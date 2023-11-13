@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React from 'react'
 import {
   SafeAreaView,
   ScrollView,
@@ -13,8 +13,8 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View,
-} from 'react-native';
+  View
+} from 'react-native'
 
 const Colors = {
   primary: '#1292B4',
@@ -23,32 +23,32 @@ const Colors = {
   light: '#DAE1E7',
   dark: '#444',
   darker: '#222',
-  black: '#000',
-};
+  black: '#000'
+}
 
 const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
-    paddingHorizontal: 24,
+    paddingHorizontal: 24
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: '600'
   },
   sectionDescription: {
     marginTop: 8,
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: '400'
   },
   highlight: {
-    fontWeight: '700',
-  },
-});
+    fontWeight: '700'
+  }
+})
 
-export default App;
+export default App
 
-function Section({children, title}) {
-  const isDarkMode = useColorScheme() === 'dark';
+function Section ({ children, title }) {
+  const isDarkMode = useColorScheme() === 'dark'
 
   return (
     <View style={styles.sectionContainer}>
@@ -56,8 +56,8 @@ function Section({children, title}) {
         style={[
           styles.sectionTitle,
           {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
+            color: isDarkMode ? Colors.white : Colors.black
+          }
         ]}>
         {title}
       </Text>
@@ -65,21 +65,21 @@ function Section({children, title}) {
         style={[
           styles.sectionDescription,
           {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
+            color: isDarkMode ? Colors.light : Colors.dark
+          }
         ]}>
         {children}
       </Text>
     </View>
-  );
+  )
 }
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+function App () {
+  const isDarkMode = useColorScheme() === 'dark'
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
+  }
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -92,7 +92,7 @@ function App() {
         style={backgroundStyle}>
         <View
           style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            backgroundColor: isDarkMode ? Colors.black : Colors.white
           }}>
           <Section title="Ham2K Portable Logger">
             A better way to log your contacts on the go.
@@ -100,5 +100,5 @@ function App() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
