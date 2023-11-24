@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import {
   Button,
@@ -7,9 +7,12 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   useColorScheme,
   View
 } from 'react-native'
+import { selectCall, setCall } from '../../store/settings'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Colors = {
   primary: '#1292B4',
@@ -37,11 +40,20 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700'
+  },
+  input: {
+    height: 40
   }
 })
 
 export default function SettingsScreen ({ navigation }) {
   const isDarkMode = useColorScheme() === 'dark'
+  const dispatch = useDispatch()
+  const call = useSelector(selectCall)
+
+  const onChangeCall = useCallback((text) => {
+    dispatch(setCall(text))
+  }, [dispatch])
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
@@ -79,6 +91,12 @@ export default function SettingsScreen ({ navigation }) {
               ]}>
               This is the settings screen
             </Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={onChangeCall}
+              value={call}
+              placeholder="Callsign"
+            />
             <Button
               title="Home"
               onPress={() => navigation.navigate('Home')}
