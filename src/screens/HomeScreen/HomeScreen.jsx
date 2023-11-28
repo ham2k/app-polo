@@ -10,6 +10,7 @@ import {
   useColorScheme,
   View
 } from 'react-native'
+import { Chip } from 'react-native-paper'
 
 const Colors = {
   primary: '#1292B4',
@@ -88,6 +89,7 @@ export default function HomeScreen ({ navigation }) {
               title="Settings"
               onPress={() => navigation.navigate('Settings')}
             />
+            <Chip icon="information">Material Design</Chip>
           </View>
         </View>
       </ScrollView>
