@@ -5,27 +5,29 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
 
+import { usePrepareThemes } from './styles/tools/usePrepareThemes'
+
 import HomeScreen from './screens/HomeScreen/HomeScreen'
 import LoggerScreen from './screens/LoggerScreen'
 import SettingsScreen from './screens/SettingsScreen'
-
-import COLORS from './styles/colors'
 
 import { persistor, store } from './store'
 
 const Stack = createNativeStackNavigator()
 
 export default function App () {
+  const [paperTheme, navigationTheme] = usePrepareThemes()
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <PaperProvider>
-          <NavigationContainer>
+        <PaperProvider theme={paperTheme}>
+          <NavigationContainer theme={navigationTheme}>
             <Stack.Navigator screenOptions={{
               headerStyle: {
-                backgroundColor: COLORS.primary.bg
+                backgroundColor: navigationTheme.colors.primary
               },
-              headerTintColor: COLORS.primary.bgText,
+              headerTintColor: paperTheme.colors.onPrimary,
               headerTitleStyle: {
                 fontWeight: 'bold'
               }
