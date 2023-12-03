@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 const DEFAULT_THEME = {
   colors: {
@@ -39,10 +39,26 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       marginTop: twoSpaces,
       paddingHorizontal: 24
     },
+    screenTitle: {
+      fontSize: 20,
+      color: theme.colors.onPrimary,
+      fontWeight: '500'
+    },
+    screenTitleLeft: {
+      fontSize: 20,
+      color: theme.colors.onPrimary,
+      fontWeight: Platform.OS === 'ios' ? '300' : '100',
+      marginRight: oneSpace
+    },
+    screenTitleRight: {
+      fontSize: 20,
+      color: theme.colors.onPrimary,
+      fontWeight: Platform.OS === 'ios' ? '600' : '800'
+    },
     title: {
       marginBottom: oneSpace,
       fontSize: largeFont,
-      fontWeight: '600'
+      fontWeight: '500'
     },
     paragraph: {
       marginBottom: oneSpace,

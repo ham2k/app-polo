@@ -12,6 +12,7 @@ import LoggerScreen from './screens/LoggerScreen'
 import SettingsScreen from './screens/SettingsScreen'
 
 import { persistor, store } from './store'
+import HeaderBar from './screens/components/HeaderBar'
 
 const Stack = createNativeStackNavigator()
 
@@ -24,17 +25,19 @@ export default function App () {
         <PaperProvider theme={paperTheme}>
           <NavigationContainer theme={navigationTheme}>
             <Stack.Navigator screenOptions={{
-              headerStyle: {
-                backgroundColor: navigationTheme.colors.primary
-              },
-              headerTintColor: paperTheme.colors.onPrimary,
-              headerTitleStyle: {
-                fontWeight: 'bold'
-              }
+              header: HeaderBar,
+              animation: 'slide_from_right'
+              // headerStyle: {
+              //   backgroundColor: navigationTheme.colors.primary
+              // },
+              // headerTintColor: paperTheme.colors.onPrimary,
+              // headerTitleStyle: {
+              //   fontWeight: 'bold'
+              // }
             }}>
-              <Stack.Screen name="Home" options={{ title: 'Ham2K Portable Logger' }} component={HomeScreen} />
+              <Stack.Screen name="Home" options={{ title: 'Ham2K', subTitle: 'Portable Logger' }} component={HomeScreen} />
               <Stack.Screen name="Logger" options={{ title: 'Logger', headerBackTitle: 'Home' }} component={LoggerScreen} />
-              <Stack.Screen name="Settings" options={{ title: 'Logger', headerBackTitle: 'Home' }} component={SettingsScreen} />
+              <Stack.Screen name="Settings" options={{ title: 'Settings', headerBackTitle: 'Home' }} component={SettingsScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </PaperProvider>
