@@ -1,10 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import createMigrate from 'redux-persist/es/createMigrate'
 
 import { migrations, LATEST_VERSION } from './migrations'
 import settingsReducer from './settings'
-import createMigrate from 'redux-persist/es/createMigrate'
+import operationsReducer from './operations'
 
 // Redux Toolkit uses Immer, which freezes state by default.
 // This is great, except that our log processing needs to mutate state when merging QSOs,
@@ -14,7 +15,8 @@ import { setAutoFreeze } from 'immer'
 setAutoFreeze(false)
 
 const rootReducer = combineReducers({
-  settings: settingsReducer
+  settings: settingsReducer,
+  operations: operationsReducer
 })
 
 const persistConfig = {

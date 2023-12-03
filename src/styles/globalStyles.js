@@ -70,6 +70,17 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     },
     button: {
       marginBottom: oneSpace
+    },
+    listContainer: {
+
+    },
+    row: {
+      minHeight: oneSpace * 8,
+      paddingHorizontal: twoSpaces,
+      paddingVertical: oneSpace,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.outline
+
     }
   })
 

@@ -1,32 +1,54 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import {
   Text,
   View
 } from 'react-native'
-import { Button, Chip } from 'react-native-paper'
+import { Button } from 'react-native-paper'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenView from '../components/ScreenView'
+import { useDispatch, useSelector } from 'react-redux'
+import { addNewOperation, loadOperationsList, selectOperationsList, selectOperationsStatus } from '../../store/operations'
+import OperationItem from '../../components/OperationItem'
 
 export default function HomeScreen ({ navigation }) {
   const styles = useThemedStyles()
+  const dispatch = useDispatch()
+  // const operationsStatus = useSelector(selectOperationsStatus)
+  const operations = useSelector(selectOperationsList)
+
+  useEffect(() => {
+    dispatch(loadOperationsList())
+  }, [dispatch])
+
+  const handleNewOperation = useCallback(() => {
+    dispatch(addNewOperation({ call: 'KI2D', name: `Operation ${operations.length + 1}` }))
+  }, [dispatch, operations])
+
+  const navigateToOperation = useCallback((operation) => {
+    navigation.navigate('Operation', { uuid: operation.uuid, operation })
+  }, [navigation])
+
   return (
     <ScreenView styles={styles}>
+      <View style={styles.listContainer}>
+        {operations.length > 0 ? (
+          operations.map((operation, index) => (
+            <OperationItem operation={operation} key={operation.uuid} styles={styles} onPress={navigateToOperation} />
+          )
+          )
+        ) : (
+          <Text>No Operations!</Text>
+        )}
+      </View>
       <View style={styles.sectionContainer}>
-        <Text style={styles.title}>
-          Ham2K Portable Logger
-        </Text>
-        <Text style={styles.paragraph}>
-          A better way to log your contacts on the go.
-        </Text>
-
         <Button
           mode="contained"
-          onPress={() => navigation.navigate('Logger')}
+          onPress={handleNewOperation}
           style={styles.button}
         >
-          Logger
+          New
         </Button>
 
         <Button
@@ -36,8 +58,6 @@ export default function HomeScreen ({ navigation }) {
         >
           Settings
         </Button>
-
-        <Chip icon="information">Material Design</Chip>
 
       </View>
     </ScreenView>

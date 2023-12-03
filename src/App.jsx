@@ -8,7 +8,7 @@ import { PaperProvider } from 'react-native-paper'
 import { usePrepareThemes } from './styles/tools/usePrepareThemes'
 
 import HomeScreen from './screens/HomeScreen/HomeScreen'
-import LoggerScreen from './screens/LoggerScreen'
+import OperationScreen from './screens/OperationScreen'
 import SettingsScreen from './screens/SettingsScreen'
 
 import { persistor, store } from './store'
@@ -36,7 +36,7 @@ export default function App () {
               // }
             }}>
               <Stack.Screen name="Home" options={{ title: 'Ham2K', subTitle: 'Portable Logger' }} component={HomeScreen} />
-              <Stack.Screen name="Logger" options={{ title: 'Logger', headerBackTitle: 'Home' }} component={LoggerScreen} />
+              <Stack.Screen name="Operation" options={{ title: 'Operation', headerBackTitle: 'Home' }} component={OperationScreen} />
               <Stack.Screen name="Settings" options={{ title: 'Settings', headerBackTitle: 'Home' }} component={SettingsScreen} />
             </Stack.Navigator>
           </NavigationContainer>

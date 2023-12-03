@@ -9,11 +9,12 @@ import { Button } from 'react-native-paper'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenView from '../components/ScreenView'
 
-export default function LoggerScreen ({ navigation }) {
+export default function OperationScreen ({ navigation, route }) {
   const styles = useThemedStyles()
+  const { uuid, operation } = route.params
 
   setTimeout(() => {
-    navigation.setOptions({ title: 'KI2D', subTitle: 'General Operation' })
+    navigation.setOptions({ title: operation?.call, subTitle: operation?.name })
   }, 0)
 
   return (
