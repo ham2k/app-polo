@@ -15,8 +15,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
   const threeSpaces = oneSpace * 3
   const halfSpace = oneSpace / 2
 
-  const normalFont = 18
-  const largeFont = 24
+  const normalFontSize = 18
+  const largeFontSize = 24
 
   const styles = StyleSheet.create({
     theme,
@@ -28,6 +28,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     twoSpaces,
     threeSpaces,
     halfSpace,
+
+    normalFontSize,
+    largeFontSize,
 
     screen: {
       backgroundColor: theme.colors.background
@@ -57,12 +60,12 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     },
     title: {
       marginBottom: oneSpace,
-      fontSize: largeFont,
+      fontSize: largeFontSize,
       fontWeight: '500'
     },
     paragraph: {
       marginBottom: oneSpace,
-      fontSize: normalFont,
+      fontSize: normalFontSize,
       fontWeight: '400'
     },
     highlight: {
