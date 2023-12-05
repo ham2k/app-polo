@@ -7,15 +7,14 @@ import {
 import { Button } from 'react-native-paper'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import ScreenView from '../components/ScreenView'
+import ScreenContainer from '../components/ScreenContainer'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNewOperation, loadOperationsList, selectOperationsList, selectOperationsStatus } from '../../store/operations'
-import OperationItem from '../../components/OperationItem'
+import { addNewOperation, loadOperationsList, selectOperationsList } from '../../store/operations'
+import OperationItem from './components/OperationItem'
 
 export default function HomeScreen ({ navigation }) {
   const styles = useThemedStyles()
   const dispatch = useDispatch()
-  // const operationsStatus = useSelector(selectOperationsStatus)
   const operations = useSelector(selectOperationsList)
 
   useEffect(() => {
@@ -31,7 +30,7 @@ export default function HomeScreen ({ navigation }) {
   }, [navigation])
 
   return (
-    <ScreenView styles={styles}>
+    <ScreenContainer>
       <View style={styles.listContainer}>
         {operations.length > 0 ? (
           operations.map((operation, index) => (
@@ -60,6 +59,6 @@ export default function HomeScreen ({ navigation }) {
         </Button>
 
       </View>
-    </ScreenView>
+    </ScreenContainer>
   )
 }

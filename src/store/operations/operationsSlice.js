@@ -11,7 +11,8 @@ const OPERATION_INITIAL_STATE = {
   operator: '',
   station: '',
   position: '',
-  grid: ''
+  grid: '',
+  status: 'ready'
 }
 
 export const operationsSlice = createSlice({
@@ -28,7 +29,10 @@ export const operationsSlice = createSlice({
       state.qsos = {}
     },
     setOperationInfo: (state, action) => {
-      state.info[action.payload.id] = { ...OPERATION_INITIAL_STATE, ...state.info[action.payload.id], ...action.payload }
+      state.info[action.payload.uuid] = { ...OPERATION_INITIAL_STATE, ...state.info[action.payload.uuid], ...action.payload }
+    },
+    setOperationQSOs: (state, action) => {
+      state.qsos[action.payload.uuid] = action.payload.qsos
     },
     addOperationQSO: (state, action) => {
       if (!state.qsos[action.payload.id]) state.qsos[action.payload.id] = { keys: {}, qsos: [] }
@@ -54,11 +58,21 @@ export const operationsSlice = createSlice({
 
 })
 
-export const { setOperationsStatus, setOperations, setOperationInfo, deleteOperationInfo } = operationsSlice.actions
+export const { setOperationsStatus, setOperations, setOperationInfo, deleteOperationInfo, setOperationQSOs } = operationsSlice.actions
 
 export const selectOperationsStatus = (state) => {
   return state?.operations?.status
 }
+
+export const selectOperationInfo = (uuid) => createSelector(
+  (state) => state?.operations?.info[uuid],
+  (info) => info ?? {}
+)
+
+export const selectOperationQSOs = (uuid) => createSelector(
+  (state) => state?.operations?.qsos[uuid],
+  (qsos) => qsos ?? []
+)
 
 export const selectOperationsList = createSelector(
   (state) => state?.operations?.info,

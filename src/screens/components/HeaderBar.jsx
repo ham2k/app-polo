@@ -6,15 +6,19 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
-export default function HeaderBar ({ route, options, navigation, back }) {
+export default function HeaderBar ({ route, options, navigation, back, close }) {
   const styles = useThemedStyles()
-
-  console.log(options)
+  console.log('header', { options, back })
   const title = options.title
   const subTitle = options.subTitle
 
+  if (options.closeInsteadOfBack) {
+    close = back
+  }
+  console.log('header', { back, close })
+
   const contentStyleTweaks = useMemo(() => {
-    if (back) {
+    if (back || close) {
       return {
         marginRight: 48
       }
@@ -23,22 +27,24 @@ export default function HeaderBar ({ route, options, navigation, back }) {
         marginLeft: 48
       }
     }
-  }, [back])
+  }, [back, close])
 
   return (
     <Appbar.Header
       theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
       dark={true}
       mode={'center-aligned'}
+      style={{ height: styles.oneSpace * 6 }}
     >
       <StatusBar
         barStyle={'light-content'}
         backgroundColor={styles.colors.primary}
       />
 
-      {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
+      {back ? <Appbar.Action isLeading onPress={navigation.goBack} icon={options.closeInsteadOfBack ? 'close' : 'arrow-left'} /> : null}
+
       <Appbar.Content
-        style={contentStyleTweaks}
+        style={[contentStyleTweaks]}
         title={
           title && subTitle ? (
             <View flexDirection="row" justifyContent="center">

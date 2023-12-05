@@ -9,7 +9,7 @@ import { Button, TextInput } from 'react-native-paper'
 import { selectCall, setCall } from '../../store/settings'
 import { useDispatch, useSelector } from 'react-redux'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import ScreenView from '../components/ScreenView'
+import ScreenContainer from '../components/ScreenContainer'
 
 export default function SettingsScreen ({ navigation }) {
   const styles = useThemedStyles()
@@ -21,7 +21,7 @@ export default function SettingsScreen ({ navigation }) {
   }, [dispatch])
 
   return (
-    <ScreenView styles={styles}>
+    <ScreenContainer>
       <View style={styles.sectionContainer}>
         <Text
           style={styles.title}>
@@ -47,6 +47,6 @@ export default function SettingsScreen ({ navigation }) {
           Home
         </Button>
       </View>
-    </ScreenView>
+    </ScreenContainer>
   )
 }

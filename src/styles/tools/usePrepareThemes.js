@@ -11,7 +11,7 @@ export function usePrepareThemes () {
   const colorScheme = useColorScheme()
 
   const colors = useMemo(() => {
-    return colorScheme === 'dark' ? darkColors : lightColors
+    return colorScheme === 'dark' ? darkColors.colors : lightColors.colors
   }, [colorScheme])
 
   const paperTheme = useMemo(() => {
