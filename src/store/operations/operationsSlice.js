@@ -1,9 +1,12 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 
+import { qsoKey } from '@ham2k/lib-qson-tools'
+
 const INITIAL_STATE = {
   status: 'ready',
   info: {},
-  qsos: {}
+  keys: {},
+  qsos: []
 }
 
 const OPERATION_INITIAL_STATE = {
@@ -35,30 +38,37 @@ export const operationsSlice = createSlice({
       state.qsos[action.payload.uuid] = action.payload.qsos
     },
     addOperationQSO: (state, action) => {
-      if (!state.qsos[action.payload.id]) state.qsos[action.payload.id] = { keys: {}, qsos: [] }
-      if (state.qsos[action.payload.id].keys[action.payload.qso.key]) {
+      console.log(action)
+      if (!state.qsos[action.payload.uuid]) state.qsos[action.payload.uuid] = []
+      if (!state.keys[action.payload.uuid]) state.keys[action.payload.uuid] = {}
+      const qsos = state.qsos[action.payload.uuid]
+      const keys = state.keys[action.payload.uuid]
+
+      const qso = action.payload.qso
+      if (!qso.key) qso.key = qsoKey(qso)
+
+      if (keys[qso.key]) {
         // Find old QSO and replace it with the new one
-        const pos = state.qsos[action.payload.id].qsos.findIndex(qso => qso.key === action.payload.qso.key)
-        state.qsos[action.payload.id].qsos[pos] = action.payload.qso
-        state.qsos[action.payload.id].keys[action.payload.qso.key] = action.payload.qso
+        const pos = qsos.findIndex(q => q.key === qso.key)
+        qsos[pos] = qso
+        keys[qso.key] = qso
       } else {
         // Add new QSO to the end of the array
-        state.qsos[action.payload.id].keys[action.payload.qso.id] = action.payload.qso
-        state.qsos[action.payload.id].qsos.push(action.payload.qso)
+        keys[qso.uuid] = qso
+        qsos[qsos.length] = qso
       }
-      state.qsos[action.payload.id] = { ...OPERATION_INITIAL_STATE, ...state.info[action.payload.id], ...action.payload }
     },
     deleteOperationInfo: (state, action) => {
-      state.info.delete(action.payload.id)
+      state.info.delete(action.payload.uuid)
     },
     deleteOperationQSOs: (state, action) => {
-      state.qsos.delete(action.payload.id)
+      state.qsos.delete(action.payload.uuid)
     }
   }
 
 })
 
-export const { setOperationsStatus, setOperations, setOperationInfo, deleteOperationInfo, setOperationQSOs } = operationsSlice.actions
+export const { setOperationsStatus, setOperations, setOperationInfo, addOperationQSO, deleteOperationInfo, setOperationQSOs } = operationsSlice.actions
 
 export const selectOperationsStatus = (state) => {
   return state?.operations?.status

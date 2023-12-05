@@ -15,7 +15,6 @@ export default function HeaderBar ({ route, options, navigation, back, close }) 
   if (options.closeInsteadOfBack) {
     close = back
   }
-  console.log('header', { back, close })
 
   const contentStyleTweaks = useMemo(() => {
     if (back || close) {

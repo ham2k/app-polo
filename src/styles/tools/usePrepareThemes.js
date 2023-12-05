@@ -6,12 +6,25 @@ import { useColorScheme } from 'react-native'
 
 import lightColors from '../lightColors'
 import darkColors from '../darkColors'
+import Color from 'color'
 
 export function usePrepareThemes () {
   const colorScheme = useColorScheme()
 
   const colors = useMemo(() => {
-    return colorScheme === 'dark' ? darkColors.colors : lightColors.colors
+    const loadedColors = colorScheme === 'dark' ? darkColors.colors : lightColors.colors
+
+    if (colorScheme === 'dark') {
+      loadedColors.primaryContainerVariant = Color(loadedColors.primaryContainer).lighten(0.2).hex()
+      loadedColors.secondaryContainerVariant = Color(loadedColors.secondaryContainer).lighten(0.2).hex()
+      loadedColors.tertiaryContainerVariant = Color(loadedColors.tertiaryContainer).lighten(0.2).hex()
+    } else {
+      loadedColors.primaryContainerVariant = Color(loadedColors.primaryContainer).darken(0.2).hex()
+      loadedColors.secondaryContainerVariant = Color(loadedColors.secondaryContainer).darken(0.2).hex()
+      loadedColors.tertiaryContainerVariant = Color(loadedColors.tertiaryContainer).darken(0.2).hex()
+    }
+
+    return loadedColors
   }, [colorScheme])
 
   const paperTheme = useMemo(() => {

@@ -6,23 +6,31 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 const LEFT_TRIM_REGEX = /^\s+/
 
-export default function LoggerInput ({ style, baseColor, label, placeholder, value, onChangeText, uppercase }) {
+export default function LoggerInput ({ style, themeColor, label, placeholder, value, onChangeText, onChange, fieldId, uppercase }) {
   const themeStyles = useThemedStyles()
 
   const [localValue, setLocalValue] = useState(value)
 
-  baseColor = baseColor ?? 'primary'
+  themeColor = themeColor ?? 'primary'
 
   useEffect(() => {
     if (!value) setLocalValue(' ')
   }, [value])
 
-  const handleChange = useCallback((text) => {
-    if (uppercase) text = text.toUpperCase()
+  const handleChange = useCallback((event) => {
+    let { text } = event.nativeEvent
+
+    if (uppercase) {
+      text = text.toUpperCase()
+    }
     text = text.replace(LEFT_TRIM_REGEX, '')
+
+    event.nativeEvent.text = text
     setLocalValue(text)
+
     onChangeText && onChangeText(text)
-  }, [setLocalValue, onChangeText, uppercase])
+    onChange && onChange({ ...event, fieldId })
+  }, [setLocalValue, onChangeText, onChange, fieldId, uppercase])
 
   const handleFocus = useCallback(() => {
     if (!value) { setLocalValue('') }
@@ -35,15 +43,15 @@ export default function LoggerInput ({ style, baseColor, label, placeholder, val
   const colorStyles = useMemo(() => {
     return {
       paperInput: {
-        color: themeStyles.theme.colors[baseColor],
-        backgroundColor: themeStyles.theme.colors[`${baseColor}Container`]
+        color: themeStyles.theme.colors[themeColor],
+        backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
       },
       nativeInput: {
-        color: themeStyles.theme.colors[baseColor],
-        backgroundColor: themeStyles.theme.colors[`${baseColor}Container`]
+        color: themeStyles.theme.colors[themeColor],
+        backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
       }
     }
-  }, [themeStyles, baseColor])
+  }, [themeStyles, themeColor])
 
   const renderInput = useCallback((props) => {
     return (
@@ -57,7 +65,6 @@ export default function LoggerInput ({ style, baseColor, label, placeholder, val
         returnKeyType={'send'}
         inputMode={'text'}
         placeholderTextColor={themeStyles.theme.colors.outline}
-        // keyboardType={'default'}
       />
     )
   }, [themeStyles])
@@ -65,17 +72,17 @@ export default function LoggerInput ({ style, baseColor, label, placeholder, val
   return (
     <TextInput
       style={[colorStyles.paperInput, style, { paddingVertical: 0 }]}
-      textColor={themeStyles.theme.colors[baseColor]}
-      selectionColor={themeStyles.theme.colors[baseColor]}
-      underlineColor={themeStyles.theme.colors[baseColor]}
-      activeUnderlineColor={themeStyles.theme.colors[baseColor]}
+      textColor={themeStyles.theme.colors[themeColor]}
+      selectionColor={themeStyles.theme.colors[themeColor]}
+      underlineColor={themeStyles.theme.colors[themeColor]}
+      activeUnderlineColor={themeStyles.theme.colors[themeColor]}
       mode={'flat'}
       dense={true}
       underlineStyle={extraStyles.underline}
       value={localValue ?? ' '}
       label={label}
       placeholder={placeholder}
-      onChangeText={handleChange}
+      onChange={handleChange}
       onFocus={handleFocus}
       onBlur={handleBlur}
       render={renderInput}

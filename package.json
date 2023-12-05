@@ -10,10 +10,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "@ham2k/lib-callsigns": "^0.0.1",
+    "@ham2k/lib-country-files": "^0.7.20231129",
+    "@ham2k/lib-qson-tools": "^0.4.0",
     "@react-native-async-storage/async-storage": "^1.19.8",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@reduxjs/toolkit": "^1.9.7",
+    "color": "^4.2.3",
     "deepmerge": "^4.3.1",
     "react": "18.2.0",
     "react-native": "0.72.6",
