@@ -31,26 +31,22 @@ export default function LoggerChip ({ children, icon, style, themeColor }) {
         }
       }
       textStyle = {
-        color: themeStyles.theme.colors[`on${upcasedThemeColor}`],
-        padding: 1 // Compensate for 'outlined' borders
+        color: themeStyles.theme.colors[`on${upcasedThemeColor}`] // `on${upcasedThemeColor}`],
       }
     } else {
-      mode = 'outlined'
+      mode = 'flat'
       colorizedTheme = {
         colors: {
-          primary: themeStyles.theme.colors[themeColor],
-          onPrimary: themeStyles.theme.colors[`on${upcasedThemeColor}`],
+          primary: themeStyles.theme.colors[`on${upcasedThemeColor}Container`],
+          onPrimary: themeStyles.theme.colors[themeColor],
           primaryContainer: themeStyles.theme.colors[`${themeColor}Container`],
           onPrimaryContainer: themeStyles.theme.colors[`on${upcasedThemeColor}Container`],
-          secondaryContainer: themeStyles.theme.colors[themeColor],
-          onSecondaryContainer: themeStyles.theme.colors[`on${upcasedThemeColor}`],
-          // surface: '#ff0000',
-          onSurface: themeStyles.theme.colors[`on${upcasedThemeColor}Container`],
-          outline: themeStyles.theme.colors[themeColor]
+          secondaryContainer: themeStyles.theme.colors[`${themeColor}Light`],
+          onSecondaryContainer: themeStyles.theme.colors[`on${upcasedThemeColor}`]
         }
       }
       textStyle = {
-        color: themeStyles.theme.colors[themeColor]
+        color: themeStyles.theme.colors[`on${upcasedThemeColor}Container`]
       }
     }
     return { mode, colorizedTheme, textStyle }

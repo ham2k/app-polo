@@ -37,7 +37,7 @@ export const operationsSlice = createSlice({
     setOperationQSOs: (state, action) => {
       state.qsos[action.payload.uuid] = action.payload.qsos
     },
-    addOperationQSO: (state, action) => {
+    addOperationQSOToStore: (state, action) => {
       console.log(action)
       if (!state.qsos[action.payload.uuid]) state.qsos[action.payload.uuid] = []
       if (!state.keys[action.payload.uuid]) state.keys[action.payload.uuid] = {}
@@ -50,11 +50,12 @@ export const operationsSlice = createSlice({
       if (keys[qso.key]) {
         // Find old QSO and replace it with the new one
         const pos = qsos.findIndex(q => q.key === qso.key)
+        console.log('replacing QSO', pos)
         qsos[pos] = qso
         keys[qso.key] = qso
       } else {
         // Add new QSO to the end of the array
-        keys[qso.uuid] = qso
+        keys[qso.key] = qso
         qsos[qsos.length] = qso
       }
     },
@@ -68,7 +69,7 @@ export const operationsSlice = createSlice({
 
 })
 
-export const { setOperationsStatus, setOperations, setOperationInfo, addOperationQSO, deleteOperationInfo, setOperationQSOs } = operationsSlice.actions
+export const { setOperationsStatus, setOperations, setOperationInfo, addOperationQSOToStore, deleteOperationInfo, setOperationQSOs } = operationsSlice.actions
 
 export const selectOperationsStatus = (state) => {
   return state?.operations?.status

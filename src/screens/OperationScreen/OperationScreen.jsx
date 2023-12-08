@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
-  Text,
   View
 } from 'react-native'
 
@@ -9,9 +8,20 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import { useDispatch, useSelector } from 'react-redux'
 import { addOperationQSO, loadOperation, selectOperationInfo, selectOperationQSOs } from '../../store/operations'
-import QSOItem from './components/QSOItem'
 import LoggerChip from './components/LoggerChip'
 import LoggingPanel from './components/LoggingPanel/LoggingPanel'
+import QSOList from './components/QSOList'
+import OperationPanel from './components/OperationPanel/OperationPanel'
+
+function prepareNewQSO (operation) {
+  return {
+    our: {
+      call: operation.call
+    },
+    band: operation.band,
+    mode: operation.mode
+  }
+}
 
 export default function OperationScreen ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -29,39 +39,58 @@ export default function OperationScreen ({ navigation, route }) {
   const operation = useSelector(selectOperationInfo(route.params.operation.uuid))
   const qsos = useSelector(selectOperationQSOs(route.params.operation.uuid))
 
-  useEffect(() => {
-    navigation.setOptions({ title: operation?.call, subTitle: operation?.name })
-  }, [navigation, operation])
+  const [lastQSO, setLastQSO] = useState()
+  const [currentQSO, setCurrentQSO] = useState(prepareNewQSO(operation))
 
+  const listRef = useRef()
+
+  // When starting, make sure all operation data is loaded
   useEffect(() => {
     dispatch(loadOperation(route.params.operation.uuid))
   }, [route.params.operation.uuid, dispatch])
 
+  // When operation data is loaded, set the title
+  useEffect(() => {
+    navigation.setOptions({ title: operation?.call, subTitle: operation?.name })
+  }, [navigation, operation])
+
+  // When the lastQSO changes, scroll to it
+  useEffect(() => {
+    setTimeout(() => {
+      if (lastQSO) {
+        const i = qsos.findIndex((qso) => qso.key === lastQSO.ket)
+        if (i > -1) {
+          listRef.current?.scrollToIndex({ index: i, animated: true })
+        } else {
+          listRef.current?.scrollToEnd()
+        }
+      } else {
+        listRef.current?.scrollToEnd()
+      }
+    }, 0)
+  }, [listRef, qsos, lastQSO])
+
   const logNewQSO = useCallback((qso) => {
     qso.our.call = operation.call
+
+    qso.startOn = new Date(qso.startOnMillis).toISOString()
+    if (qso.endOnMillis) {
+      qso.endOn = new Date(qso.endOnMillis).toISOString()
+    }
+
     console.log('logNewQSO', qso)
     dispatch(addOperationQSO({ uuid: operation.uuid, qso }))
+    setLastQSO(qso)
+    setCurrentQSO(prepareNewQSO(operation))
   }, [dispatch, operation])
 
   return (
     <ScreenContainer>
-      <View style={{ flex: 0, width: '100%', flexDirection: 'column', backgroundColor: styles.theme.colors.secondaryContainer }}>
-        <View style={{ paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace, flexDirection: 'row', flexWrap: 'wrap', gap: styles.halfSpace }}>
-          <LoggerChip icon="pine-tree" themeColor="secondary">POTA K-1233</LoggerChip>
-          <LoggerChip icon="radio" themeColor="secondary">7.325 MHz • CW • 20W</LoggerChip>
-        </View>
-      </View>
-      <View style={[styles.listContainer, { flex: 1 }]}>
-        {qsos?.length > 0 ? (
-          qsos.map((qso, index) => (
-            <QSOItem qso={qso} key={qso.key} styles={styles} />
-          )
-          )
-        ) : (
-          <Text>No QSOs Yet!</Text>
-        )}
-      </View>
-      <LoggingPanel onLog={logNewQSO} />
+      <OperationPanel operation={operation} styles={styles} stlye={{ flex: 0 }} />
+
+      <QSOList qsos={qsos} styles={styles} style={{ flex: 1 }} listRef={listRef} />
+
+      <LoggingPanel onLog={logNewQSO} qso={currentQSO} style={{ flex: 0 }} />
     </ScreenContainer>
   )
 }

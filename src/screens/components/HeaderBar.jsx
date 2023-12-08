@@ -8,7 +8,7 @@ export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
 export default function HeaderBar ({ route, options, navigation, back, close }) {
   const styles = useThemedStyles()
-  console.log('header', { options, back })
+
   const title = options.title
   const subTitle = options.subTitle
 

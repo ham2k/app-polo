@@ -15,13 +15,15 @@ export function usePrepareThemes () {
     const loadedColors = colorScheme === 'dark' ? darkColors.colors : lightColors.colors
 
     if (colorScheme === 'dark') {
-      loadedColors.primaryContainerVariant = Color(loadedColors.primaryContainer).lighten(0.2).hex()
-      loadedColors.secondaryContainerVariant = Color(loadedColors.secondaryContainer).lighten(0.2).hex()
-      loadedColors.tertiaryContainerVariant = Color(loadedColors.tertiaryContainer).lighten(0.2).hex()
+      ['primary', 'secondary', 'tertiary'].forEach((color) => {
+        loadedColors[`${color}Light`] = Color(loadedColors[color]).darken(0.7).desaturate(0.4).hex()
+        loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).lighten(0.2).desaturate(0.3).hex()
+      })
     } else {
-      loadedColors.primaryContainerVariant = Color(loadedColors.primaryContainer).darken(0.2).hex()
-      loadedColors.secondaryContainerVariant = Color(loadedColors.secondaryContainer).darken(0.2).hex()
-      loadedColors.tertiaryContainerVariant = Color(loadedColors.tertiaryContainer).darken(0.2).hex()
+      ['primary', 'secondary', 'tertiary'].forEach((color) => {
+        loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(0.95).desaturate(0.7).hex()
+        loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).darken(0.2).desaturate(0.3).hex()
+      })
     }
 
     return loadedColors

@@ -8,6 +8,11 @@ const DEFAULT_THEME = {
 }
 
 export const prepareGlobalStyles = ({ theme, colorScheme }) => {
+  const isIOS = Platform.OS === 'ios'
+  const isAndroid = Platform.OS === 'android'
+  const isDarkMode = colorScheme === 'dark'
+  const isLightMode = colorScheme === 'light'
+
   theme = theme ?? DEFAULT_THEME
 
   const oneSpace = 8
@@ -22,7 +27,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     theme,
     colors: theme.colors,
     colorScheme,
-    isDarkMode: colorScheme === 'dark',
+    isDarkMode,
 
     oneSpace,
     twoSpaces,
@@ -50,13 +55,13 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     screenTitleLeft: {
       fontSize: 20,
       color: theme.colors.onPrimary,
-      fontWeight: Platform.OS === 'ios' ? '300' : '100',
+      fontWeight: isIOS ? '300' : '100',
       marginRight: oneSpace
     },
     screenTitleRight: {
       fontSize: 20,
       color: theme.colors.onPrimary,
-      fontWeight: Platform.OS === 'ios' ? '600' : '800'
+      fontWeight: isIOS ? '600' : '800'
     },
     title: {
       marginBottom: oneSpace,
@@ -83,7 +88,23 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       paddingVertical: oneSpace,
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.outline
-
+    },
+    compactRow: {
+      minHeight: oneSpace * 5,
+      paddingHorizontal: oneSpace,
+      paddingVertical: oneSpace,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.outline
+    },
+    text: {
+      numbers: {
+        fontVariant: ['tabular-nums'],
+        fontFamily: isIOS ? 'San Francisco' : 'monospace'
+      },
+      callsign: {
+        fontVariant: ['tabular-nums'],
+        fontFamily: isIOS ? 'Menlo' : 'monospace'
+      }
     }
   })
 

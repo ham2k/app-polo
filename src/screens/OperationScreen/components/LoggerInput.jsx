@@ -6,7 +6,7 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 const LEFT_TRIM_REGEX = /^\s+/
 
-export default function LoggerInput ({ style, themeColor, label, placeholder, value, onChangeText, onChange, fieldId, uppercase }) {
+export default function LoggerInput ({ style, textStyle, themeColor, label, placeholder, value, onChangeText, onChange, onSubmitEditing, innerRef, fieldId, uppercase }) {
   const themeStyles = useThemedStyles()
 
   const [localValue, setLocalValue] = useState(value)
@@ -57,6 +57,7 @@ export default function LoggerInput ({ style, themeColor, label, placeholder, va
     return (
       <NativeTextInput
         {...props}
+        ref={innerRef}
         autoCapitalize={'none'}
         autoComplete={'off'}
         autoCorrect={false}
@@ -64,10 +65,13 @@ export default function LoggerInput ({ style, themeColor, label, placeholder, va
         textContentType={'none'}
         returnKeyType={'send'}
         inputMode={'text'}
+        style={[...props.style, textStyle]}
         placeholderTextColor={themeStyles.theme.colors.outline}
+        onSubmitEditing={onSubmitEditing}
+        blurOnSubmit={false} // Prevent keyboard from hiding
       />
     )
-  }, [themeStyles])
+  }, [themeStyles, onSubmitEditing, innerRef, textStyle])
 
   return (
     <TextInput

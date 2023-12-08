@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
   Text,
   View
 } from 'react-native'
 import { IconButton } from 'react-native-paper'
+
+import { fmtShortTimeZulu } from '../../../../tools/timeFormats'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import LoggerInput from '../LoggerInput'
@@ -29,29 +31,72 @@ function copyQSOFields (qso, dest = {}) {
   return dest
 }
 
-export default function LoggingPanel ({ qso, onLog, themeColor }) {
+function prepareStyles (themeStyles, themeColor) {
+  return {
+    ...themeStyles,
+    root: {
+      borderTopColor: themeStyles.theme.colors[`${themeColor}Light`],
+      borderTopWidth: 1,
+      backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
+    },
+    input: {
+      backgroundColor: themeStyles.theme.colors.background,
+      color: themeStyles.theme.colors.onBackground,
+      paddingHorizontal: themeStyles.oneSpace
+    }
+  }
+}
+
+export default function LoggingPanel ({ qso, onLog, themeColor, style }) {
   themeColor = themeColor || 'tertiary'
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
+  const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
 
-  const [mode, setMode] = useState(qso?.mode ?? 'SSB')
-  const [theirCall, setTheirCall] = useState(qso?.their?.call ?? '')
-  const [theirSent, setTheirSent] = useState(qso?.their?.sent ?? mode === 'CW' ? '599' : '59')
-  const [ourSent, setOurSent] = useState(qso?.our?.sent ?? mode === 'CW' ? '599' : '59')
-  const [startOnMillis, setStartOnMillis] = useState(qso?.startOnMillis)
-  const [notes, setNotes] = useState(qso?.notes ?? '')
+  const [mode, setMode] = useState()
+  const [theirCall, setTheirCall] = useState()
+  const [theirSent, setTheirSent] = useState()
+  const [ourSent, setOurSent] = useState()
+  const [pausedTime, setPausedTime] = useState()
+  const [startOnMillis, setStartOnMillis] = useState()
+  const [timeStr, setTimeStr] = useState()
+  const [notes, setNotes] = useState()
 
   const [info, setInfo] = useState('🇺🇸 USA • John J Lavelle, Jr • Wurstboro, NY')
 
-  const styles = useThemedStyles((baseStyles) => {
-    return {
-      ...baseStyles,
-      input: {
-        backgroundColor: baseStyles.theme.colors.background,
-        color: baseStyles.theme.colors.onBackground,
-        paddingHorizontal: baseStyles.oneSpace
-      }
+  useEffect(() => {
+    const mode = qso?.mode ?? 'SSB' // eslint-disable-line no-shadow
+    setMode(mode)
+    setTheirCall(qso?.their?.call ?? '')
+    setTheirSent(qso?.their?.sent ?? (mode === 'CW' ? '599' : '59'))
+    setOurSent(qso?.our?.sent ?? (mode === 'CW' ? '599' : '59'))
+    if (qso.startOnMillis) {
+      setPausedTime(true)
+      setStartOnMillis(qso.startOnMillis)
+      setTimeStr(fmtShortTimeZulu(qso.startOnMillis))
+    } else {
+      setPausedTime(false)
+      setStartOnMillis(null)
+      setTimeStr(fmtShortTimeZulu(new Date()))
     }
-  })
+    setNotes(qso?.notes ?? '')
+  }, [qso])
+
+  useEffect(() => {
+    if (!pausedTime) {
+      const interval = setInterval(() => {
+        setTimeStr(fmtShortTimeZulu(new Date()))
+        // setTimeStr(fmtDateTime(new Date(), 'ContestTimestampZulu', { weekday: undefined }))
+      }, 1000)
+      return () => clearInterval(interval)
+    }
+  }, [pausedTime])
+
+  const callFieldRef = useRef()
+  useEffect(() => {
+    setTimeout(() => {
+      callFieldRef?.current?.focus()
+    }, 100)
+  }, [qso, callFieldRef])
 
   const handleFieldChange = useCallback((event) => {
     const { fieldId, nativeEvent: { text } } = event
@@ -73,6 +118,7 @@ export default function LoggingPanel ({ qso, onLog, themeColor }) {
   }, [setTheirCall, setTheirSent, setOurSent, setNotes, setStartOnMillis, startOnMillis])
 
   const handleSubmit = useCallback(() => {
+    console.log('SUBMIT')
     const finalQso = {
       our: { sent: ourSent },
       their: { call: theirCall, sent: theirSent },
@@ -84,15 +130,15 @@ export default function LoggingPanel ({ qso, onLog, themeColor }) {
   }, [notes, ourSent, theirCall, theirSent, startOnMillis, onLog])
 
   return (
-    <View style={{ flex: 0, width: '100%', flexDirection: 'column', backgroundColor: styles.theme.colors[`${themeColor}Container`] }}>
+    <View style={[styles.root, style, { flexDirection: 'column' }]}>
       <View style={{ flex: 0, width: '100%', flexDirection: 'row' }}>
 
         <View style={{ flex: 0, flexDirection: 'column' }}>
-          <View style={{ flex: 1, paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace, flexDirection: 'row', flexWrap: 'wrap', gap: styles.halfSpace }}>
-            <LoggerChip icon="calendar" themeColor={themeColor}>12:33:15</LoggerChip>
+          <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace, flexWrap: 'wrap', gap: styles.halfSpace }}>
+            <LoggerChip icon="clock-outline" themeColor={themeColor}><Text style={styles.text.numbers}>{timeStr}</Text></LoggerChip>
             <LoggerChip icon="pine-tree" themeColor={themeColor}>P2P</LoggerChip>
           </View>
-          <View style={{ flex: 0, paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, flexDirection: 'row', gap: styles.oneSpace }}>
+          <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
             <Text>{info}</Text>
           </View>
         </View>
@@ -130,6 +176,7 @@ export default function LoggingPanel ({ qso, onLog, themeColor }) {
         </View> */}
       <View style={{ paddingHorizontal: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, flexDirection: 'row', gap: styles.oneSpace }}>
         <LoggerInput
+          innerRef={callFieldRef}
           themeColor={themeColor}
           style={[styles.input, { flex: 5 }]}
           value={theirCall}
@@ -137,6 +184,8 @@ export default function LoggingPanel ({ qso, onLog, themeColor }) {
           placeholder=""
           uppercase={true}
           onChange={handleFieldChange}
+          onSubmitEditing={handleSubmit}
+          textStyle={styles.text.callsign}
           fieldId={'theirCall'}
         />
         <LoggerInput
@@ -146,6 +195,7 @@ export default function LoggingPanel ({ qso, onLog, themeColor }) {
           label="Sent"
           placeholder="RST"
           onChange={handleFieldChange}
+          onSubmitEditing={handleSubmit}
           fieldId={'ourSent'}
           />
         <LoggerInput
@@ -155,6 +205,7 @@ export default function LoggingPanel ({ qso, onLog, themeColor }) {
           label="Rcvd"
           placeholder="RST"
           onChange={handleFieldChange}
+          onSubmitEditing={handleSubmit}
           fieldId={'theirSent'}
         />
         <LoggerInput
@@ -164,6 +215,7 @@ export default function LoggingPanel ({ qso, onLog, themeColor }) {
           label="Notes"
           placeholder=""
           onChange={handleFieldChange}
+          onSubmitEditing={handleSubmit}
           fieldId={'notes'}
         />
       </View>

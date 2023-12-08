@@ -12,6 +12,7 @@
   "dependencies": {
     "@ham2k/lib-callsigns": "^0.0.1",
     "@ham2k/lib-country-files": "^0.7.20231129",
+    "@ham2k/lib-format-tools": "^0.3.0",
     "@ham2k/lib-qson-tools": "^0.4.0",
     "@react-native-async-storage/async-storage": "^1.19.8",
     "@react-navigation/native": "^6.1.9",
