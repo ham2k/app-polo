@@ -1,4 +1,4 @@
-package com.polo;
+package com.ham2k.polo;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

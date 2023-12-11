@@ -1,4 +1,4 @@
-package com.polo;
+package com.ham2k.polo;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
