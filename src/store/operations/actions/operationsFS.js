@@ -1,7 +1,8 @@
 import RNFS from 'react-native-fs'
-import { addOperationQSOToStore, setOperationInfo, setOperationQSOs, setOperations, setOperationsStatus } from '../operationsSlice'
+import { actions } from '../operationsSlice'
 
 import UUID from 'react-native-uuid'
+import debounce from 'debounce'
 
 export const loadOperationsList = () => async (dispatch) => {
   try {
@@ -15,41 +16,34 @@ export const loadOperationsList = () => async (dispatch) => {
           info.uuid = dir.name
           operations[info.uuid] = info
         } catch (error) {
-          console.log('loadOperationsList skipping', dir.name)
+          console.info('loadOperationsList skipping', dir.name)
           // Skip this directory
         }
       }
     }
-    console.log('loadOperationsList readDir operations', operations)
-    dispatch(setOperations(operations))
-    dispatch(setOperationsStatus('ready'))
+    dispatch(actions.setOperations(operations))
+    dispatch(actions.setOperationsStatus('ready'))
   } catch (error) {
-    console.log('loadOperationsList readDir error', error)
-    dispatch(setOperations({}))
-    dispatch(setOperationsStatus('ready'))
+    console.error('loadOperationsList readDir error', error)
+    dispatch(actions.setOperations({}))
+    dispatch(actions.setOperationsStatus('ready'))
   }
 }
 
-export const addNewOperation = (operation) => (dispatch) => {
-  operation.uuid = UUID.v1()
+export const addNewOperation = (operation) => async (dispatch) => {
+  try {
+    operation.uuid = UUID.v1()
 
-  return RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/ops/${operation.uuid}`).then((mkDirResult) => {
-    RNFS.writeFile(
-      `${RNFS.DocumentDirectoryPath}/ops/${operation.uuid}/info.json`,
-      JSON.stringify(operation)
-    ).then(writeFileResult => {
-      console.log('addNewOperation writeFile', writeFileResult, JSON.stringify(operation))
-      dispatch(loadOperationsList())
-    }).catch(error => {
-      console.log('addNewOperation writeFile error', error)
-    })
-  }).catch((error) => {
-    console.log('addNewOperation mkdir error', error)
-  })
+    await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/ops/${operation.uuid}`)
+    await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${operation.uuid}/info.json`, JSON.stringify(operation))
+    dispatch(loadOperationsList())
+  } catch (error) {
+    console.error('addNewOperation error', error)
+  }
 }
 
 export const loadOperation = (uuid) => async (dispatch) => {
-  dispatch(setOperationInfo({ uuid, status: 'loading' }))
+  dispatch(actions.setOperationInfo({ uuid, status: 'loading' }))
 
   let info = { uuid }
   let qsos = []
@@ -64,24 +58,65 @@ export const loadOperation = (uuid) => async (dispatch) => {
   } catch (error) {
   }
   info.status = 'ready'
-  dispatch(setOperationQSOs({ uuid: info.uuid, qsos }))
-  dispatch(setOperationInfo(info))
+  dispatch(actions.setOperationQSOs({ uuid: info.uuid, qsos }))
+  dispatch(actions.setOperationInfo(info))
+}
+
+function debounceableDispatch (dispatch, action) {
+  return dispatch(action())
+}
+const debouncedDispatch = debounce(debounceableDispatch, 2000)
+
+export const setOperationInfo = (info) => (dispatch, getState) => {
+  dispatch(actions.setOperationInfo(info))
+  const savedInfo = getState().operations.info[info.uuid]
+  return debouncedDispatch(dispatch, () => saveOperationInfo(savedInfo))
 }
 
 export const addOperationQSO = ({ uuid, qso }) => (dispatch, getState) => {
-  dispatch(addOperationQSOToStore({ uuid, qso }))
-  return dispatch(saveOperationQSOs(uuid))
+  dispatch(actions.addOperationQSO({ uuid, qso }))
+  return debouncedDispatch(dispatch, () => saveOperationQSOs(uuid))
 }
 
 export const saveOperationQSOs = (uuid) => async (dispatch, getState) => {
   const qsos = getState().operations.qsos[uuid]
   const qsosJSON = JSON.stringify(qsos)
+
   await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-qsos.json`, qsosJSON)
+
+  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)) {
+    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)
+  }
+
   if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`)) {
     await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`, `${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)
   }
+
   await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-qsos.json`, `${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`)
+
   if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)) {
     await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)
+  }
+}
+
+export const saveOperationInfo = (info) => async (dispatch, getState) => {
+  const { uuid } = info
+
+  const infoJSON = JSON.stringify(info)
+
+  await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-info.json`, infoJSON)
+
+  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)) {
+    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)
+  }
+
+  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/info.json`)) {
+    await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/info.json`, `${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)
+  }
+
+  await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-info.json`, `${RNFS.DocumentDirectoryPath}/ops/${uuid}/info.json`)
+
+  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)) {
+    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)
   }
 }
