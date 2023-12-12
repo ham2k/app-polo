@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { View } from 'react-native'
 import { TextInput } from 'react-native-paper'
@@ -7,7 +7,6 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import LoggerChip from '../components/LoggerChip'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectOperationInfo, setOperationInfo } from '../../../store/operations'
-import DropDown from 'react-native-paper-dropdown'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -52,25 +51,25 @@ export default function OpSettingsTab ({ navigation, route }) {
 
         <View style={[{ flexDirection: 'row' }]}>
           <TextInput
-              style={[styles.paperInput, { flex: 3, width: 100 }]}
-              textStyle={styles.nativeInput}
-              label={'Our Callsign'}
-              mode={'flat'}
-              value={operation.call}
-              onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, call: text }))}
-            />
+            style={[styles.paperInput, { flex: 3, width: 100 }]}
+            textStyle={styles.nativeInput}
+            label={'Our Callsign'}
+            mode={'flat'}
+            value={operation.call}
+            onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, call: text }))}
+          />
         </View>
 
         <View style={[{ flexDirection: 'row' }]}>
           <TextInput
-              style={[styles.paperInput, { flex: 3, width: 100 }]}
-              textStyle={styles.nativeInput}
-              label={'Description'}
-              placeholder={'Operation Description'}
-              mode={'flat'}
-              value={operation.description}
-              onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, description: text }))}
-            />
+            style={[styles.paperInput, { flex: 3, width: 100 }]}
+            textStyle={styles.nativeInput}
+            label={'Description'}
+            placeholder={'Operation Description'}
+            mode={'flat'}
+            value={operation.description}
+            onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, description: text }))}
+          />
         </View>
 
       </View>
@@ -84,13 +83,13 @@ export default function OpSettingsTab ({ navigation, route }) {
         {showPOTA && (
           <View style={[{ flex: 0, flexDirection: 'row' }]}>
             <TextInput
-                style={[styles.paperInput, { flex: 3, width: 100 }]}
-                textStyle={styles.nativeInput}
-                label={'POTA References'}
-                mode={'flat'}
-                value={operation.pota}
-                onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, pota: text }))}
-              />
+              style={[styles.paperInput, { flex: 3, width: 100 }]}
+              textStyle={styles.nativeInput}
+              label={'POTA References'}
+              mode={'flat'}
+              value={operation.pota}
+              onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, pota: text }))}
+            />
           </View>
         )}
       </View>
@@ -104,13 +103,13 @@ export default function OpSettingsTab ({ navigation, route }) {
         {(showLocation) && (
           <View style={[{ flex: 0, flexDirection: 'row' }]}>
             <TextInput
-                style={[styles.paperInput, { flex: 3, width: 100 }]}
-                textStyle={styles.nativeInput}
-                label={'Grid'}
-                mode={'flat'}
-                value={operation.grid}
-                onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, grid: text }))}
-              />
+              style={[styles.paperInput, { flex: 3, width: 100 }]}
+              textStyle={styles.nativeInput}
+              label={'Grid'}
+              mode={'flat'}
+              value={operation.grid}
+              onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, grid: text }))}
+            />
           </View>
         )}
       </View>

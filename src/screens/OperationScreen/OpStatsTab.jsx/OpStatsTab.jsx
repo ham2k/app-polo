@@ -1,11 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React from 'react'
 
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectOperationInfo } from '../../../store/operations'
 
 export default function OpStatsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -24,9 +22,6 @@ export default function OpStatsTab ({ navigation, route }) {
       }
     }
   })
-
-  const dispatch = useDispatch()
-  const operation = useSelector(selectOperationInfo(route.params.operation.uuid))
 
   return (
     <View style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column' }, styles.panel]}>

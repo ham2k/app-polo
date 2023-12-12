@@ -1,7 +1,6 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 
 import { qsoKey } from '@ham2k/lib-qson-tools'
-import { saveOperationInfo, saveOperationQSOs } from './actions/operationsFS'
 
 const INITIAL_STATE = {
   status: 'ready',

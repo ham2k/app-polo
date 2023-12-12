@@ -1,34 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Text, View } from 'react-native'
 import { IconButton } from 'react-native-paper'
-
-import { fmtTimeZulu } from '../../../../tools/timeFormats'
-
-import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-import LoggerInput from '../../components/LoggerInput'
 import LoggerChip from '../../components/LoggerChip'
 
+import LoggerInput from '../../components/LoggerInput'
+import { fmtTimeZulu } from '../../../../tools/timeFormats'
+import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
+
 function describeRadio (operation) {
-  return `${operation.freq ?? '000'} MHz`// • ${operation.mode ?? 'SSB'} • ${operation.power ?? '?'}W`
-}
-
-function copyQSOFields (qso, dest = {}) {
-  dest.their = dest.their ?? {}
-  dest.our = dest.our ?? {}
-
-  dest.their.call = qso?.their?.call ?? dest.their.call
-  dest.their.sent = qso?.their?.sent ?? dest.their.sent
-  dest.our.call = qso?.our?.call ?? dest.our.call
-  dest.our.sent = qso?.our?.sent ?? dest.our.sent
-  dest.startOnMillis = qso?.startOnMillis ?? dest.startOnMillis
-
-  dest.freq = qso?.freq ?? dest.freq
-  dest.band = qso?.band ?? dest.band
-  dest.mode = qso?.mode ?? dest.mode
-
-  dest.notes = qso?.notes ?? dest.notes
-
-  return dest
+  return `${operation.freq ?? '000'} MHz • ${operation.mode ?? 'SSB'} • ${operation.power ?? '?'}W`
 }
 
 function prepareStyles (themeStyles, themeColor) {
@@ -52,7 +32,6 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
 
-  const [mode, setMode] = useState()
   const [theirCall, setTheirCall] = useState()
   const [theirSent, setTheirSent] = useState()
   const [ourSent, setOurSent] = useState()
@@ -61,11 +40,10 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
   const [timeStr, setTimeStr] = useState()
   const [notes, setNotes] = useState()
 
-  const [info, setInfo] = useState('🇺🇸 USA • John J Lavelle, Jr • Wurstboro, NY')
+  const [info] = useState('🇺🇸 USA • John J Lavelle, Jr • Wurstboro, NY')
 
   useEffect(() => {
-    const mode = qso?.mode ?? 'SSB' // eslint-disable-line no-shadow
-    setMode(mode)
+    const mode = qso?.mode ?? 'SSB'
     setTheirCall(qso?.their?.call ?? '')
     setTheirSent(qso?.their?.sent ?? (mode === 'CW' ? '599' : '59'))
     setOurSent(qso?.our?.sent ?? (mode === 'CW' ? '599' : '59'))
@@ -133,24 +111,15 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
       <View style={{ width: '100%', flexDirection: 'row', minHeight: 20 }}>
         <View style={{ flex: 1, flexDirection: 'column' }}>
           <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace, flexWrap: 'wrap', gap: styles.halfSpace }}>
-            <LoggerChip icon="clock-outline" themeColor={themeColor}><Text style={styles.text.numbers}>{timeStr}</Text> • 145.000 MHz</LoggerChip>
-            <LoggerChip icon="pine-tree" themeColor={themeColor}>P2P</LoggerChip>
+            <LoggerChip icon="clock-outline" themeColor={themeColor}><Text style={styles.text.numbers}>{timeStr}</Text></LoggerChip>
+            <LoggerChip icon="radio" themeColor={themeColor}>{describeRadio(operation)}</LoggerChip>
+            {operation.pota && <LoggerChip icon="pine-tree" themeColor={themeColor}>P2P</LoggerChip>}
           </View>
           <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
             <Text>{info}</Text>
           </View>
         </View>
 
-        <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace }}>
-          <IconButton
-            icon="upload"
-            size={styles.oneSpace * 4}
-            mode="contained"
-            containerColor={styles.theme.colors[`${themeColor}ContainerVariant`]}
-            iconColor={styles.theme.colors[`on${upcasedThemeColor}`]}
-            onPress={handleSubmit}
-          />
-        </View>
       </View>
       {/* <View style={{ paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, flexDirection: 'row', gap: styles.oneSpace }}>
           <LoggerInput
@@ -172,51 +141,64 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
               label="Power (Watts)"
           />
         </View> */}
-      <View style={{ paddingHorizontal: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, flexDirection: 'row', gap: styles.oneSpace }}>
-        <LoggerInput
-          innerRef={callFieldRef}
-          themeColor={themeColor}
-          style={[styles.input, { flex: 5 }]}
-          value={theirCall}
-          label="Their Call"
-          placeholder=""
-          uppercase={true}
-          onChange={handleFieldChange}
-          onSubmitEditing={handleSubmit}
-          textStyle={styles.text.callsign}
-          fieldId={'theirCall'}
-        />
-        <LoggerInput
-          themeColor={themeColor}
-          style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
-          value={ourSent}
-          label="Sent"
-          placeholder="RST"
-          onChange={handleFieldChange}
-          onSubmitEditing={handleSubmit}
-          fieldId={'ourSent'}
+      <View style={{ flexDirection: 'row' }}>
+        <View style={{ flex: 1, paddingHorizontal: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, flexDirection: 'row', gap: styles.oneSpace }}>
+          <LoggerInput
+            innerRef={callFieldRef}
+            themeColor={themeColor}
+            style={[styles.input, { flex: 5 }]}
+            value={theirCall}
+            label="Their Call"
+            placeholder=""
+            uppercase={true}
+            onChange={handleFieldChange}
+            onSubmitEditing={handleSubmit}
+            textStyle={styles.text.callsign}
+            fieldId={'theirCall'}
           />
-        <LoggerInput
-          themeColor={themeColor}
-          style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
-          value={theirSent}
-          label="Rcvd"
-          placeholder="RST"
-          onChange={handleFieldChange}
-          onSubmitEditing={handleSubmit}
-          fieldId={'theirSent'}
-        />
-        <LoggerInput
-          themeColor={themeColor}
-          style={[styles.input, { flex: 3 }]}
-          value={notes}
-          label="Notes"
-          placeholder=""
-          onChange={handleFieldChange}
-          onSubmitEditing={handleSubmit}
-          fieldId={'notes'}
-        />
+          <LoggerInput
+            themeColor={themeColor}
+            style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
+            value={ourSent}
+            label="Sent"
+            placeholder="RST"
+            onChange={handleFieldChange}
+            onSubmitEditing={handleSubmit}
+            fieldId={'ourSent'}
+          />
+          <LoggerInput
+            themeColor={themeColor}
+            style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
+            value={theirSent}
+            label="Rcvd"
+            placeholder="RST"
+            onChange={handleFieldChange}
+            onSubmitEditing={handleSubmit}
+            fieldId={'theirSent'}
+          />
+          <LoggerInput
+            themeColor={themeColor}
+            style={[styles.input, { flex: 3 }]}
+            value={notes}
+            label="Notes"
+            placeholder=""
+            onChange={handleFieldChange}
+            onSubmitEditing={handleSubmit}
+            fieldId={'notes'}
+          />
+        </View>
+        <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace }}>
+          <IconButton
+            icon="upload"
+            size={styles.oneSpace * 4}
+            mode="contained"
+            containerColor={styles.theme.colors[`${themeColor}ContainerVariant`]}
+            iconColor={styles.theme.colors[`on${upcasedThemeColor}`]}
+            onPress={handleSubmit}
+          />
+        </View>
       </View>
+
     </View>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { Chip } from 'react-native-paper'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'

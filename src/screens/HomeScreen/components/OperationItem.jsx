@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { View } from 'react-native'
-import { List, Text, TouchableRipple } from 'react-native-paper'
+import { Text, TouchableRipple } from 'react-native-paper'
 
 export default function OperationItem
 ({ operation, onPress, styles }) {

@@ -1,4 +1,3 @@
-import Color from 'color'
 import { Platform, StyleSheet } from 'react-native'
 
 const DEFAULT_THEME = {
@@ -10,9 +9,7 @@ const DEFAULT_THEME = {
 
 export const prepareGlobalStyles = ({ theme, colorScheme }) => {
   const isIOS = Platform.OS === 'ios'
-  const isAndroid = Platform.OS === 'android'
   const isDarkMode = colorScheme === 'dark'
-  const isLightMode = colorScheme === 'light'
 
   theme = theme ?? DEFAULT_THEME
 

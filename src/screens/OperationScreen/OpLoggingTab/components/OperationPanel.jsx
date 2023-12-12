@@ -1,13 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useState } from 'react'
 
 import { View } from 'react-native'
-import { TextInput } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import LoggerChip from '../../components/LoggerChip'
-import { useDispatch } from 'react-redux'
-import { setOperationInfo } from '../../../../store/operations'
-import DropDown from 'react-native-paper-dropdown'
 import OperationSettings from '../OperationSettings'
 
 function describeRadio (operation) {
@@ -38,8 +34,6 @@ export default function OperationPanel ({ operation }) {
     }
   }))
 
-  const dispatch = useDispatch()
-
   const [isRadioOpen, setIsRadioOpen] = useState(false)
   const [isPOTAOpen, setIsPOTAOpen] = useState(false)
   const [isLocationOpen, setIsLocationOpen] = useState(false)
@@ -49,7 +43,7 @@ export default function OperationPanel ({ operation }) {
       {isRadioOpen && (
         <View style={{ flex: 0, flexDirection: 'column' }}>
           <OperationSettings operation={operation} />
-          </View>
+        </View>
       )}
       <View style={[{ flexDirection: 'row', flexWrap: 'wrap' }, styles.container]}>
         {!isRadioOpen && <LoggerChip icon="radio" themeColor="secondary" onChange={(val) => setIsRadioOpen(val)}>{describeRadio(operation)}</LoggerChip>}

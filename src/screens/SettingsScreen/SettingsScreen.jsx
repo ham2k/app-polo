@@ -24,7 +24,8 @@ export default function SettingsScreen ({ navigation }) {
     <ScreenContainer>
       <View style={styles.sectionContainer}>
         <Text
-          style={styles.title}>
+          style={styles.title}
+        >
           Settings
         </Text>
         <Text style={styles.paragraph}>
