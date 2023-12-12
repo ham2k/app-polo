@@ -6,27 +6,38 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
-export default function HeaderBar ({ route, options, navigation, back, close }) {
+export default function HeaderBar ({ route, options, navigation, back, close, rightAction, onRightActionPress }) {
   const styles = useThemedStyles()
 
   const title = options.title
   const subTitle = options.subTitle
+
+  rightAction = rightAction ?? options.rightAction
+  onRightActionPress = onRightActionPress ?? options.onRightActionPress
 
   if (options.closeInsteadOfBack) {
     close = back
   }
 
   const contentStyleTweaks = useMemo(() => {
-    if (back || close) {
-      return {
-        marginRight: 48
+    if ((back || close)) {
+      if (rightAction) {
+        return {}
+      } else {
+        return {
+          marginRight: 48
+        }
       }
     } else {
-      return {
-        marginLeft: 48
+      if (rightAction) {
+        return {
+          marginLeft: 48
+        }
+      } else {
+        return {}
       }
     }
-  }, [back, close])
+  }, [back, close, rightAction])
 
   return (
     <Appbar.Header
@@ -43,7 +54,7 @@ export default function HeaderBar ({ route, options, navigation, back, close }) 
       {back ? <Appbar.Action isLeading onPress={navigation.goBack} icon={options.closeInsteadOfBack ? 'close' : 'arrow-left'} /> : null}
 
       <Appbar.Content
-        style={[contentStyleTweaks]}
+        style={[contentStyleTweaks, { flex: 1 }]}
         title={
           title && subTitle ? (
             <View flexDirection="row" justifyContent="center">
@@ -57,6 +68,9 @@ export default function HeaderBar ({ route, options, navigation, back, close }) 
           )
         }
       />
+
+      {rightAction ? <Appbar.Action isLeading onPress={onRightActionPress} icon={rightAction} /> : null}
+
     </Appbar.Header>
   )
 }

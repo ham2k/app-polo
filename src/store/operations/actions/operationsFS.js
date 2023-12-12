@@ -6,7 +6,10 @@ import debounce from 'debounce'
 
 export const loadOperationsList = () => async (dispatch) => {
   try {
+    await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/ops`)
+
     const readDirResult = await RNFS.readDir(`${RNFS.DocumentDirectoryPath}/ops`)
+
     const operations = {}
     for (const dir of readDirResult) {
       if (dir.isDirectory()) {

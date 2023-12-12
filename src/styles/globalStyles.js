@@ -1,3 +1,4 @@
+import Color from 'color'
 import { Platform, StyleSheet } from 'react-native'
 
 const DEFAULT_THEME = {
@@ -22,12 +23,15 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
 
   const normalFontSize = 18
   const largeFontSize = 24
+  const rem = 16 // "Width of an `m` in the base (root) font size"
 
   const styles = StyleSheet.create({
     theme,
     colors: theme.colors,
     colorScheme,
     isDarkMode,
+
+    rem,
 
     oneSpace,
     twoSpaces,
@@ -55,7 +59,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     screenTitleLeft: {
       fontSize: 20,
       color: theme.colors.onPrimary,
-      fontWeight: isIOS ? '300' : '100',
+      fontWeight: isIOS ? '400' : '100',
       marginRight: oneSpace
     },
     screenTitleRight: {
@@ -90,7 +94,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       borderBottomColor: theme.colors.outline
     },
     compactRow: {
-      minHeight: oneSpace * 5,
+      minHeight: rem * 2,
       paddingHorizontal: oneSpace,
       paddingVertical: oneSpace,
       borderBottomWidth: 1,
@@ -104,6 +108,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       callsign: {
         fontVariant: ['tabular-nums'],
         fontFamily: isIOS ? 'Menlo' : 'monospace'
+      },
+      lighter: {
+        color: theme.colors.onBackgroundLight
       }
     }
   })

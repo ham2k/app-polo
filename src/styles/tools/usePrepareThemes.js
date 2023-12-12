@@ -16,14 +16,17 @@ export function usePrepareThemes () {
 
     if (colorScheme === 'dark') {
       ['primary', 'secondary', 'tertiary'].forEach((color) => {
-        loadedColors[`${color}Light`] = Color(loadedColors[color]).darken(0.7).desaturate(0.4).hex()
-        loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).lighten(0.2).desaturate(0.3).hex()
+        loadedColors[`${color}Light`] = Color(loadedColors[color]).darken(0.5).desaturate(0.4).hex()
+        loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).lighten(1.2).desaturate(0.3).hex()
       })
+      loadedColors.onBackgroundLight = Color(loadedColors.onBackground).darken(0.3).hex()
     } else {
       ['primary', 'secondary', 'tertiary'].forEach((color) => {
-        loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(0.95).desaturate(0.7).hex()
-        loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).darken(0.2).desaturate(0.3).hex()
+        // loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(0.95).desaturate(0.7).hex()
+        loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(1.3).desaturate(0.3).hex()
+        loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).darken(0.05).desaturate(0.3).hex()
       })
+      loadedColors.onBackgroundLight = Color(loadedColors.onBackground).lighten(3).hex()
     }
 
     return loadedColors

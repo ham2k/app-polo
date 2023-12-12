@@ -9,12 +9,12 @@ const LEFT_TRIM_REGEX = /^\s+/
 export default function LoggerInput ({ style, textStyle, themeColor, label, placeholder, value, onChangeText, onChange, onSubmitEditing, innerRef, fieldId, uppercase }) {
   const themeStyles = useThemedStyles()
 
-  const [localValue, setLocalValue] = useState(value)
+  const [localValue, setLocalValue] = useState()
 
   themeColor = themeColor ?? 'primary'
 
   useEffect(() => {
-    if (!value) setLocalValue(' ')
+    setLocalValue(value)
   }, [value])
 
   const handleChange = useCallback((event) => {
@@ -32,13 +32,13 @@ export default function LoggerInput ({ style, textStyle, themeColor, label, plac
     onChange && onChange({ ...event, fieldId })
   }, [setLocalValue, onChangeText, onChange, fieldId, uppercase])
 
-  const handleFocus = useCallback(() => {
-    if (!value) { setLocalValue('') }
-  }, [setLocalValue, value])
+  // const handleFocus = useCallback(() => {
+  //   if (value === ' ') { setLocalValue('') }
+  // }, [setLocalValue, value])
 
-  const handleBlur = useCallback(() => {
-    if (!value) { setLocalValue(' ') }
-  }, [setLocalValue, value])
+  // const handleBlur = useCallback(() => {
+  //   if (!value) { setLocalValue('') }
+  // }, [setLocalValue, value])
 
   const colorStyles = useMemo(() => {
     return {
@@ -87,8 +87,8 @@ export default function LoggerInput ({ style, textStyle, themeColor, label, plac
       label={label}
       placeholder={placeholder}
       onChange={handleChange}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
+      // onFocus={handleFocus}
+      // onBlur={handleBlur}
       render={renderInput}
     />
   )

@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-
-import {
-  Text,
-  View
-} from 'react-native'
+import { Text, View } from 'react-native'
 import { IconButton } from 'react-native-paper'
 
-import { fmtShortTimeZulu } from '../../../../tools/timeFormats'
+import { fmtTimeZulu } from '../../../../tools/timeFormats'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-import LoggerInput from '../LoggerInput'
-import LoggerChip from '../LoggerChip'
+import LoggerInput from '../../components/LoggerInput'
+import LoggerChip from '../../components/LoggerChip'
+
+function describeRadio (operation) {
+  return `${operation.freq ?? '000'} MHz`// • ${operation.mode ?? 'SSB'} • ${operation.power ?? '?'}W`
+}
 
 function copyQSOFields (qso, dest = {}) {
   dest.their = dest.their ?? {}
@@ -47,7 +47,7 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-export default function LoggingPanel ({ qso, onLog, themeColor, style }) {
+export default function LoggingPanel ({ qso, operation, onLog, themeColor, style }) {
   themeColor = themeColor || 'tertiary'
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
@@ -72,11 +72,11 @@ export default function LoggingPanel ({ qso, onLog, themeColor, style }) {
     if (qso.startOnMillis) {
       setPausedTime(true)
       setStartOnMillis(qso.startOnMillis)
-      setTimeStr(fmtShortTimeZulu(qso.startOnMillis))
+      setTimeStr(fmtTimeZulu(qso.startOnMillis))
     } else {
       setPausedTime(false)
       setStartOnMillis(null)
-      setTimeStr(fmtShortTimeZulu(new Date()))
+      setTimeStr(fmtTimeZulu(new Date()))
     }
     setNotes(qso?.notes ?? '')
   }, [qso])
@@ -84,7 +84,7 @@ export default function LoggingPanel ({ qso, onLog, themeColor, style }) {
   useEffect(() => {
     if (!pausedTime) {
       const interval = setInterval(() => {
-        setTimeStr(fmtShortTimeZulu(new Date()))
+        setTimeStr(fmtTimeZulu(new Date()))
         // setTimeStr(fmtDateTime(new Date(), 'ContestTimestampZulu', { weekday: undefined }))
       }, 1000)
       return () => clearInterval(interval)
@@ -118,7 +118,6 @@ export default function LoggingPanel ({ qso, onLog, themeColor, style }) {
   }, [setTheirCall, setTheirSent, setOurSent, setNotes, setStartOnMillis, startOnMillis])
 
   const handleSubmit = useCallback(() => {
-    console.log('SUBMIT')
     const finalQso = {
       our: { sent: ourSent },
       their: { call: theirCall, sent: theirSent },
@@ -130,12 +129,11 @@ export default function LoggingPanel ({ qso, onLog, themeColor, style }) {
   }, [notes, ourSent, theirCall, theirSent, startOnMillis, onLog])
 
   return (
-    <View style={[styles.root, style, { flexDirection: 'column' }]}>
-      <View style={{ flex: 0, width: '100%', flexDirection: 'row' }}>
-
-        <View style={{ flex: 0, flexDirection: 'column' }}>
-          <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace, flexWrap: 'wrap', gap: styles.halfSpace }}>
-            <LoggerChip icon="clock-outline" themeColor={themeColor}><Text style={styles.text.numbers}>{timeStr}</Text></LoggerChip>
+    <View style={[styles.root, style, { flexDirection: 'column', justifyContent: 'flex-end', width: '100%', minHeight: 100 }]}>
+      <View style={{ width: '100%', flexDirection: 'row', minHeight: 20 }}>
+        <View style={{ flex: 1, flexDirection: 'column' }}>
+          <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace, flexWrap: 'wrap', gap: styles.halfSpace }}>
+            <LoggerChip icon="clock-outline" themeColor={themeColor}><Text style={styles.text.numbers}>{timeStr}</Text> • 145.000 MHz</LoggerChip>
             <LoggerChip icon="pine-tree" themeColor={themeColor}>P2P</LoggerChip>
           </View>
           <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
@@ -143,7 +141,7 @@ export default function LoggingPanel ({ qso, onLog, themeColor, style }) {
           </View>
         </View>
 
-        <View style={{ flex: 0, paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace }}>
+        <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace }}>
           <IconButton
             icon="upload"
             size={styles.oneSpace * 4}

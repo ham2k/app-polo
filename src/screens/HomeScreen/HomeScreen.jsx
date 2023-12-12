@@ -22,8 +22,8 @@ export default function HomeScreen ({ navigation }) {
   }, [dispatch])
 
   const handleNewOperation = useCallback(() => {
-    dispatch(addNewOperation({ call: 'KI2D', name: `Operation ${operations.length + 1}` }))
-  }, [dispatch, operations])
+    dispatch(addNewOperation({ call: '', name: 'New Operation' }))
+  }, [dispatch])
 
   const navigateToOperation = useCallback((operation) => {
     navigation.navigate('Operation', { uuid: operation.uuid, operation })

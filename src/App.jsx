@@ -11,6 +11,8 @@ import HomeScreen from './screens/HomeScreen/HomeScreen'
 import OperationScreen from './screens/OperationScreen'
 import SettingsScreen from './screens/SettingsScreen'
 
+import 'react-native-gesture-handler' // This must be included in the top component file
+
 import { persistor, store } from './store'
 import HeaderBar from './screens/components/HeaderBar'
 
@@ -29,10 +31,13 @@ export default function App () {
       <PersistGate loading={null} persistor={persistor}>
         <PaperProvider theme={paperTheme} settings={paperSettings}>
           <NavigationContainer theme={navigationTheme}>
-            <Stack.Navigator screenOptions={{
-              header: HeaderBar,
-              animation: 'slide_from_right'
-            }}>
+            <Stack.Navigator
+              id="RootNavigator"
+              screenOptions={{
+                header: HeaderBar,
+                animation: 'slide_from_right'
+              }}
+            >
               <Stack.Screen name="Home" options={{ title: 'Ham2K', subTitle: 'Portable Logger' }} component={HomeScreen} />
               <Stack.Screen name="Operation" options={{ title: 'Operation', headerBackTitle: 'Home', closeInsteadOfBack: true }} component={OperationScreen} />
               <Stack.Screen name="Settings" options={{ title: 'Settings', headerBackTitle: 'Home' }} component={SettingsScreen} />

@@ -3,16 +3,17 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Chip } from 'react-native-paper'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
-export default function LoggerChip ({ children, icon, style, themeColor }) {
+export default function LoggerChip ({ children, icon, style, selected: initialSelected, themeColor, onChange }) {
   const themeStyles = useThemedStyles()
 
-  const [selected, setSelected] = useState(false)
+  const [selected, setSelected] = useState(initialSelected)
 
   themeColor = themeColor ?? 'primary'
 
   const handlePress = useCallback(() => {
     setSelected(!selected)
-  }, [setSelected, selected])
+    onChange && onChange(!selected)
+  }, [setSelected, selected, onChange])
 
   const { colorizedTheme, textStyle, mode } = useMemo(() => {
     const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)

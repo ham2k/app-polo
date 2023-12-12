@@ -461,7 +461,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ham2k.polo";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/polo.app/polo";
 			};
@@ -485,7 +485,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ham2k.polo";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/polo.app/polo";
 			};
