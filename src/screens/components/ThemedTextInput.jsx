@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { TextInput } from 'react-native-paper'
 import { TextInput as NativeTextInput, StyleSheet } from 'react-native'
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 const LEFT_TRIM_REGEX = /^\s+/
 
-export default function LoggerInput ({ style, textStyle, themeColor, label, placeholder, value, onChangeText, onChange, onSubmitEditing, innerRef, fieldId, uppercase }) {
+export default function ThemedTextInput ({ style, textStyle, themeColor, label, placeholder, value, onChangeText, onChange, onSubmitEditing, innerRef, fieldId, uppercase, error }) {
   const themeStyles = useThemedStyles()
 
   const [localValue, setLocalValue] = useState()
@@ -90,6 +90,7 @@ export default function LoggerInput ({ style, textStyle, themeColor, label, plac
       // onFocus={handleFocus}
       // onBlur={handleBlur}
       render={renderInput}
+      error={error}
     />
   )
 }

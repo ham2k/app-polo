@@ -1,11 +1,24 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Text, View } from 'react-native'
 import { IconButton } from 'react-native-paper'
+import { analyzeFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
+import { DXCC_BY_CODE } from '@ham2k/lib-dxcc-data'
+
 import LoggerChip from '../../components/LoggerChip'
 
-import LoggerInput from '../../components/LoggerInput'
 import { fmtTimeZulu } from '../../../../tools/timeFormats'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
+
+import ThemedTextInput from '../../../components/ThemedTextInput'
+import CallsignInput from '../../../components/CallsignInput'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+
+// Not actually a react hook, just named like one
+// eslint-disable-next-line react-hooks/rules-of-hooks
+useBuiltinCountryFile()
+
+const DXCC_BY_PREFIX = {}
+Object.values(DXCC_BY_CODE).forEach(e => { DXCC_BY_PREFIX[e.entityPrefix] = e })
 
 function describeRadio (operation) {
   return `${operation.freq ?? '000'} MHz • ${operation.mode ?? 'SSB'} • ${operation.power ?? '?'}W`
@@ -40,7 +53,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
   const [timeStr, setTimeStr] = useState()
   const [notes, setNotes] = useState()
 
-  const [info] = useState('🇺🇸 USA • John J Lavelle, Jr • Wurstboro, NY')
+  const [info, setInfo] = useState('🇺🇸 USA • John J Lavelle, Jr • Wurstboro, NY')
 
   useEffect(() => {
     const mode = qso?.mode ?? 'SSB'
@@ -76,10 +89,45 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
     }, 100)
   }, [qso, callFieldRef])
 
+  const handleSubmit = useCallback(() => {
+    const finalQso = {
+      our: { sent: ourSent },
+      their: { call: theirCall, sent: theirSent },
+      startOnMillis
+    }
+    if (notes) finalQso.notes = notes
+
+    onLog(finalQso)
+  }, [notes, ourSent, theirCall, theirSent, startOnMillis, onLog])
+
+  const updateCallInfo = useCallback(call => {
+    const callInfo = parseCallsign(call)
+    let entityInfo
+    if (callInfo?.baseCall) {
+      entityInfo = analyzeFromCountryFile(callInfo)
+    }
+
+    if (!entityInfo?.entityPrefix && call) {
+      entityInfo = analyzeFromCountryFile({ prefix: call })
+    }
+
+    if (entityInfo?.entityPrefix) {
+      const entity = DXCC_BY_PREFIX[entityInfo.entityPrefix]
+      if (entity) {
+        setInfo(`${entity.flag} ${entity.name}`)
+      } else {
+        setInfo(' ')
+      }
+    } else {
+      setInfo(' ')
+    }
+  }, [setInfo])
+
   const handleFieldChange = useCallback((event) => {
     const { fieldId, nativeEvent: { text } } = event
     if (fieldId === 'theirCall') {
       setTheirCall(text)
+      updateCallInfo(text)
 
       if (text) {
         if (!startOnMillis) setStartOnMillis(Date.now())
@@ -94,17 +142,6 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
       setNotes(text)
     }
   }, [setTheirCall, setTheirSent, setOurSent, setNotes, setStartOnMillis, startOnMillis])
-
-  const handleSubmit = useCallback(() => {
-    const finalQso = {
-      our: { sent: ourSent },
-      their: { call: theirCall, sent: theirSent },
-      startOnMillis
-    }
-    if (notes) finalQso.notes = notes
-
-    onLog(finalQso)
-  }, [notes, ourSent, theirCall, theirSent, startOnMillis, onLog])
 
   return (
     <View style={[styles.root, style, { flexDirection: 'column', justifyContent: 'flex-end', width: '100%', minHeight: 100 }]}>
@@ -143,7 +180,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
         </View> */}
       <View style={{ flexDirection: 'row' }}>
         <View style={{ flex: 1, paddingHorizontal: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, flexDirection: 'row', gap: styles.oneSpace }}>
-          <LoggerInput
+          <CallsignInput
             innerRef={callFieldRef}
             themeColor={themeColor}
             style={[styles.input, { flex: 5 }]}
@@ -156,7 +193,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
             textStyle={styles.text.callsign}
             fieldId={'theirCall'}
           />
-          <LoggerInput
+          <ThemedTextInput
             themeColor={themeColor}
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
             value={ourSent}
@@ -166,7 +203,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
             onSubmitEditing={handleSubmit}
             fieldId={'ourSent'}
           />
-          <LoggerInput
+          <ThemedTextInput
             themeColor={themeColor}
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
             value={theirSent}
@@ -176,7 +213,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
             onSubmitEditing={handleSubmit}
             fieldId={'theirSent'}
           />
-          <LoggerInput
+          <ThemedTextInput
             themeColor={themeColor}
             style={[styles.input, { flex: 3 }]}
             value={notes}
