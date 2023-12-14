@@ -5,13 +5,16 @@ import { TextInput as NativeTextInput, StyleSheet } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 const LEFT_TRIM_REGEX = /^\s+/
+const SPACES_REGEX = /\s/g
+const NUMBER_WITH_SIGNS_REGEX = /[^0-9+-]/g
+const SIGN_AFTER_A_DIGIT_REGEX = /(\d)[+-]/g
 
 export default function ThemedTextInput ({
-  style, textStyle, themeColor, label, placeholder, value,
+  style, textStyle, themeColor,
+  label, placeholder, value, error,
   onChangeText, onChange, onSubmitEditing, onKeyPress,
   innerRef, fieldId,
-  uppercase, trim, noSpaces,
-  error
+  uppercase, trim, noSpaces, numeric
 }) {
   const themeStyles = useThemedStyles()
 
@@ -35,7 +38,10 @@ export default function ThemedTextInput ({
       text = text.trim()
     }
     if (noSpaces) {
-      text = text.replace(/\s/g, '')
+      text = text.replace(SPACES_REGEX, '')
+    }
+    if (numeric) {
+      text = text.replace(NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
     }
 
     event.nativeEvent.text = text

@@ -52,10 +52,13 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
 
   const [info, setInfo] = useState(' ')
 
+  const [isValid, setIsValid] = useState(false)
+
   const callFieldRef = useRef()
   const sentFieldRef = useRef()
   const rcvdFieldRef = useRef()
 
+  // Initialize the form with the QSO data
   useEffect(() => {
     const mode = qso?.mode ?? 'SSB'
     setTheirCall(qso?.their?.call ?? '')
@@ -73,6 +76,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
     setNotes(qso?.notes ?? '')
   }, [qso])
 
+  // Update the time every second
   useEffect(() => {
     if (!pausedTime) {
       const interval = setInterval(() => {
@@ -83,32 +87,26 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
     }
   }, [pausedTime])
 
+  // Focus the callsign field when the panel is opened
   useEffect(() => {
     setTimeout(() => {
       callFieldRef?.current?.focus()
     }, 100)
   }, [qso, callFieldRef])
 
-  const handleSubmit = useCallback(() => {
-    const finalQso = {
-      our: { sent: ourSent },
-      their: { call: theirCall, sent: theirSent },
-      startOnMillis
-    }
-    if (notes) finalQso.notes = notes
-
-    onLog(finalQso)
-  }, [notes, ourSent, theirCall, theirSent, startOnMillis, onLog])
-
-  const updateCallInfo = useCallback(call => {
-    const callInfo = parseCallsign(call)
+  // Validate and analize the callsign
+  useEffect(() => {
+    const callInfo = parseCallsign(theirCall)
     let entityInfo
     if (callInfo?.baseCall) {
+      setIsValid(true)
       entityInfo = analyzeFromCountryFile(callInfo)
+    } else {
+      setIsValid(false)
     }
 
-    if (!entityInfo?.entityPrefix && call) {
-      entityInfo = analyzeFromCountryFile({ prefix: call })
+    if (!entityInfo?.entityPrefix && theirCall) {
+      entityInfo = analyzeFromCountryFile({ prefix: theirCall })
     }
 
     if (entityInfo?.entityPrefix) {
@@ -121,18 +119,20 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
     } else {
       setInfo(' ')
     }
-  }, [setInfo])
+  }, [theirCall, setInfo])
 
+  // Handle form fields and update QSO info
   const handleFieldChange = useCallback((event) => {
     const { fieldId, nativeEvent: { text } } = event
     if (fieldId === 'theirCall') {
       setTheirCall(text)
-      updateCallInfo(text)
 
-      if (text) {
-        if (!startOnMillis) setStartOnMillis(Date.now())
-      } else {
-        setStartOnMillis(null)
+      if (!pausedTime) {
+        if (text) {
+          if (!startOnMillis) setStartOnMillis(Date.now())
+        } else {
+          setStartOnMillis(null)
+        }
       }
     } else if (fieldId === 'theirSent') {
       setTheirSent(text)
@@ -141,12 +141,11 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
     } else if (fieldId === 'notes') {
       setNotes(text)
     }
-  }, [setTheirCall, setTheirSent, setOurSent, setNotes, setStartOnMillis, startOnMillis, updateCallInfo])
+  }, [setTheirCall, setTheirSent, setOurSent, setNotes, setStartOnMillis, startOnMillis, pausedTime])
 
+  // Switch between fields with the space key
   const spaceKeyHander = useCallback((event) => {
     const { nativeEvent: { key, target } } = event
-    console.log('Target', event.nativeEvent.target)
-    // const ref = event.target.ref.current
     if (key === ' ') {
       if (target === findNodeHandle(callFieldRef.current)) {
         sentFieldRef.current.focus()
@@ -157,6 +156,20 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
       }
     }
   }, [callFieldRef, sentFieldRef, rcvdFieldRef])
+
+  // Finally submit the QSO
+  const handleSubmit = useCallback(() => {
+    if (isValid) {
+      const finalQso = {
+        our: { sent: ourSent },
+        their: { call: theirCall, sent: theirSent },
+        startOnMillis
+      }
+      if (notes) finalQso.notes = notes
+
+      onLog(finalQso)
+    }
+  }, [notes, ourSent, theirCall, theirSent, startOnMillis, onLog, isValid])
 
   return (
     <View style={[styles.root, style, { flexDirection: 'column', justifyContent: 'flex-end', width: '100%', minHeight: 100 }]}>
@@ -173,26 +186,6 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
         </View>
 
       </View>
-      {/* <View style={{ paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, flexDirection: 'row', gap: styles.oneSpace }}>
-          <LoggerInput
-              themeColor={themeColor}
-              style={[styles.input, { flex: 1 }]}
-              value={'K-0001'}
-              label="Their POTA"
-          />
-          <LoggerInput
-              themeColor={themeColor}
-              style={[styles.input, { flex: 1 }]}
-              value={'7.325'}
-              label="Frequency"
-          />
-          <LoggerInput
-              themeColor={themeColor}
-              style={[styles.input, { flex: 1 }]}
-              value={'20'}
-              label="Power (Watts)"
-          />
-        </View> */}
       <View style={{ flexDirection: 'row' }}>
         <View style={{ flex: 1, paddingHorizontal: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, flexDirection: 'row', gap: styles.oneSpace }}>
           <CallsignInput
@@ -202,6 +195,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
             value={theirCall}
             label="Their Call"
             placeholder=""
+            error={!isValid}
             uppercase={true}
             noSpaces={true}
             onChange={handleFieldChange}
@@ -215,8 +209,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
             themeColor={themeColor}
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
             value={ourSent}
-            uppercase={true}
-            noSpaces={true}
+            numeric={true}
             label="Sent"
             placeholder="RST"
             onChange={handleFieldChange}
@@ -229,8 +222,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
             themeColor={themeColor}
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
             value={theirSent}
-            uppercase={true}
-            noSpaces={true}
+            numeric={true}
             label="Rcvd"
             placeholder="RST"
             onChange={handleFieldChange}
@@ -254,6 +246,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
             icon="upload"
             size={styles.oneSpace * 4}
             mode="contained"
+            disabled={!isValid}
             containerColor={styles.theme.colors[`${themeColor}ContainerVariant`]}
             iconColor={styles.theme.colors[`on${upcasedThemeColor}`]}
             onPress={handleSubmit}
