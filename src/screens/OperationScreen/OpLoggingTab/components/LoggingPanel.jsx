@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, findNodeHandle } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import { analyzeFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
-import { DXCC_BY_CODE } from '@ham2k/lib-dxcc-data'
+import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import LoggerChip from '../../components/LoggerChip'
 
@@ -16,9 +16,6 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 // Not actually a react hook, just named like one
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useBuiltinCountryFile()
-
-const DXCC_BY_PREFIX = {}
-Object.values(DXCC_BY_CODE).forEach(e => { DXCC_BY_PREFIX[e.entityPrefix] = e })
 
 function describeRadio (operation) {
   return `${operation.freq ?? '000'} MHz • ${operation.mode ?? 'SSB'} • ${operation.power ?? '?'}W`
@@ -53,7 +50,11 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
   const [timeStr, setTimeStr] = useState()
   const [notes, setNotes] = useState()
 
-  const [info, setInfo] = useState('🇺🇸 USA • John J Lavelle, Jr • Wurstboro, NY')
+  const [info, setInfo] = useState(' ')
+
+  const callFieldRef = useRef()
+  const sentFieldRef = useRef()
+  const rcvdFieldRef = useRef()
 
   useEffect(() => {
     const mode = qso?.mode ?? 'SSB'
@@ -82,7 +83,6 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
     }
   }, [pausedTime])
 
-  const callFieldRef = useRef()
   useEffect(() => {
     setTimeout(() => {
       callFieldRef?.current?.focus()
@@ -141,7 +141,22 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
     } else if (fieldId === 'notes') {
       setNotes(text)
     }
-  }, [setTheirCall, setTheirSent, setOurSent, setNotes, setStartOnMillis, startOnMillis])
+  }, [setTheirCall, setTheirSent, setOurSent, setNotes, setStartOnMillis, startOnMillis, updateCallInfo])
+
+  const spaceKeyHander = useCallback((event) => {
+    const { nativeEvent: { key, target } } = event
+    console.log('Target', event.nativeEvent.target)
+    // const ref = event.target.ref.current
+    if (key === ' ') {
+      if (target === findNodeHandle(callFieldRef.current)) {
+        sentFieldRef.current.focus()
+      } else if (target === findNodeHandle(sentFieldRef.current)) {
+        rcvdFieldRef.current.focus()
+      } else if (target === findNodeHandle(rcvdFieldRef.current)) {
+        callFieldRef.current.focus()
+      }
+    }
+  }, [callFieldRef, sentFieldRef, rcvdFieldRef])
 
   return (
     <View style={[styles.root, style, { flexDirection: 'column', justifyContent: 'flex-end', width: '100%', minHeight: 100 }]}>
@@ -188,30 +203,40 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
             label="Their Call"
             placeholder=""
             uppercase={true}
+            noSpaces={true}
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             textStyle={styles.text.callsign}
             fieldId={'theirCall'}
+            onKeyPress={spaceKeyHander}
           />
           <ThemedTextInput
+            innerRef={sentFieldRef}
             themeColor={themeColor}
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
             value={ourSent}
+            uppercase={true}
+            noSpaces={true}
             label="Sent"
             placeholder="RST"
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             fieldId={'ourSent'}
+            onKeyPress={spaceKeyHander}
           />
           <ThemedTextInput
+            innerRef={rcvdFieldRef}
             themeColor={themeColor}
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
             value={theirSent}
+            uppercase={true}
+            noSpaces={true}
             label="Rcvd"
             placeholder="RST"
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             fieldId={'theirSent'}
+            onKeyPress={spaceKeyHander}
           />
           <ThemedTextInput
             themeColor={themeColor}

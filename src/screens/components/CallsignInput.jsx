@@ -24,7 +24,6 @@ export default function CallsignInput (params) {
       setIsValid(false)
       onChangeCall && onChangeCall({})
     }
-    console.log(callInfo)
 
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId })

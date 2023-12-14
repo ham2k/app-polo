@@ -6,31 +6,44 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 const LEFT_TRIM_REGEX = /^\s+/
 
-export default function ThemedTextInput ({ style, textStyle, themeColor, label, placeholder, value, onChangeText, onChange, onSubmitEditing, innerRef, fieldId, uppercase, error }) {
+export default function ThemedTextInput ({
+  style, textStyle, themeColor, label, placeholder, value,
+  onChangeText, onChange, onSubmitEditing, onKeyPress,
+  innerRef, fieldId,
+  uppercase, trim, noSpaces,
+  error
+}) {
   const themeStyles = useThemedStyles()
 
-  const [localValue, setLocalValue] = useState()
+  // const [localValue, setLocalValue] = useState()
 
   themeColor = themeColor ?? 'primary'
 
-  useEffect(() => {
-    setLocalValue(value)
-  }, [value])
+  // useEffect(() => {
+  //   setLocalValue(value)
+  // }, [value])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
 
+    text = text.replace(LEFT_TRIM_REGEX, '')
+
     if (uppercase) {
       text = text.toUpperCase()
     }
-    text = text.replace(LEFT_TRIM_REGEX, '')
+    if (trim) {
+      text = text.trim()
+    }
+    if (noSpaces) {
+      text = text.replace(/\s/g, '')
+    }
 
     event.nativeEvent.text = text
-    setLocalValue(text)
+    // setLocalValue(text)
 
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId })
-  }, [setLocalValue, onChangeText, onChange, fieldId, uppercase])
+  }, [onChangeText, onChange, fieldId, uppercase])
 
   // const handleFocus = useCallback(() => {
   //   if (value === ' ') { setLocalValue('') }
@@ -69,6 +82,7 @@ export default function ThemedTextInput ({ style, textStyle, themeColor, label, 
         placeholderTextColor={themeStyles.theme.colors.outline}
         onSubmitEditing={onSubmitEditing}
         blurOnSubmit={false} // Prevent keyboard from hiding
+        onKeyPress={onKeyPress}
       />
     )
   }, [themeStyles, onSubmitEditing, innerRef, textStyle])
@@ -83,7 +97,7 @@ export default function ThemedTextInput ({ style, textStyle, themeColor, label, 
       mode={'flat'}
       dense={true}
       underlineStyle={extraStyles.underline}
-      value={localValue ?? ' '}
+      value={value ?? ' '}
       label={label}
       placeholder={placeholder}
       onChange={handleChange}
