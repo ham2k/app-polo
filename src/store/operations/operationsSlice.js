@@ -55,7 +55,7 @@ export const operationsSlice = createSlice({
       }
     },
     setOperationQSOs: (state, action) => {
-      action.payload.qsos.forEach((qso, index) => { qso._n = index + 1 })
+      action.payload.qsos.forEach((qso, index) => { qso._number = index + 1 })
 
       state.qsos[action.payload.uuid] = action.payload.qsos
     },
@@ -71,12 +71,12 @@ export const operationsSlice = createSlice({
       if (keys[qso.key]) {
         // Find old QSO and replace it with the new one
         const pos = qsos.findIndex(q => q.key === qso.key)
-        qso._n = qsos[pos]._n
+        qso._number = qsos[pos]._n
         qsos[pos] = qso
         keys[qso.key] = qso
       } else {
         // Add new QSO to the end of the array
-        qso._n = (qsos.length ?? 0) + 1
+        qso._number = (qsos.length ?? 0) + 1
         keys[qso.key] = qso
         qsos[qsos.length] = qso
       }
