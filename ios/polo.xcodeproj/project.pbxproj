@@ -30,7 +30,7 @@
 		00E356EE1AD99517003FC87E /* poloTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = poloTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* poloTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = poloTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* Ham2K PoLo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ham2K PoLo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Ham2K Portable Logger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ham2K Portable Logger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = polo/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = polo/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = polo/Images.xcassets; sourceTree = "<group>"; };
@@ -143,7 +143,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* Ham2K PoLo.app */,
+				13B07F961A680F5B00A75B9A /* Ham2K Portable Logger.app */,
 				00E356EE1AD99517003FC87E /* poloTests.xctest */,
 			);
 			name = Products;
@@ -203,7 +203,7 @@
 			);
 			name = polo;
 			productName = polo;
-			productReference = 13B07F961A680F5B00A75B9A /* Ham2K PoLo.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Ham2K Portable Logger.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -500,6 +500,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = polo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -511,7 +513,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
-				PRODUCT_NAME = "Ham2K PoLo";
+				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -526,6 +528,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = polo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -537,7 +541,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
-				PRODUCT_NAME = "Ham2K PoLo";
+				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
