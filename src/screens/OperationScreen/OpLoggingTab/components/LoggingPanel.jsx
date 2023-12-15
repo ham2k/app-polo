@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Text, View, findNodeHandle } from 'react-native'
-import { IconButton } from 'react-native-paper'
+import { ScrollView, Text, View, findNodeHandle } from 'react-native'
+import { IconButton, SegmentedButtons } from 'react-native-paper'
 import { analyzeFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
@@ -11,6 +11,7 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 
 import ThemedTextInput from '../../../components/ThemedTextInput'
 import CallsignInput from '../../../components/CallsignInput'
+import ThemedDropDown from '../../../components/ThemedDropDown'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
 // Not actually a react hook, just named like one
@@ -18,7 +19,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 useBuiltinCountryFile()
 
 function describeRadio (operation) {
-  return `${operation.freq ?? '000'} MHz • ${operation.mode ?? 'SSB'} • ${operation.power ?? '?'}W`
+  return `${operation.freq ?? '000'} MHz • ${operation.mode ?? 'SSB'}`
 }
 
 function prepareStyles (themeStyles, themeColor) {
@@ -37,7 +38,7 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-export default function LoggingPanel ({ qso, operation, onLog, themeColor, style }) {
+export default function LoggingPanel ({ qso, operation, onLog, onOperationChange, themeColor, style }) {
   themeColor = themeColor || 'tertiary'
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
@@ -54,6 +55,11 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
 
   const [isValid, setIsValid] = useState(false)
 
+  const [showTimeFields, setShowTimeFields] = useState(false)
+  const [showRadioFields, setShowRadioFields] = useState(false)
+  const [showPOTAFields, setShowPOTAFields] = useState(false)
+  const [showModeDropdown, setShowModeDropdown] = useState(false)
+
   const callFieldRef = useRef()
   const sentFieldRef = useRef()
   const rcvdFieldRef = useRef()
@@ -66,6 +72,7 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
     setOurSent(qso?.our?.sent ?? (mode === 'CW' ? '599' : '59'))
     if (qso.startOnMillis) {
       setPausedTime(true)
+      setShowTimeFields(true)
       setStartOnMillis(qso.startOnMillis)
       setTimeStr(fmtTimeZulu(qso.startOnMillis))
     } else {
@@ -140,8 +147,16 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
       setOurSent(text)
     } else if (fieldId === 'notes') {
       setNotes(text)
+    } else if (fieldId === 'freq') {
+      onOperationChange && onOperationChange({ freq: text })
+    } else if (fieldId === 'mode') {
+      onOperationChange && onOperationChange({ mode: text })
     }
-  }, [setTheirCall, setTheirSent, setOurSent, setNotes, setStartOnMillis, startOnMillis, pausedTime])
+  }, [
+    setTheirCall, setTheirSent, setOurSent,
+    setNotes, setStartOnMillis, onOperationChange,
+    startOnMillis, pausedTime
+  ])
 
   // Switch between fields with the space key
   const spaceKeyHander = useCallback((event) => {
@@ -175,11 +190,102 @@ export default function LoggingPanel ({ qso, operation, onLog, themeColor, style
     <View style={[styles.root, style, { flexDirection: 'column', justifyContent: 'flex-end', width: '100%', minHeight: 100 }]}>
       <View style={{ width: '100%', flexDirection: 'row', minHeight: 20 }}>
         <View style={{ flex: 1, flexDirection: 'column' }}>
-          <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace, flexWrap: 'wrap', gap: styles.halfSpace }}>
-            <LoggerChip icon="clock-outline" themeColor={themeColor}><Text style={styles.text.numbers}>{timeStr}</Text></LoggerChip>
-            <LoggerChip icon="radio" themeColor={themeColor}>{describeRadio(operation)}</LoggerChip>
-            {operation.pota && <LoggerChip icon="pine-tree" themeColor={themeColor}>P2P</LoggerChip>}
-          </View>
+          {(showTimeFields || showRadioFields || showPOTAFields) && (
+            <View style={{ flex: 0, flexDirection: 'row', gap: styles.oneSpace, flexWrap: 'wrap' }}>
+              {showTimeFields && (
+                <View style={{ flex: 0, flexDirection: 'column' }}>
+                  <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace }}>
+                    <LoggerChip icon="clock-outline" themeColor={themeColor} selected={showTimeFields} onChange={(val) => setShowTimeFields(val)}><Text style={styles.text.numbers}>Time</Text></LoggerChip>
+                  </View>
+                  <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
+                    <ThemedTextInput
+                      themeColor={themeColor}
+                      style={[styles.input]}
+                      value={'22:22:22'}
+                      label="Time"
+                      placeholder="00:00:00"
+                      onChange={handleFieldChange}
+                      onSubmitEditing={handleSubmit}
+                      fieldId={'time'}
+                    />
+                    <ThemedTextInput
+                      themeColor={themeColor}
+                      style={[styles.input]}
+                      value={'2023-12-01'}
+                      label="Date"
+                      placeholder="2023-12-01"
+                      onChange={handleFieldChange}
+                      onSubmitEditing={handleSubmit}
+                      fieldId={'date'}
+                    />
+                  </View>
+                </View>
+              )}
+
+              {showRadioFields && (
+                <View style={{ flex: 0, flexDirection: 'column' }}>
+                  <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace }}>
+                    <LoggerChip icon="radio" themeColor={themeColor} selected={showRadioFields} onChange={(val) => setShowRadioFields(val)}>Transceiver</LoggerChip>
+                  </View>
+                  <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
+                    <ThemedTextInput
+                      themeColor={themeColor}
+                      style={[styles.input]}
+                      value={operation.freq ?? ''}
+                      label="Frequency"
+                      placeholder="14.250"
+                      onChange={handleFieldChange}
+                      onSubmitEditing={handleSubmit}
+                      fieldId={'freq'}
+                    />
+                    <ThemedDropDown
+                      label="Mode"
+                      value={'CW'}
+                      onChange={handleFieldChange}
+                      fieldId={'mode'}
+                      style={styles.input}
+                      list={[
+                        { value: 'SSB', label: 'SSB' },
+                        { value: 'CW', label: 'CW' },
+                        { value: 'FM', label: 'FM' },
+                        { value: 'AM', label: 'AM' },
+                        { value: 'FT8', label: 'FT8' },
+                        { value: 'FT4', label: 'FT4' },
+                        { value: 'RTTY', label: 'RTTY' }
+                      ]}
+                    />
+                  </View>
+                </View>
+              )}
+              {showPOTAFields && (
+                <View style={{ flex: 0, flexDirection: 'column' }}>
+                  <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace }}>
+                    <LoggerChip icon="pine-tree" themeColor={themeColor} selected={showPOTAFields} onChange={(val) => setShowPOTAFields(val)}>{operation.pota ? 'Park-to-Park' : 'Their POTA'}</LoggerChip>
+                  </View>
+                  <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
+                    <ThemedTextInput
+                      themeColor={themeColor}
+                      style={[styles.input]}
+                      value={'K-1234'}
+                      label="POTA Reference"
+                      placeholder="K-1234"
+                      onChange={handleFieldChange}
+                      onSubmitEditing={handleSubmit}
+                      fieldId={'theirPOTA'}
+                    />
+                  </View>
+                </View>
+              )}
+            </View>
+          )}
+          <ScrollView horizontal={true} style={{ width: '100%' }}>
+            <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.oneSpace, gap: styles.halfSpace }}>
+              {!showTimeFields && (<LoggerChip icon="clock-outline" themeColor={themeColor} selected={showTimeFields} onChange={(val) => setShowTimeFields(val)}><Text style={styles.text.numbers}>{timeStr}</Text></LoggerChip>)}
+              {!showRadioFields && (<LoggerChip icon="radio" themeColor={themeColor} selected={showRadioFields} onChange={(val) => setShowRadioFields(val)}>{describeRadio(operation)}</LoggerChip>)}
+              {!showPOTAFields && (<LoggerChip icon="pine-tree" themeColor={themeColor} selected={showPOTAFields} onChange={(val) => setShowPOTAFields(val)}>{operation.pota ? 'P2P' : 'POTA'}</LoggerChip>)}
+            </View>
+          </ScrollView>
+
           <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
             <Text>{info}</Text>
           </View>

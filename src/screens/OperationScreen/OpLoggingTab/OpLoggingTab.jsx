@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { selectOperation } from '../../../store/operations'
+import { selectOperation, setOperation } from '../../../store/operations'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import LoggingPanel from './components/LoggingPanel'
 import QSOList from './components/QSOList'
@@ -70,17 +70,26 @@ export default function OpLoggingTab ({ navigation, route }) {
       qso.endOn = new Date(qso.endOnMillis).toISOString()
     }
 
-    // TODO: Add POTA references
+    qso.mode = operation.mode
+    qso.freq = operation.freq
+    if (operation.pota) {
+      qso.refs = qso.refs ?? []
+      qso.refs.push({ type: 'potaActivation', ref: operation.pota })
+    }
 
     dispatch(addQSO({ uuid: operation.uuid, qso }))
     setLastQSO(qso)
     setCurrentQSO(prepareNewQSO(operation))
   }, [dispatch, operation])
 
+  const handleOperationChange = useCallback((attributes) => {
+    dispatch(setOperation({ uuid: operation.uuid, ...attributes }))
+  }, [dispatch, operation.uuid])
+
   return (
     <View style={{ flex: 1 }}>
       <QSOList qsos={qsos} styles={styles} style={{ flex: 1 }} listRef={listRef} />
-      <LoggingPanel operation={operation} onLog={logQSO} qso={currentQSO} style={{ flex: 0 }} />
+      <LoggingPanel operation={operation} onLog={logQSO} onOperationChange={handleOperationChange} qso={currentQSO} style={{ flex: 0 }} />
     </View>
   )
 }

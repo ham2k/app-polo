@@ -13,16 +13,16 @@ export default function QSOItem ({ qso, onPress, styles }) {
         <View style={{ flex: 0, marginLeft: 0, alignContent: 'right', minWidth: styles.rem * 1 }}>
           <Text style={[styles.text.numbers, { textAlign: 'right' }]}>{qso._number}</Text>
         </View>
-        <View style={{ flex: 0, minWidth: styles.rem * 3, marginLeft: styles.oneSpace }}>
+        <View style={{ flex: 0, minWidth: styles.rem * 3, marginLeft: styles.oneSpace * 1.5 }}>
           <Text style={[styles.text.numbers, styles.text.lighter, { textAlign: 'right' }]}>{fmtShortTimeZulu(qso.startOnMillis)}</Text>
         </View>
-        <View style={{ flex: 0, minWidth: styles.rem * 2, marginLeft: styles.oneSpace, alignContent: 'right' }}>
+        <View style={{ flex: 0, minWidth: styles.rem * 2, marginLeft: styles.oneSpace * 1.5, alignContent: 'right' }}>
           <Text style={[styles.text.numbers, styles.text.lighter]}>{qso.freq ?? '21.125.25'}</Text>
         </View>
-        <View style={{ flex: 3, marginLeft: styles.twoSpaces, minWidth: styles.rem * 3 }}>
+        <View style={{ flex: 3, marginLeft: styles.oneSpace * 1.5, minWidth: styles.rem * 3 }}>
           <Text style={styles.text.callsign}>{qso.their?.call ?? '?'}</Text>
         </View>
-        <View style={{ flex: 0, marginLeft: styles.twoSpace, minWidth: styles.rem * 2, alignContent: 'right' }}>
+        <View style={{ flex: 0, marginLeft: styles.oneSpace * 1.5, minWidth: styles.rem * 2, alignContent: 'right' }}>
           <Text style={[styles.text.numbers, { textAlign: 'right' }]}>{qso.our.sent}</Text>
         </View>
         <View style={{ flex: 0, marginLeft: styles.oneSpace, minWidth: styles.rem * 2, alignContent: 'right' }}>
