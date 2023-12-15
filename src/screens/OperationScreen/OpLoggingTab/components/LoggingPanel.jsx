@@ -13,6 +13,7 @@ import ThemedTextInput from '../../../components/ThemedTextInput'
 import CallsignInput from '../../../components/CallsignInput'
 import ThemedDropDown from '../../../components/ThemedDropDown'
 import { parseCallsign } from '@ham2k/lib-callsigns'
+import TimeChip from '../../components/TimeChip'
 
 // Not actually a react hook, just named like one
 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -48,7 +49,6 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
   const [ourSent, setOurSent] = useState()
   const [pausedTime, setPausedTime] = useState()
   const [startOnMillis, setStartOnMillis] = useState()
-  const [timeStr, setTimeStr] = useState()
   const [notes, setNotes] = useState()
 
   const [info, setInfo] = useState(' ')
@@ -58,7 +58,6 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
   const [showTimeFields, setShowTimeFields] = useState(false)
   const [showRadioFields, setShowRadioFields] = useState(false)
   const [showPOTAFields, setShowPOTAFields] = useState(false)
-  const [showModeDropdown, setShowModeDropdown] = useState(false)
 
   const callFieldRef = useRef()
   const sentFieldRef = useRef()
@@ -74,25 +73,12 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
       setPausedTime(true)
       setShowTimeFields(true)
       setStartOnMillis(qso.startOnMillis)
-      setTimeStr(fmtTimeZulu(qso.startOnMillis))
     } else {
       setPausedTime(false)
       setStartOnMillis(null)
-      setTimeStr(fmtTimeZulu(new Date()))
     }
     setNotes(qso?.notes ?? '')
   }, [qso])
-
-  // Update the time every second
-  useEffect(() => {
-    if (!pausedTime) {
-      const interval = setInterval(() => {
-        setTimeStr(fmtTimeZulu(new Date()))
-        // setTimeStr(fmtDateTime(new Date(), 'ContestTimestampZulu', { weekday: undefined }))
-      }, 1000)
-      return () => clearInterval(interval)
-    }
-  }, [pausedTime])
 
   // Focus the callsign field when the panel is opened
   useEffect(() => {
@@ -280,7 +266,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
           )}
           <ScrollView horizontal={true} style={{ width: '100%' }}>
             <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.oneSpace, gap: styles.halfSpace }}>
-              {!showTimeFields && (<LoggerChip icon="clock-outline" themeColor={themeColor} selected={showTimeFields} onChange={(val) => setShowTimeFields(val)}><Text style={styles.text.numbers}>{timeStr}</Text></LoggerChip>)}
+              {!showTimeFields && (<TimeChip time={startOnMillis} icon="clock-outline" themeColor={themeColor} selected={showTimeFields} onChange={(val) => setShowTimeFields(val)} />)}
               {!showRadioFields && (<LoggerChip icon="radio" themeColor={themeColor} selected={showRadioFields} onChange={(val) => setShowRadioFields(val)}>{describeRadio(operation)}</LoggerChip>)}
               {!showPOTAFields && (<LoggerChip icon="pine-tree" themeColor={themeColor} selected={showPOTAFields} onChange={(val) => setShowPOTAFields(val)}>{operation.pota ? 'P2P' : 'POTA'}</LoggerChip>)}
             </View>
