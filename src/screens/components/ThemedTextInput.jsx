@@ -45,19 +45,10 @@ export default function ThemedTextInput ({
     }
 
     event.nativeEvent.text = text
-    // setLocalValue(text)
 
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId })
-  }, [onChangeText, onChange, fieldId, uppercase])
-
-  // const handleFocus = useCallback(() => {
-  //   if (value === ' ') { setLocalValue('') }
-  // }, [setLocalValue, value])
-
-  // const handleBlur = useCallback(() => {
-  //   if (!value) { setLocalValue('') }
-  // }, [setLocalValue, value])
+  }, [onChangeText, onChange, fieldId, uppercase, noSpaces, numeric, trim])
 
   const colorStyles = useMemo(() => {
     return {
@@ -81,6 +72,8 @@ export default function ThemedTextInput ({
         autoComplete={'off'}
         autoCorrect={false}
         spellCheck={false}
+        keyboardType={'visible-password'}
+        secureTextEntry={false}
         textContentType={'none'}
         returnKeyType={'send'}
         inputMode={'text'}

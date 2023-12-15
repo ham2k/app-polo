@@ -6,6 +6,7 @@ import createMigrate from 'redux-persist/es/createMigrate'
 import { migrations, LATEST_VERSION } from './migrations'
 import settingsReducer from './settings'
 import operationsReducer from './operations'
+import qsosReducer from './qsos'
 
 // Redux Toolkit uses Immer, which freezes state by default.
 // This is great, except that our log processing needs to mutate state when merging QSOs,
@@ -16,14 +17,15 @@ setAutoFreeze(false)
 
 const rootReducer = combineReducers({
   settings: settingsReducer,
-  operations: operationsReducer
+  operations: operationsReducer,
+  qsos: qsosReducer
 })
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   version: LATEST_VERSION,
-  whitelist: ['settings', 'entry'],
+  whitelist: ['settings', 'operations'], // Don't include `qsos`
   migrate: createMigrate(migrations, { debug: true })
 }
 

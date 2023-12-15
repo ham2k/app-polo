@@ -5,8 +5,7 @@ import { qsoKey } from '@ham2k/lib-qson-tools'
 const INITIAL_STATE = {
   status: 'ready',
   info: {},
-  keys: {},
-  qsos: []
+  keys: {}
 }
 
 const OPERATION_INITIAL_STATE = {
@@ -33,9 +32,8 @@ export const operationsSlice = createSlice({
     },
     setOperations: (state, action) => {
       state.info = action.payload
-      state.qsos = {}
     },
-    setOperationInfo: (state, action) => {
+    setOperation: (state, action) => {
       const info = action.payload
       if (info.power) info.power = parseInt(info.power, 10)
 
@@ -54,58 +52,22 @@ export const operationsSlice = createSlice({
         newInfo.name = 'General Operation'
       }
     },
-    setOperationQSOs: (state, action) => {
-      action.payload.qsos.forEach((qso, index) => { qso._number = index + 1 })
-
-      state.qsos[action.payload.uuid] = action.payload.qsos
-    },
-    addOperationQSO: (state, action) => {
-      if (!state.qsos[action.payload.uuid]) state.qsos[action.payload.uuid] = []
-      if (!state.keys[action.payload.uuid]) state.keys[action.payload.uuid] = {}
-      const qsos = state.qsos[action.payload.uuid]
-      const keys = state.keys[action.payload.uuid]
-
-      const qso = action.payload.qso
-      if (!qso.key) qso.key = qsoKey(qso)
-
-      if (keys[qso.key]) {
-        // Find old QSO and replace it with the new one
-        const pos = qsos.findIndex(q => q.key === qso.key)
-        qso._number = qsos[pos]._n
-        qsos[pos] = qso
-        keys[qso.key] = qso
-      } else {
-        // Add new QSO to the end of the array
-        qso._number = (qsos.length ?? 0) + 1
-        keys[qso.key] = qso
-        qsos[qsos.length] = qso
-      }
-    },
-    deleteOperationInfo: (state, action) => {
+    deleteOperation: (state, action) => {
       state.info.delete(action.payload.uuid)
-    },
-    deleteOperationQSOs: (state, action) => {
-      state.qsos.delete(action.payload.uuid)
     }
   }
 
 })
 
 export const { actions } = operationsSlice
-// export const { setOperationsStatus, setOperations, deleteOperationInfo, setOperationQSOs } = operationsSlice.actions
 
 export const selectOperationsStatus = (state) => {
   return state?.operations?.status
 }
 
-export const selectOperationInfo = (uuid) => createSelector(
+export const selectOperation = (uuid) => createSelector(
   (state) => state?.operations?.info[uuid],
   (info) => info ?? {}
-)
-
-export const selectOperationQSOs = (uuid) => createSelector(
-  (state) => state?.operations?.qsos[uuid],
-  (qsos) => qsos ?? []
 )
 
 export const selectOperationsList = createSelector(

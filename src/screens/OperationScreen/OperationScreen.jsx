@@ -4,20 +4,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 
 import ScreenContainer from '../components/ScreenContainer'
-import { loadOperation, selectOperationInfo } from '../../store/operations'
+import { loadOperation, selectOperation } from '../../store/operations'
 import OpLoggingTab from './OpLoggingTab/OpLoggingTab'
 import OpStatsTab from './OpStatsTab.jsx/OpStatsTab'
 import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
 import { Dimensions } from 'react-native'
+import { loadQSOs } from '../../store/qsos'
 
 const Tab = createMaterialTopTabNavigator()
 
 export default function OperationScreen ({ navigation, route }) {
   const dispatch = useDispatch()
-  const operation = useSelector(selectOperationInfo(route.params.operation.uuid))
+  const operation = useSelector(selectOperation(route.params.operation.uuid))
 
   // When starting, make sure all operation data is loaded
   useEffect(() => {
+    dispatch(loadQSOs(route.params.operation.uuid))
     dispatch(loadOperation(route.params.operation.uuid))
   }, [route.params.operation.uuid, dispatch])
 

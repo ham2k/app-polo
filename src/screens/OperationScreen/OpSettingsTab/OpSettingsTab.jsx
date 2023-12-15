@@ -6,7 +6,7 @@ import { TextInput } from 'react-native-paper'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import LoggerChip from '../components/LoggerChip'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectOperationInfo, setOperationInfo } from '../../../store/operations'
+import { selectOperation, setOperation } from '../../../store/operations'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -35,7 +35,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   })
 
   const dispatch = useDispatch()
-  const operation = useSelector(selectOperationInfo(route.params.operation.uuid))
+  const operation = useSelector(selectOperation(route.params.operation.uuid))
 
   const [showPOTA, setShowPOTA] = useState(false)
   const [showLocation, setShowLocation] = useState(false)
@@ -56,7 +56,7 @@ export default function OpSettingsTab ({ navigation, route }) {
             label={'Our Callsign'}
             mode={'flat'}
             value={operation.call}
-            onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, call: text }))}
+            onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, call: text }))}
           />
         </View>
 
@@ -68,7 +68,7 @@ export default function OpSettingsTab ({ navigation, route }) {
             placeholder={'Operation Description'}
             mode={'flat'}
             value={operation.description}
-            onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, description: text }))}
+            onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, description: text }))}
           />
         </View>
 
@@ -88,7 +88,7 @@ export default function OpSettingsTab ({ navigation, route }) {
               label={'POTA References'}
               mode={'flat'}
               value={operation.pota}
-              onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, pota: text }))}
+              onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, pota: text }))}
             />
           </View>
         )}
@@ -108,7 +108,7 @@ export default function OpSettingsTab ({ navigation, route }) {
               label={'Grid'}
               mode={'flat'}
               value={operation.grid}
-              onChangeText={(text) => dispatch(setOperationInfo({ uuid: operation.uuid, grid: text }))}
+              onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, grid: text }))}
             />
           </View>
         )}

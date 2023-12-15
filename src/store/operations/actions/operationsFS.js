@@ -46,23 +46,16 @@ export const addNewOperation = (operation) => async (dispatch) => {
 }
 
 export const loadOperation = (uuid) => async (dispatch) => {
-  dispatch(actions.setOperationInfo({ uuid, status: 'loading' }))
+  dispatch(actions.setOperation({ uuid, status: 'loading' }))
 
   let info = { uuid }
-  let qsos = []
   try {
     const infoJSON = await RNFS.readFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/info.json`)
     info = JSON.parse(infoJSON)
   } catch (error) {
   }
-  try {
-    const qsosJSON = await RNFS.readFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`)
-    qsos = JSON.parse(qsosJSON)
-  } catch (error) {
-  }
   info.status = 'ready'
-  dispatch(actions.setOperationQSOs({ uuid: info.uuid, qsos }))
-  dispatch(actions.setOperationInfo(info))
+  dispatch(actions.setOperation(info))
 }
 
 function debounceableDispatch (dispatch, action) {
@@ -70,39 +63,13 @@ function debounceableDispatch (dispatch, action) {
 }
 const debouncedDispatch = debounce(debounceableDispatch, 2000)
 
-export const setOperationInfo = (info) => (dispatch, getState) => {
-  dispatch(actions.setOperationInfo(info))
+export const setOperation = (info) => (dispatch, getState) => {
+  dispatch(actions.setOperation(info))
   const savedInfo = getState().operations.info[info.uuid]
-  return debouncedDispatch(dispatch, () => saveOperationInfo(savedInfo))
+  return debouncedDispatch(dispatch, () => saveOperation(savedInfo))
 }
 
-export const addOperationQSO = ({ uuid, qso }) => (dispatch, getState) => {
-  dispatch(actions.addOperationQSO({ uuid, qso }))
-  return debouncedDispatch(dispatch, () => saveOperationQSOs(uuid))
-}
-
-export const saveOperationQSOs = (uuid) => async (dispatch, getState) => {
-  const qsos = getState().operations.qsos[uuid]
-  const qsosJSON = JSON.stringify(qsos)
-
-  await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-qsos.json`, qsosJSON)
-
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)) {
-    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)
-  }
-
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`)) {
-    await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`, `${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)
-  }
-
-  await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-qsos.json`, `${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`)
-
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)) {
-    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)
-  }
-}
-
-export const saveOperationInfo = (info) => async (dispatch, getState) => {
+export const saveOperation = (info) => async (dispatch, getState) => {
   const { uuid } = info
 
   const infoJSON = JSON.stringify(info)

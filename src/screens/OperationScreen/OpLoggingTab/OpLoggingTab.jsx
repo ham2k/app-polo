@@ -3,10 +3,11 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { addOperationQSO, selectOperationInfo, selectOperationQSOs } from '../../../store/operations'
+import { selectOperation } from '../../../store/operations'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import LoggingPanel from './components/LoggingPanel'
 import QSOList from './components/QSOList'
+import { addQSO, selectQSOs } from '../../../store/qsos'
 
 function prepareNewQSO (operation) {
   return {
@@ -31,14 +32,15 @@ export default function OpLoggingTab ({ navigation, route }) {
   })
 
   const dispatch = useDispatch()
-  const operation = useSelector(selectOperationInfo(route.params.operation.uuid))
-  const qsos = useSelector(selectOperationQSOs(route.params.operation.uuid))
+  const operation = useSelector(selectOperation(route.params.operation.uuid))
+  const qsos = useSelector(selectQSOs(route.params.operation.uuid))
 
   const [lastQSO, setLastQSO] = useState()
   const [currentQSO, setCurrentQSO] = useState(prepareNewQSO(operation))
 
   const listRef = useRef()
 
+  // Set navigation title
   useEffect(() => {
     navigation.setOptions({ title: `${qsos.length} QSOs`, iconName: 'radio' })
   }, [navigation, qsos])
@@ -59,7 +61,8 @@ export default function OpLoggingTab ({ navigation, route }) {
     }, 0)
   }, [listRef, qsos, lastQSO])
 
-  const logNewQSO = useCallback((qso) => {
+  // Log (or update) a QSO
+  const logQSO = useCallback((qso) => {
     qso.our.call = operation.call
 
     qso.startOn = new Date(qso.startOnMillis).toISOString()
@@ -67,7 +70,9 @@ export default function OpLoggingTab ({ navigation, route }) {
       qso.endOn = new Date(qso.endOnMillis).toISOString()
     }
 
-    dispatch(addOperationQSO({ uuid: operation.uuid, qso }))
+    // TODO: Add POTA references
+
+    dispatch(addQSO({ uuid: operation.uuid, qso }))
     setLastQSO(qso)
     setCurrentQSO(prepareNewQSO(operation))
   }, [dispatch, operation])
@@ -75,7 +80,7 @@ export default function OpLoggingTab ({ navigation, route }) {
   return (
     <View style={{ flex: 1 }}>
       <QSOList qsos={qsos} styles={styles} style={{ flex: 1 }} listRef={listRef} />
-      <LoggingPanel operation={operation} onLog={logNewQSO} qso={currentQSO} style={{ flex: 0 }} />
+      <LoggingPanel operation={operation} onLog={logQSO} qso={currentQSO} style={{ flex: 0 }} />
     </View>
   )
 }
