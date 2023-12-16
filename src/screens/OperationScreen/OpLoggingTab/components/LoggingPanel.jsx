@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { ScrollView, Text, View, findNodeHandle } from 'react-native'
-import { IconButton, SegmentedButtons } from 'react-native-paper'
+import { IconButton } from 'react-native-paper'
 import { analyzeFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import LoggerChip from '../../components/LoggerChip'
 
-import { fmtTimeZulu } from '../../../../tools/timeFormats'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 
 import ThemedTextInput from '../../../components/ThemedTextInput'
@@ -147,6 +146,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
   // Switch between fields with the space key
   const spaceKeyHander = useCallback((event) => {
     const { nativeEvent: { key, target } } = event
+    console.log('key', key)
     if (key === ' ') {
       if (target === findNodeHandle(callFieldRef.current)) {
         sentFieldRef.current.focus()
