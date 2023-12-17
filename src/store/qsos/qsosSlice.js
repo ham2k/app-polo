@@ -47,6 +47,12 @@ export const qsosSlice = createSlice({
       }
     },
     deleteQSO: (state, action) => {
+    },
+    unsetQSOs: (state, action) => {
+      state.qsos[action.payload] = undefined
+      state.keys[actions.payload] = undefined
+      delete state.qsos[action.payload]
+      delete state.keys[action.payload]
     }
   }
 

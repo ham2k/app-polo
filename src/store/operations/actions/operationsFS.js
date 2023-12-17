@@ -1,8 +1,14 @@
 import RNFS from 'react-native-fs'
 import { actions } from '../operationsSlice'
+import { actions as qsosActions } from '../../qsos'
 
 import UUID from 'react-native-uuid'
 import debounce from 'debounce'
+
+function debounceableDispatch (dispatch, action) {
+  return dispatch(action())
+}
+const debouncedDispatch = debounce(debounceableDispatch, 2000)
 
 export const loadOperationsList = () => async (dispatch) => {
   try {
@@ -58,11 +64,6 @@ export const loadOperation = (uuid) => async (dispatch) => {
   dispatch(actions.setOperation(info))
 }
 
-function debounceableDispatch (dispatch, action) {
-  return dispatch(action())
-}
-const debouncedDispatch = debounce(debounceableDispatch, 2000)
-
 export const setOperation = (info) => (dispatch, getState) => {
   dispatch(actions.setOperation(info))
   const savedInfo = getState().operations.info[info.uuid]
@@ -89,4 +90,18 @@ export const saveOperation = (info) => async (dispatch, getState) => {
   if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)) {
     await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)
   }
+}
+
+export const deleteOperation = (uuid) => async (dispatch) => {
+  await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/deleted-ops/${uuid}`)
+
+  const fileList = ['info.json', 'new-info.json', 'old-info.json', 'qsos.json', 'new-qsos.json', 'old-qsos.json']
+  fileList.forEach(async (file) => {
+    if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/${file}`)) {
+      await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/${file}`, `${RNFS.DocumentDirectoryPath}/deleted-ops/${uuid}/${file}`)
+    }
+  })
+
+  await dispatch(actions.unsetOperation(uuid))
+  await dispatch(qsosActions.unsetQSOs(uuid))
 }

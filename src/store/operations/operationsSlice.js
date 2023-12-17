@@ -50,8 +50,9 @@ export const operationsSlice = createSlice({
         newInfo.name = 'General Operation'
       }
     },
-    deleteOperation: (state, action) => {
-      state.info.delete(action.payload.uuid)
+    unsetOperation: (state, action) => {
+      state.info[action.payload] = undefined
+      delete state.info[action.payload]
     }
   }
 

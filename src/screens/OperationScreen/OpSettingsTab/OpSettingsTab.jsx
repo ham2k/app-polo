@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { View } from 'react-native'
-import { TextInput } from 'react-native-paper'
+import { Button, Divider, TextInput } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import LoggerChip from '../components/LoggerChip'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectOperation, setOperation } from '../../../store/operations'
+import { deleteOperation, selectOperation, setOperation } from '../../../store/operations'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -40,9 +40,14 @@ export default function OpSettingsTab ({ navigation, route }) {
   const [showPOTA, setShowPOTA] = useState(false)
   const [showLocation, setShowLocation] = useState(false)
 
-  useEffect(() => {
+  const handleExport = useCallback(() => {
+  }, [])
 
-  }, [operation])
+  const handleDelete = useCallback(() => {
+    dispatch(deleteOperation(operation.uuid)).then(() => {
+      navigation.navigate('Home')
+    })
+  }, [navigation, dispatch, operation])
 
   return (
     <View style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column' }, styles.panel]}>
@@ -112,6 +117,14 @@ export default function OpSettingsTab ({ navigation, route }) {
             />
           </View>
         )}
+      </View>
+
+      <Divider bold style={{ marginHorizontal: styles.oneSpace, marginVertical: styles.oneSpace }} theme={{ theme: { colors: { outlineVariant: 'red' } } }} />
+
+      <View style={[{ flex: 0, flexDirection: 'row', justifyContent: 'space-around' }, styles.container]}>
+        <Button icon="share" mode="contained" onPress={handleExport}>Export</Button>
+        <View style={{ width: styles.oneSpace * 3 }} />
+        <Button icon="delete" mode="contained" onPress={handleDelete}>Delete</Button>
       </View>
     </View>
   )
