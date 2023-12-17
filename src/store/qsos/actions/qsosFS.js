@@ -1,15 +1,15 @@
 import RNFS from 'react-native-fs'
 import { actions } from '../qsosSlice'
-import { actions as operationActions } from '../../operations'
+import { actions as operationActions, saveOperation } from '../../operations'
 
 import debounce from 'debounce'
 
 function debounceableDispatch (dispatch, action) {
   return dispatch(action())
 }
-const debouncedDispatch = debounce(debounceableDispatch, 2000)
+const debouncedDispatch = debounce(debounceableDispatch, 10000)
 
-export const loadQSOs = (uuid) => async (dispatch) => {
+export const loadQSOs = (uuid) => async (dispatch, getState) => {
   dispatch(actions.setQSOsStatus({ uuid, status: 'loading' }))
 
   let qsos = []
@@ -27,6 +27,10 @@ export const loadQSOs = (uuid) => async (dispatch) => {
     if (qso.startOnMillis > startOnMillisMax || !startOnMillisMax) startOnMillisMax = qso.startOnMillis
   })
   dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount: qsos.length }))
+  const operation = getState().operations.info[uuid]
+  setTimeout(() => {
+    dispatch(saveOperation(operation))
+  }, 0)
 }
 
 export const addQSO = ({ uuid, qso }) => (dispatch, getState) => {
@@ -63,4 +67,9 @@ export const saveQSOs = (uuid) => async (dispatch, getState) => {
   if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)) {
     await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)
   }
+
+  const operation = getState().operations.info[uuid]
+  setTimeout(() => {
+    dispatch(saveOperation(operation))
+  }, 0)
 }
