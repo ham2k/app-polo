@@ -4,6 +4,8 @@ import { actions as qsosActions } from '../../qsos'
 
 import UUID from 'react-native-uuid'
 import debounce from 'debounce'
+import { qsonToADIF } from '../../../tools/qsonToADIF'
+import { fmtISODate } from '../../../tools/timeFormats'
 
 function debounceableDispatch (dispatch, action) {
   return dispatch(action())
@@ -106,4 +108,23 @@ export const deleteOperation = (uuid) => async (dispatch) => {
 
   await dispatch(actions.unsetOperation(uuid))
   await dispatch(qsosActions.unsetQSOs(uuid))
+}
+
+export const generateADIF = (uuid) => async (dispatch, getState) => {
+  const state = getState()
+  const operation = state.operations.info[uuid]
+  const { call, startOnMillisMax, pota } = operation
+
+  const qsos = state.qsos.qsos[uuid]
+
+  const name = `${call}-${fmtISODate(startOnMillisMax)}${pota ? `-${pota}` : ''}.adi`
+  const adif = qsonToADIF({ operation, qsos })
+
+  await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/${name}`, adif)
+
+  return `${RNFS.DocumentDirectoryPath}/ops/${uuid}/${name}`
+}
+
+export const deleteADIF = (path) => async (dispatch) => {
+  await RNFS.unlink(path)
 }

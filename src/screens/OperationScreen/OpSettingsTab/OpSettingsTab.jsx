@@ -3,11 +3,14 @@ import React, { useCallback, useState } from 'react'
 import { View } from 'react-native'
 import { Button, Dialog, Divider, Portal, Text, TextInput } from 'react-native-paper'
 
+import Share from 'react-native-share'
+
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import LoggerChip from '../components/LoggerChip'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteOperation, selectOperation, setOperation } from '../../../store/operations'
+import { deleteADIF, deleteOperation, generateADIF, selectOperation, setOperation } from '../../../store/operations'
 import CallsignInput from '../../components/CallsignInput'
+import { fmtDateNice } from '../../../tools/timeFormats'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -42,7 +45,22 @@ export default function OpSettingsTab ({ navigation, route }) {
   const [showLocation, setShowLocation] = useState(false)
 
   const handleExport = useCallback(() => {
-  }, [])
+    dispatch(generateADIF(operation.uuid)).then((path) => {
+      const { call, startOnMillisMax, pota } = operation
+      Share.open({
+        url: path,
+        title: 'ADIF Export',
+        subject: `ADIF for ${call} ${fmtDateNice(startOnMillisMax)}${pota ? `-${pota}` : ''}`,
+        type: 'text/plain' // There is no official ADIF mime type
+      }).then((x) => {
+        console.log('Shared', x)
+      }).catch((e) => {
+        console.log('Sharing Error', e)
+      }).finally(() => {
+        dispatch(deleteADIF(path))
+      })
+    })
+  }, [dispatch, operation])
 
   const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false)
 

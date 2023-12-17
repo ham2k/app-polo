@@ -34,6 +34,18 @@ export function fmtDateTimeNice (t) {
   }
 }
 
+export function fmtDateNice (t) {
+  if (typeof t === 'number') {
+    t = new Date(t)
+  }
+
+  if (t) {
+    return t.toLocaleTimeString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+  } else {
+    return ''
+  }
+}
+
 export function fmtDateTimeDynamic (t, now = null) {
   if (typeof t === 'number') {
     t = new Date(t)
@@ -52,5 +64,49 @@ export function fmtDateTimeDynamic (t, now = null) {
     return t.toLocaleDateString(undefined, { month: 'long', day: 'numeric' })
   } else {
     return t.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+  }
+}
+
+export function fmtADIFDate (t) {
+  if (typeof t === 'number') {
+    t = new Date(t)
+  }
+  if (t) {
+    return t.toLocaleDateString(undefined, { format: 'yyyyMMdd', timeZone: 'UTC' })
+  } else {
+    return ''
+  }
+}
+
+export function fmtADIFTime (t) {
+  if (typeof t === 'number') {
+    t = new Date(t)
+  }
+  if (t) {
+    return t.toLocaleDateString(undefined, { format: 'HHmmss', timeZone: 'UTC' })
+  } else {
+    return ''
+  }
+}
+
+export function fmtISODate (t) {
+  if (typeof t === 'number') {
+    t = new Date(t)
+  }
+  if (t) {
+    return t.toISOString().substring(0, 10)
+  } else {
+    return ''
+  }
+}
+
+export function fmtISODateTime (t) {
+  if (typeof t === 'number') {
+    t = new Date(t)
+  }
+  if (t) {
+    return t.toISOString()
+  } else {
+    return ''
   }
 }
