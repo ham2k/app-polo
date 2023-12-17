@@ -1,7 +1,5 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 
-import { qsoKey } from '@ham2k/lib-qson-tools'
-
 const INITIAL_STATE = {
   status: 'ready',
   info: {},

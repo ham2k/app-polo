@@ -1,5 +1,6 @@
 import RNFS from 'react-native-fs'
 import { actions } from '../qsosSlice'
+import { actions as operationActions } from '../../operations'
 
 import debounce from 'debounce'
 
@@ -19,10 +20,27 @@ export const loadQSOs = (uuid) => async (dispatch) => {
   }
   dispatch(actions.setQSOsStatus({ uuid, status: 'ready' }))
   dispatch(actions.setQSOs({ uuid, qsos }))
+
+  let startOnMillisMin, startOnMillisMax
+  qsos.forEach(qso => {
+    if (qso.startOnMillis < startOnMillisMin || !startOnMillisMin) startOnMillisMin = qso.startOnMillis
+    if (qso.startOnMillis > startOnMillisMax || !startOnMillisMax) startOnMillisMax = qso.startOnMillis
+  })
+  dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount: qsos.length }))
 }
 
 export const addQSO = ({ uuid, qso }) => (dispatch, getState) => {
   dispatch(actions.addQSO({ uuid, qso }))
+
+  const state = getState()
+  const info = state.operations.info[uuid]
+  const qsos = state.qsos.qsos[uuid]
+
+  let { startOnMillisMin, startOnMillisMax } = info
+  if (qso.startOnMillis < startOnMillisMin) startOnMillisMin = qso.startOnMillis
+  if (qso.startOnMillis > startOnMillisMax) startOnMillisMax = qso.startOnMillis
+
+  dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount: qsos.length }))
   return debouncedDispatch(dispatch, () => saveQSOs(uuid))
 }
 

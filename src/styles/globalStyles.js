@@ -97,6 +97,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.outline
     },
+    rowText: {
+      fontSize: normalFontSize
+    },
     text: {
       numbers: {
         fontVariant: ['tabular-nums'],

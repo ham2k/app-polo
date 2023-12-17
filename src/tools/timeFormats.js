@@ -21,3 +21,15 @@ export function fmtTimeZulu (t) {
     return ''
   }
 }
+
+export function fmtTimeNice (t) {
+  if (typeof t === 'number') {
+    t = new Date(t)
+  }
+
+  if (t) {
+    return t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+  } else {
+    return ''
+  }
+}

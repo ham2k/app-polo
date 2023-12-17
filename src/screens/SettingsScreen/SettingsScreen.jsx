@@ -4,7 +4,7 @@ import {
   Text,
   View
 } from 'react-native'
-import { Button, TextInput } from 'react-native-paper'
+import { TextInput } from 'react-native-paper'
 
 import { selectCall, setCall } from '../../store/settings'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,27 +26,17 @@ export default function SettingsScreen ({ navigation }) {
         <Text
           style={styles.title}
         >
-          Settings
-        </Text>
-        <Text style={styles.paragraph}>
-          This is the settings screen
+          General Settings
         </Text>
         <View style={styles.paragraph}>
           <TextInput
             style={styles.input}
             onChangeText={onChangeCall}
             value={call}
-            label="Callsign"
+            label="Our Callsign"
             placeholder="Callsign"
           />
         </View>
-        <Button
-          mode="contained"
-          styles={styles.button}
-          onPress={() => navigation.navigate('Home')}
-        >
-          Home
-        </Button>
       </View>
     </ScreenContainer>
   )
