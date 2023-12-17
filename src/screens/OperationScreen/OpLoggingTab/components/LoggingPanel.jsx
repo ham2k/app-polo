@@ -146,7 +146,6 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
   // Switch between fields with the space key
   const spaceKeyHander = useCallback((event) => {
     const { nativeEvent: { key, target } } = event
-    console.log('key', key)
     if (key === ' ') {
       if (target === findNodeHandle(callFieldRef.current)) {
         sentFieldRef.current.focus()

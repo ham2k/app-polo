@@ -21,7 +21,7 @@ export default function ThemedDropDown ({
   useEffect(() => {
     setInnerValue(value || '')
   }, [value])
-  console.log('ThemedDropDown render')
+
   return (
     <DropDown
       label={label}
