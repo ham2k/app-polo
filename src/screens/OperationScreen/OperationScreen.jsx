@@ -8,7 +8,7 @@ import { loadOperation, selectOperation } from '../../store/operations'
 import OpLoggingTab from './OpLoggingTab/OpLoggingTab'
 import OpStatsTab from './OpStatsTab.jsx/OpStatsTab'
 import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
-import { Dimensions } from 'react-native'
+import { useWindowDimensions } from 'react-native'
 import { loadQSOs } from '../../store/qsos'
 
 const Tab = createMaterialTopTabNavigator()
@@ -40,12 +40,17 @@ export default function OperationScreen ({ navigation, route }) {
   //   navigation.jumpTo('Settings')
   // }, [navigation, settingsOnly])
 
+  const dimensions = useWindowDimensions()
+
   return (
     <ScreenContainer>
       <Tab.Navigator
         id={'OperationScreen_TabNavigator'}
-        initialLayout={{ width: Dimensions.get('window').width }}
+        initialLayout={{ width: dimensions.width, height: dimensions.height }}
         initialRouteName={ settingsOnly ? 'Settings' : 'QSOs'}
+        screenOptions={{
+          tabBarItemStyle: { width: dimensions.width / 3 } // This allows tab titles to be rendered while the screen is transitioning in
+        }}
       >
         <Tab.Screen
           name="QSOs"
