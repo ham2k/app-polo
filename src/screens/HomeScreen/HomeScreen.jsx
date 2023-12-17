@@ -48,9 +48,10 @@ export default function HomeScreen ({ navigation }) {
 
   return (
     <ScreenContainer>
-      <View style={{ width: '100%', padding: 0, margin: 0 }}>
-        <GestureHandlerRootView>
+      <View style={{ flex: 1, width: '100%', padding: 0, margin: 0 }}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
           <FlatList
+            style={{ flex: 1 }}
             data={operations}
             renderItem={renderRow}
             ListEmptyComponent={<Text>No Operations!</Text>}

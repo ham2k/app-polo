@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { View } from 'react-native'
-import { Button, Divider, TextInput } from 'react-native-paper'
+import { Button, Dialog, Divider, Portal, Text, TextInput } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import LoggerChip from '../components/LoggerChip'
@@ -42,6 +42,8 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const handleExport = useCallback(() => {
   }, [])
+
+  const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false)
 
   const handleDelete = useCallback(() => {
     dispatch(deleteOperation(operation.uuid)).then(() => {
@@ -124,8 +126,21 @@ export default function OpSettingsTab ({ navigation, route }) {
       <View style={[{ flex: 0, flexDirection: 'row', justifyContent: 'space-around' }, styles.container]}>
         <Button icon="share" mode="contained" onPress={handleExport}>Export</Button>
         <View style={{ width: styles.oneSpace * 3 }} />
-        <Button icon="delete" mode="contained" onPress={handleDelete}>Delete</Button>
+        <Button icon="delete" mode="contained" onPress={() => setDeleteDialogVisible(true)}>Delete</Button>
       </View>
+
+      <Portal>
+        <Dialog visible={deleteDialogVisible} onDismiss={() => setDeleteDialogVisible(false)}>
+          <Dialog.Title>Delete Operation?</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">Are you sure you want to delete this operation?</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setDeleteDialogVisible(false)}>Cancel</Button>
+            <Button onPress={handleDelete}>Yes, delete it!</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   )
 }
