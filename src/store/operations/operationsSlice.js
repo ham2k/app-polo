@@ -73,7 +73,7 @@ export const selectOperationsList = createSelector(
   (state) => state?.operations?.info,
   (info) => {
     return Object.values(info || {}).sort((a, b) => {
-      return a.uuid?.localeCompare(b.uuid)
+      return (b.startOnMillisMax ?? b.createdOnMillis ?? 0) - (a.startOnMillisMax ?? a.createdOnMillis ?? 0)
     })
   }
 )

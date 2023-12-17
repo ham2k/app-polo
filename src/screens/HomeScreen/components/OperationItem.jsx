@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { Text, TouchableRipple } from 'react-native-paper'
-import { fmtTimeNice } from '../../../tools/timeFormats'
+import { fmtDateTimeDynamic } from '../../../tools/timeFormats'
 
 export default function OperationItem ({ operation, onPress, styles }) {
   const pressHandler = useCallback(() => {
@@ -20,8 +20,15 @@ export default function OperationItem ({ operation, onPress, styles }) {
           </View>
         </View>
         <View style={[{ flexDirection: 'row', width: '100%' }]}>
-          <Text style={[styles.rowText, { marginLeft: styles.oneSpace }]}>{fmtTimeNice(operation.startOnMillisMin)}</Text>
-          <Text style={[styles.rowText, { marginLeft: styles.oneSpace }]}>{operation.qsoCount} qsos</Text>
+          {operation.qsoCount > 0 ? (
+            <>
+              <Text style={[styles.rowText, { marginLeft: styles.oneSpace }]}>{operation.qsoCount} qsos</Text>
+              <Text style={[styles.rowText, { marginLeft: styles.oneSpace }]}>{fmtDateTimeDynamic(operation.startOnMillisMax)}</Text>
+            </>
+          ) : (
+            <Text style={[styles.rowText, { marginLeft: styles.oneSpace }]}>No qsos</Text>
+
+          )}
         </View>
       </View>
     </TouchableRipple>

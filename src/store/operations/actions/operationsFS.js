@@ -42,6 +42,8 @@ export const loadOperationsList = () => async (dispatch) => {
 export const addNewOperation = (operation) => async (dispatch) => {
   try {
     operation.uuid = UUID.v1()
+    operation.qsoCount = 0
+    operation.createdOnMillis = Date.now()
 
     await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/ops/${operation.uuid}`)
     await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${operation.uuid}/info.json`, JSON.stringify(operation))

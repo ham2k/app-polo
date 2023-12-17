@@ -7,7 +7,7 @@ import debounce from 'debounce'
 function debounceableDispatch (dispatch, action) {
   return dispatch(action())
 }
-const debouncedDispatch = debounce(debounceableDispatch, 10000)
+const debouncedDispatch = debounce(debounceableDispatch, 3000)
 
 export const loadQSOs = (uuid) => async (dispatch, getState) => {
   dispatch(actions.setQSOsStatus({ uuid, status: 'loading' }))

@@ -9,11 +9,13 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import { addNewOperation, loadOperationsList, selectOperationsList } from '../../store/operations'
 import OperationItem from './components/OperationItem'
+import { selectSettings } from '../../store/settings'
 
 export default function HomeScreen ({ navigation }) {
   const styles = useThemedStyles()
   const dispatch = useDispatch()
   const operations = useSelector(selectOperationsList)
+  const settings = useSelector(selectSettings)
 
   useEffect(() => {
     navigation.setOptions({ rightAction: 'cog', onRightActionPress: () => navigation.navigate('Settings') })
@@ -24,8 +26,8 @@ export default function HomeScreen ({ navigation }) {
   }, [dispatch])
 
   const handleNewOperation = useCallback(() => {
-    dispatch(addNewOperation({ call: '', name: 'New Operation' }))
-  }, [dispatch])
+    dispatch(addNewOperation({ call: settings.call, name: 'New Operation' }))
+  }, [dispatch, settings])
 
   const navigateToOperation = useCallback((operation) => {
     navigation.navigate('Operation', { uuid: operation.uuid, operation })
