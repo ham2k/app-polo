@@ -1,10 +1,6 @@
 import React, { useCallback } from 'react'
 
-import {
-  Text,
-  View
-} from 'react-native'
-import { TextInput } from 'react-native-paper'
+import { Text, View } from 'react-native'
 
 import { selectCall, setCall } from '../../store/settings'
 import { useDispatch, useSelector } from 'react-redux'
