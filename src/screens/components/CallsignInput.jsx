@@ -1,35 +1,28 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
 import ThemedTextInput from './ThemedTextInput'
 
 export default function CallsignInput (params) {
-  const { onChange, onChangeText, fieldId, onChangeCall } = params
+  const { value, styles, textStyle } = params
 
-  const [isValid, setIsValid] = useState(false)
-
-  const handleChange = useCallback((event) => {
-    let { text } = event.nativeEvent
-
-    text = text.toUpperCase().trim()
-
-    event.nativeEvent.text = text
-
-    const callInfo = parseCallsign(text)
+  const isValid = useMemo(() => {
+    const callInfo = parseCallsign(value)
     if (callInfo?.baseCall) {
-      setIsValid(true)
-      onChangeCall && onChangeCall(callInfo)
+      return true
     } else {
-      setIsValid(false)
-      onChangeCall && onChangeCall({})
+      return false
     }
-
-    onChangeText && onChangeText(text)
-    onChange && onChange({ ...event, fieldId })
-  }, [onChangeText, onChange, onChangeCall, fieldId])
+  }, [value])
 
   return (
-    <ThemedTextInput {...params} onChange={handleChange} onChangeText={undefined} error={!isValid} />
+    <ThemedTextInput
+      {...params}
+      uppercase={true}
+      nospaces={true}
+      error={!isValid}
+      textStyle={[textStyle, styles?.text?.callsign]}
+    />
   )
 }

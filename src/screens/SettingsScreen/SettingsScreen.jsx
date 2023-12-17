@@ -10,6 +10,7 @@ import { selectCall, setCall } from '../../store/settings'
 import { useDispatch, useSelector } from 'react-redux'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
+import CallsignInput from '../components/CallsignInput'
 
 export default function SettingsScreen ({ navigation }) {
   const styles = useThemedStyles()
@@ -29,12 +30,12 @@ export default function SettingsScreen ({ navigation }) {
           General Settings
         </Text>
         <View style={styles.paragraph}>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeCall}
+          <CallsignInput
+            style={[styles.input]}
             value={call}
             label="Our Callsign"
             placeholder="Callsign"
+            onChangeText={onChangeCall}
           />
         </View>
       </View>

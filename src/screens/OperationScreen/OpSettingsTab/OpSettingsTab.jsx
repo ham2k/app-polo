@@ -7,6 +7,7 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import LoggerChip from '../components/LoggerChip'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteOperation, selectOperation, setOperation } from '../../../store/operations'
+import CallsignInput from '../../components/CallsignInput'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -57,13 +58,13 @@ export default function OpSettingsTab ({ navigation, route }) {
       <View style={[{ flex: 0, flexDirection: 'column' }, styles.container]}>
 
         <View style={[{ flexDirection: 'row' }]}>
-          <TextInput
+          <CallsignInput
             style={[styles.paperInput, { flex: 3, width: 100 }]}
-            textStyle={styles.nativeInput}
-            label={'Our Callsign'}
-            mode={'flat'}
             value={operation.call}
+            label="Our Callsign"
+            placeholder="Callsign"
             onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, call: text }))}
+            textStyle={styles.nativeInput}
           />
         </View>
 

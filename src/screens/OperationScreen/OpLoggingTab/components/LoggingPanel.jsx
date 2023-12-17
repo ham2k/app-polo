@@ -287,11 +287,8 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             label="Their Call"
             placeholder=""
             error={!isValid}
-            uppercase={true}
-            noSpaces={true}
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
-            textStyle={styles.text.callsign}
             fieldId={'theirCall'}
             onKeyPress={spaceKeyHander}
           />
