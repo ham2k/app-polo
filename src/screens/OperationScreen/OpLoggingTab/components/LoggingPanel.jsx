@@ -49,6 +49,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
   const [pausedTime, setPausedTime] = useState()
   const [startOnMillis, setStartOnMillis] = useState()
   const [notes, setNotes] = useState()
+  const [theirPOTA, setTheirPOTA] = useState()
 
   const [info, setInfo] = useState(' ')
 
@@ -77,6 +78,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
       setStartOnMillis(null)
     }
     setNotes(qso?.notes ?? '')
+    setTheirPOTA(qso?.refs?.filter(ref => ref.type === 'pota').map(ref => ref.ref).join(', ') ?? '')
   }, [qso])
 
   // Focus the callsign field when the panel is opened
@@ -132,6 +134,8 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
       setOurSent(text)
     } else if (fieldId === 'notes') {
       setNotes(text)
+    } else if (fieldId === 'theirPOTA') {
+      setTheirPOTA(text)
     } else if (fieldId === 'freq') {
       onOperationChange && onOperationChange({ freq: text })
     } else if (fieldId === 'mode') {
@@ -160,16 +164,24 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
   // Finally submit the QSO
   const handleSubmit = useCallback(() => {
     if (isValid) {
-      const finalQso = {
+      const finalQSO = {
         our: { sent: ourSent },
         their: { call: theirCall, sent: theirSent },
         startOnMillis
       }
-      if (notes) finalQso.notes = notes
-
-      onLog(finalQso)
+      if (notes) finalQSO.notes = notes
+      if (theirPOTA) {
+        finalQSO.refs = (finalQSO.refs ?? []).filter(ref => ref.type !== 'pota')
+        theirPOTA.split(',').forEach(pota => {
+          pota = pota.trim()
+          if (pota) {
+            finalQSO.refs.push({ type: 'pota', ref: pota })
+          }
+        })
+      }
+      onLog(finalQSO)
     }
-  }, [notes, ourSent, theirCall, theirSent, startOnMillis, onLog, isValid])
+  }, [notes, ourSent, theirCall, theirSent, theirPOTA, startOnMillis, onLog, isValid])
 
   return (
     <View style={[styles.root, style, { flexDirection: 'column', justifyContent: 'flex-end', width: '100%', minHeight: 100 }]}>
@@ -251,7 +263,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                     <ThemedTextInput
                       themeColor={themeColor}
                       style={[styles.input]}
-                      value={'K-1234'}
+                      value={theirPOTA}
                       label="POTA Reference"
                       placeholder="K-1234"
                       onChange={handleFieldChange}

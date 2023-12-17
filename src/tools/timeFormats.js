@@ -53,17 +53,21 @@ export function fmtDateTimeDynamic (t, now = null) {
 
   now = now || new Date()
 
-  const diffInDays = (now - t) / (1000 * 60 * 60 * 24)
-  if (diffInDays < 0) {
-    return fmtDateTimeNice(t)
-  } else if (diffInDays < 1) {
-    return t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })
-  } else if (diffInDays < 7) {
-    return t.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', hour: '2-digit' })
-  } else if (diffInDays < 365) {
-    return t.toLocaleDateString(undefined, { month: 'long', day: 'numeric' })
+  if (t) {
+    const diffInDays = (now - t) / (1000 * 60 * 60 * 24)
+    if (diffInDays < 0) {
+      return fmtDateTimeNice(t)
+    } else if (diffInDays < 1) {
+      return t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })
+    } else if (diffInDays < 7) {
+      return t.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', hour: '2-digit' })
+    } else if (diffInDays < 365) {
+      return t.toLocaleDateString(undefined, { month: 'long', day: 'numeric' })
+    } else {
+      return t.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+    }
   } else {
-    return t.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+    return ''
   }
 }
 
@@ -72,7 +76,7 @@ export function fmtADIFDate (t) {
     t = new Date(t)
   }
   if (t) {
-    return t.toLocaleDateString(undefined, { format: 'yyyyMMdd', timeZone: 'UTC' })
+    return t.toISOString().substring(0, 10).replace(/-/g, '')
   } else {
     return ''
   }
@@ -83,7 +87,7 @@ export function fmtADIFTime (t) {
     t = new Date(t)
   }
   if (t) {
-    return t.toLocaleDateString(undefined, { format: 'HHmmss', timeZone: 'UTC' })
+    return t.toISOString().substring(11, 16).replace(/:/g, '')
   } else {
     return ''
   }

@@ -6,14 +6,14 @@ export function qsonToADIF ({ operation, qsos }) {
   if (operation.pota) {
     (operation?.pota ?? '').split(',').forEach(ref => {
       ref = ref.trim()
-      commonRefs.append({ type: 'potaActivation', ref })
+      commonRefs.push({ type: 'potaActivation', ref })
     })
   }
 
   let str = ''
 
   str += 'ADIF for Operation \n'
-  str += adifField('ADIF_VER', '3.1.4')
+  str += adifField('ADIF_VER', '3.1.4', { newLine: true })
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
   str += '<EOH>\n'
@@ -32,6 +32,8 @@ function oneQSOtoADIFWithPOTAMultiples (qso, commonRefs) {
   const potaRefs = (qso?.refs || []).filter(ref => ref.type === 'pota')
   let str = ''
 
+  console.log('potaActivationRefs', potaActivationRefs)
+  console.log('potaRefs', potaRefs)
   if (potaActivationRefs.length === 0) {
     if (potaRefs.length === 0) {
       str += oneQSOtoADIF(qso)
@@ -55,6 +57,7 @@ function oneQSOtoADIFWithPOTAMultiples (qso, commonRefs) {
 }
 
 function oneQSOtoADIF (qso, potaRefs = {}, timeOfffset = 0) {
+  console.log('qso', qso.their.call, potaRefs, timeOfffset)
   let str = ''
   str += adifField('CALL', qso.their.call)
   if (qso.band) str += adifField('BAND', qso.band)

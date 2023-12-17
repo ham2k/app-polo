@@ -10,7 +10,6 @@ import LoggerChip from '../components/LoggerChip'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteADIF, deleteOperation, generateADIF, selectOperation, setOperation } from '../../../store/operations'
 import CallsignInput from '../../components/CallsignInput'
-import { fmtDateNice } from '../../../tools/timeFormats'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -46,11 +45,8 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const handleExport = useCallback(() => {
     dispatch(generateADIF(operation.uuid)).then((path) => {
-      const { call, startOnMillisMax, pota } = operation
       Share.open({
-        url: path,
-        title: 'ADIF Export',
-        subject: `ADIF for ${call} ${fmtDateNice(startOnMillisMax)}${pota ? `-${pota}` : ''}`,
+        url: `file://${path}`,
         type: 'text/plain' // There is no official ADIF mime type
       }).then((x) => {
         console.log('Shared', x)

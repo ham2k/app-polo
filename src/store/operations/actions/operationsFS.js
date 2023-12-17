@@ -118,6 +118,7 @@ export const generateADIF = (uuid) => async (dispatch, getState) => {
   const qsos = state.qsos.qsos[uuid]
 
   const name = `${call}-${fmtISODate(startOnMillisMax)}${pota ? `-${pota}` : ''}.adi`
+  console.log('generateADIF', operation)
   const adif = qsonToADIF({ operation, qsos })
 
   await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/${name}`, adif)
