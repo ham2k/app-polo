@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
-import DropDown from 'react-native-paper-dropdown'
+import DropDown from '@go_robots/react-native-paper-dropdown'
 
 export default function ThemedDropDown ({
   style, themeColor,
@@ -32,6 +32,7 @@ export default function ThemedDropDown ({
       showDropDown={onShow}
       onDismiss={onDismiss}
       list={list}
+      keyboardShouldPersistTaps="handled"
     />
   )
 }

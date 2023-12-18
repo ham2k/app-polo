@@ -22,6 +22,7 @@
     "build:ios:prod:release": "cd ios && xcodebuild -scheme polo-Prod build"
   },
   "dependencies": {
+    "@go_robots/react-native-paper-dropdown": "^1.0.8",
     "@ham2k/lib-callsigns": "^0.1",
     "@ham2k/lib-country-files": "^0.9",
     "@ham2k/lib-dxcc-data": "^0.2",
@@ -42,7 +43,6 @@
     "react-native-gesture-handler": "^2.14.0",
     "react-native-pager-view": "^6.2.3",
     "react-native-paper": "^5.11.3",
-    "react-native-paper-dropdown": "^1.0.7",
     "react-native-reanimated": "^3.6.1",
     "react-native-safe-area-context": "^4.7.4",
     "react-native-screens": "^3.27.0",
