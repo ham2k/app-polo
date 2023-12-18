@@ -38,7 +38,7 @@ export default function App () {
                 animation: 'slide_from_right'
               }}
             >
-              <Stack.Screen name="Home" options={{ title: 'Ham2K', subTitle: 'Portable Logger' }} component={HomeScreen} />
+              <Stack.Screen name="Home" options={{ title: 'Portable Logger' }} component={HomeScreen} />
               <Stack.Screen name="Operation" options={{ title: 'Operation', headerBackTitle: 'Home', closeInsteadOfBack: true }} component={OperationScreen} />
               <Stack.Screen name="Settings" options={{ title: 'Settings', headerBackTitle: 'Home' }} component={SettingsScreen} />
             </Stack.Navigator>

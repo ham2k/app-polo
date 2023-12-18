@@ -85,6 +85,20 @@ export default function ThemedTextInput ({
         importantForAutofill: 'no',
         returnKeyType: 'send'
       }
+    } else if (mode === 'numbers') {
+      return {
+        autoCapitalize: 'none',
+        autoComplete: 'off',
+        autoCorrect: false,
+        spellCheck: false,
+        dataDetectorType: 'none',
+        textContentType: 'none',
+        inputMode: 'decimal',
+        keyboardType: 'decimal-pad',
+        secureTextEntry: false,
+        importantForAutofill: 'no',
+        returnKeyType: 'send'
+      }
     } else {
       return {}
     }
@@ -99,7 +113,7 @@ export default function ThemedTextInput ({
 
         ref={innerRef}
 
-        value={value}
+        value={value || ' '}
 
         style={[colorStyles.nativeInput, ...props.style, textStyle, { backgroundColor: undefined }]}
         placeholderTextColor={themeStyles.theme.colors.outline}
@@ -122,7 +136,7 @@ export default function ThemedTextInput ({
       mode={'flat'}
       dense={true}
       underlineStyle={extraStyles.underline}
-      value={value}
+      value={value || ' '}
       label={label}
       placeholder={placeholder}
       // onFocus={handleFocus}

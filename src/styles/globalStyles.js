@@ -53,13 +53,12 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       color: theme.colors.onPrimary,
       fontWeight: '500'
     },
-    screenTitleLeft: {
+    screenTitleLight: {
       fontSize: 20,
       color: theme.colors.onPrimary,
-      fontWeight: isIOS ? '400' : '100',
-      marginRight: oneSpace
+      fontWeight: isIOS ? '300' : '100'
     },
-    screenTitleRight: {
+    screenTitleBold: {
       fontSize: 20,
       color: theme.colors.onPrimary,
       fontWeight: isIOS ? '600' : '800'

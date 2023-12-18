@@ -56,7 +56,15 @@ export default function HomeScreen ({ navigation }) {
             style={{ flex: 1 }}
             data={operations}
             renderItem={renderRow}
-            ListEmptyComponent={<Text>No Operations!</Text>}
+            ListEmptyComponent={
+              <View style={[styles.row, { flexDirection: 'column', width: '100%' }]}>
+                <View style={[{ flexDirection: 'row', width: '100%' }]}>
+                  <View style={{ flex: 0, marginLeft: 0 }}>
+                    <Text style={[styles.rowText, { fontWeight: 'bold' }]}>No Operations</Text>
+                  </View>
+                </View>
+              </View>
+            }
             keyboardShouldPersistTaps={'handled'}
             onScroll={handleScroll}
           />

@@ -243,7 +243,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                       value={'CW'}
                       onChange={handleFieldChange}
                       fieldId={'mode'}
-                      style={styles.input}
+                      style={[styles.input, { width: styles.normalFontSize * 4 }]}
                       list={[
                         { value: 'SSB', label: 'SSB' },
                         { value: 'CW', label: 'CW' },
@@ -279,7 +279,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
               )}
             </View>
           )}
-          <ScrollView horizontal={true} style={{ width: '100%' }}>
+          <ScrollView keyboardShouldPersistTaps={'handled'} horizontal={true} style={{ width: '100%' }}>
             <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.oneSpace, gap: styles.halfSpace }}>
               {!showTimeFields && (<TimeChip time={startOnMillis} icon="clock-outline" themeColor={themeColor} selected={showTimeFields} onChange={(val) => setShowTimeFields(val)} />)}
               {!showRadioFields && (<LoggerChip icon="radio" themeColor={themeColor} selected={showRadioFields} onChange={(val) => setShowRadioFields(val)}>{describeRadio(operation)}</LoggerChip>)}
@@ -345,6 +345,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             fieldId={'notes'}
+            mode={'dumb'}
           />
         </View>
         <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace }}>

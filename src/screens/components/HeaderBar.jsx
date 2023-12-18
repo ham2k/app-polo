@@ -19,25 +19,13 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
     close = back
   }
 
-  const contentStyleTweaks = useMemo(() => {
-    if ((back || close)) {
-      if (rightAction) {
-        return {}
-      } else {
-        return {
-          marginRight: 48
-        }
-      }
+  const sidesWidth = useMemo(() => {
+    if (back || close) {
+      return 48
     } else {
-      if (rightAction) {
-        return {
-          marginLeft: 48
-        }
-      } else {
-        return {}
-      }
+      return 84
     }
-  }, [back, close, rightAction])
+  }, [back, close])
 
   return (
     <Appbar.Header
@@ -51,15 +39,26 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
         backgroundColor={styles.colors.primary}
       />
 
-      {back ? <Appbar.Action isLeading onPress={navigation.goBack} icon={options.closeInsteadOfBack ? 'close' : 'arrow-left'} /> : null}
+      <View flexDirection="row" justifyContent="flex-start" style={{ width: sidesWidth }}>
+        {back ? (
+          <Appbar.Action
+            isLeading
+            onPress={navigation.goBack}
+            icon={options.closeInsteadOfBack ? 'close' : 'arrow-left'}
+            theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
+          />
+        ) : (
+          <Text style={[styles.screenTitleLight, { marginLeft: styles.oneSpace }]}>Ham2K</Text>
+        )}
+      </View>
 
       <Appbar.Content
-        style={[contentStyleTweaks, { flex: 1 }]}
+        style={[{ flex: 1 }]}
         title={
           title && subTitle ? (
             <View flexDirection="row" justifyContent="center">
-              <Text style={styles.screenTitleLeft}>{title}</Text>
-              <Text style={styles.screenTitleRight}>{subTitle}</Text>
+              <Text style={[styles.screenTitleLight, { marginRight: styles.oneSpace }]}>{title}</Text>
+              <Text style={styles.screenTitleBold}>{subTitle}</Text>
             </View>
           ) : (
             <View flexDirection="row" justifyContent="center">
@@ -69,7 +68,18 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
         }
       />
 
-      {rightAction ? <Appbar.Action isLeading onPress={onRightActionPress} icon={rightAction} /> : null}
+      <View flexDirection="row" justifyContent="flex-end" style={{ width: sidesWidth }}>
+        {rightAction ? (
+          <Appbar.Action
+            isLeading
+            onPress={onRightActionPress}
+            icon={rightAction}
+            theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
+          />
+        ) : (
+          <Text />
+        )}
+      </View>
 
     </Appbar.Header>
   )
