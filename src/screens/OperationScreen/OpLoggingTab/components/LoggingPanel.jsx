@@ -204,6 +204,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                       onChange={handleFieldChange}
                       onSubmitEditing={handleSubmit}
                       fieldId={'time'}
+                      mode={'dumb'}
                     />
                     <ThemedTextInput
                       themeColor={themeColor}
@@ -214,6 +215,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                       onChange={handleFieldChange}
                       onSubmitEditing={handleSubmit}
                       fieldId={'date'}
+                      mode={'dumb'}
                     />
                   </View>
                 </View>
@@ -234,6 +236,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                       onChange={handleFieldChange}
                       onSubmitEditing={handleSubmit}
                       fieldId={'freq'}
+                      mode={'numbers'}
                     />
                     <ThemedDropDown
                       label="Mode"
@@ -269,6 +272,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                       onChange={handleFieldChange}
                       onSubmitEditing={handleSubmit}
                       fieldId={'theirPOTA'}
+                      mode={'dumb'}
                     />
                   </View>
                 </View>
@@ -316,6 +320,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             onSubmitEditing={handleSubmit}
             fieldId={'ourSent'}
             onKeyPress={spaceKeyHander}
+            mode={'dumb'}
           />
           <ThemedTextInput
             innerRef={rcvdFieldRef}
@@ -329,6 +334,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             onSubmitEditing={handleSubmit}
             fieldId={'theirSent'}
             onKeyPress={spaceKeyHander}
+            mode={'dumb'}
           />
           <ThemedTextInput
             themeColor={themeColor}

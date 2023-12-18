@@ -14,12 +14,11 @@ export default function ThemedTextInput ({
   label, placeholder, value, error,
   onChangeText, onChange, onSubmitEditing, onKeyPress,
   innerRef, fieldId,
-  uppercase, trim, noSpaces, numeric
+  uppercase, trim, noSpaces, numeric,
+  mode
 }) {
   const themeStyles = useThemedStyles()
   const [previousValue, setPreviousValue] = useState(value)
-
-  themeColor = themeColor ?? 'primary'
 
   useEffect(() => {
     setPreviousValue(value)
@@ -62,39 +61,47 @@ export default function ThemedTextInput ({
   const colorStyles = useMemo(() => {
     return {
       paperInput: {
-        color: themeStyles.theme.colors[themeColor],
-        backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
+        color: themeColor ? themeStyles.theme.colors[themeColor] : themeStyles.theme.colors.onBackground,
+        backgroundColor: themeColor ? themeStyles.theme.colors[`${themeColor}Container`] : themeStyles.theme.colors.background
       },
       nativeInput: {
-        color: themeStyles.theme.colors[themeColor],
-        backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
+        color: themeColor ? themeStyles.theme.colors[themeColor] : themeStyles.theme.colors.onBackground,
+        backgroundColor: themeColor ? themeStyles.theme.colors[`${themeColor}Container`] : themeStyles.theme.colors.background
       }
     }
   }, [themeStyles, themeColor])
 
+  const keyboardOptions = useMemo(() => {
+    if (mode === 'dumb') {
+      return {
+        autoCapitalize: 'none',
+        autoComplete: 'off',
+        autoCorrect: false,
+        spellCheck: false,
+        dataDetectorType: 'none',
+        textContentType: 'none',
+        keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
+        secureTextEntry: false,
+        importantForAutofill: 'no',
+        returnKeyType: 'send'
+      }
+    } else {
+      return {}
+    }
+  }, [mode])
+
   const renderInput = useCallback((props) => {
     return (
       <NativeTextInput
+        {...keyboardOptions}
+
         {...props}
 
         ref={innerRef}
 
         value={value}
 
-        autoCapitalize={'none'}
-        autoComplete={'off'}
-        autoCorrect={false}
-        spellCheck={false}
-        dataDetectorType={'none'}
-        textContentType={'none'}
-        // inputType={'textVisiblePassword'}
-        keyboardType={'visible-password'} // Need both this and secureTextEntry={false} to prevent autofill on Android
-        secureTextEntry={false}
-        importantForAutofill={'no'}
-
-        returnKeyType={'send'}
-
-        style={[...props.style, textStyle]}
+        style={[colorStyles.nativeInput, ...props.style, textStyle, { backgroundColor: undefined }]}
         placeholderTextColor={themeStyles.theme.colors.outline}
 
         onSubmitEditing={onSubmitEditing}
@@ -103,15 +110,15 @@ export default function ThemedTextInput ({
         onChange={handleChange}
       />
     )
-  }, [innerRef, textStyle, themeStyles, onSubmitEditing, onKeyPress, handleChange, value])
+  }, [innerRef, textStyle, themeStyles, onSubmitEditing, onKeyPress, handleChange, value, keyboardOptions, colorStyles])
 
   return (
     <TextInput
       style={[colorStyles.paperInput, style, { paddingVertical: 0 }]}
-      textColor={themeStyles.theme.colors[themeColor]}
-      selectionColor={themeStyles.theme.colors[themeColor]}
-      underlineColor={themeStyles.theme.colors[themeColor]}
-      activeUnderlineColor={themeStyles.theme.colors[themeColor]}
+      textColor={colorStyles.paperInput.color}
+      selectionColor={colorStyles.paperInput.color}
+      underlineColor={colorStyles.paperInput.color}
+      activeUnderlineColor={colorStyles.paperInput.color}
       mode={'flat'}
       dense={true}
       underlineStyle={extraStyles.underline}

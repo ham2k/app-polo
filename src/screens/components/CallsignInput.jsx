@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
@@ -19,6 +19,7 @@ export default function CallsignInput (params) {
   return (
     <ThemedTextInput
       {...params}
+      mode="dumb"
       uppercase={true}
       nospaces={true}
       error={!isValid}
