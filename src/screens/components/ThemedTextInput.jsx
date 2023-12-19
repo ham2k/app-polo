@@ -7,22 +7,28 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 const LEFT_TRIM_REGEX = /^\s+/
 const SPACES_REGEX = /\s/g
 const NUMBER_WITH_SIGNS_REGEX = /[^0-9+-]/g
-const SIGN_AFTER_A_DIGIT_REGEX = /(\d)[+-]/g
+const NUMBER_WITH_SIGNS_AND_PERIODS_REGEX = /[^0-9+-,.]/g
+const SIGN_AFTER_A_DIGIT_REGEX = /([\d,.])[+-]/g
 
 export default function ThemedTextInput ({
   style, textStyle, themeColor,
   label, placeholder, value, error,
   onChangeText, onChange, onSubmitEditing, onKeyPress,
   innerRef, fieldId,
-  uppercase, trim, noSpaces, numeric,
-  mode
+  uppercase, trim, noSpaces, numeric, decimal,
+  keyboard
 }) {
   const themeStyles = useThemedStyles()
   const [previousValue, setPreviousValue] = useState(value)
 
+  const [innerValue, setInnerValue] = useState()
   useEffect(() => {
-    setPreviousValue(value)
+    setInnerValue(`${value}`) // ensure value is a string
   }, [value])
+
+  useEffect(() => {
+    setPreviousValue(innerValue)
+  }, [innerValue])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
@@ -46,6 +52,9 @@ export default function ThemedTextInput ({
     }
     if (numeric) {
       text = text.replace(NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+    }
+    if (decimal) {
+      text = text.replace(NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
     }
     event.nativeEvent.text = text
 
@@ -72,7 +81,7 @@ export default function ThemedTextInput ({
   }, [themeStyles, themeColor])
 
   const keyboardOptions = useMemo(() => {
-    if (mode === 'dumb') {
+    if (keyboard === 'dumb') {
       return {
         autoCapitalize: 'none',
         autoComplete: 'off',
@@ -85,7 +94,7 @@ export default function ThemedTextInput ({
         importantForAutofill: 'no',
         returnKeyType: 'send'
       }
-    } else if (mode === 'numbers') {
+    } else if (keyboard === 'numbers') {
       return {
         autoCapitalize: 'none',
         autoComplete: 'off',
@@ -102,9 +111,9 @@ export default function ThemedTextInput ({
     } else {
       return {}
     }
-  }, [mode])
-
+  }, [keyboard])
   const renderInput = useCallback((props) => {
+    console.log('renderInput', fieldId, keyboard, keyboardOptions?.inputMode)
     return (
       <NativeTextInput
         {...keyboardOptions}
@@ -113,7 +122,7 @@ export default function ThemedTextInput ({
 
         ref={innerRef}
 
-        value={value || ' '}
+        value={innerValue || ' '}
 
         style={[colorStyles.nativeInput, ...props.style, textStyle, { backgroundColor: undefined }]}
         placeholderTextColor={themeStyles.theme.colors.outline}
@@ -124,7 +133,7 @@ export default function ThemedTextInput ({
         onChange={handleChange}
       />
     )
-  }, [innerRef, textStyle, themeStyles, onSubmitEditing, onKeyPress, handleChange, value, keyboardOptions, colorStyles])
+  }, [innerRef, textStyle, themeStyles, onSubmitEditing, onKeyPress, handleChange, innerValue, keyboardOptions, colorStyles])
 
   return (
     <TextInput
@@ -136,7 +145,7 @@ export default function ThemedTextInput ({
       mode={'flat'}
       dense={true}
       underlineStyle={extraStyles.underline}
-      value={value || ' '}
+      value={innerValue || ' '}
       label={label}
       placeholder={placeholder}
       // onFocus={handleFocus}

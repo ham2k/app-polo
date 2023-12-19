@@ -10,6 +10,7 @@ import LoggerChip from '../components/LoggerChip'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteADIF, deleteOperation, generateADIF, selectOperation, setOperation } from '../../../store/operations'
 import CallsignInput from '../../components/CallsignInput'
+import POTAInput from '../../components/POTAInput'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -104,7 +105,7 @@ export default function OpSettingsTab ({ navigation, route }) {
         </View>
         {showPOTA && (
           <View style={[{ flex: 0, flexDirection: 'row' }]}>
-            <TextInput
+            <POTAInput
               style={[styles.paperInput, { flex: 3, width: 100 }]}
               textStyle={styles.nativeInput}
               label={'POTA References'}

@@ -19,7 +19,7 @@ export default function CallsignInput (params) {
   return (
     <ThemedTextInput
       {...params}
-      mode="dumb"
+      keyboard="dumb"
       uppercase={true}
       nospaces={true}
       error={!isValid}
