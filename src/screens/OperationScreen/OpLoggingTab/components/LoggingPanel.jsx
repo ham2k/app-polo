@@ -13,6 +13,9 @@ import CallsignInput from '../../../components/CallsignInput'
 import ThemedDropDown from '../../../components/ThemedDropDown'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import TimeChip from '../../components/TimeChip'
+import POTAInput from '../../../components/POTAInput'
+import FrequencyInput from '../../../components/FrequencyInput'
+import { parseFreqInMHz } from '../../../../tools/frequencyFormats'
 
 // Not actually a react hook, just named like one
 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -137,7 +140,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
     } else if (fieldId === 'theirPOTA') {
       setTheirPOTA(text)
     } else if (fieldId === 'freq') {
-      onOperationChange && onOperationChange({ freq: text })
+      onOperationChange && onOperationChange({ freq: parseFreqInMHz(text) })
     } else if (fieldId === 'mode') {
       onOperationChange && onOperationChange({ mode: text })
     }
@@ -204,7 +207,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                       onChange={handleFieldChange}
                       onSubmitEditing={handleSubmit}
                       fieldId={'time'}
-                      mode={'dumb'}
+                      keyboard={'dumb'}
                     />
                     <ThemedTextInput
                       themeColor={themeColor}
@@ -215,7 +218,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                       onChange={handleFieldChange}
                       onSubmitEditing={handleSubmit}
                       fieldId={'date'}
-                      mode={'dumb'}
+                      keyboard={'dumb'}
                     />
                   </View>
                 </View>
@@ -227,16 +230,15 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                     <LoggerChip icon="radio" themeColor={themeColor} selected={showRadioFields} onChange={(val) => setShowRadioFields(val)}>Transceiver</LoggerChip>
                   </View>
                   <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
-                    <ThemedTextInput
+                    <FrequencyInput
                       themeColor={themeColor}
                       style={[styles.input]}
                       value={operation.freq ?? ''}
                       label="Frequency"
-                      placeholder="14.250"
+                      placeholder=""
                       onChange={handleFieldChange}
                       onSubmitEditing={handleSubmit}
                       fieldId={'freq'}
-                      mode={'numbers'}
                     />
                     <ThemedDropDown
                       label="Mode"
@@ -263,7 +265,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                     <LoggerChip icon="pine-tree" themeColor={themeColor} selected={showPOTAFields} onChange={(val) => setShowPOTAFields(val)}>{operation.pota ? 'Park-to-Park' : 'Their POTA'}</LoggerChip>
                   </View>
                   <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
-                    <ThemedTextInput
+                    <POTAInput
                       themeColor={themeColor}
                       style={[styles.input]}
                       value={theirPOTA}
@@ -272,7 +274,6 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                       onChange={handleFieldChange}
                       onSubmitEditing={handleSubmit}
                       fieldId={'theirPOTA'}
-                      mode={'dumb'}
                     />
                   </View>
                 </View>
@@ -313,28 +314,27 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             themeColor={themeColor}
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
             value={ourSent}
-            numeric={true}
             label="Sent"
             placeholder="RST"
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             fieldId={'ourSent'}
             onKeyPress={spaceKeyHander}
-            mode={'dumb'}
+            keyboard={'number'}
           />
           <ThemedTextInput
             innerRef={rcvdFieldRef}
             themeColor={themeColor}
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
             value={theirSent}
-            numeric={true}
             label="Rcvd"
             placeholder="RST"
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             fieldId={'theirSent'}
             onKeyPress={spaceKeyHander}
-            mode={'dumb'}
+            keyboard={'number'}
+            numeric={true}
           />
           <ThemedTextInput
             themeColor={themeColor}
@@ -345,7 +345,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             fieldId={'notes'}
-            mode={'dumb'}
+            keyboard={'dumb'}
           />
         </View>
         <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace }}>
