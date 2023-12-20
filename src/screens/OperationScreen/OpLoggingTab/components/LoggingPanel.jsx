@@ -376,6 +376,8 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             onSubmitEditing={handleSubmit}
             fieldId={'theirCall'}
             onKeyPress={spaceKeyHander}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
           />
           <ThemedTextInput
             innerRef={sentFieldRef}
@@ -390,6 +392,23 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             fieldId={'ourSent'}
             onKeyPress={spaceKeyHander}
             keyboard={'numbers'}
+            numeric={true}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
+            // innerRef={sentFieldRef}
+            // themeColor={themeColor}
+            // style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
+            // value={ourSent}
+            // label="Sent"
+            // placeholder="RST"
+            // onChange={handleFieldChange}
+            // onSubmitEditing={handleSubmit}
+            // fieldId={'ourSent'}
+            // onKeyPress={spaceKeyHander}
+            // keyboard={'numbers'}
+            // numeric={true}
+            // onBlur={handleBlur}
+            // onFocus={handleFocus}
           />
           <ThemedTextInput
             innerRef={rcvdFieldRef}
@@ -405,6 +424,8 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             onKeyPress={spaceKeyHander}
             keyboard={'numbers'}
             numeric={true}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
           />
           <ThemedTextInput
             themeColor={themeColor}
