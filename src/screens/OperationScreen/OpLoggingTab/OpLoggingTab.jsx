@@ -69,9 +69,12 @@ export default function OpLoggingTab ({ navigation, route }) {
     if (qso.endOnMillis) {
       qso.endOn = new Date(qso.endOnMillis).toISOString()
     }
+    qso.our.sent = qso.our.sent || (operation.mode === 'CW' ? '599' : '59')
+    qso.their.sent = qso.their.sent || (operation.mode === 'CW' ? '599' : '59')
 
     qso.mode = operation.mode
     qso.freq = operation.freq
+
     if (operation.pota) {
       qso.refs = qso.refs ?? []
       qso.refs.push({ type: 'potaActivation', ref: operation.pota })
