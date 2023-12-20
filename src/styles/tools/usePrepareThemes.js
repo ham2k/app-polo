@@ -20,6 +20,7 @@ export function usePrepareThemes () {
         loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).lighten(1.2).desaturate(0.3).hex()
       })
       loadedColors.onBackgroundLight = Color(loadedColors.onBackground).darken(0.3).hex()
+      loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).darken(0.5).hex()
     } else {
       ['primary', 'secondary', 'tertiary'].forEach((color) => {
         // loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(0.95).desaturate(0.7).hex()
@@ -27,6 +28,7 @@ export function usePrepareThemes () {
         loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).darken(0.05).desaturate(0.3).hex()
       })
       loadedColors.onBackgroundLight = Color(loadedColors.onBackground).lighten(3).hex()
+      loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).lighten(6).hex()
     }
 
     return loadedColors

@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { TextInput } from 'react-native-paper'
@@ -6,6 +7,7 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 const LEFT_TRIM_REGEX = /^\s+/
 const SPACES_REGEX = /\s/g
+const ONLY_SPACES_REGEX = /^\s+$/g
 const NUMBER_WITH_SIGNS_REGEX = /[^0-9+-]/g
 const NUMBER_WITH_SIGNS_AND_PERIODS_REGEX = /[^0-9+-,.]/g
 const SIGN_AFTER_A_DIGIT_REGEX = /([\d,.])[+-]/g
@@ -14,7 +16,7 @@ export default function ThemedTextInput (props) {
   const {
     style, textStyle, themeColor,
     label, placeholder, value, error,
-    onChangeText, onChange, onSubmitEditing, onKeyPress,
+    onChangeText, onChange, onSubmitEditing, onKeyPress, onFocus, onBlur,
     innerRef, fieldId,
     uppercase, trim, noSpaces, numeric, decimal,
     keyboard
@@ -37,6 +39,9 @@ export default function ThemedTextInput (props) {
     // Lets check if what changed was the addition of a space
     if ((text !== previousValue) && (text.replace(SPACES_REGEX, '') === previousValue)) {
       spaceAdded = true
+    } else if (text.match(ONLY_SPACES_REGEX) && previousValue !== '') { // or a space replacing the entire value
+      spaceAdded = true
+      text = previousValue
     }
 
     text = text.replace(LEFT_TRIM_REGEX, '')
@@ -63,7 +68,6 @@ export default function ThemedTextInput (props) {
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId })
     if (spaceAdded) {
-      console.log('spaceAdded', fieldId)
       onKeyPress && onKeyPress({ nativeEvent: { key: ' ', target: event.nativeEvent.target } })
     }
   }, [onChangeText, onChange, fieldId, uppercase, noSpaces, numeric, decimal, trim, previousValue, onKeyPress])
@@ -77,7 +81,9 @@ export default function ThemedTextInput (props) {
       nativeInput: {
         color: themeColor ? themeStyles.theme.colors[themeColor] : themeStyles.theme.colors.onBackground,
         backgroundColor: themeColor ? themeStyles.theme.colors[`${themeColor}Container`] : themeStyles.theme.colors.background
-      }
+      },
+      selectionColor: themeColor ? themeStyles.theme.colors[`${themeColor}Light`] : themeStyles.theme.colors.primaryLight,
+      cursorColor: themeColor ? themeStyles.theme.colors[`${themeColor}`] : themeStyles.theme.colors.primary
     }
   }, [themeStyles, themeColor])
 
@@ -91,8 +97,8 @@ export default function ThemedTextInput (props) {
         dataDetectorType: 'none',
         textContentType: 'none',
         inputMode: undefined,
-        // keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
-        // secureTextEntry: false,
+        keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
+        secureTextEntry: false,
         importantForAutofill: 'no',
         returnKeyType: 'send'
       }
@@ -105,6 +111,8 @@ export default function ThemedTextInput (props) {
         dataDetectorType: 'none',
         textContentType: 'none',
         inputMode: undefined,
+        keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
+        secureTextEntry: false,
         // keyboardType: 'numbers-and-punctuation',
         // secureTextEntry: false,
         importantForAutofill: 'no',
@@ -115,6 +123,16 @@ export default function ThemedTextInput (props) {
     }
   }, [keyboard])
 
+  const [isFocused, setIsFocused] = useState(false)
+  const handleFocus = useCallback((event) => {
+    setIsFocused(true)
+    onFocus && onFocus(event)
+  }, [onFocus])
+  const handleBlur = useCallback((event) => {
+    setIsFocused(false)
+    onBlur && onBlur(event)
+  }, [onBlur])
+
   const renderInput = useCallback((props) => {
     return (
       <NativeTextInput
@@ -124,23 +142,21 @@ export default function ThemedTextInput (props) {
 
         ref={innerRef}
 
-        value={strValue || ' '}
-
+        value={strValue || ''}
+        placeholder={placeholder}
         style={[colorStyles.nativeInput, ...props.style, textStyle, { backgroundColor: undefined }]}
-        placeholderTextColor={themeStyles.theme.colors.outline}
-
+        placeholderTextColor={themeStyles.theme.colors.onBackgroundLighter}
+        cursorColor={colorStyles.cursorColor}
+        selectionColor={colorStyles.sectionColor}
         onSubmitEditing={onSubmitEditing}
         blurOnSubmit={false} // Prevent keyboard from hiding
         onKeyPress={onKeyPress}
         onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
     )
-  }, [
-    innerRef,
-    textStyle, themeStyles, colorStyles,
-    onSubmitEditing, onKeyPress, handleChange, strValue,
-    keyboardOptions
-  ])
+  }, [keyboardOptions, innerRef, strValue, colorStyles, textStyle, themeStyles, onSubmitEditing, onKeyPress, handleChange, handleFocus, handleBlur, placeholder])
 
   return (
     <TextInput

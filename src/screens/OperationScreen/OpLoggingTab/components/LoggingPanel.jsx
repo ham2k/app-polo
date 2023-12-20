@@ -15,7 +15,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import TimeChip from '../../components/TimeChip'
 import POTAInput from '../../../components/POTAInput'
 import FrequencyInput from '../../../components/FrequencyInput'
-import { parseFreqInMHz } from '../../../../tools/frequencyFormats'
+import { fmtFreqInMHz, parseFreqInMHz } from '../../../../tools/frequencyFormats'
 import { NumberKeys } from './LoggingPanel/NumberKeys'
 
 // Not actually a react hook, just named like one
@@ -23,7 +23,7 @@ import { NumberKeys } from './LoggingPanel/NumberKeys'
 useBuiltinCountryFile()
 
 function describeRadio (operation) {
-  return `${operation.freq ?? '000'} MHz • ${operation.mode ?? 'SSB'}`
+  return `${operation.freq ? fmtFreqInMHz(operation.freq) : '?'} MHz • ${operation.mode ?? 'SSB'}`
 }
 
 function prepareStyles (themeStyles, themeColor) {
@@ -70,10 +70,9 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
 
   // Initialize the form with the QSO data
   useEffect(() => {
-    const mode = qso?.mode ?? 'SSB'
     setTheirCall(qso?.their?.call ?? '')
-    setTheirSent(qso?.their?.sent ?? (mode === 'CW' ? '599' : '59'))
-    setOurSent(qso?.our?.sent ?? (mode === 'CW' ? '599' : '59'))
+    setTheirSent(qso?.their?.sent ?? '')
+    setOurSent(qso?.our?.sent ?? '')
     if (qso.startOnMillis) {
       setPausedTime(true)
       setShowTimeFields(true)
@@ -176,7 +175,6 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
 
   // Switch between fields with the space key
   const spaceKeyHander = useCallback((event) => {
-    console.log('spaceKeyHander')
     const { nativeEvent: { key, target } } = event
     if (key === ' ') {
       if (target === findNodeHandle(callFieldRef.current)) {
@@ -190,6 +188,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
   }, [callFieldRef, sentFieldRef, rcvdFieldRef])
 
   const [currentField, setCurrentField] = useState('')
+  const [currentFieldSelection, setCurrentFieldSelection] = useState(null)
   const [blurTimeout, setBlurTimeout] = useState(null)
   const handleBlur = useCallback((event) => {
     if (blurTimeout) {
@@ -207,27 +206,34 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
       setBlurTimeout(null)
     }
     const { nativeEvent: { target } } = event
-    console.log('handleFocus', target)
     if (target === findNodeHandle(callFieldRef.current)) {
       setCurrentField('theirCall')
     } else if (target === findNodeHandle(sentFieldRef.current)) {
-      setCurrentField('theirSent')
-      rcvdFieldRef.current.focus()
-    } else if (target === findNodeHandle(rcvdFieldRef.current)) {
       setCurrentField('ourSent')
+    } else if (target === findNodeHandle(rcvdFieldRef.current)) {
+      setCurrentField('theirSent')
     }
   }, [blurTimeout])
 
+  const handleSelectionChange = useCallback((event) => {
+    const { nativeEvent: { selection: { start, end } } } = event
+    setCurrentFieldSelection({ start, end })
+  }, [])
+
   const handleNumberKey = useCallback((number) => {
+    const { start, end } = currentFieldSelection ?? {}
+    const replaceContents = (text) => {
+      return text.substring(0, start) + number + text.substring(end)
+    }
     if (currentField === 'theirCall') {
-      setTheirCall(theirCall + number)
+      setTheirCall(replaceContents(theirCall))
     } else if (currentField === 'theirSent') {
-      setTheirSent(theirSent + number)
+      setTheirSent(replaceContents(theirSent))
     } else if (currentField === 'ourSent') {
-      setOurSent(ourSent + number)
+      setOurSent(replaceContents(ourSent))
     }
     // callFieldRef.current.focus()
-  }, [currentField, ourSent, theirCall, theirSent])
+  }, [currentField, currentFieldSelection, ourSent, theirCall, theirSent])
 
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
   useEffect(() => {
@@ -310,7 +316,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
                     />
                     <ThemedDropDown
                       label="Mode"
-                      value={'CW'}
+                      value={operation.mode}
                       onChange={handleFieldChange}
                       fieldId={'mode'}
                       style={[styles.input, { width: styles.normalFontSize * 4 }]}
@@ -378,6 +384,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             onKeyPress={spaceKeyHander}
             onBlur={handleBlur}
             onFocus={handleFocus}
+            onSelectionChange={handleSelectionChange}
           />
           <ThemedTextInput
             innerRef={sentFieldRef}
@@ -385,7 +392,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
             value={ourSent}
             label="Sent"
-            placeholder="RST"
+            placeholder={qso.mode === 'CW' ? '599' : '59'}
             noSpaces={true}
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
@@ -395,20 +402,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             numeric={true}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            // innerRef={sentFieldRef}
-            // themeColor={themeColor}
-            // style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
-            // value={ourSent}
-            // label="Sent"
-            // placeholder="RST"
-            // onChange={handleFieldChange}
-            // onSubmitEditing={handleSubmit}
-            // fieldId={'ourSent'}
-            // onKeyPress={spaceKeyHander}
-            // keyboard={'numbers'}
-            // numeric={true}
-            // onBlur={handleBlur}
-            // onFocus={handleFocus}
+            onSelectionChange={handleSelectionChange}
           />
           <ThemedTextInput
             innerRef={rcvdFieldRef}
@@ -416,7 +410,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
             value={theirSent}
             label="Rcvd"
-            placeholder="RST"
+            placeholder={qso.mode === 'CW' ? '599' : '59'}
             noSpaces={true}
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
@@ -426,6 +420,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             numeric={true}
             onBlur={handleBlur}
             onFocus={handleFocus}
+            onSelectionChange={handleSelectionChange}
           />
           <ThemedTextInput
             themeColor={themeColor}
