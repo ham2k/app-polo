@@ -32,8 +32,6 @@ function oneQSOtoADIFWithPOTAMultiples (qso, commonRefs) {
   const potaRefs = (qso?.refs || []).filter(ref => ref.type === 'pota')
   let str = ''
 
-  console.log('potaActivationRefs', potaActivationRefs)
-  console.log('potaRefs', potaRefs)
   if (potaActivationRefs.length === 0) {
     if (potaRefs.length === 0) {
       str += oneQSOtoADIF(qso)
@@ -57,7 +55,6 @@ function oneQSOtoADIFWithPOTAMultiples (qso, commonRefs) {
 }
 
 function oneQSOtoADIF (qso, potaRefs = {}, timeOfffset = 0) {
-  console.log('qso', qso.their.call, potaRefs, timeOfffset)
   let str = ''
   str += adifField('CALL', qso.their.call)
   if (qso.band) str += adifField('BAND', qso.band)
