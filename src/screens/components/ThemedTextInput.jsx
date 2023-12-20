@@ -10,32 +10,32 @@ const NUMBER_WITH_SIGNS_REGEX = /[^0-9+-]/g
 const NUMBER_WITH_SIGNS_AND_PERIODS_REGEX = /[^0-9+-,.]/g
 const SIGN_AFTER_A_DIGIT_REGEX = /([\d,.])[+-]/g
 
-export default function ThemedTextInput ({
-  style, textStyle, themeColor,
-  label, placeholder, value, error,
-  onChangeText, onChange, onSubmitEditing, onKeyPress,
-  innerRef, fieldId,
-  uppercase, trim, noSpaces, numeric, decimal,
-  keyboard
-}) {
+export default function ThemedTextInput (props) {
+  const {
+    style, textStyle, themeColor,
+    label, placeholder, value, error,
+    onChangeText, onChange, onSubmitEditing, onKeyPress,
+    innerRef, fieldId,
+    uppercase, trim, noSpaces, numeric, decimal,
+    keyboard
+  } = props
   const themeStyles = useThemedStyles()
   const [previousValue, setPreviousValue] = useState(value)
 
-  const [innerValue, setInnerValue] = useState()
-  useEffect(() => {
-    setInnerValue(`${value}`) // ensure value is a string
+  const strValue = useMemo(() => {
+    return `${value}`
   }, [value])
 
   useEffect(() => {
-    setPreviousValue(innerValue)
-  }, [innerValue])
+    setPreviousValue(strValue)
+  }, [strValue])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
     let spaceAdded = false
 
     // Lets check if what changed was the addition of a space
-    if (text !== previousValue && text.replace(SPACES_REGEX, '') === previousValue) {
+    if ((text !== previousValue) && (text.replace(SPACES_REGEX, '') === previousValue)) {
       spaceAdded = true
     }
 
@@ -65,7 +65,7 @@ export default function ThemedTextInput ({
     if (spaceAdded) {
       onKeyPress && onKeyPress({ nativeEvent: { key: ' ', target: event.nativeEvent.target } })
     }
-  }, [onChangeText, onChange, fieldId, uppercase, noSpaces, numeric, trim, previousValue, onKeyPress])
+  }, [onChangeText, onChange, fieldId, uppercase, noSpaces, numeric, decimal, trim, previousValue, onKeyPress])
 
   const colorStyles = useMemo(() => {
     return {
@@ -89,6 +89,7 @@ export default function ThemedTextInput ({
         spellCheck: false,
         dataDetectorType: 'none',
         textContentType: 'none',
+        inputMode: undefined,
         keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
         secureTextEntry: false,
         importantForAutofill: 'no',
@@ -102,8 +103,8 @@ export default function ThemedTextInput ({
         spellCheck: false,
         dataDetectorType: 'none',
         textContentType: 'none',
-        inputMode: 'decimal',
-        keyboardType: 'decimal-pad',
+        inputMode: undefined,
+        keyboardType: 'numbers-and-punctuation',
         secureTextEntry: false,
         importantForAutofill: 'no',
         returnKeyType: 'send'
@@ -112,8 +113,8 @@ export default function ThemedTextInput ({
       return {}
     }
   }, [keyboard])
+
   const renderInput = useCallback((props) => {
-    console.log('renderInput', fieldId, keyboard, keyboardOptions?.inputMode)
     return (
       <NativeTextInput
         {...keyboardOptions}
@@ -122,7 +123,7 @@ export default function ThemedTextInput ({
 
         ref={innerRef}
 
-        value={innerValue || ' '}
+        value={strValue || ' '}
 
         style={[colorStyles.nativeInput, ...props.style, textStyle, { backgroundColor: undefined }]}
         placeholderTextColor={themeStyles.theme.colors.outline}
@@ -133,10 +134,16 @@ export default function ThemedTextInput ({
         onChange={handleChange}
       />
     )
-  }, [innerRef, textStyle, themeStyles, onSubmitEditing, onKeyPress, handleChange, innerValue, keyboardOptions, colorStyles])
+  }, [
+    innerRef,
+    textStyle, themeStyles, colorStyles,
+    onSubmitEditing, onKeyPress, handleChange, strValue,
+    keyboardOptions, fieldId
+  ])
 
   return (
     <TextInput
+      {...props}
       style={[colorStyles.paperInput, style, { paddingVertical: 0 }]}
       textColor={colorStyles.paperInput.color}
       selectionColor={colorStyles.paperInput.color}
@@ -145,11 +152,9 @@ export default function ThemedTextInput ({
       mode={'flat'}
       dense={true}
       underlineStyle={extraStyles.underline}
-      value={innerValue || ' '}
+      value={value || ' '}
       label={label}
       placeholder={placeholder}
-      // onFocus={handleFocus}
-      // onBlur={handleBlur}
       render={renderInput}
       error={error}
     />

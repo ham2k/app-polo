@@ -21,7 +21,7 @@ export default function CallsignInput (params) {
       {...params}
       keyboard="dumb"
       uppercase={true}
-      nospaces={true}
+      noSpaces={true}
       error={!isValid}
       textStyle={[textStyle, styles?.text?.callsign]}
     />
