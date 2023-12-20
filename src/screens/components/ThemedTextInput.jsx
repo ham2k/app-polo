@@ -63,6 +63,7 @@ export default function ThemedTextInput (props) {
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId })
     if (spaceAdded) {
+      console.log('spaceAdded', fieldId)
       onKeyPress && onKeyPress({ nativeEvent: { key: ' ', target: event.nativeEvent.target } })
     }
   }, [onChangeText, onChange, fieldId, uppercase, noSpaces, numeric, decimal, trim, previousValue, onKeyPress])
@@ -90,8 +91,8 @@ export default function ThemedTextInput (props) {
         dataDetectorType: 'none',
         textContentType: 'none',
         inputMode: undefined,
-        keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
-        secureTextEntry: false,
+        // keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
+        // secureTextEntry: false,
         importantForAutofill: 'no',
         returnKeyType: 'send'
       }
@@ -104,8 +105,8 @@ export default function ThemedTextInput (props) {
         dataDetectorType: 'none',
         textContentType: 'none',
         inputMode: undefined,
-        keyboardType: 'numbers-and-punctuation',
-        secureTextEntry: false,
+        // keyboardType: 'numbers-and-punctuation',
+        // secureTextEntry: false,
         importantForAutofill: 'no',
         returnKeyType: 'send'
       }
@@ -138,7 +139,7 @@ export default function ThemedTextInput (props) {
     innerRef,
     textStyle, themeStyles, colorStyles,
     onSubmitEditing, onKeyPress, handleChange, strValue,
-    keyboardOptions, fieldId
+    keyboardOptions
   ])
 
   return (

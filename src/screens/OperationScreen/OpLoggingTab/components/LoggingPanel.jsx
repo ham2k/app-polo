@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ScrollView, Text, View, findNodeHandle } from 'react-native'
+import { Keyboard, ScrollView, Text, View, findNodeHandle } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import { analyzeFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
@@ -16,6 +16,7 @@ import TimeChip from '../../components/TimeChip'
 import POTAInput from '../../../components/POTAInput'
 import FrequencyInput from '../../../components/FrequencyInput'
 import { parseFreqInMHz } from '../../../../tools/frequencyFormats'
+import { NumberKeys } from './LoggingPanel/NumberKeys'
 
 // Not actually a react hook, just named like one
 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -151,20 +152,6 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
     startOnMillis, pausedTime
   ])
 
-  // Switch between fields with the space key
-  const spaceKeyHander = useCallback((event) => {
-    const { nativeEvent: { key, target } } = event
-    if (key === ' ') {
-      if (target === findNodeHandle(callFieldRef.current)) {
-        sentFieldRef.current.focus()
-      } else if (target === findNodeHandle(sentFieldRef.current)) {
-        rcvdFieldRef.current.focus()
-      } else if (target === findNodeHandle(rcvdFieldRef.current)) {
-        callFieldRef.current.focus()
-      }
-    }
-  }, [callFieldRef, sentFieldRef, rcvdFieldRef])
-
   // Finally submit the QSO
   const handleSubmit = useCallback(() => {
     if (isValid) {
@@ -186,6 +173,85 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
       onLog(finalQSO)
     }
   }, [notes, ourSent, theirCall, theirSent, theirPOTA, startOnMillis, onLog, isValid])
+
+  // Switch between fields with the space key
+  const spaceKeyHander = useCallback((event) => {
+    console.log('spaceKeyHander')
+    const { nativeEvent: { key, target } } = event
+    if (key === ' ') {
+      if (target === findNodeHandle(callFieldRef.current)) {
+        sentFieldRef.current.focus()
+      } else if (target === findNodeHandle(sentFieldRef.current)) {
+        rcvdFieldRef.current.focus()
+      } else if (target === findNodeHandle(rcvdFieldRef.current)) {
+        callFieldRef.current.focus()
+      }
+    }
+  }, [callFieldRef, sentFieldRef, rcvdFieldRef])
+
+  const [currentField, setCurrentField] = useState('')
+  const [blurTimeout, setBlurTimeout] = useState(null)
+  const handleBlur = useCallback((event) => {
+    if (blurTimeout) {
+      clearTimeout(blurTimeout)
+      setBlurTimeout(null)
+    }
+    setBlurTimeout(setTimeout(() => {
+      setCurrentField('')
+    }, 500))
+  }, [blurTimeout])
+
+  const handleFocus = useCallback((event) => {
+    if (blurTimeout) {
+      clearTimeout(blurTimeout)
+      setBlurTimeout(null)
+    }
+    const { nativeEvent: { target } } = event
+    console.log('handleFocus', target)
+    if (target === findNodeHandle(callFieldRef.current)) {
+      setCurrentField('theirCall')
+    } else if (target === findNodeHandle(sentFieldRef.current)) {
+      setCurrentField('theirSent')
+      rcvdFieldRef.current.focus()
+    } else if (target === findNodeHandle(rcvdFieldRef.current)) {
+      setCurrentField('ourSent')
+    }
+  }, [blurTimeout])
+
+  const handleNumberKey = useCallback((number) => {
+    if (currentField === 'theirCall') {
+      setTheirCall(theirCall + number)
+    } else if (currentField === 'theirSent') {
+      setTheirSent(theirSent + number)
+    } else if (currentField === 'ourSent') {
+      setOurSent(ourSent + number)
+    }
+    // callFieldRef.current.focus()
+  }, [currentField, ourSent, theirCall, theirSent])
+
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+  useEffect(() => {
+    setIsKeyboardVisible(Keyboard.isVisible())
+    const willShowSubscription = Keyboard.addListener('keyboardWillShow', () => {
+      setIsKeyboardVisible(true)
+    })
+    const willHideSubscription = Keyboard.addListener('keyboardWillHide', () => {
+      setIsKeyboardVisible(false)
+    })
+    const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardVisible(true)
+    })
+    const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardVisible(false)
+    })
+
+    return () => {
+      willShowSubscription.remove()
+      willHideSubscription.remove()
+      didShowSubscription.remove()
+      didHideSubscription.remove()
+    }
+  }, [])
 
   return (
     <View style={[styles.root, style, { flexDirection: 'column', justifyContent: 'flex-end', width: '100%', minHeight: 100 }]}>
@@ -318,6 +384,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             value={ourSent}
             label="Sent"
             placeholder="RST"
+            noSpaces={true}
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             fieldId={'ourSent'}
@@ -331,6 +398,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             value={theirSent}
             label="Rcvd"
             placeholder="RST"
+            noSpaces={true}
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             fieldId={'theirSent'}
@@ -363,6 +431,9 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
         </View>
       </View>
 
+      {isKeyboardVisible && (
+        <NumberKeys themeColor={themeColor} onNumberKeyPressed={handleNumberKey} enabled={!!currentField} />
+      )}
     </View>
   )
 }
