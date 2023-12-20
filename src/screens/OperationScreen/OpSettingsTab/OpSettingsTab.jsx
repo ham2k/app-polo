@@ -50,9 +50,9 @@ export default function OpSettingsTab ({ navigation, route }) {
         url: `file://${path}`,
         type: 'text/plain' // There is no official ADIF mime type
       }).then((x) => {
-        console.log('Shared', x)
+        console.error('Shared', x)
       }).catch((e) => {
-        console.log('Sharing Error', e)
+        console.error('Sharing Error', e)
       }).finally(() => {
         dispatch(deleteADIF(path))
       })

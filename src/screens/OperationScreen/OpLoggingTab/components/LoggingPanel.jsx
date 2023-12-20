@@ -65,6 +65,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
   const callFieldRef = useRef()
   const sentFieldRef = useRef()
   const rcvdFieldRef = useRef()
+  const freqFieldRef = useRef()
 
   // Initialize the form with the QSO data
   useEffect(() => {
@@ -227,10 +228,11 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
               {showRadioFields && (
                 <View style={{ flex: 0, flexDirection: 'column' }}>
                   <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace }}>
-                    <LoggerChip icon="radio" themeColor={themeColor} selected={showRadioFields} onChange={(val) => setShowRadioFields(val)}>Transceiver</LoggerChip>
+                    <LoggerChip icon="radio" themeColor={themeColor} selected={showRadioFields} onChange={(val) => { freqFieldRef.current.blur(); setTimeout(() => setShowRadioFields(val), 100) }}>Transceiver</LoggerChip>
                   </View>
                   <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
                     <FrequencyInput
+                      innerRef={freqFieldRef}
                       themeColor={themeColor}
                       style={[styles.input]}
                       value={operation.freq ?? ''}
@@ -320,7 +322,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             onSubmitEditing={handleSubmit}
             fieldId={'ourSent'}
             onKeyPress={spaceKeyHander}
-            keyboard={'number'}
+            keyboard={'numbers'}
           />
           <ThemedTextInput
             innerRef={rcvdFieldRef}
@@ -333,7 +335,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             onSubmitEditing={handleSubmit}
             fieldId={'theirSent'}
             onKeyPress={spaceKeyHander}
-            keyboard={'number'}
+            keyboard={'numbers'}
             numeric={true}
           />
           <ThemedTextInput
