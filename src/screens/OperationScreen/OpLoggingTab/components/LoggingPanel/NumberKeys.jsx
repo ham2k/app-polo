@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React from 'react'
 import { Text, View } from 'react-native'
 import { TouchableRipple } from 'react-native-paper'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'

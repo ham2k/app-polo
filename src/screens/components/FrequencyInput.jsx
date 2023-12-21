@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
 import ThemedTextInput from './ThemedTextInput'
-import { fmtFreqInMHz } from '../../tools/frequencyFormats'
 
 const REMOVE_NON_DIGITS_REGEX = /[^0-9.]/g
 
