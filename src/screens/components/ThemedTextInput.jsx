@@ -16,7 +16,7 @@ export default function ThemedTextInput (props) {
   const {
     style, textStyle, themeColor,
     label, placeholder, value, error,
-    onChangeText, onChange, onSubmitEditing, onKeyPress, onFocus, onBlur,
+    onChangeText, onChange, onSubmitEditing, onKeyPress,
     innerRef, fieldId,
     uppercase, trim, noSpaces, numeric, decimal,
     keyboard
@@ -123,16 +123,6 @@ export default function ThemedTextInput (props) {
     }
   }, [keyboard])
 
-  const [isFocused, setIsFocused] = useState(false)
-  const handleFocus = useCallback((event) => {
-    setIsFocused(true)
-    onFocus && onFocus(event)
-  }, [onFocus])
-  const handleBlur = useCallback((event) => {
-    setIsFocused(false)
-    onBlur && onBlur(event)
-  }, [onBlur])
-
   const renderInput = useCallback((props) => {
     return (
       <NativeTextInput
@@ -152,11 +142,9 @@ export default function ThemedTextInput (props) {
         blurOnSubmit={false} // Prevent keyboard from hiding
         onKeyPress={onKeyPress}
         onChange={handleChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
       />
     )
-  }, [keyboardOptions, innerRef, strValue, colorStyles, textStyle, themeStyles, onSubmitEditing, onKeyPress, handleChange, handleFocus, handleBlur, placeholder])
+  }, [keyboardOptions, innerRef, strValue, colorStyles, textStyle, themeStyles, onSubmitEditing, onKeyPress, handleChange, placeholder])
 
   return (
     <TextInput
