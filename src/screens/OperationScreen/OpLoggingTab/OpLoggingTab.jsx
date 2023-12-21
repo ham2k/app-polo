@@ -8,12 +8,10 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import LoggingPanel from './components/LoggingPanel'
 import QSOList from './components/QSOList'
 import { addQSO, selectQSOs } from '../../../store/qsos'
+import { selectSettings } from '../../../store/settings'
 
-function prepareNewQSO (operation) {
+function prepareNewQSO (operation, settings) {
   return {
-    our: {
-      call: operation.call
-    },
     band: operation.band,
     mode: operation.mode
   }
@@ -33,10 +31,11 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   const dispatch = useDispatch()
   const operation = useSelector(selectOperation(route.params.operation.uuid))
+  const settings = useSelector(selectSettings)
   const qsos = useSelector(selectQSOs(route.params.operation.uuid))
 
   const [lastQSO, setLastQSO] = useState()
-  const [currentQSO, setCurrentQSO] = useState(prepareNewQSO(operation))
+  const [currentQSO, setCurrentQSO] = useState(prepareNewQSO(operation, settings, settings), settings)
 
   const listRef = useRef()
 
@@ -63,8 +62,6 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   // Log (or update) a QSO
   const logQSO = useCallback((qso) => {
-    qso.our.call = operation.call
-
     qso.startOn = new Date(qso.startOnMillis).toISOString()
     if (qso.endOnMillis) {
       qso.endOn = new Date(qso.endOnMillis).toISOString()
@@ -82,8 +79,8 @@ export default function OpLoggingTab ({ navigation, route }) {
 
     dispatch(addQSO({ uuid: operation.uuid, qso }))
     setLastQSO(qso)
-    setCurrentQSO(prepareNewQSO(operation))
-  }, [dispatch, operation])
+    setCurrentQSO(prepareNewQSO(operation, settings))
+  }, [dispatch, operation, settings])
 
   const handleOperationChange = useCallback((attributes) => {
     dispatch(setOperation({ uuid: operation.uuid, ...attributes }))

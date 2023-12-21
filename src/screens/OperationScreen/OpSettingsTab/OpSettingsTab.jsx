@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteADIF, deleteOperation, generateADIF, selectOperation, setOperation } from '../../../store/operations'
 import CallsignInput from '../../components/CallsignInput'
 import POTAInput from '../../components/POTAInput'
+import { selectSettings } from '../../../store/settings'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -40,6 +41,7 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const dispatch = useDispatch()
   const operation = useSelector(selectOperation(route.params.operation.uuid))
+  const settings = useSelector(selectSettings)
 
   const [showPOTA, setShowPOTA] = useState(false)
   const [showLocation, setShowLocation] = useState(false)
@@ -75,10 +77,10 @@ export default function OpSettingsTab ({ navigation, route }) {
         <View style={[{ flexDirection: 'row' }]}>
           <CallsignInput
             style={[styles.paperInput, { flex: 3, width: 100 }]}
-            value={operation.call}
-            label="Our Callsign"
-            placeholder="Callsign"
-            onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, call: text }))}
+            value={operation.stationCall}
+            label="Station Callsign"
+            placeholder={`Defaults to ${settings.operatorCall}`}
+            onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, stationCall: text }))}
             textStyle={styles.nativeInput}
           />
         </View>

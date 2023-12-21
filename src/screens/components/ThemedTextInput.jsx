@@ -64,7 +64,6 @@ export default function ThemedTextInput (props) {
     event.nativeEvent.text = text
 
     setPreviousValue(text)
-
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId })
     if (spaceAdded) {
@@ -142,6 +141,7 @@ export default function ThemedTextInput (props) {
         blurOnSubmit={false} // Prevent keyboard from hiding
         onKeyPress={onKeyPress}
         onChange={handleChange}
+        onChangeText={undefined}
       />
     )
   }, [keyboardOptions, innerRef, strValue, colorStyles, textStyle, themeStyles, onSubmitEditing, onKeyPress, handleChange, placeholder])

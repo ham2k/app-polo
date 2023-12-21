@@ -1,6 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
-
-import { parseCallsign } from '@ham2k/lib-callsigns'
+import React, { useCallback } from 'react'
 
 import ThemedTextInput from './ThemedTextInput'
 
@@ -9,16 +7,7 @@ const ADD_COMMAS_REGEX = /(\d+)\s*[,]*\s*([A-Z]+)/g
 const REPEAT_COUNTRY_REGEX = /(\w+)-(\d+)(\s+,\s*|,\s*|\s+)(\d+)/g
 
 export default function POTAInput (params) {
-  const { value, styles, textStyle, onChange, onChangeText, fieldId } = params
-
-  const isValid = useMemo(() => {
-    const callInfo = parseCallsign(value)
-    if (callInfo?.baseCall) {
-      return true
-    } else {
-      return false
-    }
-  }, [value])
+  const { styles, textStyle, onChange, onChangeText, fieldId } = params
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
@@ -38,7 +27,6 @@ export default function POTAInput (params) {
       keyboard="dumb"
       uppercase={true}
       nospaces={true}
-      error={!isValid}
       textStyle={[textStyle, styles?.text?.callsign]}
       onChange={handleChange}
     />

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  call: 'N0CALL',
+  operatorCall: 'N0CALL',
   onboarded: false,
   accounts: {}
 }
@@ -12,8 +12,8 @@ export const settingsSlice = createSlice({
   initialState,
 
   reducers: {
-    setCall: (state, action) => {
-      state.call = action.payload
+    setOperatorCall: (state, action) => {
+      state.operatorCall = action.payload
     },
     setOnboarded: (state, action) => {
       state.onboarded = action.payload
@@ -27,14 +27,14 @@ export const settingsSlice = createSlice({
   }
 })
 
-export const { setCall, setOnboarded, setAccountInfo } = settingsSlice.actions
+export const { setOperatorCall, setOnboarded, setAccountInfo } = settingsSlice.actions
 
 export const selectSettings = (state) => {
   return state?.settings
 }
 
-export const selectCall = (state) => {
-  return state?.settings?.call || ''
+export const selectOperatorCall = (state) => {
+  return state?.settings?.operatorCall || ''
 }
 
 export default settingsSlice.reducer
