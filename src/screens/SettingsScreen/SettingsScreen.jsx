@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import { List } from 'react-native-paper'
-import { DefaultCallsignDialog } from './components/DefaultCallsignDialog'
+import { OperatorCallsignDialog } from './components/OperatorCallsignDialog'
 import { ScrollView } from 'react-native'
 import { AccountsQRZDialog } from './components/AccountsQRZDialog'
 
@@ -26,13 +26,13 @@ export default function SettingsScreen ({ navigation }) {
           <List.Subheader>General Settings</List.Subheader>
 
           <List.Item
-            title="Default Callsign"
-            description={settings.call ? settings.call : 'No call'}
+            title="Operator's Callsign"
+            description={settings.operatorCall ?? 'No call'}
             left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="card-account-details" />}
-            onPress={() => setCurrentDialog('defaultCall')}
+            onPress={() => setCurrentDialog('operatorCall')}
           />
-          {currentDialog === 'defaultCall' && (
-            <DefaultCallsignDialog
+          {currentDialog === 'operatorCall' && (
+            <OperatorCallsignDialog
               settings={settings}
               styles={styles}
               visible={true}

@@ -123,6 +123,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
   const handleFieldChange = useCallback((event) => {
     const { fieldId, nativeEvent: { text } } = event
     if (fieldId === 'theirCall') {
+      console.log('LoggingPanel.handleFieldChange', fieldId, text)
       setTheirCall(text)
 
       if (!pausedTime) {
@@ -377,7 +378,6 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             value={theirCall}
             label="Their Call"
             placeholder=""
-            error={!isValid}
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             fieldId={'theirCall'}

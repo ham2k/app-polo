@@ -26,7 +26,7 @@ export default function HomeScreen ({ navigation }) {
   }, [dispatch])
 
   const handleNewOperation = useCallback(() => {
-    dispatch(addNewOperation({ call: settings.call, name: 'New Operation' }))
+    dispatch(addNewOperation({ stationCall: settings.operatorCall, name: 'New Operation' }))
   }, [dispatch, settings])
 
   const navigateToOperation = useCallback((operation) => {
@@ -35,9 +35,9 @@ export default function HomeScreen ({ navigation }) {
 
   const renderRow = useCallback(({ item }) => {
     return (
-      <OperationItem key={item.uuid} operation={item} styles={styles} onPress={navigateToOperation} />
+      <OperationItem key={item.uuid} operation={item} settings={settings} styles={styles} onPress={navigateToOperation} />
     )
-  }, [navigateToOperation, styles])
+  }, [navigateToOperation, styles, settings])
 
   const [isExtended, setIsExtended] = React.useState(true)
 

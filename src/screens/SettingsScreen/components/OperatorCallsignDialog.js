@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import CallsignInput from '../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
-import { setCall } from '../../../store/settings'
+import { setOperatorCall } from '../../../store/settings'
 
-export function DefaultCallsignDialog ({ visible, settings, styles, onDialogDone }) {
+export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -15,33 +15,34 @@ export function DefaultCallsignDialog ({ visible, settings, styles, onDialogDone
   }, [visible])
 
   useEffect(() => {
-    setValue(settings?.call || '')
+    setValue(settings?.operatorCall || '')
   }, [settings])
 
   const onChange = useCallback((text) => {
+    console.log('OperatorCallsignDialog.onChange', text)
     setValue(text)
   }, [setValue])
 
   const handleAccept = useCallback(() => {
-    dispatch(setCall(value))
+    dispatch(setOperatorCall(value))
     setDialogVisible(false)
   }, [value, dispatch])
 
   const handleCancel = useCallback(() => {
-    setValue(settings.call)
+    setValue(settings.operatorCall)
     setDialogVisible(false)
   }, [settings])
 
   return (
     <Portal>
       <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-        <Dialog.Title>Default Callsign</Dialog.Title>
+        <Dialog.Title>Operator's Callsign</Dialog.Title>
         <Dialog.Content>
-          <Text variant="bodyMedium">Please enter a default callsign to use on new operations:</Text>
+          <Text variant="bodyMedium">Please enter the operator's callsign:</Text>
           <CallsignInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
             value={value}
-            label="Our Callsign"
+            label="Operator's Callsign"
             placeholder="N0CALL"
             onChangeText={onChange}
           />

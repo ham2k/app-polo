@@ -10,12 +10,14 @@ import OpStatsTab from './OpStatsTab.jsx/OpStatsTab'
 import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
 import { useWindowDimensions } from 'react-native'
 import { loadQSOs } from '../../store/qsos'
+import { selectSettings } from '../../store/settings'
 
 const Tab = createMaterialTopTabNavigator()
 
 export default function OperationScreen ({ navigation, route }) {
   const dispatch = useDispatch()
   const operation = useSelector(selectOperation(route.params.operation.uuid))
+  const settings = useSelector(selectSettings)
 
   // When starting, make sure all operation data is loaded
   useEffect(() => {
@@ -25,16 +27,16 @@ export default function OperationScreen ({ navigation, route }) {
 
   // When operation data is loaded, set the title
   useEffect(() => {
-    if (operation?.call) {
-      navigation.setOptions({ title: operation?.call, subTitle: operation?.name })
+    if (operation?.stationCall || settings?.operatorCall) {
+      navigation.setOptions({ title: operation?.stationCall, subTitle: operation?.name })
     } else {
       navigation.setOptions({ title: 'New Operation' })
     }
-  }, [navigation, operation])
+  }, [navigation, operation, settings])
 
   const settingsOnly = useMemo(() => {
-    return !operation.call
-  }, [operation])
+    return !operation.stationCall && !settings?.operatorCall
+  }, [operation, settings])
 
   // useEffect(() => {
   //   navigation.jumpTo('Settings')
