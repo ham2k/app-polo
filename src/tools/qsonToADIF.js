@@ -9,7 +9,7 @@ export function qsonToADIF ({ operation, qsos }) {
       commonRefs.push({ type: 'potaActivation', ref })
     })
   }
-
+  console.log('qsonToADIF', { operation, commonRefs })
   let str = ''
 
   str += 'ADIF for Operation \n'
@@ -31,7 +31,7 @@ function oneQSOtoADIFWithPOTAMultiples (qso, commonRefs) {
   const potaActivationRefs = (commonRefs || []).filter(ref => ref.type === 'potaActivation')
   const potaRefs = (qso?.refs || []).filter(ref => ref.type === 'pota')
   let str = ''
-
+  console.log('one qso', { potaRefs, potaActivationRefs })
   if (potaActivationRefs.length === 0) {
     if (potaRefs.length === 0) {
       str += oneQSOtoADIF(qso)
@@ -67,14 +67,14 @@ function oneQSOtoADIF (qso, potaRefs = {}, timeOfffset = 0) {
   str += adifField('OPERATOR', qso.our.call)
   str += adifField('NOTES', qso.our.notes)
 
-  if (potaRefs.activationRef) {
+  if (potaRefs.potaActivation) {
     str += adifField('MY_SIG', 'POTA')
-    str += adifField('MY_SIG_INFO', potaRefs.activationRef)
+    str += adifField('MY_SIG_INFO', potaRefs.potaActivation)
   }
 
-  if (potaRefs.potaRef) {
+  if (potaRefs.pota) {
     str += adifField('SIG', 'POTA')
-    str += adifField('SIG_INFO', potaRefs.potaRef)
+    str += adifField('SIG_INFO', potaRefs.pota)
   }
 
   str += '<EOR>\n'

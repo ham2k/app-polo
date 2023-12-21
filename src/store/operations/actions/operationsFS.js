@@ -113,9 +113,14 @@ export const deleteOperation = (uuid) => async (dispatch) => {
 export const generateADIF = (uuid) => async (dispatch, getState) => {
   const state = getState()
   const operation = state.operations.info[uuid]
-  const { call, startOnMillisMax, pota } = operation
+  const settings = state.settings
 
-  const qsos = state.qsos.qsos[uuid]
+  const { startOnMillisMax, pota } = operation
+  const call = operation?.stationCall || settings?.operatorCall
+
+  const qsos = state.qsos.qsos[uuid].map(qso => {
+    return { ...qso, our: { ...qso.our, call: operation.stationCall || settings.operatorCall } }
+  })
 
   const name = `${call}-${fmtISODate(startOnMillisMax)}${pota ? `-${pota}` : ''}.adi`
   const adif = qsonToADIF({ operation, qsos })
