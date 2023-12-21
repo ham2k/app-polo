@@ -8,7 +8,7 @@ import { loadOperation, selectOperation } from '../../store/operations'
 import OpLoggingTab from './OpLoggingTab/OpLoggingTab'
 import OpStatsTab from './OpStatsTab.jsx/OpStatsTab'
 import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
-import { useWindowDimensions } from 'react-native'
+import { Platform, useWindowDimensions } from 'react-native'
 import { loadQSOs } from '../../store/qsos'
 import { selectSettings } from '../../store/settings'
 
@@ -51,7 +51,11 @@ export default function OperationScreen ({ navigation, route }) {
         initialLayout={{ width: dimensions.width, height: dimensions.height }}
         initialRouteName={ settingsOnly ? 'Settings' : 'QSOs'}
         screenOptions={{
-          tabBarItemStyle: { width: dimensions.width / 3 } // This allows tab titles to be rendered while the screen is transitioning in
+          tabBarItemStyle: { width: dimensions.width / 3 }, // This allows tab titles to be rendered while the screen is transitioning in
+
+          // See https://github.com/react-navigation/react-navigation/issues/11301
+          // on iOS, if the keyboard is open, tabs get stuck when switching
+          animationEnabled: !Platform.iOS
         }}
       >
         <Tab.Screen
@@ -74,6 +78,7 @@ export default function OperationScreen ({ navigation, route }) {
 
         <Tab.Screen
           name="Settings"
+          options={{ title: 'Operation' }}
           component={OpSettingsTab}
           initialParams={{ uuid: operation.uuid, operation }}
         />
