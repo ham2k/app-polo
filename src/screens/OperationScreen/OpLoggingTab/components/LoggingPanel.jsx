@@ -13,10 +13,10 @@ import CallsignInput from '../../../components/CallsignInput'
 import ThemedDropDown from '../../../components/ThemedDropDown'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import TimeChip from '../../components/TimeChip'
-import POTAInput from '../../../components/POTAInput'
 import FrequencyInput from '../../../components/FrequencyInput'
 import { fmtFreqInMHz, parseFreqInMHz } from '../../../../tools/frequencyFormats'
 import { NumberKeys } from './LoggingPanel/NumberKeys'
+import activities from '../../activities'
 
 // Not actually a react hook, just named like one
 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -42,26 +42,19 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-export default function LoggingPanel ({ qso, operation, onLog, onOperationChange, themeColor, style }) {
+export default function LoggingPanel ({ qso, operation, settings, onLog, onOperationChange, themeColor, style }) {
   themeColor = themeColor || 'tertiary'
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
+  console.log('LoggingPanel', qso)
+  const [localQSO, setLocalQSO] = useState({})
 
-  const [theirCall, setTheirCall] = useState()
-  const [theirSent, setTheirSent] = useState()
-  const [ourSent, setOurSent] = useState()
   const [pausedTime, setPausedTime] = useState()
-  const [startOnMillis, setStartOnMillis] = useState()
-  const [notes, setNotes] = useState()
-  const [theirPOTA, setTheirPOTA] = useState()
-
   const [info, setInfo] = useState(' ')
 
   const [isValid, setIsValid] = useState(false)
 
-  const [showTimeFields, setShowTimeFields] = useState(false)
-  const [showRadioFields, setShowRadioFields] = useState(false)
-  const [showPOTAFields, setShowPOTAFields] = useState(false)
+  const [visibleFields, setVisibleFields] = useState({})
 
   const callFieldRef = useRef()
   const sentFieldRef = useRef()
@@ -70,23 +63,34 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
 
   // Initialize the form with the QSO data
   useEffect(() => {
-    setTheirCall(qso?.their?.call ?? '')
-    setTheirSent(qso?.their?.sent ?? '')
-    setOurSent(qso?.our?.sent ?? '')
+    console.log('effect init')
+    const local = {
+      their: {
+        call: qso?.their?.call ?? '',
+        sent: qso?.their?.sent ?? ''
+      },
+      our: {
+        sent: qso?.our?.sent ?? ''
+      },
+      startOnMillis: qso?.startOnMillis ?? null,
+      notes: qso?.notes ?? '',
+      refs: qso?.activities ?? []
+    }
+    console.log('effect', qso)
+
     if (qso.startOnMillis) {
       setPausedTime(true)
-      setShowTimeFields(true)
-      setStartOnMillis(qso.startOnMillis)
+      setVisibleFields({ time: true })
     } else {
       setPausedTime(false)
-      setStartOnMillis(null)
+      setVisibleFields({})
     }
-    setNotes(qso?.notes ?? '')
-    setTheirPOTA(qso?.refs?.filter(ref => ref.type === 'pota').map(ref => ref.ref).join(', ') ?? '')
+    setLocalQSO(local)
   }, [qso])
 
   // Focus the callsign field when the panel is opened
   useEffect(() => {
+    console.log('effect focus')
     setTimeout(() => {
       callFieldRef?.current?.focus()
     }, 100)
@@ -94,7 +98,8 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
 
   // Validate and analize the callsign
   useEffect(() => {
-    const callInfo = parseCallsign(theirCall)
+    console.log('effect validate')
+    const callInfo = parseCallsign(localQSO?.their?.call)
     let entityInfo
     if (callInfo?.baseCall) {
       setIsValid(true)
@@ -103,8 +108,8 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
       setIsValid(false)
     }
 
-    if (!entityInfo?.entityPrefix && theirCall) {
-      entityInfo = analyzeFromCountryFile({ prefix: theirCall })
+    if (!entityInfo?.entityPrefix && localQSO?.their?.call) {
+      entityInfo = analyzeFromCountryFile({ prefix: localQSO?.their?.call })
     }
 
     if (entityInfo?.entityPrefix) {
@@ -117,62 +122,44 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
     } else {
       setInfo(' ')
     }
-  }, [theirCall, setInfo])
+  }, [localQSO?.their?.call, setInfo])
 
   // Handle form fields and update QSO info
   const handleFieldChange = useCallback((event) => {
     const { fieldId, nativeEvent: { text } } = event
     if (fieldId === 'theirCall') {
-      console.log('LoggingPanel.handleFieldChange', fieldId, text)
-      setTheirCall(text)
-
+      console.log('theirCall', text)
+      let startOnMillis = localQSO?.startOnMillis
       if (!pausedTime) {
         if (text) {
-          if (!startOnMillis) setStartOnMillis(Date.now())
+          if (!startOnMillis) {
+            startOnMillis = Date.now()
+          }
         } else {
-          setStartOnMillis(null)
+          startOnMillis = null
         }
       }
+      setLocalQSO({ ...localQSO, their: { ...localQSO?.their, call: text }, startOnMillis })
     } else if (fieldId === 'theirSent') {
-      setTheirSent(text)
+      setLocalQSO({ ...localQSO, their: { ...localQSO?.their, sent: text } })
     } else if (fieldId === 'ourSent') {
-      setOurSent(text)
+      setLocalQSO({ ...localQSO, our: { ...localQSO?.our, sent: text } })
     } else if (fieldId === 'notes') {
-      setNotes(text)
-    } else if (fieldId === 'theirPOTA') {
-      setTheirPOTA(text)
+      setLocalQSO({ ...localQSO, notes: text })
     } else if (fieldId === 'freq') {
       onOperationChange && onOperationChange({ freq: parseFreqInMHz(text) })
     } else if (fieldId === 'mode') {
       onOperationChange && onOperationChange({ mode: text })
     }
-  }, [
-    setTheirCall, setTheirSent, setOurSent,
-    setNotes, setStartOnMillis, onOperationChange,
-    startOnMillis, pausedTime
-  ])
+  }, [localQSO, onOperationChange, pausedTime])
 
   // Finally submit the QSO
   const handleSubmit = useCallback(() => {
     if (isValid) {
-      const finalQSO = {
-        our: { sent: ourSent },
-        their: { call: theirCall, sent: theirSent },
-        startOnMillis
-      }
-      if (notes) finalQSO.notes = notes
-      if (theirPOTA) {
-        finalQSO.refs = (finalQSO.refs ?? []).filter(ref => ref.type !== 'pota')
-        theirPOTA.split(',').forEach(pota => {
-          pota = pota.trim()
-          if (pota) {
-            finalQSO.refs.push({ type: 'pota', ref: pota })
-          }
-        })
-      }
-      onLog(finalQSO)
+      setVisibleFields({})
+      onLog(localQSO)
     }
-  }, [notes, ourSent, theirCall, theirSent, theirPOTA, startOnMillis, onLog, isValid])
+  }, [localQSO, onLog, isValid])
 
   // Switch between fields with the space key
   const spaceKeyHander = useCallback((event) => {
@@ -227,14 +214,14 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
       return text.substring(0, start) + number + text.substring(end)
     }
     if (currentField === 'theirCall') {
-      setTheirCall(replaceContents(theirCall))
+      setLocalQSO({ ...localQSO, their: { ...localQSO?.their, call: replaceContents(localQSO?.their?.call || '') } })
     } else if (currentField === 'theirSent') {
-      setTheirSent(replaceContents(theirSent))
+      setLocalQSO({ ...localQSO, their: { ...localQSO?.their, sent: replaceContents(localQSO?.their?.sent || '') } })
     } else if (currentField === 'ourSent') {
-      setOurSent(replaceContents(ourSent))
+      setLocalQSO({ ...localQSO, our: { ...localQSO?.our, sent: replaceContents(localQSO?.our?.sent || '') } })
     }
     // callFieldRef.current.focus()
-  }, [currentField, currentFieldSelection, ourSent, theirCall, theirSent])
+  }, [currentField, currentFieldSelection, localQSO])
 
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
   useEffect(() => {
@@ -264,102 +251,106 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
     <View style={[styles.root, style, { flexDirection: 'column', justifyContent: 'flex-end', width: '100%', minHeight: 100 }]}>
       <View style={{ width: '100%', flexDirection: 'row', minHeight: 20 }}>
         <View style={{ flex: 1, flexDirection: 'column' }}>
-          {(showTimeFields || showRadioFields || showPOTAFields) && (
-            <View style={{ flex: 0, flexDirection: 'row', gap: styles.oneSpace, flexWrap: 'wrap' }}>
-              {showTimeFields && (
-                <View style={{ flex: 0, flexDirection: 'column' }}>
-                  <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace }}>
-                    <LoggerChip icon="clock-outline" themeColor={themeColor} selected={showTimeFields} onChange={(val) => setShowTimeFields(val)}><Text style={styles.text.numbers}>Time</Text></LoggerChip>
-                  </View>
-                  <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
-                    <ThemedTextInput
-                      themeColor={themeColor}
-                      style={[styles.input]}
-                      value={'22:22:22'}
-                      label="Time"
-                      placeholder="00:00:00"
-                      onChange={handleFieldChange}
-                      onSubmitEditing={handleSubmit}
-                      fieldId={'time'}
-                      keyboard={'dumb'}
-                    />
-                    <ThemedTextInput
-                      themeColor={themeColor}
-                      style={[styles.input]}
-                      value={'2023-12-01'}
-                      label="Date"
-                      placeholder="2023-12-01"
-                      onChange={handleFieldChange}
-                      onSubmitEditing={handleSubmit}
-                      fieldId={'date'}
-                      keyboard={'dumb'}
-                    />
-                  </View>
-                </View>
-              )}
 
-              {showRadioFields && (
-                <View style={{ flex: 0, flexDirection: 'column' }}>
-                  <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace }}>
-                    <LoggerChip icon="radio" themeColor={themeColor} selected={showRadioFields} onChange={(val) => { freqFieldRef.current.blur(); setTimeout(() => setShowRadioFields(val), 100) }}>Transceiver</LoggerChip>
-                  </View>
-                  <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
-                    <FrequencyInput
-                      innerRef={freqFieldRef}
-                      themeColor={themeColor}
-                      style={[styles.input]}
-                      value={operation.freq ?? ''}
-                      label="Frequency"
-                      placeholder=""
-                      onChange={handleFieldChange}
-                      onSubmitEditing={handleSubmit}
-                      fieldId={'freq'}
-                    />
-                    <ThemedDropDown
-                      label="Mode"
-                      value={operation.mode}
-                      onChange={handleFieldChange}
-                      fieldId={'mode'}
-                      style={[styles.input, { width: styles.normalFontSize * 4 }]}
-                      list={[
-                        { value: 'SSB', label: 'SSB' },
-                        { value: 'CW', label: 'CW' },
-                        { value: 'FM', label: 'FM' },
-                        { value: 'AM', label: 'AM' },
-                        { value: 'FT8', label: 'FT8' },
-                        { value: 'FT4', label: 'FT4' },
-                        { value: 'RTTY', label: 'RTTY' }
-                      ]}
-                    />
-                  </View>
-                </View>
-              )}
-              {showPOTAFields && (
-                <View style={{ flex: 0, flexDirection: 'column' }}>
-                  <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace }}>
-                    <LoggerChip icon="pine-tree" themeColor={themeColor} selected={showPOTAFields} onChange={(val) => setShowPOTAFields(val)}>{operation.pota ? 'Park-to-Park' : 'Their POTA'}</LoggerChip>
-                  </View>
-                  <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
-                    <POTAInput
-                      themeColor={themeColor}
-                      style={[styles.input]}
-                      value={theirPOTA}
-                      label="POTA Reference"
-                      placeholder="K-1234"
-                      onChange={handleFieldChange}
-                      onSubmitEditing={handleSubmit}
-                      fieldId={'theirPOTA'}
-                    />
-                  </View>
-                </View>
-              )}
-            </View>
-          )}
           <ScrollView keyboardShouldPersistTaps={'handled'} horizontal={true} style={{ width: '100%' }}>
             <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.oneSpace, gap: styles.halfSpace }}>
-              {!showTimeFields && (<TimeChip time={startOnMillis} icon="clock-outline" themeColor={themeColor} selected={showTimeFields} onChange={(val) => setShowTimeFields(val)} />)}
-              {!showRadioFields && (<LoggerChip icon="radio" themeColor={themeColor} selected={showRadioFields} onChange={(val) => setShowRadioFields(val)}>{describeRadio(operation)}</LoggerChip>)}
-              {!showPOTAFields && (<LoggerChip icon="pine-tree" themeColor={themeColor} selected={showPOTAFields} onChange={(val) => setShowPOTAFields(val)}>{operation.pota ? 'P2P' : 'POTA'}</LoggerChip>)}
+
+              <View style={{ flex: 0, flexDirection: 'column' }}>
+                <TimeChip time={localQSO?.startOnMillis} icon="clock-outline" style={{ flex: 0 }} styles={styles} themeColor={themeColor}
+                  selected={visibleFields.time}
+                  onChange={(value) => setVisibleFields({ ...visibleFields, time: value })}
+                />
+                {visibleFields.time && (
+                  <>
+                    <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
+                    <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, gap: styles.oneSpace }}>
+                      <ThemedTextInput
+                        themeColor={themeColor}
+                        style={[styles.input]}
+                        value={'22:22:22'}
+                        label="Time"
+                        placeholder="00:00:00"
+                        onChange={handleFieldChange}
+                        onSubmitEditing={handleSubmit}
+                        fieldId={'time'}
+                        keyboard={'dumb'}
+                      />
+                      <ThemedTextInput
+                        themeColor={themeColor}
+                        style={[styles.input]}
+                        value={'2023-12-01'}
+                        label="Date"
+                        placeholder="2023-12-01"
+                        onChange={handleFieldChange}
+                        onSubmitEditing={handleSubmit}
+                        fieldId={'date'}
+                        keyboard={'dumb'}
+                      />
+                    </View>
+                  </>
+                )}
+              </View>
+
+              <View style={{ flex: 0, flexDirection: 'column' }}>
+                <View style={{ flex: 0, flexDirection: 'row' }}>
+                  <LoggerChip icon="radio" styles={styles} style={{ flex: 0 }} themeColor={themeColor}
+                    selected={visibleFields.radio}
+                    onChange={(value) => setVisibleFields({ ...visibleFields, radio: value })}
+                  >{describeRadio(operation)}</LoggerChip>
+                </View>
+                {visibleFields.radio && (
+                  <>
+                    <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
+                    <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, gap: styles.oneSpace }}>
+                      <FrequencyInput
+                        innerRef={freqFieldRef}
+                        themeColor={themeColor}
+                        style={[styles.input]}
+                        value={operation.freq ?? ''}
+                        label="Frequency"
+                        placeholder=""
+                        onChange={handleFieldChange}
+                        onSubmitEditing={handleSubmit}
+                        fieldId={'freq'}
+                      />
+                      <ThemedDropDown
+                        label="Mode"
+                        value={operation.mode}
+                        onChange={handleFieldChange}
+                        fieldId={'mode'}
+                        style={[styles.input, { width: styles.normalFontSize * 4 }]}
+                        list={[
+                          { value: 'SSB', label: 'SSB' },
+                          { value: 'CW', label: 'CW' },
+                          { value: 'FM', label: 'FM' },
+                          { value: 'AM', label: 'AM' },
+                          { value: 'FT8', label: 'FT8' },
+                          { value: 'FT4', label: 'FT4' },
+                          { value: 'RTTY', label: 'RTTY' }
+                        ]}
+                      />
+                    </View>
+                  </>
+                )}
+              </View>
+
+              {activities.filter(activity => activity.exchangeShortLabel && operation[activity.operationAttribute]).map(activity => (
+                <View key={activity.key} style={{ flex: 0, flexDirection: 'column' }}>
+                  <LoggerChip icon={activity.icon} styles={styles} style={{ flex: 0 }} themeColor={themeColor}
+                    selected={!!visibleFields[activity.key]}
+                    onChange={(value) => setVisibleFields({ ...visibleFields, [activity.key]: value })}
+                  >{activity.exchangeShortLabel}</LoggerChip>
+                  {visibleFields[activity.key] && (
+                    <>
+                      <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
+                      <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, gap: styles.oneSpace }}>
+                        <activity.ExchangePanel qso={localQSO} setQSO={setLocalQSO} operation={operation} settings={settings} styles={styles} />
+                      </View>
+                    </>
+                  )}
+                </View>
+              ))}
+
             </View>
           </ScrollView>
 
@@ -375,7 +366,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             innerRef={callFieldRef}
             themeColor={themeColor}
             style={[styles.input, { flex: 5 }]}
-            value={theirCall}
+            value={localQSO?.their?.call ?? ''}
             label="Their Call"
             placeholder=""
             onChange={handleFieldChange}
@@ -390,7 +381,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             innerRef={sentFieldRef}
             themeColor={themeColor}
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
-            value={ourSent}
+            value={localQSO?.our?.sent ?? ''}
             label="Sent"
             placeholder={qso.mode === 'CW' ? '599' : '59'}
             noSpaces={true}
@@ -408,7 +399,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
             innerRef={rcvdFieldRef}
             themeColor={themeColor}
             style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
-            value={theirSent}
+            value={localQSO?.their?.sent || ''}
             label="Rcvd"
             placeholder={qso.mode === 'CW' ? '599' : '59'}
             noSpaces={true}
@@ -425,7 +416,7 @@ export default function LoggingPanel ({ qso, operation, onLog, onOperationChange
           <ThemedTextInput
             themeColor={themeColor}
             style={[styles.input, { flex: 3 }]}
-            value={notes}
+            value={localQSO?.notes ?? ''}
             label="Notes"
             placeholder=""
             onChange={handleFieldChange}

@@ -11,14 +11,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteADIF, generateADIF, selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { StationCallsignDialog } from './components/StationCallsignDialog'
-import { POTADialog } from './components/POTADialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { AddActivityDialog } from './components/AddActivityDialog'
-import { WWFFDialog } from './components/WWFFDialog'
-import { SOTADialog } from './components/SOTADialog'
-import { BOTADialog } from './components/BOTADialog'
-import { FDDialog } from './components/FDDialog'
-import { WFDDialog } from './components/WFDDialog'
+import activities from '../activities'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -92,142 +87,45 @@ export default function OpSettingsTab ({ navigation, route }) {
       <List.Section>
         <List.Subheader>Activities</List.Subheader>
 
-        {operation.pota !== undefined && (
-          <>
-            <List.Item
-              title="Parks On The Air"
-              description={operation.pota || 'Enter POTA references'}
-              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="tree" />}
-              onPress={() => setCurrentDialog('pota')}
-            />
-            {currentDialog === 'pota' && (
-              <POTADialog
-                settings={settings}
-                operation={operation}
-                styles={styles}
-                visible={true}
-                onDialogDone={() => setCurrentDialog('')}
-              />
-            )}
-          </>
-        )}
-
-        {operation.wwff !== undefined && (
-          <>
-            <List.Item
-              title="World Wide Flora & Fauna"
-              description={operation.wwff || 'Enter WWFF reference'}
-              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="flower" />}
-              onPress={() => setCurrentDialog('wwff')}
-            />
-            {currentDialog === 'wwff' && (
-              <WWFFDialog
-                settings={settings}
-                operation={operation}
-                styles={styles}
-                visible={true}
-                onDialogDone={() => setCurrentDialog('')}
-              />
-            )}
-          </>
-        )}
-
-        {operation.sota !== undefined && (
-          <>
-            <List.Item
-              title="Summits On The Air"
-              description={operation.sota || 'Enter SOTA reference'}
-              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="image-filter-hdr" />}
-              onPress={() => setCurrentDialog('sota')}
-            />
-            {currentDialog === 'sota' && (
-              <SOTADialog
-                settings={settings}
-                operation={operation}
-                styles={styles}
-                visible={true}
-                onDialogDone={() => setCurrentDialog('')}
-              />
-            )}
-          </>
-        )}
-
-        {operation.bota !== undefined && (
-          <>
-            <List.Item
-              title="Beaches On The Air"
-              description={operation.sota || 'Enter BOTA reference & exchange'}
-              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="umbrella-beach" />}
-              onPress={() => setCurrentDialog('bota')}
-            />
-            {currentDialog === 'bota' && (
-              <BOTADialog
-                settings={settings}
-                operation={operation}
-                styles={styles}
-                visible={true}
-                onDialogDone={() => setCurrentDialog('')}
-              />
-            )}
-          </>
-        )}
-
-        {operation.fd !== undefined && (
-          <>
-            <List.Item
-              title="Field Day"
-              description={operation.fd || 'Enter Field Day exchange'}
-              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="weather-sunny" />}
-              onPress={() => setCurrentDialog('fd')}
-            />
-            {currentDialog === 'fd' && (
-              <FDDialog
-                settings={settings}
-                operation={operation}
-                styles={styles}
-                visible={true}
-                onDialogDone={() => setCurrentDialog('')}
-              />
-            )}
-          </>
-        )}
-
-        {operation.wfd !== undefined && (
-          <>
-            <List.Item
-              title="Winter Field Day"
-              description={operation.wfd || 'Enter Winter Field Day exchange'}
-              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="snowflake" />}
-              onPress={() => setCurrentDialog('wfd')}
-            />
-            {currentDialog === 'wfd' && (
-              <WFDDialog
-                settings={settings}
-                operation={operation}
-                styles={styles}
-                visible={true}
-                onDialogDone={() => setCurrentDialog('')}
-              />
-            )}
-          </>
-        )}
-
+        {activities.filter(activity => operation[activity.operationAttribute] !== undefined).map((activity) => (
+          <List.Item
+            key={activity.key}
+            title={activity.name}
+            description={(activity.description && activity.description(operation)) || activity.descriptionPlaceholder}
+            left={
+                  () => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon={activity.icon} />
+                }
+            onPress={() => setCurrentDialog(`activity.${activity.key}`)}
+          />
+        ))}
         <List.Item
+          key="addActivity"
           title="Add Activity"
           description="POTA, SOTA, Field Day and more!"
           left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="plus" />}
           onPress={() => setCurrentDialog('addActivity')}
         />
-        {currentDialog === 'addActivity' && (
-          <AddActivityDialog
+      </List.Section>
+      {activities.filter(activity => operation[activity.operationAttribute] !== undefined).map((activity) => (
+        currentDialog === `activity.${activity.key}` && (
+          <activity.SettingsDialog
             settings={settings}
             operation={operation}
             styles={styles}
             visible={true}
             onDialogDone={() => setCurrentDialog('')}
           />
-        )}
-      </List.Section>
+        )
+      ))}
+      {currentDialog === 'addActivity' && (
+        <AddActivityDialog
+          settings={settings}
+          operation={operation}
+          styles={styles}
+          visible={true}
+          onDialogDone={() => setCurrentDialog('')}
+        />
+      )}
 
       <List.Section>
         <List.Subheader>Operation Data</List.Subheader>
