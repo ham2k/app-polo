@@ -1,17 +1,24 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useState } from 'react'
 
-import { View } from 'react-native'
-import { Button, Dialog, Divider, Portal, Text, TextInput } from 'react-native-paper'
+import { ScrollView } from 'react-native'
+import { List } from 'react-native-paper'
 
 import Share from 'react-native-share'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import LoggerChip from '../components/LoggerChip'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteADIF, deleteOperation, generateADIF, selectOperation, setOperation } from '../../../store/operations'
-import CallsignInput from '../../components/CallsignInput'
-import POTAInput from '../../components/POTAInput'
+import { deleteADIF, generateADIF, selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
+import { StationCallsignDialog } from './components/StationCallsignDialog'
+import { POTADialog } from './components/POTADialog'
+import { DeleteOperationDialog } from './components/DeleteOperationDialog'
+import { AddActivityDialog } from './components/AddActivityDialog'
+import { WWFFDialog } from './components/WWFFDialog'
+import { SOTADialog } from './components/SOTADialog'
+import { BOTADialog } from './components/BOTADialog'
+import { FDDialog } from './components/FDDialog'
+import { WFDDialog } from './components/WFDDialog'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -43,8 +50,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   const operation = useSelector(selectOperation(route.params.operation.uuid))
   const settings = useSelector(selectSettings)
 
-  const [showPOTA, setShowPOTA] = useState(false)
-  const [showLocation, setShowLocation] = useState(false)
+  const [currentDialog, setCurrentDialog] = useState()
 
   const handleExport = useCallback(() => {
     dispatch(generateADIF(operation.uuid)).then((path) => {
@@ -52,113 +58,204 @@ export default function OpSettingsTab ({ navigation, route }) {
         url: `file://${path}`,
         type: 'text/plain' // There is no official ADIF mime type
       }).then((x) => {
-        console.error('Shared', x)
+        console.info('Shared', x)
       }).catch((e) => {
-        console.error('Sharing Error', e)
+        console.info('Sharing Error', e)
       }).finally(() => {
         dispatch(deleteADIF(path))
       })
     })
   }, [dispatch, operation])
 
-  const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false)
-
-  const handleDelete = useCallback(() => {
-    dispatch(deleteOperation(operation.uuid)).then(() => {
-      navigation.navigate('Home')
-    })
-  }, [navigation, dispatch, operation])
-
   return (
-    <View style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column' }, styles.panel]}>
+    <ScrollView style={{ flex: 1 }}>
+      <List.Section>
+        <List.Subheader>Operation Details</List.Subheader>
 
-      <View style={[{ flex: 0, flexDirection: 'column' }, styles.container]}>
-
-        <View style={[{ flexDirection: 'row' }]}>
-          <CallsignInput
-            style={[styles.paperInput, { flex: 3, width: 100 }]}
-            value={operation.stationCall}
-            label="Station Callsign"
-            placeholder={`Defaults to ${settings.operatorCall}`}
-            onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, stationCall: text }))}
-            textStyle={styles.nativeInput}
+        <List.Item
+          title="Station Callsign"
+          description={operation.stationCall || `${settings.operatorCall} (operator)` }
+          left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="card-account-details" />}
+          onPress={() => setCurrentDialog('stationCall')}
+        />
+        {currentDialog === 'stationCall' && (
+          <StationCallsignDialog
+            settings={settings}
+            operation={operation}
+            styles={styles}
+            visible={true}
+            onDialogDone={() => setCurrentDialog('')}
           />
-        </View>
+        )}
+      </List.Section>
 
-        <View style={[{ flexDirection: 'row' }]}>
-          <TextInput
-            style={[styles.paperInput, { flex: 3, width: 100 }]}
-            textStyle={styles.nativeInput}
-            label={'Description'}
-            placeholder={'Operation Description'}
-            mode={'flat'}
-            value={operation.description}
-            onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, description: text }))}
+      <List.Section>
+        <List.Subheader>Activities</List.Subheader>
+
+        {operation.pota !== undefined && (
+          <>
+            <List.Item
+              title="Parks On The Air"
+              description={operation.pota || 'Enter POTA references'}
+              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="tree" />}
+              onPress={() => setCurrentDialog('pota')}
+            />
+            {currentDialog === 'pota' && (
+              <POTADialog
+                settings={settings}
+                operation={operation}
+                styles={styles}
+                visible={true}
+                onDialogDone={() => setCurrentDialog('')}
+              />
+            )}
+          </>
+        )}
+
+        {operation.wwff !== undefined && (
+          <>
+            <List.Item
+              title="World Wide Flora & Fauna"
+              description={operation.wwff || 'Enter WWFF reference'}
+              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="flower" />}
+              onPress={() => setCurrentDialog('wwff')}
+            />
+            {currentDialog === 'wwff' && (
+              <WWFFDialog
+                settings={settings}
+                operation={operation}
+                styles={styles}
+                visible={true}
+                onDialogDone={() => setCurrentDialog('')}
+              />
+            )}
+          </>
+        )}
+
+        {operation.sota !== undefined && (
+          <>
+            <List.Item
+              title="Summits On The Air"
+              description={operation.sota || 'Enter SOTA reference'}
+              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="image-filter-hdr" />}
+              onPress={() => setCurrentDialog('sota')}
+            />
+            {currentDialog === 'sota' && (
+              <SOTADialog
+                settings={settings}
+                operation={operation}
+                styles={styles}
+                visible={true}
+                onDialogDone={() => setCurrentDialog('')}
+              />
+            )}
+          </>
+        )}
+
+        {operation.bota !== undefined && (
+          <>
+            <List.Item
+              title="Beaches On The Air"
+              description={operation.sota || 'Enter BOTA reference & exchange'}
+              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="umbrella-beach" />}
+              onPress={() => setCurrentDialog('bota')}
+            />
+            {currentDialog === 'bota' && (
+              <BOTADialog
+                settings={settings}
+                operation={operation}
+                styles={styles}
+                visible={true}
+                onDialogDone={() => setCurrentDialog('')}
+              />
+            )}
+          </>
+        )}
+
+        {operation.fd !== undefined && (
+          <>
+            <List.Item
+              title="Field Day"
+              description={operation.fd || 'Enter Field Day exchange'}
+              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="weather-sunny" />}
+              onPress={() => setCurrentDialog('fd')}
+            />
+            {currentDialog === 'fd' && (
+              <FDDialog
+                settings={settings}
+                operation={operation}
+                styles={styles}
+                visible={true}
+                onDialogDone={() => setCurrentDialog('')}
+              />
+            )}
+          </>
+        )}
+
+        {operation.wfd !== undefined && (
+          <>
+            <List.Item
+              title="Winter Field Day"
+              description={operation.wfd || 'Enter Winter Field Day exchange'}
+              left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="snowflake" />}
+              onPress={() => setCurrentDialog('wfd')}
+            />
+            {currentDialog === 'wfd' && (
+              <WFDDialog
+                settings={settings}
+                operation={operation}
+                styles={styles}
+                visible={true}
+                onDialogDone={() => setCurrentDialog('')}
+              />
+            )}
+          </>
+        )}
+
+        <List.Item
+          title="Add Activity"
+          description="POTA, SOTA, Field Day and more!"
+          left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="plus" />}
+          onPress={() => setCurrentDialog('addActivity')}
+        />
+        {currentDialog === 'addActivity' && (
+          <AddActivityDialog
+            settings={settings}
+            operation={operation}
+            styles={styles}
+            visible={true}
+            onDialogDone={() => setCurrentDialog('')}
           />
-        </View>
-
-      </View>
-
-      <View style={[{ flex: 0, flexDirection: 'column' }, styles.container]}>
-        <View style={[{ flexDirection: 'row' }]}>
-          <LoggerChip icon="pine-tree" themeColor="secondary" selected={showPOTA} onChange={(val) => setShowPOTA(val)}>
-            {operation.pota ? `POTA: ${operation.pota}` : 'Add POTA'}
-          </LoggerChip>
-        </View>
-        {showPOTA && (
-          <View style={[{ flex: 0, flexDirection: 'row' }]}>
-            <POTAInput
-              style={[styles.paperInput, { flex: 3, width: 100 }]}
-              textStyle={styles.nativeInput}
-              label={'POTA References'}
-              mode={'flat'}
-              value={operation.pota}
-              onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, pota: text }))}
-            />
-          </View>
         )}
-      </View>
+      </List.Section>
 
-      <View style={[{ flex: 0, flexDirection: 'column' }, styles.container]}>
-        <View style={[{ flexDirection: 'row' }]}>
-          <LoggerChip icon="map-marker" themeColor="secondary" selected={showLocation} onChange={(val) => setShowLocation(val)}>
-            {operation.grid ? `Location: ${operation.grid}` : 'Add Location'}
-          </LoggerChip>
-        </View>
-        {(showLocation) && (
-          <View style={[{ flex: 0, flexDirection: 'row' }]}>
-            <TextInput
-              style={[styles.paperInput, { flex: 3, width: 100 }]}
-              textStyle={styles.nativeInput}
-              label={'Grid'}
-              mode={'flat'}
-              value={operation.grid}
-              onChangeText={(text) => dispatch(setOperation({ uuid: operation.uuid, grid: text }))}
-            />
-          </View>
+      <List.Section>
+        <List.Subheader>Operation Data</List.Subheader>
+        <List.Item
+          title="Export ADIF"
+          left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="share" />}
+          onPress={handleExport}
+        />
+      </List.Section>
+      <List.Section>
+        <List.Subheader style={{ color: styles.theme.colors.error }}>The Danger Zone</List.Subheader>
+        <List.Item
+          title="Delete Operation"
+          titleStyle={{ color: styles.theme.colors.error }}
+          left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.twoSpaces }} icon="delete" />}
+          onPress={() => setCurrentDialog('delete')}
+        />
+        {currentDialog === 'delete' && (
+          <DeleteOperationDialog
+            settings={settings}
+            operation={operation}
+            styles={styles}
+            visible={true}
+            onDialogDone={() => setCurrentDialog('')}
+          />
         )}
-      </View>
+      </List.Section>
+    </ScrollView>
 
-      <Divider bold style={{ marginHorizontal: styles.oneSpace, marginVertical: styles.oneSpace }} theme={{ theme: { colors: { outlineVariant: 'red' } } }} />
-
-      <View style={[{ flex: 0, flexDirection: 'row', justifyContent: 'space-around' }, styles.container]}>
-        <Button icon="share" mode="contained" onPress={handleExport}>Export</Button>
-        <View style={{ width: styles.oneSpace * 3 }} />
-        <Button icon="delete" mode="contained" onPress={() => setDeleteDialogVisible(true)}>Delete</Button>
-      </View>
-
-      <Portal>
-        <Dialog visible={deleteDialogVisible} onDismiss={() => setDeleteDialogVisible(false)}>
-          <Dialog.Title>Delete Operation?</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">Are you sure you want to delete this operation?</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setDeleteDialogVisible(false)}>Cancel</Button>
-            <Button onPress={handleDelete}>Yes, delete it!</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-    </View>
   )
 }
