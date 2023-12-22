@@ -8,9 +8,10 @@ import { loadOperation, selectOperation } from '../../store/operations'
 import OpLoggingTab from './OpLoggingTab/OpLoggingTab'
 import OpStatsTab from './OpStatsTab.jsx/OpStatsTab'
 import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
-import { Platform, useWindowDimensions } from 'react-native'
+import { Platform, View, useWindowDimensions } from 'react-native'
 import { loadQSOs } from '../../store/qsos'
 import { selectSettings } from '../../store/settings'
+import OpSpotsTab from './OpSpotsTab.jsx/OpSpotsTab'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -28,7 +29,7 @@ export default function OperationScreen ({ navigation, route }) {
   // When operation data is loaded, set the title
   useEffect(() => {
     if (operation?.stationCall || settings?.operatorCall) {
-      navigation.setOptions({ title: operation?.stationCall, subTitle: operation?.name })
+      navigation.setOptions({ title: operation?.stationCall || settings?.operatorCall, subTitle: operation?.name })
     } else {
       navigation.setOptions({ title: 'New Operation' })
     }
@@ -51,16 +52,32 @@ export default function OperationScreen ({ navigation, route }) {
         initialLayout={{ width: dimensions.width, height: dimensions.height }}
         initialRouteName={ settingsOnly ? 'Settings' : 'QSOs'}
         screenOptions={{
-          tabBarItemStyle: { width: dimensions.width / 3 }, // This allows tab titles to be rendered while the screen is transitioning in
+          tabBarItemStyle: { width: dimensions.width / 4 }, // This allows tab titles to be rendered while the screen is transitioning in
 
           // See https://github.com/react-navigation/react-navigation/issues/11301
           // on iOS, if the keyboard is open, tabs get stuck when switching
-          animationEnabled: !Platform.iOS
+          animationEnabled: Platform.OS !== 'ios'
         }}
       >
         <Tab.Screen
+          name="Settings"
+          options={{ title: 'Info' }}
+          component={OpSettingsTab}
+          initialParams={{ uuid: operation.uuid, operation }}
+        />
+
+        <Tab.Screen
           name="QSOs"
           component={OpLoggingTab}
+          initialParams={{ uuid: operation.uuid, operation }}
+          listeners={{
+            tabPress: e => { settingsOnly && e.preventDefault() }
+          }}
+        />
+
+        <Tab.Screen
+          name="Spots"
+          component={OpSpotsTab}
           initialParams={{ uuid: operation.uuid, operation }}
           listeners={{
             tabPress: e => { settingsOnly && e.preventDefault() }
@@ -76,12 +93,6 @@ export default function OperationScreen ({ navigation, route }) {
           }}
         />
 
-        <Tab.Screen
-          name="Settings"
-          options={{ title: 'Operation' }}
-          component={OpSettingsTab}
-          initialParams={{ uuid: operation.uuid, operation }}
-        />
       </Tab.Navigator>
     </ScreenContainer>
   )

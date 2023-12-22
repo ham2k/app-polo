@@ -21,7 +21,7 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
 
   const sidesWidth = useMemo(() => {
     if (back || close) {
-      return 48
+      return 55
     } else {
       return 84
     }
