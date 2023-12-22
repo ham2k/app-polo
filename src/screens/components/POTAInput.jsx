@@ -7,7 +7,7 @@ const ADD_COMMAS_REGEX = /(\d+)\s*[,]*\s*([A-Z]+)/g
 const REPEAT_COUNTRY_REGEX = /(\w+)-(\d+)(\s+,\s*|,\s*|\s+)(\d+)/g
 
 export default function POTAInput (params) {
-  const { styles, textStyle, onChange, onChangeText, fieldId } = params
+  const { style, styles, textStyle, onChange, onChangeText, fieldId } = params
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
@@ -27,6 +27,7 @@ export default function POTAInput (params) {
       keyboard="dumb"
       uppercase={true}
       nospaces={true}
+      style={[params.style, style]}
       textStyle={[textStyle, styles?.text?.callsign]}
       onChange={handleChange}
     />

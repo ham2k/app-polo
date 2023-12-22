@@ -89,7 +89,7 @@ export default function OpLoggingTab ({ navigation, route }) {
   return (
     <View style={{ flex: 1 }}>
       <QSOList qsos={qsos} styles={styles} style={{ flex: 1 }} listRef={listRef} />
-      <LoggingPanel operation={operation} onLog={logQSO} onOperationChange={handleOperationChange} qso={currentQSO} style={{ flex: 0 }} />
+      <LoggingPanel operation={operation} settings={settings} onLog={logQSO} onOperationChange={handleOperationChange} qso={currentQSO} style={{ flex: 0 }} />
     </View>
   )
 }

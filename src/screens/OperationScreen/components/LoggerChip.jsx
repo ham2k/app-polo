@@ -1,12 +1,19 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Chip } from 'react-native-paper'
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
-export default function LoggerChip ({ children, icon, style, selected: initialSelected, themeColor, onChange }) {
-  const themeStyles = useThemedStyles()
-
+export default function LoggerChip ({
+  children,
+  icon,
+  styles, style, themeColor, textStyle,
+  selected: initialSelected,
+  onChange
+}) {
   const [selected, setSelected] = useState(initialSelected)
+
+  useEffect(() => {
+    setSelected(initialSelected)
+  }, [initialSelected])
 
   themeColor = themeColor ?? 'primary'
 
@@ -15,50 +22,51 @@ export default function LoggerChip ({ children, icon, style, selected: initialSe
     onChange && onChange(!selected)
   }, [setSelected, selected, onChange])
 
-  const { colorizedTheme, textStyle, mode } = useMemo(() => {
+  const { colorizedTheme, baseTextStyle, mode } = useMemo(() => {
     const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
-    let colorizedTheme, textStyle, mode // eslint-disable-line no-shadow
+    let colorizedTheme, baseTextStyle, mode // eslint-disable-line no-shadow
 
     if (selected) {
       mode = 'flat'
       colorizedTheme = {
         colors: {
-          primary: themeStyles.theme.colors[`on${upcasedThemeColor}`],
-          onPrimary: themeStyles.theme.colors[themeColor],
-          primaryContainer: themeStyles.theme.colors[`${themeColor}Container`],
-          onPrimaryContainer: themeStyles.theme.colors[`on${upcasedThemeColor}Container`],
-          secondaryContainer: themeStyles.theme.colors[themeColor],
-          onSecondaryContainer: themeStyles.theme.colors[`on${upcasedThemeColor}`]
+          primary: styles.theme.colors[`on${upcasedThemeColor}`],
+          onPrimary: styles.theme.colors[themeColor],
+          primaryContainer: styles.theme.colors[`${themeColor}Container`],
+          onPrimaryContainer: styles.theme.colors[`on${upcasedThemeColor}Container`],
+          secondaryContainer: styles.theme.colors[themeColor],
+          onSecondaryContainer: styles.theme.colors[`on${upcasedThemeColor}`]
         }
       }
-      textStyle = {
-        color: themeStyles.theme.colors[`on${upcasedThemeColor}`] // `on${upcasedThemeColor}`],
+      baseTextStyle = {
+        color: styles.theme.colors[`on${upcasedThemeColor}`] // `on${upcasedThemeColor}`],
       }
     } else {
       mode = 'flat'
       colorizedTheme = {
         colors: {
-          primary: themeStyles.theme.colors[`on${upcasedThemeColor}Container`],
-          onPrimary: themeStyles.theme.colors[themeColor],
-          primaryContainer: themeStyles.theme.colors[`${themeColor}Container`],
-          onPrimaryContainer: themeStyles.theme.colors[`on${upcasedThemeColor}Container`],
-          secondaryContainer: themeStyles.theme.colors[`${themeColor}Light`],
-          onSecondaryContainer: themeStyles.theme.colors[`on${upcasedThemeColor}`]
+          primary: styles.theme.colors[`on${upcasedThemeColor}Container`],
+          onPrimary: styles.theme.colors[themeColor],
+          primaryContainer: styles.theme.colors[`${themeColor}Container`],
+          onPrimaryContainer: styles.theme.colors[`on${upcasedThemeColor}Container`],
+          secondaryContainer: styles.theme.colors[`${themeColor}Light`],
+          onSecondaryContainer: styles.theme.colors[`on${upcasedThemeColor}`]
         }
       }
-      textStyle = {
-        color: themeStyles.theme.colors[`on${upcasedThemeColor}Container`]
+      baseTextStyle = {
+        color: styles.theme.colors[`on${upcasedThemeColor}Container`]
       }
     }
-    return { mode, colorizedTheme, textStyle }
-  }, [themeColor, themeStyles, selected])
+    return { mode, colorizedTheme, baseTextStyle }
+  }, [themeColor, styles, selected])
 
   return (
     <Chip
       icon={icon}
       mode={mode}
       theme={colorizedTheme}
-      textStyle={textStyle}
+      style={[style]}
+      textStyle={[baseTextStyle, textStyle]}
       onPress={handlePress}
     >
       {children}

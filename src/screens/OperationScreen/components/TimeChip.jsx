@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import LoggerChip from './LoggerChip'
 import { fmtTimeZulu } from '../../../tools/timeFormats'
-import { Text } from 'react-native-paper'
 
 export default function TimeChip (props) {
-  const { time, styles, children } = props
+  const { time, children, styles } = props
 
   const [timeStr, setTimeStr] = useState()
 
@@ -21,6 +20,6 @@ export default function TimeChip (props) {
   }, [time])
 
   return (
-    <LoggerChip icon="clock-outline" {...props}><Text style={styles?.text?.numbers}>{children ?? timeStr}</Text></LoggerChip>
+    <LoggerChip icon="clock-outline" {...props} textStyle={styles?.text?.numbers}>{children ?? timeStr}</LoggerChip>
   )
 }
