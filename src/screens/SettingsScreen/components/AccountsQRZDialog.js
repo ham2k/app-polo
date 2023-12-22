@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, Portal, Text, TextInput } from 'react-native-paper'
-import CallsignInput from '../../components/CallsignInput'
+import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
-import { setAccountInfo, setCall } from '../../../store/settings'
+import { setAccountInfo } from '../../../store/settings'
 import ThemedTextInput from '../../components/ThemedTextInput'
+import { KeyboardAvoidingView } from 'react-native'
 
 export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
@@ -32,47 +32,52 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
   const handleAccept = useCallback(() => {
     dispatch(setAccountInfo({ qrz: { login, password } }))
     setDialogVisible(false)
-  }, [login, password, dispatch])
+    onDialogDone && onDialogDone()
+  }, [login, password, dispatch, onDialogDone])
 
   const handleCancel = useCallback(() => {
     setLogin(settings?.accounts?.qrz?.login || '')
     setPassword(settings?.accounts?.qrz?.password || '')
     setDialogVisible(false)
-  }, [settings])
+    onDialogDone && onDialogDone()
+  }, [settings, onDialogDone])
 
   return (
     <Portal>
-      <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-        <Dialog.Title>QRZ.com Account</Dialog.Title>
-        <Dialog.Content>
-          <Text variant="bodyMedium">Please enter the details for your QRZ.com account:</Text>
-          <ThemedTextInput
-            style={[styles.input, { marginTop: styles.oneSpace }]}
-            value={login}
-            autoCapitalize={'none'}
-            autoComplete="email"
-            inputMode="email"
-            keyboardType="email-address"
-            label="Login"
-            placeholder="your login"
-            onChangeText={onChangeLogin}
-          />
-          <ThemedTextInput
-            style={[styles.input, { marginTop: styles.oneSpace }]}
-            value={password}
-            label="Password"
-            autoComplete="password"
-            keyboardType="visible-password"
-            secureTextEntry={true}
-            placeholder="your password"
-            onChangeText={onChangePassword}
-          />
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button onPress={handleCancel}>Cancel</Button>
-          <Button onPress={handleAccept}>Ok</Button>
-        </Dialog.Actions>
-      </Dialog>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
+        <Dialog visible={dialogVisible} onDismiss={handleCancel}>
+          <Dialog.Icon icon="account" />
+          <Dialog.Title style={{ textAlign: 'center' }}>QRZ.com Account</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">Please enter the details for your QRZ.com account:</Text>
+            <ThemedTextInput
+              style={[styles.input, { marginTop: styles.oneSpace }]}
+              value={login}
+              autoCapitalize={'none'}
+              autoComplete="email"
+              inputMode="email"
+              keyboardType="email-address"
+              label="Login"
+              placeholder="your login"
+              onChangeText={onChangeLogin}
+            />
+            <ThemedTextInput
+              style={[styles.input, { marginTop: styles.oneSpace }]}
+              value={password}
+              label="Password"
+              autoComplete="password"
+              keyboardType="visible-password"
+              secureTextEntry={true}
+              placeholder="your password"
+              onChangeText={onChangePassword}
+            />
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={handleCancel}>Cancel</Button>
+            <Button onPress={handleAccept}>Ok</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </KeyboardAvoidingView>
     </Portal>
   )
 }
