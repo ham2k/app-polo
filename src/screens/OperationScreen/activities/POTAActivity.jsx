@@ -39,13 +39,11 @@ function ThisActivityExchangePanel (props) {
   useEffect(() => {
     const refs = (qso?.refs || []).filter(ref => ref.type === 'pota')
 
-    console.log('pota localvalue', refs)
     setLocalValue(refs.map(ref => ref.ref).join(', '))
   }, [qso])
 
   const localHandleChangeText = useCallback((value) => {
     setLocalValue(value)
-    console.log('pota change', value)
     const potaRefs = value.split(',').map(ref => ref.trim()).filter(ref => ref).map(ref => ({ type: 'pota', ref }))
     if (qso?.constructor === Array) {
       setQSO({ ...qso, refs: potaRefs + qso.refs.filter(ref => ref.type !== 'pota') })
