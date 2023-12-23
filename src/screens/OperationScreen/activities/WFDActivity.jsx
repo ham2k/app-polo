@@ -3,17 +3,17 @@ import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { setOperation } from '../../../store/operations'
 import { Text, TextInput } from 'react-native-paper'
-import { ActivitySettingsDialog } from './ActivitySettingsDialog'
+import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 
 const ACTIVITY = {
   key: 'wfd',
+  comingSoon: true,
   icon: 'snowflake',
   name: 'Winter Field Day',
   shortName: 'WFD',
   infoURL: 'https://www.winterfieldday.org/',
   operationAttribute: 'wfd',
-  exchangeAttribute: '',
-  description: (operation) => operation.wfd ? `${operation.wfd.class} ${operation.wfd.location}` : '',
+  description: (operation) => operation.wfd ? `${operation.wfd.class} ${operation.wfd.location}` + ' - NOT FUNCTIONAL YET' : '',
   descriptionPlaceholder: '',
   defaultValue: { class: '', location: '' }
 }
@@ -70,6 +70,7 @@ export function ThisActivitySettingsDialog (props) {
             value={value.location}
             onChangeText={(text) => setValue({ ...value, location: text })}
           />
+          <Text variant="bodyMedium" style={{ color: styles.theme.colors.primary }}>NOT FUNCTIONAL YET, FOR TESTING PURPOSES ONLY</Text>
         </>
       )}
     />

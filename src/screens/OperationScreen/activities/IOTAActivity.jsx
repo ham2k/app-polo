@@ -1,36 +1,54 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setOperation } from '../../../store/operations'
 import { Text, TextInput } from 'react-native-paper'
 import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 
 const ACTIVITY = {
-  key: 'wwff',
+  key: 'iota',
   comingSoon: true,
-  icon: 'flower',
-  name: 'World Wide Flora & Fauna',
-  shortName: 'WWFF',
-  infoURL: 'https://wwff.co/',
-  exchangeShortLabel: 'W2W',
-  operationAttribute: 'wwwf',
-  description: (operation) => operation.wwwf + ' - NOT FUNCTIONAL YET',
-  descriptionPlaceholder: 'Enter WWWF reference'
+  icon: 'island',
+  name: 'Islands on the Air',
+  shortName: 'IOTA',
+  infoURL: 'https://www.iota-world.org/',
+  exchangeShortLabel: 'IOTA',
+  operationAttribute: 'iota',
+  description: (operation) => operation.iota + ' - NOT FUNCTIONAL YET',
+  descriptionPlaceholder: 'Enter IOTA reference'
 }
 
 function ThisActivityExchangePanel (props) {
-  // const { qso, setQSO, handleChangeText } = props
+  const { qso, setQSO, handleChangeText } = props
 
-  // const localHandleChangeText = useCallback((value) => {
-  //   setQSO({ ...qso, [ACTIVITY.exchangeAttribute]: value })
-  //   handleChangeText && handleChangeText(value)
-  // }, [qso, setQSO, handleChangeText])
+  const [localValue, setLocalValue] = useState('')
+
+  // Only initialize localValue once
+  useEffect(() => {
+    const refs = (qso?.refs || []).filter(ref => ref.type === 'iota')
+    setLocalValue(refs.map(ref => ref.ref).join(', '))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const localHandleChangeText = useCallback((value) => {
+    setLocalValue(value)
+    const iotaRefs = value.split(',').map(ref => ref.trim()).filter(ref => ref).map(ref => ({ type: 'iota', ref }))
+    const nonIotaRefs = (qso?.refs || []).filter(ref => ref.type !== 'iota')
+
+    setQSO({ ...qso, refs: iotaRefs + nonIotaRefs })
+    handleChangeText && handleChangeText(value)
+  }, [qso, setQSO, handleChangeText])
 
   return (
-    <Text>WIP</Text>
+    <TextInput
+      {...props}
+      value={localValue}
+      label="SOTA Reference"
+      placeholder="..."
+      onTextChange={localHandleChangeText}
+    />
   )
 }
-
 export function ThisActivitySettingsDialog (props) {
   const { styles, operation } = props
 
@@ -51,11 +69,11 @@ export function ThisActivitySettingsDialog (props) {
       onChange={handleChange}
       content={({ value, setValue }) => (
         <>
-          <Text variant="bodyMedium">Enter the reference for the location being activated in this operation</Text>
+          <Text variant="bodyMedium">Enter the reference for the Island being activated in this operation</Text>
           <TextInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
             textStyle={styles.nativeInput}
-            label={'WWFF Reference'}
+            label={'IOTA Reference'}
             placeholder={'...'}
             mode={'flat'}
             value={value}

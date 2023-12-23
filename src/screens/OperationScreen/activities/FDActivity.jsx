@@ -3,17 +3,17 @@ import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { setOperation } from '../../../store/operations'
 import { Text, TextInput } from 'react-native-paper'
-import { ActivitySettingsDialog } from './ActivitySettingsDialog'
+import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 
 const ACTIVITY = {
   key: 'arrl-fd',
+  comingSoon: true,
   icon: 'weather-sunny',
   name: 'ARRL Field Day',
   shortName: 'FD',
   infoURL: 'https://field-day.arrl.org/',
   operationAttribute: 'fd',
-  exchangeAttribute: '',
-  description: (operation) => operation.fd ? `${operation.fd.class} ${operation.fd.location}` : '',
+  description: (operation) => operation.fd ? `${operation.fd.class} ${operation.fd.location}` + ' - NOT FUNCTIONAL YET' : '',
   descriptionPlaceholder: '',
   defaultValue: { class: '', location: '' }
 }
@@ -70,6 +70,7 @@ export function ThisActivitySettingsDialog (props) {
             value={value.location}
             onChangeText={(text) => setValue({ ...value, location: text })}
           />
+          <Text variant="bodyMedium" style={{ color: styles.theme.colors.primary }}>NOT FUNCTIONAL YET, FOR TESTING PURPOSES ONLY</Text>
         </>
       )}
     />
