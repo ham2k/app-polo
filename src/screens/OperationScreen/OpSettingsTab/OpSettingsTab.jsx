@@ -109,6 +109,7 @@ export default function OpSettingsTab ({ navigation, route }) {
       {activities.filter(activity => operation[activity.operationAttribute] !== undefined).map((activity) => (
         currentDialog === `activity.${activity.key}` && (
           <activity.SettingsDialog
+            key={activity.key}
             settings={settings}
             operation={operation}
             styles={styles}
