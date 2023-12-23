@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Keyboard, ScrollView, Text, View, findNodeHandle } from 'react-native'
+import { Keyboard, ScrollView, View, findNodeHandle } from 'react-native'
 import { IconButton } from 'react-native-paper'
-import { analyzeFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
-import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import LoggerChip from '../../components/LoggerChip'
 
@@ -17,12 +15,8 @@ import FrequencyInput from '../../../components/FrequencyInput'
 import { fmtFreqInMHz, parseFreqInMHz } from '../../../../tools/frequencyFormats'
 import { NumberKeys } from './LoggingPanel/NumberKeys'
 import activities from '../../activities'
-import { stringOrFunction } from '../../../../styles/tools/stringOrFunction'
-
-// Not actually a react hook, just named like one
-// eslint-disable-next-line react-hooks/rules-of-hooks
-useBuiltinCountryFile()
 import { stringOrFunction } from '../../../../tools/stringOrFunction'
+import { CallInfo } from './LoggingPanel/CallInfo'
 
 function describeRadio (operation) {
   return `${operation.freq ? fmtFreqInMHz(operation.freq) : '?'} MHz • ${operation.mode ?? 'SSB'}`
@@ -51,7 +45,6 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
   const [localQSO, setLocalQSO] = useState({})
 
   const [pausedTime, setPausedTime] = useState()
-  const [info, setInfo] = useState(' ')
 
   const [isValid, setIsValid] = useState(false)
 
@@ -97,29 +90,13 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
   // Validate and analize the callsign
   useEffect(() => {
     const callInfo = parseCallsign(localQSO?.their?.call)
-    let entityInfo
+
     if (callInfo?.baseCall) {
       setIsValid(true)
-      entityInfo = analyzeFromCountryFile(callInfo)
     } else {
       setIsValid(false)
     }
-
-    if (!entityInfo?.entityPrefix && localQSO?.their?.call) {
-      entityInfo = analyzeFromCountryFile({ prefix: localQSO?.their?.call })
-    }
-
-    if (entityInfo?.entityPrefix) {
-      const entity = DXCC_BY_PREFIX[entityInfo.entityPrefix]
-      if (entity) {
-        setInfo(`${entity.flag} ${entity.name}`)
-      } else {
-        setInfo(' ')
-      }
-    } else {
-      setInfo(' ')
-    }
-  }, [localQSO?.their?.call, setInfo])
+  }, [localQSO?.their?.call])
 
   // Handle form fields and update QSO info
   const handleFieldChange = useCallback((event) => {
@@ -351,7 +328,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
           </ScrollView>
 
           <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
-            <Text>{info}</Text>
+            <CallInfo call={localQSO?.their?.call} styles={styles} />
           </View>
         </View>
 

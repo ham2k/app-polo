@@ -36,6 +36,7 @@
     "color": "^4.2.3",
     "debounce": "^2.0.0",
     "deepmerge": "^4.3.1",
+    "fast-xml-parser": "^4.3.2",
     "react": "18.2.0",
     "react-native": "0.72.6",
     "react-native-drawer-layout": "^3.2.2",
