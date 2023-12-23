@@ -3,18 +3,18 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setOperation } from '../../../store/operations'
 import { Text, TextInput } from 'react-native-paper'
-import { ActivitySettingsDialog } from './ActivitySettingsDialog'
+import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 
 const ACTIVITY = {
   key: 'sota',
+  comingSoon: true,
   icon: 'image-filter-hdr',
   name: 'Summits on the Air',
   shortName: 'SOTA',
   infoURL: 'https://www.sota.org.uk/',
-  exchangeShortLabel: 'S2S',
+  exchangeShortLabel: ({ operation }) => operation?.sota ? 'S2S' : 'SOTA',
   operationAttribute: 'sota',
-  exchangeAttribute: 'theirSOTA',
-  description: (operation) => operation.sota,
+  description: (operation) => operation.sota + ' - NOT FUNCTIONAL YET',
   descriptionPlaceholder: 'Enter SOTA reference'
 }
 
@@ -79,6 +79,7 @@ export function ThisActivitySettingsDialog (props) {
             value={value}
             onChangeText={(text) => setValue(text)}
           />
+          <Text variant="bodyMedium" style={{ color: styles.theme.colors.primary }}>NOT FUNCTIONAL YET, FOR TESTING PURPOSES ONLY</Text>
         </>
       )}
     />

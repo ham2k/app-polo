@@ -6,15 +6,19 @@ import { View } from 'react-native'
 
 const REF_LABELS = {
   potaActivation: false,
-  pota: 'POTA'
+  pota: 'POTA',
+  sota: 'SOTA',
+  wwff: 'WWFF',
+  bota: 'BOTA',
+  iota: 'IOTA'
 }
 
 export default function QSOItem ({ qso, onPress, styles }) {
-  const multiRow = qso.notes || (qso?.refs?.length > 0)
+  const multiRow = qso.notes || (qso?.refs?.filter(ref => REF_LABELS[ref.type]).length > 0)
 
   return (
     <>
-      <View style={[styles.compactRow, { flexDirection: 'row', width: '100%' }, multiRow ? { borderBottomWidth: 0 } : {}]}>
+      <View style={[styles.compactRow, { flexDirection: 'row', width: '100%' }, multiRow ? { borderBottomWidth: 0, paddingBottom: 0 } : {}]}>
         <View style={{ flex: 0, marginLeft: 0, alignContent: 'right', minWidth: styles.rem * 1 }}>
           <Text style={[styles.text.numbers, { textAlign: 'right' }]}>{qso._number}</Text>
         </View>
@@ -35,7 +39,7 @@ export default function QSOItem ({ qso, onPress, styles }) {
         </View>
       </View>
       {multiRow && (
-        <View style={[styles.compactRow, { flexDirection: 'column', width: '100%', paddingTop: 0 }]}>
+        <View style={[styles.compactRow, { flexDirection: 'column', width: '100%', paddingVertical: 0, paddingBottom: styles.halfSpace, minHeight: undefined }]}>
           {qso.notes && (
             <View style={{ flex: 2, marginLeft: 4 * styles.rem, flexDirection: 'row' }}>
               <Text style={{ fontWeight: '600', marginRight: styles.oneSpace }}>Notes:</Text><Text>{qso.notes}</Text>

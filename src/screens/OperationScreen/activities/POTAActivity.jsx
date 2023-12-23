@@ -4,7 +4,7 @@ import POTAInput from '../../components/POTAInput'
 import { useDispatch } from 'react-redux'
 import { setOperation } from '../../../store/operations'
 import { Text } from 'react-native-paper'
-import { ActivitySettingsDialog } from './ActivitySettingsDialog'
+import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 
 const ACTIVITY = {
   key: 'pota',
@@ -12,10 +12,22 @@ const ACTIVITY = {
   name: 'Parks on the Air',
   shortName: 'POTA',
   infoURL: 'https://parksontheair.com/',
-  exchangeShortLabel: 'P2P',
+  exchangeShortLabel: ({ operation }) => operation?.pota ? 'P2P' : 'POTA',
   operationAttribute: 'pota',
   description: (operation) => operation.pota,
-  descriptionPlaceholder: 'Enter POTA references'
+  descriptionPlaceholder: 'Enter POTA references',
+  processQSO: (qso, operation) => {
+    if (operation.sota) {
+      const nonSotaRefs = (qso?.refs || []).filter(ref => ref.type !== 'sotaActivation')
+
+      return {
+        ...qso,
+        refs: nonSotaRefs + { type: 'sotaActivation', ref: operation.sota }
+      }
+    } else {
+      return qso
+    }
+  }
 }
 
 function ThisActivityExchangePanel (props) {

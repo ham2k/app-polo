@@ -3,18 +3,18 @@ import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { setOperation } from '../../../store/operations'
 import { Text, TextInput } from 'react-native-paper'
-import { ActivitySettingsDialog } from './ActivitySettingsDialog'
+import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 
 const ACTIVITY = {
   key: 'bota',
+  comingSoon: true,
   icon: 'umbrella-beach',
   name: 'Beaches on the Air',
   shortName: 'BOTA',
   infoURL: 'https://www.beachesontheair.com/',
   exchangeShortLabel: 'B2B',
   operationAttribute: 'bota',
-  exchangeAttribute: 'theirBOTA',
-  description: (operation) => operation.bota?.ref,
+  description: (operation) => operation.bota?.ref + ' - NOT FUNCTIONAL YET',
   descriptionPlaceholder: 'Enter BOTA reference',
   defaultValue: { ref: '', code: '' }
 }
@@ -77,6 +77,7 @@ export function ThisActivitySettingsDialog (props) {
             value={value.code}
             onChangeText={(text) => setValue({ ...value, code: text })}
           />
+          <Text variant="bodyMedium" style={{ color: styles.theme.colors.primary }}>NOT FUNCTIONAL YET, FOR TESTING PURPOSES ONLY</Text>
         </>
       )}
     />

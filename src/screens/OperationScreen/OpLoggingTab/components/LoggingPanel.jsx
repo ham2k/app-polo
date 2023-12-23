@@ -17,6 +17,7 @@ import FrequencyInput from '../../../components/FrequencyInput'
 import { fmtFreqInMHz, parseFreqInMHz } from '../../../../tools/frequencyFormats'
 import { NumberKeys } from './LoggingPanel/NumberKeys'
 import activities from '../../activities'
+import { stringOrFunction } from '../../../../styles/tools/stringOrFunction'
 
 // Not actually a react hook, just named like one
 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -339,7 +340,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                   <LoggerChip icon={activity.icon} styles={styles} style={{ flex: 0 }} themeColor={themeColor}
                     selected={!!visibleFields[activity.key]}
                     onChange={(value) => setVisibleFields({ ...visibleFields, [activity.key]: value })}
-                  >{activity.exchangeShortLabel}</LoggerChip>
+                  >{stringOrFunction(activity.exchangeShortLabel, { operation, qso })}</LoggerChip>
                   {visibleFields[activity.key] && (
                     <>
                       <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
