@@ -22,6 +22,7 @@ import { stringOrFunction } from '../../../../styles/tools/stringOrFunction'
 // Not actually a react hook, just named like one
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useBuiltinCountryFile()
+import { stringOrFunction } from '../../../../tools/stringOrFunction'
 
 function describeRadio (operation) {
   return `${operation.freq ? fmtFreqInMHz(operation.freq) : '?'} MHz • ${operation.mode ?? 'SSB'}`
