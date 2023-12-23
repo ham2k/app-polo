@@ -47,7 +47,6 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
   themeColor = themeColor || 'tertiary'
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
-  console.log('LoggingPanel', qso)
   const [localQSO, setLocalQSO] = useState({})
 
   const [pausedTime, setPausedTime] = useState()
@@ -64,7 +63,6 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
 
   // Initialize the form with the QSO data
   useEffect(() => {
-    console.log('effect init')
     const local = {
       their: {
         call: qso?.their?.call ?? '',
@@ -77,7 +75,6 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
       notes: qso?.notes ?? '',
       refs: qso?.activities ?? []
     }
-    console.log('effect', qso)
 
     if (qso.startOnMillis) {
       setPausedTime(true)
@@ -91,7 +88,6 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
 
   // Focus the callsign field when the panel is opened
   useEffect(() => {
-    console.log('effect focus')
     setTimeout(() => {
       callFieldRef?.current?.focus()
     }, 100)
@@ -99,7 +95,6 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
 
   // Validate and analize the callsign
   useEffect(() => {
-    console.log('effect validate')
     const callInfo = parseCallsign(localQSO?.their?.call)
     let entityInfo
     if (callInfo?.baseCall) {
@@ -129,7 +124,6 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
   const handleFieldChange = useCallback((event) => {
     const { fieldId, nativeEvent: { text } } = event
     if (fieldId === 'theirCall') {
-      console.log('theirCall', text)
       let startOnMillis = localQSO?.startOnMillis
       if (!pausedTime) {
         if (text) {

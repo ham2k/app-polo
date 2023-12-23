@@ -44,8 +44,10 @@ export const addQSO = ({ uuid, qso }) => (dispatch, getState) => {
   if (qso.startOnMillis < startOnMillisMin) startOnMillisMin = qso.startOnMillis
   if (qso.startOnMillis > startOnMillisMax) startOnMillisMax = qso.startOnMillis
 
-  dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount: qsos.length }))
-  return debouncedDispatch(dispatch, () => saveQSOs(uuid))
+  setTimeout(() => {
+    dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount: qsos.length }))
+    debouncedDispatch(dispatch, () => saveQSOs(uuid))
+  }, 1)
 }
 
 export const saveQSOs = (uuid) => async (dispatch, getState) => {

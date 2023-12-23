@@ -9,7 +9,6 @@ export function qsonToADIF ({ operation, qsos }) {
       commonRefs.push({ type: 'potaActivation', ref })
     })
   }
-  console.log('qsonToADIF', { operation, commonRefs })
   let str = ''
 
   str += 'ADIF for Operation \n'
@@ -31,7 +30,7 @@ function oneQSOtoADIFWithPOTAMultiples (qso, commonRefs) {
   const potaActivationRefs = (commonRefs || []).filter(ref => ref.type === 'potaActivation')
   const potaRefs = (qso?.refs || []).filter(ref => ref.type === 'pota')
   let str = ''
-  console.log('one qso', { potaRefs, potaActivationRefs })
+
   if (potaActivationRefs.length === 0) {
     if (potaRefs.length === 0) {
       str += oneQSOtoADIF(qso)
