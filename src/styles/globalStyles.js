@@ -1,4 +1,4 @@
-import { Platform, StyleSheet } from 'react-native'
+import { PixelRatio, Platform, StyleSheet } from 'react-native'
 
 const DEFAULT_THEME = {
   colors: {
@@ -11,16 +11,22 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
   const isIOS = Platform.OS === 'ios'
   const isDarkMode = colorScheme === 'dark'
 
-  theme = theme ?? DEFAULT_THEME
+  const pixelRatio = PixelRatio.get()
+  const fontScale = PixelRatio.getFontScale()
+  console.log('prepareGlobalStyles', { colorScheme, pixelRatio, fontScale })
 
-  const oneSpace = 8
-  const twoSpaces = oneSpace * 2
-  const threeSpaces = oneSpace * 3
-  const halfSpace = oneSpace / 2
+  theme = theme ?? DEFAULT_THEME
 
   const normalFontSize = 18
   const largeFontSize = 24
-  const rem = 16 // "Width of an `m` in the base (root) font size"
+
+  const baseRem = 16 // Guesstimage of the width of an 'm' in the base (root) font size
+  const rem = PixelRatio.roundToNearestPixel(baseRem * fontScale) // "Width of an `m` in the base (root) font size"
+
+  const halfSpace = PixelRatio.roundToNearestPixel(baseRem / 4)
+  const oneSpace = PixelRatio.roundToNearestPixel(baseRem / 2)
+  const twoSpaces = oneSpace * 2
+  const threeSpaces = oneSpace * 3
 
   const styles = StyleSheet.create({
     theme,
@@ -52,6 +58,16 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       fontSize: 20,
       color: theme.colors.onPrimary,
       fontWeight: '500'
+    },
+    screenTitleSmall: {
+      fontSize: 14,
+      color: theme.colors.onPrimary,
+      fontWeight: '500'
+    },
+    screenSubTitle: {
+      fontSize: 12,
+      color: theme.colors.onPrimary,
+      fontWeight: isIOS ? '300' : '100'
     },
     screenTitleLight: {
       fontSize: 20,
@@ -90,7 +106,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       borderBottomColor: theme.colors.outline
     },
     compactRow: {
-      minHeight: rem * 2,
+      minHeight: oneSpace * 4,
       paddingHorizontal: oneSpace,
       paddingVertical: oneSpace,
       borderBottomWidth: 1,
