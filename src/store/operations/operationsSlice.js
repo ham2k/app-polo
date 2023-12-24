@@ -1,3 +1,4 @@
+import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 
 const INITIAL_STATE = {
@@ -48,6 +49,12 @@ export const operationsSlice = createSlice({
         newInfo.name = `POTA ${newInfo.pota}`
       } else {
         newInfo.name = 'General Operation'
+      }
+
+      if (newInfo.freq) {
+        newInfo.band = bandForFrequency(newInfo.freq)
+      } else if (newInfo.band) {
+        newInfo.freq = undefined
       }
     },
     unsetOperation: (state, action) => {
