@@ -194,19 +194,19 @@ export function CallInfo ({ call, styles, style }) {
     const entity = DXCC_BY_PREFIX[parsedInfo?.entityPrefix]
     return [
       entity && `${entity.flag} ${entity.shortName}`,
-      [capitalizeString(operatorInfo.city), operatorInfo.state].filter(x => x).join(', ')
+      [capitalizeString(operatorInfo.city, { force: false }), operatorInfo.state].filter(x => x).join(', ')
     ].filter(x => x).join(' • ')
   }, [parsedInfo, operatorInfo])
 
   const line2 = useMemo(() => {
     return [
-      capitalizeString(operatorInfo.name, { mode: 'name' }),
+      capitalizeString(operatorInfo.name, { content: 'name', force: false }),
       operatorInfo.call !== parsedInfo.baseCall ? operatorInfo.call : ''
     ].filter(x => x).join(' • ')
   }, [operatorInfo, parsedInfo])
 
   return (
-    <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start', minHeight: 2 * styles.rem + 2 /* +2 to compensate for emoji */ }]}>
+    <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start', minHeight: 3 * styles.rem }]}>
       <Text>{line1}</Text>
       {loading ? (
         <ActivityIndicator size={styles.rem - 1} animating={true} style={{ alignSelf: 'flex-start' }}/>
