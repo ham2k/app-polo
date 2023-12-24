@@ -20,7 +20,7 @@ export default function QSOList ({ qsos, onPress, styles, style, listRef }) {
         ref={listRef}
         data={qsos}
         renderItem={renderRow}
-        ListEmptyComponent={<Text>No QSOs Yet!</Text>}
+        ListEmptyComponent={<Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>No QSOs yet!</Text>}
         keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
       />
     </View>

@@ -206,7 +206,7 @@ export function CallInfo ({ call, styles, style }) {
   }, [operatorInfo, parsedInfo])
 
   return (
-    <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start', minHeight: 3 * styles.rem }]}>
+    <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start', minHeight: 2.1 * styles.rem }]}>
       <Text>{line1}</Text>
       {loading ? (
         <ActivityIndicator size={styles.rem - 1} animating={true} style={{ alignSelf: 'flex-start' }}/>

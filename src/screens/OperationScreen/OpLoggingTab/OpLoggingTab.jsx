@@ -41,7 +41,7 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   // Set navigation title
   useEffect(() => {
-    navigation.setOptions({ title: `${qsos.length} QSOs`, iconName: 'radio' })
+    navigation.setOptions({ title: `${qsos.length} ${qsos.length !== 1 ? 'QSOs' : 'QSO'}`, iconName: 'radio' })
   }, [navigation, qsos])
 
   // When the lastQSO changes, scroll to it

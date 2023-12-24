@@ -21,11 +21,11 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
 
   const sidesWidth = useMemo(() => {
     if (back || close) {
-      return 55
+      return styles.oneSpace * 7
     } else {
-      return 84
+      return styles.oneSpace * 12
     }
-  }, [back, close])
+  }, [back, close, styles])
 
   return (
     <Appbar.Header
@@ -39,7 +39,7 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
         backgroundColor={styles.colors.primary}
       />
 
-      <View flexDirection="row" justifyContent="flex-start" style={{ width: sidesWidth }}>
+      <View flexDirection="row" justifyContent="flex-start" style={{ flex: 0, width: sidesWidth }}>
         {back ? (
           <Appbar.Action
             isLeading
@@ -48,22 +48,23 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
             theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
           />
         ) : (
-          <Text style={[styles.screenTitleLight, { marginLeft: styles.oneSpace }]}>Ham2K</Text>
+          <Text style={[styles.screenTitleLight, { marginLeft: styles.oneSpace }]} numberOfLines={1} adjustsFontSizeToFit={true}>Ham2K</Text>
         )}
       </View>
 
       <Appbar.Content
-        style={[{ flex: 1 }]}
+        style={[{ flex: 1, flexDirection: 'column', justifyContent: 'center' }]}
         title={
           title && subTitle ? (
-            <View flexDirection="row" justifyContent="center">
-              <Text style={[styles.screenTitleLight, { marginRight: styles.oneSpace }]}>{title}</Text>
-              <Text style={styles.screenTitleBold}>{subTitle}</Text>
-            </View>
+            <>
+              <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.screenTitleSmall}>{title}</Text>
+              <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.screenSubTitle}>{subTitle}</Text>
+              {/* <Text style={[styles.screenTitleLight]}>{title}</Text> */}
+              {/* <Text style={styles.screenTitleBold}>{'  '}{subTitle}</Text> */}
+              {/* </Text> */}
+            </>
           ) : (
-            <View flexDirection="row" justifyContent="center">
-              <Text style={styles.screenTitle}>{title}</Text>
-            </View>
+            <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} style={styles.screenTitle}>{title}</Text>
           )
         }
       />
@@ -77,7 +78,7 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
             theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
           />
         ) : (
-          <Text />
+          <Text>{' '}</Text>
         )}
       </View>
 
