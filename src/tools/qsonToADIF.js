@@ -61,6 +61,7 @@ function oneQSOtoADIF (qso, potaRefs = {}, timeOfffset = 0) {
   str += adifField('QSO_DATE', fmtADIFDate(qso.startOnMillis + timeOfffset))
   str += adifField('TIME_ON', fmtADIFTime(qso.startOnMillis + timeOfffset))
   str += adifField('FREQ', qso.freq)
+  str += adifField('BAND', qso.band && qso.band !== 'other' ? qso.band : '')
   str += adifField('RST_RCVD', qso.their.sent)
   str += adifField('RST_SENT', qso.our.sent)
   str += adifField('OPERATOR', qso.our.call)
@@ -81,5 +82,7 @@ function oneQSOtoADIF (qso, potaRefs = {}, timeOfffset = 0) {
 }
 
 function adifField (name, value, options = {}) {
+  if (!value && !options.force) return ''
+
   return `<${name}:${value?.length ?? 0}>${value ?? ''}${options.newLine ? '\n' : ' '}`
 }

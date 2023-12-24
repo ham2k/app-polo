@@ -19,7 +19,17 @@ import { stringOrFunction } from '../../../../tools/stringOrFunction'
 import { CallInfo } from './LoggingPanel/CallInfo'
 
 function describeRadio (operation) {
-  return `${operation.freq ? fmtFreqInMHz(operation.freq) : '?'} MHz • ${operation.mode ?? 'SSB'}`
+  const parts = []
+  if (operation.freq) {
+    parts.push(`${fmtFreqInMHz(operation.freq)} MHz`)
+  } else if (operation.band) {
+    parts.push(`${operation.band}`)
+  } else {
+    parts.push('Band???')
+  }
+
+  parts.push(`${operation.mode ?? 'SSB'}`)
+  return parts.join(' • ')
 }
 
 function prepareStyles (themeStyles, themeColor) {
@@ -121,6 +131,8 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
       setLocalQSO({ ...localQSO, notes: text })
     } else if (fieldId === 'freq') {
       onOperationChange && onOperationChange({ freq: parseFreqInMHz(text) })
+    } else if (fieldId === 'band') {
+      onOperationChange && onOperationChange({ band: text })
     } else if (fieldId === 'mode') {
       onOperationChange && onOperationChange({ mode: text })
     }
@@ -275,10 +287,35 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                   <>
                     <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
                     <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, gap: styles.oneSpace }}>
+                      <ThemedDropDown
+                        label="Band"
+                        value={operation.band}
+                        onChange={handleFieldChange}
+                        fieldId={'band'}
+                        style={[styles.input, { width: styles.oneSpace * 8 }]}
+                        list={[
+                          { value: '160m', label: '160m' },
+                          { value: '80m', label: '80m' },
+                          { value: '60m', label: '60m' },
+                          { value: '40m', label: '40m' },
+                          { value: '30m', label: '30m' },
+                          { value: '20m', label: '20m' },
+                          { value: '17m', label: '17m' },
+                          { value: '15m', label: '15m' },
+                          { value: '12m', label: '12m' },
+                          { value: '10m', label: '10m' },
+                          { value: '6m', label: '6m' },
+                          { value: '4m', label: '4m' },
+                          { value: '2m', label: '2m' },
+                          { value: '1.25m', label: '1.25m' },
+                          { value: '70cm', label: '70cm' },
+                          { value: 'other', label: 'Other' }
+                        ]}
+                      />
                       <FrequencyInput
                         innerRef={freqFieldRef}
                         themeColor={themeColor}
-                        style={[styles.input]}
+                        style={[styles.input, { width: styles.oneSpace * 13 }]}
                         value={operation.freq ?? ''}
                         label="Frequency"
                         placeholder=""
@@ -291,7 +328,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                         value={operation.mode}
                         onChange={handleFieldChange}
                         fieldId={'mode'}
-                        style={[styles.input, { width: styles.normalFontSize * 4 }]}
+                        style={[styles.input, { width: styles.oneSpace * 8 }]}
                         list={[
                           { value: 'SSB', label: 'SSB' },
                           { value: 'CW', label: 'CW' },
@@ -324,6 +361,32 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                 </View>
               ))}
 
+              <View style={{ flex: 0, flexDirection: 'column' }}>
+                <View style={{ flex: 0, flexDirection: 'row' }}>
+                  <LoggerChip icon="note-outline" styles={styles} style={{ flex: 0 }} themeColor={themeColor}
+                    selected={visibleFields.notes}
+                    onChange={(value) => setVisibleFields({ ...visibleFields, notes: value })}
+                  >Notes</LoggerChip>
+                </View>
+                {visibleFields.notes && (
+                  <>
+                    <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
+                    <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, gap: styles.oneSpace }}>
+                      <ThemedTextInput
+                        themeColor={themeColor}
+                        style={[styles.input, { minWidth: styles.oneSpace * 20 }]}
+                        value={localQSO?.notes ?? ''}
+                        label="Notes"
+                        placeholder=""
+                        onChange={handleFieldChange}
+                        onSubmitEditing={handleSubmit}
+                        fieldId={'notes'}
+                        keyboard={'dumb'}
+                      />
+                    </View>
+                  </>
+                )}
+              </View>
             </View>
           </ScrollView>
 
@@ -334,7 +397,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
 
       </View>
       <View style={{ flexDirection: 'row' }}>
-        <View style={{ flex: 1, paddingHorizontal: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, flexDirection: 'row', gap: styles.oneSpace }}>
+        <View style={{ flex: 1, paddingLeft: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, flexDirection: 'row', gap: styles.oneSpace }}>
           <CallsignInput
             innerRef={callFieldRef}
             themeColor={themeColor}
@@ -353,7 +416,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
           <ThemedTextInput
             innerRef={sentFieldRef}
             themeColor={themeColor}
-            style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
+            style={[styles.input, { width: styles.oneSpace * 7 }]}
             value={localQSO?.our?.sent ?? ''}
             label="Sent"
             placeholder={qso.mode === 'CW' ? '599' : '59'}
@@ -371,7 +434,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
           <ThemedTextInput
             innerRef={rcvdFieldRef}
             themeColor={themeColor}
-            style={[styles.input, { width: styles.normalFontSize * 2.5 }]}
+            style={[styles.input, { width: styles.oneSpace * 7 }]}
             value={localQSO?.their?.sent || ''}
             label="Rcvd"
             placeholder={qso.mode === 'CW' ? '599' : '59'}
@@ -386,19 +449,8 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
             onFocus={handleFocus}
             onSelectionChange={handleSelectionChange}
           />
-          <ThemedTextInput
-            themeColor={themeColor}
-            style={[styles.input, { flex: 3 }]}
-            value={localQSO?.notes ?? ''}
-            label="Notes"
-            placeholder=""
-            onChange={handleFieldChange}
-            onSubmitEditing={handleSubmit}
-            fieldId={'notes'}
-            keyboard={'dumb'}
-          />
         </View>
-        <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace }}>
+        <View style={{ justifyContent: 'flex-end', alignItems: 'center', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace }}>
           <IconButton
             icon="upload"
             size={styles.oneSpace * 4}
