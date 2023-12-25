@@ -12,6 +12,7 @@ import { Platform, useWindowDimensions } from 'react-native'
 import { loadQSOs } from '../../store/qsos'
 import { selectSettings } from '../../store/settings'
 import OpSpotsTab from './OpSpotsTab.jsx/OpSpotsTab'
+import { startTickTock } from '../../store/time'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -19,6 +20,11 @@ export default function OperationScreen ({ navigation, route }) {
   const dispatch = useDispatch()
   const operation = useSelector(selectOperation(route.params.operation.uuid))
   const settings = useSelector(selectSettings)
+
+  // Ensure the clock is ticking
+  useEffect(() => {
+    dispatch(startTickTock())
+  }, [dispatch])
 
   // When starting, make sure all operation data is loaded
   useEffect(() => {

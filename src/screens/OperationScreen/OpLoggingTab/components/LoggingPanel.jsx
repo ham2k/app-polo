@@ -17,6 +17,7 @@ import { NumberKeys } from './LoggingPanel/NumberKeys'
 import activities from '../../activities'
 import { stringOrFunction } from '../../../../tools/stringOrFunction'
 import { CallInfo } from './LoggingPanel/CallInfo'
+import { OpInfo } from './LoggingPanel/OpInfo'
 
 function describeRadio (operation) {
   const parts = []
@@ -391,7 +392,11 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
           </ScrollView>
 
           <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
-            <CallInfo call={localQSO?.their?.call} styles={styles} />
+            {localQSO?.their?.call ? (
+              <CallInfo call={localQSO?.their?.call} styles={styles} />
+            ) : (
+              <OpInfo operation={operation} styles={styles} />
+            )}
           </View>
         </View>
 

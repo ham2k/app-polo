@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux'
@@ -17,6 +17,7 @@ import { persistor, store } from './store'
 import HeaderBar from './screens/components/HeaderBar'
 
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { startTickTock } from './store/time'
 
 const Stack = createNativeStackNavigator()
 
@@ -25,6 +26,11 @@ const paperSettings = {
 }
 export default function App () {
   const [paperTheme, navigationTheme] = usePrepareThemes()
+
+  useEffect(() => {
+    console.info('App is starting')
+    store.dispatch(startTickTock())
+  }, [])
 
   return (
     <Provider store={store}>
