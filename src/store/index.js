@@ -7,6 +7,7 @@ import { migrations, LATEST_VERSION } from './migrations'
 import settingsReducer from './settings'
 import operationsReducer from './operations'
 import qsosReducer from './qsos'
+import timeReducer from './time'
 
 // Redux Toolkit uses Immer, which freezes state by default.
 // This is great, except that our log processing needs to mutate state when merging QSOs,
@@ -18,14 +19,15 @@ setAutoFreeze(false)
 const rootReducer = combineReducers({
   settings: settingsReducer,
   operations: operationsReducer,
-  qsos: qsosReducer
+  qsos: qsosReducer,
+  time: timeReducer
 })
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   version: LATEST_VERSION,
-  whitelist: ['settings', 'operations'], // Don't include `qsos`
+  whitelist: ['settings', 'operations'], // Don't include `qsos` nor `time`
   migrate: createMigrate(migrations, { debug: true })
 }
 

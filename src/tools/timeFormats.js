@@ -114,3 +114,28 @@ export function fmtISODateTime (t) {
     return ''
   }
 }
+
+export function fmtTimeBetween (t1, t2) {
+  if (typeof t1 === 'number') {
+    t1 = new Date(t1)
+  }
+  if (typeof t2 === 'number') {
+    t2 = new Date(t2)
+  }
+  if (t1 && t2) {
+    const diff = t2 - t1
+    if (diff < 0) {
+      return ''
+    } else if (diff < 1000) {
+      return '0s'
+    } else if (diff < 60000) {
+      return `${Math.floor(diff / 1000)}s`
+    } else if (diff < 3600000) {
+      return `${Math.floor(diff / 60000)}m ${Math.floor((diff % 60000) / 1000)}s`
+    } else {
+      return `${Math.floor(diff / 3600000)}h ${Math.floor((diff % 3600000) / 60000)}m`
+    }
+  } else {
+    return ''
+  }
+}

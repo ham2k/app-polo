@@ -13,7 +13,6 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
 
   const pixelRatio = PixelRatio.get()
   const fontScale = PixelRatio.getFontScale()
-  console.log('prepareGlobalStyles', { colorScheme, pixelRatio, fontScale })
 
   theme = theme ?? DEFAULT_THEME
 
