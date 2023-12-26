@@ -56,7 +56,7 @@ function ThisActivityExchangePanel (props) {
   return (
     <POTAInput
       {...props}
-      style={{ minWidth: 8 * styles.rem }}
+      style={{ minWidth: 16 * styles.oneSpace }}
       value={localValue}
       label="Their POTA"
       placeholder="K-..."

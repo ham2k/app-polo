@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { Text } from 'react-native-paper'
 
 import { View } from 'react-native'
@@ -25,15 +25,11 @@ export function OpInfo ({ operation, qsos, styles, style }) {
       }
     }
 
-    // if (operation.startOnMillisMin) {
-    //   parts.push(`${fmtTimeBetween(operation.startOnMillisMin, now)} operating`)
-    // }
-
     return parts.filter(x => x).join(' • ')
   }, [operation, now])
 
   return (
-    <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start', minHeight: 2.1 * styles.rem }]}>
+    <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start' }]}>
       <Text>{line1}</Text>
       <Text>{line2}</Text>
     </View>

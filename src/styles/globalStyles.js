@@ -19,13 +19,10 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
   const normalFontSize = 18
   const largeFontSize = 24
 
-  const baseRem = 16 // Guesstimage of the width of an 'm' in the base (root) font size
-  const rem = PixelRatio.roundToNearestPixel(baseRem * fontScale) // "Width of an `m` in the base (root) font size"
+  const baseSpace = 8 // Guesstimage of the width of an 'm' in the base (root) font size
 
-  const halfSpace = PixelRatio.roundToNearestPixel(baseRem / 4)
-  const oneSpace = PixelRatio.roundToNearestPixel(baseRem / 2)
-  const twoSpaces = oneSpace * 2
-  const threeSpaces = oneSpace * 3
+  const oneSpace = PixelRatio.roundToNearestPixel(baseSpace * fontScale)
+  const halfSpace = PixelRatio.roundToNearestPixel((baseSpace * fontScale) / 2)
 
   const styles = StyleSheet.create({
     theme,
@@ -33,11 +30,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     colorScheme,
     isDarkMode,
 
-    rem,
+    pixelRatio,
 
     oneSpace,
-    twoSpaces,
-    threeSpaces,
     halfSpace,
 
     normalFontSize,
@@ -50,7 +45,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       backgroundColor: theme.colors.background
     },
     sectionContainer: {
-      marginTop: twoSpaces,
+      marginTop: oneSpace * 2,
       paddingHorizontal: 24
     },
     screenTitle: {
@@ -99,7 +94,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     },
     row: {
       minHeight: oneSpace * 8,
-      paddingHorizontal: twoSpaces,
+      paddingHorizontal: oneSpace * 2,
       paddingVertical: oneSpace,
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.outline

@@ -28,7 +28,7 @@ export default function SettingsScreen ({ navigation }) {
           <List.Item
             title="Operator's Callsign"
             description={settings.operatorCall ?? 'No call'}
-            left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="card-account-details" />}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
             onPress={() => setCurrentDialog('operatorCall')}
           />
           {currentDialog === 'operatorCall' && (
@@ -47,7 +47,7 @@ export default function SettingsScreen ({ navigation }) {
           <List.Item
             title="QRZ (for callsign lookups)"
             description={settings?.accounts?.qrz ? settings.accounts.qrz.login : 'No account'}
-            left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="account" />}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
             onPress={() => setCurrentDialog('accountsQRZ')}
           />
           {currentDialog === 'accountsQRZ' && (
@@ -65,12 +65,12 @@ export default function SettingsScreen ({ navigation }) {
           <List.Item
             title="Version"
             description={packageJson.version}
-            left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="information-outline" />}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
           />
           <List.Item
             title="Author"
             description={'Sebastián Delmont • KI2D'}
-            left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="information-outline" />}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
           />
         </List.Section>
       </ScrollView>

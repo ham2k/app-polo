@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { TextInput } from 'react-native-paper'
-import { TextInput as NativeTextInput, StyleSheet } from 'react-native'
+import { TextInput as NativeTextInput } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 const LEFT_TRIM_REGEX = /^\s+/
@@ -14,7 +14,7 @@ const SIGN_AFTER_A_DIGIT_REGEX = /([\d,.])[+-]/g
 
 export default function ThemedTextInput (props) {
   const {
-    style, textStyle, themeColor,
+    style, themeColor,
     label, placeholder, value, error,
     onChangeText, onChange, onSubmitEditing, onKeyPress,
     innerRef, fieldId,
@@ -75,11 +75,10 @@ export default function ThemedTextInput (props) {
     return {
       paperInput: {
         color: themeColor ? themeStyles.theme.colors[themeColor] : themeStyles.theme.colors.onBackground,
-        backgroundColor: themeColor ? themeStyles.theme.colors[`${themeColor}Container`] : themeStyles.theme.colors.background
+        backgroundColor: themeStyles.theme.colors.background
       },
       nativeInput: {
-        color: themeColor ? themeStyles.theme.colors[themeColor] : themeStyles.theme.colors.onBackground,
-        backgroundColor: themeColor ? themeStyles.theme.colors[`${themeColor}Container`] : themeStyles.theme.colors.background
+        color: themeColor ? themeStyles.theme.colors[themeColor] : themeStyles.theme.colors.onBackground
       },
       selectionColor: themeColor ? themeStyles.theme.colors[`${themeColor}Light`] : themeStyles.theme.colors.primaryLight,
       cursorColor: themeColor ? themeStyles.theme.colors[`${themeColor}`] : themeStyles.theme.colors.primary
@@ -133,7 +132,7 @@ export default function ThemedTextInput (props) {
 
         value={strValue || ''}
         placeholder={placeholder}
-        style={[colorStyles.nativeInput, ...props.style, textStyle, { backgroundColor: undefined }]}
+        style={[colorStyles.nativeInput, ...props.style]}
         placeholderTextColor={themeStyles.theme.colors.onBackgroundLighter}
         cursorColor={colorStyles.cursorColor}
         selectionColor={colorStyles.sectionColor}
@@ -144,19 +143,20 @@ export default function ThemedTextInput (props) {
         onChangeText={undefined}
       />
     )
-  }, [keyboardOptions, innerRef, strValue, colorStyles, textStyle, themeStyles, onSubmitEditing, onKeyPress, handleChange, placeholder])
+  }, [keyboardOptions, innerRef, strValue, colorStyles, themeStyles, onSubmitEditing, onKeyPress, handleChange, placeholder])
 
   return (
     <TextInput
       {...props}
-      style={[colorStyles.paperInput, style, { paddingVertical: 0 }]}
+      style={[colorStyles.paperInput, { paddingHorizontal: props.dense ? themeStyles.halfSpace : themeStyles.oneSpace }, style]}
       textColor={colorStyles.paperInput.color}
       selectionColor={colorStyles.paperInput.color}
       underlineColor={colorStyles.paperInput.color}
       activeUnderlineColor={colorStyles.paperInput.color}
       mode={'flat'}
-      dense={true}
-      underlineStyle={extraStyles.underline}
+      underlineStyle={{
+        borderRadius: 30
+      }}
       value={value || ' '}
       label={label}
       placeholder={placeholder}
@@ -165,10 +165,3 @@ export default function ThemedTextInput (props) {
     />
   )
 }
-
-const extraStyles = StyleSheet.create({
-  underline: {
-    marginTop: 0,
-    borderRadius: 30
-  }
-})

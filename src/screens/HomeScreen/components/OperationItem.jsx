@@ -12,10 +12,10 @@ export default function OperationItem ({ operation, settings, onPress, styles })
     <TouchableRipple onPress={pressHandler}>
       <View style={[styles.row, { flexDirection: 'column', width: '100%' }]}>
         <View style={[{ flexDirection: 'row', width: '100%' }]}>
-          <View style={{ flex: 0, marginLeft: 0, minWidth: styles.rem * 1 }}>
+          <View style={{ flex: 0, marginLeft: 0, minWidth: styles.oneSpace * 2 }}>
             <Text style={[styles.rowText]}>{operation.stationCall || settings.operatorCall}</Text>
           </View>
-          <View style={{ flex: 0, marginLeft: styles.oneSpace, minWidth: styles.rem * 1 }}>
+          <View style={{ flex: 0, marginLeft: styles.oneSpace, minWidth: styles.oneSpace * 2 }}>
             <Text style={[styles.rowText, { fontWeight: 'bold' }]}>{operation.name}</Text>
           </View>
         </View>

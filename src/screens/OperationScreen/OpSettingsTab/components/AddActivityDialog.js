@@ -38,7 +38,7 @@ export function AddActivityDialog ({ operation, visible, settings, styles, onDia
                 <List.Item
                   key={activity.key}
                   title={activity.name}
-                  left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon={activity.icon} />}
+                  left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={activity.icon} />}
                   onPress={() => addActivity(activity.operationAttribute)}
                 />
               ))}
