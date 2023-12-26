@@ -40,11 +40,6 @@ function prepareStyles (themeStyles, themeColor) {
       borderTopColor: themeStyles.theme.colors[`${themeColor}Light`],
       borderTopWidth: 1,
       backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
-    },
-    input: {
-      backgroundColor: themeStyles.theme.colors.background,
-      color: themeStyles.theme.colors.onBackground,
-      paddingHorizontal: themeStyles.oneSpace
     }
   }
 }
@@ -252,7 +247,6 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                     <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, gap: styles.oneSpace }}>
                       <ThemedTextInput
                         themeColor={themeColor}
-                        style={[styles.input]}
                         value={'22:22:22'}
                         label="Time"
                         placeholder="00:00:00"
@@ -263,7 +257,6 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                       />
                       <ThemedTextInput
                         themeColor={themeColor}
-                        style={[styles.input]}
                         value={'2023-12-01'}
                         label="Date"
                         placeholder="2023-12-01"
@@ -290,10 +283,11 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                     <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, gap: styles.oneSpace }}>
                       <ThemedDropDown
                         label="Band"
+                        themeColor={themeColor}
                         value={operation.band}
                         onChange={handleFieldChange}
                         fieldId={'band'}
-                        style={[styles.input, { width: styles.oneSpace * 8 }]}
+                        style={{ width: styles.oneSpace * 8 }}
                         list={[
                           { value: '160m', label: '160m' },
                           { value: '80m', label: '80m' },
@@ -316,7 +310,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                       <FrequencyInput
                         innerRef={freqFieldRef}
                         themeColor={themeColor}
-                        style={[styles.input, { width: styles.oneSpace * 13 }]}
+                        style={[styles.input, { width: styles.oneSpace * 11 }]}
                         value={operation.freq ?? ''}
                         label="Frequency"
                         placeholder=""
@@ -391,7 +385,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
             </View>
           </ScrollView>
 
-          <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace }}>
+          <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace, minHeight: 5.1 * styles.oneSpace }}>
             {localQSO?.their?.call ? (
               <CallInfo call={localQSO?.their?.call} styles={styles} />
             ) : (
@@ -401,8 +395,8 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
         </View>
 
       </View>
-      <View style={{ flexDirection: 'row' }}>
-        <View style={{ flex: 1, paddingLeft: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, flexDirection: 'row', gap: styles.oneSpace }}>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingLeft: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, gap: styles.oneSpace }}>
           <CallsignInput
             innerRef={callFieldRef}
             themeColor={themeColor}
@@ -421,7 +415,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
           <ThemedTextInput
             innerRef={sentFieldRef}
             themeColor={themeColor}
-            style={[styles.input, { width: styles.oneSpace * 7 }]}
+            style={{ width: styles.oneSpace * 6 }}
             value={localQSO?.our?.sent ?? ''}
             label="Sent"
             placeholder={qso.mode === 'CW' ? '599' : '59'}
@@ -439,7 +433,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
           <ThemedTextInput
             innerRef={rcvdFieldRef}
             themeColor={themeColor}
-            style={[styles.input, { width: styles.oneSpace * 7 }]}
+            style={[styles.input, { width: styles.oneSpace * 6 }]}
             value={localQSO?.their?.sent || ''}
             label="Rcvd"
             placeholder={qso.mode === 'CW' ? '599' : '59'}
@@ -455,7 +449,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
             onSelectionChange={handleSelectionChange}
           />
         </View>
-        <View style={{ justifyContent: 'flex-end', alignItems: 'center', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.halfSpace }}>
+        <View style={{ justifyContent: 'flex-end', alignItems: 'center', paddingHorizontal: styles.oneSpace, paddingBottom: 0 }}>
           <IconButton
             icon="upload"
             size={styles.oneSpace * 4}

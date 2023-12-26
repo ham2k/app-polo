@@ -70,7 +70,7 @@ export default function OpSettingsTab ({ navigation, route }) {
         <List.Item
           title="Station Callsign"
           description={operation.stationCall || `${settings.operatorCall} (operator)` }
-          left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="card-account-details" />}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
           onPress={() => setCurrentDialog('stationCall')}
         />
         {currentDialog === 'stationCall' && (
@@ -93,7 +93,7 @@ export default function OpSettingsTab ({ navigation, route }) {
             title={activity.name}
             description={(activity.description && activity.description(operation)) || activity.descriptionPlaceholder}
             left={
-                  () => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon={activity.icon} />
+                  () => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={activity.icon} />
                 }
             onPress={() => setCurrentDialog(`activity.${activity.key}`)}
           />
@@ -102,7 +102,7 @@ export default function OpSettingsTab ({ navigation, route }) {
           key="addActivity"
           title="Add Activity"
           description="POTA, SOTA, Field Day and more!"
-          left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="plus" />}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="plus" />}
           onPress={() => setCurrentDialog('addActivity')}
         />
       </List.Section>
@@ -132,7 +132,7 @@ export default function OpSettingsTab ({ navigation, route }) {
         <List.Subheader>Operation Data</List.Subheader>
         <List.Item
           title="Export ADIF"
-          left={() => <List.Icon style={{ marginLeft: styles.twoSpaces }} icon="share" />}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
           onPress={handleExport}
         />
       </List.Section>
@@ -141,7 +141,7 @@ export default function OpSettingsTab ({ navigation, route }) {
         <List.Item
           title="Delete Operation"
           titleStyle={{ color: styles.theme.colors.error }}
-          left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.twoSpaces }} icon="delete" />}
+          left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.oneSpace * 2 }} icon="delete" />}
           onPress={() => setCurrentDialog('delete')}
         />
         {currentDialog === 'delete' && (
