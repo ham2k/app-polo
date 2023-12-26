@@ -1,3 +1,4 @@
+# POTA API Notes
 http://pota.app/all_parks_ext.csv
 https://storage.googleapis.com/gt_app/pota.json
 
@@ -21,3 +22,10 @@ https://api.pota.app/park/activations/YV-0001?count=all
 
 
 https://api.pota.app/profile/YV5RAB
+
+
+# QRZ API Notes
+https://www.qrz.com/XML/current_spec.html
+https://xmldata.qrz.com/xml/current/
+https://xmldata.qrz.com/xml/current/?username=xx1xxx;password=abcdef;agent=q5.0
+

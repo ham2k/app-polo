@@ -8,6 +8,7 @@ import settingsReducer from './settings'
 import operationsReducer from './operations'
 import qsosReducer from './qsos'
 import timeReducer from './time'
+import { reducer as apiQRZReducer, middleware as apiQRZMiddleware } from './apiQRZ'
 
 // Redux Toolkit uses Immer, which freezes state by default.
 // This is great, except that our log processing needs to mutate state when merging QSOs,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   settings: settingsReducer,
   operations: operationsReducer,
   qsos: qsosReducer,
-  time: timeReducer
+  time: timeReducer,
+  apiQRZ: apiQRZReducer
 })
 
 const persistConfig = {
@@ -66,6 +68,8 @@ export const store = configureStore({
       serializableCheck: false,
       immutableCheck: false // https://github.com/reduxjs/redux-toolkit/issues/415
     })
+
+    middlewares.push(apiQRZMiddleware)
 
     if (__DEV__) {
       const createDebugger = require('redux-flipper').default
