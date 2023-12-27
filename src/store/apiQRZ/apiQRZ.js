@@ -13,15 +13,6 @@ import { setAccountInfo } from '../settings'
 
 const BASE_URL = 'https://xmldata.qrz.com/'
 
-async function decodeXMLResponse (response) {
-  const body = await response.text()
-  const parser = new XMLParser()
-  const xml = parser.parse(body)
-  console.log(`QRZApi ${response.url} ${response.status}`)
-  console.log(xml)
-  return xml
-}
-
 function defaultParams (api) {
   const session = api.getState().settings?.accounts?.qrz?.session
   return {
@@ -34,7 +25,12 @@ const baseQueryWithSettings = fetchBaseQuery({
   baseUrl: `${BASE_URL}/xml/current`,
   responseHandler: async (response) => {
     if (response.status === 200) {
-      return await decodeXMLResponse(response)
+      const body = await response.text()
+      const parser = new XMLParser()
+      const xml = parser.parse(body)
+      // console.log(`QRZApi ${response.url} ${response.status}`)
+      // console.log(xml)
+      return xml
     } else {
       return {}
     }
@@ -43,35 +39,34 @@ const baseQueryWithSettings = fetchBaseQuery({
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQueryWithSettings(args, api, extraOptions)
-  if (result.error && result.error.status === 401) {
-    console.log('baseQueryWithReauth - Trying to get a new session')
 
+  if ((result.error && result.error.status === 401) ||
+    result.data?.QRZDatabase?.Session?.Error?.startsWith('Invalid session key') ||
+    result.data?.QRZDatabase?.Session?.Error?.startsWith('Username / password required')
+  ) {
     api.dispatch(setAccountInfo({ qrz: { session: undefined } }))
-
     // try to get a new session key
     const { login, password } = api.getState().settings?.accounts?.qrz
-    const { data, error, meta } = await baseQueryWithSettings({
+    result = await baseQueryWithSettings({
       url: '',
       params: {
         ...defaultParams(api),
         username: login,
         password
       }
-    })
+    }, api, extraOptions)
 
-    console.log('baseQueryWithReauth - session: ', { data, error })
-    if (error) return { error, meta }
-    if (data?.QRZDatabase?.Session?.Error) return { error: data?.QRZDatabase?.Session?.Error, meta }
+    if (result.error) return result
+    if (result.data?.QRZDatabase?.Session?.Error) return { error: result.data?.QRZDatabase?.Session?.Error, meta: result.meta }
 
-    const session = data?.QRZDatabase?.Session?.Key
+    const session = result.data?.QRZDatabase?.Session?.Key
     if (session) {
-      console.log('baseQueryWithReauth - saving session', session)
       api.dispatch(setAccountInfo({ qrz: { session } }))
 
       result = await baseQueryWithSettings(args, api, extraOptions)
     } else {
       api.dispatch(setAccountInfo({ qrz: { session: undefined } }))
-      return { error: 'Unexpected error logging into QRZ.com', meta }
+      return { error: 'Unexpected error logging into QRZ.com', result }
     }
   }
   return result
@@ -87,31 +82,42 @@ export const apiQRZ = createApi({
     //   https://xmldata.qrz.com/xml/current/?s=SESSIONKEY;callsign=xx1xxx
 
     lookupCall: builder.query({
-      queryFn: (arg, api, extraOptions, baseQuery) => {
-        const { call } = arg
-        // console.log('apiQRZ.lookupCall', call)
+      // responseHandler: async (response) => {
+      //   console.log('lookupCall responseHandler', response)
+      //   return response
+      // },
+      queryFn: async (args, api, extraOptions, baseQuery) => {
+        const { call } = args
         if (!call || call.length < 3) return { data: {} }
 
-        return baseQuery({
+        const response = await baseQuery({
           url: '',
           params: {
             ...defaultParams(api),
             callsign: call
-          },
-          responseHandler: async (response) => {
-            const xml = await decodeXMLResponse(response)
-            const error = xml?.QRZDatabase?.Session?.Error
+          }
+        }, api, extraOptions)
 
-            if (error) {
-              if (error.startsWith('Not found')) {
-                return { call, name: 'Not Found', error: true }
-              } else {
-                return { call, name: error, error: true }
-              }
+        if (response.data) {
+          const xml = response.data
+          const error = xml?.QRZDatabase?.Session?.Error
+          console.log(xml)
+          if (error) {
+            if (error.startsWith('Not found')) {
+              console.log('1')
+              return { error: `${call} not found`, data: undefined }
             } else {
-              const callsignInfo = xml?.QRZDatabase?.Callsign || {}
+              console.log('2')
+              return { ...response, error, data: undefined }
+            }
+          } else {
+            console.log('3')
+            const callsignInfo = xml?.QRZDatabase?.Callsign || {}
 
-              return {
+            return {
+              ...response,
+              error: undefined,
+              data: {
                 name: callsignInfo.name_fmt,
                 call: callsignInfo.call,
                 firstName: callsignInfo.fname,
@@ -131,10 +137,13 @@ export const apiQRZ = createApi({
                 lon: callsignInfo.lon,
                 image: callsignInfo.image,
                 imageInfo: (callsignInfo.imageinfo || '').split(':')
-              }
+              },
+              meta: response.meta
             }
           }
-        })
+        } else {
+          return response
+        }
       }
     })
   })
