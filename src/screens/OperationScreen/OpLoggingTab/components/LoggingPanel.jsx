@@ -387,7 +387,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
 
           <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace, minHeight: 5.1 * styles.oneSpace }}>
             {localQSO?.their?.call ? (
-              <CallInfo call={localQSO?.their?.call} styles={styles} />
+              <CallInfo qso={localQSO} styles={styles} />
             ) : (
               <OpInfo operation={operation} styles={styles} />
             )}

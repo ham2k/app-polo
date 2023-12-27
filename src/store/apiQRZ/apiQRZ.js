@@ -74,7 +74,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
 export const apiQRZ = createApi({
   reducerPath: 'apiQRZ',
-  tagTypes: ['QRZSession', 'QRZLookup'],
   baseQuery: baseQueryWithReauth,
   endpoints: builder => ({
 
@@ -101,17 +100,14 @@ export const apiQRZ = createApi({
         if (response.data) {
           const xml = response.data
           const error = xml?.QRZDatabase?.Session?.Error
-          console.log(xml)
+
           if (error) {
             if (error.startsWith('Not found')) {
-              console.log('1')
               return { error: `${call} not found`, data: undefined }
             } else {
-              console.log('2')
               return { ...response, error, data: undefined }
             }
           } else {
-            console.log('3')
             const callsignInfo = xml?.QRZDatabase?.Callsign || {}
 
             return {

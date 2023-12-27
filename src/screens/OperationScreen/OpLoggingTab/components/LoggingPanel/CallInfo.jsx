@@ -6,61 +6,82 @@ import { ActivityIndicator, Text } from 'react-native-paper'
 import { View } from 'react-native'
 import { capitalizeString } from '../../../../../tools/capitalizeString'
 import { useLookupCallQuery } from '../../../../../store/apiQRZ'
+import { useLookupParkQuery } from '../../../../../store/apiPOTA'
 
 // Not actually a react hook, just named like one
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useBuiltinCountryFile()
 
-export function CallInfo ({ call, styles, style }) {
+export function CallInfo ({ qso, styles, style }) {
   // Parse the callsign
   const [parsedInfo, setParsedInfo] = useState({})
   useEffect(() => {
     // eslint-disable-next-line no-shadow
-    let parsedInfo = parseCallsign(call)
+    let parsedInfo = parseCallsign(qso?.their?.call)
     if (parsedInfo?.baseCall) {
       annotateFromCountryFile(parsedInfo)
-    } else if (call) {
-      parsedInfo = annotateFromCountryFile({ prefix: call })
+    } else if (qso?.their?.call) {
+      parsedInfo = annotateFromCountryFile({ prefix: qso?.their?.call })
     }
     setParsedInfo(parsedInfo)
-  }, [call])
+  }, [qso?.their?.call])
 
   // Use `skip` to prevent calling the API on every keystroke
-  const [skip, setSkip] = useState(true)
+  const [skipQRZ, setSkipQRZ] = useState(true)
   useEffect(() => {
-    setSkip(true)
-    const timeout = setTimeout(() => setSkip(false), 500)
+    setSkipQRZ(true)
+    const timeout = setTimeout(() => setSkipQRZ(false), 500)
     return () => clearTimeout(timeout)
-  }, [call])
+  }, [qso?.their?.call])
 
-  const lookup = useLookupCallQuery({ call: parsedInfo?.baseCall }, { skip })
+  const qrz = useLookupCallQuery({ call: parsedInfo?.baseCall }, { skipQRZ })
+
+  // Use `skip` to prevent calling the API on every keystroke
+  const potaRef = useMemo(() => {
+    const potaRefs = qso?.refs?.filter?.(x => x.type === 'pota')
+    if (potaRefs?.length > 0) {
+      return potaRefs[0].ref
+    } else {
+      return undefined
+    }
+  }, [qso?.refs])
+
+  const pota = useLookupParkQuery({ ref: potaRef }, { skip: !potaRef })
 
   const line1 = useMemo(() => {
     const parts = []
     const entity = DXCC_BY_PREFIX[parsedInfo?.entityPrefix]
-    if (entity) parts.push(`${entity.flag} ${entity.shortName}`)
-    if (lookup?.data?.city) parts.push(capitalizeString(lookup.data.city, { force: false }), lookup.data.state)
+    // console.log('POTA', pota)
+    if (pota?.data?.name) {
+      parts.push(`${entity?.flag ? `${entity.flag} ` : ''} POTA: ${pota.data.name} ${pota.data.parktypeDesc}`)
+      if (pota.data.locationName) parts.push(pota.data.locationName)
+    } else if (pota?.data?.error) {
+      parts.push(`POTA ${potaRef} ${pota.data?.error}`)
+    } else {
+      if (entity) parts.push(`${entity.flag} ${entity.shortName}`)
+      if (qrz?.data?.city) parts.push(capitalizeString(qrz.data.city, { force: false }), qrz.data.state)
+    }
+
     return parts.filter(x => x).join(' • ')
-  }, [parsedInfo, lookup])
+  }, [parsedInfo, qrz, pota, potaRef])
 
   const line2 = useMemo(() => {
-    console.log('CallInfo', lookup)
     const parts = []
-    if (lookup?.error) {
-      parts.push(lookup.error)
-    } else if (lookup?.data?.name) {
-      parts.push(capitalizeString(lookup.data.name, { content: 'name', force: false }))
-      if (lookup.data.call && lookup.data.call !== parsedInfo.baseCall) {
-        parts.push(`(Now ${lookup.data.call})`)
+    if (qrz?.error) {
+      parts.push(qrz.error)
+    } else if (qrz?.data?.name) {
+      parts.push(capitalizeString(qrz.data.name, { content: 'name', force: false }))
+      if (qrz.data.call && qrz.data.call !== parsedInfo.baseCall) {
+        parts.push(`(Now ${qrz.data.call})`)
       }
     }
     return parts.filter(x => x).join(' • ')
-  }, [parsedInfo, lookup])
+  }, [parsedInfo, qrz])
 
   return (
     <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start' }]}>
       <Text>{line1}</Text>
-      {lookup.loading ? (
+      {qrz.loading ? (
         <ActivityIndicator size={styles.oneSpace} animating={true} style={{ alignSelf: 'flex-start' }}/>
       ) : (
         <Text style={{ fontWeight: 'bold' }}>{line2}</Text>
