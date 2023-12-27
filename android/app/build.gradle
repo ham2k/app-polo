@@ -110,9 +110,9 @@ android {
     }
     flavorDimensions ("environment")
     productFlavors {
-        dev {
+        alpha {
             dimension "environment"
-            applicationIdSuffix ".dev"
+            applicationIdSuffix ".alpha"
         }
         beta {
             dimension "environment"
