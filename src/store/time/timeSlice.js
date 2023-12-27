@@ -25,9 +25,7 @@ export const { actions } = timeSlice
 
 export const startTickTock = () => (dispatch, getState) => {
   let { interval } = getState().time
-  console.log('Starting tick tock?')
   if (interval) return
-  console.log('Starting tick tock!')
   interval = setInterval(() => {
     dispatch(actions.setNow())
   }, 1000)
