@@ -25,6 +25,7 @@ export function CallInfo ({ call, styles, style }) {
     setParsedInfo(parsedInfo)
   }, [call])
 
+  // Use `skip` to prevent calling the API on every keystroke
   const [skip, setSkip] = useState(true)
   useEffect(() => {
     setSkip(true)
@@ -32,31 +33,34 @@ export function CallInfo ({ call, styles, style }) {
     return () => clearTimeout(timeout)
   }, [call])
 
-  const { data: operatorInfo, loading } = useLookupCallQuery({ call: parsedInfo?.baseCall }, { skip })
+  const lookup = useLookupCallQuery({ call: parsedInfo?.baseCall }, { skip })
 
   const line1 = useMemo(() => {
     const parts = []
     const entity = DXCC_BY_PREFIX[parsedInfo?.entityPrefix]
     if (entity) parts.push(`${entity.flag} ${entity.shortName}`)
-    if (operatorInfo?.city) parts.push(capitalizeString(operatorInfo?.city, { force: false }), operatorInfo?.state)
+    if (lookup?.data?.city) parts.push(capitalizeString(lookup.data.city, { force: false }), lookup.data.state)
     return parts.filter(x => x).join(' • ')
-  }, [parsedInfo, operatorInfo])
+  }, [parsedInfo, lookup])
 
   const line2 = useMemo(() => {
+    console.log('CallInfo', lookup)
     const parts = []
-    if (operatorInfo?.name) {
-      parts.push(capitalizeString(operatorInfo.name, { content: 'name', force: false }))
-      if (operatorInfo?.call && operatorInfo.call !== parsedInfo.baseCall) {
-        parts.push(`(Now ${operatorInfo.call})`)
+    if (lookup?.error) {
+      parts.push(lookup.error)
+    } else if (lookup?.data?.name) {
+      parts.push(capitalizeString(lookup.data.name, { content: 'name', force: false }))
+      if (lookup.data.call && lookup.data.call !== parsedInfo.baseCall) {
+        parts.push(`(Now ${lookup.data.call})`)
       }
     }
     return parts.filter(x => x).join(' • ')
-  }, [parsedInfo, operatorInfo])
+  }, [parsedInfo, lookup])
 
   return (
     <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start' }]}>
       <Text>{line1}</Text>
-      {loading ? (
+      {lookup.loading ? (
         <ActivityIndicator size={styles.oneSpace} animating={true} style={{ alignSelf: 'flex-start' }}/>
       ) : (
         <Text style={{ fontWeight: 'bold' }}>{line2}</Text>
