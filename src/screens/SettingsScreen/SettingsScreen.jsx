@@ -3,17 +3,18 @@ import React, { useState } from 'react'
 
 import packageJson from '../../../package.json'
 
-import { selectSettings } from '../../store/settings'
-import { useSelector } from 'react-redux'
+import { selectSettings, setSettings } from '../../store/settings'
+import { useDispatch, useSelector } from 'react-redux'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
-import { List } from 'react-native-paper'
+import { List, Switch } from 'react-native-paper'
 import { OperatorCallsignDialog } from './components/OperatorCallsignDialog'
 import { ScrollView } from 'react-native'
 import { AccountsQRZDialog } from './components/AccountsQRZDialog'
 
 export default function SettingsScreen ({ navigation }) {
   const styles = useThemedStyles()
+  const dispatch = useDispatch()
 
   const settings = useSelector(selectSettings)
 
@@ -26,7 +27,7 @@ export default function SettingsScreen ({ navigation }) {
           <List.Subheader>General Settings</List.Subheader>
 
           <List.Item
-            title="Operator's Callsign"
+            title="Operator Callsign"
             description={settings.operatorCall ?? 'No call'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
             onPress={() => setCurrentDialog('operatorCall')}
@@ -39,6 +40,14 @@ export default function SettingsScreen ({ navigation }) {
               onDialogDone={() => setCurrentDialog('')}
             />
           )}
+
+          <List.Item
+            title="Show numbers row"
+            description={''}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />}
+            right={() => <Switch value={!!settings.showNumbersRow} onValueChange={(value) => dispatch(setSettings({ showNumbersRow: value })) } />}
+            onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))}
+          />
         </List.Section>
 
         <List.Section>
@@ -46,8 +55,8 @@ export default function SettingsScreen ({ navigation }) {
 
           <List.Item
             title="QRZ (for callsign lookups)"
-            description={settings?.accounts?.qrz ? settings.accounts.qrz.login : 'No account'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            description={settings?.accounts?.qrz ? `Login: ${settings.accounts.qrz.login}` : 'No account'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />}
             onPress={() => setCurrentDialog('accountsQRZ')}
           />
           {currentDialog === 'accountsQRZ' && (
@@ -70,7 +79,7 @@ export default function SettingsScreen ({ navigation }) {
           <List.Item
             title="Author"
             description={'Sebastián Delmont • KI2D'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
           />
         </List.Section>
       </ScrollView>

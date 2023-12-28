@@ -23,11 +23,16 @@ export const settingsSlice = createSlice({
       Object.keys(action.payload || {}).forEach(account => {
         state.accounts[account] = { ...state.accounts[account] || {}, ...action.payload[account] || {} }
       })
+    },
+    setSettings: (state, action) => {
+      Object.keys(action.payload || {}).forEach(key => {
+        state[key] = action.payload[key]
+      })
     }
   }
 })
 
-export const { setOperatorCall, setOnboarded, setAccountInfo } = settingsSlice.actions
+export const { setOperatorCall, setOnboarded, setAccountInfo, setSettings } = settingsSlice.actions
 
 export const selectSettings = (state) => {
   return state?.settings
