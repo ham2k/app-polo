@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import CallsignInput from '../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
-import { setOperatorCall } from '../../../store/settings'
+import { setSettings } from '../../../store/settings'
 import { KeyboardAvoidingView } from 'react-native'
 
 export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDone }) {
@@ -24,7 +24,7 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
   }, [setValue])
 
   const handleAccept = useCallback(() => {
-    dispatch(setOperatorCall(value))
+    dispatch(setSettings({ operatorCall: value }))
     setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [value, dispatch, onDialogDone])

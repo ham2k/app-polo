@@ -186,11 +186,13 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
 
   const handleSelectionChange = useCallback((event) => {
     const { nativeEvent: { selection: { start, end } } } = event
+
     setCurrentFieldSelection({ start, end })
   }, [])
 
   const handleNumberKey = useCallback((number) => {
     const { start, end } = currentFieldSelection ?? {}
+
     const replaceContents = (text) => {
       return text.substring(0, start) + number + text.substring(end)
     }
@@ -201,6 +203,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
     } else if (currentField === 'ourSent') {
       setLocalQSO({ ...localQSO, our: { ...localQSO?.our, sent: replaceContents(localQSO?.our?.sent || '') } })
     }
+    setCurrentFieldSelection({ start: start + 1, end: end + 1 })
     // callFieldRef.current.focus()
   }, [currentField, currentFieldSelection, localQSO])
 
@@ -462,7 +465,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
         </View>
       </View>
 
-      {isKeyboardVisible && (
+      {isKeyboardVisible && settings.showNumbersRow && (
         <NumberKeys themeColor={themeColor} onNumberKeyPressed={handleNumberKey} enabled={!!currentField} />
       )}
     </View>
