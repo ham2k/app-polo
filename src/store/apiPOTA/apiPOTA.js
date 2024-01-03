@@ -54,7 +54,7 @@ export const { actions } = apiPOTA
 const POTA_REGEX = /[A-Z]{1,2}-[0-9]{4,5}/
 
 export function useLookupParkQuery (arg, options) {
-  if (!arg?.ref?.match(POTA_REGEX)) {
+  if (!arg?.ref || !arg?.ref?.match(POTA_REGEX)) {
     options.skip = true
   }
   return apiPOTA.useLookupParkQuery(arg, options)

@@ -57,14 +57,14 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
         title={
           title && subTitle ? (
             <>
-              <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.screenTitleSmall}>{title}</Text>
-              <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.screenSubTitle}>{subTitle}</Text>
+              <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={styles.screenTitleSmall}>{title}</Text>
+              <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={styles.screenSubTitle}>{subTitle}</Text>
               {/* <Text style={[styles.screenTitleLight]}>{title}</Text> */}
               {/* <Text style={styles.screenTitleBold}>{'  '}{subTitle}</Text> */}
               {/* </Text> */}
             </>
           ) : (
-            <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} style={styles.screenTitle}>{title}</Text>
+            <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.8} style={styles.screenTitle}>{title}</Text>
           )
         }
       />

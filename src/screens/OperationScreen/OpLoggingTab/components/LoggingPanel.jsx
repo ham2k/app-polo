@@ -18,6 +18,7 @@ import activities from '../../activities'
 import { stringOrFunction } from '../../../../tools/stringOrFunction'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
+import { findRef } from '../../../../tools/refTools'
 
 function describeRadio (operation) {
   const parts = []
@@ -342,7 +343,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                 )}
               </View>
 
-              {activities.filter(activity => activity.exchangeShortLabel && operation[activity.operationAttribute]).map(activity => (
+              {activities.filter(activity => activity.includeInExchange && activity.includeInExchange({ operation, localQSO })).map(activity => (
                 <View key={activity.key} style={{ flex: 0, flexDirection: 'column' }}>
                   <LoggerChip icon={activity.icon} styles={styles} style={{ flex: 0 }} themeColor={themeColor}
                     selected={!!visibleFields[activity.key]}

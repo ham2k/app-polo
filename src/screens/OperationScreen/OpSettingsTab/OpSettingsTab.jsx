@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { ScrollView } from 'react-native'
 import { List } from 'react-native-paper'
@@ -13,7 +13,7 @@ import { selectSettings } from '../../../store/settings'
 import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { AddActivityDialog } from './components/AddActivityDialog'
-import activities from '../activities'
+import activities, { refHandlers } from '../activities'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -62,6 +62,11 @@ export default function OpSettingsTab ({ navigation, route }) {
     })
   }, [dispatch, operation])
 
+  const refActivities = useMemo(() => {
+    const types = [...new Set((operation?.refs || []).map((ref) => ref.type))]
+    return types.map(type => refHandlers[type]).filter(x => x)
+  }, [operation?.refs])
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <List.Section>
@@ -87,7 +92,7 @@ export default function OpSettingsTab ({ navigation, route }) {
       <List.Section>
         <List.Subheader>Activities</List.Subheader>
 
-        {activities.filter(activity => operation[activity.operationAttribute] !== undefined).map((activity) => (
+        {refActivities.map((activity) => (
           <List.Item
             key={activity.key}
             title={activity.name}
@@ -106,7 +111,7 @@ export default function OpSettingsTab ({ navigation, route }) {
           onPress={() => setCurrentDialog('addActivity')}
         />
       </List.Section>
-      {activities.filter(activity => operation[activity.operationAttribute] !== undefined).map((activity) => (
+      {refActivities.map((activity) => (
         currentDialog === `activity.${activity.key}` && (
           <activity.SettingsDialog
             key={activity.key}
