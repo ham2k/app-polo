@@ -1,9 +1,10 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { setOperation } from '../../../store/operations'
+import { setOperationData } from '../../../store/operations'
 import { Text, TextInput } from 'react-native-paper'
 import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
+import { replaceRefs, stringToRefs } from '../../../tools/refTools'
 
 const ACTIVITY = {
   key: 'sota',
@@ -12,50 +13,32 @@ const ACTIVITY = {
   name: 'Summits on the Air',
   shortName: 'SOTA',
   infoURL: 'https://www.sota.org.uk/',
-  exchangeShortLabel: ({ operation }) => operation?.sota ? 'S2S' : 'SOTA',
-  operationAttribute: 'sota',
-  description: (operation) => operation.sota + ' - NOT FUNCTIONAL YET',
+  huntingType: 'sota',
+  activationType: 'sotaActivation',
+  description: (operation) => 'COMING SOON!',
   descriptionPlaceholder: 'Enter SOTA reference'
 }
 
 function ThisActivityExchangePanel (props) {
-  const { qso, setQSO, handleChangeText } = props
-
-  const [localValue, setLocalValue] = useState('')
-
-  // Only initialize localValue once
-  useEffect(() => {
-    const refs = (qso?.refs || []).filter(ref => ref.type === 'sota')
-    setLocalValue(refs.map(ref => ref.ref).join(', '))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const localHandleChangeText = useCallback((value) => {
-    setLocalValue(value)
-    const sotaRefs = value.split(',').map(ref => ref.trim()).filter(ref => ref).map(ref => ({ type: 'sota', ref }))
-    const nonSotaRefs = (qso?.refs || []).filter(ref => ref.type !== 'sota')
-
-    setQSO({ ...qso, refs: sotaRefs + nonSotaRefs })
-    handleChangeText && handleChangeText(value)
-  }, [qso, setQSO, handleChangeText])
-
   return (
-    <TextInput
-      {...props}
-      value={localValue}
-      label="SOTA Reference"
-      placeholder="..."
-      onTextChange={localHandleChangeText}
-    />
+    <Text>WIP</Text>
   )
 }
+
 export function ThisActivitySettingsDialog (props) {
   const { styles, operation } = props
 
   const dispatch = useDispatch()
 
-  const handleChange = useCallback((text) => {
-    dispatch(setOperation({ uuid: operation.uuid, [ACTIVITY.operationAttribute]: text }))
+  const handleChange = useCallback((value) => {
+    let refs
+    if (value) {
+      refs = stringToRefs(ACTIVITY.activationType, value, { regex: ACTIVITY.referenceRegex })
+    } else {
+      refs = []
+    }
+
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, refs) }))
   }, [dispatch, operation])
 
   return (

@@ -1,9 +1,10 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { setOperation } from '../../../store/operations'
+import { setOperationData } from '../../../store/operations'
 import { Text, TextInput } from 'react-native-paper'
 import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
+import { replaceRefs, stringToRefs } from '../../../tools/refTools'
 
 const ACTIVITY = {
   key: 'wwff',
@@ -13,19 +14,13 @@ const ACTIVITY = {
   shortName: 'WWFF',
   infoURL: 'https://wwff.co/',
   exchangeShortLabel: 'W2W',
-  operationAttribute: 'wwwf',
-  description: (operation) => operation.wwwf + ' - NOT FUNCTIONAL YET',
+  huntingType: 'wwff',
+  activationType: 'wwffActivation',
+  description: (operation) => 'COMING SOON!',
   descriptionPlaceholder: 'Enter WWWF reference'
 }
 
 function ThisActivityExchangePanel (props) {
-  // const { qso, setQSO, handleChangeText } = props
-
-  // const localHandleChangeText = useCallback((value) => {
-  //   setQSO({ ...qso, [ACTIVITY.exchangeAttribute]: value })
-  //   handleChangeText && handleChangeText(value)
-  // }, [qso, setQSO, handleChangeText])
-
   return (
     <Text>WIP</Text>
   )
@@ -36,8 +31,15 @@ export function ThisActivitySettingsDialog (props) {
 
   const dispatch = useDispatch()
 
-  const handleChange = useCallback((text) => {
-    dispatch(setOperation({ uuid: operation.uuid, [ACTIVITY.operationAttribute]: text }))
+  const handleChange = useCallback((value) => {
+    let refs
+    if (value) {
+      refs = stringToRefs(ACTIVITY.activationType, value, { regex: ACTIVITY.referenceRegex })
+    } else {
+      refs = []
+    }
+
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, refs) }))
   }, [dispatch, operation])
 
   return (

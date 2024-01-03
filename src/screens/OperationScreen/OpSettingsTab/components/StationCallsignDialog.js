@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import CallsignInput from '../../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
-import { setOperation } from '../../../../store/operations'
+import { setOperationData } from '../../../../store/operations'
 import { KeyboardAvoidingView } from 'react-native'
 
 export function StationCallsignDialog ({ operation, visible, settings, styles, onDialogDone }) {
@@ -24,7 +24,7 @@ export function StationCallsignDialog ({ operation, visible, settings, styles, o
   }, [setValue])
 
   const handleAccept = useCallback(() => {
-    dispatch(setOperation({ uuid: operation.uuid, stationCall: value }))
+    dispatch(setOperationData({ uuid: operation.uuid, stationCall: value }))
     setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [dispatch, operation, value, onDialogDone])

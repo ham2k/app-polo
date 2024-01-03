@@ -1,9 +1,10 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { setOperation } from '../../../store/operations'
 import { Text, TextInput } from 'react-native-paper'
 import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
+import { setOperationData } from '../../../store/operations'
+import { replaceRefs, stringToRefs } from '../../../tools/refTools'
 
 const ACTIVITY = {
   key: 'arrl-fd',
@@ -12,20 +13,12 @@ const ACTIVITY = {
   name: 'ARRL Field Day',
   shortName: 'FD',
   infoURL: 'https://field-day.arrl.org/',
-  operationAttribute: 'fd',
-  description: (operation) => operation.fd ? `${operation.fd.class} ${operation.fd.location}` + ' - NOT FUNCTIONAL YET' : '',
+  description: (operation) => 'COMING SOON!',
   descriptionPlaceholder: '',
   defaultValue: { class: '', location: '' }
 }
 
 function ThisActivityExchangePanel (props) {
-  // const { qso, setQSO, handleChangeText } = props
-
-  // const localHandleChangeText = useCallback((value) => {
-  //   setQSO({ ...qso, [ACTIVITY.exchangeAttribute]: value })
-  //   handleChangeText && handleChangeText(value)
-  // }, [qso, setQSO, handleChangeText])
-
   return (
     <Text>WIP</Text>
   )
@@ -36,8 +29,15 @@ export function ThisActivitySettingsDialog (props) {
 
   const dispatch = useDispatch()
 
-  const handleChange = useCallback((text) => {
-    dispatch(setOperation({ uuid: operation.uuid, [ACTIVITY.operationAttribute]: text }))
+  const handleChange = useCallback((value) => {
+    let refs
+    if (value) {
+      refs = stringToRefs(ACTIVITY.key, value, { regex: ACTIVITY.referenceRegex })
+    } else {
+      refs = []
+    }
+
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.key, refs) }))
   }, [dispatch, operation])
 
   return (

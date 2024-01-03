@@ -7,6 +7,7 @@ import { View } from 'react-native'
 import { capitalizeString } from '../../../../../tools/capitalizeString'
 import { useLookupCallQuery } from '../../../../../store/apiQRZ'
 import { useLookupParkQuery } from '../../../../../store/apiPOTA'
+import { filterRefs } from '../../../../../tools/refTools'
 
 // Not actually a react hook, just named like one
 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -38,7 +39,7 @@ export function CallInfo ({ qso, styles, style }) {
 
   // Use `skip` to prevent calling the API on every keystroke
   const potaRef = useMemo(() => {
-    const potaRefs = qso?.refs?.filter?.(x => x.type === 'pota')
+    const potaRefs = filterRefs(qso?.refs, 'pota')
     if (potaRefs?.length > 0) {
       return potaRefs[0].ref
     } else {
@@ -51,7 +52,7 @@ export function CallInfo ({ qso, styles, style }) {
   const line1 = useMemo(() => {
     const parts = []
     const entity = DXCC_BY_PREFIX[parsedInfo?.entityPrefix]
-    // console.log('POTA', pota)
+
     if (pota?.data?.name) {
       parts.push(`${entity?.flag ? `${entity.flag} ` : ''} POTA: ${pota.data.name} ${pota.data.parktypeDesc}`)
       if (pota.data.locationName) parts.push(pota.data.locationName)

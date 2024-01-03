@@ -6,11 +6,7 @@ import UUID from 'react-native-uuid'
 import debounce from 'debounce'
 import { qsonToADIF } from '../../../tools/qsonToADIF'
 import { fmtISODate } from '../../../tools/timeFormats'
-
-function debounceableDispatch (dispatch, action) {
-  return dispatch(action())
-}
-const debouncedDispatch = debounce(debounceableDispatch, 2000)
+import { findRef, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 
 export const loadOperationsList = () => async (dispatch) => {
   try {
@@ -62,16 +58,15 @@ export const loadOperation = (uuid) => async (dispatch) => {
   try {
     const infoJSON = await RNFS.readFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/info.json`)
     info = JSON.parse(infoJSON)
+
+    // Temporary (as of 2024-01-01) "data migration". Remove in a month or two
+    if (info.pota) {
+      info.refs = replaceRefs(info.refs, 'potaActivation', stringToRefs('potaActivation', info.pota))
+    }
   } catch (error) {
   }
   info.status = 'ready'
   dispatch(actions.setOperation(info))
-}
-
-export const setOperation = (info) => (dispatch, getState) => {
-  dispatch(actions.setOperation(info))
-  const savedInfo = getState().operations.info[info.uuid]
-  return debouncedDispatch(dispatch, () => saveOperation(savedInfo))
 }
 
 export const saveOperation = (info) => async (dispatch, getState) => {
@@ -115,14 +110,16 @@ export const generateADIF = (uuid) => async (dispatch, getState) => {
   const operation = state.operations.info[uuid]
   const settings = state.settings
 
-  const { startOnMillisMax, pota } = operation
+  const { startOnMillisMax } = operation
+  const pota = refsToString(operation, 'potaActivation')
+
   const call = operation?.stationCall || settings?.operatorCall
 
   const qsos = state.qsos.qsos[uuid].map(qso => {
     return { ...qso, our: { ...qso.our, call: operation.stationCall || settings.operatorCall } }
   })
 
-  const name = `${call}-${fmtISODate(startOnMillisMax)}${pota ? `-${pota}` : ''}.adi`
+  const name = `${fmtISODate(startOnMillisMax)}-${call} ${pota ? `-${pota}` : ''}.adi`
   const adif = qsonToADIF({ operation, qsos })
 
   await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/${name}`, adif)

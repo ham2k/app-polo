@@ -2,13 +2,8 @@ import packageJson from '../../package.json'
 import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
 export function qsonToADIF ({ operation, qsos }) {
-  const commonRefs = []
-  if (operation.pota) {
-    (operation?.pota ?? '').split(',').forEach(ref => {
-      ref = ref.trim()
-      commonRefs.push({ type: 'potaActivation', ref })
-    })
-  }
+  const commonRefs = operation.refs || []
+
   let str = ''
 
   str += 'ADIF for Operation \n'

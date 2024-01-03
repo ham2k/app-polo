@@ -18,6 +18,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
 
   const normalFontSize = 18
   const largeFontSize = 24
+  const smallFontSize = 11
 
   const baseSpace = 8 // Guesstimage of the width of an 'm' in the base (root) font size
 
@@ -37,6 +38,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
 
     normalFontSize,
     largeFontSize,
+    smallFontSize,
 
     screen: {
       backgroundColor: theme.colors.background

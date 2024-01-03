@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { selectOperation, setOperation } from '../../../store/operations'
+import { selectOperation, setOperationData } from '../../../store/operations'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import LoggingPanel from './components/LoggingPanel'
 import QSOList from './components/QSOList'
@@ -83,7 +83,7 @@ export default function OpLoggingTab ({ navigation, route }) {
   }, [dispatch, operation, settings])
 
   const handleOperationChange = useCallback((attributes) => {
-    dispatch(setOperation({ uuid: operation.uuid, ...attributes }))
+    dispatch(setOperationData({ uuid: operation.uuid, ...attributes }))
   }, [dispatch, operation.uuid])
 
   return (

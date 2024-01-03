@@ -7,27 +7,27 @@ import WFDActivity from './WFDActivity'
 
 const activities = []
 const activityIndex = {}
+const refHandlers = {}
 
-activities.push(POTAActivity)
-activityIndex[POTAActivity.key] = POTAActivity
+function addActivity (activity) {
+  activities.push(activity)
+  activityIndex[activity.key] = activity
+  if (activity.activationType) refHandlers[activity.activationType] = activity
+  if (activity.huntingType) refHandlers[activity.huntingType] = activity
+  if (activity.key) refHandlers[activity.key] = activity
+}
 
-activities.push(SOTAActivity)
-activityIndex[SOTAActivity.key] = SOTAActivity
-
-activities.push(WWFFActivity)
-activityIndex[WWFFActivity.key] = WWFFActivity
-
-activities.push(BOTAActivity)
-activityIndex[BOTAActivity.key] = BOTAActivity
-
-activities.push(FDActivity)
-activityIndex[FDActivity.key] = FDActivity
-
-activities.push(WFDActivity)
-activityIndex[WFDActivity.key] = WFDActivity
+addActivity(POTAActivity)
+addActivity(SOTAActivity)
+addActivity(WWFFActivity)
+addActivity(BOTAActivity)
+addActivity(FDActivity)
+addActivity(WFDActivity)
 
 export {
   activityIndex,
-  activities
+  activities,
+  refHandlers
 }
+
 export default activities

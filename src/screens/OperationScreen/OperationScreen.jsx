@@ -35,7 +35,7 @@ export default function OperationScreen ({ navigation, route }) {
   // When operation data is loaded, set the title
   useEffect(() => {
     if (operation?.stationCall || settings?.operatorCall) {
-      navigation.setOptions({ title: (operation?.stationCall || settings?.operatorCall) + `: ${operation?.name}`, subTitle: '' })
+      navigation.setOptions({ title: (operation?.stationCall || settings?.operatorCall) + ` ${operation?.title}`, subTitle: operation.subtitle })
     } else {
       navigation.setOptions({ title: 'New Operation' })
     }

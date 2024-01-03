@@ -2,9 +2,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, List, Portal } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
-import { setOperation } from '../../../../store/operations'
+import { setOperationData } from '../../../../store/operations'
 import { ScrollView } from 'react-native'
 import activities from '../../activities'
+import { replaceRefs } from '../../../../tools/refTools'
 
 export function AddActivityDialog ({ operation, visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
@@ -16,7 +17,15 @@ export function AddActivityDialog ({ operation, visible, settings, styles, onDia
   }, [visible])
 
   const addActivity = useCallback((activity) => {
-    dispatch(setOperation({ uuid: operation.uuid, [activity]: activity.defaultValue || '' }))
+    const type = activity.activationType || activity.refType || activity.key
+    dispatch(setOperationData({
+      uuid: operation.uuid,
+      refs: replaceRefs(
+        operation.refs,
+        type,
+        [{ type, ref: '', ...activity.defaultValue }]
+      )
+    }))
     setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [operation, dispatch, onDialogDone])
@@ -39,7 +48,7 @@ export function AddActivityDialog ({ operation, visible, settings, styles, onDia
                   key={activity.key}
                   title={activity.name}
                   left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={activity.icon} />}
-                  onPress={() => addActivity(activity.operationAttribute)}
+                  onPress={() => addActivity(activity)}
                 />
               ))}
             </List.Section>
