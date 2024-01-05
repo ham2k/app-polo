@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { TextInput } from 'react-native-paper'
 import { TextInput as NativeTextInput } from 'react-native'
@@ -16,13 +16,17 @@ export default function ThemedTextInput (props) {
   const {
     style, themeColor,
     label, placeholder, value, error,
-    onChangeText, onChange, onSubmitEditing, onKeyPress,
-    innerRef, fieldId,
+    onChangeText, onChange, onSubmitEditing, onKeyPress, onFocus, onBlur,
+    innerRef, focusedRef,
+    fieldId,
     uppercase, trim, noSpaces, numeric, decimal,
     keyboard
   } = props
   const themeStyles = useThemedStyles()
   const [previousValue, setPreviousValue] = useState(value)
+
+  const alternateInnerRef = useRef()
+  const actualInnerRef = innerRef ?? alternateInnerRef
 
   const strValue = useMemo(() => {
     return `${value}`
@@ -65,11 +69,42 @@ export default function ThemedTextInput (props) {
 
     setPreviousValue(text)
     onChangeText && onChangeText(text)
-    onChange && onChange({ ...event, fieldId })
+    onChange && onChange({ ...event, fieldId, ref: actualInnerRef })
     if (spaceAdded) {
-      onKeyPress && onKeyPress({ nativeEvent: { key: ' ', target: event.nativeEvent.target } })
+      onKeyPress && onKeyPress({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
     }
-  }, [onChangeText, onChange, fieldId, uppercase, noSpaces, numeric, decimal, trim, previousValue, onKeyPress])
+  }, [
+    previousValue,
+    fieldId, actualInnerRef,
+    uppercase, noSpaces, numeric, decimal, trim,
+    onChangeText, onChange, onKeyPress
+  ])
+
+  const handleFocus = useCallback((event) => {
+    if (focusedRef) focusedRef.current = actualInnerRef.current
+    onFocus && onFocus({ ...event, ref: actualInnerRef })
+  }, [onFocus, focusedRef, actualInnerRef])
+
+  const handleBlur = useCallback((event) => {
+    if (focusedRef) focusedRef.current = undefined
+    onBlur && onBlur({ ...event, ref: actualInnerRef.current })
+  }, [onBlur, focusedRef, actualInnerRef])
+
+  const [currentSelection, setCurrentSelection] = useState({})
+  const handleSelectionChange = useCallback((event) => {
+    const { nativeEvent: { selection: { start, end } } } = event
+
+    setCurrentSelection({ start, end })
+  }, [])
+
+  const handleNumberKey = useCallback((number) => {
+    const { start, end } = currentSelection
+
+    const newValue = strValue.substring(0, start) + number + strValue.substring(end)
+    console.log('handleNumberKey', { start, end, strValue, newValue })
+    handleChange && handleChange({ nativeEvent: { text: newValue } })
+    setCurrentSelection({ start: start + 1, end: end + 1 })
+  }, [handleChange, strValue, currentSelection])
 
   const colorStyles = useMemo(() => {
     return {
@@ -128,7 +163,7 @@ export default function ThemedTextInput (props) {
 
         {...props}
 
-        ref={innerRef}
+        ref={actualInnerRef}
 
         value={strValue || ''}
         placeholder={placeholder}
@@ -141,9 +176,16 @@ export default function ThemedTextInput (props) {
         onKeyPress={onKeyPress}
         onChange={handleChange}
         onChangeText={undefined}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onSelectionChange={handleSelectionChange}
+        handleNumberKey={handleNumberKey}
       />
     )
-  }, [keyboardOptions, innerRef, strValue, colorStyles, themeStyles, onSubmitEditing, onKeyPress, handleChange, placeholder])
+  }, [
+    keyboardOptions, actualInnerRef, strValue, placeholder, colorStyles, themeStyles,
+    onSubmitEditing, onKeyPress, handleFocus, handleBlur, handleChange, handleNumberKey, handleSelectionChange
+  ])
 
   return (
     <TextInput

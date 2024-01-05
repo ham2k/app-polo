@@ -60,7 +60,7 @@ export function CallInfo ({ qso, styles, style }) {
       parts.push(`POTA ${potaRef} ${pota.data?.error}`)
     } else {
       if (entity) parts.push(`${entity.flag} ${entity.shortName}`)
-      if (qrz?.data?.city) parts.push(capitalizeString(qrz.data.city, { force: false }), qrz.data.state)
+      if (qrz?.data?.city && !qrz.isFetching) parts.push(capitalizeString(qrz.data.city, { force: false }), qrz.data.state)
     }
 
     return parts.filter(x => x).join(' • ')
@@ -70,14 +70,14 @@ export function CallInfo ({ qso, styles, style }) {
     const parts = []
     if (qrz?.error) {
       parts.push(qrz.error)
-    } else if (qrz?.data?.name) {
+    } else if (qrz?.data?.name && !qrz.isFetching) {
       parts.push(capitalizeString(qrz.data.name, { content: 'name', force: false }))
-      if (qrz.data.call && qrz.data.call !== parsedInfo.baseCall) {
+      if (qrz.data.call && qrz.data.call !== qrz.originalArgs?.call) {
         parts.push(`(Now ${qrz.data.call})`)
       }
     }
     return parts.filter(x => x).join(' • ')
-  }, [parsedInfo, qrz])
+  }, [qrz])
 
   return (
     <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start' }]}>

@@ -1,9 +1,13 @@
 export function findRef (obj, type) {
-  return (obj?.refs || obj || []).find(r => r.type === type)
+  if (obj?.refs) obj = obj.refs
+
+  return (obj?.find ? obj.find(r => r.type === type) : undefined)
 }
 
 export function filterRefs (obj, type) {
-  return (obj?.refs || obj || []).filter(r => r.type === type)
+  if (obj?.refs) obj = obj.refs
+
+  return (obj?.filter ? obj.filter(r => r.type === type) : [])
 }
 
 export function refsToString (obj, type, options = {}) {

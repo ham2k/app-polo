@@ -1,4 +1,3 @@
-import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 
 const INITIAL_STATE = {

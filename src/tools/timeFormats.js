@@ -3,20 +3,20 @@ export function fmtShortTimeZulu (t) {
     t = new Date(t)
   }
 
-  if (t) {
+  if (t && t.toLocaleTimeString) {
     return t.toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: false, hour: '2-digit', minute: '2-digit' }) + 'z'
   } else {
     return ''
   }
 }
 
-export function fmtTimeZulu (t) {
+export function fmtTimeZulu (t, { showZ = true } = {}) {
   if (typeof t === 'number') {
     t = new Date(t)
   }
 
-  if (t) {
-    return t.toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) + 'z'
+  if (t && t.toLocaleTimeString) {
+    return t.toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) + (showZ ? 'z' : '')
   } else {
     return ''
   }
@@ -27,7 +27,7 @@ export function fmtDateTimeNice (t) {
     t = new Date(t)
   }
 
-  if (t) {
+  if (t && t.toLocaleTimeString) {
     return t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric', year: 'numeric' })
   } else {
     return ''
@@ -39,7 +39,7 @@ export function fmtDateNice (t) {
     t = new Date(t)
   }
 
-  if (t) {
+  if (t && t.toLocaleTimeString) {
     return t.toLocaleTimeString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
   } else {
     return ''
@@ -53,7 +53,7 @@ export function fmtDateTimeDynamic (t, now = null) {
 
   now = now || new Date()
 
-  if (t) {
+  if (t && t.toLocaleTimeString) {
     const diffInDays = (now - t) / (1000 * 60 * 60 * 24)
     if (diffInDays < 0) {
       return fmtDateTimeNice(t)
@@ -75,7 +75,7 @@ export function fmtADIFDate (t) {
   if (typeof t === 'number') {
     t = new Date(t)
   }
-  if (t) {
+  if (t && t.toISOString) {
     return t.toISOString().substring(0, 10).replace(/-/g, '')
   } else {
     return ''
@@ -86,7 +86,7 @@ export function fmtADIFTime (t) {
   if (typeof t === 'number') {
     t = new Date(t)
   }
-  if (t) {
+  if (t && t.toISOString) {
     return t.toISOString().substring(11, 16).replace(/:/g, '')
   } else {
     return ''
@@ -97,7 +97,7 @@ export function fmtISODate (t) {
   if (typeof t === 'number') {
     t = new Date(t)
   }
-  if (t) {
+  if (t && t.toISOString) {
     return t.toISOString().substring(0, 10)
   } else {
     return ''
@@ -108,7 +108,7 @@ export function fmtISODateTime (t) {
   if (typeof t === 'number') {
     t = new Date(t)
   }
-  if (t) {
+  if (t && t.toISOString) {
     return t.toISOString()
   } else {
     return ''

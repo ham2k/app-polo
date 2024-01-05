@@ -3,10 +3,9 @@ import { actions } from '../operationsSlice'
 import { actions as qsosActions } from '../../qsos'
 
 import UUID from 'react-native-uuid'
-import debounce from 'debounce'
 import { qsonToADIF } from '../../../tools/qsonToADIF'
 import { fmtISODate } from '../../../tools/timeFormats'
-import { findRef, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
+import { refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 
 export const loadOperationsList = () => async (dispatch) => {
   try {

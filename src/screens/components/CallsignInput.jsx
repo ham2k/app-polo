@@ -4,8 +4,8 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 
 import ThemedTextInput from './ThemedTextInput'
 
-export default function CallsignInput (params) {
-  const { value, styles, textStyle } = params
+export default function CallsignInput (props) {
+  const { value, styles, textStyle } = props
 
   const isValid = useMemo(() => {
     const callInfo = parseCallsign(value)
@@ -18,7 +18,7 @@ export default function CallsignInput (params) {
 
   return (
     <ThemedTextInput
-      {...params}
+      {...props}
       keyboard="dumb"
       uppercase={true}
       noSpaces={true}

@@ -13,7 +13,7 @@ import { selectSettings } from '../../../store/settings'
 import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { AddActivityDialog } from './components/AddActivityDialog'
-import activities, { refHandlers } from '../activities'
+import { refHandlers } from '../activities'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
