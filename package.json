@@ -1,6 +1,6 @@
 {
   "name": "ham2k-polo",
-  "version": "0.2.0",
+  "version": "0.2.5",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -34,6 +34,8 @@
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@reduxjs/toolkit": "^1.9.7",
+    "auto-bind": "^5.0.1",
+    "clone-deep": "^4.0.1",
     "color": "^4.2.3",
     "debounce": "^2.0.0",
     "deepmerge": "^4.3.1",
