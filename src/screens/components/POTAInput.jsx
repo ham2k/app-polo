@@ -6,8 +6,8 @@ const ADD_DASHES_REGEX = /([A-Z]+)(\d+)/g
 const ADD_COMMAS_REGEX = /(\d+)\s*[,]*\s*([A-Z]+)/g
 const REPEAT_COUNTRY_REGEX = /(\w+)-(\d+)(\s+,\s*|,\s*|\s+)(\d+)/g
 
-export default function POTAInput (params) {
-  const { style, styles, textStyle, onChange, onChangeText, fieldId } = params
+export default function POTAInput (props) {
+  const { styles, textStyle, onChange, onChangeText, fieldId } = props
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
@@ -23,11 +23,10 @@ export default function POTAInput (params) {
 
   return (
     <ThemedTextInput
-      {...params}
+      {...props}
       keyboard="dumb"
       uppercase={true}
       nospaces={true}
-      style={[params.style, style]}
       textStyle={[textStyle, styles?.text?.callsign]}
       onChange={handleChange}
     />

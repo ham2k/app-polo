@@ -18,19 +18,20 @@ import activities from '../../activities'
 import { stringOrFunction } from '../../../../tools/stringOrFunction'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
-import { findRef } from '../../../../tools/refTools'
+import { TimeInput } from '../../../components/TimeInput'
+import { DateInput } from '../../../components/DateInput'
 
-function describeRadio (operation) {
+function describeRadio (qso, operation) {
   const parts = []
-  if (operation.freq) {
-    parts.push(`${fmtFreqInMHz(operation.freq)} MHz`)
-  } else if (operation.band) {
-    parts.push(`${operation.band}`)
+  if (qso?.freq ?? operation.freq) {
+    parts.push(`${fmtFreqInMHz(qso?.freq ?? operation.freq)} MHz`)
+  } else if (qso?.band ?? operation.band) {
+    parts.push(`${qso?.band ?? operation.band}`)
   } else {
     parts.push('Band???')
   }
 
-  parts.push(`${operation.mode ?? 'SSB'}`)
+  parts.push(`${qso?.mode ?? operation.mode ?? 'SSB'}`)
   return parts.join(' • ')
 }
 
@@ -45,73 +46,60 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-export default function LoggingPanel ({ qso, operation, settings, onLog, onOperationChange, themeColor, style }) {
+export default function LoggingPanel ({
+  qso, setQSO,
+  operation, settings,
+  onAccept, onOperationChange,
+  mainFieldRef,
+  themeColor, style
+}) {
   themeColor = themeColor || 'tertiary'
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
-  const [localQSO, setLocalQSO] = useState({})
+
+  const [visibleFields, setVisibleFields] = useState({})
 
   const [pausedTime, setPausedTime] = useState()
 
   const [isValid, setIsValid] = useState(false)
 
-  const [visibleFields, setVisibleFields] = useState({})
-
-  const callFieldRef = useRef()
+  const alternateCallFieldRef = useRef()
+  const callFieldRef = mainFieldRef || alternateCallFieldRef
   const sentFieldRef = useRef()
   const rcvdFieldRef = useRef()
   const freqFieldRef = useRef()
 
   // Initialize the form with the QSO data
   useEffect(() => {
-    const local = {
-      their: {
-        call: qso?.their?.call ?? '',
-        sent: qso?.their?.sent ?? ''
-      },
-      our: {
-        sent: qso?.our?.sent ?? ''
-      },
-      startOnMillis: qso?.startOnMillis ?? null,
-      notes: qso?.notes ?? '',
-      refs: qso?.activities ?? []
-    }
-
-    if (qso.startOnMillis) {
+    if (!qso?._is_new && qso?.startOnMillis) {
       setPausedTime(true)
-      setVisibleFields({ time: true })
+      // setVisibleFields({ time: true })
     } else {
       setPausedTime(false)
-      setVisibleFields({})
+      // setVisibleFields({})
     }
-    setLocalQSO(local)
   }, [qso])
-
-  // Focus the callsign field when the panel is opened
-  useEffect(() => {
-    setTimeout(() => {
-      callFieldRef?.current?.focus()
-    }, 100)
-  }, [qso, callFieldRef])
 
   // Validate and analize the callsign
   useEffect(() => {
-    const callInfo = parseCallsign(localQSO?.their?.call)
+    const callInfo = parseCallsign(qso?.their?.call)
 
     if (callInfo?.baseCall) {
       setIsValid(true)
     } else {
       setIsValid(false)
     }
-  }, [localQSO?.their?.call])
+  }, [qso?.their?.call])
 
   // Handle form fields and update QSO info
   const handleFieldChange = useCallback((event) => {
-    const { fieldId, nativeEvent: { text } } = event
+    const { fieldId } = event
+    const value = event?.value || event?.nativeEvent?.text
+
     if (fieldId === 'theirCall') {
-      let startOnMillis = localQSO?.startOnMillis
+      let startOnMillis = qso?.startOnMillis
       if (!pausedTime) {
-        if (text) {
+        if (value) {
           if (!startOnMillis) {
             startOnMillis = Date.now()
           }
@@ -119,29 +107,42 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
           startOnMillis = null
         }
       }
-      setLocalQSO({ ...localQSO, their: { ...localQSO?.their, call: text }, startOnMillis })
+      setQSO({ ...qso, their: { ...qso?.their, call: value }, startOnMillis })
     } else if (fieldId === 'theirSent') {
-      setLocalQSO({ ...localQSO, their: { ...localQSO?.their, sent: text } })
+      setQSO({ ...qso, their: { ...qso?.their, sent: value } })
     } else if (fieldId === 'ourSent') {
-      setLocalQSO({ ...localQSO, our: { ...localQSO?.our, sent: text } })
+      setQSO({ ...qso, our: { ...qso?.our, sent: value } })
     } else if (fieldId === 'notes') {
-      setLocalQSO({ ...localQSO, notes: text })
+      setQSO({ ...qso, notes: value })
     } else if (fieldId === 'freq') {
-      onOperationChange && onOperationChange({ freq: parseFreqInMHz(text) })
+      setQSO({ ...qso, freq: parseFreqInMHz(value) })
+      onOperationChange && onOperationChange({ freq: parseFreqInMHz(value) })
     } else if (fieldId === 'band') {
-      onOperationChange && onOperationChange({ band: text })
+      setQSO({ ...qso, band: value })
+      onOperationChange && onOperationChange({ band: value })
     } else if (fieldId === 'mode') {
-      onOperationChange && onOperationChange({ mode: text })
+      setQSO({ ...qso, mode: value })
+      onOperationChange && onOperationChange({ mode: value })
+    } else if (fieldId === 'time' || fieldId === 'date') {
+      setQSO({ ...qso, startOnMillis: value })
     }
-  }, [localQSO, onOperationChange, pausedTime])
+  }, [qso, setQSO, onOperationChange, pausedTime])
 
   // Finally submit the QSO
   const handleSubmit = useCallback(() => {
-    if (isValid) {
-      setVisibleFields({})
-      onLog(localQSO)
-    }
-  }, [localQSO, onLog, isValid])
+    // Ensure the focused component has a change to update values
+    //   NOTE: This is a hack that can break on newer versions of React Native
+    const component = focusedRef?.current?._internalFiberInstanceHandleDEV
+    component?.memoizedProps?.onBlur()
+
+    // Run inside a setTimeout to allow the state to update
+    setTimeout(() => {
+      if (isValid) {
+        setVisibleFields({})
+        onAccept(qso)
+      }
+    }, 10)
+  }, [qso, onAccept, isValid])
 
   // Switch between fields with the space key
   const spaceKeyHander = useCallback((event) => {
@@ -157,56 +158,14 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
     }
   }, [callFieldRef, sentFieldRef, rcvdFieldRef])
 
-  const [currentField, setCurrentField] = useState('')
-  const [currentFieldSelection, setCurrentFieldSelection] = useState(null)
-  const [blurTimeout, setBlurTimeout] = useState(null)
-  const handleBlur = useCallback((event) => {
-    if (blurTimeout) {
-      clearTimeout(blurTimeout)
-      setBlurTimeout(null)
-    }
-    setBlurTimeout(setTimeout(() => {
-      setCurrentField('')
-    }, 500))
-  }, [blurTimeout])
-
-  const handleFocus = useCallback((event) => {
-    if (blurTimeout) {
-      clearTimeout(blurTimeout)
-      setBlurTimeout(null)
-    }
-    const { nativeEvent: { target } } = event
-    if (target === findNodeHandle(callFieldRef.current)) {
-      setCurrentField('theirCall')
-    } else if (target === findNodeHandle(sentFieldRef.current)) {
-      setCurrentField('ourSent')
-    } else if (target === findNodeHandle(rcvdFieldRef.current)) {
-      setCurrentField('theirSent')
-    }
-  }, [blurTimeout])
-
-  const handleSelectionChange = useCallback((event) => {
-    const { nativeEvent: { selection: { start, end } } } = event
-
-    setCurrentFieldSelection({ start, end })
-  }, [])
+  const focusedRef = useRef()
 
   const handleNumberKey = useCallback((number) => {
-    const { start, end } = currentFieldSelection ?? {}
-
-    const replaceContents = (text) => {
-      return text.substring(0, start) + number + text.substring(end)
-    }
-    if (currentField === 'theirCall') {
-      setLocalQSO({ ...localQSO, their: { ...localQSO?.their, call: replaceContents(localQSO?.their?.call || '') } })
-    } else if (currentField === 'theirSent') {
-      setLocalQSO({ ...localQSO, their: { ...localQSO?.their, sent: replaceContents(localQSO?.their?.sent || '') } })
-    } else if (currentField === 'ourSent') {
-      setLocalQSO({ ...localQSO, our: { ...localQSO?.our, sent: replaceContents(localQSO?.our?.sent || '') } })
-    }
-    setCurrentFieldSelection({ start: start + 1, end: end + 1 })
-    // callFieldRef.current.focus()
-  }, [currentField, currentFieldSelection, localQSO])
+    if (!focusedRef.current) return
+    // NOTE: This is a hack that can break on newer versions of React Native
+    const component = focusedRef.current._internalFiberInstanceHandleDEV
+    component?.memoizedProps?.handleNumberKey(number)
+  }, [focusedRef])
 
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
   useEffect(() => {
@@ -241,7 +200,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
             <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.oneSpace, gap: styles.halfSpace }}>
 
               <View style={{ flex: 0, flexDirection: 'column' }}>
-                <TimeChip time={localQSO?.startOnMillis} icon="clock-outline" style={{ flex: 0 }} styles={styles} themeColor={themeColor}
+                <TimeChip time={qso?.startOnMillis} icon="clock-outline" style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                   selected={visibleFields.time}
                   onChange={(value) => setVisibleFields({ ...visibleFields, time: value })}
                 />
@@ -249,25 +208,25 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                   <>
                     <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
                     <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, gap: styles.oneSpace }}>
-                      <ThemedTextInput
+                      <TimeInput
                         themeColor={themeColor}
-                        value={'22:22:22'}
+                        style={{ minWidth: styles.oneSpace * 11 }}
+                        valueInMillis={qso?.startOnMillis}
                         label="Time"
-                        placeholder="00:00:00"
                         onChange={handleFieldChange}
                         onSubmitEditing={handleSubmit}
                         fieldId={'time'}
-                        keyboard={'dumb'}
+                        focusedRef={focusedRef}
                       />
-                      <ThemedTextInput
+                      <DateInput
                         themeColor={themeColor}
-                        value={'2023-12-01'}
+                        style={{ minWidth: styles.oneSpace * 11 }}
+                        valueInMillis={qso?.startOnMillis}
                         label="Date"
-                        placeholder="2023-12-01"
                         onChange={handleFieldChange}
                         onSubmitEditing={handleSubmit}
                         fieldId={'date'}
-                        keyboard={'dumb'}
+                        focusedRef={focusedRef}
                       />
                     </View>
                   </>
@@ -279,7 +238,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                   <LoggerChip icon="radio" styles={styles} style={{ flex: 0 }} themeColor={themeColor}
                     selected={visibleFields.radio}
                     onChange={(value) => setVisibleFields({ ...visibleFields, radio: value })}
-                  >{describeRadio(operation)}</LoggerChip>
+                  >{describeRadio(qso, operation)}</LoggerChip>
                 </View>
                 {visibleFields.radio && (
                   <>
@@ -288,7 +247,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                       <ThemedDropDown
                         label="Band"
                         themeColor={themeColor}
-                        value={operation.band}
+                        value={qso.band ?? operation.band}
                         onChange={handleFieldChange}
                         fieldId={'band'}
                         style={{ width: styles.oneSpace * 8 }}
@@ -315,16 +274,17 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                         innerRef={freqFieldRef}
                         themeColor={themeColor}
                         style={[styles.input, { width: styles.oneSpace * 11 }]}
-                        value={operation.freq ?? ''}
+                        value={qso.freq ?? operation.freq ?? ''}
                         label="Frequency"
                         placeholder=""
                         onChange={handleFieldChange}
                         onSubmitEditing={handleSubmit}
                         fieldId={'freq'}
+                        focusedRef={focusedRef}
                       />
                       <ThemedDropDown
                         label="Mode"
-                        value={operation.mode}
+                        value={qso.mode ?? operation.mode}
                         onChange={handleFieldChange}
                         fieldId={'mode'}
                         style={[styles.input, { width: styles.oneSpace * 8 }]}
@@ -343,7 +303,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                 )}
               </View>
 
-              {activities.filter(activity => activity.includeInExchange && activity.includeInExchange({ operation, localQSO })).map(activity => (
+              {activities.filter(activity => activity.includeInExchange && activity.includeInExchange({ operation, qso })).map(activity => (
                 <View key={activity.key} style={{ flex: 0, flexDirection: 'column' }}>
                   <LoggerChip icon={activity.icon} styles={styles} style={{ flex: 0 }} themeColor={themeColor}
                     selected={!!visibleFields[activity.key]}
@@ -353,7 +313,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                     <>
                       <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
                       <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, gap: styles.oneSpace }}>
-                        <activity.ExchangePanel qso={localQSO} setQSO={setLocalQSO} operation={operation} settings={settings} styles={styles} />
+                        <activity.ExchangePanel qso={qso} setQSO={setQSO} operation={operation} settings={settings} styles={styles} focusedRef={focusedRef} />
                       </View>
                     </>
                   )}
@@ -374,13 +334,14 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
                       <ThemedTextInput
                         themeColor={themeColor}
                         style={[styles.input, { minWidth: styles.oneSpace * 20 }]}
-                        value={localQSO?.notes ?? ''}
+                        value={qso?.notes ?? ''}
                         label="Notes"
                         placeholder=""
                         onChange={handleFieldChange}
                         onSubmitEditing={handleSubmit}
                         fieldId={'notes'}
                         keyboard={'dumb'}
+                        focusedRef={focusedRef}
                       />
                     </View>
                   </>
@@ -390,8 +351,8 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
           </ScrollView>
 
           <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace, minHeight: 5.1 * styles.oneSpace }}>
-            {localQSO?.their?.call ? (
-              <CallInfo qso={localQSO} styles={styles} />
+            {qso?.their?.call ? (
+              <CallInfo qso={qso} styles={styles} />
             ) : (
               <OpInfo operation={operation} styles={styles} />
             )}
@@ -405,24 +366,22 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
             innerRef={callFieldRef}
             themeColor={themeColor}
             style={[styles.input, { flex: 5 }]}
-            value={localQSO?.their?.call ?? ''}
+            value={qso?.their?.call ?? ''}
             label="Their Call"
             placeholder=""
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
             fieldId={'theirCall'}
             onKeyPress={spaceKeyHander}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            onSelectionChange={handleSelectionChange}
+            focusedRef={focusedRef}
           />
           <ThemedTextInput
             innerRef={sentFieldRef}
             themeColor={themeColor}
             style={{ width: styles.oneSpace * 6 }}
-            value={localQSO?.our?.sent ?? ''}
+            value={qso?.our?.sent ?? ''}
             label="Sent"
-            placeholder={qso.mode === 'CW' ? '599' : '59'}
+            placeholder={qso?.mode === 'CW' ? '599' : '59'}
             noSpaces={true}
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
@@ -430,17 +389,15 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
             onKeyPress={spaceKeyHander}
             keyboard={'numbers'}
             numeric={true}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            onSelectionChange={handleSelectionChange}
+            focusedRef={focusedRef}
           />
           <ThemedTextInput
             innerRef={rcvdFieldRef}
             themeColor={themeColor}
             style={[styles.input, { width: styles.oneSpace * 6 }]}
-            value={localQSO?.their?.sent || ''}
+            value={qso?.their?.sent || ''}
             label="Rcvd"
-            placeholder={qso.mode === 'CW' ? '599' : '59'}
+            placeholder={qso?.mode === 'CW' ? '599' : '59'}
             noSpaces={true}
             onChange={handleFieldChange}
             onSubmitEditing={handleSubmit}
@@ -448,14 +405,12 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
             onKeyPress={spaceKeyHander}
             keyboard={'numbers'}
             numeric={true}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            onSelectionChange={handleSelectionChange}
+            focusedRef={focusedRef}
           />
         </View>
         <View style={{ justifyContent: 'flex-end', alignItems: 'center', paddingHorizontal: styles.oneSpace, paddingBottom: 0 }}>
           <IconButton
-            icon="upload"
+            icon={qso?._is_new ? 'upload' : 'content-save'}
             size={styles.oneSpace * 4}
             mode="contained"
             disabled={!isValid}
@@ -467,7 +422,7 @@ export default function LoggingPanel ({ qso, operation, settings, onLog, onOpera
       </View>
 
       {isKeyboardVisible && settings.showNumbersRow && (
-        <NumberKeys themeColor={themeColor} onNumberKeyPressed={handleNumberKey} enabled={!!currentField} />
+        <NumberKeys themeColor={themeColor} onNumberKeyPressed={handleNumberKey} enabled={!!focusedRef?.current} />
       )}
     </View>
   )

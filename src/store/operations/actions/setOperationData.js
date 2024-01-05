@@ -13,8 +13,6 @@ const debouncedDispatch = debounce(debounceableDispatch, 2000)
 export const setOperationData = (data) => async (dispatch, getState) => {
   const { uuid } = data
 
-  const operation = selectOperation(uuid)(getState()) ?? {}
-
   if (data.power) data.power = parseInt(data.power, 10)
 
   if (data.freq) {
@@ -56,7 +54,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     }
   }
 
-  if (!data.title && !operation.name) {
+  if (!data.title) {
     data.title = 'General Operation'
     data.subtitle = ''
   }

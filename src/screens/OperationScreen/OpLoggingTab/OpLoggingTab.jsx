@@ -9,12 +9,22 @@ import LoggingPanel from './components/LoggingPanel'
 import QSOList from './components/QSOList'
 import { addQSO, selectQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
+import cloneDeep from 'clone-deep'
+import { qsoKey } from '@ham2k/lib-qson-tools'
 
 function prepareNewQSO (operation, settings) {
   return {
     band: operation.band,
-    mode: operation.mode
+    mode: operation.mode,
+    _is_new: true
   }
+}
+
+function prepareExistingQSO (qso) {
+  const clone = cloneDeep(qso)
+  clone._originalKey = qso.key
+  clone._is_new = false
+  return clone
 }
 
 export default function OpLoggingTab ({ navigation, route }) {
@@ -34,10 +44,9 @@ export default function OpLoggingTab ({ navigation, route }) {
   const settings = useSelector(selectSettings)
   const qsos = useSelector(selectQSOs(route.params.operation.uuid))
 
-  const [lastQSO, setLastQSO] = useState()
-  const [currentQSO, setCurrentQSO] = useState(prepareNewQSO(operation, settings, settings), settings)
-
   const listRef = useRef()
+  const mainFieldRef = useRef()
+  const focusedFieldRef = useRef()
 
   // Set navigation title
   useEffect(() => {
@@ -45,6 +54,7 @@ export default function OpLoggingTab ({ navigation, route }) {
   }, [navigation, qsos])
 
   // When the lastQSO changes, scroll to it
+  const [lastQSO, setLastQSO] = useState()
   useEffect(() => {
     setTimeout(() => {
       if (lastQSO) {
@@ -60,26 +70,69 @@ export default function OpLoggingTab ({ navigation, route }) {
     }, 0)
   }, [listRef, qsos, lastQSO])
 
+  const [qsoQueue, setQSOQueue] = useState([])
+  const [currentQSO, setCurrentQSO] = useState(undefined)
+
+  // When there is no current QSO, pop one from the queue or create a new one
+  useEffect(() => {
+    if (!currentQSO) {
+      if (qsoQueue.length > 0) {
+        const nextQSO = qsoQueue.pop()
+        setCurrentQSO(nextQSO)
+        setQSOQueue(qsoQueue)
+      } else {
+        setCurrentQSO(prepareNewQSO(operation, settings))
+      }
+      if (mainFieldRef?.current) {
+        console.log('mainfield focus')
+        mainFieldRef.current.focus()
+      } else {
+        console.log('no mainfield')
+      }
+    }
+  }, [qsoQueue, currentQSO, operation, settings])
+
+  const handleSelectQSO = useCallback((qso) => {
+    if (qso) {
+      if (currentQSO?._is_new) setQSOQueue([...qsoQueue, currentQSO])
+      setCurrentQSO(prepareExistingQSO(qso))
+      if (mainFieldRef?.current) {
+        console.log('mainfield focus')
+        mainFieldRef.current.focus()
+      } else {
+        console.log('no mainfield')
+      }
+    } else {
+      setCurrentQSO(undefined) // blanking the current QSO will trigger the useEffect above to prepare the next one
+    }
+  }, [currentQSO, qsoQueue])
+
   // Log (or update) a QSO
   const logQSO = useCallback((qso) => {
-    qso.startOn = new Date(qso.startOnMillis).toISOString()
-    if (qso.endOnMillis) {
-      qso.endOn = new Date(qso.endOnMillis).toISOString()
+    if (qso._is_new) {
+      delete qso._is_new
     }
+
+    qso.mode = qso.mode || operation.mode
+    qso.freq = qso.freq || operation.freq
+
+    if (!qso.startOnMillis) qso.startOnMillis = new Date()
+    qso.startOn = new Date(qso.startOnMillis).toISOString()
+    if (qso.endOnMillis) qso.endOn = new Date(qso.endOnMillis).toISOString()
+
+    qso.our = qso.our || {}
+    qso.our.call = qso.our.call || operation.stationCall || settings.operatorCall
     qso.our.sent = qso.our.sent || (operation.mode === 'CW' ? '599' : '59')
+
+    qso.their = qso.their || {}
     qso.their.sent = qso.their.sent || (operation.mode === 'CW' ? '599' : '59')
 
-    qso.mode = operation.mode
-    qso.freq = operation.freq
-
-    if (operation.pota) {
-      qso.refs = qso.refs ?? []
-      qso.refs.push({ type: 'potaActivation', ref: operation.pota })
-    }
+    qso.key = qsoKey(qso)
 
     dispatch(addQSO({ uuid: operation.uuid, qso }))
+
     setLastQSO(qso)
-    setCurrentQSO(prepareNewQSO(operation, settings))
+    setCurrentQSO(undefined)
   }, [dispatch, operation, settings])
 
   const handleOperationChange = useCallback((attributes) => {
@@ -88,8 +141,14 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <QSOList qsos={qsos} styles={styles} style={{ flex: 1 }} listRef={listRef} />
-      <LoggingPanel operation={operation} settings={settings} onLog={logQSO} onOperationChange={handleOperationChange} qso={currentQSO} style={{ flex: 0 }} />
+      <QSOList qsos={qsos} styles={styles} style={{ flex: 1 }} listRef={listRef} onSelect={handleSelectQSO} selected={currentQSO} />
+      <LoggingPanel
+        qso={currentQSO} setQSO={setCurrentQSO}
+        operation={operation} settings={settings}
+        onAccept={logQSO} onOperationChange={handleOperationChange}
+        mainFieldRef={mainFieldRef} focusedFieldRef={focusedFieldRef}
+        themeColor={currentQSO?._is_new ? 'tertiary' : 'secondary'} style={{ flex: 0 }}
+      />
     </View>
   )
 }

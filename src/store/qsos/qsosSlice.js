@@ -33,11 +33,15 @@ export const qsosSlice = createSlice({
       const qso = action.payload.qso
       if (!qso.key) qso.key = qsoKey(qso)
 
-      if (keys[qso.key]) {
+      if (keys[qso._originalKey ?? qso.key]) {
         // Find old QSO and replace it with the new one
-        const pos = qsos.findIndex(q => q.key === qso.key)
+        const pos = qsos.findIndex(q => q.key === (qso._originalKey ?? qso.key))
         qso._number = qsos[pos]._number
         qsos[pos] = qso
+        if (qso._originalKey) {
+          delete keys[qso._originalKey]
+          delete qso._originalKey
+        }
         keys[qso.key] = qso
       } else {
         // Add new QSO to the end of the array

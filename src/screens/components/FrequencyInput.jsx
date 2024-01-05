@@ -4,8 +4,8 @@ import ThemedTextInput from './ThemedTextInput'
 
 const REMOVE_NON_DIGITS_REGEX = /[^0-9.]/g
 
-export default function FrequencyInput (params) {
-  const { value, styles, textStyle, onChange, onChangeText, fieldId } = params
+export default function FrequencyInput (props) {
+  const { value, styles, textStyle, onChange, onChangeText, fieldId } = props
 
   const [innerValue, setInnerValue] = useState(value)
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function FrequencyInput (params) {
   }, [])
 
   const handleBlur = useCallback((event) => {
-    const newEvent = { nativeEvent: { text: innerValue, target: event.nativeEvent.target } }
+    const newEvent = { nativeEvent: { text: innerValue, target: event?.nativeEvent?.target } }
 
     onChangeText && onChangeText(innerValue)
     onChange && onChange({ ...newEvent, fieldId })
@@ -27,7 +27,7 @@ export default function FrequencyInput (params) {
 
   return (
     <ThemedTextInput
-      {...params}
+      {...props}
       value={innerValue ?? ' '}
       keyboard="numbers"
       decimal={true}
