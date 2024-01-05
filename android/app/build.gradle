@@ -78,8 +78,8 @@ android {
         applicationId "com.ham2k.polo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "0.2.0"
+        versionCode 9
+        versionName "0.2.5"
         setProperty("archivesBaseName", applicationId + "-v" + versionCode + "(" + versionName + ")")
     }
     signingConfigs {
