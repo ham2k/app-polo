@@ -64,7 +64,7 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const refActivities = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref.type))]
-    return types.map(type => refHandlers[type]).filter(x => x)
+    return types.map(type => refHandlers[type]).filter(x => x || x === '')
   }, [operation?.refs])
 
   return (
