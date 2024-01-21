@@ -24,6 +24,8 @@ const ACTIVITY = {
   descriptionPlaceholder: 'Enter POTA references',
   referenceRegex: /^[A-Z0-9]+-[0-9]{4,5}$/,
   decorateRef: (ref) => async (dispatch, getState) => {
+    if (!ref?.ref || !ref.ref.match(/^[A-Z0-9]+-[0-9]{4,5}$/)) return { ...ref, ref: '', name: '', location: '' }
+
     const promise = dispatch(apiPOTA.endpoints.lookupPark.initiate(ref))
     const { data, error, isLoaded } = await promise
     let result
@@ -86,6 +88,7 @@ export function ThisActivitySettingsDialog (props) {
     } else {
       refs = []
     }
+    if (refs.length === 0 && value !== undefined) refs = [{ type: ACTIVITY.activationType, ref: value }]
 
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, refs) }))
   }, [dispatch, operation])

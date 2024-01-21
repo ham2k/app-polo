@@ -10,6 +10,15 @@ function debounceableDispatch (dispatch, action) {
 }
 const debouncedDispatch = debounce(debounceableDispatch, 2000)
 
+const refTypeTitles = {
+  potaActivation: 'POTA',
+  sotaActivation: 'SOTA',
+  iotaActivation: 'IOTA',
+  botaActivation: 'BOTA',
+  wwffActivation: 'WWFF',
+  contest: 'Contest'
+}
+
 export const setOperationData = (data) => async (dispatch, getState) => {
   const { uuid } = data
 
@@ -43,18 +52,20 @@ export const setOperationData = (data) => async (dispatch, getState) => {
   } else if (data.refs) {
     const pota = findRef(data, 'potaActivation')
     if (pota) {
-      data.title = `at ${refsToString(data.refs, 'potaActivation', { limit: 2 })}`
-      data.subtitle = filterRefs(data, 'potaActivation').map(ref => ref.name).filter(x => x).join(', ')
-      // if (data.refs.length > 1) {
-      //   data.subtitle = `${data.subtitle} …`
-      // }
+      if (pota.ref) {
+        data.title = `at ${refsToString(data.refs, 'potaActivation', { limit: 2 })}`
+        data.subtitle = filterRefs(data, 'potaActivation').map(ref => ref.name).filter(x => x).join(', ')
+      } else {
+        data.title = 'at New POTA'
+        data.subtitle = ''
+      }
     } else {
-      data.title = `at ${data.refs.map(ref => ref.ref).join(', ')}`
+      data.title = `at ${data.refs.map(ref => ref.ref || refTypeTitles[ref.type] || ref.type).join(', ')}`
       data.subtitle = ''
     }
   }
 
-  if (!data.title) {
+  if (!data.title || data.title === 'at ') {
     data.title = 'General Operation'
     data.subtitle = ''
   }

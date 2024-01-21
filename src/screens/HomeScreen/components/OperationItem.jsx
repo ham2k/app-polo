@@ -12,22 +12,19 @@ export default function OperationItem ({ operation, settings, onPress, styles })
     <TouchableRipple onPress={pressHandler}>
       <View style={[styles.row, { flexDirection: 'column', width: '100%' }]}>
         <View style={[{ flexDirection: 'row', width: '100%' }]}>
-          <View style={{ flex: 0, marginLeft: 0, minWidth: styles.oneSpace * 2 }}>
-            <Text style={[styles.rowText]}>{operation.stationCall || settings.operatorCall}</Text>
-          </View>
-          <View style={{ flex: 0, marginLeft: styles.oneSpace, minWidth: styles.oneSpace * 2 }}>
-            <Text style={[styles.rowText, { fontWeight: 'bold' }]}>{operation.name}</Text>
+          <View style={{ flex: 0, flexDirection: 'row', marginLeft: 0, minWidth: styles.oneSpace * 2 }}>
+            <Text style={[styles.rowText]}>{operation.stationCall || settings.operatorCall}{' '}</Text>
+            <Text style={[styles.rowText, { fontWeight: 'bold' }]}>{operation.title}</Text>
           </View>
         </View>
-        <View style={[{ flexDirection: 'row', width: '100%' }]}>
+        <View style={[{ flexDirection: 'row', width: '100%', paddingTop: styles.halfSpace }]}>
           {operation.qsoCount > 0 ? (
             <>
-              <Text style={[styles.rowText, { marginLeft: styles.oneSpace }]}>{operation.qsoCount} {operation.qsoCount > 1 ? 'QSOs' : 'QSO'}</Text>
-              <Text style={[styles.rowText, { marginLeft: styles.oneSpace }]}>{fmtDateTimeDynamic(operation.startOnMillisMax)}</Text>
+              <Text style={[styles.rowText, { fontSize: styles.fontSizeSmall }]}>{operation.qsoCount} {operation.qsoCount > 1 ? 'QSOs' : 'QSO'}{' • '}</Text>
+              <Text style={[styles.rowText, { fontSize: styles.fontSizeSmall }]}>{fmtDateTimeDynamic(operation.startOnMillisMax)}</Text>
             </>
           ) : (
-            <Text style={[styles.rowText, { marginLeft: styles.oneSpace }]}>0 QSOs</Text>
-
+            <Text style={[styles.rowText, { fontSize: styles.fontSizeSmall }]}>No QSOs</Text>
           )}
         </View>
       </View>
