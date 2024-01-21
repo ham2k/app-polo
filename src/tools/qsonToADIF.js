@@ -2,7 +2,7 @@ import packageJson from '../../package.json'
 import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
 export function qsonToADIF ({ operation, qsos }) {
-  const commonRefs = operation.refs || []
+  const common = { refs: operation.refs || [], grid: operation.grid }
 
   let str = ''
 
@@ -13,7 +13,7 @@ export function qsonToADIF ({ operation, qsos }) {
   str += '<EOH>\n'
 
   qsos.forEach(qso => {
-    str += oneQSOtoADIFWithPOTAMultiples(qso, commonRefs)
+    str += oneQSOtoADIFWithPOTAMultiples(qso, operation, common)
   })
 
   return str
@@ -21,8 +21,8 @@ export function qsonToADIF ({ operation, qsos }) {
 
 // When a QSO has multiple POTA refs (either activatiors or hunters) we need to generate
 // one ADIF QSO for each combination, and fudge the time by one second for each one
-function oneQSOtoADIFWithPOTAMultiples (qso, commonRefs) {
-  const potaActivationRefs = (commonRefs || []).filter(ref => ref.type === 'potaActivation')
+function oneQSOtoADIFWithPOTAMultiples (qso, operation, common) {
+  const potaActivationRefs = (common?.refs || []).filter(ref => ref.type === 'potaActivation')
   const potaRefs = (qso?.refs || []).filter(ref => ref.type === 'pota')
   let str = ''
 
@@ -31,16 +31,16 @@ function oneQSOtoADIFWithPOTAMultiples (qso, commonRefs) {
       str += oneQSOtoADIF(qso)
     } else {
       potaRefs.forEach((potaRef, i) => {
-        str += oneQSOtoADIF(qso, { pota: potaRef.ref }, i * 1000)
+        str += oneQSOtoADIF(qso, common, { pota: potaRef.ref }, i * 1000)
       })
     }
   } else {
     potaActivationRefs.forEach((activationRef, i) => {
       if (potaRefs.length === 0) {
-        str += oneQSOtoADIF(qso, { potaActivation: activationRef.ref }, i * 1000)
+        str += oneQSOtoADIF(qso, common, { potaActivation: activationRef.ref }, i * 1000)
       } else {
         potaRefs.forEach((potaRef, j) => {
-          str += oneQSOtoADIF(qso, { potaActivation: activationRef.ref, pota: potaRef.ref }, ((i * potaRefs.length) + j) * 1000)
+          str += oneQSOtoADIF(qso, common, { potaActivation: activationRef.ref, pota: potaRef.ref }, ((i * potaRefs.length) + j) * 1000)
         })
       }
     })
@@ -48,7 +48,7 @@ function oneQSOtoADIFWithPOTAMultiples (qso, commonRefs) {
   return str
 }
 
-function oneQSOtoADIF (qso, potaRefs = {}, timeOfffset = 0) {
+function oneQSOtoADIF (qso, common, potaRefs = {}, timeOfffset = 0) {
   let str = ''
   str += adifField('CALL', qso.their.call)
   if (qso.band && qso.band !== 'other') str += adifField('BAND', qso.band)
@@ -60,6 +60,8 @@ function oneQSOtoADIF (qso, potaRefs = {}, timeOfffset = 0) {
   str += adifField('RST_SENT', qso.our.sent)
   str += adifField('OPERATOR', qso.our.call)
   str += adifField('NOTES', qso.our.notes)
+  if (qso.grid) str += adifField('GRID', qso.grid)
+  else if (common.grid) str += adifField('GRID', common.grid)
 
   if (potaRefs.potaActivation) {
     str += adifField('MY_SIG', 'POTA')
