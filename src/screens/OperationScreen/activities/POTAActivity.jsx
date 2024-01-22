@@ -93,6 +93,10 @@ export function ThisActivitySettingsDialog (props) {
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, refs) }))
   }, [dispatch, operation])
 
+  const handleGridSelect = useCallback((grid) => {
+    dispatch(setOperationData({ uuid: operation.uuid, grid }))
+  }, [dispatch, operation])
+
   return (
     <ActivitySettingsDialog
       {...props}
@@ -118,7 +122,7 @@ export function ThisActivitySettingsDialog (props) {
           />
           <ScrollView style={{ maxHeight: styles.oneSpace * 6 }}>
             {stringToRefs(ACTIVITY.activationType, value, { regex: ACTIVITY.referenceRegex }).map((ref, index) => (
-              <ThisActivityLookupLine key={ref.ref} activityRef={ref.ref} style={{ marginTop: styles.halfSpace, fontSize: styles.smallFontSize }} />
+              <ThisActivityLookupLine key={ref.ref} activityRef={ref.ref} styles={styles} style={{ marginTop: styles.halfSpace, fontSize: styles.smallFontSize }} onGridSelect={handleGridSelect} />
             ))}
           </ScrollView>
         </>
@@ -127,23 +131,34 @@ export function ThisActivitySettingsDialog (props) {
   )
 }
 
-export function ThisActivityLookupLine ({ activityRef, style }) {
+export function ThisActivityLookupLine ({ activityRef, style, styles, onGridSelect }) {
   const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef })
 
   if (pota.isLoading) {
     return <Text style={style}>{'...'}</Text>
   } else {
+    console.log(pota?.data)
     return (
-      <Text style={style}>{
-      pota?.data?.name ? (
-        [
-          [pota?.data?.name, pota?.data?.parktypeDesc].filter(x => x).join(' '),
-          pota?.data?.locationName
-        ].filter(x => x).join(' • ')
-      ) : (
-        `${activityRef} not found!`
-      )
-    }</Text>
+      <Text style={style}>
+        {pota?.data?.name ? (
+          <>
+            {[pota.data.name, pota.data.parktypeDesc].filter(x => x).join(' ')}
+            {pota?.data?.grid6 ? ' • ' : ''}
+            {pota?.data?.grid6 && (
+              <Text
+                onPress={() => onGridSelect && onGridSelect(pota.data.grid6)}
+                style={{ color: styles.theme.colors.primary, textDecorationLine: 'underline' }}
+              >
+                {pota.data.grid6}
+              </Text>
+            )}
+
+            {pota?.data?.locationName ? ` • ${pota.data.locationName}` : ''}
+          </>
+        ) : (
+          `${activityRef} not found!`
+        )}
+      </Text>
     )
   }
 }
