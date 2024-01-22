@@ -14,6 +14,7 @@ import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { AddActivityDialog } from './components/AddActivityDialog'
 import { refHandlers } from '../activities'
+import { LocationDialog } from './components/LocationDialog'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -80,6 +81,22 @@ export default function OpSettingsTab ({ navigation, route }) {
         />
         {currentDialog === 'stationCall' && (
           <StationCallsignDialog
+            settings={settings}
+            operation={operation}
+            styles={styles}
+            visible={true}
+            onDialogDone={() => setCurrentDialog('')}
+          />
+        )}
+
+        <List.Item
+          title="Location"
+          description={operation.grid ? `Grid ${operation.grid}` : 'No location set'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="map-marker-radius" />}
+          onPress={() => setCurrentDialog('location')}
+        />
+        {currentDialog === 'location' && (
+          <LocationDialog
             settings={settings}
             operation={operation}
             styles={styles}

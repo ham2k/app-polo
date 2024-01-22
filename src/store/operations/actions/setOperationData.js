@@ -21,6 +21,7 @@ const refTypeTitles = {
 
 export const setOperationData = (data) => async (dispatch, getState) => {
   const { uuid } = data
+  const operation = selectOperation(uuid)(getState()) ?? {}
 
   if (data.power) data.power = parseInt(data.power, 10)
 
@@ -49,7 +50,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
   if (data.description) {
     data.title = data.description
     data.subtitle = ''
-  } else if (data.refs) {
+  } else if (data.refs && !operation.description) {
     const pota = findRef(data, 'potaActivation')
     if (pota) {
       if (pota.ref) {
@@ -65,9 +66,16 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     }
   }
 
-  if (!data.title || data.title === 'at ') {
+  if (!operation.title && (!data.title || data.title === 'at ')) {
     data.title = 'General Operation'
     data.subtitle = ''
+  }
+
+  if (!operation.grid && !data.grid && data.refs) {
+    const pota = findRef(data, 'potaActivation')
+    if (pota?.grid) {
+      data.grid = pota.grid
+    }
   }
 
   await dispatch(actions.setOperation(data))

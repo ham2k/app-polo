@@ -1,7 +1,6 @@
 # Minor Tasks
 
 * Refactor fields so that they don't need to "blur" to update values (frequency, dates, pota, etc)
-* Operation grid
 
 # Ready to Develop
 
