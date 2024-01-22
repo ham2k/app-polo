@@ -6,6 +6,36 @@ npm start -- --reset-cache
 cd android && ./gradlew clean && ./gradlew cleanBuildCache && cd ..
 ```
 
+# Debug Menu
+
+iOS: Cmd ⌘ + D
+Android: Cmd ⌘ + M (macOS) or Ctrl + M (Windows and Linux)
+
+# Resources
+
+Icons from https://pictogrammers.com/library/mdi/
+
+# Access iOS Simulator Info
+
+https://www.iosdev.recipes/simctl/
+
+```
+xcrun simctl
+xcrun simctl listapps booted # List all apps
+```
+
+# Local path for PoLo's internal files
+```
+open `xcrun simctl get_app_container booted com.ham2k.polo data`/Documents
+```
+
+# Local path where files are saved when exporting and "Save To Files"
+```
+open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep FileProvider.LocalStorage|sed "s/group.com.apple.FileProvider.LocalStorage//g"`/File\ Provider\ Storage
+```
+
+
+https://github.com/shinydevelopment/SimulatorStatusMagic
 
 
 -------------
