@@ -12,12 +12,9 @@ export function filterRefs (obj, type) {
 
 export function refsToString (obj, type, options = {}) {
   let refs
-  if (obj?.refs) {
-    refs = filterRefs(obj, type)
-  } else {
-    refs = obj || []
-  }
-
+  console.log('refsToString refs', obj?.refs)
+  refs = filterRefs(obj?.refs ?? obj ?? [], type)
+  console.log('refsToString', refs)
   let suffix = ''
   if (options.limit) {
     if (refs.length > options.limit) {
@@ -25,6 +22,7 @@ export function refsToString (obj, type, options = {}) {
       refs = refs.slice(0, options.limit)
     }
   }
+  console.log('after limit', refs)
   return refs.filter(r => r?.ref).map(r => r.ref).join(options.separator ?? ', ') + suffix
 }
 
@@ -37,4 +35,16 @@ export function stringToRefs (type, str, options = {}) {
 export function replaceRefs (originalRefs, type, newRefs) {
   const otherRefs = (originalRefs || []).filter(r => r.type !== type)
   return [...otherRefs, ...newRefs]
+}
+
+export function replaceRef (originalRefs, type, newRef) {
+  return replaceRefs(originalRefs, type, [newRef])
+}
+
+export function removeRefs (originalRefs, type) {
+  return replaceRefs(originalRefs, type, [])
+}
+
+export function removeRef (originalRefs, type) {
+  return replaceRefs(originalRefs, type, [])
 }

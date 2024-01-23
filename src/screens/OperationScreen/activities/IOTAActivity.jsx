@@ -21,7 +21,7 @@ const ACTIVITY = {
   descriptionPlaceholder: 'Enter IOTA reference'
 }
 
-function ThisActivityExchangePanel (props) {
+function ThisActivityOptionalExchangePanel (props) {
   return (
     <Text>WIP</Text>
   )
@@ -73,7 +73,8 @@ export function ThisActivitySettingsDialog (props) {
 
 const ThisActivity = {
   ...ACTIVITY,
-  ExchangePanel: ThisActivityExchangePanel,
+  MainExchangePanel: null,
+  OptionalExchangePanel: ThisActivityOptionalExchangePanel,
   SettingsDialog: ThisActivitySettingsDialog
 }
 

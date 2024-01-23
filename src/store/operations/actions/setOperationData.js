@@ -51,18 +51,28 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     data.title = data.description
     data.subtitle = ''
   } else if (data.refs && !operation.description) {
+    const titleParts = []
+    const subtitleParts = []
+
+    const wfd = findRef(data, 'wfd')
+    if (wfd) {
+      titleParts.push('for WFD')
+      subtitleParts.push([wfd.class, wfd.location].join(' '))
+    }
+
     const pota = findRef(data, 'potaActivation')
     if (pota) {
       if (pota.ref) {
-        data.title = `at ${refsToString(data.refs, 'potaActivation', { limit: 2 })}`
-        data.subtitle = filterRefs(data, 'potaActivation').map(ref => ref.name).filter(x => x).join(', ')
+        titleParts.push(`at ${refsToString(data.refs, 'potaActivation', { limit: 2 })}`)
+        subtitleParts.push(filterRefs(data, 'potaActivation').map(ref => ref.name).filter(x => x).join(', '))
       } else {
-        data.title = 'at New POTA'
-        data.subtitle = ''
+        titleParts.push('at New POTA')
       }
-    } else {
-      data.title = `at ${data.refs.map(ref => ref.ref || refTypeTitles[ref.type] || ref.type).join(', ')}`
-      data.subtitle = ''
+    }
+
+    if (titleParts.length) {
+      data.title = titleParts.join(' ')
+      data.subtitle = subtitleParts.join(' • ')
     }
   }
 

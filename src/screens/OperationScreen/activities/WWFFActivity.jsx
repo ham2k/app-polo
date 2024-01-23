@@ -20,12 +20,6 @@ const ACTIVITY = {
   descriptionPlaceholder: 'Enter WWWF reference'
 }
 
-function ThisActivityExchangePanel (props) {
-  return (
-    <Text>WIP</Text>
-  )
-}
-
 export function ThisActivitySettingsDialog (props) {
   const { styles, operation } = props
 
@@ -72,7 +66,8 @@ export function ThisActivitySettingsDialog (props) {
 
 const ThisActivity = {
   ...ACTIVITY,
-  ExchangePanel: ThisActivityExchangePanel,
+  MainExchangePanel: null,
+  OptionalExchangePanel: null,
   SettingsDialog: ThisActivitySettingsDialog
 }
 

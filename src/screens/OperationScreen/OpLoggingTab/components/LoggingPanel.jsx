@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Keyboard, ScrollView, View, findNodeHandle } from 'react-native'
+import { Keyboard, ScrollView, View, findNodeHandle, useWindowDimensions } from 'react-native'
 import { IconButton } from 'react-native-paper'
 
 import LoggerChip from '../../components/LoggerChip'
@@ -20,6 +20,7 @@ import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { TimeInput } from '../../../components/TimeInput'
 import { DateInput } from '../../../components/DateInput'
+import { findRef } from '../../../../tools/refTools'
 
 function describeRadio (qso, operation) {
   const parts = []
@@ -62,12 +63,6 @@ export default function LoggingPanel ({
   const [pausedTime, setPausedTime] = useState()
 
   const [isValid, setIsValid] = useState(false)
-
-  const alternateCallFieldRef = useRef()
-  const callFieldRef = mainFieldRef || alternateCallFieldRef
-  const sentFieldRef = useRef()
-  const rcvdFieldRef = useRef()
-  const freqFieldRef = useRef()
 
   // Initialize the form with the QSO data
   useEffect(() => {
@@ -143,20 +138,6 @@ export default function LoggingPanel ({
       }
     }, 10)
   }, [qso, onAccept, isValid])
-
-  // Switch between fields with the space key
-  const spaceKeyHander = useCallback((event) => {
-    const { nativeEvent: { key, target } } = event
-    if (key === ' ') {
-      if (target === findNodeHandle(callFieldRef.current)) {
-        sentFieldRef.current.focus()
-      } else if (target === findNodeHandle(sentFieldRef.current)) {
-        rcvdFieldRef.current.focus()
-      } else if (target === findNodeHandle(rcvdFieldRef.current)) {
-        callFieldRef.current.focus()
-      }
-    }
-  }, [callFieldRef, sentFieldRef, rcvdFieldRef])
 
   const focusedRef = useRef()
 
@@ -271,7 +252,6 @@ export default function LoggingPanel ({
                         ]}
                       />
                       <FrequencyInput
-                        innerRef={freqFieldRef}
                         themeColor={themeColor}
                         style={[styles.input, { width: styles.oneSpace * 11 }]}
                         value={qso.freq ?? operation.freq ?? ''}
@@ -303,7 +283,7 @@ export default function LoggingPanel ({
                 )}
               </View>
 
-              {activities.filter(activity => activity.includeInExchange && activity.includeInExchange({ operation, qso })).map(activity => (
+              {activities.filter(activity => activity.includeOptionalExchange && activity.includeOptionalExchange({ operation, qso }) && activity.OptionalExchangePanel).map(activity => (
                 <View key={activity.key} style={{ flex: 0, flexDirection: 'column' }}>
                   <LoggerChip icon={activity.icon} styles={styles} style={{ flex: 0 }} themeColor={themeColor}
                     selected={!!visibleFields[activity.key]}
@@ -313,7 +293,7 @@ export default function LoggingPanel ({
                     <>
                       <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
                       <View style={{ flexDirection: 'row', paddingHorizontal: styles.oneSpace, gap: styles.oneSpace }}>
-                        <activity.ExchangePanel qso={qso} setQSO={setQSO} operation={operation} settings={settings} styles={styles} focusedRef={focusedRef} />
+                        <activity.OptionalExchangePanel qso={qso} setQSO={setQSO} operation={operation} settings={settings} styles={styles} focusedRef={focusedRef} />
                       </View>
                     </>
                   )}
@@ -361,53 +341,18 @@ export default function LoggingPanel ({
 
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingLeft: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, gap: styles.oneSpace }}>
-          <CallsignInput
-            innerRef={callFieldRef}
-            themeColor={themeColor}
-            style={[styles.input, { flex: 5 }]}
-            value={qso?.their?.call ?? ''}
-            label="Their Call"
-            placeholder=""
-            onChange={handleFieldChange}
-            onSubmitEditing={handleSubmit}
-            fieldId={'theirCall'}
-            onKeyPress={spaceKeyHander}
-            focusedRef={focusedRef}
-          />
-          <ThemedTextInput
-            innerRef={sentFieldRef}
-            themeColor={themeColor}
-            style={{ width: styles.oneSpace * 6 }}
-            value={qso?.our?.sent ?? ''}
-            label="Sent"
-            placeholder={qso?.mode === 'CW' ? '599' : '59'}
-            noSpaces={true}
-            onChange={handleFieldChange}
-            onSubmitEditing={handleSubmit}
-            fieldId={'ourSent'}
-            onKeyPress={spaceKeyHander}
-            keyboard={'numbers'}
-            numeric={true}
-            focusedRef={focusedRef}
-          />
-          <ThemedTextInput
-            innerRef={rcvdFieldRef}
-            themeColor={themeColor}
-            style={[styles.input, { width: styles.oneSpace * 6 }]}
-            value={qso?.their?.sent || ''}
-            label="Rcvd"
-            placeholder={qso?.mode === 'CW' ? '599' : '59'}
-            noSpaces={true}
-            onChange={handleFieldChange}
-            onSubmitEditing={handleSubmit}
-            fieldId={'theirSent'}
-            onKeyPress={spaceKeyHander}
-            keyboard={'numbers'}
-            numeric={true}
-            focusedRef={focusedRef}
-          />
-        </View>
+        <MainExchangePanel
+          qso={qso}
+          operation={operation}
+          settings={settings}
+          styles={styles}
+          themeColor={themeColor}
+          handleSubmit={handleSubmit}
+          handleFieldChange={handleFieldChange}
+          setQSO={setQSO}
+          mainFieldRef={mainFieldRef}
+          focusedRef={focusedRef}
+        />
         <View style={{ justifyContent: 'flex-end', alignItems: 'center', paddingHorizontal: styles.oneSpace, paddingBottom: 0 }}>
           <IconButton
             icon={qso?._is_new ? 'upload' : 'content-save'}
@@ -424,6 +369,119 @@ export default function LoggingPanel ({
       {isKeyboardVisible && settings.showNumbersRow && (
         <NumberKeys themeColor={themeColor} onNumberKeyPressed={handleNumberKey} enabled={!!focusedRef?.current} />
       )}
+    </View>
+  )
+}
+
+const MainExchangePanel = ({
+  qso, operation, settings, styles, themeColor, handleSubmit, handleFieldChange, setQSO, mainFieldRef, focusedRef
+}) => {
+  const { width } = useWindowDimensions()
+
+  // We need to pre-allocate a ref for the main field, in case `mainFieldRef` is not provided
+  // but since hooks cannot be called conditionally, we just need to create it whether we need it or not
+  const alternateCallFieldRef = useRef()
+
+  const refStack = []
+  // the first ref will correspond to the call field
+  refStack.push(mainFieldRef || alternateCallFieldRef)
+  // Add enough refs for whatever fields might get added
+  refStack.push(useRef())
+  refStack.push(useRef())
+  refStack.push(useRef())
+  refStack.push(useRef())
+  refStack.push(useRef())
+  refStack.push(useRef())
+
+  // Make a copy since `refStack` will be used to distribute refs to each component
+  let refs = [...refStack]
+
+  // Switch between fields with the space key
+  // We would have used a `useCallback` hook, but it depends on an array of refs that will change each render anyways
+  const spaceKeyHandler = (event) => {
+    const { nativeEvent: { key, target } } = event
+    if (key === ' ') {
+      const pos = refs.map(r => findNodeHandle(r.current)).indexOf(target)
+      if (pos >= 0) {
+        const next = (pos + 1) % refs.filter(r => r.current).length
+        refs[next]?.current?.focus()
+      }
+    }
+  }
+
+  let fields = []
+  fields.push(
+    <CallsignInput
+      key="call"
+      innerRef={refStack.shift()}
+      themeColor={themeColor}
+      style={[styles.input, { minWidth: styles.oneSpace * 12, flex: 10 }]}
+      value={qso?.their?.call ?? ''}
+      label="Their Call"
+      placeholder=""
+      onChange={handleFieldChange}
+      onSubmitEditing={handleSubmit}
+      fieldId={'theirCall'}
+      onKeyPress={spaceKeyHandler}
+      focusedRef={focusedRef}
+    />
+  )
+  fields.push(
+    <ThemedTextInput
+      key="sent"
+      innerRef={refStack.shift()}
+      themeColor={themeColor}
+      style={{ minWidth: styles.oneSpace * 6, flex: 1 }}
+      value={qso?.our?.sent ?? ''}
+      label="Sent"
+      placeholder={qso?.mode === 'CW' ? '599' : '59'}
+      noSpaces={true}
+      onChange={handleFieldChange}
+      onSubmitEditing={handleSubmit}
+      fieldId={'ourSent'}
+      onKeyPress={spaceKeyHandler}
+      keyboard={'numbers'}
+      numeric={true}
+      focusedRef={focusedRef}
+    />
+  )
+  fields.push(
+    <ThemedTextInput
+      key="received"
+      innerRef={refStack.shift()}
+      themeColor={themeColor}
+      style={[styles.input, { minWidth: styles.oneSpace * 6, flex: 1 }]}
+      value={qso?.their?.sent || ''}
+      label="Rcvd"
+      placeholder={qso?.mode === 'CW' ? '599' : '59'}
+      noSpaces={true}
+      onChange={handleFieldChange}
+      onSubmitEditing={handleSubmit}
+      fieldId={'theirSent'}
+      onKeyPress={spaceKeyHandler}
+      keyboard={'numbers'}
+      numeric={true}
+      focusedRef={focusedRef}
+    />
+  )
+
+  activities.filter(activity => findRef(operation, activity.key) && activity.fieldsForMainExchangePanel).forEach(activity => {
+    fields = fields.concat(
+      activity.fieldsForMainExchangePanel(
+        { qso, operation, settings, styles, themeColor, handleSubmit, setQSO, spaceKeyHandler, refStack, focusedRef }
+      )
+    )
+  })
+
+  console.log('fields', fields.length, width, width / styles.oneSpace)
+  if (fields.length > 4 && width / styles.oneSpace < 60) {
+    fields = [fields[0], ...fields.slice(3)]
+    refs = [refs[0], ...refs.slice(3)]
+  }
+
+  return (
+    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingLeft: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, gap: styles.oneSpace }}>
+      {fields}
     </View>
   )
 }
