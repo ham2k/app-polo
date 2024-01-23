@@ -101,7 +101,6 @@ export default function ThemedTextInput (props) {
     const { start, end } = currentSelection
 
     const newValue = strValue.substring(0, start) + number + strValue.substring(end)
-    console.log('handleNumberKey', { start, end, strValue, newValue })
     handleChange && handleChange({ nativeEvent: { text: newValue } })
     setCurrentSelection({ start: start + 1, end: end + 1 })
   }, [handleChange, strValue, currentSelection])
@@ -166,7 +165,7 @@ export default function ThemedTextInput (props) {
         ref={actualInnerRef}
 
         value={strValue || ''}
-        placeholder={placeholder}
+        placeholder={placeholder || ''}
         style={[colorStyles.nativeInput, ...props.style]}
         placeholderTextColor={themeStyles.theme.colors.onBackgroundLighter}
         cursorColor={colorStyles.cursorColor}
@@ -201,7 +200,7 @@ export default function ThemedTextInput (props) {
       }}
       value={value || ' '}
       label={label}
-      placeholder={placeholder}
+      placeholder={placeholder || ''}
       render={renderInput}
       error={error}
     />

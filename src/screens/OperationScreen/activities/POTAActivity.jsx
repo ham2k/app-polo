@@ -15,7 +15,7 @@ const ACTIVITY = {
   name: 'Parks on the Air',
   shortName: 'POTA',
   infoURL: 'https://parksontheair.com/',
-  includeInExchange: ({ operation }) => true,
+  includeOptionalExchange: ({ operation }) => true,
   exchangeShortLabel: ({ operation }) => findRef(operation, 'potaActivation') ? 'P2P' : 'POTA',
   huntingType: 'pota',
   activationType: 'potaActivation',
@@ -33,7 +33,8 @@ const ACTIVITY = {
       result = {
         ...ref,
         name: [data.name, data.parktypeDesc].filter(x => x).join(' '),
-        location: data?.locationName
+        location: data?.locationName,
+        grid: data?.grid6
       }
     } else if (error || isLoaded) {
       result = { ...ref, name: `${ref.ref} not found!` }
@@ -44,7 +45,7 @@ const ACTIVITY = {
   }
 }
 
-function ThisActivityExchangePanel (props) {
+function ThisActivityOptionalExchangePanel (props) {
   const { qso, setQSO, styles } = props
 
   const [localValue, setLocalValue] = useState('')
@@ -165,7 +166,8 @@ export function ThisActivityLookupLine ({ activityRef, style, styles, onGridSele
 
 const ThisActivity = {
   ...ACTIVITY,
-  ExchangePanel: ThisActivityExchangePanel,
+  MainExchangePanel: null,
+  OptionalExchangePanel: ThisActivityOptionalExchangePanel,
   SettingsDialog: ThisActivitySettingsDialog
 }
 

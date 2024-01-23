@@ -18,7 +18,7 @@ const ACTIVITY = {
   defaultValue: { class: '', location: '' }
 }
 
-function ThisActivityExchangePanel (props) {
+function ThisActivityMainExchangePanel (props) {
   return (
     <Text>WIP</Text>
   )
@@ -79,7 +79,8 @@ export function ThisActivitySettingsDialog (props) {
 
 const ThisActivity = {
   ...ACTIVITY,
-  ExchangePanel: ThisActivityExchangePanel,
+  MainExchangePanel: ThisActivityMainExchangePanel,
+  OptionalExchangePanel: null,
   SettingsDialog: ThisActivitySettingsDialog
 }
 
