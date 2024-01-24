@@ -8,13 +8,14 @@ import Share from 'react-native-share'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteADIF, generateADIF, selectOperation } from '../../../store/operations'
+import { deleteADIF, generateExport, selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { AddActivityDialog } from './components/AddActivityDialog'
-import { refHandlers } from '../activities'
+import activities, { refHandlers } from '../activities'
 import { LocationDialog } from './components/LocationDialog'
+import { findRef } from '../../../tools/refTools'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -48,18 +49,20 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
-  const handleExport = useCallback(() => {
-    dispatch(generateADIF(operation.uuid)).then((path) => {
-      Share.open({
-        url: `file://${path}`,
-        type: 'text/plain' // There is no official ADIF mime type
-      }).then((x) => {
-        console.info('Shared', x)
-      }).catch((e) => {
-        console.info('Sharing Error', e)
-      }).finally(() => {
-        dispatch(deleteADIF(path))
-      })
+  const handleExport = useCallback((type, activity) => {
+    dispatch(generateExport(operation.uuid, type, activity)).then((path) => {
+      if (path) {
+        Share.open({
+          url: `file://${path}`,
+          type: 'text/plain' // There is no official ADIF or Cabrillo mime type
+        }).then((x) => {
+          console.info('Shared', x)
+        }).catch((e) => {
+          console.info('Sharing Error', e)
+        }).finally(() => {
+          dispatch(deleteADIF(path))
+        })
+      }
     })
   }, [dispatch, operation])
 
@@ -155,8 +158,18 @@ export default function OpSettingsTab ({ navigation, route }) {
         <List.Item
           title="Export ADIF"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
-          onPress={handleExport}
+          onPress={() => handleExport('adif')}
         />
+        {activities
+          .filter((activity) => activity.cabrilloHeaders && findRef(operation, activity.key))
+          .map((activity) => (
+            <List.Item key={activity.key}
+              title={`Export Cabrillo for ${activity.name}`}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
+              onPress={() => handleExport('cabrillo', activity)}
+            />
+          ))
+        }
       </List.Section>
       <List.Section>
         <List.Subheader style={{ color: styles.theme.colors.error }}>The Danger Zone</List.Subheader>

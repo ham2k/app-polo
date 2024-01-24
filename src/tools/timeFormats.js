@@ -93,6 +93,21 @@ export function fmtADIFTime (t) {
   }
 }
 
+export function fmtCabrilloDate (t) {
+  if (typeof t === 'number') {
+    t = new Date(t)
+  }
+  if (t && t.toISOString) {
+    return t.toISOString().substring(0, 10)
+  } else {
+    return ''
+  }
+}
+
+export function fmtCabrilloTime (t) {
+  return fmtADIFTime(t)
+}
+
 export function fmtISODate (t) {
   if (typeof t === 'number') {
     t = new Date(t)

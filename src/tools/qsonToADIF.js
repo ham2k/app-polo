@@ -63,6 +63,8 @@ function oneQSOtoADIF (qso, common, potaRefs = {}, timeOfffset = 0) {
   if (qso.grid) str += adifField('GRID', qso.grid)
   else if (common.grid) str += adifField('GRID', common.grid)
 
+  if (qso.their?.arrlSection) str += adifField('ARRL_SECT', qso.their.arrlSection)
+
   if (potaRefs.potaActivation) {
     str += adifField('MY_SIG', 'POTA')
     str += adifField('MY_SIG_INFO', potaRefs.potaActivation)
