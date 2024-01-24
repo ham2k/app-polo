@@ -6,6 +6,7 @@ import UUID from 'react-native-uuid'
 import { qsonToADIF } from '../../../tools/qsonToADIF'
 import { fmtISODate } from '../../../tools/timeFormats'
 import { refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
+import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 
 export const loadOperationsList = () => async (dispatch) => {
   try {
@@ -104,26 +105,38 @@ export const deleteOperation = (uuid) => async (dispatch) => {
   await dispatch(qsosActions.unsetQSOs(uuid))
 }
 
-export const generateADIF = (uuid) => async (dispatch, getState) => {
+export const generateExport = (uuid, type, activity) => async (dispatch, getState) => {
   const state = getState()
   const operation = state.operations.info[uuid]
   const settings = state.settings
 
   const { startOnMillisMax } = operation
-  const pota = refsToString(operation, 'potaActivation')
-
   const call = operation?.stationCall || settings?.operatorCall
+
+  const baseName = `${fmtISODate(startOnMillisMax)} ${call}`
 
   const qsos = state.qsos.qsos[uuid].map(qso => {
     return { ...qso, our: { ...qso.our, call: operation.stationCall || settings.operatorCall } }
   })
 
-  const name = `${fmtISODate(startOnMillisMax)}-${call} ${pota ? `-${pota}` : ''}.adi`
-  const adif = qsonToADIF({ operation, qsos })
+  let name
+  let data
 
-  await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/${name}`, adif)
+  if (type === 'adif') {
+    const pota = refsToString(operation, 'potaActivation')
+    name = `${baseName}${pota ? ` at ${pota}` : ''}.adi`
+    data = qsonToADIF({ operation, qsos, settings })
+  } else if (type === 'cabrillo') {
+    name = `${baseName} for ${activity.shortName}.log`
+    data = qsonToCabrillo({ operation, qsos, activity, settings })
+  }
 
-  return `${RNFS.DocumentDirectoryPath}/ops/${uuid}/${name}`
+  if (name && data) {
+    await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/${name}`, data)
+    return `${RNFS.DocumentDirectoryPath}/ops/${uuid}/${name}`
+  } else {
+    return false
+  }
 }
 
 export const deleteADIF = (path) => async (dispatch) => {

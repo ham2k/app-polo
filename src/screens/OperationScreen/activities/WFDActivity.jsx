@@ -8,8 +8,24 @@ import { View } from 'react-native'
 import ThemedTextInput from '../../components/ThemedTextInput'
 import { Text } from 'react-native-paper'
 
+/*
+ NOTES:
+
+ ADIF
+   <ARRL_SECT:3>ENY
+   <CONTEST_ID:3>WFD
+   <APP_N1MM_EXCHANGE1:2>1H
+
+ Cabrillo
+   QSO: 18072 CW 2024-01-24 0246 KI2D          1H     ENY KN2X          1H   ENY
+   QSO: 18072 CW 2024-01-24 0246 KI2D          1H     ENY WC3W          2H   NFL
+
+ */
+
+const KEY = 'wfd'
+
 const ACTIVITY = {
-  key: 'wfd',
+  key: KEY,
   comingSoon: true,
   icon: 'snowflake',
   name: 'Winter Field Day',
@@ -19,11 +35,33 @@ const ACTIVITY = {
     let date
     if (operation?.qsos && operation.qsos[0]?.startOnMillis) date = Date.parse(operation.qsos[0].startOnMillis)
     else date = new Date()
-    const ref = findRef(operation, 'wfd')
+    const ref = findRef(operation, KEY)
     return [`WFD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')
   },
   descriptionPlaceholder: '',
-  defaultValue: { class: '', location: '' }
+  defaultValue: { class: '', location: '' },
+  cabrilloHeaders: ({ operation, settings, headers }) => {
+    const ref = findRef(operation, KEY)
+    headers.CONTEST = 'WFD'
+    headers.CALLSIGN = operation.stationCall || settings.operatorCall
+    headers.LOCATION = ref.location
+    headers.NAME = ''
+    headers.OPERATORS = settings.operatorCall
+    if (operation.grid) headers['GRID-LOCATOR'] = operation.grid
+    return headers
+  },
+  qsoToCabrilloParts: ({ qso, ref, operation, settings, parts }) => {
+    const ourCall = operation.stationCall || settings.operatorCall
+    const qsoRef = findRef(qso, KEY)
+
+    parts.push((ourCall ?? '').padEnd(13, ' '))
+    parts.push((ref?.class ?? '').padEnd(6, ' '))
+    parts.push((ref?.location ?? '').padEnd(3, ' '))
+    parts.push((qso?.their?.call ?? '').padEnd(13, ' '))
+    parts.push((qsoRef?.class ?? '').padEnd(4, ' '))
+    parts.push((qsoRef?.location ?? '').padEnd(3, ' '))
+    return parts
+  }
 }
 
 function fieldsForMainExchangePanel (props) {
@@ -45,7 +83,10 @@ function fieldsForMainExchangePanel (props) {
       uppercase={true}
       noSpaces={true}
       value={ref?.class || ''}
-      onChangeText={(text) => setQSO({ ...qso, refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, class: text }) })}
+      onChangeText={(text) => setQSO({
+        ...qso,
+        refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, class: text })
+      })}
       onSubmitEditing={onSubmitEditing}
       onKeyPress={spaceKeyHandler}
       focusedRef={focusedRef}
@@ -63,7 +104,11 @@ function fieldsForMainExchangePanel (props) {
       uppercase={true}
       noSpaces={true}
       value={ref?.location || ''}
-      onChangeText={(text) => setQSO({ ...qso, refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, location: text }) })}
+      onChangeText={(text) => setQSO({
+        ...qso,
+        refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, location: text }),
+        their: { ...qso?.their, arrlSection: text }
+      })}
       onSubmitEditing={onSubmitEditing}
       onKeyPress={spaceKeyHandler}
       focusedRef={focusedRef}
