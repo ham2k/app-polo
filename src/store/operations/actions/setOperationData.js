@@ -10,14 +10,14 @@ function debounceableDispatch (dispatch, action) {
 }
 const debouncedDispatch = debounce(debounceableDispatch, 2000)
 
-const refTypeTitles = {
-  potaActivation: 'POTA',
-  sotaActivation: 'SOTA',
-  iotaActivation: 'IOTA',
-  botaActivation: 'BOTA',
-  wwffActivation: 'WWFF',
-  contest: 'Contest'
-}
+// const refTypeTitles = {
+//   potaActivation: 'POTA',
+//   sotaActivation: 'SOTA',
+//   iotaActivation: 'IOTA',
+//   botaActivation: 'BOTA',
+//   wwffActivation: 'WWFF',
+//   contest: 'Contest'
+// }
 
 export const setOperationData = (data) => async (dispatch, getState) => {
   const { uuid } = data

@@ -12,9 +12,7 @@ export function filterRefs (obj, type) {
 
 export function refsToString (obj, type, options = {}) {
   let refs
-  console.log('refsToString refs', obj?.refs)
   refs = filterRefs(obj?.refs ?? obj ?? [], type)
-  console.log('refsToString', refs)
   let suffix = ''
   if (options.limit) {
     if (refs.length > options.limit) {
@@ -22,7 +20,6 @@ export function refsToString (obj, type, options = {}) {
       refs = refs.slice(0, options.limit)
     }
   }
-  console.log('after limit', refs)
   return refs.filter(r => r?.ref).map(r => r.ref).join(options.separator ?? ', ') + suffix
 }
 

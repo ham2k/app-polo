@@ -473,7 +473,6 @@ const MainExchangePanel = ({
     )
   })
 
-  console.log('fields', fields.length, width, width / styles.oneSpace)
   if (fields.length > 4 && width / styles.oneSpace < 60) {
     fields = [fields[0], ...fields.slice(3)]
     refs = [refs[0], ...refs.slice(3)]

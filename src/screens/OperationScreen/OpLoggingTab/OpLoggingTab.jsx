@@ -84,10 +84,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         setCurrentQSO(prepareNewQSO(operation, settings))
       }
       if (mainFieldRef?.current) {
-        console.log('mainfield focus')
         mainFieldRef.current.focus()
-      } else {
-        console.log('no mainfield')
       }
     }
   }, [qsoQueue, currentQSO, operation, settings])
@@ -97,10 +94,7 @@ export default function OpLoggingTab ({ navigation, route }) {
       if (currentQSO?._is_new) setQSOQueue([...qsoQueue, currentQSO])
       setCurrentQSO(prepareExistingQSO(qso))
       if (mainFieldRef?.current) {
-        console.log('mainfield focus')
         mainFieldRef.current.focus()
-      } else {
-        console.log('no mainfield')
       }
     } else {
       setCurrentQSO(undefined) // blanking the current QSO will trigger the useEffect above to prepare the next one
