@@ -18,7 +18,7 @@ export function qsonToCabrillo ({ operation, qsos, settings, activity }) {
     parts.push(fmtCabrilloDate(qso?.startOnMillis ?? qso?.endOnMillis).padEnd(10, ' '))
     parts.push(fmtCabrilloTime(qso?.startOnMillis ?? qso?.endOnMillis).padEnd(4, ' '))
     activity.qsoToCabrilloParts && activity.qsoToCabrilloParts({ qso, operation, ref, parts })
-    console.log('qso', qso, parts)
+
     str += parts.join(' ') + '\n'
   })
 

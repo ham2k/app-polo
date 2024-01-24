@@ -138,7 +138,6 @@ export function ThisActivityLookupLine ({ activityRef, style, styles, onGridSele
   if (pota.isLoading) {
     return <Text style={style}>{'...'}</Text>
   } else {
-    console.log(pota?.data)
     return (
       <Text style={style}>
         {pota?.data?.name ? (

@@ -40,7 +40,6 @@ export function TimeInput (props) {
       }
 
       const date = Date.parse(`${baseDate}T${localValue}Z`)
-      console.log('blur', date)
       if (date) {
         onChange && onChange({ value: date.valueOf(), fieldId })
       }
