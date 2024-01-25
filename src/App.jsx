@@ -28,7 +28,6 @@ export default function App () {
   const [paperTheme, navigationTheme] = usePrepareThemes()
 
   useEffect(() => {
-    console.log('hide splash')
     SplashScreen.hide()
   }, [])
 
