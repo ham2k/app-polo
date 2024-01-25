@@ -516,6 +516,7 @@
 				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -543,6 +544,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
 				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -651,6 +653,7 @@
 				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = DevDebug;
@@ -786,6 +789,7 @@
 				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = BetaDebug;
@@ -921,6 +925,7 @@
 				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = ProdDebug;
@@ -1050,6 +1055,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.dev;
 				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = DevRelease;
@@ -1176,6 +1182,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.beta;
 				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = BetaRelease;
@@ -1302,6 +1309,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.prod;
 				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = ProdRelease;
