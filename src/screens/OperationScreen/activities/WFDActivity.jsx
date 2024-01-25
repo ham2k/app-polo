@@ -85,7 +85,8 @@ function fieldsForMainExchangePanel (props) {
       value={ref?.class || ''}
       onChangeText={(text) => setQSO({
         ...qso,
-        refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, class: text })
+        refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, class: text }),
+        their: { ...qso?.their, exchange: [text, ref?.location].join(' ') }
       })}
       onSubmitEditing={onSubmitEditing}
       onKeyPress={spaceKeyHandler}
@@ -107,7 +108,7 @@ function fieldsForMainExchangePanel (props) {
       onChangeText={(text) => setQSO({
         ...qso,
         refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, location: text }),
-        their: { ...qso?.their, arrlSection: text }
+        their: { ...qso?.their, arrlSection: text, exchange: [ref?.class, text].join(' ') }
       })}
       onSubmitEditing={onSubmitEditing}
       onKeyPress={spaceKeyHandler}

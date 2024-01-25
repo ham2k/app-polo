@@ -1,9 +1,12 @@
-import React, { useCallback } from 'react'
-import { FlatList, View } from 'react-native'
+import React, { useCallback, useMemo } from 'react'
+import { FlatList, View, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem from './QSOItem'
 
 export default function QSOList ({ qsos, selected, onSelect, styles, style, listRef }) {
+  const { width } = useWindowDimensions()
+  const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
+
   const handlePress = useCallback(({ item, index }) => {
     if (item.key === selected.key) {
       onSelect && onSelect(undefined)
@@ -14,9 +17,9 @@ export default function QSOList ({ qsos, selected, onSelect, styles, style, list
 
   const renderRow = useCallback(({ item, index }) => {
     return (
-      <QSOItem qso={item} selected={item?.key === selected?.key} onPress={() => handlePress({ item, index })} styles={styles} />
+      <QSOItem qso={item} selected={item?.key === selected?.key} onPress={() => handlePress({ item, index })} styles={styles} extendedWidth={extendedWidth} />
     )
-  }, [styles, handlePress, selected])
+  }, [styles, handlePress, selected, extendedWidth])
 
   return (
     <View style={[styles.listContainer, style, { width: '100%', padding: 0, margin: 0 }]}>
