@@ -445,6 +445,7 @@
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = T56H72Q4W5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -473,6 +474,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = poloTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -498,6 +500,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = polo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo _";
@@ -528,6 +531,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo _";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
@@ -663,6 +667,7 @@
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = T56H72Q4W5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -799,6 +804,7 @@
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = T56H72Q4W5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -935,6 +941,7 @@
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = T56H72Q4W5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1066,6 +1073,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = poloTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1193,6 +1201,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = poloTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1320,6 +1329,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = poloTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
