@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
+import SplashScreen from 'react-native-splash-screen'
 
 import { usePrepareThemes } from './styles/tools/usePrepareThemes'
 
@@ -25,6 +26,11 @@ const paperSettings = {
 }
 export default function App () {
   const [paperTheme, navigationTheme] = usePrepareThemes()
+
+  useEffect(() => {
+    console.log('hide splash')
+    SplashScreen.hide()
+  }, [])
 
   return (
     <Provider store={store}>

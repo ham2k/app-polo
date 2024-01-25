@@ -30,6 +30,7 @@
 		00E356EE1AD99517003FC87E /* poloTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = poloTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* poloTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = poloTests.m; sourceTree = "<group>"; };
+		01ADCF23075EB4C25894D688 /* Pods-polo.prodrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.prodrelease.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.prodrelease.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Ham2K Portable Logger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ham2K Portable Logger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = polo/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = polo/AppDelegate.mm; sourceTree = "<group>"; };
@@ -37,15 +38,26 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = polo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = polo/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-polo-poloTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-polo-poloTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C9746486FD59ECA88E77FF4 /* Pods-polo.devrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.devrelease.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.devrelease.xcconfig"; sourceTree = "<group>"; };
+		285067297FE013E512E294F1 /* Pods-polo-poloTests.betadebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.betadebug.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.betadebug.xcconfig"; sourceTree = "<group>"; };
+		2908BA1A9DF8FB525A4E57EF /* Pods-polo.betarelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.betarelease.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.betarelease.xcconfig"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-polo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.debug.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-polo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.release.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.debug.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-polo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-polo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		692647BAF0BD378FFAA5F85B /* Pods-polo-poloTests.prodrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.prodrelease.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.prodrelease.xcconfig"; sourceTree = "<group>"; };
 		72A0D32B2B162706007E568A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		72A0D32C2B162706007E568A /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
+		73051291BC6C08E39ED86A73 /* Pods-polo-poloTests.betarelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.betarelease.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.betarelease.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = polo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-polo-poloTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.release.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.release.xcconfig"; sourceTree = "<group>"; };
+		9B7A9A648EECA029024A1016 /* Pods-polo.betadebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.betadebug.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.betadebug.xcconfig"; sourceTree = "<group>"; };
+		C0EC58EF309D62377C5D6926 /* Pods-polo-poloTests.proddebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.proddebug.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.proddebug.xcconfig"; sourceTree = "<group>"; };
+		D3C0AACBADED1145A6C4DF2D /* Pods-polo.proddebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.proddebug.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.proddebug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EDCB747124D4D5E23AC68F85 /* Pods-polo.devdebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.devdebug.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.devdebug.xcconfig"; sourceTree = "<group>"; };
+		F50C8E7CD66012C66E6F4144 /* Pods-polo-poloTests.devrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.devrelease.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.devrelease.xcconfig"; sourceTree = "<group>"; };
+		FB2513710CEE4903AC7C2032 /* Pods-polo-poloTests.devdebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.devdebug.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.devdebug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +168,18 @@
 				5709B34CF0A7D63546082F79 /* Pods-polo.release.xcconfig */,
 				5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */,
 				89C6BE57DB24E9ADA2F236DE /* Pods-polo-poloTests.release.xcconfig */,
+				D3C0AACBADED1145A6C4DF2D /* Pods-polo.proddebug.xcconfig */,
+				9B7A9A648EECA029024A1016 /* Pods-polo.betadebug.xcconfig */,
+				EDCB747124D4D5E23AC68F85 /* Pods-polo.devdebug.xcconfig */,
+				01ADCF23075EB4C25894D688 /* Pods-polo.prodrelease.xcconfig */,
+				2908BA1A9DF8FB525A4E57EF /* Pods-polo.betarelease.xcconfig */,
+				1C9746486FD59ECA88E77FF4 /* Pods-polo.devrelease.xcconfig */,
+				C0EC58EF309D62377C5D6926 /* Pods-polo-poloTests.proddebug.xcconfig */,
+				285067297FE013E512E294F1 /* Pods-polo-poloTests.betadebug.xcconfig */,
+				FB2513710CEE4903AC7C2032 /* Pods-polo-poloTests.devdebug.xcconfig */,
+				692647BAF0BD378FFAA5F85B /* Pods-polo-poloTests.prodrelease.xcconfig */,
+				73051291BC6C08E39ED86A73 /* Pods-polo-poloTests.betarelease.xcconfig */,
+				F50C8E7CD66012C66E6F4144 /* Pods-polo-poloTests.devrelease.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -634,7 +658,7 @@
 		};
 		72A472092B2FBBE8002E100B /* DevDebug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-polo.debug.xcconfig */;
+			baseConfigurationReference = EDCB747124D4D5E23AC68F85 /* Pods-polo.devdebug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				CLANG_ENABLE_MODULES = YES;
@@ -664,7 +688,7 @@
 		};
 		72A4720A2B2FBBE8002E100B /* DevDebug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */;
+			baseConfigurationReference = FB2513710CEE4903AC7C2032 /* Pods-polo-poloTests.devdebug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = T56H72Q4W5;
@@ -771,7 +795,7 @@
 		};
 		72A4720C2B2FBBFA002E100B /* BetaDebug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-polo.debug.xcconfig */;
+			baseConfigurationReference = 9B7A9A648EECA029024A1016 /* Pods-polo.betadebug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconBeta;
 				CLANG_ENABLE_MODULES = YES;
@@ -801,7 +825,7 @@
 		};
 		72A4720D2B2FBBFA002E100B /* BetaDebug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */;
+			baseConfigurationReference = 285067297FE013E512E294F1 /* Pods-polo-poloTests.betadebug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = T56H72Q4W5;
@@ -908,7 +932,7 @@
 		};
 		72A4720F2B2FBC00002E100B /* ProdDebug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-polo.debug.xcconfig */;
+			baseConfigurationReference = D3C0AACBADED1145A6C4DF2D /* Pods-polo.proddebug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconProd;
 				CLANG_ENABLE_MODULES = YES;
@@ -938,7 +962,7 @@
 		};
 		72A472102B2FBC00002E100B /* ProdDebug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */;
+			baseConfigurationReference = C0EC58EF309D62377C5D6926 /* Pods-polo-poloTests.proddebug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = T56H72Q4W5;
@@ -1041,7 +1065,7 @@
 		};
 		72A472122B2FBC06002E100B /* DevRelease */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-polo.release.xcconfig */;
+			baseConfigurationReference = 1C9746486FD59ECA88E77FF4 /* Pods-polo.devrelease.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				CLANG_ENABLE_MODULES = YES;
@@ -1069,7 +1093,7 @@
 		};
 		72A472132B2FBC06002E100B /* DevRelease */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-polo-poloTests.release.xcconfig */;
+			baseConfigurationReference = F50C8E7CD66012C66E6F4144 /* Pods-polo-poloTests.devrelease.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -1169,7 +1193,7 @@
 		};
 		72A472152B2FBC0D002E100B /* BetaRelease */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-polo.release.xcconfig */;
+			baseConfigurationReference = 2908BA1A9DF8FB525A4E57EF /* Pods-polo.betarelease.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconBeta;
 				CLANG_ENABLE_MODULES = YES;
@@ -1197,7 +1221,7 @@
 		};
 		72A472162B2FBC0D002E100B /* BetaRelease */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-polo-poloTests.release.xcconfig */;
+			baseConfigurationReference = 73051291BC6C08E39ED86A73 /* Pods-polo-poloTests.betarelease.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -1297,7 +1321,7 @@
 		};
 		72A472182B2FBC12002E100B /* ProdRelease */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-polo.release.xcconfig */;
+			baseConfigurationReference = 01ADCF23075EB4C25894D688 /* Pods-polo.prodrelease.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconProd;
 				CLANG_ENABLE_MODULES = YES;
@@ -1325,7 +1349,7 @@
 		};
 		72A472192B2FBC12002E100B /* ProdRelease */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-polo-poloTests.release.xcconfig */;
+			baseConfigurationReference = 692647BAF0BD378FFAA5F85B /* Pods-polo-poloTests.prodrelease.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
