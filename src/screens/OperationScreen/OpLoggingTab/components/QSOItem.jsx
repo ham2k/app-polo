@@ -13,7 +13,7 @@ const REF_LABELS = {
   iota: 'IOTA'
 }
 
-export default function QSOItem ({ qso, onPress, styles, selected }) {
+export default function QSOItem ({ qso, onPress, styles, selected, extendedWidth }) {
   const multiRow = qso.notes || (qso?.refs?.filter(ref => REF_LABELS[ref.type]).length > 0)
 
   return (
@@ -32,9 +32,23 @@ export default function QSOItem ({ qso, onPress, styles, selected }) {
           <View style={{ flex: 1, marginLeft: styles.oneSpace, minWidth: styles.oneSpace * 7 }}>
             <Text style={[styles.text.callsign, { fontWeight: 'bold' }]}>{qso.their?.call ?? '?'}</Text>
           </View>
-          <View style={{ flex: 0, marginLeft: styles.oneSpace, minWidth: styles.oneSpace * 3, alignContent: 'right' }}>
-            <Text style={[styles.text.numbers, { textAlign: 'right' }]}>{qso.our.sent}{'  '}{qso.their.sent}</Text>
-          </View>
+          {qso?.their?.exchange ? (
+            <>
+              {extendedWidth && (
+                <View style={{ flex: 0, marginLeft: styles.oneSpace, minWidth: styles.oneSpace * 3, alignContent: 'right' }}>
+                  <Text style={[styles.text.numbers, { textAlign: 'right' }]}>{qso?.our?.sent}{'  '}{qso?.their?.sent}</Text>
+                </View>
+              )}
+
+              <View style={{ flex: 0, marginLeft: styles.oneSpace, minWidth: styles.oneSpace * 3, alignContent: 'right' }}>
+                <Text style={[styles.text.callsign, { textAlign: 'right' }]}>{qso?.their?.exchange}</Text>
+              </View>
+            </>
+          ) : (
+            <View style={{ flex: 0, marginLeft: styles.oneSpace, minWidth: styles.oneSpace * 3, alignContent: 'right' }}>
+              <Text style={[styles.text.numbers, { textAlign: 'right' }]}>{qso?.our?.sent}{'  '}{qso?.their?.sent}</Text>
+            </View>
+          )}
         </View>
         {multiRow && (
           <View style={[styles.compactRow, { flexDirection: 'column', width: '100%', paddingVertical: 0, paddingBottom: styles.halfSpace, minHeight: undefined }]}>
