@@ -49,7 +49,7 @@ function prepareStyles (themeStyles, themeColor) {
 
 export default function LoggingPanel ({
   qso, setQSO,
-  operation, settings,
+  operation, qsos, settings,
   onAccept, onOperationChange,
   mainFieldRef,
   themeColor, style
@@ -334,7 +334,7 @@ export default function LoggingPanel ({
             {qso?.their?.call ? (
               <CallInfo qso={qso} styles={styles} />
             ) : (
-              <OpInfo operation={operation} styles={styles} />
+              <OpInfo operation={operation} styles={styles} qsos={qsos} />
             )}
           </View>
         </View>
@@ -468,7 +468,7 @@ const MainExchangePanel = ({
   activities.filter(activity => findRef(operation, activity.key) && activity.fieldsForMainExchangePanel).forEach(activity => {
     fields = fields.concat(
       activity.fieldsForMainExchangePanel(
-        { qso, operation, settings, styles, themeColor, handleSubmit, setQSO, spaceKeyHandler, refStack, focusedRef }
+        { qso, operation, settings, styles, themeColor, onSubmitEditing: handleSubmit, setQSO, spaceKeyHandler, refStack, focusedRef }
       )
     )
   })
