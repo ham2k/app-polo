@@ -13,9 +13,22 @@ export function OpInfo ({ operation, qsos, styles, style }) {
     if (operation.qsoCount === 0) {
       return 'No QSOs'
     } else {
-      return `${operation.qsoCount} ${operation.qsoCount === 1 ? 'QSO' : 'QSOs'}`
+      const parts = []
+      parts.push(`${operation.qsoCount} ${operation.qsoCount === 1 ? 'QSO' : 'QSOs'}`)
+
+      const last = qsos?.length - 1
+      if (last > 9) {
+        console.log('ms', qsos[last].startOnMillis - qsos[last - 9].startOnMillis)
+        const rate = (qsos[last].startOnMillis - qsos[last - 9].startOnMillis) / 10 / 1000 / 60 * 60
+        parts.push(`${rate.toFixed(0)} Q/h for last 10`)
+      }
+      if (last > 99) {
+        const rate = (qsos[last].startOnMillis - qsos[last - 99].startOnMillis) / 100 / 1000 / 60 * 60
+        parts.push(`${rate.toFixed(0)} Q/h for last 100`)
+      }
+      return parts.join(' • ')
     }
-  }, [operation])
+  }, [operation, qsos])
 
   const line2 = useMemo(() => {
     const parts = []

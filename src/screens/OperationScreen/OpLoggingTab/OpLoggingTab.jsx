@@ -138,7 +138,7 @@ export default function OpLoggingTab ({ navigation, route }) {
       <QSOList qsos={qsos} styles={styles} style={{ flex: 1 }} listRef={listRef} onSelect={handleSelectQSO} selected={currentQSO} />
       <LoggingPanel
         qso={currentQSO} setQSO={setCurrentQSO}
-        operation={operation} settings={settings}
+        operation={operation} qsos={qsos} settings={settings}
         onAccept={logQSO} onOperationChange={handleOperationChange}
         mainFieldRef={mainFieldRef} focusedFieldRef={focusedFieldRef}
         themeColor={currentQSO?._is_new ? 'tertiary' : 'secondary'} style={{ flex: 0 }}
