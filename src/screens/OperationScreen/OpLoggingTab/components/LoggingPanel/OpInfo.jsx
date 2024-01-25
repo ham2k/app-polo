@@ -18,7 +18,6 @@ export function OpInfo ({ operation, qsos, styles, style }) {
 
       const last = qsos?.length - 1
       if (last > 9) {
-        console.log('ms', qsos[last].startOnMillis - qsos[last - 9].startOnMillis)
         const rate = (qsos[last].startOnMillis - qsos[last - 9].startOnMillis) / 10 / 1000 / 60 * 60
         parts.push(`${rate.toFixed(0)} Q/h for last 10`)
       }
