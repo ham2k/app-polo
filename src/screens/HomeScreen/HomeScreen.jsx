@@ -10,6 +10,7 @@ import ScreenContainer from '../components/ScreenContainer'
 import { addNewOperation, loadOperationsList, selectOperationsList } from '../../store/operations'
 import OperationItem from './components/OperationItem'
 import { selectSettings } from '../../store/settings'
+import { loadAllDataFiles } from '../../store/dataFiles/actions/dataFileFS'
 
 export default function HomeScreen ({ navigation }) {
   const styles = useThemedStyles()
@@ -23,6 +24,12 @@ export default function HomeScreen ({ navigation }) {
 
   useEffect(() => {
     dispatch(loadOperationsList())
+  }, [dispatch])
+
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(loadAllDataFiles())
+    }, 100)
   }, [dispatch])
 
   const handleNewOperation = useCallback(() => {

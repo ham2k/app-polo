@@ -10,6 +10,7 @@ import qsosReducer from './qsos'
 import timeReducer from './time'
 import { reducer as apiQRZReducer, middleware as apiQRZMiddleware } from './apiQRZ'
 import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apiPOTA'
+import dataFilesReducer from './dataFiles'
 
 // Redux Toolkit uses Immer, which freezes state by default.
 // This is great, except that our log processing needs to mutate state when merging QSOs,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   operations: operationsReducer,
   qsos: qsosReducer,
   time: timeReducer,
+  dataFiles: dataFilesReducer,
   apiQRZ: apiQRZReducer,
   apiPOTA: apiPOTAReducer
 })
