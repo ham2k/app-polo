@@ -18,11 +18,11 @@ export function OpInfo ({ operation, qsos, styles, style }) {
 
       const last = qsos?.length - 1
       if (last > 9) {
-        const rate = (qsos[last].startOnMillis - qsos[last - 9].startOnMillis) / 10 / 1000 / 60 * 60
+        const rate = (10 / ((qsos[last].startOnMillis - qsos[last - 9].startOnMillis) / 1000 / 60)) * 60
         parts.push(`${rate.toFixed(0)} Q/h for last 10`)
       }
       if (last > 99) {
-        const rate = (qsos[last].startOnMillis - qsos[last - 99].startOnMillis) / 100 / 1000 / 60 * 60
+        const rate = (100 / ((qsos[last].startOnMillis - qsos[last - 9].startOnMillis) / 1000 / 60)) * 60
         parts.push(`${rate.toFixed(0)} Q/h for last 100`)
       }
       return parts.join(' • ')
