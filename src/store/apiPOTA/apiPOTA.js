@@ -5,6 +5,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
   POTA API
   https://api.pota.app/
 
+  https://docs.pota.app/api/authentication.html
+
   - A list of park references in JSON format is available programmatically at: https://api.pota.app/location/parks/{location-code}.
   - A complete CSV file is available (generated nightly) at https://pota.app/all_parks_ext.csv.
 
@@ -13,15 +15,15 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
   * https://api.pota.app/location/parks/US-NY
   * https://api.pota.app/spot/
 
-  https://api.pota.app/program/parks/YV
+  * https://api.pota.app/program/parks/YV
 
-  https://api.pota.app/user/stats/park
-  https://api.pota.app/park/YV-0001
-  https://api.pota.app/park/stats/YV-0001
-  https://api.pota.app/park/leaderboard/YV-0001?count=5
-  https://api.pota.app/park/activations/YV-0001?count=all
+  * https://api.pota.app/user/stats/park
+  * https://api.pota.app/park/YV-0001
+  * https://api.pota.app/park/stats/YV-0001
+  * https://api.pota.app/park/leaderboard/YV-0001?count=5
+  * https://api.pota.app/park/activations/YV-0001?count=all
 
-  https://api.pota.app/profile/YV5RAB
+  * https://api.pota.app/profile/YV5RAB
 
  */
 

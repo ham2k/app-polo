@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import POTAInput from '../../components/POTAInput'
 import { useDispatch } from 'react-redux'
 import { setOperationData } from '../../../store/operations'
@@ -8,6 +8,9 @@ import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 import { apiPOTA, useLookupParkQuery } from '../../../store/apiPOTA'
 import { ScrollView } from 'react-native'
 import { filterRefs, findRef, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
+import { POTAAllParks, preparePOTAAllParksData } from '../../../store/apiPOTA/potaData'
+
+preparePOTAAllParksData()
 
 const ACTIVITY = {
   key: 'pota',
@@ -65,13 +68,21 @@ function ThisActivityOptionalExchangePanel (props) {
     setQSO({ ...qso, refs: replaceRefs(qso?.refs, ACTIVITY.huntingType, refs) })
   }, [qso, setQSO])
 
+  const defaultPrefix = useMemo(() => {
+    if (qso?.their?.adifCode) {
+      return POTAAllParks.prefixByADIFCode[qso.their.adifCode] ?? 'K'
+    } else {
+      return 'K'
+    }
+  }, [qso?.their?.adifCode])
+
   return (
     <POTAInput
       {...props}
       style={{ minWidth: 16 * styles.oneSpace }}
       value={localValue}
       label="Their POTA"
-      placeholder="K-..."
+      defaultPrefix={defaultPrefix}
       onChangeText={localHandleChangeText}
     />
   )
