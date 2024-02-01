@@ -1,6 +1,6 @@
 import RNFS from 'react-native-fs'
 import { actions } from '../operationsSlice'
-import { actions as qsosActions } from '../../qsos'
+import { actions as qsosActions, saveQSOs } from '../../qsos'
 
 import UUID from 'react-native-uuid'
 import { qsonToADIF } from '../../../tools/qsonToADIF'
@@ -74,6 +74,8 @@ export const saveOperation = (info) => async (dispatch, getState) => {
 
   const infoJSON = JSON.stringify(info)
 
+  await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/ops/${uuid}`)
+
   await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-info.json`, infoJSON)
 
   if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)) {
@@ -129,6 +131,9 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
   } else if (type === 'cabrillo') {
     name = `${baseName} for ${activity.shortName}.log`
     data = qsonToCabrillo({ operation, qsos, activity, settings })
+  } else if (type === 'qson') {
+    name = `${uuid}.qson`
+    data = JSON.stringify({ operation, qsos, settings })
   }
 
   if (name && data) {
@@ -139,6 +144,39 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
   }
 }
 
-export const deleteADIF = (path) => async (dispatch) => {
+export const deleteExport = (path) => async (dispatch) => {
+  console.log('deleteExport', path)
   await RNFS.unlink(path)
+}
+
+const QSON_FILENAME_REGEX = /file:.+\/([\w-]+)\.qson/i
+
+export const importQSON = (path) => async (dispatch) => {
+  console.log('path', RNFS.DocumentDirectoryPath)
+  const matches = path.match(QSON_FILENAME_REGEX)
+  if (matches[1]) {
+    // const originalUUID = matches[1]
+    const uuid = UUID.v1()
+    dispatch(actions.setOperation({ uuid, status: 'loading' }))
+    dispatch(qsosActions.setQSOsStatus({ uuid, status: 'loading' }))
+
+    try {
+      const json = await RNFS.readFile(path.replace('file://', ''))
+      const data = JSON.parse(json)
+      data.operation.uuid = uuid
+
+      dispatch(actions.setOperation(data.operation))
+      dispatch(qsosActions.setQSOs({ uuid: data.operation.uuid, qsos: data.qsos }))
+
+      dispatch(saveOperation(data.operation))
+      dispatch(saveQSOs(data.operation.uuid))
+
+      dispatch(qsosActions.setQSOsStatus({ uuid: data.operation.uuid, status: 'ready' }))
+      dispatch(actions.setOperation({ uuid, status: 'ready' }))
+    } catch (error) {
+      console.error('Error importing QSON', error)
+    }
+  } else {
+    console.error('importQSON invalid path', path)
+  }
 }

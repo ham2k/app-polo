@@ -8,7 +8,7 @@ import Share from 'react-native-share'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteADIF, generateExport, selectOperation } from '../../../store/operations'
+import { deleteExport, generateExport, selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
@@ -60,7 +60,7 @@ export default function OpSettingsTab ({ navigation, route }) {
         }).catch((e) => {
           console.info('Sharing Error', e)
         }).finally(() => {
-          dispatch(deleteADIF(path))
+          dispatch(deleteExport(path))
         })
       }
     })
@@ -170,6 +170,11 @@ export default function OpSettingsTab ({ navigation, route }) {
             />
           ))
         }
+        <List.Item
+          title="Export data files"
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" />}
+          onPress={() => handleExport('qson')}
+        />
       </List.Section>
       <List.Section>
         <List.Subheader style={{ color: styles.theme.colors.error }}>The Danger Zone</List.Subheader>
