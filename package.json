@@ -1,6 +1,6 @@
 {
   "name": "ham2k-polo",
-  "version": "0.3.1",
+  "version": "0.3.3",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -42,6 +42,7 @@
     "fast-xml-parser": "^4.3.2",
     "react": "18.2.0",
     "react-native": "0.72.6",
+    "react-native-document-picker": "^9.1.0",
     "react-native-drawer-layout": "^3.2.2",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.14.0",

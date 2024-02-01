@@ -33,7 +33,12 @@ open `xcrun simctl get_app_container booted com.ham2k.polo data`/Documents
 ```
 open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep FileProvider.LocalStorage|sed "s/group.com.apple.FileProvider.LocalStorage//g"`/File\ Provider\ Storage
 ```
+# Troubleshooting
 
+"Unable to boot simulator" error for iOS Simulator
+
+* Go to [About this Mac > Storage > Manage > Developer]
+* Delete XCode caches
 
 https://github.com/shinydevelopment/SimulatorStatusMagic
 

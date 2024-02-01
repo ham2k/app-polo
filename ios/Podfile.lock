@@ -375,6 +375,8 @@ PODS:
   - React-jsinspector (0.72.6)
   - React-logger (0.72.6):
     - glog
+  - react-native-document-picker (9.1.0):
+    - React-Core
   - react-native-flipper (0.212.0):
     - React-Core
   - react-native-pager-view (6.2.3):
@@ -564,6 +566,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -655,6 +658,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-document-picker:
+    :path: "../node_modules/react-native-document-picker"
   react-native-flipper:
     :path: "../node_modules/react-native-flipper"
   react-native-pager-view:
@@ -748,6 +753,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 3bf18ff7cb03cd8dfdce08fbbc0d15058c1d71ae
   React-jsinspector: 194e32c6aab382d88713ad3dd0025c5f5c4ee072
   React-logger: cebf22b6cf43434e471dc561e5911b40ac01d289
+  react-native-document-picker: b4f4a23b73f864ce17965b284c0757648993805b
   react-native-flipper: 9c1957af24b76493ba74f46d000a5c1d485e7731
   react-native-pager-view: e26d35e382d86950c936f8917e3beb9188115ccc
   react-native-safe-area-context: cd1169d797a2ef722a00bfc5af10748d5b6c94f9

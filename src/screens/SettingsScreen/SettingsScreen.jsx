@@ -1,16 +1,19 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { List, Switch } from 'react-native-paper'
+import { ScrollView } from 'react-native'
+import DocumentPicker from 'react-native-document-picker'
 
 import packageJson from '../../../package.json'
 
 import { selectSettings, setSettings } from '../../store/settings'
-import { useDispatch, useSelector } from 'react-redux'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
-import { List, Switch } from 'react-native-paper'
 import { OperatorCallsignDialog } from './components/OperatorCallsignDialog'
-import { ScrollView } from 'react-native'
+
 import { AccountsQRZDialog } from './components/AccountsQRZDialog'
+import { importQSON } from '../../store/operations'
 
 export default function SettingsScreen ({ navigation }) {
   const styles = useThemedStyles()
@@ -19,6 +22,13 @@ export default function SettingsScreen ({ navigation }) {
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
+
+  const handleImportFiles = useCallback(() => {
+    DocumentPicker.pickSingle().then((file) => {
+      console.info('File', file)
+      dispatch(importQSON(file.uri))
+    })
+  }, [dispatch])
 
   return (
     <ScreenContainer>
@@ -58,6 +68,24 @@ export default function SettingsScreen ({ navigation }) {
             description={settings?.accounts?.qrz ? `Login: ${settings.accounts.qrz.login}` : 'No account'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />}
             onPress={() => setCurrentDialog('accountsQRZ')}
+          />
+          {currentDialog === 'accountsQRZ' && (
+            <AccountsQRZDialog
+              settings={settings}
+              styles={styles}
+              visible={true}
+              onDialogDone={() => setCurrentDialog('')}
+            />
+          )}
+        </List.Section>
+
+        <List.Section>
+          <List.Subheader>Tools</List.Subheader>
+
+          <List.Item
+            title="Import data files"
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-download" />}
+            onPress={handleImportFiles}
           />
           {currentDialog === 'accountsQRZ' && (
             <AccountsQRZDialog
