@@ -27,8 +27,10 @@ export default function QSOList ({ qsos, selected, onSelect, styles, style, list
         ref={listRef}
         data={qsos}
         renderItem={renderRow}
+        keyExtractor={(qso) => qso.key}
         ListEmptyComponent={<Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>No QSOs yet!</Text>}
         keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
+        initialNumToRender={20}
       />
     </View>
   )
