@@ -1,37 +1,132 @@
-import React, { useCallback, useMemo } from 'react'
-import { FlatList, View, useWindowDimensions } from 'react-native'
+import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import { FlatList, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
-import QSOItem from './QSOItem'
+import QSOItem, { guessItemHeight } from './QSOItem'
+import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 
-export default function QSOList ({ qsos, selected, onSelect, styles, style, listRef }) {
+function prepareStyles (themeStyles, themeColor) {
+  return {
+    ...themeStyles,
+    fields: {
+      number: {
+        ...themeStyles.text.numbers,
+        flex: 0,
+        marginLeft: 0,
+        minWidth: themeStyles.oneSpace * 2,
+        textAlign: 'right'
+      },
+      time: {
+        ...themeStyles.text.numbers,
+        ...themeStyles.text.lighter,
+        flex: 0,
+        minWidth: themeStyles.oneSpace * 6,
+        marginLeft: themeStyles.oneSpace,
+        textAlign: 'right'
+      },
+      freq: {
+        ...themeStyles.text.numbers,
+        ...themeStyles.text.lighter,
+        flex: 0,
+        minWidth: themeStyles.oneSpace * 4,
+        marginLeft: themeStyles.oneSpace,
+        textAlign: 'right'
+      },
+      call: {
+        ...themeStyles.text.callsign,
+        fontWeight: 'bold',
+        flex: 1,
+        marginLeft: themeStyles.oneSpace,
+        minWidth: themeStyles.oneSpace * 7,
+        textAlign: 'left'
+      },
+      signal: {
+        ...themeStyles.text.numbers,
+        ...themeStyles.text.lighter,
+        flex: 0,
+        minWidth: themeStyles.oneSpace * 3,
+        marginLeft: themeStyles.oneSpace,
+        textAlign: 'right'
+      },
+      exchange: {
+        ...themeStyles.text.callsign,
+        flex: 0,
+        minWidth: themeStyles.oneSpace * 3,
+        marginLeft: themeStyles.oneSpace,
+        textAlign: 'right'
+      },
+      icon: {
+        flex: 0,
+        width: themeStyles.oneSpace * 2
+      }
+    }
+  }
+}
+
+export default function QSOList ({ style, qsos, selectedKey, setSelectedKey, lastKey }) {
+  console.log('QSOList render')
+
+  const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles))
+
   const { width } = useWindowDimensions()
   const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
+  // const { qsos, selectedKey, setSelectedKey, lastKey } = useContext(OperationContext)
 
-  const handlePress = useCallback(({ item, index }) => {
-    if (item.key === selected.key) {
-      onSelect && onSelect(undefined)
+  const listRef = useRef()
+
+  // When the lastQSO changes, scroll to it
+  useEffect(() => {
+    setTimeout(() => {
+      console.log('QSOList lastKey effect', lastKey)
+      if (lastKey) {
+        const i = qsos.findIndex((qso) => qso.key === lastKey)
+        if (i > -1) {
+          listRef.current?.scrollToIndex({ index: i, animated: true })
+        } else {
+          listRef.current?.scrollToEnd()
+        }
+      } else {
+        listRef.current?.scrollToEnd()
+      }
+    }, 50)
+  }, [listRef, qsos, lastKey])
+
+  const handlePress = useCallback(({ qso }) => {
+    if (qso.key === selectedKey) {
+      console.log('QSOList selected none')
+      setSelectedKey && setSelectedKey(undefined)
     } else {
-      onSelect && onSelect(item)
+      console.log('QSOList selected', qso.key)
+      setSelectedKey && setSelectedKey(qso.key)
     }
-  }, [selected, onSelect])
+  }, [selectedKey, setSelectedKey])
 
   const renderRow = useCallback(({ item, index }) => {
+    const qso = item
     return (
-      <QSOItem qso={item} selected={item?.key === selected?.key} onPress={() => handlePress({ item, index })} styles={styles} extendedWidth={extendedWidth} />
+      <QSOItem qso={qso} selected={qso.key === selectedKey} onPress={handlePress} styles={styles} extendedWidth={extendedWidth} />
     )
-  }, [styles, handlePress, selected, extendedWidth])
+  }, [styles, handlePress, extendedWidth, selectedKey])
+
+  const calculateLayout = useCallback((data, index) => {
+    const height = guessItemHeight(qsos[index], styles)
+    return { length: height, offset: height * index, index }
+  }, [styles, qsos])
 
   return (
-    <View style={[styles.listContainer, style, { width: '100%', padding: 0, margin: 0 }]}>
-      <FlatList
-        ref={listRef}
-        data={qsos}
-        renderItem={renderRow}
-        keyExtractor={(qso) => qso.key}
-        ListEmptyComponent={<Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>No QSOs yet!</Text>}
-        keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
-        initialNumToRender={20}
-      />
-    </View>
+    <FlatList
+      style={style}
+      ref={listRef}
+      data={qsos}
+      renderItem={renderRow}
+      getItemLayout={calculateLayout}
+      ListEmptyComponent={<Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>No QSOs yet!</Text>}
+      keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
+      initialNumToRender={20}
+      windowSize={2}
+      maxToRenderPerBatch={30}
+      updateCellsBatchingPeriod={100}
+      removeClippedSubviews={true}
+      // initialScrollIndex={100}
+    />
   )
 }

@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Keyboard, ScrollView, View, findNodeHandle, useWindowDimensions } from 'react-native'
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { Keyboard, ScrollView, View, findNodeHandle, unstable_batchedUpdates, useWindowDimensions } from 'react-native'
 import { IconButton } from 'react-native-paper'
 
 import LoggerChip from '../../components/LoggerChip'
@@ -21,6 +21,12 @@ import { OpInfo } from './LoggingPanel/OpInfo'
 import { TimeInput } from '../../../components/TimeInput'
 import { DateInput } from '../../../components/DateInput'
 import { findRef } from '../../../../tools/refTools'
+import { OperationContext } from '../OpLoggingTab'
+import cloneDeep from 'clone-deep'
+import { useDispatch } from 'react-redux'
+import { setOperationData } from '../../../../store/operations'
+import { qsoKey } from '@ham2k/lib-qson-tools'
+import { addQSO } from '../../../../store/qsos'
 
 function describeRadio (qso, operation) {
   const parts = []
@@ -43,26 +49,85 @@ function prepareStyles (themeStyles, themeColor) {
       borderTopColor: themeStyles.theme.colors[`${themeColor}Light`],
       borderTopWidth: 1,
       backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
+    },
+    input: {
+      backgroundColor: themeStyles.theme.colors.background,
+      color: themeStyles.theme.colors.onBackground,
+      paddingHorizontal: themeStyles.oneSpace
     }
   }
 }
 
-export default function LoggingPanel ({
-  qso, setQSO,
-  operation, qsos, settings,
-  onAccept, onOperationChange,
-  mainFieldRef,
-  themeColor, style
-}) {
-  themeColor = themeColor || 'tertiary'
-  const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
+function prepareNewQSO (operation, settings) {
+  return {
+    band: operation.band,
+    mode: operation.mode,
+    _is_new: true,
+    key: 'new-qso'
+  }
+}
+
+function prepareExistingQSO (qso) {
+  const clone = cloneDeep(qso || {})
+  clone._originalKey = qso?.key
+  clone._is_new = false
+  return clone
+}
+
+export default function LoggingPanel ({ style }) {
+  const { operation, qsos, settings, selectedKey, setSelectedKey, setLastKey } = useContext(OperationContext)
+  const [qso, setQSO] = useState()
+
+  const themeColor = useMemo(() => qso?._is_new ? 'tertiary' : 'secondary', [qso])
+  const upcasedThemeColor = useMemo(() => themeColor.charAt(0).toUpperCase() + themeColor.slice(1), [themeColor])
+
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
+
+  const dispatch = useDispatch()
+
+  const mainFieldRef = useRef()
 
   const [visibleFields, setVisibleFields] = useState({})
 
   const [pausedTime, setPausedTime] = useState()
 
   const [isValid, setIsValid] = useState(false)
+
+  const [qsoQueue, setQSOQueue] = useState([])
+  console.log('LoggingPanel render')
+  // When there is no current QSO, pop one from the queue or create a new one
+  // If the currently selected QSO changes, push the current one to the queue and load the new one
+  useEffect(() => {
+    console.log('LoggingPanel useEffect', selectedKey)
+    if (!selectedKey) {
+      let nextQSO
+      if (qsoQueue.length > 0) {
+        console.log('-- pop queue')
+        nextQSO = qsoQueue.pop()
+        setQSOQueue(qsoQueue)
+      } else {
+        console.log('-- new qso')
+        nextQSO = prepareNewQSO(operation, settings)
+      }
+      setQSO(nextQSO)
+      if (nextQSO.key !== selectedKey) {
+        console.log('-- set selected', nextQSO.key)
+        setSelectedKey(nextQSO.key)
+      }
+      if (mainFieldRef?.current) {
+        mainFieldRef.current.focus()
+      }
+    } else if (qso && qso?.key !== selectedKey && selectedKey !== 'new-qso') {
+      let nextQSO = qsos.find(q => q.key === selectedKey)
+      if (qso?._is_new) setQSOQueue([...qsoQueue, qso])
+      console.log('-- prepare', nextQSO?.key)
+      nextQSO = prepareExistingQSO(nextQSO)
+      setQSO(nextQSO)
+      if (mainFieldRef?.current) {
+        mainFieldRef.current.focus()
+      }
+    }
+  }, [qsoQueue, setQSOQueue, selectedKey, setSelectedKey, operation, settings, qso, qsos])
 
   // Initialize the form with the QSO data
   useEffect(() => {
@@ -111,17 +176,17 @@ export default function LoggingPanel ({
       setQSO({ ...qso, notes: value })
     } else if (fieldId === 'freq') {
       setQSO({ ...qso, freq: parseFreqInMHz(value) })
-      onOperationChange && onOperationChange({ freq: parseFreqInMHz(value) })
+      dispatch(setOperationData({ uuid: operation.uuid, freq: parseFreqInMHz(value) }))
     } else if (fieldId === 'band') {
       setQSO({ ...qso, band: value })
-      onOperationChange && onOperationChange({ band: value })
+      dispatch(setOperationData({ uuid: operation.uuid, band: value }))
     } else if (fieldId === 'mode') {
       setQSO({ ...qso, mode: value })
-      onOperationChange && onOperationChange({ mode: value })
+      dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
       setQSO({ ...qso, startOnMillis: value })
     }
-  }, [qso, setQSO, onOperationChange, pausedTime])
+  }, [qso, setQSO, pausedTime, dispatch, operation?.uuid])
 
   // Finally submit the QSO
   const handleSubmit = useCallback(() => {
@@ -133,11 +198,40 @@ export default function LoggingPanel ({
     // Run inside a setTimeout to allow the state to update
     setTimeout(() => {
       if (isValid) {
-        setVisibleFields({})
-        onAccept(qso)
+        unstable_batchedUpdates(() => {
+          setVisibleFields({})
+
+          if (qso._is_new) {
+            delete qso._is_new
+          }
+
+          qso.mode = qso.mode || operation.mode
+          qso.freq = qso.freq || operation.freq
+
+          if (!qso.startOnMillis) qso.startOnMillis = new Date()
+          qso.startOn = new Date(qso.startOnMillis).toISOString()
+          if (qso.endOnMillis) qso.endOn = new Date(qso.endOnMillis).toISOString()
+
+          qso.our = qso.our || {}
+          qso.our.call = qso.our.call || operation.stationCall || settings.operatorCall
+          qso.our.sent = qso.our.sent || (operation.mode === 'CW' ? '599' : '59')
+
+          qso.their = qso.their || {}
+          qso.their.sent = qso.their.sent || (operation.mode === 'CW' ? '599' : '59')
+
+          qso.key = qsoKey(qso)
+
+          dispatch(addQSO({ uuid: operation.uuid, qso }))
+          console.log('handleSubmit set selected')
+          setSelectedKey(undefined)
+          console.log('handleSubmit set qso')
+          setQSO(undefined)
+          console.log('handleSubmit set last key')
+          setLastKey(qso.key)
+        })
       }
     }, 10)
-  }, [qso, onAccept, isValid])
+  }, [qso, isValid, dispatch, operation, settings, setSelectedKey, setLastKey])
 
   const focusedRef = useRef()
 

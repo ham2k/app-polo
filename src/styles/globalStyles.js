@@ -102,11 +102,13 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       borderBottomColor: theme.colors.outline
     },
     compactRow: {
-      minHeight: oneSpace * 4,
+      height: oneSpace * 4,
       paddingHorizontal: oneSpace,
       paddingVertical: oneSpace,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.outline
+      borderBottomColor: theme.colors.outline,
+      flexDirection: 'row',
+      width: '100%'
     },
     rowText: {
       fontSize: normalFontSize
