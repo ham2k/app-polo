@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { FlatList, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem, { guessItemHeight } from './QSOItem'
@@ -63,8 +63,6 @@ function prepareStyles (themeStyles, themeColor) {
 }
 
 export default function QSOList ({ style, qsos, selectedKey, setSelectedKey, lastKey }) {
-  console.log('QSOList render')
-
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles))
 
   const { width } = useWindowDimensions()
@@ -76,7 +74,6 @@ export default function QSOList ({ style, qsos, selectedKey, setSelectedKey, las
   // When the lastQSO changes, scroll to it
   useEffect(() => {
     setTimeout(() => {
-      console.log('QSOList lastKey effect', lastKey)
       if (lastKey) {
         const i = qsos.findIndex((qso) => qso.key === lastKey)
         if (i > -1) {
@@ -92,10 +89,8 @@ export default function QSOList ({ style, qsos, selectedKey, setSelectedKey, las
 
   const handlePress = useCallback(({ qso }) => {
     if (qso.key === selectedKey) {
-      console.log('QSOList selected none')
       setSelectedKey && setSelectedKey(undefined)
     } else {
-      console.log('QSOList selected', qso.key)
       setSelectedKey && setSelectedKey(qso.key)
     }
   }, [selectedKey, setSelectedKey])

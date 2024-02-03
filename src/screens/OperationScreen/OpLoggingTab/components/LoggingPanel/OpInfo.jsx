@@ -42,8 +42,8 @@ export function OpInfo ({ operation, qsos, styles, style }) {
 
   return (
     <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start' }]}>
-      <Text>{line1}</Text>
-      <Text>{line2}</Text>
+      <Text style={{ height: styles.oneSpace * 2.2 }}>{line1}</Text>
+      <Text style={{ height: styles.oneSpace * 2.2 }}>{line2}</Text>
     </View>
   )
 }
