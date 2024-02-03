@@ -1,4 +1,4 @@
-import RNFS from 'react-native-fs'
+import RNFetchBlob from 'react-native-blob-util'
 import { actions } from '../qsosSlice'
 import { actions as operationActions, saveOperation } from '../../operations'
 
@@ -14,7 +14,7 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
 
   let qsos = []
   try {
-    const qsosJSON = await RNFS.readFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`)
+    const qsosJSON = await RNFetchBlob.fs.readFile(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/qsos.json`)
     qsos = JSON.parse(qsosJSON)
   } catch (error) {
   }
@@ -54,20 +54,20 @@ export const saveQSOs = (uuid) => async (dispatch, getState) => {
   const qsos = getState().qsos.qsos[uuid]
   const qsosJSON = JSON.stringify(qsos)
 
-  await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-qsos.json`, qsosJSON)
+  await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/new-qsos.json`, qsosJSON)
 
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)) {
-    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)
+  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/old-qsos.json`)) {
+    await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/old-qsos.json`)
   }
 
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`)) {
-    await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`, `${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)
+  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/qsos.json`)) {
+    await RNFetchBlob.fs.mv(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/qsos.json`, `${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/old-qsos.json`)
   }
 
-  await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-qsos.json`, `${RNFS.DocumentDirectoryPath}/ops/${uuid}/qsos.json`)
+  await RNFetchBlob.fs.mv(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/new-qsos.json`, `${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/qsos.json`)
 
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)) {
-    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-qsos.json`)
+  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/old-qsos.json`)) {
+    await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/old-qsos.json`)
   }
 
   const operation = getState().operations.info[uuid]
