@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { View } from 'react-native'
 import { useSelector } from 'react-redux'
@@ -9,8 +9,6 @@ import LoggingPanel from './components/LoggingPanel'
 import QSOList from './components/QSOList'
 import { selectQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
-
-export const OperationContext = createContext()
 
 function prepareStyles (themeStyles, themeColor) {
   return {
@@ -41,26 +39,23 @@ export default function OpLoggingTab ({ navigation, route }) {
   const [selectedKey, setSelectedKey] = useState(undefined)
   const [lastKey, setLastKey] = useState(undefined)
 
-  const operationContext = {
-    operation,
-    qsos,
-    settings,
-    selectedKey,
-    setSelectedKey,
-    lastKey,
-    setLastKey
-  }
-
   // Set navigation title
   useEffect(() => {
     navigation.setOptions({ title: `${qsos.length} ${qsos.length !== 1 ? 'QSOs' : 'QSO'}`, iconName: 'radio' })
   }, [navigation, qsos])
+
   return (
-    <OperationContext.Provider value={operationContext}>
-      <View style={flexOne}>
-        <QSOList style={flexOne} styles={styles} qsos={qsos} selectedKey={selectedKey} setSelectedKey={setSelectedKey} lastKey={lastKey} />
-        <LoggingPanel style={flexZero} />
-      </View>
-    </OperationContext.Provider>
+    <View style={flexOne}>
+      <QSOList style={flexOne} styles={styles} qsos={qsos} selectedKey={selectedKey} setSelectedKey={setSelectedKey} lastKey={lastKey} />
+      <LoggingPanel style={flexZero}
+        operation={operation}
+        qsos={qsos}
+        settings={settings}
+        selectedKey={selectedKey}
+        setSelectedKey={setSelectedKey}
+        lastKey={lastKey}
+        setLastKey={setLastKey}
+      />
+    </View>
   )
 }

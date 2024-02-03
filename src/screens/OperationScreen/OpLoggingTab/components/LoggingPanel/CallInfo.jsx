@@ -81,11 +81,11 @@ export function CallInfo ({ qso, styles, style }) {
 
   return (
     <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start' }]}>
-      <Text>{line1}</Text>
+      <Text style={{ height: styles.oneSpace * 2.2 }}>{line1}</Text>
       {qrz.loading ? (
         <ActivityIndicator size={styles.oneSpace} animating={true} style={{ alignSelf: 'flex-start' }}/>
       ) : (
-        <Text style={{ fontWeight: 'bold' }}>{line2}</Text>
+        <Text style={{ height: styles.oneSpace * 2.2, fontWeight: 'bold' }}>{line2}</Text>
 
       )}
     </View>
