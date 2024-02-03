@@ -1,6 +1,6 @@
-import RNFS from 'react-native-fs'
+import RNFetchBlob from 'react-native-blob-util'
 import { getDataFileDefinition, getDataFileDefinitions } from '../dataFilesRegistry'
-import { actions, selectAllDataFileInfos, selectDataFileInfo } from '../dataFilesSlice'
+import { actions, selectDataFileInfo } from '../dataFilesSlice'
 
 export const fetchDataFile = (key) => async (dispatch) => {
   console.log('fetchDataFile', key)
@@ -14,23 +14,23 @@ export const fetchDataFile = (key) => async (dispatch) => {
   console.log('-- fetch done')
 
   console.log('-- saving')
-  // if (!await RNFS.exists(`${RNFS.DocumentDirectoryPath}/data`)) {
+  // if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data`)) {
   console.log('-- mkdir')
-  await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/data/`)
+  if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data`)) await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/data/`)
   console.log('-- mkdir done')
   // }
 
-  await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/data/${definition.key}.new.json`, JSON.stringify(data))
+  await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.new.json`, JSON.stringify(data))
   console.log('-- write done')
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/data/${definition.key}.old.json`)) {
-    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/data/${definition.key}.old.json`)
+  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.old.json`)) {
+    await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.old.json`)
   }
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/data/${definition.key}.json`)) {
-    await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/data/${definition.key}.json`, `${RNFS.DocumentDirectoryPath}/data/${definition.key}.old.json`)
+  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)) {
+    await RNFetchBlob.fs.mv(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`, `${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.old.json`)
   }
-  await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/data/${definition.key}.new.json`, `${RNFS.DocumentDirectoryPath}/data/${definition.key}.json`)
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/data/${definition.key}.old.json`)) {
-    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/data/${definition.key}.old.json`)
+  await RNFetchBlob.fs.mv(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.new.json`, `${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
+  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.old.json`)) {
+    await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.old.json`)
   }
   console.log('Done Saving Data File')
 
@@ -46,7 +46,7 @@ export const readDataFile = (key) => async (dispatch) => {
   if (!definition) throw new Error(`No data file definition found for ${key}`)
   dispatch(actions.setDataFileInfo(key, { status: 'loading' }))
 
-  const body = await RNFS.readFile(`${RNFS.DocumentDirectoryPath}/data/${definition.key}.json`)
+  const body = await RNFetchBlob.fs.readFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
   const data = JSON.parse(body)
 
   dispatch(actions.setDataFileInfo(key, { ...data, status: 'loaded', date: Date.parse(data.date) }))
@@ -60,7 +60,7 @@ export const loadDataFile = (key) => async (dispatch, getState) => {
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
-  const exists = false // await RNFS.exists(`${RNFS.DocumentDirectoryPath}/data/${definition.key}.json`)
+  const exists = false // await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
   if (exists) {
     await dispatch(readDataFile(key))
     const date = selectDataFileInfo(key)(getState())?.date

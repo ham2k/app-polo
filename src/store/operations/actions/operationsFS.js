@@ -1,4 +1,4 @@
-import RNFS from 'react-native-fs'
+import RNFetchBlob from 'react-native-blob-util'
 import { actions } from '../operationsSlice'
 import { actions as qsosActions, saveQSOs } from '../../qsos'
 
@@ -10,20 +10,21 @@ import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 
 export const loadOperationsList = () => async (dispatch) => {
   try {
-    await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/ops`)
+    if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops`)) { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/ops`) }
 
-    const readDirResult = await RNFS.readDir(`${RNFS.DocumentDirectoryPath}/ops`)
-
+    const dir = await RNFetchBlob.fs.ls(`${RNFetchBlob.fs.dirs.DocumentDir}/ops`)
     const operations = {}
-    for (const dir of readDirResult) {
-      if (dir.isDirectory()) {
+    for (const entry of dir) {
+      const path = `${RNFetchBlob.fs.dirs.DocumentDir}/ops/${entry}`
+      if (RNFetchBlob.fs.isDir(path)) {
         try {
-          const infoJSON = await RNFS.readFile(`${dir.path}/info.json`)
+          const infoJSON = await RNFetchBlob.fs.readFile(`${path}/info.json`)
           const info = JSON.parse(infoJSON)
-          info.uuid = dir.name
+          info.uuid = entry
           operations[info.uuid] = info
         } catch (error) {
-          console.info('loadOperationsList skipping', dir.name)
+          console.info('Skipping Operation Folder', entry)
+          console.info(error)
           // Skip this directory
         }
       }
@@ -31,7 +32,7 @@ export const loadOperationsList = () => async (dispatch) => {
     dispatch(actions.setOperations(operations))
     dispatch(actions.setOperationsStatus('ready'))
   } catch (error) {
-    console.error('loadOperationsList readDir error', error)
+    console.error('Error reading operation list', error)
     dispatch(actions.setOperations({}))
     dispatch(actions.setOperationsStatus('ready'))
   }
@@ -43,11 +44,14 @@ export const addNewOperation = (operation) => async (dispatch) => {
     operation.qsoCount = 0
     operation.createdOnMillis = Date.now()
 
-    await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/ops/${operation.uuid}`)
-    await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${operation.uuid}/info.json`, JSON.stringify(operation))
+    if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops`)) await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/ops`)
+    if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${operation.uuid}`)) await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${operation.uuid}`)
+
+    await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${operation.uuid}/info.json`, JSON.stringify(operation))
+
     dispatch(loadOperationsList())
   } catch (error) {
-    console.error('addNewOperation error', error)
+    console.error('Error adding new operation', error)
   }
 }
 
@@ -56,7 +60,7 @@ export const loadOperation = (uuid) => async (dispatch) => {
 
   let info = { uuid }
   try {
-    const infoJSON = await RNFS.readFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/info.json`)
+    const infoJSON = await RNFetchBlob.fs.readFile(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/info.json`)
     info = JSON.parse(infoJSON)
 
     // Temporary (as of 2024-01-01) "data migration". Remove in a month or two
@@ -74,32 +78,34 @@ export const saveOperation = (info) => async (dispatch, getState) => {
 
   const infoJSON = JSON.stringify(info)
 
-  await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/ops/${uuid}`)
+  if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops`)) await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/ops`)
+  if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}`)) await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}`)
 
-  await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-info.json`, infoJSON)
+  await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/new-info.json`, infoJSON)
 
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)) {
-    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)
+  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/old-info.json`)) {
+    await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/old-info.json`)
   }
 
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/info.json`)) {
-    await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/info.json`, `${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)
+  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/info.json`)) {
+    await RNFetchBlob.fs.mv(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/info.json`, `${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/old-info.json`)
   }
 
-  await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/new-info.json`, `${RNFS.DocumentDirectoryPath}/ops/${uuid}/info.json`)
+  await RNFetchBlob.fs.mv(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/new-info.json`, `${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/info.json`)
 
-  if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)) {
-    await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/old-info.json`)
+  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/old-info.json`)) {
+    await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/old-info.json`)
   }
 }
 
 export const deleteOperation = (uuid) => async (dispatch) => {
-  await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/deleted-ops/${uuid}`)
+  if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/deleted-ops`)) { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/deleted-ops`) }
+  if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/deleted-ops/${uuid}`)) { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/deleted-ops/${uuid}`) }
 
   const fileList = ['info.json', 'new-info.json', 'old-info.json', 'qsos.json', 'new-qsos.json', 'old-qsos.json']
   fileList.forEach(async (file) => {
-    if (await RNFS.exists(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/${file}`)) {
-      await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/${file}`, `${RNFS.DocumentDirectoryPath}/deleted-ops/${uuid}/${file}`)
+    if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${file}`)) {
+      await RNFetchBlob.fs.mv(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${file}`, `${RNFetchBlob.fs.dirs.DocumentDir}/deleted-ops/${uuid}/${file}`)
     }
   })
 
@@ -137,22 +143,20 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
   }
 
   if (name && data) {
-    await RNFS.writeFile(`${RNFS.DocumentDirectoryPath}/ops/${uuid}/${name}`, data)
-    return `${RNFS.DocumentDirectoryPath}/ops/${uuid}/${name}`
+    await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${name}`, data)
+    return `${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${name}`
   } else {
     return false
   }
 }
 
 export const deleteExport = (path) => async (dispatch) => {
-  console.log('deleteExport', path)
-  await RNFS.unlink(path)
+  await RNFetchBlob.fs.unlink(path)
 }
 
 const QSON_FILENAME_REGEX = /file:.+\/([\w-]+)\.qson/i
 
 export const importQSON = (path) => async (dispatch) => {
-  console.log('path', RNFS.DocumentDirectoryPath)
   const matches = path.match(QSON_FILENAME_REGEX)
   if (matches[1]) {
     // const originalUUID = matches[1]
@@ -161,7 +165,7 @@ export const importQSON = (path) => async (dispatch) => {
     dispatch(qsosActions.setQSOsStatus({ uuid, status: 'loading' }))
 
     try {
-      const json = await RNFS.readFile(path.replace('file://', ''))
+      const json = await RNFetchBlob.fs.readFile(path.replace('file://', ''))
       const data = JSON.parse(json)
       data.operation.uuid = uuid
 
@@ -177,6 +181,6 @@ export const importQSON = (path) => async (dispatch) => {
       console.error('Error importing QSON', error)
     }
   } else {
-    console.error('importQSON invalid path', path)
+    console.error('Invalid Path importing QSON', path)
   }
 }
