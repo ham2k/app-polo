@@ -1,5 +1,3 @@
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import React, { useEffect, useMemo, useState } from 'react'
 import { ActivityIndicator, Text } from 'react-native-paper'
@@ -9,24 +7,8 @@ import { useLookupCallQuery } from '../../../../../store/apiQRZ'
 import { useLookupParkQuery } from '../../../../../store/apiPOTA'
 import { filterRefs } from '../../../../../tools/refTools'
 
-// Not actually a react hook, just named like one
-// eslint-disable-next-line react-hooks/rules-of-hooks
-useBuiltinCountryFile()
-
 export function CallInfo ({ qso, styles, style }) {
   // Parse the callsign
-  const [parsedInfo, setParsedInfo] = useState({})
-  useEffect(() => {
-    // eslint-disable-next-line no-shadow
-    let parsedInfo = parseCallsign(qso?.their?.call)
-    if (parsedInfo?.baseCall) {
-      annotateFromCountryFile(parsedInfo)
-    } else if (qso?.their?.call) {
-      parsedInfo = annotateFromCountryFile({ prefix: qso?.their?.call })
-    }
-    setParsedInfo(parsedInfo)
-  }, [qso?.their?.call])
-
   // Use `skip` to prevent calling the API on every keystroke
   const [skipQRZ, setSkipQRZ] = useState(true)
   useEffect(() => {
@@ -35,7 +17,7 @@ export function CallInfo ({ qso, styles, style }) {
     return () => clearTimeout(timeout)
   }, [qso?.their?.call])
 
-  const qrz = useLookupCallQuery({ call: parsedInfo?.baseCall }, { skipQRZ })
+  const qrz = useLookupCallQuery({ call: qso?.their?.guess?.baseCall }, { skipQRZ })
 
   // Use `skip` to prevent calling the API on every keystroke
   const potaRef = useMemo(() => {
@@ -51,7 +33,7 @@ export function CallInfo ({ qso, styles, style }) {
 
   const line1 = useMemo(() => {
     const parts = []
-    const entity = DXCC_BY_PREFIX[parsedInfo?.entityPrefix]
+    const entity = DXCC_BY_PREFIX[qso?.their?.guess?.entityPrefix]
 
     if (pota?.data?.name) {
       parts.push(`${entity?.flag ? `${entity.flag} ` : ''} POTA: ${pota.data.name} ${pota.data.parktypeDesc}`)
@@ -64,7 +46,7 @@ export function CallInfo ({ qso, styles, style }) {
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [parsedInfo, qrz, pota, potaRef])
+  }, [qso?.their?.guess?.entityPrefix, qrz, pota, potaRef])
 
   const line2 = useMemo(() => {
     const parts = []

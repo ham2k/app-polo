@@ -9,6 +9,8 @@ import { apiPOTA, useLookupParkQuery } from '../../../store/apiPOTA'
 import { ScrollView } from 'react-native'
 import { filterRefs, findRef, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { POTAAllParks, preparePOTAAllParksData } from '../../../store/apiPOTA/potaData'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
 preparePOTAAllParksData()
 
@@ -68,13 +70,15 @@ function ThisActivityOptionalExchangePanel (props) {
     setQSO({ ...qso, refs: replaceRefs(qso?.refs, ACTIVITY.huntingType, refs) })
   }, [qso, setQSO])
 
+  console.log('POTAActivity qso', qso?.their, Object.keys(POTAAllParks.prefixByDXCCCode))
   const defaultPrefix = useMemo(() => {
-    if (qso?.their?.adifCode) {
-      return POTAAllParks.prefixByADIFCode[qso.their.adifCode] ?? 'K'
+    console.log('POTA defaultPrefix', qso?.their?.dxccCode)
+    if (qso?.their?.guess?.dxccCode) {
+      return POTAAllParks.prefixByDXCCCode[qso?.their.guess.dxccCode] ?? 'K'
     } else {
       return 'K'
     }
-  }, [qso?.their?.adifCode])
+  }, [qso?.their?.guess?.dxccCode])
 
   return (
     <POTAInput

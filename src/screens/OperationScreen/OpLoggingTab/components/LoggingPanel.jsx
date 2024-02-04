@@ -18,6 +18,11 @@ import { qsoKey } from '@ham2k/lib-qson-tools'
 import { addQSO } from '../../../../store/qsos'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { SecondaryExchangePanel } from './LoggingPanel/SecondaryExchangePanel'
+import { annotateFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
+
+// Not actually a react hook, just named like one
+// eslint-disable-next-line react-hooks/rules-of-hooks
+useBuiltinCountryFile()
 
 function prepareStyles (themeStyles, themeColor) {
   return {
@@ -147,7 +152,15 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
           startOnMillis = null
         }
       }
-      setQSO({ ...qso, their: { ...qso?.their, call: value }, startOnMillis })
+
+      let guess = parseCallsign(qso?.their?.call)
+      if (guess?.baseCall) {
+        annotateFromCountryFile(guess)
+      } else if (qso?.their?.call) {
+        guess = annotateFromCountryFile({ prefix: qso?.their?.call })
+      }
+
+      setQSO({ ...qso, their: { ...qso?.their, call: value, guess }, startOnMillis })
     } else if (fieldId === 'theirSent') {
       setQSO({ ...qso, their: { ...qso?.their, sent: value } })
     } else if (fieldId === 'ourSent') {
