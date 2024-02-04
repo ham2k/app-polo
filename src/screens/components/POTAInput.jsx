@@ -4,16 +4,18 @@ import ThemedTextInput from './ThemedTextInput'
 
 const ADD_DASHES_REGEX = /([A-Z]+)(\d+)/g
 const ADD_COMMAS_REGEX = /(\d+)\s*[,]*\s*([A-Z]+)/g
-const REPEAT_COUNTRY_REGEX = /(\w+)-(\d+)(\s+,\s*|,\s*|\s+)(\d+)/g
+const NO_PREFIX_REGEX = /^(\d+)/g
+const REPEAT_PREFIX_REGEX = /(\w+)-(\d+)(\s+,\s*|,\s*|\s+)(\d+)/g
 
 export default function POTAInput (props) {
   const { styles, textStyle, onChange, defaultPrefix, onChangeText, fieldId } = props
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
+    text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix}-${p1}`)
     text = text.replace(ADD_DASHES_REGEX, (match, p1, p2) => `${p1}-${p2}`)
     text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1}, ${p2}`)
-    text = text.replace(REPEAT_COUNTRY_REGEX, (match, p1, p2, p3, p4) => `${p1}-${p2}, ${p1}-${p4}`)
+    text = text.replace(REPEAT_PREFIX_REGEX, (match, p1, p2, p3, p4) => `${p1}-${p2}, ${p1}-${p4}`)
 
     event.nativeEvent.text = text
 
