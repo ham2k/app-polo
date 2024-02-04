@@ -21,7 +21,7 @@ export default function POTAInput (props) {
 
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId })
-  }, [onChange, onChangeText, fieldId])
+  }, [onChange, onChangeText, fieldId, defaultPrefix])
 
   return (
     <ThemedTextInput

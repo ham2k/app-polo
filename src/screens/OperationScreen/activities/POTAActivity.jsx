@@ -8,9 +8,7 @@ import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 import { apiPOTA, useLookupParkQuery } from '../../../store/apiPOTA'
 import { ScrollView } from 'react-native'
 import { filterRefs, findRef, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
-import { POTAAllParks, preparePOTAAllParksData } from '../../../store/apiPOTA/potaData'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { POTAAllParks, preparePOTAAllParksData } from '../../../data/POTA-AllParks'
 
 preparePOTAAllParksData()
 
