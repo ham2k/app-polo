@@ -70,9 +70,7 @@ function ThisActivityOptionalExchangePanel (props) {
     setQSO({ ...qso, refs: replaceRefs(qso?.refs, ACTIVITY.huntingType, refs) })
   }, [qso, setQSO])
 
-  console.log('POTAActivity qso', qso?.their, Object.keys(POTAAllParks.prefixByDXCCCode))
   const defaultPrefix = useMemo(() => {
-    console.log('POTA defaultPrefix', qso?.their?.dxccCode)
     if (qso?.their?.guess?.dxccCode) {
       return POTAAllParks.prefixByDXCCCode[qso?.their.guess.dxccCode] ?? 'K'
     } else {
