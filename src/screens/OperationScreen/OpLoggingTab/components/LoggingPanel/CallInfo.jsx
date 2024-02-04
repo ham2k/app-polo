@@ -6,18 +6,35 @@ import { capitalizeString } from '../../../../../tools/capitalizeString'
 import { useLookupCallQuery } from '../../../../../store/apiQRZ'
 import { useLookupParkQuery } from '../../../../../store/apiPOTA'
 import { filterRefs } from '../../../../../tools/refTools'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
 export function CallInfo ({ qso, styles, style }) {
   // Parse the callsign
+  const guess = useMemo(() => {
+    console.log('CallInfo guess', qso)
+    if (qso?.their?.guess) {
+      return qso?.their?.guess
+    } else {
+      let newGuess = parseCallsign(qso?.their?.call)
+      if (newGuess?.baseCall) {
+        annotateFromCountryFile(newGuess)
+      } else if (qso?.their?.call) {
+        newGuess = annotateFromCountryFile({ prefix: qso?.their?.call, baseCall: qso?.their?.call })
+      }
+      return newGuess
+    }
+  }, [qso])
+
   // Use `skip` to prevent calling the API on every keystroke
   const [skipQRZ, setSkipQRZ] = useState(true)
   useEffect(() => {
     setSkipQRZ(true)
     const timeout = setTimeout(() => setSkipQRZ(false), 500)
     return () => clearTimeout(timeout)
-  }, [qso?.their?.call])
+  }, [guess?.baseCall])
 
-  const qrz = useLookupCallQuery({ call: qso?.their?.guess?.baseCall }, { skipQRZ })
+  const qrz = useLookupCallQuery({ call: guess?.baseCall }, { skipQRZ })
 
   // Use `skip` to prevent calling the API on every keystroke
   const potaRef = useMemo(() => {
@@ -33,7 +50,7 @@ export function CallInfo ({ qso, styles, style }) {
 
   const line1 = useMemo(() => {
     const parts = []
-    const entity = DXCC_BY_PREFIX[qso?.their?.guess?.entityPrefix]
+    const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
     if (pota?.data?.name) {
       parts.push(`${entity?.flag ? `${entity.flag} ` : ''} POTA: ${pota.data.name} ${pota.data.parktypeDesc}`)
@@ -46,7 +63,7 @@ export function CallInfo ({ qso, styles, style }) {
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qso?.their?.guess?.entityPrefix, qrz, pota, potaRef])
+  }, [guess?.entityPrefix, qrz, pota, potaRef])
 
   const line2 = useMemo(() => {
     const parts = []

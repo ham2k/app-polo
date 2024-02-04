@@ -153,11 +153,11 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
         }
       }
 
-      let guess = parseCallsign(qso?.their?.call)
+      let guess = parseCallsign(value)
       if (guess?.baseCall) {
         annotateFromCountryFile(guess)
-      } else if (qso?.their?.call) {
-        guess = annotateFromCountryFile({ prefix: qso?.their?.call })
+      } else if (value) {
+        guess = annotateFromCountryFile({ prefix: value, baseCall: value })
       }
 
       setQSO({ ...qso, their: { ...qso?.their, call: value, guess }, startOnMillis })
