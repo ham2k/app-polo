@@ -8,6 +8,8 @@ import { fmtISODate } from '../../../tools/timeFormats'
 import { refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 
+const UUID_REGEX = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/i
+
 export const loadOperationsList = () => async (dispatch) => {
   try {
     if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/ops`)) { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/ops`) }
@@ -15,6 +17,7 @@ export const loadOperationsList = () => async (dispatch) => {
     const dir = await RNFetchBlob.fs.ls(`${RNFetchBlob.fs.dirs.DocumentDir}/ops`)
     const operations = {}
     for (const entry of dir) {
+      if (!UUID_REGEX.test(entry)) continue
       const path = `${RNFetchBlob.fs.dirs.DocumentDir}/ops/${entry}`
       if (RNFetchBlob.fs.isDir(path)) {
         try {
@@ -68,6 +71,7 @@ export const loadOperation = (uuid) => async (dispatch) => {
       info.refs = replaceRefs(info.refs, 'potaActivation', stringToRefs('potaActivation', info.pota))
     }
   } catch (error) {
+    console.error(`Error loading operation ${uuid}`, error)
   }
   info.status = 'ready'
   dispatch(actions.setOperation(info))
