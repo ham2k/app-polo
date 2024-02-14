@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import createMigrate from 'redux-persist/es/createMigrate'
 
 import { migrations, LATEST_VERSION } from './migrations'
+import systemReducer from './system'
 import settingsReducer from './settings'
 import operationsReducer from './operations'
 import qsosReducer from './qsos'
@@ -21,6 +22,7 @@ setAutoFreeze(false)
 
 const rootReducer = combineReducers({
   settings: settingsReducer,
+  system: systemReducer,
   operations: operationsReducer,
   qsos: qsosReducer,
   time: timeReducer,
@@ -33,7 +35,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   version: LATEST_VERSION,
-  whitelist: ['settings', 'operations'], // Don't include `qsos` nor `time`
+  whitelist: ['settings', 'system'], // Don't include `qsos` nor `time`
   migrate: createMigrate(migrations, { debug: true })
 }
 
