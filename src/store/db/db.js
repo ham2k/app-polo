@@ -42,7 +42,7 @@ export function dbExecute (sql, params, options = {}) {
   }
 }
 
-export function dbSelectAll (sql, params, { txn, db, row }) {
+export function dbSelectAll (sql, params, { txn, db, row } = {}) {
   return dbExecute(sql, params, { txn, db }).then((results) => {
     const rows = []
     if (row) {
