@@ -18,8 +18,7 @@ export const systemSlice = createSlice({
       })
     },
     addSystemMessage: (state, action) => {
-      state.messages.push({ time: new Date(), message: action.payload })
-      while (state.messages.length > 100) state.messages.shift()
+      state.messages = [...(state.messages || []).slice(0, 98), { time: new Date(), message: action.payload }]
     }
   }
 })
