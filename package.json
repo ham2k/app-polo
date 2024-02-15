@@ -54,6 +54,7 @@
     "react-native-screens": "^3.27.0",
     "react-native-share": "^10.0.2",
     "react-native-splash-screen": "^3.3.0",
+    "react-native-sqlite-2": "^3.6.2",
     "react-native-uuid": "^2.0.1",
     "react-native-vector-icons": "^10.0.2",
     "react-redux": "^8.1.3",

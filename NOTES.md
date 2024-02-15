@@ -4,7 +4,7 @@
 
 * Validate callsigns when entering them
 
-* POTA reference smart input. Try entering multiple park references without using - or ",", just letters, digits and space.
+* POTA reference smart input. Try entering multiple park references without using - or ",", just letters, digits and space. Change the callsign to a DX entity and see the default reference change.
 
 * Logging focus. Press space to switch between logging fields
 

@@ -7,7 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
-import { addNewOperation, loadOperationsList, selectOperationsList } from '../../store/operations'
+import { addNewOperation, getOperations, selectOperationsList } from '../../store/operations'
 import OperationItem from './components/OperationItem'
 import { selectSettings } from '../../store/settings'
 import { loadAllDataFiles } from '../../store/dataFiles/actions/dataFileFS'
@@ -23,7 +23,7 @@ export default function HomeScreen ({ navigation }) {
   }, [navigation])
 
   useEffect(() => {
-    dispatch(loadOperationsList())
+    dispatch(getOperations())
   }, [dispatch])
 
   useEffect(() => {
