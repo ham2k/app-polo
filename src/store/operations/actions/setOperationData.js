@@ -2,7 +2,7 @@ import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { actions, selectOperation } from '../operationsSlice'
 import { refHandlers } from '../../../screens/OperationScreen/activities'
 import debounce from 'debounce'
-import { saveOperation } from './operations'
+import { saveOperation } from './operationsDB'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 function debounceableDispatch (dispatch, action) {

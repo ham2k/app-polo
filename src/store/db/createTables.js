@@ -25,14 +25,14 @@ export async function createTables (db) {
     await dbExecute(`
                 CREATE TABLE IF NOT EXISTS qsos (
                   key VARCHAR(32),
-                  op_uuid VARCHAR(64),
-                  our_call VARCHAR(32),
-                  their_call VARCHAR(32),
+                  operation VARCHAR(64),
+                  ourCall VARCHAR(32),
+                  theirCall VARCHAR(32),
                   mode VARCHAR(32),
                   band VARCHAR(8),
-                  start_on INTEGER,
+                  startOnMillis INTEGER,
                   data TEXT,
-                  PRIMARY KEY (key, op_uuid)
+                  PRIMARY KEY (key, operation)
                 )`, [], { db })
     await dbExecute('DELETE FROM version', [], { db })
     await dbExecute('INSERT INTO version (version) VALUES (?)', [1], { db })
