@@ -11,6 +11,7 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { findQSOHistory } from '../../../../../store/qsos/actions/findQSOHistory'
 import { fmtDateZulu } from '../../../../../tools/timeFormats'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
+import { CallInfoDialog } from './CallInfoDialog'
 
 export function CallInfo ({ qso, operation, style, themeColor }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -20,7 +21,6 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
       history: {
         pill: {
           marginRight: baseStyles.halfSpace,
-          flex: 0,
           borderRadius: 3,
           padding: baseStyles.oneSpace * 0.3,
           paddingHorizontal: baseStyles.oneSpace * 0.5,
@@ -48,6 +48,8 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
   const isPotaOp = useMemo(() => {
     return hasRef(operation?.refs, 'potaActivation')
   }, [operation])
+
+  const [showDialog, setShowDialog] = useState(false)
 
   // Parse the callsign
   const guess = useMemo(() => {
@@ -107,13 +109,13 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     } else {
       if (entity) parts.push(`${entity.flag} ${entity.shortName}`)
 
-      if (qrz?.data?.call === guess?.baseCall && qrz?.data?.city && !skipQRZ && !qrz.isFetching) {
+      if (qrz?.data?.call === guess?.baseCall && qrz?.data?.city && qrz?.status === 'fulfilled') {
         parts.push(capitalizeString(qrz.data.city, { force: false }), qrz.data.state)
       }
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [guess, qrz, skipQRZ, pota, potaRef])
+  }, [guess, qrz, pota, potaRef])
 
   const stationInfo = useMemo(() => {
     if (skipQRZ) return ''
@@ -121,7 +123,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     const parts = []
     if (qrz?.error) {
       parts.push(qrz.error)
-    } else if (qrz?.data?.name && !qrz.isFetching) {
+    } else if (qrz?.data?.name && qrz?.status === 'fulfilled') {
       parts.push(capitalizeString(qrz.data.name, { content: 'name', force: false }))
       if (qrz.data.call && qrz.data.call !== qrz.originalArgs?.call) {
         parts.push(`(Now ${qrz.data.call})`)
@@ -134,7 +136,6 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     let info = ''
     let level = 'info'
     if (callHistory?.length > 0) {
-      console.log(callHistory)
       if (qso?._is_new && callHistory.find(x => x?.operation === operation.uuid)) {
         if (isPotaOp) {
           if (fmtDateZulu(callHistory[0]?.startOnMillis) === fmtDateZulu(new Date())) {
@@ -155,45 +156,58 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     }
     return [info, level]
   }, [callHistory, isPotaOp, operation?.uuid, qso?._is_new])
-  console.log(historyLevel, historyLevel && styles.history[historyLevel])
-  return (
-    <TouchableRipple onPress={() => true} style={{ width: '100%', height: styles.oneSpace * 5 }}>
 
-      <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
-        <View style={{ alignSelf: 'flex-start' }}>
-          {qrz.loading ? (
-            <ActivityIndicator
-              size={styles.oneSpace * 3}
-              animating={true}
-            />
-          ) : (
-            <Icon
-              source={'account'}
-              size={styles.oneSpace * 3}
-              color={styles.theme.colors[`${themeColor}ContainerVariant`]}
-            />
-          )}
-        </View>
-        <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start', paddingTop: styles.oneSpace * 0.3 }]}>
-          {(locationInfo) && (
-            <Text style={{}} numberOfLines={1} ellipsizeMode={'tail'}>
-              {locationInfo}
-            </Text>
-          )}
-          {(stationInfo || historyInfo) && (
-            <View style={{ flexDirection: 'row' }}>
-              {historyInfo && (
-                <View style={[styles.history.pill, historyLevel && styles.history[historyLevel]]}>
-                  <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyInfo}</Text>
-                </View>
-              )}
-              <Text style={{ flex: 1, fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode={'tail'}>
-                {stationInfo}
+  return (
+    <>
+      <TouchableRipple onPress={() => setShowDialog(true)} style={{ width: '100%', height: styles.oneSpace * 5 }}>
+
+        <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
+          <View style={{ alignSelf: 'flex-start', flex: 0 }}>
+            {qrz.loading ? (
+              <ActivityIndicator
+                size={styles.oneSpace * 3}
+                animating={true}
+              />
+            ) : (
+              <Icon
+                source={'account-outline'}
+                size={styles.oneSpace * 3}
+                color={styles.theme.colors[`${themeColor}ContainerVariant`]}
+              />
+            )}
+          </View>
+          <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch', paddingTop: styles.oneSpace * 0.3 }]}>
+            {(locationInfo) && (
+              <Text style={{}} numberOfLines={1} ellipsizeMode={'tail'}>
+                {locationInfo}
               </Text>
-            </View>
-          )}
+            )}
+            {(stationInfo || historyInfo) && (
+              <View style={{ flexDirection: 'row' }}>
+                {historyInfo && (
+                  <View style={[{ flex: 0 }, styles.history.pill, historyLevel && styles.history[historyLevel]]}>
+                    <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyInfo}</Text>
+                  </View>
+                )}
+                <Text style={{ flex: 1, fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode={'tail'}>
+                  {stationInfo}
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
-      </View>
-    </TouchableRipple>
+      </TouchableRipple>
+      <CallInfoDialog
+        visible={showDialog}
+        setVisible={setShowDialog}
+        qso={qso}
+        guess={guess}
+        qrz={qrz?.status === 'fulfilled' ? qrz : {}}
+        pota={pota}
+        operation={operation}
+        callHistory={callHistory}
+        styles={styles}
+      />
+    </>
   )
 }
