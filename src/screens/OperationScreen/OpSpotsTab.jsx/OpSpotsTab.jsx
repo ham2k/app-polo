@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { useSpotsQuery } from '../../../store/apiPOTA'
+import SpotList from './components/SpotList'
 
 export default function OpSpotsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -23,12 +25,19 @@ export default function OpSpotsTab ({ navigation, route }) {
     }
   })
 
+  const spots = useSpotsQuery()
+  const sortedSpots = useMemo(() => {
+    return spots?.data?.sort((a, b) => {
+      return a.frequency - b.frequency
+    })
+  }, [spots?.data])
+
+  console.log(spots.data)
   return (
-    <View style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column' }, styles.panel]}>
+    <View style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column' }]}>
 
-      <View style={[{ flex: 0, flexDirection: 'column' }, styles.container]}>
-        <Text>Spots</Text>
-
+      <View style={[{ flex: 0, flexDirection: 'column' }]}>
+        <SpotList spots={sortedSpots} />
       </View>
     </View>
   )

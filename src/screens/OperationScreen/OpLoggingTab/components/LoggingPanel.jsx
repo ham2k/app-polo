@@ -56,7 +56,13 @@ function prepareExistingQSO (qso) {
   return clone
 }
 
-export default function LoggingPanel ({ style, operation, qsos, settings, selectedKey, setSelectedKey, setLastKey }) {
+function prepareSuggestedQSO (qso) {
+  const clone = cloneDeep(qso || {})
+  clone._is_new = true
+  return clone
+}
+
+export default function LoggingPanel ({ style, operation, qsos, settings, selectedKey, setSelectedKey, setLastKey, suggestedQSO }) {
   const [qso, setQSO] = useState()
 
   const themeColor = useMemo(() => qso?._is_new ? 'tertiary' : 'secondary', [qso])
@@ -73,6 +79,12 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
   const [pausedTime, setPausedTime] = useState()
 
   const [isValid, setIsValid] = useState(false)
+
+  useEffect(() => {
+    if (suggestedQSO) {
+      setQSO(prepareSuggestedQSO(suggestedQSO))
+    }
+  }, [suggestedQSO])
 
   const setNewQSO = useCallback((newQSO) => {
     const newVisibleFields = {}

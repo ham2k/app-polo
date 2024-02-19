@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Chip, Dialog, Icon, Portal, Text } from 'react-native-paper'
+import React, { useCallback } from 'react'
+import { Button, Dialog, Icon, Portal, Text } from 'react-native-paper'
 import { View, KeyboardAvoidingView } from 'react-native'
 import { capitalizeString } from '../../../../../tools/capitalizeString'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'

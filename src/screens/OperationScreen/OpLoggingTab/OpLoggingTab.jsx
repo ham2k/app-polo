@@ -47,7 +47,8 @@ export default function OpLoggingTab ({ navigation, route }) {
   return (
     <View style={flexOne}>
       <QSOList style={flexOne} styles={styles} qsos={qsos} selectedKey={selectedKey} setSelectedKey={setSelectedKey} lastKey={lastKey} />
-      <LoggingPanel style={flexZero}
+      <LoggingPanel
+        style={flexZero}
         operation={operation}
         qsos={qsos}
         settings={settings}
@@ -55,6 +56,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         setSelectedKey={setSelectedKey}
         lastKey={lastKey}
         setLastKey={setLastKey}
+        suggestedQSO={route?.params?.qso}
       />
     </View>
   )
