@@ -6,7 +6,6 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import ScreenContainer from '../components/ScreenContainer'
 import { loadOperation, selectOperation } from '../../store/operations'
 import OpLoggingTab from './OpLoggingTab/OpLoggingTab'
-import OpStatsTab from './OpStatsTab.jsx/OpStatsTab'
 import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
 import { Platform, useWindowDimensions } from 'react-native'
 import { loadQSOs } from '../../store/qsos'
@@ -58,7 +57,7 @@ export default function OperationScreen ({ navigation, route }) {
         initialLayout={{ width: dimensions.width, height: dimensions.height }}
         initialRouteName={ settingsOnly ? 'Settings' : 'QSOs'}
         screenOptions={{
-          tabBarItemStyle: { width: dimensions.width / 4 }, // This allows tab titles to be rendered while the screen is transitioning in
+          tabBarItemStyle: { width: dimensions.width / 3 }, // This allows tab titles to be rendered while the screen is transitioning in
 
           // See https://github.com/react-navigation/react-navigation/issues/11301
           // on iOS, if the keyboard is open, tabs get stuck when switching
@@ -84,15 +83,6 @@ export default function OperationScreen ({ navigation, route }) {
         <Tab.Screen
           name="Spots"
           component={OpSpotsTab}
-          initialParams={{ uuid: operation.uuid, operation }}
-          listeners={{
-            tabPress: e => { settingsOnly && e.preventDefault() }
-          }}
-        />
-
-        <Tab.Screen
-          name="Stats"
-          component={OpStatsTab}
           initialParams={{ uuid: operation.uuid, operation }}
           listeners={{
             tabPress: e => { settingsOnly && e.preventDefault() }
