@@ -277,9 +277,9 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
 
           <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace, minHeight: 5.1 * styles.oneSpace }}>
             {qso?.their?.call ? (
-              <CallInfo qso={qso} styles={styles} />
+              <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
             ) : (
-              <OpInfo operation={operation} styles={styles} qsos={qsos} />
+              <OpInfo operation={operation} styles={styles} qsos={qsos} themeColor={themeColor} />
             )}
           </View>
         </View>

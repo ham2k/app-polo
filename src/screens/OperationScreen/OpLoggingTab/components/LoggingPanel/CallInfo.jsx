@@ -1,16 +1,54 @@
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import React, { useEffect, useMemo, useState } from 'react'
-import { ActivityIndicator, Text } from 'react-native-paper'
+import { ActivityIndicator, Icon, Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
 import { capitalizeString } from '../../../../../tools/capitalizeString'
 import { useLookupCallQuery } from '../../../../../store/apiQRZ'
 import { useLookupParkQuery } from '../../../../../store/apiPOTA'
-import { filterRefs } from '../../../../../tools/refTools'
+import { filterRefs, hasRef } from '../../../../../tools/refTools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { findQSOHistory } from '../../../../../store/qsos/actions/findQSOHistory'
+import { fmtDateZulu } from '../../../../../tools/timeFormats'
+import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 
-export function CallInfo ({ qso, styles, style }) {
+export function CallInfo ({ qso, operation, style, themeColor }) {
+  const styles = useThemedStyles((baseStyles) => {
+    // const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
+    return {
+      ...baseStyles,
+      history: {
+        pill: {
+          marginRight: baseStyles.halfSpace,
+          flex: 0,
+          borderRadius: 3,
+          padding: baseStyles.oneSpace * 0.3,
+          paddingHorizontal: baseStyles.oneSpace * 0.5,
+          backgroundColor: baseStyles.theme.colors[`${themeColor}Light`]
+        },
+        text: {
+          fontSize: baseStyles.smallFontSize,
+          fontWeight: 'normal',
+          color: 'black'
+        },
+        alert: {
+          backgroundColor: 'red',
+          color: 'white'
+        },
+        warning: {
+          backgroundColor: 'green',
+          color: 'white'
+        },
+        info: {
+        }
+      }
+    }
+  })
+
+  const isPotaOp = useMemo(() => {
+    return hasRef(operation?.refs, 'potaActivation')
+  }, [operation])
+
   // Parse the callsign
   const guess = useMemo(() => {
     if (qso?.their?.guess) {
@@ -41,7 +79,7 @@ export function CallInfo ({ qso, styles, style }) {
     const timeout = setTimeout(async () => {
       const qsoHistory = await findQSOHistory(guess?.baseCall)
       setCallHistory(qsoHistory)
-    }, 500)
+    }, 200)
     return () => clearTimeout(timeout)
   }, [guess?.baseCall])
 
@@ -57,7 +95,7 @@ export function CallInfo ({ qso, styles, style }) {
 
   const pota = useLookupParkQuery({ ref: potaRef }, { skip: !potaRef })
 
-  const line1 = useMemo(() => {
+  const locationInfo = useMemo(() => {
     const parts = []
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
@@ -69,20 +107,18 @@ export function CallInfo ({ qso, styles, style }) {
     } else {
       if (entity) parts.push(`${entity.flag} ${entity.shortName}`)
 
-      if (qrz?.data?.city && !skipQRZ && !qrz.isFetching) parts.push(capitalizeString(qrz.data.city, { force: false }), qrz.data.state)
+      if (qrz?.data?.call === guess?.baseCall && qrz?.data?.city && !skipQRZ && !qrz.isFetching) {
+        parts.push(capitalizeString(qrz.data.city, { force: false }), qrz.data.state)
+      }
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [guess?.entityPrefix, qrz, skipQRZ, pota, potaRef])
+  }, [guess, qrz, skipQRZ, pota, potaRef])
 
-  const line2 = useMemo(() => {
+  const stationInfo = useMemo(() => {
     if (skipQRZ) return ''
 
     const parts = []
-    if (callHistory?.length > 0) {
-      parts.push(`${callHistory.length} QSOs`)
-    }
-
     if (qrz?.error) {
       parts.push(qrz.error)
     } else if (qrz?.data?.name && !qrz.isFetching) {
@@ -92,17 +128,72 @@ export function CallInfo ({ qso, styles, style }) {
       }
     }
     return parts.filter(x => x).join(' • ')
-  }, [qrz, skipQRZ, callHistory])
+  }, [qrz, skipQRZ])
 
+  const [historyInfo, historyLevel] = useMemo(() => {
+    let info = ''
+    let level = 'info'
+    if (callHistory?.length > 0) {
+      console.log(callHistory)
+      if (qso?._is_new && callHistory.find(x => x?.operation === operation.uuid)) {
+        if (isPotaOp) {
+          if (fmtDateZulu(callHistory[0]?.startOnMillis) === fmtDateZulu(new Date())) {
+            info = 'Dupe!!!'
+            level = 'alert'
+          } else {
+            info = 'New POTA Day'
+            level = 'warning'
+          }
+        } else {
+          info = 'Dupe!!!'
+          level = 'alert'
+        }
+      } else {
+        info = `${callHistory.length} QSOs`
+        level = 'info'
+      }
+    }
+    return [info, level]
+  }, [callHistory, isPotaOp, operation?.uuid, qso?._is_new])
+  console.log(historyLevel, historyLevel && styles.history[historyLevel])
   return (
-    <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start' }]}>
-      <Text style={{ height: styles.oneSpace * 2.2 }}>{line1}</Text>
-      {qrz.loading ? (
-        <ActivityIndicator size={styles.oneSpace} animating={true} style={{ alignSelf: 'flex-start' }}/>
-      ) : (
-        <Text style={{ height: styles.oneSpace * 2.2, fontWeight: 'bold' }}>{line2}</Text>
+    <TouchableRipple onPress={() => true} style={{ width: '100%', height: styles.oneSpace * 5 }}>
 
-      )}
-    </View>
+      <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
+        <View style={{ alignSelf: 'flex-start' }}>
+          {qrz.loading ? (
+            <ActivityIndicator
+              size={styles.oneSpace * 3}
+              animating={true}
+            />
+          ) : (
+            <Icon
+              source={'account'}
+              size={styles.oneSpace * 3}
+              color={styles.theme.colors[`${themeColor}ContainerVariant`]}
+            />
+          )}
+        </View>
+        <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start', paddingTop: styles.oneSpace * 0.3 }]}>
+          {(locationInfo) && (
+            <Text style={{}} numberOfLines={1} ellipsizeMode={'tail'}>
+              {locationInfo}
+            </Text>
+          )}
+          {(stationInfo || historyInfo) && (
+            <View style={{ flexDirection: 'row' }}>
+              {historyInfo && (
+                <View style={[styles.history.pill, historyLevel && styles.history[historyLevel]]}>
+                  <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyInfo}</Text>
+                </View>
+              )}
+              <Text style={{ flex: 1, fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode={'tail'}>
+                {stationInfo}
+              </Text>
+            </View>
+          )}
+        </View>
+      </View>
+    </TouchableRipple>
   )
 }
