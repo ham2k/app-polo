@@ -7,7 +7,7 @@ export function fmtFreqInMHz (freq, options) {
 
   if (freq) {
     const withDecimals = freq.toFixed(3)
-    const withSeparator = withDecimals.replace(THOUSANDS_DELIMITER_REGEX, '$1.$2$3')
+    const withSeparator = withDecimals.replace(THOUSANDS_DELIMITER_REGEX, '$1,$2$3')
     if (compact) {
       return withSeparator.replace(TRAILING_ZEROS_REGEX, '')
     } else {

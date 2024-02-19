@@ -48,6 +48,20 @@ export const apiPOTA = createApi({
         }
         return response
       }
+    }),
+
+    spots: builder.query({
+      query: () => 'spot/activator',
+      transformResponse: (response) => {
+        console.log('POTA SPOTS', response)
+        if (response === null) {
+          return []
+        }
+        response.forEach(spot => {
+          spot.frequency = Number.parseFloat(spot.frequency)
+        })
+        return response
+      }
     })
   })
 })
@@ -69,6 +83,6 @@ export function useLookupParkQuery (arg, options) {
   }
 }
 
-export const { endpoints, reducerPath, reducer, middleware } = apiPOTA
+export const { endpoints, reducerPath, reducer, middleware, useSpotsQuery } = apiPOTA
 
 export default apiPOTA.reducer
