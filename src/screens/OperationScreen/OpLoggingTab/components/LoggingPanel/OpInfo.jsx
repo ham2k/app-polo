@@ -47,7 +47,7 @@ export function OpInfo ({ operation, qsos, styles, style, themeColor }) {
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
         <View style={{ alignSelf: 'flex-start' }}>
           <Icon
-            source={'timer'}
+            source={'timer-outline'}
             size={styles.oneSpace * 3}
             color={styles.theme.colors[`${themeColor}ContainerVariant`]}
           />

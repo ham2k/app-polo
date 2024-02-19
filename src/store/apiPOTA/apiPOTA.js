@@ -56,10 +56,17 @@ export const { actions } = apiPOTA
 const POTA_REGEX = /[A-Z]{1,2}-[0-9]{4,5}/
 
 export function useLookupParkQuery (arg, options) {
+  let result
   if (!arg?.ref || !arg?.ref?.match(POTA_REGEX)) {
-    options.skip = true
+    result = apiPOTA.useLookupParkQuery('', { skip: true })
+  } else {
+    result = apiPOTA.useLookupParkQuery(arg, options)
   }
-  return apiPOTA.useLookupParkQuery(arg, options)
+  if (result?.status === 'uninitialized') {
+    return undefined
+  } else {
+    return result
+  }
 }
 
 export const { endpoints, reducerPath, reducer, middleware } = apiPOTA
