@@ -298,7 +298,7 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
           mainFieldRef={mainFieldRef}
           focusedRef={focusedRef}
         />
-        <View style={{ justifyContent: 'flex-end', alignItems: 'center', paddingHorizontal: styles.oneSpace, paddingBottom: 0 }}>
+        <View style={{ justifyContent: 'flex-end', alignItems: 'center', paddingHorizontal: styles.halfSpace, paddingBottom: styles.oneSpace }}>
           <IconButton
             icon={qso?._is_new ? 'upload' : 'content-save'}
             size={styles.oneSpace * 4}
