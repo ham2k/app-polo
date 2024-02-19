@@ -22,6 +22,18 @@ export function fmtTimeZulu (t, { showZ = true } = {}) {
   }
 }
 
+export function fmtDateZulu (t) {
+  if (typeof t === 'number') {
+    t = new Date(t)
+  }
+
+  if (t && t.toISOString) {
+    return t.toISOString().substring(0, 10)
+  } else {
+    return ''
+  }
+}
+
 export function fmtDateTimeNice (t) {
   if (typeof t === 'number') {
     t = new Date(t)

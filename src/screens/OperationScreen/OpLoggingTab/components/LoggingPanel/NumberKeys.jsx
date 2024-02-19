@@ -7,6 +7,7 @@ export function NumberKeys ({ themeColor, onNumberKeyPressed, enabled }) {
   const styles = useThemedStyles((baseStyles) => {
     const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
     return {
+      ...baseStyles,
       root: {
         backgroundColor: baseStyles.theme.colors[`${themeColor}Light`],
         flexDirection: 'row',

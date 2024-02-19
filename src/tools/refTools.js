@@ -4,6 +4,10 @@ export function findRef (obj, type) {
   return (obj?.find ? obj.find(r => r?.type === type) : undefined)
 }
 
+export function hasRef (obj, type) {
+  return !!findRef(obj, type)
+}
+
 export function filterRefs (obj, type) {
   if (obj?.refs) obj = obj.refs
 
