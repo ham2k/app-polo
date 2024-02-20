@@ -123,7 +123,6 @@ export function ThisActivitySettingsDialog (props) {
           <Text variant="bodyMedium">Enter one or more park references being activated in this operation</Text>
           <POTAInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={styles.nativeInput}
             label={'POTA References'}
             placeholder={''}
             mode={'flat'}

@@ -54,7 +54,7 @@ export function ThisActivitySettingsDialog (props) {
           <Text variant="bodyMedium">Enter the exchange information for Field Day</Text>
           <TextInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={styles.nativeInput}
+            textStyle={[styles.nativeInput, styles.text.numbers]}
             label={'Class'}
             placeholder={'...'}
             mode={'flat'}
@@ -63,7 +63,7 @@ export function ThisActivitySettingsDialog (props) {
           />
           <TextInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={styles.nativeInput}
+            textStyle={[styles.nativeInput, styles.text.numbers]}
             label={'Location'}
             placeholder={'...'}
             mode={'flat'}

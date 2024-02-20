@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Switch } from 'react-native-paper'
+import { List, Switch, Text } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
 
@@ -38,7 +38,7 @@ export default function SettingsScreen ({ navigation }) {
 
           <List.Item
             title="Operator Callsign"
-            description={settings.operatorCall ?? 'No call'}
+            description={<Text style={styles.text.callsign}>{settings.operatorCall ?? 'No call'}</Text>}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
             onPress={() => setCurrentDialog('operatorCall')}
           />

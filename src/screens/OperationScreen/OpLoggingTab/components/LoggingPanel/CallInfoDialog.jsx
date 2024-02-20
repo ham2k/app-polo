@@ -15,7 +15,7 @@ export function CallInfoDialog ({
   const handleDone = useCallback(() => {
     setVisible(false)
   }, [setVisible])
-  console.log(qrz.data)
+  // console.log(qrz.data)
   if (visible) {
     return (
       <Portal>
@@ -29,7 +29,7 @@ export function CallInfoDialog ({
                       <Icon source={'account'} size={styles.oneSpace * 4} />
                     </View>
                     <View>
-                      <Text variant="headlineSmall">
+                      <Text variant="headlineSmall" style={styles.text.callsign}>
                         {qso.their.call}
                         {qrz?.data?.call && qrz?.data?.call !== qrz.originalArgs?.call && (
                           ` (now ${qrz.data.call})`
@@ -47,11 +47,11 @@ export function CallInfoDialog ({
                       </Text>
                     )}
                     {entity && (
-                      <Text>{entity.flag} {entity.shortName} • {entity.entityPrefix}</Text>
+                      <Text>{entity.flag} {entity.shortName} • <Text style={styles.text.callsign}>{entity.entityPrefix}</Text></Text>
                     )}
                     {pota?.data?.name && (
                       <Text style={{ marginTop: styles.oneSpace }}>
-                        POTA: {pota.data.reference} {pota.data.name} {pota.data.parktypeDesc}
+                        POTA: <Text style={styles.text.callsign}>{pota.data.reference}</Text> {pota.data.name} {pota.data.parktypeDesc}
                       </Text>
                     )}
                     {pota?.data?.locationName && (

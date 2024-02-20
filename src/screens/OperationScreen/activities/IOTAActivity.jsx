@@ -57,7 +57,7 @@ export function ThisActivitySettingsDialog (props) {
           <Text variant="bodyMedium">Enter the reference for the Island being activated in this operation</Text>
           <TextInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={styles.nativeInput}
+            textStyle={[styles.nativeInput, styles.text.callsign]}
             label={'IOTA Reference'}
             placeholder={'...'}
             mode={'flat'}

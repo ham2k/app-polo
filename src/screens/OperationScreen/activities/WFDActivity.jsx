@@ -76,7 +76,7 @@ function fieldsForMainExchangePanel (props) {
       key={`${ACTIVITY.key}_class`}
       innerRef={refStack.shift()}
       style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
-      textStyle={styles.nativeInput}
+      textStyle={styles.text.callsign}
       label={'Class'}
       placeholder={''}
       mode={'flat'}
@@ -98,7 +98,7 @@ function fieldsForMainExchangePanel (props) {
       key={`${ACTIVITY.key}_location`}
       innerRef={refStack.shift()}
       style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
-      textStyle={styles.nativeInput}
+      textStyle={styles.text.callsign}
       label={'Loc'}
       placeholder={''}
       mode={'flat'}
@@ -150,7 +150,7 @@ export function ThisActivitySettingsDialog (props) {
           <View flexDirection="row" alignItems="center" justifyContent="space-between" style={{ gap: styles.oneSpace }}>
             <ThemedTextInput
               style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-              textStyle={styles.nativeInput}
+              textStyle={styles.text.callsign}
               label={'Class'}
               mode={'flat'}
               uppercase={true}
@@ -160,7 +160,7 @@ export function ThisActivitySettingsDialog (props) {
             />
             <ThemedTextInput
               style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-              textStyle={styles.nativeInput}
+              textStyle={styles.text.callsign}
               label={'Location'}
               mode={'flat'}
               uppercase={true}

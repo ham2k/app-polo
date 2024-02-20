@@ -14,7 +14,7 @@ const SIGN_AFTER_A_DIGIT_REGEX = /([\d,.])[+-]/g
 
 export default function ThemedTextInput (props) {
   const {
-    style, themeColor,
+    style, themeColor, textStyle,
     label, placeholder, value, error,
     onChangeText, onChange, onSubmitEditing, onKeyPress, onFocus, onBlur,
     innerRef, focusedRef,
@@ -166,7 +166,7 @@ export default function ThemedTextInput (props) {
 
         value={strValue || ''}
         placeholder={placeholder || ''}
-        style={[colorStyles.nativeInput, ...props.style]}
+        style={[colorStyles.nativeInput, props.style, textStyle]}
         placeholderTextColor={themeStyles.theme.colors.onBackgroundLighter}
         cursorColor={colorStyles.cursorColor}
         selectionColor={colorStyles.sectionColor}
@@ -182,7 +182,7 @@ export default function ThemedTextInput (props) {
       />
     )
   }, [
-    keyboardOptions, actualInnerRef, strValue, placeholder, colorStyles, themeStyles,
+    keyboardOptions, actualInnerRef, strValue, placeholder, colorStyles, themeStyles, textStyle,
     onSubmitEditing, onKeyPress, handleFocus, handleBlur, handleChange, handleNumberKey, handleSelectionChange
   ])
 
