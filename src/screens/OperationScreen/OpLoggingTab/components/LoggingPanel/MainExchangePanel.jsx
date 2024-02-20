@@ -40,8 +40,8 @@ export const MainExchangePanel = ({
         const next = (pos + 1) % refs.filter(r => r.current).length
         refs[next]?.current?.focus()
       }
-    } else {
-      console.log('key handler', event.nativeEvent)
+      // } else {
+      // console.log('key handler', event.nativeEvent)
     }
   }
 
@@ -67,7 +67,7 @@ export const MainExchangePanel = ({
       key="sent"
       innerRef={refStack.shift()}
       themeColor={themeColor}
-      style={{ minWidth: styles.oneSpace * 6, flex: 1 }}
+      style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 6, flex: 1 }]}
       value={qso?.our?.sent ?? ''}
       label="Sent"
       placeholder={qso?.mode === 'CW' ? '599' : '59'}
@@ -86,7 +86,7 @@ export const MainExchangePanel = ({
       key="received"
       innerRef={refStack.shift()}
       themeColor={themeColor}
-      style={[styles.input, { minWidth: styles.oneSpace * 6, flex: 1 }]}
+      style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 6, flex: 1 }]}
       value={qso?.their?.sent || ''}
       label="Rcvd"
       placeholder={qso?.mode === 'CW' ? '599' : '59'}

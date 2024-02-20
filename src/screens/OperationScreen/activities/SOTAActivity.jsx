@@ -55,7 +55,7 @@ export function ThisActivitySettingsDialog (props) {
           <Text variant="bodyMedium">Enter the reference for the Summit being activated in this operation</Text>
           <TextInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={styles.nativeInput}
+            textStyle={[styles.nativeInput, styles.text.callsign]}
             label={'SOTA Reference'}
             placeholder={'...'}
             mode={'flat'}

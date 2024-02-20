@@ -3,9 +3,11 @@ import React, { useMemo } from 'react'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
 import ThemedTextInput from './ThemedTextInput'
+import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export default function CallsignInput (props) {
-  const { value, styles, textStyle } = props
+  const { value, textStyle } = props
+  const styles = useThemedStyles()
 
   const isValid = useMemo(() => {
     const callInfo = parseCallsign(value)

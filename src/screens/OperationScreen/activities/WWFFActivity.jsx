@@ -50,7 +50,7 @@ export function ThisActivitySettingsDialog (props) {
           <Text variant="bodyMedium">Enter the reference for the location being activated in this operation</Text>
           <TextInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={styles.nativeInput}
+            textStyle={[styles.nativeInput, styles.text.callsign]}
             label={'WWFF Reference'}
             placeholder={'...'}
             mode={'flat'}

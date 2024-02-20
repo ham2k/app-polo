@@ -53,7 +53,6 @@ export const apiPOTA = createApi({
     spots: builder.query({
       query: () => 'spot/activator',
       transformResponse: (response) => {
-        console.log('POTA SPOTS', response)
         if (response === null) {
           return []
         }

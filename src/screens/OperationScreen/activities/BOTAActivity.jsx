@@ -57,7 +57,7 @@ export function ThisActivitySettingsDialog (props) {
           <Text variant="bodyMedium">Enter the reference and activation code for the Beach being activated in this operation</Text>
           <TextInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={styles.nativeInput}
+            textStyle={[styles.nativeInput, styles.text.callsign]}
             label={'BOTA Reference'}
             placeholder={'...'}
             mode={'flat'}
@@ -66,7 +66,7 @@ export function ThisActivitySettingsDialog (props) {
           />
           <TextInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={styles.nativeInput}
+            textStyle={[styles.nativeInput, styles.text.callsign]}
             label={'Activation Code'}
             placeholder={'...'}
             mode={'flat'}
