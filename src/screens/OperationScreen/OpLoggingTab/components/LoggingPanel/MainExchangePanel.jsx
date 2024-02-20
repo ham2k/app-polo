@@ -31,14 +31,17 @@ export const MainExchangePanel = ({
 
   // Switch between fields with the space key
   // We would have used a `useCallback` hook, but it depends on an array of refs that will change each render anyways
-  const spaceKeyHandler = (event) => {
+  const keyHandler = (event) => {
     const { nativeEvent: { key, target } } = event
     if (key === ' ') {
       const pos = refs.map(r => findNodeHandle(r.current)).indexOf(target)
+
       if (pos >= 0) {
         const next = (pos + 1) % refs.filter(r => r.current).length
         refs[next]?.current?.focus()
       }
+    } else {
+      console.log('key handler', event.nativeEvent)
     }
   }
 
@@ -55,7 +58,7 @@ export const MainExchangePanel = ({
       onChange={handleFieldChange}
       onSubmitEditing={handleSubmit}
       fieldId={'theirCall'}
-      onKeyPress={spaceKeyHandler}
+      onKeyPress={keyHandler}
       focusedRef={focusedRef}
     />
   )
@@ -72,7 +75,7 @@ export const MainExchangePanel = ({
       onChange={handleFieldChange}
       onSubmitEditing={handleSubmit}
       fieldId={'ourSent'}
-      onKeyPress={spaceKeyHandler}
+      onKeyPress={keyHandler}
       keyboard={'numbers'}
       numeric={true}
       focusedRef={focusedRef}
@@ -91,7 +94,7 @@ export const MainExchangePanel = ({
       onChange={handleFieldChange}
       onSubmitEditing={handleSubmit}
       fieldId={'theirSent'}
-      onKeyPress={spaceKeyHandler}
+      onKeyPress={keyHandler}
       keyboard={'numbers'}
       numeric={true}
       focusedRef={focusedRef}
@@ -101,7 +104,7 @@ export const MainExchangePanel = ({
   activities.filter(activity => findRef(operation, activity.key) && activity.fieldsForMainExchangePanel).forEach(activity => {
     fields = fields.concat(
       activity.fieldsForMainExchangePanel(
-        { qso, operation, settings, styles, themeColor, onSubmitEditing: handleSubmit, setQSO, spaceKeyHandler, refStack, focusedRef }
+        { qso, operation, settings, styles, themeColor, onSubmitEditing: handleSubmit, setQSO, keyHandler, refStack, focusedRef }
       )
     )
   })

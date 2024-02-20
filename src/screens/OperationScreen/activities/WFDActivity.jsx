@@ -65,7 +65,7 @@ const ACTIVITY = {
 }
 
 function fieldsForMainExchangePanel (props) {
-  const { qso, setQSO, styles, refStack, onSubmitEditing, spaceKeyHandler, focusedRef } = props
+  const { qso, setQSO, styles, refStack, onSubmitEditing, keyHandler, focusedRef } = props
 
   const ref = findRef(qso?.refs, ACTIVITY.key) || { type: ACTIVITY.key, class: '', location: '' }
 
@@ -89,7 +89,7 @@ function fieldsForMainExchangePanel (props) {
         their: { ...qso?.their, exchange: [text, ref?.location].join(' ') }
       })}
       onSubmitEditing={onSubmitEditing}
-      onKeyPress={spaceKeyHandler}
+      onKeyPress={keyHandler}
       focusedRef={focusedRef}
     />
   )
@@ -111,7 +111,7 @@ function fieldsForMainExchangePanel (props) {
         their: { ...qso?.their, arrlSection: text, exchange: [ref?.class, text].join(' ') }
       })}
       onSubmitEditing={onSubmitEditing}
-      onKeyPress={spaceKeyHandler}
+      onKeyPress={keyHandler}
       focusedRef={focusedRef}
     />
   )
