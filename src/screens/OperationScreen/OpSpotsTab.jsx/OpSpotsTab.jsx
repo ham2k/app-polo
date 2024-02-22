@@ -42,11 +42,9 @@ export default function OpSpotsTab ({ navigation, route }) {
   const [mode, setMode] = useState('any')
 
   const spots = useSpotsQuery()
-  // console.log(spots)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log('refetch')
       spots?.refetch()
     }, 1000 * 60)
     return () => clearInterval(interval)
@@ -71,7 +69,6 @@ export default function OpSpotsTab ({ navigation, route }) {
 
   const filteredSpots = useMemo(() => {
     if (spots?.status === 'fulfilled') {
-      console.log(spots.data, band, mode)
       let filtered = spots?.data || []
       if (band !== 'any') {
         filtered = filtered?.filter(spot => spot.band === band)
