@@ -14,6 +14,5 @@ export function Ham2KMarkdown ({ children, style }) {
     }
   }, [style, styles])
 
-  console.log('Ham2KMarkdown', children)
   return <Markdown style={markdownStyles}>{children.join('')}</Markdown>
 }

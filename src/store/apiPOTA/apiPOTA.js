@@ -1,3 +1,4 @@
+import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 /**
@@ -58,6 +59,8 @@ export const apiPOTA = createApi({
         }
         response.forEach(spot => {
           spot.frequency = Number.parseFloat(spot.frequency)
+          spot.band = bandForFrequency(spot.frequency)
+          spot.timeInMillis = Date.parse(spot.spotTime + 'Z')
         })
         return response
       }

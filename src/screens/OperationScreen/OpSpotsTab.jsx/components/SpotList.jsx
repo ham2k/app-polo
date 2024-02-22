@@ -13,48 +13,57 @@ function prepareStyles (themeStyles, themeColor) {
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        minWidth: themeStyles.oneSpace * 7,
-        marginLeft: themeStyles.oneSpace,
+        fontSize: themeStyles.normalFontSize * 0.9,
+        minWidth: themeStyles.oneSpace * 13,
+        marginLeft: 0,
         textAlign: 'right'
+      },
+      freqMHz: {
+        fontWeight: 'bold',
+        textAlign: 'right'
+      },
+      freqKHz: {
+        textAlign: 'right'
+      },
+      freqHz: {
+        textAlign: 'right',
+        fontSize: themeStyles.normalFontSize * 0.7
       },
       call: {
         ...themeStyles.text.callsign,
-        fontWeight: 'bold',
         flex: 1,
-        marginLeft: themeStyles.oneSpace,
+        fontSize: themeStyles.normalFontSize * 0.9,
+        fontWeight: 'bold',
+        marginLeft: themeStyles.oneSpace * 2,
         minWidth: themeStyles.oneSpace * 5,
         textAlign: 'left'
       },
       mode: {
         flex: 0,
-        marginLeft: themeStyles.oneSpace,
+        fontSize: themeStyles.normalFontSize * 0.9,
+        marginLeft: themeStyles.oneSpace * 9,
         minWidth: themeStyles.oneSpace * 3.5,
-        textAlign: 'left'
-      },
-      ref: {
-        ...themeStyles.text.callsign,
-        fontWeight: 'bold',
-        flex: 1,
-        marginLeft: themeStyles.oneSpace,
-        minWidth: themeStyles.oneSpace * 7,
-        textAlign: 'left'
+        textAlign: 'right'
       },
       name: {
         flex: 1,
-        marginLeft: themeStyles.oneSpace,
+        fontSize: themeStyles.normalFontSize * 0.8,
         minWidth: themeStyles.oneSpace * 5,
+        marginLeft: themeStyles.oneSpace * 2,
         textAlign: 'left'
       },
       time: {
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
+        fontSize: themeStyles.normalFontSize * 0.9,
         minWidth: themeStyles.oneSpace * 6,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
       icon: {
         flex: 0,
+        fontSize: themeStyles.normalFontSize * 0.9,
         width: themeStyles.oneSpace * 2
       }
     }

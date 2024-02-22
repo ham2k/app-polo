@@ -110,6 +110,22 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       flexDirection: 'row',
       width: '100%'
     },
+    doubleRow: {
+      height: oneSpace * 7,
+      paddingHorizontal: oneSpace,
+      paddingVertical: oneSpace,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.outline,
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      width: '100%'
+    },
+    doubleRowInnerRow: {
+      // borderWidth: 1,
+      height: oneSpace * 2.3,
+      flexDirection: 'row',
+      width: '100%'
+    },
     rowText: {
       fontSize: normalFontSize
     },
