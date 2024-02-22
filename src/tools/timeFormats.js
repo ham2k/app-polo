@@ -83,6 +83,29 @@ export function fmtDateTimeDynamic (t, now = null) {
   }
 }
 
+export function fmtDateTimeRelative (t, now = null) {
+  if (typeof t === 'number') {
+    t = new Date(t)
+  }
+
+  now = now || new Date()
+
+  if (t && t.toLocaleTimeString) {
+    const diffInMinutes = Math.round((now - t) / (1000 * 60))
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`
+    } else if (diffInMinutes < 24 * 60) {
+      return `${Math.round(diffInMinutes / 60)}:${Math.round(diffInMinutes % 60)}h ago`
+    } else if (diffInMinutes < 24 * 60 * 21) {
+      return `${Math.round(diffInMinutes / (60 * 24))} days ago`
+    } else {
+      return fmtDateTimeDynamic(t, now)
+    }
+  } else {
+    return ''
+  }
+}
+
 export function fmtADIFDate (t) {
   if (typeof t === 'number') {
     t = new Date(t)
