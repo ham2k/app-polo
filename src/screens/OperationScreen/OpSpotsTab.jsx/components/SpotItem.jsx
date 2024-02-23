@@ -23,15 +23,20 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
             <Text style={styles.fields.freqHz}>.{freqParts[2]}</Text>
           </Text>
           <Text style={styles.fields.call}>{spot.activator ?? '?'}</Text>
-          <Text style={styles.fields.time}>{fmtDateTimeRelative(spot.timeInMillis)}</Text>
+          <Text>{fmtDateTimeRelative(spot.timeInMillis)}</Text>
         </View>
         <View style={styles.doubleRowInnerRow}>
-          <Text style={styles.fields.mode}>{spot.mode ?? '?'}</Text>
+          <Text style={styles.fields.band}>{spot.band}</Text>
+          <Text style={styles.fields.mode}>{spot.mode}</Text>
           <Text style={styles.fields.name} numberOfLines={1} ellipsizeMode="tail">
-            {' at '}
-            <Text style={styles.text.numbers}>{spot.reference ?? '?'}</Text>
-            {' '}
-            {spot.name ?? '?'}
+            {spot.reference && (
+              <>
+                {' at '}
+                <Text style={styles.text.numbers}>{spot.reference ?? '?'}</Text>
+                {': '}
+                {[spot.locationDesc, spot.name].join(' • ')}
+              </>
+            )}
           </Text>
         </View>
       </View>

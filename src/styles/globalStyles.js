@@ -122,7 +122,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     },
     doubleRowInnerRow: {
       // borderWidth: 1,
-      height: oneSpace * 2.3,
+      height: oneSpace * 2.6,
       flexDirection: 'row',
       width: '100%'
     },

@@ -38,18 +38,26 @@ function prepareStyles (themeStyles, themeColor) {
         minWidth: themeStyles.oneSpace * 5,
         textAlign: 'left'
       },
+      band: {
+        flex: 0,
+        fontSize: themeStyles.normalFontSize * 0.9,
+        marginLeft: themeStyles.oneSpace * 1,
+        width: themeStyles.oneSpace * 7,
+        textAlign: 'right'
+      },
       mode: {
         flex: 0,
         fontSize: themeStyles.normalFontSize * 0.9,
-        marginLeft: themeStyles.oneSpace * 9,
-        minWidth: themeStyles.oneSpace * 3.5,
+        marginLeft: themeStyles.oneSpace * 0.2,
+        width: themeStyles.oneSpace * 5,
         textAlign: 'right'
       },
       name: {
         flex: 1,
         fontSize: themeStyles.normalFontSize * 0.8,
         minWidth: themeStyles.oneSpace * 5,
-        marginLeft: themeStyles.oneSpace * 2,
+        paddingTop: themeStyles.oneSpace * 0.2,
+        marginLeft: themeStyles.oneSpace * 1.4,
         textAlign: 'left'
       },
       time: {
