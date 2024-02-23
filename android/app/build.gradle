@@ -78,7 +78,7 @@ android {
         applicationId "com.ham2k.polo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
+        versionCode 16
         versionName "0.4.0"
         setProperty("archivesBaseName", applicationId + "-v" + versionCode + "(" + versionName + ")")
     }
