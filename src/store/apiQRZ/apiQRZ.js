@@ -40,8 +40,10 @@ const baseQueryWithSettings = fetchBaseQuery({
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQueryWithSettings(args, api, extraOptions)
 
+  console.log('reauth?', result?.data?.QRZDatabase)
   if ((result.error && result.error.status === 401) ||
     result.data?.QRZDatabase?.Session?.Error?.startsWith('Invalid session key') ||
+    result.data?.QRZDatabase?.Session?.Error?.startsWith('Session Timeout') ||
     result.data?.QRZDatabase?.Session?.Error?.startsWith('Username / password required')
   ) {
     api.dispatch(setAccountInfo({ qrz: { session: undefined } }))
@@ -56,7 +58,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       }
     }, api, extraOptions)
 
-    if (result.error) return result
     if (result.data?.QRZDatabase?.Session?.Error) return { error: result.data?.QRZDatabase?.Session?.Error, meta: result.meta }
 
     const session = result.data?.QRZDatabase?.Session?.Key
