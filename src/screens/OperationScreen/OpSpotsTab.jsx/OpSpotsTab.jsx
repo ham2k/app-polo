@@ -50,40 +50,63 @@ export default function OpSpotsTab ({ navigation, route }) {
     return () => clearInterval(interval)
   })
 
-  const bandOptions = useMemo(() => {
+  const [bandOptions, bandSpots] = useMemo(() => {
     const counts = {}
-    ;(spots?.data || []).forEach(spot => {
-      counts[spot.band] = (counts[spot.band] ?? 0) + 1
-    })
     let options = [{ value: 'any', label: 'Any Band' }]
+    let filtered = []
 
-    options = options.concat(
-      Object.keys(counts)
-        .map(key => ({ band: key, count: counts[key] })).sort((a, b) => {
-          return b.count - a.count
-        })
-        .map(b => ({ value: b.band, label: `${b.band} (${b.count})` }))
-    )
-    return options
-  }, [spots])
-
-  const filteredSpots = useMemo(() => {
     if (spots?.status === 'fulfilled') {
-      let filtered = spots?.data || []
+      (spots?.data || []).forEach(spot => {
+        counts[spot.band] = (counts[spot.band] ?? 0) + 1
+      })
+
+      options = options.concat(
+        Object.keys(counts)
+          .map(key => ({ band: key, count: counts[key] })).sort((a, b) => {
+            return b.count - a.count
+          })
+          .map(b => ({ value: b.band, label: `${b.band} (${b.count})` }))
+      )
+
+      filtered = (spots?.data || [])
       if (band !== 'any') {
-        filtered = filtered?.filter(spot => spot.band === band)
+        filtered = filtered.filter(spot => spot.band === band)
       }
+    }
+
+    return [options, filtered]
+  }, [spots, band])
+
+  const [modeOptions, filteredSpots] = useMemo(() => {
+    let options = [{ value: 'any', label: 'Any Mode' }]
+    let filtered = bandSpots || []
+
+    if (spots?.status === 'fulfilled') {
+      const counts = {}
+      filtered.forEach(spot => {
+        const simpleMode = simplifiedMode(spot.mode)
+        counts[simpleMode] = (counts[simpleMode] ?? 0) + 1
+      })
+
+      options = options.concat(
+        Object.keys(counts)
+          .map(key => ({ mode: key, count: counts[key] })).sort((a, b) => {
+            return b.count - a.count
+          })
+          .map(b => ({ value: b.mode, label: `${b.mode} (${b.count})` }))
+      )
+
       if (mode !== 'any') {
         filtered = filtered?.filter(spot => simplifiedMode(spot.mode) === mode)
       }
 
-      return filtered.sort((a, b) => {
+      filtered.sort((a, b) => {
         return a.frequency - b.frequency
       })
-    } else {
-      return []
     }
-  }, [spots, band, mode])
+
+    return [options, filtered]
+  }, [spots, mode, bandSpots])
 
   return (
     <View style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column' }]}>
@@ -107,7 +130,7 @@ export default function OpSpotsTab ({ navigation, route }) {
             value={band}
             onChange={(event) => setBand(event.nativeEvent.text)}
             fieldId={'band'}
-            style={{ width: styles.oneSpace * 14 }}
+            style={{ }}
             list={bandOptions}
           />
           <ThemedDropDown
@@ -115,13 +138,8 @@ export default function OpSpotsTab ({ navigation, route }) {
             value={mode}
             onChange={(event) => setMode(event.nativeEvent.text)}
             fieldId={'mode'}
-            style={[styles.input, { width: styles.oneSpace * 14 }]}
-            list={[
-              { value: 'any', label: 'Any Mode' },
-              { value: 'PHONE', label: 'Phone' },
-              { value: 'CW', label: 'CW' },
-              { value: 'DIGITAL', label: 'Digital' }
-            ]}
+            style={{ }}
+            list={modeOptions}
           />
         </View>
       </View>
