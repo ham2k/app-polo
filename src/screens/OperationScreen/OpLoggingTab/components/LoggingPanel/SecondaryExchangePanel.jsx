@@ -79,9 +79,9 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
                   label="Band"
                   themeColor={themeColor}
                   value={qso.band ?? operation.band}
-                  onChange={handleFieldChange}
+                  onChangeValue={handleFieldChange}
                   fieldId={'band'}
-                  style={{ width: styles.oneSpace * 8 }}
+                  style={{ width: styles.oneSpace * 15 }}
                   list={[
                     { value: '160m', label: '160m' },
                     { value: '80m', label: '80m' },
@@ -103,7 +103,7 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
                 />
                 <FrequencyInput
                   themeColor={themeColor}
-                  style={[styles.input, { width: styles.oneSpace * 11 }]}
+                  style={{ width: styles.oneSpace * 11 }}
                   value={qso.freq ?? operation.freq ?? ''}
                   label="Frequency"
                   placeholder=""
@@ -117,7 +117,7 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
                   value={qso.mode ?? operation.mode}
                   onChange={handleFieldChange}
                   fieldId={'mode'}
-                  style={[styles.input, { width: styles.oneSpace * 8 }]}
+                  style={{ width: styles.oneSpace * 14 }}
                   list={[
                     { value: 'SSB', label: 'SSB' },
                     { value: 'CW', label: 'CW' },

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
-import DropDown from '@go_robots/react-native-paper-dropdown'
+import DropDown from '@developerblue/react-native-paper-dropdown'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export default function ThemedDropDown (props) {
@@ -16,7 +16,7 @@ export default function ThemedDropDown (props) {
   const [isOpen, setIsOpen] = useState(false)
   const onShow = useCallback(() => setIsOpen(true), [setIsOpen])
   const onDismiss = useCallback(() => setIsOpen(false), [setIsOpen])
-  const onSetValue = useCallback((newValue) => {
+  const handleChangeValue = useCallback((newValue) => {
     setInnerValue(newValue)
     onChange && onChange({ fieldId, nativeEvent: { text: newValue } })
     onChangeText && onChangeText(newValue)
@@ -40,17 +40,22 @@ export default function ThemedDropDown (props) {
       {...props}
       label={label}
       value={innerValue}
-      setValue={onSetValue}
+      onChangeValue={handleChangeValue}
       visible={isOpen}
-      inputProps={{
-        style: [
-          {
-            color: colorStyles.paperDropdown.color,
-            backgroundColor: colorStyles.paperDropdown.backgroundColor,
-            paddingHorizontal: props.dense ? themeStyles.halfSpace : themeStyles.oneSpace
-          },
-          style
-        ]
+      style={{
+        ...style,
+        color: colorStyles.paperDropdown.color,
+        backgroundColor: colorStyles.paperDropdown.backgroundColor,
+        height: themeStyles.oneSpace * 7,
+        paddingLeft: 0, // props.dense ? themeStyles.halfSpace : themeStyles.oneSpace,
+        paddingRight: 0
+      }}
+      contentStyle={{}}
+      background={colorStyles.paperDropdown.backgroundColor}
+      iconStyle={{ padding: 0, margin: 0, width: themeStyles.oneSpace * 2.1 }}
+      dropDownStyle={{
+        backgroundColor: colorStyles.paperDropdown.backgroundColor,
+        borderColor: themeStyles.theme.colors[themeColor]
       }}
       showDropDown={onShow}
       onDismiss={onDismiss}
