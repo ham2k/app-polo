@@ -18,11 +18,10 @@ import { qsoKey } from '@ham2k/lib-qson-tools'
 import { addQSO } from '../../../../store/qsos'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { SecondaryExchangePanel } from './LoggingPanel/SecondaryExchangePanel'
-import { annotateFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { prepareCountryFilesData } from '../../../../data/CountryFiles'
 
-// Not actually a react hook, just named like one
-// eslint-disable-next-line react-hooks/rules-of-hooks
-useBuiltinCountryFile()
+prepareCountryFilesData()
 
 function prepareStyles (themeStyles, themeColor) {
   return {
