@@ -12,6 +12,7 @@ import { findQSOHistory } from '../../../../../store/qsos/actions/findQSOHistory
 import { fmtDateZulu } from '../../../../../tools/timeFormats'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 import { CallInfoDialog } from './CallInfoDialog'
+import { prepareCountryFilesData } from '../../../../../data/CountryFiles'
 
 export function CallInfo ({ qso, operation, style, themeColor }) {
   const styles = useThemedStyles((baseStyles) => {
