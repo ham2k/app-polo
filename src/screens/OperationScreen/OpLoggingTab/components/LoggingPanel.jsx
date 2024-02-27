@@ -186,13 +186,14 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
       setQSO({ ...qso, notes: value })
     } else if (fieldId === 'freq') {
       setQSO({ ...qso, freq: parseFreqInMHz(value) })
-      dispatch(setOperationData({ uuid: operation.uuid, freq: parseFreqInMHz(value) }))
+      if (qso?._is_new) dispatch(setOperationData({ uuid: operation.uuid, freq: parseFreqInMHz(value) }))
     } else if (fieldId === 'band') {
+      console.log('Setting band', value)
       setQSO({ ...qso, band: value })
-      dispatch(setOperationData({ uuid: operation.uuid, band: value }))
+      if (qso?._is_new) dispatch(setOperationData({ uuid: operation.uuid, band: value }))
     } else if (fieldId === 'mode') {
       setQSO({ ...qso, mode: value })
-      dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
+      if (qso?._is_new) dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
       setQSO({ ...qso, startOnMillis: value })
     }
