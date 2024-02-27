@@ -3,6 +3,8 @@ import { FlatList, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem, { guessItemHeight } from './QSOItem'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
+import { useSelector } from 'react-redux'
+import { selectOperationCallInfo } from '../../../../store/operations'
 
 function prepareStyles (themeStyles, themeColor) {
   return {
@@ -62,12 +64,14 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-export default function QSOList ({ style, qsos, selectedKey, setSelectedKey, lastKey }) {
+export default function QSOList ({ style, operation, qsos, selectedKey, setSelectedKey, lastKey }) {
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles))
 
   const { width } = useWindowDimensions()
   const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
   // const { qsos, selectedKey, setSelectedKey, lastKey } = useContext(OperationContext)
+
+  const ourInfo = useSelector(selectOperationCallInfo(operation?.uuid))
 
   const listRef = useRef()
 
@@ -98,9 +102,9 @@ export default function QSOList ({ style, qsos, selectedKey, setSelectedKey, las
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
     return (
-      <QSOItem qso={qso} selected={qso.key === selectedKey} onPress={handlePress} styles={styles} extendedWidth={extendedWidth} />
+      <QSOItem qso={qso} selected={qso.key === selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={styles} extendedWidth={extendedWidth} />
     )
-  }, [styles, handlePress, extendedWidth, selectedKey])
+  }, [styles, ourInfo, handlePress, extendedWidth, selectedKey])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(qsos[index], styles)
