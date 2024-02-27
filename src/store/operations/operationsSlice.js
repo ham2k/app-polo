@@ -66,7 +66,7 @@ export const selectOperationsList = createSelector(
 )
 
 export const selectOperationCallInfo = (uuid) => createSelector(
-  (state) => state?.operations?.info[uuid]?.call,
+  (state) => state?.operations?.info[uuid]?.stationCall,
   (state) => selectOperatorCall(state),
   (operationCall, settingsCall) => {
     let info = {}
