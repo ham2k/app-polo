@@ -20,6 +20,7 @@ import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { SecondaryExchangePanel } from './LoggingPanel/SecondaryExchangePanel'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { prepareCountryFilesData } from '../../../../data/CountryFiles'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
 
 prepareCountryFilesData()
 
@@ -42,6 +43,7 @@ function prepareStyles (themeStyles, themeColor) {
 function prepareNewQSO (operation, settings) {
   return {
     band: operation.band,
+    freq: operation.freq,
     mode: operation.mode,
     _is_new: true,
     key: 'new-qso'
@@ -58,6 +60,10 @@ function prepareExistingQSO (qso) {
 function prepareSuggestedQSO (qso) {
   const clone = cloneDeep(qso || {})
   clone._is_new = true
+  clone.key = 'new-qso'
+  if (clone.freq) {
+    clone.band = bandForFrequency(clone.freq)
+  }
   return clone
 }
 
@@ -209,13 +215,17 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
             delete qso._is_new
           }
 
-          qso.mode = qso.mode || operation.mode
           qso.freq = qso.freq || operation.freq
+          if (qso.freq) {
+            qso.band = bandForFrequency(qso.freq)
+          } else {
+            qso.band = qso.band || operation.band
+          }
+          qso.mode = qso.mode || operation.mode
 
-          if (!qso.startOnMillis) qso.startOnMillis = new Date()
+          if (!qso.startOnMillis) qso.startOnMillis = (new Date()).getTime()
           qso.startOn = new Date(qso.startOnMillis).toISOString()
           if (qso.endOnMillis) qso.endOn = new Date(qso.endOnMillis).toISOString()
-
           qso.our = qso.our || {}
           qso.our.call = qso.our.call || operation.stationCall || settings.operatorCall
           qso.our.sent = qso.our.sent || (operation.mode === 'CW' ? '599' : '59')

@@ -57,10 +57,12 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
   if (qso.startOnMillis < startOnMillisMin || !startOnMillisMin) startOnMillisMin = qso.startOnMillis
   if (qso.startOnMillis > startOnMillisMax || !startOnMillisMax) startOnMillisMax = qso.startOnMillis
 
+  // No need to save operation to the db, because min/max times and counts are recalculated on load
+  dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount: qsos.length }))
+  const operation = getState().operations.info[uuid]
   setTimeout(() => {
-    // No need to save operation to the db, because min/max times and counts are recalculated on load
-    dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount: qsos.length }))
-  }, 1)
+    dispatch(saveOperation(operation))
+  }, 0)
 }
 
 export const saveQSOsForOperation = (uuid) => async (dispatch, getState) => {
