@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import POTAInput from '../../components/POTAInput'
-import { useDispatch } from 'react-redux'
-import { setOperationData } from '../../../store/operations'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
 import { Text } from 'react-native-paper'
 import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 import { apiPOTA, useLookupParkQuery } from '../../../store/apiPOTA'
@@ -93,6 +93,15 @@ export function ThisActivitySettingsDialog (props) {
 
   const dispatch = useDispatch()
 
+  const ourInfo = useSelector(selectOperationCallInfo(operation?.uuid))
+  const defaultPrefix = useMemo(() => {
+    if (ourInfo?.dxccCode) {
+      return POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] ?? 'K'
+    } else {
+      return 'K'
+    }
+  }, [ourInfo?.dxccCode])
+
   const handleChange = useCallback((value) => {
     let refs
     if (value) {
@@ -127,6 +136,7 @@ export function ThisActivitySettingsDialog (props) {
             placeholder={''}
             mode={'flat'}
             value={value}
+            defaultPrefix={defaultPrefix}
             onChangeText={(newValue) => {
               setValue(newValue)
             }}
