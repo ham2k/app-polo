@@ -1,6 +1,6 @@
 const MIXED_CASE_REGEX = /[A-Z][a-z]/g
 const ALL_UPPER_CASE_REGEX = /^[A-Z]+$/g
-const WORD_OR_HYPENED_SEPARATOR_REGEX = /([^\s-.]+?)([\s-.]+|\s*$)/g
+const WORD_OR_HYPENED_SEPARATOR_REGEX = /([^\s-.]+?)([\s"-.]+|\s*$)/g
 const LETTERS_ONLY_REGEX = /^[a-z]+$/
 const PERIOD_REGEX = /\./g
 
@@ -34,7 +34,7 @@ const CAPTITALIZATION_EXCEPTIONS = {
 
 export function capitalizeString (str, options = {}) {
   let { content = 'text', force = true } = options
-
+  console.log('capitalizeString', str, options)
   str = str?.trim()
   if (!str) return str
 

@@ -3,6 +3,7 @@ import { XMLParser } from 'fast-xml-parser'
 
 import packageJson from '../../../package.json'
 import { setAccountInfo } from '../settings'
+import { capitalizeString } from '../../tools/capitalizeString'
 
 /**
 
@@ -115,17 +116,21 @@ export const apiQRZ = createApi({
               ...response,
               error: undefined,
               data: {
-                name: callsignInfo.name_fmt,
+                name: [
+                  capitalizeString(callsignInfo.fname, { content: 'name', force: false }),
+                  callsignInfo.nickname ? `“${callsignInfo.nickname}”` : undefined,
+                  capitalizeString(callsignInfo.name, { content: 'name', force: false })
+                ].filter(x => x).join(' '),
                 call: callsignInfo.call,
                 firstName: callsignInfo.fname,
                 lastName: callsignInfo.name,
                 tz: callsignInfo.TimeZone,
                 gmtOffset: callsignInfo.GMTOffset,
-                city: callsignInfo.addr2,
+                city: capitalizeString(callsignInfo.addr2, { force: false }),
                 state: callsignInfo.state,
-                country: callsignInfo.country,
+                country: capitalizeString(callsignInfo.country, { force: false }),
                 postal: callsignInfo.zip,
-                county: callsignInfo.county,
+                county: capitalizeString(callsignInfo.county, { force: false }),
                 grid: callsignInfo.grid,
                 cqZone: callsignInfo.cqzone,
                 ituZone: callsignInfo.ituzone,
