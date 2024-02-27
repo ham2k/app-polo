@@ -1,4 +1,7 @@
+import { parseCallsign } from '@ham2k/lib-callsigns'
 import { createSelector, createSlice } from '@reduxjs/toolkit'
+import { selectOperatorCall } from '../settings'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
 const INITIAL_STATE = {
   status: 'ready',
@@ -59,6 +62,27 @@ export const selectOperationsList = createSelector(
     return Object.values(info || {}).sort((a, b) => {
       return (b.startOnMillisMax ?? b.createdOnMillis ?? 0) - (a.startOnMillisMax ?? a.createdOnMillis ?? 0)
     })
+  }
+)
+
+export const selectOperationCallInfo = (uuid) => createSelector(
+  (state) => state?.operations?.info[uuid]?.call,
+  (state) => selectOperatorCall(state),
+  (operationCall, settingsCall) => {
+    let info = {}
+    if (operationCall) {
+      info = parseCallsign(operationCall)
+      info._source = 'operation'
+    } else if (settingsCall) {
+      info = parseCallsign(settingsCall)
+      info._source = 'settings'
+    } else {
+      info._source = 'none'
+    }
+    if (info.baseCall) {
+      info = annotateFromCountryFile(info)
+    }
+    return info
   }
 )
 
