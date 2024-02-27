@@ -6,7 +6,7 @@ export const fetchDataFile = (key) => async (dispatch) => {
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
-  dispatch(actions.setDataFileInfo(key, { status: 'fetching' }))
+  dispatch(actions.setDataFileInfo({ key, status: 'fetching' }))
   const { fetch } = definition
   const data = await fetch()
 
@@ -27,18 +27,18 @@ export const fetchDataFile = (key) => async (dispatch) => {
 
   if (definition.onLoad) definition.onLoad(data)
 
-  dispatch(actions.setDataFileInfo(key, { ...data, status: 'loaded', date: data.date ?? new Date() }))
+  dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', date: data.date ?? new Date() }))
 }
 
 export const readDataFile = (key) => async (dispatch) => {
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
-  dispatch(actions.setDataFileInfo(key, { status: 'loading' }))
+  dispatch(actions.setDataFileInfo({ key, status: 'loading' }))
 
   const body = await RNFetchBlob.fs.readFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
   const data = JSON.parse(body)
 
-  dispatch(actions.setDataFileInfo(key, { ...data, status: 'loaded', date: Date.parse(data.date) }))
+  dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', date: data.date ? Date.parse(data.date) : new Date() }))
   if (definition.onLoad) definition.onLoad(data)
 }
 
