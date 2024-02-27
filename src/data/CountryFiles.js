@@ -23,7 +23,6 @@ export function prepareCountryFilesData () {
     key: 'country-files-bigcty',
     name: 'Country Files - Big CTY',
     infoURL: 'https://www.country-files.com/bigcty',
-    maxAgeInDays: 7,
     autoLoad: true,
     fetch: async () => {
       const request = 'https://www.country-files.com/bigcty/cty.csv'
@@ -33,8 +32,6 @@ export function prepareCountryFilesData () {
 
       const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
 
-      console.log('Country Files', body?.substring(0, 100))
-
       const data = parseCountryFile(body)
 
       RNFetchBlob.fs.unlink(response.data)
@@ -42,7 +39,6 @@ export function prepareCountryFilesData () {
       return data
     },
     onLoad: (data) => {
-      console.log('Country Files data', Object.keys(data))
       Object.assign(CountryFiles, data)
       setCountryFileData(CountryFiles)
     }

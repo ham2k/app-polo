@@ -11,6 +11,7 @@ export function preparePOTAAllParksData () {
     key: 'pota-all-parks',
     name: 'POTA - All Parks',
     infoURL: 'https://pota.app/',
+    icon: 'file-powerpoint-outline',
     maxAgeInDays: 7,
     autoLoad: true,
     fetch: async () => {
