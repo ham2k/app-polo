@@ -178,12 +178,14 @@ export function fmtTimeBetween (t1, t2) {
       return ''
     } else if (diff < 1000) {
       return '0s'
-    } else if (diff < 60000) {
+    } else if (diff < 60 * 1000) {
       return `${Math.floor(diff / 1000)}s`
-    } else if (diff < 3600000) {
-      return `${Math.floor(diff / 60000)}m ${Math.floor((diff % 60000) / 1000)}s`
+    } else if (diff < 60 * 60 * 1000) {
+      return `${Math.floor(diff / (60 * 1000))}m ${Math.floor((diff % (60 * 1000)) / 1000)}s`
+    } else if (diff < 1000 * 60 * 60 * 24) {
+      return `${Math.floor(diff / (60 * 60 * 1000))}h ${Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000))}m`
     } else {
-      return `${Math.floor(diff / 3600000)}h ${Math.floor((diff % 3600000) / 60000)}m`
+      return `${Math.floor(diff / (60 * 60 * 24 * 1000))}d ${Math.floor((diff % (60 * 60 * 24 * 1000)) / (60 * 60 * 1000))}h`
     }
   } else {
     return ''
