@@ -9,7 +9,7 @@ import { filterRefs, hasRef } from '../../../../../tools/refTools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { findQSOHistory } from '../../../../../store/qsos/actions/findQSOHistory'
-import { fmtDateZulu } from '../../../../../tools/timeFormats'
+import { fmtDateZulu, fmtISODate } from '../../../../../tools/timeFormats'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 import { CallInfoDialog } from './CallInfoDialog'
 import { prepareCountryFilesData } from '../../../../../data/CountryFiles'
@@ -71,7 +71,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
   const [skipQRZ, setSkipQRZ] = useState(true)
   useEffect(() => {
     setSkipQRZ(true)
-    const timeout = setTimeout(() => { setSkipQRZ(false) }, 500)
+    const timeout = setTimeout(() => { setSkipQRZ(false) }, 200)
     return () => clearTimeout(timeout)
   }, [guess?.baseCall])
 
@@ -111,7 +111,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
       if (entity) parts.push(`${entity.flag} ${entity.shortName}`)
 
       if (qrz?.data?.call === guess?.baseCall && qrz?.data?.city && qrz?.status === 'fulfilled') {
-        parts.push(capitalizeString(qrz.data.city, { force: false }), qrz.data.state)
+        parts.push(qrz.data.city, qrz.data.state)
       }
     }
 
@@ -125,7 +125,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     if (qrz?.error) {
       parts.push(qrz.error)
     } else if (qrz?.data?.name && qrz?.status === 'fulfilled') {
-      parts.push(capitalizeString(qrz.data.name, { content: 'name', force: false }))
+      parts.push(qrz.data.name)
       if (qrz.data.call && qrz.data.call !== qrz.originalArgs?.call) {
         parts.push(`(Now ${qrz.data.call})`)
       }
@@ -134,12 +134,13 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
   }, [qrz, skipQRZ])
 
   const [historyInfo, historyLevel] = useMemo(() => {
+    const today = new Date()
     let info = ''
     let level = 'info'
     if (callHistory?.length > 0) {
       if (qso?._is_new && callHistory.find(x => x?.operation === operation.uuid)) {
         if (isPotaOp) {
-          if (fmtDateZulu(callHistory[0]?.startOnMillis) === fmtDateZulu(new Date())) {
+          if (fmtDateZulu(callHistory[0]?.startOnMillis) === fmtDateZulu(today)) {
             info = 'Dupe!!!'
             level = 'alert'
           } else {
@@ -151,7 +152,13 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
           level = 'alert'
         }
       } else {
-        info = `${callHistory.length} QSOs`
+        const sameDay = callHistory.filter(x => fmtISODate(x.startOnMillis) === fmtISODate(today)).length
+
+        if (sameDay > 1) {
+          info = `${sameDay}x today + ${callHistory.length - sameDay} QSOs`
+        } else {
+          info = `+ ${callHistory.length - (qso?._is_new ? 1 : 0)} QSOs`
+        }
         level = 'info'
       }
     }

@@ -21,6 +21,12 @@ describe('capitalizeString', () => {
     expect(capitalizeString('nasa ares flexradio club')).toEqual('NASA ARES FlexRadio Club')
   })
 
+  it('can handle quotes', () => {
+    expect(capitalizeString('JOHN "Joe" DOE')).toEqual('John "Joe" Doe')
+    expect(capitalizeString('JOHN "JOE" DOE')).toEqual('John "Joe" Doe')
+    expect(capitalizeString('john "joe" doe')).toEqual('John "Joe" Doe')
+  })
+
   it('can preserve existing case', () => {
     expect(capitalizeString('sullivan county aRES')).toEqual('Sullivan County ARES')
     expect(capitalizeString('Sullivan county aRES', { force: false })).toEqual('Sullivan county aRES')
