@@ -9,8 +9,6 @@ export function guessItemHeight (qso, styles) {
   return styles.doubleRow.height + styles.doubleRow.borderBottomWidth
 }
 const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth }) {
-  console.log(spot)
-
   const freqParts = useMemo(() => partsForFreqInMHz(spot.frequency), [spot.frequency])
 
   return (
