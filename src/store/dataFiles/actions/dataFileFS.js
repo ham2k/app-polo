@@ -55,7 +55,7 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
   } else {
     await dispatch(readDataFile(key))
     const date = selectDataFileInfo(key)(getState())?.date
-    if (date && definition.maxAgeInDays && (Date.now() - date.getTime()) / 1000 / 60 / 60 / 24 > definition.maxAgeInDays) {
+    if (date && definition.maxAgeInDays && (Date.now() - Date.parse(date)) / 1000 / 60 / 60 / 24 > definition.maxAgeInDays) {
       console.info(`Data for ${definition.key} is too old, fetching a fresh version`)
       dispatch(fetchDataFile(key))
     }

@@ -31,7 +31,10 @@ const DefinitionDialog = ({ def, info, styles, onDialogDone }) => {
           <Dialog.Icon icon={def.icon ?? 'file-outline'} />
           <Dialog.Title style={{ textAlign: 'center' }}>{def.name}</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">Updated on {fmtDateTimeNice(info.date)}</Text>
+            <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{def.description}</Text>
+          </Dialog.Content>
+          <Dialog.Content>
+            <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Updated on {fmtDateTimeNice(info.date)}</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={onDialogDone}>Cancel</Button>

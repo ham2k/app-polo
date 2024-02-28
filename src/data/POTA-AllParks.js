@@ -10,6 +10,7 @@ export function preparePOTAAllParksData () {
   registerDataFile({
     key: 'pota-all-parks',
     name: 'POTA - All Parks',
+    description: 'Database of all POTA references',
     infoURL: 'https://pota.app/',
     icon: 'file-powerpoint-outline',
     maxAgeInDays: 7,
