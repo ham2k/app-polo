@@ -19,6 +19,7 @@ cd android && ./gradlew clean && ./gradlew cleanBuildCache && cd ..
 Links:
 
 * Tester Group: https://groups.google.com/g/ham2k-polo-testers
+* Discord: https://discord.gg/rT6B2fP7pU
 * Internal: https://play.google.com/apps/internaltest/4700998652811571052
 * Closed Beta: https://play.google.com/apps/testing/com.ham2k.polo.beta
 
