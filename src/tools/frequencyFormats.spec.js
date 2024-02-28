@@ -3,11 +3,14 @@ import { fmtFreqInMHz, partsForFreqInMHz, parseFreqInMHz } from './frequencyForm
 describe('fmtFreqInMHz', () => {
   it('should convert MHz to a nice formatting', () => {
     expect(fmtFreqInMHz(7125)).toEqual('7.125')
-    expect(fmtFreqInMHz(7125, { compact: false })).toEqual('7.125.000')
+    expect(fmtFreqInMHz(7125, { mode: 'compact' })).toEqual('7.125 ')
+    expect(fmtFreqInMHz(7125, { mode: 'full' })).toEqual('7.125.000')
     expect(fmtFreqInMHz(7125.100)).toEqual('7.125.100')
-    expect(fmtFreqInMHz(7125.100, { compact: false })).toEqual('7.125.100')
+    expect(fmtFreqInMHz(7125.100, { mode: 'compact' })).toEqual('7.125.')
+    expect(fmtFreqInMHz(7125.100, { mode: 'full' })).toEqual('7.125.100')
     expect(fmtFreqInMHz(146520.125)).toEqual('146.520.125')
-    expect(fmtFreqInMHz(146520.125, { compact: false })).toEqual('146.520.125')
+    expect(fmtFreqInMHz(146520.125, { mode: 'compact' })).toEqual('146.520.')
+    expect(fmtFreqInMHz(146520.125, { mode: 'full' })).toEqual('146.520.125')
   })
 })
 

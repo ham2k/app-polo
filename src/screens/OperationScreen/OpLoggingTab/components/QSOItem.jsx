@@ -8,6 +8,7 @@ import { activityIndex } from '../../activities'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { parseCallsign } from '@ham2k/lib-callsigns'
+import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
 
 export function guessItemHeight (qso, styles) {
   return styles.compactRow.height + styles.compactRow.borderBottomWidth
@@ -33,7 +34,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
       <View style={styles.compactRow}>
         <Text style={styles.fields.number}>{qso._number}</Text>
         <Text style={styles.fields.time}>{fmtShortTimeZulu(qso.startOnMillis)}</Text>
-        <Text style={styles.fields.freq}>{qso.freq ?? qso.band}</Text>
+        <Text style={styles.fields.freq}>{qso.freq ? fmtFreqInMHz(qso.freq, { mode: 'compact' }) : qso.band}</Text>
         <Text style={styles.fields.call}>
           {qso.their?.call ?? '?'}
           {theirInfo?.entityPrefix && theirInfo.entityPrefix !== ourInfo?.entityPrefix && (

@@ -29,7 +29,7 @@ function prepareStyles (themeStyles, themeColor) {
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        minWidth: themeStyles.oneSpace * 4,
+        minWidth: themeStyles.oneSpace * 7,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
