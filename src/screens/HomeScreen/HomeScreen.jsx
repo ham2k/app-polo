@@ -20,6 +20,14 @@ export default function HomeScreen ({ navigation }) {
   const settings = useSelector(selectSettings)
 
   useEffect(() => {
+    if (!settings?.operatorCall) {
+      setTimeout(() => {
+        navigation.navigate('Settings')
+      }, 500)
+    }
+  }, [settings, navigation])
+
+  useEffect(() => {
     navigation.setOptions({ rightAction: 'cog', onRightActionPress: () => navigation.navigate('Settings') })
   }, [navigation])
 
@@ -37,8 +45,9 @@ export default function HomeScreen ({ navigation }) {
     dispatch(setupOnlineStatusMonitoring())
   }, [dispatch])
 
-  const handleNewOperation = useCallback(() => {
-    dispatch(addNewOperation({ stationCall: settings.operatorCall, name: 'New Operation' }))
+  const handleNewOperation = useCallback(async () => {
+    const operation = await dispatch(addNewOperation({ stationCall: settings.operatorCall, title: 'New Operation' }))
+    navigation.navigate('Operation', { uuid: operation.uuid, operation, isNew: true })
   }, [dispatch, settings])
 
   const navigateToOperation = useCallback((operation) => {

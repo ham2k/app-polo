@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native'
 import activities from '../../activities'
 import { replaceRefs } from '../../../../tools/refTools'
 
-export function AddActivityDialog ({ operation, visible, settings, styles, onDialogDone }) {
+export function AddActivityDialog ({ operation, visible, settings, styles, onDialogDone, setCurrentDialog }) {
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -27,8 +27,12 @@ export function AddActivityDialog ({ operation, visible, settings, styles, onDia
       )
     }))
     setDialogVisible(false)
-    onDialogDone && onDialogDone()
-  }, [operation, dispatch, onDialogDone])
+    if (setCurrentDialog) {
+      setCurrentDialog(`activity.${activity.key}`)
+    } else {
+      onDialogDone && onDialogDone()
+    }
+  }, [operation, dispatch, onDialogDone, setCurrentDialog])
 
   const handleCancel = useCallback(() => {
     setDialogVisible(false)

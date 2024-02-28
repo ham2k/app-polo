@@ -149,6 +149,7 @@ export default function OpSettingsTab ({ navigation, route }) {
           operation={operation}
           styles={styles}
           visible={true}
+          setCurrentDialog={setCurrentDialog}
           onDialogDone={() => setCurrentDialog('')}
         />
       )}
@@ -159,6 +160,8 @@ export default function OpSettingsTab ({ navigation, route }) {
           title="Export ADIF"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
           onPress={() => handleExport('adif')}
+          style={{ opacity: !(operation.qsoCount > 0) ? 0.5 : 1 }}
+          disabled={!(operation.qsoCount > 0)}
         />
         {activities
           .filter((activity) => activity.cabrilloHeaders && findRef(operation, activity.key))
@@ -174,6 +177,8 @@ export default function OpSettingsTab ({ navigation, route }) {
           title="Export data files"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" />}
           onPress={() => handleExport('qson')}
+          style={{ opacity: !(operation.qsoCount > 0) ? 0.5 : 1 }}
+          disabled={!(operation.qsoCount > 0)}
         />
       </List.Section>
       <List.Section>
