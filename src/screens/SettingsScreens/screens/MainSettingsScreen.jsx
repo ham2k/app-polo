@@ -67,7 +67,13 @@ export default function MainSettingsScreen ({ navigation }) {
 
         <List.Item
           title="Operator Callsign"
-          description={<Text style={styles.text.callsign}>{settings.operatorCall ?? 'No call'}</Text>}
+          description={
+            settings.operatorCall ? (
+              <Text style={styles.text.callsign}>{settings.operatorCall ?? 'No call'}</Text>
+            ) : (
+              <Text style={{ color: 'red' }}>Please enter a callsign!</Text>
+            )
+          }
           left={OperatorCallsignIcon}
           onPress={() => setCurrentDialog('operatorCall')}
         />

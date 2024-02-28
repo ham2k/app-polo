@@ -41,8 +41,8 @@ export default function OperationScreen ({ navigation, route }) {
   }, [navigation, operation, settings])
 
   const settingsOnly = useMemo(() => {
-    return !operation.stationCall && !settings?.operatorCall
-  }, [operation, settings])
+    return route.params.isNew || (!operation.stationCall && !settings?.operatorCall)
+  }, [operation, settings, route.params.isNew])
 
   const dimensions = useWindowDimensions()
 
@@ -71,18 +71,18 @@ export default function OperationScreen ({ navigation, route }) {
           name="QSOs"
           component={OpLoggingTab}
           initialParams={{ uuid: operation.uuid, operation }}
-          listeners={{
-            tabPress: e => { settingsOnly && e.preventDefault() }
-          }}
+          // listeners={{
+          //   tabPress: e => { settingsOnly && e.preventDefault() }
+          // }}
         />
 
         <Tab.Screen
           name="Spots"
           component={OpSpotsTab}
           initialParams={{ uuid: operation.uuid, operation }}
-          listeners={{
-            tabPress: e => { settingsOnly && e.preventDefault() }
-          }}
+          // listeners={{
+          //   tabPress: e => { settingsOnly && e.preventDefault() }
+          // }}
         />
 
       </Tab.Navigator>
