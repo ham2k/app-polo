@@ -44,10 +44,6 @@ export default function OperationScreen ({ navigation, route }) {
     return !operation.stationCall && !settings?.operatorCall
   }, [operation, settings])
 
-  // useEffect(() => {
-  //   navigation.jumpTo('Settings')
-  // }, [navigation, settingsOnly])
-
   const dimensions = useWindowDimensions()
 
   return (

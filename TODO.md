@@ -3,10 +3,6 @@
 * Fix time entry, make format less strict, and dates relative to today
 * Fix time entry to use previous QSO info if missing
 
-* Don't count QSO in current op when counting history
-* Show history count as "multiplier" for same day
-* Show today's history multipliers as badge on QSOs in list
-
 # Ready to Develop
 
 * Delete QSOs
