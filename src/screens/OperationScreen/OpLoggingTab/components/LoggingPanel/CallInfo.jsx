@@ -1,18 +1,22 @@
-import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import React, { useEffect, useMemo, useState } from 'react'
-import { ActivityIndicator, Icon, Text, TouchableRipple } from 'react-native-paper'
+import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
-import { capitalizeString } from '../../../../../tools/capitalizeString'
+import { useSelector } from 'react-redux'
+
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
+
 import { useLookupCallQuery } from '../../../../../store/apiQRZ'
 import { useLookupParkQuery } from '../../../../../store/apiPOTA'
 import { filterRefs, hasRef } from '../../../../../tools/refTools'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { findQSOHistory } from '../../../../../store/qsos/actions/findQSOHistory'
 import { fmtDateZulu, fmtISODate } from '../../../../../tools/timeFormats'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
+import { selectSystemOnline } from '../../../../../store/system'
+import { selectSettings } from '../../../../../store/settings'
+
 import { CallInfoDialog } from './CallInfoDialog'
-import { prepareCountryFilesData } from '../../../../../data/CountryFiles'
 
 export function CallInfo ({ qso, operation, style, themeColor }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -46,14 +50,16 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     }
   })
 
+  const online = useSelector(selectSystemOnline())
+  const settings = useSelector(selectSettings)
+
   const isPotaOp = useMemo(() => {
     return hasRef(operation?.refs, 'potaActivation')
   }, [operation])
 
   const [showDialog, setShowDialog] = useState(false)
 
-  // Parse the callsign
-  const guess = useMemo(() => {
+  const guess = useMemo(() => { // Parse the callsign
     if (qso?.their?.guess) {
       return qso?.their?.guess
     } else {
@@ -67,18 +73,20 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     }
   }, [qso])
 
-  // Use `skip` to prevent calling the API on every keystroke
-  const [skipQRZ, setSkipQRZ] = useState(true)
+  const [skipQRZ, setSkipQRZ] = useState(true) // Use `skip` to prevent calling the API on every keystroke
   useEffect(() => {
     setSkipQRZ(true)
-    const timeout = setTimeout(() => { setSkipQRZ(false) }, 200)
-    return () => clearTimeout(timeout)
-  }, [guess?.baseCall])
+    if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && guess?.baseCall?.length > 2) {
+      const timeout = setTimeout(() => { setSkipQRZ(false) }, 200)
+      return () => clearTimeout(timeout)
+    }
+  }, [guess?.baseCall, online, settings?.accounts?.qrz])
 
-  const qrz = useLookupCallQuery({ call: guess?.baseCall }, { skip: skipQRZ })
+  const qrzLookup = useLookupCallQuery({ call: guess?.baseCall }, { skip: skipQRZ })
+  const qrz = useMemo(() => qrzLookup.currentData || {}, [qrzLookup.currentData])
 
   const [callHistory, setCallHistory] = useState()
-  useEffect(() => {
+  useEffect(() => { // Get Call History
     const timeout = setTimeout(async () => {
       const qsoHistory = await findQSOHistory(guess?.baseCall)
       setCallHistory(qsoHistory)
@@ -86,8 +94,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     return () => clearTimeout(timeout)
   }, [guess?.baseCall])
 
-  // Use `skip` to prevent calling the API on every keystroke
-  const potaRef = useMemo(() => {
+  const potaRef = useMemo(() => { // Find POTA references
     const potaRefs = filterRefs(qso?.refs, 'pota')
     if (potaRefs?.length > 0) {
       return potaRefs[0].ref
@@ -110,8 +117,8 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     } else {
       if (entity) parts.push(`${entity.flag} ${entity.shortName}`)
 
-      if (qrz?.data?.call === guess?.baseCall && qrz?.data?.city && qrz?.status === 'fulfilled') {
-        parts.push(qrz.data.city, qrz.data.state)
+      if (qrz.call === guess?.baseCall && qrz.city) {
+        parts.push(qrz.city, qrz.state)
       }
     }
 
@@ -119,19 +126,17 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
   }, [guess, qrz, pota, potaRef])
 
   const stationInfo = useMemo(() => {
-    if (skipQRZ) return ''
-
     const parts = []
-    if (qrz?.error) {
+    if (qrz) {
       parts.push(qrz.error)
-    } else if (qrz?.data?.name && qrz?.status === 'fulfilled') {
-      parts.push(qrz.data.name)
-      if (qrz.data.call && qrz.data.call !== qrz.originalArgs?.call) {
+      parts.push(qrz.name)
+      if (qrz.call && qrz.originalCall && qrz.call !== qrz.originalCall) {
         parts.push(`(Now ${qrz.data.call})`)
       }
     }
+
     return parts.filter(x => x).join(' • ')
-  }, [qrz, skipQRZ])
+  }, [qrz])
 
   const [historyInfo, historyLevel] = useMemo(() => {
     const today = new Date()
@@ -171,14 +176,15 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
 
         <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
           <View style={{ alignSelf: 'flex-start', flex: 0 }}>
-            {qrz.loading ? (
-              <ActivityIndicator
+            {online ? (
+              <Icon
+                source={'account-outline'}
                 size={styles.oneSpace * 3}
-                animating={true}
+                color={styles.theme.colors[`${themeColor}ContainerVariant`]}
               />
             ) : (
               <Icon
-                source={'account-outline'}
+                source={'cloud-off-outline'}
                 size={styles.oneSpace * 3}
                 color={styles.theme.colors[`${themeColor}ContainerVariant`]}
               />
@@ -210,7 +216,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
         setVisible={setShowDialog}
         qso={qso}
         guess={guess}
-        qrz={qrz?.status === 'fulfilled' ? qrz : {}}
+        qrz={qrz}
         pota={pota}
         operation={operation}
         callHistory={callHistory}

@@ -6,7 +6,6 @@
 # Ready to Develop
 
 * Delete QSOs
-* Offline mode
 * Location
 
 # Feature Ideas
