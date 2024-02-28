@@ -78,7 +78,7 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
                 <ThemedDropDown
                   label="Band"
                   themeColor={themeColor}
-                  value={qso.band ?? operation.band}
+                  value={qso._is_new ? (qso.band ?? operation.band ?? '') : (qso.band ?? '') }
                   onChange={handleFieldChange}
                   fieldId={'band'}
                   style={{ width: styles.oneSpace * 15 }}
@@ -104,7 +104,7 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
                 <FrequencyInput
                   themeColor={themeColor}
                   style={{ width: styles.oneSpace * 11 }}
-                  value={qso.freq ?? operation.freq ?? ''}
+                  value={qso._is_new ? (qso.freq ?? operation.freq ?? '') : (qso.freq ?? '') }
                   label="Frequency"
                   placeholder=""
                   onChange={handleFieldChange}
@@ -114,7 +114,7 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
                 />
                 <ThemedDropDown
                   label="Mode"
-                  value={qso.mode ?? operation.mode}
+                  value={qso._is_new ? (qso.mode ?? operation.mode ?? '') : (qso.mode ?? '') }
                   onChange={handleFieldChange}
                   fieldId={'mode'}
                   style={{ width: styles.oneSpace * 14 }}
