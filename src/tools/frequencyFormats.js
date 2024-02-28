@@ -1,17 +1,19 @@
-const THOUSANDS_DELIMITER_REGEX = /^(\d+)(\d\d\d)(\.\d+|)$/
-const TRAILING_ZEROS_REGEX = /(\.)(0+)$/
+const THOUSANDS_DELIMITER_REGEX = /^(\d+)(\d\d\d)([.,]\d+|)$/
+const TRAILING_DIGITS_REGEX = /([.,])(\d+)$/
 
 export function fmtFreqInMHz (freq, options) {
-  let { compact } = options || {}
-  compact = compact ?? true
+  let { mode } = options || {}
+  mode = mode ?? 'trim'
 
   if (freq) {
     const withDecimals = freq.toFixed(3)
     const withSeparator = withDecimals.replace(THOUSANDS_DELIMITER_REGEX, '$1.$2$3')
-    if (compact) {
-      return withSeparator.replace(TRAILING_ZEROS_REGEX, '')
-    } else {
+    if (mode === 'full') {
       return withSeparator
+    } else if (mode === 'compact') { // Remove decimals, but show separator or space for alignment
+      return withSeparator.replace(TRAILING_DIGITS_REGEX, (match, p1, p2) => p2 === '000' ? ' ' : p1)
+    } else { // Remove trailing zeroes
+      return withSeparator.replace(TRAILING_DIGITS_REGEX, (match, p1, p2) => p2 === '000' ? '' : p1 + p2)
     }
   } else {
     return ''
