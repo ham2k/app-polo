@@ -16,7 +16,6 @@ import HeaderBar from './screens/components/HeaderBar'
 
 import HomeScreen from './screens/HomeScreen/HomeScreen'
 import OperationScreen from './screens/OperationScreen'
-import SettingsScreens from './screens/SettingsScreens'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
 import DataFilesSettingsScreen from './screens/SettingsScreens/screens/DataFilesSettingsScreen'
 

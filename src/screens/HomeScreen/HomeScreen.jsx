@@ -11,6 +11,7 @@ import { addNewOperation, getOperations, selectOperationsList } from '../../stor
 import OperationItem from './components/OperationItem'
 import { selectSettings } from '../../store/settings'
 import { loadAllDataFiles } from '../../store/dataFiles/actions/dataFileFS'
+import { setupOnlineStatusMonitoring } from '../../store/system'
 
 export default function HomeScreen ({ navigation }) {
   const styles = useThemedStyles()
@@ -30,6 +31,10 @@ export default function HomeScreen ({ navigation }) {
     setTimeout(() => {
       dispatch(loadAllDataFiles())
     }, 100)
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(setupOnlineStatusMonitoring())
   }, [dispatch])
 
   const handleNewOperation = useCallback(() => {

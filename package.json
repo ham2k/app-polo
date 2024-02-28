@@ -30,6 +30,7 @@
     "@ham2k/lib-operation-data": "^0.1.1",
     "@ham2k/lib-qson-tools": "^0.4",
     "@react-native-async-storage/async-storage": "^1.19.8",
+    "@react-native-community/netinfo": "^11.3.1",
     "@react-navigation/material-top-tabs": "^6.6.5",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
