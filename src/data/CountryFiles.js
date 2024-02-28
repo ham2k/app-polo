@@ -1,4 +1,3 @@
-import { fmtDateNice } from '../tools/timeFormats'
 import { registerDataFile } from '../store/dataFiles'
 
 import RNFetchBlob from 'react-native-blob-util'

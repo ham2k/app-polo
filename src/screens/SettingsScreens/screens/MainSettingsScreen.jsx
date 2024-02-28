@@ -8,7 +8,6 @@ import packageJson from '../../../../package.json'
 
 import { selectSettings, setSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import ScreenContainer from '../../components/ScreenContainer'
 import { OperatorCallsignDialog } from '../components/OperatorCallsignDialog'
 
 import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
@@ -29,6 +28,38 @@ export default function MainSettingsScreen ({ navigation }) {
     })
   }, [dispatch])
 
+  const OperatorCallsignIcon = useCallback(() => (
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />
+  ), [styles])
+
+  const NumbersRowIcon = useCallback(() => (
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />
+  ), [styles])
+
+  const QRZAccountIcon = useCallback(() => (
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />
+  ), [styles])
+
+  const ManageDataFilesIcon = useCallback(() => (
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />
+  ), [styles])
+
+  const ImportOperationFilesIcon = useCallback(() => (
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-download" />
+  ), [styles])
+
+  const VersionIcon = useCallback(() => (
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />
+  ), [styles])
+
+  const AuthorIcon = useCallback(() => (
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />
+  ), [styles])
+
+  const ToggleNumbersRow = useCallback(() => (
+    <Switch value={!!settings.showNumbersRow} onValueChange={(value) => dispatch(setSettings({ showNumbersRow: value })) } />
+  ), [dispatch, settings.showNumbersRow])
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <List.Section>
@@ -37,7 +68,7 @@ export default function MainSettingsScreen ({ navigation }) {
         <List.Item
           title="Operator Callsign"
           description={<Text style={styles.text.callsign}>{settings.operatorCall ?? 'No call'}</Text>}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
+          left={OperatorCallsignIcon}
           onPress={() => setCurrentDialog('operatorCall')}
         />
         {currentDialog === 'operatorCall' && (
@@ -52,8 +83,8 @@ export default function MainSettingsScreen ({ navigation }) {
         <List.Item
           title="Show numbers row"
           description={''}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />}
-          right={() => <Switch value={!!settings.showNumbersRow} onValueChange={(value) => dispatch(setSettings({ showNumbersRow: value })) } />}
+          left={NumbersRowIcon}
+          right={ToggleNumbersRow}
           onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))}
         />
       </List.Section>
@@ -64,7 +95,7 @@ export default function MainSettingsScreen ({ navigation }) {
         <List.Item
           title="QRZ (for callsign lookups)"
           description={settings?.accounts?.qrz ? `Login: ${settings.accounts.qrz.login}` : 'No account'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />}
+          left={QRZAccountIcon}
           onPress={() => setCurrentDialog('accountsQRZ')}
         />
         {currentDialog === 'accountsQRZ' && (
@@ -82,12 +113,12 @@ export default function MainSettingsScreen ({ navigation }) {
 
         <List.Item
           title="Manage data files"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />}
+          left={ManageDataFilesIcon}
           onPress={() => navigation.navigate('DataFilesSettings')}
         />
         <List.Item
           title="Import operation files"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-download" />}
+          left={ImportOperationFilesIcon}
           onPress={handleImportFiles}
         />
       </List.Section>
@@ -97,12 +128,12 @@ export default function MainSettingsScreen ({ navigation }) {
         <List.Item
           title="Version"
           description={packageJson.version}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
+          left={VersionIcon}
         />
         <List.Item
           title="Author"
           description={'Sebastián Delmont • KI2D'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+          left={AuthorIcon}
         />
       </List.Section>
     </ScrollView>
