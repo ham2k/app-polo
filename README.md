@@ -6,6 +6,23 @@ npm start -- --reset-cache
 cd android && ./gradlew clean && ./gradlew cleanBuildCache && cd ..
 ```
 
+# Releases
+
+* Update version in `package.json`
+
+### Android
+
+* Update version and build number in `android/app/build.gradle`
+* Run `npm run build:android:beta:release`
+* Fetch binary from `android/app/build/outputs/bundle`
+
+Links:
+
+* Tester Group: https://groups.google.com/g/ham2k-polo-testers
+* Internal: https://play.google.com/apps/internaltest/4700998652811571052
+* Closed Beta: https://play.google.com/apps/testing/com.ham2k.polo.beta
+
+
 # Debug Menu
 
 iOS: Cmd ⌘ + D
@@ -25,14 +42,17 @@ xcrun simctl listapps booted # List all apps
 ```
 
 # Local path for PoLo's internal files
+
 ```
 open `xcrun simctl get_app_container booted com.ham2k.polo data`/Documents
 ```
 
 # Local path where files are saved when exporting and "Save To Files"
+
 ```
 open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep FileProvider.LocalStorage|sed "s/group.com.apple.FileProvider.LocalStorage//g"`/File\ Provider\ Storage
 ```
+
 # Troubleshooting
 
 "Unable to boot simulator" error for iOS Simulator
