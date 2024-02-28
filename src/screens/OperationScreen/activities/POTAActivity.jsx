@@ -19,7 +19,12 @@ const ACTIVITY = {
   shortName: 'POTA',
   infoURL: 'https://parksontheair.com/',
   includeOptionalExchange: ({ operation }) => true,
-  exchangeShortLabel: ({ operation }) => findRef(operation, 'potaActivation') ? 'P2P' : 'POTA',
+  exchangeShortLabel: ({ operation, qso }) => {
+    const opRef = findRef(operation, 'potaActivation')
+    let label = opRef ? 'P2P' : 'POTA'
+    if (findRef(qso, 'pota')) label = `✓ ${label}`
+    return label
+  },
   huntingType: 'pota',
   activationType: 'potaActivation',
   operationAttribute: 'pota',
