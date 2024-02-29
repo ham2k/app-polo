@@ -23,6 +23,16 @@ Links:
 * Internal: https://play.google.com/apps/internaltest/4700998652811571052
 * Closed Beta: https://play.google.com/apps/testing/com.ham2k.polo.beta
 
+### iOS
+
+* In `ios/Polo/Info.plist`, remove `localhost` from `NSExceptionDomains`
+* Update version and build number in XCode > Targets: Polo > Build Settings > Versioning
+* Also in XCode: Product > Scheme > polo-Prod
+* Also in XCode: Product > Scheme > Edit Scheme > polo-Prod > Run > Build Configuration: Release
+* Also in XCode: Product > Archive
+* In Archive: Distribute App
+
+* Revert changes to `Info.plist`
 
 # Debug Menu
 

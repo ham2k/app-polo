@@ -379,7 +379,7 @@ PODS:
     - React-Core
   - react-native-document-picker (9.1.0):
     - React-Core
-  - react-native-flipper (0.212.0):
+  - react-native-flipper (0.164.0):
     - React-Core
   - react-native-netinfo (11.3.1):
     - React-Core
@@ -765,7 +765,7 @@ SPEC CHECKSUMS:
   React-logger: cebf22b6cf43434e471dc561e5911b40ac01d289
   react-native-blob-util: d8fa1a7f726867907a8e43163fdd8b441d4489ea
   react-native-document-picker: b4f4a23b73f864ce17965b284c0757648993805b
-  react-native-flipper: 9c1957af24b76493ba74f46d000a5c1d485e7731
+  react-native-flipper: c33a4995958ef12a2b2f8290d63bed7adeed7634
   react-native-netinfo: bdb108d340cdb41875c9ced535977cac6d2ff321
   react-native-pager-view: e26d35e382d86950c936f8917e3beb9188115ccc
   react-native-safe-area-context: cd1169d797a2ef722a00bfc5af10748d5b6c94f9
