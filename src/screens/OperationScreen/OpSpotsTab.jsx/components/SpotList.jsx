@@ -4,6 +4,7 @@ import { Text } from 'react-native-paper'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import SpotItem, { guessItemHeight } from './SpotItem'
 import { useNavigation } from '@react-navigation/native'
+import { RefreshControl } from 'react-native-gesture-handler'
 
 function prepareStyles (themeStyles, themeColor) {
   return {
@@ -78,7 +79,7 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-export default function SpotList ({ spots, style }) {
+export default function SpotList ({ spots, spotsQuery, style }) {
   const navigation = useNavigation()
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles))
 
@@ -110,7 +111,7 @@ export default function SpotList ({ spots, style }) {
     const height = guessItemHeight(spots[index], styles)
     return { length: height, offset: height * index, index }
   }, [styles, spots])
-
+  console.log(spotsQuery.status)
   return (
     <FlatList
       style={style}
@@ -125,7 +126,9 @@ export default function SpotList ({ spots, style }) {
       maxToRenderPerBatch={30}
       updateCellsBatchingPeriod={100}
       removeClippedSubviews={true}
-      // initialScrollIndex={100}
+      refreshControl={
+        <RefreshControl refreshing={spotsQuery.status === 'pending'} onRefresh={() => spotsQuery.refetch()} />
+      }
     />
   )
 }
