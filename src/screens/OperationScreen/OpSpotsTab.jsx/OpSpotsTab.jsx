@@ -8,6 +8,7 @@ import { useSpotsQuery } from '../../../store/apiPOTA'
 import { selectSystemOnline } from '../../../store/system'
 import SpotList from './components/SpotList'
 import ThemedDropDown from '../../components/ThemedDropDown'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 function simplifiedMode (mode) {
   if (mode === 'CW') {
@@ -114,7 +115,7 @@ export default function OpSpotsTab ({ navigation, route }) {
   }, [spotsQuery])
 
   return (
-    <View style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column' }]}>
+    <GestureHandlerRootView style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column' }]}>
       <View style={[{ flex: 0 }, styles.panel]}>
         <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }}>
           <ThemedDropDown
@@ -134,25 +135,15 @@ export default function OpSpotsTab ({ navigation, route }) {
             style={{ }}
             list={modeOptions}
           />
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
-            {online ? (
-
-              <IconButton
-                icon={'reload'}
-                size={styles.oneSpace * 4}
-                mode="contained"
-                onPress={handleReload}
-                containerColor={styles.theme.colors[`${themeColor}ContainerVariant`]}
-                iconColor={styles.theme.colors[`on${upcasedThemeColor}`]}
-              />
-            ) : (
+          {!online && (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
               <Icon
                 source={'cloud-off-outline'}
                 size={styles.oneSpace * 4}
                 color={styles.theme.colors[`${themeColor}ContainerVariant`]}
               />
-            )}
-          </View>
+            </View>
+          )}
         </View>
         <Text style={{ fontWeight: 'bold', marginTop: styles.halfSpace, textAlign: 'center' }}>
           {filteredSpots ? (
@@ -167,7 +158,7 @@ export default function OpSpotsTab ({ navigation, route }) {
           )}
         </Text>
       </View>
-      <SpotList spots={filteredSpots} />
-    </View>
+      <SpotList spots={filteredSpots} spotsQuery={spotsQuery} />
+    </GestureHandlerRootView>
   )
 }
