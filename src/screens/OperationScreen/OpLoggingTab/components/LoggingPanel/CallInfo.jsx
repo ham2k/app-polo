@@ -162,7 +162,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
         if (sameDay > 1) {
           info = `${sameDay}x today + ${callHistory.length - sameDay} QSOs`
         } else {
-          info = `+ ${callHistory.length - (qso?._is_new ? 1 : 0)} QSOs`
+          info = `+ ${callHistory.length - (qso?._is_new ? 0 : 1)} QSOs`
         }
         level = 'info'
       }
