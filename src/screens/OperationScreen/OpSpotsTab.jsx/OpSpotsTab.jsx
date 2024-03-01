@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { View } from 'react-native'
-import { Icon, IconButton, Text } from 'react-native-paper'
+import { Icon, Text } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useSpotsQuery } from '../../../store/apiPOTA'
@@ -21,7 +21,6 @@ function simplifiedMode (mode) {
 }
 export default function OpSpotsTab ({ navigation, route }) {
   const themeColor = 'tertiary'
-  const upcasedThemeColor = 'Tertiary'
   const styles = useThemedStyles((baseStyles) => {
     return {
       ...baseStyles,
@@ -109,10 +108,6 @@ export default function OpSpotsTab ({ navigation, route }) {
 
     return [options, filtered]
   }, [mode, bandSpots])
-
-  const handleReload = useCallback(() => {
-    spotsQuery.refetch()
-  }, [spotsQuery])
 
   return (
     <GestureHandlerRootView style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column' }]}>
