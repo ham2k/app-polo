@@ -8,7 +8,7 @@ import Share from 'react-native-share'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteExport, generateExport, selectOperation } from '../../../store/operations'
+import { generateExport, selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
@@ -52,6 +52,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   const handleExport = useCallback((type, activity) => {
     dispatch(generateExport(operation.uuid, type, activity)).then((path) => {
       if (path) {
+        console.log('Exporting', path)
         Share.open({
           url: `file://${path}`,
           type: 'text/plain' // There is no official ADIF or Cabrillo mime type
@@ -60,7 +61,9 @@ export default function OpSettingsTab ({ navigation, route }) {
         }).catch((e) => {
           console.info('Sharing Error', e)
         }).finally(() => {
-          dispatch(deleteExport(path))
+          // Deleting this file causes GMail on Android to fail to attach it
+          // So for the time being, we're leaving it in place.
+          // dispatch(deleteExport(path))
         })
       }
     })
