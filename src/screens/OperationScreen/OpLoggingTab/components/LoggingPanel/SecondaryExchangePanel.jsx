@@ -170,7 +170,6 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
                   onChange={handleFieldChange}
                   onSubmitEditing={handleSubmit}
                   fieldId={'notes'}
-                  keyboard={'dumb'}
                   focusedRef={focusedRef}
                 />
               </View>
