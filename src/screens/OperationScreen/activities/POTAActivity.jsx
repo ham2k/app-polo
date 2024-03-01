@@ -18,8 +18,12 @@ const ACTIVITY = {
   name: 'Parks on the Air',
   shortName: 'POTA',
   infoURL: 'https://parksontheair.com/',
-  includeOptionalExchange: ({ operation }) => true,
-  exchangeShortLabel: ({ operation, qso }) => {
+  includeControlForQSO: ({ qso, operation }) => {
+    if (findRef(operation, 'potaActivation')) return true
+    if (findRef(qso, 'pota')) return true
+    else return false
+  },
+  labelControlForQSO: ({ operation, qso }) => {
     const opRef = findRef(operation, 'potaActivation')
     let label = opRef ? 'P2P' : 'POTA'
     if (findRef(qso, 'pota')) label = `✓ ${label}`
