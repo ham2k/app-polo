@@ -7,6 +7,8 @@ import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 import { replaceRefs, stringToRefs } from '../../../tools/refTools'
 
 /*
+https://sotawatch.sota.org.uk/en/
+
 https://sotastore.blob.core.windows.net/docs/SOTA-General-Rules-June-2022.pdf
 
 At least one QSO must be made from the Summit to qualify an activation.
