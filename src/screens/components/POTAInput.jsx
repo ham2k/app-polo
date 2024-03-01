@@ -4,9 +4,9 @@ import ThemedTextInput from './ThemedTextInput'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 const ADD_DASHES_REGEX = /([A-Z]+)(\d+)/g
-const ADD_COMMAS_REGEX = /(\d+)\s*[,]*\s*([A-Z]+)/g
-const NO_PREFIX_REGEX = /^(\d+)/g
-const REPEAT_PREFIX_REGEX = /(\w+)-(\d+)(\s+,\s*|,\s*|\s+)(\d+)/g
+const ADD_COMMAS_REGEX = /(\d\d+)\s*[,]*\s*([A-Z]+)/g
+const NO_PREFIX_REGEX = /^(\d\d+)/g
+const REPEAT_PREFIX_REGEX = /(\w+)-(\d+)(\s+,\s*|,\s*|\s+)(\d\d+)/g
 
 export default function POTAInput (props) {
   const { textStyle, onChange, defaultPrefix, onChangeText, fieldId } = props
