@@ -188,7 +188,6 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
       setQSO({ ...qso, freq: parseFreqInMHz(value) })
       if (qso?._is_new) dispatch(setOperationData({ uuid: operation.uuid, freq: parseFreqInMHz(value) }))
     } else if (fieldId === 'band') {
-      console.log('Setting band', value)
       setQSO({ ...qso, band: value, freq: undefined })
       if (qso?._is_new) dispatch(setOperationData({ uuid: operation.uuid, band: value, freq: undefined }))
     } else if (fieldId === 'mode') {

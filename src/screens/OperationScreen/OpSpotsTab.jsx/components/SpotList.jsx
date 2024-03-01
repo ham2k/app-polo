@@ -111,7 +111,7 @@ export default function SpotList ({ spots, spotsQuery, style }) {
     const height = guessItemHeight(spots[index], styles)
     return { length: height, offset: height * index, index }
   }, [styles, spots])
-  console.log(spotsQuery.status)
+
   return (
     <FlatList
       style={style}
