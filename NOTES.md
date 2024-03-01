@@ -11,3 +11,11 @@
 * QRZ Lookups. Results are properly capitalized, instead of being randomly all uppercase or mixed case.
 
 * Settings for accounts and credentials work with password managers
+
+
+---
+
+Testers
+
+Jim - N5JGE — 2024-02-29 "I did two quick SSB activations this morning / afternoon using Ham2K as my only logger."
+  First activation other than KI2D

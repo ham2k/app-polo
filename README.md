@@ -31,7 +31,6 @@ Links:
 * Also in XCode: Product > Scheme > Edit Scheme > polo-Prod > Run > Build Configuration: Release
 * Also in XCode: Product > Archive
 * In Archive: Distribute App
-
 * Revert changes to `Info.plist`
 
 # Debug Menu
