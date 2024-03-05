@@ -72,7 +72,7 @@ export const MainExchangePanel = ({
       value={qso?.our?.sent ?? ''}
       disabled={disabled}
       label="Sent"
-      placeholder={qso?.mode === 'CW' ? '599' : '59'}
+      placeholder={qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59'}
       noSpaces={true}
       onChange={handleFieldChange}
       onSubmitEditing={handleSubmit}
@@ -92,7 +92,7 @@ export const MainExchangePanel = ({
       value={qso?.their?.sent || ''}
       disabled={disabled}
       label="Rcvd"
-      placeholder={qso?.mode === 'CW' ? '599' : '59'}
+      placeholder={qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59'}
       noSpaces={true}
       onChange={handleFieldChange}
       onSubmitEditing={handleSubmit}
