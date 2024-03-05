@@ -6,12 +6,24 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../store/operations'
 
-function prepareStyles (themeStyles, themeColor) {
+function prepareStyles (themeStyles, isDeleted) {
+  let commonStylesForStatus
+
+  if (isDeleted) {
+    commonStylesForStatus = {
+      textDecorationLine: 'line-through',
+      textDecorationColor: themeStyles.colors.onBackground,
+      color: themeStyles.colors.onBackgroundLighter
+      // opacity: 0.6
+    }
+  }
+
   return {
     ...themeStyles,
     fields: {
       number: {
         ...themeStyles.text.numbers,
+        ...commonStylesForStatus,
         flex: 0,
         marginLeft: 0,
         minWidth: themeStyles.oneSpace * 2,
@@ -20,6 +32,7 @@ function prepareStyles (themeStyles, themeColor) {
       time: {
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
+        ...commonStylesForStatus,
         flex: 0,
         minWidth: themeStyles.oneSpace * 6,
         marginLeft: themeStyles.oneSpace,
@@ -28,6 +41,7 @@ function prepareStyles (themeStyles, themeColor) {
       freq: {
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
+        ...commonStylesForStatus,
         flex: 0,
         minWidth: themeStyles.oneSpace * 7,
         marginLeft: themeStyles.oneSpace,
@@ -35,6 +49,7 @@ function prepareStyles (themeStyles, themeColor) {
       },
       call: {
         ...themeStyles.text.callsign,
+        ...commonStylesForStatus,
         fontWeight: 'bold',
         flex: 1,
         marginLeft: themeStyles.oneSpace,
@@ -44,6 +59,7 @@ function prepareStyles (themeStyles, themeColor) {
       signal: {
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
+        ...commonStylesForStatus,
         flex: 0,
         minWidth: themeStyles.oneSpace * 3,
         marginLeft: themeStyles.oneSpace,
@@ -51,12 +67,14 @@ function prepareStyles (themeStyles, themeColor) {
       },
       exchange: {
         ...themeStyles.text.callsign,
+        ...commonStylesForStatus,
         flex: 0,
         minWidth: themeStyles.oneSpace * 3,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
       icon: {
+        ...commonStylesForStatus,
         flex: 0,
         width: themeStyles.oneSpace * 2
       }
@@ -65,7 +83,8 @@ function prepareStyles (themeStyles, themeColor) {
 }
 
 export default function QSOList ({ style, operation, qsos, selectedKey, setSelectedKey, lastKey }) {
-  const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles))
+  const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, false))
+  const stylesForDeleted = useThemedStyles((baseStyles) => prepareStyles(baseStyles, true))
 
   const { width } = useWindowDimensions()
   const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
@@ -102,9 +121,9 @@ export default function QSOList ({ style, operation, qsos, selectedKey, setSelec
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
     return (
-      <QSOItem qso={qso} selected={qso.key === selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={styles} extendedWidth={extendedWidth} />
+      <QSOItem qso={qso} selected={qso.key === selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} extendedWidth={extendedWidth} />
     )
-  }, [styles, ourInfo, handlePress, extendedWidth, selectedKey])
+  }, [styles, stylesForDeleted, ourInfo, handlePress, extendedWidth, selectedKey])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(qsos[index], styles)

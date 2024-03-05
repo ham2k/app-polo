@@ -18,7 +18,7 @@ activities.forEach(activity => {
   CONTROLS[activity.key] = generateActivityControl(activity)
 })
 
-export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handleFieldChange, handleSubmit, focusedRef, styles, themeColor, visibleFields, setVisibleFields }) => {
+export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, disabled, handleFieldChange, handleSubmit, focusedRef, styles, themeColor, visibleFields, setVisibleFields }) => {
   const elements = useMemo(() => {
     const keys = ['time', 'radio', 'notes']
     activities.forEach(activity => {
@@ -59,6 +59,7 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
                   {control.inputComponent && (
                     <control.inputComponent
                       qso={qso} operation={operation} settings={settings}
+                      disabled={disabled}
                       icon={control.icon}
                       style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                       handleFieldChange={handleFieldChange}
@@ -73,14 +74,14 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
           </View>
         ))}
 
-        <View style={{ flex: 0, flexDirection: 'column' }}>
+        {/* <View style={{ flex: 0, flexDirection: 'column' }}>
           <View style={{ flex: 0, flexDirection: 'row' }}>
             <LoggerChip icon="dots-vertical" styles={styles} style={{ flex: 0 }} themeColor={themeColor}
               selected={visibleFields.more}
               onChange={(value) => setVisibleFields({ ...visibleFields, more: value })}
             >More</LoggerChip>
           </View>
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   )

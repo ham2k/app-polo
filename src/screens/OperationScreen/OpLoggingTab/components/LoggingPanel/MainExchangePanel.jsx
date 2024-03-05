@@ -7,7 +7,7 @@ import activities from '../../../activities'
 import { findRef } from '../../../../../tools/refTools'
 
 export const MainExchangePanel = ({
-  qso, operation, settings, styles, themeColor, handleSubmit, handleFieldChange, setQSO, mainFieldRef, focusedRef
+  qso, operation, settings, disabled, style, styles, themeColor, handleSubmit, handleFieldChange, setQSO, mainFieldRef, focusedRef
 }) => {
   const { width } = useWindowDimensions()
 
@@ -54,6 +54,7 @@ export const MainExchangePanel = ({
       style={[styles.input, { minWidth: styles.oneSpace * 12, flex: 10 }]}
       value={qso?.their?.call ?? ''}
       label="Their Call"
+      disabled={disabled}
       placeholder=""
       onChange={handleFieldChange}
       onSubmitEditing={handleSubmit}
@@ -69,6 +70,7 @@ export const MainExchangePanel = ({
       themeColor={themeColor}
       style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 6, flex: 1 }]}
       value={qso?.our?.sent ?? ''}
+      disabled={disabled}
       label="Sent"
       placeholder={qso?.mode === 'CW' ? '599' : '59'}
       noSpaces={true}
@@ -88,6 +90,7 @@ export const MainExchangePanel = ({
       themeColor={themeColor}
       style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 6, flex: 1 }]}
       value={qso?.their?.sent || ''}
+      disabled={disabled}
       label="Rcvd"
       placeholder={qso?.mode === 'CW' ? '599' : '59'}
       noSpaces={true}
@@ -104,7 +107,7 @@ export const MainExchangePanel = ({
   activities.filter(activity => findRef(operation, activity.key) && activity.fieldsForMainExchangePanel).forEach(activity => {
     fields = fields.concat(
       activity.fieldsForMainExchangePanel(
-        { qso, operation, settings, styles, themeColor, onSubmitEditing: handleSubmit, setQSO, keyHandler, refStack, focusedRef }
+        { qso, operation, settings, disabled, styles, themeColor, onSubmitEditing: handleSubmit, setQSO, keyHandler, refStack, focusedRef }
       )
     )
   })
@@ -115,7 +118,7 @@ export const MainExchangePanel = ({
   }
 
   return (
-    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingLeft: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace, gap: styles.oneSpace }}>
+    <View style={{ ...style, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: styles.oneSpace }}>
       {fields}
     </View>
   )

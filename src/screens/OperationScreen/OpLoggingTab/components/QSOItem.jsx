@@ -48,7 +48,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
           <Icon source="note-outline" size={styles.oneSpace * 2} style={styles.fields.icon} />
         )}
         {(qso.refs || []).filter(ref => REFS_TO_INCLUDE[ref.type]).map(ref => ({ ref, activity: activityIndex[ref.type] })).map(({ ref, activity }, i) => (
-          <Icon key={i} source={activity?.icon} size={styles.oneSpace * 2} style={styles.fields.icon} />
+          <Icon key={i} source={activity?.icon} size={styles.oneSpace * 2} style={styles.fields.icon} color={styles.fields.icon.color} />
         ))}
         {qso?.their?.exchange ? (
           <>

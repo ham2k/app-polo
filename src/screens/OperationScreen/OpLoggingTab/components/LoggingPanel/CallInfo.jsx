@@ -90,7 +90,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     const timeout = setTimeout(async () => {
       const qsoHistory = await findQSOHistory(guess?.baseCall)
       setCallHistory(qsoHistory)
-    }, 200)
+    }, 0)
     return () => clearTimeout(timeout)
   }, [guess?.baseCall])
 
@@ -105,24 +105,24 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
 
   const pota = useLookupParkQuery({ ref: potaRef }, { skip: !potaRef })
 
-  const locationInfo = useMemo(() => {
+  const [locationInfo, flag] = useMemo(() => {
     const parts = []
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
     if (pota?.data?.name) {
-      parts.push(`${entity?.flag ? `${entity.flag} ` : ''} POTA: ${pota.data.name} ${pota.data.parktypeDesc}`)
+      parts.push(`POTA ${potaRef} ${pota.data.name} ${pota.data.parktypeDesc}`)
       if (pota.data.locationName) parts.push(pota.data.locationName)
     } else if (pota?.data?.error) {
       parts.push(`POTA ${potaRef} ${pota.data?.error}`)
     } else {
-      if (entity) parts.push(`${entity.flag} ${entity.shortName}`)
+      if (entity) parts.push(entity.shortName)
 
       if (qrz.call === guess?.baseCall && qrz.city) {
         parts.push(qrz.city, qrz.state)
       }
     }
 
-    return parts.filter(x => x).join(' • ')
+    return [parts.filter(x => x).join(' • '), entity?.flag ? entity.flag : '']
   }, [guess, qrz, pota, potaRef])
 
   const stationInfo = useMemo(() => {
@@ -143,7 +143,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     let info = ''
     let level = 'info'
     if (callHistory?.length > 0) {
-      if (qso?._is_new && callHistory.find(x => x?.operation === operation.uuid)) {
+      if (qso?._isNew && callHistory.find(x => x?.operation === operation.uuid)) {
         if (isPotaOp) {
           if (fmtDateZulu(callHistory[0]?.startOnMillis) === fmtDateZulu(today)) {
             info = 'Dupe!!!'
@@ -162,17 +162,17 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
         if (sameDay > 1) {
           info = `${sameDay}x today + ${callHistory.length - sameDay} QSOs`
         } else {
-          info = `+ ${callHistory.length - (qso?._is_new ? 0 : 1)} QSOs`
+          info = `+ ${callHistory.length - (qso?._isNew ? 0 : 1)} QSOs`
         }
         level = 'info'
       }
     }
     return [info, level]
-  }, [callHistory, isPotaOp, operation?.uuid, qso?._is_new])
+  }, [callHistory, isPotaOp, operation?.uuid, qso?._isNew])
 
   return (
     <>
-      <TouchableRipple onPress={() => setShowDialog(true)} style={{ width: '100%', height: styles.oneSpace * 5 }}>
+      <TouchableRipple onPress={() => setShowDialog(true)} style={{ minHeight: styles.oneSpace * 5 }}>
 
         <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
           <View style={{ alignSelf: 'flex-start', flex: 0 }}>
@@ -191,11 +191,19 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
             )}
           </View>
           <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch', paddingTop: styles.oneSpace * 0.3 }]}>
-            {(locationInfo) && (
-              <Text style={{}} numberOfLines={1} ellipsizeMode={'tail'}>
-                {locationInfo}
-              </Text>
-            )}
+            <View style={{ flexDirection: 'row' }}>
+              {flag && (
+                <Text style={{ flex: 0 }} numberOfLines={1} ellipsizeMode={'tail'}>
+                  {flag}
+                </Text>
+
+              )}
+              {locationInfo && (
+                <Text style={{ flex: 1 }} numberOfLines={2} ellipsizeMode={'tail'}>
+                  {locationInfo}
+                </Text>
+              )}
+            </View>
             {(stationInfo || historyInfo) && (
               <View style={{ flexDirection: 'row' }}>
                 {historyInfo && (
@@ -203,7 +211,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
                     <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyInfo}</Text>
                   </View>
                 )}
-                <Text style={{ flex: 1, fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode={'tail'}>
+                <Text style={{ flex: 1, fontWeight: 'bold' }} numberOfLines={2} ellipsizeMode={'tail'}>
                   {stationInfo}
                 </Text>
               </View>
