@@ -147,17 +147,21 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
       if (nextQSO.key !== selectedKey) {
         setSelectedKey(nextQSO.key)
       }
-      if (mainFieldRef?.current) {
-        mainFieldRef.current.focus()
-      }
+      setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
+        if (mainFieldRef?.current) {
+          mainFieldRef.current.focus()
+        }
+      }, 10)
     } else if (qso && qso?.key !== selectedKey && selectedKey !== 'new-qso') {
       let nextQSO = qsos.find(q => q.key === selectedKey)
       if (qso?._isNew) setQSOQueue([...qsoQueue, qso])
       nextQSO = prepareExistingQSO(nextQSO)
       setNewQSO(nextQSO)
-      if (mainFieldRef?.current) {
-        mainFieldRef.current.focus()
-      }
+      setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
+        if (mainFieldRef?.current) {
+          mainFieldRef.current.focus()
+        }
+      }, 10)
     }
   }, [qsoQueue, setQSOQueue, selectedKey, setSelectedKey, operation, settings, qso, setNewQSO, qsos])
 
@@ -303,7 +307,7 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
   }, [qso])
 
   const handleUndelete = useCallback(() => { // Undo changes to existing QSO
-    if (qso?.deleted) {
+    if (qso?.deleted || qso?._willBeDeleted) {
       setQSO({ ...qso, _willBeDeleted: false, deleted: false })
     }
   }, [qso])
