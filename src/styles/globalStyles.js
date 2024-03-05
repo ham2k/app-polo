@@ -102,7 +102,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       borderBottomColor: theme.colors.outline
     },
     compactRow: {
-      height: oneSpace * 4,
+      height: oneSpace * 4.3,
       paddingHorizontal: oneSpace,
       paddingVertical: oneSpace,
       borderBottomWidth: 1,
