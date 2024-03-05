@@ -4,7 +4,7 @@ import Markdown from 'react-native-markdown-display'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
-export function Ham2KMarkdown ({ children, style }) {
+export function Ham2kMarkdown ({ children, style }) {
   const styles = useThemedStyles()
 
   const markdownStyles = useMemo(() => {
@@ -14,5 +14,7 @@ export function Ham2KMarkdown ({ children, style }) {
     }
   }, [style, styles])
 
-  return <Markdown style={markdownStyles}>{children.join('')}</Markdown>
+  if (children.join) children = children.join('')
+
+  if (children) return <Markdown style={markdownStyles}>{children}</Markdown>
 }
