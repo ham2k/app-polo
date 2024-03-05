@@ -7,3 +7,4 @@ RELEASE NOTES
 * Wipe an unlogged QSO
 * Fixed exporting ADIF with notes
 * Use 599 as default report for RTTY
+* Dupe checks now also consider band and mode
