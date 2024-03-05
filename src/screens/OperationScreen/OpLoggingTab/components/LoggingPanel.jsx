@@ -5,22 +5,23 @@ import { IconButton, Text } from 'react-native-paper'
 import cloneDeep from 'clone-deep'
 import { useDispatch } from 'react-redux'
 
-import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-
+import { qsoKey } from '@ham2k/lib-qson-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
+
+import { prepareCountryFilesData } from '../../../../data/CountryFiles'
+import { setOperationData } from '../../../../store/operations'
+import { addQSO } from '../../../../store/qsos'
+import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { parseFreqInMHz } from '../../../../tools/frequencyFormats'
+import { SecondaryExchangePanel } from './LoggingPanel/SecondaryExchangePanel'
 import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
-import { findRef } from '../../../../tools/refTools'
-import { setOperationData } from '../../../../store/operations'
-import { qsoKey } from '@ham2k/lib-qson-tools'
-import { addQSO } from '../../../../store/qsos'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
-import { SecondaryExchangePanel } from './LoggingPanel/SecondaryExchangePanel'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { prepareCountryFilesData } from '../../../../data/CountryFiles'
-import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { joinAnd } from '../../../../tools/joinAnd'
+import { Ham2kMarkdown } from '../../../../screens/components/Ham2kMarkdown'
 
 prepareCountryFilesData()
 
@@ -85,7 +86,20 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
 
   const [pausedTime, setPausedTime] = useState()
 
-  const [isValid, setIsValid] = useState(false)
+  const [isValidQSO, setIsValidQSO] = useState(false)
+
+  const [isValidOperation, operationError] = useMemo(() => { // Ensure we have all the required operation data
+    const errors = []
+    if (!qso?.band && !operation?.band) errors.push('band')
+    if (!qso?.mode && !operation?.mode) errors.push('mode')
+    if (!operation?.stationCall && !settings?.operatorCall) errors.push('callsign')
+
+    if (errors.length > 0) {
+      return [false, `Please enter **${joinAnd(errors)}** for a valid operation`]
+    } else {
+      return [true, undefined]
+    }
+  }, [qso, operation, settings])
 
   const setNewQSO = useCallback((newQSO) => {
     if (!newQSO) setSelectedKey(undefined)
@@ -151,9 +165,9 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
     const callInfo = parseCallsign(qso?.their?.call)
 
     if (callInfo?.baseCall) {
-      setIsValid(true)
+      setIsValidQSO(true)
     } else {
-      setIsValid(false)
+      setIsValidQSO(false)
     }
   }, [qso?.their?.call])
 
@@ -222,7 +236,7 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
         setUndoInfo(undefined)
         setQSO(undefined) // Let queue management decide what to do
         setLastKey(qso.key)
-      } else if (isValid && !qso.deleted) {
+      } else if (isValidQSO && !qso.deleted) {
         unstable_batchedUpdates(() => {
           setVisibleFields({})
 
@@ -258,7 +272,7 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
         })
       }
     }, 10)
-  }, [qso, isValid, dispatch, operation, settings, setSelectedKey, setLastKey])
+  }, [qso, isValidQSO, dispatch, operation, settings, setSelectedKey, setLastKey])
 
   const [undoInfo, setUndoInfo] = useState()
 
@@ -349,18 +363,27 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
 
           <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
             <View style={{ flex: 1, paddingLeft: styles.oneSpace }}>
-              {qso?.deleted || qso?._willBeDeleted ? (
-                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
-                  <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
-                    {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
-                  </Text>
+              {operationError ? (
+                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+                  <Ham2kMarkdown style={{ color: styles.theme.colors.error }}>
+                    {operationError || 'ERROR'}
+                  </Ham2kMarkdown>
                 </View>
               ) : (
-                qso?.their?.call ? (
-                  <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
+                qso?.deleted || qso?._willBeDeleted ? (
+                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
+                      {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
+                    </Text>
+                  </View>
                 ) : (
-                  <OpInfo operation={operation} styles={styles} qsos={qsos} themeColor={themeColor} />
+                  qso?.their?.call ? (
+                    <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
+                  ) : (
+                    <OpInfo operation={operation} styles={styles} qsos={qsos} themeColor={themeColor} />
+                  )
                 )
+
               )}
             </View>
 
@@ -426,7 +449,7 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
             icon={qso?._isNew ? 'upload' : (qso?._willBeDeleted ? 'trash-can' : 'content-save')}
             size={styles.oneSpace * 4}
             mode="contained"
-            disabled={!isValid}
+            disabled={!isValidQSO || !isValidOperation}
             containerColor={styles.theme.colors[`${themeColor}ContainerVariant`]}
             iconColor={styles.theme.colors[`on${upcasedThemeColor}`]}
             onPress={handleSubmit}

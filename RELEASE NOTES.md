@@ -9,3 +9,4 @@ RELEASE NOTES
 * Use 599 as default report for RTTY
 * Dupe checks now also consider band and mode
 * Fixed frequency input
+* Cannot start logging until band and mode are specified
