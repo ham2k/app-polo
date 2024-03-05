@@ -2,7 +2,6 @@
 
 * Numbers don't work (ios?)
 * Frequency field doesn't update until blurred
-* RTTY should default to 599
 * Don't allow QSOs until a band is selected
 * On K0GR's tablet, using external keyboard would cause virtual one to pop up
   One quirk I had on my ~10yo tablet was when I wanted to edit a field and clicked a button, it would quickly open and close the keyboard. A second click and it would open and stay open. Not sure that's the app or my tablet.

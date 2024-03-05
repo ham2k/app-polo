@@ -251,10 +251,10 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
           if (qso.endOnMillis) qso.endOn = new Date(qso.endOnMillis).toISOString()
           qso.our = qso.our || {}
           qso.our.call = qso.our.call || operation.stationCall || settings.operatorCall
-          qso.our.sent = qso.our.sent || (operation.mode === 'CW' ? '599' : '59')
+          qso.our.sent = qso.our.sent || (operation.mode === 'CW' || operation.mode === 'RTTY' ? '599' : '59')
 
           qso.their = qso.their || {}
-          qso.their.sent = qso.their.sent || (operation.mode === 'CW' ? '599' : '59')
+          qso.their.sent = qso.their.sent || (operation.mode === 'CW' || operation.mode === 'RTTY' ? '599' : '59')
 
           qso.key = qsoKey(qso)
 
