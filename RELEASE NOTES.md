@@ -8,3 +8,4 @@ RELEASE NOTES
 * Fixed exporting ADIF with notes
 * Use 599 as default report for RTTY
 * Dupe checks now also consider band and mode
+* Fixed frequency input

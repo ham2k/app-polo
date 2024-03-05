@@ -142,7 +142,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     const today = new Date()
     let info = ''
     let level = 'info'
-    console.log(callHistory)
+
     if (callHistory?.length > 0) {
       if (qso?._isNew && callHistory.find(x => x?.operation === operation.uuid && x?.mode === qso.mode && x?.band === qso.band)) {
         if (isPotaOp) {
