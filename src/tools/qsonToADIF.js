@@ -59,7 +59,7 @@ function oneQSOtoADIF (qso, common, potaRefs = {}, timeOfffset = 0) {
   str += adifField('RST_RCVD', qso.their.sent)
   str += adifField('RST_SENT', qso.our.sent)
   str += adifField('OPERATOR', qso.our.call)
-  str += adifField('NOTES', qso.our.notes)
+  str += adifField('NOTES', qso.notes)
   if (qso.grid) str += adifField('GRID', qso.grid)
   else if (common.grid) str += adifField('GRID', common.grid)
 
