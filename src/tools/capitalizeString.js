@@ -34,7 +34,7 @@ const CAPTITALIZATION_EXCEPTIONS = {
 
 export function capitalizeString (str, options = {}) {
   let { content = 'text', force = true } = options
-  console.log('capitalizeString', str, options)
+
   str = str?.trim()
   if (!str) return str
 

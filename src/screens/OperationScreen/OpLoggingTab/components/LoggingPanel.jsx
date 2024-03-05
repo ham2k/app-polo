@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 // eslint-disable-next-line camelcase
 import { Keyboard, View, unstable_batchedUpdates } from 'react-native'
-import { IconButton } from 'react-native-paper'
+import { IconButton, Text } from 'react-native-paper'
 import cloneDeep from 'clone-deep'
 import { useDispatch } from 'react-redux'
 
@@ -45,21 +45,22 @@ function prepareNewQSO (operation, settings) {
     band: operation.band,
     freq: operation.freq,
     mode: operation.mode,
-    _is_new: true,
+    _isNew: true,
     key: 'new-qso'
   }
 }
 
 function prepareExistingQSO (qso) {
+  console.log('prepareExistingQSO', qso)
   const clone = cloneDeep(qso || {})
   clone._originalKey = qso?.key
-  clone._is_new = false
+  clone._isNew = false
   return clone
 }
 
 function prepareSuggestedQSO (qso) {
   const clone = cloneDeep(qso || {})
-  clone._is_new = true
+  clone._isNew = true
   clone.key = 'new-qso'
   if (clone.freq) {
     clone.band = bandForFrequency(clone.freq)
@@ -69,8 +70,10 @@ function prepareSuggestedQSO (qso) {
 
 export default function LoggingPanel ({ style, operation, qsos, settings, selectedKey, setSelectedKey, setLastKey, suggestedQSO }) {
   const [qso, setQSO] = useState()
+  const [originalQSO, setOriginalQSO] = useState()
+  const [qsoHasChanges, setQSOHasChanges] = useState(false)
 
-  const themeColor = useMemo(() => qso?._is_new ? 'tertiary' : 'secondary', [qso])
+  const themeColor = useMemo(() => (!qso || qso?._isNew) ? 'tertiary' : 'secondary', [qso])
   const upcasedThemeColor = useMemo(() => themeColor.charAt(0).toUpperCase() + themeColor.slice(1), [themeColor])
 
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
@@ -85,46 +88,54 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
 
   const [isValid, setIsValid] = useState(false)
 
-  useEffect(() => {
-    if (suggestedQSO) {
-      setQSO(prepareSuggestedQSO(suggestedQSO))
-    }
-  }, [suggestedQSO])
-
   const setNewQSO = useCallback((newQSO) => {
-    const newVisibleFields = {}
-    if (newQSO?._is_new) {
-      setPausedTime(false)
+    if (!newQSO) setSelectedKey(undefined)
+
+    if (!newQSO?._isNew && newQSO?.startOnMillis) {
+      setPausedTime(true)
     } else {
-      if (newQSO?.startOnMillis) {
-        setPausedTime(true)
-      }
-      if (newQSO.notes) {
-        newVisibleFields.notes = true
-      }
-      if (findRef(newQSO, 'pota')) {
-        newVisibleFields.pota = true
-      }
+      setPausedTime(false)
     }
 
     setQSO(newQSO)
-    setVisibleFields(newVisibleFields)
-  }, [setQSO])
+    setOriginalQSO(cloneDeep(newQSO))
+    setQSOHasChanges(false)
+    setVisibleFields({})
+  }, [setQSO, setSelectedKey])
+
+  useEffect(() => { // Keep track of QSO changes
+    if (qso && originalQSO) {
+      setQSOHasChanges(JSON.stringify(qso) !== JSON.stringify(originalQSO))
+    } else {
+      setQSOHasChanges(false)
+    }
+  }, [qso, originalQSO])
+
+  useEffect(() => { // If a parameter was passed suggesting a QSO, use that
+    if (suggestedQSO) {
+      setNewQSO(prepareSuggestedQSO(suggestedQSO))
+    }
+  }, [suggestedQSO, setNewQSO])
 
   const [qsoQueue, setQSOQueue] = useState([])
 
-  // When there is no current QSO, pop one from the queue or create a new one
-  // If the currently selected QSO changes, push the current one to the queue and load the new one
-  useEffect(() => {
-    if (!selectedKey) {
+  useEffect(() => { // Manage the QSO Queue
+    // When there is no current QSO, pop one from the queue or create a new one
+    // If the currently selected QSO changes, push the current one to the queue and load the new one
+    console.log('Manage queue effect', selectedKey, qso?.key, !!qso)
+    if (!selectedKey || (selectedKey === 'new-qso' && !qso)) {
+      console.log('no selected key')
       let nextQSO
       if (qsoQueue.length > 0) {
+        console.log('pop from queue')
         nextQSO = qsoQueue.pop()
         setQSOQueue(qsoQueue)
       } else {
+        console.log('prepare new QSO')
         nextQSO = prepareNewQSO(operation, settings)
       }
       setNewQSO(nextQSO)
+      console.log('qso', nextQSO)
       if (nextQSO.key !== selectedKey) {
         setSelectedKey(nextQSO.key)
       }
@@ -132,18 +143,21 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
         mainFieldRef.current.focus()
       }
     } else if (qso && qso?.key !== selectedKey && selectedKey !== 'new-qso') {
+      console.log('existing qso')
       let nextQSO = qsos.find(q => q.key === selectedKey)
-      if (qso?._is_new) setQSOQueue([...qsoQueue, qso])
+      if (qso?._isNew) setQSOQueue([...qsoQueue, qso])
       nextQSO = prepareExistingQSO(nextQSO)
       setNewQSO(nextQSO)
+      console.log('qso', nextQSO)
       if (mainFieldRef?.current) {
         mainFieldRef.current.focus()
       }
+    } else {
+      console.log('no change', qso)
     }
   }, [qsoQueue, setQSOQueue, selectedKey, setSelectedKey, operation, settings, qso, setNewQSO, qsos])
 
-  // Validate and analize the callsign
-  useEffect(() => {
+  useEffect(() => { // Validate and analize the callsign
     const callInfo = parseCallsign(qso?.their?.call)
 
     if (callInfo?.baseCall) {
@@ -153,10 +167,13 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
     }
   }, [qso?.their?.call])
 
-  // Handle form fields and update QSO info
-  const handleFieldChange = useCallback((event) => {
+  const handleFieldChange = useCallback((event) => { // Handle form fields and update QSO info
     const { fieldId } = event
     const value = event?.value || event?.nativeEvent?.text
+
+    if (qso?.deleted || qso?._willBeDeleted) {
+      return
+    }
 
     if (fieldId === 'theirCall') {
       let startOnMillis = qso?.startOnMillis
@@ -186,34 +203,40 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
       setQSO({ ...qso, notes: value })
     } else if (fieldId === 'freq') {
       setQSO({ ...qso, freq: parseFreqInMHz(value) })
-      if (qso?._is_new) dispatch(setOperationData({ uuid: operation.uuid, freq: parseFreqInMHz(value) }))
+      if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, freq: parseFreqInMHz(value) }))
     } else if (fieldId === 'band') {
       setQSO({ ...qso, band: value, freq: undefined })
-      if (qso?._is_new) dispatch(setOperationData({ uuid: operation.uuid, band: value, freq: undefined }))
+      if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band: value, freq: undefined }))
     } else if (fieldId === 'mode') {
       setQSO({ ...qso, mode: value })
-      if (qso?._is_new) dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
+      if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
       setQSO({ ...qso, startOnMillis: value })
     }
   }, [qso, setQSO, pausedTime, dispatch, operation?.uuid])
 
-  // Finally submit the QSO
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
     // Ensure the focused component has a change to update values
     //   NOTE: This is a hack that can break on newer versions of React Native
     const component = focusedRef?.current?._internalFiberInstanceHandleDEV
     component?.memoizedProps?.onBlur()
 
-    // Run inside a setTimeout to allow the state to update
-    setTimeout(() => {
-      if (isValid) {
+    setTimeout(() => { // Run inside a setTimeout to allow the state to update
+      if (qso._willBeDeleted) {
+        delete qso._willBeDeleted
+        qso.deleted = true
+        dispatch(addQSO({ uuid: operation.uuid, qso }))
+        setSelectedKey(undefined)
+        setUndoInfo(undefined)
+        setQSO(undefined) // Let queue management decide what to do
+        setLastKey(qso.key)
+      } else if (isValid && !qso.deleted) {
         unstable_batchedUpdates(() => {
           setVisibleFields({})
 
-          if (qso._is_new) {
-            delete qso._is_new
-          }
+          delete qso._isNew
+          delete qso._willBeDeleted
+          delete qso.deleted
 
           qso.freq = qso.freq || operation.freq
           if (qso.freq) {
@@ -237,12 +260,47 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
 
           dispatch(addQSO({ uuid: operation.uuid, qso }))
           setSelectedKey(undefined)
-          setQSO(undefined)
+          setUndoInfo(undefined)
+          setQSO(undefined) // Let queue management decide what to do
           setLastKey(qso.key)
         })
       }
     }, 10)
   }, [qso, isValid, dispatch, operation, settings, setSelectedKey, setLastKey])
+
+  const [undoInfo, setUndoInfo] = useState()
+
+  const handleWipe = useCallback(() => { // Wipe a new QSO
+    if (qso?._isNew) {
+      setUndoInfo({ qso })
+      setNewQSO(undefined)
+      const timeout = setTimeout(() => { setUndoInfo(undefined) }, 10 * 1000) // Undo will clear after 10 seconds
+      return () => clearTimeout(timeout)
+    }
+  }, [qso, setNewQSO])
+
+  const handleUnwipe = useCallback(() => { // Undo wiping a new QSO
+    if (undoInfo) {
+      setQSO(undoInfo.qso)
+      setUndoInfo(undefined)
+      setQSOHasChanges(true)
+    }
+  }, [undoInfo, originalQSO])
+
+  const handleDelete = useCallback(() => { // Delete an existing QSO
+    if (!qso?._isNew) {
+      setUndoInfo({ qso })
+      setQSO({ ...qso, _willBeDeleted: true })
+      // const timeout = setTimeout(() => { setUndoInfo(undefined) }, 10 * 1000) // Undo will clear after 10 seconds
+      // return () => clearTimeout(timeout)
+    }
+  }, [qso])
+
+  const handleUndelete = useCallback(() => { // Undo changes to existing QSO
+    if (qso?.deleted) {
+      setQSO({ ...qso, _willBeDeleted: false, deleted: false })
+    }
+  }, [qso])
 
   const focusedRef = useRef()
 
@@ -287,6 +345,7 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
             operation={operation}
             settings={settings}
             setQSO={setQSO}
+            disabled={qso?.deleted || qso?._willBeDeleted}
             handleFieldChange={handleFieldChange}
             handleSubmit={handleSubmit}
             focusedRef={focusedRef}
@@ -296,21 +355,72 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
             setVisibleFields={setVisibleFields}
           />
 
-          <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace, gap: styles.oneSpace, minHeight: 5.1 * styles.oneSpace }}>
-            {qso?.their?.call ? (
-              <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
-            ) : (
-              <OpInfo operation={operation} styles={styles} qsos={qsos} themeColor={themeColor} />
-            )}
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+            <View style={{ flex: 1, paddingLeft: styles.oneSpace }}>
+              {qso?.deleted || qso?._willBeDeleted ? (
+                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
+                    {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
+                  </Text>
+                </View>
+              ) : (
+                qso?.their?.call ? (
+                  <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
+                ) : (
+                  <OpInfo operation={operation} styles={styles} qsos={qsos} themeColor={themeColor} />
+                )
+              )}
+            </View>
+
+            <View style={{ justifyContent: 'flex-end', alignSelf: 'flex-end', paddingLeft: styles.oneSpace }}>
+              {qso?._isNew ? (
+                undoInfo ? (
+                  <IconButton
+                    icon={'undo'}
+                    size={styles.oneSpace * 4}
+                    iconColor={styles.theme.colors[themeColor]}
+                    onPress={handleUnwipe}
+                  />
+                ) : (
+                  <IconButton
+                    icon={'backspace-outline'}
+                    size={styles.oneSpace * 4}
+                    disabled={!qsoHasChanges}
+                    iconColor={styles.theme.colors[themeColor]}
+                    onPress={handleWipe}
+                  />
+                )
+              ) : (
+                (qso?.deleted || qso?._willBeDeleted) ? (
+                  <IconButton
+                    icon={'undo'}
+                    size={styles.oneSpace * 4}
+                    iconColor={styles.theme.colors[themeColor]}
+                    onPress={handleUndelete}
+                  />
+                ) : (
+                  <IconButton
+                    icon={'trash-can-outline'}
+                    size={styles.oneSpace * 4}
+                    disabled={false}
+                    iconColor={styles.theme.colors[themeColor]}
+                    onPress={handleDelete}
+                  />
+                )
+              )}
+            </View>
+
           </View>
         </View>
 
       </View>
-      <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: styles.halfSpace }}>
         <MainExchangePanel
+          style={{ flex: 1, paddingLeft: styles.oneSpace }}
           qso={qso}
           operation={operation}
           settings={settings}
+          disabled={qso?.deleted || qso?._willBeDeleted}
           styles={styles}
           themeColor={themeColor}
           handleSubmit={handleSubmit}
@@ -319,9 +429,9 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
           mainFieldRef={mainFieldRef}
           focusedRef={focusedRef}
         />
-        <View style={{ justifyContent: 'flex-end', alignItems: 'center', paddingHorizontal: styles.halfSpace, paddingBottom: styles.oneSpace }}>
+        <View style={{ flex: 0, justifyContent: 'center', alignItems: 'center', paddingLeft: styles.halfSpace }}>
           <IconButton
-            icon={qso?._is_new ? 'upload' : 'content-save'}
+            icon={qso?._isNew ? 'upload' : (qso?._willBeDeleted ? 'trash-can' : 'content-save')}
             size={styles.oneSpace * 4}
             mode="contained"
             disabled={!isValid}

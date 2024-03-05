@@ -17,8 +17,6 @@
 
 # Ready to Develop
 
-* Delete QSOs
-* Wipe log entry (with undo)
 * Switch report fields after two (or three) digits
 * SOTA
 * Location

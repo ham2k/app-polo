@@ -65,7 +65,7 @@ const ACTIVITY = {
 }
 
 function fieldsForMainExchangePanel (props) {
-  const { qso, setQSO, styles, refStack, onSubmitEditing, keyHandler, focusedRef } = props
+  const { qso, setQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
 
   const ref = findRef(qso?.refs, ACTIVITY.key) || { type: ACTIVITY.key, class: '', location: '' }
 
@@ -83,6 +83,7 @@ function fieldsForMainExchangePanel (props) {
       uppercase={true}
       noSpaces={true}
       value={ref?.class || ''}
+      disabled={disabled}
       onChangeText={(text) => setQSO({
         ...qso,
         refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, class: text }),
@@ -105,6 +106,7 @@ function fieldsForMainExchangePanel (props) {
       uppercase={true}
       noSpaces={true}
       value={ref?.location || ''}
+      disabled={disabled}
       onChangeText={(text) => setQSO({
         ...qso,
         refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, location: text }),

@@ -22,13 +22,14 @@ export const radioControl = {
     parts.push(`${qso?.mode ?? operation.mode ?? 'SSB'}`)
     return parts.join(' • ')
   },
-  inputComponent: ({ qso, operation, settings, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => (
+  inputComponent: ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => (
     <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
       <ThemedDropDown
         label="Band"
         themeColor={themeColor}
-        value={qso._is_new ? (qso.band ?? operation.band ?? '') : (qso.band ?? '') }
+        value={qso._isNew ? (qso.band ?? operation.band ?? '') : (qso.band ?? '') }
         onChange={handleFieldChange}
+        disabled={disabled}
         fieldId={'band'}
         style={{ width: styles.oneSpace * 15 }}
         list={[
@@ -53,7 +54,8 @@ export const radioControl = {
       <FrequencyInput
         themeColor={themeColor}
         style={{ width: styles.oneSpace * 11 }}
-        value={qso._is_new ? (qso.freq ?? operation.freq ?? '') : (qso.freq ?? '') }
+        value={qso._isNew ? (qso.freq ?? operation.freq ?? '') : (qso.freq ?? '') }
+        disabled={disabled}
         label="Frequency"
         placeholder=""
         onChange={handleFieldChange}
@@ -63,8 +65,9 @@ export const radioControl = {
       />
       <ThemedDropDown
         label="Mode"
-        value={qso._is_new ? (qso.mode ?? operation.mode ?? '') : (qso.mode ?? '') }
+        value={qso._isNew ? (qso.mode ?? operation.mode ?? '') : (qso.mode ?? '') }
         onChange={handleFieldChange}
+        disabled={disabled}
         fieldId={'mode'}
         style={{ width: styles.oneSpace * 14 }}
         list={[
