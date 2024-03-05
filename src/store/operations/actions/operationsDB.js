@@ -73,6 +73,7 @@ export const loadOperation = (uuid) => async (dispatch) => {
 
 export const deleteOperation = (uuid) => async (dispatch) => {
   await dbExecute('DELETE FROM operations WHERE uuid = ?', [uuid])
+  await dbExecute('DELETE FROM qsos WHERE operation = ?', [uuid])
   await dispatch(actions.unsetOperation(uuid))
   await dispatch(qsosActions.unsetQSOs(uuid))
 }
