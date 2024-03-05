@@ -144,7 +144,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     let level = 'info'
     console.log(callHistory)
     if (callHistory?.length > 0) {
-      if (qso?._isNew && callHistory.find(x => x?.operation === operation.uuid)) {
+      if (qso?._isNew && callHistory.find(x => x?.operation === operation.uuid && x?.mode === qso.mode && x?.band === qso.band)) {
         if (isPotaOp) {
           if (fmtDateZulu(callHistory[0]?.startOnMillis) === fmtDateZulu(today)) {
             info = 'Dupe!!!'
@@ -169,7 +169,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
       }
     }
     return [info, level]
-  }, [callHistory, isPotaOp, operation?.uuid, qso?._isNew])
+  }, [callHistory, isPotaOp, operation?.uuid, qso])
 
   return (
     <>
