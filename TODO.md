@@ -1,17 +1,37 @@
+# Bugs
+
+* Numbers don't work (ios?)
+* Operation Item shows text in black in dark mode (ios?)
+* Frequency field doesn't update until blurred
+* RTTY should default to 599
+* Don't allow QSOs until a band is selected
+* Deleted operation QSOs still show in history
+* Notes did not come as comments on ADIF
+* On K0GR's tablet, using external keyboard would cause virtual one to pop up
+  One quirk I had on my ~10yo tablet was when I wanted to edit a field and clicked a button, it would quickly open and close the keyboard. A second click and it would open and stay open. Not sure that's the app or my tablet.
+* History check should also consider band and mode
+
 # Minor Tasks
 
-* Fix time entry, make format less strict, and dates relative to today
-* Fix time entry to use previous QSO info if missing
+* Secondary fields should be focused after opening them
 
 # Ready to Develop
 
 * Delete QSOs
+* Wipe log entry (with undo)
+* Switch report fields after two (or three) digits
+* SOTA
 * Location
+* WWFF
+* Search POTA / SOTA / WWFF by name
+* Fix time entry to use previous QSO info if missing
+* Fix time entry, make format less strict, and dates relative to today
 
 # Feature Ideas
 
+* Autocomplete POTA or SOTA references based on spots
+* Better spot filtering and ordering. Define bands and modes you care about
 * When changing operation settings, warn that it applies to all QSOs
-* Wipe log entry (with undo)
 * Countdown to POTA midnight
 * POTA early and late shifts indicator and countdowns
 * WSJT-X Logging
