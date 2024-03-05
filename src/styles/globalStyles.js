@@ -127,7 +127,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       width: '100%'
     },
     rowText: {
-      fontSize: normalFontSize
+      fontSize: normalFontSize,
+      color: theme.colors.onBackground
     },
     text: {
       numbers: {

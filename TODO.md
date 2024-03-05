@@ -1,7 +1,6 @@
 # Bugs
 
 * Numbers don't work (ios?)
-* Operation Item shows text in black in dark mode (ios?)
 * Frequency field doesn't update until blurred
 * RTTY should default to 599
 * Don't allow QSOs until a band is selected
