@@ -142,6 +142,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     const today = new Date()
     let info = ''
     let level = 'info'
+    console.log(callHistory)
     if (callHistory?.length > 0) {
       if (qso?._isNew && callHistory.find(x => x?.operation === operation.uuid)) {
         if (isPotaOp) {
@@ -205,7 +206,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
               )}
             </View>
             {(stationInfo || historyInfo) && (
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
                 {historyInfo && (
                   <View style={[{ flex: 0 }, styles.history.pill, historyLevel && styles.history[historyLevel]]}>
                     <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyInfo}</Text>

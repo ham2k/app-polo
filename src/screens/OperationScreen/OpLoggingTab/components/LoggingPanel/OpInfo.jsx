@@ -43,19 +43,19 @@ export function OpInfo ({ operation, qsos, styles, style, themeColor }) {
   }, [qsos])
 
   return (
-    <TouchableRipple onPress={() => true} style={{ width: '100%', height: styles.oneSpace * 5 }}>
+    <TouchableRipple onPress={() => true} style={{ height: styles.oneSpace * 5 }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
-        <View style={{ alignSelf: 'flex-start' }}>
+        <View style={{ flex: 0, alignSelf: 'flex-start' }}>
           <Icon
             source={'timer-outline'}
             size={styles.oneSpace * 3}
             color={styles.theme.colors[`${themeColor}ContainerVariant`]}
           />
         </View>
-        <View style={[style, { flexDirection: 'column', justifyContent: 'flex-start', paddingTop: styles.oneSpace * 0.3 }]}>
-          {line1 && <Text numberOfLines={1} ellipsizeMode={'tail'}>{line1}</Text>}
-          {line2 && <Text numberOfLines={1} ellipsizeMode={'tail'}>{line2}</Text>}
+        <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', paddingTop: styles.oneSpace * 0.3 }]}>
+          {line1 && <Text numberOfLines={2} ellipsizeMode={'tail'}>{line1}</Text>}
+          {line2 && <Text numberOfLines={2} ellipsizeMode={'tail'}>{line2}</Text>}
         </View>
       </View>
     </TouchableRipple>

@@ -285,7 +285,7 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
       setUndoInfo(undefined)
       setQSOHasChanges(true)
     }
-  }, [undoInfo, originalQSO])
+  }, [undoInfo])
 
   const handleDelete = useCallback(() => { // Delete an existing QSO
     if (!qso?._isNew) {
@@ -372,7 +372,7 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
               )}
             </View>
 
-            <View style={{ justifyContent: 'flex-end', alignSelf: 'flex-end', paddingLeft: styles.oneSpace }}>
+            <View style={{ justifyContent: 'flex-end', alignSelf: 'flex-end' }}>
               {qso?._isNew ? (
                 undoInfo ? (
                   <IconButton
