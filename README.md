@@ -10,18 +10,19 @@ cd android && ./gradlew clean && ./gradlew cleanBuildCache && cd ..
 
 * Update version in `package.json`
 
+Links:
+
+* Tester Group: https://groups.google.com/g/ham2k-polo-testers
+* Discord: https://discord.gg/rT6B2fP7pU
+* Android Internal: https://play.google.com/apps/internaltest/4700998652811571052
+* Android Closed Beta: https://play.google.com/apps/testing/com.ham2k.polo.beta
+* TestFlight: https://testflight.apple.com/join/TjRq5t5Y
+
 ### Android
 
 * Update version and build number in `android/app/build.gradle`
 * Run `npm run build:android:beta:release`
 * Fetch binary from `android/app/build/outputs/bundle`
-
-Links:
-
-* Tester Group: https://groups.google.com/g/ham2k-polo-testers
-* Discord: https://discord.gg/rT6B2fP7pU
-* Internal: https://play.google.com/apps/internaltest/4700998652811571052
-* Closed Beta: https://play.google.com/apps/testing/com.ham2k.polo.beta
 
 ### iOS
 
