@@ -4,7 +4,6 @@
 * Frequency field doesn't update until blurred
 * RTTY should default to 599
 * Don't allow QSOs until a band is selected
-* Notes did not come as comments on ADIF
 * On K0GR's tablet, using external keyboard would cause virtual one to pop up
   One quirk I had on my ~10yo tablet was when I wanted to edit a field and clicked a button, it would quickly open and close the keyboard. A second click and it would open and stay open. Not sure that's the app or my tablet.
 * History check should also consider band and mode
@@ -30,6 +29,7 @@
 * When changing operation settings, warn that it applies to all QSOs
 * Countdown to POTA midnight
 * POTA early and late shifts indicator and countdowns
+* Ask for POTA state for references in multiple states
 * WSJT-X Logging
 * Audio Notes
 * Upload to POTA.app
