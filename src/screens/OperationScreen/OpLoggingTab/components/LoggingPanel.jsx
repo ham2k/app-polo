@@ -51,7 +51,6 @@ function prepareNewQSO (operation, settings) {
 }
 
 function prepareExistingQSO (qso) {
-  console.log('prepareExistingQSO', qso)
   const clone = cloneDeep(qso || {})
   clone._originalKey = qso?.key
   clone._isNew = false
@@ -122,20 +121,15 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
   useEffect(() => { // Manage the QSO Queue
     // When there is no current QSO, pop one from the queue or create a new one
     // If the currently selected QSO changes, push the current one to the queue and load the new one
-    console.log('Manage queue effect', selectedKey, qso?.key, !!qso)
     if (!selectedKey || (selectedKey === 'new-qso' && !qso)) {
-      console.log('no selected key')
       let nextQSO
       if (qsoQueue.length > 0) {
-        console.log('pop from queue')
         nextQSO = qsoQueue.pop()
         setQSOQueue(qsoQueue)
       } else {
-        console.log('prepare new QSO')
         nextQSO = prepareNewQSO(operation, settings)
       }
       setNewQSO(nextQSO)
-      console.log('qso', nextQSO)
       if (nextQSO.key !== selectedKey) {
         setSelectedKey(nextQSO.key)
       }
@@ -143,17 +137,13 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
         mainFieldRef.current.focus()
       }
     } else if (qso && qso?.key !== selectedKey && selectedKey !== 'new-qso') {
-      console.log('existing qso')
       let nextQSO = qsos.find(q => q.key === selectedKey)
       if (qso?._isNew) setQSOQueue([...qsoQueue, qso])
       nextQSO = prepareExistingQSO(nextQSO)
       setNewQSO(nextQSO)
-      console.log('qso', nextQSO)
       if (mainFieldRef?.current) {
         mainFieldRef.current.focus()
       }
-    } else {
-      console.log('no change', qso)
     }
   }, [qsoQueue, setQSOQueue, selectedKey, setSelectedKey, operation, settings, qso, setNewQSO, qsos])
 
@@ -202,8 +192,10 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
     } else if (fieldId === 'notes') {
       setQSO({ ...qso, notes: value })
     } else if (fieldId === 'freq') {
-      setQSO({ ...qso, freq: parseFreqInMHz(value) })
-      if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, freq: parseFreqInMHz(value) }))
+      const freq = parseFreqInMHz(value)
+      const band = bandForFrequency(freq)
+      setQSO({ ...qso, freq, band })
+      if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band, freq }))
     } else if (fieldId === 'band') {
       setQSO({ ...qso, band: value, freq: undefined })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band: value, freq: undefined }))
