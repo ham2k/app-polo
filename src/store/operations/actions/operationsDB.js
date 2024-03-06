@@ -126,24 +126,40 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
     return { ...qso, our: { ...qso.our, call: operation.stationCall || settings.operatorCall } }
   })
 
-  let name
-  let data
+  const names = []
+  const datas = []
 
   if (type === 'adif') {
-    const pota = refsToString(operation, 'potaActivation')
-    name = `${baseName}${pota ? ` at ${pota}` : ''}.adi`
-    data = qsonToADIF({ operation, qsos, settings })
+    const potaActivationRefs = (operation.refs || []).filter(ref => ref.type === 'potaActivation')
+    const nonPotaRefs = (operation.refs || []).filter(ref => ref.type !== 'potaActivation')
+
+    if (potaActivationRefs.length > 0) {
+      potaActivationRefs.forEach((activationRef, i) => {
+        names.push(`${baseName} at ${activationRef.ref}.adi`)
+        datas.push(qsonToADIF({ operation: { ...operation, refs: [...nonPotaRefs, activationRef] }, qsos, settings }))
+      })
+    } else {
+      names.push(`${baseName}.adi`)
+      datas.push(qsonToADIF({ operation, qsos, settings }))
+    }
   } else if (type === 'cabrillo') {
-    name = `${baseName} for ${activity.shortName}.log`
-    data = qsonToCabrillo({ operation, qsos, activity, settings })
+    names.push(`${baseName} for ${activity.shortName}.log`)
+    datas.push(qsonToCabrillo({ operation, qsos, activity, settings }))
   } else if (type === 'qson') {
-    name = `${uuid}.qson`
-    data = JSON.stringify({ operation, qsos, settings })
+    names.push(`${uuid}.qson`)
+    datas.push(JSON.stringify({ operation, qsos, settings }))
   }
 
-  if (name && data) {
-    await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${name}`, data)
-    return `${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${name}`
+  if (names.length && datas.length) {
+    const paths = []
+    while (names.length > 0) {
+      const name = names.shift()
+      const data = datas.shift()
+      await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${name}`, data)
+      paths.push(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${name}`)
+    }
+    console.log('generateExport', paths)
+    return paths
   } else {
     return false
   }
