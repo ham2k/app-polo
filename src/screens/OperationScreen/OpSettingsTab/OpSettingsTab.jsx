@@ -50,11 +50,10 @@ export default function OpSettingsTab ({ navigation, route }) {
   const [currentDialog, setCurrentDialog] = useState()
 
   const handleExport = useCallback((type, activity) => {
-    dispatch(generateExport(operation.uuid, type, activity)).then((path) => {
-      if (path) {
-        console.log('Exporting', path)
+    dispatch(generateExport(operation.uuid, type, activity)).then((paths) => {
+      if (paths?.length > 0) {
         Share.open({
-          url: `file://${path}`,
+          urls: paths.map(p => `file://${p}`),
           type: 'text/plain' // There is no official ADIF or Cabrillo mime type
         }).then((x) => {
           console.info('Shared', x)
