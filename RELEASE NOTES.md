@@ -1,5 +1,7 @@
 RELEASE NOTES
 
+# 0.4.6
+
 # 0.4.5
 
 * Deleted QSOs are not exported as ADIF
