@@ -1,28 +1,16 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 
 import ThemedDropDown from '../../../../../components/ThemedDropDown'
 import FrequencyInput from '../../../../../components/FrequencyInput'
 import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 
-export const radioControl = {
-  key: 'radio',
-  icon: 'radio',
-  order: 1,
-  label: ({ qso, operation, settings }) => {
-    const parts = []
-    if (qso?.freq ?? operation.freq) {
-      parts.push(`${fmtFreqInMHz(qso?.freq ?? operation.freq)} MHz`)
-    } else if (qso?.band ?? operation.band) {
-      parts.push(`${qso?.band ?? operation.band}`)
-    } else {
-      parts.push('Band???')
-    }
-
-    parts.push(`${qso?.mode ?? operation.mode ?? 'SSB'}`)
-    return parts.join(' • ')
-  },
-  inputComponent: ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => (
+const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => {
+  const ref = useRef()
+  useEffect(() => {
+    ref?.current?.focus()
+  }, [])
+  return (
     <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
       <ThemedDropDown
         label="Band"
@@ -52,6 +40,7 @@ export const radioControl = {
         ]}
       />
       <FrequencyInput
+        innerRef={ref}
         themeColor={themeColor}
         style={{ width: styles.oneSpace * 11 }}
         value={qso._isNew ? (qso.freq ?? operation.freq ?? '') : (qso.freq ?? '') }
@@ -82,4 +71,24 @@ export const radioControl = {
       />
     </View>
   )
+}
+
+export const radioControl = {
+  key: 'radio',
+  icon: 'radio',
+  order: 1,
+  label: ({ qso, operation, settings }) => {
+    const parts = []
+    if (qso?.freq ?? operation.freq) {
+      parts.push(`${fmtFreqInMHz(qso?.freq ?? operation.freq)} MHz`)
+    } else if (qso?.band ?? operation.band) {
+      parts.push(`${qso?.band ?? operation.band}`)
+    } else {
+      parts.push('Band???')
+    }
+
+    parts.push(`${qso?.mode ?? operation.mode ?? 'SSB'}`)
+    return parts.join(' • ')
+  },
+  inputComponent: RadioControlInputs
 }
