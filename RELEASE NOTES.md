@@ -3,6 +3,7 @@ RELEASE NOTES
 # 0.4.6
 
 * Secondary fields should be focused after opening them
+* Switch report fields after two (or three) digits
 
 # 0.4.5
 
