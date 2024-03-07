@@ -110,7 +110,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
     if (pota?.data?.name) {
-      parts.push(`POTA ${potaRef} ${pota.data.name} ${pota.data.parktypeDesc}`)
+      parts.push(['POTA', potaRef, pota.data.name, pota.data.parktypeDesc].filter(x => x).join(' '))
       if (pota.data.locationName) parts.push(pota.data.locationName)
     } else if (pota?.data?.error) {
       parts.push(`POTA ${potaRef} ${pota.data?.error}`)

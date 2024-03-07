@@ -6,6 +6,7 @@ import RNFetchBlob from 'react-native-blob-util'
 import packageJson from '../../package.json'
 
 export const POTAAllParks = { byReference: {}, prefixByDXCCCode: {} }
+
 export function preparePOTAAllParksData () {
   registerDataFile({
     key: 'pota-all-parks',
