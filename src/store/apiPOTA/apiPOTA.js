@@ -1,5 +1,6 @@
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { POTAAllParks } from '../../data/POTA-AllParks'
 
 /**
 
@@ -73,11 +74,25 @@ const POTA_REGEX = /[A-Z]{1,2}-[0-9]{4,5}/
 
 export function useLookupParkQuery (arg, options) {
   let result
+
   if (!arg?.ref || !arg?.ref?.match(POTA_REGEX)) {
     result = apiPOTA.useLookupParkQuery('', { skip: true })
+  } else if (POTAAllParks.byReference[arg.ref]) {
+    result = apiPOTA.useLookupParkQuery(arg.ref, { skip: true })
+    result = { ...result } // It seems that redux queries reuse their data structures, so let's clone it first
+    result.data = POTAAllParks.byReference[arg.ref]
+    result.isError = false
+    result.isUninitialized = false
+    result.isFetching = false
+    result.isLoading = false
+    result.isSuccess = true
+    result.status = 'fulfilled'
+
+    result.isOffline = true
   } else {
     result = apiPOTA.useLookupParkQuery(arg, options)
   }
+
   if (result?.status === 'uninitialized') {
     return undefined
   } else {
