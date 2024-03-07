@@ -1,16 +1,5 @@
-```
-npm start -- --reset-cache
-```
 
-```
-cd android && ./gradlew clean && ./gradlew cleanBuildCache && cd ..
-```
-
-# Releases
-
-* Update version in `package.json`
-
-Links:
+# Links:
 
 * Tester Group: https://groups.google.com/g/ham2k-polo-testers
 * Discord: https://discord.gg/rT6B2fP7pU
@@ -18,25 +7,10 @@ Links:
 * Android Closed Beta: https://play.google.com/apps/testing/com.ham2k.polo.beta
 * TestFlight: https://testflight.apple.com/join/TjRq5t5Y
 
-### Android
-
-* Update version and build number in `android/app/build.gradle`
-* Run `npm run build:android:beta:release`
-* Fetch binary from `android/app/build/outputs/bundle`
-
-### iOS
-
-* In `ios/Polo/Info.plist`, remove `localhost` from `NSExceptionDomains`
-* Update version and build number in XCode > Targets: Polo > Build Settings > Versioning
-* Also in XCode: Product > Scheme > polo-Prod
-* Also in XCode: Product > Scheme > Edit Scheme > polo-Prod > Run > Build Configuration: Release
-* Also in XCode: Product > Archive
-* In Archive: Distribute App
-* Revert changes to `Info.plist`
-
 # Debug Menu
 
 iOS: Cmd ⌘ + D
+
 Android: Cmd ⌘ + M (macOS) or Ctrl + M (Windows and Linux)
 
 # Resources
@@ -64,17 +38,63 @@ open `xcrun simctl get_app_container booted com.ham2k.polo data`/Documents
 open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep FileProvider.LocalStorage|sed "s/group.com.apple.FileProvider.LocalStorage//g"`/File\ Provider\ Storage
 ```
 
+---
+
 # Troubleshooting
 
-"Unable to boot simulator" error for iOS Simulator
+###
+```
+npm start -- --reset-cache
+```
+
+```
+cd android && ./gradlew clean && ./gradlew cleanBuildCache && cd ..
+```
+
+### "Unable to boot simulator" error for iOS Simulator
 
 * Go to [About this Mac > Storage > Manage > Developer]
 * Delete XCode caches
 
 https://github.com/shinydevelopment/SimulatorStatusMagic
 
+### Some troubleshooting links
+
+React Native [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+
+---
+
+# Release Flow
+
+### First, open a new release
+* Update version in `package.json` and add a heading on `RELEASE NOTES.md`
+* Commit to `main` as "Open {version}"
+
+### Then, write code, commit, merge, push, test, etc
+* Update `RELEASE NOTES.md` as you go
+
+### When ready to build a release
+
+#### Android
+* Update version and build number in `android/app/build.gradle`
+* Run `npm run build:android:beta:release`
+* Fetch binary from `android/app/build/outputs/bundle`
+
+#### iOS
+* In `ios/Polo/Info.plist`, remove `localhost` from `NSExceptionDomains`
+* Update version and build number in XCode > Targets: Polo > Build Settings > Versioning
+* Also in XCode: Product > Scheme > polo-Prod
+* Also in XCode: Product > Scheme > Edit Scheme > polo-Prod > Run > Build Configuration: Release
+* Also in XCode: Product > Archive
+* In Archive: Distribute App
+* Revert changes to `Info.plist`
+
+### Finally, close the release
+
+* Commit to `main` as `Release {version}`. Should only contain the changes to android and ios files described above.
 
 -------------
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
@@ -123,28 +143,6 @@ If everything is set up _correctly_, you should see your new app running in your
 
 This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
 
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
 # Learn More
 
 To learn more about React Native, take a look at the following resources:
@@ -152,5 +150,3 @@ To learn more about React Native, take a look at the following resources:
 - [React Native Website](https://reactnative.dev) - learn more about React Native.
 - [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.

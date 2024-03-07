@@ -1,12 +1,13 @@
-import React, { useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useCallback, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, Dialog, List, Portal, Text } from 'react-native-paper'
-import { KeyboardAvoidingView, ScrollView } from 'react-native'
+import { KeyboardAvoidingView, ScrollView, View } from 'react-native'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { getDataFileDefinitions, selectAllDataFileInfos } from '../../../store/dataFiles'
 import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats'
+import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 
 const DefinitionItem = ({ def, info, styles, onPress }) => {
   const Icon = useMemo(() => (
@@ -24,6 +25,11 @@ const DefinitionItem = ({ def, info, styles, onPress }) => {
 }
 
 const DefinitionDialog = ({ def, info, styles, onDialogDone }) => {
+  const dispatch = useDispatch()
+  const handleRefresh = useCallback(() => {
+    dispatch(fetchDataFile(def.key))
+  }, [def.key, dispatch])
+
   return (
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
@@ -34,11 +40,18 @@ const DefinitionDialog = ({ def, info, styles, onDialogDone }) => {
             <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{def.description}</Text>
           </Dialog.Content>
           <Dialog.Content>
-            <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Updated on {fmtDateTimeNice(info.date)}</Text>
+            {info.status === 'fetching' ? (
+              <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Fetching...</Text>
+            ) : (
+              <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Updated on {fmtDateTimeNice(info.date)}</Text>
+            )}
+            {info.version && (
+              <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Version: {info.version}</Text>
+            )}
           </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={onDialogDone}>Cancel</Button>
-            <Button onPress={onDialogDone}>Ok</Button>
+          <Dialog.Actions style={{ justifyContent: 'space-between' }}>
+            <Button onPress={handleRefresh} disabled={info.status === 'fetching'}>Refresh</Button>
+            <Button onPress={onDialogDone}>Done</Button>
           </Dialog.Actions>
         </Dialog>
       </KeyboardAvoidingView>

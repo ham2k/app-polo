@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import POTAInput from '../../components/POTAInput'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
@@ -60,6 +60,11 @@ const ACTIVITY = {
 function ThisActivityOptionalExchangePanel (props) {
   const { qso, setQSO, styles } = props
 
+  const ref = useRef()
+  useEffect(() => {
+    ref?.current?.focus()
+  }, [])
+
   const [localValue, setLocalValue] = useState('')
 
   // Only initialize localValue once
@@ -88,6 +93,7 @@ function ThisActivityOptionalExchangePanel (props) {
   return (
     <POTAInput
       {...props}
+      innerRef={ref}
       style={{ minWidth: 16 * styles.oneSpace }}
       value={localValue}
       label="Their POTA"
