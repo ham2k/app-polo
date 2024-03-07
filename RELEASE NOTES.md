@@ -4,6 +4,7 @@ RELEASE NOTES
 
 * Secondary fields should be focused after opening them
 * Switch report fields after two (or three) digits
+* Better handling of downloaded data files (e.g. POTA database)
 
 # 0.4.5
 

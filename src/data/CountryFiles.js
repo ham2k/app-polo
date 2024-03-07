@@ -3,7 +3,7 @@ import { registerDataFile } from '../store/dataFiles'
 import RNFetchBlob from 'react-native-blob-util'
 
 import packageJson from '../../package.json'
-import { parseCountryFile, setCountryFileData, useBuiltinCountryFile } from '@ham2k/lib-country-files'
+import { analyzeFromCountryFile, parseCountryFile, setCountryFileData, useBuiltinCountryFile } from '@ham2k/lib-country-files'
 
 export const CountryFiles = { }
 
@@ -36,10 +36,16 @@ export function prepareCountryFilesData () {
 
       RNFetchBlob.fs.unlink(response.data)
 
+      setCountryFileData(data)
+      const version = analyzeFromCountryFile({ call: 'VERSION' })
+
+      if (version && version.entityName) data.version = version.entityName
+
       return data
     },
     onLoad: (data) => {
       Object.assign(CountryFiles, data)
+
       setCountryFileData(CountryFiles)
     }
   })
