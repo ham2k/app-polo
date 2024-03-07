@@ -27,7 +27,7 @@ export const fetchDataFile = (key) => async (dispatch) => {
 
   if (definition.onLoad) definition.onLoad(data)
 
-  dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', date: data.date ?? new Date() }))
+  dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', version: data.version, date: data.date ?? new Date() }))
 }
 
 export const readDataFile = (key) => async (dispatch) => {
@@ -38,14 +38,21 @@ export const readDataFile = (key) => async (dispatch) => {
   const body = await RNFetchBlob.fs.readFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
   const data = JSON.parse(body)
 
-  dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', date: data.date ? Date.parse(data.date) : new Date() }))
+  const stat = await RNFetchBlob.fs.stat(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
+  const lastModified = new Date(stat.lastModified)
+
+  dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', date: lastModified ?? new Date() }))
   if (definition.onLoad) definition.onLoad(data)
 }
 
 export const loadDataFile = (key, force) => async (dispatch, getState) => {
-  if (selectDataFileInfo(key)(getState())?.date) return // Already loaded, do nothing
+  if (selectDataFileInfo(key)(getState())?.data) {
+    console.log('loadDataFile', key, 'already loaded')
+    return // Already loaded, do nothing
+  }
 
   const definition = getDataFileDefinition(key)
+  const maxAgeInDays = definition?.maxAgeInDays || 7
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
   const exists = await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
@@ -55,7 +62,8 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
   } else {
     await dispatch(readDataFile(key))
     const date = selectDataFileInfo(key)(getState())?.date
-    if (date && definition.maxAgeInDays && (Date.now() - Date.parse(date)) / 1000 / 60 / 60 / 24 > definition.maxAgeInDays) {
+
+    if (date && maxAgeInDays && (Date.now() - Date.parse(date)) / 1000 / 60 / 60 / 24 > maxAgeInDays) {
       console.info(`Data for ${definition.key} is too old, fetching a fresh version`)
       dispatch(fetchDataFile(key))
     }
