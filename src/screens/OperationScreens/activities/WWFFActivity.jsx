@@ -43,7 +43,6 @@ export function ThisActivitySettingsDialog (props) {
       title={ACTIVITY.name}
       info={ACTIVITY.infoURL}
       removeOption={true}
-      value={operation[ACTIVITY.operationAttribute]}
       onChange={handleChange}
       content={({ value, setValue }) => (
         <>

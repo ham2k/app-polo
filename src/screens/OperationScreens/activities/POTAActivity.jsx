@@ -3,10 +3,10 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import POTAInput from '../../components/POTAInput'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
-import { Text } from 'react-native-paper'
+import { List, Text } from 'react-native-paper'
 import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 import { apiPOTA, useLookupParkQuery } from '../../../store/apiPOTA'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { filterRefs, findRef, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { POTAAllParks, preparePOTAAllParksData } from '../../../data/POTA-AllParks'
 
@@ -31,7 +31,6 @@ const ACTIVITY = {
   },
   huntingType: 'pota',
   activationType: 'potaActivation',
-  operationAttribute: 'pota',
   description: (operation) => refsToString(operation, ACTIVITY.activationType),
   descriptionPlaceholder: 'Enter POTA references',
   referenceRegex: /^[A-Z0-9]+-[0-9]{4,5}$/,
@@ -198,11 +197,103 @@ export function ThisActivityLookupLine ({ activityRef, style, styles, onGridSele
   }
 }
 
+export function ThisActivityListItem ({ activityRef, style, styles, onPress }) {
+  const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef, online: true })
+
+  const description = useMemo(() => {
+    let desc
+    if (pota.isLoading) {
+      desc = '...'
+    } else if (pota?.error) {
+      desc = pota.error
+    } else {
+      desc = [
+        pota?.data?.active === 0 && 'INACTIVE PARK!!!',
+        [pota?.data?.name, pota?.data?.parktypeDesc].filter(x => x).join(' '),
+        pota?.data?.locationName
+      ].filter(x => x).join(' • ')
+    }
+    return desc
+  }, [pota])
+
+  console.log(pota?.data)
+
+  return (
+    <List.Item
+      title={
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ fontWeight: 'bold' }}>
+            {pota?.data?.ref ?? activityRef}
+          </Text>
+          <Text>
+            {pota?.data?.locationDesc && ` (${pota?.data?.locationDesc})`}
+          </Text>
+        </View>
+      }
+      description={description}
+      onPress={onPress}
+      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={ACTIVITY.icon} />}
+    />
+  )
+}
+
+export function ThisActivityOptions (props) {
+  const { styles, operation } = props
+
+  const dispatch = useDispatch()
+
+  const ourInfo = useSelector(selectOperationCallInfo(operation?.uuid))
+  const defaultPrefix = useMemo(() => {
+    if (ourInfo?.dxccCode) {
+      return POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] ?? 'K'
+    } else {
+      return 'K'
+    }
+  }, [ourInfo?.dxccCode])
+
+  const handleChange = useCallback((value) => {
+    let refs
+    if (value) {
+      refs = stringToRefs(ACTIVITY.activationType, value, { regex: ACTIVITY.referenceRegex })
+    } else {
+      refs = []
+    }
+    if (refs.length === 0 && value !== undefined) refs = [{ type: ACTIVITY.activationType, ref: value }]
+
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, refs) }))
+  }, [dispatch, operation])
+
+  const refs = useMemo(() => filterRefs(operation, ACTIVITY.activationType), [operation])
+
+  const title = useMemo(() => {
+    if (refs?.length === 0) return 'No parks selected for activation'
+    else if (refs?.length === 1) return 'Activating 1 park'
+    else return `Activating ${refs.length} parks`
+  }, [refs])
+  return (
+    <>
+      <List.Section title={title}>
+        {refs.map((ref, index) => (
+          <ThisActivityListItem
+            key={ref.ref}
+            activityRef={ref.ref}
+            styles={styles}
+          />
+        ))}
+      </List.Section>
+      <List.Section title={'Add a park…'}>
+        <Text>Search</Text>
+      </List.Section>
+    </>
+  )
+}
+
 const ThisActivity = {
   ...ACTIVITY,
   MainExchangePanel: null,
   OptionalExchangePanel: ThisActivityOptionalExchangePanel,
-  SettingsDialog: ThisActivitySettingsDialog
+  SettingsDialog: ThisActivitySettingsDialog,
+  Options: ThisActivityOptions
 }
 
 export default ThisActivity

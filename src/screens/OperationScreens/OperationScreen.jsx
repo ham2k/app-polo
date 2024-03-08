@@ -15,24 +15,21 @@ import { startTickTock } from '../../store/time'
 
 const Tab = createMaterialTopTabNavigator()
 
-export default function MainOperationScreen ({ navigation, route }) {
+export default function OperationScreen ({ navigation, route }) {
   const dispatch = useDispatch()
   const operation = useSelector(selectOperation(route.params.operation.uuid))
   const settings = useSelector(selectSettings)
 
-  // Ensure the clock is ticking
-  useEffect(() => {
+  useEffect(() => { // Ensure the clock is ticking
     dispatch(startTickTock())
   }, [dispatch])
 
-  // When starting, make sure all operation data is loaded
-  useEffect(() => {
+  useEffect(() => { // When starting, make sure all operation data is loaded
     dispatch(loadQSOs(route.params.operation.uuid))
     dispatch(loadOperation(route.params.operation.uuid))
   }, [route.params.operation.uuid, dispatch])
 
-  // When operation data is loaded, set the title
-  useEffect(() => {
+  useEffect(() => { // When operation data is loaded, set the title
     if (operation?.stationCall || settings?.operatorCall) {
       navigation.setOptions({ title: (operation?.stationCall || settings?.operatorCall) + ` ${operation?.title}`, subTitle: operation.subtitle })
     } else {
