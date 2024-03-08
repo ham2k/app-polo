@@ -15,9 +15,11 @@ import { persistor, store } from './store'
 import HeaderBar from './screens/components/HeaderBar'
 
 import HomeScreen from './screens/HomeScreen/HomeScreen'
-import MainOperationScreen from './screens/OperationScreens/MainOperationScreen'
+import OperationScreen from './screens/OperationScreens/OperationScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
 import DataFilesSettingsScreen from './screens/SettingsScreens/screens/DataFilesSettingsScreen'
+import OperationAddActivityScreen from './screens/OperationScreens/OperationAddActivityScreen'
+import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -50,7 +52,17 @@ export default function App () {
 
               <Stack.Screen name="Operation"
                 options={{ title: 'Operation', headerBackTitle: 'Home', closeInsteadOfBack: true }}
-                component={MainOperationScreen}
+                component={OperationScreen}
+              />
+
+              <Stack.Screen name="OperationAddActivity"
+                options={{ title: 'Add Activity', headerBackTitle: 'Operation' }}
+                component={OperationAddActivityScreen}
+              />
+
+              <Stack.Screen name="OperationActivityOptions"
+                options={{ title: 'Activity Options', headerBackTitle: 'Operation' }}
+                component={OperationActivityOptionsScreen}
               />
 
               <Stack.Screen name="Settings"
