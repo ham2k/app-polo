@@ -1,6 +1,6 @@
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { actions, selectOperation } from '../operationsSlice'
-import { refHandlers } from '../../../screens/OperationScreen/activities'
+import { refHandlers } from '../../../screens/OperationScreens/activities'
 import debounce from 'debounce'
 import { saveOperation } from './operationsDB'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'

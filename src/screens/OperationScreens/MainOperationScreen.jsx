@@ -15,7 +15,7 @@ import { startTickTock } from '../../store/time'
 
 const Tab = createMaterialTopTabNavigator()
 
-export default function OperationScreen ({ navigation, route }) {
+export default function MainOperationScreen ({ navigation, route }) {
   const dispatch = useDispatch()
   const operation = useSelector(selectOperation(route.params.operation.uuid))
   const settings = useSelector(selectSettings)

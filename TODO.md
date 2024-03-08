@@ -6,11 +6,8 @@
 
 # Minor Tasks
 
-* Secondary fields should be focused after opening them
-
 # Ready to Develop
 
-* Switch report fields after two (or three) digits
 * SOTA
 * Location
 * WWFF
