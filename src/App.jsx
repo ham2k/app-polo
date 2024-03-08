@@ -15,7 +15,7 @@ import { persistor, store } from './store'
 import HeaderBar from './screens/components/HeaderBar'
 
 import HomeScreen from './screens/HomeScreen/HomeScreen'
-import OperationScreen from './screens/OperationScreen'
+import MainOperationScreen from './screens/OperationScreens/MainOperationScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
 import DataFilesSettingsScreen from './screens/SettingsScreens/screens/DataFilesSettingsScreen'
 
@@ -50,13 +50,18 @@ export default function App () {
 
               <Stack.Screen name="Operation"
                 options={{ title: 'Operation', headerBackTitle: 'Home', closeInsteadOfBack: true }}
-                component={OperationScreen}
+                component={MainOperationScreen}
               />
 
-              <Stack.Group>
-                <Stack.Screen name="Settings" options={{ title: 'Settings' }} component={MainSettingsScreen} />
-                <Stack.Screen name="DataFilesSettings" options={{ title: 'Data Files', headerBackTitle: 'MainSettings' }} component={DataFilesSettingsScreen} />
-              </Stack.Group>
+              <Stack.Screen name="Settings"
+                options={{ title: 'Settings' }}
+                component={MainSettingsScreen}
+              />
+
+              <Stack.Screen name="DataFilesSettings"
+                options={{ title: 'Data Files', headerBackTitle: 'MainSettings' }}
+                component={DataFilesSettingsScreen}
+              />
 
             </Stack.Navigator>
           </NavigationContainer>

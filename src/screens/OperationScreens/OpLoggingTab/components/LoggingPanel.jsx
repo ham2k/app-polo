@@ -21,7 +21,7 @@ import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { joinAnd } from '../../../../tools/joinAnd'
-import { Ham2kMarkdown } from '../../../../screens/components/Ham2kMarkdown'
+import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 
 prepareCountryFilesData()
 
