@@ -44,6 +44,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     }
     // })
     // )
+
     data.refs = newRefs
   }
 
@@ -64,7 +65,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     if (pota) {
       if (pota.ref) {
         titleParts.push(`at ${refsToString(data.refs, 'potaActivation', { limit: 2 })}`)
-        subtitleParts.push(filterRefs(data, 'potaActivation').map(ref => ref.name).filter(x => x).join(', '))
+        subtitleParts.push(filterRefs(data, 'potaActivation').map(ref => ref.name ?? 'Park Not Found').filter(x => x).join(', '))
       } else {
         titleParts.push('at New POTA')
       }

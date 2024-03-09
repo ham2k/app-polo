@@ -5,6 +5,7 @@ RELEASE NOTES
 * Refactored Operation settings and activity options
 * Added POTA search by name
 * Update POTA database daily, while they transition all their references
+* Allow entering unknown POTA references
 * Fixed grids in ADIF exports
 
 # 0.4.6
