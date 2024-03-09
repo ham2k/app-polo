@@ -103,101 +103,6 @@ function ThisActivityOptionalExchangePanel (props) {
   )
 }
 
-export function ThisActivitySettingsDialog (props) {
-  const { styles, operation } = props
-
-  const dispatch = useDispatch()
-
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
-  const defaultPrefix = useMemo(() => {
-    if (ourInfo?.dxccCode) {
-      return POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] ?? 'K'
-    } else {
-      return 'K'
-    }
-  }, [ourInfo?.dxccCode])
-
-  const handleChange = useCallback((value) => {
-    let refs
-    if (value) {
-      refs = stringToRefs(ACTIVITY.activationType, value, { regex: ACTIVITY.referenceRegex })
-    } else {
-      refs = []
-    }
-    if (refs.length === 0 && value !== undefined) refs = [{ type: ACTIVITY.activationType, ref: value }]
-
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, refs) }))
-  }, [dispatch, operation])
-
-  const handleGridSelect = useCallback((grid) => {
-    dispatch(setOperationData({ uuid: operation.uuid, grid }))
-  }, [dispatch, operation])
-
-  return (
-    <ActivitySettingsDialog
-      {...props}
-      icon={ACTIVITY.icon}
-      title={ACTIVITY.name}
-      info={ACTIVITY.infoURL}
-      removeOption={true}
-      value={refsToString(operation, ACTIVITY.activationType)}
-      onChange={handleChange}
-      content={({ value, setValue }) => (
-        <>
-          <Text variant="bodyMedium">Enter one or more park references being activated in this operation</Text>
-          <POTAInput
-            style={[styles.input, { marginTop: styles.oneSpace }]}
-            label={'POTA References'}
-            placeholder={''}
-            mode={'flat'}
-            value={value}
-            defaultPrefix={defaultPrefix}
-            onChangeText={(newValue) => {
-              setValue(newValue)
-            }}
-          />
-          <ScrollView style={{ maxHeight: styles.oneSpace * 6 }}>
-            {stringToRefs(ACTIVITY.activationType, value, { regex: ACTIVITY.referenceRegex }).map((ref, index) => (
-              <ThisActivityLookupLine key={ref.ref} activityRef={ref.ref} styles={styles} style={{ marginTop: styles.halfSpace, fontSize: styles.smallFontSize }} onGridSelect={handleGridSelect} />
-            ))}
-          </ScrollView>
-        </>
-      )}
-    />
-  )
-}
-
-export function ThisActivityLookupLine ({ activityRef, style, styles, onGridSelect }) {
-  const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef })
-
-  if (pota?.isLoading) {
-    return <Text style={style}>{'...'}</Text>
-  } else {
-    return (
-      <Text style={style}>
-        {pota?.data?.name ? (
-          <>
-            {[pota.data.name, pota.data.parktypeDesc].filter(x => x).join(' ')}
-            {pota?.data?.grid6 ? ' • ' : ''}
-            {pota?.data?.grid6 && (
-              <Text
-                onPress={() => onGridSelect && onGridSelect(pota.data.grid6)}
-                style={{ color: styles.theme.colors.primary, textDecorationLine: 'underline' }}
-              >
-                {pota.data.grid6}
-              </Text>
-            )}
-
-            {pota?.data?.locationName ? ` • ${pota.data.locationName}` : ''}
-          </>
-        ) : (
-          `${activityRef} not found!`
-        )}
-      </Text>
-    )
-  }
-}
-
 export function ThisActivityListItem ({ activityRef, refData, allRefs, style, styles, onPress, onAddReference, onRemoveReference }) {
   const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef, online: true })
 
@@ -254,14 +159,6 @@ export function ThisActivityOptions (props) {
   const dispatch = useDispatch()
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
-
-  const defaultPrefix = useMemo(() => {
-    if (ourInfo?.dxccCode) {
-      return POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] ?? 'K'
-    } else {
-      return 'K'
-    }
-  }, [ourInfo?.dxccCode])
 
   const refs = useMemo(() => filterRefs(operation, ACTIVITY.activationType), [operation]).filter(ref => ref.ref)
 
@@ -350,7 +247,6 @@ const ThisActivity = {
   ...ACTIVITY,
   MainExchangePanel: null,
   OptionalExchangePanel: ThisActivityOptionalExchangePanel,
-  SettingsDialog: ThisActivitySettingsDialog,
   Options: ThisActivityOptions
 }
 

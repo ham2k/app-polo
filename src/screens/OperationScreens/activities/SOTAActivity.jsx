@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { setOperationData } from '../../../store/operations'
@@ -53,54 +52,10 @@ function ThisActivityOptionalExchangePanel (props) {
   )
 }
 
-export function ThisActivitySettingsDialog (props) {
-  const { styles, operation } = props
-
-  const dispatch = useDispatch()
-
-  const handleChange = useCallback((value) => {
-    let refs
-    if (value) {
-      refs = stringToRefs(ACTIVITY.activationType, value, { regex: ACTIVITY.referenceRegex })
-    } else {
-      refs = []
-    }
-
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, refs) }))
-  }, [dispatch, operation])
-
-  return (
-    <ActivitySettingsDialog
-      {...props}
-      icon={ACTIVITY.icon}
-      title={ACTIVITY.name}
-      info={ACTIVITY.infoURL}
-      removeOption={true}
-      onChange={handleChange}
-      content={({ value, setValue }) => (
-        <>
-          <Text variant="bodyMedium">Enter the reference for the Summit being activated in this operation</Text>
-          <TextInput
-            style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={[styles.nativeInput, styles.text.callsign]}
-            label={'SOTA Reference'}
-            placeholder={'...'}
-            mode={'flat'}
-            value={value}
-            onChangeText={(text) => setValue(text)}
-          />
-          <Text variant="bodyMedium" style={{ color: styles.theme.colors.primary }}>NOT FUNCTIONAL YET, FOR TESTING PURPOSES ONLY</Text>
-        </>
-      )}
-    />
-  )
-}
-
 const ThisActivity = {
   ...ACTIVITY,
   MainExchangePanel: null,
-  OptionalExchangePanel: ThisActivityOptionalExchangePanel,
-  SettingsDialog: ThisActivitySettingsDialog
+  OptionalExchangePanel: ThisActivityOptionalExchangePanel
 }
 
 export default ThisActivity
