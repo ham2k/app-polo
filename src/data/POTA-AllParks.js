@@ -14,7 +14,8 @@ export function preparePOTAAllParksData () {
     description: 'Database of all POTA references',
     infoURL: 'https://pota.app/',
     icon: 'file-powerpoint-outline',
-    maxAgeInDays: 7,
+    // TODO: Change maxAgeInDays to 7 after mid-May 2024
+    maxAgeInDays: 1,
     autoLoad: true,
     fetch: async () => {
       const url = 'https://pota.app/all_parks_ext.csv'
