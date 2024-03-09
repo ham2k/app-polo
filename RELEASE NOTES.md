@@ -4,6 +4,7 @@ RELEASE NOTES
 
 * Refactored Operation settings and activity options
 * Added POTA search by name
+* Fixed grids in ADIF exports
 # 0.4.6
 
 * Secondary fields should be focused after opening them
