@@ -21,7 +21,7 @@ const debouncedDispatch = debounce(debounceableDispatch, 2000)
 
 export const setOperationData = (data) => async (dispatch, getState) => {
   const { uuid } = data
-  const operation = selectOperation(uuid)(getState()) ?? {}
+  const operation = selectOperation(getState(), uuid) ?? {}
   console.log('operation', operation, 'data', data)
   if (data.power) data.power = parseInt(data.power, 10)
 
@@ -89,6 +89,6 @@ export const setOperationData = (data) => async (dispatch, getState) => {
   }
 
   await dispatch(actions.setOperation(data))
-  const savedOperation = selectOperation(uuid)(getState()) ?? {}
+  const savedOperation = selectOperation(getState(), uuid) ?? {}
   return debouncedDispatch(dispatch, () => saveOperation(savedOperation))
 }

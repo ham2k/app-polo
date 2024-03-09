@@ -23,13 +23,13 @@ export const dataFilesSlice = createSlice({
 
 export const { actions } = dataFilesSlice
 
-export const selectDataFileInfo = (key) => createSelector(
-  (state) => state?.dataFiles?.files[key],
+export const selectDataFileInfo = createSelector(
+  [(state, key) => state?.dataFiles?.files[key]],
   (info) => info
 )
 
-export const selectAllDataFileInfos = () => createSelector(
-  (state) => state?.dataFiles?.files,
+export const selectAllDataFileInfos = createSelector(
+  [(state) => state?.dataFiles?.files],
   (files) => files
 )
 

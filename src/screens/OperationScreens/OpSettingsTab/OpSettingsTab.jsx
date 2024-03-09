@@ -44,7 +44,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   })
 
   const dispatch = useDispatch()
-  const operation = useSelector(selectOperation(route.params.operation.uuid))
+  const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
