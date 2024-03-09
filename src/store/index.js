@@ -78,6 +78,10 @@ export const store = configureStore({
     middlewares.push(apiQRZMiddleware)
     middlewares.push(apiPOTAMiddleware)
 
+    if (__DEV__) {
+      const createDebugger = require('redux-flipper').default
+      middlewares.push(createDebugger())
+    }
     return middlewares
   },
   devTools: {
