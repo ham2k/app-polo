@@ -2,6 +2,8 @@ RELEASE NOTES
 
 # 0.4.7
 
+* Refactored Operation settings and activity options
+* Added POTA search by name
 # 0.4.6
 
 * Secondary fields should be focused after opening them
