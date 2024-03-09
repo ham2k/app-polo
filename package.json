@@ -75,7 +75,9 @@
     "eslint-config-standard": "^17.1.0",
     "jest": "^29.2.1",
     "metro-react-native-babel-preset": "0.76.8",
-    "react-test-renderer": "18.2.0"
+    "react-native-flipper": "^0.164.0",
+    "react-test-renderer": "18.2.0",
+    "redux-flipper": "^2.0.2"
   },
   "engines": {
     "node": ">=16"
