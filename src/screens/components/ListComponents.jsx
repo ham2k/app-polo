@@ -12,5 +12,5 @@ export const ListSeparator = ({ style }) => {
 export const ListRow = ({ style, children }) => {
   const styles = useThemedStyles()
 
-  return <View style={[style, { paddingLeft: styles.oneSpace, paddingRight: styles.oneSpace, minHeight: styles.oneSpace * 3 }]}>{children}</View>
+  return <View style={[style, { paddingLeft: styles.oneSpace * 1.5, paddingRight: styles.oneSpace * 2, minHeight: styles.oneSpace * 3 }]}>{children}</View>
 }
