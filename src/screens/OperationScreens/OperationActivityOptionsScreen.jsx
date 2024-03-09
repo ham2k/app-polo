@@ -1,16 +1,14 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Text } from 'react-native-paper'
-import { ScrollView, View } from 'react-native'
+import { List } from 'react-native-paper'
+import { ScrollView } from 'react-native'
 
 import ScreenContainer from '../components/ScreenContainer'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../store/operations'
 import activities from './activities'
-import { selectSettings } from '../../store/settings'
 import { replaceRefs } from '../../tools/refTools'
 import { ListSeparator } from '../components/ListComponents'
-import { ThisActivityOptions } from './activities/POTAActivity'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -18,7 +16,6 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
   const activity = activities.find((act) => act.key === route.params.activity)
-  const settings = useSelector(selectSettings)
 
   useEffect(() => { // Prepare the screen, set the activity title, etc
     if (activity && operation) {
@@ -47,6 +44,7 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
           <List.Item
             title={`Remove ${activity.shortName ?? activity.name} from this operation`}
             titleStyle={{ color: styles.theme.colors.error }}
+            // eslint-disable-next-line react/no-unstable-nested-components
             left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.oneSpace * 2 }} icon="delete" />}
             onPress={handleRemoveActivity}
           />

@@ -1,6 +1,5 @@
 import React from 'react'
 import { View } from 'react-native'
-import { List } from 'react-native-paper'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export const ListSeparator = ({ style }) => {

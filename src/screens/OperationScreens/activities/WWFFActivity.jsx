@@ -1,10 +1,3 @@
-import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { setOperationData } from '../../../store/operations'
-import { Text, TextInput } from 'react-native-paper'
-import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
-import { replaceRefs, stringToRefs } from '../../../tools/refTools'
-
 const ACTIVITY = {
   key: 'wwff',
   comingSoon: true,

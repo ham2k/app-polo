@@ -1,9 +1,5 @@
-import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { Text, TextInput } from 'react-native-paper'
-import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
-import { setOperationData } from '../../../store/operations'
-import { replaceRefs, stringToRefs } from '../../../tools/refTools'
+import React from 'react'
+import { Text } from 'react-native-paper'
 
 const ACTIVITY = {
   key: 'bota',

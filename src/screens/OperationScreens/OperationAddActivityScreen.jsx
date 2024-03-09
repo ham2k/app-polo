@@ -36,6 +36,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
             <List.Item
               key={activity.key}
               title={activity.name}
+              // eslint-disable-next-line react/no-unstable-nested-components
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={activity.icon} />}
               onPress={() => addActivity(activity)}
             />

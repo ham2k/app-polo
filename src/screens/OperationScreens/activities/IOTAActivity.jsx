@@ -1,10 +1,5 @@
-/* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { setOperationData } from '../../../store/operations'
-import { Text, TextInput } from 'react-native-paper'
-import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
-import { replaceRefs, stringToRefs } from '../../../tools/refTools'
+import React from 'react'
+import { Text } from 'react-native-paper'
 
 const ACTIVITY = {
   key: 'iota',
@@ -29,7 +24,7 @@ function ThisActivityOptionalExchangePanel (props) {
 const ThisActivity = {
   ...ACTIVITY,
   MainExchangePanel: null,
-  OptionalExchangePanel: ThisActivityOptionalExchangePanel,
-
+  OptionalExchangePanel: ThisActivityOptionalExchangePanel
+}
 
 export default ThisActivity

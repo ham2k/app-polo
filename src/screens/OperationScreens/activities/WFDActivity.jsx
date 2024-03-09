@@ -1,11 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { setOperationData } from '../../../store/operations'
-import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
-import { findRef, removeRef, replaceRef } from '../../../tools/refTools'
-import { View } from 'react-native'
+import { findRef, replaceRef } from '../../../tools/refTools'
 import ThemedTextInput from '../../components/ThemedTextInput'
-import { List, Text } from 'react-native-paper'
+import { List } from 'react-native-paper'
 import { ListRow } from '../../components/ListComponents'
 
 /*
