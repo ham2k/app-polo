@@ -13,7 +13,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
   const styles = useThemedStyles()
 
   const dispatch = useDispatch()
-  const operation = useSelector(selectOperation(route.params.operation))
+  const operation = useSelector(state => selectOperation(state, route.params.operation))
 
   const addActivity = useCallback((activity) => {
     const type = activity.activationType || activity.refType || activity.key
