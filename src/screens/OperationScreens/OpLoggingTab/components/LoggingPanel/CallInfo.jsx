@@ -50,7 +50,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     }
   })
 
-  const online = useSelector(selectSystemOnline())
+  const online = useSelector(selectSystemOnline)
   const settings = useSelector(selectSettings)
 
   const isPotaOp = useMemo(() => {

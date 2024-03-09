@@ -67,7 +67,7 @@ export default function DataFilesSettingsScreen ({ navigation }) {
     return Object.values(definitions).sort((a, b) => (a?.name ?? '').localeCompare(b?.name ?? ''))
   }, [definitions])
 
-  const dataFileInfos = useSelector(selectAllDataFileInfos())
+  const dataFileInfos = useSelector(selectAllDataFileInfos)
 
   const [selectedDefinition, setSelectedDefinition] = useState()
 
