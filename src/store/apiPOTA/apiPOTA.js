@@ -77,7 +77,7 @@ export function useLookupParkQuery (arg, options) {
 
   if (!arg?.ref || !arg?.ref?.match(POTA_REGEX)) {
     result = apiPOTA.useLookupParkQuery('', { skip: true })
-  } else if (POTAAllParks.byReference[arg.ref]) {
+  } else if (POTAAllParks.byReference[arg.ref] && !options.online) {
     result = apiPOTA.useLookupParkQuery(arg.ref, { skip: true })
     result = { ...result } // It seems that redux queries reuse their data structures, so let's clone it first
     result.data = POTAAllParks.byReference[arg.ref]

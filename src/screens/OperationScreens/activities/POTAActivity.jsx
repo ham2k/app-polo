@@ -3,12 +3,13 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import POTAInput from '../../components/POTAInput'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
-import { Text } from 'react-native-paper'
+import { IconButton, List, Searchbar, Text } from 'react-native-paper'
 import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 import { apiPOTA, useLookupParkQuery } from '../../../store/apiPOTA'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { filterRefs, findRef, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { POTAAllParks, preparePOTAAllParksData } from '../../../data/POTA-AllParks'
+import { ListRow } from '../../components/ListComponents'
 
 preparePOTAAllParksData()
 
@@ -31,7 +32,6 @@ const ACTIVITY = {
   },
   huntingType: 'pota',
   activationType: 'potaActivation',
-  operationAttribute: 'pota',
   description: (operation) => refsToString(operation, ACTIVITY.activationType),
   descriptionPlaceholder: 'Enter POTA references',
   referenceRegex: /^[A-Z0-9]+-[0-9]{4,5}$/,
@@ -103,106 +103,151 @@ function ThisActivityOptionalExchangePanel (props) {
   )
 }
 
-export function ThisActivitySettingsDialog (props) {
-  const { styles, operation } = props
+export function ThisActivityListItem ({ activityRef, refData, allRefs, style, styles, onPress, onAddReference, onRemoveReference }) {
+  const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef, online: true })
 
-  const dispatch = useDispatch()
-
-  const ourInfo = useSelector(selectOperationCallInfo(operation?.uuid))
-  const defaultPrefix = useMemo(() => {
-    if (ourInfo?.dxccCode) {
-      return POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] ?? 'K'
+  const description = useMemo(() => {
+    let desc
+    if (pota?.isLoading) {
+      desc = '...'
+    } else if (pota?.error) {
+      desc = pota.error
     } else {
-      return 'K'
+      desc = [
+        pota?.data?.active === 0 && 'INACTIVE PARK!!!',
+        [pota?.data?.name ?? refData?.name, pota?.data?.parktypeDesc ?? refData?.parktypeDesc].filter(x => x).join(' '),
+        pota?.data?.locationName ?? refData?.locationName
+      ].filter(x => x).join(' • ')
     }
-  }, [ourInfo?.dxccCode])
+    return desc
+  }, [pota, refData])
 
-  const handleChange = useCallback((value) => {
-    let refs
-    if (value) {
-      refs = stringToRefs(ACTIVITY.activationType, value, { regex: ACTIVITY.referenceRegex })
-    } else {
-      refs = []
-    }
-    if (refs.length === 0 && value !== undefined) refs = [{ type: ACTIVITY.activationType, ref: value }]
-
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, refs) }))
-  }, [dispatch, operation])
-
-  const handleGridSelect = useCallback((grid) => {
-    dispatch(setOperationData({ uuid: operation.uuid, grid }))
-  }, [dispatch, operation])
+  const isInRefs = useMemo(() => {
+    return allRefs.find(ref => ref.ref === activityRef)
+  }, [allRefs, activityRef])
 
   return (
-    <ActivitySettingsDialog
-      {...props}
-      icon={ACTIVITY.icon}
-      title={ACTIVITY.name}
-      info={ACTIVITY.infoURL}
-      removeOption={true}
-      value={refsToString(operation, ACTIVITY.activationType)}
-      onChange={handleChange}
-      content={({ value, setValue }) => (
-        <>
-          <Text variant="bodyMedium">Enter one or more park references being activated in this operation</Text>
-          <POTAInput
-            style={[styles.input, { marginTop: styles.oneSpace }]}
-            label={'POTA References'}
-            placeholder={''}
-            mode={'flat'}
-            value={value}
-            defaultPrefix={defaultPrefix}
-            onChangeText={(newValue) => {
-              setValue(newValue)
-            }}
-          />
-          <ScrollView style={{ maxHeight: styles.oneSpace * 6 }}>
-            {stringToRefs(ACTIVITY.activationType, value, { regex: ACTIVITY.referenceRegex }).map((ref, index) => (
-              <ThisActivityLookupLine key={ref.ref} activityRef={ref.ref} styles={styles} style={{ marginTop: styles.halfSpace, fontSize: styles.smallFontSize }} onGridSelect={handleGridSelect} />
-            ))}
-          </ScrollView>
-        </>
+    <List.Item style={{ paddingRight: styles.oneSpace * 1 }}
+      title={
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ fontWeight: 'bold' }}>
+            {pota?.data?.ref ?? activityRef}
+          </Text>
+          <Text>
+            {(pota?.data?.locationDesc ?? refData?.locationDesc) && ` (${pota?.data?.locationDesc ?? refData?.locationDesc})`}
+          </Text>
+        </View>
+      }
+      description={description}
+      onPress={onPress}
+      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={ACTIVITY.icon} />}
+      right={() => (
+        isInRefs ? (
+          onRemoveReference && <IconButton icon="minus-circle-outline" onPress={() => onRemoveReference(activityRef)} />
+        ) : (
+          onAddReference && <IconButton icon="plus-circle" onPress={() => onAddReference(activityRef)} />
+
+        )
       )}
     />
   )
 }
 
-export function ThisActivityLookupLine ({ activityRef, style, styles, onGridSelect }) {
-  const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef })
+export function ThisActivityOptions (props) {
+  const { styles, operation } = props
 
-  if (pota.isLoading) {
-    return <Text style={style}>{'...'}</Text>
-  } else {
-    return (
-      <Text style={style}>
-        {pota?.data?.name ? (
-          <>
-            {[pota.data.name, pota.data.parktypeDesc].filter(x => x).join(' ')}
-            {pota?.data?.grid6 ? ' • ' : ''}
-            {pota?.data?.grid6 && (
-              <Text
-                onPress={() => onGridSelect && onGridSelect(pota.data.grid6)}
-                style={{ color: styles.theme.colors.primary, textDecorationLine: 'underline' }}
-              >
-                {pota.data.grid6}
-              </Text>
-            )}
+  const dispatch = useDispatch()
 
-            {pota?.data?.locationName ? ` • ${pota.data.locationName}` : ''}
-          </>
-        ) : (
-          `${activityRef} not found!`
-        )}
-      </Text>
-    )
-  }
+  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+
+  const refs = useMemo(() => filterRefs(operation, ACTIVITY.activationType), [operation]).filter(ref => ref.ref)
+
+  const title = useMemo(() => {
+    if (refs?.length === 0) return 'No parks selected for activation'
+    else if (refs?.length === 1) return 'Activating 1 park'
+    else return `Activating ${refs.length} parks`
+  }, [refs])
+
+  const [search, setSearch] = useState('')
+
+  const [parks, setParks] = useState([])
+  const [parksMessage, setParksmessage] = useState([])
+
+  useEffect(() => {
+    if (search?.length > 2) {
+      const newParks = POTAAllParks.activeParks.filter(park => {
+        return (!ourInfo?.dxccCode || park.dxccCode === ourInfo.dxccCode) &&
+            (park.ref.toLowerCase().includes(search.toLowerCase()) || park.name.toLowerCase().includes(search.toLowerCase())
+            )
+      })
+
+      setParks(newParks.slice(0, 10))
+      if (newParks.length === 0) {
+        setParksmessage('No parks found')
+      } else if (newParks.length > 10) {
+        setParksmessage(`… and ${newParks.length - 10} more`)
+      } else {
+        setParksmessage('')
+      }
+    } else {
+      setParks([])
+      setParksmessage('Search for some parks to activate!')
+    }
+  }, [search, ourInfo])
+
+  const handleAddReference = useCallback((ref) => {
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, [...refs.filter(r => r.ref !== ref), { type: ACTIVITY.activationType, ref }]) }))
+  }, [dispatch, operation, refs])
+
+  const handleRemoveReference = useCallback((ref) => {
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, refs.filter(r => r.ref !== ref)) }))
+  }, [dispatch, operation, refs])
+
+  return (
+    <>
+      <List.Section title={title}>
+        {refs.map((ref, index) => (
+          <ThisActivityListItem
+            key={ref.ref}
+            activityRef={ref.ref}
+            allRefs={refs}
+            styles={styles}
+            onAddReference={handleAddReference}
+            onRemoveReference={handleRemoveReference}
+          />
+        ))}
+      </List.Section>
+      <List.Section title={'Add a park…'}>
+        <ListRow>
+
+          <Searchbar
+            placeholder={'Parks by name or reference…'}
+            value={search}
+            onChangeText={setSearch}
+          />
+        </ListRow>
+        {parks.map((park) => (
+          <ThisActivityListItem
+            key={park.ref}
+            activityRef={park.ref}
+            allRefs={refs}
+            refData={park}
+            styles={styles}
+            onAddReference={handleAddReference}
+            onRemoveReference={handleRemoveReference}
+          />
+        ))}
+        {parksMessage && <List.Item title={<Text style={{ textAlign: 'center' }}>{parksMessage}</Text>} />}
+      </List.Section>
+    </>
+  )
 }
 
 const ThisActivity = {
   ...ACTIVITY,
   MainExchangePanel: null,
   OptionalExchangePanel: ThisActivityOptionalExchangePanel,
-  SettingsDialog: ThisActivitySettingsDialog
+  Options: ThisActivityOptions
 }
 
 export default ThisActivity

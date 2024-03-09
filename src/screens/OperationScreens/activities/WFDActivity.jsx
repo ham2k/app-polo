@@ -1,12 +1,12 @@
-/* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setOperationData } from '../../../store/operations'
 import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
 import { findRef, removeRef, replaceRef } from '../../../tools/refTools'
 import { View } from 'react-native'
 import ThemedTextInput from '../../components/ThemedTextInput'
-import { Text } from 'react-native-paper'
+import { List, Text } from 'react-native-paper'
+import { ListRow } from '../../components/ListComponents'
 
 /*
  NOTES:
@@ -120,60 +120,47 @@ function fieldsForMainExchangePanel (props) {
   return fields
 }
 
-export function ThisActivitySettingsDialog (props) {
+export function ThisActivityOptions (props) {
   const { styles, operation } = props
 
   const dispatch = useDispatch()
 
-  const handleChange = useCallback((value) => {
-    if (value === undefined) {
-      dispatch(setOperationData({ uuid: operation.uuid, refs: removeRef(operation?.refs, ACTIVITY.key) }))
-    } else {
-      value.ref = ACTIVITY.key
-      if (value.class) value.class = value.class.toUpperCase()
-      if (value.location) value.location = value.location.toUpperCase()
+  const ref = useMemo(() => findRef(operation, ACTIVITY.key), [operation])
 
-      dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, ACTIVITY.key, value) }))
-    }
-  }, [dispatch, operation])
+  const handleChange = useCallback((value) => {
+    if (value?.class) value.class = value.class.toUpperCase()
+    if (value?.location) value.location = value.location.toUpperCase()
+
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, ACTIVITY.key, { ...ref, ...value }) }))
+  }, [dispatch, operation, ref])
 
   return (
-    <ActivitySettingsDialog
-      {...props}
-      icon={ACTIVITY.icon}
-      title={ACTIVITY.name}
-      info={ACTIVITY.infoURL}
-      removeOption={true}
-      value={findRef(operation, ACTIVITY.key)}
-      onChange={handleChange}
-      content={({ value, setValue }) => (
-        <>
-          <Text variant="bodyMedium">Enter the exchange information for Winter Field Day</Text>
-          <View flexDirection="row" alignItems="center" justifyContent="space-between" style={{ gap: styles.oneSpace }}>
-            <ThemedTextInput
-              style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-              textStyle={styles.text.callsign}
-              label={'Class'}
-              mode={'flat'}
-              uppercase={true}
-              noSpaces={true}
-              value={value?.class || ''}
-              onChangeText={(text) => setValue({ ...value, class: text })}
-            />
-            <ThemedTextInput
-              style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-              textStyle={styles.text.callsign}
-              label={'Location'}
-              mode={'flat'}
-              uppercase={true}
-              noSpaces={true}
-              value={value?.location || ''}
-              onChangeText={(text) => setValue({ ...value, location: text })}
-            />
-          </View>
-        </>
-      )}
-    />
+    <List.Section title={'Exchange Information'}>
+      <ListRow>
+        <ThemedTextInput
+          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
+          textStyle={styles.text.callsign}
+          label={'Class'}
+          mode={'flat'}
+          uppercase={true}
+          noSpaces={true}
+          value={ref?.class || ''}
+          onChangeText={(text) => handleChange({ class: text })}
+        />
+      </ListRow>
+      <ListRow>
+        <ThemedTextInput
+          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
+          textStyle={styles.text.callsign}
+          label={'Location'}
+          mode={'flat'}
+          uppercase={true}
+          noSpaces={true}
+          value={ref?.location || ''}
+          onChangeText={(text) => handleChange({ location: text })}
+        />
+      </ListRow>
+    </List.Section>
   )
 }
 
@@ -181,7 +168,7 @@ const ThisActivity = {
   ...ACTIVITY,
   fieldsForMainExchangePanel,
   OptionalExchangePanel: null,
-  SettingsDialog: ThisActivitySettingsDialog
+  Options: ThisActivityOptions
 }
 
 export default ThisActivity

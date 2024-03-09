@@ -1,10 +1,10 @@
-/* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
-import { Text, TextInput } from 'react-native-paper'
-import { ActivitySettingsDialog } from '../components/ActivitySettingsDialog'
+import { List, Text } from 'react-native-paper'
 import { setOperationData } from '../../../store/operations'
-import { replaceRefs, stringToRefs } from '../../../tools/refTools'
+import { findRef, replaceRef } from '../../../tools/refTools'
+import ThemedTextInput from '../../components/ThemedTextInput'
+import { ListRow } from '../../components/ListComponents'
 
 const ACTIVITY = {
   key: 'arrl-fd',
@@ -24,56 +24,47 @@ function ThisActivityMainExchangePanel (props) {
   )
 }
 
-export function ThisActivitySettingsDialog (props) {
+export function ThisActivityOptions (props) {
   const { styles, operation } = props
 
   const dispatch = useDispatch()
 
-  const handleChange = useCallback((value) => {
-    let refs
-    if (value) {
-      refs = stringToRefs(ACTIVITY.key, value, { regex: ACTIVITY.referenceRegex })
-    } else {
-      refs = []
-    }
+  const ref = useMemo(() => findRef(operation, ACTIVITY.key), [operation])
 
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.key, refs) }))
-  }, [dispatch, operation])
+  const handleChange = useCallback((value) => {
+    if (value?.class) value.class = value.class.toUpperCase()
+    if (value?.location) value.location = value.location.toUpperCase()
+
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, ACTIVITY.key, { ...ref, ...value }) }))
+  }, [dispatch, operation, ref])
 
   return (
-    <ActivitySettingsDialog
-      {...props}
-      icon={ACTIVITY.icon}
-      title={ACTIVITY.name}
-      info={ACTIVITY.infoURL}
-      removeOption={true}
-      value={operation[ACTIVITY.operationAttribute]}
-      onChange={handleChange}
-      content={({ value, setValue }) => (
-        <>
-          <Text variant="bodyMedium">Enter the exchange information for Field Day</Text>
-          <TextInput
-            style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={[styles.nativeInput, styles.text.numbers]}
-            label={'Class'}
-            placeholder={'...'}
-            mode={'flat'}
-            value={value.class}
-            onChangeText={(text) => setValue({ ...value, class: text })}
-          />
-          <TextInput
-            style={[styles.input, { marginTop: styles.oneSpace }]}
-            textStyle={[styles.nativeInput, styles.text.numbers]}
-            label={'Location'}
-            placeholder={'...'}
-            mode={'flat'}
-            value={value.location}
-            onChangeText={(text) => setValue({ ...value, location: text })}
-          />
-          <Text variant="bodyMedium" style={{ color: styles.theme.colors.primary }}>NOT FUNCTIONAL YET, FOR TESTING PURPOSES ONLY</Text>
-        </>
-      )}
-    />
+    <List.Section title={'Exchange Information'}>
+      <ListRow>
+        <ThemedTextInput
+          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
+          textStyle={styles.text.callsign}
+          label={'Class'}
+          mode={'flat'}
+          uppercase={true}
+          noSpaces={true}
+          value={ref?.class || ''}
+          onChangeText={(text) => handleChange({ class: text })}
+        />
+      </ListRow>
+      <ListRow>
+        <ThemedTextInput
+          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
+          textStyle={styles.text.callsign}
+          label={'Location'}
+          mode={'flat'}
+          uppercase={true}
+          noSpaces={true}
+          value={ref?.location || ''}
+          onChangeText={(text) => handleChange({ location: text })}
+        />
+      </ListRow>
+    </List.Section>
   )
 }
 
@@ -81,7 +72,7 @@ const ThisActivity = {
   ...ACTIVITY,
   MainExchangePanel: ThisActivityMainExchangePanel,
   OptionalExchangePanel: null,
-  SettingsDialog: ThisActivitySettingsDialog
+  Options: ThisActivityOptions
 }
 
 export default ThisActivity

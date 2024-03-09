@@ -5,7 +5,6 @@ import { actions as qsosActions, saveQSOsForOperation } from '../../qsos'
 import UUID from 'react-native-uuid'
 import { qsonToADIF } from '../../../tools/qsonToADIF'
 import { fmtISODate } from '../../../tools/timeFormats'
-import { refsToString } from '../../../tools/refTools'
 import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { addSystemMessage, selectSystemFlag, setSystemFlag } from '../../system'
@@ -20,7 +19,7 @@ export const getOperations = () => async (dispatch, getState) => {
   const oplist = await dbSelectAll('SELECT * FROM operations', [], { row: prepareOperationRow })
 
   if (oplist && oplist.length === 0) {
-    if (!selectSystemFlag('operations.migratedFromFiles')) {
+    if (!selectSystemFlag(getState(), 'operations.migratedFromFiles')) {
       dispatch(addSystemMessage('Migrating operation data to new database'))
       const operations = await readOldOperationFiles()
 
