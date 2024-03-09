@@ -68,8 +68,8 @@ export const selectQSOsStatus = (state) => {
   return state?.qsos?.status
 }
 
-export const selectQSOs = (uuid) => createSelector(
-  (state) => state?.qsos?.qsos[uuid],
+export const selectQSOs = createSelector(
+  [(state, uuid) => state?.qsos?.qsos[uuid]],
   (qsos) => qsos ?? []
 )
 

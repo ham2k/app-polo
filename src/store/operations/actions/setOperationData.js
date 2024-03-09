@@ -1,6 +1,6 @@
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { actions, selectOperation } from '../operationsSlice'
-import { refHandlers } from '../../../screens/OperationScreen/activities'
+import { refHandlers } from '../../../screens/OperationScreens/activities'
 import debounce from 'debounce'
 import { saveOperation } from './operationsDB'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
@@ -21,7 +21,7 @@ const debouncedDispatch = debounce(debounceableDispatch, 2000)
 
 export const setOperationData = (data) => async (dispatch, getState) => {
   const { uuid } = data
-  const operation = selectOperation(uuid)(getState()) ?? {}
+  const operation = selectOperation(getState(), uuid) ?? {}
 
   if (data.power) data.power = parseInt(data.power, 10)
 
@@ -44,6 +44,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     }
     // })
     // )
+
     data.refs = newRefs
   }
 
@@ -64,7 +65,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     if (pota) {
       if (pota.ref) {
         titleParts.push(`at ${refsToString(data.refs, 'potaActivation', { limit: 2 })}`)
-        subtitleParts.push(filterRefs(data, 'potaActivation').map(ref => ref.name).filter(x => x).join(', '))
+        subtitleParts.push(filterRefs(data, 'potaActivation').map(ref => ref.name ?? 'Park Not Found').filter(x => x).join(', '))
       } else {
         titleParts.push('at New POTA')
       }
@@ -89,6 +90,6 @@ export const setOperationData = (data) => async (dispatch, getState) => {
   }
 
   await dispatch(actions.setOperation(data))
-  const savedOperation = selectOperation(uuid)(getState()) ?? {}
+  const savedOperation = selectOperation(getState(), uuid) ?? {}
   return debouncedDispatch(dispatch, () => saveOperation(savedOperation))
 }

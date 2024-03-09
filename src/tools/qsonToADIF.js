@@ -52,8 +52,8 @@ function oneQSOtoADIF (qso, operation, common, timeOfffset = 0) {
   str += adifField('RST_SENT', qso.our.sent)
   str += adifField('OPERATOR', qso.our.call)
   str += adifField('NOTES', qso.notes)
-  if (qso.grid) str += adifField('GRID', qso.grid)
-  else if (common.grid) str += adifField('GRID', common.grid)
+  if (qso.grid) str += adifField('GRIDSQUARE', qso.grid)
+  else if (common.grid) str += adifField('MY_GRIDSQUARE', common.grid)
 
   if (qso.their?.arrlSection) str += adifField('ARRL_SECT', qso.their.arrlSection)
 

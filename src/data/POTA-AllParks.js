@@ -14,7 +14,8 @@ export function preparePOTAAllParksData () {
     description: 'Database of all POTA references',
     infoURL: 'https://pota.app/',
     icon: 'file-powerpoint-outline',
-    maxAgeInDays: 7,
+    // TODO: Change maxAgeInDays to 7 after mid-May 2024
+    maxAgeInDays: 1,
     autoLoad: true,
     fetch: async () => {
       const url = 'https://pota.app/all_parks_ext.csv'
@@ -44,6 +45,7 @@ export function preparePOTAAllParksData () {
 
       const data = {
         byReference: activeParks.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {}),
+        activeParks,
         prefixByDXCCCode: parks.reduce((obj, item) => {
           if (!obj[item.dxccCode]) obj[item.dxccCode] = item.ref && item.ref.split('-')[0]
           return obj
@@ -57,6 +59,9 @@ export function preparePOTAAllParksData () {
     },
     onLoad: (data) => {
       Object.assign(POTAAllParks, data)
+
+      // TODO: Remove this line after April 2024
+      if (!POTAAllParks.activeParks) POTAAllParks.activeParks = Object.values(POTAAllParks.byReference)
     }
   })
 }

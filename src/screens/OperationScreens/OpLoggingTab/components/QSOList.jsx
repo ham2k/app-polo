@@ -90,7 +90,7 @@ export default function QSOList ({ style, operation, qsos, selectedKey, setSelec
   const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
   // const { qsos, selectedKey, setSelectedKey, lastKey } = useContext(OperationContext)
 
-  const ourInfo = useSelector(selectOperationCallInfo(operation?.uuid))
+  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const listRef = useRef()
 

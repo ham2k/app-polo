@@ -12,7 +12,6 @@ import { generateExport, selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
-import { AddActivityDialog } from './components/AddActivityDialog'
 import activities, { refHandlers } from '../activities'
 import { LocationDialog } from './components/LocationDialog'
 import { findRef } from '../../../tools/refTools'
@@ -44,7 +43,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   })
 
   const dispatch = useDispatch()
-  const operation = useSelector(selectOperation(route.params.operation.uuid))
+  const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
@@ -69,14 +68,13 @@ export default function OpSettingsTab ({ navigation, route }) {
   }, [dispatch, operation])
 
   const refActivities = useMemo(() => {
-    const types = [...new Set((operation?.refs || []).map((ref) => ref.type))]
+    const types = [...new Set((operation?.refs || []).map((ref) => ref?.type))]
     return types.map(type => refHandlers[type]).filter(x => x || x === '')
   }, [operation?.refs])
 
   return (
     <ScrollView style={{ flex: 1 }}>
-      <List.Section>
-        <List.Subheader>Operation Details</List.Subheader>
+      <List.Section title={'Operation Details'}>
 
         <List.Item
           title="Station Callsign"
@@ -111,9 +109,7 @@ export default function OpSettingsTab ({ navigation, route }) {
         )}
       </List.Section>
 
-      <List.Section>
-        <List.Subheader>Activities</List.Subheader>
-
+      <List.Section title={'Activities'}>
         {refActivities.map((activity) => (
           <List.Item
             key={activity.key}
@@ -122,7 +118,7 @@ export default function OpSettingsTab ({ navigation, route }) {
             left={
                   () => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={activity.icon} />
                 }
-            onPress={() => setCurrentDialog(`activity.${activity.key}`)}
+            onPress={() => navigation.navigate('OperationActivityOptions', { operation: operation.uuid, activity: activity.key })}
           />
         ))}
         <List.Item
@@ -130,7 +126,7 @@ export default function OpSettingsTab ({ navigation, route }) {
           title="Add Activity"
           description="POTA, SOTA, Field Day and more!"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="plus" />}
-          onPress={() => setCurrentDialog('addActivity')}
+          onPress={() => navigation.navigate('OperationAddActivity', { operation: operation.uuid })}
         />
       </List.Section>
       {refActivities.map((activity) => (
@@ -145,19 +141,8 @@ export default function OpSettingsTab ({ navigation, route }) {
           />
         )
       ))}
-      {currentDialog === 'addActivity' && (
-        <AddActivityDialog
-          settings={settings}
-          operation={operation}
-          styles={styles}
-          visible={true}
-          setCurrentDialog={setCurrentDialog}
-          onDialogDone={() => setCurrentDialog('')}
-        />
-      )}
 
-      <List.Section>
-        <List.Subheader>Operation Data</List.Subheader>
+      <List.Section title={'Operation Data'}>
         <List.Item
           title="Export ADIF"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
@@ -183,8 +168,8 @@ export default function OpSettingsTab ({ navigation, route }) {
           disabled={!(operation.qsoCount > 0)}
         />
       </List.Section>
-      <List.Section>
-        <List.Subheader style={{ color: styles.theme.colors.error }}>The Danger Zone</List.Subheader>
+
+      <List.Section titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
         <List.Item
           title="Delete Operation"
           titleStyle={{ color: styles.theme.colors.error }}

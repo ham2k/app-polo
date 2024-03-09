@@ -32,8 +32,8 @@ const flexZero = { flex: 0 }
 export default function OpLoggingTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles))
 
-  const operation = useSelector(selectOperation(route.params.operation.uuid))
-  const qsos = useSelector(selectQSOs(route.params.operation.uuid))
+  const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
+  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
 
   const [selectedKey, setSelectedKey] = useState(undefined)

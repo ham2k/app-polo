@@ -15,9 +15,11 @@ import { persistor, store } from './store'
 import HeaderBar from './screens/components/HeaderBar'
 
 import HomeScreen from './screens/HomeScreen/HomeScreen'
-import OperationScreen from './screens/OperationScreen'
+import OperationScreen from './screens/OperationScreens/OperationScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
 import DataFilesSettingsScreen from './screens/SettingsScreens/screens/DataFilesSettingsScreen'
+import OperationAddActivityScreen from './screens/OperationScreens/OperationAddActivityScreen'
+import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -53,10 +55,25 @@ export default function App () {
                 component={OperationScreen}
               />
 
-              <Stack.Group>
-                <Stack.Screen name="Settings" options={{ title: 'Settings' }} component={MainSettingsScreen} />
-                <Stack.Screen name="DataFilesSettings" options={{ title: 'Data Files', headerBackTitle: 'MainSettings' }} component={DataFilesSettingsScreen} />
-              </Stack.Group>
+              <Stack.Screen name="OperationAddActivity"
+                options={{ title: 'Add Activity', headerBackTitle: 'Operation' }}
+                component={OperationAddActivityScreen}
+              />
+
+              <Stack.Screen name="OperationActivityOptions"
+                options={{ title: 'Activity Options', headerBackTitle: 'Operation' }}
+                component={OperationActivityOptionsScreen}
+              />
+
+              <Stack.Screen name="Settings"
+                options={{ title: 'Settings' }}
+                component={MainSettingsScreen}
+              />
+
+              <Stack.Screen name="DataFilesSettings"
+                options={{ title: 'Data Files', headerBackTitle: 'MainSettings' }}
+                component={DataFilesSettingsScreen}
+              />
 
             </Stack.Navigator>
           </NavigationContainer>

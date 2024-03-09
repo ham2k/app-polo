@@ -1,4 +1,4 @@
-import { createSelector, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 const INITIAL_STATE = {
   now: undefined,
@@ -42,10 +42,5 @@ export const stopTickTock = () => (dispatch, getState) => {
 export const selectNow = (state) => {
   return state?.time?.now
 }
-
-export const selectQSOs = (uuid) => createSelector(
-  (state) => state?.qsos?.qsos[uuid],
-  (qsos) => qsos ?? []
-)
 
 export default timeSlice.reducer

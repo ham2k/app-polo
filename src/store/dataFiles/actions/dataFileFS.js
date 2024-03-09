@@ -46,7 +46,7 @@ export const readDataFile = (key) => async (dispatch) => {
 }
 
 export const loadDataFile = (key, force) => async (dispatch, getState) => {
-  if (selectDataFileInfo(key)(getState())?.data) {
+  if (selectDataFileInfo(getState(), key)?.data) {
     console.log('loadDataFile', key, 'already loaded')
     return // Already loaded, do nothing
   }
@@ -61,7 +61,7 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
     dispatch(fetchDataFile(key))
   } else {
     await dispatch(readDataFile(key))
-    const date = selectDataFileInfo(key)(getState())?.date
+    const date = selectDataFileInfo(getState(), key)?.date
 
     if (date && maxAgeInDays && (Date.now() - Date.parse(date)) / 1000 / 60 / 60 / 24 > maxAgeInDays) {
       console.info(`Data for ${definition.key} is too old, fetching a fresh version`)

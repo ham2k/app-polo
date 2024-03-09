@@ -40,7 +40,7 @@ export default function OpSpotsTab ({ navigation, route }) {
     }
   })
 
-  const online = useSelector(selectSystemOnline())
+  const online = useSelector(selectSystemOnline)
 
   const [band, setBand] = useState('any')
   const [mode, setMode] = useState('any')

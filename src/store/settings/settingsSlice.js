@@ -36,12 +36,12 @@ export const settingsSlice = createSlice({
 export const { setOperatorCall, setOnboarded, setAccountInfo, setSettings } = settingsSlice.actions
 
 export const selectSettings = createSelector(
-  (state) => state?.settings,
+  [(state) => state?.settings],
   (value) => value ?? {}
 )
 
 export const selectOperatorCall = createSelector(
-  (state) => state?.settings?.operatorCall,
+  [(state) => state?.settings?.operatorCall],
   (value) => value ?? ''
 )
 

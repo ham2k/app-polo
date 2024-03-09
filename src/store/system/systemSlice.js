@@ -30,13 +30,17 @@ export const systemSlice = createSlice({
 export const { actions } = systemSlice
 export const { setSystemFlag, addSystemMessage } = systemSlice.actions
 
-export const selectSystemFlag = (flag, defaultValue) => createSelector(
-  (state) => state?.system?.flags || {},
-  (flags) => flags[flag] ?? defaultValue
+export const selectSystemFlag = () => createSelector(
+  [
+    (state, flag, defaultValue) => state?.system?.flags || {},
+    (_state, flag, _defaultValue) => flag,
+    (_state, _flag, defaultValue) => defaultValue
+  ],
+  (flags, flag, defaultValue) => flags[flag] ?? defaultValue
 )
 
-export const selectSystemOnline = () => createSelector(
-  (state) => state?.system?.online,
+export const selectSystemOnline = createSelector(
+  [(state) => state?.system?.online],
   (value) => value
 )
 
