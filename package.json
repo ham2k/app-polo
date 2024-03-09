@@ -41,6 +41,7 @@
     "debounce": "^2.0.0",
     "deepmerge": "^4.3.1",
     "fast-xml-parser": "^4.3.2",
+    "fuzzball": "^2.1.2",
     "react": "18.2.0",
     "react-native": "0.72.6",
     "react-native-blob-util": "^0.19.6",
