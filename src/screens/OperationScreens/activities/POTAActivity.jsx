@@ -38,7 +38,7 @@ const ACTIVITY = {
     if (!ref?.ref || !ref.ref.match(/^[A-Z0-9]+-[0-9]{4,5}$/)) return { ...ref, ref: '', name: '', location: '' }
 
     const promise = dispatch(apiPOTA.endpoints.lookupPark.initiate(ref))
-    const { data, error, isLoaded } = await promise
+    const { data } = await promise
     let result
     if (data?.name) {
       result = {
@@ -47,7 +47,7 @@ const ACTIVITY = {
         location: data?.locationName,
         grid: data?.grid6
       }
-    } else if (error || isLoaded) {
+    } else {
       result = { ...ref, name: `${ref.ref} not found!` }
     }
 
@@ -111,6 +111,8 @@ export function ThisActivityListItem ({ activityRef, refData, allRefs, style, st
       desc = '...'
     } else if (pota?.error) {
       desc = pota.error
+    } else if (!pota?.data?.name && !refData?.name) {
+      desc = 'Park Not Found'
     } else {
       desc = [
         pota?.data?.active === 0 && 'INACTIVE PARK!!!',
@@ -179,6 +181,18 @@ export function ThisActivityOptions (props) {
             (park.ref.toLowerCase().includes(search.toLowerCase()) || park.name.toLowerCase().includes(search.toLowerCase())
             )
       })
+
+      let nakedReference
+      const parts = search.match(/^\s*([A-Za-z]*)(\d+)\s*$/)
+      if (parts && parts[2].length >= 4) {
+        nakedReference = (parts[1]?.toUpperCase() || POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] || 'K') + '-' + parts[2]
+      } else if (search.match(ACTIVITY.referenceRegex)) {
+        nakedReference = search
+      }
+
+      if (nakedReference && !newParks.find(park => park.ref === nakedReference)) {
+        newParks.unshift({ ref: nakedReference })
+      }
 
       setParks(newParks.slice(0, 10))
       if (newParks.length === 0) {
