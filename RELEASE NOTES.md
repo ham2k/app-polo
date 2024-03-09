@@ -1,5 +1,7 @@
 RELEASE NOTES
 
+# 0.4.8
+
 # 0.4.7
 
 * Refactored Operation settings and activity options
