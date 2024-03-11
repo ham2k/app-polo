@@ -134,6 +134,7 @@ export default function MainSettingsScreen ({ navigation }) {
         <List.Item
           title="Version"
           description={packageJson.version}
+          onPress={() => navigation.navigate('VersionSettings')}
           left={VersionIcon}
         />
         <List.Item
