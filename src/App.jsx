@@ -27,9 +27,62 @@ const Stack = createNativeStackNavigator()
 const paperSettings = {
   icon: props => <MaterialCommunityIcon {...props} />
 }
-export default function App () {
+
+function ThemedApp () {
   const [paperTheme, navigationTheme] = usePrepareThemes()
 
+  return (
+    <PaperProvider theme={paperTheme} settings={paperSettings}>
+      <NavigationContainer theme={navigationTheme}>
+        <Stack.Navigator
+          id="RootNavigator"
+          screenOptions={{
+            header: HeaderBar,
+            animation: 'slide_from_right'
+          }}
+        >
+          <Stack.Screen name="Home"
+            options={{ title: 'Portable Logger' }}
+            component={HomeScreen}
+          />
+
+          <Stack.Screen name="Operation"
+            options={{ title: 'Operation', headerBackTitle: 'Home', closeInsteadOfBack: true }}
+            component={OperationScreen}
+          />
+
+          <Stack.Screen name="OperationAddActivity"
+            options={{ title: 'Add Activity', headerBackTitle: 'Operation' }}
+            component={OperationAddActivityScreen}
+          />
+
+          <Stack.Screen name="OperationActivityOptions"
+            options={{ title: 'Activity Options', headerBackTitle: 'Operation' }}
+            component={OperationActivityOptionsScreen}
+          />
+
+          <Stack.Screen name="Settings"
+            options={{ title: 'Settings' }}
+            component={MainSettingsScreen}
+          />
+
+          <Stack.Screen name="DataFilesSettings"
+            options={{ title: 'Data Files', headerBackTitle: 'MainSettings' }}
+            component={DataFilesSettingsScreen}
+          />
+
+          <Stack.Screen name="VersionSettings"
+            options={{ title: 'Version Information', headerBackTitle: 'MainSettings' }}
+            component={VersionSettingsScreen}
+          />
+
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
+  )
+}
+
+export default function App () {
   useEffect(() => {
     SplashScreen.hide()
   }, [])
@@ -37,53 +90,7 @@ export default function App () {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <PaperProvider theme={paperTheme} settings={paperSettings}>
-          <NavigationContainer theme={navigationTheme}>
-            <Stack.Navigator
-              id="RootNavigator"
-              screenOptions={{
-                header: HeaderBar,
-                animation: 'slide_from_right'
-              }}
-            >
-              <Stack.Screen name="Home"
-                options={{ title: 'Portable Logger' }}
-                component={HomeScreen}
-              />
-
-              <Stack.Screen name="Operation"
-                options={{ title: 'Operation', headerBackTitle: 'Home', closeInsteadOfBack: true }}
-                component={OperationScreen}
-              />
-
-              <Stack.Screen name="OperationAddActivity"
-                options={{ title: 'Add Activity', headerBackTitle: 'Operation' }}
-                component={OperationAddActivityScreen}
-              />
-
-              <Stack.Screen name="OperationActivityOptions"
-                options={{ title: 'Activity Options', headerBackTitle: 'Operation' }}
-                component={OperationActivityOptionsScreen}
-              />
-
-              <Stack.Screen name="Settings"
-                options={{ title: 'Settings' }}
-                component={MainSettingsScreen}
-              />
-
-              <Stack.Screen name="DataFilesSettings"
-                options={{ title: 'Data Files', headerBackTitle: 'MainSettings' }}
-                component={DataFilesSettingsScreen}
-              />
-
-              <Stack.Screen name="VersionSettings"
-                options={{ title: 'Version Information', headerBackTitle: 'MainSettings' }}
-                component={VersionSettingsScreen}
-              />
-
-            </Stack.Navigator>
-          </NavigationContainer>
-        </PaperProvider>
+        <ThemedApp />
       </PersistGate>
     </Provider>
   )
