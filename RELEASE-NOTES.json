@@ -1,6 +1,9 @@
 {
   "0.4.11": {
-    "changes": []
+    "changes": [
+      "Dark Mode settings",
+      "Fixed dark mode colors"
+    ]
   },
   "0.4.10": {
     "changes": [

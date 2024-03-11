@@ -145,7 +145,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     },
     markdown: {
       body: {
-        fontSize: normalFontSize
+        fontSize: normalFontSize,
+        color: theme.colors.onBackground
       },
       heading1: {
         fontWeight: 'bold',
