@@ -3,6 +3,7 @@ import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
 import DeviceInfo from 'react-native-device-info'
+import codePush from 'react-native-code-push'
 
 import packageJson from '../../../../package.json'
 import releaseNotes from '../../../../RELEASE-NOTES.json'
@@ -40,6 +41,7 @@ export default function VersionSettingsScreen ({ navigation }) {
           <List.Item title={`Version ${packageJson.version}`}
             description={`Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
             left={VersionIcon}
+            onPress={() => codePush.sync({ updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE })}
           />
 
         </List.Section>
