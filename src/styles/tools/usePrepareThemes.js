@@ -7,9 +7,20 @@ import { useColorScheme } from 'react-native'
 import lightColors from '../lightColors'
 import darkColors from '../darkColors'
 import Color from 'color'
+import { useSelector } from 'react-redux'
+import { selectSettings } from '../../store/settings'
 
 export function usePrepareThemes () {
-  const colorScheme = useColorScheme()
+  const settings = useSelector(selectSettings)
+
+  const deviceColorScheme = useColorScheme()
+  const colorScheme = useMemo(() => {
+    if (settings?.theme === 'dark' || settings?.theme === 'light') {
+      return settings.theme
+    } else {
+      return deviceColorScheme
+    }
+  }, [settings?.theme, deviceColorScheme])
 
   const colors = useMemo(() => {
     const loadedColors = colorScheme === 'dark' ? darkColors.colors : lightColors.colors

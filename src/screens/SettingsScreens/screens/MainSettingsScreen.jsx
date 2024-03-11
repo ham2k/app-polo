@@ -7,11 +7,12 @@ import DocumentPicker from 'react-native-document-picker'
 import packageJson from '../../../../package.json'
 
 import { selectSettings, setSettings } from '../../../store/settings'
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { OperatorCallsignDialog } from '../components/OperatorCallsignDialog'
-
-import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
 import { importQSON } from '../../../store/operations'
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+
+import { OperatorCallsignDialog } from '../components/OperatorCallsignDialog'
+import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
+import { ThemeDialog } from '../components/ThemeDialog'
 
 export default function MainSettingsScreen ({ navigation }) {
   const styles = useThemedStyles()
@@ -31,6 +32,10 @@ export default function MainSettingsScreen ({ navigation }) {
   const OperatorCallsignIcon = useCallback(() => (
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />
   ), [styles])
+
+  const ThemeIcon = useCallback(() => (
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={{ dark: 'weather-night', light: 'white-balance-sunny' }[settings.theme] || 'theme-light-dark'} />
+  ), [styles, settings?.theme])
 
   const NumbersRowIcon = useCallback(() => (
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />
@@ -79,6 +84,21 @@ export default function MainSettingsScreen ({ navigation }) {
         />
         {currentDialog === 'operatorCall' && (
           <OperatorCallsignDialog
+            settings={settings}
+            styles={styles}
+            visible={true}
+            onDialogDone={() => setCurrentDialog('')}
+          />
+        )}
+
+        <List.Item
+          title="Theme"
+          description={{ dark: 'Always in Dark Mode', light: 'Always in Light Mode' }[settings.theme] || 'Same as device theme'}
+          left={ThemeIcon}
+          onPress={() => setCurrentDialog('theme')}
+        />
+        {currentDialog === 'theme' && (
+          <ThemeDialog
             settings={settings}
             styles={styles}
             visible={true}

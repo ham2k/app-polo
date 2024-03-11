@@ -1,4 +1,10 @@
 {
+  "0.4.11": {
+    "changes": [
+      "Dark Mode settings",
+      "Fixed dark mode colors"
+    ]
+  },
   "0.4.10": {
     "changes": [
       "New version information screen"
