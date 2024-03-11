@@ -21,6 +21,7 @@ import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsSc
 import DataFilesSettingsScreen from './screens/SettingsScreens/screens/DataFilesSettingsScreen'
 import OperationAddActivityScreen from './screens/OperationScreens/OperationAddActivityScreen'
 import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
+import VersionSettingsScreen from './screens/SettingsScreens/screens/VersionSettingsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -74,6 +75,11 @@ function App () {
               <Stack.Screen name="DataFilesSettings"
                 options={{ title: 'Data Files', headerBackTitle: 'MainSettings' }}
                 component={DataFilesSettingsScreen}
+              />
+
+              <Stack.Screen name="VersionSettings"
+                options={{ title: 'Version Information', headerBackTitle: 'MainSettings' }}
+                component={VersionSettingsScreen}
               />
 
             </Stack.Navigator>
