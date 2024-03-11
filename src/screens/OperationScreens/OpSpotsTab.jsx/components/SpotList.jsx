@@ -33,7 +33,7 @@ function prepareStyles (themeStyles, themeColor) {
       call: {
         ...themeStyles.text.callsign,
         flex: 1,
-        fontSize: themeStyles.normalFontSize * 0.9,
+        fontSize: themeStyles.normalFontSize,
         fontWeight: 'bold',
         marginLeft: themeStyles.oneSpace * 2,
         minWidth: themeStyles.oneSpace * 5,
@@ -41,14 +41,14 @@ function prepareStyles (themeStyles, themeColor) {
       },
       band: {
         flex: 0,
-        fontSize: themeStyles.normalFontSize * 0.9,
+        fontSize: themeStyles.normalFontSize,
         marginLeft: themeStyles.oneSpace * 1,
         width: themeStyles.oneSpace * 7,
         textAlign: 'right'
       },
       mode: {
         flex: 0,
-        fontSize: themeStyles.normalFontSize * 0.9,
+        fontSize: themeStyles.normalFontSize,
         marginLeft: themeStyles.oneSpace * 0.2,
         width: themeStyles.oneSpace * 5,
         textAlign: 'right'
@@ -65,14 +65,14 @@ function prepareStyles (themeStyles, themeColor) {
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        fontSize: themeStyles.normalFontSize * 0.9,
+        fontSize: themeStyles.normalFontSize,
         minWidth: themeStyles.oneSpace * 6,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
       icon: {
         flex: 0,
-        fontSize: themeStyles.normalFontSize * 0.9,
+        fontSize: themeStyles.normalFontSize,
         width: themeStyles.oneSpace * 2
       }
     }

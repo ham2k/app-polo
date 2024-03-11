@@ -16,9 +16,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
 
   theme = theme ?? DEFAULT_THEME
 
-  const normalFontSize = 18
+  const normalFontSize = 16
   const largeFontSize = 24
-  const smallFontSize = 11
+  const smallFontSize = 12
 
   const baseSpace = 8 // Guesstimage of the width of an 'm' in the base (root) font size
 
@@ -141,6 +141,40 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       },
       lighter: {
         color: theme.colors.onBackgroundLight
+      }
+    },
+    markdown: {
+      body: {
+        fontSize: normalFontSize
+      },
+      heading1: {
+        fontWeight: 'bold',
+        fontSize: normalFontSize * 1.4,
+        marginBottom: halfSpace
+      },
+      heading2: {
+        fontWeight: 'bold',
+        fontSize: normalFontSize * 1.2,
+        marginBottom: halfSpace
+      },
+      heading3: {
+        fontWeight: 'bold',
+        fontSize: normalFontSize * 1,
+        marginBottom: halfSpace
+      },
+      bullet_list_icon: {
+        marginLeft: halfSpace,
+        marginRight: oneSpace * 1,
+        fontSize: normalFontSize * 2,
+        marginTop: -normalFontSize * 0.7
+      },
+      bullet_list_content: {
+        marginBottom: halfSpace
+      },
+      code_inline: {
+        fontVariant: ['tabular-nums'],
+        fontFamily: isIOS ? 'Menlo' : 'monospace',
+        backgroundColor: false
       }
     }
   })
