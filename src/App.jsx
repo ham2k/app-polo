@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
 import SplashScreen from 'react-native-splash-screen'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import codePush from 'react-native-code-push'
 
 import 'react-native-gesture-handler' // This must be included in the top component file
 
@@ -26,7 +27,7 @@ const Stack = createNativeStackNavigator()
 const paperSettings = {
   icon: props => <MaterialCommunityIcon {...props} />
 }
-export default function App () {
+function App () {
   const [paperTheme, navigationTheme] = usePrepareThemes()
 
   useEffect(() => {
@@ -82,3 +83,8 @@ export default function App () {
     </Provider>
   )
 }
+
+const codePushOptions = {
+}
+
+export default codePush(codePushOptions)(App)
