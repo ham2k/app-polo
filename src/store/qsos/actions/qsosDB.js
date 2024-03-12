@@ -30,7 +30,10 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
     if (qso.startOnMillis < startOnMillisMin || !startOnMillisMin) startOnMillisMin = qso.startOnMillis
     if (qso.startOnMillis > startOnMillisMax || !startOnMillisMax) startOnMillisMax = qso.startOnMillis
   })
-  dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount: qsos.length }))
+
+  const qsoCount = qsos.filter(qso => !qso.deleted).length
+
+  dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount }))
   const operation = getState().operations.info[uuid]
   setTimeout(() => {
     dispatch(saveOperation(operation))

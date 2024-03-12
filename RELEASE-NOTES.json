@@ -1,6 +1,7 @@
 {
   "0.4.13": {
     "changes": [
+      "Corrected QSO counts to account for deleted QSOs"
     ]
   },
   "0.4.12": {
