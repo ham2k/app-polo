@@ -1,6 +1,7 @@
 {
   "0.4.12": {
     "changes": [
+      "Fixed wiping QSO info that came from spots"
     ]
   },
   "0.4.11": {
