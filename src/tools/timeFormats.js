@@ -1,31 +1,32 @@
-export function fmtShortTimeZulu (t) {
-  if (typeof t === 'number') {
+export function prepareTimeValue (t) {
+  if (typeof t === 'number' || typeof t === 'string') {
     t = new Date(t)
   }
+  return t
+}
 
-  if (t && t.toLocaleTimeString) {
-    return t.toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: false, hour: '2-digit', minute: '2-digit' }) + 'z'
+export function fmtShortTimeZulu (t, { showZ = true } = {}) {
+  t = prepareTimeValue(t)
+
+  if (t && t.toISOString) {
+    return t.toISOString().substring(11, 16) + (showZ ? 'z' : '')
   } else {
     return ''
   }
 }
 
 export function fmtTimeZulu (t, { showZ = true } = {}) {
-  if (typeof t === 'number') {
-    t = new Date(t)
-  }
+  t = prepareTimeValue(t)
 
-  if (t && t.toLocaleTimeString) {
-    return t.toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) + (showZ ? 'z' : '')
+  if (t && t.toISOString) {
+    return t.toISOString().substring(11, 19) + (showZ ? 'z' : '')
   } else {
     return ''
   }
 }
 
 export function fmtDateZulu (t) {
-  if (typeof t === 'number') {
-    t = new Date(t)
-  }
+  t = prepareTimeValue(t)
 
   if (t && t.toISOString) {
     return t.toISOString().substring(0, 10)
@@ -34,10 +35,45 @@ export function fmtDateZulu (t) {
   }
 }
 
-export function fmtDateTimeNice (t) {
-  if (typeof t === 'number') {
-    t = new Date(t)
+export function fmtDateTimeZuluDynamic (t, { now, compact } = { now: null, compact: false }) {
+  t = prepareTimeValue(t)
+
+  now = now || new Date()
+
+  if (t && t.toLocaleTimeString) {
+    const diffInDays = (now - t) / (1000 * 60 * 60 * 24)
+    if (diffInDays < 1) {
+      if (compact) {
+        return fmtShortTimeZulu(t)
+      } else {
+        return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) + ' ' + fmtShortTimeZulu(t)
+      }
+    } else if (diffInDays <= 7) {
+      if (compact) {
+        return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+      } else {
+        return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) + ' ' + fmtShortTimeZulu(t)
+      }
+    } else if (diffInDays <= 365) {
+      if (compact) {
+        return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+      } else {
+        return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+      }
+    } else {
+      if (compact) {
+        return t.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+      } else {
+        return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+      }
+    }
+  } else {
+    return ''
   }
+}
+
+export function fmtDateTimeNice (t) {
+  t = prepareTimeValue(t)
 
   if (t && t.toLocaleTimeString) {
     return t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric', year: 'numeric' })
@@ -47,9 +83,7 @@ export function fmtDateTimeNice (t) {
 }
 
 export function fmtDateNice (t) {
-  if (typeof t === 'number') {
-    t = new Date(t)
-  }
+  t = prepareTimeValue(t)
 
   if (t && t.toLocaleTimeString) {
     return t.toLocaleTimeString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
@@ -59,9 +93,7 @@ export function fmtDateNice (t) {
 }
 
 export function fmtDateTimeDynamic (t, now = null) {
-  if (typeof t === 'number') {
-    t = new Date(t)
-  }
+  t = prepareTimeValue(t)
 
   now = now || new Date()
 
@@ -84,9 +116,7 @@ export function fmtDateTimeDynamic (t, now = null) {
 }
 
 export function fmtDateTimeRelative (t, now = null) {
-  if (typeof t === 'number') {
-    t = new Date(t)
-  }
+  t = prepareTimeValue(t)
 
   now = now || new Date()
 
@@ -102,9 +132,8 @@ export function fmtDateTimeRelative (t, now = null) {
 }
 
 export function fmtADIFDate (t) {
-  if (typeof t === 'number') {
-    t = new Date(t)
-  }
+  t = prepareTimeValue(t)
+
   if (t && t.toISOString) {
     return t.toISOString().substring(0, 10).replace(/-/g, '')
   } else {
@@ -113,9 +142,8 @@ export function fmtADIFDate (t) {
 }
 
 export function fmtADIFTime (t) {
-  if (typeof t === 'number') {
-    t = new Date(t)
-  }
+  t = prepareTimeValue(t)
+
   if (t && t.toISOString) {
     return t.toISOString().substring(11, 16).replace(/:/g, '')
   } else {
@@ -124,9 +152,8 @@ export function fmtADIFTime (t) {
 }
 
 export function fmtCabrilloDate (t) {
-  if (typeof t === 'number') {
-    t = new Date(t)
-  }
+  t = prepareTimeValue(t)
+
   if (t && t.toISOString) {
     return t.toISOString().substring(0, 10)
   } else {
@@ -139,9 +166,8 @@ export function fmtCabrilloTime (t) {
 }
 
 export function fmtISODate (t) {
-  if (typeof t === 'number') {
-    t = new Date(t)
-  }
+  t = prepareTimeValue(t)
+
   if (t && t.toISOString) {
     return t.toISOString().substring(0, 10)
   } else {
@@ -150,9 +176,8 @@ export function fmtISODate (t) {
 }
 
 export function fmtISODateTime (t) {
-  if (typeof t === 'number') {
-    t = new Date(t)
-  }
+  t = prepareTimeValue(t)
+
   if (t && t.toISOString) {
     return t.toISOString()
   } else {
@@ -161,12 +186,9 @@ export function fmtISODateTime (t) {
 }
 
 export function fmtTimeBetween (t1, t2) {
-  if (typeof t1 === 'number') {
-    t1 = new Date(t1)
-  }
-  if (typeof t2 === 'number') {
-    t2 = new Date(t2)
-  }
+  t1 = prepareTimeValue(t1)
+  t2 = prepareTimeValue(t2)
+
   if (t1 && t2) {
     const diff = t2 - t1
     if (diff < 0) {

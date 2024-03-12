@@ -1,6 +1,7 @@
 {
   "0.4.12": {
     "changes": [
+      "Improved time and frequency formats in operation screen",
       "Fixed wiping QSO info that came from spots",
       "Sort spot filter dropdown by band",
       "On spots list, show worked before (strikethru); new band, mode or park (green); or own spot (orange)",
