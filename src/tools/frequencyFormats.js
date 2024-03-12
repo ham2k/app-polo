@@ -1,10 +1,7 @@
 const THOUSANDS_DELIMITER_REGEX = /^(\d+)(\d\d\d)([.,]\d+|)$/
 const TRAILING_DIGITS_REGEX = /([.,])(\d+)$/
 
-export function fmtFreqInMHz (freq, options) {
-  let { mode } = options || {}
-  mode = mode ?? 'trim'
-
+export function fmtFreqInMHz (freq, { mode } = { mode: 'trim' }) {
   if (freq) {
     const withDecimals = freq.toFixed(3)
     const withSeparator = withDecimals.replace(THOUSANDS_DELIMITER_REGEX, '$1.$2$3')

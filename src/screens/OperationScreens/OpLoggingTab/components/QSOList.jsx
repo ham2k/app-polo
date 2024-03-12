@@ -6,7 +6,9 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../store/operations'
 
-function prepareStyles (themeStyles, isDeleted) {
+function prepareStyles (themeStyles, isDeleted, width) {
+  const extendedWidth = width / themeStyles.oneSpace > 60
+
   let commonStylesForStatus
 
   if (isDeleted) {
@@ -26,7 +28,7 @@ function prepareStyles (themeStyles, isDeleted) {
         ...commonStylesForStatus,
         flex: 0,
         marginLeft: 0,
-        minWidth: themeStyles.oneSpace * 2,
+        minWidth: extendedWidth ? themeStyles.oneSpace * 4 : themeStyles.oneSpace * 2,
         textAlign: 'right'
       },
       time: {
@@ -34,7 +36,7 @@ function prepareStyles (themeStyles, isDeleted) {
         ...themeStyles.text.lighter,
         ...commonStylesForStatus,
         flex: 0,
-        minWidth: themeStyles.oneSpace * 6,
+        minWidth: extendedWidth ? themeStyles.oneSpace * 14 : themeStyles.oneSpace * 7,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
@@ -43,9 +45,21 @@ function prepareStyles (themeStyles, isDeleted) {
         ...themeStyles.text.lighter,
         ...commonStylesForStatus,
         flex: 0,
-        minWidth: themeStyles.oneSpace * 7,
+        minWidth: extendedWidth ? themeStyles.oneSpace * 11 : themeStyles.oneSpace * 8,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
+      },
+      freqMHz: {
+        fontWeight: '600',
+        textAlign: 'right'
+      },
+      freqKHz: {
+        textAlign: 'right'
+      },
+      freqHz: {
+        textAlign: 'right',
+        fontWeight: '300',
+        fontSize: themeStyles.normalFontSize * 0.7
       },
       call: {
         ...themeStyles.text.callsign,
@@ -82,12 +96,14 @@ function prepareStyles (themeStyles, isDeleted) {
   }
 }
 
-export default function QSOList ({ style, operation, qsos, selectedKey, setSelectedKey, lastKey }) {
-  const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, false))
-  const stylesForDeleted = useThemedStyles((baseStyles) => prepareStyles(baseStyles, true))
-
+export default function QSOList ({ style, operation, settings, qsos, selectedKey, setSelectedKey, lastKey }) {
   const { width } = useWindowDimensions()
+
+  const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, false, width))
+  const stylesForDeleted = useThemedStyles((baseStyles) => prepareStyles(baseStyles, true, width))
+
   const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
+
   // const { qsos, selectedKey, setSelectedKey, lastKey } = useContext(OperationContext)
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
@@ -121,9 +137,9 @@ export default function QSOList ({ style, operation, qsos, selectedKey, setSelec
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
     return (
-      <QSOItem qso={qso} selected={qso.key === selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} extendedWidth={extendedWidth} />
+      <QSOItem qso={qso} settings={settings} selected={qso.key === selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} extendedWidth={extendedWidth} />
     )
-  }, [styles, stylesForDeleted, ourInfo, handlePress, extendedWidth, selectedKey])
+  }, [styles, settings, stylesForDeleted, ourInfo, handlePress, extendedWidth, selectedKey])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(qsos[index], styles)

@@ -51,6 +51,10 @@ export const selectOperationsStatus = (state) => {
   return state?.operations?.status
 }
 
+export const selectAllOperations = (state) => {
+  return state?.operations?.info
+}
+
 export const selectOperation = createSelector(
   [(state, uuid) => state?.operations?.info[uuid]],
   (info) => info ?? {}

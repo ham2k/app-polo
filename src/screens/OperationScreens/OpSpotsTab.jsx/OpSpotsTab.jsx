@@ -9,6 +9,10 @@ import { selectSystemOnline } from '../../../store/system'
 import SpotList from './components/SpotList'
 import ThemedDropDown from '../../components/ThemedDropDown'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { BANDS } from '@ham2k/lib-operation-data'
+import { findQSOHistory } from '../../../store/qsos/actions/findQSOHistory'
+import { selectAllOperations, selectOperationCall } from '../../../store/operations'
+import { filterRefs } from '../../../tools/refTools'
 
 function simplifiedMode (mode) {
   if (mode === 'CW') {
@@ -19,6 +23,7 @@ function simplifiedMode (mode) {
     return 'DIGITAL'
   }
 }
+
 export default function OpSpotsTab ({ navigation, route }) {
   const themeColor = 'tertiary'
   const styles = useThemedStyles((baseStyles) => {
@@ -46,7 +51,54 @@ export default function OpSpotsTab ({ navigation, route }) {
   const [mode, setMode] = useState('any')
 
   const spotsQuery = useSpotsQuery()
-  const spots = useMemo(() => spotsQuery.currentData || spotsQuery.data || [], [spotsQuery])
+  const [spots, setSpots] = useState([])
+
+  const allOperations = useSelector(selectAllOperations)
+  const ourCall = useSelector(state => selectOperationCall(state, route.params.uuid))
+
+  useEffect(() => {
+    setTimeout(async () => {
+      const newSpots = spotsQuery.currentData || spotsQuery.data || []
+      const annotatedSpots = []
+
+      const today = new Date()
+      for (const spot of newSpots) {
+        const flags = {}
+
+        if (spot.activator === ourCall) {
+          flags._ourSpot = true
+        }
+
+        const qsoHistory = await findQSOHistory(spot.activator, { onDate: today })
+        if (qsoHistory.length > 0) {
+          if (qsoHistory.filter(qso => qso.band === spot.band).length === 0) {
+            flags._newBand = true
+          }
+
+          if (qsoHistory.filter(qso => qso.mode === spot.mode).length === 0) {
+            flags._newMode = true
+          }
+
+          let potaRefs = []
+          for (const qso of qsoHistory) {
+            const qsoData = JSON.parse(qso.data)
+            potaRefs = potaRefs + (filterRefs(qsoData?.refs, 'pota') || []).map(ref => ref.ref)
+          }
+          if (potaRefs.length > 1) {
+            if (!potaRefs.includes(spot.reference)) {
+              flags._newReference = true
+            }
+          } else {
+            flags._newActivity = true
+          }
+          flags._worked = !flags._newBand && !flags._newMode && !flags._newReference && !flags._newActivity
+        }
+        annotatedSpots.push({ ...spot, ...flags })
+      }
+
+      setSpots(annotatedSpots)
+    }, 0)
+  }, [spotsQuery, allOperations, ourCall])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -66,9 +118,8 @@ export default function OpSpotsTab ({ navigation, route }) {
 
     options = options.concat(
       Object.keys(counts)
-        .map(key => ({ band: key, count: counts[key] })).sort((a, b) => {
-          return b.count - a.count
-        })
+        .map(key => ({ band: key, count: counts[key] }))
+        .sort((a, b) => BANDS.indexOf(a.band) - BANDS.indexOf(b.band))
         .map(b => ({ value: b.band, label: `${b.band} (${b.count})` }))
     )
 
@@ -92,9 +143,8 @@ export default function OpSpotsTab ({ navigation, route }) {
 
     options = options.concat(
       Object.keys(counts)
-        .map(key => ({ mode: key, count: counts[key] })).sort((a, b) => {
-          return b.count - a.count
-        })
+        .map(key => ({ mode: key, count: counts[key] }))
+        .sort((a, b) => b.mode - a.mode)
         .map(b => ({ value: b.mode, label: `${b.mode} (${b.count})` }))
     )
 

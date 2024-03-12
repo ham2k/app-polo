@@ -20,13 +20,14 @@ function prepareStyles (themeStyles, themeColor) {
         textAlign: 'right'
       },
       freqMHz: {
-        fontWeight: 'bold',
+        fontWeight: '600',
         textAlign: 'right'
       },
       freqKHz: {
         textAlign: 'right'
       },
       freqHz: {
+        fontWeight: '300',
         textAlign: 'right',
         fontSize: themeStyles.normalFontSize * 0.7
       },

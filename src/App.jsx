@@ -22,6 +22,7 @@ import DataFilesSettingsScreen from './screens/SettingsScreens/screens/DataFiles
 import OperationAddActivityScreen from './screens/OperationScreens/OperationAddActivityScreen'
 import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
 import VersionSettingsScreen from './screens/SettingsScreens/screens/VersionSettingsScreen'
+import LoggingSettingsScreen from './screens/SettingsScreens/screens/LoggingSettingsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -65,6 +66,11 @@ function ThemedApp () {
           <Stack.Screen name="Settings"
             options={{ title: 'Settings' }}
             component={MainSettingsScreen}
+          />
+
+          <Stack.Screen name="LoggingSettings"
+            options={{ title: 'Logging Settings', headerBackTitle: 'MainSettings' }}
+            component={LoggingSettingsScreen}
           />
 
           <Stack.Screen name="DataFilesSettings"
