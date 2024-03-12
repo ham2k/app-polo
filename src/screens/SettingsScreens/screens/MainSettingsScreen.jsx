@@ -45,6 +45,10 @@ export default function MainSettingsScreen ({ navigation }) {
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />
   ), [styles])
 
+  const LoggingRowIcon = useCallback(() => (
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="book-edit-outline" />
+  ), [styles])
+
   const ManageDataFilesIcon = useCallback(() => (
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />
   ), [styles])
@@ -113,6 +117,14 @@ export default function MainSettingsScreen ({ navigation }) {
           right={ToggleNumbersRow}
           onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))}
         />
+
+        <List.Item
+          title="Logging Settings"
+          description={''}
+          onPress={() => navigation.navigate('LoggingSettings')}
+          left={LoggingRowIcon}
+        />
+
       </List.Section>
 
       <List.Section>

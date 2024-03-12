@@ -51,6 +51,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         styles={styles}
         qsos={qsos}
         operation={operation}
+        settings={settings}
         selectedKey={selectedKey}
         setSelectedKey={setSelectedKey}
         lastKey={lastKey}
