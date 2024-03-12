@@ -64,7 +64,7 @@ export default function OpSpotsTab ({ navigation, route }) {
       const today = new Date()
       for (const spot of newSpots) {
         const flags = {}
-        console.log(spot.operator, ourCall)
+
         if (spot.activator === ourCall) {
           flags._ourSpot = true
         }
