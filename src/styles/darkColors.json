@@ -12,6 +12,7 @@
     "onTertiary": "rgb(80, 36, 0)",
     "tertiaryContainer": "rgb(114, 54, 0)",
     "onTertiaryContainer": "rgb(255, 220, 198)",
+    "important": "rgb(26, 200, 26)",
     "error": "rgb(255, 180, 171)",
     "onError": "rgb(105, 0, 5)",
     "errorContainer": "rgb(147, 0, 10)",
