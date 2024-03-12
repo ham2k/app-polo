@@ -9,6 +9,7 @@ import { selectSystemOnline } from '../../../store/system'
 import SpotList from './components/SpotList'
 import ThemedDropDown from '../../components/ThemedDropDown'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { BANDS } from '@ham2k/lib-operation-data'
 
 function simplifiedMode (mode) {
   if (mode === 'CW') {
@@ -19,6 +20,7 @@ function simplifiedMode (mode) {
     return 'DIGITAL'
   }
 }
+
 export default function OpSpotsTab ({ navigation, route }) {
   const themeColor = 'tertiary'
   const styles = useThemedStyles((baseStyles) => {
@@ -66,9 +68,8 @@ export default function OpSpotsTab ({ navigation, route }) {
 
     options = options.concat(
       Object.keys(counts)
-        .map(key => ({ band: key, count: counts[key] })).sort((a, b) => {
-          return b.count - a.count
-        })
+        .map(key => ({ band: key, count: counts[key] }))
+        .sort((a, b) => BANDS.indexOf(a.band) - BANDS.indexOf(b.band))
         .map(b => ({ value: b.band, label: `${b.band} (${b.count})` }))
     )
 
@@ -92,9 +93,8 @@ export default function OpSpotsTab ({ navigation, route }) {
 
     options = options.concat(
       Object.keys(counts)
-        .map(key => ({ mode: key, count: counts[key] })).sort((a, b) => {
-          return b.count - a.count
-        })
+        .map(key => ({ mode: key, count: counts[key] }))
+        .sort((a, b) => b.mode - a.mode)
         .map(b => ({ value: b.mode, label: `${b.mode} (${b.count})` }))
     )
 

@@ -1,7 +1,8 @@
 {
   "0.4.12": {
     "changes": [
-      "Fixed wiping QSO info that came from spots"
+      "Fixed wiping QSO info that came from spots",
+      "Sort spot filter dropdown by band"
     ]
   },
   "0.4.11": {
