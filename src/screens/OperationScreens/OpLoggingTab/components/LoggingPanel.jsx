@@ -61,6 +61,7 @@ function prepareExistingQSO (qso) {
 function prepareSuggestedQSO (qso) {
   const clone = cloneDeep(qso || {})
   clone._isNew = true
+  clone._isSuggested = true
   clone.key = 'new-qso'
   if (clone.freq) {
     clone.band = bandForFrequency(clone.freq)
@@ -112,13 +113,16 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
 
     setQSO(newQSO)
     setOriginalQSO(cloneDeep(newQSO))
-    setQSOHasChanges(false)
     setVisibleFields({})
   }, [setQSO, setSelectedKey])
 
   useEffect(() => { // Keep track of QSO changes
     if (qso && originalQSO) {
-      setQSOHasChanges(JSON.stringify(qso) !== JSON.stringify(originalQSO))
+      if (qso._isSuggested) {
+        setQSOHasChanges(true)
+      } else {
+        setQSOHasChanges(JSON.stringify(qso) !== JSON.stringify(originalQSO))
+      }
     } else {
       setQSOHasChanges(false)
     }
@@ -126,6 +130,7 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
 
   useEffect(() => { // If a parameter was passed suggesting a QSO, use that
     if (suggestedQSO) {
+      setUndoInfo(undefined)
       setNewQSO(prepareSuggestedQSO(suggestedQSO))
     }
   }, [suggestedQSO, setNewQSO])
