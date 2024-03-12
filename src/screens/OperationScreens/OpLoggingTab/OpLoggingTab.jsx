@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import { View } from 'react-native'
 import { useSelector } from 'react-redux'
@@ -34,6 +34,8 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
+  const activeQSOs = useMemo(() => qsos.filter(qso => !qso.deleted), [qsos])
+
   const settings = useSelector(selectSettings)
 
   const [selectedKey, setSelectedKey] = useState(undefined)
@@ -41,8 +43,8 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   // Set navigation title
   useEffect(() => {
-    navigation.setOptions({ title: `${qsos.length} ${qsos.length !== 1 ? 'QSOs' : 'QSO'}`, iconName: 'radio' })
-  }, [navigation, qsos])
+    navigation.setOptions({ title: `${activeQSOs.length} ${activeQSOs.length !== 1 ? 'QSOs' : 'QSO'}`, iconName: 'radio' })
+  }, [navigation, activeQSOs])
 
   return (
     <View style={flexOne}>
@@ -61,6 +63,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         style={flexZero}
         operation={operation}
         qsos={qsos}
+        activeQSOs={activeQSOs}
         settings={settings}
         selectedKey={selectedKey}
         setSelectedKey={setSelectedKey}

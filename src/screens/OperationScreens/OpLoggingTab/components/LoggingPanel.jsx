@@ -69,7 +69,7 @@ function prepareSuggestedQSO (qso) {
   return clone
 }
 
-export default function LoggingPanel ({ style, operation, qsos, settings, selectedKey, setSelectedKey, setLastKey, suggestedQSO }) {
+export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings, selectedKey, setSelectedKey, setLastKey, suggestedQSO }) {
   const [qso, setQSO] = useState()
   const [originalQSO, setOriginalQSO] = useState()
   const [qsoHasChanges, setQSOHasChanges] = useState(false)
@@ -389,7 +389,7 @@ export default function LoggingPanel ({ style, operation, qsos, settings, select
                   qso?.their?.call ? (
                     <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
                   ) : (
-                    <OpInfo operation={operation} styles={styles} qsos={qsos} themeColor={themeColor} />
+                    <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
                   )
                 )
 
