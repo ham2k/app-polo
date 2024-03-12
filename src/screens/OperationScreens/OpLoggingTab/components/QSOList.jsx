@@ -82,7 +82,7 @@ function prepareStyles (themeStyles, isDeleted) {
   }
 }
 
-export default function QSOList ({ style, operation, qsos, selectedKey, setSelectedKey, lastKey }) {
+export default function QSOList ({ style, operation, settings, qsos, selectedKey, setSelectedKey, lastKey }) {
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, false))
   const stylesForDeleted = useThemedStyles((baseStyles) => prepareStyles(baseStyles, true))
 
@@ -121,9 +121,9 @@ export default function QSOList ({ style, operation, qsos, selectedKey, setSelec
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
     return (
-      <QSOItem qso={qso} selected={qso.key === selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} extendedWidth={extendedWidth} />
+      <QSOItem qso={qso} settings={settings} selected={qso.key === selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} extendedWidth={extendedWidth} />
     )
-  }, [styles, stylesForDeleted, ourInfo, handlePress, extendedWidth, selectedKey])
+  }, [styles, settings, stylesForDeleted, ourInfo, handlePress, extendedWidth, selectedKey])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(qsos[index], styles)

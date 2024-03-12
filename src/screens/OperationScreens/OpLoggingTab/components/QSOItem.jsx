@@ -18,7 +18,7 @@ const REFS_TO_INCLUDE = {
   pota: true
 }
 
-const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, extendedWidth }) {
+const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, extendedWidth, settings }) {
   const theirInfo = useMemo(() => {
     if (qso?.their?.entityPrefix) {
       return qso?.their
@@ -37,7 +37,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         <Text style={styles.fields.freq}>{qso.freq ? fmtFreqInMHz(qso.freq, { mode: 'compact' }) : qso.band}</Text>
         <Text style={styles.fields.call}>
           {qso.their?.call ?? '?'}
-          {theirInfo?.entityPrefix && theirInfo.entityPrefix !== ourInfo?.entityPrefix && (
+          {theirInfo?.entityPrefix && (settings.dxFlags === 'all' || (settings.dxFlags !== 'none' && theirInfo.entityPrefix !== ourInfo?.entityPrefix)) && (
             <Text style={styles.fields.badges}>
               {' '}{DXCC_BY_PREFIX[theirInfo.entityPrefix]?.flag}
             </Text>

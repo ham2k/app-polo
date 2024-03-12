@@ -3,7 +3,8 @@
     "changes": [
       "Fixed wiping QSO info that came from spots",
       "Sort spot filter dropdown by band",
-      "On spots list, show worked before (strikethru); new band, mode or park (green); or own spot (orange)"
+      "On spots list, show worked before (strikethru); new band, mode or park (green); or own spot (orange)",
+      "Added a setting to control showing of DX flags in log"
     ]
   },
   "0.4.11": {
