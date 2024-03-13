@@ -8,6 +8,7 @@ import ScreenContainer from '../components/ScreenContainer'
 import { selectOperation, setOperationData } from '../../store/operations'
 import { replaceRefs } from '../../tools/refTools'
 import activities from './activities'
+import { StackActions } from '@react-navigation/native'
 
 export default function OperationAddActivityScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -25,7 +26,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
         [{ type, ref: '', ...activity.defaultValue }]
       )
     }))
-    navigation.goBack()
+    navigation.dispatch(StackActions.replace('OperationActivityOptions', { operation: operation.uuid, activity: activity.key }))
   }, [operation, dispatch, navigation])
 
   return (

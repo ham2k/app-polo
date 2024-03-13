@@ -1,13 +1,16 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import POTAInput from '../../components/POTAInput'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
-import { IconButton, List, Searchbar, Text } from 'react-native-paper'
-import { apiPOTA, useLookupParkQuery } from '../../../store/apiPOTA'
 import { View } from 'react-native'
-import { filterRefs, findRef, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
+import { useDispatch, useSelector } from 'react-redux'
+import { IconButton, List, Searchbar, Text } from 'react-native-paper'
+import Geolocation from '@react-native-community/geolocation'
+
 import { POTAAllParks, preparePOTAAllParksData } from '../../../data/POTA-AllParks'
+import { apiPOTA, useLookupParkQuery } from '../../../store/apiPOTA'
+import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
+import { filterRefs, findRef, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
+
+import POTAInput from '../../components/POTAInput'
 import { ListRow } from '../../components/ListComponents'
 
 preparePOTAAllParksData()
@@ -174,6 +177,29 @@ export function ThisActivityOptions (props) {
   const [parks, setParks] = useState([])
   const [parksMessage, setParksmessage] = useState([])
 
+  const [nearbyParks, setNearbyParks] = useState([])
+  useEffect(() => {
+    Geolocation.getCurrentPosition(info => {
+      const { latitude, longitude } = info.coords
+      console.log('Geolocation', info)
+      const newParks = POTAAllParks.activeParks.filter(park => {
+        return ((!ourInfo?.dxccCode || park.dxccCode === ourInfo.dxccCode) && Math.abs(park.lat - latitude) < 0.25 && Math.abs(park.lon - longitude) < 0.25)
+      }).sort((a, b) => {
+        const distA = Math.sqrt((a.lat - latitude) ** 2 + (a.lon - longitude) ** 2)
+        const distB = Math.sqrt((b.lat - latitude) ** 2 + (b.lon - longitude) ** 2)
+        return distA - distB
+      })
+      console.log(POTAAllParks.activeParks[0])
+      setNearbyParks(newParks)
+    }, error => {
+      console.log('Geolocation error', error)
+      setNearbyParks([])
+    })
+  }, [ourInfo])
+
+  useEffect(() => {
+
+  })
   useEffect(() => {
     if (search?.length > 2) {
       const newParks = POTAAllParks.activeParks.filter(park => {
@@ -182,6 +208,7 @@ export function ThisActivityOptions (props) {
             )
       })
 
+      // Is the search term a plain reference, either with prefix or just digits?
       let nakedReference
       const parts = search.match(/^\s*([A-Za-z]*)(\d+)\s*$/)
       if (parts && parts[2].length >= 4) {
@@ -190,6 +217,8 @@ export function ThisActivityOptions (props) {
         nakedReference = search
       }
 
+      // If it's a naked reference, let's ensure the results include it, or else add a placeholder
+      // just to cover any cases where the user knows about a new park not included in our data
       if (nakedReference && !newParks.find(park => park.ref === nakedReference)) {
         newParks.unshift({ ref: nakedReference })
       }
@@ -203,10 +232,10 @@ export function ThisActivityOptions (props) {
         setParksmessage('')
       }
     } else {
-      setParks([])
-      setParksmessage('Search for some parks to activate!')
+      setParks(nearbyParks)
+      setParksmessage(!nearbyParks.length ? 'Search for some parks to activate!' : '')
     }
-  }, [search, ourInfo])
+  }, [search, ourInfo, nearbyParks])
 
   const handleAddReference = useCallback((ref) => {
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, [...refs.filter(r => r.ref !== ref), { type: ACTIVITY.activationType, ref }]) }))
@@ -230,7 +259,7 @@ export function ThisActivityOptions (props) {
           />
         ))}
       </List.Section>
-      <List.Section title={'Add a park…'}>
+      <List.Section title={refs.length > 0 ? 'Add more parks' : 'Add a park'}>
         <ListRow>
 
           <Searchbar
@@ -246,6 +275,7 @@ export function ThisActivityOptions (props) {
             allRefs={refs}
             refData={park}
             styles={styles}
+            onPress={() => handleAddReference(park.ref) }
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />
