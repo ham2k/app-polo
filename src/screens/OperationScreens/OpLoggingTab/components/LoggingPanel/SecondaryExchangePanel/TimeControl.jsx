@@ -44,10 +44,10 @@ export const timeControl = {
   key: 'time',
   icon: 'clock-outline',
   order: 0,
-  labelComponent: ({ qso, operation, settings, icon, style, styles, themeColor, selected, onChange }) => (
+  LabelComponent: ({ qso, operation, settings, icon, style, styles, themeColor, selected, onChange }) => (
     <TimeChip time={qso?.startOnMillis} icon={icon} style={style} styles={styles} themeColor={themeColor}
       selected={selected} onChange={onChange}
     />
   ),
-  inputComponent: TimeControlInputs
+  InputComponent: TimeControlInputs
 }

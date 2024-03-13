@@ -22,6 +22,7 @@ import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { joinAnd } from '../../../../tools/joinAnd'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
+import { getObjectId } from './LoggingPanel/SecondaryExchangePanel/RadioControl'
 
 prepareCountryFilesData()
 
@@ -216,7 +217,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       setQSO({ ...qso, notes: value })
     } else if (fieldId === 'freq') {
       const freq = parseFreqInMHz(value)
-      const band = bandForFrequency(freq)
+      const band = freq ? bandForFrequency(freq) : qso?.band
       setQSO({ ...qso, freq, band })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band, freq }))
     } else if (fieldId === 'band') {
@@ -253,13 +254,13 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
           delete qso._willBeDeleted
           delete qso.deleted
 
-          qso.freq = qso.freq || operation.freq
+          qso.freq = qso.freq ?? operation.freq
           if (qso.freq) {
             qso.band = bandForFrequency(qso.freq)
           } else {
-            qso.band = qso.band || operation.band
+            qso.band = qso.band ?? operation.band
           }
-          qso.mode = qso.mode || operation.mode
+          qso.mode = qso.mode ?? operation.mode
 
           if (!qso.startOnMillis) qso.startOnMillis = (new Date()).getTime()
           qso.startOn = new Date(qso.startOnMillis).toISOString()
@@ -281,7 +282,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         })
       }
     }, 10)
-  }, [qso, isValidQSO, dispatch, operation, settings, setSelectedKey, setLastKey])
+  }, [qso, setQSO, isValidQSO, dispatch, operation, settings, setSelectedKey, setLastKey])
 
   const [undoInfo, setUndoInfo] = useState()
 
@@ -300,7 +301,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       setUndoInfo(undefined)
       setQSOHasChanges(true)
     }
-  }, [undoInfo])
+  }, [undoInfo, setQSO])
 
   const handleDelete = useCallback(() => { // Delete an existing QSO
     if (!qso?._isNew) {
@@ -309,13 +310,13 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       // const timeout = setTimeout(() => { setUndoInfo(undefined) }, 10 * 1000) // Undo will clear after 10 seconds
       // return () => clearTimeout(timeout)
     }
-  }, [qso])
+  }, [qso, setQSO])
 
   const handleUndelete = useCallback(() => { // Undo changes to existing QSO
     if (qso?.deleted || qso?._willBeDeleted) {
       setQSO({ ...qso, _willBeDeleted: false, deleted: false })
     }
-  }, [qso])
+  }, [qso, setQSO])
 
   const focusedRef = useRef()
 
