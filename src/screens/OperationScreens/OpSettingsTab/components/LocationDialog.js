@@ -1,8 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
-import { setOperationData } from '../../../../store/operations'
 import { KeyboardAvoidingView } from 'react-native'
+import { Button, Dialog, Portal, Text, TouchableRipple } from 'react-native-paper'
+import Geolocation from '@react-native-community/geolocation'
+import { locationToGrid } from '@ham2k/lib-maidenhead-grid'
+
+import { setOperationData } from '../../../../store/operations'
 import ThemedTextInput from '../../../components/ThemedTextInput'
 
 const VALID_MAIDENHEAD_REGEX = /^([A-R]{2}|[A-R]{2}[0-9]{2}|[A-R]{2}[0-9]{2}[a-x]{2}||[A-R]{2}[0-9]{2}[a-x]{2}[0-9]{2})$/
@@ -49,6 +52,28 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
     onDialogDone && onDialogDone()
   }, [operation, onDialogDone])
 
+  const [locationGrid, setLocationGrid] = useState()
+  useEffect(() => {
+    Geolocation.getCurrentPosition(info => {
+      const { latitude, longitude } = info.coords
+      console.log('Current Position', info)
+      setLocationGrid(locationToGrid(latitude, longitude))
+    }, error => {
+      console.log('location error', error)
+    })
+
+    const watchId = Geolocation.watchPosition(info => {
+      const { latitude, longitude } = info.coords
+      console.log('Position Watch', info)
+      setLocationGrid(locationToGrid(latitude, longitude))
+    }, error => {
+      console.log('location error', error)
+    })
+    return () => {
+      Geolocation.clearWatch(watchId)
+    }
+  }, [])
+
   return (
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
@@ -65,6 +90,15 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
               onChangeText={handleGridChange}
               error={!isValid}
             />
+            {locationGrid && (
+              <TouchableRipple onPress={() => setGridValue(locationGrid)} style={{ marginTop: styles.oneSpace }}>
+                <Text variant="bodyMedium" style={{ marginTop: styles.oneSpace, marginBottom: styles.oneSpace }}>
+                  <Text>Current Location: </Text>
+                  <Text style={{ color: styles.colors.primary, fontWeight: 'bold' }}>{locationGrid}</Text>
+                </Text>
+              </TouchableRipple>
+
+            )}
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={handleCancel}>Cancel</Button>

@@ -38,7 +38,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
   <false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Your location will be used to determine your Maidenhead Grid Square to include in your own logs.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialIcons.ttf</string>
