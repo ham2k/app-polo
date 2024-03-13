@@ -36,8 +36,8 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
 
         {elements.map(control => (
           <View key={control.key} style={{ flex: 0, flexDirection: 'column' }}>
-            {control.labelComponent ? (
-              <control.labelComponent
+            {control.LabelComponent ? (
+              <control.LabelComponent
                 qso={qso} operation={operation} settings={settings}
                 icon={control.icon}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
@@ -56,8 +56,8 @@ export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handl
               <>
                 <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
                 <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
-                  {control.inputComponent && (
-                    <control.inputComponent
+                  {control.InputComponent && (
+                    <control.InputComponent
                       qso={qso} operation={operation} settings={settings}
                       icon={control.icon}
                       style={{ flex: 0 }} styles={styles} themeColor={themeColor}
