@@ -104,6 +104,7 @@ function App () {
 }
 
 const codePushOptions = {
+  installMode: codePush.InstallMode.IMMEDIATE
 }
 
 export default codePush(codePushOptions)(App)

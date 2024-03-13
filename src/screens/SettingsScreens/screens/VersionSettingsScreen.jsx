@@ -38,8 +38,8 @@ export default function VersionSettingsScreen ({ navigation }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <List.Section>
-          <List.Item title={`Version ${packageJson.version}`}
-            description={`Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
+          <List.Item title={`Supplementary Updates ${packageJson.version}`}
+            description={`Base Version ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
             left={VersionIcon}
             onPress={() => codePush.sync({ updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE })}
           />
