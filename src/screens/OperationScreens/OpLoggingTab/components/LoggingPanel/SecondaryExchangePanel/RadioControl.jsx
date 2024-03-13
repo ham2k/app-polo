@@ -90,5 +90,5 @@ export const radioControl = {
     parts.push(`${qso?.mode ?? operation.mode ?? 'SSB'}`)
     return parts.join(' • ')
   },
-  inputComponent: RadioControlInputs
+  InputComponent: RadioControlInputs
 }

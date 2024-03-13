@@ -1,4 +1,10 @@
 {
+  "0.4.13": {
+    "changes": [
+      "Corrected QSO counts to account for deleted QSOs",
+      "Fixed problems with entering bands and frequencies"
+    ]
+  },
   "0.4.12": {
     "changes": [
       "Improved time and frequency formats in operation screen",

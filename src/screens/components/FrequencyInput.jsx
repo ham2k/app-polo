@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ThemedTextInput from './ThemedTextInput'
 
@@ -11,10 +11,10 @@ function reportChange ({ text, onChange, onChangeText, fieldId }) {
   onChange && onChange({ nativeEvent: { text }, fieldId })
 }
 
-const debouncedReportChange = debounce(reportChange, 1500)
-
 export default function FrequencyInput (props) {
-  const { value, styles, textStyle, onChange, onChangeText, fieldId } = props
+  const { value, styles, textStyle, onChange, onChangeText, fieldId, debounceTime } = props
+
+  const debouncedReportChange = useMemo(() => debounce(reportChange, debounceTime ?? 500), [debounceTime])
 
   const [innerValue, setInnerValue] = useState(value)
   useEffect(() => {
@@ -25,8 +25,11 @@ export default function FrequencyInput (props) {
     let { text } = event.nativeEvent
     text = text.replace(REMOVE_NON_DIGITS_REGEX, '')
     setInnerValue(text)
-    debouncedReportChange({ text, onChange, onChangeText, fieldId })
-  }, [fieldId, onChange, onChangeText])
+    if (text.length > 3 || text.match(/\d+\.\d+/)) {
+      // Don't report until we have at least 4 characters or a decimal point
+      debouncedReportChange({ text, onChange, onChangeText, fieldId })
+    }
+  }, [fieldId, onChange, onChangeText, debouncedReportChange])
 
   const handleBlur = useCallback((event) => {
     const newEvent = { nativeEvent: { text: innerValue, target: event?.nativeEvent?.target } }

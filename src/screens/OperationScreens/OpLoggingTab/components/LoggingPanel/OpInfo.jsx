@@ -10,21 +10,21 @@ export function OpInfo ({ operation, qsos, styles, style, themeColor }) {
   const now = useSelector(selectNow)
 
   const line1 = useMemo(() => {
-    if (operation.qsoCount === 0) {
+    if (qsos.length === 0) {
       return "No QSOs... Let's get on the air!"
     } else {
       const parts = []
 
-      parts.push(`${operation.qsoCount} ${operation.qsoCount === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startOnMillisMin, operation.startOnMillisMax)}`)
+      parts.push(`${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startOnMillisMin, operation.startOnMillisMax)}`)
 
       if (now - operation.startOnMillisMax < 1000 * 60 * 60 * 4) {
-        if (operation.qsoCount > 0) {
+        if (qsos.length > 0) {
           parts.push(`${fmtTimeBetween(operation.startOnMillisMax, now)} since last QSO`)
         }
       }
       return parts.filter(x => x).join(' • ')
     }
-  }, [operation, now])
+  }, [qsos, operation, now])
 
   const line2 = useMemo(() => {
     const parts = []
@@ -35,7 +35,7 @@ export function OpInfo ({ operation, qsos, styles, style, themeColor }) {
       if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 10`)
     }
     if (last > 99) {
-      const rate = (100 / ((qsos[last].startOnMillis - qsos[last - 9].startOnMillis) / 1000 / 60)) * 60
+      const rate = (100 / ((qsos[last].startOnMillis - qsos[last - 99].startOnMillis) / 1000 / 60)) * 60
       if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 100`)
     }
 

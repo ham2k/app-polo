@@ -32,5 +32,5 @@ export const notesControl = {
   icon: 'note-outline',
   order: 99,
   label: ({ qso, operation, settings }) => 'Notes',
-  inputComponent: NotesControlInputs
+  InputComponent: NotesControlInputs
 }
