@@ -64,37 +64,6 @@ React Native [Troubleshooting](https://reactnative.dev/docs/troubleshooting) pag
 
 ---
 
-# Release Flow
-
-### First, open a new release
-* Update version in `package.json` and add a heading on `RELEASE NOTES.md`
-* Commit to `main` as "Open {version}"
-
-### Then, write code, commit, merge, push, test, etc
-* Update `RELEASE NOTES.md` as you go
-
-### When ready to build a release
-
-#### Android
-* Update version and build number in `android/app/build.gradle`
-* Run `npm run build:android:beta:release`
-* Fetch binary from `android/app/build/outputs/bundle`
-
-#### iOS
-* In `ios/Polo/Info.plist`, remove `localhost` from `NSExceptionDomains`
-* Update version and build number in XCode > Targets: Polo > Build Settings > Versioning
-* Also in XCode: Product > Scheme > polo-Prod
-* Also in XCode: Product > Scheme > Edit Scheme > polo-Prod > Run > Build Configuration: Release
-* Also in XCode: Product > Archive
-* In Archive: Distribute App
-* Revert changes to `Info.plist`
-
-### Finally, close the release
-
-* Commit to `main` as `Release {version}`. Should only contain the changes to android and ios files described above.
-
--------------
-
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
