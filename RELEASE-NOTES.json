@@ -1,7 +1,10 @@
 {
   "0.4.14": {
     "changes": [
-      "GPS Location!"
+      "GPS Location!",
+      "Show nearby parks when searching for POTA references",
+      "Jump to activity settings when adding a new activity to an operation",
+      "Update operation title after removing all POTA references"
     ]
   },
   "0.4.13": {

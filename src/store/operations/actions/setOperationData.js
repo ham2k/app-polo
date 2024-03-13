@@ -74,6 +74,9 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     if (titleParts.length) {
       data.title = titleParts.join(' ')
       data.subtitle = subtitleParts.join(' • ')
+    } else {
+      data.title = 'General Operation'
+      data.subtitle = ''
     }
   }
 
