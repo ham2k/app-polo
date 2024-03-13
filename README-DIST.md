@@ -7,7 +7,7 @@
 
 * Update version and build number in `android/app/build.gradle`
 * In `ios/Polo/Info.plist`, remove `localhost` from `NSExceptionDomains`
-* Update version and build number in XCode > Targets: Polo > Build Settings > Versioning
+* Update version (`MARKETING_VERSION`) and build number (`CURRENT_PROJECT_VERSION`) in `project.pbxproj` or in XCode > Targets: Polo > Build Settings > Versioning
 
 * In XCode, check: Product > Scheme > polo-Prod
 * In XCode, check: Product > Scheme > Edit Scheme > polo-Prod > Run > Build Configuration: Release
