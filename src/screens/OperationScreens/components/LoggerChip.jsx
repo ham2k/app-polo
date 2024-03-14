@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { Chip } from 'react-native-paper'
 
@@ -6,28 +6,36 @@ export default function LoggerChip ({
   children,
   icon,
   styles, style, themeColor, textStyle,
-  selected: initialSelected,
+  selected,
+  disabled,
   onChange
 }) {
-  const [selected, setSelected] = useState(initialSelected)
-
-  useEffect(() => {
-    setSelected(initialSelected)
-  }, [initialSelected])
-
   themeColor = themeColor ?? 'primary'
 
   const handlePress = useCallback(() => {
-    setSelected(!selected)
     onChange && onChange(!selected)
-  }, [setSelected, selected, onChange])
+  }, [selected, onChange])
 
   const { colorizedTheme, baseTextStyle, mode } = useMemo(() => {
     const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
     let colorizedTheme, baseTextStyle, mode // eslint-disable-line no-shadow
 
-    if (selected) {
-      mode = 'flat'
+    mode = 'flat'
+    if (disabled) {
+      colorizedTheme = {
+        colors: {
+          primary: styles.theme.colors[`on${upcasedThemeColor}Container`],
+          onPrimary: styles.theme.colors[themeColor],
+          primaryContainer: styles.theme.colors[`${themeColor}Container`],
+          onPrimaryContainer: styles.theme.colors[`on${upcasedThemeColor}Container`],
+          secondaryContainer: styles.theme.colors[`${themeColor}Light`],
+          onSecondaryContainer: styles.theme.colors[`on${upcasedThemeColor}`]
+        }
+      }
+      baseTextStyle = {
+        color: styles.theme.colors[`on${upcasedThemeColor}Container`]
+      }
+    } else if (selected) {
       colorizedTheme = {
         colors: {
           primary: styles.theme.colors[`on${upcasedThemeColor}`],
@@ -39,7 +47,7 @@ export default function LoggerChip ({
         }
       }
       baseTextStyle = {
-        color: styles.theme.colors[`on${upcasedThemeColor}`] // `on${upcasedThemeColor}`],
+        color: styles.theme.colors[`on${upcasedThemeColor}`]
       }
     } else {
       mode = 'flat'
@@ -58,7 +66,7 @@ export default function LoggerChip ({
       }
     }
     return { mode, colorizedTheme, baseTextStyle }
-  }, [themeColor, styles, selected])
+  }, [themeColor, styles, selected, disabled])
 
   return (
     <Chip
@@ -67,6 +75,7 @@ export default function LoggerChip ({
       theme={colorizedTheme}
       style={[style]}
       textStyle={[baseTextStyle, textStyle]}
+      disabled={disabled}
       onPress={handlePress}
     >
       {children}

@@ -7,9 +7,13 @@ import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 
 const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => {
   const ref = useRef()
+
   useEffect(() => {
-    ref?.current?.focus()
+    setTimeout(() => {
+      ref?.current?.focus()
+    }, 0)
   }, [])
+
   return (
     <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
       <ThemedDropDown
@@ -90,5 +94,6 @@ export const radioControl = {
     parts.push(`${qso?.mode ?? operation.mode ?? 'SSB'}`)
     return parts.join(' • ')
   },
-  InputComponent: RadioControlInputs
+  InputComponent: RadioControlInputs,
+  optionType: 'mandatory'
 }

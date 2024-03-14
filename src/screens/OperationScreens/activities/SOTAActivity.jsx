@@ -1,5 +1,6 @@
 import React from 'react'
 import { Text } from 'react-native-paper'
+import { findRef } from '../../../tools/refTools'
 
 /*
 https://sotawatch.sota.org.uk/en/
@@ -42,16 +43,48 @@ const ACTIVITY = {
   descriptionPlaceholder: 'Enter SOTA reference'
 }
 
-function ThisActivityOptionalExchangePanel (props) {
+function ThisActivityLoggingControl (props) {
   return (
     <Text>WIP</Text>
   )
 }
 
+const HunterLoggingControl = {
+  key: 'sota/hunter',
+  order: 10,
+  icon: ACTIVITY.icon,
+  label: ({ operation, qso }) => {
+    const parts = ['SOTA']
+    if (findRef(qso, ACTIVITY.key)) parts.unshift('✓')
+    return parts.join(' ')
+  },
+  InputComponent: ThisActivityLoggingControl,
+  optionType: 'optional'
+}
+
+const ActivatorLoggingControl = {
+  key: 'sota/activator',
+  order: 10,
+  icon: ACTIVITY.icon,
+  label: ({ operation, qso }) => {
+    const parts = ['S2S']
+    if (findRef(qso, ACTIVITY.key)) parts.unshift('✓')
+    return parts.join(' ')
+  },
+  InputComponent: ThisActivityLoggingControl,
+  optionType: 'mandatory'
+}
+
 const ThisActivity = {
   ...ACTIVITY,
   MainExchangePanel: null,
-  OptionalExchangePanel: ThisActivityOptionalExchangePanel
+  loggingControls: ({ operation, settings }) => {
+    if (findRef(operation, ACTIVITY.activationType)) {
+      return [ActivatorLoggingControl]
+    } else {
+      return [HunterLoggingControl]
+    }
+  }
 }
 
 export default ThisActivity
