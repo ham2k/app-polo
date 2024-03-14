@@ -158,6 +158,8 @@ export function ThisActivityListItem ({ activityRef, refData, allRefs, style, st
 }
 
 export function ThisActivityOptions (props) {
+  const NEARBY_DEGREES = 0.25
+
   const { styles, operation } = props
 
   const dispatch = useDispatch()
@@ -177,36 +179,47 @@ export function ThisActivityOptions (props) {
   const [parks, setParks] = useState([])
   const [parksMessage, setParksmessage] = useState([])
 
-  const [nearbyParks, setNearbyParks] = useState([])
+  const [location, setLocation] = useState()
   useEffect(() => {
     Geolocation.getCurrentPosition(info => {
+      console.log('geo', info)
       const { latitude, longitude } = info.coords
-      console.log('Geolocation', info)
-      const newParks = POTAAllParks.activeParks.filter(park => {
-        return ((!ourInfo?.dxccCode || park.dxccCode === ourInfo.dxccCode) && Math.abs(park.lat - latitude) < 0.25 && Math.abs(park.lon - longitude) < 0.25)
-      }).sort((a, b) => {
-        const distA = Math.sqrt((a.lat - latitude) ** 2 + (a.lon - longitude) ** 2)
-        const distB = Math.sqrt((b.lat - latitude) ** 2 + (b.lon - longitude) ** 2)
-        return distA - distB
-      })
-      console.log(POTAAllParks.activeParks[0])
-      setNearbyParks(newParks)
+      setLocation({ lat: latitude, lon: longitude })
     }, error => {
       console.log('Geolocation error', error)
-      setNearbyParks([])
+      setLocation(undefined)
     })
-  }, [ourInfo])
+  }, [])
 
+  const [nearbyParks, setNearbyParks] = useState([])
   useEffect(() => {
+    if (location?.lat && location?.lon) {
+      const newParks = POTAAllParks.activeParks.filter(park => {
+        return ((!ourInfo?.dxccCode || park.dxccCode === ourInfo.dxccCode) && Math.abs(park.lat - location.lat) < NEARBY_DEGREES && Math.abs(park.lon - location.lon) < NEARBY_DEGREES)
+      }).sort((a, b) => {
+        const distA = Math.sqrt((a.lat - location.lat) ** 2 + (a.lon - location.lon) ** 2)
+        const distB = Math.sqrt((b.lat - location.lat) ** 2 + (b.lon - location.lon) ** 2)
+        return distA - distB
+      })
+      setNearbyParks(newParks)
+    }
+  }, [ourInfo, location])
 
-  })
   useEffect(() => {
     if (search?.length > 2) {
-      const newParks = POTAAllParks.activeParks.filter(park => {
+      let newParks = POTAAllParks.activeParks.filter(park => {
         return (!ourInfo?.dxccCode || park.dxccCode === ourInfo.dxccCode) &&
             (park.ref.toLowerCase().includes(search.toLowerCase()) || park.name.toLowerCase().includes(search.toLowerCase())
             )
       })
+
+      if (location?.lat && location?.lon) {
+        newParks = newParks.sort((a, b) => {
+          const distA = Math.sqrt((a.lat - location.lat) ** 2 + (a.lon - location.lon) ** 2)
+          const distB = Math.sqrt((b.lat - location.lat) ** 2 + (b.lon - location.lon) ** 2)
+          return distA - distB
+        })
+      }
 
       // Is the search term a plain reference, either with prefix or just digits?
       let nakedReference
@@ -233,7 +246,9 @@ export function ThisActivityOptions (props) {
       }
     } else {
       setParks(nearbyParks)
-      setParksmessage(!nearbyParks.length ? 'Search for some parks to activate!' : '')
+      if (nearbyParks === undefined) setParksmessage('Search for some parks to activate!')
+      else if (nearbyParks.length === 0) setParksmessage('No parks nearby')
+      else setParksmessage('')
     }
   }, [search, ourInfo, nearbyParks])
 
