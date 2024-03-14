@@ -22,13 +22,18 @@ import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { joinAnd } from '../../../../tools/joinAnd'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
-import { getObjectId } from './LoggingPanel/SecondaryExchangePanel/RadioControl'
 
 prepareCountryFilesData()
 
 function prepareStyles (themeStyles, themeColor) {
+  const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
+  const commonPanelHeight = themeStyles.oneSpace * 9
+
   return {
     ...themeStyles,
+    commonPanelHeight,
+    themeColor,
+    upcasedThemeColor,
     root: {
       borderTopColor: themeStyles.theme.colors[`${themeColor}Light`],
       borderTopWidth: 1,
@@ -38,6 +43,44 @@ function prepareStyles (themeStyles, themeColor) {
       backgroundColor: themeStyles.theme.colors.background,
       color: themeStyles.theme.colors.onBackground
       // paddingRight: themeStyles.oneSpace
+    },
+    infoPanel: {
+      container: {
+        minHeight: commonPanelHeight,
+        flexDirection: 'row',
+        alignItems: 'center'
+      },
+      buttonContainer: {
+        justifyContent: 'flex-end',
+        alignSelf: 'flex-end',
+        marginBottom: commonPanelHeight / 2 - themeStyles.oneSpace * 4
+      },
+      button: {
+        size: themeStyles.oneSpace * 4,
+        color: themeStyles.theme.colors[themeColor]
+      }
+    },
+    secondaryControls: {
+      headingContainer: {
+        backgroundColor: themeStyles.theme.colors[themeColor],
+        color: themeStyles.theme.colors[`${themeColor}Container`],
+        paddingHorizontal: themeStyles.oneSpace,
+        paddingVertical: themeStyles.halfSpace
+      },
+      headingText: {
+        color: themeStyles.theme.colors[`${themeColor}Container`]
+      },
+      controlContainer: {
+        minHeight: commonPanelHeight,
+        flexDirection: 'row',
+        backgroundColor: themeStyles.theme.colors[themeColor],
+        color: themeStyles.theme.colors[`${themeColor}Container`],
+        paddingHorizontal: themeStyles.oneSpace,
+        paddingVertical: themeStyles.oneSpace
+      },
+      controlText: {
+        color: themeStyles.theme.colors[`${themeColor}Container`]
+      }
     }
   }
 }
@@ -84,7 +127,14 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
   const mainFieldRef = useRef()
 
-  const [visibleFields, setVisibleFields] = useState({})
+  const [currentSecondaryControl, reallySetCurrentSecondaryControl] = useState({})
+  const setCurrentSecondaryControl = useCallback((control) => {
+    if (control === currentSecondaryControl) {
+      control = undefined
+    }
+    mainFieldRef.current.focus()
+    setTimeout(() => reallySetCurrentSecondaryControl(control), 10)
+  }, [currentSecondaryControl, reallySetCurrentSecondaryControl])
 
   const [pausedTime, setPausedTime] = useState()
 
@@ -114,8 +164,8 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
     setQSO(newQSO)
     setOriginalQSO(cloneDeep(newQSO))
-    setVisibleFields({})
-  }, [setQSO, setSelectedKey])
+    setCurrentSecondaryControl(undefined)
+  }, [setQSO, setSelectedKey, setCurrentSecondaryControl])
 
   useEffect(() => { // Keep track of QSO changes
     if (qso && originalQSO) {
@@ -170,6 +220,10 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       }, 10)
     }
   }, [qsoQueue, setQSOQueue, selectedKey, setSelectedKey, operation, settings, qso, setNewQSO, qsos])
+
+  useEffect(() => {
+    mainFieldRef.current.focus()
+  }, [currentSecondaryControl])
 
   useEffect(() => { // Validate and analize the callsign
     const callInfo = parseCallsign(qso?.their?.call)
@@ -248,7 +302,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         setLastKey(qso.key)
       } else if (isValidQSO && !qso.deleted) {
         unstable_batchedUpdates(() => {
-          setVisibleFields({})
+          setCurrentSecondaryControl(undefined)
 
           delete qso._isNew
           delete qso._willBeDeleted
@@ -282,7 +336,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         })
       }
     }, 10)
-  }, [qso, setQSO, isValidQSO, dispatch, operation, settings, setSelectedKey, setLastKey])
+  }, [qso, setQSO, isValidQSO, dispatch, operation, settings, setSelectedKey, setLastKey, setCurrentSecondaryControl])
 
   const [undoInfo, setUndoInfo] = useState()
 
@@ -367,77 +421,77 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
             focusedRef={focusedRef}
             styles={styles}
             themeColor={themeColor}
-            visibleFields={visibleFields}
-            setVisibleFields={setVisibleFields}
+            currentSecondaryControl={currentSecondaryControl}
+            setCurrentSecondaryControl={setCurrentSecondaryControl}
           />
 
-          <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-            <View style={{ flex: 1, paddingLeft: styles.oneSpace }}>
-              {operationError ? (
-                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-                  <Ham2kMarkdown style={{ color: styles.theme.colors.error }}>
-                    {operationError || 'ERROR'}
-                  </Ham2kMarkdown>
-                </View>
-              ) : (
-                qso?.deleted || qso?._willBeDeleted ? (
-                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
-                      {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
-                    </Text>
+          {!currentSecondaryControl && (
+            <View style={styles.infoPanel.container}>
+              <View style={{ flex: 1, paddingLeft: styles.oneSpace }}>
+                {operationError ? (
+                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+                    <Ham2kMarkdown style={{ color: styles.theme.colors.error }}>
+                      {operationError || 'ERROR'}
+                    </Ham2kMarkdown>
                   </View>
                 ) : (
-                  qso?.their?.call ? (
-                    <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
+                  qso?.deleted || qso?._willBeDeleted ? (
+                    <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
+                      <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
+                        {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
+                      </Text>
+                    </View>
                   ) : (
-                    <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
+                    qso?.their?.call ? (
+                      <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
+                    ) : (
+                      <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
+                    )
                   )
-                )
 
-              )}
-            </View>
-
-            <View style={{ justifyContent: 'flex-end', alignSelf: 'flex-end' }}>
-              {qso?._isNew ? (
-                undoInfo ? (
-                  <IconButton
-                    icon={'undo'}
-                    size={styles.oneSpace * 4}
-                    iconColor={styles.theme.colors[themeColor]}
-                    onPress={handleUnwipe}
-                  />
+                )}
+              </View>
+              <View style={styles.infoPanel.buttonContainer}>
+                {qso?._isNew ? (
+                  undoInfo ? (
+                    <IconButton
+                      icon={'undo'}
+                      size={styles.infoPanel.button.size}
+                      iconColor={styles.infoPanel.button.color}
+                      onPress={handleUnwipe}
+                    />
+                  ) : (
+                    <IconButton
+                      icon={'backspace-outline'}
+                      size={styles.infoPanel.button.size}
+                      iconColor={styles.infoPanel.button.color}
+                      disabled={!qsoHasChanges}
+                      onPress={handleWipe}
+                    />
+                  )
                 ) : (
-                  <IconButton
-                    icon={'backspace-outline'}
-                    size={styles.oneSpace * 4}
-                    disabled={!qsoHasChanges}
-                    iconColor={styles.theme.colors[themeColor]}
-                    onPress={handleWipe}
-                  />
-                )
-              ) : (
-                (qso?.deleted || qso?._willBeDeleted) ? (
-                  <IconButton
-                    icon={'undo'}
-                    size={styles.oneSpace * 4}
-                    iconColor={styles.theme.colors[themeColor]}
-                    onPress={handleUndelete}
-                  />
-                ) : (
-                  <IconButton
-                    icon={'trash-can-outline'}
-                    size={styles.oneSpace * 4}
-                    disabled={false}
-                    iconColor={styles.theme.colors[themeColor]}
-                    onPress={handleDelete}
-                  />
-                )
-              )}
-            </View>
+                  (qso?.deleted || qso?._willBeDeleted) ? (
+                    <IconButton
+                      icon={'undo'}
+                      size={styles.infoPanel.button.size}
+                      iconColor={styles.infoPanel.button.color}
+                      onPress={handleUndelete}
+                    />
+                  ) : (
+                    <IconButton
+                      icon={'trash-can-outline'}
+                      size={styles.infoPanel.button.size}
+                      iconColor={styles.infoPanel.button.color}
+                      disabled={false}
+                      onPress={handleDelete}
+                    />
+                  )
+                )}
+              </View>
 
-          </View>
+            </View>
+          )}
         </View>
-
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: styles.halfSpace }}>
         <MainExchangePanel

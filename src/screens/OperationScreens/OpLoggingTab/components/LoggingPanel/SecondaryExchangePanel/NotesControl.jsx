@@ -5,8 +5,11 @@ import ThemedTextInput from '../../../../../components/ThemedTextInput'
 
 const NotesControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => {
   const ref = useRef()
+
   useEffect(() => {
-    ref?.current?.focus()
+    setTimeout(() => {
+      ref?.current?.focus()
+    }, 0)
   }, [])
 
   return (
@@ -31,6 +34,11 @@ export const notesControl = {
   key: 'notes',
   icon: 'note-outline',
   order: 99,
-  label: ({ qso, operation, settings }) => 'Notes',
-  InputComponent: NotesControlInputs
+  label: ({ qso, operation, settings }) => {
+    const parts = ['Notes']
+    if (qso?.notes) parts.unshift('✓')
+    return parts.join(' ')
+  },
+  InputComponent: NotesControlInputs,
+  optionType: 'optional'
 }

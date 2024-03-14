@@ -59,7 +59,7 @@ const ACTIVITY = {
   }
 }
 
-function ThisActivityOptionalExchangePanel (props) {
+function ThisActivityLoggingControl (props) {
   const { qso, setQSO, styles } = props
 
   const ref = useRef()
@@ -301,10 +301,42 @@ export function ThisActivityOptions (props) {
   )
 }
 
+const HunterLoggingControl = {
+  key: 'pota/hunter',
+  order: 10,
+  icon: ACTIVITY.icon,
+  label: ({ operation, qso }) => {
+    const parts = ['POTA']
+    if (findRef(qso, ACTIVITY.key)) parts.unshift('✓')
+    return parts.join(' ')
+  },
+  InputComponent: ThisActivityLoggingControl,
+  optionType: 'optional'
+}
+
+const ActivatorLoggingControl = {
+  key: 'pota/activator',
+  order: 10,
+  icon: ACTIVITY.icon,
+  label: ({ operation, qso }) => {
+    const parts = ['P2P']
+    if (findRef(qso, ACTIVITY.key)) parts.unshift('✓')
+    return parts.join(' ')
+  },
+  InputComponent: ThisActivityLoggingControl,
+  optionType: 'mandatory'
+}
+
 const ThisActivity = {
   ...ACTIVITY,
   MainExchangePanel: null,
-  OptionalExchangePanel: ThisActivityOptionalExchangePanel,
+  loggingControls: ({ operation, settings }) => {
+    if (findRef(operation, 'potaActivation')) {
+      return [ActivatorLoggingControl]
+    } else {
+      return [HunterLoggingControl]
+    }
+  },
   Options: ThisActivityOptions
 }
 

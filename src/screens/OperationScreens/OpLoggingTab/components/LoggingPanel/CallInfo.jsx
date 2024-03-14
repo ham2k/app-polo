@@ -73,14 +73,20 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     }
   }, [qso])
 
-  const [skipQRZ, setSkipQRZ] = useState(true) // Use `skip` to prevent calling the API on every keystroke
+  const [skipQRZ, setSkipQRZ] = useState(undefined) // Use `skip` to prevent calling the API on every keystroke
   useEffect(() => {
-    setSkipQRZ(true)
+    console.log('skipQRZ?', skipQRZ, guess?.baseCall)
     if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && guess?.baseCall?.length > 2) {
-      const timeout = setTimeout(() => { setSkipQRZ(false) }, 200)
-      return () => clearTimeout(timeout)
+      if (skipQRZ === undefined) {
+        // If we start with a prefilled call, then call QRZ right away
+        setSkipQRZ(false)
+      } else {
+        // Wait a bit before calling QRZ on every keystroke
+        const timeout = setTimeout(() => { setSkipQRZ(false) }, 200)
+        return () => clearTimeout(timeout)
+      }
     }
-  }, [guess?.baseCall, online, settings?.accounts?.qrz])
+  }, [guess?.baseCall, online, settings?.accounts?.qrz, skipQRZ])
 
   const qrzLookup = useLookupCallQuery({ call: guess?.baseCall }, { skip: skipQRZ })
   const qrz = useMemo(() => qrzLookup.currentData || {}, [qrzLookup.currentData])
