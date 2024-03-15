@@ -286,7 +286,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   }, [qso, setQSO, pausedTime, dispatch, operation?.uuid])
 
   const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
-    // Ensure the focused component has a change to update values
+    // Ensure the focused component has a chance to update values
     //   NOTE: This is a hack that can break on newer versions of React Native
     const component = focusedRef?.current?._internalFiberInstanceHandleDEV
     component?.memoizedProps?.onBlur()
