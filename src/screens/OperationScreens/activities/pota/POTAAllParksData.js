@@ -1,13 +1,13 @@
-import { fmtDateNice } from '../tools/timeFormats'
-import { registerDataFile } from '../store/dataFiles'
+import { fmtDateNice } from '../../../../tools/timeFormats'
+import { registerDataFile } from '../../../../store/dataFiles'
 
 import RNFetchBlob from 'react-native-blob-util'
 
-import packageJson from '../../package.json'
+import packageJson from '../../../../../package.json'
 
 export const POTAAllParks = { byReference: {}, prefixByDXCCCode: {} }
 
-export function preparePOTAAllParksData () {
+export function registerPOTAAllParksData () {
   registerDataFile({
     key: 'pota-all-parks',
     name: 'POTA - All Parks',
