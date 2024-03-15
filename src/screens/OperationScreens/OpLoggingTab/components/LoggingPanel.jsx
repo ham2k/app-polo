@@ -133,7 +133,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       control = undefined
     }
     mainFieldRef.current.focus()
-    setTimeout(() => reallySetCurrentSecondaryControl(control), 10)
+    setTimeout(() => reallySetCurrentSecondaryControl(control), 0)
   }, [currentSecondaryControl, reallySetCurrentSecondaryControl])
 
   const [pausedTime, setPausedTime] = useState()

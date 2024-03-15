@@ -40,5 +40,6 @@ export const notesControl = {
     return parts.join(' ')
   },
   InputComponent: NotesControlInputs,
+  inputWidthMultiplier: 20,
   optionType: 'optional'
 }

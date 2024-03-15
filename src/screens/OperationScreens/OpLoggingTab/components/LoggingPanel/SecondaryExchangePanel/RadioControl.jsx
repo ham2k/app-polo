@@ -95,5 +95,6 @@ export const radioControl = {
     return parts.join(' • ')
   },
   InputComponent: RadioControlInputs,
+  inputWidthMultiplier: 43,
   optionType: 'mandatory'
 }
