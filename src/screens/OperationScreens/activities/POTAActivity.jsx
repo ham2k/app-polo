@@ -60,7 +60,7 @@ const ACTIVITY = {
 }
 
 function ThisActivityLoggingControl (props) {
-  const { qso, setQSO, styles } = props
+  const { qso, setQSO, style, styles } = props
 
   const ref = useRef()
   useEffect(() => {
@@ -96,7 +96,7 @@ function ThisActivityLoggingControl (props) {
     <POTAInput
       {...props}
       innerRef={ref}
-      style={{ minWidth: 16 * styles.oneSpace }}
+      style={[style, { minWidth: 16 * styles.oneSpace }]}
       value={localValue}
       label="Their POTA"
       defaultPrefix={defaultPrefix}
@@ -250,7 +250,7 @@ export function ThisActivityOptions (props) {
       else if (nearbyParks.length === 0) setParksmessage('No parks nearby')
       else setParksmessage('')
     }
-  }, [search, ourInfo, nearbyParks])
+  }, [search, ourInfo, nearbyParks, location])
 
   const handleAddReference = useCallback((ref) => {
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, ACTIVITY.activationType, [...refs.filter(r => r.ref !== ref), { type: ACTIVITY.activationType, ref }]) }))
