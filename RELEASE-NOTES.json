@@ -2,7 +2,8 @@
   "0.5.1": {
     "changes": [
       "Sort POTA results by rough proximity to current location",
-      "Refactored Secondary Fields (notes, p2p, etc) panel"
+      "Refactored Secondary Fields (notes, p2p, etc) panel",
+      "Summits On The Air (SOTA) support"
     ]
   },
   "0.5.0": {
@@ -16,7 +17,7 @@
   "0.4.13": {
     "changes": [
       "Corrected QSO counts to account for deleted QSOs",
-      "Fixed problems with entering bands and frequencies"
+      "Fixed problems with enterinsg bands and frequencies"
     ]
   },
   "0.4.12": {
