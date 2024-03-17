@@ -37,7 +37,7 @@ export function usePrepareThemes () {
       ['primary', 'secondary', 'tertiary'].forEach((color) => {
         // loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(0.95).desaturate(0.7).hex()
         loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(1.3).desaturate(0.3).hex()
-        loadedColors[`${color}Lighter`] = Color(loadedColors[color]).lighten(1.2).desaturate(0.3).hex()
+        loadedColors[`${color}Lighter`] = Color(loadedColors[color]).lighten(1.5).desaturate(0.3).hex()
         loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).darken(0.05).desaturate(0.3).hex()
       })
       loadedColors.onBackgroundLight = Color(loadedColors.onBackground).lighten(3).hex()
