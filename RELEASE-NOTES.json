@@ -3,6 +3,7 @@
     "changes": [
       "Sort POTA results by rough proximity to current location",
       "Refactored Secondary Fields (notes, p2p, etc) panel",
+      "Ensure filenames are valid (contributed by M1SDH)",
       "Summits On The Air (SOTA) support",
       "Better Startup experience"
     ]
