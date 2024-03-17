@@ -1,4 +1,8 @@
 {
+  "0.5.3": {
+    "changes": [
+    ]
+  },
   "0.5.2": {
     "changes": [
       "Make secondary controls appear above, instead of below the selector chips",
