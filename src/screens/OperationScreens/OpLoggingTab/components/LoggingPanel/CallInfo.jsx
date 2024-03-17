@@ -13,7 +13,7 @@ import { filterRefs, hasRef } from '../../../../../tools/refTools'
 import { findQSOHistory } from '../../../../../store/qsos/actions/findQSOHistory'
 import { fmtDateZulu, fmtISODate } from '../../../../../tools/timeFormats'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
-import { selectRuntimeOnline } from '../../../../../store/system'
+import { selectRuntimeOnline } from '../../../../../store/runtime'
 import { selectSettings } from '../../../../../store/settings'
 
 import { CallInfoDialog } from './CallInfoDialog'
@@ -75,7 +75,6 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
 
   const [skipQRZ, setSkipQRZ] = useState(undefined) // Use `skip` to prevent calling the API on every keystroke
   useEffect(() => {
-    console.log('skipQRZ?', skipQRZ, guess?.baseCall)
     if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && guess?.baseCall?.length > 2) {
       if (skipQRZ === undefined) {
         // If we start with a prefilled call, then call QRZ right away

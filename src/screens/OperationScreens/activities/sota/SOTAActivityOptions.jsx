@@ -20,7 +20,7 @@ export function SOTAActivityOptions (props) {
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const operationRef = useMemo(() => findRef(operation, INFO.activationType), [operation]) ?? ''
-  console.log('operationRef', operationRef)
+
   const title = useMemo(() => {
     if (!operationRef?.ref) return 'No summit selected for activation'
     else return 'Activating summit:'
@@ -34,11 +34,10 @@ export function SOTAActivityOptions (props) {
   const [location, setLocation] = useState()
   useEffect(() => {
     Geolocation.getCurrentPosition(info => {
-      console.log('geo', info)
       const { latitude, longitude } = info.coords
       setLocation({ lat: latitude, lon: longitude })
     }, error => {
-      console.log('Geolocation error', error)
+      console.error('Geolocation error', error)
       setLocation(undefined)
     })
   }, [])
@@ -104,9 +103,6 @@ export function SOTAActivityOptions (props) {
   }, [search, ourInfo, nearbyResults, location])
 
   const handleAddReference = useCallback((newRef) => {
-    console.log('add ref', newRef)
-    console.log('  refs', operation.refs)
-    console.log('  new', replaceRef(operation?.refs, INFO.activationType, { type: INFO.activationType, ref: newRef }))
     dispatch(setOperationData({
       uuid: operation.uuid,
       refs: replaceRef(operation?.refs, INFO.activationType, { type: INFO.activationType, ref: newRef })

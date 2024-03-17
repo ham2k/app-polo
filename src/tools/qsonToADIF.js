@@ -1,10 +1,12 @@
 import packageJson from '../../package.json'
+import { filterRefs, findRef } from './refTools'
 import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
 export function qsonToADIF ({ operation, qsos }) {
-  const potaActivationRef = (operation?.refs || []).filter(ref => ref?.type === 'potaActivation')[0]
+  const potaActivationRef = findRef(operation, 'potaActivation')
+  const sotaActivationRef = findRef(operation, 'sotaActivation')
 
-  const common = { potaActivation: potaActivationRef?.ref, grid: operation.grid }
+  const common = { potaActivation: potaActivationRef?.ref, sotaActivation: sotaActivationRef?.ref, grid: operation.grid }
 
   let str = ''
 
@@ -26,8 +28,11 @@ export function qsonToADIF ({ operation, qsos }) {
 // When a QSO has multiple POTA refs we need to generate multiple ADIF QSOs,
 // one for each reference, and fudge the time by one second for each one
 function oneQSOtoADIFWithPOTAMultiples (qso, operation, common) {
-  const potaRefs = (qso?.refs || []).filter(ref => ref?.type === 'pota')
+  const potaRefs = filterRefs(qso, 'pota')
+  const sotaRef = findRef(qso, 'sota')
   let str = ''
+
+  if (sotaRef) common = { ...common, sota: sotaRef.ref }
 
   if (potaRefs.length === 0) {
     str += oneQSOtoADIF(qso, operation, common)
@@ -53,18 +58,28 @@ function oneQSOtoADIF (qso, operation, common, timeOfffset = 0) {
   str += adifField('OPERATOR', qso.our.call)
   str += adifField('NOTES', qso.notes)
   if (qso.grid) str += adifField('GRIDSQUARE', qso.grid)
-  else if (common.grid) str += adifField('MY_GRIDSQUARE', common.grid)
+  else if (common?.grid) str += adifField('MY_GRIDSQUARE', common.grid)
 
   if (qso.their?.arrlSection) str += adifField('ARRL_SECT', qso.their.arrlSection)
 
-  if (common.potaActivation) {
+  if (common?.potaActivation) {
     str += adifField('MY_SIG', 'POTA')
     str += adifField('MY_SIG_INFO', common.potaActivation)
+    str += adifField('MY_POTA_REF', common.potaActivation)
   }
 
-  if (common.pota) {
+  if (common?.pota) {
     str += adifField('SIG', 'POTA')
     str += adifField('SIG_INFO', common.pota)
+    str += adifField('POTA_REF', common.pota)
+  }
+
+  if (common?.sotaActivation) {
+    str += adifField('MY_SOTA_REF', common.sotaActivation)
+  }
+
+  if (common?.sota) {
+    str += adifField('SOTA_REF', common.sota)
   }
 
   str += '<EOR>\n'

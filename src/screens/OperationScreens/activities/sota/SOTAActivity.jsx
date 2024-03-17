@@ -72,7 +72,6 @@ const SOTAActivity = {
   },
 
   suggestOperationTitle: (ref) => {
-    console.log('suggest sota', ref)
     if (ref.type === INFO.activationType && ref.ref) {
       return { at: ref.ref, subtitle: ref.name }
     } else {
