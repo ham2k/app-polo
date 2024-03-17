@@ -60,7 +60,7 @@ export function SOTAActivityOptions (props) {
     if (search?.length > 2) {
       const ucSearch = search.toUpperCase()
       let newResults = SOTAData.activeReferences.filter(reference => {
-        return (reference.ref?.includes(ucSearch) || (reference.uc ?? reference.name).includes(ucSearch))
+        return (reference.ref?.includes(ucSearch) || (reference.uc ?? reference.name ?? '').includes(ucSearch))
       })
 
       if (location?.lat && location?.lon) {

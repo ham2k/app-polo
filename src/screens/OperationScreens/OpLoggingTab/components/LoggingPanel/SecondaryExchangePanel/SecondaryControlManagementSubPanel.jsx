@@ -126,10 +126,6 @@ export const SecondaryControlManagementSubPanel = ({
           </View>
         </View>
       </View>
-      <View style={[styles.secondaryControls.controlContainer, { flexDirection: 'column' }]}>
-        <Text style={styles.secondaryControls.controlText}>Add or remove additional controls.</Text>
-        <Text style={styles.secondaryControls.controlText}>Some of them are required and cannot be removed.</Text>
-      </View>
     </>
   )
 }
