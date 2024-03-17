@@ -6,9 +6,7 @@ import { Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SplashScreen from 'react-native-splash-screen'
 
-import { loadAllDataFiles } from '../../store/dataFiles/actions/dataFileFS'
-import { setupOnlineStatusMonitoring } from '../../store/runtime/actions/onlineStatus'
-import { addRuntimeMessage, resetRuntimeMessages, selectRuntimeMessages } from '../../store/runtime'
+import { selectRuntimeMessages } from '../../store/runtime'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Ham2kMarkdown } from '../components/Ham2kMarkdown'
 import { startupSequence } from '../../store/runtime/actions/startupSequence'
@@ -52,14 +50,14 @@ export default function StartScreen ({ setAppState }) {
         ...dropShadow,
         fontSize: 30,
         fontWeight: 400,
-        color: '#F0F0F0',
+        color: '#FFF',
         textAlign: 'center'
       },
       polo: {
         ...dropShadow,
         fontSize: 40,
         fontWeight: 'bold',
-        color: '#D0D0D0',
+        color: '#FFF',
         textAlign: 'center'
       },
       message: {
