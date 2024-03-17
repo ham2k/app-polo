@@ -20,13 +20,13 @@ export const startupSequence = (onReady) => (dispatch) => {
     dispatch(addRuntimeMessage(`**Version ${packageJson.version}**`))
 
     const steps = [
-      async () => new Promise(resolve => setTimeout(() => { resolve() }, 500)),
+      // async () => new Promise(resolve => setTimeout(() => { resolve() }, 500)),
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
       async () => await dispatch(setupOnlineStatusMonitoring()),
       async () => await dispatch(loadAllDataFiles()),
       async () => await dispatch(getOperations()),
-      async () => await dispatch(addRuntimeMessage('QRV!')),
-      async () => new Promise(resolve => setTimeout(() => { onReady && onReady(); resolve() }, 500))
+      // async () => await dispatch(addRuntimeMessage('QRV!')),
+      async () => new Promise(resolve => setTimeout(() => { onReady && onReady(); resolve() }, 10))
     ]
 
     for (const step of steps) {
