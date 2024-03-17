@@ -1,4 +1,9 @@
 {
+  "0.5.2": {
+    "changes": [
+
+    ]
+  },
   "0.5.1": {
     "changes": [
       "Sort POTA results by rough proximity to current location",
