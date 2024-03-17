@@ -1,6 +1,7 @@
 import RNFetchBlob from 'react-native-blob-util'
 import { getDataFileDefinition, getDataFileDefinitions } from '../dataFilesRegistry'
 import { actions, selectDataFileInfo } from '../dataFilesSlice'
+import { addRuntimeMessage } from '../../runtime'
 
 export const fetchDataFile = (key) => async (dispatch) => {
   const definition = getDataFileDefinition(key)
@@ -43,8 +44,10 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
   const exists = await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
   if (!exists || force) {
     console.info(`Data for ${definition.key} not found, fetching a fresh version`)
+    dispatch(addRuntimeMessage(`Downloading ${definition.name}`))
     dispatch(fetchDataFile(key))
   } else {
+    dispatch(addRuntimeMessage(`Loading ${definition.name}`))
     await dispatch(readDataFile(key))
     const date = selectDataFileInfo(getState(), key)?.date
 
@@ -55,10 +58,9 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
   }
 }
 
-export const loadAllDataFiles = () => (dispatch, getState) => {
+export const loadAllDataFiles = () => async (dispatch, getState) => {
   const definitions = getDataFileDefinitions()
-
-  definitions.forEach((definition) => {
-    dispatch(loadDataFile(definition.key))
-  })
+  for (const definition of definitions) {
+    await dispatch(loadDataFile(definition.key))
+  }
 }

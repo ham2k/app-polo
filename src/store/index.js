@@ -5,6 +5,7 @@ import createMigrate from 'redux-persist/es/createMigrate'
 
 import { migrations, LATEST_VERSION } from './migrations'
 import systemReducer from './system'
+import runtimeReducer from './runtime'
 import settingsReducer from './settings'
 import operationsReducer from './operations'
 import qsosReducer from './qsos'
@@ -23,6 +24,7 @@ setAutoFreeze(false)
 const rootReducer = combineReducers({
   settings: settingsReducer,
   system: systemReducer,
+  runtime: runtimeReducer,
   operations: operationsReducer,
   qsos: qsosReducer,
   time: timeReducer,

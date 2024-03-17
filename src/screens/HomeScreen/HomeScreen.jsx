@@ -10,8 +10,6 @@ import ScreenContainer from '../components/ScreenContainer'
 import { addNewOperation, getOperations, selectOperationsList } from '../../store/operations'
 import OperationItem from './components/OperationItem'
 import { selectSettings } from '../../store/settings'
-import { loadAllDataFiles } from '../../store/dataFiles/actions/dataFileFS'
-import { setupOnlineStatusMonitoring } from '../../store/system'
 
 export default function HomeScreen ({ navigation }) {
   const styles = useThemedStyles()
@@ -33,16 +31,6 @@ export default function HomeScreen ({ navigation }) {
 
   useEffect(() => {
     dispatch(getOperations())
-  }, [dispatch])
-
-  useEffect(() => {
-    setTimeout(() => {
-      dispatch(loadAllDataFiles())
-    }, 100)
-  }, [dispatch])
-
-  useEffect(() => {
-    dispatch(setupOnlineStatusMonitoring())
   }, [dispatch])
 
   const handleNewOperation = useCallback(async () => {

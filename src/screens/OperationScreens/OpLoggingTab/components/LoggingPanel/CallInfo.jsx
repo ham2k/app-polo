@@ -13,7 +13,7 @@ import { filterRefs, hasRef } from '../../../../../tools/refTools'
 import { findQSOHistory } from '../../../../../store/qsos/actions/findQSOHistory'
 import { fmtDateZulu, fmtISODate } from '../../../../../tools/timeFormats'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
-import { selectSystemOnline } from '../../../../../store/system'
+import { selectRuntimeOnline } from '../../../../../store/system'
 import { selectSettings } from '../../../../../store/settings'
 
 import { CallInfoDialog } from './CallInfoDialog'
@@ -50,7 +50,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     }
   })
 
-  const online = useSelector(selectSystemOnline)
+  const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
 
   const isPotaOp = useMemo(() => {
