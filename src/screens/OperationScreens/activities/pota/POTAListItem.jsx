@@ -6,14 +6,12 @@ import { View } from 'react-native'
 
 import { INFO } from './POTAInfo'
 
-export function POTAListItem ({ activityRef, refData, allRefs, style, styles, onPress, onAddReference, onRemoveReference }) {
-  const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef, online: true })
+export function POTAListItem ({ activityRef, refData, allRefs, style, styles, onPress, onAddReference, onRemoveReference, online }) {
+  const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef, online })
 
   const description = useMemo(() => {
     let desc
-    if (pota?.isLoading) {
-      desc = '...'
-    } else if (pota?.error) {
+    if (online && pota?.error) {
       desc = pota.error
     } else if (!pota?.data?.name && !refData?.name) {
       desc = 'Park Not Found'
@@ -25,7 +23,7 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, on
       ].filter(x => x).join(' • ')
     }
     return desc
-  }, [pota, refData])
+  }, [pota, refData, online])
 
   const isInRefs = useMemo(() => {
     return allRefs.find(ref => ref.ref === activityRef)
