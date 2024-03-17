@@ -16,10 +16,14 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
   }, [visible])
 
   useEffect(() => {
-    setValue(settings?.operatorCall || '')
+    if (settings?.operatorCall === 'N0CALL') {
+      setValue('')
+    } else {
+      setValue(settings?.operatorCall || '')
+    }
   }, [settings])
 
-  const onChange = useCallback((text) => {
+  const onChangeText = useCallback((text) => {
     setValue(text)
   }, [setValue])
 
@@ -45,10 +49,10 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
             <Text variant="bodyMedium">Please enter the operator's callsign:</Text>
             <CallsignInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
-              value={value}
+              value={value ?? ''}
               label="Operator's Callsign"
               placeholder="N0CALL"
-              onChangeText={onChange}
+              onChangeText={onChangeText}
             />
           </Dialog.Content>
           <Dialog.Actions>
