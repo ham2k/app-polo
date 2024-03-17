@@ -19,7 +19,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
       <ThemedDropDown
         label="Band"
         themeColor={themeColor}
-        value={qso._isNew ? (qso.band ?? operation.band ?? '') : (qso.band ?? '') }
+        value={qso?._isNew ? (qso.band ?? operation.band ?? '') : (qso.band ?? '') }
         onChange={handleFieldChange}
         disabled={disabled}
         fieldId={'band'}
