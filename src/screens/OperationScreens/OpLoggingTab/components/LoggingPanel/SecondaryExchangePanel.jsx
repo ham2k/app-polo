@@ -1,87 +1,53 @@
 import React, { useMemo } from 'react'
-import { ScrollView, View } from 'react-native'
 
 import activities from '../../../activities'
-import LoggerChip from '../../../components/LoggerChip'
-import { stringOrFunction } from '../../../../../tools/stringOrFunction'
 import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
-import { generateActivityControl } from './SecondaryExchangePanel/ActivityControl'
+import { SecondaryControlManagementSubPanel } from './SecondaryExchangePanel/SecondaryControlManagementSubPanel'
+import { SecondaryControlSelectionsubPanel } from './SecondaryExchangePanel/SecondaryControlSelectionSubPanel'
 
-const CONTROLS = {
-  time: timeControl,
-  radio: radioControl,
-  notes: notesControl
-}
-activities.forEach(activity => {
-  CONTROLS[activity.key] = generateActivityControl(activity)
-})
+export const SecondaryExchangePanel = (params) => {
+  const { currentSecondaryControl, operation, settings } = params
 
-export const SecondaryExchangePanel = ({ qso, operation, settings, setQSO, handleFieldChange, handleSubmit, focusedRef, styles, themeColor, visibleFields, setVisibleFields }) => {
-  const elements = useMemo(() => {
-    const keys = ['time', 'radio', 'notes']
+  const secondaryControlSettings = useMemo(() => (
+    operation?.secondaryControls ?? settings?.secondaryControls ?? {}
+  ), [operation?.secondaryControls, settings?.secondaryControls])
+
+  const allControls = useMemo(() => {
+    const newControls = {
+      time: timeControl,
+      radio: radioControl,
+      notes: notesControl
+    }
     activities.forEach(activity => {
-      if (activity.includeControlForQSO && activity.includeControlForQSO({ qso, operation, settings })) {
-        keys.push(activity.key)
+      const activityControls = activity.loggingControls ? activity.loggingControls({ operation, settings }) : []
+      for (const control of activityControls) {
+        newControls[control.key] = control
       }
     })
+    return newControls
+  }, [operation, settings])
 
-    return keys.map(key => CONTROLS[key]).sort((a, b) => a.order - b.order)
-  }, [qso, operation, settings])
+  const enabledControls = useMemo(() => {
+    let keys = Object.keys(allControls)
 
-  return (
-    <ScrollView keyboardShouldPersistTaps={'handled'} horizontal={true} style={{ width: '100%' }}>
-      <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.oneSpace, gap: styles.halfSpace }}>
+    keys = keys.filter(key => allControls[key].optionType === 'mandatory' || secondaryControlSettings[key])
 
-        {elements.map(control => (
-          <View key={control.key} style={{ flex: 0, flexDirection: 'column' }}>
-            {control.LabelComponent ? (
-              <control.LabelComponent
-                qso={qso} operation={operation} settings={settings}
-                icon={control.icon}
-                style={{ flex: 0 }} styles={styles} themeColor={themeColor}
-                selected={visibleFields[control.key]} onChange={(value) => setVisibleFields({ ...visibleFields, [control.key]: value })}
-              />
-            ) : (
-              <LoggerChip
-                icon={control.icon}
-                style={{ flex: 0 }} styles={styles} themeColor={themeColor}
-                selected={visibleFields[control.key]} onChange={(value) => setVisibleFields({ ...visibleFields, [control.key]: value })}
-              >
-                {control.label ? stringOrFunction(control.label, { operation, qso, settings }) : control.key}
-              </LoggerChip>
-            )}
-            {visibleFields[control.key] && (
-              <>
-                <View style={{ flex: 0, height: 3, marginTop: styles.halfSpace, marginBottom: styles.oneSpace, backgroundColor: styles.theme.colors[themeColor] } } />
-                <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
-                  {control.InputComponent && (
-                    <control.InputComponent
-                      qso={qso} operation={operation} settings={settings}
-                      icon={control.icon}
-                      style={{ flex: 0 }} styles={styles} themeColor={themeColor}
-                      handleFieldChange={handleFieldChange}
-                      setQSO={setQSO}
-                      handleSubmit={handleSubmit}
-                      focusedRef={focusedRef}
-                    />
-                  )}
-                </View>
-              </>
-            )}
-          </View>
-        ))}
+    return keys.map(key => allControls[key]).sort((a, b) => a.order - b.order)
+  }, [allControls, secondaryControlSettings])
 
-        {/* <View style={{ flex: 0, flexDirection: 'column' }}>
-          <View style={{ flex: 0, flexDirection: 'row' }}>
-            <LoggerChip icon="dots-vertical" styles={styles} style={{ flex: 0 }} themeColor={themeColor}
-              selected={visibleFields.more}
-              onChange={(value) => setVisibleFields({ ...visibleFields, more: value })}
-            >More</LoggerChip>
-          </View>
-        </View> */}
-      </View>
-    </ScrollView>
-  )
+  const moreControls = useMemo(() => {
+    let keys = Object.keys(allControls)
+
+    keys = keys.filter(key => !(allControls[key].optionType === 'mandatory' || secondaryControlSettings[key]))
+
+    return keys.map(key => allControls[key]).sort((a, b) => a.order - b.order)
+  }, [allControls, secondaryControlSettings])
+
+  if (currentSecondaryControl === 'manage-controls') {
+    return <SecondaryControlManagementSubPanel {...params} secondaryControlSettings={secondaryControlSettings} allControls={allControls} enabledControls={enabledControls} moreControls={moreControls} />
+  } else {
+    return <SecondaryControlSelectionsubPanel {...params} secondaryControlSettings={secondaryControlSettings} allControls={allControls} enabledControls={enabledControls} moreControls={moreControls} />
+  }
 }

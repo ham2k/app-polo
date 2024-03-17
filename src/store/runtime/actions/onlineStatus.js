@@ -1,5 +1,5 @@
 import { addEventListener } from '@react-native-community/netinfo'
-import { actions } from '../systemSlice'
+import { actions } from '../runtimeSlice'
 
 let unsubscribe
 

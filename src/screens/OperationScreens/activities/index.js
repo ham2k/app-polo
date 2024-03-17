@@ -1,5 +1,5 @@
-import POTAActivity from './POTAActivity'
-import SOTAActivity from './SOTAActivity'
+import POTAActivity from './pota/POTAActivity'
+import SOTAActivity from './sota/SOTAActivity'
 import WWFFActivity from './WWFFActivity'
 import BOTAActivity from './BOTAActivity'
 import FDActivity from './FDActivity'

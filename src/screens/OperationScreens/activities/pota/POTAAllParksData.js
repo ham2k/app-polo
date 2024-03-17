@@ -1,13 +1,13 @@
-import { fmtDateNice } from '../tools/timeFormats'
-import { registerDataFile } from '../store/dataFiles'
+import { fmtDateNice } from '../../../../tools/timeFormats'
+import { registerDataFile } from '../../../../store/dataFiles'
 
 import RNFetchBlob from 'react-native-blob-util'
 
-import packageJson from '../../package.json'
+import packageJson from '../../../../../package.json'
 
 export const POTAAllParks = { byReference: {}, prefixByDXCCCode: {} }
 
-export function preparePOTAAllParksData () {
+export function registerPOTAAllParksData () {
   registerDataFile({
     key: 'pota-all-parks',
     name: 'POTA - All Parks',
@@ -44,7 +44,6 @@ export function preparePOTAAllParksData () {
       const activeParks = parks.filter(park => park.active)
 
       const data = {
-        byReference: activeParks.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {}),
         activeParks,
         prefixByDXCCCode: parks.reduce((obj, item) => {
           if (!obj[item.dxccCode]) obj[item.dxccCode] = item.ref && item.ref.split('-')[0]
@@ -58,7 +57,9 @@ export function preparePOTAAllParksData () {
       return data
     },
     onLoad: (data) => {
-      Object.assign(POTAAllParks, data)
+      POTAAllParks.activeParks = data.activeParks
+      POTAAllParks.byReference = data.activeParks.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
+      POTAAllParks.version = data.version
 
       // TODO: Remove this line after April 2024
       if (!POTAAllParks.activeParks) POTAAllParks.activeParks = Object.values(POTAAllParks.byReference)

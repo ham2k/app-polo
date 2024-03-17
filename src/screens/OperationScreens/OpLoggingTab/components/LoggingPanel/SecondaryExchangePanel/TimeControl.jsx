@@ -8,7 +8,9 @@ import { DateInput } from '../../../../../components/DateInput'
 const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => {
   const ref = useRef()
   useEffect(() => {
-    ref?.current?.focus()
+    setTimeout(() => {
+      ref?.current?.focus()
+    }, 0)
   }, [])
 
   return (
@@ -44,10 +46,9 @@ export const timeControl = {
   key: 'time',
   icon: 'clock-outline',
   order: 0,
-  LabelComponent: ({ qso, operation, settings, icon, style, styles, themeColor, selected, onChange }) => (
-    <TimeChip time={qso?.startOnMillis} icon={icon} style={style} styles={styles} themeColor={themeColor}
-      selected={selected} onChange={onChange}
-    />
+  LabelComponent: (props) => (
+    <TimeChip {...props} time={props?.qso?.startOnMillis} />
   ),
-  InputComponent: TimeControlInputs
+  InputComponent: TimeControlInputs,
+  optionType: 'mandatory'
 }

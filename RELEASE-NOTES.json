@@ -1,4 +1,14 @@
 {
+  "0.5.1": {
+    "changes": [
+      "Sort POTA results by rough proximity to current location",
+      "Refactored Secondary Fields (notes, p2p, etc) panel",
+      "Ensure filenames are valid (contributed by M1SDH)",
+      "Summits On The Air (SOTA) support",
+      "Better Startup experience",
+      "Potentially fix crash when searching POTA references while offline"
+    ]
+  },
   "0.5.0": {
     "changes": [
       "GPS Location!",

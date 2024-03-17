@@ -1,32 +1,19 @@
 import RNFetchBlob from 'react-native-blob-util'
 import { getDataFileDefinition, getDataFileDefinitions } from '../dataFilesRegistry'
 import { actions, selectDataFileInfo } from '../dataFilesSlice'
+import { addRuntimeMessage } from '../../runtime'
 
 export const fetchDataFile = (key) => async (dispatch) => {
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
   dispatch(actions.setDataFileInfo({ key, status: 'fetching' }))
-  const { fetch } = definition
-  const data = await fetch()
+  const data = await definition.fetch()
 
   if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data`)) await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/data/`)
-
-  await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.new.json`, JSON.stringify(data))
-
-  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.old.json`)) {
-    await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.old.json`)
-  }
-  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)) {
-    await RNFetchBlob.fs.mv(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`, `${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.old.json`)
-  }
-  await RNFetchBlob.fs.mv(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.new.json`, `${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
-  if (await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.old.json`)) {
-    await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.old.json`)
-  }
+  await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`, JSON.stringify(data))
 
   if (definition.onLoad) definition.onLoad(data)
-
   dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', version: data.version, date: data.date ?? new Date() }))
 }
 
@@ -47,7 +34,6 @@ export const readDataFile = (key) => async (dispatch) => {
 
 export const loadDataFile = (key, force) => async (dispatch, getState) => {
   if (selectDataFileInfo(getState(), key)?.data) {
-    console.log('loadDataFile', key, 'already loaded')
     return // Already loaded, do nothing
   }
 
@@ -58,8 +44,10 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
   const exists = await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
   if (!exists || force) {
     console.info(`Data for ${definition.key} not found, fetching a fresh version`)
+    dispatch(addRuntimeMessage(`Downloading ${definition.name}`))
     dispatch(fetchDataFile(key))
   } else {
+    dispatch(addRuntimeMessage(`Loading ${definition.name}`))
     await dispatch(readDataFile(key))
     const date = selectDataFileInfo(getState(), key)?.date
 
@@ -70,10 +58,9 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
   }
 }
 
-export const loadAllDataFiles = () => (dispatch, getState) => {
+export const loadAllDataFiles = () => async (dispatch, getState) => {
   const definitions = getDataFileDefinitions()
-
-  definitions.forEach((definition) => {
-    dispatch(loadDataFile(definition.key))
-  })
+  for (const definition of definitions) {
+    await dispatch(loadDataFile(definition.key))
+  }
 }

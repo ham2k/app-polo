@@ -3,7 +3,7 @@ import { actions, selectOperation } from '../operationsSlice'
 import { refHandlers } from '../../../screens/OperationScreens/activities'
 import debounce from 'debounce'
 import { saveOperation } from './operationsDB'
-import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
+import { findRef } from '../../../tools/refTools'
 
 function debounceableDispatch (dispatch, action) {
   return dispatch(action())
@@ -34,16 +34,14 @@ export const setOperationData = (data) => async (dispatch, getState) => {
   if (data.refs) {
     const newRefs = []
     for (const ref of data.refs) {
-    // await Promise.all(
-    //   data.refs.map(async (ref) => {
-      if (refHandlers[ref.type] && refHandlers[ref.type].decorateRef) {
-        newRefs.push(await dispatch(refHandlers[ref.type].decorateRef(ref)))
+      if (refHandlers[ref.type]?.decorateRefWithDispatch) {
+        newRefs.push(await dispatch(refHandlers[ref.type].decorateRefWithDispatch(ref)))
+      } else if (refHandlers[ref.type]?.decorateRef) {
+        newRefs.push(dispatch(refHandlers[ref.type].decorateRef(ref)))
       } else {
         newRefs.push(ref)
       }
     }
-    // })
-    // )
 
     data.refs = newRefs
   }
@@ -52,24 +50,19 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     data.title = data.description
     data.subtitle = ''
   } else if (data.refs && !operation.description) {
+    const referenceTitles = data.refs.map(ref => refHandlers[ref.type]?.suggestOperationTitle && refHandlers[ref.type]?.suggestOperationTitle(ref)).filter(x => x)
+
     const titleParts = []
-    const subtitleParts = []
+    console.log('setOperationData', data.refs)
+    console.log('  ', referenceTitles)
+    const plainTitles = referenceTitles.map(ref => ref.title).filter(x => x).join(', ')
+    const forTitles = referenceTitles.map(ref => ref.for).filter(x => x).join(', ')
+    const atTitles = referenceTitles.map(ref => ref.at).filter(x => x).join(', ')
+    if (plainTitles) titleParts.push(plainTitles)
+    if (forTitles) titleParts.push('for ' + forTitles)
+    if (atTitles) titleParts.push('at ' + atTitles)
 
-    const wfd = findRef(data, 'wfd')
-    if (wfd) {
-      titleParts.push('for WFD')
-      subtitleParts.push([wfd.class, wfd.location].join(' '))
-    }
-
-    const pota = findRef(data, 'potaActivation')
-    if (pota) {
-      if (pota.ref) {
-        titleParts.push(`at ${refsToString(data.refs, 'potaActivation', { limit: 2 })}`)
-        subtitleParts.push(filterRefs(data, 'potaActivation').map(ref => ref.name ?? 'Park Not Found').filter(x => x).join(', '))
-      } else {
-        titleParts.push('at New POTA')
-      }
-    }
+    const subtitleParts = referenceTitles.map(ref => ref.subtitle).filter(x => x)
 
     if (titleParts.length) {
       data.title = titleParts.join(' ')

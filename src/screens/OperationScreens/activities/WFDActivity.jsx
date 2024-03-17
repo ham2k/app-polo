@@ -36,6 +36,10 @@ const ACTIVITY = {
     const ref = findRef(operation, KEY)
     return [`WFD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')
   },
+  suggestOperationTitle: (ref) => {
+    return { for: 'WFD', subtitle: [ref?.class, ref?.location].filter(x => x).join(' ') }
+  },
+
   descriptionPlaceholder: '',
   defaultValue: { class: '', location: '' },
   cabrilloHeaders: ({ operation, settings, headers }) => {

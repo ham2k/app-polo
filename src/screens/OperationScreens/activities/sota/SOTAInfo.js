@@ -1,6 +1,3 @@
-import React from 'react'
-import { Text } from 'react-native-paper'
-
 /*
 https://sotawatch.sota.org.uk/en/
 
@@ -29,29 +26,14 @@ With effect from 01-Jan-2004, only one QSO with a given Summit on any one day (d
 
  */
 
-const ACTIVITY = {
+export const INFO = {
   key: 'sota',
-  comingSoon: true,
   icon: 'image-filter-hdr',
   name: 'Summits on the Air',
   shortName: 'SOTA',
   infoURL: 'https://www.sota.org.uk/',
   huntingType: 'sota',
   activationType: 'sotaActivation',
-  description: (operation) => 'COMING SOON!',
-  descriptionPlaceholder: 'Enter SOTA reference'
+  descriptionPlaceholder: 'Enter SOTA reference',
+  referenceRegex: /^[A-Z0-9]{1,3}\/[A-Z]{2}-[0-9]{3,}$/
 }
-
-function ThisActivityOptionalExchangePanel (props) {
-  return (
-    <Text>WIP</Text>
-  )
-}
-
-const ThisActivity = {
-  ...ACTIVITY,
-  MainExchangePanel: null,
-  OptionalExchangePanel: ThisActivityOptionalExchangePanel
-}
-
-export default ThisActivity
