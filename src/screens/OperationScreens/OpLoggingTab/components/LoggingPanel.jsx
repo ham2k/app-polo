@@ -425,72 +425,71 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
             setCurrentSecondaryControl={setCurrentSecondaryControl}
           />
 
-          {!currentSecondaryControl && (
-            <View style={styles.infoPanel.container}>
-              <View style={{ flex: 1, paddingLeft: styles.oneSpace }}>
-                {operationError ? (
-                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-                    <Ham2kMarkdown style={{ color: styles.theme.colors.error }}>
-                      {operationError || 'ERROR'}
-                    </Ham2kMarkdown>
+          <View style={styles.infoPanel.container}>
+            <View style={{ flex: 1, paddingLeft: styles.oneSpace }}>
+              {operationError ? (
+                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+                  <Ham2kMarkdown style={{ color: styles.theme.colors.error }}>
+                    {operationError || 'ERROR'}
+                  </Ham2kMarkdown>
+                </View>
+              ) : (
+                qso?.deleted || qso?._willBeDeleted ? (
+                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
+                      {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
+                    </Text>
                   </View>
                 ) : (
-                  qso?.deleted || qso?._willBeDeleted ? (
-                    <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
-                        {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
-                      </Text>
-                    </View>
+                  qso?.their?.call ? (
+                    <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
                   ) : (
-                    qso?.their?.call ? (
-                      <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
-                    ) : (
-                      <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
-                    )
+                    <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
                   )
+                )
 
-                )}
-              </View>
-              <View style={styles.infoPanel.buttonContainer}>
-                {qso?._isNew ? (
-                  undoInfo ? (
-                    <IconButton
-                      icon={'undo'}
-                      size={styles.infoPanel.button.size}
-                      iconColor={styles.infoPanel.button.color}
-                      onPress={handleUnwipe}
-                    />
-                  ) : (
-                    <IconButton
-                      icon={'backspace-outline'}
-                      size={styles.infoPanel.button.size}
-                      iconColor={styles.infoPanel.button.color}
-                      disabled={!qsoHasChanges}
-                      onPress={handleWipe}
-                    />
-                  )
-                ) : (
-                  (qso?.deleted || qso?._willBeDeleted) ? (
-                    <IconButton
-                      icon={'undo'}
-                      size={styles.infoPanel.button.size}
-                      iconColor={styles.infoPanel.button.color}
-                      onPress={handleUndelete}
-                    />
-                  ) : (
-                    <IconButton
-                      icon={'trash-can-outline'}
-                      size={styles.infoPanel.button.size}
-                      iconColor={styles.infoPanel.button.color}
-                      disabled={false}
-                      onPress={handleDelete}
-                    />
-                  )
-                )}
-              </View>
-
+              )}
             </View>
-          )}
+            <View style={styles.infoPanel.buttonContainer}>
+              {qso?._isNew ? (
+                undoInfo ? (
+                  <IconButton
+                    icon={'undo'}
+                    size={styles.infoPanel.button.size}
+                    iconColor={styles.infoPanel.button.color}
+                    onPress={handleUnwipe}
+                  />
+                ) : (
+                  <IconButton
+                    icon={'backspace-outline'}
+                    size={styles.infoPanel.button.size}
+                    iconColor={styles.infoPanel.button.color}
+                    disabled={!qsoHasChanges}
+                    onPress={handleWipe}
+                  />
+                )
+              ) : (
+                (qso?.deleted || qso?._willBeDeleted || undoInfo) ? (
+                  <IconButton
+                    icon={'undo'}
+                    size={styles.infoPanel.button.size}
+                    iconColor={styles.infoPanel.button.color}
+                    onPress={undoInfo ? handleUnwipe : handleUndelete}
+                  />
+                ) : (
+                  <IconButton
+                    icon={'trash-can-outline'}
+                    size={styles.infoPanel.button.size}
+                    iconColor={styles.infoPanel.button.color}
+                    disabled={false}
+                    onPress={handleDelete}
+                  />
+                )
+              )}
+            </View>
+
+          </View>
+
         </View>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: styles.halfSpace }}>

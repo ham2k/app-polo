@@ -79,6 +79,19 @@ export const SecondaryControlSelectionsubPanel = ({
 
   return (
     <>
+      {SecondaryComponent && (
+        <View style={[styles.secondaryControls.controlContainer, secondaryContainerStyle]}>
+          <SecondaryComponent
+            qso={qso} operation={operation} settings={settings}
+            style={secondaryComponentStyle} styles={styles} themeColor={themeColor}
+            handleFieldChange={handleFieldChange}
+            setQSO={setQSO}
+            handleSubmit={handleSubmit}
+            focusedRef={focusedRef}
+            selected={false}
+          />
+        </View>
+      )}
       <View
         onLayout={(event) => setContainerLayout(event.nativeEvent.layout)}
         style={{
@@ -113,19 +126,6 @@ export const SecondaryControlSelectionsubPanel = ({
           </LoggerChip>
         </View>
       </View>
-      {SecondaryComponent && (
-        <View style={[styles.secondaryControls.controlContainer, secondaryContainerStyle]}>
-          <SecondaryComponent
-            qso={qso} operation={operation} settings={settings}
-            style={secondaryComponentStyle} styles={styles} themeColor={themeColor}
-            handleFieldChange={handleFieldChange}
-            setQSO={setQSO}
-            handleSubmit={handleSubmit}
-            focusedRef={focusedRef}
-            selected={false}
-          />
-        </View>
-      )}
     </>
   )
 }
