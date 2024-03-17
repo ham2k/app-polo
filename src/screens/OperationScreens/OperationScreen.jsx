@@ -12,10 +12,13 @@ import { loadQSOs } from '../../store/qsos'
 import { selectSettings } from '../../store/settings'
 import OpSpotsTab from './OpSpotsTab.jsx/OpSpotsTab'
 import { startTickTock } from '../../store/time'
+import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 const Tab = createMaterialTopTabNavigator()
 
 export default function OperationScreen ({ navigation, route }) {
+  const styles = useThemedStyles()
+
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
@@ -50,7 +53,10 @@ export default function OperationScreen ({ navigation, route }) {
         initialLayout={{ width: dimensions.width, height: dimensions.height }}
         initialRouteName={ settingsOnly ? 'Settings' : 'QSOs'}
         screenOptions={{
-          tabBarItemStyle: { width: dimensions.width / 3 }, // This allows tab titles to be rendered while the screen is transitioning in
+          tabBarItemStyle: [{ width: dimensions.width / 3 }, styles.screenTabBarItem], // This allows tab titles to be rendered while the screen is transitioning in
+          tabBarLabelStyle: styles.screenTabBarLabel,
+          tabBarStyle: styles.screenTabBar,
+          tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryLighter, height: styles.halfSpace * 1.5 },
 
           // See https://github.com/react-navigation/react-navigation/issues/11301
           // on iOS, if the keyboard is open, tabs get stuck when switching

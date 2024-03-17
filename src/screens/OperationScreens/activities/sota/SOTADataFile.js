@@ -23,7 +23,6 @@ export function registerSOTADataFile () {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
       })
       const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
-      console.log('SOTA BODY', body.length)
 
       const references = []
       const regions = {}
@@ -32,7 +31,6 @@ export function registerSOTADataFile () {
       const lines = body.split('\n')
       const versionRow = lines.shift()
       const headers = parseSOTACSVRow(lines.shift()).filter(x => x)
-      console.log('SOTA CSV', headers)
 
       lines.forEach(line => {
         const row = parseSOTACSVRow(line, { headers })
@@ -72,18 +70,15 @@ export function registerSOTADataFile () {
         regions,
         version: versionRow
       }
-      console.log('SOTA Data', data.activeReferences.length)
       RNFetchBlob.fs.unlink(response.data)
 
       return data
     },
     onLoad: (data) => {
-      console.log('assigning')
       SOTAData.activeReferences = data.activeReferences
       SOTAData.regions = data.regions
       SOTAData.byReference = data.activeReferences.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
       SOTAData.version = data.version
-      console.log('assigned')
     }
   })
 }

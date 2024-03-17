@@ -75,6 +75,20 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       color: theme.colors.onPrimary,
       fontWeight: isIOS ? '600' : '800'
     },
+    screenTabBar: {
+      backgroundColor: theme.colors.primary
+    },
+    screenTabBarItem: {
+      color: theme.colors.onPrimary
+    },
+    screenTabBarLabel: {
+      backgroundColor: theme.colors.primary,
+      color: theme.colors.onPrimary
+    },
+    screenTabBarIndicator: {
+      backgroundColor: theme.colors.onPrimary,
+      height: halfSpace
+    },
     title: {
       marginBottom: oneSpace,
       fontSize: largeFontSize,
