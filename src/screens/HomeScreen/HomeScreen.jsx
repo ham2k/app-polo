@@ -7,7 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
-import { addNewOperation, getOperations, selectOperationsList } from '../../store/operations'
+import { addNewOperation, selectOperationsList } from '../../store/operations'
 import OperationItem from './components/OperationItem'
 import { selectSettings } from '../../store/settings'
 
@@ -28,10 +28,6 @@ export default function HomeScreen ({ navigation }) {
   useEffect(() => {
     navigation.setOptions({ rightAction: 'cog', onRightActionPress: () => navigation.navigate('Settings') })
   }, [navigation])
-
-  useEffect(() => {
-    dispatch(getOperations())
-  }, [dispatch])
 
   const handleNewOperation = useCallback(async () => {
     const operation = await dispatch(addNewOperation({ stationCall: settings.operatorCall, title: 'New Operation' }))
