@@ -57,9 +57,10 @@ export function registerPOTAAllParksData () {
       return data
     },
     onLoad: (data) => {
-      POTAAllParks.activeParks = data.activeParks
-      POTAAllParks.byReference = data.activeParks.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
+      POTAAllParks.activeParks = data.activeParks ?? []
       POTAAllParks.version = data.version
+
+      POTAAllParks.byReference = POTAAllParks.activeParks.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
 
       // TODO: Remove this line after April 2024
       if (!POTAAllParks.activeParks) POTAAllParks.activeParks = Object.values(POTAAllParks.byReference)

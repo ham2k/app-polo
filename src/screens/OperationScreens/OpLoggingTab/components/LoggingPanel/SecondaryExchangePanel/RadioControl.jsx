@@ -19,7 +19,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
       <ThemedDropDown
         label="Band"
         themeColor={themeColor}
-        value={qso?._isNew ? (qso.band ?? operation.band ?? '') : (qso.band ?? '') }
+        value={qso?._isNew ? (qso?.band ?? operation?.band ?? '') : (qso?.band ?? '') }
         onChange={handleFieldChange}
         disabled={disabled}
         fieldId={'band'}
@@ -47,7 +47,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
         innerRef={ref}
         themeColor={themeColor}
         style={{ width: styles.oneSpace * 11 }}
-        value={qso._isNew ? (qso.freq ?? operation.freq ?? '') : (qso.freq ?? '') }
+        value={qso?._isNew ? (qso?.freq ?? operation?.freq ?? '') : (qso?.freq ?? '') }
         disabled={disabled}
         label="Frequency"
         placeholder=""
@@ -58,7 +58,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
       />
       <ThemedDropDown
         label="Mode"
-        value={qso._isNew ? (qso.mode ?? operation.mode ?? '') : (qso.mode ?? '') }
+        value={qso?._isNew ? (qso?.mode ?? operation?.mode ?? '') : (qso?.mode ?? '') }
         onChange={handleFieldChange}
         disabled={disabled}
         fieldId={'mode'}
