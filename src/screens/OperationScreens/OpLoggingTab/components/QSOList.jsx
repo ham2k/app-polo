@@ -96,7 +96,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
   }
 }
 
-export default function QSOList ({ style, operation, settings, qsos, selectedKey, setSelectedKey, lastKey }) {
+export default function QSOList ({ style, operation, settings, qsos, selectedKey, setLoggingState, lastKey }) {
   const { width } = useWindowDimensions()
 
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, false, width))
@@ -128,11 +128,11 @@ export default function QSOList ({ style, operation, settings, qsos, selectedKey
 
   const handlePress = useCallback(({ qso }) => {
     if (qso.key === selectedKey) {
-      setSelectedKey && setSelectedKey(undefined)
+      setLoggingState && setLoggingState({ selectedKey: undefined })
     } else {
-      setSelectedKey && setSelectedKey(qso.key)
+      setLoggingState && setLoggingState({ selectedKey: qso.key })
     }
-  }, [selectedKey, setSelectedKey])
+  }, [selectedKey, setLoggingState])
 
   const renderRow = useCallback(({ item, index }) => {
     const qso = item

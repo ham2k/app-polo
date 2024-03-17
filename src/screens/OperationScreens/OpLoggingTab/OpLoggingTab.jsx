@@ -38,8 +38,13 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   const settings = useSelector(selectSettings)
 
-  const [selectedKey, setSelectedKey] = useState(undefined)
-  const [lastKey, setLastKey] = useState(undefined)
+  const [loggingState, setLoggingState] = useState({})
+
+  useEffect(() => {
+    if (route?.params?.qso) {
+      setLoggingState({ selectedKey: 'suggested-qso', suggestedQSO: route.params.qso })
+    }
+  }, [route?.params?.qso])
 
   // Set navigation title
   useEffect(() => {
@@ -54,9 +59,9 @@ export default function OpLoggingTab ({ navigation, route }) {
         qsos={qsos}
         operation={operation}
         settings={settings}
-        selectedKey={selectedKey}
-        setSelectedKey={setSelectedKey}
-        lastKey={lastKey}
+        setLoggingState={setLoggingState}
+        selectedKey={loggingState.selectedKey}
+        lastKey={loggingState.lastKey}
       />
 
       <LoggingPanel
@@ -65,11 +70,10 @@ export default function OpLoggingTab ({ navigation, route }) {
         qsos={qsos}
         activeQSOs={activeQSOs}
         settings={settings}
-        selectedKey={selectedKey}
-        setSelectedKey={setSelectedKey}
-        lastKey={lastKey}
-        setLastKey={setLastKey}
-        suggestedQSO={route?.params?.qso}
+        setLoggingState={setLoggingState}
+        selectedKey={loggingState.selectedKey}
+        lastKey={loggingState.lastKey}
+        suggestedQSO={loggingState.suggestedQSO}
       />
     </View>
   )
