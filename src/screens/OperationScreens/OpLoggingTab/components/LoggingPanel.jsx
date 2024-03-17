@@ -113,7 +113,7 @@ function prepareSuggestedQSO (qso) {
   return clone
 }
 
-export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings, selectedKey, setSelectedKey, setLastKey, suggestedQSO }) {
+export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings, selectedKey, setLoggingState, suggestedQSO }) {
   const [qso, setQSO] = useState()
   const [originalQSO, setOriginalQSO] = useState()
   const [qsoHasChanges, setQSOHasChanges] = useState(false)
@@ -154,7 +154,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   }, [qso, operation, settings])
 
   const setNewQSO = useCallback((newQSO) => {
-    if (!newQSO) setSelectedKey(undefined)
+    if (!newQSO) setLoggingState({ selectedKey: undefined })
 
     if (!newQSO?._isNew && newQSO?.startOnMillis) {
       setPausedTime(true)
@@ -165,7 +165,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     setQSO(newQSO)
     setOriginalQSO(cloneDeep(newQSO))
     setCurrentSecondaryControl(undefined)
-  }, [setQSO, setSelectedKey, setCurrentSecondaryControl])
+  }, [setQSO, setLoggingState, setCurrentSecondaryControl])
 
   useEffect(() => { // Keep track of QSO changes
     if (qso && originalQSO) {
@@ -178,13 +178,6 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       setQSOHasChanges(false)
     }
   }, [qso, originalQSO])
-
-  useEffect(() => { // If a parameter was passed suggesting a QSO, use that
-    if (suggestedQSO) {
-      setUndoInfo(undefined)
-      setNewQSO(prepareSuggestedQSO(suggestedQSO))
-    }
-  }, [suggestedQSO, setNewQSO])
 
   const [qsoQueue, setQSOQueue] = useState([])
 
@@ -201,7 +194,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       }
       setNewQSO(nextQSO)
       if (nextQSO.key !== selectedKey) {
-        setSelectedKey(nextQSO.key)
+        setLoggingState({ selectedKey: nextQSO.key })
       }
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
         if (mainFieldRef?.current) {
@@ -209,9 +202,18 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         }
       }, 10)
     } else if (qso && qso?.key !== selectedKey && selectedKey !== 'new-qso') {
-      let nextQSO = qsos.find(q => q.key === selectedKey)
+      let nextQSO
+      if (selectedKey === 'suggested-qso') {
+        nextQSO = prepareSuggestedQSO(suggestedQSO)
+        setLoggingState({ selectedKey: nextQSO.key })
+      } else {
+        nextQSO = qsos.find(q => q.key === selectedKey)
+        if (nextQSO) nextQSO = prepareExistingQSO(nextQSO)
+        else nextQSO = prepareNewQSO(operation, settings)
+      }
+
       if (qso?._isNew) setQSOQueue([...qsoQueue, qso])
-      nextQSO = prepareExistingQSO(nextQSO)
+
       setNewQSO(nextQSO)
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
         if (mainFieldRef?.current) {
@@ -219,7 +221,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         }
       }, 10)
     }
-  }, [qsoQueue, setQSOQueue, selectedKey, setSelectedKey, operation, settings, qso, setNewQSO, qsos])
+  }, [qsoQueue, setQSOQueue, selectedKey, setLoggingState, suggestedQSO, operation, settings, qso, setNewQSO, qsos])
 
   useEffect(() => {
     mainFieldRef.current.focus()
@@ -296,10 +298,9 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         delete qso._willBeDeleted
         qso.deleted = true
         dispatch(addQSO({ uuid: operation.uuid, qso }))
-        setSelectedKey(undefined)
+        setLoggingState({ selectedKey: undefined, lastKey: qso.key })
         setUndoInfo(undefined)
         setQSO(undefined) // Let queue management decide what to do
-        setLastKey(qso.key)
       } else if (isValidQSO && !qso.deleted) {
         unstable_batchedUpdates(() => {
           setCurrentSecondaryControl(undefined)
@@ -329,14 +330,13 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
           qso.key = qsoKey(qso)
 
           dispatch(addQSO({ uuid: operation.uuid, qso }))
-          setSelectedKey(undefined)
+          setLoggingState({ selectedKey: undefined, lastKey: qso.key })
           setUndoInfo(undefined)
           setQSO(undefined) // Let queue management decide what to do
-          setLastKey(qso.key)
         })
       }
     }, 10)
-  }, [qso, setQSO, isValidQSO, dispatch, operation, settings, setSelectedKey, setLastKey, setCurrentSecondaryControl])
+  }, [qso, setQSO, isValidQSO, dispatch, operation, settings, setLoggingState, setCurrentSecondaryControl])
 
   const [undoInfo, setUndoInfo] = useState()
 
