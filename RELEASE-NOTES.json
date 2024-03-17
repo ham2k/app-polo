@@ -5,7 +5,8 @@
       "Refactored Secondary Fields (notes, p2p, etc) panel",
       "Ensure filenames are valid (contributed by M1SDH)",
       "Summits On The Air (SOTA) support",
-      "Better Startup experience"
+      "Better Startup experience",
+      "Potentially fix crash when searching POTA references while offline"
     ]
   },
   "0.5.0": {

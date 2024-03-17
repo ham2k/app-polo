@@ -9,6 +9,7 @@ import { POTAAllParks } from './POTAAllParksData'
 import { ListRow } from '../../../components/ListComponents'
 import { INFO } from './POTAInfo'
 import { POTAListItem } from './POTAListItem'
+import { selectRuntimeOnline } from '../../../../store/runtime'
 
 export function POTAActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
@@ -16,6 +17,8 @@ export function POTAActivityOptions (props) {
   const { styles, operation } = props
 
   const dispatch = useDispatch()
+
+  const online = useSelector(selectRuntimeOnline)
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
@@ -122,6 +125,7 @@ export function POTAActivityOptions (props) {
             activityRef={ref.ref}
             allRefs={refs}
             styles={styles}
+            online={online}
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />
