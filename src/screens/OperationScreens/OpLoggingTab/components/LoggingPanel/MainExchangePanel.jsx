@@ -79,7 +79,7 @@ export const MainExchangePanel = ({
   fields.push(
     <ThemedTextInput
       key="sent"
-      innerRef={refStack.shift()}
+      innerRef={refStack.splice(settings.switchSentRcvd ? 1 : 0, 1)[0]}
       themeColor={themeColor}
       style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 6, flex: 1 }]}
       value={qso?.our?.sent ?? ''}
@@ -96,7 +96,7 @@ export const MainExchangePanel = ({
       focusedRef={focusedRef}
     />
   )
-  fields.push(
+  fields.splice(settings.switchSentRcvd ? fields.length - 1 : fields.length, 0,
     <ThemedTextInput
       key="received"
       innerRef={refStack.shift()}
