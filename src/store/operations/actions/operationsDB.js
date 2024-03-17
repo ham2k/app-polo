@@ -7,7 +7,6 @@ import { qsonToADIF } from '../../../tools/qsonToADIF'
 import { fmtISODate } from '../../../tools/timeFormats'
 import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
-import { addSystemMessage, selectSystemFlag, setSystemFlag } from '../../system'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
@@ -19,26 +18,7 @@ export const getOperations = () => async (dispatch, getState) => {
   const oplist = await dbSelectAll('SELECT * FROM operations', [], { row: prepareOperationRow })
 
   if (oplist && oplist.length === 0) {
-    if (!selectSystemFlag(getState(), 'operations.migratedFromFiles')) {
-      dispatch(addSystemMessage('Migrating operation data to new database'))
-      const operations = await readOldOperationFiles()
-
-      for (const uuid in operations) {
-        const operation = operations[uuid]
-
-        dispatch(saveOperation(operation.info))
-        dispatch(qsosActions.setQSOs({ uuid, qsos: operation.qsos }))
-        dispatch(saveQSOsForOperation(uuid))
-      }
-      if (operations.length > 0) {
-        dispatch(addSystemMessage(`Migrated ${operations.length} successfully`))
-      } else {
-        dispatch(addSystemMessage('There were no operations to migrate'))
-      }
-      dispatch(setSystemFlag({ 'operations.migratedFromFiles': true }))
-
-      return dispatch(getOperations())
-    }
+    return dispatch(getOperations())
   }
 
   const ophash = oplist.reduce((acc, op) => {

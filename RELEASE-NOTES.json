@@ -3,7 +3,8 @@
     "changes": [
       "Sort POTA results by rough proximity to current location",
       "Refactored Secondary Fields (notes, p2p, etc) panel",
-      "Summits On The Air (SOTA) support"
+      "Summits On The Air (SOTA) support",
+      "Better Startup experience"
     ]
   },
   "0.5.0": {

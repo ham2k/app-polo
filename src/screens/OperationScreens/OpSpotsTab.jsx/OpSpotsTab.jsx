@@ -5,7 +5,7 @@ import { Icon, Text } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useSpotsQuery } from '../../../store/apiPOTA'
-import { selectSystemOnline } from '../../../store/system'
+import { selectRuntimeOnline } from '../../../store/runtime'
 import SpotList from './components/SpotList'
 import ThemedDropDown from '../../components/ThemedDropDown'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -45,7 +45,7 @@ export default function OpSpotsTab ({ navigation, route }) {
     }
   })
 
-  const online = useSelector(selectSystemOnline)
+  const online = useSelector(selectRuntimeOnline)
 
   const [band, setBand] = useState('any')
   const [mode, setMode] = useState('any')

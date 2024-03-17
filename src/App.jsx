@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
-import SplashScreen from 'react-native-splash-screen'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import 'react-native-gesture-handler' // This must be included in the top component file
@@ -22,6 +21,7 @@ import OperationAddActivityScreen from './screens/OperationScreens/OperationAddA
 import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
 import VersionSettingsScreen from './screens/SettingsScreens/screens/VersionSettingsScreen'
 import LoggingSettingsScreen from './screens/SettingsScreens/screens/LoggingSettingsScreen'
+import StartScreen from './screens/StartScreen/StartScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -29,11 +29,13 @@ const paperSettings = {
   icon: props => <MaterialCommunityIcon {...props} />
 }
 
-function ThemedApp () {
-  const [paperTheme, navigationTheme] = usePrepareThemes()
+function MainApp ({ navigationTheme }) {
+  const [appState, setAppState] = useState('starting')
 
-  return (
-    <PaperProvider theme={paperTheme} settings={paperSettings}>
+  if (appState === 'starting') {
+    return <StartScreen setAppState={setAppState} />
+  } else {
+    return (
       <NavigationContainer theme={navigationTheme}>
         <Stack.Navigator
           id="RootNavigator"
@@ -84,15 +86,21 @@ function ThemedApp () {
 
         </Stack.Navigator>
       </NavigationContainer>
+    )
+  }
+}
+
+function ThemedApp () {
+  const [paperTheme, navigationTheme] = usePrepareThemes()
+
+  return (
+    <PaperProvider theme={paperTheme} settings={paperSettings}>
+      <MainApp navigationTheme={navigationTheme} />
     </PaperProvider>
   )
 }
 
 export default function App () {
-  useEffect(() => {
-    SplashScreen.hide()
-  }, [])
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
