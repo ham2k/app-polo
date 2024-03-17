@@ -114,11 +114,11 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
 
     if (potaActivationRefs.length > 0) {
       potaActivationRefs.forEach((activationRef, i) => {
-        names.push(`${baseName} at ${activationRef.ref}.adi`)
+        names.push(`${baseName.replace(/[/\\:]/g, '-')} at ${activationRef.ref.replace(/[/\\:]/g, '-')}.adi`)
         datas.push(qsonToADIF({ operation: { ...operation, refs: [...nonPotaRefs, activationRef] }, qsos, settings }))
       })
     } else {
-      names.push(`${baseName}.adi`)
+      names.push(`${baseName.replace(/[/\\:]/g, '-')}.adi`)
       datas.push(qsonToADIF({ operation, qsos, settings }))
     }
   } else if (type === 'cabrillo') {
