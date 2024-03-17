@@ -18,10 +18,6 @@ const prepareOperationRow = (row) => {
 export const getOperations = () => async (dispatch, getState) => {
   const oplist = await dbSelectAll('SELECT * FROM operations', [], { row: prepareOperationRow })
 
-  if (oplist && oplist.length === 0) {
-    return dispatch(getOperations())
-  }
-
   const ophash = oplist.reduce((acc, op) => {
     acc[op.uuid] = op
     return acc
