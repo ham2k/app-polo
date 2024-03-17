@@ -53,8 +53,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     const referenceTitles = data.refs.map(ref => refHandlers[ref.type]?.suggestOperationTitle && refHandlers[ref.type]?.suggestOperationTitle(ref)).filter(x => x)
 
     const titleParts = []
-    console.log('setOperationData', data.refs)
-    console.log('  ', referenceTitles)
+
     const plainTitles = referenceTitles.map(ref => ref.title).filter(x => x).join(', ')
     const forTitles = referenceTitles.map(ref => ref.for).filter(x => x).join(', ')
     const atTitles = referenceTitles.map(ref => ref.at).filter(x => x).join(', ')
