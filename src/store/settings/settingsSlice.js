@@ -1,7 +1,7 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  operatorCall: 'N0CALL',
+  operatorCall: '',
   onboarded: false,
   accounts: {},
   flags: {}
@@ -42,7 +42,7 @@ export const selectSettings = createSelector(
 
 export const selectOperatorCall = createSelector(
   [(state) => state?.settings?.operatorCall],
-  (value) => value ?? ''
+  (value) => value === 'N0CALL' ? '' : (value ?? '')
 )
 
 export default settingsSlice.reducer
