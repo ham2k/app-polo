@@ -7,6 +7,7 @@ import debounce from 'debounce'
 const REMOVE_NON_DIGITS_REGEX = /[^0-9.]/g
 
 function reportChange ({ text, onChange, onChangeText, fieldId }) {
+  console.log('report change', text)
   onChangeText && onChangeText(text)
   onChange && onChange({ nativeEvent: { text }, fieldId })
 }
@@ -14,7 +15,10 @@ function reportChange ({ text, onChange, onChangeText, fieldId }) {
 export default function FrequencyInput (props) {
   const { value, styles, textStyle, onChange, onChangeText, fieldId, debounceTime } = props
 
-  const debouncedReportChange = useMemo(() => debounce(reportChange, debounceTime ?? 500), [debounceTime])
+  const debouncedReportChange = useMemo(() => {
+    console.log('memoized debounceTime', debounceTime)
+    return debounce(reportChange, debounceTime ?? 3000)
+  }, [debounceTime])
 
   const [innerValue, setInnerValue] = useState(value)
   useEffect(() => {
@@ -25,10 +29,7 @@ export default function FrequencyInput (props) {
     let { text } = event.nativeEvent
     text = text.replace(REMOVE_NON_DIGITS_REGEX, '')
     setInnerValue(text)
-    if (text.length > 3 || text.match(/\d+\.\d+/)) {
-      // Don't report until we have at least 4 characters or a decimal point
-      debouncedReportChange({ text, onChange, onChangeText, fieldId })
-    }
+    debouncedReportChange({ text, onChange, onChangeText, fieldId })
   }, [fieldId, onChange, onChangeText, debouncedReportChange])
 
   const handleBlur = useCallback((event) => {

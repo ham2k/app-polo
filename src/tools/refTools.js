@@ -14,6 +14,12 @@ export function filterRefs (obj, type) {
   return (obj?.filter ? obj.filter(r => r?.type === type) : [])
 }
 
+export function excludeRefs (obj, type) {
+  if (obj?.refs) obj = obj.refs
+
+  return (obj?.filter ? obj.filter(r => r?.type !== type) : [])
+}
+
 export function refsToString (obj, type, options = {}) {
   let refs
   refs = filterRefs(obj?.refs ?? obj ?? [], type)
