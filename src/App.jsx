@@ -12,6 +12,9 @@ import { Provider, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Config from 'react-native-config'
+import codePush from 'react-native-code-push'
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
 
 import 'react-native-gesture-handler' // This must be included in the top component file
 
@@ -29,8 +32,44 @@ import OperationScreen from './screens/OperationScreens/OperationScreen'
 import OperationAddActivityScreen from './screens/OperationScreens/OperationAddActivityScreen'
 import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
 import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
-import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
-import { AppWrappedForDistribution, useConfigForDistribution } from './distro'
+import CreditsSettingsScreen from './screens/SettingsScreens/screens/CreditsSettingsScreen'
+
+const GLOBAL_APP_SETTINGS = {
+  consentAppData: false
+}
+
+/** BEGIN DISTRIBUTION-ONLY */
+import { Client } from 'rollbar-react-native'
+/** END DISTRIBUTION-ONLY */
+
+const DISTRIBUTION_CONFIG = {}
+
+/** EXAMPLE CODEPUSH CONFIG */
+// DISTRIBUTION_CONFIG.codePushOptions = {
+//   installMode: codePush.InstallMode.IMMEDIATE
+// }
+
+/** EXAMPLE ROLLBAR CONFIG */
+// import { Client } from 'rollbar-react-native'
+// DISTRIBUTION_CONFIG.rollbarNative = new Client({
+//   accessToken: Config.ROLLBAR_TOKEN,
+//   captureUncaught: true,
+//   captureUnhandledRejections: true
+// })
+
+/** BEGIN DISTRIBUTION-ONLY */
+if (process.env.NODE_ENV !== 'development') {
+  DISTRIBUTION_CONFIG.rollbarNative = new Client({
+    accessToken: Config.ROLLBAR_TOKEN,
+    captureUncaught: true,
+    captureUnhandledRejections: true
+  })
+
+  DISTRIBUTION_CONFIG.codePushOptions = {
+    installMode: codePush.InstallMode.IMMEDIATE
+  }
+}
+/** END DISTRIBUTION-ONLY */
 
 const Stack = createNativeStackNavigator()
 
