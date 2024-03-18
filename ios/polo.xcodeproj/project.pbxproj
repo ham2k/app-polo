@@ -44,6 +44,7 @@
 		5709B34CF0A7D63546082F79 /* Pods-polo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.release.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.debug.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.debug.xcconfig"; sourceTree = "<group>"; };
 		692647BAF0BD378FFAA5F85B /* Pods-polo-poloTests.prodrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.prodrelease.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.prodrelease.xcconfig"; sourceTree = "<group>"; };
+		720996792BA85FB5002C388D /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		72A0D32B2B162706007E568A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		72A0D32C2B162706007E568A /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		73051291BC6C08E39ED86A73 /* Pods-polo-poloTests.betarelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.betarelease.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.betarelease.xcconfig"; sourceTree = "<group>"; };
@@ -106,6 +107,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				720996792BA85FB5002C388D /* Config.xcconfig */,
 			);
 			name = polo;
 			sourceTree = "<group>";
@@ -523,7 +525,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = polo/Info.plist;
@@ -533,7 +534,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -554,7 +554,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo _";
@@ -563,7 +562,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -579,6 +577,7 @@
 		};
 		72A472082B2FBBE8002E100B /* DevDebug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 720996792BA85FB5002C388D /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -670,7 +669,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = polo/Info.plist;
@@ -680,7 +678,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -725,6 +722,7 @@
 		};
 		72A4720B2B2FBBFA002E100B /* BetaDebug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 720996792BA85FB5002C388D /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -816,7 +814,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Beta";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = polo/Info.plist;
@@ -826,7 +823,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -871,6 +867,7 @@
 		};
 		72A4720E2B2FBC00002E100B /* ProdDebug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 720996792BA85FB5002C388D /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -962,7 +959,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Prod";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = polo/Info.plist;
@@ -972,7 +968,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1017,6 +1012,7 @@
 		};
 		72A472112B2FBC06002E100B /* DevRelease */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 720996792BA85FB5002C388D /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -1104,7 +1100,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo 𝛼";
@@ -1113,7 +1108,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1154,6 +1148,7 @@
 		};
 		72A472142B2FBC0D002E100B /* BetaRelease */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 720996792BA85FB5002C388D /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -1241,7 +1236,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Beta";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo β";
@@ -1250,7 +1244,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1291,6 +1284,7 @@
 		};
 		72A472172B2FBC12002E100B /* ProdRelease */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 720996792BA85FB5002C388D /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -1378,7 +1372,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Prod";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo";
@@ -1387,7 +1380,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1428,6 +1420,7 @@
 		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 720996792BA85FB5002C388D /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -1515,6 +1508,7 @@
 		};
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 720996792BA85FB5002C388D /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
