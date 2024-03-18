@@ -79,8 +79,8 @@ android {
         applicationId "com.ham2k.polo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode project.env.get("BUILD").toInteger()
-        versionName project.env.get("BASE_VERSION")
+        versionCode project.env.get("POLO_BUILD").toInteger()
+        versionName project.env.get("POLO_BASE_VERSION")
         setProperty("archivesBaseName", applicationId + "-v" + versionCode + "(" + versionName + ")")
         resValue "string", "build_config_package", "com.ham2k.polo"
     }
@@ -109,6 +109,11 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
+    }
+    android.buildTypes.each { buildType ->
+       // to prevent incorrect long value restoration from strings.xml we need to wrap it with double quotes
+        // https://github.com/microsoft/cordova-plugin-code-push/issues/264
+        buildType.resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
     }
     flavorDimensions ("environment")
     productFlavors {
