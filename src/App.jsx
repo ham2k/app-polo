@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import codePush from 'react-native-code-push'
 
 import 'react-native-gesture-handler' // This must be included in the top component file
 
@@ -22,6 +23,13 @@ import OperationActivityOptionsScreen from './screens/OperationScreens/Operation
 import VersionSettingsScreen from './screens/SettingsScreens/screens/VersionSettingsScreen'
 import LoggingSettingsScreen from './screens/SettingsScreens/screens/LoggingSettingsScreen'
 import StartScreen from './screens/StartScreen/StartScreen'
+
+const DISTRIBUTION_CONFIG = {}
+
+/** EXAMPLE CODEPUSH CONFIG */
+// DISTRIBUTION_CONFIG.codePushOptions = {
+//   installMode: codePush.InstallMode.IMMEDIATE
+// }
 
 const Stack = createNativeStackNavigator()
 
@@ -101,11 +109,17 @@ function ThemedApp () {
 }
 
 export default function App () {
-  return (
+  let BaseApp = (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ThemedApp />
       </PersistGate>
     </Provider>
   )
+
+  if (DISTRIBUTION_CONFIG.codePushOptions) {
+    BaseApp = codePush(DISTRIBUTION_CONFIG.codePushOptions)(BaseApp)
+  }
+
+  return BaseApp
 }
