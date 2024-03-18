@@ -12,6 +12,7 @@ import { Provider, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Config from 'react-native-config'
 import codePush from 'react-native-code-push'
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
 
@@ -44,6 +45,10 @@ const GLOBAL_APP_SETTINGS = {
   consentAppData: false
 }
 
+/** BEGIN DISTRIBUTION-ONLY */
+import { Client } from 'rollbar-react-native'
+/** END DISTRIBUTION-ONLY */
+
 const DISTRIBUTION_CONFIG = {}
 
 /** EXAMPLE CODEPUSH CONFIG */
@@ -59,13 +64,19 @@ const DISTRIBUTION_CONFIG = {}
 //   captureUnhandledRejections: true
 // })
 
-export function reportError (error, ...extra) {
-  if (GLOBAL_APP_SETTINGS.consentAppData && DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollbar) {
-    DISTRIBUTION_CONFIG.rollbarNative.rollbar.error(error, ...extra)
+/** BEGIN DISTRIBUTION-ONLY */
+if (process.env.NODE_ENV !== 'development') {
+  DISTRIBUTION_CONFIG.rollbarNative = new Client({
+    accessToken: Config.ROLLBAR_TOKEN,
+    captureUncaught: true,
+    captureUnhandledRejections: true
+  })
+
+  DISTRIBUTION_CONFIG.codePushOptions = {
+    installMode: codePush.InstallMode.IMMEDIATE
   }
-  console.error(error, ...extra)
-  if (extra && extra[0]?.stack) console.error(extra[0].stack)
 }
+/** END DISTRIBUTION-ONLY */
 
 const Stack = createNativeStackNavigator()
 
