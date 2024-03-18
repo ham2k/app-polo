@@ -10,6 +10,9 @@ export default function CallsignInput (props) {
   const styles = useThemedStyles()
 
   const isValid = useMemo(() => {
+    if (value === '3RR0R') {
+      throw new Error('Test error')
+    }
     const callInfo = parseCallsign(value)
     if (callInfo?.baseCall) {
       return true
