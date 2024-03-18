@@ -82,7 +82,6 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       color: theme.colors.onPrimary
     },
     screenTabBarLabel: {
-      backgroundColor: theme.colors.primary,
       color: theme.colors.onPrimary
     },
     screenTabBarIndicator: {
