@@ -117,7 +117,7 @@ function ThemedApp () {
   )
 }
 
-let App = () => (
+const PersistedApp = () => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <ThemedApp />
@@ -125,16 +125,17 @@ let App = () => (
   </Provider>
 )
 
+let App
 if (DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollbar) {
-  App = () => {
-    return (
-      <RollbarProvider instance={DISTRIBUTION_CONFIG.rollbarNative.rollbar}>
-        <ErrorBoundary>
-          <App />
-        </ErrorBoundary>
-      </RollbarProvider>
-    )
-  }
+  App = () => (
+    <RollbarProvider instance={DISTRIBUTION_CONFIG.rollbarNative.rollbar}>
+      <ErrorBoundary>
+        <PersistedApp />
+      </ErrorBoundary>
+    </RollbarProvider>
+  )
+} else {
+  App = PersistedApp
 }
 
 if (DISTRIBUTION_CONFIG.codePushOptions) {
