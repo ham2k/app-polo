@@ -79,8 +79,8 @@ android {
         applicationId "com.ham2k.polo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 38
-        versionName "0.5.0"
+        versionCode project.env.get("BUILD").toInteger()
+        versionName project.env.get("BASE_VERSION")
         setProperty("archivesBaseName", applicationId + "-v" + versionCode + "(" + versionName + ")")
         resValue "string", "build_config_package", "com.ham2k.polo"
     }
