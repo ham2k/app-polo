@@ -18,10 +18,9 @@ export default function StartScreen ({ setAppState }) {
 
   const styles = useThemedStyles((baseTheme) => {
     const dropShadow = {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 1,
-      shadowRadius: baseTheme.oneSpace * 0.5
+      textShadowColor: '#000',
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace * 2
     }
     return {
       screen: {
