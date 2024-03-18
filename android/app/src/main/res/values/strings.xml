@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">PoLo</string>
-    <string moduleConfig="true" name="CodePushDeploymentKey"></string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">EIfkyoFTrEig6wBclCA0MBeY9H2GZBO1RoTaf</string>
 </resources>
