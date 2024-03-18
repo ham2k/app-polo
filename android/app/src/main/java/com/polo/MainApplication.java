@@ -8,6 +8,9 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
+import com.microsoft.codepush.react.CodePush;
+import com.rollbar.RollbarReactNative;
+
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -57,11 +60,18 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    if (BuildConfig.ROLLBAR_TOKEN != null && BuildConfig.ROLLBAR_TOKEN.length() > 0) {
+      RollbarReactNative.init(this, BuildConfig.ROLLBAR_TOKEN, BuildConfig.ROLLBAR_ENV);
+    }
+
     SoLoader.init(this, /* native exopackage */ false);
+
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       DefaultNewArchitectureEntryPoint.load();
     }
-    ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    if (BuildConfig.ROLLBAR_TOKEN != null) {
+      RollbarReactNative.init(this, BuildConfig.ROLLBAR_TOKEN, BuildConfig.ROLLBAR_ENV);
+    }
   }
 }

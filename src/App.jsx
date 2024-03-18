@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import codePush from 'react-native-code-push'
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
 
 import 'react-native-gesture-handler' // This must be included in the top component file
 
@@ -30,6 +31,14 @@ const DISTRIBUTION_CONFIG = {}
 // DISTRIBUTION_CONFIG.codePushOptions = {
 //   installMode: codePush.InstallMode.IMMEDIATE
 // }
+
+/** EXAMPLE ROLLBAR CONFIG */
+// import { Client } from 'rollbar-react-native'
+// DISTRIBUTION_CONFIG.rollbarNative = new Client({
+//   accessToken: Config.ROLLBAR_TOKEN,
+//   captureUncaught: true,
+//   captureUnhandledRejections: true
+// })
 
 const Stack = createNativeStackNavigator()
 
@@ -108,18 +117,28 @@ function ThemedApp () {
   )
 }
 
-export default function App () {
-  let BaseApp = (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <ThemedApp />
-      </PersistGate>
-    </Provider>
-  )
+let App = () => (
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <ThemedApp />
+    </PersistGate>
+  </Provider>
+)
 
-  if (DISTRIBUTION_CONFIG.codePushOptions) {
-    BaseApp = codePush(DISTRIBUTION_CONFIG.codePushOptions)(BaseApp)
+if (DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollbar) {
+  App = () => {
+    return (
+      <RollbarProvider instance={DISTRIBUTION_CONFIG.rollbarNative.rollbar}>
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
+      </RollbarProvider>
+    )
   }
-
-  return BaseApp
 }
+
+if (DISTRIBUTION_CONFIG.codePushOptions) {
+  App = codePush(DISTRIBUTION_CONFIG.codePushOptions)(App)
+}
+
+export default App

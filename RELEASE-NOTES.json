@@ -1,6 +1,7 @@
 {
   "0.6.0": {
     "changes": [
+      "Added crash reporting"
     ]
   },
   "0.5.3": {
