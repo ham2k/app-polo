@@ -8,6 +8,7 @@ import { fmtISODate } from '../../../tools/timeFormats'
 import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { refHandlers } from '../../../screens/OperationScreens/activities'
+import { excludeRefs, filterRefs } from '../../../tools/refTools'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
@@ -106,11 +107,13 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
   const datas = []
 
   if (type === 'adif') {
-    const potaActivationRefs = (operation.refs || []).filter(ref => ref.type === 'potaActivation')
-    const nonPotaRefs = (operation.refs || []).filter(ref => ref.type !== 'potaActivation')
+    const potaActivationRefs = filterRefs(operation, 'potaActivation')
+    const nonPotaRefs = excludeRefs(operation, 'potaActivation')
 
-    ;(potaActivationRefs || []).forEach((activationRef, i) => {
-      const combinedRefs = [...nonPotaRefs, activationRef]
+    const combinations = potaActivationRefs.length ? potaActivationRefs : [{}]
+
+    combinations.forEach((activationRef, i) => {
+      const combinedRefs = [...nonPotaRefs, activationRef].filter(x => x?.type)
 
       const referenceTitles = combinedRefs.map(ref => refHandlers[ref.type]?.suggestOperationTitle && refHandlers[ref.type]?.suggestOperationTitle(ref)).filter(x => x)
 

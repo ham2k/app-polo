@@ -1,7 +1,8 @@
 {
   "0.5.3": {
     "changes": [
-      "Fixed bugs in frequency input"
+      "Fixed bugs in frequency input",
+      "Fixed bugs when exporting logs"
     ]
   },
   "0.5.2": {
