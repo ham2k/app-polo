@@ -14,7 +14,7 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, on
     if (online && pota?.error) {
       desc = pota.error
     } else if (!pota?.data?.name && !refData?.name) {
-      desc = 'Park Not Found'
+      desc = 'Unknown Park'
     } else {
       desc = [
         pota?.data?.active === 0 && 'INACTIVE PARK!!!',

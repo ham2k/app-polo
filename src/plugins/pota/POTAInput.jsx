@@ -3,10 +3,10 @@ import React, { useCallback } from 'react'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ThemedTextInput from '../../screens/components/ThemedTextInput'
 
-const ADD_DASHES_REGEX = /([A-Z]+)(\d+)/g
-const ADD_COMMAS_REGEX = /(\d\d+)\s*[,]*\s*([A-Z]+)/g
-const NO_PREFIX_REGEX = /^(\d\d+)/g
-const REPEAT_PREFIX_REGEX = /(\w+)-(\d+)(\s+,\s*|,\s*|\s+)(\d\d+)/g
+const ADD_DASHES_REGEX = /([A-Z]+)(\d+|TEST)/gi
+const ADD_COMMAS_REGEX = /(\d\d+)\s*[,]*\s*([A-Z]+)/gi
+const NO_PREFIX_REGEX = /^(\d\d+|TEST)/gi
+const REPEAT_PREFIX_REGEX = /(\w+)-(\d+)(\s+,\s*|,\s*|\s+)(\d\d+|TEST)/gi
 
 export default function POTAInput (props) {
   const { textStyle, onChange, defaultPrefix, onChangeText, fieldId } = props

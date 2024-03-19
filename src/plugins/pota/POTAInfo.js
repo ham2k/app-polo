@@ -7,5 +7,5 @@ export const INFO = {
   huntingType: 'pota',
   activationType: 'potaActivation',
   descriptionPlaceholder: 'Enter POTA references',
-  referenceRegex: /^[A-Z0-9]+-[0-9]{4,5}$/
+  referenceRegex: /^[A-Z0-9]+-(?:[0-9]{4,5}|TEST)$/
 }
