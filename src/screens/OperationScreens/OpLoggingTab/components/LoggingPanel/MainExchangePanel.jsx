@@ -3,8 +3,8 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { View, findNodeHandle, useWindowDimensions } from 'react-native'
 import CallsignInput from '../../../../components/CallsignInput'
 import ThemedTextInput from '../../../../components/ThemedTextInput'
-import activities from '../../../activities'
 import { findRef } from '../../../../../tools/refTools'
+import activities from '../../../../../plugins/loadPlugins'
 
 export const MainExchangePanel = ({
   qso, operation, settings, style, styles, themeColor, handleSubmit, handleFieldChange, setQSO, mainFieldRef, focusedRef

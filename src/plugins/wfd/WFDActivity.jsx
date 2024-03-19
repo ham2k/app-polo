@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
-import { setOperationData } from '../../../store/operations'
-import { findRef, replaceRef } from '../../../tools/refTools'
-import ThemedTextInput from '../../components/ThemedTextInput'
+import { setOperationData } from '../../store/operations'
+import { findRef, replaceRef } from '../../tools/refTools'
+import ThemedTextInput from '../../screens/components/ThemedTextInput'
 import { List } from 'react-native-paper'
-import { ListRow } from '../../components/ListComponents'
+import { ListRow } from '../../screens/components/ListComponents'
 
 /*
  NOTES:

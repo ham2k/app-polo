@@ -4,11 +4,11 @@ import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { fmtDateTimeZuluDynamic } from '../../../../tools/timeFormats'
 import { View } from 'react-native'
 
-import { activityIndex } from '../../activities'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
+import { activityIndex } from '../../../../plugins/loadPlugins'
 
 export function guessItemHeight (qso, styles) {
   return styles.compactRow.height + styles.compactRow.borderBottomWidth

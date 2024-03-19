@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { List, Searchbar, Text } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
-import { selectOperationCallInfo, setOperationData } from '../../../../store/operations'
-import { filterRefs, replaceRefs } from '../../../../tools/refTools'
+import { selectOperationCallInfo, setOperationData } from '../../store/operations'
+import { filterRefs, replaceRefs } from '../../tools/refTools'
 import { POTAAllParks } from './POTAAllParksData'
-import { ListRow } from '../../../components/ListComponents'
 import { INFO } from './POTAInfo'
 import { POTAListItem } from './POTAListItem'
-import { selectRuntimeOnline } from '../../../../store/runtime'
+import { selectRuntimeOnline } from '../../store/runtime'
+import { ListRow } from '../../screens/components/ListComponents'
 
 export function POTAActivityOptions (props) {
   const NEARBY_DEGREES = 0.25

@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { List, Searchbar, Text } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
-import { selectOperationCallInfo, setOperationData } from '../../../../store/operations'
-import { findRef, replaceRef } from '../../../../tools/refTools'
+import { selectOperationCallInfo, setOperationData } from '../../store/operations'
+import { findRef, replaceRef } from '../../tools/refTools'
 import { SOTAData } from './SOTADataFile'
-import { ListRow } from '../../../components/ListComponents'
 import { INFO } from './SOTAInfo'
 import { SOTAListItem } from './SOTAListItem'
+import { ListRow } from '../../screens/components/ListComponents'
 
 export function SOTAActivityOptions (props) {
   const NEARBY_DEGREES = 0.25

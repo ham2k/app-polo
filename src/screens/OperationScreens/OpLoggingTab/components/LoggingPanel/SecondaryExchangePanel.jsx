@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 
-import activities from '../../../activities'
 import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
 import { SecondaryControlManagementSubPanel } from './SecondaryExchangePanel/SecondaryControlManagementSubPanel'
 import { SecondaryControlSelectionsubPanel } from './SecondaryExchangePanel/SecondaryControlSelectionSubPanel'
+import activities from '../../../../../plugins/loadPlugins'
 
 export const SecondaryExchangePanel = (params) => {
   const { currentSecondaryControl, operation, settings } = params

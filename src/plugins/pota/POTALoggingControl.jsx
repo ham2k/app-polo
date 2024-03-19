@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../../tools/refTools'
-import { INFO } from './SOTAInfo'
-import SOTAInput from './SOTAInput'
+import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../tools/refTools'
+import { POTAAllParks } from './POTAAllParksData'
+import { INFO } from './POTAInfo'
+import POTAInput from './POTAInput'
 
-export function SOTALoggingControl (props) {
+export function POTALoggingControl (props) {
   const { qso, setQSO, style, styles } = props
 
   const ref = useRef()
@@ -29,13 +30,22 @@ export function SOTALoggingControl (props) {
     setQSO({ ...qso, refs: replaceRefs(qso?.refs, INFO.huntingType, refs) })
   }, [qso, setQSO])
 
+  const defaultPrefix = useMemo(() => {
+    if (qso?.their?.guess?.dxccCode) {
+      return POTAAllParks.prefixByDXCCCode[qso?.their.guess.dxccCode] ?? 'K'
+    } else {
+      return 'K'
+    }
+  }, [qso?.their?.guess?.dxccCode])
+
   return (
-    <SOTAInput
+    <POTAInput
       {...props}
       innerRef={ref}
       style={[style, { minWidth: 16 * styles.oneSpace }]}
       value={localValue}
-      label="Their SOTA"
+      label="Their POTA"
+      defaultPrefix={defaultPrefix}
       onChangeText={localHandleChangeText}
     />
   )

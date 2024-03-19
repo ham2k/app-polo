@@ -12,9 +12,9 @@ import { generateExport, selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
-import activities, { refHandlers } from '../activities'
 import { LocationDialog } from './components/LocationDialog'
 import { findRef } from '../../../tools/refTools'
+import activities, { refHandlers } from '../../../plugins/loadPlugins'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {

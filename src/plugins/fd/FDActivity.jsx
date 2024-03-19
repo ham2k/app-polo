@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { List, Text } from 'react-native-paper'
-import { setOperationData } from '../../../store/operations'
-import { findRef, replaceRef } from '../../../tools/refTools'
-import ThemedTextInput from '../../components/ThemedTextInput'
-import { ListRow } from '../../components/ListComponents'
+import { setOperationData } from '../../store/operations'
+import { findRef, replaceRef } from '../../tools/refTools'
+import ThemedTextInput from '../../screens/components/ThemedTextInput'
+import { ListRow } from '../../screens/components/ListComponents'
 
 const ACTIVITY = {
   key: 'arrl-fd',

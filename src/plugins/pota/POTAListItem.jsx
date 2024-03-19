@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useMemo } from 'react'
-import { useLookupParkQuery } from '../../../../store/apiPOTA'
+import { useLookupParkQuery } from '../../store/apiPOTA'
 import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 

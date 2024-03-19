@@ -7,7 +7,7 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import { selectOperation, setOperationData } from '../../store/operations'
 import { replaceRefs } from '../../tools/refTools'
-import activities from './activities'
+import activities from '../../plugins/loadPlugins'
 import { StackActions } from '@react-navigation/native'
 
 export default function OperationAddActivityScreen ({ navigation, route }) {
