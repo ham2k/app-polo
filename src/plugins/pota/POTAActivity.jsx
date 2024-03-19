@@ -1,39 +1,41 @@
-import { findRef, refsToString } from '../../../../tools/refTools'
+import { apiPOTA } from '../../store/apiPOTA'
+import { findRef, refsToString } from '../../tools/refTools'
 
-import { INFO } from './SOTAInfo'
-import { SOTAActivityOptions } from './SOTAActivityOptions'
-import { SOTAData, registerSOTADataFile } from './SOTADataFile'
-import { SOTALoggingControl } from './SOTALoggingControl'
+import { POTAActivityOptions } from './POTAActivityOptions'
+import { POTALoggingControl } from './POTALoggingControl'
+import { registerPOTAAllParksData } from './POTAAllParksData'
 
-registerSOTADataFile()
+import { INFO } from './POTAInfo'
+
+registerPOTAAllParksData()
 
 const HunterLoggingControl = {
-  key: 'sota/hunter',
+  key: 'pota/hunter',
   order: 10,
   icon: INFO.icon,
   label: ({ operation, qso }) => {
-    const parts = ['SOTA']
+    const parts = ['POTA']
     if (findRef(qso, INFO.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: SOTALoggingControl,
+  InputComponent: POTALoggingControl,
   optionType: 'optional'
 }
 
 const ActivatorLoggingControl = {
-  key: 'sota/activator',
+  key: 'pota/activator',
   order: 10,
   icon: INFO.icon,
   label: ({ operation, qso }) => {
-    const parts = ['S2S']
+    const parts = ['P2P']
     if (findRef(qso, INFO.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: SOTALoggingControl,
+  InputComponent: POTALoggingControl,
   optionType: 'mandatory'
 }
 
-const SOTAActivity = {
+const POTAActivity = {
   ...INFO,
   MainExchangePanel: null,
   loggingControls: ({ operation, settings }) => {
@@ -43,7 +45,7 @@ const SOTAActivity = {
       return [HunterLoggingControl]
     }
   },
-  Options: SOTAActivityOptions,
+  Options: POTAActivityOptions,
 
   description: (operation) => refsToString(operation, INFO.activationType),
 
@@ -55,20 +57,30 @@ const SOTAActivity = {
 
   labelControlForQSO: ({ operation, qso }) => {
     const opRef = findRef(operation, INFO.activationType)
-    let label = opRef ? 'S2S' : 'SOTA'
+    let label = opRef ? 'P2P' : 'POTA'
     if (findRef(qso, INFO.huntingType)) label = `✓ ${label}`
     return label
   },
 
-  decorateRef: (ref) => (dispatch, getState) => {
-    if (ref.ref) {
-      const reference = SOTAData.byReference[ref.ref]
-      if (reference) {
-        return { ...ref, name: reference.name, location: reference.region, grid: reference.grid }
-      } else {
-        return { ...ref, name: 'Unknown summit' }
+  decorateRefWithDispatch: (ref) => async (dispatch, getState) => {
+    if (!ref?.ref || !ref.ref.match(INFO.referenceRegex)) return { ...ref, ref: '', name: '', location: '' }
+
+    const promise = dispatch(apiPOTA.endpoints.lookupPark.initiate(ref))
+    const { data } = await promise
+    let result
+    if (data?.name) {
+      result = {
+        ...ref,
+        name: [data.name, data.parktypeDesc].filter(x => x).join(' '),
+        location: data?.locationName,
+        grid: data?.grid6
       }
+    } else {
+      result = { ...ref, name: `${ref.ref} not found!` }
     }
+
+    promise.unsubscribe()
+    return result
   },
 
   suggestOperationTitle: (ref) => {
@@ -78,6 +90,7 @@ const SOTAActivity = {
       return null
     }
   }
+
 }
 
-export default SOTAActivity
+export default POTAActivity

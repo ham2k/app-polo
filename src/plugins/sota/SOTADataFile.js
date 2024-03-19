@@ -1,8 +1,8 @@
-import { registerDataFile } from '../../../../store/dataFiles'
+import { registerDataFile } from '../../store/dataFiles'
 
 import RNFetchBlob from 'react-native-blob-util'
 
-import packageJson from '../../../../../package.json'
+import packageJson from '../../../package.json'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 export const SOTAData = { byReference: {}, activeReferences: [] }

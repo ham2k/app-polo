@@ -6,9 +6,10 @@ import { ScrollView } from 'react-native'
 import ScreenContainer from '../components/ScreenContainer'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../store/operations'
-import activities from './activities'
+
 import { replaceRefs } from '../../tools/refTools'
 import { ListSeparator } from '../components/ListComponents'
+import activities from '../../plugins/loadPlugins'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const styles = useThemedStyles()

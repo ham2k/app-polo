@@ -1,20 +1,16 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Checkbox, Dialog, List, Portal } from 'react-native-paper'
-import { useDispatch } from 'react-redux'
 import { KeyboardAvoidingView, ScrollView } from 'react-native'
-import { setSettings } from '../../../../../store/settings'
 import { stringOrFunction } from '../../../../../tools/stringOrFunction'
 import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
-import activities from '../../../activities'
+import activities from '../../../../../plugins/loadPlugins'
 
 export function LoggingPanelConfigDialog ({ visible, operation, settings, styles, onDialogDone }) {
-  const dispatch = useDispatch()
-
   const [dialogVisible, setDialogVisible] = useState(false)
-  const [value, setValue] = useState('')
+  const [setValue] = useState('')
 
   const loggingControlSettings = settings?.logging?.controls || {}
 
