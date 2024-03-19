@@ -109,6 +109,7 @@ export function POTAActivityOptions (props) {
   }, [search, ourInfo, nearbyParks, location])
 
   const handleAddReference = useCallback((ref) => {
+    console.log('add', ref)
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, INFO.activationType, [...refs.filter(r => r.ref !== ref), { type: INFO.activationType, ref }]) }))
   }, [dispatch, operation, refs])
 

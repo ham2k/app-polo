@@ -16,7 +16,6 @@ export default function FrequencyInput (props) {
   const { value, styles, textStyle, onChange, onChangeText, fieldId, debounceTime } = props
 
   const debouncedReportChange = useMemo(() => {
-    console.log('memoized debounceTime', debounceTime)
     return debounce(reportChange, debounceTime ?? 3000)
   }, [debounceTime])
 

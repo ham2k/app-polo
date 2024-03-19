@@ -38,8 +38,8 @@
       "level4": "rgb(34, 50, 57)",
       "level5": "rgb(35, 54, 62)"
     },
-    "surfaceDisabled": "rgba(225, 226, 228, 0.12)",
-    "onSurfaceDisabled": "rgba(225, 226, 228, 0.38)",
+    "surfaceDisabled": "rgba(125, 128, 130, 0.3)",
+    "onSurfaceDisabled": "rgba(225, 226, 228, 0.5)",
     "backdrop": "rgba(42, 50, 53, 0.4)"
   }
 }
