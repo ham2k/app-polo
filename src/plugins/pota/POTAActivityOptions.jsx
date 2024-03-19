@@ -79,9 +79,9 @@ export function POTAActivityOptions (props) {
 
       // Is the search term a plain reference, either with prefix or just digits?
       let nakedReference
-      const parts = search.match(/^\s*([A-Za-z]*)(\d+)\s*$/)
+      const parts = search.match(/^\s*([A-Z]*)[-]{0,1}(\d+|TEST)\s*$/i)
       if (parts && parts[2].length >= 4) {
-        nakedReference = (parts[1]?.toUpperCase() || POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] || 'K') + '-' + parts[2]
+        nakedReference = (parts[1]?.toUpperCase() || POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] || 'K') + '-' + parts[2].toUpperCase()
       } else if (search.match(INFO.referenceRegex)) {
         nakedReference = search
       }
