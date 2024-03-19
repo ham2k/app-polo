@@ -73,6 +73,7 @@ function prepareStyles (themeStyles, themeColor) {
       controlContainer: {
         minHeight: commonPanelHeight,
         flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: themeStyles.theme.colors[themeColor],
         color: themeStyles.theme.colors[`${themeColor}Container`],
         paddingHorizontal: themeStyles.oneSpace,
@@ -80,6 +81,15 @@ function prepareStyles (themeStyles, themeColor) {
       },
       controlText: {
         color: themeStyles.theme.colors[`${themeColor}Container`]
+      },
+      button: {
+        labelStyle: {
+          color: themeStyles.theme.colors[`${themeColor}`]
+        },
+        contentStyle: {
+          backgroundColor: themeStyles.theme.colors[`${themeColor}Lighter`],
+          border: 'red' // themeStyles.theme.colors[`on${upcasedThemeColor}`]
+        }
       }
     }
   }

@@ -6,6 +6,7 @@ import { POTALoggingControl } from './POTALoggingControl'
 import { registerPOTAAllParksData } from './POTAAllParksData'
 
 import { INFO } from './POTAInfo'
+import { POTASpotterControl } from './POTASpotterControl'
 
 registerPOTAAllParksData()
 
@@ -35,12 +36,24 @@ const ActivatorLoggingControl = {
   optionType: 'mandatory'
 }
 
+const SpotterControl = {
+  key: 'pota/spotter',
+  order: 11,
+  icon: 'hand-wave',
+  label: ({ operation, qso }) => {
+    return 'Spotting'
+  },
+  InputComponent: POTASpotterControl,
+  inputWidthMultiplier: 40,
+  optionType: 'mandatory'
+}
+
 const POTAActivity = {
   ...INFO,
   MainExchangePanel: null,
   loggingControls: ({ operation, settings }) => {
     if (findRef(operation, INFO.activationType)) {
-      return [ActivatorLoggingControl]
+      return [ActivatorLoggingControl, SpotterControl]
     } else {
       return [HunterLoggingControl]
     }
