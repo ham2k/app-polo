@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">H2K?PoLo</string>
+    <string name="app_name">PoLo</string>
     <string moduleConfig="true" name="CodePushDeploymentKey"></string>
 </resources>
