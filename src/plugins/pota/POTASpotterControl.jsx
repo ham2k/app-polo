@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { fmtFreqInMHz } from '../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../tools/timeFormats'
@@ -56,6 +56,13 @@ export function POTASpotterControl (props) {
   const online = useSelector(selectRuntimeOnline)
 
   const dispatch = useDispatch()
+
+  const ref = useRef()
+  useEffect(() => {
+    setTimeout(() => {
+      ref?.current?.focus()
+    }, 0)
+  }, [ref])
 
   const [spotterUI, setSpotterUI] = useState({})
   const [comments, setComments] = useState()
@@ -118,6 +125,7 @@ export function POTASpotterControl (props) {
         {spotterUI.message}
       </ThemedButton>
       <ThemedTextInput
+        innerRef={ref}
         style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace }}
         label={'Comments'}
         value={comments ?? ''}

@@ -10,8 +10,10 @@ export function POTALoggingControl (props) {
 
   const ref = useRef()
   useEffect(() => {
-    ref?.current?.focus()
-  }, [])
+    setTimeout(() => {
+      ref?.current?.focus()
+    }, 0)
+  }, [ref])
 
   const [localValue, setLocalValue] = useState('')
 
