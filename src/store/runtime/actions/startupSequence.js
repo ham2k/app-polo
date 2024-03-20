@@ -11,7 +11,10 @@ const MESSAGES = [
   'Checking the tubes',
   'Warming up the tubes',
   'Unfolding the map',
-  'Charging the flux capacitor'
+  'Charging the flux capacitor',
+  'Purging the dilithium chamber', // M1SDH
+  'Activating the turbo encabulator', // M1SDH
+  'Engaging the warp drive' // K4HNT
 ]
 
 export const startupSequence = (onReady) => (dispatch) => {
