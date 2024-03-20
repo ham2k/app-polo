@@ -24,6 +24,8 @@ function simplifiedMode (mode) {
   }
 }
 
+const MAX_SPOT_AGE_IN_MINUTES = 10
+
 export default function OpSpotsTab ({ navigation, route }) {
   const themeColor = 'tertiary'
   const styles = useThemedStyles((baseStyles) => {
@@ -64,6 +66,10 @@ export default function OpSpotsTab ({ navigation, route }) {
       const today = new Date()
       for (const spot of newSpots) {
         const flags = {}
+
+        if (today - spot.timeInMillis > (1000 * 60 * MAX_SPOT_AGE_IN_MINUTES)) {
+          continue
+        }
 
         if (spot.activator === ourCall) {
           flags._ourSpot = true
