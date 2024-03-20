@@ -8,10 +8,7 @@
 
 # Ready to Develop
 
-* SOTA
-* Location
 * WWFF
-* Search POTA / SOTA / WWFF by name
 * Fix time entry to use previous QSO info if missing
 * Fix time entry, make format less strict, and dates relative to today
 
@@ -30,16 +27,8 @@
 * Upload to ClubLog
 * Upload to other logging services
 * CAT Monitoring/Control
-* POTA Self-spotting
 * Queue callsigns
 
 Refactor home screen.
   * Mark operations as "completed" and/or "archived"
   * Group operations by date
-
-
-# Completed
-* Cached POTA database
-* Search POTA by name
-* POTA Spots
-* Refactor Operation name/title

@@ -15,8 +15,3 @@ From AB6D - Brian
 
 
 ---
-
-Testers
-
-Jim - N5JGE — 2024-02-29 "I did two quick SSB activations this morning / afternoon using Ham2K as my only logger."
-  First activation other than KI2D
