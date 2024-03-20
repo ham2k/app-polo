@@ -1,29 +1,31 @@
 /*
-https://sotawatch.sota.org.uk/en/
+https://wwff.co/
 
-https://www.sotadata.org.uk/summitslist.csv
+https://wwff.co/wwff-data/wwff_directory.csv
 
-https://sotastore.blob.core.windows.net/docs/SOTA-General-Rules-June-2022.pdf
+https://wwff.co/wwff_cont/uploads/2023/04/WWFF-Global-Rules-V_5.9.pdf
 
-At least one QSO must be made from the Summit to qualify an activation.
+For all WWFF activations, a minimum of 44 QSOs are required for the activity to
+count towards WWFF activator awards. For some national awards lower
+amounts of QSOs might suffice.
 
-In order for the activation to qualify for the points attributed to that Summit, a minimum of four
-QSOs must be made, each of which must be with a different station.
+The 44 QSOs can be accrued over multiple activations. They do not have to be
+attained during one activation.
 
-QSOs must comprise an exchange of callsigns and signal reports; it is strongly recommended that
-the summit identifier be given during each contact.
+Valid contacts will include an exchange between the activator and the hunter of
+their respective call signs, a signal report, and wherever possible the WWFF
+reference number.
 
-Activator points accrue to the operator regardless of the callsign used. The operator must
-be entitled to use the callsign. Multiple operators of the same station may claim activator
-points. Each individual operator must make the minimum number of QSOs stated above
-in order to claim Activator points.
+Contacts with the same chaser using a club call sign, a vanity call sign, or a
+special event call sign for example, are allowed and will count towards the 44
+QSO threshold.
 
-The Activator claims the Summit points on an expedition basis
+Rules for Hunters
 
-Rules for Chasers
-
-With effect from 01-Jan-2004, only one QSO with a given Summit on any one day (defined as 00:00 to 23:59 UTC) counts for points.
-
+For hunters to claim a park contact, the activator’s log must be uploaded to
+WWFF Logsearch. There are instances where park activators do not provide
+their logs for upload to Logsearch. Unfortunately, in these instances, the contact
+will not count towards WWFF global awards
  */
 
 export const INFO = {
