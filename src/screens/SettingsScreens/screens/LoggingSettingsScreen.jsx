@@ -59,8 +59,8 @@ export default function LoggingSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ showStateField: !settings.showStateField }))}
           />
           <List.Item
-            title="Switch Sent/Rcvd order"
-            description={''}
+            title="Switch signal report order"
+            description={!settings.switchSentRcvd ? 'Sent first, Rcvd second' : 'Rcvd first, Sent second'}
             left={SwitchSentRcvdIcon}
             right={ToggleSwitchSentRcvd}
             onPress={() => dispatch(setSettings({ switchSentRcvd: !settings.switchSentRcvd }))}
