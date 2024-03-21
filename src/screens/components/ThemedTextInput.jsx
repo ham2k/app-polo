@@ -213,7 +213,7 @@ export default function ThemedTextInput (props) {
   return (
     <TextInput
       {...props}
-      style={[colorStyles.paperInput, { height: themeStyles.oneSpace * 7, paddingHorizontal: props.dense ? themeStyles.halfSpace : themeStyles.oneSpace }, style]}
+      style={[colorStyles.paperInput, { marginTop: 0, paddingTop: 0, paddingHorizontal: props.dense ? themeStyles.halfSpace : themeStyles.oneSpace }, style]}
       textColor={colorStyles.paperInput.color}
       selectionColor={colorStyles.paperInput.color}
       underlineColor={colorStyles.paperInput.color}

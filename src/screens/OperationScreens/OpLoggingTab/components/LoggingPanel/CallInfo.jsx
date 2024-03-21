@@ -200,7 +200,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
             <View style={{ flexDirection: 'row' }}>
               {flag && (
                 <Text style={{ flex: 0 }} numberOfLines={1} ellipsizeMode={'tail'}>
-                  {flag}
+                  {flag}{' '}
                 </Text>
 
               )}

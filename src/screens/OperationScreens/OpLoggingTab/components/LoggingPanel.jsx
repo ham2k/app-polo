@@ -27,7 +27,7 @@ prepareCountryFilesData()
 
 function prepareStyles (themeStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
-  const commonPanelHeight = themeStyles.oneSpace * 9
+  const commonPanelHeight = themeStyles.oneSpace * 6
 
   return {
     ...themeStyles,
