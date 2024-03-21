@@ -31,24 +31,23 @@ export function registerWWFFDataFile () {
 
       lines.forEach(line => {
         const row = parseWWFFCSVRow(line, { headers })
-        const lat = Number.parseFloat(row.latitude)
-        const lon = Number.parseFloat(row.longitude)
-        const grid = !row.iaruLocator ? locationToGrid6(lat, lon) : row.iaruLocator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
-        references.push({
-          ref: row.reference.toUpperCase(),
-          dxccCode: Number.parseInt(row.dxccEnum, 10),
-          name: row.name,
-          active: row.status === 'active',
-          grid,
-          lat,
-          lon
-        })
+        if (row.status === 'active') {
+          const lat = Number.parseFloat(row.latitude)
+          const lon = Number.parseFloat(row.longitude)
+          const grid = !row.iaruLocator ? locationToGrid6(lat, lon) : row.iaruLocator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
+          references.push({
+            ref: row.reference.toUpperCase(),
+            dxccCode: Number.parseInt(row.dxccEnum, 10),
+            name: row.name,
+            grid,
+            lat,
+            lon
+          })
+        }
       })
 
-      const activeReferences = references.filter(ref => ref.active)
-
       const data = {
-        activeReferences,
+        references,
         prefixByDXCCCode: references.reduce((obj, item) => {
           if (!obj[item.dxccCode]) obj[item.dxccCode] = item.ref && item.ref.split('-')[0]
           return obj
@@ -61,7 +60,7 @@ export function registerWWFFDataFile () {
       return data
     },
     onLoad: (data) => {
-      WWFFData.activeReferences = data.activeReferences ?? []
+      WWFFData.activeReferences = data.references ?? []
       WWFFData.version = data.version
       WWFFData.prefixByDXCCCode = data.prefixByDXCCCode
       WWFFData.byReference = WWFFData.activeReferences.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
