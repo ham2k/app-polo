@@ -294,6 +294,8 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
       setQSO({ ...qso, startOnMillis: value })
+    } else if (fieldId === 'state') {
+      setQSO({ ...qso, their: { ...qso.their, state: value } })
     }
   }, [qso, setQSO, pausedTime, dispatch, operation?.uuid])
 
