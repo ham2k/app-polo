@@ -117,6 +117,29 @@ export const MainExchangePanel = ({
     />
   )
 
+  if (settings.showStateField) {
+    fields.push(
+      <ThemedTextInput
+        key="state"
+        innerRef={refStack.shift()}
+        themeColor={themeColor}
+        style={[styles.input, { minWidth: styles.oneSpace * 6, flex: 1 }]}
+        value={qso?.their?.state ?? ''}
+        label="State"
+        placeholder={''}
+        uppercase={true}
+        noSpaces={true}
+        onChange={handleFieldChange}
+        onSubmitEditing={handleSubmit}
+        fieldId={'state'}
+        onKeyPress={keyHandler}
+        keyboard={'dumb'}
+        maxLength={5}
+        focusedRef={focusedRef}
+      />
+    )
+  }
+
   activities.filter(activity => findRef(operation, activity.key) && activity.fieldsForMainExchangePanel).forEach(activity => {
     fields = fields.concat(
       activity.fieldsForMainExchangePanel(

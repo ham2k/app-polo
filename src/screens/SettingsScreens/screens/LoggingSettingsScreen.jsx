@@ -1,14 +1,17 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useState } from 'react'
-import { List } from 'react-native-paper'
+import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { useSelector } from 'react-redux'
-import { selectSettings } from '../../../store/settings'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectSettings, setSettings } from '../../../store/settings'
 import { FlagsDialog } from '../components/FlagsDialog'
 
 export default function LoggingSettingsScreen ({ navigation }) {
+  const dispatch = useDispatch()
+
   const styles = useThemedStyles((baseStyles) => {
     return {
       ...baseStyles,
@@ -24,17 +27,13 @@ export default function LoggingSettingsScreen ({ navigation }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
-  const FlagsIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="flag" />
-  ), [styles])
-
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <List.Section>
-          <List.Item title={'Show Flags'}
-            description={{ none: "Don't show any flags", all: 'For all contacts' }[settings.dxFlags] || 'Only for DX contacts'}
-            left={FlagsIcon}
+          <List.Item title={'Country Flags'}
+            description={{ none: "Don't show any flags", all: 'Show flags for all contacts' }[settings.dxFlags] || 'Show only for DX contacts'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="flag" />}
             onPress={() => setCurrentDialog('flags')}
           />
           {currentDialog === 'flags' && (
@@ -45,6 +44,12 @@ export default function LoggingSettingsScreen ({ navigation }) {
               onDialogDone={() => setCurrentDialog('')}
             />
           )}
+          <List.Item title={'State Field'}
+            description={settings.showStateField ? 'Include State field in main exchange' : "Don't include State field" }
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="select-marker" />}
+            right={() => <Switch value={!!settings.showStateField} onValueChange={(value) => dispatch(setSettings({ showStateField: value })) } />}
+            onPress={() => dispatch(setSettings({ showStateField: !settings.showStateField }))}
+          />
         </List.Section>
       </ScrollView>
     </ScreenContainer>
