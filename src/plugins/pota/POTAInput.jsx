@@ -15,6 +15,7 @@ export default function POTAInput (props) {
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
+
     text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix ?? 'K'}-${p1}`)
     text = text.replace(ADD_DASHES_REGEX, (match, p1, p2) => `${p1}-${p2}`)
     text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1}, ${p2}`)

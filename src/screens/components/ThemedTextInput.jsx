@@ -80,30 +80,55 @@ export default function ThemedTextInput (props) {
     onChangeText, onChange, onKeyPress
   ])
 
-  const handleFocus = useCallback((event) => {
-    if (focusedRef) focusedRef.current = actualInnerRef.current
-    onFocus && onFocus({ ...event, ref: actualInnerRef })
-  }, [onFocus, focusedRef, actualInnerRef])
-
-  const handleBlur = useCallback((event) => {
-    if (focusedRef) focusedRef.current = undefined
-    onBlur && onBlur({ ...event, ref: actualInnerRef.current })
-  }, [onBlur, focusedRef, actualInnerRef])
-
   const [currentSelection, setCurrentSelection] = useState({})
+  const [isFocused, setIsFocused] = useState(false)
+
+  useEffect(() => {
+    if (focusedRef && isFocused) {
+      focusedRef.current = {
+        onNumberKey: (number) => {
+          if (!isFocused) return
+
+          let { start, end } = currentSelection
+
+          if (!start && !end) {
+            // If selection position is unknown, we assume the cursor is at the end of the string
+            start = strValue.length
+            end = strValue.length
+          }
+
+          const newValue = strValue.substring(0, start) + number + strValue.substring(end)
+
+          handleChange && handleChange({ nativeEvent: { text: newValue, target: actualInnerRef.current._nativeTag } })
+
+          if (strValue.length === start && strValue.length === end) {
+            // Cursor was at the end of the original value
+            // Since the handleChange method might modify the value, and does not cause
+            // a call to onSelectionChange, we need to mark the current selection state as 'unknown'
+            setCurrentSelection({})
+          } else {
+            setCurrentSelection({ start: start + 1, end: end + 1 })
+          }
+        }
+      }
+    }
+  }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, strValue, actualInnerRef])
+
   const handleSelectionChange = useCallback((event) => {
     const { nativeEvent: { selection: { start, end } } } = event
 
     setCurrentSelection({ start, end })
   }, [])
 
-  const handleNumberKey = useCallback((number) => {
-    const { start, end } = currentSelection
+  const handleFocus = useCallback((event) => {
+    setIsFocused(true)
+    onFocus && onFocus({ ...event, ref: actualInnerRef })
+  }, [onFocus, actualInnerRef])
 
-    const newValue = strValue.substring(0, start) + number + strValue.substring(end)
-    handleChange && handleChange({ nativeEvent: { text: newValue } })
-    setCurrentSelection({ start: start + 1, end: end + 1 })
-  }, [handleChange, strValue, currentSelection])
+  const handleBlur = useCallback((event) => {
+    setIsFocused(false)
+    onBlur && onBlur({ ...event, ref: actualInnerRef.current })
+  }, [onBlur, actualInnerRef])
 
   const colorStyles = useMemo(() => {
     return {
@@ -178,12 +203,11 @@ export default function ThemedTextInput (props) {
         onFocus={handleFocus}
         onBlur={handleBlur}
         onSelectionChange={handleSelectionChange}
-        handleNumberKey={handleNumberKey}
       />
     )
   }, [
     keyboardOptions, actualInnerRef, strValue, placeholder, colorStyles, themeStyles, textStyle,
-    onSubmitEditing, onKeyPress, handleFocus, handleBlur, handleChange, handleNumberKey, handleSelectionChange
+    onSubmitEditing, onKeyPress, handleFocus, handleBlur, handleChange, handleSelectionChange
   ])
 
   return (

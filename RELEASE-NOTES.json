@@ -2,7 +2,8 @@
   "0.6.0": {
     "changes": [
       "Added crash reporting",
-      "POTA Spotting (thanks to info from VK1AO)"
+      "POTA Spotting (thanks to info from VK1AO)",
+      "Fixed Number Keys"
     ]
   },
   "0.5.3": {
