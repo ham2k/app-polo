@@ -61,14 +61,20 @@ function oneQSOtoADIF (qso, operation, common, timeOfffset = 0) {
   str += adifField('TIME_ON', fmtADIFTime(qso.startOnMillis + timeOfffset))
   str += adifField('RST_RCVD', qso.their.sent)
   str += adifField('RST_SENT', qso.our.sent)
-  str += adifField('STATION_CALLSIGN', common.stationCall)
-  str += adifField('OPERATOR', qso.our.call ?? common.operatorCall)
+  str += adifField('STATION_CALLSIGN', qso.our.call ?? common.stationCall)
   str += adifField('OPERATOR', common.operatorCall)
   str += adifField('NOTES', qso.notes)
-  if (qso.grid) str += adifField('GRIDSQUARE', qso.grid)
-  else if (common?.grid) str += adifField('MY_GRIDSQUARE', common.grid)
+  str += adifField('GRIDSQUARE', qso.their?.grid ?? qso.their?.guess?.grid)
+  str += adifField('MY_GRIDSQUARE', qso?.our?.grid ?? common.grid)
 
-  if (qso.their?.arrlSection) str += adifField('ARRL_SECT', qso.their.arrlSection)
+  str += adifField('NAME', qso.their?.name ?? qso.their?.guess?.name)
+  str += adifField('DXCC', qso.their?.dxccCode ?? qso.their?.guess?.dxccCode)
+  str += adifField('COUNTRY', qso.their?.country ?? qso.their?.guess?.country)
+  str += adifField('STATE', qso.their?.state ?? qso.their?.guess?.state)
+  str += adifField('CQZ', qso.their?.cqZone ?? qso.their?.guess?.cqZone)
+  str += adifField('ITUZ', qso.their?.ituZone ?? qso.their?.guess?.ituZone)
+
+  str += adifField('ARRL_SECT', qso.their.arrlSection)
 
   if (common?.potaActivation) {
     str += adifField('MY_SIG', 'POTA')

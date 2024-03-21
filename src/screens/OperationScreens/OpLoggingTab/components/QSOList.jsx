@@ -20,6 +20,8 @@ function prepareStyles (themeStyles, isDeleted, width) {
     }
   }
 
+  const DEBUG = false
+
   return {
     ...themeStyles,
     fields: {
@@ -29,7 +31,8 @@ function prepareStyles (themeStyles, isDeleted, width) {
         flex: 0,
         marginLeft: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 4 : themeStyles.oneSpace * 2,
-        textAlign: 'right'
+        textAlign: 'right',
+        borderWidth: DEBUG ? 1 : 0
       },
       time: {
         ...themeStyles.text.numbers,
@@ -38,7 +41,8 @@ function prepareStyles (themeStyles, isDeleted, width) {
         flex: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 14 : themeStyles.oneSpace * 7,
         marginLeft: themeStyles.oneSpace,
-        textAlign: 'right'
+        textAlign: 'right',
+        borderWidth: DEBUG ? 1 : 0
       },
       freq: {
         ...themeStyles.text.numbers,
@@ -47,7 +51,8 @@ function prepareStyles (themeStyles, isDeleted, width) {
         flex: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 11 : themeStyles.oneSpace * 8,
         marginLeft: themeStyles.oneSpace,
-        textAlign: 'right'
+        textAlign: 'right',
+        borderWidth: DEBUG ? 1 : 0
       },
       freqMHz: {
         fontWeight: '600',
@@ -65,10 +70,26 @@ function prepareStyles (themeStyles, isDeleted, width) {
         ...themeStyles.text.callsign,
         ...commonStylesForStatus,
         fontWeight: 'bold',
-        flex: 1,
+        flex: 0,
         marginLeft: themeStyles.oneSpace,
-        minWidth: themeStyles.oneSpace * 7,
-        textAlign: 'left'
+        minWidth: themeStyles.oneSpace * 8,
+        textAlign: 'left',
+        borderWidth: DEBUG ? 1 : 0
+      },
+      name: {
+        ...commonStylesForStatus,
+        flex: 1,
+        marginLeft: themeStyles.halfSpace,
+        textAlign: 'left',
+        borderWidth: DEBUG ? 1 : 0
+      },
+      location: {
+        ...commonStylesForStatus,
+        flex: 0,
+        marginLeft: themeStyles.halfSpace,
+        minWidth: themeStyles.oneSpace * 3.5,
+        textAlign: 'center',
+        borderWidth: DEBUG ? 1 : 0
       },
       signal: {
         ...themeStyles.text.numbers,
@@ -77,7 +98,8 @@ function prepareStyles (themeStyles, isDeleted, width) {
         flex: 0,
         minWidth: themeStyles.oneSpace * 3,
         marginLeft: themeStyles.oneSpace,
-        textAlign: 'right'
+        textAlign: 'right',
+        borderWidth: DEBUG ? 1 : 0
       },
       exchange: {
         ...themeStyles.text.callsign,
@@ -85,12 +107,14 @@ function prepareStyles (themeStyles, isDeleted, width) {
         flex: 0,
         minWidth: themeStyles.oneSpace * 3,
         marginLeft: themeStyles.oneSpace,
-        textAlign: 'right'
+        textAlign: 'right',
+        borderWidth: DEBUG ? 1 : 0
       },
       icon: {
         ...commonStylesForStatus,
         flex: 0,
-        width: themeStyles.oneSpace * 2
+        width: themeStyles.oneSpace * 2,
+        borderWidth: DEBUG ? 1 : 0
       }
     }
   }
