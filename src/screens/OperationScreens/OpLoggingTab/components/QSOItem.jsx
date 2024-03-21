@@ -52,12 +52,21 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         </Text>
         <Text style={styles.fields.call}>
           {qso.their?.call ?? '?'}
+        </Text>
+        <Text style={styles.fields.location}>
           {theirInfo?.entityPrefix && (settings.dxFlags === 'all' || (settings.dxFlags !== 'none' && theirInfo.entityPrefix !== ourInfo?.entityPrefix)) && (
             <Text style={styles.fields.badges}>
               {' '}{DXCC_BY_PREFIX[theirInfo.entityPrefix]?.flag}
             </Text>
           )}
-
+          {(qso?.their?.state || qso?.their?.guess?.state) && (
+            qso?.their?.state || qso?.their?.guess?.state
+          )}
+        </Text>
+        <Text style={styles.fields.name}>
+          {extendedWidth && (
+            qso.their?.name ?? qso.their?.guess?.name ?? ''
+          )}
         </Text>
         {qso.notes && (
           <Icon source="note-outline" size={styles.oneSpace * 2} style={styles.fields.icon} />
