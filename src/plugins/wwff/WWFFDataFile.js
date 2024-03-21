@@ -14,7 +14,7 @@ export function registerWWFFDataFile () {
     name: 'WWFF - All Parks',
     description: 'Database of all WWFF references',
     infoURL: 'https://wwff.co/directory/',
-    icon: 'file-image-outline',
+    icon: 'file-word-outline',
     maxAgeInDays: 7,
     autoLoad: true,
     fetch: async () => {
