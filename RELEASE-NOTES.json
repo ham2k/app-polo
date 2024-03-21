@@ -3,7 +3,8 @@
     "changes": [
       "Added crash reporting",
       "POTA Spotting (thanks to info from VK1AO)",
-      "Fixed Number Keys"
+      "Fixed Number Keys",
+      "Fixed proper exporting of station callsign to ADIF"
     ]
   },
   "0.5.3": {
