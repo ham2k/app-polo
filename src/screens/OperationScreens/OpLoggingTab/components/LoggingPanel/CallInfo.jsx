@@ -18,7 +18,7 @@ import { selectSettings } from '../../../../../store/settings'
 
 import { CallInfoDialog } from './CallInfoDialog'
 
-export function CallInfo ({ qso, operation, style, themeColor }) {
+export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
   const styles = useThemedStyles((baseStyles) => {
     // const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
     return {
@@ -60,7 +60,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
   const [showDialog, setShowDialog] = useState(false)
 
   const guess = useMemo(() => { // Parse the callsign
-    if (qso?.their?.guess) {
+    if (qso?.their?.guess?.baseCall) {
       return qso?.their?.guess
     } else {
       let newGuess = parseCallsign(qso?.their?.call)
@@ -108,17 +108,74 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
     }
   }, [qso?.refs])
 
-  const pota = useLookupParkQuery({ ref: potaRef }, { skip: !potaRef })
+  const potaLookup = useLookupParkQuery({ ref: potaRef }, { skip: !potaRef, online })
+  const pota = useMemo(() => potaLookup?.data ?? {}, [potaLookup?.data])
+
+  useEffect(() => {
+    const theirInfo = {}
+    if (qrz?.name && qrz?.name !== qso?.their?.guess?.name) {
+      theirInfo.qrzInfo = {
+        name: qrz.name,
+        state: qrz.state,
+        city: qrz.city,
+        country: qrz.country,
+        county: qrz.county,
+        postal: qrz.postal,
+        grid: qrz.grid,
+        cqZone: qrz.cqZone,
+        ituZone: qrz.ituZone,
+        image: qrz.image,
+        imageInfo: qrz.imageInfo
+      }
+
+      theirInfo.guess = {
+        ...theirInfo.guess,
+        name: qrz.name,
+        grid: qrz.grid
+      }
+
+      if (qrz.country === 'United States' || qrz.country === 'Canada') {
+        theirInfo.guess.state = qrz.state
+      }
+    } else if (!qrz?.name && qso?.their?.qrzInfo?.name) {
+      theirInfo.qrzInfo = {}
+      theirInfo.guess = {
+        ...theirInfo.guess,
+        state: '',
+        grid: '',
+        name: ''
+      }
+    }
+
+    if (pota.grid6 && qso?.their?.guess?.grid !== pota.grid6) {
+      theirInfo.guess = {
+        ...theirInfo.guess,
+        grid: pota.grid6
+      }
+
+      if (pota.reference?.startsWith('US-') || pota.reference?.startsWith('CA-')) {
+        const potaState = (pota.locationDesc || '').split('-').pop().trim()
+        theirInfo.guess.state = potaState
+      }
+
+      // console.log(pota.locationDesc)
+      theirInfo.guess = { ...theirInfo.guess }
+    }
+
+    if (Object.keys(theirInfo).length > 0) {
+      onChange && onChange({ their: theirInfo })
+    }
+  }, [qrz, pota, onChange, qso?.their?.qrzInfo, qso?.their?.guess])
 
   const [locationInfo, flag] = useMemo(() => {
     const parts = []
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
-    if (pota?.data?.name) {
-      parts.push(['POTA', potaRef, pota.data.name, pota.data.parktypeDesc].filter(x => x).join(' '))
-      if (pota.data.locationName) parts.push(pota.data.locationName)
-    } else if (pota?.data?.error) {
-      parts.push(`POTA ${potaRef} ${pota.data?.error}`)
+    if (pota.name) {
+      parts.push(['POTA', potaRef, pota.name, pota.parktypeDesc].filter(x => x).join(' '))
+      if (pota.locationName) parts.push(pota.locationName)
+    } else if (pota.error) {
+      parts.push(`POTA ${potaRef} ${pota.error}`)
     } else {
       if (entity) parts.push(entity.shortName)
 
@@ -136,7 +193,7 @@ export function CallInfo ({ qso, operation, style, themeColor }) {
       parts.push(qrz.error)
       parts.push(qrz.name)
       if (qrz.call && qrz.originalCall && qrz.call !== qrz.originalCall) {
-        parts.push(`(Now ${qrz.data.call})`)
+        parts.push(`(Now ${qrz.call})`)
       }
     }
 
