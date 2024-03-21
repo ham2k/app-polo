@@ -26,6 +26,7 @@ const NotesControlInputs = ({ qso, operation, settings, disabled, icon, style, s
         onSubmitEditing={handleSubmit}
         fieldId={'notes'}
         focusedRef={focusedRef}
+        keyboard="dumb"
       />
     </View>
   )

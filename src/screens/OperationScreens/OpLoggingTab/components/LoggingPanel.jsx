@@ -27,7 +27,7 @@ prepareCountryFilesData()
 
 function prepareStyles (themeStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
-  const commonPanelHeight = themeStyles.oneSpace * 9
+  const commonPanelHeight = themeStyles.oneSpace * 6
 
   return {
     ...themeStyles,
@@ -294,8 +294,23 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
       setQSO({ ...qso, startOnMillis: value })
+    } else if (fieldId === 'state') {
+      setQSO({ ...qso, their: { ...qso.their, state: value } })
     }
   }, [qso, setQSO, pausedTime, dispatch, operation?.uuid])
+
+  const handleBatchChanges = useCallback((changes) => {
+    if (changes.their) {
+      if (changes.their.guess) {
+        changes.their.guess = { ...qso.their.guess, ...changes.their.guess }
+      }
+      changes.their = { ...qso.their, ...changes.their }
+    }
+    if (changes.our) {
+      changes.their = { ...qso.our, ...changes.our }
+    }
+    setQSO({ ...qso, ...changes })
+  }, [qso, setQSO])
 
   const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
     // Ensure the focused component has a chance to update values
@@ -331,7 +346,6 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
           qso.startOn = new Date(qso.startOnMillis).toISOString()
           if (qso.endOnMillis) qso.endOn = new Date(qso.endOnMillis).toISOString()
           qso.our = qso.our || {}
-          qso.our.call = qso.our.call || operation.stationCall || settings.operatorCall
           qso.our.sent = qso.our.sent || (operation.mode === 'CW' || operation.mode === 'RTTY' ? '599' : '59')
 
           qso.their = qso.their || {}
@@ -346,7 +360,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         })
       }
     }, 10)
-  }, [qso, setQSO, isValidQSO, dispatch, operation, settings, setLoggingState, setCurrentSecondaryControl])
+  }, [qso, setQSO, isValidQSO, dispatch, operation, setLoggingState, setCurrentSecondaryControl])
 
   const [undoInfo, setUndoInfo] = useState()
 
@@ -386,9 +400,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
   const handleNumberKey = useCallback((number) => {
     if (!focusedRef.current) return
-    // NOTE: This is a hack that can break on newer versions of React Native
-    const component = focusedRef.current._internalFiberInstanceHandleDEV
-    component?.memoizedProps?.handleNumberKey(number)
+    focusedRef.current.onNumberKey && focusedRef.current.onNumberKey(number)
   }, [focusedRef])
 
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
@@ -452,7 +464,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
                   </View>
                 ) : (
                   qso?.their?.call ? (
-                    <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} />
+                    <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} onChange={handleBatchChanges} />
                   ) : (
                     <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
                   )

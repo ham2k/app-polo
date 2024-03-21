@@ -53,11 +53,10 @@ export default function OperationScreen ({ navigation, route }) {
         initialLayout={{ width: dimensions.width, height: dimensions.height }}
         initialRouteName={ settingsOnly ? 'Settings' : 'QSOs'}
         screenOptions={{
-          tabBarItemStyle: [{ width: dimensions.width / 3 }, styles.screenTabBarItem], // This allows tab titles to be rendered while the screen is transitioning in
+          tabBarItemStyle: [{ width: dimensions.width / 3 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 5, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
           tabBarLabelStyle: styles.screenTabBarLabel,
           tabBarStyle: styles.screenTabBar,
           tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryLighter, height: styles.halfSpace * 1.5 },
-
           // See https://github.com/react-navigation/react-navigation/issues/11301
           // on iOS, if the keyboard is open, tabs get stuck when switching
           animationEnabled: Platform.OS !== 'ios'

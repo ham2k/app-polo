@@ -4,9 +4,11 @@ import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../tools
 import { POTAAllParks } from './POTAAllParksData'
 import { INFO } from './POTAInfo'
 import POTAInput from './POTAInput'
+import { useSelector } from 'react-redux'
+import { selectOperationCallInfo } from '../../store/operations'
 
 export function POTALoggingControl (props) {
-  const { qso, setQSO, style, styles } = props
+  const { qso, operation, setQSO, style, styles } = props
 
   const ref = useRef()
   useEffect(() => {
@@ -14,6 +16,8 @@ export function POTALoggingControl (props) {
       ref?.current?.focus()
     }, 0)
   }, [ref])
+
+  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const [localValue, setLocalValue] = useState('')
 
@@ -34,11 +38,13 @@ export function POTALoggingControl (props) {
 
   const defaultPrefix = useMemo(() => {
     if (qso?.their?.guess?.dxccCode) {
-      return POTAAllParks.prefixByDXCCCode[qso?.their.guess.dxccCode] ?? 'K'
+      return POTAAllParks.prefixByDXCCCode[qso?.their.guess.dxccCode] ?? '?'
+    } else if (ourInfo?.dxccCode) {
+      return POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] ?? '?'
     } else {
-      return 'K'
+      return '?'
     }
-  }, [qso?.their?.guess?.dxccCode])
+  }, [qso?.their?.guess?.dxccCode, ourInfo?.dxccCode])
 
   return (
     <POTAInput

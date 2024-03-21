@@ -58,6 +58,7 @@ export function registerPOTAAllParksData () {
     },
     onLoad: (data) => {
       POTAAllParks.activeParks = data.activeParks ?? []
+      POTAAllParks.prefixByDXCCCode = data.prefixByDXCCCode ?? {}
       POTAAllParks.version = data.version
 
       POTAAllParks.byReference = POTAAllParks.activeParks.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
