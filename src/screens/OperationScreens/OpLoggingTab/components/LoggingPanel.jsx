@@ -386,9 +386,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
   const handleNumberKey = useCallback((number) => {
     if (!focusedRef.current) return
-    // NOTE: This is a hack that can break on newer versions of React Native
-    const component = focusedRef.current._internalFiberInstanceHandleDEV
-    component?.memoizedProps?.handleNumberKey(number)
+    focusedRef.current.onNumberKey && focusedRef.current.onNumberKey(number)
   }, [focusedRef])
 
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
