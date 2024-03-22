@@ -5,10 +5,12 @@ import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 export function qsonToADIF ({ operation, settings, qsos }) {
   const potaActivationRef = findRef(operation, 'potaActivation')
   const sotaActivationRef = findRef(operation, 'sotaActivation')
+  const wwffActivationRef = findRef(operation, 'wwffActivation')
 
   const common = {
     potaActivation: potaActivationRef?.ref,
     sotaActivation: sotaActivationRef?.ref,
+    wwffActivation: wwffActivationRef?.ref,
     grid: operation.grid,
     stationCall: operation.stationCall ?? settings.operatorCall
   }
@@ -36,9 +38,11 @@ export function qsonToADIF ({ operation, settings, qsos }) {
 function oneQSOtoADIFWithPOTAMultiples (qso, operation, common) {
   const potaRefs = filterRefs(qso, 'pota')
   const sotaRef = findRef(qso, 'sota')
+  const wwffRef = findRef(qso, 'wwff')
   let str = ''
 
   if (sotaRef) common = { ...common, sota: sotaRef.ref }
+  if (wwffRef) common = { ...common, wwff: wwffRef.ref }
 
   if (potaRefs.length === 0) {
     str += oneQSOtoADIF(qso, operation, common)
@@ -94,6 +98,16 @@ function oneQSOtoADIF (qso, operation, common, timeOfffset = 0) {
 
   if (common?.sota) {
     str += adifField('SOTA_REF', common.sota)
+  }
+
+  if (common?.wwffActivation) {
+    str += adifField('MY_SIG', 'WWFF')
+    str += adifField('MY_SIG_INFO', common.wwffActivation)
+  }
+
+  if (common?.wwff) {
+    str += adifField('SIG', 'WWFF')
+    str += adifField('SIG_INFO', common.wwff)
   }
 
   str += '<EOR>\n'
