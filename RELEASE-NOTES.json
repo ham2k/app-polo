@@ -4,6 +4,8 @@
       "POTA Spotting (thanks to info from VK1AO)",
       "Added State Field",
       "Capture data from QRZ.com and export to ADIF",
+      "WWFF (contributed by M1SDH)",
+      "Option to switch Sent/Rcvd field order (contributed by M1SDH)",
       "Added crash reporting",
       "Fixed Number Keys",
       "Fixed proper exporting of station callsign to ADIF"
