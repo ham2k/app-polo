@@ -38,6 +38,7 @@
     "@react-navigation/native-stack": "^6.9.17",
     "@reduxjs/toolkit": "^1.9.7",
     "@rollbar/react": "^0.11.2",
+    "@sayem314/react-native-keep-awake": "^1.2.3",
     "auto-bind": "^5.0.1",
     "clone-deep": "^4.0.1",
     "color": "^4.2.3",

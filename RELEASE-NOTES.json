@@ -4,6 +4,7 @@
       "POTA Spotting (thanks to info from VK1AO)",
       "Added State Field",
       "Capture data from QRZ.com and export to ADIF",
+      "Option to keep device awake",
       "WWFF (contributed by M1SDH)",
       "Option to switch Sent/Rcvd field order (contributed by M1SDH)",
       "Added crash reporting",
