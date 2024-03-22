@@ -76,46 +76,41 @@ export const MainExchangePanel = ({
       focusedRef={focusedRef}
     />
   )
-  fields.push(
+  const rstFieldRefs = [refStack.shift(), refStack.shift()]
+  if (settings.switchSentRcvd) rstFieldRefs.reverse()
+  const rstFieldProps = {
+    themeColor,
+    style: [styles?.text?.numbers, { minWidth: styles.oneSpace * 6, flex: 1 }],
+    placeholder: rstLength === 3 ? '599' : '59',
+    noSpaces: true,
+    onChange: handleRSTChange,
+    onSubmitEditing: handleSubmit,
+    onKeyPress: keyHandler,
+    keyboard: 'numbers',
+    numeric: true,
+    maxLength: rstLength + 1,
+    focusedRef
+  }
+  const rstFields = [
     <ThemedTextInput
+      {...rstFieldProps}
       key="sent"
-      innerRef={refStack.shift()}
-      themeColor={themeColor}
-      style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 6, flex: 1 }]}
+      innerRef={rstFieldRefs.shift()}
       value={qso?.our?.sent ?? ''}
       label="Sent"
-      placeholder={rstLength === 3 ? '599' : '59'}
-      noSpaces={true}
-      onChange={handleRSTChange}
-      onSubmitEditing={handleSubmit}
       fieldId={'ourSent'}
-      onKeyPress={keyHandler}
-      keyboard={'numbers'}
-      numeric={true}
-      maxLength={rstLength + 1}
-      focusedRef={focusedRef}
-    />
-  )
-  fields.push(
+    />,
     <ThemedTextInput
+      {...rstFieldProps}
       key="received"
-      innerRef={refStack.shift()}
-      themeColor={themeColor}
-      style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 6, flex: 1 }]}
+      innerRef={rstFieldRefs.shift()}
       value={qso?.their?.sent || ''}
       label="Rcvd"
-      placeholder={rstLength === 3 ? '599' : '59'}
-      noSpaces={true}
-      onChange={handleRSTChange}
-      onSubmitEditing={handleSubmit}
       fieldId={'theirSent'}
-      onKeyPress={keyHandler}
-      keyboard={'numbers'}
-      numeric={true}
-      maxLength={rstLength + 1}
-      focusedRef={focusedRef}
     />
-  )
+  ]
+  if (settings.switchSentRcvd) rstFields.reverse()
+  fields = fields.concat(rstFields)
 
   if (settings.showStateField) {
     fields.push(
