@@ -77,12 +77,12 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         {qso?.their?.exchange ? (
           <>
             {extendedWidth && (
-              <Text style={styles.fields.signal}>{qso?.our?.sent}{'  '}{qso?.their?.sent}</Text>
+              <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{'  '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
             )}
             <Text style={styles.fields.exchange}>{qso?.their?.exchange}</Text>
           </>
         ) : (
-          <Text style={styles.fields.signal}>{qso?.our?.sent}{'  '}{qso?.their?.sent}</Text>
+          <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{'  '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
         )}
       </View>
     </TouchableRipple>

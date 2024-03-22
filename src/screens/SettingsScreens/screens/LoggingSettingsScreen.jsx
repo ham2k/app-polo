@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
@@ -27,6 +27,14 @@ export default function LoggingSettingsScreen ({ navigation }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
+  const SwitchSentRcvdIcon = useCallback(() => (
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="arrow-left-right" />
+  ), [styles])
+
+  const ToggleSwitchSentRcvd = useCallback(() => (
+    <Switch value={!!settings.switchSentRcvd} onValueChange={(value) => dispatch(setSettings({ switchSentRcvd: value })) } />
+  ), [dispatch, settings.switchSentRcvd])
+
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
@@ -49,6 +57,13 @@ export default function LoggingSettingsScreen ({ navigation }) {
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="select-marker" />}
             right={() => <Switch value={!!settings.showStateField} onValueChange={(value) => dispatch(setSettings({ showStateField: value })) } />}
             onPress={() => dispatch(setSettings({ showStateField: !settings.showStateField }))}
+          />
+          <List.Item
+            title="Switch signal report order"
+            description={!settings.switchSentRcvd ? 'Sent first, Rcvd second' : 'Rcvd first, Sent second'}
+            left={SwitchSentRcvdIcon}
+            right={ToggleSwitchSentRcvd}
+            onPress={() => dispatch(setSettings({ switchSentRcvd: !settings.switchSentRcvd }))}
           />
         </List.Section>
       </ScrollView>
