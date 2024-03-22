@@ -1,4 +1,7 @@
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { createSelector, createSlice } from '@reduxjs/toolkit'
+import { Platform } from 'react-native'
 
 const initialState = {
   operatorCall: '',
@@ -37,7 +40,24 @@ export const { setOperatorCall, setOnboarded, setAccountInfo, setSettings } = se
 
 export const selectSettings = createSelector(
   [(state) => state?.settings],
-  (value) => value ?? {}
+  (settings) => {
+    settings = settings || {}
+    if (settings.showNumbersRow === undefined) {
+      settings.showNumbersRow = Platform.OS === 'ios'
+    }
+
+    if (settings.showStateField === undefined && settings.operatorCall) {
+      let info = parseCallsign(settings.operatorCall)
+      if (info.baseCall) {
+        info = annotateFromCountryFile(info)
+      }
+      if (info?.entityPrefix?.startsWith('K') || info?.entityPrefix?.startsWith('VE')) {
+        settings.showStateField = true
+      }
+    }
+
+    return settings
+  }
 )
 
 export const selectOperatorCall = createSelector(
