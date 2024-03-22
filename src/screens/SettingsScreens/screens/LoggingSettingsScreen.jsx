@@ -58,6 +58,15 @@ export default function LoggingSettingsScreen ({ navigation }) {
             right={() => <Switch value={!!settings.showStateField} onValueChange={(value) => dispatch(setSettings({ showStateField: value })) } />}
             onPress={() => dispatch(setSettings({ showStateField: !settings.showStateField }))}
           />
+
+          <List.Item
+            title="Show numbers row"
+            description={settings.showNumbersRow ? 'Quick buttons for numbers' : "Don't show numbers row"}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />}
+            right={() => <Switch value={!!settings.showNumbersRow} onValueChange={(value) => dispatch(setSettings({ showNumbersRow: value })) } />}
+            onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))}
+          />
+
           <List.Item
             title="Switch signal report order"
             description={!settings.switchSentRcvd ? 'Sent first, Rcvd second' : 'Rcvd first, Sent second'}
