@@ -74,6 +74,14 @@ export default function LoggingSettingsScreen ({ navigation }) {
             right={ToggleSwitchSentRcvd}
             onPress={() => dispatch(setSettings({ switchSentRcvd: !settings.switchSentRcvd }))}
           />
+
+          <List.Item
+            title="Keep device awake"
+            description={settings.keepDeviceAwake ? 'Prevent device from locking screen' : 'Allow regular screen locking'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="coffee" />}
+            right={() => <Switch value={!!settings.keepDeviceAwake} onValueChange={(value) => dispatch(setSettings({ keepDeviceAwake: value })) } />}
+            onPress={() => dispatch(setSettings({ keepDeviceAwake: !settings.keepDeviceAwake }))}
+          />
         </List.Section>
       </ScrollView>
     </ScreenContainer>
