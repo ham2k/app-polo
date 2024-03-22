@@ -13,6 +13,7 @@ import { selectSettings } from '../../store/settings'
 import OpSpotsTab from './OpSpotsTab.jsx/OpSpotsTab'
 import { startTickTock } from '../../store/time'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import KeepAwake from '@sayem314/react-native-keep-awake'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -48,6 +49,7 @@ export default function OperationScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
+      {settings.keepDeviceAwake && <KeepAwake />}
       <Tab.Navigator
         id={'OperationScreen_TabNavigator'}
         initialLayout={{ width: dimensions.width, height: dimensions.height }}

@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Switch, Text } from 'react-native-paper'
+import { List, Text } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
 
 import packageJson from '../../../../package.json'
 
-import { selectSettings, setSettings } from '../../../store/settings'
+import { selectSettings } from '../../../store/settings'
 import { importQSON } from '../../../store/operations'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
@@ -37,10 +37,6 @@ export default function MainSettingsScreen ({ navigation }) {
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={{ dark: 'weather-night', light: 'white-balance-sunny' }[settings.theme] || 'theme-light-dark'} />
   ), [styles, settings?.theme])
 
-  const NumbersRowIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />
-  ), [styles])
-
   const QRZAccountIcon = useCallback(() => (
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />
   ), [styles])
@@ -64,10 +60,6 @@ export default function MainSettingsScreen ({ navigation }) {
   const AuthorIcon = useCallback(() => (
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />
   ), [styles])
-
-  const ToggleNumbersRow = useCallback(() => (
-    <Switch value={!!settings.showNumbersRow} onValueChange={(value) => dispatch(setSettings({ showNumbersRow: value })) } />
-  ), [dispatch, settings.showNumbersRow])
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -109,14 +101,6 @@ export default function MainSettingsScreen ({ navigation }) {
             onDialogDone={() => setCurrentDialog('')}
           />
         )}
-
-        <List.Item
-          title="Show numbers row"
-          description={''}
-          left={NumbersRowIcon}
-          right={ToggleNumbersRow}
-          onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))}
-        />
 
         <List.Item
           title="Logging Settings"
