@@ -127,7 +127,6 @@ android {
         }
         prod {
             dimension "environment"
-            applicationIdSuffix ".prod"
         }
     }
 }
