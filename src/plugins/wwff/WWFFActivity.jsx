@@ -4,6 +4,7 @@ import { INFO } from './WWFFInfo'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
+import { WWFFSpotterControl } from './WWFFSpotterControl'
 
 registerWWFFDataFile()
 
@@ -33,12 +34,24 @@ const ActivatorLoggingControl = {
   optionType: 'mandatory'
 }
 
+const SpotterControl = {
+  key: 'wwff/spotter',
+  order: 11,
+  icon: INFO.icon,
+  label: ({ operation, qso }) => {
+    return 'Spotting'
+  },
+  InputComponent: WWFFSpotterControl,
+  inputWidthMultiplier: 40,
+  optionType: 'mandatory'
+}
+
 const WWFFActivity = {
   ...INFO,
   MainExchangePanel: null,
   loggingControls: ({ operation, settings }) => {
     if (findRef(operation, INFO.activationType)) {
-      return [ActivatorLoggingControl]
+      return [ActivatorLoggingControl, SpotterControl]
     } else {
       return [HunterLoggingControl]
     }

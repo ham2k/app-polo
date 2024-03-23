@@ -1,0 +1,141 @@
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+
+import { fmtFreqInMHz } from '../../tools/frequencyFormats'
+import { fmtDateTimeRelative } from '../../tools/timeFormats'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectNow } from '../../store/time'
+import ThemedButton from '../../screens/components/ThemedButton'
+import { setOperationData } from '../../store/operations'
+import ThemedTextInput from '../../screens/components/ThemedTextInput'
+
+import packageJson from '../../../package.json'
+import { filterRefs } from '../../tools/refTools'
+import { selectRuntimeOnline } from '../../store/runtime'
+
+const MINUTES_UNTIL_RESPOT = 5
+
+const validModes = ['CW', 'FM', 'SSB', 'RTTY', 'PSK']
+
+const postSpot = (operation, comments) => async (dispatch, getState) => {
+  const state = getState()
+  const call = operation.stationCall || state.settings.operatorCall
+
+  const refs = filterRefs(operation, 'wwffActivation')
+  for (const ref of refs) { // Should only be one
+    try {
+      const response = await fetch('https://www.cqgma.org/wwff/spotwwff.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
+        },
+        body: new URLSearchParams({
+          yspotter: call,
+          ycall: call,
+          yreference: ref.ref,
+          yqrg: operation.freq,
+          ymode: validModes.includes(operation.mode) ? operation.mode : 'other',
+          ycomment: [comments, '[Ham2K PoLo]'].filter(x => x).join(' '),
+          B1: 'Submit'
+        }).toString()
+      })
+      if (response.status === 200) {
+        // const body = await response.text()
+        // console.log(body)
+      } else {
+        console.log('http error', response)
+        const body = await response.text()
+        console.log(body)
+      }
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: operation.freq }))
+}
+
+export function WWFFSpotterControl (props) {
+  const { operation, styles } = props
+
+  const online = useSelector(selectRuntimeOnline)
+
+  const dispatch = useDispatch()
+
+  const ref = useRef()
+  useEffect(() => {
+    setTimeout(() => {
+      ref?.current?.focus()
+    }, 0)
+  }, [ref])
+
+  const [spotterUI, setSpotterUI] = useState({})
+  const [comments, setComments] = useState()
+
+  const now = useSelector(selectNow)
+
+  useEffect(() => {
+    if (operation?.freq) {
+      if (operation.freq !== operation.spottedFreq) {
+        setSpotterUI({
+          message: `Spot at ${fmtFreqInMHz(operation.freq)}`,
+          disabled: false
+        })
+        if (comments === undefined) setComments(operation.spottedFreq ? 'QSY' : 'QRV')
+      } else if (now - operation.spottedAt > (1000 * 60 * MINUTES_UNTIL_RESPOT)) {
+        setSpotterUI({
+          message: `Re-spot at ${fmtFreqInMHz(operation.freq)}`,
+          disabled: false
+        })
+        if (comments === undefined) setComments('QRT')
+      } else if (comments?.length > 0 && (now - operation.spottedAt < (1000 * 1))) {
+        setSpotterUI({
+          message: `Spotted ${fmtDateTimeRelative(operation.spottedAt)}`,
+          disabled: true
+        })
+        setComments(undefined)
+      } else if (comments?.length > 0) {
+        setSpotterUI({
+          message: `Re-spot at ${fmtFreqInMHz(operation.freq)}`,
+          disabled: false
+        })
+      } else {
+        setSpotterUI({
+          message: `Spotted ${fmtDateTimeRelative(operation.spottedAt)}`,
+          disabled: true
+        })
+      }
+    } else {
+      setSpotterUI({
+        message: 'First set a frequency to spot.',
+        disabled: true
+      })
+    }
+  }, [operation?.freq, operation?.spottedFreq, operation?.spottedAt, operation, now, comments])
+
+  const handleSpotting = useCallback(() => {
+    dispatch(postSpot(operation, comments))
+    setComments(undefined)
+  }, [dispatch, operation, comments])
+
+  return (
+    <>
+      <ThemedButton
+        themeColor="tertiaryLighter"
+        mode="contained"
+        icon={online ? 'hand-wave' : 'cloud-off-outline'}
+        onPress={handleSpotting}
+        disabled={!online || spotterUI.disabled}
+      >
+        {spotterUI.message}
+      </ThemedButton>
+      <ThemedTextInput
+        innerRef={ref}
+        style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace }}
+        label={'Comments'}
+        value={comments ?? ''}
+        onChangeText={setComments}
+      />
+    </>
+  )
+}
