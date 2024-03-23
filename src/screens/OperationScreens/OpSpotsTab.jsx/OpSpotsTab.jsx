@@ -11,7 +11,7 @@ import ThemedDropDown from '../../components/ThemedDropDown'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { BANDS } from '@ham2k/lib-operation-data'
 import { findQSOHistory } from '../../../store/qsos/actions/findQSOHistory'
-import { selectAllOperations, selectOperationCall } from '../../../store/operations'
+import { selectAllOperations, selectOperationCall, selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs } from '../../../tools/refTools'
 
 function simplifiedMode (mode) {
@@ -56,7 +56,7 @@ export default function OpSpotsTab ({ navigation, route }) {
   const [spots, setSpots] = useState([])
 
   const allOperations = useSelector(selectAllOperations)
-  const ourCall = useSelector(state => selectOperationCall(state, route.params.uuid))
+  const callInfo = useSelector(state => selectOperationCallInfo(state, route.params.uuid))
 
   useEffect(() => {
     setTimeout(async () => {
@@ -71,7 +71,7 @@ export default function OpSpotsTab ({ navigation, route }) {
           continue
         }
 
-        if (spot.activator === ourCall) {
+        if (spot.activator === callInfo.call) {
           flags._ourSpot = true
         }
 
@@ -104,7 +104,7 @@ export default function OpSpotsTab ({ navigation, route }) {
 
       setSpots(annotatedSpots)
     }, 0)
-  }, [spotsQuery, allOperations, ourCall])
+  }, [spotsQuery, allOperations, callInfo])
 
   useEffect(() => {
     const interval = setInterval(() => {
