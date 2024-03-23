@@ -26,6 +26,20 @@ npm run build:android:beta:release
 * Announce in Discord #polo-releases
 * Send email to testers
 
+### Generate APKs
+
+As seen [here](https://proandroiddev.com/how-to-create-an-apk-from-the-android-app-bundle-d913429d43a)
+
+```
+brew install bundletool
+cd android/app/build/outputs/betaRelease
+bundletool build-apks --bundle=android/app/build/outputs/bundle/betaRelease/com.ham2k.polo-v${POLO_BUILD}(${POLO_BASE_RELEASE})-beta-release.aab --output=com.ham2k.polo-v${POLO_BUILD}(${POLO_BASE_RELEASE})-beta-release.apk
+```
+
+``````
+
+```bundletool install-apks --apks=polo.apks```
+
 ---
 
 # Supplemental Updates (OTA CodePush)
