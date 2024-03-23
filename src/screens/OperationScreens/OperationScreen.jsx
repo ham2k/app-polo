@@ -1,19 +1,19 @@
 import React, { useEffect, useMemo } from 'react'
-
 import { useDispatch, useSelector } from 'react-redux'
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
-
-import ScreenContainer from '../components/ScreenContainer'
-import { loadOperation, selectOperation } from '../../store/operations'
-import OpLoggingTab from './OpLoggingTab/OpLoggingTab'
-import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
 import { Platform, useWindowDimensions } from 'react-native'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import KeepAwake from '@sayem314/react-native-keep-awake'
+
+import { loadOperation, selectOperation } from '../../store/operations'
 import { loadQSOs } from '../../store/qsos'
 import { selectSettings } from '../../store/settings'
-import OpSpotsTab from './OpSpotsTab.jsx/OpSpotsTab'
 import { startTickTock } from '../../store/time'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import KeepAwake from '@sayem314/react-native-keep-awake'
+import ScreenContainer from '../components/ScreenContainer'
+import OpLoggingTab from './OpLoggingTab/OpLoggingTab'
+import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
+import OpSpotsTab from './OpSpotsTab.jsx/OpSpotsTab'
+import OpMapTab from './OpMapTab/OpMapTab'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -42,8 +42,8 @@ export default function OperationScreen ({ navigation, route }) {
   }, [navigation, operation, settings])
 
   const settingsOnly = useMemo(() => {
-    return route.params.isNew || (!operation.stationCall && !settings?.operatorCall)
-  }, [operation, settings, route.params.isNew])
+    return (!operation.stationCall && !settings?.operatorCall)
+  }, [operation, settings])
 
   const dimensions = useWindowDimensions()
 
@@ -55,22 +55,16 @@ export default function OperationScreen ({ navigation, route }) {
         initialLayout={{ width: dimensions.width, height: dimensions.height }}
         initialRouteName={ settingsOnly ? 'Settings' : 'QSOs'}
         screenOptions={{
-          tabBarItemStyle: [{ width: dimensions.width / 3 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 5, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
+          tabBarItemStyle: [{ width: dimensions.width / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 5, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
           tabBarLabelStyle: styles.screenTabBarLabel,
           tabBarStyle: styles.screenTabBar,
           tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryLighter, height: styles.halfSpace * 1.5 },
           // See https://github.com/react-navigation/react-navigation/issues/11301
           // on iOS, if the keyboard is open, tabs get stuck when switching
-          animationEnabled: Platform.OS !== 'ios'
+          animationEnabled: Platform.OS !== 'ios',
+          lazy: true
         }}
       >
-        <Tab.Screen
-          name="Settings"
-          options={{ title: 'Info' }}
-          component={OpSettingsTab}
-          initialParams={{ uuid: operation.uuid, operation }}
-        />
-
         <Tab.Screen
           name="QSOs"
           component={OpLoggingTab}
@@ -84,9 +78,27 @@ export default function OperationScreen ({ navigation, route }) {
           name="Spots"
           component={OpSpotsTab}
           initialParams={{ uuid: operation.uuid, operation }}
+          screenOptions={ { lazy: true }}
           // listeners={{
           //   tabPress: e => { settingsOnly && e.preventDefault() }
           // }}
+        />
+
+        <Tab.Screen
+          name="Map"
+          component={OpMapTab}
+          initialParams={{ uuid: operation.uuid, operation }}
+          screenOptions={ { lazy: true }}
+          // listeners={{
+          //   tabPress: e => { settingsOnly && e.preventDefault() }
+          // }}
+        />
+
+        <Tab.Screen
+          name="Settings"
+          options={{ title: 'Info' }}
+          component={OpSettingsTab}
+          initialParams={{ uuid: operation.uuid, operation }}
         />
 
       </Tab.Navigator>

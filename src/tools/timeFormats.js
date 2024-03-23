@@ -169,7 +169,12 @@ export function fmtISODate (t) {
   t = prepareTimeValue(t)
 
   if (t && t.toISOString) {
-    return t.toISOString().substring(0, 10)
+    try {
+      return t.toISOString().substring(0, 10)
+    } catch (e) {
+      console.error('fmtIsoDate', e)
+      return ''
+    }
   } else {
     return ''
   }
