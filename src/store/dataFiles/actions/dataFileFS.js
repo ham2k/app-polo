@@ -60,7 +60,11 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
 
 export const loadAllDataFiles = () => async (dispatch, getState) => {
   const definitions = getDataFileDefinitions()
+  const state = getState()
+
   for (const definition of definitions) {
-    await dispatch(loadDataFile(definition.key))
+    if (state?.settings[`dataFiles/${definition.key}`] ?? definition?.enabledByDefault) {
+      await dispatch(loadDataFile(definition.key))
+    }
   }
 }

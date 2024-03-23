@@ -6,7 +6,7 @@ import RNFetchBlob from 'react-native-blob-util'
 import packageJson from '../../../package.json'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
-export const WWFFData = { byReference: {}, prefixByDXCCCode: {} }
+export const WWFFData = { references: [], activeReferences: [], byReference: {}, prefixByDXCCCode: {} }
 
 export function registerWWFFDataFile () {
   registerDataFile({
@@ -16,7 +16,7 @@ export function registerWWFFDataFile () {
     infoURL: 'https://wwff.co/directory/',
     icon: 'file-word-outline',
     maxAgeInDays: 7,
-    autoLoad: true,
+    enabledByDefault: false,
     fetch: async () => {
       const url = 'https://wwff.co/wwff-data/wwff_directory.csv'
 
