@@ -37,5 +37,5 @@ export const INFO = {
   huntingType: 'wwff',
   activationType: 'wwffActivation',
   descriptionPlaceholder: 'Enter WWFF reference',
-  referenceRegex: /^[A-Z0-9]+FF-[0-9]{4,5}$/
+  referenceRegex: /^[A-Z0-9]+FF-[0-9]{4,5}$/i
 }

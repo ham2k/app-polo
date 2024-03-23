@@ -1,7 +1,8 @@
 {
   "0.6.1": {
     "changes": [
-      "Operation Map!!!"
+      "Operation Map!!!",
+      "Enable or disable offline data files"
     ]
   },
   "0.6.0": {

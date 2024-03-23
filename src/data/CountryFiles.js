@@ -23,7 +23,7 @@ export function prepareCountryFilesData () {
     name: 'Country Files - Big CTY',
     description: 'Helps match callsigns to entities and zones',
     infoURL: 'https://www.country-files.com/bigcty',
-    autoLoad: true,
+    enabledByDefault: true,
     fetch: async () => {
       const request = 'https://www.country-files.com/bigcty/cty.csv'
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', request, {

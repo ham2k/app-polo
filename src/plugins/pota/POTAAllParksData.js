@@ -5,7 +5,7 @@ import RNFetchBlob from 'react-native-blob-util'
 
 import packageJson from '../../../package.json'
 
-export const POTAAllParks = { byReference: {}, prefixByDXCCCode: {} }
+export const POTAAllParks = { byReference: {}, prefixByDXCCCode: {}, activeParks: [] }
 
 export function registerPOTAAllParksData () {
   registerDataFile({
@@ -16,7 +16,7 @@ export function registerPOTAAllParksData () {
     icon: 'file-powerpoint-outline',
     // TODO: Change maxAgeInDays to 7 after mid-May 2024
     maxAgeInDays: 1,
-    autoLoad: true,
+    enabledByDefault: true,
     fetch: async () => {
       const url = 'https://pota.app/all_parks_ext.csv'
 
