@@ -71,20 +71,19 @@ export function SOTAActivityOptions (props) {
         })
       }
 
-      // // Is the search term a plain reference, either with prefix or just digits?
-      // let nakedReference
-      // const parts = search.match(/^\s*([A-Za-z]*)(\d+)\s*$/)
-      // if (parts && parts[2].length >= 4) {
-      //   nakedReference = (parts[1]?.toUpperCase() || SOTAData.prefixByDXCCCode[ourInfo?.dxccCode] || 'K') + '-' + parts[2]
-      // } else if (search.match(INFO.referenceRegex)) {
-      //   nakedReference = search
-      // }
+      // Is the search term a plain reference, either with prefix or just digits?
+      let nakedReference
+      console.log('naked?', search)
+      if (search.match(INFO.referenceRegex)) {
+        nakedReference = search.toUpperCase()
+        console.log('--', nakedReference)
+      }
 
-      // // If it's a naked reference, let's ensure the results include it, or else add a placeholder
-      // // just to cover any cases where the user knows about a new park not included in our data
-      // if (nakedReference && !newResults.find(park => park.ref === nakedReference)) {
-      //   newResults.unshift({ ref: nakedReference })
-      // }
+      // If it's a naked reference, let's ensure the results include it, or else add a placeholder
+      // just to cover any cases where the user knows about a new reference not included in our data
+      if (nakedReference && !newResults.find(ref => ref.ref === nakedReference)) {
+        newResults.unshift({ ref: nakedReference, name: 'Unknown summit' })
+      }
 
       setResults(newResults.slice(0, 10))
       if (newResults.length === 0) {

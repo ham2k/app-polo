@@ -72,20 +72,17 @@ export function WWFFActivityOptions (props) {
         })
       }
 
-      // // Is the search term a plain reference, either with prefix or just digits?
-      // let nakedReference
-      // const parts = search.match(/^\s*([A-Za-z]*)(\d+)\s*$/)
-      // if (parts && parts[2].length >= 4) {
-      //   nakedReference = (parts[1]?.toUpperCase() || WWFFData.prefixByDXCCCode[ourInfo?.dxccCode] || 'K') + '-' + parts[2]
-      // } else if (search.match(INFO.referenceRegex)) {
-      //   nakedReference = search
-      // }
+      // Is the search term a plain reference, either with prefix or just digits?
+      let nakedReference
+      if (search.match(INFO.referenceRegex)) {
+        nakedReference = search.toUpperCase()
+      }
 
-      // // If it's a naked reference, let's ensure the results include it, or else add a placeholder
-      // // just to cover any cases where the user knows about a new park not included in our data
-      // if (nakedReference && !newResults.find(park => park.ref === nakedReference)) {
-      //   newResults.unshift({ ref: nakedReference })
-      // }
+      // If it's a naked reference, let's ensure the results include it, or else add a placeholder
+      // just to cover any cases where the user knows about a new reference not included in our data
+      if (nakedReference && !newResults.find(ref => ref.ref === nakedReference)) {
+        newResults.unshift({ ref: nakedReference })
+      }
 
       setResults(newResults.slice(0, 10))
       if (newResults.length === 0) {

@@ -23,7 +23,7 @@ export function SOTAListItem ({ activityRef, refData, operationRef, style, style
           </Text>
         </View>
       }
-      description={[SOTAData.regions[reference.reg]?.region, SOTAData.regions[reference.reg]?.association].filter(x => x).join(' • ')}
+      description={[SOTAData.regions[reference?.reg]?.region, SOTAData.regions[reference?.reg]?.association].filter(x => x).join(' • ')}
       onPress={onPress}
       left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={INFO.icon} />}
       right={() => (

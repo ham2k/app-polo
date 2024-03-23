@@ -5,7 +5,7 @@ import RNFetchBlob from 'react-native-blob-util'
 import packageJson from '../../../package.json'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
-export const SOTAData = { byReference: {}, activeReferences: [] }
+export const SOTAData = { byReference: {}, activeReferences: [], regions: {} }
 
 export function registerSOTADataFile () {
   registerDataFile({
@@ -15,7 +15,7 @@ export function registerSOTADataFile () {
     infoURL: 'https://www.sotadata.org.uk/en/summits',
     icon: 'file-image-outline',
     maxAgeInDays: 7,
-    autoLoad: true,
+    enabledByDefault: false,
     fetch: async () => {
       const url = 'https://www.sotadata.org.uk/summitslist.csv'
 

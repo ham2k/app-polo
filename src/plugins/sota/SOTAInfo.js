@@ -35,5 +35,5 @@ export const INFO = {
   huntingType: 'sota',
   activationType: 'sotaActivation',
   descriptionPlaceholder: 'Enter SOTA reference',
-  referenceRegex: /^[A-Z0-9]{1,3}\/[A-Z]{2}-[0-9]{3,}$/
+  referenceRegex: /^[A-Z0-9]{1,3}\/[A-Z]{2}-[0-9]{3,}$/i
 }

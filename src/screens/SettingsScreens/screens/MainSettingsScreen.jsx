@@ -1,12 +1,13 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Text } from 'react-native-paper'
+import { List, Switch, Text } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
 
 import packageJson from '../../../../package.json'
 
-import { selectSettings } from '../../../store/settings'
+import { selectSettings, setSettings } from '../../../store/settings'
 import { importQSON } from '../../../store/operations'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
@@ -101,6 +102,14 @@ export default function MainSettingsScreen ({ navigation }) {
             onDialogDone={() => setCurrentDialog('')}
           />
         )}
+
+        <List.Item
+          title="Use Metric Units"
+          description={settings.distanceUnits === 'miles' ? 'Use Miles for distances' : 'Use Kilometers for distances'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="tape-measure" />}
+          right={() => <Switch value={settings.distanceUnits !== 'miles'} onValueChange={(value) => dispatch(setSettings({ distanceUnits: settings.distanceUnits === 'miles' ? 'km' : 'miles' })) } />}
+          onPress={() => dispatch(setSettings({ distanceUnits: settings.distanceUnits === 'miles' ? 'km' : 'miles' }))}
+        />
 
         <List.Item
           title="Logging Settings"

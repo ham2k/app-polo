@@ -46,16 +46,28 @@ export const selectSettings = createSelector(
       settings.showNumbersRow = Platform.OS === 'ios'
     }
 
-    if (settings.showStateField === undefined && settings.operatorCall) {
-      let info = parseCallsign(settings.operatorCall)
+    let info = {}
+    if (settings?.operatorCall) {
+      info = parseCallsign(settings.operatorCall)
       if (info.baseCall) {
         info = annotateFromCountryFile(info)
       }
-      if (info?.entityPrefix?.startsWith('K') || info?.entityPrefix?.startsWith('VE')) {
+    }
+
+    if (settings.showStateField === undefined && info?.entityPrefix) {
+      if (info.entityPrefix.startsWith('K') || info.entityPrefix.startsWith('VE')) {
         settings.showStateField = true
       }
     }
 
+    if (settings.distanceUnits === undefined && info?.entityPrefix) {
+      // US, UK, Liberia and Myanmar use miles
+      if (info.entityPrefix.startsWith('K') || info.entityPrefix.startsWith('G') || info.entityPrefix.startsWith('EL') || info.entityPrefix.startsWith('XZ')) {
+        settings.distanceUnits = 'miles'
+      } else {
+        settings.distanceUnits = 'km'
+      }
+    }
     return settings
   }
 )

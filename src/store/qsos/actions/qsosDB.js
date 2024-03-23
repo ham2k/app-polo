@@ -11,6 +11,7 @@ import { dbExecute, dbSelectAll } from '../../db/db'
 
 export const prepareQSORow = (row) => {
   const data = JSON.parse(row.data)
+  delete data._originalKey
   return data
 }
 
@@ -46,10 +47,13 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
     WHERE operation = ? AND (key = ? OR key = ?)
     `, [uuid, qso.key, qso._originalKey ?? qso.key])
 
+  const qsoClone = { ...qso }
+  delete qsoClone._originalKey
+
   await dbExecute(`
     INSERT INTO qsos
     (operation, key, data, ourCall, theirCall, mode, band, startOnMillis) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `, [uuid, qso.key, JSON.stringify(qso), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startOnMillis])
+    `, [uuid, qso.key, JSON.stringify(qsoClone), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startOnMillis])
 
   dispatch(actions.addQSO({ uuid, qso }))
   const state = getState()
