@@ -1,6 +1,8 @@
 {
   "0.6.2": {
     "changes": [
+      "Fixed issues with Date & Time inputs",
+      "Enter relative dates and times (try appending `-1d` to the date, or `+1h` to the time)"
     ]
   },
   "0.6.1": {
