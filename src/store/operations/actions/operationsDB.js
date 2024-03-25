@@ -7,7 +7,6 @@ import { qsonToADIF } from '../../../tools/qsonToADIF'
 import { fmtISODate } from '../../../tools/timeFormats'
 import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
-import { excludeRefs, filterRefs } from '../../../tools/refTools'
 import { refHandlers } from '../../../plugins/loadPlugins'
 
 const prepareOperationRow = (row) => {
@@ -107,26 +106,18 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
   const datas = []
 
   if (type === 'adif') {
-    const potaActivationRefs = filterRefs(operation, 'potaActivation')
-    const nonPotaRefs = excludeRefs(operation, 'potaActivation')
-
-    const combinations = potaActivationRefs.length ? potaActivationRefs : [{}]
+    const combinations = operation.refs.length ? operation.refs : [{}]
 
     combinations.forEach((activationRef, i) => {
-      const combinedRefs = [...nonPotaRefs, activationRef].filter(x => x?.type)
-
-      const referenceTitles = combinedRefs.map(ref => refHandlers[ref.type]?.suggestOperationTitle && refHandlers[ref.type]?.suggestOperationTitle(ref)).filter(x => x)
+      const referenceTitle = refHandlers[activationRef.type]?.suggestOperationTitle && refHandlers[activationRef.type]?.suggestOperationTitle(activationRef)
 
       const titleParts = [baseName]
-      const plainTitles = referenceTitles.map(ref => ref.title).filter(x => x).join(', ')
-      const forTitles = referenceTitles.map(ref => ref.for).filter(x => x).join(', ')
-      const atTitles = referenceTitles.map(ref => ref.at).filter(x => x).join(', ')
-      if (plainTitles) titleParts.push(plainTitles)
-      if (forTitles) titleParts.push('for ' + forTitles)
-      if (atTitles) titleParts.push('at ' + atTitles)
+      if (referenceTitle?.title) titleParts.push(referenceTitle.title)
+      if (referenceTitle?.for) titleParts.push('for ' + referenceTitle.for)
+      if (referenceTitle?.at) titleParts.push('at ' + referenceTitle.at)
 
       names.push(`${titleParts.join(' ').replace(/[/\\:]/g, '-')}.adi`)
-      datas.push(qsonToADIF({ operation: { ...operation, refs: combinedRefs }, qsos, settings }))
+      datas.push(qsonToADIF({ operation: { ...operation, activationRef }, qsos, settings }))
     })
   } else if (type === 'cabrillo') {
     names.push(`${baseName.replace(/[/\\:]/g)} for ${activity.shortName.replace(/[/\\:]/g)}.log`)

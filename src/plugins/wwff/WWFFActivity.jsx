@@ -1,4 +1,5 @@
 import { findRef, refsToString } from '../../tools/refTools'
+import { adifField } from '../../tools/qsonToADIF'
 
 import { INFO } from './WWFFInfo'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
@@ -77,6 +78,14 @@ const WWFFActivity = {
     } else {
       return null
     }
+  },
+
+  activationADIF: (activationRef) => {
+    return adifField('MY_SIG', 'WWFF') + adifField('MY_SIG_INFO', activationRef.ref)
+  },
+
+  huntingADIF: (huntingRef) => {
+    return adifField('SIG', 'WWFF') + adifField('SIG_INFO', huntingRef.ref)
   }
 }
 

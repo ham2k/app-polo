@@ -1,16 +1,11 @@
 import packageJson from '../../package.json'
-import { filterRefs, findRef } from './refTools'
+import { filterRefs } from './refTools'
 import { fmtADIFDate, fmtADIFTime } from './timeFormats'
+import { refHandlers } from '../plugins/loadPlugins'
 
 export function qsonToADIF ({ operation, settings, qsos }) {
-  const potaActivationRef = findRef(operation, 'potaActivation')
-  const sotaActivationRef = findRef(operation, 'sotaActivation')
-  const wwffActivationRef = findRef(operation, 'wwffActivation')
-
   const common = {
-    potaActivation: potaActivationRef?.ref,
-    sotaActivation: sotaActivationRef?.ref,
-    wwffActivation: wwffActivationRef?.ref,
+    activationRef: operation.activationRef,
     grid: operation.grid,
     stationCall: operation.stationCall ?? settings.operatorCall
   }
@@ -26,8 +21,7 @@ export function qsonToADIF ({ operation, settings, qsos }) {
 
   qsos.forEach(qso => {
     if (qso.deleted) return
-
-    str += oneQSOtoADIFWithPOTAMultiples(qso, operation, common)
+    str += oneQSOtoADIFWithActivityMultiples(qso, operation, common)
   })
 
   return str
@@ -35,20 +29,16 @@ export function qsonToADIF ({ operation, settings, qsos }) {
 
 // When a QSO has multiple POTA refs we need to generate multiple ADIF QSOs,
 // one for each reference, and fudge the time by one second for each one
-function oneQSOtoADIFWithPOTAMultiples (qso, operation, common) {
-  const potaRefs = filterRefs(qso, 'pota')
-  const sotaRef = findRef(qso, 'sota')
-  const wwffRef = findRef(qso, 'wwff')
+function oneQSOtoADIFWithActivityMultiples (qso, operation, common) {
+  const huntingType = refHandlers[common?.activationRef.type]?.huntingType
+  const huntingRefs = huntingType ? filterRefs(qso, huntingType) : qso.refs
   let str = ''
 
-  if (sotaRef) common = { ...common, sota: sotaRef.ref }
-  if (wwffRef) common = { ...common, wwff: wwffRef.ref }
-
-  if (potaRefs.length === 0) {
+  if (huntingRefs.length === 0) {
     str += oneQSOtoADIF(qso, operation, common)
   } else {
-    potaRefs.forEach((potaRef, i) => {
-      str += oneQSOtoADIF(qso, operation, { ...common, pota: potaRef.ref }, i * 1000)
+    huntingRefs.forEach((huntingRef, i) => {
+      str += oneQSOtoADIF(qso, operation, { ...common, huntingRef }, i * 1000)
     })
   }
 
@@ -80,41 +70,14 @@ function oneQSOtoADIF (qso, operation, common, timeOfffset = 0) {
 
   str += adifField('ARRL_SECT', qso.their.arrlSection)
 
-  if (common?.potaActivation) {
-    str += adifField('MY_SIG', 'POTA')
-    str += adifField('MY_SIG_INFO', common.potaActivation)
-    str += adifField('MY_POTA_REF', common.potaActivation)
-  }
-
-  if (common?.pota) {
-    str += adifField('SIG', 'POTA')
-    str += adifField('SIG_INFO', common.pota)
-    str += adifField('POTA_REF', common.pota)
-  }
-
-  if (common?.sotaActivation) {
-    str += adifField('MY_SOTA_REF', common.sotaActivation)
-  }
-
-  if (common?.sota) {
-    str += adifField('SOTA_REF', common.sota)
-  }
-
-  if (common?.wwffActivation) {
-    str += adifField('MY_SIG', 'WWFF')
-    str += adifField('MY_SIG_INFO', common.wwffActivation)
-  }
-
-  if (common?.wwff) {
-    str += adifField('SIG', 'WWFF')
-    str += adifField('SIG_INFO', common.wwff)
-  }
+  str += refHandlers[common?.activationRef?.type]?.activationADIF ? refHandlers[common.activationRef.type]?.activationADIF(common.activationRef) : ''
+  str += refHandlers[common?.huntingRef?.type]?.huntingADIF ? refHandlers[common.huntingRef.type]?.huntingADIF(common.huntingRef) : ''
 
   str += '<EOR>\n'
   return str
 }
 
-function adifField (name, value, options = {}) {
+export function adifField (name, value, options = {}) {
   if (!value && !options.force) return ''
   if (typeof value !== 'string') value = value.toString()
 

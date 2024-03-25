@@ -1,5 +1,6 @@
 import { apiPOTA } from '../../store/apiPOTA'
 import { findRef, refsToString } from '../../tools/refTools'
+import { adifField } from '../../tools/qsonToADIF'
 
 import { POTAActivityOptions } from './POTAActivityOptions'
 import { POTALoggingControl } from './POTALoggingControl'
@@ -102,6 +103,14 @@ const POTAActivity = {
     } else {
       return null
     }
+  },
+
+  activationADIF: (activationRef) => {
+    return adifField('MY_SIG', 'POTA') + adifField('MY_SIG_INFO', activationRef.ref) + adifField('MY_POTA_REF', activationRef.ref)
+  },
+
+  huntingADIF: (huntingRef) => {
+    return adifField('SIG', 'POTA') + adifField('SIG_INFO', huntingRef.ref) + adifField('POTA_REF', huntingRef.ref)
   }
 
 }

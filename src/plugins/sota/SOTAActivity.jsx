@@ -1,4 +1,5 @@
 import { findRef, refsToString } from '../../tools/refTools'
+import { adifField } from '../../tools/qsonToADIF'
 
 import { INFO } from './SOTAInfo'
 import { SOTAActivityOptions } from './SOTAActivityOptions'
@@ -77,7 +78,16 @@ const SOTAActivity = {
     } else {
       return null
     }
+  },
+
+  activationADIF: (activationRef) => {
+    return adifField('MY_SOTA_REF', activationRef.ref)
+  },
+
+  huntingADIF: (huntingRef) => {
+    return adifField('SOTA_REF', huntingRef.ref)
   }
+
 }
 
 export default SOTAActivity
