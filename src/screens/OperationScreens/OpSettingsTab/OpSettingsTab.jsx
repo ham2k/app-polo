@@ -14,7 +14,7 @@ import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { LocationDialog } from './components/LocationDialog'
 import { findRef } from '../../../tools/refTools'
-import activities, { refHandlers } from '../../../plugins/loadPlugins'
+import { findHooks } from '../../../extensions/registry'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -67,9 +67,11 @@ export default function OpSettingsTab ({ navigation, route }) {
     })
   }, [dispatch, operation])
 
-  const refActivities = useMemo(() => {
+  const refHandlers = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type))]
-    return types.map(type => refHandlers[type]).filter(x => x || x === '')
+    const handlers = types.map(type => findHooks(`ref:${type}`)[0]).filter(x => x || x === '')
+    console.log('refHandlers', types, handlers)
+    return handlers
   }, [operation?.refs])
 
   return (
@@ -110,15 +112,15 @@ export default function OpSettingsTab ({ navigation, route }) {
       </List.Section>
 
       <List.Section title={'Activities'}>
-        {refActivities.map((activity) => (
+        {refHandlers.map((handler) => (
           <List.Item
-            key={activity.key}
-            title={activity.name}
-            description={(activity.description && activity.description(operation)) || activity.descriptionPlaceholder}
+            key={handler.key}
+            title={handler.name}
+            description={(handler.description && handler.description(operation)) || handler.descriptionPlaceholder}
             left={
-                  () => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={activity.icon} />
+                  () => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={handler.icon} />
                 }
-            onPress={() => navigation.navigate('OperationActivityOptions', { operation: operation.uuid, activity: activity.key })}
+            onPress={() => navigation.navigate('OperationActivityOptions', { operation: operation.uuid, activity: handler.key })}
           />
         ))}
         <List.Item
@@ -129,18 +131,23 @@ export default function OpSettingsTab ({ navigation, route }) {
           onPress={() => navigation.navigate('OperationAddActivity', { operation: operation.uuid })}
         />
       </List.Section>
-      {refActivities.map((activity) => (
-        currentDialog === `activity.${activity.key}` && (
-          <activity.SettingsDialog
-            key={activity.key}
-            settings={settings}
-            operation={operation}
-            styles={styles}
-            visible={true}
-            onDialogDone={() => setCurrentDialog('')}
-          />
-        )
-      ))}
+      {refHandlers.map((handler) => {
+        if (currentDialog === `activity.${handler.key}`) {
+          const activity = findHooks('activity', { key: handler.key })[0]
+          return (
+            <activity.SettingsDialog
+              key={activity.key}
+              settings={settings}
+              operation={operation}
+              styles={styles}
+              visible={true}
+              onDialogDone={() => setCurrentDialog('')}
+            />
+          )
+        } else {
+          return null
+        }
+      })}
 
       <List.Section title={'Operation Data'}>
         <List.Item
@@ -150,7 +157,7 @@ export default function OpSettingsTab ({ navigation, route }) {
           style={{ opacity: !(operation.qsoCount > 0) ? 0.5 : 1 }}
           disabled={!(operation.qsoCount > 0)}
         />
-        {activities
+        {findHooks('activity')
           .filter((activity) => activity.cabrilloHeaders && findRef(operation, activity.key))
           .map((activity) => (
             <List.Item key={activity.key}

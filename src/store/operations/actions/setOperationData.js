@@ -3,7 +3,7 @@ import { actions, selectOperation } from '../operationsSlice'
 import debounce from 'debounce'
 import { saveOperation } from './operationsDB'
 import { findRef } from '../../../tools/refTools'
-import { refHandlers } from '../../../plugins/loadPlugins'
+import { findHooks } from '../../../extensions/registry'
 
 function debounceableDispatch (dispatch, action) {
   return dispatch(action())
@@ -32,25 +32,31 @@ export const setOperationData = (data) => async (dispatch, getState) => {
   }
 
   if (data.refs) {
-    const newRefs = []
+    const decoratedRefs = []
     for (const ref of data.refs) {
-      if (refHandlers[ref.type]?.decorateRefWithDispatch) {
-        newRefs.push(await dispatch(refHandlers[ref.type].decorateRefWithDispatch(ref)))
-      } else if (refHandlers[ref.type]?.decorateRef) {
-        newRefs.push(dispatch(refHandlers[ref.type].decorateRef(ref)))
-      } else {
-        newRefs.push(ref)
+      let decoratedRef = ref
+      const hooks = findHooks(`ref:${ref.type}`)
+      for (const hook of hooks) {
+        if (hook?.decorateRefWithDispatch) {
+          decoratedRef = await dispatch(hook.decorateRefWithDispatch(decoratedRef))
+        } else if (hook?.decorateRef) {
+          decoratedRef = hook.decorateRef(decoratedRef)
+        }
       }
+      decoratedRefs.push(decoratedRef)
     }
 
-    data.refs = newRefs
+    data.refs = decoratedRefs
   }
 
   if (data.description) {
     data.title = data.description
     data.subtitle = ''
   } else if (data.refs && !operation.description) {
-    const referenceTitles = data.refs.map(ref => refHandlers[ref?.type]?.suggestOperationTitle && refHandlers[ref?.type]?.suggestOperationTitle(ref)).filter(x => x)
+    const referenceTitles = data.refs.map(ref => {
+      const hooks = findHooks(`ref:${ref.type}`)
+      return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref))[0]
+    }).filter(x => x)
 
     const titleParts = []
 

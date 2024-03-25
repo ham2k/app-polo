@@ -1,4 +1,5 @@
 import packageJson from '../../../../package.json'
+import loadExtensions from '../../../extensions/loadExtensions'
 
 import { loadAllDataFiles } from '../../dataFiles/actions/dataFileFS'
 import { getOperations } from '../../operations'
@@ -25,6 +26,7 @@ export const startupSequence = (onReady) => (dispatch) => {
     const steps = [
       // async () => new Promise(resolve => setTimeout(() => { resolve() }, 500)),
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
+      async () => await dispatch(loadExtensions()),
       async () => await dispatch(setupOnlineStatusMonitoring()),
       async () => await dispatch(loadAllDataFiles()),
       async () => await dispatch(getOperations()),

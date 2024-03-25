@@ -8,7 +8,7 @@ import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
-import { activityIndex } from '../../../../plugins/loadPlugins'
+import { findHooks } from '../../../../extensions/registry'
 
 export function guessItemHeight (qso, styles) {
   return styles.compactRow.height + styles.compactRow.borderBottomWidth
@@ -72,8 +72,8 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         {qso.notes && (
           <Icon source="note-outline" size={styles.oneSpace * 2} style={styles.fields.icon} />
         )}
-        {(qso.refs || []).filter(ref => REFS_TO_INCLUDE[ref.type]).map(ref => ({ ref, activity: activityIndex[ref.type] })).map(({ ref, activity }, i) => (
-          <Icon key={i} source={activity?.icon} size={styles.oneSpace * 2} style={styles.fields.icon} color={styles.fields.icon.color} />
+        {(qso.refs || []).filter(ref => REFS_TO_INCLUDE[ref.type]).map(ref => ({ ref, handler: findHooks(`ref:${ref.type}`)[0] })).map(({ ref, handler }, i) => (
+          <Icon key={i} source={handler?.icon} size={styles.oneSpace * 2} style={styles.fields.icon} color={styles.fields.icon.color} />
         ))}
         {qso?.their?.exchange ? (
           <>

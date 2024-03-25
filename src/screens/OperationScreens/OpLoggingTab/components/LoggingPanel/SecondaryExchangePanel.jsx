@@ -5,7 +5,7 @@ import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
 import { SecondaryControlManagementSubPanel } from './SecondaryExchangePanel/SecondaryControlManagementSubPanel'
 import { SecondaryControlSelectionsubPanel } from './SecondaryExchangePanel/SecondaryControlSelectionSubPanel'
-import activities from '../../../../../plugins/loadPlugins'
+import { findHooks } from '../../../../../extensions/registry'
 
 export const SecondaryExchangePanel = (params) => {
   const { currentSecondaryControl, operation, settings } = params
@@ -20,7 +20,7 @@ export const SecondaryExchangePanel = (params) => {
       radio: radioControl,
       notes: notesControl
     }
-    activities.forEach(activity => {
+    findHooks('activity').forEach(activity => {
       const activityControls = activity.loggingControls ? activity.loggingControls({ operation, settings }) : []
       for (const control of activityControls) {
         newControls[control.key] = control

@@ -8,7 +8,7 @@ import { fmtISODate } from '../../../tools/timeFormats'
 import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { excludeRefs, filterRefs } from '../../../tools/refTools'
-import { refHandlers } from '../../../plugins/loadPlugins'
+import { findHooks } from '../../../extensions/registry'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
@@ -115,7 +115,10 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
     combinations.forEach((activationRef, i) => {
       const combinedRefs = [...nonPotaRefs, activationRef].filter(x => x?.type)
 
-      const referenceTitles = combinedRefs.map(ref => refHandlers[ref.type]?.suggestOperationTitle && refHandlers[ref.type]?.suggestOperationTitle(ref)).filter(x => x)
+      const referenceTitles = combinedRefs.map(ref => {
+        const hooks = findHooks(`ref:${ref.type}`)
+        return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref))[0]
+      }).filter(x => x)
 
       const titleParts = [baseName]
       const plainTitles = referenceTitles.map(ref => ref.title).filter(x => x).join(', ')
