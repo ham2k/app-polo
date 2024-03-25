@@ -2,14 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 import ThemedTextInput from './ThemedTextInput'
 import { fmtTimeZulu } from '../../tools/timeFormats'
 import { useSelector } from 'react-redux'
-import { selectNow } from '../../store/time'
+import { selectSecondsTick } from '../../store/time'
 
 const VALID_TIME_REGEX = /^(\d{1,2}|\d{1,2}:\d{0,2}|\d{1,2}:\d{1,2}:\d{0,2})$/
 
 export function TimeInput (props) {
   const { label, valueInMillis, onChange, onBlur, fieldId } = props
 
-  const now = useSelector(selectNow)
+  const now = useSelector(selectSecondsTick)
 
   const [nowStr, setNowStr] = useState()
 
