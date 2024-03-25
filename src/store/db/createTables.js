@@ -10,9 +10,9 @@ export async function createTables (db) {
   }
 
   if (version === 1) {
-    console.log('createTables -- using version 1')
+    // console.log('createTables -- using version 1')
   } else if (version === 0) {
-    console.log('createTables -- creating version 1')
+    // console.log('createTables -- creating version 1')
     await dbExecute(`
                 CREATE TABLE IF NOT EXISTS version (
                   version INTEGER PRIMARY KEY NOT NULL

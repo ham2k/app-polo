@@ -220,7 +220,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
           level = 'alert'
         }
       } else {
-        console.log('callHistory', callHistory.map(x => x.startOnMillis))
+        // console.log('callHistory', callHistory.map(x => x.startOnMillis))
         const sameDay = callHistory.filter(x => x && fmtISODate(x.startOnMillis) === fmtISODate(today)).length
 
         if (sameDay > 1) {

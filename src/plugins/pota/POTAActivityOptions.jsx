@@ -38,11 +38,10 @@ export function POTAActivityOptions (props) {
   const [location, setLocation] = useState()
   useEffect(() => {
     Geolocation.getCurrentPosition(info => {
-      console.log('geo', info)
       const { latitude, longitude } = info.coords
       setLocation({ lat: latitude, lon: longitude })
     }, error => {
-      console.log('Geolocation error', error)
+      console.error('Geolocation error', error)
       setLocation(undefined)
     })
   }, [])
@@ -109,7 +108,6 @@ export function POTAActivityOptions (props) {
   }, [search, ourInfo, nearbyParks, location])
 
   const handleAddReference = useCallback((ref) => {
-    console.log('add', ref)
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, INFO.activationType, [...refs.filter(r => r.ref !== ref), { type: INFO.activationType, ref }]) }))
   }, [dispatch, operation, refs])
 

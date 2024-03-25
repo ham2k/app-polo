@@ -4,10 +4,10 @@ import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
 import { fmtTimeBetween } from '../../../../../tools/timeFormats'
 import { useSelector } from 'react-redux'
-import { selectNow } from '../../../../../store/time'
+import { selectSecondsTick } from '../../../../../store/time'
 
 export function OpInfo ({ operation, qsos, styles, style, themeColor }) {
-  const now = useSelector(selectNow)
+  const now = useSelector(selectSecondsTick)
 
   const line1 = useMemo(() => {
     if (qsos.length === 0) {

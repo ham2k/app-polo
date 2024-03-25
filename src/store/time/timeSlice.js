@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const INITIAL_STATE = {
-  now: undefined,
   interval: undefined
 }
 
@@ -12,7 +11,9 @@ export const timeSlice = createSlice({
 
   reducers: {
     setValues: (state, action) => {
-      state = { ...state, ...action.payload }
+      for (const key in action.payload) {
+        state[key] = action.payload[key]
+      }
     },
     saveInterval: (state, action) => {
       state.interval = action.payload
@@ -29,11 +30,11 @@ export const startTickTock = () => (dispatch, getState) => {
   interval = setInterval(() => {
     const now = Date.now()
     const seconds = Math.floor(now / 1000) * 1000
-    const values = { now, seconds }
-    if ((seconds / 1000) % 10 === 0) values.tenSeconds = seconds
-    if ((seconds / 1000) % 30 === 0) values.thirtySeconds = seconds
-    if ((seconds / 1000) % 60 === 0) values.oneMinute = seconds
-    if ((seconds / 1000) % 300 === 0) values.fiveMinutes = seconds
+    const tenSeconds = Math.floor(now / 10000) * 10000
+    const thirtySeconds = Math.floor(now / 30000) * 30000
+    const oneMinute = Math.floor(now / 60000) * 60000
+    const fiveMinutes = Math.floor(now / 300000) * 300000
+    const values = { now, seconds, tenSeconds, thirtySeconds, oneMinute, fiveMinutes }
     dispatch(actions.setValues(values))
   }, 1000)
   actions.saveInterval(interval)

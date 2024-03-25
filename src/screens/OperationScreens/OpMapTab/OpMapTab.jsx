@@ -8,7 +8,7 @@ import DXCC_LOCATIONS from '../../../data/dxccLocations.json'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectRuntimeOnline } from '../../../store/runtime'
-import { selectOperation, selectOperationCallInfo } from '../../../store/operations'
+import { selectOperation } from '../../../store/operations'
 import { addQSO, selectQSOs } from '../../../store/qsos'
 import { fmtShortTimeZulu } from '../../../tools/timeFormats'
 import { Image } from 'react-native'
@@ -52,8 +52,6 @@ export default function OpMapTab ({ navigation, route }) {
 
   const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
-
-  const callInfo = useSelector(state => selectOperationCallInfo(state, route.params.uuid))
 
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
 

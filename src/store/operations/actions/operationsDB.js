@@ -37,7 +37,7 @@ export const saveOperation = (operation) => async (dispatch, getState) => {
 export const addNewOperation = (operation) => async (dispatch) => {
   operation.uuid = UUID.v1()
   operation.qsoCount = 0
-  operation.createdOnMillis = Date.now()
+  operation.createdOnMillis = Math.floor(Date.now() / 1000) * 1000
   dispatch(actions.setOperation(operation))
   dispatch(saveOperation(operation))
   return operation
@@ -144,7 +144,6 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
       await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${name}`, data)
       paths.push(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${name}`)
     }
-    console.log('generateExport', paths)
     return paths
   } else {
     return false
