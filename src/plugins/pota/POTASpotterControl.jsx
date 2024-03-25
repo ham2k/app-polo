@@ -38,12 +38,12 @@ const postSpot = (operation, comments) => async (dispatch, getState) => {
         // const body = await response.text()
         // console.log(body)
       } else {
-        console.log('http error', response)
+        console.error('http error', response)
         const body = await response.text()
-        console.log(body)
+        console.error(body)
       }
     } catch (error) {
-      console.log('error', error)
+      console.error('error', error)
     }
   }
 

@@ -17,7 +17,7 @@ export function dbExecute (sql, params, options = {}) {
             resolve(results)
           },
           (tx, error) => {
-            console.log('Error executing SQL', sql, params, error)
+            console.error('Error executing SQL', sql, params, error)
             reject(error)
           }
         )
@@ -32,7 +32,7 @@ export function dbExecute (sql, params, options = {}) {
               resolve(results)
             },
             (tx, error) => {
-              console.log('Error executing SQL', sql, params, error)
+              console.error('Error executing SQL', sql, params, error)
               reject(error)
             }
           )
@@ -78,7 +78,7 @@ export function database () {
       createTables(GLOBAL_DB).then(() => {
         resolve(GLOBAL_DB)
       }).catch(e => {
-        console.log('Error opening database', e)
+        console.error('Error opening database', e)
         reject(e)
       })
     }
