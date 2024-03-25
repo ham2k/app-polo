@@ -1,51 +1,48 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import ThemedTextInput from './ThemedTextInput'
 
-import debounce from 'debounce'
-
 const REMOVE_NON_DIGITS_REGEX = /[^0-9.]/g
 
-function reportChange ({ text, onChange, onChangeText, fieldId }) {
-  onChangeText && onChangeText(text)
-  onChange && onChange({ nativeEvent: { text }, fieldId })
-}
-
 export default function FrequencyInput (props) {
-  const { value, styles, textStyle, onChange, onChangeText, fieldId, debounceTime } = props
+  const { value, styles, textStyle, onChange, onChangeText, fieldId, onBlur, innerRef } = props
 
-  const debouncedReportChange = useMemo(() => {
-    return debounce(reportChange, debounceTime ?? 3000)
-  }, [debounceTime])
+  const localRef = useRef()
+  const actualInnerRef = innerRef ?? localRef
 
-  const [innerValue, setInnerValue] = useState(value)
+  const [localValue, setLocalValue] = useState()
+
   useEffect(() => {
-    setInnerValue(`${value}`)
-  }, [value])
+    if (actualInnerRef?.current?.isFocused()) return
+
+    setLocalValue(value ?? '')
+  }, [value, actualInnerRef])
+
+  const handleBlur = useCallback((event) => {
+    setLocalValue(value)
+    onBlur && onBlur(event)
+  }, [value, onBlur])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
     text = text.replace(REMOVE_NON_DIGITS_REGEX, '')
-    setInnerValue(text)
-    debouncedReportChange({ text, onChange, onChangeText, fieldId })
-  }, [fieldId, onChange, onChangeText, debouncedReportChange])
+    setLocalValue(text)
 
-  const handleBlur = useCallback((event) => {
-    const newEvent = { nativeEvent: { text: innerValue, target: event?.nativeEvent?.target } }
-
-    onChangeText && onChangeText(innerValue)
-    onChange && onChange({ ...newEvent, fieldId })
-  }, [fieldId, innerValue, onChange, onChangeText])
+    if (text !== value) {
+      onChangeText && onChangeText(text)
+      onChange && onChange({ nativeEvent: { text }, fieldId })
+    }
+  }, [fieldId, onChange, onChangeText, value])
 
   return (
     <ThemedTextInput
       {...props}
-      value={innerValue ?? ' '}
+      value={localValue ?? ' '}
       keyboard="numbers"
       decimal={true}
       textStyle={[textStyle, styles?.text?.callsign]}
       onChange={handleChange}
-      // onBlur={handleBlur}
+      onBlur={handleBlur}
       onEndEditing={handleBlur}
     />
   )
