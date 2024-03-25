@@ -56,18 +56,16 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
   useEffect(() => {
     Geolocation.getCurrentPosition(info => {
       const { latitude, longitude } = info.coords
-      console.log('Current Position', info)
       setLocationGrid(locationToGrid(latitude, longitude))
     }, error => {
-      console.log('location error', error)
+      console.error('location error', error)
     })
 
     const watchId = Geolocation.watchPosition(info => {
       const { latitude, longitude } = info.coords
-      console.log('Position Watch', info)
       setLocationGrid(locationToGrid(latitude, longitude))
     }, error => {
-      console.log('location error', error)
+      console.error('location error', error)
     })
     return () => {
       Geolocation.clearWatch(watchId)

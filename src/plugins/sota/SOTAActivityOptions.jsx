@@ -73,10 +73,8 @@ export function SOTAActivityOptions (props) {
 
       // Is the search term a plain reference, either with prefix or just digits?
       let nakedReference
-      console.log('naked?', search)
       if (search.match(INFO.referenceRegex)) {
         nakedReference = search.toUpperCase()
-        console.log('--', nakedReference)
       }
 
       // If it's a naked reference, let's ensure the results include it, or else add a placeholder

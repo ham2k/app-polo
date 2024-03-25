@@ -144,7 +144,6 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
       await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${name}`, data)
       paths.push(`${RNFetchBlob.fs.dirs.DocumentDir}/ops/${uuid}/${name}`)
     }
-    console.log('generateExport', paths)
     return paths
   } else {
     return false

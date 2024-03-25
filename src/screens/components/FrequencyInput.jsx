@@ -7,7 +7,6 @@ import debounce from 'debounce'
 const REMOVE_NON_DIGITS_REGEX = /[^0-9.]/g
 
 function reportChange ({ text, onChange, onChangeText, fieldId }) {
-  console.log('report change', text)
   onChangeText && onChangeText(text)
   onChange && onChange({ nativeEvent: { text }, fieldId })
 }
