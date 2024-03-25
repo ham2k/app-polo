@@ -1,4 +1,8 @@
 {
+  "0.6.3": {
+    "changes": [
+    ]
+  },
   "0.6.2": {
     "changes": [
       "Fixed issues with Date & Time inputs",
