@@ -9,20 +9,19 @@ import { selectOperation, setOperationData } from '../../store/operations'
 
 import { replaceRefs } from '../../tools/refTools'
 import { ListSeparator } from '../components/ListComponents'
-import activities from '../../plugins/loadPlugins'
+import { findHooks } from '../../extensions/registry'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
-  const activity = activities.find((act) => act.key === route.params.activity)
+  const activity = findHooks('activity').find((act) => act.key === route.params.activity)
 
   useEffect(() => { // Prepare the screen, set the activity title, etc
     if (activity && operation) {
       navigation.setOptions({
         title: activity.name ?? `Activity "${activity.key}`
-        // subTitle: (activity.description && activity.description(operation)) || activity.descriptionPlaceholder
       })
     } else {
       navigation.goBack()

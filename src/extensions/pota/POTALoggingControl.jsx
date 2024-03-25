@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../tools/refTools'
 import { POTAAllParks } from './POTAAllParksData'
-import { INFO } from './POTAInfo'
+import { Info } from './POTAInfo'
 import POTAInput from './POTAInput'
 import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../store/operations'
@@ -23,17 +23,17 @@ export function POTALoggingControl (props) {
 
   // Only initialize localValue once
   useEffect(() => {
-    const refs = filterRefs(qso, INFO.huntingType)
+    const refs = filterRefs(qso, Info.huntingType)
     if (!localValue) {
-      setLocalValue(refsToString(refs, INFO.huntingType))
+      setLocalValue(refsToString(refs, Info.huntingType))
     }
   }, [qso, localValue])
 
   const localHandleChangeText = useCallback((value) => {
     setLocalValue(value)
-    const refs = stringToRefs(INFO.huntingType, value, { regex: INFO.referenceRegex })
+    const refs = stringToRefs(Info.huntingType, value, { regex: Info.referenceRegex })
 
-    setQSO({ ...qso, refs: replaceRefs(qso?.refs, INFO.huntingType, refs) })
+    setQSO({ ...qso, refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
   }, [qso, setQSO])
 
   const defaultPrefix = useMemo(() => {

@@ -1,4 +1,4 @@
-export const INFO = {
+export const Info = {
   key: 'pota',
   icon: 'pine-tree',
   name: 'Parks on the Air',
