@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { fmtFreqInMHz } from '../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../tools/timeFormats'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectNow } from '../../store/time'
+import { selectSecondsTick } from '../../store/time'
 import ThemedButton from '../../screens/components/ThemedButton'
 import { setOperationData } from '../../store/operations'
 import ThemedTextInput from '../../screens/components/ThemedTextInput'
@@ -67,7 +67,7 @@ export function POTASpotterControl (props) {
   const [spotterUI, setSpotterUI] = useState({})
   const [comments, setComments] = useState()
 
-  const now = useSelector(selectNow)
+  const now = useSelector(selectSecondsTick)
 
   useEffect(() => {
     if (operation?.freq) {

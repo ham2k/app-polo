@@ -260,7 +260,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       if (!pausedTime) {
         if (value) {
           if (!startOnMillis) {
-            startOnMillis = Date.now()
+            startOnMillis = Math.floor(Date.now() / 1000) * 1000
           }
         } else {
           startOnMillis = null

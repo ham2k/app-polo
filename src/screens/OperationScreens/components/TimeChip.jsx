@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react'
 import LoggerChip from './LoggerChip'
 import { fmtTimeZulu } from '../../../tools/timeFormats'
 import { useSelector } from 'react-redux'
-import { selectNow } from '../../../store/time'
+import { selectSecondsTick } from '../../../store/time'
 
 export default function TimeChip (props) {
   const { time, children, styles } = props
 
-  const now = useSelector(selectNow)
-
+  const now = useSelector(selectSecondsTick)
   const [timeStr, setTimeStr] = useState()
 
   useEffect(() => {
     if (!time) {
-      setTimeStr(fmtTimeZulu(new Date()))
+      setTimeStr(fmtTimeZulu(now))
     } else {
       setTimeStr(fmtTimeZulu(time))
     }
