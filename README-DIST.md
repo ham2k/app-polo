@@ -33,7 +33,7 @@ As seen [here](https://proandroiddev.com/how-to-create-an-apk-from-the-android-a
 ```
 brew install bundletool
 cd android/app/build/outputs/betaRelease
-bundletool build-apks --bundle=android/app/build/outputs/bundle/betaRelease/com.ham2k.polo-v${POLO_BUILD}(${POLO_BASE_RELEASE})-beta-release.aab --output=com.ham2k.polo-v${POLO_BUILD}(${POLO_BASE_RELEASE})-beta-release.apk
+bundletool build-apks --bundle=android/app/build/outputs/bundle/betaRelease/com.ham2k.polo-v${POLO_BUILD}\(${POLO_BASE_VERSION}\)-beta-release.aab --output=com.ham2k.polo-v${POLO_BUILD}\(${POLO_BASE_VERSION}\)-beta-release.apk
 ```
 
 ``````
