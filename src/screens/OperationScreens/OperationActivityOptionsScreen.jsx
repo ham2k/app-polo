@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
@@ -16,7 +16,8 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
-  const activity = findHooks('activity').find((act) => act.key === route.params.activity)
+  const handler = useMemo(() => findHooks(`ref:${route.params.activity}`)[0], [route.params.activity])
+  const activity = useMemo(() => findHooks('activity', { key: handler.key })[0], [handler])
 
   useEffect(() => { // Prepare the screen, set the activity title, etc
     if (activity && operation) {
@@ -29,10 +30,15 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
   }, [navigation, activity, operation])
 
   const handleRemoveActivity = useCallback(() => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, activity.activationType ?? activity.key, []) }))
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation, activity.activationType ?? activity.key, []) }))
 
     navigation.goBack()
   }, [activity, dispatch, navigation, operation])
+
+  if (!handler || !activity) {
+    navigation.goBack()
+    return null
+  }
 
   return (
     <ScreenContainer>

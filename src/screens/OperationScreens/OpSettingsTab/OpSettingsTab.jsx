@@ -70,7 +70,6 @@ export default function OpSettingsTab ({ navigation, route }) {
   const refHandlers = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type))]
     const handlers = types.map(type => findHooks(`ref:${type}`)[0]).filter(x => x || x === '')
-    console.log('refHandlers', types, handlers)
     return handlers
   }, [operation?.refs])
 
