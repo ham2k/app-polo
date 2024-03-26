@@ -16,6 +16,7 @@ export const timeSlice = createSlice({
       }
     },
     saveInterval: (state, action) => {
+      console.log('saved interval', action.payload)
       state.interval = action.payload
     }
   }
@@ -37,14 +38,14 @@ export const startTickTock = () => (dispatch, getState) => {
     const values = { now, seconds, tenSeconds, thirtySeconds, oneMinute, fiveMinutes }
     dispatch(actions.setValues(values))
   }, 1000)
-  actions.saveInterval(interval)
+  dispatch(actions.saveInterval(interval))
 }
 
 export const stopTickTock = () => (dispatch, getState) => {
   const { interval } = getState().time
   if (!interval) return
   clearInterval(interval)
-  actions.saveInterval(undefined)
+  dispatch(actions.saveInterval(undefined))
 }
 
 export const selectNow = (state) => {
