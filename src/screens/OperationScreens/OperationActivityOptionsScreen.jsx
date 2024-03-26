@@ -9,46 +9,42 @@ import { selectOperation, setOperationData } from '../../store/operations'
 
 import { replaceRefs } from '../../tools/refTools'
 import { ListSeparator } from '../components/ListComponents'
-import { findHooks } from '../../extensions/registry'
+import { findBestHook } from '../../extensions/registry'
+import { defaultReferenceHandlerFor } from '../../extensions/core/references'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
-  const handler = useMemo(() => findHooks(`ref:${route.params.activity}`)[0], [route.params.activity])
-  const activity = useMemo(() => findHooks('activity', { key: handler.key })[0], [handler])
+  const handler = useMemo(() => (
+    findBestHook(`ref:${route.params.activity}`) || defaultReferenceHandlerFor(route.params.activity)
+  ), [route.params.activity])
+  const activity = useMemo(() => findBestHook('activity', { key: handler.key })[0], [handler])
 
   useEffect(() => { // Prepare the screen, set the activity title, etc
     if (activity && operation) {
       navigation.setOptions({
         title: activity.name ?? `Activity "${activity.key}`
       })
-    } else {
-      navigation.goBack()
     }
   }, [navigation, activity, operation])
 
   const handleRemoveActivity = useCallback(() => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation, activity.activationType ?? activity.key, []) }))
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation, activity?.activationType ?? activity?.key ?? handler?.key, []) }))
 
     navigation.goBack()
-  }, [activity, dispatch, navigation, operation])
-
-  if (!handler || !activity) {
-    navigation.goBack()
-    return null
-  }
+  }, [activity, handler, dispatch, navigation, operation])
 
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        {activity.Options && <activity.Options operation={operation} styles={styles} />}
+        {activity?.Options && <activity.Options operation={operation} styles={styles} />}
 
         <List.Section>
           <ListSeparator />
           <List.Item
-            title={`Remove ${activity.shortName ?? activity.name} from this operation`}
+            title={`Remove ${activity?.shortName ?? activity?.name ?? handler?.name} from this operation`}
             titleStyle={{ color: styles.theme.colors.error }}
             // eslint-disable-next-line react/no-unstable-nested-components
             left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.oneSpace * 2 }} icon="delete" />}
