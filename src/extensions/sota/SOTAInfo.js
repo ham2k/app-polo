@@ -37,5 +37,6 @@ export const Info = {
   huntingType: 'sota',
   activationType: 'sotaActivation',
   descriptionPlaceholder: 'Enter SOTA reference',
+  unknownReferenceName: 'Unknown Summit',
   referenceRegex: /^[A-Z0-9]{1,3}\/[A-Z]{2}-[0-9]{3,}$/i
 }

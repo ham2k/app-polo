@@ -20,31 +20,49 @@ import { ListRow } from '../../screens/components/ListComponents'
 
  */
 
-const KEY = 'wfd'
-
-const ACTIVITY = {
-  key: KEY,
-  comingSoon: true,
+const Info = {
+  key: 'wfd',
   icon: 'snowflake',
   name: 'Winter Field Day',
   shortName: 'WFD',
   infoURL: 'https://www.winterfieldday.org/',
+  defaultValue: { class: '', location: '' }
+}
+
+const Extension = {
+  ...Info,
+  onActivation: ({ registerHook, registerHandler }) => {
+    registerHook('activity', { hook: ActivityHook })
+    registerHook(`ref:${Info.key}`, { hook: ReferenceHandler })
+  }
+}
+export default Extension
+
+const ActivityHook = {
+  ...Info,
+  Options: ActivityOptions,
+  fieldsForMainExchangePanel
+}
+
+const ReferenceHandler = {
+  ...Info,
+
+  descriptionPlaceholder: '',
   description: (operation) => {
     let date
     if (operation?.qsos && operation.qsos[0]?.startOnMillis) date = Date.parse(operation.qsos[0].startOnMillis)
     else date = new Date()
-    const ref = findRef(operation, KEY)
+    const ref = findRef(operation, Info.key)
     return [`WFD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')
   },
+
   suggestOperationTitle: (ref) => {
-    return { for: 'WFD', subtitle: [ref?.class, ref?.location].filter(x => x).join(' ') }
+    return { for: Info.shortName, subtitle: [ref?.class, ref?.location].filter(x => x).join(' ') }
   },
 
-  descriptionPlaceholder: '',
-  defaultValue: { class: '', location: '' },
   cabrilloHeaders: ({ operation, settings, headers }) => {
-    const ref = findRef(operation, KEY)
-    headers.CONTEST = 'WFD'
+    const ref = findRef(operation, Info.key)
+    headers.CONTEST = Info.cabrilloName ?? Info.shortName
     headers.CALLSIGN = operation.stationCall || settings.operatorCall
     headers.LOCATION = ref.location
     headers.NAME = ''
@@ -52,9 +70,10 @@ const ACTIVITY = {
     if (operation.grid) headers['GRID-LOCATOR'] = operation.grid
     return headers
   },
+
   qsoToCabrilloParts: ({ qso, ref, operation, settings, parts }) => {
     const ourCall = operation.stationCall || settings.operatorCall
-    const qsoRef = findRef(qso, KEY)
+    const qsoRef = findRef(qso, Info.key)
 
     parts.push((ourCall ?? '').padEnd(13, ' '))
     parts.push((ref?.class ?? '').padEnd(6, ' '))
@@ -69,13 +88,13 @@ const ACTIVITY = {
 function fieldsForMainExchangePanel (props) {
   const { qso, setQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
 
-  const ref = findRef(qso?.refs, ACTIVITY.key) || { type: ACTIVITY.key, class: '', location: '' }
+  const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: '', location: '' }
 
   const fields = []
 
   fields.push(
     <ThemedTextInput
-      key={`${ACTIVITY.key}_class`}
+      key={`${Info.key}/class`}
       innerRef={refStack.shift()}
       style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
       textStyle={styles.text.callsign}
@@ -88,7 +107,7 @@ function fieldsForMainExchangePanel (props) {
       disabled={disabled}
       onChangeText={(text) => setQSO({
         ...qso,
-        refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, class: text }),
+        refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text }),
         their: { ...qso?.their, exchange: [text, ref?.location].join(' ') }
       })}
       onSubmitEditing={onSubmitEditing}
@@ -98,7 +117,7 @@ function fieldsForMainExchangePanel (props) {
   )
   fields.push(
     <ThemedTextInput
-      key={`${ACTIVITY.key}_location`}
+      key={`${Info.key}/location`}
       innerRef={refStack.shift()}
       style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
       textStyle={styles.text.callsign}
@@ -111,7 +130,7 @@ function fieldsForMainExchangePanel (props) {
       disabled={disabled}
       onChangeText={(text) => setQSO({
         ...qso,
-        refs: replaceRef(qso?.refs, ACTIVITY.key, { ...ref, location: text }),
+        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text }),
         their: { ...qso?.their, arrlSection: text, exchange: [ref?.class, text].join(' ') }
       })}
       onSubmitEditing={onSubmitEditing}
@@ -122,18 +141,18 @@ function fieldsForMainExchangePanel (props) {
   return fields
 }
 
-export function ThisActivityOptions (props) {
+export function ActivityOptions (props) {
   const { styles, operation } = props
 
   const dispatch = useDispatch()
 
-  const ref = useMemo(() => findRef(operation, ACTIVITY.key), [operation])
+  const ref = useMemo(() => findRef(operation, Info.key), [operation])
 
   const handleChange = useCallback((value) => {
     if (value?.class) value.class = value.class.toUpperCase()
     if (value?.location) value.location = value.location.toUpperCase()
 
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, ACTIVITY.key, { ...ref, ...value }) }))
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, ...value }) }))
   }, [dispatch, operation, ref])
 
   return (
@@ -165,12 +184,3 @@ export function ThisActivityOptions (props) {
     </List.Section>
   )
 }
-
-const ThisActivity = {
-  ...ACTIVITY,
-  fieldsForMainExchangePanel,
-  OptionalExchangePanel: null,
-  Options: ThisActivityOptions
-}
-
-export default ThisActivity

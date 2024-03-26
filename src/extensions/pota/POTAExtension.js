@@ -101,7 +101,7 @@ const ReferenceHandler = {
         grid: data?.grid6
       }
     } else {
-      result = { ...ref, name: `${ref.ref} not found!` }
+      return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
     }
 
     promise.unsubscribe()
