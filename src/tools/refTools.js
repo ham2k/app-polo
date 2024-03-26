@@ -40,7 +40,7 @@ export function stringToRefs (type, str, options = {}) {
 }
 
 export function replaceRefs (originalRefs, type, newRefs) {
-  const otherRefs = (originalRefs || []).filter(r => r && r.type !== type)
+  const otherRefs = (originalRefs?.refs ?? originalRefs ?? []).filter(r => r && r.type !== type)
   return [...otherRefs, ...newRefs]
 }
 

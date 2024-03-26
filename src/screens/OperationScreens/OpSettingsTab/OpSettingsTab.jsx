@@ -14,7 +14,8 @@ import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { LocationDialog } from './components/LocationDialog'
 import { findRef } from '../../../tools/refTools'
-import { findHooks } from '../../../extensions/registry'
+import { findBestHook, findHooks } from '../../../extensions/registry'
+import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -69,7 +70,9 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const refHandlers = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type))]
-    const handlers = types.map(type => findHooks(`ref:${type}`)[0]).filter(x => x || x === '')
+    const handlers = types.map(type => (
+      findBestHook(`ref:${type}`) || defaultReferenceHandlerFor(type)
+    ))
     return handlers
   }, [operation?.refs])
 

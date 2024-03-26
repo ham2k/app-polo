@@ -1,5 +1,5 @@
 import { findRef, refsToString } from '../../tools/refTools'
-import { WWFFctivityOptions } from './WWFFctivityOptions'
+import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
 import { Info } from './WWFFInfo'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
@@ -26,7 +26,7 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  Options: WWFFctivityOptions,
+  Options: WWFFActivityOptions,
 
   includeControlForQSO: ({ qso, operation }) => {
     if (findRef(operation, Info.activationType)) return true

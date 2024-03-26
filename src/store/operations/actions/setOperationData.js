@@ -55,7 +55,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
   } else if (data.refs && !operation.description) {
     const referenceTitles = data.refs.map(ref => {
       const hooks = findHooks(`ref:${ref?.type}`)
-      return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref))[0]
+      return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref)).filter(x => x)[0]
     }).filter(x => x)
 
     const titleParts = []
