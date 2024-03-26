@@ -28,7 +28,7 @@ their logs for upload to Logsearch. Unfortunately, in these instances, the conta
 will not count towards WWFF global awards
  */
 
-export const INFO = {
+export const Info = {
   key: 'wwff',
   icon: 'flower',
   name: 'World Wide Flora & Fauna',
@@ -37,5 +37,6 @@ export const INFO = {
   huntingType: 'wwff',
   activationType: 'wwffActivation',
   descriptionPlaceholder: 'Enter WWFF reference',
+  unknownReferenceName: 'Unknown Park',
   referenceRegex: /^[A-Z0-9]+FF-[0-9]{4,5}$/i
 }

@@ -3,7 +3,7 @@ import React, { useMemo } from 'react'
 import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 
-import { INFO } from './WWFFInfo'
+import { Info } from './WWFFInfo'
 import { WWFFData } from './WWFFDataFile'
 
 export function WWFFListItem ({ activityRef, refData, operationRef, style, styles, onPress, onAddReference, onRemoveReference }) {
@@ -22,7 +22,7 @@ export function WWFFListItem ({ activityRef, refData, operationRef, style, style
       }
       description={reference.name}
       onPress={onPress}
-      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={INFO.icon} />}
+      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
       right={() => (
         activityRef === operationRef ? (
           onRemoveReference && <IconButton icon="minus-circle-outline" onPress={() => onRemoveReference(activityRef)} />

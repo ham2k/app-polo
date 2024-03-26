@@ -6,7 +6,7 @@ import Geolocation from '@react-native-community/geolocation'
 import { selectOperationCallInfo, setOperationData } from '../../store/operations'
 import { findRef, replaceRef } from '../../tools/refTools'
 import { WWFFData } from './WWFFDataFile'
-import { INFO } from './WWFFInfo'
+import { Info } from './WWFFInfo'
 import { WWFFListItem } from './WWFFListItem'
 import { ListRow } from '../../screens/components/ListComponents'
 
@@ -19,7 +19,7 @@ export function WWFFActivityOptions (props) {
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const operationRef = useMemo(() => findRef(operation, INFO.activationType), [operation]) ?? ''
+  const operationRef = useMemo(() => findRef(operation, Info.activationType), [operation]) ?? ''
 
   const title = useMemo(() => {
     if (!operationRef?.ref) return 'No park selected for activation'
@@ -74,7 +74,7 @@ export function WWFFActivityOptions (props) {
 
       // Is the search term a plain reference, either with prefix or just digits?
       let nakedReference
-      if (search.match(INFO.referenceRegex)) {
+      if (search.match(Info.referenceRegex)) {
         nakedReference = search.toUpperCase()
       }
 
@@ -103,14 +103,14 @@ export function WWFFActivityOptions (props) {
   const handleAddReference = useCallback((newRef) => {
     dispatch(setOperationData({
       uuid: operation.uuid,
-      refs: replaceRef(operation?.refs, INFO.activationType, { type: INFO.activationType, ref: newRef })
+      refs: replaceRef(operation?.refs, Info.activationType, { type: Info.activationType, ref: newRef })
     }))
   }, [dispatch, operation])
 
   const handleRemoveReference = useCallback((newRef) => {
     dispatch(setOperationData({
       uuid: operation.uuid,
-      refs: replaceRef(operation?.refs, INFO.activationType, {})
+      refs: replaceRef(operation?.refs, Info.activationType, {})
     }))
   }, [dispatch, operation])
 

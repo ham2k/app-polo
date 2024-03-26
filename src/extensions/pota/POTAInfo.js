@@ -9,5 +9,6 @@ export const Info = {
   huntingType: 'pota',
   activationType: 'potaActivation',
   descriptionPlaceholder: 'Enter POTA references',
+  unknownReferenceName: 'Unknown Park',
   referenceRegex: /^[A-Z0-9]+-(?:[0-9]{4,5}|TEST)$/i
 }

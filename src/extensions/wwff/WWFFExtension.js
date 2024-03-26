@@ -1,13 +1,13 @@
 import { findRef, refsToString } from '../../tools/refTools'
-import { SOTAActivityOptions } from './SOTAActivityOptions'
-import { SOTAData, registerSOTADataFile } from './SOTADataFile'
-import { Info } from './SOTAInfo'
-import { SOTALoggingControl } from './SOTALoggingControl'
+import { WWFFctivityOptions } from './WWFFctivityOptions'
+import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
+import { Info } from './WWFFInfo'
+import { WWFFLoggingControl } from './WWFFLoggingControl'
 
 const Extension = {
   ...Info,
   onActivation: ({ registerHook, registerHandler }) => {
-    registerSOTADataFile()
+    registerWWFFDataFile()
 
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
@@ -26,7 +26,7 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  Options: SOTAActivityOptions,
+  Options: WWFFctivityOptions,
 
   includeControlForQSO: ({ qso, operation }) => {
     if (findRef(operation, Info.activationType)) return true
@@ -51,7 +51,7 @@ const HunterLoggingControl = {
     if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: SOTALoggingControl,
+  InputComponent: WWFFLoggingControl,
   optionType: 'optional'
 }
 
@@ -64,7 +64,7 @@ const ActivatorLoggingControl = {
     if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: SOTALoggingControl,
+  InputComponent: WWFFLoggingControl,
   optionType: 'mandatory'
 }
 
@@ -75,7 +75,7 @@ const ReferenceHandler = {
 
   decorateRef: (ref) => {
     if (ref.ref) {
-      const reference = SOTAData.byReference[ref.ref]
+      const reference = WWFFData.byReference[ref.ref]
       if (reference) {
         return { ...ref, name: reference.name, location: reference.region, grid: reference.grid }
       } else {
