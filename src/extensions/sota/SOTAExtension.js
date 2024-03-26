@@ -1,15 +1,13 @@
-import { apiPOTA } from '../../store/apiPOTA'
 import { findRef, refsToString } from '../../tools/refTools'
-import { POTAActivityOptions } from './POTAActivityOptions'
-import { registerPOTAAllParksData } from './POTAAllParksData'
-import { Info } from './POTAInfo'
-import { POTALoggingControl } from './POTALoggingControl'
-import { POTASpotterControl } from './POTASpotterControl'
+import { SOTAActivityOptions } from './SOTAActivityOptions'
+import { SOTAData, registerSOTADataFile } from './SOTADataFile'
+import { Info } from './SOTAInfo'
+import { SOTALoggingControl } from './SOTALoggingControl'
 
 const Extension = {
   ...Info,
   onActivation: ({ registerHook, registerHandler }) => {
-    registerPOTAAllParksData()
+    registerSOTADataFile()
 
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
@@ -23,12 +21,12 @@ const ActivityHook = {
   MainExchangePanel: null,
   loggingControls: ({ operation, settings }) => {
     if (findRef(operation, Info.activationType)) {
-      return [ActivatorLoggingControl, SpotterControl]
+      return [ActivatorLoggingControl]
     } else {
       return [HunterLoggingControl]
     }
   },
-  Options: POTAActivityOptions,
+  Options: SOTAActivityOptions,
 
   includeControlForQSO: ({ qso, operation }) => {
     if (findRef(operation, Info.activationType)) return true
@@ -53,7 +51,7 @@ const HunterLoggingControl = {
     if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: POTALoggingControl,
+  InputComponent: SOTALoggingControl,
   optionType: 'optional'
 }
 
@@ -66,19 +64,7 @@ const ActivatorLoggingControl = {
     if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: POTALoggingControl,
-  optionType: 'mandatory'
-}
-
-const SpotterControl = {
-  key: `${Info.key}/spotter`,
-  order: 11,
-  icon: 'hand-wave',
-  label: ({ operation, qso }) => {
-    return 'Spotting'
-  },
-  InputComponent: POTASpotterControl,
-  inputWidthMultiplier: 40,
+  InputComponent: SOTALoggingControl,
   optionType: 'mandatory'
 }
 
@@ -87,25 +73,15 @@ const ReferenceHandler = {
 
   description: (operation) => refsToString(operation, Info.activationType),
 
-  decorateRefWithDispatch: (ref) => async (dispatch, getState) => {
-    if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', location: '' }
-
-    const promise = dispatch(apiPOTA.endpoints.lookupPark.initiate(ref))
-    const { data } = await promise
-    let result
-    if (data?.name) {
-      result = {
-        ...ref,
-        name: [data.name, data.parktypeDesc].filter(x => x).join(' '),
-        location: data?.locationName,
-        grid: data?.grid6
+  decorateRef: (ref) => {
+    if (ref.ref) {
+      const reference = SOTAData.byReference[ref.ref]
+      if (reference) {
+        return { ...ref, name: reference.name, location: reference.region, grid: reference.grid }
+      } else {
+        return { ...ref, name: 'Unknown summit' }
       }
-    } else {
-      result = { ...ref, name: `${ref.ref} not found!` }
     }
-
-    promise.unsubscribe()
-    return result
   },
 
   suggestOperationTitle: (ref) => {

@@ -3,6 +3,8 @@ export const Info = {
   icon: 'pine-tree',
   name: 'Parks on the Air',
   shortName: 'POTA',
+  doubleContact: 'Park-to-Park',
+  shortNameDoubleContact: 'P2P',
   infoURL: 'https://parksontheair.com/',
   huntingType: 'pota',
   activationType: 'potaActivation',

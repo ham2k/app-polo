@@ -3,7 +3,7 @@ import React, { useMemo } from 'react'
 import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 
-import { INFO } from './SOTAInfo'
+import { Info } from './SOTAInfo'
 import { SOTAData } from './SOTADataFile'
 
 export function SOTAListItem ({ activityRef, refData, operationRef, style, styles, onPress, onAddReference, onRemoveReference }) {
@@ -25,7 +25,7 @@ export function SOTAListItem ({ activityRef, refData, operationRef, style, style
       }
       description={[SOTAData.regions[reference?.reg]?.region, SOTAData.regions[reference?.reg]?.association].filter(x => x).join(' • ')}
       onPress={onPress}
-      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={INFO.icon} />}
+      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
       right={() => (
         activityRef === operationRef ? (
           onRemoveReference && <IconButton icon="minus-circle-outline" onPress={() => onRemoveReference(activityRef)} />

@@ -1,19 +1,16 @@
-import { findRef, refsToString } from '../../tools/refTools'
+import { findRef } from '../../tools/refTools'
 
-import { INFO } from './SOTAInfo'
+import { Info } from './SOTAInfo'
 import { SOTAActivityOptions } from './SOTAActivityOptions'
-import { SOTAData, registerSOTADataFile } from './SOTADataFile'
 import { SOTALoggingControl } from './SOTALoggingControl'
-
-registerSOTADataFile()
 
 const HunterLoggingControl = {
   key: 'sota/hunter',
   order: 10,
-  icon: INFO.icon,
+  icon: Info.icon,
   label: ({ operation, qso }) => {
     const parts = ['SOTA']
-    if (findRef(qso, INFO.huntingType)) parts.unshift('✓')
+    if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
   InputComponent: SOTALoggingControl,
@@ -23,10 +20,10 @@ const HunterLoggingControl = {
 const ActivatorLoggingControl = {
   key: 'sota/activator',
   order: 10,
-  icon: INFO.icon,
+  icon: Info.icon,
   label: ({ operation, qso }) => {
     const parts = ['S2S']
-    if (findRef(qso, INFO.huntingType)) parts.unshift('✓')
+    if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
   InputComponent: SOTALoggingControl,
@@ -34,10 +31,10 @@ const ActivatorLoggingControl = {
 }
 
 const SOTAActivity = {
-  ...INFO,
+  ...Info,
   MainExchangePanel: null,
   loggingControls: ({ operation, settings }) => {
-    if (findRef(operation, INFO.activationType)) {
+    if (findRef(operation, Info.activationType)) {
       return [ActivatorLoggingControl]
     } else {
       return [HunterLoggingControl]
@@ -45,38 +42,17 @@ const SOTAActivity = {
   },
   Options: SOTAActivityOptions,
 
-  description: (operation) => refsToString(operation, INFO.activationType),
-
   includeControlForQSO: ({ qso, operation }) => {
-    if (findRef(operation, INFO.activationType)) return true
-    if (findRef(qso, INFO.huntingType)) return true
+    if (findRef(operation, Info.activationType)) return true
+    if (findRef(qso, Info.huntingType)) return true
     else return false
   },
 
   labelControlForQSO: ({ operation, qso }) => {
-    const opRef = findRef(operation, INFO.activationType)
+    const opRef = findRef(operation, Info.activationType)
     let label = opRef ? 'S2S' : 'SOTA'
-    if (findRef(qso, INFO.huntingType)) label = `✓ ${label}`
+    if (findRef(qso, Info.huntingType)) label = `✓ ${label}`
     return label
-  },
-
-  decorateRef: (ref) => (dispatch, getState) => {
-    if (ref.ref) {
-      const reference = SOTAData.byReference[ref.ref]
-      if (reference) {
-        return { ...ref, name: reference.name, location: reference.region, grid: reference.grid }
-      } else {
-        return { ...ref, name: 'Unknown summit' }
-      }
-    }
-  },
-
-  suggestOperationTitle: (ref) => {
-    if (ref.type === INFO.activationType && ref.ref) {
-      return { at: ref.ref, subtitle: ref.name }
-    } else {
-      return null
-    }
   }
 }
 

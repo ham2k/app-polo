@@ -31,16 +31,15 @@ export function findHooks (hookCategory, { key } = {}) {
   return hooks
 }
 
-function registerHook (hookCategory, { extension, hook, name, priority }) {
+function registerHook (hookCategory, { extension, hook, priority }) {
   if (!Hooks[hookCategory] && !VALID_HOOK_REGEX.test(hookCategory)) {
     console.error(`Invalid hook ${hookCategory} for extension ${extension.key}`)
     return false
   }
   if (!hook) hook = extension[hookCategory]
-  if (!name) name = hookCategory
-  const newHooks = (Hooks[hookCategory] ?? []).filter(h => h.key !== extension.key && h.name !== name)
-  newHooks.push({ key: extension.key, extension, name, hook, priority })
-  newHooks.sort((a, b) => (a.priority ?? extension.priority) - (b.priority ?? extension.priority))
+  const newHooks = (Hooks[hookCategory] ?? []).filter(h => h.key !== extension.key)
+  newHooks.push({ key: extension.key, extension, hook, priority })
+  newHooks.sort((a, b) => (a.priority ?? a.extension?.priority) - (b.priority ?? b.extension?.priority))
   Hooks[hookCategory] = newHooks
 }
 

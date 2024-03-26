@@ -46,7 +46,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
       decoratedRefs.push(decoratedRef)
     }
 
-    data.refs = decoratedRefs
+    data.refs = decoratedRefs.filter(ref => ref?.type)
   }
 
   if (data.description) {
@@ -54,7 +54,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     data.subtitle = ''
   } else if (data.refs && !operation.description) {
     const referenceTitles = data.refs.map(ref => {
-      const hooks = findHooks(`ref:${ref.type}`)
+      const hooks = findHooks(`ref:${ref?.type}`)
       return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref))[0]
     }).filter(x => x)
 
