@@ -1,4 +1,10 @@
 {
+  "0.6.3": {
+    "changes": [
+      "Added support and discord links",
+      "Performance fixes"
+    ]
+  },
   "0.6.2": {
     "changes": [
       "Fixed issues with Date & Time inputs",

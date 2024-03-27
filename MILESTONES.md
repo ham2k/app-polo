@@ -34,3 +34,4 @@
 ### 2024-03-18: First Youtube video of the app in use
 * Morten LB0FI on his [Norwegian Hamventures Channel](https://youtu.be/_diPKWNjX0A?si=A5J-Vl0eLBz1px-q)
 
+### 2024-03-25: Made the Android app discretely available on Google Play, as "Ham2K PoLo BETA"

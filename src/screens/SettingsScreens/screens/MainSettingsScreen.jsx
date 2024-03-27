@@ -2,7 +2,7 @@
 import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { List, Switch, Text } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { Linking, ScrollView } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
 
 import packageJson from '../../../../package.json'
@@ -30,38 +30,6 @@ export default function MainSettingsScreen ({ navigation }) {
     })
   }, [dispatch])
 
-  const OperatorCallsignIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />
-  ), [styles])
-
-  const ThemeIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={{ dark: 'weather-night', light: 'white-balance-sunny' }[settings.theme] || 'theme-light-dark'} />
-  ), [styles, settings?.theme])
-
-  const QRZAccountIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />
-  ), [styles])
-
-  const LoggingRowIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="book-edit-outline" />
-  ), [styles])
-
-  const ManageDataFilesIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />
-  ), [styles])
-
-  const ImportOperationFilesIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-download" />
-  ), [styles])
-
-  const VersionIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />
-  ), [styles])
-
-  const AuthorIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />
-  ), [styles])
-
   return (
     <ScrollView style={{ flex: 1 }}>
       <List.Section>
@@ -76,7 +44,7 @@ export default function MainSettingsScreen ({ navigation }) {
               <Text style={{ color: 'red' }}>Please enter a callsign!</Text>
             )
           }
-          left={OperatorCallsignIcon}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
           onPress={() => setCurrentDialog('operatorCall')}
         />
         {currentDialog === 'operatorCall' && (
@@ -91,7 +59,7 @@ export default function MainSettingsScreen ({ navigation }) {
         <List.Item
           title="Theme"
           description={{ dark: 'Always in Dark Mode', light: 'Always in Light Mode' }[settings.theme] || 'Same as device theme'}
-          left={ThemeIcon}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={{ dark: 'weather-night', light: 'white-balance-sunny' }[settings.theme] || 'theme-light-dark'} />}
           onPress={() => setCurrentDialog('theme')}
         />
         {currentDialog === 'theme' && (
@@ -115,7 +83,7 @@ export default function MainSettingsScreen ({ navigation }) {
           title="Logging Settings"
           description={''}
           onPress={() => navigation.navigate('LoggingSettings')}
-          left={LoggingRowIcon}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="book-edit-outline" />}
         />
 
       </List.Section>
@@ -126,7 +94,7 @@ export default function MainSettingsScreen ({ navigation }) {
         <List.Item
           title="QRZ (for callsign lookups)"
           description={settings?.accounts?.qrz ? `Login: ${settings.accounts.qrz.login}` : 'No account'}
-          left={QRZAccountIcon}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />}
           onPress={() => setCurrentDialog('accountsQRZ')}
         />
         {currentDialog === 'accountsQRZ' && (
@@ -144,12 +112,12 @@ export default function MainSettingsScreen ({ navigation }) {
 
         <List.Item
           title="Manage data files"
-          left={ManageDataFilesIcon}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />}
           onPress={() => navigation.navigate('DataFilesSettings')}
         />
         <List.Item
           title="Import operation files"
-          left={ImportOperationFilesIcon}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-download" />}
           onPress={handleImportFiles}
         />
       </List.Section>
@@ -160,12 +128,34 @@ export default function MainSettingsScreen ({ navigation }) {
           title="Version"
           description={packageJson.version}
           onPress={() => navigation.navigate('VersionSettings')}
-          left={VersionIcon}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
         />
         <List.Item
           title="Author"
           description={'Sebastián Delmont • KI2D'}
-          left={AuthorIcon}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+        />
+      </List.Section>
+
+      <List.Section>
+        <List.Subheader>Need Help?</List.Subheader>
+        <List.Item
+          title="Contact Us"
+          description={'Email help@ham2k.com'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-alert-outline" />}
+          onPress={async () => await Linking.openURL('mailto:help@ham2k.com')}
+        />
+        <List.Item
+          title="Official Reflector"
+          description={'Ham2K PoLo Google Group'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-seal-outline" />}
+          onPress={async () => await Linking.openURL('https://groups.google.com/g/ham2k-polo')}
+        />
+        <List.Item
+          title="Discord Server"
+          description={'Our online community'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="forum" />}
+          onPress={async () => await Linking.openURL('https://discord.gg/c4Th9QkByJ')}
         />
       </List.Section>
     </ScrollView>

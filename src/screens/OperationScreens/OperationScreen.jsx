@@ -7,7 +7,7 @@ import KeepAwake from '@sayem314/react-native-keep-awake'
 import { loadOperation, selectOperation } from '../../store/operations'
 import { loadQSOs } from '../../store/qsos'
 import { selectSettings } from '../../store/settings'
-import { startTickTock } from '../../store/time'
+import { startTickTock, stopTickTock } from '../../store/time'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import OpLoggingTab from './OpLoggingTab/OpLoggingTab'
@@ -26,6 +26,7 @@ export default function OperationScreen ({ navigation, route }) {
 
   useEffect(() => { // Ensure the clock is ticking
     dispatch(startTickTock())
+    return () => dispatch(stopTickTock())
   }, [dispatch])
 
   useEffect(() => { // When starting, make sure all operation data is loaded
