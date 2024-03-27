@@ -176,6 +176,7 @@ export default function OpMapTab ({ navigation, route }) {
           description={operation.title}
           anchor={{ x: 0.5, y: 0.5 }}
           flat={true}
+          tracksViewChanges={false}
         >
           <Image
             source={PIN_QTH}
@@ -200,6 +201,7 @@ export default function OpMapTab ({ navigation, route }) {
           title={[qso.their.call, distanceStr].join(' • ')}
           description={[qso.their?.sent, qso.mode, qso.band, fmtShortTimeZulu(qso.startOnMillis)].join(' • ')}
           flat={true}
+          tracksViewChanges={false}
         >
           <Image
             source={PIN_FOR_STRENGTH[strength]}
