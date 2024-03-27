@@ -20,6 +20,9 @@ export function defaultReferenceHandlerFor (type) {
 const Extension = {
   key: 'core-references',
   name: 'Core Reference Handlers',
+  category: 'core',
+  hidden: true,
+  alwaysEnabled: true,
   onActivation: ({ registerHook, registerHandler }) => {
     registerHook('ref:pota', { priority: -1, hook: POTAReferenceHandler })
     registerHook('ref:potaActivation', { priority: -1, hook: POTAReferenceHandler })

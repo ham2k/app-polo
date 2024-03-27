@@ -1,3 +1,4 @@
+import { loadDataFile } from '../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../tools/refTools'
 import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { SOTAData, registerSOTADataFile } from './SOTADataFile'
@@ -6,12 +7,14 @@ import { SOTALoggingControl } from './SOTALoggingControl'
 
 const Extension = {
   ...Info,
-  onActivation: ({ registerHook, registerHandler }) => {
-    registerSOTADataFile()
-
+  category: 'activation',
+  onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+
+    registerSOTADataFile()
+    await dispatch(loadDataFile('sota-all-summits'))
   }
 }
 export default Extension

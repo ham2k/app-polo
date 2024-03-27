@@ -24,6 +24,7 @@ import OperationActivityOptionsScreen from './screens/OperationScreens/Operation
 import VersionSettingsScreen from './screens/SettingsScreens/screens/VersionSettingsScreen'
 import LoggingSettingsScreen from './screens/SettingsScreens/screens/LoggingSettingsScreen'
 import StartScreen from './screens/StartScreen/StartScreen'
+import FeaturesSettingsScreen from './screens/SettingsScreens/screens/FeaturesSettingsScreen'
 
 const DISTRIBUTION_CONFIG = {}
 
@@ -84,6 +85,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="Settings"
             options={{ title: 'Settings' }}
             component={MainSettingsScreen}
+          />
+
+          <Stack.Screen name="FeaturesSettings"
+            options={{ title: 'Features Settings', headerBackTitle: 'MainSettings' }}
+            component={FeaturesSettingsScreen}
           />
 
           <Stack.Screen name="LoggingSettings"

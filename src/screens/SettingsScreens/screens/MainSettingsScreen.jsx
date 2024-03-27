@@ -86,6 +86,13 @@ export default function MainSettingsScreen ({ navigation }) {
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="book-edit-outline" />}
         />
 
+        <List.Item
+          title="Features"
+          description={'Enable or disable specific features'}
+          onPress={() => navigation.navigate('FeaturesSettings')}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="format-list-bulleted" />}
+        />
+
       </List.Section>
 
       <List.Section>

@@ -1,4 +1,5 @@
 import { apiPOTA } from '../../store/apiPOTA'
+import { loadDataFile } from '../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../tools/refTools'
 import { POTAActivityOptions } from './POTAActivityOptions'
 import { registerPOTAAllParksData } from './POTAAllParksData'
@@ -8,12 +9,14 @@ import { POTASpotterControl } from './POTASpotterControl'
 
 const Extension = {
   ...Info,
-  onActivation: ({ registerHook, registerHandler }) => {
-    registerPOTAAllParksData()
-
+  category: 'activation',
+  onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+
+    registerPOTAAllParksData()
+    await dispatch(loadDataFile('pota-all-parks'))
   }
 }
 export default Extension
