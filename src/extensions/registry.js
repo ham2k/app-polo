@@ -1,3 +1,5 @@
+import { selectSettings } from '../store/settings'
+
 /*
  * # Extensions Registry
  * An extension is a module that can be registered to the application to extend its functionality.
@@ -24,6 +26,10 @@ export function getExtension (key) {
   return Extensions[key]
 }
 
+export function allExtensions () {
+  return Object.values(Extensions)
+}
+
 export function findHooks (hookCategory, { key } = {}) {
   let hooks = (Hooks[hookCategory] ?? []).map(h => h.hook)
   if (key) hooks = hooks.filter(h => h.key === key)
@@ -47,23 +53,41 @@ function registerHook (hookCategory, { extension, hook, priority }) {
   Hooks[hookCategory] = newHooks
 }
 
-function unregisterHooks (hookCategory, { extension }) {
+function unregisterAllHooks (hookCategory, { extension }) {
   Hooks[hookCategory] = Hooks[hookCategory].filter(h => h.key !== extension.key)
 }
 
-export function activateExtension (extension) {
+export function activateEnabledExtensions (dispatch, getState) {
+  const settings = selectSettings(getState()) || {}
+  const extensions = allExtensions()
+  extensions.forEach(extension => {
+    if (extension.alwaysEnabled || (settings[`extensions/${extension.key}`] ?? extension.enabledByDefault)) {
+      dispatch(activateExtension(extension))
+    }
+  })
+}
+
+export const activateExtension = (extension) => (dispatch) => {
   if (extension.onActivation) {
     extension.onActivation({
       registerHook: (hookCategory, props) => { registerHook(hookCategory, { ...props, extension }) }
     })
   }
+  if (extension.onActivationDispatch) {
+    dispatch(extension.onActivationDispatch({
+      registerHook: (hookCategory, props) => { registerHook(hookCategory, { ...props, extension }) }
+    }))
+  }
 }
 
-export function deactivateExtension (extension) {
-  Object.keys(Hooks).forEach(hookName => {
-    unregisterHooks(hookName, { extension })
-  })
+export const deactivateExtension = (extension) => (dispatch) => {
   if (extension.onDeactivation) {
     extension.onDeactivation({})
   }
+  if (extension.onDeactivationDispatch) {
+    dispatch(extension.onDeactivationDispatch({}))
+  }
+  Object.keys(Hooks).forEach(hookCategory => {
+    unregisterAllHooks(hookCategory, { extension })
+  })
 }

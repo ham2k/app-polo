@@ -4,6 +4,7 @@ import RNFetchBlob from 'react-native-blob-util'
 
 import packageJson from '../../package.json'
 import { analyzeFromCountryFile, parseCountryFile, setCountryFileData, useBuiltinCountryFile } from '@ham2k/lib-country-files'
+import { loadDataFile } from '../../store/dataFiles/actions/dataFileFS'
 
 export const CountryFiles = { }
 
@@ -12,6 +13,19 @@ https://www.country-files.com/bigcty/cty.dat
 https://www.country-files.com/bigcty/cty.csv
 https://www.country-files.com/bigcty/download/bigcty.zip
  */
+
+const Extension = {
+  key: 'core-countryFiles',
+  name: 'Core Country Files Data',
+  category: 'core',
+  hidden: true,
+  alwaysEnabled: true,
+  onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
+    prepareCountryFilesData()
+    await dispatch(loadDataFile('country-files-bigcty'))
+  }
+}
+export default Extension
 
 export function prepareCountryFilesData () {
   // eslint-disable-next-line react-hooks/rules-of-hooks

@@ -1,3 +1,4 @@
+import { loadDataFile } from '../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../tools/refTools'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
@@ -6,12 +7,14 @@ import { WWFFLoggingControl } from './WWFFLoggingControl'
 
 const Extension = {
   ...Info,
-  onActivation: ({ registerHook, registerHandler }) => {
-    registerWWFFDataFile()
-
+  category: 'activation',
+  onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+
+    registerWWFFDataFile()
+    await dispatch(loadDataFile('wwff-all-parks'))
   }
 }
 export default Extension

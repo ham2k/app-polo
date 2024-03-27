@@ -1,5 +1,5 @@
 import { addRuntimeMessage } from '../store/runtime'
-import { activateExtension, registerExtension } from './registry'
+import { activateEnabledExtensions, registerExtension } from './registry'
 
 import POTAExtension from './pota/POTAExtension'
 import SOTAExtension from './sota/SOTAExtension'
@@ -15,11 +15,7 @@ const loadExtensions = () => (dispatch, getState) => {
   registerExtension(WFDExtension)
   registerExtension(FDExtension)
 
-  activateExtension(POTAExtension)
-  activateExtension(SOTAExtension)
-  activateExtension(WWFFExtension)
-  activateExtension(FDExtension)
-  activateExtension(WFDExtension)
+  activateEnabledExtensions(dispatch, getState)
 }
 
 export default loadExtensions

@@ -28,7 +28,7 @@ export const startupSequence = (onReady) => (dispatch) => {
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
       async () => await dispatch(loadExtensions()),
       async () => await dispatch(setupOnlineStatusMonitoring()),
-      async () => await dispatch(loadAllDataFiles()),
+      // async () => await dispatch(loadAllDataFiles()),
       async () => await dispatch(getOperations()),
       // async () => await dispatch(addRuntimeMessage('QRV!')),
       async () => new Promise(resolve => setTimeout(() => { onReady && onReady(); resolve() }, 10))
