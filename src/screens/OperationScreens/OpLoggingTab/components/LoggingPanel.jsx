@@ -10,7 +10,6 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 
-import { prepareCountryFilesData } from '../../../../data/CountryFiles'
 import { setOperationData } from '../../../../store/operations'
 import { addQSO } from '../../../../store/qsos'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
@@ -22,8 +21,6 @@ import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { joinAnd } from '../../../../tools/joinAnd'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
-
-prepareCountryFilesData()
 
 function prepareStyles (themeStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)

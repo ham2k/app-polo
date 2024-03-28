@@ -75,11 +75,18 @@ export function registerSOTADataFile () {
       return data
     },
     onLoad: (data) => {
-      SOTAData.activeReferences = data.activeReferences ?? []
-      SOTAData.regions = data.regions
-      SOTAData.version = data.version
+      if (data.regions) {
+        SOTAData.activeReferences = data.activeReferences ?? []
+        SOTAData.regions = data.regions
+        SOTAData.version = data.version
 
-      SOTAData.byReference = SOTAData.activeReferences.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
+        SOTAData.byReference = SOTAData.activeReferences.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
+      } else {
+        SOTAData.activeReferences = []
+        SOTAData.regions = {}
+        SOTAData.byReference = {}
+        SOTAData.version = null
+      }
     }
   })
 }

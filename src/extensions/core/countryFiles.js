@@ -1,10 +1,12 @@
-import { registerDataFile } from '../store/dataFiles'
-
 import RNFetchBlob from 'react-native-blob-util'
 
-import packageJson from '../../package.json'
 import { analyzeFromCountryFile, parseCountryFile, setCountryFileData, useBuiltinCountryFile } from '@ham2k/lib-country-files'
+
+import packageJson from '../../../package.json'
+import { registerDataFile } from '../../store/dataFiles'
 import { loadDataFile } from '../../store/dataFiles/actions/dataFileFS'
+
+useBuiltinCountryFile()
 
 export const CountryFiles = { }
 
@@ -27,17 +29,14 @@ const Extension = {
 }
 export default Extension
 
-export function prepareCountryFilesData () {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useBuiltinCountryFile()
-  // This function is not a hook, it's just named like one
 
+export function prepareCountryFilesData () {
   registerDataFile({
     key: 'country-files-bigcty',
     name: 'Country Files - Big CTY',
     description: 'Helps match callsigns to entities and zones',
     infoURL: 'https://www.country-files.com/bigcty',
-    enabledByDefault: true,
+    alwaysEnabled: true,
     fetch: async () => {
       const request = 'https://www.country-files.com/bigcty/cty.csv'
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', request, {
@@ -58,9 +57,12 @@ export function prepareCountryFilesData () {
       return data
     },
     onLoad: (data) => {
-      Object.assign(CountryFiles, data)
-
-      setCountryFileData(CountryFiles)
+      if (data.entities) {
+        Object.assign(CountryFiles, data)
+        setCountryFileData(CountryFiles)
+      } else {
+        useBuiltinCountryFile()
+      }
     }
   })
 }
