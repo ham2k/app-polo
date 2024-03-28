@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
@@ -7,7 +7,6 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectSettings, setSettings } from '../../../store/settings'
-import { FlagsDialog } from '../components/FlagsDialog'
 import { ThemeDialog } from '../components/ThemeDialog'
 
 export default function GeneralSettingsScreen ({ navigation }) {
