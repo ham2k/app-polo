@@ -89,7 +89,7 @@ function MainApp ({ navigationTheme }) {
           />
 
           <Stack.Screen name="FeaturesSettings"
-            options={{ title: 'Features Settings', headerBackTitle: 'MainSettings' }}
+            options={{ title: 'App Features', headerBackTitle: 'MainSettings' }}
             component={FeaturesSettingsScreen}
           />
 

@@ -7,7 +7,7 @@ import { SOTALoggingControl } from './SOTALoggingControl'
 
 const Extension = {
   ...Info,
-  category: 'activation',
+  category: 'locationBased',
   onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })

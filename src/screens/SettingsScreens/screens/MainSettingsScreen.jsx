@@ -71,7 +71,7 @@ export default function MainSettingsScreen ({ navigation }) {
         />
 
         <List.Item
-          title="Features"
+          title="App Features"
           description={'Manage features like POTA, SOTA, etc'}
           onPress={() => navigation.navigate('FeaturesSettings')}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="format-list-bulleted" />}

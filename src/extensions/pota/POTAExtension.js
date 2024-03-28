@@ -9,7 +9,7 @@ import { POTASpotterControl } from './POTASpotterControl'
 
 const Extension = {
   ...Info,
-  category: 'activation',
+  category: 'locationBased',
   enabledByDefault: true,
   onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })

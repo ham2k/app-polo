@@ -1,7 +1,8 @@
-export const CATEGORIES = {
+export const EXTENSION_CATEGORIES = {
+  core: 'Core Features',
   locationBased: 'Location-based Activities',
   fieldOps: 'Field Operations',
-  core: 'Core Features'
+  other : 'Other Features'
 }
 
-export const CATEGORIES_ORDER = ['locationBased', 'fieldOps', 'core']
+export const EXTENSION_CATEGORIES_ORDER = ['locationBased', 'fieldOps', 'core', 'other']
