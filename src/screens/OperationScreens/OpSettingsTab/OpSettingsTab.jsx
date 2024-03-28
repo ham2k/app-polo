@@ -69,7 +69,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   }, [dispatch, operation])
 
   const refHandlers = useMemo(() => {
-    const types = [...new Set((operation?.refs || []).map((ref) => ref?.type))]
+    const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]
     const handlers = types.map(type => (
       findBestHook(`ref:${type}`) || defaultReferenceHandlerFor(type)
     ))
