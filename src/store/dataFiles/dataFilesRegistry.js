@@ -1,7 +1,6 @@
 const registeredDataFiles = {}
 
 export function registerDataFile (definiton) {
-  // console.log('Registered data file', definiton.key)
   registeredDataFiles[definiton.key] = definiton
 }
 

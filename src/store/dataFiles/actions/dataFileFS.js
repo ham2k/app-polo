@@ -85,13 +85,10 @@ export const removeDataFile = (key, force) => async (dispatch, getState) => {
   dispatch(actions.setDataFileInfo({ key, data: undefined, status: 'removed', date: undefined }))
 }
 
-export const loadAllDataFiles = () => async (dispatch, getState) => {
+export const loadAllDataFiles = () => async (dispatch) => {
   const definitions = getDataFileDefinitions()
-  const state = getState()
 
   for (const definition of definitions) {
-    if (state?.settings[`dataFiles/${definition.key}`] ?? definition?.enabledByDefault) {
-      await dispatch(loadDataFile(definition.key))
-    }
+    await dispatch(loadDataFile(definition.key))
   }
 }
