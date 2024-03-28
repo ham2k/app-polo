@@ -54,10 +54,12 @@ export const MainExchangePanel = ({
     const value = event?.value || event?.nativeEvent?.text
 
     handleFieldChange && handleFieldChange(event)
-    if (value.length >= rstLength) {
-      keyHandler && keyHandler({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
+    if (settings.jumpAfterRST) {
+      if (value.length >= rstLength) {
+        keyHandler && keyHandler({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
+      }
     }
-  }, [handleFieldChange, keyHandler, rstLength])
+  }, [handleFieldChange, keyHandler, rstLength, settings])
 
   let fields = []
   fields.push(

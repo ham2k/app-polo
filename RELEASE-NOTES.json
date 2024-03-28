@@ -3,6 +3,7 @@
     "changes": [
       "Added support and discord links",
       "Manage App Features",
+      "Setting for auto-jump on rst entry",
       "Performance fixes"
     ]
   },
