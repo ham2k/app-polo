@@ -20,7 +20,7 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const handler = useMemo(() => (
     findBestHook(`ref:${route.params.activity}`) || defaultReferenceHandlerFor(route.params.activity)
   ), [route.params.activity])
-  const activity = useMemo(() => findBestHook('activity', { key: handler.key })[0], [handler])
+  const activity = useMemo(() => findBestHook('activity', { key: handler.key }), [handler])
 
   useEffect(() => { // Prepare the screen, set the activity title, etc
     if (activity && operation) {
