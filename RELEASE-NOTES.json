@@ -2,6 +2,7 @@
   "0.6.3": {
     "changes": [
       "Added support and discord links",
+      "Manage App Features",
       "Performance fixes"
     ]
   },

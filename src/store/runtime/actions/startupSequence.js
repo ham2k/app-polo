@@ -1,4 +1,3 @@
-import { miniSerializeError } from '@reduxjs/toolkit'
 import packageJson from '../../../../package.json'
 import loadExtensions from '../../../extensions/loadExtensions'
 

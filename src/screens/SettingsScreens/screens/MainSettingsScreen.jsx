@@ -1,19 +1,18 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Switch, Text } from 'react-native-paper'
+import { List, Text } from 'react-native-paper'
 import { Linking, ScrollView } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
 
 import packageJson from '../../../../package.json'
 
-import { selectSettings, setSettings } from '../../../store/settings'
+import { selectSettings } from '../../../store/settings'
 import { importQSON } from '../../../store/operations'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 import { OperatorCallsignDialog } from '../components/OperatorCallsignDialog'
 import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
-import { ThemeDialog } from '../components/ThemeDialog'
 
 export default function MainSettingsScreen ({ navigation }) {
   const styles = useThemedStyles()

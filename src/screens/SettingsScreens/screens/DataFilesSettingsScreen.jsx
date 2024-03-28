@@ -5,10 +5,10 @@ import { KeyboardAvoidingView, ScrollView } from 'react-native'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { actions, getDataFileDefinitions, selectAllDataFileInfos } from '../../../store/dataFiles'
+import { getDataFileDefinitions, selectAllDataFileInfos } from '../../../store/dataFiles'
 import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { selectSettings, setSettings } from '../../../store/settings'
+import { selectSettings } from '../../../store/settings'
 
 const DefinitionItem = ({ def, settings, info, styles, onPress }) => {
   const Icon = useMemo(() => (
