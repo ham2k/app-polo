@@ -47,7 +47,6 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
   if (selectDataFileInfo(getState(), key)?.data) {
     return // Already loaded, do nothing
   }
-
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
@@ -58,7 +57,7 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
     if (!exists || force) {
       console.info(`Data for ${definition.key} not found, fetching a fresh version`)
       dispatch(addRuntimeMessage(`Downloading ${definition.name}`))
-      dispatch(fetchDataFile(key))
+      await dispatch(fetchDataFile(key))
     } else {
       dispatch(addRuntimeMessage(`Loading ${definition.name}`))
       await dispatch(readDataFile(key))
@@ -66,13 +65,24 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
 
       if (date && maxAgeInDays && (Date.now() - Date.parse(date)) / 1000 / 60 / 60 / 24 > maxAgeInDays) {
         console.info(`Data for ${definition.key} is too old, fetching a fresh version`)
-        dispatch(fetchDataFile(key))
+        await dispatch(fetchDataFile(key))
       }
     }
   } catch (error) {
     console.error(`Error loading data file ${key}`, error)
     dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
   }
+}
+
+export const removeDataFile = (key, force) => async (dispatch, getState) => {
+  const definition = getDataFileDefinition(key)
+  if (!definition) throw new Error(`No data file definition found for ${key}`)
+
+  const exists = await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
+  if (exists) {
+    await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
+  }
+  dispatch(actions.setDataFileInfo({ key, data: undefined, status: 'removed', date: undefined }))
 }
 
 export const loadAllDataFiles = () => async (dispatch, getState) => {
