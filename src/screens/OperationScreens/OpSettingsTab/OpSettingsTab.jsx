@@ -133,23 +133,6 @@ export default function OpSettingsTab ({ navigation, route }) {
           onPress={() => navigation.navigate('OperationAddActivity', { operation: operation.uuid })}
         />
       </List.Section>
-      {refHandlers.map((handler) => {
-        if (currentDialog === `activity.${handler.key}`) {
-          const activity = findHooks('activity', { key: handler.key })[0]
-          return (
-            <activity.SettingsDialog
-              key={activity.key}
-              settings={settings}
-              operation={operation}
-              styles={styles}
-              visible={true}
-              onDialogDone={() => setCurrentDialog('')}
-            />
-          )
-        } else {
-          return null
-        }
-      })}
 
       <List.Section title={'Operation Data'}>
         <List.Item
