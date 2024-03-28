@@ -25,6 +25,8 @@ import OperationActivityOptionsScreen from './screens/OperationScreens/Operation
 import VersionSettingsScreen from './screens/SettingsScreens/screens/VersionSettingsScreen'
 import LoggingSettingsScreen from './screens/SettingsScreens/screens/LoggingSettingsScreen'
 import StartScreen from './screens/StartScreen/StartScreen'
+import FeaturesSettingsScreen from './screens/SettingsScreens/screens/FeaturesSettingsScreen'
+import GeneralSettingsScreen from './screens/SettingsScreens/screens/GeneralSettingsScreen'
 
 /** BEGIN DISTRIBUTION-ONLY */
 import { Client } from 'rollbar-react-native'
@@ -103,6 +105,16 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="Settings"
             options={{ title: 'Settings' }}
             component={MainSettingsScreen}
+          />
+
+          <Stack.Screen name="FeaturesSettings"
+            options={{ title: 'App Features', headerBackTitle: 'MainSettings' }}
+            component={FeaturesSettingsScreen}
+          />
+
+          <Stack.Screen name="GeneralSettings"
+            options={{ title: 'General Settings', headerBackTitle: 'MainSettings' }}
+            component={GeneralSettingsScreen}
           />
 
           <Stack.Screen name="LoggingSettings"

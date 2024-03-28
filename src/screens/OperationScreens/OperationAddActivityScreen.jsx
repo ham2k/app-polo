@@ -7,8 +7,8 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import { selectOperation, setOperationData } from '../../store/operations'
 import { replaceRefs } from '../../tools/refTools'
-import activities from '../../plugins/loadPlugins'
 import { StackActions } from '@react-navigation/native'
+import { findHooks } from '../../extensions/registry'
 
 export default function OperationAddActivityScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -33,7 +33,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <List.Section>
-          {activities.map((activity) => (
+          {findHooks('activity').map((activity) => (
             <List.Item
               key={activity.key}
               title={activity.name}

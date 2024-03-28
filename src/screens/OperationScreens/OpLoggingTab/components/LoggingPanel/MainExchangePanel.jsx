@@ -4,7 +4,7 @@ import { View, findNodeHandle, useWindowDimensions } from 'react-native'
 import CallsignInput from '../../../../components/CallsignInput'
 import ThemedTextInput from '../../../../components/ThemedTextInput'
 import { findRef } from '../../../../../tools/refTools'
-import activities from '../../../../../plugins/loadPlugins'
+import { findHooks } from '../../../../../extensions/registry'
 
 export const MainExchangePanel = ({
   qso, operation, settings, style, styles, themeColor, handleSubmit, handleFieldChange, setQSO, mainFieldRef, focusedRef
@@ -54,10 +54,12 @@ export const MainExchangePanel = ({
     const value = event?.value || event?.nativeEvent?.text
 
     handleFieldChange && handleFieldChange(event)
-    if (value.length >= rstLength) {
-      keyHandler && keyHandler({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
+    if (settings.jumpAfterRST) {
+      if (value.length >= rstLength) {
+        keyHandler && keyHandler({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
+      }
     }
-  }, [handleFieldChange, keyHandler, rstLength])
+  }, [handleFieldChange, keyHandler, rstLength, settings])
 
   let fields = []
   fields.push(
@@ -135,7 +137,7 @@ export const MainExchangePanel = ({
     )
   }
 
-  activities.filter(activity => findRef(operation, activity.key) && activity.fieldsForMainExchangePanel).forEach(activity => {
+  findHooks('activity').filter(activity => findRef(operation, activity.key) && activity.fieldsForMainExchangePanel).forEach(activity => {
     fields = fields.concat(
       activity.fieldsForMainExchangePanel(
         { qso, operation, settings, styles, themeColor, onSubmitEditing: handleSubmit, setQSO, keyHandler, refStack, focusedRef }

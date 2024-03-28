@@ -4,7 +4,7 @@ import { useLookupParkQuery } from '../../store/apiPOTA'
 import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 
-import { INFO } from './POTAInfo'
+import { Info } from './POTAInfo'
 
 export function POTAListItem ({ activityRef, refData, allRefs, style, styles, onPress, onAddReference, onRemoveReference, online }) {
   const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef, online })
@@ -43,7 +43,7 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, on
       }
       description={description}
       onPress={onPress}
-      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={INFO.icon} />}
+      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
       right={() => (
         isInRefs ? (
           onRemoveReference && <IconButton icon="minus-circle-outline" onPress={() => onRemoveReference(activityRef)} />

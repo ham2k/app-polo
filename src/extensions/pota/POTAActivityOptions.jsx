@@ -6,7 +6,7 @@ import Geolocation from '@react-native-community/geolocation'
 import { selectOperationCallInfo, setOperationData } from '../../store/operations'
 import { filterRefs, replaceRefs } from '../../tools/refTools'
 import { POTAAllParks } from './POTAAllParksData'
-import { INFO } from './POTAInfo'
+import { Info } from './POTAInfo'
 import { POTAListItem } from './POTAListItem'
 import { selectRuntimeOnline } from '../../store/runtime'
 import { ListRow } from '../../screens/components/ListComponents'
@@ -22,7 +22,7 @@ export function POTAActivityOptions (props) {
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const refs = useMemo(() => filterRefs(operation, INFO.activationType), [operation]).filter(ref => ref.ref)
+  const refs = useMemo(() => filterRefs(operation, Info.activationType), [operation]).filter(ref => ref.ref)
 
   const title = useMemo(() => {
     if (refs?.length === 0) return 'No parks selected for activation'
@@ -81,7 +81,7 @@ export function POTAActivityOptions (props) {
       const parts = search.match(/^\s*([A-Z]*)[-]{0,1}(\d+|TEST)\s*$/i)
       if (parts && parts[2].length >= 4) {
         nakedReference = (parts[1]?.toUpperCase() || POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] || 'K') + '-' + parts[2].toUpperCase()
-      } else if (search.match(INFO.referenceRegex)) {
+      } else if (search.match(Info.referenceRegex)) {
         nakedReference = search
       }
 
@@ -108,11 +108,11 @@ export function POTAActivityOptions (props) {
   }, [search, ourInfo, nearbyParks, location])
 
   const handleAddReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, INFO.activationType, [...refs.filter(r => r.ref !== ref), { type: INFO.activationType, ref }]) }))
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, [...refs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]) }))
   }, [dispatch, operation, refs])
 
   const handleRemoveReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, INFO.activationType, refs.filter(r => r.ref !== ref)) }))
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, refs.filter(r => r.ref !== ref)) }))
   }, [dispatch, operation, refs])
 
   return (

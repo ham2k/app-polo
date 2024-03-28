@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
@@ -27,14 +27,6 @@ export default function LoggingSettingsScreen ({ navigation }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
-  const SwitchSentRcvdIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="arrow-left-right" />
-  ), [styles])
-
-  const ToggleSwitchSentRcvd = useCallback(() => (
-    <Switch value={!!settings.switchSentRcvd} onValueChange={(value) => dispatch(setSettings({ switchSentRcvd: value })) } />
-  ), [dispatch, settings.switchSentRcvd])
-
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
@@ -60,27 +52,19 @@ export default function LoggingSettingsScreen ({ navigation }) {
           />
 
           <List.Item
-            title="Show numbers row"
-            description={settings.showNumbersRow ? 'Quick buttons for numbers' : "Don't show numbers row"}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />}
-            right={() => <Switch value={!!settings.showNumbersRow} onValueChange={(value) => dispatch(setSettings({ showNumbersRow: value })) } />}
-            onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))}
-          />
-
-          <List.Item
             title="Switch signal report order"
             description={!settings.switchSentRcvd ? 'Sent first, Rcvd second' : 'Rcvd first, Sent second'}
-            left={SwitchSentRcvdIcon}
-            right={ToggleSwitchSentRcvd}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="arrow-left-right" />}
+            right={() => <Switch value={!!settings.switchSentRcvd} onValueChange={(value) => dispatch(setSettings({ switchSentRcvd: value })) } />}
             onPress={() => dispatch(setSettings({ switchSentRcvd: !settings.switchSentRcvd }))}
           />
 
           <List.Item
-            title="Keep device awake"
-            description={settings.keepDeviceAwake ? 'Prevent device from locking screen' : 'Allow regular screen locking'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="coffee" />}
-            right={() => <Switch value={!!settings.keepDeviceAwake} onValueChange={(value) => dispatch(setSettings({ keepDeviceAwake: value })) } />}
-            onPress={() => dispatch(setSettings({ keepDeviceAwake: !settings.keepDeviceAwake }))}
+            title="Jump to next field on RST entry"
+            description={settings.jumpAfterRST ? 'Jump after RST is entered' : "Don't jump automatically" }
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="redo" />}
+            right={() => <Switch value={!!settings.jumpAfterRST} onValueChange={(value) => dispatch(setSettings({ jumpAfterRST: value })) } />}
+            onPress={() => dispatch(setSettings({ jumpAfterRST: !settings.jumpAfterRST }))}
           />
         </List.Section>
       </ScrollView>

@@ -16,7 +16,6 @@ export const timeSlice = createSlice({
       }
     },
     saveInterval: (state, action) => {
-      console.log('saved interval', action.payload)
       state.interval = action.payload
     }
   }

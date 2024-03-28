@@ -1,7 +1,10 @@
 import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { annotateFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { Platform } from 'react-native'
+
+// eslint-disable-next-line react-hooks/rules-of-hooks
+useBuiltinCountryFile()
 
 const initialState = {
   operatorCall: '',

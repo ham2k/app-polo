@@ -5,12 +5,12 @@ import Geolocation from '@react-native-community/geolocation'
 
 import { selectOperationCallInfo, setOperationData } from '../../store/operations'
 import { findRef, replaceRef } from '../../tools/refTools'
-import { SOTAData } from './SOTADataFile'
-import { INFO } from './SOTAInfo'
-import { SOTAListItem } from './SOTAListItem'
+import { WWFFData } from './WWFFDataFile'
+import { Info } from './WWFFInfo'
+import { WWFFListItem } from './WWFFListItem'
 import { ListRow } from '../../screens/components/ListComponents'
 
-export function SOTAActivityOptions (props) {
+export function WWFFActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
 
   const { styles, operation } = props
@@ -19,11 +19,11 @@ export function SOTAActivityOptions (props) {
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const operationRef = useMemo(() => findRef(operation, INFO.activationType), [operation]) ?? ''
+  const operationRef = useMemo(() => findRef(operation, Info.activationType), [operation]) ?? ''
 
   const title = useMemo(() => {
-    if (!operationRef?.ref) return 'No summit selected for activation'
-    else return 'Activating summit:'
+    if (!operationRef?.ref) return 'No park selected for activation'
+    else return 'Activating park:'
   }, [operationRef])
 
   const [search, setSearch] = useState('')
@@ -45,7 +45,7 @@ export function SOTAActivityOptions (props) {
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
     if (location?.lat && location?.lon) {
-      const newResults = SOTAData.activeReferences.filter(reference => {
+      const newResults = WWFFData.activeReferences.filter(reference => {
         return (Math.abs(reference.lat - location.lat) < NEARBY_DEGREES && Math.abs(reference.lon - location.lon) < NEARBY_DEGREES)
       }).sort((a, b) => {
         const distA = Math.sqrt((a.lat - location.lat) ** 2 + (a.lon - location.lon) ** 2)
@@ -58,9 +58,10 @@ export function SOTAActivityOptions (props) {
 
   useEffect(() => {
     if (search?.length > 2) {
-      const ucSearch = search.toUpperCase()
-      let newResults = SOTAData.activeReferences.filter(reference => {
-        return (reference.ref?.includes(ucSearch) || (reference.uc ?? reference.name ?? '').includes(ucSearch))
+      let newResults = WWFFData.activeReferences.filter(ref => {
+        return (!ourInfo?.dxccCode || ref.dxccCode === ourInfo.dxccCode) &&
+            (ref.ref.toLowerCase().includes(search.toLowerCase()) || ref.name.toLowerCase().includes(search.toLowerCase())
+            )
       })
 
       if (location?.lat && location?.lon) {
@@ -73,19 +74,19 @@ export function SOTAActivityOptions (props) {
 
       // Is the search term a plain reference, either with prefix or just digits?
       let nakedReference
-      if (search.match(INFO.referenceRegex)) {
+      if (search.match(Info.referenceRegex)) {
         nakedReference = search.toUpperCase()
       }
 
       // If it's a naked reference, let's ensure the results include it, or else add a placeholder
       // just to cover any cases where the user knows about a new reference not included in our data
       if (nakedReference && !newResults.find(ref => ref.ref === nakedReference)) {
-        newResults.unshift({ ref: nakedReference, name: 'Unknown summit' })
+        newResults.unshift({ ref: nakedReference })
       }
 
       setResults(newResults.slice(0, 10))
       if (newResults.length === 0) {
-        setResultsMessage('No summits found')
+        setResultsMessage('No parks found')
       } else if (newResults.length > 10) {
         setResultsMessage(`… and ${newResults.length - 10} more`)
       } else {
@@ -93,8 +94,8 @@ export function SOTAActivityOptions (props) {
       }
     } else {
       setResults(nearbyResults)
-      if (nearbyResults === undefined) setResultsMessage('Search for some summits to activate!')
-      else if (nearbyResults.length === 0) setResultsMessage('No summits nearby')
+      if (nearbyResults === undefined) setResultsMessage('Search for a park to activate!')
+      else if (nearbyResults.length === 0) setResultsMessage('No parks nearby')
       else setResultsMessage('')
     }
   }, [search, ourInfo, nearbyResults, location])
@@ -102,14 +103,14 @@ export function SOTAActivityOptions (props) {
   const handleAddReference = useCallback((newRef) => {
     dispatch(setOperationData({
       uuid: operation.uuid,
-      refs: replaceRef(operation?.refs, INFO.activationType, { type: INFO.activationType, ref: newRef })
+      refs: replaceRef(operation?.refs, Info.activationType, { type: Info.activationType, ref: newRef })
     }))
   }, [dispatch, operation])
 
   const handleRemoveReference = useCallback((newRef) => {
     dispatch(setOperationData({
       uuid: operation.uuid,
-      refs: replaceRef(operation?.refs, INFO.activationType, {})
+      refs: replaceRef(operation?.refs, Info.activationType, {})
     }))
   }, [dispatch, operation])
 
@@ -117,7 +118,7 @@ export function SOTAActivityOptions (props) {
     <>
       <List.Section title={title}>
         {operationRef?.ref && (
-          <SOTAListItem
+          <WWFFListItem
             key={operationRef.ref}
             activityRef={operationRef.ref}
             operationRef={operationRef.ref}
@@ -127,17 +128,17 @@ export function SOTAActivityOptions (props) {
           />
         )}
       </List.Section>
-      <List.Section title={operationRef ? undefined : 'Select a summit'}>
+      <List.Section title={operationRef ? undefined : 'Select a park'}>
         <ListRow>
 
           <Searchbar
-            placeholder={'Summits by name or reference…'}
+            placeholder={'Parks by name or reference…'}
             value={search}
             onChangeText={setSearch}
           />
         </ListRow>
         {results.map((result) => (
-          <SOTAListItem
+          <WWFFListItem
             key={result.ref}
             activityRef={result.ref}
             operationRef={operationRef.ref}

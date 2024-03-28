@@ -26,14 +26,17 @@ With effect from 01-Jan-2004, only one QSO with a given Summit on any one day (d
 
  */
 
-export const INFO = {
+export const Info = {
   key: 'sota',
   icon: 'image-filter-hdr',
   name: 'Summits on the Air',
   shortName: 'SOTA',
+  doubleContact: 'Summit-to-Summit',
+  shortNameDoubleContact: 'S2S',
   infoURL: 'https://www.sota.org.uk/',
   huntingType: 'sota',
   activationType: 'sotaActivation',
   descriptionPlaceholder: 'Enter SOTA reference',
+  unknownReferenceName: 'Unknown Summit',
   referenceRegex: /^[A-Z0-9]{1,3}\/[A-Z]{2}-[0-9]{3,}$/i
 }

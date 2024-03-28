@@ -6,7 +6,7 @@ import { stringOrFunction } from '../../../../../tools/stringOrFunction'
 import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
-import activities from '../../../../../plugins/loadPlugins'
+import { findHooks } from '../../../../../extensions/registry'
 
 export function LoggingPanelConfigDialog ({ visible, operation, settings, styles, onDialogDone }) {
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -20,7 +20,7 @@ export function LoggingPanelConfigDialog ({ visible, operation, settings, styles
       radio: radioControl,
       notes: notesControl
     }
-    activities.forEach(activity => {
+    findHooks('activity').forEach(activity => {
       const activityControls = activity.loggingControls ? activity.loggingControls({ operation, settings }) : []
       for (const control of activityControls) {
         newControls[control.key] = control
@@ -41,7 +41,7 @@ export function LoggingPanelConfigDialog ({ visible, operation, settings, styles
 
   useEffect(() => {
     setValue(settings?.theme || 'auto')
-  }, [settings])
+  }, [settings, setValue])
 
   const handleAccept = useCallback(() => {
     // dispatch(setSettings({ theme: value }))
@@ -53,7 +53,7 @@ export function LoggingPanelConfigDialog ({ visible, operation, settings, styles
     setValue(settings.theme)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [settings, onDialogDone])
+  }, [settings, onDialogDone, setValue])
 
   return (
     <Portal>
