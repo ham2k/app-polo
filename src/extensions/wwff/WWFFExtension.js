@@ -1,4 +1,4 @@
-import { loadDataFile } from '../../store/dataFiles/actions/dataFileFS'
+import { loadDataFile, removeDataFile } from '../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../tools/refTools'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
@@ -15,6 +15,9 @@ const Extension = {
 
     registerWWFFDataFile()
     await dispatch(loadDataFile('wwff-all-parks'))
+  },
+  onDeactivationDispatch: () => async (dispatch) => {
+    await dispatch(removeDataFile('wwff-all-parks'))
   }
 }
 export default Extension

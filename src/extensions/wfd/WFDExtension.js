@@ -31,7 +31,7 @@ const Info = {
 
 const Extension = {
   ...Info,
-  category: 'field-ops',
+  category: 'activation',
   onActivation: ({ registerHook, registerHandler }) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.key}`, { hook: ReferenceHandler })

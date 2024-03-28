@@ -1,7 +1,7 @@
+import { miniSerializeError } from '@reduxjs/toolkit'
 import packageJson from '../../../../package.json'
 import loadExtensions from '../../../extensions/loadExtensions'
 
-import { loadAllDataFiles } from '../../dataFiles/actions/dataFileFS'
 import { getOperations } from '../../operations'
 import { addRuntimeMessage, resetRuntimeMessages } from '../runtimeSlice'
 import { setupOnlineStatusMonitoring } from './onlineStatus'
@@ -23,19 +23,22 @@ export const startupSequence = (onReady) => (dispatch) => {
     dispatch(resetRuntimeMessages())
     dispatch(addRuntimeMessage(`**Version ${packageJson.version}**`))
 
+    const minimumTimePromise = new Promise(resolve => {
+      setTimeout(() => { resolve() }, 1500)
+    })
+
     const steps = [
-      // async () => new Promise(resolve => setTimeout(() => { resolve() }, 500)),
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
       async () => await dispatch(loadExtensions()),
       async () => await dispatch(setupOnlineStatusMonitoring()),
-      // async () => await dispatch(loadAllDataFiles()),
       async () => await dispatch(getOperations()),
-      // async () => await dispatch(addRuntimeMessage('QRV!')),
-      async () => new Promise(resolve => setTimeout(() => { onReady && onReady(); resolve() }, 10))
+      async () => await minimumTimePromise
     ]
 
     for (const step of steps) {
       await step()
     }
+
+    onReady && onReady()
   }, 0)
 }

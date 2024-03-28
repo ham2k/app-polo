@@ -31,7 +31,7 @@ export default function FeaturesSettingsScreen ({ navigation }) {
 
   const dispatch = useDispatch()
 
-  const extensions = useMemo(() => allExtensions(), [])
+  const extensions = useMemo(() => allExtensions().filter(e => !e.alwaysEnabled), [])
 
   const sortedExtensions = useMemo(() => {
     return Object.values(extensions).sort((a, b) => (a?.name ?? '').localeCompare(b?.name ?? ''))
@@ -43,12 +43,12 @@ export default function FeaturesSettingsScreen ({ navigation }) {
     dispatch(setSettings({ [`extensions/${extension.key}`]: value }))
     const slowTimeout = setTimeout(() => {
       setSlowOperationMessage('Activating extension, this may take a moment...')
-    }, 1000)
-    setTimeout(() => {
+    }, 1500)
+    setTimeout(async () => {
       if (value) {
-        activateExtension(extension)
+        await dispatch(activateExtension(extension))
       } else {
-        deactivateExtension(extension)
+        await dispatch(deactivateExtension(extension))
       }
       if (slowTimeout) clearTimeout(slowTimeout)
       setSlowOperationMessage()

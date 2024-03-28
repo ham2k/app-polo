@@ -67,14 +67,14 @@ export function activateEnabledExtensions (dispatch, getState) {
   })
 }
 
-export const activateExtension = (extension) => (dispatch) => {
+export const activateExtension = (extension) => async (dispatch) => {
   if (extension.onActivation) {
     extension.onActivation({
       registerHook: (hookCategory, props) => { registerHook(hookCategory, { ...props, extension }) }
     })
   }
   if (extension.onActivationDispatch) {
-    dispatch(extension.onActivationDispatch({
+    await dispatch(extension.onActivationDispatch({
       registerHook: (hookCategory, props) => { registerHook(hookCategory, { ...props, extension }) }
     }))
   }

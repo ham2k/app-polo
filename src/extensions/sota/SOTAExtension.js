@@ -1,4 +1,4 @@
-import { loadDataFile } from '../../store/dataFiles/actions/dataFileFS'
+import { loadDataFile, removeDataFile } from '../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../tools/refTools'
 import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { SOTAData, registerSOTADataFile } from './SOTADataFile'
@@ -15,6 +15,9 @@ const Extension = {
 
     registerSOTADataFile()
     await dispatch(loadDataFile('sota-all-summits'))
+  },
+  onDeactivationDispatch: () => async (dispatch) => {
+    await dispatch(removeDataFile('sota-all-summits'))
   }
 }
 export default Extension
