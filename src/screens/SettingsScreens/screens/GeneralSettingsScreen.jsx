@@ -74,5 +74,3 @@ export default function GeneralSettingsScreen ({ navigation }) {
     </ScreenContainer>
   )
 }
-
-// ))}
