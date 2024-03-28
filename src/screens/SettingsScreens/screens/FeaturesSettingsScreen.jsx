@@ -8,6 +8,7 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { activateExtension, allExtensions, deactivateExtension } from '../../../extensions/registry'
+import { EXTENSION_CATEGORIES, EXTENSION_CATEGORIES_ORDER } from '../../../extensions/categories'
 
 const FeatureItem = ({ extension, settings, info, styles, onChange }) => {
   const enabled = useMemo(() => settings[`extensions/${extension.key}`] ?? extension?.enabledByDefault, [settings, extension])
@@ -31,11 +32,25 @@ export default function FeaturesSettingsScreen ({ navigation }) {
 
   const dispatch = useDispatch()
 
-  const extensions = useMemo(() => allExtensions().filter(e => !e.alwaysEnabled), [])
+  const featureGroups = useMemo(() => {
+    const extensions = allExtensions().filter(e => !e.alwaysEnabled)
+    const groups = {}
+    extensions.forEach((extension) => {
+      let category = extension.category
+      if (!EXTENSION_CATEGORIES[category]) category = 'other'
 
-  const sortedExtensions = useMemo(() => {
-    return Object.values(extensions).sort((a, b) => (a?.name ?? '').localeCompare(b?.name ?? ''))
-  }, [extensions])
+      if (!groups[category]) groups[category] = []
+      groups[category].push(extension)
+    })
+
+    return EXTENSION_CATEGORIES_ORDER.map((category) => {
+      return {
+        category,
+        label: EXTENSION_CATEGORIES[category] || '',
+        extensions: (groups[category] || []).sort((a, b) => (a?.name ?? '').localeCompare(b?.name ?? ''))
+      }
+    }).filter((group) => group.extensions.length > 0)
+  }, [])
 
   const [slowOperationMessage, setSlowOperationMessage] = useState()
 
@@ -69,13 +84,14 @@ export default function FeaturesSettingsScreen ({ navigation }) {
         </Portal>
       )}
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          {sortedExtensions.map((extension) => (
-            <React.Fragment key={extension.key}>
-              <FeatureItem extension={extension} settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
-            </React.Fragment>
-          ))}
-        </List.Section>
+        {featureGroups.map(({ category, label, extensions }) => (
+          <List.Section key={category}>
+            <List.Subheader>{label}</List.Subheader>
+            {extensions.map((extension) => (
+              <FeatureItem key={extension.key} extension={extension} settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
+            ))}
+          </List.Section>
+        ))}
 
       </ScrollView>
     </ScreenContainer>
