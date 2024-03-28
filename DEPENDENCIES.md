@@ -29,6 +29,8 @@ Specific to React Native (0.72)
 * react-native-uuid — MIT, js-only
 * react-native-vector-icons — MIT, android, ios, mac, web, windows
 
+https://docs.google.com/spreadsheets/d/1F1tI9PQLl_uab3HNYNwgjPVL2r0hJ9VymXcgDp5etdg/edit#gid=1521034944
+
 General React (18)
 * @reduxjs/toolkit
 * @rollbar/react
