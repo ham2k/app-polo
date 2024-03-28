@@ -33,7 +33,6 @@ export default function MainSettingsScreen ({ navigation }) {
   return (
     <ScrollView style={{ flex: 1 }}>
       <List.Section>
-        <List.Subheader>General Settings</List.Subheader>
 
         <List.Item
           title="Operator Callsign"
@@ -56,39 +55,24 @@ export default function MainSettingsScreen ({ navigation }) {
           />
         )}
 
+        <List.Subheader>Settings</List.Subheader>
         <List.Item
-          title="Theme"
-          description={{ dark: 'Always in Dark Mode', light: 'Always in Light Mode' }[settings.theme] || 'Same as device theme'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={{ dark: 'weather-night', light: 'white-balance-sunny' }[settings.theme] || 'theme-light-dark'} />}
-          onPress={() => setCurrentDialog('theme')}
-        />
-        {currentDialog === 'theme' && (
-          <ThemeDialog
-            settings={settings}
-            styles={styles}
-            visible={true}
-            onDialogDone={() => setCurrentDialog('')}
-          />
-        )}
-
-        <List.Item
-          title="Use Metric Units"
-          description={settings.distanceUnits === 'miles' ? 'Use Miles for distances' : 'Use Kilometers for distances'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="tape-measure" />}
-          right={() => <Switch value={settings.distanceUnits !== 'miles'} onValueChange={(value) => dispatch(setSettings({ distanceUnits: settings.distanceUnits === 'miles' ? 'km' : 'miles' })) } />}
-          onPress={() => dispatch(setSettings({ distanceUnits: settings.distanceUnits === 'miles' ? 'km' : 'miles' }))}
+          title="General Settings"
+          description={'Dark mode, numbers row, units, and more'}
+          onPress={() => navigation.navigate('GeneralSettings')}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cogs" />}
         />
 
         <List.Item
           title="Logging Settings"
-          description={''}
+          description={'Customize the logging experience'}
           onPress={() => navigation.navigate('LoggingSettings')}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="book-edit-outline" />}
         />
 
         <List.Item
           title="Features"
-          description={'Enable or disable specific features'}
+          description={'Manage features like POTA, SOTA, etc'}
           onPress={() => navigation.navigate('FeaturesSettings')}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="format-list-bulleted" />}
         />

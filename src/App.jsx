@@ -25,6 +25,7 @@ import VersionSettingsScreen from './screens/SettingsScreens/screens/VersionSett
 import LoggingSettingsScreen from './screens/SettingsScreens/screens/LoggingSettingsScreen'
 import StartScreen from './screens/StartScreen/StartScreen'
 import FeaturesSettingsScreen from './screens/SettingsScreens/screens/FeaturesSettingsScreen'
+import GeneralSettingsScreen from './screens/SettingsScreens/screens/GeneralSettingsScreen'
 
 const DISTRIBUTION_CONFIG = {}
 
@@ -90,6 +91,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="FeaturesSettings"
             options={{ title: 'Features Settings', headerBackTitle: 'MainSettings' }}
             component={FeaturesSettingsScreen}
+          />
+
+          <Stack.Screen name="GeneralSettings"
+            options={{ title: 'General Settings', headerBackTitle: 'MainSettings' }}
+            component={GeneralSettingsScreen}
           />
 
           <Stack.Screen name="LoggingSettings"
