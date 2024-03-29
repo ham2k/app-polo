@@ -2,12 +2,14 @@ import { useMemo } from 'react'
 import { useTheme } from 'react-native-paper'
 
 import { prepareGlobalStyles } from '../globalStyles'
-import { useColorScheme } from 'react-native'
+import { useColorScheme, useWindowDimensions } from 'react-native'
 import { useSelector } from 'react-redux'
 import { selectSettings } from '../../store/settings'
 
 export function useThemedStyles (styleMassager) {
   const theme = useTheme()
+
+  const { width, height } = useWindowDimensions()
 
   const settings = useSelector(selectSettings)
 
@@ -22,8 +24,8 @@ export function useThemedStyles (styleMassager) {
   }, [settings?.theme, deviceColorScheme])
 
   const baseStyles = useMemo(() => {
-    return prepareGlobalStyles({ theme, colorScheme })
-  }, [theme, colorScheme])
+    return prepareGlobalStyles({ theme, colorScheme, width, height })
+  }, [theme, colorScheme, width, height])
 
   const styles = useMemo(() => {
     if (styleMassager) {

@@ -7,20 +7,25 @@ const DEFAULT_THEME = {
   }
 }
 
-export const prepareGlobalStyles = ({ theme, colorScheme }) => {
+export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const isIOS = Platform.OS === 'ios'
   const isDarkMode = colorScheme === 'dark'
 
   const pixelRatio = PixelRatio.get()
   const fontScale = PixelRatio.getFontScale()
-
   theme = theme ?? DEFAULT_THEME
 
-  const normalFontSize = 16
-  const largeFontSize = 24
-  const smallFontSize = 12
+  // If the screen is too small, and the font scale too large, nothing will fit, so we need to adjust our font sizes down
+  let fontScaleAdjustment = 1
+  if (width / fontScale < 340) {
+    fontScaleAdjustment = width / fontScale / 330
+  }
 
-  const baseSpace = 8 // Guesstimage of the width of an 'm' in the base (root) font size
+  const normalFontSize = 15 * fontScaleAdjustment
+  const largeFontSize = 24 * fontScaleAdjustment
+  const smallFontSize = 12 * fontScaleAdjustment
+
+  const baseSpace = 8 * fontScaleAdjustment // Guesstimage of the width of an 'm' in the base (root) font size
 
   const oneSpace = PixelRatio.roundToNearestPixel(baseSpace * fontScale)
   const halfSpace = PixelRatio.roundToNearestPixel((baseSpace * fontScale) / 2)
@@ -39,6 +44,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
     normalFontSize,
     largeFontSize,
     smallFontSize,
+    fontScaleAdjustment,
 
     screen: {
       backgroundColor: theme.colors.background
@@ -51,27 +57,27 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       paddingHorizontal: 24
     },
     screenTitle: {
-      fontSize: 20,
+      fontSize: 20 * fontScaleAdjustment,
       color: theme.colors.onPrimary,
       fontWeight: '500'
     },
     screenTitleSmall: {
-      fontSize: 14,
+      fontSize: 14 * fontScaleAdjustment,
       color: theme.colors.onPrimary,
       fontWeight: '500'
     },
     screenSubTitle: {
-      fontSize: 12,
+      fontSize: 12 * fontScaleAdjustment,
       color: theme.colors.onPrimary,
       fontWeight: isIOS ? '300' : '100'
     },
     screenTitleLight: {
-      fontSize: 20,
+      fontSize: 20 * fontScaleAdjustment,
       color: theme.colors.onPrimary,
       fontWeight: isIOS ? '300' : '100'
     },
     screenTitleBold: {
-      fontSize: 20,
+      fontSize: 20 * fontScaleAdjustment,
       color: theme.colors.onPrimary,
       fontWeight: isIOS ? '600' : '800'
     },
@@ -115,9 +121,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme }) => {
       borderBottomColor: theme.colors.outline
     },
     compactRow: {
-      height: oneSpace * 4.3,
+      height: oneSpace * 4,
       paddingHorizontal: oneSpace,
-      paddingVertical: oneSpace,
+      paddingVertical: halfSpace,
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.outline,
       flexDirection: 'row',
