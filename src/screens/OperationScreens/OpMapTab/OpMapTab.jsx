@@ -4,8 +4,6 @@ import MapView, { Marker, Polyline } from 'react-native-maps'
 
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
-import DXCC_LOCATIONS from '../../../data/dxccLocations.json'
-
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectOperation } from '../../../store/operations'
