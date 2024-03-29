@@ -5,8 +5,9 @@ import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 
 import { Info } from './POTAInfo'
+import { fmtDistance } from '../../tools/geoTools'
 
-export function POTAListItem ({ activityRef, refData, allRefs, style, styles, onPress, onAddReference, onRemoveReference, online }) {
+export function POTAListItem ({ activityRef, refData, allRefs, style, styles, settings, onPress, onAddReference, onRemoveReference, online }) {
   const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef, online })
 
   const description = useMemo(() => {
@@ -18,8 +19,7 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, on
     } else {
       desc = [
         pota?.data?.active === 0 && 'INACTIVE PARK!!!',
-        [pota?.data?.name ?? refData?.name, pota?.data?.parktypeDesc ?? refData?.parktypeDesc].filter(x => x).join(' '),
-        pota?.data?.locationName ?? refData?.locationName
+        [pota?.data?.name ?? refData?.name, pota?.data?.parktypeDesc ?? refData?.parktypeDesc].filter(x => x).join(' ')
       ].filter(x => x).join(' • ')
     }
     return desc
@@ -32,12 +32,15 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, on
   return (
     <List.Item style={{ paddingRight: styles.oneSpace * 1 }}
       title={
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
           <Text style={{ fontWeight: 'bold' }}>
             {pota?.data?.ref ?? activityRef}
           </Text>
-          <Text>
+          {/* <Text>
             {(pota?.data?.locationDesc ?? refData?.locationDesc) && ` (${pota?.data?.locationDesc ?? refData?.locationDesc})`}
+          </Text> */}
+          <Text>
+            {refData?.distance && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
           </Text>
         </View>
       }

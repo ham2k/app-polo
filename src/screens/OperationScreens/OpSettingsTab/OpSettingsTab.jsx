@@ -13,7 +13,6 @@ import { selectSettings } from '../../../store/settings'
 import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { LocationDialog } from './components/LocationDialog'
-import { findRef } from '../../../tools/refTools'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 
