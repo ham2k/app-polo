@@ -11,7 +11,7 @@ import ThemedDropDown from '../../components/ThemedDropDown'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { BANDS } from '@ham2k/lib-operation-data'
 import { findQSOHistory } from '../../../store/qsos/actions/findQSOHistory'
-import { selectAllOperations, selectOperationCall, selectOperationCallInfo } from '../../../store/operations'
+import { selectAllOperations, selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs } from '../../../tools/refTools'
 
 function simplifiedMode (mode) {

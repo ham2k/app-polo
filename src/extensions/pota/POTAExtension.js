@@ -103,9 +103,10 @@ const ReferenceHandler = {
     if (data?.name) {
       result = {
         ...ref,
-        name: [data.name, data.parktypeDesc].filter(x => x).join(' '),
-        location: data?.locationName,
-        grid: data?.grid6
+        name: data.shortName || data.name,
+        shortName: data.shortName,
+        location: data.locationName,
+        grid: data.grid6
       }
     } else {
       return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
@@ -117,7 +118,7 @@ const ReferenceHandler = {
 
   suggestOperationTitle: (ref) => {
     if (ref.type === Info.activationType && ref.ref) {
-      return { at: ref.ref, subtitle: ref.name }
+      return { at: ref.ref, subtitle: ref.name, shortSubtitle: ref.shortName }
     } else {
       return null
     }
