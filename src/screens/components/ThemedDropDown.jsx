@@ -53,10 +53,6 @@ export default function ThemedDropDown (props) {
       contentStyle={{}}
       background={colorStyles.paperDropdown.backgroundColor}
       iconStyle={{ padding: 0, margin: 0, width: themeStyles.oneSpace * 2.1 }}
-      dropDownStyle={{
-        backgroundColor: colorStyles.paperDropdown.backgroundColor,
-        borderColor: themeStyles.theme.colors[themeColor]
-      }}
       showDropDown={onShow}
       onDismiss={onDismiss}
       list={list}
