@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Searchbar, Text } from 'react-native-paper'
+import { List, Searchbar } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
 import { selectOperationCallInfo, setOperationData } from '../../store/operations'
@@ -9,11 +9,12 @@ import { SOTAData } from './SOTADataFile'
 import { Info } from './SOTAInfo'
 import { SOTAListItem } from './SOTAListItem'
 import { ListRow } from '../../screens/components/ListComponents'
+import { distanceOnEarth } from '../../tools/geoTools'
 
 export function SOTAActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
 
-  const { styles, operation } = props
+  const { styles, operation, settings } = props
 
   const dispatch = useDispatch()
 
@@ -42,19 +43,26 @@ export function SOTAActivityOptions (props) {
     })
   }, [])
 
+  const refData = useMemo(() => {
+    const newData = { ...operationRef, ...SOTAData.byReference[operationRef.ref] }
+    if (location?.lat && location?.lon) {
+      newData.distance = distanceOnEarth(newData, location, { units: settings.distanceUnits })
+    }
+    return newData
+  }, [operationRef, location, settings.distanceUnits])
+
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
     if (location?.lat && location?.lon) {
       const newResults = SOTAData.activeReferences.filter(reference => {
         return (Math.abs(reference.lat - location.lat) < NEARBY_DEGREES && Math.abs(reference.lon - location.lon) < NEARBY_DEGREES)
-      }).sort((a, b) => {
-        const distA = Math.sqrt((a.lat - location.lat) ** 2 + (a.lon - location.lon) ** 2)
-        const distB = Math.sqrt((b.lat - location.lat) ** 2 + (b.lon - location.lon) ** 2)
-        return distA - distB
-      })
+      }).map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, location, { units: settings.distanceUnits })
+      })).sort((a, b) => a.distance - b.distance)
       setNearbyResults(newResults)
     }
-  }, [ourInfo, location])
+  }, [ourInfo, location, settings.distanceUnits])
 
   useEffect(() => {
     if (search?.length > 2) {
@@ -64,11 +72,10 @@ export function SOTAActivityOptions (props) {
       })
 
       if (location?.lat && location?.lon) {
-        newResults = newResults.sort((a, b) => {
-          const distA = Math.sqrt((a.lat - location.lat) ** 2 + (a.lon - location.lon) ** 2)
-          const distB = Math.sqrt((b.lat - location.lat) ** 2 + (b.lon - location.lon) ** 2)
-          return distA - distB
-        })
+        newResults = newResults.map(park => ({
+          ...park,
+          distance: distanceOnEarth(park, location, { units: settings.distanceUnits })
+        })).sort((a, b) => a.distance - b.distance)
       }
 
       // Is the search term a plain reference, either with prefix or just digits?
@@ -83,21 +90,23 @@ export function SOTAActivityOptions (props) {
         newResults.unshift({ ref: nakedReference, name: 'Unknown summit' })
       }
 
-      setResults(newResults.slice(0, 10))
+      setResults(newResults.slice(0, 15))
       if (newResults.length === 0) {
         setResultsMessage('No summits found')
-      } else if (newResults.length > 10) {
-        setResultsMessage(`… and ${newResults.length - 10} more`)
+      } else if (newResults.length > 15) {
+        setResultsMessage(`Nearest 15 of ${newResults.length} matches`)
+      } else if (newResults.length === 1) {
+        setResultsMessage('One matching summits')
       } else {
-        setResultsMessage('')
+        setResultsMessage(`${newResults.length} matching summits`)
       }
     } else {
       setResults(nearbyResults)
       if (nearbyResults === undefined) setResultsMessage('Search for some summits to activate!')
       else if (nearbyResults.length === 0) setResultsMessage('No summits nearby')
-      else setResultsMessage('')
+      else setResultsMessage('Nearby summits')
     }
-  }, [search, ourInfo, nearbyResults, location])
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
 
   const handleAddReference = useCallback((newRef) => {
     dispatch(setOperationData({
@@ -116,26 +125,29 @@ export function SOTAActivityOptions (props) {
   return (
     <>
       <List.Section title={title}>
-        {operationRef?.ref && (
+        {refData?.ref && (
           <SOTAListItem
-            key={operationRef.ref}
-            activityRef={operationRef.ref}
-            operationRef={operationRef.ref}
+            key={refData.ref}
+            activityRef={refData.ref}
+            refData={refData}
+            operationRef={refData.ref}
             styles={styles}
+            settings={settings}
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />
         )}
       </List.Section>
-      <List.Section title={operationRef ? undefined : 'Select a summit'}>
-        <ListRow>
 
-          <Searchbar
-            placeholder={'Summits by name or reference…'}
-            value={search}
-            onChangeText={setSearch}
-          />
-        </ListRow>
+      <ListRow>
+        <Searchbar
+          placeholder={'Summits by name or reference…'}
+          value={search}
+          onChangeText={setSearch}
+        />
+      </ListRow>
+
+      <List.Section title={resultsMessage}>
         {results.map((result) => (
           <SOTAListItem
             key={result.ref}
@@ -143,12 +155,12 @@ export function SOTAActivityOptions (props) {
             operationRef={operationRef.ref}
             refData={result}
             styles={styles}
+            settings={settings}
             onPress={() => handleAddReference(result.ref) }
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />
         ))}
-        {resultsMessage && <List.Item title={<Text style={{ textAlign: 'center' }}>{resultsMessage}</Text>} />}
       </List.Section>
     </>
   )

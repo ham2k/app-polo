@@ -9,10 +9,10 @@ export function distanceOnEarth (location1, location2, options = {}) {
     radius = 6371 // Radius of the Earth in km
   }
 
-  const lat1 = location1.lat ?? location1.latitude
-  const lon1 = location1.lon ?? location1.longitude
-  const lat2 = location2.lat ?? location2.latitude
-  const lon2 = location2.lon ?? location2.longitude
+  const lat1 = location1?.lat ?? location1?.latitude
+  const lon1 = location1?.lon ?? location1?.longitude
+  const lat2 = location2?.lat ?? location2?.latitude
+  const lon2 = location2?.lon ?? location2?.longitude
 
   if (!lat1 || !lon1 || !lat2 || !lon2) return null
 
@@ -32,13 +32,15 @@ function deg2rad (deg) {
   return deg * (Math.PI / 180)
 }
 
+const THOUSANDS_DELIMITER_REGEX = /^(\d+)(\d\d\d)$/
+
 export function fmtDistance (dist, options) {
   if (!dist) return ''
 
   if (options.units === 'miles') {
-    return `${dist.toFixed(0)} mi`
+    return `${dist.toFixed(0).replace(THOUSANDS_DELIMITER_REGEX, '$1,$2')} mi`
   } else {
-    return `${dist.toFixed(0)} km`
+    return `${dist.toFixed(0).replace(THOUSANDS_DELIMITER_REGEX, '$1.$2')} km`
   }
 }
 

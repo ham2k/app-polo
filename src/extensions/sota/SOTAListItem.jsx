@@ -5,8 +5,9 @@ import { View } from 'react-native'
 
 import { Info } from './SOTAInfo'
 import { SOTAData } from './SOTADataFile'
+import { fmtDistance } from '../../tools/geoTools'
 
-export function SOTAListItem ({ activityRef, refData, operationRef, style, styles, onPress, onAddReference, onRemoveReference }) {
+export function SOTAListItem ({ activityRef, refData, operationRef, style, settings, styles, onPress, onAddReference, onRemoveReference }) {
   const reference = useMemo(() => {
     return (SOTAData.byReference && SOTAData.byReference[activityRef]) || {}
   }, [activityRef])
@@ -23,7 +24,18 @@ export function SOTAListItem ({ activityRef, refData, operationRef, style, style
           </Text>
         </View>
       }
-      description={[SOTAData.regions[reference?.reg]?.region, SOTAData.regions[reference?.reg]?.association].filter(x => x).join(' • ')}
+      description={
+        <View style={{ flexDirection: 'row' }}>
+          <Text>
+            {[SOTAData.regions[reference?.reg]?.region, SOTAData.regions[reference?.reg]?.association].filter(x => x).join(' • ')}
+          </Text>
+          {refData?.distance && (
+            <Text>
+              {' - ' + fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
+            </Text>
+          )}
+        </View>
+      }
       onPress={onPress}
       left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
       right={() => (
