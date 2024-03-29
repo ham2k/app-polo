@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
@@ -8,6 +8,10 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { ThemeDialog } from '../components/ThemeDialog'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { POTAAllParks } from '../../../extensions/pota/POTAAllParksData'
+import { fmtISODate } from '../../../tools/timeFormats'
 
 export default function GeneralSettingsScreen ({ navigation }) {
   const dispatch = useDispatch()
@@ -26,6 +30,22 @@ export default function GeneralSettingsScreen ({ navigation }) {
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
+
+  const [compactName, longName] = useMemo(() => {
+    const call = settings.operatorCall ?? 'N0CALL'
+    let info = parseCallsign(call)
+    let prefix = 'X'
+    if (info.baseCall) {
+      info = annotateFromCountryFile(info)
+    }
+    if (info.dxccCode) {
+      prefix = (POTAAllParks.prefixByDXCCCode && POTAAllParks.prefixByDXCCCode[info.dxccCode]) || info.entityPrefix || 'X'
+    }
+    return [
+      `${call}@${prefix}-1234-${fmtISODate(new Date()).replace(/-/g, '')}.adi`.replace(/[/\\:]/g, '-'),
+      `${fmtISODate(new Date())} ${call} at ${prefix}-1234.adi`.replace(/[/\\:]/g, '-')
+    ]
+  }, [settings])
 
   return (
     <ScreenContainer>
@@ -68,6 +88,14 @@ export default function GeneralSettingsScreen ({ navigation }) {
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="coffee" />}
             right={() => <Switch value={!!settings.keepDeviceAwake} onValueChange={(value) => dispatch(setSettings({ keepDeviceAwake: value })) } />}
             onPress={() => dispatch(setSettings({ keepDeviceAwake: !settings.keepDeviceAwake }))}
+          />
+
+          <List.Item
+            title="Use compact file names"
+            description={settings.useCompactFileNames ? compactName : longName}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-code-outline" />}
+            right={() => <Switch value={!!settings.useCompactFileNames} onValueChange={(value) => dispatch(setSettings({ useCompactFileNames: value })) } />}
+            onPress={() => dispatch(setSettings({ useCompactFileNames: !settings.useCompactFileNames }))}
           />
         </List.Section>
       </ScrollView>

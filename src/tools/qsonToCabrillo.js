@@ -1,14 +1,14 @@
 import { findRef } from './refTools'
 import { fmtCabrilloDate, fmtCabrilloTime } from './timeFormats'
 
-export function qsonToCabrillo ({ operation, qsos, settings, activity }) {
-  const ref = findRef(operation, activity.key)
+export function qsonToCabrillo ({ operation, qsos, settings, handler }) {
+  const ref = findRef(operation, handler.key)
 
   let str = ''
 
   str += 'START-OF-LOG: 3.0\n'
-  if (activity.cabrilloHeaders) {
-    str += activity.cabrilloHeaders({ operation, settings, headers: [] }).join('\n')
+  if (handler.cabrilloHeaders) {
+    str += handler.cabrilloHeaders({ operation, settings, headers: [] }).join('\n')
   }
 
   qsos.forEach(qso => {
@@ -17,7 +17,7 @@ export function qsonToCabrillo ({ operation, qsos, settings, activity }) {
     parts.push(cabrilloMode(qso).padEnd(2, ' '))
     parts.push(fmtCabrilloDate(qso?.startOnMillis ?? qso?.endOnMillis).padEnd(10, ' '))
     parts.push(fmtCabrilloTime(qso?.startOnMillis ?? qso?.endOnMillis).padEnd(4, ' '))
-    activity.qsoToCabrilloParts && activity.qsoToCabrilloParts({ qso, operation, ref, parts })
+    handler.qsoToCabrilloParts && handler.qsoToCabrilloParts({ qso, operation, ref, parts })
 
     str += parts.join(' ') + '\n'
   })

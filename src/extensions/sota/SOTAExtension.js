@@ -1,5 +1,5 @@
 import { loadDataFile, removeDataFile } from '../../store/dataFiles/actions/dataFileFS'
-import { findRef, refsToString } from '../../tools/refTools'
+import { filterRefs, findRef, refsToString } from '../../tools/refTools'
 import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { SOTAData, registerSOTADataFile } from './SOTADataFile'
 import { Info } from './SOTAInfo'
@@ -96,5 +96,27 @@ const ReferenceHandler = {
     } else {
       return null
     }
+  },
+
+  suggestExportOptions: ({ operation, ref, settings }) => {
+    if (ref.type === Info.activationType && ref.ref) {
+      return [{
+        format: 'adif',
+        common: { refs: [ref] },
+        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
+        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+      }]
+    }
+  },
+
+  adifFieldsForOneQSO: ({ qso, operation, common }) => {
+    const huntingRef = findRef(qso, Info.huntingType)
+    const activationRef = findRef(operation, Info.activationType)
+    const fields = []
+    if (activationRef) fields.push({ MY_SOTA_REF: activationRef.ref })
+    if (huntingRef) fields.push({ SOTA_REF: huntingRef.ref })
+
+    return fields
   }
+
 }

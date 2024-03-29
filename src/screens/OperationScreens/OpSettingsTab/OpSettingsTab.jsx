@@ -76,6 +76,8 @@ export default function OpSettingsTab ({ navigation, route }) {
     return handlers
   }, [operation?.refs])
 
+  const activityHooks = useMemo(() => findHooks('activity'), [])
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <List.Section title={'Operation Details'}>
@@ -128,7 +130,9 @@ export default function OpSettingsTab ({ navigation, route }) {
         <List.Item
           key="addActivity"
           title="Add Activity"
-          description="POTA, SOTA, Field Day and more!"
+          disabled={activityHooks.length === 0}
+          style={{ opacity: activityHooks.length === 0 ? 0.5 : 1 }}
+          description={activityHooks.length > 0 ? 'POTA, SOTA, Field Day and more!' : 'First enable some activity features in the main settings screen'}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="plus" />}
           onPress={() => navigation.navigate('OperationAddActivity', { operation: operation.uuid })}
         />
@@ -136,29 +140,19 @@ export default function OpSettingsTab ({ navigation, route }) {
 
       <List.Section title={'Operation Data'}>
         <List.Item
-          title="Export ADIF"
+          title="Export Log Files"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
-          onPress={() => handleExport('adif')}
+          onPress={() => handleExport()}
           style={{ opacity: !(operation.qsoCount > 0) ? 0.5 : 1 }}
           disabled={!(operation.qsoCount > 0)}
         />
-        {findHooks('activity')
-          .filter((activity) => activity.cabrilloHeaders && findRef(operation, activity.key))
-          .map((activity) => (
-            <List.Item key={activity.key}
-              title={`Export Cabrillo for ${activity.name}`}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
-              onPress={() => handleExport('cabrillo', activity)}
-            />
-          ))
-        }
-        <List.Item
+        {/* <List.Item
           title="Export data files"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" />}
           onPress={() => handleExport('qson')}
           style={{ opacity: !(operation.qsoCount > 0) ? 0.5 : 1 }}
           disabled={!(operation.qsoCount > 0)}
-        />
+        /> */}
       </List.Section>
 
       <List.Section titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
