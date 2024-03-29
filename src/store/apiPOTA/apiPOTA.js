@@ -1,6 +1,7 @@
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { POTAAllParks, abbreviatePOTAName } from '../../extensions/pota/POTAAllParksData'
+import { reportError } from '../../App'
 
 /**
 
@@ -53,7 +54,7 @@ export const apiPOTA = createApi({
           response.name = [response.name, response.parktypeDesc].filter(x => x).join(' ')
           response.shortName = abbreviatePOTAName(response.name)
         } catch (e) {
-          console.error('Error in POTA API park lookup', e)
+          reportError('Error in POTA API park lookup', e)
         }
         return response
       }

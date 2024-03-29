@@ -11,6 +11,7 @@ import ThemedTextInput from '../../screens/components/ThemedTextInput'
 import packageJson from '../../../package.json'
 import { filterRefs } from '../../tools/refTools'
 import { selectRuntimeOnline } from '../../store/runtime'
+import { reportError } from '../../App'
 
 const MINUTES_UNTIL_RESPOT = 5
 
@@ -38,12 +39,11 @@ const postSpot = (operation, comments) => async (dispatch, getState) => {
         // const body = await response.text()
         // console.log(body)
       } else {
-        console.error('http error', response)
         const body = await response.text()
-        console.error(body)
+        reportError('POTA Spotter http error', response, body)
       }
     } catch (error) {
-      console.error('error', error)
+      reportError('POTA Spotter error', error)
     }
   }
 

@@ -61,7 +61,6 @@ export function locationForQSONInfo (qsonInfo) {
     }
     return null
   } catch (e) {
-    console.error('Error in locationForQSONInfo', e)
     return null
   }
 }

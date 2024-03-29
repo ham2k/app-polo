@@ -13,6 +13,7 @@ import { Image } from 'react-native'
 import { selectSettings } from '../../../store/settings'
 import { apiQRZ } from '../../../store/apiQRZ'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../tools/geoTools'
+import { reportError } from '../../../App'
 
 const PIN_QTH = require('./images/qth.png')
 const PIN_FOR_STRENGTH = {
@@ -59,7 +60,6 @@ export default function OpMapTab ({ navigation, route }) {
       const [latitude, longitude] = gridToLocation(operation.grid)
       return { latitude, longitude }
     } catch (e) {
-      console.error('Error in qth', e)
       return {}
     }
   }, [operation?.grid])
@@ -113,7 +113,7 @@ export default function OpMapTab ({ navigation, route }) {
             }
           }))
         } catch (e) {
-          console.error('QRZ Lookup Error', e)
+          reportError('QRZ Lookup Error', e)
         } finally {
           setNextQSOWithoutInfo(null)
         }
@@ -225,7 +225,6 @@ function strengthForQSO (qso) {
       return (qso.their?.sent || 55) % 10
     }
   } catch (e) {
-    console.error('Error in strengthForQSO', e)
     return 5
   }
 }

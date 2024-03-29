@@ -1,3 +1,4 @@
+import { reportError } from '../App'
 import { selectSettings } from '../store/settings'
 
 /*
@@ -43,7 +44,7 @@ export function findBestHook (hookCategory, options) {
 
 function registerHook (hookCategory, { extension, hook, priority }) {
   if (!Hooks[hookCategory] && !VALID_HOOK_REGEX.test(hookCategory)) {
-    console.error(`Invalid hook ${hookCategory} for extension ${extension.key}`)
+    reportError(`Invalid hook ${hookCategory} for extension ${extension.key}`)
     return false
   }
   if (!hook) hook = extension[hookCategory]

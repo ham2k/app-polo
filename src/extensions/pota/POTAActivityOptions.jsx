@@ -11,6 +11,7 @@ import { POTAListItem } from './POTAListItem'
 import { selectRuntimeOnline } from '../../store/runtime'
 import { ListRow } from '../../screens/components/ListComponents'
 import { distanceOnEarth } from '../../tools/geoTools'
+import { reportError } from '../../App'
 
 export function POTAActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
@@ -42,7 +43,7 @@ export function POTAActivityOptions (props) {
       const { latitude, longitude } = info.coords
       setLocation({ lat: latitude, lon: longitude })
     }, error => {
-      console.error('Geolocation error', error)
+      reportError('Geolocation error', error)
       setLocation(undefined)
     })
   }, [])
