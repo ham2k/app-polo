@@ -8,7 +8,8 @@ import { fmtISODate } from '../../../tools/timeFormats'
 import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { excludeRefs, filterRefs } from '../../../tools/refTools'
-import { findHooks } from '../../../extensions/registry'
+import { findBestHook, findHooks } from '../../../extensions/registry'
+import { simpleTemplate } from '../../../tools/stringTools'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
@@ -97,7 +98,11 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
   const { startOnMillisMax } = operation
   const call = operation?.stationCall || settings?.operatorCall
 
-  const baseName = `${fmtISODate(startOnMillisMax)} ${call}`
+  const baseNameParts = {
+    call,
+    date: fmtISODate(startOnMillisMax),
+    compactDate: fmtISODate(startOnMillisMax).replace(/-/g, '')
+  }
 
   const qsos = state.qsos.qsos[uuid].map(qso => {
     return { ...qso, our: { ...qso.our, call: operation.stationCall || settings.operatorCall } }
@@ -106,38 +111,27 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
   const names = []
   const datas = []
 
-  if (type === 'adif') {
-    const potaActivationRefs = filterRefs(operation, 'potaActivation')
-    const nonPotaRefs = excludeRefs(operation, 'potaActivation')
+  const exports = operation?.refs.map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler)
+  exports.forEach(({ handler, ref }) => {
+    const options = (handler.suggestExportOptions && handler.suggestExportOptions({ operation, ref, settings })) || []
 
-    const combinations = potaActivationRefs.length ? potaActivationRefs : [{}]
+    options.forEach(option => {
+      const nameParts = { ...baseNameParts, ref: ref.ref, ...(handler.suggestOperationTitle && handler.suggestOperationTitle(ref)) }
+      const baseName = simpleTemplate(option.nameTemplate || '{date} {call} {ref}', nameParts)
+      const title = simpleTemplate(option.titleTemplate || '{call} {ref} {date}', nameParts)
 
-    combinations.forEach((activationRef, i) => {
-      const combinedRefs = [...nonPotaRefs, activationRef].filter(x => x?.type)
-
-      const referenceTitles = combinedRefs.map(ref => {
-        const hooks = findHooks(`ref:${ref.type}`)
-        return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref)).filter(x => x)[0]
-      }).filter(x => x)
-
-      const titleParts = [baseName]
-      const plainTitles = referenceTitles.map(ref => ref.title).filter(x => x).join(', ')
-      const forTitles = referenceTitles.map(ref => ref.for).filter(x => x).join(', ')
-      const atTitles = referenceTitles.map(ref => ref.at).filter(x => x).join(', ')
-      if (plainTitles) titleParts.push(plainTitles)
-      if (forTitles) titleParts.push('for ' + forTitles)
-      if (atTitles) titleParts.push('at ' + atTitles)
-
-      names.push(`${titleParts.join(' ').replace(/[/\\:]/g, '-')}.adi`)
-      datas.push(qsonToADIF({ operation: { ...operation, refs: combinedRefs }, qsos, settings }))
+      if (option.format === 'adif') {
+        names.push(`${baseName.replace(/[/\\:]/g, '-')}.adi`)
+        datas.push(qsonToADIF({ operation: { ...operation, ...option.common }, qsos, settings, handler, title }))
+      } else if (option.format === 'cabrillo') {
+        names.push(`${baseName.replace(/[/\\:]/g, '-')}.log`)
+        datas.push(qsonToCabrillo({ operation: { ...operation, ...option.common }, qsos, activity, settings, handler }))
+      // } else if (type === 'qson') {
+      //   names.push(`${uuid}.qson`)
+      //   datas.push(JSON.stringify({ operation: { ...operation, ...option.common }, qsos, settings }))
+      }
     })
-  } else if (type === 'cabrillo') {
-    names.push(`${baseName.replace(/[/\\:]/g)} for ${activity.shortName.replace(/[/\\:]/g)}.log`)
-    datas.push(qsonToCabrillo({ operation, qsos, activity, settings }))
-  } else if (type === 'qson') {
-    names.push(`${uuid}.qson`)
-    datas.push(JSON.stringify({ operation, qsos, settings }))
-  }
+  })
 
   if (names.length && datas.length) {
     const paths = []

@@ -1,16 +1,9 @@
 import packageJson from '../../package.json'
-import { filterRefs, findRef } from './refTools'
 import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
-export function qsonToADIF ({ operation, settings, qsos }) {
-  const potaActivationRef = findRef(operation, 'potaActivation')
-  const sotaActivationRef = findRef(operation, 'sotaActivation')
-  const wwffActivationRef = findRef(operation, 'wwffActivation')
-
+export function qsonToADIF ({ operation, settings, qsos, handler, title }) {
   const common = {
-    potaActivation: potaActivationRef?.ref,
-    sotaActivation: sotaActivationRef?.ref,
-    wwffActivation: wwffActivationRef?.ref,
+    refs: operation.refs,
     grid: operation.grid,
     stationCall: operation.stationCall ?? settings.operatorCall
   }
@@ -18,7 +11,7 @@ export function qsonToADIF ({ operation, settings, qsos }) {
 
   let str = ''
 
-  str += 'ADIF for Operation \n'
+  str += `ADIF for ${title || operation?.title || 'Operation'} \n`
   str += adifField('ADIF_VER', '3.1.4', { newLine: true })
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
@@ -27,91 +20,53 @@ export function qsonToADIF ({ operation, settings, qsos }) {
   qsos.forEach(qso => {
     if (qso.deleted) return
 
-    str += oneQSOtoADIFWithPOTAMultiples(qso, operation, common)
+    let handlerFieldCombinations
+    if (handler?.adifFieldCombinationsForOneQSO) {
+      handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common })
+    } else if (handler?.adifFieldsForOneQSO) {
+      handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common })]
+    } else {
+      handlerFieldCombinations = [[]]
+    }
+
+    handlerFieldCombinations.forEach((combinationFields, index) => {
+      const fields = adifFieldsForOneQSO(qso, operation, common, index * 1000)
+      str += adifRow([...fields, ...combinationFields])
+    })
   })
 
   return str
 }
 
-// When a QSO has multiple POTA refs we need to generate multiple ADIF QSOs,
-// one for each reference, and fudge the time by one second for each one
-function oneQSOtoADIFWithPOTAMultiples (qso, operation, common) {
-  const potaRefs = filterRefs(qso, 'pota')
-  const sotaRef = findRef(qso, 'sota')
-  const wwffRef = findRef(qso, 'wwff')
-  let str = ''
-
-  if (sotaRef) common = { ...common, sota: sotaRef.ref }
-  if (wwffRef) common = { ...common, wwff: wwffRef.ref }
-
-  if (potaRefs.length === 0) {
-    str += oneQSOtoADIF(qso, operation, common)
-  } else {
-    potaRefs.forEach((potaRef, i) => {
-      str += oneQSOtoADIF(qso, operation, { ...common, pota: potaRef.ref }, i * 1000)
-    })
-  }
-
-  return str
+function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
+  return [
+    { CALL: qso.their.call },
+    { MODE: qso.mode ?? 'SSB' },
+    { BAND: qso.band && qso.band !== 'other' ? qso.band : undefined },
+    { FREQ: qso.freq ? (qso.freq / 1000).toFixed(6) : undefined },
+    { QSO_DATE: fmtADIFDate(qso.startOnMillis + timeOfffset) },
+    { TIME_ON: fmtADIFTime(qso.startOnMillis + timeOfffset) },
+    { RST_RCVD: qso.their.sent },
+    { RST_SENT: qso.our.sent },
+    { STATION_CALLSIGN: qso.our.call ?? common.stationCall },
+    { OPERATOR: common.operatorCall },
+    { NOTES: qso.notes },
+    { GRIDSQUARE: qso.their?.grid ?? qso.their?.guess?.grid },
+    { MY_GRIDSQUARE: qso?.our?.grid ?? common.grid },
+    { NAME: qso.their?.name ?? qso.their?.guess?.name },
+    { DXCC: qso.their?.dxccCode ?? qso.their?.guess?.dxccCode },
+    { COUNTRY: qso.their?.country ?? qso.their?.guess?.country },
+    { STATE: qso.their?.state ?? qso.their?.guess?.state },
+    { CQZ: qso.their?.cqZone ?? qso.their?.guess?.cqZone },
+    { ITUZ: qso.their?.ituZone ?? qso.their?.guess?.ituZone },
+    { ARRL_SECT: qso.their.arrlSection }
+  ]
 }
 
-function oneQSOtoADIF (qso, operation, common, timeOfffset = 0) {
-  let str = ''
-  str += adifField('CALL', qso.their.call)
-  if (qso.band && qso.band !== 'other') str += adifField('BAND', qso.band)
-  if (qso.freq) str += adifField('FREQ', (qso.freq / 1000).toFixed(6))
-  str += adifField('MODE', qso.mode ?? 'SSB')
-  str += adifField('QSO_DATE', fmtADIFDate(qso.startOnMillis + timeOfffset))
-  str += adifField('TIME_ON', fmtADIFTime(qso.startOnMillis + timeOfffset))
-  str += adifField('RST_RCVD', qso.their.sent)
-  str += adifField('RST_SENT', qso.our.sent)
-  str += adifField('STATION_CALLSIGN', qso.our.call ?? common.stationCall)
-  str += adifField('OPERATOR', common.operatorCall)
-  str += adifField('NOTES', qso.notes)
-  str += adifField('GRIDSQUARE', qso.their?.grid ?? qso.their?.guess?.grid)
-  str += adifField('MY_GRIDSQUARE', qso?.our?.grid ?? common.grid)
-
-  str += adifField('NAME', qso.their?.name ?? qso.their?.guess?.name)
-  str += adifField('DXCC', qso.their?.dxccCode ?? qso.their?.guess?.dxccCode)
-  str += adifField('COUNTRY', qso.their?.country ?? qso.their?.guess?.country)
-  str += adifField('STATE', qso.their?.state ?? qso.their?.guess?.state)
-  str += adifField('CQZ', qso.their?.cqZone ?? qso.their?.guess?.cqZone)
-  str += adifField('ITUZ', qso.their?.ituZone ?? qso.their?.guess?.ituZone)
-
-  str += adifField('ARRL_SECT', qso.their.arrlSection)
-
-  if (common?.potaActivation) {
-    str += adifField('MY_SIG', 'POTA')
-    str += adifField('MY_SIG_INFO', common.potaActivation)
-    str += adifField('MY_POTA_REF', common.potaActivation)
-  }
-
-  if (common?.pota) {
-    str += adifField('SIG', 'POTA')
-    str += adifField('SIG_INFO', common.pota)
-    str += adifField('POTA_REF', common.pota)
-  }
-
-  if (common?.sotaActivation) {
-    str += adifField('MY_SOTA_REF', common.sotaActivation)
-  }
-
-  if (common?.sota) {
-    str += adifField('SOTA_REF', common.sota)
-  }
-
-  if (common?.wwffActivation) {
-    str += adifField('MY_SIG', 'WWFF')
-    str += adifField('MY_SIG_INFO', common.wwffActivation)
-  }
-
-  if (common?.wwff) {
-    str += adifField('SIG', 'WWFF')
-    str += adifField('SIG_INFO', common.wwff)
-  }
-
-  str += '<EOR>\n'
-  return str
+function adifRow (fields) {
+  return fields
+    .map(field => adifField(Object.keys(field)[0], Object.values(field)[0]))
+    .join('') + '<EOR>\n'
 }
 
 function adifField (name, value, options = {}) {
