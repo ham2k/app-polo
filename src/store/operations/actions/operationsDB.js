@@ -7,8 +7,7 @@ import { qsonToADIF } from '../../../tools/qsonToADIF'
 import { fmtISODate } from '../../../tools/timeFormats'
 import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
-import { excludeRefs, filterRefs } from '../../../tools/refTools'
-import { findBestHook, findHooks } from '../../../extensions/registry'
+import { findBestHook } from '../../../extensions/registry'
 import { simpleTemplate } from '../../../tools/stringTools'
 
 const prepareOperationRow = (row) => {
