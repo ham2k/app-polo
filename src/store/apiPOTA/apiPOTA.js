@@ -1,6 +1,6 @@
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { POTAAllParks } from '../../extensions/pota/POTAAllParksData'
+import { POTAAllParks, abbreviatePOTAName } from '../../extensions/pota/POTAAllParksData'
 
 /**
 
@@ -44,9 +44,16 @@ export const apiPOTA = createApi({
     lookupPark: builder.query({
       query: ({ ref }) => `park/${ref}`,
       transformResponse: (response) => {
-        if (response === null) {
-          // This is what the API returns when a park was not found
-          return { error: 'Park not found' }
+        try {
+          if (response === null) {
+            // This is what the API returns when a park was not found
+            return { error: 'Park not found' }
+          }
+          response.originalName = response.name
+          response.name = [response.name, response.parktypeDesc].filter(x => x).join(' ')
+          response.shortName = abbreviatePOTAName(response.name)
+        } catch (e) {
+          console.error('Error in POTA API park lookup', e)
         }
         return response
       }
@@ -58,7 +65,9 @@ export const apiPOTA = createApi({
         if (response === null) {
           return []
         }
+        console.log(response[0])
         response.forEach(spot => {
+          spot.shortName = abbreviatePOTAName(spot.name)
           spot.frequency = Number.parseFloat(spot.frequency)
           spot.band = bandForFrequency(spot.frequency)
           spot.timeInMillis = Date.parse(spot.spotTime + 'Z')

@@ -19,7 +19,7 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, se
     } else {
       desc = [
         pota?.data?.active === 0 && 'INACTIVE PARK!!!',
-        [pota?.data?.name ?? refData?.name, pota?.data?.parktypeDesc ?? refData?.parktypeDesc].filter(x => x).join(' ')
+        pota?.data?.name ?? refData?.name
       ].filter(x => x).join(' • ')
     }
     return desc

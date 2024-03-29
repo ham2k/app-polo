@@ -179,7 +179,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
       if (dist) parts.push(fmtDistance(dist, { units: settings.distanceUnits }))
     }
     if (pota.name) {
-      parts.push(['POTA', potaRef, pota.name, pota.parktypeDesc].filter(x => x).join(' '))
+      parts.push(['POTA', potaRef, pota.shortName ?? pota.name].filter(x => x).join(' '))
       if (pota.locationName) parts.push(pota.locationName)
     } else if (pota.error) {
       parts.push(`POTA ${potaRef} ${pota.error}`)
