@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { View } from 'react-native'
-import { Icon } from 'react-native-paper'
+import { ScrollView, View } from 'react-native'
+import { Icon, IconButton } from 'react-native-paper'
 
 import LoggerChip from '../../../../components/LoggerChip'
 import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
@@ -77,6 +77,17 @@ export const SecondaryControlSelectionsubPanel = ({
     }
   }, [secondaryControl, chipLayout, containerLayout, currentSecondaryControl, styles])
 
+  const [chipContainerOpen, setChipContainerOpen] = useState(false)
+  const handleContainerToggle = useCallback((value) => {
+    setChipContainerOpen(value)
+  }, [])
+  const [chipContainerStyle, chipScrollViewProps] = useMemo(() => {
+    if (chipContainerOpen) {
+      return [{ flexWrap: 'wrap' }, { horizontal: false }]
+    } else {
+      return [{ flexWrap: 'nowrap', flex: 1 }, { horizontal: true }]
+    }
+  }, [chipContainerOpen])
   return (
     <>
       {SecondaryComponent && (
@@ -92,40 +103,65 @@ export const SecondaryControlSelectionsubPanel = ({
           />
         </View>
       )}
-      <View
-        onLayout={(event) => setContainerLayout(event.nativeEvent.layout)}
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          paddingHorizontal: styles.oneSpace,
-          paddingTop: styles.oneSpace,
-          paddingBottom: styles.oneSpace,
-          gap: styles.halfSpace
-        }}
-      >
-        {enabledControls.map(control => (
-          <PositionedControlChip
-            key={control.key}
-            control={control}
-            icon={control.icon}
-            qso={qso} operation={operation} settings={settings}
-            style={{ flex: 0 }} styles={styles} themeColor={themeColor}
-            selected={currentSecondaryControl === control.key}
-            onChange={(value, measure) => handleChipSelect(control.key, value, measure)}
-          />
-        ))}
-
-        <View style={{ flex: 0, flexDirection: 'column' }}>
-          <LoggerChip
-            styles={styles}
-            style={{ flex: 0 }}
-            themeColor={themeColor}
-            onChange={() => setCurrentSecondaryControl('manage-controls')}
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-end' }}>
+        <ScrollView
+          {...chipScrollViewProps}
+          keyboardShouldPersistTaps={'handled'}
+          onLayout={(event) => setContainerLayout(event.nativeEvent.layout)}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingHorizontal: styles.oneSpace,
+              paddingTop: styles.oneSpace,
+              paddingBottom: styles.oneSpace,
+              gap: styles.halfSpace,
+              ...chipContainerStyle
+            }}
           >
-            <Icon source="cog" size={styles.oneSpace * 2} />
-          </LoggerChip>
+            {enabledControls.map(control => (
+              <PositionedControlChip
+                key={control.key}
+                control={control}
+                icon={control.icon}
+                qso={qso} operation={operation} settings={settings}
+                style={{ flex: 0 }} styles={styles} themeColor={themeColor}
+                selected={currentSecondaryControl === control.key}
+                onChange={(value, measure) => handleChipSelect(control.key, value, measure)}
+              />
+            ))}
+
+            <View style={{ flex: 0, flexDirection: 'column', marginRight: styles.oneSpace * 6 }}>
+              <LoggerChip
+                styles={styles}
+                style={{ flex: 0 }}
+                themeColor={themeColor}
+                onChange={() => setCurrentSecondaryControl('manage-controls')}
+              >
+                <Icon source="cog" size={styles.oneSpace * 2} />
+              </LoggerChip>
+            </View>
+          </View>
+        </ScrollView>
+        <View
+          style={{
+            position: 'absolute',
+            right: 0,
+            bottom: 0,
+            top: 0,
+            marginLeft: 0,
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+            backgroundColor: chipContainerOpen ? undefined : styles.colors[`${themeColor}ContainerAlpha`]
+          }}
+        >
+          <IconButton
+            icon={chipContainerOpen ? 'chevron-down' : 'chevron-left'}
+            onPress={() => handleContainerToggle(!chipContainerOpen)}
+          />
         </View>
       </View>
+
     </>
   )
 }
