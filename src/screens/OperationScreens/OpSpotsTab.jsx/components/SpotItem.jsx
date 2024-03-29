@@ -68,7 +68,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
                 {' at '}
                 <Text style={[styles.text.numbers, commonStyle, refStyle]}>{spot.reference ?? '?'}</Text>
                 {': '}
-                {[spot.locationDesc, spot.name].join(' • ')}
+                {[spot.locationDesc.substring(3, 6), spot.shortName ?? spot.name].join(' • ')}
               </>
             )}
           </Text>

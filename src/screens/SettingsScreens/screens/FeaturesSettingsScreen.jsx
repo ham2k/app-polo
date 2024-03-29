@@ -58,7 +58,7 @@ export default function FeaturesSettingsScreen ({ navigation }) {
     dispatch(setSettings({ [`extensions/${extension.key}`]: value }))
     const slowTimeout = setTimeout(() => {
       setSlowOperationMessage('Activating extension, this may take a moment...')
-    }, 1500)
+    }, 500)
     setTimeout(async () => {
       if (value) {
         await dispatch(activateExtension(extension))

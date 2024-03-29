@@ -11,11 +11,15 @@ import { replaceRefs } from '../../tools/refTools'
 import { ListSeparator } from '../components/ListComponents'
 import { findBestHook } from '../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../extensions/core/references'
+import { selectSettings } from '../../store/settings'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
 
+  const settings = useSelector(selectSettings)
+
   const dispatch = useDispatch()
+
   const operation = useSelector(state => selectOperation(state, route.params.operation))
   const handler = useMemo(() => (
     findBestHook(`ref:${route.params.activity}`) || defaultReferenceHandlerFor(route.params.activity)
@@ -39,7 +43,7 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        {activity?.Options && <activity.Options operation={operation} styles={styles} />}
+        {activity?.Options && <activity.Options operation={operation} styles={styles} settings={settings} />}
 
         <List.Section>
           <ListSeparator />

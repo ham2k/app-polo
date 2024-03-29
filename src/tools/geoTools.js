@@ -1,3 +1,6 @@
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import DXCC_LOCATIONS from '../data/dxccLocations.json'
+
 export function distanceOnEarth (location1, location2, options = {}) {
   let radius
   if (options.units === 'miles') {
@@ -6,10 +9,10 @@ export function distanceOnEarth (location1, location2, options = {}) {
     radius = 6371 // Radius of the Earth in km
   }
 
-  const lat1 = location1.lat ?? location1.latitude
-  const lon1 = location1.lon ?? location1.longitude
-  const lat2 = location2.lat ?? location2.latitude
-  const lon2 = location2.lon ?? location2.longitude
+  const lat1 = location1?.lat ?? location1?.latitude
+  const lon1 = location1?.lon ?? location1?.longitude
+  const lat2 = location2?.lat ?? location2?.latitude
+  const lon2 = location2?.lon ?? location2?.longitude
 
   if (!lat1 || !lon1 || !lat2 || !lon2) return null
 
@@ -29,12 +32,41 @@ function deg2rad (deg) {
   return deg * (Math.PI / 180)
 }
 
+const THOUSANDS_DELIMITER_REGEX = /^(\d+)(\d\d\d)$/
+
 export function fmtDistance (dist, options) {
   if (!dist) return ''
 
   if (options.units === 'miles') {
-    return `${dist.toFixed(0)} mi`
+    return `${dist.toFixed(0).replace(THOUSANDS_DELIMITER_REGEX, '$1,$2')} mi`
   } else {
-    return `${dist.toFixed(0)} km`
+    return `${dist.toFixed(0).replace(THOUSANDS_DELIMITER_REGEX, '$1.$2')} km`
   }
+}
+
+export function locationForQSONInfo (qsonInfo) {
+  try {
+    const grid = qsonInfo?.grid ?? qsonInfo?.guess?.grid ?? qsonInfo?.qrzInfo?.grid
+
+    if (grid) {
+      const [latitude, longitude] = gridToLocation(grid)
+      return { latitude, longitude }
+    }
+
+    const entityPrefix = qsonInfo?.entityPrefix ?? qsonInfo?.guess?.entityPrefix ?? qsonInfo?.qrzInfo?.entityPrefix
+    const state = qsonInfo?.state ?? qsonInfo?.guess?.state ?? qsonInfo?.qrzInfo?.state
+    if (entityPrefix) {
+      const loc = DXCC_LOCATIONS[[entityPrefix, state].join('-')] || DXCC_LOCATIONS[entityPrefix]
+      if (loc) return { latitude: loc[1], longitude: loc[0] }
+    }
+    return null
+  } catch (e) {
+    return null
+  }
+}
+
+export function distanceForQSON (qso, { units }) {
+  const theirLocation = locationForQSONInfo(qso?.their)
+  const ourLocation = locationForQSONInfo(qso?.our)
+  return (theirLocation && ourLocation) ? distanceOnEarth(theirLocation, ourLocation, { units }) : null
 }

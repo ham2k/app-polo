@@ -4,8 +4,6 @@ import MapView, { Marker, Polyline } from 'react-native-maps'
 
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
-import DXCC_LOCATIONS from '../../../data/dxccLocations.json'
-
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectOperation } from '../../../store/operations'
@@ -14,7 +12,8 @@ import { fmtShortTimeZulu } from '../../../tools/timeFormats'
 import { Image } from 'react-native'
 import { selectSettings } from '../../../store/settings'
 import { apiQRZ } from '../../../store/apiQRZ'
-import { distanceOnEarth, fmtDistance } from '../../../tools/geoTools'
+import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../tools/geoTools'
+import { reportError } from '../../../App'
 
 const PIN_QTH = require('./images/qth.png')
 const PIN_FOR_STRENGTH = {
@@ -61,7 +60,6 @@ export default function OpMapTab ({ navigation, route }) {
       const [latitude, longitude] = gridToLocation(operation.grid)
       return { latitude, longitude }
     } catch (e) {
-      console.error('Error in qth', e)
       return {}
     }
   }, [operation?.grid])
@@ -115,7 +113,7 @@ export default function OpMapTab ({ navigation, route }) {
             }
           }))
         } catch (e) {
-          console.error('QRZ Lookup Error', e)
+          reportError('QRZ Lookup Error', e)
         } finally {
           setNextQSOWithoutInfo(null)
         }
@@ -127,7 +125,7 @@ export default function OpMapTab ({ navigation, route }) {
     const activeQSOs = qsos.filter(qso => !qso.deleted)
     return activeQSOs
       .map(qso => {
-        const location = locationForQSO(qso)
+        const location = locationForQSONInfo(qso?.their)
         const strength = strengthForQSO(qso)
         const distance = location && qth ? distanceOnEarth(location, qth, { units: settings.distanceUnits }) : null
         const distanceStr = distance ? fmtDistance(distance, { units: settings.distanceUnits }) : ''
@@ -214,28 +212,6 @@ export default function OpMapTab ({ navigation, route }) {
   )
 }
 
-function locationForQSO (qso) {
-  try {
-    const grid = qso?.their?.grid ?? qso?.their?.guess?.grid ?? qso?.their?.qrzInfo?.grid
-
-    if (grid) {
-      const [latitude, longitude] = gridToLocation(grid)
-      return { latitude, longitude }
-    }
-
-    const entityPrefix = qso?.their?.entityPrefix ?? qso?.their?.guess?.entityPrefix ?? qso?.their?.qrzInfo?.entityPrefix
-    const state = qso?.their?.state ?? qso?.their?.guess?.state ?? qso?.their?.qrzInfo?.state
-    if (entityPrefix) {
-      const loc = DXCC_LOCATIONS[[entityPrefix, state].join('-')] || DXCC_LOCATIONS[entityPrefix]
-      if (loc) return { latitude: loc[1], longitude: loc[0] }
-    }
-    return null
-  } catch (e) {
-    console.error('Error in locationForQSO', e)
-    return null
-  }
-}
-
 function strengthForQSO (qso) {
   try {
     if (qso.mode === 'CW' || qso.mode === 'RTTY') {
@@ -249,7 +225,6 @@ function strengthForQSO (qso) {
       return (qso.their?.sent || 55) % 10
     }
   } catch (e) {
-    console.error('Error in strengthForQSO', e)
     return 5
   }
 }

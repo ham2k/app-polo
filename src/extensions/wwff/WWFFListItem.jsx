@@ -5,8 +5,9 @@ import { View } from 'react-native'
 
 import { Info } from './WWFFInfo'
 import { WWFFData } from './WWFFDataFile'
+import { fmtDistance } from '../../tools/geoTools'
 
-export function WWFFListItem ({ activityRef, refData, operationRef, style, styles, onPress, onAddReference, onRemoveReference }) {
+export function WWFFListItem ({ activityRef, refData, operationRef, style, styles, settings, onPress, onAddReference, onRemoveReference }) {
   const reference = useMemo(() => {
     return (WWFFData.byReference && WWFFData.byReference[activityRef]) || {}
   }, [activityRef])
@@ -14,9 +15,12 @@ export function WWFFListItem ({ activityRef, refData, operationRef, style, style
   return (
     <List.Item style={{ paddingRight: styles.oneSpace * 1 }}
       title={
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
           <Text style={{ fontWeight: 'bold' }}>
-            {reference?.ref ?? activityRef}
+            {reference.ref ?? activityRef}
+          </Text>
+          <Text>
+            {refData?.distance && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
           </Text>
         </View>
       }

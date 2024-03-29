@@ -6,3 +6,15 @@ export function camelCaseToWords (camelCase, { capitalize } = {}) {
 
   return words
 }
+
+export function simpleTemplate (template, values = {}, context = {}) {
+  return template.replace(/\{(.*?)}/g, (match, key) => {
+    if (typeof values[key] === 'function') {
+      return values[key](key, context)
+    } else if (typeof values._default === 'function') {
+      return values._default(key, context)
+    } else {
+      return values[key] || match
+    }
+  })
+}

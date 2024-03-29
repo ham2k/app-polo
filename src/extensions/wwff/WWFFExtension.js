@@ -96,5 +96,28 @@ const ReferenceHandler = {
     } else {
       return null
     }
+  },
+
+  suggestExportOptions: ({ operation, ref, settings }) => {
+    if (ref.type === Info.activationType && ref.ref) {
+      return [{
+        format: 'adif',
+        common: { refs: [ref] },
+        // Note that compact format uses _ instead of - because of WWFF requirements
+        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}_{compactDate}' : '{date} {call} at {ref}',
+        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+      }]
+    }
+  },
+
+  adifFieldsForOneQSO: ({ qso, operation, common }) => {
+    const huntingRef = findRef(qso, Info.huntingType)
+    const activationRef = findRef(operation, Info.activationType)
+    const fields = []
+    if (activationRef) fields.push({ MY_SIG: 'WWFF', MY_SIG_INFO: activationRef.ref })
+    if (huntingRef) fields.push({ SIG: 'WWFF', SIG_INFO: huntingRef.ref })
+
+    return fields
   }
+
 }

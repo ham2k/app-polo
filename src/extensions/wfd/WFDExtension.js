@@ -61,6 +61,21 @@ const ReferenceHandler = {
     return { for: Info.shortName, subtitle: [ref?.class, ref?.location].filter(x => x).join(' ') }
   },
 
+  suggestExportOptions: ({ operation, ref, settings }) => {
+    if (ref.type === Info.key) {
+      return [{
+        format: 'adif',
+        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
+        titleTemplate: `{call}: ${Info.name} on {date}`
+      },
+      {
+        format: 'cabrillo',
+        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
+        titleTemplate: `{call}: ${Info.name} on {date}`
+      }]
+    }
+  },
+
   cabrilloHeaders: ({ operation, settings, headers }) => {
     const ref = findRef(operation, Info.key)
     headers.CONTEST = Info.cabrilloName ?? Info.shortName

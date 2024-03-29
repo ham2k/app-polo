@@ -1,4 +1,12 @@
 {
+  "0.6.4": {
+    "changes": [
+      "Refactored log exporting code",
+      "Fixed frequency and mode control layout on small screens",
+      "Show distances in QSOs and activity searches",
+      "POTA name abbreviations"
+    ]
+  },
   "0.6.3": {
     "changes": [
       "Added support and discord links",

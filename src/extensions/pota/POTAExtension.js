@@ -1,6 +1,6 @@
 import { apiPOTA } from '../../store/apiPOTA'
 import { loadDataFile, removeDataFile } from '../../store/dataFiles/actions/dataFileFS'
-import { findRef, refsToString } from '../../tools/refTools'
+import { filterRefs, findRef, refsToString } from '../../tools/refTools'
 import { POTAActivityOptions } from './POTAActivityOptions'
 import { registerPOTAAllParksData } from './POTAAllParksData'
 import { Info } from './POTAInfo'
@@ -103,9 +103,10 @@ const ReferenceHandler = {
     if (data?.name) {
       result = {
         ...ref,
-        name: [data.name, data.parktypeDesc].filter(x => x).join(' '),
-        location: data?.locationName,
-        grid: data?.grid6
+        name: data.shortName || data.name,
+        shortName: data.shortName,
+        location: data.locationName,
+        grid: data.grid6
       }
     } else {
       return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
@@ -117,9 +118,40 @@ const ReferenceHandler = {
 
   suggestOperationTitle: (ref) => {
     if (ref.type === Info.activationType && ref.ref) {
-      return { at: ref.ref, subtitle: ref.name }
+      return { at: ref.ref, subtitle: ref.name, shortSubtitle: ref.shortName }
     } else {
       return null
+    }
+  },
+
+  suggestExportOptions: ({ operation, ref, settings }) => {
+    if (ref.type === Info.activationType && ref.ref) {
+      return [{
+        format: 'adif',
+        common: { refs: [ref] },
+        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
+        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+      }]
+    }
+  },
+
+  adifFieldCombinationsForOneQSO: ({ qso, operation, common }) => {
+    const huntingRefs = filterRefs(qso, Info.huntingType)
+    const activationRef = findRef(operation, Info.activationType)
+    let activationADIF = []
+    if (activationRef) {
+      activationADIF = [
+        { MY_SIG: 'POTA' }, { MY_SIG_INFO: activationRef.ref }, { MY_POTA_REF: activationRef.ref }
+      ]
+    }
+
+    if (huntingRefs.length > 0) {
+      return huntingRefs.map(huntingRef => [
+        ...activationADIF,
+        { SIG: 'POTA' }, { SIG_INFO: huntingRef.ref }, { POTA_REF: huntingRef.ref }
+      ])
+    } else {
+      return [activationADIF]
     }
   }
 }

@@ -89,7 +89,7 @@ export function CallInfoDialog ({
                     )}
                     {pota?.data?.name && (
                       <Text style={{ marginTop: styles.oneSpace }}>
-                        POTA: <Text style={styles.text.callsign}>{pota.data.reference}</Text> {pota.data.name} {pota.data.parktypeDesc}
+                        POTA: <Text style={styles.text.callsign}>{pota.data.reference}</Text> {pota.data.shortName ?? pota.data.name}
                       </Text>
                     )}
                     {pota?.data?.locationName && (

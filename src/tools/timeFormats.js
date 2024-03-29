@@ -172,7 +172,6 @@ export function fmtISODate (t) {
     try {
       return t.toISOString().substring(0, 10)
     } catch (e) {
-      console.error('fmtIsoDate', e)
       return ''
     }
   } else {
