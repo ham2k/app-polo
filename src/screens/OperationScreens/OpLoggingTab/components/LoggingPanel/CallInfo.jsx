@@ -17,6 +17,8 @@ import { selectRuntimeOnline } from '../../../../../store/runtime'
 import { selectSettings } from '../../../../../store/settings'
 
 import { CallInfoDialog } from './CallInfoDialog'
+import { distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
+import { selectOperationCallInfo } from '../../../../../store/operations'
 
 export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -52,6 +54,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
 
   const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
+  const opCallInfo = useSelector(selectOperationCallInfo)
 
   const isPotaOp = useMemo(() => {
     return hasRef(operation?.refs, 'potaActivation')
@@ -171,6 +174,10 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     const parts = []
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
+    if (operation.grid && guess?.grid) {
+      const dist = distanceForQSON({ ...qso, our: { ...opCallInfo, grid: operation.grid }, their: { ...qso.their, guess } }, { units: settings.distanceUnits })
+      if (dist) parts.push(fmtDistance(dist, { units: settings.distanceUnits }))
+    }
     if (pota.name) {
       parts.push(['POTA', potaRef, pota.name, pota.parktypeDesc].filter(x => x).join(' '))
       if (pota.locationName) parts.push(pota.locationName)
@@ -185,7 +192,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     }
 
     return [parts.filter(x => x).join(' • '), entity?.flag ? entity.flag : '']
-  }, [guess, qrz, pota, potaRef])
+  }, [guess, operation.grid, pota, qso, opCallInfo, settings.distanceUnits, potaRef, qrz.call, qrz.city, qrz.state])
 
   const stationInfo = useMemo(() => {
     const parts = []

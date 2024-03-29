@@ -1,3 +1,6 @@
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import DXCC_LOCATIONS from '../data/dxccLocations.json'
+
 export function distanceOnEarth (location1, location2, options = {}) {
   let radius
   if (options.units === 'miles') {
@@ -37,4 +40,32 @@ export function fmtDistance (dist, options) {
   } else {
     return `${dist.toFixed(0)} km`
   }
+}
+
+export function locationForQSONInfo (qsonInfo) {
+  try {
+    const grid = qsonInfo?.grid ?? qsonInfo?.guess?.grid ?? qsonInfo?.qrzInfo?.grid
+
+    if (grid) {
+      const [latitude, longitude] = gridToLocation(grid)
+      return { latitude, longitude }
+    }
+
+    const entityPrefix = qsonInfo?.entityPrefix ?? qsonInfo?.guess?.entityPrefix ?? qsonInfo?.qrzInfo?.entityPrefix
+    const state = qsonInfo?.state ?? qsonInfo?.guess?.state ?? qsonInfo?.qrzInfo?.state
+    if (entityPrefix) {
+      const loc = DXCC_LOCATIONS[[entityPrefix, state].join('-')] || DXCC_LOCATIONS[entityPrefix]
+      if (loc) return { latitude: loc[1], longitude: loc[0] }
+    }
+    return null
+  } catch (e) {
+    console.error('Error in locationForQSONInfo', e)
+    return null
+  }
+}
+
+export function distanceForQSON (qso, { units }) {
+  const theirLocation = locationForQSONInfo(qso?.their)
+  const ourLocation = locationForQSONInfo(qso?.our)
+  return (theirLocation && ourLocation) ? distanceOnEarth(theirLocation, ourLocation, { units }) : null
 }

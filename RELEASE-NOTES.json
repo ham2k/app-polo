@@ -2,7 +2,8 @@
   "0.6.4": {
     "changes": [
       "Refactored log exporting code",
-      "Fixed frequency and mode control layout on small screens"
+      "Fixed frequency and mode control layout on small screens",
+      "Show QSO distance"
     ]
   },
   "0.6.3": {

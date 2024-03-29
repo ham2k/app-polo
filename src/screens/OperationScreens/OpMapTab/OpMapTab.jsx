@@ -14,7 +14,7 @@ import { fmtShortTimeZulu } from '../../../tools/timeFormats'
 import { Image } from 'react-native'
 import { selectSettings } from '../../../store/settings'
 import { apiQRZ } from '../../../store/apiQRZ'
-import { distanceOnEarth, fmtDistance } from '../../../tools/geoTools'
+import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../tools/geoTools'
 
 const PIN_QTH = require('./images/qth.png')
 const PIN_FOR_STRENGTH = {
@@ -127,7 +127,7 @@ export default function OpMapTab ({ navigation, route }) {
     const activeQSOs = qsos.filter(qso => !qso.deleted)
     return activeQSOs
       .map(qso => {
-        const location = locationForQSO(qso)
+        const location = locationForQSONInfo(qso?.their)
         const strength = strengthForQSO(qso)
         const distance = location && qth ? distanceOnEarth(location, qth, { units: settings.distanceUnits }) : null
         const distanceStr = distance ? fmtDistance(distance, { units: settings.distanceUnits }) : ''
@@ -212,28 +212,6 @@ export default function OpMapTab ({ navigation, route }) {
       ))}
     </MapView>
   )
-}
-
-function locationForQSO (qso) {
-  try {
-    const grid = qso?.their?.grid ?? qso?.their?.guess?.grid ?? qso?.their?.qrzInfo?.grid
-
-    if (grid) {
-      const [latitude, longitude] = gridToLocation(grid)
-      return { latitude, longitude }
-    }
-
-    const entityPrefix = qso?.their?.entityPrefix ?? qso?.their?.guess?.entityPrefix ?? qso?.their?.qrzInfo?.entityPrefix
-    const state = qso?.their?.state ?? qso?.their?.guess?.state ?? qso?.their?.qrzInfo?.state
-    if (entityPrefix) {
-      const loc = DXCC_LOCATIONS[[entityPrefix, state].join('-')] || DXCC_LOCATIONS[entityPrefix]
-      if (loc) return { latitude: loc[1], longitude: loc[0] }
-    }
-    return null
-  } catch (e) {
-    console.error('Error in locationForQSO', e)
-    return null
-  }
 }
 
 function strengthForQSO (qso) {
