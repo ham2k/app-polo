@@ -7,6 +7,7 @@ import { locationToGrid } from '@ham2k/lib-maidenhead-grid'
 
 import { setOperationData } from '../../../../store/operations'
 import ThemedTextInput from '../../../components/ThemedTextInput'
+import { reportError } from '../../../../App'
 
 const VALID_MAIDENHEAD_REGEX = /^([A-R]{2}|[A-R]{2}[0-9]{2}|[A-R]{2}[0-9]{2}[a-x]{2}||[A-R]{2}[0-9]{2}[a-x]{2}[0-9]{2})$/
 const PARTIAL_MAIDENHEAD_REGEX = /^([A-R]{0,2}|[A-R]{2}[0-9]{0,2}|[A-R]{2}[0-9]{2}[a-x]{0,2}||[A-R]{2}[0-9]{2}[a-x]{2}[0-9]{0,2})$/
@@ -58,14 +59,14 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
       const { latitude, longitude } = info.coords
       setLocationGrid(locationToGrid(latitude, longitude))
     }, error => {
-      console.error('location error', error)
+      reportError('location error', error)
     })
 
     const watchId = Geolocation.watchPosition(info => {
       const { latitude, longitude } = info.coords
       setLocationGrid(locationToGrid(latitude, longitude))
     }, error => {
-      console.error('location error', error)
+      reportError('location error', error)
     })
     return () => {
       Geolocation.clearWatch(watchId)

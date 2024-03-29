@@ -9,6 +9,7 @@ import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { findBestHook } from '../../../extensions/registry'
 import { simpleTemplate } from '../../../tools/stringTools'
+import { reportError } from '../../../App'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
@@ -84,7 +85,7 @@ export const readOldOperationFiles = async () => {
     }
     return operations
   } catch (error) {
-    console.error('Error reading operation list', error)
+    reportError('Error reading operation list', error)
     return {}
   }
 }
@@ -174,9 +175,9 @@ export const importQSON = (path) => async (dispatch) => {
       dispatch(qsosActions.setQSOsStatus({ uuid: data.operation.uuid, status: 'ready' }))
       dispatch(actions.setOperation({ uuid, status: 'ready' }))
     } catch (error) {
-      console.error('Error importing QSON', error)
+      reportError('Error importing QSON', error)
     }
   } else {
-    console.error('Invalid Path importing QSON', path)
+    reportError('Invalid Path importing QSON', path)
   }
 }

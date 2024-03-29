@@ -2,6 +2,7 @@ import RNFetchBlob from 'react-native-blob-util'
 import { getDataFileDefinition, getDataFileDefinitions } from '../dataFilesRegistry'
 import { actions, selectDataFileInfo } from '../dataFilesSlice'
 import { addRuntimeMessage } from '../../runtime'
+import { reportError } from '../../../App'
 
 export const fetchDataFile = (key) => async (dispatch) => {
   const definition = getDataFileDefinition(key)
@@ -17,7 +18,7 @@ export const fetchDataFile = (key) => async (dispatch) => {
     if (definition.onLoad) definition.onLoad(data)
     dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', version: data.version, date: data.date ?? new Date() }))
   } catch (error) {
-    console.error(`Error fetching data file ${key}`, error)
+    reportError(`Error fetching data file ${key}`, error)
     dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
   }
 }
@@ -38,7 +39,7 @@ export const readDataFile = (key) => async (dispatch) => {
     dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', date: lastModified ?? new Date() }))
     if (definition.onLoad) definition.onLoad(data)
   } catch (error) {
-    console.error(`Error reading data file ${key}`, error)
+    reportError(`Error reading data file ${key}`, error)
     dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
   }
 }
@@ -69,7 +70,7 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
       }
     }
   } catch (error) {
-    console.error(`Error loading data file ${key}`, error)
+    reportError(`Error loading data file ${key}`, error)
     dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
   }
 }

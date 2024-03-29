@@ -42,6 +42,13 @@ const DISTRIBUTION_CONFIG = {}
 //   captureUnhandledRejections: true
 // })
 
+export function reportError (error, ...extra) {
+  if (DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollbar) {
+    DISTRIBUTION_CONFIG.rollbarNative.rollbar.error(error, ...extra)
+  }
+  console.error(error, ...extra)
+}
+
 const Stack = createNativeStackNavigator()
 
 const paperSettings = {

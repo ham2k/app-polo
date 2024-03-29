@@ -10,6 +10,7 @@ import { Info } from './WWFFInfo'
 import { WWFFListItem } from './WWFFListItem'
 import { ListRow } from '../../screens/components/ListComponents'
 import { distanceOnEarth } from '../../tools/geoTools'
+import { reportError } from '../../App'
 
 export function WWFFActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
@@ -38,7 +39,7 @@ export function WWFFActivityOptions (props) {
       const { latitude, longitude } = info.coords
       setLocation({ lat: latitude, lon: longitude })
     }, error => {
-      console.error('Geolocation error', error)
+      reportError('Geolocation error', error)
       setLocation(undefined)
     })
   }, [])
