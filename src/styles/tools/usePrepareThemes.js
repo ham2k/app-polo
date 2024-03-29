@@ -33,6 +33,7 @@ export function usePrepareThemes () {
         loadedColors[`on${upcasedColor}Light`] = loadedColors[`on${upcasedColor}`]
         loadedColors[`on${upcasedColor}Lighter`] = Color(loadedColors[`on${upcasedColor}`]).lighten(5).desaturate(0.2).hex()
         loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).lighten(1.2).desaturate(0.3).hex()
+        loadedColors[`${color}ContainerAlpha`] = Color(loadedColors[`${color}Container`]).alpha(0.8).string()
       })
       loadedColors.onBackgroundLight = Color(loadedColors.onBackground).darken(0.3).hex()
       loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).darken(0.5).hex()
@@ -45,6 +46,7 @@ export function usePrepareThemes () {
         loadedColors[`on${upcasedColor}Light`] = loadedColors[`on${upcasedColor}`]
         loadedColors[`on${upcasedColor}Lighter`] = Color(loadedColors[`on${upcasedColor}`]).darken(0.7).desaturate(0.2).hex()
         loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).darken(0.05).desaturate(0.3).hex()
+        loadedColors[`${color}ContainerAlpha`] = Color(loadedColors[`${color}Container`]).alpha(0.8).string()
       })
       loadedColors.onBackgroundLight = Color(loadedColors.onBackground).lighten(3).hex()
       loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).lighten(6).hex()
