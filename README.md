@@ -42,13 +42,24 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 
 # Troubleshooting
 
-###
+### Clean Build
 ```
-npm start -- --reset-cache
-```
+# For all platforms
+rm -rf node_modules
+npm install
 
-```
-cd android && ./gradlew clean && ./gradlew cleanBuildCache && cd ..
+# For android
+(cd android && ./gradlew clean && ./gradlew cleanBuildCache)
+
+# For iOS
+rm -rf ~/Library/Caches/CocoaPods
+rm -rf ios/Pods
+rm -rf ios/Podfile.lock
+rm -rf ios/build
+(cd ios && pod install)
+
+# For all platforms
+npm start -- --reset-cache
 ```
 
 ### "Unable to boot simulator" error for iOS Simulator

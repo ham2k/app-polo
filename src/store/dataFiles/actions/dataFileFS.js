@@ -12,7 +12,7 @@ export const fetchDataFile = (key) => async (dispatch) => {
     dispatch(actions.setDataFileInfo({ key, status: 'fetching' }))
     const data = await definition.fetch()
 
-    if (!await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data`)) await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/data/`)
+    try { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/data/`) } catch (error) { /* ignore */ }
     await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`, JSON.stringify(data))
 
     if (definition.onLoad) definition.onLoad(data)
