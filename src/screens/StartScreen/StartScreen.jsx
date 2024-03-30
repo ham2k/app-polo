@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { ImageBackground, View, useWindowDimensions } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { ImageBackground, Pressable, View, useWindowDimensions } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'react-native-paper'
@@ -10,6 +10,8 @@ import { selectRuntimeMessages } from '../../store/runtime'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Ham2kMarkdown } from '../components/Ham2kMarkdown'
 import { startupSequence } from '../../store/runtime/actions/startupSequence'
+import { UpdateTracksDialog } from '../SettingsScreens/components/UpdateTracksDialog'
+import { selectSettings } from '../../store/settings'
 
 const SPLASH_IMAGE = require('./img/launch_screen.png')
 
@@ -89,22 +91,50 @@ export default function StartScreen ({ setAppState }) {
     }
   })
 
+  const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
   const messages = useSelector(selectRuntimeMessages)
 
   useEffect(() => {
     SplashScreen.hide()
-    dispatch(startupSequence(() => setAppState('ready')))
-  }, [dispatch, setAppState])
+  }, [])
+
+  const [startupPhase, setStartupPhase] = useState('hold')
+
+  useEffect(() => { // If not using the default track, give the user some milliseconds to switch tracks dialog
+    if (startupPhase !== 'hold') return
+
+    if (settings.updateTrack && settings.updateTrack !== 'Production') {
+      const timeout = setTimeout(() => {
+        if (startupPhase === 'hold') {
+          setStartupPhase('start')
+        }
+      }, 500)
+      return () => clearTimeout(timeout)
+    } else {
+      setStartupPhase('start')
+    }
+  }, [startupPhase, settings])
+
+  useEffect(() => { // After a short wait, begin the startup sequence
+    if (startupPhase === 'start') {
+      setStartupPhase('starting')
+      dispatch(startupSequence(() => setAppState('ready')))
+    }
+  }, [dispatch, setAppState, startupPhase])
+
+  const handleInterruption = useCallback(() => { // If the uer taps the screen, show the track selection dialog
+    if (startupPhase === 'hold') setStartupPhase('dialog')
+  }, [setStartupPhase, startupPhase])
 
   return (
     <ImageBackground source={SPLASH_IMAGE} style={styles.screen}>
       <SafeAreaView>
         <GestureHandlerRootView style={styles.container}>
-          <View style={styles.titleBox}>
+          <Pressable style={styles.titleBox} onPress={() => { handleInterruption(); return true }}>
             <Text style={styles.ham2k}>Ham2K</Text>
-            <Text style={styles.polo}>Portable Logger</Text>
-          </View>
+            <Text style={styles.polo} onPressIn={handleInterruption}>Portable Logger</Text>
+          </Pressable>
           <View style={styles.messagesBox}>
             {messages.map((msg, i) => (
               <Ham2kMarkdown key={i} styles={styles}>{msg.message}</Ham2kMarkdown>
@@ -112,6 +142,15 @@ export default function StartScreen ({ setAppState }) {
           </View>
         </GestureHandlerRootView>
       </SafeAreaView>
+      {startupPhase === 'dialog' && (
+        <UpdateTracksDialog
+          settings={settings}
+          styles={styles}
+          visible={true}
+          dismissable={false}
+          onDialogDone={() => setStartupPhase('start')}
+        />
+      )}
     </ImageBackground>
   )
 }
