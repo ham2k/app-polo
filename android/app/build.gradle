@@ -120,6 +120,7 @@ android {
     flavorDimensions ("environment")
     productFlavors {
         alpha {
+            isDefault true
             dimension "environment"
             applicationIdSuffix ".alpha"
         }
@@ -154,3 +155,4 @@ project.ext.vectoricons = [
     iconFontNames: [ 'MaterialIcons.ttf', 'MaterialCommunityIcons.ttf' ] // Specify font files
 ]
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+
