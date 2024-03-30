@@ -1,9 +1,12 @@
+import CodePush from 'react-native-code-push'
 import packageJson from '../../../../package.json'
 import loadExtensions from '../../../extensions/loadExtensions'
 
 import { getOperations } from '../../operations'
+import { selectSettings } from '../../settings'
 import { addRuntimeMessage, resetRuntimeMessages } from '../runtimeSlice'
 import { setupOnlineStatusMonitoring } from './onlineStatus'
+import { UPDATE_TRACK_KEYS } from '../../../screens/SettingsScreens/screens/VersionSettingsScreen'
 
 const MESSAGES = [
   'Reticulating splines',
@@ -17,7 +20,9 @@ const MESSAGES = [
   'Engaging the warp drive' // K4HNT
 ]
 
-export const startupSequence = (onReady) => (dispatch) => {
+export const startupSequence = (onReady) => (dispatch, getState) => {
+  const settings = selectSettings(getState()) || {}
+
   setTimeout(async () => {
     dispatch(resetRuntimeMessages())
     dispatch(addRuntimeMessage(`**Version ${packageJson.version}**`))
@@ -28,6 +33,10 @@ export const startupSequence = (onReady) => (dispatch) => {
 
     const steps = [
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
+      async () => {
+        await dispatch(addRuntimeMessage('Checking for updates...'))
+        await CodePush.sync({ deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Production'] })
+      },
       async () => await dispatch(loadExtensions()),
       async () => await dispatch(setupOnlineStatusMonitoring()),
       async () => await dispatch(getOperations()),
