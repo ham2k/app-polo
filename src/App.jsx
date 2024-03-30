@@ -73,7 +73,7 @@ if (process.env.NODE_ENV !== 'development') {
   })
 
   DISTRIBUTION_CONFIG.codePushOptions = {
-    installMode: codePush.InstallMode.IMMEDIATE
+    installMode: codePush.InstallMode.ON_NEXT_RESUME
   }
 }
 /** END DISTRIBUTION-ONLY */
@@ -216,8 +216,8 @@ if (DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollb
   App = PersistedApp
 }
 
-if (DISTRIBUTION_CONFIG.codePushOptions) {
-  App = codePush(DISTRIBUTION_CONFIG.codePushOptions)(App)
-}
+// if (DISTRIBUTION_CONFIG.codePushOptions) {
+//   App = codePush(DISTRIBUTION_CONFIG.codePushOptions)(App)
+// }
 
 export default App
