@@ -15,7 +15,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
   }, [])
 
   return (
-    <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, maxWidth: styles.oneSpace * 44 }}>
+    <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
       <ThemedDropDown
         label="Band"
         themeColor={themeColor}
@@ -24,7 +24,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
         disabled={disabled}
         dropDownContainerMaxHeight={styles.oneSpace * 19}
         fieldId={'band'}
-        style={{ flex: 3 }}
+        style={{ width: styles.oneSpace * (styles.size === 'xs' ? 13 : 15) }}
         list={[
           { value: '160m', label: '160m' },
           { value: '80m', label: '80m' },
@@ -47,7 +47,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
       <FrequencyInput
         innerRef={ref}
         themeColor={themeColor}
-        style={{ flex: 8 }}
+        style={{ width: styles.oneSpace * (styles.size === 'xs' ? 10 : 11) }}
         value={qso?._isNew ? (qso?.freq ?? operation?.freq ?? '') : (qso?.freq ?? '') }
         disabled={disabled}
         label="Frequency"
@@ -64,7 +64,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
         disabled={disabled}
         dropDownContainerMaxHeight={styles.oneSpace * 19}
         fieldId={'mode'}
-        style={{ flex: 3 }}
+        style={{ width: styles.oneSpace * (styles.size === 'xs' ? 12 : 14) }}
         list={[
           { value: 'SSB', label: 'SSB' },
           { value: 'CW', label: 'CW' },

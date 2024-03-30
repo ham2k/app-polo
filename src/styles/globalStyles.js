@@ -15,9 +15,16 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const fontScale = PixelRatio.getFontScale()
   theme = theme ?? DEFAULT_THEME
 
+  let size
+  if (width / fontScale < 340) size = 'xs'
+  else if (width / fontScale < 400) size = 'sm'
+  else if (width / fontScale < 600) size = 'md'
+  else if (width / fontScale < 1000) size = 'lg'
+  else size = 'xl'
+
   // If the screen is too small, and the font scale too large, nothing will fit, so we need to adjust our font sizes down
   let fontScaleAdjustment = 1
-  if (width / fontScale < 340) {
+  if (size === 'xs') {
     fontScaleAdjustment = width / fontScale / 330
   }
 
@@ -37,6 +44,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     isDarkMode,
 
     pixelRatio,
+
+    size,
 
     oneSpace,
     halfSpace,
