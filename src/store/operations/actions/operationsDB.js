@@ -111,10 +111,25 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
   const names = []
   const datas = []
 
-  const exports = operation?.refs.map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler)
-  exports.forEach(({ handler, ref }) => {
-    const options = (handler.suggestExportOptions && handler.suggestExportOptions({ operation, ref, settings })) || []
+  const exportHandlers = (operation?.refs || []).map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler)
+  let exportOptions = exportHandlers.map(({ handler, ref }) => (
+    { handler, ref, options: handler.suggestExportOptions && handler.suggestExportOptions({ operation, ref, settings }) }
+  )).flat().filter(({ options }) => options)
 
+  if (exportOptions.length === 0) {
+    exportOptions = [{
+      handler: {},
+      ref: {},
+      options: [{
+        format: 'adif',
+        common: { refs: [] },
+        nameTemplate: settings.useCompactFileNames ? '{call}-{compactDate}' : '{date} {call}',
+        titleTemplate: '{call} General Operation'
+      }]
+    }]
+  }
+
+  exportOptions.forEach(({ handler, ref, options }) => {
     options.forEach(option => {
       const nameParts = { ...baseNameParts, ref: ref.ref, ...(handler.suggestOperationTitle && handler.suggestOperationTitle(ref)) }
       const baseName = simpleTemplate(option.nameTemplate || '{date} {call} {ref}', nameParts)
@@ -126,9 +141,9 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
       } else if (option.format === 'cabrillo') {
         names.push(`${baseName.replace(/[/\\:]/g, '-')}.log`)
         datas.push(qsonToCabrillo({ operation: { ...operation, ...option.common }, qsos, activity, settings, handler }))
-      // } else if (type === 'qson') {
-      //   names.push(`${uuid}.qson`)
-      //   datas.push(JSON.stringify({ operation: { ...operation, ...option.common }, qsos, settings }))
+        // } else if (type === 'qson') {
+        //   names.push(`${uuid}.qson`)
+        //   datas.push(JSON.stringify({ operation: { ...operation, ...option.common }, qsos, settings }))
       }
     })
   })
