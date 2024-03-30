@@ -12,7 +12,7 @@ export default function TimeChip (props) {
 
   useEffect(() => {
     if (!time) {
-      setTimeStr(fmtTimeZulu(now))
+      setTimeStr(fmtTimeZulu(now ?? Date.now()))
     } else {
       setTimeStr(fmtTimeZulu(time))
     }
