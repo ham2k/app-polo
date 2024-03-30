@@ -125,7 +125,7 @@ export default function VersionSettingsScreen ({ navigation }) {
 
           <List.Item title={
             isUpdating ? 'Checking for updates...'
-              : `Check for updates${updateMetadata?.track !== (settings?.updateTrack ?? 'Production') ? ` - Track: ${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']}` : ''}`}
+              : `Check for updates${(settings?.updateTrack && settings.updateTrack !== 'Production') ? ` - Track: ${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']}` : ''}`}
             description={updateMessage}
             disabled={isUpdating}
             style={{ opacity: isUpdating ? 0.7 : 1 }}

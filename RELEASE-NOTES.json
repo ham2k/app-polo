@@ -104,7 +104,8 @@
   "0.6.5": {
     "changes": [
       "Fixed ADIF export for General Operation",
-      "Fixed wiggle in radio controls"
+      "Fixed wiggle in radio controls",
+      "Manage separate update tracks"
     ]
   },
   "0.6.4": {

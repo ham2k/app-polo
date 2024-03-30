@@ -5,7 +5,7 @@ import { setSettings } from '../../../store/settings'
 import { KeyboardAvoidingView, View } from 'react-native'
 import { UPDATE_TRACK_LABELS } from '../screens/VersionSettingsScreen'
 
-export function UpdateTracksDialog ({ visible, settings, styles, onDialogDone }) {
+export function UpdateTracksDialog ({ visible, settings, styles, onDialogDone, dismissable }) {
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -34,7 +34,7 @@ export function UpdateTracksDialog ({ visible, settings, styles, onDialogDone })
   return (
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-        <Dialog visible={dialogVisible} onDismiss={handleCancel}>
+        <Dialog visible={dialogVisible} onDismiss={handleCancel} dismissable={dismissable ?? true}>
           <Dialog.Icon icon={'glass-fragile'} />
           <Dialog.Title style={{ textAlign: 'center' }}>Update Track</Dialog.Title>
           <Dialog.Content>
