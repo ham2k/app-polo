@@ -13,7 +13,7 @@ import { getOperations } from '../../operations'
 import { selectSettings } from '../../settings'
 import { addRuntimeMessage, resetRuntimeMessages } from '../runtimeSlice'
 import { setupOnlineStatusMonitoring } from './onlineStatus'
-import { UPDATE_TRACK_KEYS } from '../../../screens/SettingsScreens/screens/VersionSettingsScreen'
+import { UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from '../../../screens/SettingsScreens/screens/VersionSettingsScreen'
 
 const MESSAGES = [
   'Reticulating splines',
@@ -41,7 +41,11 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
     const steps = [
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
       async () => {
-        await dispatch(addRuntimeMessage('Checking for updates...'))
+        if (settings.updateTrack && settings.updateTrack !== 'Production') {
+          await dispatch(addRuntimeMessage(`Checking for ${UPDATE_TRACK_LABELS[settings.updateTrack]} updates...`))
+        } else {
+          await dispatch(addRuntimeMessage('Checking for updates...'))
+        }
         await CodePush.sync({ deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Production'] })
       },
       async () => await dispatch(loadExtensions()),
