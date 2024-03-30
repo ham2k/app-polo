@@ -66,7 +66,7 @@ if (process.env.NODE_ENV !== 'development') {
   })
 
   DISTRIBUTION_CONFIG.codePushOptions = {
-    installMode: codePush.InstallMode.IMMEDIATE
+    installMode: codePush.InstallMode.ON_NEXT_RESUME
   }
 }
 /** END DISTRIBUTION-ONLY */
@@ -154,5 +154,22 @@ const App = () => (
     </Provider>
   </AppWrappedForDistribution>
 )
+
+let App
+if (DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollbar) {
+  App = () => (
+    <RollbarProvider instance={DISTRIBUTION_CONFIG.rollbarNative.rollbar}>
+      <ErrorBoundary>
+        <PersistedApp />
+      </ErrorBoundary>
+    </RollbarProvider>
+  )
+} else {
+  App = PersistedApp
+}
+
+// if (DISTRIBUTION_CONFIG.codePushOptions) {
+//   App = codePush(DISTRIBUTION_CONFIG.codePushOptions)(App)
+// }
 
 export default App
