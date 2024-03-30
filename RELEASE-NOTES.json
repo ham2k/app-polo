@@ -1,6 +1,8 @@
 {
   "0.6.5": {
     "changes": [
+      "Fixed ADIF export for General Operation",
+      "Fixed wiggle in radio controls"
     ]
   },
   "0.6.4": {
