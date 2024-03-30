@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { ImageBackground, View, useWindowDimensions } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { ImageBackground, Pressable, View, useWindowDimensions } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'react-native-paper'
@@ -89,13 +89,41 @@ export default function StartScreen ({ setAppState }) {
     }
   })
 
+  const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
   const messages = useSelector(selectRuntimeMessages)
 
   useEffect(() => {
     SplashScreen.hide()
-    dispatch(startupSequence(() => setAppState('ready')))
-  }, [dispatch, setAppState])
+  }, [])
+
+  const [startupPhase, setStartupPhase] = useState('hold')
+
+  useEffect(() => { // If not using the default track, give the user some milliseconds to switch tracks dialog
+    if (startupPhase !== 'hold') return
+
+    if (settings.updateTrack && settings.updateTrack !== 'Production') {
+      const timeout = setTimeout(() => {
+        if (startupPhase === 'hold') {
+          setStartupPhase('start')
+        }
+      }, 500)
+      return () => clearTimeout(timeout)
+    } else {
+      setStartupPhase('start')
+    }
+  }, [startupPhase, settings])
+
+  useEffect(() => { // After a short wait, begin the startup sequence
+    if (startupPhase === 'start') {
+      setStartupPhase('starting')
+      dispatch(startupSequence(() => setAppState('ready')))
+    }
+  }, [dispatch, setAppState, startupPhase])
+
+  const handleInterruption = useCallback(() => { // If the uer taps the screen, show the track selection dialog
+    if (startupPhase === 'hold') setStartupPhase('dialog')
+  }, [setStartupPhase, startupPhase])
 
   return (
     <ImageBackground source={SPLASH_IMAGE} style={styles.screen}>
@@ -112,6 +140,15 @@ export default function StartScreen ({ setAppState }) {
           </View>
         </GestureHandlerRootView>
       </SafeAreaView>
+      {startupPhase === 'dialog' && (
+        <UpdateTracksDialog
+          settings={settings}
+          styles={styles}
+          visible={true}
+          dismissable={false}
+          onDialogDone={() => setStartupPhase('start')}
+        />
+      )}
     </ImageBackground>
   )
 }
