@@ -97,6 +97,22 @@ export default function GeneralSettingsScreen ({ navigation }) {
             right={() => <Switch value={!!settings.useCompactFileNames} onValueChange={(value) => dispatch(setSettings({ useCompactFileNames: value })) } />}
             onPress={() => dispatch(setSettings({ useCompactFileNames: !settings.useCompactFileNames }))}
           />
+
+          <List.Item
+            title="Share app usage data"
+            description={settings.consentAppData ? 'Help us improve the app by sharing usage, crash and performance data' : 'Keep app usage data private'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-lock" />}
+            right={() => <Switch value={!!settings.consentAppData} onValueChange={(value) => dispatch(setSettings({ consentAppData: value })) } />}
+            onPress={() => dispatch(setSettings({ consentAppData: !settings.consentAppData }))}
+          />
+
+          <List.Item
+            title="Share operation data"
+            description={settings.consentOpData ? 'Share some operation data publicly and with other users' : 'Keep operation data private'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-lock" />}
+            right={() => <Switch value={!!settings.consentOpData} onValueChange={(value) => dispatch(setSettings({ consentOpData: value })) } />}
+            onPress={() => dispatch(setSettings({ consentAppData: !settings.consentOpData }))}
+          />
         </List.Section>
       </ScrollView>
     </ScreenContainer>

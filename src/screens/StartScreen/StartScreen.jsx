@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { ImageBackground, Pressable, View, useWindowDimensions } from 'react-native'
+import { ImageBackground, View, useWindowDimensions } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'react-native-paper'
@@ -10,6 +10,9 @@ import { selectRuntimeMessages } from '../../store/runtime'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Ham2kMarkdown } from '../components/Ham2kMarkdown'
 import { startupSequence } from '../../store/runtime/actions/startupSequence'
+import { OnboardingManager } from './onboarding/OnboardingManager'
+import { selectSettings } from '../../store/settings'
+import { selectSystemFlag, setSystemFlag } from '../../store/system'
 
 const SPLASH_IMAGE = require('./img/launch_screen.png')
 
@@ -23,6 +26,7 @@ export default function StartScreen ({ setAppState }) {
       textShadowRadius: baseTheme.oneSpace * 2
     }
     return {
+      ...baseTheme,
       screen: {
         flex: 1,
         flexDirection: 'column',
@@ -90,6 +94,8 @@ export default function StartScreen ({ setAppState }) {
   })
 
   const settings = useSelector(selectSettings)
+  const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
+
   const dispatch = useDispatch()
   const messages = useSelector(selectRuntimeMessages)
 
@@ -99,31 +105,26 @@ export default function StartScreen ({ setAppState }) {
 
   const [startupPhase, setStartupPhase] = useState('hold')
 
-  useEffect(() => { // If not using the default track, give the user some milliseconds to switch tracks dialog
+  useEffect(() => { // Determine the startup phase
     if (startupPhase !== 'hold') return
-
-    if (settings.updateTrack && settings.updateTrack !== 'Production') {
-      const timeout = setTimeout(() => {
-        if (startupPhase === 'hold') {
-          setStartupPhase('start')
-        }
-      }, 500)
-      return () => clearTimeout(timeout)
+    if (!onboardedOn || !settings?.operatorCall) {
+      setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
     } else {
       setStartupPhase('start')
     }
-  }, [startupPhase, settings])
+  }, [startupPhase, onboardedOn, settings?.operatorCall])
 
-  useEffect(() => { // After a short wait, begin the startup sequence
+  const handleOnboardingDone = useCallback(() => {
+    dispatch(setSystemFlag('onboardedOn', Date.now()))
+    setStartupPhase('start')
+  }, [dispatch, setStartupPhase])
+
+  useEffect(() => { // Once ready, begin the startup sequence
     if (startupPhase === 'start') {
       setStartupPhase('starting')
       dispatch(startupSequence(() => setAppState('ready')))
     }
   }, [dispatch, setAppState, startupPhase])
-
-  const handleInterruption = useCallback(() => { // If the uer taps the screen, show the track selection dialog
-    if (startupPhase === 'hold') setStartupPhase('dialog')
-  }, [setStartupPhase, startupPhase])
 
   return (
     <ImageBackground source={SPLASH_IMAGE} style={styles.screen}>
@@ -140,13 +141,11 @@ export default function StartScreen ({ setAppState }) {
           </View>
         </GestureHandlerRootView>
       </SafeAreaView>
-      {startupPhase === 'dialog' && (
-        <UpdateTracksDialog
+      {startupPhase === 'onboarding' && (
+        <OnboardingManager
           settings={settings}
           styles={styles}
-          visible={true}
-          dismissable={false}
-          onDialogDone={() => setStartupPhase('start')}
+          onOnboardingDone={handleOnboardingDone}
         />
       )}
     </ImageBackground>
