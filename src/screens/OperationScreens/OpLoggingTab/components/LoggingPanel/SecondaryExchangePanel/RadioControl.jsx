@@ -7,12 +7,7 @@ import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 
 const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => {
   const ref = useRef()
-
-  useEffect(() => {
-    setTimeout(() => {
-      ref?.current?.focus()
-    }, 0)
-  }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   return (
     <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
