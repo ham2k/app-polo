@@ -61,7 +61,8 @@
     "changes": [
       "Fixed ADIF export for General Operation",
       "Fixed wiggle in radio controls",
-      "Manage separate update tracks"
+      "Manage separate update tracks",
+      "Onboarding!"
     ]
   },
   "0.6.4": {
