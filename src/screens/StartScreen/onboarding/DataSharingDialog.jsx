@@ -1,44 +1,34 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import CallsignInput from '../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
 import { KeyboardAvoidingView } from 'react-native'
 
-export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDone }) {
+export function ActivitiesDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
 
-  const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
-
   const [dialogVisible, setDialogVisible] = useState(false)
-  const [value, setValue] = useState('')
+
+  const [values, setValues] = useState('')
 
   useEffect(() => {
     setDialogVisible(visible)
   }, [visible])
 
   useEffect(() => {
-    if (settings?.operatorCall === 'N0CALL') {
-      setValue('')
-    } else {
-      setValue(settings?.operatorCall || '')
-    }
+    setValues({
+      ['extensions/pota']: settings['extensions/pota'],
+      ['extensions/pota']: settings['extensions/pota'],
+      ['extensions/pota']: settings['extensions/wwff'],
   }, [settings])
 
-  const onChangeText = useCallback((text) => {
-    setValue(text)
-  }, [setValue])
-
   const handleAccept = useCallback(() => {
-    dispatch(setSettings({ operatorCall: value }))
-    setDialogVisible(false)
+    dispatch(setSettings(values)
     onDialogDone && onDialogDone()
   }, [value, dispatch, onDialogDone])
 
   const handleCancel = useCallback(() => {
-    setValue(settings.operatorCall)
-    setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [settings, onDialogDone])
 
@@ -51,7 +41,6 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
           <Dialog.Content>
             <Text variant="bodyMedium">Please enter the operator's callsign:</Text>
             <CallsignInput
-              innerRef={ref}
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={value ?? ''}
               label="Operator's Callsign"

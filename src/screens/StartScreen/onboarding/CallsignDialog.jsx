@@ -1,17 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import CallsignInput from '../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
 import { KeyboardAvoidingView } from 'react-native'
 
-export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDone }) {
+export function OnboardingDialog ({ visible, settings, styles, onDialogDone, onDialogCancel }) {
   const dispatch = useDispatch()
 
-  const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
-
-  const [dialogVisible, setDialogVisible] = useState(false)
   const [value, setValue] = useState('')
 
   useEffect(() => {
@@ -32,26 +28,22 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
 
   const handleAccept = useCallback(() => {
     dispatch(setSettings({ operatorCall: value }))
-    setDialogVisible(false)
+
     onDialogDone && onDialogDone()
   }, [value, dispatch, onDialogDone])
 
   const handleCancel = useCallback(() => {
-    setValue(settings.operatorCall)
-    setDialogVisible(false)
-    onDialogDone && onDialogDone()
-  }, [settings, onDialogDone])
+    onDialogCancel && onDialogCancel()
+  }, [onDialogCancel])
 
   return (
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-        <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-          <Dialog.Icon icon="card-account-details" />
-          <Dialog.Title style={{ textAlign: 'center' }}>Operator's Callsign</Dialog.Title>
+        <Dialog visible={true} onDismiss={handleCancel}>
+          <Dialog.Title style={{ textAlign: 'center' }}>First, some questions…</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">Please enter the operator's callsign:</Text>
+            <Text variant="bodyMedium">What's your callsign?</Text>
             <CallsignInput
-              innerRef={ref}
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={value ?? ''}
               label="Operator's Callsign"
@@ -61,7 +53,7 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={handleCancel}>Cancel</Button>
-            <Button onPress={handleAccept}>Ok</Button>
+            <Button onPress={handleAccept}>Continue</Button>
           </Dialog.Actions>
         </Dialog>
       </KeyboardAvoidingView>

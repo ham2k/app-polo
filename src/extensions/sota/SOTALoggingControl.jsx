@@ -8,11 +8,7 @@ export function SOTALoggingControl (props) {
   const { qso, setQSO, style, styles } = props
 
   const ref = useRef()
-  useEffect(() => {
-    setTimeout(() => {
-      ref?.current?.focus()
-    }, 0)
-  }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   const [localValue, setLocalValue] = useState('')
 

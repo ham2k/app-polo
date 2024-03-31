@@ -58,11 +58,7 @@ export function POTASpotterControl (props) {
   const dispatch = useDispatch()
 
   const ref = useRef()
-  useEffect(() => {
-    setTimeout(() => {
-      ref?.current?.focus()
-    }, 0)
-  }, [ref])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   const [spotterUI, setSpotterUI] = useState({})
   const [comments, setComments] = useState()
