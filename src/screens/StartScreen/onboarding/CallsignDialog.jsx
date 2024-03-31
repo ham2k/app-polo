@@ -1,18 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, Portal, Text } from 'react-native-paper'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Button, Dialog, Text } from 'react-native-paper'
 import CallsignInput from '../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
-import { KeyboardAvoidingView } from 'react-native'
 
-export function OnboardingDialog ({ visible, settings, styles, onDialogDone, onDialogCancel }) {
+export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const dispatch = useDispatch()
 
-  const [value, setValue] = useState('')
+  const ref = useRef()
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
-  useEffect(() => {
-    setDialogVisible(visible)
-  }, [visible])
+  const [value, setValue] = useState('')
 
   useEffect(() => {
     if (settings?.operatorCall === 'N0CALL') {
@@ -26,37 +24,36 @@ export function OnboardingDialog ({ visible, settings, styles, onDialogDone, onD
     setValue(text)
   }, [setValue])
 
-  const handleAccept = useCallback(() => {
+  const handleNext = useCallback(() => {
     dispatch(setSettings({ operatorCall: value }))
 
-    onDialogDone && onDialogDone()
-  }, [value, dispatch, onDialogDone])
+    onDialogNext && onDialogNext()
+  }, [value, dispatch, onDialogNext])
 
-  const handleCancel = useCallback(() => {
-    onDialogCancel && onDialogCancel()
-  }, [onDialogCancel])
+  const handlePrevious = useCallback(() => {
+    onDialogPrevious && onDialogPrevious()
+  }, [onDialogPrevious])
 
   return (
-    <Portal>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-        <Dialog visible={true} onDismiss={handleCancel}>
-          <Dialog.Title style={{ textAlign: 'center' }}>First, some questions…</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">What's your callsign?</Text>
-            <CallsignInput
-              style={[styles.input, { marginTop: styles.oneSpace }]}
-              value={value ?? ''}
-              label="Operator's Callsign"
-              placeholder="N0CALL"
-              onChangeText={onChangeText}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={handleCancel}>Cancel</Button>
-            <Button onPress={handleAccept}>Continue</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </KeyboardAvoidingView>
-    </Portal>
+    <Dialog visible={true} dismissable={false}>
+      <Dialog.Title style={{ textAlign: 'center' }}>What's your callsign?</Dialog.Title>
+      <Dialog.Content>
+        <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
+          You need an Amateur Radio Operator License in order to find this app useful
+        </Text>
+        <CallsignInput
+          innerRef={ref}
+          style={[styles.input, { marginTop: styles.oneSpace * 2 }]}
+          value={value ?? ''}
+          label="Operator's Callsign"
+          placeholder="N0CALL"
+          onChangeText={onChangeText}
+        />
+      </Dialog.Content>
+      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
+        <Button onPress={handlePrevious}>{previousLabel ?? 'Back'}</Button>
+        <Button onPress={handleNext}>{nextLabel ?? 'Next'}</Button>
+      </Dialog.Actions>
+    </Dialog>
   )
 }

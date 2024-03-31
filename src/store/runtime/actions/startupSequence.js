@@ -23,7 +23,7 @@ export const startupSequence = (onReady) => (dispatch) => {
     dispatch(addRuntimeMessage(`**Version ${packageJson.version}**`))
 
     const minimumTimePromise = new Promise(resolve => {
-      setTimeout(() => { resolve() }, 1500)
+      setTimeout(() => { resolve() }, 1000)
     })
 
     const steps = [
