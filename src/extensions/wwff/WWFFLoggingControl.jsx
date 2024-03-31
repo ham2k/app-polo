@@ -9,11 +9,7 @@ export function WWFFLoggingControl (props) {
   const { qso, setQSO, style, styles } = props
 
   const ref = useRef()
-  useEffect(() => {
-    setTimeout(() => {
-      ref?.current?.focus()
-    }, 0)
-  }, [ref])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   const [localValue, setLocalValue] = useState('')
 

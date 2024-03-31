@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import CallsignInput from '../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
@@ -7,6 +7,9 @@ import { KeyboardAvoidingView } from 'react-native'
 
 export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
+
+  const ref = useRef()
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   const [dialogVisible, setDialogVisible] = useState(false)
   const [value, setValue] = useState('')
@@ -48,6 +51,7 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
           <Dialog.Content>
             <Text variant="bodyMedium">Please enter the operator's callsign:</Text>
             <CallsignInput
+              innerRef={ref}
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={value ?? ''}
               label="Operator's Callsign"

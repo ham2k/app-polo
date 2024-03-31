@@ -11,11 +11,7 @@ export function POTALoggingControl (props) {
   const { qso, operation, setQSO, style, styles } = props
 
   const ref = useRef()
-  useEffect(() => {
-    setTimeout(() => {
-      ref?.current?.focus()
-    }, 0)
-  }, [ref])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 

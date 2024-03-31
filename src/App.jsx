@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Provider } from 'react-redux'
+import { Provider, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -27,6 +27,11 @@ import LoggingSettingsScreen from './screens/SettingsScreens/screens/LoggingSett
 import StartScreen from './screens/StartScreen/StartScreen'
 import FeaturesSettingsScreen from './screens/SettingsScreens/screens/FeaturesSettingsScreen'
 import GeneralSettingsScreen from './screens/SettingsScreens/screens/GeneralSettingsScreen'
+import { selectSettings } from './store/settings'
+
+const GLOBAL_APP_SETTINGS = {
+  consentAppData: false
+}
 
 /** BEGIN DISTRIBUTION-ONLY */
 import { Client } from 'rollbar-react-native'
@@ -62,7 +67,7 @@ if (process.env.NODE_ENV !== 'development') {
 /** END DISTRIBUTION-ONLY */
 
 export function reportError (error, ...extra) {
-  if (DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollbar) {
+  if (GLOBAL_APP_SETTINGS.consentAppData && DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollbar) {
     DISTRIBUTION_CONFIG.rollbarNative.rollbar.error(error, ...extra)
   }
   console.error(error, ...extra)
@@ -76,6 +81,11 @@ const paperSettings = {
 
 function MainApp ({ navigationTheme }) {
   const [appState, setAppState] = useState('starting')
+
+  const settings = useSelector(selectSettings)
+  useEffect(() => { // Some top-level functions need access to settings info that's only available in the store at this point
+    GLOBAL_APP_SETTINGS.consentAppData = settings.consentAppData
+  }, [settings?.consentAppData])
 
   if (appState === 'starting') {
     return <StartScreen setAppState={setAppState} />

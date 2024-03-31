@@ -20,9 +20,12 @@ export const systemSlice = createSlice({
 })
 
 export const { actions } = systemSlice
-export const { setSystemFlag } = systemSlice.actions
 
-export const selectSystemFlag = () => createSelector(
+export const setSystemFlag = (flag, value) => (dispatch) => {
+  dispatch(actions.setSystemFlag({ [flag]: value }))
+}
+
+export const selectSystemFlag = createSelector(
   [
     (state, flag, defaultValue) => state?.system?.flags || {},
     (_state, flag, _defaultValue) => flag,
