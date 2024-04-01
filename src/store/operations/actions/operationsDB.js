@@ -111,42 +111,46 @@ export const generateExport = (uuid, type, activity) => async (dispatch, getStat
   const names = []
   const datas = []
 
-  const exportHandlers = (operation?.refs || []).map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler)
-  let exportOptions = exportHandlers.map(({ handler, ref }) => (
-    { handler, ref, options: handler.suggestExportOptions && handler.suggestExportOptions({ operation, ref, settings }) }
-  )).flat().filter(({ options }) => options)
+  if (type === 'qson') {
+    const nameParts = { ...baseNameParts, title: operation.title, uuid: operation.uuid, shortUUID: operation.uuid.split('-')[0] }
+    const baseName = simpleTemplate('{shortUUID} {date} {call} {title}', nameParts)
+    names.push(`${baseName.replace(/[/\\:]/g, '-')}.qson`)
+    datas.push(JSON.stringify({ operation, qsos, settings }))
+  } else {
+    const exportHandlers = (operation?.refs || []).map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler)
+    let exportOptions = exportHandlers.map(({ handler, ref }) => (
+      { handler, ref, options: handler.suggestExportOptions && handler.suggestExportOptions({ operation, ref, settings }) }
+    )).flat().filter(({ options }) => options)
 
-  if (exportOptions.length === 0) {
-    exportOptions = [{
-      handler: {},
-      ref: {},
-      options: [{
-        format: 'adif',
-        common: { refs: [] },
-        nameTemplate: settings.useCompactFileNames ? '{call}-{compactDate}' : '{date} {call}',
-        titleTemplate: '{call} General Operation'
+    if (exportOptions.length === 0) {
+      exportOptions = [{
+        handler: {},
+        ref: {},
+        options: [{
+          format: 'adif',
+          common: { refs: [] },
+          nameTemplate: settings.useCompactFileNames ? '{call}-{compactDate}' : '{date} {call}',
+          titleTemplate: '{call} General Operation'
+        }]
       }]
-    }]
-  }
+    }
 
-  exportOptions.forEach(({ handler, ref, options }) => {
-    options.forEach(option => {
-      const nameParts = { ...baseNameParts, ref: ref.ref, ...(handler.suggestOperationTitle && handler.suggestOperationTitle(ref)) }
-      const baseName = simpleTemplate(option.nameTemplate || '{date} {call} {ref}', nameParts)
-      const title = simpleTemplate(option.titleTemplate || '{call} {ref} {date}', nameParts)
+    exportOptions.forEach(({ handler, ref, options }) => {
+      options.forEach(option => {
+        const nameParts = { ...baseNameParts, ref: ref.ref, ...(handler.suggestOperationTitle && handler.suggestOperationTitle(ref)) }
+        const baseName = simpleTemplate(option.nameTemplate || '{date} {call} {ref}', nameParts)
+        const title = simpleTemplate(option.titleTemplate || '{call} {ref} {date}', nameParts)
 
-      if (option.format === 'adif') {
-        names.push(`${baseName.replace(/[/\\:]/g, '-')}.adi`)
-        datas.push(qsonToADIF({ operation: { ...operation, ...option.common }, qsos, settings, handler, title }))
-      } else if (option.format === 'cabrillo') {
-        names.push(`${baseName.replace(/[/\\:]/g, '-')}.log`)
-        datas.push(qsonToCabrillo({ operation: { ...operation, ...option.common }, qsos, activity, settings, handler }))
-        // } else if (type === 'qson') {
-        //   names.push(`${uuid}.qson`)
-        //   datas.push(JSON.stringify({ operation: { ...operation, ...option.common }, qsos, settings }))
-      }
+        if (option.format === 'adif') {
+          names.push(`${baseName.replace(/[/\\:]/g, '-')}.adi`)
+          datas.push(qsonToADIF({ operation: { ...operation, ...option.common }, qsos, settings, handler, title }))
+        } else if (option.format === 'cabrillo') {
+          names.push(`${baseName.replace(/[/\\:]/g, '-')}.log`)
+          datas.push(qsonToCabrillo({ operation: { ...operation, ...option.common }, qsos, activity, settings, handler }))
+        }
+      })
     })
-  })
+  }
 
   if (names.length && datas.length) {
     const paths = []
