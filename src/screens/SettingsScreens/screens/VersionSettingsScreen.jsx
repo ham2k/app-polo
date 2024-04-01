@@ -72,7 +72,7 @@ export default function VersionSettingsScreen ({ navigation }) {
     if (isUpdating) {
       return 'Checking for updates...'
     } else if (settings.devMode || (settings.updateTrack && settings.updateTrack !== DEFAULT_TRACK)) {
-      return `Check for updates - ${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']} Track`
+      return `Check for ${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']} Track updates`
     } else {
       return 'Check for updates'
     }
