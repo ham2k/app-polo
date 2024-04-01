@@ -18,7 +18,7 @@ import HeaderBar from './screens/components/HeaderBar'
 import HomeScreen from './screens/HomeScreen/HomeScreen'
 import OperationScreen from './screens/OperationScreens/OperationScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
-import DataFilesSettingsScreen from './screens/SettingsScreens/screens/DataFilesSettingsScreen'
+import DataSettingsScreen from './screens/SettingsScreens/screens/DataSettingsScreen'
 import OperationAddActivityScreen from './screens/OperationScreens/OperationAddActivityScreen'
 import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
 import VersionSettingsScreen from './screens/SettingsScreens/screens/VersionSettingsScreen'
@@ -121,9 +121,9 @@ function MainApp ({ navigationTheme }) {
             component={LoggingSettingsScreen}
           />
 
-          <Stack.Screen name="DataFilesSettings"
-            options={{ title: 'Data Files', headerBackTitle: 'MainSettings' }}
-            component={DataFilesSettingsScreen}
+          <Stack.Screen name="DataSettings"
+            options={{ title: 'Data Settings', headerBackTitle: 'MainSettings' }}
+            component={DataSettingsScreen}
           />
 
           <Stack.Screen name="VersionSettings"

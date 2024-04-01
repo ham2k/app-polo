@@ -63,7 +63,7 @@ const DefinitionDialog = ({ def, info, settings, styles, onDialogDone }) => {
   )
 }
 
-export default function DataFilesSettingsScreen ({ navigation }) {
+export default function DataSettingsScreen ({ navigation }) {
   const styles = useThemedStyles()
 
   const settings = useSelector(selectSettings)
@@ -81,6 +81,7 @@ export default function DataFilesSettingsScreen ({ navigation }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <List.Section>
+          <List.Subheader>Offline Data</List.Subheader>
           {sortedDefinitions.map((def) => (
             <React.Fragment key={def.key}>
               <DefinitionItem def={def} settings={settings} info={dataFileInfos[def.key]} styles={styles} onPress={() => setSelectedDefinition(def.key)} />

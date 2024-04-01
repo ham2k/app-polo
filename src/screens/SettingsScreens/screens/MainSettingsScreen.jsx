@@ -66,6 +66,13 @@ export default function MainSettingsScreen ({ navigation }) {
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="format-list-bulleted" />}
         />
 
+        <List.Item
+          title="Data Settings"
+          description="Data files, callsign notes, and more"
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />}
+          onPress={() => navigation.navigate('DataSettings')}
+        />
+
         {settings.devMode && (
           <List.Item
             title="Developer Settings"
@@ -96,16 +103,6 @@ export default function MainSettingsScreen ({ navigation }) {
             onDialogDone={() => setCurrentDialog('')}
           />
         )}
-      </List.Section>
-
-      <List.Section>
-        <List.Subheader>Tools</List.Subheader>
-
-        <List.Item
-          title="Manage data files"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />}
-          onPress={() => navigation.navigate('DataFilesSettings')}
-        />
       </List.Section>
 
       <List.Section>
