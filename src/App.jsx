@@ -27,6 +27,7 @@ import StartScreen from './screens/StartScreen/StartScreen'
 import FeaturesSettingsScreen from './screens/SettingsScreens/screens/FeaturesSettingsScreen'
 import GeneralSettingsScreen from './screens/SettingsScreens/screens/GeneralSettingsScreen'
 import { selectSettings } from './store/settings'
+import DevModeSettingsScreen from './screens/SettingsScreens/screens/DevModeSettingsScreen'
 
 const GLOBAL_APP_SETTINGS = {
   consentAppData: false
@@ -128,6 +129,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="VersionSettings"
             options={{ title: 'Version Information', headerBackTitle: 'MainSettings' }}
             component={VersionSettingsScreen}
+          />
+
+          <Stack.Screen name="DevModeSettings"
+            options={{ title: 'Developer Settings', headerBackTitle: 'MainSettings' }}
+            component={DevModeSettingsScreen}
           />
 
         </Stack.Navigator>

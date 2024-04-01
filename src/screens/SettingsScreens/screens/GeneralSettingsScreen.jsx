@@ -98,6 +98,7 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ useCompactFileNames: !settings.useCompactFileNames }))}
           />
 
+          <List.Subheader>Privacy</List.Subheader>
           <List.Item
             title="Share app usage data"
             description={settings.consentAppData ? 'Help us improve the app by sharing usage, crash and performance data' : 'Keep app usage data private'}
