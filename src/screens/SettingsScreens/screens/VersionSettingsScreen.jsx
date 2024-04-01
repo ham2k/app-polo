@@ -55,8 +55,6 @@ export default function VersionSettingsScreen ({ navigation }) {
 
   const settings = useSelector(selectSettings)
 
-  const [currentDialog, setCurrentDialog] = useState()
-
   const [updateMetadata, setUpdateMetadata] = useState()
   useEffect(() => {
     CodePush.getUpdateMetadata().then((metadata) => {
@@ -76,12 +74,6 @@ export default function VersionSettingsScreen ({ navigation }) {
     }
     return version
   }, [settings.devMode, updateMetadata?.track])
-
-  const handlePressOnVersion = useCallback(() => {
-    if (settings.devMode || (settings.updateTrack && settings.updateTrack !== 'Production')) {
-      setCurrentDialog('track')
-    }
-  }, [settings?.devMode, settings?.updateTrack])
 
   const [isUpdating, setIsUpdating] = useState()
   const [updateMessage, setUpdateMessage] = useState()
@@ -139,16 +131,7 @@ export default function VersionSettingsScreen ({ navigation }) {
           <List.Item title={currentVersionLabel}
             description={`Base Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
-            onPress={handlePressOnVersion}
           />
-          {currentDialog === 'track' && (
-            <UpdateTracksDialog
-              settings={settings}
-              styles={styles}
-              visible={true}
-              onDialogDone={() => setCurrentDialog('')}
-            />
-          )}
 
           <List.Item title={checkForUpdatesLabel}
             description={updateMessage}
