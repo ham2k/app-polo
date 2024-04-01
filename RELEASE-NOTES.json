@@ -1,7 +1,7 @@
 {
   "0.6.7": {
     "changes": [
-
+      "Fixed SOTA reference entry for 3-character prefixes"
     ]
   },
   "0.6.6": {
