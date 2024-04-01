@@ -1,40 +1,69 @@
 require 'bundler/setup'
 require 'dotenv/tasks'
 require 'json'
+require 'net/http'
+require 'uri'
 
 
-task :staging => :dotenv do
-  release_version = JSON.parse(File.read('package.json'))['version']
-  release_notes = JSON.parse(File.read('RELEASE-NOTES.json'))[release_version]['changes']
+namespace :release do
+  task :bleeding => :dotenv do
+    release_version = JSON.parse(File.read('package.json'))['version']
+    system "appcenter codepush release-react -a Ham2K/polo-android -d Development -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
+    system "appcenter codepush release-react -a Ham2K/polo-ios -d Development -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
+  end
 
-  release_description = <<-EOF
-# Release #{release_version} (Supplemental)"
+  task :unstable => :dotenv do
+    release_version = JSON.parse(File.read('package.json'))['version']
+    release_notes = JSON.parse(File.read('RELEASE-NOTES.json'))[release_version]['changes']
 
-#{release_notes.map { |note| "- #{note}" }.join("\n")}
-EOF
+    release_description = <<-EOF
+  # Release #{release_version} (Supplemental)
 
-  puts "Releasing #{release_version} bundle to Staging in AppCenter"
-  puts "=================================================================="
-  cmd = "appcenter codepush release-react -a Ham2K/polo-android -d Staging -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
-  puts "$ #{cmd}"
-  system cmd
+  #{release_notes.map { |note| "- #{note}" }.join("\n")}
+  EOF
 
-  cmd = "appcenter codepush release-react -a Ham2K/polo-ios -d Staging -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
-  puts "$ #{cmd}"
-  system cmd
+    puts "Releasing #{release_version} bundle to Staging in AppCenter"
+    puts "=================================================================="
+    cmd = "appcenter codepush release-react -a Ham2K/polo-android -d Staging -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
+    puts "$ #{cmd}"
+    system cmd
 
-  cmd = "git tag -a #{release_version}-bundle -m 'Release #{release_version}'"
-  puts "$ #{cmd}"
-  system cmd
-  puts "=================================================================="
-  puts ""
-  puts release_description
-  puts ""
+    cmd = "appcenter codepush release-react -a Ham2K/polo-ios -d Staging -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
+    puts "$ #{cmd}"
+    system cmd
 
-end
+    cmd = "git tag -a #{release_version}-bundle -m 'Release #{release_version}'"
+    puts "$ #{cmd}"
+    system cmd
+    puts "=================================================================="
+    puts ""
+    puts release_description
+    puts ""
 
-task :development => :dotenv do
-  release_version = JSON.parse(File.read('package.json'))['version']
-  system "appcenter codepush release-react -a Ham2K/polo-android -d Development -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
-  system "appcenter codepush release-react -a Ham2K/polo-ios -d Development -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
+  end
+
+  task :stable => :dotenv do
+    system "appcenter codepush promote -a Ham2K/polo-android -s Staging -d Production -t $POLO_BASE_VERSION -r 100"
+    system "appcenter codepush promote -a Ham2K/polo-ios -s Staging -d Production -t $POLO_BASE_VERSION -r 100"
+  end
+
+  task :discord => :dotenv do
+    release_version = JSON.parse(File.read('package.json'))['version']
+    release_notes = JSON.parse(File.read('RELEASE-NOTES.json'))[release_version]['changes']
+
+    release_description = <<-EOF
+  # Release #{release_version} (Supplemental)
+
+  #{release_notes.map { |note| "- #{note}" }.join("\n")}
+  EOF
+
+    uri = URI.parse(ENV['DISCORD_WEBHOOK_URL'])
+    header = {'Content-Type': 'application/json'}
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    request = Net::HTTP::Post.new(uri.request_uri, header)
+    request.body = {content: release_description}.to_json
+
+    response = http.request(request)
+  end
 end
