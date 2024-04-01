@@ -14,7 +14,8 @@ const Extensions = {
 }
 
 const Hooks = {
-  activity: []
+  activity: [],
+  command: []
 }
 
 const VALID_HOOK_REGEX = /^(ref:\w+)/
@@ -47,9 +48,12 @@ function registerHook (hookCategory, { extension, hook, priority }) {
     reportError(`Invalid hook ${hookCategory} for extension ${extension.key}`)
     return false
   }
+
   if (!hook) hook = extension[hookCategory]
-  const newHooks = (Hooks[hookCategory] ?? []).filter(h => h.key !== extension.key)
-  newHooks.push({ key: extension.key, extension, hook, priority })
+  if (!extension) extension = hook.extension
+
+  const newHooks = (Hooks[hookCategory] ?? []).filter(h => h.key !== (hook.key ?? extension.key))
+  newHooks.push({ key: hook.key ?? extension.key, extension, hook, priority })
   newHooks.sort((a, b) => (b.priority ?? b.extension?.priority ?? 0) - (a.priority ?? a.extension?.priority ?? 0))
   Hooks[hookCategory] = newHooks
 }

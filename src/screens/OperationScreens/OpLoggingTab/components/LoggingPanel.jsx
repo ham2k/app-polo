@@ -21,6 +21,7 @@ import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { joinAnd } from '../../../../tools/joinAnd'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
+import { checkAndProcessCommands } from '../../../../extensions/commands/commandHandling'
 
 function prepareStyles (themeStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
@@ -245,11 +246,15 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   }, [qso?.their?.call])
 
   const handleFieldChange = useCallback((event) => { // Handle form fields and update QSO info
-    const { fieldId } = event
+    const { fieldId, alsoClearTheirCall } = event
     const value = event?.value || event?.nativeEvent?.text
 
     if (qso?.deleted || qso?._willBeDeleted) {
       return
+    }
+
+    if (alsoClearTheirCall && fieldId !== 'theirCall') { // This is used by command-handling to reset the call entry when a command was processed
+      qso.their.call = ''
     }
 
     if (fieldId === 'theirCall') {
@@ -279,8 +284,10 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     } else if (fieldId === 'notes') {
       setQSO({ ...qso, notes: value })
     } else if (fieldId === 'freq') {
+      console.log('freq', value)
       const freq = parseFreqInMHz(value)
       const band = freq ? bandForFrequency(freq) : qso?.band
+      console.log('freq', freq, band)
       setQSO({ ...qso, freq, band })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band, freq }))
     } else if (fieldId === 'band') {
@@ -316,6 +323,12 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     component?.memoizedProps?.onBlur()
 
     setTimeout(() => { // Run inside a setTimeout to allow the state to update
+      // First, try to process any commands
+
+      if (checkAndProcessCommands(qso.their.call, { qso, originalQSO, operation, dispatch, settings, handleFieldChange })) {
+        return
+      }
+
       if (qso._willBeDeleted) {
         delete qso._willBeDeleted
         qso.deleted = true
@@ -357,7 +370,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         })
       }
     }, 10)
-  }, [qso, setQSO, isValidQSO, dispatch, operation, setLoggingState, setCurrentSecondaryControl])
+  }, [qso, originalQSO, operation, settings, handleFieldChange, isValidQSO, dispatch, setLoggingState, setCurrentSecondaryControl])
 
   const [undoInfo, setUndoInfo] = useState()
 
