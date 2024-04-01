@@ -1,8 +1,9 @@
-import { loadDataFile, removeDataFile } from '../../store/dataFiles/actions/dataFileFS'
-import { findRef, refsToString } from '../../tools/refTools'
-import { WWFFActivityOptions } from './WWFFActivityOptions'
-import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
+import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
+import { findRef, refsToString } from '../../../tools/refTools'
+
 import { Info } from './WWFFInfo'
+import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
+import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
 
 const Extension = {

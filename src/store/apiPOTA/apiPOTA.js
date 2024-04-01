@@ -1,6 +1,6 @@
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { POTAAllParks, abbreviatePOTAName } from '../../extensions/pota/POTAAllParksData'
+import { POTAAllParks, abbreviatePOTAName } from '../../extensions/activities/pota/POTAAllParksData'
 import { reportError } from '../../App'
 
 /**

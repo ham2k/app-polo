@@ -1,10 +1,10 @@
-import { fmtDateNice } from '../../tools/timeFormats'
-import { registerDataFile } from '../../store/dataFiles'
-
 import RNFetchBlob from 'react-native-blob-util'
-
-import packageJson from '../../../package.json'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
+
+import packageJson from '../../../../package.json'
+
+import { fmtDateNice } from '../../../tools/timeFormats'
+import { registerDataFile } from '../../../store/dataFiles'
 
 export const WWFFData = { references: [], activeReferences: [], byReference: {}, prefixByDXCCCode: {} }
 

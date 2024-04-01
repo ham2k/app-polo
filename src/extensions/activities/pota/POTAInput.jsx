@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 
-import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import ThemedTextInput from '../../screens/components/ThemedTextInput'
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 
 const ADD_DASHES_REGEX = /([A-Z]+)(\d+|TEST)/gi
 const ADD_COMMAS_REGEX = /(\d\d+)\s*[,]*\s*([A-Z]+)/gi

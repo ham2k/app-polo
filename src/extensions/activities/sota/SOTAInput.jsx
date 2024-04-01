@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
-import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import ThemedTextInput from '../../screens/components/ThemedTextInput'
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 
 const ADD_DASHES_REGEX = /^([A-Z0-9]{1,2}[A-Z]{1,})(\d+)/g
 

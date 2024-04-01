@@ -1,11 +1,12 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useMemo } from 'react'
-import { useLookupParkQuery } from '../../store/apiPOTA'
 import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 
+import { useLookupParkQuery } from '../../../store/apiPOTA'
+import { fmtDistance } from '../../../tools/geoTools'
+
 import { Info } from './POTAInfo'
-import { fmtDistance } from '../../tools/geoTools'
 
 export function POTAListItem ({ activityRef, refData, allRefs, style, styles, settings, onPress, onAddReference, onRemoveReference, online }) {
   const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef, online })
