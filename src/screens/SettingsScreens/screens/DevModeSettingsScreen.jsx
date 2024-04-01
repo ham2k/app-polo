@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -19,9 +19,9 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { loadQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
 import { generateExport, importQSON, selectOperationsList } from '../../../store/operations'
-import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { loadQSOs } from '../../../store/qsos'
+import { DEFAULT_TRACK, UPDATE_TRACK_LABELS } from './VersionSettingsScreen'
+import { UpdateTracksDialog } from '../components/UpdateTracksDialog'
 
 function prepareStyles (baseStyles) {
   return {
@@ -36,6 +36,8 @@ function prepareStyles (baseStyles) {
 
 export default function DevModeSettingsScreen ({ navigation }) {
   const styles = useThemedStyles(prepareStyles)
+
+  const [currentDialog, setCurrentDialog] = useState()
 
   const dispatch = useDispatch()
 
@@ -86,8 +88,26 @@ export default function DevModeSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <Ham2kListSection title={'Data'}>
-          <Ham2kListItem
+        <List.Section>
+          <List.Subheader>Updates</List.Subheader>
+          <List.Item title={'Select Update Track'}
+            description={UPDATE_TRACK_LABELS[settings?.updateTrack || DEFAULT_TRACK]}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="glass-fragile" color={styles.colors.devMode}/>}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            onPress={() => setCurrentDialog('track')}
+          />
+          {currentDialog === 'track' && (
+            <UpdateTracksDialog
+              settings={settings}
+              styles={styles}
+              visible={true}
+              onDialogDone={() => setCurrentDialog('')}
+            />
+          )}
+
+          <List.Subheader>Data</List.Subheader>
+          <List.Item
             title="Export all operation data"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
             titleStyle={{ color: styles.colors.devMode }}
