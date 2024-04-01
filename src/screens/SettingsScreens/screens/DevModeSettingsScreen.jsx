@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectSettings } from '../../../store/settings'
 import { generateExport, importQSON, selectOperationsList } from '../../../store/operations'
 import { loadQSOs } from '../../../store/qsos'
+import { DEFAULT_TRACK, UPDATE_TRACK_LABELS } from './VersionSettingsScreen'
+import { UpdateTracksDialog } from '../components/UpdateTracksDialog'
 
 export default function DevModeSettingsScreen ({ navigation }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -23,6 +25,8 @@ export default function DevModeSettingsScreen ({ navigation }) {
       }
     }
   })
+
+  const [currentDialog, setCurrentDialog] = useState()
 
   const dispatch = useDispatch()
 
@@ -71,6 +75,23 @@ export default function DevModeSettingsScreen ({ navigation }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <List.Section>
+          <List.Subheader>Updates</List.Subheader>
+          <List.Item title={'Select Update Track'}
+            description={UPDATE_TRACK_LABELS[settings?.updateTrack || DEFAULT_TRACK]}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="glass-fragile" color={styles.colors.devMode}/>}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            onPress={() => setCurrentDialog('track')}
+          />
+          {currentDialog === 'track' && (
+            <UpdateTracksDialog
+              settings={settings}
+              styles={styles}
+              visible={true}
+              onDialogDone={() => setCurrentDialog('')}
+            />
+          )}
+
           <List.Subheader>Data</List.Subheader>
           <List.Item
             title="Export all operation data"
