@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, Switch, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
-import { Linking, View } from 'react-native'
+import { View } from 'react-native'
 import { setSystemFlag } from '../../../store/system'
 
 export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
