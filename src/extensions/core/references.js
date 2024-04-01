@@ -23,7 +23,7 @@ const Extension = {
   category: 'core',
   hidden: true,
   alwaysEnabled: true,
-  onActivation: ({ registerHook, registerHandler }) => {
+  onActivation: ({ registerHook }) => {
     registerHook('ref:pota', { priority: -1, hook: POTAReferenceHandler })
     registerHook('ref:potaActivation', { priority: -1, hook: POTAReferenceHandler })
     registerHook('ref:sota', { priority: -1, hook: SOTAReferenceHandler })

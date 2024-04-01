@@ -9,7 +9,7 @@ import { WWFFLoggingControl } from './WWFFLoggingControl'
 const Extension = {
   ...Info,
   category: 'locationBased',
-  onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
+  onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
