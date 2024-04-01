@@ -40,6 +40,7 @@
     },
     "surfaceDisabled": "rgba(125, 128, 130, 0.5)",
     "onSurfaceDisabled": "rgba(25, 28, 30, 0.38)",
-    "backdrop": "rgba(42, 50, 53, 0.4)"
+    "backdrop": "rgba(42, 50, 53, 0.4)",
+    "devMode": "rgb(219, 114, 4)"
   }
 }

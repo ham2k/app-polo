@@ -48,19 +48,19 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
-  const handleExport = useCallback((type, activity) => {
-    dispatch(generateExport(operation.uuid, type, activity)).then((paths) => {
+  const handleExport = useCallback((type) => {
+    dispatch(generateExport(operation.uuid, type)).then((paths) => {
       if (paths?.length > 0) {
         Share.open({
           urls: paths.map(p => `file://${p}`),
-          type: 'text/plain' // There is no official ADIF or Cabrillo mime type
+          type: 'text/plain' // There is no official mime type for our files
         }).then((x) => {
           console.info('Shared', x)
         }).catch((e) => {
           console.info('Sharing Error', e)
         }).finally(() => {
-          // Deleting this file causes GMail on Android to fail to attach it
-          // So for the time being, we're leaving it in place.
+          // Deleting these file causes GMail on Android to fail to attach it
+          // So for the time being, we're leaving them in place.
           // dispatch(deleteExport(path))
         })
       }
@@ -145,13 +145,17 @@ export default function OpSettingsTab ({ navigation, route }) {
           style={{ opacity: !(operation.qsoCount > 0) ? 0.5 : 1 }}
           disabled={!(operation.qsoCount > 0)}
         />
-        {/* <List.Item
-          title="Export data files"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" />}
-          onPress={() => handleExport('qson')}
-          style={{ opacity: !(operation.qsoCount > 0) ? 0.5 : 1 }}
-          disabled={!(operation.qsoCount > 0)}
-        /> */}
+        {settings.devMode && (
+          <List.Item
+            title="Export QSON file"
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            onPress={() => handleExport('qson')}
+            style={{ opacity: !(operation.qsoCount > 0) ? 0.5 : 1 }}
+            disabled={!(operation.qsoCount > 0)}
+          />
+        )}
       </List.Section>
 
       <List.Section titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>

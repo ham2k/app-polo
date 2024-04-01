@@ -1,14 +1,12 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { List, Text } from 'react-native-paper'
 import { Linking, ScrollView } from 'react-native'
-import DocumentPicker from 'react-native-document-picker'
 
 import packageJson from '../../../../package.json'
 
 import { selectSettings } from '../../../store/settings'
-import { importQSON } from '../../../store/operations'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 import { OperatorCallsignDialog } from '../components/OperatorCallsignDialog'
@@ -16,18 +14,10 @@ import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
 
 export default function MainSettingsScreen ({ navigation }) {
   const styles = useThemedStyles()
-  const dispatch = useDispatch()
 
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
-
-  const handleImportFiles = useCallback(() => {
-    DocumentPicker.pickSingle().then((file) => {
-      console.info('File', file)
-      dispatch(importQSON(file.uri))
-    })
-  }, [dispatch])
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -76,6 +66,17 @@ export default function MainSettingsScreen ({ navigation }) {
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="format-list-bulleted" />}
         />
 
+        {settings.devMode && (
+          <List.Item
+            title="Developer Settings"
+            description={'Here be dragons'}
+            onPress={() => navigation.navigate('DevModeSettings')}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="fire" color={styles.colors.devMode} />}
+          />
+        )}
+
       </List.Section>
 
       <List.Section>
@@ -104,11 +105,6 @@ export default function MainSettingsScreen ({ navigation }) {
           title="Manage data files"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />}
           onPress={() => navigation.navigate('DataFilesSettings')}
-        />
-        <List.Item
-          title="Import operation files"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-download" />}
-          onPress={handleImportFiles}
         />
       </List.Section>
 

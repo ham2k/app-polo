@@ -75,29 +75,3 @@ function animateCall (cells, handleFieldChange, options = {}) {
     }
   }, time)
 }
-
-function animateCallIn (str, handleFieldChange, options = {}) {
-  const { delay = 100, step = 1 } = options
-  let i = 0
-  const interval = setInterval(() => {
-    if (i < str.length) {
-      handleFieldChange({ fieldId: 'theirCall', value: str.substring(0, i + 1) })
-      i += step
-    } else {
-      clearInterval(interval)
-    }
-  }, delay)
-}
-
-function animateCallOut (str, handleFieldChange, options = {}) {
-  const { delay = 100, step = 1 } = options
-  let i = 0
-  const interval = setInterval(() => {
-    if (i <= str.length) {
-      handleFieldChange({ fieldId: 'theirCall', value: str.substring(0, str.length - i) })
-      i += step
-    } else {
-      clearInterval(interval)
-    }
-  }, delay)
-}
