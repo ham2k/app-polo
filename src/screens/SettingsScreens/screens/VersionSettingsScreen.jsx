@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { List } from 'react-native-paper'
 import { Platform, ScrollView } from 'react-native'
 
@@ -37,6 +37,8 @@ export const UPDATE_TRACK_LABELS = {
   Development: 'Bleeding Edge'
 }
 
+export const DEFAULT_TRACK = 'Production'
+
 function prepareStyles (baseStyles) {
   return {
     ...baseStyles,
@@ -51,12 +53,13 @@ function prepareStyles (baseStyles) {
 export default function VersionSettingsScreen ({ navigation }) {
   const styles = useThemedStyles(prepareStyles)
 
+  const settings = useSelector(selectSettings)
+
   const [currentDialog, setCurrentDialog] = useState()
 
   const [updateMetadata, setUpdateMetadata] = useState()
   useEffect(() => {
     CodePush.getUpdateMetadata().then((metadata) => {
-      console.log(metadata)
       if (metadata?.deploymentKey) {
         const track = Object.keys(UPDATE_TRACK_KEYS).find(key => UPDATE_TRACK_KEYS[key] === metadata.deploymentKey)
         if (track) metadata.track = track
@@ -66,8 +69,32 @@ export default function VersionSettingsScreen ({ navigation }) {
     })
   }, [])
 
+  const currentVersionLabel = useMemo(() => {
+    let version = `Version ${packageJson.version}`
+    if ((updateMetadata?.track && updateMetadata?.track !== DEFAULT_TRACK) || settings.devMode) {
+      version += ` (${UPDATE_TRACK_LABELS[updateMetadata?.track]} Track)`
+    }
+    return version
+  }, [settings.devMode, updateMetadata?.track])
+
+  const handlePressOnVersion = useCallback(() => {
+    if (settings.devMode || (settings.updateTrack && settings.updateTrack !== 'Production')) {
+      setCurrentDialog('track')
+    }
+  }, [settings?.devMode, settings?.updateTrack])
+
   const [isUpdating, setIsUpdating] = useState()
   const [updateMessage, setUpdateMessage] = useState()
+  const checkForUpdatesLabel = useMemo(() => {
+    if (isUpdating) {
+      return 'Checking for updates...'
+    } else if (settings.devMode || (settings.updateTrack && settings.updateTrack !== DEFAULT_TRACK)) {
+      return `Check for updates - ${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']} Track`
+    } else {
+      return 'Check for updates'
+    }
+  }, [isUpdating, settings?.devMode, settings?.updateTrack])
+
   const checkForUpdates = useCallback(async () => {
     try {
       const deploymentKey = UPDATE_TRACK_KEYS[settings.updateTrack] || UPDATE_TRACK_KEYS.Production
@@ -109,10 +136,10 @@ export default function VersionSettingsScreen ({ navigation }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <List.Section>
-          <List.Item title={`Version ${packageJson.version}${updateMetadata?.track ? ` - Track: ${UPDATE_TRACK_LABELS[updateMetadata.track]}` : ''}`}
+          <List.Item title={currentVersionLabel}
             description={`Base Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
-            onPress={() => setCurrentDialog('track')}
+            onPress={handlePressOnVersion}
           />
           {currentDialog === 'track' && (
             <UpdateTracksDialog
@@ -123,9 +150,7 @@ export default function VersionSettingsScreen ({ navigation }) {
             />
           )}
 
-          <List.Item title={
-            isUpdating ? 'Checking for updates...'
-              : `Check for updates${(settings?.updateTrack && settings.updateTrack !== 'Production') ? ` - Track: ${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']}` : ''}`}
+          <List.Item title={checkForUpdatesLabel}
             description={updateMessage}
             disabled={isUpdating}
             style={{ opacity: isUpdating ? 0.7 : 1 }}
