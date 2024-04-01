@@ -6,6 +6,7 @@ import packageJson from '../../../package.json'
 import { registerDataFile } from '../../store/dataFiles'
 import { loadDataFile } from '../../store/dataFiles/actions/dataFileFS'
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 useBuiltinCountryFile()
 
 export const CountryFiles = { }
@@ -60,6 +61,7 @@ export function prepareCountryFilesData () {
         Object.assign(CountryFiles, data)
         setCountryFileData(CountryFiles)
       } else {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useBuiltinCountryFile()
       }
     }
