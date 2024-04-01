@@ -1,19 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../tools/refTools'
-import { POTAAllParks } from './POTAAllParksData'
-import { Info } from './POTAInfo'
-import POTAInput from './POTAInput'
-import { useSelector } from 'react-redux'
-import { selectOperationCallInfo } from '../../store/operations'
+import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 
-export function POTALoggingControl (props) {
-  const { qso, operation, setQSO, style, styles } = props
+import { Info } from './WWFFInfo'
+import { WWFFData } from './WWFFDataFile'
+import WWFFInput from './WWFFInput'
+
+export function WWFFLoggingControl (props) {
+  const { qso, setQSO, style, styles } = props
 
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
-
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const [localValue, setLocalValue] = useState('')
 
@@ -34,21 +31,19 @@ export function POTALoggingControl (props) {
 
   const defaultPrefix = useMemo(() => {
     if (qso?.their?.guess?.dxccCode) {
-      return POTAAllParks.prefixByDXCCCode[qso?.their.guess.dxccCode] ?? '?'
-    } else if (ourInfo?.dxccCode) {
-      return POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] ?? '?'
+      return WWFFData.prefixByDXCCCode[qso?.their.guess.dxccCode] ?? 'KFF'
     } else {
-      return '?'
+      return 'KFF'
     }
-  }, [qso?.their?.guess?.dxccCode, ourInfo?.dxccCode])
+  }, [qso?.their?.guess?.dxccCode])
 
   return (
-    <POTAInput
+    <WWFFInput
       {...props}
       innerRef={ref}
       style={[style, { minWidth: 16 * styles.oneSpace }]}
       value={localValue}
-      label="Their POTA"
+      label="Their WWFF"
       defaultPrefix={defaultPrefix}
       onChangeText={localHandleChangeText}
     />

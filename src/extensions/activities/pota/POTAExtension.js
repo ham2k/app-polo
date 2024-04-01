@@ -1,9 +1,10 @@
-import { apiPOTA } from '../../store/apiPOTA'
-import { loadDataFile, removeDataFile } from '../../store/dataFiles/actions/dataFileFS'
-import { filterRefs, findRef, refsToString } from '../../tools/refTools'
+import { apiPOTA } from '../../../store/apiPOTA'
+import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
+import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
+
+import { Info } from './POTAInfo'
 import { POTAActivityOptions } from './POTAActivityOptions'
 import { registerPOTAAllParksData } from './POTAAllParksData'
-import { Info } from './POTAInfo'
 import { POTALoggingControl } from './POTALoggingControl'
 import { POTASpotterControl } from './POTASpotterControl'
 
@@ -11,7 +12,7 @@ const Extension = {
   ...Info,
   category: 'locationBased',
   enabledByDefault: true,
-  onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
+  onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })

@@ -5,7 +5,7 @@ import { View } from 'react-native'
 
 import { Info } from './WWFFInfo'
 import { WWFFData } from './WWFFDataFile'
-import { fmtDistance } from '../../tools/geoTools'
+import { fmtDistance } from '../../../tools/geoTools'
 
 export function WWFFListItem ({ activityRef, refData, operationRef, style, styles, settings, onPress, onAddReference, onRemoveReference }) {
   const reference = useMemo(() => {

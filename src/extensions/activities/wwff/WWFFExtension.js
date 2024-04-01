@@ -1,14 +1,15 @@
-import { loadDataFile, removeDataFile } from '../../store/dataFiles/actions/dataFileFS'
-import { findRef, refsToString } from '../../tools/refTools'
-import { WWFFActivityOptions } from './WWFFActivityOptions'
-import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
+import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
+import { findRef, refsToString } from '../../../tools/refTools'
+
 import { Info } from './WWFFInfo'
+import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
+import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
 
 const Extension = {
   ...Info,
   category: 'locationBased',
-  onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
+  onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })

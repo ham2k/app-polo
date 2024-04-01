@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import { fmtFreqInMHz } from '../../tools/frequencyFormats'
-import { fmtDateTimeRelative } from '../../tools/timeFormats'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectSecondsTick } from '../../store/time'
-import ThemedButton from '../../screens/components/ThemedButton'
-import { setOperationData } from '../../store/operations'
-import ThemedTextInput from '../../screens/components/ThemedTextInput'
+import { reportError } from '../../../App'
 
-import packageJson from '../../../package.json'
-import { filterRefs } from '../../tools/refTools'
-import { selectRuntimeOnline } from '../../store/runtime'
-import { reportError } from '../../App'
+import { fmtFreqInMHz } from '../../../tools/frequencyFormats'
+import { fmtDateTimeRelative } from '../../../tools/timeFormats'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectSecondsTick } from '../../../store/time'
+import ThemedButton from '../../../screens/components/ThemedButton'
+import { setOperationData } from '../../../store/operations'
+import ThemedTextInput from '../../../screens/components/ThemedTextInput'
+
+import packageJson from '../../../../package.json'
+import { filterRefs } from '../../../tools/refTools'
+import { selectRuntimeOnline } from '../../../store/runtime'
 
 const MINUTES_UNTIL_RESPOT = 5
 

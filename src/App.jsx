@@ -29,13 +29,13 @@ import FeaturesSettingsScreen from './screens/SettingsScreens/screens/FeaturesSe
 import GeneralSettingsScreen from './screens/SettingsScreens/screens/GeneralSettingsScreen'
 import { selectSettings } from './store/settings'
 
-const GLOBAL_APP_SETTINGS = {
-  consentAppData: false
-}
-
 /** BEGIN DISTRIBUTION-ONLY */
 import { Client } from 'rollbar-react-native'
 /** END DISTRIBUTION-ONLY */
+
+const GLOBAL_APP_SETTINGS = {
+  consentAppData: false
+}
 
 const DISTRIBUTION_CONFIG = {}
 

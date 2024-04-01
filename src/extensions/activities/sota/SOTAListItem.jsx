@@ -5,7 +5,7 @@ import { View } from 'react-native'
 
 import { Info } from './SOTAInfo'
 import { SOTAData } from './SOTADataFile'
-import { fmtDistance } from '../../tools/geoTools'
+import { fmtDistance } from '../../../tools/geoTools'
 
 export function SOTAListItem ({ activityRef, refData, operationRef, style, settings, styles, onPress, onAddReference, onRemoveReference }) {
   const reference = useMemo(() => {

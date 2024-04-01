@@ -3,16 +3,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { List, Searchbar } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
-import { selectOperationCallInfo, setOperationData } from '../../store/operations'
-import { findRef, replaceRef } from '../../tools/refTools'
-import { WWFFData } from './WWFFDataFile'
-import { Info } from './WWFFInfo'
-import { WWFFListItem } from './WWFFListItem'
-import { ListRow } from '../../screens/components/ListComponents'
-import { distanceOnEarth } from '../../tools/geoTools'
-import { reportError } from '../../App'
+import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
+import { findRef, replaceRef } from '../../../tools/refTools'
+import { ListRow } from '../../../screens/components/ListComponents'
+import { distanceOnEarth } from '../../../tools/geoTools'
+import { reportError } from '../../../App'
 
-export function WWFFActivityOptions (props) {
+import { Info } from './SOTAInfo'
+import { SOTAListItem } from './SOTAListItem'
+import { SOTAData } from './SOTADataFile'
+
+export function SOTAActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
 
   const { styles, operation, settings } = props
@@ -24,8 +25,8 @@ export function WWFFActivityOptions (props) {
   const operationRef = useMemo(() => findRef(operation, Info.activationType), [operation]) ?? ''
 
   const title = useMemo(() => {
-    if (!operationRef?.ref) return 'No park selected for activation'
-    else return 'Activating park:'
+    if (!operationRef?.ref) return 'No summit selected for activation'
+    else return 'Activating summit:'
   }, [operationRef])
 
   const [search, setSearch] = useState('')
@@ -45,7 +46,7 @@ export function WWFFActivityOptions (props) {
   }, [])
 
   const refData = useMemo(() => {
-    const newData = { ...operationRef, ...WWFFData.byReference[operationRef.ref] }
+    const newData = { ...operationRef, ...SOTAData.byReference[operationRef.ref] }
     if (location?.lat && location?.lon) {
       newData.distance = distanceOnEarth(newData, location, { units: settings.distanceUnits })
     }
@@ -55,7 +56,7 @@ export function WWFFActivityOptions (props) {
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
     if (location?.lat && location?.lon) {
-      const newResults = WWFFData.activeReferences.filter(reference => {
+      const newResults = SOTAData.activeReferences.filter(reference => {
         return (Math.abs(reference.lat - location.lat) < NEARBY_DEGREES && Math.abs(reference.lon - location.lon) < NEARBY_DEGREES)
       }).map(result => ({
         ...result,
@@ -67,11 +68,9 @@ export function WWFFActivityOptions (props) {
 
   useEffect(() => {
     if (search?.length > 2) {
-      let newResults = WWFFData.activeReferences.filter(ref => {
-        return (
-          !ourInfo?.dxccCode || ref.dxccCode === ourInfo.dxccCode) &&
-            (ref.ref.toLowerCase().includes(search.toLowerCase()) || ref.name.toLowerCase().includes(search.toLowerCase())
-            )
+      const ucSearch = search.toUpperCase()
+      let newResults = SOTAData.activeReferences.filter(reference => {
+        return (reference.ref?.includes(ucSearch) || (reference.uc ?? reference.name ?? '').includes(ucSearch))
       })
 
       if (location?.lat && location?.lon) {
@@ -90,24 +89,24 @@ export function WWFFActivityOptions (props) {
       // If it's a naked reference, let's ensure the results include it, or else add a placeholder
       // just to cover any cases where the user knows about a new reference not included in our data
       if (nakedReference && !newResults.find(ref => ref.ref === nakedReference)) {
-        newResults.unshift({ ref: nakedReference })
+        newResults.unshift({ ref: nakedReference, name: 'Unknown summit' })
       }
 
       setResults(newResults.slice(0, 15))
       if (newResults.length === 0) {
-        setResultsMessage('No parks found')
+        setResultsMessage('No summits found')
       } else if (newResults.length > 15) {
         setResultsMessage(`Nearest 15 of ${newResults.length} matches`)
       } else if (newResults.length === 1) {
-        setResultsMessage('One matching park')
+        setResultsMessage('One matching summits')
       } else {
-        setResultsMessage(`${newResults.length} matching parks`)
+        setResultsMessage(`${newResults.length} matching summits`)
       }
     } else {
       setResults(nearbyResults)
-      if (nearbyResults === undefined) setResultsMessage('Search for a park to activate!')
-      else if (nearbyResults.length === 0) setResultsMessage('No parks nearby')
-      else setResultsMessage('Nearby parks')
+      if (nearbyResults === undefined) setResultsMessage('Search for some summits to activate!')
+      else if (nearbyResults.length === 0) setResultsMessage('No summits nearby')
+      else setResultsMessage('Nearby summits')
     }
   }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
 
@@ -129,7 +128,7 @@ export function WWFFActivityOptions (props) {
     <>
       <List.Section title={title}>
         {refData?.ref && (
-          <WWFFListItem
+          <SOTAListItem
             key={refData.ref}
             activityRef={refData.ref}
             refData={refData}
@@ -144,7 +143,7 @@ export function WWFFActivityOptions (props) {
 
       <ListRow>
         <Searchbar
-          placeholder={'Parks by name or reference…'}
+          placeholder={'Summits by name or reference…'}
           value={search}
           onChangeText={setSearch}
         />
@@ -152,7 +151,7 @@ export function WWFFActivityOptions (props) {
 
       <List.Section title={resultsMessage}>
         {results.map((result) => (
-          <WWFFListItem
+          <SOTAListItem
             key={result.ref}
             activityRef={result.ref}
             operationRef={operationRef.ref}

@@ -1,4 +1,9 @@
 {
+  "0.6.6": {
+    "changes": [
+      "Shortcut Commands"
+    ]
+  },
   "0.6.5": {
     "changes": [
       "Fixed ADIF export for General Operation",
