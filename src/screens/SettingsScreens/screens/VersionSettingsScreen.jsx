@@ -17,7 +17,6 @@ import CodePush from 'react-native-code-push'
 import { reportError } from '../../../App'
 import { useSelector } from 'react-redux'
 import { selectSettings } from '../../../store/settings'
-import { UpdateTracksDialog } from '../components/UpdateTracksDialog'
 
 export const UPDATE_TRACK_KEYS = {
   Production: (Platform.OS === 'ios') ? 'sC0Sy_ImAi-XZCBDK-mdoLYO2FR7CD2vXw1MD' : 'XfaqlzjBp9SWZLCZQSfezxEOdlkNgLu4PYrDN',
@@ -72,7 +71,7 @@ export default function VersionSettingsScreen ({ navigation }) {
     if (isUpdating) {
       return 'Checking for updates...'
     } else if (settings.devMode || (settings.updateTrack && settings.updateTrack !== DEFAULT_TRACK)) {
-      return `Check for updates - ${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']} Track`
+      return `Check for ${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']} Track updates`
     } else {
       return 'Check for updates'
     }
