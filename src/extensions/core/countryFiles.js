@@ -22,13 +22,12 @@ const Extension = {
   category: 'core',
   hidden: true,
   alwaysEnabled: true,
-  onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
+  onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     prepareCountryFilesData()
     await dispatch(loadDataFile('country-files-bigcty'))
   }
 }
 export default Extension
-
 
 export function prepareCountryFilesData () {
   registerDataFile({

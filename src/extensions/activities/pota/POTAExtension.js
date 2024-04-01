@@ -12,7 +12,7 @@ const Extension = {
   ...Info,
   category: 'locationBased',
   enabledByDefault: true,
-  onActivationDispatch: ({ registerHook, registerHandler }) => async (dispatch) => {
+  onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
