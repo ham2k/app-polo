@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
-import { setOperationData } from '../../store/operations'
-import { findRef, replaceRef } from '../../tools/refTools'
-import ThemedTextInput from '../../screens/components/ThemedTextInput'
 import { List } from 'react-native-paper'
-import { ListRow } from '../../screens/components/ListComponents'
+
+import { setOperationData } from '../../../store/operations'
+import { findRef, replaceRef } from '../../../tools/refTools'
+import ThemedTextInput from '../../../screens/components/ThemedTextInput'
+import { ListRow } from '../../../screens/components/ListComponents'
 
 /*
  NOTES:
@@ -21,16 +22,17 @@ import { ListRow } from '../../screens/components/ListComponents'
  */
 
 const Info = {
-  key: 'wfd',
-  icon: 'snowflake',
-  name: 'Winter Field Day',
-  shortName: 'WFD',
-  infoURL: 'https://www.winterfieldday.org/',
+  key: 'fd',
+  icon: 'weather-sunny',
+  name: 'ARRL Field Day',
+  shortName: 'FD',
+  infoURL: 'https://field-day.arrl.org/',
   defaultValue: { class: '', location: '' }
 }
 
 const Extension = {
   ...Info,
+  enabledByDefault: true,
   category: 'fieldOps',
   onActivation: ({ registerHook, registerHandler }) => {
     registerHook('activity', { hook: ActivityHook })

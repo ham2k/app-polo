@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../tools/refTools'
+import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { Info } from './SOTAInfo'
 import SOTAInput from './SOTAInput'
 

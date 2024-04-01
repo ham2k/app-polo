@@ -1,5 +1,6 @@
-import { loadDataFile, removeDataFile } from '../../store/dataFiles/actions/dataFileFS'
-import { findRef, refsToString } from '../../tools/refTools'
+import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
+import { findRef, refsToString } from '../../../tools/refTools'
+
 import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { SOTAData, registerSOTADataFile } from './SOTADataFile'
 import { Info } from './SOTAInfo'

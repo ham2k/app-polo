@@ -10,7 +10,7 @@ import { selectSettings, setSettings } from '../../../store/settings'
 import { ThemeDialog } from '../components/ThemeDialog'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { POTAAllParks } from '../../../extensions/pota/POTAAllParksData'
+import { POTAAllParks } from '../../../extensions/activities/pota/POTAAllParksData'
 import { fmtISODate } from '../../../tools/timeFormats'
 
 export default function GeneralSettingsScreen ({ navigation }) {
