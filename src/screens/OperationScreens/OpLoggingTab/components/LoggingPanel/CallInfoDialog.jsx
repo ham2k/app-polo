@@ -4,6 +4,8 @@ import { View, KeyboardAvoidingView, Image, Linking } from 'react-native'
 import { capitalizeString } from '../../../../../tools/capitalizeString'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { fmtDateTimeDynamic } from '../../../../../tools/timeFormats'
+import { findAllCallNotes } from '../../../../../extensions/data/call-notes/CallNotesExtension'
+import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 
 const HISTORY_QSOS_TO_SHOW = 3
 
@@ -15,7 +17,7 @@ export function CallInfoDialog ({
 }) {
   const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
-  const [thisOpTitle, thisOpQSOs, historyTitle, historyRecent, historyAndMore] = useMemo(() => {
+  const [thisOpTitle, thisOpQSOs, historyTitle, historyRecent, historyAndMore, callNotes] = useMemo(() => {
     const thisQs = (callHistory || []).filter(q => operation && q.operation === operation?.uuid)
     const otherOps = (callHistory || []).filter(q => q.operation !== operation?.uuid)
 
@@ -47,8 +49,11 @@ export function CallInfoDialog ({
     } else {
       andMore = ''
     }
-    return [thisTitle, thisQs, title, recent, andMore]
-  }, [callHistory, operation])
+
+    const notes = findAllCallNotes(guess?.baseCall)
+
+    return [thisTitle, thisQs, title, recent, andMore, notes]
+  }, [callHistory, operation, guess?.baseCall])
 
   const handleDone = useCallback(() => {
     setVisible(false)
@@ -103,6 +108,15 @@ export function CallInfoDialog ({
                   )}
                 </View>
               </View>
+              {callNotes && (
+                <View style={{ flexDirection: 'column' }}>
+                  <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Notes</Text>
+                  {callNotes.map((note, i) => (
+                    <Ham2kMarkdown key={i}>{note.note}</Ham2kMarkdown>
+                  ))}
+                </View>
+              )}
+
               {thisOpTitle && (
                 <View style={{ flexDirection: 'column' }}>
                   <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>

@@ -10,6 +10,7 @@ import WFDExtension from './activities/wfd/WFDExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import DevModeCommands from './commands/DevModeCommands'
+import CallNotesExtension from './data/call-notes/CallNotesExtension'
 
 const loadExtensions = () => (dispatch, getState) => {
   dispatch(addRuntimeMessage('Loading extensions'))
@@ -22,6 +23,8 @@ const loadExtensions = () => (dispatch, getState) => {
 
   registerExtension(RadioCommands)
   registerExtension(DevModeCommands)
+
+  registerExtension(CallNotesExtension)
 
   activateEnabledExtensions(dispatch, getState)
 }

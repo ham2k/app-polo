@@ -15,7 +15,9 @@ const Extensions = {
 
 const Hooks = {
   activity: [],
-  command: []
+  command: [],
+  screen: [],
+  setting: []
 }
 
 const VALID_HOOK_REGEX = /^(ref:\w+)/
