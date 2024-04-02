@@ -3,13 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Dialog, List, Portal, Text } from 'react-native-paper'
 import { KeyboardAvoidingView, ScrollView } from 'react-native'
 
-import ScreenContainer from '../../components/ScreenContainer'
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { getDataFileDefinitions, selectAllDataFileInfos } from '../../../store/dataFiles'
-import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats'
-import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { selectSettings } from '../../../store/settings'
-import { findHooks } from '../../../extensions/registry'
+import ScreenContainer from '../../../../screens/components/ScreenContainer'
+import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
+import { getDataFileDefinitions, selectAllDataFileInfos } from '../../../../store/dataFiles'
+import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../../tools/timeFormats'
+import { fetchDataFile } from '../../../../store/dataFiles/actions/dataFileFS'
+import { selectSettings } from '../../../../store/settings'
 
 const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
   const Icon = useMemo(() => (
@@ -18,7 +17,7 @@ const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
   return (
     <List.Item
       key={def.name}
-      title={def.name}
+      title={'TITLE'}
       description={`Updated ${fmtDateTimeRelative(info?.date)}`}
       left={() => Icon}
       onPress={onPress}
@@ -64,7 +63,7 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
   )
 }
 
-export default function DataSettingsScreen ({ navigation }) {
+export default function ManageCallNotesScreen ({ navigation }) {
   const styles = useThemedStyles()
 
   const settings = useSelector(selectSettings)
@@ -77,11 +76,6 @@ export default function DataSettingsScreen ({ navigation }) {
   const dataFileInfos = useSelector(selectAllDataFileInfos)
 
   const [selectedDefinition, setSelectedDefinition] = useState()
-
-  const extensionSettingHooks = useMemo(() => {
-    const hooks = findHooks('setting').filter(hook => hook.category === 'data' && hook.SettingItem)
-    return hooks
-  }, [])
 
   return (
     <ScreenContainer>
@@ -105,14 +99,10 @@ export default function DataSettingsScreen ({ navigation }) {
           ))}
         </List.Section>
 
-        {extensionSettingHooks && (
-          <List.Section>
-            <List.Subheader>Extensions</List.Subheader>
-            {extensionSettingHooks.map((hook) => (
-              <hook.SettingItem key={hook.key} settings={settings} styles={styles} />
-            ))}
-          </List.Section>
-        )}
+        <List.Section>
+          <List.Subheader>Offline Data</List.Subheader>
+
+        </List.Section>
       </ScrollView>
     </ScreenContainer>
   )
