@@ -10,12 +10,84 @@
       "sha1": "62442a18a9fe9457c1afeabf683d263a691b7798"
     },
     {
+      "path": "assets/fonts/Roboto Condensed Black.ttf",
+      "sha1": "c8c0cdf2be7515d260e539bc0f5dc834f357527f"
+    },
+    {
+      "path": "assets/fonts/Roboto Condensed Bold.ttf",
+      "sha1": "ce4d91f530b29a73ffdc9a6638224c5224969ed5"
+    },
+    {
+      "path": "assets/fonts/Roboto Condensed ExtraBold.ttf",
+      "sha1": "75d59bf12cb5786d32da166adde95de642dfd27d"
+    },
+    {
+      "path": "assets/fonts/Roboto Condensed Light.ttf",
+      "sha1": "6e0dcc22f3889609e3bc7a970c2a031e4607c263"
+    },
+    {
+      "path": "assets/fonts/Roboto Condensed Medium.ttf",
+      "sha1": "9e0b4aea68faafd916d58a036d812f40cc9d5c77"
+    },
+    {
+      "path": "assets/fonts/Roboto Condensed Thin.ttf",
+      "sha1": "fa19298cc21846652da186a0915e1139e3ebedde"
+    },
+    {
+      "path": "assets/fonts/Roboto Condensed.ttf",
+      "sha1": "574fde0d0a6bcbe05e36f7d3fd848b402d0389f9"
+    },
+    {
       "path": "assets/fonts/Roboto Light.ttf",
       "sha1": "18788c5d630fa695f9283f6393bfa541b2031508"
     },
     {
       "path": "assets/fonts/Roboto Medium.ttf",
       "sha1": "3c6a09fcc6a454924c81af7dff94fc6d399ed79b"
+    },
+    {
+      "path": "assets/fonts/Roboto Mono Bold.ttf",
+      "sha1": "07e9d911c2caf2ea4764423fe3f4db21ebe2c597"
+    },
+    {
+      "path": "assets/fonts/Roboto Mono Light.ttf",
+      "sha1": "bec8ac4b23987197c142eadfe2e1f041f7f571df"
+    },
+    {
+      "path": "assets/fonts/Roboto Mono Medium.ttf",
+      "sha1": "493efbc7b2d774d90944a32a52acfdd6b95aec0a"
+    },
+    {
+      "path": "assets/fonts/Roboto Mono Thin.ttf",
+      "sha1": "74eff08ab58298b4b12981bde846b1e03ed4492a"
+    },
+    {
+      "path": "assets/fonts/Roboto Mono.ttf",
+      "sha1": "396fbb17ef9e3ece728372516d73a857bd1ce32d"
+    },
+    {
+      "path": "assets/fonts/Roboto Slab Black.ttf",
+      "sha1": "62fcfce4242c43dd3ae707cc938a820628a3d7f0"
+    },
+    {
+      "path": "assets/fonts/Roboto Slab ExtraBold.ttf",
+      "sha1": "ad76cd800876cbc6887e780b472f1b73a89c5976"
+    },
+    {
+      "path": "assets/fonts/Roboto Slab Light.ttf",
+      "sha1": "cbfed3e08c740288a62a3866f91772b4e3355572"
+    },
+    {
+      "path": "assets/fonts/Roboto Slab Medium.ttf",
+      "sha1": "ab08900d96a25d9378ab6ba3a6d056d8b3f27123"
+    },
+    {
+      "path": "assets/fonts/Roboto Slab Thin.ttf",
+      "sha1": "48d3cbf1075a0e184a7696103dc4a156f4073827"
+    },
+    {
+      "path": "assets/fonts/Roboto Slab.ttf",
+      "sha1": "b3b3920564dc847109e16e951058a63a44a4a5c3"
     },
     {
       "path": "assets/fonts/Roboto Thin.ttf",
