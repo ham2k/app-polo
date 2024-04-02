@@ -325,7 +325,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     setTimeout(() => { // Run inside a setTimeout to allow the state to update
       // First, try to process any commands
 
-      if (checkAndProcessCommands(qso.their.call, { qso, originalQSO, operation, dispatch, settings, handleFieldChange })) {
+      if (checkAndProcessCommands(qso?.their?.call, { qso, originalQSO, operation, dispatch, settings, handleFieldChange })) {
         return
       }
 
