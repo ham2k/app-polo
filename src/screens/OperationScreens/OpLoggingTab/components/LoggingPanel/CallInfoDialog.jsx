@@ -53,7 +53,7 @@ export function CallInfoDialog ({
   const handleDone = useCallback(() => {
     setVisible(false)
   }, [setVisible])
-  // console.log(qrz.data)
+
   if (visible) {
     return (
       <Portal>
@@ -69,19 +69,16 @@ export function CallInfoDialog ({
                     <View>
                       <Text variant="headlineSmall" style={styles.text.callsign}>
                         {qso.their.call}
-                        {qrz?.data?.call && qrz?.data?.call !== qrz.originalArgs?.call && (
-                          ` (now ${qrz.data.call})`
-                        )}
                       </Text>
                     </View>
                   </View>
                   <View>
                     <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
-                      {capitalizeString(qrz?.data?.name, { content: 'name', force: false })}
+                      {capitalizeString(qrz?.name, { content: 'name', force: false })}
                     </Text>
-                    {qrz?.data?.call === guess?.baseCall && qrz?.data?.city && (
+                    {qrz?.call === guess?.baseCall && qrz?.city && (
                       <Text>
-                        {[capitalizeString(qrz?.data?.city, { force: false }), qrz?.data?.state].filter(x => x).join(', ')}
+                        {[capitalizeString(qrz?.city, { force: false }), qrz?.state].filter(x => x).join(', ')}
                       </Text>
                     )}
                     {entity && (
@@ -98,11 +95,11 @@ export function CallInfoDialog ({
                   </View>
                 </View>
                 <View style={{ flex: 0, marginLeft: styles.oneSpace }}>
-                  {qrz?.data?.image && (
-                    <Image source={{ uri: qrz.data.image }} style={{ width: styles.oneSpace * 10, height: styles.oneSpace * 10, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
+                  {qrz?.image && (
+                    <Image source={{ uri: qrz.image }} style={{ width: styles.oneSpace * 10, height: styles.oneSpace * 10, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
                   )}
-                  {qrz?.data?.call && (
-                    <Chip icon="web" mode="flat" onPress={() => Linking.openURL(`https://qrz.com/db/${qrz?.data?.call}`)}>qrz</Chip>
+                  {qrz?.call && (
+                    <Chip icon="web" mode="flat" onPress={() => Linking.openURL(`https://qrz.com/db/${qrz?.call}`)}>qrz</Chip>
                   )}
                 </View>
               </View>
