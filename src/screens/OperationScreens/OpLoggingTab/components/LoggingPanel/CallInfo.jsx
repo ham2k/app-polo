@@ -184,7 +184,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     } else if (pota.error) {
       parts.push(`POTA ${potaRef} ${pota.error}`)
     } else {
-      if (entity) parts.push(entity.shortName)
+      if (entity && entity.entityPrefix !== opCallInfo.entityPrefix) parts.push(entity.shortName)
 
       if (qrz.call === guess?.baseCall && qrz.city) {
         parts.push(qrz.city, qrz.state)
@@ -270,7 +270,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
 
               )}
               {locationInfo && (
-                <Text style={{ flex: 1 }} numberOfLines={2} ellipsizeMode={'tail'}>
+                <Text style={{ flex: 1, fontFamily: locationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} numberOfLines={2} ellipsizeMode={'tail'}>
                   {locationInfo}
                 </Text>
               )}
@@ -282,7 +282,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
                     <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyInfo}</Text>
                   </View>
                 )}
-                <Text style={{ flex: 1, fontWeight: 'bold' }} numberOfLines={2} ellipsizeMode={'tail'}>
+                <Text style={{ flex: 1, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} numberOfLines={2} ellipsizeMode={'tail'}>
                   {stationInfo}
                 </Text>
               </View>

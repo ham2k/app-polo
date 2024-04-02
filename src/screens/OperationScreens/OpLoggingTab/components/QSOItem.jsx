@@ -69,21 +69,23 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
             qso.their?.name ?? qso.their?.guess?.name ?? ''
           )}
         </Text>
-        {qso.notes && (
-          <Icon source="note-outline" size={styles.oneSpace * 2} style={styles.fields.icon} />
-        )}
-        {(qso.refs || []).filter(ref => REFS_TO_INCLUDE[ref.type]).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).map(({ ref, handler }, i) => (
-          <Icon key={i} source={handler?.icon} size={styles.oneSpace * 2} style={styles.fields.icon} color={styles.fields.icon.color} />
-        ))}
+        <Text style={styles.fields.icon}>
+          {qso.notes && (
+            <Icon source="note-outline" size={styles.oneSpace * 2} style={styles.fields.icon} />
+          )}
+          {(qso.refs || []).filter(ref => REFS_TO_INCLUDE[ref.type]).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).map(({ ref, handler }, i) => (
+            <Icon key={i} source={handler?.icon} size={styles.oneSpace * 2} style={styles.fields.icon} color={styles.fields.icon.color} />
+          ))}
+        </Text>
         {qso?.their?.exchange ? (
           <>
             {extendedWidth && (
-              <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{'  '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
+              <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
             )}
             <Text style={styles.fields.exchange}>{qso?.their?.exchange}</Text>
           </>
         ) : (
-          <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{'  '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
+          <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
         )}
       </View>
     </TouchableRipple>

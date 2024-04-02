@@ -32,6 +32,13 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const largeFontSize = 24 * fontScaleAdjustment
   const smallFontSize = 12 * fontScaleAdjustment
 
+  const fontFamily = 'Roboto'
+  const specialTitleFontFamily = 'Roboto Slab Black'
+  const thinTitleFontFamily = 'Roboto Thin'
+  const normalFontFamily = 'Roboto'
+  const condensedFontFamily = 'Roboto Condensed'
+  const maybeCondensedFontFamily = size === 'xs' || size === 'sm' ? 'Roboto Condensed' : 'Roboto'
+
   const baseSpace = 8 * fontScaleAdjustment // Guesstimage of the width of an 'm' in the base (root) font size
 
   const oneSpace = PixelRatio.roundToNearestPixel(baseSpace * fontScale)
@@ -46,6 +53,12 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     pixelRatio,
 
     size,
+    smOrGreater: size !== 'xs',
+    mdOrGreater: size !== 'xs' && size !== 'sm',
+    lgOrGreater: size !== 'xs' && size !== 'sm' && size !== 'md',
+    lgOrSmaller: size !== 'xl',
+    mdOrSmaller: size !== 'xl' && size !== 'lg',
+    smOrSmaller: size !== 'xl' && size !== 'lg' && size !== 'md',
 
     oneSpace,
     halfSpace,
@@ -54,6 +67,13 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     largeFontSize,
     smallFontSize,
     fontScaleAdjustment,
+
+    fontFamily,
+    specialTitleFontFamily,
+    thinTitleFontFamily,
+    normalFontFamily,
+    condensedFontFamily,
+    maybeCondensedFontFamily,
 
     screen: {
       backgroundColor: theme.colors.background
@@ -68,13 +88,13 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     screenTitle: {
       fontSize: 20 * fontScaleAdjustment,
       color: theme.colors.onPrimary,
-      fontFamily: 'Roboto Slab Black'
+      fontFamily: specialTitleFontFamily
       // fontWeight: 'bold'
     },
     screenTitleSmall: {
       fontSize: 14 * fontScaleAdjustment,
       color: theme.colors.onPrimary,
-      fontWeight: '500'
+      fontFamily: 'Roboto Slab Medium'
     },
     screenSubTitle: {
       fontSize: 12 * fontScaleAdjustment,
@@ -102,6 +122,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     screenTabBarIndicator: {
       backgroundColor: theme.colors.onPrimary,
       height: halfSpace
+    },
+    dialog: {
     },
     title: {
       marginBottom: oneSpace,
