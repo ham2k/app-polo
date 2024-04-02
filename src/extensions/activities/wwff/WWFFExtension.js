@@ -115,8 +115,8 @@ const ReferenceHandler = {
     const huntingRef = findRef(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
     const fields = []
-    if (activationRef) fields.push({ MY_SIG: 'WWFF', MY_SIG_INFO: activationRef.ref })
-    if (huntingRef) fields.push({ SIG: 'WWFF', SIG_INFO: huntingRef.ref })
+    if (activationRef) fields.push({ MY_SIG: 'WWFF' }, { MY_SIG_INFO: activationRef.ref })
+    if (huntingRef) fields.push({ SIG: 'WWFF' }, { SIG_INFO: huntingRef.ref })
 
     return fields
   }
