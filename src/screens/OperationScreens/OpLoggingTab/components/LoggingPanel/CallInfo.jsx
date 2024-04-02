@@ -19,6 +19,8 @@ import { selectSettings } from '../../../../../store/settings'
 import { CallInfoDialog } from './CallInfoDialog'
 import { distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { selectOperationCallInfo } from '../../../../../store/operations'
+import { findCallNotes } from '../../../../../extensions/data/call-notes/CallNotesExtension'
+import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 
 export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -48,6 +50,10 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
         },
         info: {
         }
+      },
+      markdown: {
+        ...baseStyles.markdown,
+        paragraph: { margin: 0, marginTop: baseStyles.halfSpace, marginBottom: 0 }
       }
     }
   })
@@ -89,6 +95,8 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
       }
     }
   }, [guess?.baseCall, online, settings?.accounts?.qrz, skipQRZ])
+
+  const callNotes = useMemo(() => findCallNotes(guess?.baseCall), [guess?.baseCall])
 
   const qrzLookup = useLookupCallQuery({ call: guess?.baseCall }, { skip: skipQRZ })
   const qrz = useMemo(() => qrzLookup.currentData || {}, [qrzLookup.currentData])
@@ -161,7 +169,6 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
         theirInfo.guess.state = potaState
       }
 
-      // console.log(pota.locationDesc)
       theirInfo.guess = { ...theirInfo.guess }
     }
 
@@ -196,7 +203,9 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
 
   const stationInfo = useMemo(() => {
     const parts = []
-    if (qrz) {
+    if (callNotes && callNotes[0]) {
+      parts.push(callNotes[0].note)
+    } else if (qrz) {
       parts.push(qrz.error)
       parts.push(qrz.name)
       if (qrz.call && qrz.originalCall && qrz.call !== qrz.originalCall) {
@@ -205,7 +214,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qrz])
+  }, [qrz, callNotes])
 
   const [historyInfo, historyLevel] = useMemo(() => {
     const today = new Date()
@@ -227,7 +236,6 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
           level = 'alert'
         }
       } else {
-        // console.log('callHistory', callHistory.map(x => x.startOnMillis))
         const sameDay = callHistory.filter(x => x && fmtISODate(x.startOnMillis) === fmtISODate(today)).length
 
         if (sameDay > 1) {
@@ -283,24 +291,26 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
                   </View>
                 )}
                 <Text style={{ flex: 1, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} numberOfLines={2} ellipsizeMode={'tail'}>
-                  {stationInfo}
+                  <Ham2kMarkdown styles={styles}>{stationInfo}</Ham2kMarkdown>
                 </Text>
               </View>
             )}
           </View>
         </View>
       </TouchableRipple>
-      <CallInfoDialog
-        visible={showDialog}
-        setVisible={setShowDialog}
-        qso={qso}
-        guess={guess}
-        qrz={qrz}
-        pota={pota}
-        operation={operation}
-        callHistory={callHistory}
-        styles={styles}
-      />
+      {showDialog && (
+        <CallInfoDialog
+          visible={showDialog}
+          setVisible={setShowDialog}
+          qso={qso}
+          guess={guess}
+          qrz={qrz}
+          pota={pota}
+          operation={operation}
+          callHistory={callHistory}
+          styles={styles}
+        />
+      )}
     </>
   )
 }

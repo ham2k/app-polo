@@ -35,11 +35,16 @@ export const settingsSlice = createSlice({
       Object.keys(action.payload || {}).forEach(key => {
         state[key] = action.payload[key]
       })
+    },
+    setExtensionSettings: (state, action) => {
+      const { key, ...rest } = action.payload.key
+      state.extensions = state.extensions || {}
+      state.extensions[key] = { ...state.extensions[key] || {}, ...rest }
     }
   }
 })
 
-export const { setOperatorCall, setOnboarded, setAccountInfo, setSettings } = settingsSlice.actions
+export const { setOperatorCall, setOnboarded, setAccountInfo, setSettings, setExtensionSettings } = settingsSlice.actions
 
 export const selectSettings = createSelector(
   [(state) => state?.settings],
@@ -72,6 +77,17 @@ export const selectSettings = createSelector(
       }
     }
     return settings
+  }
+)
+
+export const selectExtensionSettings = createSelector(
+  [
+    (state, key) => state?.settings?.extensions,
+    (state, key) => key
+  ],
+  (extensionsSettings, key) => {
+    extensionsSettings = extensionsSettings || {}
+    return extensionsSettings[key] || {}
   }
 )
 
