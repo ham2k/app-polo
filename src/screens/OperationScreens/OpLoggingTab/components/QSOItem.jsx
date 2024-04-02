@@ -17,7 +17,8 @@ export function guessItemHeight (qso, styles) {
 const REFS_TO_INCLUDE = {
   pota: true,
   sota: true,
-  wwff: true
+  wwff: true,
+  custom: true
 }
 
 const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, extendedWidth, settings }) {
