@@ -33,6 +33,8 @@ export const Info = {
   icon: 'flower',
   name: 'World Wide Flora & Fauna',
   shortName: 'WWFF',
+  doubleContact: 'Park-to-Park',
+  shortNameDoubleContact: 'P2P',
   infoURL: 'https://wwff.co/',
   huntingType: 'wwff',
   activationType: 'wwffActivation',
