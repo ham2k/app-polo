@@ -32,6 +32,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         marginLeft: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 4 : themeStyles.oneSpace * 2,
         textAlign: 'right',
+        lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
       },
       time: {
@@ -42,28 +43,34 @@ function prepareStyles (themeStyles, isDeleted, width) {
         minWidth: extendedWidth ? themeStyles.oneSpace * 14 : themeStyles.oneSpace * 7,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right',
+        lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
       },
       freq: {
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         ...commonStylesForStatus,
+        fontFamily: 'Roboto',
         flex: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 11 : themeStyles.oneSpace * 8,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right',
+        lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
       },
       freqMHz: {
         fontWeight: '600',
+        lineHeight: themeStyles.oneSpace * 2.5,
         textAlign: 'right'
       },
       freqKHz: {
+        lineHeight: themeStyles.oneSpace * 2.5,
         textAlign: 'right'
       },
       freqHz: {
         textAlign: 'right',
         fontWeight: '300',
+        lineHeight: themeStyles.oneSpace * 2.5,
         fontSize: themeStyles.normalFontSize * 0.7
       },
       call: {
@@ -74,6 +81,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         marginLeft: themeStyles.oneSpace,
         minWidth: themeStyles.oneSpace * 8,
         textAlign: 'left',
+        lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
       },
       name: {
@@ -81,6 +89,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         flex: 1,
         marginLeft: themeStyles.halfSpace,
         textAlign: 'left',
+        lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
       },
       location: {
@@ -89,6 +98,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         marginLeft: themeStyles.halfSpace,
         minWidth: themeStyles.oneSpace * 3.5,
         textAlign: 'center',
+        lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
       },
       signal: {
@@ -99,6 +109,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         minWidth: themeStyles.oneSpace * 3,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right',
+        lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
       },
       exchange: {
@@ -108,12 +119,14 @@ function prepareStyles (themeStyles, isDeleted, width) {
         minWidth: themeStyles.oneSpace * 3,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right',
+        lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
       },
       icon: {
         ...commonStylesForStatus,
         flex: 0,
-        width: themeStyles.oneSpace * 2,
+        maxWidth: themeStyles.oneSpace * 4,
+        lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
       }
     }
