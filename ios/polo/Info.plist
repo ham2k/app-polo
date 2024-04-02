@@ -36,13 +36,19 @@
 		</dict>
 	</dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
-  <false/>
+	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location will be used to determine your Maidenhead Grid Square to include in your own logs.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialIcons.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
+		<string>Roboto Black.ttf</string>
+		<string>Roboto Bold.ttf</string>
+		<string>Roboto Light.ttf</string>
+		<string>Roboto Medium.ttf</string>
+		<string>Roboto Thin.ttf</string>
+		<string>Roboto.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -67,6 +73,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>CodePushDeploymentKey</key>
-	<string></string>
+	<string/>
 </dict>
 </plist>
