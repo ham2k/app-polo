@@ -68,7 +68,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     screenTitle: {
       fontSize: 20 * fontScaleAdjustment,
       color: theme.colors.onPrimary,
-      fontWeight: '500'
+      fontFamily: 'Roboto Slab Black'
+      // fontWeight: 'bold'
     },
     screenTitleSmall: {
       fontSize: 14 * fontScaleAdjustment,
@@ -86,9 +87,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       fontWeight: isIOS ? '300' : '100'
     },
     screenTitleBold: {
-      fontSize: 20 * fontScaleAdjustment,
-      color: theme.colors.onPrimary,
-      fontWeight: isIOS ? '600' : '800'
+      fontFamily: 'Roboto Black',
+      fontSize: 20 * fontScaleAdjustment
     },
     screenTabBar: {
       backgroundColor: theme.colors.primary
@@ -156,16 +156,17 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     },
     rowText: {
       fontSize: normalFontSize,
+      fontFamily: 'Roboto',
       color: theme.colors.onBackground
     },
     text: {
       numbers: {
         fontVariant: ['tabular-nums'],
-        fontFamily: isIOS ? 'San Francisco' : 'monospace'
+        fontFamily: 'Roboto Mono Medium'
       },
       callsign: {
         fontVariant: ['tabular-nums'],
-        fontFamily: isIOS ? 'Menlo' : 'monospace'
+        fontFamily: 'Roboto Mono Medium'
       },
       lighter: {
         color: theme.colors.onBackgroundLight
@@ -202,7 +203,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       },
       code_inline: {
         fontVariant: ['tabular-nums'],
-        fontFamily: isIOS ? 'Menlo' : 'monospace',
+        fontFamily: 'Roboto Mono Medium',
         backgroundColor: false
       }
     }

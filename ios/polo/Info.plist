@@ -43,8 +43,26 @@
 	<array>
 		<string>MaterialIcons.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
+		<string>Roboto Mono Bold.ttf</string>
+		<string>Roboto Mono Light.ttf</string>
+		<string>Roboto Mono Medium.ttf</string>
+		<string>Roboto Mono Thin.ttf</string>
+		<string>Roboto Mono.ttf</string>
+		<string>Roboto Slab Black.ttf</string>
+		<string>Roboto Slab ExtraBold.ttf</string>
+		<string>Roboto Slab Light.ttf</string>
+		<string>Roboto Slab Medium.ttf</string>
+		<string>Roboto Slab Thin.ttf</string>
+		<string>Roboto Slab.ttf</string>
 		<string>Roboto Black.ttf</string>
 		<string>Roboto Bold.ttf</string>
+		<string>Roboto Condensed Black.ttf</string>
+		<string>Roboto Condensed Bold.ttf</string>
+		<string>Roboto Condensed ExtraBold.ttf</string>
+		<string>Roboto Condensed Light.ttf</string>
+		<string>Roboto Condensed Medium.ttf</string>
+		<string>Roboto Condensed Thin.ttf</string>
+		<string>Roboto Condensed.ttf</string>
 		<string>Roboto Light.ttf</string>
 		<string>Roboto Medium.ttf</string>
 		<string>Roboto Thin.ttf</string>

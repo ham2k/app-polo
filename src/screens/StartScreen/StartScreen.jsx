@@ -59,7 +59,7 @@ export default function StartScreen ({ setAppState }) {
       polo: {
         ...dropShadow,
         fontSize: 40,
-        fontWeight: 'bold',
+        fontFamily: 'Roboto Slab Black',
         color: '#FFF',
         textAlign: 'center'
       },
