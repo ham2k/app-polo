@@ -1,48 +1,47 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import RNFetchBlob from 'react-native-blob-util'
 
 import packageJson from '../../../../package.json'
-import { registerDataFile } from '../../../store/dataFiles'
-import { loadDataFile } from '../../../store/dataFiles/actions/dataFileFS'
+import { registerDataFile, unRegisterDataFile } from '../../../store/dataFiles'
+import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { selectExtensionSettings } from '../../../store/settings'
 import { List } from 'react-native-paper'
 import ManageCallNotesScreen from './screens/ManageCallNotesScreen'
+import { useSelector } from 'react-redux'
 
-const Info = {
+export const Info = {
   key: 'call-notes',
   name: 'Callsign Notes',
+  icon: 'file-account-outline',
   description: 'Adds notes to callsigns'
 }
 
-const BUILT_IN_NOTES = [
-  { name: "Ham2K's Hams of Note", location: 'https://ham2k.com/data/hams-of-note.txt', builtin: true },
-  { name: 'Test', location: 'https://www.dropbox.com/scl/fi/v59g43pnxpmenexnu6zs4/sd-dxlog-extra.txt?rlkey=q5s0d29n18um08py5hy6a8rae&raw=1' }
+export const BUILT_IN_NOTES = [
+  {
+    name: "Ham2K's Hams of Note",
+    location: 'https://ham2k.com/data/hams-of-note.txt',
+    description: "A veritable sample of who's who and who isn't in the world of radio",
+    builtin: true
+  }
 ]
 
-const CallNotes = {}
-const CallNotesFiles = []
+export const CallNotes = {}
+export const ActiveCallNotesFiles = {}
+export const CallNotesFiles = []
 
 const Extension = {
   ...Info,
-  category: 'data',
-  alwaysEnabled: true,
+  category: 'other',
   enabledByDefault: true,
   onActivationDispatch: ({ registerHook }) => async (dispatch, getState) => {
     const settings = selectExtensionSettings(getState(), Info.key)
 
-    const files = BUILT_IN_NOTES
-    settings.userFiles?.forEach(file => files.push({ ...file, builtin: false }))
+    const files = [...BUILT_IN_NOTES]
+    settings.customFiles?.forEach(file => files.push({ ...file, builtin: false }))
 
     for (const file of files) {
-      registerDataFile({
-        key: `call-notes-${file.location}`,
-        name: file.name,
-        icon: 'file-account-outline',
-        description: `${file.builtin ? 'Built-in' : "User's"} Callsign Notes`,
-        fetch: createCallNotesFetcher(file),
-        onLoad: createCallNotesLoader(file)
-      })
       CallNotesFiles.push(file)
+      registerDataFile(createDataFileDefinition(file))
       await dispatch(loadDataFile(`call-notes-${file.location}`))
     }
 
@@ -52,7 +51,7 @@ const Extension = {
         category: 'data',
         SettingItem: ({ navigation, styles }) => (
           <List.Item
-            title="Manage Callsign Notes"
+            title="Callsign Notes"
             description={''}
             onPress={() => navigation.navigate('ExtensionScreen', { key: 'call-notes-settings' })}
             // eslint-disable-next-line react/no-unstable-nested-components
@@ -68,9 +67,25 @@ const Extension = {
         ScreenComponent: ManageCallNotesScreen
       }
     })
+  },
+  onDeactivationDispatch: () => async (dispatch, getState) => {
+    for (const file of CallNotesFiles) {
+      unRegisterDataFile(`call-notes-${file.location}`)
+      await dispatch(removeDataFile(`call-notes-${file.location}`))
+    }
+    CallNotesFiles.length = 0 // empty the array
   }
 }
 export default Extension
+
+export const createDataFileDefinition = (file) => ({
+  key: `call-notes-${file.location}`,
+  name: file.name,
+  icon: 'file-account-outline',
+  description: `${file.builtin ? 'Built-in' : "User's"} Callsign Notes`,
+  fetch: createCallNotesFetcher(file),
+  onLoad: createCallNotesLoader(file)
+})
 
 const createCallNotesFetcher = (file) => async () => {
   const request = file.location
@@ -99,20 +114,34 @@ const createCallNotesLoader = (file) => async (data) => {
   CallNotes[file.location] = data
 }
 
-export const findCallNotes = (call) => {
+export const findCallNotes = (call, enabledLocations) => {
   for (const file of CallNotesFiles) {
-    if (CallNotes[file.location]?.[call]) {
+    if (enabledLocations[file.location] !== false && CallNotes[file.location]?.[call]) {
       return CallNotes[file.location][call]
     }
   }
 }
 
-export const findAllCallNotes = (call) => {
+export const findAllCallNotes = (call, enabledLocations) => {
   let notes = []
   for (const file of CallNotesFiles) {
-    if (CallNotes[file.location]?.[call]) {
+    if (enabledLocations[file.location] !== false && CallNotes[file.location]?.[call]) {
       notes = notes.concat(CallNotes[file.location][call])
     }
   }
   return notes
+}
+
+export const useOneCallNoteFinder = (call) => {
+  const settings = useSelector(state => selectExtensionSettings(state, Info.key))
+  return useMemo(() => {
+    return findCallNotes(call, settings.enabledLocations)
+  }, [call, settings?.enabledLocations])
+}
+
+export const useAllCallNotesFinder = (call) => {
+  const settings = useSelector(state => selectExtensionSettings(state, Info.key))
+  return useMemo(() => {
+    return findAllCallNotes(call, settings.enabledLocations)
+  }, [call, settings?.enabledLocations])
 }

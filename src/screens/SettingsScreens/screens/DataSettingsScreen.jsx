@@ -105,11 +105,11 @@ export default function DataSettingsScreen ({ navigation }) {
           ))}
         </List.Section>
 
-        {extensionSettingHooks && (
+        {extensionSettingHooks.length > 0 && (
           <List.Section>
             <List.Subheader>Extensions</List.Subheader>
             {extensionSettingHooks.map((hook) => (
-              <hook.SettingItem key={hook.key} settings={settings} styles={styles} />
+              <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
             ))}
           </List.Section>
         )}
