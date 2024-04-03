@@ -37,7 +37,7 @@ export const settingsSlice = createSlice({
       })
     },
     setExtensionSettings: (state, action) => {
-      const { key, ...rest } = action.payload.key
+      const { key, ...rest } = action.payload
       state.extensions = state.extensions || {}
       state.extensions[key] = { ...state.extensions[key] || {}, ...rest }
     }

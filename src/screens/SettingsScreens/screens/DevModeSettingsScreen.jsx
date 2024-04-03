@@ -32,16 +32,12 @@ export default function DevModeSettingsScreen ({ navigation }) {
   const handleExportFiles = useCallback(async () => {
     let paths = []
     for (const operation of operations) {
-      console.log('Exporting', operation.uuid)
       await dispatch(loadQSOs(operation.uuid))
-      console.log('loaded qsos')
       const qsonPaths = await dispatch(generateExport(operation.uuid, 'qson'))
-      console.log('paths', qsonPaths)
       if (qsonPaths?.length > 0) {
         paths = paths.concat(qsonPaths)
       }
     }
-    console.log('Paths', paths)
     if (paths.length > 0) {
       Share.open({
         urls: paths.map(p => `file://${p}`),

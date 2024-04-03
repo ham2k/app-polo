@@ -12,6 +12,8 @@ import { capitalizeString } from '../../tools/capitalizeString'
 
  */
 
+const DEBUG = false
+
 const BASE_URL = 'https://xmldata.qrz.com/'
 
 function defaultParams (api) {
@@ -29,8 +31,8 @@ const baseQueryWithSettings = fetchBaseQuery({
       const body = await response.text()
       const parser = new XMLParser()
       const xml = parser.parse(body)
-      // console.log(`QRZApi ${response.url} ${response.status}`)
-      // console.log(xml)
+      if (DEBUG) console.log(`QRZApi ${response.url} ${response.status}`)
+      if (DEBUG) console.log(xml)
       return xml
     } else {
       return {}
@@ -41,7 +43,7 @@ const baseQueryWithSettings = fetchBaseQuery({
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQueryWithSettings(args, api, extraOptions)
 
-  // console.log('baseQueryWithReauth first call', result?.data?.QRZDatabase)
+  if (DEBUG) console.log('baseQueryWithReauth first call', result?.data?.QRZDatabase)
   if ((result.error && result.error.status === 401) ||
     result.data?.QRZDatabase?.Session?.Error?.startsWith('Invalid session key') ||
     result.data?.QRZDatabase?.Session?.Error?.startsWith('Session Timeout') ||
@@ -59,7 +61,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       }
     }, api, extraOptions)
 
-    // console.log('baseQueryWithReauth second call', result?.data?.QRZDatabase)
+    if (DEBUG) console.log('baseQueryWithReauth second call', result?.data?.QRZDatabase)
 
     if (result.data?.QRZDatabase?.Session?.Error) return { error: result.data?.QRZDatabase?.Session?.Error, meta: result.meta }
 
@@ -68,7 +70,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       api.dispatch(setAccountInfo({ qrz: { session } }))
 
       result = await baseQueryWithSettings(args, api, extraOptions)
-      // console.log('baseQueryWithReauth third call', result?.data?.QRZDatabase)
+      if (DEBUG) console.log('baseQueryWithReauth third call', result?.data?.QRZDatabase)
     } else {
       api.dispatch(setAccountInfo({ qrz: { session: undefined } }))
       return { error: 'Unexpected error logging into QRZ.com', result }
@@ -86,10 +88,6 @@ export const apiQRZ = createApi({
     //   https://xmldata.qrz.com/xml/current/?s=SESSIONKEY;callsign=xx1xxx
 
     lookupCall: builder.query({
-      // responseHandler: async (response) => {
-      //   console.log('lookupCall responseHandler', response)
-      //   return response
-      // },
       keepUnusedDataFor: 60 * 60 * 12, // 12 hours
       queryFn: async (args, api, extraOptions, baseQuery) => {
         const { call } = args

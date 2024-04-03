@@ -284,10 +284,8 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     } else if (fieldId === 'notes') {
       setQSO({ ...qso, notes: value })
     } else if (fieldId === 'freq') {
-      console.log('freq', value)
       const freq = parseFreqInMHz(value)
       const band = freq ? bandForFrequency(freq) : qso?.band
-      console.log('freq', freq, band)
       setQSO({ ...qso, freq, band })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band, freq }))
     } else if (fieldId === 'band') {

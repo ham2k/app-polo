@@ -28,6 +28,7 @@ import FeaturesSettingsScreen from './screens/SettingsScreens/screens/FeaturesSe
 import GeneralSettingsScreen from './screens/SettingsScreens/screens/GeneralSettingsScreen'
 import { selectSettings } from './store/settings'
 import DevModeSettingsScreen from './screens/SettingsScreens/screens/DevModeSettingsScreen'
+import ExtensionScreen from './screens/SettingsScreens/screens/ExtensionScreen'
 
 const GLOBAL_APP_SETTINGS = {
   consentAppData: false
@@ -134,6 +135,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="DevModeSettings"
             options={{ title: 'Developer Settings', headerBackTitle: 'MainSettings' }}
             component={DevModeSettingsScreen}
+          />
+
+          <Stack.Screen name="ExtensionScreen"
+            options={{ title: 'Extension', headerBackTitle: 'Back' }}
+            component={ExtensionScreen}
           />
 
         </Stack.Navigator>
