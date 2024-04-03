@@ -6,17 +6,23 @@ export function checkAndProcessCommands (value, extraParams) {
   let match
   const matchingCommand = hooks.find(hook => {
     try {
-      if (hook.matchRegex) {
-        match = value.match(hook.matchRegex)
+      if (typeof hook?.match === 'function') {
+        match = hook.match(value)
         return !!match
-      } else if (hook.match && hook.match === value) {
-        match = value
-        return true
+      } else if (typeof hook?.match === 'string') {
+        if (value === hook.match) {
+          match = value
+          return true
+        }
+      } else if (typeof hook?.match === 'object' && hook.match.test) {
+        match = value.match(hook.match)
+        return !!match
       } else {
         return false
       }
     } catch (e) {
       reportError(`Error in checkAndProcessCommands matching for '${hook.key}'`, e)
+
       return false
     }
   })

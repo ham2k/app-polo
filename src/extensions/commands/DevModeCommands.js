@@ -21,7 +21,7 @@ const KonamiCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-devmode-konami',
-  matchRegex: /^KONAMI$/i,
+  match: /^KONAMI$/i,
   invokeCommand: (match, { dispatch, settings, handleFieldChange }) => {
     dispatch(setSettings({ devMode: !settings.devMode }))
     handleFieldChange({ fieldId: 'theirCall', value: 'KONAMI!' })
