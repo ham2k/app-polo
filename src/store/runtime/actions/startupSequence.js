@@ -39,10 +39,11 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
         } else {
           await dispatch(addRuntimeMessage('Checking for updates...'))
         }
-        await CodePush.sync({ deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Production'] })
+        CodePush.sync({ deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Production'] })
+        // don't `await` for this, because it can hang the app if there is no connection
       },
-      async () => await dispatch(loadExtensions()),
       async () => await dispatch(setupOnlineStatusMonitoring()),
+      async () => await dispatch(loadExtensions()),
       async () => await dispatch(getOperations()),
       async () => await minimumTimePromise
     ]
