@@ -1,7 +1,9 @@
 {
-  "0.7.2-pre1": {
+  "0.7.2-pre2": {
     "changes": [
-      "Callsign Notes"
+      "Callsign Notes",
+      "Band & Mode settings",
+      "Fixed SOTA reference entry for 3-letter prefixes"
     ]
   },
   "0.7.1": {
