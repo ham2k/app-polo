@@ -29,6 +29,7 @@ import GeneralSettingsScreen from './screens/SettingsScreens/screens/GeneralSett
 import { selectSettings } from './store/settings'
 import DevModeSettingsScreen from './screens/SettingsScreens/screens/DevModeSettingsScreen'
 import ExtensionScreen from './screens/SettingsScreens/screens/ExtensionScreen'
+import BandModeSettingsScreen from './screens/SettingsScreens/screens/BandModeSettingsScreen'
 
 const GLOBAL_APP_SETTINGS = {
   consentAppData: false
@@ -54,6 +55,7 @@ export function reportError (error, ...extra) {
     DISTRIBUTION_CONFIG.rollbarNative.rollbar.error(error, ...extra)
   }
   console.error(error, ...extra)
+  if (extra && extra[0]?.stack) console.error(extra[0].stack)
 }
 
 const Stack = createNativeStackNavigator()
@@ -120,6 +122,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="LoggingSettings"
             options={{ title: 'Logging Settings', headerBackTitle: 'MainSettings' }}
             component={LoggingSettingsScreen}
+          />
+
+          <Stack.Screen name="BandModeSettings"
+            options={{ title: 'Bands & Modes', headerBackTitle: 'MainSettings' }}
+            component={BandModeSettingsScreen}
           />
 
           <Stack.Screen name="DataSettings"

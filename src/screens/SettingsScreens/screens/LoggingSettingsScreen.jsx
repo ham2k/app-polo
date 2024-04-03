@@ -66,6 +66,13 @@ export default function LoggingSettingsScreen ({ navigation }) {
             right={() => <Switch value={!!settings.jumpAfterRST} onValueChange={(value) => dispatch(setSettings({ jumpAfterRST: value })) } />}
             onPress={() => dispatch(setSettings({ jumpAfterRST: !settings.jumpAfterRST }))}
           />
+
+          <List.Item
+            title="Bands & Modes"
+            description={[settings.bands.join(', '), settings.modes.join(', ')].join(' • ')}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="radio" />}
+            onPress={() => navigation.navigate('BandModeSettings')}
+          />
         </List.Section>
       </ScrollView>
     </ScreenContainer>
