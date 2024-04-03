@@ -191,10 +191,12 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     } else if (pota.error) {
       parts.push(`POTA ${potaRef} ${pota.error}`)
     } else {
-      if (entity && entity.entityPrefix !== opCallInfo.entityPrefix) parts.push(entity.shortName)
-
       if (qrz.call === guess?.baseCall && qrz.city) {
+        if (entity && entity.entityPrefix !== opCallInfo.entityPrefix) parts.push(entity.shortName)
+
         parts.push(qrz.city, qrz.state)
+      } else {
+        if (entity) parts.push(entity.shortName)
       }
     }
 
