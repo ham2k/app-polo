@@ -9,8 +9,9 @@ import { getDataFileDefinitions, selectAllDataFileInfos } from '../../../store/d
 import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { selectSettings } from '../../../store/settings'
+import { findHooks } from '../../../extensions/registry'
 
-const DefinitionItem = ({ def, settings, info, styles, onPress }) => {
+const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
   const Icon = useMemo(() => (
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={def.icon ?? 'file-outline'} />
   ), [def.icon, styles])
@@ -25,7 +26,7 @@ const DefinitionItem = ({ def, settings, info, styles, onPress }) => {
   )
 }
 
-const DefinitionDialog = ({ def, info, settings, styles, onDialogDone }) => {
+const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone }) => {
   const dispatch = useDispatch()
 
   const handleRefresh = useCallback(() => {
@@ -68,25 +69,30 @@ export default function DataSettingsScreen ({ navigation }) {
 
   const settings = useSelector(selectSettings)
 
-  const definitions = useMemo(() => getDataFileDefinitions(), [])
-  const sortedDefinitions = useMemo(() => {
-    return Object.values(definitions).sort((a, b) => (a?.name ?? '').localeCompare(b?.name ?? ''))
-  }, [definitions])
+  const dataFileDefinitions = useMemo(() => getDataFileDefinitions(), [])
+  const sortedDataFileDefinitions = useMemo(() => {
+    return Object.values(dataFileDefinitions).sort((a, b) => (a?.name ?? '').localeCompare(b?.name ?? ''))
+  }, [dataFileDefinitions])
 
   const dataFileInfos = useSelector(selectAllDataFileInfos)
 
   const [selectedDefinition, setSelectedDefinition] = useState()
+
+  const extensionSettingHooks = useMemo(() => {
+    const hooks = findHooks('setting').filter(hook => hook.category === 'data' && hook.SettingItem)
+    return hooks
+  }, [])
 
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <List.Section>
           <List.Subheader>Offline Data</List.Subheader>
-          {sortedDefinitions.map((def) => (
+          {sortedDataFileDefinitions.map((def) => (
             <React.Fragment key={def.key}>
-              <DefinitionItem def={def} settings={settings} info={dataFileInfos[def.key]} styles={styles} onPress={() => setSelectedDefinition(def.key)} />
+              <DataFileDefinitionItem def={def} settings={settings} info={dataFileInfos[def.key]} styles={styles} onPress={() => setSelectedDefinition(def.key)} />
               {selectedDefinition === def.key && (
-                <DefinitionDialog
+                <DataFileDefinitionDialog
                   settings={settings}
                   def={def}
                   info={dataFileInfos[def.key]}
@@ -99,6 +105,14 @@ export default function DataSettingsScreen ({ navigation }) {
           ))}
         </List.Section>
 
+        {extensionSettingHooks.length > 0 && (
+          <List.Section>
+            <List.Subheader>Extensions</List.Subheader>
+            {extensionSettingHooks.map((hook) => (
+              <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
+            ))}
+          </List.Section>
+        )}
       </ScrollView>
     </ScreenContainer>
   )

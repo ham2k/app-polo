@@ -4,6 +4,8 @@ import { View, KeyboardAvoidingView, Image, Linking } from 'react-native'
 import { capitalizeString } from '../../../../../tools/capitalizeString'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { fmtDateTimeDynamic } from '../../../../../tools/timeFormats'
+import { useAllCallNotesFinder } from '../../../../../extensions/data/call-notes/CallNotesExtension'
+import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 
 const HISTORY_QSOS_TO_SHOW = 3
 
@@ -47,8 +49,11 @@ export function CallInfoDialog ({
     } else {
       andMore = ''
     }
+
     return [thisTitle, thisQs, title, recent, andMore]
   }, [callHistory, operation])
+
+  const callNotes = useAllCallNotesFinder(guess?.baseCall)
 
   const handleDone = useCallback(() => {
     setVisible(false)
@@ -103,6 +108,15 @@ export function CallInfoDialog ({
                   )}
                 </View>
               </View>
+              {callNotes && (
+                <View style={{ flexDirection: 'column' }}>
+                  <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Notes</Text>
+                  {callNotes.map((note, i) => (
+                    <Ham2kMarkdown key={i}>{note.note}</Ham2kMarkdown>
+                  ))}
+                </View>
+              )}
+
               {thisOpTitle && (
                 <View style={{ flexDirection: 'column' }}>
                   <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>

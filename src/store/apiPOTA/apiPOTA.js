@@ -66,7 +66,6 @@ export const apiPOTA = createApi({
         if (response === null) {
           return []
         }
-        console.log(response[0])
         response.forEach(spot => {
           spot.shortName = abbreviatePOTAName(spot.name)
           spot.frequency = Number.parseFloat(spot.frequency)

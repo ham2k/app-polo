@@ -1,4 +1,9 @@
 {
+  "0.7.2-pre1": {
+    "changes": [
+      "Callsign Notes"
+    ]
+  },
   "0.7.1": {
     "changes": [
       "Minor style tweaks"
