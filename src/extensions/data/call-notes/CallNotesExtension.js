@@ -135,13 +135,13 @@ export const findAllCallNotes = (call, enabledLocations) => {
 export const useOneCallNoteFinder = (call) => {
   const settings = useSelector(state => selectExtensionSettings(state, Info.key))
   return useMemo(() => {
-    return findCallNotes(call, settings.enabledLocations)
+    return findCallNotes(call, settings?.enabledLocations || {})
   }, [call, settings?.enabledLocations])
 }
 
 export const useAllCallNotesFinder = (call) => {
   const settings = useSelector(state => selectExtensionSettings(state, Info.key))
   return useMemo(() => {
-    return findAllCallNotes(call, settings.enabledLocations)
+    return findAllCallNotes(call, settings.enabledLocations || {})
   }, [call, settings?.enabledLocations])
 }
