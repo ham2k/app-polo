@@ -28,7 +28,7 @@
     "@ham2k/lib-dxcc-data": "^0.2",
     "@ham2k/lib-format-tools": "^0.3",
     "@ham2k/lib-maidenhead-grid": "^0.1.0",
-    "@ham2k/lib-operation-data": "^0.1.1",
+    "@ham2k/lib-operation-data": "^0.4.2",
     "@ham2k/lib-qson-tools": "^0.4",
     "@react-native-async-storage/async-storage": "^1.19.8",
     "@react-native-community/geolocation": "^3.2.0",

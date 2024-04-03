@@ -1,13 +1,34 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { View } from 'react-native'
 
 import ThemedDropDown from '../../../../../components/ThemedDropDown'
 import FrequencyInput from '../../../../../components/FrequencyInput'
 import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
+import { ADIF_MODES_AND_SUBMODES, BANDS, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
 
 const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => {
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+
+  const bandOptions = useMemo(() => {
+    const options = [...settings?.bands || POPULAR_BANDS]
+    if (!options.includes(qso?.band)) options.push(qso?.band)
+    if (!options.includes(operation?.band)) options.push(operation?.band)
+    options.sort((a, b) => BANDS.indexOf(a) - BANDS.indexOf(b))
+    if (!options.includes('other')) options.concat(['other'])
+
+    return options.map(band => ({ value: band, label: band }))
+  }, [operation?.band, qso?.band, settings?.bands])
+
+  const modeOptions = useMemo(() => {
+    const options = [...settings?.modes || POPULAR_MODES]
+    if (!options.includes(qso?.mode)) options.push(qso?.mode)
+    if (!options.includes(operation?.mode)) options.push(operation?.mode)
+    options.sort((a, b) => (POPULAR_MODES.indexOf(a) ?? (ADIF_MODES_AND_SUBMODES.index(a) + 100)) - (POPULAR_MODES.indexOf(b) ?? (ADIF_MODES_AND_SUBMODES.index(b) + 100)))
+    if (!options.includes('other')) options.concat(['other'])
+
+    return options.map(mode => ({ value: mode, label: mode }))
+  }, [operation?.mode, qso?.mode, settings?.modes])
 
   return (
     <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
@@ -20,24 +41,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
         dropDownContainerMaxHeight={styles.oneSpace * 19}
         fieldId={'band'}
         style={{ width: styles.oneSpace * (styles.size === 'xs' ? 13 : 15) }}
-        list={[
-          { value: '160m', label: '160m' },
-          { value: '80m', label: '80m' },
-          { value: '60m', label: '60m' },
-          { value: '40m', label: '40m' },
-          { value: '30m', label: '30m' },
-          { value: '20m', label: '20m' },
-          { value: '17m', label: '17m' },
-          { value: '15m', label: '15m' },
-          { value: '12m', label: '12m' },
-          { value: '10m', label: '10m' },
-          { value: '6m', label: '6m' },
-          { value: '4m', label: '4m' },
-          { value: '2m', label: '2m' },
-          { value: '1.25m', label: '1.25m' },
-          { value: '70cm', label: '70cm' },
-          { value: 'other', label: 'Other' }
-        ]}
+        list={bandOptions}
       />
       <FrequencyInput
         innerRef={ref}
@@ -60,15 +64,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
         dropDownContainerMaxHeight={styles.oneSpace * 19}
         fieldId={'mode'}
         style={{ width: styles.oneSpace * (styles.size === 'xs' ? 12 : 14) }}
-        list={[
-          { value: 'SSB', label: 'SSB' },
-          { value: 'CW', label: 'CW' },
-          { value: 'FM', label: 'FM' },
-          { value: 'AM', label: 'AM' },
-          { value: 'FT8', label: 'FT8' },
-          { value: 'FT4', label: 'FT4' },
-          { value: 'RTTY', label: 'RTTY' }
-        ]}
+        list={modeOptions}
       />
     </View>
   )
