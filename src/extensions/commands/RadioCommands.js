@@ -21,7 +21,7 @@ const BandCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-radio-band',
-  matchRegex: /^(2|6|10|12|15|17|20|30|40|60|80|160)M{0,1}$/i,
+  match: /^(2|6|10|12|15|17|20|30|40|60|80|160)M{0,1}$/i,
   invokeCommand: (match, { handleFieldChange }) => {
     handleFieldChange({ fieldId: 'band', value: match[1] + 'm' })
   }
@@ -31,7 +31,7 @@ const FrequencyCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-radio-frequency',
-  matchRegex: /^([\d.]{1,})$/,
+  match: /^([\d.]{1,})$/,
   invokeCommand: (match, { qso, handleFieldChange }) => {
     if (match[1].startsWith('..') && qso.freq) {
       handleFieldChange({ fieldId: 'freq', value: `${Math.round(qso.freq)}${match[1].substring(1)}` })
@@ -47,7 +47,7 @@ const ModeCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-radio-mode',
-  matchRegex: /^(CW|SSB|USB|LSB|FM|AM|FT8|FT4|RTTY)$/i,
+  match: /^(CW|SSB|USB|LSB|FM|AM|FT8|FT4|RTTY|LSB|USB)$/i,
   invokeCommand: (match, { handleFieldChange }) => {
     handleFieldChange({ fieldId: 'mode', value: match[1] })
   }
