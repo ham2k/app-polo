@@ -19,7 +19,7 @@ import { selectSettings } from '../../../../../store/settings'
 import { CallInfoDialog } from './CallInfoDialog'
 import { distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { selectOperationCallInfo } from '../../../../../store/operations'
-import { findCallNotes } from '../../../../../extensions/data/call-notes/CallNotesExtension'
+import { useOneCallNoteFinder } from '../../../../../extensions/data/call-notes/CallNotesExtension'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 
 export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
@@ -96,7 +96,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     }
   }, [guess?.baseCall, online, settings?.accounts?.qrz, skipQRZ])
 
-  const callNotes = useMemo(() => findCallNotes(guess?.baseCall), [guess?.baseCall])
+  const callNotes = useOneCallNoteFinder(guess?.baseCall)
 
   const qrzLookup = useLookupCallQuery({ call: guess?.baseCall }, { skip: skipQRZ })
   const qrz = useMemo(() => qrzLookup.currentData || {}, [qrzLookup.currentData])

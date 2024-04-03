@@ -4,7 +4,7 @@ import { View, KeyboardAvoidingView, Image, Linking } from 'react-native'
 import { capitalizeString } from '../../../../../tools/capitalizeString'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { fmtDateTimeDynamic } from '../../../../../tools/timeFormats'
-import { findAllCallNotes } from '../../../../../extensions/data/call-notes/CallNotesExtension'
+import { useAllCallNotesFinder } from '../../../../../extensions/data/call-notes/CallNotesExtension'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 
 const HISTORY_QSOS_TO_SHOW = 3
@@ -17,7 +17,7 @@ export function CallInfoDialog ({
 }) {
   const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
-  const [thisOpTitle, thisOpQSOs, historyTitle, historyRecent, historyAndMore, callNotes] = useMemo(() => {
+  const [thisOpTitle, thisOpQSOs, historyTitle, historyRecent, historyAndMore] = useMemo(() => {
     const thisQs = (callHistory || []).filter(q => operation && q.operation === operation?.uuid)
     const otherOps = (callHistory || []).filter(q => q.operation !== operation?.uuid)
 
@@ -50,10 +50,10 @@ export function CallInfoDialog ({
       andMore = ''
     }
 
-    const notes = findAllCallNotes(guess?.baseCall)
+    return [thisTitle, thisQs, title, recent, andMore]
+  }, [callHistory, operation])
 
-    return [thisTitle, thisQs, title, recent, andMore, notes]
-  }, [callHistory, operation, guess?.baseCall])
+  const callNotes = useAllCallNotesFinder(guess?.baseCall)
 
   const handleDone = useCallback(() => {
     setVisible(false)

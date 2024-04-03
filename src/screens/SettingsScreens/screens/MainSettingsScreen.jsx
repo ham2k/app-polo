@@ -60,17 +60,17 @@ export default function MainSettingsScreen ({ navigation }) {
         />
 
         <List.Item
-          title="App Features"
-          description={'Manage features like POTA, SOTA, etc'}
-          onPress={() => navigation.navigate('FeaturesSettings')}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="format-list-bulleted" />}
-        />
-
-        <List.Item
           title="Data Settings"
           description="Data files, callsign notes, and more"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />}
           onPress={() => navigation.navigate('DataSettings')}
+        />
+
+        <List.Item
+          title="App Features"
+          description={'Manage features like POTA, SOTA, etc'}
+          onPress={() => navigation.navigate('FeaturesSettings')}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="format-list-bulleted" />}
         />
 
         {settings.devMode && (
