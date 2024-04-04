@@ -18,3 +18,8 @@ export function simpleTemplate (template, values = {}, context = {}) {
     }
   })
 }
+
+export function sanitizeToISO8859 (text) {
+  // eslint-disable-next-line no-control-regex
+  return text.replace(/[”“]/g, '"').replace(/[‘’]/g, "'").replace(/[^\x00-\xFF]/g, '·')
+}

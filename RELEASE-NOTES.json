@@ -5,7 +5,8 @@
       "Band & Mode settings",
       "Fixed SOTA reference entry for 3-letter prefixes",
       "Fixed WWFF Logging (contributed by M1SDH)",
-      "New 'Custom' Extension for SIG_INFO Activations (contributed by M1SDH)"
+      "New 'Custom' Extension for SIG_INFO Activations (contributed by M1SDH)",
+      "Ensure ADIF exports are free of UTF-8 extended characters"s
     ]
   },
   "0.7.1": {
