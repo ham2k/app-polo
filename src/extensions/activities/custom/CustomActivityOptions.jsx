@@ -1,12 +1,13 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, List, TextInput } from 'react-native-paper'
+import { Button, List } from 'react-native-paper'
 
 import { setOperationData } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
 import { Info } from './CustomInfo'
 import { CustomListItem } from './CustomListItem'
 import { ListRow } from '../../../screens/components/ListComponents'
+import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 
 export function CustomActivityOptions (props) {
   const { styles, operation } = props
@@ -52,25 +53,25 @@ export function CustomActivityOptions (props) {
       </List.Section>
       <List.Section title={refs?.length === 0 ? 'Add more references' : 'Add a reference'}>
         <ListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
-          <TextInput
+          <ThemedTextInput
             label="Activity - MY_SIG in ADIF (Optional)"
-            placeholder={'COTA…'}
+            placeholder={'i.e. COTA…'}
             value={mySig}
             onChangeText={text => setMySig(text)}
           />
         </ListRow>
         <ListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
-          <TextInput
+          <ThemedTextInput
             label="Reference - MY_SIG_INFO in ADIF"
-            placeholder={'XY-1234…'}
+            placeholder={'i.e. XY-1234…'}
             value={mySigInfo}
             onChangeText={text => setMySigInfo(text)}
           />
         </ListRow>
         <ListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
-          <TextInput
+          <ThemedTextInput
             label="Name (Optional)"
-            placeholder={'XYZ Castle…'}
+            placeholder={'i.e. XYZ Castle…'}
             value={name}
             onChangeText={text => setName(text)}
           />
