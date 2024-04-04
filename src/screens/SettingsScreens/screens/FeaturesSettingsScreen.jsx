@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dialog, List, Portal, Switch, Text } from 'react-native-paper'
 import { KeyboardAvoidingView, ScrollView } from 'react-native'
@@ -9,6 +9,7 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { activateExtension, allExtensions, deactivateExtension } from '../../../extensions/registry'
 import { EXTENSION_CATEGORIES, EXTENSION_CATEGORIES_ORDER } from '../../../extensions/categories'
+import { useUIState } from '../../../store/ui'
 
 const FeatureItem = ({ extension, settings, info, styles, onChange }) => {
   const enabled = useMemo(() => settings[`extensions/${extension.key}`] ?? extension?.enabledByDefault, [settings, extension])
@@ -52,7 +53,7 @@ export default function FeaturesSettingsScreen ({ navigation }) {
     }).filter((group) => group.extensions.length > 0)
   }, [])
 
-  const [slowOperationMessage, setSlowOperationMessage] = useState()
+  const [slowOperationMessage, setSlowOperationMessage] = useUIState('FeaturesSettingsScreen', 'slowOperationMessage', undefined)
 
   const handleChange = useCallback((extension, value) => {
     dispatch(setSettings({ [`extensions/${extension.key}`]: value }))
@@ -68,7 +69,7 @@ export default function FeaturesSettingsScreen ({ navigation }) {
       if (slowTimeout) clearTimeout(slowTimeout)
       setSlowOperationMessage()
     }, 0)
-  }, [dispatch])
+  }, [dispatch, setSlowOperationMessage])
 
   return (
     <ScreenContainer>

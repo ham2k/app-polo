@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Button, Checkbox, Dialog, List, Portal } from 'react-native-paper'
 import { KeyboardAvoidingView, ScrollView } from 'react-native'
 import { stringOrFunction } from '../../../../../tools/stringOrFunction'
@@ -7,10 +7,10 @@ import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
 import { findHooks } from '../../../../../extensions/registry'
+import { useUIState } from '../../../../../store/ui'
 
 export function LoggingPanelConfigDialog ({ visible, operation, settings, styles, onDialogDone }) {
-  const [dialogVisible, setDialogVisible] = useState(false)
-  const [setValue] = useState('')
+  const [dialogVisible, setDialogVisible] = useUIState('LoggingPanelConfigDialog', 'dialogVisible', true)
 
   const loggingControlSettings = settings?.logging?.controls || {}
 
@@ -35,25 +35,16 @@ export function LoggingPanelConfigDialog ({ visible, operation, settings, styles
     return keys.map(key => allControls[key]).sort((a, b) => a.order - b.order)
   }, [allControls])
 
-  useEffect(() => {
-    setDialogVisible(visible)
-  }, [visible])
-
-  useEffect(() => {
-    setValue(settings?.theme || 'auto')
-  }, [settings, setValue])
-
   const handleAccept = useCallback(() => {
     // dispatch(setSettings({ theme: value }))
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [onDialogDone])
+  }, [onDialogDone, setDialogVisible])
 
   const handleCancel = useCallback(() => {
-    setValue(settings.theme)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [settings, onDialogDone, setValue])
+  }, [setDialogVisible, onDialogDone])
 
   return (
     <Portal>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { KeyboardAvoidingView } from 'react-native'
 import { Button, Dialog, Portal, Text, TouchableRipple } from 'react-native-paper'
@@ -8,6 +8,7 @@ import { locationToGrid } from '@ham2k/lib-maidenhead-grid'
 import { setOperationData } from '../../../../store/operations'
 import ThemedTextInput from '../../../components/ThemedTextInput'
 import { reportError } from '../../../../App'
+import { useUIState } from '../../../../store/ui'
 
 const VALID_MAIDENHEAD_REGEX = /^([A-R]{2}|[A-R]{2}[0-9]{2}|[A-R]{2}[0-9]{2}[a-x]{2}||[A-R]{2}[0-9]{2}[a-x]{2}[0-9]{2})$/
 const PARTIAL_MAIDENHEAD_REGEX = /^([A-R]{0,2}|[A-R]{2}[0-9]{0,2}|[A-R]{2}[0-9]{2}[a-x]{0,2}||[A-R]{2}[0-9]{2}[a-x]{2}[0-9]{0,2})$/
@@ -15,22 +16,18 @@ const PARTIAL_MAIDENHEAD_REGEX = /^([A-R]{0,2}|[A-R]{2}[0-9]{0,2}|[A-R]{2}[0-9]{
 export function LocationDialog ({ operation, visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
 
-  const [dialogVisible, setDialogVisible] = useState(false)
+  const [dialogVisible, setDialogVisible] = useUIState('OpSettingsTab.LocationDialog', 'dialogVisible', visible)
 
-  const [grid, setGridValue] = useState('')
-  const [isValid, setIsValidValue] = useState()
-
-  useEffect(() => {
-    setDialogVisible(visible)
-  }, [visible])
+  const [grid, setGridValue] = useUIState('OpSettingsTab.LocationDialog', 'grid', '')
+  const [isValid, setIsValidValue] = useUIState('OpSettingsTab.LocationDialog', 'isValid', null)
 
   useEffect(() => {
     setGridValue(operation?.grid || '')
-  }, [operation])
+  }, [operation, setGridValue])
 
   useEffect(() => {
     setIsValidValue(VALID_MAIDENHEAD_REGEX.test(grid))
-  }, [grid])
+  }, [grid, setIsValidValue])
 
   const handleGridChange = useCallback((text) => {
     text = text.substring(0, 4).toUpperCase() + text.substring(4).toLowerCase()
@@ -45,15 +42,15 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
     }
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [dispatch, operation, grid, isValid, onDialogDone])
+  }, [isValid, setDialogVisible, onDialogDone, dispatch, operation.uuid, grid])
 
   const handleCancel = useCallback(() => {
     setGridValue(operation.grid)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [operation, onDialogDone])
+  }, [setGridValue, operation.grid, setDialogVisible, onDialogDone])
 
-  const [locationGrid, setLocationGrid] = useState()
+  const [locationGrid, setLocationGrid] = useUIState('OpSettingsTab.LocationDialog', 'locationGrid', null)
   useEffect(() => {
     Geolocation.getCurrentPosition(info => {
       const { latitude, longitude } = info.coords
@@ -71,7 +68,7 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
     return () => {
       Geolocation.clearWatch(watchId)
     }
-  }, [])
+  }, [setLocationGrid])
 
   return (
     <Portal>

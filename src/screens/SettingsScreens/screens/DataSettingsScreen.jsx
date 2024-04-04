@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Dialog, List, Portal, Text } from 'react-native-paper'
 import { KeyboardAvoidingView, ScrollView } from 'react-native'
@@ -10,6 +10,7 @@ import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { selectSettings } from '../../../store/settings'
 import { findHooks } from '../../../extensions/registry'
+import { useUIState } from '../../../store/ui'
 
 const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
   const Icon = useMemo(() => (
@@ -76,7 +77,7 @@ export default function DataSettingsScreen ({ navigation }) {
 
   const dataFileInfos = useSelector(selectAllDataFileInfos)
 
-  const [selectedDefinition, setSelectedDefinition] = useState()
+  const [selectedDefinition, setSelectedDefinition] = useUIState('DataSettingsScreen', 'selectedDefinition', '')
 
   const extensionSettingHooks = useMemo(() => {
     const hooks = findHooks('setting').filter(hook => hook.category === 'data' && hook.SettingItem)

@@ -1,18 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { deleteOperation } from '../../../../store/operations'
 import { useNavigation } from '@react-navigation/native'
+import { useUIState } from '../../../../store/ui'
 
 export function DeleteOperationDialog ({ operation, visible, settings, styles, onDialogDone }) {
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
-  const [dialogVisible, setDialogVisible] = useState(false)
-
-  useEffect(() => {
-    setDialogVisible(visible)
-  }, [visible])
+  const [dialogVisible, setDialogVisible] = useUIState('OpSettingsTab.DeleteOperationDialog', 'dialogVisible', visible)
 
   const handleAccept = useCallback(() => {
     setDialogVisible(false)
@@ -20,12 +17,12 @@ export function DeleteOperationDialog ({ operation, visible, settings, styles, o
       navigation.navigate('Home')
     })
     onDialogDone && onDialogDone()
-  }, [operation, dispatch, onDialogDone, navigation])
+  }, [setDialogVisible, dispatch, operation.uuid, onDialogDone, navigation])
 
   const handleCancel = useCallback(() => {
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [onDialogDone])
+  }, [onDialogDone, setDialogVisible])
 
   return (
     <Portal>

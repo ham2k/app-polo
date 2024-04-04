@@ -1,34 +1,27 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Button, Dialog, Portal, RadioButton, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
 import { KeyboardAvoidingView, View } from 'react-native'
+import { useUIState } from '../../../store/ui'
 
 export function ThemeDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
 
-  const [dialogVisible, setDialogVisible] = useState(false)
-  const [value, setValue] = useState('')
-
-  useEffect(() => {
-    setDialogVisible(visible)
-  }, [visible])
-
-  useEffect(() => {
-    setValue(settings?.theme || 'auto')
-  }, [settings])
+  const [dialogVisible, setDialogVisible] = useUIState('ThemeDialog', 'dialogVisible', visible)
+  const [value, setValue] = useUIState('ThemeDialog', 'value', settings?.theme || 'auto')
 
   const handleAccept = useCallback(() => {
     dispatch(setSettings({ theme: value }))
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [value, dispatch, onDialogDone])
+  }, [dispatch, value, setDialogVisible, onDialogDone])
 
   const handleCancel = useCallback(() => {
     setValue(settings.theme)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [settings, onDialogDone])
+  }, [setValue, settings.theme, setDialogVisible, onDialogDone])
 
   return (
     <Portal>
