@@ -1,6 +1,5 @@
 import SQLite from 'react-native-sqlite-2'
 import { createTables } from './createTables'
-import { reportError } from '../../App'
 
 const DB_NAME = 'polo.sqlite'
 const DB_DISPLAY_NAME = 'Ham2K Portable Logger Database'
@@ -18,7 +17,7 @@ export function dbExecute (sql, params, options = {}) {
             resolve(results)
           },
           (tx, error) => {
-            reportError('Error executing SQL', sql, params, error)
+            console.info('Error executing SQL', { sql, params, error })
             reject(error)
           }
         )
@@ -33,7 +32,7 @@ export function dbExecute (sql, params, options = {}) {
               resolve(results)
             },
             (tx, error) => {
-              reportError('Error executing SQL', sql, params, error)
+              console.info('Error executing SQL', { sql, params, error })
               reject(error)
             }
           )
