@@ -12,7 +12,7 @@ import RadioCommands from './commands/RadioCommands'
 import DevModeCommands from './commands/DevModeCommands'
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 
-const loadExtensions = () => (dispatch, getState) => {
+const loadExtensions = () => async (dispatch, getState) => {
   dispatch(addRuntimeMessage('Loading extensions'))
   registerExtension(CountryFilesExtension)
   registerExtension(POTAExtension)
@@ -26,7 +26,7 @@ const loadExtensions = () => (dispatch, getState) => {
 
   registerExtension(CallNotesExtension)
 
-  activateEnabledExtensions(dispatch, getState)
+  await activateEnabledExtensions(dispatch, getState)
 }
 
 export default loadExtensions
