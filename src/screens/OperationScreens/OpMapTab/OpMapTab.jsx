@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import MapView, { Marker, Polyline } from 'react-native-maps'
 
@@ -14,6 +14,7 @@ import { selectSettings } from '../../../store/settings'
 import { apiQRZ } from '../../../store/apiQRZ'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../tools/geoTools'
 import { reportError } from '../../../App'
+import { useUIState } from '../../../store/ui'
 
 const PIN_QTH = require('./images/qth.png')
 const PIN_FOR_STRENGTH = {
@@ -66,7 +67,7 @@ export default function OpMapTab ({ navigation, route }) {
 
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
 
-  const [nextQSOWithoutInfo, setNextQSOWithoutInfo] = useState(null)
+  const [nextQSOWithoutInfo, setNextQSOWithoutInfo] = useUIState('OpMapTab', 'nextQSOWithoutInfo', null)
 
   useEffect(() => {
     if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password) {
@@ -74,7 +75,7 @@ export default function OpMapTab ({ navigation, route }) {
         setNextQSOWithoutInfo(qsos.find(qso => !qso.their?.qrzInfo))
       }
     }
-  }, [qsos, online, settings, nextQSOWithoutInfo])
+  }, [qsos, online, settings, nextQSOWithoutInfo, setNextQSOWithoutInfo])
 
   useEffect(() => {
     if (nextQSOWithoutInfo) {
@@ -119,7 +120,7 @@ export default function OpMapTab ({ navigation, route }) {
         }
       }, 10)
     }
-  }, [nextQSOWithoutInfo, dispatch, operation?.uuid])
+  }, [nextQSOWithoutInfo, dispatch, operation.uuid, setNextQSOWithoutInfo])
 
   const mappableQSOs = useMemo(() => {
     const activeQSOs = qsos.filter(qso => !qso.deleted)
@@ -152,13 +153,13 @@ export default function OpMapTab ({ navigation, route }) {
     }
   }, [qth, mappableQSOs])
 
-  const [mapStyles, setMapStyles] = useState(stylesForMap({ region: initialRegion, qth, mappableQSOs }))
+  const [mapStyles, setMapStyles] = useUIState('OpMapTab', 'mapStyles', stylesForMap({ region: initialRegion, qth, mappableQSOs }))
   const handleRegionChange = useCallback((region) => {
     const newStyles = stylesForMap({ region, qth, mappableQSOs })
     if (newStyles.marker.opacity !== mapStyles.marker.opacity) {
       setMapStyles(newStyles)
     }
-  }, [mapStyles, qth, mappableQSOs])
+  }, [qth, mappableQSOs, mapStyles.marker.opacity, setMapStyles])
 
   return (
     <MapView

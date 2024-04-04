@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { List, Text } from 'react-native-paper'
 import { Linking, ScrollView } from 'react-native'
@@ -11,13 +11,14 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 import { OperatorCallsignDialog } from '../components/OperatorCallsignDialog'
 import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
+import { useUIState } from '../../../store/ui'
 
 export default function MainSettingsScreen ({ navigation }) {
   const styles = useThemedStyles()
 
   const settings = useSelector(selectSettings)
 
-  const [currentDialog, setCurrentDialog] = useState()
+  const [currentDialog, setCurrentDialog] = useUIState('MainSettingsScreen', 'currentDialog', '')
 
   return (
     <ScrollView style={{ flex: 1 }}>

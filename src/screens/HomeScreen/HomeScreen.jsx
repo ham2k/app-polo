@@ -10,6 +10,7 @@ import ScreenContainer from '../components/ScreenContainer'
 import { addNewOperation, selectOperationsList } from '../../store/operations'
 import OperationItem from './components/OperationItem'
 import { selectSettings } from '../../store/settings'
+import { useUIState } from '../../store/ui'
 
 export default function HomeScreen ({ navigation }) {
   const styles = useThemedStyles()
@@ -44,7 +45,7 @@ export default function HomeScreen ({ navigation }) {
     )
   }, [navigateToOperation, styles, settings])
 
-  const [isExtended, setIsExtended] = React.useState(true)
+  const [isExtended, setIsExtended] = useUIState('HomeScreen', 'scrolledToTop', true)
 
   const handleScroll = ({ nativeEvent }) => {
     const currentScrollPosition =

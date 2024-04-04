@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
 import { useSelector } from 'react-redux'
@@ -21,6 +21,7 @@ import { distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { selectOperationCallInfo } from '../../../../../store/operations'
 import { useOneCallNoteFinder } from '../../../../../extensions/data/call-notes/CallNotesExtension'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
+import { useUIState } from '../../../../../store/ui'
 
 export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -66,7 +67,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     return hasRef(operation?.refs, 'potaActivation')
   }, [operation])
 
-  const [showDialog, setShowDialog] = useState(false)
+  const [showDialog, setShowDialog] = useUIState('LoggingPanel.CallInfo', 'showDialog', false)
 
   const guess = useMemo(() => { // Parse the callsign
     if (qso?.their?.guess?.baseCall) {
@@ -82,10 +83,10 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     }
   }, [qso])
 
-  const [skipQRZ, setSkipQRZ] = useState(undefined) // Use `skip` to prevent calling the API on every keystroke
+  const [skipQRZ, setSkipQRZ] = useUIState('LoggingPanel.CallInfo', 'skipQRZ', null) // Use `skip` to prevent calling the API on every keystroke
   useEffect(() => {
     if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && guess?.baseCall?.length > 2) {
-      if (skipQRZ === undefined) {
+      if (skipQRZ === null) {
         // If we start with a prefilled call, then call QRZ right away
         setSkipQRZ(false)
       } else {
@@ -94,21 +95,21 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
         return () => clearTimeout(timeout)
       }
     }
-  }, [guess?.baseCall, online, settings?.accounts?.qrz, skipQRZ])
+  }, [guess?.baseCall, online, setSkipQRZ, settings?.accounts?.qrz, skipQRZ])
 
   const callNotes = useOneCallNoteFinder(guess?.baseCall)
 
   const qrzLookup = useLookupCallQuery({ call: guess?.baseCall }, { skip: skipQRZ })
   const qrz = useMemo(() => qrzLookup.currentData || {}, [qrzLookup.currentData])
 
-  const [callHistory, setCallHistory] = useState()
+  const [callHistory, setCallHistory] = useUIState('LoggingPanel.CallInfo', 'callHistory', [])
   useEffect(() => { // Get Call History
     const timeout = setTimeout(async () => {
       const qsoHistory = await findQSOHistory(guess?.baseCall)
       setCallHistory(qsoHistory)
     }, 0)
     return () => clearTimeout(timeout)
-  }, [guess?.baseCall])
+  }, [guess?.baseCall, setCallHistory])
 
   const potaRef = useMemo(() => { // Find POTA references
     const potaRefs = filterRefs(qso?.refs, 'pota')

@@ -1,34 +1,31 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Button, Dialog, Portal, RadioButton, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
 import { KeyboardAvoidingView, View } from 'react-native'
+import { useUIState } from '../../../store/ui'
 
 export function FlagsDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
 
-  const [dialogVisible, setDialogVisible] = useState(false)
-  const [value, setValue] = useState('')
-
-  useEffect(() => {
-    setDialogVisible(visible)
-  }, [visible])
+  const [dialogVisible, setDialogVisible] = useUIState('FlagsDialog', 'dialogVisible', visible)
+  const [value, setValue] = useUIState('FlagsDialog', 'value', '')
 
   useEffect(() => {
     setValue(settings?.dxFlags || 'dx')
-  }, [settings])
+  }, [setValue, settings])
 
   const handleAccept = useCallback(() => {
     dispatch(setSettings({ dxFlags: value }))
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [value, dispatch, onDialogDone])
+  }, [dispatch, value, setDialogVisible, onDialogDone])
 
   const handleCancel = useCallback(() => {
     setValue(settings.theme)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [settings, onDialogDone])
+  }, [setValue, settings.theme, setDialogVisible, onDialogDone])
 
   return (
     <Portal>

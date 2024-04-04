@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Button, Dialog, List, Portal, Switch, Text } from 'react-native-paper'
 import { KeyboardAvoidingView, ScrollView } from 'react-native'
@@ -11,6 +11,7 @@ import { BUILT_IN_NOTES, CallNotes, CallNotesFiles, Info, createDataFileDefiniti
 import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
 import { registerDataFile, unRegisterDataFile } from '../../../../store/dataFiles'
 import { loadDataFile } from '../../../../store/dataFiles/actions/dataFileFS'
+import { useUIState } from '../../../../store/ui'
 
 const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDone }) => {
   const def = useMemo(() => extSettings.customFiles[index], [extSettings.customFiles, index])
@@ -110,7 +111,7 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
     return enabled
   }, [extSettings?.enabledLocations])
 
-  const [selectedFile, setSelectedFile] = useState()
+  const [selectedFile, setSelectedFile] = useUIState('ManageCallNotesScreen', 'selectedFile', undefined)
 
   return (
     <ScreenContainer>
