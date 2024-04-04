@@ -7,6 +7,7 @@ import SOTAExtension from './activities/sota/SOTAExtension'
 import WWFFExtension from './activities/wwff/WWFFExtension'
 import FDExtension from './activities/fd/FDExtension'
 import WFDExtension from './activities/wfd/WFDExtension'
+import CustomExtension from './activities/custom/CustomExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import DevModeCommands from './commands/DevModeCommands'
@@ -18,6 +19,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(POTAExtension)
   registerExtension(SOTAExtension)
   registerExtension(WWFFExtension)
+  registerExtension(CustomExtension)
   registerExtension(WFDExtension)
   registerExtension(FDExtension)
 
