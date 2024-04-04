@@ -1,4 +1,5 @@
 import packageJson from '../../package.json'
+import { sanitizeToISO8859 } from './stringTools'
 import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
 export function qsonToADIF ({ operation, settings, qsos, handler, title }) {
@@ -72,6 +73,8 @@ function adifRow (fields) {
 function adifField (name, value, options = {}) {
   if (!value && !options.force) return ''
   if (typeof value !== 'string') value = value.toString()
+
+  value = sanitizeToISO8859(value)
 
   return `<${name}:${value?.length ?? 0}>${value}${options.newLine ? '\n' : ' '}`
 }
