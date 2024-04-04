@@ -1,9 +1,11 @@
 {
-  "0.7.2-pre2": {
+  "0.7.2-pre3": {
     "changes": [
       "Callsign Notes",
       "Band & Mode settings",
-      "Fixed SOTA reference entry for 3-letter prefixes"
+      "Fixed SOTA reference entry for 3-letter prefixes",
+      "Fixed WWFF Logging (contributed by M1SDH)",
+      "New 'Custom' Extesion for SIG_INFO Activations (contributed by M1SDH)"
     ]
   },
   "0.7.1": {
