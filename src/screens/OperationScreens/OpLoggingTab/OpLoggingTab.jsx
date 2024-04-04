@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 
 import { View } from 'react-native'
 import { useSelector } from 'react-redux'
@@ -9,6 +9,7 @@ import LoggingPanel from './components/LoggingPanel'
 import QSOList from './components/QSOList'
 import { selectQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
+import { useUIState } from '../../../store/ui'
 
 function prepareStyles (themeStyles, themeColor) {
   return {
@@ -38,13 +39,13 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   const settings = useSelector(selectSettings)
 
-  const [loggingState, setLoggingState] = useState({})
+  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   useEffect(() => {
     if (route?.params?.qso) {
       setLoggingState({ selectedKey: 'suggested-qso', suggestedQSO: route.params.qso })
     }
-  }, [route?.params?.qso])
+  }, [route.params.qso, setLoggingState])
 
   // Set navigation title
   useEffect(() => {

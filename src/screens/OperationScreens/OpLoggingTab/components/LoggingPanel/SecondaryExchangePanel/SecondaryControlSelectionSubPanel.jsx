@@ -1,17 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { ScrollView, View } from 'react-native'
 import { Icon, IconButton } from 'react-native-paper'
 
 import LoggerChip from '../../../../components/LoggerChip'
 import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
+import { useUIState } from '../../../../../../store/ui'
 
 const PositionedControlChip = (props) => {
   const { control, operation, qso, settings, onChange } = props
 
-  const [layout, setLayout] = useState([])
+  const [layout, setLayout] = useUIState('SecondaryExchangePanel.ControlSelection', 'layout', {})
   const handleLayout = useCallback((event) => {
     setLayout({ ...event.nativeEvent.layout, key: control.key })
-  }, [control.key])
+  }, [control.key, setLayout])
 
   const handleChange = useCallback((value) => {
     onChange && onChange(value, layout)
@@ -37,9 +38,9 @@ export const SecondaryControlSelectionsubPanel = ({
   themeColor, currentSecondaryControl, setCurrentSecondaryControl,
   allControls, enabledControls
 }) => {
-  const [containerLayout, setContainerLayout] = useState()
+  const [containerLayout, setContainerLayout] = useUIState('SecondaryExchangePanel.ControlSelection', 'containerLayout', null)
 
-  const [chipLayout, setChipLayout] = useState({})
+  const [chipLayout, setChipLayout] = useUIState('SecondaryExchangePanel.ControlSelection', 'chipLayout', {})
   const handleChipSelect = useCallback((key, value, layout) => {
     if (value) {
       setChipLayout(layout)
@@ -47,15 +48,15 @@ export const SecondaryControlSelectionsubPanel = ({
       setChipLayout({})
     }
     setCurrentSecondaryControl(key)
-  }, [setCurrentSecondaryControl])
+  }, [setChipLayout, setCurrentSecondaryControl])
 
   const [secondaryControl, SecondaryComponent] = useMemo(() => {
     const control = allControls[currentSecondaryControl]
     return [control, control?.InputComponent]
   }, [allControls, currentSecondaryControl])
 
-  const [secondaryContainerStyle, setSecondaryContainerStyle] = useState()
-  const [secondaryComponentStyle, setSecondaryComponentStyle] = useState()
+  const [secondaryContainerStyle, setSecondaryContainerStyle] = useUIState('SecondaryExchangePanel.ControlSelection', 'secondaryContainerStyle', false)
+  const [secondaryComponentStyle, setSecondaryComponentStyle] = useUIState('SecondaryExchangePanel.ControlSelection', 'secondaryComponentStyle', false)
 
   useEffect(() => {
     if (secondaryControl && secondaryControl.key === chipLayout.key) {
@@ -75,12 +76,13 @@ export const SecondaryControlSelectionsubPanel = ({
         setSecondaryContainerStyle({ paddingRight: styles.oneSpace, justifyContent: 'flex-end' })
       }
     }
-  }, [secondaryControl, chipLayout, containerLayout, currentSecondaryControl, styles])
+  }, [secondaryControl, chipLayout, containerLayout, currentSecondaryControl, styles, setSecondaryComponentStyle, setSecondaryContainerStyle])
 
-  const [chipContainerOpen, setChipContainerOpen] = useState(false)
+  const [chipContainerOpen, setChipContainerOpen] = useUIState('SecondaryExchangePanel.ControlSelection', 'chipContainerOpen', false)
   const handleContainerToggle = useCallback((value) => {
     setChipContainerOpen(value)
-  }, [])
+  }, [setChipContainerOpen])
+
   const [chipContainerStyle, chipScrollViewProps] = useMemo(() => {
     if (chipContainerOpen) {
       return [{ flexWrap: 'wrap' }, { horizontal: false }]

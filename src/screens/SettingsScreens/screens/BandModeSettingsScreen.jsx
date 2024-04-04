@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
@@ -7,6 +7,7 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { ADIF_MODES_AND_SUBMODES, BANDS, MAIN_MODES, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
+import { useUIState } from '../../../store/ui'
 
 export default function BandModeSettingsScreen ({ navigation }) {
   const dispatch = useDispatch()
@@ -41,17 +42,7 @@ export default function BandModeSettingsScreen ({ navigation }) {
     dispatch(setSettings({ modes: newModes }))
   }, [dispatch, settings?.modes])
 
-  const [moreBands, setMoreBands] = useState()
-
-  useEffect(() => {
-    if (moreBands === undefined) {
-      if ((settings.bands ?? []).find(band => !POPULAR_BANDS.includes(band))) {
-        setMoreBands(true)
-      } else {
-        setMoreBands(false)
-      }
-    }
-  }, [moreBands, settings?.bands])
+  const [moreBands, setMoreBands] = useUIState('BandModeSettingsScreen', 'moreBands', !!(settings.bands ?? []).find(band => !POPULAR_BANDS.includes(band)))
 
   const bandOptions = useMemo(() => {
     if (moreBands || (settings.bands ?? []).find(band => !POPULAR_BANDS.includes(band))) {
@@ -61,7 +52,7 @@ export default function BandModeSettingsScreen ({ navigation }) {
     }
   }, [moreBands, settings?.bands])
 
-  const [moreModes, setMoreModes] = useState()
+  const [moreModes, setMoreModes] = useUIState('BandModeSettingsScreen', 'moreModes', undefined)
 
   useEffect(() => {
     if (moreModes === undefined) {
@@ -73,7 +64,7 @@ export default function BandModeSettingsScreen ({ navigation }) {
         setMoreModes(0)
       }
     }
-  }, [moreModes, settings?.modes])
+  }, [moreModes, setMoreModes, settings.modes])
 
   const modeOptions = useMemo(() => {
     if (moreModes === 2 || (settings.modes ?? []).find(mode => !POPULAR_MODES.includes(mode))) {

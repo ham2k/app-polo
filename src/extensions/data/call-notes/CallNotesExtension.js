@@ -105,7 +105,7 @@ const createCallNotesFetcher = (file) => async () => {
     }
   })
 
-  RNFetchBlob.fs.unlink(response.data)
+  await RNFetchBlob.fs.unlink(response.data)
 
   return data
 }
