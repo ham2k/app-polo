@@ -6,6 +6,7 @@ export async function createTables (db) {
     const row = await dbSelectOne('SELECT version FROM version LIMIT 1', [], { db })
     version = row?.version ?? 0
   } catch (e) {
+    console.log('createTables -- error getting version', e)
     version = 0
   }
 
