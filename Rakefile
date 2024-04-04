@@ -39,7 +39,7 @@ namespace :release do
     puts ""
     puts release_description
     puts ""
-
+    puts "You need to be on the unstable track to test this.  (enter \"konami\" on any operation log, and then use Developer Settings to change your release track)"
   end
 
   task :stable => :dotenv do
