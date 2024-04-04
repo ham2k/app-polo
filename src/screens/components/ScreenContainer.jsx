@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHeaderHeight } from '@react-navigation/elements'
 
-import { KeyboardAvoidingView, Platform, SafeAreaView, View } from 'react-native'
+import { KeyboardAvoidingView, Platform, View } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export default function ScreenContainer ({ children }) {
@@ -10,15 +10,13 @@ export default function ScreenContainer ({ children }) {
 
   if (Platform.OS === 'ios') {
     return (
-      <SafeAreaView style={{ flex: 1, flexDirection: 'column' }}>
-        <KeyboardAvoidingView
-          style={[styles.screenContainer, { flex: 1, flexDirection: 'column' }]}
-          behavior={'padding'}
-          keyboardVerticalOffset={headerHeight}
-        >
-          {children}
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+      <KeyboardAvoidingView
+        style={[styles.screenContainer, { flex: 1, flexDirection: 'column' }]}
+        behavior={'padding'}
+        keyboardVerticalOffset={headerHeight}
+      >
+        {children}
+      </KeyboardAvoidingView>
     )
   } else {
     return (

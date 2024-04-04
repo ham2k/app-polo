@@ -22,6 +22,7 @@ import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { joinAnd } from '../../../../tools/joinAnd'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 import { checkAndProcessCommands } from '../../../../extensions/commands/commandHandling'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 function prepareStyles (themeStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
@@ -436,123 +437,126 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   }, [])
 
   return (
-    <View style={[styles.root, style, { flexDirection: 'column', justifyContent: 'flex-end', width: '100%', minHeight: 100 }]}>
-      <View style={{ width: '100%', flexDirection: 'row', minHeight: 20 }}>
-        <View style={{ flex: 1, flexDirection: 'column' }}>
+    <View style={[styles.root, style]}>
+      <SafeAreaView edges={['bottom', 'left', 'right']}>
 
-          <SecondaryExchangePanel
-            qso={qso}
-            operation={operation}
-            settings={settings}
-            setQSO={setQSO}
-            disabled={qso?.deleted || qso?._willBeDeleted}
-            handleFieldChange={handleFieldChange}
-            handleSubmit={handleSubmit}
-            focusedRef={focusedRef}
-            styles={styles}
-            themeColor={themeColor}
-            currentSecondaryControl={currentSecondaryControl}
-            setCurrentSecondaryControl={setCurrentSecondaryControl}
-          />
+        <View style={{ width: '100%', flexDirection: 'row', minHeight: 20 }}>
+          <View style={{ flex: 1, flexDirection: 'column' }}>
 
-          <View style={styles.infoPanel.container}>
-            <View style={{ flex: 1, paddingLeft: styles.oneSpace }}>
-              {operationError ? (
-                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-                  <Ham2kMarkdown style={{ color: styles.theme.colors.error }}>
-                    {operationError || 'ERROR'}
-                  </Ham2kMarkdown>
-                </View>
-              ) : (
-                qso?.deleted || qso?._willBeDeleted ? (
-                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
-                      {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
-                    </Text>
+            <SecondaryExchangePanel
+              qso={qso}
+              operation={operation}
+              settings={settings}
+              setQSO={setQSO}
+              disabled={qso?.deleted || qso?._willBeDeleted}
+              handleFieldChange={handleFieldChange}
+              handleSubmit={handleSubmit}
+              focusedRef={focusedRef}
+              styles={styles}
+              themeColor={themeColor}
+              currentSecondaryControl={currentSecondaryControl}
+              setCurrentSecondaryControl={setCurrentSecondaryControl}
+            />
+
+            <View style={styles.infoPanel.container}>
+              <View style={{ flex: 1, paddingLeft: styles.oneSpace }}>
+                {operationError ? (
+                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+                    <Ham2kMarkdown style={{ color: styles.theme.colors.error }}>
+                      {operationError || 'ERROR'}
+                    </Ham2kMarkdown>
                   </View>
                 ) : (
-                  qso?.their?.call ? (
-                    <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} onChange={handleBatchChanges} />
+                  qso?.deleted || qso?._willBeDeleted ? (
+                    <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
+                      <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
+                        {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
+                      </Text>
+                    </View>
                   ) : (
-                    <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
+                    qso?.their?.call ? (
+                      <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} onChange={handleBatchChanges} />
+                    ) : (
+                      <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
+                    )
                   )
-                )
 
-              )}
-            </View>
-            <View style={styles.infoPanel.buttonContainer}>
-              {qso?._isNew ? (
-                undoInfo ? (
-                  <IconButton
-                    icon={'undo'}
-                    size={styles.infoPanel.button.size}
-                    iconColor={styles.infoPanel.button.color}
-                    onPress={handleUnwipe}
-                  />
+                )}
+              </View>
+              <View style={styles.infoPanel.buttonContainer}>
+                {qso?._isNew ? (
+                  undoInfo ? (
+                    <IconButton
+                      icon={'undo'}
+                      size={styles.infoPanel.button.size}
+                      iconColor={styles.infoPanel.button.color}
+                      onPress={handleUnwipe}
+                    />
+                  ) : (
+                    <IconButton
+                      icon={'backspace-outline'}
+                      size={styles.infoPanel.button.size}
+                      iconColor={styles.infoPanel.button.color}
+                      disabled={!qsoHasChanges}
+                      onPress={handleWipe}
+                    />
+                  )
                 ) : (
-                  <IconButton
-                    icon={'backspace-outline'}
-                    size={styles.infoPanel.button.size}
-                    iconColor={styles.infoPanel.button.color}
-                    disabled={!qsoHasChanges}
-                    onPress={handleWipe}
-                  />
-                )
-              ) : (
-                (qso?.deleted || qso?._willBeDeleted || undoInfo) ? (
-                  <IconButton
-                    icon={'undo'}
-                    size={styles.infoPanel.button.size}
-                    iconColor={styles.infoPanel.button.color}
-                    onPress={undoInfo ? handleUnwipe : handleUndelete}
-                  />
-                ) : (
-                  <IconButton
-                    icon={'trash-can-outline'}
-                    size={styles.infoPanel.button.size}
-                    iconColor={styles.infoPanel.button.color}
-                    disabled={false}
-                    onPress={handleDelete}
-                  />
-                )
-              )}
+                  (qso?.deleted || qso?._willBeDeleted || undoInfo) ? (
+                    <IconButton
+                      icon={'undo'}
+                      size={styles.infoPanel.button.size}
+                      iconColor={styles.infoPanel.button.color}
+                      onPress={undoInfo ? handleUnwipe : handleUndelete}
+                    />
+                  ) : (
+                    <IconButton
+                      icon={'trash-can-outline'}
+                      size={styles.infoPanel.button.size}
+                      iconColor={styles.infoPanel.button.color}
+                      disabled={false}
+                      onPress={handleDelete}
+                    />
+                  )
+                )}
+              </View>
+
             </View>
 
           </View>
-
         </View>
-      </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: styles.halfSpace }}>
-        <MainExchangePanel
-          style={{ flex: 1, paddingLeft: styles.oneSpace }}
-          qso={qso}
-          operation={operation}
-          settings={settings}
-          disabled={qso?.deleted || qso?._willBeDeleted}
-          styles={styles}
-          themeColor={themeColor}
-          handleSubmit={handleSubmit}
-          handleFieldChange={handleFieldChange}
-          setQSO={setQSO}
-          mainFieldRef={mainFieldRef}
-          focusedRef={focusedRef}
-        />
-        <View style={{ flex: 0, justifyContent: 'center', alignItems: 'center', paddingLeft: styles.halfSpace }}>
-          <IconButton
-            icon={qso?._isNew ? 'upload' : (qso?._willBeDeleted ? 'trash-can' : 'content-save')}
-            size={styles.oneSpace * 4}
-            mode="contained"
-            disabled={!isValidQSO || !isValidOperation}
-            containerColor={styles.theme.colors[`${themeColor}ContainerVariant`]}
-            iconColor={styles.theme.colors[`on${upcasedThemeColor}`]}
-            onPress={handleSubmit}
+        <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: styles.halfSpace }}>
+          <MainExchangePanel
+            style={{ flex: 1, paddingLeft: styles.oneSpace }}
+            qso={qso}
+            operation={operation}
+            settings={settings}
+            disabled={qso?.deleted || qso?._willBeDeleted}
+            styles={styles}
+            themeColor={themeColor}
+            handleSubmit={handleSubmit}
+            handleFieldChange={handleFieldChange}
+            setQSO={setQSO}
+            mainFieldRef={mainFieldRef}
+            focusedRef={focusedRef}
           />
+          <View style={{ flex: 0, justifyContent: 'center', alignItems: 'center', paddingLeft: styles.halfSpace }}>
+            <IconButton
+              icon={qso?._isNew ? 'upload' : (qso?._willBeDeleted ? 'trash-can' : 'content-save')}
+              size={styles.oneSpace * 4}
+              mode="contained"
+              disabled={!isValidQSO || !isValidOperation}
+              containerColor={styles.theme.colors[`${themeColor}ContainerVariant`]}
+              iconColor={styles.theme.colors[`on${upcasedThemeColor}`]}
+              onPress={handleSubmit}
+            />
+          </View>
         </View>
-      </View>
 
-      {isKeyboardVisible && settings.showNumbersRow && (
-        <NumberKeys themeColor={themeColor} onNumberKeyPressed={handleNumberKey} enabled={!!focusedRef?.current} />
-      )}
+        {isKeyboardVisible && settings.showNumbersRow && (
+          <NumberKeys themeColor={themeColor} onNumberKeyPressed={handleNumberKey} enabled={!!focusedRef?.current} />
+        )}
+      </SafeAreaView>
     </View>
   )
 }
