@@ -43,6 +43,13 @@ namespace :release do
   end
 
   task :stable => :dotenv do
+    release_version = JSON.parse(File.read('package.json'))['version']
+
+    system "appcenter codepush release-react -a Ham2K/polo-android -d Production -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
+    system "appcenter codepush release-react -a Ham2K/polo-android -d Production -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
+  end
+
+  task :promote => :dotenv do
     system "appcenter codepush promote -a Ham2K/polo-android -s Staging -d Production -t $POLO_BASE_VERSION -r 100"
     system "appcenter codepush promote -a Ham2K/polo-ios -s Staging -d Production -t $POLO_BASE_VERSION -r 100"
   end
