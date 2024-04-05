@@ -22,6 +22,8 @@ import TimeCommands from './commands/TimeCommands'
 import DevModeCommands from './commands/DevModeCommands'
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 
+import WABExtension from './other/wab/WABExtension'
+
 const loadExtensions = () => async (dispatch, getState) => {
   dispatch(addRuntimeMessage('Loading extensions'))
   registerExtension(CountryFilesExtension)
@@ -38,6 +40,8 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(DevModeCommands)
 
   registerExtension(CallNotesExtension)
+
+  registerExtension(WABExtension)
 
   await activateEnabledExtensions(dispatch, getState)
 }
