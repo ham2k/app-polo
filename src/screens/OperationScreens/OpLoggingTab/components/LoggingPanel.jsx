@@ -234,10 +234,6 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     }
   }, [qsoQueue, setQSOQueue, selectedKey, setLoggingState, suggestedQSO, operation, settings, qso, setNewQSO, qsos])
 
-  useEffect(() => {
-    mainFieldRef.current.focus()
-  }, [currentSecondaryControl])
-
   useEffect(() => { // Validate and analize the callsign
     const callInfo = parseCallsign(qso?.their?.call)
 
