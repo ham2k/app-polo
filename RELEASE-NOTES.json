@@ -1,5 +1,10 @@
 {
-  "0.7.2-pre3": {
+  "0.7.3": {
+    "changes": [
+
+    ]
+  },
+  "0.7.2": {
     "changes": [
       "Callsign Notes ⭐️",
       "Band & Mode settings",
