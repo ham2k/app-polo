@@ -7,27 +7,14 @@ import { findRef, replaceRef } from '../../../tools/refTools'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 import { ListRow } from '../../../screens/components/ListComponents'
 
-/*
- NOTES:
-
- ADIF
-   <ARRL_SECT:3>ENY
-   <CONTEST_ID:3>WFD
-   <APP_N1MM_EXCHANGE1:2>1H
-
- Cabrillo
-   QSO: 18072 CW 2024-01-24 0246 KI2D          1H     ENY KN2X          1H   ENY
-   QSO: 18072 CW 2024-01-24 0246 KI2D          1H     ENY WC3W          2H   NFL
-
- */
-
 const Info = {
-  key: 'wfd',
-  icon: 'snowflake',
-  name: 'Winter Field Day',
-  shortName: 'WFD',
-  infoURL: 'https://www.winterfieldday.org/',
-  defaultValue: { class: '', location: '' }
+  key: 'seqp',
+  icon: 'emoticon-cool-outline',
+  name: 'Solar Eclipse QSO Party',
+  shortName: 'SEQP',
+  cabrilloName: 'ECLIPSE-QSO',
+  infoURL: 'https://hamsci.org/seqp-rules',
+  defaultValue: { grid: '' }
 }
 
 const Extension = {
@@ -51,15 +38,12 @@ const ReferenceHandler = {
 
   descriptionPlaceholder: '',
   description: (operation) => {
-    let date
-    if (operation?.qsos && operation.qsos[0]?.startOnMillis) date = Date.parse(operation.qsos[0].startOnMillis)
-    else date = new Date()
     const ref = findRef(operation, Info.key)
-    return [`WFD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')
+    return ['SEQP', ref?.ourGrid].filter(x => x).join(' • ')
   },
 
   suggestOperationTitle: (ref) => {
-    return { for: Info.shortName, subtitle: [ref?.class, ref?.location].filter(x => x).join(' ') }
+    return { for: Info.shortName, subtitle: ref?.ourGrid }
   },
 
   suggestExportOptions: ({ operation, ref, settings }) => {
@@ -92,12 +76,13 @@ const ReferenceHandler = {
     const ourCall = operation.stationCall || settings.operatorCall
     const qsoRef = findRef(qso, Info.key)
 
-    parts.push((ourCall ?? '').padEnd(13, ' '))
-    parts.push((ref?.class ?? '').padEnd(6, ' '))
-    parts.push((ref?.location ?? '').padEnd(3, ' '))
-    parts.push((qso?.their?.call ?? '').padEnd(13, ' '))
-    parts.push((qsoRef?.class ?? '').padEnd(4, ' '))
-    parts.push((qsoRef?.location ?? '').padEnd(3, ' '))
+    parts.push((ourCall ?? '').padEnd(17, ' '))
+    parts.push((qso?.our?.sent ?? '').padEnd(4, ' '))
+    parts.push((ref?.ourGrid ?? '').padEnd(4, ' '))
+    parts.push((qso?.their?.call ?? '').padEnd(17, ' '))
+    parts.push((qso?.their?.sent ?? '').padEnd(4, ' '))
+    parts.push((qsoRef?.theirGrid ?? '').padEnd(4, ' '))
+
     return parts
   }
 }
@@ -111,44 +96,21 @@ function fieldsForMainExchangePanel (props) {
 
   fields.push(
     <ThemedTextInput
-      key={`${Info.key}/class`}
+      key={`${Info.key}/grid`}
       innerRef={refStack.shift()}
       style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
       textStyle={styles.text.callsign}
-      label={'Class'}
+      label={'Location'}
       placeholder={''}
       mode={'flat'}
       uppercase={true}
       noSpaces={true}
-      value={ref?.class || ''}
+      value={ref?.theirGrid || (qso?.their?.guess?.grid && qso.their.guess.grid.substring(0, 4)) || ''}
       disabled={disabled}
       onChangeText={(text) => setQSO({
         ...qso,
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text }),
-        their: { ...qso?.their, exchange: [text, ref?.location].join(' ') }
-      })}
-      onSubmitEditing={onSubmitEditing}
-      onKeyPress={keyHandler}
-      focusedRef={focusedRef}
-    />
-  )
-  fields.push(
-    <ThemedTextInput
-      key={`${Info.key}/location`}
-      innerRef={refStack.shift()}
-      style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
-      textStyle={styles.text.callsign}
-      label={'Loc'}
-      placeholder={''}
-      mode={'flat'}
-      uppercase={true}
-      noSpaces={true}
-      value={ref?.location || ''}
-      disabled={disabled}
-      onChangeText={(text) => setQSO({
-        ...qso,
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text }),
-        their: { ...qso?.their, arrlSection: text, exchange: [ref?.class, text].join(' ') }
+        refs: replaceRef(qso?.refs, Info.key, { ...ref, theirGrid: text }),
+        their: { ...qso?.their, grid: text }
       })}
       onSubmitEditing={onSubmitEditing}
       onKeyPress={keyHandler}
@@ -178,24 +140,12 @@ export function ActivityOptions (props) {
         <ThemedTextInput
           style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
           textStyle={styles.text.callsign}
-          label={'Class'}
+          label={'Our Grid'}
           mode={'flat'}
           uppercase={true}
           noSpaces={true}
-          value={ref?.class || ''}
-          onChangeText={(text) => handleChange({ class: text })}
-        />
-      </ListRow>
-      <ListRow>
-        <ThemedTextInput
-          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-          textStyle={styles.text.callsign}
-          label={'Location'}
-          mode={'flat'}
-          uppercase={true}
-          noSpaces={true}
-          value={ref?.location || ''}
-          onChangeText={(text) => handleChange({ location: text })}
+          value={ref?.ourGrid || (operation?.grid && operation.grid.substring(0, 4)) || ''}
+          onChangeText={(text) => handleChange({ ourGrid: text })}
         />
       </ListRow>
     </List.Section>

@@ -80,12 +80,12 @@ const ReferenceHandler = {
 
   cabrilloHeaders: ({ operation, settings, headers }) => {
     const ref = findRef(operation, Info.key)
-    headers.CONTEST = Info.cabrilloName ?? Info.shortName
-    headers.CALLSIGN = operation.stationCall || settings.operatorCall
-    headers.LOCATION = ref.location
-    headers.NAME = ''
-    headers.OPERATORS = settings.operatorCall
-    if (operation.grid) headers['GRID-LOCATOR'] = operation.grid
+    headers.push(['CONTEST', Info.cabrilloName ?? Info.shortName])
+    headers.push(['CALLSIGN', operation.stationCall || settings.operatorCall])
+    headers.push(['LOCATION', ref.location])
+    headers.push(['NAME', ''])
+    headers.push(['OPERATORS', settings.operatorCall])
+    if (operation.grid) headers.push(['GRID-LOCATOR', operation.grid])
     return headers
   },
 

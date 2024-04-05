@@ -1,6 +1,6 @@
 {
   "name": "ham2k-polo",
-  "version": "0.7.2-pre4",
+  "version": "0.7.3",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
