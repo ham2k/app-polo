@@ -8,7 +8,11 @@ export function qsonToCabrillo ({ operation, qsos, settings, handler }) {
 
   str += 'START-OF-LOG: 3.0\n'
   if (handler.cabrilloHeaders) {
-    str += handler.cabrilloHeaders({ operation, settings, headers: [] }).join('\n')
+    str += handler
+      .cabrilloHeaders({ operation, settings, headers: [] })
+      .map((header) => header[1] ? `${header[0]}: ${header[1]}` : '')
+      .filter(x => x)
+      .join('\n') + '\n'
   }
 
   qsos.forEach(qso => {
