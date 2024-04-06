@@ -60,7 +60,8 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
 
   const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
-  const opCallInfo = useSelector(selectOperationCallInfo)
+
+  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const isPotaOp = useMemo(() => {
     return hasRef(operation?.refs, 'potaActivation')
@@ -182,7 +183,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
     if (operation.grid && guess?.grid) {
-      const dist = distanceForQSON({ ...qso, our: { ...opCallInfo, grid: operation.grid }, their: { ...qso.their, guess } }, { units: settings.distanceUnits })
+      const dist = distanceForQSON({ ...qso, our: { ...ourInfo, grid: operation.grid }, their: { ...qso.their, guess } }, { units: settings.distanceUnits })
       if (dist) parts.push(fmtDistance(dist, { units: settings.distanceUnits }))
     }
     if (pota.name) {
@@ -192,7 +193,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
       parts.push(`POTA ${potaRef} ${pota.error}`)
     } else {
       if (qrz.call === guess?.baseCall && qrz.city) {
-        if (entity && entity.entityPrefix !== opCallInfo.entityPrefix) parts.push(entity.shortName)
+        if (entity && entity.entityPrefix !== ourInfo.entityPrefix) parts.push(entity.shortName)
 
         parts.push(qrz.city, qrz.state)
       } else {
@@ -201,7 +202,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     }
 
     return [parts.filter(x => x).join(' • '), entity?.flag ? entity.flag : '']
-  }, [guess, operation.grid, pota, qso, opCallInfo, settings.distanceUnits, potaRef, qrz.call, qrz.city, qrz.state])
+  }, [guess, operation.grid, pota, qso, ourInfo, settings.distanceUnits, potaRef, qrz.call, qrz.city, qrz.state])
 
   const stationInfo = useMemo(() => {
     const parts = []
