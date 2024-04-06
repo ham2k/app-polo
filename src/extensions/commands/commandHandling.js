@@ -38,7 +38,7 @@ export function checkAndProcessCommands (value, extraParams) {
       callWasCleared = true
     }
     const setQSOWrapper = (args) => {
-      setQSOWrapper({ ...qso, their: { ...qso.their, call: args.their.call || '' } })
+      setQSOWrapper({ ...qso, their: { ...qso.their, call: args.their?.call || '' } })
       callWasCleared = true
     }
 
