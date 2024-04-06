@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
@@ -12,7 +12,6 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { POTAAllParks } from '../../../extensions/activities/pota/POTAAllParksData'
 import { fmtISODate } from '../../../tools/timeFormats'
-import { useUIState } from '../../../store/ui'
 
 export default function GeneralSettingsScreen ({ navigation }) {
   const dispatch = useDispatch()
@@ -30,7 +29,7 @@ export default function GeneralSettingsScreen ({ navigation }) {
 
   const settings = useSelector(selectSettings)
 
-  const [currentDialog, setCurrentDialog] = useUIState('GeneralSettingsScreen', 'currentDialog', '')
+  const [currentDialog, setCurrentDialog] = useState()
 
   const [compactName, longName] = useMemo(() => {
     const call = settings.operatorCall ?? 'N0CALL'

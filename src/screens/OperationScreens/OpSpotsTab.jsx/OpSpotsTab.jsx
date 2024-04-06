@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { View } from 'react-native'
 import { Icon, Text } from 'react-native-paper'
@@ -13,7 +13,6 @@ import { BANDS } from '@ham2k/lib-operation-data'
 import { findQSOHistory } from '../../../store/qsos/actions/findQSOHistory'
 import { selectAllOperations, selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs } from '../../../tools/refTools'
-import { useUIState } from '../../../store/ui'
 
 function simplifiedMode (mode) {
   if (mode === 'CW') {
@@ -50,11 +49,11 @@ export default function OpSpotsTab ({ navigation, route }) {
 
   const online = useSelector(selectRuntimeOnline)
 
-  const [band, setBand] = useUIState('OpSpotsTab', 'band', 'any')
-  const [mode, setMode] = useUIState('OpSpotsTab', 'mode', 'any')
+  const [band, setBand] = useState('any')
+  const [mode, setMode] = useState('any')
 
   const spotsQuery = useSpotsQuery()
-  const [spots, setSpots] = useUIState('OpSpotsTab', 'spots', [])
+  const [spots, setSpots] = useState([])
 
   const allOperations = useSelector(selectAllOperations)
   const callInfo = useSelector(state => selectOperationCallInfo(state, route.params.uuid))
@@ -105,7 +104,7 @@ export default function OpSpotsTab ({ navigation, route }) {
 
       setSpots(annotatedSpots)
     }, 0)
-  }, [spotsQuery, allOperations, callInfo, setSpots])
+  }, [spotsQuery, allOperations, callInfo])
 
   useEffect(() => {
     const interval = setInterval(() => {

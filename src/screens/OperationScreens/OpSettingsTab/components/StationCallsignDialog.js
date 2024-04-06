@@ -1,20 +1,23 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import CallsignInput from '../../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
 import { setOperationData } from '../../../../store/operations'
 import { KeyboardAvoidingView } from 'react-native'
-import { useUIState } from '../../../../store/ui'
 
 export function StationCallsignDialog ({ operation, visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
 
-  const [dialogVisible, setDialogVisible] = useUIState('OpSettingsTab.StationCallsignDialog', 'dialogVisible', visible)
-  const [value, setValue] = useUIState('OpSettingsTab.StationCallsignDialog', 'value', '')
+  const [dialogVisible, setDialogVisible] = useState(false)
+  const [value, setValue] = useState('')
+
+  useEffect(() => {
+    setDialogVisible(visible)
+  }, [visible])
 
   useEffect(() => {
     setValue(operation?.stationCall || '')
-  }, [operation, setValue])
+  }, [operation])
 
   const onChange = useCallback((text) => {
     setValue(text)
@@ -24,13 +27,13 @@ export function StationCallsignDialog ({ operation, visible, settings, styles, o
     dispatch(setOperationData({ uuid: operation.uuid, stationCall: value }))
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [dispatch, operation.uuid, value, setDialogVisible, onDialogDone])
+  }, [dispatch, operation, value, onDialogDone])
 
   const handleCancel = useCallback(() => {
     setValue(operation.stationCall)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [setValue, operation.stationCall, setDialogVisible, onDialogDone])
+  }, [operation, onDialogDone])
 
   return (
     <Portal>

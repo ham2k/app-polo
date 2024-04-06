@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { ScrollView } from 'react-native'
 import { List } from 'react-native-paper'
@@ -15,7 +15,6 @@ import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { LocationDialog } from './components/LocationDialog'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { useUIState } from '../../../store/ui'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles((baseStyles) => {
@@ -47,7 +46,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
 
-  const [currentDialog, setCurrentDialog] = useUIState('OpSettingsTab', 'dialog', '')
+  const [currentDialog, setCurrentDialog] = useState()
 
   const handleExport = useCallback((type) => {
     dispatch(generateExport(operation.uuid, type)).then((paths) => {
