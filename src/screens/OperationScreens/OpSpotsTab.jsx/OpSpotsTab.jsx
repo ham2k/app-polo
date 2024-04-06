@@ -72,7 +72,7 @@ export default function OpSpotsTab ({ navigation, route }) {
           continue
         }
 
-        if (spot.activator === callInfo.call) {
+        if (spot.activator === callInfo?.call) {
           flags._ourSpot = true
         }
 
