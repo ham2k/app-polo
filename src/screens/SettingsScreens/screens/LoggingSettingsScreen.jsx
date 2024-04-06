@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React from 'react'
+import React, { useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
@@ -8,7 +8,6 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { FlagsDialog } from '../components/FlagsDialog'
-import { useUIState } from '../../../store/ui'
 
 export default function LoggingSettingsScreen ({ navigation }) {
   const dispatch = useDispatch()
@@ -26,7 +25,7 @@ export default function LoggingSettingsScreen ({ navigation }) {
 
   const settings = useSelector(selectSettings)
 
-  const [currentDialog, setCurrentDialog] = useUIState('LoggingSettingsScreen', 'currentDialog', '')
+  const [currentDialog, setCurrentDialog] = useState()
 
   return (
     <ScreenContainer>
