@@ -105,7 +105,7 @@ function fieldsForMainExchangePanel (props) {
       mode={'flat'}
       uppercase={true}
       noSpaces={true}
-      value={ref?.theirGrid || (qso?.their?.guess?.grid && qso.their.guess.grid.substring(0, 4)) || ''}
+      value={ref?.theirGrid === undefined ? (qso?.their?.guess?.grid && qso.their.guess.grid.substring(0, 4)) || '' : ref?.theirGrid}
       disabled={disabled}
       onChangeText={(text) => setQSO({
         ...qso,
@@ -144,7 +144,7 @@ export function ActivityOptions (props) {
           mode={'flat'}
           uppercase={true}
           noSpaces={true}
-          value={ref?.ourGrid || (operation?.grid && operation.grid.substring(0, 4)) || ''}
+          value={ref?.ourGrid === undefined ? (operation?.grid && operation.grid.substring(0, 4)) || '' : ref?.ourGrid}
           onChangeText={(text) => handleChange({ ourGrid: text })}
         />
       </ListRow>
