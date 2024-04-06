@@ -34,10 +34,11 @@ export function POTAActivityOptions (props) {
   }, [refs])
 
   const [search, setSearch] = useState('')
+
   const [parks, setParks] = useState([])
   const [parksMessage, setParksMessage] = useState([])
-  const [location, setLocation] = useState()
 
+  const [location, setLocation] = useState()
   useEffect(() => {
     Geolocation.getCurrentPosition(info => {
       const { latitude, longitude } = info.coords

@@ -6,7 +6,6 @@ import createMigrate from 'redux-persist/es/createMigrate'
 import { migrations, LATEST_VERSION } from './migrations'
 import systemReducer from './system'
 import runtimeReducer from './runtime'
-import uiReducer from './ui'
 import settingsReducer from './settings'
 import operationsReducer from './operations'
 import qsosReducer from './qsos'
@@ -26,7 +25,6 @@ const rootReducer = combineReducers({
   settings: settingsReducer,
   system: systemReducer,
   runtime: runtimeReducer,
-  ui: uiReducer,
   operations: operationsReducer,
   qsos: qsosReducer,
   time: timeReducer,

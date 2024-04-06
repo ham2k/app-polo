@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Dialog, Portal, Text } from 'react-native-paper'
 import CallsignInput from '../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
 import { KeyboardAvoidingView } from 'react-native'
-import { useUIState } from '../../../store/ui'
 
 export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
@@ -12,8 +11,20 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
-  const [dialogVisible, setDialogVisible] = useUIState('OperatorCallsignDialog', 'dialogVisible', visible)
-  const [value, setValue] = useUIState('OperatorCallsignDialog', 'value', settings?.operatorCall || '')
+  const [dialogVisible, setDialogVisible] = useState(false)
+  const [value, setValue] = useState('')
+
+  useEffect(() => {
+    setDialogVisible(visible)
+  }, [visible])
+
+  useEffect(() => {
+    if (settings?.operatorCall === 'N0CALL') {
+      setValue('')
+    } else {
+      setValue(settings?.operatorCall || '')
+    }
+  }, [settings])
 
   const onChangeText = useCallback((text) => {
     setValue(text)
@@ -23,13 +34,13 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
     dispatch(setSettings({ operatorCall: value }))
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [dispatch, value, setDialogVisible, onDialogDone])
+  }, [value, dispatch, onDialogDone])
 
   const handleCancel = useCallback(() => {
     setValue(settings.operatorCall)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [setValue, settings.operatorCall, setDialogVisible, onDialogDone])
+  }, [settings, onDialogDone])
 
   return (
     <Portal>
