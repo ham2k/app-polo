@@ -73,7 +73,7 @@ export function CallInfoDialog ({
                     </View>
                     <View>
                       <Text variant="headlineSmall" style={styles.text.callsign}>
-                        {qso.their.call}
+                        {qso.their?.call}
                       </Text>
                     </View>
                   </View>
