@@ -83,24 +83,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     }
   }, [qso])
 
-  const [skipQRZ, setSkipQRZ] = useState(undefined) // Use `skip` to prevent calling the API on every keystroke
-  useEffect(() => {
-    if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && guess?.baseCall?.length > 2) {
-      if (skipQRZ === undefined) {
-        // If we start with a prefilled call, then call QRZ right away
-        setSkipQRZ(false)
-      } else {
-        // Wait a bit before calling QRZ on every keystroke
-        const timeout = setTimeout(() => { setSkipQRZ(false) }, 200)
-        return () => clearTimeout(timeout)
-      }
-    }
-  }, [guess?.baseCall, online, settings?.accounts?.qrz, skipQRZ])
-
   const callNotes = useOneCallNoteFinder(guess?.baseCall)
-
-  const qrzLookup = useLookupCallQuery({ call: guess?.baseCall }, { skip: skipQRZ })
-  const qrz = useMemo(() => qrzLookup.currentData || {}, [qrzLookup.currentData])
 
   const [callHistory, setCallHistory] = useState()
   useEffect(() => { // Get Call History
@@ -110,6 +93,23 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     }, 0)
     return () => clearTimeout(timeout)
   }, [guess?.baseCall])
+
+  const [skipQRZ, setSkipQRZ] = useState(undefined) // Use `skip` to prevent calling the API on every keystroke
+  useEffect(() => {
+    if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && guess?.baseCall?.length > 2) {
+      if (skipQRZ === undefined) {
+        // If we start with a prefilled call, then call QRZ right away
+        setSkipQRZ(false)
+      } else {
+        // Wait a bit before calling QRZ on every keystroke
+        const timeout = setTimeout(() => setSkipQRZ(false), 200)
+        return () => clearTimeout(timeout)
+      }
+    }
+  }, [guess?.baseCall, online, settings?.accounts?.qrz, skipQRZ])
+
+  const qrzLookup = useLookupCallQuery({ call: guess?.baseCall }, { skip: skipQRZ })
+  const qrz = useMemo(() => qrzLookup.currentData || {}, [qrzLookup.currentData])
 
   const potaRef = useMemo(() => { // Find POTA references
     const potaRefs = filterRefs(qso?.refs, 'pota')
@@ -121,10 +121,26 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
   }, [qso?.refs])
 
   const potaLookup = useLookupParkQuery({ ref: potaRef }, { skip: !potaRef, online })
-  const pota = useMemo(() => potaLookup?.data ?? {}, [potaLookup?.data])
+  const pota = useMemo(() => {
+    return potaLookup?.data ?? {}
+  }
+  , [potaLookup?.data])
 
-  useEffect(() => {
-    const theirInfo = {}
+  useEffect(() => { // Merge all data sources and update guesses and QSO
+    const theirInfo = { guess: {} }
+    const historyData = {}
+    if (callHistory && callHistory[0] && callHistory[0].theirCall === qso.their.baseCall) {
+      if (historyData?.their?.qrzInfo) theirInfo.qrzInfo = historyData.their.qrzInfo
+      if (historyData?.their?.guess) theirInfo.guess = historyData.their.guess
+      if (historyData?.their?.name) theirInfo.guess.name = historyData.their.name
+      if (historyData?.their?.state) theirInfo.guess.state = historyData.their.state
+      if (historyData?.their?.city) theirInfo.guess.city = historyData.their.city
+      if (historyData?.their?.postal) theirInfo.guess.postal = historyData.their.postal
+      if (historyData?.their?.grid) theirInfo.guess.grid = historyData.their.grid
+      if (historyData?.their?.cqZone) theirInfo.guess.cqZone = historyData.their.cqZone
+      if (historyData?.their?.ituZone) theirInfo.guess.ituZone = historyData.their.ituZone
+    }
+
     if (qrz?.name && qrz?.name !== qso?.their?.guess?.name) {
       theirInfo.qrzInfo = {
         name: qrz.name,
@@ -176,7 +192,9 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     if (Object.keys(theirInfo).length > 0) {
       onChange && onChange({ their: theirInfo })
     }
-  }, [qrz, pota, onChange, qso?.their?.qrzInfo, qso?.their?.guess])
+  // Don't make it dependent on `onChange` or we trigger an infinite loop
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qrz, pota, callHistory, qso.their.baseCall, qso.their?.guess?.name, qso.their?.guess?.grid, qso.their?.qrzInfo?.name])
 
   const [locationInfo, flag] = useMemo(() => {
     const parts = []
