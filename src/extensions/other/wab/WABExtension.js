@@ -3,7 +3,7 @@ import { WABOpSetting } from './components/WABOpSetting'
 export const Info = {
   key: 'wab-square',
   name: 'Worked All Britain (WAB)',
-  icon: 'map-marker-path',
+  icon: 'selection-marker',
   description: 'Add WAB Square to operation'
 }
 

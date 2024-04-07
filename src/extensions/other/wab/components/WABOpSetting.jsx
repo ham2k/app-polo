@@ -6,6 +6,7 @@ import { selectOperationCallInfo } from '../../../../store/operations'
 import { Ham2kListItem } from '../../../../screens/components/Ham2kListItem'
 
 import { WABSquareDialog } from './WABSquareDialog'
+import { Info } from '../WABExtension'
 
 export function WABOpSetting ({ styles, operation, settings }) {
   const [currentDialog, setCurrentDialog] = useState()
@@ -18,7 +19,7 @@ export function WABOpSetting ({ styles, operation, settings }) {
           description={operation?.wabSquare ? `${operation.wabSquare}` : 'No square set'}
           onPress={() => setCurrentDialog('wabSquare')}
           // eslint-disable-next-line react/no-unstable-nested-components
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="map-marker-path" />}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
         />
         {currentDialog === 'wabSquare' && (
           <WABSquareDialog

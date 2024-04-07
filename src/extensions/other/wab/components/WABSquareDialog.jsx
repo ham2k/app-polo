@@ -7,6 +7,7 @@ import Geolocation from '@react-native-community/geolocation'
 import { setOperationData } from '../../../../store/operations'
 import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
 import { locationToWABSquare } from '../WABLocation'
+import { Info } from '../WABExtension'
 
 const VALID_WAB_REGEX = /^(W[AV][0-9]{2}|[CDGHJ][0-9]{2}|[HJNOST][A-HJ-Z][0-9]{2}|)$/
 const PARTIAL_WAB_REGEX = /^([CDGHJNOSTW]{0,1}|W[AV][0-9]{0,2}|[CDGHJ][0-9]{0,2}|[HJNOST][A-Z][0-9]{0,2})$/
@@ -72,7 +73,7 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
         <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-          <Dialog.Icon icon="map-marker-path" />
+          <Dialog.Icon icon={Info.icon} />
           <Dialog.Title style={{ textAlign: 'center' }}>Worked All Britain Square</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">Enter WAB Square</Text>
