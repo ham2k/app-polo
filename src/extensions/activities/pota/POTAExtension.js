@@ -1,10 +1,9 @@
-import { apiPOTA } from '../../../store/apiPOTA'
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './POTAInfo'
 import { POTAActivityOptions } from './POTAActivityOptions'
-import { registerPOTAAllParksData } from './POTAAllParksData'
+import { POTAAllParks, registerPOTAAllParksData } from './POTAAllParksData'
 import { POTALoggingControl } from './POTALoggingControl'
 import { POTASpotterControl } from './POTASpotterControl'
 
@@ -95,11 +94,10 @@ const ReferenceHandler = {
 
   description: (operation) => refsToString(operation, Info.activationType),
 
-  decorateRefWithDispatch: (ref) => async (dispatch, getState) => {
-    if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', location: '' }
+  decorateRef: (ref) => {
+    if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', shortName: '', location: '' }
 
-    const promise = dispatch(apiPOTA.endpoints.lookupPark.initiate(ref))
-    const { data } = await promise
+    const data = POTAAllParks.byReference[ref.ref]
     let result
     if (data?.name) {
       result = {
@@ -110,10 +108,8 @@ const ReferenceHandler = {
         grid: data.grid6
       }
     } else {
-      return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
+      return { name: Info.unknownReferenceName ?? 'Unknown reference', shortName: 'Unknown reference', ...ref }
     }
-
-    promise.unsubscribe()
     return result
   },
 
