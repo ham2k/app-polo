@@ -1,5 +1,9 @@
 {
-  "0.7.3-pre3": {
+  "0.7.3-pre0": {
+    "changes": [
+    ]
+  },
+  "0.7.3": {
     "changes": [
       "Eclipse QSO Party",
       "Performance fixes",
