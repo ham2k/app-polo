@@ -305,7 +305,6 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     if (changes.our) {
       changes.their = { ...qso.our, ...changes.our }
     }
-    console.log('Batch changes:', changes)
     setQSO({ ...qso, ...changes })
   }, [qso, setQSO])
 

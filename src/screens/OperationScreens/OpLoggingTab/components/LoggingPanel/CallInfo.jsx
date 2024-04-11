@@ -126,7 +126,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     const their = { ...qso.their, guess, lookup: {} }
 
     let historyData = {}
-    console.log('CallInfo: callHistory', qso.their?.guess?.baseCall, callHistory && callHistory[0])
+
     if (callHistory && callHistory[0] && callHistory[0].theirCall === guess?.baseCall) {
       historyData = JSON.parse(callHistory[0].data)
       if (historyData?.their?.qrzInfo) {
@@ -145,11 +145,9 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
         if (!their.lookup[key]) delete their.lookup[key]
       })
       their.lookup.source = 'history'
-      console.log('History', their.lookup)
     }
 
     if (qrz?.name && qrz?.name !== qso?.their?.lookup?.name) {
-      console.log('qrz', qrz)
       their.lookup = {
         source: 'qrz.com',
         call: qrz.call,
@@ -198,7 +196,6 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
   const [locationInfo, flag] = useMemo(() => {
     const parts = []
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
-    console.log('Location', qso.their)
     if (operation.grid && guess?.grid) {
       const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { ...qso.their, guess } }, { units: settings.distanceUnits })
       if (dist) parts.push(fmtDistance(dist, { units: settings.distanceUnits }))
