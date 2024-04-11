@@ -1,7 +1,8 @@
 {
-  "0.7.3-pre0": {
+  "0.7.4-pre0": {
     "changes": [
-      "Use data from past log entries if QRZ is not available"
+      "Use data from past log entries if QRZ is not available",
+      "Import ADIF into historical data"
     ]
   },
   "0.7.3": {

@@ -300,14 +300,12 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
   const handleBatchChanges = useCallback((changes) => {
     if (changes.their) {
-      if (changes.their.guess) {
-        changes.their.guess = { ...qso.their.guess, ...changes.their.guess }
-      }
       changes.their = { ...qso.their, ...changes.their }
     }
     if (changes.our) {
       changes.their = { ...qso.our, ...changes.our }
     }
+    console.log('Batch changes:', changes)
     setQSO({ ...qso, ...changes })
   }, [qso, setQSO])
 
