@@ -71,7 +71,7 @@ export default function OpMapTab ({ navigation, route }) {
   useEffect(() => {
     if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password) {
       if (!nextQSOWithoutInfo) {
-        setNextQSOWithoutInfo(qsos.find(qso => !qso.their?.qrzInfo))
+        setNextQSOWithoutInfo(qsos.find(qso => !qso.their?.lookup))
       }
     }
   }, [qsos, online, settings, nextQSOWithoutInfo])
@@ -81,7 +81,7 @@ export default function OpMapTab ({ navigation, route }) {
       setTimeout(async () => {
         try {
           const { data } = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: nextQSOWithoutInfo.their.call }))
-          const qrzInfo = {
+          const lookup = {
             name: data?.name,
             state: data?.state,
             city: data?.city,
@@ -95,7 +95,7 @@ export default function OpMapTab ({ navigation, route }) {
             imageInfo: data?.imageInfo
           }
 
-          if (data?.error) qrzInfo.error = data.error
+          if (data?.error) lookup.error = data.error
 
           await dispatch(addQSO({
             uuid: operation.uuid,
@@ -108,7 +108,7 @@ export default function OpMapTab ({ navigation, route }) {
                   grid: data?.grid,
                   ...nextQSOWithoutInfo.their.guess
                 },
-                qrzInfo
+                lookup
               }
             }
           }))

@@ -75,19 +75,25 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
 export const saveQSOsForOperation = (uuid) => async (dispatch, getState) => {
   const qsos = getState().qsos.qsos[uuid]
   // Move old QSOs out of the way (in sqlite, || is concatenation)
-  await dbExecute(`
-    UPDATE qsos
-    SET operation = operation || '_tmp'
-    WHERE operation = ?
-    `, [uuid])
+  try {
+    await dbExecute(`
+      UPDATE qsos
+      SET operation = operation || '_tmp'
+      WHERE operation = ?
+      `, [uuid])
+  } catch (error) {
+    console.error('error moving old QSOs', error)
+  }
 
   // Save new QSOs
   for (const qso of qsos) {
     const json = JSON.stringify(qso)
+    console.log('saving', qso.key)
     await dbExecute(`
       INSERT INTO qsos
       (operation, key, data, ourCall, theirCall, mode, band, startOnMillis) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `, [uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startOnMillis])
+      ON CONFLICT DO UPDATE SET data = ?
+    `, [uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startOnMillis, json])
   }
 
   // Rename delete old QSOs  (in sqlite, || is concatenation)

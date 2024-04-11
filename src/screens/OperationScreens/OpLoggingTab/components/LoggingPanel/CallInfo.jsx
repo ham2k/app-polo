@@ -9,7 +9,7 @@ import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import { useLookupCallQuery } from '../../../../../store/apiQRZ'
 import { useLookupParkQuery } from '../../../../../store/apiPOTA'
-import { filterRefs, hasRef } from '../../../../../tools/refTools'
+import { filterRefs, findRef, hasRef } from '../../../../../tools/refTools'
 import { findQSOHistory } from '../../../../../store/qsos/actions/findQSOHistory'
 import { fmtDateZulu, fmtISODate } from '../../../../../tools/timeFormats'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
@@ -70,18 +70,14 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
   const [showDialog, setShowDialog] = useState(false)
 
   const guess = useMemo(() => { // Parse the callsign
-    if (qso?.their?.guess?.baseCall) {
-      return qso?.their?.guess
-    } else {
-      let newGuess = parseCallsign(qso?.their?.call)
-      if (newGuess?.baseCall) {
-        annotateFromCountryFile(newGuess)
-      } else if (qso?.their?.call) {
-        newGuess = annotateFromCountryFile({ prefix: qso?.their?.call, baseCall: qso?.their?.call })
-      }
-      return newGuess
+    let newGuess = parseCallsign(qso?.their?.call)
+    if (newGuess?.baseCall) {
+      annotateFromCountryFile(newGuess)
+    } else if (qso?.their?.call) {
+      newGuess = annotateFromCountryFile({ prefix: qso?.their?.call, baseCall: qso?.their?.call })
     }
-  }, [qso])
+    return newGuess
+  }, [qso?.their?.call])
 
   const callNotes = useOneCallNoteFinder(guess?.baseCall)
 
@@ -102,7 +98,7 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
         setSkipQRZ(false)
       } else {
         // Wait a bit before calling QRZ on every keystroke
-        const timeout = setTimeout(() => setSkipQRZ(false), 200)
+        const timeout = setTimeout(() => { console.log('qrz go'); setSkipQRZ(false) }, 200)
         return () => clearTimeout(timeout)
       }
     }
@@ -127,22 +123,36 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
   , [potaLookup?.data])
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    const theirInfo = { guess: {} }
-    const historyData = {}
-    if (callHistory && callHistory[0] && callHistory[0].theirCall === qso.their.baseCall) {
-      if (historyData?.their?.qrzInfo) theirInfo.qrzInfo = historyData.their.qrzInfo
-      if (historyData?.their?.guess) theirInfo.guess = historyData.their.guess
-      if (historyData?.their?.name) theirInfo.guess.name = historyData.their.name
-      if (historyData?.their?.state) theirInfo.guess.state = historyData.their.state
-      if (historyData?.their?.city) theirInfo.guess.city = historyData.their.city
-      if (historyData?.their?.postal) theirInfo.guess.postal = historyData.their.postal
-      if (historyData?.their?.grid) theirInfo.guess.grid = historyData.their.grid
-      if (historyData?.their?.cqZone) theirInfo.guess.cqZone = historyData.their.cqZone
-      if (historyData?.their?.ituZone) theirInfo.guess.ituZone = historyData.their.ituZone
+    const their = { ...qso.their, guess, lookup: {} }
+
+    let historyData = {}
+    console.log('CallInfo: callHistory', qso.their?.guess?.baseCall, callHistory && callHistory[0])
+    if (callHistory && callHistory[0] && callHistory[0].theirCall === guess?.baseCall) {
+      historyData = JSON.parse(callHistory[0].data)
+      if (historyData?.their?.qrzInfo) {
+        historyData.their.lookup = historyData.their?.qrzInfo
+        historyData.their.lookup.source = 'qrz.com'
+      }
+
+      their.lookup.name = historyData.their.name ?? historyData.their.lookup?.name
+      their.lookup.state = historyData.their.state ?? historyData.their.lookup?.state
+      their.lookup.city = historyData.their.city ?? historyData.their.lookup?.city
+      their.lookup.postal = historyData.their.postal ?? historyData.their.lookup?.postal
+      their.lookup.grid = historyData.their.grid ?? historyData.their.lookup?.grid
+      their.lookup.cqZone = historyData.their.cqZone ?? historyData.their.lookup?.cqZone
+      their.lookup.ituZone = historyData.their.ituZone ?? historyData.their.lookup?.ituZone
+      Object.keys(their.lookup).forEach(key => {
+        if (!their.lookup[key]) delete their.lookup[key]
+      })
+      their.lookup.source = 'history'
+      console.log('History', their.lookup)
     }
 
-    if (qrz?.name && qrz?.name !== qso?.their?.guess?.name) {
-      theirInfo.qrzInfo = {
+    if (qrz?.name && qrz?.name !== qso?.their?.lookup?.name) {
+      console.log('qrz', qrz)
+      their.lookup = {
+        source: 'qrz.com',
+        call: qrz.call,
         name: qrz.name,
         state: qrz.state,
         city: qrz.city,
@@ -155,53 +165,42 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
         image: qrz.image,
         imageInfo: qrz.imageInfo
       }
+    }
 
-      theirInfo.guess = {
-        ...theirInfo.guess,
-        name: qrz.name,
-        grid: qrz.grid
-      }
-
-      if (qrz.country === 'United States' || qrz.country === 'Canada') {
-        theirInfo.guess.state = qrz.state
-      }
-    } else if (!qrz?.name && qso?.their?.qrzInfo?.name) {
-      theirInfo.qrzInfo = {}
-      theirInfo.guess = {
-        ...theirInfo.guess,
-        state: '',
-        grid: '',
-        name: ''
+    if (their.lookup?.name) {
+      their.guess = {
+        ...their.guess,
+        name: their.lookup.name,
+        state: their.lookup.state,
+        city: their.lookup.city,
+        grid: their.lookup.grid
       }
     }
 
-    if (pota.grid6 && qso?.their?.guess?.grid !== pota.grid6) {
-      theirInfo.guess = {
-        ...theirInfo.guess,
-        grid: pota.grid6
-      }
+    if (pota?.locationDesc?.indexOf(',') < 0) {
+      // Only use POTA info if it's not a multi-state park
+      if (pota.grid6 && qso.their?.guess?.grid !== pota.grid6) {
+        their.guess.grid = pota.grid6
 
-      if (pota.reference?.startsWith('US-') || pota.reference?.startsWith('CA-')) {
-        const potaState = (pota.locationDesc || '').split('-').pop().trim()
-        theirInfo.guess.state = potaState
+        if (pota.reference?.startsWith('US-') || pota.reference?.startsWith('CA-')) {
+          const potaState = (pota.locationDesc || '').split('-').pop().trim()
+          their.guess.state = potaState
+        }
       }
-
-      theirInfo.guess = { ...theirInfo.guess }
     }
 
-    if (Object.keys(theirInfo).length > 0) {
-      onChange && onChange({ their: theirInfo })
-    }
-  // Don't make it dependent on `onChange` or we trigger an infinite loop
+    onChange && onChange({ their })
+
+  // To avoid infinite loops, don't make it dependent on `onChange`, or on `qso.their.guess` values.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [qrz, pota, callHistory, qso.their.baseCall, qso.their?.guess?.name, qso.their?.guess?.grid, qso.their?.qrzInfo?.name])
+  }, [guess, qrz, pota, callHistory, qso.their?.guess?.baseCall])
 
   const [locationInfo, flag] = useMemo(() => {
     const parts = []
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
-
+    console.log('Location', qso.their)
     if (operation.grid && guess?.grid) {
-      const dist = distanceForQSON({ ...qso, our: { ...ourInfo, grid: operation.grid }, their: { ...qso.their, guess } }, { units: settings.distanceUnits })
+      const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { ...qso.their, guess } }, { units: settings.distanceUnits })
       if (dist) parts.push(fmtDistance(dist, { units: settings.distanceUnits }))
     }
     if (pota.name) {
@@ -210,17 +209,17 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
     } else if (pota.error) {
       parts.push(`POTA ${potaRef} ${pota.error}`)
     } else {
-      if (qrz.call === guess?.baseCall && qrz.city) {
+      if (qso?.their?.city || qso?.their?.guess?.city) {
         if (entity && entity.entityPrefix !== ourInfo.entityPrefix) parts.push(entity.shortName)
 
-        parts.push(qrz.city, qrz.state)
+        parts.push(qso?.their?.city ?? qso?.their?.guess?.city, qso?.their?.state ?? qso?.their?.guess?.state)
       } else {
         if (entity) parts.push(entity.shortName)
       }
     }
 
     return [parts.filter(x => x).join(' • '), entity?.flag ? entity.flag : '']
-  }, [guess, operation.grid, pota, qso, ourInfo, settings.distanceUnits, potaRef, qrz.call, qrz.city, qrz.state])
+  }, [guess, operation.grid, pota, qso?.their, ourInfo, settings.distanceUnits, potaRef])
 
   const stationInfo = useMemo(() => {
     const parts = []
@@ -228,14 +227,11 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
       parts.push(callNotes[0].note)
     } else if (qrz) {
       parts.push(qrz.error)
-      parts.push(qrz.name)
-      if (qrz.call && qrz.originalCall && qrz.call !== qrz.originalCall) {
-        parts.push(`(Now ${qrz.call})`)
-      }
+      parts.push(qso?.their?.name ?? qso?.their?.guess?.name)
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qrz, callNotes])
+  }, [qrz, qso?.their?.name, qso?.their?.guess?.name, callNotes])
 
   const [historyInfo, historyLevel] = useMemo(() => {
     const today = new Date()
@@ -246,6 +242,13 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
       if (qso?._isNew && callHistory.find(x => x?.operation === operation.uuid && x?.mode === qso.mode && x?.band === qso.band)) {
         if (isPotaOp) {
           if (fmtDateZulu(callHistory[0]?.startOnMillis) === fmtDateZulu(today)) {
+            if (findRef(qso, 'pota')) {
+              info = 'Maybe Dupe!!! (P2P)'
+              level = 'alert'
+            } else {
+              info = 'Dupe!!!'
+              level = 'alert'
+            }
             info = 'Dupe!!!'
             level = 'alert'
           } else {
@@ -261,9 +264,11 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
 
         if (sameDay > 1) {
           info = `${sameDay}x today + ${callHistory.length - sameDay} QSOs`
-        } else {
+        } else if (callHistory.length - (qso?._isNew ? 0 : 1) > 0) {
           info = `+ ${callHistory.length - (qso?._isNew ? 0 : 1)} QSOs`
         }
+        info = info.replace(' 1 QSOs', '1 QSO')
+
         level = 'info'
       }
     }
@@ -324,9 +329,8 @@ export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
           visible={showDialog}
           setVisible={setShowDialog}
           qso={qso}
-          guess={guess}
-          qrz={qrz}
           pota={pota}
+          qrz={qrz}
           operation={operation}
           callHistory={callHistory}
           styles={styles}

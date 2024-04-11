@@ -1,8 +1,11 @@
 import RNFetchBlob from 'react-native-blob-util'
 import { actions } from '../operationsSlice'
 import { actions as qsosActions, saveQSOsForOperation } from '../../qsos'
-
+import { adifToQSON } from '@ham2k/lib-qson-adif'
+import { qsoKey } from '@ham2k/lib-qson-tools'
+import { btoa } from 'react-native-quick-base64'
 import UUID from 'react-native-uuid'
+
 import { qsonToADIF } from '../../../tools/qsonToADIF'
 import { fmtISODate } from '../../../tools/timeFormats'
 import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
@@ -40,7 +43,7 @@ export const addNewOperation = (operation) => async (dispatch) => {
   operation.qsoCount = 0
   operation.createdOnMillis = Math.floor(Date.now() / 1000) * 1000
   dispatch(actions.setOperation(operation))
-  dispatch(saveOperation(operation))
+  await dispatch(saveOperation(operation))
   return operation
 }
 
@@ -174,7 +177,7 @@ const QSON_FILENAME_REGEX = /file:.+\/([\w-]+)\.qson/i
 
 export const importQSON = (path) => async (dispatch) => {
   const matches = path.match(QSON_FILENAME_REGEX)
-  if (matches[1]) {
+  if (matches) {
     // const originalUUID = matches[1]
     const uuid = UUID.v1()
     dispatch(actions.setOperation({ uuid, status: 'loading' }))
@@ -188,8 +191,8 @@ export const importQSON = (path) => async (dispatch) => {
       dispatch(actions.setOperation(data.operation))
       dispatch(qsosActions.setQSOs({ uuid: data.operation.uuid, qsos: data.qsos }))
 
-      dispatch(saveOperation(data.operation))
-      dispatch(saveQSOsForOperation(data.operation.uuid))
+      await dispatch(saveOperation(data.operation))
+      await dispatch(saveQSOsForOperation(data.operation.uuid))
 
       dispatch(qsosActions.setQSOsStatus({ uuid: data.operation.uuid, status: 'ready' }))
       dispatch(actions.setOperation({ uuid, status: 'ready' }))
@@ -199,4 +202,53 @@ export const importQSON = (path) => async (dispatch) => {
   } else {
     reportError('Invalid Path importing QSON', path)
   }
+}
+
+const ADIF_FILENAME_REGEX = /file:.+\.adi/i
+
+export const importHistoricalADIF = (path) => async (dispatch) => {
+  const matches = path.match(ADIF_FILENAME_REGEX)
+  if (matches) {
+    dispatch(qsosActions.setQSOsStatus({ uuid: 'historical', status: 'loading' }))
+    try {
+      const filename = decodeURI(path.replace('file://', ''))
+      const adif = await RNFetchBlob.fs.readFile(filename, 'utf8')
+      const data = adifToQSON(adif)
+      const qsos = data.qsos.map(qso => {
+        return {
+          band: qso.band,
+          freq: qso.freq,
+          mode: qso.mode,
+          startOnMillis: qso.startOnMillis,
+          our: { call: qso.our.call },
+          their: {
+            call: qso.their.call,
+            name: qso.their.name,
+            grid: qso.their.grid,
+            city: qso.their.city ?? qso.their.qth,
+            state: qso.their.state,
+            county: qso.their.county,
+            country: qso.their.country,
+            postal: qso.their.postal,
+            cqZone: qso.their.cqZone,
+            ituZone: qso.their.ituZone
+          },
+          key: qsoKey(qso),
+          operation: 'historical'
+        }
+      })
+      dispatch(qsosActions.setQSOs({ uuid: 'historical', qsos }))
+      await dispatch(saveQSOsForOperation('historical'))
+      dispatch(qsosActions.setQSOsStatus({ uuid: 'historical', status: 'ready' }))
+    } catch (error) {
+      reportError('Error importing QSON', error)
+    }
+  } else {
+    reportError('Invalid Path importing QSON', path)
+  }
+}
+
+export const countHistoricalRecords = () => async (dispatch) => {
+  const row = await dbSelectOne('SELECT COUNT(*) as count FROM qsos WHERE operation = ?', ['historical'])
+  return row.count
 }
