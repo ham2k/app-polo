@@ -42,8 +42,8 @@ export function dbExecute (sql, params, options = {}) {
   }
 }
 
-export function dbSelectAll (sql, params, { txn, db, row } = {}) {
-  return dbExecute(sql, params, { txn, db }).then((results) => {
+export function dbSelectAll (sql, params, { db, row } = {}) {
+  return dbExecute(sql, params, { db }).then((results) => {
     const rows = []
     if (row) {
       for (let i = 0; i < results.rows.length; i++) {
@@ -58,8 +58,8 @@ export function dbSelectAll (sql, params, { txn, db, row } = {}) {
   })
 }
 
-export function dbSelectOne (sql, params, { txn, db, row }) {
-  return dbExecute(sql, params, { txn, db }).then((results) => {
+export function dbSelectOne (sql, params, { db, row } = {}) {
+  return dbExecute(sql, params, { db }).then((results) => {
     if (row) {
       return row(results.rows.item(0))
     } else {

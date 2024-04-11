@@ -1,5 +1,11 @@
 {
-  "0.7.3-pre3": {
+  "0.7.4-pre0": {
+    "changes": [
+      "Use data from past log entries if QRZ is not available",
+      "Import ADIF into historical data"
+    ]
+  },
+  "0.7.3": {
     "changes": [
       "Eclipse QSO Party",
       "Performance fixes",

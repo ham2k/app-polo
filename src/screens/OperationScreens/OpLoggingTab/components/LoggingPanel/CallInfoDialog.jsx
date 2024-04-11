@@ -11,11 +11,14 @@ const HISTORY_QSOS_TO_SHOW = 3
 
 export function CallInfoDialog ({
   visible, setVisible,
-  qso, guess, operation,
-  qrz, pota, callHistory,
+  qso, operation,
+  pota, qrz, callHistory,
   styles
 }) {
-  const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
+  const lookup = qso?.their?.lookup ?? {}
+  const guess = qso?.their?.guess ?? {}
+
+  const entity = DXCC_BY_PREFIX[guess.entityPrefix]
 
   const [thisOpTitle, thisOpQSOs, historyTitle, historyRecent, historyAndMore] = useMemo(() => {
     const thisQs = (callHistory || []).filter(q => operation && q.operation === operation?.uuid)
@@ -53,7 +56,7 @@ export function CallInfoDialog ({
     return [thisTitle, thisQs, title, recent, andMore]
   }, [callHistory, operation])
 
-  const callNotes = useAllCallNotesFinder(guess?.baseCall)
+  const callNotes = useAllCallNotesFinder(guess.baseCall)
 
   const handleDone = useCallback(() => {
     setVisible(false)
@@ -79,11 +82,11 @@ export function CallInfoDialog ({
                   </View>
                   <View>
                     <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
-                      {capitalizeString(qrz?.name, { content: 'name', force: false })}
+                      {capitalizeString(qso?.their?.lookup?.name, { content: 'name', force: false })}
                     </Text>
-                    {qrz?.call === guess?.baseCall && qrz?.city && (
+                    {lookup.call === guess.baseCall && lookup.city && (
                       <Text>
-                        {[capitalizeString(qrz?.city, { force: false }), qrz?.state].filter(x => x).join(', ')}
+                        {[capitalizeString(lookup.city, { force: false }), lookup.state].filter(x => x).join(', ')}
                       </Text>
                     )}
                     {entity && (
@@ -100,12 +103,10 @@ export function CallInfoDialog ({
                   </View>
                 </View>
                 <View style={{ flex: 0, marginLeft: styles.oneSpace }}>
-                  {qrz?.image && (
-                    <Image source={{ uri: qrz.image }} style={{ width: styles.oneSpace * 10, height: styles.oneSpace * 10, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
+                  {(lookup.image ?? qrz.image) && (
+                    <Image source={{ uri: (lookup.image ?? qrz.image) }} style={{ width: styles.oneSpace * 10, height: styles.oneSpace * 10, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
                   )}
-                  {qrz?.call && (
-                    <Chip icon="web" mode="flat" onPress={() => Linking.openURL(`https://qrz.com/db/${qrz?.call}`)}>qrz</Chip>
-                  )}
+                  <Chip icon="web" mode="flat" onPress={() => Linking.openURL(`https://qrz.com/db/${qso.their.call}`)}>qrz.com</Chip>
                 </View>
               </View>
               {callNotes && (
