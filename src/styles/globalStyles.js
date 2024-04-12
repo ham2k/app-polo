@@ -49,6 +49,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     colors: theme.colors,
     colorScheme,
     isDarkMode,
+    isIOS,
+    isAndroid: !isIOS,
 
     pixelRatio,
 
