@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import MapView, { Marker, Polyline } from 'react-native-maps'
+import MapView, { Marker, Polyline, Circle } from 'react-native-maps'
 
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
@@ -9,23 +9,24 @@ import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectOperation } from '../../../store/operations'
 import { addQSO, selectQSOs } from '../../../store/qsos'
 import { fmtShortTimeZulu } from '../../../tools/timeFormats'
-import { Image } from 'react-native'
+import { Image, View, useWindowDimensions } from 'react-native'
 import { selectSettings } from '../../../store/settings'
 import { apiQRZ } from '../../../store/apiQRZ'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../tools/geoTools'
 import { reportError } from '../../../App'
 
-const PIN_QTH = require('./images/qth.png')
-const PIN_FOR_STRENGTH = {
-  1: require('./images/qso-1.png'),
-  2: require('./images/qso-2.png'),
-  3: require('./images/qso-3.png'),
-  4: require('./images/qso-4.png'),
-  5: require('./images/qso-5.png'),
-  6: require('./images/qso-6.png'),
-  7: require('./images/qso-7.png'),
-  8: require('./images/qso-8.png'),
-  9: require('./images/qso-9.png')
+const METERS_IN_ONE_DEGREE = 111111
+
+const RGB_FOR_STRENGTH = {
+  1: '247, 239, 126',
+  2: '252, 234, 35',
+  3: '247, 206, 0',
+  4: '250, 202, 45',
+  5: '250, 178, 45',
+  6: '250, 168, 45',
+  7: '252, 133, 28',
+  8: '252, 118, 50',
+  9: '245, 7, 7'
 }
 
 export default function OpMapTab ({ navigation, route }) {
@@ -152,13 +153,22 @@ export default function OpMapTab ({ navigation, route }) {
     }
   }, [qth, mappableQSOs])
 
-  const [mapStyles, setMapStyles] = useState(stylesForMap({ region: initialRegion, qth, mappableQSOs }))
-  const handleRegionChange = useCallback((region) => {
-    const newStyles = stylesForMap({ region, qth, mappableQSOs })
-    if (newStyles.marker.opacity !== mapStyles.marker.opacity) {
-      setMapStyles(newStyles)
-    }
-  }, [mapStyles, qth, mappableQSOs])
+  const { width, height } = useWindowDimensions()
+  const [longitudeDelta, setLongitudeDelta] = useState(Math.floor(initialRegion.longitudeDelta))
+  const handleRegionChange = useCallback((newRegion) => {
+    setLongitudeDelta(Math.floor(newRegion.longitudeDelta))
+  }, [])
+
+  const scale = useMemo(() => {
+    const metersPerPixel = (longitudeDelta * METERS_IN_ONE_DEGREE) / width
+    const metersPerOneSpace = metersPerPixel * styles.oneSpace
+    console.log('Scale?', { longitudeDelta, width, height, metersPerPixel, metersPerOneSpace })
+    return { metersPerPixel, metersPerOneSpace }
+  }, [longitudeDelta, width, height, styles])
+
+  const mapStyles = useMemo(() => {
+    return stylesForMap({ longitudeDelta, count: mappableQSOs?.length })
+  }, [longitudeDelta, mappableQSOs?.length])
 
   return (
     <MapView
@@ -167,23 +177,43 @@ export default function OpMapTab ({ navigation, route }) {
       onRegionChange={handleRegionChange}
     >
       {qth.latitude && qth.longitude && (
-        <Marker
-          key={'qth'}
-          coordinate={qth}
-          title={`QTH: ${operation.grid}`}
-          description={operation.title}
-          anchor={{ x: 0.5, y: 0.5 }}
-          flat={true}
-          tracksViewChanges={false}
-        >
-          <Image
-            source={PIN_QTH}
-            resizeMode="cover"
-            style={{ width: 16, height: 16 }}
+        <>
+          <Marker
+            key={'qth'}
+            coordinate={qth}
+            title={`QTH: ${operation.grid}`}
+            description={operation.title}
+            anchor={{ x: 0.5, y: 0.5 }}
+            flat={true}
+            tracksViewChanges={false}
+          >
+            <View style={{ width: styles.oneSpace, height: styles.oneSpace }} />
+          </Marker>
+          <Circle
+            center={qth}
+            radius={scale.metersPerOneSpace * 0.5}
+            fillColor={'rgba(0,200,0,1)'}
+            strokeWidth={0.1}
           />
-        </Marker>
+        </>
       )}
-      {qth.latitude && qth.longitude && mappableQSOs.map(({ qso, location, strength }) => (
+      <MapMarkers
+        qth={qth}
+        qsos={mappableQSOs}
+        mapStyles={mapStyles}
+        styles={styles}
+        metersPerOneSpace={scale.metersPerOneSpace}
+      />
+    </MapView>
+  )
+}
+
+const MapMarkers = ({ qth, qsos, initialQSO, mapStyles, styles, metersPerOneSpace }) => {
+  const ref = useRef()
+
+  return (
+    <>
+      {qth.latitude && qth.longitude && qsos.map(({ qso, location, strength }) => (
         <Polyline
           key={qso.key}
           geodesic={true}
@@ -191,24 +221,28 @@ export default function OpMapTab ({ navigation, route }) {
           {...mapStyles.line}
         />
       ))}
-      {mappableQSOs.map(({ qso, location, strength, distanceStr }) => (
-        <Marker
-          key={qso.key}
-          coordinate={location}
-          anchor={{ x: 0.5, y: 0.5 }}
-          title={[qso.their.call, distanceStr].join(' • ')}
-          description={[qso.their?.sent, qso.mode, qso.band, fmtShortTimeZulu(qso.startOnMillis)].join(' • ')}
-          flat={true}
-          tracksViewChanges={false}
-        >
-          <Image
-            source={PIN_FOR_STRENGTH[strength]}
-            resizeMode="cover"
-            style={{ width: 16, height: 16, resizeMode: 'cover', ...mapStyles.marker }}
+      {qsos.map(({ qso, location, strength, distanceStr }) => (
+        <React.Fragment key={qso.key}>
+          <Marker
+            coordinate={location}
+            innerRef={initialQSO && initialQSO.key === qso.key ? ref : undefined}
+            anchor={{ x: 0.5, y: 0.5 }}
+            title={[qso.their.call, distanceStr].join(' • ')}
+            description={[qso.their?.sent, qso.mode, qso.band, fmtShortTimeZulu(qso.startOnMillis)].join(' • ')}
+            flat={true}
+            tracksViewChanges={false}
+          >
+            <View style={{ width: styles.oneSpace * mapStyles.marker.size, height: styles.oneSpace * mapStyles.marker.size }} />
+          </Marker>
+          <Circle
+            center={location}
+            radius={metersPerOneSpace * mapStyles.marker.size / 2}
+            fillColor={`rgba(${RGB_FOR_STRENGTH[strength] ?? RGB_FOR_STRENGTH[5]}, ${mapStyles.marker.opacity})`}
+            strokeWidth={0.1}
           />
-        </Marker>
+        </React.Fragment>
       ))}
-    </MapView>
+    </>
   )
 }
 
@@ -229,25 +263,28 @@ function strengthForQSO (qso) {
   }
 }
 
-function stylesForMap ({ region, mappableQSOs, qth }) {
-  let longitudeDelta = region.longitudeDelta
-  if (mappableQSOs.length > 50) {
+function stylesForMap ({ longitudeDelta, count }) {
+  if (count > 50) {
     longitudeDelta = longitudeDelta * 1.5
   }
-
-  if (longitudeDelta > 90) {
-    return { marker: { opacity: 0.4, width: 14, height: 14 }, line: { strokeColor: 'rgba(60,60,60,0.3)' } }
+  console.log('Styles for Map', { longitudeDelta, count })
+  if (longitudeDelta > 140) {
+    return { marker: { opacity: 0.7, size: 0.5 }, line: { strokeColor: 'rgba(60,60,60,0.2)' } }
+  } else if (longitudeDelta > 120) {
+    return { marker: { opacity: 0.7, size: 0.5 }, line: { strokeColor: 'rgba(60,60,60,0.2)' } }
+  } else if (longitudeDelta > 90) {
+    return { marker: { opacity: 0.7, size: 0.5 }, line: { strokeColor: 'rgba(60,60,60,0.2)' } }
   } else if (longitudeDelta > 60) {
-    return { marker: { opacity: 0.5, width: 14, height: 14 }, line: { strokeColor: 'rgba(60,60,60,0.3)' } }
+    return { marker: { opacity: 0.7, size: 0.8 }, line: { strokeColor: 'rgba(60,60,60,0.3)' } }
   } else if (longitudeDelta > 40) {
-    return { marker: { opacity: 0.7, width: 14, height: 14 }, line: { strokeColor: 'rgba(60,60,60,0.4)' } }
+    return { marker: { opacity: 0.7, size: 0.9 }, line: { strokeColor: 'rgba(60,60,60,0.4)' } }
   } else if (longitudeDelta > 25) {
-    return { marker: { opacity: 0.75, width: 16, height: 16 }, line: { strokeColor: 'rgba(60,60,60,0.4)' } }
+    return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: 'rgba(60,60,60,0.4)' } }
   } else if (longitudeDelta > 15) {
-    return { marker: { opacity: 0.8, width: 18, height: 18 }, line: { strokeColor: 'rgba(75,75,75,0.5)' } }
+    return { marker: { opacity: 1, size: 1 }, line: { strokeColor: 'rgba(75,75,75,0.5)' } }
   } else if (longitudeDelta > 10) {
-    return { marker: { opacity: 0.85, width: 20, height: 20 }, line: { strokeColor: 'rgba(90,90,90,0.7)' } }
+    return { marker: { opacity: 1, size: 1.2 }, line: { strokeColor: 'rgba(90,90,90,0.7)' } }
   } else {
-    return { marker: { opacity: 0.9, width: 24, height: 24 }, line: { strokeColor: 'rgba(60,60,60,0.3)' } }
+    return { marker: { opacity: 1, size: 1.4 }, line: { strokeColor: 'rgba(60,60,60,0.3)' } }
   }
 }
