@@ -3,7 +3,6 @@ import { actions } from '../operationsSlice'
 import { actions as qsosActions, saveQSOsForOperation } from '../../qsos'
 import { adifToQSON } from '@ham2k/lib-qson-adif'
 import { qsoKey } from '@ham2k/lib-qson-tools'
-import { btoa } from 'react-native-quick-base64'
 import UUID from 'react-native-uuid'
 
 import { qsonToADIF } from '../../../tools/qsonToADIF'
