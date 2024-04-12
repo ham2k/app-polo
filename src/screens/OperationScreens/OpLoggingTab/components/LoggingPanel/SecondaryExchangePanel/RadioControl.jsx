@@ -6,7 +6,7 @@ import FrequencyInput from '../../../../../components/FrequencyInput'
 import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 import { ADIF_MODES_AND_SUBMODES, BANDS, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
 
-const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => {
+const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
@@ -52,7 +52,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
         label="Frequency"
         placeholder=""
         onChange={handleFieldChange}
-        onSubmitEditing={handleSubmit}
+        onSubmitEditing={onSubmitEditing}
         fieldId={'freq'}
         focusedRef={focusedRef}
       />

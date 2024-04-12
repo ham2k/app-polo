@@ -7,8 +7,8 @@ import { SecondaryControlManagementSubPanel } from './SecondaryExchangePanel/Sec
 import { SecondaryControlSelectionsubPanel } from './SecondaryExchangePanel/SecondaryControlSelectionSubPanel'
 import { findHooks } from '../../../../../extensions/registry'
 
-export const SecondaryExchangePanel = (params) => {
-  const { currentSecondaryControl, operation, settings } = params
+export const SecondaryExchangePanel = (props) => {
+  const { currentSecondaryControl, operation, settings } = props
 
   const secondaryControlSettings = useMemo(() => (
     operation?.secondaryControls ?? settings?.secondaryControls ?? {}
@@ -46,8 +46,8 @@ export const SecondaryExchangePanel = (params) => {
   }, [allControls, secondaryControlSettings])
 
   if (currentSecondaryControl === 'manage-controls') {
-    return <SecondaryControlManagementSubPanel {...params} secondaryControlSettings={secondaryControlSettings} allControls={allControls} enabledControls={enabledControls} moreControls={moreControls} />
+    return <SecondaryControlManagementSubPanel {...props} secondaryControlSettings={secondaryControlSettings} allControls={allControls} enabledControls={enabledControls} moreControls={moreControls} />
   } else {
-    return <SecondaryControlSelectionsubPanel {...params} secondaryControlSettings={secondaryControlSettings} allControls={allControls} enabledControls={enabledControls} moreControls={moreControls} />
+    return <SecondaryControlSelectionsubPanel {...props} secondaryControlSettings={secondaryControlSettings} allControls={allControls} enabledControls={enabledControls} moreControls={moreControls} />
   }
 }

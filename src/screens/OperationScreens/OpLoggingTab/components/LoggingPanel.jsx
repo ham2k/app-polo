@@ -446,7 +446,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
               setQSO={setQSO}
               disabled={qso?.deleted || qso?._willBeDeleted}
               handleFieldChange={handleFieldChange}
-              handleSubmit={handleSubmit}
+              onSubmitEditing={handleSubmit}
               focusedRef={focusedRef}
               styles={styles}
               themeColor={themeColor}
@@ -530,7 +530,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
             disabled={qso?.deleted || qso?._willBeDeleted}
             styles={styles}
             themeColor={themeColor}
-            handleSubmit={handleSubmit}
+            onSubmitEditing={handleSubmit}
             handleFieldChange={handleFieldChange}
             setQSO={setQSO}
             mainFieldRef={mainFieldRef}

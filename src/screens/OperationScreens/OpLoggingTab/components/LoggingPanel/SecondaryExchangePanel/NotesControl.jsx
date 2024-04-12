@@ -3,7 +3,7 @@ import { View } from 'react-native'
 
 import ThemedTextInput from '../../../../../components/ThemedTextInput'
 
-const NotesControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => {
+const NotesControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
@@ -18,7 +18,7 @@ const NotesControlInputs = ({ qso, operation, settings, disabled, icon, style, s
         label="Notes"
         placeholder=""
         onChange={handleFieldChange}
-        onSubmitEditing={handleSubmit}
+        onSubmitEditing={onSubmitEditing}
         fieldId={'notes'}
         focusedRef={focusedRef}
         keyboard="dumb"

@@ -1,11 +1,12 @@
 {
-  "0.7.4-pre1": {
+  "0.7.4-pre2": {
     "changes": [
       "Use data from past log entries if QRZ is not available",
       "Import ADIF into historical data",
       "Made numbers row larger",
       "Map performance improvements",
-      "Fixed display of icons in Operations"
+      "Fixed display of icons in Operations",
+      "Fixed the use of the 'send' or 'return' key to save QSOs"
     ]
   },
   "0.7.3": {
