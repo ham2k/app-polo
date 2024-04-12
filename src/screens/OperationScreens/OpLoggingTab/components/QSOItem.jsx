@@ -66,8 +66,8 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
           )}
         </Text>
         <Text style={styles.fields.name}>
-          {extendedWidth && (
-            qso.their?.name ?? qso.their?.guess?.name ?? ''
+          {styles.smOrGreater && (
+            qso.their?.name ?? qso.their?.lookup?.name ?? ''
           )}
         </Text>
         <Text style={styles.fields.icon}>

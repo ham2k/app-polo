@@ -126,7 +126,8 @@ function prepareStyles (themeStyles, isDeleted, width) {
       icon: {
         ...commonStylesForStatus,
         flex: 0,
-        maxWidth: themeStyles.oneSpace * 4,
+        textAlign: 'right',
+        maxWidth: themeStyles.oneSpace * 8,
         lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
       }

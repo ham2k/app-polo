@@ -4,7 +4,8 @@
       "Use data from past log entries if QRZ is not available",
       "Import ADIF into historical data",
       "Made numbers row larger",
-      "Map performance improvements"
+      "Map performance improvements",
+      "Fixed display of icons in Operations"
     ]
   },
   "0.7.3": {
