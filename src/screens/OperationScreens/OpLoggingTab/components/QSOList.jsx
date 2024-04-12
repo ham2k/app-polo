@@ -5,6 +5,7 @@ import QSOItem, { guessItemHeight } from './QSOItem'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../store/operations'
+import { useUIState } from '../../../../store/ui'
 
 function prepareStyles (themeStyles, isDeleted, width) {
   const extendedWidth = width / themeStyles.oneSpace > 60
@@ -133,15 +134,15 @@ function prepareStyles (themeStyles, isDeleted, width) {
   }
 }
 
-export default function QSOList ({ style, operation, settings, qsos, selectedKey, setLoggingState, lastKey }) {
+export default function QSOList ({ style, operation, settings, qsos }) {
   const { width } = useWindowDimensions()
+
+  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, false, width))
   const stylesForDeleted = useThemedStyles((baseStyles) => prepareStyles(baseStyles, true, width))
 
   const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
-
-  // const { qsos, selectedKey, setSelectedKey, lastKey } = useContext(OperationContext)
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
@@ -150,8 +151,8 @@ export default function QSOList ({ style, operation, settings, qsos, selectedKey
   // When the lastQSO changes, scroll to it
   useEffect(() => {
     setTimeout(() => {
-      if (lastKey) {
-        const i = qsos.findIndex((qso) => qso.key === lastKey)
+      if (loggingState?.lastKey) {
+        const i = qsos.findIndex((qso) => qso.key === loggingState?.lastKey)
         if (i > -1) {
           listRef.current?.scrollToIndex({ index: i, animated: true })
         } else {
@@ -161,22 +162,22 @@ export default function QSOList ({ style, operation, settings, qsos, selectedKey
         listRef.current?.scrollToEnd()
       }
     }, 50)
-  }, [listRef, qsos, lastKey])
+  }, [listRef, qsos, loggingState?.lastKey])
 
   const handlePress = useCallback(({ qso }) => {
-    if (qso.key === selectedKey) {
-      setLoggingState && setLoggingState({ selectedKey: undefined })
+    if (qso.key === loggingState?.selectedKey) {
+      setLoggingState({ selectedKey: undefined })
     } else {
-      setLoggingState && setLoggingState({ selectedKey: qso.key })
+      setLoggingState({ selectedKey: qso.key })
     }
-  }, [selectedKey, setLoggingState])
+  }, [loggingState?.selectedKey, setLoggingState])
 
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
     return (
-      <QSOItem qso={qso} settings={settings} selected={qso.key === selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} extendedWidth={extendedWidth} />
+      <QSOItem qso={qso} settings={settings} selected={qso.key === loggingState?.selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} extendedWidth={extendedWidth} />
     )
-  }, [styles, settings, stylesForDeleted, ourInfo, handlePress, extendedWidth, selectedKey])
+  }, [styles, settings, stylesForDeleted, ourInfo, handlePress, extendedWidth, loggingState?.selectedKey])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(qsos[index], styles)
