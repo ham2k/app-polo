@@ -23,6 +23,7 @@ import { joinAnd } from '../../../../tools/joinAnd'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 import { checkAndProcessCommands } from '../../../../extensions/commands/commandHandling'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useUIState } from '../../../../store/ui'
 
 function prepareStyles (themeStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
@@ -122,10 +123,12 @@ function prepareSuggestedQSO (qso) {
   return clone
 }
 
-export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings, selectedKey, setLoggingState, suggestedQSO }) {
+export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings }) {
   const [qso, setQSO] = useState()
   const [originalQSO, setOriginalQSO] = useState()
   const [qsoHasChanges, setQSOHasChanges] = useState(false)
+
+  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   const themeColor = useMemo(() => (!qso || qso?._isNew) ? 'tertiary' : 'secondary', [qso])
   const upcasedThemeColor = useMemo(() => themeColor.charAt(0).toUpperCase() + themeColor.slice(1), [themeColor])
@@ -193,7 +196,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   useEffect(() => { // Manage the QSO Queue
     // When there is no current QSO, pop one from the queue or create a new one
     // If the currently selected QSO changes, push the current one to the queue and load the new one
-    if (!selectedKey || (selectedKey === 'new-qso' && !qso)) {
+    if (!loggingState?.selectedKey || (loggingState?.selectedKey === 'new-qso' && !qso)) {
       let nextQSO
       if (qsoQueue.length > 0) {
         nextQSO = qsoQueue.pop()
@@ -202,7 +205,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         nextQSO = prepareNewQSO(operation, settings)
       }
       setNewQSO(nextQSO)
-      if (nextQSO.key !== selectedKey) {
+      if (nextQSO.key !== loggingState?.selectedKey) {
         setLoggingState({ selectedKey: nextQSO.key })
       }
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
@@ -210,13 +213,13 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
           mainFieldRef.current.focus()
         }
       }, 10)
-    } else if (qso && qso?.key !== selectedKey && selectedKey !== 'new-qso') {
+    } else if (qso && qso?.key !== loggingState?.selectedKey && loggingState?.selectedKey !== 'new-qso') {
       let nextQSO
-      if (selectedKey === 'suggested-qso') {
-        nextQSO = prepareSuggestedQSO(suggestedQSO)
+      if (loggingState?.selectedKey === 'suggested-qso') {
+        nextQSO = prepareSuggestedQSO(loggingState?.suggestedQSO)
         setLoggingState({ selectedKey: nextQSO.key })
       } else {
-        nextQSO = qsos.find(q => q.key === selectedKey)
+        nextQSO = qsos.find(q => q.key === loggingState?.selectedKey)
         if (nextQSO) nextQSO = prepareExistingQSO(nextQSO)
         else nextQSO = prepareNewQSO(operation, settings)
       }
@@ -230,7 +233,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         }
       }, 10)
     }
-  }, [qsoQueue, setQSOQueue, selectedKey, setLoggingState, suggestedQSO, operation, settings, qso, setNewQSO, qsos])
+  }, [qsoQueue, setQSOQueue, loggingState?.selectedKey, setLoggingState, loggingState?.suggestedQSO, operation, settings, qso, setNewQSO, qsos])
 
   useEffect(() => { // Validate and analize the callsign
     const callInfo = parseCallsign(qso?.their?.call)
