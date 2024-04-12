@@ -1,13 +1,16 @@
 import packageJson from '../../package.json'
+import { findBestHook } from '../extensions/registry'
 import { sanitizeToISO8859 } from './stringTools'
 import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
-export function qsonToADIF ({ operation, settings, qsos, handler, title }) {
+export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers, title }) {
   const common = {
     refs: operation.refs,
     grid: operation.grid,
     stationCall: operation.stationCall ?? settings.operatorCall
   }
+  const operationWithoutRefs = { ...operation, refs: [] }
+
   if (operation.stationCall !== settings.operatorCall) common.operatorCall = settings.operatorCall
 
   let str = ''
@@ -31,8 +34,24 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title }) {
     }
 
     handlerFieldCombinations.forEach((combinationFields, index) => {
-      const fields = adifFieldsForOneQSO(qso, operation, common, index * 1000)
-      str += adifRow([...fields, ...combinationFields])
+      let fields = adifFieldsForOneQSO(qso, operation, common, index * 1000)
+      fields = fields.concat(combinationFields)
+
+      ;(qso.refs || []).forEach(ref => {
+        const exportHandler = findBestHook(`ref:${ref.type}`)
+        if (exportHandler && exportHandler.key !== handler.key && exportHandler.adifFieldsForOneQSO) {
+          const refFields = exportHandler.adifFieldsForOneQSO({ qso, operation: operationWithoutRefs, common })
+          refFields.forEach(refField => {
+            if (fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])) {
+              // Another field with the same name already exists
+            } else {
+              fields = fields.concat([refField])
+            }
+          })
+        }
+      })
+
+      str += adifRow(fields)
     })
   })
 
