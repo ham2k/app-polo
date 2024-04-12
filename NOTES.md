@@ -20,13 +20,11 @@ https://cwhelchel.github.io/potamap.ol/
 
 # Native components to add for next build
 
+Locale settings
+
 https://github.com/react-native-masked-view/masked-view
 To add a gradient on the secondary exchange scroll area
 
 https://github.com/ArturKalach/react-native-external-keyboard#readme
 For better external keyboard support
 
-https://github.com/expo/google-fonts#readme
-More weights of Roboto
-
-Add Map Markers as native images
