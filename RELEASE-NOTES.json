@@ -6,7 +6,8 @@
       "Made numbers row larger",
       "Map performance improvements",
       "Fixed display of icons in Operations",
-      "Fixed the use of the 'send' or 'return' key to save QSOs"
+      "Fixed the use of the 'send' or 'return' key to save QSOs",
+      "Fixed missing log info when not activating anything"
     ]
   },
   "0.7.3": {
