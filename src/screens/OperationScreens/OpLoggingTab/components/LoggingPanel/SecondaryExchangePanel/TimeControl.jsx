@@ -5,7 +5,7 @@ import TimeChip from '../../../../components/TimeChip'
 import { TimeInput } from '../../../../../components/TimeInput'
 import { DateInput } from '../../../../../components/DateInput'
 
-const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, handleSubmit, focusedRef }) => {
+const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
@@ -19,7 +19,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
         disabled={disabled}
         label="Time"
         onChange={handleFieldChange}
-        onSubmitEditing={handleSubmit}
+        onSubmitEditing={onSubmitEditing}
         fieldId={'time'}
         focusedRef={focusedRef}
       />
@@ -30,7 +30,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
         disabled={disabled}
         label="Date"
         onChange={handleFieldChange}
-        onSubmitEditing={handleSubmit}
+        onSubmitEditing={onSubmitEditing}
         fieldId={'date'}
         focusedRef={focusedRef}
       />
