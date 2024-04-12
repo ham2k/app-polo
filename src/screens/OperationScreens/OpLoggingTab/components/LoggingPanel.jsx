@@ -434,7 +434,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
   return (
     <View style={[styles.root, style]}>
-      <SafeAreaView edges={['bottom', 'left', 'right']}>
+      <SafeAreaView edges={[isKeyboardVisible ? '' : 'bottom', 'left', 'right'].filter(x => x)}>
 
         <View style={{ width: '100%', flexDirection: 'row', minHeight: 20 }}>
           <View style={{ flex: 1, flexDirection: 'column' }}>
