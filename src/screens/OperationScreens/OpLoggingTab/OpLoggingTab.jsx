@@ -9,6 +9,7 @@ import LoggingPanel from './components/LoggingPanel'
 import QSOList from './components/QSOList'
 import { selectQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
+import { useUIState } from '../../../store/ui'
 
 function prepareStyles (themeStyles, themeColor) {
   return {
@@ -38,13 +39,14 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   const settings = useSelector(selectSettings)
 
-  const [loggingState, setLoggingState] = useState({})
+  // eslint-disable-next-line no-unused-vars
+  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   useEffect(() => {
     if (route?.params?.qso) {
       setLoggingState({ selectedKey: 'suggested-qso', suggestedQSO: route.params.qso })
     }
-  }, [route?.params?.qso])
+  }, [route?.params?.qso, setLoggingState])
 
   // Set navigation title
   useEffect(() => {
@@ -59,9 +61,6 @@ export default function OpLoggingTab ({ navigation, route }) {
         qsos={qsos}
         operation={operation}
         settings={settings}
-        setLoggingState={setLoggingState}
-        selectedKey={loggingState.selectedKey}
-        lastKey={loggingState.lastKey}
       />
 
       <LoggingPanel
@@ -70,10 +69,6 @@ export default function OpLoggingTab ({ navigation, route }) {
         qsos={qsos}
         activeQSOs={activeQSOs}
         settings={settings}
-        setLoggingState={setLoggingState}
-        selectedKey={loggingState.selectedKey}
-        lastKey={loggingState.lastKey}
-        suggestedQSO={loggingState.suggestedQSO}
       />
     </View>
   )
