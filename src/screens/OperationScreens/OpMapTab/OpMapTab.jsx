@@ -9,12 +9,14 @@ import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectOperation } from '../../../store/operations'
 import { addQSO, selectQSOs } from '../../../store/qsos'
 import { fmtShortTimeZulu } from '../../../tools/timeFormats'
-import { Image, View, useWindowDimensions } from 'react-native'
+import { View, useWindowDimensions } from 'react-native'
 import { selectSettings } from '../../../store/settings'
 import { apiQRZ } from '../../../store/apiQRZ'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../tools/geoTools'
 import { reportError } from '../../../App'
 import { useUIState } from '../../../store/ui'
+
+const TRANSP_PNG = require('../../../../assets/images/transp-16.png')
 
 const METERS_IN_ONE_DEGREE = 111111
 
@@ -157,21 +159,23 @@ export default function OpMapTab ({ navigation, route }) {
     }
   }, [qth, mappableQSOs])
 
+  // eslint-disable-next-line no-unused-vars
   const { width, height } = useWindowDimensions()
   const [longitudeDelta, setLongitudeDelta] = useState(Math.floor(initialRegion.longitudeDelta))
   const handleRegionChange = useCallback((newRegion) => {
-    setLongitudeDelta(Math.floor(newRegion.longitudeDelta))
+    setLongitudeDelta(Math.max(1, Math.floor(newRegion.longitudeDelta)))
   }, [])
 
   const scale = useMemo(() => {
     const metersPerPixel = (longitudeDelta * METERS_IN_ONE_DEGREE) / width
     const metersPerOneSpace = metersPerPixel * styles.oneSpace
-    console.log('Scale?', { longitudeDelta, width, height, metersPerPixel, metersPerOneSpace })
     return { metersPerPixel, metersPerOneSpace }
-  }, [longitudeDelta, width, height, styles])
+  }, [longitudeDelta, width, styles])
 
   const mapStyles = useMemo(() => {
-    return stylesForMap({ longitudeDelta, count: mappableQSOs?.length })
+    const newStyles = stylesForMap({ longitudeDelta, count: mappableQSOs?.length })
+    console.log('mapStyles', { longitudeDelta, newStyles })
+    return newStyles
   }, [longitudeDelta, mappableQSOs?.length])
 
   return (
@@ -179,6 +183,7 @@ export default function OpMapTab ({ navigation, route }) {
       style={styles.root}
       initialRegion={initialRegion}
       onRegionChange={handleRegionChange}
+      mapType={styles.isIOS ? 'mutedStandard' : 'terrain'}
     >
       {qth.latitude && qth.longitude && (
         <>
@@ -190,6 +195,7 @@ export default function OpMapTab ({ navigation, route }) {
             anchor={{ x: 0.5, y: 0.5 }}
             flat={true}
             tracksViewChanges={false}
+            icon={TRANSP_PNG}
           >
             <View style={{ width: styles.oneSpace, height: styles.oneSpace }} />
           </Marker>
@@ -242,8 +248,11 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, metersPerOneSpa
             description={[qso.their?.sent, qso.mode, qso.band, fmtShortTimeZulu(qso.startOnMillis)].join(' • ')}
             flat={true}
             tracksViewChanges={false}
+            icon={TRANSP_PNG}
           >
-            <View style={{ width: styles.oneSpace * mapStyles.marker.size, height: styles.oneSpace * mapStyles.marker.size }} />
+            <View width={12} height={12} style={{ width: styles.oneSpace * mapStyles.marker.size, height: styles.oneSpace * mapStyles.marker.size }}>
+              <View />{/* Empty View */}
+            </View>
           </Marker>
           <Circle
             center={location}
@@ -278,7 +287,6 @@ function stylesForMap ({ longitudeDelta, count }) {
   if (count > 50) {
     longitudeDelta = longitudeDelta * 1.5
   }
-  console.log('Styles for Map', { longitudeDelta, count })
   if (longitudeDelta > 140) {
     return { marker: { opacity: 0.7, size: 0.5 }, line: { strokeColor: 'rgba(60,60,60,0.2)' } }
   } else if (longitudeDelta > 120) {
