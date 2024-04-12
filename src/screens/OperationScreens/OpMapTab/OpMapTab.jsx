@@ -14,6 +14,7 @@ import { selectSettings } from '../../../store/settings'
 import { apiQRZ } from '../../../store/apiQRZ'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../tools/geoTools'
 import { reportError } from '../../../App'
+import { useUIState } from '../../../store/ui'
 
 const METERS_IN_ONE_DEGREE = 111111
 
@@ -54,6 +55,9 @@ export default function OpMapTab ({ navigation, route }) {
   const settings = useSelector(selectSettings)
 
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
+
+  // eslint-disable-next-line no-unused-vars
+  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   const qth = useMemo(() => {
     try {
@@ -203,13 +207,20 @@ export default function OpMapTab ({ navigation, route }) {
         mapStyles={mapStyles}
         styles={styles}
         metersPerOneSpace={scale.metersPerOneSpace}
+        selectedKey={loggingState?.selectedKey}
       />
     </MapView>
   )
 }
 
-const MapMarkers = ({ qth, qsos, initialQSO, mapStyles, styles, metersPerOneSpace }) => {
+const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, metersPerOneSpace }) => {
   const ref = useRef()
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.showCallout()
+    }
+  }, [ref, selectedKey])
 
   return (
     <>
@@ -225,7 +236,7 @@ const MapMarkers = ({ qth, qsos, initialQSO, mapStyles, styles, metersPerOneSpac
         <React.Fragment key={qso.key}>
           <Marker
             coordinate={location}
-            innerRef={initialQSO && initialQSO.key === qso.key ? ref : undefined}
+            ref={selectedKey && selectedKey === qso.key ? ref : undefined}
             anchor={{ x: 0.5, y: 0.5 }}
             title={[qso.their.call, distanceStr].join(' • ')}
             description={[qso.their?.sent, qso.mode, qso.band, fmtShortTimeZulu(qso.startOnMillis)].join(' • ')}

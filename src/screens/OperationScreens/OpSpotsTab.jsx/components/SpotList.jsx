@@ -86,7 +86,6 @@ export default function SpotList ({ spots, spotsQuery, style }) {
 
   const { width } = useWindowDimensions()
   const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
-  // const { qsos, selectedKey, setSelectedKey, lastKey } = useContext(OperationContext)
 
   const listRef = useRef()
 
