@@ -204,8 +204,6 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (qso?.their?.lookup?.dxccCode && qso?.their?.lookup?.dxccCode !== guess?.dxccCode)
 
-    console.log('location memo guess', qso?.their?.guess)
-    console.log('location memo lookup', qso?.their?.lookup)
     const parts = []
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
