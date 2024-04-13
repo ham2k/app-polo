@@ -95,14 +95,19 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-function prepareNewQSO (operation, settings) {
-  return {
+function prepareNewQSO (operation, qsos, settings) {
+  const qso = {
     band: operation.band,
     freq: operation.freq,
     mode: operation.mode,
     _isNew: true,
     key: 'new-qso'
   }
+  if (operation._nextManualTime) {
+    qso.startOnMillis = operation._nextManualTime
+    qso._manualTime = true
+  }
+  return qso
 }
 
 function prepareExistingQSO (qso) {
@@ -203,7 +208,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         nextQSO = qsoQueue.pop()
         setQSOQueue(qsoQueue)
       } else {
-        nextQSO = prepareNewQSO(operation, settings)
+        nextQSO = prepareNewQSO(operation, qsos, settings)
       }
       setNewQSO(nextQSO)
       if (nextQSO.key !== loggingState?.selectedKey) {
@@ -222,7 +227,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       } else {
         nextQSO = qsos.find(q => q.key === loggingState?.selectedKey)
         if (nextQSO) nextQSO = prepareExistingQSO(nextQSO)
-        else nextQSO = prepareNewQSO(operation, settings)
+        else nextQSO = prepareNewQSO(operation, qsos, settings)
       }
 
       if (qso?._isNew) setQSOQueue([...qsoQueue, qso])
@@ -259,15 +264,13 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     }
 
     if (fieldId === 'theirCall') {
-      let startOnMillis = qso?.startOnMillis
-      if (!pausedTime) {
-        if (value) {
-          if (!startOnMillis) {
-            startOnMillis = Math.floor(Date.now() / 1000) * 1000
-          }
-        } else {
-          startOnMillis = null
-        }
+      let timeChanges = {}
+      if (qso?._isNew && value && !pausedTime && !qso.startOnMillis) {
+        setPausedTime(true)
+        timeChanges = { startOnMillis: Math.floor(Date.now() / 1000) * 1000, _manualTime: false }
+      } else if (qso?._isNew && !value) {
+        setPausedTime(false)
+        timeChanges = { startOnMillis: undefined, _manualTime: false }
       }
 
       let guess = parseCallsign(value)
@@ -277,7 +280,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         guess = annotateFromCountryFile({ prefix: value, baseCall: value })
       }
 
-      updateQSO({ their: { call: value, guess }, startOnMillis })
+      updateQSO({ their: { call: value, guess }, ...timeChanges })
     } else if (fieldId === 'theirSent') {
       updateQSO({ their: { sent: value } })
     } else if (fieldId === 'ourSent') {
@@ -296,7 +299,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       updateQSO({ mode: value })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
-      updateQSO({ startOnMillis: value })
+      updateQSO({ startOnMillis: value, _manualTime: true })
     } else if (fieldId === 'state') {
       updateQSO({ their: { state: value } })
     }
@@ -310,7 +313,6 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
     setTimeout(() => { // Run inside a setTimeout to allow the state to update
       // First, try to process any commands
-
       if (checkAndProcessCommands(qso?.their?.call, { qso, originalQSO, operation, dispatch, settings, handleFieldChange })) {
         return
       }
@@ -325,6 +327,17 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       } else if (isValidQSO && !qso.deleted) {
         unstable_batchedUpdates(() => {
           setCurrentSecondaryControl(undefined)
+
+          if (qso?._isNew && qso?._manualTime && qso.startOnMillis) {
+            let nextManualTime = qso.startOnMillis + (60 * 1000)
+            if (qsos.length > 0) {
+              const diff = Math.abs(qso.startOnMillis - qsos[qsos.length - 1].startOnMillis)
+              if (diff >= 1000) {
+                nextManualTime = qso.startOnMillis + Math.min(diff, 60 * 5000)
+              }
+            }
+            dispatch(setOperationData({ uuid: operation.uuid, _nextManualTime: nextManualTime }))
+          }
 
           delete qso._isNew
           delete qso._willBeDeleted
@@ -356,7 +369,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         })
       }
     }, 10)
-  }, [qso, setQSO, originalQSO, operation, settings, handleFieldChange, isValidQSO, dispatch, setLoggingState, setCurrentSecondaryControl])
+  }, [qso, qsos, setQSO, originalQSO, operation, settings, handleFieldChange, isValidQSO, dispatch, setLoggingState, setCurrentSecondaryControl])
 
   const [undoInfo, setUndoInfo] = useState()
 

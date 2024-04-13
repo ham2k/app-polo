@@ -11,6 +11,7 @@ import SEQPExtension from './activities/seqp/SEQPExtension'
 import CustomExtension from './activities/custom/CustomExtension'
 
 import RadioCommands from './commands/RadioCommands'
+import TimeCommands from './commands/TimeCommands'
 import DevModeCommands from './commands/DevModeCommands'
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 
@@ -26,6 +27,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(SEQPExtension)
 
   registerExtension(RadioCommands)
+  registerExtension(TimeCommands)
   registerExtension(DevModeCommands)
 
   registerExtension(CallNotesExtension)

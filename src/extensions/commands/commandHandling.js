@@ -15,7 +15,7 @@ export function checkAndProcessCommands (value, extraParams) {
           return true
         }
       } else if (typeof hook?.match === 'object' && hook.match.test) {
-        match = value.match(hook.match)
+        match = value && value.match(hook.match)
         return !!match
       }
       return false
