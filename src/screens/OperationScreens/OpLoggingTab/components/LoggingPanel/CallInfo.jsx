@@ -98,14 +98,23 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
         setSkipQRZ(false)
       } else {
         // Wait a bit before calling QRZ on every keystroke
-        const timeout = setTimeout(() => { console.log('qrz go'); setSkipQRZ(false) }, 200)
+        const timeout = setTimeout(() => { setSkipQRZ(false) }, 200)
         return () => clearTimeout(timeout)
       }
     }
   }, [guess?.baseCall, online, settings?.accounts?.qrz, skipQRZ])
+  const [qrzCall, setQRZCall] = useState()
 
-  const qrzLookup = useLookupCallQuery({ call: guess?.baseCall }, { skip: skipQRZ })
-  const qrz = useMemo(() => qrzLookup.currentData || {}, [qrzLookup.currentData])
+  const qrzLookup = useLookupCallQuery({ call: qrzCall === guess.baseCall ? qrzCall : guess.call }, { skip: skipQRZ })
+  const qrz = useMemo(() => {
+    if (qrzLookup?.error?.indexOf('not found') >= 0) {
+      // If the call has a prefix or suffix, and the full call was not found, let's retry with the base call
+      if (qrzLookup?.originalArgs?.call !== guess.baseCall) {
+        setQRZCall(guess.baseCall)
+      }
+    }
+    return qrzLookup.currentData || {}
+  }, [qrzLookup, guess.baseCall])
 
   const potaRef = useMemo(() => { // Find POTA references
     const potaRefs = filterRefs(qso?.refs, 'pota')
@@ -123,7 +132,7 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
   , [potaLookup?.data])
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    const their = { ...qso.their, guess, lookup: {} }
+    const their = { guess, lookup: {} }
 
     let historyData = {}
 
@@ -147,7 +156,7 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
       their.lookup.source = 'history'
     }
 
-    if (qrz?.name && qrz?.name !== qso?.their?.lookup?.name) {
+    if (qrz?.name) {
       their.lookup = {
         source: 'qrz.com',
         call: qrz.call,
@@ -155,6 +164,7 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
         state: qrz.state,
         city: qrz.city,
         country: qrz.country,
+        dxccCode: qrz.dxccCode,
         county: qrz.county,
         postal: qrz.postal,
         grid: qrz.grid,
@@ -166,69 +176,99 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
     }
 
     if (their.lookup?.name) {
-      their.guess = {
-        ...their.guess,
-        name: their.lookup.name,
-        state: their.lookup.state,
-        city: their.lookup.city,
-        grid: their.lookup.grid
+      // Use their name in any case
+      their.guess.name = their.lookup.name
+      if (guess.indicators && guess.indicators.find(ind => ['P', 'M', 'AM', 'MM'].indexOf(ind) >= 0)) {
+        // If operating Portable, Maritime Mobile, or Mobile, ignore location
+      } else if (their.lookup.call === guess.call) {
+        // If the lookup call is the same as the guess call, then use the lookup location
+        their.guess.state = their.lookup.state
+        their.guess.city = their.lookup.city
+        their.guess.grid = their.lookup.grid
       }
     }
 
-    if (pota?.locationDesc?.indexOf(',') < 0) {
+    if (pota?.grid6 && pota?.locationDesc?.indexOf(',') < 0) {
       // Only use POTA info if it's not a multi-state park
-      if (pota.grid6 && qso.their?.guess?.grid !== pota.grid6) {
-        their.guess.grid = pota.grid6
+      their.guess.grid = pota.grid6
 
-        if (pota.reference?.startsWith('US-') || pota.reference?.startsWith('CA-')) {
-          const potaState = (pota.locationDesc || '').split('-').pop().trim()
-          their.guess.state = potaState
-        }
+      if (pota.reference?.startsWith('US-') || pota.reference?.startsWith('CA-')) {
+        const potaState = (pota.locationDesc || '').split('-').pop().trim()
+        their.guess.state = potaState
       }
     }
 
-    onChange && onChange({ their })
-
-  // To avoid infinite loops, don't make it dependent on `onChange`, or on `qso.their.guess` values.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guess, qrz, pota, callHistory, qso.their?.guess?.baseCall])
+    updateQSO({ their })
+  }, [guess, qrz, pota, callHistory, updateQSO])
 
   const [locationInfo, flag] = useMemo(() => {
+    let isOnTheGo = (qso?.their?.lookup?.dxccCode && qso?.their?.lookup?.dxccCode !== guess?.dxccCode)
+
+    console.log('location memo guess', qso?.their?.guess)
+    console.log('location memo lookup', qso?.their?.lookup)
     const parts = []
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
+
     if (operation.grid && guess?.grid) {
-      const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { ...qso.their, guess } }, { units: settings.distanceUnits })
+      const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
       if (dist) parts.push(fmtDistance(dist, { units: settings.distanceUnits }))
     }
+
+    if (guess.indicators && guess.indicators.find(ind => ['P', 'M', 'AM', 'MM'].indexOf(ind) >= 0)) {
+      isOnTheGo = true
+      if (guess.indicators.indexOf('P') >= 0) parts.push('[Portable]')
+      else if (guess.indicators.indexOf('M') >= 0) parts.push('[Mobile]')
+      else if (guess.indicators.indexOf('MM') >= 0) parts.push('[🚢]')
+      else if (guess.indicators.indexOf('AM') >= 0) parts.push('[✈️]')
+    }
+
+    if (entity && entity.entityPrefix !== ourInfo.entityPrefix) {
+      parts.push(entity.shortName)
+    }
+
     if (pota.name) {
+      isOnTheGo = true
       parts.push(['POTA', potaRef, pota.shortName ?? pota.name].filter(x => x).join(' '))
       if (pota.locationName) parts.push(pota.locationName)
     } else if (pota.error) {
       parts.push(`POTA ${potaRef} ${pota.error}`)
-    } else {
-      if (qso?.their?.city || qso?.their?.guess?.city) {
-        if (entity && entity.entityPrefix !== ourInfo.entityPrefix) parts.push(entity.shortName)
+    }
 
-        parts.push(qso?.their?.city ?? qso?.their?.guess?.city, qso?.their?.state ?? qso?.their?.guess?.state)
-      } else {
-        if (entity) parts.push(entity.shortName)
+    if (qso?.their?.city || qso?.their?.state) {
+      parts.push([qso?.their?.city, qso?.their?.state].filter(x => x).join(', '))
+    } else if (!isOnTheGo && (qso?.their?.guess?.city || qso?.their?.guess?.state)) {
+      parts.push([qso?.their?.guess?.city, qso?.their?.guess?.state].filter(x => x).join(', '))
+    }
+
+    if (isOnTheGo) {
+      if (qso?.their?.lookup?.city || qso?.their?.lookup?.state || qso?.their?.lookup?.country) {
+        parts.push(
+          'From ' + [
+            [qso.their.lookup.city, qso.their.lookup.state].filter(x => x).join(', '),
+            qso.their.lookup.dxccCode !== guess.dxccCode ? qso.their.lookup.country : ''
+          ].filter(x => x).join(' ')
+        )
       }
     }
 
     return [parts.filter(x => x).join(' • '), entity?.flag ? entity.flag : '']
-  }, [guess, operation.grid, pota, qso?.their, ourInfo, settings.distanceUnits, potaRef])
+  }, [
+    guess, operation.grid, pota,
+    qso?.their?.lookup, qso?.their?.guess, qso?.their?.city, qso?.their?.state, qso?.their?.grid,
+    ourInfo, settings.distanceUnits, potaRef
+  ])
 
   const stationInfo = useMemo(() => {
     const parts = []
     if (callNotes && callNotes[0]) {
       parts.push(callNotes[0].note)
-    } else if (qrz) {
-      parts.push(qrz.error)
+    } else {
+      if (qrz?.error) parts.push(qrz.error)
       parts.push(qso?.their?.name ?? qso?.their?.guess?.name)
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qrz, qso?.their?.name, qso?.their?.guess?.name, callNotes])
+  }, [qrz?.error, qso?.their?.name, qso?.their?.guess?.name, callNotes])
 
   const [historyInfo, historyLevel] = useMemo(() => {
     const today = new Date()
@@ -295,13 +335,13 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
           <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch', paddingTop: styles.oneSpace * 0.3 }]}>
             <View style={{ flexDirection: 'row' }}>
               {flag && (
-                <Text style={{ flex: 0 }} numberOfLines={1} ellipsizeMode={'tail'}>
+                <Text style={{ flex: 0, fontFamily: styles.normalFontFamily, lineHeight: styles.oneSpace * 2.5 }} numberOfLines={1} ellipsizeMode={'tail'}>
                   {flag}{' '}
                 </Text>
 
               )}
               {locationInfo && (
-                <Text style={{ flex: 1, fontFamily: locationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} numberOfLines={2} ellipsizeMode={'tail'}>
+                <Text style={{ flex: 1, fontFamily: locationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily, lineHeight: styles.oneSpace * 2.5 }} numberOfLines={2} ellipsizeMode={'tail'}>
                   {locationInfo}
                 </Text>
               )}
