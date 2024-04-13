@@ -21,6 +21,7 @@ https://cwhelchel.github.io/potamap.ol/
 # Native components to add for next build
 
 Locale settings
+https://github.com/zoontek/react-native-localize
 
 https://github.com/react-native-masked-view/masked-view
 To add a gradient on the secondary exchange scroll area
