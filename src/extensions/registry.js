@@ -68,11 +68,9 @@ export async function activateEnabledExtensions (dispatch, getState) {
   const settings = selectSettings(getState()) || {}
   const extensions = allExtensions()
   for (const extension of extensions) {
-    console.log('Activating extension', extension.key)
     if (extension.alwaysEnabled || (settings[`extensions/${extension.key}`] ?? extension.enabledByDefault)) {
       await dispatch(activateExtension(extension))
     }
-    console.log('Done activating extension', extension.key)
   }
 }
 

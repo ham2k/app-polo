@@ -23,14 +23,16 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
     qsos = await dbSelectAll('SELECT * FROM qsos WHERE operation = ? ORDER BY startOnMillis', [uuid], { row: prepareQSORow })
   } catch (error) {
   }
-  dispatch(actions.setQSOs({ uuid, qsos }))
-  dispatch(actions.setQSOsStatus({ uuid, status: 'ready' }))
 
   let startOnMillisMin, startOnMillisMax
-  qsos.forEach(qso => {
+  qsos.forEach((qso, index) => {
+    qso._number = index + 1
     if (qso.startOnMillis < startOnMillisMin || !startOnMillisMin) startOnMillisMin = qso.startOnMillis
     if (qso.startOnMillis > startOnMillisMax || !startOnMillisMax) startOnMillisMax = qso.startOnMillis
   })
+
+  dispatch(actions.setQSOs({ uuid, qsos }))
+  dispatch(actions.setQSOsStatus({ uuid, status: 'ready' }))
 
   const qsoCount = qsos.filter(qso => !qso.deleted).length
 

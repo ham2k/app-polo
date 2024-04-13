@@ -36,7 +36,6 @@ export const qsosSlice = createSlice({
       if (keys[qso._originalKey ?? qso.key]) {
         // Find old QSO and replace it with the new one
         const pos = qsos.findIndex(q => q.key === (qso._originalKey ?? qso.key))
-        qso._number = qsos[pos]._number
         qsos[pos] = qso
         if (qso._originalKey) {
           delete keys[qso._originalKey]
@@ -45,10 +44,10 @@ export const qsosSlice = createSlice({
         keys[qso.key] = qso
       } else {
         // Add new QSO to the end of the array
-        qso._number = (qsos.length ?? 0) + 1
         keys[qso.key] = qso
         qsos[qsos.length] = qso
       }
+      state.qsos[action.payload.uuid] = qsos.sort((a, b) => a.startOnMillis - b.startOnMillis).map((q, index) => { q._number = index + 1; return q })
     },
     deleteQSO: (state, action) => {
     },

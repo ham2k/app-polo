@@ -19,6 +19,6 @@ export default function TimeChip (props) {
   }, [time, now])
 
   return (
-    <LoggerChip icon="clock-outline" {...props} textStyle={styles?.text?.numbers}>{children ?? timeStr}</LoggerChip>
+    <LoggerChip icon={props.icon ?? 'clock-outline'} {...props} textStyle={styles?.text?.numbers}>{children ?? timeStr}</LoggerChip>
   )
 }
