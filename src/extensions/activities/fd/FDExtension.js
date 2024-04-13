@@ -12,7 +12,7 @@ import { ListRow } from '../../../screens/components/ListComponents'
 
  ADIF
    <ARRL_SECT:3>ENY
-   <CONTEST_ID:3>WFD
+   <CONTEST_ID:3>FD
    <APP_N1MM_EXCHANGE1:2>1H
 
  Cabrillo
@@ -56,7 +56,7 @@ const ReferenceHandler = {
     if (operation?.qsos && operation.qsos[0]?.startOnMillis) date = Date.parse(operation.qsos[0].startOnMillis)
     else date = new Date()
     const ref = findRef(operation, Info.key)
-    return [`WFD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')
+    return [`FD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')
   },
 
   suggestOperationTitle: (ref) => {
