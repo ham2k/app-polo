@@ -104,7 +104,7 @@ const ReferenceHandler = {
 }
 
 function fieldsForMainExchangePanel (props) {
-  const { qso, setQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
+  const { qso, updateQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: '', location: '' }
 
@@ -123,10 +123,9 @@ function fieldsForMainExchangePanel (props) {
       noSpaces={true}
       value={ref?.class || ''}
       disabled={disabled}
-      onChangeText={(text) => setQSO({
-        ...qso,
+      onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text }),
-        their: { ...qso?.their, exchange: [text, ref?.location].join(' ') }
+        their: { exchange: [text, ref?.location].join(' ') }
       })}
       onSubmitEditing={onSubmitEditing}
       onKeyPress={keyHandler}
@@ -146,10 +145,9 @@ function fieldsForMainExchangePanel (props) {
       noSpaces={true}
       value={ref?.location || ''}
       disabled={disabled}
-      onChangeText={(text) => setQSO({
-        ...qso,
+      onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text }),
-        their: { ...qso?.their, arrlSection: text, exchange: [ref?.class, text].join(' ') }
+        their: { arrlSection: text, exchange: [ref?.class, text].join(' ') }
       })}
       onSubmitEditing={onSubmitEditing}
       onKeyPress={keyHandler}

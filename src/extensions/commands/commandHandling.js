@@ -27,25 +27,25 @@ export function checkAndProcessCommands (value, extraParams) {
   })
 
   if (matchingCommand && matchingCommand.invokeCommand) {
-    const { handleFieldChange, qso, setQSO } = extraParams
+    const { handleFieldChange, updateQSO } = extraParams
     let callWasCleared = false
-    // We need special wrappers for `handleFieldChange` and `setQSO` in order to also reset the call if a command was processed
-    // If `qso` changed, then our subsequent call to `setQSO` to change it will not reflect any updates
+    // We need special wrappers for `handleFieldChange` and `updateQSO` in order to also reset the call if a command was processed
+    // If `qso` changed, then our subsequent call to `updateQSO` to change it will not reflect any updates
     // because the `qso` we have access here is the one from the time of the initial call to `checkAndProcessCommands`
     // not the one with updates from the command processing.
     const handleFieldChangeWrapper = (event) => {
       handleFieldChange({ ...event, alsoClearTheirCall: true })
       callWasCleared = true
     }
-    const setQSOWrapper = (args) => {
-      setQSOWrapper({ ...qso, their: { ...qso.their, call: args.their?.call || '' } })
+    const updateQSOWrapper = (args) => {
+      updateQSOWrapper({ their: { call: args.their?.call || '' } })
       callWasCleared = true
     }
 
     try {
-      const result = matchingCommand.invokeCommand && matchingCommand.invokeCommand(match, { ...extraParams, handleFieldChange: handleFieldChangeWrapper, setQSO: setQSOWrapper })
+      const result = matchingCommand.invokeCommand && matchingCommand.invokeCommand(match, { ...extraParams, handleFieldChange: handleFieldChangeWrapper, updateQSO: updateQSOWrapper })
       if (!callWasCleared) {
-        setQSO({ ...qso, their: { ...qso.their, call: '' } })
+        updateQSO({ their: { call: '' } })
       }
 
       return result ?? true

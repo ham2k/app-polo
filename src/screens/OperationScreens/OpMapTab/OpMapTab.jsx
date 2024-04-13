@@ -174,7 +174,7 @@ export default function OpMapTab ({ navigation, route }) {
 
   const mapStyles = useMemo(() => {
     const newStyles = stylesForMap({ longitudeDelta, count: mappableQSOs?.length })
-    console.log('mapStyles', { longitudeDelta, newStyles })
+
     return newStyles
   }, [longitudeDelta, mappableQSOs?.length])
 

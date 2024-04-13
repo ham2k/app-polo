@@ -22,7 +22,7 @@ import { selectOperationCallInfo } from '../../../../../store/operations'
 import { useOneCallNoteFinder } from '../../../../../extensions/data/call-notes/CallNotesExtension'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 
-export function CallInfo ({ qso, operation, style, themeColor, onChange }) {
+export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
   const styles = useThemedStyles((baseStyles) => {
     // const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
     return {

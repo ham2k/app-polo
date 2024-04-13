@@ -124,7 +124,8 @@ function prepareSuggestedQSO (qso) {
 }
 
 export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings }) {
-  const [qso, setQSO] = useState()
+  const [qso, setQSO, updateQSO] = useUIState('LoggingPanel', 'qso', undefined)
+
   const [originalQSO, setOriginalQSO] = useState()
   const [qsoHasChanges, setQSOHasChanges] = useState(false)
 
@@ -276,40 +277,30 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         guess = annotateFromCountryFile({ prefix: value, baseCall: value })
       }
 
-      setQSO({ ...qso, their: { ...qso?.their, call: value, guess }, startOnMillis })
+      updateQSO({ their: { call: value, guess }, startOnMillis })
     } else if (fieldId === 'theirSent') {
-      setQSO({ ...qso, their: { ...qso?.their, sent: value } })
+      updateQSO({ their: { sent: value } })
     } else if (fieldId === 'ourSent') {
-      setQSO({ ...qso, our: { ...qso?.our, sent: value } })
+      updateQSO({ our: { sent: value } })
     } else if (fieldId === 'notes') {
-      setQSO({ ...qso, notes: value })
+      updateQSO({ notes: value })
     } else if (fieldId === 'freq') {
       const freq = parseFreqInMHz(value)
       const band = freq ? bandForFrequency(freq) : qso?.band
-      setQSO({ ...qso, freq, band })
+      updateQSO({ freq, band })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band, freq }))
     } else if (fieldId === 'band') {
-      setQSO({ ...qso, band: value, freq: undefined })
+      updateQSO({ band: value, freq: undefined })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band: value, freq: undefined }))
     } else if (fieldId === 'mode') {
-      setQSO({ ...qso, mode: value })
+      updateQSO({ mode: value })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
-      setQSO({ ...qso, startOnMillis: value })
+      updateQSO({ startOnMillis: value })
     } else if (fieldId === 'state') {
-      setQSO({ ...qso, their: { ...qso.their, state: value } })
+      updateQSO({ their: { state: value } })
     }
-  }, [qso, setQSO, pausedTime, dispatch, operation?.uuid])
-
-  const handleBatchChanges = useCallback((changes) => {
-    if (changes.their) {
-      changes.their = { ...qso.their, ...changes.their }
-    }
-    if (changes.our) {
-      changes.their = { ...qso.our, ...changes.our }
-    }
-    setQSO({ ...qso, ...changes })
-  }, [qso, setQSO])
+  }, [qso, updateQSO, pausedTime, dispatch, operation?.uuid])
 
   const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
     // Ensure the focused component has a chance to update values
@@ -365,7 +356,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         })
       }
     }, 10)
-  }, [qso, originalQSO, operation, settings, handleFieldChange, isValidQSO, dispatch, setLoggingState, setCurrentSecondaryControl])
+  }, [qso, setQSO, originalQSO, operation, settings, handleFieldChange, isValidQSO, dispatch, setLoggingState, setCurrentSecondaryControl])
 
   const [undoInfo, setUndoInfo] = useState()
 
@@ -389,17 +380,17 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   const handleDelete = useCallback(() => { // Delete an existing QSO
     if (!qso?._isNew) {
       setUndoInfo({ qso })
-      setQSO({ ...qso, _willBeDeleted: true })
+      updateQSO({ _willBeDeleted: true })
       // const timeout = setTimeout(() => { setUndoInfo(undefined) }, 10 * 1000) // Undo will clear after 10 seconds
       // return () => clearTimeout(timeout)
     }
-  }, [qso, setQSO])
+  }, [qso, updateQSO])
 
   const handleUndelete = useCallback(() => { // Undo changes to existing QSO
     if (qso?.deleted || qso?._willBeDeleted) {
-      setQSO({ ...qso, _willBeDeleted: false, deleted: false })
+      updateQSO({ _willBeDeleted: false, deleted: false })
     }
-  }, [qso, setQSO])
+  }, [qso, updateQSO])
 
   const focusedRef = useRef()
 
@@ -444,6 +435,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
               operation={operation}
               settings={settings}
               setQSO={setQSO}
+              updateQSO={updateQSO}
               disabled={qso?.deleted || qso?._willBeDeleted}
               handleFieldChange={handleFieldChange}
               onSubmitEditing={handleSubmit}
@@ -471,7 +463,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
                     </View>
                   ) : (
                     qso?.their?.call ? (
-                      <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} onChange={handleBatchChanges} />
+                      <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} updateQSO={updateQSO} />
                     ) : (
                       <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
                     )
@@ -533,6 +525,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
             onSubmitEditing={handleSubmit}
             handleFieldChange={handleFieldChange}
             setQSO={setQSO}
+            updateQSO={updateQSO}
             mainFieldRef={mainFieldRef}
             focusedRef={focusedRef}
           />
