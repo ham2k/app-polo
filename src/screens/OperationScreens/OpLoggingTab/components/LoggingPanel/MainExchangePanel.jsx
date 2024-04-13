@@ -15,22 +15,21 @@ export const MainExchangePanel = ({
   // but since hooks cannot be called conditionally, we just need to create it whether we need it or not
   const alternateCallFieldRef = useRef()
 
-  const refStack = []
   // the first ref will correspond to the call field
-  refStack.push(mainFieldRef || alternateCallFieldRef)
+  const ref0 = mainFieldRef || alternateCallFieldRef
   // Add enough refs for whatever fields might get added
-  refStack.push(useRef())
-  refStack.push(useRef())
-  refStack.push(useRef())
-  refStack.push(useRef())
-  refStack.push(useRef())
-  refStack.push(useRef())
+  const ref1 = useRef()
+  const ref2 = useRef()
+  const ref3 = useRef()
+  const ref4 = useRef()
+  const ref5 = useRef()
+  const ref6 = useRef()
+  const refs = useMemo(() => ([ref0, ref1, ref2, ref3, ref4, ref5, ref6]), [ref0, ref1, ref2, ref3, ref4, ref5, ref6])
 
-  // Make a copy since `refStack` will be used to distribute refs to each component
-  let refs = useMemo(() => [...refStack], [refStack])
+  // Make a copy since `refStack` will be used to distribute refs to each component and it gets modified
+  const refStack = [...refs]
 
   // Switch between fields with the space key
-  // We would have used a `useCallback` hook, but it depends on an array of refs that will change each render anyways
   const keyHandler = useCallback((event) => {
     const { nativeEvent: { key, target } } = event
     if (key === ' ') {
@@ -147,7 +146,6 @@ export const MainExchangePanel = ({
 
   if (fields.length > 4 && width / styles.oneSpace < 60) {
     fields = [fields[0], ...fields.slice(3)]
-    refs = [refs[0], ...refs.slice(3)]
   }
 
   return (
