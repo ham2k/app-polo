@@ -88,7 +88,7 @@ export const saveQSOsForOperation = (uuid) => async (dispatch, getState) => {
   // Save new QSOs
   for (const qso of qsos) {
     const json = JSON.stringify(qso)
-    console.log('saving', qso.key)
+
     await dbExecute(`
       INSERT INTO qsos
       (operation, key, data, ourCall, theirCall, mode, band, startOnMillis) VALUES (?, ?, ?, ?, ?, ?, ?, ?)

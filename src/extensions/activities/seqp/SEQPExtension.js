@@ -88,7 +88,7 @@ const ReferenceHandler = {
 }
 
 function fieldsForMainExchangePanel (props) {
-  const { qso, setQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
+  const { qso, updateQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: '', location: '' }
 
@@ -107,10 +107,9 @@ function fieldsForMainExchangePanel (props) {
       noSpaces={true}
       value={ref?.theirGrid === undefined ? (qso?.their?.guess?.grid && qso.their.guess.grid.substring(0, 4)) || '' : ref?.theirGrid}
       disabled={disabled}
-      onChangeText={(text) => setQSO({
-        ...qso,
+      onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, theirGrid: text }),
-        their: { ...qso?.their, grid: text }
+        their: { grid: text }
       })}
       onSubmitEditing={onSubmitEditing}
       onKeyPress={keyHandler}

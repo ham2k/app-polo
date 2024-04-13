@@ -9,7 +9,7 @@ import { POTAAllParks } from './POTAAllParksData'
 import POTAInput from './POTAInput'
 
 export function POTALoggingControl (props) {
-  const { qso, operation, setQSO, style, styles } = props
+  const { qso, operation, updateQSO, style, styles } = props
 
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
@@ -30,8 +30,8 @@ export function POTALoggingControl (props) {
     setLocalValue(value)
     const refs = stringToRefs(Info.huntingType, value, { regex: Info.referenceRegex })
 
-    setQSO({ ...qso, refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
-  }, [qso, setQSO])
+    updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
+  }, [qso, updateQSO])
 
   const defaultPrefix = useMemo(() => {
     if (qso?.their?.guess?.dxccCode) {

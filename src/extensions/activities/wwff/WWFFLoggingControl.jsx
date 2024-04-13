@@ -7,7 +7,7 @@ import { WWFFData } from './WWFFDataFile'
 import WWFFInput from './WWFFInput'
 
 export function WWFFLoggingControl (props) {
-  const { qso, setQSO, style, styles } = props
+  const { qso, updateQSO, style, styles } = props
 
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
@@ -26,8 +26,8 @@ export function WWFFLoggingControl (props) {
     setLocalValue(value)
     const refs = stringToRefs(Info.huntingType, value, { regex: Info.referenceRegex })
 
-    setQSO({ ...qso, refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
-  }, [qso, setQSO])
+    updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
+  }, [qso, updateQSO])
 
   const defaultPrefix = useMemo(() => {
     if (qso?.their?.guess?.dxccCode) {
