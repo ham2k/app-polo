@@ -59,6 +59,9 @@ rm -rf ios/build
 (cd ios && pod install)
 
 # For all platforms
+```
+watchman watch-del .
+watchman watch-project .
 npm start -- --reset-cache
 ```
 
