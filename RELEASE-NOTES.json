@@ -1,5 +1,5 @@
 {
-  "0.7.4-pre6": {
+  "0.7.4-pre6.1": {
     "changes": [
       "Full-screen Map View",
       "Use data from past log entries if QRZ is not available",

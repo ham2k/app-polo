@@ -47,7 +47,7 @@ function prepareStyles (baseTheme, themeColor) {
       padding: baseTheme.oneSpace
     },
     titleContainer: {
-      backgroundColor: baseTheme.isIOS ? Color(baseTheme.colors.primary).alpha(0.3).string() : Color(baseTheme.colors.primary).lighten(1.3).alpha(0.5).string(),
+      backgroundColor: baseTheme.isIOS ? Color(baseTheme.colors.primary).alpha(0.3).string() : Color(baseTheme.colors.primary).lighten(3).desaturate(0.7).alpha(0.5).string(),
       position: 'absolute',
       padding: baseTheme.oneSpace * 1,
       top: 0,
