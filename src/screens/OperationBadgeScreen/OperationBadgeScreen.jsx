@@ -1,23 +1,22 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { IconButton } from 'react-native-paper'
+import { StatusBar, View, useWindowDimensions } from 'react-native'
+import { IconButton, Text } from 'react-native-paper'
 import MapView, { Marker, Polyline, Circle } from 'react-native-maps'
-
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { selectRuntimeOnline } from '../../../store/runtime'
-import { selectOperation } from '../../../store/operations'
-import { addQSO, selectQSOs } from '../../../store/qsos'
-import { fmtShortTimeZulu } from '../../../tools/timeFormats'
-import { View, useWindowDimensions } from 'react-native'
-import { selectSettings } from '../../../store/settings'
-import { apiQRZ } from '../../../store/apiQRZ'
-import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../tools/geoTools'
-import { reportError } from '../../../App'
-import { useUIState } from '../../../store/ui'
+import { loadOperation, selectOperation } from '../../store/operations'
+import { addQSO, loadQSOs, selectQSOs } from '../../store/qsos'
+import { selectSettings } from '../../store/settings'
+import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../tools/geoTools'
+import { reportError } from '../../App'
+import { apiQRZ } from '../../store/apiQRZ'
+import { selectRuntimeOnline } from '../../store/runtime'
+import { fmtDateTimeNice, fmtShortTimeZulu, fmtTimeBetween } from '../../tools/timeFormats'
+import Color from 'color'
 
-const TRANSP_PNG = require('../../../../assets/images/transp-16.png')
+const TRANSP_PNG = require('../../../assets/images/transp-16.png')
 
 const METERS_IN_ONE_DEGREE = 111111
 
@@ -33,35 +32,80 @@ const RGB_FOR_STRENGTH = {
   9: '245, 7, 7'
 }
 
-function prepareStyles (baseStyles, themeColor) {
+function prepareStyles (baseTheme, themeColor) {
   return {
-    ...baseStyles,
+    ...baseTheme,
     root: {
       flexDirection: 'column',
       flex: 1
     },
     panel: {
-      backgroundColor: baseStyles.theme.colors[`${themeColor}Container`],
-      borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
-      borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
+      backgroundColor: baseTheme.theme.colors[`${themeColor}Container`],
+      borderBottomColor: baseTheme.theme.colors[`${themeColor}Light`],
+      borderTopColor: baseTheme.theme.colors[`${themeColor}Light`],
       borderBottomWidth: 1,
-      padding: baseStyles.oneSpace
+      padding: baseTheme.oneSpace
+    },
+    titleContainer: {
+      backgroundColor: Color(baseTheme.colors.primary).alpha(0.3).string(),
+      position: 'absolute',
+      padding: baseTheme.oneSpace * 1,
+      top: 0,
+      left: 0,
+      right: 0
+    },
+    title: {
+      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      color: '#222',
+      fontFamily: baseTheme.boldTitleFontFamily
+    },
+    secondaryTitle: {
+      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      color: '#222',
+      fontFamily: baseTheme.boldTitleFontFamily
+    },
+    subTitle: {
+      fontSize: 16 * baseTheme.fontScaleAdjustment,
+      color: '#222',
+      fontFamily: baseTheme.normalFontFamily
+    },
+    ham2k: {
+      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      color: '#222',
+      fontFamily: baseTheme.normalFontFamily,
+      lineHeight: 18 * baseTheme.fontScaleAdjustment
+    },
+    logger: {
+      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      color: '#222',
+      fontFamily: baseTheme.boldTitleFontFamily,
+      lineHeight: 18 * baseTheme.fontScaleAdjustment
     }
   }
 }
 
-export default function OpMapTab ({ navigation, route }) {
+export default function OperationBadgeScreen ({ navigation, route }) {
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor)
 
   const dispatch = useDispatch()
-
-  const online = useSelector(selectRuntimeOnline)
-  const settings = useSelector(selectSettings)
-
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
+  const settings = useSelector(selectSettings)
+  const online = useSelector(selectRuntimeOnline)
 
-  const [loggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  useEffect(() => { // When starting, make sure all operation data is loaded
+    dispatch(loadQSOs(route.params.operation.uuid))
+    dispatch(loadOperation(route.params.operation.uuid))
+  }, [route.params.operation.uuid, dispatch])
+  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
+
+  // useEffect(() => { // When operation data is loaded, set the title
+  //   if (operation?.stationCall || settings?.operatorCall) {
+  //     navigation.setOptions({ title: (operation?.stationCall || settings?.operatorCall) + ` ${operation?.title}`, subTitle: operation.subtitle })
+  //   } else {
+  //     navigation.setOptions({ title: 'New Operation' })
+  //   }
+  // }, [navigation, operation, settings])
 
   const qth = useMemo(() => {
     try {
@@ -72,8 +116,6 @@ export default function OpMapTab ({ navigation, route }) {
       return {}
     }
   }, [operation?.grid])
-
-  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
 
   const [nextQSOWithoutInfo, setNextQSOWithoutInfo] = useState(null)
 
@@ -180,8 +222,17 @@ export default function OpMapTab ({ navigation, route }) {
     return newStyles
   }, [longitudeDelta, mappableQSOs?.length])
 
+  const opDate = useMemo(() => {
+    return `${fmtDateTimeNice(operation.startOnMillisMin)}`
+  }, [operation])
+
+  const opStats = useMemo(() => {
+    return `${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startOnMillisMin, operation.startOnMillisMax)}`
+  }, [qsos, operation])
+
   return (
     <>
+      <StatusBar hidden />
       <MapView
         style={styles.root}
         initialRegion={initialRegion}
@@ -216,16 +267,35 @@ export default function OpMapTab ({ navigation, route }) {
           mapStyles={mapStyles}
           styles={styles}
           metersPerOneSpace={scale.metersPerOneSpace}
-          selectedKey={loggingState?.selectedKey}
         />
       </MapView>
-      <View style={{ position: 'absolute', bottom: styles.oneSpace * 2, right: styles.oneSpace * 2 }}>
+      <View style={[styles.titleContainer, { flexDirection: styles.portrait ? 'column' : 'row', justifyContent: 'space-between' }]}>
+        <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Text style={styles.title}>
+            {operation?.stationCall || settings?.operatorCall} {operation?.title}
+          </Text>
+          <Text style={styles.subTitle}>{operation?.subtitle}</Text>
+        </View>
+        <View style={{ flexDirection: 'column', alignItems: 'flex-end' }}>
+          <Text style={[styles.secondaryTitle, { textAlign: 'right' }]}>
+            {opStats}
+          </Text>
+          <Text style={[styles.subTitle, { textAlign: 'right' }]}>
+            {opDate}
+          </Text>
+        </View>
+      </View>
+      <View style={{ flexDirection: 'row', position: 'absolute', bottom: styles.oneSpace, right: styles.oneSpace * 2 }}>
+        <Text style={styles.ham2k}>Ham2K </Text>
+        <Text style={styles.logger}>Portable Logger</Text>
+      </View>
+      <View style={{ position: 'absolute', bottom: styles.oneSpace * 5, right: styles.oneSpace * 2 }}>
         <IconButton
-          icon="fullscreen"
+          icon="fullscreen-exit"
           size={styles.oneSpace * 4}
           mode={'contained'}
           style={{ opacity: 0.7 }}
-          onPress={() => navigation.navigate('OperationBadgeScreen', { operation })}
+          onPress={() => navigation.goBack()}
         />
       </View>
     </>

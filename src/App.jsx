@@ -30,6 +30,7 @@ import { selectSettings } from './store/settings'
 import DevModeSettingsScreen from './screens/SettingsScreens/screens/DevModeSettingsScreen'
 import ExtensionScreen from './screens/SettingsScreens/screens/ExtensionScreen'
 import BandModeSettingsScreen from './screens/SettingsScreens/screens/BandModeSettingsScreen'
+import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
 
 const GLOBAL_APP_SETTINGS = {
   consentAppData: false
@@ -92,6 +93,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="Operation"
             options={{ title: 'Operation', headerBackTitle: 'Home', closeInsteadOfBack: true }}
             component={OperationScreen}
+          />
+
+          <Stack.Screen name="OperationBadgeScreen"
+            options={{ headerMode: 'none', header: () => null }}
+            component={OperationBadgeScreen}
           />
 
           <Stack.Screen name="OperationAddActivity"
