@@ -14,6 +14,7 @@ import { selectSettings } from '../../settings'
 import { addRuntimeMessage, resetRuntimeMessages } from '../runtimeSlice'
 import { setupOnlineStatusMonitoring } from './onlineStatus'
 import { UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from '../../../screens/SettingsScreens/screens/VersionSettingsScreen'
+import { setStateForComponent } from '../../ui'
 
 const MESSAGES = [
   'Reticulating splines',
@@ -41,12 +42,12 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
     const steps = [
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
       async () => {
-        if (settings.updateTrack && settings.updateTrack !== 'Production') {
+        if (settings.updateTrack && settings.updateTrack !== 'Development') {
           await dispatch(addRuntimeMessage(`Checking for ${UPDATE_TRACK_LABELS[settings.updateTrack]} updates...`))
         } else {
           await dispatch(addRuntimeMessage('Checking for updates...'))
         }
-        CodePush.sync({ deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Production'] })
+        CodePush.sync({ deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Development'] })
         // don't `await` for this, because it can hang the app if there is no connection
       },
       async () => await dispatch(setupOnlineStatusMonitoring()),
