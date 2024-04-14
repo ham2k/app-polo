@@ -2,7 +2,6 @@ import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { actions, selectOperation } from '../operationsSlice'
 import debounce from 'debounce'
 import { saveOperation } from './operationsDB'
-import { findRef } from '../../../tools/refTools'
 import { findHooks } from '../../../extensions/registry'
 import { reportError } from '../../../App'
 
@@ -10,15 +9,6 @@ function debounceableDispatch (dispatch, action) {
   return dispatch(action())
 }
 const debouncedDispatch = debounce(debounceableDispatch, 2000)
-
-// const refTypeTitles = {
-//   potaActivation: 'POTA',
-//   sotaActivation: 'SOTA',
-//   iotaActivation: 'IOTA',
-//   botaActivation: 'BOTA',
-//   wwffActivation: 'WWFF',
-//   contest: 'Contest'
-// }
 
 export const setOperationData = (data) => async (dispatch, getState) => {
   try {
@@ -85,10 +75,10 @@ export const setOperationData = (data) => async (dispatch, getState) => {
       data.subtitle = ''
     }
 
-    if (!operation.grid && !data.grid && data.refs) {
-      const pota = findRef(data, 'potaActivation')
-      if (pota?.grid) {
-        data.grid = pota.grid
+    if (!operation.grid && data.refs) {
+      const gridRef = data.refs.find(ref => ref.grid)
+      if (gridRef) {
+        data.grid = gridRef.grid
       }
     }
 
