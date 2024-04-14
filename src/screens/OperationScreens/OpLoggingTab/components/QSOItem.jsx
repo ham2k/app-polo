@@ -21,7 +21,7 @@ const REFS_TO_INCLUDE = {
   custom: true
 }
 
-const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, extendedWidth, settings }) {
+const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, settings }) {
   const theirInfo = useMemo(() => {
     if (qso?.their?.entityPrefix) {
       return qso?.their
@@ -39,17 +39,17 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
       return [null, qso.band, null]
     }
   }, [qso])
-
+  // console.log('qso item', qso.key)
   return (
     <TouchableRipple onPress={() => onPress && onPress({ qso })} style={{ backgroundColor: selected ? styles.theme.colors.secondaryLight : undefined }}>
       <View style={styles.compactRow}>
         <Text style={styles.fields.number}>{qso._number}</Text>
-        <Text style={styles.fields.time}>{fmtDateTimeZuluDynamic(qso.startOnMillis, { compact: !extendedWidth })}</Text>
+        <Text style={styles.fields.time}>{fmtDateTimeZuluDynamic(qso.startOnMillis, { compact: !styles.mdOrGreater })}</Text>
         <Text style={styles.fields.freq}>
           {freqParts[0] && <Text style={styles.fields.freqMHz}>{freqParts[0]}.</Text>}
           {freqParts[1] && <Text style={styles.fields.freqKHz}>{freqParts[1]}</Text>}
           {freqParts[2] && <Text style={styles.fields.freqHz}>
-            {extendedWidth ? `.${freqParts[2]}` : `.${freqParts[2].substring(0, 1)}`}
+            {styles.mdOrGreater ? `.${freqParts[2]}` : `.${freqParts[2].substring(0, 1)}`}
           </Text>}
         </Text>
         <Text style={styles.fields.call}>
@@ -80,7 +80,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         </Text>
         {qso?.their?.exchange ? (
           <>
-            {extendedWidth && (
+            {styles.mdOrGreater && (
               <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
             )}
             <Text style={styles.fields.exchange}>{qso?.their?.exchange}</Text>

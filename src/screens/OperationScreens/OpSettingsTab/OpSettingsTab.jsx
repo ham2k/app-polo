@@ -16,31 +16,33 @@ import { LocationDialog } from './components/LocationDialog'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 
-export default function OpSettingsTab ({ navigation, route }) {
-  const styles = useThemedStyles((baseStyles) => {
-    return {
-      ...baseStyles,
-      panel: {
-        backgroundColor: baseStyles.theme.colors.secondaryContainer,
-        borderBottomColor: baseStyles.theme.colors.secondaryLight,
-        borderBottomWidth: 1
-      },
-      paperInput: {
-        backgroundColor: baseStyles.theme.colors.surface,
-        color: baseStyles.theme.colors.onSurface
-      },
-      nativeInput: {
-        backgroundColor: baseStyles.theme.colors.surface,
-        color: baseStyles.theme.colors.onSurface
-      },
-      container: {
-        paddingHorizontal: baseStyles.oneSpace,
-        paddingTop: baseStyles.oneSpace,
-        paddingBottom: baseStyles.oneSpace,
-        gap: baseStyles.halfSpace
-      }
+function prepareStyles (baseStyles) {
+  return {
+    ...baseStyles,
+    panel: {
+      backgroundColor: baseStyles.theme.colors.secondaryContainer,
+      borderBottomColor: baseStyles.theme.colors.secondaryLight,
+      borderBottomWidth: 1
+    },
+    paperInput: {
+      backgroundColor: baseStyles.theme.colors.surface,
+      color: baseStyles.theme.colors.onSurface
+    },
+    nativeInput: {
+      backgroundColor: baseStyles.theme.colors.surface,
+      color: baseStyles.theme.colors.onSurface
+    },
+    container: {
+      paddingHorizontal: baseStyles.oneSpace,
+      paddingTop: baseStyles.oneSpace,
+      paddingBottom: baseStyles.oneSpace,
+      gap: baseStyles.halfSpace
     }
-  })
+  }
+}
+
+export default function OpSettingsTab ({ navigation, route }) {
+  const styles = useThemedStyles(prepareStyles)
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))

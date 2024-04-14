@@ -31,19 +31,21 @@ export const UPDATE_TRACK_LABELS = {
 
 export const DEFAULT_TRACK = 'Production'
 
-export default function VersionSettingsScreen ({ navigation }) {
-  const settings = useSelector(selectSettings)
-
-  const styles = useThemedStyles((baseStyles) => {
-    return {
-      ...baseStyles,
-      listRow: {
-        marginLeft: baseStyles.oneSpace * 2,
-        marginRight: baseStyles.oneSpace * 2,
-        marginBottom: baseStyles.oneSpace
-      }
+function prepareStyles (baseStyles) {
+  return {
+    ...baseStyles,
+    listRow: {
+      marginLeft: baseStyles.oneSpace * 2,
+      marginRight: baseStyles.oneSpace * 2,
+      marginBottom: baseStyles.oneSpace
     }
-  })
+  }
+}
+
+export default function VersionSettingsScreen ({ navigation }) {
+  const styles = useThemedStyles(prepareStyles)
+
+  const settings = useSelector(selectSettings)
 
   const [updateMetadata, setUpdateMetadata] = useState()
   useEffect(() => {

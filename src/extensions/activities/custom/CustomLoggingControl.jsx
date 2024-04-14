@@ -5,7 +5,7 @@ import { Info } from './CustomInfo'
 import CustomInput from './CustomInput'
 
 export function CustomLoggingControl (props) {
-  const { qso, setQSO, style, styles } = props
+  const { qso, updateQSO, style, styles } = props
 
   const ref = useRef()
   useEffect(() => {
@@ -28,8 +28,8 @@ export function CustomLoggingControl (props) {
     setLocalValue(value)
     const refs = stringToRefs(Info.huntingType, value, { regex: Info.referenceRegex })
 
-    setQSO({ ...qso, refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
-  }, [qso, setQSO])
+    updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
+  }, [qso, updateQSO])
 
   return (
     <CustomInput

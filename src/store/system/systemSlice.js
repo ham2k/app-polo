@@ -1,7 +1,8 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  flags: {}
+  flags: {},
+  accounts: {}
 }
 
 export const systemSlice = createSlice({
@@ -14,6 +15,12 @@ export const systemSlice = createSlice({
       state.flags = state.flags || {}
       Object.keys(action.payload || {}).forEach(key => {
         state.flags[key] = action.payload[key]
+      })
+    },
+    setAccountInfo: (state, action) => {
+      state.accounts = state.accounts || {}
+      Object.keys(action.payload || {}).forEach(account => {
+        state.accounts[account] = { ...state.accounts[account] || {}, ...action.payload[account] || {} }
       })
     }
   }

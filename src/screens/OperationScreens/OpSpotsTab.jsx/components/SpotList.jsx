@@ -82,7 +82,7 @@ function prepareStyles (themeStyles, themeColor) {
 
 export default function SpotList ({ spots, spotsQuery, style }) {
   const navigation = useNavigation()
-  const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles))
+  const styles = useThemedStyles(prepareStyles)
 
   const { width } = useWindowDimensions()
   const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])

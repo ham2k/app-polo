@@ -16,17 +16,19 @@ import { UpdateTracksDialog } from '../components/UpdateTracksDialog'
 import { reportError } from '../../../App'
 import CodePush from 'react-native-code-push'
 
-export default function DevModeSettingsScreen ({ navigation }) {
-  const styles = useThemedStyles((baseStyles) => {
-    return {
-      ...baseStyles,
-      listRow: {
-        marginLeft: baseStyles.oneSpace * 2,
-        marginRight: baseStyles.oneSpace * 2,
-        marginBottom: baseStyles.oneSpace
-      }
+function prepareStyles (baseStyles) {
+  return {
+    ...baseStyles,
+    listRow: {
+      marginLeft: baseStyles.oneSpace * 2,
+      marginRight: baseStyles.oneSpace * 2,
+      marginBottom: baseStyles.oneSpace
     }
-  })
+  }
+}
+
+export default function DevModeSettingsScreen ({ navigation }) {
+  const styles = useThemedStyles(prepareStyles)
 
   const [currentDialog, setCurrentDialog] = useState()
 

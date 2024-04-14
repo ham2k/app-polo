@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-// eslint-disable-next-line camelcase
-import { Keyboard, View, unstable_batchedUpdates } from 'react-native'
+
+import { Keyboard, View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
 import cloneDeep from 'clone-deep'
-import { useDispatch } from 'react-redux'
+import { useDispatch, batch } from 'react-redux'
 
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
@@ -24,6 +24,9 @@ import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 import { checkAndProcessCommands } from '../../../../extensions/commands/commandHandling'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useUIState } from '../../../../store/ui'
+import { logTimer } from '../../../../tools/perfTools'
+
+const DEBUG = false
 
 function prepareStyles (themeStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
@@ -95,14 +98,19 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-function prepareNewQSO (operation, settings) {
-  return {
+function prepareNewQSO (operation, qsos, settings) {
+  const qso = {
     band: operation.band,
     freq: operation.freq,
     mode: operation.mode,
     _isNew: true,
     key: 'new-qso'
   }
+  if (operation._nextManualTime) {
+    qso.startOnMillis = operation._nextManualTime
+    qso._manualTime = true
+  }
+  return qso
 }
 
 function prepareExistingQSO (qso) {
@@ -124,16 +132,17 @@ function prepareSuggestedQSO (qso) {
 }
 
 export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings }) {
-  const [qso, setQSO] = useState()
+  const [qso, setQSO, updateQSO] = useUIState('LoggingPanel', 'qso', undefined)
+
   const [originalQSO, setOriginalQSO] = useState()
   const [qsoHasChanges, setQSOHasChanges] = useState(false)
 
-  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   const themeColor = useMemo(() => (!qso || qso?._isNew) ? 'tertiary' : 'secondary', [qso])
   const upcasedThemeColor = useMemo(() => themeColor.charAt(0).toUpperCase() + themeColor.slice(1), [themeColor])
 
-  const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
+  const styles = useThemedStyles(prepareStyles, themeColor)
 
   const dispatch = useDispatch()
 
@@ -166,7 +175,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   }, [qso, operation, settings])
 
   const setNewQSO = useCallback((newQSO) => {
-    if (!newQSO) setLoggingState({ selectedKey: undefined })
+    if (!newQSO) updateLoggingState({ selectedKey: undefined })
 
     if (!newQSO?._isNew && newQSO?.startOnMillis) {
       setPausedTime(true)
@@ -177,7 +186,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     setQSO(newQSO)
     setOriginalQSO(cloneDeep(newQSO))
     setCurrentSecondaryControl(undefined)
-  }, [setQSO, setLoggingState, setCurrentSecondaryControl])
+  }, [setQSO, updateLoggingState, setCurrentSecondaryControl])
 
   useEffect(() => { // Keep track of QSO changes
     if (qso && originalQSO) {
@@ -202,11 +211,11 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         nextQSO = qsoQueue.pop()
         setQSOQueue(qsoQueue)
       } else {
-        nextQSO = prepareNewQSO(operation, settings)
+        nextQSO = prepareNewQSO(operation, qsos, settings)
       }
       setNewQSO(nextQSO)
       if (nextQSO.key !== loggingState?.selectedKey) {
-        setLoggingState({ selectedKey: nextQSO.key })
+        updateLoggingState({ selectedKey: nextQSO.key })
       }
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
         if (mainFieldRef?.current) {
@@ -217,11 +226,11 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       let nextQSO
       if (loggingState?.selectedKey === 'suggested-qso') {
         nextQSO = prepareSuggestedQSO(loggingState?.suggestedQSO)
-        setLoggingState({ selectedKey: nextQSO.key })
+        updateLoggingState({ selectedKey: nextQSO.key })
       } else {
         nextQSO = qsos.find(q => q.key === loggingState?.selectedKey)
         if (nextQSO) nextQSO = prepareExistingQSO(nextQSO)
-        else nextQSO = prepareNewQSO(operation, settings)
+        else nextQSO = prepareNewQSO(operation, qsos, settings)
       }
 
       if (qso?._isNew) setQSOQueue([...qsoQueue, qso])
@@ -233,7 +242,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         }
       }, 10)
     }
-  }, [qsoQueue, setQSOQueue, loggingState?.selectedKey, setLoggingState, loggingState?.suggestedQSO, operation, settings, qso, setNewQSO, qsos])
+  }, [qsoQueue, setQSOQueue, loggingState?.selectedKey, updateLoggingState, loggingState?.suggestedQSO, operation, settings, qso, setNewQSO, qsos])
 
   useEffect(() => { // Validate and analize the callsign
     const callInfo = parseCallsign(qso?.their?.call)
@@ -258,15 +267,13 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     }
 
     if (fieldId === 'theirCall') {
-      let startOnMillis = qso?.startOnMillis
-      if (!pausedTime) {
-        if (value) {
-          if (!startOnMillis) {
-            startOnMillis = Math.floor(Date.now() / 1000) * 1000
-          }
-        } else {
-          startOnMillis = null
-        }
+      let timeChanges = {}
+      if (qso?._isNew && value && !pausedTime && !qso.startOnMillis) {
+        setPausedTime(true)
+        timeChanges = { startOnMillis: Math.floor(Date.now() / 1000) * 1000, _manualTime: false }
+      } else if (qso?._isNew && !value) {
+        setPausedTime(false)
+        timeChanges = { startOnMillis: undefined, _manualTime: false }
       }
 
       let guess = parseCallsign(value)
@@ -276,42 +283,33 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         guess = annotateFromCountryFile({ prefix: value, baseCall: value })
       }
 
-      setQSO({ ...qso, their: { ...qso?.their, call: value, guess }, startOnMillis })
+      updateQSO({ their: { call: value, guess }, ...timeChanges })
     } else if (fieldId === 'theirSent') {
-      setQSO({ ...qso, their: { ...qso?.their, sent: value } })
+      updateQSO({ their: { sent: value } })
     } else if (fieldId === 'ourSent') {
-      setQSO({ ...qso, our: { ...qso?.our, sent: value } })
+      updateQSO({ our: { sent: value } })
     } else if (fieldId === 'notes') {
-      setQSO({ ...qso, notes: value })
+      updateQSO({ notes: value })
     } else if (fieldId === 'freq') {
       const freq = parseFreqInMHz(value)
       const band = freq ? bandForFrequency(freq) : qso?.band
-      setQSO({ ...qso, freq, band })
+      updateQSO({ freq, band })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band, freq }))
     } else if (fieldId === 'band') {
-      setQSO({ ...qso, band: value, freq: undefined })
+      updateQSO({ band: value, freq: undefined })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band: value, freq: undefined }))
     } else if (fieldId === 'mode') {
-      setQSO({ ...qso, mode: value })
+      updateQSO({ mode: value })
       if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
-      setQSO({ ...qso, startOnMillis: value })
+      updateQSO({ startOnMillis: value, _manualTime: true })
     } else if (fieldId === 'state') {
-      setQSO({ ...qso, their: { ...qso.their, state: value } })
+      updateQSO({ their: { state: value } })
     }
-  }, [qso, setQSO, pausedTime, dispatch, operation?.uuid])
-
-  const handleBatchChanges = useCallback((changes) => {
-    if (changes.their) {
-      changes.their = { ...qso.their, ...changes.their }
-    }
-    if (changes.our) {
-      changes.their = { ...qso.our, ...changes.our }
-    }
-    setQSO({ ...qso, ...changes })
-  }, [qso, setQSO])
+  }, [qso, updateQSO, pausedTime, dispatch, operation?.uuid])
 
   const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
+    if (DEBUG) logTimer('submit', 'handleSubmit start', { reset: true })
     // Ensure the focused component has a chance to update values
     //   NOTE: This is a hack that can break on newer versions of React Native
     const component = focusedRef?.current?._internalFiberInstanceHandleDEV
@@ -319,7 +317,6 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
     setTimeout(() => { // Run inside a setTimeout to allow the state to update
       // First, try to process any commands
-
       if (checkAndProcessCommands(qso?.their?.call, { qso, originalQSO, operation, dispatch, settings, handleFieldChange })) {
         return
       }
@@ -328,12 +325,23 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         delete qso._willBeDeleted
         qso.deleted = true
         dispatch(addQSO({ uuid: operation.uuid, qso }))
-        setLoggingState({ selectedKey: undefined, lastKey: qso.key })
+        updateLoggingState({ selectedKey: undefined, lastKey: qso.key })
         setUndoInfo(undefined)
         setQSO(undefined) // Let queue management decide what to do
       } else if (isValidQSO && !qso.deleted) {
-        unstable_batchedUpdates(() => {
+        batch(() => {
           setCurrentSecondaryControl(undefined)
+
+          if (qso?._isNew && qso?._manualTime && qso.startOnMillis) {
+            let nextManualTime = qso.startOnMillis + (60 * 1000)
+            if (qsos.length > 0) {
+              const diff = Math.abs(qso.startOnMillis - qsos[qsos.length - 1].startOnMillis)
+              if (diff >= 1000) {
+                nextManualTime = qso.startOnMillis + Math.min(diff, 60 * 5000)
+              }
+            }
+            dispatch(setOperationData({ uuid: operation.uuid, _nextManualTime: nextManualTime }))
+          }
 
           delete qso._isNew
           delete qso._willBeDeleted
@@ -358,14 +366,22 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
           qso.key = qsoKey(qso)
 
+          if (DEBUG) logTimer('submit', 'handleSubmit before dispatch')
           dispatch(addQSO({ uuid: operation.uuid, qso }))
-          setLoggingState({ selectedKey: undefined, lastKey: qso.key })
+          if (DEBUG) logTimer('submit', 'handleSubmit before updateLoggingState')
+          updateLoggingState({ selectedKey: undefined, lastKey: qso.key })
+          if (DEBUG) logTimer('submit', 'handleSubmit before setUndoInfo')
           setUndoInfo(undefined)
+          if (DEBUG) logTimer('submit', 'handleSubmit before setQSO')
           setQSO(undefined) // Let queue management decide what to do
+          if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
         })
+        if (DEBUG) logTimer('submit', 'handleSubmit after batchedUpdates')
       }
+      if (DEBUG) logTimer('submit', 'handleSubmit 3')
     }, 10)
-  }, [qso, originalQSO, operation, settings, handleFieldChange, isValidQSO, dispatch, setLoggingState, setCurrentSecondaryControl])
+    if (DEBUG) logTimer('submit', 'handleSubmit 4')
+  }, [qso, qsos, setQSO, originalQSO, operation, settings, handleFieldChange, isValidQSO, dispatch, updateLoggingState, setCurrentSecondaryControl])
 
   const [undoInfo, setUndoInfo] = useState()
 
@@ -389,17 +405,17 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   const handleDelete = useCallback(() => { // Delete an existing QSO
     if (!qso?._isNew) {
       setUndoInfo({ qso })
-      setQSO({ ...qso, _willBeDeleted: true })
+      updateQSO({ _willBeDeleted: true })
       // const timeout = setTimeout(() => { setUndoInfo(undefined) }, 10 * 1000) // Undo will clear after 10 seconds
       // return () => clearTimeout(timeout)
     }
-  }, [qso, setQSO])
+  }, [qso, updateQSO])
 
   const handleUndelete = useCallback(() => { // Undo changes to existing QSO
     if (qso?.deleted || qso?._willBeDeleted) {
-      setQSO({ ...qso, _willBeDeleted: false, deleted: false })
+      updateQSO({ _willBeDeleted: false, deleted: false })
     }
-  }, [qso, setQSO])
+  }, [qso, updateQSO])
 
   const focusedRef = useRef()
 
@@ -444,6 +460,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
               operation={operation}
               settings={settings}
               setQSO={setQSO}
+              updateQSO={updateQSO}
               disabled={qso?.deleted || qso?._willBeDeleted}
               handleFieldChange={handleFieldChange}
               onSubmitEditing={handleSubmit}
@@ -471,7 +488,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
                     </View>
                   ) : (
                     qso?.their?.call ? (
-                      <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} onChange={handleBatchChanges} />
+                      <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} updateQSO={updateQSO} />
                     ) : (
                       <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
                     )
@@ -533,6 +550,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
             onSubmitEditing={handleSubmit}
             handleFieldChange={handleFieldChange}
             setQSO={setQSO}
+            updateQSO={updateQSO}
             mainFieldRef={mainFieldRef}
             focusedRef={focusedRef}
           />
