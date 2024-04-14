@@ -3,43 +3,45 @@ import { Text, View } from 'react-native'
 import { TouchableRipple } from 'react-native-paper'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 
-export function NumberKeys ({ themeColor, onNumberKeyPressed, enabled }) {
-  const styles = useThemedStyles((baseStyles) => {
-    const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
-    return {
-      ...baseStyles,
-      root: {
-        backgroundColor: baseStyles.theme.colors[`${themeColor}Light`],
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        padding: baseStyles.halfSpace,
-        gap: baseStyles.oneSpace
-      },
-      key: {
-        fontSize: baseStyles.normalFontSize * 1.2,
-        fontWeight: 'bold',
-        textAlign: 'center'
-      },
-      keyTouchable: {
-        flex: 1,
-        paddingVertical: baseStyles.oneSpace * (baseStyles.smOrGreater ? 1 : 0.5),
-        overflow: 'hidden', // or round borders never show
-        borderWidth: 1,
-        borderColor: baseStyles.theme.colors[`${themeColor}Light`],
-        borderRadius: baseStyles.oneSpace * 1.5
-      },
-      disabledRoot: {
-        backgroundColor: baseStyles.theme.colors[`${themeColor}Container`]
-      },
-      enabledKey: {
-        color: baseStyles.theme.colors[`on${upcasedThemeColor}`]
-      },
-      disabledKey: {
-        color: baseStyles.theme.colors.onBackgroundLighter,
-        fontWeight: 'normal'
-      }
+function prepareStyles (baseStyles, themeColor) {
+  const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
+  return {
+    ...baseStyles,
+    root: {
+      backgroundColor: baseStyles.theme.colors[`${themeColor}Light`],
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      padding: baseStyles.halfSpace,
+      gap: baseStyles.oneSpace
+    },
+    key: {
+      fontSize: baseStyles.normalFontSize * 1.2,
+      fontWeight: 'bold',
+      textAlign: 'center'
+    },
+    keyTouchable: {
+      flex: 1,
+      paddingVertical: baseStyles.oneSpace * (baseStyles.smOrGreater ? 1 : 0.5),
+      overflow: 'hidden', // or round borders never show
+      borderWidth: 1,
+      borderColor: baseStyles.theme.colors[`${themeColor}Light`],
+      borderRadius: baseStyles.oneSpace * 1.5
+    },
+    disabledRoot: {
+      backgroundColor: baseStyles.theme.colors[`${themeColor}Container`]
+    },
+    enabledKey: {
+      color: baseStyles.theme.colors[`on${upcasedThemeColor}`]
+    },
+    disabledKey: {
+      color: baseStyles.theme.colors.onBackgroundLighter,
+      fontWeight: 'normal'
     }
-  })
+  }
+}
+
+export function NumberKeys ({ themeColor, onNumberKeyPressed, enabled }) {
+  const styles = useThemedStyles(prepareStyles, themeColor)
 
   return (
     <View style={[styles.root, enabled ? styles.enabledRoot : styles.disabledRoot]}>

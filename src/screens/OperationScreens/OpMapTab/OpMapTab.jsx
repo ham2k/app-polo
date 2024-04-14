@@ -32,24 +32,26 @@ const RGB_FOR_STRENGTH = {
   9: '245, 7, 7'
 }
 
+function prepareStyles (baseStyles, themeColor) {
+  return {
+    ...baseStyles,
+    root: {
+      flexDirection: 'column',
+      flex: 1
+    },
+    panel: {
+      backgroundColor: baseStyles.theme.colors[`${themeColor}Container`],
+      borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
+      borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
+      borderBottomWidth: 1,
+      padding: baseStyles.oneSpace
+    }
+  }
+}
+
 export default function OpMapTab ({ navigation, route }) {
   const themeColor = 'tertiary'
-  const styles = useThemedStyles((baseStyles) => {
-    return {
-      ...baseStyles,
-      root: {
-        flexDirection: 'column',
-        flex: 1
-      },
-      panel: {
-        backgroundColor: baseStyles.theme.colors[`${themeColor}Container`],
-        borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
-        borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
-        borderBottomWidth: 1,
-        padding: baseStyles.oneSpace
-      }
-    }
-  })
+  const styles = useThemedStyles(prepareStyles, themeColor)
 
   const dispatch = useDispatch()
 
@@ -58,8 +60,7 @@ export default function OpMapTab ({ navigation, route }) {
 
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
 
-  // eslint-disable-next-line no-unused-vars
-  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  const [loggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   const qth = useMemo(() => {
     try {

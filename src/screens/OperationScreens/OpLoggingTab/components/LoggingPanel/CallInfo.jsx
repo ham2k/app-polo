@@ -22,41 +22,43 @@ import { selectOperationCallInfo } from '../../../../../store/operations'
 import { useOneCallNoteFinder } from '../../../../../extensions/data/call-notes/CallNotesExtension'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 
-export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
-  const styles = useThemedStyles((baseStyles) => {
-    // const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
-    return {
-      ...baseStyles,
-      history: {
-        pill: {
-          marginRight: baseStyles.halfSpace,
-          borderRadius: 3,
-          padding: baseStyles.oneSpace * 0.3,
-          paddingHorizontal: baseStyles.oneSpace * 0.5,
-          backgroundColor: baseStyles.theme.colors[`${themeColor}Light`]
-        },
-        text: {
-          fontSize: baseStyles.smallFontSize,
-          fontWeight: 'normal',
-          color: 'black'
-        },
-        alert: {
-          backgroundColor: 'red',
-          color: 'white'
-        },
-        warning: {
-          backgroundColor: 'green',
-          color: 'white'
-        },
-        info: {
-        }
+function prepareStyles (baseStyles, themeColor) {
+  // const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
+  return {
+    ...baseStyles,
+    history: {
+      pill: {
+        marginRight: baseStyles.halfSpace,
+        borderRadius: 3,
+        padding: baseStyles.oneSpace * 0.3,
+        paddingHorizontal: baseStyles.oneSpace * 0.5,
+        backgroundColor: baseStyles.theme.colors[`${themeColor}Light`]
       },
-      markdown: {
-        ...baseStyles.markdown,
-        paragraph: { margin: 0, marginTop: baseStyles.halfSpace, marginBottom: 0 }
+      text: {
+        fontSize: baseStyles.smallFontSize,
+        fontWeight: 'normal',
+        color: 'black'
+      },
+      alert: {
+        backgroundColor: 'red',
+        color: 'white'
+      },
+      warning: {
+        backgroundColor: 'green',
+        color: 'white'
+      },
+      info: {
       }
+    },
+    markdown: {
+      ...baseStyles.markdown,
+      paragraph: { margin: 0, marginTop: baseStyles.halfSpace, marginBottom: 0 }
     }
-  })
+  }
+}
+
+export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
+  const styles = useThemedStyles(prepareStyles, themeColor)
 
   const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
