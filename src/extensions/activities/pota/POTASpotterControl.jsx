@@ -33,7 +33,7 @@ const postSpot = (operation, comments) => async (dispatch, getState) => {
           reference: ref.ref,
           mode: operation.mode,
           source: 'Ham2K Portable Logger',
-          comments: [comments, '[Ham2K PoLo]'].filter(x => x).join(' ')
+          comments
         })
       })
       if (response.status === 200) {
@@ -73,7 +73,7 @@ export function POTASpotterControl (props) {
           message: `Spot at ${fmtFreqInMHz(operation.freq)}`,
           disabled: false
         })
-        if (comments === undefined) setComments(operation.spottedFreq ? 'QSY' : 'QRV')
+        if (comments === undefined) setComments(operation.spottedFreq ? 'QSY' : 'QRV with Ham2K PoLo')
       } else if (now - operation.spottedAt > (1000 * 60 * MINUTES_UNTIL_RESPOT)) {
         setSpotterUI({
           message: `Re-spot at ${fmtFreqInMHz(operation.freq)}`,
