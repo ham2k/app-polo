@@ -182,7 +182,7 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
       their.guess.name = their.lookup.name
       if (guess.indicators && guess.indicators.find(ind => ['P', 'M', 'AM', 'MM'].indexOf(ind) >= 0)) {
         // If operating Portable, Maritime Mobile, or Mobile, ignore location
-      } else if (their.lookup.call === guess.call) {
+      } else if (their.lookup.call === guess.call || !their.lookup.call) {
         // If the lookup call is the same as the guess call, then use the lookup location
         their.guess.state = their.lookup.state
         their.guess.city = their.lookup.city
