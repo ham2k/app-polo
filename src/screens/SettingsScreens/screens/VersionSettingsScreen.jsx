@@ -49,7 +49,7 @@ export default function VersionSettingsScreen ({ navigation }) {
           <List.Item title={'Recent Changes'}
             left={NewsIcon}
           />
-          {Object.keys(releaseNotes).slice(0, 4).map((release, i) => (
+          {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
             <ListRow key={i} style={styles.listRow}>
 
               <Markdown style={styles.markdown}>
