@@ -26,12 +26,15 @@ export async function findQSOHistory (call, options = {}) {
       qsos.key, qsos.ourCall, qsos.theirCall, qsos.operation, qsos.startOnMillis, qsos.band, qsos.mode, qsos.data
     FROM
       qsos
-    INNER JOIN operations ON operations.uuid = qsos.operation -- avoid orphaned qsos
-    WHERE ${whereClauses.join(' AND ')}
+    LEFT OUTER JOIN operations ON operations.uuid = qsos.operation
+    WHERE
+      (operations.uuid IS NOT NULL OR qsos.operation = 'historical')  -- avoid orphaned qsos
+      AND ${whereClauses.join(' AND ')}
     ORDER BY startOnMillis DESC
     `,
     whereArgs
   )
+
   qsos = qsos.filter(qso => {
     if (qso.deleted === undefined) {
       const data = JSON.parse(qso.data)
