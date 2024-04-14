@@ -47,7 +47,7 @@ function prepareStyles (baseTheme, themeColor) {
       padding: baseTheme.oneSpace
     },
     titleContainer: {
-      backgroundColor: Color(baseTheme.colors.primary).alpha(0.3).string(),
+      backgroundColor: baseTheme.isIOS ? Color(baseTheme.colors.primary).alpha(0.3).string() : Color(baseTheme.colors.primary).lighten(1.3).alpha(0.5).string(),
       position: 'absolute',
       padding: baseTheme.oneSpace * 1,
       top: 0,
@@ -285,7 +285,7 @@ export default function OperationBadgeScreen ({ navigation, route }) {
           </Text>
         </View>
       </View>
-      <View style={{ flexDirection: 'row', position: 'absolute', bottom: styles.oneSpace, right: styles.oneSpace * 2 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', position: 'absolute', bottom: styles.oneSpace, right: styles.oneSpace * 10, left: styles.oneSpace * 10 }}>
         <Text style={styles.ham2k}>Ham2K </Text>
         <Text style={styles.logger}>Portable Logger</Text>
       </View>
