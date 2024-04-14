@@ -13,17 +13,19 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { ListRow } from '../../components/ListComponents'
 
-export default function VersionSettingsScreen ({ navigation }) {
-  const styles = useThemedStyles((baseStyles) => {
-    return {
-      ...baseStyles,
-      listRow: {
-        marginLeft: baseStyles.oneSpace * 2,
-        marginRight: baseStyles.oneSpace * 2,
-        marginBottom: baseStyles.oneSpace
-      }
+function prepareStyles (baseStyles) {
+  return {
+    ...baseStyles,
+    listRow: {
+      marginLeft: baseStyles.oneSpace * 2,
+      marginRight: baseStyles.oneSpace * 2,
+      marginBottom: baseStyles.oneSpace
     }
-  })
+  }
+}
+
+export default function VersionSettingsScreen ({ navigation }) {
+  const styles = useThemedStyles(prepareStyles)
 
   const VersionIcon = useCallback(() => (
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />

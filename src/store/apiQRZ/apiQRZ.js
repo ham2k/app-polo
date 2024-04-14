@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { XMLParser } from 'fast-xml-parser'
 
 import packageJson from '../../../package.json'
-import { setAccountInfo } from '../settings'
+import { actions as systemActions } from '../system'
 import { capitalizeString } from '../../tools/capitalizeString'
 
 /**
@@ -17,7 +17,7 @@ const DEBUG = false
 const BASE_URL = 'https://xmldata.qrz.com/'
 
 function defaultParams (api) {
-  const session = api.getState().settings?.accounts?.qrz?.session
+  const session = api.getState().system?.accounts?.qrz?.session
   return {
     s: session,
     agent: `ham2k-polo-${packageJson.version}`
@@ -49,7 +49,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     result.data?.QRZDatabase?.Session?.Error?.startsWith('Session Timeout') ||
     result.data?.QRZDatabase?.Session?.Error?.startsWith('Username / password required')
   ) {
-    api.dispatch(setAccountInfo({ qrz: { session: undefined } }))
+    api.dispatch(systemActions.setAccountInfo({ qrz: { session: undefined } }))
     // try to get a new session key
     const { login, password } = api.getState().settings?.accounts?.qrz
     result = await baseQueryWithSettings({
@@ -67,12 +67,12 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
     const session = result.data?.QRZDatabase?.Session?.Key
     if (session) {
-      api.dispatch(setAccountInfo({ qrz: { session } }))
+      api.dispatch(systemActions.setAccountInfo({ qrz: { session } }))
 
       result = await baseQueryWithSettings(args, api, extraOptions)
       if (DEBUG) console.log('baseQueryWithReauth third call', result?.data?.QRZDatabase)
     } else {
-      api.dispatch(setAccountInfo({ qrz: { session: undefined } }))
+      api.dispatch(systemActions.setAccountInfo({ qrz: { session: undefined } }))
       return { error: 'Unexpected error logging into QRZ.com', result }
     }
   }

@@ -26,26 +26,28 @@ function simplifiedMode (mode) {
 
 const MAX_SPOT_AGE_IN_MINUTES = 10
 
+function prepareStyles (baseStyles, themeColor) {
+  return {
+    ...baseStyles,
+    panel: {
+      backgroundColor: baseStyles.theme.colors[`${themeColor}Container`],
+      borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
+      borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
+      borderBottomWidth: 1,
+      padding: baseStyles.oneSpace
+    },
+    container: {
+      paddingHorizontal: baseStyles.oneSpace,
+      paddingTop: baseStyles.oneSpace,
+      paddingBottom: baseStyles.oneSpace,
+      gap: baseStyles.halfSpace
+    }
+  }
+}
+
 export default function OpSpotsTab ({ navigation, route }) {
   const themeColor = 'tertiary'
-  const styles = useThemedStyles((baseStyles) => {
-    return {
-      ...baseStyles,
-      panel: {
-        backgroundColor: baseStyles.theme.colors[`${themeColor}Container`],
-        borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
-        borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
-        borderBottomWidth: 1,
-        padding: baseStyles.oneSpace
-      },
-      container: {
-        paddingHorizontal: baseStyles.oneSpace,
-        paddingTop: baseStyles.oneSpace,
-        paddingBottom: baseStyles.oneSpace,
-        gap: baseStyles.halfSpace
-      }
-    }
-  })
+  const styles = useThemedStyles(prepareStyles, themeColor)
 
   const online = useSelector(selectRuntimeOnline)
 

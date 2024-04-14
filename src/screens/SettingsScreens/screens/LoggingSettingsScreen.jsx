@@ -9,19 +9,21 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { FlagsDialog } from '../components/FlagsDialog'
 
+function prepareStyles (baseStyles) {
+  return {
+    ...baseStyles,
+    listRow: {
+      marginLeft: baseStyles.oneSpace * 2,
+      marginRight: baseStyles.oneSpace * 2,
+      marginBottom: baseStyles.oneSpace
+    }
+  }
+}
+
 export default function LoggingSettingsScreen ({ navigation }) {
   const dispatch = useDispatch()
 
-  const styles = useThemedStyles((baseStyles) => {
-    return {
-      ...baseStyles,
-      listRow: {
-        marginLeft: baseStyles.oneSpace * 2,
-        marginRight: baseStyles.oneSpace * 2,
-        marginBottom: baseStyles.oneSpace
-      }
-    }
-  })
+  const styles = useThemedStyles(prepareStyles)
 
   const settings = useSelector(selectSettings)
 

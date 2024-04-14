@@ -13,19 +13,21 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { POTAAllParks } from '../../../extensions/activities/pota/POTAAllParksData'
 import { fmtISODate } from '../../../tools/timeFormats'
 
+function prepareStyles (baseStyles) {
+  return {
+    ...baseStyles,
+    listRow: {
+      marginLeft: baseStyles.oneSpace * 2,
+      marginRight: baseStyles.oneSpace * 2,
+      marginBottom: baseStyles.oneSpace
+    }
+  }
+}
+
 export default function GeneralSettingsScreen ({ navigation }) {
   const dispatch = useDispatch()
 
-  const styles = useThemedStyles((baseStyles) => {
-    return {
-      ...baseStyles,
-      listRow: {
-        marginLeft: baseStyles.oneSpace * 2,
-        marginRight: baseStyles.oneSpace * 2,
-        marginBottom: baseStyles.oneSpace
-      }
-    }
-  })
+  const styles = useThemedStyles(prepareStyles)
 
   const settings = useSelector(selectSettings)
 

@@ -1,10 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { FlatList, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem, { guessItemHeight } from './QSOItem'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-import { useSelector } from 'react-redux'
-import { selectOperationCallInfo } from '../../../../store/operations'
 import { useUIState } from '../../../../store/ui'
 
 function prepareStyles (themeStyles, isDeleted, width) {
@@ -135,17 +133,13 @@ function prepareStyles (themeStyles, isDeleted, width) {
   }
 }
 
-export default function QSOList ({ style, operation, settings, qsos }) {
+const QSOList = function QSOList ({ style, ourInfo, settings, qsos }) {
   const { width } = useWindowDimensions()
 
-  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
-  const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, false, width))
-  const stylesForDeleted = useThemedStyles((baseStyles) => prepareStyles(baseStyles, true, width))
-
-  const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
-
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+  const styles = useThemedStyles(prepareStyles, false, width)
+  const stylesForDeleted = useThemedStyles(prepareStyles, true, width)
 
   const listRef = useRef()
 
@@ -167,18 +161,18 @@ export default function QSOList ({ style, operation, settings, qsos }) {
 
   const handlePress = useCallback(({ qso }) => {
     if (qso.key === loggingState?.selectedKey) {
-      setLoggingState({ selectedKey: undefined })
+      updateLoggingState({ selectedKey: undefined })
     } else {
-      setLoggingState({ selectedKey: qso.key })
+      updateLoggingState({ selectedKey: qso.key })
     }
-  }, [loggingState?.selectedKey, setLoggingState])
+  }, [loggingState?.selectedKey, updateLoggingState])
 
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
     return (
-      <QSOItem qso={qso} settings={settings} selected={qso.key === loggingState?.selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} extendedWidth={extendedWidth} />
+      <QSOItem qso={qso} settings={settings} selected={qso.key === loggingState?.selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} />
     )
-  }, [styles, settings, stylesForDeleted, ourInfo, handlePress, extendedWidth, loggingState?.selectedKey])
+  }, [styles, settings, stylesForDeleted, ourInfo, handlePress, loggingState?.selectedKey])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(qsos[index], styles)
@@ -203,3 +197,4 @@ export default function QSOList ({ style, operation, settings, qsos }) {
     />
   )
 }
+export default QSOList

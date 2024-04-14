@@ -12,17 +12,19 @@ import { selectSettings } from '../../../store/settings'
 import { generateExport, importQSON, selectOperationsList } from '../../../store/operations'
 import { loadQSOs } from '../../../store/qsos'
 
-export default function DevModeSettingsScreen ({ navigation }) {
-  const styles = useThemedStyles((baseStyles) => {
-    return {
-      ...baseStyles,
-      listRow: {
-        marginLeft: baseStyles.oneSpace * 2,
-        marginRight: baseStyles.oneSpace * 2,
-        marginBottom: baseStyles.oneSpace
-      }
+function prepareStyles (baseStyles) {
+  return {
+    ...baseStyles,
+    listRow: {
+      marginLeft: baseStyles.oneSpace * 2,
+      marginRight: baseStyles.oneSpace * 2,
+      marginBottom: baseStyles.oneSpace
     }
-  })
+  }
+}
+
+export default function DevModeSettingsScreen ({ navigation }) {
+  const styles = useThemedStyles(prepareStyles)
 
   const dispatch = useDispatch()
 

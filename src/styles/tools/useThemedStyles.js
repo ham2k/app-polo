@@ -6,7 +6,7 @@ import { useColorScheme, useWindowDimensions } from 'react-native'
 import { useSelector } from 'react-redux'
 import { selectSettings } from '../../store/settings'
 
-export function useThemedStyles (styleMassager) {
+export function useThemedStyles (styleMassager, extraArg1, extraArg2, extraArg3) {
   const theme = useTheme()
 
   const { width, height } = useWindowDimensions()
@@ -29,11 +29,11 @@ export function useThemedStyles (styleMassager) {
 
   const styles = useMemo(() => {
     if (styleMassager) {
-      return styleMassager(baseStyles)
+      return styleMassager(baseStyles, extraArg1, extraArg2, extraArg3)
     } else {
       return baseStyles
     }
-  }, [baseStyles, styleMassager])
+  }, [baseStyles, styleMassager, extraArg1, extraArg2, extraArg3])
 
   return styles
 }

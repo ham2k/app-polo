@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-// eslint-disable-next-line camelcase
-import { Keyboard, View, unstable_batchedUpdates } from 'react-native'
+
+import { Keyboard, View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
 import cloneDeep from 'clone-deep'
-import { useDispatch } from 'react-redux'
+import { useDispatch, batch } from 'react-redux'
 
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
@@ -24,6 +24,9 @@ import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 import { checkAndProcessCommands } from '../../../../extensions/commands/commandHandling'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useUIState } from '../../../../store/ui'
+import { logTimer } from '../../../../tools/perfTools'
+
+const DEBUG = false
 
 function prepareStyles (themeStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
@@ -134,12 +137,12 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   const [originalQSO, setOriginalQSO] = useState()
   const [qsoHasChanges, setQSOHasChanges] = useState(false)
 
-  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   const themeColor = useMemo(() => (!qso || qso?._isNew) ? 'tertiary' : 'secondary', [qso])
   const upcasedThemeColor = useMemo(() => themeColor.charAt(0).toUpperCase() + themeColor.slice(1), [themeColor])
 
-  const styles = useThemedStyles((baseStyles) => prepareStyles(baseStyles, themeColor))
+  const styles = useThemedStyles(prepareStyles, themeColor)
 
   const dispatch = useDispatch()
 
@@ -172,7 +175,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   }, [qso, operation, settings])
 
   const setNewQSO = useCallback((newQSO) => {
-    if (!newQSO) setLoggingState({ selectedKey: undefined })
+    if (!newQSO) updateLoggingState({ selectedKey: undefined })
 
     if (!newQSO?._isNew && newQSO?.startOnMillis) {
       setPausedTime(true)
@@ -183,7 +186,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     setQSO(newQSO)
     setOriginalQSO(cloneDeep(newQSO))
     setCurrentSecondaryControl(undefined)
-  }, [setQSO, setLoggingState, setCurrentSecondaryControl])
+  }, [setQSO, updateLoggingState, setCurrentSecondaryControl])
 
   useEffect(() => { // Keep track of QSO changes
     if (qso && originalQSO) {
@@ -212,7 +215,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       }
       setNewQSO(nextQSO)
       if (nextQSO.key !== loggingState?.selectedKey) {
-        setLoggingState({ selectedKey: nextQSO.key })
+        updateLoggingState({ selectedKey: nextQSO.key })
       }
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
         if (mainFieldRef?.current) {
@@ -223,7 +226,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       let nextQSO
       if (loggingState?.selectedKey === 'suggested-qso') {
         nextQSO = prepareSuggestedQSO(loggingState?.suggestedQSO)
-        setLoggingState({ selectedKey: nextQSO.key })
+        updateLoggingState({ selectedKey: nextQSO.key })
       } else {
         nextQSO = qsos.find(q => q.key === loggingState?.selectedKey)
         if (nextQSO) nextQSO = prepareExistingQSO(nextQSO)
@@ -239,7 +242,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         }
       }, 10)
     }
-  }, [qsoQueue, setQSOQueue, loggingState?.selectedKey, setLoggingState, loggingState?.suggestedQSO, operation, settings, qso, setNewQSO, qsos])
+  }, [qsoQueue, setQSOQueue, loggingState?.selectedKey, updateLoggingState, loggingState?.suggestedQSO, operation, settings, qso, setNewQSO, qsos])
 
   useEffect(() => { // Validate and analize the callsign
     const callInfo = parseCallsign(qso?.their?.call)
@@ -306,6 +309,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   }, [qso, updateQSO, pausedTime, dispatch, operation?.uuid])
 
   const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
+    if (DEBUG) logTimer('submit', 'handleSubmit start', { reset: true })
     // Ensure the focused component has a chance to update values
     //   NOTE: This is a hack that can break on newer versions of React Native
     const component = focusedRef?.current?._internalFiberInstanceHandleDEV
@@ -321,11 +325,11 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         delete qso._willBeDeleted
         qso.deleted = true
         dispatch(addQSO({ uuid: operation.uuid, qso }))
-        setLoggingState({ selectedKey: undefined, lastKey: qso.key })
+        updateLoggingState({ selectedKey: undefined, lastKey: qso.key })
         setUndoInfo(undefined)
         setQSO(undefined) // Let queue management decide what to do
       } else if (isValidQSO && !qso.deleted) {
-        unstable_batchedUpdates(() => {
+        batch(() => {
           setCurrentSecondaryControl(undefined)
 
           if (qso?._isNew && qso?._manualTime && qso.startOnMillis) {
@@ -362,14 +366,22 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
           qso.key = qsoKey(qso)
 
+          if (DEBUG) logTimer('submit', 'handleSubmit before dispatch')
           dispatch(addQSO({ uuid: operation.uuid, qso }))
-          setLoggingState({ selectedKey: undefined, lastKey: qso.key })
+          if (DEBUG) logTimer('submit', 'handleSubmit before updateLoggingState')
+          updateLoggingState({ selectedKey: undefined, lastKey: qso.key })
+          if (DEBUG) logTimer('submit', 'handleSubmit before setUndoInfo')
           setUndoInfo(undefined)
+          if (DEBUG) logTimer('submit', 'handleSubmit before setQSO')
           setQSO(undefined) // Let queue management decide what to do
+          if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
         })
+        if (DEBUG) logTimer('submit', 'handleSubmit after batchedUpdates')
       }
+      if (DEBUG) logTimer('submit', 'handleSubmit 3')
     }, 10)
-  }, [qso, qsos, setQSO, originalQSO, operation, settings, handleFieldChange, isValidQSO, dispatch, setLoggingState, setCurrentSecondaryControl])
+    if (DEBUG) logTimer('submit', 'handleSubmit 4')
+  }, [qso, qsos, setQSO, originalQSO, operation, settings, handleFieldChange, isValidQSO, dispatch, updateLoggingState, setCurrentSecondaryControl])
 
   const [undoInfo, setUndoInfo] = useState()
 

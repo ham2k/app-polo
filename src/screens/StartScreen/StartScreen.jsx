@@ -16,82 +16,84 @@ import { selectSystemFlag, setSystemFlag } from '../../store/system'
 
 const SPLASH_IMAGE = require('./img/launch_screen.png')
 
+function prepareStyles (baseTheme, height) {
+  const dropShadow = {
+    textShadowColor: '#000',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: baseTheme.oneSpace * 2
+  }
+  return {
+    ...baseTheme,
+    screen: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'stretch',
+      resizeMode: 'cover',
+      height: '100%'
+    },
+    container: {
+      height: '100%',
+      flexDirection: 'column',
+      justifyContent: 'space-between'
+    },
+    titleBox: {
+      marginTop: height * 0.15
+    },
+    messagesBox: {
+      marginBottom: height * 0.05,
+      minHeight: baseTheme.oneSpace * 20,
+      justifyContent: 'flex-end',
+      alignItems: 'center'
+    },
+    ham2k: {
+      ...dropShadow,
+      fontSize: 30,
+      fontWeight: 400,
+      color: '#FFF',
+      textAlign: 'center'
+    },
+    polo: {
+      ...dropShadow,
+      fontSize: 40,
+      fontFamily: 'Roboto Slab Black',
+      color: '#FFF',
+      textAlign: 'center'
+    },
+    message: {
+      ...dropShadow,
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#D0D0D0',
+      textAlign: 'center'
+    },
+    markdown: {
+      ...baseTheme.markdown,
+      body: {
+        ...baseTheme.markdown.body,
+        color: '#D0D0D0',
+        fontSize: baseTheme.normalFontSize,
+        textAlign: 'center',
+        marginLeft: baseTheme.oneSpace * 3,
+        marginRight: baseTheme.oneSpace * 3
+      },
+      paragraph: {
+        ...dropShadow,
+        textAlign: 'center',
+        alignItems: 'center',
+        margin: 0,
+        marginBottom: 0,
+        marginTop: baseTheme.halfSpace,
+        padding: 0
+      }
+    }
+  }
+}
+
 export default function StartScreen ({ setAppState }) {
   const { height } = useWindowDimensions()
 
-  const styles = useThemedStyles((baseTheme) => {
-    const dropShadow = {
-      textShadowColor: '#000',
-      textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 2
-    }
-    return {
-      ...baseTheme,
-      screen: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'stretch',
-        resizeMode: 'cover',
-        height: '100%'
-      },
-      container: {
-        height: '100%',
-        flexDirection: 'column',
-        justifyContent: 'space-between'
-      },
-      titleBox: {
-        marginTop: height * 0.15
-      },
-      messagesBox: {
-        marginBottom: height * 0.05,
-        minHeight: baseTheme.oneSpace * 20,
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-      },
-      ham2k: {
-        ...dropShadow,
-        fontSize: 30,
-        fontWeight: 400,
-        color: '#FFF',
-        textAlign: 'center'
-      },
-      polo: {
-        ...dropShadow,
-        fontSize: 40,
-        fontFamily: 'Roboto Slab Black',
-        color: '#FFF',
-        textAlign: 'center'
-      },
-      message: {
-        ...dropShadow,
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#D0D0D0',
-        textAlign: 'center'
-      },
-      markdown: {
-        ...baseTheme.markdown,
-        body: {
-          ...baseTheme.markdown.body,
-          color: '#D0D0D0',
-          fontSize: baseTheme.normalFontSize,
-          textAlign: 'center',
-          marginLeft: baseTheme.oneSpace * 3,
-          marginRight: baseTheme.oneSpace * 3
-        },
-        paragraph: {
-          ...dropShadow,
-          textAlign: 'center',
-          alignItems: 'center',
-          margin: 0,
-          marginBottom: 0,
-          marginTop: baseTheme.halfSpace,
-          padding: 0
-        }
-      }
-    }
-  })
+  const styles = useThemedStyles(prepareStyles, height)
 
   const settings = useSelector(selectSettings)
   const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
