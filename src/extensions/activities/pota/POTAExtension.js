@@ -102,10 +102,10 @@ const ReferenceHandler = {
     if (data?.name) {
       result = {
         ...ref,
-        name: data.shortName || data.name,
+        name: data.name,
         shortName: data.shortName,
         location: data.locationName,
-        grid: data.grid6
+        grid: data.grid
       }
     } else {
       return { name: Info.unknownReferenceName ?? 'Unknown reference', shortName: 'Unknown reference', ...ref }

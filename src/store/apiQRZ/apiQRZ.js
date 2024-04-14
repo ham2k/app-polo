@@ -53,7 +53,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   ) {
     apiState.session = undefined
     // try to get a new session key
-    const { login, password } = api.getState().settings?.accounts?.qrz
+    const { login, password } = api.getState().settings?.accounts?.qrz ?? {}
     if (DEBUG) console.log('baseQueryWithReauth second call')
     result = await baseQueryWithSettings({
       url: '',

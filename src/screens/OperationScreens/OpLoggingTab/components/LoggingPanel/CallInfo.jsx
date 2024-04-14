@@ -109,7 +109,7 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO }) {
 
   const qrzLookup = useLookupCallQuery({ call: qrzCall === guess.baseCall ? qrzCall : guess.call }, { skip: skipQRZ })
   const qrz = useMemo(() => {
-    if (qrzLookup?.error?.indexOf('not found') >= 0) {
+    if (qrzLookup?.error?.message && qrzLookup.error?.message.indexOf('not found') >= 0) {
       // If the call has a prefix or suffix, and the full call was not found, let's retry with the base call
       if (qrzLookup?.originalArgs?.call !== guess.baseCall) {
         setQRZCall(guess.baseCall)

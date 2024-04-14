@@ -22,6 +22,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   else if (width / fontScale < 1000) size = 'lg'
   else size = 'xl'
 
+  const portrait = height > width
+  const landscape = !portrait
+
   // If the screen is too small, and the font scale too large, nothing will fit, so we need to adjust our font sizes down
   let fontScaleAdjustment = 1
   if (size === 'xs') {
@@ -33,8 +36,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const smallFontSize = 12 * fontScaleAdjustment
 
   const fontFamily = 'Roboto'
-  const specialTitleFontFamily = 'Roboto Slab Black'
-  const thinTitleFontFamily = 'Roboto Thin'
+  const boldTitleFontFamily = 'Roboto Slab Black'
+  const thinTitleFontFamily = 'Roboto Slab Medium'
   const normalFontFamily = 'Roboto'
   const condensedFontFamily = 'Roboto Condensed'
   const maybeCondensedFontFamily = size === 'xs' || size === 'sm' ? 'Roboto Condensed' : 'Roboto'
@@ -54,6 +57,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
 
     pixelRatio,
 
+    portrait,
+    landscape,
     size,
     smOrGreater: size !== 'xs',
     mdOrGreater: size !== 'xs' && size !== 'sm',
@@ -71,7 +76,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     fontScaleAdjustment,
 
     fontFamily,
-    specialTitleFontFamily,
+    boldTitleFontFamily,
     thinTitleFontFamily,
     normalFontFamily,
     condensedFontFamily,
@@ -90,7 +95,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     screenTitle: {
       fontSize: 20 * fontScaleAdjustment,
       color: theme.colors.onPrimary,
-      fontFamily: specialTitleFontFamily
+      fontFamily: boldTitleFontFamily
       // fontWeight: 'bold'
     },
     screenTitleSmall: {
