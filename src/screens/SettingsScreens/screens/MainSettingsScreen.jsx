@@ -122,9 +122,9 @@ export default function MainSettingsScreen ({ navigation }) {
         />
         <List.Item
           title="Credits"
-          description={'Sebastián Delmont • KI2D & Team'}
+          description={'Sebastián Delmont KI2D & Team PoLo'}
           onPress={() => navigation.navigate('CreditsSettings')}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account-group" />}
         />
       </List.Section>
 
