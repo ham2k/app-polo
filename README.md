@@ -1,23 +1,36 @@
+# Ham2K Portable Logger - PoLo
 
-# Links:
+An app for Amateur Radio operations.
 
-* Tester Group: https://groups.google.com/g/ham2k-polo-testers
-* Discord: https://discord.gg/rT6B2fP7pU
-* Android Internal: https://play.google.com/apps/internaltest/4700998652811571052
-* Android Closed Beta: https://play.google.com/apps/testing/com.ham2k.polo.beta
-* TestFlight: https://testflight.apple.com/join/TjRq5t5Y
+### Our Community
 
-# Debug Menu
+* [Discord](https://discord.gg/rT6B2fP7pU)
+* [Google Groups - PoLo Testers](https://groups.google.com/g/ham2k-polo-testers)
+
+### Install Links
+
+* Android - [Play Store](https://play.google.com/store/apps/details?id=com.ham2k.polo.beta)
+* Android - [Beta Testing](https://play.google.com/apps/testing/com.ham2k.polo.beta)
+* iOS - App Store (coming soon)
+* iOS - [Beta Testing](https://testflight.apple.com/join/TjRq5t5Y)
+
+This app is Open Source and licensed under the [Mozilla Public License 2.0](./LICENSE)
+
+---
+
+# Notes for Developers
+
+### Debug Menu
 
 iOS: Cmd ⌘ + D
 
 Android: Cmd ⌘ + M (macOS) or Ctrl + M (Windows and Linux)
 
-# Resources
+### Resources
 
 Icons from https://pictogrammers.com/library/mdi/
 
-# Access iOS Simulator Info
+### Access iOS Simulator Info
 
 https://www.iosdev.recipes/simctl/
 
@@ -26,13 +39,13 @@ xcrun simctl
 xcrun simctl listapps booted # List all apps
 ```
 
-# Local path for PoLo's internal files
+### Local path for PoLo's internal files
 
 ```
 open `xcrun simctl get_app_container booted com.ham2k.polo data`/Documents
 ```
 
-# Local path where files are saved when exporting and "Save To Files"
+### Local path where files are saved when exporting and "Save To Files"
 
 ```
 open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep FileProvider.LocalStorage|sed "s/group.com.apple.FileProvider.LocalStorage//g"`/File\ Provider\ Storage
