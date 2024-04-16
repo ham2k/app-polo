@@ -160,7 +160,7 @@ export default function VersionSettingsScreen ({ navigation }) {
           <List.Item title={'Recent Changes'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="newspaper-variant-outline" />}
           />
-          {Object.keys(releaseNotes).slice(0, 5).map((release, i) => (
+          {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
             <ListRow key={i} style={styles.listRow}>
 
               <Markdown style={styles.markdown}>
