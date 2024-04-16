@@ -34,13 +34,13 @@ import OperationActivityOptionsScreen from './screens/OperationScreens/Operation
 import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
 import CreditsSettingsScreen from './screens/SettingsScreens/screens/CreditsSettingsScreen'
 
-const GLOBAL_APP_SETTINGS = {
-  consentAppData: false
-}
-
 /** BEGIN DISTRIBUTION-ONLY */
 import { Client } from 'rollbar-react-native'
 /** END DISTRIBUTION-ONLY */
+
+const GLOBAL_APP_SETTINGS = {
+  consentAppData: false
+}
 
 const DISTRIBUTION_CONFIG = {}
 
@@ -70,6 +70,14 @@ if (process.env.NODE_ENV !== 'development') {
   }
 }
 /** END DISTRIBUTION-ONLY */
+
+export function reportError (error, ...extra) {
+  if (GLOBAL_APP_SETTINGS.consentAppData && DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollbar) {
+    DISTRIBUTION_CONFIG.rollbarNative.rollbar.error(error, ...extra)
+  }
+  console.error(error, ...extra)
+  if (extra && extra[0]?.stack) console.error(extra[0].stack)
+}
 
 const Stack = createNativeStackNavigator()
 

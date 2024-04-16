@@ -110,8 +110,6 @@ export default function StartScreen ({ setAppState }) {
 
   const settings = useSelector(selectSettings)
   const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
-
-  const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
   const messages = useSelector(selectRuntimeMessages)
 
@@ -121,22 +119,31 @@ export default function StartScreen ({ setAppState }) {
 
   const [startupPhase, setStartupPhase] = useState('hold')
 
-  useEffect(() => { // If not using the default track, give the user some milliseconds to switch tracks dialog
+  useEffect(() => { // Determine the startup phase
     if (startupPhase !== 'hold') return
-
-    if (settings.updateTrack && settings.updateTrack !== 'Production') {
-      const timeout = setTimeout(() => {
-        if (startupPhase === 'hold') {
-          setStartupPhase('start')
-        }
-      }, 500)
-      return () => clearTimeout(timeout)
+    if (!onboardedOn || !settings?.operatorCall) {
+      setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
     } else {
-      setStartupPhase('start')
+      // If not using the default track, give the user some milliseconds to switch tracks dialog
+      if (settings.updateTrack && settings.updateTrack !== 'Production') {
+        const timeout = setTimeout(() => {
+          if (startupPhase === 'hold') {
+            setStartupPhase('start')
+          }
+        }, 500)
+        return () => clearTimeout(timeout)
+      } else {
+        setStartupPhase('start')
+      }
     }
-  }, [startupPhase, settings])
+  }, [startupPhase, onboardedOn, settings?.operatorCall, settings?.updateTrack])
 
-  useEffect(() => { // After a short wait, begin the startup sequence
+  const handleOnboardingDone = useCallback(() => {
+    dispatch(setSystemFlag('onboardedOn', Date.now()))
+    setStartupPhase('start')
+  }, [dispatch, setStartupPhase])
+
+  useEffect(() => { // Once ready, begin the startup sequence
     if (startupPhase === 'start') {
       setStartupPhase('starting')
       dispatch(startupSequence(() => setAppState('ready')))
@@ -169,6 +176,13 @@ export default function StartScreen ({ setAppState }) {
           visible={true}
           dismissable={false}
           onDialogDone={() => setStartupPhase('start')}
+        />
+      )}
+      {startupPhase === 'onboarding' && (
+        <OnboardingManager
+          settings={settings}
+          styles={styles}
+          onOnboardingDone={handleOnboardingDone}
         />
       )}
     </ImageBackground>

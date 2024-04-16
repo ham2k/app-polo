@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, Switch, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
-import { View } from 'react-native'
+import { Linking, View } from 'react-native'
 import { setSystemFlag } from '../../../store/system'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
 
