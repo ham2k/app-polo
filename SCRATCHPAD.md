@@ -1,3 +1,7 @@
+# Scratchpad
+
+Quick notes for future reference
+
 # SOTAMat
 
 From AB6D - Brian
@@ -16,6 +20,11 @@ From AB6D - Brian
 # Maps for POTA
 
 https://cwhelchel.github.io/potamap.ol/
+
+
+# Open source license notices
+
+https://github.com/mattermost/mattermost-mobile/tree/main/build/notice-file
 
 
 # Native components to add for next build
