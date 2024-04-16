@@ -114,8 +114,9 @@ export default function MainSettingsScreen ({ navigation }) {
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
         />
         <List.Item
-          title="Author"
-          description={'Sebastián Delmont • KI2D'}
+          title="Credits"
+          description={'Sebastián Delmont • KI2D & Team'}
+          onPress={() => navigation.navigate('CreditsSettings')}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
         />
       </List.Section>

@@ -31,6 +31,7 @@ import DevModeSettingsScreen from './screens/SettingsScreens/screens/DevModeSett
 import ExtensionScreen from './screens/SettingsScreens/screens/ExtensionScreen'
 import BandModeSettingsScreen from './screens/SettingsScreens/screens/BandModeSettingsScreen'
 import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
+import CreditsSettingsScreen from './screens/SettingsScreens/screens/CreditsSettingsScreen'
 
 const GLOBAL_APP_SETTINGS = {
   consentAppData: false
@@ -143,6 +144,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="VersionSettings"
             options={{ title: 'Version Information', headerBackTitle: 'MainSettings' }}
             component={VersionSettingsScreen}
+          />
+
+          <Stack.Screen name="CreditsSettings"
+            options={{ title: 'Credits', headerBackTitle: 'MainSettings' }}
+            component={CreditsSettingsScreen}
           />
 
           <Stack.Screen name="DevModeSettings"
