@@ -35,3 +35,5 @@
 * Morten LB0FI on his [Norwegian Hamventures Channel](https://youtu.be/_diPKWNjX0A?si=A5J-Vl0eLBz1px-q)
 
 ### 2024-03-25: Made the Android app discretely available on Google Play, as "Ham2K PoLo BETA"
+
+### 2024-04-15: Crossed 1,000 installs, between Android and iOS
