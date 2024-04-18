@@ -29,11 +29,11 @@ export default function OperationItem ({ operation, settings, onPress, styles })
         <View style={[{ flexDirection: 'row', width: '100%', paddingTop: styles.halfSpace }]}>
           {operation.qsoCount > 0 ? (
             <>
-              <Text style={[styles.rowText, { fontSize: styles.fontSizeSmall }]}>{operation.qsoCount} {operation.qsoCount > 1 ? 'QSOs' : 'QSO'}{' • '}</Text>
-              <Text style={[styles.rowText, { fontSize: styles.fontSizeSmall }]}>{fmtDateTimeDynamic(operation.startOnMillisMax)}</Text>
+              <Text style={[styles.rowText, { fontSize: styles.smallFontSize }]}>{operation.qsoCount} {operation.qsoCount > 1 ? 'QSOs' : 'QSO'}{' • '}</Text>
+              <Text style={[styles.rowText, { fontSize: styles.smallFontSize }]}>{fmtDateTimeDynamic(operation.startOnMillisMax)}</Text>
             </>
           ) : (
-            <Text style={[styles.rowText, { fontSize: styles.fontSizeSmall }]}>No QSOs</Text>
+            <Text style={[styles.rowText, { fontSize: styles.smallFontSize }]}>No QSOs</Text>
           )}
         </View>
       </View>
