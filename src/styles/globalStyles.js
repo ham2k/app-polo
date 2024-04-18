@@ -6,6 +6,7 @@
  */
 
 import { PixelRatio, Platform, StyleSheet } from 'react-native'
+import { computeSizes } from './tools/computeSizes'
 
 const DEFAULT_THEME = {
   colors: {
@@ -17,30 +18,15 @@ const DEFAULT_THEME = {
 export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const isIOS = Platform.OS === 'ios'
   const isDarkMode = colorScheme === 'dark'
-
-  const pixelRatio = PixelRatio.get()
-  const fontScale = PixelRatio.getFontScale()
   theme = theme ?? DEFAULT_THEME
 
-  let size
-  if (width / fontScale < 340) size = 'xs'
-  else if (width / fontScale < 400) size = 'sm'
-  else if (width / fontScale < 1000) size = 'md'
-  else if (width / fontScale < 1200) size = 'lg'
-  else size = 'xl'
-
-  const portrait = height > width
-  const landscape = !portrait
-
-  // If the screen is too small, and the font scale too large, nothing will fit, so we need to adjust our font sizes down
-  let fontScaleAdjustment = 1
-  if (size === 'xs') {
-    fontScaleAdjustment = width / fontScale / 330
-  }
-
-  const normalFontSize = 15 * fontScaleAdjustment
+  const sizeInfo = computeSizes()
+  const { size, fontScale, fontScaleAdjustment } = sizeInfo
+  console.log('size info', sizeInfo)
+  const normalFontSize = 16 * fontScaleAdjustment
   const largeFontSize = 24 * fontScaleAdjustment
-  const smallFontSize = 12 * fontScaleAdjustment
+  const smallFontSize = 14 * fontScaleAdjustment
+  const smallerFontSize = 12 * fontScaleAdjustment
 
   const fontFamily = 'Roboto'
   const boldTitleFontFamily = 'Roboto Slab Black'
@@ -51,8 +37,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
 
   const baseSpace = 8 * fontScaleAdjustment // Guesstimage of the width of an 'm' in the base (root) font size
 
-  const oneSpace = PixelRatio.roundToNearestPixel(baseSpace * fontScale)
-  const halfSpace = PixelRatio.roundToNearestPixel((baseSpace * fontScale) / 2)
+  const oneSpace = PixelRatio.roundToNearestPixel(baseSpace * fontScale * fontScaleAdjustment)
+  const halfSpace = PixelRatio.roundToNearestPixel(oneSpace / 2)
 
   const styles = StyleSheet.create({
     theme,
@@ -62,17 +48,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     isIOS,
     isAndroid: !isIOS,
 
-    pixelRatio,
-
-    portrait,
-    landscape,
-    size,
-    smOrGreater: size !== 'xs',
-    mdOrGreater: size !== 'xs' && size !== 'sm',
-    lgOrGreater: size !== 'xs' && size !== 'sm' && size !== 'md',
-    lgOrSmaller: size !== 'xl',
-    mdOrSmaller: size !== 'xl' && size !== 'lg',
-    smOrSmaller: size !== 'xl' && size !== 'lg' && size !== 'md',
+    ...sizeInfo,
 
     oneSpace,
     halfSpace,
@@ -80,6 +56,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     normalFontSize,
     largeFontSize,
     smallFontSize,
+    smallerFontSize,
     fontScaleAdjustment,
 
     fontFamily,
