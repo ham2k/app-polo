@@ -1,0 +1,114 @@
+{
+  "default": {
+    "fontFamily": "Roboto",
+    "fontSize": 16,
+    "fontWeight": "400",
+    "letterSpacing": 0,
+    "lineHeight": 16
+  },
+  "bodyLarge": {
+    "fontFamily": "Roboto",
+    "fontSize": 16,
+    "fontWeight": "400",
+    "letterSpacing": 0.15,
+    "lineHeight": 24
+  },
+  "bodyMedium": {
+    "fontFamily": "Roboto",
+    "fontSize": 14,
+    "fontWeight": "400",
+    "letterSpacing": 0.25,
+    "lineHeight": 20
+  },
+  "bodySmall": {
+    "fontFamily": "Roboto",
+    "fontSize": 12,
+    "fontWeight": "400",
+    "letterSpacing": 0.4,
+    "lineHeight": 16
+  },
+  "displayLarge": {
+    "fontFamily": "Roboto",
+    "fontSize": 57,
+    "fontWeight": "400",
+    "letterSpacing": 0,
+    "lineHeight": 64
+  },
+  "displayMedium": {
+    "fontFamily": "Roboto",
+    "fontSize": 45,
+    "fontWeight": "400",
+    "letterSpacing": 0,
+    "lineHeight": 52
+  },
+  "displaySmall": {
+    "fontFamily": "Roboto",
+    "fontSize": 36,
+    "fontWeight": "400",
+    "letterSpacing": 0,
+    "lineHeight": 44
+  },
+  "headlineLarge": {
+    "fontFamily": "Roboto",
+    "fontSize": 32,
+    "fontWeight": "400",
+    "letterSpacing": 0,
+    "lineHeight": 40
+  },
+  "headlineMedium": {
+    "fontFamily": "Roboto",
+    "fontSize": 28,
+    "fontWeight": "400",
+    "letterSpacing": 0,
+    "lineHeight": 36
+  },
+  "headlineSmall": {
+    "fontFamily": "Roboto",
+    "fontSize": 24,
+    "fontWeight": "400",
+    "letterSpacing": 0,
+    "lineHeight": 32
+  },
+  "labelLarge": {
+    "fontFamily": "Roboto Medium",
+    "fontSize": 16,
+    "fontWeight": "500",
+    "letterSpacing": 0.1,
+    "lineHeight": 20
+  },
+  "labelMedium": {
+    "fontFamily": "Roboto Medium",
+    "fontSize": 14,
+    "fontWeight": "500",
+    "letterSpacing": 0.5,
+    "lineHeight": 16
+  },
+  "labelSmall": {
+    "fontFamily": "Roboto Medium",
+    "fontSize": 12,
+    "fontWeight": "500",
+    "letterSpacing": 0.5,
+    "lineHeight": 16
+  },
+  "titleLarge": {
+    "fontFamily": "Roboto Medium",
+    "fontSize": 22,
+    "fontWeight": "500",
+    "letterSpacing": 0,
+    "lineHeight": 28
+  },
+  "titleMedium": {
+    "fontFamily": "Roboto Medium",
+    "fontSize": 16,
+    "fontWeight": "500",
+    "letterSpacing": 0.15,
+    "lineHeight": 24
+  },
+  "titleSmall": {
+    "fontFamily": "Roboto Medium",
+    "fontSize": 14,
+    "fontWeight": "500",
+    "letterSpacing": 0.1,
+    "lineHeight": 20
+  }
+}

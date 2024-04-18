@@ -6,16 +6,17 @@
  */
 
 import { useMemo } from 'react'
-
-import { MD3LightTheme, MD3DarkTheme } from 'react-native-paper'
-
+import { MD3LightTheme, MD3DarkTheme, configureFonts } from 'react-native-paper'
 import { useColorScheme } from 'react-native'
+import Color from 'color'
+import { useSelector } from 'react-redux'
+
+import { selectSettings } from '../../store/settings'
+import { computeSizes } from './computeSizes'
 
 import lightColors from '../lightColors'
 import darkColors from '../darkColors'
-import Color from 'color'
-import { useSelector } from 'react-redux'
-import { selectSettings } from '../../store/settings'
+import fontConfig from '../fonts'
 
 export function usePrepareThemes () {
   const settings = useSelector(selectSettings)
@@ -28,6 +29,17 @@ export function usePrepareThemes () {
       return deviceColorScheme
     }
   }, [settings?.theme, deviceColorScheme])
+
+  const fonts = useMemo(() => {
+    const { fontScaleAdjustment } = computeSizes()
+    Object.keys(fontConfig).forEach(variant => {
+      if (fontConfig[variant].fontSize) fontConfig[variant].fontSize = fontConfig[variant].fontSize * fontScaleAdjustment
+      if (fontConfig[variant].lineHeight) fontConfig[variant].lineHeight = fontConfig[variant].lineHeight * fontScaleAdjustment
+    })
+    const configuredFonts = configureFonts({ config: fontConfig })
+    console.log(configuredFonts)
+    return configuredFonts
+  }, [])
 
   const colors = useMemo(() => {
     const loadedColors = colorScheme === 'dark' ? darkColors.colors : lightColors.colors
@@ -65,9 +77,10 @@ export function usePrepareThemes () {
   const paperTheme = useMemo(() => {
     return {
       ...(colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme),
-      colors
+      colors,
+      fonts
     }
-  }, [colors, colorScheme])
+  }, [colors, fonts, colorScheme])
 
   const navigationTheme = useMemo(() => {
     return {
