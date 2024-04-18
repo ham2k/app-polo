@@ -233,7 +233,6 @@ export default function ThemedTextInput (props) {
           paddingHorizontal: props.dense ? themeStyles.halfSpace : themeStyles.oneSpace,
           fontSize: themeStyles.normalFontSize,
           fontFamily: themeStyles.fontFamily
-          // height: themeStyles.oneSpace * 6
         },
         style
       ]}
