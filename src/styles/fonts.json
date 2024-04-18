@@ -2,9 +2,7 @@
   "default": {
     "fontFamily": "Roboto",
     "fontSize": 16,
-    "fontWeight": "400",
-    "letterSpacing": 0,
-    "lineHeight": 16
+    "fontWeight": "400"
   },
   "bodyLarge": {
     "fontFamily": "Roboto",

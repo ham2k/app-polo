@@ -198,7 +198,12 @@ export default function ThemedTextInput (props) {
 
         value={strValue || ''}
         placeholder={placeholder || ''}
-        style={[colorStyles.nativeInput, props.style, textStyle]}
+        style={[
+          colorStyles.nativeInput,
+          props.style,
+          { fontFamily: themeStyles.fontFamily },
+          textStyle
+        ]}
         placeholderTextColor={themeStyles.theme.colors.onBackgroundLighter}
         cursorColor={colorStyles.cursorColor}
         selectionColor={colorStyles.sectionColor}
@@ -220,7 +225,18 @@ export default function ThemedTextInput (props) {
   return (
     <TextInput
       {...props}
-      style={[colorStyles.paperInput, { marginTop: 0, paddingTop: 0, paddingHorizontal: props.dense ? themeStyles.halfSpace : themeStyles.oneSpace }, style]}
+      style={[
+        colorStyles.paperInput,
+        {
+          marginTop: 0,
+          paddingTop: 0,
+          paddingHorizontal: props.dense ? themeStyles.halfSpace : themeStyles.oneSpace,
+          fontSize: themeStyles.normalFontSize,
+          fontFamily: themeStyles.fontFamily
+          // height: themeStyles.oneSpace * 6
+        },
+        style
+      ]}
       textColor={colorStyles.paperInput.color}
       selectionColor={colorStyles.paperInput.color}
       underlineColor={colorStyles.paperInput.color}
