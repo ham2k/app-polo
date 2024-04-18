@@ -61,7 +61,7 @@ export default function OperationScreen (props) {
 
   const dimensions = useWindowDimensions()
 
-  const [splitWidth, setSplitWidth] = useState(styles.lgOrGreater ? dimensions.width - styles.oneSpace * 50 : dimensions.width)
+  const [splitWidth] = useState(styles.lgOrGreater ? dimensions.width - styles.oneSpace * 40 : dimensions.width)
 
   if (styles.lgOrGreater) {
     return (

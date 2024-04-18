@@ -7,7 +7,7 @@
 
 import React, { useState, useMemo, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, List } from 'react-native-paper'
+import { Button } from 'react-native-paper'
 
 import { setOperationData } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
@@ -15,6 +15,7 @@ import { Info } from './CustomInfo'
 import { CustomListItem } from './CustomListItem'
 import { ListRow } from '../../../screens/components/ListComponents'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
+import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
 export function CustomActivityOptions (props) {
   const { styles, operation } = props
@@ -48,7 +49,7 @@ export function CustomActivityOptions (props) {
 
   return (
     <>
-      <List.Section title={title}>
+      <Ham2kListSection title={title}>
         {refs.map((ref, index) => (
           <CustomListItem
             key={ref.ref}
@@ -57,8 +58,8 @@ export function CustomActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </List.Section>
-      <List.Section title={refs?.length === 0 ? 'Add more references' : 'Add a reference'}>
+      </Ham2kListSection>
+      <Ham2kListSection title={refs?.length === 0 ? 'Add more references' : 'Add a reference'}>
         <ListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
           <ThemedTextInput
             label="Activity - MY_SIG in ADIF (Optional)"
@@ -86,7 +87,7 @@ export function CustomActivityOptions (props) {
         <ListRow>
           <Button icon="plus-circle" mode="contained" onPress = {() => handleAddReference(mySigInfo, name, mySig) }>Add</Button>
         </ListRow>
-      </List.Section>
+      </Ham2kListSection>
     </>
   )
 }

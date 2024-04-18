@@ -9,16 +9,19 @@
 import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
-
-import ScreenContainer from '../../components/ScreenContainer'
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectSettings, setSettings } from '../../../store/settings'
-import { ThemeDialog } from '../components/ThemeDialog'
-import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { selectSettings, setSettings } from '../../../store/settings'
 import { POTAAllParks } from '../../../extensions/activities/pota/POTAAllParksData'
 import { fmtISODate } from '../../../tools/timeFormats'
+import { ThemeDialog } from '../components/ThemeDialog'
+import ScreenContainer from '../../components/ScreenContainer'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { Ham2kListSubheader } from '../../components/Ham2kListSubheader'
 
 function prepareStyles (baseStyles) {
   return {
@@ -59,8 +62,8 @@ export default function GeneralSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          <List.Item
+        <Ham2kListSection>
+          <Ham2kListItem
             title="Theme"
             description={{ dark: 'Always in Dark Mode', light: 'Always in Light Mode' }[settings.theme] || 'Same as device theme'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={{ dark: 'weather-night', light: 'white-balance-sunny' }[settings.theme] || 'theme-light-dark'} />}
@@ -75,7 +78,7 @@ export default function GeneralSettingsScreen ({ navigation }) {
             />
           )}
 
-          <List.Item
+          <Ham2kListItem
             title="Show numbers row"
             description={settings.showNumbersRow ? 'Quick buttons for numbers' : "Don't show numbers row"}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />}
@@ -83,7 +86,7 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))}
           />
 
-          <List.Item
+          <Ham2kListItem
             title="Use Metric Units"
             description={settings.distanceUnits === 'miles' ? 'Use Miles for distances' : 'Use Kilometers for distances'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="tape-measure" />}
@@ -91,7 +94,7 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ distanceUnits: settings.distanceUnits === 'miles' ? 'km' : 'miles' }))}
           />
 
-          <List.Item
+          <Ham2kListItem
             title="Keep device awake"
             description={settings.keepDeviceAwake ? 'Prevent device from locking screen' : 'Allow regular screen locking'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="coffee" />}
@@ -99,7 +102,7 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ keepDeviceAwake: !settings.keepDeviceAwake }))}
           />
 
-          <List.Item
+          <Ham2kListItem
             title="Use compact file names"
             description={settings.useCompactFileNames ? compactName : longName}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-code-outline" />}
@@ -107,8 +110,8 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ useCompactFileNames: !settings.useCompactFileNames }))}
           />
 
-          <List.Subheader>Privacy</List.Subheader>
-          <List.Item
+          <Ham2kListSubheader>Privacy</Ham2kListSubheader>
+          <Ham2kListItem
             title="Share app usage data"
             description={settings.consentAppData ? 'Help us improve the app by sharing usage, crash and performance data' : 'Keep app usage data private'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-lock" />}
@@ -116,14 +119,14 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ consentAppData: !settings.consentAppData }))}
           />
 
-          <List.Item
+          <Ham2kListItem
             title="Share operation data"
             description={settings.consentOpData ? 'Share some operation data publicly and with other users' : 'Keep operation data private'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-lock" />}
             right={() => <Switch value={!!settings.consentOpData} onValueChange={(value) => dispatch(setSettings({ consentOpData: value })) } />}
             onPress={() => dispatch(setSettings({ consentAppData: !settings.consentOpData }))}
           />
-        </List.Section>
+        </Ham2kListSection>
       </ScrollView>
     </ScreenContainer>
   )

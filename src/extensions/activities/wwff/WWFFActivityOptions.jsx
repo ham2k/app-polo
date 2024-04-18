@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Searchbar } from 'react-native-paper'
+import { Searchbar } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
 import { reportError } from '../../../App'
@@ -19,6 +19,7 @@ import { distanceOnEarth } from '../../../tools/geoTools'
 import { Info } from './WWFFInfo'
 import { WWFFData } from './WWFFDataFile'
 import { WWFFListItem } from './WWFFListItem'
+import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
 export function WWFFActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
@@ -135,7 +136,7 @@ export function WWFFActivityOptions (props) {
 
   return (
     <>
-      <List.Section title={title}>
+      <Ham2kListSection title={title}>
         {refData?.ref && (
           <WWFFListItem
             key={refData.ref}
@@ -148,7 +149,7 @@ export function WWFFActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         )}
-      </List.Section>
+      </Ham2kListSection>
 
       <ListRow>
         <Searchbar
@@ -158,7 +159,7 @@ export function WWFFActivityOptions (props) {
         />
       </ListRow>
 
-      <List.Section title={resultsMessage}>
+      <Ham2kListSection title={resultsMessage}>
         {results.map((result) => (
           <WWFFListItem
             key={result.ref}
@@ -172,7 +173,7 @@ export function WWFFActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </List.Section>
+      </Ham2kListSection>
     </>
   )
 }

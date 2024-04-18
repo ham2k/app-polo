@@ -14,6 +14,7 @@ import { useLookupParkQuery } from '../../../store/apiPOTA'
 import { fmtDistance } from '../../../tools/geoTools'
 
 import { Info } from './POTAInfo'
+import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
 export function POTAListItem ({ activityRef, refData, allRefs, style, styles, settings, onPress, onAddReference, onRemoveReference, online }) {
   const pota = useLookupParkQuery({ ref: activityRef }, { skip: !activityRef, online })
@@ -38,7 +39,7 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, se
   }, [allRefs, activityRef])
 
   return (
-    <List.Item style={{ paddingRight: styles.oneSpace * 1 }}
+    <Ham2kListItem style={{ paddingRight: styles.oneSpace * 1 }}
       title={
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
           <Text style={{ fontWeight: 'bold' }}>
