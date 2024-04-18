@@ -51,7 +51,6 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
         <Dialog visible={true} onDismiss={onDialogDone}>
-          <Dialog.Icon icon={def.icon ?? 'file-outline'} />
           <Dialog.Title style={{ textAlign: 'center' }}>{def.name}</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{def.description}</Text>

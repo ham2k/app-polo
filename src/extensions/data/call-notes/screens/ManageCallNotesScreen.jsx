@@ -69,7 +69,6 @@ const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDo
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
         <Dialog visible={true} onDismiss={onDialogDone}>
-          <Dialog.Icon icon={'file-account-outline'} />
           <Dialog.Title style={{ textAlign: 'center' }}>Callsign Notes File</Dialog.Title>
           <Dialog.Content>
             <ThemedTextInput
