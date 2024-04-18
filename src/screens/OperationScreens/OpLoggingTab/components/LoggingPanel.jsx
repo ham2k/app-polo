@@ -11,6 +11,7 @@ import { Keyboard, View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
 import cloneDeep from 'clone-deep'
 import { useDispatch, batch } from 'react-redux'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
@@ -18,20 +19,19 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 
 import { setOperationData } from '../../../../store/operations'
+import { useUIState } from '../../../../store/ui'
 import { addQSO } from '../../../../store/qsos'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { parseFreqInMHz } from '../../../../tools/frequencyFormats'
+import { logTimer } from '../../../../tools/perfTools'
+import { joinAnd } from '../../../../tools/joinAnd'
+import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
+import { checkAndProcessCommands } from '../../../../extensions/commands/commandHandling'
 import { SecondaryExchangePanel } from './LoggingPanel/SecondaryExchangePanel'
 import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
-import { joinAnd } from '../../../../tools/joinAnd'
-import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
-import { checkAndProcessCommands } from '../../../../extensions/commands/commandHandling'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useUIState } from '../../../../store/ui'
-import { logTimer } from '../../../../tools/perfTools'
 
 const DEBUG = false
 
@@ -432,24 +432,41 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   }, [focusedRef])
 
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+  const [keyboardExtraStyles, setKeyboardExtraStyles] = useState({})
   useEffect(() => {
-    setIsKeyboardVisible(Keyboard.isVisible())
-    const willShowSubscription = Keyboard.addListener('keyboardWillShow', () => {
-      setIsKeyboardVisible(true)
-    })
-    const willHideSubscription = Keyboard.addListener('keyboardWillHide', () => {
-      setIsKeyboardVisible(false)
-    })
+    if (Keyboard.isVisible()) {
+      const metrics = Keyboard.metrics()
+      console.log('Keyboard shown', metrics)
+      if (metrics.height > 100) {
+        setIsKeyboardVisible(true)
+        setKeyboardExtraStyles({})
+      } else {
+        setIsKeyboardVisible(false)
+        setKeyboardExtraStyles({ paddingBottom: metrics.height - 10 })
+      }
+    }
+
     const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
-      setIsKeyboardVisible(true)
+      const metrics = Keyboard.metrics()
+      console.log('Keyboard shown', metrics)
+      if (metrics.height > 100) {
+        // On iPads, when there's an external keyboard connected, the OS still shows a small
+        // button on the bottom right with some options
+        // This is considered "keyboard visible", which causes KeyboardAvoidingView to leave an ugly empty padding
+        setIsKeyboardVisible(true)
+        setKeyboardExtraStyles({})
+      } else {
+        setIsKeyboardVisible(false)
+        setKeyboardExtraStyles({ paddingBottom: metrics.height - 10 })
+      }
     })
     const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      console.log('Keyboard hidden', Keyboard.metrics())
       setIsKeyboardVisible(false)
+      setKeyboardExtraStyles({})
     })
 
     return () => {
-      willShowSubscription.remove()
-      willHideSubscription.remove()
       didShowSubscription.remove()
       didHideSubscription.remove()
     }
@@ -545,7 +562,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
           </View>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: styles.halfSpace }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: styles.halfSpace, ...keyboardExtraStyles }}>
           <MainExchangePanel
             style={{ flex: 1, paddingLeft: styles.oneSpace }}
             qso={qso}

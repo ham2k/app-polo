@@ -13,16 +13,16 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
-export default function HeaderBar ({ route, options, navigation, back, close, rightAction, onRightActionPress }) {
+export default function HeaderBar ({ route, options, navigation, back, close, title, subTitle, rightAction, closeInsteadOfBack, onRightActionPress }) {
   const styles = useThemedStyles()
 
-  const title = options.title
-  const subTitle = options.subTitle
+  title = title || options?.title
+  subTitle = subTitle || options?.subTitle
+  rightAction = rightAction ?? options?.rightAction
+  onRightActionPress = onRightActionPress ?? options?.onRightActionPress
+  closeInsteadOfBack = closeInsteadOfBack ?? options?.closeInsteadOfBack
 
-  rightAction = rightAction ?? options.rightAction
-  onRightActionPress = onRightActionPress ?? options.onRightActionPress
-
-  if (options.closeInsteadOfBack) {
+  if (closeInsteadOfBack) {
     close = back
   }
 
@@ -39,7 +39,7 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
       theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
       dark={true}
       mode={'center-aligned'}
-      style={{ height: styles.oneSpace * 6 }}
+      style={styles.screenHeader }
     >
       <StatusBar
         barStyle={'light-content'}
@@ -51,7 +51,7 @@ export default function HeaderBar ({ route, options, navigation, back, close, ri
           <Appbar.Action
             isLeading
             onPress={navigation.goBack}
-            icon={options.closeInsteadOfBack ? 'close' : 'arrow-left'}
+            icon={closeInsteadOfBack ? 'close' : 'arrow-left'}
             theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
           />
         ) : (

@@ -25,8 +25,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   let size
   if (width / fontScale < 340) size = 'xs'
   else if (width / fontScale < 400) size = 'sm'
-  else if (width / fontScale < 600) size = 'md'
-  else if (width / fontScale < 1000) size = 'lg'
+  else if (width / fontScale < 1000) size = 'md'
+  else if (width / fontScale < 1200) size = 'lg'
   else size = 'xl'
 
   const portrait = height > width
@@ -91,6 +91,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
 
     screen: {
       backgroundColor: theme.colors.background
+    },
+    screenHeader: {
+      height: oneSpace * 6
     },
     screenContainer: {
       backgroundColor: theme.colors.background
