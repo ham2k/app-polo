@@ -84,7 +84,6 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
         <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-          <Dialog.Icon icon="map-marker-radius" />
           <Dialog.Title style={{ textAlign: 'center' }}>Station Location</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">Enter a Maidenhead Grid Square Locator</Text>

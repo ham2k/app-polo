@@ -37,7 +37,6 @@ export function DeleteOperationDialog ({ operation, visible, settings, styles, o
   return (
     <Portal>
       <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-        <Dialog.Icon icon="delete" color={styles.theme.colors.error} />
         <Dialog.Title style={{ textAlign: 'center', color: styles.theme.colors.error }}>Delete operation?</Dialog.Title>
         <Dialog.Content>
           <Text variant="bodyMedium">Are you sure you want to delete this operation?</Text>

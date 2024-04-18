@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Searchbar } from 'react-native-paper'
+import { Searchbar } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
 import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
@@ -19,6 +19,7 @@ import { reportError } from '../../../App'
 import { Info } from './SOTAInfo'
 import { SOTAListItem } from './SOTAListItem'
 import { SOTAData } from './SOTADataFile'
+import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
 export function SOTAActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
@@ -133,7 +134,7 @@ export function SOTAActivityOptions (props) {
 
   return (
     <>
-      <List.Section title={title}>
+      <Ham2kListSection title={title}>
         {refData?.ref && (
           <SOTAListItem
             key={refData.ref}
@@ -146,7 +147,7 @@ export function SOTAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         )}
-      </List.Section>
+      </Ham2kListSection>
 
       <ListRow>
         <Searchbar
@@ -156,7 +157,7 @@ export function SOTAActivityOptions (props) {
         />
       </ListRow>
 
-      <List.Section title={resultsMessage}>
+      <Ham2kListSection title={resultsMessage}>
         {results.map((result) => (
           <SOTAListItem
             key={result.ref}
@@ -170,7 +171,7 @@ export function SOTAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </List.Section>
+      </Ham2kListSection>
     </>
   )
 }

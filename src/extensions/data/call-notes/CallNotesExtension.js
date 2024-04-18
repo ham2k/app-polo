@@ -15,6 +15,7 @@ import { selectExtensionSettings } from '../../../store/settings'
 import { List } from 'react-native-paper'
 import ManageCallNotesScreen from './screens/ManageCallNotesScreen'
 import { useSelector } from 'react-redux'
+import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
 export const Info = {
   key: 'call-notes',
@@ -57,7 +58,7 @@ const Extension = {
         key: 'call-notes-settings',
         category: 'data',
         SettingItem: ({ navigation, styles }) => (
-          <List.Item
+          <Ham2kListItem
             title="Callsign Notes"
             description={''}
             onPress={() => navigation.navigate('ExtensionScreen', { key: 'call-notes-settings' })}

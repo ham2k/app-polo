@@ -13,6 +13,7 @@ import { View } from 'react-native'
 import { Info } from './WWFFInfo'
 import { WWFFData } from './WWFFDataFile'
 import { fmtDistance } from '../../../tools/geoTools'
+import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
 export function WWFFListItem ({ activityRef, refData, operationRef, style, styles, settings, onPress, onAddReference, onRemoveReference }) {
   const reference = useMemo(() => {
@@ -20,7 +21,7 @@ export function WWFFListItem ({ activityRef, refData, operationRef, style, style
   }, [activityRef])
 
   return (
-    <List.Item style={{ paddingRight: styles.oneSpace * 1 }}
+    <Ham2kListItem style={{ paddingRight: styles.oneSpace * 1 }}
       title={
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
           <Text style={{ fontWeight: 'bold' }}>

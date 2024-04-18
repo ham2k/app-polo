@@ -7,13 +7,15 @@
 
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { List, Switch } from 'react-native-paper'
+import { Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
-
-import ScreenContainer from '../../components/ScreenContainer'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectSettings, setSettings } from '../../../store/settings'
 import { ADIF_MODES_AND_SUBMODES, BANDS, MAIN_MODES, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
+
+import { selectSettings, setSettings } from '../../../store/settings'
+import ScreenContainer from '../../components/ScreenContainer'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
 
 export default function BandModeSettingsScreen ({ navigation }) {
   const dispatch = useDispatch()
@@ -95,37 +97,35 @@ export default function BandModeSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          <List.Subheader>Bands</List.Subheader>
+        <Ham2kListSection title={'Bands'}>
           {bandOptions.map((band) => (
-            <List.Item
+            <Ham2kListItem
               key={band}
               title={band}
               right={() => <Switch value={settings.bands.includes(band)} onValueChange={(value) => setBand(band, value)} />}
               onPress={() => setBand(band, !settings.bands.includes(band))}
             />
           ))}
-          <List.Item
+          <Ham2kListItem
             title={moreBands ? 'Show common bands' : 'Show all bands'}
             onPress={() => setMoreBands(!moreBands)}
           />
-        </List.Section>
+        </Ham2kListSection>
 
-        <List.Section>
-          <List.Subheader>Modes</List.Subheader>
+        <Ham2kListSection title={'Modes'}>
           {modeOptions.map((mode) => (
-            <List.Item
+            <Ham2kListItem
               key={mode}
               title={mode}
               right={() => <Switch value={settings.modes.includes(mode)} onValueChange={(value) => setMode(mode, value)} />}
               onPress={() => setMode(mode, !settings.modes.includes(mode))}
             />
           ))}
-          <List.Item
+          <Ham2kListItem
             title={{ 0: 'Show more modes', 1: 'Show even more modes', 2: 'Show fewer modes' }[moreModes] ?? 'Show more modes'}
             onPress={() => setMoreModes(moreModes + 1 % 3)}
           />
-        </List.Section>
+        </Ham2kListSection>
       </ScrollView>
     </ScreenContainer>
   )

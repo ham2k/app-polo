@@ -13,6 +13,7 @@ import { View } from 'react-native'
 import { Info } from './SOTAInfo'
 import { SOTAData } from './SOTADataFile'
 import { fmtDistance } from '../../../tools/geoTools'
+import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
 export function SOTAListItem ({ activityRef, refData, operationRef, style, settings, styles, onPress, onAddReference, onRemoveReference }) {
   const reference = useMemo(() => {
@@ -20,7 +21,7 @@ export function SOTAListItem ({ activityRef, refData, operationRef, style, setti
   }, [activityRef])
 
   return (
-    <List.Item style={{ paddingRight: styles.oneSpace * 1 }}
+    <Ham2kListItem style={{ paddingRight: styles.oneSpace * 1 }}
       title={
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontWeight: 'bold' }}>

@@ -12,6 +12,8 @@ import { Linking, ScrollView } from 'react-native'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
 
 function prepareStyles (baseStyles) {
   return {
@@ -30,26 +32,25 @@ export default function CreditsSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          <List.Item title={'Created by Sebastián Delmont • KI2D'}
+        <Ham2kListSection>
+          <Ham2kListItem title={'Created by Sebastián Delmont • KI2D'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
           />
 
-          <List.Item title={'Ham2K PoLo is Open Source'}
+          <Ham2kListItem title={'Ham2K PoLo is Open Source'}
             description={'Check out the code and contribute on GitHub!'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="github" />}
             onPress={async () => await Linking.openURL('https://github.com/ham2k/app-polo')}
           />
 
-        </List.Section>
+        </Ham2kListSection>
 
-        <List.Section>
-          <List.Subheader>Team PoLo</List.Subheader>
-          <List.Item title={'Steve Hiscocks • M1SDH'}
+        <Ham2kListSection title={'Team PoLo'}>
+          <Ham2kListItem title={'Steve Hiscocks • M1SDH'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
           />
 
-        </List.Section>
+        </Ham2kListSection>
 
       </ScrollView>
     </ScreenContainer>

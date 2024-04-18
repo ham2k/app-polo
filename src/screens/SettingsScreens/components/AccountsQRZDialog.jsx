@@ -53,7 +53,6 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
         <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-          <Dialog.Icon icon="account" />
           <Dialog.Title style={{ textAlign: 'center' }}>QRZ.com Account</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">Please enter the details for your QRZ.com account:</Text>

@@ -6,11 +6,12 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
+
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings } from '../../../store/settings'
-import ScreenContainer from '../../components/ScreenContainer'
 import { findBestHook } from '../../../extensions/registry'
+import ScreenContainer from '../../components/ScreenContainer'
 
 export default function ExtensionScreen ({ navigation, route }) {
   const styles = useThemedStyles()

@@ -7,12 +7,12 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
-import { List } from 'react-native-paper'
 
 import { setOperationData } from '../../../store/operations'
 import { findRef, replaceRef } from '../../../tools/refTools'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 import { ListRow } from '../../../screens/components/ListComponents'
+import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
 /*
  NOTES:
@@ -179,7 +179,7 @@ export function ActivityOptions (props) {
   }, [dispatch, operation, ref])
 
   return (
-    <List.Section title={'Exchange Information'}>
+    <Ham2kListSection title={'Exchange Information'}>
       <ListRow>
         <ThemedTextInput
           style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
@@ -204,6 +204,6 @@ export function ActivityOptions (props) {
           onChangeText={(text) => handleChange({ location: text })}
         />
       </ListRow>
-    </List.Section>
+    </Ham2kListSection>
   )
 }

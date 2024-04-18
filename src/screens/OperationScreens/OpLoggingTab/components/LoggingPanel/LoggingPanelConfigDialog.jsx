@@ -14,6 +14,8 @@ import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
 import { findHooks } from '../../../../../extensions/registry'
+import { Ham2kListItem } from '../../../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../../../components/Ham2kListSection'
 
 export function LoggingPanelConfigDialog ({ visible, operation, settings, styles, onDialogDone }) {
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -70,9 +72,9 @@ export function LoggingPanelConfigDialog ({ visible, operation, settings, styles
           <Dialog.ScrollArea style={{ padding: 0, paddingHorizontal: styles.oneSpace, maxHeight: '80%' }}>
 
             <ScrollView>
-              <List.Section>
+              <Ham2kListSection>
                 {sortedControls.map(control => (
-                  <List.Item
+                  <Ham2kListItem
                     style={{ paddingTop: 20, margin: 0 }}
                     title={stringOrFunction(control.optionLabel ?? control.label ?? control.key, { operation, settings })}
                     description={stringOrFunction(control.optionDescription, { operation, settings })}
@@ -87,7 +89,7 @@ export function LoggingPanelConfigDialog ({ visible, operation, settings, styles
                     onPress={() => 1}
                   />
                 ))}
-              </List.Section>
+              </Ham2kListSection>
             </ScrollView>
           </Dialog.ScrollArea>
 

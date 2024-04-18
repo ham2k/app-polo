@@ -19,6 +19,8 @@ import { ListSeparator } from '../components/ListComponents'
 import { findBestHook } from '../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../extensions/core/references'
 import { selectSettings } from '../../store/settings'
+import { Ham2kListItem } from '../components/Ham2kListItem'
+import { Ham2kListSection } from '../components/Ham2kListSection'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -52,16 +54,16 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
       <ScrollView style={{ flex: 1 }}>
         {activity?.Options && <activity.Options operation={operation} styles={styles} settings={settings} />}
 
-        <List.Section>
+        <Ham2kListSection>
           <ListSeparator />
-          <List.Item
+          <Ham2kListItem
             title={`Remove ${activity?.shortName ?? activity?.name ?? handler?.name} from this operation`}
             titleStyle={{ color: styles.theme.colors.error }}
             // eslint-disable-next-line react/no-unstable-nested-components
             left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.oneSpace * 2 }} icon="delete" />}
             onPress={handleRemoveActivity}
           />
-        </List.Section>
+        </Ham2kListSection>
 
       </ScrollView>
     </ScreenContainer>

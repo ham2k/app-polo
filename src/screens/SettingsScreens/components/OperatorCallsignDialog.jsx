@@ -53,7 +53,6 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
         <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-          <Dialog.Icon icon="card-account-details" />
           <Dialog.Title style={{ textAlign: 'center' }}>Operator's Callsign</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">Please enter the operator's callsign:</Text>

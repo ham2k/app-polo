@@ -20,6 +20,8 @@ import { selectSettings } from '../../../store/settings'
 import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { LocationDialog } from './components/LocationDialog'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 
@@ -88,9 +90,9 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   return (
     <ScrollView style={{ flex: 1 }}>
-      <List.Section title={'Operation Details'}>
+      <Ham2kListSection title={'Operation Details'}>
 
-        <List.Item
+        <Ham2kListItem
           title="Station Callsign"
           description={operation.stationCall || `${settings.operatorCall} (operator)` }
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
@@ -106,7 +108,7 @@ export default function OpSettingsTab ({ navigation, route }) {
           />
         )}
 
-        <List.Item
+        <Ham2kListItem
           title="Location"
           description={operation.grid ? `Grid ${operation.grid}` : 'No location set'}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="map-marker-radius" />}
@@ -121,11 +123,11 @@ export default function OpSettingsTab ({ navigation, route }) {
             onDialogDone={() => setCurrentDialog('')}
           />
         )}
-      </List.Section>
+      </Ham2kListSection>
 
-      <List.Section title={'Activities'}>
+      <Ham2kListSection title={'Activities'}>
         {refHandlers.map((handler) => (
-          <List.Item
+          <Ham2kListItem
             key={handler.key}
             title={handler.name}
             description={(handler.description && handler.description(operation)) || handler.descriptionPlaceholder}
@@ -135,7 +137,7 @@ export default function OpSettingsTab ({ navigation, route }) {
             onPress={() => navigation.navigate('OperationActivityOptions', { operation: operation.uuid, activity: handler.key })}
           />
         ))}
-        <List.Item
+        <Ham2kListItem
           key="addActivity"
           title="Add Activity"
           disabled={activityHooks.length === 0}
@@ -144,10 +146,10 @@ export default function OpSettingsTab ({ navigation, route }) {
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="plus" />}
           onPress={() => navigation.navigate('OperationAddActivity', { operation: operation.uuid })}
         />
-      </List.Section>
+      </Ham2kListSection>
 
-      <List.Section title={'Operation Data'}>
-        <List.Item
+      <Ham2kListSection title={'Operation Data'}>
+        <Ham2kListItem
           title="Export Log Files"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
           onPress={() => handleExport()}
@@ -155,7 +157,7 @@ export default function OpSettingsTab ({ navigation, route }) {
           disabled={!(operation.qsoCount > 0)}
         />
         {settings.devMode && (
-          <List.Item
+          <Ham2kListItem
             title="Export QSON file"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
             titleStyle={{ color: styles.colors.devMode }}
@@ -165,10 +167,10 @@ export default function OpSettingsTab ({ navigation, route }) {
             disabled={!(operation.qsoCount > 0)}
           />
         )}
-      </List.Section>
+      </Ham2kListSection>
 
-      <List.Section titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
-        <List.Item
+      <Ham2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
+        <Ham2kListItem
           title="Delete Operation"
           titleStyle={{ color: styles.theme.colors.error }}
           left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.oneSpace * 2 }} icon="delete" />}
@@ -183,7 +185,7 @@ export default function OpSettingsTab ({ navigation, route }) {
             onDialogDone={() => setCurrentDialog('')}
           />
         )}
-      </List.Section>
+      </Ham2kListSection>
     </ScrollView>
 
   )

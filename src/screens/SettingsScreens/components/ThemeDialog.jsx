@@ -41,7 +41,6 @@ export function ThemeDialog ({ visible, settings, styles, onDialogDone }) {
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
         <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-          <Dialog.Icon icon={{ dark: 'weather-night', light: 'white-balance-sunny' }[value] || 'theme-light-dark'} />
           <Dialog.Title style={{ textAlign: 'center' }}>Theme</Dialog.Title>
           <Dialog.Content>
             <RadioButton.Group

@@ -15,6 +15,8 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { FlagsDialog } from '../components/FlagsDialog'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
 
 function prepareStyles (baseStyles) {
   return {
@@ -39,8 +41,8 @@ export default function LoggingSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          <List.Item title={'Country Flags'}
+        <Ham2kListSection>
+          <Ham2kListItem title={'Country Flags'}
             description={{ none: "Don't show any flags", all: 'Show flags for all contacts' }[settings.dxFlags] || 'Show only for DX contacts'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="flag" />}
             onPress={() => setCurrentDialog('flags')}
@@ -53,14 +55,14 @@ export default function LoggingSettingsScreen ({ navigation }) {
               onDialogDone={() => setCurrentDialog('')}
             />
           )}
-          <List.Item title={'State Field'}
+          <Ham2kListItem title={'State Field'}
             description={settings.showStateField ? 'Include State field in main exchange' : "Don't include State field" }
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="select-marker" />}
             right={() => <Switch value={!!settings.showStateField} onValueChange={(value) => dispatch(setSettings({ showStateField: value })) } />}
             onPress={() => dispatch(setSettings({ showStateField: !settings.showStateField }))}
           />
 
-          <List.Item
+          <Ham2kListItem
             title="Switch signal report order"
             description={!settings.switchSentRcvd ? 'Sent first, Rcvd second' : 'Rcvd first, Sent second'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="arrow-left-right" />}
@@ -68,7 +70,7 @@ export default function LoggingSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ switchSentRcvd: !settings.switchSentRcvd }))}
           />
 
-          <List.Item
+          <Ham2kListItem
             title="Jump to next field on RST entry"
             description={settings.jumpAfterRST ? 'Jump after RST is entered' : "Don't jump automatically" }
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="redo" />}
@@ -76,13 +78,13 @@ export default function LoggingSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ jumpAfterRST: !settings.jumpAfterRST }))}
           />
 
-          <List.Item
+          <Ham2kListItem
             title="Bands & Modes"
             description={[settings.bands.join(', '), settings.modes.join(', ')].join(' • ')}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="radio" />}
             onPress={() => navigation.navigate('BandModeSettings')}
           />
-        </List.Section>
+        </Ham2kListSection>
       </ScrollView>
     </ScreenContainer>
   )
