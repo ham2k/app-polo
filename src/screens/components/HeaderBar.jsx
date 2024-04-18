@@ -82,6 +82,7 @@ export default function HeaderBar ({ route, options, navigation, back, close, ti
             isLeading
             onPress={onRightActionPress}
             icon={rightAction}
+            size={styles.oneSpace * 2.5}
             theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
           />
         ) : (
