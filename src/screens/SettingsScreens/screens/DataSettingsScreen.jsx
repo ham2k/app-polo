@@ -11,24 +11,26 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Dialog, List, Portal, Text } from 'react-native-paper'
 import { KeyboardAvoidingView, ScrollView } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
-import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { getDataFileDefinitions, selectAllDataFileInfos } from '../../../store/dataFiles'
-import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { selectSettings } from '../../../store/settings'
-import { findHooks } from '../../../extensions/registry'
 import { countHistoricalRecords, importHistoricalADIF } from '../../../store/operations'
+import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats'
+import { findHooks } from '../../../extensions/registry'
 import { countTemplate } from '../../../tools/stringTools'
-import { fmtNumber } from '@ham2k/lib-format-tools'
+import ScreenContainer from '../../components/ScreenContainer'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
 
 const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
   const Icon = useMemo(() => (
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={def.icon ?? 'file-outline'} />
   ), [def.icon, styles])
   return (
-    <List.Item
+    <Ham2kListItem
       key={def.name}
       title={def.name}
       description={`Updated ${fmtDateTimeRelative(info?.date)}`}
@@ -137,8 +139,7 @@ export default function DataSettingsScreen ({ navigation }) {
       )}
 
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          <List.Subheader>Offline Data</List.Subheader>
+        <Ham2kListSection title={'Offline Data'}>
           {sortedDataFileDefinitions.map((def) => (
             <React.Fragment key={def.key}>
               <DataFileDefinitionItem def={def} settings={settings} info={dataFileInfos[def.key]} styles={styles} onPress={() => setSelectedDefinition(def.key)} />
@@ -154,25 +155,23 @@ export default function DataSettingsScreen ({ navigation }) {
               )}
             </React.Fragment>
           ))}
-        </List.Section>
+        </Ham2kListSection>
 
-        <List.Section>
-          <List.Subheader>Log Data</List.Subheader>
-          <List.Item
+        <Ham2kListSection title={'Log Data'}>
+          <Ham2kListItem
             title="Import History from ADIF"
             description={historicalCount && countTemplate(historicalCount, { zero: 'No records', one: '1 record', more: '{fmtCount} records' }, { fmtCount: fmtNumber(historicalCount) })}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="database-import-outline" />}
             onPress={handleImportHistoricalFile}
           />
-        </List.Section>
+        </Ham2kListSection>
 
         {extensionSettingHooks.length > 0 && (
-          <List.Section>
-            <List.Subheader>Extensions</List.Subheader>
+          <Ham2kListSection title={'Extensions'}>
             {extensionSettingHooks.map((hook) => (
               <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
             ))}
-          </List.Section>
+          </Ham2kListSection>
         )}
       </ScrollView>
     </ScreenContainer>

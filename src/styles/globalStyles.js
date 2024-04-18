@@ -175,6 +175,22 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       fontFamily: 'Roboto',
       color: theme.colors.onBackground
     },
+    list: {
+      section: {
+        fontSize: normalFontSize,
+        fontWeight: '500',
+        fontFamily: 'Roboto Slab Medium'
+      },
+      title: {
+        fontSize: normalFontSize,
+        fontWeight: '500',
+        fontFamily: 'Roboto Medium'
+      },
+      description: {
+        fontSize: normalFontSize,
+        paddingTop: halfSpace
+      }
+    },
     text: {
       numbers: {
         fontVariant: ['tabular-nums'],

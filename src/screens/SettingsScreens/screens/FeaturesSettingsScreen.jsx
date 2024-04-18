@@ -11,17 +11,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Dialog, List, Portal, Switch, Text } from 'react-native-paper'
 import { KeyboardAvoidingView, ScrollView } from 'react-native'
 
-import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { activateExtension, allExtensions, deactivateExtension } from '../../../extensions/registry'
 import { EXTENSION_CATEGORIES, EXTENSION_CATEGORIES_ORDER } from '../../../extensions/categories'
+import ScreenContainer from '../../components/ScreenContainer'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
 
 const FeatureItem = ({ extension, settings, info, styles, onChange }) => {
   const enabled = useMemo(() => settings[`extensions/${extension.key}`] ?? extension?.enabledByDefault, [settings, extension])
 
   return (
-    <List.Item
+    <Ham2kListItem
       key={extension.name}
       title={extension.name}
       description={extension.description}
@@ -92,12 +94,11 @@ export default function FeaturesSettingsScreen ({ navigation }) {
       )}
       <ScrollView style={{ flex: 1 }}>
         {featureGroups.map(({ category, label, extensions }) => (
-          <List.Section key={category}>
-            <List.Subheader>{label}</List.Subheader>
+          <Ham2kListSection title={label} key={category}>
             {extensions.map((extension) => (
               <FeatureItem key={extension.key} extension={extension} settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
             ))}
-          </List.Section>
+          </Ham2kListSection>
         ))}
 
       </ScrollView>

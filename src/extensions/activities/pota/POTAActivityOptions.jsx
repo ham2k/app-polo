@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Searchbar } from 'react-native-paper'
+import { Searchbar } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
 import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
@@ -20,6 +20,7 @@ import { reportError } from '../../../App'
 import { Info } from './POTAInfo'
 import { POTAAllParks } from './POTAAllParksData'
 import { POTAListItem } from './POTAListItem'
+import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
 export function POTAActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
@@ -136,7 +137,7 @@ export function POTAActivityOptions (props) {
 
   return (
     <>
-      <List.Section title={title}>
+      <Ham2kListSection title={title}>
         {refDatas.map((park, index) => (
           <POTAListItem
             key={park.ref}
@@ -150,7 +151,7 @@ export function POTAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </List.Section>
+      </Ham2kListSection>
 
       <ListRow>
         <Searchbar
@@ -160,7 +161,7 @@ export function POTAActivityOptions (props) {
         />
       </ListRow>
 
-      <List.Section title={parksMessage}>
+      <Ham2kListSection title={parksMessage}>
         {parks.map((park) => (
           <POTAListItem
             key={park.ref}
@@ -174,7 +175,7 @@ export function POTAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </List.Section>
+      </Ham2kListSection>
     </>
   )
 }

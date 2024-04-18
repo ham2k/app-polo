@@ -18,6 +18,8 @@ import { BUILT_IN_NOTES, CallNotes, CallNotesFiles, Info, createDataFileDefiniti
 import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
 import { registerDataFile, unRegisterDataFile } from '../../../../store/dataFiles'
 import { loadDataFile } from '../../../../store/dataFiles/actions/dataFileFS'
+import { Ham2kListItem } from '../../../../screens/components/Ham2kListItem'
+import { Ham2kListSection } from '../../../../screens/components/Ham2kListSection'
 
 const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDone }) => {
   const def = useMemo(() => extSettings.customFiles[index], [extSettings.customFiles, index])
@@ -122,10 +124,9 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          <List.Subheader>Builtin</List.Subheader>
+        <Ham2kListSection title={'Builtin'}>
           {BUILT_IN_NOTES.map(def => (
-            <List.Item
+            <Ham2kListItem
               key={def.name}
               title={def.name}
               description={def.description}
@@ -134,12 +135,11 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
               onPress={() => dispatch(setExtensionSettings({ key: Info.key, enabledLocations: { ...enabledLocations, [def.location]: !enabledLocations[def.location] } }))}
             />
           ))}
-        </List.Section>
+        </Ham2kListSection>
 
-        <List.Section>
-          <List.Subheader>Custom</List.Subheader>
+        <Ham2kListSection title="Custom">
           {customFiles.map((def, i) => (
-            <List.Item key={i}
+            <Ham2kListItem key={i}
               title={def.name}
               description={def.location}
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-account-outline" />}
@@ -148,7 +148,7 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
             />
           ))}
 
-          <List.Item
+          <Ham2kListItem
             title={'Add a new file'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="plus" />}
             onPress={() => {
@@ -157,7 +157,7 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
             }}
           />
 
-        </List.Section>
+        </Ham2kListSection>
         {selectedFile !== undefined && (
           <FileDefinitionDialog
             index={selectedFile}
@@ -167,14 +167,13 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
             onDialogDone={() => setSelectedFile(undefined)}
           />
         )}
-        <List.Section>
-          <List.Subheader>About Callsign Notes</List.Subheader>
+        <Ham2kListSection title={'About Callsign Notes'}>
           <Text style={{ marginHorizontal: styles.oneSpace * 2 }}>
             Callsign notes are stored on simple text files, one call per line followed by
             information you want shown in the logging screen. You can use the builtin files
             or add your own.
           </Text>
-        </List.Section>
+        </Ham2kListSection>
       </ScrollView>
     </ScreenContainer>
   )

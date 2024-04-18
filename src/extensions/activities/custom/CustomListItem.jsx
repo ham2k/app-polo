@@ -11,10 +11,11 @@ import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 
 import { Info } from './CustomInfo'
+import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
 export function CustomListItem ({ activityRef, style, styles, onPress, onRemoveReference }) {
   return (
-    <List.Item style={{ paddingRight: styles.oneSpace * 1 }}
+    <Ham2kListItem style={{ paddingRight: styles.oneSpace * 1 }}
       title={
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontWeight: 'bold' }}>

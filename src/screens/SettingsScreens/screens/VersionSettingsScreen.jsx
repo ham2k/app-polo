@@ -19,6 +19,8 @@ import Markdown from 'react-native-markdown-display'
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { ListRow } from '../../components/ListComponents'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
 
 function prepareStyles (baseStyles) {
   return {
@@ -45,15 +47,15 @@ export default function VersionSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          <List.Item title={`Version ${packageJson.version}`}
+        <Ham2kListSection>
+          <Ham2kListItem title={`Version ${packageJson.version}`}
             description={`Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
             left={VersionIcon}
           />
 
-        </List.Section>
-        <List.Section>
-          <List.Item title={'Recent Changes'}
+        </Ham2kListSection>
+        <Ham2kListSection>
+          <Ham2kListItem title={'Recent Changes'}
             left={NewsIcon}
           />
           {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
@@ -69,7 +71,7 @@ ${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
             </ListRow>
           ))}
 
-        </List.Section>
+        </Ham2kListSection>
 
       </ScrollView>
     </ScreenContainer>

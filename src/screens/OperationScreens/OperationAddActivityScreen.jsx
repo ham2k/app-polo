@@ -16,6 +16,8 @@ import { selectOperation, setOperationData } from '../../store/operations'
 import { replaceRefs } from '../../tools/refTools'
 import { StackActions } from '@react-navigation/native'
 import { findHooks } from '../../extensions/registry'
+import { Ham2kListItem } from '../components/Ham2kListItem'
+import { Ham2kListSection } from '../components/Ham2kListSection'
 
 export default function OperationAddActivityScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -39,9 +41,9 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
+        <Ham2kListSection>
           {findHooks('activity').map((activity) => (
-            <List.Item
+            <Ham2kListItem
               key={activity.key}
               title={activity.name}
               // eslint-disable-next-line react/no-unstable-nested-components
@@ -49,7 +51,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
               onPress={() => addActivity(activity)}
             />
           ))}
-        </List.Section>
+        </Ham2kListSection>
 
       </ScrollView>
     </ScreenContainer>

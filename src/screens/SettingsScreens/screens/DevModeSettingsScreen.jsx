@@ -9,15 +9,17 @@
 import React, { useCallback } from 'react'
 import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import DocumentPicker from 'react-native-document-picker'
 import Share from 'react-native-share'
 
-import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { useDispatch, useSelector } from 'react-redux'
+import { loadQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
 import { generateExport, importQSON, selectOperationsList } from '../../../store/operations'
-import { loadQSOs } from '../../../store/qsos'
+import ScreenContainer from '../../components/ScreenContainer'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
 
 function prepareStyles (baseStyles) {
   return {
@@ -75,23 +77,22 @@ export default function DevModeSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          <List.Subheader>Data</List.Subheader>
-          <List.Item
+        <Ham2kListSection title={'Data'}>
+          <Ham2kListItem
             title="Export all operation data"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleExportFiles}
           />
-          <List.Item
+          <Ham2kListItem
             title="Import QSON file"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-download" color={styles.colors.devMode} />}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleImportFiles}
           />
-        </List.Section>
+        </Ham2kListSection>
       </ScrollView>
     </ScreenContainer>
   )
