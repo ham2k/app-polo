@@ -46,7 +46,6 @@ export function StationCallsignDialog ({ operation, visible, settings, styles, o
     <Portal>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
         <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-          <Dialog.Icon icon="card-account-details" />
           <Dialog.Title style={{ textAlign: 'center' }}>Station's Callsign</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">Enter a Station Callsign, if different from the current operator {settings?.operatorCall}</Text>
