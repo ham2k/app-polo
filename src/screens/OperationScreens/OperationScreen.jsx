@@ -63,10 +63,10 @@ export default function OperationScreen (props) {
   const dimensions = useWindowDimensions()
 
   const splitView = useMemo(() => {
-    return styles.lgOrGreater
-  }, [styles?.lgOrGreater])
+    return !settings.dontSplitViews && (dimensions.width / styles.oneSpace > 95)
+  }, [dimensions?.width, styles?.oneSpace, settings?.dontSplitViews])
 
-  const [splitWidth] = useState(splitView ? dimensions.width - styles.oneSpace * 40 : dimensions.width)
+  const [splitWidth] = useState(splitView ? Math.max(dimensions.width * 0.60, dimensions.width - styles.oneSpace * 40) : dimensions.width)
 
   if (splitView) {
     return (
