@@ -5,60 +5,25 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { reportError } from '../../../App'
-
-import { fmtFreqInMHz } from '../../../tools/frequencyFormats'
-import { fmtDateTimeRelative } from '../../../tools/timeFormats'
+import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
+import { fmtDateTimeRelative } from '../../../../../../tools/timeFormats'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectSecondsTick } from '../../../store/time'
-import ThemedButton from '../../../screens/components/ThemedButton'
-import { setOperationData } from '../../../store/operations'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
+import { selectSecondsTick } from '../../../../../../store/time'
+import { View } from 'react-native'
+import { Badge, Icon } from 'react-native-paper'
+import ThemedButton from '../../../../../components/ThemedButton'
 
-import packageJson from '../../../../package.json'
-import { filterRefs } from '../../../tools/refTools'
-import { selectRuntimeOnline } from '../../../store/runtime'
+import ThemedTextInput from '../../../../../components/ThemedTextInput'
+import { selectRuntimeOnline } from '../../../../../../store/runtime'
+import { findHooks } from '../../../../../../extensions/registry'
+import { findRef } from '../../../../../../tools/refTools'
+import { setOperationData } from '../../../../../../store/operations'
 
 const MINUTES_UNTIL_RESPOT = 5
 
-const postSpot = (operation, comments) => async (dispatch, getState) => {
-  const state = getState()
-  const call = operation.stationCall || state.settings.operatorCall
-
-  const refs = filterRefs(operation, 'potaActivation')
-  for (const ref of refs) {
-    try {
-      const response = await fetch('https://api.pota.app/spot', {
-        method: 'POST',
-        headers: { 'User-Agent': `Ham2K Portable Logger/${packageJson.version}` },
-        body: JSON.stringify({
-          activator: call,
-          spotter: call,
-          frequency: operation.freq,
-          reference: ref.ref,
-          mode: operation.mode,
-          source: 'Ham2K Portable Logger',
-          comments
-        })
-      })
-      if (response.status === 200) {
-        // const body = await response.text()
-        // console.log(body)
-      } else {
-        const body = await response.text()
-        reportError('POTA Spotter http error', response, body)
-      }
-    } catch (error) {
-      reportError('POTA Spotter error', error)
-    }
-  }
-
-  dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: operation.freq }))
-}
-
-export function POTASpotterControl (props) {
+export function SpotterControlInputs (props) {
   const { operation, styles } = props
 
   const online = useSelector(selectRuntimeOnline)
@@ -112,22 +77,34 @@ export function POTASpotterControl (props) {
     }
   }, [operation?.freq, operation?.spottedFreq, operation?.spottedAt, operation, now, comments])
 
+  const activityHooksWithSpot = useMemo(() =>
+    findHooks('activity').filter((x) => (findRef(operation.refs, x.activationType) && x.postSpot))
+  , [operation.refs])
+
   const handleSpotting = useCallback(() => {
-    dispatch(postSpot(operation, comments))
+    activityHooksWithSpot.forEach(hook => dispatch(hook.postSpot(operation, comments)))
+    dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: operation.freq }))
     setComments(undefined)
-  }, [dispatch, operation, comments])
+  }, [dispatch, operation, comments, activityHooksWithSpot])
 
   return (
     <>
-      <ThemedButton
-        themeColor="tertiaryLighter"
-        mode="contained"
-        icon={online ? 'hand-wave' : 'cloud-off-outline'}
-        onPress={handleSpotting}
-        disabled={!online || spotterUI.disabled}
-      >
-        {spotterUI.message}
-      </ThemedButton>
+      <View>
+        <ThemedButton
+          themeColor="tertiaryLighter"
+          mode="contained"
+          icon={online ? 'hand-wave' : 'cloud-off-outline'}
+          onPress={handleSpotting}
+          disabled={!online || spotterUI.disabled}
+        >
+          {spotterUI.message}
+        </ThemedButton>
+        {activityHooksWithSpot.map((x, n) => (
+          <Badge key={`${x.key}/badge`} style={{ position: 'absolute', top: -8, right: -4 + (n * 23), backgroundColor: styles.colors.tertiaryLight }}>
+            <Icon key={`${x.key}/icon`} source={x.icon} size={styles.oneSpace * 2} color={styles.colors.onTertiaryLight} />
+          </Badge>
+        ))}
+      </View>
       <ThemedTextInput
         innerRef={ref}
         style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace }}
@@ -137,4 +114,16 @@ export function POTASpotterControl (props) {
       />
     </>
   )
+}
+
+export const spotterControl = {
+  key: 'spotter',
+  order: 11,
+  icon: 'hand-wave',
+  label: ({ operation, qso }) => {
+    return 'Spotting'
+  },
+  InputComponent: SpotterControlInputs,
+  inputWidthMultiplier: 40,
+  optionType: 'mandatory'
 }
