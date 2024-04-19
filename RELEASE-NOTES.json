@@ -1,9 +1,12 @@
 {
-  "0.7.5-pre1": {
+  "0.7.5-pre2": {
     "changes": [
       "PoLo is now officialy Open Source",
       "Theme tweaks",
-      "Use a split screen for operations on tablets"
+      "Use a split screen for operations on tablets",
+      "Support for spotting multiple activities at once (contributed by M1SDH)",
+      "WWFF Spotting (contributed by M1SDH)",
+      "Worked All Britain Squares (contributed by M1SDH)"
     ]
   },
   "0.7.4": {
