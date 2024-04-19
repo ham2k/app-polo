@@ -32,6 +32,7 @@ export default function OperationScreen (props) {
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
+  const suggestedQSO = route?.params?.qso
   const settings = useSelector(selectSettings)
 
   useEffect(() => { // Ensure the clock is ticking
@@ -79,11 +80,10 @@ export default function OperationScreen (props) {
                 height: '100%',
                 borderColor: styles.colors.primary,
                 borderRightWidth: styles.oneSpace
-
               }}
             >
               <HeaderBar options={headerOptions} navigation={navigation} back={true} />
-              <OpLoggingTab navigation={navigation} route={{ params: { operation } }} />
+              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView } }} />
             </View>
             <SafeAreaView
               edges={['top']}
@@ -114,22 +114,24 @@ export default function OperationScreen (props) {
                 <Tab.Screen
                   name="Spots"
                   component={OpSpotsTab}
-                  initialParams={{ uuid: operation.uuid, operation }}
-                  screenOptions={ { lazy: true }}
+                  initialParams={{ uuid: operation.uuid, operation, splitView }}
+                  screenOptions={{ lazy: true }}
                 />
 
                 <Tab.Screen
                   name="Map"
                   component={OpMapTab}
-                  initialParams={{ uuid: operation.uuid, operation }}
-                  screenOptions={ { lazy: true }}
+                  initialParams={{ uuid: operation.uuid, operation, splitView }}
+                  screenOptions={{ lazy: true }}
+                  splitView={splitView}
                 />
 
                 <Tab.Screen
                   name="Settings"
                   options={{ title: 'Info' }}
                   component={OpSettingsTab}
-                  initialParams={{ uuid: operation.uuid, operation }}
+                  initialParams={{ uuid: operation.uuid, operation, splitView }}
+                  splitView={splitView}
                 />
 
               </Tab.Navigator>

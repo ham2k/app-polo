@@ -99,12 +99,12 @@ function MainApp ({ navigationTheme }) {
           />
 
           <Stack.Screen name="Operation"
-            options={{ title: 'Operation', header: () => null, headerBackTitle: 'Home', closeInsteadOfBack: true }}
+            options={{ title: 'Operation', headerShown: false, headerBackTitle: 'Home', closeInsteadOfBack: true }}
             component={OperationScreen}
           />
 
           <Stack.Screen name="OperationBadgeScreen"
-            options={{ headerMode: 'none', header: () => null }}
+            options={{ headerMode: 'none', headerShown: false }}
             component={OperationBadgeScreen}
           />
 
