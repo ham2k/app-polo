@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
 import { View } from 'react-native'
 import { setSystemFlag } from '../../../store/system'
+import { Ham2kDialog } from '../../components/Ham2kDialog'
 
 export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const dispatch = useDispatch()
@@ -36,7 +37,7 @@ export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPreviou
   }, [onDialogPrevious])
 
   return (
-    <Dialog visible={true} dismissable={false}>
+    <Ham2kDialog visible={true} dismissable={false}>
       <Dialog.Title style={{ textAlign: 'center' }}>Data & Privacy</Dialog.Title>
       <Dialog.Content>
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'left', marginBottom: styles.oneSpace * 2, marginTop: styles.oneSpace * 2 }}>
@@ -63,6 +64,6 @@ export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPreviou
         <Button onPress={handlePrevious}>{previousLabel ?? 'Back'}</Button>
         <Button onPress={handleNext}>{nextLabel ?? 'Next'}</Button>
       </Dialog.Actions>
-    </Dialog>
+    </Ham2kDialog>
   )
 }

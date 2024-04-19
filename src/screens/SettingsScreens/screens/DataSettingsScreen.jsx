@@ -8,8 +8,8 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Dialog, List, Portal, Text } from 'react-native-paper'
-import { KeyboardAvoidingView, ScrollView } from 'react-native'
+import { Button, Dialog, List, Text } from 'react-native-paper'
+import { ScrollView } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
@@ -24,6 +24,7 @@ import { countTemplate } from '../../../tools/stringTools'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { Ham2kDialog } from '../../components/Ham2kDialog'
 
 const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
   const Icon = useMemo(() => (
@@ -48,32 +49,28 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
   }, [def.key, dispatch])
 
   return (
-    <Portal>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-        <Dialog visible={true} onDismiss={onDialogDone}>
-          <Dialog.Title style={{ textAlign: 'center' }}>{def.name}</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{def.description}</Text>
-          </Dialog.Content>
-          <Dialog.Content>
-            {info?.status === 'fetching' ? (
-              <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Fetching...</Text>
-            ) : (
-              <>
-                <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Updated on {fmtDateTimeNice(info?.date)}</Text>
-                {info?.version && (
-                  <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Version: {info.version}</Text>
-                )}
-              </>
+    <Ham2kDialog visible={true} onDismiss={onDialogDone}>
+      <Dialog.Title style={{ textAlign: 'center' }}>{def.name}</Dialog.Title>
+      <Dialog.Content>
+        <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{def.description}</Text>
+      </Dialog.Content>
+      <Dialog.Content>
+        {info?.status === 'fetching' ? (
+          <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Fetching...</Text>
+        ) : (
+          <>
+            <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Updated on {fmtDateTimeNice(info?.date)}</Text>
+            {info?.version && (
+              <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Version: {info.version}</Text>
             )}
-          </Dialog.Content>
-          <Dialog.Actions style={{ justifyContent: 'space-between' }}>
-            <Button onPress={handleRefresh} disabled={info?.status === 'fetching'}>Refresh</Button>
-            <Button onPress={onDialogDone}>Done</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </KeyboardAvoidingView>
-    </Portal>
+          </>
+        )}
+      </Dialog.Content>
+      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
+        <Button onPress={handleRefresh} disabled={info?.status === 'fetching'}>Refresh</Button>
+        <Button onPress={onDialogDone}>Done</Button>
+      </Dialog.Actions>
+    </Ham2kDialog>
   )
 }
 
@@ -126,15 +123,11 @@ export default function DataSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       {loadingHistoricalMessage && (
-        <Portal>
-          <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-            <Dialog visible={true}>
-              <Dialog.Content>
-                <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{loadingHistoricalMessage}</Text>
-              </Dialog.Content>
-            </Dialog>
-          </KeyboardAvoidingView>
-        </Portal>
+        <Ham2kDialog visible={true}>
+          <Dialog.Content>
+            <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{loadingHistoricalMessage}</Text>
+          </Dialog.Content>
+        </Ham2kDialog>
       )}
 
       <ScrollView style={{ flex: 1 }}>

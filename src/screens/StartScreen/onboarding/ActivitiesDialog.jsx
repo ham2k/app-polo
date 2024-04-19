@@ -10,6 +10,7 @@ import { Button, Dialog, Switch, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
 import { View } from 'react-native'
+import { Ham2kDialog } from '../../components/Ham2kDialog'
 
 export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const dispatch = useDispatch()
@@ -34,7 +35,7 @@ export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrev
   }, [onDialogPrevious])
 
   return (
-    <Dialog visible={true} dismissable={false}>
+    <Ham2kDialog visible={true} dismissable={false}>
       <Dialog.Title style={{ textAlign: 'center' }}>Favorite Activities</Dialog.Title>
       <Dialog.Content>
         <Text style={{ fontSize: styles.normalFontSize, marginBottom: styles.oneSpace * 2, textAlign: 'center' }}>Are you interested in any of these popular activation programs?</Text>
@@ -62,6 +63,6 @@ export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrev
         <Button onPress={handlePrevious}>{previousLabel ?? 'Back'}</Button>
         <Button onPress={handleNext}>{nextLabel ?? 'Continue'}</Button>
       </Dialog.Actions>
-    </Dialog>
+    </Ham2kDialog>
   )
 }
