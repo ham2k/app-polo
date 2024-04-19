@@ -6,27 +6,118 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { List, Text } from 'react-native-paper'
-import { Linking, ScrollView } from 'react-native'
+import { Linking, ScrollView, useWindowDimensions, View } from 'react-native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import packageJson from '../../../../package.json'
 
 import { selectSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
-import { OperatorCallsignDialog } from '../components/OperatorCallsignDialog'
-import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kListSubheader } from '../../components/Ham2kListSubheader'
+import ScreenContainer from '../../components/ScreenContainer'
+import HeaderBar from '../../components/HeaderBar'
+
+import { OperatorCallsignDialog } from '../components/OperatorCallsignDialog'
+import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
+
+import BandModeSettingsScreen from './BandModeSettingsScreen'
+import CreditsSettingsScreen from './CreditsSettingsScreen'
+import DataSettingsScreen from './DataSettingsScreen'
+import DevModeSettingsScreen from './DevModeSettingsScreen'
+import ExtensionScreen from './ExtensionScreen'
+import FeaturesSettingsScreen from './FeaturesSettingsScreen'
+import GeneralSettingsScreen from './GeneralSettingsScreen'
+import LoggingSettingsScreen from './LoggingSettingsScreen'
+import VersionSettingsScreen from './VersionSettingsScreen'
+
+const Stack = createNativeStackNavigator()
 
 export default function MainSettingsScreen ({ navigation }) {
   const styles = useThemedStyles()
 
   const settings = useSelector(selectSettings)
 
+  const headerOptions = useMemo(() => {
+    let options = {}
+    options = { title: 'Settings' }
+    options.closeInsteadOfBack = true
+    return options
+  }, [])
+
+  const dimensions = useWindowDimensions()
+
+  const splitView = useMemo(() => {
+    return !settings.dontSplitViews && (dimensions.width / styles.oneSpace > 95)
+  }, [dimensions?.width, styles?.oneSpace, settings?.dontSplitViews])
+
+  const [splitWidth] = useState(splitView ? Math.max(dimensions.width * 0.40, styles.oneSpace * 40) : dimensions.width)
+
+  if (splitView) {
+    return (
+      <>
+        <ScreenContainer>
+          <View style={{ height: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'stretch' }}>
+            <View
+              style={{
+                width: splitWidth,
+                height: '100%',
+                borderColor: styles.colors.primary,
+                borderRightWidth: styles.oneSpace
+              }}
+            >
+              <HeaderBar options={headerOptions} navigation={navigation} back={true} />
+              <MainSettingsOptions settings={settings} styles={styles} navigation={navigation} />
+            </View>
+            <View
+              style={{
+                backgroundColor: styles.colors.primary,
+                flex: 1,
+                height: '100%',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'stretch'
+              }}
+            >
+              <Stack.Navigator
+                id="SettingsNavigator"
+                initialRouteName={'GeneralSettings'}
+                screenOptions={{
+                  header: HeaderBar,
+                  animation: 'slide_from_right'
+                }}
+              >
+                {settingsScreensArray({ includeMain: false, topLevelBack: false })}
+              </Stack.Navigator>
+            </View>
+          </View>
+        </ScreenContainer>
+      </>
+    )
+  } else {
+    return (
+      <ScreenContainer>
+        <Stack.Navigator
+          id="SettingsNavigator"
+          initialRouteName={'MainSettings'}
+          screenOptions={{
+            header: HeaderBar,
+            animation: 'slide_from_right'
+          }}
+        >
+          {settingsScreensArray({ includeMain: true, topLevelBack: true })}
+        </Stack.Navigator>
+      </ScreenContainer>
+    )
+  }
+}
+
+function MainSettingsOptions ({ settings, styles, navigation }) {
   const [currentDialog, setCurrentDialog] = useState()
 
   return (
@@ -154,4 +245,78 @@ export default function MainSettingsScreen ({ navigation }) {
       </Ham2kListSection>
     </ScrollView>
   )
+}
+
+function MainSettingsOptionsScreen ({ navigation }) {
+  const styles = useThemedStyles()
+  const settings = useSelector(selectSettings)
+
+  return (
+    <MainSettingsOptions
+      navigation={navigation}
+      settings={settings}
+      styles={styles}
+    />
+  )
+}
+
+function settingsScreensArray ({ includeMain, topLevelBack }) {
+  const screens = [
+    <Stack.Screen name="GeneralSettings" key="GeneralSettings"
+      options={{ title: 'General Settings', headerBackVisible: topLevelBack }}
+      component={GeneralSettingsScreen}
+    />,
+
+    <Stack.Screen name="LoggingSettings" key="LoggingSettings"
+      options={{ title: 'Logging Settings', headerBackVisible: topLevelBack }}
+      component={LoggingSettingsScreen}
+    />,
+
+    <Stack.Screen name="FeaturesSettings" key="FeaturesSettings"
+      options={{ title: 'App Features', headerBackVisible: topLevelBack }}
+      component={FeaturesSettingsScreen}
+    />,
+
+    <Stack.Screen name="DataSettings" key="DataSettings"
+      options={{ title: 'Data Settings', headerBackVisible: topLevelBack }}
+      component={DataSettingsScreen}
+    />,
+
+    <Stack.Screen name="VersionSettings" key="VersionSettings"
+      options={{ title: 'Version Information', headerBackVisible: topLevelBack }}
+      component={VersionSettingsScreen}
+    />,
+
+    <Stack.Screen name="CreditsSettings" key="CreditsSettings"
+      options={{ title: 'Credits', headerBackVisible: topLevelBack }}
+      component={CreditsSettingsScreen}
+    />,
+
+    <Stack.Screen name="DevModeSettings" key="DevModeSettings"
+      options={{ title: 'Developer Settings', headerBackVisible: topLevelBack }}
+      component={DevModeSettingsScreen}
+    />,
+
+    <Stack.Screen name="BandModeSettings" key="BandModeSettings"
+      options={{ title: 'Bands & Modes' }}
+      component={BandModeSettingsScreen}
+    />,
+
+    <Stack.Screen name="ExtensionScreen" key="ExtensionScreen"
+      options={{ title: 'Extension' }}
+      component={ExtensionScreen}
+    />
+
+  ]
+
+  if (includeMain) {
+    screens.unshift(
+      <Stack.Screen name="MainSettingsOptions" key="MainSettings"
+        options={{ title: 'Settings' }}
+        component={MainSettingsOptionsScreen}
+      />
+    )
+  }
+
+  return screens
 }

@@ -13,7 +13,7 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
-export default function HeaderBar ({ route, options, navigation, back, close, title, subTitle, rightAction, closeInsteadOfBack, onRightActionPress }) {
+export default function HeaderBar ({ route, options, navigation, back, close, title, subTitle, rightAction, headerBackVisible, closeInsteadOfBack, onRightActionPress }) {
   const styles = useThemedStyles()
 
   title = title || options?.title
@@ -21,6 +21,7 @@ export default function HeaderBar ({ route, options, navigation, back, close, ti
   rightAction = rightAction ?? options?.rightAction
   onRightActionPress = onRightActionPress ?? options?.onRightActionPress
   closeInsteadOfBack = closeInsteadOfBack ?? options?.closeInsteadOfBack
+  headerBackVisible = headerBackVisible ?? options?.headerBackVisible ?? true
 
   if (closeInsteadOfBack) {
     close = back
@@ -47,15 +48,17 @@ export default function HeaderBar ({ route, options, navigation, back, close, ti
       />
 
       <View flexDirection="row" justifyContent="flex-start" style={{ flex: 0, width: sidesWidth }}>
-        {back ? (
-          <Appbar.Action
-            isLeading
-            onPress={navigation.goBack}
-            icon={closeInsteadOfBack ? 'close' : 'arrow-left'}
-            theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
-          />
-        ) : (
-          <Text style={[styles.screenTitleLight, { marginLeft: styles.oneSpace }]} numberOfLines={1} adjustsFontSizeToFit={true}>Ham2K</Text>
+        {headerBackVisible && (
+          back ? (
+            <Appbar.Action
+              isLeading
+              onPress={navigation.goBack}
+              icon={closeInsteadOfBack ? 'close' : 'arrow-left'}
+              theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
+            />
+          ) : (
+            <Text style={[styles.screenTitleLight, { marginLeft: styles.oneSpace }]} numberOfLines={1} adjustsFontSizeToFit={true}>Ham2K</Text>
+          )
         )}
       </View>
 
