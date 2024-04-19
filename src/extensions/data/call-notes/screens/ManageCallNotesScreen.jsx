@@ -8,8 +8,8 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Dialog, List, Portal, Switch, Text } from 'react-native-paper'
-import { KeyboardAvoidingView, ScrollView } from 'react-native'
+import { Button, Dialog, List, Switch, Text } from 'react-native-paper'
+import { ScrollView } from 'react-native'
 
 import ScreenContainer from '../../../../screens/components/ScreenContainer'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
@@ -20,6 +20,7 @@ import { registerDataFile, unRegisterDataFile } from '../../../../store/dataFile
 import { loadDataFile } from '../../../../store/dataFiles/actions/dataFileFS'
 import { Ham2kListItem } from '../../../../screens/components/Ham2kListItem'
 import { Ham2kListSection } from '../../../../screens/components/Ham2kListSection'
+import { Ham2kDialog } from '../../../../screens/components/Ham2kDialog'
 
 const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDone }) => {
   const def = useMemo(() => extSettings.customFiles[index], [extSettings.customFiles, index])
@@ -66,34 +67,30 @@ const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDo
   }, [onDialogDone, def, dispatch, originalDef])
 
   return (
-    <Portal>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-        <Dialog visible={true} onDismiss={onDialogDone}>
-          <Dialog.Title style={{ textAlign: 'center' }}>Callsign Notes File</Dialog.Title>
-          <Dialog.Content>
-            <ThemedTextInput
-              label="Name"
-              value={def.name ?? ''}
-              placeholder={'Name for your Callsign Notes File'}
-              onChangeText={(value) => updateDef({ name: value }) }
-              style={{ marginBottom: styles.oneSpace }}
-            />
-            <ThemedTextInput
-              label="Location"
-              value={def.location ?? ''}
-              inputMode={'url'}
-              multiline={true}
-              placeholder={'https://example.com/dir/notes.txt'}
-              onChangeText={(value) => updateDef({ location: value }) }
-            />
-          </Dialog.Content>
-          <Dialog.Actions style={{ justifyContent: 'space-between' }}>
-            <Button onPress={handleDelete}>Delete</Button>
-            <Button onPress={handleDone}>Done</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </KeyboardAvoidingView>
-    </Portal>
+    <Ham2kDialog visible={true} onDismiss={onDialogDone}>
+      <Dialog.Title style={{ textAlign: 'center' }}>Callsign Notes File</Dialog.Title>
+      <Dialog.Content>
+        <ThemedTextInput
+          label="Name"
+          value={def.name ?? ''}
+          placeholder={'Name for your Callsign Notes File'}
+          onChangeText={(value) => updateDef({ name: value }) }
+          style={{ marginBottom: styles.oneSpace }}
+        />
+        <ThemedTextInput
+          label="Location"
+          value={def.location ?? ''}
+          inputMode={'url'}
+          multiline={true}
+          placeholder={'https://example.com/dir/notes.txt'}
+          onChangeText={(value) => updateDef({ location: value }) }
+        />
+      </Dialog.Content>
+      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
+        <Button onPress={handleDelete}>Delete</Button>
+        <Button onPress={handleDone}>Done</Button>
+      </Dialog.Actions>
+    </Ham2kDialog>
   )
 }
 

@@ -87,6 +87,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   }, [operation?.refs])
 
   const activityHooks = useMemo(() => findHooks('activity'), [])
+  const opSettingsHooks = useMemo(() => findHooks('opSetting'), [])
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -123,6 +124,10 @@ export default function OpSettingsTab ({ navigation, route }) {
             onDialogDone={() => setCurrentDialog('')}
           />
         )}
+
+        {opSettingsHooks.filter(hook => hook.category === 'detail').map((hook) => (
+          <hook.OpSettingItem key={hook.key} operation={operation} styles={styles} settings={settings} />
+        ))}
       </Ham2kListSection>
 
       <Ham2kListSection title={'Activities'}>

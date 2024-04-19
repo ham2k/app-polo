@@ -6,10 +6,11 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, Portal, RadioButton, Text } from 'react-native-paper'
+import { Button, Dialog, RadioButton, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
-import { KeyboardAvoidingView, View } from 'react-native'
+import { View } from 'react-native'
+import { Ham2kDialog } from '../../components/Ham2kDialog'
 
 export function ThemeDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
@@ -38,35 +39,31 @@ export function ThemeDialog ({ visible, settings, styles, onDialogDone }) {
   }, [settings, onDialogDone])
 
   return (
-    <Portal>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-        <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-          <Dialog.Title style={{ textAlign: 'center' }}>Theme</Dialog.Title>
-          <Dialog.Content>
-            <RadioButton.Group
-              onValueChange={(v) => setValue(v)}
-              value={value}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <RadioButton value="light" />
-                <Text onPress={() => setValue('light')} style={styles.rowText}>Always in Light Mode</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <RadioButton value="dark" />
-                <Text onPress={() => setValue('dark')} style={styles.rowText}>Always in Dark Mode</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <RadioButton value="auto" />
-                <Text onPress={() => setValue('auto')} style={styles.rowText}>Same as Device Theme</Text>
-              </View>
-            </RadioButton.Group>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={handleCancel}>Cancel</Button>
-            <Button onPress={handleAccept}>Ok</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </KeyboardAvoidingView>
-    </Portal>
+    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
+      <Dialog.Title style={{ textAlign: 'center' }}>Theme</Dialog.Title>
+      <Dialog.Content>
+        <RadioButton.Group
+          onValueChange={(v) => setValue(v)}
+          value={value}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <RadioButton value="light" />
+            <Text onPress={() => setValue('light')} style={styles.rowText}>Always in Light Mode</Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <RadioButton value="dark" />
+            <Text onPress={() => setValue('dark')} style={styles.rowText}>Always in Dark Mode</Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <RadioButton value="auto" />
+            <Text onPress={() => setValue('auto')} style={styles.rowText}>Same as Device Theme</Text>
+          </View>
+        </RadioButton.Group>
+      </Dialog.Content>
+      <Dialog.Actions>
+        <Button onPress={handleCancel}>Cancel</Button>
+        <Button onPress={handleAccept}>Ok</Button>
+      </Dialog.Actions>
+    </Ham2kDialog>
   )
 }

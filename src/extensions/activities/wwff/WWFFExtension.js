@@ -12,6 +12,7 @@ import { Info } from './WWFFInfo'
 import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
+import { WWFFPostSpot } from './WWFFPostSpot'
 
 const Extension = {
   ...Info,
@@ -40,6 +41,7 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
+  postSpot: WWFFPostSpot,
   Options: WWFFActivityOptions,
 
   includeControlForQSO: ({ qso, operation }) => {

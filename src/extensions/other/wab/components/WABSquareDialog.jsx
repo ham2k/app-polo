@@ -9,22 +9,21 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Dialog, Text, TouchableRipple } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
-import { locationToGrid } from '@ham2k/lib-maidenhead-grid'
 
 import { setOperationData } from '../../../../store/operations'
-import ThemedTextInput from '../../../components/ThemedTextInput'
-import { reportError } from '../../../../App'
-import { Ham2kDialog } from '../../../components/Ham2kDialog'
+import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
+import { Ham2kDialog } from '../../../../screens/components/Ham2kDialog'
+import { locationToWABSquare } from '../WABLocation'
 
-const VALID_MAIDENHEAD_REGEX = /^([A-R]{2}|[A-R]{2}[0-9]{2}|[A-R]{2}[0-9]{2}[a-x]{2}||[A-R]{2}[0-9]{2}[a-x]{2}[0-9]{2})$/
-const PARTIAL_MAIDENHEAD_REGEX = /^([A-R]{0,2}|[A-R]{2}[0-9]{0,2}|[A-R]{2}[0-9]{2}[a-x]{0,2}||[A-R]{2}[0-9]{2}[a-x]{2}[0-9]{0,2})$/
+const VALID_WAB_REGEX = /^(W[AV][0-9]{2}|[CDGHJ][0-9]{2}|[HJNOST][A-HJ-Z][0-9]{2}|)$/
+const PARTIAL_WAB_REGEX = /^([CDGHJNOSTW]{0,1}|W[AV][0-9]{0,2}|[CDGHJ][0-9]{0,2}|[HJNOST][A-Z][0-9]{0,2})$/
 
-export function LocationDialog ({ operation, visible, settings, styles, onDialogDone }) {
+export function WABSquareDialog ({ operation, visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
 
-  const [grid, setGridValue] = useState('')
+  const [square, setSquareValue] = useState('')
   const [isValid, setIsValidValue] = useState()
 
   useEffect(() => {
@@ -32,48 +31,44 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
   }, [visible])
 
   useEffect(() => {
-    setGridValue(operation?.grid || '')
+    setSquareValue(operation?.wabSquare || '')
   }, [operation])
 
   useEffect(() => {
-    setIsValidValue(VALID_MAIDENHEAD_REGEX.test(grid))
-  }, [grid])
+    setIsValidValue(VALID_WAB_REGEX.test(square))
+  }, [square])
 
-  const handleGridChange = useCallback((text) => {
-    text = text.substring(0, 4).toUpperCase() + text.substring(4).toLowerCase()
-    if (PARTIAL_MAIDENHEAD_REGEX.test(text)) {
-      setGridValue(text)
+  const handSquareChange = useCallback((text) => {
+    text = text.toUpperCase()
+    if (PARTIAL_WAB_REGEX.test(text)) {
+      setSquareValue(text)
     }
-  }, [setGridValue])
+  }, [setSquareValue])
 
   const handleAccept = useCallback(() => {
     if (isValid) {
-      dispatch(setOperationData({ uuid: operation.uuid, grid }))
+      dispatch(setOperationData({ uuid: operation.uuid, wabSquare: square }))
     }
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [dispatch, operation, grid, isValid, onDialogDone])
+  }, [dispatch, operation, square, isValid, onDialogDone])
 
   const handleCancel = useCallback(() => {
-    setGridValue(operation.grid)
+    setSquareValue(operation.grid)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [operation, onDialogDone])
+  }, [setSquareValue, operation.grid, setDialogVisible, onDialogDone])
 
-  const [locationGrid, setLocationGrid] = useState()
+  const [wabSquare, setWABSquare] = useState()
   useEffect(() => {
     Geolocation.getCurrentPosition(info => {
       const { latitude, longitude } = info.coords
-      setLocationGrid(locationToGrid(latitude, longitude))
-    }, error => {
-      reportError('location error', error)
+      setWABSquare(locationToWABSquare(latitude, longitude))
     })
 
     const watchId = Geolocation.watchPosition(info => {
       const { latitude, longitude } = info.coords
-      setLocationGrid(locationToGrid(latitude, longitude))
-    }, error => {
-      reportError('location error', error)
+      setWABSquare(locationToWABSquare(latitude, longitude))
     })
     return () => {
       Geolocation.clearWatch(watchId)
@@ -82,25 +77,24 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
 
   return (
     <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <Dialog.Title style={{ textAlign: 'center' }}>Station Location</Dialog.Title>
+      <Dialog.Title style={{ textAlign: 'center' }}>Worked All Britain Square</Dialog.Title>
       <Dialog.Content>
-        <Text variant="bodyMedium">Enter a Maidenhead Grid Square Locator</Text>
+        <Text variant="bodyMedium">Enter WAB Square</Text>
         <ThemedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
-          value={grid}
-          label="Grid Square Locator"
-          placeholder={'AA00aa'}
-          onChangeText={handleGridChange}
+          value={square}
+          label="WAB Square"
+          placeholder={'e.g. SU14'}
+          onChangeText={handSquareChange}
           error={!isValid}
         />
-        {locationGrid && (
-          <TouchableRipple onPress={() => setGridValue(locationGrid)} style={{ marginTop: styles.oneSpace }}>
+        {wabSquare && (
+          <TouchableRipple onPress={() => setSquareValue(wabSquare)} style={{ marginTop: styles.oneSpace }}>
             <Text variant="bodyMedium" style={{ marginTop: styles.oneSpace, marginBottom: styles.oneSpace }}>
-              <Text>Current Location: </Text>
-              <Text style={{ color: styles.colors.primary, fontWeight: 'bold' }}>{locationGrid}</Text>
+              <Text>Current Square: </Text>
+              <Text style={{ color: styles.colors.primary, fontWeight: 'bold' }}>{wabSquare}</Text>
             </Text>
           </TouchableRipple>
-
         )}
       </Dialog.Content>
       <Dialog.Actions>

@@ -37,7 +37,6 @@ export function usePrepareThemes () {
       if (fontConfig[variant].lineHeight) fontConfig[variant].lineHeight = fontConfig[variant].lineHeight * fontScaleAdjustment
     })
     const configuredFonts = configureFonts({ config: fontConfig })
-    console.log(configuredFonts)
     return configuredFonts
   }, [])
 

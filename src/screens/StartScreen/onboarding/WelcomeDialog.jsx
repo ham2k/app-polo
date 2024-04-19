@@ -7,6 +7,7 @@
 
 import React, { useCallback } from 'react'
 import { Button, Dialog, Text } from 'react-native-paper'
+import { Ham2kDialog } from '../../components/Ham2kDialog'
 
 export function WelcomeDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const handleNext = useCallback(() => {
@@ -18,7 +19,7 @@ export function WelcomeDialog ({ settings, styles, onDialogNext, onDialogPreviou
   }, [onDialogPrevious])
 
   return (
-    <Dialog visible={true} dismissable={false}>
+    <Ham2kDialog visible={true} dismissable={false}>
       <Dialog.Title style={{ textAlign: 'center' }}>Welcome to PoLo!</Dialog.Title>
       <Dialog.Content>
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>We have a few questions to help us better suit your needs.</Text>
@@ -27,6 +28,6 @@ export function WelcomeDialog ({ settings, styles, onDialogNext, onDialogPreviou
         <Button onPress={handlePrevious}>{previousLabel ?? 'Skip'}</Button>
         <Button onPress={handleNext}>{nextLabel ?? 'Continue'}</Button>
       </Dialog.Actions>
-    </Dialog>
+    </Ham2kDialog>
   )
 }

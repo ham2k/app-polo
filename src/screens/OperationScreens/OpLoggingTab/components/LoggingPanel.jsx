@@ -436,7 +436,6 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   useEffect(() => {
     if (Keyboard.isVisible()) {
       const metrics = Keyboard.metrics()
-      console.log('Keyboard shown', metrics)
       if (metrics.height > 100) {
         setIsKeyboardVisible(true)
         setKeyboardExtraStyles({})
@@ -448,7 +447,6 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
     const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
       const metrics = Keyboard.metrics()
-      console.log('Keyboard shown', metrics)
       if (metrics.height > 100) {
         // On iPads, when there's an external keyboard connected, the OS still shows a small
         // button on the bottom right with some options
@@ -461,7 +459,6 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       }
     })
     const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-      console.log('Keyboard hidden', Keyboard.metrics())
       setIsKeyboardVisible(false)
       setKeyboardExtraStyles({})
     })

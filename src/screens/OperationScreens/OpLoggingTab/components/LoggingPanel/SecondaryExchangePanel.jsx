@@ -13,6 +13,8 @@ import { notesControl } from './SecondaryExchangePanel/NotesControl'
 import { SecondaryControlManagementSubPanel } from './SecondaryExchangePanel/SecondaryControlManagementSubPanel'
 import { SecondaryControlSelectionsubPanel } from './SecondaryExchangePanel/SecondaryControlSelectionSubPanel'
 import { findHooks } from '../../../../../extensions/registry'
+import { findRef } from '../../../../../tools/refTools'
+import { spotterControl } from './SecondaryExchangePanel/SpotterControl'
 
 export const SecondaryExchangePanel = (props) => {
   const { currentSecondaryControl, operation, settings } = props
@@ -27,7 +29,11 @@ export const SecondaryExchangePanel = (props) => {
       radio: radioControl,
       notes: notesControl
     }
-    findHooks('activity').forEach(activity => {
+    const activityHooks = findHooks('activity')
+    if (activityHooks.filter((x) => (findRef(operation, x.activationType) && x.postSpot)).length > 0) {
+      newControls[spotterControl.key] = spotterControl
+    }
+    activityHooks.forEach(activity => {
       const activityControls = activity.loggingControls ? activity.loggingControls({ operation, settings }) : []
       for (const control of activityControls) {
         newControls[control.key] = control

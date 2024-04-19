@@ -87,8 +87,7 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-export default function SpotList ({ spots, spotsQuery, style }) {
-  const navigation = useNavigation()
+export default function SpotList ({ spots, spotsQuery, style, onPress }) {
   const styles = useThemedStyles(prepareStyles)
 
   const { width } = useWindowDimensions()
@@ -96,23 +95,12 @@ export default function SpotList ({ spots, spotsQuery, style }) {
 
   const listRef = useRef()
 
-  const handlePress = useCallback(({ spot }) => {
-    navigation.navigate('QSOs', {
-      qso: {
-        their: { call: spot.activator },
-        freq: spot.frequency,
-        mode: spot.mode,
-        refs: [{ type: 'pota', ref: spot.reference }]
-      }
-    })
-  }, [navigation])
-
   const renderRow = useCallback(({ item, index }) => {
     const spot = item
     return (
-      <SpotItem spot={spot} onPress={handlePress} styles={styles} extendedWidth={extendedWidth} />
+      <SpotItem spot={spot} onPress={onPress} styles={styles} extendedWidth={extendedWidth} />
     )
-  }, [styles, handlePress, extendedWidth])
+  }, [styles, onPress, extendedWidth])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(spots[index], styles)

@@ -6,11 +6,11 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Button, Dialog, Portal, Text } from 'react-native-paper'
+import { Button, Dialog, Text } from 'react-native-paper'
 import CallsignInput from '../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
-import { KeyboardAvoidingView } from 'react-native'
+import { Ham2kDialog } from '../../components/Ham2kDialog'
 
 export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
@@ -50,27 +50,23 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
   }, [settings, onDialogDone])
 
   return (
-    <Portal>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-        <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-          <Dialog.Title style={{ textAlign: 'center' }}>Operator's Callsign</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">Please enter the operator's callsign:</Text>
-            <CallsignInput
-              innerRef={ref}
-              style={[styles.input, { marginTop: styles.oneSpace }]}
-              value={value ?? ''}
-              label="Operator's Callsign"
-              placeholder="N0CALL"
-              onChangeText={onChangeText}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={handleCancel}>Cancel</Button>
-            <Button onPress={handleAccept}>Ok</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </KeyboardAvoidingView>
-    </Portal>
+    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
+      <Dialog.Title style={{ textAlign: 'center' }}>Operator's Callsign</Dialog.Title>
+      <Dialog.Content>
+        <Text variant="bodyMedium">Please enter the operator's callsign:</Text>
+        <CallsignInput
+          innerRef={ref}
+          style={[styles.input, { marginTop: styles.oneSpace }]}
+          value={value ?? ''}
+          label="Operator's Callsign"
+          placeholder="N0CALL"
+          onChangeText={onChangeText}
+        />
+      </Dialog.Content>
+      <Dialog.Actions>
+        <Button onPress={handleCancel}>Cancel</Button>
+        <Button onPress={handleAccept}>Ok</Button>
+      </Dialog.Actions>
+    </Ham2kDialog>
   )
 }

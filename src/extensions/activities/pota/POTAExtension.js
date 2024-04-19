@@ -12,7 +12,7 @@ import { Info } from './POTAInfo'
 import { POTAActivityOptions } from './POTAActivityOptions'
 import { POTAAllParks, registerPOTAAllParksData } from './POTAAllParksData'
 import { POTALoggingControl } from './POTALoggingControl'
-import { POTASpotterControl } from './POTASpotterControl'
+import { POTAPostSpot } from './POTAPostSpot'
 
 const Extension = {
   ...Info,
@@ -37,11 +37,12 @@ const ActivityHook = {
   MainExchangePanel: null,
   loggingControls: ({ operation, settings }) => {
     if (findRef(operation, Info.activationType)) {
-      return [ActivatorLoggingControl, SpotterControl]
+      return [ActivatorLoggingControl]
     } else {
       return [HunterLoggingControl]
     }
   },
+  postSpot: POTAPostSpot,
   Options: POTAActivityOptions,
 
   includeControlForQSO: ({ qso, operation }) => {
@@ -81,18 +82,6 @@ const ActivatorLoggingControl = {
     return parts.join(' ')
   },
   InputComponent: POTALoggingControl,
-  optionType: 'mandatory'
-}
-
-const SpotterControl = {
-  key: `${Info.key}/spotter`,
-  order: 11,
-  icon: 'hand-wave',
-  label: ({ operation, qso }) => {
-    return 'Spotting'
-  },
-  InputComponent: POTASpotterControl,
-  inputWidthMultiplier: 40,
   optionType: 'mandatory'
 }
 

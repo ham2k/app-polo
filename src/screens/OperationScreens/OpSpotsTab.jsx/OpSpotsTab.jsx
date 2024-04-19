@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { View } from 'react-native'
 import { Icon, Text } from 'react-native-paper'
@@ -174,6 +174,29 @@ export default function OpSpotsTab ({ navigation, route }) {
     return [options, filtered]
   }, [mode, bandSpots])
 
+  const handlePress = useCallback(({ spot }) => {
+    if (route?.params?.splitView) {
+      navigation.navigate('Operation', {
+        ...route?.params,
+        qso: {
+          their: { call: spot.activator },
+          freq: spot.frequency,
+          mode: spot.mode,
+          refs: [{ type: 'pota', ref: spot.reference }]
+        }
+      })
+    } else {
+      navigation.navigate('QSOs', {
+        qso: {
+          their: { call: spot.activator },
+          freq: spot.frequency,
+          mode: spot.mode,
+          refs: [{ type: 'pota', ref: spot.reference }]
+        }
+      })
+    }
+  }, [navigation, route?.params])
+
   return (
     <GestureHandlerRootView style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column' }]}>
       <View style={[{ flex: 0 }, styles.panel]}>
@@ -218,7 +241,7 @@ export default function OpSpotsTab ({ navigation, route }) {
           )}
         </Text>
       </View>
-      <SpotList spots={filteredSpots} spotsQuery={spotsQuery} />
+      <SpotList spots={filteredSpots} spotsQuery={spotsQuery} onPress={handlePress} />
     </GestureHandlerRootView>
   )
 }

@@ -10,6 +10,7 @@ import { Button, Dialog, Text } from 'react-native-paper'
 import CallsignInput from '../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
+import { Ham2kDialog } from '../../components/Ham2kDialog'
 
 export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const dispatch = useDispatch()
@@ -42,7 +43,7 @@ export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevio
   }, [onDialogPrevious])
 
   return (
-    <Dialog visible={true} dismissable={false}>
+    <Ham2kDialog visible={true} dismissable={false}>
       <Dialog.Title style={{ textAlign: 'center' }}>What's your callsign?</Dialog.Title>
       <Dialog.Content>
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
@@ -61,6 +62,6 @@ export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevio
         <Button onPress={handlePrevious}>{previousLabel ?? 'Back'}</Button>
         <Button onPress={handleNext}>{nextLabel ?? 'Next'}</Button>
       </Dialog.Actions>
-    </Dialog>
+    </Ham2kDialog>
   )
 }
