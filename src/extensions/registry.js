@@ -24,7 +24,8 @@ const Hooks = {
   activity: [],
   command: [],
   screen: [],
-  setting: []
+  setting: [],
+  opSetting: []
 }
 
 const VALID_HOOK_REGEX = /^(ref:\w+)/
