@@ -6,11 +6,11 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, Portal, Text } from 'react-native-paper'
+import { Button, Dialog, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { setAccountInfo } from '../../../store/settings'
 import ThemedTextInput from '../../components/ThemedTextInput'
-import { KeyboardAvoidingView } from 'react-native'
+import { Ham2kDialog } from '../../components/Ham2kDialog'
 
 export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
@@ -50,40 +50,36 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
   }, [settings, onDialogDone])
 
   return (
-    <Portal>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-        <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-          <Dialog.Title style={{ textAlign: 'center' }}>QRZ.com Account</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">Please enter the details for your QRZ.com account:</Text>
-            <ThemedTextInput
-              style={[styles.input, { marginTop: styles.oneSpace }]}
-              value={login}
-              autoCapitalize={'none'}
-              autoComplete="email"
-              inputMode="email"
-              keyboardType="email-address"
-              label="Login"
-              placeholder="your login"
-              onChangeText={onChangeLogin}
-            />
-            <ThemedTextInput
-              style={[styles.input, { marginTop: styles.oneSpace }]}
-              value={password}
-              label="Password"
-              autoComplete="password"
-              keyboardType="visible-password"
-              secureTextEntry={true}
-              placeholder="your password"
-              onChangeText={onChangePassword}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={handleCancel}>Cancel</Button>
-            <Button onPress={handleAccept}>Ok</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </KeyboardAvoidingView>
-    </Portal>
+    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
+      <Dialog.Title style={{ textAlign: 'center' }}>QRZ.com Account</Dialog.Title>
+      <Dialog.Content>
+        <Text variant="bodyMedium">Please enter the details for your QRZ.com account:</Text>
+        <ThemedTextInput
+          style={[styles.input, { marginTop: styles.oneSpace }]}
+          value={login}
+          autoCapitalize={'none'}
+          autoComplete="email"
+          inputMode="email"
+          keyboardType="email-address"
+          label="Login"
+          placeholder="your login"
+          onChangeText={onChangeLogin}
+        />
+        <ThemedTextInput
+          style={[styles.input, { marginTop: styles.oneSpace }]}
+          value={password}
+          label="Password"
+          autoComplete="password"
+          keyboardType="visible-password"
+          secureTextEntry={true}
+          placeholder="your password"
+          onChangeText={onChangePassword}
+        />
+      </Dialog.Content>
+      <Dialog.Actions>
+        <Button onPress={handleCancel}>Cancel</Button>
+        <Button onPress={handleAccept}>Ok</Button>
+      </Dialog.Actions>
+    </Ham2kDialog>
   )
 }

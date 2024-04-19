@@ -6,10 +6,11 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, Portal, Text } from 'react-native-paper'
+import { Button, Dialog, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { deleteOperation } from '../../../../store/operations'
 import { useNavigation } from '@react-navigation/native'
+import { Ham2kDialog } from '../../../components/Ham2kDialog'
 
 export function DeleteOperationDialog ({ operation, visible, settings, styles, onDialogDone }) {
   const navigation = useNavigation()
@@ -35,17 +36,15 @@ export function DeleteOperationDialog ({ operation, visible, settings, styles, o
   }, [onDialogDone])
 
   return (
-    <Portal>
-      <Dialog visible={dialogVisible} onDismiss={handleCancel}>
-        <Dialog.Title style={{ textAlign: 'center', color: styles.theme.colors.error }}>Delete operation?</Dialog.Title>
-        <Dialog.Content>
-          <Text variant="bodyMedium">Are you sure you want to delete this operation?</Text>
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button onPress={handleCancel}>Cancel</Button>
-          <Button onPress={handleAccept} textColor={styles.theme.colors.error}>Yes, Delete</Button>
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
+    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
+      <Dialog.Title style={{ textAlign: 'center', color: styles.theme.colors.error }}>Delete operation?</Dialog.Title>
+      <Dialog.Content>
+        <Text variant="bodyMedium">Are you sure you want to delete this operation?</Text>
+      </Dialog.Content>
+      <Dialog.Actions>
+        <Button onPress={handleCancel}>Cancel</Button>
+        <Button onPress={handleAccept} textColor={styles.theme.colors.error}>Yes, Delete</Button>
+      </Dialog.Actions>
+    </Ham2kDialog>
   )
 }

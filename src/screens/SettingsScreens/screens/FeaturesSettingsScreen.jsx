@@ -8,8 +8,8 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Dialog, List, Portal, Switch, Text } from 'react-native-paper'
-import { KeyboardAvoidingView, ScrollView } from 'react-native'
+import { Dialog, List, Switch, Text } from 'react-native-paper'
+import { ScrollView } from 'react-native'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
@@ -18,6 +18,7 @@ import { EXTENSION_CATEGORIES, EXTENSION_CATEGORIES_ORDER } from '../../../exten
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { Ham2kDialog } from '../../components/Ham2kDialog'
 
 const FeatureItem = ({ extension, settings, info, styles, onChange }) => {
   const enabled = useMemo(() => settings[`extensions/${extension.key}`] ?? extension?.enabledByDefault, [settings, extension])
@@ -82,15 +83,11 @@ export default function FeaturesSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       {slowOperationMessage && (
-        <Portal>
-          <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-            <Dialog visible={true}>
-              <Dialog.Content>
-                <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{slowOperationMessage}</Text>
-              </Dialog.Content>
-            </Dialog>
-          </KeyboardAvoidingView>
-        </Portal>
+        <Ham2kDialog visible={true}>
+          <Dialog.Content>
+            <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{slowOperationMessage}</Text>
+          </Dialog.Content>
+        </Ham2kDialog>
       )}
       <ScrollView style={{ flex: 1 }}>
         {featureGroups.map(({ category, label, extensions }) => (
