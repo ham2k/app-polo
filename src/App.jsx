@@ -20,24 +20,24 @@ import 'react-native-gesture-handler' // This must be included in the top compon
 import { usePrepareThemes } from './styles/tools/usePrepareThemes'
 
 import { persistor, store } from './store'
+import { selectSettings } from './store/settings'
 import HeaderBar from './screens/components/HeaderBar'
 
+import StartScreen from './screens/StartScreen/StartScreen'
 import HomeScreen from './screens/HomeScreen/HomeScreen'
 import OperationScreen from './screens/OperationScreens/OperationScreen'
-import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
-import DataSettingsScreen from './screens/SettingsScreens/screens/DataSettingsScreen'
 import OperationAddActivityScreen from './screens/OperationScreens/OperationAddActivityScreen'
 import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
+import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
+import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
+import DataSettingsScreen from './screens/SettingsScreens/screens/DataSettingsScreen'
 import VersionSettingsScreen from './screens/SettingsScreens/screens/VersionSettingsScreen'
 import LoggingSettingsScreen from './screens/SettingsScreens/screens/LoggingSettingsScreen'
-import StartScreen from './screens/StartScreen/StartScreen'
 import FeaturesSettingsScreen from './screens/SettingsScreens/screens/FeaturesSettingsScreen'
 import GeneralSettingsScreen from './screens/SettingsScreens/screens/GeneralSettingsScreen'
-import { selectSettings } from './store/settings'
 import DevModeSettingsScreen from './screens/SettingsScreens/screens/DevModeSettingsScreen'
 import ExtensionScreen from './screens/SettingsScreens/screens/ExtensionScreen'
 import BandModeSettingsScreen from './screens/SettingsScreens/screens/BandModeSettingsScreen'
-import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
 import CreditsSettingsScreen from './screens/SettingsScreens/screens/CreditsSettingsScreen'
 
 const GLOBAL_APP_SETTINGS = {
@@ -119,55 +119,9 @@ function MainApp ({ navigationTheme }) {
           />
 
           <Stack.Screen name="Settings"
-            options={{ title: 'Settings' }}
+            options={{ title: 'Settings', headerShown: false }}
             component={MainSettingsScreen}
           />
-
-          <Stack.Screen name="FeaturesSettings"
-            options={{ title: 'App Features', headerBackTitle: 'MainSettings' }}
-            component={FeaturesSettingsScreen}
-          />
-
-          <Stack.Screen name="GeneralSettings"
-            options={{ title: 'General Settings', headerBackTitle: 'MainSettings' }}
-            component={GeneralSettingsScreen}
-          />
-
-          <Stack.Screen name="LoggingSettings"
-            options={{ title: 'Logging Settings', headerBackTitle: 'MainSettings' }}
-            component={LoggingSettingsScreen}
-          />
-
-          <Stack.Screen name="BandModeSettings"
-            options={{ title: 'Bands & Modes', headerBackTitle: 'MainSettings' }}
-            component={BandModeSettingsScreen}
-          />
-
-          <Stack.Screen name="DataSettings"
-            options={{ title: 'Data Settings', headerBackTitle: 'MainSettings' }}
-            component={DataSettingsScreen}
-          />
-
-          <Stack.Screen name="VersionSettings"
-            options={{ title: 'Version Information', headerBackTitle: 'MainSettings' }}
-            component={VersionSettingsScreen}
-          />
-
-          <Stack.Screen name="CreditsSettings"
-            options={{ title: 'Credits', headerBackTitle: 'MainSettings' }}
-            component={CreditsSettingsScreen}
-          />
-
-          <Stack.Screen name="DevModeSettings"
-            options={{ title: 'Developer Settings', headerBackTitle: 'MainSettings' }}
-            component={DevModeSettingsScreen}
-          />
-
-          <Stack.Screen name="ExtensionScreen"
-            options={{ title: 'Extension', headerBackTitle: 'Back' }}
-            component={ExtensionScreen}
-          />
-
         </Stack.Navigator>
       </NavigationContainer>
     )
