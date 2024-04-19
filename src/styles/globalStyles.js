@@ -22,7 +22,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
 
   const sizeInfo = computeSizes()
   const { size, fontScale, fontScaleAdjustment } = sizeInfo
-  console.log('size info', sizeInfo)
+
   const normalFontSize = 16 * fontScaleAdjustment
   const largeFontSize = 24 * fontScaleAdjustment
   const smallFontSize = 14 * fontScaleAdjustment
