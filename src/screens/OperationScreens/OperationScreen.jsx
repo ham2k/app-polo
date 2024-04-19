@@ -61,9 +61,13 @@ export default function OperationScreen (props) {
 
   const dimensions = useWindowDimensions()
 
-  const [splitWidth] = useState(styles.lgOrGreater ? dimensions.width - styles.oneSpace * 40 : dimensions.width)
+  const splitView = useMemo(() => {
+    return styles.lgOrGreater
+  }, [styles?.lgOrGreater])
 
-  if (styles.lgOrGreater) {
+  const [splitWidth] = useState(splitView ? dimensions.width - styles.oneSpace * 40 : dimensions.width)
+
+  if (splitView) {
     return (
       <>
         {settings.keepDeviceAwake && <KeepAwake />}
