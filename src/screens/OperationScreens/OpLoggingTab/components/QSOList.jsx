@@ -13,7 +13,7 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { useUIState } from '../../../../store/ui'
 
 function prepareStyles (themeStyles, isDeleted, width) {
-  const extendedWidth = width / themeStyles.oneSpace > 60
+  const extendedWidth = width / themeStyles.oneSpace > 80
 
   let commonStylesForStatus
 
@@ -143,10 +143,15 @@ function prepareStyles (themeStyles, isDeleted, width) {
 const QSOList = function QSOList ({ style, ourInfo, settings, qsos }) {
   const { width } = useWindowDimensions()
 
+  const [componentWidth, setComponentWidth] = useUIState()
+  const handleLayout = useCallback((event) => {
+    setComponentWidth(event?.nativeEvent?.layout?.width)
+  }, [setComponentWidth])
+
   const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
-  const styles = useThemedStyles(prepareStyles, false, width)
-  const stylesForDeleted = useThemedStyles(prepareStyles, true, width)
+  const styles = useThemedStyles(prepareStyles, false, componentWidth ?? width)
+  const stylesForDeleted = useThemedStyles(prepareStyles, true, componentWidth ?? width)
 
   const listRef = useRef()
 
@@ -190,6 +195,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos }) {
     <FlatList
       style={style}
       ref={listRef}
+      onLayout={handleLayout}
       data={qsos}
       renderItem={renderRow}
       getItemLayout={calculateLayout}
