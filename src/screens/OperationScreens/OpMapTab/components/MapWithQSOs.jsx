@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import MapView, { Marker, Polyline, Circle } from 'react-native-maps'
-import { View, useWindowDimensions } from 'react-native'
+import { View, useWindowDimensions, useColorScheme } from 'react-native'
 
 import { fmtShortTimeZulu } from '../../../../tools/timeFormats'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../../tools/geoTools'
@@ -17,18 +17,21 @@ const TRANSP_PNG = require('../../../../../assets/images/transp-16.png')
 const METERS_IN_ONE_DEGREE = 111111
 
 const RGB_FOR_STRENGTH = {
-  1: '247, 239, 126',
-  2: '252, 234, 35',
-  3: '247, 206, 0',
-  4: '250, 202, 45',
-  5: '250, 178, 45',
-  6: '250, 168, 45',
-  7: '252, 133, 28',
-  8: '252, 118, 50',
-  9: '245, 7, 7'
+  1: '217, 252, 174', // '247, 239, 126',
+  2: '184, 242, 111', // '252, 234, 35',
+  3: '164, 219, 61', // '247, 206, 0',
+  4: '192, 227, 50', // '250, 202, 45',
+  5: '237, 220, 64', // '250, 178, 45',
+  6: '250, 195, 77', // '250, 168, 45',
+  7: '237, 156, 50', // '252, 133, 28',
+  8: '227, 90, 11', // '252, 118, 50',
+  9: '227, 11, 11' // '245, 7, 7'
 }
 
 export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedKey }) {
+  // Maps change with the actual device color scheme, not the user preferences in the app
+  const deviceColorScheme = useColorScheme()
+
   const mappableQSOs = useMemo(() => {
     const activeQSOs = qsos.filter(qso => !qso.deleted)
     return activeQSOs
@@ -74,10 +77,10 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
   }, [longitudeDelta, width, styles])
 
   const mapStyles = useMemo(() => {
-    const newStyles = stylesForMap({ longitudeDelta, count: mappableQSOs?.length })
+    const newStyles = stylesForMap({ longitudeDelta, count: mappableQSOs?.length, deviceColorScheme })
 
     return newStyles
-  }, [longitudeDelta, mappableQSOs?.length])
+  }, [longitudeDelta, mappableQSOs?.length, deviceColorScheme])
 
   return (
     <MapView
@@ -103,7 +106,7 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
           <Circle
             center={qth}
             radius={scale.metersPerOneSpace * 0.5}
-            fillColor={'rgba(0,200,0,1)'}
+            fillColor={'rgba(0,180,0,1)'}
             strokeWidth={0.1}
           />
         </>
@@ -184,27 +187,30 @@ function strengthForQSO (qso) {
   }
 }
 
-function stylesForMap ({ longitudeDelta, count }) {
+function stylesForMap ({ longitudeDelta, count, deviceColorScheme }) {
+  const darkMode = deviceColorScheme === 'dark'
+
   if (count > 50) {
     longitudeDelta = longitudeDelta * 1.5
   }
+
   if (longitudeDelta > 140) {
-    return { marker: { opacity: 0.7, size: 0.5 }, line: { strokeColor: 'rgba(60,60,60,0.2)' } }
+    return { marker: { opacity: 0.7, size: 0.6 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
   } else if (longitudeDelta > 120) {
-    return { marker: { opacity: 0.7, size: 0.5 }, line: { strokeColor: 'rgba(60,60,60,0.2)' } }
+    return { marker: { opacity: 0.7, size: 0.7 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
   } else if (longitudeDelta > 90) {
-    return { marker: { opacity: 0.7, size: 0.5 }, line: { strokeColor: 'rgba(60,60,60,0.2)' } }
+    return { marker: { opacity: 0.8, size: 0.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
   } else if (longitudeDelta > 60) {
-    return { marker: { opacity: 0.7, size: 0.8 }, line: { strokeColor: 'rgba(60,60,60,0.3)' } }
+    return { marker: { opacity: 0.7, size: 0.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
   } else if (longitudeDelta > 40) {
-    return { marker: { opacity: 0.7, size: 0.9 }, line: { strokeColor: 'rgba(60,60,60,0.4)' } }
+    return { marker: { opacity: 0.7, size: 0.9 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
   } else if (longitudeDelta > 25) {
-    return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: 'rgba(60,60,60,0.4)' } }
+    return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
   } else if (longitudeDelta > 15) {
-    return { marker: { opacity: 1, size: 1 }, line: { strokeColor: 'rgba(75,75,75,0.5)' } }
+    return { marker: { opacity: 1, size: 1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.4)` } }
   } else if (longitudeDelta > 10) {
-    return { marker: { opacity: 1, size: 1.2 }, line: { strokeColor: 'rgba(90,90,90,0.7)' } }
+    return { marker: { opacity: 1, size: 1.2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
   } else {
-    return { marker: { opacity: 1, size: 1.4 }, line: { strokeColor: 'rgba(60,60,60,0.3)' } }
+    return { marker: { opacity: 1, size: 1.4 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
   }
 }

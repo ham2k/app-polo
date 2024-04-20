@@ -55,7 +55,7 @@ export function usePrepareThemes () {
         loadedColors[`${color}ContainerVariant`] = Color(loadedColors[color]).lighten(0.15).desaturate(0.1).hex()
         loadedColors[`${color}ContainerAlpha`] = Color(loadedColors[`${color}Container`]).alpha(0.8).string()
       })
-      loadedColors.onBackgroundLight = Color(loadedColors.onBackground).darken(0.2).hex()
+      loadedColors.onBackgroundLight = Color(loadedColors.onBackground).darken(0.1).desaturate(0.1).hex()
       loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).darken(0.5).hex()
     } else {
       ['primary', 'secondary', 'tertiary'].forEach((color) => {

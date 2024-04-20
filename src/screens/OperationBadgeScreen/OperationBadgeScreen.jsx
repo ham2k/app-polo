@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { StatusBar, View } from 'react-native'
+import { StatusBar, View, useColorScheme } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
@@ -19,7 +19,18 @@ import { fmtDateTimeNice, fmtTimeBetween } from '../../tools/timeFormats'
 import Color from 'color'
 import MapWithQSOs from '../OperationScreens/OpMapTab/components/MapWithQSOs'
 
-function prepareStyles (baseTheme, themeColor) {
+function prepareStyles (baseTheme, themeColor, deviceColorScheme) {
+  let titleBackground
+  if (baseTheme.isIOS) {
+    if (deviceColorScheme === 'dark') {
+      titleBackground = Color(baseTheme.colors.primary).lighten(4).alpha(0.6).string()
+    } else {
+      titleBackground = Color(baseTheme.colors.primary).lighten(4).alpha(0.4).string()
+    }
+  } else {
+    titleBackground = Color(baseTheme.colors.primary).lighten(4).alpha(0.5).string()
+  }
+
   return {
     ...baseTheme,
     root: {
@@ -34,7 +45,7 @@ function prepareStyles (baseTheme, themeColor) {
       padding: baseTheme.oneSpace
     },
     titleContainer: {
-      backgroundColor: baseTheme.isIOS ? Color(baseTheme.colors.primary).alpha(0.3).string() : Color(baseTheme.colors.primary).lighten(1.3).alpha(0.5).string(),
+      backgroundColor: titleBackground,
       position: 'absolute',
       padding: baseTheme.oneSpace * 1,
       top: 0,
@@ -58,13 +69,13 @@ function prepareStyles (baseTheme, themeColor) {
     },
     ham2k: {
       fontSize: 18 * baseTheme.fontScaleAdjustment,
-      color: '#222',
+      color: deviceColorScheme === 'dark' ? '#CCC' : '#222',
       fontFamily: baseTheme.normalFontFamily,
       lineHeight: 18 * baseTheme.fontScaleAdjustment
     },
     logger: {
       fontSize: 18 * baseTheme.fontScaleAdjustment,
-      color: '#222',
+      color: deviceColorScheme === 'dark' ? '#CCC' : '#222',
       fontFamily: baseTheme.boldTitleFontFamily,
       lineHeight: 18 * baseTheme.fontScaleAdjustment
     }
@@ -72,8 +83,11 @@ function prepareStyles (baseTheme, themeColor) {
 }
 
 export default function OperationBadgeScreen ({ navigation, route }) {
+  // Maps change with the actual device color scheme, not the user preferences in the app
+  const deviceColorScheme = useColorScheme()
+
   const themeColor = 'tertiary'
-  const styles = useThemedStyles(prepareStyles, themeColor)
+  const styles = useThemedStyles(prepareStyles, themeColor, deviceColorScheme)
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
@@ -129,7 +143,7 @@ export default function OperationBadgeScreen ({ navigation, route }) {
           </Text>
         </View>
       </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'center', position: 'absolute', bottom: styles.oneSpace, right: styles.oneSpace * 10, left: styles.oneSpace * 10 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', position: 'absolute', bottom: styles.oneSpace * 3, right: styles.oneSpace * 10, left: styles.oneSpace * 10 }}>
         <Text style={styles.ham2k}>Ham2K </Text>
         <Text style={styles.logger}>Portable Logger</Text>
       </View>
