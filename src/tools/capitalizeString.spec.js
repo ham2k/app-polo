@@ -32,6 +32,7 @@ describe('capitalizeString', () => {
     expect(capitalizeString('JOHN "Joe" DOE')).toEqual('John "Joe" Doe')
     expect(capitalizeString('JOHN "JOE" DOE')).toEqual('John "Joe" Doe')
     expect(capitalizeString('john "joe" doe')).toEqual('John "Joe" Doe')
+    expect(capitalizeString('JOHN “JOE” DOE')).toEqual('John “Joe” Doe')
   })
 
   it('can preserve existing case', () => {
