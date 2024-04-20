@@ -30,7 +30,7 @@ import { useOneCallNoteFinder } from '../../../../../extensions/data/call-notes/
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 
 function prepareStyles (baseStyles, themeColor) {
-  // const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
+  const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   return {
     ...baseStyles,
     history: {
@@ -44,7 +44,7 @@ function prepareStyles (baseStyles, themeColor) {
       text: {
         fontSize: baseStyles.smallFontSize,
         fontWeight: 'normal',
-        color: 'black'
+        color: baseStyles.theme.colors[`on${upcasedThemeColor}Container`]
       },
       alert: {
         backgroundColor: 'red',

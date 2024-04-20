@@ -63,10 +63,10 @@ export default function OperationScreen (props) {
   const dimensions = useWindowDimensions()
 
   const splitView = useMemo(() => {
-    return styles.lgOrGreater
-  }, [styles?.lgOrGreater])
+    return !settings.dontSplitViews && (dimensions.width / styles.oneSpace > 95)
+  }, [dimensions?.width, styles?.oneSpace, settings?.dontSplitViews])
 
-  const [splitWidth] = useState(splitView ? dimensions.width - styles.oneSpace * 40 : dimensions.width)
+  const [splitWidth] = useState(splitView ? Math.max(dimensions.width * 0.60, dimensions.width - styles.oneSpace * 40) : dimensions.width)
 
   if (splitView) {
     return (
@@ -104,7 +104,7 @@ export default function OperationScreen (props) {
                   tabBarItemStyle: [{ width: (dimensions.width - splitWidth) / 3 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                   tabBarLabelStyle: styles.screenTabBarLabel,
                   tabBarStyle: styles.screenTabBar,
-                  tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryLighter, height: styles.halfSpace * 1.5 },
+                  tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryHighlight, height: styles.halfSpace * 1.5 },
                   // See https://github.com/react-navigation/react-navigation/issues/11301
                   // on iOS, if the keyboard is open, tabs get stuck when switching
                   animationEnabled: Platform.OS !== 'ios',

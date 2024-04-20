@@ -102,6 +102,16 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ keepDeviceAwake: !settings.keepDeviceAwake }))}
           />
 
+          {styles.mdOrGreater && (
+            <Ham2kListItem
+              title="Use Split Views"
+              description={settings.dontSplitViews ? "Don't use split views" : 'Use Split Views when screen is large enough' }
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="arrow-split-vertical" />}
+              right={() => <Switch value={!settings.dontSplitViews} onValueChange={(value) => dispatch(setSettings({ dontSplitViews: !value })) } />}
+              onPress={() => dispatch(setSettings({ dontSplitViews: !settings.dontSplitViews }))}
+            />
+          )}
+
           <Ham2kListItem
             title="Use compact file names"
             description={settings.useCompactFileNames ? compactName : longName}

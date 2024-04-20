@@ -18,13 +18,13 @@ export function computeSizes () {
   }
 
   // For Tablets, lets bump the font size a bit
-  if (width > 500) {
+  if (width > 1000) {
     fontScaleAdjustment = fontScaleAdjustment * 1.07
   }
 
   let size
   if (width / (fontScale * fontScaleAdjustment) < 340) size = 'xs'
-  else if (width / (fontScale * fontScaleAdjustment) < 400) size = 'sm'
+  else if (width / (fontScale * fontScaleAdjustment) < 500) size = 'sm'
   else if (width / (fontScale * fontScaleAdjustment) < 1000) size = 'md'
   else if (width / (fontScale * fontScaleAdjustment) < 1200) size = 'lg'
   else size = 'xl'
