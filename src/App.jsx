@@ -30,15 +30,6 @@ import OperationAddActivityScreen from './screens/OperationScreens/OperationAddA
 import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
 import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
-import DataSettingsScreen from './screens/SettingsScreens/screens/DataSettingsScreen'
-import VersionSettingsScreen from './screens/SettingsScreens/screens/VersionSettingsScreen'
-import LoggingSettingsScreen from './screens/SettingsScreens/screens/LoggingSettingsScreen'
-import FeaturesSettingsScreen from './screens/SettingsScreens/screens/FeaturesSettingsScreen'
-import GeneralSettingsScreen from './screens/SettingsScreens/screens/GeneralSettingsScreen'
-import DevModeSettingsScreen from './screens/SettingsScreens/screens/DevModeSettingsScreen'
-import ExtensionScreen from './screens/SettingsScreens/screens/ExtensionScreen'
-import BandModeSettingsScreen from './screens/SettingsScreens/screens/BandModeSettingsScreen'
-import CreditsSettingsScreen from './screens/SettingsScreens/screens/CreditsSettingsScreen'
 
 const GLOBAL_APP_SETTINGS = {
   consentAppData: false
