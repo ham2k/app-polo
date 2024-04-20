@@ -30,6 +30,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
 
   return {
     ...themeStyles,
+    ...extendedWidth,
     fields: {
       number: {
         ...themeStyles.text.numbers,
@@ -46,7 +47,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         ...themeStyles.text.lighter,
         ...commonStylesForStatus,
         flex: 0,
-        minWidth: extendedWidth ? themeStyles.oneSpace * 14 : themeStyles.oneSpace * 7,
+        minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 7,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right',
         lineHeight: themeStyles.oneSpace * 2.5,
@@ -58,8 +59,8 @@ function prepareStyles (themeStyles, isDeleted, width) {
         ...commonStylesForStatus,
         fontFamily: 'Roboto',
         flex: 0,
-        minWidth: extendedWidth ? themeStyles.oneSpace * 11 : themeStyles.oneSpace * 8,
-        marginLeft: themeStyles.oneSpace,
+        minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 8,
+        marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
         textAlign: 'right',
         lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
@@ -84,7 +85,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         ...commonStylesForStatus,
         fontWeight: 'bold',
         flex: 0,
-        marginLeft: themeStyles.oneSpace,
+        marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
         minWidth: themeStyles.oneSpace * 8,
         textAlign: 'left',
         lineHeight: themeStyles.oneSpace * 2.5,
@@ -93,7 +94,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
       name: {
         ...commonStylesForStatus,
         flex: 1,
-        marginLeft: themeStyles.halfSpace,
+        marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
         textAlign: 'left',
         lineHeight: themeStyles.oneSpace * 2.5,
         borderWidth: DEBUG ? 1 : 0
@@ -101,7 +102,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
       location: {
         ...commonStylesForStatus,
         flex: 0,
-        marginLeft: themeStyles.halfSpace,
+        marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
         minWidth: themeStyles.oneSpace * 3.5,
         textAlign: 'center',
         lineHeight: themeStyles.oneSpace * 2.5,
