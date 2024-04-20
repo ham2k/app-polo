@@ -1,19 +1,19 @@
 {
   "colors": {
-    "primary": "rgb(97, 212, 255)",
-    "onPrimary": "rgb(0, 53, 69)",
-    "primaryContainer": "rgb(0, 77, 99)",
+    "primary": "rgb(0, 103, 131)",
+    "onPrimary": "rgb(255, 255, 255)",
+    "primaryContainer": "rgb(0, 103, 131)",
     "onPrimaryContainer": "rgb(188, 233, 255)",
-    "secondary": "rgb(165, 200, 255)",
+    "secondary": "rgb(91, 158, 222)",
     "onSecondary": "rgb(0, 49, 95)",
-    "secondaryContainer": "rgb(0, 71, 134)",
+    "secondaryContainer": "rgb(62, 96, 150)",
     "onSecondaryContainer": "rgb(212, 227, 255)",
-    "tertiary": "rgb(255, 183, 134)",
-    "onTertiary": "rgb(80, 36, 0)",
-    "tertiaryContainer": "rgb(114, 54, 0)",
+    "tertiary": "rgb(245, 162, 86)",
+    "onTertiary": "rgb(40, 26, 0)",
+    "tertiaryContainer": "rgb(166, 101, 40)",
     "onTertiaryContainer": "rgb(255, 220, 198)",
     "important": "rgb(26, 200, 26)",
-    "error": "rgb(255, 180, 171)",
+    "error": "rgb(240, 24, 0)",
     "onError": "rgb(105, 0, 5)",
     "errorContainer": "rgb(147, 0, 10)",
     "onErrorContainer": "rgb(255, 180, 171)",
@@ -34,13 +34,13 @@
       "level0": "transparent",
       "level1": "rgb(29, 37, 41)",
       "level2": "rgb(31, 43, 48)",
-      "level3": "rgb(33, 48, 55)",
+      "level3": "rgb(33, 44, 48)",
       "level4": "rgb(34, 50, 57)",
       "level5": "rgb(35, 54, 62)"
     },
     "surfaceDisabled": "rgba(125, 128, 130, 0.3)",
     "onSurfaceDisabled": "rgba(225, 226, 228, 0.5)",
-    "backdrop": "rgba(42, 50, 53, 0.4)",
-    "devMode": "rgb(2471, 161, 69)"
+    "backdrop": "rgba(84, 100, 106, 0.7)",
+    "devMode": "rgb(247, 161, 69)"
   }
 }
