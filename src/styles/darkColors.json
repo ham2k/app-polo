@@ -10,7 +10,7 @@
     "onSecondaryContainer": "rgb(212, 227, 255)",
     "tertiary": "rgb(245, 162, 86)",
     "onTertiary": "rgb(40, 26, 0)",
-    "tertiaryContainer": "rgb(166, 101, 40)",
+    "tertiaryContainer": "rgb(166, 95, 40)",
     "onTertiaryContainer": "rgb(255, 220, 198)",
     "important": "rgb(26, 200, 26)",
     "error": "rgb(240, 24, 0)",
