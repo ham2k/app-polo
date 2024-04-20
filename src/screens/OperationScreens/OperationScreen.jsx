@@ -21,8 +21,9 @@ import ScreenContainer from '../components/ScreenContainer'
 import HeaderBar from '../components/HeaderBar'
 import OpLoggingTab from './OpLoggingTab/OpLoggingTab'
 import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
-import OpSpotsTab from './OpSpotsTab.jsx/OpSpotsTab'
+import OpSpotsTab from './OpSpotsTab/OpSpotsTab'
 import OpMapTab from './OpMapTab/OpMapTab'
+import OpInfoTab from './OpInfoTab/OpInfoTab'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -55,10 +56,6 @@ export default function OperationScreen (props) {
     options.closeInsteadOfBack = true
     return options
   }, [operation?.stationCall, operation.subtitle, operation?.title, settings?.operatorCall])
-
-  const settingsOnly = useMemo(() => {
-    return (!operation.stationCall && !settings?.operatorCall)
-  }, [operation, settings])
 
   const dimensions = useWindowDimensions()
 
@@ -99,9 +96,9 @@ export default function OperationScreen (props) {
               <Tab.Navigator
                 id={'OperationScreen_TabNavigator'}
                 initialLayout={{ width: splitWidth, height: dimensions.height }}
-                initialRouteName={ 'Settings' }
+                initialRouteName={ operation?.qsoCount > 0 ? 'Info' : 'Settings' }
                 screenOptions={{
-                  tabBarItemStyle: [{ width: (dimensions.width - splitWidth) / 3 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
+                  tabBarItemStyle: [{ width: (dimensions.width - splitWidth) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                   tabBarLabelStyle: styles.screenTabBarLabel,
                   tabBarStyle: styles.screenTabBar,
                   tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryHighlight, height: styles.halfSpace * 1.5 },
@@ -111,6 +108,13 @@ export default function OperationScreen (props) {
                   lazy: true
                 }}
               >
+                <Tab.Screen
+                  name="Info"
+                  options={{ title: 'Info' }}
+                  component={OpInfoTab}
+                  initialParams={{ uuid: operation.uuid, operation }}
+                />
+
                 <Tab.Screen
                   name="Spots"
                   component={OpSpotsTab}
@@ -128,7 +132,7 @@ export default function OperationScreen (props) {
 
                 <Tab.Screen
                   name="Settings"
-                  options={{ title: 'Info' }}
+                  options={{ title: 'Operation' }}
                   component={OpSettingsTab}
                   initialParams={{ uuid: operation.uuid, operation, splitView }}
                   splitView={splitView}
@@ -152,7 +156,7 @@ export default function OperationScreen (props) {
             <Tab.Navigator
               id={'OperationScreen_TabNavigator'}
               initialLayout={{ width: splitWidth, height: dimensions.height }}
-              initialRouteName={ settingsOnly ? 'Settings' : 'QSOs'}
+              initialRouteName={ operation?.qsoCount > 0 ? 'QSOs' : 'Settings' }
               screenOptions={{
                 tabBarItemStyle: [{ width: dimensions.width / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 4, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                 tabBarLabelStyle: styles.screenTabBarLabel,
@@ -186,7 +190,7 @@ export default function OperationScreen (props) {
 
               <Tab.Screen
                 name="Settings"
-                options={{ title: 'Info' }}
+                options={{ title: 'Operation' }}
                 component={OpSettingsTab}
                 initialParams={{ uuid: operation.uuid, operation }}
               />

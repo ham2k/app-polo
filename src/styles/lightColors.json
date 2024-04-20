@@ -6,7 +6,7 @@
     "onPrimaryContainer": "rgb(0, 31, 41)",
     "secondary": "rgb(0, 95, 175)",
     "onSecondary": "rgb(255, 255, 255)",
-    "secondaryContainer": "rgb(212, 227, 255)",
+    "secondaryContainer": "rgb(210, 227, 252)",
     "onSecondaryContainer": "rgb(0, 28, 58)",
     "tertiary": "rgb(150, 73, 0)",
     "onTertiary": "rgb(255, 255, 255)",
