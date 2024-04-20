@@ -143,7 +143,7 @@ export const findAllCallNotes = (call, enabledLocations) => {
 export const useOneCallNoteFinder = (call) => {
   const settings = useSelector(state => selectExtensionSettings(state, Info.key))
   return useMemo(() => {
-    const cleanCall = call.replace(/\/$/, '') // Remove trailing /, until this gets fixed in lib-callsign
+    const cleanCall = (call ?? '').replace(/\/$/, '') // Remove trailing /, until this gets fixed in lib-callsign
     return findCallNotes(cleanCall, settings?.enabledLocations || {})
   }, [call, settings?.enabledLocations])
 }

@@ -13,9 +13,67 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
-export default function HeaderBar ({ route, options, navigation, back, close, title, subTitle, rightAction, headerBackVisible, closeInsteadOfBack, onRightActionPress }) {
-  const styles = useThemedStyles()
+function prepareStyles (baseStyles, options) {
+  return ({
+    ...baseStyles,
+    root: {
+      height: baseStyles.oneSpace * 6
+    },
+    content: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center'
+    },
+    screenContainer: {
+      backgroundColor: baseStyles.colors.background
+    },
+    screenTitle: {
+      fontSize: 20 * baseStyles.fontScaleAdjustment,
+      color: baseStyles.colors.onPrimary,
+      fontFamily: baseStyles.boldTitleFontFamily
+      // fontWeight: 'bold'
+    },
+    screenTitleSmall: {
+      fontSize: 14 * baseStyles.fontScaleAdjustment,
+      color: baseStyles.colors.onPrimary,
+      fontFamily: 'Roboto Slab Medium'
+    },
+    screenSubTitle: {
+      fontSize: 12 * baseStyles.fontScaleAdjustment,
+      color: baseStyles.colors.onPrimary,
+      fontWeight: baseStyles.isIOS ? '300' : '100',
+      fontFamily: baseStyles.normalFontFamily
+    },
+    screenSubTitleCondensed: {
+      fontSize: 12 * baseStyles.fontScaleAdjustment,
+      color: baseStyles.colors.onPrimary,
+      fontWeight: baseStyles.isIOS ? '300' : '100',
+      fontFamily: baseStyles.maybeCondensedFontFamily
+    },
+    screenTitleLight: {
+      fontSize: 20 * baseStyles.fontScaleAdjustment,
+      color: baseStyles.colors.onPrimary,
+      fontWeight: baseStyles.isIOS ? '300' : '100',
+      marginLeft: baseStyles.oneSpace
+    },
+    screenTitleBold: {
+      fontFamily: 'Roboto Black',
+      fontSize: 20 * baseStyles.fontScaleAdjustment
+    },
+    sideContent: {
+      flex: 0,
+      width: baseStyles.oneSpace * (options.back || options.close) ? 7 : 12
+    },
+    appBarTheme: {
+      colors: {
+        surface: baseStyles.colors.primary,
+        onSurface: baseStyles.colors.onPrimary
+      }
+    }
+  })
+}
 
+export default function HeaderBar ({ route, options, navigation, back, close, title, subTitle, rightAction, headerBackVisible, closeInsteadOfBack, onRightActionPress }) {
   title = title || options?.title
   subTitle = subTitle || options?.subTitle
   rightAction = rightAction ?? options?.rightAction
@@ -23,55 +81,45 @@ export default function HeaderBar ({ route, options, navigation, back, close, ti
   closeInsteadOfBack = closeInsteadOfBack ?? options?.closeInsteadOfBack
   headerBackVisible = headerBackVisible ?? options?.headerBackVisible ?? true
 
+  const styles = useThemedStyles(prepareStyles, { back, close })
+
   if (closeInsteadOfBack) {
     close = back
   }
-
-  const sidesWidth = useMemo(() => {
-    if (back || close) {
-      return styles.oneSpace * 7
-    } else {
-      return styles.oneSpace * 12
-    }
-  }, [back, close, styles])
-
   return (
     <Appbar.Header
-      theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
+      theme={styles.appBarTheme}
       dark={true}
       mode={'center-aligned'}
-      style={styles.screenHeader }
+      style={styles.root}
     >
       <StatusBar
         barStyle={'light-content'}
         backgroundColor={styles.colors.primary}
       />
 
-      <View flexDirection="row" justifyContent="flex-start" style={{ flex: 0, width: sidesWidth }}>
+      <View flexDirection="row" justifyContent="flex-start" style={styles.sideContent}>
         {headerBackVisible && (
           back ? (
             <Appbar.Action
               isLeading
               onPress={navigation.goBack}
               icon={closeInsteadOfBack ? 'close' : 'arrow-left'}
-              theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
+              theme={styles.appBarTheme}
             />
           ) : (
-            <Text style={[styles.screenTitleLight, { marginLeft: styles.oneSpace }]} numberOfLines={1} adjustsFontSizeToFit={true}>Ham2K</Text>
+            <Text style={styles.screenTitleLight} numberOfLines={1} adjustsFontSizeToFit={true}>Ham2K</Text>
           )
         )}
       </View>
 
       <Appbar.Content
-        style={[{ flex: 1, flexDirection: 'column', justifyContent: 'center' }]}
+        style={styles.content}
         title={
           title && subTitle ? (
             <>
               <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={styles.screenTitleSmall}>{title}</Text>
-              <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={[styles.screenSubTitle, { fontFamily: subTitle.length > 60 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }]}>{subTitle}</Text>
-              {/* <Text style={[styles.screenTitleLight]}>{title}</Text> */}
-              {/* <Text style={styles.screenTitleBold}>{'  '}{subTitle}</Text> */}
-              {/* </Text> */}
+              <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}>{subTitle}</Text>
             </>
           ) : (
             <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.8} style={styles.screenTitle}>{title}</Text>
@@ -79,14 +127,14 @@ export default function HeaderBar ({ route, options, navigation, back, close, ti
         }
       />
 
-      <View flexDirection="row" justifyContent="flex-end" style={{ width: sidesWidth }}>
+      <View flexDirection="row" justifyContent="flex-end" style={styles.sideContent}>
         {rightAction ? (
           <Appbar.Action
             isLeading
             onPress={onRightActionPress}
             icon={rightAction}
             size={styles.oneSpace * 2.5}
-            theme={{ colors: { surface: styles.colors.primary, onSurface: styles.colors.onPrimary } }}
+            theme={styles.appBarTheme}
           />
         ) : (
           <Text>{' '}</Text>

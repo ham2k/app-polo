@@ -32,7 +32,7 @@ function prepareStyles (baseTheme, height) {
   }
   return {
     ...baseTheme,
-    screen: {
+    root: {
       flex: 1,
       flexDirection: 'column',
       justifyContent: 'center',
@@ -150,7 +150,7 @@ export default function StartScreen ({ setAppState }) {
   }, [setStartupPhase, startupPhase])
 
   return (
-    <ImageBackground source={SPLASH_IMAGE} style={styles.screen}>
+    <ImageBackground source={SPLASH_IMAGE} style={styles.root}>
       <SafeAreaView>
         <GestureHandlerRootView style={styles.container}>
           <Pressable style={styles.titleBox} onPress={() => { handleInterruption(); return true }}>

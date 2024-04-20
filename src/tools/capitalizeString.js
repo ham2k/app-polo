@@ -7,7 +7,7 @@
 
 const MIXED_CASE_REGEX = /[A-Z][a-z]/g
 const ALL_UPPER_CASE_REGEX = /^[A-Z]+$/g
-const WORD_OR_HYPENED_SEPARATOR_REGEX = /([^\s-.]+?)([\s"-.]+|\s*$)/g
+const WORD_OR_HYPENED_SEPARATOR_REGEX = /([^\s-.]+?)([\s"“”‘’'-.]+|\s*$)/g
 const LETTERS_ONLY_REGEX = /^[a-z]+$/
 const PERIOD_REGEX = /\./g
 

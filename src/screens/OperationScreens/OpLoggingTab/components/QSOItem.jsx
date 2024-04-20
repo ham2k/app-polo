@@ -51,7 +51,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
     <TouchableRipple onPress={() => onPress && onPress({ qso })} style={{ backgroundColor: selected ? styles.theme.colors.secondaryContainer : undefined }}>
       <View style={styles.compactRow}>
         <Text style={styles.fields.number}>{qso._number}</Text>
-        <Text style={styles.fields.time}>{fmtDateTimeZuluDynamic(qso.startOnMillis, { compact: !styles.mdOrGreater })}</Text>
+        <Text style={styles.fields.time}>{fmtDateTimeZuluDynamic(qso.startOnMillis, { compact: !styles.extendedWidth })}</Text>
         <Text style={styles.fields.freq}>
           {freqParts[0] && <Text style={styles.fields.freqMHz}>{freqParts[0]}.</Text>}
           {freqParts[1] && <Text style={styles.fields.freqKHz}>{freqParts[1]}</Text>}
