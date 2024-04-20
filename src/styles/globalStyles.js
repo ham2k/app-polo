@@ -66,44 +66,6 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     condensedFontFamily,
     maybeCondensedFontFamily,
 
-    screen: {
-      backgroundColor: theme.colors.background
-    },
-    screenHeader: {
-      height: oneSpace * 6
-    },
-    screenContainer: {
-      backgroundColor: theme.colors.background
-    },
-    sectionContainer: {
-      marginTop: oneSpace * 2,
-      paddingHorizontal: 24
-    },
-    screenTitle: {
-      fontSize: 20 * fontScaleAdjustment,
-      color: theme.colors.onPrimary,
-      fontFamily: boldTitleFontFamily
-      // fontWeight: 'bold'
-    },
-    screenTitleSmall: {
-      fontSize: 14 * fontScaleAdjustment,
-      color: theme.colors.onPrimary,
-      fontFamily: 'Roboto Slab Medium'
-    },
-    screenSubTitle: {
-      fontSize: 12 * fontScaleAdjustment,
-      color: theme.colors.onPrimary,
-      fontWeight: isIOS ? '300' : '100'
-    },
-    screenTitleLight: {
-      fontSize: 20 * fontScaleAdjustment,
-      color: theme.colors.onPrimary,
-      fontWeight: isIOS ? '300' : '100'
-    },
-    screenTitleBold: {
-      fontFamily: 'Roboto Black',
-      fontSize: 20 * fontScaleAdjustment
-    },
     screenTabBar: {
       backgroundColor: theme.colors.primary
     },

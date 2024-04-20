@@ -11,9 +11,23 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import { KeyboardAvoidingView, Platform, View, Keyboard } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
+function prepareStyles (baseStyles) {
+  return ({
+    ...baseStyles,
+    root: {
+      backgroundColor: baseStyles.colors.background,
+      flex: 1,
+      height: '100%',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'stretch'
+    }
+  })
+}
+
 export default function ScreenContainer ({ children }) {
   const headerHeight = useHeaderHeight()
-  const styles = useThemedStyles()
+  const styles = useThemedStyles(prepareStyles)
 
   const [keyboardVisible, setKeyboardVisible] = useState()
 
@@ -42,7 +56,7 @@ export default function ScreenContainer ({ children }) {
   if (Platform.OS === 'ios') {
     return (
       <KeyboardAvoidingView
-        style={[styles.screenContainer, { flex: 1, height: '100%', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch' }]}
+        style={styles.root}
         behavior={'padding'}
         keyboardVerticalOffset={headerHeight}
         enabled={keyboardVisible}
@@ -52,7 +66,7 @@ export default function ScreenContainer ({ children }) {
     )
   } else {
     return (
-      <View style={[styles.screenContainer, { flex: 1, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch' }]}>
+      <View style={styles.root}>
         {children}
       </View>
     )
