@@ -88,7 +88,15 @@ const ActivatorLoggingControl = {
 const ReferenceHandler = {
   ...Info,
 
-  description: (operation) => refsToString(operation, Info.activationType),
+  shortDescription: (operation) => refsToString(operation, Info.activationType),
+
+  description: (operation) => {
+    const refs = filterRefs(operation, Info.activationType)
+    return [
+      refs.map(r => r.ref).filter(x => x).join(', '),
+      refs.map(r => r.name).filter(x => x).join(', ')
+    ].filter(x => x).join(' • ')
+  },
 
   decorateRef: (ref) => {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', shortName: '', location: '' }
