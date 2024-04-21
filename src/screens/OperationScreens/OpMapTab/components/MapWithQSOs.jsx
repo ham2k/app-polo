@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import MapView, { Marker, Polyline, Circle } from 'react-native-maps'
-import { View, useWindowDimensions, useColorScheme } from 'react-native'
+import { View, useColorScheme } from 'react-native'
 
 import { fmtShortTimeZulu } from '../../../../tools/timeFormats'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../../tools/geoTools'
@@ -63,33 +63,41 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     }
   }, [qth, mappableQSOs])
 
-  // eslint-disable-next-line no-unused-vars
-  const { width, height } = useWindowDimensions()
-  const [longitudeDelta, setLongitudeDelta] = useState(Math.floor(initialRegion.longitudeDelta))
+  const [layout, setLayout] = useState()
+  const handleLayout = useCallback((event) => {
+    setLayout(event?.nativeEvent?.layout)
+  }, [setLayout])
+
+  const [region, setRegion] = useState(initialRegion)
   const handleRegionChange = useCallback((newRegion) => {
-    setLongitudeDelta(Math.max(1, Math.floor(newRegion.longitudeDelta)))
-  }, [])
+    setRegion(newRegion)
+  }, [setRegion])
 
   const scale = useMemo(() => {
-    const metersPerPixel = (longitudeDelta * METERS_IN_ONE_DEGREE) / width
-    const metersPerOneSpace = metersPerPixel * styles.oneSpace
-    return { metersPerPixel, metersPerOneSpace }
-  }, [longitudeDelta, width, styles])
+    if (layout?.height && region?.longitudeDelta) {
+      const metersPerPixel = (region.longitudeDelta * METERS_IN_ONE_DEGREE) / layout.width
+      const metersPerOneSpace = Math.floor(metersPerPixel * styles.oneSpace)
+      return { metersPerPixel, metersPerOneSpace, region, layout }
+    } else {
+      return null
+    }
+  }, [layout, region, styles])
 
   const mapStyles = useMemo(() => {
-    const newStyles = stylesForMap({ longitudeDelta, count: mappableQSOs?.length, deviceColorScheme })
+    const newStyles = stylesForMap({ latitudeDelta: scale?.latitudeDelta, metersPerPixel: scale?.metersPerPixel, count: mappableQSOs?.length, deviceColorScheme })
 
     return newStyles
-  }, [longitudeDelta, mappableQSOs?.length, deviceColorScheme])
+  }, [scale, mappableQSOs?.length, deviceColorScheme])
 
   return (
     <MapView
+      onLayout={handleLayout}
       style={styles.root}
       initialRegion={initialRegion}
       onRegionChange={handleRegionChange}
       mapType={styles.isIOS ? 'mutedStandard' : 'terrain'}
     >
-      {qth.latitude && qth.longitude && (
+      {qth.latitude && qth.longitude && scale && (
         <>
           <Marker
             key={'qth'}
@@ -105,25 +113,27 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
           </Marker>
           <Circle
             center={qth}
-            radius={scale.metersPerOneSpace * 0.5}
+            radius={radiusForMarker({ location: qth, scale, size: 1 })}
             fillColor={'rgba(0,180,0,1)'}
             strokeWidth={0.1}
           />
         </>
       )}
-      <MapMarkers
-        qth={qth}
-        qsos={mappableQSOs}
-        mapStyles={mapStyles}
-        styles={styles}
-        metersPerOneSpace={scale.metersPerOneSpace}
-        selectedKey={selectedKey}
-      />
+      {scale && (
+        <MapMarkers
+          qth={qth}
+          qsos={mappableQSOs}
+          mapStyles={mapStyles}
+          styles={styles}
+          scale={scale}
+          selectedKey={selectedKey}
+        />
+      )}
     </MapView>
   )
 }
 
-const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, metersPerOneSpace }) => {
+const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, scale }) => {
   const ref = useRef()
 
   useEffect(() => {
@@ -160,7 +170,7 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, metersPerOneSpa
           </Marker>
           <Circle
             center={location}
-            radius={metersPerOneSpace * mapStyles.marker.size / 2}
+            radius={radiusForMarker({ location, scale, size: mapStyles.marker.size })}
             fillColor={`rgba(${RGB_FOR_STRENGTH[strength] ?? RGB_FOR_STRENGTH[5]}, ${mapStyles.marker.opacity})`}
             strokeWidth={0.1}
           />
@@ -168,6 +178,22 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, metersPerOneSpa
       ))}
     </>
   )
+}
+
+function radiusForMarker ({ location, size, scale }) {
+  const latitude = Math.abs(location.latitude ?? location.lat)
+  let latitudeScale
+  if (latitude > 80) latitudeScale = 0.7
+  else if (latitude > 70) latitudeScale = 0.8
+  else if (latitude > 60) latitudeScale = 0.8
+  else if (latitude > 50) latitudeScale = 1
+  else if (latitude > 40) latitudeScale = 1.1
+  else if (latitude > 30) latitudeScale = 1.4
+  else if (latitude > 20) latitudeScale = 1.5
+  else if (latitude > 10) latitudeScale = 1.8
+  else latitudeScale = 2
+
+  return (scale.metersPerOneSpace * size * latitudeScale) / 2
 }
 
 function strengthForQSO (qso) {
@@ -187,28 +213,28 @@ function strengthForQSO (qso) {
   }
 }
 
-function stylesForMap ({ longitudeDelta, count, deviceColorScheme }) {
+function stylesForMap ({ longitudeDelta, metersPerPixel, count, deviceColorScheme }) {
   const darkMode = deviceColorScheme === 'dark'
 
   if (count > 50) {
     longitudeDelta = longitudeDelta * 1.5
   }
 
-  if (longitudeDelta > 140) {
-    return { marker: { opacity: 0.7, size: 0.6 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
-  } else if (longitudeDelta > 120) {
+  if (metersPerPixel > 32000) {
     return { marker: { opacity: 0.7, size: 0.7 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
-  } else if (longitudeDelta > 90) {
-    return { marker: { opacity: 0.8, size: 0.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
-  } else if (longitudeDelta > 60) {
-    return { marker: { opacity: 0.7, size: 0.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
-  } else if (longitudeDelta > 40) {
-    return { marker: { opacity: 0.7, size: 0.9 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
-  } else if (longitudeDelta > 25) {
+  } else if (metersPerPixel > 16000) {
+    return { marker: { opacity: 0.7, size: 0.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
+  } else if (metersPerPixel > 8000) {
+    return { marker: { opacity: 0.8, size: 0.9 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
+  } else if (metersPerPixel > 4000) {
     return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
-  } else if (longitudeDelta > 15) {
-    return { marker: { opacity: 1, size: 1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.4)` } }
-  } else if (longitudeDelta > 10) {
+  } else if (metersPerPixel > 2000) {
+    return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
+  } else if (metersPerPixel > 1000) {
+    return { marker: { opacity: 0.7, size: 1.05 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
+  } else if (metersPerPixel > 500) {
+    return { marker: { opacity: 1, size: 1.1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.4)` } }
+  } else if (metersPerPixel > 100) {
     return { marker: { opacity: 1, size: 1.2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
   } else {
     return { marker: { opacity: 1, size: 1.4 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
