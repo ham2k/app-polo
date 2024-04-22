@@ -10,7 +10,6 @@ import { FlatList, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import SpotItem, { guessItemHeight } from './SpotItem'
-import { useNavigation } from '@react-navigation/native'
 import { RefreshControl } from 'react-native-gesture-handler'
 
 function prepareStyles (themeStyles, themeColor) {
@@ -45,6 +44,7 @@ function prepareStyles (themeStyles, themeColor) {
         fontWeight: 'bold',
         marginLeft: themeStyles.oneSpace * 2,
         minWidth: themeStyles.oneSpace * 5,
+        lineHeight: themeStyles.oneSpace * 2.5,
         textAlign: 'left'
       },
       band: {

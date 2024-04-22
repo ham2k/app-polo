@@ -78,6 +78,9 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
           )}
         </Text>
         <Text style={styles.fields.icon}>
+          {qso.their?.guess?.emoji && (
+            qso.their?.guess?.emoji + ' '
+          )}
           {qso.notes && (
             <Icon source="note-outline" size={styles.oneSpace * 2} style={styles.fields.icon} />
           )}

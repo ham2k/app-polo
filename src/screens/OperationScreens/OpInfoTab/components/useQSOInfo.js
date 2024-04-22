@@ -7,6 +7,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
+import emojiRegex from 'emoji-regex'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -20,6 +21,8 @@ import { findQSOHistory } from '../../../../store/qsos/actions/findQSOHistory'
 
 import { filterRefs } from '../../../../tools/refTools'
 import { useOneCallNoteFinder } from '../../../../extensions/data/call-notes/CallNotesExtension'
+
+const EMOJI_REGEX = emojiRegex()
 
 export const useQSOInfo = ({ qso, operation }) => {
   const online = useSelector(selectRuntimeOnline)
@@ -146,6 +149,16 @@ export const useQSOInfo = ({ qso, operation }) => {
       }
     }
 
+    if (callNotes?.length > 0) {
+      newGuess.note = callNotes[0].note
+      const matches = newGuess.note && newGuess.note.match(EMOJI_REGEX)
+      if (matches) {
+        newGuess.emoji = matches[0]
+      } else {
+        newGuess.emoji = '⭐️'
+      }
+    }
+
     if (pota?.grid6 && pota?.locationDesc?.indexOf(',') < 0) {
       // Only use POTA info if it's not a multi-state park
       newGuess.grid = pota.grid6
@@ -156,7 +169,7 @@ export const useQSOInfo = ({ qso, operation }) => {
       }
     }
     return { guess: newGuess, lookup: newLookup }
-  }, [theirCall, qrz, pota, callHistory])
+  }, [theirCall, qrz, pota, callHistory, callNotes])
 
   return {
     ourInfo, theirCall, guess, lookup, pota, qrz, callNotes, callHistory, online
