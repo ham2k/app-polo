@@ -1,5 +1,5 @@
 {
-  "0.7.5-pre5": {
+  "0.7.5-pre6": {
     "changes": [
       "PoLo is now officialy Open Source",
       "Theme tweaks, colors, sizes, maps colors",
@@ -8,7 +8,8 @@
       "WWFF Spotting (contributed by M1SDH)",
       "Worked All Britain Squares (contributed by M1SDH)",
       "Removed Solar Eclipse QSO Party",
-      "Show POTA names in Operation Settings screen"
+      "Show POTA names in Operation Settings screen",
+      "Show call notes emoji in log and spots"
     ]
   },
   "0.7.4": {

@@ -1,6 +1,6 @@
 {
   "name": "ham2k-polo",
-  "version": "0.7.5-pre5",
+  "version": "0.7.5-pre6",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -45,6 +45,7 @@
     "color": "^4.2.3",
     "debounce": "^2.0.0",
     "deepmerge": "^4.3.1",
+    "emoji-regex": "^10.3.0",
     "fast-xml-parser": "^4.3.2",
     "fuzzball": "^2.1.2",
     "proj4": "^2.11.0",
