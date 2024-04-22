@@ -14,7 +14,7 @@ import { ScrollView } from 'react-native'
 import ScreenContainer from '../../../../screens/components/ScreenContainer'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { selectExtensionSettings, setExtensionSettings } from '../../../../store/settings'
-import { BUILT_IN_NOTES, CallNotes, CallNotesFiles, Info, createDataFileDefinition } from '../CallNotesExtension'
+import { ActiveCallNotesFiles, BUILT_IN_NOTES, CallNotes, CallNotesFiles, Info, createDataFileDefinition } from '../CallNotesExtension'
 import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
 import { registerDataFile, unRegisterDataFile } from '../../../../store/dataFiles'
 import { loadDataFile } from '../../../../store/dataFiles/actions/dataFileFS'
@@ -30,9 +30,10 @@ const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDo
 
   const updateDef = useCallback((values) => {
     const newFiles = [...extSettings.customFiles]
-    newFiles[index] = { ...newFiles[index], ...values }
+    newFiles[index] = { ...def, ...values }
+
     dispatch(setExtensionSettings({ key: Info.key, customFiles: newFiles }))
-  }, [dispatch, index, extSettings])
+  }, [dispatch, index, def, extSettings?.customFiles])
 
   const handleDelete = useCallback(() => {
     const newFiles = [...extSettings.customFiles]
@@ -44,12 +45,14 @@ const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDo
       CallNotesFiles.splice(pos, 1)
       delete CallNotes[originalDef.location]
       unRegisterDataFile(`call-notes-${originalDef.location}`)
+      ActiveCallNotesFiles[originalDef.location] = false
     }
 
     onDialogDone && onDialogDone()
   }, [dispatch, extSettings.customFiles, index, onDialogDone, originalDef])
 
   const handleDone = useCallback(async () => {
+    const originallyEnabled = ActiveCallNotesFiles[originalDef.location]
     if (def.location !== originalDef.location) {
       const pos = CallNotesFiles.findIndex(f => f.location === originalDef.location)
       if (pos >= 0) {
@@ -59,9 +62,11 @@ const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDo
       }
       delete CallNotes[originalDef.location]
       unRegisterDataFile(`call-notes-${originalDef.location}`)
+      ActiveCallNotesFiles[originalDef.location] = false
 
       registerDataFile(createDataFileDefinition(def))
       await dispatch(loadDataFile(`call-notes-${def.location}`))
+      ActiveCallNotesFiles[def.location] = originallyEnabled
     }
     onDialogDone && onDialogDone()
   }, [onDialogDone, def, dispatch, originalDef])
@@ -75,13 +80,12 @@ const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDo
           value={def.name ?? ''}
           placeholder={'Name for your Callsign Notes File'}
           onChangeText={(value) => updateDef({ name: value }) }
-          style={{ marginBottom: styles.oneSpace }}
         />
         <ThemedTextInput
           label="Location"
           value={def.location ?? ''}
           inputMode={'url'}
-          multiline={true}
+          // multiline={true}  // TODO: Change to multiline when this bug is fixed https://github.com/facebook/react-native/issues/37784
           placeholder={'https://example.com/dir/notes.txt'}
           onChangeText={(value) => updateDef({ location: value }) }
         />
@@ -117,6 +121,11 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
 
   const [selectedFile, setSelectedFile] = useState()
 
+  const handleToggle = useCallback((location, value) => {
+    dispatch(setExtensionSettings({ key: Info.key, enabledLocations: { ...enabledLocations, [location]: value } }))
+    ActiveCallNotesFiles[location] = value
+  }, [dispatch, enabledLocations])
+
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
@@ -127,8 +136,7 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
               title={def.name}
               description={def.description}
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-account-outline" />}
-              right={() => <Switch value={!!enabledLocations[def.location]} onValueChange={(value) => dispatch(setExtensionSettings({ key: Info.key, enabledLocations: { ...enabledLocations, [def.location]: value } })) } />}
-              onPress={() => dispatch(setExtensionSettings({ key: Info.key, enabledLocations: { ...enabledLocations, [def.location]: !enabledLocations[def.location] } }))}
+              right={() => <Switch value={!!enabledLocations[def.location]} onValueChange={(value) => handleToggle(def.location, value) } />}
             />
           ))}
         </Ham2kListSection>
@@ -139,7 +147,7 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
               title={def.name}
               description={def.location}
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-account-outline" />}
-              right={() => <Switch value={!!enabledLocations[def.location]} onValueChange={(value) => dispatch(setExtensionSettings({ key: Info.key, enabledLocations: { ...enabledLocations, [def.location]: value } })) } />}
+              right={() => <Switch value={!!enabledLocations[def.location]} onValueChange={(value) => handleToggle(def.location, value) } />}
               onPress={() => setSelectedFile(i)}
             />
           ))}

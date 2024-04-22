@@ -14,7 +14,6 @@ import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/d
 import { selectExtensionSettings } from '../../../store/settings'
 import { List } from 'react-native-paper'
 import ManageCallNotesScreen from './screens/ManageCallNotesScreen'
-import { useSelector } from 'react-redux'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
 export const Info = {
@@ -51,6 +50,10 @@ const Extension = {
       CallNotesFiles.push(file)
       registerDataFile(createDataFileDefinition(file))
       await dispatch(loadDataFile(`call-notes-${file.location}`))
+
+      if (settings.enabledLocations?.[file.location] !== false) {
+        ActiveCallNotesFiles[file.location] = true
+      }
     }
 
     registerHook('setting', {
@@ -80,6 +83,7 @@ const Extension = {
     for (const file of CallNotesFiles) {
       unRegisterDataFile(`call-notes-${file.location}`)
       await dispatch(removeDataFile(`call-notes-${file.location}`))
+      ActiveCallNotesFiles[file.location] = false
     }
     CallNotesFiles.length = 0 // empty the array
   }
@@ -122,7 +126,8 @@ const createCallNotesLoader = (file) => async (data) => {
   CallNotes[file.location] = data
 }
 
-export const findCallNotes = (call, enabledLocations) => {
+export const findCallNotes = (call, enabledLocations = ActiveCallNotesFiles) => {
+  call = (call ?? '').replace(/\/$/, '') // Remove trailing /, until this gets fixed in lib-callsign
   for (const file of CallNotesFiles) {
     if (enabledLocations[file.location] !== false && CallNotes[file.location]?.[call]) {
       return CallNotes[file.location][call]
@@ -130,7 +135,8 @@ export const findCallNotes = (call, enabledLocations) => {
   }
 }
 
-export const findAllCallNotes = (call, enabledLocations) => {
+export const findAllCallNotes = (call, enabledLocations = ActiveCallNotesFiles) => {
+  call = (call ?? '').replace(/\/$/, '') // Remove trailing /, until this gets fixed in lib-callsign
   let notes = []
   for (const file of CallNotesFiles) {
     if (enabledLocations[file.location] !== false && CallNotes[file.location]?.[call]) {
@@ -141,16 +147,13 @@ export const findAllCallNotes = (call, enabledLocations) => {
 }
 
 export const useOneCallNoteFinder = (call) => {
-  const settings = useSelector(state => selectExtensionSettings(state, Info.key))
   return useMemo(() => {
-    const cleanCall = (call ?? '').replace(/\/$/, '') // Remove trailing /, until this gets fixed in lib-callsign
-    return findCallNotes(cleanCall, settings?.enabledLocations || {})
-  }, [call, settings?.enabledLocations])
+    return findCallNotes(call)
+  }, [call])
 }
 
 export const useAllCallNotesFinder = (call) => {
-  const settings = useSelector(state => selectExtensionSettings(state, Info.key))
   return useMemo(() => {
-    return findAllCallNotes(call, settings.enabledLocations || {})
-  }, [call, settings?.enabledLocations])
+    return findAllCallNotes(call)
+  }, [call])
 }

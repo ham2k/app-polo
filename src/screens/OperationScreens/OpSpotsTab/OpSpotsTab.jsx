@@ -9,6 +9,7 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { View } from 'react-native'
 import { Icon, Text } from 'react-native-paper'
+import emojiRegex from 'emoji-regex'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useSpotsQuery } from '../../../store/apiPOTA'
@@ -20,6 +21,9 @@ import { BANDS } from '@ham2k/lib-operation-data'
 import { findQSOHistory } from '../../../store/qsos/actions/findQSOHistory'
 import { selectAllOperations, selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs } from '../../../tools/refTools'
+import { findCallNotes, useOneCallNoteFinder } from '../../../extensions/data/call-notes/CallNotesExtension'
+
+const EMOJI_REGEX = emojiRegex()
 
 function simplifiedMode (mode) {
   if (mode === 'CW') {
@@ -108,6 +112,17 @@ export default function OpSpotsTab ({ navigation, route }) {
           }
           flags._worked = !flags._newBand && !flags._newMode && !flags._newReference && !flags._newActivity
         }
+        // console.log(spot)
+        const callNote = findCallNotes(spot.activator)
+        if (callNote) {
+          const matches = callNote[0].note && callNote[0].note.match(EMOJI_REGEX)
+          if (matches) {
+            flags._emoji = matches[0]
+          } else {
+            flags._emoji = '⭐️'
+          }
+        }
+
         annotatedSpots.push({ ...spot, ...flags })
       }
 
