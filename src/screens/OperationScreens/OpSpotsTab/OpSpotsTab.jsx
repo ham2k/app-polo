@@ -21,7 +21,7 @@ import { BANDS } from '@ham2k/lib-operation-data'
 import { findQSOHistory } from '../../../store/qsos/actions/findQSOHistory'
 import { selectAllOperations, selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs } from '../../../tools/refTools'
-import { findCallNotes, useOneCallNoteFinder } from '../../../extensions/data/call-notes/CallNotesExtension'
+import { findCallNotes } from '../../../extensions/data/call-notes/CallNotesExtension'
 
 const EMOJI_REGEX = emojiRegex()
 
