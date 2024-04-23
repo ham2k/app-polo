@@ -32,6 +32,7 @@ import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
+import { annotateQSO } from '../../OpInfoTab/components/useQSOInfo'
 
 const DEBUG = false
 
@@ -138,7 +139,7 @@ function prepareSuggestedQSO (qso) {
   return clone
 }
 
-export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings }) {
+export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings, online }) {
   const [qso, setQSO, updateQSO] = useUIState('LoggingPanel', 'qso', undefined)
 
   const [originalQSO, setOriginalQSO] = useState()
@@ -252,7 +253,13 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
   }, [qsoQueue, setQSOQueue, loggingState?.selectedKey, updateLoggingState, loggingState?.suggestedQSO, operation, settings, qso, setNewQSO, qsos])
 
   useEffect(() => { // Validate and analize the callsign
-    const callInfo = parseCallsign(qso?.their?.call)
+    let call = qso?.their?.call ?? ''
+    if (call.indexOf(',') >= 0) {
+      const calls = call = call.split(',')
+      call = calls[calls.length - 1].trim()
+    }
+
+    const callInfo = parseCallsign(call)
 
     if (callInfo?.baseCall) {
       setIsValidQSO(true)
@@ -322,7 +329,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     const component = focusedRef?.current?._internalFiberInstanceHandleDEV
     component?.memoizedProps?.onBlur()
 
-    setTimeout(() => { // Run inside a setTimeout to allow the state to update
+    setTimeout(async () => { // Run inside a setTimeout to allow the state to update
       // First, try to process any commands
       if (checkAndProcessCommands(qso?.their?.call, { qso, originalQSO, operation, dispatch, settings, handleFieldChange })) {
         return
@@ -336,7 +343,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         setUndoInfo(undefined)
         setQSO(undefined) // Let queue management decide what to do
       } else if (isValidQSO && !qso.deleted) {
-        batch(() => {
+        await batch(async () => {
           setCurrentSecondaryControl(undefined)
 
           if (qso?._isNew && qso?._manualTime && qso.startOnMillis) {
@@ -347,6 +354,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
                 nextManualTime = qso.startOnMillis + Math.min(diff, 60 * 5000)
               }
             }
+            // No need to await this one, can happen in parallel
             dispatch(setOperationData({ uuid: operation.uuid, _nextManualTime: nextManualTime }))
           }
 
@@ -371,13 +379,30 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
           qso.their = qso.their || {}
           qso.their.sent = qso.their.sent || (operation.mode === 'CW' || operation.mode === 'RTTY' ? '599' : '59')
 
-          qso.key = qsoKey(qso)
+          let call = qso?.their?.call
+          const calls = call = call.split(',')
+          for (let i = 0; i < calls.length; i++) {
+            let oneQSO = qso
+            if (calls.length > 1) { // If this is a multi-call QSO, we need to clone and annotate the QSO for each call
+              oneQSO = cloneDeep(qso)
+              oneQSO.their.call = calls[i].trim()
+              oneQSO.their.guess = {}
+              oneQSO.their.lookup = {}
+              await annotateQSO({ qso: oneQSO, online, settings, dispatch })
 
-          if (DEBUG) logTimer('submit', 'handleSubmit before dispatch')
-          dispatch(addQSO({ uuid: operation.uuid, qso }))
-          if (DEBUG) logTimer('submit', 'handleSubmit before updateLoggingState')
-          updateLoggingState({ selectedKey: undefined, lastKey: qso.key })
-          if (DEBUG) logTimer('submit', 'handleSubmit before setUndoInfo')
+              if (i > 0 && oneQSO._originalKey) {
+                delete oneQSO._originalKey // Only the first call in a multi-call QSO should have the original key
+              }
+            }
+
+            oneQSO.key = qsoKey(oneQSO)
+
+            if (DEBUG) logTimer('submit', 'handleSubmit before dispatch')
+            dispatch(addQSO({ uuid: operation.uuid, qso: oneQSO }))
+            if (DEBUG) logTimer('submit', 'handleSubmit before updateLoggingState')
+            updateLoggingState({ selectedKey: undefined, lastKey: oneQSO.key })
+            if (DEBUG) logTimer('submit', 'handleSubmit before setUndoInfo')
+          }
           setUndoInfo(undefined)
           if (DEBUG) logTimer('submit', 'handleSubmit before setQSO')
           setQSO(undefined) // Let queue management decide what to do
@@ -388,7 +413,10 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
     }, 10)
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
-  }, [qso, qsos, setQSO, originalQSO, operation, settings, handleFieldChange, isValidQSO, dispatch, updateLoggingState, setCurrentSecondaryControl])
+  }, [
+    qso, qsos, setQSO, originalQSO, operation, settings, online,
+    handleFieldChange, isValidQSO, dispatch, updateLoggingState, setCurrentSecondaryControl
+  ])
 
   const [undoInfo, setUndoInfo] = useState()
 
@@ -509,9 +537,9 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
                     </View>
                   ) : (
                     qso?.their?.call ? (
-                      <CallInfo qso={qso} operation={operation} styles={styles} themeColor={themeColor} updateQSO={updateQSO} settings={settings} />
+                      <CallInfo qso={qso} operation={operation} settings={settings} styles={styles} themeColor={themeColor} updateQSO={updateQSO} />
                     ) : (
-                      <OpInfo operation={operation} styles={styles} qsos={activeQSOs} themeColor={themeColor} />
+                      <OpInfo operation={operation} styles={styles} settings={settings} qsos={activeQSOs} themeColor={themeColor} />
                     )
                   )
 

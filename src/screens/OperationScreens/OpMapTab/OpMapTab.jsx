@@ -78,7 +78,7 @@ export default function OpMapTab ({ navigation, route }) {
     if (nextQSOWithoutInfo) {
       setTimeout(async () => {
         try {
-          const { data } = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: nextQSOWithoutInfo.their.call }))
+          const { data } = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: nextQSOWithoutInfo.their.call }, { subscribe: false }))
           const lookup = {
             name: data?.name,
             state: data?.state,
