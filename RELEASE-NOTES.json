@@ -1,4 +1,9 @@
 {
+  "0.7.6-pre1": {
+    "changes": [
+      "Log multiple QSOs at once"
+    ]
+  },
   "0.7.5": {
     "changes": [
       "PoLo is now officialy Open Source",
