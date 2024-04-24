@@ -15,6 +15,7 @@ export const POTAPostSpot = (operation, comments) => async (dispatch, getState) 
   const call = operation.stationCall || state.settings.operatorCall
 
   const refs = filterRefs(operation, 'potaActivation')
+  const refComment = refs.length > 1 ? `${refs.length}-fer: ${refs.map((x) => (x.ref)).join(' ')}` : ''
   for (const ref of refs) {
     try {
       const response = await fetch('https://api.pota.app/spot', {
@@ -27,7 +28,7 @@ export const POTAPostSpot = (operation, comments) => async (dispatch, getState) 
           reference: ref.ref,
           mode: operation.mode,
           source: 'Ham2K Portable Logger',
-          comments
+          comments: [comments, refComment].filter((x) => (x)).join(' ')
         })
       })
       if (response.status === 200) {
