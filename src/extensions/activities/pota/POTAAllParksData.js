@@ -9,10 +9,10 @@ import RNFetchBlob from 'react-native-blob-util'
 
 import packageJson from '../../../../package.json'
 
-import { fmtDateNice } from '../../../tools/timeFormats'
 import { registerDataFile } from '../../../store/dataFiles'
+import { dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
-export const POTAAllParks = { byReference: {}, prefixByDXCCCode: {}, activeParks: [] }
+export const POTAAllParks = { prefixByDXCCCode: {} }
 
 export function registerPOTAAllParksData () {
   registerDataFile({
@@ -31,32 +31,52 @@ export function registerPOTAAllParksData () {
       })
       const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
 
-      const parks = []
+      await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['pota'])
+
       const lines = body.split('\n')
       const headers = parsePOTACSVRow(lines.shift())
-      lines.forEach(line => {
+
+      let totalActiveParks = 0
+      let totalParks = 0
+      const prefixByDXCCCode = {}
+
+      for (const line of lines) {
         const row = parsePOTACSVRow(line, { headers })
-        parks.push({
+        const data = {
           ref: row.reference,
           dxccCode: Number.parseInt(row.entityId, 10),
           name: row.name,
           shortName: abbreviatePOTAName(row.name),
           active: row.active === '1',
           grid: row.grid,
-          lat: Number.parseFloat(row.latitude),
-          lon: Number.parseFloat(row.longitude)
-        })
-      })
+          lat: Number.parseFloat(row.latitude) ?? 0,
+          lon: Number.parseFloat(row.longitude) ?? 0
+        }
 
-      const activeParks = parks.filter(park => park.active)
+        if (data.ref && data.dxccCode) {
+          totalParks++
+          if (data.active) totalActiveParks++
+
+          if (!prefixByDXCCCode[data.dxccCode]) prefixByDXCCCode[data.dxccCode] = data.ref.split('-')[0]
+
+          await dbExecute(`
+            INSERT INTO lookups
+              (category, subCategory, key, name, data, lat, lon, flags, updated)
+            VALUES
+              (?, ?, ?, ?, ?, ?, ?, ?, 1)
+            ON CONFLICT DO
+            UPDATE SET
+              subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+            `, ['pota', `${data.dxccCode}`, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, data.active, `${data.dxccCode}`, data.name, JSON.stringify(data), data.lat, data.lon, data.active])
+        }
+      }
+
+      await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
 
       const data = {
-        activeParks,
-        prefixByDXCCCode: parks.reduce((obj, item) => {
-          if (!obj[item.dxccCode]) obj[item.dxccCode] = item.ref && item.ref.split('-')[0]
-          return obj
-        }, {}),
-        version: fmtDateNice(new Date())
+        totalParks,
+        totalActiveParks,
+        prefixByDXCCCode
       }
 
       RNFetchBlob.fs.unlink(response.data)
@@ -64,13 +84,41 @@ export function registerPOTAAllParksData () {
       return data
     },
     onLoad: (data) => {
-      POTAAllParks.activeParks = data.activeParks ?? []
       POTAAllParks.prefixByDXCCCode = data.prefixByDXCCCode ?? {}
-      POTAAllParks.version = data.version
-
-      POTAAllParks.byReference = POTAAllParks.activeParks.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
+      POTAAllParks.totalParks = data.totalParks ?? 0
+      POTAAllParks.totalActiveParks = data.totalActiveParks ?? 0
     }
   })
+}
+
+export function potaPrefixForDXCCCode (code) {
+  return (POTAAllParks.prefixByDXCCCode && POTAAllParks.prefixByDXCCCode[code]) || ''
+}
+
+export async function potaFindParkByReference (ref) {
+  return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['pota', ref], { row: row => JSON.parse(row.data) })
+}
+
+export async function potaFindParksByName (dxccCode, name) {
+  console.log('pota find by name', { dxccCode, name })
+  const results = await dbSelectAll(
+    'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
+    ['pota', `${dxccCode}`, `%${name}%`, `%${name}%`],
+    { row: row => JSON.parse(row.data) }
+  )
+  console.log(results)
+  return results
+}
+
+export async function potaFindParksByLocation (dxccCode, lat, lon, delta = 1) {
+  console.log('pota find by location', { dxccCode, lat, lon, delta })
+  const results = await dbSelectAll(
+    'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
+    ['pota', `${dxccCode}`, lat - delta, lat + delta, lon - delta, lon + delta],
+    { row: row => JSON.parse(row.data) }
+  )
+  console.log(results)
+  return results
 }
 
 const QUOTED_CSV_ROW_REGEX = /"(([^"]|"")*)",{0,1}/g
