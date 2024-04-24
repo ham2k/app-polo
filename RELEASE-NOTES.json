@@ -1,7 +1,8 @@
 {
   "0.7.6-pre1": {
     "changes": [
-      "Log multiple QSOs at once"
+      "Log multiple QSOs at once",
+      "Include POTA references in spot comment for multi-park activations (contributed by M1SDH)"
     ]
   },
   "0.7.5": {
