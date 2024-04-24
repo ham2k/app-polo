@@ -12,7 +12,7 @@ import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../to
 import { selectOperationCallInfo } from '../../../store/operations'
 
 import { Info } from './POTAInfo'
-import { POTAAllParks } from './POTAAllParksData'
+import { potaPrefixForDXCCCode } from './POTAAllParksData'
 import POTAInput from './POTAInput'
 
 export function POTALoggingControl (props) {
@@ -42,9 +42,9 @@ export function POTALoggingControl (props) {
 
   const defaultPrefix = useMemo(() => {
     if (qso?.their?.guess?.dxccCode) {
-      return POTAAllParks.prefixByDXCCCode[qso?.their.guess.dxccCode] ?? '?'
+      return potaPrefixForDXCCCode(qso?.their.guess.dxccCode) ?? '?'
     } else if (ourInfo?.dxccCode) {
-      return POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] ?? '?'
+      return potaPrefixForDXCCCode(ourInfo?.dxccCode) ?? '?'
     } else {
       return '?'
     }

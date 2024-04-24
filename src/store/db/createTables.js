@@ -17,31 +17,50 @@ export async function createTables (db) {
     version = 0
   }
 
-  if (version === 1) {
-    // console.log('createTables -- using version 1')
+  // if (version === 2) {
+  //   // console.log('createTables -- using version 1')
+  // } else if (version === 1) {
+  // console.log('createTables -- creating version 2')
+  if (version >= 1) {
+    // await dbExecute('DROP TABLE lookups', [], { db })
+    await dbExecute(`
+      CREATE TABLE IF NOT EXISTS lookups (
+        category TEXT NOT NULL,
+        subCategory TEXT,
+        key TEXT NOT NULL,
+        name TEXT,
+        data TEXT,
+        lat REAL,
+        lon REAL,
+        flags INTEGER,
+        updated INTEGER,
+        PRIMARY KEY (category, key)
+      )`, [], { db })
+
+    await dbExecute('UPDATE version SET version = 2', [], { db })
   } else if (version === 0) {
     // console.log('createTables -- creating version 1')
     await dbExecute(`
-                CREATE TABLE IF NOT EXISTS version (
-                  version INTEGER PRIMARY KEY NOT NULL
-                )`, [], { db })
+      CREATE TABLE IF NOT EXISTS version (
+        version INTEGER PRIMARY KEY NOT NULL
+      )`, [], { db })
     await dbExecute(`
-                CREATE TABLE IF NOT EXISTS operations (
-                  uuid VARCHAR(64) PRIMARY KEY NOT NULL,
-                  data TEXT
-                )`, [], { db })
+      CREATE TABLE IF NOT EXISTS operations (
+        uuid TEXT PRIMARY KEY NOT NULL,
+        data TEXT
+      )`, [], { db })
     await dbExecute(`
-                CREATE TABLE IF NOT EXISTS qsos (
-                  key VARCHAR(32),
-                  operation VARCHAR(64),
-                  ourCall VARCHAR(32),
-                  theirCall VARCHAR(32),
-                  mode VARCHAR(32),
-                  band VARCHAR(8),
-                  startOnMillis INTEGER,
-                  data TEXT,
-                  PRIMARY KEY (key, operation)
-                )`, [], { db })
+      CREATE TABLE IF NOT EXISTS qsos (
+        key TEXT
+        operation TEXT,
+        ourCall TEXT,
+        theirCall TEXT
+        mode TEXT,
+        band TEXT,
+        startOnMillis INTEGER,
+        data TEXT,
+        PRIMARY KEY (key, operation)
+      )`, [], { db })
     await dbExecute('DELETE FROM version', [], { db })
     await dbExecute('INSERT INTO version (version) VALUES (?)', [1], { db })
   }

@@ -15,7 +15,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
-import { POTAAllParks } from '../../../extensions/activities/pota/POTAAllParksData'
+import { potaPrefixForDXCCCode } from '../../../extensions/activities/pota/POTAAllParksData'
 import { fmtISODate } from '../../../tools/timeFormats'
 import { ThemeDialog } from '../components/ThemeDialog'
 import ScreenContainer from '../../components/ScreenContainer'
@@ -51,7 +51,7 @@ export default function GeneralSettingsScreen ({ navigation }) {
       info = annotateFromCountryFile(info)
     }
     if (info.dxccCode) {
-      prefix = (POTAAllParks.prefixByDXCCCode && POTAAllParks.prefixByDXCCCode[info.dxccCode]) || info.entityPrefix || 'X'
+      prefix = potaPrefixForDXCCCode(info.dxccCode) || info.entityPrefix || 'X'
     }
     return [
       `${call}@${prefix}-1234-${fmtISODate(new Date()).replace(/-/g, '')}.adi`.replace(/[/\\:]/g, '-'),

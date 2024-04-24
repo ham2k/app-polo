@@ -5,9 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { useState } from 'react'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { POTAAllParks, abbreviatePOTAName } from '../../extensions/activities/pota/POTAAllParksData'
+import { POTAAllParks, abbreviatePOTAName, potaFindParkByReference } from '../../extensions/activities/pota/POTAAllParksData'
 import { reportError } from '../../App'
 
 /**
@@ -91,20 +92,28 @@ const POTA_REGEX = /[A-Z]{1,2}-[0-9]{4,5}/
 export function useLookupParkQuery (arg, options) {
   let result
 
+  const [lookupData, setLookupData] = useState()
+
   if (!arg?.ref || !arg?.ref?.match(POTA_REGEX)) {
     result = apiPOTA.useLookupParkQuery('', { skip: true })
-  } else if (POTAAllParks.byReference[arg.ref] && !options.online) {
+  } else if (POTAAllParks.byReference && POTAAllParks.byReference[arg.ref] && !options.online) {
     result = apiPOTA.useLookupParkQuery(arg.ref, { skip: true })
     result = { ...result } // It seems that redux queries reuse their data structures, so let's clone it first
-    result.data = POTAAllParks.byReference[arg.ref]
-    result.isError = false
-    result.isUninitialized = false
-    result.isFetching = false
-    result.isLoading = false
-    result.isSuccess = true
-    result.status = 'fulfilled'
 
-    result.isOffline = true
+    if (lookupData) {
+      result.data = lookupData
+      result.isError = false
+      result.isUninitialized = false
+      result.isFetching = false
+      result.isLoading = false
+      result.isSuccess = true
+      result.status = 'fulfilled'
+      result.isOffline = true
+    } else {
+      potaFindParkByReference(arg.ref).then(data => {
+        setLookupData(data)
+      })
+    }
   } else {
     result = apiPOTA.useLookupParkQuery(arg, options)
   }
