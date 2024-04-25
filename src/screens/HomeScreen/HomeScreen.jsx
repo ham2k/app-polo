@@ -7,8 +7,8 @@
 
 import React, { useCallback, useEffect } from 'react'
 
-import { FlatList, Text, View } from 'react-native'
-import { AnimatedFAB } from 'react-native-paper'
+import { FlatList, View } from 'react-native'
+import { AnimatedFAB, Button, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
@@ -17,6 +17,7 @@ import ScreenContainer from '../components/ScreenContainer'
 import { addNewOperation, selectOperationsList } from '../../store/operations'
 import OperationItem from './components/OperationItem'
 import { selectSettings } from '../../store/settings'
+import Notices from './components/Notices'
 
 export default function HomeScreen ({ navigation }) {
   const styles = useThemedStyles()
@@ -75,14 +76,16 @@ export default function HomeScreen ({ navigation }) {
             onScroll={handleScroll}
           />
         </GestureHandlerRootView>
+        <AnimatedFAB
+          icon="plus"
+          label="New Operation"
+          extended={isExtended}
+          style={[{ right: styles.oneSpace * 4, bottom: styles.oneSpace * 2 }]}
+          onPress={handleNewOperation}
+        />
       </View>
-      <AnimatedFAB
-        icon="plus"
-        label="New Operation"
-        extended={isExtended}
-        style={[{ bottom: styles.oneSpace * 4, right: styles.oneSpace * 4, position: 'absolute' }]}
-        onPress={handleNewOperation}
-      />
+
+      <Notices />
     </ScreenContainer>
   )
 }
