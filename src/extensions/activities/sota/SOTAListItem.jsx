@@ -6,18 +6,19 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 
 import { Info } from './SOTAInfo'
-import { SOTAData } from './SOTADataFile'
+import { sotaFindOneByReference } from './SOTADataFile'
 import { fmtDistance } from '../../../tools/geoTools'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
 export function SOTAListItem ({ activityRef, refData, operationRef, style, settings, styles, onPress, onAddReference, onRemoveReference }) {
-  const reference = useMemo(() => {
-    return (SOTAData.byReference && SOTAData.byReference[activityRef]) || {}
+  const [reference, setReference] = useState()
+  useEffect(() => {
+    sotaFindOneByReference(activityRef).then(setReference)
   }, [activityRef])
 
   return (
@@ -35,7 +36,7 @@ export function SOTAListItem ({ activityRef, refData, operationRef, style, setti
       description={
         <View style={{ flexDirection: 'row' }}>
           <Text>
-            {[SOTAData.regions[reference?.reg]?.region, SOTAData.regions[reference?.reg]?.association].filter(x => x).join(' • ')}
+            {[reference?.region, reference?.association].filter(x => x).join(' • ')}
           </Text>
           {refData?.distance && (
             <Text>

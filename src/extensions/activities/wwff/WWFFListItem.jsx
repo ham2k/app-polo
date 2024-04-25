@@ -6,18 +6,20 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 
 import { Info } from './WWFFInfo'
-import { WWFFData } from './WWFFDataFile'
+
 import { fmtDistance } from '../../../tools/geoTools'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
+import { wwffFindOneByReference } from './WWFFDataFile'
 
 export function WWFFListItem ({ activityRef, refData, operationRef, style, styles, settings, onPress, onAddReference, onRemoveReference }) {
-  const reference = useMemo(() => {
-    return (WWFFData.byReference && WWFFData.byReference[activityRef]) || {}
+  const [reference, setReference] = useState()
+  useEffect(() => {
+    wwffFindOneByReference(activityRef).then(setReference)
   }, [activityRef])
 
   return (
