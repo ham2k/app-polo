@@ -17,7 +17,7 @@ export const POTAAllParks = { prefixByDXCCCode: {} }
 export function registerPOTAAllParksData () {
   registerDataFile({
     key: 'pota-all-parks',
-    name: 'POTA - All Parks',
+    name: 'POTA: All Parks',
     description: 'Database of all POTA references',
     infoURL: 'https://pota.app/',
     icon: 'file-powerpoint-outline',
@@ -87,6 +87,9 @@ export function registerPOTAAllParksData () {
       POTAAllParks.prefixByDXCCCode = data.prefixByDXCCCode ?? {}
       POTAAllParks.totalParks = data.totalParks ?? 0
       POTAAllParks.totalActiveParks = data.totalActiveParks ?? 0
+    },
+    onRemove: async () => {
+      await dbExecute('DELETE FROM lookups WHERE category = ?', ['pota'])
     }
   })
 }
@@ -100,24 +103,20 @@ export async function potaFindParkByReference (ref) {
 }
 
 export async function potaFindParksByName (dxccCode, name) {
-  console.log('pota find by name', { dxccCode, name })
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['pota', `${dxccCode}`, `%${name}%`, `%${name}%`],
     { row: row => JSON.parse(row.data) }
   )
-  console.log(results)
   return results
 }
 
 export async function potaFindParksByLocation (dxccCode, lat, lon, delta = 1) {
-  console.log('pota find by location', { dxccCode, lat, lon, delta })
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['pota', `${dxccCode}`, lat - delta, lat + delta, lon - delta, lon + delta],
     { row: row => JSON.parse(row.data) }
   )
-  console.log(results)
   return results
 }
 

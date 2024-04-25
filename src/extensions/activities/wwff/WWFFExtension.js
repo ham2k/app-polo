@@ -9,7 +9,7 @@ import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/d
 import { findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './WWFFInfo'
-import { WWFFData, registerWWFFDataFile } from './WWFFDataFile'
+import { registerWWFFDataFile, wwffFindOneByReference } from './WWFFDataFile'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
 import { WWFFPostSpot } from './WWFFPostSpot'
@@ -89,11 +89,11 @@ const ReferenceHandler = {
 
   description: (operation) => refsToString(operation, Info.activationType),
 
-  decorateRef: (ref) => {
+  decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {
-      const reference = WWFFData.byReference[ref.ref]
-      if (reference) {
-        return { ...ref, name: reference.name, location: reference.region, grid: reference.grid }
+      const data = await wwffFindOneByReference(ref.ref)
+      if (data) {
+        return { ...ref, name: data.name, location: data.region, grid: data.grid }
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
       }

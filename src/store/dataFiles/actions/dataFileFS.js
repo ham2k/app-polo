@@ -22,7 +22,7 @@ export const fetchDataFile = (key) => async (dispatch) => {
     try { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/data/`) } catch (error) { /* ignore */ }
     await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`, JSON.stringify(data))
 
-    if (definition.onLoad) definition.onLoad(data)
+    if (definition.onLoad) await definition.onLoad(data)
     dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', version: data.version, date: data.date ?? new Date() }))
   } catch (error) {
     reportError(`Error fetching data file ${key}`, error)
@@ -44,7 +44,7 @@ export const readDataFile = (key) => async (dispatch) => {
     const lastModified = new Date(stat.lastModified)
 
     dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', date: lastModified ?? new Date() }))
-    if (definition.onLoad) definition.onLoad(data)
+    if (definition.onLoad) await definition.onLoad(data)
   } catch (error) {
     reportError(`Error reading data file ${key}`, error)
     dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
@@ -90,6 +90,7 @@ export const removeDataFile = (key, force) => async (dispatch, getState) => {
   if (exists) {
     await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
   }
+  if (definition.onRemove) await definition.onRemove()
   dispatch(actions.setDataFileInfo({ key, data: undefined, status: 'removed', date: undefined }))
 }
 
