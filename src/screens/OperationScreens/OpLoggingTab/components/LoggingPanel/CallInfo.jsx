@@ -62,19 +62,14 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO, settin
   const [showDialog, setShowDialog] = useState(false)
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    updateQSO && updateQSO({ their: { ...qso.their, guess, lookup } })
+    if (guess) { updateQSO && updateQSO({ their: { ...qso.their, guess, lookup } }) }
   }, [guess, lookup, qso.their, updateQSO])
 
   const [locationInfo, flag] = useMemo(() => {
-    let isOnTheGo = (qso?.their?.lookup?.dxccCode && qso?.their?.lookup?.dxccCode !== guess?.dxccCode)
+    let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess?.dxccCode)
 
     const parts = []
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
-
-    if (operation.grid && guess?.grid) {
-      const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
-      if (dist) parts.push(fmtDistance(dist, { units: settings.distanceUnits }))
-    }
 
     if (guess.indicators && guess.indicators.find(ind => ['P', 'M', 'AM', 'MM'].indexOf(ind) >= 0)) {
       isOnTheGo = true
@@ -82,6 +77,11 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO, settin
       else if (guess.indicators.indexOf('M') >= 0) parts.push('[Mobile]')
       else if (guess.indicators.indexOf('MM') >= 0) parts.push('[🚢]')
       else if (guess.indicators.indexOf('AM') >= 0) parts.push('[✈️]')
+    }
+
+    if (operation.grid && guess?.grid) {
+      const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
+      if (dist) parts.push(`${fmtDistance(dist, { units: settings.distanceUnits })} to`)
     }
 
     if (entity && entity.entityPrefix !== ourInfo.entityPrefix) {
@@ -98,25 +98,27 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO, settin
 
     if (qso?.their?.city || qso?.their?.state) {
       parts.push([qso?.their?.city, qso?.their?.state].filter(x => x).join(', '))
-    } else if (!isOnTheGo && (qso?.their?.guess?.city || qso?.their?.guess?.state)) {
-      parts.push([qso?.their?.guess?.city, qso?.their?.guess?.state].filter(x => x).join(', '))
+    } else if (!isOnTheGo && (guess?.city || guess?.state)) {
+      parts.push([guess?.city, guess?.state].filter(x => x).join(', '))
     }
 
-    if (isOnTheGo) {
-      if (qso?.their?.lookup?.city || qso?.their?.lookup?.state || qso?.their?.lookup?.country) {
-        parts.push(
-          'From ' + [
-            [qso.their.lookup.city, qso.their.lookup.state].filter(x => x).join(', '),
-            qso.their.lookup.dxccCode !== guess.dxccCode ? qso.their.lookup.country : ''
-          ].filter(x => x).join(' ')
-        )
-      }
-    }
+    const locationText = parts.filter(x => x).join(' ')
 
-    return [parts.filter(x => x).join(' • '), entity?.flag ? entity.flag : '']
+    // if (isOnTheGo) {
+    //   if (lookup?.city || lookup?.state || lookup?.country) {
+    //     parts.push(
+    //       'From ' + [
+    //         [lookup.city, lookup.state].filter(x => x).join(', '),
+    //         lookup.dxccCode !== guess.dxccCode ? lookup.country : ''
+    //       ].filter(x => x).join(' ')
+    //     )
+    //   }
+    // }
+
+    return [locationText, entity?.flag ? entity.flag : '']
   }, [
-    guess, operation.grid, pota,
-    qso?.their?.lookup, qso?.their?.guess, qso?.their?.city, qso?.their?.state, qso?.their?.grid,
+    operation.grid, pota,
+    lookup, guess, qso?.their?.city, qso?.their?.state, qso?.their?.grid,
     ourInfo, settings.distanceUnits
   ])
 
@@ -126,11 +128,11 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO, settin
       parts.push(callNotes[0].note)
     } else {
       if (qrz?.error) parts.push(qrz.error)
-      parts.push(qso?.their?.name ?? qso?.their?.guess?.name)
+      parts.push(qso?.their?.name ?? guess?.name)
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qrz?.error, qso?.their?.name, qso?.their?.guess?.name, callNotes])
+  }, [qrz?.error, qso?.their?.name, guess?.name, callNotes])
 
   const [historyInfo, historyLevel] = useMemo(() => {
     const today = new Date()
