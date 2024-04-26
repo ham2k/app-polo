@@ -39,6 +39,7 @@ export const MainExchangePanel = ({
   // Switch between fields with the space key
   const keyHandler = useCallback((event) => {
     const { nativeEvent: { key, target } } = event
+
     if (key === ' ') {
       const pos = refs.map(r => findNodeHandle(r.current)).indexOf(target)
 

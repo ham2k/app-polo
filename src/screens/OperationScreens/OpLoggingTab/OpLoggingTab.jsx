@@ -16,6 +16,7 @@ import QSOList from './components/QSOList'
 import { selectQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
 import { useUIState } from '../../../store/ui'
+import { selectRuntimeOnline } from '../../../store/runtime'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
@@ -27,6 +28,7 @@ export default function OpLoggingTab ({ navigation, route }) {
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const settings = useSelector(selectSettings)
+  const online = useSelector(selectRuntimeOnline)
 
   const [,, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
@@ -57,6 +59,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         activeQSOs={activeQSOs}
         settings={settings}
         ourInfo={ourInfo}
+        online={online}
       />
     </View>
   )
