@@ -64,9 +64,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         </Text>
         <Text style={styles.fields.location}>
           {theirInfo?.entityPrefix && (settings.dxFlags === 'all' || (settings.dxFlags !== 'none' && theirInfo.entityPrefix !== ourInfo?.entityPrefix)) && (
-            <Text style={styles.fields.badges}>
-              {' '}{DXCC_BY_PREFIX[theirInfo.entityPrefix]?.flag}
-            </Text>
+            ' ' + DXCC_BY_PREFIX[theirInfo.entityPrefix]?.flag
           )}
           {(qso?.their?.state || qso?.their?.guess?.state) && (
             qso?.their?.state || qso?.their?.guess?.state
@@ -82,10 +80,10 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
             qso.their?.guess?.emoji + ' '
           )}
           {qso.notes && (
-            <Icon source="note-outline" size={styles.oneSpace * 2} style={styles.fields.icon} />
+            <Icon source="note-outline" size={styles.normalFontSize} style={styles.fields.icon} />
           )}
           {(qso.refs || []).filter(ref => REFS_TO_INCLUDE[ref.type]).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).map(({ ref, handler }, i) => (
-            <Icon key={i} source={handler?.icon} size={styles.oneSpace * 2} style={styles.fields.icon} color={styles.fields.icon.color} />
+            <Icon key={i} source={handler?.icon} size={styles.normalFontSize} style={styles.fields.icon} color={styles.fields.icon.color} />
           ))}
         </Text>
         {qso?.their?.exchange ? (

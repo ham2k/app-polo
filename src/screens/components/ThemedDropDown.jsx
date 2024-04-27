@@ -53,11 +53,10 @@ export default function ThemedDropDown (props) {
         ...style,
         color: colorStyles.paperDropdown.color,
         backgroundColor: colorStyles.paperDropdown.backgroundColor,
-        height: themeStyles.oneSpace * 7,
         paddingLeft: 0, // props.dense ? themeStyles.halfSpace : themeStyles.oneSpace,
-        paddingRight: 0
+        paddingRight: 0,
+        fontSize: 12
       }}
-      contentStyle={{}}
       background={colorStyles.paperDropdown.backgroundColor}
       iconStyle={{ padding: 0, margin: 0, width: themeStyles.oneSpace * 2.1 }}
       showDropDown={onShow}

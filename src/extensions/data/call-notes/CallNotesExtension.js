@@ -101,6 +101,8 @@ export const createDataFileDefinition = (file) => ({
 
 const createCallNotesFetcher = (file) => async () => {
   const request = file.location
+  if (!file.location) return {}
+
   const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', request, {
     'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
   })

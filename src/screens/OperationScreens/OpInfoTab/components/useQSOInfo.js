@@ -203,6 +203,8 @@ function mergeData ({ theirCall, qrz, pota, callHistory, callNotes }) {
     } else {
       newGuess.emoji = '⭐️'
     }
+  } else {
+    newGuess.emoji = undefined
   }
 
   if (pota?.grid6 && pota?.locationDesc?.indexOf(',') < 0) {

@@ -24,7 +24,7 @@ import { setOperationData } from '../../../../../../store/operations'
 const MINUTES_UNTIL_RESPOT = 5
 
 export function SpotterControlInputs (props) {
-  const { operation, styles } = props
+  const { operation, styles, style } = props
 
   const online = useSelector(selectRuntimeOnline)
 
@@ -88,31 +88,48 @@ export function SpotterControlInputs (props) {
   }, [dispatch, operation, comments, activityHooksWithSpot])
 
   return (
-    <>
-      <View>
+    <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end' }]}>
+      <View style={{ flex: 1 }}>
         <ThemedButton
           themeColor="tertiaryLighter"
           mode="contained"
           icon={online ? 'hand-wave' : 'cloud-off-outline'}
           onPress={handleSpotting}
           disabled={!online || spotterUI.disabled}
+          minWidth={styles.oneSpace * 18}
+          labelStyle={{ ellipsizeMode: 'middle' }}
         >
           {spotterUI.message}
         </ThemedButton>
         {activityHooksWithSpot.map((x, n) => (
-          <Badge key={`${x.key}/badge`} style={{ position: 'absolute', top: -8, right: -4 + (n * 23), backgroundColor: styles.colors.tertiaryLight }}>
-            <Icon key={`${x.key}/icon`} source={x.icon} size={styles.oneSpace * 2} color={styles.colors.onTertiaryLight} />
+          <Badge
+            key={x.key}
+            style={{
+              position: 'absolute',
+              top: -styles.oneSpace * 2,
+              right: -styles.halfSpace + (n * styles.oneSpace * 3),
+              backgroundColor: styles.colors.tertiaryLight,
+              height: styles.oneSpace * 3.5,
+              width: styles.oneSpace * 3.5,
+              padding: 0,
+              margin: 0
+            }}
+            size={styles.oneSpace * 3}
+          >
+            <Icon source={x.icon} size={styles.oneSpace * (styles.isIOS ? 0.8 : 2)} color={styles.colors.onTertiaryLight} />
           </Badge>
         ))}
       </View>
-      <ThemedTextInput
-        innerRef={ref}
-        style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace }}
-        label={'Comments'}
-        value={comments ?? ''}
-        onChangeText={setComments}
-      />
-    </>
+      {!spotterUI.disabled && (
+        <ThemedTextInput
+          innerRef={ref}
+          style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace, flex: 1 }}
+          label={'Comments'}
+          value={comments ?? ''}
+          onChangeText={setComments}
+        />
+      )}
+    </View>
   )
 }
 
@@ -124,6 +141,6 @@ export const spotterControl = {
     return 'Spotting'
   },
   InputComponent: SpotterControlInputs,
-  inputWidthMultiplier: 40,
+  inputWidthMultiplier: 36,
   optionType: 'mandatory'
 }

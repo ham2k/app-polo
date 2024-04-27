@@ -157,7 +157,7 @@ export const MainExchangePanel = ({
   }
 
   return (
-    <View style={{ ...style, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: styles.oneSpace }}>
+    <View style={{ ...style, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'stretch', gap: styles.oneSpace }}>
       {fields}
     </View>
   )

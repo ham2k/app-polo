@@ -132,7 +132,7 @@ export default function OperationScreen (props) {
 
                 <Tab.Screen
                   name="Settings"
-                  options={{ title: 'Operation' }}
+                  options={{ title: styles.smOrLarger ? 'Operation' : 'Op' }}
                   component={OpSettingsTab}
                   initialParams={{ uuid: operation.uuid, operation, splitView }}
                   splitView={splitView}
@@ -190,7 +190,7 @@ export default function OperationScreen (props) {
 
               <Tab.Screen
                 name="Settings"
-                options={{ title: 'Operation' }}
+                options={{ title: styles.smOrLarger ? 'Operation' : 'Operat.' }}
                 component={OpSettingsTab}
                 initialParams={{ uuid: operation.uuid, operation }}
               />

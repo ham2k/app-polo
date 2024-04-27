@@ -201,9 +201,14 @@ export default function ThemedTextInput (props) {
         style={[
           colorStyles.nativeInput,
           props.style,
-          { fontFamily: themeStyles.fontFamily },
+          {
+            fontFamily: themeStyles.fontFamily
+            // fontSize: themeStyles.normalFontSize * 4,
+            // lineHeight: themeStyles.normalFontSize * 5
+          },
           textStyle
         ]}
+        allowFontScaling={false}
         placeholderTextColor={themeStyles.theme.colors.onBackgroundLighter}
         cursorColor={colorStyles.cursorColor}
         selectionColor={colorStyles.sectionColor}
@@ -228,14 +233,14 @@ export default function ThemedTextInput (props) {
       style={[
         colorStyles.paperInput,
         {
-          marginTop: 0,
-          paddingTop: 0,
           paddingHorizontal: props.dense ? themeStyles.halfSpace : themeStyles.oneSpace,
-          fontSize: themeStyles.normalFontSize,
+          fontSize: themeStyles.normalFontSize * themeStyles.fontScale, // For some reason, this component does take into consideration `fontScale` so we have to multiply it ourselves
+          lineHeight: themeStyles.normalFontSize * themeStyles.fontScale * 1.2, // For some reason, this component does take into consideration `fontScale` so we have to multiply it ourselves
           fontFamily: themeStyles.fontFamily
         },
         style
       ]}
+      maxFontSizeMultiplier={1} // This affects the size of the label
       textColor={colorStyles.paperInput.color}
       selectionColor={colorStyles.paperInput.color}
       underlineColor={colorStyles.paperInput.color}

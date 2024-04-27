@@ -12,7 +12,7 @@ import Color from 'color'
 import { useSelector } from 'react-redux'
 
 import { selectSettings } from '../../store/settings'
-import { computeSizes } from './computeSizes'
+import { useComputeSizes } from './computeSizes'
 
 import lightColors from '../lightColors'
 import darkColors from '../darkColors'
@@ -30,15 +30,17 @@ export function usePrepareThemes () {
     }
   }, [settings?.theme, deviceColorScheme])
 
+  const sizes = useComputeSizes()
+
   const fonts = useMemo(() => {
-    const { fontScaleAdjustment } = computeSizes()
+    const { fontScaleAdjustment } = sizes
     Object.keys(fontConfig).forEach(variant => {
       if (fontConfig[variant].fontSize) fontConfig[variant].fontSize = fontConfig[variant].fontSize * fontScaleAdjustment
       if (fontConfig[variant].lineHeight) fontConfig[variant].lineHeight = fontConfig[variant].lineHeight * fontScaleAdjustment
     })
     const configuredFonts = configureFonts({ config: fontConfig })
     return configuredFonts
-  }, [])
+  }, [sizes])
 
   const colors = useMemo(() => {
     const loadedColors = colorScheme === 'dark' ? darkColors.colors : lightColors.colors
@@ -81,9 +83,10 @@ export function usePrepareThemes () {
     return {
       ...(colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme),
       colors,
-      fonts
+      fonts,
+      sizes
     }
-  }, [colors, fonts, colorScheme])
+  }, [colors, fonts, colorScheme, sizes])
 
   const navigationTheme = useMemo(() => {
     return {

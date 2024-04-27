@@ -128,7 +128,7 @@ export const SecondaryControlManagementSubPanel = ({
               selected={true}
               onChange={() => setCurrentSecondaryControl('manage-controls')}
             >
-              <Icon source="cog" size={styles.oneSpace * 2} color={styles.colors[`on${styles.upcasedThemeColor}`]} />
+              <Icon source="cog" size={styles.oneSpace * (styles.isIOS ? 0.8 : 2)} color={styles.colors[`on${styles.upcasedThemeColor}`]} />
             </LoggerChip>
           </View>
         </View>

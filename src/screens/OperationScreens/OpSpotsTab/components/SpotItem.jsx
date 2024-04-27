@@ -67,7 +67,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
             {spot.activator ?? '?'}
             {spot._emoji && ' ' + spot._emoji}
           </Text>
-          <Text style={[commonStyle]}>{fmtDateTimeRelative(spot.timeInMillis)}</Text>
+          <Text style={[styles.fields.time, commonStyle]}>{fmtDateTimeRelative(spot.timeInMillis)}</Text>
         </View>
         <View style={styles.doubleRowInnerRow}>
           <Text style={[styles.fields.band, commonStyle, bandStyle]}>{spot.band}</Text>

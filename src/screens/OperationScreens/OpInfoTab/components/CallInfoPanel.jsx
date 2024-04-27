@@ -138,7 +138,7 @@ export function CallInfoPanel ({ qso, operation, themeColor, style }) {
 
               <View>
                 <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
-                  {capitalizeString(qso?.their?.lookup?.name, { content: 'name', force: false })}
+                  {capitalizeString(lookup?.name, { content: 'name', force: false })}
                 </Text>
                 {lookup.city && (
                   <Text>
