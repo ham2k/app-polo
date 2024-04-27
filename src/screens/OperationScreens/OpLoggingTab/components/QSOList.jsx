@@ -15,10 +15,17 @@ import { useUIState } from '../../../../store/ui'
 function prepareStyles (themeStyles, isDeleted, width) {
   const extendedWidth = width / themeStyles.oneSpace > 80
 
-  let commonStylesForStatus
+  const DEBUG = false
+
+  let commontStyles = {
+    fontSize: themeStyles.normalFontSize,
+    lineHeight: themeStyles.normalFontSize * 1.4,
+    borderWidth: DEBUG ? 1 : 0
+  }
 
   if (isDeleted) {
-    commonStylesForStatus = {
+    commontStyles = {
+      ...commontStyles,
       textDecorationLine: 'line-through',
       textDecorationColor: themeStyles.colors.onBackground,
       color: themeStyles.colors.onBackgroundLighter
@@ -26,116 +33,96 @@ function prepareStyles (themeStyles, isDeleted, width) {
     }
   }
 
-  const DEBUG = false
-
   return {
     ...themeStyles,
     ...extendedWidth,
     fields: {
       number: {
+        ...commontStyles,
         ...themeStyles.text.numbers,
-        ...commonStylesForStatus,
         flex: 0,
         marginLeft: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 4 : themeStyles.oneSpace * 3,
-        textAlign: 'right',
-        lineHeight: themeStyles.oneSpace * 2.8,
-        borderWidth: DEBUG ? 1 : 0
+        textAlign: 'right'
       },
       time: {
+        ...commontStyles,
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
-        ...commonStylesForStatus,
         flex: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 7,
         marginLeft: themeStyles.oneSpace,
-        textAlign: 'right',
-        lineHeight: themeStyles.oneSpace * 2.8,
-        borderWidth: DEBUG ? 1 : 0
+        textAlign: 'right'
       },
       freq: {
+        ...commontStyles,
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
-        ...commonStylesForStatus,
         fontFamily: 'Roboto',
         flex: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 8,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
-        textAlign: 'right',
-        lineHeight: themeStyles.oneSpace * 2.8,
-        borderWidth: DEBUG ? 1 : 0
+        textAlign: 'right'
       },
       freqMHz: {
+        ...commontStyles,
         fontWeight: '600',
-        lineHeight: themeStyles.oneSpace * 2.8,
         textAlign: 'right'
       },
       freqKHz: {
-        lineHeight: themeStyles.oneSpace * 2.8,
+        ...commontStyles,
         textAlign: 'right'
       },
       freqHz: {
+        ...commontStyles,
         textAlign: 'right',
         fontWeight: '300',
-        lineHeight: themeStyles.oneSpace * 2.8,
         fontSize: themeStyles.normalFontSize * 0.7
       },
       call: {
+        ...commontStyles,
         ...themeStyles.text.callsign,
-        ...commonStylesForStatus,
         fontWeight: 'bold',
         flex: 0,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
         minWidth: themeStyles.oneSpace * 8,
-        textAlign: 'left',
-        lineHeight: themeStyles.oneSpace * 2.8,
-        borderWidth: DEBUG ? 1 : 0
+        textAlign: 'left'
       },
       name: {
-        ...commonStylesForStatus,
+        ...commontStyles,
         flex: 1,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
-        textAlign: 'left',
-        lineHeight: themeStyles.oneSpace * 2.8,
-        borderWidth: DEBUG ? 1 : 0
+        textAlign: 'left'
       },
       location: {
-        ...commonStylesForStatus,
+        ...commontStyles,
         flex: 0,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
         minWidth: themeStyles.oneSpace * 3.5,
-        textAlign: 'center',
-        lineHeight: themeStyles.oneSpace * 2.8,
-        borderWidth: DEBUG ? 1 : 0
+        textAlign: 'center'
       },
       signal: {
+        ...commontStyles,
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
-        ...commonStylesForStatus,
         flex: 0,
         minWidth: themeStyles.oneSpace * 3,
         marginLeft: themeStyles.oneSpace,
-        textAlign: 'right',
-        lineHeight: themeStyles.oneSpace * 2.8,
-        borderWidth: DEBUG ? 1 : 0
+        textAlign: 'right'
       },
       exchange: {
+        ...commontStyles,
         ...themeStyles.text.callsign,
-        ...commonStylesForStatus,
         flex: 0,
         minWidth: themeStyles.oneSpace * 3,
         marginLeft: themeStyles.oneSpace,
-        textAlign: 'right',
-        lineHeight: themeStyles.oneSpace * 2.8,
-        borderWidth: DEBUG ? 1 : 0
+        textAlign: 'right'
       },
       icon: {
-        ...commonStylesForStatus,
+        ...commontStyles,
         flex: 0,
         textAlign: 'right',
-        maxWidth: themeStyles.oneSpace * 8,
-        lineHeight: themeStyles.oneSpace * 2.8,
-        borderWidth: DEBUG ? 1 : 0
+        maxWidth: themeStyles.oneSpace * 8
       }
     }
   }

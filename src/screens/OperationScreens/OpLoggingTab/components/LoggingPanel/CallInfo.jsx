@@ -199,13 +199,13 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO, settin
           <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch', paddingTop: styles.oneSpace * 0.3 }]}>
             <View style={{ flexDirection: 'row' }}>
               {flag && (
-                <Text style={{ flex: 0, fontFamily: styles.normalFontFamily, lineHeight: styles.oneSpace * 2.5 }} numberOfLines={1} ellipsizeMode={'tail'}>
+                <Text style={{ flex: 0, fontFamily: styles.normalFontFamily, lineHeight: styles.normalFontSize * 1.3 }} numberOfLines={1} ellipsizeMode={'tail'}>
                   {flag}{' '}
                 </Text>
 
               )}
               {locationInfo && (
-                <Text style={{ flex: 1, fontFamily: locationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily, lineHeight: styles.oneSpace * 2.5 }} numberOfLines={2} ellipsizeMode={'tail'}>
+                <Text style={{ flex: 1, fontFamily: locationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily, lineHeight: styles.normalFontSize * 1.3 }} numberOfLines={2} ellipsizeMode={'tail'}>
                   {locationInfo}
                 </Text>
               )}

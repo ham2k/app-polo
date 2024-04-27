@@ -6,7 +6,6 @@
  */
 
 import { PixelRatio, Platform, StyleSheet } from 'react-native'
-import { computeSizes } from './tools/computeSizes'
 
 const DEFAULT_THEME = {
   colors: {
@@ -20,8 +19,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const isDarkMode = colorScheme === 'dark'
   theme = theme ?? DEFAULT_THEME
 
-  const sizeInfo = computeSizes()
-  const { size, fontScale, fontScaleAdjustment } = sizeInfo
+  const sizeInfo = theme.sizes
+  const { size, fontScaleAdjustment, pixelScaleAdjustment } = sizeInfo
 
   const normalFontSize = 16 * fontScaleAdjustment
   const largeFontSize = 24 * fontScaleAdjustment
@@ -35,9 +34,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const condensedFontFamily = 'Roboto Condensed'
   const maybeCondensedFontFamily = size === 'xs' || size === 'sm' ? 'Roboto Condensed' : 'Roboto'
 
-  const baseSpace = 8 * fontScaleAdjustment // Guesstimage of the width of an 'm' in the base (root) font size
+  const baseSpace = 8 // Guesstimage of the width of an 'm' in the base (root) font size
 
-  const oneSpace = PixelRatio.roundToNearestPixel(baseSpace * fontScale * fontScaleAdjustment)
+  const oneSpace = PixelRatio.roundToNearestPixel(baseSpace * pixelScaleAdjustment)
   const halfSpace = PixelRatio.roundToNearestPixel(oneSpace / 2)
 
   const styles = StyleSheet.create({
@@ -73,7 +72,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       color: theme.colors.onPrimary
     },
     screenTabBarLabel: {
-      color: theme.colors.onPrimary
+      color: theme.colors.onPrimary,
+      fontSize: normalFontSize
     },
     screenTabBarIndicator: {
       backgroundColor: theme.colors.onPrimary,

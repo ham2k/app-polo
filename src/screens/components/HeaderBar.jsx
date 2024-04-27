@@ -28,41 +28,46 @@ function prepareStyles (baseStyles, options) {
       backgroundColor: baseStyles.colors.background
     },
     screenTitle: {
+      fontFamily: baseStyles.boldTitleFontFamily,
       fontSize: 20 * baseStyles.fontScaleAdjustment,
-      color: baseStyles.colors.onPrimary,
-      fontFamily: baseStyles.boldTitleFontFamily
-      // fontWeight: 'bold'
+      lineHeight: 22 * baseStyles.fontScaleAdjustment,
+      color: baseStyles.colors.onPrimary
     },
     screenTitleSmall: {
+      fontFamily: 'Roboto Slab Medium',
       fontSize: 14 * baseStyles.fontScaleAdjustment,
-      color: baseStyles.colors.onPrimary,
-      fontFamily: 'Roboto Slab Medium'
+      lineHeight: 16 * baseStyles.fontScaleAdjustment,
+      color: baseStyles.colors.onPrimary
     },
     screenSubTitle: {
+      fontFamily: baseStyles.normalFontFamily,
       fontSize: 12 * baseStyles.fontScaleAdjustment,
-      color: baseStyles.colors.onPrimary,
+      lineHeight: 14 * baseStyles.fontScaleAdjustment,
       fontWeight: baseStyles.isIOS ? '300' : '100',
-      fontFamily: baseStyles.normalFontFamily
+      color: baseStyles.colors.onPrimary
     },
     screenSubTitleCondensed: {
+      fontFamily: baseStyles.maybeCondensedFontFamily,
       fontSize: 12 * baseStyles.fontScaleAdjustment,
-      color: baseStyles.colors.onPrimary,
+      lineHeight: 14 * baseStyles.fontScaleAdjustment,
       fontWeight: baseStyles.isIOS ? '300' : '100',
-      fontFamily: baseStyles.maybeCondensedFontFamily
+      color: baseStyles.colors.onPrimary
     },
     screenTitleLight: {
-      fontSize: 20 * baseStyles.fontScaleAdjustment,
+      fontFamily: baseStyles.normalFontFamily,
+      fontSize: 14 * baseStyles.fontScaleAdjustment,
       color: baseStyles.colors.onPrimary,
-      fontWeight: baseStyles.isIOS ? '300' : '100',
+      // fontWeight: baseStyles.isIOS ? '300' : '100',
       marginLeft: baseStyles.oneSpace
     },
     screenTitleBold: {
       fontFamily: 'Roboto Black',
-      fontSize: 20 * baseStyles.fontScaleAdjustment
+      fontSize: 20 * baseStyles.fontScaleAdjustment,
+      lineHeight: 22 * baseStyles.fontScaleAdjustment
     },
     sideContent: {
       flex: 0,
-      width: baseStyles.oneSpace * (options.back || options.close) ? 7 : 12
+      width: baseStyles.oneSpace * ((options.back || options.close) ? 4 : 8)
     },
     appBarTheme: {
       colors: {
@@ -105,10 +110,11 @@ export default function HeaderBar ({ route, options, navigation, back, close, ti
               isLeading
               onPress={navigation.goBack}
               icon={closeInsteadOfBack ? 'close' : 'arrow-left'}
+              size={styles.oneSpace * 2.5}
               theme={styles.appBarTheme}
             />
           ) : (
-            <Text style={styles.screenTitleLight} numberOfLines={1} adjustsFontSizeToFit={true}>Ham2K</Text>
+            <Text style={styles.screenTitleLight} numberOfLines={1} adjustsFontSizeToFit={false}>Ham2K</Text>
           )
         )}
       </View>
