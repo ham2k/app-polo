@@ -89,6 +89,8 @@ const ReferenceHandler = {
 
   description: (operation) => refsToString(operation, Info.activationType),
 
+  incQsoItemIcon: true,
+
   decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {
       const data = await wwffFindOneByReference(ref.ref)

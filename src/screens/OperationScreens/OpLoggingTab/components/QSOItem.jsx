@@ -21,13 +21,6 @@ export function guessItemHeight (qso, styles) {
   return styles.compactRow.height + styles.compactRow.borderBottomWidth
 }
 
-const REFS_TO_INCLUDE = {
-  pota: true,
-  sota: true,
-  wwff: true,
-  custom: true
-}
-
 const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, settings }) {
   const theirInfo = useMemo(() => {
     if (qso?.their?.entityPrefix) {
@@ -82,7 +75,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
           {qso.notes && (
             <Icon source="note-outline" size={styles.normalFontSize} style={styles.fields.icon} />
           )}
-          {(qso.refs || []).filter(ref => REFS_TO_INCLUDE[ref.type]).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).map(({ ref, handler }, i) => (
+          {(qso.refs || []).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.incQsoItemIcon).map(({ ref, handler }, i) => (
             <Icon key={i} source={handler?.icon} size={styles.normalFontSize} style={styles.fields.icon} color={styles.fields.icon.color} />
           ))}
         </Text>
