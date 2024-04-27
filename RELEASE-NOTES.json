@@ -1,5 +1,11 @@
 {
-  "0.7.6-pre1": {
+  "0.7.7-pre1": {
+    "changes": [
+      "Minor style tweaks",
+      "Fixed bug with stale call info data"
+    ]
+  },
+  "0.7.6": {
     "changes": [
       "Log multiple QSOs at once",
       "Include POTA references in spot comment for multi-park activations (contributed by M1SDH)"
