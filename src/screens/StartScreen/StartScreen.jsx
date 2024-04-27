@@ -24,11 +24,6 @@ import { selectSystemFlag, setSystemFlag } from '../../store/system'
 const SPLASH_IMAGE = require('./img/launch_screen.png')
 
 function prepareStyles (baseTheme, height) {
-  const dropShadow = {
-    textShadowColor: '#000',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: baseTheme.oneSpace * 2
-  }
   return {
     ...baseTheme,
     root: {
@@ -54,21 +49,29 @@ function prepareStyles (baseTheme, height) {
       alignItems: 'center'
     },
     ham2k: {
-      ...dropShadow,
-      fontSize: 30,
+      fontSize: baseTheme.normalFontSize * 1.7,
+      lineHeight: baseTheme.normalFontSize * 2,
       fontWeight: 400,
+      textShadowColor: '#000',
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace * 1.5,
       color: '#FFF',
       textAlign: 'center'
     },
     polo: {
-      ...dropShadow,
-      fontSize: 40,
+      fontSize: baseTheme.normalFontSize * 2.3,
+      lineHeight: baseTheme.normalFontSize * 3,
+      textShadowColor: '#000',
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace * 2,
       fontFamily: 'Roboto Slab Black',
       color: '#FFF',
       textAlign: 'center'
     },
     message: {
-      ...dropShadow,
+      textShadowColor: '#000',
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace,
       fontSize: 20,
       fontWeight: 'bold',
       color: '#D0D0D0',
@@ -85,7 +88,9 @@ function prepareStyles (baseTheme, height) {
         marginRight: baseTheme.oneSpace * 3
       },
       paragraph: {
-        ...dropShadow,
+        textShadowColor: '#000',
+        textShadowOffset: { width: 0, height: 0 },
+        textShadowRadius: baseTheme.oneSpace,
         textAlign: 'center',
         alignItems: 'center',
         margin: 0,

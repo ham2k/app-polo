@@ -13,74 +13,80 @@ import SpotItem, { guessItemHeight } from './SpotItem'
 import { RefreshControl } from 'react-native-gesture-handler'
 
 function prepareStyles (themeStyles, themeColor) {
+  const commonStyles = {
+    fontSize: themeStyles.normalFontSize,
+    lineHeight: themeStyles.normalFontSize * 1.3
+  }
+
   return {
     ...themeStyles,
     fields: {
       freq: {
+        ...commonStyles,
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        fontSize: themeStyles.normalFontSize * 0.9,
-        minWidth: themeStyles.oneSpace * 13,
+        minWidth: themeStyles.oneSpace * 11,
         marginLeft: 0,
         textAlign: 'right'
       },
       freqMHz: {
+        ...commonStyles,
         fontWeight: '600',
         textAlign: 'right'
       },
       freqKHz: {
+        ...commonStyles,
         textAlign: 'right'
       },
       freqHz: {
+        ...commonStyles,
         fontWeight: '300',
         textAlign: 'right',
         fontSize: themeStyles.normalFontSize * 0.7
       },
       call: {
+        ...commonStyles,
         ...themeStyles.text.callsign,
         flex: 1,
-        fontSize: themeStyles.normalFontSize,
         fontWeight: 'bold',
         marginLeft: themeStyles.oneSpace * 2,
         minWidth: themeStyles.oneSpace * 5,
-        lineHeight: themeStyles.oneSpace * 2.5,
         textAlign: 'left'
       },
       band: {
+        ...commonStyles,
         flex: 0,
-        fontSize: themeStyles.normalFontSize,
         marginLeft: themeStyles.oneSpace * 1,
-        width: themeStyles.oneSpace * 7,
+        width: themeStyles.oneSpace * 5,
         textAlign: 'right'
       },
       mode: {
+        ...commonStyles,
         flex: 0,
-        fontSize: themeStyles.normalFontSize,
         marginLeft: themeStyles.oneSpace * 0.2,
         width: themeStyles.oneSpace * 5,
         textAlign: 'right'
       },
       name: {
+        ...commonStyles,
         flex: 1,
-        fontSize: themeStyles.normalFontSize * 0.8,
         minWidth: themeStyles.oneSpace * 5,
-        paddingTop: themeStyles.oneSpace * 0.2,
         marginLeft: themeStyles.oneSpace * 1.4,
         textAlign: 'left'
       },
       time: {
+        ...commonStyles,
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        fontSize: themeStyles.normalFontSize,
         minWidth: themeStyles.oneSpace * 6,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
       icon: {
+        ...commonStyles,
         flex: 0,
-        fontSize: themeStyles.normalFontSize,
         width: themeStyles.oneSpace * 2
       }
     }

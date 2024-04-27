@@ -1,7 +1,7 @@
 {
   "0.7.7-pre1": {
     "changes": [
-      "Minor style tweaks",
+      "Better layout and styles for large font sizes",
       "Fixed bug with stale call info data"
     ]
   },

@@ -587,7 +587,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
           </View>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: styles.halfSpace, ...keyboardExtraStyles }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyItems: 'center', paddingVertical: styles.halfSpace, ...keyboardExtraStyles }}>
           <MainExchangePanel
             style={{ flex: 1, paddingLeft: styles.oneSpace }}
             qso={qso}
