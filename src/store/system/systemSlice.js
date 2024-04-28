@@ -6,10 +6,12 @@
  */
 
 import { createSelector, createSlice } from '@reduxjs/toolkit'
+import UUID from 'react-native-uuid'
 
 const initialState = {
   flags: {},
-  accounts: {}
+  accounts: {},
+  notices: []
 }
 
 export const systemSlice = createSlice({
@@ -29,6 +31,18 @@ export const systemSlice = createSlice({
       Object.keys(action.payload || {}).forEach(account => {
         state.accounts[account] = { ...state.accounts[account] || {}, ...action.payload[account] || {} }
       })
+    },
+    addNotice: (state, action) => {
+      state.notices = state.notices || []
+      action.payload.key = action.payload.key || UUID.v1()
+      action.payload.timestamp = action.payload.timestamp || new Date().valueOf
+
+      state.notices = state.notices.filter(notice => notice.key !== action.payload.key)
+      state.notices.push(action.payload)
+    },
+    dismissNotice: (state, action) => {
+      state.notices = state.notices || []
+      state.notices = state.notices.filter(notice => notice.key !== action.payload.key)
     }
   }
 })
@@ -46,6 +60,11 @@ export const selectSystemFlag = createSelector(
     (_state, _flag, defaultValue) => defaultValue
   ],
   (flags, flag, defaultValue) => flags[flag] ?? defaultValue
+)
+
+export const selectNotices = createSelector(
+  (state) => state?.system?.notices,
+  (notices) => notices || []
 )
 
 export default systemSlice.reducer
