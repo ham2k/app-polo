@@ -21,7 +21,7 @@ import { findQSOHistory } from '../../../../store/qsos/actions/findQSOHistory'
 
 import { filterRefs, findRef } from '../../../../tools/refTools'
 import { findAllCallNotes, useOneCallNoteFinder } from '../../../../extensions/data/call-notes/CallNotesExtension'
-import { POTAAllParks } from '../../../../extensions/activities/pota/POTAAllParksData'
+import { potaFindParkByReference } from '../../../../extensions/activities/pota/POTAAllParksData'
 
 const EMOJI_REGEX = emojiRegex()
 
@@ -94,6 +94,7 @@ export const useQSOInfo = ({ qso, operation }) => {
   }, [qso?.refs])
 
   const potaLookup = useLookupParkQuery({ ref: potaRef }, { skip: !potaRef, online })
+
   const pota = useMemo(() => {
     return potaLookup?.data ?? {}
   }
@@ -129,7 +130,7 @@ export async function annotateQSO ({ qso, online, settings, dispatch }) {
   let pota = {}
   const potaRef = findRef(qso?.refs, 'pota')
   if (potaRef) {
-    const potaLookup = POTAAllParks.byReference[potaRef]
+    const potaLookup = await potaFindParkByReference(potaRef)
     pota = potaLookup?.data ?? {}
   }
 

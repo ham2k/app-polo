@@ -18,7 +18,7 @@ import { distanceOnEarth } from '../../../tools/geoTools'
 import { reportError } from '../../../App'
 
 import { Info } from './POTAInfo'
-import { POTAAllParks } from './POTAAllParksData'
+import { potaFindParkByReference, potaFindParksByLocation, potaFindParksByName, potaPrefixForDXCCCode } from './POTAAllParksData'
 import { POTAListItem } from './POTAListItem'
 import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
@@ -33,7 +33,7 @@ export function POTAActivityOptions (props) {
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const refs = useMemo(() => filterRefs(operation, Info.activationType), [operation]).filter(ref => ref.ref)
+  const refs = useMemo(() => filterRefs(operation, Info.activationType).filter(ref => ref.ref), [operation])
 
   const title = useMemo(() => {
     if (refs?.length === 0) return 'No parks selected for activation'
@@ -57,74 +57,80 @@ export function POTAActivityOptions (props) {
     })
   }, [])
 
-  const refDatas = useMemo(() => {
-    return refs.map(ref => {
-      const newData = { ...ref, ...POTAAllParks.byReference[ref.ref] }
-      if (location?.lat && location?.lon) {
-        newData.distance = distanceOnEarth(newData, location, { units: settings.distanceUnits })
+  const [refDatas, setRefDatas] = useState([])
+  useEffect(() => {
+    setTimeout(async () => {
+      const datas = []
+      for (const ref of refs) {
+        const park = await potaFindParkByReference(ref.ref)
+        const newData = { ...ref, ...park }
+        if (location?.lat && location?.lon) {
+          newData.distance = distanceOnEarth(newData, location, { units: settings.distanceUnits })
+        }
+        datas.push(newData)
       }
-      return newData
-    })
+      setRefDatas(datas)
+    }, 0)
   }, [refs, location, settings.distanceUnits])
 
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
-    if (location?.lat && location?.lon) {
-      const newResults = POTAAllParks.activeParks.filter(park => {
-        return ((!ourInfo?.dxccCode || park.dxccCode === ourInfo.dxccCode) && Math.abs(park.lat - location.lat) < NEARBY_DEGREES && Math.abs(park.lon - location.lon) < NEARBY_DEGREES)
-      }).map(result => ({
-        ...result,
-        distance: distanceOnEarth(result, location, { units: settings.distanceUnits })
-      })).sort((a, b) => a.distance - b.distance)
-      setNearbyResults(newResults)
-    }
+    setTimeout(async () => {
+      if (location?.lat && location?.lon) {
+        const newResults = await potaFindParksByLocation(ourInfo.dxccCode, location.lat, location.lon, NEARBY_DEGREES)
+        setNearbyResults(
+          newResults.map(result => ({
+            ...result,
+            distance: distanceOnEarth(result, location, { units: settings.distanceUnits })
+          })).sort((a, b) => a.distance - b.distance)
+        )
+      }
+    })
   }, [ourInfo, location, settings.distanceUnits])
 
   useEffect(() => {
-    if (search?.length > 2) {
-      let newParks = POTAAllParks.activeParks.filter(park => {
-        return (!ourInfo?.dxccCode || park.dxccCode === ourInfo.dxccCode) &&
-            (park.ref.toLowerCase().includes(search.toLowerCase()) || park.name.toLowerCase().includes(search.toLowerCase())
-            )
-      })
-      if (location?.lat && location?.lon) {
-        newParks = newParks.map(park => ({
-          ...park,
-          distance: distanceOnEarth(park, location, { units: settings.distanceUnits })
-        })).sort((a, b) => a.distance - b.distance)
-      }
+    setTimeout(async () => {
+      if (search?.length > 2) {
+        let newParks = await potaFindParksByName(ourInfo?.dxccCode, search.toLowerCase())
+        if (location?.lat && location?.lon) {
+          newParks = newParks.map(park => ({
+            ...park,
+            distance: distanceOnEarth(park, location, { units: settings.distanceUnits })
+          })).sort((a, b) => a.distance - b.distance)
+        }
 
-      // Is the search term a plain reference, either with prefix or just digits?
-      let nakedReference
-      const parts = search.match(/^\s*([A-Z]*)[-]{0,1}(\d+|TEST)\s*$/i)
-      if (parts && parts[2].length >= 4) {
-        nakedReference = (parts[1]?.toUpperCase() || POTAAllParks.prefixByDXCCCode[ourInfo?.dxccCode] || 'K') + '-' + parts[2].toUpperCase()
-      } else if (search.match(Info.referenceRegex)) {
-        nakedReference = search
-      }
+        // Is the search term a plain reference, either with prefix or just digits?
+        let nakedReference
+        const parts = search.match(/^\s*([A-Z]*)[-]{0,1}(\d+|TEST)\s*$/i)
+        if (parts && parts[2].length >= 4) {
+          nakedReference = (parts[1]?.toUpperCase() || potaPrefixForDXCCCode(ourInfo?.dxccCode) || 'K') + '-' + parts[2].toUpperCase()
+        } else if (search.match(Info.referenceRegex)) {
+          nakedReference = search
+        }
 
-      // If it's a naked reference, let's ensure the results include it, or else add a placeholder
-      // just to cover any cases where the user knows about a new park not included in our data
-      if (nakedReference && !newParks.find(park => park.ref === nakedReference)) {
-        newParks.unshift({ ref: nakedReference })
-      }
+        // If it's a naked reference, let's ensure the results include it, or else add a placeholder
+        // just to cover any cases where the user knows about a new park not included in our data
+        if (nakedReference && !newParks.find(park => park.ref === nakedReference)) {
+          newParks.unshift({ ref: nakedReference })
+        }
 
-      setParks(newParks.slice(0, 15))
-      if (newParks.length === 0) {
-        setParksMessage('No parks found')
-      } else if (newParks.length > 15) {
-        setParksMessage(`Nearest 15 of ${newParks.length} matches`)
-      } else if (newParks.length === 1) {
-        setParksMessage('One matching park')
+        setParks(newParks.slice(0, 15))
+        if (newParks.length === 0) {
+          setParksMessage('No parks found')
+        } else if (newParks.length > 15) {
+          setParksMessage(`Nearest 15 of ${newParks.length} matches`)
+        } else if (newParks.length === 1) {
+          setParksMessage('One matching park')
+        } else {
+          setParksMessage(`${newParks.length} matching parks`)
+        }
       } else {
-        setParksMessage(`${newParks.length} matching parks`)
+        setParks(nearbyResults)
+        if (nearbyResults === undefined) setParksMessage('Search for some parks to activate!')
+        else if (nearbyResults.length === 0) setParksMessage('No parks nearby')
+        else setParksMessage('Nearby parks')
       }
-    } else {
-      setParks(nearbyResults)
-      if (nearbyResults === undefined) setParksMessage('Search for some parks to activate!')
-      else if (nearbyResults.length === 0) setParksMessage('No parks nearby')
-      else setParksMessage('Nearby parks')
-    }
+    })
   }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
 
   const handleAddReference = useCallback((ref) => {

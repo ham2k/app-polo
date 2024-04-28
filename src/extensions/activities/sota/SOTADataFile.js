@@ -6,23 +6,27 @@
  */
 
 import RNFetchBlob from 'react-native-blob-util'
+import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import packageJson from '../../../../package.json'
 import { registerDataFile } from '../../../store/dataFiles'
+import { dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
-export const SOTAData = { byReference: {}, activeReferences: [], regions: {} }
+export const SOTAData = {}
 
 export function registerSOTADataFile () {
   registerDataFile({
     key: 'sota-all-summits',
-    name: 'SOTA - All Summits',
+    name: 'SOTA: All Summits',
     description: 'Database of all SOTA references',
     infoURL: 'https://www.sotadata.org.uk/en/summits',
     icon: 'file-image-outline',
     maxAgeInDays: 7,
     enabledByDefault: false,
-    fetch: async () => {
+    fetch: async ({ options, key, definition }) => {
+      options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
+
       const url = 'https://www.sotadata.org.uk/summitslist.csv'
 
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
@@ -30,50 +34,60 @@ export function registerSOTADataFile () {
       })
       const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
 
-      const references = []
-      const regions = {}
-      const regionIds = {}
+      await dbExecute('PRAGMA locking_mode = EXCLUSIVE') // improves performance of inserts
+
+      await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['sota'])
+
+      let totalSummits = 0
 
       const lines = body.split('\n')
       const versionRow = lines.shift()
       const headers = parseSOTACSVRow(lines.shift()).filter(x => x)
 
-      lines.forEach(line => {
+      for (const line of lines) {
         const row = parseSOTACSVRow(line, { headers })
         if (row.SummitCode && row.ValidTo === '31/12/2099') {
-          const lon = Number.parseFloat(row.Longitude)
-          const lat = Number.parseFloat(row.Latitude)
-          const ref = {
+          const lon = Number.parseFloat(row.Longitude) || 0
+          const lat = Number.parseFloat(row.Latitude) || 0
+          const data = {
             ref: row.SummitCode.toUpperCase(),
             grid: locationToGrid6(lat, lon),
-            alt: Number.parseInt(row.AltM, 10),
+            altitude: Number.parseInt(row.AltM, 10),
+            region: row.RegionName,
+            association: row.RegionName,
             lat,
             lon
           }
-          if (ref.ref !== row.SummitName) ref.name = row.SummitName
+          if (data.ref !== row.SummitName) data.name = row.SummitName
 
-          const uc = row.SummitName.toUpperCase()
-          if (ref.name !== uc && ref.ref !== uc) ref.uc = uc
-
-          const regStr = [row.RegionName, row.AssociationName].join('-')
-          if (regionIds[regStr]) {
-            ref.reg = regionIds[regStr]
-          } else {
-            const regId = Object.keys(regions).length + 1
-            regionIds[regStr] = regId
-            regions[regId] = { region: row.RegionName, association: row.AssociationName }
-            ref.reg = regId
+          totalSummits++
+          if (totalSummits % 89 === 0) { // using a prime number results in "smoother" progress updates
+            options.onStatus && await options.onStatus({
+              key,
+              definition,
+              status: 'progress',
+              progress: `Loaded \'${fmtNumber(totalSummits)}\' summits (\'${fmtPercent(Math.min(totalSummits / 152000, 1), 'integer')}\')`
+            })
           }
 
-          references.push(ref)
+          await dbExecute(`
+            INSERT INTO lookups
+              (category, subCategory, key, name, data, lat, lon, flags, updated)
+            VALUES
+              (?, ?, ?, ?, ?, ?, ?, ?, 1)
+            ON CONFLICT DO
+            UPDATE SET
+              subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+            `, ['sota', data.region, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.region, data.name, JSON.stringify(data), data.lat, data.lon, 1])
         }
-      })
+      }
 
-      const activeReferences = references // TODO: Filter out inactive references
+      await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
+
+      await dbExecute('PRAGMA locking_mode = NORMAL')
 
       const data = {
-        activeReferences,
-        regions,
+        totalSummits,
         version: versionRow
       }
       RNFetchBlob.fs.unlink(response.data)
@@ -82,19 +96,43 @@ export function registerSOTADataFile () {
     },
     onLoad: (data) => {
       if (data.regions) {
-        SOTAData.activeReferences = data.activeReferences ?? []
-        SOTAData.regions = data.regions
+        SOTAData.totalSummits = data.totalSummits
         SOTAData.version = data.version
-
-        SOTAData.byReference = SOTAData.activeReferences.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
       } else {
-        SOTAData.activeReferences = []
-        SOTAData.regions = {}
-        SOTAData.byReference = {}
+        SOTAData.totalSummits = 0
         SOTAData.version = null
       }
+    },
+    onRemove: async () => {
+      await dbExecute('DELETE FROM lookups WHERE category = ?', ['sota'])
     }
   })
+}
+
+export async function sotaFindOneByReference (ref) {
+  return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['sota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
+}
+
+export async function sotaFindAllByName (dxccCode, name) {
+  console.log('pota find by name', { dxccCode, name })
+  const results = await dbSelectAll(
+    'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
+    ['sota', `%${name}%`, `%${name}%`],
+    { row: row => row?.data ? JSON.parse(row.data) : {} }
+  )
+  console.log(results)
+  return results
+}
+
+export async function sotaFindAllByLocation (dxccCode, lat, lon, delta = 1) {
+  console.log('pota find by location', { dxccCode, lat, lon, delta })
+  const results = await dbSelectAll(
+    'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
+    ['sota', lat - delta, lat + delta, lon - delta, lon + delta],
+    { row: row => row?.data ? JSON.parse(row.data) : {} }
+  )
+  console.log(results)
+  return results
 }
 
 const CSV_ROW_REGEX = /(?:"((?:[^"]|"")*)"|([^",]*))(?:,|\s*$)/g

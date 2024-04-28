@@ -9,7 +9,7 @@ import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/d
 import { findRef, refsToString } from '../../../tools/refTools'
 
 import { SOTAActivityOptions } from './SOTAActivityOptions'
-import { SOTAData, registerSOTADataFile } from './SOTADataFile'
+import { registerSOTADataFile, sotaFindOneByReference } from './SOTADataFile'
 import { Info } from './SOTAInfo'
 import { SOTALoggingControl } from './SOTALoggingControl'
 
@@ -22,7 +22,7 @@ const Extension = {
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 
     registerSOTADataFile()
-    await dispatch(loadDataFile('sota-all-summits'))
+    await dispatch(loadDataFile('sota-all-summits', { noticesInsteadOfFetch: true }))
   },
   onDeactivationDispatch: () => async (dispatch) => {
     await dispatch(removeDataFile('sota-all-summits'))
@@ -92,11 +92,11 @@ const ReferenceHandler = {
     return [ref.ref, ref.name].filter(x => x).join(' • ')
   },
 
-  decorateRef: (ref) => {
+  decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {
-      const reference = SOTAData.byReference[ref.ref]
-      if (reference) {
-        return { ...ref, name: reference.name, location: reference.region, grid: reference.grid }
+      const data = await sotaFindOneByReference(ref.ref)
+      if (data) {
+        return { ...ref, name: data.name, location: data.region, grid: data.grid }
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
       }

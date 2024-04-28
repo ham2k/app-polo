@@ -10,7 +10,7 @@ import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './POTAInfo'
 import { POTAActivityOptions } from './POTAActivityOptions'
-import { POTAAllParks, registerPOTAAllParksData } from './POTAAllParksData'
+import { potaFindParkByReference, registerPOTAAllParksData } from './POTAAllParksData'
 import { POTALoggingControl } from './POTALoggingControl'
 import { POTAPostSpot } from './POTAPostSpot'
 
@@ -24,7 +24,8 @@ const Extension = {
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 
     registerPOTAAllParksData()
-    await dispatch(loadDataFile('pota-all-parks'))
+
+    await dispatch(loadDataFile('pota-all-parks', { noticesInsteadOfFetch: true }))
   },
   onDeactivationDispatch: () => async (dispatch) => {
     await dispatch(removeDataFile('pota-all-parks'))
@@ -98,10 +99,10 @@ const ReferenceHandler = {
     ].filter(x => x).join(' • ')
   },
 
-  decorateRef: (ref) => {
+  decorateRefWithDispatch: (ref) => async () => {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', shortName: '', location: '' }
 
-    const data = POTAAllParks.byReference[ref.ref]
+    const data = await potaFindParkByReference(ref.ref)
     let result
     if (data?.name) {
       result = {
