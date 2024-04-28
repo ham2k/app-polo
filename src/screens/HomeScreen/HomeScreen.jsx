@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect } from 'react'
 
 import { FlatList, View } from 'react-native'
-import { AnimatedFAB, Button, Text } from 'react-native-paper'
+import { AnimatedFAB, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 

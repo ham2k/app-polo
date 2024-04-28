@@ -5,54 +5,89 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useState, useEffect, useRef } from 'react'
-import { View, Animated } from 'react-native'
+import React, { useState, useEffect, useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { View, Platform, UIManager, LayoutAnimation } from 'react-native'
 import { Button } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
+import { actions as systemActions, selectNotices } from '../../../store/system/systemSlice'
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true)
+  }
+}
+
+const NewNoticeAnimation = {
+  duration: 1000,
+  create: {
+    type: 'easeInEaseOut',
+    property: 'opacity'
+  },
+  update: {
+    type: 'easeInEaseOut'
+  }
+}
+
+const DismissNoticeAnimation = {
+  duration: 500,
+  create: {
+    type: 'easeInEaseOut',
+    property: 'opacity'
+  },
+  update: {
+    type: 'easeInEaseOut'
+  }
+}
 
 export default function Notices () {
   const styles = useThemedStyles()
 
-  const notices = [
-    { text: '🎉 The POTA database has not been updated in over a week.' },
-    { text: 'The SOTA database has not been updated in over a week.' }
-  ]
+  const dispatch = useDispatch()
+  const notices = useSelector(selectNotices)
 
-  const [layout, setLayout] = useState()
-  const handleLayout = useCallback((event) => {
-    if (!layout) {
-      setLayout(event?.nativeEvent?.layout)
-      console.log('layout', event?.nativeEvent?.layout)
-    }
-  }, [setLayout, layout])
-
-  const animatedHeight = useRef(new Animated.Value(0)).current
-
+  const [currentNotice, setCurrentNotice] = useState()
   useEffect(() => {
-    if (layout?.height > 0) {
-      console.log('layout height', layout?.height, animatedHeight)
-      console.log('start animation')
-      Animated.timing(animatedHeight, {
-        toValue: 140,
-        duration: 1000,
-        useNativeDriver: false
-      }).start()
+    if (!currentNotice && notices.length > 0) {
+      console.log('setting current', notices)
+      setCurrentNotice(notices[0])
     }
-  }, [layout?.height, animatedHeight])
+  }, [notices, currentNotice])
+
+  const [visible, setVisible] = useState()
+  useEffect(() => {
+    if (currentNotice) {
+      LayoutAnimation.configureNext(NewNoticeAnimation)
+      setVisible(true)
+    }
+  }, [currentNotice])
+
+  const handleDismiss = useCallback((notice) => {
+    setVisible(false)
+    LayoutAnimation.configureNext(DismissNoticeAnimation,
+      () => { // animation ended
+        setCurrentNotice(undefined)
+        dispatch(systemActions.dismissNotice(notice))
+      },
+      () => { // animation failed
+        setCurrentNotice(undefined)
+        dispatch(systemActions.dismissNotice(notice))
+      }
+    )
+  }, [dispatch])
 
   return (
-    <Animated.View
+    <View
       style={{
-        height: animatedHeight,
+        height: visible ? undefined : 0,
         flexDirection: 'column'
       }}
     >
-      {notices.map((notice, index) => (
+      {[currentNotice].filter(x => x).map((notice, index) => (
         <View
-          onLayout={handleLayout}
           key={index}
           style={{
             padding: styles.oneSpace * 2,
@@ -68,11 +103,11 @@ export default function Notices () {
           <Ham2kMarkdown style={{ color: '#333' }}>{notice.text}</Ham2kMarkdown>
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
-            <Button style={{ width: styles.oneSpace * 12 }} mode="text" compact={true}>Dismiss</Button>
+            <Button style={{ width: styles.oneSpace * 12 }} mode="text" compact={true} onPress={() => handleDismiss(notice)}>Dismiss</Button>
             <Button style={{ width: styles.oneSpace * 12 }} mode={'outlined'} compact={true}>Update</Button>
           </View>
         </View>
       ))}
-    </Animated.View>
+    </View>
   )
 }
