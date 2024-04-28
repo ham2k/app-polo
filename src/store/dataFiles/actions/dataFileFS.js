@@ -10,23 +10,37 @@ import { getDataFileDefinition, getDataFileDefinitions } from '../dataFilesRegis
 import { actions, selectDataFileInfo } from '../dataFilesSlice'
 import { addRuntimeMessage } from '../../runtime'
 import { reportError } from '../../../App'
+import { addNotice } from '../../system/systemSlice'
 
-export const fetchDataFile = (key) => async (dispatch) => {
+/*
+ * Loading lifecycle:
+ *  `status`: null, "fetching", "loading", "loaded", "error"
+ *
+ *
+ */
+export const fetchDataFile = (key, options = {}) => async (dispatch) => {
+  console.log('fetchDataFile')
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
   try {
-    dispatch(actions.setDataFileInfo({ key, status: 'fetching' }))
-    const data = await definition.fetch()
+    await dispatch(actions.setDataFileInfo({ key, status: 'fetching' }))
+    options.onStatus && await options.onStatus({ key, definition, status: 'fetching' })
+    console.log('fetchDataFile fetching')
+
+    const data = await definition.fetch({ key, definition, options })
 
     try { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/data/`) } catch (error) { /* ignore */ }
     await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`, JSON.stringify(data))
 
-    if (definition.onLoad) await definition.onLoad(data)
-    dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', version: data.version, date: data.date ?? new Date() }))
+    if (definition.onLoad) await definition.onLoad(data, options)
+    await dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', version: data.version, date: data.date ?? new Date() }))
+    console.log('fetchDataFile loaded')
+    options.onStatus && await options.onStatus({ key, definition, status: 'loaded', data })
   } catch (error) {
     reportError(`Error fetching data file ${key}`, error)
-    dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
+    await dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
+    options.onStatus && await options.onStatus({ key, definition, status: 'error', error })
   }
 }
 
@@ -51,9 +65,11 @@ export const readDataFile = (key) => async (dispatch) => {
   }
 }
 
-export const loadDataFile = (key, force) => async (dispatch, getState) => {
+export const loadDataFile = (key, options) => async (dispatch, getState) => {
+  const { force, noticesInsteadOfFetch } = options || {}
+
   if (selectDataFileInfo(getState(), key)?.data) {
-    return // Already loaded, do nothing
+    return
   }
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
@@ -65,20 +81,28 @@ export const loadDataFile = (key, force) => async (dispatch, getState) => {
     if (!exists || force) {
       console.info(`Data for ${definition.key} not found, fetching a fresh version`)
       dispatch(addRuntimeMessage(`Downloading ${definition.name}`))
-      await dispatch(fetchDataFile(key))
+      if (noticesInsteadOfFetch) {
+        await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for '${definition.name}' has to be downloaded`, actionLabel: 'Download Now', action: 'fetch', actionArgs: { key: definition.key } }))
+      } else {
+        await dispatch(fetchDataFile(key))
+      }
     } else {
-      dispatch(addRuntimeMessage(`Loading ${definition.name}`))
       await dispatch(readDataFile(key))
       const date = selectDataFileInfo(getState(), key)?.date
 
+      dispatch(addRuntimeMessage(`Loading ${definition.name}`))
       if (date && maxAgeInDays && (Date.now() - Date.parse(date)) / 1000 / 60 / 60 / 24 > maxAgeInDays) {
-        console.info(`Data for ${definition.key} is too old, fetching a fresh version`)
-        await dispatch(fetchDataFile(key))
+        if (noticesInsteadOfFetch) {
+          await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for '${definition.name}' has not been updated in a while`, actionLabel: 'Refresh Now', action: 'fetch', actionArgs: { key: definition.key } }))
+        } else {
+          await dispatch(fetchDataFile(key))
+        }
       }
     }
   } catch (error) {
     reportError(`Error loading data file ${key}`, error)
     dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
+    return 'error'
   }
 }
 

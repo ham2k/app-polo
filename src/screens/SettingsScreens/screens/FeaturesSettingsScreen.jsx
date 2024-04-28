@@ -19,6 +19,7 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
+import Notices from '../../HomeScreen/components/Notices'
 
 const FeatureItem = ({ extension, settings, info, styles, onChange }) => {
   const enabled = useMemo(() => settings[`extensions/${extension.key}`] ?? extension?.enabledByDefault, [settings, extension])
@@ -99,6 +100,8 @@ export default function FeaturesSettingsScreen ({ navigation }) {
         ))}
 
       </ScrollView>
+
+      <Notices />
     </ScreenContainer>
   )
 }

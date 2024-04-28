@@ -32,7 +32,9 @@ const Extension = {
   alwaysEnabled: true,
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     prepareCountryFilesData()
-    await dispatch(loadDataFile('country-files-bigcty'))
+
+    // Don't `await`, load in the background
+    dispatch(loadDataFile('country-files-bigcty'))
   }
 }
 export default Extension

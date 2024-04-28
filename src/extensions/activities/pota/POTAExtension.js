@@ -24,7 +24,8 @@ const Extension = {
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 
     registerPOTAAllParksData()
-    await dispatch(loadDataFile('pota-all-parks'))
+
+    await dispatch(loadDataFile('pota-all-parks', { noticesInsteadOfFetch: true }))
   },
   onDeactivationDispatch: () => async (dispatch) => {
     await dispatch(removeDataFile('pota-all-parks'))

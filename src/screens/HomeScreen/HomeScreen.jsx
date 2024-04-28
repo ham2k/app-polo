@@ -80,7 +80,7 @@ export default function HomeScreen ({ navigation }) {
           icon="plus"
           label="New Operation"
           extended={isExtended}
-          style={[{ right: styles.oneSpace * 4, bottom: styles.oneSpace * 2 }]}
+          style={[{ right: styles.oneSpace * 2, bottom: styles.oneSpace * 2 }]}
           onPress={handleNewOperation}
         />
       </View>

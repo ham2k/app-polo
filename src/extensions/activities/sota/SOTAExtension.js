@@ -22,7 +22,7 @@ const Extension = {
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 
     registerSOTADataFile()
-    await dispatch(loadDataFile('sota-all-summits'))
+    await dispatch(loadDataFile('sota-all-summits', { noticesInsteadOfFetch: true }))
   },
   onDeactivationDispatch: () => async (dispatch) => {
     await dispatch(removeDataFile('sota-all-summits'))

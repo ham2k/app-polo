@@ -49,7 +49,9 @@ const Extension = {
     for (const file of files) {
       CallNotesFiles.push(file)
       registerDataFile(createDataFileDefinition(file))
-      await dispatch(loadDataFile(`call-notes-${file.location}`))
+
+      // Load Call Note files without `await`
+      dispatch(loadDataFile(`call-notes-${file.location}`))
 
       if (settings.enabledLocations?.[file.location] !== false) {
         ActiveCallNotesFiles[file.location] = true
