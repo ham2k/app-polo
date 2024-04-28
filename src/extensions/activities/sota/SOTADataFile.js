@@ -6,6 +6,7 @@
  */
 
 import RNFetchBlob from 'react-native-blob-util'
+import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import packageJson from '../../../../package.json'
@@ -23,13 +24,17 @@ export function registerSOTADataFile () {
     icon: 'file-image-outline',
     maxAgeInDays: 7,
     enabledByDefault: false,
-    fetch: async () => {
+    fetch: async ({ options, key, definition }) => {
+      options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
+
       const url = 'https://www.sotadata.org.uk/summitslist.csv'
 
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
       })
       const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
+
+      await dbExecute('PRAGMA locking_mode = EXCLUSIVE') // improves performance of inserts
 
       await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['sota'])
 
@@ -42,8 +47,8 @@ export function registerSOTADataFile () {
       for (const line of lines) {
         const row = parseSOTACSVRow(line, { headers })
         if (row.SummitCode && row.ValidTo === '31/12/2099') {
-          const lon = Number.parseFloat(row.Longitude)
-          const lat = Number.parseFloat(row.Latitude)
+          const lon = Number.parseFloat(row.Longitude) || 0
+          const lat = Number.parseFloat(row.Latitude) || 0
           const data = {
             ref: row.SummitCode.toUpperCase(),
             grid: locationToGrid6(lat, lon),
@@ -56,6 +61,14 @@ export function registerSOTADataFile () {
           if (data.ref !== row.SummitName) data.name = row.SummitName
 
           totalSummits++
+          if (totalSummits % 89 === 0) { // using a prime number results in "smoother" progress updates
+            options.onStatus && await options.onStatus({
+              key,
+              definition,
+              status: 'progress',
+              progress: `Loaded \'${fmtNumber(totalSummits)}\' summits (\'${fmtPercent(Math.min(totalSummits / 152000, 1), 'integer')}\')`
+            })
+          }
 
           await dbExecute(`
             INSERT INTO lookups
@@ -68,6 +81,10 @@ export function registerSOTADataFile () {
             `, ['sota', data.region, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.region, data.name, JSON.stringify(data), data.lat, data.lon, 1])
         }
       }
+
+      await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
+
+      await dbExecute('PRAGMA locking_mode = NORMAL')
 
       const data = {
         totalSummits,

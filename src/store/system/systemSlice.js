@@ -48,6 +48,7 @@ export const systemSlice = createSlice({
 })
 
 export const { actions } = systemSlice
+export const { addNotice, dismissNotice } = systemSlice.actions
 
 export const setSystemFlag = (flag, value) => (dispatch) => {
   dispatch(actions.setSystemFlag({ [flag]: value }))

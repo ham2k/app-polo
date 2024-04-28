@@ -23,7 +23,7 @@ const Extension = {
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 
     registerWWFFDataFile()
-    await dispatch(loadDataFile('wwff-all-parks'))
+    await dispatch(loadDataFile('wwff-all-parks', { noticesInsteadOfFetch: true }))
   },
   onDeactivationDispatch: () => async (dispatch) => {
     await dispatch(removeDataFile('wwff-all-parks'))

@@ -6,6 +6,7 @@
  */
 
 import RNFetchBlob from 'react-native-blob-util'
+import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import packageJson from '../../../../package.json'
@@ -24,13 +25,17 @@ export function registerWWFFDataFile () {
     icon: 'file-word-outline',
     maxAgeInDays: 7,
     enabledByDefault: false,
-    fetch: async () => {
+    fetch: async ({ options, key, definition }) => {
+      options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
+
       const url = 'https://wwff.co/wwff-data/wwff_directory.csv'
 
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
       })
       const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
+
+      await dbExecute('PRAGMA locking_mode = EXCLUSIVE') // improves performance of inserts
 
       await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['wwff'])
 
@@ -44,12 +49,12 @@ export function registerWWFFDataFile () {
       for (const line of lines) {
         const row = parseWWFFCSVRow(line, { headers })
         if (row.status === 'active') {
-          const lat = Number.parseFloat(row.latitude)
-          const lon = Number.parseFloat(row.longitude)
+          const lat = Number.parseFloat(row.latitude) || 0
+          const lon = Number.parseFloat(row.longitude) || 0
           const grid = !row.iaruLocator ? locationToGrid6(lat, lon) : row.iaruLocator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
           const data = {
             ref: row.reference.toUpperCase(),
-            dxccCode: Number.parseInt(row.dxccEnum, 10),
+            dxccCode: Number.parseInt(row.dxccEnum, 10) || 0,
             name: row.name,
             grid,
             lat,
@@ -57,6 +62,14 @@ export function registerWWFFDataFile () {
           }
 
           totalReferences++
+          if (totalReferences % 89 === 0) { // using a prime number results in "smoother" progress updates
+            options.onStatus && await options.onStatus({
+              key,
+              definition,
+              status: 'progress',
+              progress: `Loaded \'${fmtNumber(totalReferences)}\' references (\`${fmtPercent(Math.min(totalReferences / 58000, 1), 'integer')}\`)`
+            })
+          }
 
           if (!prefixByDXCCCode[data.dxccCode]) prefixByDXCCCode[data.dxccCode] = data.ref.split('-')[0]
 
@@ -73,6 +86,8 @@ export function registerWWFFDataFile () {
       }
 
       await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wwff'])
+
+      await dbExecute('PRAGMA locking_mode = NORMAL')
 
       RNFetchBlob.fs.unlink(response.data)
 

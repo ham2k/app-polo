@@ -6,6 +6,7 @@
  */
 
 import RNFetchBlob from 'react-native-blob-util'
+import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 
 import packageJson from '../../../../package.json'
 
@@ -23,13 +24,17 @@ export function registerPOTAAllParksData () {
     icon: 'file-powerpoint-outline',
     maxAgeInDays: 7,
     enabledByDefault: true,
-    fetch: async () => {
+    fetch: async ({ key, definition, options }) => {
+      options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
+
       const url = 'https://pota.app/all_parks_ext.csv'
 
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
       })
       const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
+
+      await dbExecute('PRAGMA locking_mode = EXCLUSIVE') // improves performance of inserts
 
       await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['pota'])
 
@@ -44,18 +49,26 @@ export function registerPOTAAllParksData () {
         const row = parsePOTACSVRow(line, { headers })
         const data = {
           ref: row.reference,
-          dxccCode: Number.parseInt(row.entityId, 10),
+          dxccCode: Number.parseInt(row.entityId, 10) || 0,
           name: row.name,
           shortName: abbreviatePOTAName(row.name),
           active: row.active === '1',
           grid: row.grid,
-          lat: Number.parseFloat(row.latitude) ?? 0,
-          lon: Number.parseFloat(row.longitude) ?? 0
+          lat: Number.parseFloat(row.latitude) || 0,
+          lon: Number.parseFloat(row.longitude) || 0
         }
 
         if (data.ref && data.dxccCode) {
           totalParks++
           if (data.active) totalActiveParks++
+          if (totalParks % 89 === 0) { // using a prime number results in "smoother" progress updates
+            options.onStatus && await options.onStatus({
+              key,
+              definition,
+              status: 'progress',
+              progress: `Loaded \`${fmtNumber(totalParks)}\` parks (\`${fmtPercent(Math.min(totalParks / 55000, 1), 'integer')}\`)`
+            })
+          }
 
           if (!prefixByDXCCCode[data.dxccCode]) prefixByDXCCCode[data.dxccCode] = data.ref.split('-')[0]
 
@@ -72,6 +85,8 @@ export function registerPOTAAllParksData () {
       }
 
       await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
+
+      await dbExecute('PRAGMA locking_mode = NORMAL')
 
       const data = {
         totalParks,
