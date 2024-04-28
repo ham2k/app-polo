@@ -15,6 +15,7 @@ import WWFFExtension from './activities/wwff/WWFFExtension'
 import FDExtension from './activities/fd/FDExtension'
 import WFDExtension from './activities/wfd/WFDExtension'
 import CustomExtension from './activities/custom/CustomExtension'
+import UKBOTAExtension from './activities/ukbota/UKBOTAExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
@@ -32,6 +33,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(CustomExtension)
   registerExtension(WFDExtension)
   registerExtension(FDExtension)
+  registerExtension(UKBOTAExtension)
 
   registerExtension(RadioCommands)
   registerExtension(TimeCommands)
