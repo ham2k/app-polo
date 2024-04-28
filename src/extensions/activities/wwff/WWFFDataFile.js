@@ -12,7 +12,7 @@ import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 import packageJson from '../../../../package.json'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
 export const WWFFData = { prefixByDXCCCode: {} }
 
@@ -26,7 +26,7 @@ export function registerWWFFDataFile () {
     maxAgeInDays: 7,
     enabledByDefault: false,
     fetch: async ({ options, key, definition }) => {
-      options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
+      options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data (might take longer than you\'d expect)' })
 
       const url = 'https://wwff.co/wwff-data/wwff_directory.csv'
 
@@ -35,59 +35,74 @@ export function registerWWFFDataFile () {
       })
       const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
 
-      await dbExecute('PRAGMA locking_mode = EXCLUSIVE') // improves performance of inserts
-
-      await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['wwff'])
-
-      let totalReferences = 0
-
       const prefixByDXCCCode = {}
 
       const lines = body.split('\n')
       const headers = parseWWFFCSVRow(lines.shift()).filter(x => x)
 
-      for (const line of lines) {
-        const row = parseWWFFCSVRow(line, { headers })
-        if (row.status === 'active') {
-          const lat = Number.parseFloat(row.latitude) || 0
-          const lon = Number.parseFloat(row.longitude) || 0
-          const grid = !row.iaruLocator ? locationToGrid6(lat, lon) : row.iaruLocator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
-          const data = {
-            ref: row.reference.toUpperCase(),
-            dxccCode: Number.parseInt(row.dxccEnum, 10) || 0,
-            name: row.name,
-            grid,
-            lat,
-            lon
-          }
+      const startTime = Date.now()
+      let processedLines = 0
+      const totalLines = lines.length
 
-          totalReferences++
-          if (totalReferences % 89 === 0) { // using a prime number results in "smoother" progress updates
-            options.onStatus && await options.onStatus({
-              key,
-              definition,
-              status: 'progress',
-              progress: `Loaded \'${fmtNumber(totalReferences)}\' references (\`${fmtPercent(Math.min(totalReferences / 58000, 1), 'integer')}\`)`
+      let totalReferences = 0
+
+      const db = await database()
+      db.transaction(transaction => {
+        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['wwff'])
+      })
+
+      while (lines.length > 0) {
+        const batch = lines.splice(0, 797)
+        await (() => new Promise(resolve => {
+          setTimeout(() => {
+            db.transaction(async transaction => {
+              for (const line of batch) {
+                const row = parseWWFFCSVRow(line, { headers })
+                if (row.status === 'active') {
+                  const lat = Number.parseFloat(row.latitude) || 0
+                  const lon = Number.parseFloat(row.longitude) || 0
+                  const grid = !row.iaruLocator ? locationToGrid6(lat, lon) : row.iaruLocator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
+                  const data = {
+                    ref: row.reference.toUpperCase(),
+                    dxccCode: Number.parseInt(row.dxccEnum, 10) || 0,
+                    name: row.name,
+                    grid,
+                    lat,
+                    lon
+                  }
+
+                  totalReferences++
+
+                  if (!prefixByDXCCCode[data.dxccCode]) prefixByDXCCCode[data.dxccCode] = data.ref.split('-')[0]
+
+                  transaction.executeSql(`
+                    INSERT INTO lookups
+                      (category, subCategory, key, name, data, lat, lon, flags, updated)
+                    VALUES
+                      (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                    ON CONFLICT DO
+                    UPDATE SET
+                      subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                    `, ['wwff', `${data.dxccCode}`, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, `${data.dxccCode}`, data.name, JSON.stringify(data), data.lat, data.lon, 1]
+                  )
+                }
+                processedLines++
+              }
+              options.onStatus && await options.onStatus({
+                key,
+                definition,
+                status: 'progress',
+                progress: `Loaded \`${fmtNumber(processedLines)}\` parks (\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\`)\n\n${fmtNumber(processedLines / ((Date.now() - startTime) / 1000), 'oneDecimal')}/sec`
+              })
+              resolve()
             })
-          }
-
-          if (!prefixByDXCCCode[data.dxccCode]) prefixByDXCCCode[data.dxccCode] = data.ref.split('-')[0]
-
-          await dbExecute(`
-            INSERT INTO lookups
-              (category, subCategory, key, name, data, lat, lon, flags, updated)
-            VALUES
-              (?, ?, ?, ?, ?, ?, ?, ?, 1)
-            ON CONFLICT DO
-            UPDATE SET
-              subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-            `, ['wwff', `${data.dxccCode}`, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, `${data.dxccCode}`, data.name, JSON.stringify(data), data.lat, data.lon, 1])
-        }
+          }, 0)
+        }))()
       }
 
-      await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wwff'])
-
-      await dbExecute('PRAGMA locking_mode = NORMAL')
+      db.transaction(transaction => {
+        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wwff'])
+      })
 
       RNFetchBlob.fs.unlink(response.data)
 
