@@ -9,6 +9,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { View, Platform, UIManager, LayoutAnimation } from 'react-native'
 import { Button, Dialog } from 'react-native-paper'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
@@ -48,10 +49,28 @@ const DismissNoticeAnimation = {
 function prepareStyles (baseStyles) {
   return {
     ...baseStyles,
-    markdown: {
-      ...baseStyles.markdown,
-      // paragraph: { textAlign: 'center', borderWidth: 1 },
-      body: { textAlign: 'center' }
+    root: {
+      backgroundColor: 'rgb(252,244,167)'
+    },
+    noticeContainer: {
+      padding: baseStyles.oneSpace * 2,
+      width: '100%',
+      height: 140,
+      backgroundColor: 'rgb(252,244,167)',
+      borderColor: 'rgb(197,191,131)',
+      borderTopWidth: 1,
+      flexDirection: 'column',
+      gap: baseStyles.oneSpace
+    },
+    noticeText: {
+      color: 'rgb(97, 92, 47)'
+    },
+    buttonTheme: {
+      colors: {
+        primary: 'rgb(97, 92, 47)',
+        outline: 'rgb(97, 92, 47)',
+        onPrimary: 'rgb(252,244,167)'
+      }
     }
   }
 }
@@ -61,6 +80,8 @@ export default function Notices () {
 
   const dispatch = useDispatch()
   const notices = useSelector(selectNotices)
+
+  const safeArea = useSafeAreaInsets()
 
   const [currentNotice, setCurrentNotice] = useState()
   useEffect(() => {
@@ -112,10 +133,14 @@ export default function Notices () {
 
   return (
     <View
-      style={{
-        height: visible ? undefined : 0,
-        flexDirection: 'column'
-      }}
+      style={[
+        styles.root,
+        {
+          height: visible ? undefined : 0,
+          paddingBottom: visible ? safeArea.bottom : 0,
+          flexDirection: 'column'
+        }
+      ]}
     >
       {overlayText && (
         <Ham2kDialog visible={true}>
@@ -128,23 +153,15 @@ export default function Notices () {
       {[currentNotice].filter(x => x).map((notice, index) => (
         <View
           key={index}
-          style={{
-            padding: styles.oneSpace * 2,
-            width: '100%',
-            height: 140,
-            backgroundColor: 'rgb(252,244,167)',
-            borderColor: 'rgb(197,191,131)',
-            borderTopWidth: 1,
-            flexDirection: 'column',
-            gap: styles.oneSpace
-          }}
+          style={styles.noticeContainer}
         >
-          <Ham2kMarkdown style={{ color: '#333' }}>{notice.text}</Ham2kMarkdown>
+          <Ham2kMarkdown style={styles.noticeText}>{notice.text}</Ham2kMarkdown>
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
             <Button
               style={{ width: styles.oneSpace * 12 }}
-              mode="text"
+              theme={ styles.buttonTheme }
+              mode={'outlined'}
               compact={true}
               onPress={() => handleDismiss(notice)}
             >
@@ -152,7 +169,8 @@ export default function Notices () {
             </Button>
             {notice.action && (
               <Button
-                mode={'outlined'}
+                mode={'contained'}
+                theme={ styles.buttonTheme }
                 compact={true}
                 disabled={notice.action === 'disabled'}
                 onPress={() => handleAction(notice)}

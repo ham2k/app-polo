@@ -11,6 +11,7 @@ import { FlatList, View } from 'react-native'
 import { AnimatedFAB, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
@@ -24,6 +25,8 @@ export default function HomeScreen ({ navigation }) {
   const dispatch = useDispatch()
   const operations = useSelector(selectOperationsList)
   const settings = useSelector(selectSettings)
+
+  const safeArea = useSafeAreaInsets()
 
   useEffect(() => {
     if (!settings?.operatorCall) {
@@ -80,7 +83,7 @@ export default function HomeScreen ({ navigation }) {
           icon="plus"
           label="New Operation"
           extended={isExtended}
-          style={[{ right: styles.oneSpace * 2, bottom: styles.oneSpace * 2 }]}
+          style={[{ right: Math.max(styles.oneSpace * 2, safeArea.right), bottom: Math.max(styles.oneSpace * 2, safeArea.bottom) }]}
           onPress={handleNewOperation}
         />
       </View>
