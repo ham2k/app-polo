@@ -11,7 +11,7 @@ import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import packageJson from '../../../../package.json'
 import { registerDataFile } from '../../../store/dataFiles'
-import { dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
 export const SOTAData = {}
 
@@ -34,57 +34,71 @@ export function registerSOTADataFile () {
       })
       const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
 
-      await dbExecute('PRAGMA locking_mode = EXCLUSIVE') // improves performance of inserts
-
-      await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['sota'])
-
-      let totalSummits = 0
-
       const lines = body.split('\n')
       const versionRow = lines.shift()
       const headers = parseSOTACSVRow(lines.shift()).filter(x => x)
 
-      for (const line of lines) {
-        const row = parseSOTACSVRow(line, { headers })
-        if (row.SummitCode && row.ValidTo === '31/12/2099') {
-          const lon = Number.parseFloat(row.Longitude) || 0
-          const lat = Number.parseFloat(row.Latitude) || 0
-          const data = {
-            ref: row.SummitCode.toUpperCase(),
-            grid: locationToGrid6(lat, lon),
-            altitude: Number.parseInt(row.AltM, 10),
-            region: row.RegionName,
-            association: row.RegionName,
-            lat,
-            lon
-          }
-          if (data.ref !== row.SummitName) data.name = row.SummitName
+      const startTime = Date.now()
+      let processedLines = 0
+      const totalLines = lines.length
 
-          totalSummits++
-          if (totalSummits % 89 === 0) { // using a prime number results in "smoother" progress updates
-            options.onStatus && await options.onStatus({
-              key,
-              definition,
-              status: 'progress',
-              progress: `Loaded \'${fmtNumber(totalSummits)}\' summits (\'${fmtPercent(Math.min(totalSummits / 152000, 1), 'integer')}\')`
+      let totalSummits = 0
+
+      const db = await database()
+      db.transaction(transaction => {
+        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['sota'])
+      })
+
+      while (lines.length > 0) {
+        const batch = lines.splice(0, 797)
+        await (() => new Promise(resolve => {
+          setTimeout(() => {
+            db.transaction(async transaction => {
+              for (const line of batch) {
+                const row = parseSOTACSVRow(line, { headers })
+                if (row.SummitCode && row.ValidTo === '31/12/2099') {
+                  const lon = Number.parseFloat(row.Longitude) || 0
+                  const lat = Number.parseFloat(row.Latitude) || 0
+                  const data = {
+                    ref: row.SummitCode.toUpperCase(),
+                    grid: locationToGrid6(lat, lon),
+                    altitude: Number.parseInt(row.AltM, 10),
+                    region: row.RegionName,
+                    association: row.RegionName,
+                    lat,
+                    lon
+                  }
+                  if (data.ref !== row.SummitName) data.name = row.SummitName
+
+                  totalSummits++
+                  transaction.executeSql(`
+                    INSERT INTO lookups
+                      (category, subCategory, key, name, data, lat, lon, flags, updated)
+                    VALUES
+                      (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                    ON CONFLICT DO
+                    UPDATE SET
+                      subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                    `, ['sota', data.region, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.region, data.name, JSON.stringify(data), data.lat, data.lon, 1]
+                  )
+                }
+                processedLines++
+              }
+              options.onStatus && await options.onStatus({
+                key,
+                definition,
+                status: 'progress',
+                progress: `Loaded \`${fmtNumber(processedLines)}\` summits (\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\`)\n\n${fmtNumber(processedLines / ((Date.now() - startTime) / 1000), 'oneDecimal')}/sec`
+              })
+              resolve()
             })
-          }
-
-          await dbExecute(`
-            INSERT INTO lookups
-              (category, subCategory, key, name, data, lat, lon, flags, updated)
-            VALUES
-              (?, ?, ?, ?, ?, ?, ?, ?, 1)
-            ON CONFLICT DO
-            UPDATE SET
-              subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-            `, ['sota', data.region, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.region, data.name, JSON.stringify(data), data.lat, data.lon, 1])
-        }
+          }, 0)
+        }))()
       }
 
-      await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
-
-      await dbExecute('PRAGMA locking_mode = NORMAL')
+      db.transaction(transaction => {
+        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
+      })
 
       const data = {
         totalSummits,
@@ -114,24 +128,20 @@ export async function sotaFindOneByReference (ref) {
 }
 
 export async function sotaFindAllByName (dxccCode, name) {
-  console.log('pota find by name', { dxccCode, name })
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['sota', `%${name}%`, `%${name}%`],
     { row: row => row?.data ? JSON.parse(row.data) : {} }
   )
-  console.log(results)
   return results
 }
 
 export async function sotaFindAllByLocation (dxccCode, lat, lon, delta = 1) {
-  console.log('pota find by location', { dxccCode, lat, lon, delta })
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['sota', lat - delta, lat + delta, lon - delta, lon + delta],
     { row: row => row?.data ? JSON.parse(row.data) : {} }
   )
-  console.log(results)
   return results
 }
 

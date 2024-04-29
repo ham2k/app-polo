@@ -11,7 +11,7 @@ import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import packageJson from '../../../../package.json'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
 export const POTAAllParks = { prefixByDXCCCode: {} }
 
@@ -34,59 +34,75 @@ export function registerPOTAAllParksData () {
       })
       const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
 
-      await dbExecute('PRAGMA locking_mode = EXCLUSIVE') // improves performance of inserts
-
-      await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['pota'])
-
       const lines = body.split('\n')
       const headers = parsePOTACSVRow(lines.shift())
+
+      const startTime = Date.now()
+      let processedLines = 0
+      const totalLines = lines.length
 
       let totalActiveParks = 0
       let totalParks = 0
       const prefixByDXCCCode = {}
 
-      for (const line of lines) {
-        const row = parsePOTACSVRow(line, { headers })
-        const data = {
-          ref: row.reference,
-          dxccCode: Number.parseInt(row.entityId, 10) || 0,
-          name: row.name,
-          shortName: abbreviatePOTAName(row.name),
-          active: row.active === '1',
-          grid: row.grid,
-          lat: Number.parseFloat(row.latitude) || 0,
-          lon: Number.parseFloat(row.longitude) || 0
-        }
+      const db = await database()
+      db.transaction(transaction => {
+        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['pota'])
+      })
+      while (lines.length > 0) {
+        const batch = lines.splice(0, 797)
+        await (() => new Promise(resolve => {
+          setTimeout(() => {
+            db.transaction(async transaction => {
+              for (const line of batch) {
+                const row = parsePOTACSVRow(line, { headers })
+                const data = {
+                  ref: row.reference,
+                  dxccCode: Number.parseInt(row.entityId, 10) || 0,
+                  name: row.name,
+                  shortName: abbreviatePOTAName(row.name),
+                  active: row.active === '1',
+                  grid: row.grid,
+                  lat: Number.parseFloat(row.latitude) || 0,
+                  lon: Number.parseFloat(row.longitude) || 0
+                }
 
-        if (data.ref && data.dxccCode) {
-          totalParks++
-          if (data.active) totalActiveParks++
-          if (totalParks % 89 === 0) { // using a prime number results in "smoother" progress updates
-            options.onStatus && await options.onStatus({
-              key,
-              definition,
-              status: 'progress',
-              progress: `Loaded \`${fmtNumber(totalParks)}\` parks (\`${fmtPercent(Math.min(totalParks / 55000, 1), 'integer')}\`)`
+                if (data.ref && data.dxccCode) {
+                  totalParks++
+                  if (data.active) totalActiveParks++
+
+                  if (!prefixByDXCCCode[data.dxccCode]) prefixByDXCCCode[data.dxccCode] = data.ref.split('-')[0]
+
+                  transaction.executeSql(`
+                  INSERT INTO lookups
+                    (category, subCategory, key, name, data, lat, lon, flags, updated)
+                  VALUES
+                    (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                  ON CONFLICT DO
+                  UPDATE SET
+                    subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                  `, ['pota', `${data.dxccCode}`, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, data.active, `${data.dxccCode}`, data.name, JSON.stringify(data), data.lat, data.lon, data.active]
+                  )
+                }
+                processedLines++
+              }
+              options.onStatus && await options.onStatus({
+                key,
+                definition,
+                status: 'progress',
+                progress: `Loaded \`${fmtNumber(processedLines)}\` parks (\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\`)\n\n${fmtNumber(processedLines / ((Date.now() - startTime) / 1000), 'oneDecimal')}/sec`
+              })
+              resolve()
             })
-          }
-
-          if (!prefixByDXCCCode[data.dxccCode]) prefixByDXCCCode[data.dxccCode] = data.ref.split('-')[0]
-
-          await dbExecute(`
-            INSERT INTO lookups
-              (category, subCategory, key, name, data, lat, lon, flags, updated)
-            VALUES
-              (?, ?, ?, ?, ?, ?, ?, ?, 1)
-            ON CONFLICT DO
-            UPDATE SET
-              subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-            `, ['pota', `${data.dxccCode}`, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, data.active, `${data.dxccCode}`, data.name, JSON.stringify(data), data.lat, data.lon, data.active])
-        }
+          }, 0)
+        }))()
       }
 
-      await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
+      db.transaction(transaction => {
+        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
+      })
 
-      await dbExecute('PRAGMA locking_mode = NORMAL')
+      // await dbExecute('PRAGMA locking_mode = NORMAL')
 
       const data = {
         totalParks,
