@@ -1,8 +1,9 @@
 {
-  "0.7.7-pre1": {
+  "0.7.7-pre2": {
     "changes": [
       "Better layout and styles for large font sizes",
-      "Fixed bug with stale call info data"
+      "Fixed bug with stale call info data",
+      "Better handling of offline data, faster startup"
     ]
   },
   "0.7.6": {
