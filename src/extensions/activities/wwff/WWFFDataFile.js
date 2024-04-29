@@ -112,10 +112,9 @@ export function registerWWFFDataFile () {
       }
     },
     onLoad: (data) => {
-      WWFFData.activeReferences = data.references ?? []
-      WWFFData.version = data.version
+      if (data.references) return false // Old data - TODO: Remove this after a few months
       WWFFData.prefixByDXCCCode = data.prefixByDXCCCode
-      WWFFData.byReference = WWFFData.activeReferences.reduce((obj, item) => Object.assign(obj, { [item.ref]: item }), {})
+      WWFFData.totalReferences = data.totalReferences
     },
     onRemove: async () => {
       await dbExecute('DELETE FROM lookups WHERE category = ?', ['wwff'])

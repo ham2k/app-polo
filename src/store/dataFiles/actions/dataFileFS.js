@@ -33,18 +33,23 @@ export const fetchDataFile = (key, options = {}) => async (dispatch) => {
     try { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/data/`) } catch (error) { /* ignore */ }
     await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`, JSON.stringify(data))
 
-    if (definition.onLoad) await definition.onLoad(data, options)
     await dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', version: data.version, date: data.date ?? new Date() }))
-    console.log('fetchDataFile loaded')
     options.onStatus && await options.onStatus({ key, definition, status: 'loaded', data })
+
+    let loadedOk
+    if (definition.onLoad) loadedOk = await definition.onLoad(data, options)
+    if (loadedOk === undefined || loadedOk === null) loadedOk = true
+
+    return loadedOk
   } catch (error) {
     reportError(`Error fetching data file ${key}`, error)
     await dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
     options.onStatus && await options.onStatus({ key, definition, status: 'error', error })
+    return false
   }
 }
 
-export const readDataFile = (key) => async (dispatch) => {
+export const readDataFile = (key, options = {}) => async (dispatch) => {
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
@@ -58,10 +63,16 @@ export const readDataFile = (key) => async (dispatch) => {
     const lastModified = new Date(stat.lastModified)
 
     dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', date: lastModified ?? new Date() }))
-    if (definition.onLoad) await definition.onLoad(data)
+
+    let loadedOk
+    if (definition.onLoad) loadedOk = await definition.onLoad(data, options)
+    if (loadedOk === undefined || loadedOk === null) loadedOk = true
+
+    return loadedOk
   } catch (error) {
     reportError(`Error reading data file ${key}`, error)
     dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
+    return false
   }
 }
 
@@ -87,13 +98,19 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
         await dispatch(fetchDataFile(key))
       }
     } else {
-      await dispatch(readDataFile(key))
+      const readOk = await dispatch(readDataFile(key))
       const date = selectDataFileInfo(getState(), key)?.date
 
       dispatch(addRuntimeMessage(`Loading ${definition.name}`))
       if (date && maxAgeInDays && (Date.now() - Date.parse(date)) / 1000 / 60 / 60 / 24 > maxAgeInDays) {
         if (noticesInsteadOfFetch) {
           await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for '${definition.name}' has not been updated in a while.`, actionLabel: 'Refresh Now', action: 'fetch', actionArgs: { key: definition.key } }))
+        } else {
+          await dispatch(fetchDataFile(key))
+        }
+      } else if (!readOk) {
+        if (noticesInsteadOfFetch) {
+          await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for '${definition.name}' has to be downloaded.`, actionLabel: 'Download Now', action: 'fetch', actionArgs: { key: definition.key } }))
         } else {
           await dispatch(fetchDataFile(key))
         }
