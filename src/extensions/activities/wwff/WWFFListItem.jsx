@@ -27,14 +27,14 @@ export function WWFFListItem ({ activityRef, refData, operationRef, style, style
       title={
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
           <Text style={{ fontWeight: 'bold' }}>
-            {reference.ref ?? activityRef}
+            {reference?.ref ?? activityRef}
           </Text>
           <Text>
             {refData?.distance && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
           </Text>
         </View>
       }
-      description={reference.name}
+      description={reference?.name}
       onPress={onPress}
       left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
       right={() => (
