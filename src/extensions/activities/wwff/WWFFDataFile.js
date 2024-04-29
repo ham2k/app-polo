@@ -127,7 +127,7 @@ export function wwffPrefixForDXCCCode (code) {
 }
 
 export async function wwffFindOneByReference (ref) {
-  return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['wwff', ref], { row: row => JSON.parse(row.data) })
+  return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['wwff', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
 export async function wwffFindAllByName (dxccCode, name) {

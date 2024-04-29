@@ -131,7 +131,7 @@ export function potaPrefixForDXCCCode (code) {
 }
 
 export async function potaFindParkByReference (ref) {
-  return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['pota', ref], { row: row => JSON.parse(row.data) })
+  return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['pota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
 export async function potaFindParksByName (dxccCode, name) {
