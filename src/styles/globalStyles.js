@@ -168,20 +168,23 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     },
     markdown: {
       body: {
-        fontSize: normalFontSize,
-        color: theme.colors.onBackground
+        fontFamily,
+        fontSize: normalFontSize
       },
       heading1: {
+        fontFamily,
         fontWeight: 'bold',
         fontSize: normalFontSize * 1.4,
         marginBottom: halfSpace
       },
       heading2: {
+        fontFamily,
         fontWeight: 'bold',
         fontSize: normalFontSize * 1.2,
         marginBottom: halfSpace
       },
       heading3: {
+        fontFamily,
         fontWeight: 'bold',
         fontSize: normalFontSize * 1,
         marginBottom: halfSpace
@@ -197,7 +200,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       },
       code_inline: {
         fontVariant: ['tabular-nums'],
-        fontFamily: 'Roboto Mono Medium',
+        fontFamily: 'Roboto Mono Regular',
         backgroundColor: false
       }
     }

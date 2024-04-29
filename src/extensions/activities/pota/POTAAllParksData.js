@@ -37,10 +37,6 @@ export function registerPOTAAllParksData () {
       const lines = body.split('\n')
       const headers = parsePOTACSVRow(lines.shift())
 
-      const startTime = Date.now()
-      let processedLines = 0
-      const totalLines = lines.length
-
       let totalActiveParks = 0
       let totalParks = 0
       const prefixByDXCCCode = {}
@@ -49,6 +45,11 @@ export function registerPOTAAllParksData () {
       db.transaction(transaction => {
         transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['pota'])
       })
+
+      const startTime = Date.now()
+      let processedLines = 0
+      const totalLines = lines.length
+
       while (lines.length > 0) {
         const batch = lines.splice(0, 797)
         await (() => new Promise(resolve => {
@@ -90,7 +91,7 @@ export function registerPOTAAllParksData () {
                 key,
                 definition,
                 status: 'progress',
-                progress: `Loaded \`${fmtNumber(processedLines)}\` parks (\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\`)\n\n${fmtNumber(processedLines / ((Date.now() - startTime) / 1000), 'oneDecimal')}/sec`
+                progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
               })
               resolve()
             })
@@ -101,8 +102,6 @@ export function registerPOTAAllParksData () {
       db.transaction(transaction => {
         transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
       })
-
-      // await dbExecute('PRAGMA locking_mode = NORMAL')
 
       const data = {
         totalParks,
@@ -115,6 +114,8 @@ export function registerPOTAAllParksData () {
       return data
     },
     onLoad: (data) => {
+      if (data.activeParks) return false // Old data - TODO: Remove this after a few months
+
       POTAAllParks.prefixByDXCCCode = data.prefixByDXCCCode ?? {}
       POTAAllParks.totalParks = data.totalParks ?? 0
       POTAAllParks.totalActiveParks = data.totalActiveParks ?? 0
