@@ -17,12 +17,9 @@ export async function createTables (db) {
     version = 0
   }
 
-  // if (version === 2) {
-  //   // console.log('createTables -- using version 1')
-  // } else if (version === 1) {
-  // console.log('createTables -- creating version 2')
-  if (version >= 1) {
-    // await dbExecute('DROP TABLE lookups', [], { db })
+  if (version === 2) {
+    // console.log('createTables -- using version 1')
+  } else if (version === 1) {
     await dbExecute(`
       CREATE TABLE IF NOT EXISTS lookups (
         category TEXT NOT NULL,

@@ -40,16 +40,16 @@ export function registerWWFFDataFile () {
       const lines = body.split('\n')
       const headers = parseWWFFCSVRow(lines.shift()).filter(x => x)
 
-      const startTime = Date.now()
-      let processedLines = 0
-      const totalLines = lines.length
-
       let totalReferences = 0
 
       const db = await database()
       db.transaction(transaction => {
         transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['wwff'])
       })
+
+      const startTime = Date.now()
+      let processedLines = 0
+      const totalLines = lines.length
 
       while (lines.length > 0) {
         const batch = lines.splice(0, 797)
@@ -92,7 +92,7 @@ export function registerWWFFDataFile () {
                 key,
                 definition,
                 status: 'progress',
-                progress: `Loaded \`${fmtNumber(processedLines)}\` parks (\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\`)\n\n${fmtNumber(processedLines / ((Date.now() - startTime) / 1000), 'oneDecimal')}/sec`
+                progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'integer')} seconds left.`
               })
               resolve()
             })
