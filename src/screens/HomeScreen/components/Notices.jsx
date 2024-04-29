@@ -66,6 +66,8 @@ export default function Notices () {
   useEffect(() => {
     if (!currentNotice && notices.length > 0) {
       setCurrentNotice(notices[0])
+    } else if (!notices.find(n => n.id === currentNotice.id)) {
+      setCurrentNotice(notices[0])
     }
   }, [notices, currentNotice])
 
