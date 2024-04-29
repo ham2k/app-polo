@@ -14,6 +14,7 @@ import { selectSettings } from '../../settings'
 import { addRuntimeMessage, resetRuntimeMessages } from '../runtimeSlice'
 import { setupOnlineStatusMonitoring } from './onlineStatus'
 import { UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from '../../../screens/SettingsScreens/screens/VersionSettingsScreen'
+import { addNotice, dismissNotice } from '../../system/systemSlice'
 
 const MESSAGES = [
   'Reticulating splines',
@@ -46,8 +47,25 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
         } else {
           await dispatch(addRuntimeMessage('Checking for updates...'))
         }
-        CodePush.sync({ deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Development'] })
-        // don't `await` for this, because it can hang the app if there is no connection
+
+        setTimeout(async () => {
+          await CodePush.sync({
+            deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Development']
+          })
+          setTimeout(() => {
+            CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING).then((metadata) => {
+              if (metadata) {
+                if (metadata.description) {
+                  dispatch(addNotice({ key: 'update', text: `Version ${metadata?.description} is available.`, actionLabel: 'Update Now', action: 'update' }))
+                } else {
+                  dispatch(addNotice({ key: 'update', text: 'A new version of PoLo is available.', actionLabel: 'Update Now', action: 'update' }))
+                }
+              } else {
+                dispatch(dismissNotice({ key: 'update' }))
+              }
+            })
+          }, 100)
+        }, 0)
       },
       async () => await dispatch(setupOnlineStatusMonitoring()),
       async () => await dispatch(loadExtensions()),
