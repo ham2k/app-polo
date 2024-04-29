@@ -109,13 +109,10 @@ export function registerSOTADataFile () {
       return data
     },
     onLoad: (data) => {
-      if (data.regions) {
-        SOTAData.totalSummits = data.totalSummits
-        SOTAData.version = data.version
-      } else {
-        SOTAData.totalSummits = 0
-        SOTAData.version = null
-      }
+      if (data.regions) return false // Old data - TODO: Remove this after a few months
+
+      SOTAData.totalSummits = data.totalSummits
+      SOTAData.version = data.version
     },
     onRemove: async () => {
       await dbExecute('DELETE FROM lookups WHERE category = ?', ['sota'])

@@ -114,6 +114,8 @@ export function registerPOTAAllParksData () {
       return data
     },
     onLoad: (data) => {
+      if (data.activeParks) return false // Old data - TODO: Remove this after a few months
+
       POTAAllParks.prefixByDXCCCode = data.prefixByDXCCCode ?? {}
       POTAAllParks.totalParks = data.totalParks ?? 0
       POTAAllParks.totalActiveParks = data.totalActiveParks ?? 0
