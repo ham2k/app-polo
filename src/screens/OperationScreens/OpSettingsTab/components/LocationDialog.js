@@ -67,14 +67,14 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
       setLocationGrid(locationToGrid(latitude, longitude))
     }, error => {
       reportError('location error', error)
-    })
+    }, { enableHighAccuracy: true })
 
     const watchId = Geolocation.watchPosition(info => {
       const { latitude, longitude } = info.coords
       setLocationGrid(locationToGrid(latitude, longitude))
     }, error => {
       reportError('location error', error)
-    })
+    }, { enableHighAccuracy: true })
     return () => {
       Geolocation.clearWatch(watchId)
     }
