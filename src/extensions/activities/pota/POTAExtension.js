@@ -99,6 +99,8 @@ const ReferenceHandler = {
     ].filter(x => x).join(' • ')
   },
 
+  incQsoItemIcon: true,
+
   decorateRefWithDispatch: (ref) => async () => {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', shortName: '', location: '' }
 

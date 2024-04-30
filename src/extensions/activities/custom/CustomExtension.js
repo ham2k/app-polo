@@ -70,6 +70,8 @@ const ReferenceHandler = {
     return [ref.ref, ref.name].filter(x => x).join(' • ')
   },
 
+  incQsoItemIcon: true,
+
   decorateRef: (ref) => {
     return ref // Custom so no known extra data
   },
