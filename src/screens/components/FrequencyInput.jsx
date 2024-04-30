@@ -12,7 +12,7 @@ import ThemedTextInput from './ThemedTextInput'
 const REMOVE_NON_DIGITS_REGEX = /[^0-9.]/g
 
 export default function FrequencyInput (props) {
-  const { value, styles, textStyle, onChange, onChangeText, fieldId, onBlur, innerRef } = props
+  const { value, styles, textStyle, onChange, onChangeText, fieldId, innerRef } = props
 
   const localRef = useRef()
   const actualInnerRef = innerRef ?? localRef
@@ -25,11 +25,6 @@ export default function FrequencyInput (props) {
     setLocalValue(value ?? '')
   }, [value, actualInnerRef])
 
-  const handleBlur = useCallback((event) => {
-    setLocalValue(value)
-    onBlur && onBlur(event)
-  }, [value, onBlur])
-
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
     text = text.replace(REMOVE_NON_DIGITS_REGEX, '')
@@ -38,6 +33,9 @@ export default function FrequencyInput (props) {
     if (text !== value) {
       onChangeText && onChangeText(text)
       onChange && onChange({ nativeEvent: { text }, fieldId })
+    } else if (text === '') {
+      onChangeText && onChangeText(undefined)
+      onChange && onChange({ nativeEvent: { text: undefined }, fieldId })
     }
   }, [fieldId, onChange, onChangeText, value])
 
@@ -49,8 +47,6 @@ export default function FrequencyInput (props) {
       decimal={true}
       textStyle={[textStyle, styles?.text?.callsign]}
       onChange={handleChange}
-      onBlur={handleBlur}
-      onEndEditing={handleBlur}
     />
   )
 }
