@@ -65,9 +65,7 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
     Geolocation.getCurrentPosition(info => {
       const { latitude, longitude } = info.coords
       setLocationGrid(locationToGrid(latitude, longitude))
-    }, error => {
-      reportError('location error', error)
-    }, { enableHighAccuracy: true })
+    }, undefined, { enableHighAccuracy: true })
 
     const watchId = Geolocation.watchPosition(info => {
       const { latitude, longitude } = info.coords

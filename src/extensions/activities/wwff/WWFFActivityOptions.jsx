@@ -47,10 +47,7 @@ export function WWFFActivityOptions (props) {
     Geolocation.getCurrentPosition(info => {
       const { latitude, longitude } = info.coords
       setLocation({ lat: latitude, lon: longitude })
-    }, error => {
-      reportError('Geolocation error', error)
-      setLocation(undefined)
-    })
+    }, undefined, { enableHighAccuracy: true })
   }, [])
 
   const [refData, setRefData] = useState({})
