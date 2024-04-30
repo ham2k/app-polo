@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -79,54 +79,76 @@ export default function DevModeSettingsScreen ({ navigation }) {
     })
   }, [dispatch])
 
+  const [pendingUpdateMetadata, setPendingUpdateMetadata] = useState()
+  useEffect(() => {
+    CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING).then((metadata) => {
+      if (metadata?.deploymentKey) {
+        const track = Object.keys(UPDATE_TRACK_KEYS).find(key => UPDATE_TRACK_KEYS[key] === metadata.deploymentKey)
+        if (track) metadata.track = track
+      }
+      setPendingUpdateMetadata(metadata)
+    })
+  }, [])
+
   const [isUpdating, setIsUpdating] = useState()
   const [updateMessage, setUpdateMessage] = useState()
   const checkForUpdatesLabel = useMemo(() => {
     if (isUpdating) {
       return 'Checking for updates...'
+    } else if (pendingUpdateMetadata?.isPending) {
+      setUpdateMessage(pendingUpdateMetadata?.description)
+      if (settings.devMode || (settings.updateTrack && settings.updateTrack !== DEFAULT_TRACK)) {
+        return `${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']} update available`
+      } else {
+        return 'Update available'
+      }
     } else if (settings.devMode || (settings.updateTrack && settings.updateTrack !== DEFAULT_TRACK)) {
-      return `Check for ${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']} Track updates`
+      return `Check for ${UPDATE_TRACK_LABELS[settings?.updateTrack ?? 'Production']} updates`
     } else {
       return 'Check for updates'
     }
-  }, [isUpdating, settings?.devMode, settings?.updateTrack])
+  }, [isUpdating, settings.devMode, settings.updateTrack, pendingUpdateMetadata?.description, pendingUpdateMetadata?.isPending])
 
   const checkForUpdates = useCallback(async () => {
-    try {
-      const deploymentKey = UPDATE_TRACK_KEYS[settings.updateTrack] || UPDATE_TRACK_KEYS.Production
-      console.log(deploymentKey)
-      setIsUpdating(true)
-      setUpdateMessage('Checking for updates...')
-      const update = await CodePush.checkForUpdate(deploymentKey)
-      console.log(update)
-      if (update) {
-        setUpdateMessage('Update available')
+    if (pendingUpdateMetadata?.isPending) {
+      pendingUpdateMetadata.install(CodePush.InstallMode.IMMEDIATE)
+    } else {
+      try {
+        const deploymentKey = UPDATE_TRACK_KEYS[settings.updateTrack] || UPDATE_TRACK_KEYS.Production
+        console.log(deploymentKey)
+        setIsUpdating(true)
+        setUpdateMessage('Checking for updates...')
+        const update = await CodePush.checkForUpdate(deploymentKey)
         console.log(update)
-        setTimeout(() => {
-          setUpdateMessage('Downloading...')
-          update.download((progress) => {
-            setUpdateMessage(`Downloading... ${(progress.receivedBytes / progress.totalBytes * 100).toFixed(0)}%`)
-          }).then((result) => {
-            console.log(result)
-            setUpdateMessage('Installing...')
-            result.install(CodePush.InstallMode.IMMEDIATE)
-            setIsUpdating(false)
-          }).catch((err) => {
-            reportError('Error downloading update', err)
-            setUpdateMessage('Error downloading update')
-            setIsUpdating(false)
-          })
-        }, 1000)
-      } else {
-        setUpdateMessage('No updates available')
+        if (update) {
+          setUpdateMessage('Update available')
+          console.log(update)
+          setTimeout(() => {
+            setUpdateMessage('Downloading...')
+            update.download((progress) => {
+              setUpdateMessage(`Downloading... ${(progress.receivedBytes / progress.totalBytes * 100).toFixed(0)}%`)
+            }).then((result) => {
+              console.log(result)
+              setUpdateMessage('Installing...')
+              result.install(CodePush.InstallMode.IMMEDIATE)
+              setIsUpdating(false)
+            }).catch((err) => {
+              reportError('Error downloading update', err)
+              setUpdateMessage('Error downloading update')
+              setIsUpdating(false)
+            })
+          }, 1000)
+        } else {
+          setUpdateMessage('No updates available')
+          setIsUpdating(false)
+        }
+      } catch (err) {
+        reportError('Error checking for updates', err)
+        setUpdateMessage('Error checking for updates')
         setIsUpdating(false)
       }
-    } catch (err) {
-      reportError('Error checking for updates', err)
-      setUpdateMessage('Error checking for updates')
-      setIsUpdating(false)
     }
-  }, [settings.updateTrack])
+  }, [pendingUpdateMetadata, settings.updateTrack])
 
   if (!settings.devMode) return
 
