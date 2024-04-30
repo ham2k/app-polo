@@ -89,7 +89,7 @@ const ReferenceHandler = {
 
   description: (operation) => refsToString(operation, Info.activationType),
 
-  incQsoItemIcon: true,
+  iconForQSO: Info.icon,
 
   decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {
