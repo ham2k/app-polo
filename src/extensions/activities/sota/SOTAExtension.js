@@ -92,7 +92,7 @@ const ReferenceHandler = {
     return [ref.ref, ref.name].filter(x => x).join(' • ')
   },
 
-  incQsoItemIcon: true,
+  iconForQSO: Info.icon,
 
   decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {
