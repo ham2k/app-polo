@@ -145,7 +145,7 @@ export default function Notices () {
       {overlayText && (
         <Ham2kDialog visible={true}>
           <Dialog.Content>
-            <Ham2kMarkdown styles={styles}>{overlayText}</Ham2kMarkdown>
+            <Ham2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>{overlayText}</Ham2kMarkdown>
           </Dialog.Content>
         </Ham2kDialog>
       )}
