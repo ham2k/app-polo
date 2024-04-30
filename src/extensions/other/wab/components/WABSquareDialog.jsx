@@ -64,12 +64,12 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
     Geolocation.getCurrentPosition(info => {
       const { latitude, longitude } = info.coords
       setWABSquare(locationToWABSquare(latitude, longitude))
-    })
+    }, undefined, { enableHighAccuracy: true })
 
     const watchId = Geolocation.watchPosition(info => {
       const { latitude, longitude } = info.coords
       setWABSquare(locationToWABSquare(latitude, longitude))
-    })
+    }, undefined, { enableHighAccuracy: true })
     return () => {
       Geolocation.clearWatch(watchId)
     }
