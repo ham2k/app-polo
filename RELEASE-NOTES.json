@@ -1,9 +1,13 @@
 {
-  "0.7.7-pre2": {
+  "0.7.7-pre3": {
     "changes": [
+      "Better handling of offline data, faster startup",
+      "UK Bukers On The Air (contributed by M1SDH)",
+      "English Castles Award (contributed by M1SDH)",
+      "English Lighthouses Award (contributed by M1SDH)",
       "Better layout and styles for large font sizes",
       "Fixed bug with stale call info data",
-      "Better handling of offline data, faster startup"
+      "Fixed bug in frequency input"
     ]
   },
   "0.7.6": {
