@@ -6,13 +6,12 @@
  */
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { findRef, refsToString } from '../../../tools/refTools'
+import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
-import { Info } from './WWFFInfo'
-import { registerWWFFDataFile, wwffFindOneByReference } from './WWFFDataFile'
-import { WWFFActivityOptions } from './WWFFActivityOptions'
-import { WWFFLoggingControl } from './WWFFLoggingControl'
-import { WWFFPostSpot } from './WWFFPostSpot'
+import { Info } from './UKBOTAInfo'
+import { UKBOTAActivityOptions } from './UKBOTAActivityOptions'
+import { ukbotaFindOneByReference, registerUKBOTADataFile } from './UKBOTADataFile'
+import { UKBOTALoggingControl } from './UKBOTALoggingControl'
 
 const Extension = {
   ...Info,
@@ -22,11 +21,11 @@ const Extension = {
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 
-    registerWWFFDataFile()
-    await dispatch(loadDataFile('wwff-all-parks', { noticesInsteadOfFetch: true }))
+    registerUKBOTADataFile()
+    await dispatch(loadDataFile('ukbota-all-bunkers', { noticesInsteadOfFetch: true }))
   },
   onDeactivationDispatch: () => async (dispatch) => {
-    await dispatch(removeDataFile('wwff-all-parks'))
+    await dispatch(removeDataFile('ukbota-all-bunkers'))
   }
 }
 export default Extension
@@ -41,8 +40,7 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  postSpot: WWFFPostSpot,
-  Options: WWFFActivityOptions,
+  Options: UKBOTAActivityOptions,
 
   includeControlForQSO: ({ qso, operation }) => {
     if (findRef(operation, Info.activationType)) return true
@@ -67,7 +65,7 @@ const HunterLoggingControl = {
     if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: WWFFLoggingControl,
+  InputComponent: UKBOTALoggingControl,
   optionType: 'optional'
 }
 
@@ -80,26 +78,41 @@ const ActivatorLoggingControl = {
     if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: WWFFLoggingControl,
+  InputComponent: UKBOTALoggingControl,
   optionType: 'mandatory'
 }
 
 const ReferenceHandler = {
   ...Info,
 
-  description: (operation) => refsToString(operation, Info.activationType),
+  shortDescription: (operation) => refsToString(operation, Info.activationType),
+
+  description: (operation) => {
+    const refs = filterRefs(operation, Info.activationType)
+    return [
+      refs.map(r => r.ref).filter(x => x).join(', '),
+      refs.map(r => r.name).filter(x => x).join(', ')
+    ].filter(x => x).join(' • ')
+  },
 
   incQsoItemIcon: true,
 
   decorateRefWithDispatch: (ref) => async () => {
-    if (ref.ref) {
-      const data = await wwffFindOneByReference(ref.ref)
-      if (data) {
-        return { ...ref, name: data.name, location: data.region, grid: data.grid }
-      } else {
-        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
+    if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', location: '' }
+
+    const data = await ukbotaFindOneByReference(ref.ref)
+    let result
+    if (data?.name) {
+      result = {
+        ...ref,
+        name: data.name,
+        location: data.area,
+        grid: data.grid
       }
+    } else {
+      return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
     }
+    return result
   },
 
   suggestOperationTitle: (ref) => {
@@ -115,21 +128,42 @@ const ReferenceHandler = {
       return [{
         format: 'adif',
         common: { refs: [ref] },
-        // Note that compact format uses _ instead of - because of WWFF requirements
-        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}_{compactDate}' : '{date} {call} at {ref}',
+        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
     }
   },
 
   adifFieldsForOneQSO: ({ qso, operation, common }) => {
-    const huntingRef = findRef(qso, Info.huntingType)
+    const huntingRefs = filterRefs(qso, Info.huntingType)
+
+    if (huntingRefs) return ([{ SIG: 'UKBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }])
+    else return []
+  },
+
+  adifFieldCombinationsForOneQSO: ({ qso, operation, common }) => {
+    const huntingRefs = filterRefs(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
-    const fields = []
-    if (activationRef) fields.push({ MY_SIG: 'WWFF' }, { MY_SIG_INFO: activationRef.ref })
-    if (huntingRef) fields.push({ SIG: 'WWFF' }, { SIG_INFO: huntingRef.ref })
+    let activationADIF = []
+    if (activationRef) {
+      activationADIF = [
+        { MY_SIG: 'UKBOTA' }, { MY_SIG_INFO: activationRef.ref }
+      ]
+    }
 
-    return fields
+    if (huntingRefs.length > 0) {
+      return [[
+        ...activationADIF,
+        { SIG: 'UKBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }
+      ]]
+    } else {
+      return [activationADIF]
+    }
+  },
+
+  adifHeaderComment: ({ qsos, operation, common }) => {
+    const b2bCount = qsos.reduce((count, qso) => count + filterRefs(qso, Info.huntingType).length, 0)
+    const stationsWorked = new Set(qsos.map(qso => qso.their?.call + qso.band)).size
+    return `Stations Worked: ${stationsWorked}\nB2B QSOs: ${b2bCount}\n`
   }
-
 }
