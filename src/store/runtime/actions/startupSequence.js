@@ -56,7 +56,7 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
             CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING).then((metadata) => {
               if (metadata) {
                 if (metadata.description) {
-                  dispatch(addNotice({ key: 'update', text: `Version ${metadata?.description} is available.`, actionLabel: 'Update Now', action: 'update' }))
+                  dispatch(addNotice({ key: 'update', text: `Version ${metadata?.description.replace('Release ', '')} is available.`, actionLabel: 'Update Now', action: 'update' }))
                 } else {
                   dispatch(addNotice({ key: 'update', text: 'A new version of PoLo is available.', actionLabel: 'Update Now', action: 'update' }))
                 }
