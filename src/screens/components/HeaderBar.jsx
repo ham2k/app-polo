@@ -55,7 +55,7 @@ function prepareStyles (baseStyles, options) {
     },
     screenTitleLight: {
       fontFamily: baseStyles.normalFontFamily,
-      fontSize: 14 * baseStyles.fontScaleAdjustment,
+      fontSize: 16 * baseStyles.fontScaleAdjustment,
       color: baseStyles.colors.onPrimary,
       // fontWeight: baseStyles.isIOS ? '300' : '100',
       marginLeft: baseStyles.oneSpace
