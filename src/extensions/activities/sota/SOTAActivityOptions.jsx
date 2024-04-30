@@ -14,7 +14,6 @@ import { selectOperationCallInfo, setOperationData } from '../../../store/operat
 import { findRef, replaceRef } from '../../../tools/refTools'
 import { ListRow } from '../../../screens/components/ListComponents'
 import { distanceOnEarth } from '../../../tools/geoTools'
-import { reportError } from '../../../App'
 
 import { Info } from './SOTAInfo'
 import { SOTAListItem } from './SOTAListItem'
