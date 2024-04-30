@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Searchbar } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
-import { reportError } from '../../../App'
 import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
 import { ListRow } from '../../../screens/components/ListComponents'

@@ -15,7 +15,6 @@ import { filterRefs, replaceRefs } from '../../../tools/refTools'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { ListRow } from '../../../screens/components/ListComponents'
 import { distanceOnEarth } from '../../../tools/geoTools'
-import { reportError } from '../../../App'
 
 import { Info } from './POTAInfo'
 import { potaFindParkByReference, potaFindParksByLocation, potaFindParksByName, potaPrefixForDXCCCode } from './POTAAllParksData'
