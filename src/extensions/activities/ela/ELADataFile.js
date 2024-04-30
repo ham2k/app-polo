@@ -30,7 +30,7 @@ export function registerELADataFile () {
     fetch: async ({ options, key, definition }) => {
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
-      const url = 'http://www.ecaelastats.site/ELA_References.json'
+      const url = 'https://www.ecaelastats.site/ELA_References.json'
 
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
