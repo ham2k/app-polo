@@ -23,6 +23,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers,
   let str = ''
 
   str += `ADIF for ${title || operation?.title || 'Operation'} \n`
+  if (handler?.adifHeaderComment) str += handler.adifHeaderComment({qsos, operation, common})
   str += adifField('ADIF_VER', '3.1.4', { newLine: true })
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })

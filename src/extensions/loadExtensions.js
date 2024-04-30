@@ -15,6 +15,7 @@ import WWFFExtension from './activities/wwff/WWFFExtension'
 import FDExtension from './activities/fd/FDExtension'
 import WFDExtension from './activities/wfd/WFDExtension'
 import CustomExtension from './activities/custom/CustomExtension'
+import UKBOTAExtension from './activities/ukbota/UKBOTAExtension'
 import ECAExtension from './activities/eca/ECAExtension'
 import ELAExtension from './activities/ela/ELAExtension'
 
@@ -34,6 +35,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(CustomExtension)
   registerExtension(WFDExtension)
   registerExtension(FDExtension)
+  registerExtension(UKBOTAExtension)
   registerExtension(ECAExtension)
   registerExtension(ELAExtension)
 
