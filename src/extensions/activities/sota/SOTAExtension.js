@@ -92,6 +92,8 @@ const ReferenceHandler = {
     return [ref.ref, ref.name].filter(x => x).join(' • ')
   },
 
+  iconForQSO: Info.icon,
+
   decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {
       const data = await sotaFindOneByReference(ref.ref)

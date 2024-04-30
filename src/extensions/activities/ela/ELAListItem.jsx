@@ -6,21 +6,24 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 
-import { Info } from './WWFFInfo'
-
+import { Info } from './ELAInfo'
+import { elaFindOneByReference } from './ELADataFile'
 import { fmtDistance } from '../../../tools/geoTools'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
-import { wwffFindOneByReference } from './WWFFDataFile'
 
-export function WWFFListItem ({ activityRef, refData, operationRef, style, styles, settings, onPress, onAddReference, onRemoveReference }) {
+export function ELAListItem ({ activityRef, refData, allRefs, style, styles, settings, onPress, onAddReference, onRemoveReference }) {
   const [reference, setReference] = useState()
   useEffect(() => {
-    wwffFindOneByReference(activityRef).then(setReference)
+    elaFindOneByReference(activityRef).then(setReference)
   }, [activityRef])
+
+  const isInRefs = useMemo(() => {
+    return allRefs.find(ref => ref.ref === activityRef)
+  }, [allRefs, activityRef])
 
   return (
     <Ham2kListItem style={{ paddingRight: styles.oneSpace * 1 }}
@@ -34,11 +37,11 @@ export function WWFFListItem ({ activityRef, refData, operationRef, style, style
           </Text>
         </View>
       }
-      description={reference?.name}
+      description={[reference?.name, reference?.location].filter(x => x).join(', ')}
       onPress={onPress}
       left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
       right={() => (
-        activityRef === operationRef ? (
+        isInRefs ? (
           onRemoveReference && <IconButton icon="minus-circle-outline" onPress={() => onRemoveReference(activityRef)} />
         ) : (
           onAddReference && <IconButton icon="plus-circle" onPress={() => onAddReference(activityRef)} />
