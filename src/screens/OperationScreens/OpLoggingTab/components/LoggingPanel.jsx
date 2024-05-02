@@ -538,7 +538,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
                     </View>
                   ) : (
                     qso?.their?.call ? (
-                      <CallInfo qso={qso} operation={operation} settings={settings} styles={styles} themeColor={themeColor} updateQSO={updateQSO} />
+                      <CallInfo qso={qso} qsos={activeQSOs} operation={operation} settings={settings} styles={styles} themeColor={themeColor} updateQSO={updateQSO} />
                     ) : (
                       <OpInfo operation={operation} styles={styles} settings={settings} qsos={activeQSOs} themeColor={themeColor} />
                     )
