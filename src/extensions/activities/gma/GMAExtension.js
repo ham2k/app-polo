@@ -12,6 +12,7 @@ import { GMAActivityOptions } from './GMAActivityOptions'
 import { registerGMADataFile, gmaFindOneByReference } from './GMADataFile'
 import { Info } from './GMAInfo'
 import { GMALoggingControl } from './GMALoggingControl'
+import { GMAPostSpot } from './GMAPostSpot'
 
 const Extension = {
   ...Info,
@@ -40,6 +41,7 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
+  postSpot: GMAPostSpot,
   Options: GMAActivityOptions,
 
   includeControlForQSO: ({ qso, operation }) => {
