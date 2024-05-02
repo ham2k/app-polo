@@ -168,11 +168,11 @@ const ReferenceHandler = {
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
-    const { band, mode, key } = qso
+    const { band, mode, key, startOnMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const counts = refs.length
 
-    const nearDupes = qsos.filter(q => !q.deleted && q.their.call === qso.their.call && q.key !== key)
+    const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
       return { counts, type: Info.activationType }

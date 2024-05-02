@@ -161,6 +161,7 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
         if (score?.alerts && score?.alerts[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.alerts[0]}`] ?? MESSAGES_FOR_SCORING[score?.alerts[0]] ?? score?.alerts[0], 'alert']
         return []
       }).filter(x => x)[0]
+
       if (message && level) return [message, level]
     }
 

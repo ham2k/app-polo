@@ -17,6 +17,6 @@ export function startOfDayInMillis (t) {
 const ONE_DAY = 24 * 60 * 60 * 1000
 
 export function yesterdayInMillis () {
-  const now = Date().now()
+  const now = Date.now()
   return startOfDayInMillis(now - ONE_DAY)
 }
