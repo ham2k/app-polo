@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { FlatList, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem, { guessItemHeight } from './QSOItem'
@@ -173,9 +173,9 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos }) {
   }, [loggingState?.selectedKey, updateLoggingState])
 
   const renderRow = useCallback(({ item, index }) => {
-    const qso = item
+    const qso = item.qso
     return (
-      <QSOItem qso={qso} settings={settings} selected={qso.key === loggingState?.selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} />
+      <QSOItem qso={qso} number={item.number} settings={settings} selected={qso.key === loggingState?.selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} />
     )
   }, [styles, settings, stylesForDeleted, ourInfo, handlePress, loggingState?.selectedKey])
 
@@ -184,12 +184,17 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos }) {
     return { length: height, offset: height * index, index }
   }, [styles, qsos])
 
+  const qsosNumbered = useMemo(() => {
+    let deleted = 0
+    return qsos.map((qso, index) => ({ qso, number: index + 1 - (qso.deleted ? deleted++ : deleted) }))
+  }, [qsos])
+
   return (
     <FlatList
       style={style}
       ref={listRef}
       onLayout={handleLayout}
-      data={qsos}
+      data={qsosNumbered}
       renderItem={renderRow}
       getItemLayout={calculateLayout}
       ListEmptyComponent={<Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>No QSOs yet!</Text>}
