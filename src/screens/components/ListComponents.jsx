@@ -12,7 +12,7 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 export const ListSeparator = ({ style }) => {
   const styles = useThemedStyles()
 
-  return <View style={[style, { backgroundColor: styles.colors.primary, height: styles.oneSpace * 1.5, borderTopWidth: 1, borderBottomWidth: 1, borderColor: styles.colors.primaryContainer }]} />
+  return <View style={[style, { backgroundColor: styles.colors.primary, height: styles.oneSpace * 0.7, borderTopWidth: 1, borderBottomWidth: 1, borderColor: styles.colors.primaryContainer }]} />
 }
 
 export const ListRow = ({ style, children }) => {

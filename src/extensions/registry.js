@@ -5,6 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { useMemo } from 'react'
+import { useSelector } from 'react-redux'
+
 import { reportError } from '../App'
 import { selectSettings } from '../store/settings'
 
@@ -42,11 +45,26 @@ export function allExtensions () {
   return Object.values(Extensions)
 }
 
+function isExtensionEnabled (extension, settings) {
+  return (extension.alwaysEnabled || (settings[`extensions/${extension.key}`] ?? extension.enabledByDefault))
+}
+
 export function findHooks (hookCategory, { key } = {}) {
   let hooks = (Hooks[hookCategory] ?? []).map(h => h.hook)
   if (key) hooks = hooks.filter(h => h.key === key)
 
   return hooks
+}
+
+export function useFindHooks (hookCategory, { key } = {}) {
+  const settings = useSelector(selectSettings)
+
+  const activeExtensionHash = useMemo(() => {
+    const extensions = allExtensions()
+    return extensions.filter(extension => isExtensionEnabled(extension, settings)).join('|')
+  }, [settings])
+
+  return useMemo(() => findHooks(hookCategory, { key }), [activeExtensionHash, hookCategory, key]) // eslint-disable-line react-hooks/exhaustive-deps
 }
 
 export function findBestHook (hookCategory, options) {
@@ -76,7 +94,7 @@ export async function activateEnabledExtensions (dispatch, getState) {
   const settings = selectSettings(getState()) || {}
   const extensions = allExtensions()
   for (const extension of extensions) {
-    if (extension.alwaysEnabled || (settings[`extensions/${extension.key}`] ?? extension.enabledByDefault)) {
+    if (isExtensionEnabled(extension, settings)) {
       await dispatch(activateExtension(extension))
     }
   }

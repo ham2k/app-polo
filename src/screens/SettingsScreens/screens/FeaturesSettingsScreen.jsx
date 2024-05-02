@@ -66,15 +66,16 @@ export default function FeaturesSettingsScreen ({ navigation }) {
   const [slowOperationMessage, setSlowOperationMessage] = useState()
 
   const handleChange = useCallback((extension, value) => {
-    dispatch(setSettings({ [`extensions/${extension.key}`]: value }))
     const slowTimeout = setTimeout(() => {
       setSlowOperationMessage('Activating extension, this may take a moment...')
     }, 1500)
     setTimeout(async () => {
       if (value) {
         await dispatch(activateExtension(extension))
+        await dispatch(setSettings({ [`extensions/${extension.key}`]: value }))
       } else {
         await dispatch(deactivateExtension(extension))
+        await dispatch(setSettings({ [`extensions/${extension.key}`]: value }))
       }
       if (slowTimeout) clearTimeout(slowTimeout)
       setSlowOperationMessage()

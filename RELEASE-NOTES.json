@@ -1,5 +1,5 @@
 {
-  "0.7.7-pre4": {
+  "0.7.7-pre5": {
     "changes": [
       "Better handling of offline data, faster startup",
       "UK Bukers On The Air (contributed by M1SDH)",
@@ -8,6 +8,7 @@
       "Better layout and styles for large font sizes",
       "Better handling of duplicates and QSO scoring",
       "Use high-accuracy location when available",
+      "Link to App Features from Operation Settings",
       "Fixed bug with stale call info data",
       "Fixed bug in frequency input"
     ]
