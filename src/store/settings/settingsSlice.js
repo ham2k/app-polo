@@ -89,7 +89,7 @@ export const selectSettings = createSelector(
     }
 
     if (settings.bands === undefined) {
-      settings.bands = ['160m', '80m', '40m', '30m', '20m', '17m', '15m', '12m', '10m', '6m', '2m', '70cm']
+      settings.bands = ['80m', '40m', '30m', '20m', '17m', '15m', '12m', '10m', '6m', '2m']
     }
 
     return settings
