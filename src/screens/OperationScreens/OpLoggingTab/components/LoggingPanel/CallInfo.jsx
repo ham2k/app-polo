@@ -10,14 +10,26 @@ import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
-import { findRef } from '../../../../../tools/refTools'
-import { fmtDateZulu, fmtISODate } from '../../../../../tools/timeFormats'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 
+import { findBestHook } from '../../../../../extensions/registry'
 import { CallInfoDialog } from './CallInfoDialog'
 import { distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 import { useQSOInfo } from '../../../OpInfoTab/components/useQSOInfo'
+import { startOfDayInMillis, yesterdayInMillis } from '../../../../../tools/timeTools'
+
+const MESSAGES_FOR_SCORING = {
+  duplicate: 'Dupe!!!',
+  newBand: 'New Band',
+  newMode: 'New Mode',
+  newRef: 'New Reference',
+  newDay: 'New Day',
+  'potaActivation.newDay': 'New POTA Day',
+  'potaActivation.newRef': 'New Park',
+  'sotaActivation.newDay': 'New SOTA Day',
+  'sotaActivation.newRef': 'New Summit'
+}
 
 function prepareStyles (baseStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
@@ -40,11 +52,13 @@ function prepareStyles (baseStyles, themeColor) {
         backgroundColor: 'red',
         color: 'white'
       },
-      warning: {
+      notice: {
         backgroundColor: 'green',
         color: 'white'
       },
       info: {
+        backgroundColor: '#666',
+        color: 'white'
       }
     },
     markdown: {
@@ -54,7 +68,7 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export function CallInfo ({ qso, operation, style, themeColor, updateQSO, settings }) {
+export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, settings }) {
   const styles = useThemedStyles(prepareStyles, themeColor)
 
   const { online, ourInfo, guess, lookup, pota, qrz, callNotes, callHistory } = useQSOInfo({ qso, operation })
@@ -75,8 +89,8 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO, settin
       isOnTheGo = true
       if (guess.indicators.indexOf('P') >= 0) parts.push('[Portable]')
       else if (guess.indicators.indexOf('M') >= 0) parts.push('[Mobile]')
-      else if (guess.indicators.indexOf('MM') >= 0) parts.push('[🚢]')
-      else if (guess.indicators.indexOf('AM') >= 0) parts.push('[✈️]')
+      else if (guess.indicators.indexOf('MM') >= 0) parts.push('[ 🚢 ]')
+      else if (guess.indicators.indexOf('AM') >= 0) parts.push('[ ✈️ ]')
     }
 
     if (operation.grid && guess?.grid) {
@@ -134,47 +148,49 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO, settin
     return parts.filter(x => x).join(' • ')
   }, [qrz?.error, qso?.their?.name, guess?.name, callNotes])
 
-  const [historyInfo, historyLevel] = useMemo(() => {
-    const today = new Date()
-    let info = ''
-    let level = 'info'
+  const scoreInfo = useMemo(() => {
+    const exportHandlers = (operation?.refs || []).map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler && x.handler.scoringForQSO)
+    const scores = exportHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, operation, ref })).filter(x => x)
+    return scores
+  }, [operation, qso, qsos])
+
+  const [historyMessage, historyLevel] = useMemo(() => {
+    if (scoreInfo?.length > 0) {
+      const [message, level] = scoreInfo.map(score => {
+        if (score?.notices && score?.notices[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.notices[0]}`] ?? MESSAGES_FOR_SCORING[score?.notices[0]] ?? score?.notices[0], 'notice']
+        if (score?.alerts && score?.alerts[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.alerts[0]}`] ?? MESSAGES_FOR_SCORING[score?.alerts[0]] ?? score?.alerts[0], 'alert']
+        return []
+      }).filter(x => x)[0]
+      if (message && level) return [message, level]
+    }
 
     if (callHistory?.length > 0) {
-      if (qso?._isNew && callHistory.find(x => x?.operation === operation.uuid && x?.mode === qso.mode && x?.band === qso.band)) {
-        if (pota?.ref) {
-          if (fmtDateZulu(callHistory[0]?.startOnMillis) === fmtDateZulu(today)) {
-            if (findRef(qso, 'pota')) {
-              info = 'Maybe Dupe!!! (P2P)'
-              level = 'alert'
-            } else {
-              info = 'Dupe!!!'
-              level = 'alert'
-            }
-            info = 'Dupe!!!'
-            level = 'alert'
-          } else {
-            info = 'New POTA Day'
-            level = 'warning'
-          }
-        } else {
-          info = 'Dupe!!!'
-          level = 'alert'
-        }
-      } else {
-        const sameDay = callHistory.filter(x => x && fmtISODate(x.startOnMillis) === fmtISODate(today)).length
+      let message = ''
+      let level = 'info'
 
-        if (sameDay > 1) {
-          info = `${sameDay}x today + ${callHistory.length - sameDay} QSOs`
-        } else if (callHistory.length - (qso?._isNew ? 0 : 1) > 0) {
-          info = `+ ${callHistory.length - (qso?._isNew ? 0 : 1)} QSOs`
-        }
-        info = info.replace(' 1 QSOs', '1 QSO')
-
-        level = 'info'
+      if (!message) {
+        const today = startOfDayInMillis()
+        const count = callHistory.filter(x => x && x.startOnMillis >= today).length
+        if (count >= 1) message = `${count} today + ${callHistory.length - count} QSOs`
       }
+
+      if (!message) {
+        const yesterday = yesterdayInMillis()
+        const count = callHistory.filter(x => x && x.startOnMillis >= yesterday).length
+        if (count >= 1) message = `${count} yesterday + ${callHistory.length - count} QSOs`
+      }
+
+      if (!message && callHistory.length - (qso?._isNew ? 0 : 1) > 0) {
+        message = `${qso?._isNew ? '' : '+ '}${callHistory.length - (qso?._isNew ? 0 : 1)} QSOs`
+      }
+
+      message = message.replace(' 1 QSOs', ' 1 QSO')
+
+      level = 'info'
+      return [message, level]
     }
-    return [info, level]
-  }, [callHistory, pota?.ref, operation?.uuid, qso])
+    return []
+  }, [scoreInfo, callHistory, qso?._isNew])
 
   return (
     <>
@@ -210,11 +226,11 @@ export function CallInfo ({ qso, operation, style, themeColor, updateQSO, settin
                 </Text>
               )}
             </View>
-            {(stationInfo || historyInfo) && (
+            {(stationInfo || historyMessage) && (
               <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                {historyInfo && (
+                {historyMessage && (
                   <View style={[{ flex: 0 }, styles.history.pill, historyLevel && styles.history[historyLevel]]}>
-                    <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyInfo}</Text>
+                    <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyMessage}</Text>
                   </View>
                 )}
                 <Text style={{ flex: 1, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} numberOfLines={2} ellipsizeMode={'tail'}>

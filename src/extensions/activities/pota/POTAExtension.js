@@ -13,6 +13,7 @@ import { POTAActivityOptions } from './POTAActivityOptions'
 import { potaFindParkByReference, registerPOTAAllParksData } from './POTAAllParksData'
 import { POTALoggingControl } from './POTALoggingControl'
 import { POTAPostSpot } from './POTAPostSpot'
+import { fmtDateZulu } from '../../../tools/timeFormats'
 
 const Extension = {
   ...Info,
@@ -163,6 +164,35 @@ const ReferenceHandler = {
       ])
     } else {
       return [activationADIF]
+    }
+  },
+
+  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+    const { band, mode, key } = qso
+    const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
+    const counts = refs.length
+
+    const nearDupes = qsos.filter(q => !q.deleted && q.their.call === qso.their.call && q.key !== key)
+
+    if (nearDupes.length === 0) {
+      return { counts, type: Info.activationType }
+    } else {
+      const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
+      const sameBand = nearDupes.filter(q => q.band === band).length !== 0
+      const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
+      const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
+      const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref))).length !== 0
+      if (sameBand && sameMode && sameDay && sameRefs) {
+        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+      } else {
+        const notices = []
+        if (!sameRefs) notices.push('newRef')
+        if (!sameDay) notices.push('newDay')
+        if (!sameMode) notices.push('newMode')
+        if (!sameBand) notices.push('newBand')
+
+        return { counts, notices, type: Info.activationType }
+      }
     }
   }
 }
