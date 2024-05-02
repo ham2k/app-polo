@@ -38,7 +38,7 @@ import VersionSettingsScreen from './VersionSettingsScreen'
 
 const Stack = createNativeStackNavigator()
 
-export default function MainSettingsScreen ({ navigation }) {
+export default function MainSettingsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
 
   const settings = useSelector(selectSettings)
@@ -86,7 +86,7 @@ export default function MainSettingsScreen ({ navigation }) {
             >
               <Stack.Navigator
                 id="SettingsNavigator"
-                initialRouteName={'GeneralSettings'}
+                initialRouteName={route?.params?.screen ?? 'GeneralSettings'}
                 screenOptions={{
                   header: HeaderBar,
                   animation: 'slide_from_right'
@@ -104,7 +104,7 @@ export default function MainSettingsScreen ({ navigation }) {
       <ScreenContainer>
         <Stack.Navigator
           id="SettingsNavigator"
-          initialRouteName={'MainSettings'}
+          initialRouteName={route?.params?.screen ?? 'MainSettings'}
           screenOptions={{
             header: HeaderBar,
             animation: 'slide_from_right'
