@@ -7,6 +7,7 @@
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../../tools/refTools'
+import { fmtDateZulu } from '../../../tools/timeFormats'
 
 import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { registerSOTADataFile, sotaFindOneByReference } from './SOTADataFile'
@@ -132,6 +133,35 @@ const ReferenceHandler = {
     if (huntingRef) fields.push({ SOTA_REF: huntingRef.ref })
 
     return fields
-  }
+  },
 
+  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+    const { key } = qso
+    const theirRef = findRef(qso, Info.huntingType)
+    const points = theirRef?.ref ? 1 : 0
+
+    const nearDupes = qsos.filter(q => !q.deleted && q.their.call === qso.their.call && q.key !== key)
+
+    if (nearDupes.length === 0) {
+      return { counts: 1, points, type: Info.activationType }
+    } else if (points > 0) {
+      // Contacts with the same station don't count for the 4 QSOs needed to activate the summit
+      // But might count for hunter points if they are for a new summit or day
+
+      const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
+      const sameRefs = nearDupes.filter(q => findRef(q, Info.huntingType)?.ref === theirRef.ref)
+      const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
+      if (sameDay && sameRefs) {
+        return { counts: 0, points: 0, alerts: ['duplicate'], type: Info.activationType }
+      } else {
+        const notices = []
+        if (!sameRefs) notices.push('newRef')
+        if (!sameDay) notices.push('newDay')
+
+        return { counts: 0, points, notices, type: Info.activationType }
+      }
+    } else {
+      return { counts: 0, points: 0, alerts: ['duplicate'], type: Info.activationType }
+    }
+  }
 }
