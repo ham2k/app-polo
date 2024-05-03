@@ -87,6 +87,15 @@ export default function GeneralSettingsScreen ({ navigation }) {
           />
 
           <Ham2kListItem
+            title="Extra key in numbers row"
+            description={settings.showExtraInNumbersRow ? 'Include slash or period' : 'Just show the numbers'}
+            disabled={!settings.showNumbersRow}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />}
+            right={() => <Switch disabled={!settings.showNumbersRow} value={!!settings.showExtraInNumbersRow} onValueChange={(value) => dispatch(setSettings({ showExtraInNumbersRow: value })) } />}
+            onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showExtraInNumbersRow }))}
+          />
+
+          <Ham2kListItem
             title="Use Metric Units"
             description={settings.distanceUnits === 'miles' ? 'Use Miles for distances' : 'Use Kilometers for distances'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="tape-measure" />}

@@ -57,8 +57,13 @@ export const selectSettings = createSelector(
   [(state) => state?.settings],
   (settings) => {
     settings = settings || {}
+
     if (settings.showNumbersRow === undefined) {
       settings.showNumbersRow = Platform.OS === 'ios'
+    }
+
+    if (settings.showExtraInNumbersRow === undefined) {
+      settings.showExtraInNumbersRow = true
     }
 
     let info = {}
