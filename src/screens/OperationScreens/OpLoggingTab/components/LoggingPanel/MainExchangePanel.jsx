@@ -74,7 +74,7 @@ export const MainExchangePanel = ({
       key="call"
       innerRef={refStack.shift()}
       themeColor={themeColor}
-      style={[styles.input, { minWidth: styles.oneSpace * 12, flex: 10 }]}
+      style={[styles.input, { minWidth: styles.oneSpace * 10, flex: 10 }]}
       value={qso?.their?.call ?? ''}
       label="Their Call"
       placeholder=""
@@ -89,7 +89,7 @@ export const MainExchangePanel = ({
   if (settings.switchSentRcvd) rstFieldRefs.reverse()
   const rstFieldProps = {
     themeColor,
-    style: [styles?.text?.numbers, { minWidth: styles.oneSpace * 6, flex: 1 }],
+    style: [styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }],
     placeholder: rstLength === 3 ? '599' : '59',
     noSpaces: true,
     onChange: handleRSTChange,
@@ -127,7 +127,7 @@ export const MainExchangePanel = ({
         key="state"
         innerRef={refStack.shift()}
         themeColor={themeColor}
-        style={[styles.input, { minWidth: styles.oneSpace * 6, flex: 1 }]}
+        style={[styles.input, { minWidth: styles.oneSpace * 5.7, flex: 1 }]}
         value={qso?.their?.state ?? ''}
         label="State"
         placeholder={qso?.their?.guess?.state ?? ''}

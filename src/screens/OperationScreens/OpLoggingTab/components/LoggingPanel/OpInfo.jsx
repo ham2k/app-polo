@@ -50,7 +50,7 @@ export function OpInfo ({ operation, qsos, styles, style, themeColor }) {
   }, [qsos])
 
   return (
-    <TouchableRipple onPress={() => true} style={{ height: styles.oneSpace * 5 }}>
+    <TouchableRipple onPress={() => true} style={{ minHeight: styles.oneSpace * 5 }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
         <View style={{ flex: 0, alignSelf: 'flex-start' }}>
