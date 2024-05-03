@@ -618,7 +618,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         </View>
 
         {isKeyboardVisible && settings.showNumbersRow && (
-          <NumberKeys themeColor={themeColor} onNumberKeyPressed={handleNumberKey} enabled={!!focusedRef?.current} />
+          <NumberKeys settings={settings} themeColor={themeColor} onNumberKeyPressed={handleNumberKey} enabled={!!focusedRef?.current} />
         )}
       </SafeAreaView>
     </View>
