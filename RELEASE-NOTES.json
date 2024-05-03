@@ -1,5 +1,5 @@
 {
-  "0.7.7-pre5": {
+  "0.7.7-pre6": {
     "changes": [
       "Better handling of offline data, faster startup",
       "Added slash or period to number key row",
@@ -11,7 +11,8 @@
       "Use high-accuracy location when available",
       "Link to App Features from Operation Settings",
       "Fixed bug with stale call info data",
-      "Fixed bug in frequency input"
+      "Fixed bug in frequency input",
+      "Fixed bug importing files on Android"
     ]
   },
   "0.7.6": {
