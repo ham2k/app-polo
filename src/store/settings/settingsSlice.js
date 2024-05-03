@@ -57,8 +57,13 @@ export const selectSettings = createSelector(
   [(state) => state?.settings],
   (settings) => {
     settings = settings || {}
+
     if (settings.showNumbersRow === undefined) {
       settings.showNumbersRow = Platform.OS === 'ios'
+    }
+
+    if (settings.showExtraInNumbersRow === undefined) {
+      settings.showExtraInNumbersRow = true
     }
 
     let info = {}
@@ -89,7 +94,7 @@ export const selectSettings = createSelector(
     }
 
     if (settings.bands === undefined) {
-      settings.bands = ['160m', '80m', '40m', '30m', '20m', '17m', '15m', '12m', '10m', '6m', '2m', '70cm']
+      settings.bands = ['80m', '40m', '30m', '20m', '17m', '15m', '12m', '10m', '6m', '2m']
     }
 
     return settings

@@ -26,7 +26,7 @@ export default function ThemedTextInput (props) {
     onChangeText, onChange, onSubmitEditing, onKeyPress, onFocus, onBlur,
     innerRef, focusedRef,
     fieldId,
-    uppercase, trim, noSpaces, numeric, decimal,
+    uppercase, trim, noSpaces, periodToSlash, numeric, decimal,
     keyboard
   } = props
   const themeStyles = useThemedStyles()
@@ -66,6 +66,9 @@ export default function ThemedTextInput (props) {
     if (noSpaces) {
       text = text.replace(SPACES_REGEX, '')
     }
+    if (periodToSlash) {
+      text = text.replaceAll('.', '/')
+    }
     if (numeric) {
       text = text.replace(NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
     }
@@ -83,7 +86,7 @@ export default function ThemedTextInput (props) {
   }, [
     previousValue,
     fieldId, actualInnerRef,
-    uppercase, noSpaces, numeric, decimal, trim,
+    uppercase, noSpaces, periodToSlash, numeric, decimal, trim,
     onChangeText, onChange, onKeyPress
   ])
 
