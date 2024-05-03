@@ -11,6 +11,7 @@ import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import DocumentPicker from 'react-native-document-picker'
+import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -66,9 +67,17 @@ export default function DevModeSettingsScreen ({ navigation }) {
   }, [dispatch, operations])
 
   const handleImportFiles = useCallback(() => {
-    DocumentPicker.pickSingle().then((file) => {
+    DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
       console.info('File', file)
-      dispatch(importQSON(file.uri))
+      await dispatch(importQSON(file.fileCopyUri))
+
+      RNFetchBlob.fs.unlink(file.fileCopyUri)
+    }).catch((error) => {
+      if (error.indexOf('cancelled') >= 0) {
+        // ignore
+      } else {
+        reportError('Error importing QSON', error)
+      }
     })
   }, [dispatch])
 
