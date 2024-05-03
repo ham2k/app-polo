@@ -194,8 +194,8 @@ export const importQSON = (path) => async (dispatch) => {
       const data = JSON.parse(json)
       data.operation.uuid = uuid
 
-      dispatch(actions.setOperation(data.operation))
-      dispatch(qsosActions.setQSOs({ uuid: data.operation.uuid, qsos: data.qsos }))
+      await dispatch(actions.setOperation(data.operation))
+      await dispatch(qsosActions.setQSOs({ uuid: data.operation.uuid, qsos: data.qsos }))
 
       await dispatch(saveOperation(data.operation))
       await dispatch(saveQSOsForOperation(data.operation.uuid))
@@ -243,14 +243,14 @@ export const importHistoricalADIF = (path) => async (dispatch) => {
           operation: 'historical'
         }
       })
-      dispatch(qsosActions.setQSOs({ uuid: 'historical', qsos }))
+      await dispatch(qsosActions.setQSOs({ uuid: 'historical', qsos }))
       await dispatch(saveQSOsForOperation('historical'))
       dispatch(qsosActions.setQSOsStatus({ uuid: 'historical', status: 'ready' }))
     } catch (error) {
-      reportError('Error importing QSON', error)
+      reportError('Error importing ADIF', error)
     }
   } else {
-    reportError('Invalid Path importing QSON', path)
+    reportError('Invalid Path importing ADIF', path)
   }
 }
 

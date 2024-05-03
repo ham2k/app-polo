@@ -11,8 +11,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Dialog, List, Text } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
+import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
+import { reportError } from '../../../App'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { getDataFileDefinitions, selectAllDataFileInfos } from '../../../store/dataFiles'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
@@ -104,19 +106,28 @@ export default function DataSettingsScreen ({ navigation }) {
   }, [dispatch])
 
   const handleImportHistoricalFile = useCallback(() => {
-    DocumentPicker.pickSingle().then(async (file) => {
+    DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
       setLoadingHistoricalMessage('Importing ADIF records... Please be patient!')
       const interval = setInterval(async () => {
         const count = await dispatch(countHistoricalRecords())
         setHistoricalCount(count)
       }, 1000)
-      await dispatch(importHistoricalADIF(file.uri))
+      await dispatch(importHistoricalADIF(file.fileCopyUri))
+
+      RNFetchBlob.fs.unlink(file.fileCopyUri)
 
       clearInterval(interval)
 
       setLoadingHistoricalMessage()
       const count = await dispatch(countHistoricalRecords())
+
       setHistoricalCount(count)
+    }).catch((error) => {
+      if (error.indexOf('cancelled') >= 0) {
+        // ignore
+      } else {
+        reportError('Error importing historical ADIF', error)
+      }
     })
   }, [dispatch])
 
