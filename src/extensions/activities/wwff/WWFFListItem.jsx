@@ -34,7 +34,7 @@ export function WWFFListItem ({ activityRef, refData, operationRef, style, style
           </Text>
         </View>
       }
-      description={reference?.name}
+      description={reference?.ref ? reference?.name : 'Unknown Park Reference'}
       onPress={onPress}
       left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
       right={() => (

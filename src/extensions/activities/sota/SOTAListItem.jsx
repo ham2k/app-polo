@@ -36,7 +36,7 @@ export function SOTAListItem ({ activityRef, refData, operationRef, style, setti
       description={
         <View style={{ flexDirection: 'row' }}>
           <Text>
-            {[reference?.region, reference?.association].filter(x => x).join(' • ')}
+            {reference?.ref ? [reference?.region, reference?.association].filter(x => x).join(' • ') : 'Unknown Summit Reference'}
           </Text>
           {refData?.distance && (
             <Text>
