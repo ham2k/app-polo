@@ -20,8 +20,98 @@ import OperationItem from './components/OperationItem'
 import { selectSettings } from '../../store/settings'
 import Notices from './components/Notices'
 
+function prepareStyles (baseStyles) {
+  const DEBUG = false
+
+  return {
+    ...baseStyles,
+    row: {
+      ...baseStyles.row,
+      // borderWidth: 1,
+      // borderColor: 'blue',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      gap: baseStyles.oneSpace,
+      paddingTop: baseStyles.oneSpace * 2
+    },
+    rowTop: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      gap: baseStyles.oneSpace
+    },
+    rowBottom: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      gap: baseStyles.oneSpace
+    },
+    rowTopLeft: {
+      borderWidth: DEBUG ? 1 : undefined,
+      borderColor: DEBUG ? 'blue' : undefined,
+      flex: 1
+    },
+    rowTopRight: {
+      borderWidth: DEBUG ? 1 : undefined,
+      borderColor: DEBUG ? 'blue' : undefined,
+      flex: 0
+    },
+    rowBottomLeft: {
+      borderWidth: DEBUG ? 1 : undefined,
+      borderColor: DEBUG ? 'blue' : undefined,
+      flex: 1
+    },
+    rowBottomRight: {
+      borderWidth: DEBUG ? 1 : undefined,
+      borderColor: DEBUG ? 'blue' : undefined,
+      flex: 0
+    },
+    countContainer: {
+      backgroundColor: 'rgba(127,127,127,0.4)',
+      borderWidth: 0,
+      paddingRight: baseStyles.oneSpace * 0.8,
+      paddingLeft: baseStyles.oneSpace * 0.8,
+      marginTop: -baseStyles.oneSpace * 0.1,
+      borderRadius: baseStyles.oneSpace * 1.5
+    },
+    rowText: {
+      ...baseStyles.rowText,
+      backgroundColor: DEBUG ? 'rgba(0,0,0,0.1)' : undefined,
+      lineHeight: baseStyles.oneSpace * 1.7
+    },
+    countText: {
+      ...baseStyles.rowText,
+      fontSize: baseStyles.smallFontSize,
+      lineHeight: baseStyles.oneSpace * 1.7
+      // fontWeight: 'bold'
+    },
+    rowTextSmall: {
+      ...baseStyles.rowText,
+      backgroundColor: DEBUG ? 'rgba(0,0,0,0.1)' : undefined,
+      fontSize: baseStyles.smallFontSize,
+      lineHeight: baseStyles.oneSpace * 1.7
+    },
+    rowTextSmallBold: {
+      ...baseStyles.rowText,
+      backgroundColor: DEBUG ? 'rgba(0,0,0,0.1)' : undefined,
+      fontSize: baseStyles.smallFontSize,
+      lineHeight: baseStyles.oneSpace * 1.7,
+      fontWeight: 'bold'
+    },
+    markdown: {
+      ...baseStyles.markdown,
+      body: {
+        ...baseStyles.markdown.body,
+        ellipsizeMode: 'tail',
+        numberOfLines: 1,
+        backgroundColor: DEBUG ? 'rgba(0,0,0,0.1)' : undefined
+      },
+      paragraph: { margin: 0, padding: 0, marginTop: 0, marginBottom: 0 }
+    }
+  }
+}
+
 export default function HomeScreen ({ navigation }) {
-  const styles = useThemedStyles()
+  const styles = useThemedStyles(prepareStyles)
   const dispatch = useDispatch()
   const operations = useSelector(selectOperationsList)
   const settings = useSelector(selectSettings)

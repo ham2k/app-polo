@@ -73,7 +73,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     },
     screenTabBarLabel: {
       color: theme.colors.onPrimary,
-      fontSize: normalFontSize
+      fontSize: sizeInfo.smOrSmaller ? smallFontSize : normalFontSize
     },
     screenTabBarIndicator: {
       backgroundColor: theme.colors.onPrimary,
@@ -101,7 +101,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
 
     },
     row: {
-      minHeight: oneSpace * 8,
+      minHeight: oneSpace * 7,
       paddingHorizontal: oneSpace * 2,
       paddingVertical: oneSpace,
       borderBottomWidth: 1,

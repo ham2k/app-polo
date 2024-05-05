@@ -79,6 +79,25 @@ export function fmtDateTimeZuluDynamic (t, { now, compact } = { now: null, compa
   }
 }
 
+export function fmtDateZuluDynamic (t, { now } = { now: null, compact: false }) {
+  t = prepareTimeValue(t)
+
+  now = now || new Date()
+
+  if (t && t.toLocaleTimeString) {
+    const diffInDays = (now - t) / (1000 * 60 * 60 * 24)
+    if (diffInDays <= 7) {
+      return t.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', timeZone: 'UTC' })
+    } else if (diffInDays <= 360) {
+      return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+    } else {
+      return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+    }
+  } else {
+    return ''
+  }
+}
+
 export function fmtDateTimeNice (t) {
   t = prepareTimeValue(t)
 

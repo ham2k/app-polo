@@ -35,20 +35,20 @@ function prepareStyles (baseStyles, options) {
     },
     screenTitleSmall: {
       fontFamily: 'Roboto Slab Medium',
-      fontSize: 14 * baseStyles.fontScaleAdjustment,
-      lineHeight: 16 * baseStyles.fontScaleAdjustment,
+      fontSize: 17 * baseStyles.fontScaleAdjustment,
+      lineHeight: 20 * baseStyles.fontScaleAdjustment,
       color: baseStyles.colors.onPrimary
     },
     screenSubTitle: {
       fontFamily: baseStyles.normalFontFamily,
-      fontSize: 12 * baseStyles.fontScaleAdjustment,
+      fontSize: 13 * baseStyles.fontScaleAdjustment,
       lineHeight: 14 * baseStyles.fontScaleAdjustment,
       fontWeight: baseStyles.isIOS ? '300' : '100',
       color: baseStyles.colors.onPrimary
     },
     screenSubTitleCondensed: {
       fontFamily: baseStyles.maybeCondensedFontFamily,
-      fontSize: 12 * baseStyles.fontScaleAdjustment,
+      fontSize: 13 * baseStyles.fontScaleAdjustment,
       lineHeight: 14 * baseStyles.fontScaleAdjustment,
       fontWeight: baseStyles.isIOS ? '300' : '100',
       color: baseStyles.colors.onPrimary

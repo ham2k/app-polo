@@ -10,6 +10,7 @@ import React, { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { useSelector } from 'react-redux'
 
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, selectOperationCallInfo } from '../../../store/operations'
 import LoggingPanel from './components/LoggingPanel'
 import QSOList from './components/QSOList'
@@ -27,6 +28,8 @@ export default function OpLoggingTab ({ navigation, route }) {
   const activeQSOs = useMemo(() => qsos.filter(qso => !qso.deleted), [qsos])
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
+  const styles = useThemedStyles()
+
   const settings = useSelector(selectSettings)
   const online = useSelector(selectRuntimeOnline)
 
@@ -40,8 +43,12 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   // Set navigation title
   useEffect(() => {
-    navigation.setOptions({ title: `${activeQSOs.length} ${activeQSOs.length !== 1 ? 'QSOs' : 'QSO'}`, iconName: 'radio' })
-  }, [navigation, activeQSOs])
+    if (styles?.smOrSmaller) {
+      navigation.setOptions({ title: `${activeQSOs.length} ${activeQSOs.length !== 1 ? 'Qs' : 'Q'}`, iconName: 'radio' })
+    } else {
+      navigation.setOptions({ title: `${activeQSOs.length} ${activeQSOs.length !== 1 ? 'QSOs' : 'QSO'}`, iconName: 'radio' })
+    }
+  }, [navigation, activeQSOs, styles?.smOrSmaller])
 
   return (
     <View style={flexOne}>
