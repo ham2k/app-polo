@@ -10,7 +10,7 @@
       "Better handling of duplicates and QSO scoring",
       "Use high-accuracy location when available",
       "Link to App Features from Operation Settings",
-      "Make it easier to use Dropbox, iCloud or Google Drive links for Callsign Notes",
+      "Make it easier to use Dropbox, iCloud, Google Docs or Google Drive links for Callsign Notes",
       "Fixed bug with stale call info data",
       "Fixed bug in frequency input",
       "Fixed bug importing files on Android"
