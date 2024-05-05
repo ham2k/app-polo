@@ -41,7 +41,7 @@ export const fetchDataFile = (key, options = {}) => async (dispatch) => {
 
     return loadedOk
   } catch (error) {
-    reportError(`Error fetching data file ${key}`, error)
+    console.warn(`Error fetching data file ${key}`, error)
     await dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
     options.onStatus && await options.onStatus({ key, definition, status: 'error', error })
     return false
