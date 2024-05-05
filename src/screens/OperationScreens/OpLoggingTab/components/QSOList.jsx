@@ -58,23 +58,27 @@ function prepareStyles (themeStyles, isDeleted, width) {
         ...commontStyles,
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
-        fontFamily: 'Roboto',
+        // fontFamily: 'Roboto',
         flex: 0,
+        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 8,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
         textAlign: 'right'
       },
       freqMHz: {
         ...commontStyles,
+        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         fontWeight: '600',
         textAlign: 'right'
       },
       freqKHz: {
         ...commontStyles,
+        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         textAlign: 'right'
       },
       freqHz: {
         ...commontStyles,
+        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         textAlign: 'right',
         fontWeight: '300',
         fontSize: themeStyles.normalFontSize * 0.7
@@ -96,6 +100,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
       },
       location: {
         ...commontStyles,
+        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         flex: 0,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
         minWidth: themeStyles.oneSpace * 3.5,

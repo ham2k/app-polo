@@ -8,7 +8,9 @@
 import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { Text, TouchableRipple } from 'react-native-paper'
-import { fmtDateTimeDynamic } from '../../../tools/timeFormats'
+import { fmtNumber } from '@ham2k/lib-format-tools'
+
+import { fmtDateZuluDynamic } from '../../../tools/timeFormats'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 
 export default function OperationItem ({ operation, settings, onPress, styles }) {
@@ -17,24 +19,27 @@ export default function OperationItem ({ operation, settings, onPress, styles })
   }, [onPress, operation])
 
   return (
-    <TouchableRipple onPress={pressHandler}>
-      <View style={[styles.row, { flexDirection: 'column', width: '100%' }]}>
-        <View style={[{ flexDirection: 'row', width: '100%' }]}>
-          <View style={{ flex: 0, flexDirection: 'row', marginLeft: 0, minWidth: styles.oneSpace * 2 }}>
-            {/* <Text style={[styles.text.callsign, styles.rowText]}>{operation.stationCall || settings.operatorCall}{' '}</Text>
-            <Text style={[styles.rowText, { fontWeight: 'bold' }]}><Ham2kMarkdown>{operation.title}</Ham2kMarkdown></Text> */}
-            <Ham2kMarkdown style={styles.rowText}>**`{operation.stationCall || settings.operatorCall}`**{' '}{operation.title}</Ham2kMarkdown>
+    <TouchableRipple onPress={pressHandler} style={styles.rowRoot}>
+      <View style={styles.row}>
+        <View style={styles.rowTop}>
+          <View style={styles.rowTopLeft}>
+            <Ham2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCall || settings.operatorCall}`**{' '}{operation.title}</Ham2kMarkdown>
+          </View>
+          <View style={styles.rowTopRight}>
+            <View style={styles.countContainer}>
+              <Text style={styles.countText}>{fmtNumber(operation.qsoCount)}</Text>
+            </View>
           </View>
         </View>
-        <View style={[{ flexDirection: 'row', width: '100%', paddingTop: styles.halfSpace }]}>
-          {operation.qsoCount > 0 ? (
-            <>
-              <Text style={[styles.rowText, { fontSize: styles.smallFontSize }]}>{operation.qsoCount} {operation.qsoCount > 1 ? 'QSOs' : 'QSO'}{' • '}</Text>
-              <Text style={[styles.rowText, { fontSize: styles.smallFontSize }]}>{fmtDateTimeDynamic(operation.startOnMillisMax)}</Text>
-            </>
-          ) : (
-            <Text style={[styles.rowText, { fontSize: styles.smallFontSize }]}>No QSOs</Text>
-          )}
+        <View style={styles.rowBottom}>
+          <View style={styles.rowBottomLeft}>
+            <Text style={styles.rowTextSmall} numberOfLines={1} ellipsizeMode={'tail'}>{operation.subtitle}</Text>
+          </View>
+          <View style={styles.rowBottomRight}>
+            {operation.startOnMillisMax && (
+              <Text style={styles.rowTextSmall}>{fmtDateZuluDynamic(operation.startOnMillisMax)}</Text>
+            )}
+          </View>
         </View>
       </View>
     </TouchableRipple>
