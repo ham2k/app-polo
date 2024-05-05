@@ -9,7 +9,8 @@ import { useState } from 'react'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { POTAAllParks, abbreviatePOTAName, potaFindParkByReference } from '../../extensions/activities/pota/POTAAllParksData'
-import { reportError } from '../../App'
+import { reportError } from '../../distro'
+
 
 /**
 

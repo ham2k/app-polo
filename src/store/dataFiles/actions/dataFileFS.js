@@ -9,7 +9,8 @@ import RNFetchBlob from 'react-native-blob-util'
 import { getDataFileDefinition, getDataFileDefinitions } from '../dataFilesRegistry'
 import { actions, selectDataFileInfo } from '../dataFilesSlice'
 import { addRuntimeMessage } from '../../runtime'
-import { reportError } from '../../../App'
+import { reportError } from '../../../distro'
+
 import { addNotice } from '../../system/systemSlice'
 
 /*

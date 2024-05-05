@@ -12,9 +12,6 @@ import { Provider, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import Config from 'react-native-config'
-import codePush from 'react-native-code-push'
-import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
 
 import 'react-native-gesture-handler' // This must be included in the top component file
 
@@ -24,6 +21,8 @@ import { persistor, store } from './store'
 import { selectSettings } from './store/settings'
 import HeaderBar from './screens/components/HeaderBar'
 
+import GLOBAL from './GLOBAL'
+
 import StartScreen from './screens/StartScreen/StartScreen'
 import HomeScreen from './screens/HomeScreen/HomeScreen'
 import OperationScreen from './screens/OperationScreens/OperationScreen'
@@ -31,51 +30,7 @@ import OperationAddActivityScreen from './screens/OperationScreens/OperationAddA
 import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
 import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
-
-/** BEGIN DISTRIBUTION-ONLY */
-import { Client } from 'rollbar-react-native'
-/** END DISTRIBUTION-ONLY */
-
-const GLOBAL_APP_SETTINGS = {
-  consentAppData: false
-}
-
-const DISTRIBUTION_CONFIG = {}
-
-/** EXAMPLE CODEPUSH CONFIG */
-// DISTRIBUTION_CONFIG.codePushOptions = {
-//   installMode: codePush.InstallMode.IMMEDIATE
-// }
-
-/** EXAMPLE ROLLBAR CONFIG */
-// import { Client } from 'rollbar-react-native'
-// DISTRIBUTION_CONFIG.rollbarNative = new Client({
-//   accessToken: Config.ROLLBAR_TOKEN,
-//   captureUncaught: true,
-//   captureUnhandledRejections: true
-// })
-
-/** BEGIN DISTRIBUTION-ONLY */
-if (process.env.NODE_ENV !== 'development') {
-  DISTRIBUTION_CONFIG.rollbarNative = new Client({
-    accessToken: Config.ROLLBAR_TOKEN,
-    captureUncaught: true,
-    captureUnhandledRejections: true
-  })
-
-  DISTRIBUTION_CONFIG.codePushOptions = {
-    installMode: codePush.InstallMode.ON_NEXT_RESUME
-  }
-}
-/** END DISTRIBUTION-ONLY */
-
-export function reportError (error, ...extra) {
-  if (GLOBAL_APP_SETTINGS.consentAppData && DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollbar) {
-    DISTRIBUTION_CONFIG.rollbarNative.rollbar.error(error, ...extra)
-  }
-  console.error(error, ...extra)
-  if (extra && extra[0]?.stack) console.error(extra[0].stack)
-}
+import { AppWrappedForDistribution, useConfigForDistribution } from './distro'
 
 const Stack = createNativeStackNavigator()
 
@@ -87,8 +42,11 @@ function MainApp ({ navigationTheme }) {
   const [appState, setAppState] = useState('starting')
 
   const settings = useSelector(selectSettings)
+
+  useConfigForDistribution({ settings })
+
   useEffect(() => { // Some top-level functions need access to settings info that's only available in the store at this point
-    GLOBAL_APP_SETTINGS.consentAppData = settings.consentAppData
+    GLOBAL.consentAppData = settings.consentAppData
   }, [settings?.consentAppData])
 
   if (appState === 'starting') {
@@ -148,29 +106,14 @@ function ThemedApp () {
   )
 }
 
-const PersistedApp = () => (
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <ThemedApp />
-    </PersistGate>
-  </Provider>
+const App = () => (
+  <AppWrappedForDistribution>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <ThemedApp />
+      </PersistGate>
+    </Provider>
+  </AppWrappedForDistribution>
 )
-
-let App
-if (DISTRIBUTION_CONFIG.rollbarNative && DISTRIBUTION_CONFIG.rollbarNative.rollbar) {
-  App = () => (
-    <RollbarProvider instance={DISTRIBUTION_CONFIG.rollbarNative.rollbar}>
-      <ErrorBoundary>
-        <PersistedApp />
-      </ErrorBoundary>
-    </RollbarProvider>
-  )
-} else {
-  App = PersistedApp
-}
-
-// if (DISTRIBUTION_CONFIG.codePushOptions) {
-//   App = codePush(DISTRIBUTION_CONFIG.codePushOptions)(App)
-// }
 
 export default App
