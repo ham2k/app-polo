@@ -32,7 +32,7 @@ function prepareStyles (baseStyles) {
       flexDirection: 'column',
       justifyContent: 'space-between',
       gap: baseStyles.oneSpace,
-      paddingTop: baseStyles.oneSpace * 2
+      paddingTop: baseStyles.oneSpace * 1.5
     },
     rowTop: {
       flexDirection: 'row',
@@ -76,25 +76,26 @@ function prepareStyles (baseStyles) {
     rowText: {
       ...baseStyles.rowText,
       backgroundColor: DEBUG ? 'rgba(0,0,0,0.1)' : undefined,
-      lineHeight: baseStyles.oneSpace * 1.7
+      fontSize: baseStyles.smallFontSize,
+      lineHeight: baseStyles.smallFontSize * 1.3
     },
     countText: {
       ...baseStyles.rowText,
       fontSize: baseStyles.smallFontSize,
-      lineHeight: baseStyles.oneSpace * 1.7
+      lineHeight: baseStyles.smallFontSize * 1.3
       // fontWeight: 'bold'
     },
     rowTextSmall: {
       ...baseStyles.rowText,
       backgroundColor: DEBUG ? 'rgba(0,0,0,0.1)' : undefined,
       fontSize: baseStyles.smallFontSize,
-      lineHeight: baseStyles.oneSpace * 1.7
+      lineHeight: baseStyles.smallFontSize * 1.3
     },
     rowTextSmallBold: {
       ...baseStyles.rowText,
       backgroundColor: DEBUG ? 'rgba(0,0,0,0.1)' : undefined,
       fontSize: baseStyles.smallFontSize,
-      lineHeight: baseStyles.oneSpace * 1.7,
+      lineHeight: baseStyles.smallFontSize * 1.3,
       fontWeight: 'bold'
     },
     markdown: {
