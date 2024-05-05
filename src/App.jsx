@@ -23,8 +23,6 @@ import { persistor, store } from './store'
 import { selectSettings } from './store/settings'
 import HeaderBar from './screens/components/HeaderBar'
 
-import GLOBAL from './GLOBAL'
-
 import StartScreen from './screens/StartScreen/StartScreen'
 import HomeScreen from './screens/HomeScreen/HomeScreen'
 import OperationScreen from './screens/OperationScreens/OperationScreen'
