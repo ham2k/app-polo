@@ -15,6 +15,8 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 
 import 'react-native-gesture-handler' // This must be included in the top component file
 
+import GLOBAL from './GLOBAL'
+
 import { usePrepareThemes } from './styles/tools/usePrepareThemes'
 
 import { persistor, store } from './store'
