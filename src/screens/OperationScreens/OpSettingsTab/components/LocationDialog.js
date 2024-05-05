@@ -13,7 +13,6 @@ import { locationToGrid } from '@ham2k/lib-maidenhead-grid'
 
 import { setOperationData } from '../../../../store/operations'
 import ThemedTextInput from '../../../components/ThemedTextInput'
-import { reportError } from '../../../../distro'
 
 import { Ham2kDialog } from '../../../components/Ham2kDialog'
 
@@ -72,7 +71,8 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
       const { latitude, longitude } = info.coords
       setLocationGrid(locationToGrid(latitude, longitude))
     }, error => {
-      reportError('location error', error)
+      setLocationGrid('NO GPS')
+      console.warn('Location error', error)
     }, { enableHighAccuracy: true })
     return () => {
       Geolocation.clearWatch(watchId)
