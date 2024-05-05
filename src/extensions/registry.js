@@ -8,7 +8,8 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { reportError } from '../App'
+import { reportError } from '../distro'
+
 import { selectSettings } from '../store/settings'
 
 /*

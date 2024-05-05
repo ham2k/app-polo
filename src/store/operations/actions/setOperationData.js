@@ -10,7 +10,8 @@ import { actions, selectOperation } from '../operationsSlice'
 import debounce from 'debounce'
 import { saveOperation } from './operationsDB'
 import { findHooks } from '../../../extensions/registry'
-import { reportError } from '../../../App'
+import { reportError } from '../../../distro'
+
 
 function debounceableDispatch (dispatch, action) {
   return dispatch(action())
