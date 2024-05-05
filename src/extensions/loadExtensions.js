@@ -22,6 +22,7 @@ import ELAExtension from './activities/ela/ELAExtension'
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
 import DevModeCommands from './commands/DevModeCommands'
+import DebuggingCommands from './commands/DebuggingCommands'
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 
 import WABExtension from './other/wab/WABExtension'
@@ -42,6 +43,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(RadioCommands)
   registerExtension(TimeCommands)
   registerExtension(DevModeCommands)
+  registerExtension(DebuggingCommands)
 
   registerExtension(CallNotesExtension)
 
