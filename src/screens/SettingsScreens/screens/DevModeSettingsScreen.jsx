@@ -15,6 +15,7 @@ import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 import CodePush from 'react-native-code-push'
 
+import { reportError } from '../../../distro'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { loadQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'

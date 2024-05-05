@@ -7,7 +7,6 @@
 
 import { reportError } from '../../../distro'
 
-
 import packageJson from '../../../../package.json'
 import { filterRefs } from '../../../tools/refTools'
 
