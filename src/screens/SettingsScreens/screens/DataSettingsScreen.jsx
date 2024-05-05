@@ -14,7 +14,8 @@ import DocumentPicker from 'react-native-document-picker'
 import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
-import { reportError } from '../../../App'
+import { reportError } from '../../../distro'
+
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { getDataFileDefinitions, selectAllDataFileInfos } from '../../../store/dataFiles'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'

@@ -18,7 +18,8 @@ import { qsonToCabrillo } from '../../../tools/qsonToCabrillo'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { findBestHook } from '../../../extensions/registry'
 import { simpleTemplate } from '../../../tools/stringTools'
-import { reportError } from '../../../App'
+import { reportError } from '../../../distro'
+
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)

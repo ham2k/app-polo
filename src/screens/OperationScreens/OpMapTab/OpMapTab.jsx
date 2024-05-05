@@ -18,7 +18,8 @@ import { addQSO, selectQSOs } from '../../../store/qsos'
 import { View } from 'react-native'
 import { selectSettings } from '../../../store/settings'
 import { apiQRZ } from '../../../store/apiQRZ'
-import { reportError } from '../../../App'
+import { reportError } from '../../../distro'
+
 import { useUIState } from '../../../store/ui'
 import MapWithQSOs from './components/MapWithQSOs'
 
