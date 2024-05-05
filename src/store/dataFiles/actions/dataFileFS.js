@@ -20,14 +20,12 @@ import { addNotice } from '../../system/systemSlice'
  *
  */
 export const fetchDataFile = (key, options = {}) => async (dispatch) => {
-  console.log('fetchDataFile')
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
   try {
     await dispatch(actions.setDataFileInfo({ key, status: 'fetching' }))
     options.onStatus && await options.onStatus({ key, definition, status: 'fetching' })
-    console.log('fetchDataFile fetching')
 
     const data = await definition.fetch({ key, definition, options })
 

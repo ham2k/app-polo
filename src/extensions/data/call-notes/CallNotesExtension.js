@@ -102,10 +102,11 @@ export const createDataFileDefinition = (file) => ({
 })
 
 const createCallNotesFetcher = (file) => async () => {
-  const request = file.location
   if (!file.location) return {}
 
-  const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', request, {
+  const url = await resolveDownloadUrl(file.location)
+  console.log('resolved url', url)
+  const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
     'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
   })
 
@@ -160,4 +161,33 @@ export const useAllCallNotesFinder = (call) => {
   return useMemo(() => {
     return findAllCallNotes(call)
   }, [call])
+}
+
+async function resolveDownloadUrl (url) {
+  url = url.trim()
+
+  if (url.match(/^https:\/\/(www\.)*dropbox\.com\//i)) {
+    if (!url.match(/&dl=1/)) {
+      return url.replaceAll(/&dl=0/g, '&dl=1')
+    }
+  } else if (url.match(/^https:\/\/(www\.)*icloud\.com\/iclouddrive/i)) {
+    const parts = url.match(/iclouddrive\/([\w_]+)/)
+    const response = await fetch('https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve', {
+      method: 'POST',
+      headers: { 'User-Agent': `Ham2K Portable Logger/${packageJson.version}` },
+      body: JSON.stringify({
+        shortGUIDs: [{ value: parts[1] }]
+      })
+    })
+    if (response.status === 200) {
+      const body = await response.text()
+      const json = JSON.parse(body)
+      return json?.results && json?.results[0] && json?.results[0].rootRecord?.fields?.fileContent?.value?.downloadURL
+    }
+  } else if (url.match(/^https:\/\/drive\.google\.com\//i)) {
+    const parts = url.match(/file\/d\/([\w_-]+)/)
+    return `https://drive.google.com/uc?id=${parts[1]}&export=download`
+  }
+
+  return url
 }
