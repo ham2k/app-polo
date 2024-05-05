@@ -86,7 +86,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
       call: {
         ...commontStyles,
         ...themeStyles.text.callsign,
-        fontWeight: 'bold',
+        ...themeStyles.text.callsignBold,
         flex: 0,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
         minWidth: themeStyles.oneSpace * 8,

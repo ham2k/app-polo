@@ -156,11 +156,17 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     text: {
       numbers: {
         fontVariant: ['tabular-nums'],
-        fontFamily: 'Roboto Mono Medium'
+        fontFamily: 'Roboto Mono',
+        fontWeight: 'regular'
       },
       callsign: {
         fontVariant: ['tabular-nums'],
-        fontFamily: 'Roboto Mono Medium'
+        fontFamily: 'Roboto Mono',
+        fontWeight: 'regular'
+      },
+      callsignBold: {
+        fontVariant: ['tabular-nums'],
+        fontFamily: 'Roboto Mono Bold'
       },
       lighter: {
         color: theme.colors.onBackgroundLight
@@ -200,9 +206,13 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       },
       code_inline: {
         fontVariant: ['tabular-nums'],
-        fontFamily: 'Roboto Mono Regular',
+        fontFamily: 'Roboto Mono',
+        fontWeight: 'regular',
         backgroundColor: false
       }
+      // strong: {
+      //   fontWeight: '700'
+      // }
     }
   })
 
