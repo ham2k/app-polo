@@ -189,6 +189,6 @@ async function resolveDownloadUrl (url) {
     return `https://drive.google.com/uc?id=${parts[1]}&export=download`
   } else if (url.match(/^https:\/\/docs\.google\.com\/document/i)) {
     const parts = url.match(/\/d\/([\w_-]+)/)
-    return `https://docs.google.com/document/export?format=txt&=${parts[1]}`
+    return `https://docs.google.com/document/export?format=txt&id=${parts[1]}`
   }
 }
