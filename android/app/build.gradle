@@ -85,6 +85,9 @@ android {
         versionName project.env.get("POLO_BASE_VERSION")
         setProperty("archivesBaseName", applicationId + "-v" + versionCode + "(" + versionName + ")")
         resValue "string", "build_config_package", "com.ham2k.polo"
+        manifestPlaceholders = [
+            appAuthRedirectScheme: 'com.ham2k.polo'
+        ]
     }
     signingConfigs {
         debug {

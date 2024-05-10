@@ -32,7 +32,10 @@ export const SecondaryExchangePanel = (props) => {
       edit: editQSOControl
     }
     const activityHooks = findHooks('activity')
-    if (activityHooks.filter((x) => (findRef(operation, x.activationType) && x.postSpot)).length > 0) {
+    if (activityHooks.filter((x) => (
+      findRef(operation, x.activationType) && x.postSpot &&
+      (!x.isSpotEnabled || (x.isSpotEnabled && x.isSpotEnabled({ operation, settings }))))).length > 0
+    ) {
       newControls[spotterControl.key] = spotterControl
     }
     activityHooks.forEach(activity => {
