@@ -1,7 +1,8 @@
 {
   "0.7.8-pre1": {
     "changes": [
-      "Fixed QSON imports"
+      "Fixed QSON imports",
+      "Link to Online Manual"
     ]
   },
   "0.7.7": {
