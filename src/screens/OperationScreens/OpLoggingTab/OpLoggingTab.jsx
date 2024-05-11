@@ -43,12 +43,12 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   // Set navigation title
   useEffect(() => {
-    if (styles?.smOrSmaller) {
+    if (styles?.mdOrSmaller) {
       navigation.setOptions({ title: `${activeQSOs.length} ${activeQSOs.length !== 1 ? 'Qs' : 'Q'}`, iconName: 'radio' })
     } else {
       navigation.setOptions({ title: `${activeQSOs.length} ${activeQSOs.length !== 1 ? 'QSOs' : 'QSO'}`, iconName: 'radio' })
     }
-  }, [navigation, activeQSOs, styles?.smOrSmaller])
+  }, [navigation, activeQSOs, styles?.mdOrSmaller])
 
   return (
     <View style={flexOne}>

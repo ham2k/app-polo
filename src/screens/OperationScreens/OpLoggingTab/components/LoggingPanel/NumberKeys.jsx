@@ -30,7 +30,7 @@ function prepareStyles (baseStyles, themeColor) {
     },
     keyTouchable: {
       flex: 1,
-      paddingVertical: baseStyles.oneSpace * (baseStyles.smOrGreater ? 1 : 0.5),
+      paddingVertical: baseStyles.oneSpace * (baseStyles.smOrLarger ? 1 : 0.5),
       overflow: 'hidden', // or round borders never show
       borderWidth: 1,
       borderColor: baseStyles.theme.colors[`${themeColor}Light`],

@@ -49,7 +49,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
           {freqParts[0] && <Text style={styles.fields.freqMHz}>{freqParts[0]}.</Text>}
           {freqParts[1] && <Text style={styles.fields.freqKHz}>{freqParts[1]}</Text>}
           {freqParts[2] && <Text style={styles.fields.freqHz}>
-            {styles.mdOrGreater ? `.${freqParts[2]}` : `.${freqParts[2].substring(0, 1)}`}
+            {styles.mdOrLarger ? `.${freqParts[2]}` : `.${freqParts[2].substring(0, 1)}`}
           </Text>}
         </Text>
         <Text style={styles.fields.call}>
@@ -64,7 +64,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
           )}
         </Text>
         <Text style={styles.fields.name}>
-          {styles.smOrGreater && (
+          {styles.smOrLarger && (
             qso.their?.name ?? qso.their?.lookup?.name ?? ''
           )}
         </Text>
@@ -81,7 +81,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         </Text>
         {qso?.their?.exchange ? (
           <>
-            {styles.mdOrGreater && (
+            {styles.mdOrLarger && (
               <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
             )}
             <Text style={styles.fields.exchange}>{qso?.their?.exchange}</Text>
