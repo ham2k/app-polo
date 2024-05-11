@@ -58,8 +58,8 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     return {
       latitude: latitudeMin + (latitudeMax - latitudeMin) / 2,
       longitude: longitudeMin + (longitudeMax - longitudeMin) / 2,
-      latitudeDelta: latitudeMax - latitudeMin + 10,
-      longitudeDelta: longitudeMax - longitudeMin + 10
+      latitudeDelta: Math.abs(latitudeMax - latitudeMin) + 10,
+      longitudeDelta: Math.abs(longitudeMax - longitudeMin) + 10
     }
   }, [qth, mappableQSOs])
 
