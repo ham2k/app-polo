@@ -27,7 +27,7 @@ export default function OperationItem ({ operation, settings, onPress, styles })
           </View>
           <View style={styles.rowTopRight}>
             <View style={styles.countContainer}>
-              <Text style={styles.countText}>{fmtNumber(operation.qsoCount)}</Text>
+              <Text style={styles.countText}>{fmtNumber(operation.qsoCount ?? 0)}</Text>
             </View>
           </View>
         </View>

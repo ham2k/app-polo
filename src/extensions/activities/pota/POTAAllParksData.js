@@ -61,7 +61,6 @@ export function registerPOTAAllParksData () {
                   ref: row.reference,
                   dxccCode: Number.parseInt(row.entityId, 10) || 0,
                   name: row.name,
-                  shortName: abbreviatePOTAName(row.name),
                   active: row.active === '1',
                   grid: row.grid,
                   lat: Number.parseFloat(row.latitude) || 0,
@@ -165,37 +164,4 @@ function parsePOTACSVRow (row, options) {
   } else {
     return parts
   }
-}
-
-const ABBREVIATIONS = [
-  ['National Historical Park', 'NHP'],
-  ['National Historical Site', 'NHS'],
-  ['National Heritage Area', 'NHA'],
-  ['National Park', 'NP'],
-  ['National Preserve', 'NPr'],
-  ['National Monument', 'NMo'],
-  ['National Seashore', 'NSs'],
-  ['National Scenic River', 'NSRv'],
-  ['National Scenic Trail', 'NSTr'],
-  ['National Nature Reserve', 'NNRe'],
-  ['Wild and Scenic River', 'WSRv'],
-  ['State Conservation Area', 'SCA'],
-  ['State Historic Site', 'SHS'],
-  ['State Game Land', 'SGL'],
-  ['State Park', 'SP'],
-  ['State Preserve', 'SPr'],
-  ['State Forest', 'SF'],
-  ['Wildlife Management Area', 'WMA'],
-  ['Conservation Area', 'CA'],
-  ['Management Area', 'MgA'],
-  ['Recreation Park', 'RP'],
-  ['Country Park', 'CP'],
-  ['Natura 2000', 'N2K']
-]
-
-export function abbreviatePOTAName (name) {
-  for (const [long, short] of ABBREVIATIONS) {
-    name = name?.replace(long, short)
-  }
-  return name
 }

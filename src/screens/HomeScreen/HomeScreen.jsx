@@ -76,7 +76,8 @@ function prepareStyles (baseStyles) {
     rowText: {
       ...baseStyles.rowText,
       backgroundColor: DEBUG ? 'rgba(0,0,0,0.1)' : undefined,
-      fontSize: baseStyles.smallFontSize,
+      fontSize: baseStyles.normalFontSize,
+      fontWeight: '600',
       lineHeight: baseStyles.smallFontSize * 1.3
     },
     countText: {

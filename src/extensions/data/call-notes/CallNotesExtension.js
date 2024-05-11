@@ -190,5 +190,7 @@ async function resolveDownloadUrl (url) {
   } else if (url.match(/^https:\/\/docs\.google\.com\/document/i)) {
     const parts = url.match(/\/d\/([\w_-]+)/)
     return `https://docs.google.com/document/export?format=txt&id=${parts[1]}`
+  } else {
+    return url
   }
 }

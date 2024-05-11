@@ -101,7 +101,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
 
     },
     row: {
-      minHeight: oneSpace * 7,
+      minHeight: oneSpace * 8,
       paddingHorizontal: oneSpace * 2,
       paddingVertical: oneSpace,
       borderBottomWidth: 1,
@@ -207,7 +207,6 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       code_inline: {
         fontVariant: ['tabular-nums'],
         fontFamily: 'Roboto Mono',
-        fontWeight: 'regular',
         backgroundColor: false
       }
       // strong: {

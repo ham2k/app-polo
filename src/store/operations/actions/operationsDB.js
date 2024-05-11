@@ -20,7 +20,6 @@ import { findBestHook } from '../../../extensions/registry'
 import { simpleTemplate } from '../../../tools/stringTools'
 import { reportError } from '../../../distro'
 
-
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
   data.uuid = row.uuid
@@ -180,7 +179,7 @@ export const deleteExport = (path) => async (dispatch) => {
   await RNFetchBlob.fs.unlink(path)
 }
 
-const QSON_FILENAME_REGEX = /file:.+\/([\w-]+)\.qson/i
+const QSON_FILENAME_REGEX = /.+\.qson$/i
 
 export const importQSON = (path) => async (dispatch) => {
   const matches = path.match(QSON_FILENAME_REGEX)
@@ -191,7 +190,7 @@ export const importQSON = (path) => async (dispatch) => {
     dispatch(qsosActions.setQSOsStatus({ uuid, status: 'loading' }))
 
     try {
-      const json = await RNFetchBlob.fs.readFile(path.replace('file://', ''))
+      const json = await RNFetchBlob.fs.readFile(path)
       const data = JSON.parse(json)
       data.operation.uuid = uuid
 
@@ -211,15 +210,14 @@ export const importQSON = (path) => async (dispatch) => {
   }
 }
 
-const ADIF_FILENAME_REGEX = /file:.+\.adi/i
+const ADIF_FILENAME_REGEX = /.+\.(adi|adif)$/i
 
 export const importHistoricalADIF = (path) => async (dispatch) => {
   const matches = path.match(ADIF_FILENAME_REGEX)
   if (matches) {
     dispatch(qsosActions.setQSOsStatus({ uuid: 'historical', status: 'loading' }))
     try {
-      const filename = decodeURI(path.replace('file://', ''))
-      const adif = await RNFetchBlob.fs.readFile(filename, 'utf8')
+      const adif = await RNFetchBlob.fs.readFile(path, 'utf8')
       const data = adifToQSON(adif)
       const qsos = data.qsos.map(qso => {
         return {

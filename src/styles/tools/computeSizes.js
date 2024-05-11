@@ -20,7 +20,7 @@ import { PixelRatio, Dimensions } from 'react-native'
  * `pixelScaleAdjustment` is the ratio of pixels to the adjusted font size.
  *
  * `size` is a string representing the screen size category: 'xs', 'sm', 'md', 'lg', 'xl'.
- * `smOrGreater`, `mdOrGreater`, `lgOrGreater`, `lgOrSmaller`, `mdOrSmaller`, `smOrSmaller` are booleans shortcuts for `size` comparisons
+ * `smOrLarger`, `mdOrLarger`, `lgOrLarger`, `lgOrSmaller`, `mdOrSmaller`, `smOrSmaller` are booleans shortcuts for `size` comparisons
  *
  */
 
@@ -82,9 +82,6 @@ export function computeSizes ({ width, height, fontScale, pixelRatio }) {
     fontScaleAdjustment,
     pixelScaleAdjustment,
 
-    smOrGreater: size !== 'xs',
-    mdOrGreater: size !== 'xs' && size !== 'sm',
-    lgOrGreater: size !== 'xs' && size !== 'sm' && size !== 'md',
     smOrLarger: size !== 'xs',
     mdOrLarger: size !== 'xs' && size !== 'sm',
     lgOrLarger: size !== 'xs' && size !== 'sm' && size !== 'md',
