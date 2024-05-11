@@ -1,5 +1,10 @@
 {
-  "0.7.7-pre7": {
+  "0.7.8-pre1": {
+    "changes": [
+      "Fixed QSON imports"
+    ]
+  },
+  "0.7.7": {
     "changes": [
       "Better handling of offline data, faster startup",
       "Added slash or period to number key row",

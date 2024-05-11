@@ -69,10 +69,9 @@ export default function DevModeSettingsScreen ({ navigation }) {
 
   const handleImportFiles = useCallback(() => {
     DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
-      console.info('File', file)
-      await dispatch(importQSON(file.fileCopyUri))
-
-      RNFetchBlob.fs.unlink(file.fileCopyUri)
+      const filename = decodeURI(file.fileCopyUri.replace('file://', ''))
+      await dispatch(importQSON(filename))
+      RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
       if (error.indexOf('cancelled') >= 0) {
         // ignore
