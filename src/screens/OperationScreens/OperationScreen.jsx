@@ -190,7 +190,7 @@ export default function OperationScreen (props) {
 
               <Tab.Screen
                 name="Settings"
-                options={{ title: (dimensions.width / 4) > (styles.oneSpace * 12) ? 'Operation' : 'Oper.' }}
+                options={{ title: (dimensions.width / 4) > (styles.oneSpace * 11) ? 'Operation' : 'Oper.' }}
                 component={OpSettingsTab}
                 initialParams={{ uuid: operation.uuid, operation }}
               />

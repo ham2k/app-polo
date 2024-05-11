@@ -12,7 +12,6 @@ import { saveOperation } from './operationsDB'
 import { findHooks } from '../../../extensions/registry'
 import { reportError } from '../../../distro'
 
-
 function debounceableDispatch (dispatch, action) {
   return dispatch(action())
 }
