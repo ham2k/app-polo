@@ -225,6 +225,12 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
       <Ham2kListSection>
         <Ham2kListSubheader>Need Help?</Ham2kListSubheader>
         <Ham2kListItem
+          title="Read The Fine Manual"
+          description={'Browse the documentation for PoLo'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-document-multiple-outline" />}
+          onPress={async () => await Linking.openURL('https://polo.ham2k.com/docs/')}
+        />
+        <Ham2kListItem
           title="Contact Us"
           description={'Email help@ham2k.com'}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-alert-outline" />}
