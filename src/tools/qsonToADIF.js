@@ -10,6 +10,8 @@ import { findBestHook } from '../extensions/registry'
 import { sanitizeToISO8859 } from './stringTools'
 import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
+import { adifModeAndSubmodeForMode } from '@ham2k/lib-operation-data'
+
 export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers, title }) {
   const common = {
     refs: operation.refs,
@@ -66,10 +68,19 @@ export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers,
   return str
 }
 
+function modeToADIF (mode) {
+  const modeAndSubmode = adifModeAndSubmodeForMode(mode)
+  if (modeAndSubmode.length > 1) {
+    return [{ MODE: modeAndSubmode[0] }, { SUBMODE: modeAndSubmode[1] }]
+  } else {
+    return [{ MODE: mode ?? 'SSB' }]
+  }
+}
+
 function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
   return [
     { CALL: qso.their.call },
-    { MODE: qso.mode ?? 'SSB' },
+    ...modeToADIF(qso.mode),
     { BAND: qso.band && qso.band !== 'other' ? qso.band : undefined },
     { FREQ: qso.freq ? (qso.freq / 1000).toFixed(6) : undefined },
     { QSO_DATE: fmtADIFDate(qso.startOnMillis + timeOfffset) },

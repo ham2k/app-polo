@@ -24,7 +24,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
     options.sort((a, b) => BANDS.indexOf(a) - BANDS.indexOf(b))
     if (!options.includes('other')) options.concat(['other'])
 
-    return options.map(band => ({ value: band, label: band }))
+    return options.filter(x => x).map(band => ({ value: band, label: band }))
   }, [operation?.band, qso?.band, settings?.bands])
 
   const modeOptions = useMemo(() => {

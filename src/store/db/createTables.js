@@ -32,7 +32,7 @@ export async function createTables (db) {
         key TEXT NOT NULL,
         operation TEXT NOT NULL,
         ourCall TEXT,
-        theirCall TEXT
+        theirCall TEXT,
         mode TEXT,
         band TEXT,
         startOnMillis INTEGER,

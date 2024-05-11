@@ -5,7 +5,7 @@ An app for Amateur Radio operations.
 ### Our Community
 
 * [Discord](https://discord.gg/rT6B2fP7pU)
-* [Google Groups - PoLo Testers](https://groups.google.com/g/ham2k-polo-testers)
+* [Google Groups - PoLo Testers](https://groups.google.com/g/ham2k-polo)
 
 ### Install Links
 
