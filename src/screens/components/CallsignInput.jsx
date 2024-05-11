@@ -14,7 +14,7 @@ import ThemedTextInput from './ThemedTextInput'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 const LETTERS_REGEX = /[A-Z]+/
-const ONLY_NUMBER_REGEX = /^\s*[+-]*\d+(\.\d+)*/
+const ONLY_NUMBER_REGEX = /^\s*[+-]*\d+(\.\d+)*$/
 
 export default function CallsignInput (props) {
   const { value, textStyle } = props
