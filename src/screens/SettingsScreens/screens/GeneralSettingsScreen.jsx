@@ -111,7 +111,7 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ keepDeviceAwake: !settings.keepDeviceAwake }))}
           />
 
-          {styles.mdOrGreater && (
+          {styles.mdOrLarger && (
             <Ham2kListItem
               title="Use Split Views"
               description={settings.dontSplitViews ? "Don't use split views" : 'Use Split Views when screen is large enough' }
