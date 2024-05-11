@@ -111,12 +111,11 @@ const ReferenceHandler = {
       result = {
         ...ref,
         name: data.name,
-        shortName: data.shortName,
         location: data.locationName,
         grid: data.grid
       }
     } else {
-      return { name: Info.unknownReferenceName ?? 'Unknown reference', shortName: 'Unknown reference', ...ref }
+      return { name: Info.unknownReferenceName ?? 'Unknown reference', ...ref }
     }
     return result
   },
