@@ -166,32 +166,28 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
     }
 
     if (callHistory?.length > 0) {
-      let message = ''
-      let level = 'info'
+      const parts = []
+      const today = startOfDayInMillis()
+      const yesterday = yesterdayInMillis()
+      let count = callHistory.length
+      const countToday = callHistory.filter(x => x.startOnMillis >= today).length
+      const countYesterday = callHistory.filter(x => x.startOnMillis >= yesterday).length - countToday
 
-      if (!message) {
-        const today = startOfDayInMillis()
-        const count = callHistory.filter(x => x && x.startOnMillis >= today).length
-        if (count >= 1) message = `${count} today + ${callHistory.length - count} QSOs`
+      if (countToday) {
+        parts.push(`+ ${countToday} today`)
+        count -= countToday
+      } else if (countYesterday) {
+        parts.push(`+ ${countYesterday} yesterday`)
+        count -= countYesterday
+      }
+      if (count) {
+        parts.push(`+ ${count} QSOs`)
       }
 
-      if (!message) {
-        const yesterday = yesterdayInMillis()
-        const count = callHistory.filter(x => x && x.startOnMillis >= yesterday).length
-        if (count >= 1) message = `${count} yesterday + ${callHistory.length - count} QSOs`
-      }
-
-      if (!message && callHistory.length - (qso?._isNew ? 0 : 1) > 0) {
-        message = `${qso?._isNew ? '' : '+ '}${callHistory.length - (qso?._isNew ? 0 : 1)} QSOs`
-      }
-
-      message = message.replace(' 1 QSOs', ' 1 QSO')
-
-      level = 'info'
-      return [message, level]
+      return [parts.join(' ').replace(' 1 QSOs', ' 1 QSO'), 'info']
     }
     return []
-  }, [scoreInfo, callHistory, qso?._isNew])
+  }, [scoreInfo, callHistory])
 
   return (
     <>

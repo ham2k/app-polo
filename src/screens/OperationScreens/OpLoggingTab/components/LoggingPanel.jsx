@@ -375,6 +375,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
           qso.startOn = new Date(qso.startOnMillis).toISOString()
           if (qso.endOnMillis) qso.endOn = new Date(qso.endOnMillis).toISOString()
           qso.our = qso.our || {}
+          qso.our.call = qso.our.call || ourInfo?.call
           qso.our.sent = qso.our.sent || (operation.mode === 'CW' || operation.mode === 'RTTY' ? '599' : '59')
 
           qso.their = qso.their || {}
