@@ -139,7 +139,7 @@ function prepareSuggestedQSO (qso) {
   return clone
 }
 
-export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings, online }) {
+export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings, online, ourInfo }) {
   const [qso, setQSO, updateQSO] = useUIState('LoggingPanel', 'qso', undefined)
 
   const [originalQSO, setOriginalQSO] = useState()
@@ -332,7 +332,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
     setTimeout(async () => { // Run inside a setTimeout to allow the state to update
       // First, try to process any commands
-      if (checkAndProcessCommands(qso?.their?.call, { qso, originalQSO, operation, dispatch, settings, handleFieldChange })) {
+      if (checkAndProcessCommands(qso?.their?.call, { qso, originalQSO, operation, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })) {
         return
       }
 
@@ -415,8 +415,8 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     }, 10)
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
   }, [
-    qso, qsos, setQSO, originalQSO, operation, settings, online,
-    handleFieldChange, isValidQSO, dispatch, updateLoggingState, setCurrentSecondaryControl
+    qso, qsos, setQSO, originalQSO, operation, settings, online, ourInfo,
+    handleFieldChange, isValidQSO, dispatch, updateQSO, updateLoggingState, setCurrentSecondaryControl
   ])
 
   const [undoInfo, setUndoInfo] = useState()

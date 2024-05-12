@@ -123,7 +123,10 @@ export async function annotateQSO ({ qso, online, settings, dispatch }) {
 
   let qrz = {}
   if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2) {
-    const qrzLookup = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: theirCall.call }, { subscribe: false }))
+    const qrzPromise = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: theirCall.call }))
+    await Promise.all(dispatch(apiQRZ.util.getRunningQueriesThunk()))
+    const qrzLookup = await dispatch((_dispatch, getState) => apiQRZ.endpoints.lookupCall.select({ call: theirCall.call })(getState()))
+    qrzPromise.unsubscribe && qrzPromise.unsubscribe()
     qrz = qrzLookup.data || {}
   }
 
