@@ -53,10 +53,11 @@ export const useQSOInfo = ({ qso, operation }) => {
   useEffect(() => { // Get Call History
     const timeout = setTimeout(async () => {
       const qsoHistory = await findQSOHistory(theirCall?.baseCall)
-      setCallHistory(qsoHistory)
+
+      setCallHistory(qsoHistory.filter(x => x && (x?.operation !== operation?.uuid || x.key !== qso?.key)))
     }, 0)
     return () => clearTimeout(timeout)
-  }, [theirCall?.baseCall])
+  }, [theirCall?.baseCall, qso?.key, operation?.uuid])
 
   const [skipQRZ, setSkipQRZ] = useState(undefined) // Use `skip` to prevent calling the API on every keystroke
   useEffect(() => {
