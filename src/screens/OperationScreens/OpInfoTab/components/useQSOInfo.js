@@ -53,10 +53,11 @@ export const useQSOInfo = ({ qso, operation }) => {
   useEffect(() => { // Get Call History
     const timeout = setTimeout(async () => {
       const qsoHistory = await findQSOHistory(theirCall?.baseCall)
-      setCallHistory(qsoHistory)
+
+      setCallHistory(qsoHistory.filter(x => x && (x?.operation !== operation?.uuid || x.key !== qso?.key)))
     }, 0)
     return () => clearTimeout(timeout)
-  }, [theirCall?.baseCall])
+  }, [theirCall?.baseCall, qso?.key, operation?.uuid])
 
   const [skipQRZ, setSkipQRZ] = useState(undefined) // Use `skip` to prevent calling the API on every keystroke
   useEffect(() => {
@@ -123,7 +124,10 @@ export async function annotateQSO ({ qso, online, settings, dispatch }) {
 
   let qrz = {}
   if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2) {
-    const qrzLookup = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: theirCall.call }, { subscribe: false }))
+    const qrzPromise = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: theirCall.call }))
+    await Promise.all(dispatch(apiQRZ.util.getRunningQueriesThunk()))
+    const qrzLookup = await dispatch((_dispatch, getState) => apiQRZ.endpoints.lookupCall.select({ call: theirCall.call })(getState()))
+    qrzPromise.unsubscribe && qrzPromise.unsubscribe()
     qrz = qrzLookup.data || {}
   }
 

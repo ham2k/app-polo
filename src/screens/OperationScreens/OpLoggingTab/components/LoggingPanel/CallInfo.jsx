@@ -45,6 +45,7 @@ function prepareStyles (baseStyles, themeColor) {
       },
       text: {
         fontSize: baseStyles.smallFontSize,
+        lineHeight: baseStyles.normalFontSize * 1.3,
         fontWeight: 'normal',
         color: baseStyles.theme.colors[`on${upcasedThemeColor}Container`]
       },
@@ -166,32 +167,28 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
     }
 
     if (callHistory?.length > 0) {
-      let message = ''
-      let level = 'info'
+      const parts = []
+      const today = startOfDayInMillis()
+      const yesterday = yesterdayInMillis()
+      let count = callHistory.length
+      const countToday = callHistory.filter(x => x.startOnMillis >= today).length
+      const countYesterday = callHistory.filter(x => x.startOnMillis >= yesterday).length - countToday
 
-      if (!message) {
-        const today = startOfDayInMillis()
-        const count = callHistory.filter(x => x && x.startOnMillis >= today).length
-        if (count >= 1) message = `${count} today + ${callHistory.length - count} QSOs`
+      if (countToday) {
+        parts.push(`+ ${countToday} today`)
+        count -= countToday
+      } else if (countYesterday) {
+        parts.push(`+ ${countYesterday} yesterday`)
+        count -= countYesterday
+      }
+      if (count) {
+        parts.push(`+ ${count} QSOs`)
       }
 
-      if (!message) {
-        const yesterday = yesterdayInMillis()
-        const count = callHistory.filter(x => x && x.startOnMillis >= yesterday).length
-        if (count >= 1) message = `${count} yesterday + ${callHistory.length - count} QSOs`
-      }
-
-      if (!message && callHistory.length - (qso?._isNew ? 0 : 1) > 0) {
-        message = `${qso?._isNew ? '' : '+ '}${callHistory.length - (qso?._isNew ? 0 : 1)} QSOs`
-      }
-
-      message = message.replace(' 1 QSOs', ' 1 QSO')
-
-      level = 'info'
-      return [message, level]
+      return [parts.join(' ').replace(' 1 QSOs', ' 1 QSO'), 'info']
     }
     return []
-  }, [scoreInfo, callHistory, qso?._isNew])
+  }, [scoreInfo, callHistory])
 
   return (
     <>
@@ -234,9 +231,10 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
                     <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyMessage}</Text>
                   </View>
                 )}
-                <Text style={{ flex: 1, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} numberOfLines={2} ellipsizeMode={'tail'}>
-                  <Ham2kMarkdown styles={styles}>{stationInfo}</Ham2kMarkdown>
-                </Text>
+                <View style={{ flex: 1 }}>
+                  {/* numberOfLines={2} ellipsizeMode={'tail'} */}
+                  <Ham2kMarkdown style={{ lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
+                </View>
               </View>
             )}
           </View>
