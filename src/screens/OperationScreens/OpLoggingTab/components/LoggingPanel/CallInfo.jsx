@@ -45,6 +45,7 @@ function prepareStyles (baseStyles, themeColor) {
       },
       text: {
         fontSize: baseStyles.smallFontSize,
+        lineHeight: baseStyles.normalFontSize * 1.3,
         fontWeight: 'normal',
         color: baseStyles.theme.colors[`on${upcasedThemeColor}Container`]
       },
@@ -230,9 +231,10 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
                     <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyMessage}</Text>
                   </View>
                 )}
-                <Text style={{ flex: 1, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} numberOfLines={2} ellipsizeMode={'tail'}>
-                  <Ham2kMarkdown styles={styles}>{stationInfo}</Ham2kMarkdown>
-                </Text>
+                <View style={{ flex: 1 }}>
+                  {/* numberOfLines={2} ellipsizeMode={'tail'} */}
+                  <Ham2kMarkdown style={{ lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
+                </View>
               </View>
             )}
           </View>
