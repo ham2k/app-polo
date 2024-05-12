@@ -1,7 +1,8 @@
 {
-  "0.7.8-pre1": {
+  "0.7.8-pre2": {
     "changes": [
       "Fixed QSON imports",
+      "Fixed ADIF export of submodes like FT4",
       "Link to Online Manual"
     ]
   },
