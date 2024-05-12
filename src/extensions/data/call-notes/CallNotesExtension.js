@@ -115,7 +115,8 @@ const createCallNotesFetcher = (file) => async () => {
   const data = {}
   body.split(/[\n\r]+/).forEach(line => {
     if (line.startsWith('#')) return
-    const [call, ...noteWords] = line.split(' ')
+    const [call, ...noteWords] = line.split(/\s+/)
+
     if (call.length > 2 && noteWords.length > 0) {
       data[call] = data[call] || []
       data[call].push({ source: file.name, note: noteWords.join(' ') })
@@ -149,6 +150,18 @@ export const findAllCallNotes = (call, enabledLocations = ActiveCallNotesFiles) 
     }
   }
   return notes
+}
+
+export const getAllCallsFromNotes = () => {
+  const calls = new Set()
+  for (const file of CallNotesFiles) {
+    if (ActiveCallNotesFiles[file.location] !== false) {
+      for (const call in CallNotes[file.location]) {
+        calls.add(call)
+      }
+    }
+  }
+  return Array.from(calls)
 }
 
 export const useOneCallNoteFinder = (call) => {
