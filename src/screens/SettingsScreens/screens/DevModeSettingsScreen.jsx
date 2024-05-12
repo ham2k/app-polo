@@ -69,7 +69,7 @@ export default function DevModeSettingsScreen ({ navigation }) {
 
   const handleImportFiles = useCallback(() => {
     DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
-      const filename = decodeURI(file.fileCopyUri.replace('file://', ''))
+      const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
       await dispatch(importQSON(filename))
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {

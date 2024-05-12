@@ -114,7 +114,7 @@ export default function DataSettingsScreen ({ navigation }) {
         setHistoricalCount(count)
       }, 1000)
 
-      const filename = decodeURI(file.fileCopyUri.replace('file://', ''))
+      const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
 
       await dispatch(importHistoricalADIF(filename))
       RNFetchBlob.fs.unlink(filename)
