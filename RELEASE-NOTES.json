@@ -5,7 +5,8 @@
       "Link to Online Manual",
       "Fixed QSON imports",
       "Fixed ADIF export of submodes like FT4, and bands like 1.25m",
-      "Fixed map issues on Android"
+      "Fixed map issues on Android",
+      "Fixed QRZ links"
     ]
   },
   "0.7.7": {
