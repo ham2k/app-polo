@@ -158,7 +158,7 @@ export function CallInfoPanel ({ qso, operation, themeColor, style }) {
                 theme={styles.chipTheme} textStyle={styles.chipTextStyle}
                 icon="web"
                 mode="flat"
-                labelonPress={() => Linking.openURL(`https://qrz.com/db/${qso.their.call}`)}
+                onPress={() => Linking.openURL(`https://qrz.com/db/${qso.their.call}`)}
               >
                 qrz.com
               </Chip>
