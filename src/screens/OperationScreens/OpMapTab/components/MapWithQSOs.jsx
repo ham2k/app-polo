@@ -70,6 +70,8 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
 
   const [region, setRegion] = useState(initialRegion)
   const handleRegionChange = useCallback((newRegion) => {
+    newRegion.latitudeDelta = Math.abs(newRegion.latitudeDelta)
+    newRegion.longitudeDelta = Math.abs(newRegion.longitudeDelta)
     setRegion(newRegion)
   }, [setRegion])
 
@@ -183,9 +185,12 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, scale }) => {
 function radiusForMarker ({ location, size, scale }) {
   const latitude = Math.abs(location.latitude ?? location.lat)
   let latitudeScale
-  if (latitude > 80) latitudeScale = 0.7
-  else if (latitude > 70) latitudeScale = 0.8
-  else if (latitude > 60) latitudeScale = 0.8
+  if (latitude > 85) latitudeScale = 0.006
+  else if (latitude > 80) latitudeScale = 0.27
+  else if (latitude > 75) latitudeScale = 0.37
+  else if (latitude > 70) latitudeScale = 0.55
+  else if (latitude > 65) latitudeScale = 0.7
+  else if (latitude > 60) latitudeScale = 0.9
   else if (latitude > 50) latitudeScale = 1
   else if (latitude > 40) latitudeScale = 1.1
   else if (latitude > 30) latitudeScale = 1.4
@@ -223,9 +228,9 @@ function stylesForMap ({ longitudeDelta, metersPerPixel, count, deviceColorSchem
   if (Platform.OS === 'ios') {
     const darkMode = Platform.OS === 'ios' && deviceColorScheme === 'dark'
     if (metersPerPixel > 32000) {
-      return { marker: { opacity: 0.7, size: 0.7 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
+      return { marker: { opacity: 0.7, size: 0.5 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
     } else if (metersPerPixel > 16000) {
-      return { marker: { opacity: 0.7, size: 0.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
+      return { marker: { opacity: 0.7, size: 0.7 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
     } else if (metersPerPixel > 8000) {
       return { marker: { opacity: 0.8, size: 0.9 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
     } else if (metersPerPixel > 4000) {
