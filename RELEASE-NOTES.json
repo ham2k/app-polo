@@ -4,7 +4,7 @@
       "Better handling of history counts",
       "Link to Online Manual",
       "Fixed QSON imports",
-      "Fixed ADIF export of submodes like FT4",
+      "Fixed ADIF export of submodes like FT4, and bands like 1.25m",
       "Fixed map issues on Android"
     ]
   },
@@ -12,7 +12,7 @@
     "changes": [
       "Better handling of offline data, faster startup",
       "Added slash or period to number key row",
-      "UK Bukers On The Air (contributed by M1SDH)",
+      "UK Bunkers On The Air (contributed by M1SDH)",
       "English Castles Award (contributed by M1SDH)",
       "English Lighthouses Award (contributed by M1SDH)",
       "Better layout and styles for large font sizes",
