@@ -20,7 +20,7 @@ export const Info = {
   key: 'call-notes',
   name: 'Callsign Notes',
   icon: 'file-account-outline',
-  description: 'Adds notes to callsigns'
+  description: 'Shows notes for callsigns when logging'
 }
 
 export const BUILT_IN_NOTES = [
