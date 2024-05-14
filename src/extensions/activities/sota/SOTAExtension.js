@@ -136,6 +136,8 @@ const ReferenceHandler = {
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
+    if (!ref.ref) return {}
+
     const { key, startOnMillis } = qso
     const theirRef = findRef(qso, Info.huntingType)
     const points = theirRef?.ref ? 1 : 0

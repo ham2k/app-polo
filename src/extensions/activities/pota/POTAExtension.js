@@ -167,6 +167,8 @@ const ReferenceHandler = {
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
+    if (!ref.ref) return {}
+
     const { band, mode, key, startOnMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const counts = refs.length
