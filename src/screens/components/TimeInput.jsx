@@ -87,7 +87,7 @@ export function TimeInput (props) {
       placeholder={nowStr}
       onChange={handleChange}
       onEndEditing={handleBlur}
-      keyboard={'dumb'}
+      keyboard={'numbers'}
     />
   )
 }

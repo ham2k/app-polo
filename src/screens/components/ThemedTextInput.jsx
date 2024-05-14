@@ -167,7 +167,8 @@ export default function ThemedTextInput (props) {
         keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
         secureTextEntry: false,
         importantForAutofill: 'no',
-        returnKeyType: 'send'
+        returnKeyType: 'send',
+        keyboardAppearance: themeStyles.isDarkMode ? 'dark' : 'light'
       }
     } else if (keyboard === 'numbers') {
       return {
@@ -178,17 +179,19 @@ export default function ThemedTextInput (props) {
         dataDetectorType: 'none',
         textContentType: 'none',
         inputMode: undefined,
-        keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
+        // keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
+        keyboardType: themeStyles.isIOS ? 'numbers-and-punctuation' : 'visible-password',
         secureTextEntry: false,
-        // keyboardType: 'numbers-and-punctuation',
-        // secureTextEntry: false,
         importantForAutofill: 'no',
-        returnKeyType: 'send'
+        returnKeyType: 'send',
+        keyboardAppearance: themeStyles.isDarkMode ? 'dark' : 'light'
       }
     } else {
-      return {}
+      return {
+        keyboardAppearance: themeStyles.isDarkMode ? 'dark' : 'light'
+      }
     }
-  }, [keyboard])
+  }, [keyboard, themeStyles.isIOS, themeStyles.isDarkMode])
 
   const renderInput = useCallback((props) => {
     return (

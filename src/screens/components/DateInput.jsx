@@ -98,7 +98,7 @@ export function DateInput (props) {
       onChange={handleChange}
       onBlur={handleBlur}
       onEndEditing={handleBlur}
-      keyboard={'dumb'}
+      keyboard={'numbers'}
     />
   )
 }
