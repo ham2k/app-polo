@@ -1,12 +1,13 @@
 {
-  "0.7.8-pre4": {
+  "0.7.8-pre5": {
     "changes": [
       "Better handling of history counts",
       "Link to Online Manual",
       "Fixed QSON imports",
       "Fixed ADIF export of submodes like FT4, and bands like 1.25m",
       "Fixed map issues on Android",
-      "Fixed QRZ links"
+      "Fixed QRZ links",
+      "Use numeric keyboard when appropriate (iOS only)"
     ]
   },
   "0.7.7": {
