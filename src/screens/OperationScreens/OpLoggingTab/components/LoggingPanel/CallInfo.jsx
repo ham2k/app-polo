@@ -83,41 +83,47 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess?.dxccCode)
 
-    const parts = []
+    const leftParts = []
+    const rightParts = []
+
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
     if (guess.indicators && guess.indicators.find(ind => ['P', 'M', 'AM', 'MM'].indexOf(ind) >= 0)) {
       isOnTheGo = true
-      if (guess.indicators.indexOf('P') >= 0) parts.push('[Portable]')
-      else if (guess.indicators.indexOf('M') >= 0) parts.push('[Mobile]')
-      else if (guess.indicators.indexOf('MM') >= 0) parts.push('[ 🚢 ]')
-      else if (guess.indicators.indexOf('AM') >= 0) parts.push('[ ✈️ ]')
+      if (guess.indicators.indexOf('P') >= 0) leftParts.push('[Portable]')
+      else if (guess.indicators.indexOf('M') >= 0) leftParts.push('[Mobile]')
+      else if (guess.indicators.indexOf('MM') >= 0) leftParts.push('[ 🚢 ]')
+      else if (guess.indicators.indexOf('AM') >= 0) leftParts.push('[ ✈️ ]')
     }
 
     if (operation.grid && guess?.grid) {
       const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
-      if (dist) parts.push(`${fmtDistance(dist, { units: settings.distanceUnits })} to`)
+      if (dist) leftParts.push(`${fmtDistance(dist, { units: settings.distanceUnits })} to`)
     }
 
     if (entity && entity.entityPrefix !== ourInfo.entityPrefix) {
-      parts.push(entity.shortName)
+      leftParts.push(entity.shortName)
     }
 
     if (pota.name) {
       isOnTheGo = true
-      parts.push(['POTA', pota.reference, pota.shortName ?? pota.name].filter(x => x).join(' '))
-      if (pota.locationName) parts.push(pota.locationName)
+      leftParts.push(
+        [
+          ['POTA', pota.reference, pota.shortName ?? pota.name].filter(x => x).join(' '),
+          pota.locationName
+        ].filter(x => x).join(' – ')
+      )
     } else if (pota.error) {
-      parts.push(`POTA ${pota.reference} ${pota.error}`)
+      leftParts.push(`POTA ${pota.reference} ${pota.error}`)
     }
 
     if (qso?.their?.city || qso?.their?.state) {
-      parts.push([qso?.their?.city, qso?.their?.state].filter(x => x).join(', '))
+      rightParts.push([qso?.their?.city, qso?.their?.state].filter(x => x).join(', '))
     } else if (!isOnTheGo && (guess?.city || guess?.state)) {
-      parts.push([guess?.city, guess?.state].filter(x => x).join(', '))
+      rightParts.push([guess?.city, guess?.state].filter(x => x).join(', '))
     }
 
-    const locationText = parts.filter(x => x).join(' ')
+    const locationText = [leftParts.filter(x => x).join(' '), rightParts.filter(x => x).join(' ')].filter(x => x).join(' – ')
 
     // if (isOnTheGo) {
     //   if (lookup?.city || lookup?.state || lookup?.country) {
