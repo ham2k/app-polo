@@ -11,6 +11,7 @@ import { actions as qsosActions, saveQSOsForOperation } from '../../qsos'
 import { adifToQSON } from '@ham2k/lib-qson-adif'
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import UUID from 'react-native-uuid'
+import { Buffer } from 'buffer'
 
 import { qsonToADIF } from '../../../tools/qsonToADIF'
 import { fmtISODate } from '../../../tools/timeFormats'
@@ -217,7 +218,10 @@ export const importHistoricalADIF = (path) => async (dispatch) => {
   if (matches) {
     dispatch(qsosActions.setQSOsStatus({ uuid: 'historical', status: 'loading' }))
     try {
-      const adif = await RNFetchBlob.fs.readFile(path, 'utf8')
+      const adif64 = await RNFetchBlob.fs.readFile(path, 'base64')
+      const buffer = Buffer.from(adif64, 'base64')
+      const adif = buffer.toString('utf8')
+
       const data = adifToQSON(adif)
       const qsos = data.qsos.map(qso => {
         return {
