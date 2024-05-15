@@ -39,6 +39,18 @@ const CAPTITALIZATION_EXCEPTIONS = {
   youtube: 'YouTube'
 }
 
+const MODAL_CAPITALIZATION_EXCEPTIONS = {
+  address: {
+    nsw: 'NSW',
+    vic: 'VIC',
+    qld: 'QLD',
+    tas: 'TAS',
+    act: 'ACT',
+    pei: 'PEI',
+    nwt: 'NWT'
+  }
+}
+
 export function capitalizeString (str, options = {}) {
   let { content = 'text', force = true } = options
 
@@ -55,6 +67,8 @@ export function capitalizeString (str, options = {}) {
       word = word.toLowerCase()
       if (CAPTITALIZATION_EXCEPTIONS[word]) {
         return CAPTITALIZATION_EXCEPTIONS[word] + separator
+      } else if (MODAL_CAPITALIZATION_EXCEPTIONS[content] && MODAL_CAPITALIZATION_EXCEPTIONS[content][word]) {
+        return MODAL_CAPITALIZATION_EXCEPTIONS[content][word] + separator
       } else if (word.length === 1 && content === 'name' && word.match(LETTERS_ONLY_REGEX)) {
         // Initials
         return word.toUpperCase() + (separator.match(PERIOD_REGEX) ? '' : '.') + separator
