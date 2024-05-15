@@ -138,7 +138,7 @@ export const apiQRZ = createApi({
                 lastName: callsignInfo.name,
                 tz: callsignInfo.TimeZone,
                 gmtOffset: callsignInfo.GMTOffset,
-                city: capitalizeString(callsignInfo.addr2, { force: false }),
+                city: capitalizeString(callsignInfo.addr2, { content: 'address', force: false }),
                 state: callsignInfo.state,
                 country: capitalizeString(callsignInfo.country, { force: false }),
                 postal: callsignInfo.zip,

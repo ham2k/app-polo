@@ -142,7 +142,7 @@ export function CallInfoPanel ({ qso, operation, themeColor, style }) {
                 </Text>
                 {lookup.city && (
                   <Text>
-                    {[capitalizeString(lookup.city, { force: false }), lookup.state].filter(x => x).join(', ')}
+                    {[capitalizeString(lookup.city, { content: 'address', force: false }), lookup.state].filter(x => x).join(', ')}
                   </Text>
                 )}
                 {entity && (
