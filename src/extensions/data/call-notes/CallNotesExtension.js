@@ -7,12 +7,13 @@
 
 import React, { useMemo } from 'react'
 import RNFetchBlob from 'react-native-blob-util'
+import { List } from 'react-native-paper'
+import { Buffer } from 'buffer'
 
 import packageJson from '../../../../package.json'
 import { registerDataFile, unRegisterDataFile } from '../../../store/dataFiles'
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { selectExtensionSettings } from '../../../store/settings'
-import { List } from 'react-native-paper'
 import ManageCallNotesScreen from './screens/ManageCallNotesScreen'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
@@ -105,15 +106,19 @@ const createCallNotesFetcher = (file) => async () => {
   if (!file.location) return {}
 
   const url = await resolveDownloadUrl(file.location)
-  console.log('resolved url', url)
+
   const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
     'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
   })
 
-  const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
+  const body64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
+  const buffer = Buffer.from(body64, 'base64')
+  const body = buffer.toString('utf8')
 
   const data = {}
+
   body.split(/[\n\r]+/).forEach(line => {
+    if (!line) return
     if (line.startsWith('#')) return
     const [call, ...noteWords] = line.split(/\s+/)
 
