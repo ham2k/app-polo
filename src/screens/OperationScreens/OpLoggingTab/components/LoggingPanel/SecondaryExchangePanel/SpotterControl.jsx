@@ -88,7 +88,7 @@ export function SpotterControlInputs (props) {
   }, [dispatch, operation, comments, activityHooksWithSpot])
 
   return (
-    <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end' }]}>
+    <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 60 }]}>
       <View style={{ flex: 1 }}>
         <ThemedButton
           themeColor="tertiaryLighter"
@@ -97,7 +97,6 @@ export function SpotterControlInputs (props) {
           onPress={handleSpotting}
           disabled={!online || spotterUI.disabled}
           minWidth={styles.oneSpace * 18}
-          labelStyle={{ ellipsizeMode: 'middle' }}
         >
           {spotterUI.message}
         </ThemedButton>
@@ -116,7 +115,7 @@ export function SpotterControlInputs (props) {
             }}
             size={styles.oneSpace * 3}
           >
-            <Icon source={x.icon} size={styles.oneSpace * (styles.isIOS ? 0.8 : 2)} color={styles.colors.onTertiaryLight} />
+            <Icon source={x.icon} size={styles.oneSpace * 2} color={styles.colors.onTertiaryLight} />
           </Badge>
         ))}
       </View>
