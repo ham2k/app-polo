@@ -7,7 +7,8 @@
       "Fixed ADIF export of submodes like FT4, and bands like 1.25m",
       "Fixed map issues on Android",
       "Fixed QRZ links",
-      "Use numeric keyboard when appropriate (iOS only)"
+      "Use numeric keyboard when appropriate (iOS only)",
+      "Ensure QRZ password is never capitalized (KE8PZN's bug)"
     ]
   },
   "0.7.7": {

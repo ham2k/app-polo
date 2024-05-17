@@ -72,6 +72,7 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
           autoComplete="password"
           keyboardType="visible-password"
           secureTextEntry={true}
+          autoCapitalize={'none'}
           placeholder="your password"
           onChangeText={onChangePassword}
         />
