@@ -8,22 +8,22 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { List } from 'react-native-paper'
+import { useSelector } from 'react-redux'
 import { Platform, ScrollView } from 'react-native'
-
 import DeviceInfo from 'react-native-device-info'
+import Markdown from 'react-native-markdown-display'
+import CodePush from 'react-native-code-push'
 
 import packageJson from '../../../../package.json'
 import releaseNotes from '../../../../RELEASE-NOTES.json'
 
-import Markdown from 'react-native-markdown-display'
-
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { ListRow } from '../../components/ListComponents'
-import CodePush from 'react-native-code-push'
-import { reportError } from '../../../App'
-import { useSelector } from 'react-redux'
+import { reportError } from '../../../distro'
 import { selectSettings } from '../../../store/settings'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
 
 export const UPDATE_TRACK_KEYS = {
   Production: (Platform.OS === 'ios') ? 'sC0Sy_ImAi-XZCBDK-mdoLYO2FR7CD2vXw1MD' : 'XfaqlzjBp9SWZLCZQSfezxEOdlkNgLu4PYrDN',
@@ -143,13 +143,13 @@ export default function VersionSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          <List.Item title={currentVersionLabel}
+        <Ham2kListSection>
+          <Ham2kListItem title={currentVersionLabel}
             description={`Base Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
           />
 
-          <List.Item title={checkForUpdatesLabel}
+          <Ham2kListItem title={checkForUpdatesLabel}
             description={updateMessage}
             disabled={isUpdating}
             style={{ opacity: isUpdating ? 0.7 : 1 }}
@@ -157,9 +157,14 @@ export default function VersionSettingsScreen ({ navigation }) {
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-arrow-down" />}
           />
 
-          <List.Item title={'Recent Changes'}
+        </Ham2kListSection>
+
+        <Ham2kListSection>
+          <Ham2kListItem
+            title={'Recent Changes'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="newspaper-variant-outline" />}
           />
+
           {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
             <ListRow key={i} style={styles.listRow}>
 
@@ -179,5 +184,3 @@ ${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
     </ScreenContainer>
   )
 }
-
-// ))}

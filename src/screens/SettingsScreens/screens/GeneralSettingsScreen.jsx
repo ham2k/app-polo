@@ -8,7 +8,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { Linking, ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { parseCallsign } from '@ham2k/lib-callsigns'
@@ -145,6 +145,14 @@ export default function GeneralSettingsScreen ({ navigation }) {
             right={() => <Switch value={!!settings.consentOpData} onValueChange={(value) => dispatch(setSettings({ consentOpData: value })) } />}
             onPress={() => dispatch(setSettings({ consentAppData: !settings.consentOpData }))}
           />
+
+          <Ham2kListItem
+            title="Privacy Policy"
+            description={'Read our Privacy Policy'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-document-outline" />}
+            onPress={async () => await Linking.openURL('https://ham2k.com/legal/privacy/')}
+          />
+
         </Ham2kListSection>
       </ScrollView>
     </ScreenContainer>

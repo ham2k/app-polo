@@ -13,17 +13,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import DocumentPicker from 'react-native-document-picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
+import CodePush from 'react-native-code-push'
 
 import { reportError } from '../../../distro'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { loadQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
 import { generateExport, importQSON, selectOperationsList } from '../../../store/operations'
-import { loadQSOs } from '../../../store/qsos'
-import { DEFAULT_TRACK, UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from './VersionSettingsScreen'
 import { UpdateTracksDialog } from '../components/UpdateTracksDialog'
-import { reportError } from '../../../App'
-import CodePush from 'react-native-code-push'
+import ScreenContainer from '../../components/ScreenContainer'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
+
+import { DEFAULT_TRACK, UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from './VersionSettingsScreen'
 
 function prepareStyles (baseStyles) {
   return {
@@ -161,9 +163,8 @@ export default function DevModeSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <List.Section>
-          <List.Subheader>Updates</List.Subheader>
-          <List.Item title={'Select Update Track'}
+        <Ham2kListSection title={'Updates'}>
+          <Ham2kListItem title={'Select Update Track'}
             description={UPDATE_TRACK_LABELS[settings?.updateTrack || DEFAULT_TRACK]}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="glass-fragile" color={styles.colors.devMode}/>}
             titleStyle={{ color: styles.colors.devMode }}
@@ -178,7 +179,7 @@ export default function DevModeSettingsScreen ({ navigation }) {
               onDialogDone={() => setCurrentDialog('')}
             />
           )}
-          <List.Item title={checkForUpdatesLabel}
+          <Ham2kListItem title={checkForUpdatesLabel}
             description={updateMessage}
             disabled={isUpdating}
             style={{ opacity: isUpdating ? 0.7 : 1 }}
@@ -188,8 +189,10 @@ export default function DevModeSettingsScreen ({ navigation }) {
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-arrow-down" color={styles.colors.devMode}/>}
           />
 
-          <List.Subheader>Data</List.Subheader>
-          <List.Item
+        </Ham2kListSection>
+
+        <Ham2kListSection title={'Data'}>
+          <Ham2kListItem
             title="Export all operation data"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
             titleStyle={{ color: styles.colors.devMode }}
