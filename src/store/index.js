@@ -17,6 +17,7 @@ import uiReducer from './ui'
 import settingsReducer from './settings'
 import operationsReducer from './operations'
 import qsosReducer from './qsos'
+import stationReducer from './station'
 import timeReducer from './time'
 import { reducer as apiQRZReducer, middleware as apiQRZMiddleware } from './apiQRZ'
 import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apiPOTA'
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   ui: uiReducer,
   operations: operationsReducer,
   qsos: qsosReducer,
+  station: stationReducer,
   time: timeReducer,
   dataFiles: dataFilesReducer,
   apiQRZ: apiQRZReducer,
@@ -46,7 +48,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   version: LATEST_VERSION,
-  whitelist: ['settings', 'system'], // Don't include `qsos` nor `time`
+  whitelist: ['settings', 'system', 'station'], // Don't include `qsos` nor `time`
   migrate: createMigrate(migrations, { debug: true })
 }
 

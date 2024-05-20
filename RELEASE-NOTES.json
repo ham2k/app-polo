@@ -10,7 +10,8 @@
       "Use numeric keyboard when appropriate (iOS only)",
       "Ensure QRZ password is never capitalized (KE8PZN's bug)",
       "Use a screen instead of a dialog for showing callsign info",
-      "Improvements for RST inputs"
+      "Improvements for RST inputs",
+      "Keep track of VFO band and mode globally"
     ]
   },
   "0.7.7": {
