@@ -9,7 +9,8 @@
       "Fixed QRZ links",
       "Use numeric keyboard when appropriate (iOS only)",
       "Ensure QRZ password is never capitalized (KE8PZN's bug)",
-      "Use a screen instead of a dialog for showing callsign info"
+      "Use a screen instead of a dialog for showing callsign info",
+      "Improvements for RST inputs"
     ]
   },
   "0.7.7": {

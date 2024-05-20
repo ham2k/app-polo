@@ -36,6 +36,12 @@ import { annotateQSO } from '../../OpInfoTab/components/useQSOInfo'
 
 const DEBUG = false
 
+export function defaultRSTForMode (mode) {
+  if (mode === 'CW' || mode === 'RTTY') return '599'
+  if (mode === 'FT8' || mode === 'FT4') return '+0'
+  return '59'
+}
+
 function prepareStyles (themeStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   const commonPanelHeight = themeStyles.oneSpace * 6
@@ -376,10 +382,10 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
           if (qso.endOnMillis) qso.endOn = new Date(qso.endOnMillis).toISOString()
           qso.our = qso.our || {}
           qso.our.call = qso.our.call || ourInfo?.call
-          qso.our.sent = qso.our.sent || (operation.mode === 'CW' || operation.mode === 'RTTY' ? '599' : '59')
+          qso.our.sent = qso.our.sent || defaultRSTForMode(qso.mode)
 
           qso.their = qso.their || {}
-          qso.their.sent = qso.their.sent || (operation.mode === 'CW' || operation.mode === 'RTTY' ? '599' : '59')
+          qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
 
           let call = qso?.their?.call
           const calls = call = call.split(',')

@@ -15,8 +15,8 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 const LEFT_TRIM_REGEX = /^\s+/
 const SPACES_REGEX = /\s/g
 const ONLY_SPACES_REGEX = /^\s+$/g
-const NUMBER_WITH_SIGNS_REGEX = /[^0-9+-]/g
-const NUMBER_WITH_SIGNS_AND_PERIODS_REGEX = /[^0-9+-,.]/g
+const NOT_NUMBER_WITH_SIGNS_REGEX = /[^0-9+-]/g
+const NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX = /[^0-9+-,.]/g
 const SIGN_AFTER_A_DIGIT_REGEX = /([\d,.])[+-]/g
 
 export default function ThemedTextInput (props) {
@@ -26,7 +26,7 @@ export default function ThemedTextInput (props) {
     onChangeText, onChange, onSubmitEditing, onKeyPress, onFocus, onBlur,
     innerRef, focusedRef,
     fieldId,
-    uppercase, trim, noSpaces, periodToSlash, numeric, decimal,
+    uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
     keyboard
   } = props
   const themeStyles = useThemedStyles()
@@ -70,10 +70,13 @@ export default function ThemedTextInput (props) {
       text = text.replaceAll('.', '/')
     }
     if (numeric) {
-      text = text.replace(NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+      text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
     }
     if (decimal) {
-      text = text.replace(NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+      text = text.replace(NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+    }
+    if (rst) {
+      text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '')
     }
     event.nativeEvent.text = text
 
@@ -86,7 +89,7 @@ export default function ThemedTextInput (props) {
   }, [
     previousValue,
     fieldId, actualInnerRef,
-    uppercase, noSpaces, periodToSlash, numeric, decimal, trim,
+    uppercase, noSpaces, periodToSlash, numeric, decimal, trim, rst,
     onChangeText, onChange, onKeyPress
   ])
 

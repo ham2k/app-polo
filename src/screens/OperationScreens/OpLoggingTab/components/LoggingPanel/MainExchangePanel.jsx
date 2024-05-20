@@ -9,6 +9,7 @@ import React, { useCallback, useMemo, useRef } from 'react'
 
 import { View, findNodeHandle, useWindowDimensions } from 'react-native'
 import CallsignInput from '../../../../components/CallsignInput'
+import RSTInput from '../../../../components/RSTInput'
 import ThemedTextInput from '../../../../components/ThemedTextInput'
 import { findRef } from '../../../../../tools/refTools'
 import { findHooks } from '../../../../../extensions/registry'
@@ -90,18 +91,14 @@ export const MainExchangePanel = ({
   const rstFieldProps = {
     themeColor,
     style: [styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }],
-    placeholder: rstLength === 3 ? '599' : '59',
-    noSpaces: true,
     onChange: handleRSTChange,
     onSubmitEditing,
     onKeyPress: keyHandler,
-    keyboard: 'numbers',
-    numeric: true,
-    maxLength: rstLength + 1,
-    focusedRef
+    focusedRef,
+    radioMode: qso?.mode ?? operation?.mode ?? 'SSB'
   }
   const rstFields = [
-    <ThemedTextInput
+    <RSTInput
       {...rstFieldProps}
       key="sent"
       innerRef={rstFieldRefs.shift()}
@@ -109,7 +106,7 @@ export const MainExchangePanel = ({
       label="Sent"
       fieldId={'ourSent'}
     />,
-    <ThemedTextInput
+    <RSTInput
       {...rstFieldProps}
       key="received"
       innerRef={rstFieldRefs.shift()}
