@@ -1,5 +1,5 @@
 {
-  "0.7.8-pre5": {
+  "0.7.8-pre6": {
     "changes": [
       "Better handling of history counts",
       "Link to Online Manual",
@@ -8,7 +8,8 @@
       "Fixed map issues on Android",
       "Fixed QRZ links",
       "Use numeric keyboard when appropriate (iOS only)",
-      "Ensure QRZ password is never capitalized (KE8PZN's bug)"
+      "Ensure QRZ password is never capitalized (KE8PZN's bug)",
+      "Use a screen instead of a dialog for showing callsign info"
     ]
   },
   "0.7.7": {
