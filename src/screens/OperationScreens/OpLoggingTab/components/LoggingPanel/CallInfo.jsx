@@ -38,8 +38,10 @@ function prepareStyles (baseStyles, themeColor) {
     history: {
       pill: {
         marginRight: baseStyles.halfSpace,
+        lineHeight: baseStyles.normalFontSize * 1.3,
         borderRadius: 3,
-        padding: baseStyles.oneSpace * 0.3,
+        // padding: baseStyles.oneSpace * 0.3,
+        marginTop: baseStyles.oneSpace * 0.5,
         paddingHorizontal: baseStyles.oneSpace * 0.5,
         backgroundColor: baseStyles.theme.colors[`${themeColor}Light`]
       },
@@ -64,7 +66,12 @@ function prepareStyles (baseStyles, themeColor) {
     },
     markdown: {
       ...baseStyles.markdown,
-      paragraph: { margin: 0, marginTop: baseStyles.halfSpace, marginBottom: 0 }
+      paragraph: {
+        margin: 0,
+        marginTop: baseStyles.halfSpace,
+        marginBottom: 0,
+        lineHeight: baseStyles.normalFontSize * 1.3
+      }
     }
   }
 }
