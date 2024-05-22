@@ -8,8 +8,8 @@ require 'uri'
 namespace :release do
   task :bleeding => :dotenv do
     release_version = JSON.parse(File.read('package.json'))['version']
-    system "appcenter codepush release-react -a Ham2K/polo-android -d Development -t $POLO_BASE_VERSION --description \"Release #{release_version} 🔪🩸\""
-    system "appcenter codepush release-react -a Ham2K/polo-ios -d Development -t $POLO_BASE_VERSION --description \"Release #{release_version} 🔪🩸\""
+    system "appcenter codepush release-react -a Ham2K/polo-android -d Development -t $POLO_BASE_VERSION --description \"Release #{release_version}*\""
+    system "appcenter codepush release-react -a Ham2K/polo-ios -d Development -t $POLO_BASE_VERSION --description \"Release #{release_version}*\""
   end
 
   task :unstable => :dotenv do
