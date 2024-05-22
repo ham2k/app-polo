@@ -96,11 +96,8 @@ export function UKBOTAActivityOptions (props) {
         }
 
         let nakedReference
-        const parts = search.match(/^\s*(B\/G[DIJMUW]?)-?(\d+)\s*$/i)
-        if (parts && parts[2].length >= 4) {
-          nakedReference = (parts[1]?.toUpperCase() || `B/${ourInfo?.entityPrefix}` || 'B/G') + '-' + parts[2].toUpperCase()
-        } else if (search.match(Info.referenceRegex)) {
-          nakedReference = search
+        if (search.match(Info.referenceRegex)) {
+          nakedReference = search.toUpperCase()
         }
 
         // If it's a naked reference, let's ensure the results include it, or else add a placeholder
