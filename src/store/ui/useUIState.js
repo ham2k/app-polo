@@ -17,13 +17,13 @@ export function useUIState (component, key, initialValue) {
   let data = (componentData && componentData[key]) ?? initialValue
 
   useEffect(() => {
-    if (initialValue !== undefined) {
+    if (data === undefined && initialValue !== undefined) {
       setter(initialValue)
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
       data = initialValue
     }
-  }, [setter])
+  }, [data, setter, initialValue])
 
   return [data, setter, updater]
 }
