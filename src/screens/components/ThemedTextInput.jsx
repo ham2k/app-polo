@@ -9,7 +9,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { TextInput } from 'react-native-paper'
-import { TextInput as NativeTextInput } from 'react-native'
+import { TextInput as NativeTextInput, Platform } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 const LEFT_TRIM_REGEX = /^\s+/
@@ -171,7 +171,8 @@ export default function ThemedTextInput (props) {
         secureTextEntry: false,
         importantForAutofill: 'no',
         returnKeyType: 'send',
-        keyboardAppearance: themeStyles.isDarkMode ? 'dark' : 'light'
+        // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
+        keyboardAppearance: (themeStyles.isDarkMode && !Platform.isPad) ? 'dark' : 'light'
       }
     } else if (keyboard === 'numbers') {
       return {
