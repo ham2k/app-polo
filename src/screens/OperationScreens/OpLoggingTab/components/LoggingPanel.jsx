@@ -33,8 +33,15 @@ import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { annotateQSO } from '../../OpInfoTab/components/useQSOInfo'
+import { setVFO } from '../../../../store/station/stationSlice'
 
 const DEBUG = false
+
+export function defaultRSTForMode (mode) {
+  if (mode === 'CW' || mode === 'RTTY') return '599'
+  if (mode === 'FT8' || mode === 'FT4') return '+0'
+  return '59'
+}
 
 function prepareStyles (themeStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
@@ -106,11 +113,11 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-function prepareNewQSO (operation, qsos, settings) {
+function prepareNewQSO (operation, qsos, vfo, settings) {
   const qso = {
-    band: operation.band,
-    freq: operation.freq,
-    mode: operation.mode,
+    band: vfo.band,
+    freq: vfo.freq,
+    mode: vfo.mode,
     _isNew: true,
     key: 'new-qso'
   }
@@ -139,7 +146,7 @@ function prepareSuggestedQSO (qso) {
   return clone
 }
 
-export default function LoggingPanel ({ style, operation, qsos, activeQSOs, settings, online, ourInfo }) {
+export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs, settings, online, ourInfo }) {
   const [qso, setQSO, updateQSO] = useUIState('LoggingPanel', 'qso', undefined)
 
   const [originalQSO, setOriginalQSO] = useState()
@@ -171,8 +178,8 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
 
   const [isValidOperation, operationError] = useMemo(() => { // Ensure we have all the required operation data
     const errors = []
-    if (!qso?.band && !operation?.band) errors.push('band')
-    if (!qso?.mode && !operation?.mode) errors.push('mode')
+    if (!qso?.band && !vfo?.band) errors.push('band')
+    if (!qso?.mode && !vfo?.mode) errors.push('mode')
     if (!operation?.stationCall && !settings?.operatorCall) errors.push('callsign')
 
     if (errors.length > 0) {
@@ -180,7 +187,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     } else {
       return [true, undefined]
     }
-  }, [qso, operation, settings])
+  }, [qso, operation, vfo, settings])
 
   const setNewQSO = useCallback((newQSO) => {
     if (!newQSO) updateLoggingState({ selectedKey: undefined })
@@ -219,7 +226,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         nextQSO = qsoQueue.pop()
         setQSOQueue(qsoQueue)
       } else {
-        nextQSO = prepareNewQSO(operation, qsos, settings)
+        nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
       }
       setNewQSO(nextQSO)
       if (nextQSO.key !== loggingState?.selectedKey) {
@@ -250,7 +257,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
         }
       }, 10)
     }
-  }, [qsoQueue, setQSOQueue, loggingState?.selectedKey, updateLoggingState, loggingState?.suggestedQSO, operation, settings, qso, setNewQSO, qsos])
+  }, [qsoQueue, setQSOQueue, loggingState?.selectedKey, updateLoggingState, loggingState?.suggestedQSO, operation, settings, qso, vfo, setNewQSO, qsos])
 
   useEffect(() => { // Validate and analize the callsign
     let call = qso?.their?.call ?? ''
@@ -309,19 +316,19 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
       const band = freq ? bandForFrequency(freq) : undefined
 
       updateQSO({ freq, band })
-      if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band, freq }))
+      if (qso?._isNew) dispatch(setVFO({ band, freq }))
     } else if (fieldId === 'band') {
       updateQSO({ band: value, freq: undefined })
-      if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, band: value, freq: undefined }))
+      if (qso?._isNew) dispatch(setVFO({ band: value, freq: undefined }))
     } else if (fieldId === 'mode') {
       updateQSO({ mode: value })
-      if (qso?._isNew) dispatch(setOperationData({ uuid: operation.uuid, mode: value }))
+      if (qso?._isNew) dispatch(setVFO({ mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
       updateQSO({ startOnMillis: value, _manualTime: true })
     } else if (fieldId === 'state') {
       updateQSO({ their: { state: value } })
     }
-  }, [qso, updateQSO, pausedTime, dispatch, operation?.uuid])
+  }, [qso, updateQSO, pausedTime, dispatch])
 
   const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
     if (DEBUG) logTimer('submit', 'handleSubmit start', { reset: true })
@@ -363,23 +370,23 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
           delete qso._willBeDeleted
           delete qso.deleted
 
-          qso.freq = qso.freq ?? operation.freq
+          qso.freq = qso.freq ?? vfo.freq
           if (qso.freq) {
             qso.band = bandForFrequency(qso.freq)
           } else {
-            qso.band = qso.band ?? operation.band
+            qso.band = qso.band ?? vfo.band
           }
-          qso.mode = qso.mode ?? operation.mode
+          qso.mode = qso.mode ?? vfo.mode
 
           if (!qso.startOnMillis) qso.startOnMillis = (new Date()).getTime()
           qso.startOn = new Date(qso.startOnMillis).toISOString()
           if (qso.endOnMillis) qso.endOn = new Date(qso.endOnMillis).toISOString()
           qso.our = qso.our || {}
           qso.our.call = qso.our.call || ourInfo?.call
-          qso.our.sent = qso.our.sent || (operation.mode === 'CW' || operation.mode === 'RTTY' ? '599' : '59')
+          qso.our.sent = qso.our.sent || defaultRSTForMode(qso.mode)
 
           qso.their = qso.their || {}
-          qso.their.sent = qso.their.sent || (operation.mode === 'CW' || operation.mode === 'RTTY' ? '599' : '59')
+          qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
 
           let call = qso?.their?.call
           const calls = call = call.split(',')
@@ -416,7 +423,7 @@ export default function LoggingPanel ({ style, operation, qsos, activeQSOs, sett
     }, 10)
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
   }, [
-    qso, qsos, setQSO, originalQSO, operation, settings, online, ourInfo,
+    qso, qsos, vfo, setQSO, originalQSO, operation, settings, online, ourInfo,
     handleFieldChange, isValidQSO, dispatch, updateQSO, updateLoggingState, setCurrentSecondaryControl
   ])
 

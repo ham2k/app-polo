@@ -5,15 +5,15 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 
 import { findBestHook } from '../../../../../extensions/registry'
-import { CallInfoDialog } from './CallInfoDialog'
 import { distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 import { useQSOInfo } from '../../../OpInfoTab/components/useQSOInfo'
@@ -70,11 +70,10 @@ function prepareStyles (baseStyles, themeColor) {
 }
 
 export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, settings }) {
+  const navigation = useNavigation()
   const styles = useThemedStyles(prepareStyles, themeColor)
 
   const { online, ourInfo, guess, lookup, pota, qrz, callNotes, callHistory } = useQSOInfo({ qso, operation })
-
-  const [showDialog, setShowDialog] = useState(false)
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
     if (guess) { updateQSO && updateQSO({ their: { ...qso.their, guess, lookup } }) }
@@ -198,7 +197,7 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
 
   return (
     <>
-      <TouchableRipple onPress={() => setShowDialog(true)} style={{ minHeight: styles.oneSpace * 5 }}>
+      <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call: qso?.their?.call, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 5 }}>
 
         <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
           <View style={{ alignSelf: 'flex-start', flex: 0 }}>
@@ -246,21 +245,6 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
           </View>
         </View>
       </TouchableRipple>
-      {showDialog && (
-        <CallInfoDialog
-          visible={showDialog}
-          setVisible={setShowDialog}
-          qso={qso}
-          guess={guess}
-          lookup={lookup}
-          pota={pota}
-          qrz={qrz}
-          operation={operation}
-          callNotes={callNotes}
-          callHistory={callHistory}
-          styles={styles}
-        />
-      )}
     </>
   )
 }

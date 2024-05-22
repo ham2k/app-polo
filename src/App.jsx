@@ -31,6 +31,7 @@ import OperationActivityOptionsScreen from './screens/OperationScreens/Operation
 import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
 import { AppWrappedForDistribution, useConfigForDistribution } from './distro'
+import CallInfoScreen from './screens/CallInfoScreen/CallInfoScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -84,6 +85,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="OperationActivityOptions"
             options={{ title: 'Activity Options', headerBackTitle: 'Operation' }}
             component={OperationActivityOptionsScreen}
+          />
+
+          <Stack.Screen name="CallInfo"
+            options={{ title: 'Callsign Info' }}
+            component={CallInfoScreen}
           />
 
           <Stack.Screen name="Settings"

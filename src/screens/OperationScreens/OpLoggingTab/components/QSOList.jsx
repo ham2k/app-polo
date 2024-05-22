@@ -6,11 +6,12 @@
  */
 
 import React, { useCallback, useEffect, useRef } from 'react'
-import { FlatList, useWindowDimensions } from 'react-native'
+import { FlatList, View, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem, { guessItemHeight } from './QSOItem'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { useUIState } from '../../../../store/ui'
+import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
 
 function prepareStyles (themeStyles, isDeleted, width) {
   const extendedWidth = width / themeStyles.oneSpace > 80
@@ -133,7 +134,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
   }
 }
 
-const QSOList = function QSOList ({ style, ourInfo, settings, qsos }) {
+const QSOList = function QSOList ({ style, ourInfo, settings, qsos, vfo }) {
   const { width } = useWindowDimensions()
 
   const [componentWidth, setComponentWidth] = useUIState()
@@ -192,7 +193,19 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos }) {
       data={qsos}
       renderItem={renderRow}
       getItemLayout={calculateLayout}
-      ListEmptyComponent={<Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>No QSOs yet!</Text>}
+      ListEmptyComponent={
+        <View style={{ flexDirection: 'column' }}>
+          <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
+            No QSOs yet!
+          </Text>
+          <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
+            Please confirm that you're operating on
+          </Text>
+          <Text style={{ flex: 1, marginTop: styles.oneSpace * 1, textAlign: 'center', fontWeight: 'bold' }}>
+            {[vfo.freq ? fmtFreqInMHz(vfo.freq) + ' MHz' : vfo.band, vfo.mode].filter(x => x).join(' • ')}
+          </Text>
+        </View>
+      }
       keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
       initialNumToRender={20}
       windowSize={2}
