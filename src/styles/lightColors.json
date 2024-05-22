@@ -1,15 +1,15 @@
 {
   "colors": {
     "primary": "rgb(0, 103, 131)",
-    "onPrimary": "rgb(255, 255, 255)",
+    "onPrimary": "rgb(240, 240, 240)",
     "primaryContainer": "rgb(188, 233, 255)",
     "onPrimaryContainer": "rgb(0, 31, 41)",
     "secondary": "rgb(0, 95, 175)",
-    "onSecondary": "rgb(255, 255, 255)",
+    "onSecondary": "rgb(240, 240, 240)",
     "secondaryContainer": "rgb(210, 227, 252)",
     "onSecondaryContainer": "rgb(0, 28, 58)",
     "tertiary": "rgb(150, 73, 0)",
-    "onTertiary": "rgb(255, 255, 255)",
+    "onTertiary": "rgb(240, 240, 240)",
     "tertiaryContainer": "rgb(255, 220, 198)",
     "onTertiaryContainer": "rgb(49, 19, 0)",
     "important": "rgb(26, 200, 26)",

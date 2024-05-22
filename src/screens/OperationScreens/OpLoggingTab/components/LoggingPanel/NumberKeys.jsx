@@ -40,7 +40,7 @@ function prepareStyles (baseStyles, themeColor) {
       backgroundColor: baseStyles.theme.colors[`${themeColor}Container`]
     },
     enabledKey: {
-      color: baseStyles.theme.colors[`on${upcasedThemeColor}`]
+      color: baseStyles.theme.colors[`on${upcasedThemeColor}Light`]
     },
     disabledKey: {
       color: baseStyles.theme.colors.onBackgroundLighter,
