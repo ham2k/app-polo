@@ -24,7 +24,7 @@ import { setOperationData } from '../../../../../../store/operations'
 const MINUTES_UNTIL_RESPOT = 5
 
 export function SpotterControlInputs (props) {
-  const { operation, styles, style } = props
+  const { operation, vfo, styles, style } = props
 
   const online = useSelector(selectRuntimeOnline)
 
@@ -39,16 +39,16 @@ export function SpotterControlInputs (props) {
   const now = useSelector(selectSecondsTick)
 
   useEffect(() => {
-    if (operation?.freq) {
-      if (operation.freq !== operation.spottedFreq) {
+    if (vfo?.freq) {
+      if (vfo.freq !== operation.spottedFreq) {
         setSpotterUI({
-          message: `Spot at ${fmtFreqInMHz(operation.freq)}`,
+          message: `Spot at ${fmtFreqInMHz(vfo.freq)}`,
           disabled: false
         })
         if (comments === undefined) setComments(operation.spottedFreq ? 'QSY' : 'QRV with Ham2K PoLo')
       } else if (now - operation.spottedAt > (1000 * 60 * MINUTES_UNTIL_RESPOT)) {
         setSpotterUI({
-          message: `Re-spot at ${fmtFreqInMHz(operation.freq)}`,
+          message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
           disabled: false
         })
         if (comments === undefined) setComments('QRT')
@@ -60,7 +60,7 @@ export function SpotterControlInputs (props) {
         setComments(undefined)
       } else if (comments?.length > 0) {
         setSpotterUI({
-          message: `Re-spot at ${fmtFreqInMHz(operation.freq)}`,
+          message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
           disabled: false
         })
       } else {
@@ -75,17 +75,17 @@ export function SpotterControlInputs (props) {
         disabled: true
       })
     }
-  }, [operation?.freq, operation?.spottedFreq, operation?.spottedAt, operation, now, comments])
+  }, [vfo?.freq, operation?.spottedFreq, operation?.spottedAt, operation, now, comments])
 
   const activityHooksWithSpot = useMemo(() =>
     findHooks('activity').filter((x) => (findRef(operation.refs, x.activationType) && x.postSpot))
   , [operation.refs])
 
   const handleSpotting = useCallback(() => {
-    activityHooksWithSpot.forEach(hook => dispatch(hook.postSpot(operation, comments)))
+    activityHooksWithSpot.forEach(hook => dispatch(hook.postSpot(operation, vfo, comments)))
     dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: operation.freq }))
     setComments(undefined)
-  }, [dispatch, operation, comments, activityHooksWithSpot])
+  }, [dispatch, operation, vfo, comments, activityHooksWithSpot])
 
   return (
     <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 60 }]}>

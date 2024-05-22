@@ -10,7 +10,7 @@ import { reportError } from '../../../distro'
 import packageJson from '../../../../package.json'
 import { filterRefs } from '../../../tools/refTools'
 
-export const POTAPostSpot = (operation, comments) => async (dispatch, getState) => {
+export const POTAPostSpot = (operation, vfo, comments) => async (dispatch, getState) => {
   const state = getState()
   const call = operation.stationCall || state.settings.operatorCall
 
@@ -24,9 +24,9 @@ export const POTAPostSpot = (operation, comments) => async (dispatch, getState) 
         body: JSON.stringify({
           activator: call,
           spotter: call,
-          frequency: operation.freq,
+          frequency: vfo.freq,
           reference: ref.ref,
-          mode: operation.mode,
+          mode: vfo.mode,
           source: 'Ham2K Portable Logger',
           comments: [comments, refComment].filter((x) => (x)).join(' ')
         })

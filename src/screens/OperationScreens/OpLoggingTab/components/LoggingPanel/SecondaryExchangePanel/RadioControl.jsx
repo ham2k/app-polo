@@ -13,36 +13,36 @@ import FrequencyInput from '../../../../../components/FrequencyInput'
 import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 import { ADIF_MODES_AND_SUBMODES, BANDS, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
 
-const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
+const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   const bandOptions = useMemo(() => {
     const options = [...settings?.bands || POPULAR_BANDS]
     if (!options.includes(qso?.band)) options.push(qso?.band)
-    if (!options.includes(operation?.band)) options.push(operation?.band)
+    if (!options.includes(vfo?.band)) options.push(vfo?.band)
     options.sort((a, b) => BANDS.indexOf(a) - BANDS.indexOf(b))
     if (!options.includes('other')) options.concat(['other'])
 
     return options.filter(x => x).map(band => ({ value: band, label: band }))
-  }, [operation?.band, qso?.band, settings?.bands])
+  }, [vfo?.band, qso?.band, settings?.bands])
 
   const modeOptions = useMemo(() => {
     const options = [...settings?.modes || POPULAR_MODES]
     if (!options.includes(qso?.mode)) options.push(qso?.mode)
-    if (!options.includes(operation?.mode)) options.push(operation?.mode)
+    if (!options.includes(vfo?.mode)) options.push(vfo?.mode)
     options.sort((a, b) => (POPULAR_MODES.indexOf(a) ?? (ADIF_MODES_AND_SUBMODES.index(a) + 100)) - (POPULAR_MODES.indexOf(b) ?? (ADIF_MODES_AND_SUBMODES.index(b) + 100)))
     if (!options.includes('other')) options.concat(['other'])
 
     return options.map(mode => ({ value: mode, label: mode }))
-  }, [operation?.mode, qso?.mode, settings?.modes])
+  }, [vfo?.mode, qso?.mode, settings?.modes])
 
   return (
     <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
       <ThemedDropDown
         label="Band"
         themeColor={themeColor}
-        value={qso?._isNew ? (qso?.band ?? operation?.band ?? '') : (qso?.band ?? '') }
+        value={qso?._isNew ? (qso?.band ?? vfo?.band ?? '') : (qso?.band ?? '') }
         onChange={handleFieldChange}
         disabled={disabled}
         dropDownContainerMaxHeight={styles.oneSpace * 19}
@@ -54,7 +54,7 @@ const RadioControlInputs = ({ qso, operation, settings, disabled, icon, style, s
         innerRef={ref}
         themeColor={themeColor}
         style={{ width: styles.oneSpace * (styles.size === 'xs' ? 10 : 11) }}
-        value={qso?._isNew ? (qso?.freq ?? operation?.freq ?? '') : (qso?.freq ?? '') }
+        value={qso?._isNew ? (qso?.freq ?? vfo?.freq ?? '') : (qso?.freq ?? '') }
         disabled={disabled}
         label="Frequency"
         placeholder=""

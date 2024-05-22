@@ -188,11 +188,11 @@ export default function ThemedTextInput (props) {
         secureTextEntry: false,
         importantForAutofill: 'no',
         returnKeyType: 'send',
-        keyboardAppearance: themeStyles.isDarkMode ? 'dark' : 'light'
+        keyboardAppearance: (themeStyles.isDarkMode && !Platform.isPad) ? 'dark' : 'light'
       }
     } else {
       return {
-        keyboardAppearance: themeStyles.isDarkMode ? 'dark' : 'light'
+        keyboardAppearance: (themeStyles.isDarkMode && !Platform.isPad) ? 'dark' : 'light'
       }
     }
   }, [keyboard, themeStyles.isIOS, themeStyles.isDarkMode])
