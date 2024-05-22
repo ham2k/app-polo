@@ -1,5 +1,10 @@
 {
-  "0.7.8-pre6": {
+  "0.7.9-pre1": {
+    "changes": [
+
+    ]
+  },
+  "0.7.8": {
     "changes": [
       "Better handling of history counts",
       "Link to Online Manual",
