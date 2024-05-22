@@ -45,7 +45,7 @@ const SeedCommandHook = {
   extension: Extension,
   key: 'commands-debug-error',
   match: /^SEED(\d+)$/i,
-  invokeCommand: (match, { handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, operation, settings, online, ourInfo }) => {
+  invokeCommand: (match, { handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
     setTimeout(async () => {
       let count = parseInt(match[1], 10)
       let startOnMillis = Date.now()
@@ -70,9 +70,9 @@ const SeedCommandHook = {
         calls.splice(index, 1)
 
         const oneQSO = {
-          mode: qso.mode ?? operation.mode ?? 'SSB',
-          band: qso.band ?? operation.band ?? '20m',
-          freq: qso.freq ?? operation.freq,
+          mode: qso.mode ?? vfo.mode ?? 'SSB',
+          band: qso.band ?? vfo.band ?? '20m',
+          freq: qso.freq ?? vfo.freq,
           startOnMillis,
           startOn: new Date(startOnMillis).toISOString()
         }

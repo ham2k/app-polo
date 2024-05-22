@@ -12,13 +12,13 @@ import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
 
 const validModes = ['CW', 'FM', 'SSB', 'RTTY', 'PSK']
 
-export const GMACommonPostSpot = (operation, comments, refs, url) => async (dispatch, getState) => {
+export const GMACommonPostSpot = (operation, vfo, comments, refs, url) => async (dispatch, getState) => {
   const state = getState()
   const call = operation.stationCall || state.settings.operatorCall
   const baseCall = parseCallsign(call).baseCall
 
-  let mode = operation.mode
-  if (!validModes.includes(operation.mode)) {
+  let mode = vfo.mode
+  if (!validModes.includes(vfo.mode)) {
     if (ADIF_SUBMODES.SSB.includes(mode)) mode = 'SSB'
     else if (ADIF_SUBMODES.PSK.includes(mode)) mode = 'PSK'
     else mode = 'other'
@@ -37,7 +37,7 @@ export const GMACommonPostSpot = (operation, comments, refs, url) => async (disp
         yspotter: baseCall ?? call, // Spotter shouldn't include /P, etc.
         ycall: call,
         yreference: mainRef,
-        yqrg: operation.freq,
+        yqrg: vfo.freq,
         ymode: mode,
         ycomment: [comments, refComment].filter((x) => (x)).join(' '),
         B1: 'Submit'

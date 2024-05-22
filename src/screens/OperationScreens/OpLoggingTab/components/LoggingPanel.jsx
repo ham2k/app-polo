@@ -516,6 +516,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
             <SecondaryExchangePanel
               qso={qso}
               operation={operation}
+              vfo={vfo}
               settings={settings}
               setQSO={setQSO}
               updateQSO={updateQSO}
