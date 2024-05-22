@@ -37,7 +37,7 @@ export function ECAListItem ({ activityRef, refData, allRefs, style, styles, set
           </Text>
         </View>
       }
-      description={[reference?.name, reference?.location].filter(x => x).join(', ')}
+      description={reference?.ref ? [reference?.name, reference?.location].filter(x => x).join(', ') : 'Unknown Castle Reference'}
       onPress={onPress}
       left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
       right={() => (

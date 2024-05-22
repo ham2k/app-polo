@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
@@ -25,6 +25,9 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
+  const currentActivities = useMemo(() => (
+    new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))
+  ), [operation?.refs])
 
   const activityHooks = useFindHooks('activity')
 
@@ -45,7 +48,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <Ham2kListSection>
-          {activityHooks.map((activity) => (
+          {activityHooks.filter(activity => !currentActivities.has(activity.activationType)).map((activity) => (
             <Ham2kListItem
               key={activity.key}
               title={activity.name}

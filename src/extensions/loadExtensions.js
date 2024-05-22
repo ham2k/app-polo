@@ -11,6 +11,7 @@ import { activateEnabledExtensions, registerExtension } from './registry'
 import CountryFilesExtension from './core/countryFiles'
 import POTAExtension from './activities/pota/POTAExtension'
 import SOTAExtension from './activities/sota/SOTAExtension'
+import GMAExtension from './activities/gma/GMAExtension'
 import WWFFExtension from './activities/wwff/WWFFExtension'
 import FDExtension from './activities/fd/FDExtension'
 import WFDExtension from './activities/wfd/WFDExtension'
@@ -32,6 +33,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(CountryFilesExtension)
   registerExtension(POTAExtension)
   registerExtension(SOTAExtension)
+  registerExtension(GMAExtension)
   registerExtension(WWFFExtension)
   registerExtension(CustomExtension)
   registerExtension(WFDExtension)
