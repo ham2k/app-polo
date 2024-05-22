@@ -8,6 +8,8 @@
 const ABBREVIATIONS = [
   ['National Park', 'NP'],
   ['State Park', 'SP'],
+  ['Area of Outstanding Natural Beauty', 'AONB'],
+  [/Site of (?:Special|Significant) Scientific Interest/, 'SSSI'], // Significant commonly misused
   [/National(?=\s|$)/g, 'Ntl.'],
   [/(Historical|Historic)(?=\s|$)/g, 'Hist.'],
   [/Preserve(?=\s|$)/g, 'Prsv.'],
@@ -15,8 +17,10 @@ const ABBREVIATIONS = [
   [/Monument(?=\s|$)/g, 'Mon.'],
   [/Conservation(?=\s|$)/g, 'Cons.'],
   [/Management(?=\s|$)/g, 'Mgmt.'],
-  [/Recreational(?=\s|$)/g, 'Rec.'],
-  [/Recreation(?=\s|$)/g, 'Rec.']
+  [/(Recreational|Recreation)(?=\s|$)/g, 'Rec.'],
+  [/Regional(?=\s|$)/g, 'Reg.'],
+  [/Landscape(?=\s|$)/g, 'Lndscp.'],
+  [/Protected(?=\s|$)/g, 'Prot.']
 ]
 
 export function abbreviateString (str) {
