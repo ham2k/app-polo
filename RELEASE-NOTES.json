@@ -1,7 +1,7 @@
 {
   "0.7.9-pre1": {
     "changes": [
-
+      "Allow entering incomplete callsigns or references that include a `?`"
     ]
   },
   "0.7.8": {
