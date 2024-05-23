@@ -268,7 +268,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
 
     const callInfo = parseCallsign(call)
 
-    if (callInfo?.baseCall) {
+    if (callInfo?.baseCall || call.indexOf('?') >= 0) {
       setIsValidQSO(true)
     } else {
       setIsValidQSO(false)
