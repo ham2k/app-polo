@@ -20,7 +20,7 @@ import { selectSettings } from '../../../../store/settings'
 import { findQSOHistory } from '../../../../store/qsos/actions/findQSOHistory'
 
 import { filterRefs, findRef } from '../../../../tools/refTools'
-import { findAllCallNotes, useOneCallNoteFinder } from '../../../../extensions/data/call-notes/CallNotesExtension'
+import { findAllCallNotes, useAllCallNotesFinder } from '../../../../extensions/data/call-notes/CallNotesExtension'
 import { potaFindParkByReference } from '../../../../extensions/activities/pota/POTAAllParksData'
 
 const EMOJI_REGEX = emojiRegex()
@@ -47,7 +47,7 @@ export const useQSOInfo = ({ qso, operation }) => {
     return newGuess
   }, [qso?.their?.call])
 
-  const callNotes = useOneCallNoteFinder(theirCall?.baseCall)
+  const callNotes = useAllCallNotesFinder(theirCall?.baseCall)
 
   const [callHistory, setCallHistory] = useState()
   useEffect(() => { // Get Call History

@@ -45,18 +45,16 @@ const Extension = {
     const settings = selectExtensionSettings(getState(), Info.key)
 
     const files = [...BUILT_IN_NOTES]
-    settings.customFiles?.forEach(file => files.push({ ...file, builtin: false }))
+    settings.customFiles?.forEach(file => files.unshift({ ...file, builtin: false }))
 
     for (const file of files) {
       CallNotesFiles.push(file)
       registerDataFile(createDataFileDefinition(file))
 
-      // Load Call Note files without `await`
+      // Load Call Note files without `await`, in the background
       dispatch(loadDataFile(`call-notes-${file.location}`))
 
-      if (settings.enabledLocations?.[file.location] !== false) {
-        ActiveCallNotesFiles[file.location] = true
-      }
+      ActiveCallNotesFiles[file.location] = !!settings.enabledLocations?.[file.location]
     }
 
     registerHook('setting', {

@@ -2,7 +2,8 @@
   "0.7.9-pre1": {
     "changes": [
       "Allow entering incomplete callsigns or references that include a `?`",
-      "Various fixes for Spotting control"
+      "Various fixes for Spotting control",
+      "Various fixes for Call Notes"
     ]
   },
   "0.7.8": {
