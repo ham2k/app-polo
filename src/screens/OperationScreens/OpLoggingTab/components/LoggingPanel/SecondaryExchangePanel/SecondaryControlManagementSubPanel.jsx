@@ -16,7 +16,7 @@ import { setOperationData } from '../../../../../../store/operations'
 import { setSettings } from '../../../../../../store/settings'
 
 export const SecondaryControlManagementSubPanel = ({
-  qso, operation, settings, styles, themeColor, currentSecondaryControl, setCurrentSecondaryControl,
+  qso, operation, vfo, settings, styles, themeColor, currentSecondaryControl, setCurrentSecondaryControl,
   allControls, enabledControls, moreControls, secondaryControlSettings
 }) => {
   const dispatch = useDispatch()
@@ -55,7 +55,7 @@ export const SecondaryControlManagementSubPanel = ({
           <View key={control.key} style={{ flex: 0, flexDirection: 'column' }}>
             {control.LabelComponent ? (
               <control.LabelComponent
-                qso={qso} operation={operation} settings={settings}
+                qso={qso} operation={operation} vfo={vfo} settings={settings}
                 icon={control.icon}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 disabled={control.optionType === 'mandatory'}
@@ -70,7 +70,7 @@ export const SecondaryControlManagementSubPanel = ({
                 selected={false}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               >
-                {control.label ? stringOrFunction(control.label, { operation, qso, settings }) : control.key}
+                {control.label ? stringOrFunction(control.label, { operation, vfo, qso, settings }) : control.key}
               </LoggerChip>
             )}
           </View>
@@ -98,7 +98,7 @@ export const SecondaryControlManagementSubPanel = ({
           <View key={control.key} style={{ flex: 0, flexDirection: 'column' }}>
             {control.LabelComponent ? (
               <control.LabelComponent
-                qso={qso} operation={operation} settings={settings}
+                qso={qso} operation={operation} vfo={vfo} settings={settings}
                 icon={control.icon}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={false}
@@ -113,7 +113,7 @@ export const SecondaryControlManagementSubPanel = ({
                 disabled={control.optionType === 'mandatory'}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               >
-                {control.label ? stringOrFunction(control.label, { operation, qso, settings }) : control.key}
+                {control.label ? stringOrFunction(control.label, { operation, vfo, qso, settings }) : control.key}
               </LoggerChip>
             )}
           </View>

@@ -18,7 +18,7 @@ import { Ham2kListItem } from '../../../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../../../components/Ham2kListSection'
 import { Ham2kDialog } from '../../../../components/Ham2kDialog'
 
-export function LoggingPanelConfigDialog ({ visible, operation, settings, styles, onDialogDone }) {
+export function LoggingPanelConfigDialog ({ visible, operation, vfo, settings, styles, onDialogDone }) {
   const [dialogVisible, setDialogVisible] = useState(false)
   const [setValue] = useState('')
 
@@ -75,8 +75,8 @@ export function LoggingPanelConfigDialog ({ visible, operation, settings, styles
             {sortedControls.map(control => (
               <Ham2kListItem
                 style={{ paddingTop: 20, margin: 0 }}
-                title={stringOrFunction(control.optionLabel ?? control.label ?? control.key, { operation, settings })}
-                description={stringOrFunction(control.optionDescription, { operation, settings })}
+                title={stringOrFunction(control.optionLabel ?? control.label ?? control.key, { operation, vfo, settings })}
+                description={stringOrFunction(control.optionDescription, { operation, vfo, settings })}
                 left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={control.icon} />}
                 right={() => {
                   if (control.optionType === 'mandatory') {
