@@ -42,7 +42,7 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
     const steps = [
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
       async () => {
-        if (settings.updateTrack && settings.updateTrack !== 'Development') {
+        if (settings.updateTrack && settings.updateTrack !== 'Production') {
           await dispatch(addRuntimeMessage(`Checking for ${UPDATE_TRACK_LABELS[settings.updateTrack]} updates...`))
         } else {
           await dispatch(addRuntimeMessage('Checking for updates...'))
@@ -50,7 +50,7 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
 
         setTimeout(async () => {
           await CodePush.sync({
-            deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Development']
+            deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Production']
           })
           setTimeout(() => {
             CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING).then((metadata) => {
