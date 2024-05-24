@@ -15,11 +15,11 @@ const NotesControlInputs = ({ qso, operation, settings, disabled, icon, style, s
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   return (
-    <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
+    <View style={[style, { flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }]}>
       <ThemedTextInput
         innerRef={ref}
         themeColor={themeColor}
-        style={[styles.input, { minWidth: styles.oneSpace * 20 }]}
+        style={[styles.input, { minWidth: styles.oneSpace * 20, width: '100%' }]}
         value={qso?.notes ?? ''}
         disabled={disabled}
         label="Notes"
@@ -43,6 +43,6 @@ export const notesControl = {
     return parts.join(' ')
   },
   InputComponent: NotesControlInputs,
-  inputWidthMultiplier: 20,
+  inputWidthMultiplier: 40,
   optionType: 'optional'
 }
