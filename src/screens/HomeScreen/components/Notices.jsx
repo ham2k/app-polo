@@ -98,6 +98,8 @@ export default function Notices () {
     if (currentNotice) {
       LayoutAnimation.configureNext(NewNoticeAnimation)
       setVisible(true)
+    } else {
+      setVisible(false)
     }
   }, [currentNotice])
 
@@ -138,7 +140,7 @@ export default function Notices () {
         styles.root,
         {
           height: visible ? undefined : 0,
-          paddingBottom: visible ? safeArea.bottom : 0,
+          paddingBottom: visible ? safeArea.bottom + styles.oneSpace : 0,
           flexDirection: 'column'
         }
       ]}
