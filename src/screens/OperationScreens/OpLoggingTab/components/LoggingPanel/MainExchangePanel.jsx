@@ -15,7 +15,7 @@ import { findRef } from '../../../../../tools/refTools'
 import { findHooks } from '../../../../../extensions/registry'
 
 export const MainExchangePanel = ({
-  qso, operation, settings, style, styles, themeColor, onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef
+  qso, operation, vfo, settings, style, styles, themeColor, onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef
 }) => {
   const { width } = useWindowDimensions()
 
@@ -95,7 +95,7 @@ export const MainExchangePanel = ({
     onSubmitEditing,
     onKeyPress: keyHandler,
     focusedRef,
-    radioMode: qso?.mode ?? operation?.mode ?? 'SSB'
+    radioMode: qso?.mode ?? vfo?.mode ?? 'SSB'
   }
   const rstFields = [
     <RSTInput
@@ -144,7 +144,7 @@ export const MainExchangePanel = ({
   findHooks('activity').filter(activity => findRef(operation, activity.key) && activity.fieldsForMainExchangePanel).forEach(activity => {
     fields = fields.concat(
       activity.fieldsForMainExchangePanel(
-        { qso, operation, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, keyHandler, refStack, focusedRef }
+        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, keyHandler, refStack, focusedRef }
       )
     )
   })

@@ -13,7 +13,7 @@ import LoggerChip from '../../../../components/LoggerChip'
 import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
 
 const PositionedControlChip = (props) => {
-  const { control, operation, qso, settings, onChange } = props
+  const { control, operation, vfo, qso, settings, onChange } = props
 
   const [layout, setLayout] = useState([])
   const handleLayout = useCallback((event) => {
@@ -32,7 +32,7 @@ const PositionedControlChip = (props) => {
     return (
       <View onLayout={handleLayout}>
         <LoggerChip {...props} onChange={handleChange}>
-          {control.label ? stringOrFunction(control.label, { operation, qso, settings }) : control.key}
+          {control.label ? stringOrFunction(control.label, { operation, qso, vfo, settings }) : control.key}
         </LoggerChip>
       </View>
     )
@@ -132,7 +132,7 @@ export const SecondaryControlSelectionsubPanel = ({
                 key={control.key}
                 control={control}
                 icon={control.icon}
-                qso={qso} operation={operation} settings={settings}
+                qso={qso} operation={operation} vfo={vfo} settings={settings}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={currentSecondaryControl === control.key}
                 onChange={(value, measure) => handleChipSelect(control.key, value, measure)}

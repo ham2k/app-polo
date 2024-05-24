@@ -547,9 +547,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
                     </View>
                   ) : (
                     qso?.their?.call ? (
-                      <CallInfo qso={qso} qsos={activeQSOs} operation={operation} settings={settings} styles={styles} themeColor={themeColor} updateQSO={updateQSO} />
+                      <CallInfo qso={qso} qsos={activeQSOs} operation={operation} vfo={vfo} settings={settings} styles={styles} themeColor={themeColor} updateQSO={updateQSO} />
                     ) : (
-                      <OpInfo operation={operation} styles={styles} settings={settings} qsos={activeQSOs} themeColor={themeColor} />
+                      <OpInfo operation={operation} vfo={vfo} styles={styles} settings={settings} qsos={activeQSOs} themeColor={themeColor} />
                     )
                   )
 
@@ -602,6 +602,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
             style={{ flex: 1, paddingLeft: styles.oneSpace }}
             qso={qso}
             operation={operation}
+            vfo={vfo}
             settings={settings}
             disabled={qso?.deleted || qso?._willBeDeleted}
             styles={styles}

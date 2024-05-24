@@ -17,7 +17,7 @@ import { findRef } from '../../../../../tools/refTools'
 import { spotterControl } from './SecondaryExchangePanel/SpotterControl'
 
 export const SecondaryExchangePanel = (props) => {
-  const { currentSecondaryControl, operation, settings } = props
+  const { currentSecondaryControl, operation, vfo, settings } = props
 
   const secondaryControlSettings = useMemo(() => (
     operation?.secondaryControls ?? settings?.secondaryControls ?? {}
@@ -34,13 +34,13 @@ export const SecondaryExchangePanel = (props) => {
       newControls[spotterControl.key] = spotterControl
     }
     activityHooks.forEach(activity => {
-      const activityControls = activity.loggingControls ? activity.loggingControls({ operation, settings }) : []
+      const activityControls = activity.loggingControls ? activity.loggingControls({ operation, vfo, settings }) : []
       for (const control of activityControls) {
         newControls[control.key] = control
       }
     })
     return newControls
-  }, [operation, settings])
+  }, [operation, vfo, settings])
 
   const enabledControls = useMemo(() => {
     let keys = Object.keys(allControls)

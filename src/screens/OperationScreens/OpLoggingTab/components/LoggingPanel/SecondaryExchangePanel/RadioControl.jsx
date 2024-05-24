@@ -65,7 +65,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
       />
       <ThemedDropDown
         label="Mode"
-        value={qso?._isNew ? (qso?.mode ?? operation?.mode ?? '') : (qso?.mode ?? '') }
+        value={qso?._isNew ? (qso?.mode ?? vfo?.mode ?? '') : (qso?.mode ?? '') }
         onChange={handleFieldChange}
         disabled={disabled}
         dropDownContainerMaxHeight={styles.oneSpace * 19}
@@ -81,17 +81,17 @@ export const radioControl = {
   key: 'radio',
   icon: 'radio',
   order: 1,
-  label: ({ qso, operation, settings }) => {
+  label: ({ qso, operation, vfo, settings }) => {
     const parts = []
-    if (qso?.freq ?? operation.freq) {
-      parts.push(`${fmtFreqInMHz(qso?.freq ?? operation.freq)} MHz`)
+    if (qso?.freq ?? vfo.freq) {
+      parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo.freq)} MHz`)
     } else if (qso?.band ?? operation.band) {
       parts.push(`${qso?.band ?? operation.band}`)
     } else {
       parts.push('Band???')
     }
 
-    parts.push(`${qso?.mode ?? operation.mode ?? 'SSB'}`)
+    parts.push(`${qso?.mode ?? vfo.mode ?? 'SSB'}`)
     return parts.join(' • ')
   },
   InputComponent: RadioControlInputs,
