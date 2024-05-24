@@ -178,8 +178,6 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
 
   const [isValidOperation, operationError] = useMemo(() => { // Ensure we have all the required operation data
     const errors = []
-    console.log('error?', { qso, vfo })
-    console.log('mode', qso?.mode, vfo?.mode)
     if (!qso?.band && !vfo?.band) errors.push('band')
     if (!operation?.stationCall && !settings?.operatorCall) errors.push('callsign')
 
