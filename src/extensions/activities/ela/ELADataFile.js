@@ -25,7 +25,7 @@ export function registerELADataFile () {
     description: 'Database of all ELA references',
     infoURL: 'https://ecaelastats.site/ela_refs.php',
     icon: 'file-certificate-outline',
-    maxAgeInDays: 30,
+    maxAgeInDays: 100,
     enabledByDefault: false,
     fetch: async ({ options, key, definition }) => {
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })

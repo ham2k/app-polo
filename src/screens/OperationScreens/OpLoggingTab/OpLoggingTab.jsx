@@ -35,13 +35,26 @@ export default function OpLoggingTab ({ navigation, route }) {
   const settings = useSelector(selectSettings)
   const online = useSelector(selectRuntimeOnline)
 
-  const [,, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
-  useEffect(() => {
+  useEffect(() => { // Reset logging state when operation changes
+    if (loggingState?.operationUUID !== operation?.uuid) {
+      console.log('Operation changed')
+      if (loggingState?.qso) {
+        console.log('-- suggesting ', loggingState.qso)
+        setLoggingState({ operationUUID: operation?.uuid, selectedKey: 'suggested-qso', suggestedQSO: loggingState.qso })
+      } else {
+        console.log('-- new qso')
+        setLoggingState({ operationUUID: operation?.uuid, selectedKey: 'new-qso' })
+      }
+    }
+  }, [loggingState?.operationUUID, loggingState?.qso, operation?.uuid, setLoggingState])
+
+  useEffect(() => { // Inject suggested-qso when present
     if (route?.params?.qso) {
       updateLoggingState({ selectedKey: 'suggested-qso', suggestedQSO: route.params.qso })
     }
-  }, [route?.params?.qso, updateLoggingState])
+  }, [route?.params?.qso, setLoggingState, updateLoggingState])
 
   // Set navigation title
   useEffect(() => {

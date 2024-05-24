@@ -23,7 +23,7 @@ export function registerUKBOTADataFile () {
     description: 'Database of all UKBOTA references',
     infoURL: 'https://bunkerbase.org',
     icon: 'file-cloud-outline',
-    maxAgeInDays: 7,
+    maxAgeInDays: 100,
     enabledByDefault: true,
     fetch: async ({ key, definition, options }) => {
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })

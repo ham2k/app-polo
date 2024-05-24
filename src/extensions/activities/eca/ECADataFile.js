@@ -23,7 +23,7 @@ export function registerECADataFile () {
     description: 'Database of all ECA references',
     infoURL: 'https://ecaelastats.site/eca_refs.php',
     icon: 'file-certificate-outline',
-    maxAgeInDays: 7,
+    maxAgeInDays: 100,
     enabledByDefault: false,
     fetch: async ({ options, key, definition }) => {
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })

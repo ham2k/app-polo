@@ -1,4 +1,12 @@
 {
+  "0.7.9-pre1": {
+    "changes": [
+      "Logging info now persists between screen changes",
+      "Allow entering incomplete callsigns or references that include a `?`",
+      "Various fixes for Spotting control",
+      "Various fixes for Call Notes"
+    ]
+  },
   "0.7.8": {
     "changes": [
       "Better handling of history counts",

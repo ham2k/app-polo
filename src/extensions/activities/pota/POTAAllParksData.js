@@ -22,7 +22,7 @@ export function registerPOTAAllParksData () {
     description: 'Database of all POTA references',
     infoURL: 'https://pota.app/',
     icon: 'file-powerpoint-outline',
-    maxAgeInDays: 7,
+    maxAgeInDays: 28,
     enabledByDefault: true,
     fetch: async ({ key, definition, options }) => {
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })

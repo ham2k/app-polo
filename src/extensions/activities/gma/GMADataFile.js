@@ -22,7 +22,7 @@ export function registerGMADataFile () {
     description: 'Database of all GMA references',
     infoURL: 'https://www.cqgma.org/smtdsp.php',
     icon: 'file-image-outline',
-    maxAgeInDays: 7,
+    maxAgeInDays: 100,
     enabledByDefault: false,
     fetch: async ({ options, key, definition }) => {
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
