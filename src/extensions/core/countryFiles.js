@@ -46,6 +46,7 @@ export function prepareCountryFilesData () {
     description: 'Helps match callsigns to entities and zones',
     infoURL: 'https://www.country-files.com/bigcty',
     alwaysEnabled: true,
+    maxAgeInDays: 14,
     fetch: async () => {
       const request = 'https://www.country-files.com/bigcty/cty.csv'
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', request, {

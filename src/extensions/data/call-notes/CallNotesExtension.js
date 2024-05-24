@@ -97,7 +97,8 @@ export const createDataFileDefinition = (file) => ({
   icon: 'file-account-outline',
   description: `${file.builtin ? 'Built-in' : "User's"} Callsign Notes`,
   fetch: createCallNotesFetcher(file),
-  onLoad: createCallNotesLoader(file)
+  onLoad: createCallNotesLoader(file),
+  maxAgeInDays: 1
 })
 
 const createCallNotesFetcher = (file) => async () => {

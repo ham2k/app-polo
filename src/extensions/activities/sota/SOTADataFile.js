@@ -22,7 +22,7 @@ export function registerSOTADataFile () {
     description: 'Database of all SOTA references',
     infoURL: 'https://www.sotadata.org.uk/en/summits',
     icon: 'file-image-outline',
-    maxAgeInDays: 7,
+    maxAgeInDays: 100,
     enabledByDefault: false,
     fetch: async ({ options, key, definition }) => {
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })

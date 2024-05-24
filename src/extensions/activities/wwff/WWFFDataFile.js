@@ -23,7 +23,7 @@ export function registerWWFFDataFile () {
     description: 'Database of all WWFF references',
     infoURL: 'https://wwff.co/directory/',
     icon: 'file-word-outline',
-    maxAgeInDays: 7,
+    maxAgeInDays: 30,
     enabledByDefault: false,
     fetch: async ({ options, key, definition }) => {
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data (might take longer than you\'d expect)' })
