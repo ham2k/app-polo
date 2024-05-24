@@ -46,7 +46,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
         fieldId={'date'}
         focusedRef={focusedRef}
       />
-      {qso?._isNew && operation._nextManualTime && (
+      {qso?._isNew && (operation._nextManualTime || qso?.startOnMillis) && (
         <View flexDirection="column" alignItems={'center'} justifyContent={'center'}>
           <ThemedButton
             themeColor="tertiaryLighter"
