@@ -12,7 +12,7 @@ import { fmtDateTimeRelative } from '../../../../../../tools/timeFormats'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectSecondsTick } from '../../../../../../store/time'
 import { View } from 'react-native'
-import { Badge, Icon } from 'react-native-paper'
+import { Icon } from 'react-native-paper'
 import ThemedButton from '../../../../../components/ThemedButton'
 
 import ThemedTextInput from '../../../../../components/ThemedTextInput'
@@ -21,7 +21,7 @@ import { findHooks } from '../../../../../../extensions/registry'
 import { findRef } from '../../../../../../tools/refTools'
 import { setOperationData } from '../../../../../../store/operations'
 
-const MINUTES_UNTIL_RESPOT = 5
+const SECONDS_UNTIL_RESPOT = 30
 
 export function SpotterControlInputs (props) {
   const { operation, vfo, styles, style } = props
@@ -46,7 +46,7 @@ export function SpotterControlInputs (props) {
           disabled: false
         })
         if (comments === undefined) setComments(operation.spottedFreq ? 'QSY' : 'QRV with Ham2K PoLo')
-      } else if (now - operation.spottedAt > (1000 * 60 * MINUTES_UNTIL_RESPOT)) {
+      } else if (now - operation.spottedAt > (1000 * SECONDS_UNTIL_RESPOT)) {
         setSpotterUI({
           message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
           disabled: false
@@ -55,7 +55,7 @@ export function SpotterControlInputs (props) {
       } else if (comments?.length > 0 && (now - operation.spottedAt < (1000 * 1))) {
         setSpotterUI({
           message: `Spotted ${fmtDateTimeRelative(operation.spottedAt)}`,
-          disabled: true
+          disabled: false
         })
         setComments(undefined)
       } else if (comments?.length > 0) {
@@ -66,7 +66,7 @@ export function SpotterControlInputs (props) {
       } else {
         setSpotterUI({
           message: `Spotted ${fmtDateTimeRelative(operation.spottedAt)}`,
-          disabled: true
+          disabled: false
         })
       }
     } else {
@@ -83,42 +83,12 @@ export function SpotterControlInputs (props) {
 
   const handleSpotting = useCallback(() => {
     activityHooksWithSpot.forEach(hook => dispatch(hook.postSpot(operation, vfo, comments)))
-    dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: operation.freq }))
+    dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
     setComments(undefined)
   }, [dispatch, operation, vfo, comments, activityHooksWithSpot])
 
   return (
-    <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 60 }]}>
-      <View style={{ flex: 1 }}>
-        <ThemedButton
-          themeColor="tertiaryLighter"
-          mode="contained"
-          icon={online ? 'hand-wave' : 'cloud-off-outline'}
-          onPress={handleSpotting}
-          disabled={!online || spotterUI.disabled}
-          minWidth={styles.oneSpace * 18}
-        >
-          {spotterUI.message}
-        </ThemedButton>
-        {activityHooksWithSpot.map((x, n) => (
-          <Badge
-            key={x.key}
-            style={{
-              position: 'absolute',
-              top: -styles.oneSpace * 2,
-              right: -styles.halfSpace + (n * styles.oneSpace * 3),
-              backgroundColor: styles.colors.tertiaryLight,
-              height: styles.oneSpace * 3.5,
-              width: styles.oneSpace * 3.5,
-              padding: 0,
-              margin: 0
-            }}
-            size={styles.oneSpace * 3}
-          >
-            <Icon source={x.icon} size={styles.oneSpace * 2} color={styles.colors.onTertiaryLight} />
-          </Badge>
-        ))}
-      </View>
+    <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
       {!spotterUI.disabled && (
         <ThemedTextInput
           innerRef={ref}
@@ -128,6 +98,26 @@ export function SpotterControlInputs (props) {
           onChangeText={setComments}
         />
       )}
+      <ThemedButton
+        themeColor="tertiaryLighter"
+        mode="contained"
+        icon={online ? 'hand-wave' : 'cloud-off-outline'}
+        onPress={handleSpotting}
+        disabled={!online || spotterUI.disabled}
+        // minWidth={styles.oneSpace * 18}
+      >
+        {spotterUI.message}
+      </ThemedButton>
+      <View style={{ flex: 0, flexDirection: 'row', position: 'absolute', top: styles.oneSpace * -1, right: 0 }}>
+        {activityHooksWithSpot.map((x, n) => (
+          <Icon
+            key={x.key}
+            source={x.icon}
+            size={styles.oneSpace * 2.3}
+            color={styles.colors.onTertiaryLight}
+          />
+        ))}
+      </View>
     </View>
   )
 }
@@ -140,6 +130,6 @@ export const spotterControl = {
     return 'Spotting'
   },
   InputComponent: SpotterControlInputs,
-  inputWidthMultiplier: 36,
+  inputWidthMultiplier: 40,
   optionType: 'mandatory'
 }
