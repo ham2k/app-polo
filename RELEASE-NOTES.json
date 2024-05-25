@@ -1,7 +1,8 @@
 {
   "0.7.9-pre1": {
     "changes": [
-      "Logging info now persists between screen changes"
+      "Logging info now persists between screen changes",
+      "Quick call lookup in Home Screen"
     ]
   },
   "0.7.8": {
