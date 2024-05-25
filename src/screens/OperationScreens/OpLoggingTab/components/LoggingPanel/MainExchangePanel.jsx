@@ -54,7 +54,9 @@ export const MainExchangePanel = ({
   }, [refs])
 
   const rstLength = useMemo(() => {
-    return qso?.mode === 'CW' || qso?.mode === 'RTTY' ? 3 : 2
+    if (qso?.mode === 'CW' || qso?.mode === 'RTTY') return 3
+    if (qso?.mode === 'FT8' || qso?.mode === 'FT4') return 3
+    return 2
   }, [qso?.mode])
 
   // For RST fields, switch to the next field after a full signal report is entered
