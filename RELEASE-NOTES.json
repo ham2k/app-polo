@@ -2,6 +2,7 @@
   "0.7.9-pre1": {
     "changes": [
       "Logging info now persists between screen changes",
+      "Quick call lookup in Home Screen",
       "Allow entering incomplete callsigns or references that include a `?`",
       "Various fixes for Spotting control",
       "Various fixes for Call Notes",

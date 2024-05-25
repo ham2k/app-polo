@@ -96,12 +96,13 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
 
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
-    if (guess.indicators && guess.indicators.find(ind => ['P', 'M', 'AM', 'MM'].indexOf(ind) >= 0)) {
+    if (guess.postindicators && guess.postindicators.find(ind => ['P', 'M', 'AM', 'MM', 'PM'].indexOf(ind) >= 0)) {
       isOnTheGo = true
-      if (guess.indicators.indexOf('P') >= 0) leftParts.push('[Portable]')
-      else if (guess.indicators.indexOf('M') >= 0) leftParts.push('[Mobile]')
-      else if (guess.indicators.indexOf('MM') >= 0) leftParts.push('[ 🚢 ]')
-      else if (guess.indicators.indexOf('AM') >= 0) leftParts.push('[ ✈️ ]')
+      if (guess.postindicators.indexOf('P') >= 0) leftParts.push('[Portable]')
+      else if (guess.postindicators.indexOf('M') >= 0) leftParts.push('[Mobile]')
+      else if (guess.postindicators.indexOf('MM') >= 0) leftParts.push('[ 🚢 ]')
+      else if (guess.postindicators.indexOf('AM') >= 0) leftParts.push('[ ✈️ ]')
+      else if (guess.postindicators.indexOf('PM') >= 0) leftParts.push('[ 🪂 ]')
     }
 
     if (operation.grid && guess?.grid) {
@@ -146,7 +147,7 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
 
     return [locationText, entity?.flag ? entity.flag : '']
   }, [
-    operation.grid, pota,
+    operation?.grid, pota,
     lookup, guess, qso?.their?.city, qso?.their?.state, qso?.their?.grid,
     ourInfo, settings.distanceUnits
   ])
@@ -184,76 +185,84 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
       const parts = []
       const today = startOfDayInMillis()
       const yesterday = yesterdayInMillis()
+      const lastWeek = startOfDayInMillis() - 6 * 24 * 60 * 60 * 1000
       let count = callHistory.length
       const countToday = callHistory.filter(x => x.startOnMillis >= today).length
       const countYesterday = callHistory.filter(x => x.startOnMillis >= yesterday).length - countToday
+      const countLastWeek = callHistory.filter(x => x.startOnMillis >= lastWeek).length
 
-      if (countToday) {
-        parts.push(`+ ${countToday} today`)
+      if (qso?.startOnMillis) {
+        parts.push('') // add an empty element to force a join that includes a "+"
+      }
+
+      if (countLastWeek > countToday || countLastWeek > countYesterday) {
+        // parts.push(`${countLastWeek} since ${fmtDateWeekDay(lastWeek)}`)
+        parts.push(`${countLastWeek} in last 7 days`)
+        count -= countLastWeek
+      } else if (countToday) {
+        parts.push(`${countToday} today`)
         count -= countToday
       } else if (countYesterday) {
-        parts.push(`+ ${countYesterday} yesterday`)
+        parts.push(`${countYesterday} yesterday`)
         count -= countYesterday
       }
       if (count) {
-        parts.push(`+ ${count} QSOs`)
+        parts.push(`${count} QSOs`)
       }
 
-      return [parts.join(' ').replace(' 1 QSOs', ' 1 QSO'), 'info']
+      return [parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), 'info']
     }
     return []
-  }, [scoreInfo, callHistory])
+  }, [scoreInfo, callHistory, qso?.startOnMillis])
 
   return (
-    <>
-      <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call: qso?.their?.call, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 5 }}>
+    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call: qso?.their?.call, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6 }}>
 
-        <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
-          <View style={{ alignSelf: 'flex-start', flex: 0 }}>
-            {online ? (
-              <Icon
-                source={'account-outline'}
-                size={styles.oneSpace * 3}
-                color={styles.theme.colors[`${themeColor}ContainerVariant`]}
-              />
-            ) : (
-              <Icon
-                source={'cloud-off-outline'}
-                size={styles.oneSpace * 3}
-                color={styles.theme.colors[`${themeColor}ContainerVariant`]}
-              />
-            )}
-          </View>
-          <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch', paddingTop: styles.oneSpace * 0.3 }]}>
-            <View style={{ flexDirection: 'row' }}>
-              {flag && (
-                <Text style={{ flex: 0, fontFamily: styles.normalFontFamily, lineHeight: styles.normalFontSize * 1.3 }} numberOfLines={1} ellipsizeMode={'tail'}>
-                  {flag}{' '}
-                </Text>
-
-              )}
-              {locationInfo && (
-                <Text style={{ flex: 1, fontFamily: locationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily, lineHeight: styles.normalFontSize * 1.3 }} numberOfLines={2} ellipsizeMode={'tail'}>
-                  {locationInfo}
-                </Text>
-              )}
-            </View>
-            {(stationInfo || historyMessage) && (
-              <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                {historyMessage && (
-                  <View style={[{ flex: 0 }, styles.history.pill, historyLevel && styles.history[historyLevel]]}>
-                    <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyMessage}</Text>
-                  </View>
-                )}
-                <View style={{ flex: 1 }}>
-                  {/* numberOfLines={2} ellipsizeMode={'tail'} */}
-                  <Ham2kMarkdown style={{ lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
-                </View>
-              </View>
-            )}
-          </View>
+      <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
+        <View style={{ alignSelf: 'flex-start', flex: 0 }}>
+          {online ? (
+            <Icon
+              source={'account-outline'}
+              size={styles.oneSpace * 3}
+              color={styles.theme.colors[`${themeColor}ContainerVariant`]}
+            />
+          ) : (
+            <Icon
+              source={'cloud-off-outline'}
+              size={styles.oneSpace * 3}
+              color={styles.theme.colors[`${themeColor}ContainerVariant`]}
+            />
+          )}
         </View>
-      </TouchableRipple>
-    </>
+        <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch', paddingTop: styles.oneSpace * 0.3 }]}>
+          <View style={{ flexDirection: 'row' }}>
+            {flag && (
+              <Text style={{ flex: 0, fontFamily: styles.normalFontFamily, lineHeight: styles.normalFontSize * 1.3 }} numberOfLines={1} ellipsizeMode={'tail'}>
+                {flag}{' '}
+              </Text>
+
+            )}
+            {locationInfo && (
+              <Text style={{ flex: 1, fontFamily: locationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily, lineHeight: styles.normalFontSize * 1.3 }} numberOfLines={2} ellipsizeMode={'tail'}>
+                {locationInfo}
+              </Text>
+            )}
+          </View>
+          {(stationInfo || historyMessage) && (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+              {historyMessage && (
+                <View style={[{ flex: 0 }, styles.history.pill, historyLevel && styles.history[historyLevel]]}>
+                  <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyMessage}</Text>
+                </View>
+              )}
+              <View style={{ flex: 1, minWidth: stationInfo.length * styles.oneSpace * 0.6 }}>
+                {/* numberOfLines={2} ellipsizeMode={'tail'} */}
+                <Ham2kMarkdown style={{ lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
+              </View>
+            </View>
+          )}
+        </View>
+      </View>
+    </TouchableRipple>
   )
 }
