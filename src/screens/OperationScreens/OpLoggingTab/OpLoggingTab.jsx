@@ -39,12 +39,9 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   useEffect(() => { // Reset logging state when operation changes
     if (loggingState?.operationUUID !== operation?.uuid) {
-      console.log('Operation changed')
       if (loggingState?.qso) {
-        console.log('-- suggesting ', loggingState.qso)
         setLoggingState({ operationUUID: operation?.uuid, selectedKey: 'suggested-qso', suggestedQSO: loggingState.qso })
       } else {
-        console.log('-- new qso')
         setLoggingState({ operationUUID: operation?.uuid, selectedKey: 'new-qso' })
       }
     }

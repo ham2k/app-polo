@@ -16,9 +16,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import { addNewOperation, selectOperationsList } from '../../store/operations'
-import OperationItem from './components/OperationItem'
 import { selectSettings } from '../../store/settings'
 import Notices from './components/Notices'
+import OperationItem from './components/OperationItem'
+import HomeTools from './components/HomeTools'
 
 function prepareStyles (baseStyles) {
   const DEBUG = false
@@ -149,12 +150,11 @@ export default function HomeScreen ({ navigation }) {
 
   const [isExtended, setIsExtended] = React.useState(true)
 
-  const handleScroll = ({ nativeEvent }) => {
-    const currentScrollPosition =
-      Math.floor(nativeEvent?.contentOffset?.y) ?? 0
+  const handleScroll = useCallback(({ nativeEvent }) => {
+    const currentScrollPosition = Math.floor(nativeEvent?.contentOffset?.y) ?? 0
 
     setIsExtended(currentScrollPosition <= styles.oneSpace * 8)
-  }
+  }, [styles.oneSpace])
 
   return (
     <ScreenContainer>
@@ -175,10 +175,15 @@ export default function HomeScreen ({ navigation }) {
           icon="plus"
           label="New Operation"
           extended={isExtended}
-          style={[{ right: Math.max(styles.oneSpace * 2, safeArea.right), bottom: Math.max(styles.oneSpace * 2, safeArea.bottom) }]}
+          style={[{
+            right: Math.max(styles.oneSpace * 2, safeArea.right),
+            bottom: Math.max(styles.oneSpace * 2, safeArea.bottom)
+          }]}
           onPress={handleNewOperation}
         />
       </View>
+
+      <HomeTools settings={settings} styles={styles} />
 
       <Notices />
     </ScreenContainer>

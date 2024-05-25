@@ -38,13 +38,10 @@ import { setVFO } from '../../../../store/station/stationSlice'
 const DEBUG = false
 
 export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs, settings, online, ourInfo }) {
-  console.log('=== LoggingPanel render ===============')
-
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
   const [qso, setQSO, updateQSO] = useMemo(() => {
     const qsoValue = loggingState?.qso
     const setQSOFunction = (newQSO, more) => {
-      console.log('setQSO', newQSO)
       setLoggingState({
         ...loggingState,
         qso: newQSO,
@@ -98,24 +95,14 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
     }
   }, [qso, operation, vfo, settings])
 
-  useEffect(() => console.log('effect loggingState?.selectedKey', loggingState?.selectedKey), [loggingState?.selectedKey])
-  useEffect(() => console.log('effect loggingState?.suggestedQSO'), [loggingState?.suggestedQSO])
-  useEffect(() => console.log('effect loggingState?.qsoQueue', (loggingState?.qsoQueue || []).map(q => q.key)), [loggingState?.qsoQueue])
-  useEffect(() => console.log('effect qso', { key: qso?.key, call: qso?.their?.call }), [qso])
-  useEffect(() => console.log('effect qsos'), [qsos])
-  useEffect(() => console.log('effect hasChanges', loggingState?.hasChanges), [loggingState?.hasChanges])
-
   useEffect(() => { // Manage the QSO Queue
     // When there is no current QSO, pop one from the queue or create a new one
     // If the currently selected QSO changes, push the current one to the queue and load the new one
     if (!loggingState?.selectedKey || (loggingState?.selectedKey === 'new-qso' && !qso)) {
-      console.log('Manage QSO queue - New QSO', { selectedKey: loggingState?.selectedKey, qsoKey: qso?.key })
       let nextQSO
       const otherStateChanges = {}
       if (loggingState?.qsoQueue?.length > 0) {
         nextQSO = loggingState.qsoQueue.pop() ?? prepareNewQSO(operation, qsos, vfo, settings)
-        console.log('-- queue', loggingState.qsoQueue.map(q => q.key))
-        console.log('-- popping qso from queue', nextQSO.key, nextQSO)
         otherStateChanges.qsoQueue = loggingState.qsoQueue
       } else {
         nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
@@ -127,7 +114,6 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
         }
       }, 10)
     } else if (((qso && qso?.key !== loggingState?.selectedKey) || !qso) && loggingState?.selectedKey !== 'new-qso') {
-      console.log('Manage QSO queue - Other QSO', { selectedKey: loggingState?.selectedKey, qsoKey: qso?.key })
       let nextQSO
       const otherStateChanges = {}
 
@@ -141,11 +127,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
       }
 
       if (qso?._isNew) {
-        console.log('-- adding qso to queue', qso.key, qso?.their?.call)
         otherStateChanges.qsoQueue = [...loggingState?.qsoQueue || [], qso]
       }
 
-      console.log('-- setting different QSO', nextQSO)
       setQSO(nextQSO, { otherStateChanges })
 
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
@@ -235,7 +219,6 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
         delete qso._willBeDeleted
         qso.deleted = true
         dispatch(addQSO({ uuid: operation.uuid, qso }))
-        console.log('updateLoggingState 3')
         setQSO(undefined, { otherStateChanges: { lastKey: qso.key } })
       } else if (isValidQSO && !qso.deleted) {
         await batch(async () => {
