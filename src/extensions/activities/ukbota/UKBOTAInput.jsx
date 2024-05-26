@@ -27,8 +27,8 @@ export default function UKBOTAInput (props) {
     text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix ?? 'B/G'}-${p1}`)
     text = text.replace(ADD_SLASHES_REGEX, (match, p1, p2) => `B/${p2}`)
     text = text.replace(ADD_DASHES_REGEX, (match, p1, p2) => `${p1}-${p2}`)
-    text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1}, ${p2}`)
-    text = text.replace(REPEAT_PREFIX_REGEX, (match, p1, p2, p3, p4) => `${p1}-${p2}, ${p1}-${p4}`)
+    text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1},${p2}`)
+    text = text.replace(REPEAT_PREFIX_REGEX, (match, p1, p2, p3, p4) => `${p1}-${p2},${p1}-${p4}`)
 
     event.nativeEvent.text = text
 

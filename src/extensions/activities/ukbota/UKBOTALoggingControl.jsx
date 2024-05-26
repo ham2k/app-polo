@@ -53,7 +53,7 @@ export function UKBOTALoggingControl (props) {
     <UKBOTAInput
       {...props}
       innerRef={ref}
-      style={[style, { minWidth: 16 * styles.oneSpace }]}
+      style={[style, { maxWidth: '95%', minWidth: styles.oneSpace * 30, width: Math.max(16, localValue?.length || 0) * styles.oneSpace * 1.3 }]}
       value={localValue}
       label="Their Bunker"
       defaultPrefix={defaultPrefix}

@@ -25,8 +25,8 @@ export default function POTAInput (props) {
 
     text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix ?? 'K'}-${p1}`)
     text = text.replace(ADD_DASHES_REGEX, (match, p1, p2) => `${p1}-${p2}`)
-    text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1}, ${p2}`)
-    text = text.replace(REPEAT_PREFIX_REGEX, (match, p1, p2, p3, p4) => `${p1}-${p2}, ${p1}-${p4}`)
+    text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1},${p2}`)
+    text = text.replace(REPEAT_PREFIX_REGEX, (match, p1, p2, p3, p4) => `${p1}-${p2},${p1}-${p4}`)
 
     event.nativeEvent.text = text
 
@@ -40,7 +40,7 @@ export default function POTAInput (props) {
       keyboard="dumb"
       uppercase={true}
       nospaces={true}
-      placeholder={`${defaultPrefix ?? 'K'}-…`}
+      placeholder={`${defaultPrefix ?? 'US'}-…`}
       textStyle={[textStyle, styles?.text?.callsign]}
       onChange={handleChange}
     />

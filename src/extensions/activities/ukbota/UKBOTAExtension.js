@@ -67,6 +67,7 @@ const HunterLoggingControl = {
     return parts.join(' ')
   },
   InputComponent: UKBOTALoggingControl,
+  inputWidthMultiplier: 30,
   optionType: 'optional'
 }
 
@@ -80,6 +81,7 @@ const ActivatorLoggingControl = {
     return parts.join(' ')
   },
   InputComponent: UKBOTALoggingControl,
+  inputWidthMultiplier: 30,
   optionType: 'mandatory'
 }
 

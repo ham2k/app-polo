@@ -54,7 +54,8 @@ export function POTALoggingControl (props) {
     <POTAInput
       {...props}
       innerRef={ref}
-      style={[style, { minWidth: 16 * styles.oneSpace }]}
+      style={[style, { maxWidth: '95%', minWidth: styles.oneSpace * 30, width: Math.max(16, localValue?.length || 0) * styles.oneSpace * 1.3 }]}
+      contentStyle={[]}
       value={localValue}
       label="Their POTA"
       defaultPrefix={defaultPrefix}
