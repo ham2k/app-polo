@@ -11,6 +11,7 @@ import { findRef, refsToString } from '../../../tools/refTools'
 import { Info } from './ELAInfo'
 import { elaFindOneByReference, registerELADataFile } from './ELADataFile'
 import { ELAActivityOptions } from './ELAActivityOptions'
+import { ELAPostSpot } from './ELAPostSpot'
 
 const Extension = {
   ...Info,
@@ -31,7 +32,8 @@ export default Extension
 const ActivityHook = {
   ...Info,
   MainExchangePanel: null,
-  Options: ELAActivityOptions
+  Options: ELAActivityOptions,
+  postSpot: ELAPostSpot
 }
 
 const ReferenceHandler = {
