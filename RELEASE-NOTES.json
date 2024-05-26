@@ -1,8 +1,9 @@
 {
-  "0.7.9-pre1": {
+  "0.7.9-pre2": {
     "changes": [
       "Logging info now persists between screen changes",
-      "Quick call lookup in Home Screen"
+      "Quick call lookup in Home Screen",
+      "When logging multiple POTA references, allow the field to grow"
     ]
   },
   "0.7.8": {
