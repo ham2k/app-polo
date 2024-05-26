@@ -71,6 +71,7 @@ const HunterLoggingControl = {
     return parts.join(' ')
   },
   InputComponent: POTALoggingControl,
+  inputWidthMultiplier: 30,
   optionType: 'optional'
 }
 
@@ -84,6 +85,7 @@ const ActivatorLoggingControl = {
     return parts.join(' ')
   },
   InputComponent: POTALoggingControl,
+  inputWidthMultiplier: 30,
   optionType: 'mandatory'
 }
 

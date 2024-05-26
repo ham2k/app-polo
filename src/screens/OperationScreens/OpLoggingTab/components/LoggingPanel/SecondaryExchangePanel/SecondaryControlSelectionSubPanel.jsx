@@ -75,11 +75,11 @@ export const SecondaryControlSelectionsubPanel = ({
 
       setSecondaryComponentStyle({ width: controlWidth })
       if (chipLayout.x + controlWidth < containerLayout.width) {
-        setSecondaryContainerStyle({ paddingLeft: chipLayout.x })
+        setSecondaryContainerStyle({ paddingLeft: chipLayout.x, paddingRight: styles.oneSpace })
       } else if (containerLayout.width - (chipLayout.x + chipLayout.width) - controlWidth > 0) {
-        setSecondaryContainerStyle({ paddingRight: containerLayout.width - (chipLayout.x + chipLayout.width), justifyContent: 'flex-end' })
+        setSecondaryContainerStyle({ paddingLeft: styles.oneSpace, paddingRight: containerLayout.width - (chipLayout.x + chipLayout.width), justifyContent: 'flex-end' })
       } else {
-        setSecondaryContainerStyle({ paddingRight: styles.oneSpace, justifyContent: 'flex-end' })
+        setSecondaryContainerStyle({ paddingLeft: styles.oneSpace, paddingRight: styles.oneSpace, justifyContent: 'flex-end' })
       }
     }
   }, [secondaryControl, chipLayout, containerLayout, currentSecondaryControl, styles])
