@@ -1,9 +1,10 @@
 {
-  "0.7.9-pre2": {
+  "0.7.9-pre3": {
     "changes": [
       "Logging info now persists between screen changes",
       "Quick call lookup in Home Screen",
       "When logging multiple POTA references, allow the field to grow",
+      "Include bearing alongisde distance for callsign info",
       "Allow entering incomplete callsigns or references that include a `?`",
       "Various fixes for Spotting control",
       "Various fixes for Call Notes",

@@ -16,23 +16,35 @@ export function distanceOnEarth (location1, location2, options = {}) {
     radius = 6371 // Radius of the Earth in km
   }
 
-  const lat1 = location1?.lat ?? location1?.latitude
-  const lon1 = location1?.lon ?? location1?.longitude
-  const lat2 = location2?.lat ?? location2?.latitude
-  const lon2 = location2?.lon ?? location2?.longitude
+  const lat1 = deg2rad(location1?.lat ?? location1?.latitude)
+  const lon1 = deg2rad(location1?.lon ?? location1?.longitude)
+  const lat2 = deg2rad(location2?.lat ?? location2?.latitude)
+  const lon2 = deg2rad(location2?.lon ?? location2?.longitude)
 
   if (!lat1 || !lon1 || !lat2 || !lon2) return null
 
-  const dLat = deg2rad(lat2 - lat1) // deg2rad below
-  const dLon = deg2rad(lon2 - lon1)
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2)
+  const sinLat = Math.sin((lat2 - lat1) / 2)
+  const sinLon = Math.sin((lon2 - lon1) / 2)
 
+  const a = sinLat * sinLat + Math.cos(lat1) * Math.cos(lat2) * sinLon * sinLon
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 
   return radius * c
+}
+
+export function bearingOnEarth (location1, location2) {
+  const lat1 = deg2rad(location1?.lat ?? location1?.latitude)
+  const lon1 = deg2rad(location1?.lon ?? location1?.longitude)
+  const lat2 = deg2rad(location2?.lat ?? location2?.latitude)
+  const lon2 = deg2rad(location2?.lon ?? location2?.longitude)
+
+  if (!lat1 || !lon1 || !lat2 || !lon2) return null
+
+  const y = Math.sin(lon2 - lon1) * Math.cos(lat2)
+  const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1)
+  const theta = Math.atan2(y, x)
+
+  return (theta * 180 / Math.PI + 360) % 360 // in degrees
 }
 
 function deg2rad (deg) {
@@ -76,4 +88,10 @@ export function distanceForQSON (qso, { units }) {
   const theirLocation = locationForQSONInfo(qso?.their)
   const ourLocation = locationForQSONInfo(qso?.our)
   return (theirLocation && ourLocation) ? distanceOnEarth(theirLocation, ourLocation, { units }) : null
+}
+
+export function bearingForQSON (qso) {
+  const theirLocation = locationForQSONInfo(qso?.their)
+  const ourLocation = locationForQSONInfo(qso?.our)
+  return (theirLocation && ourLocation) ? bearingOnEarth(theirLocation, ourLocation) : null
 }

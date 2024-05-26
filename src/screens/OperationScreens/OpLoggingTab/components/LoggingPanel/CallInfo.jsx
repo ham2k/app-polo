@@ -14,7 +14,7 @@ import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 
 import { findBestHook } from '../../../../../extensions/registry'
-import { distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
+import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 import { useQSOInfo } from '../../../OpInfoTab/components/useQSOInfo'
 import { startOfDayInMillis, yesterdayInMillis } from '../../../../../tools/timeTools'
@@ -91,8 +91,8 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess?.dxccCode)
 
-    const leftParts = []
-    const rightParts = []
+    let leftParts = []
+    let rightParts = []
 
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
@@ -107,7 +107,12 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
 
     if (operation.grid && guess?.grid) {
       const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
-      if (dist) leftParts.push(`${fmtDistance(dist, { units: settings.distanceUnits })} to`)
+      const bearing = bearingForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } })
+      const str = [
+        dist && fmtDistance(dist, { units: settings.distanceUnits }),
+        bearing && `(${Math.round(bearing)}°)`
+      ].filter(x => x).join(' ')
+      if (str) leftParts.push(`${str} to`)
     }
 
     if (entity && entity.entityPrefix !== ourInfo.entityPrefix) {
@@ -130,6 +135,11 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
       rightParts.push([qso?.their?.city, qso?.their?.state].filter(x => x).join(', '))
     } else if (!isOnTheGo && (guess?.city || guess?.state)) {
       rightParts.push([guess?.city, guess?.state].filter(x => x).join(', '))
+    }
+
+    if (entity && entity.entityPrefix === ourInfo.entityPrefix) {
+      leftParts = [...leftParts, ...rightParts]
+      rightParts = []
     }
 
     const locationText = [leftParts.filter(x => x).join(' '), rightParts.filter(x => x).join(' ')].filter(x => x).join(' – ')
