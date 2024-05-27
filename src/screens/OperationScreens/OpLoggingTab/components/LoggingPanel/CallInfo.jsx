@@ -265,7 +265,7 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
                   <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyMessage}</Text>
                 </View>
               )}
-              <View style={{ flex: 1, minWidth: stationInfo.length * styles.oneSpace * 0.6 }}>
+              <View style={{ flex: 1, minWidth: stationInfo.length * styles.oneSpace * 0.8 }}>
                 {/* numberOfLines={2} ellipsizeMode={'tail'} */}
                 <Ham2kMarkdown style={{ lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
               </View>
