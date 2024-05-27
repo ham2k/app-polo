@@ -41,7 +41,7 @@ export function refsToString (obj, type, options = {}) {
 }
 
 export function stringToRefs (type, str, options = {}) {
-  let refs = str.split(options.separator ?? /\s*,\s*/).map(r => r.trim()).filter(r => r)
+  let refs = str.split(options.separator ?? /\s*,\s*/).map(r => r && r.trim()).filter(r => r)
 
   if (options.regex) refs = refs.filter(r => r.match(options.regex) || r.indexOf('?') >= 0)
 
