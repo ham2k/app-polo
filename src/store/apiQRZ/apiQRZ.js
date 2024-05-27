@@ -141,7 +141,7 @@ export const apiQRZ = createApi({
                 city: capitalizeString(callsignInfo.addr2, { content: 'address', force: false }),
                 state: callsignInfo.state,
                 country: capitalizeString(callsignInfo.country, { force: false }),
-                postal: callsignInfo.zip,
+                postal: `${callsignInfo.zip}`,
                 county: capitalizeString(callsignInfo.county, { force: false }),
                 grid: callsignInfo.grid,
                 cqZone: callsignInfo.cqzone,

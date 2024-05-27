@@ -5,6 +5,7 @@
       "Quick call lookup in Home Screen",
       "When logging multiple POTA references, allow the field to grow",
       "Include bearing alongisde distance for callsign info",
+      "Fixed crash when looking up certain callsigns on QRZ.com",
       "Allow entering incomplete callsigns or references that include a `?`",
       "Various fixes for Spotting control",
       "Various fixes for Call Notes",

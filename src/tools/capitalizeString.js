@@ -54,9 +54,9 @@ const MODAL_CAPITALIZATION_EXCEPTIONS = {
 export function capitalizeString (str, options = {}) {
   let { content = 'text', force = true } = options
 
-  if (!str) return str
+  if (!str) return ''
 
-  str = str?.trim()
+  str = `${str}`.trim()
 
   // If we're not forcing capitalization, only do it if the string is already mixed case
   if (!force && !str.match(MIXED_CASE_REGEX)) {

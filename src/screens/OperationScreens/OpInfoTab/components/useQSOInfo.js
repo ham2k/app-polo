@@ -76,7 +76,12 @@ export const useQSOInfo = ({ qso, operation }) => {
   const [qrzCall, setQRZCall] = useState()
   const qrzLookup = useLookupCallQuery({ call: qrzCall === theirCall.baseCall ? qrzCall : theirCall.call }, { skip: skipQRZ })
   const qrz = useMemo(() => {
-    if (qrzLookup?.error && qrzLookup.error.indexOf('not found') >= 0) {
+    if (qrzLookup?.error && qrzLookup.error.indexOf && qrzLookup.error.indexOf('not found') >= 0) {
+      // If the call has a prefix or suffix, and the full call was not found, let's retry with the base call
+      if (qrzLookup?.originalArgs?.call !== theirCall.baseCall) {
+        setQRZCall(theirCall.baseCall)
+      }
+    } else if (qrzLookup?.error?.message && qrzLookup.error.message.indexOf('not found') >= 0) {
       // If the call has a prefix or suffix, and the full call was not found, let's retry with the base call
       if (qrzLookup?.originalArgs?.call !== theirCall.baseCall) {
         setQRZCall(theirCall.baseCall)
