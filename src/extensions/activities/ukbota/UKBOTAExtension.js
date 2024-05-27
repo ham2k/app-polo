@@ -162,8 +162,8 @@ const ReferenceHandler = {
   },
 
   adifHeaderComment: ({ qsos, operation, common }) => {
-    const b2bCount = qsos.reduce((count, qso) => count + filterRefs(qso, Info.huntingType).length, 0)
-    const stationsWorked = new Set(qsos.map(qso => qso.their?.call + qso.band)).size
+    const b2bCount = qsos.filter(qso => !qso.deleted).reduce((count, qso) => count + filterRefs(qso, Info.huntingType).length, 0)
+    const stationsWorked = new Set(qsos.filter(qso => !qso.deleted).map(qso => qso.their?.call + qso.band)).size
     return `Stations Worked: ${stationsWorked}\nB2B QSOs: ${b2bCount}\n`
   }
 }
