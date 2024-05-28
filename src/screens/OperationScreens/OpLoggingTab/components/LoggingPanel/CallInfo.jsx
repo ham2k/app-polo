@@ -28,7 +28,9 @@ const MESSAGES_FOR_SCORING = {
   'potaActivation.newDay': 'New POTA Day',
   'potaActivation.newRef': 'New Park',
   'sotaActivation.newDay': 'New SOTA Day',
-  'sotaActivation.newRef': 'New Summit'
+  'sotaActivation.newRef': 'New Summit',
+  'ukbotaActivation.newDay': 'New UKBOTA Day',
+  'ukbotaActivation.newRef': 'New Bunker'
 }
 
 function prepareStyles (baseStyles, themeColor) {

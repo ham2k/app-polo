@@ -15,8 +15,9 @@ export const POTAPostSpot = (operation, vfo, comments) => async (dispatch, getSt
   const call = operation.stationCall || state.settings.operatorCall
 
   const refs = filterRefs(operation, 'potaActivation')
-  const refComment = refs.length > 1 ? `${refs.length}-fer: ${refs.map((x) => (x.ref)).join(' ')}` : ''
-  for (const ref of refs) {
+  if (refs.length > 0) {
+    const ref = refs[0]
+    const refComment = refs.length > 1 ? `${refs.length}-fer: ${refs.map((x) => (x.ref)).join(' ')}` : ''
     try {
       const response = await fetch('https://api.pota.app/spot', {
         method: 'POST',

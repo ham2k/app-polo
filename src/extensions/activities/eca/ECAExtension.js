@@ -11,6 +11,7 @@ import { findRef, refsToString } from '../../../tools/refTools'
 import { Info } from './ECAInfo'
 import { ecaFindOneByReference, registerECADataFile } from './ECADataFile'
 import { ECAActivityOptions } from './ECAActivityOptions'
+import { ECAPostSpot } from './ECAPostSpot'
 
 const Extension = {
   ...Info,
@@ -31,7 +32,8 @@ export default Extension
 const ActivityHook = {
   ...Info,
   MainExchangePanel: null,
-  Options: ECAActivityOptions
+  Options: ECAActivityOptions,
+  postSpot: ECAPostSpot
 }
 
 const ReferenceHandler = {

@@ -19,6 +19,7 @@ import CustomExtension from './activities/custom/CustomExtension'
 import UKBOTAExtension from './activities/ukbota/UKBOTAExtension'
 import ECAExtension from './activities/eca/ECAExtension'
 import ELAExtension from './activities/ela/ELAExtension'
+import SiOTAExtentsion from './activities/siota/SiOTAExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
@@ -41,6 +42,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(UKBOTAExtension)
   registerExtension(ECAExtension)
   registerExtension(ELAExtension)
+  registerExtension(SiOTAExtentsion)
 
   registerExtension(RadioCommands)
   registerExtension(TimeCommands)

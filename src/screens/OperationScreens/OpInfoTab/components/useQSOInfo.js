@@ -31,60 +31,49 @@ export const useQSOInfo = ({ qso, operation }) => {
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const theirCall = useMemo(() => { // Parse the callsign
-    let call = qso?.their?.call ?? ''
-    if (call.indexOf(',') >= 0) {
-      const calls = call = call.split(',')
-      call = calls[calls.length - 1].trim()
-    }
+  // This is the master "debounce" for the rest of the `useQSOInfo` hook
+  const [theirCall, setTheirCall] = useState()
+  useEffect(() => { // Parse the callsign, after debouncing for 200ms.
+    const timeout = setTimeout(() => {
+      let call = qso?.their?.call ?? ''
+      if (call.endsWith('/')) call = call.slice(0, -1)
+      if (call.indexOf(',') >= 0) {
+        const calls = call = call.split(',')
+        call = calls[calls.length - 1].trim()
+      }
 
-    let newGuess = parseCallsign(call)
-    if (newGuess?.baseCall) {
-      annotateFromCountryFile(newGuess)
-    } else if (call) {
-      newGuess = annotateFromCountryFile({ prefix: call, baseCall: call })
-    }
-    return newGuess
+      let newGuess = parseCallsign(call)
+      if (newGuess?.baseCall) {
+        annotateFromCountryFile(newGuess)
+      } else if (call) {
+        newGuess = annotateFromCountryFile({ prefix: call, baseCall: call })
+      }
+      setTheirCall(newGuess)
+    }, 200)
+
+    return () => { console.log('Clear timeout', timeout, qso?.their?.call); clearTimeout(timeout) }
   }, [qso?.their?.call])
 
   const callNotes = useAllCallNotesFinder(theirCall?.baseCall)
 
   const [callHistory, setCallHistory] = useState()
   useEffect(() => { // Get Call History
-    const timeout = setTimeout(async () => {
-      const qsoHistory = await findQSOHistory(theirCall?.baseCall)
-
+    if (!theirCall?.baseCall) return
+    findQSOHistory(theirCall?.baseCall).then(qsoHistory => {
       setCallHistory(qsoHistory.filter(x => x && (x?.operation !== operation?.uuid || x.key !== qso?.key)))
-    }, 0)
-    return () => clearTimeout(timeout)
+    })
   }, [theirCall?.baseCall, qso?.key, operation?.uuid])
 
-  const [skipQRZ, setSkipQRZ] = useState(undefined) // Use `skip` to prevent calling the API on every keystroke
-  useEffect(() => {
-    if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2) {
-      if (skipQRZ === undefined) {
-        // If we start with a prefilled call, then call QRZ right away
-        setSkipQRZ(false)
-      } else {
-        // Wait a bit before calling QRZ on every keystroke
-        const timeout = setTimeout(() => { setSkipQRZ(false) }, 400)
-        return () => clearTimeout(timeout)
-      }
-    }
-  }, [theirCall?.baseCall, online, settings?.accounts?.qrz, skipQRZ])
-
-  const [qrzCall, setQRZCall] = useState()
-  const qrzLookup = useLookupCallQuery({ call: qrzCall === theirCall.baseCall ? qrzCall : theirCall.call }, { skip: skipQRZ })
+  // Get QRZ.com info
+  const skipQRZ = !(online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2)
+  const [altQRZCall, setAltQRZCall] = useState()
+  const qrzLookup = useLookupCallQuery({ call: altQRZCall === theirCall?.baseCall ? altQRZCall : theirCall?.call }, { skip: skipQRZ })
   const qrz = useMemo(() => {
-    if (qrzLookup?.error && qrzLookup.error.indexOf && qrzLookup.error.indexOf('not found') >= 0) {
+    const error = qrzLookup?.error?.message || qrzLookup?.error
+    if (error && error.indexOf && error.indexOf('not found') >= 0) {
       // If the call has a prefix or suffix, and the full call was not found, let's retry with the base call
-      if (qrzLookup?.originalArgs?.call !== theirCall.baseCall) {
-        setQRZCall(theirCall.baseCall)
-      }
-    } else if (qrzLookup?.error?.message && qrzLookup.error.message.indexOf('not found') >= 0) {
-      // If the call has a prefix or suffix, and the full call was not found, let's retry with the base call
-      if (qrzLookup?.originalArgs?.call !== theirCall.baseCall) {
-        setQRZCall(theirCall.baseCall)
+      if (qrzLookup?.originalArgs?.call && qrzLookup?.originalArgs?.call !== theirCall.baseCall) {
+        setAltQRZCall(theirCall.baseCall)
       }
     }
     return qrzLookup.currentData || {}
