@@ -171,7 +171,7 @@ const ReferenceHandler = {
 
     const { band, mode, key, startOnMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
-    const counts = refs.length
+    const counts = refs.length || 1
 
     const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
@@ -182,12 +182,12 @@ const ReferenceHandler = {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
       const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
-      const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref))).length !== 0
-      if (sameBand && sameMode && sameDay && sameRefs) {
+      const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
+      if (sameBand && sameMode && sameDay && (sameRefs || refs.length === 0)) {
         return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
-        if (!sameRefs) notices.push('newRef')
+        if (refs.length > 0 && !sameRefs) notices.push('newRef') // only if at new ref
         if (!sameDay) notices.push('newDay')
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
