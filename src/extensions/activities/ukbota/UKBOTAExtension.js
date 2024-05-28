@@ -7,6 +7,7 @@
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
+import { fmtDateZulu } from '../../../tools/timeFormats'
 
 import { Info } from './UKBOTAInfo'
 import { UKBOTAActivityOptions } from './UKBOTAActivityOptions'
@@ -163,7 +164,39 @@ const ReferenceHandler = {
 
   adifHeaderComment: ({ qsos, operation, common }) => {
     const b2bCount = qsos.reduce((count, qso) => count + filterRefs(qso, Info.huntingType).length, 0)
-    const stationsWorked = new Set(qsos.map(qso => qso.their?.call + qso.band)).size
+    const stationsWorked = new Set(qsos.map(qso => qso.their?.call + qso.band + fmtDateZulu(qso.startOnMillis ?? Date.now()))).size
     return `Stations Worked: ${stationsWorked}\nB2B QSOs: ${b2bCount}\n`
+  },
+
+  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+    if (!ref.ref) return {}
+
+    const { band, key, startOnMillis } = qso
+    const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
+    const points = refs.length
+
+    const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+
+    if (nearDupes.length === 0) {
+      return { counts: 1, points, type: Info.activationType }
+    } else {
+      const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
+      const sameBand = nearDupes.filter(q => q.band === band).length !== 0
+      const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
+      const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
+      if (sameBand && sameDay) {
+        if (points > 0 && !sameRefs) { // Doesn't count towards activation, but towards B2B award.
+          return { counts: 0, points, notices: ['newRef'], type: Info.activationType }
+        }
+        return { counts: 0, points: 0, alerts: ['duplicate'], type: Info.activationType }
+      } else {
+        const notices = []
+        if (refs.length > 0 && !sameRefs) notices.push('newRef')
+        if (!sameDay) notices.push('newDay')
+        if (!sameBand) notices.push('newBand')
+
+        return { counts: 1, points, notices, type: Info.activationType }
+      }
+    }
   }
 }
