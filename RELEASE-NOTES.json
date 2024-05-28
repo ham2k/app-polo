@@ -3,7 +3,8 @@
     "changes": [
       "Allow entering incomplete callsigns or references that include a `?`",
       "Various fixes for Spotting control",
-      "Various fixes for Call Notes"
+      "Various fixes for Call Notes",
+      "Add Silos on the Air (SiOTA) (contributed by M1SDH)"
     ]
   },
   "0.7.8": {

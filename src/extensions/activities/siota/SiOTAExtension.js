@@ -7,12 +7,11 @@
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
-import { fmtDateZulu } from '../../../tools/timeFormats'
 
-import { Info } from './UKBOTAInfo'
-import { UKBOTAActivityOptions } from './UKBOTAActivityOptions'
-import { ukbotaFindOneByReference, registerUKBOTADataFile } from './UKBOTADataFile'
-import { UKBOTALoggingControl } from './UKBOTALoggingControl'
+import { Info } from './SiOTAInfo'
+import { SiOTAActivityOptions } from './SiOTAActivityOptions'
+import { siotaFindOneByReference, registerSiOTADataFile } from './SiOTADataFile'
+import { SiOTALoggingControl } from './SiOTALoggingControl'
 
 const Extension = {
   ...Info,
@@ -22,11 +21,11 @@ const Extension = {
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 
-    registerUKBOTADataFile()
-    await dispatch(loadDataFile('ukbota-all-bunkers', { noticesInsteadOfFetch: true }))
+    registerSiOTADataFile()
+    await dispatch(loadDataFile('siota-all-silos', { noticesInsteadOfFetch: true }))
   },
   onDeactivationDispatch: () => async (dispatch) => {
-    await dispatch(removeDataFile('ukbota-all-bunkers'))
+    await dispatch(removeDataFile('siota-all-silos'))
   }
 }
 export default Extension
@@ -41,7 +40,7 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  Options: UKBOTAActivityOptions,
+  Options: SiOTAActivityOptions,
 
   includeControlForQSO: ({ qso, operation }) => {
     if (findRef(operation, Info.activationType)) return true
@@ -66,7 +65,7 @@ const HunterLoggingControl = {
     if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: UKBOTALoggingControl,
+  InputComponent: SiOTALoggingControl,
   optionType: 'optional'
 }
 
@@ -79,7 +78,7 @@ const ActivatorLoggingControl = {
     if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: UKBOTALoggingControl,
+  InputComponent: SiOTALoggingControl,
   optionType: 'mandatory'
 }
 
@@ -101,13 +100,14 @@ const ReferenceHandler = {
   decorateRefWithDispatch: (ref) => async () => {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', location: '' }
 
-    const data = await ukbotaFindOneByReference(ref.ref)
+    const data = await siotaFindOneByReference(ref.ref)
     let result
     if (data?.name) {
       result = {
         ...ref,
         name: data.name,
-        location: data.area,
+        location: data.location,
+        state: data.state,
         grid: data.grid
       }
     } else {
@@ -138,7 +138,7 @@ const ReferenceHandler = {
   adifFieldsForOneQSO: ({ qso, operation, common }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
 
-    if (huntingRefs) return ([{ SIG: 'UKBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }])
+    if (huntingRefs) return ([{ SIG: 'SIOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }])
     else return []
   },
 
@@ -148,31 +148,24 @@ const ReferenceHandler = {
     let activationADIF = []
     if (activationRef) {
       activationADIF = [
-        { MY_SIG: 'UKBOTA' }, { MY_SIG_INFO: activationRef.ref }
+        { MY_SIG: 'SIOTA' }, { MY_SIG_INFO: activationRef.ref }
       ]
     }
 
     if (huntingRefs.length > 0) {
       return [[
         ...activationADIF,
-        { SIG: 'UKBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }
+        { SIG: 'SIOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }
       ]]
     } else {
       return [activationADIF]
     }
   },
 
-  adifHeaderComment: ({ qsos, operation, common }) => {
-    const b2bCount = qsos.filter(qso => !qso.deleted).reduce((count, qso) => count + filterRefs(qso, Info.huntingType).length, 0)
-    const stationsWorked = new Set(qsos.filter(qso => !qso.deleted).map(qso => qso.their?.call + qso.band)).size
-
-    return `Stations Worked: ${stationsWorked}\nB2B QSOs: ${b2bCount}\n`
-  },
-
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
     if (!ref.ref) return {}
 
-    const { band, key, startOnMillis } = qso
+    const { band, mode, key, startOnMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const points = refs.length
 
@@ -181,19 +174,17 @@ const ReferenceHandler = {
     if (nearDupes.length === 0) {
       return { counts: 1, points, type: Info.activationType }
     } else {
-      const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
-      const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
+      const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
-      if (sameBand && sameDay) {
-        if (points > 0 && !sameRefs) { // Doesn't count towards activation, but towards B2B award.
+      if (sameBand && sameMode) {
+        if (points > 0 && !sameRefs) { // Doesn't count towards activation, but towards Silo 2 Silo award.
           return { counts: 0, points, notices: ['newRef'], type: Info.activationType }
         }
         return { counts: 0, points: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
-        if (refs.length > 0 && !sameRefs) notices.push('newRef')
-        if (!sameDay) notices.push('newDay')
+        if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
         return { counts: 1, points, notices, type: Info.activationType }
