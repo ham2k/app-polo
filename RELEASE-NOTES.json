@@ -4,6 +4,7 @@
       "Allow entering incomplete callsigns or references that include a `?`",
       "Various fixes for Spotting control",
       "Various fixes for Call Notes",
+      "Add ECA/ELA self-spotting to GMA cluster (contributed by M1SDH)",
       "Add Silos on the Air (SiOTA) (contributed by M1SDH)"
     ]
   },
