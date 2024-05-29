@@ -51,7 +51,7 @@ export const useQSOInfo = ({ qso, operation }) => {
       setTheirCall(newGuess)
     }, 200)
 
-    return () => { console.log('Clear timeout', timeout, qso?.their?.call); clearTimeout(timeout) }
+    return () => clearTimeout(timeout)
   }, [qso?.their?.call])
 
   const callNotes = useAllCallNotesFinder(theirCall?.baseCall)
