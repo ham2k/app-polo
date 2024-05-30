@@ -10,7 +10,8 @@
       "Various fixes for Spotting control",
       "Various fixes for Call Notes",
       "Add ECA/ELA self-spotting to GMA cluster (contributed by M1SDH)",
-      "Add Silos on the Air (SiOTA) (contributed by M1SDH)"
+      "Add Silos on the Air (SiOTA) (contributed by M1SDH)",
+      "Fixed decimal command for frequency going up 1MHz"
     ]
   },
   "0.7.8": {

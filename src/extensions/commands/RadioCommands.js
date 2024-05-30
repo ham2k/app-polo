@@ -41,9 +41,9 @@ const FrequencyCommandHook = {
   match: /^([\d.]{1,})$/,
   invokeCommand: (match, { qso, handleFieldChange }) => {
     if (match[1].startsWith('..') && qso.freq) {
-      handleFieldChange({ fieldId: 'freq', value: `${Math.round(qso.freq)}${match[1].substring(1)}` })
+      handleFieldChange({ fieldId: 'freq', value: `${Math.floor(qso.freq)}${match[1].substring(1)}` })
     } else if (match[1].startsWith('.') && qso.freq) {
-      handleFieldChange({ fieldId: 'freq', value: `${Math.round(qso.freq / 1000)}${match[1]}` })
+      handleFieldChange({ fieldId: 'freq', value: `${Math.floor(qso.freq / 1000)}${match[1]}` })
     } else {
       handleFieldChange({ fieldId: 'freq', value: match[1] })
     }
