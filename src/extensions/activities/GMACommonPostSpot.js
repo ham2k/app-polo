@@ -25,7 +25,7 @@ export const GMACommonPostSpot = (operation, vfo, comments, refs, url) => async 
   }
 
   const mainRef = refs[0].ref
-  const refComment = refs.length > 1 ? `also ${refs.map((x) => (x.ref)).join(' ')}` : ''
+  const refComment = refs.length > 1 ? `also ${refs.slice(1).map((x) => (x.ref)).join(' ')}` : ''
   try {
     const response = await fetch(url ?? 'https://www.cqgma.org/spotsmart2.php', {
       method: 'POST',
