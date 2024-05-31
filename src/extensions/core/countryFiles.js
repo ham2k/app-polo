@@ -42,7 +42,7 @@ export default Extension
 export function prepareCountryFilesData () {
   registerDataFile({
     key: 'country-files-bigcty',
-    name: 'Country Files - Big CTY',
+    name: 'Data: Country Files - Big CTY',
     description: 'Helps match callsigns to entities and zones',
     infoURL: 'https://www.country-files.com/bigcty',
     alwaysEnabled: true,
