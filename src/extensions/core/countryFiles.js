@@ -6,6 +6,7 @@
  */
 
 import RNFetchBlob from 'react-native-blob-util'
+import { Buffer } from 'buffer'
 
 import { analyzeFromCountryFile, parseCountryFile, setCountryFileData, useBuiltinCountryFile } from '@ham2k/lib-country-files'
 
@@ -53,7 +54,9 @@ export function prepareCountryFilesData () {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
       })
 
-      const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
+      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
+      const buffer = Buffer.from(data64, 'base64')
+      const body = buffer.toString('utf8')
 
       const data = parseCountryFile(body)
 

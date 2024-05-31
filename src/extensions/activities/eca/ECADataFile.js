@@ -8,6 +8,7 @@
 import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
+import { Buffer } from 'buffer'
 
 import packageJson from '../../../../package.json'
 import { fmtDateNice } from '../../../tools/timeFormats'
@@ -33,7 +34,9 @@ export function registerECADataFile () {
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
       })
-      const body = await RNFetchBlob.fs.readFile(response.data, 'utf8')
+      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
+      const buffer = Buffer.from(data64, 'base64')
+      const body = buffer.toString('utf8')
 
       const rawReferences = JSON.parse(body)?.[2]?.data ?? []
       let totalRefs = 0
