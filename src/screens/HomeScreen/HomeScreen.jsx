@@ -134,7 +134,7 @@ export default function HomeScreen ({ navigation }) {
   }, [navigation])
 
   const handleNewOperation = useCallback(async () => {
-    const operation = await dispatch(addNewOperation({ stationCall: settings.operatorCall, title: 'New Operation' }))
+    const operation = await dispatch(addNewOperation({ stationCall: settings.operatorCall }))
     navigation.navigate('Operation', { uuid: operation.uuid, operation, _isNew: true })
   }, [dispatch, settings, navigation])
 

@@ -26,8 +26,10 @@ import HeaderBar from './screens/components/HeaderBar'
 import StartScreen from './screens/StartScreen/StartScreen'
 import HomeScreen from './screens/HomeScreen/HomeScreen'
 import OperationScreen from './screens/OperationScreens/OperationScreen'
-import OperationAddActivityScreen from './screens/OperationScreens/OperationAddActivityScreen'
-import OperationActivityOptionsScreen from './screens/OperationScreens/OperationActivityOptionsScreen'
+import OperationAddActivityScreen from './screens/OperationScreens/OpSettingsTab/OperationAddActivityScreen'
+import OperationActivityOptionsScreen from './screens/OperationScreens/OpSettingsTab/OperationActivityOptionsScreen'
+import OperationStationInfoScreen from './screens/OperationScreens/OpSettingsTab/OperationStationInfoScreen'
+
 import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
 import { AppWrappedForDistribution, useConfigForDistribution } from './distro'
@@ -75,6 +77,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="OperationBadgeScreen"
             options={{ headerMode: 'none', headerShown: false }}
             component={OperationBadgeScreen}
+          />
+
+          <Stack.Screen name="OperationStationInfo"
+            options={{ title: 'Station Info', headerBackTitle: 'Operation' }}
+            component={OperationStationInfoScreen}
           />
 
           <Stack.Screen name="OperationAddActivity"

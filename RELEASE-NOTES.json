@@ -1,16 +1,17 @@
 {
-  "0.7.9-pre4": {
+  "0.7.9-pre5": {
     "changes": [
       "Logging info now persists between screen changes",
       "Quick call lookup in Home Screen",
-      "When logging multiple POTA references, allow the field to grow",
-      "Include bearing alongisde distance for callsign info",
-      "Fixed crash when looking up certain callsigns on QRZ.com",
-      "Allow entering incomplete callsigns or references that include a `?`",
-      "Various fixes for Spotting control",
-      "Various fixes for Call Notes",
       "Add ECA/ELA self-spotting to GMA cluster (contributed by M1SDH)",
-      "Add Silos on the Air (SiOTA) (contributed by M1SDH)"
+      "Add Silos on the Air (SiOTA) (contributed by M1SDH)",
+      "Include bearing alongisde distance for callsign info",
+      "Allow entering incomplete callsigns or references that include a `?`",
+      "When logging multiple POTA references, allow the field to grow",
+      "Refactored how callsign settings are entered",
+      "Fixed crash when looking up certain callsigns on QRZ.com",
+      "Various fixes for Spotting control",
+      "Various fixes for Call Notes"
     ]
   },
   "0.7.8": {

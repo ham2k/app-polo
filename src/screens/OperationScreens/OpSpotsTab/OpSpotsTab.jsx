@@ -201,7 +201,7 @@ export default function OpSpotsTab ({ navigation, route }) {
         }
       })
     } else {
-      navigation.navigate('QSOs', {
+      navigation.navigate('OpLog', {
         qso: {
           their: { call: spot.activator },
           freq: spot.frequency,

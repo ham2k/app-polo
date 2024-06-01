@@ -86,14 +86,14 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
   const [isValidOperation, operationError] = useMemo(() => { // Ensure we have all the required operation data
     const errors = []
     if (!qso?.band && !vfo?.band) errors.push('band')
-    if (!operation?.stationCall && !settings?.operatorCall) errors.push('callsign')
+    if (!operation?.stationCall) errors.push('callsign')
 
     if (errors.length > 0) {
       return [false, `Please enter **${joinAnd(errors)}** for a valid operation`]
     } else {
       return [true, undefined]
     }
-  }, [qso, operation, vfo, settings])
+  }, [qso, operation, vfo])
 
   useEffect(() => { // Manage the QSO Queue
     // When there is no current QSO, pop one from the queue or create a new one

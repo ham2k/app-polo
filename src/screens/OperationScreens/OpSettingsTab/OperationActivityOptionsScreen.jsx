@@ -10,17 +10,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
-import ScreenContainer from '../components/ScreenContainer'
-import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import { selectOperation, setOperationData } from '../../store/operations'
-
-import { replaceRefs } from '../../tools/refTools'
-import { ListSeparator } from '../components/ListComponents'
-import { findBestHook } from '../../extensions/registry'
-import { defaultReferenceHandlerFor } from '../../extensions/core/references'
-import { selectSettings } from '../../store/settings'
-import { Ham2kListItem } from '../components/Ham2kListItem'
-import { Ham2kListSection } from '../components/Ham2kListSection'
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { selectOperation, setOperationData } from '../../../store/operations'
+import { selectSettings } from '../../../store/settings'
+import { findBestHook } from '../../../extensions/registry'
+import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
+import { replaceRefs } from '../../../tools/refTools'
+import ScreenContainer from '../../components/ScreenContainer'
+import { ListSeparator } from '../../components/ListComponents'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -38,7 +37,7 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
   useEffect(() => { // Prepare the screen, set the activity title, etc
     if (activity && operation) {
       navigation.setOptions({
-        title: activity.name ?? `Activity "${activity.key}`
+        title: activity.name ?? `Activity "${activity.key}"`
       })
     }
   }, [navigation, activity, operation])
