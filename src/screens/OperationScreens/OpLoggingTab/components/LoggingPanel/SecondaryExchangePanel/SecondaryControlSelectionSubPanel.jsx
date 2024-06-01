@@ -61,6 +61,12 @@ export const SecondaryControlSelectionsubPanel = ({
     return [control, control?.InputComponent]
   }, [allControls, currentSecondaryControl])
 
+  useEffect(() => {
+    if (secondaryControl?.onlyNewQSOs && !qso._isNew) {
+      setCurrentSecondaryControl(undefined)
+    }
+  }, [qso._isNew, secondaryControl?.onlyNewQSOs, setCurrentSecondaryControl])
+
   const [secondaryContainerStyle, setSecondaryContainerStyle] = useState()
   const [secondaryComponentStyle, setSecondaryComponentStyle] = useState()
 
@@ -88,6 +94,7 @@ export const SecondaryControlSelectionsubPanel = ({
   const handleContainerToggle = useCallback((value) => {
     setChipContainerOpen(value)
   }, [])
+
   const [chipContainerStyle, chipScrollViewProps] = useMemo(() => {
     if (chipContainerOpen) {
       return [{ flexWrap: 'wrap' }, { horizontal: false }]
@@ -95,6 +102,7 @@ export const SecondaryControlSelectionsubPanel = ({
       return [{ flexWrap: 'nowrap', flex: 1 }, { horizontal: true }]
     }
   }, [chipContainerOpen])
+
   return (
     <>
       {SecondaryComponent && (
@@ -135,6 +143,7 @@ export const SecondaryControlSelectionsubPanel = ({
                 qso={qso} operation={operation} vfo={vfo} settings={settings}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={currentSecondaryControl === control.key}
+                disabled={control.onlyNewQSOs && !qso._isNew}
                 onChange={(value, measure) => handleChipSelect(control.key, value, measure)}
               />
             ))}

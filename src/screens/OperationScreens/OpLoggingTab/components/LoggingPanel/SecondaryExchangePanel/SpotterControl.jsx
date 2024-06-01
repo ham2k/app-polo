@@ -127,9 +127,10 @@ export const spotterControl = {
   order: 11,
   icon: 'hand-wave',
   label: ({ operation, qso }) => {
-    return 'Spotting'
+    return 'Self-Spotting'
   },
   InputComponent: SpotterControlInputs,
   inputWidthMultiplier: 40,
-  optionType: 'mandatory'
+  optionType: 'mandatory',
+  onlyNewQSOs: true
 }
