@@ -95,7 +95,7 @@ export default Extension
 
 export const createDataFileDefinition = (file) => ({
   key: `call-notes-${file.location}`,
-  name: file.name,
+  name: `Notes: ${file.name}`,
   icon: 'file-account-outline',
   description: `${file.builtin ? 'Built-in' : "User's"} Callsign Notes`,
   fetch: createCallNotesFetcher(file),

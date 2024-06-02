@@ -13,11 +13,11 @@ import { List } from 'react-native-paper'
 
 import Share from 'react-native-share'
 
+import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { generateExport, selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
-import { StationCallsignDialog } from './components/StationCallsignDialog'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { LocationDialog } from './components/LocationDialog'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
@@ -59,6 +59,18 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
+  const [stationInfo, stationInfoColor] = useMemo(() => {
+    const stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
+    const operatorCall = operation?.operatorCall ?? settings?.operatorCall ?? ''
+    if (stationCall && operatorCall && stationCall !== operatorCall) {
+      return [`\`${stationCall}\` (operated by \`${operatorCall}\`)`, undefined]
+    } else if (stationCall) {
+      return [`\`${stationCall}\``, undefined]
+    } else {
+      return ['NO STATION CALLSIGN DEFINED', styles.colors.error]
+    }
+  }, [operation?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors.error])
+
   const handleExport = useCallback((type) => {
     dispatch(generateExport(operation.uuid, type)).then((paths) => {
       if (paths?.length > 0) {
@@ -89,25 +101,22 @@ export default function OpSettingsTab ({ navigation, route }) {
   const activityHooks = useMemo(() => findHooks('activity'), [])
   const opSettingsHooks = useMemo(() => findHooks('opSetting'), [])
 
+  const readyToExport = useMemo(() => {
+    return (operation.stationCall ?? settings?.operatorCall) && operation.qsoCount > 0
+  }, [operation.qsoCount, operation.stationCall, settings?.operatorCall])
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <Ham2kListSection title={'Operation Details'}>
 
         <Ham2kListItem
-          title="Station Callsign"
-          description={operation.stationCall || `${settings.operatorCall} (operator)` }
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
-          onPress={() => setCurrentDialog('stationCall')}
+          title="Station Info"
+          description={<Ham2kMarkdown style={{ color: stationInfoColor }}>{stationInfo}</Ham2kMarkdown>}
+          titleStyle={{ color: stationInfoColor }}
+          descriptionStyle={{ color: stationInfoColor }}
+          left={() => <List.Icon color={stationInfoColor} style={{ marginLeft: styles.oneSpace * 2 }} icon="radio-tower" />}
+          onPress={() => navigation.navigate('OperationStationInfo', { operation: operation.uuid })}
         />
-        {currentDialog === 'stationCall' && (
-          <StationCallsignDialog
-            settings={settings}
-            operation={operation}
-            styles={styles}
-            visible={true}
-            onDialogDone={() => setCurrentDialog('')}
-          />
-        )}
 
         <Ham2kListItem
           title="Location"
@@ -157,9 +166,9 @@ export default function OpSettingsTab ({ navigation, route }) {
         <Ham2kListItem
           title="Export Log Files"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
-          onPress={() => handleExport()}
-          style={{ opacity: !(operation.qsoCount > 0) ? 0.5 : 1 }}
-          disabled={!(operation.qsoCount > 0)}
+          onPress={() => readyToExport && handleExport()}
+          style={{ opacity: readyToExport ? 1 : 0.5 }}
+          disabled={!readyToExport}
         />
         {settings.devMode && (
           <Ham2kListItem
@@ -167,9 +176,9 @@ export default function OpSettingsTab ({ navigation, route }) {
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
-            onPress={() => handleExport('qson')}
-            style={{ opacity: !(operation.qsoCount > 0) ? 0.5 : 1 }}
-            disabled={!(operation.qsoCount > 0)}
+            onPress={() => readyToExport && handleExport('qson')}
+            style={{ opacity: readyToExport ? 1 : 0.5 }}
+            disabled={!readyToExport}
           />
         )}
       </Ham2kListSection>

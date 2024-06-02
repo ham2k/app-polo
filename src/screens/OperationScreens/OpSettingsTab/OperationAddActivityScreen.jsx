@@ -9,16 +9,16 @@ import React, { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
-
-import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import ScreenContainer from '../components/ScreenContainer'
-import { selectOperation, setOperationData } from '../../store/operations'
-import { replaceRefs } from '../../tools/refTools'
 import { StackActions } from '@react-navigation/native'
-import { useFindHooks } from '../../extensions/registry'
-import { Ham2kListItem } from '../components/Ham2kListItem'
-import { Ham2kListSection } from '../components/Ham2kListSection'
-import { ListSeparator } from '../components/ListComponents'
+
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { selectOperation, setOperationData } from '../../../store/operations'
+import { replaceRefs } from '../../../tools/refTools'
+import { useFindHooks } from '../../../extensions/registry'
+import ScreenContainer from '../../components/ScreenContainer'
+import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { ListSeparator } from '../../components/ListComponents'
 
 export default function OperationAddActivityScreen ({ navigation, route }) {
   const styles = useThemedStyles()

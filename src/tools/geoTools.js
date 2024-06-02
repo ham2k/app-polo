@@ -93,5 +93,5 @@ export function distanceForQSON (qso, { units }) {
 export function bearingForQSON (qso) {
   const theirLocation = locationForQSONInfo(qso?.their)
   const ourLocation = locationForQSONInfo(qso?.our)
-  return (theirLocation && ourLocation) ? bearingOnEarth(theirLocation, ourLocation) : null
+  return (theirLocation && ourLocation) ? bearingOnEarth(ourLocation, theirLocation) : null
 }

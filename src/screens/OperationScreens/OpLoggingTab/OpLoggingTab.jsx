@@ -53,8 +53,7 @@ export default function OpLoggingTab ({ navigation, route }) {
     }
   }, [route?.params?.qso, setLoggingState, updateLoggingState])
 
-  // Set navigation title
-  useEffect(() => {
+  useEffect(() => { // Set navigation title
     if (styles?.smOrLarger) {
       navigation.setOptions({ title: `${activeQSOs.length} ${activeQSOs.length !== 1 ? 'QSOs' : 'QSO'}`, iconName: 'radio' })
     } else {

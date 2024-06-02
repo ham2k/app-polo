@@ -48,14 +48,14 @@ export default function OperationScreen (props) {
 
   const headerOptions = useMemo(() => {
     let options = {}
-    if (operation?.stationCall || settings?.operatorCall) {
-      options = { title: (operation?.stationCall || settings?.operatorCall) + ` ${operation?.title}`, subTitle: operation.subtitle }
+    if (operation?.stationCall) {
+      options = { title: (operation?.stationCall) + ` ${operation?.title}`, subTitle: operation.subtitle }
     } else {
       options = { title: 'New Operation' }
     }
     options.closeInsteadOfBack = true
     return options
-  }, [operation?.stationCall, operation.subtitle, operation?.title, settings?.operatorCall])
+  }, [operation?.stationCall, operation.subtitle, operation?.title])
 
   const dimensions = useWindowDimensions()
 
@@ -96,7 +96,7 @@ export default function OperationScreen (props) {
               <Tab.Navigator
                 id={'OperationScreen_TabNavigator'}
                 initialLayout={{ width: splitWidth, height: dimensions.height }}
-                initialRouteName={ operation?.qsoCount > 0 ? 'Info' : 'Settings' }
+                initialRouteName={ operation?.qsoCount > 0 ? 'OpInfo' : 'OpSettings' }
                 screenOptions={{
                   tabBarItemStyle: [{ width: (dimensions.width - splitWidth) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                   tabBarLabelStyle: styles.screenTabBarLabel,
@@ -109,21 +109,23 @@ export default function OperationScreen (props) {
                 }}
               >
                 <Tab.Screen
-                  name="Info"
+                  name="OpInfo"
                   options={{ title: 'Info' }}
                   component={OpInfoTab}
                   initialParams={{ uuid: operation.uuid, operation }}
                 />
 
                 <Tab.Screen
-                  name="Spots"
+                  name="OpSpots"
+                  options={{ title: 'Spots' }}
                   component={OpSpotsTab}
                   initialParams={{ uuid: operation.uuid, operation, splitView }}
                   screenOptions={{ lazy: true }}
                 />
 
                 <Tab.Screen
-                  name="Map"
+                  name="OpMap"
+                  options={{ title: 'Map' }}
                   component={OpMapTab}
                   initialParams={{ uuid: operation.uuid, operation, splitView }}
                   screenOptions={{ lazy: true }}
@@ -131,7 +133,7 @@ export default function OperationScreen (props) {
                 />
 
                 <Tab.Screen
-                  name="Settings"
+                  name="OpSettings"
                   options={{ title: (dimensions.width / 4) > (styles.oneSpace * 34) ? 'Operation' : 'Oper.' }}
                   component={OpSettingsTab}
                   initialParams={{ uuid: operation.uuid, operation, splitView }}
@@ -156,7 +158,7 @@ export default function OperationScreen (props) {
             <Tab.Navigator
               id={'OperationScreen_TabNavigator'}
               initialLayout={{ width: splitWidth, height: dimensions.height }}
-              initialRouteName={ operation?.qsoCount > 0 ? 'QSOs' : 'Settings' }
+              initialRouteName={ operation?.stationCall && operation?.qsoCount > 0 ? 'OpLog' : 'OpSettings' }
               screenOptions={{
                 tabBarItemStyle: [{ width: dimensions.width / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 4, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                 tabBarLabelStyle: styles.screenTabBarLabel,
@@ -169,27 +171,30 @@ export default function OperationScreen (props) {
               }}
             >
               <Tab.Screen
-                name="QSOs"
+                name="OpLog"
+                options={{ title: 'QSOs' }}
                 component={OpLoggingTab}
                 initialParams={{ uuid: operation.uuid, operation }}
               />
 
               <Tab.Screen
-                name="Spots"
+                name="OpSpots"
+                options={{ title: 'Spots' }}
                 component={OpSpotsTab}
                 initialParams={{ uuid: operation.uuid, operation }}
                 screenOptions={ { lazy: true }}
               />
 
               <Tab.Screen
-                name="Map"
+                name="OpMap"
+                options={{ title: 'Map' }}
                 component={OpMapTab}
                 initialParams={{ uuid: operation.uuid, operation }}
                 screenOptions={ { lazy: true }}
               />
 
               <Tab.Screen
-                name="Settings"
+                name="OpSettings"
                 options={{ title: (dimensions.width / 4) > (styles.oneSpace * 10.5) ? 'Operation' : 'Oper.' }}
                 component={OpSettingsTab}
                 initialParams={{ uuid: operation.uuid, operation }}

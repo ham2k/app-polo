@@ -40,7 +40,7 @@ const PositionedControlChip = (props) => {
 }
 
 export const SecondaryControlSelectionsubPanel = ({
-  qso, operation, vfo, settings, setQSO, updateQSO, handleFieldChange, onSubmitEditing, focusedRef, styles,
+  qso, operation, vfo, settings, navigation, setQSO, updateQSO, handleFieldChange, onSubmitEditing, focusedRef, styles,
   themeColor, currentSecondaryControl, setCurrentSecondaryControl,
   allControls, enabledControls
 }) => {
@@ -53,13 +53,25 @@ export const SecondaryControlSelectionsubPanel = ({
     } else {
       setChipLayout({})
     }
-    setCurrentSecondaryControl(key)
-  }, [setCurrentSecondaryControl])
+    console.log('chip ', key)
+    if (allControls[key]?.onSelect) {
+      console.log('-- on select')
+      allControls[key].onSelect({ qso, operation, settings, navigation })
+    } else {
+      setCurrentSecondaryControl(key)
+    }
+  }, [allControls, navigation, operation, qso, setCurrentSecondaryControl, settings])
 
   const [secondaryControl, SecondaryComponent] = useMemo(() => {
     const control = allControls[currentSecondaryControl]
     return [control, control?.InputComponent]
   }, [allControls, currentSecondaryControl])
+
+  useEffect(() => {
+    if (secondaryControl?.onlyNewQSOs && !qso?._isNew) {
+      setCurrentSecondaryControl(undefined)
+    }
+  }, [qso?._isNew, secondaryControl?.onlyNewQSOs, setCurrentSecondaryControl])
 
   const [secondaryContainerStyle, setSecondaryContainerStyle] = useState()
   const [secondaryComponentStyle, setSecondaryComponentStyle] = useState()
@@ -88,6 +100,7 @@ export const SecondaryControlSelectionsubPanel = ({
   const handleContainerToggle = useCallback((value) => {
     setChipContainerOpen(value)
   }, [])
+
   const [chipContainerStyle, chipScrollViewProps] = useMemo(() => {
     if (chipContainerOpen) {
       return [{ flexWrap: 'wrap' }, { horizontal: false }]
@@ -95,6 +108,7 @@ export const SecondaryControlSelectionsubPanel = ({
       return [{ flexWrap: 'nowrap', flex: 1 }, { horizontal: true }]
     }
   }, [chipContainerOpen])
+
   return (
     <>
       {SecondaryComponent && (
@@ -135,6 +149,7 @@ export const SecondaryControlSelectionsubPanel = ({
                 qso={qso} operation={operation} vfo={vfo} settings={settings}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={currentSecondaryControl === control.key}
+                disabled={control.onlyNewQSOs && !qso?._isNew}
                 onChange={(value, measure) => handleChipSelect(control.key, value, measure)}
               />
             ))}
