@@ -3,6 +3,7 @@
     "changes": [
       "Logging info now persists between screen changes",
       "Quick call lookup in Home Screen",
+      "Added a control to edit full QSO details in a separate screen",
       "Add ECA/ELA self-spotting to GMA cluster (contributed by M1SDH)",
       "Add Silos on the Air (SiOTA) (contributed by M1SDH)",
       "Include bearing alongisde distance for callsign info",

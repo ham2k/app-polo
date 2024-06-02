@@ -124,7 +124,7 @@ export function SpotterControlInputs (props) {
 
 export const spotterControl = {
   key: 'spotter',
-  order: 11,
+  order: 100,
   icon: 'hand-wave',
   label: ({ operation, qso }) => {
     return 'Self-Spotting'

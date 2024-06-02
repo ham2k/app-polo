@@ -15,6 +15,7 @@ import { SecondaryControlSelectionsubPanel } from './SecondaryExchangePanel/Seco
 import { findHooks } from '../../../../../extensions/registry'
 import { findRef } from '../../../../../tools/refTools'
 import { spotterControl } from './SecondaryExchangePanel/SpotterControl'
+import { editQSOControl } from '../../../EditQSOScreen'
 
 export const SecondaryExchangePanel = (props) => {
   const { currentSecondaryControl, operation, vfo, settings } = props
@@ -27,7 +28,8 @@ export const SecondaryExchangePanel = (props) => {
     const newControls = {
       time: timeControl,
       radio: radioControl,
-      notes: notesControl
+      notes: notesControl,
+      edit: editQSOControl
     }
     const activityHooks = findHooks('activity')
     if (activityHooks.filter((x) => (findRef(operation, x.activationType) && x.postSpot)).length > 0) {

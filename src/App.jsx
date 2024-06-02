@@ -21,19 +21,21 @@ import { usePrepareThemes } from './styles/tools/usePrepareThemes'
 
 import { persistor, store } from './store'
 import { selectSettings } from './store/settings'
+
+import { AppWrappedForDistribution, useConfigForDistribution } from './distro'
+
 import HeaderBar from './screens/components/HeaderBar'
 
 import StartScreen from './screens/StartScreen/StartScreen'
 import HomeScreen from './screens/HomeScreen/HomeScreen'
 import OperationScreen from './screens/OperationScreens/OperationScreen'
+import EditQSOScreen from './screens/OperationScreens/EditQSOScreen'
+import CallInfoScreen from './screens/CallInfoScreen/CallInfoScreen'
+import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
 import OperationAddActivityScreen from './screens/OperationScreens/OpSettingsTab/OperationAddActivityScreen'
 import OperationActivityOptionsScreen from './screens/OperationScreens/OpSettingsTab/OperationActivityOptionsScreen'
 import OperationStationInfoScreen from './screens/OperationScreens/OpSettingsTab/OperationStationInfoScreen'
-
-import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
-import { AppWrappedForDistribution, useConfigForDistribution } from './distro'
-import CallInfoScreen from './screens/CallInfoScreen/CallInfoScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -97,6 +99,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="CallInfo"
             options={{ title: 'Callsign Info' }}
             component={CallInfoScreen}
+          />
+
+          <Stack.Screen name="EditQSO"
+            options={{ title: 'Edit QSO' }}
+            component={EditQSOScreen}
           />
 
           <Stack.Screen name="Settings"

@@ -21,6 +21,7 @@ import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { setOperationData } from '../../../../store/operations'
 import { useUIState } from '../../../../store/ui'
 import { addQSO } from '../../../../store/qsos'
+import { setVFO } from '../../../../store/station/stationSlice'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { parseFreqInMHz } from '../../../../tools/frequencyFormats'
 import { logTimer } from '../../../../tools/perfTools'
@@ -33,11 +34,13 @@ import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { annotateQSO } from '../../OpInfoTab/components/useQSOInfo'
-import { setVFO } from '../../../../store/station/stationSlice'
+import { useNavigation } from '@react-navigation/native'
 
 const DEBUG = false
 
 export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs, settings, online, ourInfo }) {
+  const navigation = useNavigation()
+
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
   const [qso, setQSO, updateQSO] = useMemo(() => {
     const qsoValue = loggingState?.qso
@@ -379,6 +382,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
               operation={operation}
               vfo={vfo}
               settings={settings}
+              navigation={navigation}
               setQSO={setQSO}
               updateQSO={updateQSO}
               disabled={qso?.deleted || qso?._willBeDeleted}
