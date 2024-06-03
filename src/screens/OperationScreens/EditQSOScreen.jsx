@@ -47,7 +47,7 @@ const QSO_SECTIONS = [
       { key: 'city', label: 'City', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 } },
       { key: 'state', label: 'State', type: 'text', guess: true },
       { key: 'county', label: 'County', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 }, includeIf: ({ qso }) => qso?.their?.entityPrefix === 'K' || qso?.their?.guess?.entityPrefix === 'K' },
-      { key: 'entity', label: 'Entity', type: 'text', guess: true, disabled: true, minSpaces: 16, style: { flex: 1 }, getter: ({ qso }) => `${qso?.their?.entityName || qso?.their?.guess?.entityName} (${qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix})` },
+      { key: 'entity', label: 'Entity', type: 'text', guess: true, disabled: true, minSpaces: 16, style: { flex: 1 }, getter: ({ qso }) => qso?.their?.entityName ? `${qso?.their?.entityName || qso?.their?.guess?.entityName} (${qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix})` : undefined },
       { key: 'cqZone', label: 'CQ Zone', type: 'number', guess: true },
       { key: 'ituZone', label: 'ITU Zone', type: 'number', guess: true },
       { key: 'arrlSection', label: 'ARRL Section', type: 'text', minSpaces: 14, includeIf: ({ qso }) => qso?.their?.entityPrefix === 'K' || qso?.their?.guess?.entityPrefix === 'K' },
@@ -172,7 +172,7 @@ function getValueForField ({ qso, field, section }) {
   if (field.getter) {
     return field.getter({ qso, field, section, sectionData })
   } else if (field.key) {
-    return sectionData[field.key] ?? (field.guess ? sectionData?.guess[field.key] : undefined)
+    return sectionData[field.key] ?? (field.guess ? sectionData?.guess && sectionData?.guess[field.key] : undefined)
   } else {
     return undefined
   }
