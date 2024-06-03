@@ -63,7 +63,7 @@ export const selectAllOperations = (state) => {
 }
 
 export const selectOperation = createSelector(
-  [(state, uuid) => state?.operations?.info[uuid]] ?? {},
+  [(state, uuid) => state?.operations?.info[uuid] ?? {}],
   (info) => info
 )
 

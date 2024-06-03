@@ -55,7 +55,7 @@ export default function OperationScreen (props) {
     }
     options.closeInsteadOfBack = true
     return options
-  }, [operation?.stationCall, operation.subtitle, operation?.title])
+  }, [operation?.stationCall, operation?.subtitle, operation?.title])
 
   const dimensions = useWindowDimensions()
 
