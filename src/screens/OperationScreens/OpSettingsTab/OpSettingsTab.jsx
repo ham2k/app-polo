@@ -170,7 +170,9 @@ export default function OpSettingsTab ({ navigation, route }) {
           style={{ opacity: readyToExport ? 1 : 0.5 }}
           disabled={!readyToExport}
         />
-        {settings.devMode && (
+      </Ham2kListSection>
+      {settings.devMode && (
+        <Ham2kListSection title={'Developer Options'} titleStyle={{ color: styles.colors.devMode }}>
           <Ham2kListItem
             title="Export QSON file"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
@@ -180,8 +182,8 @@ export default function OpSettingsTab ({ navigation, route }) {
             style={{ opacity: readyToExport ? 1 : 0.5 }}
             disabled={!readyToExport}
           />
-        )}
-      </Ham2kListSection>
+        </Ham2kListSection>
+      )}
 
       <Ham2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
         <Ham2kListItem
