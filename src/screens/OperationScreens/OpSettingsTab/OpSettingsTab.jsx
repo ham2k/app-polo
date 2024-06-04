@@ -111,9 +111,8 @@ export default function OpSettingsTab ({ navigation, route }) {
 
         <Ham2kListItem
           title="Station Info"
-          description={<Ham2kMarkdown style={{ color: stationInfoColor }}>{stationInfo}</Ham2kMarkdown>}
+          description={() => <Ham2kMarkdown style={{ ...styles.list.description, color: stationInfoColor }} compact={true}>{stationInfo}</Ham2kMarkdown>}
           titleStyle={{ color: stationInfoColor }}
-          descriptionStyle={{ color: stationInfoColor }}
           left={() => <List.Icon color={stationInfoColor} style={{ marginLeft: styles.oneSpace * 2 }} icon="radio-tower" />}
           onPress={() => navigation.navigate('OperationStationInfo', { operation: operation.uuid })}
         />
