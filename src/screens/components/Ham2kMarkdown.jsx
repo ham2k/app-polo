@@ -11,13 +11,31 @@ import Markdown from 'react-native-markdown-display'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
-export function Ham2kMarkdown ({ children, styles, style }) {
+export function Ham2kMarkdown ({ children, styles, style, compact }) {
   const defaultStyles = useThemedStyles()
   const markdownStyle = useMemo(() => {
     const combinedStyle = { ...defaultStyles?.markdown, ...styles?.markdown }
     if (style) combinedStyle.body = { ...combinedStyle?.body, ...style }
+    if (compact) {
+      combinedStyle.paragraph = {
+        ...combinedStyle?.paragraph,
+        padding: styles?.markdown?.paragraph?.padding ?? 0,
+        margin: styles?.markdown?.paragraph?.margin ?? 0,
+        marginTop: styles?.markdown?.paragraph?.marginTop ?? 0,
+        marginBottom: styles?.markdown?.paragraph?.marginBottom ?? 0,
+        paddingTop: styles?.markdown?.paragraph?.paddingTopx ?? 0,
+        paddingBottom: styles?.markdown?.paragraph?.paddingBottom ?? 0
+      }
+      combinedStyle.body = {
+        ...combinedStyle?.body,
+        paddingTop: style.paddingTop ?? 0,
+        paddingBottom: style.paddingBottom ?? 0,
+        marginTop: style.marginTop ?? 0,
+        marginBottom: style.marginBottom ?? 0
+      }
+    }
     return combinedStyle
-  }, [styles, style, defaultStyles])
+  }, [styles, style, defaultStyles, compact])
 
   if (children.join) children = children.join('')
   if (children) return <Markdown style={markdownStyle}>{children}</Markdown>

@@ -63,13 +63,13 @@ export default function OpSettingsTab ({ navigation, route }) {
     const stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
     const operatorCall = operation?.operatorCall ?? settings?.operatorCall ?? ''
     if (stationCall && operatorCall && stationCall !== operatorCall) {
-      return [`\`${stationCall}\` (operated by \`${operatorCall}\`)`, undefined]
+      return [`\`${stationCall}\` (operated by \`${operatorCall}\`)`, styles.colors.onSurface]
     } else if (stationCall) {
-      return [`\`${stationCall}\``, undefined]
+      return [`\`${stationCall}\``, styles.colors.onSurface]
     } else {
       return ['NO STATION CALLSIGN DEFINED', styles.colors.error]
     }
-  }, [operation?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors.error])
+  }, [operation?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors])
 
   const handleExport = useCallback((type) => {
     dispatch(generateExport(operation.uuid, type)).then((paths) => {
@@ -111,9 +111,8 @@ export default function OpSettingsTab ({ navigation, route }) {
 
         <Ham2kListItem
           title="Station Info"
-          description={<Ham2kMarkdown style={{ color: stationInfoColor }}>{stationInfo}</Ham2kMarkdown>}
+          description={() => <Ham2kMarkdown style={{ ...styles.list.description, color: stationInfoColor }} compact={true}>{stationInfo}</Ham2kMarkdown>}
           titleStyle={{ color: stationInfoColor }}
-          descriptionStyle={{ color: stationInfoColor }}
           left={() => <List.Icon color={stationInfoColor} style={{ marginLeft: styles.oneSpace * 2 }} icon="radio-tower" />}
           onPress={() => navigation.navigate('OperationStationInfo', { operation: operation.uuid })}
         />
@@ -170,7 +169,9 @@ export default function OpSettingsTab ({ navigation, route }) {
           style={{ opacity: readyToExport ? 1 : 0.5 }}
           disabled={!readyToExport}
         />
-        {settings.devMode && (
+      </Ham2kListSection>
+      {settings.devMode && (
+        <Ham2kListSection title={'Developer Options'} titleStyle={{ color: styles.colors.devMode }}>
           <Ham2kListItem
             title="Export QSON file"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
@@ -180,8 +181,8 @@ export default function OpSettingsTab ({ navigation, route }) {
             style={{ opacity: readyToExport ? 1 : 0.5 }}
             disabled={!readyToExport}
           />
-        )}
-      </Ham2kListSection>
+        </Ham2kListSection>
+      )}
 
       <Ham2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
         <Ham2kListItem

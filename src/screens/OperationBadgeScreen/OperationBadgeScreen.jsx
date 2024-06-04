@@ -69,13 +69,13 @@ function prepareStyles (baseTheme, themeColor, deviceColorScheme) {
     },
     ham2k: {
       fontSize: 18 * baseTheme.fontScaleAdjustment,
-      color: deviceColorScheme === 'dark' ? '#CCC' : '#222',
+      color: baseTheme.isIOS && deviceColorScheme === 'dark' ? '#CCC' : '#222',
       fontFamily: baseTheme.normalFontFamily,
       lineHeight: 18 * baseTheme.fontScaleAdjustment
     },
     logger: {
       fontSize: 18 * baseTheme.fontScaleAdjustment,
-      color: deviceColorScheme === 'dark' ? '#CCC' : '#222',
+      color: baseTheme.isIOS && deviceColorScheme === 'dark' ? '#CCC' : '#222',
       fontFamily: baseTheme.boldTitleFontFamily,
       lineHeight: 18 * baseTheme.fontScaleAdjustment
     }

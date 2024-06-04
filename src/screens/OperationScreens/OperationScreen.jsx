@@ -49,7 +49,7 @@ export default function OperationScreen (props) {
   const headerOptions = useMemo(() => {
     let options = {}
     if (operation?.stationCall) {
-      options = { title: (operation?.stationCall) + ` ${operation?.title}`, subTitle: operation.subtitle }
+      options = { title: (operation?.stationCall) + ` ${operation?.title || 'General Operation'}`, subTitle: operation.subtitle }
     } else {
       options = { title: 'New Operation' }
     }

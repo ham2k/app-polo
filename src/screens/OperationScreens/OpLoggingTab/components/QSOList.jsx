@@ -199,7 +199,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, vfo }) {
             No QSOs yet!
           </Text>
           <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
-            Please confirm that you're operating on
+            Currently set to
           </Text>
           <Text style={{ flex: 1, marginTop: styles.oneSpace * 1, textAlign: 'center', fontWeight: 'bold' }}>
             {[vfo.freq ? fmtFreqInMHz(vfo.freq) + ' MHz' : vfo.band, vfo.mode].filter(x => x).join(' • ')}

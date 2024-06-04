@@ -23,7 +23,7 @@ export default function OperationItem ({ operation, settings, onPress, styles })
       <View style={styles.row}>
         <View style={styles.rowTop}>
           <View style={styles.rowTopLeft}>
-            <Ham2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCall || settings.operatorCall}`**{' '}{operation.title}</Ham2kMarkdown>
+            <Ham2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCall || settings.operatorCall}`**{' '}{operation.title || 'General Operation'}</Ham2kMarkdown>
           </View>
           <View style={styles.rowTopRight}>
             <View style={styles.countContainer}>
