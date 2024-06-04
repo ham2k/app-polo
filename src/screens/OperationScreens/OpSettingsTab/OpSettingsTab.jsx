@@ -63,13 +63,13 @@ export default function OpSettingsTab ({ navigation, route }) {
     const stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
     const operatorCall = operation?.operatorCall ?? settings?.operatorCall ?? ''
     if (stationCall && operatorCall && stationCall !== operatorCall) {
-      return [`\`${stationCall}\` (operated by \`${operatorCall}\`)`, undefined]
+      return [`\`${stationCall}\` (operated by \`${operatorCall}\`)`, styles.colors.onSurface]
     } else if (stationCall) {
-      return [`\`${stationCall}\``, undefined]
+      return [`\`${stationCall}\``, styles.colors.onSurface]
     } else {
       return ['NO STATION CALLSIGN DEFINED', styles.colors.error]
     }
-  }, [operation?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors.error])
+  }, [operation?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors])
 
   const handleExport = useCallback((type) => {
     dispatch(generateExport(operation.uuid, type)).then((paths) => {
