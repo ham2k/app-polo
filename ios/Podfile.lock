@@ -329,7 +329,7 @@ PODS:
     - react-native-config/App (= 1.5.1)
   - react-native-config/App (1.5.1):
     - React-Core
-  - react-native-document-picker (9.1.0):
+  - react-native-document-picker (9.2.0):
     - React-Core
   - react-native-geolocation (3.2.0):
     - RCT-Folly (= 2021.07.22.00)
@@ -719,7 +719,7 @@ SPEC CHECKSUMS:
   React-logger: cebf22b6cf43434e471dc561e5911b40ac01d289
   react-native-blob-util: d8fa1a7f726867907a8e43163fdd8b441d4489ea
   react-native-config: 86038147314e2e6d10ea9972022aa171e6b1d4d8
-  react-native-document-picker: b4f4a23b73f864ce17965b284c0757648993805b
+  react-native-document-picker: 2b3efb60622b7be891b8d0e0e5424632150e0c94
   react-native-geolocation: 79f48f6047efe1cb94c99b5d97415b510f97b948
   react-native-keep-awake: 5cfb49d1b2ee4321b2ffbc651e2d6d64d6f66772
   react-native-maps: 79610ffcd0ec2ca8e0cefb48aa8ae7c62a75d7cc

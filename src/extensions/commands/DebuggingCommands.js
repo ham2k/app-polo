@@ -56,10 +56,11 @@ const SeedCommandHook = {
         startOnMillis -= t
       }
       const calls = getAllCallsFromNotes().filter(x => x)
+      if (calls.length === 0) calls.concat(['KI2D', 'M1SDH', 'EI5IYB', 'M0LZN', 'WV3H', 'LB4FH', 'VK1AO'])
 
       while (count > 0) {
         const index = Math.floor(Math.random() * calls.length)
-        let call = calls[index]
+        let call = calls[index] || 'N0CALL'
 
         if (Math.random() > 0.20) { // On 80% of the calls, replace the digit with something random
           call = call.replace(/(?<=\w)(\d)/, (m, p1) => {
@@ -70,9 +71,9 @@ const SeedCommandHook = {
         calls.splice(index, 1)
 
         const oneQSO = {
-          mode: qso.mode ?? vfo.mode ?? 'SSB',
-          band: qso.band ?? vfo.band ?? '20m',
-          freq: qso.freq ?? vfo.freq,
+          mode: qso?.mode ?? vfo?.mode ?? 'SSB',
+          band: qso?.band ?? vfo?.band ?? '20m',
+          freq: qso?.freq ?? vfo?.freq,
           startOnMillis,
           startOn: new Date(startOnMillis).toISOString()
         }

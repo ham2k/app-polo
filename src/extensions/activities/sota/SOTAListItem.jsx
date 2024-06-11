@@ -34,15 +34,15 @@ export function SOTAListItem ({ activityRef, refData, operationRef, style, setti
         </View>
       }
       description={
-        <View style={{ flexDirection: 'row' }}>
-          <Text>
-            {reference?.ref ? [reference?.region, reference?.association].filter(x => x).join(' • ') : 'Unknown Summit Reference'}
-          </Text>
+        <View style={{ flexDirection: 'row', flex: 1 }}>
           {refData?.distance && (
             <Text>
-              {' - ' + fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
+              {fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away • '}
             </Text>
           )}
+          <Text style={{ flex: 1 }} ellipsizeMode={'tail'} numberOfLines={1}>
+            {reference?.ref ? [reference?.region, reference?.association].filter(x => x).join(' • ') : 'Unknown Summit Reference'}
+          </Text>
         </View>
       }
       onPress={onPress}
