@@ -67,7 +67,7 @@ export function registerSOTADataFile () {
                     grid: locationToGrid6(lat, lon),
                     altitude: Number.parseInt(row.AltM, 10),
                     region: row.RegionName,
-                    association: row.RegionName,
+                    association: row.AssociationName,
                     lat,
                     lon
                   }
