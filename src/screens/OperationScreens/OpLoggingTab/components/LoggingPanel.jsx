@@ -222,7 +222,14 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
         delete qso._willBeDeleted
         qso.deleted = true
         dispatch(addQSO({ uuid: operation.uuid, qso }))
-        setQSO(undefined, { otherStateChanges: { lastKey: qso.key } })
+        updateLoggingState({
+          qso: undefined,
+          selectedKey: undefined,
+          lastKey: qso.key,
+          originalQSO: undefined,
+          hasChanges: false,
+          undoInfo: undefined
+        })
       } else if (isValidQSO && !qso.deleted) {
         await batch(async () => {
           setCurrentSecondaryControl(undefined)
