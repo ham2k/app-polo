@@ -1,4 +1,10 @@
 {
+  "0.7.10-pre1": {
+    "changes": [
+      "Satellite QSOs",
+      "Fixed problem deleting multiple QSOs"
+    ]
+  },
   "0.7.9": {
     "changes": [
       "Logging info now persists between screen changes",

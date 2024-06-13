@@ -26,6 +26,7 @@ import TimeCommands from './commands/TimeCommands'
 import DevModeCommands from './commands/DevModeCommands'
 import DebuggingCommands from './commands/DebuggingCommands'
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
+import SatellitesExtension from './activities/satellites/SatellitesExtension'
 
 import WABExtension from './other/wab/WABExtension'
 
@@ -50,6 +51,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(DebuggingCommands)
 
   registerExtension(CallNotesExtension)
+  registerExtension(SatellitesExtension)
 
   registerExtension(WABExtension)
 

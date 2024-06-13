@@ -147,7 +147,7 @@ export const MainExchangePanel = ({
     fields = fields.concat(
       activity.fieldsForMainExchangePanel(
         { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, keyHandler, refStack, focusedRef }
-      )
+      ) || []
     )
   })
 

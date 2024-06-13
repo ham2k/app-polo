@@ -12,6 +12,8 @@ const LETTERS_ONLY_REGEX = /^[a-z]+$/
 const PERIOD_REGEX = /\./g
 
 const CAPTITALIZATION_EXCEPTIONS = {
+  am: 'AM',
+  cw: 'CW',
   iaru: 'IARU',
   ii: 'II',
   iii: 'III',
@@ -24,6 +26,9 @@ const CAPTITALIZATION_EXCEPTIONS = {
   ares: 'ARES',
   clublog: 'ClubLog',
   fcc: 'FCC',
+  fm: 'FM',
+  ft4: 'FT4',
+  ft8: 'FT8',
   flexradio: 'FlexRadio',
   gridtracker: 'GridTracker',
   ham2k: 'Ham2K',
@@ -36,6 +41,7 @@ const CAPTITALIZATION_EXCEPTIONS = {
   qsl: 'QSL',
   qso: 'QSO',
   qth: 'QTH',
+  rtty: 'RTTY',
   youtube: 'YouTube'
 }
 
