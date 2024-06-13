@@ -35,6 +35,7 @@ import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { annotateQSO } from '../../OpInfoTab/components/useQSOInfo'
 import { useNavigation } from '@react-navigation/native'
+import { findHooks } from '../../../../extensions/registry'
 
 const DEBUG = false
 
@@ -121,7 +122,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
       const otherStateChanges = {}
 
       if (loggingState?.selectedKey === 'suggested-qso') {
-        nextQSO = prepareSuggestedQSO(loggingState?.suggestedQSO)
+        nextQSO = prepareSuggestedQSO(loggingState?.suggestedQSO, qsos, operation, vfo, settings)
         otherStateChanges.suggestedQSO = undefined
       } else {
         nextQSO = qsos.find(q => q.key === loggingState?.selectedKey)
@@ -595,6 +596,14 @@ function prepareNewQSO (operation, qsos, vfo, settings) {
     qso.startOnMillis = operation._nextManualTime
     qso._manualTime = true
   }
+
+  const activityHooks = findHooks('activity')
+  activityHooks.forEach(activity => {
+    if (activity.prepareNewQSO) {
+      activity.prepareNewQSO({ qso, qsos, operation, vfo, settings })
+    }
+  })
+
   return qso
 }
 
@@ -605,7 +614,7 @@ function prepareExistingQSO (qso) {
   return clone
 }
 
-function prepareSuggestedQSO (qso) {
+function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   const clone = cloneDeep(qso || {})
   clone._isNew = true
   clone._isSuggested = true
@@ -613,5 +622,13 @@ function prepareSuggestedQSO (qso) {
   if (clone.freq) {
     clone.band = bandForFrequency(clone.freq)
   }
+
+  const activityHooks = findHooks('activity')
+  activityHooks.forEach(activity => {
+    if (activity.prepareNewQSO) {
+      activity.prepareNewQSO({ qso, qsos, operation, vfo, settings })
+    }
+  })
+
   return clone
 }

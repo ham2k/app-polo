@@ -53,9 +53,7 @@ export const SecondaryControlSelectionsubPanel = ({
     } else {
       setChipLayout({})
     }
-    console.log('chip ', key)
     if (allControls[key]?.onSelect) {
-      console.log('-- on select')
       allControls[key].onSelect({ qso, operation, settings, navigation })
     } else {
       setCurrentSecondaryControl(key)
