@@ -11,6 +11,9 @@ import { addQSO } from '../../store/qsos'
 import { annotateQSO } from '../../screens/OperationScreens/OpInfoTab/components/useQSOInfo'
 import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
 import { poissonRandom } from '../../tools/randomTools'
+import { setSystemFlag } from '../../store/system'
+import { DevSettings } from 'react-native'
+import { setSettings } from '../../store/settings'
 
 const Info = {
   key: 'commands-debug',
@@ -25,6 +28,7 @@ const Extension = {
   onActivation: ({ registerHook }) => {
     registerHook('command', { priority: 100, hook: ErrorCommandHook })
     registerHook('command', { priority: 100, hook: SeedCommandHook })
+    registerHook('command', { priority: 100, hook: OnboardCommandHook })
   }
 }
 
@@ -37,6 +41,18 @@ const ErrorCommandHook = {
   match: /3RR0R/i,
   invokeCommand: (match, { handleFieldChange }) => {
     throw new Error('Test error!')
+  }
+}
+
+const OnboardCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-error',
+  match: /ONBOARD/i,
+  invokeCommand: (match, { dispatch }) => {
+    dispatch(setSystemFlag('onboardedOn', undefined))
+    dispatch(setSettings({ operatorCall: undefined }))
+    setTimeout(() => DevSettings.reload(), 500)
   }
 }
 
