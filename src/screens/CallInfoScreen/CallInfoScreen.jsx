@@ -12,9 +12,9 @@ import { CallInfoPanel } from '../OperationScreens/OpInfoTab/components/CallInfo
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export default function CallInfoScreen ({ navigation, route }) {
-  const operation = route?.params?.operation
-  const qso = route?.params?.qso
   const call = route?.params?.call
+  const operation = route?.params?.operation ?? {}
+  const qso = route?.params?.qso ?? { their: { call } }
 
   const styles = useThemedStyles()
 

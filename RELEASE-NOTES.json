@@ -3,7 +3,8 @@
     "changes": [
       "Satellite QSOs",
       "Fixed problem deleting multiple QSOs",
-      "Ignore taps on your own spots"
+      "Ignore taps on your own spots",
+      "Changes to the Credits Screen"
     ]
   },
   "0.7.9": {

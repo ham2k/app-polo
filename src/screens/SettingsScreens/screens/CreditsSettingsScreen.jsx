@@ -46,8 +46,29 @@ export default function CreditsSettingsScreen ({ navigation }) {
         </Ham2kListSection>
 
         <Ham2kListSection title={'Team PoLo'}>
-          <Ham2kListItem title={'Steve Hiscocks • M1SDH'}
+          <Ham2kListItem
+            title={'Sebastián Delmont • KI2D'}
+            description={'Creator & Lead Developer'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'KI2D' })}
+          />
+          <Ham2kListItem
+            title={'Steve Hiscocks • M1SDH'}
+            description={'Developer'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'M1SDH' })}
+          />
+          <Ham2kListItem
+            title={'Ciemon Dunville • G0TRT'}
+            description={'Documentation'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'G0TRT' })}
+          />
+          <Ham2kListItem
+            title={'Alan McDonald • VK1AO'}
+            description={'Documentation'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'VK1AO' })}
           />
 
         </Ham2kListSection>
