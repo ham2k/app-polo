@@ -17,7 +17,7 @@ import { bandForFrequency } from '@ham2k/lib-operation-data'
 
 const Extension = {
   ...Info,
-  enabledByDefault: true,
+  enabledByDefault: false,
   category: 'other',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
