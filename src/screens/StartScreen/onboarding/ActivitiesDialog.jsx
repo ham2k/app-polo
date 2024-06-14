@@ -21,7 +21,8 @@ export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrev
     setValues({
       'extensions/pota': settings['extensions/pota'] ?? true,
       'extensions/sota': settings['extensions/sota'] ?? false,
-      'extensions/wwff': settings['extensions/wwff'] ?? false
+      'extensions/wwff': settings['extensions/wwff'] ?? false,
+      'extensions/satellites': settings['extensions/satellites'] ?? false
     })
   }, [settings])
 
@@ -55,6 +56,12 @@ export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrev
           <Switch value={values['extensions/wwff']} onValueChange={(value) => setValues({ ...values, 'extensions/wwff': value }) } />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, 'extensions/wwff': !values['extensions/wwff'] })}>
             Worldwide Fauna & Flora
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace, marginTop: styles.oneSpace }}>
+          <Switch value={values['extensions/satellites']} onValueChange={(value) => setValues({ ...values, 'extensions/satellites': value }) } />
+          <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, 'extensions/satellites': !values['extensions/satellites'] })}>
+            Satellites
           </Text>
         </View>
         <Text style={{ fontSize: styles.normalFontSize, marginTop: styles.oneSpace * 2, textAlign: 'center' }}>(You can find more options in the Settings, under 'App Features')</Text>
