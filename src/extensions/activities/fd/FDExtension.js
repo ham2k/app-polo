@@ -51,7 +51,7 @@ export default Extension
 const ActivityHook = {
   ...Info,
   Options: ActivityOptions,
-  fieldsForMainExchangePanel
+  mainExchangeForOperation
 }
 
 const ReferenceHandler = {
@@ -110,7 +110,7 @@ const ReferenceHandler = {
   }
 }
 
-function fieldsForMainExchangePanel (props) {
+function mainExchangeForOperation (props) {
   const { qso, updateQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: '', location: '' }

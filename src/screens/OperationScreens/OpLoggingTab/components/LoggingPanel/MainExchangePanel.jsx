@@ -48,8 +48,6 @@ export const MainExchangePanel = ({
         const next = (pos + 1) % refs.filter(r => r.current).length
         setTimeout(() => refs[next]?.current?.focus(), 0)
       }
-      // } else {
-      // console.log('key handler', event.nativeEvent)
     }
   }, [refs])
 
@@ -120,6 +118,21 @@ export const MainExchangePanel = ({
   if (settings.switchSentRcvd) rstFields.reverse()
   fields = fields.concat(rstFields)
 
+  findHooks('activity').filter(activity => activity.mainExchangeForOperation && findRef(operation, activity.key)).forEach(activity => {
+    fields = fields.concat(
+      activity.mainExchangeForOperation(
+        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, keyHandler, refStack, focusedRef }
+      ) || []
+    )
+  })
+  findHooks('activity').filter(activity => activity.mainExchangeForQSO).forEach(activity => {
+    fields = fields.concat(
+      activity.mainExchangeForQSO(
+        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, keyHandler, refStack, focusedRef }
+      ) || []
+    )
+  })
+
   if (settings.showStateField) {
     fields.push(
       <ThemedTextInput
@@ -143,16 +156,8 @@ export const MainExchangePanel = ({
     )
   }
 
-  findHooks('activity').filter(activity => findRef(operation, activity.key) && activity.fieldsForMainExchangePanel).forEach(activity => {
-    fields = fields.concat(
-      activity.fieldsForMainExchangePanel(
-        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, keyHandler, refStack, focusedRef }
-      ) || []
-    )
-  })
-
   if (fields.length > 4 && width / styles.oneSpace < 60) {
-    fields = [fields[0], ...fields.slice(3)]
+    fields = [fields[0], ...fields.slice(3)] // exclude the RST fields
   }
 
   return (
