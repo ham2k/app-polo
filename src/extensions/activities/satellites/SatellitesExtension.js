@@ -21,7 +21,7 @@ const Extension = {
   category: 'other',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
-    registerHook(`ref:${Info.type}`, { hook: ReferenceHandler })
+    registerHook(`ref:${Info.refType}`, { hook: ReferenceHandler })
 
     registerSatelliteData()
     dispatch(loadDataFile('satellite-data')) // Don't `await`, load in the background
@@ -31,13 +31,13 @@ export default Extension
 
 const ActivityHook = {
   ...Info,
-  fieldsForMainExchangePanel,
+  mainExchangeForQSO,
   loggingControls: ({ operation, settings }) => {
     return [LoggingControl]
   },
   prepareNewQSO: ({ operation, qso }) => {
     if (!qso._isSuggested && operation?.satellite) {
-      qso.refs = replaceRef(qso.refs, Info.type, { ref: operation.satellite })
+      qso.refs = replaceRef(qso.refs, Info.refType, { type: Info.refType, ref: operation.satellite })
     }
   }
 }
@@ -47,7 +47,7 @@ const LoggingControl = {
   order: 10,
   icon: Info.icon,
   label: ({ operation, qso }) => {
-    const ref = findRef(qso?.refs, Info.type)
+    const ref = findRef(qso?.refs, Info.refType)
     if (ref?.ref) {
       const [name] = ref.ref.split('/')
 
@@ -61,12 +61,11 @@ const LoggingControl = {
   optionType: 'optional'
 }
 
-function fieldsForMainExchangePanel (props) {
+function mainExchangeForQSO (props) {
   const { qso, updateQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
-
   const fields = []
 
-  if (findRef(qso, Info.type)) {
+  if (findRef(qso, Info.refType)) {
     fields.push(
       <GridInput
         key={`${Info.key}/grid`}
@@ -87,6 +86,7 @@ function fieldsForMainExchangePanel (props) {
       />
     )
   }
+  return fields
 }
 
 const ReferenceHandler = {
@@ -95,7 +95,7 @@ const ReferenceHandler = {
   iconForQSO: Info.icon,
 
   adifFieldsForOneQSO: ({ qso, operation, common }) => {
-    const ref = findRef(qso, Info.type)
+    const ref = findRef(qso, Info.refType)
     const [satName, satFreq, satMode] = ref?.ref?.split('/')
     const sat = SatelliteData.satelliteByName[satName]
     if (sat) {

@@ -10,5 +10,6 @@ export const Info = {
   icon: 'satellite-variant',
   name: 'Satellite Operations',
   shortName: 'Sats',
-  infoURL: 'https://www.amsat.org/'
+  infoURL: 'https://www.amsat.org/',
+  refType: 'satellite'
 }

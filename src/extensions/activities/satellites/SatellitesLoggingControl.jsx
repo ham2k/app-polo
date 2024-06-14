@@ -23,7 +23,7 @@ export function SatellitesLoggingControl (props) {
   const dispatch = useDispatch()
 
   const value = useMemo(() => {
-    const ref = findRef(qso?.refs, Info.type)
+    const ref = findRef(qso?.refs, Info.refType)
     return ref?.ref ?? operation?.satellite ?? ''
   }, [operation?.satellite, qso?.refs])
 
@@ -58,13 +58,13 @@ export function SatellitesLoggingControl (props) {
       const freq = uplink.lowerMHz ? uplink.lowerMHz * 1000 : vfo?.freq
       const mode = uplink.mode === 'fm' ? 'FM' : vfo?.mode
 
-      updateQSO({ freq, mode, refs: replaceRef(qso?.refs, Info.type, { ref: newValue }) })
+      updateQSO({ freq, mode, refs: replaceRef(qso?.refs, Info.refType, { type: Info.refType, ref: newValue }) })
       if (qso?._isNew) {
         dispatch(setOperationData({ uuid: operation.uuid, satellite: newValue }))
         dispatch(setVFO({ freq, mode }))
       }
     } else {
-      updateQSO({ refs: removeRef(qso?.refs, Info.type) })
+      updateQSO({ refs: removeRef(qso?.refs, Info.refType) })
       if (qso?._isNew) {
         dispatch(setOperationData({ uuid: operation.uuid, satellite: undefined }))
       }
