@@ -84,7 +84,7 @@ export default function OpSpotsTab ({ navigation, route }) {
           continue
         }
 
-        if (spot.activator === callInfo?.call) {
+        if (spot.activator === callInfo?.call || spot.activator === callInfo.baseCall) {
           flags._ourSpot = true
         }
 
@@ -190,6 +190,8 @@ export default function OpSpotsTab ({ navigation, route }) {
   }, [mode, bandSpots])
 
   const handlePress = useCallback(({ spot }) => {
+    if (spot._ourSpot) return
+
     if (route?.params?.splitView) {
       navigation.navigate('Operation', {
         ...route?.params,
