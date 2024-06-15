@@ -47,7 +47,7 @@ const ErrorCommandHook = {
 const OnboardCommandHook = {
   ...Info,
   extension: Extension,
-  key: 'commands-debug-error',
+  key: 'commands-debug-onboard',
   match: /ONBOARD/i,
   invokeCommand: (match, { dispatch }) => {
     dispatch(setSystemFlag('onboardedOn', undefined))
@@ -59,7 +59,7 @@ const OnboardCommandHook = {
 const SeedCommandHook = {
   ...Info,
   extension: Extension,
-  key: 'commands-debug-error',
+  key: 'commands-debug-seed',
   match: /^SEED(\d+)$/i,
   invokeCommand: (match, { handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
     setTimeout(async () => {
