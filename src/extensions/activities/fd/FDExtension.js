@@ -107,6 +107,9 @@ const ReferenceHandler = {
     parts.push((qsoRef?.class ?? '').padEnd(4, ' '))
     parts.push((qsoRef?.location ?? '').padEnd(3, ' '))
     return parts
+  },
+  relevantInfoForQSOItem: ({ qso, operation }) => {
+    return [qso.their.exchange]
   }
 }
 

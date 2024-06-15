@@ -97,6 +97,7 @@ export const MainExchangePanel = ({
     focusedRef,
     radioMode: qso?.mode ?? vfo?.mode ?? 'SSB'
   }
+
   const rstFields = [
     <RSTInput
       {...rstFieldProps}

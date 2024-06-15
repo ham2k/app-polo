@@ -5,13 +5,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { FlatList, View, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem, { guessItemHeight } from './QSOItem'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { useUIState } from '../../../../store/ui'
 import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
+import { findHooks } from '../../../../extensions/registry'
 
 function prepareStyles (themeStyles, isDeleted, width) {
   const extendedWidth = width / themeStyles.oneSpace > 80
@@ -134,7 +135,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
   }
 }
 
-const QSOList = function QSOList ({ style, ourInfo, settings, qsos, vfo }) {
+const QSOList = function QSOList ({ style, ourInfo, settings, qsos, operation, vfo }) {
   const { width } = useWindowDimensions()
 
   const [componentWidth, setComponentWidth] = useUIState()
@@ -165,6 +166,23 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, vfo }) {
     }, 50)
   }, [listRef, qsos, loggingState?.lastKey])
 
+  const refHandlers = useMemo(() => {
+    const types = {}
+    ;(operation?.refs || []).forEach((ref) => {
+      types[ref.type] = true
+    })
+    qsos.forEach((qso) => {
+      (qso.refs || []).forEach((ref) => {
+        types[ref.type] = true
+      })
+    })
+    let handlers = []
+    Object.keys(types).forEach(key => {
+      handlers = handlers.concat(findHooks(`ref:${key}`).filter(h => h.relevantInfoForQSOItem))
+    })
+    return handlers.filter(x => x)
+  }, [qsos, operation])
+
   const handlePress = useCallback(({ qso }) => {
     if (qso.key === loggingState?.selectedKey) {
       updateLoggingState({ selectedKey: undefined })
@@ -176,9 +194,18 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, vfo }) {
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
     return (
-      <QSOItem qso={qso} settings={settings} selected={qso.key === loggingState?.selectedKey} ourInfo={ourInfo} onPress={handlePress} styles={qso.deleted ? stylesForDeleted : styles} />
+      <QSOItem
+        qso={qso}
+        operation={operation}
+        settings={settings}
+        selected={qso.key === loggingState?.selectedKey}
+        ourInfo={ourInfo}
+        onPress={handlePress}
+        styles={qso.deleted ? stylesForDeleted : styles}
+        refHandlers={refHandlers}
+      />
     )
-  }, [styles, settings, stylesForDeleted, ourInfo, handlePress, loggingState?.selectedKey])
+  }, [operation, refHandlers, styles, settings, stylesForDeleted, ourInfo, handlePress, loggingState?.selectedKey])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(qsos[index], styles)

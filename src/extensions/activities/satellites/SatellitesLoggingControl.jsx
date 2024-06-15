@@ -24,8 +24,8 @@ export function SatellitesLoggingControl (props) {
 
   const value = useMemo(() => {
     const ref = findRef(qso?.refs, Info.refType)
-    return ref?.ref ?? operation?.satellite ?? ''
-  }, [operation?.satellite, qso?.refs])
+    return qso?._isNew ? ref?.ref ?? operation?.satellite : ref?.ref
+  }, [operation?.satellite, qso?.refs, qso?._isNew])
 
   const options = useMemo(() => {
     const sats = [{ label: 'None', value: '' }]
@@ -75,7 +75,7 @@ export function SatellitesLoggingControl (props) {
     <ThemedDropDown
       {...props}
       label="Satellite"
-      value={value}
+      value={value ?? ''}
       onChange={handleChange}
       dropDownContainerMaxHeight={styles.oneSpace * 19}
       fieldId={'satellite'}
