@@ -77,6 +77,20 @@ const ReferenceHandler = {
     if (activationRef) fields.push({ MY_SIG_INFO: activationRef.ref })
 
     return fields
+  },
+
+  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+    if (!ref.ref) return {}
+
+    const { key, startOnMillis } = qso
+
+    const dupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+    console.log('scoring', dupes)
+    if (dupes.length === 0) {
+      return { counts: 1, type: Info.activationType }
+    } else {
+      return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+    }
   }
 
 }
