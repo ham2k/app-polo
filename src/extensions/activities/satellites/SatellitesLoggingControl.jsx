@@ -34,13 +34,13 @@ export function SatellitesLoggingControl (props) {
       sat.uplinks.forEach((uplink, index) => {
         const downlink = sat.downlinks[index] && sat.downlinks[index]
         let label = sat.name
-        label += ` • ${capitalizeString(uplink.mode)}: `
-        label += [fmtFreqInMHz(uplink.lowerMHz), fmtFreqInMHz(downlink.upperMHz)].filter(x => x).join(' → ')
+        label += ` • ${capitalizeString(uplink?.mode)}: `
+        label += [fmtFreqInMHz(uplink?.lowerMHz), fmtFreqInMHz(downlink?.upperMHz)].filter(x => x).join(' → ')
         if (sat.aliases) label += ' (' + sat.aliases.join(', ') + ')'
 
         sats.push({
           label,
-          value: `${sat.name}/${uplink.lowerMHz}/${uplink.mode}`
+          value: `${sat.name}/${uplink?.lowerMHz}/${uplink?.mode}`
         })
       })
     })
