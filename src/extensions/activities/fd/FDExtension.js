@@ -13,6 +13,7 @@ import { findRef, replaceRef } from '../../../tools/refTools'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 import { ListRow } from '../../../screens/components/ListComponents'
 import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
+import { superModeForMode } from '@ham2k/lib-operation-data'
 
 /*
  NOTES:
@@ -110,6 +111,29 @@ const ReferenceHandler = {
   },
   relevantInfoForQSOItem: ({ qso, operation }) => {
     return [qso.their.exchange]
+  },
+
+  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+    const { band, mode, key, startOnMillis } = qso
+    const superMode = superModeForMode(mode)
+
+    const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+
+    if (nearDupes.length === 0) {
+      return { counts: 1, type: Info.activationType }
+    } else {
+      const sameBand = nearDupes.filter(q => q.band === band).length !== 0
+      const sameMode = nearDupes.filter(q => superModeForMode(q.mode) === superMode).length !== 0
+      if (sameBand && sameMode) {
+        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+      } else {
+        const notices = []
+        if (!sameMode) notices.push('newMode')
+        if (!sameBand) notices.push('newBand')
+
+        return { counts: 1, notices, type: Info.activationType }
+      }
+    }
   }
 }
 
@@ -122,6 +146,7 @@ function mainExchangeForOperation (props) {
 
   fields.push(
     <ThemedTextInput
+      {...props}
       key={`${Info.key}/class`}
       innerRef={refStack.shift()}
       style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
@@ -144,6 +169,7 @@ function mainExchangeForOperation (props) {
   )
   fields.push(
     <ThemedTextInput
+      {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}
       style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
