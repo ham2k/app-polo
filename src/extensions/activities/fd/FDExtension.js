@@ -14,6 +14,7 @@ import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 import { ListRow } from '../../../screens/components/ListComponents'
 import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 import { superModeForMode } from '@ham2k/lib-operation-data'
+import { FIELD_DAY_SECTIONS } from './FDSections'
 
 /*
  NOTES:
@@ -137,6 +138,8 @@ const ReferenceHandler = {
   }
 }
 
+const EXCHANGE_REGEX = /^(\d+)([ABCDEF])$/
+
 function mainExchangeForOperation (props) {
   const { qso, updateQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
 
@@ -158,6 +161,7 @@ function mainExchangeForOperation (props) {
       noSpaces={true}
       value={ref?.class || ''}
       disabled={disabled}
+      error={ref?.class?.length >= 2 && !EXCHANGE_REGEX.test(ref?.class)}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text }),
         their: { exchange: [text, ref?.location].join(' ') }
@@ -181,6 +185,7 @@ function mainExchangeForOperation (props) {
       noSpaces={true}
       value={ref?.location || ''}
       disabled={disabled}
+      error={ref?.location?.length >= 2 && !FIELD_DAY_SECTIONS[ref?.location]}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text }),
         their: { arrlSection: text, exchange: [ref?.class, text].join(' ') }

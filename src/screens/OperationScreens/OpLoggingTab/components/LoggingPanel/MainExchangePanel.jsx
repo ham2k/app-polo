@@ -32,7 +32,10 @@ export const MainExchangePanel = ({
   const ref4 = useRef()
   const ref5 = useRef()
   const ref6 = useRef()
-  const refs = useMemo(() => ([ref0, ref1, ref2, ref3, ref4, ref5, ref6]), [ref0, ref1, ref2, ref3, ref4, ref5, ref6])
+  const ref7 = useRef()
+  const ref8 = useRef()
+  const ref9 = useRef()
+  const refs = useMemo(() => ([ref0, ref1, ref2, ref3, ref4, ref5, ref6, ref7, ref8, ref9]), [ref0, ref1, ref2, ref3, ref4, ref5, ref6, ref7, ref8, ref9])
 
   // Make a copy since `refStack` will be used to distribute refs to each component and it gets modified
   const refStack = [...refs]
@@ -40,13 +43,15 @@ export const MainExchangePanel = ({
   // Switch between fields with the space key
   const keyHandler = useCallback((event) => {
     const { nativeEvent: { key, target } } = event
-
     if (key === ' ') {
-      const pos = refs.map(r => findNodeHandle(r.current)).indexOf(target)
+      const renderedRefs = refs.filter(x => x?.current)
+      const pos = renderedRefs.map(r => findNodeHandle(r.current)).indexOf(target)
 
       if (pos >= 0) {
-        const next = (pos + 1) % refs.filter(r => r.current).length
-        setTimeout(() => refs[next]?.current?.focus(), 0)
+        const next = (pos + 1) % renderedRefs.length
+        setTimeout(() => {
+          renderedRefs[next]?.current?.focus()
+        }, 0)
       }
     }
   }, [refs])
