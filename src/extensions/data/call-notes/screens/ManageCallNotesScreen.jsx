@@ -14,7 +14,7 @@ import { ScrollView } from 'react-native'
 import ScreenContainer from '../../../../screens/components/ScreenContainer'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { selectExtensionSettings, setExtensionSettings } from '../../../../store/settings'
-import { ActiveCallNotesFiles, BUILT_IN_NOTES, CallNotes, CallNotesFiles, Info, createDataFileDefinition } from '../CallNotesExtension'
+import { BUILT_IN_NOTES, CallNotesData, Info, createDataFileDefinition } from '../CallNotesExtension'
 import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
 import { registerDataFile, unRegisterDataFile } from '../../../../store/dataFiles'
 import { loadDataFile } from '../../../../store/dataFiles/actions/dataFileFS'
@@ -40,33 +40,33 @@ const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDo
     newFiles.splice(index, 1)
     dispatch(setExtensionSettings({ key: Info.key, customFiles: newFiles }))
 
-    const pos = CallNotesFiles.findIndex(f => f.location === originalDef.location)
+    const pos = CallNotesData.files.findIndex(f => f.location === originalDef.location)
     if (pos >= 0) {
-      CallNotesFiles.splice(pos, 1)
-      delete CallNotes[originalDef.location]
+      CallNotesData.files.splice(pos, 1)
+      delete CallNotesData.notes[originalDef.location]
       unRegisterDataFile(`call-notes-${originalDef.location}`)
-      ActiveCallNotesFiles[originalDef.location] = false
+      CallNotesData.activeFiles[originalDef.location] = false
     }
 
     onDialogDone && onDialogDone()
   }, [dispatch, extSettings.customFiles, index, onDialogDone, originalDef])
 
   const handleDone = useCallback(async () => {
-    const originallyEnabled = ActiveCallNotesFiles[originalDef.location]
+    const originallyEnabled = CallNotesData.activeFiles[originalDef.location]
     if (def.location !== originalDef.location) {
-      const pos = CallNotesFiles.findIndex(f => f.location === originalDef.location)
+      const pos = CallNotesData.files.findIndex(f => f.location === originalDef.location)
       if (pos >= 0) {
-        CallNotesFiles[pos] = def
+        CallNotesData.files[pos] = def
       } else {
-        CallNotesFiles.push(def)
+        CallNotesData.files.push(def)
       }
-      delete CallNotes[originalDef.location]
+      delete CallNotesData.notes[originalDef.location]
       unRegisterDataFile(`call-notes-${originalDef.location}`)
-      ActiveCallNotesFiles[originalDef.location] = false
+      CallNotesData.activeFiles[originalDef.location] = false
 
       registerDataFile(createDataFileDefinition(def))
       await dispatch(loadDataFile(`call-notes-${def.location}`))
-      ActiveCallNotesFiles[def.location] = originallyEnabled
+      CallNotesData.activeFiles[def.location] = originallyEnabled
     }
     onDialogDone && onDialogDone()
   }, [onDialogDone, def, dispatch, originalDef])
@@ -123,7 +123,7 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
 
   const handleToggle = useCallback((location, value) => {
     dispatch(setExtensionSettings({ key: Info.key, enabledLocations: { ...enabledLocations, [location]: value } }))
-    ActiveCallNotesFiles[location] = value
+    CallNotesData.activeFiles[location] = value
   }, [dispatch, enabledLocations])
 
   return (
