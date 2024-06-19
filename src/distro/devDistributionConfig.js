@@ -19,9 +19,9 @@ export function reportData (payload) {
   console.info('DATA', payload)
 }
 
-export function trackSettings ({ settings }) {
+export function trackSettings ({ settings, action, actionData }) {
   if (settings.consentAppData) {
-    reportData({ call: settings.operatorCall, settings: { ...settings, accounts: undefined } })
+    reportData({ call: settings.operatorCall, settings: { ...settings, accounts: undefined }, action, actionData })
   } else {
     reportData({
       call: `ANON-${hashCode(settings.operatorCall)}`,
@@ -30,9 +30,9 @@ export function trackSettings ({ settings }) {
   }
 }
 
-export function trackOperation ({ operation, settings }) {
+export function trackOperation ({ operation, settings, action, actionData }) {
   if (settings.consentAppData) {
-    reportData({ call: settings.operatorCall, operation })
+    reportData({ call: settings.operatorCall, operation: { ...operation, consentOpData: settings.consentOpData }, action, actionData })
   }
 }
 
