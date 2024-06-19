@@ -212,6 +212,7 @@ function mergeData ({ theirCall, qrz, pota, callHistory, callNotes }) {
 
     if (pota.reference?.startsWith('US-') || pota.reference?.startsWith('CA-')) {
       const potaState = (pota.locationDesc || '').split('-').pop().trim()
+      newGuess.city = undefined
       newGuess.state = potaState
     }
   }

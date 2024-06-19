@@ -83,15 +83,15 @@ export const radioControl = {
   order: 1,
   label: ({ qso, operation, vfo, settings }) => {
     const parts = []
-    if (qso?.freq ?? vfo.freq) {
-      parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo.freq)} MHz`)
-    } else if (qso?.band ?? operation.band) {
-      parts.push(`${qso?.band ?? operation.band}`)
+    if (qso?.freq ?? vfo?.freq) {
+      parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo?.freq)} MHz`)
+    } else if (qso?.band ?? operation?.band) {
+      parts.push(`${qso?.band ?? operation?.band}`)
     } else {
       parts.push('Band???')
     }
 
-    parts.push(`${qso?.mode ?? vfo.mode ?? 'SSB'}`)
+    parts.push(`${qso?.mode ?? vfo?.mode ?? 'SSB'}`)
     return parts.join(' • ')
   },
   InputComponent: RadioControlInputs,

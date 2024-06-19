@@ -1,8 +1,13 @@
 {
-  "0.7.10-pre1": {
+  "0.7.10-pre2": {
     "changes": [
       "Satellite QSOs",
-      "Fixed problem deleting multiple QSOs"
+      "Fixed problem deleting multiple QSOs",
+      "Ignore taps on your own spots",
+      "Changes to the Credits Screen",
+      "Scoring (dupes and such) for ELA and ECA",
+      "Scoring (dupes and such) for Field Day",
+      "Share operation activity"
     ]
   },
   "0.7.9": {

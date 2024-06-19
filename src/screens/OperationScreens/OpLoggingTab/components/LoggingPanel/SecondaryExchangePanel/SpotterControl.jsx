@@ -40,21 +40,21 @@ export function SpotterControlInputs (props) {
 
   useEffect(() => {
     if (vfo?.freq) {
-      if (vfo.freq !== operation.spottedFreq) {
+      if (vfo.freq !== operation?.spottedFreq) {
         setSpotterUI({
           message: `Spot at ${fmtFreqInMHz(vfo.freq)}`,
           disabled: false
         })
-        if (comments === undefined) setComments(operation.spottedFreq ? 'QSY' : 'QRV with Ham2K PoLo')
-      } else if (now - operation.spottedAt > (1000 * SECONDS_UNTIL_RESPOT)) {
+        if (comments === undefined) setComments(operation?.spottedFreq ? 'QSY' : 'QRV with Ham2K PoLo')
+      } else if (now - (operation?.spottedAt || 0) > (1000 * SECONDS_UNTIL_RESPOT)) {
         setSpotterUI({
           message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
           disabled: false
         })
         if (comments === undefined) setComments('QRT')
-      } else if (comments?.length > 0 && (now - operation.spottedAt < (1000 * 1))) {
+      } else if (comments?.length > 0 && (now - (operation?.spottedAt || 0) < (1000 * 1))) {
         setSpotterUI({
-          message: `Spotted ${fmtDateTimeRelative(operation.spottedAt)}`,
+          message: `Spotted ${fmtDateTimeRelative(operation?.spottedAt)}`,
           disabled: false
         })
         setComments(undefined)
@@ -65,7 +65,7 @@ export function SpotterControlInputs (props) {
         })
       } else {
         setSpotterUI({
-          message: `Spotted ${fmtDateTimeRelative(operation.spottedAt)}`,
+          message: `Spotted ${fmtDateTimeRelative(operation?.spottedAt)}`,
           disabled: false
         })
       }

@@ -24,6 +24,7 @@ import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
 import OpSpotsTab from './OpSpotsTab/OpSpotsTab'
 import OpMapTab from './OpMapTab/OpMapTab'
 import OpInfoTab from './OpInfoTab/OpInfoTab'
+import { trackOperation } from '../../distro'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -45,6 +46,14 @@ export default function OperationScreen (props) {
     dispatch(loadQSOs(route.params.operation.uuid))
     dispatch(loadOperation(route.params.operation.uuid))
   }, [route.params.operation.uuid, dispatch])
+
+  const [lastTracking, setLastTracking] = useState(0)
+  useEffect(() => {
+    if (Date.now() - lastTracking > 1000 * 60 * 0.5) {
+      trackOperation({ settings, operation })
+      setLastTracking(Date.now())
+    }
+  }, [settings, operation, lastTracking])
 
   const headerOptions = useMemo(() => {
     let options = {}

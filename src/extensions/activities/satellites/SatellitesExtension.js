@@ -62,23 +62,25 @@ const LoggingControl = {
 }
 
 function mainExchangeForQSO (props) {
-  const { qso, updateQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
+  const { qso, updateQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef, themeColor } = props
   const fields = []
 
   if (findRef(qso, Info.refType)) {
     fields.push(
       <GridInput
+        {...props}
+        themeColor={themeColor}
         key={`${Info.key}/grid`}
         innerRef={refStack.shift()}
         style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
         textStyle={styles.text.callsign}
         label={'Grid'}
-        placeholder={''}
+        placeholder={qso?.their?.guess?.grid || ''}
         mode={'flat'}
         value={qso?.their?.grid || ''}
         disabled={disabled}
         onChangeText={(text) => updateQSO({
-          their: { grid: text }
+          their: { grid: text, exchange: text }
         })}
         onSubmitEditing={onSubmitEditing}
         onKeyPress={keyHandler}
@@ -108,6 +110,12 @@ const ReferenceHandler = {
       fields.push({ SAT_NAME: satName })
       fields.push({ BAND_RX: bandForFrequency(downlink.upperMHz) })
       return fields
+    }
+  },
+  relevantInfoForQSOItem: ({ qso, operation }) => {
+    const ref = findRef(qso, Info.refType)
+    if (ref?.ref && qso.their.grid) {
+      return [qso.their.grid.substring(0, 4)]
     }
   }
 }

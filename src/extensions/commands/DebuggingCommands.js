@@ -11,6 +11,9 @@ import { addQSO } from '../../store/qsos'
 import { annotateQSO } from '../../screens/OperationScreens/OpInfoTab/components/useQSOInfo'
 import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
 import { poissonRandom } from '../../tools/randomTools'
+import { setSystemFlag } from '../../store/system'
+import { DevSettings } from 'react-native'
+import { setSettings } from '../../store/settings'
 
 const Info = {
   key: 'commands-debug',
@@ -25,6 +28,7 @@ const Extension = {
   onActivation: ({ registerHook }) => {
     registerHook('command', { priority: 100, hook: ErrorCommandHook })
     registerHook('command', { priority: 100, hook: SeedCommandHook })
+    registerHook('command', { priority: 100, hook: OnboardCommandHook })
   }
 }
 
@@ -40,10 +44,22 @@ const ErrorCommandHook = {
   }
 }
 
+const OnboardCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-onboard',
+  match: /ONBOARD/i,
+  invokeCommand: (match, { dispatch }) => {
+    dispatch(setSystemFlag('onboardedOn', undefined))
+    dispatch(setSettings({ operatorCall: undefined }))
+    setTimeout(() => DevSettings.reload(), 500)
+  }
+}
+
 const SeedCommandHook = {
   ...Info,
   extension: Extension,
-  key: 'commands-debug-error',
+  key: 'commands-debug-seed',
   match: /^SEED(\d+)$/i,
   invokeCommand: (match, { handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
     setTimeout(async () => {

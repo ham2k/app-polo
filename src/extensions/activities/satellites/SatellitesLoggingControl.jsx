@@ -24,8 +24,8 @@ export function SatellitesLoggingControl (props) {
 
   const value = useMemo(() => {
     const ref = findRef(qso?.refs, Info.refType)
-    return ref?.ref ?? operation?.satellite ?? ''
-  }, [operation?.satellite, qso?.refs])
+    return qso?._isNew ? ref?.ref ?? operation?.satellite : ref?.ref
+  }, [operation?.satellite, qso?.refs, qso?._isNew])
 
   const options = useMemo(() => {
     const sats = [{ label: 'None', value: '' }]
@@ -34,13 +34,13 @@ export function SatellitesLoggingControl (props) {
       sat.uplinks.forEach((uplink, index) => {
         const downlink = sat.downlinks[index] && sat.downlinks[index]
         let label = sat.name
-        label += ` • ${capitalizeString(uplink.mode)}: `
-        label += [fmtFreqInMHz(uplink.lowerMHz), fmtFreqInMHz(downlink.upperMHz)].filter(x => x).join(' → ')
+        label += ` • ${capitalizeString(uplink?.mode)}: `
+        label += [fmtFreqInMHz(uplink?.lowerMHz), fmtFreqInMHz(downlink?.upperMHz)].filter(x => x).join(' → ')
         if (sat.aliases) label += ' (' + sat.aliases.join(', ') + ')'
 
         sats.push({
           label,
-          value: `${sat.name}/${uplink.lowerMHz}/${uplink.mode}`
+          value: `${sat.name}/${uplink?.lowerMHz}/${uplink?.mode}`
         })
       })
     })
@@ -75,7 +75,7 @@ export function SatellitesLoggingControl (props) {
     <ThemedDropDown
       {...props}
       label="Satellite"
-      value={value}
+      value={value ?? ''}
       onChange={handleChange}
       dropDownContainerMaxHeight={styles.oneSpace * 19}
       fieldId={'satellite'}

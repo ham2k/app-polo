@@ -101,6 +101,11 @@ export const selectSettings = createSelector(
   }
 )
 
+export const selectRawSettings = createSelector(
+  [(state) => state?.settings],
+  (settings) => settings
+)
+
 export const selectExtensionSettings = createSelector(
   [
     (state, key) => state?.settings?.extensions,

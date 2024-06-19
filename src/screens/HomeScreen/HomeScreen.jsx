@@ -16,10 +16,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import { addNewOperation, selectOperationsList } from '../../store/operations'
-import { selectSettings } from '../../store/settings'
+import { selectRawSettings, selectSettings } from '../../store/settings'
 import Notices from './components/Notices'
 import OperationItem from './components/OperationItem'
 import HomeTools from './components/HomeTools'
+import { trackSettings } from '../../distro'
 
 function prepareStyles (baseStyles) {
   const DEBUG = false
@@ -118,6 +119,7 @@ export default function HomeScreen ({ navigation }) {
   const dispatch = useDispatch()
   const operations = useSelector(selectOperationsList)
   const settings = useSelector(selectSettings)
+  const rawSettings = useSelector(selectRawSettings)
 
   const safeArea = useSafeAreaInsets()
 
@@ -128,6 +130,12 @@ export default function HomeScreen ({ navigation }) {
       }, 500)
     }
   }, [settings, navigation])
+
+  useEffect(() => {
+    trackSettings({ settings: rawSettings })
+    // We don't want to track changes in settings, so no dependencies here
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     navigation.setOptions({ rightAction: 'cog', onRightActionPress: () => navigation.navigate('Settings') })

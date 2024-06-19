@@ -17,16 +17,11 @@ const INITIAL_STATE = {
 }
 
 const OPERATION_INITIAL_STATE = {
-  call: '',
-  operator: '',
-  station: '',
-  position: '',
-  grid: '',
+  operatorCall: '',
+  stationCall: '',
   band: undefined,
   freq: undefined,
-  mode: 'SSB',
-  power: undefined,
-  status: 'ready'
+  mode: 'SSB'
 }
 
 export const operationsSlice = createSlice({

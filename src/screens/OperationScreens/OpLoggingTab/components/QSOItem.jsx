@@ -21,7 +21,7 @@ export function guessItemHeight (qso, styles) {
   return styles.compactRow.height + styles.compactRow.borderBottomWidth
 }
 
-const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, settings }) {
+const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress, styles, selected, settings, refHandlers }) {
   const theirInfo = useMemo(() => {
     if (qso?.their?.entityPrefix) {
       return qso?.their
@@ -39,7 +39,19 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
       return [null, qso.band, null]
     }
   }, [qso])
-  // console.log('qso item', qso.key)
+
+  const extraInfo = useMemo(() => {
+    let info = []
+    try {
+      (refHandlers || []).forEach(handler => {
+        info = info.concat(handler.relevantInfoForQSOItem({ qso }))
+      })
+    } catch (e) {
+      console.error('Error in QSOItem', e)
+    }
+    return info.filter(x => x).join(' ')
+  }, [qso, refHandlers])
+
   return (
     <TouchableRipple onPress={() => onPress && onPress({ qso })} style={{ backgroundColor: selected ? styles.theme.colors.secondaryContainer : undefined }}>
       <View style={styles.compactRow}>
@@ -79,12 +91,12 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
             <Icon key={i} source={handler?.iconForQSO} size={styles.normalFontSize} style={styles.fields.icon} color={styles.fields.icon.color} />
           ))}
         </Text>
-        {qso?.their?.exchange ? (
+        {extraInfo ? (
           <>
             {styles.mdOrLarger && (
               <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
             )}
-            <Text style={styles.fields.exchange}>{qso?.their?.exchange}</Text>
+            <Text style={styles.fields.exchange}>{extraInfo}</Text>
           </>
         ) : (
           <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>

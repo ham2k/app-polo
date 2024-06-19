@@ -175,8 +175,8 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
   }, [qrz?.error, qso?.their?.name, guess?.name, callNotes])
 
   const scoreInfo = useMemo(() => {
-    const exportHandlers = (operation?.refs || []).map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler && x.handler.scoringForQSO)
-    const scores = exportHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, operation, ref })).filter(x => x)
+    const refHandlers = (operation?.refs || []).map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler && x.handler.scoringForQSO)
+    const scores = refHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, operation, ref })).filter(x => x)
     return scores
   }, [operation, qso, qsos])
 
