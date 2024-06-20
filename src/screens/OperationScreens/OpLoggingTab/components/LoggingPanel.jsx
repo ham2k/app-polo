@@ -21,7 +21,7 @@ import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { setOperationData } from '../../../../store/operations'
 import { useUIState } from '../../../../store/ui'
 import { addQSO } from '../../../../store/qsos'
-import { setVFO } from '../../../../store/station/stationSlice'
+import { setPwr, setVFO } from '../../../../store/station/stationSlice'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { parseFreqInMHz } from '../../../../tools/frequencyFormats'
 import { logTimer } from '../../../../tools/perfTools'
@@ -39,7 +39,7 @@ import { findHooks } from '../../../../extensions/registry'
 
 const DEBUG = false
 
-export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs, settings, online, ourInfo }) {
+export default function LoggingPanel ({ style, operation, vfo, pwr, qsos, activeQSOs, settings, online, ourInfo }) {
   const navigation = useNavigation()
 
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
@@ -106,10 +106,10 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
       let nextQSO
       const otherStateChanges = {}
       if (loggingState?.qsoQueue?.length > 0) {
-        nextQSO = loggingState.qsoQueue.pop() ?? prepareNewQSO(operation, qsos, vfo, settings)
+        nextQSO = loggingState.qsoQueue.pop() ?? prepareNewQSO(operation, qsos, vfo, settings, pwr)
         otherStateChanges.qsoQueue = loggingState.qsoQueue
       } else {
-        nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
+        nextQSO = prepareNewQSO(operation, qsos, vfo, settings, pwr)
       }
       setQSO(nextQSO, { otherStateChanges })
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
@@ -127,7 +127,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
       } else {
         nextQSO = qsos.find(q => q.key === loggingState?.selectedKey)
         if (nextQSO) nextQSO = prepareExistingQSO(nextQSO)
-        else nextQSO = prepareNewQSO(operation, qsos, settings)
+        else nextQSO = prepareNewQSO(operation, qsos, settings, pwr)
       }
 
       if (qso?._isNew) {
@@ -142,7 +142,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
         }
       }, 10)
     }
-  }, [loggingState?.selectedKey, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO])
+  }, [loggingState?.selectedKey, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, pwr])
 
   useEffect(() => { // Validate and analize the callsign
     let call = qso?.their?.call ?? ''
@@ -203,6 +203,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
       updateQSO({ startOnMillis: value, _manualTime: true })
     } else if (fieldId === 'state') {
       updateQSO({ their: { state: value } })
+    } else if (fieldId === 'txPwr') {
+      updateQSO({ txPwr: value })
+      if (qso?._isNew) dispatch(setPwr({ txPwr: value }))
     }
   }, [qso, updateQSO, dispatch])
 
@@ -590,11 +593,12 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-function prepareNewQSO (operation, qsos, vfo, settings) {
+function prepareNewQSO (operation, qsos, vfo, settings, pwr) {
   const qso = {
     band: vfo.band,
     freq: vfo.freq,
     mode: vfo.mode,
+    txPwr: pwr,
     _isNew: true,
     key: 'new-qso'
   }

@@ -18,7 +18,7 @@ import { selectQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
 import { useUIState } from '../../../store/ui'
 import { selectRuntimeOnline } from '../../../store/runtime'
-import { selectVFO } from '../../../store/station/stationSlice'
+import { selectPwr, selectVFO } from '../../../store/station/stationSlice'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
@@ -28,6 +28,7 @@ export default function OpLoggingTab ({ navigation, route }) {
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
   const activeQSOs = useMemo(() => qsos.filter(qso => !qso.deleted), [qsos])
   const vfo = useSelector(state => selectVFO(state))
+  const pwr = useSelector(state => selectPwr(state))
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const styles = useThemedStyles()
@@ -78,6 +79,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         qsos={qsos}
         activeQSOs={activeQSOs}
         vfo={vfo}
+        pwr={pwr}
         settings={settings}
         ourInfo={ourInfo}
         online={online}
