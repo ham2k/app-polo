@@ -16,7 +16,7 @@ export function reportError (error, ...extra) {
 
 export function reportData (payload) {
   payload.version = packageJson.version
-  console.info('DATA', payload)
+  // console.info('DATA', payload)
 }
 
 export function trackSettings ({ settings, action, actionData }) {
