@@ -10,6 +10,7 @@ import React, { useMemo } from 'react'
 import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
+import { powerControl } from './SecondaryExchangePanel/TxPowerControl'
 import { SecondaryControlManagementSubPanel } from './SecondaryExchangePanel/SecondaryControlManagementSubPanel'
 import { SecondaryControlSelectionsubPanel } from './SecondaryExchangePanel/SecondaryControlSelectionSubPanel'
 import { findHooks } from '../../../../../extensions/registry'
@@ -29,7 +30,8 @@ export const SecondaryExchangePanel = (props) => {
       time: timeControl,
       radio: radioControl,
       notes: notesControl,
-      edit: editQSOControl
+      edit: editQSOControl,
+      txpwr: powerControl
     }
     const activityHooks = findHooks('activity')
     if (activityHooks.filter((x) => (findRef(operation, x.activationType) && x.postSpot)).length > 0) {
