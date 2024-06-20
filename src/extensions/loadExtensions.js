@@ -25,6 +25,7 @@ import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
 import DevModeCommands from './commands/DevModeCommands'
 import DebuggingCommands from './commands/DebuggingCommands'
+import OperatorCommands from './commands/OperatorCommands'
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 import SatellitesExtension from './activities/satellites/SatellitesExtension'
 
@@ -49,6 +50,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(TimeCommands)
   registerExtension(DevModeCommands)
   registerExtension(DebuggingCommands)
+  registerExtension(OperatorCommands)
 
   registerExtension(CallNotesExtension)
   registerExtension(SatellitesExtension)
