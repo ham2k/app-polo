@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 
 import { fmtDateTimeZuluDynamic } from '../../../../tools/timeFormats'
@@ -52,8 +52,12 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
     return info.filter(x => x).join(' ')
   }, [qso, refHandlers])
 
+  const pressHandler = useCallback(() => {
+    onPress && onPress({ qso })
+  }, [qso, onPress])
+
   return (
-    <TouchableRipple onPress={() => onPress && onPress({ qso })} style={{ backgroundColor: selected ? styles.theme.colors.secondaryContainer : undefined }}>
+    <TouchableRipple onPress={pressHandler} style={selected ? styles.selectedRow : styles.unselectedRow}>
       <View style={styles.compactRow}>
         <Text style={styles.fields.number}>{qso._number}</Text>
         <Text style={styles.fields.time}>{fmtDateTimeZuluDynamic(qso.startOnMillis, { compact: !styles.extendedWidth })}</Text>

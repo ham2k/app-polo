@@ -264,6 +264,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
           if (qso.endOnMillis) qso.endOn = new Date(qso.endOnMillis).toISOString()
           qso.our = qso.our || {}
           qso.our.call = qso.our.call || ourInfo?.call
+          qso.our.operatorCall = qso.our.operatorCall || operation.operatorCall
           qso.our.sent = qso.our.sent || defaultRSTForMode(qso.mode)
 
           qso.their = qso.their || {}
