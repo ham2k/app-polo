@@ -1,12 +1,12 @@
 {
-  "0.7.10-pre2": {
+  "0.7.10": {
     "changes": [
+      "Fixes for Field Day",
       "Satellite QSOs",
       "Fixed problem deleting multiple QSOs",
       "Ignore taps on your own spots",
       "Changes to the Credits Screen",
       "Scoring (dupes and such) for ELA and ECA",
-      "Scoring (dupes and such) for Field Day",
       "Share operation activity"
     ]
   },
@@ -40,7 +40,10 @@
       "Add placeholder name in search when reference unknown (M1SDH)",
       "Use a screen instead of a dialog for showing callsign info",
       "Improvements for RST inputs",
-      "Keep track of VFO band and mode globally"
+      "Keep track of VFO band and mode globally",
+      "Allow entering incomplete callsigns or references that include a `?`",
+      "Various fixes for Spotting control",
+      "Various fixes for Call Notes"
     ]
   },
   "0.7.7": {
@@ -136,7 +139,9 @@
   "0.6.5": {
     "changes": [
       "Fixed ADIF export for General Operation",
-      "Fixed wiggle in radio controls"
+      "Fixed wiggle in radio controls",
+      "Manage separate update tracks",
+      "Onboarding!"
     ]
   },
   "0.6.4": {
