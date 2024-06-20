@@ -14,20 +14,20 @@ import { useUIState } from '../../../../store/ui'
 import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findHooks } from '../../../../extensions/registry'
 
-function prepareStyles (themeStyles, isDeleted, width) {
+function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
   const extendedWidth = width / themeStyles.oneSpace > 80
 
   const DEBUG = false
 
-  let commontStyles = {
+  let commonStyles = {
     fontSize: themeStyles.normalFontSize,
     lineHeight: themeStyles.normalFontSize * 1.4,
     borderWidth: DEBUG ? 1 : 0
   }
 
   if (isDeleted) {
-    commontStyles = {
-      ...commontStyles,
+    commonStyles = {
+      ...commonStyles,
       textDecorationLine: 'line-through',
       textDecorationColor: themeStyles.colors.onBackground,
       color: themeStyles.colors.onBackgroundLighter
@@ -35,12 +35,24 @@ function prepareStyles (themeStyles, isDeleted, width) {
     }
   }
 
+  if (isOtherOperator) {
+    commonStyles = {
+      ...commonStyles,
+      opacity: 0.7
+    }
+  }
+
   return {
     ...themeStyles,
     ...extendedWidth,
+    selectedRow: {
+      backgroundColor: themeStyles.colors.secondaryContainer
+    },
+    unselectedRow: {
+    },
     fields: {
       number: {
-        ...commontStyles,
+        ...commonStyles,
         ...themeStyles.text.numbers,
         flex: 0,
         marginLeft: 0,
@@ -48,7 +60,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         textAlign: 'right'
       },
       time: {
-        ...commontStyles,
+        ...commonStyles,
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
@@ -57,7 +69,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         textAlign: 'right'
       },
       freq: {
-        ...commontStyles,
+        ...commonStyles,
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         // fontFamily: 'Roboto',
@@ -68,25 +80,25 @@ function prepareStyles (themeStyles, isDeleted, width) {
         textAlign: 'right'
       },
       freqMHz: {
-        ...commontStyles,
+        ...commonStyles,
         lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         fontWeight: '600',
         textAlign: 'right'
       },
       freqKHz: {
-        ...commontStyles,
+        ...commonStyles,
         lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         textAlign: 'right'
       },
       freqHz: {
-        ...commontStyles,
+        ...commonStyles,
         lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         textAlign: 'right',
         fontWeight: '300',
         fontSize: themeStyles.normalFontSize * 0.7
       },
       call: {
-        ...commontStyles,
+        ...commonStyles,
         ...themeStyles.text.callsign,
         ...themeStyles.text.callsignBold,
         flex: 0,
@@ -95,13 +107,13 @@ function prepareStyles (themeStyles, isDeleted, width) {
         textAlign: 'left'
       },
       name: {
-        ...commontStyles,
+        ...commonStyles,
         flex: 1,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
         textAlign: 'left'
       },
       location: {
-        ...commontStyles,
+        ...commonStyles,
         lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         flex: 0,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
@@ -109,7 +121,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         textAlign: 'center'
       },
       signal: {
-        ...commontStyles,
+        ...commonStyles,
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
@@ -118,7 +130,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         textAlign: 'right'
       },
       exchange: {
-        ...commontStyles,
+        ...commonStyles,
         ...themeStyles.text.callsign,
         flex: 0,
         minWidth: themeStyles.oneSpace * 3,
@@ -126,7 +138,7 @@ function prepareStyles (themeStyles, isDeleted, width) {
         textAlign: 'right'
       },
       icon: {
-        ...commontStyles,
+        ...commonStyles,
         flex: 0,
         textAlign: 'right',
         maxWidth: themeStyles.oneSpace * 8
@@ -145,8 +157,9 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, operation, v
 
   const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
-  const styles = useThemedStyles(prepareStyles, false, componentWidth ?? width)
-  const stylesForDeleted = useThemedStyles(prepareStyles, true, componentWidth ?? width)
+  const styles = useThemedStyles(prepareStyles, false, false, componentWidth ?? width)
+  const stylesForDeleted = useThemedStyles(prepareStyles, true, false, componentWidth ?? width)
+  const stylesForOtherOperator = useThemedStyles(prepareStyles, false, true, componentWidth ?? width)
 
   const listRef = useRef()
 
@@ -193,6 +206,12 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, operation, v
 
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
+
+    let qsoStyles
+    if (qso.deleted) qsoStyles = stylesForDeleted
+    else if (qso.our?.operatorCall !== operation?.operatorCall) qsoStyles = stylesForOtherOperator
+    else qsoStyles = styles
+
     return (
       <QSOItem
         qso={qso}
@@ -201,11 +220,11 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, operation, v
         selected={qso.key === loggingState?.selectedKey}
         ourInfo={ourInfo}
         onPress={handlePress}
-        styles={qso.deleted ? stylesForDeleted : styles}
+        styles={qsoStyles}
         refHandlers={refHandlers}
       />
     )
-  }, [operation, refHandlers, styles, settings, stylesForDeleted, ourInfo, handlePress, loggingState?.selectedKey])
+  }, [stylesForDeleted, operation, stylesForOtherOperator, styles, settings, loggingState?.selectedKey, ourInfo, handlePress, refHandlers])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(qsos[index], styles)

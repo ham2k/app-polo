@@ -2,7 +2,8 @@
   "0.7.10.1": {
     "changes": [
       "More Field Day tweaks",
-      "Allow changing operator call mid-operation"
+      "Allow changing operator call mid-operation",
+      "Dim QSOs from other operators"
     ]
   },
   "0.7.10": {
