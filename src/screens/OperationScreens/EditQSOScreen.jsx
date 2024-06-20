@@ -42,6 +42,7 @@ const QSO_SECTIONS = [
     fields: [
       { key: 'call', label: 'Station Call', type: 'callsign', minSpaces: 14, style: { flex: 1 } },
       { key: 'sent', label: 'RST', type: 'rst' },
+      { key: 'exchange', label: 'Exchange', type: 'text' },
       { key: 'name', label: 'Name', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 } },
       // { key: 'qth', label: 'QTH', type: 'text', guess: true, minSpaces: 16, breakBefore: true },
       { key: 'city', label: 'City', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 } },
@@ -61,9 +62,10 @@ const QSO_SECTIONS = [
     key: 'our',
     data: 'our',
     fields: [
-      { key: 'stationCall', label: 'Station Call', type: 'callsign', minSpaces: 17, style: { flex: 1 } },
-      { key: 'operatorCall', label: 'Operator Call', type: 'callsign', minSpaces: 17, style: { flex: 1 } },
-      { key: 'sent', label: 'RST', type: 'rst' }
+      { key: 'call', label: 'Station Call', type: 'callsign', minSpaces: 11, style: { flex: 1 } },
+      { key: 'operatorCall', label: 'Operator Call', type: 'callsign', minSpaces: 11, style: { flex: 1 } },
+      { key: 'sent', label: 'RST', type: 'rst', minSpaces: 4, style: { flex: 1 } },
+      { key: 'exchange', label: 'Exchange', type: 'text', minSpaces: 8, style: { flex: 1 } }
       // { key: 'grid', label: 'Grid', type: 'grid' },
       // { key: 'latitude', label: 'Latitude', type: 'number' },
       // { key: 'longitude', label: 'Longitude', type: 'number' }

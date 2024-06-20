@@ -9,6 +9,7 @@ import { actions } from '../qsosSlice'
 import { actions as operationActions, saveOperation } from '../../operations'
 
 import { dbExecute, dbSelectAll } from '../../db/db'
+import { qsoKey } from '@ham2k/lib-qson-tools'
 
 // import debounce from 'debounce'
 // function debounceableDispatch (dispatch, action) {
@@ -81,6 +82,27 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
   setTimeout(() => {
     dispatch(saveOperation(operation))
   }, 0)
+}
+
+export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getState) => {
+  for (const qso of qsos) {
+    const originalKey = qso.key
+    await dbExecute(`
+      DELETE FROM qsos
+      WHERE operation = ? AND key = ?
+      `, [uuid, qso.key])
+
+    qso.our = { ...qso.our, ...data.our } // Batch Update only changes `our` data
+    qso.key = qsoKey(qso)
+
+    await dbExecute(`
+      INSERT INTO qsos
+      (operation, key, data, ourCall, theirCall, mode, band, startOnMillis) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `, [uuid, qso.key, JSON.stringify(qso), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startOnMillis])
+
+    dispatch(actions.addQSO({ uuid, qso: { ...qso, _originalKey: originalKey } }))
+  }
+  // Since the batch update does not change operation counts or times, no need to do anything else here
 }
 
 export const saveQSOsForOperation = (uuid) => async (dispatch, getState) => {

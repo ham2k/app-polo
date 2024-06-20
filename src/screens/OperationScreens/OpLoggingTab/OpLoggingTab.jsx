@@ -68,6 +68,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         qsos={qsos}
         vfo={vfo}
         settings={settings}
+        operation={operation}
         ourInfo={ourInfo}
       />
 

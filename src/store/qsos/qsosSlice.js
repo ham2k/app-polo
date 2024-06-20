@@ -89,8 +89,8 @@ export const selectQSOsStatus = (state) => {
 }
 
 export const selectQSOs = createSelector(
-  [(state, uuid) => state?.qsos?.qsos[uuid]],
-  (qsos) => qsos ?? []
+  (state, uuid) => (state?.qsos?.qsos && state?.qsos?.qsos[uuid]) || [],
+  (qsos) => qsos
 )
 
 export default qsosSlice.reducer

@@ -1,4 +1,10 @@
 {
+  "0.7.10.1": {
+    "changes": [
+      "More Field Day tweaks",
+      "Allow changing operator call mid-operation"
+    ]
+  },
   "0.7.10": {
     "changes": [
       "Fixes for Field Day",
