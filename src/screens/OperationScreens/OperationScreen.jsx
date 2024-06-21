@@ -60,7 +60,7 @@ export default function OperationScreen (props) {
     if (operation?.stationCall) {
       let call = operation?.stationCall
       if (operation.operatorCall && operation.operatorCall !== operation.stationCall) {
-        call = `${call} (${operation.operatorCall})`
+        call = `${call} (op ${operation.operatorCall})`
       }
       options = { title: `${call} ${operation?.title || 'General Operation'}`, subTitle: operation.subtitle }
     } else {
