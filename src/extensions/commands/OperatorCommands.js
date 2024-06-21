@@ -5,7 +5,6 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { qsoKey } from '@ham2k/lib-qson-tools'
 import { setOperationData } from '../../store/operations'
 
 const Info = {
