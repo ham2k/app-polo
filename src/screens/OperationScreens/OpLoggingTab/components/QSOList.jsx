@@ -133,9 +133,9 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
         ...commonStyles,
         ...themeStyles.text.callsign,
         flex: 0,
-        minWidth: themeStyles.oneSpace * 3,
+        minWidth: themeStyles.oneSpace * 8.5,
         marginLeft: themeStyles.oneSpace,
-        textAlign: 'right'
+        textAlign: 'left'
       },
       icon: {
         ...commonStyles,
