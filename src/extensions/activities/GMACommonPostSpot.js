@@ -17,8 +17,8 @@ export const GMACommonPostSpot = (operation, vfo, comments, refs, url) => async 
   const call = operation.stationCall || state.settings.operatorCall
   const baseCall = parseCallsign(call).baseCall
 
-  let mode = vfo.mode
-  if (!validModes.includes(vfo.mode)) {
+  let mode = vfo?.mode ?? 'SSB'
+  if (!validModes.includes(mode)) {
     if (ADIF_SUBMODES.SSB.includes(mode)) mode = 'SSB'
     else if (ADIF_SUBMODES.PSK.includes(mode)) mode = 'PSK'
     else mode = 'other'
