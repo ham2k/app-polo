@@ -118,7 +118,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
 
   const handleUpdateOperator = useCallback(() => {
     dispatch(batchUpdateQSOs({ uuid: operation.uuid, qsos, data: { our: { operatorCall: operation.operatorCall } } }))
-  }, [dispatch, operation.uuid, operation.stationCall, qsos])
+  }, [dispatch, operation.uuid, operation.operatorCall, qsos])
 
   return (
     <ScreenContainer>
