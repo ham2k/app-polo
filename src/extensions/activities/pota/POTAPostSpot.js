@@ -27,7 +27,7 @@ export const POTAPostSpot = (operation, vfo, comments) => async (dispatch, getSt
           spotter: call,
           frequency: vfo.freq,
           reference: ref.ref,
-          mode: vfo.mode,
+          mode: vfo?.mode ?? 'SSB',
           source: 'Ham2K Portable Logger',
           comments: [comments, refComment].filter((x) => (x)).join(' ')
         })
