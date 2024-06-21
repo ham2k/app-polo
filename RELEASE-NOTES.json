@@ -4,7 +4,8 @@
       "More Field Day tweaks",
       "Allow changing operator call mid-operation",
       "Dim QSOs from other operators",
-      "OP/{call} command to change operator call"
+      "OP/{call} command to change operator call",
+      "Fixed missing call info in split views"
     ]
   },
   "0.7.10": {
