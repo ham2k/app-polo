@@ -58,13 +58,17 @@ export default function OperationScreen (props) {
   const headerOptions = useMemo(() => {
     let options = {}
     if (operation?.stationCall) {
-      options = { title: (operation?.stationCall) + ` ${operation?.title || 'General Operation'}`, subTitle: operation.subtitle }
+      let call = operation?.stationCall
+      if (operation.operatorCall && operation.operatorCall !== operation.stationCall) {
+        call = `${call} (${operation.operatorCall})`
+      }
+      options = { title: `${call} ${operation?.title || 'General Operation'}`, subTitle: operation.subtitle }
     } else {
       options = { title: 'New Operation' }
     }
     options.closeInsteadOfBack = true
     return options
-  }, [operation?.stationCall, operation?.subtitle, operation?.title])
+  }, [operation.operatorCall, operation.stationCall, operation.subtitle, operation?.title])
 
   const dimensions = useWindowDimensions()
 
