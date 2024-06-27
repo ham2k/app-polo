@@ -12,14 +12,14 @@ import { View } from 'react-native'
 
 import { fmtDistance } from '../../../tools/geoTools'
 
-import { Info } from './UKBOTAInfo'
-import { ukbotaFindOneByReference } from './UKBOTADataFile'
+import { Info } from './WWBOTAInfo'
+import { wwbotaFindOneByReference } from './WWBOTADataFile'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
-export function UKBOTAListItem ({ activityRef, refData, allRefs, style, styles, settings, onPress, onAddReference, onRemoveReference, online }) {
+export function WWBOTAListItem ({ activityRef, refData, allRefs, style, styles, settings, onPress, onAddReference, onRemoveReference, online }) {
   const [reference, setReference] = useState()
   useEffect(() => {
-    ukbotaFindOneByReference(activityRef).then(setReference)
+    wwbotaFindOneByReference(activityRef).then(setReference)
   }, [activityRef])
 
   const isInRefs = useMemo(() => {

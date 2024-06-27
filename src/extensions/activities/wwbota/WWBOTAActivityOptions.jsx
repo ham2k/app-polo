@@ -17,11 +17,11 @@ import { ListRow } from '../../../screens/components/ListComponents'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
-import { Info } from './UKBOTAInfo'
-import { ukbotaFindAllByLocation, ukbotaFindAllByName, ukbotaFindOneByReference } from './UKBOTADataFile'
-import { UKBOTAListItem } from './UKBOTAListItem'
+import { Info } from './WWBOTAInfo'
+import { wwbotaFindAllByLocation, wwbotaFindAllByName, wwbotaFindOneByReference } from './WWBOTADataFile'
+import { WWBOTAListItem } from './WWBOTAListItem'
 
-export function UKBOTAActivityOptions (props) {
+export function WWBOTAActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
 
   const { styles, operation, settings } = props
@@ -58,7 +58,7 @@ export function UKBOTAActivityOptions (props) {
     setTimeout(async () => {
       const datas = []
       for (const ref of refs) {
-        const result = await ukbotaFindOneByReference(ref.ref)
+        const result = await wwbotaFindOneByReference(ref.ref)
         const newData = { ...ref, ...result }
         if (location?.lat && location?.lon) {
           newData.distance = distanceOnEarth(newData, location, { units: settings.distanceUnits })
@@ -73,7 +73,7 @@ export function UKBOTAActivityOptions (props) {
   useEffect(() => {
     setTimeout(async () => {
       if (location?.lat && location?.lon) {
-        const newResults = await ukbotaFindAllByLocation(ourInfo?.entityPrefix, location.lat, location.lon, NEARBY_DEGREES)
+        const newResults = await wwbotaFindAllByLocation(ourInfo?.entityPrefix, location.lat, location.lon, NEARBY_DEGREES)
         setNearbyResults(
           newResults.map(result => ({
             ...result,
@@ -87,7 +87,7 @@ export function UKBOTAActivityOptions (props) {
   useEffect(() => {
     setTimeout(async () => {
       if (search?.length > 2) {
-        let newRefs = await ukbotaFindAllByName(ourInfo?.entityPrefix, search.toLowerCase())
+        let newRefs = await wwbotaFindAllByName(ourInfo?.entityPrefix, search.toLowerCase())
         if (location?.lat && location?.lon) {
           newRefs = newRefs.map(ref => ({
             ...ref,
@@ -137,7 +137,7 @@ export function UKBOTAActivityOptions (props) {
     <>
       <Ham2kListSection title={title}>
         {refDatas.map((bunker, index) => (
-          <UKBOTAListItem
+          <WWBOTAListItem
             key={bunker.ref}
             activityRef={bunker.ref}
             refData={bunker}
@@ -161,7 +161,7 @@ export function UKBOTAActivityOptions (props) {
 
       <Ham2kListSection title={resultsMessage}>
         {results.map((ref) => (
-          <UKBOTAListItem
+          <WWBOTAListItem
             key={ref.ref}
             activityRef={ref.ref}
             allRefs={refs}
