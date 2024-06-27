@@ -41,7 +41,7 @@ function prepareStyles (themeStyles, themeColor) {
       },
       freqHz: {
         ...commonStyles,
-        fontWeight: '300',
+        fontWeight: '400',
         textAlign: 'right',
         fontSize: themeStyles.normalFontSize * 0.7
       },
