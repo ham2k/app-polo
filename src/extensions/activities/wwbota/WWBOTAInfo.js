@@ -6,16 +6,16 @@
  */
 
 export const Info = {
-  key: 'ukbota',
+  key: 'wwbota',
   icon: 'nuke',
-  name: 'UK Bunkers on the Air',
-  shortName: 'UKBOTA',
+  name: 'Worldwide Bunkers on the Air',
+  shortName: 'WWBOTA',
   doubleContact: 'Bunker-to-Bunker',
   shortNameDoubleContact: 'B2B',
   infoURL: 'https://bunkersontheair.org/',
-  huntingType: 'ukbota',
-  activationType: 'ukbotaActivation',
-  descriptionPlaceholder: 'Enter UKBOTA references',
+  huntingType: 'wwbota',
+  activationType: 'wwbotaActivation',
+  descriptionPlaceholder: 'Enter WWBOTA references',
   unknownReferenceName: 'Unknown Bunker',
-  referenceRegex: /^B\/G[DIJMUW]?-[0-9]{4}$/i
+  referenceRegex: /^B\/(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*)-[0-9]{4,}$/i
 }
