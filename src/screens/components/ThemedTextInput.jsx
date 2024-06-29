@@ -23,36 +23,32 @@ export default function ThemedTextInput (props) {
   const {
     style, themeColor, textStyle,
     label, placeholder, value, error,
-    onChangeText, onChange, onSubmitEditing, onKeyPress, onFocus, onBlur,
+    onChangeText, onChange, onSubmitEditing, onSpace, onFocus, onBlur,
     innerRef, focusedRef,
     fieldId,
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
     keyboard
   } = props
   const themeStyles = useThemedStyles()
-  const [previousValue, setPreviousValue] = useState(value)
+  const [localValue, setLocalValue] = useState(value)
 
   const alternateInnerRef = useRef()
   const actualInnerRef = innerRef ?? alternateInnerRef
 
-  const strValue = useMemo(() => {
-    return `${value}`
-  }, [value])
-
   useEffect(() => {
-    setPreviousValue(strValue)
-  }, [strValue])
+    setLocalValue(`${value}`)
+  }, [value])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
     let spaceAdded = false
 
     // Lets check if what changed was the addition of a space
-    if ((text !== previousValue) && (text.replace(SPACES_REGEX, '') === previousValue)) {
+    if ((text !== localValue) && (text.replace(SPACES_REGEX, '') === localValue)) {
       spaceAdded = true
-    } else if (text.match(ONLY_SPACES_REGEX) && previousValue !== '') { // or a space replacing the entire value
+    } else if (text.match(ONLY_SPACES_REGEX) && localValue !== '') { // or a space replacing the entire value
       spaceAdded = true
-      text = previousValue
+      text = localValue
     }
 
     text = text.replace(LEFT_TRIM_REGEX, '')
@@ -80,17 +76,17 @@ export default function ThemedTextInput (props) {
     }
     event.nativeEvent.text = text
 
-    setPreviousValue(text)
+    setLocalValue(text)
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId, ref: actualInnerRef })
     if (spaceAdded) {
-      onKeyPress && onKeyPress({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
+      onSpace && onSpace({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
     }
   }, [
-    previousValue,
+    localValue,
     fieldId, actualInnerRef,
     uppercase, noSpaces, periodToSlash, numeric, decimal, trim, rst,
-    onChangeText, onChange, onKeyPress
+    onChangeText, onChange, onSpace
   ])
 
   const [currentSelection, setCurrentSelection] = useState({})
@@ -106,15 +102,15 @@ export default function ThemedTextInput (props) {
 
           if (!start && !end) {
             // If selection position is unknown, we assume the cursor is at the end of the string
-            start = strValue.length
-            end = strValue.length
+            start = localValue.length
+            end = localValue.length
           }
 
-          const newValue = strValue.substring(0, start) + number + strValue.substring(end)
+          const newValue = localValue.substring(0, start) + number + localValue.substring(end)
 
           handleChange && handleChange({ nativeEvent: { text: newValue, target: actualInnerRef.current._nativeTag } })
 
-          if (strValue.length === start && strValue.length === end) {
+          if (localValue.length === start && localValue.length === end) {
             // Cursor was at the end of the original value
             // Since the handleChange method might modify the value, and does not cause
             // a call to onSelectionChange, we need to mark the current selection state as 'unknown'
@@ -125,7 +121,7 @@ export default function ThemedTextInput (props) {
         }
       }
     }
-  }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, strValue, actualInnerRef])
+  }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, localValue, actualInnerRef])
 
   const handleSelectionChange = useCallback((event) => {
     const { nativeEvent: { selection: { start, end } } } = event
@@ -158,44 +154,40 @@ export default function ThemedTextInput (props) {
   }, [themeStyles, themeColor])
 
   const keyboardOptions = useMemo(() => {
+    const dumbDownKeyboardProps = {
+      autoCapitalize: uppercase ? 'characters' : 'none',
+      autoComplete: 'off',
+      autoCorrect: false,
+      disableFullScreenUI: false,
+      enterKeyHint: 'send',
+      importantForAutofill: 'no',
+      inputMode: undefined,
+      spellCheck: false,
+      textContentType: 'none',
+
+      // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
+      keyboardAppearance: (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
+
+      // On Android, "visible-password" would enable numbers in the keyboard, and disable autofill
+      // but it has serious lag issues https://github.com/facebook/react-native/issues/35735
+      // keyboardType: 'visible-password',
+      // secureTextEntry: Platform.OS === 'android'
+      // textContentType: Platform.OS === 'android' ? 'password' : 'none',
+    }
+
     if (keyboard === 'dumb') {
-      return {
-        autoCapitalize: 'none',
-        autoComplete: 'off',
-        autoCorrect: false,
-        spellCheck: false,
-        dataDetectorType: 'none',
-        textContentType: 'none',
-        inputMode: undefined,
-        keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
-        secureTextEntry: false,
-        importantForAutofill: 'no',
-        returnKeyType: 'send',
-        // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
-        keyboardAppearance: (themeStyles.isDarkMode && !Platform.isPad) ? 'dark' : 'light'
-      }
+      return dumbDownKeyboardProps
     } else if (keyboard === 'numbers') {
       return {
-        autoCapitalize: 'none',
-        autoComplete: 'off',
-        autoCorrect: false,
-        spellCheck: false,
-        dataDetectorType: 'none',
-        textContentType: 'none',
-        inputMode: undefined,
-        // keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
-        keyboardType: themeStyles.isIOS ? 'numbers-and-punctuation' : 'visible-password',
-        secureTextEntry: false,
-        importantForAutofill: 'no',
-        returnKeyType: 'send',
-        keyboardAppearance: (themeStyles.isDarkMode && !Platform.isPad) ? 'dark' : 'light'
+        ...dumbDownKeyboardProps,
+        keyboardType: 'numbers-and-punctuation'
       }
     } else {
       return {
-        keyboardAppearance: (themeStyles.isDarkMode && !Platform.isPad) ? 'dark' : 'light'
+        keyboardAppearance: (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
       }
     }
-  }, [keyboard, themeStyles.isIOS, themeStyles.isDarkMode])
+  }, [keyboard, themeStyles.isDarkMode, uppercase])
 
   const renderInput = useCallback((props) => {
     return (
@@ -206,7 +198,7 @@ export default function ThemedTextInput (props) {
 
         ref={actualInnerRef}
 
-        value={strValue || ''}
+        value={localValue || ''}
         placeholder={placeholder || ''}
         style={[
           colorStyles.nativeInput,
@@ -224,7 +216,6 @@ export default function ThemedTextInput (props) {
         selectionColor={colorStyles.sectionColor}
         onSubmitEditing={onSubmitEditing}
         blurOnSubmit={false} // Prevent keyboard from hiding
-        onKeyPress={onKeyPress}
         onChange={handleChange}
         onChangeText={undefined}
         onFocus={handleFocus}
@@ -233,8 +224,8 @@ export default function ThemedTextInput (props) {
       />
     )
   }, [
-    keyboardOptions, actualInnerRef, strValue, placeholder, colorStyles, themeStyles, textStyle,
-    onSubmitEditing, onKeyPress, handleFocus, handleBlur, handleChange, handleSelectionChange
+    keyboardOptions, actualInnerRef, localValue, placeholder, colorStyles, themeStyles, textStyle,
+    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange
   ])
 
   return (

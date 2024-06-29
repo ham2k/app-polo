@@ -137,7 +137,7 @@ const ReferenceHandler = {
 }
 
 function mainExchangeForOperation (props) {
-  const { qso, updateQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef } = props
+  const { qso, updateQSO, styles, refStack } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: '', location: '' }
 
@@ -156,14 +156,10 @@ function mainExchangeForOperation (props) {
       uppercase={true}
       noSpaces={true}
       value={ref?.class || ''}
-      disabled={disabled}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text }),
         their: { exchange: [text, ref?.location].join(' ') }
       })}
-      onSubmitEditing={onSubmitEditing}
-      onKeyPress={keyHandler}
-      focusedRef={focusedRef}
     />
   )
   fields.push(
@@ -179,14 +175,10 @@ function mainExchangeForOperation (props) {
       uppercase={true}
       noSpaces={true}
       value={ref?.location || ''}
-      disabled={disabled}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text }),
         their: { arrlSection: text, exchange: [ref?.class, text].join(' ') }
       })}
-      onSubmitEditing={onSubmitEditing}
-      onKeyPress={keyHandler}
-      focusedRef={focusedRef}
     />
   )
   return fields

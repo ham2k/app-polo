@@ -41,7 +41,7 @@ export const MainExchangePanel = ({
   const refStack = [...refs]
 
   // Switch between fields with the space key
-  const keyHandler = useCallback((event) => {
+  const spaceHandler = useCallback((event) => {
     const { nativeEvent: { key, target } } = event
     if (key === ' ') {
       const renderedRefs = refs.filter(x => x?.current)
@@ -69,10 +69,10 @@ export const MainExchangePanel = ({
     handleFieldChange && handleFieldChange(event)
     if (settings.jumpAfterRST) {
       if (value.length >= rstLength) {
-        keyHandler && keyHandler({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
+        spaceHandler && spaceHandler({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
       }
     }
-  }, [handleFieldChange, keyHandler, rstLength, settings])
+  }, [handleFieldChange, spaceHandler, rstLength, settings])
 
   let fields = []
   fields.push(
@@ -87,7 +87,7 @@ export const MainExchangePanel = ({
       onChange={handleFieldChange}
       onSubmitEditing={onSubmitEditing}
       fieldId={'theirCall'}
-      onKeyPress={keyHandler}
+      onSpace={spaceHandler}
       focusedRef={focusedRef}
     />
   )
@@ -98,7 +98,7 @@ export const MainExchangePanel = ({
     style: [styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }],
     onChange: handleRSTChange,
     onSubmitEditing,
-    onKeyPress: keyHandler,
+    onSpace: spaceHandler,
     focusedRef,
     radioMode: qso?.mode ?? vfo?.mode ?? 'SSB'
   }
@@ -127,14 +127,14 @@ export const MainExchangePanel = ({
   findHooks('activity').filter(activity => activity.mainExchangeForOperation && findRef(operation, activity.key)).forEach(activity => {
     fields = fields.concat(
       activity.mainExchangeForOperation(
-        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, keyHandler, refStack, focusedRef }
+        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
       ) || []
     )
   })
   findHooks('activity').filter(activity => activity.mainExchangeForQSO).forEach(activity => {
     fields = fields.concat(
       activity.mainExchangeForQSO(
-        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, keyHandler, refStack, focusedRef }
+        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
       ) || []
     )
   })
@@ -154,7 +154,7 @@ export const MainExchangePanel = ({
         onChange={handleFieldChange}
         onSubmitEditing={onSubmitEditing}
         fieldId={'state'}
-        onKeyPress={keyHandler}
+        onSpace={spaceHandler}
         keyboard={'dumb'}
         maxLength={5}
         focusedRef={focusedRef}
