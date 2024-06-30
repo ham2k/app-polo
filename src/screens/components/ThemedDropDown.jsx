@@ -7,8 +7,8 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
-import DropDown from '@developerblue/react-native-paper-dropdown'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import PaperDropDown from './PaperDropDown'
 
 export default function ThemedDropDown (props) {
   const {
@@ -24,6 +24,7 @@ export default function ThemedDropDown (props) {
   const onShow = useCallback(() => setIsOpen(true), [setIsOpen])
   const onDismiss = useCallback(() => setIsOpen(false), [setIsOpen])
   const handleChangeValue = useCallback((newValue) => {
+    console.log('change', newValue)
     setInnerValue(newValue)
     onChange && onChange({ fieldId, nativeEvent: { text: newValue } })
     onChangeText && onChangeText(newValue)
@@ -41,9 +42,8 @@ export default function ThemedDropDown (props) {
       }
     }
   }, [themeStyles, themeColor])
-
   return (
-    <DropDown
+    <PaperDropDown
       {...props}
       label={label}
       value={innerValue}

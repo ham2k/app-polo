@@ -22,7 +22,6 @@
     "build:ios:prod:release": "cd ios && xcodebuild -scheme polo-Prod build"
   },
   "dependencies": {
-    "@developerblue/react-native-paper-dropdown": "github:ham2k/react-native-paper-dropdown",
     "@ham2k/lib-callsigns": "^0.1",
     "@ham2k/lib-country-files": "^0.9",
     "@ham2k/lib-dxcc-data": "^0.2",
