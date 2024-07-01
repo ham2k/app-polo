@@ -1,3 +1,9 @@
+# Dist setup
+
+```
+npm install -g appcenter-cli
+```
+
 # Open a new version
 
 * Update version in `package.json`
