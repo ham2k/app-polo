@@ -1,4 +1,11 @@
 {
+  "0.7.11-pre0": {
+    "changes": [
+      "Fix bugs where notes were not being shown",
+      "Fix bugs with stray lookup data",
+      "Fix bug with onboarding dialog"
+    ]
+  },
   "0.7.10.1": {
     "changes": [
       "More Field Day tweaks",
