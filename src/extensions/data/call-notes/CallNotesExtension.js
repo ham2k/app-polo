@@ -129,7 +129,7 @@ const createCallNotesFetcher = (file) => async () => {
 
     if (call.length > 2 && noteWords.length > 0) {
       data[call] = data[call] || []
-      data[call].push({ source: file.name, note: noteWords.join(' ') })
+      data[call].push({ source: file.name, note: noteWords.join(' '), call })
     }
   })
 
