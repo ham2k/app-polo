@@ -14,13 +14,20 @@ namespace :release do
 
   task :unstable => :dotenv do
     release_version = JSON.parse(File.read('package.json'))['version']
-    release_notes = JSON.parse(File.read('RELEASE-NOTES.json'))[release_version]['changes']
+    all_release_notes = JSON.parse(File.read('RELEASE-NOTES.json'))
 
-    release_description = <<-EOF
-  # Release #{release_version} (Supplemental)
+    if all_release_notes[release_version].nil?
+      puts "No release notes found for #{release_version}"
+      exit 1
+    end
 
-  #{release_notes.map { |note| "- #{note}" }.join("\n")}
-  EOF
+    release_notes = all_release_notes[release_version]['changes']
+
+    release_description = <<~EOF
+      # Release #{release_version} (Supplemental)
+
+      #{release_notes.map { |note| "- #{note}" }.join("\n")}
+    EOF
 
     puts "Releasing #{release_version} bundle to Staging in AppCenter"
     puts "=================================================================="
