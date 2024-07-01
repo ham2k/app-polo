@@ -45,7 +45,6 @@ const Extension = {
   enabledByDefault: true,
   onActivationDispatch: ({ registerHook }) => async (dispatch, getState) => {
     const settings = selectExtensionSettings(getState(), Info.key)
-
     const files = [...BUILT_IN_NOTES]
     settings.customFiles?.forEach(file => files.unshift({ ...file, builtin: false }))
 
@@ -53,13 +52,13 @@ const Extension = {
     CallNotesData.files = []
     CallNotesData.activeFiles = {}
     for (const file of files) {
-      CallNotesData.activeFiles[file.location] = !!settings.enabledLocations?.[file.location]
-
+      if (!file.location) continue
       if (CallNotesData.files.indexOf(file) >= 0) continue
+
+      CallNotesData.activeFiles[file.location] = settings.enabledLocations?.[file.location] !== false
 
       CallNotesData.files.push(file)
       registerDataFile(createDataFileDefinition(file))
-
       // Load Call Note files without `await`, in the background
       dispatch(loadDataFile(`call-notes-${file.location}`))
     }
@@ -145,7 +144,6 @@ const createCallNotesLoader = (file) => async (data) => {
 
 export const findCallNotes = (call, enabledLocations = CallNotesData.activeFiles) => {
   if (!call) return []
-
   call = (call ?? '').replace(/\/$/, '') // TODO: Remove this line once the trailing / gets fixed in lib-callsign
   for (const file of CallNotesData.files) {
     if (enabledLocations[file.location] !== false && CallNotesData.notes[file.location]?.[call]) {
@@ -156,7 +154,6 @@ export const findCallNotes = (call, enabledLocations = CallNotesData.activeFiles
 
 export const findAllCallNotes = (call, enabledLocations = CallNotesData.activeFiles) => {
   if (!call) return []
-
   call = (call ?? '').replace(/\/$/, '') // TODO: Remove this line once the trailing / gets fixed in lib-callsign
   let notes = []
   for (const file of CallNotesData.files) {
