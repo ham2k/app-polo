@@ -130,7 +130,7 @@ export const apiQRZ = createApi({
               data: {
                 name: [
                   capitalizeString(callsignInfo.fname, { content: 'name', force: false }),
-                  callsignInfo.nickname ? `“${callsignInfo.nickname}”` : undefined,
+                  callsignInfo.nickname ? `“${capitalizeString(callsignInfo.nickname, { content: 'name', force: false })}”` : undefined,
                   capitalizeString(callsignInfo.name, { content: 'name', force: false })
                 ].filter(x => x).join(' '),
                 call: callsignInfo.call,

@@ -22,6 +22,7 @@ import { findQSOHistory } from '../../../../store/qsos/actions/findQSOHistory'
 import { filterRefs, findRef } from '../../../../tools/refTools'
 import { findAllCallNotes, useAllCallNotesFinder } from '../../../../extensions/data/call-notes/CallNotesExtension'
 import { potaFindParkByReference } from '../../../../extensions/activities/pota/POTAAllParksData'
+import { capitalizeString } from '../../../../tools/capitalizeString'
 
 const EMOJI_REGEX = emojiRegex()
 
@@ -31,38 +32,35 @@ export const useQSOInfo = ({ qso, operation }) => {
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  // This is the master "debounce" for the rest of the `useQSOInfo` hook
-  const [theirCall, setTheirCall] = useState()
-  useEffect(() => { // Parse the callsign, after debouncing for 200ms.
-    const timeout = setTimeout(() => {
-      let call = qso?.their?.call ?? ''
-      if (call.endsWith('/')) call = call.slice(0, -1)
-      if (call.indexOf(',') >= 0) {
-        const calls = call = call.split(',')
-        call = calls[calls.length - 1].trim()
-      }
+  const theirCall = useMemo(() => {
+    let call = qso?.their?.call ?? ''
+    if (call.endsWith('/')) call = call.slice(0, -1)
+    if (call.indexOf(',') >= 0) {
+      const calls = call = call.split(',')
+      call = calls[calls.length - 1].trim()
+    }
 
-      let newGuess = parseCallsign(call)
-      if (newGuess?.baseCall) {
-        annotateFromCountryFile(newGuess)
-      } else if (call) {
-        newGuess = annotateFromCountryFile({ prefix: call, baseCall: call })
-      }
-      setTheirCall(newGuess)
-    }, 200)
-
-    return () => clearTimeout(timeout)
+    let newGuess = parseCallsign(call)
+    if (newGuess?.baseCall) {
+      annotateFromCountryFile(newGuess)
+    } else if (call) {
+      newGuess = annotateFromCountryFile({ prefix: call, baseCall: call })
+    }
+    return newGuess
   }, [qso?.their?.call])
 
   const callNotes = useAllCallNotesFinder(theirCall?.baseCall)
 
   const [callHistory, setCallHistory] = useState()
   useEffect(() => { // Get Call History
-    if (!theirCall?.baseCall) return
-    findQSOHistory(theirCall?.baseCall).then(qsoHistory => {
-      setCallHistory(qsoHistory.filter(x => x && (x?.operation !== operation?.uuid || x.key !== qso?.key)))
-    })
-  }, [theirCall?.baseCall, qso?.key, operation?.uuid])
+    if (theirCall?.baseCall !== qso?.their?.call) {
+      setCallHistory([])
+    } else {
+      findQSOHistory(theirCall?.baseCall).then(qsoHistory => {
+        setCallHistory(qsoHistory.filter(x => x && (x?.operation !== operation?.uuid || x.key !== qso?.key)))
+      })
+    }
+  }, [theirCall?.baseCall, qso?.key, qso?.their?.call, operation?.uuid])
 
   // Get QRZ.com info
   const skipQRZ = !(online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2)
@@ -96,11 +94,11 @@ export const useQSOInfo = ({ qso, operation }) => {
   , [potaLookup?.data])
 
   const { guess, lookup } = useMemo(() => { // Merge all data sources and update guesses and QSO
-    return mergeData({ theirCall, qrz, pota, callHistory, callNotes })
-  }, [theirCall, qrz, pota, callHistory, callNotes])
+    return mergeData({ theirCall, qrz, pota, potaRef, callHistory, callNotes })
+  }, [theirCall, qrz, pota, potaRef, callHistory, callNotes])
 
   return {
-    ourInfo, theirCall, guess, lookup, pota, qrz, callNotes, callHistory, online
+    ourInfo, theirCall, guess, lookup, pota, potaRef, qrz, callNotes, callHistory, online
   }
 }
 
@@ -132,12 +130,12 @@ export async function annotateQSO ({ qso, online, settings, dispatch }) {
     pota = potaLookup?.data ?? {}
   }
 
-  const { guess, lookup } = mergeData({ theirCall, qrz, pota, callHistory, callNotes })
+  const { guess, lookup } = mergeData({ theirCall, qrz, pota, potaRef, callHistory, callNotes })
   qso.their.guess = guess
   qso.their.lookup = lookup
 }
 
-function mergeData ({ theirCall, qrz, pota, callHistory, callNotes }) {
+function mergeData ({ theirCall, qrz, pota, potaRef, callHistory, callNotes }) {
   let historyData = {}
   let newLookup = {}
   const newGuess = { ...theirCall }
@@ -149,9 +147,9 @@ function mergeData ({ theirCall, qrz, pota, callHistory, callNotes }) {
       historyData.their.lookup.source = 'qrz.com'
     }
 
-    newLookup.name = historyData.their.name ?? historyData.their.lookup?.name
+    newLookup.name = capitalizeString(historyData.their.name ?? historyData.their.lookup?.name, { content: 'name', force: false })
     newLookup.state = historyData.their.state ?? historyData.their.lookup?.state
-    newLookup.city = historyData.their.city ?? historyData.their.lookup?.city
+    newLookup.city = capitalizeString(historyData.their.city ?? historyData.their.lookup?.city, { content: 'address', force: false })
     newLookup.postal = historyData.their.postal ?? historyData.their.lookup?.postal
     newLookup.grid = historyData.their.grid ?? historyData.their.lookup?.grid
     newLookup.cqZone = historyData.their.cqZone ?? historyData.their.lookup?.cqZone
@@ -162,7 +160,7 @@ function mergeData ({ theirCall, qrz, pota, callHistory, callNotes }) {
     newLookup.source = 'history'
   }
 
-  if (qrz?.name) {
+  if (qrz?.name && (qrz.call === theirCall.call || qrz.call === theirCall.baseCall)) {
     newLookup = {
       source: 'qrz.com',
       call: qrz.call,
@@ -194,7 +192,7 @@ function mergeData ({ theirCall, qrz, pota, callHistory, callNotes }) {
     }
   }
 
-  if (callNotes?.length > 0) {
+  if (callNotes?.length > 0 && (callNotes[0]?.call === undefined || callNotes[0]?.call === theirCall.baseCall || callNotes[0]?.call === theirCall?.call)) {
     newGuess.note = callNotes[0].note
     const matches = newGuess.note && newGuess.note.match(EMOJI_REGEX)
     if (matches) {
@@ -206,7 +204,7 @@ function mergeData ({ theirCall, qrz, pota, callHistory, callNotes }) {
     newGuess.emoji = undefined
   }
 
-  if (pota?.grid6 && pota?.locationDesc?.indexOf(',') < 0) {
+  if (pota?.grid6 && (potaRef === undefined || pota.reference === potaRef) && pota?.locationDesc?.indexOf(',') < 0) {
     // Only use POTA info if it's not a multi-state park
     newGuess.grid = pota.grid6
 

@@ -101,18 +101,16 @@ export default function MainSettingsScreen ({ navigation, route }) {
     )
   } else {
     return (
-      <ScreenContainer>
-        <Stack.Navigator
-          id="SettingsNavigator"
-          initialRouteName={route?.params?.screen ?? 'MainSettings'}
-          screenOptions={{
-            header: HeaderBar,
-            animation: 'slide_from_right'
-          }}
-        >
-          {settingsScreensArray({ includeMain: true, topLevelBack: true })}
-        </Stack.Navigator>
-      </ScreenContainer>
+      <Stack.Navigator
+        id="SettingsNavigator"
+        initialRouteName={route?.params?.screen ?? 'MainSettings'}
+        screenOptions={{
+          header: HeaderBar,
+          animation: 'slide_from_right'
+        }}
+      >
+        {settingsScreensArray({ includeMain: true, topLevelBack: true })}
+      </Stack.Navigator>
     )
   }
 }
