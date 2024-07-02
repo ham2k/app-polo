@@ -9,10 +9,10 @@ import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/d
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { fmtDateZulu } from '../../../tools/timeFormats'
 
-import { Info } from './UKBOTAInfo'
-import { UKBOTAActivityOptions } from './UKBOTAActivityOptions'
-import { ukbotaFindOneByReference, registerUKBOTADataFile } from './UKBOTADataFile'
-import { UKBOTALoggingControl } from './UKBOTALoggingControl'
+import { Info } from './WWBOTAInfo'
+import { WWBOTAActivityOptions } from './WWBOTAActivityOptions'
+import { wwbotaFindOneByReference, registerWWBOTADataFile } from './WWBOTADataFile'
+import { WWBOTALoggingControl } from './WWBOTALoggingControl'
 
 const Extension = {
   ...Info,
@@ -21,12 +21,14 @@ const Extension = {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+    registerHook('ref:ukbota', { hook: ReferenceHandler }) // Legacy
+    registerHook('ref:ukbotaActivation', { hook: ReferenceHandler }) // Legacy
 
-    registerUKBOTADataFile()
-    await dispatch(loadDataFile('ukbota-all-bunkers', { noticesInsteadOfFetch: true }))
+    registerWWBOTADataFile()
+    await dispatch(loadDataFile('wwbota-all-bunkers', { noticesInsteadOfFetch: true }))
   },
   onDeactivationDispatch: () => async (dispatch) => {
-    await dispatch(removeDataFile('ukbota-all-bunkers'))
+    await dispatch(removeDataFile('wwbota-all-bunkers'))
   }
 }
 export default Extension
@@ -41,7 +43,7 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  Options: UKBOTAActivityOptions,
+  Options: WWBOTAActivityOptions,
 
   includeControlForQSO: ({ qso, operation }) => {
     if (findRef(operation, Info.activationType)) return true
@@ -66,7 +68,7 @@ const HunterLoggingControl = {
     if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: UKBOTALoggingControl,
+  InputComponent: WWBOTALoggingControl,
   inputWidthMultiplier: 30,
   optionType: 'optional'
 }
@@ -80,7 +82,7 @@ const ActivatorLoggingControl = {
     if (findRef(qso, Info.huntingType)) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: UKBOTALoggingControl,
+  InputComponent: WWBOTALoggingControl,
   inputWidthMultiplier: 30,
   optionType: 'mandatory'
 }
@@ -103,7 +105,7 @@ const ReferenceHandler = {
   decorateRefWithDispatch: (ref) => async () => {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', location: '' }
 
-    const data = await ukbotaFindOneByReference(ref.ref)
+    const data = await wwbotaFindOneByReference(ref.ref)
     let result
     if (data?.name) {
       result = {
@@ -140,7 +142,7 @@ const ReferenceHandler = {
   adifFieldsForOneQSO: ({ qso, operation, common }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
 
-    if (huntingRefs) return ([{ SIG: 'UKBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }])
+    if (huntingRefs) return ([{ SIG: 'WWBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }])
     else return []
   },
 
@@ -150,14 +152,14 @@ const ReferenceHandler = {
     let activationADIF = []
     if (activationRef) {
       activationADIF = [
-        { MY_SIG: 'UKBOTA' }, { MY_SIG_INFO: activationRef.ref }
+        { MY_SIG: 'WWBOTA' }, { MY_SIG_INFO: activationRef.ref }
       ]
     }
 
     if (huntingRefs.length > 0) {
       return [[
         ...activationADIF,
-        { SIG: 'UKBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }
+        { SIG: 'WWBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }
       ]]
     } else {
       return [activationADIF]

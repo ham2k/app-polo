@@ -10,13 +10,13 @@ import React, { useCallback } from 'react'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 
-const ADD_DASHES_REGEX = /([A-Z]+)(\d+)/gi
-const ADD_SLASHES_REGEX = /(B)?((?<!\/)G[DIJMUW]?)/gi
+const ADD_DASHES_REGEX = /^(?:B?\/)?([0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*)(\d+)(?!-)$/gi
+const ADD_SLASHES_REGEX = /^B?((?<!\/)(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*)-)$/gi
 const ADD_COMMAS_REGEX = /(\d\d+)\s*[,]*\s*([A-Z]+)/gi
 const NO_PREFIX_REGEX = /^(\d\d+)/gi
 const REPEAT_PREFIX_REGEX = /([\w/]+)-(\d+)(\s+,\s*|,\s*|\s+)(\d\d+)/gi
 
-export default function UKBOTAInput (props) {
+export default function WWBOTAInput (props) {
   const { textStyle, onChange, defaultPrefix, onChangeText, fieldId } = props
 
   const styles = useThemedStyles()
@@ -24,9 +24,9 @@ export default function UKBOTAInput (props) {
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
 
-    text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix ?? 'B/G'}-${p1}`)
-    text = text.replace(ADD_SLASHES_REGEX, (match, p1, p2) => `B/${p2}`)
-    text = text.replace(ADD_DASHES_REGEX, (match, p1, p2) => `${p1}-${p2}`)
+    text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix ?? 'B/?'}-${p1}`)
+    text = text.replace(ADD_SLASHES_REGEX, (match, p1, p2) => `B/${p1}`)
+    text = text.replace(ADD_DASHES_REGEX, (match, p1, p2) => `B/${p1}-${p2}`)
     text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1},${p2}`)
     text = text.replace(REPEAT_PREFIX_REGEX, (match, p1, p2, p3, p4) => `${p1}-${p2},${p1}-${p4}`)
 

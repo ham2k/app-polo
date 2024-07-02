@@ -171,7 +171,7 @@ export function fmtADIFTime (t) {
   t = prepareTimeValue(t)
 
   if (t && t.toISOString) {
-    return t.toISOString().substring(11, 16).replace(/:/g, '')
+    return t.toISOString().substring(11, 19).replace(/:/g, '')
   } else {
     return ''
   }
@@ -188,7 +188,7 @@ export function fmtCabrilloDate (t) {
 }
 
 export function fmtCabrilloTime (t) {
-  return fmtADIFTime(t)
+  return fmtADIFTime(t).substring(0, 4)
 }
 
 export function fmtISODate (t) {

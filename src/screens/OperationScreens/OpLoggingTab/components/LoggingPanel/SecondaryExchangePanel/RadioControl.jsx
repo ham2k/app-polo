@@ -34,7 +34,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
     options.sort((a, b) => (POPULAR_MODES.indexOf(a) ?? (ADIF_MODES_AND_SUBMODES.index(a) + 100)) - (POPULAR_MODES.indexOf(b) ?? (ADIF_MODES_AND_SUBMODES.index(b) + 100)))
     if (!options.includes('other')) options.concat(['other'])
 
-    return options.map(mode => ({ value: mode, label: mode }))
+    return options.filter(x => x).map(mode => ({ value: mode, label: mode }))
   }, [vfo?.mode, qso?.mode, settings?.modes])
 
   return (

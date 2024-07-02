@@ -53,14 +53,10 @@ export const useQSOInfo = ({ qso, operation }) => {
 
   const [callHistory, setCallHistory] = useState()
   useEffect(() => { // Get Call History
-    if (theirCall?.baseCall !== qso?.their?.call) {
-      setCallHistory([])
-    } else {
-      findQSOHistory(theirCall?.baseCall).then(qsoHistory => {
-        setCallHistory(qsoHistory.filter(x => x && (x?.operation !== operation?.uuid || x.key !== qso?.key)))
-      })
-    }
-  }, [theirCall?.baseCall, qso?.key, qso?.their?.call, operation?.uuid])
+    findQSOHistory(theirCall?.call).then(qsoHistory => {
+      setCallHistory(qsoHistory.filter(x => x && (x?.operation !== operation?.uuid || x.key !== qso?.key)))
+    })
+  }, [theirCall?.call, qso?.key, qso?.their?.call, operation?.uuid])
 
   // Get QRZ.com info
   const skipQRZ = !(online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2)
@@ -112,7 +108,7 @@ export async function annotateQSO ({ qso, online, settings, dispatch }) {
 
   const callNotes = findAllCallNotes(theirCall?.baseCall)
 
-  const callHistory = await findQSOHistory(theirCall?.baseCall)
+  const callHistory = await findQSOHistory(theirCall?.call)
 
   let qrz = {}
   if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2) {
@@ -140,7 +136,7 @@ function mergeData ({ theirCall, qrz, pota, potaRef, callHistory, callNotes }) {
   let newLookup = {}
   const newGuess = { ...theirCall }
 
-  if (callHistory && callHistory[0] && callHistory[0].theirCall === theirCall?.baseCall) {
+  if (callHistory && callHistory[0] && callHistory[0].theirCall === theirCall?.call) {
     historyData = JSON.parse(callHistory[0].data)
     if (historyData?.their?.qrzInfo) {
       historyData.their.lookup = historyData.their?.qrzInfo

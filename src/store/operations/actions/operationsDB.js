@@ -261,3 +261,7 @@ export const countHistoricalRecords = () => async (dispatch) => {
   const row = await dbSelectOne('SELECT COUNT(*) as count FROM qsos WHERE operation = ?', ['historical'])
   return row.count
 }
+
+export const deleteHistoricalRecords = () => async (dispatch) => {
+  await dbExecute('DELETE FROM qsos WHERE operation = ?', ['historical'])
+}

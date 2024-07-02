@@ -27,7 +27,7 @@ export const POTAPostSpot = (operation, vfo, comments) => async (dispatch, getSt
           spotter: call,
           frequency: vfo.freq,
           reference: ref.ref,
-          mode: vfo.mode,
+          mode: vfo?.mode ?? 'SSB',
           source: 'Ham2K Portable Logger',
           comments: [comments, refComment].filter((x) => (x)).join(' ')
         })
@@ -35,12 +35,15 @@ export const POTAPostSpot = (operation, vfo, comments) => async (dispatch, getSt
       if (response.status === 200) {
         // const body = await response.text()
         // console.log(body)
+        return true
       } else {
         const body = await response.text()
         reportError('POTA Spotter http error', response, body)
+        return false
       }
     } catch (error) {
       reportError('POTA Spotter error', error)
+      return false
     }
   }
 }

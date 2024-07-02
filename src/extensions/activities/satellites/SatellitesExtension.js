@@ -62,7 +62,7 @@ const LoggingControl = {
 }
 
 function mainExchangeForQSO (props) {
-  const { qso, updateQSO, styles, disabled, refStack, onSubmitEditing, keyHandler, focusedRef, themeColor } = props
+  const { qso, updateQSO, styles, refStack, themeColor } = props
   const fields = []
 
   if (findRef(qso, Info.refType)) {
@@ -78,13 +78,9 @@ function mainExchangeForQSO (props) {
         placeholder={qso?.their?.guess?.grid || ''}
         mode={'flat'}
         value={qso?.their?.grid || ''}
-        disabled={disabled}
         onChangeText={(text) => updateQSO({
           their: { grid: text, exchange: text }
         })}
-        onSubmitEditing={onSubmitEditing}
-        onKeyPress={keyHandler}
-        focusedRef={focusedRef}
       />
     )
   }

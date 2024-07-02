@@ -134,17 +134,22 @@ export default function HomeTools ({ settings, styles, style }) {
         >
           <Searchbar
             {...{
-              autoCapitalize: 'none',
               autoComplete: 'off',
               autoCorrect: false,
               spellCheck: false,
               dataDetectorType: 'none',
               textContentType: 'none',
               inputMode: undefined,
-              keyboardType: 'visible-password', // Need both this and secureTextEntry={false} to prevent autofill on Android
-              secureTextEntry: false,
               importantForAutofill: 'no',
               returnKeyType: 'send',
+              autoCapitalize: 'characters',
+
+              // On Android, "visible-password" would enable numbers in the keyboard, and disable autofill
+              // but it has serious lag issues https://github.com/facebook/react-native/issues/35735
+              // keyboardType: 'visible-password',
+              // secureTextEntry: Platform.OS === 'android'
+              // textContentType: Platform.OS === 'android' ? 'password' : 'none',
+
               onBlur: handleBlur,
               onFocus: handleFocus,
               onSelectionChange: handleSelectionChange

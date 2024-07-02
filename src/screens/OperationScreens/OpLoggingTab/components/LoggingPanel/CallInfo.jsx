@@ -29,8 +29,8 @@ const MESSAGES_FOR_SCORING = {
   'potaActivation.newRef': 'New Park',
   'sotaActivation.newDay': 'New SOTA Day',
   'sotaActivation.newRef': 'New Summit',
-  'ukbotaActivation.newDay': 'New UKBOTA Day',
-  'ukbotaActivation.newRef': 'New Bunker'
+  'wwbotaActivation.newDay': 'New WWBOTA Day',
+  'wwbotaActivation.newRef': 'New Bunker'
 }
 
 function prepareStyles (baseStyles, themeColor) {
@@ -40,16 +40,15 @@ function prepareStyles (baseStyles, themeColor) {
     history: {
       pill: {
         marginRight: baseStyles.halfSpace,
-        lineHeight: baseStyles.normalFontSize * 1.3,
         borderRadius: 3,
-        // padding: baseStyles.oneSpace * 0.3,
-        marginTop: baseStyles.oneSpace * 0.5,
+        marginTop: baseStyles.oneSpace * 0.25,
         paddingHorizontal: baseStyles.oneSpace * 0.5,
         backgroundColor: baseStyles.theme.colors[`${themeColor}Light`]
       },
       text: {
         fontSize: baseStyles.smallFontSize,
         lineHeight: baseStyles.normalFontSize * 1.3,
+        marginTop: baseStyles.oneSpace * 0.3,
         fontWeight: 'normal',
         color: baseStyles.theme.colors[`on${upcasedThemeColor}Container`]
       },
@@ -107,7 +106,10 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
 
     if (operation.grid && guess?.grid) {
       const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
-      const bearing = bearingForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } })
+      let bearing
+      if (settings.showBearing) {
+        bearing = bearingForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } })
+      }
       const str = [
         dist && fmtDistance(dist, { units: settings.distanceUnits }),
         bearing && `(${Math.round(bearing)}°)`
@@ -156,11 +158,7 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
     // }
 
     return [locationText, entity?.flag ? entity.flag : '']
-  }, [
-    operation?.grid, pota,
-    lookup, guess, qso?.their?.city, qso?.their?.state, qso?.their?.grid,
-    ourInfo, settings.distanceUnits
-  ])
+  }, [lookup?.dxccCode, guess, operation.grid, ourInfo, pota.name, pota.error, pota.reference, pota.shortName, pota.locationName, qso?.their?.city, qso?.their?.state, qso?.their?.grid, settings.distanceUnits, settings.showBearing])
 
   const stationInfo = useMemo(() => {
     const parts = []
@@ -259,16 +257,17 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
             )}
           </View>
           {(stationInfo || historyMessage) && (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-              {historyMessage && (
-                <View style={[{ flex: 0 }, styles.history.pill, historyLevel && styles.history[historyLevel]]}>
-                  <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyMessage}</Text>
-                </View>
-              )}
-              <View style={{ flex: 1, minWidth: stationInfo.length * styles.oneSpace * 0.8 }}>
-                {/* numberOfLines={2} ellipsizeMode={'tail'} */}
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'flex-start' }}>
+              <View style={{ flex: 1, minWidth: stationInfo.length * styles.oneSpace * 1.05 }}>
                 <Ham2kMarkdown style={{ lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
               </View>
+              {historyMessage && (
+                <View style={{ flex: 0 }}>
+                  <View style={[styles.history.pill, historyLevel && styles.history[historyLevel]]}>
+                    <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyMessage}</Text>
+                  </View>
+                </View>
+              )}
             </View>
           )}
         </View>

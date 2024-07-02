@@ -16,7 +16,7 @@ import WWFFExtension from './activities/wwff/WWFFExtension'
 import FDExtension from './activities/fd/FDExtension'
 import WFDExtension from './activities/wfd/WFDExtension'
 import CustomExtension from './activities/custom/CustomExtension'
-import UKBOTAExtension from './activities/ukbota/UKBOTAExtension'
+import WWBOTAExtension from './activities/wwbota/WWBOTAExtension'
 import ECAExtension from './activities/eca/ECAExtension'
 import ELAExtension from './activities/ela/ELAExtension'
 import SiOTAExtentsion from './activities/siota/SiOTAExtension'
@@ -41,7 +41,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(CustomExtension)
   registerExtension(WFDExtension)
   registerExtension(FDExtension)
-  registerExtension(UKBOTAExtension)
+  registerExtension(WWBOTAExtension)
   registerExtension(ECAExtension)
   registerExtension(ELAExtension)
   registerExtension(SiOTAExtentsion)

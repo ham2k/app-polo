@@ -20,7 +20,7 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { getDataFileDefinitions, selectAllDataFileInfos } from '../../../store/dataFiles'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { selectSettings } from '../../../store/settings'
-import { countHistoricalRecords, importHistoricalADIF } from '../../../store/operations'
+import { countHistoricalRecords, deleteHistoricalRecords, importHistoricalADIF } from '../../../store/operations'
 import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats'
 import { findHooks } from '../../../extensions/registry'
 import { countTemplate } from '../../../tools/stringTools'
@@ -77,6 +77,29 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
   )
 }
 
+const ConfirmClearHistoryDialog = ({ onDialogDelete, onDialogDone }) => {
+  const handleDelete = () => {
+    onDialogDelete()
+    onDialogDone()
+  }
+
+  return (
+    <Ham2kDialog visible={true} onDismiss={onDialogDone}>
+      <Dialog.Title style={{ textAlign: 'center' }}>Are you sure?</Dialog.Title>
+      <Dialog.Content>
+        <Text variant="bodyMedium" style={{ textAlign: 'center' }}>This will remove all historical records previously imported from ADIF files</Text>
+      </Dialog.Content>
+      <Dialog.Content>
+        <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Records from operations will not be deleted</Text>
+      </Dialog.Content>
+      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
+        <Button onPress={handleDelete}>Delete</Button>
+        <Button onPress={onDialogDone}>Cancel</Button>
+      </Dialog.Actions>
+    </Ham2kDialog>
+  )
+}
+
 export default function DataSettingsScreen ({ navigation }) {
   const styles = useThemedStyles()
 
@@ -99,6 +122,7 @@ export default function DataSettingsScreen ({ navigation }) {
 
   const [loadingHistoricalMessage, setLoadingHistoricalMessage] = useState()
   const [historicalCount, setHistoricalCount] = useState()
+  const [showClearHistoricalRecordsDialog, setShowClearHistoricalRecordsDialog] = useState(false)
   useEffect(() => {
     setTimeout(async () => {
       const count = await dispatch(countHistoricalRecords())
@@ -132,6 +156,16 @@ export default function DataSettingsScreen ({ navigation }) {
         reportError('Error importing historical ADIF', error)
       }
     })
+  }, [dispatch])
+
+  const handleClearHistoricalRecords = useCallback(async () => {
+    try {
+      await dispatch(deleteHistoricalRecords())
+    } catch (error) {
+      reportError('Error deleting historical records', error)
+    }
+
+    setHistoricalCount(await dispatch(countHistoricalRecords()))
   }, [dispatch])
 
   return (
@@ -170,6 +204,23 @@ export default function DataSettingsScreen ({ navigation }) {
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="database-import-outline" />}
             onPress={handleImportHistoricalFile}
           />
+          {
+            historicalCount > 0 &&
+              <>
+                <Ham2kListItem
+                  title="Clear ADIF History"
+                  description="Remove ADIF imported records"
+                  left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="database-remove-outline" />}
+                  onPress={() => setShowClearHistoricalRecordsDialog(true)}
+                />
+                { showClearHistoricalRecordsDialog &&
+                  <ConfirmClearHistoryDialog
+                    onDialogDone={() => setShowClearHistoricalRecordsDialog(false)}
+                    onDialogDelete={handleClearHistoricalRecords}
+                  />
+                }
+              </>
+          }
         </Ham2kListSection>
 
         {extensionSettingHooks.length > 0 && (

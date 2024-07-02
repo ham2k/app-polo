@@ -12,14 +12,14 @@ import { View } from 'react-native'
 
 import { fmtDistance } from '../../../tools/geoTools'
 
-import { Info } from './UKBOTAInfo'
-import { ukbotaFindOneByReference } from './UKBOTADataFile'
+import { Info } from './WWBOTAInfo'
+import { wwbotaFindOneByReference } from './WWBOTADataFile'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
-export function UKBOTAListItem ({ activityRef, refData, allRefs, style, styles, settings, onPress, onAddReference, onRemoveReference, online }) {
+export function WWBOTAListItem ({ activityRef, refData, allRefs, style, styles, settings, onPress, onAddReference, onRemoveReference, online }) {
   const [reference, setReference] = useState()
   useEffect(() => {
-    ukbotaFindOneByReference(activityRef).then(setReference)
+    wwbotaFindOneByReference(activityRef).then(setReference)
   }, [activityRef])
 
   const isInRefs = useMemo(() => {
@@ -38,7 +38,7 @@ export function UKBOTAListItem ({ activityRef, refData, allRefs, style, styles, 
           </Text>
         </View>
       }
-      description={reference?.ref ? [reference?.name, reference?.area].filter(x => x).join(', ') : 'Unknown Bunker Reference'}
+      description={reference?.ref ? [reference?.name, reference?.type].filter(x => x).join(', ') : 'Unknown Bunker Reference'}
       onPress={onPress}
       left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
       right={() => (

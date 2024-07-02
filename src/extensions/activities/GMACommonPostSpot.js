@@ -17,8 +17,8 @@ export const GMACommonPostSpot = (operation, vfo, comments, refs, url) => async 
   const call = operation.stationCall || state.settings.operatorCall
   const baseCall = parseCallsign(call).baseCall
 
-  let mode = vfo.mode
-  if (!validModes.includes(vfo.mode)) {
+  let mode = vfo?.mode ?? 'SSB'
+  if (!validModes.includes(mode)) {
     if (ADIF_SUBMODES.SSB.includes(mode)) mode = 'SSB'
     else if (ADIF_SUBMODES.PSK.includes(mode)) mode = 'PSK'
     else mode = 'other'
@@ -46,11 +46,14 @@ export const GMACommonPostSpot = (operation, vfo, comments, refs, url) => async 
     if (response.status === 200) {
       // const body = await response.text()
       // console.log(body)
+      return true
     } else {
       const body = await response.text()
       console.error('Error in GMA Spot', { response, body })
+      return false
     }
   } catch (error) {
     console.error('Error in GMA Spot', error)
+    return false
   }
 }

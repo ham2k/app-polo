@@ -15,13 +15,13 @@ import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fmtDateNice } from '../../../tools/timeFormats'
 
-export const UKBOTAData = { }
+export const WWBOTAData = { }
 
-export function registerUKBOTADataFile () {
+export function registerWWBOTADataFile () {
   registerDataFile({
-    key: 'ukbota-all-bunkers',
-    name: 'UKBOTA: All Bunkers',
-    description: 'Database of all UKBOTA references',
+    key: 'wwbota-all-bunkers',
+    name: 'WWBOTA: All Bunkers',
+    description: 'Database of all WWBOTA references',
     infoURL: 'https://bunkerbase.org',
     icon: 'file-cloud-outline',
     maxAgeInDays: 100,
@@ -29,7 +29,7 @@ export function registerUKBOTADataFile () {
     fetch: async ({ key, definition, options }) => {
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
-      const url = 'https://drive.google.com/uc?id=1ea3j9S4VzcDttMPs_9WOj-4L_DzfcUhR'
+      const url = 'https://wwbota.org/wwbota-3/'
 
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
@@ -39,14 +39,14 @@ export function registerUKBOTADataFile () {
       const body = buffer.toString('utf8')
 
       const lines = body.split('\n')
-      const headers = parseUKBOTACSVRow(lines.shift())
+      const headers = parseWWBOTACSVRow(lines.shift())
       headers[0] = headers[0].replace(/^\uFEFF/, '')
 
       let totalReferences = 0
 
       const db = await database()
       db.transaction(transaction => {
-        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['ukbota'])
+        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['wwbota'])
       })
 
       const startTime = Date.now()
@@ -54,23 +54,23 @@ export function registerUKBOTADataFile () {
       const totalLines = lines.length
 
       while (lines.length > 0) {
-        const batch = lines.splice(0, 500)
+        const batch = lines.splice(0, 177)
         await (() => new Promise(resolve => {
           setTimeout(() => {
             db.transaction(async transaction => {
               for (const line of batch) {
-                const row = parseUKBOTACSVRow(line, { headers })
-                const ref = row['UKBOTA Reference']
+                const row = parseWWBOTACSVRow(line, { headers })
+                const ref = row.Reference
                 if (ref) {
                   row.Maidenhead &&= row.Maidenhead.replace(/[A-Z]{2}$/, x => x.toLowerCase())
                   const data = {
                     ref,
                     entityPrefix: ref.split('-')[0].split('/')[1],
-                    name: row['Bunker Name'],
-                    area: row.Area,
+                    name: row.Name,
+                    type: row.Type,
                     grid: row.Maidenhead,
-                    lat: Number.parseFloat(row.Latitude),
-                    lon: Number.parseFloat(row.Longitude)
+                    lat: Number.parseFloat(row.Lat),
+                    lon: Number.parseFloat(row.Long)
                   }
 
                   totalReferences++
@@ -82,7 +82,7 @@ export function registerUKBOTADataFile () {
                   ON CONFLICT DO
                   UPDATE SET
                     subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                  `, ['ukbota', data.entityPrefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.entityPrefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
+                  `, ['wwbota', data.entityPrefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.entityPrefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
                   )
                 }
                 processedLines++
@@ -100,7 +100,11 @@ export function registerUKBOTADataFile () {
       }
 
       db.transaction(transaction => {
-        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['ukbota'])
+        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wwbota'])
+      })
+
+      db.transaction(transaction => {
+        transaction.executeSql('DELETE FROM lookups WHERE category = ?', ['ukbota']) // Legacy
       })
 
       const data = {
@@ -113,39 +117,40 @@ export function registerUKBOTADataFile () {
       return data
     },
     onLoad: (data) => {
-      UKBOTAData.totalRefs = data.totalRefs
-      UKBOTAData.version = data.version
+      WWBOTAData.totalRefs = data.totalRefs
+      WWBOTAData.version = data.version
     },
     onRemove: async () => {
-      await dbExecute('DELETE FROM lookups WHERE category = ?', ['ukbota'])
+      await dbExecute('DELETE FROM lookups WHERE category = ?', ['wwbota'])
+      await dbExecute('DELETE FROM lookups WHERE category = ?', ['ukbota']) // Legacy
     }
   })
 }
 
-export async function ukbotaFindOneByReference (ref) {
-  return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['ukbota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
+export async function wwbotaFindOneByReference (ref) {
+  return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['wwbota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function ukbotaFindAllByName (entityPrefix, name) {
+export async function wwbotaFindAllByName (entityPrefix, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
-    ['ukbota', entityPrefix, `%${name}%`, `%${name}%`],
+    ['wwbota', entityPrefix, `%${name}%`, `%${name}%`],
     { row: row => JSON.parse(row.data) }
   )
   return results
 }
 
-export async function ukbotaFindAllByLocation (entityPrefix, lat, lon, delta = 1) {
+export async function wwbotaFindAllByLocation (entityPrefix, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
-    ['ukbota', entityPrefix, lat - delta, lat + delta, lon - delta, lon + delta],
+    ['wwbota', entityPrefix, lat - delta, lat + delta, lon - delta, lon + delta],
     { row: row => JSON.parse(row.data) }
   )
   return results
 }
 
 const OPTIONAL_QUOTED_CSV_ROW_REGEX = /(?<=^|,)(?:(?:"((?:[^"]|"")*)")|([^,]*))(?:,|$)/g
-function parseUKBOTACSVRow (row, options) {
+function parseWWBOTACSVRow (row, options) {
   const parts = [...row.matchAll(OPTIONAL_QUOTED_CSV_ROW_REGEX)].map(
     match => match[1] ? match[1].replaceAll('""', '"') : match[2])
   if (options?.headers) {
