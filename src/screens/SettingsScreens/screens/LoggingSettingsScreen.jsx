@@ -62,6 +62,13 @@ export default function LoggingSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ showStateField: !settings.showStateField }))}
           />
 
+          <Ham2kListItem title={'Show Bearing'}
+            description={settings.showBearing ? 'Show estimated bearing to station' : "Don't show bearing information" }
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="compass-outline" />}
+            right={() => <Switch value={!!settings.showBearing} onValueChange={(value) => dispatch(setSettings({ showBearing: value })) } />}
+            onPress={() => dispatch(setSettings({ showBearing: !settings.showBearing }))}
+          />
+
           <Ham2kListItem
             title="Switch signal report order"
             description={!settings.switchSentRcvd ? 'Sent first, Rcvd second' : 'Rcvd first, Sent second'}

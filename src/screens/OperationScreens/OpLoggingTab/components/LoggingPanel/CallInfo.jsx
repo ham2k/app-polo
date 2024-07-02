@@ -106,7 +106,10 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
 
     if (operation.grid && guess?.grid) {
       const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
-      const bearing = bearingForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } })
+      let bearing
+      if (settings.showBearing) {
+        bearing = bearingForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } })
+      }
       const str = [
         dist && fmtDistance(dist, { units: settings.distanceUnits }),
         bearing && `(${Math.round(bearing)}°)`
@@ -155,11 +158,7 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
     // }
 
     return [locationText, entity?.flag ? entity.flag : '']
-  }, [
-    operation?.grid, pota,
-    lookup, guess, qso?.their?.city, qso?.their?.state, qso?.their?.grid,
-    ourInfo, settings.distanceUnits
-  ])
+  }, [lookup?.dxccCode, guess, operation.grid, ourInfo, pota.name, pota.error, pota.reference, pota.shortName, pota.locationName, qso?.their?.city, qso?.their?.state, qso?.their?.grid, settings.distanceUnits, settings.showBearing])
 
   const stationInfo = useMemo(() => {
     const parts = []
