@@ -29,7 +29,7 @@ export function registerWWBOTADataFile () {
     fetch: async ({ key, definition, options }) => {
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
-      const url = 'https://drive.google.com/uc?id=1ea3j9S4VzcDttMPs_9WOj-4L_DzfcUhR'
+      const url = 'https://wwbota.org/wwbota-3/'
 
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
@@ -54,23 +54,23 @@ export function registerWWBOTADataFile () {
       const totalLines = lines.length
 
       while (lines.length > 0) {
-        const batch = lines.splice(0, 500)
+        const batch = lines.splice(0, 177)
         await (() => new Promise(resolve => {
           setTimeout(() => {
             db.transaction(async transaction => {
               for (const line of batch) {
                 const row = parseWWBOTACSVRow(line, { headers })
-                const ref = row['UKBOTA Reference']
+                const ref = row.Reference
                 if (ref) {
                   row.Maidenhead &&= row.Maidenhead.replace(/[A-Z]{2}$/, x => x.toLowerCase())
                   const data = {
                     ref,
                     entityPrefix: ref.split('-')[0].split('/')[1],
-                    name: row['Bunker Name'],
-                    area: row.Area,
+                    name: row.Name,
+                    type: row.Type,
                     grid: row.Maidenhead,
-                    lat: Number.parseFloat(row.Latitude),
-                    lon: Number.parseFloat(row.Longitude)
+                    lat: Number.parseFloat(row.Lat),
+                    lon: Number.parseFloat(row.Long)
                   }
 
                   totalReferences++

@@ -8,11 +8,11 @@
 export const Info = {
   key: 'wwbota',
   icon: 'nuke',
-  name: 'Worldwide Bunkers on the Air',
+  name: 'Bunkers on the Air',
   shortName: 'WWBOTA',
   doubleContact: 'Bunker-to-Bunker',
   shortNameDoubleContact: 'B2B',
-  infoURL: 'https://bunkersontheair.org/',
+  infoURL: 'https://wwbota.org/',
   huntingType: 'wwbota',
   activationType: 'wwbotaActivation',
   descriptionPlaceholder: 'Enter WWBOTA references',

@@ -38,7 +38,7 @@ export function WWBOTAListItem ({ activityRef, refData, allRefs, style, styles, 
           </Text>
         </View>
       }
-      description={reference?.ref ? [reference?.name, reference?.area].filter(x => x).join(', ') : 'Unknown Bunker Reference'}
+      description={reference?.ref ? [reference?.name, reference?.type].filter(x => x).join(', ') : 'Unknown Bunker Reference'}
       onPress={onPress}
       left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
       right={() => (
