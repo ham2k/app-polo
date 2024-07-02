@@ -8,7 +8,8 @@
       "Fix bugs with stray lookup data",
       "Fix bug with onboarding dialog",
       "Option to clear Historical Data (contributed by NA7DO)",
-      "Include seconds in ADIF times (contributed by NA7DO)"
+      "Include seconds in ADIF times (contributed by NA7DO)",
+      "Bunkers on the air is now Worldwide! (contributed by M1SDH)"
     ]
   },
   "0.7.10.1": {
