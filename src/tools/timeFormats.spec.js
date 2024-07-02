@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { prepareTimeValue, fmtShortTimeZulu, fmtTimeZulu, fmtDateZulu, fmtDateTimeZuluDynamic } from './timeFormats'
+import { prepareTimeValue, fmtShortTimeZulu, fmtTimeZulu, fmtDateZulu, fmtDateTimeZuluDynamic, fmtADIFTime, fmtCabrilloTime } from './timeFormats'
 
 describe('prepareTimeValue', () => {
   it('should work', () => {
@@ -54,5 +54,21 @@ describe('fmtDateTimeZuluDynamic', () => {
     expect(fmtDateTimeZuluDynamic('2024-03-10T23:15:00Z', { now, compact: true })).toEqual('Mar 10')
     expect(fmtDateTimeZuluDynamic('2023-05-10T23:15:00Z', { now, compact: true })).toEqual('May 10')
     expect(fmtDateTimeZuluDynamic('2023-02-10T23:15:00Z', { now, compact: true })).toEqual('Feb 2023')
+  })
+})
+
+describe('fmtADIFTime', () => {
+  it('should work', () => {
+    const now = new Date('2024-03-12T12:34:56-0000')
+
+    expect(fmtADIFTime(now.getTime())).toEqual('123456')
+  })
+})
+
+describe('fmtCabrilloTime', () => {
+  it('should work', () => {
+    const now = new Date('2024-03-12T12:34:56-0000')
+
+    expect(fmtCabrilloTime(now.getTime())).toEqual('1234')
   })
 })
