@@ -11,10 +11,10 @@ import { useSelector } from 'react-redux'
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { selectOperationCallInfo } from '../../../store/operations'
 
-import { Info } from './UKBOTAInfo'
-import UKBOTAInput from './UKBOTAInput'
+import { Info } from './WWBOTAInfo'
+import WWBOTAInput from './WWBOTAInput'
 
-export function UKBOTALoggingControl (props) {
+export function WWBOTALoggingControl (props) {
   const { qso, operation, updateQSO, style, styles } = props
 
   const ref = useRef()
@@ -40,17 +40,17 @@ export function UKBOTALoggingControl (props) {
   }, [qso, updateQSO])
 
   const defaultPrefix = useMemo(() => {
-    if (qso?.their?.guess?.entityPrefix?.[0] === 'G') {
+    if (qso?.their?.guess?.entityPrefix) {
       return `B/${qso?.their.guess.entityPrefix}`
-    } else if (ourInfo?.entityPrefix?.[0] === 'G') {
+    } else if (ourInfo?.entityPrefix) {
       return `B/${ourInfo?.entityPrefix}`
     } else {
-      return '?'
+      return 'B/?'
     }
   }, [qso?.their?.guess?.entityPrefix, ourInfo?.entityPrefix])
 
   return (
-    <UKBOTAInput
+    <WWBOTAInput
       {...props}
       innerRef={ref}
       style={[style, { maxWidth: '95%', minWidth: styles.oneSpace * 30, width: Math.max(16, localValue?.length || 0) * styles.oneSpace * 1.3 }]}
