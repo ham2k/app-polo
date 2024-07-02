@@ -35,12 +35,15 @@ export const POTAPostSpot = (operation, vfo, comments) => async (dispatch, getSt
       if (response.status === 200) {
         // const body = await response.text()
         // console.log(body)
+        return true
       } else {
         const body = await response.text()
         reportError('POTA Spotter http error', response, body)
+        return false
       }
     } catch (error) {
       reportError('POTA Spotter error', error)
+      return false
     }
   }
 }

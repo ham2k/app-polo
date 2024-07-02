@@ -24,7 +24,7 @@ import { setOperationData } from '../../../../../../store/operations'
 const SECONDS_UNTIL_RESPOT = 30
 
 export function SpotterControlInputs (props) {
-  const { operation, vfo, styles, style } = props
+  const { operation, vfo, styles, style, setCurrentSecondaryControl } = props
 
   const online = useSelector(selectRuntimeOnline)
 
@@ -34,70 +34,89 @@ export function SpotterControlInputs (props) {
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   const [spotterUI, setSpotterUI] = useState({})
+  const [inProgress, setInProgress] = useState(false)
+  const [spotStatus, setSpotStatus] = useState({})
   const [comments, setComments] = useState()
 
   const now = useSelector(selectSecondsTick)
 
   useEffect(() => {
-    if (vfo?.freq) {
-      if (vfo.freq !== operation?.spottedFreq) {
-        setSpotterUI({
-          message: `Spot at ${fmtFreqInMHz(vfo.freq)}`,
-          disabled: false
-        })
-        if (comments === undefined) setComments(operation?.spottedFreq ? 'QSY' : 'QRV with Ham2K PoLo')
-      } else if (now - (operation?.spottedAt || 0) > (1000 * SECONDS_UNTIL_RESPOT)) {
-        setSpotterUI({
-          message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
-          disabled: false
-        })
-        if (comments === undefined) setComments('QRT')
-      } else if (comments?.length > 0 && (now - (operation?.spottedAt || 0) < (1000 * 1))) {
-        setSpotterUI({
-          message: `Spotted ${fmtDateTimeRelative(operation?.spottedAt)}`,
-          disabled: false
-        })
-        setComments(undefined)
-      } else if (comments?.length > 0) {
-        setSpotterUI({
-          message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
-          disabled: false
-        })
+    if (!inProgress) {
+      if (vfo?.freq) {
+        if (vfo.freq !== operation?.spottedFreq) {
+          setSpotterUI({
+            message: `Spot at ${fmtFreqInMHz(vfo.freq)}`,
+            disabled: false
+          })
+          if (comments === undefined) setComments(operation?.spottedFreq ? 'QSY' : 'QRV with Ham2K PoLo')
+        } else if (now - (operation?.spottedAt || 0) > (1000 * SECONDS_UNTIL_RESPOT)) {
+          setSpotterUI({
+            message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
+            disabled: false
+          })
+        } else if (comments?.length > 0 && (now - (operation?.spottedAt || 0) < (1000 * 1))) {
+          setSpotterUI({
+            message: `Spotted ${fmtDateTimeRelative(operation?.spottedAt)}`,
+            disabled: false
+          })
+          setComments(undefined)
+        } else if (comments?.length > 0) {
+          setSpotterUI({
+            message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
+            disabled: false
+          })
+        } else {
+          setSpotterUI({
+            message: `Spotted ${fmtDateTimeRelative(operation?.spottedAt)}`,
+            disabled: false
+          })
+        }
       } else {
         setSpotterUI({
-          message: `Spotted ${fmtDateTimeRelative(operation?.spottedAt)}`,
-          disabled: false
+          message: 'First set a frequency to spot.',
+          disabled: true
         })
       }
-    } else {
-      setSpotterUI({
-        message: 'First set a frequency to spot.',
-        disabled: true
-      })
     }
-  }, [vfo?.freq, operation?.spottedFreq, operation?.spottedAt, operation, now, comments])
+  }, [inProgress, vfo?.freq, operation?.spottedFreq, operation?.spottedAt, operation, now, comments])
 
   const activityHooksWithSpot = useMemo(() =>
     findHooks('activity').filter((x) => (findRef(operation.refs, x.activationType) && x.postSpot))
   , [operation.refs])
 
-  const handleSpotting = useCallback(() => {
-    activityHooksWithSpot.forEach(hook => dispatch(hook.postSpot(operation, vfo, comments)))
-    dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
+  const handleSpotting = useCallback(async () => {
+    const status = {}
+    let ok = true
+    setSpotStatus(status)
+    setInProgress(true)
+    for (const hook of activityHooksWithSpot) {
+      setSpotterUI({
+        message: `Spotting ${hook.shortName ?? hook.name}…`,
+        disabled: true
+      })
+      status[hook.key] = await dispatch(hook.postSpot(operation, vfo, comments))
+      ok = ok && status[hook.key]
+      setSpotStatus(status)
+    }
+    setInProgress(false)
     setComments(undefined)
-  }, [dispatch, operation, vfo, comments, activityHooksWithSpot])
+    if (ok) {
+      dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
+      setCurrentSecondaryControl(undefined)
+    }
+  }, [activityHooksWithSpot, dispatch, operation, vfo, comments, setCurrentSecondaryControl])
 
   return (
     <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
-      {!spotterUI.disabled && (
-        <ThemedTextInput
-          innerRef={ref}
-          style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace, flex: 1 }}
-          label={'Comments'}
-          value={comments ?? ''}
-          onChangeText={setComments}
-        />
-      )}
+      <ThemedTextInput
+        innerRef={ref}
+        style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace, flex: 1 }}
+        label={'Comments'}
+        value={comments ?? ''}
+        onChangeText={setComments}
+        disabled={!online || spotterUI.disabled}
+      />
+
       <ThemedButton
         themeColor="tertiaryLighter"
         mode="contained"
@@ -114,12 +133,18 @@ export function SpotterControlInputs (props) {
             key={x.key}
             source={x.icon}
             size={styles.oneSpace * 2.3}
-            color={styles.colors.onTertiaryLight}
+            color={styles.colors[colorForStatus(spotStatus[x.key])]}
           />
         ))}
       </View>
     </View>
   )
+}
+
+const colorForStatus = (status) => {
+  if (status === true) return 'importantLight'
+  if (status === false) return 'errorLight'
+  return 'onTertiaryLight'
 }
 
 export const spotterControl = {

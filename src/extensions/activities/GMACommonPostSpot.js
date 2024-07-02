@@ -46,11 +46,14 @@ export const GMACommonPostSpot = (operation, vfo, comments, refs, url) => async 
     if (response.status === 200) {
       // const body = await response.text()
       // console.log(body)
+      return true
     } else {
       const body = await response.text()
       console.error('Error in GMA Spot', { response, body })
+      return false
     }
   } catch (error) {
     console.error('Error in GMA Spot', error)
+    return false
   }
 }

@@ -115,6 +115,7 @@ export const SecondaryControlSelectionsubPanel = ({
             qso={qso} operation={operation} vfo={vfo} settings={settings}
             style={secondaryComponentStyle} styles={styles} themeColor={themeColor}
             handleFieldChange={handleFieldChange}
+            setCurrentSecondaryControl={setCurrentSecondaryControl}
             setQSO={setQSO}
             updateQSO={updateQSO}
             onSubmitEditing={onSubmitEditing}
