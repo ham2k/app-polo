@@ -6,7 +6,9 @@
       "Bearing display is now optional",
       "Fix bugs where notes were not being shown",
       "Fix bugs with stray lookup data",
-      "Fix bug with onboarding dialog"
+      "Fix bug with onboarding dialog",
+      "Option to clear Historical Data (contributed by NA7DO)",
+      "Include seconds in ADIF times (contributed by NA7DO)"
     ]
   },
   "0.7.10.1": {
