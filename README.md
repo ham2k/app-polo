@@ -1,3 +1,5 @@
+THIS IS A TEST
+
 # Ham2K Portable Logger - PoLo
 
 An app for Amateur Radio operations.
