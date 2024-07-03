@@ -20,6 +20,26 @@ This app is Open Source and licensed under the [Mozilla Public License 2.0](./LI
 
 # Notes for Developers
 
+## Development Environment
+
+First, complete the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions up to just before "Creating a new application" step.
+
+Then clone this repository and install the dependencies:
+
+```
+npm install
+```
+
+And finally, build the app for your target platform:
+
+```
+# iOS
+(cd ios && RCT_NEW_ARCH_ENABLED=1 pod install)
+npm run ios
+
+# Android
+npm run android -- --mode alphaDebug
+```
 ### Debug Menu
 
 iOS: Cmd ⌘ + D
@@ -53,6 +73,19 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 
 ---
 
+# Known Issues
+
+### Android builds from the metro bundler terminal
+
+Because of a mess with our multiple build flavors, under RN 0.73 the default way of running android for development is broken
+so you cannot just press `a` from the metro bundler terminal to run the app on android.
+
+Instead, run the metro bundler (`npm start`) on one terminal, and run `npm run android` on another to build the app.
+
+Afterwards, just press `r` on the metro bundler terminal to reload the app.
+
+
+
 # Troubleshooting
 
 ### Clean Build
@@ -62,14 +95,15 @@ rm -rf node_modules
 npm install
 
 # For android
-(cd android && ./gradlew clean && ./gradlew cleanBuildCache)
+rm -rf android/app/.cxx
+(cd android && ./gradlew clean)
 
 # For iOS
 rm -rf ~/Library/Caches/CocoaPods
 rm -rf ios/Pods
 rm -rf ios/Podfile.lock
 rm -rf ios/build
-(cd ios && pod install)
+(cd ios && RCT_NEW_ARCH_ENABLED=1 pod install)
 
 # For all platforms
 watchman watch-del .

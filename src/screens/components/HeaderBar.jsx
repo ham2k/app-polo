@@ -43,14 +43,14 @@ function prepareStyles (baseStyles, options) {
       fontFamily: baseStyles.normalFontFamily,
       fontSize: 13 * baseStyles.fontScaleAdjustment,
       lineHeight: 14 * baseStyles.fontScaleAdjustment,
-      fontWeight: baseStyles.isIOS ? '300' : '100',
+      fontWeight: baseStyles.isIOS ? '400' : '100',
       color: baseStyles.colors.onPrimary
     },
     screenSubTitleCondensed: {
       fontFamily: baseStyles.maybeCondensedFontFamily,
       fontSize: 13 * baseStyles.fontScaleAdjustment,
       lineHeight: 14 * baseStyles.fontScaleAdjustment,
-      fontWeight: baseStyles.isIOS ? '300' : '100',
+      fontWeight: baseStyles.isIOS ? '400' : '100',
       color: baseStyles.colors.onPrimary
     },
     screenTitleLight: {
@@ -91,6 +91,9 @@ export default function HeaderBar ({ route, options, navigation, back, close, ti
   if (closeInsteadOfBack) {
     close = back
   }
+
+  // TODO: Once React Native fixes adjustsFontSizeToFit on iOS so it doesn't scale the font up, add it back to the Text components below
+
   return (
     <Appbar.Header
       theme={styles.appBarTheme}
@@ -124,11 +127,11 @@ export default function HeaderBar ({ route, options, navigation, back, close, ti
         title={
           title && subTitle ? (
             <>
-              <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={styles.screenTitleSmall}>{title}</Text>
-              <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}>{subTitle}</Text>
+              <Text adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={styles.screenTitleSmall}>{title}</Text>
+              <Text adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}>{subTitle}</Text>
             </>
           ) : (
-            <Text adjustsFontSizeToFit={true} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.8} style={styles.screenTitle}>{title}</Text>
+            <Text adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.8} maxFontSizeMultiplier={1} style={styles.screenTitle}>{title}</Text>
           )
         }
       />

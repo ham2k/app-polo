@@ -109,7 +109,7 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
             anchor={{ x: 0.5, y: 0.5 }}
             flat={true}
             tracksViewChanges={false}
-            icon={TRANSP_PNG}
+            image={TRANSP_PNG}
           >
             <View style={{ width: styles.oneSpace, height: styles.oneSpace }} />
           </Marker>
@@ -164,7 +164,7 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, scale }) => {
             description={[qso.their?.sent, qso.mode, qso.band, fmtShortTimeZulu(qso.startOnMillis)].join(' • ')}
             flat={true}
             tracksViewChanges={false}
-            icon={TRANSP_PNG}
+            image={TRANSP_PNG}
           >
             <View width={12} height={12} style={{ width: styles.oneSpace * mapStyles.marker.size, height: styles.oneSpace * mapStyles.marker.size }}>
               <View />{/* Empty View */}

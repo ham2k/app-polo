@@ -94,7 +94,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
         ...commonStyles,
         lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         textAlign: 'right',
-        fontWeight: '300',
+        fontWeight: '400',
         fontSize: themeStyles.normalFontSize * 0.7
       },
       call: {
