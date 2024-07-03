@@ -42,19 +42,13 @@ export const stationSlice = createSlice({
       }
       state.transceivers[name].vfo = { ...state.transceivers[name].vfo, ...data }
     },
-    setPwr: (state, action) => {
-      let { name, ...data } = action.payload
-      name = name ?? state.currentTransceiver ?? 'default'
-      state.transceivers[name] = state.transceivers[name] || {}
-      state.transceivers[name].txPwr = data.txPwr
-    },
     setCurrentTransceiver: (state, action) => {
       state.currentTransceiver = action.payload
     }
   }
 })
 
-export const { setTransceiverState, setCurrentTransceiver, setVFO, setPwr } = stationSlice.actions
+export const { setTransceiverState, setCurrentTransceiver, setVFO } = stationSlice.actions
 
 export const selectTransceiver = createSelector(
   (state) => state?.station?.transceivers,
@@ -73,16 +67,6 @@ export const selectVFO = createSelector(
     const transceiver = transceivers[name] ?? {}
 
     return transceiver.vfo || { band: '20m', mode: 'USB' }
-  }
-)
-
-export const selectPwr = createSelector(
-  (state) => state?.station?.transceivers,
-  (state, transceiver) => transceiver || state?.station?.currentTransceiver || 'default',
-  (transceivers, name) => {
-    const transceiver = transceivers[name] ?? {}
-
-    return transceiver.txPwr || ''
   }
 )
 

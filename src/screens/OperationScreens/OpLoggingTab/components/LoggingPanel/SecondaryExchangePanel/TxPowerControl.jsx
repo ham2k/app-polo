@@ -10,7 +10,7 @@ import { View } from 'react-native'
 
 import ThemedTextInput from '../../../../../components/ThemedTextInput'
 
-const TxPowerInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
+const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
@@ -52,7 +52,7 @@ export const powerControl = {
     if (qso?.twpwer) parts.unshift('✓')
     return parts.join(' ')
   },
-  InputComponent: TxPowerInputs,
+  InputComponent: TxPowerControl,
   inputWidthMultiplier: 40,
   optionType: 'optional'
 }
