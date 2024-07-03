@@ -1,6 +1,9 @@
 {
-  "0.7.11-pre1": {
+  "24.7.0-b1": {
+    "name": "July 2024 (beta 1)",
     "changes": [
+      "New version schema, starting with the 'July 2024' release",
+      "Big upgrades to the underlying framework (React Native, 0.74)",
       "Hide self-spotting after successfully posting",
       "Tweaked layout of Call Info Panel",
       "Bearing display is now optional",
