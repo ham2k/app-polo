@@ -203,8 +203,8 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
       updateQSO({ startOnMillis: value, _manualTime: true })
     } else if (fieldId === 'state') {
       updateQSO({ their: { state: value } })
-    } else if (fieldId === 'txPwr') {
-      updateQSO({ txPwr: value })
+    } else if (fieldId === 'power') {
+      updateQSO({ power: value })
       if (qso?._isNew) dispatch(setVFO({ power: value }))
     }
   }, [qso, updateQSO, dispatch])
@@ -598,7 +598,7 @@ function prepareNewQSO (operation, qsos, vfo, settings) {
     band: vfo.band,
     freq: vfo.freq,
     mode: vfo.mode,
-    txPwr: vfo.power,
+    power: vfo.power,
     _isNew: true,
     key: 'new-qso'
   }

@@ -31,7 +31,7 @@ export const SecondaryExchangePanel = (props) => {
       radio: radioControl,
       notes: notesControl,
       edit: editQSOControl,
-      txpwr: powerControl
+      power: powerControl
     }
     const activityHooks = findHooks('activity')
     if (activityHooks.filter((x) => (findRef(operation, x.activationType) && x.postSpot)).length > 0) {

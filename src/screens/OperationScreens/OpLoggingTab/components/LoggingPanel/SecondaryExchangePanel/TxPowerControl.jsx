@@ -30,13 +30,13 @@ const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, style
         innerRef={ref}
         themeColor={themeColor}
         style={[styles.input, { minWidth: styles.oneSpace * 20, width: '100%' }]}
-        value={qso?.txPwr ?? ''}
+        value={qso?.power ?? ''}
         disabled={disabled}
         label="Power"
         placeholder=""
         onChange={handleOnChange}
         onSubmitEditing={onSubmitEditing}
-        fieldId={'txPwr'}
+        fieldId={'power'}
         focusedRef={focusedRef}
         keyboard="dumb"
       />
@@ -44,7 +44,7 @@ const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, style
   )
 }
 export const powerControl = {
-  key: 'txpwr',
+  key: 'power',
   icon: 'lightning-bolt-outline',
   order: 100,
   label: ({ qso, operation, settings }) => {

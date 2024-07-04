@@ -99,7 +99,7 @@ function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
     { CQZ: qso.their?.cqZone ?? qso.their?.guess?.cqZone },
     { ITUZ: qso.their?.ituZone ?? qso.their?.guess?.ituZone },
     { ARRL_SECT: qso.their.arrlSection },
-    { TX_PWR: qso.txPwr }
+    { TX_PWR: qso.power }
   ]
 }
 
