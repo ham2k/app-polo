@@ -409,8 +409,8 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
               setCurrentSecondaryControl={setCurrentSecondaryControl}
             />
 
-            <View style={styles.infoPanel.container}>
-              <View style={{ flex: 1, paddingLeft: styles.oneSpace }}>
+            <View style={[styles.infoPanel.container, { flexDirection: settings.leftieMode ? 'row-reverse' : 'row' }]}>
+              <View style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}>
                 {operationError ? (
                   <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
                     <Ham2kMarkdown style={{ color: styles.theme.colors.error }}>
@@ -476,9 +476,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
 
           </View>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyItems: 'center', paddingVertical: styles.halfSpace, ...keyboardExtraStyles }}>
+        <View style={{ flexDirection: settings.leftieMode ? 'row-reverse' : 'row', alignItems: 'center', justifyItems: 'center', paddingVertical: styles.halfSpace, ...keyboardExtraStyles }}>
           <MainExchangePanel
-            style={{ flex: 1, paddingLeft: styles.oneSpace }}
+            style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}
             qso={qso}
             operation={operation}
             vfo={vfo}
@@ -493,7 +493,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
             mainFieldRef={mainFieldRef}
             focusedRef={focusedRef}
           />
-          <View style={{ flex: 0, justifyContent: 'center', alignItems: 'center', paddingLeft: styles.halfSpace }}>
+          <View style={{ flex: 0, justifyContent: 'center', alignItems: 'center', [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.halfSpace }}>
             <IconButton
               icon={qso?._isNew ? 'upload' : (qso?._willBeDeleted ? 'trash-can' : 'content-save')}
               size={styles.oneSpace * 4}
