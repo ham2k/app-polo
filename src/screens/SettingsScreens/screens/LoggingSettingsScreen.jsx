@@ -87,7 +87,7 @@ export default function LoggingSettingsScreen ({ navigation }) {
 
           <Ham2kListItem
             title="Bands & Modes"
-            description={[settings.bands.join(', '), settings.modes.join(', ')].join(' • ')}
+            description={[(settings.bands || []).join(', '), (settings.modes || []).join(', ')].join(' • ')}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="radio" />}
             onPress={() => navigation.navigate('BandModeSettings')}
           />
