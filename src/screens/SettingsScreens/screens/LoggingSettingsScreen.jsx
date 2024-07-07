@@ -42,6 +42,13 @@ export default function LoggingSettingsScreen ({ navigation }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <Ham2kListSection>
+          <Ham2kListItem title={'Leftie Mode'}
+            description={settings.leftieMode ? 'Improved layout for left-handed users' : 'Regular layout for right-handed users' }
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="hand-front-left-outline" />}
+            right={() => <Switch value={!!settings.leftieMode} onValueChange={(value) => dispatch(setSettings({ leftieMode: value })) } />}
+            onPress={() => dispatch(setSettings({ leftieMode: !settings.leftieMode }))}
+          />
+
           <Ham2kListItem title={'Country Flags'}
             description={{ none: "Don't show any flags", all: 'Show flags for all contacts' }[settings.dxFlags] || 'Show only for DX contacts'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="flag" />}
