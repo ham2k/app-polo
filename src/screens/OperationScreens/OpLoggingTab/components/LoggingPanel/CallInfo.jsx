@@ -41,7 +41,7 @@ function prepareStyles (baseStyles, themeColor) {
       pill: {
         marginRight: baseStyles.halfSpace,
         borderRadius: 3,
-        marginTop: baseStyles.oneSpace * 0.25,
+        // marginTop: baseStyles.oneSpace * 0.25,
         paddingHorizontal: baseStyles.oneSpace * 0.5,
         backgroundColor: baseStyles.theme.colors[`${themeColor}Light`]
       },
@@ -257,9 +257,9 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
             )}
           </View>
           {(stationInfo || historyMessage) && (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'flex-start' }}>
-              <View style={{ flex: 1, minWidth: stationInfo.length * styles.oneSpace * 1.05 }}>
-                <Ham2kMarkdown style={{ lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+              <View style={{ flex: 1, minWidth: stationInfo.length > 25 ? '80%' : undefined }}>
+                <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
               </View>
               {historyMessage && (
                 <View style={{ flex: 0 }}>
