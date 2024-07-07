@@ -258,7 +258,7 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
           </View>
           {(stationInfo || historyMessage) && (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'flex-start' }}>
-              <View style={{ flex: 1, minWidth: stationInfo.length * styles.oneSpace * 1.05 }}>
+              <View style={{ flex: 1 }}>
                 <Ham2kMarkdown style={{ lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
               </View>
               {historyMessage && (
