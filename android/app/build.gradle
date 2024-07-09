@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
@@ -72,6 +73,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 android {
     ndkVersion rootProject.ext.ndkVersion
 
+    buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     namespace "com.ham2k.polo"
@@ -118,6 +120,7 @@ android {
     flavorDimensions ("environment")
     productFlavors {
         alpha {
+            isDefault true
             dimension "environment"
             applicationIdSuffix ".alpha"
         }
@@ -151,3 +154,4 @@ project.ext.vectoricons = [
     iconFontNames: [ 'MaterialIcons.ttf', 'MaterialCommunityIcons.ttf' ] // Specify font files
 ]
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+
