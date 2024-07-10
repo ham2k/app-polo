@@ -1,5 +1,6 @@
 {
-  "0.7.11-pre1": {
+  "24.7.0": {
+    "name": "July 2024",
     "changes": [
       "Hide self-spotting after successfully posting",
       "Tweaked layout of Call Info Panel",
