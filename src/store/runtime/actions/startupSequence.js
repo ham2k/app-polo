@@ -33,7 +33,11 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
 
   setTimeout(async () => {
     dispatch(resetRuntimeMessages())
-    dispatch(addRuntimeMessage(`**Version ${packageJson.version}**`))
+    if (packageJson.versionName) {
+      dispatch(addRuntimeMessage(`## ${packageJson.versionName} Release`))
+    } else {
+      dispatch(addRuntimeMessage(`## Version ${packageJson.version}`))
+    }
 
     const minimumTimePromise = new Promise(resolve => {
       setTimeout(() => { resolve() }, 1000)
