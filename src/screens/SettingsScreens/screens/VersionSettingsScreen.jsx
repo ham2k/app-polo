@@ -77,7 +77,12 @@ export default function VersionSettingsScreen ({ navigation }) {
   }, [])
 
   const currentVersionLabel = useMemo(() => {
-    let version = `Version ${packageJson.version}`
+    let version
+    if (packageJson.versionName) {
+      version = `${packageJson.versionName} Release (${packageJson.version})`
+    } else {
+      version = `Version ${packageJson.version}`
+    }
     if ((updateMetadata?.track && updateMetadata?.track !== DEFAULT_TRACK) || settings.devMode) {
       version += ` (${UPDATE_TRACK_LABELS[updateMetadata?.track]})`
     }
@@ -170,7 +175,7 @@ export default function VersionSettingsScreen ({ navigation }) {
 
               <Markdown style={styles.markdown}>
                 {
-`## Release ${release}
+`## ${releaseNotes[release].name ? `${releaseNotes[release].name} Release (${release})` : `Version ${release}`}
 ${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
 `
                 }
