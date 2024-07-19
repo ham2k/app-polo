@@ -273,13 +273,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
           qso.their = qso.their || {}
           qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
 
-          qso.their.name = qso.their.name || qso.their.guess?.name
-          qso.their.city = qso.their.city || qso.their.guess?.city
-          qso.their.state = qso.their.state || qso.their.guess?.state
-          qso.their.grid = qso.their.grid || qso.their.guess?.grid
-
           let call = qso?.their?.call
           let lastKey
+
           const calls = call = call.split(',')
           for (let i = 0; i < calls.length; i++) {
             let oneQSO = qso
