@@ -1,4 +1,10 @@
 {
+  "24.8.0-pre1": {
+    "name": "August 2024 (pre 1)",
+    "changes": [
+      "Input for TX Power (contributed by NA7DO)"
+    ]
+  },
   "24.7.0": {
     "name": "July 2024",
     "changes": [

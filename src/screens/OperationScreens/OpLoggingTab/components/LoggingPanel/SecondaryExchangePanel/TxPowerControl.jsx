@@ -9,6 +9,7 @@ import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 
 import ThemedTextInput from '../../../../../components/ThemedTextInput'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const ref = useRef()
@@ -16,7 +17,7 @@ const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, style
 
   const handleOnChange = (event) => {
     const value = event?.value || event?.nativeEvent?.text
-    const digits = [...value].filter(c => c >= '0' && c <= '9').join('')
+    const digits = Number.parseFloat(value)
 
     handleFieldChange({
       ...event,
@@ -29,7 +30,7 @@ const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, style
       <ThemedTextInput
         innerRef={ref}
         themeColor={themeColor}
-        style={[styles.input, { minWidth: styles.oneSpace * 20, width: '100%' }]}
+        style={[styles.input, { minWidth: styles.oneSpace * 10, width: '100%' }]}
         value={qso?.power ?? ''}
         disabled={disabled}
         label="Power"
@@ -45,14 +46,16 @@ const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, style
 }
 export const powerControl = {
   key: 'power',
-  icon: 'lightning-bolt-outline',
-  order: 100,
+  icon: 'lightning-bolt',
+  order: 2,
   label: ({ qso, operation, settings }) => {
-    const parts = ['Power']
-    if (qso?.twpwer) parts.unshift('✓')
-    return parts.join(' ')
+    if (qso?.power) {
+      return fmtNumber(qso.power, 0) + 'W'
+    } else {
+      return 'Power'
+    }
   },
   InputComponent: TxPowerControl,
-  inputWidthMultiplier: 40,
+  inputWidthMultiplier: 10,
   optionType: 'optional'
 }

@@ -83,6 +83,7 @@ function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
     ...modeToADIF(qso.mode),
     { BAND: qso.band && qso.band !== 'other' ? qso.band : undefined },
     { FREQ: qso.freq ? (qso.freq / 1000).toFixed(6) : undefined },
+    { TX_PWR: qso.power },
     { QSO_DATE: fmtADIFDate(qso.startOnMillis + timeOfffset) },
     { TIME_ON: fmtADIFTime(qso.startOnMillis + timeOfffset) },
     { RST_RCVD: qso.their.sent },
@@ -99,8 +100,7 @@ function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
     { STATE: qso.their?.state ?? qso.their?.guess?.state },
     { CQZ: qso.their?.cqZone ?? qso.their?.guess?.cqZone },
     { ITUZ: qso.their?.ituZone ?? qso.their?.guess?.ituZone },
-    { ARRL_SECT: qso.their.arrlSection },
-    { TX_PWR: qso.power }
+    { ARRL_SECT: qso.their.arrlSection }
   ]
 }
 
