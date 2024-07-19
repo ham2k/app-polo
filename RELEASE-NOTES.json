@@ -1,4 +1,16 @@
 {
+  "24.7.2": {
+    "name": "July 2024",
+    "changes": [
+      "Fixed an issue when entering multiple callsigns at the same time"
+    ]
+  },
+  "24.7.1": {
+    "name": "July 2024",
+    "changes": [
+      "Fixed an issue with Callsign Notes loading for some Android devices"
+    ]
+  },
   "24.7.0": {
     "name": "July 2024",
     "changes": [

@@ -94,6 +94,7 @@ function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
     { MY_GRIDSQUARE: qso?.our?.grid ?? common.grid },
     { NAME: qso.their?.name ?? qso.their?.guess?.name },
     { DXCC: qso.their?.dxccCode ?? qso.their?.guess?.dxccCode },
+    { QTH: qso.their?.city ?? qso.their?.guess?.city },
     { COUNTRY: qso.their?.country ?? qso.their?.guess?.country },
     { STATE: qso.their?.state ?? qso.their?.guess?.state },
     { CQZ: qso.their?.cqZone ?? qso.their?.guess?.cqZone },

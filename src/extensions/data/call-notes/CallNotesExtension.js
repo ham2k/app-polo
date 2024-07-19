@@ -59,8 +59,7 @@ const Extension = {
 
       CallNotesData.files.push(file)
       registerDataFile(createDataFileDefinition(file))
-      // Load Call Note files without `await`, in the background
-      dispatch(loadDataFile(`call-notes-${file.location}`))
+      await dispatch(loadDataFile(`call-notes-${file.location}`))
     }
 
     registerHook('setting', {

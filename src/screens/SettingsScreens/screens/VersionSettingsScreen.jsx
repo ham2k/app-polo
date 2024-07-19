@@ -149,8 +149,8 @@ export default function VersionSettingsScreen ({ navigation }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <Ham2kListSection>
-          <Ham2kListItem title={currentVersionLabel}
-            description={`Base Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
+          <Ham2kListItem title={packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`}
+            description={`${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
           />
 
@@ -175,7 +175,7 @@ export default function VersionSettingsScreen ({ navigation }) {
 
               <Markdown style={styles.markdown}>
                 {
-`## ${releaseNotes[release].name ? `${releaseNotes[release].name} Release (${release})` : `Version ${release}`}
+`## ${releaseNotes[release].name ? `${releaseNotes[release].name} Release` : `Version ${release}`}
 ${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
 `
                 }
