@@ -12,7 +12,7 @@ import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
 
 const validModes = ['CW', 'FM', 'SSB', 'RTTY', 'PSK']
 
-export const GMACommonPostSpot = (operation, vfo, comments, refs, url) => async (dispatch, getState) => {
+export const GMACommonPostSpot = ({ operation, vfo, comments, refs, url }) => async (dispatch, getState) => {
   const state = getState()
   const call = operation.stationCall || state.settings.operatorCall
   const baseCall = parseCallsign(call).baseCall

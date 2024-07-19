@@ -13,7 +13,7 @@ import { apiSOTA } from './apiSOTA'
 
 const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']
 
-export const SOTAPostSpot = (operation, comments) => async (dispatch, getState) => {
+export const SOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 
@@ -21,7 +21,7 @@ export const SOTAPostSpot = (operation, comments) => async (dispatch, getState) 
   for (const ref of refs) { // Should only be one
     const [associationCode, summitCode] = ref.ref.split('/', 2)
 
-    let mode = operation.mode
+    let mode = vfo.mode
     if (!validModes.includes(mode)) {
       if (ADIF_SUBMODES.SSB.includes(mode)) {
         mode = 'SSB'
@@ -35,12 +35,12 @@ export const SOTAPostSpot = (operation, comments) => async (dispatch, getState) 
       associationCode,
       summitCode,
       activatorCallsign,
-      frequency: `${operation.freq / 1000}`, // string
+      frequency: `${vfo.freq / 1000}`, // string
       mode,
       comments
     }
+
     // Errors will be logged by apiSOTA
-    const promise = dispatch(apiSOTA.endpoints.spot.initiate(spot))
-    promise.unsubscribe()
+    await dispatch(apiSOTA.endpoints.spot.initiate(spot))
   }
 }

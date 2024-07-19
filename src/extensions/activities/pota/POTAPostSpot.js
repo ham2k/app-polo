@@ -10,7 +10,7 @@ import { reportError } from '../../../distro'
 import packageJson from '../../../../package.json'
 import { filterRefs } from '../../../tools/refTools'
 
-export const POTAPostSpot = (operation, vfo, comments) => async (dispatch, getState) => {
+export const POTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const state = getState()
   const call = operation.stationCall || state.settings.operatorCall
 
