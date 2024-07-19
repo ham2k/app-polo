@@ -88,6 +88,17 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>CodePushDeploymentKey</key>
-	<string/>
+	<string>j1Ux2KScamgLBBbu3v0EgeFWLhWtLdfLk_A7d</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.ham2k.polo</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.ham2k.polo</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

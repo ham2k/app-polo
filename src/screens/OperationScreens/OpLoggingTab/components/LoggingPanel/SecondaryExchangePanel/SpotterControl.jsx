@@ -94,7 +94,7 @@ export function SpotterControlInputs (props) {
         message: `Spotting ${hook.shortName ?? hook.name}…`,
         disabled: true
       })
-      status[hook.key] = await dispatch(hook.postSpot(operation, vfo, comments))
+      status[hook.key] = await dispatch(hook.postSpot({ operation, vfo, comments }))
       ok = ok && status[hook.key]
       setSpotStatus(status)
     }

@@ -39,13 +39,15 @@ const baseQueryWithSettings = fetchBaseQuery({
     return headers
   },
   responseHandler: async (response) => {
+    if (DEBUG) console.log(`SOTAApi ${response.url} ${response.status}`)
     if (response.status === 200 || response.status === 201) { // 201 for spotting
       const data = await response.json()
-      if (DEBUG) console.log(`SOTAApi ${response.url} ${response.status}`)
       if (DEBUG) console.log('-- response', data)
       return data
     } else {
-      return {}
+      const body = await response.text()
+      if (DEBUG) console.log('-- response', body)
+      return { message: body }
     }
   }
 })
@@ -54,7 +56,19 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   if (DEBUG) console.log('baseQueryWithReauth first call', { args })
   let result = await baseQueryWithSettings(args, api, extraOptions)
 
-  if (result.error && result.error.status === 401) {
+  console.log('RESULT', Object.keys(result))
+  let getNewToken = false
+  if (result.error) {
+    if (result.error.status === 401) {
+      getNewToken = true
+    } else if (result.error.status === 500) {
+      if (result.data?.body?.indexOf('authentication') >= 0) {
+        getNewToken = true
+      }
+    }
+  }
+
+  if (getNewToken) {
     // try to get a new access token
     const refreshToken = api.getState().settings?.accounts?.sota?.refreshToken
 

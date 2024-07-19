@@ -8,9 +8,9 @@
 import { filterRefs } from '../../../tools/refTools'
 import { GMACommonPostSpot } from '../GMACommonPostSpot'
 
-export const WWFFPostSpot = (operation, vfo, comments) => async (dispatch, getState) => {
+export const WWFFPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const refs = filterRefs(operation, 'wwffActivation')
   if (refs.length) {
-    return dispatch(GMACommonPostSpot(operation, vfo, comments, refs, 'https://www.cqgma.org/wwff/spotwwff.php'))
+    return dispatch(GMACommonPostSpot({ operation, vfo, comments, refs, url: 'https://www.cqgma.org/wwff/spotwwff.php' }))
   }
 }
