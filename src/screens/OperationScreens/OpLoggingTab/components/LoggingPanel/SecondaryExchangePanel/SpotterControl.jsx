@@ -24,7 +24,7 @@ import { setOperationData } from '../../../../../../store/operations'
 const SECONDS_UNTIL_RESPOT = 30
 
 export function SpotterControlInputs (props) {
-  const { operation, vfo, styles, style, setCurrentSecondaryControl } = props
+  const { operation, vfo, styles, style, settings, setCurrentSecondaryControl } = props
 
   const online = useSelector(selectRuntimeOnline)
 
@@ -81,8 +81,8 @@ export function SpotterControlInputs (props) {
   }, [inProgress, vfo?.freq, operation?.spottedFreq, operation?.spottedAt, operation, now, comments])
 
   const activityHooksWithSpot = useMemo(() =>
-    findHooks('activity').filter((x) => (findRef(operation.refs, x.activationType) && x.postSpot))
-  , [operation.refs])
+    findHooks('activity').filter((x) => (findRef(operation.refs, x.activationType) && x.postSpot && (!x.isSpotEnabled || (x.isSpotEnabled && x.isSpotEnabled({ operation, settings })))))
+  , [operation, settings])
 
   const handleSpotting = useCallback(async () => {
     const status = {}
