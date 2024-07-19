@@ -17,6 +17,7 @@ import { findHooks } from '../../../../../extensions/registry'
 import { Ham2kListItem } from '../../../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../../../components/Ham2kListSection'
 import { Ham2kDialog } from '../../../../components/Ham2kDialog'
+import { powerControl } from './SecondaryExchangePanel/TxPowerControl'
 
 export function LoggingPanelConfigDialog ({ visible, operation, vfo, settings, styles, onDialogDone }) {
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -28,7 +29,8 @@ export function LoggingPanelConfigDialog ({ visible, operation, vfo, settings, s
     const newControls = {
       time: timeControl,
       radio: radioControl,
-      notes: notesControl
+      notes: notesControl,
+      power: powerControl
     }
     findHooks('activity').forEach(activity => {
       const activityControls = activity.loggingControls ? activity.loggingControls({ operation, settings }) : []
