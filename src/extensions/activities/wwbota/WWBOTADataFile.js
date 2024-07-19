@@ -151,7 +151,7 @@ export async function wwbotaFindAllByLocation (entityPrefix, lat, lon, delta = 1
 
 const OPTIONAL_QUOTED_CSV_ROW_REGEX = /(?<=^|,)(?:(?:"((?:[^"]|"")*)")|([^,]*))(?:,|$)/g
 function parseWWBOTACSVRow (row, options) {
-  const parts = [...row.matchAll(OPTIONAL_QUOTED_CSV_ROW_REGEX)].map(
+  const parts = [...row.trim().matchAll(OPTIONAL_QUOTED_CSV_ROW_REGEX)].map(
     match => match[1] ? match[1].replaceAll('""', '"') : match[2])
   if (options?.headers) {
     const obj = {}

@@ -13,6 +13,8 @@ import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { registerSOTADataFile, sotaFindOneByReference } from './SOTADataFile'
 import { Info } from './SOTAInfo'
 import { SOTALoggingControl } from './SOTALoggingControl'
+import { SOTAAccountSetting } from './SOTAAccount'
+import { SOTAPostSpot } from './SOTAPostSpot'
 
 const Extension = {
   ...Info,
@@ -21,6 +23,13 @@ const Extension = {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+    registerHook('setting', {
+      hook: {
+        key: 'sota-account',
+        category: 'account',
+        SettingItem: SOTAAccountSetting
+      }
+    })
 
     registerSOTADataFile()
     await dispatch(loadDataFile('sota-all-summits', { noticesInsteadOfFetch: true }))
@@ -41,6 +50,12 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
+
+  postSpot: SOTAPostSpot,
+  isSpotEnabled: ({ operation, settings }) => {
+    return !!settings?.accounts?.sota?.idToken
+  },
+
   Options: SOTAActivityOptions,
 
   includeControlForQSO: ({ qso, operation }) => {

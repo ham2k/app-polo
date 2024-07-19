@@ -83,6 +83,7 @@ function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
     ...modeToADIF(qso.mode),
     { BAND: qso.band && qso.band !== 'other' ? qso.band : undefined },
     { FREQ: qso.freq ? (qso.freq / 1000).toFixed(6) : undefined },
+    { TX_PWR: qso.power },
     { QSO_DATE: fmtADIFDate(qso.startOnMillis + timeOfffset) },
     { TIME_ON: fmtADIFTime(qso.startOnMillis + timeOfffset) },
     { RST_RCVD: qso.their.sent },

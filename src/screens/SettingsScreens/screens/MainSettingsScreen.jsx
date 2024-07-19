@@ -13,6 +13,7 @@ import { Linking, ScrollView, useWindowDimensions, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import packageJson from '../../../../package.json'
+import { findHooks } from '../../../extensions/registry'
 
 import { selectSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -118,6 +119,11 @@ export default function MainSettingsScreen ({ navigation, route }) {
 function MainSettingsOptions ({ settings, styles, navigation }) {
   const [currentDialog, setCurrentDialog] = useState()
 
+  const accountSettingHooks = useMemo(() => {
+    const hooks = findHooks('setting').filter(hook => hook.category === 'account' && hook.SettingItem)
+    return hooks
+  }, [])
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <Ham2kListSection>
@@ -202,6 +208,9 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
             onDialogDone={() => setCurrentDialog('')}
           />
         )}
+        {accountSettingHooks.map((hook) => (
+          <hook.SettingItem key={hook.key} settings={settings} styles={styles} />
+        ))}
       </Ham2kListSection>
 
       <Ham2kListSection>

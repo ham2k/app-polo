@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "24.7.2",
-  "versionName": "July 2024",
+  "version": "24.8.0-pre1",
+  "versionName": "August 2024",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -53,6 +53,7 @@
     "proj4": "^2.11",
     "react": "18.2.0",
     "react-native": "0.74.2",
+    "react-native-app-auth": "^7.2.0",
     "react-native-blob-util": "^0.19",
     "react-native-code-push": "^8.2",
     "react-native-config": "^1.5",
