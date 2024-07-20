@@ -82,14 +82,24 @@ const ReferenceHandler = {
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
     if (!ref.ref) return {}
 
-    const { key, startOnMillis } = qso
+    const { band, mode, key, startOnMillis } = qso
 
-    const dupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
-    console.log('scoring', dupes)
-    if (dupes.length === 0) {
+    const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+
+    if (nearDupes.length === 0) {
       return { counts: 1, type: Info.activationType }
     } else {
-      return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+      const sameBand = nearDupes.filter(q => q.band === band).length !== 0
+      const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
+      if (sameBand && sameMode) {
+        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+      } else {
+        const notices = []
+        if (!sameMode) notices.push('newMode')
+        if (!sameBand) notices.push('newBand')
+
+        return { counts: 1, notices, type: Info.activationType }
+      }
     }
   }
 
