@@ -55,7 +55,7 @@ export function reportData (payload) {
       })
       console.log('Data reported')
     } catch (error) {
-      console.error('Error reporting data:', error)
+      console.log('Error reporting data:', error)
     }
   }, 0)
 }
