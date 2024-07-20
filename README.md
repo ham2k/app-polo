@@ -50,6 +50,9 @@ Android: Cmd ⌘ + M (macOS) or Ctrl + M (Windows and Linux)
 
 Icons from https://pictogrammers.com/library/mdi/
 
+Tools
+* https://icon.kitchen/
+
 ### Access iOS Simulator Info
 
 https://www.iosdev.recipes/simctl/
@@ -70,6 +73,14 @@ open `xcrun simctl get_app_container booted com.ham2k.polo data`/Documents
 ```
 open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep FileProvider.LocalStorage|sed "s/group.com.apple.FileProvider.LocalStorage//g"`/File\ Provider\ Storage
 ```
+
+### Updating the splash screen
+
+* Start with a 2048x2048 image.
+* Go to [AppIcon](https://www.appicon.co/#image-sets) > Image Sets, upload the image, generate and download the image set
+* On `android/app/src/main/res` replace `launch_screen` in each subdirectory.
+* On `ios/polo/Images.xcassets/LaunchScreen.imageset` replace the three versions of `launch_screen`
+* On `src/screens/StartScreen/img` replace the three versions of `launch_screen`.
 
 ---
 

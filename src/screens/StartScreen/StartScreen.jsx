@@ -23,7 +23,7 @@ import { selectSystemFlag, setSystemFlag } from '../../store/system'
 
 import packageJson from '../../../package.json'
 
-const SPLASH_IMAGE = require('./img/launch_screen.png')
+const SPLASH_IMAGE = require('./img/launch_screen.jpg')
 
 function prepareStyles (baseTheme, height) {
   return {
