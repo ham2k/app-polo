@@ -25,6 +25,7 @@ import OpSpotsTab from './OpSpotsTab/OpSpotsTab'
 import OpMapTab from './OpMapTab/OpMapTab'
 import OpInfoTab from './OpInfoTab/OpInfoTab'
 import { trackOperation } from '../../distro'
+import { selectRuntimeOnline } from '../../store/runtime'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -36,6 +37,7 @@ export default function OperationScreen (props) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const suggestedQSO = route?.params?.qso
   const settings = useSelector(selectSettings)
+  const online = useSelector(selectRuntimeOnline)
 
   useEffect(() => { // Ensure the clock is ticking
     dispatch(startTickTock())
@@ -49,11 +51,11 @@ export default function OperationScreen (props) {
 
   const [lastTracking, setLastTracking] = useState(0)
   useEffect(() => {
-    if (Date.now() - lastTracking > 1000 * 60 * 0.5) {
+    if (Date.now() - lastTracking > 1000 * 60 * 0.5 && online) {
       trackOperation({ settings, operation })
       setLastTracking(Date.now())
     }
-  }, [settings, operation, lastTracking])
+  }, [settings, operation, lastTracking, online])
 
   const headerOptions = useMemo(() => {
     let options = {}
