@@ -9,7 +9,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { List } from 'react-native-paper'
 import { useSelector } from 'react-redux'
-import { Platform, ScrollView } from 'react-native'
+import { Image, Platform, Pressable, ScrollView } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import Markdown from 'react-native-markdown-display'
 import CodePush from 'react-native-code-push'
@@ -24,6 +24,8 @@ import { reportError } from '../../../distro'
 import { selectSettings } from '../../../store/settings'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
+
+const SPLASH_IMAGE = require('../../../screens/StartScreen/img/launch_screen.jpg')
 
 export const UPDATE_TRACK_KEYS = {
   Production: (Platform.OS === 'ios') ? 'sC0Sy_ImAi-XZCBDK-mdoLYO2FR7CD2vXw1MD' : 'XfaqlzjBp9SWZLCZQSfezxEOdlkNgLu4PYrDN',
@@ -79,7 +81,7 @@ export default function VersionSettingsScreen ({ navigation }) {
   const currentVersionLabel = useMemo(() => {
     let version
     if (packageJson.versionName) {
-      version = `${packageJson.versionName} Release (${packageJson.version})`
+      version = `${packageJson.versionName} Release`
     } else {
       version = `Version ${packageJson.version}`
     }
@@ -145,47 +147,83 @@ export default function VersionSettingsScreen ({ navigation }) {
     }
   }, [settings.updateTrack, pendingUpdateMetadata])
 
+  const [showImage, setShowImage] = useState(false)
+
   return (
-    <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
-        <Ham2kListSection>
-          <Ham2kListItem title={packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`}
-            description={`${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
+    <ScreenContainer
+      style={{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        width: '100%',
+        margin: 0,
+        height: '100%'
+      }}
+    >
+      {showImage ? (
+        <Pressable
+          onPress={() => setShowImage(false)}
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'stretch'
+          }}
+        >
+          <Image
+            source={SPLASH_IMAGE}
+            style={{
+              resizeMode: 'cover',
+              width: '100%',
+              margin: 0,
+              height: '100%'
+            }}
           />
+        </Pressable>
+      ) : (
+        <ScrollView style={{ flex: 1 }}>
+          <Ham2kListSection>
+            <Ham2kListItem title={currentVersionLabel}
+              description={`${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
+            />
 
-          <Ham2kListItem title={checkForUpdatesLabel}
-            description={updateMessage}
-            disabled={isUpdating}
-            style={{ opacity: isUpdating ? 0.7 : 1 }}
-            onPress={checkForUpdates}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-arrow-down" />}
-          />
+            <Ham2kListItem title={checkForUpdatesLabel}
+              description={updateMessage}
+              disabled={isUpdating}
+              style={{ opacity: isUpdating ? 0.7 : 1 }}
+              onPress={checkForUpdates}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-arrow-down" />}
+            />
 
-        </Ham2kListSection>
+          </Ham2kListSection>
 
-        <Ham2kListSection>
-          <Ham2kListItem
-            title={'Recent Changes'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="newspaper-variant-outline" />}
-          />
+          <Ham2kListSection>
+            <Ham2kListItem
+              title={'Recent Changes'}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="newspaper-variant-outline" />}
+              right={() => (
+                <Pressable onPress={() => setShowImage(true)}>
+                  <Image source={SPLASH_IMAGE} style={{ width: 64, height: 64 }} />
+                </Pressable>
+              )}
+            />
 
-          {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
-            <ListRow key={i} style={styles.listRow}>
+            {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
+              <ListRow key={i} style={styles.listRow}>
 
-              <Markdown style={styles.markdown}>
-                {
-`## ${releaseNotes[release].name ? `${releaseNotes[release].name} Release` : `Version ${release}`}
-${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
-`
-                }
-              </Markdown>
-            </ListRow>
-          ))}
+                <Markdown style={styles.markdown}>
+                  {
+  `## ${releaseNotes[release].name ? `${releaseNotes[release].name} Release` : `Version ${release}`}
+  ${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
+  `
+                  }
+                </Markdown>
+              </ListRow>
+            ))}
+          </Ham2kListSection>
 
-        </Ham2kListSection>
-
-      </ScrollView>
+        </ScrollView>
+      )}
     </ScreenContainer>
   )
 }
