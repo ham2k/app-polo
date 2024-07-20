@@ -20,14 +20,15 @@ import WWBOTAExtension from './activities/wwbota/WWBOTAExtension'
 import ECAExtension from './activities/eca/ECAExtension'
 import ELAExtension from './activities/ela/ELAExtension'
 import SiOTAExtentsion from './activities/siota/SiOTAExtension'
+import CallNotesExtension from './data/call-notes/CallNotesExtension'
+import SatellitesExtension from './activities/satellites/SatellitesExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
 import DevModeCommands from './commands/DevModeCommands'
 import DebuggingCommands from './commands/DebuggingCommands'
 import OperatorCommands from './commands/OperatorCommands'
-import CallNotesExtension from './data/call-notes/CallNotesExtension'
-import SatellitesExtension from './activities/satellites/SatellitesExtension'
+import MiscCommands from './commands/MiscCommands'
 
 import WABExtension from './other/wab/WABExtension'
 
@@ -51,6 +52,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(DevModeCommands)
   registerExtension(DebuggingCommands)
   registerExtension(OperatorCommands)
+  registerExtension(MiscCommands)
 
   registerExtension(CallNotesExtension)
   registerExtension(SatellitesExtension)

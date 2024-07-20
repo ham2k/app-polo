@@ -80,31 +80,11 @@ export function SpotterControlInputs (props) {
     }
   }, [inProgress, vfo?.freq, operation?.spottedFreq, operation?.spottedAt, operation, now, comments])
 
-  const activityHooksWithSpot = useMemo(() =>
-    findHooks('activity').filter((x) => (findRef(operation.refs, x.activationType) && x.postSpot && (!x.isSpotEnabled || (x.isSpotEnabled && x.isSpotEnabled({ operation, settings })))))
-  , [operation, settings])
+  const activityHooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ operation, settings }), [operation, settings])
 
   const handleSpotting = useCallback(async () => {
-    const status = {}
-    let ok = true
-    setSpotStatus(status)
-    setInProgress(true)
-    for (const hook of activityHooksWithSpot) {
-      setSpotterUI({
-        message: `Spotting ${hook.shortName ?? hook.name}…`,
-        disabled: true
-      })
-      status[hook.key] = await dispatch(hook.postSpot({ operation, vfo, comments }))
-      ok = ok && status[hook.key]
-      setSpotStatus(status)
-    }
-    setInProgress(false)
-    setComments(undefined)
-    if (ok) {
-      dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
-      setCurrentSecondaryControl(undefined)
-    }
-  }, [activityHooksWithSpot, dispatch, operation, vfo, comments, setCurrentSecondaryControl])
+    postSpots({ operation, vfo, comments, activityHooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl })
+  }, [activityHooksWithSpotting, dispatch, operation, vfo, comments, setCurrentSecondaryControl])
 
   return (
     <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
@@ -128,7 +108,7 @@ export function SpotterControlInputs (props) {
         {spotterUI.message}
       </ThemedButton>
       <View style={{ flex: 0, flexDirection: 'row', position: 'absolute', top: styles.oneSpace * -1, right: 0 }}>
-        {activityHooksWithSpot.map((x, n) => (
+        {activityHooksWithSpotting.map((x, n) => (
           <Icon
             key={x.key}
             source={x.icon}
@@ -139,6 +119,32 @@ export function SpotterControlInputs (props) {
       </View>
     </View>
   )
+}
+
+export function retrieveHooksWithSpotting ({ operation, settings }) {
+  return findHooks('activity').filter((x) => (findRef(operation.refs, x.activationType) && x.postSpot && (!x.isSpotEnabled || (x.isSpotEnabled && x.isSpotEnabled({ operation, settings })))))
+}
+
+export async function postSpots ({ operation, vfo, comments, activityHooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl }) {
+  const status = {}
+  let ok = true
+  setSpotStatus && setSpotStatus(status)
+  setInProgress && setInProgress(true)
+  for (const hook of activityHooksWithSpotting) {
+    setSpotterUI && setSpotterUI({
+      message: `Spotting ${hook.shortName ?? hook.name}…`,
+      disabled: true
+    })
+    status[hook.key] = await dispatch(hook.postSpot({ operation, vfo, comments }))
+    ok = ok && status[hook.key]
+    setSpotStatus && setSpotStatus(status)
+  }
+  setInProgress && setInProgress(false)
+  setComments && setComments(undefined)
+  if (ok) {
+    dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
+    setCurrentSecondaryControl && setCurrentSecondaryControl(undefined)
+  }
 }
 
 const colorForStatus = (status) => {
