@@ -19,6 +19,7 @@ const Extension = {
     registerHook('command', { priority: 100, hook: ModeCommandHook })
     registerHook('command', { priority: 100, hook: BandCommandHook })
     registerHook('command', { priority: 99, hook: FrequencyCommandHook })
+    registerHook('command', { priority: 98, hook: PowerCommandHook })
   }
 }
 
@@ -47,6 +48,16 @@ const FrequencyCommandHook = {
     } else {
       handleFieldChange({ fieldId: 'freq', value: match[1] })
     }
+  }
+}
+
+const PowerCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-radio-power',
+  match: /^([\d.]{1,})[wW]$/,
+  invokeCommand: (match, { qso, handleFieldChange }) => {
+    handleFieldChange({ fieldId: 'power', value: match[1] })
   }
 }
 
