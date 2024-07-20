@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /*
  * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
  *
@@ -5,9 +6,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { List } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { Image, Pressable, ScrollView } from 'react-native'
 
 import DeviceInfo from 'react-native-device-info'
 
@@ -21,6 +22,8 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { ListRow } from '../../components/ListComponents'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
+
+const SPLASH_IMAGE = require('../../../screens/StartScreen/img/launch_screen.jpg')
 
 function prepareStyles (baseStyles) {
   return {
@@ -44,38 +47,73 @@ export default function VersionSettingsScreen ({ navigation }) {
     <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="bullhorn" />
   ), [styles])
 
+  const [showImage, setShowImage] = useState(false)
+
   return (
-    <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
-        <Ham2kListSection>
-          <Ham2kListItem title={packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`}
-            description={`${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
-            left={VersionIcon}
+    <ScreenContainer
+      style={{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        width: '100%',
+        margin: 0,
+        height: '100%'
+      }}
+    >
+      {showImage ? (
+        <Pressable
+          onPress={() => setShowImage(false)}
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'stretch'
+          }}
+        >
+          <Image
+            source={SPLASH_IMAGE}
+            style={{
+              resizeMode: 'cover',
+              width: '100%',
+              margin: 0,
+              height: '100%'
+            }}
           />
+        </Pressable>
+      ) : (
+        <ScrollView style={{ flex: 1 }}>
+          <Ham2kListSection>
+            <Ham2kListItem title={packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`}
+              description={`${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
+              left={VersionIcon}
+            />
 
-        </Ham2kListSection>
-        <Ham2kListSection>
-          <Ham2kListItem title={'Recent Changes'}
-            left={NewsIcon}
-          />
-          {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
-            <ListRow key={i} style={styles.listRow}>
+          </Ham2kListSection>
+          <Ham2kListSection>
+            <Ham2kListItem title={'Recent Changes'}
+              left={NewsIcon}
+              right={() => (
+                <Pressable onPress={() => setShowImage(true)}>
+                  <Image source={SPLASH_IMAGE} style={{ width: 64, height: 64 }} />
+                </Pressable>
+              )}
+            />
+            {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
+              <ListRow key={i} style={styles.listRow}>
 
-              <Markdown style={styles.markdown}>
-                {
-`## ${releaseNotes[release].name ? `${releaseNotes[release].name} Release` : `Version ${release}`}
-${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
-`
-                }
-              </Markdown>
-            </ListRow>
-          ))}
+                <Markdown style={styles.markdown}>
+                  {
+  `## ${releaseNotes[release].name ? `${releaseNotes[release].name} Release` : `Version ${release}`}
+  ${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
+  `
+                  }
+                </Markdown>
+              </ListRow>
+            ))}
 
-        </Ham2kListSection>
+          </Ham2kListSection>
 
-      </ScrollView>
+        </ScrollView>
+      )}
     </ScreenContainer>
   )
 }
-
-// ))}
