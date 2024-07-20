@@ -21,6 +21,8 @@ import { OnboardingManager } from './onboarding/OnboardingManager'
 import { selectSettings } from '../../store/settings'
 import { selectSystemFlag, setSystemFlag } from '../../store/system'
 
+import packageJson from '../../../package.json'
+
 const SPLASH_IMAGE = require('./img/launch_screen.png')
 
 function prepareStyles (baseTheme, height) {
@@ -67,6 +69,17 @@ function prepareStyles (baseTheme, height) {
       fontFamily: 'Roboto Slab Black',
       color: '#FFF',
       textAlign: 'center'
+    },
+    version: {
+      fontSize: baseTheme.normalFontSize * 1.3,
+      lineHeight: baseTheme.normalFontSize * 2,
+      fontWeight: 400,
+      textShadowColor: '#000',
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace * 1.5,
+      color: '#FFF',
+      textAlign: 'center',
+      marginTop: baseTheme.oneSpace
     },
     message: {
       textShadowColor: '#000',
@@ -117,6 +130,8 @@ export default function StartScreen ({ setAppState }) {
     SplashScreen.hide()
   }, [])
 
+  const versionName = packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`
+
   const [startupPhase, setStartupPhase] = useState('hold')
 
   useEffect(() => { // Determine the startup phase
@@ -147,6 +162,7 @@ export default function StartScreen ({ setAppState }) {
           <View style={styles.titleBox}>
             <Text style={styles.ham2k}>Ham2K</Text>
             <Text style={styles.polo}>Portable Logger</Text>
+            <Text style={styles.version}>{versionName}</Text>
           </View>
           <View style={styles.messagesBox}>
             {messages.map((msg, i) => (
