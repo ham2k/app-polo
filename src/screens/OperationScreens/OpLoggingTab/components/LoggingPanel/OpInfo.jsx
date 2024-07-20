@@ -42,8 +42,10 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
   const { markdownMessage, markdownStyle, icon } = useMemo(() => {
     if (message?.startsWith && message.startsWith('ERROR:')) {
       return { markdownMessage: message.split('ERROR:')[1], markdownStyle: { color: styles.theme.colors.error }, icon: 'information' }
+    } else if (message === true) {
+      return { markdownMessage: '', icon: 'timer-outline' }
     } else if (message) {
-      return { markdownMessage: message, icon: 'chevron-right-box' }
+      return { markdownMessage: message || '', icon: 'chevron-right-box' }
     } else {
       return { markdownMessage: '', icon: 'timer-outline' }
     }

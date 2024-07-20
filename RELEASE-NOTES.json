@@ -3,7 +3,8 @@
     "name": "August 2024 (pre 1)",
     "changes": [
       "Input for TX Power (contributed by NA7DO)",
-      "SOTA Self-spotting (contributed by M1SDH)"
+      "SOTA Self-spotting (contributed by M1SDH)",
+      "Self-spotting command shortcut (‘SPOTME’)"
     ]
   },
   "24.7.0": {

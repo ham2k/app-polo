@@ -175,7 +175,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
     }
 
     if (fieldId === 'theirCall') {
-      const commandResult = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, qsos, dispatch, settings, online, ourInfo })
+      const commandResult = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo })
       setMessage(commandResult || undefined)
 
       let guess = parseCallsign(value)
@@ -211,7 +211,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
       updateQSO({ power: value })
       if (qso?._isNew) dispatch(setVFO({ power: value }))
     }
-  }, [qso, loggingState?.originalQSO, operation, qsos, dispatch, settings, online, ourInfo, updateQSO])
+  }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO])
 
   const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
     if (DEBUG) logTimer('submit', 'handleSubmit start', { reset: true })
@@ -222,7 +222,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
 
     setTimeout(async () => { // Run inside a setTimeout to allow the state to update
       // First, try to process any commands
-      const commandResult = checkAndProcessCommands(qso?.their?.call, { qso, originalQSO: loggingState?.originalQSO, operation, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })
+      const commandResult = checkAndProcessCommands(qso?.their?.call, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })
       if (commandResult) {
         setMessage(commandResult || undefined)
         return
