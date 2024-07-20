@@ -25,6 +25,7 @@ import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { trackOperation } from '../../../distro'
+import { selectRuntimeOnline } from '../../../store/runtime'
 
 function prepareStyles (baseStyles) {
   return {
@@ -57,6 +58,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
+  const online = useSelector(selectRuntimeOnline)
 
   const [currentDialog, setCurrentDialog] = useState()
 
@@ -73,7 +75,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   }, [operation?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors])
 
   const handleExport = useCallback((type) => {
-    trackOperation({ settings, operation, action: 'exportOperation', actionData: { type } })
+    if (online) trackOperation({ settings, operation, action: 'exportOperation', actionData: { type } })
 
     dispatch(generateExport(operation.uuid, type)).then((paths) => {
       if (paths?.length > 0) {
@@ -91,7 +93,7 @@ export default function OpSettingsTab ({ navigation, route }) {
         })
       }
     })
-  }, [dispatch, operation, settings])
+  }, [dispatch, online, operation, settings])
 
   const refHandlers = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]

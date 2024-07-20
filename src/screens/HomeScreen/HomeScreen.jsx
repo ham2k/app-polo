@@ -21,6 +21,7 @@ import Notices from './components/Notices'
 import OperationItem from './components/OperationItem'
 import HomeTools from './components/HomeTools'
 import { trackSettings } from '../../distro'
+import { selectRuntimeOnline } from '../../store/runtime'
 
 function prepareStyles (baseStyles) {
   const DEBUG = false
@@ -120,6 +121,7 @@ export default function HomeScreen ({ navigation }) {
   const operations = useSelector(selectOperationsList)
   const settings = useSelector(selectSettings)
   const rawSettings = useSelector(selectRawSettings)
+  const online = useSelector(selectRuntimeOnline)
 
   const safeArea = useSafeAreaInsets()
 
@@ -132,7 +134,7 @@ export default function HomeScreen ({ navigation }) {
   }, [settings, navigation])
 
   useEffect(() => {
-    trackSettings({ settings: rawSettings })
+    if (online) trackSettings({ settings: rawSettings })
     // We don't want to track changes in settings, so no dependencies here
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
