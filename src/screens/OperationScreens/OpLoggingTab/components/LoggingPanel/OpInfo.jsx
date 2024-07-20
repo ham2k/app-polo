@@ -5,16 +5,56 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 
 import { View } from 'react-native'
 import { fmtTimeBetween } from '../../../../../tools/timeFormats'
 import { useSelector } from 'react-redux'
 import { selectSecondsTick } from '../../../../../store/time'
+import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
+import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 
-export function OpInfo ({ operation, qsos, styles, style, themeColor }) {
+function prepareStyles (baseStyles, themeColor) {
+  return {
+    ...baseStyles,
+    textLine: {
+      lineHeight: baseStyles.normalFontSize * 1.3,
+      marginBottom: baseStyles.oneSpace * 0.5
+    },
+    markdown: {
+      ...baseStyles.markdown,
+      paragraph: {
+        margin: 0,
+        marginTop: 0,
+        marginBottom: 0,
+        lineHeight: baseStyles.normalFontSize * 1.3
+      }
+    }
+  }
+}
+
+export function OpInfo ({ message, clearMessage, operation, qsos, style, themeColor }) {
   const now = useSelector(selectSecondsTick)
+
+  const styles = useThemedStyles(prepareStyles, themeColor)
+
+  const { markdownMessage, markdownStyle, icon } = useMemo(() => {
+    if (message?.startsWith && message.startsWith('ERROR:')) {
+      return { markdownMessage: message.split('ERROR:')[1], markdownStyle: { color: styles.theme.colors.error }, icon: 'information' }
+    } else if (message) {
+      return { markdownMessage: message, icon: 'chevron-right-box' }
+    } else {
+      return { markdownMessage: '', icon: 'timer-outline' }
+    }
+  }, [message, styles])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      clearMessage()
+    }, 3000)
+    return () => clearTimeout(timer)
+  }, [message, clearMessage])
 
   const line1 = useMemo(() => {
     if (qsos.length === 0) {
@@ -50,19 +90,27 @@ export function OpInfo ({ operation, qsos, styles, style, themeColor }) {
   }, [qsos])
 
   return (
-    <TouchableRipple onPress={() => true} style={{ minHeight: styles.oneSpace * 5 }}>
+    <TouchableRipple onPress={() => true} style={{ minHeight: styles.oneSpace * 6 }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
         <View style={{ flex: 0, alignSelf: 'flex-start' }}>
           <Icon
-            source={'timer-outline'}
+            source={icon}
             size={styles.oneSpace * 3}
             color={styles.theme.colors[`${themeColor}ContainerVariant`]}
           />
         </View>
         <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', paddingTop: styles.oneSpace * 0.3 }]}>
-          {line1 && <Text numberOfLines={2} ellipsizeMode={'tail'}>{line1}</Text>}
-          {line2 && <Text numberOfLines={2} ellipsizeMode={'tail'}>{line2}</Text>}
+          {markdownMessage ? (
+            <Ham2kMarkdown style={{ ...markdownStyle, borderWidth: 0, borderColor: 'red', fontWeight: 'bold' }} styles={styles}>
+              {markdownMessage}
+            </Ham2kMarkdown>
+          ) : (
+            <>
+              {line1 && <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.textLine}>{line1}</Text>}
+              {line2 && <Text numberOfLines={2} ellipsizeMode={'tail'} styles={styles.textLine}>{line2}</Text>}
+            </>
+          )}
         </View>
       </View>
     </TouchableRipple>

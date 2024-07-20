@@ -29,6 +29,13 @@ const KonamiCommandHook = {
   extension: Extension,
   key: 'commands-devmode-konami',
   match: /^KONAMI$/i,
+  describeCommand: (match, { settings }) => {
+    if (settings.devMode) {
+      return 'Deactivate developer mode?'
+    } else {
+      return 'Activate developer mode?'
+    }
+  },
   invokeCommand: (match, { dispatch, settings, handleFieldChange }) => {
     dispatch(setSettings({ devMode: !settings.devMode }))
     handleFieldChange({ fieldId: 'theirCall', value: 'KONAMI!' })
@@ -76,6 +83,11 @@ const KonamiCommandHook = {
       ''
     ],
     handleFieldChange, { time: 80 })
+    if (settings.devMode) {
+      return 'Deactivated developer mode'
+    } else {
+      return 'Activated developer mode'
+    }
   }
 }
 

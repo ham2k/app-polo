@@ -39,6 +39,9 @@ const ErrorCommandHook = {
   extension: Extension,
   key: 'commands-debug-error',
   match: /3RR0R/i,
+  describeCommand: (match) => {
+    return 'Throw a test error?'
+  },
   invokeCommand: (match, { handleFieldChange }) => {
     throw new Error('Test error!')
   }
@@ -49,10 +52,14 @@ const OnboardCommandHook = {
   extension: Extension,
   key: 'commands-debug-onboard',
   match: /ONBOARD/i,
+  describeCommand: (match) => {
+    return 'Reset the onboarding process?'
+  },
   invokeCommand: (match, { dispatch }) => {
     dispatch(setSystemFlag('onboardedOn', undefined))
     dispatch(setSettings({ operatorCall: undefined }))
     setTimeout(() => DevSettings.reload(), 500)
+    return 'Onboarding process resetted'
   }
 }
 
@@ -61,9 +68,13 @@ const SeedCommandHook = {
   extension: Extension,
   key: 'commands-debug-seed',
   match: /^SEED(\d+)$/i,
+  describeCommand: (match) => {
+    const count = parseInt(match[1], 10)
+    return `Seed the log with ${count} QSOs?`
+  },
   invokeCommand: (match, { handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
+    let count = parseInt(match[1], 10)
     setTimeout(async () => {
-      let count = parseInt(match[1], 10)
       let startOnMillis = Date.now()
       const times = []
       for (let i = 0; i < count; i++) {
@@ -94,7 +105,7 @@ const SeedCommandHook = {
           startOn: new Date(startOnMillis).toISOString()
         }
         oneQSO.their = { call, sent: randomRST(oneQSO.mode) }
-        oneQSO.our = { call: ourInfo.call, sent: randomRST(oneQSO.mode) }
+        oneQSO.our = { call: ourInfo.call, operatorCall: ourInfo.operatorCall || operation.operatorCall, sent: randomRST(oneQSO.mode) }
         await annotateQSO({ qso: oneQSO, online, settings, dispatch })
 
         oneQSO.key = qsoKey(oneQSO)
@@ -105,6 +116,7 @@ const SeedCommandHook = {
         startOnMillis = startOnMillis + times.pop()
       }
     }, 0)
+    return `Seeding the log with ${count} QSOs`
   }
 }
 
