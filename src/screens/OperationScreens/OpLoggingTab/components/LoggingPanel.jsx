@@ -26,8 +26,7 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { parseFreqInMHz } from '../../../../tools/frequencyFormats'
 import { logTimer } from '../../../../tools/perfTools'
 import { joinAnd } from '../../../../tools/joinAnd'
-import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
-import { checkAndProcessCommands } from '../../../../extensions/commands/commandHandling'
+import { checkAndDescribeCommands, checkAndProcessCommands } from '../../../../extensions/commands/commandHandling'
 import { SecondaryExchangePanel } from './LoggingPanel/SecondaryExchangePanel'
 import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
@@ -43,6 +42,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
   const navigation = useNavigation()
 
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+
   const [qso, setQSO, updateQSO] = useMemo(() => {
     const qsoValue = loggingState?.qso
     const setQSOFunction = (newQSO, more) => {
@@ -93,7 +93,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
     if (!operation?.stationCall) errors.push('callsign')
 
     if (errors.length > 0) {
-      return [false, `Please enter **${joinAnd(errors)}** for a valid operation`]
+      return [false, `ERROR: Please enter **${joinAnd(errors)}** for a valid operation`]
     } else {
       return [true, undefined]
     }
@@ -160,6 +160,8 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
     }
   }, [qso?.their?.call])
 
+  const [message, setMessage] = useState()
+
   const handleFieldChange = useCallback((event) => { // Handle form fields and update QSO info
     const { fieldId, alsoClearTheirCall } = event
     const value = event?.value || event?.nativeEvent?.text
@@ -173,13 +175,15 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
     }
 
     if (fieldId === 'theirCall') {
+      const commandResult = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, qsos, dispatch, settings, online, ourInfo })
+      setMessage(commandResult || undefined)
+
       let guess = parseCallsign(value)
       if (guess?.baseCall) {
         annotateFromCountryFile(guess)
       } else if (value) {
         guess = annotateFromCountryFile({ prefix: value, baseCall: value })
       }
-
       updateQSO({ their: { call: value, guess } })
     } else if (fieldId === 'theirSent') {
       updateQSO({ their: { sent: value } })
@@ -207,7 +211,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
       updateQSO({ power: value })
       if (qso?._isNew) dispatch(setVFO({ power: value }))
     }
-  }, [qso, updateQSO, dispatch])
+  }, [qso, loggingState?.originalQSO, operation, qsos, dispatch, settings, online, ourInfo, updateQSO])
 
   const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
     if (DEBUG) logTimer('submit', 'handleSubmit start', { reset: true })
@@ -218,7 +222,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
 
     setTimeout(async () => { // Run inside a setTimeout to allow the state to update
       // First, try to process any commands
-      if (checkAndProcessCommands(qso?.their?.call, { qso, originalQSO: loggingState?.originalQSO, operation, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })) {
+      const commandResult = checkAndProcessCommands(qso?.their?.call, { qso, originalQSO: loggingState?.originalQSO, operation, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })
+      if (commandResult) {
+        setMessage(commandResult || undefined)
         return
       }
 
@@ -410,27 +416,36 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs,
 
             <View style={[styles.infoPanel.container, { flexDirection: settings.leftieMode ? 'row-reverse' : 'row' }]}>
               <View style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}>
-                {operationError ? (
-                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-                    <Ham2kMarkdown style={{ color: styles.theme.colors.error }}>
-                      {operationError || 'ERROR'}
-                    </Ham2kMarkdown>
+                {qso?.deleted || qso?._willBeDeleted ? (
+                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
+                      {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
+                    </Text>
                   </View>
                 ) : (
-                  qso?.deleted || qso?._willBeDeleted ? (
-                    <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
-                        {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
-                      </Text>
-                    </View>
+                  !message && qso?.their?.call?.length > 2 ? (
+                    <CallInfo
+                      qso={qso}
+                      qsos={activeQSOs}
+                      operation={operation}
+                      vfo={vfo}
+                      settings={settings}
+                      styles={styles}
+                      themeColor={themeColor}
+                      updateQSO={updateQSO}
+                    />
                   ) : (
-                    qso?.their?.call ? (
-                      <CallInfo qso={qso} qsos={activeQSOs} operation={operation} vfo={vfo} settings={settings} styles={styles} themeColor={themeColor} updateQSO={updateQSO} />
-                    ) : (
-                      <OpInfo operation={operation} vfo={vfo} styles={styles} settings={settings} qsos={activeQSOs} themeColor={themeColor} />
-                    )
+                    <OpInfo
+                      message={message || operationError}
+                      clearMessage={() => setMessage(undefined)}
+                      operation={operation}
+                      vfo={vfo}
+                      styles={styles}
+                      settings={settings}
+                      qsos={activeQSOs}
+                      themeColor={themeColor}
+                    />
                   )
-
                 )}
               </View>
               <View style={styles.infoPanel.buttonContainer}>

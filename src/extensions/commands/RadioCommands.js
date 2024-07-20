@@ -30,8 +30,13 @@ const BandCommandHook = {
   extension: Extension,
   key: 'commands-radio-band',
   match: /^(2|6|10|12|15|17|20|30|40|60|80|160)M{0,1}$/i,
+  describeCommand: (match) => {
+    if (match[0].length < 2) return ''
+    return `Change band to ${match[1]}m?`
+  },
   invokeCommand: (match, { handleFieldChange }) => {
     handleFieldChange({ fieldId: 'band', value: match[1] + 'm' })
+    return `Band changed to ${match[1]}m`
   }
 }
 
@@ -40,13 +45,26 @@ const FrequencyCommandHook = {
   extension: Extension,
   key: 'commands-radio-frequency',
   match: /^([\d.]{1,})$/,
+  describeCommand: (match, { qso }) => {
+    if (match[1].length < 3) return
+    if (match[1].startsWith('..') && qso.freq) {
+      return `Change frequency to ${Math.round(qso.freq)}${match[1].substring(1)}?`
+    } else if (match[1].startsWith('.') && qso.freq) {
+      return `Change frequency to ${Math.floor(qso.freq / 1000)}${match[1]}?`
+    } else {
+      return `Change frequency to ${match[1]}?`
+    }
+  },
   invokeCommand: (match, { qso, handleFieldChange }) => {
     if (match[1].startsWith('..') && qso.freq) {
       handleFieldChange({ fieldId: 'freq', value: `${Math.round(qso.freq)}${match[1].substring(1)}` })
+      return `Frequency changed to ${Math.round(qso.freq)}${match[1].substring(1)}`
     } else if (match[1].startsWith('.') && qso.freq) {
       handleFieldChange({ fieldId: 'freq', value: `${Math.floor(qso.freq / 1000)}${match[1]}` })
+      return `Frequency changed to ${Math.floor(qso.freq / 1000)}${match[1]}`
     } else {
       handleFieldChange({ fieldId: 'freq', value: match[1] })
+      return `Frequency changed to ${match[1]}`
     }
   }
 }
@@ -56,8 +74,12 @@ const PowerCommandHook = {
   extension: Extension,
   key: 'commands-radio-power',
   match: /^([\d.]{1,})[wW]$/,
+  describeCommand: (match, { qso }) => {
+    return `Change power to ${match[1]}W?`
+  },
   invokeCommand: (match, { qso, handleFieldChange }) => {
     handleFieldChange({ fieldId: 'power', value: match[1] })
+    return `Power changed to ${match[1]}W`
   }
 }
 
@@ -66,7 +88,11 @@ const ModeCommandHook = {
   extension: Extension,
   key: 'commands-radio-mode',
   match: /^(CW|SSB|USB|LSB|FM|AM|FT8|FT4|RTTY|LSB|USB)$/i,
+  describeCommand: (match, { qso }) => {
+    return `Change mode to ${match[1]}?`
+  },
   invokeCommand: (match, { handleFieldChange }) => {
     handleFieldChange({ fieldId: 'mode', value: match[1] })
+    return `Mode changed to ${match[1]}`
   }
 }
