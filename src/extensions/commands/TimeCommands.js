@@ -74,16 +74,28 @@ const NowTimeCommandHook = {
   extension: Extension,
   key: 'commands-time-now',
   match: /^(NOW|TODAY|YESTERDAY)$/i,
+  describeCommand: (match) => {
+    if (match[1] === 'NOW') {
+      return 'Set time to now?'
+    } else if (match[1] === 'TODAY') {
+      return 'Set time to today?'
+    } else if (match[1] === 'YESTERDAY') {
+      return 'Set time to yesterday?'
+    }
+  },
   invokeCommand: (match, { qso, handleFieldChange, dispatch, operation }) => {
     if (match[1] === 'NOW') {
       handleFieldChange({ fieldId: 'time', value: new Date().valueOf() })
       dispatch(setOperationData({ uuid: operation.uuid, _manualTime: false }))
+      return 'Time set to now'
     } else if (match[1] === 'TODAY') {
       handleFieldChange({ fieldId: 'time', value: new Date().valueOf() })
       dispatch(setOperationData({ uuid: operation.uuid, _manualTime: true }))
+      return 'Time set to today'
     } else if (match[1] === 'YESTERDAY') {
       handleFieldChange({ fieldId: 'time', value: new Date().valueOf() - 1000 * 60 * 60 * 24 })
       dispatch(setOperationData({ uuid: operation.uuid, _manualTime: true }))
+      return 'Time set to yesterday'
     }
   }
 }

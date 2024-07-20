@@ -3,19 +3,8 @@
     "name": "August 2024 (pre 1)",
     "changes": [
       "Input for TX Power (contributed by NA7DO)",
-      "SOTA Self-spotting (contributed by M1SDH)"
-    ]
-  },
-  "24.7.2": {
-    "name": "July 2024",
-    "changes": [
-      "Fixed an issue when entering multiple callsigns at the same time"
-    ]
-  },
-  "24.7.1": {
-    "name": "July 2024",
-    "changes": [
-      "Fixed an issue with Callsign Notes loading for some Android devices"
+      "SOTA Self-spotting (contributed by M1SDH)",
+      "Self-spotting command shortcut (‘SPOTME’)"
     ]
   },
   "24.7.0": {
