@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
@@ -22,18 +22,12 @@ export function WWBOTALoggingControl (props) {
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const [localValue, setLocalValue] = useState('')
-
-  // Only initialize localValue once
-  useEffect(() => {
+  const refsString = useMemo(() => {
     const refs = filterRefs(qso, Info.huntingType)
-    if (!localValue) {
-      setLocalValue(refsToString(refs, Info.huntingType))
-    }
-  }, [qso, localValue])
+    return refsToString(refs, Info.huntingType)
+  }, [qso])
 
-  const localHandleChangeText = useCallback((value) => {
-    setLocalValue(value)
+  const handleChangeText = useCallback((value) => {
     const refs = stringToRefs(Info.huntingType, value, { regex: Info.referenceRegex })
 
     updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
@@ -53,11 +47,11 @@ export function WWBOTALoggingControl (props) {
     <WWBOTAInput
       {...props}
       innerRef={ref}
-      style={[style, { maxWidth: '95%', minWidth: styles.oneSpace * 30, width: Math.max(16, localValue?.length || 0) * styles.oneSpace * 1.3 }]}
-      value={localValue}
+      style={[style, { maxWidth: '95%', minWidth: styles.oneSpace * 30, width: Math.max(16, refsString?.length || 0) * styles.oneSpace * 1.3 }]}
+      value={refsString}
       label="Their Bunker"
       defaultPrefix={defaultPrefix}
-      onChangeText={localHandleChangeText}
+      onChangeText={handleChangeText}
     />
   )
 }
