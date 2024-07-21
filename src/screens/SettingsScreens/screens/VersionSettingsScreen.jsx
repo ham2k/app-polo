@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 /*
  * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
  *
@@ -147,8 +146,6 @@ export default function VersionSettingsScreen ({ navigation }) {
       }
     }
   }, [settings.updateTrack, pendingUpdateMetadata])
-
-  const [showImage, setShowImage] = useState(false)
 
   const [showImage, setShowImage] = useState(false)
 
