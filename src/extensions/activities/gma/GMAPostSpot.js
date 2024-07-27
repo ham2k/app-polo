@@ -6,7 +6,7 @@
  */
 
 import { filterRefs } from '../../../tools/refTools'
-import { GMACommonPostSpot } from '../GMACommonPostSpot'
+import { GMACommonPostSpot } from './GMACommonPostSpot'
 
 export const GMAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const refs = filterRefs(operation, 'gmaActivation')

@@ -9,8 +9,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { refresh } from 'react-native-app-auth'
 
-import packageJson from '../../../../../package.json'
-import { setAccountInfo } from '../../../../store/settings'
+import packageJson from '../../../package.json'
+import { setAccountInfo } from '../settings'
 
 /**
 
@@ -56,7 +56,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   if (DEBUG) console.log('baseQueryWithReauth first call', { args })
   let result = await baseQueryWithSettings(args, api, extraOptions)
 
-  console.log('RESULT', Object.keys(result))
   let getNewToken = false
   if (result.error) {
     if (result.error.status === 401) {
