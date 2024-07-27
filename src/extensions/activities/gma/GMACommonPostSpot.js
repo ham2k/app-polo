@@ -6,7 +6,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import packageJson from '../../../package.json'
+import packageJson from '../../../../package.json'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
 

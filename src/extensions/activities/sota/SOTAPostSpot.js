@@ -9,7 +9,7 @@
 import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
 
 import { filterRefs } from '../../../tools/refTools'
-import { apiSOTA } from './apiSOTA'
+import { apiSOTA } from '../../../store/apiSOTA'
 
 const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']
 
