@@ -141,16 +141,16 @@ export function fmtDateTimeDynamic (t, now = null) {
   }
 }
 
-export function fmtDateTimeRelative (t, now = null) {
+export function fmtDateTimeRelative (t, { now = null, roundTo = false } = {}) {
   t = prepareTimeValue(t)
 
   now = now || new Date()
 
   if (t && t.toLocaleTimeString) {
     if (t < now) {
-      return `${fmtTimeBetween(t, now)} ago`
+      return `${fmtTimeBetween(t, now, { roundTo })} ago`
     } else {
-      return `${fmtTimeBetween(t, now)} from now`
+      return `${fmtTimeBetween(t, now, { roundTo })} from now`
     }
   } else {
     return ''
@@ -215,12 +215,17 @@ export function fmtISODateTime (t) {
   }
 }
 
-export function fmtTimeBetween (t1, t2) {
+export function fmtTimeBetween (t1, t2, { roundTo = false } = {}) {
   t1 = prepareTimeValue(t1)
   t2 = prepareTimeValue(t2)
 
   if (t1 && t2) {
-    const diff = t2 - t1
+    let diff = t2 - t1
+
+    if (roundTo === 'minutes') {
+      diff = Math.round(diff / (60 * 1000)) * (60 * 1000)
+    }
+
     if (diff < 0) {
       return ''
     } else if (diff < 1000) {
@@ -228,7 +233,11 @@ export function fmtTimeBetween (t1, t2) {
     } else if (diff < 60 * 1000) {
       return `${Math.floor(diff / 1000)}s`
     } else if (diff < 60 * 60 * 1000) {
-      return `${Math.floor(diff / (60 * 1000))}m ${Math.floor((diff % (60 * 1000)) / 1000)}s`
+      if (roundTo === 'minutes') {
+        return `${Math.floor(diff / (60 * 1000))}m`
+      } else {
+        return `${Math.floor(diff / (60 * 1000))}m ${Math.floor((diff % (60 * 1000)) / 1000)}s`
+      }
     } else if (diff < 1000 * 60 * 60 * 24) {
       return `${Math.floor(diff / (60 * 60 * 1000))}h ${Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000))}m`
     } else {

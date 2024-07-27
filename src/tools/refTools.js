@@ -65,3 +65,13 @@ export function removeRefs (originalRefs, type) {
 export function removeRef (originalRefs, type) {
   return replaceRefs(originalRefs, type, [])
 }
+
+export function mergeRefs (aRefs, bRefs) {
+  const newRefs = [...aRefs]
+  bRefs.forEach(ref => {
+    if (!newRefs.find(r => r.type === ref.type && r.ref === ref.ref)) {
+      newRefs.push(ref)
+    }
+  })
+  return newRefs
+}

@@ -6,24 +6,21 @@
  */
 
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { View } from 'react-native'
 import { Icon, Text } from 'react-native-paper'
-import emojiRegex from 'emoji-regex'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { useSpotsQuery } from '../../../store/apiPOTA'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import SpotList from './components/SpotList'
 import ThemedDropDown from '../../components/ThemedDropDown'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { BANDS } from '@ham2k/lib-operation-data'
-import { findQSOHistory } from '../../../store/qsos/actions/findQSOHistory'
 import { selectAllOperations, selectOperationCallInfo } from '../../../store/operations'
-import { filterRefs } from '../../../tools/refTools'
-import { findCallNotes } from '../../../extensions/data/call-notes/CallNotesExtension'
-
-const EMOJI_REGEX = emojiRegex()
+import { selectSettings } from '../../../store/settings'
+import { useFindHooks } from '../../../extensions/registry'
+import { annotateQSO } from '../OpInfoTab/components/useQSOInfo'
+import { qsoKey } from '@ham2k/lib-qson-tools'
 
 function simplifiedMode (mode) {
   if (mode === 'CW') {
@@ -35,7 +32,8 @@ function simplifiedMode (mode) {
   }
 }
 
-const MAX_SPOT_AGE_IN_MINUTES = 10
+const MAX_SPOT_AGE_IN_SECONDS = 30 * 60
+const REFRESH_INTERVAL_IN_SECONDS = 60
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -56,86 +54,81 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export default function OpSpotsTab ({ navigation, route }) {
+export default function OpSpotsTab ({ navigation, route, operation }) {
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor)
 
+  const dispatch = useDispatch()
+  const settings = useSelector(selectSettings)
   const online = useSelector(selectRuntimeOnline)
 
   const [band, setBand] = useState('any')
   const [mode, setMode] = useState('any')
 
-  const spotsQuery = useSpotsQuery()
-  const [spots, setSpots] = useState([])
-
   const allOperations = useSelector(selectAllOperations)
-  const callInfo = useSelector(state => selectOperationCallInfo(state, route.params.uuid))
+  const ourInfo = useSelector(state => selectOperationCallInfo(state, route.params.uuid))
+
+  const [spots, setSpots] = useState([])
+  const [lastFetched, setLastFetched] = useState(0)
+  const [loading, setLoading] = useState(false)
+
+  const spotsHooks = useFindHooks('spots')
+  // const hookByKey = useMemo(() => {
+  //   const hooks = {}
+  //   for (const hook of spotsHooks) {
+  //     hooks[hook.key] = hook
+  //   }
+  //   return hooks
+  // }, [spotsHooks])
 
   useEffect(() => {
-    setTimeout(async () => {
-      const newSpots = spotsQuery.currentData || spotsQuery.data || []
-      const annotatedSpots = []
-
-      const today = new Date()
-      for (const spot of newSpots) {
-        const flags = {}
-
-        if (today - spot.timeInMillis > (1000 * 60 * MAX_SPOT_AGE_IN_MINUTES)) {
-          continue
+    console.log('load effect', { lastFetched, online, hooks: spotsHooks.map(h => h.key) })
+    if (lastFetched === 0) {
+      setLastFetched(new Date())
+      setLoading(true)
+      setTimeout(async () => {
+        console.log('loading')
+        let newSpots = []
+        for (const hook of spotsHooks) {
+          const hookSpots = await hook.fetchSpots({ online, settings, dispatch })
+          newSpots = newSpots.concat(hookSpots)
         }
 
-        if (spot.activator === callInfo?.call || spot.activator === callInfo.baseCall) {
-          flags._ourSpot = true
+        const today = new Date()
+
+        const annotatedSpots = []
+
+        for (const spot of newSpots) {
+          if (today - (spot.spot?.timeInMillis || 0) > (1000 * MAX_SPOT_AGE_IN_SECONDS)) {
+            console.log('skip', spot.their.call, spot.spot?.timeInMillis)
+            continue
+          }
+          // spot.our.call = ourInfo.call
+
+          spot.our = spot.our || {}
+          spot.timeOnMillis = 0
+          spot.key = `${spot.spot.source}:${qsoKey(spot)}`
+
+          await annotateQSO({ qso: spot, online, settings, dispatch, skipLookup: true })
+          annotatedSpots.push(spot)
         }
 
-        const qsoHistory = await findQSOHistory(spot.activator, { onDate: today })
-        if (qsoHistory.length > 0) {
-          if (qsoHistory.filter(qso => qso.band === spot.band).length === 0) {
-            flags._newBand = true
-          }
+        setSpots(annotatedSpots)
+        setLoading(false)
+      }, 0)
+    }
+  }, [allOperations, spotsHooks, online, settings, dispatch, lastFetched, ourInfo.call])
 
-          if (qsoHistory.filter(qso => qso.mode === spot.mode).length === 0) {
-            flags._newMode = true
-          }
-
-          let potaRefs = []
-          for (const qso of qsoHistory) {
-            const qsoData = JSON.parse(qso.data)
-            potaRefs = potaRefs + (filterRefs(qsoData?.refs, 'pota') || []).map(ref => ref.ref)
-          }
-          if (potaRefs.length > 1) {
-            if (!potaRefs.includes(spot.reference)) {
-              flags._newReference = true
-            }
-          } else {
-            flags._newActivity = true
-          }
-          flags._worked = !flags._newBand && !flags._newMode && !flags._newReference && !flags._newActivity
-        }
-        // console.log(spot)
-        const callNote = findCallNotes(spot.activator)
-        if (callNote) {
-          const matches = callNote[0].note && callNote[0].note.match(EMOJI_REGEX)
-          if (matches) {
-            flags._emoji = matches[0]
-          } else {
-            flags._emoji = '⭐️'
-          }
-        }
-
-        annotatedSpots.push({ ...spot, ...flags })
-      }
-
-      setSpots(annotatedSpots)
-    }, 0)
-  }, [spotsQuery, allOperations, callInfo])
-
-  useEffect(() => {
+  useEffect(() => { // Refresh periodically
     const interval = setInterval(() => {
-      spotsQuery?.refetch()
-    }, 1000 * 60)
+      setLastFetched(0)
+    }, 1000 * REFRESH_INTERVAL_IN_SECONDS)
     return () => clearInterval(interval)
   })
+
+  const refresh = useCallback(() => {
+    setLastFetched(0)
+  }, [])
 
   const [bandOptions, bandSpots] = useMemo(() => {
     const counts = {}
@@ -183,7 +176,7 @@ export default function OpSpotsTab ({ navigation, route }) {
     }
 
     filtered.sort((a, b) => {
-      return a.frequency - b.frequency
+      return a.freq - b.freq
     })
 
     return [options, filtered]
@@ -193,24 +186,9 @@ export default function OpSpotsTab ({ navigation, route }) {
     if (spot._ourSpot) return
 
     if (route?.params?.splitView) {
-      navigation.navigate('Operation', {
-        ...route?.params,
-        qso: {
-          their: { call: spot.activator },
-          freq: spot.frequency,
-          mode: spot.mode,
-          refs: [{ type: 'pota', ref: spot.reference }]
-        }
-      })
+      navigation.navigate('Operation', { ...route?.params, qso: { ...spot, our: undefined, key: undefined } })
     } else {
-      navigation.navigate('OpLog', {
-        qso: {
-          their: { call: spot.activator },
-          freq: spot.frequency,
-          mode: spot.mode,
-          refs: [{ type: 'pota', ref: spot.reference }]
-        }
-      })
+      navigation.navigate('OpLog', { qso: { ...spot, our: undefined, key: undefined } })
     }
   }, [navigation, route?.params])
 
@@ -258,7 +236,7 @@ export default function OpSpotsTab ({ navigation, route }) {
           )}
         </Text>
       </View>
-      <SpotList spots={filteredSpots} spotsQuery={spotsQuery} onPress={handlePress} />
+      <SpotList spots={filteredSpots} loading={loading} refresh={refresh} onPress={handlePress} />
     </GestureHandlerRootView>
   )
 }
