@@ -13,9 +13,12 @@ import SpotItem, { guessItemHeight } from './SpotItem'
 import { RefreshControl } from 'react-native-gesture-handler'
 
 function prepareStyles (themeStyles, themeColor) {
+  const DEBUG = false
+
   const commonStyles = {
     fontSize: themeStyles.normalFontSize,
-    lineHeight: themeStyles.normalFontSize * 1.3
+    lineHeight: themeStyles.normalFontSize * 1.3,
+    borderWidth: DEBUG ? 1 : 0
   }
 
   return {
@@ -26,7 +29,7 @@ function prepareStyles (themeStyles, themeColor) {
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        minWidth: themeStyles.oneSpace * 11,
+        width: themeStyles.oneSpace * 11.15,
         marginLeft: 0,
         textAlign: 'right'
       },
@@ -50,7 +53,7 @@ function prepareStyles (themeStyles, themeColor) {
         ...themeStyles.text.callsign,
         flex: 1,
         fontWeight: 'bold',
-        marginLeft: themeStyles.oneSpace * 2,
+        marginLeft: themeStyles.oneSpace * 1.45,
         minWidth: themeStyles.oneSpace * 5,
         textAlign: 'left'
       },
@@ -68,10 +71,9 @@ function prepareStyles (themeStyles, themeColor) {
         width: themeStyles.oneSpace * 5,
         textAlign: 'right'
       },
-      name: {
+      label: {
         ...commonStyles,
         flex: 1,
-        minWidth: themeStyles.oneSpace * 5,
         marginLeft: themeStyles.oneSpace * 1.4,
         textAlign: 'left'
       },
@@ -93,7 +95,7 @@ function prepareStyles (themeStyles, themeColor) {
   }
 }
 
-export default function SpotList ({ spots, spotsQuery, style, onPress }) {
+export default function SpotList ({ spots, loading, refresh, style, onPress }) {
   const styles = useThemedStyles(prepareStyles)
 
   const { width } = useWindowDimensions()
@@ -104,7 +106,7 @@ export default function SpotList ({ spots, spotsQuery, style, onPress }) {
   const renderRow = useCallback(({ item, index }) => {
     const spot = item
     return (
-      <SpotItem spot={spot} onPress={onPress} styles={styles} extendedWidth={extendedWidth} />
+      <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} extendedWidth={extendedWidth} />
     )
   }, [styles, onPress, extendedWidth])
 
@@ -128,7 +130,7 @@ export default function SpotList ({ spots, spotsQuery, style, onPress }) {
       updateCellsBatchingPeriod={100}
       removeClippedSubviews={true}
       refreshControl={
-        <RefreshControl refreshing={spotsQuery.status === 'pending'} onRefresh={() => spotsQuery.refetch()} />
+        <RefreshControl refreshing={loading} onRefresh={refresh} />
       }
     />
   )

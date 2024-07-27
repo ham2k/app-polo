@@ -98,7 +98,7 @@ export const useQSOInfo = ({ qso, operation }) => {
   }
 }
 
-export async function annotateQSO ({ qso, online, settings, dispatch }) {
+export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup = false }) {
   let theirCall = parseCallsign(qso?.their?.call)
   if (theirCall?.baseCall) {
     annotateFromCountryFile(theirCall)
@@ -111,7 +111,7 @@ export async function annotateQSO ({ qso, online, settings, dispatch }) {
   const callHistory = await findQSOHistory(theirCall?.call)
 
   let qrz = {}
-  if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2) {
+  if (!skipLookup && online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2) {
     const qrzPromise = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: theirCall.call }))
     await Promise.all(dispatch(apiQRZ.util.getRunningQueriesThunk()))
     const qrzLookup = await dispatch((_dispatch, getState) => apiQRZ.endpoints.lookupCall.select({ call: theirCall.call })(getState()))

@@ -14,6 +14,8 @@ import { potaFindParkByReference, registerPOTAAllParksData } from './POTAAllPark
 import { POTALoggingControl } from './POTALoggingControl'
 import { POTAPostSpot } from './POTAPostSpot'
 import { fmtDateZulu } from '../../../tools/timeFormats'
+import { apiPOTA } from '../../../store/apiPOTA'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
 
 const Extension = {
   ...Info,
@@ -21,6 +23,7 @@ const Extension = {
   enabledByDefault: true,
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
+    registerHook('spots', { hook: SpotsHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 
@@ -58,6 +61,49 @@ const ActivityHook = {
     let label = opRef ? Info.shortNameDoubleContact : Info.shortName
     if (findRef(qso, Info.huntingType)) label = `✓ ${label}`
     return label
+  }
+}
+
+const SpotsHook = {
+  ...Info,
+  fetchSpots: async ({ online, settings, dispatch }) => {
+    let spots = []
+    if (online) {
+      const apiPromise = await dispatch(apiPOTA.endpoints.spots.initiate({}, { forceRefetch: true }))
+      await Promise.all(dispatch(apiPOTA.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, getState) => apiPOTA.endpoints.spots.select({})(getState()))
+
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+      spots = apiResults.data || {}
+    }
+    return spots.map(spot => {
+      const qso = {
+        their: { call: spot.activator },
+        freq: spot.frequency,
+        band: spot.frequency ? bandForFrequency(spot.frequency) : spot.band,
+        mode: spot.mode,
+        refs: [{
+          ref: spot.reference,
+          type: Info.huntingType,
+          label: `POTA ${spot.reference}: ${spot.locationDesc} ${spot.name}`
+        }],
+        spot: {
+          timeInMillis: Date.parse(spot.spotTime + 'Z'),
+          source: Info.key,
+          icon: Info.icon,
+          label: `POTA ${spot.reference}: ${spot.locationDesc} ${spot.name}`,
+          sourceInfo: {
+            source: spot.source,
+            id: spot.spotId,
+            comments: spot.comments,
+            spotter: spot.spotter,
+            count: spot.count
+          }
+        }
+      }
+
+      return qso
+    })
   }
 }
 

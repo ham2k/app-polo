@@ -16,7 +16,7 @@ export function guessItemHeight (qso, styles) {
   return styles.doubleRow.height + styles.doubleRow.borderBottomWidth
 }
 const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth }) {
-  const freqParts = useMemo(() => partsForFreqInMHz(spot.frequency), [spot.frequency])
+  const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
 
   const [commonStyle, bandStyle, modeStyle, refStyle] = useMemo(() => {
     const workedStyles = []
@@ -64,23 +64,16 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
             <Text style={[styles.fields.freqHz, commonStyle]}>.{freqParts[2]}</Text>
           </Text>
           <Text style={[styles.fields.call, commonStyle]}>
-            {spot.activator ?? '?'}
-            {spot._emoji && ' ' + spot._emoji}
+            {spot.their?.call ?? '?'}
+            {spot.their?.guess?.emoji && ' ' + spot.their?.guess?.emoji}
           </Text>
-          <Text style={[styles.fields.time, commonStyle]}>{fmtDateTimeRelative(spot.timeInMillis)}</Text>
+          <Text style={[styles.fields.time, commonStyle]}>{fmtDateTimeRelative(spot.spot?.timeInMillis, { roundTo: 'minutes' })}</Text>
         </View>
         <View style={styles.doubleRowInnerRow}>
           <Text style={[styles.fields.band, commonStyle, bandStyle]}>{spot.band}</Text>
           <Text style={[styles.fields.mode, commonStyle, modeStyle]}>{spot.mode}</Text>
-          <Text style={[styles.fields.name, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
-            {spot.reference && (
-              <>
-                {' at '}
-                <Text style={[styles.text.numbers, commonStyle, refStyle]}>{spot.reference ?? '?'}</Text>
-                {': '}
-                {[spot.locationDesc.substring(3, 6), spot.shortName ?? spot.name].join(' • ')}
-              </>
-            )}
+          <Text style={[styles.fields.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
+            {spot.spot.label}
           </Text>
         </View>
       </View>
