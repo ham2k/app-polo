@@ -19,7 +19,7 @@ import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 import { useQSOInfo } from '../../../OpInfoTab/components/useQSOInfo'
 import { startOfDayInMillis, yesterdayInMillis } from '../../../../../tools/timeTools'
 
-const MESSAGES_FOR_SCORING = {
+export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!!!',
   newBand: 'New Band',
   newMode: 'New Mode',

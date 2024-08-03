@@ -95,7 +95,7 @@ export default function OperationScreen (props) {
               }}
             >
               <HeaderBar options={headerOptions} navigation={navigation} back={true} />
-              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView } }} />
+              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO } }} />
             </View>
             <SafeAreaView
               edges={['top']}

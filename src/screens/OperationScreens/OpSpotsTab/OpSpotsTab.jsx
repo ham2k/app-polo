@@ -18,9 +18,10 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { BANDS } from '@ham2k/lib-operation-data'
 import { selectAllOperations, selectOperationCallInfo } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
-import { useFindHooks } from '../../../extensions/registry'
+import { findBestHook, useFindHooks } from '../../../extensions/registry'
 import { annotateQSO } from '../OpInfoTab/components/useQSOInfo'
 import { qsoKey } from '@ham2k/lib-qson-tools'
+import { selectQSOs } from '../../../store/qsos'
 
 function simplifiedMode (mode) {
   if (mode === 'CW') {
@@ -32,7 +33,7 @@ function simplifiedMode (mode) {
   }
 }
 
-const MAX_SPOT_AGE_IN_SECONDS = 30 * 60
+// const MAX_SPOT_AGE_IN_SECONDS = 30 * 60
 const REFRESH_INTERVAL_IN_SECONDS = 60
 
 function prepareStyles (baseStyles, themeColor) {
@@ -54,7 +55,7 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export default function OpSpotsTab ({ navigation, route, operation }) {
+export default function OpSpotsTab ({ navigation, route }) {
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor)
 
@@ -66,9 +67,13 @@ export default function OpSpotsTab ({ navigation, route, operation }) {
   const [mode, setMode] = useState('any')
 
   const allOperations = useSelector(selectAllOperations)
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, route.params.uuid))
 
-  const [spots, setSpots] = useState([])
+  const operation = route.params.operation
+  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
+
+  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation.uuid))
+
+  const [rawSpots, setRawSpots] = useState([])
   const [lastFetched, setLastFetched] = useState(0)
   const [loading, setLoading] = useState(false)
 
@@ -82,42 +87,77 @@ export default function OpSpotsTab ({ navigation, route, operation }) {
   // }, [spotsHooks])
 
   useEffect(() => {
-    console.log('load effect', { lastFetched, online, hooks: spotsHooks.map(h => h.key) })
     if (lastFetched === 0) {
       setLastFetched(new Date())
       setLoading(true)
       setTimeout(async () => {
-        console.log('loading')
         let newSpots = []
         for (const hook of spotsHooks) {
           const hookSpots = await hook.fetchSpots({ online, settings, dispatch })
           newSpots = newSpots.concat(hookSpots)
         }
 
-        const today = new Date()
+        // const today = new Date()
 
         const annotatedSpots = []
 
         for (const spot of newSpots) {
-          if (today - (spot.spot?.timeInMillis || 0) > (1000 * MAX_SPOT_AGE_IN_SECONDS)) {
-            console.log('skip', spot.their.call, spot.spot?.timeInMillis)
-            continue
-          }
-          // spot.our.call = ourInfo.call
+          // if (today - (spot.spot?.timeInMillis || 0) > (1000 * MAX_SPOT_AGE_IN_SECONDS)) {
+          //   console.log('skip', spot.their.call, spot.spot?.timeInMillis)
+          //   continue
+          // }
 
           spot.our = spot.our || {}
           spot.timeOnMillis = 0
           spot.key = `${spot.spot.source}:${qsoKey(spot)}`
 
           await annotateQSO({ qso: spot, online, settings, dispatch, skipLookup: true })
+
           annotatedSpots.push(spot)
         }
 
-        setSpots(annotatedSpots)
+        setRawSpots(annotatedSpots)
         setLoading(false)
       }, 0)
     }
-  }, [allOperations, spotsHooks, online, settings, dispatch, lastFetched, ourInfo.call])
+  }, [allOperations, spotsHooks, online, settings, dispatch, lastFetched, ourInfo.call, operation, qsos])
+
+  const spots = useMemo(() => {
+    const scoringRefHandlers = (operation?.refs || []).map(ref => (
+      { handler: findBestHook(`ref:${ref.type}`), ref }
+    ))?.filter(x => x?.handler && x.handler.scoringForQSO)
+
+    return rawSpots.map(rawSpot => {
+      const spot = { ...rawSpot }
+      spot.spot = spot.spot || {}
+      spot.spot.type = undefined
+      spot.spot.flags = {}
+
+      if (spot.their?.call === ourInfo.call) {
+        spot.spot.type = 'self'
+      } else {
+        scoringRefHandlers.forEach(({ handler, ref }) => {
+          const score = handler.scoringForQSO({ qso: spot, qsos, operation, ref })
+          if (score?.alerts && score?.alerts[0] === 'duplicate') {
+            if (spot.spot.type === 'scoring') {
+              spot.spot.type = 'partialDuplicate'
+            } else {
+              spot.spot.type = 'duplicate'
+            }
+          } else if (score?.counts === '0') {
+            spot.spot.type = spot.spot.type || 'nonScoring'
+          } else {
+            spot.spot.type = spot.spot.type || 'scoring'
+          }
+
+          if (score.notices) {
+            score.notices.forEach(notice => (spot.spot.flags[notice] = true))
+          }
+        })
+      }
+      return spot
+    })
+  }, [operation, rawSpots, ourInfo.call, qsos])
 
   useEffect(() => { // Refresh periodically
     const interval = setInterval(() => {
