@@ -116,7 +116,7 @@ const PaperDropDown = (props, _ref) => {
           style={{
             ...touchableStyle,
             flexGrow: 1,
-            flexDirection: 'column',
+            flexDirection: 'row',
             flexWrap: 'nowrap',
             justifyContent: 'flex-start',
             alignItems: 'stretch',
@@ -130,14 +130,16 @@ const PaperDropDown = (props, _ref) => {
             paddingRight: 0,
             paddingBottom: 0,
             paddingLeft: 0,
-            overflow: 'visible'
+            overflow: 'visible',
+            maxWidth: '100%'
           }}
           theme={theme}
         >
           <View
             pointerEvents={'none'}
             style={{
-              flexGrow: 1
+              flexGrow: 1,
+              flexDirection: 'row'
             }}
           >
             <TextInput
