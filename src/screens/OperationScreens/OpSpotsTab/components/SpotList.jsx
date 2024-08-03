@@ -69,12 +69,20 @@ function prepareStyles (themeStyles, themeColor) {
         flex: 0,
         marginLeft: themeStyles.oneSpace * 0.2,
         width: themeStyles.oneSpace * 5,
-        textAlign: 'right'
+        textAlign: 'right',
+        marginRight: themeStyles.oneSpace * 1.4
+      },
+      icon: {
+        ...commonStyles,
+        flex: 0,
+        textAlign: 'left',
+        marginRight: themeStyles.oneSpace * 0.3,
+        marginLeft: themeStyles.oneSpace * -0.5,
+        marginTop: themeStyles.oneSpace * 0.2
       },
       label: {
         ...commonStyles,
         flex: 1,
-        marginLeft: themeStyles.oneSpace * 1.4,
         textAlign: 'left'
       },
       time: {
@@ -85,11 +93,6 @@ function prepareStyles (themeStyles, themeColor) {
         minWidth: themeStyles.oneSpace * 6,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
-      },
-      icon: {
-        ...commonStyles,
-        flex: 0,
-        width: themeStyles.oneSpace * 2
       }
     }
   }

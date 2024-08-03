@@ -15,12 +15,15 @@ import { Info } from './SOTAInfo'
 import { SOTALoggingControl } from './SOTALoggingControl'
 import { SOTAAccountSetting } from './SOTAAccount'
 import { SOTAPostSpot } from './SOTAPostSpot'
+import { apiSOTA } from '../../../store/apiSOTA'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
 
 const Extension = {
   ...Info,
   category: 'locationBased',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
+    registerHook('spots', { hook: SpotsHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
     registerHook('setting', {
@@ -69,6 +72,55 @@ const ActivityHook = {
     let label = opRef ? Info.shortNameDoubleContact : Info.shortName
     if (findRef(qso, Info.huntingType)) label = `✓ ${label}`
     return label
+  }
+}
+
+const SpotsHook = {
+  ...Info,
+  fetchSpots: async ({ online, settings, dispatch }) => {
+    let spots = []
+    if (online) {
+      const apiPromise = await dispatch(apiSOTA.endpoints.spots.initiate({ limit: 50 }, { forceRefetch: true }))
+      await Promise.all(dispatch(apiSOTA.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, getState) => apiSOTA.endpoints.spots.select({ limit: 50 })(getState()))
+
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+      spots = apiResults.data || []
+    }
+    const qsos = spots.map(spot => {
+      const freqInMHz = Math.round(Number.parseFloat(spot.frequency, 10) * 1000)
+      const qso = {
+        their: { call: spot.activatorCallsign },
+        freq: freqInMHz,
+        band: freqInMHz ? bandForFrequency(freqInMHz) : spot.band,
+        mode: spot.mode.toUpperCase(),
+        refs: [{
+          ref: `${spot.associationCode}/${spot.summitCode}`,
+          type: Info.huntingType
+        }],
+        spot: {
+          timeInMillis: Date.parse(spot.timeStamp + 'Z'),
+          source: Info.key,
+          icon: Info.icon,
+          label: `SOTA ${spot.associationCode}/${spot.summitCode}: ${spot.summitDetails}`,
+          sourceInfo: {
+            id: spot.id,
+            comments: spot.comments,
+            spotter: spot.callsign
+          }
+        }
+      }
+      return qso
+    })
+    const dedupedQSOs = []
+    const includedCalls = {}
+    for (const qso of qsos) {
+      if (!includedCalls[qso.their.call]) {
+        includedCalls[qso.their.call] = true
+        dedupedQSOs.push(qso)
+      }
+    }
+    return dedupedQSOs
   }
 }
 

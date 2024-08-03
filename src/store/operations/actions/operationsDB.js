@@ -40,7 +40,7 @@ export const getOperations = () => async (dispatch, getState) => {
 
 export const saveOperation = (operation) => async (dispatch, getState) => {
   const { uuid } = operation
-
+  console.log('save operation', operation)
   const json = JSON.stringify(operation)
   await dbExecute('INSERT INTO operations (uuid, data) VALUES (?, ?) ON CONFLICT DO UPDATE SET data = ?', [uuid, json, json])
 }
@@ -56,6 +56,7 @@ export const addNewOperation = (operation) => async (dispatch) => {
 
 export const loadOperation = (uuid) => async (dispatch) => {
   const operation = await dbSelectOne('SELECT * FROM operations WHERE uuid = ?', [uuid], { row: prepareOperationRow })
+  console.log('load operation', operation)
   dispatch(actions.setOperation(operation))
 }
 

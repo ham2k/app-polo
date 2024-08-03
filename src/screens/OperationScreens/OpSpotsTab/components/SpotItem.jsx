@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Text, TouchableRipple } from 'react-native-paper'
+import { Icon, Text, TouchableRipple } from 'react-native-paper'
 
 import { View } from 'react-native'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
@@ -20,32 +20,32 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
 
   const [commonStyle, bandStyle, modeStyle, refStyle] = useMemo(() => {
     const workedStyles = []
-    if (spot._ourSpot) {
+    if (spot.spot?.type === 'self') {
       workedStyles[0] = {
         color: styles.colors.tertiary,
-        opacity: 0.8
+        opacity: 0.7
       }
     }
-    if (spot._worked) {
+    if (spot.spot?.type === 'duplicate') {
       workedStyles[0] = {
         textDecorationLine: 'line-through',
         textDecorationColor: styles.colors.onBackground,
-        opacity: 0.8
+        opacity: 0.6
       }
     }
-    if (spot._newBand) {
+    if (spot.spot?.flags?.newBand) {
       workedStyles[1] = {
         fontWeight: 'bold',
         color: styles.colors.important
       }
     }
-    if (spot._newMode) {
+    if (spot.spot?.flags?.newMode) {
       workedStyles[2] = {
         fontWeight: 'bold',
         color: styles.colors.important
       }
     }
-    if (spot._newReference) {
+    if (spot.spot?.flags?.newRef || spot.spot?.flags?.newDay) {
       workedStyles[3] = {
         fontWeight: 'bold',
         color: styles.colors.important
@@ -72,6 +72,15 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
         <View style={styles.doubleRowInnerRow}>
           <Text style={[styles.fields.band, commonStyle, bandStyle]}>{spot.band}</Text>
           <Text style={[styles.fields.mode, commonStyle, modeStyle]}>{spot.mode}</Text>
+          {spot.spot?.icon && (
+            <View style={[styles.fields.icon, commonStyle, refStyle]}>
+              <Icon
+                source={spot.spot?.icon}
+                size={styles.oneSpace * 2.3}
+                color={refStyle?.color || commonStyle?.color}
+              />
+            </View>
+          )}
           <Text style={[styles.fields.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
             {spot.spot.label}
           </Text>

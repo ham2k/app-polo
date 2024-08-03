@@ -84,14 +84,13 @@ const SpotsHook = {
         mode: spot.mode,
         refs: [{
           ref: spot.reference,
-          type: Info.huntingType,
-          label: `POTA ${spot.reference}: ${spot.locationDesc} ${spot.name}`
+          type: Info.huntingType
         }],
         spot: {
           timeInMillis: Date.parse(spot.spotTime + 'Z'),
           source: Info.key,
           icon: Info.icon,
-          label: `POTA ${spot.reference}: ${spot.locationDesc} ${spot.name}`,
+          label: `POTA ${spot.reference}: ${spot.locationDesc ? spot.locationDesc.split('-')[1] + ' •' : ''} ${spot.name}`,
           sourceInfo: {
             source: spot.source,
             id: spot.spotId,
