@@ -59,7 +59,7 @@ export const selectStateForComponent = createSelector(
   [
     (state, component) => state?.ui && state?.ui[component]
   ],
-  (value) => value ?? {}
+  (value) => value
 )
 
 export default uiSlice.reducer
