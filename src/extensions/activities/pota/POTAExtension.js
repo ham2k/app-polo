@@ -39,6 +39,7 @@ export default Extension
 
 const ActivityHook = {
   ...Info,
+
   MainExchangePanel: null,
   loggingControls: ({ operation, settings }) => {
     if (findRef(operation, Info.activationType)) {
@@ -66,6 +67,7 @@ const ActivityHook = {
 
 const SpotsHook = {
   ...Info,
+  sourceName: 'pota.app',
   fetchSpots: async ({ online, settings, dispatch }) => {
     let spots = []
     if (online) {

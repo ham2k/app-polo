@@ -1,10 +1,12 @@
 {
-  "24.8.0-pre1": {
-    "name": "August 2024 (pre 1)",
+  "24.8.0-pre2": {
+    "name": "August 2024 (pre 2)",
     "changes": [
-      "Input for TX Power (contributed by NA7DO)",
+      "SOTA Spots!!!",
       "SOTA Self-spotting (contributed by M1SDH)",
-      "Self-spotting command shortcut (‘SPOTME’)"
+      "Input for TX Power (contributed by NA7DO)",
+      "Self-spotting command shortcut (‘SPOTME’)",
+      "General improvements on the Spots Screen"
     ]
   },
   "24.7.0": {
