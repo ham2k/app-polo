@@ -77,7 +77,7 @@ const ActivityHook = {
 
 const SpotsHook = {
   ...Info,
-  sourceName: 'sotawatch.sota.org.uk',
+  sourceName: 'SOTAWatch',
   fetchSpots: async ({ online, settings, dispatch }) => {
     let spots = []
     if (online) {
