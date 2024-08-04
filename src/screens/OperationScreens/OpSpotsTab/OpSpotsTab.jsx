@@ -209,6 +209,7 @@ export default function OpSpotsTab ({ navigation, route }) {
             themeColor={themeColor}
             settings={settings}
             online={online}
+            refreshSpots={() => updateSpotsState({ lastFetched: 0 })}
             onDone={() => setShowControls(false)}
           />
         </View>
