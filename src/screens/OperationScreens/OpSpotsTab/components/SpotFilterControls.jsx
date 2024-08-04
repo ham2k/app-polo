@@ -9,11 +9,13 @@ import React from 'react'
 import { View } from 'react-native'
 import { Switch, Text } from 'react-native-paper'
 
+import { superModeForMode } from '@ham2k/lib-operation-data'
+
 import { useUIState } from '../../../../store/ui'
 import ThemedDropDown from '../../../components/ThemedDropDown'
-import SpotFilterIndicators from './SpotFilterIndicators'
-import { LONG_LABEL_FOR_MODE, simplifiedMode } from '../OpSpotsTab'
 import ThemedButton from '../../../components/ThemedButton'
+import { LONG_LABEL_FOR_MODE } from '../OpSpotsTab'
+import SpotFilterIndicators from './SpotFilterIndicators'
 
 export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSources, vfo, options, counts, operation, onDone, refreshSpots, styles, themeColor, settings, online }) {
   const [filterState, , updateFilterState] = useUIState('OpSpotsTab', 'filterState', {})
@@ -65,7 +67,7 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
             style={{ width: '100%' }}
             list={[
               { value: 'any', label: 'All Modes' },
-              { value: 'auto', label: `Automatic (Currently ${LONG_LABEL_FOR_MODE[simplifiedMode(vfo.mode)]})` },
+              { value: 'auto', label: `Automatic (Currently ${LONG_LABEL_FOR_MODE[superModeForMode(vfo.mode)]})` },
               ...options.mode
             ]}
             dropDownContainerMaxHeight={styles.oneSpace * 40}

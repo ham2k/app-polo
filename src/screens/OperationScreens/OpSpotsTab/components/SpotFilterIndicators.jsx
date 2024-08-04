@@ -7,10 +7,10 @@
 
 import React from 'react'
 import { Icon } from 'react-native-paper'
-
 import { View } from 'react-native'
-import { useUIState } from '../../../../store/ui'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+
+import { useUIState } from '../../../../store/ui'
 import LoggerChip from '../../components/LoggerChip'
 import { LABEL_FOR_MODE, simplifiedMode } from '../OpSpotsTab'
 
