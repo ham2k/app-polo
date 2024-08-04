@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { Info } from './CustomInfo'
@@ -21,18 +21,12 @@ export function CustomLoggingControl (props) {
     }, 0)
   }, [ref])
 
-  const [localValue, setLocalValue] = useState('')
-
-  // Only initialize localValue once
-  useEffect(() => {
+  const refsString = useMemo(() => {
     const refs = filterRefs(qso, Info.huntingType)
-    if (!localValue) {
-      setLocalValue(refsToString(refs, Info.huntingType))
-    }
-  }, [qso, localValue])
+    return refsToString(refs, Info.huntingType)
+  }, [qso])
 
-  const localHandleChangeText = useCallback((value) => {
-    setLocalValue(value)
+  const handleChangeText = useCallback((value) => {
     const refs = stringToRefs(Info.huntingType, value, { regex: Info.referenceRegex })
 
     updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
@@ -43,9 +37,9 @@ export function CustomLoggingControl (props) {
       {...props}
       innerRef={ref}
       style={[style, { minWidth: 16 * styles.oneSpace }]}
-      value={localValue}
+      value={refsString}
       label="Their Ref"
-      onChangeText={localHandleChangeText}
+      onChangeText={handleChangeText}
     />
   )
 }

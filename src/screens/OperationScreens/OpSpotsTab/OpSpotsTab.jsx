@@ -25,6 +25,7 @@ import SpotFilterControls from './components/SpotFilterControls'
 import SpotFilterIndicators from './components/SpotFilterIndicators'
 import { selectVFO } from '../../../store/station/stationSlice'
 import { Text } from 'react-native-paper'
+import { DefaultScoringHandler } from '../OpLoggingTab/components/LoggingPanel/CallInfo'
 
 export function simplifiedMode (mode) {
   if (mode === 'CW') {
@@ -135,11 +136,9 @@ export default function OpSpotsTab ({ navigation, route }) {
     }
   }, [
     allOperations, spotsHooks, online, settings, dispatch,
-    ourInfo.call, operation, qsos, spotsState.lastFetched,
+    ourInfo.call, operation, spotsState.lastFetched,
     updateSpotsState, filterState.sources
   ])
-
-  useEffect(() => { console.log('filterState', filterState) }, [filterState])
 
   const { spots: filteredSpots, options, counts } = useMemo(() => {
     console.log('filtering spots', spotsState.rawSpots?.length, filterState)
@@ -150,6 +149,7 @@ export default function OpSpotsTab ({ navigation, route }) {
     const scoringRefHandlers = (operation?.refs || []).map(ref => (
       { handler: findBestHook(`ref:${ref.type}`), ref }
     ))?.filter(x => x?.handler && x.handler.scoringForQSO)
+    if (scoringRefHandlers.length === 0) scoringRefHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
 
     return filteredSpots.map(rawSpot => {
       const spot = { ...rawSpot }
@@ -209,6 +209,7 @@ export default function OpSpotsTab ({ navigation, route }) {
             themeColor={themeColor}
             settings={settings}
             online={online}
+            refreshSpots={() => updateSpotsState({ lastFetched: 0 })}
             onDone={() => setShowControls(false)}
           />
         </View>

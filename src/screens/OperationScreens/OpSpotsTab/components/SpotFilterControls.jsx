@@ -15,7 +15,7 @@ import SpotFilterIndicators from './SpotFilterIndicators'
 import { LONG_LABEL_FOR_MODE, simplifiedMode } from '../OpSpotsTab'
 import ThemedButton from '../../../components/ThemedButton'
 
-export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSources, vfo, options, counts, operation, onDone, styles, themeColor, settings, online }) {
+export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSources, vfo, options, counts, operation, onDone, refreshSpots, styles, themeColor, settings, online }) {
   const [filterState, , updateFilterState] = useUIState('OpSpotsTab', 'filterState', {})
   console.log('SpotFilterControls', { filterState })
   return (
@@ -92,8 +92,20 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
         </Text>
         {spotsSources.map(source => (
           <View key={source.key} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'stretch', gap: styles.oneSpace }}>
-            <Switch value={filterState.sources?.[source.key] !== false} onValueChange={(value) => updateFilterState({ sources: { [source.key]: value } })} />
-            <Text style={{ fontSize: styles.normalFontSize }} onPress={() => updateFilterState({ sources: { [source.key]: !filterState.sources?.[source.key] } })}>
+            <Switch
+              value={filterState.sources?.[source.key] !== false}
+              onValueChange={(value) => {
+                updateFilterState({ sources: { [source.key]: value } })
+                if (value) refreshSpots()
+              }}
+            />
+            <Text
+              style={{ fontSize: styles.normalFontSize }}
+              onPress={() => {
+                updateFilterState({ sources: { [source.key]: !filterState.sources?.[source.key] } })
+                if (!filterState.sources?.[source.key]) refreshSpots()
+              }}
+            >
               <Text style={{ fontWeight: 'bold' }}>{source.sourceName ?? source.name}: </Text>{counts.source?.[source.key] || '0'} spots
             </Text>
           </View>
