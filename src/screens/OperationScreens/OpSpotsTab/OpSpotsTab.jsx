@@ -8,34 +8,25 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { TouchableOpacity, View } from 'react-native'
-
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { selectRuntimeOnline } from '../../../store/runtime'
-import SpotList from './components/SpotList'
+import { Text } from 'react-native-paper'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { BANDS, ADIF_MODES } from '@ham2k/lib-operation-data'
+
+import { qsoKey } from '@ham2k/lib-qson-tools'
+import { BANDS, ADIF_MODES, superModeForMode } from '@ham2k/lib-operation-data'
+
+import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectAllOperations, selectOperationCallInfo } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
-import { findBestHook, useFindHooks } from '../../../extensions/registry'
-import { annotateQSO } from '../OpInfoTab/components/useQSOInfo'
-import { qsoKey } from '@ham2k/lib-qson-tools'
 import { selectQSOs } from '../../../store/qsos'
 import { useUIState } from '../../../store/ui'
+import { selectVFO } from '../../../store/station/stationSlice'
+import { findBestHook, useFindHooks } from '../../../extensions/registry'
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { DefaultScoringHandler } from '../OpLoggingTab/components/LoggingPanel/CallInfo'
+import SpotList from './components/SpotList'
+import { annotateQSO } from '../OpInfoTab/components/useQSOInfo'
 import SpotFilterControls from './components/SpotFilterControls'
 import SpotFilterIndicators from './components/SpotFilterIndicators'
-import { selectVFO } from '../../../store/station/stationSlice'
-import { Text } from 'react-native-paper'
-import { DefaultScoringHandler } from '../OpLoggingTab/components/LoggingPanel/CallInfo'
-
-export function simplifiedMode (mode) {
-  if (mode === 'CW') {
-    return 'CW'
-  } else if (mode === 'SSB' || mode === 'LSB' || mode === 'USB' || mode === 'FM' || mode === 'AM') {
-    return 'PHONE'
-  } else {
-    return 'DIGITAL'
-  }
-}
 
 export const LABEL_FOR_MODE = {
   CW: 'CW',
@@ -293,7 +284,7 @@ export function filterAndCount (rawSpots, filterState, vfo) {
   results.options.mode = []
 
   results.spots.forEach(spot => {
-    const simpleMode = simplifiedMode(spot.mode)
+    const simpleMode = superModeForMode(spot.mode)
     results.counts.mode[simpleMode] = (results.counts.mode[simpleMode] ?? 0) + 1
   })
   results.options.mode = results.options.mode.concat(
@@ -303,8 +294,8 @@ export function filterAndCount (rawSpots, filterState, vfo) {
       .map(a => ({ value: a.mode, label: `${LONG_LABEL_FOR_MODE[a.mode]} (${a.count})` }))
   )
   if (filterState.mode && filterState.mode !== 'any') {
-    const mode = filterState.mode === 'auto' ? simplifiedMode(vfo.mode) : filterState.mode
-    results.spots = results.spots.filter(spot => simplifiedMode(spot.mode) === mode)
+    const mode = filterState.mode === 'auto' ? superModeForMode(vfo.mode) : filterState.mode
+    results.spots = results.spots.filter(spot => superModeForMode(spot.mode) === mode)
   }
 
   results.spots.sort((a, b) => {
