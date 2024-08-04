@@ -208,9 +208,13 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, operation, v
     const qso = item
 
     let qsoStyles
-    if (qso.deleted) qsoStyles = stylesForDeleted
-    else if (qso.our?.operatorCall !== operation?.operatorCall) qsoStyles = stylesForOtherOperator
-    else qsoStyles = styles
+    if (qso.deleted) {
+      qsoStyles = stylesForDeleted
+    } else if (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.operatorCall) {
+      qsoStyles = stylesForOtherOperator
+    } else {
+      qsoStyles = styles
+    }
 
     return (
       <QSOItem
