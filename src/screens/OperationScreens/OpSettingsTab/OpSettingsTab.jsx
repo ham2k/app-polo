@@ -7,16 +7,17 @@
 
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useMemo, useState } from 'react'
-
 import { ScrollView } from 'react-native'
 import { List } from 'react-native-paper'
 
+import DocumentPicker from 'react-native-document-picker'
+import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
-import { generateExport, selectOperation } from '../../../store/operations'
+import { generateExport, importADIFIntoOperation, selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { LocationDialog } from './components/LocationDialog'
@@ -24,7 +25,7 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { trackOperation } from '../../../distro'
+import { reportError, trackOperation } from '../../../distro'
 import { selectRuntimeOnline } from '../../../store/runtime'
 
 function prepareStyles (baseStyles) {
@@ -94,6 +95,20 @@ export default function OpSettingsTab ({ navigation, route }) {
       }
     })
   }, [dispatch, online, operation, settings])
+
+  const handleImportADIF = useCallback(() => {
+    DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
+      const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
+      await dispatch(importADIFIntoOperation(filename, operation))
+      RNFetchBlob.fs.unlink(filename)
+    }).catch((error) => {
+      if (error.indexOf('cancelled') >= 0) {
+        // ignore
+      } else {
+        reportError('Error importing ADIF', error)
+      }
+    })
+  }, [dispatch, operation])
 
   const refHandlers = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]
@@ -177,6 +192,13 @@ export default function OpSettingsTab ({ navigation, route }) {
       </Ham2kListSection>
       {settings.devMode && (
         <Ham2kListSection title={'Developer Options'} titleStyle={{ color: styles.colors.devMode }}>
+          <Ham2kListItem
+            title="Add QSOs from ADIF file"
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-import-outline" color={styles.colors.devMode} />}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            onPress={() => handleImportADIF()}
+          />
           <Ham2kListItem
             title="Export QSON file"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
