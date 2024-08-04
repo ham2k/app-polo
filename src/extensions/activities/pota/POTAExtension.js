@@ -67,7 +67,7 @@ const ActivityHook = {
 
 const SpotsHook = {
   ...Info,
-  sourceName: 'pota.app',
+  sourceName: 'POTA.app',
   fetchSpots: async ({ online, settings, dispatch }) => {
     let spots = []
     if (online) {
