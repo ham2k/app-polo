@@ -7,7 +7,7 @@
 
 import RNFetchBlob from 'react-native-blob-util'
 import { actions } from '../operationsSlice'
-import { actions as qsosActions, saveQSOsForOperation } from '../../qsos'
+import { addQSO, actions as qsosActions, saveQSOsForOperation } from '../../qsos'
 import { adifToQSON } from '@ham2k/lib-qson-adif'
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import UUID from 'react-native-uuid'
@@ -214,6 +214,45 @@ export const importQSON = (path) => async (dispatch) => {
 
 const ADIF_FILENAME_REGEX = /.+\.(adi|adif)$/i
 
+export const importADIFIntoOperation = (path, operation) => async (dispatch) => {
+  const matches = path.match(ADIF_FILENAME_REGEX)
+  if (matches) {
+    dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'loading' }))
+    try {
+      const adif64 = await RNFetchBlob.fs.readFile(path, 'base64')
+      const buffer = Buffer.from(adif64, 'base64')
+      const adif = buffer.toString('utf8')
+
+      const data = adifToQSON(adif)
+      const qsos = data.qsos.map(qso => {
+        const newQSO = { ...qso }
+        newQSO.key = qsoKey(newQSO)
+        newQSO.refs = qso.refs.map(ref => {
+          if (ref.type.match(/Activation$/i)) {
+            // Remove activation references, since the QSOs will get them from this operation
+            return false
+          } else {
+            return ref
+          }
+        }).filter(x => x)
+        // TODO: Call annotateQSO?
+        return newQSO
+      })
+
+      for (const qso of qsos) {
+        await dispatch(addQSO({ uuid: operation.uuid, qso }))
+      }
+
+      await dispatch(saveQSOsForOperation(operation.uuid))
+      dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'ready' }))
+    } catch (error) {
+      reportError('Error importing ADIF into Operation', error)
+    }
+  } else {
+    reportError('Invalid Path importing ADIF into Operation', path)
+  }
+}
+
 export const importHistoricalADIF = (path) => async (dispatch) => {
   const matches = path.match(ADIF_FILENAME_REGEX)
   if (matches) {
@@ -227,7 +266,7 @@ export const importHistoricalADIF = (path) => async (dispatch) => {
       const qsos = data.qsos.map(qso => {
         return {
           band: qso.band,
-          freq: qso.freq,
+          freq: qso.frequency ?? qso.freq,
           mode: qso.mode,
           startOnMillis: qso.startOnMillis,
           our: { call: qso.our.call },
@@ -251,10 +290,10 @@ export const importHistoricalADIF = (path) => async (dispatch) => {
       await dispatch(saveQSOsForOperation('historical'))
       dispatch(qsosActions.setQSOsStatus({ uuid: 'historical', status: 'ready' }))
     } catch (error) {
-      reportError('Error importing ADIF', error)
+      reportError('Error importing Historical ADIF', error)
     }
   } else {
-    reportError('Invalid Path importing ADIF', path)
+    reportError('Invalid Path importing Historical ADIF', path)
   }
 }
 
