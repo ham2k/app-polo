@@ -135,11 +135,9 @@ export default function OpSpotsTab ({ navigation, route }) {
     }
   }, [
     allOperations, spotsHooks, online, settings, dispatch,
-    ourInfo.call, operation, qsos, spotsState.lastFetched,
+    ourInfo.call, operation, spotsState.lastFetched,
     updateSpotsState, filterState.sources
   ])
-
-  useEffect(() => { console.log('filterState', filterState) }, [filterState])
 
   const { spots: filteredSpots, options, counts } = useMemo(() => {
     console.log('filtering spots', spotsState.rawSpots?.length, filterState)
