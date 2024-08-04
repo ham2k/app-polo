@@ -174,6 +174,7 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
 
   const scoreInfo = useMemo(() => {
     const refHandlers = (operation?.refs || []).map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler && x.handler.scoringForQSO)
+    if (refHandlers.length === 0) refHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
     const scores = refHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, operation, ref })).filter(x => x)
     return scores
   }, [operation, qso, qsos])
@@ -274,4 +275,29 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
       </View>
     </TouchableRipple>
   )
+}
+
+export const DefaultScoringHandler = {
+  key: 'defaultOperation',
+  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+    const { band, mode, key, startOnMillis } = qso
+
+    const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+
+    if (nearDupes.length === 0) {
+      return { counts: 1, type: 'defaultOperation' }
+    } else {
+      const sameBand = nearDupes.filter(q => q.band === band).length !== 0
+      const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
+      if (sameBand && sameMode) {
+        return { counts: 0, alerts: ['duplicate'], type: 'defaultOperation' }
+      } else {
+        const notices = []
+        if (!sameMode) notices.push('newMode')
+        if (!sameBand) notices.push('newBand')
+
+        return { counts: 1, notices, type: 'defaultOperation' }
+      }
+    }
+  }
 }

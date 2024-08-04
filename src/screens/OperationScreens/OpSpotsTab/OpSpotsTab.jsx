@@ -25,6 +25,7 @@ import SpotFilterControls from './components/SpotFilterControls'
 import SpotFilterIndicators from './components/SpotFilterIndicators'
 import { selectVFO } from '../../../store/station/stationSlice'
 import { Text } from 'react-native-paper'
+import { DefaultScoringHandler } from '../OpLoggingTab/components/LoggingPanel/CallInfo'
 
 export function simplifiedMode (mode) {
   if (mode === 'CW') {
@@ -148,6 +149,7 @@ export default function OpSpotsTab ({ navigation, route }) {
     const scoringRefHandlers = (operation?.refs || []).map(ref => (
       { handler: findBestHook(`ref:${ref.type}`), ref }
     ))?.filter(x => x?.handler && x.handler.scoringForQSO)
+    if (scoringRefHandlers.length === 0) scoringRefHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
 
     return filteredSpots.map(rawSpot => {
       const spot = { ...rawSpot }
