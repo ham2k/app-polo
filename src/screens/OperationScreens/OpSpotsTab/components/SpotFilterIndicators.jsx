@@ -12,7 +12,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import { useUIState } from '../../../../store/ui'
 import LoggerChip from '../../components/LoggerChip'
-import { LABEL_FOR_MODE, simplifiedMode } from '../OpSpotsTab'
+import { LABEL_FOR_MODE } from '../OpSpotsTab'
+import { superModeForMode } from '@ham2k/lib-operation-data'
 
 export default function SpotFilterIndicators ({ vfo, options, counts, operation, onPress, styles, themeColor, settings, online }) {
   const [filterState, ,] = useUIState('OpSpotsTab', 'filterState', {})
@@ -58,6 +59,6 @@ function labelForBand (band, vfo) {
 
 function labelForMode (mode, vfo) {
   if (!mode || mode === 'any') return 'All modes'
-  else if (mode === 'auto') return vfo.mode ? LABEL_FOR_MODE[simplifiedMode(vfo?.mode)] : 'Auto'
-  else return LABEL_FOR_MODE[simplifiedMode(mode)] || simplifiedMode(mode)
+  else if (mode === 'auto') return vfo.mode ? LABEL_FOR_MODE[superModeForMode(vfo?.mode)] : 'Auto'
+  else return LABEL_FOR_MODE[superModeForMode(mode)] || superModeForMode(mode)
 }
