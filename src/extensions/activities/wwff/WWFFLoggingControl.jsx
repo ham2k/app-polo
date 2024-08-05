@@ -25,7 +25,7 @@ export function WWFFLoggingControl (props) {
   }, [qso])
 
   const handleChangeText = useCallback((value) => {
-    const refs = stringToRefs(Info.huntingType, value, { regex: Info.referenceRegex })
+    const refs = stringToRefs(Info.huntingType, value)
 
     updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
   }, [qso, updateQSO])
