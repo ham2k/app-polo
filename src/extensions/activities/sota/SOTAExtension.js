@@ -72,7 +72,9 @@ const ActivityHook = {
     let label = opRef ? Info.shortNameDoubleContact : Info.shortName
     if (findRef(qso, Info.huntingType)) label = `✓ ${label}`
     return label
-  }
+  },
+
+  generalHuntingType: ({ operation, settings }) => Info.huntingType
 }
 
 const SpotsHook = {

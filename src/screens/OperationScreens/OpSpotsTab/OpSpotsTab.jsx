@@ -20,9 +20,9 @@ import { selectSettings } from '../../../store/settings'
 import { selectQSOs } from '../../../store/qsos'
 import { useUIState } from '../../../store/ui'
 import { selectVFO } from '../../../store/station/stationSlice'
-import { findBestHook, useFindHooks } from '../../../extensions/registry'
+import { useFindHooks } from '../../../extensions/registry'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { DefaultScoringHandler } from '../OpLoggingTab/components/LoggingPanel/CallInfo'
+import { scoringRefsHandlersForOperation } from '../OpLoggingTab/components/LoggingPanel/CallInfo'
 import SpotList from './components/SpotList'
 import { annotateQSO } from '../OpInfoTab/components/useQSOInfo'
 import SpotFilterControls from './components/SpotFilterControls'
@@ -137,10 +137,7 @@ export default function OpSpotsTab ({ navigation, route }) {
   }, [spotsState.rawSpots, filterState, vfo])
 
   const scoredSpots = useMemo(() => {
-    const scoringRefHandlers = (operation?.refs || []).map(ref => (
-      { handler: findBestHook(`ref:${ref.type}`), ref }
-    ))?.filter(x => x?.handler && x.handler.scoringForQSO)
-    if (scoringRefHandlers.length === 0) scoringRefHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
+    const scoringRefHandlers = scoringRefsHandlersForOperation(operation, settings)
 
     return filteredSpots.map(rawSpot => {
       const spot = { ...rawSpot }
@@ -172,7 +169,7 @@ export default function OpSpotsTab ({ navigation, route }) {
       }
       return spot
     })
-  }, [operation, filteredSpots, ourInfo.call, qsos])
+  }, [operation, settings, filteredSpots, ourInfo.call, qsos])
 
   const handlePress = useCallback(({ spot }) => {
     if (spot._ourSpot) return

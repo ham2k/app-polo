@@ -62,7 +62,9 @@ const ActivityHook = {
     let label = opRef ? Info.shortNameDoubleContact : Info.shortName
     if (findRef(qso, Info.huntingType)) label = `✓ ${label}`
     return label
-  }
+  },
+
+  generalHuntingType: ({ operation, settings }) => Info.huntingType
 }
 
 const SpotsHook = {
@@ -216,6 +218,37 @@ const ReferenceHandler = {
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
+    const { band, mode, key, startOnMillis } = qso
+    const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
+    const counts = refs.length || 1
+
+    if (refs.length === 0 && !ref?.ref) return { counts: 0 } // If not activating, only counts if other QSO has a POTA ref
+
+    const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+
+    if (nearDupes.length === 0) {
+      return { counts, type: Info.activationType }
+    } else {
+      const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
+      const sameBand = nearDupes.filter(q => q.band === band).length !== 0
+      const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
+      const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
+      const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
+      if (sameBand && sameMode && sameDay && (sameRefs || refs.length === 0)) {
+        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+      } else {
+        const notices = []
+        if (refs.length > 0 && !sameRefs) notices.push('newRef') // only if at new ref
+        if (!sameDay) notices.push('newDay')
+        if (!sameMode) notices.push('newMode')
+        if (!sameBand) notices.push('newBand')
+
+        return { counts, notices, type: Info.activationType }
+      }
+    }
+  },
+
+  scoringForHuntingQSO: ({ qso, qsos, operation, ref }) => {
     if (!ref.ref) return {}
 
     const { band, mode, key, startOnMillis } = qso
