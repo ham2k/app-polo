@@ -13,7 +13,7 @@ import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 
-import { findBestHook } from '../../../../../extensions/registry'
+import { findBestHook, findHooks } from '../../../../../extensions/registry'
 import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 import { useQSOInfo } from '../../../OpInfoTab/components/useQSOInfo'
@@ -173,11 +173,12 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
   }, [qrz?.error, qso?.their?.name, guess?.name, callNotes])
 
   const scoreInfo = useMemo(() => {
-    const refHandlers = (operation?.refs || []).map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler && x.handler.scoringForQSO)
-    if (refHandlers.length === 0) refHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
+    const refHandlers = scoringRefsHandlersForOperation(operation, settings)
+
     const scores = refHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, operation, ref })).filter(x => x)
+
     return scores
-  }, [operation, qso, qsos])
+  }, [operation, qso, qsos, settings])
 
   const [historyMessage, historyLevel] = useMemo(() => {
     if (scoreInfo?.length > 0) {
@@ -275,6 +276,34 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
       </View>
     </TouchableRipple>
   )
+}
+
+export function scoringRefsHandlersForOperation (operation, settings) {
+  const scoringKeys = {}
+
+  // Get handlers for operation refs
+  const scoringRefHandlers = []
+  ;(operation?.refs || []).forEach(ref => {
+    const handler = findBestHook(`ref:${ref.type}`)
+    if (handler && handler.scoringForQSO) {
+      scoringRefHandlers.push({ handler, ref })
+      scoringKeys[handler.key] = true
+    }
+  })
+
+  // Get handlers for general hunting activities
+  findHooks('activity').forEach(hook => {
+    const type = hook.generalHuntingType && hook.generalHuntingType({ operation, settings })
+    const handler = type && findBestHook(`ref:${type}`)
+    if (handler && handler.scoringForQSO && !scoringKeys[handler.key]) {
+      scoringRefHandlers.push({ handler, ref: { type } })
+      scoringKeys[handler.key] = true
+    }
+  })
+
+  if (scoringRefHandlers.length === 0) scoringRefHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
+
+  return scoringRefHandlers
 }
 
 export const DefaultScoringHandler = {
