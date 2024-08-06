@@ -10,6 +10,7 @@ import { actions as operationActions, saveOperation } from '../../operations'
 
 import { dbExecute, dbSelectAll } from '../../db/db'
 import { qsoKey } from '@ham2k/lib-qson-tools'
+import mergeQSOs from '../../../tools/mergeQSOs'
 
 // import debounce from 'debounce'
 // function debounceableDispatch (dispatch, action) {
@@ -52,6 +53,23 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
 }
 
 export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
+  const origQSOs = await dbSelectAll(
+    'SELECT * FROM qsos WHERE operation = ? AND (key = ? OR key = ?)',
+    [uuid, qso.key, qso._originalKey ?? qso.key], { row: prepareQSORow }
+  )
+
+  if (origQSOs.length > 0) {
+    for (const origQSO of origQSOs) {
+      if (origQSO.key === qso.key) {
+        qso = mergeQSOs(origQSO, qso)
+      }
+
+      await dbExecute(`
+        DELETE FROM qsos
+        WHERE operation = ? AND key = ?
+        `, [uuid, origQSO.key])
+    }
+  }
   await dbExecute(`
     DELETE FROM qsos
     WHERE operation = ? AND (key = ? OR key = ?)
