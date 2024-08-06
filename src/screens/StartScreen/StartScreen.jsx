@@ -87,14 +87,14 @@ function prepareStyles (baseTheme, height) {
       textShadowRadius: baseTheme.oneSpace,
       fontSize: 20,
       fontWeight: 'bold',
-      color: '#D0D0D0',
+      color: '#FFFFFF', // '#D0D0D0',
       textAlign: 'center'
     },
     markdown: {
       ...baseTheme.markdown,
       body: {
         ...baseTheme.markdown.body,
-        color: '#D0D0D0',
+        color: '#FFFFFF', // '#D0D0D0',
         fontSize: baseTheme.normalFontSize,
         textAlign: 'center',
         marginLeft: baseTheme.oneSpace * 3,
