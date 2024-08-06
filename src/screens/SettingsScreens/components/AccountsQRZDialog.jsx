@@ -69,8 +69,9 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={password}
           label="Password"
-          autoComplete="password"
-          keyboardType="visible-password"
+          autoComplete="current-password"
+          keyboardType="default"
+          textContentType="password"
           secureTextEntry={true}
           autoCapitalize={'none'}
           placeholder="your password"
