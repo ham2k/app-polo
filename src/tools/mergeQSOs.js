@@ -7,25 +7,40 @@
 
 export default function mergeQSOs (a, b) {
   if (!a || !b || a.key !== b.key) {
-    return [a, b]
+    return a
   }
 
-  if (a.startOnMillis && b.startOnMillis && a.startOnMillis > b.startOnMillis) {
-    a.startOnMillis = b.startOnMillis
-    a.startOn = b.startOn
+  // Asume `b` has most updated values, and make a copy of it
+  const merged = { ...b }
+  if (b.refs) merged.refs = [...b.refs]
+
+  const other = a
+
+  // Extend times if needed
+  if (other.startOnMillis && merged.startOnMillis && other.startOnMillis < merged.startOnMillis) {
+    merged.startOnMillis = other.startOnMillis
+    merged.startOn = other.startOn
   }
 
-  if (a.endOnMillis && b.endOnMillis && a.endOnMillis < b.endOnMillis) {
-    a.endOnMillis = b.endOnMillis
-    a.endOn = b.endOn
+  if (other.endOnMillis && merged.endOnMillis && other.endOnMillis > merged.endOnMillis) {
+    merged.endOnMillis = other.endOnMillis
+    merged.endOn = other.endOn
   }
 
-  if (b.qsl) {
-    a.qsl = { ...a.qsl, ...b.qsl }
-    a.qsl.received = a.qsl?.received || b.qsl?.received
-  }
+  // Merge references
+  (other.refs || []).forEach(ref => {
+    if (ref.type === 'pota') {
+      // POTA allows multipe references, so we check type and ref
+      if (!merged.refs.find(r => r.type === ref.type && r.ref === ref.ref)) {
+        merged.refs.push(ref)
+      }
+    } else {
+      // For other types of references, we only keep one per type
+      if (!merged.refs.find(r => r.type === ref.type)) {
+        merged.refs.push(ref)
+      }
+    }
+  })
 
-  if (b.refs) a.refs = { ...a.refs, ...b.refs }
-
-  return [a]
+  return merged
 }

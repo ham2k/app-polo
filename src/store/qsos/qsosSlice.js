@@ -8,6 +8,7 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 
 import { qsoKey } from '@ham2k/lib-qson-tools'
+import mergeQSOs from '../../tools/mergeQSOs'
 
 const INITIAL_STATE = {
   status: 'ready',
@@ -44,7 +45,8 @@ export const qsosSlice = createSlice({
         // Find old QSO and replace it with the new one
         const pos = qsos.findIndex(q => q.key === (qso._originalKey ?? qso.key))
         const oldQSO = qsos[pos]
-        qsos[pos] = qso
+        const mergedQSO = mergeQSOs(oldQSO, qso)
+        qsos[pos] = mergedQSO
         if (qso._originalKey) {
           delete keys[qso._originalKey]
           delete qso._originalKey
