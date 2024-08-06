@@ -311,7 +311,7 @@ export const DefaultScoringHandler = {
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
     const { band, mode, key, startOnMillis } = qso
 
-    const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+    const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
       return { counts: 1, type: 'defaultOperation' }
