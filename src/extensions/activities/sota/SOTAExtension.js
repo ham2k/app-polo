@@ -212,7 +212,7 @@ const ReferenceHandler = {
     const theirRef = findRef(qso, Info.huntingType)
     const points = theirRef?.ref ? 1 : 0
 
-    const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+    const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
       return { counts: 1, points, type: Info.activationType }
