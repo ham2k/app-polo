@@ -16,7 +16,7 @@ import { BANDS, ADIF_MODES, superModeForMode } from '@ham2k/lib-operation-data'
 
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectAllOperations, selectOperationCallInfo } from '../../../store/operations'
-import { selectSettings } from '../../../store/settings'
+import { selectSettings, setSettings } from '../../../store/settings'
 import { selectQSOs } from '../../../store/qsos'
 import { useUIState } from '../../../store/ui'
 import { selectVFO } from '../../../store/station/stationSlice'
@@ -72,7 +72,11 @@ export default function OpSpotsTab ({ navigation, route }) {
   const online = useSelector(selectRuntimeOnline)
   const vfo = useSelector(state => selectVFO(state))
 
-  const [filterState] = useUIState('OpSpotsTab', 'filterState', {})
+  const filterState = useMemo(() => settings?.spots?.filters || {}, [settings])
+  const updateFilterState = useCallback((newState) => {
+    dispatch(setSettings({ spots: { ...settings?.spots, filters: { ...settings?.spots?.filters, ...newState } } }))
+  }, [dispatch, settings.spots])
+
   const [spotsState, , updateSpotsState] = useUIState('OpSpotsTab', 'spotsState', { rawSpots: [], lastFetched: 0, loading: false })
 
   const allOperations = useSelector(selectAllOperations)
@@ -101,7 +105,6 @@ export default function OpSpotsTab ({ navigation, route }) {
     if (spotsState.lastFetched === 0) {
       updateSpotsState({ lastFetched: new Date(), loading: true })
       setTimeout(async () => {
-        console.log('load timeout')
         let newSpots = []
         for (const hook of spotsHooks) {
           if (filterState.sources?.[hook.key] !== false) {
@@ -132,7 +135,6 @@ export default function OpSpotsTab ({ navigation, route }) {
   ])
 
   const { spots: filteredSpots, options, counts } = useMemo(() => {
-    console.log('filtering spots', spotsState.rawSpots?.length, filterState)
     return filterAndCount(spotsState.rawSpots, filterState, vfo)
   }, [spotsState.rawSpots, filterState, vfo])
 
@@ -197,6 +199,8 @@ export default function OpSpotsTab ({ navigation, route }) {
             themeColor={themeColor}
             settings={settings}
             online={online}
+            filterState={filterState}
+            updateFilterState={updateFilterState}
             refreshSpots={() => updateSpotsState({ lastFetched: 0 })}
             onDone={() => setShowControls(false)}
           />
@@ -211,6 +215,7 @@ export default function OpSpotsTab ({ navigation, route }) {
               themeColor={themeColor}
               settings={settings}
               online={online}
+              filterState={filterState}
               onPress={() => setShowControls(true)}
             />
             <TouchableOpacity onPress={() => setShowControls(true)} style={{ flex: 0, flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }}>
