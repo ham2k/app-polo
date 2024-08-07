@@ -295,9 +295,15 @@ export function filterAndCount (rawSpots, filterState, vfo) {
     results.spots = results.spots.filter(spot => superModeForMode(spot.mode) === mode)
   }
 
-  results.spots.sort((a, b) => {
-    return a.freq - b.freq
-  })
+  if (filterState.sortBy === 'time') {
+    results.spots = results.spots.sort((a, b) => {
+      return b.spot.timeInMillis - a.spot.timeInMillis
+    })
+  } else {
+    results.spots.sort((a, b) => {
+      return a.freq - b.freq
+    })
+  }
 
   return results
 }
