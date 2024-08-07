@@ -10,14 +10,11 @@ import { Icon } from 'react-native-paper'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-import { useUIState } from '../../../../store/ui'
 import LoggerChip from '../../components/LoggerChip'
 import { LABEL_FOR_MODE } from '../OpSpotsTab'
 import { superModeForMode } from '@ham2k/lib-operation-data'
 
-export default function SpotFilterIndicators ({ vfo, options, counts, operation, onPress, styles, themeColor, settings, online }) {
-  const [filterState, ,] = useUIState('OpSpotsTab', 'filterState', {})
-
+export default function SpotFilterIndicators ({ vfo, options, counts, operation, filterState, onPress, styles, themeColor, settings, online }) {
   return (
     <TouchableOpacity onPress={onPress} style={{ flex: 0, flexDirection: 'column', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }}>
       <View style={{ flex: 0, flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }}>
