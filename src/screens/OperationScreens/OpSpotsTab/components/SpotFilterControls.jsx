@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { View } from 'react-native'
-import { Switch, Text } from 'react-native-paper'
+import { SegmentedButtons, Switch, Text } from 'react-native-paper'
 
 import { superModeForMode } from '@ham2k/lib-operation-data'
 
@@ -16,12 +16,16 @@ import ThemedDropDown from '../../../components/ThemedDropDown'
 import ThemedButton from '../../../components/ThemedButton'
 import { LONG_LABEL_FOR_MODE } from '../OpSpotsTab'
 import SpotFilterIndicators from './SpotFilterIndicators'
+import { ScrollView } from 'react-native-gesture-handler'
 
 export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSources, vfo, options, counts, operation, onDone, refreshSpots, styles, themeColor, settings, online }) {
   const [filterState, , updateFilterState] = useUIState('OpSpotsTab', 'filterState', {})
   console.log('SpotFilterControls', { filterState })
   return (
-    <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'stretch' }}>
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ flexDirection: 'column', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'stretch' }}
+    >
       <SpotFilterIndicators
         options={options}
         counts={counts}
@@ -39,7 +43,7 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
         </ThemedButton>
       </View>
       <View style={{ flex: 0, flexDirection: 'column', marginTop: styles.oneSpace * 2, marginHorizontal: styles.oneSpace * 4, gap: styles.oneSpace, alignItems: 'stretch' }}>
-        <Text style={{ fontWeight: 'bold', marginTop: styles.halfSpace, textAlign: 'center' }}>
+        <Text style={[styles.markdown.heading2, { marginTop: styles.halfSpace, textAlign: 'center' }]}>
           Filters
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'stretch' }}>
@@ -88,8 +92,22 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
           />
         </View>
       </View>
-      <View style={{ minHeight: 200, flexDirection: 'column', marginTop: styles.oneSpace * 2, marginHorizontal: styles.oneSpace * 4, gap: styles.oneSpace, alignItems: 'stretch' }}>
-        <Text style={{ fontWeight: 'bold', marginTop: styles.halfSpace, textAlign: 'center' }}>
+      <View style={{ flexDirection: 'column', marginTop: styles.oneSpace * 2, marginHorizontal: styles.oneSpace * 4, gap: styles.oneSpace, alignItems: 'stretch' }}>
+        <Text style={[styles.markdown.heading2, { marginTop: styles.halfSpace, textAlign: 'center' }]}>
+          Sorting
+        </Text>
+        <SegmentedButtons
+          value={filterState.sortBy || 'frequency' }
+          onValueChange={(value) => updateFilterState({ sortBy: value })}
+          buttons={[
+            { value: 'time', label: 'By spot time' },
+            { value: 'frequency', label: 'By frequency' }
+          ]}
+        />
+
+      </View>
+      <View style={{ flexDirection: 'column', marginTop: styles.oneSpace * 2, marginHorizontal: styles.oneSpace * 4, gap: styles.oneSpace, alignItems: 'stretch' }}>
+        <Text style={[styles.markdown.heading2, { marginTop: styles.halfSpace, textAlign: 'center' }]}>
           Spot Sources
         </Text>
         {spotsSources.map(source => (
@@ -113,6 +131,6 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
           </View>
         ))}
       </View>
-    </View>
+    </ScrollView>
   )
 }
