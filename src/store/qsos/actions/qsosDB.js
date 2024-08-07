@@ -60,7 +60,10 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
 
   if (origQSOs.length > 0) {
     for (const origQSO of origQSOs) {
-      if (origQSO.key === qso.key) {
+      if (qso._originalKey) {
+        // Do nothing when saving changes to an already existing QSO
+      } else if (origQSO.key === qso.key) {
+        // Merge the new QSO with the old one
         qso = mergeQSOs(origQSO, qso)
       }
 
