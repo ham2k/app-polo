@@ -13,12 +13,14 @@ import { registerWWFFDataFile, wwffFindOneByReference } from './WWFFDataFile'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
 import { WWFFPostSpot } from './WWFFPostSpot'
+import { apiGMA } from '../../../store/apiGMA'
 
 const Extension = {
   ...Info,
   category: 'locationBased',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
+    registerHook('spots', { hook: SpotsHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 
@@ -55,6 +57,54 @@ const ActivityHook = {
     let label = opRef ? Info.shortNameDoubleContact : Info.shortName
     if (findRef(qso, Info.huntingType)) label = `✓ ${label}`
     return label
+  }
+}
+
+const SpotsHook = {
+  ...Info,
+  sourceName: 'WWFFwatch',
+  fetchSpots: async ({ online, settings, dispatch }) => {
+    let spots = []
+    if (online) {
+      const apiPromise = await dispatch(apiGMA.endpoints.spots.initiate('wwff', { forceRefetch: true }))
+      await Promise.all(dispatch(apiGMA.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, getState) => apiGMA.endpoints.spots.select('wwff')(getState()))
+
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+      spots = apiResults.data || []
+    }
+    const qsos = spots.map(spot => {
+      const qso = {
+        their: { call: spot.ACTIVATOR },
+        freq: spot.frequency,
+        band: spot.band,
+        mode: spot.mode,
+        refs: [{
+          ref: spot.REF,
+          type: Info.huntingType
+        }],
+        spot: {
+          timeInMillis: spot.timeInMillis,
+          source: Info.key,
+          icon: Info.icon,
+          label: `${spot.REF}: ${spot.NAME}`,
+          sourceInfo: {
+            comments: spot.TEXT,
+            spotter: spot.SPOTTER
+          }
+        }
+      }
+      return qso
+    })
+    const dedupedQSOs = []
+    const includedCalls = {}
+    for (const qso of qsos) {
+      if (!includedCalls[qso.their.call]) {
+        includedCalls[qso.their.call] = true
+        dedupedQSOs.push(qso)
+      }
+    }
+    return dedupedQSOs
   }
 }
 
