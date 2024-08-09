@@ -112,14 +112,14 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
               <Switch
                 value={filterState.sources?.[source.key] !== false}
                 onValueChange={(value) => {
-                  updateFilterState({ sources: { [source.key]: value } })
+                  updateFilterState({ sources: { ...filterState.sources, [source.key]: value } })
                   if (value) refreshSpots()
                 }}
               />
               <Text
                 style={{ fontSize: styles.normalFontSize }}
                 onPress={() => {
-                  updateFilterState({ sources: { [source.key]: !filterState.sources?.[source.key] } })
+                  updateFilterState({ sources: { ...filterState.sources, [source.key]: !filterState.sources?.[source.key] } })
                   if (!filterState.sources?.[source.key]) refreshSpots()
                 }}
               >
