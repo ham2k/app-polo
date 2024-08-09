@@ -30,12 +30,14 @@ export const SOTASSOConfig = {
 
 const baseQueryWithSettings = fetchBaseQuery({
   baseUrl: 'https://',
-  prepareHeaders: (headers, { getState }) => {
+  prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('Accept', 'application/json')
     headers.set('Content-type', 'application/json')
-    headers.set('Authorization', `bearer ${getState().settings?.accounts?.sota?.accessToken}`)
     headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
-    headers.set('id_token', getState().settings?.accounts?.sota?.idToken) // Required by spot API
+    if (endpoint !== 'spots') {
+      headers.set('Authorization', `bearer ${getState().settings?.accounts?.sota?.accessToken}`)
+      headers.set('id_token', getState().settings?.accounts?.sota?.idToken) // Required by spot API
+    }
     return headers
   },
   responseHandler: async (response) => {
@@ -57,7 +59,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQueryWithSettings(args, api, extraOptions)
 
   let getNewToken = false
-  if (result.error) {
+  if (result.error && result.meta.request.headers.has('id_Token')) {
     if (result.error.status === 401) {
       getNewToken = true
     } else if (result.error.status === 500) {
