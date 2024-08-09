@@ -1,11 +1,12 @@
 {
-  "24.8.0-pre8": {
-    "name": "August 2024 (pre 8)",
+  "24.8.0-pre10": {
+    "name": "August 2024 (pre 9)",
     "changes": [
       "Much improved Spots Screen",
       "SOTA Spots!!!",
-      "SOTA Self-spotting (contributed by M1SDH)",
-      "Input for TX Power (contributed by NA7DO)",
+      "SOTA Self-spotting (by M1SDH)",
+      "WWFF Spots (by M1SDH)",
+      "Input for TX Power (by NA7DO)",
       "Self-spotting command shortcut (‘SPOTME’)",
       "Add QSOs to an operation from an ADIF file (Dev Mode only, for now)",
       "Miscelaneous bug fixes"
