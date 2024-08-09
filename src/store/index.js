@@ -22,6 +22,7 @@ import timeReducer from './time'
 import { reducer as apiQRZReducer, middleware as apiQRZMiddleware } from './apiQRZ'
 import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apiPOTA'
 import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './apiSOTA'
+import { reducer as apiGMAReducer, middleware as apiGMAMiddleware } from './apiGMA'
 import dataFilesReducer from './dataFiles'
 
 // Redux Toolkit uses Immer, which freezes state by default.
@@ -43,7 +44,8 @@ const rootReducer = combineReducers({
   dataFiles: dataFilesReducer,
   apiQRZ: apiQRZReducer,
   apiPOTA: apiPOTAReducer,
-  apiSOTA: apiSOTAReducer
+  apiSOTA: apiSOTAReducer,
+  apiGMA: apiGMAReducer
 })
 
 const persistConfig = {
@@ -93,6 +95,7 @@ export const store = configureStore({
     middlewares.push(apiQRZMiddleware)
     middlewares.push(apiPOTAMiddleware)
     middlewares.push(apiSOTAMiddleware)
+    middlewares.push(apiGMAMiddleware)
 
     return middlewares
   },
