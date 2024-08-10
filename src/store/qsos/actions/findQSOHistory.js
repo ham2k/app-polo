@@ -8,9 +8,9 @@
 import { fmtDateZulu } from '../../../tools/timeFormats'
 import { dbSelectAll } from '../../db/db'
 
-export async function findQSOHistory (call, options = {}) {
-  const whereClauses = ['qsos.theirCall = ?']
-  const whereArgs = [call]
+export async function findQSOHistory (baseCall, options = {}) {
+  const whereClauses = ['qsos.theirCall = ? OR qsos.theirCall LIKE ? OR qsos.theirCall LIKE ? OR qsos.theirCall LIKE ?']
+  const whereArgs = [baseCall, `%/${baseCall}`, `${baseCall}/%`, `%/${baseCall}/%`]
 
   if (options.onDate) {
     whereClauses.push("strftime('%Y-%m-%d', qsos.startOnMillis / 1000, 'unixepoch') = ?")

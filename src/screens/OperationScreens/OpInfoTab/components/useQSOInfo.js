@@ -53,10 +53,10 @@ export const useQSOInfo = ({ qso, operation }) => {
 
   const [callHistory, setCallHistory] = useState()
   useEffect(() => { // Get Call History
-    findQSOHistory(theirCall?.call).then(qsoHistory => {
+    findQSOHistory(theirCall?.baseCall).then(qsoHistory => {
       setCallHistory(qsoHistory.filter(x => x && (x?.operation !== operation?.uuid || x.key !== qso?.key)))
     })
-  }, [theirCall?.call, qso?.key, qso?.their?.call, operation?.uuid])
+  }, [theirCall?.baseCall, qso?.key, qso?.their?.call, operation?.uuid])
 
   // Get QRZ.com info
   const skipQRZ = !(online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2)
@@ -108,7 +108,7 @@ export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup
 
   const callNotes = findAllCallNotes(theirCall?.baseCall)
 
-  const callHistory = await findQSOHistory(theirCall?.call)
+  const callHistory = await findQSOHistory(theirCall?.baseCall)
 
   let qrz = {}
   if (!skipLookup && online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && theirCall?.baseCall?.length > 2) {
@@ -136,13 +136,15 @@ function mergeData ({ theirCall, qrz, pota, potaRef, callHistory, callNotes }) {
   let newLookup = {}
   const newGuess = { ...theirCall }
 
-  if (callHistory && callHistory[0] && callHistory[0].theirCall === theirCall?.call) {
-    historyData = JSON.parse(callHistory[0].data)
+  const historyMatch = callHistory?.find(x => x.theirCall === theirCall?.call) || callHistory?.[0]
+  if (historyMatch) {
+    historyData = JSON.parse(historyMatch.data)
     if (historyData?.their?.qrzInfo) {
       historyData.their.lookup = historyData.their?.qrzInfo
       historyData.their.lookup.source = 'qrz.com'
     }
 
+    newLookup.call = historyData.their.call
     newLookup.name = capitalizeString(historyData.their.name ?? historyData.their.lookup?.name, { content: 'name', force: false })
     newLookup.state = historyData.their.state ?? historyData.their.lookup?.state
     newLookup.city = capitalizeString(historyData.their.city ?? historyData.their.lookup?.city, { content: 'address', force: false })
