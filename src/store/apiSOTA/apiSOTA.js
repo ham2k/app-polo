@@ -88,9 +88,12 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       // react-native-app-auth Issue #861
       if (error.message.includes('Connection error') || error.message.includes('Network error')) {
         if (DEBUG) console.log('Connection error')
-      } else {
+      } else if (error.code === 'invalid_grant') {
         console.log('Refresh token failed, logged out...')
         api.dispatch(setAccountInfo({ sota: { idToken: undefined } }))
+      } else {
+        // Let's not be too hasty clearing token
+        console.log('Unknown error refreshing token', error.code)
       }
       // return original result
       return result
