@@ -1,6 +1,12 @@
 {
+  "24.9.0": {
+    "name": "September '24",
+    "changes": [
+
+    ]
+  },
   "24.8.0": {
-    "name": "August 2024",
+    "name": "August '24",
     "changes": [
       "Much improved Spots Screen",
       "SOTA Spots!!!",
@@ -13,7 +19,7 @@
     ]
   },
   "24.7.0": {
-    "name": "July 2024",
+    "name": "July '24",
     "changes": [
       "New version schema, starting with the 'July 2024' release",
       "Big upgrades to the underlying framework (React Native, 0.74)",
