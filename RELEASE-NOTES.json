@@ -1,6 +1,12 @@
 {
-  "24.8.0-pre10": {
-    "name": "August 2024 (pre 9)",
+  "24.9.0": {
+    "name": "September '24",
+    "changes": [
+
+    ]
+  },
+  "24.8.0": {
+    "name": "August '24",
     "changes": [
       "Much improved Spots Screen",
       "SOTA Spots!!!",
@@ -13,7 +19,7 @@
     ]
   },
   "24.7.0": {
-    "name": "July 2024",
+    "name": "July '24",
     "changes": [
       "Hide self-spotting after successfully posting",
       "Tweaked layout of Call Info Panel",
