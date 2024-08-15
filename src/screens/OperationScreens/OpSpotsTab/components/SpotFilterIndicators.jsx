@@ -11,7 +11,7 @@ import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import LoggerChip from '../../components/LoggerChip'
-import { LABEL_FOR_MODE } from '../OpSpotsTab'
+import { LABEL_FOR_MODE } from './SpotsPanel'
 import { superModeForMode } from '@ham2k/lib-operation-data'
 
 export default function SpotFilterIndicators ({ vfo, options, counts, operation, filterState, onPress, styles, themeColor, settings, online }) {

@@ -13,7 +13,7 @@ import { superModeForMode } from '@ham2k/lib-operation-data'
 
 import ThemedDropDown from '../../../components/ThemedDropDown'
 import ThemedButton from '../../../components/ThemedButton'
-import { LONG_LABEL_FOR_MODE } from '../OpSpotsTab'
+import { LONG_LABEL_FOR_MODE } from './SpotsPanel'
 import SpotFilterIndicators from './SpotFilterIndicators'
 import { ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -53,7 +53,7 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
               style={{ width: '100%' }}
               list={[
                 { value: 'any', label: 'All Bands' },
-                { value: 'auto', label: `Automatic (Currently ${vfo.band})` },
+                { value: 'auto', label: `Automatic (Currently ${vfo?.band})` },
                 ...options.band
               ]}
               dropDownContainerMaxHeight={styles.oneSpace * 40}
@@ -68,7 +68,7 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
               style={{ width: '100%' }}
               list={[
                 { value: 'any', label: 'All Modes' },
-                { value: 'auto', label: `Automatic (Currently ${LONG_LABEL_FOR_MODE[superModeForMode(vfo.mode)]})` },
+                { value: 'auto', label: `Automatic (Currently ${LONG_LABEL_FOR_MODE[superModeForMode(vfo?.mode)]})` },
                 ...options.mode
               ]}
               dropDownContainerMaxHeight={styles.oneSpace * 40}

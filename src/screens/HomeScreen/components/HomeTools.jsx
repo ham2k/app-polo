@@ -7,7 +7,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react'
 import { Keyboard, View } from 'react-native'
-import { Searchbar } from 'react-native-paper'
+import { IconButton, Searchbar } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 
@@ -130,7 +130,7 @@ export default function HomeTools ({ settings, styles, style }) {
         style={{ flex: 0, flexDirection: 'column', width: '100%', backgroundColor: styles.colors.primary }}
       >
         <View
-          style={{ padding: styles.oneSpace, margin: 0, paddingBottom: styles.oneSpace, ...keyboardExtraStyles }}
+          style={{ flexDirection: 'row', padding: styles.oneSpace, margin: 0, paddingBottom: styles.oneSpace, ...keyboardExtraStyles }}
         >
           <Searchbar
             {...{
@@ -160,6 +160,15 @@ export default function HomeTools ({ settings, styles, style }) {
             traileringIcon={search ? 'close' : ''}
             onTraileringIconPress={handleClearSearch}
             theme={{ colors: { onSurface: styles.colors.onBackgroundLight } }}
+            style={{ flex: 1 }}
+          />
+
+          <IconButton
+            icon="format-list-bulleted"
+            iconColor={styles.colors.onPrimary}
+            size={styles.oneSpace * 3.5}
+            style={{ flex: 0 }}
+            onPress={() => navigation.navigate('Spots')}
           />
         </View>
         {isKeyboardVisible && settings.showNumbersRow && (
