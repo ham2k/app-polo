@@ -12,20 +12,20 @@ import { useSelector } from 'react-redux'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, selectOperationCallInfo } from '../../../store/operations'
-import LoggingPanel from './components/LoggingPanel'
-import QSOList from './components/QSOList'
-import { selectQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
 import { useUIState } from '../../../store/ui'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectVFO } from '../../../store/station/stationSlice'
+import QSOList from './components/QSOList'
+import LoggingPanel from './components/LoggingPanel'
+import { useQSOsWithMilestones } from './components/useQSOsWithMilestones'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
 
 export default function OpLoggingTab ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
-  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
+  const { sections, qsos } = useQSOsWithMilestones({ uuid: route.params.operation.uuid })
   const activeQSOs = useMemo(() => qsos.filter(qso => !qso.deleted), [qsos])
   const vfo = useSelector(state => selectVFO(state))
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
@@ -62,6 +62,7 @@ export default function OpLoggingTab ({ navigation, route }) {
       <QSOList
         style={flexOne}
         qsos={qsos}
+        sections={sections}
         vfo={vfo}
         settings={settings}
         operation={operation}
