@@ -8,7 +8,6 @@
 import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
-import { Buffer } from 'buffer'
 
 import packageJson from '../../../../package.json'
 import { registerDataFile } from '../../../store/dataFiles'
@@ -33,27 +32,18 @@ export function registerSOTADataFile () {
       const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
       })
-      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-      const buffer = Buffer.from(data64, 'base64')
-      const body = buffer.toString('utf8')
-
-      const lines = body.split('\n')
-      const versionRow = lines.shift()
-      const headers = parseSOTACSVRow(lines.shift()).filter(x => x)
-
-      let totalSummits = 0
-
       const db = await database()
       db.transaction(transaction => {
         transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['sota'])
       })
 
-      const startTime = Date.now()
+      const approxTotalLines = 175000 // Better way to get this?
       let processedLines = 0
-      const totalLines = lines.length
+      let totalLines = 0
+      let totalSummits = 0
+      let headers
 
-      while (lines.length > 0) {
-        const batch = lines.splice(0, 797)
+      async function processBatch (batch) {
         await (() => new Promise(resolve => {
           setTimeout(() => {
             db.transaction(async transaction => {
@@ -91,7 +81,7 @@ export function registerSOTADataFile () {
                 key,
                 definition,
                 status: 'progress',
-                progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
+                progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / Math.max(totalLines, approxTotalLines), 1), 'integer')}\``
               })
               resolve()
             })
@@ -99,17 +89,47 @@ export function registerSOTADataFile () {
         }))()
       }
 
-      db.transaction(transaction => {
-        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
+      return new Promise((resolve, reject) => {
+        let buffer = ''
+        let versionRow
+        const promises = []
+        RNFetchBlob.fs.readStream(response.data, 'utf8', 102400, 400).then((stream) => {
+          stream.onData((chunk) => {
+            buffer += chunk
+            const lines = buffer.split('\n')
+            buffer = lines.pop()
+            totalLines += lines.length
+            if (lines.length > 0 && processedLines === 0) {
+              versionRow = lines.shift()
+              processedLines++
+            }
+            if (lines.length > 0 && processedLines === 1) {
+              headers = parseSOTACSVRow(lines.shift()).filter(x => x)
+              processedLines++
+            }
+            if (lines.length > 0) {
+              promises.push(processBatch(lines))
+            }
+          })
+          stream.onEnd(() => {
+            RNFetchBlob.fs.unlink(response.data)
+            if (buffer.length > 0) {
+              promises.push(processBatch(buffer.split('\n')))
+            }
+            resolve(Promise.all(promises).then(() => {
+              db.transaction(transaction => {
+                transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
+              })
+              return { totalSummits, version: versionRow }
+            }))
+          })
+          stream.onError((err) => {
+            RNFetchBlob.fs.unlink(response.data)
+            reject(err)
+          })
+          stream.open()
+        })
       })
-
-      const data = {
-        totalSummits,
-        version: versionRow
-      }
-      RNFetchBlob.fs.unlink(response.data)
-
-      return data
     },
     onLoad: (data) => {
       if (data.regions) return false // Old data - TODO: Remove this after a few months
