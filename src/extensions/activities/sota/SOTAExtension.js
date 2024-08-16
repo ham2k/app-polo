@@ -235,5 +235,26 @@ const ReferenceHandler = {
     } else {
       return { counts: 0, points: 0, alerts: ['duplicate'], type: Info.activationType }
     }
+  },
+
+  accumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
+    if (!ref?.ref) return score // No scoring if not activating
+    if (!score?.key) score = undefined // Reset if score doesn't have the right shape
+    score = score ?? {
+      key: ref?.type,
+      icon: Info.icon,
+      label: Info.shortName,
+      counts: 0
+    }
+
+    score.counts = score.counts + qsoScore.counts
+    if (score.counts >= 4) {
+      score.value = undefined
+      score.activated = true
+    } else {
+      score.value = score.counts
+      score.activated = false
+    }
+    return score
   }
 }

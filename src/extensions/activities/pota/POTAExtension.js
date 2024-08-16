@@ -246,5 +246,30 @@ const ReferenceHandler = {
         return { counts, notices, type: Info.activationType }
       }
     }
+  },
+
+  accumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
+    if (!ref?.ref) return score // No scoring if not activating
+    if (!score?.key) score = undefined // Reset if score doesn't have the right shape
+    score = score ?? {
+      key: ref?.type,
+      icon: Info.icon,
+      label: Info.shortName,
+      value: 0,
+      refs: {},
+      primaryRef: undefined
+    }
+
+    if (!score.refs[ref.ref]) { // Track how many parks we're activating
+      score.refs[ref.ref] = true
+      score.primaryRef = score.primaryRef || ref.ref
+    }
+
+    if (score.primaryRef !== ref.ref) return score // Only do scoring for one ref
+
+    score.value = score.value + qsoScore.counts
+    score.activated = (score.value >= 10)
+
+    return score
   }
 }

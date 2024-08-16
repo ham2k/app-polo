@@ -25,8 +25,6 @@ const flexZero = { flex: 0 }
 
 export default function OpLoggingTab ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
-  const { sections, qsos } = useQSOsWithMilestones({ uuid: route.params.operation.uuid })
-  const activeQSOs = useMemo(() => qsos.filter(qso => !qso.deleted), [qsos])
   const vfo = useSelector(state => selectVFO(state))
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
@@ -34,6 +32,9 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   const settings = useSelector(selectSettings)
   const online = useSelector(selectRuntimeOnline)
+
+  const { sections, qsos } = useQSOsWithMilestones({ operation, settings })
+  const activeQSOs = useMemo(() => qsos.filter(qso => !qso.deleted), [qsos])
 
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 

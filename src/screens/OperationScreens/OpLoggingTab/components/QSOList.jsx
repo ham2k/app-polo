@@ -13,8 +13,7 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { useUIState } from '../../../../store/ui'
 import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findHooks } from '../../../../extensions/registry'
-import { fmtDateZuluDynamic } from '../../../../tools/timeFormats'
-import { fmtNumber } from '@ham2k/lib-format-tools'
+import QSOHeader from './QSOHeader'
 
 function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
   const extendedWidth = width / themeStyles.oneSpace > 80
@@ -54,8 +53,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
     },
     headerRow: {
       ...themeStyles.compactRow,
-      backgroundColor: themeStyles.colors.surfaceVariant,
-      paddingTop: themeStyles.oneSpace * 0.9
+      backgroundColor: themeStyles.colors.surfaceVariant
     },
     fields: {
       header: {
@@ -163,8 +161,6 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
 const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo }) {
   const { width } = useWindowDimensions()
 
-  useEffect(() => { console.log('QSOList', sections) }, [sections])
-
   const [componentWidth, setComponentWidth] = useUIState()
   const handleLayout = useCallback((event) => {
     setComponentWidth(event?.nativeEvent?.layout?.width)
@@ -188,7 +184,6 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
         sections.find((section, i) => {
           return section.data.find((qso, j) => {
             if (qso.key === loggingState?.lastKey) {
-              console.log('found lastKey', { lastKey: loggingState?.lastKey, i, j })
               sectionIndex = i
               itemIndex = j
               return true
@@ -255,25 +250,14 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
 
   const renderHeader = useCallback(({ section, index }) => {
     return (
-      <View style={styles.headerRow}>
-        <Text style={styles.fields.header}>
-          <Text style={styles.text.bold}>{fmtDateZuluDynamic(section.day)}:{' '}</Text>
-          <Text style={{}}>{
-            section.data.length === 0 ? (
-              'No QSOs'
-            ) : (
-              section.data.length === 1 ? (
-                '1 QSO'
-              ) : (
-                `${fmtNumber(section.data.length)} QSOs`
-              )
-            )
-          }</Text>
-        </Text>
-      </View>
-
+      <QSOHeader
+        section={section}
+        operation={operation}
+        settings={settings}
+        styles={styles}
+      />
     )
-  }, [styles])
+  }, [operation, settings, styles])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(qsos[index], styles)
@@ -307,8 +291,6 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
       windowSize={2}
       maxToRenderPerBatch={30}
       updateCellsBatchingPeriod={100}
-      removeClippedSubviews={true}
-      // initialScrollIndex={100}
     />
   )
 }

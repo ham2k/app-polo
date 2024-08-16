@@ -6,7 +6,7 @@
  */
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { findRef, refsToString } from '../../../tools/refTools'
+import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './WWFFInfo'
 import { registerWWFFDataFile, wwffFindOneByReference } from './WWFFDataFile'
@@ -180,6 +180,48 @@ const ReferenceHandler = {
     if (huntingRef) fields.push({ SIG: 'WWFF' }, { SIG_INFO: huntingRef.ref })
 
     return fields
-  }
+  },
 
+  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+    const { band, mode, key, startOnMillis } = qso
+    const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
+
+    if (refs.length === 0 && !ref?.ref) return { counts: 0 } // If not activating, only counts if other QSO has a WWFF ref
+
+    const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+
+    if (nearDupes.length === 0) {
+      return { counts: 1, type: Info.activationType }
+    } else {
+      const sameBand = nearDupes.filter(q => q.band === band).length !== 0
+      const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
+      const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
+      if (sameBand && sameMode && (sameRefs || refs.length === 0)) {
+        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+      } else {
+        const notices = []
+        if (refs.length > 0 && !sameRefs) notices.push('newRef') // only if at new ref
+        if (!sameMode) notices.push('newMode')
+        if (!sameBand) notices.push('newBand')
+
+        return { counts: 1, notices, type: Info.activationType }
+      }
+    }
+  },
+
+  accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
+    if (!ref?.ref) return score // No scoring if not activating
+    if (!score?.key) score = undefined // Reset if score doesn't have the right shape
+    score = score ?? {
+      key: ref?.type,
+      icon: Info.icon,
+      label: Info.shortName,
+      value: 0
+    }
+
+    score.value = score.value + qsoScore.counts
+    score.activated = (score.value >= 44)
+
+    return score
+  }
 }
