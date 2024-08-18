@@ -36,6 +36,7 @@ import OperationAddActivityScreen from './screens/OperationScreens/OpSettingsTab
 import OperationActivityOptionsScreen from './screens/OperationScreens/OpSettingsTab/OperationActivityOptionsScreen'
 import OperationStationInfoScreen from './screens/OperationScreens/OpSettingsTab/OperationStationInfoScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
+import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -99,6 +100,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="CallInfo"
             options={{ title: 'Callsign Info' }}
             component={CallInfoScreen}
+          />
+
+          <Stack.Screen name="Spots"
+            options={{ title: 'Spots' }}
+            component={SpotsScreen}
           />
 
           <Stack.Screen name="EditQSO"

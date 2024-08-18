@@ -6,13 +6,14 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { FlatList, View, useWindowDimensions } from 'react-native'
+import { SectionList, View, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem, { guessItemHeight } from './QSOItem'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { useUIState } from '../../../../store/ui'
 import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findHooks } from '../../../../extensions/registry'
+import QSOHeader from './QSOHeader'
 
 function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
   const extendedWidth = width / themeStyles.oneSpace > 80
@@ -50,7 +51,17 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
     },
     unselectedRow: {
     },
+    headerRow: {
+      ...themeStyles.compactRow,
+      backgroundColor: themeStyles.colors.surfaceVariant
+    },
     fields: {
+      header: {
+        ...commonStyles,
+        flex: 0,
+        marginLeft: 0,
+        textAlign: 'left'
+      },
       number: {
         ...commonStyles,
         ...themeStyles.text.numbers,
@@ -147,7 +158,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
   }
 }
 
-const QSOList = function QSOList ({ style, ourInfo, settings, qsos, operation, vfo }) {
+const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo }) {
   const { width } = useWindowDimensions()
 
   const [componentWidth, setComponentWidth] = useUIState()
@@ -166,18 +177,25 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, operation, v
   // When the lastQSO changes, scroll to it
   useEffect(() => {
     setTimeout(() => {
+      if (!sections || !sections.length) return
+      let sectionIndex = sections.length - 1
+      let itemIndex = sections[sectionIndex].data.length - 1
       if (loggingState?.lastKey) {
-        const i = qsos.findIndex((qso) => qso.key === loggingState?.lastKey)
-        if (i > -1) {
-          listRef.current?.scrollToIndex({ index: i, animated: true })
-        } else {
-          listRef.current?.scrollToEnd()
-        }
-      } else {
-        listRef.current?.scrollToEnd()
+        sections.find((section, i) => {
+          return section.data.find((qso, j) => {
+            if (qso.key === loggingState?.lastKey) {
+              sectionIndex = i
+              itemIndex = j
+              return true
+            }
+            return false
+          })
+        })
       }
+
+      listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
     }, 50)
-  }, [listRef, qsos, loggingState?.lastKey])
+  }, [listRef, loggingState?.lastKey, sections])
 
   const refHandlers = useMemo(() => {
     const types = {}
@@ -230,18 +248,30 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, operation, v
     )
   }, [stylesForDeleted, operation, stylesForOtherOperator, styles, settings, loggingState?.selectedKey, ourInfo, handlePress, refHandlers])
 
+  const renderHeader = useCallback(({ section, index }) => {
+    return (
+      <QSOHeader
+        section={section}
+        operation={operation}
+        settings={settings}
+        styles={styles}
+      />
+    )
+  }, [operation, settings, styles])
+
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(qsos[index], styles)
     return { length: height, offset: height * index, index }
   }, [styles, qsos])
 
   return (
-    <FlatList
+    <SectionList
       style={style}
       ref={listRef}
       onLayout={handleLayout}
-      data={qsos}
+      sections={sections || []}
       renderItem={renderRow}
+      renderSectionHeader={renderHeader}
       getItemLayout={calculateLayout}
       ListEmptyComponent={
         <View style={{ flexDirection: 'column' }}>
@@ -261,8 +291,6 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, operation, v
       windowSize={2}
       maxToRenderPerBatch={30}
       updateCellsBatchingPeriod={100}
-      removeClippedSubviews={true}
-      // initialScrollIndex={100}
     />
   )
 }

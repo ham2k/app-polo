@@ -168,6 +168,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
         fontVariant: ['tabular-nums'],
         fontFamily: 'Roboto Mono Bold'
       },
+      bold: {
+        fontWeight: 'bold'
+      },
       lighter: {
         color: theme.colors.onBackgroundLight
       }
