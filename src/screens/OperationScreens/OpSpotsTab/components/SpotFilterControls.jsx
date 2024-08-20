@@ -17,11 +17,12 @@ import { LONG_LABEL_FOR_MODE } from './SpotsPanel'
 import SpotFilterIndicators from './SpotFilterIndicators'
 import { ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { CONTINENTS } from '@ham2k/lib-dxcc-data'
 
 export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSources, vfo, options, filterState, updateFilterState, counts, operation, onDone, refreshSpots, styles, themeColor, settings, online }) {
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <SafeAreaView style={{ flexDirection: 'column', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'stretch', width: '100%', maxWidth: '100%' }}>
+    <ScrollView style={{ flex: 1, borderWidth: 1, borderColor: 'red' }}>
+      <SafeAreaView style={{ flexDirection: 'column', paddingHorizontal: 0, paddingBottom: styles.oneSpace * 3, gap: styles.oneSpace, alignItems: 'center', width: '100%', maxWidth: '100%' }}>
         <SpotFilterIndicators
           options={options}
           counts={counts}
@@ -94,6 +95,7 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
             Sorting
           </Text>
           <SegmentedButtons
+            style={{ width: '100%' }}
             value={filterState.sortBy || 'frequency' }
             onValueChange={(value) => updateFilterState({ sortBy: value })}
             buttons={[
@@ -108,16 +110,9 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
             Spot Sources
           </Text>
           {spotsSources.map(source => (
-            <View key={source.key} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'stretch', gap: styles.oneSpace }}>
-              <Switch
-                value={filterState.sources?.[source.key] !== false}
-                onValueChange={(value) => {
-                  updateFilterState({ sources: { ...filterState.sources, [source.key]: value } })
-                  if (value) refreshSpots()
-                }}
-              />
+            <View key={source.key} style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'stretch', gap: styles.oneSpace }}>
               <Text
-                style={{ fontSize: styles.normalFontSize }}
+                style={{ fontSize: styles.normalFontSize, flex: 1 }}
                 onPress={() => {
                   updateFilterState({ sources: { ...filterState.sources, [source.key]: !filterState.sources?.[source.key] } })
                   if (!filterState.sources?.[source.key]) refreshSpots()
@@ -125,6 +120,37 @@ export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSour
               >
                 <Text style={{ fontWeight: 'bold' }}>{source.sourceName ?? source.name}: </Text>{counts.source?.[source.key] || '0'} spots
               </Text>
+              <Switch
+                value={filterState.sources?.[source.key] !== false}
+                onValueChange={(value) => {
+                  updateFilterState({ sources: { ...filterState.sources, [source.key]: value } })
+                  if (value) refreshSpots()
+                }}
+              />
+            </View>
+          ))}
+        </View>
+
+        <View style={{ flexDirection: 'column', marginTop: styles.oneSpace * 2, maxWidth: styles.oneSpace * 35, gap: styles.oneSpace, alignItems: 'stretch' }}>
+          <Text style={[styles.markdown.heading2, { marginTop: styles.halfSpace, textAlign: 'center' }]}>
+            Filter by Continent
+          </Text>
+          {Object.keys(CONTINENTS).map(continent => (
+            <View key={continent} style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'stretch', gap: styles.oneSpace }}>
+              <Text
+                style={{ flex: 1, fontSize: styles.normalFontSize }}
+                onPress={() => {
+                  updateFilterState({ continents: { ...filterState.continents, [continent]: !!filterState.continents?.[continent] } })
+                }}
+              >
+                <Text style={{ fontWeight: 'bold' }}>{CONTINENTS[continent] ?? continent}: </Text>{counts.continent?.[continent] || '0'} spots
+              </Text>
+              <Switch
+                value={filterState.continents?.[continent] !== false}
+                onValueChange={(value) => {
+                  updateFilterState({ continents: { ...filterState.continents, [continent]: value } })
+                }}
+              />
             </View>
           ))}
         </View>

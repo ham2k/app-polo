@@ -31,6 +31,7 @@ export const apiGMA = createApi({
   endpoints: builder => ({
     spots: builder.query({
       query: (arg) => `spots/${arg}/`,
+      keepUnusedDataFor: 60 * 60, // 1 hour
       transformResponse: (response) => {
         if (response === null || !response?.RCD) {
           return []

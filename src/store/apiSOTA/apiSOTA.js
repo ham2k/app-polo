@@ -123,7 +123,8 @@ export const apiSOTA = createApi({
     spots: builder.query({
       query: ({ limit, filter }) => ({
         url: `api2.sota.org.uk/api/spots/${limit}/${filter ?? 'all'}`
-      })
+      }),
+      keepUnusedDataFor: 60 * 60 // 1 hour
     })
   })
 })

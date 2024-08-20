@@ -69,6 +69,7 @@ export const apiPOTA = createApi({
 
     spots: builder.query({
       query: () => 'spot/activator',
+      keepUnusedDataFor: 60 * 60, // 1 hour
       transformResponse: (response) => {
         if (response === null) {
           return []
