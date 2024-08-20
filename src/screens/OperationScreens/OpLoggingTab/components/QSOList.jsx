@@ -291,6 +291,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
       windowSize={2}
       maxToRenderPerBatch={30}
       updateCellsBatchingPeriod={100}
+      stickySectionHeadersEnabled={true}
     />
   )
 }
