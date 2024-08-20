@@ -175,7 +175,7 @@ export default function SpotsPanel ({ operation, qsos, onSelect }) {
   return (
     <GestureHandlerRootView style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column', alignItems: 'stretch' }]}>
       {showControls ? (
-        <View style={[{ flex: 1, flexDirection: 'column', alignItems: 'center' }, styles.panel]}>
+        <View style={[styles.panel, { flex: 1, padding: 0, flexDirection: 'column', alignItems: 'stretch' }]}>
           <SpotFilterControls
             rawSpots={spotsState.rawSpots}
             filteredSpots={scoredSpots}
@@ -251,6 +251,14 @@ export function filterAndCount (rawSpots, filterState, vfo) {
       return (today - (spot.spot?.timeInMillis || 0) <= (1000 * 60 * filterState.ageInMinutes))
     })
   }
+
+  // == CONTINENT ===============
+  results.counts.continent = {}
+  results.spots.forEach(spot => {
+    console.log(spot.their?.guess?.continent)
+    results.counts.continent[spot.their?.guess?.continent] = (results.counts.continent[spot.their?.guess?.continent] ?? 0) + 1
+  })
+  results.spots = results.spots.filter(spot => filterState.continents?.[spot.their?.guess?.continent] !== false)
 
   // == BAND ====================
   results.counts.band = {}
