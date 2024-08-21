@@ -190,15 +190,17 @@ export default function OpSettingsTab ({ navigation, route }) {
           disabled={!readyToExport}
         />
       </Ham2kListSection>
+
+      <Ham2kListSection title={'Import QSOs'}>
+        <Ham2kListItem
+          title="Add QSOs from ADIF file"
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-import-outline" />}
+          onPress={() => handleImportADIF()}
+        />
+      </Ham2kListSection>
+
       {settings.devMode && (
         <Ham2kListSection title={'Developer Options'} titleStyle={{ color: styles.colors.devMode }}>
-          <Ham2kListItem
-            title="Add QSOs from ADIF file"
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-import-outline" color={styles.colors.devMode} />}
-            titleStyle={{ color: styles.colors.devMode }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            onPress={() => handleImportADIF()}
-          />
           <Ham2kListItem
             title="Export QSON file"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}

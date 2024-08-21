@@ -4,7 +4,8 @@
     "changes": [
       "Counting QSOs for an Operation",
       "Access to Spots from Home Screen",
-      "Filter Spots by Continent"
+      "Filter Spots by Continent",
+      "Add QSOs to an operation from an ADIF file"
     ]
   },
   "24.8.0": {

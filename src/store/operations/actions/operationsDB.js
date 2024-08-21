@@ -227,7 +227,7 @@ export const importADIFIntoOperation = (path, operation) => async (dispatch) => 
       const qsos = data.qsos.map(qso => {
         const newQSO = { ...qso }
         newQSO.key = qsoKey(newQSO)
-        newQSO.refs = qso.refs.map(ref => {
+        newQSO.refs = (qso.refs || []).map(ref => {
           if (ref.type.match(/Activation$/i)) {
             // Remove activation references, since the QSOs will get them from this operation
             return false
