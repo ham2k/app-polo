@@ -6,15 +6,19 @@ require Pod::Executable.execute_command('node', ['-p',
   )', __dir__]).strip
 
 platform :ios, '14.0' # min_ios_version_supported
+
 prepare_react_native_project!
 
 linkage = 'static' # ENV['USE_FRAMEWORKS'] Rollbar requires use_frameworks
+
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
   use_frameworks! :linkage => linkage.to_sym
 end
 
 target 'polo' do
+  pod 'RollbarReactNative', path: '../node_modules/rollbar-react-native'
+
   config = use_native_modules!
 
   use_react_native!(
@@ -22,6 +26,7 @@ target 'polo' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+
 
   target 'poloTests' do
     inherit! :complete
