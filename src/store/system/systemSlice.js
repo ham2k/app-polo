@@ -55,17 +55,12 @@ export const setSystemFlag = (flag, value) => (dispatch) => {
 }
 
 export const selectSystemFlag = createSelector(
-  [
-    (state, flag, defaultValue) => state?.system?.flags || {},
-    (_state, flag, _defaultValue) => flag,
-    (_state, _flag, defaultValue) => defaultValue
-  ],
+  (state, flag, defaultValue) => state?.system?.flags || {},
+  (_state, flag, _defaultValue) => flag,
+  (_state, _flag, defaultValue) => defaultValue,
   (flags, flag, defaultValue) => flags[flag] ?? defaultValue
 )
 
-export const selectNotices = createSelector(
-  (state) => state?.system?.notices,
-  (notices) => notices || []
-)
+export const selectNotices = (state) => state?.system?.notices ?? []
 
 export default systemSlice.reducer

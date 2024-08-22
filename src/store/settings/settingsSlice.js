@@ -54,9 +54,9 @@ export const settingsSlice = createSlice({
 export const { setOperatorCall, setOnboarded, setAccountInfo, setSettings, setExtensionSettings } = settingsSlice.actions
 
 export const selectSettings = createSelector(
-  [(state) => state?.settings],
+  (state) => state?.settings,
   (settings) => {
-    settings = settings || {}
+    settings = { ...settings }
 
     if (settings.showNumbersRow === undefined) {
       settings.showNumbersRow = Platform.OS === 'ios'
@@ -101,16 +101,11 @@ export const selectSettings = createSelector(
   }
 )
 
-export const selectRawSettings = createSelector(
-  [(state) => state?.settings],
-  (settings) => settings
-)
+export const selectRawSettings = (state) => state?.settings
 
 export const selectExtensionSettings = createSelector(
-  [
-    (state, key) => state?.settings?.extensions,
-    (state, key) => key
-  ],
+  (state, key) => state?.settings?.extensions,
+  (state, key) => key,
   (extensionsSettings, key) => {
     extensionsSettings = extensionsSettings || {}
     return extensionsSettings[key] || {}
@@ -118,8 +113,8 @@ export const selectExtensionSettings = createSelector(
 )
 
 export const selectOperatorCall = createSelector(
-  [(state) => state?.settings?.operatorCall],
-  (value) => value === 'N0CALL' ? '' : (value ?? '')
+  (state) => state?.settings,
+  (settings) => settings?.operatorCall === 'N0CALL' ? '' : (settings?.operatorCall ?? '')
 )
 
 export default settingsSlice.reducer

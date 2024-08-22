@@ -56,10 +56,9 @@ export const { actions } = uiSlice
 export const { setStateForComponent, updateStateForComponent } = uiSlice.actions
 
 export const selectStateForComponent = createSelector(
-  [
-    (state, component) => state?.ui && state?.ui[component]
-  ],
-  (value) => value
+  (state, component) => state?.ui,
+  (state, component) => component,
+  (ui, component) => ui?.[component]
 )
 
 export default uiSlice.reducer
