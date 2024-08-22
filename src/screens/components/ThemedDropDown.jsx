@@ -24,7 +24,6 @@ export default function ThemedDropDown (props) {
   const onShow = useCallback(() => setIsOpen(true), [setIsOpen])
   const onDismiss = useCallback(() => setIsOpen(false), [setIsOpen])
   const handleChangeValue = useCallback((newValue) => {
-    console.log('change', newValue)
     setInnerValue(newValue)
     onChange && onChange({ fieldId, nativeEvent: { text: newValue } })
     onChangeText && onChangeText(newValue)

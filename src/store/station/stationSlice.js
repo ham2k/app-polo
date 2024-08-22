@@ -53,21 +53,12 @@ export const { setTransceiverState, setCurrentTransceiver, setVFO } = stationSli
 export const selectTransceiver = createSelector(
   (state) => state?.station?.transceivers,
   (state, transceiver) => transceiver || state?.station?.currentTransceiver || 'default',
-  (transceivers, name) => {
-    const transceiver = transceivers[name] ?? {}
-
-    return transceiver
-  }
+  (transceivers, name) => transceivers[name] ?? {}
 )
 
 export const selectVFO = createSelector(
-  (state) => state?.station?.transceivers,
-  (state, transceiver) => transceiver || state?.station?.currentTransceiver || 'default',
-  (transceivers, name) => {
-    const transceiver = transceivers[name] ?? {}
-
-    return transceiver.vfo || { band: '20m', mode: 'USB' }
-  }
+  (state, transceiver) => selectTransceiver(state, transceiver),
+  (transceiver) => transceiver.vfo || { band: '20m', mode: 'USB' }
 )
 
 export default stationSlice.reducer

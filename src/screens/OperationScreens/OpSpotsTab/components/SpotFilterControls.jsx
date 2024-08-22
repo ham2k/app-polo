@@ -21,7 +21,7 @@ import { CONTINENTS } from '@ham2k/lib-dxcc-data'
 
 export default function SpotFilterControls ({ filteredSpots, rawSpots, spotsSources, vfo, options, filterState, updateFilterState, counts, operation, onDone, refreshSpots, styles, themeColor, settings, online }) {
   return (
-    <ScrollView style={{ flex: 1, borderWidth: 1, borderColor: 'red' }}>
+    <ScrollView style={{ flex: 1 }}>
       <SafeAreaView style={{ flexDirection: 'column', paddingHorizontal: 0, paddingBottom: styles.oneSpace * 3, gap: styles.oneSpace, alignItems: 'center', width: '100%', maxWidth: '100%' }}>
         <SpotFilterIndicators
           options={options}

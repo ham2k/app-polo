@@ -5,9 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Platform, View, useWindowDimensions } from 'react-native'
+import { Animated, PanResponder, Platform, View, useWindowDimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import KeepAwake from '@sayem314/react-native-keep-awake'
@@ -26,8 +26,13 @@ import OpMapTab from './OpMapTab/OpMapTab'
 import OpInfoTab from './OpInfoTab/OpInfoTab'
 import { trackOperation } from '../../distro'
 import { selectRuntimeOnline } from '../../store/runtime'
+import { useUIState } from '../../store/ui'
+import { Icon } from 'react-native-paper'
 
 const Tab = createMaterialTopTabNavigator()
+
+const MIN_WIDTH_LEFT = 60
+const MIN_WIDTH_RIGHT = 40
 
 export default function OperationScreen (props) {
   const { navigation, route } = props
@@ -74,11 +79,57 @@ export default function OperationScreen (props) {
 
   const dimensions = useWindowDimensions()
 
+  const [panesState, , updatePanesState] = useUIState('OperationScreen', 'panes', {
+    mainPaneWidth: dimensions?.width * 0.8,
+    resizingActive: false,
+    mainPaneDelta: 0
+  })
+
   const splitView = useMemo(() => {
     return !settings.dontSplitViews && (dimensions.width / styles.oneSpace > 95)
   }, [dimensions?.width, styles?.oneSpace, settings?.dontSplitViews])
 
-  const [splitWidth] = useState(splitView ? Math.max(dimensions.width * 0.60, dimensions.width - styles.oneSpace * 40) : dimensions.width)
+  const mainPaneWidth = useMemo(() => {
+    if (isNaN(panesState.mainPaneWidth) || !panesState.mainPaneWidth) {
+      return (dimensions.width - styles.oneSpace * MIN_WIDTH_LEFT) + (panesState.mainPaneDelta || 0)
+    } else {
+      return Math.max(
+        Math.min(
+          panesState.mainPaneWidth + (panesState.mainPaneDelta || 0),
+          dimensions.width - styles.oneSpace * MIN_WIDTH_RIGHT
+        ),
+        styles.oneSpace * MIN_WIDTH_LEFT
+      )
+    }
+  }, [dimensions.width, panesState, styles.oneSpace])
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: (event, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (event, gestureState) => true,
+      onMoveShouldSetPanResponder: (event, gestureState) => true,
+      onMoveShouldSetPanResponderCapture: (event, gestureState) => true,
+      onMoveShouldSetResponderCapture: (event, gestureState) => true,
+
+      onPanResponderGrant: (event, gestureState) => {
+        updatePanesState({ resizingActive: true })
+      },
+
+      onPanResponderMove: (event, gestureState) => {
+        updatePanesState({ mainPaneDelta: gestureState.dx })
+      },
+
+      onPanResponderRelease: (event, gestureState) => {
+        updatePanesState({ resizingActive: false })
+      }
+    })
+  ).current
+
+  useEffect(() => {
+    if (panesState.resizingActive === false && panesState.mainPaneDelta !== 0) {
+      updatePanesState({ mainPaneWidth, mainPaneDelta: 0 })
+    }
+  }, [panesState.resizingActive, panesState.mainPaneDelta, mainPaneWidth, updatePanesState])
 
   if (splitView) {
     return (
@@ -86,77 +137,99 @@ export default function OperationScreen (props) {
         {settings.keepDeviceAwake && <KeepAwake />}
         <ScreenContainer>
           <View style={{ height: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'stretch' }}>
-            <View
+            <Animated.View
               style={{
-                width: splitWidth,
-                height: '100%',
-                borderColor: styles.colors.primary,
-                borderRightWidth: styles.oneSpace
+                width: mainPaneWidth,
+                minWidth: styles.oneSpace * MIN_WIDTH_LEFT,
+                height: '100%'
               }}
             >
               <HeaderBar options={headerOptions} navigation={navigation} back={true} />
               <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO } }} />
+            </Animated.View>
+            <View
+              style={{
+                backgroundColor: panesState.resizingActive ? styles.colors.primaryLighter : styles.colors.primary,
+                width: styles.oneSpace * 2,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              {...panResponder.panHandlers}
+            >
+              <View style={{ marginLeft: styles.oneSpace * -0.7, opacity: 0.8 }}>
+
+                <Icon source="dots-vertical" color={styles.colors.onPrimary} size={styles.oneSpace * 3.5} />
+              </View>
             </View>
-            <SafeAreaView
-              edges={['top']}
+            <Animated.View
               style={{
                 backgroundColor: styles.colors.primary,
                 flex: 1,
-                height: '100%',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                alignItems: 'stretch'
+                minWidth: styles.oneSpace * MIN_WIDTH_RIGHT,
+                height: '100%'
               }}
             >
-              <Tab.Navigator
-                id={'OperationScreen_TabNavigator'}
-                initialLayout={{ width: splitWidth, height: dimensions.height }}
-                initialRouteName={ operation?.qsoCount > 0 ? 'OpInfo' : 'OpSettings' }
-                screenOptions={{
-                  tabBarItemStyle: [{ width: (dimensions.width - splitWidth) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
-                  tabBarLabelStyle: styles.screenTabBarLabel,
-                  tabBarStyle: styles.screenTabBar,
-                  tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryHighlight, height: styles.halfSpace * 1.5 },
-                  // See https://github.com/react-navigation/react-navigation/issues/11301
-                  // on iOS, if the keyboard is open, tabs get stuck when switching
-                  animationEnabled: Platform.OS !== 'ios',
-                  lazy: true
+              <SafeAreaView edges={['top']}
+                style={{
+                  height: '100%',
+                  width: '100%',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  alignItems: 'stretch'
                 }}
               >
-                <Tab.Screen
-                  name="OpInfo"
-                  options={{ title: 'Info' }}
-                  component={OpInfoTab}
-                  initialParams={{ uuid: operation.uuid, operation }}
-                />
 
-                <Tab.Screen
-                  name="OpSpots"
-                  options={{ title: 'Spots' }}
-                  component={OpSpotsTab}
-                  initialParams={{ uuid: operation.uuid, operation, splitView }}
-                  screenOptions={{ lazy: true }}
-                />
+                <Tab.Navigator
+                  id={'OperationScreen_TabNavigator'}
+                  initialLayout={{ width: (dimensions.width - mainPaneWidth), height: dimensions.height }}
+                  initialRouteName={ operation?.qsoCount > 0 ? 'OpInfo' : 'OpSettings' }
+                  screenOptions={{
+                    tabBarItemStyle: [{ width: (dimensions.width - mainPaneWidth) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
+                    tabBarLabelStyle: styles.screenTabBarLabel,
+                    tabBarStyle: styles.screenTabBar,
+                    tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryHighlight, height: styles.halfSpace * 1.5 },
+                    // See https://github.com/react-navigation/react-navigation/issues/11301
+                    // on iOS, if the keyboard is open, tabs get stuck when switching
+                    animationEnabled: Platform.OS !== 'ios',
+                    lazy: true
+                  }}
+                >
+                  <Tab.Screen
+                    name="OpInfo"
+                    options={{ title: 'Info' }}
+                    component={OpInfoTab}
+                    initialParams={{ uuid: operation.uuid, operation }}
+                  />
 
-                <Tab.Screen
-                  name="OpMap"
-                  options={{ title: 'Map' }}
-                  component={OpMapTab}
-                  initialParams={{ uuid: operation.uuid, operation, splitView }}
-                  screenOptions={{ lazy: true }}
-                  splitView={splitView}
-                />
+                  <Tab.Screen
+                    name="OpSpots"
+                    options={{ title: 'Spots' }}
+                    component={OpSpotsTab}
+                    initialParams={{ uuid: operation.uuid, operation, splitView }}
+                    screenOptions={{ lazy: true }}
+                  />
 
-                <Tab.Screen
-                  name="OpSettings"
-                  options={{ title: (dimensions.width / 4) > (styles.oneSpace * 34) ? 'Operation' : 'Oper.' }}
-                  component={OpSettingsTab}
-                  initialParams={{ uuid: operation.uuid, operation, splitView }}
-                  splitView={splitView}
-                />
+                  <Tab.Screen
+                    name="OpMap"
+                    options={{ title: 'Map' }}
+                    component={OpMapTab}
+                    initialParams={{ uuid: operation.uuid, operation, splitView }}
+                    screenOptions={{ lazy: true }}
+                    splitView={splitView}
+                  />
 
-              </Tab.Navigator>
-            </SafeAreaView>
+                  <Tab.Screen
+                    name="OpSettings"
+                    options={{ title: (dimensions.width / 4) > (styles.oneSpace * 34) ? 'Operation' : 'Oper.' }}
+                    component={OpSettingsTab}
+                    initialParams={{ uuid: operation.uuid, operation, splitView }}
+                    splitView={splitView}
+                  />
+
+                </Tab.Navigator>
+              </SafeAreaView>
+            </Animated.View>
 
           </View>
         </ScreenContainer>
@@ -172,7 +245,7 @@ export default function OperationScreen (props) {
           <View style={{ height: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'stretch' }}>
             <Tab.Navigator
               id={'OperationScreen_TabNavigator'}
-              initialLayout={{ width: splitWidth, height: dimensions.height }}
+              initialLayout={{ width: dimensions.width, height: dimensions.height }}
               initialRouteName={ operation?.stationCall && operation?.qsoCount > 0 ? 'OpLog' : 'OpSettings' }
               screenOptions={{
                 tabBarItemStyle: [{ width: dimensions.width / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 4, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in

@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { createSelector, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   online: null,
@@ -34,14 +34,8 @@ export const runtimeSlice = createSlice({
 export const { actions } = runtimeSlice
 export const { addRuntimeMessage, resetRuntimeMessages } = runtimeSlice.actions
 
-export const selectRuntimeOnline = createSelector(
-  [(state) => state?.runtime?.online],
-  (value) => value
-)
+export const selectRuntimeOnline = (state) => state?.runtime?.online
 
-export const selectRuntimeMessages = createSelector(
-  [(state) => state?.runtime?.messages],
-  (value) => value ?? []
-)
+export const selectRuntimeMessages = (state) => state?.runtime?.messages ?? []
 
 export default runtimeSlice.reducer

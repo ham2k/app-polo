@@ -31,13 +31,14 @@ export const dataFilesSlice = createSlice({
 export const { actions } = dataFilesSlice
 
 export const selectDataFileInfo = createSelector(
-  [(state, key) => state?.dataFiles?.files[key]],
-  (info) => info
+  (state, key) => state?.dataFiles,
+  (state, key) => key,
+  (dataFiles, key) => dataFiles?.files[key]
 )
 
 export const selectAllDataFileInfos = createSelector(
-  [(state) => state?.dataFiles?.files],
-  (files) => files
+  (state) => state?.dataFiles,
+  (dataFiles) => dataFiles?.files
 )
 
 export default dataFilesSlice.reducer

@@ -255,7 +255,6 @@ export function filterAndCount (rawSpots, filterState, vfo) {
   // == CONTINENT ===============
   results.counts.continent = {}
   results.spots.forEach(spot => {
-    console.log(spot.their?.guess?.continent)
     results.counts.continent[spot.their?.guess?.continent] = (results.counts.continent[spot.their?.guess?.continent] ?? 0) + 1
   })
   results.spots = results.spots.filter(spot => filterState.continents?.[spot.their?.guess?.continent] !== false)

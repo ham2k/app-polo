@@ -58,17 +58,19 @@ export const selectAllOperations = (state) => {
 }
 
 export const selectOperation = createSelector(
-  [(state, uuid) => state?.operations?.info[uuid] ?? {}],
-  (info) => info
+  (state, uuid) => state?.operations?.info,
+  (state, uuid) => uuid,
+  (info, uuid) => info?.[uuid] ?? {}
 )
 
 export const selectOperationCall = createSelector(
-  [(state, uuid) => state?.operations?.info[uuid]],
-  (operation) => operation?.stationCall ?? ''
+  (state, uuid) => state?.operations?.info,
+  (state, uuid) => uuid,
+  (info, uuid) => info?.[uuid]?.stationCall ?? ''
 )
 
 export const selectOperationsList = createSelector(
-  [(state) => state?.operations?.info],
+  (state) => state?.operations?.info,
   (info) => {
     return Object.values(info || {}).sort((a, b) => {
       return (b.startOnMillisMax ?? b.createdOnMillis ?? 0) - (a.startOnMillisMax ?? a.createdOnMillis ?? 0)
@@ -77,10 +79,8 @@ export const selectOperationsList = createSelector(
 )
 
 export const selectOperationCallInfo = createSelector(
-  [
-    (state, uuid) => selectOperationCall(state, uuid),
-    (state) => selectOperatorCall(state)
-  ],
+  (state, uuid) => selectOperationCall(state, uuid),
+  (state) => selectOperatorCall(state),
   (operationCall, settingsCall) => {
     let info = {}
     if (operationCall) {

@@ -90,7 +90,6 @@ const PaperDropDown = (props, _ref) => {
   }, [value])
 
   const setActive = useCallback((currentValue) => {
-    console.log('active', currentValue)
     onChangeValue && onChangeValue(currentValue)
   }, [onChangeValue])
 
@@ -223,7 +222,6 @@ const PaperDropDown = (props, _ref) => {
                   ? dropDownItemSelectedStyle
                   : dropDownItemStyle)
               }} onPress={() => {
-                console.log('press menu', item.value)
                 setActive(item.value)
                 if (onDismiss) {
                   onDismiss()
