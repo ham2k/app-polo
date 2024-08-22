@@ -43,24 +43,28 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
         const score = section.scores[key]
         const refKeys = Object.keys(score.refs ?? { one: true })
 
-        return (
-          <Text key={key} style={[styles.fields.header, { marginLeft: styles.oneSpace, textAlign: 'right', opacity: score.activated === false ? 0.5 : 1 }]}>
-            {score.icon ? (
-              refKeys.map((refKey, index) => (
-                <Icon
-                  key={refKey}
-                  source={score.icon}
-                  size={styles.normalFontSize}
-                  color={score.activated === true ? styles.colors.important : undefined }
-                  style={styles.fields.icon}
-                />
-              ))
-            ) : (
-              `${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ' '}`
-            )}
-            {' '}{score.value ?? ''}{score.activated && ' ✓'}
-          </Text>
-        )
+        if (score.icon || score.label) {
+          return (
+            <Text key={key} style={[styles.fields.header, { marginLeft: styles.oneSpace, textAlign: 'right', opacity: score.activated === false ? 0.5 : 1 }]}>
+              {score.icon ? (
+                refKeys.map((refKey, index) => (
+                  <Icon
+                    key={refKey}
+                    source={score.icon}
+                    size={styles.normalFontSize}
+                    color={score.activated === true ? styles.colors.important : undefined }
+                    style={styles.fields.icon}
+                  />
+                ))
+              ) : (
+                `${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ' '}`
+              )}
+              {' '}{score.value ?? ''}{score.activated && ' ✓'}
+            </Text>
+          )
+        } else {
+          return null
+        }
       })}
     </View>
   )
