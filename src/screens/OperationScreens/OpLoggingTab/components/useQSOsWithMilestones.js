@@ -19,7 +19,7 @@ export function useQSOsWithMilestones ({ operation, settings }) {
 
   const sections = useMemo(() => {
     const scoringRefHandlers = scoringRefsHandlersForOperation(operation, settings)
-    console.log('ref handlers', scoringRefHandlers.map(h => h.ref.type))
+
     // eslint-disable-next-line no-shadow
     const sections = []
     let currentSection = null

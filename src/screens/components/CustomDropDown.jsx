@@ -10,7 +10,7 @@
  * where the README has a badge mentioning the MIT license, but no license file is present
  */
 
-import React, { forwardRef, useState, useCallback, Fragment, useEffect } from 'react'
+import React, { useState, useCallback, Fragment, useEffect } from 'react'
 
 import { LayoutChangeEvent, ScrollView, TouchableHighlight, View } from 'react-native'
 import { Divider, Icon, Menu, TextInput, useTheme } from 'react-native-paper'
@@ -44,7 +44,6 @@ const CustomDropDown = (props, _ref) => {
     background,
     centered,
     rippleColor,
-    underlayColor,
     touchableStyle,
     error,
     selectionColor,
@@ -90,7 +89,6 @@ const CustomDropDown = (props, _ref) => {
   }, [value])
 
   const setActive = useCallback((currentValue) => {
-    console.log('active', currentValue)
     onChangeValue && onChangeValue(currentValue)
   }, [onChangeValue])
 
@@ -220,7 +218,6 @@ const CustomDropDown = (props, _ref) => {
                   ? dropDownItemSelectedStyle
                   : dropDownItemStyle)
               }} onPress={() => {
-                console.log('press menu', item.value)
                 setActive(item.value)
                 if (onDismiss) {
                   onDismiss()
