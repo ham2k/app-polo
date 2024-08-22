@@ -1,10 +1,11 @@
 {
-  "24.9.0": {
+  "24.9.0-pre2": {
     "name": "September '24",
     "changes": [
       "Counting QSOs for an Operation",
       "Access to Spots from Home Screen",
       "Filter Spots by Continent",
+      "Split view can now be resized",
       "Add QSOs to an operation from an ADIF file"
     ]
   },
