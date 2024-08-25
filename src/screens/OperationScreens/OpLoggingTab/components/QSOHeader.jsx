@@ -13,10 +13,6 @@ import { View } from 'react-native'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
-export function guessItemHeight (qso, styles) {
-  return styles.compactRow.height + styles.compactRow.borderBottomWidth
-}
-
 const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings }) {
   return (
     <View style={styles.headerRow}>
