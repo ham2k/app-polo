@@ -39,7 +39,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
         const score = section.scores[key]
         const refKeys = Object.keys(score.refs ?? { one: true })
 
-        if (score.icon || score.label) {
+        if (score.summary && (score.icon || score.label)) {
           return (
             <Text key={key} style={[styles.fields.header, { marginLeft: styles.oneSpace, textAlign: 'right', opacity: score.activated === false ? 0.5 : 1 }]}>
               {score.icon ? (
@@ -55,7 +55,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
               ) : (
                 `${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ' '}`
               )}
-              {' '}{score.value ?? ''}{score.activated && ' ✓'}
+              {' '}{score.summary}
             </Text>
           )
         } else {

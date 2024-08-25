@@ -153,7 +153,7 @@ export default function SpotsPanel ({ operation, qsos, onSelect }) {
             } else {
               spot.spot.type = 'duplicate'
             }
-          } else if (score?.counts === '0') {
+          } else if (score?.value === 0) {
             spot.spot.type = spot.spot.type || 'nonScoring'
           } else {
             spot.spot.type = spot.spot.type || 'scoring'

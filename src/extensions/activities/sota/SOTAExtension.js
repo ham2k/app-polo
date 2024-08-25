@@ -210,12 +210,13 @@ const ReferenceHandler = {
 
     const { key, startOnMillis } = qso
     const theirRef = findRef(qso, Info.huntingType)
-    const points = theirRef?.ref ? 1 : 0
+    const refCount = theirRef ? 1 : 0
+    const points = refCount
 
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
-      return { counts: 1, points, type: Info.activationType }
+      return { value: 1, refCount, points, type: Info.activationType }
     } else if (points > 0) {
       // Contacts with the same station don't count for the 4 QSOs needed to activate the summit
       // But might count for hunter points if they are for a new summit or day
@@ -224,16 +225,16 @@ const ReferenceHandler = {
       const sameRefs = nearDupes.filter(q => findRef(q, Info.huntingType)?.ref === theirRef.ref)
       const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
       if (sameDay && sameRefs) {
-        return { counts: 0, points: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { value: 0, refCount, points: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
         if (!sameRefs) notices.push('newRef')
         if (!sameDay) notices.push('newDay')
 
-        return { counts: 0, points, notices, type: Info.activationType }
+        return { value: 0, refCount, points, notices, type: Info.activationType }
       }
     } else {
-      return { counts: 0, points: 0, alerts: ['duplicate'], type: Info.activationType }
+      return { value: 0, refCount, points: 0, alerts: ['duplicate'], type: Info.activationType }
     }
   },
 
@@ -244,17 +245,27 @@ const ReferenceHandler = {
       key: ref?.type,
       icon: Info.icon,
       label: Info.shortName,
-      counts: 0
+      summary: '',
+      value: 0,
+      refCount: 0
     }
 
-    score.counts = score.counts + qsoScore.counts
-    if (score.counts >= 4) {
-      score.value = undefined
-      score.activated = true
+    score.value = score.value + qsoScore.value
+    score.refCount = score.refCount + qsoScore.refCount
+
+    score.activated = score.value >= 4
+
+    if (score.activated) {
+      score.summary = '✓'
     } else {
-      score.value = score.counts
-      score.activated = false
+      score.summary = `${score.value}/4`
     }
+
+    if (score.refCount > 0) {
+      const label = score.primaryRef ? 'S2S' : 'S'
+      score.summary = [score.summary, `${score.refCount} ${label}`].filter(x => x).join(' • ')
+    }
+
     return score
   }
 }

@@ -220,14 +220,23 @@ const ReferenceHandler = {
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
     const { band, mode, key, startOnMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
-    const counts = refs.length || 1
+    const refCount = refs.length
+    let value
+    let type
+    if (ref?.ref) {
+      type = Info.activationType
+      value = refCount || 1
+    } else {
+      type = Info.huntingType
+      value = refCount
+    }
 
-    if (refs.length === 0 && !ref?.ref) return { counts: 0 } // If not activating, only counts if other QSO has a POTA ref
+    if (value === 0) return { value: 0 } // If not activating, only counts if other QSO has a POTA ref
 
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
-      return { counts, type: Info.activationType }
+      return { value, refCount, type }
     } else {
       const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
@@ -235,7 +244,7 @@ const ReferenceHandler = {
       const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
       if (sameBand && sameMode && sameDay && (sameRefs || refs.length === 0)) {
-        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { value: 0, refCount, alerts: ['duplicate'], type }
       } else {
         const notices = []
         if (refs.length > 0 && !sameRefs) notices.push('newRef') // only if at new ref
@@ -243,7 +252,7 @@ const ReferenceHandler = {
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        return { counts, notices, type: Info.activationType }
+        return { value, refCount, notices, type }
       }
     }
   },
@@ -256,6 +265,9 @@ const ReferenceHandler = {
       icon: Info.icon,
       label: Info.shortName,
       value: 0,
+      refCount: 0,
+      extraRefs: 0,
+      summary: '',
       refs: {},
       primaryRef: undefined
     }
@@ -267,8 +279,26 @@ const ReferenceHandler = {
 
     if (score.primaryRef !== ref.ref) return score // Only do scoring for one ref
 
-    score.value = score.value + qsoScore.counts
-    score.activated = (score.value >= 10)
+    score.value = score.value + qsoScore.value
+    score.refCount = score.refCount + qsoScore.refCount
+    if (qsoScore.refCount > 1) score.extraRefs = score.extraRefs + qsoScore.refCount - 1
+
+    score.activated = score.value >= 10
+
+    if (score.activated) {
+      score.summary = '✓'
+    } else {
+      score.summary = `${score.value}/10`
+    }
+
+    if (score.refCount > 0) {
+      const label = score.primaryRef ? 'P2P' : 'P'
+      if (score.extraRefs > 0) {
+        score.summary = [score.summary, `${score.refCount - score.extraRefs}+${score.extraRefs} ${label}`].filter(x => x).join(' • ')
+      } else {
+        score.summary = [score.summary, `${score.refCount} ${label}`].filter(x => x).join(' • ')
+      }
+    }
 
     return score
   }

@@ -314,18 +314,18 @@ export const DefaultScoringHandler = {
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
-      return { counts: 1, type: 'defaultOperation' }
+      return { count: 1, type: 'defaultOperation' }
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
       if (sameBand && sameMode) {
-        return { counts: 0, alerts: ['duplicate'], type: 'defaultOperation' }
+        return { count: 0, alerts: ['duplicate'], type: 'defaultOperation' }
       } else {
         const notices = []
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        return { counts: 1, notices, type: 'defaultOperation' }
+        return { count: 1, notices, type: 'defaultOperation' }
       }
     }
   }
