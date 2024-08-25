@@ -187,12 +187,12 @@ const ReferenceHandler = {
     const { band, mode, key, startOnMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
 
-    if (refs.length === 0 && !ref?.ref) return { counts: 0 } // If not activating, only counts if other QSO has a WWFF ref
+    if (refs.length === 0 && !ref?.ref) return { value: 0 } // If not activating, only counts if other QSO has a WWFF ref
 
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
-      return { counts: 1, type: Info.activationType }
+      return { value: 1, type: Info.activationType }
     } else {
       const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
@@ -200,7 +200,7 @@ const ReferenceHandler = {
       const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
       if (sameBand && sameMode && sameDay && (sameRefs || refs.length === 0)) {
-        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { value: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
         if (refs.length > 0 && !sameRefs) notices.push('newRef') // only if at new ref
@@ -208,7 +208,7 @@ const ReferenceHandler = {
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        return { counts: 1, notices, type: Info.activationType }
+        return { value: 1, notices, type: Info.activationType }
       }
     }
   },
@@ -220,11 +220,17 @@ const ReferenceHandler = {
       key: ref?.type,
       icon: Info.icon,
       label: Info.shortName,
-      value: 0
+      value: 0,
+      summary: ''
     }
 
-    score.value = score.value + qsoScore.counts
-    score.activated = (score.value >= 44)
+    score.value = score.value + qsoScore.value
+    score.activated = score.value >= 44
+    if (score.activated) {
+      score.summary = '✓'
+    } else {
+      score.summary = `${score.value}/44`
+    }
 
     return score
   }
