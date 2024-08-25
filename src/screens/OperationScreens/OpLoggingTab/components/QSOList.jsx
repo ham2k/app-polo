@@ -8,12 +8,13 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { SectionList, View, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
-import QSOItem, { guessItemHeight } from './QSOItem'
+import QSOItem from './QSOItem'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { useUIState } from '../../../../store/ui'
 import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findHooks } from '../../../../extensions/registry'
 import QSOHeader from './QSOHeader'
+import getItemLayout from 'react-native-get-item-layout-section-list'
 
 function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
   const extendedWidth = width / themeStyles.oneSpace > 80
@@ -259,10 +260,16 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
     )
   }, [operation, settings, styles])
 
-  const calculateLayout = useCallback((data, index) => {
-    const height = guessItemHeight(qsos[index], styles)
-    return { length: height, offset: height * index, index }
-  }, [styles, qsos])
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- useCallback prefers to see an inline function
+  const calculateLayout = useCallback(
+    getItemLayout({
+      getItemHeight: styles.compactRow.height + styles.compactRow.borderBottomWidth,
+      getSectionHeaderHeight: styles.headerRow.height + styles.headerRow.borderBottomWidth
+    }),
+    [styles]
+  )
+
+  const extractKey = useCallback((item, index) => item.key, [])
 
   return (
     <SectionList
@@ -273,26 +280,33 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
       renderItem={renderRow}
       renderSectionHeader={renderHeader}
       getItemLayout={calculateLayout}
-      ListEmptyComponent={
-        <View style={{ flexDirection: 'column' }}>
-          <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
-            No QSOs yet!
-          </Text>
-          <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
-            Currently set to
-          </Text>
-          <Text style={{ flex: 1, marginTop: styles.oneSpace * 1, textAlign: 'center', fontWeight: 'bold' }}>
-            {[vfo.freq ? fmtFreqInMHz(vfo.freq) + ' MHz' : vfo.band, vfo.mode].filter(x => x).join(' • ')}
-          </Text>
-        </View>
-      }
+      keyExtractor={extractKey}
+      ListEmptyComponent={<ListEmptyComponent styles={styles} vfo={vfo} />}
       keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
       initialNumToRender={20}
       windowSize={2}
       maxToRenderPerBatch={30}
       updateCellsBatchingPeriod={100}
       stickySectionHeadersEnabled={true}
+      removeClippedSubviews={true}
     />
   )
 }
+
+const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo }) {
+  return (
+    <View style={{ flexDirection: 'column' }}>
+      <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
+        No QSOs yet!
+      </Text>
+      <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
+        Currently set to
+      </Text>
+      <Text style={{ flex: 1, marginTop: styles.oneSpace * 1, textAlign: 'center', fontWeight: 'bold' }}>
+        {[vfo.freq ? fmtFreqInMHz(vfo.freq) + ' MHz' : vfo.band, vfo.mode].filter(x => x).join(' • ')}
+      </Text>
+    </View>
+  )
+})
+
 export default QSOList

@@ -109,6 +109,8 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     },
     compactRow: {
       height: oneSpace * 4,
+      maxHeight: oneSpace * 4,
+      minHeight: oneSpace * 4,
       paddingHorizontal: oneSpace,
       paddingVertical: halfSpace,
       borderBottomWidth: 1,

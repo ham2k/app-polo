@@ -61,6 +61,7 @@
     "react-native-document-picker": "^9.3",
     "react-native-drawer-layout": "^3.3",
     "react-native-gesture-handler": "^2.17",
+    "react-native-get-item-layout-section-list": "^0.1.0",
     "react-native-maps": "^1.15.4",
     "react-native-markdown-display": "^7.0",
     "react-native-pager-view": "^6.3",

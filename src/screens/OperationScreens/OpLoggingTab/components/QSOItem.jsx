@@ -17,10 +17,6 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findBestHook } from '../../../../extensions/registry'
 
-export function guessItemHeight (qso, styles) {
-  return styles.compactRow.height + styles.compactRow.borderBottomWidth
-}
-
 const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress, styles, selected, settings, refHandlers }) {
   const theirInfo = useMemo(() => {
     if (qso?.their?.entityPrefix) {
