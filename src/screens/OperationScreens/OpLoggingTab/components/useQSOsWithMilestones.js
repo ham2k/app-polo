@@ -11,6 +11,7 @@ import { selectQSOs } from '../../../../store/qsos'
 import { scoringRefsHandlersForOperation } from './LoggingPanel/CallInfo'
 
 import { useMemo } from 'react'
+import { current } from '@reduxjs/toolkit'
 
 const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
@@ -43,15 +44,22 @@ export function useQSOsWithMilestones ({ operation, settings }) {
       }
       currentSection.data.push(qso)
 
-      scoringRefHandlers.forEach(({ handler, ref }) => {
-        const qsoScore = handler.scoringForQSO({ qso, qsos, operation, ref })
-        const key = ref?.type ?? handler.key
-        if (handler.accumulateScoreForDay) {
-          currentSection.scores[key] = handler.accumulateScoreForDay({ qsoScore, score: currentSection.scores[key], operation, ref })
-        } else if (handler.accumulateScoreForOperation) {
-          currentSection.scores[key] = handler.accumulateScoreForOperation({ qsoScore, score: currentSection.scores[key], operation, ref })
-        }
-      })
+      if (!qso.deleted) {
+        currentSection.count = (currentSection.count || 0) + 1
+
+        scoringRefHandlers.forEach(({ handler, ref }) => {
+          const qsoScore = handler.scoringForQSO({ qso, qsos, operation, ref })
+
+          const key = ref?.type ?? handler.key
+          if (handler.accumulateScoreForDay) {
+            currentSection.scores[key] = handler.accumulateScoreForDay({ qsoScore, score: currentSection.scores[key], operation, ref })
+          } else if (handler.accumulateScoreForOperation) {
+            currentSection.scores[key] = handler.accumulateScoreForOperation({ qsoScore, score: currentSection.scores[key], operation, ref })
+          }
+        })
+      } else {
+        currentSection.deleted = (currentSection.deleted || 0) + 1
+      }
     }
     return sections
   }, [qsos, operation, settings])

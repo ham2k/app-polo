@@ -19,15 +19,15 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
       <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
         {fmtDateZuluDynamic(section.day)}
       </Text>
-      <Text style={[styles.fields.header, { flex: 0, textAlign: 'right', minWidth: styles.oneSpace * 11 }]}>
+      <Text style={[styles.fields.header, { flex: 0, textAlign: 'right', minWidth: styles.oneSpace * 8 }]}>
         {
-            section.data.length === 0 ? (
+            section.count === 0 ? (
               'No QSOs'
             ) : (
-              section.data.length === 1 ? (
+              section.count === 1 ? (
                 '1 QSO'
               ) : (
-                `${fmtNumber(section.data.length)} QSOs`
+                `${fmtNumber(section.count)} QSOs`
               )
             )
           }
@@ -43,15 +43,12 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
           return (
             <Text key={key} style={[styles.fields.header, { marginLeft: styles.oneSpace, textAlign: 'right', opacity: score.activated === false ? 0.5 : 1 }]}>
               {score.icon ? (
-                refKeys.map((refKey, index) => (
-                  <Icon
-                    key={refKey}
-                    source={score.icon}
-                    size={styles.normalFontSize}
-                    color={score.activated === true ? styles.colors.important : undefined }
-                    style={styles.fields.icon}
-                  />
-                ))
+                <Icon
+                  source={score.icon}
+                  size={styles.normalFontSize}
+                  color={score.activated === true ? styles.colors.important : undefined }
+                  style={styles.fields.icon}
+                />
               ) : (
                 `${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ' '}`
               )}
