@@ -11,7 +11,6 @@ import { selectQSOs } from '../../../../store/qsos'
 import { scoringRefsHandlersForOperation } from './LoggingPanel/CallInfo'
 
 import { useMemo } from 'react'
-import { current } from '@reduxjs/toolkit'
 
 const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 

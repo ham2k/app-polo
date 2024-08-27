@@ -28,7 +28,7 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export function OpInfoPanel ({ operation, qsos, style, themeColor }) {
+export function OpInfoPanel ({ operation, qsos, sections, style, themeColor }) {
   const styles = useThemedStyles(prepareStyles, themeColor)
 
   const now = useSelector(selectSecondsTick)
