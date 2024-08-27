@@ -6,7 +6,6 @@
  */
 
 import CodePush from 'react-native-code-push'
-import packageJson from '../../../../package.json'
 import loadExtensions from '../../../extensions/loadExtensions'
 
 import { getOperations } from '../../operations'
@@ -33,11 +32,6 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
 
   setTimeout(async () => {
     dispatch(resetRuntimeMessages())
-    if (packageJson.versionName) {
-      dispatch(addRuntimeMessage(`## ${packageJson.versionName} Release`))
-    } else {
-      dispatch(addRuntimeMessage(`## Version ${packageJson.version}`))
-    }
 
     const minimumTimePromise = new Promise(resolve => {
       setTimeout(() => { resolve() }, 1000)

@@ -42,14 +42,23 @@ function prepareStyles (baseTheme, height) {
       flexDirection: 'column',
       justifyContent: 'space-between'
     },
-    titleBox: {
-      marginTop: height * 0.15
+    titleBoxTop: {
+      height: '50%',
+      justifyContent: 'flex-end'
+    },
+    titleBoxBottom: {
+      // marginTop: height * 0.15
+      justifyContent: 'flex-start',
+      marginBottom: baseTheme.oneSpace * 2,
+      flex: 0
     },
     messagesBox: {
       marginBottom: height * 0.05,
-      minHeight: baseTheme.oneSpace * 20,
+      flex: 1,
+      // minHeight: baseTheme.oneSpace * 20,
       justifyContent: 'flex-end',
-      alignItems: 'center'
+      alignItems: 'center',
+      overflow: 'hidden'
     },
     ham2k: {
       fontSize: baseTheme.normalFontSize * 1.7,
@@ -77,7 +86,7 @@ function prepareStyles (baseTheme, height) {
       fontWeight: 400,
       textShadowColor: '#000',
       textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 1.5,
+      textShadowRadius: baseTheme.oneSpace * 1,
       color: '#FFF',
       textAlign: 'center',
       marginTop: baseTheme.oneSpace
@@ -173,8 +182,10 @@ export default function StartScreen ({ setAppState }) {
     <ImageBackground source={SPLASH_IMAGE} style={styles.root}>
       <SafeAreaView>
         <GestureHandlerRootView style={styles.container}>
-          <Pressable style={styles.titleBox} onPress={() => { handleInterruption(); return true }}>
+          <Pressable style={styles.titleBoxTop} onPress={() => { handleInterruption(); return true }}>
             <Text style={styles.ham2k}>Ham2K</Text>
+          </Pressable>
+          <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }}>
             <Text style={styles.polo} onPressIn={handleInterruption}>Portable Logger</Text>
             <Text style={styles.version}>{versionName}</Text>
           </Pressable>
