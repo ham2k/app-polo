@@ -10,17 +10,20 @@ import { ScrollView } from 'react-native'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { OpInfoPanel } from './OpInfoTab/components/OpInfoPanel'
+import { useSelector } from 'react-redux'
+import { selectSectionedQSOs } from '../../store/qsos'
 
 export default function OpInfoScreen ({ navigation, route }) {
   const call = route?.params?.call
   const operation = route?.params?.operation ?? {}
-  const qso = route?.params?.qso ?? { their: { call } }
+
+  const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid))
 
   const styles = useThemedStyles()
 
-  useEffect(() => {
-    navigation.setOptions({ title: call })
-  }, [navigation, call])
+  // useEffect(() => {
+  //   navigation.setOptions({ title: "" })
+  // }, [navigation, call])
 
   return (
     <ScrollView style={{ height: '100%' }} contentContainerStyle={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch' }}>
@@ -28,7 +31,9 @@ export default function OpInfoScreen ({ navigation, route }) {
         styles={styles}
         themeColor={'tertiary'}
         call={call}
-        qso={qso}
+        sections={sections}
+        qsos={qsos}
+        activeQSOs={activeQSOs}
         operation={operation}
       />
     </ScrollView>

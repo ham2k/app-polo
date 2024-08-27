@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import { View } from 'react-native'
 import { useSelector } from 'react-redux'
@@ -18,7 +18,7 @@ import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectVFO } from '../../../store/station/stationSlice'
 import QSOList from './components/QSOList'
 import LoggingPanel from './components/LoggingPanel'
-import { useQSOsWithMilestones } from './components/useQSOsWithMilestones'
+import { selectSectionedQSOs } from '../../../store/qsos'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
@@ -33,8 +33,7 @@ export default function OpLoggingTab ({ navigation, route }) {
   const settings = useSelector(selectSettings)
   const online = useSelector(selectRuntimeOnline)
 
-  const { sections, qsos } = useQSOsWithMilestones({ operation, settings })
-  const activeQSOs = useMemo(() => qsos.filter(qso => !qso.deleted), [qsos])
+  const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid))
 
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
@@ -58,6 +57,10 @@ export default function OpLoggingTab ({ navigation, route }) {
     }
   }, [navigation, activeQSOs, styles?.smOrLarger])
 
+  const showOpInfo = useCallback(() => {
+    navigation.navigate('OpInfo', { operation, uuid: operation.uuid })
+  }, [navigation, operation])
+
   return (
     <View style={flexOne}>
       <QSOList
@@ -68,6 +71,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         settings={settings}
         operation={operation}
         ourInfo={ourInfo}
+        onHeaderPress={showOpInfo}
       />
 
       <LoggingPanel

@@ -11,7 +11,7 @@ import { View } from 'react-native'
 
 import { selectOperation } from '../../../store/operations'
 import { useUIState } from '../../../store/ui'
-import { selectQSOs } from '../../../store/qsos'
+import { selectSectionedQSOs } from '../../../store/qsos'
 
 import { CallInfoPanel } from './components/CallInfoPanel'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -21,8 +21,7 @@ export default function OpInfoTab ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const [loggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
-  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
-  const activeQSOs = useMemo(() => qsos.filter(q => !q.deleted), [qsos])
+  const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid))
 
   const themeColor = useMemo(() => {
     return (loggingState.selectedKey === 'new-qso') ? 'tertiary' : 'secondary'
@@ -32,7 +31,7 @@ export default function OpInfoTab ({ navigation, route }) {
 
   return (
     <View style={{ height: '100%', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch', backgroundColor: styles.theme.colors[`${themeColor}Container`] }}>
-      <OpInfoPanel styles={styles} style={{ }} qsos={activeQSOs} operation={operation} themeColor={themeColor} />
+      <OpInfoPanel styles={styles} style={{ }} qsos={qsos} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
       <CallInfoPanel styles={styles} style={{ flexDirection: 'column-reverse' }} qso={loggingState.qso} operation={operation} themeColor={themeColor} />
     </View>
   )

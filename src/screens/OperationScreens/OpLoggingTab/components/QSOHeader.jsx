@@ -6,21 +6,22 @@
  */
 
 import React from 'react'
-import { Icon, Text } from 'react-native-paper'
+import { Icon, Text, TouchableRipple } from 'react-native-paper'
 
 import { fmtDateZuluDynamic } from '../../../../tools/timeFormats'
-import { View } from 'react-native'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
+import { View } from 'react-native'
 
-const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings }) {
+const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings, onHeaderPress }) {
   return (
-    <View style={styles.headerRow}>
-      <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
-        {fmtDateZuluDynamic(section.day)}
-      </Text>
-      <Text style={[styles.fields.header, { flex: 0, textAlign: 'right', minWidth: styles.oneSpace * 8 }]}>
-        {
+    <TouchableRipple onPress={onHeaderPress}>
+      <View style={styles.headerRow}>
+        <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
+          {fmtDateZuluDynamic(section.day)}
+        </Text>
+        <Text style={[styles.fields.header, { flex: 0, textAlign: 'right', minWidth: styles.oneSpace * 8 }]}>
+          {
             section.count === 0 ? (
               'No QSOs'
             ) : (
@@ -31,35 +32,36 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
               )
             )
           }
-      </Text>
+        </Text>
 
-      <Text style={[styles.fields.header, { flex: 1 }]}>{' '}</Text>
+        <Text style={[styles.fields.header, { flex: 1 }]}>{' '}</Text>
 
-      {Object.keys(section.scores ?? {}).sort().map(key => {
-        const score = section.scores[key]
-        const refKeys = Object.keys(score.refs ?? { one: true })
+        {Object.keys(section.scores ?? {}).sort().map(key => {
+          const score = section.scores[key]
+          const refKeys = Object.keys(score.refs ?? { one: true })
 
-        if (score.summary && (score.icon || score.label)) {
-          return (
-            <Text key={key} style={[styles.fields.header, { marginLeft: styles.oneSpace, textAlign: 'right', opacity: score.activated === false ? 0.5 : 1 }]}>
-              {score.icon ? (
-                <Icon
-                  source={score.icon}
-                  size={styles.normalFontSize}
-                  color={score.activated === true ? styles.colors.important : undefined }
-                  style={styles.fields.icon}
-                />
-              ) : (
+          if (score.summary && (score.icon || score.label)) {
+            return (
+              <Text key={key} style={[styles.fields.header, { marginLeft: styles.oneSpace, textAlign: 'right', opacity: score.activated === false ? 0.5 : 1 }]}>
+                {score.icon ? (
+                  <Icon
+                    source={score.icon}
+                    size={styles.normalFontSize}
+                    color={score.activated === true ? styles.colors.important : undefined }
+                    style={styles.fields.icon}
+                  />
+                ) : (
                 `${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ' '}`
-              )}
-              {' '}{score.summary}
-            </Text>
-          )
-        } else {
-          return null
-        }
-      })}
-    </View>
+                )}
+                {' '}{score.summary}
+              </Text>
+            )
+          } else {
+            return null
+          }
+        })}
+      </View>
+    </TouchableRipple>
   )
 })
 export default QSOHeader
