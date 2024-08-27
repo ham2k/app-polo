@@ -7,7 +7,6 @@
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../../tools/refTools'
-import { fmtDateZulu } from '../../../tools/timeFormats'
 
 import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { registerSOTADataFile, sotaFindOneByReference } from './SOTADataFile'
@@ -208,6 +207,8 @@ const ReferenceHandler = {
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
     if (!ref.ref) return {}
 
+    const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
+
     const { key, startOnMillis } = qso
     const theirRef = findRef(qso, Info.huntingType)
     const refCount = theirRef ? 1 : 0
@@ -221,9 +222,11 @@ const ReferenceHandler = {
       // Contacts with the same station don't count for the 4 QSOs needed to activate the summit
       // But might count for hunter points if they are for a new summit or day
 
-      const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
+      const thisQSOTime = qso.startOnMillis ?? Date.now()
+      const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
+
       const sameRefs = nearDupes.filter(q => findRef(q, Info.huntingType)?.ref === theirRef.ref)
-      const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
+      const sameDay = nearDupes.filter(q => (q.startOnMillis % TWENTY_FOUR_HOURS_IN_MILLIS) === day).length !== 0
       if (sameDay && sameRefs) {
         return { value: 0, refCount, points: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
@@ -262,7 +265,7 @@ const ReferenceHandler = {
     }
 
     if (score.refCount > 0) {
-      const label = score.primaryRef ? 'S2S' : 'S'
+      const label = ref?.ref ? 'S2S' : 'S'
       score.summary = [score.summary, `${score.refCount} ${label}`].filter(x => x).join(' • ')
     }
 

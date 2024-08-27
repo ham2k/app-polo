@@ -7,7 +7,6 @@
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
-import { fmtDateZulu } from '../../../tools/timeFormats'
 
 import { Info } from './WWBOTAInfo'
 import { WWBOTAActivityOptions } from './WWBOTAActivityOptions'
@@ -176,6 +175,8 @@ const ReferenceHandler = {
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
     if (!ref.ref) return {}
 
+    const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
+
     const { band, key, startOnMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const points = refs.length
@@ -185,9 +186,10 @@ const ReferenceHandler = {
     if (nearDupes.length === 0) {
       return { counts: 1, points, type: Info.activationType }
     } else {
-      const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
+      const thisQSOTime = qso.startOnMillis ?? Date.now()
+      const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
-      const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
+      const sameDay = nearDupes.filter(q => (q.startOnMillis % TWENTY_FOUR_HOURS_IN_MILLIS) === day).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
       if (sameBand && sameDay) {
         if (points > 0 && !sameRefs) { // Doesn't count towards activation, but towards B2B award.

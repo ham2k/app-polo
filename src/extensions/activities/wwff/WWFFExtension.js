@@ -14,7 +14,6 @@ import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
 import { WWFFPostSpot } from './WWFFPostSpot'
 import { apiGMA } from '../../../store/apiGMA'
-import { fmtDateZulu } from '../../../tools/timeFormats'
 
 const Extension = {
   ...Info,
@@ -187,6 +186,8 @@ const ReferenceHandler = {
     const { band, mode, key, startOnMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
 
+    const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
+
     if (refs.length === 0 && !ref?.ref) return { value: 0 } // If not activating, only counts if other QSO has a WWFF ref
 
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
@@ -194,10 +195,12 @@ const ReferenceHandler = {
     if (nearDupes.length === 0) {
       return { value: 1, type: Info.activationType }
     } else {
-      const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
+      const thisQSOTime = qso.startOnMillis ?? Date.now()
+      const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
+
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
-      const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
+      const sameDay = nearDupes.filter(q => (q.startOnMillis % TWENTY_FOUR_HOURS_IN_MILLIS) === day).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
       if (sameBand && sameMode && sameDay && (sameRefs || refs.length === 0)) {
         return { value: 0, alerts: ['duplicate'], type: Info.activationType }

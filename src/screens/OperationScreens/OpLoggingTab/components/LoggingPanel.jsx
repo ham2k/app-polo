@@ -38,7 +38,7 @@ import { findHooks } from '../../../../extensions/registry'
 
 const DEBUG = false
 
-export default function LoggingPanel ({ style, operation, vfo, qsos, activeQSOs, settings, online, ourInfo }) {
+export default function LoggingPanel ({ style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo }) {
   const navigation = useNavigation()
 
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})

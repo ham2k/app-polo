@@ -13,7 +13,6 @@ import { POTAActivityOptions } from './POTAActivityOptions'
 import { potaFindParkByReference, registerPOTAAllParksData } from './POTAAllParksData'
 import { POTALoggingControl } from './POTALoggingControl'
 import { POTAPostSpot } from './POTAPostSpot'
-import { fmtDateZulu } from '../../../tools/timeFormats'
 import { apiPOTA } from '../../../store/apiPOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 
@@ -219,6 +218,9 @@ const ReferenceHandler = {
 
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
     const { band, mode, key, startOnMillis } = qso
+
+    const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
+
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const refCount = refs.length
     let value
@@ -238,10 +240,12 @@ const ReferenceHandler = {
     if (nearDupes.length === 0) {
       return { value, refCount, type }
     } else {
-      const day = fmtDateZulu(qso.startOnMillis ?? Date.now())
+      const thisQSOTime = qso.startOnMillis ?? Date.now()
+      const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
+
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
-      const sameDay = nearDupes.filter(q => fmtDateZulu(q.startOnMillis) === day).length !== 0
+      const sameDay = nearDupes.filter(q => (q.startOnMillis % TWENTY_FOUR_HOURS_IN_MILLIS) === day).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
       if (sameBand && sameMode && sameDay && (sameRefs || refs.length === 0)) {
         return { value: 0, refCount, alerts: ['duplicate'], type }
@@ -285,10 +289,10 @@ const ReferenceHandler = {
 
     score.activated = score.value >= 10
 
-    if (!score.activated) {
-      score.summary = `${score.value}/10`
+    if (score.activated) {
+      score.summary = '✓'
     } else {
-      score.summary = ''
+      score.summary = `${score.value}/10`
     }
 
     if (score.refCount > 0) {

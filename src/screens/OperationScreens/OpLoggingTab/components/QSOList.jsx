@@ -159,7 +159,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
   }
 }
 
-const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo }) {
+const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress }) {
   const { width } = useWindowDimensions()
 
   const [componentWidth, setComponentWidth] = useUIState()
@@ -256,9 +256,10 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
         operation={operation}
         settings={settings}
         styles={styles}
+        onHeaderPress={onHeaderPress}
       />
     )
-  }, [operation, settings, styles])
+  }, [operation, settings, styles, onHeaderPress])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps -- useCallback prefers to see an inline function
   const calculateLayout = useCallback(
