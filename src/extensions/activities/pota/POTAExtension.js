@@ -285,10 +285,10 @@ const ReferenceHandler = {
 
     score.activated = score.value >= 10
 
-    if (score.activated) {
-      score.summary = '✓'
-    } else {
+    if (!score.activated) {
       score.summary = `${score.value}/10`
+    } else {
+      score.summary = ''
     }
 
     if (score.refCount > 0) {

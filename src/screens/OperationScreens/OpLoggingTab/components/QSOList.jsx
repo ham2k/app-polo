@@ -77,7 +77,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
         ...themeStyles.text.lighter,
         flex: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 7,
-        marginLeft: themeStyles.oneSpace,
+        marginLeft: 0,
         textAlign: 'right'
       },
       freq: {
@@ -288,7 +288,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
       maxToRenderPerBatch={30}
       updateCellsBatchingPeriod={100}
       stickySectionHeadersEnabled={true}
-      removeClippedSubviews={true}
+      removeClippedSubviews={false} // Buggy on Android
     />
   )
 }

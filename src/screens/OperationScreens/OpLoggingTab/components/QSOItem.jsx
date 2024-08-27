@@ -8,7 +8,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 
-import { fmtDateTimeZuluDynamic } from '../../../../tools/timeFormats'
+import { fmtTimeZulu } from '../../../../tools/timeFormats'
 import { View } from 'react-native'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
@@ -55,7 +55,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
   return (
     <TouchableRipple onPress={pressHandler} style={selected ? styles.selectedRow : styles.unselectedRow}>
       <View style={styles.compactRow}>
-        <Text style={styles.fields.time}>{fmtDateTimeZuluDynamic(qso.startOnMillis, { compact: !styles.extendedWidth })}</Text>
+        <Text style={styles.fields.time}>{fmtTimeZulu(qso.startOnMillis, { compact: !styles.extendedWidth })}</Text>
         <Text style={styles.fields.freq}>
           {freqParts[0] && <Text style={styles.fields.freqMHz}>{freqParts[0]}.</Text>}
           {freqParts[1] && <Text style={styles.fields.freqKHz}>{freqParts[1]}</Text>}
