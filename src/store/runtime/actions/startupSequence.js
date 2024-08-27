@@ -5,7 +5,6 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import packageJson from '../../../../package.json'
 import loadExtensions from '../../../extensions/loadExtensions'
 
 import { getOperations } from '../../operations'
@@ -27,11 +26,6 @@ const MESSAGES = [
 export const startupSequence = (onReady) => (dispatch) => {
   setTimeout(async () => {
     dispatch(resetRuntimeMessages())
-    if (packageJson.versionName) {
-      dispatch(addRuntimeMessage(`## ${packageJson.versionName} Release`))
-    } else {
-      dispatch(addRuntimeMessage(`## Version ${packageJson.version}`))
-    }
 
     const minimumTimePromise = new Promise(resolve => {
       setTimeout(() => { resolve() }, 1000)
