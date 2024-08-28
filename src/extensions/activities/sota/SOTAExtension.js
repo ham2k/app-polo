@@ -226,7 +226,7 @@ const ReferenceHandler = {
       const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
 
       const sameRefs = nearDupes.filter(q => findRef(q, Info.huntingType)?.ref === theirRef.ref)
-      const sameDay = nearDupes.filter(q => (q.startOnMillis % TWENTY_FOUR_HOURS_IN_MILLIS) === day).length !== 0
+      const sameDay = nearDupes.filter(q => (q.startOnMillis - (q.startOnMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
       if (sameDay && sameRefs) {
         return { value: 0, refCount, points: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
