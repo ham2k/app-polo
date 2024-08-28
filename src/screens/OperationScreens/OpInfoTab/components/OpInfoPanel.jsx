@@ -14,6 +14,7 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { fmtDateZuluDynamic, fmtTimeBetween } from '../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../store/time'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -85,7 +86,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
             <Text style={[styles.markdown.body, { marginBottom: styles.halfSpace }]}>
               <Text style={{ fontWeight: 'bold' }}>{fmtDateZuluDynamic(section.day)}: </Text>
               <Text>
-                {section.count === 0 ? 'No QSOs' : section.count === 1 ? '1 QSO' : `${section.count} QSOs`}
+                {section.count === 0 ? 'No QSOs' : section.count === 1 ? '1 QSO' : `${fmtNumber(section.count ?? 0)} QSOs`}
               </Text>
             </Text>
             {Object.keys(section.scores ?? {}).sort().map(key => {
