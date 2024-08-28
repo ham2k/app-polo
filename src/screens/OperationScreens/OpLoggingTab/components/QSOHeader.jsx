@@ -28,7 +28,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
               section.count === 1 ? (
                 '1 QSO'
               ) : (
-                `${fmtNumber(section.count)} QSOs`
+                `${fmtNumber(section.count ?? 0)} QSOs`
               )
             )
           }

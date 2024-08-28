@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { ScrollView } from 'react-native'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'

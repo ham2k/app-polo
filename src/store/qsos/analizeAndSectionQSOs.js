@@ -25,7 +25,7 @@ export function analizeAndSectionQSOs ({ qsos, operation, settings }) {
 
     if (!currentSection || currentSection.day !== day) {
       const previousSection = currentSection
-      currentSection = { day, data: [] }
+      currentSection = { day, data: [], count: 0 }
       sections.push(currentSection)
 
       scoringRefHandlers.forEach(({ handler, ref }) => {

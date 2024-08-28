@@ -31,7 +31,7 @@ export default function OpInfoTab ({ navigation, route }) {
 
   return (
     <View style={{ height: '100%', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch', backgroundColor: styles.theme.colors[`${themeColor}Container`] }}>
-      <OpInfoPanel styles={styles} style={{ }} qsos={qsos} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
+      <OpInfoPanel styles={styles} style={{ maxHeight: '60%' }} qsos={qsos} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
       <CallInfoPanel styles={styles} style={{ flexDirection: 'column-reverse' }} qso={loggingState.qso} operation={operation} themeColor={themeColor} />
     </View>
   )
