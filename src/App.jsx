@@ -38,6 +38,7 @@ import OperationStationInfoScreen from './screens/OperationScreens/OpSettingsTab
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
 import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
+import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -81,6 +82,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="OperationBadgeScreen"
             options={{ headerMode: 'none', headerShown: false }}
             component={OperationBadgeScreen}
+          />
+
+          <Stack.Screen name="OperationDetails"
+            options={{ title: 'Operation Details', headerBackTitle: 'Operation' }}
+            component={OperationDetailsScreen}
           />
 
           <Stack.Screen name="OperationStationInfo"

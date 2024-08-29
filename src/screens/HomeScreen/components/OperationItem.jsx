@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { View } from 'react-native'
 import { Text, TouchableRipple } from 'react-native-paper'
 import { fmtNumber } from '@ham2k/lib-format-tools'
@@ -18,12 +18,19 @@ export default function OperationItem ({ operation, settings, onPress, styles })
     onPress && onPress(operation)
   }, [onPress, operation])
 
+  const title = useMemo(() => {
+    // eslint-disable-next-line no-shadow
+    let title = [operation.title, operation.userTitle].filter(x => x).join(' - ')
+    title = title || 'General Operation'
+    return title
+  }, [operation.title, operation.userTitle])
+
   return (
     <TouchableRipple onPress={pressHandler} style={styles.rowRoot}>
       <View style={styles.row}>
         <View style={styles.rowTop}>
           <View style={styles.rowTopLeft}>
-            <Ham2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCall || settings.operatorCall}`**{' '}{operation.title || 'General Operation'}</Ham2kMarkdown>
+            <Ham2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCall || settings.operatorCall}`**{' '}{title}</Ham2kMarkdown>
           </View>
           <View style={styles.rowTopRight}>
             <View style={styles.countContainer}>

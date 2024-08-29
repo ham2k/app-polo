@@ -65,17 +65,16 @@ export default function OperationScreen (props) {
   const headerOptions = useMemo(() => {
     let options = {}
     if (operation?.stationCall) {
-      let call = operation?.stationCall
-      if (operation.operatorCall && operation.operatorCall !== operation.stationCall) {
-        call = `${call} (op ${operation.operatorCall})`
+      options = {
+        title: buildTitleForOperation({ operatorCall: operation.operatorCall, stationCall: operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
+        subTitle: operation.subtitle
       }
-      options = { title: `${call} ${operation?.title || 'General Operation'}`, subTitle: operation.subtitle }
     } else {
       options = { title: 'New Operation' }
     }
     options.closeInsteadOfBack = true
     return options
-  }, [operation.operatorCall, operation.stationCall, operation.subtitle, operation?.title])
+  }, [operation.operatorCall, operation.stationCall, operation.subtitle, operation.title, operation.userTitle])
 
   const dimensions = useWindowDimensions()
 
@@ -293,5 +292,20 @@ export default function OperationScreen (props) {
         </ScreenContainer>
       </>
     )
+  }
+}
+
+export function buildTitleForOperation (operation) {
+  if (operation?.stationCall) {
+    let call = operation?.stationCall
+    if (operation.operatorCall && operation.operatorCall !== operation.stationCall) {
+      call = `${call} (op ${operation.operatorCall})`
+    }
+    let title = [operation.title, operation.userTitle].filter(x => x).join(' - ')
+    title = title || 'General Operation'
+
+    return [call, title].join(' ')
+  } else {
+    return 'New Operation'
   }
 }

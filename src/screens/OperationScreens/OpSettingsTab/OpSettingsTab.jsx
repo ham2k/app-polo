@@ -27,6 +27,7 @@ import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { reportError, trackOperation } from '../../../distro'
 import { selectRuntimeOnline } from '../../../store/runtime'
+import { buildTitleForOperation } from '../OperationScreen'
 
 function prepareStyles (baseStyles) {
   return {
@@ -127,7 +128,15 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   return (
     <ScrollView style={{ flex: 1 }}>
-      <Ham2kListSection title={'Operation Details'}>
+      <Ham2kListSection>
+
+        <Ham2kListItem
+          title={operation.userTitle || 'Operation Details'}
+          description={operation.notes || buildTitleForOperation(operation)}
+          titleStyle={{ color: stationInfoColor }}
+          left={() => <List.Icon color={stationInfoColor} style={{ marginLeft: styles.oneSpace * 2 }} icon="book-outline" />}
+          onPress={() => navigation.navigate('OperationDetails', { operation: operation.uuid })}
+        />
 
         <Ham2kListItem
           title="Station Info"
