@@ -116,6 +116,10 @@ const createCallNotesFetcher = (file) => async () => {
     'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
   })
 
+  if (response?.respInfo?.status >= 300) {
+    throw new Error(`HTTP Error ${response.status} fetching ${url}`)
+  }
+
   const body64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
   const buffer = Buffer.from(body64, 'base64')
   const body = buffer.toString('utf8')
@@ -194,7 +198,7 @@ async function resolveDownloadUrl (url) {
 
   if (url.match(/^https:\/\/(www\.)*dropbox\.com\//i)) {
     if (!url.match(/&dl=1/)) {
-      return url.replaceAll(/&dl=0/g, '&dl=1')
+      return `${url.replaceAll(/&dl=0/g, '')}&dl=1`
     }
   } else if (url.match(/^https:\/\/(www\.)*icloud\.com\/iclouddrive/i)) {
     const parts = url.match(/iclouddrive\/([\w_]+)/)
