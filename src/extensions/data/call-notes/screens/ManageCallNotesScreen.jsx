@@ -10,66 +10,68 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Button, Dialog, List, Switch, Text } from 'react-native-paper'
 import { ScrollView } from 'react-native'
+import UUID from 'react-native-uuid'
 
-import ScreenContainer from '../../../../screens/components/ScreenContainer'
-import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-import { selectExtensionSettings, setExtensionSettings } from '../../../../store/settings'
 import { BUILT_IN_NOTES, CallNotesData, Info, createDataFileDefinition } from '../CallNotesExtension'
-import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
-import { registerDataFile, unRegisterDataFile } from '../../../../store/dataFiles'
 import { loadDataFile } from '../../../../store/dataFiles/actions/dataFileFS'
+import { registerDataFile, unRegisterDataFile } from '../../../../store/dataFiles'
+import { selectExtensionSettings, setExtensionSettings } from '../../../../store/settings'
+import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
+import ScreenContainer from '../../../../screens/components/ScreenContainer'
+import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
 import { Ham2kListItem } from '../../../../screens/components/Ham2kListItem'
 import { Ham2kListSection } from '../../../../screens/components/Ham2kListSection'
 import { Ham2kDialog } from '../../../../screens/components/Ham2kDialog'
 
-const FileDefinitionDialog = ({ index, extSettings, styles, dispatch, onDialogDone }) => {
-  const def = useMemo(() => extSettings.customFiles[index], [extSettings.customFiles, index])
+const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDialogDone }) => {
+  const def = useMemo(() => extSettings.customFiles.find(f => f.identifier === identifier), [extSettings.customFiles, identifier])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const originalDef = useMemo(() => extSettings.customFiles[index], [index])
+  const originalLocation = useMemo(() => def.location, [])
 
   const updateDef = useCallback((values) => {
     const newFiles = [...extSettings.customFiles]
-    newFiles[index] = { ...def, ...values }
+    let pos = newFiles.findIndex(f => f.identifier === identifier)
+    if (pos < 0) pos = newFiles.length
+    newFiles[pos] = { ...def, ...values }
 
     dispatch(setExtensionSettings({ key: Info.key, customFiles: newFiles }))
-  }, [dispatch, index, def, extSettings?.customFiles])
+  }, [extSettings.customFiles, def, dispatch, identifier])
 
   const handleDelete = useCallback(() => {
     const newFiles = [...extSettings.customFiles]
-    newFiles.splice(index, 1)
-    dispatch(setExtensionSettings({ key: Info.key, customFiles: newFiles }))
+    let pos = newFiles.findIndex(f => f.identifier === identifier)
+    newFiles.splice(pos, 1)
+    const enabledNotes = { ...extSettings.enabledNotes }
+    delete enabledNotes[identifier]
+    dispatch(setExtensionSettings({ key: Info.key, customFiles: newFiles, enabledNotes }))
 
-    const pos = CallNotesData.files.findIndex(f => f.location === originalDef.location)
+    pos = CallNotesData.files.findIndex(f => f.identifier === identifier)
     if (pos >= 0) {
       CallNotesData.files.splice(pos, 1)
-      delete CallNotesData.notes[originalDef.location]
-      unRegisterDataFile(`call-notes-${originalDef.location}`)
-      CallNotesData.activeFiles[originalDef.location] = false
+      delete CallNotesData.notes[identifier]
+      unRegisterDataFile(`call-notes-${identifier}`)
+      CallNotesData.activeFiles[identifier] = false
     }
 
     onDialogDone && onDialogDone()
-  }, [dispatch, extSettings.customFiles, index, onDialogDone, originalDef])
+  }, [dispatch, extSettings.customFiles, extSettings.enabledNotes, identifier, onDialogDone])
 
   const handleDone = useCallback(async () => {
-    const originallyEnabled = CallNotesData.activeFiles[originalDef.location]
-    if (def.location !== originalDef.location) {
-      const pos = CallNotesData.files.findIndex(f => f.location === originalDef.location)
-      if (pos >= 0) {
-        CallNotesData.files[pos] = def
-      } else {
-        CallNotesData.files.push(def)
-      }
-      delete CallNotesData.notes[originalDef.location]
-      unRegisterDataFile(`call-notes-${originalDef.location}`)
-      CallNotesData.activeFiles[originalDef.location] = false
+    let pos = CallNotesData.files.findIndex(f => f.identifier === identifier)
+    if (pos <= 0) pos = CallNotesData.files.length
+    CallNotesData.files[pos] = def
 
+    if (originalLocation !== def.location) {
+      unRegisterDataFile(`call-notes-${identifier}`)
       registerDataFile(createDataFileDefinition(def))
-      await dispatch(loadDataFile(`call-notes-${def.location}`))
-      CallNotesData.activeFiles[def.location] = originallyEnabled
+      if (CallNotesData.activeFiles[identifier]) {
+        dispatch(loadDataFile(`call-notes-${identifier}`))
+      }
     }
+
     onDialogDone && onDialogDone()
-  }, [onDialogDone, def, dispatch, originalDef])
+  }, [originalLocation, def, onDialogDone, identifier, dispatch])
 
   return (
     <Ham2kDialog visible={true} onDismiss={onDialogDone}>
@@ -111,20 +113,19 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
     return extSettings?.customFiles || []
   }, [extSettings])
 
-  const enabledLocations = useMemo(() => {
-    const enabled = extSettings?.enabledLocations || {}
-    BUILT_IN_NOTES.forEach(def => {
-      enabled[def.location] = enabled[def.location] ?? true
-    })
-    return enabled
-  }, [extSettings?.enabledLocations])
-
   const [selectedFile, setSelectedFile] = useState()
 
-  const handleToggle = useCallback((location, value) => {
-    dispatch(setExtensionSettings({ key: Info.key, enabledLocations: { ...enabledLocations, [location]: value } }))
-    CallNotesData.activeFiles[location] = value
-  }, [dispatch, enabledLocations])
+  const handleToggle = useCallback((identifier, value) => {
+    dispatch(setExtensionSettings({ key: Info.key, enabledNotes: { ...extSettings.enabledNotes, [identifier]: value } }))
+    CallNotesData.activeFiles[identifier] = value
+  }, [dispatch, extSettings.enabledNotes])
+
+  const handleNewFile = useCallback(() => {
+    const identifier = UUID.v1()
+    dispatch(setExtensionSettings({ key: Info.key, customFiles: [...customFiles, { name: '', identifier }] }))
+    CallNotesData.activeFiles[identifier] = true
+    setSelectedFile(identifier)
+  }, [customFiles, dispatch])
 
   return (
     <ScreenContainer>
@@ -136,7 +137,7 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
               title={def.name}
               description={def.description}
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-account-outline" />}
-              right={() => <Switch value={!!enabledLocations[def.location]} onValueChange={(value) => handleToggle(def.location, value) } />}
+              right={() => <Switch value={extSettings.enabledNotes[def.identifier] !== false} onValueChange={(value) => handleToggle(def.identifier, value) } />}
             />
           ))}
         </Ham2kListSection>
@@ -147,24 +148,21 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
               title={def.name}
               description={def.location}
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-account-outline" />}
-              right={() => <Switch value={!!enabledLocations[def.location]} onValueChange={(value) => handleToggle(def.location, value) } />}
-              onPress={() => setSelectedFile(i)}
+              right={() => <Switch value={extSettings.enabledNotes[def.identifier] !== false} onValueChange={(value) => handleToggle(def.identifier, value) } />}
+              onPress={() => setSelectedFile(def.identifier)}
             />
           ))}
 
           <Ham2kListItem
             title={'Add a new file'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="plus" />}
-            onPress={() => {
-              dispatch(setExtensionSettings({ key: Info.key, customFiles: [...customFiles, { name: '' }] }))
-              setSelectedFile(customFiles.length)
-            }}
+            onPress={handleNewFile}
           />
 
         </Ham2kListSection>
         {selectedFile !== undefined && (
           <FileDefinitionDialog
-            index={selectedFile}
+            identifier={selectedFile}
             extSettings={extSettings}
             styles={styles}
             dispatch={dispatch}

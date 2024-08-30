@@ -19,7 +19,7 @@ import CallsignInput from '../../components/CallsignInput'
 import { batchUpdateQSOs, selectQSOs } from '../../../store/qsos'
 import { joinAnd } from '../../../tools/joinAnd'
 
-export default function OperationAddActivityScreen ({ navigation, route }) {
+export default function OperationStationInfoScreen ({ navigation, route }) {
   const styles = useThemedStyles()
 
   const dispatch = useDispatch()

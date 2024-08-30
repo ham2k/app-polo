@@ -24,11 +24,14 @@ export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers,
 
   let str = ''
 
-  str += `ADIF for ${title || operation?.title || 'Operation'} \n`
-  if (handler?.adifHeaderComment) str += handler.adifHeaderComment({ qsos, operation, common })
+  str += `ADIF for ${title || ((operation.stationCall ?? operation.operatorCall) + ' ' + operation?.title) || 'Operation'} \n`
   str += adifField('ADIF_VER', '3.1.4', { newLine: true })
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
+  if (operation.userTitle) str += adifField('X_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
+  if (operation.userTitle) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
+  if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common })) + '\n'
+
   str += '<EOH>\n'
 
   qsos.forEach(qso => {
@@ -66,6 +69,10 @@ export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers,
   })
 
   return str
+}
+
+function escapeForHeader (str) {
+  return str.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
 function modeToADIF (mode) {
