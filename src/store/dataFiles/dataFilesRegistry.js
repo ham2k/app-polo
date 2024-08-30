@@ -13,10 +13,10 @@ export function registerDataFile (definiton) {
   registeredDataFiles[definiton.key] = definiton
 }
 
-export function unRegisterDataFile (definiton) {
-  registeredDataFiles[definiton.key]?.onUnload && registeredDataFiles[definiton.key]?.onUnload()
-  removeDataFile(definiton.key)
-  delete registeredDataFiles[definiton.key]
+export function unRegisterDataFile (key) {
+  registeredDataFiles[key]?.onUnload && registeredDataFiles[key]?.onUnload()
+  removeDataFile(key)
+  delete registeredDataFiles[key]
 }
 
 export function getDataFileDefinition (key) {

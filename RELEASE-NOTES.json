@@ -1,5 +1,5 @@
 {
-  "24.9.0-pre5": {
+  "24.9.0-pre6": {
     "name": "September '24",
     "changes": [
       "Counting and scoring QSOs for an Operation",
@@ -7,7 +7,8 @@
       "Filter spots by Continent",
       "Split view can now be resized",
       "Add QSOs to an operation from an ADIF file",
-      "Operation Title and Notes"
+      "Operation Title and Notes",
+      "Fixed bugs related to loading Callsign Notes"
     ]
   },
   "24.8.0": {
