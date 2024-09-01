@@ -77,8 +77,8 @@ const Extension = {
 
       CallNotesData.files.push(file)
       registerDataFile(createDataFileDefinition(file))
-      // Load Call Note files without `await`, in the background
-      dispatch(loadDataFile(`call-notes-${file.location}`))
+      // Load in the background, don't `await`
+      dispatch(loadDataFile(`call-notes-${file.identifier}`))
     }
 
     registerHook('setting', {
@@ -215,7 +215,12 @@ async function resolveDownloadUrl (url) {
   url = url.trim()
 
   if (url.match(/^https:\/\/(www\.)*dropbox\.com\//i)) {
-    return `${url.replaceAll(/&dl=\d/g, '')}&dl=1`
+    url = url.replaceAll(/[&?]raw=\d/g, '').replaceAll(/[&?]dl=\d/g, '')
+    if (url.match(/\?/)) {
+      return `${url}&dl=1&raw=1`
+    } else {
+      return `${url}?dl=1&raw=1`
+    }
   } else if (url.match(/^https:\/\/(www\.)*icloud\.com\/iclouddrive/i)) {
     const parts = url.match(/iclouddrive\/([\w_]+)/)
     const response = await fetch('https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve', {
