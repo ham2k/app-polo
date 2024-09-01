@@ -644,6 +644,10 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
     clone.band = bandForFrequency(clone.freq)
   }
 
+  if (vfo.power) {
+    clone.power = vfo.power
+  }
+
   const activityHooks = findHooks('activity')
   activityHooks.forEach(activity => {
     if (activity.prepareNewQSO) {
