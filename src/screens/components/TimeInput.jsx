@@ -11,8 +11,6 @@ import { fmtTimeZulu } from '../../tools/timeFormats'
 import { useSelector } from 'react-redux'
 import { selectSecondsTick } from '../../store/time'
 
-const VALID_TIME_REGEX = /^(\d{1,2}|\d{1,2}:\d{2}|\d{1,2}:\d{2}:\d{2})$/
-
 export function TimeInput (props) {
   const { label, valueInMillis, onChange, onBlur, fieldId, innerRef } = props
 
@@ -56,8 +54,18 @@ export function TimeInput (props) {
     }
     const baseDate = fullBaseTime.split('T')[0]
 
-    if (text?.match(VALID_TIME_REGEX)) {
+    if (text?.match(/^\d{1,2}$/)) {
+      newValue = Date.parse(`${baseDate}T${text}:00:00Z`)
+    } else if (text?.match(/^\d{1,2}:\d{2}$/)) {
+      newValue = Date.parse(`${baseDate}T${text}:00Z`)
+    } else if (text?.match(/^\d{1,2}:\d{2}:\d{2}$/)) {
       newValue = Date.parse(`${baseDate}T${text}Z`)
+    } else if (text?.match(/^\d{1,4}$/)) {
+      const l = text.length
+      newValue = Date.parse(`${baseDate}T${text.substring(0, l - 2)}:${text.substring(l - 2, l)}:00Z`)
+    } else if (text?.match(/^\d{1,6}$/)) {
+      const l = text.length
+      newValue = Date.parse(`${baseDate}T${text.substring(0, l - 4)}:${text.substring(l - 4, l - 2)}:${text.substring(l - 2, l)}Z`)
     } else {
       const parts = text?.match(/^\d{2}:\d{2}:\d{2}([-+]\d{1,})([hms])$/)
       if (parts) {

@@ -8,7 +8,8 @@
       "Split view can now be resized",
       "Add QSOs to an operation from an ADIF file",
       "Operation Title and Notes",
-      "Fixed bugs related to loading Callsign Notes"
+      "Fixed bugs related to loading Callsign Notes",
+      "Date and time input fields now accept shorter formats"
     ]
   },
   "24.8.0": {

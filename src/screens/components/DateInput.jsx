@@ -57,12 +57,18 @@ export function DateInput (props) {
 
     if (text?.match(/^\d{1,2}$/)) {
       newValue = Date.parse(`${baseYear}-${baseMonth}-${text}T${baseTime}`)
-    } else if (text?.match(/^\d{1,2}-\d{1,2}$/)) {
+    } else if (text?.match(/^\d{1,2}[-/]\d{1,2}$/)) {
       newValue = Date.parse(`${baseYear}-${text}T${baseTime}`)
     } else if (text?.match(/^\d{4}$/)) {
       newValue = Date.parse(`${baseYear}-${text.substring(0, 2)}-${text.substring(2, 4)}T${baseTime}`)
-    } else if (text?.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) {
+    } else if (text?.match(/^\d{4}[-/]\d{1,2}[-/]\d{1,2}$/)) {
       newValue = Date.parse(`${text}T${baseTime}`)
+    } else if (text?.match(/^\d{4}\d{2}\d{2}$/)) {
+      newValue = Date.parse(`${text.substring(0, 4)}-${text.substring(4, 6)}-${text.substring(6, 8)}T${baseTime}`)
+    } else if (text?.match(/^\d{2}\d{2}\d{2}$/)) {
+      newValue = Date.parse(`20${text.substring(0, 2)}-${text.substring(2, 4)}-${text.substring(4, 6)}T${baseTime}`)
+    } else if (text?.match(/^[01]\d{3}$/)) {
+      newValue = Date.parse(`${baseYear}-${text.substring(0, 2)}-${text.substring(2, 4)}T${baseTime}`)
     } else {
       const parts = text?.match(/^\d{4}-\d{2}-\d{2}([-+]\d{1,})([dmw]{0,1})$/)
       if (parts) {
