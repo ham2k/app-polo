@@ -130,7 +130,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         else nextQSO = prepareNewQSO(operation, qsos, settings)
       }
 
-      if (qso?._isNew) {
+      if (qso?._isNew && !qso?._isSuggested) {
         otherStateChanges.qsoQueue = [...loggingState?.qsoQueue || [], qso]
       }
 
@@ -320,7 +320,11 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
 
   const handleWipe = useCallback(() => { // Wipe a new QSO
     if (qso?._isNew) {
-      setQSO(undefined, { otherStateChanges: { undoInfo: { qso } } })
+      if (qso?._isSuggested) {
+        setQSO(undefined)
+      } else {
+        setQSO(undefined, { otherStateChanges: { undoInfo: { qso } } })
+      }
       const timeout = setTimeout(() => updateLoggingState({ undoInfo: undefined }), 10 * 1000) // Undo will clear after 10 seconds
       return () => clearTimeout(timeout)
     }
@@ -642,6 +646,10 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   clone.key = 'new-qso'
   if (clone.freq) {
     clone.band = bandForFrequency(clone.freq)
+  }
+
+  if (vfo.power) {
+    clone.power = vfo.power
   }
 
   const activityHooks = findHooks('activity')
