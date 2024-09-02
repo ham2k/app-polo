@@ -8,21 +8,11 @@
 
 import packageJson from '../../../../package.json'
 import { parseCallsign } from '@ham2k/lib-callsigns'
-import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
-
-const validModes = ['CW', 'FM', 'SSB', 'RTTY', 'PSK']
 
 export const GMACommonPostSpot = ({ operation, vfo, comments, refs, url }) => async (dispatch, getState) => {
   const state = getState()
   const call = operation.stationCall || state.settings.operatorCall
   const baseCall = parseCallsign(call).baseCall
-
-  let mode = vfo?.mode ?? 'SSB'
-  if (!validModes.includes(mode)) {
-    if (ADIF_SUBMODES.SSB.includes(mode)) mode = 'SSB'
-    else if (ADIF_SUBMODES.PSK.includes(mode)) mode = 'PSK'
-    else mode = 'other'
-  }
 
   const mainRef = refs[0].ref
   const refComment = refs.length > 1 ? `also ${refs.slice(1).map((x) => (x.ref)).join(' ')}` : ''
@@ -38,7 +28,7 @@ export const GMACommonPostSpot = ({ operation, vfo, comments, refs, url }) => as
         ycall: call,
         yreference: mainRef,
         yqrg: vfo.freq,
-        ymode: mode,
+        ymode: vfo.mode ?? 'SSB',
         ycomment: [comments, refComment].filter((x) => (x)).join(' '),
         B1: 'Submit'
       }).toString()
