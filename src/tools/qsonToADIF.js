@@ -72,6 +72,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers,
 }
 
 function escapeForHeader (str) {
+  if (!str) return ''
   return str.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
