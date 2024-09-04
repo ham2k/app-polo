@@ -115,9 +115,7 @@ export default function SpotsPanel ({ operation, qsos, onSelect }) {
           spot.timeOnMillis = 0
           spot.key = `${spot.spot.source}:${qsoKey(spot)}`
 
-          await annotateQSO({ qso: spot, online, settings, dispatch, skipLookup: true })
-
-          annotatedSpots.push(spot)
+          annotatedSpots.push(await annotateQSO({ qso: spot, online, settings, dispatch, skipLookup: true }))
         }
 
         updateSpotsState({ rawSpots: annotatedSpots, loading: false })

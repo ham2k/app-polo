@@ -290,7 +290,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
               oneQSO.their.call = calls[i].trim()
               oneQSO.their.guess = {}
               oneQSO.their.lookup = {}
-              await annotateQSO({ qso: oneQSO, online, settings, dispatch })
+              oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
 
               if (i > 0 && oneQSO._originalKey) {
                 delete oneQSO._originalKey // Only the first call in a multi-call QSO should have the original key
