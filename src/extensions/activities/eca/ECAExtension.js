@@ -12,6 +12,7 @@ import { Info } from './ECAInfo'
 import { ecaFindOneByReference, registerECADataFile } from './ECADataFile'
 import { ECAActivityOptions } from './ECAActivityOptions'
 import { ECAPostSpot } from './ECAPostSpot'
+import { LOCATION_ACCURACY } from '../../constants'
 
 const Extension = {
   ...Info,
@@ -45,7 +46,14 @@ const ReferenceHandler = {
     if (ref.ref) {
       const reference = await ecaFindOneByReference(ref.ref)
       if (reference) {
-        return { ...ref, name: reference.name, location: reference.region, grid: reference.grid }
+        return {
+          ...ref,
+          name: reference.name,
+          location: reference.region,
+          grid: reference.grid,
+          accuracy: LOCATION_ACCURACY.REASONABLE,
+          label: `${Info.shortName} ${ref.ref}: ${reference.name}`
+        }
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
       }

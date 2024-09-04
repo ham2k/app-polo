@@ -77,15 +77,15 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, settings }) {
+export function CallInfo ({ qso, qsos, operation, style, themeColor, setQSO, settings }) {
   const navigation = useNavigation()
   const styles = useThemedStyles(prepareStyles, themeColor)
 
-  const { online, ourInfo, guess, lookup, pota, qrz, callNotes, callHistory } = useQSOInfo({ qso, operation })
+  const { online, ourInfo, guess, lookup, refs, qrz, callNotes, callHistory } = useQSOInfo({ qso, operation })
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    if (guess) { updateQSO && updateQSO({ their: { ...qso.their, guess, lookup } }) }
-  }, [guess, lookup, qso.their, updateQSO])
+    if (guess) { setQSO && setQSO({ ...qso, their: { ...qso.their, guess, lookup } }) }
+  }, [guess, lookup, qso, setQSO])
 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess?.dxccCode)
@@ -121,20 +121,18 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
       leftParts.push(entity.shortName)
     }
 
-    if (pota.name) {
-      isOnTheGo = true
-      leftParts.push(
-        [
-          ['POTA', pota.reference, pota.shortName ?? pota.name].filter(x => x).join(' '),
-          pota.locationName
-        ].filter(x => x).join(' – ')
-      )
-    } else if (pota.error) {
-      leftParts.push(`POTA ${pota.reference} ${pota.error}`)
+    for (const ref of (refs ?? [])) {
+      if (ref.grid) isOnTheGo = true
+      if (refs.error) {
+        leftParts.push(`${ref.reference} ${ref.error}`)
+      }
     }
 
     if (qso?.their?.city || qso?.their?.state) {
       rightParts.push([qso?.their?.city, qso?.their?.state].filter(x => x).join(', '))
+    } else if (guess?.locationLabel) {
+      console.log('adding location label')
+      rightParts.push(guess?.locationLabel)
     } else if (!isOnTheGo && (guess?.city || guess?.state)) {
       rightParts.push([guess?.city, guess?.state].filter(x => x).join(', '))
     }
@@ -158,7 +156,7 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
     // }
 
     return [locationText, entity?.flag ? entity.flag : '']
-  }, [lookup?.dxccCode, guess, operation.grid, ourInfo, pota.name, pota.error, pota.reference, pota.shortName, pota.locationName, qso?.their?.city, qso?.their?.state, qso?.their?.grid, settings.distanceUnits, settings.showBearing])
+  }, [lookup?.dxccCode, guess, operation.grid, ourInfo, qso?.their?.city, qso?.their?.state, qso?.their?.grid, settings.distanceUnits, settings.showBearing, refs])
 
   const stationInfo = useMemo(() => {
     const parts = []

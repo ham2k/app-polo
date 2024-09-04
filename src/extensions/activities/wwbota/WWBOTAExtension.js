@@ -12,6 +12,7 @@ import { Info } from './WWBOTAInfo'
 import { WWBOTAActivityOptions } from './WWBOTAActivityOptions'
 import { wwbotaFindOneByReference, registerWWBOTADataFile } from './WWBOTADataFile'
 import { WWBOTALoggingControl } from './WWBOTALoggingControl'
+import { LOCATION_ACCURACY } from '../../constants'
 
 const Extension = {
   ...Info,
@@ -111,7 +112,9 @@ const ReferenceHandler = {
         ...ref,
         name: data.name,
         location: data.area,
-        grid: data.grid
+        grid: data.grid,
+        accuracy: LOCATION_ACCURACY.ACCURATE,
+        label: `${Info.shortName} ${ref.ref}: ${data.name}`
       }
     } else {
       return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }

@@ -7,6 +7,7 @@
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../../tools/refTools'
+import { LOCATION_ACCURACY } from '../../constants'
 
 import { GMAActivityOptions } from './GMAActivityOptions'
 import { registerGMADataFile, gmaFindOneByReference } from './GMADataFile'
@@ -100,7 +101,13 @@ const ReferenceHandler = {
     if (ref.ref) {
       const data = await gmaFindOneByReference(ref.ref)
       if (data) {
-        return { ...ref, name: data.name, grid: data.grid }
+        return {
+          ...ref,
+          name: data.name,
+          grid: data.grid,
+          accuracy: LOCATION_ACCURACY.REASONABLE,
+          label: `${Info.shortName} ${ref.ref}: ${data.name}`
+        }
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
       }

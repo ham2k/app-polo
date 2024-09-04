@@ -12,6 +12,7 @@ import { Info } from './ELAInfo'
 import { elaFindOneByReference, registerELADataFile } from './ELADataFile'
 import { ELAActivityOptions } from './ELAActivityOptions'
 import { ELAPostSpot } from './ELAPostSpot'
+import { LOCATION_ACCURACY } from '../../constants'
 
 const Extension = {
   ...Info,
@@ -45,7 +46,14 @@ const ReferenceHandler = {
     if (ref.ref) {
       const reference = await elaFindOneByReference(ref.ref)
       if (reference) {
-        return { ...ref, name: reference.name, location: reference.region, grid: reference.grid }
+        return {
+          ...ref,
+          name: reference.name,
+          location: reference.region,
+          grid: reference.grid,
+          accuracy: LOCATION_ACCURACY.REASONABLE,
+          label: `${Info.shortName} ${ref.ref}: ${reference.name}`
+        }
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
       }
