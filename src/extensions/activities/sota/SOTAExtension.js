@@ -16,6 +16,7 @@ import { SOTAAccountSetting } from './SOTAAccount'
 import { SOTAPostSpot } from './SOTAPostSpot'
 import { apiSOTA } from '../../../store/apiSOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { LOCATION_ACCURACY } from '../../constants'
 
 const Extension = {
   ...Info,
@@ -168,7 +169,14 @@ const ReferenceHandler = {
     if (ref.ref) {
       const data = await sotaFindOneByReference(ref.ref)
       if (data) {
-        return { ...ref, name: data.name, location: data.region, grid: data.grid }
+        return {
+          ...ref,
+          name: data.name,
+          location: data.region,
+          grid: data.grid,
+          accuracy: LOCATION_ACCURACY.ACCURATE,
+          label: `${Info.shortName} ${ref.ref}: ${data.name}`
+        }
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
       }

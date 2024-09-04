@@ -12,6 +12,7 @@ import { Info } from './SiOTAInfo'
 import { SiOTAActivityOptions } from './SiOTAActivityOptions'
 import { siotaFindOneByReference, registerSiOTADataFile } from './SiOTADataFile'
 import { SiOTALoggingControl } from './SiOTALoggingControl'
+import { LOCATION_ACCURACY } from '../../constants'
 
 const Extension = {
   ...Info,
@@ -108,7 +109,9 @@ const ReferenceHandler = {
         name: data.name,
         location: data.location,
         state: data.state,
-        grid: data.grid
+        grid: data.grid,
+        accuracy: LOCATION_ACCURACY.ACCURATE,
+        label: `${Info.shortName} ${ref.ref}: ${data.name}`
       }
     } else {
       return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }

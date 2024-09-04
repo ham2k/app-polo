@@ -14,6 +14,7 @@ import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
 import { WWFFPostSpot } from './WWFFPostSpot'
 import { apiGMA } from '../../../store/apiGMA'
+import { LOCATION_ACCURACY } from '../../constants'
 
 const Extension = {
   ...Info,
@@ -145,7 +146,14 @@ const ReferenceHandler = {
     if (ref.ref) {
       const data = await wwffFindOneByReference(ref.ref)
       if (data) {
-        return { ...ref, name: data.name, location: data.region, grid: data.grid }
+        return {
+          ...ref,
+          name: data.name,
+          location: data.region,
+          grid: data.grid,
+          accuracy: LOCATION_ACCURACY.REASONABLE,
+          label: `${Info.shortName} ${ref.ref}: ${data.name}`
+        }
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
       }

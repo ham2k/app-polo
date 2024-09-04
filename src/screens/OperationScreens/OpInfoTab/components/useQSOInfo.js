@@ -6,30 +6,29 @@
  */
 
 import { useEffect, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import emojiRegex from 'emoji-regex'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
 import { useLookupCallQuery, apiQRZ } from '../../../../store/apiQRZ'
-import { useLookupParkQuery } from '../../../../store/apiPOTA'
 import { selectRuntimeOnline } from '../../../../store/runtime'
 import { selectOperationCallInfo } from '../../../../store/operations'
 import { selectSettings } from '../../../../store/settings'
 import { findQSOHistory } from '../../../../store/qsos/actions/findQSOHistory'
 
-import { filterRefs, findRef } from '../../../../tools/refTools'
 import { findAllCallNotes, useAllCallNotesFinder } from '../../../../extensions/data/call-notes/CallNotesExtension'
-import { potaFindParkByReference } from '../../../../extensions/activities/pota/POTAAllParksData'
 import { capitalizeString } from '../../../../tools/capitalizeString'
+import { findHooks } from '../../../../extensions/registry'
+import { LOCATION_ACCURACY } from '../../../../extensions/constants'
 
 const EMOJI_REGEX = emojiRegex()
 
 export const useQSOInfo = ({ qso, operation }) => {
   const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
-
+  const dispatch = useDispatch()
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const theirCall = useMemo(() => {
@@ -73,28 +72,33 @@ export const useQSOInfo = ({ qso, operation }) => {
     return qrzLookup.currentData || {}
   }, [qrzLookup, theirCall?.baseCall])
 
-  const potaRef = useMemo(() => { // Find POTA references
-    const potaRefs = filterRefs(qso?.refs, 'pota')
-    if (potaRefs?.length > 0) {
-      return potaRefs[0].ref
-    } else {
-      return undefined
-    }
-  }, [qso?.refs])
-
-  const potaLookup = useLookupParkQuery({ ref: potaRef }, { skip: !potaRef, online })
-
-  const pota = useMemo(() => {
-    return potaLookup?.data ?? {}
-  }
-  , [potaLookup?.data])
+  const [refs, setRefs] = useState()
+  useEffect(() => {
+    setTimeout(async () => {
+      // eslint-disable-next-line no-shadow
+      let refs = []
+      for (const ref of (qso?.refs || [])) {
+        const hooks = findHooks(`ref:${ref.type}`)
+        for (const hook of hooks) {
+          if (hook?.decorateRefWithDispatch) {
+            refs.push(await dispatch(hook.decorateRefWithDispatch(ref, { dispatch })))
+          } else if (hook?.decorateRef) {
+            refs.push(hook.decorateRef(ref))
+          }
+        }
+      }
+      refs = refs.sort((a, b) => (b.accuracy ?? LOCATION_ACCURACY.NO_LOCATION) - (a.accuracy ?? LOCATION_ACCURACY.NO_LOCATION))
+      console.log('set refs', refs)
+      setRefs(refs)
+    }, 0)
+  }, [dispatch, qso?.refs])
 
   const { guess, lookup } = useMemo(() => { // Merge all data sources and update guesses and QSO
-    return mergeData({ theirCall, qrz, pota, potaRef, callHistory, callNotes })
-  }, [theirCall, qrz, pota, potaRef, callHistory, callNotes])
+    return mergeData({ theirCall, qrz, refs, callHistory, callNotes })
+  }, [theirCall, qrz, refs, callHistory, callNotes])
 
   return {
-    ourInfo, theirCall, guess, lookup, pota, potaRef, qrz, callNotes, callHistory, online
+    ourInfo, theirCall, guess, lookup, refs, qrz, callNotes, callHistory, online
   }
 }
 
@@ -120,14 +124,20 @@ export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup
     qrz = qrzLookup.data || {}
   }
 
-  let pota = {}
-  const potaRef = findRef(qso?.refs, 'pota')
-  if (potaRef) {
-    const potaLookup = await potaFindParkByReference(potaRef)
-    pota = potaLookup?.data ?? {}
+  let refs = []
+  for (const ref of (qso?.refs || [])) {
+    const hooks = findHooks(`ref:${ref.type}`)
+    for (const hook of hooks) {
+      if (hook?.decorateRefWithDispatch) {
+        refs.push(await dispatch(hook.decorateRefWithDispatch(ref)))
+      } else if (hook?.decorateRef) {
+        refs.push(hook.decorateRef(ref))
+      }
+    }
   }
+  refs = refs.sort((a, b) => (a.accuracy ?? LOCATION_ACCURACY.NO_LOCATION) - (b.accuracy ?? LOCATION_ACCURACY.NO_LOCATION))
 
-  const { guess, lookup } = mergeData({ theirCall, qrz, pota, potaRef, callHistory, callNotes })
+  const { guess, lookup } = mergeData({ theirCall, qrz, refs, callHistory, callNotes })
 
   qso.their.guess = guess
   qso.their.lookup = lookup
@@ -135,7 +145,7 @@ export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup
   return qso
 }
 
-function mergeData ({ theirCall, qrz, pota, potaRef, callHistory, callNotes }) {
+function mergeData ({ theirCall, qrz, refs, callHistory, callNotes }) {
   let historyData = {}
   let newLookup
   const newGuess = { ...theirCall }
@@ -206,15 +216,21 @@ function mergeData ({ theirCall, qrz, pota, potaRef, callHistory, callNotes }) {
     newGuess.emoji = undefined
   }
 
-  if (pota?.grid6 && (potaRef === undefined || pota.reference === potaRef) && pota?.locationDesc?.indexOf(',') < 0) {
-    // Only use POTA info if it's not a multi-state park
-    newGuess.grid = pota.grid6
-
-    if (pota.reference?.startsWith('US-') || pota.reference?.startsWith('CA-')) {
-      const potaState = (pota.locationDesc || '').split('-').pop().trim()
-      newGuess.city = undefined
-      newGuess.state = potaState
+  if (refs) {
+    for (const ref of refs) {
+      if (ref.grid) {
+        if ((newGuess.locationAccuracy ?? LOCATION_ACCURACY.NO_LOCATION) > (ref.accuracy ?? LOCATION_ACCURACY.VAGUE)) {
+          newGuess.locationAccuracy = (ref.accuracy ?? LOCATION_ACCURACY.VAGUE)
+          newGuess.locationLabel = ref.label ?? ref.name
+          newGuess.grid = ref.grid
+        }
+      }
+      if (ref.state) {
+        newGuess.city = undefined
+        newGuess.state = ref.state
+      }
     }
   }
+
   return { guess: newGuess, lookup: newLookup }
 }
