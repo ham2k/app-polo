@@ -97,7 +97,7 @@ const SeedCommandHook = {
 
         calls.splice(index, 1)
 
-        const oneQSO = {
+        let oneQSO = {
           mode: qso?.mode ?? vfo?.mode ?? 'SSB',
           band: qso?.band ?? vfo?.band ?? '20m',
           freq: qso?.freq ?? vfo?.freq,
@@ -106,7 +106,7 @@ const SeedCommandHook = {
         }
         oneQSO.their = { call, sent: randomRST(oneQSO.mode) }
         oneQSO.our = { call: ourInfo.call, operatorCall: ourInfo.operatorCall || operation.operatorCall, sent: randomRST(oneQSO.mode) }
-        await annotateQSO({ qso: oneQSO, online, settings, dispatch })
+        oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
 
         oneQSO.key = qsoKey(oneQSO)
         await dispatch(addQSO({ uuid: operation.uuid, qso: oneQSO }))

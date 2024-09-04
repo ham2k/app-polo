@@ -140,7 +140,7 @@ export function CallInfoPanel ({ qso, operation, themeColor, style }) {
                 <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
                   {capitalizeString(lookup?.name, { content: 'name', force: false })}
                 </Text>
-                {lookup.city && (
+                {lookup?.city && (
                   <Text>
                     {[capitalizeString(lookup.city, { content: 'address', force: false }), lookup.state].filter(x => x).join(', ')}
                   </Text>
@@ -151,7 +151,7 @@ export function CallInfoPanel ({ qso, operation, themeColor, style }) {
               </View>
             </View>
             <View style={{ flex: 1, marginLeft: styles.oneSpace, maxWidth: '50%', alignItems: 'center' }}>
-              {(lookup.image ?? qrz.image) && (
+              {(lookup?.image ?? qrz?.image) && (
                 <Image source={{ uri: (lookup.image ?? qrz.image) }} style={{ width: '100%', height: styles.oneSpace * 20, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
               )}
               <Chip

@@ -66,7 +66,7 @@ export const useQSOInfo = ({ qso, operation }) => {
     const error = qrzLookup?.error?.message || qrzLookup?.error
     if (error && error.indexOf && error.indexOf('not found') >= 0) {
       // If the call has a prefix or suffix, and the full call was not found, let's retry with the base call
-      if (qrzLookup?.originalArgs?.call && qrzLookup?.originalArgs?.call !== theirCall.baseCall) {
+      if (qrzLookup?.originalArgs?.call && qrzLookup?.originalArgs?.call !== theirCall?.baseCall) {
         setAltQRZCall(theirCall.baseCall)
       }
     }
@@ -99,6 +99,7 @@ export const useQSOInfo = ({ qso, operation }) => {
 }
 
 export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup = false }) {
+  qso = { ...qso }
   let theirCall = parseCallsign(qso?.their?.call)
   if (theirCall?.baseCall) {
     annotateFromCountryFile(theirCall)
@@ -127,13 +128,16 @@ export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup
   }
 
   const { guess, lookup } = mergeData({ theirCall, qrz, pota, potaRef, callHistory, callNotes })
+
   qso.their.guess = guess
   qso.their.lookup = lookup
+
+  return qso
 }
 
 function mergeData ({ theirCall, qrz, pota, potaRef, callHistory, callNotes }) {
   let historyData = {}
-  let newLookup = {}
+  let newLookup
   const newGuess = { ...theirCall }
 
   if (callHistory && callHistory[0] && callHistory[0].theirCall === theirCall?.call) {
@@ -142,21 +146,23 @@ function mergeData ({ theirCall, qrz, pota, potaRef, callHistory, callNotes }) {
       historyData.their.lookup = historyData.their?.qrzInfo
       historyData.their.lookup.source = 'qrz.com'
     }
-
-    newLookup.name = capitalizeString(historyData.their.name ?? historyData.their.lookup?.name, { content: 'name', force: false })
-    newLookup.state = historyData.their.state ?? historyData.their.lookup?.state
-    newLookup.city = capitalizeString(historyData.their.city ?? historyData.their.lookup?.city, { content: 'address', force: false })
-    newLookup.postal = historyData.their.postal ?? historyData.their.lookup?.postal
-    newLookup.grid = historyData.their.grid ?? historyData.their.lookup?.grid
-    newLookup.cqZone = historyData.their.cqZone ?? historyData.their.lookup?.cqZone
-    newLookup.ituZone = historyData.their.ituZone ?? historyData.their.lookup?.ituZone
-    Object.keys(newLookup).forEach(key => {
-      if (!newLookup[key]) delete newLookup[key]
-    })
-    newLookup.source = 'history'
+    if (historyData.their) {
+      newLookup = {}
+      newLookup.name = capitalizeString(historyData.their.name ?? historyData.their.lookup?.name, { content: 'name', force: false })
+      newLookup.state = historyData.their.state ?? historyData.their.lookup?.state
+      newLookup.city = capitalizeString(historyData.their.city ?? historyData.their.lookup?.city, { content: 'address', force: false })
+      newLookup.postal = historyData.their.postal ?? historyData.their.lookup?.postal
+      newLookup.grid = historyData.their.grid ?? historyData.their.lookup?.grid
+      newLookup.cqZone = historyData.their.cqZone ?? historyData.their.lookup?.cqZone
+      newLookup.ituZone = historyData.their.ituZone ?? historyData.their.lookup?.ituZone
+      Object.keys(newLookup).forEach(key => {
+        if (!newLookup[key]) delete newLookup[key]
+      })
+      newLookup.source = 'history'
+    }
   }
 
-  if (qrz?.name && (qrz.call === theirCall.call || qrz.call === theirCall.baseCall)) {
+  if (qrz?.name && (qrz.call === theirCall.call || qrz.call === theirCall.baseCall || qrz.otherCall === theirCall.call || qrz.otherCall === theirCall.baseCall)) {
     newLookup = {
       source: 'qrz.com',
       call: qrz.call,
