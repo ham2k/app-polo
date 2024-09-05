@@ -88,7 +88,6 @@ export const useQSOInfo = ({ qso, operation }) => {
         }
       }
       refs = refs.sort((a, b) => (b.accuracy ?? LOCATION_ACCURACY.NO_LOCATION) - (a.accuracy ?? LOCATION_ACCURACY.NO_LOCATION))
-      console.log('set refs', refs)
       setRefs(refs)
     }, 0)
   }, [dispatch, qso?.refs])

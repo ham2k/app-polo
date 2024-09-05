@@ -436,7 +436,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                       settings={settings}
                       styles={styles}
                       themeColor={themeColor}
-                      updateQSO={updateQSO}
+                      setQSO={setQSO}
                     />
                   ) : (
                     <OpInfo
