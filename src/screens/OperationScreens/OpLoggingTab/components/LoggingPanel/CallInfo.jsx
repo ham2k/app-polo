@@ -84,7 +84,7 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, setQSO, set
   const { online, ourInfo, guess, lookup, refs, qrz, callNotes, callHistory } = useQSOInfo({ qso, operation })
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    if (guess) { setQSO && setQSO({ ...qso, their: { ...qso.their, guess, lookup } }) }
+    if (guess && qso?.their?.guess !== guess) { setQSO && setQSO({ ...qso, their: { ...qso.their, guess, lookup } }) }
   }, [guess, lookup, qso, setQSO])
 
   const [locationInfo, flag] = useMemo(() => {

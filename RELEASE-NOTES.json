@@ -1,5 +1,11 @@
 {
-  "24.9.0-pre9": {
+  "24.9.1": {
+    "name": "September '24 (24.9.1)",
+    "changes": [
+      "Fixed bug where QSO names and locations were not being saved."
+    ]
+  },
+  "24.9.0": {
     "name": "September '24",
     "changes": [
       "Counting and scoring QSOs for an Operation",
