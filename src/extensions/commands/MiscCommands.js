@@ -44,11 +44,15 @@ const SpotCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-misc-spot',
-  match: /^(SPOTME|SPME|SELFSPOT|SELFSP)(|[/.][\w\d]*)$/i,
+  match: /^(SPOT|SPOTME|SPME|SELFSPOT|QRV|QRT|QSY)(|[/.][\w\d]*)$/i,
   describeCommand: (match, { vfo }) => {
-    const comments = match[2]?.substring(1) || ''
+    let comments = match[2]?.substring(1) || ''
 
     if (!vfo.freq) return 'Cannot self-spot without frequency'
+
+    if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
+      comments = match[1]
+    }
 
     if (comments) {
       return `Self-spot with ‘${comments}’?`
