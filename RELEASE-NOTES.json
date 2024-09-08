@@ -1,4 +1,10 @@
 {
+  "24.10.0-pre0": {
+    "name": "October '24",
+    "changes": [
+      "New Month"
+    ]
+  },
   "24.9.1": {
     "name": "September '24 (24.9.1)",
     "changes": [
