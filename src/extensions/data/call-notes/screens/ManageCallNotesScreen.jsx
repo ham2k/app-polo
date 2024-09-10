@@ -137,7 +137,7 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
               title={def.name}
               description={def.description}
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-account-outline" />}
-              right={() => <Switch value={extSettings.enabledNotes[def.identifier] !== false} onValueChange={(value) => handleToggle(def.identifier, value) } />}
+              right={() => <Switch value={extSettings?.enabledNotes?.[def.identifier] !== false} onValueChange={(value) => handleToggle(def.identifier, value) } />}
             />
           ))}
         </Ham2kListSection>
