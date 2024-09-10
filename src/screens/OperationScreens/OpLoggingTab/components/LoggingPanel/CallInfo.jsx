@@ -77,15 +77,15 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export function CallInfo ({ qso, qsos, operation, style, themeColor, setQSO, settings }) {
+export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, settings }) {
   const navigation = useNavigation()
   const styles = useThemedStyles(prepareStyles, themeColor)
 
   const { online, ourInfo, guess, lookup, refs, qrz, callNotes, callHistory } = useQSOInfo({ qso, operation })
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    if (guess && qso?.their?.guess !== guess) { setQSO && setQSO({ ...qso, their: { ...qso.their, guess, lookup } }) }
-  }, [guess, lookup, qso, setQSO])
+    updateQSO && updateQSO({ their: { guess, lookup } })
+  }, [guess, lookup, updateQSO])
 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess?.dxccCode)

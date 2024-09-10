@@ -57,7 +57,6 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     }
     const updateQSOFunction = (changes, more) => {
       const updatedQSO = { ...qsoValue, ...changes }
-
       updateLoggingState({
         qso: changes,
         hasChanges: !!qsoValue?._isSuggested || JSON.stringify(updatedQSO) !== JSON.stringify(loggingState?.originalQSO),
@@ -436,7 +435,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                       settings={settings}
                       styles={styles}
                       themeColor={themeColor}
-                      setQSO={setQSO}
+                      updateQSO={updateQSO}
                     />
                   ) : (
                     <OpInfo
