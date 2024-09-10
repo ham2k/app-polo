@@ -41,15 +41,19 @@ function deepMergeState (state, data, visited = undefined) {
   visited.add(data)
 
   // Then merge keys, recursively
-  Object.keys(data || {}).forEach(key => {
+  for (const key of Object.keys(data || {})) {
     const value = data[key]
     if (typeof value === 'object' && !Array.isArray(value) && !visited.has(value)) {
-      state[key] = state[key] || {}
-      deepMergeState(state[key], value)
+      if (Object.keys(value).length === 0) {
+        state[key] = {}
+      } else {
+        state[key] = state[key] || {}
+        deepMergeState(state[key], value)
+      }
     } else {
       state[key] = value
     }
-  })
+  }
 }
 
 export const { actions } = uiSlice
