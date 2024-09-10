@@ -7,17 +7,16 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
-
-import { fmtTimeZulu } from '../../../../tools/timeFormats'
 import { View } from 'react-native'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { parseCallsign } from '@ham2k/lib-callsigns'
+
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findBestHook } from '../../../../extensions/registry'
 
-const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress, styles, selected, settings, refHandlers }) {
+const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
   const theirInfo = useMemo(() => {
     if (qso?.their?.entityPrefix) {
       return qso?.their
@@ -55,7 +54,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
   return (
     <TouchableRipple onPress={pressHandler} style={selected ? styles.selectedRow : styles.unselectedRow}>
       <View style={styles.compactRow}>
-        <Text style={styles.fields.time}>{fmtTimeZulu(qso.startOnMillis, { compact: !styles.extendedWidth })}</Text>
+        <Text style={styles.fields.time}>{timeFormatFunction(qso.startOnMillis)}</Text>
         <Text style={styles.fields.freq}>
           {freqParts[0] && <Text style={styles.fields.freqMHz}>{freqParts[0]}.</Text>}
           {freqParts[1] && <Text style={styles.fields.freqKHz}>{freqParts[1]}</Text>}
@@ -65,6 +64,9 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
         </Text>
         <Text style={styles.fields.call}>
           {qso.their?.call ?? '?'}
+          {styles.narrowWidth && qso.their?.guess?.emoji && (
+            ' ' + qso.their?.guess?.emoji
+          )}
         </Text>
         <Text style={styles.fields.location}>
           {theirInfo?.entityPrefix && (settings.dxFlags === 'all' || (settings.dxFlags !== 'none' && theirInfo.entityPrefix !== ourInfo?.entityPrefix)) && (
@@ -75,14 +77,14 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
           )}
         </Text>
         <Text style={styles.fields.name}>
+          {!styles.narrowWidth && qso.their?.guess?.emoji && (
+            qso.their?.guess?.emoji + ' '
+          )}
           {styles.smOrLarger && (
             qso.their?.name ?? qso.their?.lookup?.name ?? ''
           )}
         </Text>
         <Text style={styles.fields.icon}>
-          {qso.their?.guess?.emoji && (
-            qso.their?.guess?.emoji + ' '
-          )}
           {qso.notes && (
             <Icon source="note-outline" size={styles.normalFontSize} style={styles.fields.icon} />
           )}

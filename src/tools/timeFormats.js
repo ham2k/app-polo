@@ -22,11 +22,15 @@ export function fmtShortTimeZulu (t, { showZ = true } = {}) {
   }
 }
 
-export function fmtTimeZulu (t, { showZ = true } = {}) {
+export function fmtTimeZulu (t, { showZ = true, compact = false } = {}) {
   t = prepareTimeValue(t)
 
   if (t && t.toISOString) {
-    return t.toISOString().substring(11, 19) + (showZ ? 'z' : '')
+    if (compact) {
+      return t.toISOString().substring(11, 16) + (showZ ? 'z' : '')
+    } else {
+      return t.toISOString().substring(11, 19) + (showZ ? 'z' : '')
+    }
   } else {
     return ''
   }
