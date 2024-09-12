@@ -28,6 +28,7 @@ import { trackOperation } from '../../distro'
 import { selectRuntimeOnline } from '../../store/runtime'
 import { useUIState } from '../../store/ui'
 import { Icon } from 'react-native-paper'
+import { slashZeros } from '../../tools/stringTools'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -304,7 +305,7 @@ export function buildTitleForOperation (operation) {
     let title = [operation.title, operation.userTitle].filter(x => x).join(' - ')
     title = title || 'General Operation'
 
-    return [call, title].join(' ')
+    return [call ? slashZeros(call) : '', title].join(' ')
   } else {
     return 'New Operation'
   }

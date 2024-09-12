@@ -40,3 +40,7 @@ export function sanitizeToISO8859 (text) {
   // eslint-disable-next-line no-control-regex
   return text.replace(/[”“]/g, '"').replace(/[‘’]/g, "'").replace(/[^\x00-\xFF]/g, '·')
 }
+
+export function slashZeros (text) {
+  return text.replace(/0/g, 'Ø')
+}
