@@ -131,7 +131,6 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
     if (qso?.their?.city || qso?.their?.state) {
       rightParts.push([qso?.their?.city, qso?.their?.state].filter(x => x).join(', '))
     } else if (guess?.locationLabel) {
-      console.log('adding location label')
       rightParts.push(guess?.locationLabel)
     } else if (!isOnTheGo && (guess?.city || guess?.state)) {
       rightParts.push([guess?.city, guess?.state].filter(x => x).join(', '))
