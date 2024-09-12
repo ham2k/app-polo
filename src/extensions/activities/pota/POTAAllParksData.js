@@ -5,14 +5,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { Buffer } from 'buffer'
-
-import packageJson from '../../../../package.json'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const POTAAllParks = { prefixByDXCCCode: {} }
 
@@ -25,58 +22,57 @@ export function registerPOTAAllParksData () {
     icon: 'file-powerpoint-outline',
     maxAgeInDays: 28,
     enabledByDefault: true,
-    fetch: async ({ key, definition, options }) => {
+    fetch: async (args) => {
+      const { key, definition, options } = args
+
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
       const url = 'https://pota.app/all_parks_ext.csv'
 
-      const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
-        'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
-      })
-      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-      const buffer = Buffer.from(data64, 'base64')
-      const body = buffer.toString('utf8')
+      const data = await fetchAndProcessURL({
+        ...args,
+        url,
+        process: async (body) => {
+          const lines = body.split('\n')
+          const headers = parsePOTACSVRow(lines.shift())
 
-      const lines = body.split('\n')
-      const headers = parsePOTACSVRow(lines.shift())
+          let totalActiveParks = 0
+          let totalParks = 0
+          const prefixByDXCCCode = {}
 
-      let totalActiveParks = 0
-      let totalParks = 0
-      const prefixByDXCCCode = {}
+          const db = await database()
+          db.transaction(transaction => {
+            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['pota'])
+          })
 
-      const db = await database()
-      db.transaction(transaction => {
-        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['pota'])
-      })
+          const startTime = Date.now()
+          let processedLines = 0
+          const totalLines = lines.length
 
-      const startTime = Date.now()
-      let processedLines = 0
-      const totalLines = lines.length
+          while (lines.length > 0) {
+            const batch = lines.splice(0, 797)
+            await (() => new Promise(resolve => {
+              setTimeout(() => {
+                db.transaction(async transaction => {
+                  for (const line of batch) {
+                    const row = parsePOTACSVRow(line, { headers })
+                    const park = {
+                      ref: row.reference,
+                      dxccCode: Number.parseInt(row.entityId, 10) || 0,
+                      name: row.name,
+                      active: row.active === '1',
+                      grid: row.grid,
+                      lat: Number.parseFloat(row.latitude) || 0,
+                      lon: Number.parseFloat(row.longitude) || 0
+                    }
 
-      while (lines.length > 0) {
-        const batch = lines.splice(0, 797)
-        await (() => new Promise(resolve => {
-          setTimeout(() => {
-            db.transaction(async transaction => {
-              for (const line of batch) {
-                const row = parsePOTACSVRow(line, { headers })
-                const data = {
-                  ref: row.reference,
-                  dxccCode: Number.parseInt(row.entityId, 10) || 0,
-                  name: row.name,
-                  active: row.active === '1',
-                  grid: row.grid,
-                  lat: Number.parseFloat(row.latitude) || 0,
-                  lon: Number.parseFloat(row.longitude) || 0
-                }
+                    if (park.ref && park.dxccCode) {
+                      totalParks++
+                      if (park.active) totalActiveParks++
 
-                if (data.ref && data.dxccCode) {
-                  totalParks++
-                  if (data.active) totalActiveParks++
+                      if (!prefixByDXCCCode[park.dxccCode]) prefixByDXCCCode[park.dxccCode] = park.ref.split('-')[0]
 
-                  if (!prefixByDXCCCode[data.dxccCode]) prefixByDXCCCode[data.dxccCode] = data.ref.split('-')[0]
-
-                  transaction.executeSql(`
+                      transaction.executeSql(`
                   INSERT INTO lookups
                     (category, subCategory, key, name, data, lat, lon, flags, updated)
                   VALUES
@@ -84,34 +80,34 @@ export function registerPOTAAllParksData () {
                   ON CONFLICT DO
                   UPDATE SET
                     subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                  `, ['pota', `${data.dxccCode}`, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, data.active, `${data.dxccCode}`, data.name, JSON.stringify(data), data.lat, data.lon, data.active]
-                  )
-                }
-                processedLines++
-              }
-              options.onStatus && await options.onStatus({
-                key,
-                definition,
-                status: 'progress',
-                progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
-              })
-              resolve()
-            })
-          }, 0)
-        }))()
-      }
+                  `, ['pota', `${park.dxccCode}`, park.ref, park.name, JSON.stringify(park), park.lat, park.lon, park.active, `${park.dxccCode}`, park.name, JSON.stringify(park), park.lat, park.lon, park.active]
+                      )
+                    }
+                    processedLines++
+                  }
+                  options.onStatus && await options.onStatus({
+                    key,
+                    definition,
+                    status: 'progress',
+                    progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
+                  })
+                  resolve()
+                })
+              }, 0)
+            }))()
+          }
 
-      db.transaction(transaction => {
-        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
+          db.transaction(transaction => {
+            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
+          })
+
+          return {
+            totalParks,
+            totalActiveParks,
+            prefixByDXCCCode
+          }
+        }
       })
-
-      const data = {
-        totalParks,
-        totalActiveParks,
-        prefixByDXCCCode
-      }
-
-      RNFetchBlob.fs.unlink(response.data)
 
       return data
     },
