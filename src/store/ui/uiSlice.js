@@ -44,7 +44,7 @@ function deepMergeState (state, data, visited = undefined) {
   for (const key of Object.keys(data || {})) {
     const value = data[key]
     if (typeof value === 'object' && !Array.isArray(value) && !visited.has(value)) {
-      if (Object.keys(value).length === 0) {
+      if (Object.keys(value || {}).length === 0) {
         state[key] = {}
       } else {
         state[key] = state[key] || {}

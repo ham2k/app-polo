@@ -18,9 +18,9 @@ export default function OpSpotsTab ({ navigation, route }) {
     if (spot._ourSpot) return
 
     if (route?.params?.splitView) {
-      navigation.navigate('Operation', { ...route?.params, qso: { ...spot, our: undefined, key: undefined } })
+      navigation.navigate('Operation', { ...route?.params, qso: { ...spot, our: undefined, originalKey: spot.key, key: undefined } })
     } else {
-      navigation.navigate('OpLog', { qso: { ...spot, our: undefined, key: undefined } })
+      navigation.navigate('OpLog', { qso: { ...spot, our: undefined, originalKey: spot.key, key: undefined } })
     }
   }, [navigation, route?.params])
 
