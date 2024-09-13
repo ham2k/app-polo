@@ -59,9 +59,14 @@ export function checkAndProcessCommands (value, extraParams) {
 export function checkAndDescribeCommands (value, extraParams) {
   const { matchingCommand, match } = findMatchingCommand(value)
 
-  if (matchingCommand && matchingCommand.describeCommand) {
+  if (matchingCommand) {
     try {
-      const result = matchingCommand.describeCommand(match, extraParams)
+      let result
+      if (matchingCommand.describeCommand) {
+        result = matchingCommand.describeCommand(match, extraParams)
+      } else {
+        result = match?.[0]
+      }
 
       return result
     } catch (e) {

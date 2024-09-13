@@ -159,7 +159,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     }
   }, [qso?.their?.call])
 
-  const [message, setMessage] = useState()
+  const [commandInfo, setCommandInfo] = useState()
 
   const handleFieldChange = useCallback((event) => { // Handle form fields and update QSO info
     const { fieldId, alsoClearTheirCall } = event
@@ -174,8 +174,8 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     }
 
     if (fieldId === 'theirCall') {
-      const commandResult = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo })
-      setMessage(commandResult || undefined)
+      const commandDescription = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo })
+      setCommandInfo({ message: commandDescription || undefined, match: !!commandDescription || commandDescription === '' })
 
       let guess = parseCallsign(value)
       if (guess?.baseCall) {
@@ -223,7 +223,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       // First, try to process any commands
       const commandResult = checkAndProcessCommands(qso?.their?.call, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })
       if (commandResult) {
-        setMessage(commandResult || undefined)
+        setCommandInfo({ message: commandResult || undefined, match: undefined })
         return
       }
 
@@ -427,7 +427,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                     </Text>
                   </View>
                 ) : (
-                  !message && qso?.their?.call?.length > 2 ? (
+                  !commandInfo?.message && qso?.their?.call?.length > 2 ? (
                     <CallInfo
                       qso={qso}
                       qsos={activeQSOs}
@@ -440,8 +440,8 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                     />
                   ) : (
                     <OpInfo
-                      message={message || operationError}
-                      clearMessage={() => setMessage(undefined)}
+                      message={commandInfo?.message || operationError}
+                      clearMessage={() => setCommandInfo({ ...commandInfo, message: undefined })}
                       operation={operation}
                       vfo={vfo}
                       styles={styles}
@@ -516,7 +516,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
               icon={qso?._isNew ? 'upload' : (qso?._willBeDeleted ? 'trash-can' : 'content-save')}
               size={styles.oneSpace * 4}
               mode="contained"
-              disabled={!isValidQSO || !isValidOperation}
+              disabled={!((isValidQSO && isValidOperation) || commandInfo?.match)}
               containerColor={styles.theme.colors[`${themeColor}ContainerVariant`]}
               iconColor={styles.theme.colors[`on${upcasedThemeColor}`]}
               onPress={handleSubmit}

@@ -2,7 +2,9 @@
   "24.10.0-pre0": {
     "name": "October '24",
     "changes": [
-      "Self-spotting shortcuts `QRV`, `QSY` and `QRT`."
+      "Self-spotting shortcuts `QRV`, `QSY` and `QRT`",
+      "Use the [send] button to trigger shortcuts"
+    ]
     ]
   },
   "24.9.1": {
