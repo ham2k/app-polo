@@ -29,7 +29,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers,
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
   if (operation.userTitle) str += adifField('X_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
-  if (operation.userTitle) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
+  if (operation.notes) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
   if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common })) + '\n'
 
   str += '<EOH>\n'
