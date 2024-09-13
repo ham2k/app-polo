@@ -1,4 +1,11 @@
 {
+  "24.9.5": {
+    "name": "September '24 (24.9.5)",
+    "changes": [
+      "More spotting fixes",
+      "Include notes in ADIF, even when there is no title"
+    ]
+  },
   "24.9.4": {
     "name": "September '24 (24.9.4)",
     "changes": [
