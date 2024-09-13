@@ -257,6 +257,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
 
           delete qso._isNew
           delete qso._willBeDeleted
+          delete qso._suggestedKey
           delete qso.deleted
 
           qso.freq = qso.freq ?? vfo.freq

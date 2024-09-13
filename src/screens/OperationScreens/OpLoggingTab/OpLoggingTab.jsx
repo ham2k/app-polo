@@ -44,10 +44,15 @@ export default function OpLoggingTab ({ navigation, route }) {
   }, [loggingState?.operationUUID, loggingState?.qso, operation?.uuid, setLoggingState])
 
   useEffect(() => { // Inject suggested-qso when present
-    if (route?.params?.qso?.originalKey && loggingState?.suggestedQSO?.originalKey !== route.params.qso.originalKey && loggingState?.qso?.originalKey !== route.params.qso.originalKey) {
+    if (route?.params?.qso?._suggestedKey && loggingState?.suggestedQSO?._suggestedKey !== route.params.qso._suggestedKey && loggingState?.qso?._suggestedKey !== route.params.qso._suggestedKey) {
       setLoggingState({ ...loggingState, selectedKey: 'suggested-qso', suggestedQSO: route.params.qso })
+      if (route?.params?.splitView) {
+        navigation.navigate('Operation', { ...route?.params, qso: undefined })
+      } else {
+        navigation.navigate('OpLog', { qso: undefined })
+      }
     }
-  }, [loggingState, route.params.qso, setLoggingState])
+  }, [loggingState, setLoggingState, navigation, route.params])
 
   useEffect(() => { // Set navigation title
     if (styles?.smOrLarger) {
