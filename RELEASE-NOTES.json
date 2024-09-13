@@ -5,6 +5,32 @@
       "Self-spotting shortcuts `QRV`, `QSY` and `QRT`",
       "Use the [send] button to trigger shortcuts"
     ]
+  },
+  "24.9.5": {
+    "name": "September '24 (24.9.5)",
+    "changes": [
+      "More spotting fixes",
+      "Include notes in ADIF, even when there is no title"
+    ]
+  },
+  "24.9.4": {
+    "name": "September '24 (24.9.4)",
+    "changes": [
+      "Fixed crash when selecting certain spotted calls"
+    ]
+  },
+  "24.9.3": {
+    "name": "September '24 (24.9.3)",
+    "changes": [
+      "Further fixes for crash in Callsign Notes Settings"
+    ]
+  },
+  "24.9.2": {
+    "name": "September '24 (24.9.2)",
+    "changes": [
+      "Fixed crash in Callsign Notes Settings",
+      "Fixed crash when looking up certain callsigns",
+      "Fixed bug preventing clearing of callsigns"
     ]
   },
   "24.9.1": {
