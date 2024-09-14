@@ -145,7 +145,7 @@ export default function OperationScreen (props) {
               }}
             >
               <HeaderBar options={headerOptions} navigation={navigation} back={true} />
-              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO } }} />
+              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView } }} />
             </Animated.View>
             <View
               style={{
@@ -199,7 +199,7 @@ export default function OperationScreen (props) {
                     name="OpInfo"
                     options={{ title: 'Info' }}
                     component={OpInfoTab}
-                    initialParams={{ uuid: operation.uuid, operation }}
+                    initialParams={{ uuid: operation.uuid, operation, splitView }}
                   />
 
                   <Tab.Screen
