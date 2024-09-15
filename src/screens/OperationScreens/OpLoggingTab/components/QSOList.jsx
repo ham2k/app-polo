@@ -15,9 +15,11 @@ import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findHooks } from '../../../../extensions/registry'
 import QSOHeader from './QSOHeader'
 import getItemLayout from 'react-native-get-item-layout-section-list'
+import { fmtShortTimeZulu, fmtTimeZulu } from '../../../../tools/timeFormats'
 
 function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
   const extendedWidth = width / themeStyles.oneSpace > 80
+  const narrowWidth = width / themeStyles.oneSpace < 50
 
   const DEBUG = false
 
@@ -46,7 +48,8 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
 
   return {
     ...themeStyles,
-    ...extendedWidth,
+    extendedWidth,
+    narrowWidth,
     selectedRow: {
       backgroundColor: themeStyles.colors.secondaryContainer
     },
@@ -223,6 +226,14 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
     }
   }, [loggingState?.selectedKey, updateLoggingState])
 
+  const timeFormatFunction = useMemo(() => {
+    if (styles.extendedWidth) {
+      return fmtTimeZulu
+    } else {
+      return fmtShortTimeZulu
+    }
+  }, [styles])
+
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
 
@@ -243,11 +254,12 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
         selected={qso.key === loggingState?.selectedKey}
         ourInfo={ourInfo}
         onPress={handlePress}
+        timeFormatFunction={timeFormatFunction}
         styles={qsoStyles}
         refHandlers={refHandlers}
       />
     )
-  }, [stylesForDeleted, operation, stylesForOtherOperator, styles, settings, loggingState?.selectedKey, ourInfo, handlePress, refHandlers])
+  }, [operation, settings, loggingState?.selectedKey, ourInfo, handlePress, timeFormatFunction, refHandlers, stylesForDeleted, stylesForOtherOperator, styles])
 
   const renderHeader = useCallback(({ section, index }) => {
     return (

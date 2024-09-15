@@ -958,9 +958,28 @@ PODS:
     - react-native-config/App (= 1.5.3)
   - react-native-config/App (1.5.3):
     - React-Core
-  - react-native-document-picker (9.3.0):
+  - react-native-document-picker (9.3.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
     - React-Core
-  - react-native-geolocation (3.3.0):
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - react-native-geolocation (3.4.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -987,7 +1006,7 @@ PODS:
     - React-Core
   - react-native-netinfo (11.3.2):
     - React-Core
-  - react-native-pager-view (6.3.4):
+  - react-native-pager-view (6.4.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1243,11 +1262,11 @@ PODS:
     - React-logger (= 0.74.2)
     - React-perflogger (= 0.74.2)
     - React-utils (= 0.74.2)
-  - RNCAsyncStorage (1.24.0):
+  - RNCAsyncStorage (2.0.0):
     - React-Core
   - RNDeviceInfo (11.1.0):
     - React-Core
-  - RNGestureHandler (2.18.1):
+  - RNGestureHandler (2.19.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1268,7 +1287,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated (3.15.0):
+  - RNReanimated (3.15.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1288,10 +1307,10 @@ PODS:
     - React-utils
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 3.15.0)
-    - RNReanimated/worklets (= 3.15.0)
+    - RNReanimated/reanimated (= 3.15.1)
+    - RNReanimated/worklets (= 3.15.1)
     - Yoga
-  - RNReanimated/reanimated (3.15.0):
+  - RNReanimated/reanimated (3.15.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1312,7 +1331,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated/worklets (3.15.0):
+  - RNReanimated/worklets (3.15.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1675,12 +1694,12 @@ SPEC CHECKSUMS:
   react-native-app-auth: 63fa4e58c5bd29aeb974d3a06a23c5858322d533
   react-native-blob-util: 39a20f2ef11556d958dc4beb0aa07d1ef2690745
   react-native-config: 8f7283449bbb048902f4e764affbbf24504454af
-  react-native-document-picker: 5b97e24a7f1a1e4a50a72c540a043f32d29a70a2
-  react-native-geolocation: 3d05370e569784e95cd8a4f75713c9ab42b0f038
+  react-native-document-picker: 7bddf5a35d8829e9c6b8158bc44eb4229b01a7ea
+  react-native-geolocation: 997e9bf75e3996045de9d24fc9ef976b2fc95aad
   react-native-keep-awake: 5cfb49d1b2ee4321b2ffbc651e2d6d64d6f66772
   react-native-maps: 2e6e9896195781327ee15b33e3e84bf73c08207a
   react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
-  react-native-pager-view: be07c83460060264af9d76e7efda738852e1d429
+  react-native-pager-view: ec794201907d9b62825bcf2a3a6ed3ff493c2ab8
   react-native-safe-area-context: ab8f4a3d8180913bd78ae75dd599c94cce3d5e9a
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-sqlite-2: 21c4a9d439e92193a8712c68492731c014671b53
@@ -1707,10 +1726,10 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 1f0b3361460921edcbe9042ce690e5ca6dab9639
   React-utils: 5a40a1bb87d8c2d42a6bbbb7ead6d95785ca6042
   ReactCommon: e5866ad8f7487779853fa3fe33f1c075207c3262
-  RNCAsyncStorage: ec53e44dc3e75b44aa2a9f37618a49c3bc080a7a
+  RNCAsyncStorage: d35c79ffba52c1013013e16b1fc295aec2feabb6
   RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
-  RNGestureHandler: fc0d83b45872ee937ecc9814012d9b48586b4d7a
-  RNReanimated: 45f0fd1250364dffec9aabd4a0959f2956a5e78b
+  RNGestureHandler: 1cc5930a64f5168977e5726b9c24777ecc8a8570
+  RNReanimated: f8dc6e880959a874d8d65c1e1fcdc29c946b9fea
   RNScreens: db442e7b8c7bc8befec2ce057927305ff8598cc8
   RNShare: 0fad69ae2d71de9d1f7b9a43acf876886a6cb99c
   RNVectorIcons: 7ac7aaa83f8f3d4c7c0f7daea5a431e91a29b0cd

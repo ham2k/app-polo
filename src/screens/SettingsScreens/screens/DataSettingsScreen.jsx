@@ -28,6 +28,7 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
+import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 
 const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
   const Icon = useMemo(() => (
@@ -47,26 +48,39 @@ const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
 const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone }) => {
   const dispatch = useDispatch()
 
+  const [statusText, setStatusText] = useState()
+
   const handleRefresh = useCallback(() => {
-    dispatch(fetchDataFile(def.key))
-  }, [def.key, dispatch])
+    setStatusText(`### Fetching '${def.name}'…`)
+
+    dispatch(fetchDataFile(def.key, {
+      force: true,
+      onStatus: ({ key, definition, status, progress }) => {
+        if (status === 'fetching' || status === 'loading') {
+          setStatusText(`### Fetching '${definition.name}'…`)
+        } else if (status === 'progress') {
+          setStatusText(`### Fetching '${definition.name}'\n\n${progress}`)
+        } else if (status === 'loaded') {
+          setStatusText('')
+        }
+      }
+    }))
+  }, [def.key, def.name, dispatch])
 
   return (
     <Ham2kDialog visible={true} onDismiss={onDialogDone}>
       <Dialog.Title style={{ textAlign: 'center' }}>{def.name}</Dialog.Title>
       <Dialog.Content>
-        <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{def.description}</Text>
+        <Ham2kMarkdown>{def.description}</Ham2kMarkdown>
       </Dialog.Content>
       <Dialog.Content>
         {info?.status === 'fetching' ? (
-          <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Fetching...</Text>
+          <Ham2kMarkdown>{statusText}</Ham2kMarkdown>
         ) : (
-          <>
-            <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Updated on {fmtDateTimeNice(info?.date)}</Text>
-            {info?.version && (
-              <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Version: {info.version}</Text>
-            )}
-          </>
+          <Ham2kMarkdown>
+            Updated on {fmtDateTimeNice(info?.date)}
+            {info?.version && `\n\nVersion: ${info.version}`}
+          </Ham2kMarkdown>
         )}
       </Dialog.Content>
       <Dialog.Actions style={{ justifyContent: 'space-between' }}>

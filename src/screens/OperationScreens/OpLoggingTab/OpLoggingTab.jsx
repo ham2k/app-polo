@@ -35,7 +35,7 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid))
 
-  const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   useEffect(() => { // Reset logging state when operation changes
     if (loggingState?.operationUUID !== operation?.uuid) {
@@ -44,10 +44,15 @@ export default function OpLoggingTab ({ navigation, route }) {
   }, [loggingState?.operationUUID, loggingState?.qso, operation?.uuid, setLoggingState])
 
   useEffect(() => { // Inject suggested-qso when present
-    if (route?.params?.qso) {
-      updateLoggingState({ selectedKey: 'suggested-qso', suggestedQSO: route.params.qso })
+    if (route?.params?.qso?._suggestedKey && loggingState?.suggestedQSO?._suggestedKey !== route.params.qso._suggestedKey && loggingState?.qso?._suggestedKey !== route.params.qso._suggestedKey) {
+      setLoggingState({ ...loggingState, selectedKey: 'suggested-qso', suggestedQSO: route.params.qso })
+      if (route?.params?.splitView) {
+        navigation.navigate('Operation', { ...route?.params, qso: undefined })
+      } else {
+        navigation.navigate('OpLog', { qso: undefined })
+      }
     }
-  }, [route?.params?.qso, setLoggingState, updateLoggingState])
+  }, [loggingState, setLoggingState, navigation, route.params])
 
   useEffect(() => { // Set navigation title
     if (styles?.smOrLarger) {

@@ -18,6 +18,8 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { fmtDateTimeNice, fmtTimeBetween } from '../../tools/timeFormats'
 import Color from 'color'
 import MapWithQSOs from '../OperationScreens/OpMapTab/components/MapWithQSOs'
+import { slashZeros } from '../../tools/stringTools'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function prepareStyles (baseTheme, themeColor, deviceColorScheme) {
   let titleBackground
@@ -93,6 +95,8 @@ export default function OperationBadgeScreen ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
 
+  const safeArea = useSafeAreaInsets()
+
   useEffect(() => { // When starting, make sure all operation data is loaded
     dispatch(loadQSOs(route.params.operation.uuid))
     dispatch(loadOperation(route.params.operation.uuid))
@@ -127,10 +131,10 @@ export default function OperationBadgeScreen ({ navigation, route }) {
         qsos={qsos}
         settings={settings}
       />
-      <View style={[styles.titleContainer, { flexDirection: styles.portrait ? 'column' : 'row', justifyContent: 'space-between' }]}>
+      <View style={[styles.titleContainer, { paddingTop: safeArea.top + styles.oneSpace, paddingHorizontal: Math.max(safeArea.left, safeArea.right) + (styles.oneSpace * 2), flexDirection: styles.portrait ? 'column' : 'row', justifyContent: 'space-between' }]}>
         <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
           <Text style={styles.title}>
-            {operation?.stationCall || settings?.operatorCall} {operation?.title}
+            {slashZeros(operation?.stationCall || settings?.operatorCall)} {operation?.title}
           </Text>
           <Text style={styles.subTitle}>{operation?.subtitle}</Text>
         </View>
@@ -143,11 +147,11 @@ export default function OperationBadgeScreen ({ navigation, route }) {
           </Text>
         </View>
       </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'center', position: 'absolute', bottom: styles.oneSpace * 3, right: styles.oneSpace * 10, left: styles.oneSpace * 10 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', position: 'absolute', bottom: safeArea.bottom, right: styles.oneSpace * 10, left: styles.oneSpace * 10 }}>
         <Text style={styles.ham2k}>Ham2K </Text>
         <Text style={styles.logger}>Portable Logger</Text>
       </View>
-      <View style={{ position: 'absolute', bottom: styles.oneSpace * 5, right: styles.oneSpace * 2 }}>
+      <View style={{ position: 'absolute', bottom: safeArea.bottom + styles.oneSpace, right: styles.oneSpace * 2 }}>
         <IconButton
           icon="fullscreen-exit"
           size={styles.oneSpace * 4}

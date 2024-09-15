@@ -133,24 +133,24 @@ export const apiQRZ = createApi({
                   callsignInfo.nickname ? `“${capitalizeString(callsignInfo.nickname, { content: 'name', force: false })}”` : undefined,
                   capitalizeString(callsignInfo.name, { content: 'name', force: false })
                 ].filter(x => x).join(' '),
-                call: callsignInfo.call,
-                otherCall: callsignInfo.xref,
-                firstName: callsignInfo.fname,
-                lastName: callsignInfo.name,
-                tz: callsignInfo.TimeZone,
-                gmtOffset: callsignInfo.GMTOffset,
+                call: castString(callsignInfo.call),
+                otherCall: castString(callsignInfo.xref),
+                firstName: castString(callsignInfo.fname),
+                lastName: castString(callsignInfo.name),
+                tz: castString(callsignInfo.TimeZone),
+                gmtOffset: castNumber(callsignInfo.GMTOffset),
                 city: capitalizeString(callsignInfo.addr2, { content: 'address', force: false }),
-                state: callsignInfo.state,
+                state: castString(callsignInfo.state),
                 country: capitalizeString(callsignInfo.country, { force: false }),
-                postal: `${callsignInfo.zip}`,
+                postal: castString(callsignInfo.zip),
                 county: capitalizeString(callsignInfo.county, { force: false }),
-                grid: callsignInfo.grid,
-                cqZone: callsignInfo.cqzone,
-                ituZone: callsignInfo.ituzone,
-                dxccCode: callsignInfo.dxcc,
-                lat: callsignInfo.lat,
-                lon: callsignInfo.lon,
-                image: callsignInfo.image,
+                grid: castString(callsignInfo.grid),
+                cqZone: castNumber(callsignInfo.cqzone),
+                ituZone: castNumber(callsignInfo.ituzone),
+                dxccCode: castNumber(callsignInfo.dxcc),
+                lat: castNumber(callsignInfo.lat),
+                lon: castNumber(callsignInfo.lon),
+                image: castString(callsignInfo.image),
                 imageInfo: (callsignInfo.imageinfo || '').split(':')
               },
               meta: response.meta
@@ -163,6 +163,18 @@ export const apiQRZ = createApi({
     })
   })
 })
+
+function castString (value) {
+  if (value === undefined || value === null) return ''
+  return String(value)
+}
+
+function castNumber (value) {
+  if (value === undefined || value === null) return 0
+  const number = Number(value)
+  if (isNaN(number)) return null
+  return number
+}
 
 export const { actions } = apiQRZ
 
