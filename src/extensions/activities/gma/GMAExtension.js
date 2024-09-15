@@ -127,7 +127,7 @@ const ReferenceHandler = {
       return [{
         format: 'adif',
         common: { refs: [ref] },
-        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
+        nameTemplate: settings.useCompactFileNames ? '{call}@GMA-{ref}-{compactDate}' : '{date} {call} at GMA {ref}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
     }
