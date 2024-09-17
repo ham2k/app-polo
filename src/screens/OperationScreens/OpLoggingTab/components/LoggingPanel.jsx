@@ -35,6 +35,7 @@ import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { annotateQSO } from '../../OpInfoTab/components/useQSOInfo'
 import { useNavigation } from '@react-navigation/native'
 import { findHooks } from '../../../../extensions/registry'
+import { trackEvent } from '../../../../distro'
 
 const DEBUG = false
 
@@ -221,11 +222,18 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
 
     setTimeout(async () => { // Run inside a setTimeout to allow the state to update
       // First, try to process any commands
-      const commandResult = checkAndProcessCommands(qso?.their?.call, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })
+      const command = qso?.their?.call
+      const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })
       if (commandResult) {
+        trackEvent('command', { command })
         setCommandInfo({ message: commandResult || undefined, match: undefined })
         return
       }
+
+      let eventName = 'edit_qso'
+      if (qso?._willBeDeleted) eventName = 'delete_qso'
+      else if (qso?._isNew) eventName = 'add_qso'
+      else if (qso?._willBeDeleted === false && qso?.deleted === false) eventName = 'undelete_qso'
 
       if (qso._willBeDeleted) {
         delete qso._willBeDeleted
@@ -239,6 +247,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
           hasChanges: false,
           undoInfo: undefined
         })
+        trackEvent(eventName, { their_prefix: qso.their.entityPrefix ?? qso.their.guess.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
       } else if (isValidQSO && !qso.deleted) {
         await batch(async () => {
           setCurrentSecondaryControl(undefined)
@@ -302,6 +311,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
             if (DEBUG) logTimer('submit', 'handleSubmit before dispatch')
             dispatch(addQSO({ uuid: operation.uuid, qso: oneQSO }))
             if (DEBUG) logTimer('submit', 'handleSubmit before updateLoggingState')
+
+            trackEvent(eventName, { their_prefix: oneQSO.their.entityPrefix ?? oneQSO.their.guess.entityPrefix, refs: (oneQSO.refs || []).map(r => r.type).join(',') })
+
             lastKey = oneQSO.key
           }
           if (DEBUG) logTimer('submit', 'handleSubmit before setQSO')

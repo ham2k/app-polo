@@ -19,6 +19,7 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { ListSeparator } from '../../components/ListComponents'
+import { trackEvent } from '../../../distro'
 
 export default function OperationAddActivityScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -41,6 +42,8 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
         [{ type, ref: '', ...activity.defaultValue }]
       )
     }))
+
+    trackEvent('add_activity', { activity: activity?.key })
     navigation.dispatch(StackActions.replace('OperationActivityOptions', { operation: operation.uuid, activity: activity.key }))
   }, [operation, dispatch, navigation])
 

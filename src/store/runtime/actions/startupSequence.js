@@ -65,6 +65,7 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
           }, 100)
         }, 0)
       },
+
       async () => await dispatch(setupOnlineStatusMonitoring()),
       async () => await dispatch(loadExtensions()),
       async () => await dispatch(getOperations()),

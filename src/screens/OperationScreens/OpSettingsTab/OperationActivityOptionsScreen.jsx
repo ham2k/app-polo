@@ -20,6 +20,7 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { ListSeparator } from '../../components/ListComponents'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { trackEvent } from '../../../distro'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -44,6 +45,7 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
 
   const handleRemoveActivity = useCallback(() => {
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation, activity?.activationType ?? activity?.key ?? handler?.key, []) }))
+    trackEvent('remove_activity', { activity: activity?.key })
 
     navigation.goBack()
   }, [activity, handler, dispatch, navigation, operation])

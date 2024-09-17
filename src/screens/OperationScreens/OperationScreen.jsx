@@ -57,7 +57,7 @@ export default function OperationScreen (props) {
 
   const [lastTracking, setLastTracking] = useState(0)
   useEffect(() => {
-    if (Date.now() - lastTracking > 1000 * 60 * 0.5 && online) {
+    if (Date.now() - lastTracking > 1000 * 60 * 5 && online) {
       trackOperation({ settings, operation })
       setLastTracking(Date.now())
     }

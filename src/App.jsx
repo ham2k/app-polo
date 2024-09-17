@@ -22,7 +22,7 @@ import { usePrepareThemes } from './styles/tools/usePrepareThemes'
 import { persistor, store } from './store'
 import { selectSettings } from './store/settings'
 
-import { AppWrappedForDistribution, useConfigForDistribution } from './distro'
+import { AppWrappedForDistribution, trackNavigation, useConfigForDistribution } from './distro'
 
 import HeaderBar from './screens/components/HeaderBar'
 
@@ -57,11 +57,31 @@ function MainApp ({ navigationTheme }) {
     GLOBAL.consentAppData = settings.consentAppData
   }, [settings?.consentAppData])
 
+  const routeNameRef = React.useRef()
+  const navigationRef = React.useRef()
+
   if (appState === 'starting') {
     return <StartScreen setAppState={setAppState} />
   } else {
     return (
-      <NavigationContainer theme={navigationTheme}>
+      <NavigationContainer
+        theme={navigationTheme}
+        ref={navigationRef}
+        onReady={() => {
+          if (routeNameRef.current === undefined) {
+            trackNavigation({ settings, currentRouteName: navigationRef.current.getCurrentRoute().name })
+          }
+          routeNameRef.current = navigationRef.current.getCurrentRoute().name
+        }}
+        onStateChange={() => {
+          const previousRouteName = routeNameRef.current
+          const currentRouteName = navigationRef.current.getCurrentRoute().name
+          if (previousRouteName !== currentRouteName) {
+            trackNavigation({ settings, currentRouteName, previousRouteName })
+          }
+          routeNameRef.current = currentRouteName
+        }}
+      >
         <Stack.Navigator
           id="RootNavigator"
           screenOptions={{

@@ -25,8 +25,7 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { reportError, trackOperation } from '../../../distro'
-import { selectRuntimeOnline } from '../../../store/runtime'
+import { reportError, trackEvent } from '../../../distro'
 import { buildTitleForOperation } from '../OperationScreen'
 
 function prepareStyles (baseStyles) {
@@ -60,7 +59,6 @@ export default function OpSettingsTab ({ navigation, route }) {
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
-  const online = useSelector(selectRuntimeOnline)
 
   const [currentDialog, setCurrentDialog] = useState()
 
@@ -77,7 +75,12 @@ export default function OpSettingsTab ({ navigation, route }) {
   }, [operation?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors])
 
   const handleExport = useCallback((type) => {
-    if (online) trackOperation({ settings, operation, action: 'exportOperation', actionData: { type } })
+    trackEvent('export_operation', {
+      export_type: type,
+      qso_count: operation.qsoCount,
+      duration_minutes: Math.round((operation.startOnMillisMax - operation.startOnMillisMin) / (1000 * 60)),
+      refs: (operation.refs || []).map(r => r.type).join(',')
+    })
 
     dispatch(generateExport(operation.uuid, type)).then((paths) => {
       if (paths?.length > 0) {
@@ -95,12 +98,17 @@ export default function OpSettingsTab ({ navigation, route }) {
         })
       }
     })
-  }, [dispatch, online, operation, settings])
+  }, [dispatch, operation])
 
   const handleImportADIF = useCallback(() => {
     DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
       const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
-      await dispatch(importADIFIntoOperation(filename, operation))
+      const count = await dispatch(importADIFIntoOperation(filename, operation))
+      trackEvent('import_adif', {
+        import_count: count,
+        qso_count: operation.qsoCount,
+        refs: (operation.refs || []).map(r => r.type).join(',')
+      })
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
       if (error.indexOf('cancelled') >= 0) {
