@@ -36,6 +36,14 @@ export function trackOperation ({ operation, settings, action, actionData }) {
   }
 }
 
+export function trackNavigation () {
+  // Do nothing
+}
+
+export function trackEvent () {
+  // Do nothing
+}
+
 export function AppWrappedForDistribution ({ children }) {
   return (
     <>

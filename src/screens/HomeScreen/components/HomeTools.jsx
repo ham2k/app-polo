@@ -15,6 +15,9 @@ import { NumberKeys } from '../../OperationScreens/OpLoggingTab/components/Loggi
 import { useUIState } from '../../../store/ui/useUIState'
 
 import CallLookup from './CallLookup'
+import { trackEvent } from '../../../distro'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
 export default function HomeTools ({ settings, styles, style }) {
   const navigation = useNavigation()
@@ -23,6 +26,20 @@ export default function HomeTools ({ settings, styles, style }) {
   const setSearch = useCallback((value) => {
     reallySetSearch(value.toUpperCase())
   }, [reallySetSearch])
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      let theirInfo = parseCallsign(search)
+      if (theirInfo.baseCall) {
+        theirInfo = annotateFromCountryFile(theirInfo)
+      }
+      if (theirInfo.entityPrefix) {
+        trackEvent('search_callsign', { their_prefix: theirInfo.entityPrefix })
+      }
+    }, 2000)
+
+    return () => clearTimeout(timeout)
+  }, [search, settings?.operatorCall])
 
   const handleClearSearch = useCallback(() => {
     reallySetSearch('')

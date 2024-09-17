@@ -20,7 +20,7 @@ import { selectRawSettings, selectSettings } from '../../store/settings'
 import Notices from './components/Notices'
 import OperationItem from './components/OperationItem'
 import HomeTools from './components/HomeTools'
-import { trackSettings } from '../../distro'
+import { trackEvent, trackSettings } from '../../distro'
 import { selectRuntimeOnline } from '../../store/runtime'
 
 function prepareStyles (baseStyles) {
@@ -145,6 +145,7 @@ export default function HomeScreen ({ navigation }) {
 
   const handleNewOperation = useCallback(async () => {
     const operation = await dispatch(addNewOperation({ stationCall: settings.operatorCall, title: 'New Operation' }))
+    trackEvent('create_operation')
     navigation.navigate('Operation', { uuid: operation.uuid, operation, _isNew: true })
   }, [dispatch, settings, navigation])
 

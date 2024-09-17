@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux'
 import { deleteOperation } from '../../../../store/operations'
 import { useNavigation } from '@react-navigation/native'
 import { Ham2kDialog } from '../../../components/Ham2kDialog'
+import { trackEvent } from '../../../../distro'
 
 export function DeleteOperationDialog ({ operation, visible, settings, styles, onDialogDone }) {
   const navigation = useNavigation()
@@ -27,6 +28,7 @@ export function DeleteOperationDialog ({ operation, visible, settings, styles, o
     dispatch(deleteOperation(operation.uuid)).then(() => {
       navigation.navigate('Home')
     })
+    trackEvent('delete_operation', {})
     onDialogDone && onDialogDone()
   }, [operation, dispatch, onDialogDone, navigation])
 

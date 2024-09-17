@@ -17,6 +17,7 @@ import { Ham2kDialog } from '../../components/Ham2kDialog'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { dismissNotice, selectNotices } from '../../../store/system/systemSlice'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
+import { trackEvent } from '../../../distro'
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -106,6 +107,9 @@ export default function Notices () {
 
   const handleAction = useCallback(async (notice) => {
     setVisible(false)
+
+    trackEvent('accept_notice', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
+
     LayoutAnimation.configureNext(DismissNoticeAnimation,
       async () => { // animation ended
         await dispatch(dismissNotice(notice))
@@ -116,11 +120,15 @@ export default function Notices () {
         setCurrentNotice(undefined)
       }
     )
+
     await performAction(notice, dispatch, setOverlayText)
   }, [dispatch])
 
   const handleDismiss = useCallback((notice) => {
     setVisible(false)
+
+    trackEvent('dismiss_notice', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
+
     LayoutAnimation.configureNext(DismissNoticeAnimation,
       async () => { // animation ended
         await dispatch(dismissNotice(notice))

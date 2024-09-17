@@ -245,12 +245,14 @@ export const importADIFIntoOperation = (path, operation) => async (dispatch) => 
 
       await dispatch(saveQSOsForOperation(operation.uuid))
       dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'ready' }))
+      return qsos.length
     } catch (error) {
       reportError('Error importing ADIF into Operation', error)
     }
   } else {
     reportError('Invalid Path importing ADIF into Operation', path)
   }
+  return -1
 }
 
 export const importHistoricalADIF = (path) => async (dispatch) => {
