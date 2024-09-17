@@ -1,0 +1,6 @@
+{
+  "react-native": {
+    "analytics_auto_collection_enabled": false,
+    "google_analytics_automatic_screen_reporting_enabled": false
+  }
+}

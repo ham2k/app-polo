@@ -7,7 +7,7 @@
  *
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Client } from 'rollbar-react-native'
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
 import Config from 'react-native-config'
@@ -18,6 +18,9 @@ import { hashCode } from '../tools/hashCode'
 import GLOBAL from '../GLOBAL'
 
 import packageJson from '../../package.json'
+import { firebase } from '@react-native-firebase/analytics'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
 if (process.env.NODE_ENV !== 'development') {
   GLOBAL.rollbarNative = new Client({
@@ -40,7 +43,7 @@ export function reportError (error, ...extra) {
 }
 
 export function reportData (payload) {
-  console.log('DATA', payload)
+  // console.log('DATA', payload)
   payload.version = packageJson.version
 
   setTimeout(async () => {
@@ -53,7 +56,7 @@ export function reportData (payload) {
         },
         body: JSON.stringify(payload)
       })
-      console.log('Data reported')
+      // console.log('Data reported')
     } catch (error) {
       console.log('Error reporting data:', error)
     }
@@ -74,6 +77,22 @@ export function trackSettings ({ settings, action, actionData }) {
 export function trackOperation ({ operation, settings, action, actionData }) {
   if (settings.consentAppData) {
     reportData({ call: settings.operatorCall, operation: { ...operation, consentOpData: settings.consentOpData }, action, actionData })
+  }
+}
+
+export function trackNavigation ({ currentRouteName, previousRouteName }) {
+  if (GLOBAL.consentAppData) {
+    firebase?.analytics()?.logScreenView({
+      screen_name: currentRouteName,
+      screen_class: currentRouteName
+    })
+  }
+}
+
+export function trackEvent (event, data) {
+  if (GLOBAL.consentAppData) {
+    // console.log('EVENT', event, data)
+    firebase?.analytics()?.logEvent(`polo_${event}`, data)
   }
 }
 
@@ -106,4 +125,46 @@ export function useConfigForDistribution ({ settings }) {
       })
     }
   }, [settings?.operatorCall])
+
+  const [analyticsEnabled, setAnalyticsEnabled] = useState(false)
+  useEffect(() => {
+    setImmediate(async () => {
+      GLOBAL.consentAppData = settings?.consentAppData
+      if (settings?.consentAppData && !analyticsEnabled) {
+        await firebase?.analytics()?.setAnalyticsCollectionEnabled(true)
+        await firebase?.analytics()?.setConsent({
+          analytics_storage: true,
+          ad_storage: false,
+          ad_user_data: false,
+          ad_personalization: false
+        })
+        setAnalyticsEnabled(true)
+      } else if (!settings?.consentAppData && analyticsEnabled) {
+        await firebase?.analytics()?.setConsent({
+          analytics_storage: false,
+          ad_storage: false,
+          ad_user_data: false,
+          ad_personalization: false
+        })
+        await firebase?.analytics()?.setAnalyticsCollectionEnabled(false)
+        setAnalyticsEnabled(false)
+      }
+    })
+  }, [analyticsEnabled, settings?.consentAppData])
+
+  useEffect(() => {
+    if (settings?.consentAppData) {
+      let info = parseCallsign(settings?.operatorCall)
+      if (info.baseCall) {
+        info = annotateFromCountryFile(info)
+      }
+      firebase?.analytics()?.setUserId(info.baseCall)
+      firebase?.analytics()?.setUserProperties({
+        entity_prefix: info.entityPrefix,
+        entity_name: info.entityName,
+        base_call: info.baseCall,
+        call: settings?.operatorCall
+      })
+    }
+  }, [settings?.operatorCall, settings?.consentAppData])
 }

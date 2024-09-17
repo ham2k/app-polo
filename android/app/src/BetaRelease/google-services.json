@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "545346794805",
+    "project_id": "ham2k-polo-staging",
+    "storage_bucket": "ham2k-polo-staging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545346794805:android:e8e3b5540ca6045959087c",
+        "android_client_info": {
+          "package_name": "com.ham2k.polo.alpha"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8yhlrcmFsbXusvoZTYU_2HxvYaliFJko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545346794805:android:b890b14da6c55e0b59087c",
+        "android_client_info": {
+          "package_name": "com.ham2k.polo.beta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8yhlrcmFsbXusvoZTYU_2HxvYaliFJko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

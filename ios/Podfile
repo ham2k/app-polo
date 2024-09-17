@@ -9,7 +9,9 @@ platform :ios, '14.0' # min_ios_version_supported
 
 prepare_react_native_project!
 
-linkage = 'static' # ENV['USE_FRAMEWORKS'] Rollbar requires use_frameworks
+linkage = 'static' # ENV['USE_FRAMEWORKS'] Rollbar and Firebase require use_frameworks
+
+$RNFirebaseAsStaticFramework = true
 
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
