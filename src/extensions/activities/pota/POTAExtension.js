@@ -158,35 +158,23 @@ const ReferenceHandler = {
 
     const data = await potaFindParkByReference(ref.ref)
 
-    // console.log('POTA decorator', data)
-
-    // const apiPromise = await dispatch(apiPOTA.endpoints.lookupPark.initiate({ ref: ref.ref }))
-    // await Promise.all(dispatch(apiPOTA.util.getRunningQueriesThunk()))
-    // const apiLookup = await dispatch((_dispatch, getState) => apiPOTA.endpoints.lookupCall.select({ ref: ref.ref })(getState()))
-    // apiPromise.unsubscribe && apiPromise.unsubscribe()
-    // const data2 = apiLookup.data || {}
-    // console.log('POTA API', data2)
-    // const pota = useMemo(() => {
-    //   return potaLookup?.data ?? {}
-    // }
-    // , [potaLookup?.data])
-
-    //  && (potaRef === undefined || pota.reference === potaRef) && pota?.locationDesc?.indexOf(',') < 0) {
-    // // Only use POTA info if it's not a multi-state park
-    // newGuess.grid = pota.grid6
-
-    // if (pota.reference?.startsWith('US-') || pota.reference?.startsWith('CA-')) {
-    //   const potaState = (pota.locationDesc || '').split('-').pop().trim()
-
     let result
     if (data?.name) {
       result = {
         ...ref,
         name: data.name,
-        location: data.locationName,
-        grid: data.grid,
-        accuracy: LOCATION_ACCURACY.REASONABLE,
+        location: data.location,
         label: `${Info.shortName} ${ref.ref}: ${data.name}`
+      }
+      if (data.location.indexOf(',') < 0) {
+        // Only use grid if it's not a multi-state park
+        result.accuracy = LOCATION_ACCURACY.REASONABLE
+        result.grid = data.grid
+
+        if (data.ref?.startsWith('US-') || data.ref?.startsWith('CA-')) {
+          // For US and Canada, use the state/province.
+          result.state = (data.location || '').split('-').pop().trim()
+        }
       }
     } else {
       return { name: Info.unknownReferenceName ?? 'Unknown reference', ...ref }

@@ -63,7 +63,8 @@ export function registerPOTAAllParksData () {
                       active: row.active === '1',
                       grid: row.grid,
                       lat: Number.parseFloat(row.latitude) || 0,
-                      lon: Number.parseFloat(row.longitude) || 0
+                      lon: Number.parseFloat(row.longitude) || 0,
+                      location: row.locationDesc
                     }
 
                     if (park.ref && park.dxccCode) {
