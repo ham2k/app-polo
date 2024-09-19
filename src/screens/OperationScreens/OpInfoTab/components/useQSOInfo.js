@@ -171,22 +171,27 @@ function mergeData ({ theirCall, qrz, refs, callHistory, callNotes }) {
     }
   }
 
-  if (qrz?.name && (qrz.call === theirCall.call || qrz.call === theirCall.baseCall || qrz.otherCall === theirCall.call || qrz.otherCall === theirCall.baseCall)) {
-    newLookup = {
-      source: 'qrz.com',
-      call: qrz.call,
-      name: qrz.name,
-      state: qrz.state,
-      city: qrz.city,
-      country: qrz.country,
-      dxccCode: qrz.dxccCode,
-      county: qrz.county,
-      postal: qrz.postal,
-      grid: qrz.grid,
-      cqZone: qrz.cqZone,
-      ituZone: qrz.ituZone,
-      image: qrz.image,
-      imageInfo: qrz.imageInfo
+  if (qrz?.name) {
+    let matchingQRZCall = qrz.allCalls.find(call => call === theirCall.call)
+    if (!matchingQRZCall && theirCall.baseCall) matchingQRZCall = qrz.allCalls.find(call => call === theirCall.baseCall)
+
+    if (matchingQRZCall) {
+      newLookup = {
+        source: 'qrz.com',
+        call: matchingQRZCall,
+        name: qrz.name,
+        state: qrz.state,
+        city: qrz.city,
+        country: qrz.country,
+        dxccCode: qrz.dxccCode,
+        county: qrz.county,
+        postal: qrz.postal,
+        grid: qrz.grid,
+        cqZone: qrz.cqZone,
+        ituZone: qrz.ituZone,
+        image: qrz.image,
+        imageInfo: qrz.imageInfo
+      }
     }
   }
 
