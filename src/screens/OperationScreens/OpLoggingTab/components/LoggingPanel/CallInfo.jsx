@@ -179,7 +179,8 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
 
   const [historyMessage, historyLevel] = useMemo(() => {
     if (scoreInfo?.length > 0) {
-      const [message, level] = scoreInfo.map(score => {
+      // Order by value, as those that provide points/QSOs/etc. more important
+      const [message, level] = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
         if (score?.notices && score?.notices[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.notices[0]}`] ?? MESSAGES_FOR_SCORING[score?.notices[0]] ?? score?.notices[0], 'notice']
         if (score?.alerts && score?.alerts[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.alerts[0]}`] ?? MESSAGES_FOR_SCORING[score?.alerts[0]] ?? score?.alerts[0], 'alert']
         return []

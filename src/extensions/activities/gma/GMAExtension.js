@@ -56,7 +56,9 @@ const ActivityHook = {
     let label = opRef ? Info.shortNameDoubleContact : Info.shortName
     if (findRef(qso, Info.huntingType)) label = `✓ ${label}`
     return label
-  }
+  },
+
+  generalHuntingType: ({ operation, settings }) => Info.huntingType
 }
 
 const HunterLoggingControl = {
@@ -127,7 +129,7 @@ const ReferenceHandler = {
       return [{
         format: 'adif',
         common: { refs: [ref] },
-        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
+        nameTemplate: settings.useCompactFileNames ? '{call}@GMA-{ref}-{compactDate}' : '{date} {call} at GMA {ref}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
     }
