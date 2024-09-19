@@ -5,20 +5,17 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import { IconButton } from 'react-native-paper'
 
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectOperation } from '../../../store/operations'
-import { addQSO, selectQSOs } from '../../../store/qsos'
+import { selectQSOs } from '../../../store/qsos'
 import { View } from 'react-native'
 import { selectSettings } from '../../../store/settings'
-import { apiQRZ } from '../../../store/apiQRZ'
-import { reportError } from '../../../distro'
 
 import { useUIState } from '../../../store/ui'
 import MapWithQSOs from './components/MapWithQSOs'
@@ -44,9 +41,6 @@ export default function OpMapTab ({ navigation, route }) {
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor)
 
-  const dispatch = useDispatch()
-
-  const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
 
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
@@ -64,61 +58,6 @@ export default function OpMapTab ({ navigation, route }) {
   }, [operation?.grid])
 
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
-
-  const [nextQSOWithoutInfo, setNextQSOWithoutInfo] = useState(null)
-
-  useEffect(() => {
-    if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password) {
-      if (!nextQSOWithoutInfo) {
-        setNextQSOWithoutInfo(qsos.find(qso => !qso.their?.lookup))
-      }
-    }
-  }, [qsos, online, settings, nextQSOWithoutInfo])
-
-  useEffect(() => {
-    if (nextQSOWithoutInfo) {
-      setTimeout(async () => {
-        try {
-          const { data } = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: nextQSOWithoutInfo.their.call }, { subscribe: false }))
-          const lookup = {
-            name: data?.name,
-            state: data?.state,
-            city: data?.city,
-            country: data?.country,
-            county: data?.county,
-            postal: data?.postal,
-            grid: data?.grid,
-            cqZone: data?.cqZone,
-            ituZone: data?.ituZone,
-            image: data?.image,
-            imageInfo: data?.imageInfo
-          }
-
-          if (data?.error) lookup.error = data.error
-
-          await dispatch(addQSO({
-            uuid: operation.uuid,
-            qso: {
-              ...nextQSOWithoutInfo,
-              their: {
-                ...nextQSOWithoutInfo.their,
-                guess: {
-                  name: data?.name,
-                  grid: data?.grid,
-                  ...nextQSOWithoutInfo.their.guess
-                },
-                lookup
-              }
-            }
-          }))
-        } catch (e) {
-          reportError('QRZ Lookup Error', e)
-        } finally {
-          setNextQSOWithoutInfo(null)
-        }
-      }, 10)
-    }
-  }, [nextQSOWithoutInfo, dispatch, operation?.uuid])
 
   return (
     <>
