@@ -1,4 +1,10 @@
 {
+  "24.9.7": {
+    "name": "September '24 (24.9.7)",
+    "changes": [
+      "Fixed bug when doing for calls with multiple aliases on QRZ.com"
+    ]
+  },
   "24.9.6": {
     "name": "September '24 (24.9.6)",
     "changes": [
