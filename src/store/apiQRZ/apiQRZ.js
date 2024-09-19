@@ -134,7 +134,7 @@ export const apiQRZ = createApi({
                   capitalizeString(callsignInfo.name, { content: 'name', force: false })
                 ].filter(x => x).join(' '),
                 call: castString(callsignInfo.call),
-                otherCall: castString(callsignInfo.xref),
+                allCalls: [castString(callsignInfo.call)].concat(castString(callsignInfo.aliases).split(',')).concat([castString(callsignInfo.xref)]).filter(x => x),
                 firstName: castString(callsignInfo.fname),
                 lastName: castString(callsignInfo.name),
                 tz: castString(callsignInfo.TimeZone),
