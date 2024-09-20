@@ -204,7 +204,7 @@ const ReferenceHandler = {
   adifFieldsForOneQSO: ({ qso, operation, common }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
 
-    if (huntingRefs) return ([{ SIG: 'POTA' }, { SIG_INFO: huntingRefs[0].ref }, { POTA_REF: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }])
+    if (huntingRefs && huntingRefs[0]) return ([{ SIG: 'POTA' }, { SIG_INFO: huntingRefs[0]?.ref }, { POTA_REF: huntingRefs.map(ref => ref?.ref).filter(x => x).join(',') }])
     else return []
   },
 
