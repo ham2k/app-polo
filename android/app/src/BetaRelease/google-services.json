@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "545346794805",
-    "project_id": "ham2k-polo-staging",
-    "storage_bucket": "ham2k-polo-staging.appspot.com"
+    "project_number": "675275536936",
+    "project_id": "ham2k-polo",
+    "storage_bucket": "ham2k-polo.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:545346794805:android:e8e3b5540ca6045959087c",
+        "mobilesdk_app_id": "1:675275536936:android:3bbd748f3112eccfc7d31d",
         "android_client_info": {
-          "package_name": "com.ham2k.polo.alpha"
+          "package_name": "com.ham2k.polo"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB8yhlrcmFsbXusvoZTYU_2HxvYaliFJko"
+          "current_key": "AIzaSyBbj_tEwTSWQ0X8B8iLcRWER_QyOuLLkk8"
         }
       ],
       "services": {
@@ -26,7 +26,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:545346794805:android:b890b14da6c55e0b59087c",
+        "mobilesdk_app_id": "1:675275536936:android:3ee8213b67cbeaeac7d31d",
         "android_client_info": {
           "package_name": "com.ham2k.polo.beta"
         }
@@ -34,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB8yhlrcmFsbXusvoZTYU_2HxvYaliFJko"
+          "current_key": "AIzaSyBbj_tEwTSWQ0X8B8iLcRWER_QyOuLLkk8"
         }
       ],
       "services": {
