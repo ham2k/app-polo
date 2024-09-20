@@ -171,8 +171,8 @@ const ReferenceHandler = {
         result.accuracy = LOCATION_ACCURACY.REASONABLE
         result.grid = data.grid
 
-        if (data.ref?.startsWith('US-') || data.ref?.startsWith('CA-')) {
-          // For US and Canada, use the state/province.
+        if (data.ref?.startsWith('US-') || data.ref?.startsWith('CA-') || data.ref?.startsWith('AU-')) {
+          // For US, Canada or Australia, use the state/province.
           result.state = (data.location || '').split('-').pop().trim()
         }
       }
