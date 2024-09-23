@@ -9,7 +9,7 @@ platform :ios, '14.0' # min_ios_version_supported
 
 prepare_react_native_project!
 
-linkage = 'static' # ENV['USE_FRAMEWORKS'] Rollbar and Firebase require use_frameworks
+linkage = 'static' # ENV['USE_FRAMEWORKS'] Firebase require use_frameworks
 
 $RNFirebaseAsStaticFramework = true
 
@@ -19,8 +19,6 @@ if linkage != nil
 end
 
 target 'polo' do
-  pod 'RollbarReactNative', path: '../node_modules/rollbar-react-native'
-
   config = use_native_modules!
 
   use_react_native!(

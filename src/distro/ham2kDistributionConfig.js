@@ -8,37 +8,34 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Client } from 'rollbar-react-native'
-import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
-import Config from 'react-native-config'
 import codePush from 'react-native-code-push'
+import { firebase as firebaseAnalytics } from '@react-native-firebase/analytics'
+import { firebase as firebaseCrashlytics } from '@react-native-firebase/crashlytics'
 
-import { hashCode } from '../tools/hashCode'
-
-import GLOBAL from '../GLOBAL'
-
-import packageJson from '../../package.json'
-import { firebase } from '@react-native-firebase/analytics'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
-if (process.env.NODE_ENV !== 'development') {
-  GLOBAL.rollbarNative = new Client({
-    accessToken: Config.ROLLBAR_TOKEN,
-    captureUncaught: true,
-    captureUnhandledRejections: true
-  })
+import packageJson from '../../package.json'
+import GLOBAL from '../GLOBAL'
+import { hashCode } from '../tools/hashCode'
 
+if (process.env.NODE_ENV !== 'development') {
   GLOBAL.codePushOptions = {
     installMode: codePush.InstallMode.ON_NEXT_RESUME
   }
 }
 
-export function reportError (error, ...extra) {
-  if (GLOBAL?.consentAppData && GLOBAL?.rollbarNative?.rollbar) {
-    GLOBAL.rollbarNative.rollbar.error(error, ...extra)
+export function reportError (msg, ...extra) {
+  if (GLOBAL?.consentAppData) {
+    console.log('reportError')
+    console.log(typeof msg)
+    console.log(typeof extra[0])
+    firebaseCrashlytics?.crashlytics()?.log(msg)
+    if (extra && extra[0]?.stack) {
+      firebaseCrashlytics?.crashlytics()?.recordError(extra[0])
+    }
   }
-  console.error(error, ...extra)
+  console.error(msg, ...extra)
   if (extra && extra[0]?.stack) console.error(extra[0].stack)
 }
 
@@ -82,7 +79,7 @@ export function trackOperation ({ operation, settings, action, actionData }) {
 
 export function trackNavigation ({ currentRouteName, previousRouteName }) {
   if (GLOBAL.consentAppData) {
-    firebase?.analytics()?.logScreenView({
+    firebaseAnalytics?.analytics()?.logScreenView({
       screen_name: currentRouteName,
       screen_class: currentRouteName
     })
@@ -92,47 +89,33 @@ export function trackNavigation ({ currentRouteName, previousRouteName }) {
 export function trackEvent (event, data) {
   if (GLOBAL.consentAppData) {
     // console.log('EVENT', event, data)
-    firebase?.analytics()?.logEvent(`polo_${event}`, data)
+    firebaseAnalytics?.analytics()?.logEvent(`polo_${event}`, data)
   }
 }
 
 export function AppWrappedForDistribution ({ children }) {
-  if (GLOBAL?.rollbarNative?.rollbar) {
-    return (
-      <RollbarProvider instance={GLOBAL.rollbarNative?.rollbar}>
-        <ErrorBoundary>
-          {children}
-        </ErrorBoundary>
-      </RollbarProvider>
-    )
-  } else {
-    return (
-      <>
-        {children}
-      </>
-    )
-  }
+  return (
+    <>
+      {children}
+    </>
+  )
 }
 
 export function useConfigForDistribution ({ settings }) {
+  // Keep track of consent
   useEffect(() => {
-    if (GLOBAL.rollbarNative?.rollbar) {
-      GLOBAL.rollbarNative.rollbar.configure({
-        payload: {
-          person: { id: settings?.operatorCall },
-          packageVersion: packageJson.version
-        }
-      })
-    }
-  }, [settings?.operatorCall])
+    GLOBAL.consentAppData = settings?.consentAppData
+  }, [settings?.consentAppData])
 
+  // Enable/disable Firebase Analytics & Crashlytics
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false)
   useEffect(() => {
     setImmediate(async () => {
-      GLOBAL.consentAppData = settings?.consentAppData
       if (settings?.consentAppData && !analyticsEnabled) {
-        await firebase?.analytics()?.setAnalyticsCollectionEnabled(true)
-        await firebase?.analytics()?.setConsent({
+        await firebaseCrashlytics?.crashlytics()?.setCrashlyticsCollectionEnabled(true)
+
+        await firebaseAnalytics?.analytics()?.setAnalyticsCollectionEnabled(true)
+        await firebaseAnalytics?.analytics()?.setConsent({
           analytics_storage: true,
           ad_storage: false,
           ad_user_data: false,
@@ -140,26 +123,35 @@ export function useConfigForDistribution ({ settings }) {
         })
         setAnalyticsEnabled(true)
       } else if (!settings?.consentAppData && analyticsEnabled) {
-        await firebase?.analytics()?.setConsent({
+        await firebaseCrashlytics?.crashlytics()?.setCrashlyticsCollectionEnabled(false)
+
+        await firebaseAnalytics?.analytics()?.setAnalyticsCollectionEnabled(false)
+        await firebaseAnalytics?.analytics()?.setConsent({
           analytics_storage: false,
           ad_storage: false,
           ad_user_data: false,
           ad_personalization: false
         })
-        await firebase?.analytics()?.setAnalyticsCollectionEnabled(false)
+
         setAnalyticsEnabled(false)
       }
     })
   }, [analyticsEnabled, settings?.consentAppData])
 
+  // Set Firebase Analytics & Crashlytics user properties
   useEffect(() => {
     if (settings?.consentAppData) {
+      firebaseCrashlytics?.crashlytics()?.setUserId(settings?.operatorCall)
+      firebaseCrashlytics?.crashlytics()?.setAttributes({
+        packageVersion: packageJson.version
+      })
+
       let info = parseCallsign(settings?.operatorCall)
       if (info.baseCall) {
         info = annotateFromCountryFile(info)
       }
-      firebase?.analytics()?.setUserId(info.baseCall)
-      firebase?.analytics()?.setUserProperties({
+      firebaseAnalytics?.analytics()?.setUserId(info.baseCall)
+      firebaseAnalytics?.analytics()?.setUserProperties({
         entity_prefix: info.entityPrefix,
         entity_name: info.entityName,
         base_call: info.baseCall,
