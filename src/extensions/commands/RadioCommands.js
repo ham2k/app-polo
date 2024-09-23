@@ -36,7 +36,7 @@ const BandCommandHook = {
   },
   invokeCommand: (match, { handleFieldChange }) => {
     handleFieldChange({ fieldId: 'band', value: match[1] + 'm' })
-    return `Band changed to ${match[1]}m`
+    return `Band set to ${match[1]}m`
   }
 }
 
@@ -58,13 +58,13 @@ const FrequencyCommandHook = {
   invokeCommand: (match, { qso, handleFieldChange }) => {
     if (match[1].startsWith('..') && qso.freq) {
       handleFieldChange({ fieldId: 'freq', value: `${Math.round(qso.freq)}${match[1].substring(1)}` })
-      return `Frequency changed to ${Math.round(qso.freq)}${match[1].substring(1)}`
+      return `Frequency set to ${Math.round(qso.freq)}${match[1].substring(1)}`
     } else if (match[1].startsWith('.') && qso.freq) {
       handleFieldChange({ fieldId: 'freq', value: `${Math.floor(qso.freq / 1000)}${match[1]}` })
-      return `Frequency changed to ${Math.floor(qso.freq / 1000)}${match[1]}`
+      return `Frequency set to ${Math.floor(qso.freq / 1000)}${match[1]}`
     } else {
       handleFieldChange({ fieldId: 'freq', value: match[1] })
-      return `Frequency changed to ${match[1]}`
+      return `Frequency set to ${match[1]}`
     }
   }
 }
@@ -79,7 +79,7 @@ const PowerCommandHook = {
   },
   invokeCommand: (match, { qso, handleFieldChange }) => {
     handleFieldChange({ fieldId: 'power', value: match[1] })
-    return `Power changed to ${match[1]}W`
+    return `Power set to ${match[1]}W`
   }
 }
 
@@ -93,6 +93,6 @@ const ModeCommandHook = {
   },
   invokeCommand: (match, { handleFieldChange }) => {
     handleFieldChange({ fieldId: 'mode', value: match[1] })
-    return `Mode changed to ${match[1]}`
+    return `Mode set to ${match[1]}`
   }
 }
