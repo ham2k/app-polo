@@ -227,6 +227,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       if (commandResult) {
         trackEvent('command', { command })
         setCommandInfo({ message: commandResult || undefined, match: undefined })
+        setTimeout(() => {
+          setCommandInfo({ message: undefined, match: undefined })
+        }, 3000)
         return
       }
 
@@ -453,7 +456,6 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                   ) : (
                     <OpInfo
                       message={commandInfo?.message || operationError}
-                      clearMessage={() => setCommandInfo({ ...commandInfo, message: undefined })}
                       operation={operation}
                       vfo={vfo}
                       styles={styles}

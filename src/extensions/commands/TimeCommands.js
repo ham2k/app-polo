@@ -6,6 +6,7 @@
  */
 
 import { setOperationData } from '../../store/operations'
+import { fmtDateTimeZuluDynamic } from '../../tools/timeFormats'
 
 const Info = {
   key: 'commands-time',
@@ -30,7 +31,14 @@ const DirectTimeCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-time-direct',
-  match: /^(\d{1,2}-\d{2,2}|\d{1,2}:\d{2,2}|\d{1,2}:\d{2,2}:\d{2,2})$/i,
+  match: /^(\d{1,2}[-/]\d{2,2}|\d{1,2}:\d{2,2}|\d{1,2}:\d{2,2}:\d{2,2})$/i,
+  describeCommand: (match) => {
+    if (match[1].indexOf(':') > -1) {
+      return `Set time to ${match[1]}?`
+    } else {
+      return `Set date to ${match[1]}?`
+    }
+  },
   invokeCommand: (match, { qso, handleFieldChange }) => {
     const baseTime = qso.startOnMillis ? new Date(qso.startOnMillis) : new Date()
     if (match[1].indexOf(':') > -1) {
@@ -38,10 +46,12 @@ const DirectTimeCommandHook = {
       if (time.length === 5) time = time + ':00'
       const newValue = Date.parse(`${baseTime.toISOString().split('T')[0]}T${time}Z`)
       handleFieldChange({ fieldId: 'time', value: newValue.valueOf() })
+      return `Time set to ${fmtDateTimeZuluDynamic(newValue.valueOf())}`
     } else {
-      const date = match[1].padStart(5, '0')
+      const date = match[1].padStart(5, '0').replace('/', '-')
       const newValue = Date.parse(`${baseTime.getFullYear()}-${date}T${baseTime.toISOString().split('T')[1]}`)
       handleFieldChange({ fieldId: 'time', value: newValue.valueOf() })
+      return `Date set to ${fmtDateTimeZuluDynamic(newValue.valueOf())}`
     }
   }
 }
@@ -51,6 +61,18 @@ const DeltaTimeCommandHook = {
   extension: Extension,
   key: 'commands-time-delta',
   match: /^([-+]\d+)([hmsdw])$/i,
+  describeCommand: (match) => {
+    if (match) {
+      const delta = parseInt(match[1], 10)
+      const units = match[2].toUpperCase()
+      if (units === 'H') return `Change time by ${delta} hours?`
+      else if (units === 'M') return `Change time by ${delta} minutes?`
+      else if (units === 'S') return `Change time by ${delta} seconds?`
+      else if (units === 'D') return `Change time by ${delta} days?`
+      else if (units === 'W') return `Change time by ${delta} weeks?`
+      else return ''
+    }
+  },
   invokeCommand: (match, { qso, handleFieldChange }) => {
     const baseTime = qso.startOnMillis ? new Date(qso.startOnMillis) : new Date()
 
@@ -65,6 +87,7 @@ const DeltaTimeCommandHook = {
 
       const newValue = baseTime.valueOf() + delta
       handleFieldChange({ fieldId: 'time', value: newValue })
+      return `Time set to ${fmtDateTimeZuluDynamic(newValue.valueOf())}`
     }
   }
 }
@@ -76,11 +99,11 @@ const NowTimeCommandHook = {
   match: /^(NOW|TODAY|YESTERDAY)$/i,
   describeCommand: (match) => {
     if (match[1] === 'NOW') {
-      return 'Set time to now?'
+      return 'Change time to now?'
     } else if (match[1] === 'TODAY') {
-      return 'Set time to today?'
+      return 'Change time to today?'
     } else if (match[1] === 'YESTERDAY') {
-      return 'Set time to yesterday?'
+      return 'Change time to yesterday?'
     }
   },
   invokeCommand: (match, { qso, handleFieldChange, dispatch, operation }) => {
