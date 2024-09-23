@@ -95,20 +95,41 @@ const ReferenceHandler = {
     const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
-      return { counts: 1, type: Info.activationType }
+      return { value: 1, type: Info.activationType }
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
       if (sameBand && sameMode) {
-        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { value: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        return { counts: 1, notices, type: Info.activationType }
+        return { value: 1, notices, type: Info.activationType }
       }
     }
-  }
+  },
 
+  accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
+    if (!ref?.ref) return score // No scoring if not activating
+    if (!score?.key) score = undefined // Reset if score doesn't have the right shape
+    score = score ?? {
+      key: ref?.type,
+      icon: Info.icon,
+      label: Info.shortName,
+      value: 0,
+      summary: ''
+    }
+
+    score.value = score.value + qsoScore.value
+    score.activated = score.value >= 50
+    if (score.activated) {
+      score.summary = '✓'
+    } else {
+      score.summary = `${score.value}/50`
+    }
+
+    return score
+  }
 }

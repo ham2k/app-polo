@@ -184,12 +184,12 @@ const ReferenceHandler = {
 
     const { band, key, startOnMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
-    const points = refs.length
+    const refCount = refs.length
 
     const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
-      return { counts: 1, points, type: Info.activationType }
+      return { value: 1, refCount, type: Info.activationType }
     } else {
       const thisQSOTime = qso.startOnMillis ?? Date.now()
       const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
@@ -197,18 +197,58 @@ const ReferenceHandler = {
       const sameDay = nearDupes.filter(q => (q.startOnMillis - (q.startOnMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
       if (sameBand && sameDay) {
-        if (points > 0 && !sameRefs) { // Doesn't count towards activation, but towards B2B award.
-          return { counts: 0, points, notices: ['newRef'], type: Info.activationType }
+        if (refCount > 0 && !sameRefs) { // Doesn't count towards activation, but towards B2B award.
+          return { value: 0, refCount, notices: ['newRef'], type: Info.activationType }
         }
-        return { counts: 0, points: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { value: 0, refCount: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
         if (refs.length > 0 && !sameRefs) notices.push('newRef')
         if (!sameDay) notices.push('newDay')
         if (!sameBand) notices.push('newBand')
 
-        return { counts: 1, points, notices, type: Info.activationType }
+        return { value: 1, refCount, notices, type: Info.activationType }
       }
     }
+  },
+
+  accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
+    if (!ref?.ref) return score // No scoring if not activating
+    if (!score?.key) score = undefined // Reset if score doesn't have the right shape
+    score = score ?? {
+      key: ref?.type,
+      icon: Info.icon,
+      label: Info.shortName,
+      value: 0,
+      refCount: 0,
+      summary: '',
+      refs: {},
+      primaryRef: undefined
+    }
+
+    if (!score.refs[ref.ref]) { // Track how many bunker we're activating
+      score.refs[ref.ref] = true
+      score.primaryRef = score.primaryRef || ref.ref
+    }
+
+    if (score.primaryRef !== ref.ref) return score // Only do scoring for one ref
+
+    score.value = score.value + qsoScore.value
+    score.refCount = score.refCount + qsoScore.refCount
+
+    score.activated = score.value >= 25
+
+    if (score.activated) {
+      score.summary = '✓'
+    } else {
+      score.summary = `${score.value}/25`
+    }
+
+    if (score.refCount > 0) {
+      const label = score.primaryRef ? 'B2B' : 'B'
+      score.summary = [score.summary, `${score.refCount} ${label}`].filter(x => x).join(' • ')
+    }
+
+    return score
   }
 }
