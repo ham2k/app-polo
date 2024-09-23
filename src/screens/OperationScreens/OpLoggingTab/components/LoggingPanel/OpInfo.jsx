@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 
 import { View } from 'react-native'
@@ -50,13 +50,6 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
       return { markdownMessage: '', icon: 'timer-outline' }
     }
   }, [message, styles])
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      clearMessage()
-    }, 3000)
-    return () => clearTimeout(timer)
-  }, [message, clearMessage])
 
   const line1 = useMemo(() => {
     if (qsos.length === 0) {
