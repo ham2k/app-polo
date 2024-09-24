@@ -21,6 +21,7 @@ export function registerPOTAAllParksData () {
     infoURL: 'https://pota.app/',
     icon: 'file-powerpoint-outline',
     maxAgeInDays: 28,
+    version: 2,
     enabledByDefault: true,
     fetch: async (args) => {
       const { key, definition, options } = args
