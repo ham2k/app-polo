@@ -36,7 +36,7 @@ export const fetchDataFile = (key, options = {}) => async (dispatch, getState) =
     const data = await definition.fetch({ key, definition, info, dispatch, getState, options })
 
     try { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/data/`) } catch (error) { /* ignore */ }
-    await RNFetchBlob.fs.writeFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`, JSON.stringify(data))
+    await RNFetchBlob.fs.writeFile(filenameForDefinition(definition), JSON.stringify(data))
 
     await dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', version: data.version, date: data.date ?? new Date() }))
     options.onStatus && await options.onStatus({ key, definition, status: 'loaded', data })
@@ -61,14 +61,14 @@ export const readDataFile = (key, options = {}) => async (dispatch) => {
   try {
     dispatch(actions.setDataFileInfo({ key, status: 'loading' }))
 
-    const body = await RNFetchBlob.fs.readFile(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
+    const body = await RNFetchBlob.fs.readFile(filenameForDefinition(definition))
     const data = JSON.parse(body)
 
     let date
     if (data.date) {
       date = new Date(data.date)
     } else {
-      const stat = await RNFetchBlob.fs.stat(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
+      const stat = await RNFetchBlob.fs.stat(filenameForDefinition(definition))
       date = new Date(stat.lastModified)
     }
 
@@ -98,7 +98,7 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
   try {
     const maxAgeInDays = definition?.maxAgeInDays || 7
 
-    const exists = await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
+    const exists = await RNFetchBlob.fs.exists(filenameForDefinition(definition))
     if (!exists || force) {
       console.info(`Data for ${definition.key} not found, fetching a fresh version`)
       dispatch(addRuntimeMessage(`Downloading ${definition.name}`))
@@ -137,9 +137,9 @@ export const removeDataFile = (key, force) => async (dispatch, getState) => {
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
-  const exists = await RNFetchBlob.fs.exists(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
+  const exists = await RNFetchBlob.fs.exists(filenameForDefinition(definition))
   if (exists) {
-    await RNFetchBlob.fs.unlink(`${RNFetchBlob.fs.dirs.DocumentDir}/data/${definition.key}.json`)
+    await RNFetchBlob.fs.unlink(filenameForDefinition(definition))
   }
   if (definition.onRemove) await definition.onRemove()
   dispatch(actions.setDataFileInfo({ key, data: undefined, status: 'removed', date: undefined }))
@@ -191,4 +191,9 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
   }
 
   return data
+}
+
+function filenameForDefinition (definition) {
+  const basename = [definition.key, definition.version].filter(x => x).join('-')
+  return `${RNFetchBlob.fs.dirs.DocumentDir}/data/${basename}.json`
 }
