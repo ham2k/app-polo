@@ -41,7 +41,6 @@ const Info = {
 
 const Extension = {
   ...Info,
-  enabledByDefault: true,
   category: 'fieldOps',
   onActivation: ({ registerHook }) => {
     registerHook('activity', { hook: ActivityHook })
