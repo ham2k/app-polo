@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Dialog, Text, TouchableRipple } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
-import { locationToGrid } from '@ham2k/lib-maidenhead-grid'
+import { locationToGrid6, locationToGrid8 } from '@ham2k/lib-maidenhead-grid'
 
 import { setOperationData } from '../../../../store/operations'
 import GridInput from '../../../components/GridInput'
@@ -56,12 +56,15 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
   useEffect(() => {
     Geolocation.getCurrentPosition(info => {
       const { latitude, longitude } = info.coords
-      setLocationGrid(locationToGrid(latitude, longitude))
+      console.log('Location', { useGrid8: settings?.useGrid8, latitude, longitude, grid8: locationToGrid8(latitude, longitude) })
+      if (settings?.useGrid8) setLocationGrid(locationToGrid8(latitude, longitude))
+      else setLocationGrid(locationToGrid6(latitude, longitude))
     }, undefined, { enableHighAccuracy: true })
 
     const watchId = Geolocation.watchPosition(info => {
       const { latitude, longitude } = info.coords
-      setLocationGrid(locationToGrid(latitude, longitude))
+      if (settings?.useGrid8) setLocationGrid(locationToGrid8(latitude, longitude))
+      else setLocationGrid(locationToGrid6(latitude, longitude))
     }, error => {
       setLocationGrid('NO GPS')
       console.warn('Location error', error)
@@ -69,7 +72,7 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
     return () => {
       Geolocation.clearWatch(watchId)
     }
-  }, [])
+  }, [settings?.useGrid8])
 
   return (
     <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
@@ -80,7 +83,7 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={grid}
           label="Grid Square Locator"
-          placeholder={'AA00aa'}
+          placeholder={settings?.useGrid8 ? 'AA00aa00' : 'AA00aa'}
           onChangeText={setGridValue}
         />
         {locationGrid && (
