@@ -129,6 +129,14 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ useCompactFileNames: !settings.useCompactFileNames }))}
           />
 
+          <Ham2kListItem
+            title="High precision location"
+            description={settings.useGrid8 ? 'Use 8-digit grids' : 'Use 6-digit grids'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="select-marker" />}
+            right={() => <Switch value={!!settings.useGrid8} onValueChange={(value) => dispatch(setSettings({ useGrid8: value })) } />}
+            onPress={() => dispatch(setSettings({ useGrid8: !settings.useGrid8 }))}
+          />
+
           <Ham2kListSubheader>Privacy</Ham2kListSubheader>
           <Ham2kListItem
             title="Share app usage data"
