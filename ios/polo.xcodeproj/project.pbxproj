@@ -307,7 +307,7 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "polo" */;
 			buildPhases = (
 				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
-				72FD72332C985D7D00AA9DDE /* GoogleService Seleciton */,
+				72FD72332C985D7D00AA9DDE /* GoogleService Config Selection */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -443,7 +443,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-polo/Pods-polo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		72FD72332C985D7D00AA9DDE /* GoogleService Seleciton */ = {
+		72FD72332C985D7D00AA9DDE /* GoogleService Config Selection */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -452,14 +452,14 @@
 			);
 			inputPaths = (
 			);
-			name = "GoogleService Seleciton";
+			name = "GoogleService Config Selection";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Define the plist paths\nGOOGLE_PLIST_SRC=\"\"\ncase \"${CONFIGURATION}\" in\n  DevDebug)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Staging-com.ham2k.polo.dev.plist\"\n    ;;\n  DevRelease)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Staging-com.ham2k.polo.dev.plist\"\n    ;;\n  ProdDebug)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Staging-com.ham2k.polo.dev.plist\"\n    ;;\n  Debug)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Staging-com.ham2k.polo.plist\"\n    ;;\n  Release)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Prod.plist\"\n    ;;\n  *)\n    echo \"No matching GoogleService-Info.plist found for ${CONFIGURATION}\"\n    exit 1\n    ;;\nesac\n\n# Define the destination path\nGOOGLE_PLIST_DEST=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n\n# Copy the appropriate file to the built products directory\ncp \"${GOOGLE_PLIST_SRC}\" \"${GOOGLE_PLIST_DEST}\"\n";
+			shellScript = "# Define the plist paths\nGOOGLE_PLIST_SRC=\"\"\ncase \"${CONFIGURATION}\" in\n  DevDebug)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Staging-com.ham2k.polo.dev.plist\"\n    ;;\n  DevRelease)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Staging-com.ham2k.polo.dev.plist\"\n    ;;\n  ProdDebug)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Staging-com.ham2k.polo.dev.plist\"\n    ;;\n  Debug)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Staging-com.ham2k.polo.plist\"\n    ;;\n  Release)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Prod.plist\"\n    ;;\n  ProdRelease)\n    GOOGLE_PLIST_SRC=\"${PROJECT_DIR}/GoogleService-Prod.plist\"\n    ;;\n  *)\n    echo \"No matching GoogleService-Info.plist found for ${CONFIGURATION}\"\n    exit 1\n    ;;\nesac\n\n# Define the destination path\nGOOGLE_PLIST_DEST=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n\n# Copy the appropriate file to the built products directory\ncp \"${GOOGLE_PLIST_SRC}\" \"${GOOGLE_PLIST_DEST}\"\n";
 		};
 		75ECE1A8A49E3671D7C6150C /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
