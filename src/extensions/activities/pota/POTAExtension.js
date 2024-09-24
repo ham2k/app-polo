@@ -166,8 +166,7 @@ const ReferenceHandler = {
         location: data.location,
         label: `${Info.shortName} ${ref.ref}: ${data.name}`
       }
-      if (data.location.indexOf(',') < 0) {
-        // Only use grid if it's not a multi-state park
+      if (data?.location?.indexOf(',') < 0) {
         result.accuracy = LOCATION_ACCURACY.REASONABLE
         result.grid = data.grid
 
