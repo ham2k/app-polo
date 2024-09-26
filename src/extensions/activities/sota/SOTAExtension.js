@@ -216,8 +216,6 @@ const ReferenceHandler = {
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
-    if (!ref.ref) return {}
-
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const { key, startOnMillis } = qso
@@ -236,7 +234,7 @@ const ReferenceHandler = {
       const thisQSOTime = qso.startOnMillis ?? Date.now()
       const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
 
-      const sameRefs = nearDupes.filter(q => findRef(q, Info.huntingType)?.ref === theirRef.ref)
+      const sameRefs = nearDupes.filter(q => findRef(q, Info.huntingType)?.ref === theirRef.ref).length !== 0
       const sameDay = nearDupes.filter(q => (q.startOnMillis - (q.startOnMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
       if (sameDay && sameRefs) {
         return { value: 0, refCount, points: 0, alerts: ['duplicate'], type: Info.activationType }
