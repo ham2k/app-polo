@@ -119,8 +119,17 @@ const ReferenceHandler = {
       icon: Info.icon,
       label: Info.shortName,
       value: 0,
-      summary: ''
+      summary: '',
+      refs: {},
+      primaryRef: undefined
     }
+
+    if (!score.refs[ref.ref]) {
+      score.refs[ref.ref] = true
+      score.primaryRef = score.primaryRef || ref.ref
+    }
+
+    if (score.primaryRef !== ref.ref) return score // Only do scoring for one ref
 
     score.value = score.value + qsoScore.value
     score.activated = score.value >= 50
