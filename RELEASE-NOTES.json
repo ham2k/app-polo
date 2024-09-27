@@ -8,7 +8,8 @@
       "Fixes for GMA spotting and log file name",
       "Improvements in SOTA and WWFF log exports",
       "Scoring summaries for ECA, ELA and WWBOTA",
-      "Guess modes based on frequency"
+      "Guess modes based on frequency",
+      "General Setting to use 8-digit grids"
     ]
   },
   "24.9.7": {
