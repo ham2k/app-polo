@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "24.10.0-pre2",
-  "versionName": "October '24 (pre 2)",
+  "version": "24.10.0-pre3",
+  "versionName": "October '24 (pre 3)",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -28,7 +28,7 @@
     "@ham2k/lib-dxcc-data": "^0.2",
     "@ham2k/lib-format-tools": "^0.3",
     "@ham2k/lib-maidenhead-grid": "^0.2",
-    "@ham2k/lib-operation-data": "^0.6",
+    "@ham2k/lib-operation-data": "^0.7",
     "@ham2k/lib-qson-adif": "^0.4",
     "@ham2k/lib-qson-tools": "^0.5",
     "@react-native-async-storage/async-storage": "^2.0",

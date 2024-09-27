@@ -34,7 +34,7 @@ And finally, build the app for your target platform:
 
 ```
 # iOS
-(cd ios && RCT_NEW_ARCH_ENABLED=1 pod install)
+(cd ios && pod install)
 npm run ios
 
 # Android

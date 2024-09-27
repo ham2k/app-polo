@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
 import { setOperationData } from '../../../../store/operations'
 import { useUIState } from '../../../../store/ui'
@@ -194,9 +194,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     } else if (fieldId === 'freq') {
       const freq = value ? parseFreqInMHz(value) : undefined
       const band = freq ? bandForFrequency(freq) : undefined
-
-      updateQSO({ freq, band })
-      if (qso?._isNew) dispatch(setVFO({ band, freq }))
+      const mode = freq ? modeForFrequency(freq) : qso?.mode
+      updateQSO({ freq, band, mode })
+      if (qso?._isNew) dispatch(setVFO({ band, freq, mode }))
     } else if (fieldId === 'band') {
       updateQSO({ band: value, freq: undefined })
       if (qso?._isNew) dispatch(setVFO({ band: value, freq: undefined }))
@@ -650,6 +650,7 @@ function prepareExistingQSO (qso) {
   const clone = cloneDeep(qso || {})
   clone._originalKey = qso?.key
   clone._isNew = false
+
   return clone
 }
 
@@ -660,6 +661,9 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   clone.key = 'new-qso'
   if (clone.freq) {
     clone.band = bandForFrequency(clone.freq)
+    if (!clone.mode) {
+      clone.mode = modeForFrequency(clone.freq)
+    }
   }
 
   if (vfo.power) {
