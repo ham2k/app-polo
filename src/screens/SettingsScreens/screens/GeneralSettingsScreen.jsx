@@ -86,14 +86,27 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))}
           />
 
-          <Ham2kListItem
-            title="Extra key in numbers row"
-            description={settings.showExtraInNumbersRow ? 'Include slash or period' : 'Just show the numbers'}
-            disabled={!settings.showNumbersRow}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />}
-            right={() => <Switch disabled={!settings.showNumbersRow} value={!!settings.showExtraInNumbersRow} onValueChange={(value) => dispatch(setSettings({ showExtraInNumbersRow: value })) } />}
-            onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showExtraInNumbersRow }))}
-          />
+          {settings.showNumbersRow && (
+            <Ham2kListItem
+              style={{ marginLeft: styles.oneSpace * 8 }}
+              title="Extra key in numbers row"
+              description={settings.showExtraInNumbersRow ? 'Include slash or period' : 'Just show the numbers'}
+              disabled={!settings.showNumbersRow}
+              right={() => <Switch disabled={!settings.showNumbersRow} value={!!settings.showExtraInNumbersRow} onValueChange={(value) => dispatch(setSettings({ showExtraInNumbersRow: value })) } />}
+              onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showExtraInNumbersRow }))}
+            />
+          )}
+
+          {settings.showNumbersRow && (
+            <Ham2kListItem
+              style={{ marginLeft: styles.oneSpace * 8 }}
+              title="Use vibration in numbers row"
+              description={settings.vibrateNumbersRow ? 'Vibrate when pressing numbers' : "Don't vibrate when pressing numbers"}
+              disabled={!settings.showNumbersRow}
+              right={() => <Switch disabled={!settings.showNumbersRow} value={!!settings.vibrateNumbersRow} onValueChange={(value) => dispatch(setSettings({ vibrateNumbersRow: value })) } />}
+              onPress={() => dispatch(setSettings({ showNumbersRow: !settings.vibrateNumbersRow }))}
+            />
+          )}
 
           <Ham2kListItem
             title="Use Metric Units"

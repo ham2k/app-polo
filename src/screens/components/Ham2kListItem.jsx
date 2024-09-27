@@ -10,8 +10,16 @@ import { List } from 'react-native-paper'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
-export function Ham2kListItem ({ title, description, disabled, ...moreProps }) {
+export function Ham2kListItem ({ title, description, disabled, style, ...moreProps }) {
   const styles = useThemedStyles()
+
+  const rootStyle = useMemo(() => {
+    if (disabled) {
+      return { ...style, opacity: 0.5 }
+    } else {
+      return style
+    }
+  }, [style, disabled])
 
   const titleStyle = useMemo(() => {
     return {
@@ -31,7 +39,7 @@ export function Ham2kListItem ({ title, description, disabled, ...moreProps }) {
     <List.Item
       {...moreProps}
       title={title}
-      style={disabled ? { opacity: 0.5 } : {}}
+      style={rootStyle}
       description={description}
       titleStyle={titleStyle}
       descriptionStyle={descriptionStyle}

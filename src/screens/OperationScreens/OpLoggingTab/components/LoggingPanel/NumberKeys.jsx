@@ -55,9 +55,10 @@ export function NumberKeys ({ themeColor, onNumberKeyPressed, settings, enabled 
   const [mode] = useUIState('NumberKeys', 'mode', 'numbers')
 
   const handleKey = useCallback((key) => {
-    Vibration.vibrate(1)
+    if (settings.vibrateNumbersRow !== false) Vibration.vibrate(1)
+
     onNumberKeyPressed && onNumberKeyPressed(key)
-  }, [onNumberKeyPressed])
+  }, [onNumberKeyPressed, settings.vibrateNumbersRow])
 
   return (
     <View style={[styles.root, enabled ? styles.enabledRoot : styles.disabledRoot]}>
