@@ -12,7 +12,7 @@ import { Text } from 'react-native-paper'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { qsoKey } from '@ham2k/lib-qson-tools'
-import { BANDS, ADIF_MODES, superModeForMode } from '@ham2k/lib-operation-data'
+import { BANDS, ADIF_MODES, superModeForMode, modeForFrequency } from '@ham2k/lib-operation-data'
 
 import { selectRuntimeOnline } from '../../../../store/runtime'
 import { selectAllOperations, selectOperationCallInfo } from '../../../../store/operations'
@@ -114,6 +114,9 @@ export default function SpotsPanel ({ operation, qsos, onSelect }) {
           spot.our = spot.our || {}
           spot.timeOnMillis = 0
           spot.key = `${spot.spot.source}:${qsoKey(spot)}`
+          if (!spot.mode) {
+            spot.mode = modeForFrequency(spot.freq)
+          }
 
           annotatedSpots.push(await annotateQSO({ qso: spot, online, settings, dispatch, skipLookup: true }))
         }

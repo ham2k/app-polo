@@ -5,6 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { modeForFrequency } from '@ham2k/lib-operation-data'
+import { fmtFreqInMHz } from '../../tools/frequencyFormats'
+
 const Info = {
   key: 'commands-radio',
   name: 'Shortcuts to change frequency, band and mode'
@@ -56,15 +59,19 @@ const FrequencyCommandHook = {
     }
   },
   invokeCommand: (match, { qso, handleFieldChange }) => {
+    let freq
     if (match[1].startsWith('..') && qso.freq) {
-      handleFieldChange({ fieldId: 'freq', value: `${Math.round(qso.freq)}${match[1].substring(1)}` })
-      return `Frequency set to ${Math.round(qso.freq)}${match[1].substring(1)}`
+      freq = Number.parseFloat(`${Math.round(qso.freq)}${match[1].substring(1)}`) * 1000
     } else if (match[1].startsWith('.') && qso.freq) {
-      handleFieldChange({ fieldId: 'freq', value: `${Math.floor(qso.freq / 1000)}${match[1]}` })
-      return `Frequency set to ${Math.floor(qso.freq / 1000)}${match[1]}`
+      freq = Number.parseFloat(`${Math.floor(qso.freq / 1000)}${match[1]}`) * 1000
     } else {
-      handleFieldChange({ fieldId: 'freq', value: match[1] })
-      return `Frequency set to ${match[1]}`
+      freq = Number.parseFloat(match[1]) * 1000
+    }
+
+    if (freq) {
+      const mode = modeForFrequency(freq)
+      handleFieldChange({ fieldId: 'freq', value: freq })
+      return `Frequency set to ${fmtFreqInMHz(freq)} MHz (${mode})`
     }
   }
 }

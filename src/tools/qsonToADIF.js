@@ -10,7 +10,7 @@ import { findBestHook } from '../extensions/registry'
 import { sanitizeToISO8859 } from './stringTools'
 import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
-import { adifModeAndSubmodeForMode } from '@ham2k/lib-operation-data'
+import { adifModeAndSubmodeForMode, modeForFrequency } from '@ham2k/lib-operation-data'
 
 export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers, title }) {
   const common = {
@@ -76,19 +76,23 @@ function escapeForHeader (str) {
   return str.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-function modeToADIF (mode) {
+function modeToADIF (mode, freq) {
   const modeAndSubmode = adifModeAndSubmodeForMode(mode)
   if (modeAndSubmode.length > 1) {
     return [{ MODE: modeAndSubmode[0] }, { SUBMODE: modeAndSubmode[1] }]
+  } else if (mode) {
+    return [{ MODE: mode }]
+  } else if (freq) {
+    return [{ MODE: modeForFrequency(freq) }]
   } else {
-    return [{ MODE: mode ?? 'SSB' }]
+    return [{ MODE: 'SSB' }]
   }
 }
 
 function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
   return [
     { CALL: qso.their.call },
-    ...modeToADIF(qso.mode),
+    ...modeToADIF(qso.mode, qso.freq),
     { BAND: qso.band && qso.band !== 'other' ? qso.band : undefined },
     { FREQ: qso.freq ? (qso.freq / 1000).toFixed(6) : undefined },
     { TX_PWR: qso.power },

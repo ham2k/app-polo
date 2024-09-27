@@ -1,5 +1,5 @@
 {
-  "24.10.0-pre1": {
+  "24.10.0-pre2": {
     "name": "October '24",
     "changes": [
       "Self-spotting shortcuts `QRV`, `QSY` and `QRT`",
@@ -7,7 +7,8 @@
       "Added vibration to number keys",
       "Fixes for GMA spotting and log file name",
       "Improvements in SOTA and WWFF log exports",
-      "Socring summaries for ECA, ELA and WWBOTA"
+      "Scoring summaries for ECA, ELA and WWBOTA",
+      "Guess modes based on frequency"
     ]
   },
   "24.9.7": {

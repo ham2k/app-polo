@@ -35,6 +35,8 @@ const REMOVE_NON_DIGITS_REGEX = /[^0-9.,]/g
 const MORE_THAN_ONE_PERIOD_REGEX = /(\.)(\d+)(\.)/g
 
 export function parseFreqInMHz (freq) {
+  if (typeof freq === 'number') return freq
+
   if (freq) {
     freq = freq.replace(REMOVE_NON_DIGITS_REGEX, '')
     freq = freq.replace(',', '.')
