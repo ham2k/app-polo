@@ -236,12 +236,15 @@ const ReferenceHandler = {
     score.value = score.value + qsoScore.value
     score.refCount = score.refCount + qsoScore.refCount
 
-    score.activated = score.value >= 25
+    const activationScore = Math.max(...Object.keys(score.refs)
+      .map((x) => (['S5', 'Z3'].includes(x.split(/[/-]/)?.[1]) ? 10 : 25)))
+
+    score.activated = score.value >= activationScore
 
     if (score.activated) {
       score.summary = '✓'
     } else {
-      score.summary = `${score.value}/25`
+      score.summary = `${score.value}/${activationScore}`
     }
 
     if (score.refCount > 0) {
