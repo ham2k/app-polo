@@ -66,8 +66,11 @@ const ReferenceHandler = {
   shortDescription: (operation) => refsToString(operation, Info.activationType),
 
   description: (operation) => {
-    const ref = findRef(operation, Info.activationType)
-    return [ref.ref, ref.name].filter(x => x).join(' • ')
+    const refs = filterRefs(operation, Info.activationType)
+    return [
+      refs.map(r => r.ref).filter(x => x).join(', '),
+      refs.map(r => r.name).filter(x => x).join(', ')
+    ].filter(x => x).join(' • ')
   },
 
   iconForQSO: Info.icon,
