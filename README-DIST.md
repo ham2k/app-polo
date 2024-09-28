@@ -1,3 +1,10 @@
+# Dist environment setup
+```
+bundle install
+npm install -g appcenter-cli
+appcenter login
+```
+
 # Release Channels
 
 (NOTE, these release notes are a work in progress, not the current reality)
@@ -43,13 +50,6 @@
 ### iOS - Production
 
 
-
-# Dist setup
-
-```
-npm install -g appcenter-cli
-```
-
 # Open a new version
 
 * Update version in `package.json`
@@ -89,13 +89,18 @@ cd android/app/build/outputs/betaRelease
 bundletool build-apks --bundle=android/app/build/outputs/bundle/betaRelease/com.ham2k.polo-v${POLO_BUILD}\(${POLO_BASE_VERSION}\)-beta-release.aab --output=com.ham2k.polo-v${POLO_BUILD}\(${POLO_BASE_VERSION}\)-beta-release.apk
 ```
 
-``````
 
 ```bundletool install-apks --apks=polo.apks```
 
 ---
 
 # Supplemental Updates (OTA CodePush)
+
+```
+rake release:unstable
+```
+
+or manually:
 
 ```
 BASE_VERSION=0.4.10
