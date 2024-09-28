@@ -6,27 +6,16 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import MapView, { Marker, Polyline, Circle } from 'react-native-maps'
+import MapView, { Marker, Polyline, Circle, Callout } from 'react-native-maps'
 import { View, useColorScheme, Platform } from 'react-native'
 
 import { fmtShortTimeZulu } from '../../../../tools/timeFormats'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../../tools/geoTools'
+import { Text } from 'react-native-paper'
 
 const TRANSP_PNG = require('../../../../../assets/images/transp-16.png')
 
 const METERS_IN_ONE_DEGREE = 111111
-
-const RGB_FOR_STRENGTH = {
-  1: '217, 252, 174', // '247, 239, 126',
-  2: '184, 242, 111', // '252, 234, 35',
-  3: '164, 219, 61', // '247, 206, 0',
-  4: '192, 227, 50', // '250, 202, 45',
-  5: '237, 220, 64', // '250, 178, 45',
-  6: '250, 195, 77', // '250, 168, 45',
-  7: '237, 156, 50', // '252, 133, 28',
-  8: '227, 90, 11', // '252, 118, 50',
-  9: '227, 11, 11' // '245, 7, 7'
-}
 
 export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedKey }) {
   // Maps change with the actual device color scheme, not the user preferences in the app
@@ -115,8 +104,8 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
           </Marker>
           <Circle
             center={qth}
-            radius={radiusForMarker({ location: qth, scale, size: 1 })}
-            fillColor={'rgba(0,180,0,1)'}
+            radius={radiusForMarker({ location: qth, scale, size: mapStyles.marker.size })}
+            fillColor={'rgba(0,0,0,1)'}
             strokeWidth={0.1}
           />
         </>
@@ -160,20 +149,28 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, scale }) => {
             coordinate={location}
             ref={selectedKey && selectedKey === qso.key ? ref : undefined}
             anchor={{ x: 0.5, y: 0.5 }}
-            title={[qso.their.call, distanceStr].join(' • ')}
-            description={[qso.their?.sent, qso.mode, qso.band, fmtShortTimeZulu(qso.startOnMillis)].join(' • ')}
             flat={true}
             tracksViewChanges={false}
             image={TRANSP_PNG}
           >
-            <View width={12} height={12} style={{ width: styles.oneSpace * mapStyles.marker.size, height: styles.oneSpace * mapStyles.marker.size }}>
-              <View />{/* Empty View */}
-            </View>
+            <Callout>
+              <View>
+                <Text style={{ fontWeight: 'bold' }}>
+                  {qso.their?.call} • {distanceStr}
+                </Text>
+                <Text>
+                  {qso.their?.sent}
+                  {' • '}{qso.mode}
+                  {' • '}<Text style={{ fontWeight: 'bold', color: colorForText({ qso, styles, mapStyles }) }}>{qso.band}</Text>
+                  {' • '}{fmtShortTimeZulu(qso.startOnMillis)}
+                </Text>
+              </View>
+            </Callout>
           </Marker>
           <Circle
             center={location}
-            radius={radiusForMarker({ location, scale, size: mapStyles.marker.size })}
-            fillColor={`rgba(${RGB_FOR_STRENGTH[strength] ?? RGB_FOR_STRENGTH[5]}, ${mapStyles.marker.opacity})`}
+            radius={radiusForMarker({ qso, strength, location, scale, size: mapStyles.marker.size })}
+            fillColor={colorForMarker({ qso, location, strength, styles, mapStyles })}
             strokeWidth={0.1}
           />
         </React.Fragment>
@@ -182,29 +179,29 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, scale }) => {
   )
 }
 
-function radiusForMarker ({ location, size, scale }) {
+function radiusForMarker ({ qso, strength, location, size, scale }) {
   const latitude = Math.abs(location.latitude ?? location.lat)
-  let latitudeScale
-  if (latitude > 85) latitudeScale = 0.006
-  else if (latitude > 80) latitudeScale = 0.27
-  else if (latitude > 75) latitudeScale = 0.37
-  else if (latitude > 70) latitudeScale = 0.55
-  else if (latitude > 65) latitudeScale = 0.7
-  else if (latitude > 60) latitudeScale = 0.9
-  else if (latitude > 50) latitudeScale = 1
-  else if (latitude > 40) latitudeScale = 1.1
-  else if (latitude > 30) latitudeScale = 1.4
-  else if (latitude > 20) latitudeScale = 1.5
-  else if (latitude > 10) latitudeScale = 1.8
-  else latitudeScale = 2
 
-  return (scale.metersPerOneSpace * size * latitudeScale) / 2
+  const latitudeScale = Math.cos(latitude * Math.PI / 180)
+
+  const baseRadius = (scale.metersPerOneSpace * size * latitudeScale) / 2
+
+  // A signal strength of 5 is 100% radius. 9 is 130% radius. 1 is 70% radius.
+  return baseRadius * (1 + (((strength || 5) - 5) / ((9 - 1) / 2) * 0.30))
+}
+
+function colorForMarker ({ qso, location, strength, styles, mapStyles }) {
+  return styles.colors.bands[qso.band] || styles.colors.bands.default
+}
+
+function colorForText ({ qso, styles, mapStyles }) {
+  return styles.colors.bands[qso.band] || styles.colors.bands.default
 }
 
 function strengthForQSO (qso) {
   try {
     if (qso.mode === 'CW' || qso.mode === 'RTTY') {
-      return Math.floor(qso.their?.sent || 555 / 10) % 10
+      return Math.floor((qso.their?.sent || 555) / 10) % 10
     } else if (qso.mode === 'FT8' || qso.mode === 'FT4') {
       const signal = (qso.their?.sent || -10)
       // map signal report from -20 to +10 into 1 to 9
@@ -228,43 +225,43 @@ function stylesForMap ({ longitudeDelta, metersPerPixel, count, deviceColorSchem
   if (Platform.OS === 'ios') {
     const darkMode = Platform.OS === 'ios' && deviceColorScheme === 'dark'
     if (metersPerPixel > 32000) {
-      return { marker: { opacity: 0.7, size: 0.5 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
+      return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
     } else if (metersPerPixel > 16000) {
-      return { marker: { opacity: 0.7, size: 0.7 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
+      return { marker: { opacity: 0.7, size: 1.4 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
     } else if (metersPerPixel > 8000) {
-      return { marker: { opacity: 0.8, size: 0.9 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
+      return { marker: { opacity: 0.8, size: 1.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
     } else if (metersPerPixel > 4000) {
-      return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
+      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
     } else if (metersPerPixel > 2000) {
-      return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
+      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
     } else if (metersPerPixel > 1000) {
-      return { marker: { opacity: 0.7, size: 1.05 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
+      return { marker: { opacity: 0.7, size: 2.1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
     } else if (metersPerPixel > 500) {
-      return { marker: { opacity: 1, size: 1.1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.4)` } }
+      return { marker: { opacity: 1, size: 2.2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.4)` } }
     } else if (metersPerPixel > 100) {
-      return { marker: { opacity: 1, size: 1.2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
+      return { marker: { opacity: 1, size: 2.4 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
     } else {
-      return { marker: { opacity: 1, size: 1.4 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
+      return { marker: { opacity: 1, size: 2.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
     }
   } else {
     if (metersPerPixel > 32000) {
-      return { marker: { opacity: 0.7, size: 0.7 }, line: { strokeColor: 'rgba(40,40,40,0.4)' } }
+      return { marker: { opacity: 0.7, size: 1.4 }, line: { strokeColor: 'rgba(40,40,40,0.4)' } }
     } else if (metersPerPixel > 16000) {
-      return { marker: { opacity: 0.7, size: 0.8 }, line: { strokeColor: 'rgba(40,40,40,0.4)' } }
+      return { marker: { opacity: 0.7, size: 1.6 }, line: { strokeColor: 'rgba(40,40,40,0.4)' } }
     } else if (metersPerPixel > 8000) {
-      return { marker: { opacity: 0.8, size: 0.9 }, line: { strokeColor: 'rgba(40,40,40,0.5)' } }
+      return { marker: { opacity: 0.8, size: 1.8 }, line: { strokeColor: 'rgba(40,40,40,0.5)' } }
     } else if (metersPerPixel > 4000) {
-      return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: 'rgba(60,60,60,0.5)' } }
+      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: 'rgba(60,60,60,0.5)' } }
     } else if (metersPerPixel > 2000) {
-      return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: 'rgba(60,60,60,0.6)' } }
+      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: 'rgba(60,60,60,0.6)' } }
     } else if (metersPerPixel > 1000) {
-      return { marker: { opacity: 0.7, size: 1.05 }, line: { strokeColor: 'rgba(60,60,60,0.6)' } }
+      return { marker: { opacity: 0.7, size: 2.1 }, line: { strokeColor: 'rgba(60,60,60,0.6)' } }
     } else if (metersPerPixel > 500) {
-      return { marker: { opacity: 1, size: 1.1 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
+      return { marker: { opacity: 1, size: 2.2 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
     } else if (metersPerPixel > 100) {
-      return { marker: { opacity: 1, size: 1.2 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
+      return { marker: { opacity: 1, size: 2.4 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
     } else {
-      return { marker: { opacity: 1, size: 1.4 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
+      return { marker: { opacity: 1, size: 2.8 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
     }
   }
 }
