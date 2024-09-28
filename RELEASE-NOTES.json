@@ -1,7 +1,8 @@
 {
-  "24.10.0-pre3": {
+  "24.10.0-pre4": {
     "name": "October '24",
     "changes": [
+      "Map markers now use colors for bands",
       "Self-spotting shortcuts `QRV`, `QSY` and `QRT`",
       "Use the [send] button to trigger shortcuts",
       "Added vibration to number keys",

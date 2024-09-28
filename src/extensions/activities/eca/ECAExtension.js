@@ -6,7 +6,7 @@
  */
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { findRef, refsToString } from '../../../tools/refTools'
+import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './ECAInfo'
 import { ecaFindOneByReference, registerECADataFile } from './ECADataFile'
@@ -40,7 +40,15 @@ const ActivityHook = {
 const ReferenceHandler = {
   ...Info,
 
-  description: (operation) => refsToString(operation, Info.activationType),
+  shortDescription: (operation) => refsToString(operation, Info.activationType),
+
+  description: (operation) => {
+    const refs = filterRefs(operation, Info.activationType)
+    return [
+      refs.map(r => r.ref).filter(x => x).join(', '),
+      refs.map(r => r.name).filter(x => x).join(', ')
+    ].filter(x => x).join(' • ')
+  },
 
   decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {

@@ -140,7 +140,12 @@ const ActivatorLoggingControl = {
 const ReferenceHandler = {
   ...Info,
 
-  description: (operation) => refsToString(operation, Info.activationType),
+  shortDescription: (operation) => refsToString(operation, Info.activationType),
+
+  description: (operation) => {
+    const ref = findRef(operation, Info.activationType)
+    return [ref.ref, ref.name].filter(x => x).join(' • ')
+  },
 
   iconForQSO: Info.icon,
 
