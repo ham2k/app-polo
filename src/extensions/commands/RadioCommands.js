@@ -6,7 +6,7 @@
  */
 
 import { modeForFrequency } from '@ham2k/lib-operation-data'
-import { fmtFreqInMHz } from '../../tools/frequencyFormats'
+import { fmtFreqInMHz, parseFreqInMHz } from '../../tools/frequencyFormats'
 
 const Info = {
   key: 'commands-radio',
@@ -61,11 +61,11 @@ const FrequencyCommandHook = {
   invokeCommand: (match, { qso, handleFieldChange }) => {
     let freq
     if (match[1].startsWith('..') && qso.freq) {
-      freq = Number.parseFloat(`${Math.round(qso.freq)}${match[1].substring(1)}`) * 1000
+      freq = parseFreqInMHz(`${Math.round(qso.freq)}${match[1].substring(1)}`)
     } else if (match[1].startsWith('.') && qso.freq) {
-      freq = Number.parseFloat(`${Math.floor(qso.freq / 1000)}${match[1]}`) * 1000
+      freq = parseFreqInMHz(`${Math.floor(qso.freq / 1000)}${match[1]}`)
     } else {
-      freq = Number.parseFloat(match[1]) * 1000
+      freq = parseFreqInMHz(match[1])
     }
 
     if (freq) {
