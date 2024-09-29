@@ -30,13 +30,15 @@ import SpotFilterIndicators from './SpotFilterIndicators'
 export const LABEL_FOR_MODE = {
   CW: 'CW',
   PHONE: 'Phone',
-  DIGITAL: 'Digi'
+  DIGITAL: 'Digi',
+  DATA: 'Dig'
 }
 
 export const LONG_LABEL_FOR_MODE = {
   CW: 'CW',
   PHONE: 'Phone',
-  DIGITAL: 'Digital'
+  DIGITAL: 'Digital',
+  DATA: 'Digital'
 }
 
 const REFRESH_INTERVAL_IN_SECONDS = 60
