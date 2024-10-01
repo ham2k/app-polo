@@ -45,19 +45,7 @@ const ActivityHook = {
       return []
     }
   },
-  Options: CustomActivityOptions,
-
-  includeControlForQSO: ({ qso, operation }) => {
-    if (findRef(operation, Info.activationType)) return true
-    if (findRef(qso, Info.huntingType)) return true
-    else return false
-  },
-
-  labelControlForQSO: ({ operation, qso }) => {
-    let label = 'Custom'
-    if (findRef(qso, Info.huntingType)) label = `✓ ${label}`
-    return label
-  }
+  Options: CustomActivityOptions
 }
 
 const ReferenceHandler = {
