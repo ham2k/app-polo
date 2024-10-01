@@ -15,6 +15,7 @@ import { fmtDateZuluDynamic, fmtTimeBetween } from '../../../../tools/timeFormat
 import { selectSecondsTick } from '../../../../store/time'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 import { fmtNumber } from '@ham2k/lib-format-tools'
+import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -89,26 +90,31 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                 {section.count === 0 ? 'No QSOs' : section.count === 1 ? '1 QSO' : `${fmtNumber(section.count ?? 0)} QSOs`}
               </Text>
             </Text>
-            {Object.keys(section.scores ?? {}).sort().map(key => {
+            {Object.keys(section.scores ?? {}).sort((a, b) => (section.scores[a].weight ?? 0) - (section.scores[b].weight ?? 0)).map(key => {
               const score = section.scores[key]
+
               const refKeys = Object.keys(score.refs ?? { one: true })
 
-              if (score.summary && (score.icon || score.label)) {
+              if ((score.summary || score.longSummary) && (score.icon || score.label)) {
                 return (
-                  <React.Fragment key={key}>
-                    <Text style={[styles.markdown.body, { marginLeft: styles.oneSpace }]}>
+                  <View key={key} style={{ maxWidth: '100%', flexDirection: 'row', alignItems: 'flex-start', marginBottom: styles.oneSpace }}>
+                    <View style={{ width: styles.oneSpace * 3, marginTop: styles.oneSpace * 0.2 }}>
                       {score.icon && (
                         <Icon
                           source={score.icon}
                           size={styles.normalFontSize}
                           color={score.activated === true ? styles.colors.important : undefined}
-                          style={[styles.icon, { paddingRight: styles.oneSpace }]}
+                          style={styles.icon}
                         />
                       )}
-                      {` ${score.label}${refKeys.length > 1 ? `×${refKeys.length}: ` : ': '}`}
-                      {score.summary}
-                    </Text>
-                  </React.Fragment>
+                    </View>
+                    <Ham2kMarkdown style={{ width: '93%' }}>
+                      {score.label && (
+                        ` ${score.label}${refKeys.length > 1 ? `×${refKeys.length}:` : ':'}`
+                      )}
+                      {' '}{score.longSummary ?? score.summary}
+                    </Ham2kMarkdown>
+                  </View>
                 )
               } else {
                 return null

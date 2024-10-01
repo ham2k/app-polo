@@ -10,7 +10,7 @@ import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { selectSettings } from '../settings'
 import { selectOperation } from '../operations'
-import { analizeAndSectionQSOs } from './analizeAndSectionQSOs'
+import { analizeAndSectionQSOs } from '../../extensions/scoring'
 
 const INITIAL_STATE = {
   status: 'ready',
@@ -91,18 +91,17 @@ export const selectQSOsStatus = (state) => {
   return state?.qsos?.status
 }
 
+const EMPTY_QSOS = []
 export const selectQSOs = createSelector(
-  (state, uuid) => state?.qsos?.qsos,
-  (state, uuid) => uuid,
-  (qsos, uuid) => qsos?.[uuid] ?? []
+  (state, uuid) => state?.qsos?.qsos?.[uuid],
+  (qsos) => qsos ?? EMPTY_QSOS
 )
 
 export const selectSectionedQSOs = createSelector(
-  (state, uuid) => state?.qsos?.qsos?.[uuid],
-  (state, uuid) => uuid,
+  (state, uuid) => selectQSOs(state, uuid),
   (state, uuid) => selectSettings(state),
   (state, uuid) => selectOperation(state, uuid),
-  (qsos, uuid, settings, operation) => analizeAndSectionQSOs({ qsos, settings, operation })
+  (qsos, settings, operation) => analizeAndSectionQSOs({ qsos, settings, operation })
 )
 
 export default qsosSlice.reducer

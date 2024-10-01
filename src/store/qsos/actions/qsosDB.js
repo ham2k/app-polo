@@ -45,11 +45,15 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
 
   const qsoCount = qsos.filter(qso => !qso.deleted).length
 
-  dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount }))
   const operation = getState().operations.info[uuid]
-  setTimeout(() => {
-    dispatch(saveOperation(operation))
-  }, 0)
+  if (startOnMillisMin !== operation.startOnMillisMin ||
+  startOnMillisMax !== operation.startOnMillisMax ||
+  qsoCount !== operation.qsoCount) {
+    dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount }))
+    setTimeout(() => {
+      dispatch(saveOperation(operation))
+    }, 0)
+  }
 }
 
 export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {

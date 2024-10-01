@@ -140,6 +140,10 @@ const ReferenceHandler = {
     if (score.primaryRef !== ref.ref) return score // Only do scoring for one ref
 
     score.value = score.value + qsoScore.value
+    return score
+  },
+
+  summarizeScore: ({ score, operation, ref, section }) => {
     score.activated = score.value >= 25
     if (score.activated) {
       score.summary = '✓'

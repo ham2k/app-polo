@@ -265,6 +265,10 @@ const ReferenceHandler = {
     score.value = score.value + qsoScore.value
     score.refCount = score.refCount + qsoScore.refCount
 
+    return score
+  },
+
+  summarizeScore: ({ score, operation, ref, section }) => {
     score.activated = score.value >= 4
 
     if (score.activated) {

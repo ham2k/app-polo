@@ -90,8 +90,12 @@ export function fmtDateZuluDynamic (t, { now } = { now: null, compact: false }) 
 
   if (t && t.toLocaleTimeString) {
     const diffInDays = (now - t) / (1000 * 60 * 60 * 24)
-    if (diffInDays <= 1) {
+    if (diffInDays > -1 && diffInDays <= 0) {
+      return 'Tomorrow'
+    } else if (diffInDays > 0 && diffInDays <= 1) {
       return 'Today'
+    } else if (diffInDays > 1 && diffInDays <= 2) {
+      return 'Yesterday'
     } else if (diffInDays <= 7) {
       return t.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', timeZone: 'UTC' })
     } else if (diffInDays <= 360) {

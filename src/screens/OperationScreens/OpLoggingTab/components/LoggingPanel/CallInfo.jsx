@@ -13,11 +13,11 @@ import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 
-import { findBestHook, findHooks } from '../../../../../extensions/registry'
+import { scoringHandlersForOperation } from '../../../../../extensions/scoring'
 import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
+import { startOfDayInMillis, yesterdayInMillis } from '../../../../../tools/timeTools'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 import { useQSOInfo } from '../../../OpInfoTab/components/useQSOInfo'
-import { startOfDayInMillis, yesterdayInMillis } from '../../../../../tools/timeTools'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!!!',
@@ -77,7 +77,7 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, settings }) {
+export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, updateQSO, settings }) {
   const navigation = useNavigation()
   const styles = useThemedStyles(prepareStyles, themeColor)
 
@@ -170,12 +170,14 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
   }, [qrz?.error, qso?.their?.name, guess?.name, callNotes])
 
   const scoreInfo = useMemo(() => {
-    const refHandlers = scoringRefsHandlersForOperation(operation, settings)
+    const scoringHandlers = scoringHandlersForOperation(operation, settings)
 
-    const scores = refHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, operation, ref })).filter(x => x)
+    const lastSection = sections && sections[sections.length - 1]
+
+    const scores = scoringHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, score: lastSection?.scores?.[ref.key], operation, ref })).filter(x => x)
 
     return scores
-  }, [operation, qso, qsos, settings])
+  }, [operation, qso, qsos, sections, settings])
 
   const [historyMessage, historyLevel] = useMemo(() => {
     if (scoreInfo?.length > 0) {
@@ -274,57 +276,4 @@ export function CallInfo ({ qso, qsos, operation, style, themeColor, updateQSO, 
       </View>
     </TouchableRipple>
   )
-}
-
-export function scoringRefsHandlersForOperation (operation, settings) {
-  const scoringKeys = {}
-
-  // Get handlers for operation refs
-  const scoringRefHandlers = []
-  ;(operation?.refs || []).forEach(ref => {
-    const handler = findBestHook(`ref:${ref.type}`)
-    if (handler && handler.scoringForQSO) {
-      scoringRefHandlers.push({ handler, ref })
-      scoringKeys[handler.key] = true
-    }
-  })
-
-  // Get handlers for general hunting activities
-  findHooks('activity').forEach(hook => {
-    const type = hook.generalHuntingType && hook.generalHuntingType({ operation, settings })
-    const handler = type && findBestHook(`ref:${type}`)
-    if (handler && handler.scoringForQSO && !scoringKeys[handler.key]) {
-      scoringRefHandlers.push({ handler, ref: { type } })
-      scoringKeys[handler.key] = true
-    }
-  })
-
-  if (scoringRefHandlers.length === 0) scoringRefHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
-
-  return scoringRefHandlers
-}
-
-export const DefaultScoringHandler = {
-  key: 'defaultOperation',
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
-    const { band, mode, key, startOnMillis } = qso
-
-    const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
-
-    if (nearDupes.length === 0) {
-      return { count: 1, type: 'defaultOperation' }
-    } else {
-      const sameBand = nearDupes.filter(q => q.band === band).length !== 0
-      const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
-      if (sameBand && sameMode) {
-        return { count: 0, alerts: ['duplicate'], type: 'defaultOperation' }
-      } else {
-        const notices = []
-        if (!sameMode) notices.push('newMode')
-        if (!sameBand) notices.push('newBand')
-
-        return { count: 1, notices, type: 'defaultOperation' }
-      }
-    }
-  }
 }
