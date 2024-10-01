@@ -282,7 +282,6 @@ const ReferenceHandler = {
       value: 0,
       refCount: 0,
       extraRefs: 0,
-      summary: '',
       refs: {},
       primaryRef: undefined
     }
@@ -292,12 +291,16 @@ const ReferenceHandler = {
       score.primaryRef = score.primaryRef || ref.ref
     }
 
-    if (score.primaryRef !== ref.ref) return score // Only do scoring for one ref
+    if (score.primaryRef === ref.ref) { // Only do scoring for the primary ref
+      score.value = score.value + qsoScore.value
+      score.refCount = score.refCount + qsoScore.refCount
+      if (qsoScore.refCount > 1) score.extraRefs = score.extraRefs + qsoScore.refCount - 1
+    }
 
-    score.value = score.value + qsoScore.value
-    score.refCount = score.refCount + qsoScore.refCount
-    if (qsoScore.refCount > 1) score.extraRefs = score.extraRefs + qsoScore.refCount - 1
+    return score
+  },
 
+  summarizeScore: ({ score, operation, ref, section }) => {
     score.activated = score.value >= 10
 
     if (score.activated) {
@@ -314,6 +317,7 @@ const ReferenceHandler = {
         score.summary = [score.summary, `${score.refCount} ${label}`].filter(x => x).join(' • ')
       }
     }
+    score.longSummary = [score.summary, `${score.value} Contacts`].filter(x => x).join(' • ')
 
     return score
   }

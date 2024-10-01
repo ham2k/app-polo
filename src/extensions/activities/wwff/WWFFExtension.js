@@ -243,6 +243,10 @@ const ReferenceHandler = {
     }
 
     score.value = score.value + qsoScore.value
+    return score
+  },
+
+  summarizeScore: ({ score, operation, ref, section }) => {
     score.activated = score.value >= 44
     if (score.activated) {
       score.summary = '✓'

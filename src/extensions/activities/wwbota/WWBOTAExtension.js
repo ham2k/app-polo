@@ -236,6 +236,10 @@ const ReferenceHandler = {
     score.value = score.value + qsoScore.value
     score.refCount = score.refCount + qsoScore.refCount
 
+    return score
+  },
+
+  summarizeScore: ({ score, operation, ref, section }) => {
     const activationScore = Math.max(...Object.keys(score.refs)
       .map((x) => (['S5', 'Z3'].includes(x.split(/[/-]/)?.[1]) ? 10 : 25)))
 

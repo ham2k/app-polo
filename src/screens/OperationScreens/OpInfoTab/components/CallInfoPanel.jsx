@@ -16,6 +16,7 @@ import { fmtDateTimeDynamic } from '../../../../tools/timeFormats'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 
 import { useQSOInfo } from './useQSOInfo'
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 
 const HISTORY_QSOS_TO_SHOW = 3
 
@@ -75,7 +76,7 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export function CallInfoPanel ({ qso, operation, themeColor, style }) {
+export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) {
   const styles = useThemedStyles(prepareStyles, themeColor)
 
   const { guess, lookup, pota, qrz, callNotes, callHistory } = useQSOInfo({ qso, operation })
@@ -119,104 +120,106 @@ export function CallInfoPanel ({ qso, operation, themeColor, style }) {
   }, [callHistory, operation])
 
   return (
-    <View style={[styles.root, style]}>
-      {qso?.their?.call && (
-        <>
-          <View style={[styles.section, { flexDirection: 'row' }]}>
-            <View style={{ flex: 1, flexDirection: 'column' }}>
+    <GestureHandlerRootView style={[style, styles.root]}>
+      <ScrollView>
+        {qso?.their?.call && (
+          <>
+            <View style={[styles.section, { flexDirection: 'row' }]}>
+              <View style={{ flex: 1, flexDirection: 'column' }}>
 
-              <View style={{ flexDirection: 'row' }}>
-                {/* <View>
+                <View style={{ flexDirection: 'row' }}>
+                  {/* <View>
                   <Icon source={'account'} size={styles.oneSpace * 4} />
                 </View> */}
+                  <View>
+                    <Text variant="headlineSmall" style={styles.text.callsign}>
+                      {qso?.their?.call}
+                    </Text>
+                  </View>
+                </View>
+
                 <View>
-                  <Text variant="headlineSmall" style={styles.text.callsign}>
-                    {qso?.their?.call}
+                  <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
+                    {capitalizeString(lookup?.name, { content: 'name', force: false })}
                   </Text>
+                  {lookup?.city && (
+                    <Text>
+                      {[capitalizeString(lookup.city, { content: 'address', force: false }), lookup.state].filter(x => x).join(', ')}
+                    </Text>
+                  )}
+                  {entity && (
+                    <Text>{entity.flag} {entity.shortName}</Text>
+                  )}
                 </View>
               </View>
-
-              <View>
-                <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
-                  {capitalizeString(lookup?.name, { content: 'name', force: false })}
-                </Text>
-                {lookup?.city && (
-                  <Text>
-                    {[capitalizeString(lookup.city, { content: 'address', force: false }), lookup.state].filter(x => x).join(', ')}
-                  </Text>
+              <View style={{ flex: 1, marginLeft: styles.oneSpace, maxWidth: '50%', alignItems: 'center' }}>
+                {(lookup?.image ?? qrz?.image) && (
+                  <Image source={{ uri: (lookup.image ?? qrz.image) }} style={{ width: '100%', height: styles.oneSpace * 20, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
                 )}
-                {entity && (
-                  <Text>{entity.flag} {entity.shortName}</Text>
-                )}
+                <Chip
+                  theme={styles.chipTheme} textStyle={styles.chipTextStyle}
+                  icon="web"
+                  mode="flat"
+                  onPress={() => Linking.openURL(`https://qrz.com/db/${qso.their.call}`)}
+                >
+                  qrz.com
+                </Chip>
               </View>
             </View>
-            <View style={{ flex: 1, marginLeft: styles.oneSpace, maxWidth: '50%', alignItems: 'center' }}>
-              {(lookup?.image ?? qrz?.image) && (
-                <Image source={{ uri: (lookup.image ?? qrz.image) }} style={{ width: '100%', height: styles.oneSpace * 20, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
-              )}
-              <Chip
-                theme={styles.chipTheme} textStyle={styles.chipTextStyle}
-                icon="web"
-                mode="flat"
-                onPress={() => Linking.openURL(`https://qrz.com/db/${qso.their.call}`)}
-              >
-                qrz.com
-              </Chip>
-            </View>
-          </View>
 
-          {pota?.name && (
-            <View style={styles.section}>
-              <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Parks on The Air</Text>
-              <Text variant="bodyLarge">
-                <Text style={styles.text.callsign}>{pota.reference} </Text>
-                {[pota.name, pota.locationName].filter(f => f).join(' • ')}
-              </Text>
-            </View>
-          )}
+            {pota?.name && (
+              <View style={styles.section}>
+                <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Parks on The Air</Text>
+                <Text variant="bodyLarge">
+                  <Text style={styles.text.callsign}>{pota.reference} </Text>
+                  {[pota.name, pota.locationName].filter(f => f).join(' • ')}
+                </Text>
+              </View>
+            )}
 
-          {callNotes && (
-            <View style={styles.section}>
-              <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Notes</Text>
-              {callNotes.map((note, i) => (
-                <Ham2kMarkdown key={i}>{note.note}</Ham2kMarkdown>
-              ))}
-            </View>
-          )}
+            {callNotes && (
+              <View style={styles.section}>
+                <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Notes</Text>
+                {callNotes.map((note, i) => (
+                  <Ham2kMarkdown key={i}>{note.note}</Ham2kMarkdown>
+                ))}
+              </View>
+            )}
 
-          {thisOpTitle && (
+            {thisOpTitle && (
+              <View style={styles.section}>
+                <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
+                  {thisOpTitle}
+                </Text>
+                {thisOpQSOs.map((q, i) => (
+                  <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
+                    <Text style={{}}>{q.band}</Text>
+                    <Text style={{}}>{q.mode}</Text>
+                    <Text style={{}}>{fmtDateTimeDynamic(q.startOnMillis)}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
             <View style={styles.section}>
               <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
-                {thisOpTitle}
+                {historyTitle}
               </Text>
-              {thisOpQSOs.map((q, i) => (
+              {historyRecent.map((q, i) => (
                 <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
                   <Text style={{}}>{q.band}</Text>
                   <Text style={{}}>{q.mode}</Text>
                   <Text style={{}}>{fmtDateTimeDynamic(q.startOnMillis)}</Text>
                 </View>
               ))}
+              {historyAndMore && (
+                <Text style={{}}>
+                  {historyAndMore}
+                </Text>
+              )}
             </View>
-          )}
-          <View style={styles.section}>
-            <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
-              {historyTitle}
-            </Text>
-            {historyRecent.map((q, i) => (
-              <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
-                <Text style={{}}>{q.band}</Text>
-                <Text style={{}}>{q.mode}</Text>
-                <Text style={{}}>{fmtDateTimeDynamic(q.startOnMillis)}</Text>
-              </View>
-            ))}
-            {historyAndMore && (
-              <Text style={{}}>
-                {historyAndMore}
-              </Text>
-            )}
-          </View>
-        </>
-      )}
-    </View>
+          </>
+        )}
+      </ScrollView>
+    </GestureHandlerRootView>
   )
 }

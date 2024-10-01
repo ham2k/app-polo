@@ -22,10 +22,10 @@ import { selectVFO } from '../../../../store/station'
 import { useFindHooks } from '../../../../extensions/registry'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { annotateQSO } from '../../OpInfoTab/components/useQSOInfo'
-import { scoringRefsHandlersForOperation } from '../../OpLoggingTab/components/LoggingPanel/CallInfo'
 import SpotList from './SpotList'
 import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
+import { scoringHandlersForOperation } from '../../../../extensions/scoring'
 
 export const LABEL_FOR_MODE = {
   CW: 'CW',
@@ -63,7 +63,7 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export default function SpotsPanel ({ operation, qsos, onSelect }) {
+export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor)
 
@@ -137,7 +137,7 @@ export default function SpotsPanel ({ operation, qsos, onSelect }) {
   }, [spotsState.rawSpots, filterState, vfo])
 
   const scoredSpots = useMemo(() => {
-    const scoringRefHandlers = scoringRefsHandlersForOperation(operation, settings)
+    const scoringHandlers = scoringHandlersForOperation(operation, settings)
 
     return filteredSpots.map(rawSpot => {
       const spot = { ...rawSpot }
@@ -148,8 +148,9 @@ export default function SpotsPanel ({ operation, qsos, onSelect }) {
       if (spot.their?.call === ourInfo.call) {
         spot.spot.type = 'self'
       } else {
-        scoringRefHandlers.forEach(({ handler, ref }) => {
-          const score = handler.scoringForQSO({ qso: spot, qsos, operation, ref })
+        scoringHandlers.forEach(({ handler, ref }) => {
+          const lastSection = sections && sections[sections.length - 1]
+          const score = handler.scoringForQSO({ qso: spot, qsos, score: lastSection?.scores?.[ref.key], ref })
           if (score?.alerts && score?.alerts[0] === 'duplicate') {
             if (spot.spot.type === 'scoring') {
               spot.spot.type = 'partialDuplicate'
@@ -169,7 +170,7 @@ export default function SpotsPanel ({ operation, qsos, onSelect }) {
       }
       return spot
     })
-  }, [operation, settings, filteredSpots, ourInfo.call, qsos])
+  }, [operation, settings, filteredSpots, ourInfo.call, sections, qsos])
 
   const handlePress = useCallback(({ spot }) => {
     onSelect && onSelect({ spot })

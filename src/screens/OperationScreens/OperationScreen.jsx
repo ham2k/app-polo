@@ -51,8 +51,10 @@ export default function OperationScreen (props) {
   }, [dispatch])
 
   useEffect(() => { // When starting, make sure all operation data is loaded
-    dispatch(loadQSOs(route.params.operation.uuid))
-    dispatch(loadOperation(route.params.operation.uuid))
+    setImmediate(async () => {
+      await dispatch(loadOperation(route.params.operation.uuid))
+      await dispatch(loadQSOs(route.params.operation.uuid))
+    })
   }, [route.params.operation.uuid, dispatch])
 
   const [lastTracking, setLastTracking] = useState(0)

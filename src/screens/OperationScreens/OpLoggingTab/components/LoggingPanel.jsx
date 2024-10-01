@@ -446,6 +446,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                     <CallInfo
                       qso={qso}
                       qsos={activeQSOs}
+                      sections={sections}
                       operation={operation}
                       vfo={vfo}
                       settings={settings}

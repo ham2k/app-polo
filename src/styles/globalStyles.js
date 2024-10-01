@@ -183,6 +183,10 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
         fontSize: normalFontSize,
         color: theme.colors.onBackground
       },
+      paragraph: {
+        marginTop: 0,
+        marginBottom: halfSpace
+      },
       heading1: {
         fontFamily,
         fontWeight: 'bold',
