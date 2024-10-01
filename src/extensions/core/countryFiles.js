@@ -5,14 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import RNFetchBlob from 'react-native-blob-util'
-import { Buffer } from 'buffer'
-
 import { analyzeFromCountryFile, parseCountryFile, setCountryFileData, useBuiltinCountryFile } from '@ham2k/lib-country-files'
 
-import packageJson from '../../../package.json'
 import { registerDataFile } from '../../store/dataFiles'
-import { loadDataFile } from '../../store/dataFiles/actions/dataFileFS'
+import { fetchAndProcessURL, loadDataFile } from '../../store/dataFiles/actions/dataFileFS'
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useBuiltinCountryFile()
@@ -49,25 +45,20 @@ export function prepareCountryFilesData () {
     alwaysEnabled: true,
     maxAgeInDays: 14,
     fetch: async () => {
-      const request = 'https://www.country-files.com/bigcty/cty.csv'
-      const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', request, {
-        'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
+      const url = 'https://www.country-files.com/bigcty/cty.csv'
+      return fetchAndProcessURL({
+        url,
+        process: async (body) => {
+          const data = parseCountryFile(body)
+
+          setCountryFileData(data)
+          const version = analyzeFromCountryFile({ call: 'VERSION' })
+
+          if (version && version.entityName) data.version = version.entityName
+
+          return data
+        }
       })
-
-      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-      const buffer = Buffer.from(data64, 'base64')
-      const body = buffer.toString('utf8')
-
-      const data = parseCountryFile(body)
-
-      RNFetchBlob.fs.unlink(response.data)
-
-      setCountryFileData(data)
-      const version = analyzeFromCountryFile({ call: 'VERSION' })
-
-      if (version && version.entityName) data.version = version.entityName
-
-      return data
     },
     onLoad: (data) => {
       if (data.entities) {

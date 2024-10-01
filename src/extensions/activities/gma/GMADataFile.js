@@ -5,14 +5,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
-import { Buffer } from 'buffer'
 
-import packageJson from '../../../../package.json'
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const GMAData = {}
 
@@ -25,92 +23,88 @@ export function registerGMADataFile () {
     icon: 'file-image-outline',
     maxAgeInDays: 100,
     enabledByDefault: false,
-    fetch: async ({ options, key, definition }) => {
+    fetch: async (args) => {
+      const { key, definition, options } = args
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
       const url = 'https://www.cqgma.org/gma_summits.csv'
 
-      const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
-        'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
-      })
+      return fetchAndProcessURL({
+        ...args,
+        url,
+        process: async (body) => {
+          const lines = body.split('\n')
+          const versionRow = lines.shift()
+          const headers = parseGMACSVRow(lines.shift()).filter(x => x).map(x => x.trim())
 
-      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-      const buffer = Buffer.from(data64, 'base64')
-      const body = buffer.toString('utf8')
+          let totalSummits = 0
 
-      const lines = body.split('\n')
-      const versionRow = lines.shift()
-      const headers = parseGMACSVRow(lines.shift()).filter(x => x).map(x => x.trim())
+          const db = await database()
+          db.transaction(transaction => {
+            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['gma'])
+          })
 
-      let totalSummits = 0
+          const startTime = Date.now()
+          let processedLines = 0
+          const totalLines = lines.length
 
-      const db = await database()
-      db.transaction(transaction => {
-        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['gma'])
-      })
+          while (lines.length > 0) {
+            const batch = lines.splice(0, 797)
+            await (() => new Promise(resolve => {
+              setTimeout(() => {
+                db.transaction(async transaction => {
+                  for (const line of batch) {
+                    const row = parseGMACSVRow(line, { headers })
+                    if (row.deleted === '0') {
+                      const lon = Number.parseFloat(row.Longitude)
+                      const lat = Number.parseFloat(row.Latitude)
+                      const grid = !row['Maidenhead Locator'] ? locationToGrid6(lat, lon) : row['Maidenhead Locator'].replace(/[A-Z]{2}$/, x => x.toLowerCase())
+                      const data = {
+                        ref: row.Reference.toUpperCase(),
+                        prefix: row.Reference.split('/')[0],
+                        name: row.Name,
+                        grid,
+                        altitude: Number.parseInt(row['Height (m)'], 10),
+                        lat,
+                        lon
+                      }
 
-      const startTime = Date.now()
-      let processedLines = 0
-      const totalLines = lines.length
-
-      while (lines.length > 0) {
-        const batch = lines.splice(0, 797)
-        await (() => new Promise(resolve => {
-          setTimeout(() => {
-            db.transaction(async transaction => {
-              for (const line of batch) {
-                const row = parseGMACSVRow(line, { headers })
-                if (row.deleted === '0') {
-                  const lon = Number.parseFloat(row.Longitude)
-                  const lat = Number.parseFloat(row.Latitude)
-                  const grid = !row['Maidenhead Locator'] ? locationToGrid6(lat, lon) : row['Maidenhead Locator'].replace(/[A-Z]{2}$/, x => x.toLowerCase())
-                  const data = {
-                    ref: row.Reference.toUpperCase(),
-                    prefix: row.Reference.split('/')[0],
-                    name: row.Name,
-                    grid,
-                    altitude: Number.parseInt(row['Height (m)'], 10),
-                    lat,
-                    lon
+                      totalSummits++
+                      transaction.executeSql(`
+                        INSERT INTO lookups
+                          (category, subCategory, key, name, data, lat, lon, flags, updated)
+                        VALUES
+                          (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                        ON CONFLICT DO
+                        UPDATE SET
+                          subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                        `, ['gma', data.prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.prefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
+                      )
+                    }
+                    processedLines++
                   }
+                  options.onStatus && await options.onStatus({
+                    key,
+                    definition,
+                    status: 'progress',
+                    progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
+                  })
+                  resolve()
+                })
+              }, 0)
+            }))()
+          }
 
-                  totalSummits++
-                  transaction.executeSql(`
-                    INSERT INTO lookups
-                      (category, subCategory, key, name, data, lat, lon, flags, updated)
-                    VALUES
-                      (?, ?, ?, ?, ?, ?, ?, ?, 1)
-                    ON CONFLICT DO
-                    UPDATE SET
-                      subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                    `, ['gma', data.prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.prefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                  )
-                }
-                processedLines++
-              }
-              options.onStatus && await options.onStatus({
-                key,
-                definition,
-                status: 'progress',
-                progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
-              })
-              resolve()
-            })
-          }, 0)
-        }))()
-      }
+          db.transaction(transaction => {
+            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['gma'])
+          })
 
-      db.transaction(transaction => {
-        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['gma'])
+          return {
+            totalSummits,
+            version: versionRow
+          }
+        }
       })
-
-      const data = {
-        totalSummits,
-        version: versionRow
-      }
-      RNFetchBlob.fs.unlink(response.data)
-
-      return data
     },
     onLoad: (data) => {
       GMAData.totalSummits = data.totalSummits

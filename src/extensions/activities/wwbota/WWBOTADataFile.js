@@ -5,15 +5,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { Buffer } from 'buffer'
-
-import packageJson from '../../../../package.json'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fmtDateNice } from '../../../tools/timeFormats'
+import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const WWBOTAData = { }
 
@@ -26,95 +23,91 @@ export function registerWWBOTADataFile () {
     icon: 'file-cloud-outline',
     maxAgeInDays: 100,
     enabledByDefault: true,
-    fetch: async ({ key, definition, options }) => {
+    fetch: async (args) => {
+      const { key, definition, options } = args
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
       const url = 'https://wwbota.org/wwbota-3/'
 
-      const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
-        'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
-      })
-      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-      const buffer = Buffer.from(data64, 'base64')
-      const body = buffer.toString('utf8')
+      return fetchAndProcessURL({
+        ...args,
+        url,
+        process: async (body) => {
+          const lines = body.split('\n')
+          const headers = parseWWBOTACSVRow(lines.shift())
+          headers[0] = headers[0].replace(/^\uFEFF/, '')
 
-      const lines = body.split('\n')
-      const headers = parseWWBOTACSVRow(lines.shift())
-      headers[0] = headers[0].replace(/^\uFEFF/, '')
+          let totalReferences = 0
 
-      let totalReferences = 0
+          const db = await database()
+          db.transaction(transaction => {
+            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['wwbota'])
+          })
 
-      const db = await database()
-      db.transaction(transaction => {
-        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['wwbota'])
-      })
+          const startTime = Date.now()
+          let processedLines = 0
+          const totalLines = lines.length
 
-      const startTime = Date.now()
-      let processedLines = 0
-      const totalLines = lines.length
+          while (lines.length > 0) {
+            const batch = lines.splice(0, 177)
+            await (() => new Promise(resolve => {
+              setTimeout(() => {
+                db.transaction(async transaction => {
+                  for (const line of batch) {
+                    const row = parseWWBOTACSVRow(line, { headers })
+                    const ref = row.Reference
+                    if (ref) {
+                      row.Maidenhead &&= row.Maidenhead.replace(/[A-Z]{2}$/, x => x.toLowerCase())
+                      const data = {
+                        ref,
+                        entityPrefix: ref.split('-')[0].split('/')[1],
+                        name: row.Name,
+                        type: row.Type,
+                        grid: row.Maidenhead,
+                        lat: Number.parseFloat(row.Lat),
+                        lon: Number.parseFloat(row.Long)
+                      }
 
-      while (lines.length > 0) {
-        const batch = lines.splice(0, 177)
-        await (() => new Promise(resolve => {
-          setTimeout(() => {
-            db.transaction(async transaction => {
-              for (const line of batch) {
-                const row = parseWWBOTACSVRow(line, { headers })
-                const ref = row.Reference
-                if (ref) {
-                  row.Maidenhead &&= row.Maidenhead.replace(/[A-Z]{2}$/, x => x.toLowerCase())
-                  const data = {
-                    ref,
-                    entityPrefix: ref.split('-')[0].split('/')[1],
-                    name: row.Name,
-                    type: row.Type,
-                    grid: row.Maidenhead,
-                    lat: Number.parseFloat(row.Lat),
-                    lon: Number.parseFloat(row.Long)
+                      totalReferences++
+                      transaction.executeSql(`
+                      INSERT INTO lookups
+                        (category, subCategory, key, name, data, lat, lon, flags, updated)
+                      VALUES
+                        (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                      ON CONFLICT DO
+                      UPDATE SET
+                        subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                      `, ['wwbota', data.entityPrefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.entityPrefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
+                      )
+                    }
+                    processedLines++
                   }
+                  options.onStatus && await options.onStatus({
+                    key,
+                    definition,
+                    status: 'progress',
+                    progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
+                  })
+                  resolve()
+                })
+              }, 0)
+            }))()
+          }
 
-                  totalReferences++
-                  transaction.executeSql(`
-                  INSERT INTO lookups
-                    (category, subCategory, key, name, data, lat, lon, flags, updated)
-                  VALUES
-                    (?, ?, ?, ?, ?, ?, ?, ?, 1)
-                  ON CONFLICT DO
-                  UPDATE SET
-                    subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                  `, ['wwbota', data.entityPrefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.entityPrefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                  )
-                }
-                processedLines++
-              }
-              options.onStatus && await options.onStatus({
-                key,
-                definition,
-                status: 'progress',
-                progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
-              })
-              resolve()
-            })
-          }, 0)
-        }))()
-      }
+          db.transaction(transaction => {
+            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wwbota'])
+          })
 
-      db.transaction(transaction => {
-        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wwbota'])
+          db.transaction(transaction => {
+            transaction.executeSql('DELETE FROM lookups WHERE category = ?', ['ukbota']) // Legacy
+          })
+
+          return {
+            totalReferences,
+            version: fmtDateNice(new Date())
+          }
+        }
       })
-
-      db.transaction(transaction => {
-        transaction.executeSql('DELETE FROM lookups WHERE category = ?', ['ukbota']) // Legacy
-      })
-
-      const data = {
-        totalReferences,
-        version: fmtDateNice(new Date())
-      }
-
-      RNFetchBlob.fs.unlink(response.data)
-
-      return data
     },
     onLoad: (data) => {
       WWBOTAData.totalRefs = data.totalRefs

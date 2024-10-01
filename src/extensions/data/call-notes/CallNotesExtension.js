@@ -6,14 +6,12 @@
  */
 
 import React, { useMemo } from 'react'
-import RNFetchBlob from 'react-native-blob-util'
 import { List } from 'react-native-paper'
-import { Buffer } from 'buffer'
 import UUID from 'react-native-uuid'
 
 import packageJson from '../../../../package.json'
 import { registerDataFile, unRegisterDataFile } from '../../../store/dataFiles'
-import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
+import { fetchAndProcessURL, loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { selectExtensionSettings, setExtensionSettings } from '../../../store/settings'
 import ManageCallNotesScreen from './screens/ManageCallNotesScreen'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
@@ -130,35 +128,26 @@ const createCallNotesFetcher = (file) => async () => {
 
   const url = await resolveDownloadUrl(file.location)
 
-  const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
-    'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
-  })
+  return fetchAndProcessURL({
+    url,
+    process: async (body) => {
+      const data = {}
 
-  if (response?.respInfo?.status >= 300) {
-    throw new Error(`HTTP Error ${response.status} fetching ${url}`)
-  }
+      body.split(/[\n\r]+/).forEach(line => {
+        line = line.trim()
+        if (!line) return
+        if (line.startsWith('#')) return
+        const [call, ...noteWords] = line.split(/\s+/)
 
-  const body64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-  const buffer = Buffer.from(body64, 'base64')
-  const body = buffer.toString('utf8')
+        if (call.length > 2 && noteWords.length > 0) {
+          data[call] = data[call] || []
+          data[call].push({ source: file.name, note: noteWords.join(' '), call })
+        }
+      })
 
-  const data = {}
-
-  body.split(/[\n\r]+/).forEach(line => {
-    line = line.trim()
-    if (!line) return
-    if (line.startsWith('#')) return
-    const [call, ...noteWords] = line.split(/\s+/)
-
-    if (call.length > 2 && noteWords.length > 0) {
-      data[call] = data[call] || []
-      data[call].push({ source: file.name, note: noteWords.join(' '), call })
+      return data
     }
   })
-
-  await RNFetchBlob.fs.unlink(response.data)
-
-  return data
 }
 
 const createCallNotesLoader = (file) => async (data) => {

@@ -5,15 +5,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
-import { Buffer } from 'buffer'
 
-import packageJson from '../../../../package.json'
 import { fmtDateNice } from '../../../tools/timeFormats'
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const ECAData = {}
 
@@ -26,50 +24,49 @@ export function registerECADataFile () {
     icon: 'file-certificate-outline',
     maxAgeInDays: 100,
     enabledByDefault: false,
-    fetch: async ({ options, key, definition }) => {
+    fetch: async (args) => {
+      const { key, definition, options } = args
+
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
-      const url = 'https://www.ecaelastats.site/ECA_References.json'
+      const url = 'https://ham2k.com/data/cached/eca/ECA_References.json'
 
-      const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
-        'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
-      })
-      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-      const buffer = Buffer.from(data64, 'base64')
-      const body = buffer.toString('utf8')
+      return fetchAndProcessURL({
+        ...args,
+        url,
+        process: async (body) => {
+          const rawReferences = JSON.parse(body)?.[2]?.data ?? []
+          let totalRefs = 0
 
-      const rawReferences = JSON.parse(body)?.[2]?.data ?? []
-      let totalRefs = 0
+          const db = await database()
+          db.transaction(transaction => {
+            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['eca'])
+          })
 
-      const db = await database()
-      db.transaction(transaction => {
-        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['eca'])
-      })
+          const startTime = Date.now()
+          let processedRawRefs = 0
+          const totalRawRefs = rawReferences.length
 
-      const startTime = Date.now()
-      let processedRawRefs = 0
-      const totalRawRefs = rawReferences.length
+          while (rawReferences.length > 0) {
+            const batch = rawReferences.splice(0, 500)
+            await (() => new Promise(resolve => {
+              setTimeout(() => {
+                db.transaction(async transaction => {
+                  for (const reference of batch) {
+                    const lat = parseFloat(reference.LATITUDE)
+                    const lon = parseFloat(reference.LONGITUDE)
+                    const grid = (!isNaN(lat) && !isNaN(lon)) ? locationToGrid6(lat, lon) : null
+                    const data = {
+                      ref: reference.WCA,
+                      name: reference.NAME_OF_CASTLE.trim(),
+                      location: reference.LOCATION,
+                      lat: isNaN(lat) ? null : lat,
+                      lon: isNaN(lon) ? null : lon,
+                      grid
+                    }
 
-      while (rawReferences.length > 0) {
-        const batch = rawReferences.splice(0, 500)
-        await (() => new Promise(resolve => {
-          setTimeout(() => {
-            db.transaction(async transaction => {
-              for (const reference of batch) {
-                const lat = parseFloat(reference.LATITUDE)
-                const lon = parseFloat(reference.LONGITUDE)
-                const grid = (!isNaN(lat) && !isNaN(lon)) ? locationToGrid6(lat, lon) : null
-                const data = {
-                  ref: reference.WCA,
-                  name: reference.NAME_OF_CASTLE.trim(),
-                  location: reference.LOCATION,
-                  lat: isNaN(lat) ? null : lat,
-                  lon: isNaN(lon) ? null : lon,
-                  grid
-                }
-
-                totalRefs++
-                transaction.executeSql(`
+                    totalRefs++
+                    transaction.executeSql(`
                   INSERT INTO lookups
                     (category, subCategory, key, name, data, lat, lon, flags, updated)
                   VALUES
@@ -78,32 +75,31 @@ export function registerECADataFile () {
                   UPDATE SET
                     subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
                   `, ['eca', data.location, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.location, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                )
-                processedRawRefs++
-              }
-              options.onStatus && await options.onStatus({
-                key,
-                definition,
-                status: 'progress',
-                progress: `Loaded \`${fmtNumber(processedRawRefs)}\` references.\n\n\`${fmtPercent(Math.min(processedRawRefs / totalRawRefs, 1), 'integer')}\` • ${fmtNumber((totalRawRefs - processedRawRefs) * ((Date.now() - startTime) / 1000) / processedRawRefs, 'oneDecimal')} seconds left.`
-              })
-              resolve()
-            })
-          }, 0)
-        }))()
-      }
+                    )
+                    processedRawRefs++
+                  }
+                  options.onStatus && await options.onStatus({
+                    key,
+                    definition,
+                    status: 'progress',
+                    progress: `Loaded \`${fmtNumber(processedRawRefs)}\` references.\n\n\`${fmtPercent(Math.min(processedRawRefs / totalRawRefs, 1), 'integer')}\` • ${fmtNumber((totalRawRefs - processedRawRefs) * ((Date.now() - startTime) / 1000) / processedRawRefs, 'oneDecimal')} seconds left.`
+                  })
+                  resolve()
+                })
+              }, 0)
+            }))()
+          }
 
-      db.transaction(transaction => {
-        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['eca'])
+          db.transaction(transaction => {
+            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['eca'])
+          })
+
+          return {
+            totalRefs,
+            version: fmtDateNice(new Date())
+          }
+        }
       })
-
-      const data = {
-        totalRefs,
-        version: fmtDateNice(new Date())
-      }
-      RNFetchBlob.fs.unlink(response.data)
-
-      return data
     },
     onLoad: (data) => {
       ECAData.totalRefs = data.totalRefs

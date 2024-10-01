@@ -153,23 +153,23 @@ export const loadAllDataFiles = () => async (dispatch) => {
   }
 }
 
+const DEBUG_FETCH = false
+
 export async function fetchAndProcessURL ({ url, key, process, definition, info, options }) {
   const headers = {
     'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
   }
-  console.log('fetching', { url, info })
+  if (DEBUG_FETCH) console.log('Fetching', { url, info })
   if (info?.data?.etag) {
-    console.log('using etag', info.data.etag)
+    if (DEBUG_FETCH) console.log('-- Using etag', info.data.etag)
     headers['If-None-Match'] = info.data.etag
   }
 
   const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, headers)
-  console.log('response keys', Object.keys(response))
-  console.log('response info keys', Object.keys(response.respInfo))
-  console.log('respnse status', response?.respInfo?.status)
-  console.log('response headers', response?.respInfo?.headers)
+  if (DEBUG_FETCH) console.log('-- Response status', response?.respInfo?.status)
+  if (DEBUG_FETCH) console.log('-- Response headers', response?.respInfo?.headers)
   if (response.respInfo.status === 304) {
-    console.log('304 Not Modified')
+    if (DEBUG_FETCH) console.log('-- 304 Not Modified')
     console.log(info?.data)
     return info?.data
   } else if (response.respInfo.status !== 200) {
@@ -187,7 +187,7 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
   const etagKey = Object.keys(response.respInfo.headers).find(k => k.toLowerCase() === 'etag')
   if (etagKey && response.respInfo.headers[etagKey]) {
     data.etag = response.respInfo.headers[etagKey]
-    console.log('saved etag', data.etag)
+    if (DEBUG_FETCH) console.log('-- Saved etag', data.etag)
   }
 
   return data
