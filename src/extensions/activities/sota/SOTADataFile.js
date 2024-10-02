@@ -5,14 +5,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
-import { Buffer } from 'buffer'
 
-import packageJson from '../../../../package.json'
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const SOTAData = {}
 
@@ -25,91 +23,89 @@ export function registerSOTADataFile () {
     icon: 'file-image-outline',
     maxAgeInDays: 100,
     enabledByDefault: false,
-    fetch: async ({ options, key, definition }) => {
+    fetch: async (args) => {
+      const { key, definition, options } = args
+
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
       const url = 'https://www.sotadata.org.uk/summitslist.csv'
 
-      const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
-        'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
-      })
-      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-      const buffer = Buffer.from(data64, 'base64')
-      const body = buffer.toString('utf8')
+      return fetchAndProcessURL({
+        ...args,
+        url,
+        process: async (body) => {
+          const lines = body.split('\n')
+          const versionRow = lines.shift()
+          const headers = parseSOTACSVRow(lines.shift()).filter(x => x)
 
-      const lines = body.split('\n')
-      const versionRow = lines.shift()
-      const headers = parseSOTACSVRow(lines.shift()).filter(x => x)
+          let totalSummits = 0
 
-      let totalSummits = 0
+          const db = await database()
+          db.transaction(transaction => {
+            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['sota'])
+          })
 
-      const db = await database()
-      db.transaction(transaction => {
-        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['sota'])
-      })
+          const startTime = Date.now()
+          let processedLines = 0
+          const totalLines = lines.length
 
-      const startTime = Date.now()
-      let processedLines = 0
-      const totalLines = lines.length
+          while (lines.length > 0) {
+            const batch = lines.splice(0, 797)
+            await (() => new Promise(resolve => {
+              setTimeout(() => {
+                db.transaction(async transaction => {
+                  for (const line of batch) {
+                    const row = parseSOTACSVRow(line, { headers })
+                    if (row.SummitCode && row.ValidTo === '31/12/2099') {
+                      const lon = Number.parseFloat(row.Longitude) || 0
+                      const lat = Number.parseFloat(row.Latitude) || 0
+                      const data = {
+                        ref: row.SummitCode.toUpperCase(),
+                        grid: locationToGrid6(lat, lon),
+                        altitude: Number.parseInt(row.AltM, 10),
+                        region: row.RegionName,
+                        association: row.AssociationName,
+                        lat,
+                        lon
+                      }
+                      if (data.ref !== row.SummitName) data.name = row.SummitName
 
-      while (lines.length > 0) {
-        const batch = lines.splice(0, 797)
-        await (() => new Promise(resolve => {
-          setTimeout(() => {
-            db.transaction(async transaction => {
-              for (const line of batch) {
-                const row = parseSOTACSVRow(line, { headers })
-                if (row.SummitCode && row.ValidTo === '31/12/2099') {
-                  const lon = Number.parseFloat(row.Longitude) || 0
-                  const lat = Number.parseFloat(row.Latitude) || 0
-                  const data = {
-                    ref: row.SummitCode.toUpperCase(),
-                    grid: locationToGrid6(lat, lon),
-                    altitude: Number.parseInt(row.AltM, 10),
-                    region: row.RegionName,
-                    association: row.AssociationName,
-                    lat,
-                    lon
+                      totalSummits++
+                      transaction.executeSql(`
+                        INSERT INTO lookups
+                          (category, subCategory, key, name, data, lat, lon, flags, updated)
+                        VALUES
+                          (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                        ON CONFLICT DO
+                        UPDATE SET
+                          subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                        `, ['sota', data.region, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.region, data.name, JSON.stringify(data), data.lat, data.lon, 1]
+                      )
+                    }
+                    processedLines++
                   }
-                  if (data.ref !== row.SummitName) data.name = row.SummitName
+                  options.onStatus && await options.onStatus({
+                    key,
+                    definition,
+                    status: 'progress',
+                    progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
+                  })
+                  resolve()
+                })
+              }, 0)
+            }))()
+          }
 
-                  totalSummits++
-                  transaction.executeSql(`
-                    INSERT INTO lookups
-                      (category, subCategory, key, name, data, lat, lon, flags, updated)
-                    VALUES
-                      (?, ?, ?, ?, ?, ?, ?, ?, 1)
-                    ON CONFLICT DO
-                    UPDATE SET
-                      subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                    `, ['sota', data.region, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.region, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                  )
-                }
-                processedLines++
-              }
-              options.onStatus && await options.onStatus({
-                key,
-                definition,
-                status: 'progress',
-                progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
-              })
-              resolve()
-            })
-          }, 0)
-        }))()
-      }
+          db.transaction(transaction => {
+            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
+          })
 
-      db.transaction(transaction => {
-        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
+          return {
+            totalSummits,
+            version: versionRow
+          }
+        }
       })
-
-      const data = {
-        totalSummits,
-        version: versionRow
-      }
-      RNFetchBlob.fs.unlink(response.data)
-
-      return data
     },
     onLoad: (data) => {
       if (data.regions) return false // Old data - TODO: Remove this after a few months

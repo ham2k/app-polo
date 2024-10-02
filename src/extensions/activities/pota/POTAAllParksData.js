@@ -30,7 +30,7 @@ export function registerPOTAAllParksData () {
 
       const url = 'https://pota.app/all_parks_ext.csv'
 
-      const data = await fetchAndProcessURL({
+      return await fetchAndProcessURL({
         ...args,
         url,
         process: async (body) => {
@@ -110,8 +110,6 @@ export function registerPOTAAllParksData () {
           }
         }
       })
-
-      return data
     },
     onLoad: (data) => {
       if (data.activeParks) return false // Old data - TODO: Remove this after a few months

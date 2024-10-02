@@ -5,16 +5,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { Buffer } from 'buffer'
-
-import packageJson from '../../../../package.json'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fmtDateNice } from '../../../tools/timeFormats'
 import { Info } from './SiOTAInfo'
+import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const SiOTAData = { }
 
@@ -27,89 +24,86 @@ export function registerSiOTADataFile () {
     icon: 'file-cloud-outline',
     maxAgeInDays: 100,
     enabledByDefault: true,
-    fetch: async ({ key, definition, options }) => {
+    fetch: async (args) => {
+      const { key, definition, options } = args
+
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
       const url = 'https://www.silosontheair.com/data/silos.csv'
 
-      const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
-        'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
-      })
-      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-      const buffer = Buffer.from(data64, 'base64')
-      const body = buffer.toString('utf8')
+      return fetchAndProcessURL({
+        ...args,
+        url,
+        process: async (body) => {
+          const lines = body.split('\n')
+          const headers = parseSiOTACSVRow(lines.shift())
 
-      const lines = body.split('\n')
-      const headers = parseSiOTACSVRow(lines.shift())
+          let totalReferences = 0
 
-      let totalReferences = 0
+          const db = await database()
+          db.transaction(transaction => {
+            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['siota'])
+          })
 
-      const db = await database()
-      db.transaction(transaction => {
-        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['siota'])
-      })
+          const startTime = Date.now()
+          let processedLines = 0
+          const totalLines = lines.length
 
-      const startTime = Date.now()
-      let processedLines = 0
-      const totalLines = lines.length
+          while (lines.length > 0) {
+            const batch = lines.splice(0, 250)
+            await (() => new Promise(resolve => {
+              setTimeout(() => {
+                db.transaction(async transaction => {
+                  for (const line of batch) {
+                    const row = parseSiOTACSVRow(line, { headers })
+                    const ref = row.SILO_CODE
+                    if (Info.referenceRegex.test(ref)) {
+                      const data = {
+                        ref,
+                        name: row.NAME,
+                        location: row.LOCALITY,
+                        state: row.STATE,
+                        grid: row.LOCATOR,
+                        lat: Number.parseFloat(row.LAT),
+                        lon: Number.parseFloat(row.LNG)
+                      }
 
-      while (lines.length > 0) {
-        const batch = lines.splice(0, 250)
-        await (() => new Promise(resolve => {
-          setTimeout(() => {
-            db.transaction(async transaction => {
-              for (const line of batch) {
-                const row = parseSiOTACSVRow(line, { headers })
-                const ref = row.SILO_CODE
-                if (Info.referenceRegex.test(ref)) {
-                  const data = {
-                    ref,
-                    name: row.NAME,
-                    location: row.LOCALITY,
-                    state: row.STATE,
-                    grid: row.LOCATOR,
-                    lat: Number.parseFloat(row.LAT),
-                    lon: Number.parseFloat(row.LNG)
+                      totalReferences++
+                      transaction.executeSql(`
+                      INSERT INTO lookups
+                        (category, subCategory, key, name, data, lat, lon, flags, updated)
+                      VALUES
+                        (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                      ON CONFLICT DO
+                      UPDATE SET
+                        subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                      `, ['siota', data.state, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.state, data.name, JSON.stringify(data), data.lat, data.lon, 1]
+                      )
+                    }
+                    processedLines++
                   }
+                  options.onStatus && await options.onStatus({
+                    key,
+                    definition,
+                    status: 'progress',
+                    progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
+                  })
+                  resolve()
+                })
+              }, 0)
+            }))()
+          }
 
-                  totalReferences++
-                  transaction.executeSql(`
-                  INSERT INTO lookups
-                    (category, subCategory, key, name, data, lat, lon, flags, updated)
-                  VALUES
-                    (?, ?, ?, ?, ?, ?, ?, ?, 1)
-                  ON CONFLICT DO
-                  UPDATE SET
-                    subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                  `, ['siota', data.state, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.state, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                  )
-                }
-                processedLines++
-              }
-              options.onStatus && await options.onStatus({
-                key,
-                definition,
-                status: 'progress',
-                progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
-              })
-              resolve()
-            })
-          }, 0)
-        }))()
-      }
+          db.transaction(transaction => {
+            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['siota'])
+          })
 
-      db.transaction(transaction => {
-        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['siota'])
+          return {
+            totalReferences,
+            version: fmtDateNice(new Date())
+          }
+        }
       })
-
-      const data = {
-        totalReferences,
-        version: fmtDateNice(new Date())
-      }
-
-      RNFetchBlob.fs.unlink(response.data)
-
-      return data
     },
     onLoad: (data) => {
       SiOTAData.totalRefs = data.totalRefs

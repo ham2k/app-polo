@@ -50,7 +50,8 @@ export const DXCCScoringHandler = {
         .map(entityPrefix => DXCC_BY_PREFIX[entityPrefix])
         .sort((a, b) => score.entities[b.entityPrefix] - score.entities[a.entityPrefix])
         .forEach(entity => {
-          score.longSummary += `${entity.flag}&nbsp;${entity.name.replaceAll(' ', '&nbsp;')}&nbsp;(${score.entities[entity.entityPrefix]}) `
+          const countTxt = score.entities[entity.entityPrefix] > 1 ? `(${score.entities[entity.entityPrefix]})` : ''
+          score.longSummary += `${[entity.flag, entity.name.replaceAll(' ', '&nbsp;'), countTxt].join('&nbsp;')} `
         })
     }
 

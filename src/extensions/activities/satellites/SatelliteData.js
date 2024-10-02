@@ -5,12 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import RNFetchBlob from 'react-native-blob-util'
-import { Buffer } from 'buffer'
-
-import packageJson from '../../../../package.json'
-
 import { registerDataFile } from '../../../store/dataFiles'
+import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const SatelliteData = {}
 
@@ -23,27 +19,28 @@ export function registerSatelliteData () {
     icon: 'satellite-variant',
     maxAgeInDays: 28,
     enabledByDefault: true,
-    fetch: async ({ key, definition, options }) => {
+    fetch: async (args) => {
+      const { key, definition, options } = args
+
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
       const url = 'https://polo.ham2k.com/data/satellites.json'
 
-      const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, {
-        'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
+      return fetchAndProcessURL({
+        ...args,
+        url,
+        process: async (body) => {
+          const data = JSON.parse(body)
+
+          const activeSatellites = data
+          const satelliteByName = data.reduce((acc, sat) => {
+            acc[sat.name] = sat
+            return acc
+          }, {})
+
+          return { activeSatellites, satelliteByName }
+        }
       })
-      const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-      const buffer = Buffer.from(data64, 'base64')
-      const body = buffer.toString('utf8')
-
-      const data = JSON.parse(body)
-
-      const activeSatellites = data
-      const satelliteByName = data.reduce((acc, sat) => {
-        acc[sat.name] = sat
-        return acc
-      }, {})
-
-      return { activeSatellites, satelliteByName }
     },
     onLoad: (data) => {
       SatelliteData.activeSatellites = data.activeSatellites

@@ -47,19 +47,6 @@ const ActivityHook = {
   postSpot: WWFFPostSpot,
   Options: WWFFActivityOptions,
 
-  includeControlForQSO: ({ qso, operation }) => {
-    if (findRef(operation, Info.activationType)) return true
-    if (findRef(qso, Info.huntingType)) return true
-    else return false
-  },
-
-  labelControlForQSO: ({ operation, qso }) => {
-    const opRef = findRef(operation, Info.activationType)
-    let label = opRef ? Info.shortNameDoubleContact : Info.shortName
-    if (findRef(qso, Info.huntingType)) label = `✓ ${label}`
-    return label
-  },
-
   generalHuntingType: ({ operation, settings }) => Info.huntingType
 }
 

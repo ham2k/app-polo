@@ -45,19 +45,6 @@ const ActivityHook = {
   },
   Options: WWBOTAActivityOptions,
 
-  includeControlForQSO: ({ qso, operation }) => {
-    if (findRef(operation, Info.activationType)) return true
-    if (findRef(qso, Info.huntingType)) return true
-    else return false
-  },
-
-  labelControlForQSO: ({ operation, qso }) => {
-    const opRef = findRef(operation, Info.activationType)
-    let label = opRef ? Info.shortNameDoubleContact : Info.shortName
-    if (findRef(qso, Info.huntingType)) label = `✓ ${label}`
-    return label
-  },
-
   generalHuntingType: ({ operation, settings }) => Info.huntingType
 }
 
@@ -178,15 +165,13 @@ const ReferenceHandler = {
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
-    if (!ref.ref) return {}
-
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const { band, key, startOnMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const refCount = refs.length
 
-    const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+    const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
       return { value: 1, refCount, type: Info.activationType }
@@ -240,7 +225,7 @@ const ReferenceHandler = {
   },
 
   summarizeScore: ({ score, operation, ref, section }) => {
-    const activationScore = Math.max(...Object.keys(score.refs)
+    const activationScore = Math.max(...Object.keys(score?.refs ?? {})
       .map((x) => (['S5', 'Z3'].includes(x.split(/[/-]/)?.[1]) ? 10 : 25)))
 
     score.activated = score.value >= activationScore
