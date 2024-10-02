@@ -93,8 +93,9 @@ export const selectQSOsStatus = (state) => {
 
 const EMPTY_QSOS = []
 export const selectQSOs = createSelector(
-  (state, uuid) => state?.qsos?.qsos?.[uuid],
-  (qsos) => qsos ?? EMPTY_QSOS
+  (state, uuid) => state?.qsos?.qsos,
+  (state, uuid) => uuid,
+  (qsos, uuid) => qsos[uuid] ?? EMPTY_QSOS
 )
 
 export const selectSectionedQSOs = createSelector(

@@ -20,6 +20,7 @@ import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { findBestHook } from '../../../extensions/registry'
 import { simpleTemplate } from '../../../tools/stringTools'
 import { reportError } from '../../../distro'
+import { annotateQSO } from '../../../screens/OperationScreens/OpInfoTab/components/useQSOInfo'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
@@ -222,9 +223,8 @@ export const importADIFIntoOperation = (path, operation) => async (dispatch) => 
       const adif = buffer.toString('utf8')
 
       const data = adifToQSON(adif)
-      const qsos = data.qsos.map(qso => {
+      const qsos = data.qsos.map((qso) => {
         const newQSO = { ...qso }
-        newQSO.key = qsoKey(newQSO)
         newQSO.refs = (qso.refs || []).map(ref => {
           if (ref.type.match(/Activation$/i)) {
             // Remove activation references, since the QSOs will get them from this operation
@@ -233,11 +233,15 @@ export const importADIFIntoOperation = (path, operation) => async (dispatch) => 
             return ref
           }
         }).filter(x => x)
-        // TODO: Call annotateQSO?
+
+        newQSO.key = qsoKey(newQSO)
+
         return newQSO
       })
 
-      for (const qso of qsos) {
+      for (let qso of qsos) {
+        qso = await annotateQSO({ qso, online: false, skipLookup: false, dispatch, settings: {} })
+        console.log('add', qso)
         await dispatch(addQSO({ uuid: operation.uuid, qso }))
       }
 

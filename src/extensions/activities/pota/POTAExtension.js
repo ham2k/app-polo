@@ -270,7 +270,8 @@ const ReferenceHandler = {
       refCount: 0,
       extraRefs: 0,
       refs: {},
-      primaryRef: undefined
+      primaryRef: undefined,
+      for: 'day'
     }
 
     if (!score.refs[ref.ref]) { // Track how many parks we're activating

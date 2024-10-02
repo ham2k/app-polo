@@ -10,6 +10,7 @@ import { findBestHook, findHooks } from '../registry'
 import { DXCCScoringHandler } from './DXCCScoringHandler'
 import { USStatesScoringHandler } from './USStatesScoringHandler'
 import { CanadianProvincesScoringHandler } from './CanadianProvincesScoringHandler'
+import { BandsAndModesScoringHandler } from './BandsAndModesScoringHandler'
 
 const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
@@ -46,6 +47,9 @@ export function scoringHandlersForOperation (operation, settings) {
 
   scoringHandlers.push({ handler: CanadianProvincesScoringHandler, ref: {} })
   scoringKeys[CanadianProvincesScoringHandler.key] = true
+
+  scoringHandlers.push({ handler: BandsAndModesScoringHandler, ref: {} })
+  scoringKeys[BandsAndModesScoringHandler.key] = true
 
   return scoringHandlers
 }
@@ -93,6 +97,7 @@ export function analizeAndSectionQSOs ({ qsos, operation, settings }) {
         const key = ref?.type ?? handler.key
 
         const qsoScore = handler.scoringForQSO({ qso, qsos, operation, score: currentSection.scores[key], ref })
+        console.log('qsoScore', qsoScore, qso.their.call, qso.their.state)
         if (handler.accumulateScoreForDay) {
           currentSection.scores[key] = handler.accumulateScoreForDay({ qsoScore, score: currentSection.scores[key], operation, ref })
         } else if (handler.accumulateScoreForOperation) {

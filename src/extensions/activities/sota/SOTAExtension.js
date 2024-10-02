@@ -246,7 +246,8 @@ const ReferenceHandler = {
       label: Info.shortName,
       summary: '',
       value: 0,
-      refCount: 0
+      refCount: 0,
+      for: 'day'
     }
 
     score.value = score.value + qsoScore.value

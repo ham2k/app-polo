@@ -227,7 +227,7 @@ const ReferenceHandler = {
   },
 
   summarizeScore: ({ score, operation, ref, section }) => {
-    const activationScore = Math.max(...Object.keys(score.refs)
+    const activationScore = Math.max(...Object.keys(score?.refs ?? {})
       .map((x) => (['S5', 'Z3'].includes(x.split(/[/-]/)?.[1]) ? 10 : 25)))
 
     score.activated = score.value >= activationScore

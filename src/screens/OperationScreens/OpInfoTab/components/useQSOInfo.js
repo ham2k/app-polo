@@ -127,7 +127,7 @@ export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup
   for (const ref of (qso?.refs || [])) {
     const hooks = findHooks(`ref:${ref.type}`)
     for (const hook of hooks) {
-      if (hook?.decorateRefWithDispatch) {
+      if (hook?.decorateRefWithDispatch && dispatch) {
         refs.push(await dispatch(hook.decorateRefWithDispatch(ref)))
       } else if (hook?.decorateRef) {
         refs.push(hook.decorateRef(ref))
