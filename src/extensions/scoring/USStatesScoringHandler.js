@@ -40,7 +40,7 @@ export const USStatesScoringHandler = {
     score.icon = 'star'
     score.weight = USStatesScoringHandler.weight
 
-    const count = Object.keys(score.states).length
+    const count = Object.keys(score.states ?? {}).length
 
     if (count >= 10) {
       score.summary = `${count}`
