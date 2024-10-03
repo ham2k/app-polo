@@ -39,6 +39,7 @@ import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsSc
 import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
 import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
+import RootErrorBoundary from './screens/components/RootErrorBoundary'
 
 const Stack = createNativeStackNavigator()
 
@@ -154,12 +155,20 @@ function MainApp ({ navigationTheme }) {
   }
 }
 
+function ErrorWrappedApp (props) {
+  return (
+    <RootErrorBoundary>
+      <MainApp {...props} />
+    </RootErrorBoundary>
+  )
+}
+
 function ThemedApp () {
   const [paperTheme, navigationTheme] = usePrepareThemes()
 
   return (
     <PaperProvider theme={paperTheme} settings={paperSettings}>
-      <MainApp navigationTheme={navigationTheme} />
+      <ErrorWrappedApp navigationTheme={navigationTheme} />
     </PaperProvider>
   )
 }

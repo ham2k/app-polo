@@ -14,7 +14,7 @@ export const USStatesScoringHandler = {
   scoringForQSO: ({ qso, qsos, operation, score, ref }) => {
     // console.log('scoringForQSO', qso.their)
     const entityPrefix = qso.their?.entityPrefix ?? qso.their?.guess?.entityPrefix
-    console.log('scoringForQSO', entityPrefix)
+
     if (entityPrefix !== 'K' && entityPrefix !== 'KH6' && entityPrefix !== 'KL7') return {}
 
     const state = (qso?.their?.state ?? qso?.their?.guess?.state ?? '').toUpperCase()
@@ -32,7 +32,7 @@ export const USStatesScoringHandler = {
     if (qsoScore.state) {
       score.states[qsoScore.state] = (score.states[qsoScore.state] ?? 0) + 1
     }
-    console.log('accumulateScoreForOperation', qsoScore.state, score)
+
     return score
   },
 

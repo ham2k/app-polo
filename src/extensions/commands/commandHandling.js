@@ -48,8 +48,12 @@ export function checkAndProcessCommands (value, extraParams) {
 
       return result ?? true
     } catch (e) {
-      reportError(`Error in checkAndProcessCommands invocation for '${matchingCommand.key}'`, e)
-      return false
+      if (e.message === 'Test error!') {
+        throw e
+      } else {
+        reportError(`Error in checkAndProcessCommands invocation for '${matchingCommand.key}'`, e)
+        return false
+      }
     }
   } else {
     return false
