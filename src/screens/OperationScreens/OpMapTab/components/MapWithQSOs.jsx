@@ -64,14 +64,16 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     setRegion(newRegion)
   }, [setRegion])
 
-  const scale = useMemo(() => {
-    if (layout?.height && region?.longitudeDelta) {
-      const metersPerPixel = (region.longitudeDelta * METERS_IN_ONE_DEGREE) / layout.width
-      const metersPerOneSpace = Math.floor(metersPerPixel * styles.oneSpace)
-      return { metersPerPixel, metersPerOneSpace, region, layout }
-    } else {
-      return null
-    }
+  const [scale, setScale] = useState()
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (layout?.height && region?.longitudeDelta) {
+        const metersPerPixel = (region.longitudeDelta * METERS_IN_ONE_DEGREE) / layout.width
+        const metersPerOneSpace = Math.floor(metersPerPixel * styles.oneSpace)
+        setScale({ metersPerPixel, metersPerOneSpace })
+      }
+    }, 50)
+    return () => clearTimeout(timeout)
   }, [layout, region, styles])
 
   const mapStyles = useMemo(() => {
@@ -86,12 +88,13 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
       style={styles.root}
       initialRegion={initialRegion}
       onRegionChange={handleRegionChange}
+      cameraZoomRange={{ animated: false }}
       mapType={styles.isIOS ? 'mutedStandard' : 'terrain'}
     >
-      {qth.latitude && qth.longitude && scale && (
+      {qth.latitude && qth.longitude && scale?.metersPerOneSpace && (
         <>
           <Marker
-            key={'qth'}
+            key={'qth-marker'}
             coordinate={qth}
             title={`QTH: ${operation.grid}`}
             description={operation.title}
@@ -103,20 +106,21 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
             <View style={{ width: styles.oneSpace, height: styles.oneSpace }} />
           </Marker>
           <Circle
+            key={'qth-circle'}
             center={qth}
-            radius={radiusForMarker({ location: qth, scale, size: mapStyles.marker.size })}
+            radius={radiusForMarker({ location: qth, metersPerOneSpace: scale?.metersPerOneSpace, size: mapStyles.marker.size })}
             fillColor={'rgba(0,0,0,1)'}
             strokeWidth={0.1}
           />
         </>
       )}
-      {scale && (
+      {scale?.metersPerOneSpace && (
         <MapMarkers
           qth={qth}
           qsos={mappableQSOs}
           mapStyles={mapStyles}
           styles={styles}
-          scale={scale}
+          metersPerOneSpace={scale?.metersPerOneSpace}
           selectedKey={selectedKey}
         />
       )}
@@ -124,7 +128,7 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
   )
 }
 
-const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, scale }) => {
+const MapMarkers = React.memo(function MapMarkers ({ qth, qsos, selectedKey, mapStyles, styles, metersPerOneSpace }) {
   const ref = useRef()
 
   useEffect(() => {
@@ -137,7 +141,7 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, scale }) => {
     <>
       {qth.latitude && qth.longitude && qsos.map(({ qso, location, strength }) => (
         <Polyline
-          key={qso.key}
+          key={`${qso.key}-line-${metersPerOneSpace}`}
           geodesic={true}
           coordinates={[location, qth]}
           {...mapStyles.line}
@@ -146,6 +150,7 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, scale }) => {
       {qsos.map(({ qso, location, strength, distanceStr }) => (
         <React.Fragment key={qso.key}>
           <Marker
+            key={`${qso.key}-marker-${metersPerOneSpace}`}
             coordinate={location}
             ref={selectedKey && selectedKey === qso.key ? ref : undefined}
             anchor={{ x: 0.5, y: 0.5 }}
@@ -168,8 +173,9 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, scale }) => {
             </Callout>
           </Marker>
           <Circle
+            key={`${qso.key}-circle-${metersPerOneSpace}`}
             center={location}
-            radius={radiusForMarker({ qso, strength, location, scale, size: mapStyles.marker.size })}
+            radius={radiusForMarker({ qso, strength, location, metersPerOneSpace, size: mapStyles.marker.size })}
             fillColor={colorForMarker({ qso, location, strength, styles, mapStyles })}
             strokeWidth={0.1}
           />
@@ -177,14 +183,14 @@ const MapMarkers = ({ qth, qsos, selectedKey, mapStyles, styles, scale }) => {
       ))}
     </>
   )
-}
+})
 
-function radiusForMarker ({ qso, strength, location, size, scale }) {
+function radiusForMarker ({ qso, strength, location, size, metersPerOneSpace }) {
   const latitude = Math.abs(location.latitude ?? location.lat)
 
   const latitudeScale = Math.cos(latitude * Math.PI / 180)
 
-  const baseRadius = (scale.metersPerOneSpace * size * latitudeScale) / 2
+  const baseRadius = (metersPerOneSpace * size * latitudeScale) / 2
 
   // A signal strength of 5 is 100% radius. 9 is 130% radius. 1 is 70% radius.
   return baseRadius * (1 + (((strength || 5) - 5) / ((9 - 1) / 2) * 0.30))

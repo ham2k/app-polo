@@ -97,7 +97,7 @@ export function analizeAndSectionQSOs ({ qsos, operation, settings }) {
         const key = ref?.type ?? handler.key
 
         const qsoScore = handler.scoringForQSO({ qso, qsos, operation, score: currentSection.scores[key], ref })
-        console.log('qsoScore', qsoScore, qso.their.call, qso.their.state)
+
         if (handler.accumulateScoreForDay) {
           currentSection.scores[key] = handler.accumulateScoreForDay({ qsoScore, score: currentSection.scores[key], operation, ref })
         } else if (handler.accumulateScoreForOperation) {
