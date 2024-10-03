@@ -25,18 +25,25 @@ if (process.env.NODE_ENV !== 'development') {
   }
 }
 
-export function reportError (msg, ...extra) {
+export function reportError (...params) {
   if (GLOBAL?.consentAppData) {
-    console.log('reportError')
-    console.log(typeof msg)
-    console.log(typeof extra[0])
-    firebaseCrashlytics?.crashlytics()?.log(msg)
-    if (extra && extra[0]?.stack) {
-      firebaseCrashlytics?.crashlytics()?.recordError(extra[0])
+    let message, error
+    if (typeof params[0] === 'string') {
+      message = params[0]
+      if (params[1]?.stack) error = params[1]
+    } else if (params[0] && params[0].stack) {
+      error = params[0]
+    }
+
+    if (message) {
+      console.log('Reporting Error', message)
+      firebaseCrashlytics?.crashlytics()?.log(message)
+    }
+    if (error) {
+      console.log('-- ', error.message)
+      firebaseCrashlytics?.crashlytics()?.recordError(error)
     }
   }
-  console.error(msg, ...extra)
-  if (extra && extra[0]?.stack) console.error(extra[0].stack)
 }
 
 export function reportData (payload) {
