@@ -5,12 +5,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { ScrollView, View } from 'react-native'
+import { ScrollView } from 'react-native'
 import { Button, Text } from 'react-native-paper'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { reportError } from '../../distro'
 
 function prepareStyles (baseStyles) {
   return {
@@ -27,9 +28,14 @@ function prepareStyles (baseStyles) {
 }
 
 export default function RootErrorBoundary ({ children }) {
+  const onError = useCallback((error) => {
+    reportError('Error caught by RootErrorBoundary', error)
+  }, [])
+
   return (
     <ErrorBoundary
       FallbackComponent={RootFallback}
+      onError={onError}
     >
       {children}
     </ErrorBoundary>
