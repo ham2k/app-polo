@@ -37,8 +37,8 @@ export const BandsAndModesScoringHandler = {
     score.icon = 'antenna'
     score.weight = BandsAndModesScoringHandler.weight
 
-    const bandCount = Object.keys(score.bands).length
-    const modeCount = Object.keys(score.modes).length
+    const bandCount = Object.keys(score.bands ?? {}).length
+    const modeCount = Object.keys(score.modes ?? {}).length
 
     const summaryTitleParts = []
     if (bandCount >= 2) summaryTitleParts.push(`${bandCount} Bands`)
@@ -51,7 +51,7 @@ export const BandsAndModesScoringHandler = {
         if (score.bands[band]) {
           score.longSummary += `${band} - `
           const parts = []
-          Object.keys(score.modes).sort().forEach(mode => {
+          Object.keys(score.modes ?? {}).sort().forEach(mode => {
             if (score.bandModes[`${band}-${mode}`]) {
               parts.push(`${score.bandModes[`${band}-${mode}`]} ${mode}`)
             }

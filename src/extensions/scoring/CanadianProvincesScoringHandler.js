@@ -39,7 +39,7 @@ export const CanadianProvincesScoringHandler = {
     score.icon = 'leaf-maple'
     score.weight = CanadianProvincesScoringHandler.weight
 
-    const count = Object.keys(score.states).length
+    const count = Object.keys(score.states ?? {}).length
 
     if (count >= 3) {
       score.summary = `${count}`

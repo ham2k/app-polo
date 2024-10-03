@@ -36,7 +36,7 @@ export const DXCCScoringHandler = {
     score.icon = 'earth'
     score.weight = DXCCScoringHandler.weight
 
-    const count = Object.keys(score.entities).length
+    const count = Object.keys(score.entities ?? {}).length
 
     if (count >= 5) {
       score.summary = `${count}`
