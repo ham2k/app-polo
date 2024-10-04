@@ -101,9 +101,9 @@ export default function GeneralSettingsScreen ({ navigation }) {
             <Ham2kListItem
               style={{ marginLeft: styles.oneSpace * 8 }}
               title="Use vibration in numbers row"
-              description={settings.vibrateNumbersRow ? 'Vibrate when pressing numbers' : "Don't vibrate when pressing numbers"}
+              description={settings.vibrateNumbersRow !== false ? 'Vibrate when pressing numbers' : "Don't vibrate when pressing numbers"}
               disabled={!settings.showNumbersRow}
-              right={() => <Switch disabled={!settings.showNumbersRow} value={!!settings.vibrateNumbersRow} onValueChange={(value) => dispatch(setSettings({ vibrateNumbersRow: value })) } />}
+              right={() => <Switch disabled={!settings.showNumbersRow} value={settings.vibrateNumbersRow !== false} onValueChange={(value) => dispatch(setSettings({ vibrateNumbersRow: value })) } />}
               onPress={() => dispatch(setSettings({ showNumbersRow: !settings.vibrateNumbersRow }))}
             />
           )}
