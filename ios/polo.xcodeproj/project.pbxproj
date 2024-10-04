@@ -316,6 +316,7 @@
 				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
 				75ECE1A8A49E3671D7C6150C /* [CP-User] [RNFB] Core Configuration */,
 				987F1E96B423D7C8BBAC04C6 /* [CP-User] [RNFB] Crashlytics Configuration */,
+				72A155062CB001640004D214 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -442,6 +443,28 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-polo/Pods-polo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		72A155062CB001640004D214 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
 		};
 		72FD72332C985D7D00AA9DDE /* GoogleService Config Selection */ = {
 			isa = PBXShellScriptBuildPhase;
