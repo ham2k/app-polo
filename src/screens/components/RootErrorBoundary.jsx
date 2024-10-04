@@ -9,9 +9,14 @@ import React, { useCallback, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ScrollView } from 'react-native'
 import { Button, Text } from 'react-native-paper'
-import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import Share from 'react-native-share'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import DeviceInfo from 'react-native-device-info'
+
+import packageJson from '../../../package.json'
+
 import { reportError } from '../../distro'
+import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 function prepareStyles (baseStyles) {
   return {
@@ -47,28 +52,40 @@ function RootFallback ({ error, resetErrorBoundary }) {
 
   const [showDetails, setShowDetails] = useState(false)
 
+  const shareDetails = useCallback(() => {
+    Share.open({
+      title: 'Ham2K PoLo Error Details',
+      message: detailsText(error),
+      email: 'help@ham2k.com'
+    })
+  }, [error])
+
   return (
     <GestureHandlerRootView style={styles.root}>
       <Text style={[styles.markdown.heading2, { marginBottom: styles.oneSpace }]}>Something went wrong</Text>
-      <Text style={{ marginBottom: styles.oneSpace }}>{error.message}</Text>
+      <Text style={{ marginBottom: styles.oneSpace * 4 }}>{error.message}</Text>
 
-      <Button style={{ marginBottom: styles.oneSpace * 2 }} onPress={resetErrorBoundary}>Try again</Button>
+      <Button style={{ marginBottom: styles.oneSpace * 4 }} onPress={resetErrorBoundary}>Try again</Button>
+
+      <Button style={{ marginBottom: styles.oneSpace * 1 }} onPress={shareDetails}>Share details with the Development Team</Button>
 
       {!showDetails && (
-        <Button onPress={() => setShowDetails(true)}>More Details</Button>
+        <Button onPress={() => setShowDetails(true)}>Show details</Button>
       )}
 
       {showDetails && (
-        <ScrollView style={{ maxHeight: '40%', borderWidth: 1, borderColor: '#AAA', padding: styles.oneSpace }}>
-          <Text>{cleanStack(error.stack)}</Text>
-        </ScrollView>
+        <>
+          <ScrollView style={{ maxHeight: '40%', borderWidth: 1, borderColor: '#AAA', padding: styles.oneSpace, marginBottom: styles.oneSpace * 2 }}>
+            <Text style={{ paddingBottom: styles.oneSpace * 2 }}>{detailsText(error)}</Text>
+          </ScrollView>
+        </>
       )}
     </GestureHandlerRootView>
   )
 }
 
-function cleanStack (stack) {
-  return stack.split('\n')
+function detailsText (error) {
+  const stack = error.stack.split('\n')
     .filter(line => !line
       .includes('node_modules'))
     .map(line => {
@@ -82,4 +99,12 @@ function cleanStack (stack) {
     })
     .filter(x => x)
     .join('\n')
+
+  const version = `Version ${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`
+
+  let platform = `Platform ${DeviceInfo.getSystemName()} ${DeviceInfo.getSystemVersion()}`
+  platform += ` - ${DeviceInfo.getManufacturerSync()} ${DeviceInfo.getDeviceId()}`
+  platform += ` -  ${DeviceInfo.getInstallerPackageNameSync()} - ${DeviceInfo.getInstallReferrerSync()}`
+
+  return [error.message, stack, version, platform].join('\n\n')
 }

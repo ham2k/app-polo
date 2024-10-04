@@ -8,11 +8,13 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback } from 'react'
 import { List } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import DocumentPicker from 'react-native-document-picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
+
+import packageJson from '../../../../package.json'
 
 import { reportError } from '../../../distro'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -22,6 +24,9 @@ import { generateExport, importQSON, selectOperationsList } from '../../../store
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
+import DeviceInfo from 'react-native-device-info'
+import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 
 function prepareStyles (baseStyles) {
   return {
@@ -81,6 +86,14 @@ export default function DevModeSettingsScreen ({ navigation }) {
     })
   }, [dispatch])
 
+  const shareSystemInfo = useCallback(() => {
+    Share.open({
+      title: 'Ham2K PoLo System Information',
+      message: systemInfo(),
+      email: 'help@ham2k.com'
+    })
+  }, [])
+
   if (!settings.devMode) return
 
   return (
@@ -102,7 +115,40 @@ export default function DevModeSettingsScreen ({ navigation }) {
             onPress={handleImportFiles}
           />
         </Ham2kListSection>
+        <Ham2kListSection title={'System Information'}>
+          <View style={{ paddingHorizontal: styles.oneSpace * 2 }}>
+            <Ham2kMarkdown styles={{ markdown: { heading3: { ...styles.markdown.heading3, marginTop: styles.oneSpace } } }}>
+              {systemInfo()}
+            </Ham2kMarkdown>
+          </View>
+          <Ham2kListItem
+            title="Share with the Development Team"
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
+            onPress={shareSystemInfo}
+          />
+        </Ham2kListSection>
       </ScrollView>
     </ScreenContainer>
   )
+}
+
+function systemInfo () {
+  return `
+### Version
+
+* ${packageJson.version}
+* Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})
+
+### System
+
+* ${DeviceInfo.getSystemName()} ${DeviceInfo.getSystemVersion()}
+* ${DeviceInfo.getManufacturerSync()} ${DeviceInfo.getDeviceId()}
+*  ${DeviceInfo.getInstallerPackageNameSync()} - ${DeviceInfo.getInstallReferrerSync()}
+
+### Resources
+
+* ${fmtGigabytes(DeviceInfo.getTotalMemorySync())} RAM - ${fmtMegabytes(DeviceInfo.getUsedMemorySync())} used
+* ${fmtGigabytes(DeviceInfo.getTotalDiskCapacitySync())} storage - ${fmtGigabytes(DeviceInfo.getFreeDiskStorageSync())} free
+${DeviceInfo.isKeyboardConnectedSync() ? '* Keyboard connected\n' : ''}
+  `
 }
