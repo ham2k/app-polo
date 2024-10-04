@@ -1,5 +1,5 @@
 {
-  "24.10.0-pre6": {
+  "24.10.0": {
     "name": "October '24",
     "changes": [
       "Count DXCC entities, US States and Canadian Provinces",
