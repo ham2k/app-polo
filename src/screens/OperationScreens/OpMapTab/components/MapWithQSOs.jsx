@@ -160,10 +160,10 @@ const MapMarkers = React.memo(function MapMarkers ({ qth, qsos, selectedKey, map
           >
             <Callout>
               <View>
-                <Text style={{ fontWeight: 'bold' }}>
+                <Text style={{ fontWeight: 'bold', color: '#333' }}>
                   {qso.their?.call} • {distanceStr}
                 </Text>
-                <Text>
+                <Text style={{ color: '#333' }}>
                   {qso.their?.sent}
                   {' • '}{qso.mode}
                   {' • '}<Text style={{ fontWeight: 'bold', color: colorForText({ qso, styles, mapStyles }) }}>{qso.band}</Text>
