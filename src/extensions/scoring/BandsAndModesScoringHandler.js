@@ -44,25 +44,24 @@ export const BandsAndModesScoringHandler = {
     if (bandCount >= 2) summaryTitleParts.push(`${bandCount} Bands`)
     if (modeCount >= 2) summaryTitleParts.push(`${modeCount} Modes`)
 
-    if (summaryTitleParts.length > 0) {
-      score.longSummary = summaryTitleParts.join(', ') + '\n'
+    score.longSummary = ''
+    if (summaryTitleParts.length > 0) score.longSummary = summaryTitleParts.join(', ') + '\n'
 
-      BANDS.forEach(band => {
-        if (score.bands[band]) {
-          score.longSummary += `${band} - `
-          const parts = []
-          Object.keys(score.modes ?? {}).sort().forEach(mode => {
-            if (score.bandModes[`${band}-${mode}`]) {
-              parts.push(`${score.bandModes[`${band}-${mode}`]} ${mode}`)
-            }
-          })
-          if (parts.length > 1) {
-            parts.push(`Total ${score.bands[band]}`)
+    BANDS.forEach(band => {
+      if (score.bands[band]) {
+        score.longSummary += `${band} - `
+        const parts = []
+        Object.keys(score.modes ?? {}).sort().forEach(mode => {
+          if (score.bandModes[`${band}-${mode}`]) {
+            parts.push(`${score.bandModes[`${band}-${mode}`]} ${mode}`)
           }
-          score.longSummary += `${parts.join(' • ')}\n`
+        })
+        if (parts.length > 1) {
+          parts.push(`Total ${score.bands[band]}`)
         }
-      })
-    }
+        score.longSummary += `${parts.join(' • ')}\n`
+      }
+    })
 
     return score
   }
