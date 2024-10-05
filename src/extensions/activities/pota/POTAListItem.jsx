@@ -10,7 +10,7 @@ import React, { useMemo } from 'react'
 import { IconButton, List, Text } from 'react-native-paper'
 import { View } from 'react-native'
 
-import { useLookupParkQuery } from '../../../store/apiPOTA'
+import { useLookupParkQuery } from '../../../store/apis/apiPOTA'
 import { fmtDistance } from '../../../tools/geoTools'
 
 import { Info } from './POTAInfo'

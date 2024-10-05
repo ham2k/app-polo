@@ -9,8 +9,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { refresh } from 'react-native-app-auth'
 
-import packageJson from '../../../package.json'
-import { setAccountInfo } from '../settings'
+import packageJson from '../../../../package.json'
+import { setAccountInfo } from '../../settings'
 
 /**
 

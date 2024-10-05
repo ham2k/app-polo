@@ -13,7 +13,7 @@ import { registerWWFFDataFile, wwffFindOneByReference } from './WWFFDataFile'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
 import { WWFFPostSpot } from './WWFFPostSpot'
-import { apiGMA } from '../../../store/apiGMA'
+import { apiGMA } from '../../../store/apis/apiGMA'
 import { LOCATION_ACCURACY } from '../../constants'
 
 const Extension = {

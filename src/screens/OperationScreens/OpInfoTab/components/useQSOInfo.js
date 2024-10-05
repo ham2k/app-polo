@@ -12,7 +12,7 @@ import emojiRegex from 'emoji-regex'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
-import { useLookupCallQuery, apiQRZ } from '../../../../store/apiQRZ'
+import { useLookupCallQuery, apiQRZ } from '../../../../store/apis/apiQRZ'
 import { selectRuntimeOnline } from '../../../../store/runtime'
 import { selectOperationCallInfo } from '../../../../store/operations'
 import { selectSettings } from '../../../../store/settings'

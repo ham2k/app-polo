@@ -8,8 +8,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { XMLParser } from 'fast-xml-parser'
 
-import packageJson from '../../../package.json'
-import { capitalizeString } from '../../tools/capitalizeString'
+import packageJson from '../../../../package.json'
+import { capitalizeString } from '../../../tools/capitalizeString'
 
 /**
 

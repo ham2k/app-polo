@@ -15,7 +15,7 @@ import { authorize, logout } from 'react-native-app-auth'
 import { setAccountInfo } from '../../../store/settings'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 import { Ham2kDialog } from '../../../screens/components/Ham2kDialog'
-import { SOTASSOConfig, useAccountQuery } from '../../../store/apiSOTA'
+import { SOTASSOConfig, useAccountQuery } from '../../../store/apis/apiSOTA'
 
 export function SOTAAccountSetting ({ settings, styles }) {
   const [currentDialog, setCurrentDialog] = useState()

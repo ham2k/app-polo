@@ -14,7 +14,7 @@ import { Info } from './SOTAInfo'
 import { SOTALoggingControl } from './SOTALoggingControl'
 import { SOTAAccountSetting } from './SOTAAccount'
 import { SOTAPostSpot } from './SOTAPostSpot'
-import { apiSOTA } from '../../../store/apiSOTA'
+import { apiSOTA } from '../../../store/apis/apiSOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 
