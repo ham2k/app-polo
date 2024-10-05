@@ -8,6 +8,9 @@
 import { useState } from 'react'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
+import packageJson from '../../../../package.json'
+
 import { POTAAllParks, potaFindParkByReference } from '../../../extensions/activities/pota/POTAAllParksData'
 import { reportError } from '../../../distro'
 
@@ -45,6 +48,7 @@ export const apiPOTA = createApi({
     prepareHeaders: (headers, { getState }) => {
       headers.set('Accept', 'application/json')
       headers.set('Content-type', 'application/json')
+      headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
       return headers
     }
   }),

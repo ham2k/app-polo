@@ -8,6 +8,7 @@
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
+
 import packageJson from '../../../../package.json'
 
 /**
