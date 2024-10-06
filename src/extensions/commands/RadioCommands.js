@@ -69,7 +69,7 @@ const FrequencyCommandHook = {
     }
 
     if (freq) {
-      const mode = modeForFrequency(freq)
+      const mode = modeForFrequency(freq) ?? 'SSB'
       handleFieldChange({ fieldId: 'freq', value: freq })
       return `Frequency set to ${fmtFreqInMHz(freq)} MHz (${mode})`
     }
