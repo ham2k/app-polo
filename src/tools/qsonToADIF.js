@@ -83,7 +83,7 @@ function modeToADIF (mode, freq) {
   } else if (mode) {
     return [{ MODE: mode }]
   } else if (freq) {
-    return [{ MODE: modeForFrequency(freq) }]
+    return [{ MODE: modeForFrequency(freq) ?? 'SSB' }]
   } else {
     return [{ MODE: 'SSB' }]
   }
