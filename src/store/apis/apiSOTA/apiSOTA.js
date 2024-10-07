@@ -25,7 +25,7 @@ export const SOTASSOConfig = {
   issuer: 'https://sso.sota.org.uk/auth/realms/SOTA/',
   clientId: 'sotawatch',
   redirectUrl: 'com.ham2k.polo://sota',
-  scopes: ['openid']
+  scopes: ['openid', 'offline_access']
 }
 
 const baseQueryWithSettings = fetchBaseQuery({
