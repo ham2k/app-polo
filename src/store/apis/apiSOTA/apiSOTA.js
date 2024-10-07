@@ -60,12 +60,8 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
   let getNewToken = false
   if (result.error && result.meta.request.headers.has('id_Token')) {
-    if (result.error.status === 401) {
+    if (result.error.status === 401 || result.error.status === 500) {
       getNewToken = true
-    } else if (result.error.status === 500) {
-      if (result.data?.body?.indexOf('authentication') >= 0) {
-        getNewToken = true
-      }
     }
   }
 
