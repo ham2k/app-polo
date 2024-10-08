@@ -17,7 +17,10 @@ import { scoringHandlersForOperation } from '../../../../../extensions/scoring'
 import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { startOfDayInMillis, yesterdayInMillis } from '../../../../../tools/timeTools'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
-import { useQSOInfo } from '../../../OpInfoTab/components/useQSOInfo'
+import { useCallLookup } from '../../../OpInfoTab/components/useCallLookup'
+import { useSelector } from 'react-redux'
+import { selectOperationCallInfo } from '../../../../../store/operations'
+import { selectRuntimeOnline } from '../../../../../store/runtime'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!!!',
@@ -80,20 +83,25 @@ function prepareStyles (baseStyles, themeColor) {
 export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, updateQSO, settings }) {
   const navigation = useNavigation()
   const styles = useThemedStyles(prepareStyles, themeColor)
+  const online = useSelector(selectRuntimeOnline)
+  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const { online, ourInfo, guess, lookup, refs, qrz, callNotes, callHistory } = useQSOInfo({ qso, operation })
+  const { guess, lookup, refs } = useCallLookup({ call: qso?.their?.call, refs: qso?.refs })
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
+    console.log('update qso effect')
     updateQSO && updateQSO({ their: { guess, lookup } })
-  }, [guess, lookup, updateQSO])
+    // Ignore warning about `updateQSO
+    //   eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guess, lookup])
 
   const [locationInfo, flag] = useMemo(() => {
-    let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess?.dxccCode)
+    let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess.dxccCode)
 
     let leftParts = []
     let rightParts = []
 
-    const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
+    const entity = DXCC_BY_PREFIX[guess.entityPrefix]
 
     if (guess.postindicators && guess.postindicators.find(ind => ['P', 'M', 'AM', 'MM', 'PM'].indexOf(ind) >= 0)) {
       isOnTheGo = true
@@ -104,7 +112,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       else if (guess.postindicators.indexOf('PM') >= 0) leftParts.push('[ 🪂 ]')
     }
 
-    if (operation.grid && guess?.grid) {
+    if (operation.grid && guess.grid) {
       const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
       let bearing
       if (settings.showBearing) {
@@ -130,10 +138,10 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
     if (qso?.their?.city || qso?.their?.state) {
       rightParts.push([qso?.their?.city, qso?.their?.state].filter(x => x).join(', '))
-    } else if (guess?.locationLabel) {
-      rightParts.push(guess?.locationLabel)
-    } else if (!isOnTheGo && (guess?.city || guess?.state)) {
-      rightParts.push([guess?.city, guess?.state].filter(x => x).join(', '))
+    } else if (guess.locationLabel) {
+      rightParts.push(guess.locationLabel)
+    } else if (!isOnTheGo && (guess.city || guess.state)) {
+      rightParts.push([guess.city, guess.state].filter(x => x).join(', '))
     }
 
     if (entity && entity.entityPrefix === ourInfo.entityPrefix) {
@@ -159,15 +167,15 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
   const stationInfo = useMemo(() => {
     const parts = []
-    if (callNotes && callNotes[0]) {
-      parts.push(callNotes[0].note)
+    if (lookup.note) {
+      parts.push(lookup.note)
     } else {
-      if (qrz?.error) parts.push(qrz.error)
-      parts.push(qso?.their?.name ?? guess?.name)
+      // if (qrz?.error) parts.push(qrz.error)
+      parts.push(qso?.their?.name ?? guess.name)
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qrz?.error, qso?.their?.name, guess?.name, callNotes])
+  }, [qso?.their?.name, guess.name, lookup.note])
 
   const scoreInfo = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)
@@ -191,15 +199,15 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       if (message && level) return [message, level]
     }
 
-    if (callHistory?.length > 0) {
+    if (lookup?.history?.length > 0) {
       const parts = []
       const today = startOfDayInMillis()
       const yesterday = yesterdayInMillis()
       const lastWeek = startOfDayInMillis() - 6 * 24 * 60 * 60 * 1000
-      let count = callHistory.length
-      const countToday = callHistory.filter(x => x.startOnMillis >= today).length
-      const countYesterday = callHistory.filter(x => x.startOnMillis >= yesterday).length - countToday
-      const countLastWeek = callHistory.filter(x => x.startOnMillis >= lastWeek).length
+      let count = lookup?.history.length
+      const countToday = lookup?.history.filter(x => x.startOnMillis >= today).length
+      const countYesterday = lookup?.history.filter(x => x.startOnMillis >= yesterday).length - countToday
+      const countLastWeek = lookup?.history.filter(x => x.startOnMillis >= lastWeek).length
 
       if (qso?.startOnMillis) {
         parts.push('') // add an empty element to force a join that includes a "+"
@@ -223,7 +231,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       return [parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), 'info']
     }
     return []
-  }, [scoreInfo, callHistory, qso?.startOnMillis])
+  }, [scoreInfo, lookup?.history, qso?.startOnMillis])
 
   return (
     <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call: qso?.their?.call, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6 }}>

@@ -8,8 +8,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { XMLParser } from 'fast-xml-parser'
 
-import packageJson from '../../../package.json'
-import { capitalizeString } from '../../tools/capitalizeString'
+import packageJson from '../../../../package.json'
+import { capitalizeString } from '../../../tools/capitalizeString'
 
 /**
 
@@ -34,6 +34,9 @@ function defaultParams (api) {
 
 const baseQueryWithSettings = fetchBaseQuery({
   baseUrl: `${BASE_URL}/xml/current`,
+  prepareHeaders: (headers, { getState, endpoint }) => {
+    headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
+  },
   responseHandler: async (response) => {
     if (response.status === 200) {
       const body = await response.text()

@@ -20,7 +20,7 @@ import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { findBestHook } from '../../../extensions/registry'
 import { simpleTemplate } from '../../../tools/stringTools'
 import { reportError } from '../../../distro'
-import { annotateQSO } from '../../../screens/OperationScreens/OpInfoTab/components/useQSOInfo'
+import { annotateQSO } from '../../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)

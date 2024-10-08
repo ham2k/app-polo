@@ -14,7 +14,7 @@ import { Info } from './SOTAInfo'
 import { SOTALoggingControl } from './SOTALoggingControl'
 import { SOTAAccountSetting } from './SOTAAccount'
 import { SOTAPostSpot } from './SOTAPostSpot'
-import { apiSOTA } from '../../../store/apiSOTA'
+import { apiSOTA } from '../../../store/apis/apiSOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 
@@ -209,6 +209,8 @@ const ReferenceHandler = {
     const theirRef = findRef(qso, Info.huntingType)
     const refCount = theirRef ? 1 : 0
     const points = refCount
+
+    if (!theirRef && !ref?.ref) return { value: 0 } // If not activating, only counts if other QSO has a SOTA ref
 
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 

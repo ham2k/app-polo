@@ -41,7 +41,7 @@ export const CallNotesData = {
 
 const Extension = {
   ...Info,
-  category: 'other',
+  category: 'lookup',
   enabledByDefault: true,
   onActivationDispatch: ({ registerHook }) => async (dispatch, getState) => {
     const settings = selectExtensionSettings(getState(), Info.key)
@@ -101,6 +101,8 @@ const Extension = {
         ScreenComponent: ManageCallNotesScreen
       }
     })
+
+    registerHook('lookup', { hook: LookupHook })
   },
   onDeactivationDispatch: () => async (dispatch, getState) => {
     for (const file of CallNotesData.files) {
@@ -112,6 +114,15 @@ const Extension = {
   }
 }
 export default Extension
+
+const LookupHook = {
+  ...Info,
+  extension: Extension,
+  lookupCallWithDispatch: async (callInfo, { settings, operation, online, dispatch }) => {
+    const callNotes = findAllCallNotes(callInfo?.baseCall)
+    return { notes: callNotes, source: 'Call Notes' }
+  }
+}
 
 export const createDataFileDefinition = (file) => ({
   key: `call-notes-${file.identifier}`,

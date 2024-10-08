@@ -13,7 +13,7 @@ import { POTAActivityOptions } from './POTAActivityOptions'
 import { potaFindParkByReference, registerPOTAAllParksData } from './POTAAllParksData'
 import { POTALoggingControl } from './POTALoggingControl'
 import { POTAPostSpot } from './POTAPostSpot'
-import { apiPOTA } from '../../../store/apiPOTA'
+import { apiPOTA } from '../../../store/apis/apiPOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 
