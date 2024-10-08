@@ -210,6 +210,8 @@ const ReferenceHandler = {
     const refCount = theirRef ? 1 : 0
     const points = refCount
 
+    if (!theirRef && !ref?.ref) return { value: 0 } // If not activating, only counts if other QSO has a SOTA ref
+
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {

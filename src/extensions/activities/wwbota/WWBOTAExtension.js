@@ -171,6 +171,8 @@ const ReferenceHandler = {
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const refCount = refs.length
 
+    if (refs.length === 0 && !ref?.ref) return { value: 0 } // If not activating, only counts if other QSO has a WWBOTA ref
+
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     if (nearDupes.length === 0) {
