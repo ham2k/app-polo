@@ -8,7 +8,7 @@
 import { qsoKey } from '@ham2k/lib-qson-tools'
 
 import { addQSO } from '../../store/qsos'
-import { annotateQSO } from '../../screens/OperationScreens/OpInfoTab/components/useQSOInfo'
+import { annotateQSO } from '../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
 import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
 import { poissonRandom } from '../../tools/randomTools'
 import { setSystemFlag } from '../../store/system'

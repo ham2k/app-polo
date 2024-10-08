@@ -30,6 +30,8 @@ const Hooks = {
   screen: [],
   setting: [],
   spots: [],
+  lookup: [],
+  account: [],
   opSetting: []
 }
 

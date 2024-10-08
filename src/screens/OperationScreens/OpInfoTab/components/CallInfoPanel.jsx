@@ -15,7 +15,7 @@ import { capitalizeString } from '../../../../tools/capitalizeString'
 import { fmtDateTimeDynamic } from '../../../../tools/timeFormats'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 
-import { useQSOInfo } from './useQSOInfo'
+import { useCallLookup } from './useCallLookup'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 
 const HISTORY_QSOS_TO_SHOW = 3
@@ -79,13 +79,13 @@ function prepareStyles (baseStyles, themeColor) {
 export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) {
   const styles = useThemedStyles(prepareStyles, themeColor)
 
-  const { guess, lookup, pota, qrz, callNotes, callHistory } = useQSOInfo({ qso, operation })
+  const { guess, lookup, lookups } = useCallLookup({ call: qso?.their?.call, refs: qso?.refs })
 
   const entity = DXCC_BY_PREFIX[guess.entityPrefix]
 
   const [thisOpTitle, thisOpQSOs, historyTitle, historyRecent, historyAndMore] = useMemo(() => {
-    const thisQs = (callHistory || []).filter(q => operation && q.operation === operation?.uuid)
-    const otherOps = (callHistory || []).filter(q => q.operation !== operation?.uuid)
+    const thisQs = (lookup.history || []).filter(q => operation && q.operation === operation?.uuid)
+    const otherOps = (lookup.history || []).filter(q => q.operation !== operation?.uuid)
 
     const recent = otherOps?.slice(0, HISTORY_QSOS_TO_SHOW) || []
     let thisTitle
@@ -117,7 +117,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
     }
 
     return [thisTitle, thisQs, title, recent, andMore]
-  }, [callHistory, operation])
+  }, [lookup.history, operation])
 
   return (
     <GestureHandlerRootView style={[style, styles.root]}>
@@ -153,8 +153,8 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                 </View>
               </View>
               <View style={{ flex: 1, marginLeft: styles.oneSpace, maxWidth: '50%', alignItems: 'center' }}>
-                {(lookup?.image ?? qrz?.image) && (
-                  <Image source={{ uri: (lookup.image ?? qrz.image) }} style={{ width: '100%', height: styles.oneSpace * 20, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
+                {lookup?.image && (
+                  <Image source={{ uri: lookup.image }} style={{ width: '100%', height: styles.oneSpace * 20, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
                 )}
                 <Chip
                   theme={styles.chipTheme} textStyle={styles.chipTextStyle}
@@ -167,20 +167,10 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
               </View>
             </View>
 
-            {pota?.name && (
-              <View style={styles.section}>
-                <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Parks on The Air</Text>
-                <Text variant="bodyLarge">
-                  <Text style={styles.text.callsign}>{pota.reference} </Text>
-                  {[pota.name, pota.locationName].filter(f => f).join(' • ')}
-                </Text>
-              </View>
-            )}
-
-            {callNotes && (
+            {lookup?.notes && (
               <View style={styles.section}>
                 <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Notes</Text>
-                {callNotes.map((note, i) => (
+                {lookups?.['call-notes']?.notes.map((note, i) => (
                   <Ham2kMarkdown key={i}>{note.note}</Ham2kMarkdown>
                 ))}
               </View>
