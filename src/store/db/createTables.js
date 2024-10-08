@@ -61,7 +61,39 @@ export async function createTables (db) {
     await dbExecute('UPDATE version SET version = 2', [], { db })
   }
 
-  if (version === 2) {
+  if (version < 3) {
+    console.log('createTables -- creating version 3')
+    /**
+     * skcc is the standalone SKCC number, e.g. 1234
+     * skccNr is the SKCC number plus any (C, T, S) award earned, e.g. 1234T
+     */
+    await dbExecute(`
+      CREATE TABLE IF NOT EXISTS skccMembers (
+        skcc TEXT NOT NULL,
+        skccNr TEXT,
+        call TEXT,
+        name TEXT,
+        qth TEXT,
+        spc TEXT,
+        oldCall TEXT,
+        dxCode INTEGER,
+        joinDate DATE,
+        centDate DATE,
+        tribDate DATE,
+        tx8Date DATE,
+        senDate DATE,
+        dxEntity TEXT,
+        updated INTEGER,
+        PRIMARY KEY (skcc)
+      )`, [], { db })
+
+    await dbExecute(`
+      CREATE INDEX IF NOT EXISTS
+      idx_call ON skccMembers (call)`, [], { db })
+    await dbExecute('UPDATE version SET version = 3', [], { db })
+  }
+
+  if (version === 3) {
     // console.log('createTables -- using version 1')
   }
 }

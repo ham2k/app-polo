@@ -207,6 +207,10 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       updateQSO({ startOnMillis: value, _manualTime: true })
     } else if (fieldId === 'state') {
       updateQSO({ their: { state: value } })
+    } else if (fieldId === 'name') {
+      updateQSO({ their: { name: value } })
+    } else if (fieldId === 'skcc') {
+      updateQSO({ their: { skcc: value } })
     } else if (fieldId === 'power') {
       updateQSO({ power: value })
       if (qso?._isNew) dispatch(setVFO({ power: value }))
