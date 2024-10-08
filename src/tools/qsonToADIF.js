@@ -103,6 +103,7 @@ function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
     { STATION_CALLSIGN: qso.our.call ?? common.stationCall },
     { OPERATOR: qso.our.operatorCall ?? common.operatorCall ?? qso.our.call ?? common.stationCall },
     { NOTES: qso.notes },
+    { COMMENT: qso.comment },
     { COMMENTS: qso.notes },
     { GRIDSQUARE: qso.their?.grid ?? qso.their?.guess?.grid },
     { MY_GRIDSQUARE: qso?.our?.grid ?? common.grid },

@@ -24,6 +24,7 @@ import CallNotesExtension from './data/call-notes/CallNotesExtension'
 import CallHistoryExtension from './data/call-history/CallHistoryExtension'
 import QRZExtension from './data/qrz/QRZExtension'
 import SatellitesExtension from './activities/satellites/SatellitesExtension'
+import SKCCExtension from './activities/skcc/SKCCExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
@@ -48,6 +49,7 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(ECAExtension)
   registerExtension(ELAExtension)
   registerExtension(SiOTAExtentsion)
+  registerExtension(SKCCExtension)
 
   registerExtension(RadioCommands)
   registerExtension(TimeCommands)
