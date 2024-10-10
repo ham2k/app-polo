@@ -11,6 +11,7 @@ import { DXCCScoringHandler } from './DXCCScoringHandler'
 import { USStatesScoringHandler } from './USStatesScoringHandler'
 import { CanadianProvincesScoringHandler } from './CanadianProvincesScoringHandler'
 import { BandsAndModesScoringHandler } from './BandsAndModesScoringHandler'
+import { reportError } from '../../distro'
 
 const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
@@ -54,7 +55,7 @@ export function scoringHandlersForOperation (operation, settings) {
   return scoringHandlers
 }
 
-export function analizeAndSectionQSOs ({ qsos, operation, settings }) {
+export function analyzeAndSectionQSOs ({ qsos, operation, settings }) {
   qsos = qsos ?? []
   operation = operation ?? {}
 
@@ -70,21 +71,24 @@ export function analizeAndSectionQSOs ({ qsos, operation, settings }) {
 
     if (!currentSection || currentSection.day !== day) {
       const previousSection = currentSection
-      currentSection = { day, data: [], count: 0 }
+      currentSection = { day, data: [], count: 0, scores: {} }
       sections.push(currentSection)
 
       scoringHandlers.forEach(({ handler, ref }) => {
         const key = ref?.type ?? handler.key
-        if (handler.summarizeScore && previousSection?.scores?.[key]) {
-          previousSection.scores[key] = handler.summarizeScore({ score: previousSection.scores[key], operation, ref, section: previousSection })
+        // Summarize previous section
+        if (handler.summarizeScore && previousSection && previousSection.scores[key]) {
+          try {
+            previousSection.scores[key] = handler.summarizeScore({ score: previousSection.scores[key] ?? {}, operation, ref, section: previousSection })
+          } catch (e) {
+            reportError(`Error summarizing score for '${handler.key}'`, e)
+          }
         }
 
         if (handler.accumulateScoreForDay) {
-          currentSection.scores = currentSection.scores ?? {}
-          currentSection.scores[key] = currentSection.scores[key] ?? {}
+          currentSection.scores[key] = currentSection.scores[key] ?? {} // Reuse scores if sharing key
         } else if (handler.accumulateScoreForOperation) {
-          currentSection.scores = currentSection.scores ?? {}
-          currentSection.scores[key] = { ...(previousSection?.scores && previousSection.scores[key]) }
+          currentSection.scores[key] = { ...previousSection?.scores?.[key] } // Copy scores from previous section
         }
       })
     }
@@ -98,10 +102,14 @@ export function analizeAndSectionQSOs ({ qsos, operation, settings }) {
 
         const qsoScore = handler.scoringForQSO({ qso, qsos, operation, score: currentSection.scores[key], ref })
 
-        if (handler.accumulateScoreForDay) {
-          currentSection.scores[key] = handler.accumulateScoreForDay({ qsoScore, score: currentSection.scores[key], operation, ref })
-        } else if (handler.accumulateScoreForOperation) {
-          currentSection.scores[key] = handler.accumulateScoreForOperation({ qsoScore, score: currentSection.scores[key], operation, ref })
+        try {
+          if (handler.accumulateScoreForDay) {
+            currentSection.scores[key] = handler.accumulateScoreForDay({ qsoScore, score: currentSection.scores[key], operation, ref })
+          } else if (handler.accumulateScoreForOperation) {
+            currentSection.scores[key] = handler.accumulateScoreForOperation({ qsoScore, score: currentSection.scores[key], operation, ref })
+          }
+        } catch (e) {
+          reportError(`Error accumulating score for '${handler.key}' and qso '${qso.key}'`, e)
         }
       })
     } else {
@@ -109,10 +117,15 @@ export function analizeAndSectionQSOs ({ qsos, operation, settings }) {
     }
   }
 
+  // Summarize last section
   scoringHandlers.forEach(({ handler, ref }) => {
     const key = ref?.type ?? handler.key
     if (handler.summarizeScore && currentSection?.scores?.[key]) {
-      currentSection.scores[key] = handler.summarizeScore({ score: currentSection.scores[key], operation, ref, section: currentSection })
+      try {
+        currentSection.scores[key] = handler.summarizeScore({ score: currentSection.scores[key] ?? {}, operation, ref, section: currentSection })
+      } catch (e) {
+        reportError(`Error summarizing score for '${handler.key}'`, e)
+      }
     }
   })
 

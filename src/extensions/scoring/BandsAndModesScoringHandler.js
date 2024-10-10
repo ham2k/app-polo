@@ -48,11 +48,11 @@ export const BandsAndModesScoringHandler = {
     if (summaryTitleParts.length > 0) score.longSummary = summaryTitleParts.join(', ') + '\n'
 
     BANDS.forEach(band => {
-      if (score.bands[band]) {
+      if (score?.bands?.[band]) {
         score.longSummary += `${band} - `
         const parts = []
         Object.keys(score.modes ?? {}).sort().forEach(mode => {
-          if (score.bandModes[`${band}-${mode}`]) {
+          if (score?.bandModes[`${band}-${mode}`]) {
             parts.push(`${score.bandModes[`${band}-${mode}`]} ${mode}`)
           }
         })
