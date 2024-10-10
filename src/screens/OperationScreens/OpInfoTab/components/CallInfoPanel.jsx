@@ -157,7 +157,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
               </View>
               <View style={{ flex: 1, marginLeft: styles.oneSpace, maxWidth: '50%', alignItems: 'center' }}>
                 {(lookup?.image ?? qrz?.image) && (
-                  <Image source={{ uri: (lookup.image ?? qrz.image) }} style={{ width: '100%', height: styles.oneSpace * 20, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
+                  <Image source={{ uri: (lookup?.image ?? qrz?.image) }} style={{ width: '100%', height: styles.oneSpace * 20, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
                 )}
                 <Chip
                   theme={styles.chipTheme} textStyle={styles.chipTextStyle}
