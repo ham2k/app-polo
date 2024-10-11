@@ -194,7 +194,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     } else if (fieldId === 'freq') {
       const freq = value ? parseFreqInMHz(value) : undefined
       const band = freq ? bandForFrequency(freq) : undefined
-      const mode = freq ? (modeForFrequency(freq) ?? 'SSB') : qso?.mode
+      const mode = freq ? (modeForFrequency(freq) ?? qso?.mode ?? vfo?.mode ?? 'SSB') : qso?.mode
       updateQSO({ freq, band, mode })
       if (qso?._isNew) dispatch(setVFO({ band, freq, mode }))
     } else if (fieldId === 'band') {

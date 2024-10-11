@@ -48,17 +48,22 @@ const FrequencyCommandHook = {
   extension: Extension,
   key: 'commands-radio-frequency',
   match: /^([\d.]{1,})$/,
-  describeCommand: (match, { qso }) => {
+  describeCommand: (match, { qso, vfo }) => {
+    let freq
     if (match[1].length < 3) return
     if (match[1].startsWith('..') && qso.freq) {
-      return `Change frequency to ${Math.round(qso.freq)}${match[1].substring(1)}?`
+      freq = parseFreqInMHz(`${Math.round(qso.freq)}${match[1].substring(1)}`)
     } else if (match[1].startsWith('.') && qso.freq) {
-      return `Change frequency to ${Math.floor(qso.freq / 1000)}${match[1]}?`
+      freq = parseFreqInMHz(`${Math.floor(qso.freq / 1000)}${match[1]}`)
     } else {
-      return `Change frequency to ${match[1]}?`
+      freq = parseFreqInMHz(match[1])
+    }
+    if (freq) {
+      const mode = modeForFrequency(freq) ?? vfo.mode ?? 'SSB'
+      return `Change frequency to ${fmtFreqInMHz(freq)} MHz${mode !== vfo?.mode ? ` (${mode})` : ''}?`
     }
   },
-  invokeCommand: (match, { qso, handleFieldChange }) => {
+  invokeCommand: (match, { qso, handleFieldChange, vfo }) => {
     let freq
     if (match[1].startsWith('..') && qso.freq) {
       freq = parseFreqInMHz(`${Math.round(qso.freq)}${match[1].substring(1)}`)
@@ -69,7 +74,7 @@ const FrequencyCommandHook = {
     }
 
     if (freq) {
-      const mode = modeForFrequency(freq) ?? 'SSB'
+      const mode = modeForFrequency(freq) ?? vfo.mode ?? 'SSB'
       handleFieldChange({ fieldId: 'freq', value: freq })
       return `Frequency set to ${fmtFreqInMHz(freq)} MHz (${mode})`
     }
