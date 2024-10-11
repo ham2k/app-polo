@@ -85,11 +85,11 @@ export default function VersionSettingsScreen ({ navigation }) {
     } else {
       version = `Version ${packageJson.version}`
     }
-    if ((updateMetadata?.track && updateMetadata?.track !== DEFAULT_TRACK) || settings.devMode) {
+    if ((updateMetadata?.track && updateMetadata?.track !== DEFAULT_TRACK)) {
       version += ` (${UPDATE_TRACK_LABELS[updateMetadata?.track]})`
     }
     return version
-  }, [settings.devMode, updateMetadata?.track])
+  }, [updateMetadata])
 
   const [isUpdating, setIsUpdating] = useState()
   const [updateMessage, setUpdateMessage] = useState()
