@@ -4,6 +4,12 @@
     "changes": [
     ]
   },
+  "24.10.1": {
+    "name": "October '24",
+    "changes": [
+      "Fixed crash on operations where all QSOs are deleted"
+    ]
+  },
   "24.10.0": {
     "name": "October '24",
     "changes": [
