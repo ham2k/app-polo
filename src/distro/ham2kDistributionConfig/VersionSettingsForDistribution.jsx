@@ -9,15 +9,40 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Ham2kListSection } from '../../screens/components/Ham2kListSection'
-import { Ham2kListItem } from '../../screens/components/Ham2kListItem'
-import { DEFAULT_TRACK, UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from './VersionSettingsForDistribution'
-import { List } from 'react-native-paper'
-import { UpdateTracksDialog } from './UpdateTracksDialog'
+import { Platform } from 'react-native'
 import CodePush from 'react-native-code-push'
 
-export function DevModeSettingsForDistribution ({ settings, styles, reportError }) {
-  const [currentDialog, setCurrentDialog] = useState()
+import packageJson from '../../../package.json'
+import { reportError } from './distroTracking'
+import { Ham2kListSection } from '../../screens/components/Ham2kListSection'
+import { Ham2kListItem } from '../../screens/components/Ham2kListItem'
+import DeviceInfo from 'react-native-device-info'
+import { List } from 'react-native-paper'
+
+export const UPDATE_TRACK_KEYS = {
+  Production: (Platform.OS === 'ios') ? 'sC0Sy_ImAi-XZCBDK-mdoLYO2FR7CD2vXw1MD' : 'XfaqlzjBp9SWZLCZQSfezxEOdlkNgLu4PYrDN',
+  Staging: (Platform.OS === 'ios') ? 'j1Ux2KScamgLBBbu3v0EgeFWLhWtLdfLk_A7d' : 'EIfkyoFTrEig6wBclCA0MBeY9H2GZBO1RoTaf',
+  Development: (Platform.OS === 'ios') ? 'GgYMX5qJm-w6SDnyfAsfBEFcDPPPgWpxOANAI' : 'fDguTumb3gkMNGzZjZE8tcab6tD_KV2hohf3y'
+}
+export const UPDATE_TRACK_LABELS = {
+  Production: 'Stable(ish)',
+  Staging: 'Unstable',
+  Development: 'Bleeding Edge'
+}
+
+export const DEFAULT_TRACK = 'Production'
+
+export function VersionSettingsForDistribution ({ settings, styles }) {
+  const [updateMetadata, setUpdateMetadata] = useState()
+  useEffect(() => {
+    CodePush.getUpdateMetadata().then((metadata) => {
+      if (metadata?.deploymentKey) {
+        const track = Object.keys(UPDATE_TRACK_KEYS).find(key => UPDATE_TRACK_KEYS[key] === metadata.deploymentKey)
+        if (track) metadata.track = track
+      }
+      setUpdateMetadata(metadata)
+    })
+  }, [])
 
   const [pendingUpdateMetadata, setPendingUpdateMetadata] = useState()
   useEffect(() => {
@@ -29,6 +54,19 @@ export function DevModeSettingsForDistribution ({ settings, styles, reportError 
       setPendingUpdateMetadata(metadata)
     })
   }, [])
+
+  const currentVersionLabel = useMemo(() => {
+    let version
+    if (packageJson.versionName) {
+      version = `${packageJson.versionName} Release`
+    } else {
+      version = `Version ${packageJson.version}`
+    }
+    if ((updateMetadata?.track && updateMetadata?.track !== DEFAULT_TRACK) || settings.devMode) {
+      version += ` (${UPDATE_TRACK_LABELS[updateMetadata?.track]})`
+    }
+    return version
+  }, [settings.devMode, updateMetadata?.track])
 
   const [isUpdating, setIsUpdating] = useState()
   const [updateMessage, setUpdateMessage] = useState()
@@ -55,20 +93,16 @@ export function DevModeSettingsForDistribution ({ settings, styles, reportError 
     } else {
       try {
         const deploymentKey = UPDATE_TRACK_KEYS[settings.updateTrack] || UPDATE_TRACK_KEYS.Production
-        console.log(deploymentKey)
         setIsUpdating(true)
         setUpdateMessage('Checking for updates...')
         const update = await CodePush.checkForUpdate(deploymentKey)
-        console.log(update)
         if (update) {
           setUpdateMessage('Update available')
-          console.log(update)
           setTimeout(() => {
             setUpdateMessage('Downloading...')
             update.download((progress) => {
               setUpdateMessage(`Downloading... ${(progress.receivedBytes / progress.totalBytes * 100).toFixed(0)}%`)
             }).then((result) => {
-              console.log(result)
               setUpdateMessage('Installing...')
               result.install(CodePush.InstallMode.IMMEDIATE)
               setIsUpdating(false)
@@ -88,35 +122,23 @@ export function DevModeSettingsForDistribution ({ settings, styles, reportError 
         setIsUpdating(false)
       }
     }
-  }, [pendingUpdateMetadata, reportError, settings.updateTrack])
+  }, [settings.updateTrack, pendingUpdateMetadata])
 
   return (
-    <Ham2kListSection title={'Updates'}>
-      <Ham2kListItem title={'Select Update Track'}
-        description={UPDATE_TRACK_LABELS[settings?.updateTrack || DEFAULT_TRACK]}
-        left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="glass-fragile" color={styles.colors.devMode}/>}
-        titleStyle={{ color: styles.colors.devMode }}
-        descriptionStyle={{ color: styles.colors.devMode }}
-        onPress={() => setCurrentDialog('track')}
+    <Ham2kListSection>
+
+      <Ham2kListItem title={currentVersionLabel}
+        description={`${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
+        left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
       />
-      {currentDialog === 'track' && (
-        <UpdateTracksDialog
-          settings={settings}
-          styles={styles}
-          visible={true}
-          onDialogDone={() => setCurrentDialog('')}
-        />
-      )}
+
       <Ham2kListItem title={checkForUpdatesLabel}
         description={updateMessage}
         disabled={isUpdating}
         style={{ opacity: isUpdating ? 0.7 : 1 }}
-        titleStyle={{ color: styles.colors.devMode }}
-        descriptionStyle={{ color: styles.colors.devMode }}
         onPress={checkForUpdates}
-        left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-arrow-down" color={styles.colors.devMode}/>}
+        left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-arrow-down" />}
       />
-
     </Ham2kListSection>
   )
 }

@@ -11,7 +11,7 @@ import React from 'react'
 import CodePush from 'react-native-code-push'
 
 import GLOBAL from '../../GLOBAL'
-import { UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from '../../screens/SettingsScreens/screens/VersionSettingsScreen'
+import { UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from './VersionSettingsForDistribution'
 import { addNotice, dismissNotice } from '../../store/system'
 import { addRuntimeMessage } from '../../store/runtime'
 
@@ -20,6 +20,7 @@ import { UpdateTracksDialog } from './UpdateTracksDialog'
 export * from './distroTracking'
 export * from './distroConfig'
 export * from './DevModeSettingsForDistribution'
+export * from './VersionSettingsForDistribution'
 
 if (process.env.NODE_ENV !== 'development') {
   GLOBAL.codePushOptions = {

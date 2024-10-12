@@ -155,7 +155,7 @@ export default function StartScreen ({ setAppState }) {
           if (startupPhase === 'hold') {
             setStartupPhase('start')
           }
-        }, 5000)
+        }, 500)
         return () => clearTimeout(timeout)
       } else {
         setStartupPhase('start')
