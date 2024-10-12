@@ -64,3 +64,7 @@ export function startupStepsForDistribution ({ settings, dispatch }) {
     }
   ]
 }
+
+export function handleNoticeActionForDistribution ({ notice, dispatch, setOverlayText }) {
+  return true
+}
