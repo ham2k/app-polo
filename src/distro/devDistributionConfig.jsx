@@ -5,10 +5,15 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { hashCode } from '../tools/hashCode'
 import packageJson from '../../package.json'
 import { addRuntimeMessage } from '../store/runtime'
+
+import { Ham2kListSection } from '../screens/components/Ham2kListSection'
+import { Ham2kListItem } from '../screens/components/Ham2kListItem'
+import DeviceInfo from 'react-native-device-info'
+import { List } from 'react-native-paper'
 
 export function reportError (error, ...extra) {
   console.error(error, ...extra)
@@ -83,5 +88,27 @@ export function StartupInterruptionDialogForDistribution ({ settings, styles, se
 export function DevModeSettingsForDistribution ({ settings, styles, dispatch, operations }) {
   return (
     <></>
+  )
+}
+
+export function VersionSettingsForDistribution ({ settings, styles }) {
+  const currentVersionLabel = useMemo(() => {
+    let version
+    if (packageJson.versionName) {
+      version = `${packageJson.versionName} Release`
+    } else {
+      version = `Version ${packageJson.version}`
+    }
+    return version
+  }, [])
+
+  return (
+    <Ham2kListSection>
+      <Ham2kListItem title={currentVersionLabel}
+        description={`${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
+        // eslint-disable-next-line react/no-unstable-nested-components
+        left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
+      />
+    </Ham2kListSection>
   )
 }
