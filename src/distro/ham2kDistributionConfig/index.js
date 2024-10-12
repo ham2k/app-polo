@@ -19,6 +19,7 @@ import { UpdateTracksDialog } from './UpdateTracksDialog'
 
 export * from './distroTracking'
 export * from './distroConfig'
+export * from './DevModeSettingsForDistribution'
 
 if (process.env.NODE_ENV !== 'development') {
   GLOBAL.codePushOptions = {
