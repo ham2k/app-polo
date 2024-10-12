@@ -18,7 +18,7 @@ import { Ham2kDialog } from '../../components/Ham2kDialog'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { dismissNotice, selectNotices } from '../../../store/system/systemSlice'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { trackEvent } from '../../../distro'
+import { trackEvent, handleNoticeActionForDistribution } from '../../../distro'
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -214,6 +214,6 @@ async function performAction (notice, dispatch, setOverlayText) {
       metadata.install(CodePush.InstallMode.IMMEDIATE)
     })
   } else {
-    return true
+    return handleNoticeActionForDistribution({ notice, dispatch, setOverlayText })
   }
 }
