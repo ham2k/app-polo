@@ -1,3 +1,3 @@
 /* This particular file is dedicated to the public domain */
 
-export * from './ham2kDistributionConfig'
+export * from './ham2kDistributionConfig/ham2kDistributionConfig'
