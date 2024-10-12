@@ -15,6 +15,8 @@ import { UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from '../../screens/SettingsSc
 import { addNotice, dismissNotice } from '../../store/system'
 import { addRuntimeMessage } from '../../store/runtime'
 
+import { UpdateTracksDialog } from './UpdateTracksDialog'
+
 export * from './distroTracking'
 export * from './distroConfig'
 
@@ -69,4 +71,20 @@ export function handleNoticeActionForDistribution ({ notice, dispatch, setOverla
       metadata.install(CodePush.InstallMode.IMMEDIATE)
     })
   }
+}
+
+export function enableStartupInterruptionDialogForDistribution ({ settings }) {
+  return true // settings.updateTrack && settings.updateTrack !== 'Production'
+}
+
+export function StartupInterruptionDialogForDistribution ({ settings, styles, setStartupPhase }) {
+  return (
+    <UpdateTracksDialog
+      settings={settings}
+      styles={styles}
+      visible={true}
+      dismissable={false}
+      onDialogDone={() => setStartupPhase('start')}
+    />
+  )
 }

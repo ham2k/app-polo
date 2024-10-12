@@ -3,9 +3,9 @@ import { Button, Dialog, RadioButton, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { View } from 'react-native'
 
-import { setSettings } from '../../../store/settings'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
-import { UPDATE_TRACK_LABELS } from '../screens/VersionSettingsScreen'
+import { setSettings } from '../../store/settings'
+import { Ham2kDialog } from '../../screens/components/Ham2kDialog'
+import { UPDATE_TRACK_LABELS } from '../../screens/SettingsScreens/screens/VersionSettingsScreen'
 
 export function UpdateTracksDialog ({ visible, settings, styles, onDialogDone, dismissable }) {
   const dispatch = useDispatch()
