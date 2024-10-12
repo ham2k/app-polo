@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { hashCode } from '../tools/hashCode'
 import packageJson from '../../package.json'
 import { addRuntimeMessage } from '../store/runtime'
@@ -67,4 +67,15 @@ export function startupStepsForDistribution ({ settings, dispatch }) {
 
 export function handleNoticeActionForDistribution ({ notice, dispatch, setOverlayText }) {
   return true
+}
+
+export function enableStartupInterruptionDialogForDistribution ({ settings }) {
+  return false
+}
+
+export function StartupInterruptionDialogForDistribution ({ settings, styles, setStartupPhase }) {
+  useEffect(() => setStartupPhase('start'), [setStartupPhase])
+  return (
+    <></>
+  )
 }

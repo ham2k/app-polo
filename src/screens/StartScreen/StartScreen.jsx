@@ -17,10 +17,11 @@ import { selectRuntimeMessages } from '../../store/runtime'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Ham2kMarkdown } from '../components/Ham2kMarkdown'
 import { startupSequence } from '../../store/runtime/actions/startupSequence'
-import { UpdateTracksDialog } from '../SettingsScreens/components/UpdateTracksDialog'
 import { OnboardingManager } from './onboarding/OnboardingManager'
 import { selectSettings } from '../../store/settings'
 import { selectSystemFlag, setSystemFlag } from '../../store/system'
+
+import { enableStartupInterruptionDialogForDistribution, StartupInterruptionDialogForDistribution } from '../../distro'
 
 import packageJson from '../../../package.json'
 
@@ -148,8 +149,8 @@ export default function StartScreen ({ setAppState }) {
     if (!onboardedOn || !settings?.operatorCall) {
       setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
     } else {
-      // If not using the default track, give the user some milliseconds to switch tracks dialog
-      if (settings.updateTrack && settings.updateTrack !== 'Production') {
+      // If startup interruption is enabled, give the user some milliseconds to trigger it
+      if (enableStartupInterruptionDialogForDistribution({ settings })) {
         const timeout = setTimeout(() => {
           if (startupPhase === 'hold') {
             setStartupPhase('start')
@@ -160,7 +161,7 @@ export default function StartScreen ({ setAppState }) {
         setStartupPhase('start')
       }
     }
-  }, [startupPhase, onboardedOn, settings?.operatorCall, settings?.updateTrack])
+  }, [startupPhase, onboardedOn, settings])
 
   const handleOnboardingDone = useCallback(() => {
     dispatch(setSystemFlag('onboardedOn', Date.now()))
@@ -197,12 +198,10 @@ export default function StartScreen ({ setAppState }) {
         </GestureHandlerRootView>
       </SafeAreaView>
       {startupPhase === 'dialog' && (
-        <UpdateTracksDialog
+        <StartupInterruptionDialogForDistribution
           settings={settings}
           styles={styles}
-          visible={true}
-          dismissable={false}
-          onDialogDone={() => setStartupPhase('start')}
+          setStartupPhase={setStartupPhase}
         />
       )}
       {startupPhase === 'onboarding' && (
