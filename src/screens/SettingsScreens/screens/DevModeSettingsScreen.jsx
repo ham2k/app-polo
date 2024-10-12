@@ -16,7 +16,7 @@ import Share from 'react-native-share'
 
 import packageJson from '../../../../package.json'
 
-import { reportError } from '../../../distro'
+import { DevModeSettingsForDistribution, reportError } from '../../../distro'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { loadQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
@@ -99,6 +99,7 @@ export default function DevModeSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
+        <DevModeSettingsForDistribution styles={styles} dispatch={dispatch} settings={settings} operations={operations} />
         <Ham2kListSection title={'Data'}>
           <Ham2kListItem
             title="Export all operation data"
