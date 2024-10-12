@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { ImageBackground, View, useWindowDimensions } from 'react-native'
+import { ImageBackground, Pressable, View, useWindowDimensions } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'react-native-paper'
@@ -20,6 +20,8 @@ import { startupSequence } from '../../store/runtime/actions/startupSequence'
 import { OnboardingManager } from './onboarding/OnboardingManager'
 import { selectSettings } from '../../store/settings'
 import { selectSystemFlag, setSystemFlag } from '../../store/system'
+
+import { enableStartupInterruptionDialogForDistribution, StartupInterruptionDialogForDistribution } from '../../distro'
 
 import packageJson from '../../../package.json'
 
@@ -131,7 +133,6 @@ export default function StartScreen ({ setAppState }) {
 
   const settings = useSelector(selectSettings)
   const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
-
   const dispatch = useDispatch()
   const messages = useSelector(selectRuntimeMessages)
 
@@ -148,9 +149,19 @@ export default function StartScreen ({ setAppState }) {
     if (!onboardedOn || !settings?.operatorCall) {
       setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
     } else {
-      setStartupPhase('start')
+      // If startup interruption is enabled, give the user some milliseconds to trigger it
+      if (enableStartupInterruptionDialogForDistribution({ settings })) {
+        const timeout = setTimeout(() => {
+          if (startupPhase === 'hold') {
+            setStartupPhase('start')
+          }
+        }, 500)
+        return () => clearTimeout(timeout)
+      } else {
+        setStartupPhase('start')
+      }
     }
-  }, [startupPhase, onboardedOn, settings?.operatorCall])
+  }, [startupPhase, onboardedOn, settings])
 
   const handleOnboardingDone = useCallback(() => {
     dispatch(setSystemFlag('onboardedOn', Date.now()))
@@ -164,17 +175,21 @@ export default function StartScreen ({ setAppState }) {
     }
   }, [dispatch, setAppState, startupPhase])
 
+  const handleInterruption = useCallback(() => { // If the uer taps the screen, show the track selection dialog
+    if (startupPhase === 'hold') setStartupPhase('dialog')
+  }, [setStartupPhase, startupPhase])
+
   return (
     <ImageBackground source={SPLASH_IMAGE} style={styles.root}>
       <SafeAreaView>
         <GestureHandlerRootView style={styles.container}>
-          <View style={styles.titleBoxTop}>
+          <Pressable style={styles.titleBoxTop} onPress={() => { handleInterruption(); return true }}>
             <Text style={styles.ham2k}>Ham2K</Text>
-          </View>
-          <View style={styles.titleBoxBottom}>
-            <Text style={styles.polo}>Portable Logger</Text>
+          </Pressable>
+          <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }}>
+            <Text style={styles.polo} onPressIn={handleInterruption}>Portable Logger</Text>
             <Text style={styles.version}>{versionName}</Text>
-          </View>
+          </Pressable>
           <View style={styles.messagesBox}>
             {messages.map((msg, i) => (
               <Ham2kMarkdown key={i} styles={styles}>{msg.message}</Ham2kMarkdown>
@@ -182,6 +197,13 @@ export default function StartScreen ({ setAppState }) {
           </View>
         </GestureHandlerRootView>
       </SafeAreaView>
+      {startupPhase === 'dialog' && (
+        <StartupInterruptionDialogForDistribution
+          settings={settings}
+          styles={styles}
+          setStartupPhase={setStartupPhase}
+        />
+      )}
       {startupPhase === 'onboarding' && (
         <OnboardingManager
           settings={settings}
