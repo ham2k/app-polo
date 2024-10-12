@@ -5,15 +5,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import CodePush from 'react-native-code-push'
+import { startupStepsForDistribution } from '../../../distro'
 import loadExtensions from '../../../extensions/loadExtensions'
-
 import { getOperations } from '../../operations'
 import { selectSettings } from '../../settings'
 import { addRuntimeMessage, resetRuntimeMessages } from '../runtimeSlice'
 import { setupOnlineStatusMonitoring } from './onlineStatus'
-import { UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from '../../../screens/SettingsScreens/screens/VersionSettingsScreen'
-import { addNotice, dismissNotice } from '../../system/systemSlice'
 
 const MESSAGES = [
   'Reticulating splines',
@@ -39,42 +36,14 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
 
     const steps = [
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
-      async () => {
-        if (settings.updateTrack && settings.updateTrack !== 'Production') {
-          await dispatch(addRuntimeMessage(`Checking for ${UPDATE_TRACK_LABELS[settings.updateTrack]} updates...`))
-        } else {
-          await dispatch(addRuntimeMessage('Checking for updates...'))
-        }
-
-        setTimeout(async () => {
-          await CodePush.sync({
-            deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Production']
-          })
-          setTimeout(() => {
-            CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING).then((metadata) => {
-              if (metadata) {
-                if (metadata.description) {
-                  dispatch(addNotice({ key: 'update', text: `Version ${metadata?.description.replace('Release ', '')} is available.`, actionLabel: 'Update Now', action: 'update' }))
-                } else {
-                  dispatch(addNotice({ key: 'update', text: 'A new version of PoLo is available.', actionLabel: 'Update Now', action: 'update' }))
-                }
-              } else {
-                dispatch(dismissNotice({ key: 'update' }))
-              }
-            })
-          }, 100)
-        }, 0)
-      },
-
       async () => await dispatch(setupOnlineStatusMonitoring()),
       async () => await dispatch(loadExtensions()),
       async () => await dispatch(getOperations()),
-      async () => await minimumTimePromise
+      async () => await minimumTimePromise,
+      ...startupStepsForDistribution({ settings, dispatch })
     ]
 
-    for (const step of steps) {
-      await step()
-    }
+    await Promise.all(steps.map(fn => fn()))
 
     onReady && onReady()
   }, 0)
