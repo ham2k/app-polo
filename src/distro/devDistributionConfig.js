@@ -8,6 +8,7 @@
 import React from 'react'
 import { hashCode } from '../tools/hashCode'
 import packageJson from '../../package.json'
+import { addRuntimeMessage } from '../store/runtime'
 
 export function reportError (error, ...extra) {
   console.error(error, ...extra)
@@ -54,4 +55,12 @@ export function AppWrappedForDistribution ({ children }) {
 
 export function useConfigForDistribution ({ settings }) {
   // Do nothing
+}
+
+export function startupStepsForDistribution ({ settings, dispatch }) {
+  return [
+    async () => {
+      await dispatch(addRuntimeMessage('Portable Logger Development Build'))
+    }
+  ]
 }

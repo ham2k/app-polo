@@ -5,9 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { startupStepsForDistribution } from '../../../distro'
 import loadExtensions from '../../../extensions/loadExtensions'
-
 import { getOperations } from '../../operations'
+import { selectSettings } from '../../settings'
 import { addRuntimeMessage, resetRuntimeMessages } from '../runtimeSlice'
 import { setupOnlineStatusMonitoring } from './onlineStatus'
 
@@ -23,7 +24,9 @@ const MESSAGES = [
   'Engaging the warp drive' // K4HNT
 ]
 
-export const startupSequence = (onReady) => (dispatch) => {
+export const startupSequence = (onReady) => (dispatch, getState) => {
+  const settings = selectSettings(getState()) || {}
+
   setTimeout(async () => {
     dispatch(resetRuntimeMessages())
 
@@ -33,15 +36,14 @@ export const startupSequence = (onReady) => (dispatch) => {
 
     const steps = [
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
-      async () => await dispatch(loadExtensions()),
       async () => await dispatch(setupOnlineStatusMonitoring()),
+      async () => await dispatch(loadExtensions()),
       async () => await dispatch(getOperations()),
-      async () => await minimumTimePromise
+      async () => await minimumTimePromise,
+      ...startupStepsForDistribution({ settings, dispatch })
     ]
 
-    for (const step of steps) {
-      await step()
-    }
+    await Promise.all(steps.map(fn => fn()))
 
     onReady && onReady()
   }, 0)
