@@ -8,7 +8,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import codePush from 'react-native-code-push'
+import CodePush from 'react-native-code-push'
 import { firebase as firebaseAnalytics } from '@react-native-firebase/analytics'
 import { firebase as firebaseCrashlytics } from '@react-native-firebase/crashlytics'
 
@@ -17,11 +17,14 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
 import packageJson from '../../package.json'
 import GLOBAL from '../GLOBAL'
+import { UPDATE_TRACK_KEYS, UPDATE_TRACK_LABELS } from '../screens/SettingsScreens/screens/VersionSettingsScreen'
 import { hashCode } from '../tools/hashCode'
+import { addNotice, dismissNotice } from '../store/system'
+import { addRuntimeMessage } from '../store/runtime'
 
 if (process.env.NODE_ENV !== 'development') {
   GLOBAL.codePushOptions = {
-    installMode: codePush.InstallMode.ON_NEXT_RESUME
+    installMode: CodePush.InstallMode.ON_NEXT_RESUME
   }
 }
 
@@ -166,4 +169,35 @@ export function useConfigForDistribution ({ settings }) {
       })
     }
   }, [settings?.operatorCall, settings?.consentAppData])
+}
+
+export function startupStepsForDistribution ({ settings, dispatch }) {
+  return [
+    async () => {
+      if (settings.updateTrack && settings.updateTrack !== 'Production') {
+        await dispatch(addRuntimeMessage(`Checking for ${UPDATE_TRACK_LABELS[settings.updateTrack]} updates...`))
+      } else {
+        await dispatch(addRuntimeMessage('Checking for updates...'))
+      }
+
+      setTimeout(async () => {
+        await CodePush.sync({
+          deploymentKey: UPDATE_TRACK_KEYS[settings?.updateTrack ?? 'Production']
+        })
+        setTimeout(() => {
+          CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING).then((metadata) => {
+            if (metadata) {
+              if (metadata.description) {
+                dispatch(addNotice({ key: 'update', text: `Version ${metadata?.description.replace('Release ', '')} is available.`, actionLabel: 'Update Now', action: 'update' }))
+              } else {
+                dispatch(addNotice({ key: 'update', text: 'A new version of PoLo is available.', actionLabel: 'Update Now', action: 'update' }))
+              }
+            } else {
+              dispatch(dismissNotice({ key: 'update' }))
+            }
+          })
+        }, 100)
+      }, 0)
+    }
+  ]
 }
