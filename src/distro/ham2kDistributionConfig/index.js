@@ -62,3 +62,11 @@ export function startupStepsForDistribution ({ settings, dispatch }) {
     }
   ]
 }
+
+export function handleNoticeActionForDistribution ({ notice, dispatch, setOverlayText }) {
+  if (notice.action === 'update') {
+    CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING).then((metadata) => {
+      metadata.install(CodePush.InstallMode.IMMEDIATE)
+    })
+  }
+}

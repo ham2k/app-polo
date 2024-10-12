@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { View, Platform, UIManager, LayoutAnimation } from 'react-native'
 import { Button, Dialog } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import CodePush from 'react-native-code-push'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
@@ -209,10 +208,6 @@ async function performAction (notice, dispatch, setOverlayText) {
         }
       }
     }))
-  } else if (notice.action === 'update') {
-    CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING).then((metadata) => {
-      metadata.install(CodePush.InstallMode.IMMEDIATE)
-    })
   } else {
     return handleNoticeActionForDistribution({ notice, dispatch, setOverlayText })
   }
