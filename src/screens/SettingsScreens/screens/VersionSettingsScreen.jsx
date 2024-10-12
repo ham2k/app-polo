@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 /*
  * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
  *
@@ -6,20 +5,20 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useState } from 'react'
+/* eslint-disable react/no-unstable-nested-components */
+import React, { useState } from 'react'
 import { List } from 'react-native-paper'
+import { useSelector } from 'react-redux'
 import { Image, Pressable, ScrollView } from 'react-native'
-
-import DeviceInfo from 'react-native-device-info'
-
-import packageJson from '../../../../package.json'
-import releaseNotes from '../../../../RELEASE-NOTES.json'
-
 import Markdown from 'react-native-markdown-display'
+
+import releaseNotes from '../../../../RELEASE-NOTES.json'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { ListRow } from '../../components/ListComponents'
+import { VersionSettingsForDistribution } from '../../../distro'
+import { selectSettings } from '../../../store/settings'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 
@@ -39,13 +38,7 @@ function prepareStyles (baseStyles) {
 export default function VersionSettingsScreen ({ navigation }) {
   const styles = useThemedStyles(prepareStyles)
 
-  const VersionIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />
-  ), [styles])
-
-  const NewsIcon = useCallback(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="bullhorn" />
-  ), [styles])
+  const settings = useSelector(selectSettings)
 
   const [showImage, setShowImage] = useState(false)
 
@@ -81,22 +74,19 @@ export default function VersionSettingsScreen ({ navigation }) {
         </Pressable>
       ) : (
         <ScrollView style={{ flex: 1 }}>
-          <Ham2kListSection>
-            <Ham2kListItem title={packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`}
-              description={`${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
-              left={VersionIcon}
-            />
+          <VersionSettingsForDistribution settings={settings} styles={styles} />
 
-          </Ham2kListSection>
           <Ham2kListSection>
-            <Ham2kListItem title={'Recent Changes'}
-              left={NewsIcon}
+            <Ham2kListItem
+              title={'Recent Changes'}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="newspaper-variant-outline" />}
               right={() => (
                 <Pressable onPress={() => setShowImage(true)}>
                   <Image source={SPLASH_IMAGE} style={{ width: 64, height: 64 }} />
                 </Pressable>
               )}
             />
+
             {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
               <ListRow key={i} style={styles.listRow}>
 
@@ -109,7 +99,6 @@ export default function VersionSettingsScreen ({ navigation }) {
                 </Markdown>
               </ListRow>
             ))}
-
           </Ham2kListSection>
 
         </ScrollView>
