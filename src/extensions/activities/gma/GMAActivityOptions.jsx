@@ -69,7 +69,7 @@ export function GMAActivityOptions (props) {
         setNearbyResults(newResults.map(result => ({
           ...result,
           distance: distanceOnEarth(result, location, { units: settings.distanceUnits })
-        })).sort((a, b) => a.distance - b.distance))
+        })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999)))
       }
     })
   }, [ourInfo, location, settings.distanceUnits])
@@ -83,7 +83,7 @@ export function GMAActivityOptions (props) {
           newResults = newResults.map(park => ({
             ...park,
             distance: distanceOnEarth(park, location, { units: settings.distanceUnits })
-          })).sort((a, b) => a.distance - b.distance)
+          })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
         }
 
         // Is the search term a plain reference, either with prefix or just digits?
