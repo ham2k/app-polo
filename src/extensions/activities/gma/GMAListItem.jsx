@@ -29,7 +29,7 @@ export function GMAListItem ({ activityRef, refData, operationRef, style, settin
             {reference?.ref ?? activityRef}
           </Text>
           <Text>
-            {refData?.distance && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
+            {(typeof refData?.distance === 'number') && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
           </Text>
         </View>
       }

@@ -49,7 +49,7 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, se
             {(pota?.data?.locationDesc ?? refData?.locationDesc) && ` (${pota?.data?.locationDesc ?? refData?.locationDesc})`}
           </Text> */}
           <Text>
-            {refData?.distance && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
+            {(typeof refData?.distance === 'number') && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
           </Text>
         </View>
       }

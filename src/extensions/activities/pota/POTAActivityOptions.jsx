@@ -78,7 +78,7 @@ export function POTAActivityOptions (props) {
           newResults.map(result => ({
             ...result,
             distance: distanceOnEarth(result, location, { units: settings.distanceUnits })
-          })).sort((a, b) => a.distance - b.distance)
+          })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
         )
       }
     })
