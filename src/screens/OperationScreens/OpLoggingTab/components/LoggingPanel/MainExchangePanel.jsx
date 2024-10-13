@@ -134,7 +134,7 @@ export const MainExchangePanel = ({
   findHooks('activity').filter(activity => activity.mainExchangeForQSO).forEach(activity => {
     fields = fields.concat(
       activity.mainExchangeForQSO(
-        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
+        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef, handleFieldChange }
       ) || []
     )
   })
