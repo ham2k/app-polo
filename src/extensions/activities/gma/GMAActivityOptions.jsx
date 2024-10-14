@@ -43,10 +43,19 @@ export function GMAActivityOptions (props) {
 
   const [location, setLocation] = useState()
   useEffect(() => {
-    Geolocation.getCurrentPosition(info => {
-      const { latitude, longitude } = info.coords
-      setLocation({ lat: latitude, lon: longitude })
-    }, undefined, { enableHighAccuracy: true })
+    Geolocation.getCurrentPosition(
+      info => {
+        const { latitude, longitude } = info.coords
+        setLocation({ lat: latitude, lon: longitude })
+      },
+      error => {
+        console.info('Geolocation error', error)
+      }, {
+        enableHighAccuracy: true,
+        timeout: 30 * 1000 /* 30 seconds */,
+        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+      }
+    )
   }, [])
 
   const [refData, setRefData] = useState({})

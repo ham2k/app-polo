@@ -54,21 +54,36 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
 
   const [locationGrid, setLocationGrid] = useState()
   useEffect(() => {
-    Geolocation.getCurrentPosition(info => {
-      const { latitude, longitude } = info.coords
-      console.log('Location', { useGrid8: settings?.useGrid8, latitude, longitude, grid8: locationToGrid8(latitude, longitude) })
-      if (settings?.useGrid8) setLocationGrid(locationToGrid8(latitude, longitude))
-      else setLocationGrid(locationToGrid6(latitude, longitude))
-    }, undefined, { enableHighAccuracy: true })
+    Geolocation.getCurrentPosition(
+      info => {
+        const { latitude, longitude } = info.coords
+        if (settings?.useGrid8) setLocationGrid(locationToGrid8(latitude, longitude))
+        else setLocationGrid(locationToGrid6(latitude, longitude))
+      },
+      error => {
+        console.info('Geolocation error', error)
+      }, {
+        enableHighAccuracy: true,
+        timeout: 30 * 1000 /* 30 seconds */,
+        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+      }
+    )
 
-    const watchId = Geolocation.watchPosition(info => {
-      const { latitude, longitude } = info.coords
-      if (settings?.useGrid8) setLocationGrid(locationToGrid8(latitude, longitude))
-      else setLocationGrid(locationToGrid6(latitude, longitude))
-    }, error => {
-      setLocationGrid('NO GPS')
-      console.warn('Location error', error)
-    }, { enableHighAccuracy: true })
+    const watchId = Geolocation.watchPosition(
+      info => {
+        const { latitude, longitude } = info.coords
+        if (settings?.useGrid8) setLocationGrid(locationToGrid8(latitude, longitude))
+        else setLocationGrid(locationToGrid6(latitude, longitude))
+      },
+      error => {
+        console.info('Geolocation watch error', error)
+        setLocationGrid('NO GPS')
+      }, {
+        enableHighAccuracy: true,
+        timeout: 1000 * 60 * 3 /* 3 minutes */,
+        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+      }
+    )
     return () => {
       Geolocation.clearWatch(watchId)
     }
