@@ -58,7 +58,10 @@ export function useConfigForDistribution ({ settings }) {
   // Set Firebase Analytics & Crashlytics user properties
   useEffect(() => {
     if (settings?.consentAppData) {
-      firebaseCrashlytics?.crashlytics()?.setUserId(settings?.operatorCall)
+      if (settings?.operatorCall) {
+        firebaseCrashlytics?.crashlytics()?.setUserId(settings?.operatorCall)
+      }
+
       firebaseCrashlytics?.crashlytics()?.setAttributes({
         packageVersion: packageJson.version
       })
@@ -66,14 +69,15 @@ export function useConfigForDistribution ({ settings }) {
       let info = parseCallsign(settings?.operatorCall)
       if (info.baseCall) {
         info = annotateFromCountryFile(info)
+
+        firebaseAnalytics?.analytics()?.setUserId(info.baseCall)
+        firebaseAnalytics?.analytics()?.setUserProperties({
+          entity_prefix: info.entityPrefix,
+          entity_name: info.entityName,
+          base_call: info.baseCall,
+          call: settings?.operatorCall
+        })
       }
-      firebaseAnalytics?.analytics()?.setUserId(info.baseCall)
-      firebaseAnalytics?.analytics()?.setUserProperties({
-        entity_prefix: info.entityPrefix,
-        entity_name: info.entityName,
-        base_call: info.baseCall,
-        call: settings?.operatorCall
-      })
     }
   }, [settings?.operatorCall, settings?.consentAppData])
 }
