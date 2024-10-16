@@ -25,7 +25,7 @@
   "dependencies": {
     "@ham2k/lib-callsigns": "^0.1",
     "@ham2k/lib-country-files": "^0.10",
-    "@ham2k/lib-dxcc-data": "^0.2",
+    "@ham2k/lib-dxcc-data": "^0.3",
     "@ham2k/lib-format-tools": "^0.3",
     "@ham2k/lib-maidenhead-grid": "^0.2",
     "@ham2k/lib-operation-data": "^0.8",
