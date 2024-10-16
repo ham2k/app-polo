@@ -9,6 +9,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { selectOperatorCall } from '../settings'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 const INITIAL_STATE = {
   status: 'ready',
@@ -94,6 +95,9 @@ export const selectOperationCallInfo = createSelector(
     }
     if (info.baseCall) {
       info = annotateFromCountryFile(info)
+      if (info.entityPrefix) {
+        info = { ...info, ...DXCC_BY_PREFIX[info.entityPrefix] }
+      }
     }
     return info
   }
