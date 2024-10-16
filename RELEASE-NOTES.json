@@ -4,6 +4,14 @@
     "changes": [
     ]
   },
+  "24.10.2": {
+    "name": "October '24",
+    "changes": [
+      "Fixed bugs related to retrieval of GPS locations",
+      "Fixed ADIF export comments field name",
+      "Fixed band plan for Australia and South Africa to include all modes in 30m"
+    ]
+  },
   "24.10.1": {
     "name": "October '24",
     "changes": [

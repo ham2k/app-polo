@@ -76,14 +76,14 @@ function escapeForHeader (str) {
   return str.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-function modeToADIF (mode, freq) {
+function modeToADIF (mode, freq, qsoInfo) {
   const modeAndSubmode = adifModeAndSubmodeForMode(mode)
   if (modeAndSubmode.length > 1) {
     return [{ MODE: modeAndSubmode[0] }, { SUBMODE: modeAndSubmode[1] }]
   } else if (mode) {
     return [{ MODE: mode }]
   } else if (freq) {
-    return [{ MODE: modeForFrequency(freq) ?? 'SSB' }]
+    return [{ MODE: modeForFrequency(freq, qsoInfo) ?? 'SSB' }]
   } else {
     return [{ MODE: 'SSB' }]
   }
@@ -92,7 +92,7 @@ function modeToADIF (mode, freq) {
 function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
   return [
     { CALL: qso.their.call },
-    ...modeToADIF(qso.mode, qso.freq),
+    ...modeToADIF(qso.mode, qso.freq, qso?.our),
     { BAND: qso.band && qso.band !== 'other' ? qso.band : undefined },
     { FREQ: qso.freq ? (qso.freq / 1000).toFixed(6) : undefined },
     { TX_PWR: qso.power },
