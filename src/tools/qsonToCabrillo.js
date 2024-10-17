@@ -22,15 +22,19 @@ export function qsonToCabrillo ({ operation, qsos, settings, handler }) {
       .join('\n') + '\n'
   }
 
-  qsos.forEach(qso => {
-    const parts = ['QSO:']
-    parts.push(cabrilloFreq(qso).padEnd(5, ' '))
-    parts.push(cabrilloMode(qso).padEnd(2, ' '))
-    parts.push(fmtCabrilloDate(qso?.startOnMillis ?? qso?.endOnMillis).padEnd(10, ' '))
-    parts.push(fmtCabrilloTime(qso?.startOnMillis ?? qso?.endOnMillis).padEnd(4, ' '))
-    handler.qsoToCabrilloParts && handler.qsoToCabrilloParts({ qso, operation, ref, parts })
-
-    str += parts.join(' ') + '\n'
+  qsos.filter(qso => !qso.deleted).forEach(qso => {
+    let combinations = handler.qsoToCabrilloParts && handler.qsoToCabrilloParts({ qso, operation, ref })
+    if (!Array.isArray(combinations?.[0])) {
+      combinations = [combinations]
+    }
+    combinations.forEach(parts => {
+      str += 'QSO: '
+      str += cabrilloFreq(qso).padEnd(5, ' ') + ' '
+      str += cabrilloMode(qso).padEnd(2, ' ') + ' '
+      str += fmtCabrilloDate(qso?.startOnMillis ?? qso?.endOnMillis).padEnd(10, ' ') + ' '
+      str += fmtCabrilloTime(qso?.startOnMillis ?? qso?.endOnMillis).padEnd(4, ' ') + ' '
+      str += parts.join(' ') + '\n'
+    })
   })
 
   str += 'END-OF-LOG\n'

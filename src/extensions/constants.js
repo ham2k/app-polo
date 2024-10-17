@@ -10,10 +10,11 @@ export const EXTENSION_CATEGORIES = {
   locationBased: 'Location-based Activities',
   fieldOps: 'Field Operations',
   lookup: 'Data Lookup',
+  contests: 'Contests',
   other: 'Other Features'
 }
 
-export const EXTENSION_CATEGORIES_ORDER = ['locationBased', 'fieldOps', 'lookup', 'core', 'other']
+export const EXTENSION_CATEGORIES_ORDER = ['locationBased', 'fieldOps', 'contests', 'lookup', 'core', 'other']
 
 // We don't care for really precise location. For our purposes, a 6-digit grid is precise enough.
 // But depending on the source, the location might not be accurate.

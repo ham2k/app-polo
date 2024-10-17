@@ -123,8 +123,10 @@ export const MainExchangePanel = ({
   ]
   if (settings.switchSentRcvd) rstFields.reverse()
   fields = fields.concat(rstFields)
+  let hideStateField = false
 
   findHooks('activity').filter(activity => activity.mainExchangeForOperation && findRef(operation, activity.key)).forEach(activity => {
+    if (activity.hideStateField) hideStateField = true
     fields = fields.concat(
       activity.mainExchangeForOperation(
         { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
@@ -132,6 +134,7 @@ export const MainExchangePanel = ({
     )
   })
   findHooks('activity').filter(activity => activity.mainExchangeForQSO).forEach(activity => {
+    if (activity.hideStateField) hideStateField = true
     fields = fields.concat(
       activity.mainExchangeForQSO(
         { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
@@ -139,7 +142,7 @@ export const MainExchangePanel = ({
     )
   })
 
-  if (settings.showStateField) {
+  if (settings.showStateField && !hideStateField) {
     fields.push(
       <ThemedTextInput
         key="state"

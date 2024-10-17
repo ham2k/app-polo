@@ -24,6 +24,7 @@ import { selectRuntimeOnline } from '../../../../../store/runtime'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!!!',
+  invalidBand: 'Invalid Band',
   newBand: 'New Band',
   newMode: 'New Mode',
   newRef: 'New Reference',
@@ -190,13 +191,13 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   const [historyMessage, historyLevel] = useMemo(() => {
     if (scoreInfo?.length > 0) {
       // Order by value, as those that provide points/QSOs/etc. more important
-      const [message, level] = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
+      const messageLevelPair = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
         if (score?.notices && score?.notices[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.notices[0]}`] ?? MESSAGES_FOR_SCORING[score?.notices[0]] ?? score?.notices[0], 'notice']
         if (score?.alerts && score?.alerts[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.alerts[0]}`] ?? MESSAGES_FOR_SCORING[score?.alerts[0]] ?? score?.alerts[0], 'alert']
         return []
-      }).filter(x => x)[0]
+      }).filter(x => x.length)[0]
 
-      if (message && level) return [message, level]
+      if (messageLevelPair) return messageLevelPair
     }
 
     if (lookup?.history?.length > 0) {
