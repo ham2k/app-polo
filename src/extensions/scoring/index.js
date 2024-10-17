@@ -81,7 +81,7 @@ export function analyzeAndSectionQSOs ({ qsos, operation, settings }) {
           try {
             previousSection.scores[key] = handler.summarizeScore({ score: previousSection.scores[key] ?? {}, operation, ref, section: previousSection })
           } catch (e) {
-            reportError(`Error summarizing score for '${handler.key}'`, e)
+            reportError(`Error summarizing previous section score for '${handler.key}'`, e)
           }
         }
 
