@@ -87,7 +87,8 @@ function MainApp ({ navigationTheme }) {
           id="RootNavigator"
           screenOptions={{
             header: HeaderBar,
-            animation: 'slide_from_right'
+            animation: 'slide_from_right',
+            freezeOnBlur: true
           }}
         >
           <Stack.Screen name="Home"

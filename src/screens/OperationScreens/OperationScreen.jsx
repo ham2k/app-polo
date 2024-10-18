@@ -194,6 +194,7 @@ export default function OperationScreen (props) {
                     // See https://github.com/react-navigation/react-navigation/issues/11301
                     // on iOS, if the keyboard is open, tabs get stuck when switching
                     animationEnabled: Platform.OS !== 'ios',
+                    freezeOnBlur: true,
                     lazy: true
                   }}
                 >
@@ -257,6 +258,7 @@ export default function OperationScreen (props) {
                 // See https://github.com/react-navigation/react-navigation/issues/11301
                 // on iOS, if the keyboard is open, tabs get stuck when switching
                 animationEnabled: Platform.OS !== 'ios',
+                freezeOnBlur: true,
                 lazy: true
               }}
             >
