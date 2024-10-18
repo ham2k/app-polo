@@ -90,7 +90,8 @@ export default function MainSettingsScreen ({ navigation, route }) {
                 initialRouteName={route?.params?.screen ?? 'GeneralSettings'}
                 screenOptions={{
                   header: HeaderBar,
-                  animation: 'slide_from_right'
+                  animation: 'slide_from_right',
+                  freezeOnBlur: true
                 }}
               >
                 {settingsScreensArray({ includeMain: false, topLevelBack: false })}
@@ -107,7 +108,8 @@ export default function MainSettingsScreen ({ navigation, route }) {
         initialRouteName={route?.params?.screen ?? 'MainSettings'}
         screenOptions={{
           header: HeaderBar,
-          animation: 'slide_from_right'
+          animation: 'slide_from_right',
+          freezeOnBlur: true
         }}
       >
         {settingsScreensArray({ includeMain: true, topLevelBack: true })}
