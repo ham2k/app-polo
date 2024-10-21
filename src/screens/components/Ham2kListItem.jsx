@@ -15,11 +15,11 @@ export function Ham2kListItem ({ title, description, disabled, style, ...morePro
 
   const rootStyle = useMemo(() => {
     if (disabled) {
-      return { ...style, opacity: 0.5 }
+      return { ...styles.list.item, ...style, opacity: 0.5 }
     } else {
-      return style
+      return { ...styles.list.item, ...style }
     }
-  }, [style, disabled])
+  }, [style, disabled, styles])
 
   const titleStyle = useMemo(() => {
     return {

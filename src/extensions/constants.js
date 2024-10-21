@@ -5,17 +5,6 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-export const EXTENSION_CATEGORIES = {
-  core: 'Core Features',
-  locationBased: 'Location-based Activities',
-  fieldOps: 'Field Operations',
-  lookup: 'Data Lookup',
-  contests: 'Contests',
-  other: 'Other Features'
-}
-
-export const EXTENSION_CATEGORIES_ORDER = ['locationBased', 'fieldOps', 'contests', 'lookup', 'core', 'other']
-
 // We don't care for really precise location. For our purposes, a 6-digit grid is precise enough.
 // But depending on the source, the location might not be accurate.
 // For example, a grid from the POTA database might be off by miles (and even more in a few cases like the Appalachian Trail)
