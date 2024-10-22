@@ -4,7 +4,8 @@
     "changes": [
       "Menu option to Lookup all QSOs in an Operation",
       "Cleaned up app internals for better performance",
-      "Fixed Cabrillo export bug"
+      "Fixed Cabrillo export bug",
+      "Changing activity references (POTA, SOTA, etc) updates grid unless set manually"
     ]
   },
   "24.10.3": {

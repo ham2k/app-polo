@@ -82,10 +82,14 @@ export const setOperationData = (data) => async (dispatch, getState) => {
       data.subtitle = ''
     }
 
-    if (!operation.grid && data.refs) {
-      const gridRef = data.refs.find(ref => ref.grid)
+    if (!data.grid && (!operation.grid || operation.gridSource === 'refs')) {
+      const gridRef = (data.refs || []).find(ref => ref.grid)
       if (gridRef) {
         data.grid = gridRef.grid
+        data.gridSource = 'refs'
+      } else {
+        data.grid = ''
+        data.gridSource = ''
       }
     }
 

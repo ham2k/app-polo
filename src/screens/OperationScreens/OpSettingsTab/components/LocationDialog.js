@@ -24,6 +24,8 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
   const [dialogVisible, setDialogVisible] = useState(false)
 
   const [grid, setGridValue] = useState('')
+  const [source, setSourceValue] = useState('')
+
   const [isValid, setIsValidValue] = useState()
 
   useEffect(() => {
@@ -32,27 +34,35 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
 
   useEffect(() => {
     setGridValue(operation?.grid || '')
+    setSourceValue(operation?.gridSource || '')
   }, [operation])
 
   useEffect(() => {
     setIsValidValue(VALID_MAIDENHEAD_REGEX.test(grid))
   }, [grid])
 
+  const updateGrid = useCallback((grid, source = 'manual') => {
+    setGridValue(grid)
+    setSourceValue(source)
+  }, [])
+
   const handleAccept = useCallback(() => {
     if (isValid) {
-      dispatch(setOperationData({ uuid: operation.uuid, grid }))
+      dispatch(setOperationData({ uuid: operation.uuid, grid, gridSource: source }))
     }
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [dispatch, operation, grid, isValid, onDialogDone])
+  }, [dispatch, operation, grid, source, isValid, onDialogDone])
 
   const handleCancel = useCallback(() => {
     setGridValue(operation.grid)
+    setSourceValue(operation.gridSource)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [operation, onDialogDone])
 
   const [locationGrid, setLocationGrid] = useState()
+
   useEffect(() => {
     Geolocation.getCurrentPosition(
       info => {
@@ -99,10 +109,10 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
           value={grid}
           label="Grid Square Locator"
           placeholder={settings?.useGrid8 ? 'AA00aa00' : 'AA00aa'}
-          onChangeText={setGridValue}
+          onChangeText={updateGrid}
         />
         {locationGrid && (
-          <TouchableRipple onPress={() => setGridValue(locationGrid)} style={{ marginTop: styles.oneSpace }}>
+          <TouchableRipple onPress={() => updateGrid(locationGrid, 'gps')} style={{ marginTop: styles.oneSpace }}>
             <Text variant="bodyMedium" style={{ marginTop: styles.oneSpace, marginBottom: styles.oneSpace }}>
               <Text>Current Location: </Text>
               <Text style={{ color: styles.colors.primary, fontWeight: 'bold' }}>{locationGrid}</Text>
