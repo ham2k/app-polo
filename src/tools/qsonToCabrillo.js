@@ -37,7 +37,7 @@ export function qsonToCabrillo ({ operation, qsos, settings, handler }) {
     })
   })
 
-  str += 'END-OF-LOG\n'
+  str += 'END-OF-LOG:\n'
   return str
 }
 

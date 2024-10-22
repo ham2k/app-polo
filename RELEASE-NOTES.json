@@ -3,7 +3,8 @@
     "name": "November '24 (pre 0)",
     "changes": [
       "Menu option to Lookup all QSOs in an Operation",
-      "Cleaned up app internals for better performance"
+      "Cleaned up app internals for better performance",
+      "Fixed Cabrillo export bug"
     ]
   },
   "24.10.3": {
