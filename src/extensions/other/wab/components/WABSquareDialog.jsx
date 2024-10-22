@@ -61,15 +61,33 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
 
   const [wabSquare, setWABSquare] = useState()
   useEffect(() => {
-    Geolocation.getCurrentPosition(info => {
-      const { latitude, longitude } = info.coords
-      setWABSquare(locationToWABSquare(latitude, longitude))
-    }, undefined, { enableHighAccuracy: true })
+    Geolocation.getCurrentPosition(
+      info => {
+        const { latitude, longitude } = info.coords
+        setWABSquare(locationToWABSquare(latitude, longitude))
+      },
+      error => {
+        console.info('Geolocation error', error)
+      }, {
+        enableHighAccuracy: true,
+        timeout: 30 * 1000 /* 30 seconds */,
+        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+      }
+    )
 
-    const watchId = Geolocation.watchPosition(info => {
-      const { latitude, longitude } = info.coords
-      setWABSquare(locationToWABSquare(latitude, longitude))
-    }, undefined, { enableHighAccuracy: true })
+    const watchId = Geolocation.watchPosition(
+      info => {
+        const { latitude, longitude } = info.coords
+        setWABSquare(locationToWABSquare(latitude, longitude))
+      },
+      error => {
+        console.info('Geolocation watch error', error)
+      }, {
+        enableHighAccuracy: true,
+        timeout: 1000 * 60 * 3 /* 3 minutes */,
+        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+      }
+    )
     return () => {
       Geolocation.clearWatch(watchId)
     }

@@ -24,6 +24,8 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
   const [dialogVisible, setDialogVisible] = useState(false)
 
   const [grid, setGridValue] = useState('')
+  const [source, setSourceValue] = useState('')
+
   const [isValid, setIsValidValue] = useState()
 
   useEffect(() => {
@@ -32,43 +34,66 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
 
   useEffect(() => {
     setGridValue(operation?.grid || '')
+    setSourceValue(operation?.gridSource || '')
   }, [operation])
 
   useEffect(() => {
     setIsValidValue(VALID_MAIDENHEAD_REGEX.test(grid))
   }, [grid])
 
+  const updateGrid = useCallback((grid, source = 'manual') => {
+    setGridValue(grid)
+    setSourceValue(source)
+  }, [])
+
   const handleAccept = useCallback(() => {
     if (isValid) {
-      dispatch(setOperationData({ uuid: operation.uuid, grid }))
+      dispatch(setOperationData({ uuid: operation.uuid, grid, gridSource: source }))
     }
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [dispatch, operation, grid, isValid, onDialogDone])
+  }, [dispatch, operation, grid, source, isValid, onDialogDone])
 
   const handleCancel = useCallback(() => {
     setGridValue(operation.grid)
+    setSourceValue(operation.gridSource)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [operation, onDialogDone])
 
   const [locationGrid, setLocationGrid] = useState()
-  useEffect(() => {
-    Geolocation.getCurrentPosition(info => {
-      const { latitude, longitude } = info.coords
-      console.log('Location', { useGrid8: settings?.useGrid8, latitude, longitude, grid8: locationToGrid8(latitude, longitude) })
-      if (settings?.useGrid8) setLocationGrid(locationToGrid8(latitude, longitude))
-      else setLocationGrid(locationToGrid6(latitude, longitude))
-    }, undefined, { enableHighAccuracy: true })
 
-    const watchId = Geolocation.watchPosition(info => {
-      const { latitude, longitude } = info.coords
-      if (settings?.useGrid8) setLocationGrid(locationToGrid8(latitude, longitude))
-      else setLocationGrid(locationToGrid6(latitude, longitude))
-    }, error => {
-      setLocationGrid('NO GPS')
-      console.warn('Location error', error)
-    }, { enableHighAccuracy: true })
+  useEffect(() => {
+    Geolocation.getCurrentPosition(
+      info => {
+        const { latitude, longitude } = info.coords
+        if (settings?.useGrid8) setLocationGrid(locationToGrid8(latitude, longitude))
+        else setLocationGrid(locationToGrid6(latitude, longitude))
+      },
+      error => {
+        console.info('Geolocation error', error)
+      }, {
+        enableHighAccuracy: true,
+        timeout: 30 * 1000 /* 30 seconds */,
+        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+      }
+    )
+
+    const watchId = Geolocation.watchPosition(
+      info => {
+        const { latitude, longitude } = info.coords
+        if (settings?.useGrid8) setLocationGrid(locationToGrid8(latitude, longitude))
+        else setLocationGrid(locationToGrid6(latitude, longitude))
+      },
+      error => {
+        console.info('Geolocation watch error', error)
+        setLocationGrid('NO GPS')
+      }, {
+        enableHighAccuracy: true,
+        timeout: 1000 * 60 * 3 /* 3 minutes */,
+        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+      }
+    )
     return () => {
       Geolocation.clearWatch(watchId)
     }
@@ -84,10 +109,10 @@ export function LocationDialog ({ operation, visible, settings, styles, onDialog
           value={grid}
           label="Grid Square Locator"
           placeholder={settings?.useGrid8 ? 'AA00aa00' : 'AA00aa'}
-          onChangeText={setGridValue}
+          onChangeText={updateGrid}
         />
         {locationGrid && (
-          <TouchableRipple onPress={() => setGridValue(locationGrid)} style={{ marginTop: styles.oneSpace }}>
+          <TouchableRipple onPress={() => updateGrid(locationGrid, 'gps')} style={{ marginTop: styles.oneSpace }}>
             <Text variant="bodyMedium" style={{ marginTop: styles.oneSpace, marginBottom: styles.oneSpace }}>
               <Text>Current Location: </Text>
               <Text style={{ color: styles.colors.primary, fontWeight: 'bold' }}>{locationGrid}</Text>

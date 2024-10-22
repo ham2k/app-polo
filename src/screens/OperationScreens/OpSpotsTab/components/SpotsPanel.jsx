@@ -117,7 +117,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
           spot.timeOnMillis = 0
           spot.key = `${spot.spot.source}:${qsoKey(spot)}`
           if (!spot.mode) {
-            spot.mode = modeForFrequency(spot.freq) ?? 'SSB'
+            spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
           }
 
           annotatedSpots.push(await annotateQSO({ qso: spot, online, settings, dispatch, skipLookup: true }))

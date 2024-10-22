@@ -9,12 +9,11 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dialog, List, Switch, Text } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { activateExtension, allExtensions, deactivateExtension } from '../../../extensions/registry'
-import { EXTENSION_CATEGORIES, EXTENSION_CATEGORIES_ORDER } from '../../../extensions/constants'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
@@ -43,25 +42,9 @@ export default function FeaturesSettingsScreen ({ navigation }) {
 
   const dispatch = useDispatch()
 
-  const featureGroups = useMemo(() => {
-    const extensions = allExtensions().filter(e => !e.alwaysEnabled)
-    const groups = {}
-    extensions.forEach((extension) => {
-      let category = extension.category
-      if (!EXTENSION_CATEGORIES[category]) category = 'other'
+  const featureGroups = useMemo(() => groupAndSortExtensions(allExtensions().filter(e => !e.alwaysEnabled)), [])
 
-      if (!groups[category]) groups[category] = []
-      groups[category].push(extension)
-    })
-
-    return EXTENSION_CATEGORIES_ORDER.map((category) => {
-      return {
-        category,
-        label: EXTENSION_CATEGORIES[category] || '',
-        extensions: (groups[category] || []).sort((a, b) => (a?.name ?? '').localeCompare(b?.name ?? ''))
-      }
-    }).filter((group) => group.extensions.length > 0)
-  }, [])
+  const [showMoreForGroup, setShowMoreForGroup] = useState({})
 
   const [slowOperationMessage, setSlowOperationMessage] = useState()
 
@@ -92,11 +75,34 @@ export default function FeaturesSettingsScreen ({ navigation }) {
         </Ham2kDialog>
       )}
       <ScrollView style={{ flex: 1 }}>
-        {featureGroups.map(({ category, label, extensions }) => (
+        {featureGroups.map(({ category, label, extensions, popular }) => (
+
           <Ham2kListSection title={label} key={category}>
-            {extensions.map((extension) => (
-              <FeatureItem key={extension.key} extension={extension} settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
-            ))}
+            {showMoreForGroup[category] || popular.length === 0 ? (
+              <>
+                {extensions.map((extension) => (
+                  <FeatureItem key={extension.key} extension={extension} settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
+                ))}
+                {popular.length > 0 && (
+                  <Ham2kListItem
+                    title={`Fewer ${label}...`}
+                    left={() => <View style={{ width: styles.oneSpace * 5 }} />}
+                    onPress={() => setShowMoreForGroup({ ...showMoreForGroup, [category]: false })}
+                  />
+                )}
+              </>
+            ) : (
+              <>
+                {popular.map((extension) => (
+                  <FeatureItem key={extension.key} extension={extension} settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
+                ))}
+                <Ham2kListItem
+                  title={`More ${label}...`}
+                  left={() => <View style={{ width: styles.oneSpace * 5 }} />}
+                  onPress={() => setShowMoreForGroup({ ...showMoreForGroup, [category]: true })}
+                />
+              </>
+            )}
           </Ham2kListSection>
         ))}
 
@@ -105,4 +111,62 @@ export default function FeaturesSettingsScreen ({ navigation }) {
       <Notices />
     </ScreenContainer>
   )
+}
+
+const CATEGORY_TITLES = {
+  core: 'Core Features',
+  locationBased: 'Location-based Activities',
+  contestsAndFieldOps: 'Contests & Field Ops',
+  lookup: 'Data Lookup',
+  other: 'Other Features'
+}
+
+const CATEGORY_REGROUPINGS = {
+  fieldOps: 'contestsAndFieldOps',
+  contests: 'contestsAndFieldOps'
+}
+
+const CATEGORIES_ORDER = ['locationBased', 'contestsAndFieldOps', 'lookup', 'core', 'other']
+
+const POPULAR_EXTENSIONS = [
+  'pota',
+  'wwff',
+  'sota'
+]
+
+function groupAndSortExtensions (extensions) {
+  const groups = {}
+  const popularForGroup = {}
+  extensions.forEach((extension) => {
+    let category = extension.category
+
+    if (CATEGORY_REGROUPINGS[category]) category = CATEGORY_REGROUPINGS[category]
+
+    if (!CATEGORY_TITLES[category]) category = 'other'
+
+    if (!groups[category]) groups[category] = []
+    groups[category].push(extension)
+
+    if (POPULAR_EXTENSIONS.includes(extension.key)) {
+      if (!popularForGroup[category]) popularForGroup[category] = []
+      popularForGroup[category].push(extension)
+    }
+  })
+
+  return CATEGORIES_ORDER.map((category) => {
+    return {
+      category,
+      label: CATEGORY_TITLES[category] || '',
+      extensions: (groups[category] || []).sort(extensionComparer),
+      popular: (popularForGroup[category] || []).sort(extensionComparer)
+    }
+  }).filter((group) => group.extensions.length > 0)
+}
+
+function extensionComparer (a, b) {
+  const popularA = POPULAR_EXTENSIONS.includes(a.key)
+  const popularB = POPULAR_EXTENSIONS.includes(b.key)
+  if (popularA && !popularB) return -1
+  if (!popularA && popularB) return 1
+  return (a?.name ?? '').localeCompare(b?.name ?? '')
 }

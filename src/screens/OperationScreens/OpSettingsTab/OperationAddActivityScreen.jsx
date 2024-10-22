@@ -14,7 +14,7 @@ import { StackActions } from '@react-navigation/native'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
 import { replaceRefs } from '../../../tools/refTools'
-import { useFindHooks } from '../../../extensions/registry'
+import { findBestHook, useFindHooks } from '../../../extensions/registry'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
@@ -26,9 +26,17 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
-  const currentActivities = useMemo(() => (
-    new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))
-  ), [operation?.refs])
+  const currentActivities = useMemo(() => {
+    const activities = {}
+    ;(operation?.refs || []).forEach(ref => {
+      const hook = findBestHook(`ref:${ref.type}`)
+      if (hook) {
+        activities[hook.key] = hook.description && hook.description(operation)
+      }
+    })
+
+    return activities
+  }, [operation])
 
   const activityHooks = useFindHooks('activity')
 
@@ -51,10 +59,11 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <Ham2kListSection>
-          {activityHooks.filter(activity => !currentActivities.has(activity.activationType)).map((activity) => (
+          {activityHooks.map((activity) => (
             <Ham2kListItem
               key={activity.key}
               title={activity.name}
+              description={currentActivities[activity.key] ?? ''}
               // eslint-disable-next-line react/no-unstable-nested-components
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={activity.icon} />}
               onPress={() => addActivity(activity)}

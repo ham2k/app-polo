@@ -44,10 +44,19 @@ export function ECAActivityOptions (props) {
 
   const [location, setLocation] = useState()
   useEffect(() => {
-    Geolocation.getCurrentPosition(info => {
-      const { latitude, longitude } = info.coords
-      setLocation({ lat: latitude, lon: longitude })
-    }, undefined, { enableHighAccuracy: true })
+    Geolocation.getCurrentPosition(
+      info => {
+        const { latitude, longitude } = info.coords
+        setLocation({ lat: latitude, lon: longitude })
+      },
+      error => {
+        console.info('Geolocation error', error)
+      }, {
+        enableHighAccuracy: true,
+        timeout: 30 * 1000 /* 30 seconds */,
+        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+      }
+    )
   }, [])
 
   const [refDatas, setRefDatas] = useState([])
@@ -75,7 +84,7 @@ export function ECAActivityOptions (props) {
           newResults.map(result => ({
             ...result,
             distance: distanceOnEarth(result, location, { units: settings.distanceUnits })
-          })).sort((a, b) => a.distance - b.distance)
+          })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
         )
       }
     })
@@ -89,7 +98,7 @@ export function ECAActivityOptions (props) {
           newRefs = newRefs.map(ref => ({
             ...ref,
             distance: distanceOnEarth(ref, location, { units: settings.distanceUnits })
-          })).sort((a, b) => a.distance - b.distance)
+          })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
         }
 
         // Is the search term a plain reference, either with prefix or just digits?

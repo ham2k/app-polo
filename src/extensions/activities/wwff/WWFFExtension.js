@@ -167,8 +167,8 @@ const ReferenceHandler = {
       return [{
         format: 'adif',
         common: { refs: [ref] },
-        // Note that compact format uses _ instead of - because of WWFF requirements
-        nameTemplate: '{call} @ {ref} {compactDate}',
+        // Note that compact format uses a space instead of - because of WWFF requirements
+        nameTemplate: '{call}@{ref} {compactDate}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
     }

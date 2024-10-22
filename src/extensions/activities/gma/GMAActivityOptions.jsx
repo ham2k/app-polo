@@ -43,10 +43,19 @@ export function GMAActivityOptions (props) {
 
   const [location, setLocation] = useState()
   useEffect(() => {
-    Geolocation.getCurrentPosition(info => {
-      const { latitude, longitude } = info.coords
-      setLocation({ lat: latitude, lon: longitude })
-    }, undefined, { enableHighAccuracy: true })
+    Geolocation.getCurrentPosition(
+      info => {
+        const { latitude, longitude } = info.coords
+        setLocation({ lat: latitude, lon: longitude })
+      },
+      error => {
+        console.info('Geolocation error', error)
+      }, {
+        enableHighAccuracy: true,
+        timeout: 30 * 1000 /* 30 seconds */,
+        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+      }
+    )
   }, [])
 
   const [refData, setRefData] = useState({})
@@ -69,7 +78,7 @@ export function GMAActivityOptions (props) {
         setNearbyResults(newResults.map(result => ({
           ...result,
           distance: distanceOnEarth(result, location, { units: settings.distanceUnits })
-        })).sort((a, b) => a.distance - b.distance))
+        })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999)))
       }
     })
   }, [ourInfo, location, settings.distanceUnits])
@@ -83,7 +92,7 @@ export function GMAActivityOptions (props) {
           newResults = newResults.map(park => ({
             ...park,
             distance: distanceOnEarth(park, location, { units: settings.distanceUnits })
-          })).sort((a, b) => a.distance - b.distance)
+          })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
         }
 
         // Is the search term a plain reference, either with prefix or just digits?

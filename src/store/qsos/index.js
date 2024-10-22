@@ -9,5 +9,7 @@ import reducer from './qsosSlice'
 
 export * from './qsosSlice'
 export * from './actions/qsosDB'
+export * from './actions/lookupQSOs'
+export * from './actions/findQSOHistory'
 
 export default reducer

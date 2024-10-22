@@ -140,6 +140,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       color: theme.colors.onBackground
     },
     list: {
+      item: {
+        minHeight: oneSpace * 8
+      },
       section: {
         fontSize: normalFontSize,
         fontWeight: '500',
