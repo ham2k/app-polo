@@ -2,6 +2,8 @@
   "24.10.99-pre0": {
     "name": "November '24 (pre 0)",
     "changes": [
+      "Menu option to Lookup all QSOs in an Operation",
+      "Cleaned up app internals for better performance"
     ]
   },
   "24.10.3": {

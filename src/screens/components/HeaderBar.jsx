@@ -5,9 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 
-import { Appbar, Text } from 'react-native-paper'
+import { Appbar, Menu, Text } from 'react-native-paper'
 import { StatusBar, View } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
@@ -78,10 +78,14 @@ function prepareStyles (baseStyles, options) {
   })
 }
 
-export default function HeaderBar ({ route, options, navigation, back, close, title, subTitle, rightAction, headerBackVisible, closeInsteadOfBack, onRightActionPress }) {
+export default function HeaderBar ({
+  route, options, navigation, back, close, title, subTitle,
+  rightAction, rightMenuItems, headerBackVisible, closeInsteadOfBack, onRightActionPress
+}) {
   title = title || options?.title
   subTitle = subTitle || options?.subTitle
   rightAction = rightAction ?? options?.rightAction
+  rightMenuItems = rightMenuItems ?? options?.rightMenuItems
   onRightActionPress = onRightActionPress ?? options?.onRightActionPress
   closeInsteadOfBack = closeInsteadOfBack ?? options?.closeInsteadOfBack
   headerBackVisible = headerBackVisible ?? options?.headerBackVisible ?? true
@@ -91,6 +95,11 @@ export default function HeaderBar ({ route, options, navigation, back, close, ti
   if (closeInsteadOfBack) {
     close = back
   }
+
+  const [showMenu, setShowMenu] = useState(false)
+  const onRightActionShowMenu = useCallback(() => {
+    setShowMenu(true)
+  }, [setShowMenu])
 
   // TODO: Once React Native fixes adjustsFontSizeToFit on iOS so it doesn't scale the font up, add it back to the Text components below
 
@@ -137,16 +146,39 @@ export default function HeaderBar ({ route, options, navigation, back, close, ti
       />
 
       <View flexDirection="row" justifyContent="flex-end" style={styles.sideContent}>
-        {rightAction ? (
-          <Appbar.Action
-            isLeading
-            onPress={onRightActionPress}
-            icon={rightAction}
-            size={styles.oneSpace * 2.5}
-            theme={styles.appBarTheme}
-          />
+        {rightMenuItems ? (
+          <>
+            <Menu
+              visible={showMenu}
+              onDismiss={() => setShowMenu(false)}
+              anchorPosition={'bottom'}
+              anchor={
+                <Appbar.Action
+                  isLeading
+                  onPress={onRightActionShowMenu}
+                  icon={'dots-vertical'}
+                  size={styles.oneSpace * 2.5}
+                  theme={styles.appBarTheme}
+                />
+              }
+            >
+              {React.Children.map(rightMenuItems, child => (
+                React.cloneElement(child, { setShowMenu })
+              ))}
+            </Menu>
+          </>
         ) : (
-          <Text>{' '}</Text>
+          rightAction ? (
+            <Appbar.Action
+              isLeading
+              onPress={onRightActionPress}
+              icon={rightAction}
+              size={styles.oneSpace * 2.5}
+              theme={styles.appBarTheme}
+            />
+          ) : (
+            <Text>{' '}</Text>
+          )
         )}
       </View>
 

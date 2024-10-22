@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Animated, PanResponder, Platform, View, useWindowDimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -13,8 +13,8 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import KeepAwake from '@sayem314/react-native-keep-awake'
 
 import { loadOperation, selectOperation } from '../../store/operations'
-import { loadQSOs } from '../../store/qsos'
-import { selectSettings } from '../../store/settings'
+import { loadQSOs, lookupAllQSOs } from '../../store/qsos'
+import { selectSettings, setSettings } from '../../store/settings'
 import { startTickTock, stopTickTock } from '../../store/time'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
@@ -27,7 +27,7 @@ import OpInfoTab from './OpInfoTab/OpInfoTab'
 import { trackOperation } from '../../distro'
 import { selectRuntimeOnline } from '../../store/runtime'
 import { useUIState } from '../../store/ui'
-import { Icon } from 'react-native-paper'
+import { Icon, Menu, Text } from 'react-native-paper'
 import { slashZeros } from '../../tools/stringTools'
 
 const Tab = createMaterialTopTabNavigator()
@@ -76,8 +76,10 @@ export default function OperationScreen (props) {
       options = { title: 'New Operation' }
     }
     options.closeInsteadOfBack = true
+    options.rightMenuItems = <OperationMenuItems {...{ operation, settings, styles, dispatch, online }} />
+
     return options
-  }, [operation.operatorCall, operation.stationCall, operation.subtitle, operation.title, operation.userTitle])
+  }, [dispatch, online, operation, settings, styles])
 
   const dimensions = useWindowDimensions()
 
@@ -146,7 +148,7 @@ export default function OperationScreen (props) {
                 height: '100%'
               }}
             >
-              <HeaderBar options={headerOptions} navigation={navigation} back={true} />
+              <HeaderBar options={headerOptions} navigation={navigation} back={true} rightAction={'cog'} />
               <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView } }} />
             </Animated.View>
             <View
@@ -313,4 +315,35 @@ export function buildTitleForOperation (operation) {
   } else {
     return 'New Operation'
   }
+}
+
+function OperationMenuItems ({ operation, settings, styles, dispatch, online, setShowMenu }) {
+  const hideAndRun = useCallback((action) => {
+    setShowMenu(false)
+    setTimeout(() => action(), 10)
+  }, [setShowMenu])
+
+  return (
+    <>
+      <Text style={{ marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
+        Logging Settings
+      </Text>
+      <Menu.Item
+        leadingIcon="select-marker"
+        trailingIcon={settings.showStateField ? 'check-bold' : ''}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: !settings.showStateField }))) }}
+        title={'State field'}
+
+      />
+      <View style={{ height: 2, backgroundColor: styles.colors.onSurface, marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace }} />
+      <Text style={{ marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
+        Actions
+      </Text>
+      <Menu.Item
+        leadingIcon="search-web"
+        onPress={() => hideAndRun(() => dispatch(lookupAllQSOs(operation.uuid)))}
+        title={'Lookup all QSOs'}
+      />
+    </>
+  )
 }
