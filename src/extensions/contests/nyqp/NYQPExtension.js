@@ -79,6 +79,28 @@ const ReferenceHandler = {
     }
   },
 
+  adifFieldsForOneQSO: ({ qso, operation, common }) => {
+    const ref = findRef(operation, Info.key)
+    const qsoRef = findRef(qso, Info.key)
+
+    const fields = [
+      { CONTEST_ID: 'NY-QSO-PARTY' },
+      { STX_STRING: ref?.location }
+    ]
+
+    if (qsoRef?.location) {
+      fields.push({ SRX_STRING: qsoRef.location })
+    } else {
+      if (qso?.their?.guess?.entityCode === 'K' || qso?.their?.guess?.entityCode === 'VE') {
+        fields.push({ SRX_STRING: qso?.their?.state ?? qso?.their?.guess?.state })
+      } else {
+        fields.push({ SRX_STRING: 'DX' })
+      }
+    }
+
+    return fields
+  },
+
   cabrilloHeaders: ({ operation, settings, headers }) => {
     const ref = findRef(operation, Info.key)
 
@@ -120,7 +142,11 @@ const ReferenceHandler = {
       theirLocations = [qsoRef?.location]
       theyAreInState = !!NY_COUNTIES[qsoRef?.location]
     } else {
-      theirLocations = [qso?.their?.state ?? qso?.their?.guess?.state]
+      if (qso?.their?.guess?.entityCode === 'K' || qso?.their?.guess?.entityCode === 'VE') {
+        theirLocations = [qso?.their?.state ?? qso?.their?.guess?.state]
+      } else {
+        theirLocations = 'DX'
+      }
       theyAreInState = false
     }
 
