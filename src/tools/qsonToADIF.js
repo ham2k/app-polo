@@ -12,7 +12,7 @@ import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
 import { adifModeAndSubmodeForMode, modeForFrequency } from '@ham2k/lib-operation-data'
 
-export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers, title }) {
+export function qsonToADIF ({ operation, settings, qsos, handler, title }) {
   const common = {
     refs: operation.refs,
     grid: operation.grid,
@@ -24,14 +24,16 @@ export function qsonToADIF ({ operation, settings, qsos, handler, otherHandlers,
 
   let str = ''
 
-  str += `ADIF for ${title || ((operation.stationCall ?? operation.operatorCall) + ' ' + operation?.title) || 'Operation'} \n`
+  str += `ADIF for ${title || (common.stationCall + ' ' + operation?.title) || 'Operation'} \n`
   str += adifField('ADIF_VER', '3.1.4', { newLine: true })
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
   if (operation.userTitle) str += adifField('X_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
   if (operation.notes) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
+  if (handler.adifFieldsForHeader) {
+    str += escapeForHeader(handler.adifFieldsForHeader({ qsos, operation, common }) ?? []).join('\n')
+  }
   if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common })) + '\n'
-
   str += '<EOH>\n'
 
   qsos.forEach(qso => {

@@ -120,21 +120,21 @@ const ReferenceHandler = {
     if (ref.type === Info.activationType && ref.ref) {
       return [{
         format: 'adif',
-        common: { refs: [ref] },
+        exportData: { refs: [ref] },
         nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation, common }) => {
+  adifFieldsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
 
     if (huntingRefs) return ([{ SIG: 'SIOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }])
     else return []
   },
 
-  adifFieldCombinationsForOneQSO: ({ qso, operation, common }) => {
+  adifFieldCombinationsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
     let activationADIF = []

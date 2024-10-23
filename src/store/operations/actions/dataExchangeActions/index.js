@@ -5,11 +5,4 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import reducer from './operationsSlice'
-
-export * from './operationsSlice'
-export * from './actions/operationsDB'
-export * from './actions/setOperationData'
-export * from './actions/dataExchangeActions'
-
-export default reducer
+export * from './importQSON'

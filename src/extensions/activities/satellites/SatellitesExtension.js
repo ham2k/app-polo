@@ -92,7 +92,7 @@ const ReferenceHandler = {
 
   iconForQSO: Info.icon,
 
-  adifFieldsForOneQSO: ({ qso, operation, common }) => {
+  adifFieldsForOneQSO: ({ qso, operation }) => {
     const ref = findRef(qso, Info.refType)
     const [satName, satFreq, satMode] = ref?.ref?.split('/')
     const sat = SatelliteData.satelliteByName[satName]

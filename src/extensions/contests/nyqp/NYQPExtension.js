@@ -79,7 +79,7 @@ const ReferenceHandler = {
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation, common }) => {
+  adifFieldsForOneQSO: ({ qso, operation }) => {
     const ref = findRef(operation, Info.key)
     const qsoRef = findRef(qso, Info.key)
 

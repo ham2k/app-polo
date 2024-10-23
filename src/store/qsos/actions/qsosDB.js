@@ -36,19 +36,21 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
   let startOnMillisMin, startOnMillisMax
   qsos.forEach((qso, index) => {
     qso._number = index + 1
-    if (qso.startOnMillis < startOnMillisMin || !startOnMillisMin) startOnMillisMin = qso.startOnMillis
-    if (qso.startOnMillis > startOnMillisMax || !startOnMillisMax) startOnMillisMax = qso.startOnMillis
+    if (qso.startOnMillis) {
+      if (qso.startOnMillis < startOnMillisMin || !startOnMillisMin) startOnMillisMin = qso.startOnMillis
+      if (qso.startOnMillis > startOnMillisMax || !startOnMillisMax) startOnMillisMax = qso.startOnMillis
+    }
   })
 
   dispatch(actions.setQSOs({ uuid, qsos }))
   dispatch(actions.setQSOsStatus({ uuid, status: 'ready' }))
 
   const qsoCount = qsos.filter(qso => !qso.deleted).length
-
   const operation = getState().operations.info[uuid]
-  if (startOnMillisMin !== operation.startOnMillisMin ||
-  startOnMillisMax !== operation.startOnMillisMax ||
-  qsoCount !== operation.qsoCount) {
+  console.log('loadQSOs', { uuid, operation })
+  if (startOnMillisMin !== operation?.startOnMillisMin ||
+  startOnMillisMax !== operation?.startOnMillisMax ||
+  qsoCount !== operation?.qsoCount) {
     dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount }))
     setTimeout(() => {
       dispatch(saveOperation(operation))

@@ -166,7 +166,7 @@ const ReferenceHandler = {
     if (ref.type === Info.activationType && ref.ref) {
       return [{
         format: 'adif',
-        common: { refs: [ref] },
+        exportData: { refs: [ref] },
         // Note that compact format uses a space instead of - because of WWFF requirements
         nameTemplate: '{call}@{ref} {compactDate}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
@@ -174,7 +174,7 @@ const ReferenceHandler = {
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation, common }) => {
+  adifFieldsForOneQSO: ({ qso, operation }) => {
     const huntingRef = findRef(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
     const fields = []

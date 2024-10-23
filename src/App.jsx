@@ -35,6 +35,7 @@ import OperationBadgeScreen from './screens/OperationBadgeScreen/OperationBadgeS
 import OperationAddActivityScreen from './screens/OperationScreens/OpSettingsTab/OperationAddActivityScreen'
 import OperationActivityOptionsScreen from './screens/OperationScreens/OpSettingsTab/OperationActivityOptionsScreen'
 import OperationStationInfoScreen from './screens/OperationScreens/OpSettingsTab/OperationStationInfoScreen'
+import OperationDataScreen from './screens/OperationScreens/OpSettingsTab/OperationDataScreen'
 import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsScreen'
 import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
@@ -124,6 +125,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="OperationActivityOptions"
             options={{ title: 'Activity Options', headerBackTitle: 'Operation' }}
             component={OperationActivityOptionsScreen}
+          />
+
+          <Stack.Screen name="OperationData"
+            options={{ title: 'Operation Data', headerBackTitle: 'Operation' }}
+            component={OperationDataScreen}
           />
 
           <Stack.Screen name="CallInfo"
