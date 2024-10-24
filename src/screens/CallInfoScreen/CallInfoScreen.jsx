@@ -10,6 +10,7 @@ import { ScrollView } from 'react-native'
 
 import { CallInfoPanel } from '../OperationScreens/OpInfoTab/components/CallInfoPanel'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { slashZeros } from '../../tools/stringTools'
 
 export default function CallInfoScreen ({ navigation, route }) {
   const call = route?.params?.call
@@ -19,7 +20,7 @@ export default function CallInfoScreen ({ navigation, route }) {
   const styles = useThemedStyles()
 
   useEffect(() => {
-    navigation.setOptions({ title: call })
+    navigation.setOptions({ title: slashZeros(call) })
   }, [navigation, call])
 
   return (
