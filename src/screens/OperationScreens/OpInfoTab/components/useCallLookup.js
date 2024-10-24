@@ -20,36 +20,37 @@ import { LOCATION_ACCURACY } from '../../../../extensions/constants'
 
 const EMOJI_REGEX = emojiRegex()
 
-export const useCallLookup = ({ call, refs }) => {
+const EMPTY_LOOKUP = { guess: {}, lookup: {}, lookups: {}, theirInfo: {} }
+
+export const useCallLookup = (qso) => {
   const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
 
-  const [lookupInfo, setLookupInfo] = useState({ guess: {}, lookup: {}, lookups: {}, theirInfo: {} })
+  const [lookupInfos, setLookupInfos] = useState({})
+
+  const call = qso?.their?.call
+
   useEffect(() => {
-    setTimeout(async () => {
-      let theirInfo = parseCallsign(call)
-      if (theirInfo?.baseCall) {
-        theirInfo = annotateFromCountryFile(theirInfo)
-      } else if (call) {
-        theirInfo = annotateFromCountryFile({ prefix: call, baseCall: call })
-      }
+    if (call && call.length > 2 && !lookupInfos[call]) {
+      const timeout = setTimeout(async () => {
+        const { guess, lookup, lookups, theirInfo } = await _performLookup({ qso, online, settings, dispatch })
+        setLookupInfos({ ...lookupInfos, [call]: { guess, lookup, lookups, theirInfo } })
+      }, 50)
+      return () => clearTimeout(timeout)
+    }
+  }, [call, online, settings, dispatch, lookupInfos, qso])
 
-      const { lookups } = await lookupCall(theirInfo, { online, settings, dispatch, skipLookup: false })
-      const { refs: decoratedRefs } = await lookupRefs(refs, { online, settings, dispatch, skipLookup: false })
-
-      const { guess, lookup } = mergeData({ theirInfo, lookups, refs: decoratedRefs })
-
-      setLookupInfo({ guess, lookup, lookups, theirInfo })
-    }, 0)
-  }, [call, refs, online, settings, dispatch])
-
-  return lookupInfo
+  return lookupInfos[call] || EMPTY_LOOKUP
 }
 
 export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup = false }) {
-  qso = { ...qso }
+  const { guess, lookup, theirInfo } = await _performLookup({ qso, online, settings, dispatch })
 
+  return { ...qso, their: { ...qso.their, ...theirInfo, guess, lookup } }
+}
+
+async function _performLookup ({ qso, online, settings, dispatch, skipLookup = false }) {
   let theirInfo = parseCallsign(qso?.their?.call)
   if (theirInfo?.baseCall) {
     theirInfo = annotateFromCountryFile(theirInfo)
@@ -62,10 +63,7 @@ export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup
 
   const { guess, lookup } = mergeData({ theirInfo, lookups, refs })
 
-  qso.their.guess = guess
-  qso.their.lookup = lookup
-
-  return qso
+  return { guess, lookup, lookups, theirInfo }
 }
 
 export async function lookupCall (theirInfo, { online, settings, dispatch, skipLookup = false }) {
