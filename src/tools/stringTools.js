@@ -42,5 +42,6 @@ export function sanitizeToISO8859 (text) {
 }
 
 export function slashZeros (text) {
-  return text.replace(/0/g, 'Ø')
+  // See "Combining Solidus" in https://en.wikipedia.org/wiki/Slashed_zero
+  return text.replace(/0/g, '0̸')
 }
