@@ -79,7 +79,7 @@ function prepareStyles (baseStyles, themeColor) {
 export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) {
   const styles = useThemedStyles(prepareStyles, themeColor)
 
-  const { guess, lookup, lookups } = useCallLookup({ call: qso?.their?.call, refs: qso?.refs })
+  const { guess, lookup, lookups } = useCallLookup(qso)
 
   const entity = DXCC_BY_PREFIX[guess.entityPrefix]
 

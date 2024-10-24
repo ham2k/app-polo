@@ -87,10 +87,9 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   const online = useSelector(selectRuntimeOnline)
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const { guess, lookup, refs } = useCallLookup({ call: qso?.their?.call, refs: qso?.refs })
+  const { guess, lookup, refs } = useCallLookup(qso)
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    console.log('update qso effect')
     updateQSO && updateQSO({ their: { guess, lookup } })
     // Ignore warning about `updateQSO
     //   eslint-disable-next-line react-hooks/exhaustive-deps

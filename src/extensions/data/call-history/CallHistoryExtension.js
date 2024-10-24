@@ -29,7 +29,7 @@ const LookupHook = {
   ...Info,
   lookupCallWithDispatch: async (callInfo, { settings, operation, online, dispatch }) => {
     const history = await findQSOHistory(callInfo?.call)
-    const lookup = {}
+    const lookup = { call: callInfo.call }
     if (history && history[0] && (history[0].theirCall === callInfo?.call || history[0].theirCall === callInfo?.baseCall)) {
       const historyData = JSON.parse(history[0].data)
       if (historyData?.their?.qrzInfo) { // Old data was stored this way
@@ -37,6 +37,7 @@ const LookupHook = {
       }
 
       if (historyData.their) {
+        lookup.call = historyData.their.lookup?.call ?? historyData.their.call
         lookup.name = capitalizeString(historyData.their.name ?? historyData.their.lookup?.name, { content: 'name', force: false })
         lookup.state = historyData.their.state ?? historyData.their.lookup?.state
         lookup.city = capitalizeString(historyData.their.city ?? historyData.their.lookup?.city, { content: 'address', force: false })
