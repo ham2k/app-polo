@@ -69,11 +69,13 @@ const ReferenceHandler = {
       return [{
         format: 'adif',
         nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
+        exportType: 'nyqp-adif',
         titleTemplate: `{call}: ${Info.name} on {date}`
       },
       {
         format: 'cabrillo',
         nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
+        exportType: 'nyqp-cabrillo',
         titleTemplate: `{call}: ${Info.name} on {date}`
       }]
     }

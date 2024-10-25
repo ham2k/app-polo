@@ -8,8 +8,8 @@
 
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ScrollView } from 'react-native'
-import { List, Menu, Text } from 'react-native-paper'
+import { ScrollView, View } from 'react-native'
+import { Checkbox, List, Menu, Text } from 'react-native-paper'
 import DocumentPicker from 'react-native-document-picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
@@ -104,28 +104,44 @@ export default function OperationDataScreen (props) {
     })
   }, [dispatch, operation])
 
+  const selectedExportOptions = useMemo(() => exportOptions.filter(option => (settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false), [exportOptions, settings.exportTypes])
+
+  const exportTitle = useMemo(() => {
+    if (selectedExportOptions.length === 0) return 'Select from the export options below'
+    if (selectedExportOptions.length === 1 && exportOptions.length === 1) return 'Export 1 file'
+    if (selectedExportOptions.length === 1) return 'Export 1 selected file'
+    if (selectedExportOptions.length === exportOptions.length) return `Export all ${selectedExportOptions.length} files`
+    return `Export ${selectedExportOptions.length} selected files`
+  }, [exportOptions.length, selectedExportOptions.length])
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <Ham2kListSection title={'Export QSOs'}>
         <Ham2kListItem
-          title="Export All Files"
+          title={exportTitle}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
-          onPress={() => readyToExport && handleExports({ options: exportOptions })}
+          onPress={() => readyToExport && handleExports({ options: selectedExportOptions })}
           style={{ opacity: readyToExport ? 1 : 0.5 }}
           disabled={!readyToExport}
         />
         {exportOptions.map((option) => (
-          <Ham2kListItem
-            key={option.fileName}
-            title={option.exportTitle}
-            description={option.fileName}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
-            onPress={() => readyToExport && handleExports({ options: [option] })}
-            descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
-            titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
-            style={{ opacity: readyToExport ? 1 : 0.5 }}
-            disabled={!readyToExport}
-          />
+          <View key={option.fileName} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'center' }}>
+            <Checkbox
+              status={(settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
+              onPress={() => dispatch(setSettings({ exportTypes: { ...settings.exportTypes, [option.exportType]: !((settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false) } }))}
+            />
+            <Ham2kListItem
+              key={option.fileName}
+              title={option.exportTitle}
+              description={option.fileName}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
+              onPress={() => readyToExport && handleExports({ options: [option] })}
+              descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
+              titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
+              style={{ opacity: readyToExport ? 1 : 0.5, flex: 1 }}
+              disabled={!readyToExport}
+            />
+          </View>
         ))}
       </Ham2kListSection>
 
