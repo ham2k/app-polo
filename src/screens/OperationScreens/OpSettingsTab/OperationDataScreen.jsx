@@ -14,17 +14,14 @@ import DocumentPicker from 'react-native-document-picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 
-import { generateExportsForOptions, importADIFIntoOperation, loadOperation, selectOperation, selectOperationCallInfo } from '../../../store/operations'
-import { loadQSOs } from '../../../store/qsos'
+import { dataExportOptions, generateExportsForOptions, importADIFIntoOperation, loadOperation, selectOperation, selectOperationCallInfo } from '../../../store/operations'
+import { loadQSOs, selectQSOs } from '../../../store/qsos'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { buildTitleForOperation } from '../OperationScreen'
 import { reportError, trackEvent } from '../../../distro'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { findBestHook } from '../../../extensions/registry'
-import { simpleTemplate } from '../../../tools/stringTools'
-import { fmtISODate } from '../../../tools/timeFormats'
 
 export default function OperationDataScreen (props) {
   const { navigation, route } = props
@@ -32,6 +29,7 @@ export default function OperationDataScreen (props) {
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
+  const qsos = useSelector(state => selectQSOs(state, operation?.uuid))
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
   const settings = useSelector(selectSettings)
 
@@ -58,61 +56,7 @@ export default function OperationDataScreen (props) {
     return ourInfo.call && operation.qsoCount > 0
   }, [operation.qsoCount, ourInfo.call])
 
-  const exportOptions = useMemo(() => {
-    const exports = []
-
-    const baseNameParts = {
-      call: ourInfo.call,
-      date: fmtISODate(operation.startOnMillisMax),
-      compactDate: fmtISODate(operation.startOnMillisMax).replace(/-/g, ''),
-      title: operation.title,
-      uuid: operation.uuid,
-      shortUUID: operation.uuid.split('-')[0]
-    }
-
-    const exportHandlers = (operation?.refs || []).map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler)
-    const handlersWithOptions = exportHandlers.map(({ handler, ref }) => (
-      { handler, ref, options: handler.suggestExportOptions && handler.suggestExportOptions({ operation, ref, settings }) }
-    )).flat().filter(({ options }) => options)
-    handlersWithOptions.forEach(({ handler, ref, options }) => {
-      options.forEach(option => {
-        const nameParts = { ...baseNameParts, ref: ref.ref, ...(handler.suggestOperationTitle && handler.suggestOperationTitle(ref)) }
-        const baseName = simpleTemplate(option.nameTemplate || '{date} {call} {ref}', nameParts).replace(/[/\\:]/g, '-')
-        let fileName
-        let exportTitle
-        if (option.format === 'adif') {
-          fileName = `${baseName}.adi`
-          exportTitle = `${handler.shortName ?? handler.name} ADIF`
-        } else if (option.format === 'cabrillo') {
-          fileName = `${baseName}.log`
-          exportTitle = `${handler.shortName ?? handler.name} Cabrillo`
-        } else if (option.format === 'qson') {
-          fileName = `${baseName}.qson`
-          exportTitle = `${handler.shortName ?? handler.name} QSON`
-        } else if (option.format) {
-          fileName = `${baseName}.${options.format}`
-          exportTitle = `${handler.shortName ?? handler.name} ${options.format}`
-        } else {
-          fileName = `${baseName}.txt`
-          exportTitle = `${handler.shortName ?? handler.name} Data`
-        }
-        exports.push({ ...option, handler, ref, fileName, exportTitle })
-      })
-    })
-    if (settings.devMode) {
-      exports.push({
-        handler: { key: 'devmode', icon: 'briefcase-upload' },
-        format: 'qson',
-        exportType: 'devmode-qson',
-        ref: {},
-        fileName: simpleTemplate('{shortUUID} {date} {call} {title}.qson', baseNameParts).replace(/[\\\\/\\:]/g, '-'),
-        exportTitle: 'Developer Mode: QSON Export',
-        devMode: true,
-        selectedByDefault: false
-      })
-    }
-    return exports
-  }, [operation, ourInfo.call, settings])
+  const exportOptions = useMemo(() => dataExportOptions({ operation, qsos, settings, ourInfo }), [operation, ourInfo, qsos, settings])
 
   const handleExports = useCallback(({ options }) => {
     options.forEach((option) => {

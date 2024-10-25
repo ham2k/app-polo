@@ -72,7 +72,7 @@ const ReferenceHandler = {
   },
 
   suggestExportOptions: ({ operation, ref, settings }) => {
-    if (ref.type === Info.key) {
+    if (ref?.type === Info?.key) {
       return [{
         format: 'adif',
         nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,

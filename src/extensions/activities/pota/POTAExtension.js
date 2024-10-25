@@ -177,7 +177,7 @@ const ReferenceHandler = {
   },
 
   suggestExportOptions: ({ operation, ref, settings }) => {
-    if (ref.type === Info.activationType && ref.ref) {
+    if (ref?.type === Info.activationType && ref?.ref) {
       return [{
         format: 'adif',
         exportType: `${Info.key}-activator`,

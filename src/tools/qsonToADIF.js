@@ -12,7 +12,7 @@ import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
 import { adifModeAndSubmodeForMode, modeForFrequency } from '@ham2k/lib-operation-data'
 
-export function qsonToADIF ({ operation, settings, qsos, handler, title }) {
+export function qsonToADIF ({ operation, settings, qsos, handler, title, exportType }) {
   const common = {
     refs: operation.refs,
     grid: operation.grid,
@@ -41,12 +41,14 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title }) {
 
     let handlerFieldCombinations
     if (handler?.adifFieldCombinationsForOneQSO) {
-      handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common })
+      handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common, exportType })
     } else if (handler?.adifFieldsForOneQSO) {
-      handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common })]
+      handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common, exportType })]
     } else {
       handlerFieldCombinations = [[]]
     }
+
+    if (handlerFieldCombinations === false || handlerFieldCombinations[0] === false) return
 
     handlerFieldCombinations.forEach((combinationFields, index) => {
       let fields = adifFieldsForOneQSO(qso, operation, common, index * 1000)
@@ -55,7 +57,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title }) {
       ;(qso.refs || []).forEach(ref => {
         const exportHandler = findBestHook(`ref:${ref.type}`)
         if (exportHandler && exportHandler.key !== handler.key && exportHandler.adifFieldsForOneQSO) {
-          const refFields = exportHandler.adifFieldsForOneQSO({ qso, operation: operationWithoutRefs, common })
+          const refFields = exportHandler.adifFieldsForOneQSO({ qso, operation: operationWithoutRefs, common, exportType })
           refFields.forEach(refField => {
             if (fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])) {
               // Another field with the same name already exists

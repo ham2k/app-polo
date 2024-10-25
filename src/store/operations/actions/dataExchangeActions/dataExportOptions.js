@@ -7,7 +7,7 @@
 
 import { fmtISODate } from '../../../../tools/timeFormats'
 import { simpleTemplate } from '../../../../tools/stringTools'
-import { findBestHook } from '../../../../extensions/registry'
+import { findBestHook, findHooks } from '../../../../extensions/registry'
 
 export const DATA_EXTENSIONS = {
   adif: 'adi',
@@ -31,7 +31,7 @@ export const DATA_FORMAT_DESCRIPTIONS = {
   other: 'Data'
 }
 
-export function dataExportOptions ({ operation, settings, ourInfo }) {
+export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
   const exports = []
 
   const baseNameParts = {
@@ -43,29 +43,41 @@ export function dataExportOptions ({ operation, settings, ourInfo }) {
     shortUUID: operation.uuid.split('-')[0]
   }
 
-  const exportHandlers = (operation?.refs || []).map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))?.filter(x => x?.handler)
-  const handlersWithOptions = exportHandlers.map(({ handler, ref }) => (
-    { handler, ref, options: handler.suggestExportOptions && handler.suggestExportOptions({ operation, ref, settings }) }
+  const exportHandlersForRefs = (operation?.refs || [])
+    .map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))
+    .filter(x => x?.handler)
+  const exportHandlersForActivities = findHooks('activity')
+    .filter(hook => hook.referenceTypes)
+    .map(hook => hook.referenceTypes.map(type => ({ handler: findBestHook(`ref:${type}`), ref: { type } })))
+    .flat().filter(x => x.handler)
+
+  const handlersWithOptions = [...exportHandlersForRefs, ...exportHandlersForActivities].map(({ handler, ref }) => (
+    { handler, ref, options: handler.suggestExportOptions && handler.suggestExportOptions({ operation, qsos, ref, settings }) }
   )).flat().filter(({ options }) => options)
+
   handlersWithOptions.forEach(({ handler, ref, options }) => {
     options.forEach(option => {
-      const nameParts = { ...baseNameParts, ref: ref.ref, ...(handler.suggestOperationTitle && handler.suggestOperationTitle(ref)) }
+      const nameParts = { ...baseNameParts, ref: ref.ref, ...option.templateData, ...(handler.suggestOperationTitle && handler.suggestOperationTitle(ref)) }
+      nameParts.titleDashed = nameParts.title.replace(/[^a-zA-Z0-9]/g, '-')
       const baseName = simpleTemplate(option.nameTemplate || '{date} {call} {ref}', nameParts).replace(/[/\\:]/g, '-')
 
       const title = simpleTemplate(option.titleTemplate || '{call} {ref} {date}', nameParts)
       const fileName = `${baseName}.${DATA_EXTENSIONS[option.format] || DATA_EXTENSIONS.other}`
-      const description = `${handler.shortName ?? handler.name} ${DATA_FORMAT_DESCRIPTIONS[option.format] || DATA_FORMAT_DESCRIPTIONS.other}`
+      const exportTitle = option.exportTitle || `${handler.shortName ?? handler.name} ${DATA_FORMAT_DESCRIPTIONS[option.format] || DATA_FORMAT_DESCRIPTIONS.other}`
 
-      exports.push({ handler, ref, option, fileName, title, description })
+      exports.push({ ...option, handler, ref, fileName, title, exportTitle })
     })
   })
   if (settings.devMode) {
     exports.push({
       handler: { key: 'devmode', icon: 'briefcase-upload' },
+      format: 'qson',
+      exportType: 'devmode-qson',
       ref: {},
-      name: simpleTemplate('{shortUUID} {date} {call} {title}.qson'.replace(/[/\\:]/g), baseNameParts),
-      description: 'Developer Mode: QSON Export',
-      devMode: true
+      fileName: simpleTemplate('{shortUUID} {date} {call} {title}.qson', baseNameParts).replace(/[\\\\/\\:]/g, '-'),
+      exportTitle: 'Developer Mode: QSON Export',
+      devMode: true,
+      selectedByDefault: false
     })
   }
   return exports

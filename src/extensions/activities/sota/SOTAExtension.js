@@ -61,7 +61,9 @@ const ActivityHook = {
 
   Options: SOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+
+  referenceTypes: [Info.huntingType, Info.activationType]
 }
 
 const SpotsHook = {
@@ -178,8 +180,8 @@ const ReferenceHandler = {
     }
   },
 
-  suggestExportOptions: ({ operation, ref, settings }) => {
-    if (ref.type === Info.activationType && ref.ref) {
+  suggestExportOptions: ({ operation, qsos, ref, settings }) => {
+    if (ref?.type === Info.activationType && ref?.ref) {
       return [{
         format: 'adif',
         exportType: `${Info.key}-activator`,
@@ -187,12 +189,26 @@ const ReferenceHandler = {
         nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
+    } else if (ref?.type === Info.huntingType) {
+      const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType))
+      if (!hasSOTA) return null
+      return [{
+        format: 'adif',
+        exportType: `${Info.key}-hunter`,
+        templateData: { modifier: 'SOTA Hunted', modifierDashed: 'sota-hunted' },
+        nameTemplate: settings.useCompactFileNames ? '{call}@{modifierDashed}-{titleDashed}-{compactDate}' : '{date} {call} {modifier} {title}',
+        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`,
+        exportTitle: 'SOTA Hunted'
+      }]
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation }) => {
+  adifFieldsForOneQSO: ({ qso, operation, exportType }) => {
     const huntingRef = findRef(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
+
+    if (!activationRef && !huntingRef) return false
+
     const fields = []
     if (activationRef) fields.push({ MY_SOTA_REF: activationRef.ref })
     if (huntingRef) fields.push({ SOTA_REF: huntingRef.ref })
