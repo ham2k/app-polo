@@ -1,11 +1,12 @@
 {
-  "24.10.99-pre0": {
-    "name": "November '24 (pre 0)",
+  "24.10.99-pre2": {
+    "name": "November '24 (pre 1)",
     "changes": [
       "Menu option to Lookup all QSOs in an Operation",
       "Cleaned up app internals for better performance",
       "Fixed Cabrillo export bug",
-      "Changing activity references (POTA, SOTA, etc) updates grid unless set manually"
+      "Changing activity references (POTA, SOTA, etc) updates grid unless set manually",
+      "Fixed call lookup and history bugs"
     ]
   },
   "24.10.3": {
