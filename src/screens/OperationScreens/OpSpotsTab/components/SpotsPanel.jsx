@@ -77,7 +77,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
     dispatch(setSettings({ spots: { ...settings?.spots, filters: { ...settings?.spots?.filters, ...newState } } }))
   }, [dispatch, settings.spots])
 
-  const [spotsState, , updateSpotsState] = useUIState('OpSpotsTab', 'spotsState', { rawSpots: [], lastFetched: 0, loading: false })
+  const [spotsState, , updateSpotsState] = useUIState('OpSpotsTab', 'spotsState', { spots: {}, lastFetched: 0, loading: false })
 
   const allOperations = useSelector(selectAllOperations)
 
@@ -100,42 +100,40 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
 
   useEffect(() => {
     if (spotsState.lastFetched === 0) {
-      updateSpotsState({ lastFetched: new Date(), loading: true })
+      updateSpotsState({ loading: true })
       setTimeout(async () => {
-        let newSpots = []
-        for (const hook of spotsHooks) {
-          if (filterState.sources?.[hook.key] !== false) {
-            const hookSpots = await hook.fetchSpots({ online, settings, dispatch })
-            newSpots = newSpots.concat(hookSpots)
-          }
-        }
+        await Promise.all(
+          spotsHooks.filter(hook => filterState.sources?.[hook.key] !== false).map(hook => {
+            return hook.fetchSpots({ online, settings, dispatch }).then(async spots => {
+              const annotatedSpots = []
+              for (const spot of spots) {
+                spot.our = spot.our || {}
+                spot.timeOnMillis = 0
+                spot.key = `${spot.spot.source}:${qsoKey(spot)}`
+                if (!spot.mode) {
+                  spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
+                }
 
-        const annotatedSpots = []
-
-        for (const spot of newSpots) {
-          spot.our = spot.our || {}
-          spot.timeOnMillis = 0
-          spot.key = `${spot.spot.source}:${qsoKey(spot)}`
-          if (!spot.mode) {
-            spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
-          }
-
-          annotatedSpots.push(await annotateQSO({ qso: spot, online, settings, dispatch, skipLookup: true }))
-        }
-
-        updateSpotsState({ rawSpots: annotatedSpots, loading: false })
+                annotatedSpots.push(await annotateQSO({ qso: spot, online, settings, dispatch, skipLookup: true }))
+              }
+              updateSpotsState({ spots: { [hook.key]: annotatedSpots } })
+            })
+          })
+        )
+        updateSpotsState({ lastFetched: new Date(), loading: false })
       }, 0)
     }
-  }, [
-    allOperations, spotsHooks, online, settings, dispatch,
-    ourInfo.call, operation, spotsState.lastFetched,
-    updateSpotsState, filterState.sources
-  ])
+  }, [allOperations, spotsHooks, online, settings, dispatch, operation, spotsState.lastFetched, updateSpotsState, filterState.sources, ourInfo])
 
   const { spots: filteredSpots, options, counts } = useMemo(() => {
-    return filterAndCount(spotsState.rawSpots, filterState, vfo)
-  }, [spotsState.rawSpots, filterState, vfo])
+    const allSpots = []
+    spotsHooks.filter(hook => filterState.sources?.[hook.key] !== false).forEach(hook => {
+      allSpots.push(...spotsState.spots?.[hook.key] || [])
+    })
 
+    return filterAndCount(allSpots, filterState, vfo)
+  }, [spotsHooks, filterState, vfo, spotsState.spots])
+  console.log(counts)
   const scoredSpots = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)
 
@@ -213,14 +211,18 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
             />
             <TouchableOpacity onPress={() => setShowControls(true)} style={{ flex: 0, flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }}>
               <Text style={{ fontWeight: 'bold', marginTop: styles.halfSpace, textAlign: 'center' }}>
-                {filteredSpots ? (
-                  filterState.mode === 'any' && filterState.band === 'any' ? (
-                `${filteredSpots.length} Spots`
-                  ) : (
-                `Showing ${filteredSpots.length} out of ${spotsState.rawSpots?.length} Spots`
-                  )
-                ) : (
+                {spotsState.loading ? (
                   'Loading Spots...'
+                ) : (
+                  !counts.all ? (
+                    'No Spots'
+                  ) : (
+                    (filteredSpots.length !== counts.all) ? (
+                      `Showing ${filteredSpots.length} out of ${counts.all} Spots`
+                    ) : (
+                      `${filteredSpots.length} Spots`
+                    )
+                  )
                 )}
               </Text>
             </TouchableOpacity>
@@ -234,6 +236,8 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
 
 export function filterAndCount (rawSpots, filterState, vfo) {
   const results = { options: {}, spots: rawSpots || [], counts: {} }
+
+  results.counts.all = rawSpots.length
 
   // == SOURCES ====================
   results.counts.source = {}
