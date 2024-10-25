@@ -180,21 +180,22 @@ const ReferenceHandler = {
     if (ref.type === Info.activationType && ref.ref) {
       return [{
         format: 'adif',
-        operationData: { refs: [ref] },
+        exportType: `${Info.key}-activator`,
+        exportData: { refs: [ref] },
         nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation, operationData }) => {
+  adifFieldsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
 
     if (huntingRefs && huntingRefs[0]) return ([{ SIG: 'POTA' }, { SIG_INFO: huntingRefs[0]?.ref }, { POTA_REF: huntingRefs.map(ref => ref?.ref).filter(x => x).join(',') }])
     else return []
   },
 
-  adifFieldCombinationsForOneQSO: ({ qso, operation, common }) => {
+  adifFieldCombinationsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
     let activationADIF = []

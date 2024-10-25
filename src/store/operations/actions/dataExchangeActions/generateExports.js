@@ -20,8 +20,8 @@ export const generateExportsForOptions = (uuid, exports) => async (dispatch, get
   })
 
   const paths = []
-  for (const oneExport in exports) {
-    paths.push(oneExport.data = await generateExportFile({ uuid, qsos, operation, settings, ...oneExport }))
+  for (const oneExport of exports) {
+    paths.push(await generateExportFile({ uuid, qsos, operation, settings, ...oneExport }))
   }
 
   return paths.filter(x => x)

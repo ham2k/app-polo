@@ -330,7 +330,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       </Text>
       <Menu.Item
         leadingIcon="select-marker"
-        trailingIcon={settings.showStateField ? 'check-bold' : ''}
+        trailingIcon={settings.showStateField ? 'check-circle-outline' : 'circle-outline'}
         onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: !settings.showStateField }))) }}
         title={'State field'}
 

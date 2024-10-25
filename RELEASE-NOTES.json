@@ -1,7 +1,8 @@
 {
-  "24.10.99-pre2": {
-    "name": "November '24 (pre 1)",
+  "24.10.99-pre3": {
+    "name": "November '24 (pre 3)",
     "changes": [
+      "New Operation Data Screen, for exports, imports and sharing",
       "Menu option to Lookup all QSOs in an Operation",
       "Cleaned up app internals for better performance",
       "Fixed Cabrillo export bug",
