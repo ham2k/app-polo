@@ -6,17 +6,13 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { parseCallsign } from '@ham2k/lib-callsigns'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
-import { potaPrefixForDXCCCode } from '../../../extensions/activities/pota/POTAAllParksData'
-import { fmtISODate } from '../../../tools/timeFormats'
 import { ThemeDialog } from '../components/ThemeDialog'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
@@ -42,22 +38,6 @@ export default function GeneralSettingsScreen ({ navigation }) {
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
-
-  const [compactName, longName] = useMemo(() => {
-    const call = settings.operatorCall ?? 'N0CALL'
-    let info = parseCallsign(call)
-    let prefix = 'X'
-    if (info.baseCall) {
-      info = annotateFromCountryFile(info)
-    }
-    if (info.dxccCode) {
-      prefix = potaPrefixForDXCCCode(info.dxccCode) || info.entityPrefix || 'X'
-    }
-    return [
-      `${call}@${prefix}-1234-${fmtISODate(new Date()).replace(/-/g, '')}.adi`.replace(/[/\\:]/g, '-'),
-      `${fmtISODate(new Date())} ${call} at ${prefix}-1234.adi`.replace(/[/\\:]/g, '-')
-    ]
-  }, [settings])
 
   return (
     <ScreenContainer>
@@ -133,14 +113,6 @@ export default function GeneralSettingsScreen ({ navigation }) {
               onPress={() => dispatch(setSettings({ dontSplitViews: !settings.dontSplitViews }))}
             />
           )}
-
-          <Ham2kListItem
-            title="Use compact file names"
-            description={settings.useCompactFileNames ? compactName : longName}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-code-outline" />}
-            right={() => <Switch value={!!settings.useCompactFileNames} onValueChange={(value) => dispatch(setSettings({ useCompactFileNames: value })) } />}
-            onPress={() => dispatch(setSettings({ useCompactFileNames: !settings.useCompactFileNames }))}
-          />
 
           <Ham2kListItem
             title="High precision location"

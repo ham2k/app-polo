@@ -72,7 +72,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
           {theirInfo?.entityPrefix && (settings.dxFlags === 'all' || (settings.dxFlags !== 'none' && theirInfo.entityPrefix !== ourInfo?.entityPrefix)) && (
             ' ' + DXCC_BY_PREFIX[theirInfo.entityPrefix]?.flag
           )}
-          {(qso?.their?.state || qso?.their?.guess?.state) && (
+          {(!!settings.showStateField && (qso?.their?.state || qso?.their?.guess?.state)) && (
             qso?.their?.state || qso?.their?.guess?.state
           )}
         </Text>

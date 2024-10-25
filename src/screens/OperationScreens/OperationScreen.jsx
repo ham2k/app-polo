@@ -330,9 +330,16 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       </Text>
       <Menu.Item
         leadingIcon="select-marker"
-        trailingIcon={settings.showStateField ? 'check-circle-outline' : 'circle-outline'}
+        trailingIcon={settings.showStateField !== false ? 'check-circle-outline' : 'circle-outline'}
         onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: !settings.showStateField }))) }}
-        title={'State field'}
+        title={'State Field'}
+
+      />
+      <Menu.Item
+        leadingIcon="numeric"
+        trailingIcon={settings.showNumbersRow !== false ? 'check-circle-outline' : 'circle-outline'}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))) }}
+        title={'Numbers Row'}
 
       />
       <View style={{ height: 2, backgroundColor: styles.colors.onSurface, marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace }} />
