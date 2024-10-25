@@ -115,14 +115,14 @@ const ReferenceHandler = {
     if (ref.type === Info.activationType && ref.ref) {
       return [{
         format: 'adif',
-        common: { refs: [ref] },
+        exportData: { refs: [ref] },
         nameTemplate: settings.useCompactFileNames ? '{call}@GMA-{ref}-{compactDate}' : '{date} {call} at GMA {ref}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation, common }) => {
+  adifFieldsForOneQSO: ({ qso, operation }) => {
     const huntingRef = findRef(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
     const fields = []

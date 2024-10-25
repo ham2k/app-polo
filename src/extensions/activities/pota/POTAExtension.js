@@ -180,14 +180,14 @@ const ReferenceHandler = {
     if (ref.type === Info.activationType && ref.ref) {
       return [{
         format: 'adif',
-        common: { refs: [ref] },
+        operationData: { refs: [ref] },
         nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation, common }) => {
+  adifFieldsForOneQSO: ({ qso, operation, operationData }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
 
     if (huntingRefs && huntingRefs[0]) return ([{ SIG: 'POTA' }, { SIG_INFO: huntingRefs[0]?.ref }, { POTA_REF: huntingRefs.map(ref => ref?.ref).filter(x => x).join(',') }])

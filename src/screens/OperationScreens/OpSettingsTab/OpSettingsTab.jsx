@@ -6,18 +6,14 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { List } from 'react-native-paper'
 
-import DocumentPicker from 'react-native-document-picker'
-import RNFetchBlob from 'react-native-blob-util'
-import Share from 'react-native-share'
-
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { useDispatch, useSelector } from 'react-redux'
-import { generateExport, importADIFIntoOperation, selectOperation } from '../../../store/operations'
+import { useSelector } from 'react-redux'
+import { selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { LocationDialog } from './components/LocationDialog'
@@ -25,7 +21,6 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { reportError, trackEvent } from '../../../distro'
 import { buildTitleForOperation } from '../OperationScreen'
 
 function prepareStyles (baseStyles) {
@@ -56,11 +51,11 @@ function prepareStyles (baseStyles) {
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles(prepareStyles)
 
-  const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
+  console.log('OpSettingsTab')
 
   const [stationInfo, stationInfoColor] = useMemo(() => {
     const stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
@@ -74,51 +69,6 @@ export default function OpSettingsTab ({ navigation, route }) {
     }
   }, [operation?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors])
 
-  const handleExport = useCallback((type) => {
-    trackEvent('export_operation', {
-      export_type: type,
-      qso_count: operation.qsoCount,
-      duration_minutes: Math.round((operation.startOnMillisMax - operation.startOnMillisMin) / (1000 * 60)),
-      refs: (operation.refs || []).map(r => r.type).join(',')
-    })
-
-    dispatch(generateExport(operation.uuid, type)).then((paths) => {
-      if (paths?.length > 0) {
-        Share.open({
-          urls: paths.map(p => `file://${p}`),
-          type: 'text/plain' // There is no official mime type for our files
-        }).then((x) => {
-          console.info('Shared', x)
-        }).catch((e) => {
-          console.info('Sharing Error', e)
-        }).finally(() => {
-          // Deleting these file causes GMail on Android to fail to attach it
-          // So for the time being, we're leaving them in place.
-          // dispatch(deleteExport(path))
-        })
-      }
-    })
-  }, [dispatch, operation])
-
-  const handleImportADIF = useCallback(() => {
-    DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
-      const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
-      const count = await dispatch(importADIFIntoOperation(filename, operation))
-      trackEvent('import_adif', {
-        import_count: count,
-        qso_count: operation.qsoCount,
-        refs: (operation.refs || []).map(r => r.type).join(',')
-      })
-      RNFetchBlob.fs.unlink(filename)
-    }).catch((error) => {
-      if (error.indexOf('cancelled') >= 0) {
-        // ignore
-      } else {
-        reportError('Error importing ADIF', error)
-      }
-    })
-  }, [dispatch, operation])
-
   const refHandlers = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]
     const handlers = types.map(type => (
@@ -129,10 +79,6 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const activityHooks = useMemo(() => findHooks('activity'), [])
   const opSettingsHooks = useMemo(() => findHooks('opSetting'), [])
-
-  const readyToExport = useMemo(() => {
-    return (operation.stationCall ?? settings?.operatorCall) && operation.qsoCount > 0
-  }, [operation.qsoCount, operation.stationCall, settings?.operatorCall])
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -200,35 +146,12 @@ export default function OpSettingsTab ({ navigation, route }) {
 
       <Ham2kListSection title={'Operation Data'}>
         <Ham2kListItem
-          title="Export Log Files"
+          title="Manage Operation Logs"
+          description="Export, import and manage data"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
-          onPress={() => readyToExport && handleExport()}
-          style={{ opacity: readyToExport ? 1 : 0.5 }}
-          disabled={!readyToExport}
+          onPress={() => navigation.navigate('OperationData', { operation: operation.uuid })}
         />
       </Ham2kListSection>
-
-      <Ham2kListSection title={'Import QSOs'}>
-        <Ham2kListItem
-          title="Add QSOs from ADIF file"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-import-outline" />}
-          onPress={() => handleImportADIF()}
-        />
-      </Ham2kListSection>
-
-      {settings.devMode && (
-        <Ham2kListSection title={'Developer Options'} titleStyle={{ color: styles.colors.devMode }}>
-          <Ham2kListItem
-            title="Export QSON file"
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
-            titleStyle={{ color: styles.colors.devMode }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            onPress={() => readyToExport && handleExport('qson')}
-            style={{ opacity: readyToExport ? 1 : 0.5 }}
-            disabled={!readyToExport}
-          />
-        </Ham2kListSection>
-      )}
 
       <Ham2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
         <Ham2kListItem

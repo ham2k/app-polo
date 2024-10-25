@@ -167,15 +167,15 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
   const stationInfo = useMemo(() => {
     const parts = []
-    if (lookup.note) {
-      parts.push(lookup.note)
+    if (guess.note) {
+      parts.push(guess.note)
     } else {
       // if (qrz?.error) parts.push(qrz.error)
       parts.push(qso?.their?.name ?? guess.name)
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qso?.their?.name, guess.name, lookup.note])
+  }, [qso?.their?.name, guess.name, guess.note])
 
   const scoreInfo = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)
