@@ -26,6 +26,7 @@ const Extension = {
     registerHook('spots', { hook: SpotsHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+    registerHook('export', { hook: ReferenceHandler })
     registerHook('setting', {
       hook: {
         key: 'sota-account',
@@ -61,9 +62,7 @@ const ActivityHook = {
 
   Options: SOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType,
-
-  referenceTypes: [Info.huntingType, Info.activationType]
+  generalHuntingType: ({ operation, settings }) => Info.huntingType
 }
 
 const SpotsHook = {

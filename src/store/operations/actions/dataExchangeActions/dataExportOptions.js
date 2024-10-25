@@ -45,13 +45,12 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
 
   const exportHandlersForRefs = (operation?.refs || [])
     .map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))
-    .filter(x => x?.handler)
-  const exportHandlersForActivities = findHooks('activity')
-    .filter(hook => hook.referenceTypes)
-    .map(hook => hook.referenceTypes.map(type => ({ handler: findBestHook(`ref:${type}`), ref: { type } })))
-    .flat().filter(x => x.handler)
+    .filter(x => x?.handler && x.handler.suggestExportOptions)
+  const exportHandlersForExports = findHooks('export')
+    .map(handler => ({ handler, ref: {} }))
+    .flat().filter(x => x.handler && x.handler.suggestExportOptions)
 
-  const handlersWithOptions = [...exportHandlersForRefs, ...exportHandlersForActivities].map(({ handler, ref }) => (
+  const handlersWithOptions = [...exportHandlersForRefs, ...exportHandlersForExports].map(({ handler, ref }) => (
     { handler, ref, options: handler.suggestExportOptions && handler.suggestExportOptions({ operation, qsos, ref, settings }) }
   )).flat().filter(({ options }) => options)
 
@@ -68,17 +67,5 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
       exports.push({ ...option, handler, ref, fileName, title, exportTitle })
     })
   })
-  if (settings.devMode) {
-    exports.push({
-      handler: { key: 'devmode', icon: 'briefcase-upload' },
-      format: 'qson',
-      exportType: 'devmode-qson',
-      ref: {},
-      fileName: simpleTemplate('{shortUUID} {date} {call} {title}.qson', baseNameParts).replace(/[\\\\/\\:]/g, '-'),
-      exportTitle: 'Developer Mode: QSON Export',
-      devMode: true,
-      selectedByDefault: false
-    })
-  }
   return exports
 }

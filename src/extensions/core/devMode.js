@@ -8,21 +8,40 @@
 import { setSettings } from '../../store/settings'
 
 const Info = {
-  key: 'commands-devmode',
-  name: 'Shortcuts to activat a special developer mode'
+  key: 'core-devMode',
+  name: 'Core Developer Mode Handlers',
+  category: 'core',
+  hidden: true,
+  alwaysEnabled: true
 }
 
-const Extension = {
+export const Extension = {
   ...Info,
-  category: 'commands',
-  hidden: true,
-  alwaysEnabled: true,
-  onActivation: ({ registerHook }) => {
+  onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('command', { priority: 100, hook: KonamiCommandHook })
+    registerHook('export', { hook: ExportHandler })
   }
 }
-
 export default Extension
+
+const ExportHandler = {
+  ...Info,
+
+  suggestExportOptions: ({ operation, qsos, ref, settings }) => {
+    if (settings.devMode) {
+      return ([{
+        icon: 'briefcase-upload',
+        format: 'qson',
+        exportType: 'devmode-qson',
+        nameTemplate: settings.useCompactFileNames ? '{call}@{shortUUID}-{compactDate}' : '{date} {call} {title} ({shortUUID})',
+        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`,
+        exportTitle: 'Developer Mode: QSON Export',
+        devMode: true,
+        selectedByDefault: false
+      }])
+    }
+  }
+}
 
 const KonamiCommandHook = {
   ...Info,

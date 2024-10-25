@@ -119,7 +119,7 @@ export default function OperationDataScreen (props) {
             key={option.fileName}
             title={option.exportTitle}
             description={option.fileName}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={option.handler.icon} />}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
             onPress={() => readyToExport && handleExports({ options: [option] })}
             descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
             titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
