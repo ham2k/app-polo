@@ -5,7 +5,7 @@ import { View } from 'react-native'
 
 import { setSettings } from '../../store/settings'
 import { Ham2kDialog } from '../../screens/components/Ham2kDialog'
-import { UPDATE_TRACK_LABELS } from '../../screens/SettingsScreens/screens/VersionSettingsScreen'
+import { UPDATE_TRACK_LABELS } from './VersionSettingsForDistribution'
 
 export function UpdateTracksDialog ({ visible, settings, styles, onDialogDone, dismissable }) {
   const dispatch = useDispatch()
