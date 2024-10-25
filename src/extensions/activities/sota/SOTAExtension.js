@@ -188,7 +188,7 @@ const ReferenceHandler = {
         nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
-    } else if (ref?.type === Info.huntingType) {
+    } else { // "export" hook
       const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType))
       if (!hasSOTA) return null
       return [{
