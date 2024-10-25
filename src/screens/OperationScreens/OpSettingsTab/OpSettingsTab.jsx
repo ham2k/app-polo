@@ -55,7 +55,6 @@ export default function OpSettingsTab ({ navigation, route }) {
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
-  console.log('OpSettingsTab')
 
   const [stationInfo, stationInfoColor] = useMemo(() => {
     const stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''

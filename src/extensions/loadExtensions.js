@@ -9,6 +9,7 @@ import { addRuntimeMessage } from '../store/runtime'
 import { activateEnabledExtensions, registerExtension } from './registry'
 
 import CountryFilesExtension from './core/countryFiles'
+import DevModeExtension from './core/devMode'
 import POTAExtension from './activities/pota/POTAExtension'
 import SOTAExtension from './activities/sota/SOTAExtension'
 import GMAExtension from './activities/gma/GMAExtension'
@@ -29,7 +30,6 @@ import NYQPExtension from './contests/nyqp/NYQPExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
-import DevModeCommands from './commands/DevModeCommands'
 import DebuggingCommands from './commands/DebuggingCommands'
 import OperatorCommands from './commands/OperatorCommands'
 import MiscCommands from './commands/MiscCommands'
@@ -38,6 +38,7 @@ import WABExtension from './other/wab/WABExtension'
 
 const loadExtensions = () => async (dispatch, getState) => {
   dispatch(addRuntimeMessage('Loading extensions'))
+  registerExtension(DevModeExtension)
   registerExtension(CountryFilesExtension)
   registerExtension(POTAExtension)
   registerExtension(SOTAExtension)
@@ -55,7 +56,6 @@ const loadExtensions = () => async (dispatch, getState) => {
 
   registerExtension(RadioCommands)
   registerExtension(TimeCommands)
-  registerExtension(DevModeCommands)
   registerExtension(DebuggingCommands)
   registerExtension(OperatorCommands)
   registerExtension(MiscCommands)

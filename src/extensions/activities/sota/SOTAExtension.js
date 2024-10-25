@@ -26,6 +26,7 @@ const Extension = {
     registerHook('spots', { hook: SpotsHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+    registerHook('export', { hook: ReferenceHandler })
     registerHook('setting', {
       hook: {
         key: 'sota-account',
@@ -178,20 +179,35 @@ const ReferenceHandler = {
     }
   },
 
-  suggestExportOptions: ({ operation, ref, settings }) => {
-    if (ref.type === Info.activationType && ref.ref) {
+  suggestExportOptions: ({ operation, qsos, ref, settings }) => {
+    if (ref?.type === Info.activationType && ref?.ref) {
       return [{
         format: 'adif',
+        exportType: `${Info.key}-activator`,
         exportData: { refs: [ref] },
         nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
+    } else { // "export" hook
+      const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType))
+      if (!hasSOTA) return null
+      return [{
+        format: 'adif',
+        exportType: `${Info.key}-hunter`,
+        templateData: { modifier: 'SOTA Hunted', modifierDashed: 'sota-hunted' },
+        nameTemplate: settings.useCompactFileNames ? '{call}@{modifierDashed}-{titleDashed}-{compactDate}' : '{date} {call} {modifier} {title}',
+        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`,
+        exportTitle: 'SOTA Hunted'
+      }]
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation }) => {
+  adifFieldsForOneQSO: ({ qso, operation, exportType }) => {
     const huntingRef = findRef(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
+
+    if (!activationRef && !huntingRef) return false
+
     const fields = []
     if (activationRef) fields.push({ MY_SOTA_REF: activationRef.ref })
     if (huntingRef) fields.push({ SOTA_REF: huntingRef.ref })
