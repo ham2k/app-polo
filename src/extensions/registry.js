@@ -90,8 +90,10 @@ function registerHook (hookCategory, { extension, hook, priority }) {
   Hooks[hookCategory] = newHooks
 }
 
-function unregisterAllHooks (hookCategory, { extension }) {
-  Hooks[hookCategory] = Hooks[hookCategory].filter(h => h.key !== extension.key)
+function unregisterAllHooks ({ extension }) {
+  Object.keys(Hooks).forEach(hookCategory => {
+    Hooks[hookCategory] = Hooks[hookCategory].filter(h => h.extension.key !== extension.key)
+  })
 }
 
 export async function activateEnabledExtensions (dispatch, getState) {
@@ -125,6 +127,6 @@ export const deactivateExtension = (extension) => async (dispatch) => {
     await dispatch(extension.onDeactivationDispatch({}))
   }
   Object.keys(Hooks).forEach(hookCategory => {
-    unregisterAllHooks(hookCategory, { extension })
+    unregisterAllHooks({ extension })
   })
 }

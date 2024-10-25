@@ -9,7 +9,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native'
-import { IconButton, List } from 'react-native-paper'
+import { List } from 'react-native-paper'
 import DocumentPicker from 'react-native-document-picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'

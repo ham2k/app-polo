@@ -79,7 +79,7 @@ function prepareStyles (baseStyles, themeColor) {
 export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) {
   const styles = useThemedStyles(prepareStyles, themeColor)
 
-  const { guess, lookup, lookups } = useCallLookup(qso)
+  const { guess, lookup } = useCallLookup(qso)
 
   const entity = DXCC_BY_PREFIX[guess.entityPrefix]
 
@@ -170,7 +170,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
             {lookup?.notes && (
               <View style={styles.section}>
                 <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Notes</Text>
-                {lookups?.['call-notes']?.notes.map((note, i) => (
+                {lookup.notes.map((note, i) => (
                   <Ham2kMarkdown key={i}>{note.note}</Ham2kMarkdown>
                 ))}
               </View>

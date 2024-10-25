@@ -7,12 +7,11 @@
 
 import React, { useMemo } from 'react'
 import { List } from 'react-native-paper'
-import UUID from 'react-native-uuid'
 
 import packageJson from '../../../../package.json'
 import { registerDataFile, unRegisterDataFile } from '../../../store/dataFiles'
 import { fetchAndProcessURL, loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { selectExtensionSettings, setExtensionSettings } from '../../../store/settings'
+import { selectExtensionSettings } from '../../../store/settings'
 import ManageCallNotesScreen from './screens/ManageCallNotesScreen'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 
@@ -45,21 +44,6 @@ const Extension = {
   enabledByDefault: true,
   onActivationDispatch: ({ registerHook }) => async (dispatch, getState) => {
     const settings = selectExtensionSettings(getState(), Info.key)
-
-    // Migrate from old settings
-    if (settings.customFiles?.[0] && !settings.customFiles[0].identifier) {
-      settings.customFiles?.forEach(file => {
-        file.identifier = UUID.v1()
-      })
-      settings.enabledNotes = {}
-      Object.keys(settings.enabledLocations ?? {}).forEach(location => {
-        const file = settings.customFiles.find(f => f.location === location)
-        if (file) {
-          settings.enabledNotes[file.identifier] = settings.enabledLocations[location]
-        }
-      })
-      dispatch(setExtensionSettings({ key: Info.key, customFiles: settings.customFiles, enabledNotes: settings.enabledNotes, enabledLocations: undefined }))
-    }
 
     const files = [...BUILT_IN_NOTES]
     settings.customFiles?.forEach(file => files.unshift({ ...file, builtin: false }))
@@ -106,11 +90,16 @@ const Extension = {
   },
   onDeactivationDispatch: () => async (dispatch, getState) => {
     for (const file of CallNotesData.files) {
-      unRegisterDataFile(`call-notes-${file.identifier}`)
-      await dispatch(removeDataFile(`call-notes-${file.identifier}`))
-      CallNotesData.activeFiles[file.identifier] = false
+      try {
+        await dispatch(removeDataFile(`call-notes-${file.identifier}`))
+        unRegisterDataFile(`call-notes-${file.identifier}`)
+      } catch (e) {
+        console.error('Error removing call notes file', file, e)
+      }
     }
+    CallNotesData.notes = {}
     CallNotesData.files = []
+    CallNotesData.activeFiles = {}
   }
 }
 export default Extension
@@ -120,7 +109,7 @@ const LookupHook = {
   extension: Extension,
   lookupCallWithDispatch: async (callInfo, { settings, operation, online, dispatch }) => {
     const callNotes = findAllCallNotes(callInfo?.baseCall)
-    return { notes: callNotes, source: 'Call Notes' }
+    return { notes: callNotes, call: callInfo?.baseCall, source: 'Call Notes' }
   }
 }
 
