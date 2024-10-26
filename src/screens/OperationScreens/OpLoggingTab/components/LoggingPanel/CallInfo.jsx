@@ -87,6 +87,11 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   const online = useSelector(selectRuntimeOnline)
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
+  const call = useMemo(() => {
+    const calls = qso?.their?.call.split(',').filter(x => x)
+    return calls[calls.length - 1]
+  }, [qso?.their?.call])
+
   const { guess, lookup, refs } = useCallLookup(qso)
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
@@ -234,7 +239,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   }, [scoreInfo, lookup?.history, qso?.startOnMillis])
 
   return (
-    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call: qso?.their?.call, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6 }}>
+    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6 }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
         <View style={{ alignSelf: 'flex-start', flex: 0 }}>

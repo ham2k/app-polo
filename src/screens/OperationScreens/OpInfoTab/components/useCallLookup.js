@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import emojiRegex from 'emoji-regex'
 
@@ -29,7 +29,10 @@ export const useCallLookup = (qso) => {
 
   const [lookupInfos, setLookupInfos] = useState({})
 
-  const call = qso?.their?.call
+  const call = useMemo(() => {
+    const calls = qso?.their?.call.split(',').filter(x => x)
+    return calls[calls.length - 1]
+  }, [qso?.their?.call])
 
   useEffect(() => {
     if (call && call.length > 2 && !lookupInfos[call]) {
@@ -51,11 +54,14 @@ export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup
 }
 
 async function _performLookup ({ qso, online, settings, dispatch, skipLookup = false }) {
-  let theirInfo = parseCallsign(qso?.their?.call)
+  const calls = qso?.their?.call.split(',').filter(x => x)
+  const call = calls[calls.length - 1]
+
+  let theirInfo = parseCallsign(call)
   if (theirInfo?.baseCall) {
     theirInfo = annotateFromCountryFile(theirInfo)
-  } else if (qso?.their?.call) {
-    theirInfo = annotateFromCountryFile({ prefix: qso?.their?.call, baseCall: qso?.their?.call })
+  } else if (call) {
+    theirInfo = annotateFromCountryFile({ prefix: call, baseCall: call })
   }
 
   const { lookups } = await lookupCall(theirInfo, { online, settings, dispatch, skipLookup: false })

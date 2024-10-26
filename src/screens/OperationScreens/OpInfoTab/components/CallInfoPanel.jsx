@@ -79,6 +79,11 @@ function prepareStyles (baseStyles, themeColor) {
 export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) {
   const styles = useThemedStyles(prepareStyles, themeColor)
 
+  const call = useMemo(() => {
+    const calls = qso?.their?.call.split(',').filter(x => x)
+    return calls[calls.length - 1]
+  }, [qso?.their?.call])
+
   const { guess, lookup } = useCallLookup(qso)
 
   const entity = DXCC_BY_PREFIX[guess.entityPrefix]
@@ -122,7 +127,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
   return (
     <GestureHandlerRootView style={[style, styles.root]}>
       <ScrollView>
-        {qso?.their?.call && (
+        {call && (
           <>
             <View style={[styles.section, { flexDirection: 'row' }]}>
               <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -133,7 +138,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                 </View> */}
                   <View>
                     <Text variant="headlineSmall" style={styles.text.callsign}>
-                      {qso?.their?.call}
+                      {call}
                     </Text>
                   </View>
                 </View>
@@ -160,7 +165,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                   theme={styles.chipTheme} textStyle={styles.chipTextStyle}
                   icon="web"
                   mode="flat"
-                  onPress={() => Linking.openURL(`https://qrz.com/db/${qso.their.call}`)}
+                  onPress={() => Linking.openURL(`https://qrz.com/db/${call}`)}
                 >
                   qrz.com
                 </Chip>
