@@ -39,7 +39,7 @@ export const useCallLookup = (qso) => {
       const timeout = setTimeout(async () => {
         const { guess, lookup, lookups, theirInfo } = await _performLookup({ qso, online, settings, dispatch })
         setLookupInfos({ ...lookupInfos, [call]: { guess, lookup, lookups, theirInfo } })
-      }, 50)
+      }, 0)
       return () => clearTimeout(timeout)
     }
   }, [call, online, settings, dispatch, lookupInfos, qso])
@@ -76,11 +76,19 @@ export async function lookupCall (theirInfo, { online, settings, dispatch, skipL
   const lookups = {}
   if (!skipLookup) {
     const lookupHooks = findHooks('lookup')
+    const lookedUp = {}
     for (const hook of lookupHooks) {
-      if (hook?.lookupCallWithDispatch) {
-        lookups[hook.key] = await hook.lookupCallWithDispatch(theirInfo, { settings, dispatch, online })
-      } else if (hook?.lookupCall) {
-        lookups[hook.key] = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online }))
+      if (!hook?.shouldSkipLookup || !hook.shouldSkipLookup({ online, lookedUp })) {
+        let data
+        if (hook?.lookupCallWithDispatch) {
+          data = await hook.lookupCallWithDispatch(theirInfo, { settings, dispatch, online })
+        } else if (hook?.lookupCall) {
+          data = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online }))
+        }
+        if (data) {
+          lookups[hook.key] = data
+          Object.keys(data).forEach(key => { lookedUp[key] = true })
+        }
       }
     }
   }

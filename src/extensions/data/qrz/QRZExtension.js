@@ -10,7 +10,8 @@ import { apiQRZ } from '../../../store/apis/apiQRZ'
 export const Info = {
   key: 'qrz',
   icon: 'web',
-  name: 'QRZ.com',
+  name: 'QRZ.com Callsign Lookups',
+  description: 'Requires free account for names, and paid account for locations',
   shortName: 'QRZ',
   infoURL: 'https://qrz.com/'
 }
@@ -20,7 +21,7 @@ const Extension = {
   category: 'lookup',
   enabledByDefault: true,
   onActivation: ({ registerHook }) => {
-    registerHook('lookup', { hook: LookupHook })
+    registerHook('lookup', { hook: LookupHook, priority: 100 })
     registerHook('account', { hook: AccountHook })
   }
 }
@@ -28,6 +29,9 @@ export default Extension
 
 const LookupHook = {
   ...Info,
+  shouldSkipLookup: ({ online, lookedUp }) => {
+    return !online || (lookedUp.name && lookedUp.grid)
+  },
   lookupCallWithDispatch: async (callInfo, { settings, online, dispatch }) => {
     if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && callInfo?.baseCall?.length > 2) {
       const qrzPromise = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: callInfo.call }))

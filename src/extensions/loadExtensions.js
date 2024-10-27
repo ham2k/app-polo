@@ -24,6 +24,7 @@ import SiOTAExtentsion from './activities/siota/SiOTAExtension'
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 import CallHistoryExtension from './data/call-history/CallHistoryExtension'
 import QRZExtension from './data/qrz/QRZExtension'
+import HamDBExtension from './data/hamdb/HamDBExtension'
 import SatellitesExtension from './activities/satellites/SatellitesExtension'
 
 import NYQPExtension from './contests/nyqp/NYQPExtension'
@@ -62,7 +63,9 @@ const loadExtensions = () => async (dispatch, getState) => {
 
   registerExtension(CallNotesExtension)
   registerExtension(CallHistoryExtension)
+
   registerExtension(QRZExtension)
+  registerExtension(HamDBExtension)
 
   registerExtension(SatellitesExtension)
 

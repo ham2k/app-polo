@@ -8,7 +8,8 @@
       "Cleaned up app internals for better performance",
       "Fixed Cabrillo export bug",
       "Changing activity references (POTA, SOTA, etc) updates grid unless set manually",
-      "Fixed call lookup, notes and history bugs"
+      "Fixed call lookup, notes and history bugs",
+      "HamDB lookup included by default"
     ]
   },
   "24.10.3": {
