@@ -71,29 +71,41 @@ const SpotsHook = {
   fetchSpots: async ({ online, settings, dispatch }) => {
     let spots = []
     if (online) {
-      const apiPromise = await dispatch(apiSOTA.endpoints.spots.initiate({ limit: 50 }, { forceRefetch: true }))
+      const apiEpochPromise = await dispatch(apiSOTA.endpoints.epoch.initiate({}, { forceRefetch: true }))
       await Promise.all(dispatch(apiSOTA.util.getRunningQueriesThunk()))
-      const apiResults = await dispatch((_dispatch, getState) => apiSOTA.endpoints.spots.select({ limit: 50 })(getState()))
+      const apiEpochResults = await dispatch((_dispatch, getState) => apiSOTA.endpoints.epoch.select({})(getState()))
+
+      apiEpochPromise.unsubscribe && apiEpochPromise.unsubscribe()
+      const epoch = apiEpochResults.data
+
+      // If epoch not changed, will returned cached result
+      const apiPromise = await dispatch(apiSOTA.endpoints.spots.initiate({ limit: 50, epoch }))
+      await Promise.all(dispatch(apiSOTA.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, getState) => apiSOTA.endpoints.spots.select({ limit: 50, epoch })(getState()))
 
       apiPromise.unsubscribe && apiPromise.unsubscribe()
       spots = apiResults.data || []
+
+      // null out any old caches to reduce memory
+      const caches = await dispatch((_dispatch, getState) => apiSOTA.util.selectCachedArgsForQuery(getState(), 'spots'))
+      caches.filter(x => x?.epoch !== epoch).forEach(x => dispatch(apiSOTA.util.updateQueryData('spots', x, () => null)))
     }
-    const qsos = spots.map(spot => {
-      const freqInMHz = Math.round(Number.parseFloat(spot.frequency, 10) * 1000)
+
+    const qsos = spots.filter(x => (x?.type ?? 'NORMAL') === 'NORMAL').map(spot => {
       const qso = {
         their: { call: spot.activatorCallsign },
-        freq: freqInMHz,
-        band: freqInMHz ? bandForFrequency(freqInMHz) : spot.band,
+        freq: spot.frequency,
+        band: spot.frequency ? bandForFrequency(spot.frequency) : spot.band,
         mode: spot.mode.toUpperCase(),
         refs: [{
-          ref: `${spot.associationCode}/${spot.summitCode}`,
+          ref: spot.summitCode,
           type: Info.huntingType
         }],
         spot: {
-          timeInMillis: Date.parse(spot.timeStamp + 'Z'),
+          timeInMillis: Date.parse(spot.timeStamp),
           source: Info.key,
           icon: Info.icon,
-          label: `SOTA ${spot.associationCode}/${spot.summitCode}: ${spot.summitDetails}`,
+          label: `SOTA ${spot.summitCode}: ${spot.summitName}`,
           sourceInfo: {
             id: spot.id,
             comments: spot.comments,

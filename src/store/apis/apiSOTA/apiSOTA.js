@@ -34,7 +34,7 @@ const baseQueryWithSettings = fetchBaseQuery({
     headers.set('Accept', 'application/json')
     headers.set('Content-type', 'application/json')
     headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
-    if (endpoint !== 'spots') {
+    if (!(endpoint === 'spots' || endpoint === 'epoch')) {
       headers.set('Authorization', `bearer ${getState().settings?.accounts?.sota?.accessToken}`)
       headers.set('id_token', getState().settings?.accounts?.sota?.idToken) // Required by spot API
     }
@@ -43,7 +43,12 @@ const baseQueryWithSettings = fetchBaseQuery({
   responseHandler: async (response) => {
     if (DEBUG) console.log(`SOTAApi ${response.url} ${response.status}`)
     if (response.status === 200 || response.status === 201) { // 201 for spotting
-      const data = await response.json()
+      let data
+      if (response.url.endsWith('epoch')) {
+        data = await response.text()
+      } else {
+        data = await response.json()
+      }
       if (DEBUG) console.log('-- response', data)
       return data
     } else {
@@ -111,16 +116,19 @@ export const apiSOTA = createApi({
     }),
     spot: builder.query({
       query: (body) => ({
-        url: 'api2.sota.org.uk/api/spots',
+        url: 'api-db2.sota.org.uk/api/spots',
         method: 'POST',
         body
       })
     }),
+    epoch: builder.query({
+      query: () => 'api-db2.sota.org.uk/api/spots/epoch'
+    }),
     spots: builder.query({
-      query: ({ limit, filter }) => ({
-        url: `api2.sota.org.uk/api/spots/${limit}/${filter ?? 'all'}`
+      query: ({ epoch, limit, band, mode }) => ({ // epoch used to invalidate cache
+        url: `api-db2.sota.org.uk/api/spots/${limit}/${band ?? 'all'}/${mode ?? 'all'}/`
       }),
-      keepUnusedDataFor: 60 * 60 // 1 hour
+      keepUnusedDataFor: 15 * 60 // 15 minutes
     })
   })
 })
