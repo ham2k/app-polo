@@ -7,6 +7,7 @@
 
 import { Linking } from 'react-native'
 import { postSpots, retrieveHooksWithSpotting } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
+import { fmtFreqInMHz } from '../../tools/frequencyFormats'
 
 const Info = {
   key: 'commands-misc',
@@ -61,11 +62,20 @@ const SpotCommandHook = {
     }
   },
   invokeCommand: (match, { operation, vfo, dispatch, settings }) => {
-    const comments = match[2]?.substring(1) || ''
+    let comments = match[2]?.substring(1) || ''
 
     if (!vfo.freq) return 'Cannot self-spot without frequency'
 
+    if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
+      comments = match[1]
+    }
+
     const activityHooksWithSpotting = retrieveHooksWithSpotting({ operation, settings })
     postSpots({ operation, vfo, comments, activityHooksWithSpotting, dispatch })
+    if (comments) {
+      return `Self-spotting at ${fmtFreqInMHz(vfo.freq)} with ‘${comments}’`
+    } else {
+      return `Self-spotting at ${fmtFreqInMHz(vfo.freq)}`
+    }
   }
 }

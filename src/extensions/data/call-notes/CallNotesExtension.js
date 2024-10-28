@@ -19,7 +19,7 @@ export const Info = {
   key: 'call-notes',
   name: 'Callsign Notes',
   icon: 'file-account-outline',
-  description: 'Shows notes for callsigns when logging'
+  description: 'Shows notes for callsigns when logging. Can add custom notes.'
 }
 
 export const BUILT_IN_NOTES = [
@@ -86,7 +86,7 @@ const Extension = {
       }
     })
 
-    registerHook('lookup', { hook: LookupHook })
+    registerHook('lookup', { hook: LookupHook, priority: -1 })
   },
   onDeactivationDispatch: () => async (dispatch, getState) => {
     for (const file of CallNotesData.files) {

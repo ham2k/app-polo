@@ -20,6 +20,7 @@ import { selectSettings } from '../store/settings'
  *
  * It can register `hooks` to be called at specific points in the application lifecycle.
  *
+ * Hooks are sorted by priority, which defaults to 0. The higher the priority, the earlier the hook is called.
  */
 const Extensions = {
 }

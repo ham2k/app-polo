@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import emojiRegex from 'emoji-regex'
 
@@ -29,14 +29,17 @@ export const useCallLookup = (qso) => {
 
   const [lookupInfos, setLookupInfos] = useState({})
 
-  const call = qso?.their?.call
+  const call = useMemo(() => {
+    const calls = qso?.their?.call.split(',').filter(x => x)
+    return calls[calls.length - 1]
+  }, [qso?.their?.call])
 
   useEffect(() => {
     if (call && call.length > 2 && !lookupInfos[call]) {
       const timeout = setTimeout(async () => {
         const { guess, lookup, lookups, theirInfo } = await _performLookup({ qso, online, settings, dispatch })
         setLookupInfos({ ...lookupInfos, [call]: { guess, lookup, lookups, theirInfo } })
-      }, 50)
+      }, 0)
       return () => clearTimeout(timeout)
     }
   }, [call, online, settings, dispatch, lookupInfos, qso])
@@ -51,11 +54,14 @@ export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup
 }
 
 async function _performLookup ({ qso, online, settings, dispatch, skipLookup = false }) {
-  let theirInfo = parseCallsign(qso?.their?.call)
+  const calls = qso?.their?.call.split(',').filter(x => x)
+  const call = calls[calls.length - 1]
+
+  let theirInfo = parseCallsign(call)
   if (theirInfo?.baseCall) {
     theirInfo = annotateFromCountryFile(theirInfo)
-  } else if (qso?.their?.call) {
-    theirInfo = annotateFromCountryFile({ prefix: qso?.their?.call, baseCall: qso?.their?.call })
+  } else if (call) {
+    theirInfo = annotateFromCountryFile({ prefix: call, baseCall: call })
   }
 
   const { lookups } = await lookupCall(theirInfo, { online, settings, dispatch, skipLookup: false })
@@ -70,11 +76,19 @@ export async function lookupCall (theirInfo, { online, settings, dispatch, skipL
   const lookups = {}
   if (!skipLookup) {
     const lookupHooks = findHooks('lookup')
+    const lookedUp = {}
     for (const hook of lookupHooks) {
-      if (hook?.lookupCallWithDispatch) {
-        lookups[hook.key] = await hook.lookupCallWithDispatch(theirInfo, { settings, dispatch, online })
-      } else if (hook?.lookupCall) {
-        lookups[hook.key] = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online }))
+      if (!hook?.shouldSkipLookup || !hook.shouldSkipLookup({ online, lookedUp })) {
+        let data
+        if (hook?.lookupCallWithDispatch) {
+          data = await hook.lookupCallWithDispatch(theirInfo, { settings, dispatch, online })
+        } else if (hook?.lookupCall) {
+          data = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online }))
+        }
+        if (data) {
+          lookups[hook.key] = data
+          Object.keys(data).forEach(key => { lookedUp[key] = true })
+        }
       }
     }
   }

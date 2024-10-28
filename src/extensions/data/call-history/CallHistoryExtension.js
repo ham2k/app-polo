@@ -11,7 +11,8 @@ import { capitalizeString } from '../../../tools/capitalizeString'
 export const Info = {
   key: 'call-history',
   icon: 'web',
-  name: 'Call History'
+  name: 'Call History',
+  description: 'Upload historic ADIF and use for offline lookups'
 }
 
 const Extension = {
@@ -19,7 +20,7 @@ const Extension = {
   category: 'lookup',
   enabledByDefault: true,
   onActivation: ({ registerHook }) => {
-    registerHook('lookup', { hook: LookupHook })
+    registerHook('lookup', { hook: LookupHook, priority: -1 })
     registerHook('setting', { hook: SettingHook })
   }
 }
