@@ -23,7 +23,7 @@ const DEBUG = false
 
 export const SOTASSOConfig = {
   issuer: 'https://sso.sota.org.uk/auth/realms/SOTA/',
-  clientId: 'sotawatch',
+  clientId: 'polo',
   redirectUrl: 'com.ham2k.polo://sota',
   scopes: ['openid']
 }
