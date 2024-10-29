@@ -58,15 +58,18 @@ export function useConfigForDistribution ({ settings }) {
   // Set Firebase Analytics & Crashlytics user properties
   useEffect(() => {
     if (settings?.consentAppData) {
-      if (settings?.operatorCall) {
+      let info = parseCallsign(settings?.operatorCall)
+
+      if (settings?.operatorCall?.length > 2) {
         firebaseCrashlytics?.crashlytics()?.setUserId(settings?.operatorCall)
       }
 
       firebaseCrashlytics?.crashlytics()?.setAttributes({
-        packageVersion: packageJson.version
+        packageVersion: packageJson.version,
+        baseCall: info.baseCall ?? '-',
+        call: settings?.operatorCall ?? '-'
       })
 
-      let info = parseCallsign(settings?.operatorCall)
       if (info.baseCall) {
         info = annotateFromCountryFile(info)
 
