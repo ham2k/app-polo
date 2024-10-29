@@ -80,8 +80,12 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
   const styles = useThemedStyles(prepareStyles, themeColor)
 
   const call = useMemo(() => {
-    const calls = qso?.their?.call.split(',').filter(x => x)
-    return calls[calls.length - 1]
+    const calls = qso?.their?.call?.split(',')?.filter(x => x)
+    if (calls?.length > 1) {
+      return calls[calls.length - 1]
+    } else {
+      return qso?.their?.call
+    }
   }, [qso?.their?.call])
 
   const { guess, lookup } = useCallLookup(qso)

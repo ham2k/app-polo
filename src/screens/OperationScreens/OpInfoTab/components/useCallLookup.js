@@ -30,8 +30,12 @@ export const useCallLookup = (qso) => {
   const [lookupInfos, setLookupInfos] = useState({})
 
   const call = useMemo(() => {
-    const calls = qso?.their?.call.split(',').filter(x => x)
-    return calls[calls.length - 1]
+    const calls = qso?.their?.call?.split(',')?.filter(x => x)
+    if (calls?.length > 1) {
+      return calls[calls.length - 1]
+    } else {
+      return qso?.their?.call
+    }
   }, [qso?.their?.call])
 
   useEffect(() => {
@@ -54,8 +58,13 @@ export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup
 }
 
 async function _performLookup ({ qso, online, settings, dispatch, skipLookup = false }) {
-  const calls = qso?.their?.call.split(',').filter(x => x)
-  const call = calls[calls.length - 1]
+  const calls = qso?.their?.call?.split(',')?.filter(x => x)
+  let call
+  if (calls?.length > 1) {
+    call = calls[calls.length - 1]
+  } else {
+    call = qso?.their?.call
+  }
 
   let theirInfo = parseCallsign(call)
   if (theirInfo?.baseCall) {
