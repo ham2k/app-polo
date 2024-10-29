@@ -46,7 +46,7 @@ export const importADIFIntoOperation = (path, operation) => async (dispatch) => 
 
       for (let qso of qsos) {
         qso = await annotateQSO({ qso, online: false, skipLookup: false, dispatch, settings: {} })
-        console.log('add', qso)
+
         await dispatch(addQSO({ uuid: operation.uuid, qso }))
       }
 

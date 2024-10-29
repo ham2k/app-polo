@@ -47,7 +47,7 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
 
   const qsoCount = qsos.filter(qso => !qso.deleted).length
   const operation = getState().operations.info[uuid]
-  console.log('loadQSOs', { uuid, operation })
+  // console.log('loadQSOs', { uuid, operation })
   if (startOnMillisMin !== operation?.startOnMillisMin ||
   startOnMillisMax !== operation?.startOnMillisMax ||
   qsoCount !== operation?.qsoCount) {
