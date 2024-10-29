@@ -114,7 +114,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
                   spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
                 }
 
-                annotatedSpots.push(await annotateQSO({ qso: spot, online, settings, dispatch, skipLookup: true }))
+                annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, dispatch, skipLookup: true }))
               }
               updateSpotsState({ spots: { [hook.key]: annotatedSpots } })
             })
