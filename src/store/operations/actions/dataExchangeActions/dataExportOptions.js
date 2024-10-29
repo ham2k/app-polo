@@ -67,5 +67,6 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
       exports.push({ ...option, handler, ref, fileName, title, exportTitle })
     })
   })
-  return exports
+
+  return exports.sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
 }

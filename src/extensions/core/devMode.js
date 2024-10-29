@@ -30,6 +30,7 @@ const ExportHandler = {
   suggestExportOptions: ({ operation, qsos, ref, settings }) => {
     if (settings.devMode) {
       return ([{
+        priority: -100,
         icon: 'briefcase-upload',
         format: 'qson',
         exportType: 'devmode-qson',

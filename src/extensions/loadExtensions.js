@@ -10,6 +10,7 @@ import { activateEnabledExtensions, registerExtension } from './registry'
 
 import CountryFilesExtension from './core/countryFiles'
 import DevModeExtension from './core/devMode'
+import ADIFExtension from './core/adif'
 import POTAExtension from './activities/pota/POTAExtension'
 import SOTAExtension from './activities/sota/SOTAExtension'
 import GMAExtension from './activities/gma/GMAExtension'
@@ -40,6 +41,7 @@ import WABExtension from './other/wab/WABExtension'
 const loadExtensions = () => async (dispatch, getState) => {
   dispatch(addRuntimeMessage('Loading extensions'))
   registerExtension(DevModeExtension)
+  registerExtension(ADIFExtension)
   registerExtension(CountryFilesExtension)
   registerExtension(POTAExtension)
   registerExtension(SOTAExtension)
