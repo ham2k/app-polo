@@ -133,7 +133,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
 
     return filterAndCount(allSpots, filterState, vfo)
   }, [spotsHooks, filterState, vfo, spotsState.spots])
-  console.log(counts)
+
   const scoredSpots = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)
 

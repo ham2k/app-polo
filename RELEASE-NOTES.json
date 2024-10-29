@@ -1,9 +1,10 @@
 {
   "24.10.99-pre3": {
-    "name": "November '24 (pre 3)",
+    "name": "November '24 (pre 4)",
     "changes": [
       "New Operation Data Screen, for exports, imports and sharing",
       "SOTA Hunter log export",
+      "Updated SOTA APIs",
       "HamDB lookups (free, but US, Canada and Germany only)",
       "Cleaned up app internals for better performance",
       "Menu option to Lookup all QSOs in an Operation",
