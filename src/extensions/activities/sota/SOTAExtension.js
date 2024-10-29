@@ -91,7 +91,18 @@ const SpotsHook = {
       caches.filter(x => x?.epoch !== epoch).forEach(x => dispatch(apiSOTA.util.updateQueryData('spots', x, () => null)))
     }
 
-    const qsos = spots.filter(x => (x?.type ?? 'NORMAL') === 'NORMAL').map(spot => {
+    // Dedupe first so QRT spots take precedence and filtered out
+    // Spots already provided sorted reverse by time/id of spot i.e. most recent first
+    const dedupedSpots = []
+    const includedCalls = {}
+    for (const spot of spots) {
+      if (!includedCalls[spot.activatorCallsign]) {
+        includedCalls[spot.activatorCallsign] = true
+        dedupedSpots.push(spot)
+      }
+    }
+
+    const qsos = dedupedSpots.filter(x => (x?.type ?? 'NORMAL') === 'NORMAL').map(spot => {
       const qso = {
         their: { call: spot.activatorCallsign },
         freq: spot.frequency,
@@ -115,15 +126,8 @@ const SpotsHook = {
       }
       return qso
     })
-    const dedupedQSOs = []
-    const includedCalls = {}
-    for (const qso of qsos) {
-      if (!includedCalls[qso.their.call]) {
-        includedCalls[qso.their.call] = true
-        dedupedQSOs.push(qso)
-      }
-    }
-    return dedupedQSOs
+
+    return qsos
   }
 }
 
