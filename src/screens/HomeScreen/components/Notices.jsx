@@ -203,7 +203,7 @@ async function performAction (notice, dispatch, setOverlayText) {
           setOverlayText(`### Fetching '${definition.name}'…`)
         } else if (status === 'progress') {
           setOverlayText(`### Fetching '${definition.name}'\n\n${progress}`)
-        } else if (status === 'loaded') {
+        } else if (status === 'loaded' || status === 'error') {
           setOverlayText('')
         }
       }

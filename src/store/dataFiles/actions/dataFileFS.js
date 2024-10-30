@@ -48,6 +48,7 @@ export const fetchDataFile = (key, options = {}) => async (dispatch, getState) =
     return loadedOk
   } catch (error) {
     console.warn(`Error fetching data file ${key}`, error)
+    console.warn(error.stack)
     await dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
     options.onStatus && await options.onStatus({ key, definition, status: 'error', error })
     return false
@@ -153,7 +154,7 @@ export const loadAllDataFiles = () => async (dispatch) => {
   }
 }
 
-const DEBUG_FETCH = false
+const DEBUG_FETCH = true
 
 export async function fetchAndProcessURL ({ url, key, process, definition, info, options }) {
   const headers = {
@@ -170,13 +171,14 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
   if (DEBUG_FETCH) console.log('-- Response headers', response?.respInfo?.headers)
   if (response.respInfo.status === 304) {
     if (DEBUG_FETCH) console.log('-- 304 Not Modified')
-    console.log(info?.data)
     return info?.data
   } else if (response.respInfo.status !== 200) {
     throw new Error(`Failed to fetch ${url}: ${response.respInfo.status}`)
   }
 
+  if (DEBUG_FETCH) console.log('-- Reading file', response.data)
   const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
+  if (DEBUG_FETCH) console.log('-- Decoding', data64.length, 'bytes')
   const buffer = Buffer.from(data64, 'base64')
   const body = buffer.toString('utf8')
 
@@ -191,6 +193,69 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
   }
 
   return data
+}
+
+export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options }) {
+  if (!processLineBatch) {
+    console.error('No processLineBatch function provided for batched lines')
+    return
+  }
+
+  const headers = {
+    'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
+  }
+  if (DEBUG_FETCH) console.log('Fetching for batching', { url, info })
+  if (info?.data?.etag) {
+    if (DEBUG_FETCH) console.log('-- Using etag', info.data.etag)
+    // headers['If-None-Match'] = info.data.etag
+  }
+
+  const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, headers)
+  if (DEBUG_FETCH) console.log('-- Response status', response?.respInfo?.status)
+  if (DEBUG_FETCH) console.log('-- Response headers', response?.respInfo?.headers)
+  if (response.respInfo.status === 304) {
+    if (DEBUG_FETCH) console.log('-- 304 Not Modified')
+    return info?.data
+  } else if (response.respInfo.status !== 200) {
+    throw new Error(`Failed to fetch ${url}: ${response.respInfo.status}`)
+  }
+
+  const streamingPromise = new Promise((resolve, reject) => {
+    let previousChunk = ''
+    RNFetchBlob.fs.readStream(response.data, 'utf8', chunkSize ?? 4096).then(stream => {
+      stream.onData(chunk => {
+        // If the chunk ends with a complete line, then it ends in "\n" and `lines` will have an empty element as last.
+        // but if it's not a complete line, then the last element will be the partial line.
+        // In either case, we save it as `previousChunk` and remove it from the array,
+        // and in the next chunk we'll prepend it to the first line.
+        chunk = previousChunk + chunk
+        const lines = chunk.split('\n')
+        previousChunk = lines.pop()
+        processLineBatch(lines)
+      })
+      stream.onEnd(() => {
+        processEndOfBatch && processEndOfBatch()
+        resolve()
+      })
+      stream.onError((err) => {
+        console.log('Error reading stream', err)
+        reject(err)
+      })
+      stream.open()
+    })
+  })
+
+  await streamingPromise
+
+  RNFetchBlob.fs.unlink(response.data)
+
+  const etagKey = Object.keys(response.respInfo.headers).find(k => k.toLowerCase() === 'etag')
+  if (etagKey && response.respInfo.headers[etagKey]) {
+    if (DEBUG_FETCH) console.log('-- Saved etag', response.respInfo.headers[etagKey])
+    return { etag: response.respInfo.headers[etagKey] }
+  } else {
+    return {}
+  }
 }
 
 function filenameForDefinition (definition) {

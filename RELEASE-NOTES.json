@@ -1,15 +1,16 @@
 {
-  "24.10.99-pre4.2": {
-    "name": "November '24 (pre 4.2)",
+  "24.10.99-pre5": {
+    "name": "November '24 (pre 5)",
     "changes": [
       "New Operation Data Screen, for exports, imports and sharing",
       "SOTA Hunter log export",
       "Updated SOTA APIs",
       "HamDB lookups (free, but US, Canada and Germany only)",
       "Cleaned up app internals for better performance",
-      "Menu option to Lookup all QSOs in an Operation",
-      "Fixed Cabrillo export bug",
+      "Menu option to 'Lookup all QSOs' in an Operation",
       "Changing activity references (POTA, SOTA, etc) updates grid unless set manually",
+      "Fixed crash when loading data files on devices with limited RAM",
+      "Fixed Cabrillo export bug",
       "Fixed call lookup, notes and history bugs",
       "Fixed `QRT` spotting command"
     ]

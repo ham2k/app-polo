@@ -10,7 +10,8 @@ import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
-import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
+import { Platform } from 'react-native'
+import { fetchAndProcessBatchedLines } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const WWFFData = { prefixByDXCCCode: {} }
 
@@ -25,89 +26,114 @@ export function registerWWFFDataFile () {
     enabledByDefault: false,
     fetch: async (args) => {
       const { key, definition, options } = args
-      options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data (might take longer than you\'d expect)' })
+      options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
       const url = 'https://wwff.co/wwff-data/wwff_directory.csv'
 
-      return fetchAndProcessURL({
+      const db = await database()
+      db.transaction(transaction => {
+        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['wwff'])
+      })
+
+      const dataRows = []
+
+      // Since we're streaming, we cannot know how many references there are beforehand, so we need to take a guess
+      const expectedReferences = 63000
+
+      // Since the work is split in two phases, and their speeds are different,
+      // we need to adjust the expected steps based on a ratio
+      const fetchWorkRatio = 1
+      const dbWorkRatio = Platform.OS === 'android' ? 7 : 3 // Inserts in android seem to be much slower
+      const expectedSteps = expectedReferences * (fetchWorkRatio + dbWorkRatio)
+
+      let completedSteps = 0
+      let totalReferences = 0
+      const startTime = Date.now()
+
+      let headers
+      const prefixByDXCCCode = {}
+
+      const { etag } = await fetchAndProcessBatchedLines({
         ...args,
         url,
-        process: async (body) => {
-          const prefixByDXCCCode = {}
-
-          const lines = body.split('\n')
-          const headers = parseWWFFCSVRow(lines.shift()).filter(x => x)
-
-          let totalReferences = 0
-
-          const db = await database()
-          db.transaction(transaction => {
-            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['wwff'])
-          })
-
-          const startTime = Date.now()
-          let processedLines = 0
-          const totalLines = lines.length
-
-          while (lines.length > 0) {
-            const batch = lines.splice(0, 797)
-            await (() => new Promise(resolve => {
-              setTimeout(() => {
-                db.transaction(async transaction => {
-                  for (const line of batch) {
-                    const row = parseWWFFCSVRow(line, { headers })
-                    if (row.status === 'active') {
-                      const lat = Number.parseFloat(row.latitude) || 0
-                      const lon = Number.parseFloat(row.longitude) || 0
-                      const grid = !row.iaruLocator ? locationToGrid6(lat, lon) : row.iaruLocator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
-                      const data = {
-                        ref: row.reference.toUpperCase(),
-                        dxccCode: Number.parseInt(row.dxccEnum, 10) || 0,
-                        name: row.name,
-                        grid,
-                        lat,
-                        lon
-                      }
-
-                      totalReferences++
-
-                      if (!prefixByDXCCCode[data.dxccCode]) prefixByDXCCCode[data.dxccCode] = data.ref.split('-')[0]
-
-                      transaction.executeSql(`
-                        INSERT INTO lookups
-                          (category, subCategory, key, name, data, lat, lon, flags, updated)
-                        VALUES
-                          (?, ?, ?, ?, ?, ?, ?, ?, 1)
-                        ON CONFLICT DO
-                        UPDATE SET
-                          subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                        `, ['wwff', `${data.dxccCode}`, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, `${data.dxccCode}`, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                      )
-                    }
-                    processedLines++
-                  }
-                  options.onStatus && await options.onStatus({
-                    key,
-                    definition,
-                    status: 'progress',
-                    progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
-                  })
-                  resolve()
-                })
-              }, 0)
-            }))()
+        chunkSize: 262144,
+        processLineBatch: (lines) => {
+          if (!headers) {
+            headers = parseWWFFCSVRow(lines.shift()).filter(x => x)
           }
 
-          db.transaction(transaction => {
-            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wwff'])
-          })
+          for (const line of lines) {
+            const row = parseWWFFCSVRow(line, { headers })
+            if (row.status === 'active') {
+              const lat = Number.parseFloat(row.latitude) || 0
+              const lon = Number.parseFloat(row.longitude) || 0
+              const grid = !row.iaruLocator ? locationToGrid6(lat, lon) : row.iaruLocator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
+              const rowData = {
+                ref: row.reference.toUpperCase(),
+                dxccCode: Number.parseInt(row.dxccEnum, 10) || 0,
+                name: row.name,
+                grid,
+                lat,
+                lon
+              }
 
-          return {
-            totalReferences,
-            prefixByDXCCCode
+              if (!prefixByDXCCCode[rowData.dxccCode]) prefixByDXCCCode[rowData.dxccCode] = rowData.ref.split('-')[0]
+
+              dataRows.push(rowData)
+              completedSteps += fetchWorkRatio
+            }
           }
+          options.onStatus && options.onStatus({
+            key,
+            definition,
+            status: 'progress',
+            progress: `Loaded \`${fmtNumber(Math.round(completedSteps / (fetchWorkRatio + dbWorkRatio)))}\` references.\n\n\`${fmtPercent(Math.min(completedSteps / expectedSteps, 1), 'integer')}\` • ${fmtNumber(Math.max(expectedSteps - completedSteps, 1) * ((Date.now() - startTime) / 1000) / completedSteps, 'oneDecimal')} seconds left.`
+          })
         }
       })
+
+      while (dataRows.length > 0) {
+        const batch = dataRows.splice(0, 223) // prime number chunks make for more "random" progress updates
+        await (() => new Promise(resolve => {
+          setTimeout(() => {
+            db.transaction(async transaction => {
+              for (const rowData of batch) {
+                const jsonRowData = JSON.stringify(rowData)
+                transaction.executeSql(`
+                  INSERT INTO lookups
+                    (category, subCategory, key, name, data, lat, lon, flags, updated)
+                  VALUES
+                    (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                  ON CONFLICT DO
+                  UPDATE SET
+                    subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                  `, ['wwff', `${rowData.dxccCode}`, rowData.ref, rowData.name, jsonRowData, rowData.lat, rowData.lon, 1, `${rowData.dxccCode}`, rowData.name, jsonRowData, rowData.lat, rowData.lon, 1]
+                )
+
+                completedSteps += dbWorkRatio
+                totalReferences++
+              }
+
+              options.onStatus && options.onStatus({
+                key,
+                definition,
+                status: 'progress',
+                progress: `Loaded \`${fmtNumber(Math.round(completedSteps / (fetchWorkRatio + dbWorkRatio)))}\` references.\n\n\`${fmtPercent(Math.min(completedSteps / expectedSteps, 1), 'integer')}\` • ${fmtNumber(Math.max(expectedSteps - completedSteps, 1) * ((Date.now() - startTime) / 1000) / completedSteps, 'oneDecimal')} seconds left.`
+              })
+              resolve()
+            })
+          }, 0)
+        }))()
+      }
+
+      db.transaction(transaction => {
+        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wwff'])
+      })
+      console.log('totalReferences', totalReferences)
+      console.log('seconds', (Date.now() - startTime) / 1000)
+      console.log('per second', (totalReferences / (Date.now() - startTime) / 1000))
+
+      return { totalReferences, prefixByDXCCCode, etag }
     },
     onLoad: (data) => {
       if (data.references) return false // Old data - TODO: Remove this after a few months

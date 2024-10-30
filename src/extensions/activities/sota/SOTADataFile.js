@@ -10,7 +10,8 @@ import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
-import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
+import { fetchAndProcessBatchedLines } from '../../../store/dataFiles/actions/dataFileFS'
+import { Platform } from 'react-native'
 
 export const SOTAData = {}
 
@@ -30,48 +31,79 @@ export function registerSOTADataFile () {
 
       const url = 'https://www.sotadata.org.uk/summitslist.csv'
 
-      return fetchAndProcessURL({
+      const db = await database()
+      db.transaction(transaction => {
+        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['sota'])
+      })
+
+      const dataRows = []
+
+      // Since we're streaming, we cannot know how many references there are beforehand, so we need to take a guess
+      const expectedSumits = 63000
+
+      // Since the work is split in two phases, and their speeds are different,
+      // we need to adjust the expected steps based on a ratio
+      const fetchWorkRatio = 1
+      const dbWorkRatio = Platform.OS === 'android' ? 7 : 3 // Inserts in android seem to be much slower
+      const expectedSteps = expectedSumits * (fetchWorkRatio + dbWorkRatio)
+
+      let completedSteps = 0
+      let totalSummits = 0
+      const startTime = Date.now()
+
+      let version
+      let headers
+
+      const { etag } = await fetchAndProcessBatchedLines({
         ...args,
         url,
-        process: async (body) => {
-          const lines = body.split('\n')
-          const versionRow = lines.shift()
-          const headers = parseSOTACSVRow(lines.shift()).filter(x => x)
+        chunkSize: 262144,
+        processLineBatch: (lines) => {
+          if (!version) {
+            version = lines.shift()
+          }
+          if (!headers) {
+            headers = parseSOTACSVRow(lines.shift()).filter(x => x)
+          }
 
-          let totalSummits = 0
+          for (const line of lines) {
+            const row = parseSOTACSVRow(line, { headers })
+            if (row.SummitCode && row.ValidTo === '31/12/2099') {
+              const lon = Number.parseFloat(row.Longitude) || 0
+              const lat = Number.parseFloat(row.Latitude) || 0
+              const rowData = {
+                ref: row.SummitCode.toUpperCase(),
+                grid: locationToGrid6(lat, lon),
+                altitude: Number.parseInt(row.AltM, 10),
+                region: row.RegionName,
+                association: row.AssociationName,
+                lat,
+                lon
+              }
+              if (rowData.ref !== row.SummitName) rowData.name = row.SummitName
 
-          const db = await database()
-          db.transaction(transaction => {
-            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['sota'])
+              dataRows.push(rowData)
+              completedSteps += fetchWorkRatio
+            }
+          }
+
+          options.onStatus && options.onStatus({
+            key,
+            definition,
+            status: 'progress',
+            progress: `Loaded \`${fmtNumber(Math.round(completedSteps / (fetchWorkRatio + dbWorkRatio)))}\` references.\n\n\`${fmtPercent(Math.min(completedSteps / expectedSteps, 1), 'integer')}\` • ${fmtNumber(Math.max(expectedSteps - completedSteps, 1) * ((Date.now() - startTime) / 1000) / completedSteps, 'oneDecimal')} seconds left.`
           })
+        }
+      })
 
-          const startTime = Date.now()
-          let processedLines = 0
-          const totalLines = lines.length
-
-          while (lines.length > 0) {
-            const batch = lines.splice(0, 797)
-            await (() => new Promise(resolve => {
-              setTimeout(() => {
-                db.transaction(async transaction => {
-                  for (const line of batch) {
-                    const row = parseSOTACSVRow(line, { headers })
-                    if (row.SummitCode && row.ValidTo === '31/12/2099') {
-                      const lon = Number.parseFloat(row.Longitude) || 0
-                      const lat = Number.parseFloat(row.Latitude) || 0
-                      const data = {
-                        ref: row.SummitCode.toUpperCase(),
-                        grid: locationToGrid6(lat, lon),
-                        altitude: Number.parseInt(row.AltM, 10),
-                        region: row.RegionName,
-                        association: row.AssociationName,
-                        lat,
-                        lon
-                      }
-                      if (data.ref !== row.SummitName) data.name = row.SummitName
-
-                      totalSummits++
-                      transaction.executeSql(`
+      while (dataRows.length > 0) {
+        const batch = dataRows.splice(0, 223) // prime number chunks make for more "random" progress updates
+        await (() => new Promise(resolve => {
+          setTimeout(() => {
+            db.transaction(async transaction => {
+              for (const rowData of batch) {
+                const jsonRowData = JSON.stringify(rowData)
+                transaction.executeSql(`
                         INSERT INTO lookups
                           (category, subCategory, key, name, data, lat, lon, flags, updated)
                         VALUES
@@ -79,34 +111,34 @@ export function registerSOTADataFile () {
                         ON CONFLICT DO
                         UPDATE SET
                           subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                        `, ['sota', data.region, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.region, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                      )
-                    }
-                    processedLines++
-                  }
-                  options.onStatus && await options.onStatus({
-                    key,
-                    definition,
-                    status: 'progress',
-                    progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
-                  })
-                  resolve()
-                })
-              }, 0)
-            }))()
-          }
+                        `, ['sota', rowData.region, rowData.ref, rowData.name, jsonRowData, rowData.lat, rowData.lon, 1, rowData.region, rowData.name, jsonRowData, rowData.lat, rowData.lon, 1]
+                )
+                completedSteps += dbWorkRatio
+                totalSummits++
+              }
 
-          db.transaction(transaction => {
-            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
-          })
+              options.onStatus && options.onStatus({
+                key,
+                definition,
+                status: 'progress',
+                progress: `Loaded \`${fmtNumber(Math.round(completedSteps / (fetchWorkRatio + dbWorkRatio)))}\` references.\n\n\`${fmtPercent(Math.min(completedSteps / expectedSteps, 1), 'integer')}\` • ${fmtNumber(Math.max(expectedSteps - completedSteps, 1) * ((Date.now() - startTime) / 1000) / completedSteps, 'oneDecimal')} seconds left.`
+              })
+              resolve()
+            })
+          }, 0)
+        }))()
+      }
 
-          return {
-            totalSummits,
-            version: versionRow
-          }
-        }
+      db.transaction(transaction => {
+        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
       })
+      console.log('totalSummits', totalSummits)
+      console.log('seconds', (Date.now() - startTime) / 1000)
+      console.log('per second', (totalSummits / (Date.now() - startTime) / 1000))
+
+      return { totalSummits, version, etag }
     },
+
     onLoad: (data) => {
       if (data.regions) return false // Old data - TODO: Remove this after a few months
 
