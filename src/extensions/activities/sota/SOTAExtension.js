@@ -94,8 +94,8 @@ const SpotsHook = {
     const qsos = spots.filter(x => (x?.type ?? 'NORMAL') === 'NORMAL').map(spot => {
       const qso = {
         their: { call: spot.activatorCallsign },
-        freq: spot.frequency,
-        band: spot.frequency ? bandForFrequency(spot.frequency) : spot.band,
+        freq: spot.frequency * 1000,
+        band: spot.frequency ? bandForFrequency(spot.frequency * 1000) : 'other',
         mode: spot.mode.toUpperCase(),
         refs: [{
           ref: spot.summitCode,

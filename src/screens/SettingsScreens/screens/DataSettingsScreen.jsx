@@ -60,7 +60,7 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
           setStatusText(`### Fetching '${definition.name}'…`)
         } else if (status === 'progress') {
           setStatusText(`### Fetching '${definition.name}'\n\n${progress}`)
-        } else if (status === 'loaded') {
+        } else if (status === 'loaded' || status === 'error') {
           setStatusText('')
         }
       }

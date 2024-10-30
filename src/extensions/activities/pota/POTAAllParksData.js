@@ -9,7 +9,8 @@ import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
-import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
+import { fetchAndProcessBatchedLines, fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
+import { Platform } from 'react-native'
 
 export const POTAAllParks = { prefixByDXCCCode: {} }
 
@@ -30,51 +31,80 @@ export function registerPOTAAllParksData () {
 
       const url = 'https://pota.app/all_parks_ext.csv'
 
-      return await fetchAndProcessURL({
+      const db = await database()
+      db.transaction(transaction => {
+        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['pota'])
+      })
+
+      const dataRows = []
+
+      // Since we're streaming, we cannot know how many references there are beforehand, so we need to take a guess
+      const expectedReferences = 62000
+
+      // Since the work is split in two phases, and their speeds are different,
+      // we need to adjust the expected steps based on a ratio
+      const fetchWorkRatio = 1
+      const dbWorkRatio = Platform.OS === 'android' ? 7 : 3 // Inserts in android seem to be much slower
+      const expectedSteps = expectedReferences * (fetchWorkRatio + dbWorkRatio)
+
+      let completedSteps = 0
+      let totalParks = 0
+      let totalActiveParks = 0
+      const startTime = Date.now()
+
+      let headers
+      const prefixByDXCCCode = {}
+
+      const { etag } = await fetchAndProcessBatchedLines({
         ...args,
         url,
-        process: async (body) => {
-          const lines = body.split('\n')
-          const headers = parsePOTACSVRow(lines.shift())
+        chunkSize: 262144,
+        processLineBatch: (lines) => {
+          if (!headers) {
+            headers = parsePOTACSVRow(lines.shift()).filter(x => x)
+          }
 
-          let totalActiveParks = 0
-          let totalParks = 0
-          const prefixByDXCCCode = {}
+          for (const line of lines) {
+            const row = parsePOTACSVRow(line, { headers })
+            const rowData = {
+              ref: row.reference,
+              dxccCode: Number.parseInt(row.entityId, 10) || 0,
+              name: row.name,
+              active: row.active === '1',
+              grid: row.grid,
+              lat: Number.parseFloat(row.latitude) || 0,
+              lon: Number.parseFloat(row.longitude) || 0,
+              location: row.locationDesc
+            }
 
-          const db = await database()
-          db.transaction(transaction => {
-            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['pota'])
+            if (rowData.ref && rowData.dxccCode) {
+              totalParks++
+              if (rowData.active) totalActiveParks++
+
+              if (!prefixByDXCCCode[rowData.dxccCode]) prefixByDXCCCode[rowData.dxccCode] = rowData.ref.split('-')[0]
+
+              dataRows.push(rowData)
+              completedSteps += fetchWorkRatio
+            }
+          }
+
+          options.onStatus && options.onStatus({
+            key,
+            definition,
+            status: 'progress',
+            progress: `Loaded \`${fmtNumber(Math.round(completedSteps / (fetchWorkRatio + dbWorkRatio)))}\` references.\n\n\`${fmtPercent(Math.min(completedSteps / expectedSteps, 1), 'integer')}\` • ${fmtNumber(Math.max(expectedSteps - completedSteps, 1) * ((Date.now() - startTime) / 1000) / completedSteps, 'oneDecimal')} seconds left.`
           })
+        }
+      })
 
-          const startTime = Date.now()
-          let processedLines = 0
-          const totalLines = lines.length
-
-          while (lines.length > 0) {
-            const batch = lines.splice(0, 797)
-            await (() => new Promise(resolve => {
-              setTimeout(() => {
-                db.transaction(async transaction => {
-                  for (const line of batch) {
-                    const row = parsePOTACSVRow(line, { headers })
-                    const park = {
-                      ref: row.reference,
-                      dxccCode: Number.parseInt(row.entityId, 10) || 0,
-                      name: row.name,
-                      active: row.active === '1',
-                      grid: row.grid,
-                      lat: Number.parseFloat(row.latitude) || 0,
-                      lon: Number.parseFloat(row.longitude) || 0,
-                      location: row.locationDesc
-                    }
-
-                    if (park.ref && park.dxccCode) {
-                      totalParks++
-                      if (park.active) totalActiveParks++
-
-                      if (!prefixByDXCCCode[park.dxccCode]) prefixByDXCCCode[park.dxccCode] = park.ref.split('-')[0]
-
-                      transaction.executeSql(`
+      while (dataRows.length > 0) {
+        const batch = dataRows.splice(0, 223) // prime number chunks make for more "random" progress updates
+        await (() => new Promise(resolve => {
+          setTimeout(() => {
+            db.transaction(async transaction => {
+              for (const rowData of batch) {
+                const jsonRowData = JSON.stringify(rowData)
+                transaction.executeSql(`
                   INSERT INTO lookups
                     (category, subCategory, key, name, data, lat, lon, flags, updated)
                   VALUES
@@ -82,34 +112,32 @@ export function registerPOTAAllParksData () {
                   ON CONFLICT DO
                   UPDATE SET
                     subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                  `, ['pota', `${park.dxccCode}`, park.ref, park.name, JSON.stringify(park), park.lat, park.lon, park.active, `${park.dxccCode}`, park.name, JSON.stringify(park), park.lat, park.lon, park.active]
-                      )
-                    }
-                    processedLines++
-                  }
-                  options.onStatus && await options.onStatus({
-                    key,
-                    definition,
-                    status: 'progress',
-                    progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
-                  })
-                  resolve()
-                })
-              }, 0)
-            }))()
-          }
+                  `, ['pota', `${rowData.dxccCode}`, rowData.ref, rowData.name, jsonRowData, rowData.lat, rowData.lon, rowData.active, `${rowData.dxccCode}`, rowData.name, jsonRowData, rowData.lat, rowData.lon, rowData.active]
+                )
+                completedSteps += dbWorkRatio
+              }
 
-          db.transaction(transaction => {
-            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
-          })
+              options.onStatus && options.onStatus({
+                key,
+                definition,
+                status: 'progress',
+                progress: `Loaded \`${fmtNumber(Math.round(completedSteps / (fetchWorkRatio + dbWorkRatio)))}\` references.\n\n\`${fmtPercent(Math.min(completedSteps / expectedSteps, 1), 'integer')}\` • ${fmtNumber(Math.max(expectedSteps - completedSteps, 1) * ((Date.now() - startTime) / 1000) / completedSteps, 'oneDecimal')} seconds left.`
+              })
+              resolve()
+            })
+          }, 0)
+        }))()
+      }
 
-          return {
-            totalParks,
-            totalActiveParks,
-            prefixByDXCCCode
-          }
-        }
+      db.transaction(transaction => {
+        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
       })
+      console.log('totalParks', totalParks)
+      console.log('totalActiveParks', totalActiveParks)
+      console.log('seconds', (Date.now() - startTime) / 1000)
+      console.log('per second', (totalParks / (Date.now() - startTime) / 1000))
+
+      return { totalParks, totalActiveParks, prefixByDXCCCode, etag }
     },
     onLoad: (data) => {
       if (data.activeParks) return false // Old data - TODO: Remove this after a few months
