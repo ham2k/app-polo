@@ -14,6 +14,27 @@ import GLOBAL from '../../GLOBAL'
 
 import { hashCode } from '../../tools/hashCode'
 import packageJson from '../../../package.json'
+import { ToastAndroid } from 'react-native'
+
+let logSequence = 0
+
+const WATCHED_CALLS = ['KI2D', 'HB9HUP', 'LZ3AW', 'N1BS', 'N4KPT']
+export function logRemotely (payload) {
+  try {
+    if (GLOBAL.consentAppData) {
+      if (WATCHED_CALLS.indexOf(GLOBAL.operatorCall) >= 0) {
+        reportData({
+          call: GLOBAL.operatorCall,
+          time: new Date().toISOString(),
+          sequence: logSequence++,
+          log: payload
+        })
+      }
+    }
+  } catch (error) {
+    console.error('Error logging remotely')
+  }
+}
 
 export function reportError (...params) {
   if (GLOBAL?.consentAppData) {
@@ -27,7 +48,7 @@ export function reportError (...params) {
 
     if (message) {
       console.log('Reporting Error', message)
-      firebaseCrashlytics?.crashlytics()?.log(message)
+      firebaseCrashlytics?.crashlytics()?.recordError(new Error(message), message)
     }
     if (error) {
       console.log('-- ', error.message)

@@ -22,7 +22,9 @@ export function useConfigForDistribution ({ settings }) {
   // Keep track of consent
   useEffect(() => {
     GLOBAL.consentAppData = settings?.consentAppData
-  }, [settings?.consentAppData])
+    GLOBAL.consentOpData = settings?.consentOpData
+    GLOBAL.operatorCall = settings?.operatorCall
+  }, [settings?.consentAppData, settings?.consentOpData, settings?.operatorCall])
 
   // Enable/disable Firebase Analytics & Crashlytics
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false)
