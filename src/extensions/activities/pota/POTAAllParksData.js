@@ -9,7 +9,7 @@ import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
-import { fetchAndProcessBatchedLines, fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
+import { fetchAndProcessBatchedLines } from '../../../store/dataFiles/actions/dataFileFS'
 import { Platform } from 'react-native'
 
 export const POTAAllParks = { prefixByDXCCCode: {} }
