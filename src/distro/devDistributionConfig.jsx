@@ -14,10 +14,30 @@ import { Ham2kListSection } from '../screens/components/Ham2kListSection'
 import { Ham2kListItem } from '../screens/components/Ham2kListItem'
 import DeviceInfo from 'react-native-device-info'
 import { List } from 'react-native-paper'
+import GLOBAL from '../GLOBAL'
 
 export function reportError (error, ...extra) {
   console.error(error, ...extra)
   if (extra && extra[0]?.stack) console.error(extra[0].stack)
+}
+
+const WATCHED_CALLS = []
+let logSequence = 0
+export function logRemotely (payload) {
+  try {
+    if (GLOBAL.consentAppData) {
+      if (WATCHED_CALLS.indexOf(GLOBAL.operatorCall) >= 0) {
+        reportData({
+          call: GLOBAL.operatorCall,
+          time: new Date().toISOString(),
+          sequence: logSequence++,
+          log: payload
+        })
+      }
+    }
+  } catch (error) {
+    console.error('Error logging remotely')
+  }
 }
 
 export function reportData (payload) {
