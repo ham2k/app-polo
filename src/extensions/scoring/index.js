@@ -11,7 +11,7 @@ import { DXCCScoringHandler } from './DXCCScoringHandler'
 import { USStatesScoringHandler } from './USStatesScoringHandler'
 import { CanadianProvincesScoringHandler } from './CanadianProvincesScoringHandler'
 import { BandsAndModesScoringHandler } from './BandsAndModesScoringHandler'
-import { reportError } from '../../distro'
+import { logRemotely, reportError } from '../../distro'
 
 const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
@@ -58,6 +58,7 @@ export function scoringHandlersForOperation (operation, settings) {
 export function analyzeAndSectionQSOs ({ qsos, operation, settings }) {
   qsos = qsos ?? []
   operation = operation ?? {}
+  logRemotely({ where: 'analyzeAndSectionQSOs', uuid: operation?.uuid, count: qsos?.length, first: qsos?.[0]?.key })
 
   const scoringHandlers = scoringHandlersForOperation(operation, settings)
 
@@ -128,6 +129,7 @@ export function analyzeAndSectionQSOs ({ qsos, operation, settings }) {
       }
     }
   })
+  logRemotely({ where: 'analyzeAndSectionQSOs return', uuid: operation?.uuid, count: qsos?.length, active: activeQSOs?.length, sections: sections?.length })
 
   return { qsos, activeQSOs, sections }
 }

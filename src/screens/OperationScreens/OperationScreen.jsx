@@ -24,7 +24,7 @@ import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
 import OpSpotsTab from './OpSpotsTab/OpSpotsTab'
 import OpMapTab from './OpMapTab/OpMapTab'
 import OpInfoTab from './OpInfoTab/OpInfoTab'
-import { trackOperation } from '../../distro'
+import { logRemotely, trackOperation } from '../../distro'
 import { selectRuntimeOnline } from '../../store/runtime'
 import { useUIState } from '../../store/ui'
 import { Icon, Menu, Text } from 'react-native-paper'
@@ -52,10 +52,15 @@ export default function OperationScreen (props) {
 
   useEffect(() => { // When starting, make sure all operation data is loaded
     setImmediate(async () => {
+      logRemotely({ where: 'OperationScreen start effect', uuid: route.params.operation.uuid })
       await dispatch(loadOperation(route.params.operation.uuid))
       await dispatch(loadQSOs(route.params.operation.uuid))
     })
   }, [route.params.operation.uuid, dispatch])
+
+  useEffect(() => {
+    logRemotely({ where: 'OperationScreen operation effect', uuid: route.params.operation.uuid, operation })
+  }, [operation, route.params.operation.uuid])
 
   const [lastTracking, setLastTracking] = useState(0)
   useEffect(() => {
