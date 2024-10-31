@@ -19,7 +19,7 @@ import { loadQSOs, selectQSOs } from '../../../store/qsos'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { buildTitleForOperation } from '../OperationScreen'
-import { logRemotely, reportError, trackEvent } from '../../../distro'
+import { reportError, trackEvent } from '../../../distro'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 
@@ -34,14 +34,9 @@ export default function OperationDataScreen (props) {
   const settings = useSelector(selectSettings)
 
   useEffect(() => { // When starting, make sure all operation data is loaded
-    logRemotely({ where: 'OperationDataScreen startup effect', uuid: route.params.operation })
     dispatch(loadQSOs(route.params.operation))
     dispatch(loadOperation(route.params.operation))
   }, [route.params.operation, dispatch])
-
-  useEffect(() => {
-    logRemotely({ where: 'OperationDataScreen qsos effect', uuid: operation?.uuid, count: qsos?.length, operation })
-  }, [operation, qsos])
 
   useEffect(() => {
     let options = { title: 'Operation Data' }

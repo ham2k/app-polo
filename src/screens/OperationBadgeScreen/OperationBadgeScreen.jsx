@@ -20,7 +20,6 @@ import Color from 'color'
 import MapWithQSOs from '../OperationScreens/OpMapTab/components/MapWithQSOs'
 import { slashZeros } from '../../tools/stringTools'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { logRemotely } from '../../distro'
 
 function prepareStyles (baseTheme, themeColor, deviceColorScheme) {
   let titleBackground
@@ -103,10 +102,6 @@ export default function OperationBadgeScreen ({ navigation, route }) {
     dispatch(loadOperation(route.params.operation.uuid))
   }, [route.params.operation.uuid, dispatch])
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
-
-  useEffect(() => {
-    logRemotely({ where: 'OperationBadgeScreen qsos effect', uuid: operation?.uuid, count: qsos?.length, operation })
-  }, [operation, qsos])
 
   const qth = useMemo(() => {
     try {

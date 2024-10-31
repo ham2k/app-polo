@@ -18,8 +18,7 @@ import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectVFO } from '../../../store/station/stationSlice'
 import QSOList from './components/QSOList'
 import LoggingPanel from './components/LoggingPanel'
-import { selectSectionedQSOs } from '../../../store/qsos'
-import { logRemotely } from '../../../distro'
+import { selectQSOs, selectSectionedQSOs } from '../../../store/qsos'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
@@ -35,10 +34,6 @@ export default function OpLoggingTab ({ navigation, route }) {
   const online = useSelector(selectRuntimeOnline)
 
   const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid))
-
-  useEffect(() => {
-    logRemotely({ where: 'OpLoggingTab qsos effect', uuid: operation?.uuid, count: qsos?.length, active: activeQSOs?.length, sections: sections?.length, operation })
-  }, [activeQSOs, operation, qsos, sections])
 
   const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 

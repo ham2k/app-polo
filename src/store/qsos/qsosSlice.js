@@ -11,7 +11,6 @@ import { qsoKey } from '@ham2k/lib-qson-tools'
 import { selectSettings } from '../settings'
 import { selectOperation } from '../operations'
 import { analyzeAndSectionQSOs } from '../../extensions/scoring'
-import { logRemotely } from '../../distro'
 
 const INITIAL_STATE = {
   status: 'ready',
@@ -29,8 +28,6 @@ export const qsosSlice = createSlice({
       state.status = action.payload
     },
     setQSOs: (state, action) => {
-      logRemotely({ where: 'qsosSlice.setQSOs', uuid: action?.payload?.uuid, count: action?.payload?.qsos?.length, first: action?.payload?.qsos?.[0]?.key })
-
       action.payload.qsos.forEach((qso, index) => { qso._number = index + 1 })
 
       state.qsos[action.payload.uuid] = action.payload.qsos

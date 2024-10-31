@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { IconButton } from 'react-native-paper'
 
@@ -19,7 +19,6 @@ import { selectSettings } from '../../../store/settings'
 
 import { useUIState } from '../../../store/ui'
 import MapWithQSOs from './components/MapWithQSOs'
-import { logRemotely } from '../../../distro'
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -59,10 +58,6 @@ export default function OpMapTab ({ navigation, route }) {
   }, [operation?.grid])
 
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
-
-  useEffect(() => {
-    logRemotely({ where: 'OpSpotsTab qsos effect', uuid: operation?.uuid, count: qsos?.length, operation })
-  }, [operation, qsos])
 
   return (
     <>

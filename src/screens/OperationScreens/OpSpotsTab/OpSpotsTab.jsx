@@ -5,19 +5,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { selectQSOs } from '../../../store/qsos'
 import SpotsPanel from './components/SpotsPanel'
-import { logRemotely } from '../../../distro'
 
 export default function OpSpotsTab ({ navigation, route }) {
   const operation = route.params.operation
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
-
-  useEffect(() => {
-    logRemotely({ where: 'OpSpotsTab qsos effect', uuid: operation?.uuid, count: qsos?.length, operation })
-  }, [operation, qsos])
 
   const handleSelect = useCallback(({ spot }) => {
     if (spot._ourSpot) return

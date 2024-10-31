@@ -11,7 +11,6 @@ import { actions as operationActions, saveOperation } from '../../operations'
 import { dbExecute, dbSelectAll } from '../../db/db'
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import mergeQSOs from '../../../tools/mergeQSOs'
-import { logRemotely } from '../../../distro'
 
 // import debounce from 'debounce'
 // function debounceableDispatch (dispatch, action) {
@@ -32,10 +31,7 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
   try {
     qsos = await dbSelectAll('SELECT * FROM qsos WHERE operation = ? ORDER BY startOnMillis', [uuid], { row: prepareQSORow })
   } catch (error) {
-    logRemotely({ msg: `Error loading QSOs for operation ${uuid}` })
   }
-
-  logRemotely({ where: 'qsosDB.loadQSOs', uuid, count: qsos?.length, first: qsos?.[0]?.key })
 
   let startOnMillisMin, startOnMillisMax
   qsos.forEach((qso, index) => {
@@ -55,7 +51,6 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
   if (startOnMillisMin !== operation?.startOnMillisMin ||
   startOnMillisMax !== operation?.startOnMillisMax ||
   qsoCount !== operation?.qsoCount) {
-    logRemotely({ where: 'qsosDB.loadQSOs updating operation', uuid, count: qsos?.length, first: qsos?.[0]?.key })
     dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount }))
     setTimeout(() => {
       dispatch(saveOperation(operation))

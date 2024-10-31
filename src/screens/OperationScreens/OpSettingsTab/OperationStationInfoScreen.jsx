@@ -18,7 +18,6 @@ import { Ham2kListSection } from '../../components/Ham2kListSection'
 import CallsignInput from '../../components/CallsignInput'
 import { batchUpdateQSOs, selectQSOs } from '../../../store/qsos'
 import { joinAnd } from '../../../tools/joinAnd'
-import { logRemotely } from '../../../distro'
 
 export default function OperationStationInfoScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -27,10 +26,6 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   const settings = useSelector(selectSettings)
   const operation = useSelector(state => selectOperation(state, route.params.operation))
   const qsos = useSelector(state => selectQSOs(state, route.params.operation))
-
-  useEffect(() => {
-    logRemotely({ where: 'OperationStationInfoScreen qsos effect', uuid: operation?.uuid, count: qsos?.length, operation })
-  }, [operation, qsos])
 
   useEffect(() => {
     if (!operation) {

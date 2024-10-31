@@ -10,7 +10,6 @@ import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { selectOperatorCall } from '../settings'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
-import { logRemotely } from '../../distro'
 
 const INITIAL_STATE = {
   status: 'ready',
@@ -39,7 +38,6 @@ export const operationsSlice = createSlice({
       state.info = action.payload
     },
     setOperation: (state, action) => {
-      logRemotely({ where: 'operationSlice.setOperation', uuid: action?.payload?.uuid, payload: action?.payload })
       state.info[action.payload.uuid] = { ...OPERATION_INITIAL_STATE, ...state.info[action.payload.uuid], ...action.payload }
     },
     unsetOperation: (state, action) => {
