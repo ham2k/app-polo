@@ -38,14 +38,14 @@ const LookupHook = {
       }
 
       if (historyData.their) {
-        lookup.call = historyData.their.lookup?.call ?? historyData.their.call
-        lookup.name = capitalizeString(historyData.their.name ?? historyData.their.lookup?.name, { content: 'name', force: false })
-        lookup.state = historyData.their.state ?? historyData.their.lookup?.state
-        lookup.city = capitalizeString(historyData.their.city ?? historyData.their.lookup?.city, { content: 'address', force: false })
-        lookup.postal = historyData.their.postal ?? historyData.their.lookup?.postal
-        lookup.grid = historyData.their.grid ?? historyData.their.lookup?.grid
-        lookup.cqZone = historyData.their.cqZone ?? historyData.their.lookup?.cqZone
-        lookup.ituZone = historyData.their.ituZone ?? historyData.their.lookup?.ituZone
+        lookup.call = historyData.their.guess?.call ?? historyData.their.call
+        lookup.name = capitalizeString(historyData.their.name ?? historyData.their.guess?.name, { content: 'name', force: false })
+        lookup.state = historyData.their.state ?? historyData.their.guess?.state
+        lookup.city = capitalizeString(historyData.their.city ?? historyData.their.guess?.city, { content: 'address', force: false })
+        lookup.postal = historyData.their.postal ?? historyData.their.guess?.postal
+        lookup.grid = historyData.their.grid ?? historyData.their.guess?.grid
+        lookup.cqZone = historyData.their.cqZone ?? historyData.their.guess?.cqZone
+        lookup.ituZone = historyData.their.ituZone ?? historyData.their.guess?.ituZone
         Object.keys(lookup).forEach(key => {
           if (!lookup[key]) delete lookup[key]
         })

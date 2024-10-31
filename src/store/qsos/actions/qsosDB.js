@@ -86,8 +86,8 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
 
   const qsoClone = { ...qso }
   delete qsoClone._originalKey
-  if (qsoClone.their?.lookup?.history) {
-    delete qsoClone.their.lookup.history
+  if (qsoClone.their?.lookup) {
+    delete qsoClone.their.lookup
   }
 
   await dbExecute(`

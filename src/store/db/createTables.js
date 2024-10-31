@@ -67,7 +67,7 @@ export async function createTables (db) {
     // including recursive history, to the point of causing sqlite to slow down to a halt.
     // This migration removes that data in a simple query.
     await dbExecute(`
-      UPDATE qsos SET data = json_remove(data, '$.their.lookup.history')
+      UPDATE qsos SET data = json_remove(data, '$.their.lookup')
     `, [], { db })
 
     await dbExecute('UPDATE version SET version = 3', [], { db })
