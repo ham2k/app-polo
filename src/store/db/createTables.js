@@ -61,7 +61,15 @@ export async function createTables (db) {
     await dbExecute('UPDATE version SET version = 2', [], { db })
   }
 
-  if (version === 2) {
-    // console.log('createTables -- using version 1')
+  if (version < 3) {
+    console.log('createTables -- creating version 3')
+    // For a couple of weeks, we were saving `history` data in each QSO,
+    // including recursive history, to the point of causing sqlite to slow down to a halt.
+    // This migration removes that data in a simple query.
+    await dbExecute(`
+      UPDATE qsos SET data = json_remove(data, '$.their.lookup.history')
+    `, [], { db })
+
+    await dbExecute('UPDATE version SET version = 3', [], { db })
   }
 }
