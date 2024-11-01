@@ -41,6 +41,7 @@ import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
 import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
 import RootErrorBoundary from './screens/components/RootErrorBoundary'
+import DeviceInfo from 'react-native-device-info'
 
 const Stack = createNativeStackNavigator()
 
@@ -55,9 +56,16 @@ function MainApp ({ navigationTheme }) {
 
   useConfigForDistribution({ settings })
 
-  useEffect(() => { // Some top-level functions need access to settings info that's only available in the store at this point
-    GLOBAL.consentAppData = settings.consentAppData
-  }, [settings?.consentAppData])
+  useEffect(() => {
+    setTimeout(async () => {
+      // Some top-level functions need access to settings info that's only available in the store at this point
+      GLOBAL.consentAppData = settings.consentAppData
+      GLOBAL.consentOpData = settings.consentOpData
+      GLOBAL.deviceId = await DeviceInfo.getUniqueId()
+      GLOBAL.deviceName = await DeviceInfo.getDeviceName()
+      console.log('GLOBAL', GLOBAL)
+    })
+  }, [settings?.consentAppData, settings?.consentOpData])
 
   const routeNameRef = React.useRef()
   const navigationRef = React.useRef()
