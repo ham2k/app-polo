@@ -11,6 +11,7 @@ import { actions as operationActions, saveOperation } from '../../operations'
 import { dbExecute, dbSelectAll } from '../../db/db'
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import mergeQSOs from '../../../tools/mergeQSOs'
+import GLOBAL from '../../../GLOBAL'
 
 // import debounce from 'debounce'
 // function debounceableDispatch (dispatch, action) {
@@ -64,7 +65,13 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
     [uuid, qso.key, qso._originalKey ?? qso.key], { row: prepareQSORow }
   )
 
+  const now = Date.now()
+
   if (origQSOs.length > 0) {
+    qso.createdAtMillis = origQSOs[0].createdAtMillis || qso.createdAtMillis || now
+    qso.createdOnDeviceId = origQSOs[0].createdOnDeviceId || qso.createdOnDeviceId || GLOBAL.deviceId
+    qso.createdOnDeviceName = origQSOs[0].createdOnDeviceName || qso.createdOnDeviceName || GLOBAL.deviceName
+
     for (const origQSO of origQSOs) {
       if (qso._originalKey) {
         // Do nothing when saving changes to an already existing QSO
@@ -78,7 +85,13 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
         WHERE operation = ? AND key = ?
         `, [uuid, origQSO.key])
     }
+  } else {
+    qso.createdAtMillis = qso.createdAtMillis || now
+    qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId
   }
+  qso.updatedAtMillis = now
+  qso.updatedOnDeviceId = GLOBAL.deviceId
+
   await dbExecute(`
     DELETE FROM qsos
     WHERE operation = ? AND (key = ? OR key = ?)

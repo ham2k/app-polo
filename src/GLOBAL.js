@@ -6,6 +6,9 @@
  */
 
 const GLOBAL = {
-  consentAppData: false
+  consentAppData: false,
+  consentOpData: false,
+  deviceId: null,
+  deviceName: null
 }
 export default GLOBAL
