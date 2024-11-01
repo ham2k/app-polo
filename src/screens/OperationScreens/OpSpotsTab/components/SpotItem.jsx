@@ -72,15 +72,16 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
         <View style={styles.doubleRowInnerRow}>
           <Text style={[styles.fields.band, commonStyle, bandStyle]}>{spot.band}</Text>
           <Text style={[styles.fields.mode, commonStyle, modeStyle]}>{spot.mode}</Text>
-          {spot.spot?.icon && (
-            <View style={[styles.fields.icon, commonStyle, refStyle]}>
+          {spot.spots.filter(s => s?.icon).map(subSpot => (
+            <View key={subSpot.source} style={[styles.fields.icon, commonStyle, refStyle]}>
               <Icon
-                source={spot.spot?.icon}
+                key={subSpot.source}
+                source={subSpot.icon}
                 size={styles.oneSpace * 2.3}
-                color={refStyle?.color || commonStyle?.color}
+                color={(subSpot?.type === 'scoring' && refStyle?.color) || commonStyle?.color}
               />
             </View>
-          )}
+          ))}
           <Text style={[styles.fields.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
             {spot.spot.label}
           </Text>
