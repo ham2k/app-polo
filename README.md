@@ -22,8 +22,8 @@ The fastest, easiest, bestest way to log your amateur radio operations on the go
 * iOS - [AppStore](https://apps.apple.com/us/app/ham2k-portable-logger/id6478713938)
 
 ### Test Releases
-* Android - [Beta Testing](https://play.google.com/apps/testing/com.ham2k.polo.beta)
-* iOS - [Beta Testing](https://testflight.apple.com/join/TjRq5t5Y)
+* Android - [Beta Testing](https://play.google.com/apps/testing/com.ham2k.polo.beta) via Google Play testing
+* iOS - [Beta Testing](https://testflight.apple.com/join/TjRq5t5Y) via TestFlight
 
 This app is Open Source and licensed under the [Mozilla Public License 2.0](./LICENSE)
 
