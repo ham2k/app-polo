@@ -240,22 +240,22 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
           onPress={async () => await Linking.openURL('https://polo.ham2k.com/docs/')}
         />
         <Ham2kListItem
+          title="Ham2K Forums"
+          description={'Find help, give feedback, discuss ideas…'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="forum" />}
+          onPress={async () => await Linking.openURL('https://groups.google.com/g/ham2k-polo')}
+        />
+        <Ham2kListItem
+          title="Ham2K Chat"
+          description={'The discord server for our online community'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="chat" />}
+          onPress={async () => await Linking.openURL('https://discord.gg/c4Th9QkByJ')}
+        />
+        <Ham2kListItem
           title="Contact Us"
           description={'Email help@ham2k.com'}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-alert-outline" />}
           onPress={async () => await Linking.openURL('mailto:help@ham2k.com')}
-        />
-        <Ham2kListItem
-          title="Official Reflector"
-          description={'Ham2K PoLo Google Group'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-seal-outline" />}
-          onPress={async () => await Linking.openURL('https://groups.google.com/g/ham2k-polo')}
-        />
-        <Ham2kListItem
-          title="Discord Server"
-          description={'Our online community'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="forum" />}
-          onPress={async () => await Linking.openURL('https://discord.gg/c4Th9QkByJ')}
         />
       </Ham2kListSection>
     </ScrollView>
