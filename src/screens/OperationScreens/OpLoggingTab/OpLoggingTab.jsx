@@ -18,7 +18,7 @@ import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectVFO } from '../../../store/station/stationSlice'
 import QSOList from './components/QSOList'
 import LoggingPanel from './components/LoggingPanel'
-import { selectQSOs, selectSectionedQSOs } from '../../../store/qsos'
+import { selectSectionedQSOs } from '../../../store/qsos'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
