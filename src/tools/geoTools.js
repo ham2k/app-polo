@@ -65,15 +65,15 @@ export function fmtDistance (dist, options) {
 
 export function locationForQSONInfo (qsonInfo) {
   try {
-    const grid = qsonInfo?.grid ?? qsonInfo?.guess?.grid ?? qsonInfo?.lookup?.grid
+    const grid = qsonInfo?.grid ?? qsonInfo?.guess?.grid
 
     if (grid) {
       const [latitude, longitude] = gridToLocation(grid)
       return { latitude, longitude }
     }
 
-    const entityPrefix = qsonInfo?.entityPrefix ?? qsonInfo?.guess?.entityPrefix ?? qsonInfo?.lookup?.entityPrefix
-    const state = qsonInfo?.state ?? qsonInfo?.guess?.state ?? qsonInfo?.lookup?.state
+    const entityPrefix = qsonInfo?.entityPrefix ?? qsonInfo?.guess?.entityPrefix
+    const state = qsonInfo?.state ?? qsonInfo?.guess?.state
     if (entityPrefix) {
       const loc = DXCC_LOCATIONS[[entityPrefix, state].join('-')] || DXCC_LOCATIONS[entityPrefix]
       if (loc) return { latitude: loc[1], longitude: loc[0] }

@@ -81,7 +81,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
             qso.their?.guess?.emoji + ' '
           )}
           {styles.smOrLarger && (
-            qso.their?.name ?? qso.their?.lookup?.name ?? ''
+            qso.their?.name ?? qso.their?.guess?.name ?? ''
           )}
         </Text>
         <Text style={styles.fields.icon}>
