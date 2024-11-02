@@ -33,12 +33,10 @@ const LookupHook = {
     const lookup = { call: callInfo.call }
     if (history && history[0] && (history[0].theirCall === callInfo?.call || history[0].theirCall === callInfo?.baseCall)) {
       const historyData = JSON.parse(history[0].data)
-      if (historyData?.their?.qrzInfo) { // Old data was stored this way
-        historyData.their.lookup = historyData.their?.qrzInfo
-      }
-
       if (historyData.their) {
+        // Capture the lookup call, not the QSO, because the original guess and lookup might have been for different modifiers
         lookup.call = historyData.their.guess?.call ?? historyData.their.call
+
         lookup.name = capitalizeString(historyData.their.name ?? historyData.their.guess?.name, { content: 'name', force: false })
         lookup.state = historyData.their.state ?? historyData.their.guess?.state
         lookup.city = capitalizeString(historyData.their.city ?? historyData.their.guess?.city, { content: 'address', force: false })

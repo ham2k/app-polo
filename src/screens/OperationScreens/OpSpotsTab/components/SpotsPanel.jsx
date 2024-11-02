@@ -131,7 +131,28 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
       allSpots.push(...spotsState.spots?.[hook.key] || [])
     })
 
-    return filterAndCount(allSpots, filterState, vfo)
+    // Most recent spot primary before merging
+    allSpots.sort((a, b) => b.timeInMillis - a.timeInMillis)
+    const callSpots = {}
+    const mergedSpots = []
+
+    allSpots.forEach((spot) => {
+      const existingSpot = callSpots?.[spot.their.call]
+      // Assume divergence in frequency different spot: don't merge
+      // and reasonable 30mins between spots
+      if (!existingSpot ||
+          Math.abs(spot.freq - existingSpot.freq) > 0.5 || // 0.5 kHz
+          Math.abs(spot.spot.timeInMillis - existingSpot.spot.timeInMillis) > 1000 * 60 * 30) { // 30mins
+        const newSpot = { ...spot, refs: [...spot.refs], spots: [spot.spot] }
+        if (!existingSpot) callSpots[spot.their.call] = newSpot
+        mergedSpots.push(newSpot)
+      } else {
+        existingSpot.spots.push({ ...spot.spot })
+        existingSpot.refs.push(...spot.refs)
+      }
+    })
+
+    return filterAndCount(mergedSpots, filterState, vfo)
   }, [spotsHooks, filterState, vfo, spotsState.spots])
 
   const scoredSpots = useMemo(() => {
@@ -149,16 +170,17 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
         scoringHandlers.forEach(({ handler, ref }) => {
           const lastSection = sections && sections[sections.length - 1]
           const score = handler.scoringForQSO({ qso: spot, qsos, score: lastSection?.scores?.[ref.key], ref })
-          if (score?.alerts && score?.alerts[0] === 'duplicate') {
-            if (spot.spot.type === 'scoring') {
-              spot.spot.type = 'partialDuplicate'
+          if (score?.alerts && score?.alerts[0] === 'duplicate' && (spot.spot?.type !== 'scoring')) {
+            spot.spot.type = 'duplicate'
+          } else if (score?.value > 0 || score?.points > 0) {
+            const subSpot = spot.spots.find(s => s?.source && s?.source === ref?.type)
+            if (subSpot) {
+              subSpot.type = 'scoring'
+              subSpot.flags = spot.spot.flags
+              if (spot.spot?.type !== 'scoring') spot.spot = subSpot // Make scoring spot primary
             } else {
-              spot.spot.type = 'duplicate'
+              spot.spot.type = 'scoring'
             }
-          } else if (score?.value === 0) {
-            spot.spot.type = spot.spot.type || 'nonScoring'
-          } else {
-            spot.spot.type = spot.spot.type || 'scoring'
           }
 
           if (score.notices) {
@@ -241,15 +263,14 @@ export function filterAndCount (rawSpots, filterState, vfo) {
 
   // == SOURCES ====================
   results.counts.source = {}
-  results.spots.forEach(spot => {
-    results.counts.source[spot.spot?.source] = (results.counts.source[spot.spot?.source] ?? 0) + 1
-  })
+  results.spots.forEach(spot => spot.spots.forEach(subSpot => {
+    results.counts.source[subSpot?.source] = (results.counts.source[subSpot?.source] ?? 0) + 1
+  }))
 
-  ;(Object.keys(filterState.sources || {}))
-    .filter(x => (filterState.sources?.[x] === false))
-    .forEach(disabledSource => {
-      results.spots = results.spots.filter(spot => !(spot.spot?.source === disabledSource))
-    })
+  const disabledSources = Object.keys(filterState.sources || {}).filter(x => (filterState.sources?.[x] === false))
+  results.spots = results.spots.filter(spot => (
+    spot.spots.length === 0 || !spot.spots.every(s => disabledSources.includes(s?.source))
+  ))
 
   // == AGE =====================
   const today = new Date()
