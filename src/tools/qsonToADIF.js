@@ -59,8 +59,13 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title, exportT
         if (exportHandler && exportHandler.key !== handler.key && exportHandler.adifFieldsForOneQSO) {
           const refFields = exportHandler.adifFieldsForOneQSO({ qso, operation: operationWithoutRefs, common, exportType })
           refFields.forEach(refField => {
-            if (fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])) {
-              // Another field with the same name already exists
+            const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
+            if (existingField) {
+              // Another field with the same name already exists. Keep the first one defined and ignore this one
+              // unless it is `false`, in which case the field should be removed.
+              if (refField[1] === false) {
+                existingField[1] = false
+              }
             } else {
               fields = fields.concat([refField])
             }
@@ -123,6 +128,7 @@ function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
 
 function adifRow (fields) {
   return fields
+    .filter(field => field[1] !== false)
     .map(field => adifField(Object.keys(field)[0], Object.values(field)[0]))
     .join('') + '<EOR>\n'
 }
