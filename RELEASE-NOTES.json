@@ -1,10 +1,11 @@
 {
-  "24.10.99-pre8": {
-    "name": "November '24 (pre 8)",
+  "24.10.99-rc1": {
+    "name": "November '24 (RC 1)",
     "changes": [
       "New Operation Data Screen, for exports, imports and sharing",
       "SOTA Hunter log export",
       "Updated SOTA APIs",
+      "Combining spots from different sources as one",
       "HamDB lookups (free, but US, Canada and Germany only)",
       "Link to our new Forums",
       "Cleaned up app internals for better performance",
