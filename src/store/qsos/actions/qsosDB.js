@@ -5,13 +5,15 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import UUID from 'react-native-uuid'
+import { qsoKey } from '@ham2k/lib-qson-tools'
+
+import GLOBAL from '../../../GLOBAL'
+
 import { actions } from '../qsosSlice'
 import { actions as operationActions, saveOperation } from '../../operations'
-
 import { dbExecute, dbSelectAll } from '../../db/db'
-import { qsoKey } from '@ham2k/lib-qson-tools'
 import mergeQSOs from '../../../tools/mergeQSOs'
-import GLOBAL from '../../../GLOBAL'
 
 // import debounce from 'debounce'
 // function debounceableDispatch (dispatch, action) {
@@ -68,9 +70,10 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
   const now = Date.now()
 
   if (origQSOs.length > 0) {
-    qso.createdAtMillis = origQSOs[0].createdAtMillis || qso.createdAtMillis || now
-    qso.createdOnDeviceId = origQSOs[0].createdOnDeviceId || qso.createdOnDeviceId || GLOBAL.deviceId
-    qso.createdOnDeviceName = origQSOs[0].createdOnDeviceName || qso.createdOnDeviceName || GLOBAL.deviceName
+    qso.uuid = origQSOs[0].uuid || qso.uuid
+    qso.createdAtMillis = origQSOs[0].createdAtMillis || qso.createdAtMillis
+    qso.createdOnDeviceId = origQSOs[0].createdOnDeviceId || qso.createdOnDeviceId
+    qso.createdOnDeviceName = origQSOs[0].createdOnDeviceName || qso.createdOnDeviceName
 
     for (const origQSO of origQSOs) {
       if (qso._originalKey) {
@@ -85,10 +88,10 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
         WHERE operation = ? AND key = ?
         `, [uuid, origQSO.key])
     }
-  } else {
-    qso.createdAtMillis = qso.createdAtMillis || now
-    qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId
   }
+  qso.uuid = qso.uuid || UUID.v1()
+  qso.createdAtMillis = qso.createdAtMillis || now
+  qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId
   qso.updatedAtMillis = now
   qso.updatedOnDeviceId = GLOBAL.deviceId
 
