@@ -79,9 +79,9 @@ const SpotsHook = {
       const epoch = apiEpochResults.data
 
       // If epoch not changed, will returned cached result
-      const apiPromise = await dispatch(apiSOTA.endpoints.spots.initiate({ limit: 50, epoch }))
+      const apiPromise = await dispatch(apiSOTA.endpoints.spots.initiate({ limit: -1, epoch })) // -1 == 1hour
       await Promise.all(dispatch(apiSOTA.util.getRunningQueriesThunk()))
-      const apiResults = await dispatch((_dispatch, getState) => apiSOTA.endpoints.spots.select({ limit: 50, epoch })(getState()))
+      const apiResults = await dispatch((_dispatch, getState) => apiSOTA.endpoints.spots.select({ limit: -1, epoch })(getState()))
 
       apiPromise.unsubscribe && apiPromise.unsubscribe()
       spots = apiResults.data || []
