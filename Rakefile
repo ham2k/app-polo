@@ -80,4 +80,62 @@ namespace :release do
 
     response = http.request(request)
   end
+
+
+  task :forums => :dotenv do
+    release_version = JSON.parse(File.read('package.json'))['version']
+    release_version_name = JSON.parse(File.read('package.json'))['versionName']
+    release_notes = JSON.parse(File.read('RELEASE-NOTES.json'))[release_version]['changes']
+
+    if release_version =~ /\.99/
+      release_track = "Test"
+    else
+      release_track = "Official"
+    end
+
+    if release_version =~ /\.0$/ || release_version =~ /-pre0/
+      release_mode = "Major Release"
+    else
+      release_mode = "Supplemental"
+    end
+
+    release_description = <<-EOF
+### #{release_version_name} - #{release_mode} `#{release_version}`
+
+#{release_notes.map { |note| "- #{note}" }.join("\n")}
+
+EOF
+
+    if release_mode == "Major Release" && release_track == "Official"
+    release_description += <<-EOF
+Upgrade through your device's app store.
+EOF
+    elsif release_mode == "Supplemental" && release_track == "Official"
+    release_description += <<-EOF
+Direct update inside the app. Look for a notification or go to the Settings Screen and check there.
+EOF
+    elsif release_mode == "Major Release" && release_track == "Test"
+    release_description += <<-EOF
+Upgrade through the Test Program channels (Google Play on Android, TestFlight on iOS).
+EOF
+    elsif release_mode == "Supplemental" && release_track == "Test"
+    release_description += <<-EOF
+Direct update inside the app. Look for a notification or go to the Settings Screen and check there.
+EOF
+    end
+
+
+    puts "---------------------"
+    puts release_description
+    puts "---------------------"
+
+    # uri = URI.parse(ENV['DISCORD_WEBHOOK_URL'])
+    # header = {'Content-Type': 'application/json'}
+    # http = Net::HTTP.new(uri.host, uri.port)
+    # http.use_ssl = true
+    # request = Net::HTTP::Post.new(uri.request_uri, header)
+    # request.body = {content: release_description}.to_json
+
+    # response = http.request(request)
+  end
 end
