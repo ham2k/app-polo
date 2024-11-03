@@ -63,8 +63,9 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
       const title = simpleTemplate(option.titleTemplate || '{call} {ref} {date}', nameParts)
       const fileName = `${baseName}.${DATA_EXTENSIONS[option.format] || DATA_EXTENSIONS.other}`
       const exportTitle = option.exportTitle || `${handler.shortName ?? handler.name} ${DATA_FORMAT_DESCRIPTIONS[option.format] || DATA_FORMAT_DESCRIPTIONS.other}`
+      const exportType = option.exportType || handler.key
 
-      exports.push({ ...option, handler, ref, fileName, title, exportTitle })
+      exports.push({ ...option, handler, ref, fileName, title, exportTitle, exportType })
     })
   })
 

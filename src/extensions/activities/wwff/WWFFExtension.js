@@ -174,13 +174,16 @@ const ReferenceHandler = {
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation }) => {
+  adifFieldsForOneQSO: ({ qso, operation, exportType }) => {
     const huntingRef = findRef(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
     const fields = []
-    if (activationRef) fields.push({ MY_SIG: 'WWFF' }, { MY_SIG_INFO: activationRef.ref })
-    if (huntingRef) fields.push({ SIG: 'WWFF' }, { SIG_INFO: huntingRef.ref })
+    if (activationRef) fields.push({ MY_SIG: 'WWFF' }, { MY_SIG_INFO: activationRef.ref }, { MY_WWFF_REF: activationRef.ref })
+    if (huntingRef) fields.push({ SIG: 'WWFF' }, { SIG_INFO: huntingRef.ref }, { WWFF_REF: huntingRef.ref })
 
+    if (exportType === 'wwff') {
+      fields.push({ POTA_REF: false }, { MY_POTA_REF: false }) // Delete POTA references, since some WWFF admins will reject logs that include them.
+    }
     return fields
   },
 
