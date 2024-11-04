@@ -243,7 +243,7 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
           title="Ham2K Forums"
           description={'Find help, give feedback, discuss ideas…'}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="forum" />}
-          onPress={async () => await Linking.openURL('https://groups.google.com/g/ham2k-polo')}
+          onPress={async () => await Linking.openURL('https://forums.ham2k.com/')}
         />
         <Ham2kListItem
           title="Ham2K Chat"
