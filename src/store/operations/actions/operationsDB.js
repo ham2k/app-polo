@@ -17,6 +17,15 @@ import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
   data.uuid = row.uuid
+
+  // After version 24.11.99 we're moving to `startAt` instead of `startOn`
+  // But during the transition period, we might find databases with either,
+  // as we switch between versions in development
+  if (data.startAtMillisMin) data.startOnMillisMin = data.startAtMillisMin
+  if (data.startAtMillisMax) data.startOnMillisMax = data.startAtMillisMax
+  if (data.createdOnMillis) data.createdAtMillis = data.createdOnMillis
+  if (data.updatedOnMillis) data.updatedAtMillis = data.updatedOnMillis
+
   return data
 }
 

@@ -7,6 +7,7 @@
 
 import { fmtDateZulu } from '../../../tools/timeFormats'
 import { dbSelectAll } from '../../db/db'
+import { prepareQSORow } from './qsosDB'
 
 export async function findQSOHistory (call, options = {}) {
   const whereClauses = ['qsos.theirCall = ?']
@@ -39,16 +40,11 @@ export async function findQSOHistory (call, options = {}) {
       AND ${whereClauses.join(' AND ')}
     ORDER BY startOnMillis DESC
     `,
-    whereArgs
+    whereArgs,
+    { row: prepareQSORow }
   )
 
-  qsos = qsos.filter(qso => {
-    if (qso.deleted === undefined) {
-      const data = JSON.parse(qso.data)
-      return !data.deleted
-    } else {
-      return !qso.deleted
-    }
-  })
+  qsos = qsos.filter(qso => !qso.deleted)
+
   return qsos
 }

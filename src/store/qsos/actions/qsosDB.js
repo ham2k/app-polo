@@ -24,6 +24,15 @@ import mergeQSOs from '../../../tools/mergeQSOs'
 export const prepareQSORow = (row) => {
   const data = JSON.parse(row.data)
   delete data._originalKey
+
+  // After version 24.11.99 we're moving to `startAt` instead of `startOn`
+  // But during the transition period, we might find databases with either,
+  // as we switch between versions in development
+  if (data.startAtMillis) data.startOnMillis = data.startAtMillis
+  if (data.startAt) data.startOn = data.startAt
+  if (data.endAtMillis) data.endOnMillis = data.endAtMillis
+  if (data.endAt) data.endOn = data.endAt
+
   return data
 }
 
