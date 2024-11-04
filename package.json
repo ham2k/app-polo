@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "24.10.99-rc1",
-  "versionName": "November '24 (RC 1)",
+  "version": "24.11.99-pre0",
+  "versionName": "December '24 (Pre 0)",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

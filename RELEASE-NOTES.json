@@ -1,6 +1,11 @@
 {
-  "24.10.99-rc1": {
-    "name": "November '24 (RC 1)",
+  "24.11.99-pre0": {
+    "name": "December '24 (Pre 0)",
+    "changes": [
+    ]
+  },
+  "24.11.0": {
+    "name": "November '24",
     "changes": [
       "New Operation Data Screen, for exports, imports and sharing",
       "SOTA Hunter log export",
