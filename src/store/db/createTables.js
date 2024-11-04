@@ -72,4 +72,14 @@ export async function createTables (db) {
 
     await dbExecute('UPDATE version SET version = 3', [], { db })
   }
+
+  // TODO: Uncomment this block when we're close to releasing the December '24 version
+  // if (version < 4) {
+  //   console.log('createTables -- creating version 4')
+  //   await dbExecute(`
+  //     ALTER TABLE qsos RENAME COLUMN startedOnMillis TO startedAtMillis
+  //   `, [], { db })
+
+  //   await dbExecute('UPDATE version SET version = 4', [], { db })
+  // }
 }

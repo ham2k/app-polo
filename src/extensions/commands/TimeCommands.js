@@ -40,7 +40,7 @@ const DirectTimeCommandHook = {
     }
   },
   invokeCommand: (match, { qso, handleFieldChange }) => {
-    const baseTime = qso.startOnMillis ? new Date(qso.startOnMillis) : new Date()
+    const baseTime = qso.startAtMillis ? new Date(qso.startAtMillis) : new Date()
     if (match[1].indexOf(':') > -1) {
       let time = match[1].padStart(5, '0')
       if (time.length === 5) time = time + ':00'
@@ -74,7 +74,7 @@ const DeltaTimeCommandHook = {
     }
   },
   invokeCommand: (match, { qso, handleFieldChange }) => {
-    const baseTime = qso.startOnMillis ? new Date(qso.startOnMillis) : new Date()
+    const baseTime = qso.startAtMillis ? new Date(qso.startAtMillis) : new Date()
 
     if (match) {
       let delta = parseInt(match[1], 10)

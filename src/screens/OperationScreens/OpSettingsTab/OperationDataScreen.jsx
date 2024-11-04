@@ -63,7 +63,7 @@ export default function OperationDataScreen (props) {
       trackEvent('export_operation', {
         export_type: [option.exportType ?? option.handler.key, option.format].join('.'),
         qso_count: operation.qsoCount,
-        duration_minutes: Math.round((operation.startOnMillisMax - operation.startOnMillisMin) / (1000 * 60)),
+        duration_minutes: Math.round((operation.startAtMillisMax - operation.startAtMillisMin) / (1000 * 60)),
         refs: (option.operationData?.refs || []).map(r => r.type).join(',')
       })
     })

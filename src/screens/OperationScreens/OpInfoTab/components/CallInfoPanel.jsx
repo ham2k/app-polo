@@ -194,7 +194,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                   <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
                     <Text style={{}}>{q.band}</Text>
                     <Text style={{}}>{q.mode}</Text>
-                    <Text style={{}}>{fmtDateTimeDynamic(q.startOnMillis)}</Text>
+                    <Text style={{}}>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
                   </View>
                 ))}
               </View>
@@ -207,7 +207,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                 <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
                   <Text style={{}}>{q.band}</Text>
                   <Text style={{}}>{q.mode}</Text>
-                  <Text style={{}}>{fmtDateTimeDynamic(q.startOnMillis)}</Text>
+                  <Text style={{}}>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
                 </View>
               ))}
               {historyAndMore && (

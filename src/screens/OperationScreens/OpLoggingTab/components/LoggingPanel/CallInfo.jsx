@@ -210,11 +210,11 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       const yesterday = yesterdayInMillis()
       const lastWeek = startOfDayInMillis() - 6 * 24 * 60 * 60 * 1000
       let count = lookup?.history.length
-      const countToday = lookup?.history.filter(x => x.startOnMillis >= today).length
-      const countYesterday = lookup?.history.filter(x => x.startOnMillis >= yesterday).length - countToday
-      const countLastWeek = lookup?.history.filter(x => x.startOnMillis >= lastWeek).length
+      const countToday = lookup?.history.filter(x => x.startAtMillis >= today).length
+      const countYesterday = lookup?.history.filter(x => x.startAtMillis >= yesterday).length - countToday
+      const countLastWeek = lookup?.history.filter(x => x.startAtMillis >= lastWeek).length
 
-      if (qso?.startOnMillis) {
+      if (qso?.startAtMillis) {
         parts.push('') // add an empty element to force a join that includes a "+"
       }
 
@@ -236,7 +236,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       return [parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), 'info']
     }
     return []
-  }, [scoreInfo, lookup?.history, qso?.startOnMillis])
+  }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
   return (
     <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6 }}>

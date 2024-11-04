@@ -15,14 +15,12 @@ import { actions as operationActions, saveOperation } from '../../operations'
 import { dbExecute, dbSelectAll } from '../../db/db'
 import mergeQSOs from '../../../tools/mergeQSOs'
 
-// import debounce from 'debounce'
-// function debounceableDispatch (dispatch, action) {
-//   return dispatch(action())
-// }
-// const debouncedDispatch = debounce(debounceableDispatch, 3000)
-
 export const prepareQSORow = (row) => {
   const data = JSON.parse(row.data)
+  if (data.startOnMillis) data.startAtMillis = data.startOnMillis
+  if (data.startOn) data.startAt = data.startOn
+  if (data.endOnMillis) data.endAtMillis = data.endOnMillis
+  if (data.endOn) data.endAt = data.endOn
   delete data._originalKey
   return data
 }
@@ -32,16 +30,17 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
 
   let qsos = []
   try {
+    // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     qsos = await dbSelectAll('SELECT * FROM qsos WHERE operation = ? ORDER BY startOnMillis', [uuid], { row: prepareQSORow })
   } catch (error) {
   }
 
-  let startOnMillisMin, startOnMillisMax
+  let startAtMillisMin, startAtMillisMax
   qsos.forEach((qso, index) => {
     qso._number = index + 1
-    if (qso.startOnMillis) {
-      if (qso.startOnMillis < startOnMillisMin || !startOnMillisMin) startOnMillisMin = qso.startOnMillis
-      if (qso.startOnMillis > startOnMillisMax || !startOnMillisMax) startOnMillisMax = qso.startOnMillis
+    if (qso.startAtMillis) {
+      if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
+      if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
     }
   })
 
@@ -51,10 +50,10 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
   const qsoCount = qsos.filter(qso => !qso.deleted).length
   const operation = getState().operations.info[uuid]
   // console.log('loadQSOs', { uuid, operation })
-  if (startOnMillisMin !== operation?.startOnMillisMin ||
-  startOnMillisMax !== operation?.startOnMillisMax ||
+  if (startAtMillisMin !== operation?.startAtMillisMin ||
+  startAtMillisMax !== operation?.startAtMillisMax ||
   qsoCount !== operation?.qsoCount) {
-    dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount }))
+    dispatch(operationActions.setOperation({ uuid, startAtMillisMin, startAtMillisMax, qsoCount }))
     setTimeout(() => {
       dispatch(saveOperation(operation))
     }, 0)
@@ -106,10 +105,11 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
     delete qsoClone.their.lookup
   }
 
+  // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
   await dbExecute(`
     INSERT INTO qsos
     (operation, key, data, ourCall, theirCall, mode, band, startOnMillis) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `, [uuid, qso.key, JSON.stringify(qsoClone), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startOnMillis])
+    `, [uuid, qso.key, JSON.stringify(qsoClone), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis])
 
   dispatch(actions.addQSO({ uuid, qso }))
 
@@ -117,12 +117,12 @@ export const addQSO = ({ uuid, qso }) => async (dispatch, getState) => {
   const info = state.operations.info[uuid]
   const qsos = state.qsos.qsos[uuid]
 
-  let { startOnMillisMin, startOnMillisMax } = info
-  if (qso.startOnMillis < startOnMillisMin || !startOnMillisMin) startOnMillisMin = qso.startOnMillis
-  if (qso.startOnMillis > startOnMillisMax || !startOnMillisMax) startOnMillisMax = qso.startOnMillis
+  let { startAtMillisMin, startAtMillisMax } = info
+  if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
+  if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
 
   // No need to save operation to the db, because min/max times and counts are recalculated on load
-  dispatch(operationActions.setOperation({ uuid, startOnMillisMin, startOnMillisMax, qsoCount: qsos.filter(q => !q.deleted).length }))
+  dispatch(operationActions.setOperation({ uuid, startAtMillisMin, startAtMillisMax, qsoCount: qsos.filter(q => !q.deleted).length }))
 
   const operation = getState().operations.info[uuid]
   setTimeout(() => {
@@ -141,10 +141,11 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
     qso.our = { ...qso.our, ...data.our } // Batch Update only changes `our` data
     qso.key = qsoKey(qso)
 
+    // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     await dbExecute(`
       INSERT INTO qsos
       (operation, key, data, ourCall, theirCall, mode, band, startOnMillis) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `, [uuid, qso.key, JSON.stringify(qso), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startOnMillis])
+      `, [uuid, qso.key, JSON.stringify(qso), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis])
 
     dispatch(actions.addQSO({ uuid, qso: { ...qso, _originalKey: originalKey } }))
   }
@@ -168,11 +169,12 @@ export const saveQSOsForOperation = (uuid) => async (dispatch, getState) => {
   for (const qso of qsos) {
     const json = JSON.stringify(qso)
 
+    // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     await dbExecute(`
       INSERT INTO qsos
       (operation, key, data, ourCall, theirCall, mode, band, startOnMillis) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT DO UPDATE SET data = ?
-    `, [uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startOnMillis, json])
+    `, [uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, json])
   }
 
   // Rename delete old QSOs  (in sqlite, || is concatenation)

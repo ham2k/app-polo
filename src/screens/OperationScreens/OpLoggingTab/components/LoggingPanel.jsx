@@ -204,7 +204,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       updateQSO({ mode: value })
       if (qso?._isNew) dispatch(setVFO({ mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
-      updateQSO({ startOnMillis: value, _manualTime: true })
+      updateQSO({ startAtMillis: value, _manualTime: true })
     } else if (fieldId === 'state') {
       updateQSO({ their: { state: value } })
     } else if (fieldId === 'power') {
@@ -255,12 +255,12 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         await batch(async () => {
           setCurrentSecondaryControl(undefined)
 
-          if (qso?._isNew && qso?._manualTime && qso.startOnMillis) {
-            let nextManualTime = qso.startOnMillis + (60 * 1000)
+          if (qso?._isNew && qso?._manualTime && qso.startAtMillis) {
+            let nextManualTime = qso.startAtMillis + (60 * 1000)
             if (qsos.length > 0) {
-              const diff = Math.abs(qso.startOnMillis - qsos[qsos.length - 1].startOnMillis)
+              const diff = Math.abs(qso.startAtMillis - qsos[qsos.length - 1].startAtMillis)
               if (diff >= 1000) {
-                nextManualTime = qso.startOnMillis + Math.min(diff, 60 * 5000)
+                nextManualTime = qso.startAtMillis + Math.min(diff, 60 * 5000)
               }
             }
             // No need to await this one, can happen in parallel
@@ -280,9 +280,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
           }
           qso.mode = qso.mode ?? vfo.mode
 
-          if (!qso.startOnMillis) qso.startOnMillis = (new Date()).getTime()
-          qso.startOn = new Date(qso.startOnMillis).toISOString()
-          if (qso.endOnMillis) qso.endOn = new Date(qso.endOnMillis).toISOString()
+          if (!qso.startAtMillis) qso.startAtMillis = (new Date()).getTime()
+          qso.startAt = new Date(qso.startAtMillis).toISOString()
+          if (qso.endAtMillis) qso.endAt = new Date(qso.endAtMillis).toISOString()
           qso.our = qso.our || {}
           qso.our.call = qso.our.call || ourInfo?.call
           qso.our.operatorCall = qso.our.operatorCall || operation.operatorCall
@@ -633,7 +633,7 @@ function prepareNewQSO (operation, qsos, vfo, settings) {
     key: 'new-qso'
   }
   if (operation._nextManualTime) {
-    qso.startOnMillis = operation._nextManualTime
+    qso.startAtMillis = operation._nextManualTime
     qso._manualTime = true
   }
 

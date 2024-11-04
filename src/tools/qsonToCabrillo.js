@@ -31,8 +31,8 @@ export function qsonToCabrillo ({ operation, qsos, settings, handler }) {
       str += 'QSO: '
       str += cabrilloFreq(qso).padEnd(5, ' ') + ' '
       str += cabrilloMode(qso).padEnd(2, ' ') + ' '
-      str += fmtCabrilloDate(qso?.startOnMillis ?? qso?.endOnMillis).padEnd(10, ' ') + ' '
-      str += fmtCabrilloTime(qso?.startOnMillis ?? qso?.endOnMillis).padEnd(4, ' ') + ' '
+      str += fmtCabrilloDate(qso?.startAtMillis ?? qso?.endAtMillis).padEnd(10, ' ') + ' '
+      str += fmtCabrilloTime(qso?.startAtMillis ?? qso?.endAtMillis).padEnd(4, ' ') + ' '
       str += parts.join(' ') + '\n'
     })
   })

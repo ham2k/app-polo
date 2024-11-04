@@ -57,11 +57,11 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
     } else {
       const parts = []
 
-      parts.push(`${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startOnMillisMin, operation.startOnMillisMax)}`)
+      parts.push(`${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`)
 
-      if (now - operation.startOnMillisMax < 1000 * 60 * 60 * 4) {
+      if (now - operation.startAtMillisMax < 1000 * 60 * 60 * 4) {
         if (qsos.length > 0) {
-          parts.push(`${fmtTimeBetween(operation.startOnMillisMax, now)} since last QSO`)
+          parts.push(`${fmtTimeBetween(operation.startAtMillisMax, now)} since last QSO`)
         }
       }
       return parts.filter(x => x).join(' • ')
@@ -73,11 +73,11 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
 
     const last = qsos?.length - 1
     if (last > 9) {
-      const rate = (10 / ((qsos[last].startOnMillis - qsos[last - 9].startOnMillis) / 1000 / 60)) * 60
+      const rate = (10 / ((qsos[last].startAtMillis - qsos[last - 9].startAtMillis) / 1000 / 60)) * 60
       if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 10`)
     }
     if (last > 99) {
-      const rate = (100 / ((qsos[last].startOnMillis - qsos[last - 99].startOnMillis) / 1000 / 60)) * 60
+      const rate = (100 / ((qsos[last].startAtMillis - qsos[last - 99].startAtMillis) / 1000 / 60)) * 60
       if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 100`)
     }
 

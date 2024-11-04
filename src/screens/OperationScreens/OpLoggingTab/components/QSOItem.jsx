@@ -54,7 +54,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
   return (
     <TouchableRipple onPress={pressHandler} style={selected ? styles.selectedRow : styles.unselectedRow}>
       <View style={styles.compactRow}>
-        <Text style={styles.fields.time}>{timeFormatFunction(qso.startOnMillis)}</Text>
+        <Text style={styles.fields.time}>{timeFormatFunction(qso.startAtMillis)}</Text>
         <Text style={styles.fields.freq}>
           {freqParts[0] && <Text style={styles.fields.freqMHz}>{freqParts[0]}.</Text>}
           {freqParts[1] && <Text style={styles.fields.freqKHz}>{freqParts[1]}</Text>}

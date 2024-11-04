@@ -67,7 +67,7 @@ export function analyzeAndSectionQSOs ({ qsos, operation, settings }) {
 
   let currentSection = null
   for (const qso of qsos) {
-    const day = qso.startOnMillis - (qso.startOnMillis % TWENTY_FOUR_HOURS_IN_MILLIS)
+    const day = qso.startAtMillis - (qso.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)
 
     if (!currentSection || currentSection.day !== day) {
       const previousSection = currentSection

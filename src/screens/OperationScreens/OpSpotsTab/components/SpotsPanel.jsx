@@ -108,7 +108,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
               const annotatedSpots = []
               for (const spot of spots) {
                 spot.our = spot.our || {}
-                spot.timeOnMillis = 0
+                spot.timeInMillis = 0
                 spot.key = `${spot.spot.source}:${qsoKey(spot)}`
                 if (!spot.mode) {
                   spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'

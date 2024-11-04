@@ -16,6 +16,11 @@ import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
+  if (data.startOnMillisMin) data.startAtMillisMin = data.startOnMillisMin
+  if (data.startOnMillisMax) data.startAtMillisMax = data.startOnMillisMax
+  if (data.createdOnMillis) data.createdAtMillis = data.createdOnMillis
+  if (data.updatedOnMillis) data.updatedAtMillis = data.updatedOnMillis
+
   data.uuid = row.uuid
   return data
 }
@@ -40,7 +45,7 @@ export const saveOperation = (operation) => async (dispatch, getState) => {
 export const addNewOperation = (operation) => async (dispatch) => {
   operation.uuid = UUID.v1()
   operation.qsoCount = 0
-  operation.createdOnMillis = Math.floor(Date.now() / 1000) * 1000
+  operation.createdAtMillis = Math.floor(Date.now() / 1000) * 1000
   dispatch(actions.setOperation(operation))
   await dispatch(saveOperation(operation))
   return operation

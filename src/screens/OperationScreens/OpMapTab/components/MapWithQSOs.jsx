@@ -167,7 +167,7 @@ const MapMarkers = React.memo(function MapMarkers ({ qth, qsos, selectedKey, map
                   {qso.their?.sent}
                   {' • '}{qso.mode}
                   {' • '}<Text style={{ fontWeight: 'bold', color: colorForText({ qso, styles, mapStyles }) }}>{qso.band}</Text>
-                  {' • '}{fmtShortTimeZulu(qso.startOnMillis)}
+                  {' • '}{fmtShortTimeZulu(qso.startAtMillis)}
                 </Text>
               </View>
             </Callout>

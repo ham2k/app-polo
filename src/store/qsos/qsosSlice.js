@@ -53,8 +53,8 @@ export const qsosSlice = createSlice({
           delete qso._originalKey
         }
         keys[qso.key] = qso
-        if (oldQSO?.startOnMillis !== qso.startOnMillis) {
-          qsos.sort((a, b) => a.startOnMillis - b.startOnMillis)
+        if (oldQSO?.startAtMillis !== qso.startAtMillis) {
+          qsos.sort((a, b) => a.startAtMillis - b.startAtMillis)
           qsos.forEach((q, index) => {
             if (q._number !== index + 1) q._number = index + 1
           })
@@ -63,8 +63,8 @@ export const qsosSlice = createSlice({
         // Add new QSO to the end of the array
         keys[qso.key] = qso
         qsos[qsos.length] = qso
-        if (qsos.length > 1 && qsos[qsos.length - 2].startOnMillis > qso.startOnMillis) {
-          qsos.sort((a, b) => a.startOnMillis - b.startOnMillis)
+        if (qsos.length > 1 && qsos[qsos.length - 2].startAtMillis > qso.startAtMillis) {
+          qsos.sort((a, b) => a.startAtMillis - b.startAtMillis)
           qsos.forEach((q, index) => {
             if (q._number !== index + 1) q._number = index + 1
           })

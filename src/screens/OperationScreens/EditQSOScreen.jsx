@@ -27,8 +27,8 @@ const QSO_SECTIONS = [
     key: 'qso',
     data: '',
     fields: [
-      { key: 'time', label: 'Time', type: 'time', getter: ({ qso }) => qso.startOnMillis },
-      { key: 'date', label: 'Date', type: 'date', getter: ({ qso }) => qso.startOnMillis },
+      { key: 'time', label: 'Time', type: 'time', getter: ({ qso }) => qso.startAtMillis },
+      { key: 'date', label: 'Date', type: 'date', getter: ({ qso }) => qso.startAtMillis },
       { key: 'freq', label: 'Frequency', type: 'freq' },
       { key: 'mode', label: 'Mode', type: 'mode' },
       { key: 'band', label: 'Band', type: 'band' },
