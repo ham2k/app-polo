@@ -152,11 +152,20 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
         marginLeft: themeStyles.oneSpace,
         textAlign: 'left'
       },
+      icons: {
+        ...commonStyles,
+        flex: 0,
+        flexDirection: 'row',
+        textAlign: 'right',
+        marginLeft: themeStyles.oneSpace,
+        minWidth: themeStyles.oneSpace * 2,
+        maxWidth: themeStyles.oneSpace * 9
+      },
       icon: {
         ...commonStyles,
         flex: 0,
-        textAlign: 'right',
-        maxWidth: themeStyles.oneSpace * 8
+        marginTop: themeStyles.oneSpace * 0.45,
+        width: themeStyles.oneSpace * 1.8
       }
     }
   }
