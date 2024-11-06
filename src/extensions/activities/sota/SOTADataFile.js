@@ -39,13 +39,13 @@ export function registerSOTADataFile () {
       const dataRows = []
 
       // Since we're streaming, we cannot know how many references there are beforehand, so we need to take a guess
-      const expectedSumits = 63000
+      const expectedReferences = 156000
 
       // Since the work is split in two phases, and their speeds are different,
       // we need to adjust the expected steps based on a ratio
       const fetchWorkRatio = 1
-      const dbWorkRatio = Platform.OS === 'android' ? 7 : 3 // Inserts in android seem to be much slower
-      const expectedSteps = expectedSumits * (fetchWorkRatio + dbWorkRatio)
+      const dbWorkRatio = Platform.OS === 'android' ? 7 : 2 // Inserts in android seem to be much slower
+      const expectedSteps = expectedReferences * (fetchWorkRatio + dbWorkRatio)
 
       let completedSteps = 0
       let totalSummits = 0
@@ -57,7 +57,7 @@ export function registerSOTADataFile () {
       const { etag } = await fetchAndProcessBatchedLines({
         ...args,
         url,
-        chunkSize: 262144,
+        chunkSize: 131072,
         processLineBatch: (lines) => {
           if (!version) {
             version = lines.shift()
@@ -132,9 +132,6 @@ export function registerSOTADataFile () {
       db.transaction(transaction => {
         transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['sota'])
       })
-      console.log('totalSummits', totalSummits)
-      console.log('seconds', (Date.now() - startTime) / 1000)
-      console.log('per second', (totalSummits / (Date.now() - startTime) / 1000))
 
       return { totalSummits, version, etag }
     },

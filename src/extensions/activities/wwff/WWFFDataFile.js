@@ -43,7 +43,7 @@ export function registerWWFFDataFile () {
       // Since the work is split in two phases, and their speeds are different,
       // we need to adjust the expected steps based on a ratio
       const fetchWorkRatio = 1
-      const dbWorkRatio = Platform.OS === 'android' ? 7 : 3 // Inserts in android seem to be much slower
+      const dbWorkRatio = Platform.OS === 'android' ? 7 : 2 // Inserts in android seem to be much slower
       const expectedSteps = expectedReferences * (fetchWorkRatio + dbWorkRatio)
 
       let completedSteps = 0
@@ -129,9 +129,6 @@ export function registerWWFFDataFile () {
       db.transaction(transaction => {
         transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wwff'])
       })
-      console.log('totalReferences', totalReferences)
-      console.log('seconds', (Date.now() - startTime) / 1000)
-      console.log('per second', (totalReferences / (Date.now() - startTime) / 1000))
 
       return { totalReferences, prefixByDXCCCode, etag }
     },

@@ -44,7 +44,7 @@ export function registerPOTAAllParksData () {
       // Since the work is split in two phases, and their speeds are different,
       // we need to adjust the expected steps based on a ratio
       const fetchWorkRatio = 1
-      const dbWorkRatio = Platform.OS === 'android' ? 7 : 3 // Inserts in android seem to be much slower
+      const dbWorkRatio = Platform.OS === 'android' ? 7 : 2 // Inserts in android seem to be much slower
       const expectedSteps = expectedReferences * (fetchWorkRatio + dbWorkRatio)
 
       let completedSteps = 0
@@ -58,7 +58,7 @@ export function registerPOTAAllParksData () {
       const { etag } = await fetchAndProcessBatchedLines({
         ...args,
         url,
-        chunkSize: 262144,
+        chunkSize: 131072,
         processLineBatch: (lines) => {
           if (!headers) {
             headers = parsePOTACSVRow(lines.shift()).filter(x => x)
@@ -132,10 +132,6 @@ export function registerPOTAAllParksData () {
       db.transaction(transaction => {
         transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
       })
-      console.log('totalParks', totalParks)
-      console.log('totalActiveParks', totalActiveParks)
-      console.log('seconds', (Date.now() - startTime) / 1000)
-      console.log('per second', (totalParks / (Date.now() - startTime) / 1000))
 
       return { totalParks, totalActiveParks, prefixByDXCCCode, etag }
     },

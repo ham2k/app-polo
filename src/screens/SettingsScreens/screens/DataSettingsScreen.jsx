@@ -29,6 +29,7 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
+import KeepAwake from '@sayem314/react-native-keep-awake'
 
 const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
   const Icon = useMemo(() => (
@@ -75,7 +76,10 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
       </Dialog.Content>
       <Dialog.Content>
         {info?.status === 'fetching' ? (
-          <Ham2kMarkdown>{statusText}</Ham2kMarkdown>
+          <>
+            <Ham2kMarkdown>{statusText}</Ham2kMarkdown>
+            <KeepAwake />
+          </>
         ) : (
           <Ham2kMarkdown>
             Updated on {fmtDateTimeNice(info?.date)}
