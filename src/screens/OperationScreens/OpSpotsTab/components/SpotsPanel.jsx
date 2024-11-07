@@ -192,6 +192,27 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
     })
   }, [operation, settings, filteredSpots, ourInfo.call, sections, qsos])
 
+  const mergedOpSpots = useMemo(() => {
+    const mOpSpots = []
+    scoredSpots.forEach((spot) => {
+      const refSet = new Set(spot.refs.map(x => x.ref))
+      // Not digital as could be multiple people on one freq. e.g. FT8
+      const matchingSpot = superModeForMode(spot.mode) !== 'DATA' && mOpSpots.find(opSpot => (
+        spot.spot.type === opSpot.spot.type && // Don't mix scoring and dupes
+        Math.abs(spot.freq - opSpot.freq) <= 0.1 && // 0.1 kHz
+        Math.abs(spot.spot.timeInMillis - opSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
+        spot.refs.length === opSpot.refs.length && // all refs match
+        opSpot.refs.every(ref => refSet.has(ref.ref))
+      ))
+      if (matchingSpot) {
+        matchingSpot.their.call = `${matchingSpot.their.call},${spot.their.call}`
+      } else {
+        mOpSpots.push({ ...spot, their: { call: spot.their.call } })
+      }
+    })
+    return mOpSpots
+  }, [scoredSpots])
+
   const handlePress = useCallback(({ spot }) => {
     onSelect && onSelect({ spot })
   }, [onSelect])
@@ -249,7 +270,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
               </Text>
             </TouchableOpacity>
           </View>
-          <SpotList spots={scoredSpots} loading={spotsState.loading} refresh={refresh} onPress={handlePress} />
+          <SpotList spots={mergedOpSpots} loading={spotsState.loading} refresh={refresh} onPress={handlePress} />
         </>
       )}
     </GestureHandlerRootView>
