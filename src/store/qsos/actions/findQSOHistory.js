@@ -13,6 +13,11 @@ export async function findQSOHistory (call, options = {}) {
   const whereClauses = ['qsos.theirCall = ?']
   const whereArgs = [call]
 
+  if (options.baseCall) {
+    whereClauses[0] = `${whereClauses[0]} OR qsos.theirCall = ?`
+    whereArgs.push(options.baseCall)
+  }
+
   if (options.onDate) {
     whereClauses.push("strftime('%Y-%m-%d', qsos.startOnMillis / 1000, 'unixepoch') = ?")
     whereArgs.push(fmtDateZulu(options.onDate))
@@ -28,7 +33,8 @@ export async function findQSOHistory (call, options = {}) {
     whereArgs.push(options.mode)
   }
 
-  let qsos = await dbSelectAll(
+  // TODO: Rename `startOnMillis` to `startAtMillis` in the database
+  let rows = await dbSelectAll(
     `
     SELECT
       qsos.key, qsos.ourCall, qsos.theirCall, qsos.operation, qsos.startOnMillis, qsos.band, qsos.mode, qsos.data
@@ -40,11 +46,12 @@ export async function findQSOHistory (call, options = {}) {
       AND ${whereClauses.join(' AND ')}
     ORDER BY startOnMillis DESC
     `,
-    whereArgs,
-    { row: prepareQSORow }
+    whereArgs
   )
 
-  qsos = qsos.filter(qso => !qso.deleted)
+  rows = rows.filter(rows => !rows.deleted)
 
-  return qsos
+  const mostRecentQSO = rows[0] && prepareQSORow(rows[0])
+
+  return { history: rows, mostRecentQSO }
 }

@@ -86,14 +86,14 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   const styles = useThemedStyles(prepareStyles, themeColor)
   const online = useSelector(selectRuntimeOnline)
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+  // console.log('\n\nCallInfo render')
+  const { call, guess, lookup, refs } = useCallLookup(qso)
 
-  const call = useMemo(() => {
-    const calls = qso?.their?.call.split(',').filter(x => x)
-    return calls[calls.length - 1]
-  }, [qso?.their?.call])
+  // useEffect(() => {
+  //   console.log('CallInfo effect')
+  // }, [call, guess])
 
-  const { guess, lookup, refs } = useCallLookup(qso)
-
+  // console.log('CallInfo render with', { call, guessLocation: guess?.locationLabel, name: guess?.name, state: guess?.state })
   useEffect(() => { // Merge all data sources and update guesses and QSO
     updateQSO && updateQSO({ their: { guess, lookup } })
     // Ignore warning about `updateQSO
@@ -148,7 +148,6 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     } else if (!isOnTheGo && (guess.city || guess.state)) {
       rightParts.push([guess.city, guess.state].filter(x => x).join(', '))
     }
-
     if (entity && entity.entityPrefix === ourInfo.entityPrefix) {
       leftParts = [...leftParts, ...rightParts]
       rightParts = []

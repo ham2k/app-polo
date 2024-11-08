@@ -20,8 +20,6 @@ import { LOCATION_ACCURACY } from '../../../../extensions/constants'
 
 const EMOJI_REGEX = emojiRegex()
 
-const EMPTY_LOOKUP = { guess: {}, lookup: {}, lookups: {}, theirInfo: {} }
-
 export const useCallLookup = (qso) => {
   const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
@@ -29,42 +27,61 @@ export const useCallLookup = (qso) => {
 
   const [lookupInfos, setLookupInfos] = useState({})
 
-  const call = useMemo(() => {
-    const calls = qso?.their?.call?.split(',')?.filter(x => x)
-    if (calls?.length > 1) {
-      return calls[calls.length - 1]
-    } else {
-      return qso?.their?.call
-    }
-  }, [qso?.their?.call])
+  const { call, theirInfo, cacheKey } = useMemo(() => _extractCallInfo(qso), [qso])
 
   useEffect(() => {
-    if (call && call.length > 2 && !lookupInfos[call]) {
-      const timeout = setTimeout(async () => {
-        const { guess, lookup, lookups, theirInfo } = await _performLookup({ qso, online, settings, dispatch })
-        setLookupInfos({ ...lookupInfos, [call]: { guess, lookup, lookups, theirInfo } })
-      }, 0)
-      return () => clearTimeout(timeout)
-    }
-  }, [call, online, settings, dispatch, lookupInfos, qso])
+    // console.log('useCallLookup effect', { call, cacheKey, cachedCount: Object.keys(lookupInfos).length })
+    if (call && call.length > 2 && (!lookupInfos[cacheKey] || lookupInfos[cacheKey].status === 'prefilled')) {
+      // console.log('useCallLookup effect not cached', { cacheKey, source: lookupInfos[cacheKey]?.status })
+      setLookupInfos({ ...lookupInfos, [cacheKey]: { ...lookupInfos[cacheKey], status: 'looking' } })
+      setTimeout(async () => {
+        // First do an offline lookup, to use things like local history as fast as possible
+        const offlineLookup = await _performLookup({ qso, call, theirInfo, online: false, skipLookup: true, settings, dispatch })
+        // console.log('filling lookupInfos with offline lookup', { name: offlineLookup.guess.name, locationLabel: offlineLookup.guess.locationLabel, state: offlineLookup.guess.state })
+        setLookupInfos({ ...lookupInfos, [cacheKey]: { call, cacheKey, ...offlineLookup, status: 'offline' } })
 
-  return lookupInfos[call] || EMPTY_LOOKUP
+        // And then a full lookup for slower online sources
+        const onlineLookup = await _performLookup({ qso, call, theirInfo, online, settings, dispatch })
+        // console.log('filling lookupInfos with online lookup', { name: onlineLookup.guess.name, locationLabel: onlineLookup.guess.locationLabel, state: onlineLookup.guess.state })
+        setLookupInfos({ ...lookupInfos, [cacheKey]: { call, cacheKey, ...onlineLookup, status: 'online' } })
+      }, 0)
+    } else {
+      // console.log('useCallLookup effect cached', { cacheKey })
+    }
+  }, [call, online, settings, dispatch, lookupInfos, qso, cacheKey, theirInfo])
+
+  if (lookupInfos[cacheKey]) {
+    // console.log('useCallLookup returns', cacheKey)
+    return lookupInfos[cacheKey]
+  } else if (lookupInfos[`${call}-no-refs`]) {
+    // console.log('useCallLookup returns without refs', cacheKey)
+    setLookupInfos({ ...lookupInfos, [cacheKey]: { ...lookupInfos[`${call}-no-refs`], status: 'prefilled' } })
+    return lookupInfos[`${call}-no-refs`]
+  } else {
+    // console.log('useCallLookup returns barebones', cacheKey)
+    const lookupInfo = { call, cacheKey, theirInfo, guess: theirInfo, lookup: {}, lookups: {}, status: 'prefilled' }
+    setLookupInfos({ ...lookupInfos, [cacheKey]: lookupInfo })
+    return lookupInfo
+  }
 }
 
 export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup = false }) {
-  const { guess, lookup, theirInfo } = await _performLookup({ qso, online, settings, dispatch })
+  const { call, theirInfo } = _extractCallInfo(qso)
+
+  const { guess, lookup } = await _performLookup({ qso, call, theirInfo, online, settings, dispatch })
 
   return { ...qso, their: { ...qso.their, ...theirInfo, guess, lookup } }
 }
 
-async function _performLookup ({ qso, online, settings, dispatch, skipLookup = false }) {
-  const calls = qso?.their?.call?.split(',')?.filter(x => x)
-  let call
-  if (calls?.length > 1) {
-    call = calls[calls.length - 1]
-  } else {
-    call = qso?.their?.call
-  }
+function _extractCallInfo (qso) {
+  // Pick the last call in the list, and ignore any under 3 characters or with a question mark
+  const calls = qso?.their?.call?.split(',')?.filter(x => x && x.length > 2 && x.indexOf('?') < 0)
+  let call = calls[calls.length - 1]
+
+  // Remove any trailing slash
+  if (call?.endsWith('/')) call = call.slice(0, -1)
+
+  // if (!call || call.length < 3) return { call: '', theirInfo: {}, cacheKey: 'no-call' }
 
   let theirInfo = parseCallsign(call)
   if (theirInfo?.baseCall) {
@@ -73,15 +90,23 @@ async function _performLookup ({ qso, online, settings, dispatch, skipLookup = f
     theirInfo = annotateFromCountryFile({ prefix: call, baseCall: call })
   }
 
-  const { lookups } = await lookupCall(theirInfo, { online, settings, dispatch, skipLookup: false })
-  const { refs } = await lookupRefs(qso?.refs, { online, settings, dispatch, skipLookup: false })
+  const cacheKey = `${call}-${qso?.refs?.map(r => `${r.type || r.key}:${r.ref}`).join(',') || 'no-refs'}`
 
-  const { guess, lookup } = mergeData({ theirInfo, lookups, refs })
+  return { call, theirInfo, cacheKey }
+}
+
+async function _performLookup ({ qso, call, theirInfo, online, settings, dispatch, skipLookup = false }) {
+  // if (!call || call.length < 3) return { guess: theirInfo, lookup: {}, lookups: {}, theirInfo }
+
+  const { lookups } = await _lookupCall(theirInfo, { online, settings, dispatch, skipLookup: false })
+  const { refs } = await _lookupRefs(qso?.refs, { online, settings, dispatch, skipLookup: false })
+
+  const { guess, lookup } = _mergeData({ theirInfo, lookups, refs })
 
   return { guess, lookup, lookups, theirInfo }
 }
 
-export async function lookupCall (theirInfo, { online, settings, dispatch, skipLookup = false }) {
+async function _lookupCall (theirInfo, { online, settings, dispatch, skipLookup = false }) {
   const lookups = {}
   if (!skipLookup) {
     const lookupHooks = findHooks('lookup')
@@ -105,7 +130,7 @@ export async function lookupCall (theirInfo, { online, settings, dispatch, skipL
   return { lookups }
 }
 
-export async function lookupRefs (refs, { online, settings, dispatch, skipLookup = false }) {
+async function _lookupRefs (refs, { online, settings, dispatch, skipLookup = false }) {
   let newRefs = []
   for (const ref of (refs || [])) {
     const hooks = findHooks(`ref:${ref.type}`)
@@ -122,7 +147,7 @@ export async function lookupRefs (refs, { online, settings, dispatch, skipLookup
   return { refs: newRefs }
 }
 
-function mergeData ({ theirInfo, lookups, refs }) {
+function _mergeData ({ theirInfo, lookups, refs }) {
   let mergedLookup = {}
   const newGuess = { ...theirInfo }
 
