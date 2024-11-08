@@ -29,28 +29,32 @@ export default Extension
 const LookupHook = {
   ...Info,
   lookupCallWithDispatch: async (callInfo, { settings, operation, online, dispatch }) => {
-    const history = await findQSOHistory(callInfo?.call)
-    const lookup = { call: callInfo.call }
-    if (history && history[0] && (history[0].theirCall === callInfo?.call || history[0].theirCall === callInfo?.baseCall)) {
-      const historyData = JSON.parse(history[0].data)
-      if (historyData.their) {
-        // Capture the lookup call, not the QSO, because the original guess and lookup might have been for different modifiers
-        lookup.call = historyData.their.guess?.call ?? historyData.their.call
+    const { history, mostRecentQSO } = await findQSOHistory(callInfo?.call, { baseCall: callInfo?.baseCall })
+    // console.log('History lookup', { call: callInfo.call, history: history.length, name: mostRecentQSO?.their?.name, guessName: mostRecentQSO?.their?.guess?.name })
+    // console.log('-- ', mostRecentQSO)
+    if (mostRecentQSO?.their?.call) {
+      const lookup = { call: callInfo?.call, source: 'Call History' }
 
-        lookup.name = capitalizeString(historyData.their.name ?? historyData.their.guess?.name, { content: 'name', force: false })
-        lookup.state = historyData.their.state ?? historyData.their.guess?.state
-        lookup.city = capitalizeString(historyData.their.city ?? historyData.their.guess?.city, { content: 'address', force: false })
-        lookup.postal = historyData.their.postal ?? historyData.their.guess?.postal
-        lookup.grid = historyData.their.grid ?? historyData.their.guess?.grid
-        lookup.cqZone = historyData.their.cqZone ?? historyData.their.guess?.cqZone
-        lookup.ituZone = historyData.their.ituZone ?? historyData.their.guess?.ituZone
-        Object.keys(lookup).forEach(key => {
-          if (!lookup[key]) delete lookup[key]
-        })
-        lookup.source = 'Call History'
+      lookup.name = capitalizeString(mostRecentQSO?.their?.name ?? mostRecentQSO?.their?.guess?.name, { content: 'name', force: false })
+
+      // If modifiers match, and the guess was not for a different location, use the location
+      if (mostRecentQSO.their.call === callInfo?.call && !mostRecentQSO.their.guess?.locationLabel) {
+        lookup.state = mostRecentQSO.their.state ?? mostRecentQSO.their.guess?.state
+        lookup.city = capitalizeString(mostRecentQSO.their.city ?? mostRecentQSO.their.guess?.city, { content: 'address', force: false })
+        lookup.postal = mostRecentQSO.their.postal ?? mostRecentQSO.their.guess?.postal
+        lookup.grid = mostRecentQSO.their.grid ?? mostRecentQSO.their.guess?.grid
+        lookup.cqZone = mostRecentQSO.their.cqZone ?? mostRecentQSO.their.guess?.cqZone
+        lookup.ituZone = mostRecentQSO.their.ituZone ?? mostRecentQSO.their.guess?.ituZone
       }
+      lookup.source = 'Call History'
+
+      Object.keys(lookup).forEach(key => {
+        if (!lookup[key]) delete lookup[key]
+      })
+      return { ...lookup, history }
+    } else {
+      return { history: [] }
     }
-    return { ...lookup, history }
   }
 }
 
