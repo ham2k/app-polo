@@ -1,4 +1,10 @@
 {
+  "24.11.1": {
+    "name": "November '24",
+    "changes": [
+      "Fix problems with name lookups and POTA references"
+    ]
+  },
   "24.11.0": {
     "name": "November '24",
     "changes": [
