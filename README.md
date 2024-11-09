@@ -33,7 +33,7 @@ This app is Open Source and licensed under the [Mozilla Public License 2.0](./LI
 
 ## Development Environment
 
-First, complete the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions up to just before "Creating a new application" step.
+First, complete the [React Native - Environment Setup](https://reactnative.dev/docs/set-up-your-environment) instructions up to just before "Creating a new application" step.
 
 Then clone this repository and install the dependencies:
 
