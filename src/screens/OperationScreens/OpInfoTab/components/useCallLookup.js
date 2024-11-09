@@ -75,7 +75,7 @@ export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup
 
 function _extractCallInfo (qso) {
   // Pick the last call in the list, and ignore any under 3 characters or with a question mark
-  const calls = qso?.their?.call?.split(',')?.filter(x => x && x.length > 2 && x.indexOf('?') < 0)
+  const calls = qso?.their?.call?.split(',')?.filter(x => x && x.length > 2 && x.indexOf('?') < 0) ?? []
   let call = calls[calls.length - 1]
 
   // Remove any trailing slash
