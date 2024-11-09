@@ -33,7 +33,6 @@ https://docs.google.com/spreadsheets/d/1F1tI9PQLl_uab3HNYNwgjPVL2r0hJ9VymXcgDp5e
 
 General React (18)
 * @reduxjs/toolkit
-* @rollbar/react
 
 General Javascript
 * @ham2k

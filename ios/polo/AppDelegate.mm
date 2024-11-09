@@ -4,8 +4,6 @@
 
 #import "RNSplashScreen.h"
 #import "RNCConfig.h"
-#import <CodePush/CodePush.h>
-#import <RollbarReactNative/RollbarReactNative.h>
 
 @implementation AppDelegate
 
@@ -15,15 +13,6 @@
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-
-  NSString *rollbarToken = [RNCConfig envFor:@"ROLLBAR_TOKEN"];
-  if ([rollbarToken length] > 0) {
-    NSDictionary *options = @{
-      @"accessToken": rollbarToken
-    };
-
-    [RollbarReactNative initWithConfiguration:options];
-  }
 
   BOOL ret = [super application:application didFinishLaunchingWithOptions:launchOptions];
   if (ret == YES) {
@@ -39,11 +28,7 @@
 
 - (NSURL *)bundleURL
 {
-#if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
-#else
-  return [CodePush bundleURL];
-#endif
 }
 
 - (BOOL) application: (UIApplication *)application
