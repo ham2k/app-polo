@@ -17,14 +17,14 @@ export default function mergeQSOs (a, b) {
   const other = a
 
   // Extend times if needed
-  if (other.startOnMillis && merged.startOnMillis && other.startOnMillis < merged.startOnMillis) {
-    merged.startOnMillis = other.startOnMillis
-    merged.startOn = other.startOn
+  if (other.startAtMillis && merged.startAtMillis && other.startAtMillis < merged.startAtMillis) {
+    merged.startAtMillis = other.startAtMillis
+    merged.startAt = other.startAt
   }
 
-  if (other.endOnMillis && merged.endOnMillis && other.endOnMillis > merged.endOnMillis) {
-    merged.endOnMillis = other.endOnMillis
-    merged.endOn = other.endOn
+  if (other.endAtMillis && merged.endAtMillis && other.endAtMillis > merged.endAtMillis) {
+    merged.endAtMillis = other.endAtMillis
+    merged.endAt = other.endAt
   }
 
   // Merge references

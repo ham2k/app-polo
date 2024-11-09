@@ -75,12 +75,12 @@ const SeedCommandHook = {
   invokeCommand: (match, { handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
     let count = parseInt(match[1], 10)
     setTimeout(async () => {
-      let startOnMillis = Date.now()
+      let startAtMillis = Date.now()
       const times = []
       for (let i = 0; i < count; i++) {
         const t = poissonRandom(120) * 1000 // mean of 120 seconds per QSO
         times.push(t)
-        startOnMillis -= t
+        startAtMillis -= t
       }
       const calls = getAllCallsFromNotes().filter(x => x)
       if (calls.length === 0) calls.concat(['KI2D', 'M1SDH', 'EI5IYB', 'M0LZN', 'WV3H', 'LB4FH', 'VK1AO'])
@@ -101,8 +101,8 @@ const SeedCommandHook = {
           mode: qso?.mode ?? vfo?.mode ?? 'SSB',
           band: qso?.band ?? vfo?.band ?? '20m',
           freq: qso?.freq ?? vfo?.freq,
-          startOnMillis,
-          startOn: new Date(startOnMillis).toISOString()
+          startAtMillis,
+          startAt: new Date(startAtMillis).toISOString()
         }
         oneQSO.their = { call, sent: randomRST(oneQSO.mode) }
         oneQSO.our = { call: ourInfo.call, operatorCall: ourInfo.operatorCall || operation.operatorCall, sent: randomRST(oneQSO.mode) }
@@ -113,7 +113,7 @@ const SeedCommandHook = {
         updateLoggingState({ selectedKey: undefined, lastKey: oneQSO.key })
 
         count--
-        startOnMillis = startOnMillis + times.pop()
+        startAtMillis = startAtMillis + times.pop()
       }
     }, 0)
     return `Seeding the log with ${count} QSOs`

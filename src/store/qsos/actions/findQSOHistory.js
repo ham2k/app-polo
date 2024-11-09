@@ -19,6 +19,7 @@ export async function findQSOHistory (call, options = {}) {
   }
 
   if (options.onDate) {
+    // TODO: Rename `startOnMillis` to `startAtMillis` in the database
     whereClauses.push("strftime('%Y-%m-%d', qsos.startOnMillis / 1000, 'unixepoch') = ?")
     whereArgs.push(fmtDateZulu(options.onDate))
   }

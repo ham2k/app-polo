@@ -43,8 +43,8 @@ export default function OperationItem ({ operation, settings, onPress, styles })
             <Text style={styles.rowTextSmall} numberOfLines={1} ellipsizeMode={'tail'}>{operation.subtitle}</Text>
           </View>
           <View style={styles.rowBottomRight}>
-            {operation.startOnMillisMax && (
-              <Text style={styles.rowTextSmall}>{fmtDateZuluDynamic(operation.startOnMillisMax)}</Text>
+            {operation.startAtMillisMax && (
+              <Text style={styles.rowTextSmall}>{fmtDateZuluDynamic(operation.startAtMillisMax)}</Text>
             )}
           </View>
         </View>

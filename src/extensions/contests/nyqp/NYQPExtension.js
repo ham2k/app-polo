@@ -54,7 +54,7 @@ const ReferenceHandler = {
   descriptionPlaceholder: '',
   description: (operation) => {
     let date
-    if (operation?.qsos && operation.qsos[0]?.startOnMillis) date = Date.parse(operation.qsos[0].startOnMillis)
+    if (operation?.qsos && operation.qsos[0]?.startAtMillis) date = Date.parse(operation.qsos[0].startAtMillis)
     else date = new Date()
     const ref = findRef(operation, Info.key)
     return [`NYQP ${date.getFullYear()}`, ref?.location].filter(x => x).join(' • ')
@@ -208,7 +208,7 @@ const ReferenceHandler = {
       theirLocations = []
     }
 
-    const { band, mode, key, startOnMillis } = qso
+    const { band, mode, key, startAtMillis } = qso
 
     if (INVALID_BANDS.indexOf(band) >= 0) {
       return { value: 0, alerts: ['invalidBand'], type: Info.key }
@@ -216,7 +216,7 @@ const ReferenceHandler = {
 
     const superMode = superModeForMode(mode)
 
-    const nearDupes = qsos.filter(q => !q.deleted && (startOnMillis ? q.startOnMillis < startOnMillis : true) && q.their.call === qso.their.call && q.key !== key)
+    const nearDupes = qsos.filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.key !== key)
 
     const locationMultiplier = ourLocations.length * theirLocations.length
     const value = ({ CW: 2, SSB: 1, DATA: 3 }[superMode] || 1) * locationMultiplier

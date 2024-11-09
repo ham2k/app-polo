@@ -27,7 +27,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
         innerRef={ref}
         themeColor={themeColor}
         style={{ minWidth: styles.oneSpace * 11 }}
-        valueInMillis={qso?.startOnMillis}
+        valueInMillis={qso?.startAtMillis}
         disabled={disabled}
         label="Time"
         onChange={handleFieldChange}
@@ -38,7 +38,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
       <DateInput
         themeColor={themeColor}
         style={{ minWidth: styles.oneSpace * 11 }}
-        valueInMillis={qso?.startOnMillis}
+        valueInMillis={qso?.startAtMillis}
         disabled={disabled}
         label="Date"
         onChange={handleFieldChange}
@@ -46,7 +46,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
         fieldId={'date'}
         focusedRef={focusedRef}
       />
-      {qso?._isNew && (operation._nextManualTime || qso?.startOnMillis) && (
+      {qso?._isNew && (operation._nextManualTime || qso?.startAtMillis) && (
         <View flexDirection="column" alignItems={'center'} justifyContent={'center'}>
           <ThemedButton
             themeColor="tertiaryLighter"
@@ -73,11 +73,11 @@ export const timeControl = {
   LabelComponent: (props) => {
     if (props.operation?._nextManualTime) {
       return (
-        <TimeChip {...props} icon={'pause'} time={props?.qso?.startOnMillis} />
+        <TimeChip {...props} icon={'pause'} time={props?.qso?.startAtMillis} />
       )
     } else {
       return (
-        <TimeChip {...props} time={props?.qso?.startOnMillis} />
+        <TimeChip {...props} time={props?.qso?.startAtMillis} />
       )
     }
   },

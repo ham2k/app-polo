@@ -114,11 +114,11 @@ export default function OperationBadgeScreen ({ navigation, route }) {
   }, [operation?.grid])
 
   const opDate = useMemo(() => {
-    return `${fmtDateTimeNice(operation.startOnMillisMin)}`
+    return `${fmtDateTimeNice(operation.startAtMillisMin)}`
   }, [operation])
 
   const opStats = useMemo(() => {
-    return `${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startOnMillisMin, operation.startOnMillisMax)}`
+    return `${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`
   }, [qsos, operation])
 
   return (

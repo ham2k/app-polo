@@ -77,7 +77,7 @@ export const importHistoricalADIF = (path) => async (dispatch) => {
           band: qso.band,
           freq: qso.frequency ?? qso.freq,
           mode: qso.mode,
-          startOnMillis: qso.startOnMillis,
+          startAtMillis: qso.startAtMillis,
           our: { call: qso.our.call },
           their: {
             call: qso.their.call,

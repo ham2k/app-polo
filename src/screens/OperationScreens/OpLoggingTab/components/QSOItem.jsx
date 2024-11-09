@@ -54,7 +54,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
   return (
     <TouchableRipple onPress={pressHandler} style={selected ? styles.selectedRow : styles.unselectedRow}>
       <View style={styles.compactRow}>
-        <Text style={styles.fields.time}>{timeFormatFunction(qso.startOnMillis)}</Text>
+        <Text style={styles.fields.time}>{timeFormatFunction(qso.startAtMillis)}</Text>
         <Text style={styles.fields.freq}>
           {freqParts[0] && <Text style={styles.fields.freqMHz}>{freqParts[0]}.</Text>}
           {freqParts[1] && <Text style={styles.fields.freqKHz}>{freqParts[1]}</Text>}
@@ -84,14 +84,14 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
             qso.their?.name ?? qso.their?.guess?.name ?? ''
           )}
         </Text>
-        <Text style={styles.fields.icon}>
+        <View style={styles.fields.icons}>
           {qso.notes && (
             <Icon source="note-outline" size={styles.normalFontSize} style={styles.fields.icon} />
           )}
           {(qso.refs || []).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.iconForQSO).map(({ ref, handler }, i) => (
-            <Icon key={i} source={handler?.iconForQSO} size={styles.normalFontSize} style={styles.fields.icon} color={styles.fields.icon.color} />
+            <View key={i} style={styles.fields.icon}><Icon key={i} source={handler?.iconForQSO} size={styles.normalFontSize} color={styles.fields.icon.color} /></View>
           ))}
-        </Text>
+        </View>
         {extraInfo ? (
           <>
             {styles.mdOrLarger && (
