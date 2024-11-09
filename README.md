@@ -33,9 +33,9 @@ This app is Open Source and licensed under the [Mozilla Public License 2.0](./LI
 
 ## Development Environment
 
-First, complete the [React Native - Environment Setup](https://reactnative.dev/docs/set-up-your-environment) instructions up to just before "Creating a new application" step.
+First, complete the [React Native - Environment Setup](https://reactnative.dev/docs/set-up-your-environment) instructions.
 
-Then clone this repository and install the dependencies:
+Then clone this repository, `cd` into it and install the dependencies:
 
 ```
 npm install
@@ -105,7 +105,7 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 Because of a mess with our multiple build flavors, under RN 0.73 the default way of running android for development is broken
 so you cannot just press `a` from the metro bundler terminal to run the app on android.
 
-Instead, run the metro bundler (`npm start`) on one terminal, and run `npm run android` on another to build the app.
+Instead, run the metro bundler (`npm start`) on one terminal, and run `npm run android -- --mode alphaDebug` on another to build the app.
 
 Afterwards, just press `r` on the metro bundler terminal to reload the app.
 
