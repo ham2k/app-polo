@@ -10,7 +10,6 @@ Specific to React Native (0.72)
 * @react-navigation (material-top-tabs, native-stack, drawer-layout) — android, ios (may run on others)
 * @sayem314/react-native-keep-awake — MIT, android, ios, web, supports New Architecture
 * react-native-blob-util — MIT, supports New Architecture
-* react-native-code-push — MIT, android, ios, windows
 * react-native-config — MIT, android, ios, windows
 * react-native-device-info — MIT, android, ios, windows
 * react-native-document-picker — MIT, android, ios, windows, supports New Architecture

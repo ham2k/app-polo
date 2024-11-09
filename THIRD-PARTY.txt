@@ -7029,7 +7029,6 @@ The following npm packages may be included in this product:
  - babel-core@7.0.0-bridge.0
  - babel-plugin-syntax-trailing-function-commas@7.0.0-beta.0
  - bplist-parser@0.3.1
- - code-push@4.2.1
  - degenerator@5.0.1
  - denodeify@1.2.1
  - deprecated-react-native-prop-types@4.1.0
