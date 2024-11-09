@@ -35,7 +35,8 @@ export function WWBOTALoggingControl (props) {
 
   const defaultPrefix = useMemo(() => {
     if (qso?.their?.guess?.entityPrefix) {
-      return `B/${qso?.their.guess.entityPrefix}`
+      const prefix = qso?.their?.guess?.entityPrefix
+      return `B/${prefix === 'I' ? 'IT' : prefix}`
     } else if (ourInfo?.entityPrefix) {
       return `B/${ourInfo?.entityPrefix}`
     } else {

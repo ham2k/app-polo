@@ -2,6 +2,7 @@
   "24.11.99-pre0": {
     "name": "December '24 (Pre 0)",
     "changes": [
+      "Fix reference prefix for ITABOTA"
     ]
   },
   "24.11.2": {
