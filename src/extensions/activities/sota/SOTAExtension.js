@@ -196,7 +196,9 @@ const ReferenceHandler = {
   },
 
   suggestExportOptions: ({ operation, qsos, ref, settings }) => {
+    console.log('suggestExportOptions', { ref })
     if (ref?.type === Info.activationType && ref?.ref) {
+      console.log('SOTA Activator')
       return [{
         format: 'adif',
         exportType: `${Info.key}-activator`,
@@ -206,7 +208,9 @@ const ReferenceHandler = {
       }]
     } else { // "export" hook
       const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType))
-      if (!hasSOTA) return null
+      const isSOTAActivation = findRef(operation, Info.activationType)
+      if (!hasSOTA || isSOTAActivation) return null
+      console.log('SOTA Hunter')
       return [{
         format: 'adif',
         exportType: `${Info.key}-hunter`,
