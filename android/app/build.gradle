@@ -115,11 +115,6 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-    android.buildTypes.each { buildType ->
-       // to prevent incorrect long value restoration from strings.xml we need to wrap it with double quotes
-        // https://github.com/microsoft/cordova-plugin-code-push/issues/264
-        buildType.resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
-    }
     flavorDimensions ("environment")
     productFlavors {
         alpha {
