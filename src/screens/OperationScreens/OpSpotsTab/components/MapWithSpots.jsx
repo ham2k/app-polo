@@ -11,34 +11,35 @@ import { View, useColorScheme, Platform } from 'react-native'
 
 import { fmtShortTimeZulu } from '../../../../tools/timeFormats'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../../tools/geoTools'
+import { stylesForMap } from '../../OpMapTab/components/MapWithQSOs'
 import { Text } from 'react-native-paper'
 
 const TRANSP_PNG = require('../../../../../assets/images/transp-16.png')
 
 const METERS_IN_ONE_DEGREE = 111111
 
-export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedUUID }) {
+// @todo qth, loading, refresh, selectedKey
+export default function MapWithSpots ({ styles, operation, qth, spots, loading, refresh, settings, selectedKey }) {
   // Maps change with the actual device color scheme, not the user preferences in the app
   const deviceColorScheme = useColorScheme()
 
-  const mappableQSOs = useMemo(() => {
-    const activeQSOs = qsos.filter(qso => !qso.deleted)
-    return activeQSOs
-      .map(qso => {
-        const location = locationForQSONInfo(qso?.their)
-        const strength = strengthForQSO(qso)
+  const mappableSpots = useMemo(() => {
+    return spots
+      .map(spot => {
+        // @todo don't think this works for spots, figure out how to get qson or another way to get spot location
+        const location = locationForQSONInfo(spot?.their)
         const distance = location && qth ? distanceOnEarth(location, qth, { units: settings.distanceUnits }) : null
         const distanceStr = distance ? fmtDistance(distance, { units: settings.distanceUnits }) : ''
-        return { qso, location, strength, distance, distanceStr }
+        return { spot, location, distance, distanceStr }
       })
       .filter(({ location }) => location)
-      .sort((a, b) => b.strength - a.strength) // Weakest first
-  }, [qsos, qth, settings])
+      .sort((a, b) => b.strength - a.strength) // @todo Oldest first
+  }, [spots, qth, settings])
 
   const initialRegion = useMemo(() => {
     const { latitude, longitude } = qth
     let latitudeMin = latitude ?? 0; let latitudeMax = latitude ?? 0; let longitudeMin = longitude ?? 0; let longitudeMax = longitude ?? 0
-    for (const { location } of mappableQSOs) {
+    for (const { location } of mappableSpots) {
       latitudeMin = Math.min(latitudeMin, location.latitude)
       latitudeMax = Math.max(latitudeMax, location.latitude)
       longitudeMin = Math.min(longitudeMin, location.longitude)
@@ -50,7 +51,7 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
       latitudeDelta: Math.abs(latitudeMax - latitudeMin) + 10,
       longitudeDelta: Math.abs(longitudeMax - longitudeMin) + 10
     }
-  }, [qth, mappableQSOs])
+  }, [qth, mappableSpots])
 
   const [layout, setLayout] = useState()
   const handleLayout = useCallback((event) => {
@@ -77,10 +78,10 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
   }, [layout, region, styles])
 
   const mapStyles = useMemo(() => {
-    const newStyles = stylesForMap({ latitudeDelta: scale?.latitudeDelta, metersPerPixel: scale?.metersPerPixel, count: mappableQSOs?.length, deviceColorScheme })
+    const newStyles = stylesForMap({ latitudeDelta: scale?.latitudeDelta, metersPerPixel: scale?.metersPerPixel, count: mappableSpots?.length, deviceColorScheme })
 
     return newStyles
-  }, [scale, mappableQSOs?.length, deviceColorScheme])
+  }, [scale, mappableSpots?.length, deviceColorScheme])
 
   return (
     <MapView
@@ -117,42 +118,42 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
       {scale?.metersPerOneSpace && (
         <MapMarkers
           qth={qth}
-          qsos={mappableQSOs}
+          spots={mappableSpots}
           mapStyles={mapStyles}
           styles={styles}
           metersPerOneSpace={scale?.metersPerOneSpace}
-          selectedUUID={selectedUUID}
+          selectedKey={selectedKey}
         />
       )}
     </MapView>
   )
 }
 
-const MapMarkers = React.memo(function MapMarkers ({ qth, qsos, selectedUUID, mapStyles, styles, metersPerOneSpace }) {
+const MapMarkers = React.memo(function MapMarkers ({ qth, spots, selectedKey, mapStyles, styles, metersPerOneSpace }) {
   const ref = useRef()
 
   useEffect(() => {
     if (ref.current) {
       ref.current.showCallout()
     }
-  }, [ref, selectedUUID])
+  }, [ref, selectedKey])
 
   return (
     <>
-      {qth.latitude && qth.longitude && qsos.map(({ qso, location, strength }) => (
+      {qth.latitude && qth.longitude && spots.map(({ spot, location, strength }) => (
         <Polyline
-          key={`${qso.uuid}-line-${metersPerOneSpace}`}
+          key={`${spot.key}-line-${metersPerOneSpace}`}
           geodesic={true}
           coordinates={[location, qth]}
           {...mapStyles.line}
         />
       ))}
-      {qsos.map(({ qso, location, strength, distanceStr }) => (
-        <React.Fragment key={qso.uuid}>
+      {spots.map(({ spot, location, strength, distanceStr }) => (
+        <React.Fragment key={spot.key}>
           <Marker
-            key={`${qso.uuid}-marker-${metersPerOneSpace}`}
+            key={`${spot.key}-marker-${metersPerOneSpace}`}
             coordinate={location}
-            ref={selectedUUID && selectedUUID === qso.uuid ? ref : undefined}
+            ref={selectedKey && selectedKey === spot.key ? ref : undefined}
             anchor={{ x: 0.5, y: 0.5 }}
             flat={true}
             tracksViewChanges={false}
@@ -161,22 +162,22 @@ const MapMarkers = React.memo(function MapMarkers ({ qth, qsos, selectedUUID, ma
             <Callout>
               <View>
                 <Text style={{ fontWeight: 'bold', color: '#333' }}>
-                  {qso.their?.call} • {distanceStr}
+                  {spot.their?.call} • {distanceStr}
                 </Text>
                 <Text style={{ color: '#333' }}>
-                  {qso.their?.sent}
-                  {' • '}{qso.mode}
-                  {' • '}<Text style={{ fontWeight: 'bold', color: colorForText({ qso, styles, mapStyles }) }}>{qso.band}</Text>
-                  {' • '}{fmtShortTimeZulu(qso.startAtMillis)}
+                  {spot.their?.sent}
+                  {' • '}{spot.mode}
+                  {' • '}<Text style={{ fontWeight: 'bold', color: colorForText({ spot, styles, mapStyles }) }}>{spot.band}</Text>
+                  {' • '}{fmtShortTimeZulu(spot.startAtMillis)}
                 </Text>
               </View>
             </Callout>
           </Marker>
           <Circle
-            key={`${qso.uuid}-circle-${metersPerOneSpace}`}
+            key={`${spot.key}-circle-${metersPerOneSpace}`}
             center={location}
-            radius={radiusForMarker({ qso, strength, location, metersPerOneSpace, size: mapStyles.marker.size })}
-            fillColor={colorForMarker({ qso, location, strength, styles, mapStyles })}
+            radius={radiusForMarker({ spot, strength, location, metersPerOneSpace, size: mapStyles.marker.size })}
+            fillColor={colorForMarker({ spot, location, strength, styles, mapStyles })}
             strokeWidth={0.1}
           />
         </React.Fragment>
@@ -202,72 +203,4 @@ function colorForMarker ({ qso, location, strength, styles, mapStyles }) {
 
 function colorForText ({ qso, styles, mapStyles }) {
   return styles.colors.bands[qso.band] || styles.colors.bands.default
-}
-
-function strengthForQSO (qso) {
-  try {
-    if (qso.mode === 'CW' || qso.mode === 'RTTY') {
-      return Math.floor((qso.their?.sent || 555) / 10) % 10
-    } else if (qso.mode === 'FT8' || qso.mode === 'FT4') {
-      const signal = (qso.their?.sent || -10)
-      // map signal report from -20 to +10 into 1 to 9
-      const remapped = (9 - 1) / (10 - (-20)) * (signal - (-20)) + 1
-      return Math.min(9, Math.max(1, Math.round(remapped)))
-    } else {
-      return (qso.their?.sent || 55) % 10
-    }
-  } catch (e) {
-    return 5
-  }
-}
-
-export function stylesForMap ({ longitudeDelta, metersPerPixel, count, deviceColorScheme }) {
-  // in iOS, maps change with the actual device color scheme, not the user preferences in the app
-
-  if (count > 50) {
-    longitudeDelta = longitudeDelta * 1.5
-  }
-
-  if (Platform.OS === 'ios') {
-    const darkMode = Platform.OS === 'ios' && deviceColorScheme === 'dark'
-    if (metersPerPixel > 32000) {
-      return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
-    } else if (metersPerPixel > 16000) {
-      return { marker: { opacity: 0.7, size: 1.4 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
-    } else if (metersPerPixel > 8000) {
-      return { marker: { opacity: 0.8, size: 1.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
-    } else if (metersPerPixel > 4000) {
-      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
-    } else if (metersPerPixel > 2000) {
-      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
-    } else if (metersPerPixel > 1000) {
-      return { marker: { opacity: 0.7, size: 2.1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
-    } else if (metersPerPixel > 500) {
-      return { marker: { opacity: 1, size: 2.2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.4)` } }
-    } else if (metersPerPixel > 100) {
-      return { marker: { opacity: 1, size: 2.4 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
-    } else {
-      return { marker: { opacity: 1, size: 2.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
-    }
-  } else {
-    if (metersPerPixel > 32000) {
-      return { marker: { opacity: 0.7, size: 1.4 }, line: { strokeColor: 'rgba(40,40,40,0.4)' } }
-    } else if (metersPerPixel > 16000) {
-      return { marker: { opacity: 0.7, size: 1.6 }, line: { strokeColor: 'rgba(40,40,40,0.4)' } }
-    } else if (metersPerPixel > 8000) {
-      return { marker: { opacity: 0.8, size: 1.8 }, line: { strokeColor: 'rgba(40,40,40,0.5)' } }
-    } else if (metersPerPixel > 4000) {
-      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: 'rgba(60,60,60,0.5)' } }
-    } else if (metersPerPixel > 2000) {
-      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: 'rgba(60,60,60,0.6)' } }
-    } else if (metersPerPixel > 1000) {
-      return { marker: { opacity: 0.7, size: 2.1 }, line: { strokeColor: 'rgba(60,60,60,0.6)' } }
-    } else if (metersPerPixel > 500) {
-      return { marker: { opacity: 1, size: 2.2 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
-    } else if (metersPerPixel > 100) {
-      return { marker: { opacity: 1, size: 2.4 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
-    } else {
-      return { marker: { opacity: 1, size: 2.8 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
-    }
-  }
 }
