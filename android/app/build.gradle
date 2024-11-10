@@ -116,6 +116,11 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            applicationIdSuffix ".beta"
+        }
+        prodRelease {
+            initWith release
+            applicationIdSuffix ".prod"
         }
     }
     android.buildTypes.each { buildType ->
