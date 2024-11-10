@@ -270,7 +270,6 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
               refresh={refresh}
               onPress={handlePress}
               styles={styles}
-              qth={null} // @todo
               settings={settings}
               selectedKey={null}
             />

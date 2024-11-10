@@ -7,44 +7,57 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import MapView, { Marker, Polyline, Circle, Callout } from 'react-native-maps'
-import { View, useColorScheme, Platform } from 'react-native'
+import { View, useColorScheme } from 'react-native'
 
 import { fmtShortTimeZulu } from '../../../../tools/timeFormats'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../../tools/geoTools'
 import { stylesForMap } from '../../OpMapTab/components/MapWithQSOs'
 import { Text } from 'react-native-paper'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
 const TRANSP_PNG = require('../../../../../assets/images/transp-16.png')
 
 const METERS_IN_ONE_DEGREE = 111111
 
-// @todo qth, loading, refresh, selectedKey
-export default function MapWithSpots ({ styles, operation, qth, spots, loading, refresh, settings, selectedKey }) {
+// @todo loading, refresh, selectedKey
+export default function MapWithSpots ({ styles, operation, spots, loading, refresh, settings, selectedKey }) {
   // Maps change with the actual device color scheme, not the user preferences in the app
   const deviceColorScheme = useColorScheme()
 
-  const mappableSpots = useMemo(() => {
-    return spots
-      .map(spot => {
-        // @todo don't think this works for spots, figure out how to get qson or another way to get spot location
-        const location = locationForQSONInfo(spot?.their)
-        const distance = location && qth ? distanceOnEarth(location, qth, { units: settings.distanceUnits }) : null
-        const distanceStr = distance ? fmtDistance(distance, { units: settings.distanceUnits }) : ''
-        return { spot, location, distance, distanceStr }
-      })
-      .filter(({ location }) => location)
-      .sort((a, b) => b.strength - a.strength) // @todo Oldest first
-  }, [spots, qth, settings])
+  const qth = [50.1, -1.7] // @todo remove
+  const mappableSpots = []
+  // const qth = useMemo(() => {
+  //   try {
+  //     if (!operation?.grid) return {}
+  //     const [latitude, longitude] = gridToLocation(operation.grid)
+  //     return { latitude, longitude }
+  //   } catch (e) {
+  //     return {}
+  //   }
+  // }, [operation?.grid])
+  //
+  // const mappableSpots = useMemo(() => {
+  //   return spots
+  //     .map(spot => {
+  //       // @todo don't think this works for spots, figure out how to get qson or another way to get spot location
+  //       const location = locationForQSONInfo(spot)
+  //       const distance = location && qth ? distanceOnEarth(location, qth, { units: settings.distanceUnits }) : null
+  //       const distanceStr = distance ? fmtDistance(distance, { units: settings.distanceUnits }) : ''
+  //       return { spot, location, distance, distanceStr }
+  //     })
+  //     .filter(({ location }) => location)
+  //     .sort((a, b) => b.spot.timeInMillis - a.spot.timeInMillis)
+  // }, [spots, qth, settings])
 
   const initialRegion = useMemo(() => {
     const { latitude, longitude } = qth
     let latitudeMin = latitude ?? 0; let latitudeMax = latitude ?? 0; let longitudeMin = longitude ?? 0; let longitudeMax = longitude ?? 0
-    for (const { location } of mappableSpots) {
-      latitudeMin = Math.min(latitudeMin, location.latitude)
-      latitudeMax = Math.max(latitudeMax, location.latitude)
-      longitudeMin = Math.min(longitudeMin, location.longitude)
-      longitudeMax = Math.max(longitudeMax, location.longitude)
-    }
+    // for (const { location } of mappableSpots) {
+    //   latitudeMin = Math.min(latitudeMin, location.latitude)
+    //   latitudeMax = Math.max(latitudeMax, location.latitude)
+    //   longitudeMin = Math.min(longitudeMin, location.longitude)
+    //   longitudeMax = Math.max(longitudeMax, location.longitude)
+    // }
     return {
       latitude: latitudeMin + (latitudeMax - latitudeMin) / 2,
       longitude: longitudeMin + (longitudeMax - longitudeMin) / 2,
@@ -81,12 +94,13 @@ export default function MapWithSpots ({ styles, operation, qth, spots, loading, 
     const newStyles = stylesForMap({ latitudeDelta: scale?.latitudeDelta, metersPerPixel: scale?.metersPerPixel, count: mappableSpots?.length, deviceColorScheme })
 
     return newStyles
-  }, [scale, mappableSpots?.length, deviceColorScheme])
+  }, [scale, 0, deviceColorScheme])
+  // @todo revert to: }, [scale, mappableSpots?.length, deviceColorScheme])
 
   return (
     <MapView
       onLayout={handleLayout}
-      style={styles.root}
+      style={[{ flex: 1, flexDirection: 'column'}, styles.root]}
       initialRegion={initialRegion}
       onRegionChange={handleRegionChange}
       cameraZoomRange={{ animated: false }}
@@ -140,7 +154,7 @@ const MapMarkers = React.memo(function MapMarkers ({ qth, spots, selectedKey, ma
 
   return (
     <>
-      {qth.latitude && qth.longitude && spots.map(({ spot, location, strength }) => (
+      {qth.latitude && qth.longitude && spots.map(({ spot, location }) => (
         <Polyline
           key={`${spot.key}-line-${metersPerOneSpace}`}
           geodesic={true}
@@ -148,7 +162,7 @@ const MapMarkers = React.memo(function MapMarkers ({ qth, spots, selectedKey, ma
           {...mapStyles.line}
         />
       ))}
-      {spots.map(({ spot, location, strength, distanceStr }) => (
+      {spots.map(({ spot, location, age, band, distanceStr }) => (
         <React.Fragment key={spot.key}>
           <Marker
             key={`${spot.key}-marker-${metersPerOneSpace}`}
@@ -176,8 +190,8 @@ const MapMarkers = React.memo(function MapMarkers ({ qth, spots, selectedKey, ma
           <Circle
             key={`${spot.key}-circle-${metersPerOneSpace}`}
             center={location}
-            radius={radiusForMarker({ spot, strength, location, metersPerOneSpace, size: mapStyles.marker.size })}
-            fillColor={colorForMarker({ spot, location, strength, styles, mapStyles })}
+            radius={radiusForMarker({ spot, age, location, metersPerOneSpace, size: mapStyles.marker.size })}
+            fillColor={colorForMarker({ spot, location, band, styles, mapStyles })}
             strokeWidth={0.1}
           />
         </React.Fragment>
@@ -186,15 +200,16 @@ const MapMarkers = React.memo(function MapMarkers ({ qth, spots, selectedKey, ma
   )
 })
 
-function radiusForMarker ({ qso, strength, location, size, metersPerOneSpace }) {
+// Get a radius for the marker. Zero age is 130% radius, 30 minutes old or older is 70% radius. This matches the radii
+// used for signal strength in the QSO map. Age provided in millis.
+function radiusForMarker ({ age, location, size, metersPerOneSpace }) {
   const latitude = Math.abs(location.latitude ?? location.lat)
 
   const latitudeScale = Math.cos(latitude * Math.PI / 180)
 
   const baseRadius = (metersPerOneSpace * size * latitudeScale) / 2
 
-  // A signal strength of 5 is 100% radius. 9 is 130% radius. 1 is 70% radius.
-  return baseRadius * (1 + (((strength || 5) - 5) / ((9 - 1) / 2) * 0.30))
+  return baseRadius * (1.3 - age / 1800000.0 * 0.6)
 }
 
 function colorForMarker ({ qso, location, strength, styles, mapStyles }) {
