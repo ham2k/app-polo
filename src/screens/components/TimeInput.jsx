@@ -43,7 +43,8 @@ export function TimeInput (props) {
 
   const handleChange = useCallback((event) => {
     const { text } = event.nativeEvent
-    setLocalValue(text)
+    actualInnerRef.current.setNativeProps({ text })
+    // setLocalValue(text)
 
     let fullBaseTime
     let newValue

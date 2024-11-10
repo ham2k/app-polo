@@ -5,8 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState, useCallback, useEffect } from 'react'
-import { Keyboard, View } from 'react-native'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
+import { Keyboard, Platform, View } from 'react-native'
 import { IconButton, Searchbar } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
@@ -22,10 +22,21 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 export default function HomeTools ({ settings, styles, style }) {
   const navigation = useNavigation()
 
-  const [search, reallySetSearch] = useState('')
-  const setSearch = useCallback((value) => {
-    reallySetSearch(value.toUpperCase())
-  }, [reallySetSearch])
+  const actualInnerRef = useRef()
+
+  const [search, setSearch] = useState('')
+  const [localValue, setLocalValue] = useState()
+  useEffect(() => { setLocalValue(search) }, [search])
+
+  const handleChangeText = useCallback((value) => {
+    actualInnerRef.current.setNativeProps({ text: value.toUpperCase() })
+    if (Platform.OS === 'android') {
+      // This minimizes issues when using external keyboards on Android
+      setTimeout(() => setSearch(value.toUpperCase()), 15)
+    } else {
+      setSearch(value.toUpperCase())
+    }
+  }, [])
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -42,7 +53,7 @@ export default function HomeTools ({ settings, styles, style }) {
   }, [search, settings?.operatorCall])
 
   const handleClearSearch = useCallback(() => {
-    reallySetSearch('')
+    setSearch('')
   }, [])
 
   const navigateToCall = useCallback((call) => {
@@ -171,9 +182,10 @@ export default function HomeTools ({ settings, styles, style }) {
               onFocus: handleFocus,
               onSelectionChange: handleSelectionChange
             }}
+            ref={actualInnerRef}
             placeholder={'Quick Call Lookup…'}
-            value={search}
-            onChangeText={setSearch}
+            value={localValue}
+            onChangeText={handleChangeText}
             traileringIcon={search ? 'close' : ''}
             onTraileringIconPress={handleClearSearch}
             theme={{ colors: { onSurface: styles.colors.onBackgroundLight } }}

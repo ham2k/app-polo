@@ -28,7 +28,8 @@ export default function FrequencyInput (props) {
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
     text = text.replace(REMOVE_NON_DIGITS_REGEX, '')
-    setLocalValue(text)
+    actualInnerRef.current.setNativeProps({ text })
+    // setLocalValue(text)
 
     if (text !== value) {
       onChangeText && onChangeText(text)
