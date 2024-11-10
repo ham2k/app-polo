@@ -49,7 +49,7 @@ And finally, build the app for your target platform:
 npm run ios
 
 # Android
-npm run android -- --mode alphaDebug
+npm run android
 ```
 ### Debug Menu
 
