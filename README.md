@@ -100,17 +100,6 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 
 # Known Issues
 
-### Android builds from the metro bundler terminal
-
-Because of a mess with our multiple build flavors, under RN 0.73 the default way of running android for development is broken
-so you cannot just press `a` from the metro bundler terminal to run the app on android.
-
-Instead, run the metro bundler (`npm start`) on one terminal, and run `npm run android -- --mode alphaDebug` on another to build the app.
-
-Afterwards, just press `r` on the metro bundler terminal to reload the app.
-
-
-
 # Troubleshooting
 
 ### Clean Build
