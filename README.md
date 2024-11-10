@@ -33,9 +33,9 @@ This app is Open Source and licensed under the [Mozilla Public License 2.0](./LI
 
 ## Development Environment
 
-First, complete the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions up to just before "Creating a new application" step.
+First, complete the [React Native - Environment Setup](https://reactnative.dev/docs/set-up-your-environment) instructions.
 
-Then clone this repository and install the dependencies:
+Then clone this repository, `cd` into it and install the dependencies:
 
 ```
 npm install
@@ -105,7 +105,7 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 Because of a mess with our multiple build flavors, under RN 0.73 the default way of running android for development is broken
 so you cannot just press `a` from the metro bundler terminal to run the app on android.
 
-Instead, run the metro bundler (`npm start`) on one terminal, and run `npm run android` on another to build the app.
+Instead, run the metro bundler (`npm start`) on one terminal, and run `npm run android -- --mode alphaDebug` on another to build the app.
 
 Afterwards, just press `r` on the metro bundler terminal to reload the app.
 
@@ -146,61 +146,3 @@ https://github.com/shinydevelopment/SimulatorStatusMagic
 ### Some troubleshooting links
 
 React Native [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
----
-
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
-
-# Getting Started
-
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
-
-## Step 1: Start the Metro Server
-
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
-
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
