@@ -47,7 +47,7 @@ export default function GridInput (props) {
 
     text = text.substring(0, 4).toUpperCase() + text.substring(4).toLowerCase()
     if (PARTIAL_MAIDENHEAD_REGEX.test(text)) {
-      setLocalValue(text)
+      actualInnerRef.current.setNativeProps({ text })
     }
 
     if (text !== value) {

@@ -2,6 +2,7 @@
   "24.11.99-pre0": {
     "name": "December '24 (Pre 0)",
     "changes": [
+      "Fixed problems with external keyboards on Android"
     ]
   },
   "24.11.2": {

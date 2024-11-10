@@ -40,6 +40,7 @@ export default function ThemedTextInput (props) {
   }, [value])
 
   const handleChange = useCallback((event) => {
+    console.log('handleChange', event.nativeEvent)
     let { text } = event.nativeEvent
     let spaceAdded = false
 
@@ -76,7 +77,8 @@ export default function ThemedTextInput (props) {
     }
     event.nativeEvent.text = text
 
-    setLocalValue(text)
+    actualInnerRef.current.setNativeProps({ text })
+    // setLocalValue(text)
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId, ref: actualInnerRef })
     if (spaceAdded) {
