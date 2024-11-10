@@ -17,6 +17,7 @@ export default function SpotListMapToggle ({ onPress, styles, themeColor, inMapM
         <LoggerChip
           style={{ flex: 0 }} styles={styles} themeColor={themeColor}
           selected={false}
+          icon={inMapMode ? 'view-list' : 'map'}
         >
           {inMapMode ? 'List' : 'Map'}
         </LoggerChip>
