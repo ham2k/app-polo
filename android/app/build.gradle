@@ -108,6 +108,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            applicationIdSuffix ".alpha"
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -121,21 +122,6 @@ android {
        // to prevent incorrect long value restoration from strings.xml we need to wrap it with double quotes
         // https://github.com/microsoft/cordova-plugin-code-push/issues/264
         buildType.resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
-    }
-    flavorDimensions ("environment")
-    productFlavors {
-        alpha {
-            isDefault true
-            dimension "environment"
-            applicationIdSuffix ".alpha"
-        }
-        beta {
-            dimension "environment"
-            applicationIdSuffix ".beta"
-        }
-        prod {
-            dimension "environment"
-        }
     }
 }
 
