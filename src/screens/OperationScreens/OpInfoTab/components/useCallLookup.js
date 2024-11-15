@@ -154,13 +154,14 @@ function _mergeData ({ theirInfo, lookups, refs }) {
   for (const key in lookups) { // High to low priority
     if (lookups[key].call === theirInfo.call || lookups[key].call === theirInfo.baseCall) {
       mergedLookup = {
+        sources: [],
         ...filterFalsyNotZero(lookups[key]),
         ...mergedLookup,
         notes: [...mergedLookup.notes ?? [], ...lookups[key].notes ?? []],
         history: [...mergedLookup.history ?? [], ...lookups[key].history ?? []]
       }
       if (lookups[key].source) {
-        mergedLookup.sources = (mergedLookup.sources || []) + [lookups[key].source]
+        mergedLookup.sources.push(lookups[key].source)
       }
     }
   }
