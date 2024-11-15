@@ -172,7 +172,7 @@ function castString (value) {
 }
 
 function castNumber (value) {
-  if (value === undefined || value === null) return 0
+  if (value === undefined || value === null) return null
   const number = Number(value)
   if (isNaN(number)) return null
   return number
