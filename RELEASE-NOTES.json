@@ -2,6 +2,7 @@
   "24.11.99-pre0": {
     "name": "December '24 (Pre 0)",
     "changes": [
+      "Merge spots of multi-operator activations",
       "Fixed problems with external keyboards on Android",
       "Fixed lookup of portable calls",
       "Add HamQTH callsign lookup"
