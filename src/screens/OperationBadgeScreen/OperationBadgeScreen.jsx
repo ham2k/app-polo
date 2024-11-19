@@ -50,9 +50,10 @@ function prepareStyles (baseTheme, themeColor, deviceColorScheme) {
       backgroundColor: titleBackground,
       position: 'absolute',
       padding: baseTheme.oneSpace * 1,
+      width: '100%',
       top: 0,
       left: 0,
-      right: 0
+      right: 100
     },
     title: {
       fontSize: 18 * baseTheme.fontScaleAdjustment,
@@ -131,8 +132,11 @@ export default function OperationBadgeScreen ({ navigation, route }) {
         qsos={qsos}
         settings={settings}
       />
-      <View style={[styles.titleContainer, { paddingTop: safeArea.top + styles.oneSpace, paddingHorizontal: Math.max(safeArea.left, safeArea.right) + (styles.oneSpace * 2), flexDirection: styles.portrait ? 'column' : 'row', justifyContent: 'space-between' }]}>
-        <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+      <View style={[styles.titleContainer,
+        { width: '100%', maxWidth: '100%', paddingTop: safeArea.top + styles.oneSpace, paddingHorizontal: Math.max(safeArea.left, safeArea.right) + (styles.oneSpace * 2), flexDirection: styles.portrait ? 'column' : 'row', justifyContent: 'space-between' }
+      ]}
+      >
+        <View style={{ flexDirection: 'column', alignItems: 'flex-start', maxWidth: '75%' }}>
           <Text style={styles.title}>
             {slashZeros(operation?.stationCall || settings?.operatorCall)} {operation?.title}
           </Text>
@@ -147,7 +151,7 @@ export default function OperationBadgeScreen ({ navigation, route }) {
           </Text>
         </View>
       </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'center', position: 'absolute', bottom: safeArea.bottom, right: styles.oneSpace * 10, left: styles.oneSpace * 10 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', position: 'absolute', bottom: Math.max(safeArea.bottom, styles.oneSpace), right: styles.oneSpace * 10, left: styles.oneSpace * 10 }}>
         <Text style={styles.ham2k}>Ham2K </Text>
         <Text style={styles.logger}>Portable Logger</Text>
       </View>
