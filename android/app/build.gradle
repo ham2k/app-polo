@@ -97,15 +97,16 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file(MYAPP_UPLOAD_STORE_FILE)
-            storePassword MYAPP_UPLOAD_STORE_PASSWORD
-            keyAlias MYAPP_UPLOAD_KEY_ALIAS
-            keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            storeFile file(project.env.get("MYAPP_UPLOAD_STORE_FILE"))
+            storePassword project.env.get("MYAPP_UPLOAD_STORE_PASSWORD")
+            keyAlias project.env.get("MYAPP_UPLOAD_KEY_ALIAS")
+            keyPassword project.env.get("MYAPP_UPLOAD_KEY_PASSWORD")
         }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            applicationIdSuffix ".alpha"
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -113,21 +114,10 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-        }
-    }
-    flavorDimensions ("environment")
-    productFlavors {
-        alpha {
-            isDefault true
-            dimension "environment"
-            applicationIdSuffix ".alpha"
-        }
-        beta {
-            dimension "environment"
             applicationIdSuffix ".beta"
         }
-        prod {
-            dimension "environment"
+        prodRelease {
+            initWith release
             applicationIdSuffix ".prod"
         }
     }

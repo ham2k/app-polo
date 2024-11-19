@@ -612,7 +612,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-polo.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
@@ -641,7 +641,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-polo.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
@@ -1063,7 +1063,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9B7A9A648EECA029024A1016 /* Pods-polo.betadebug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Beta";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
@@ -1289,7 +1289,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D3C0AACBADED1145A6C4DF2D /* Pods-polo.proddebug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Prod";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
@@ -1728,7 +1728,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2908BA1A9DF8FB525A4E57EF /* Pods-polo.betarelease.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Beta";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
@@ -1945,7 +1945,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 01ADCF23075EB4C25894D688 /* Pods-polo.prodrelease.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Prod";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;

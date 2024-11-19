@@ -8,19 +8,7 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest",
-    "run:android:dev": "react-native run-android --tasks installDevDebug --appIdSuffix=dev",
-    "run:android:beta": "react-native run-android --tasks installBetaDebug --appIdSuffix=prod",
-    "run:android:prod": "react-native run-android --tasks installProdDebug --appIdSuffix=prod",
-    "build:android:dev:release": "cd android && ./gradlew bundleDevRelease && open app/build/outputs/bundle/devRelease",
-    "build:android:beta:release": "cd android && ./gradlew bundleBetaRelease && open app/build/outputs/bundle/betaRelease",
-    "build:android:prod:release": "cd android && ./gradlew bundleProdRelease && open app/build/outputs/bundle/prodRelease",
-    "run:ios:dev": "react-native run-ios --scheme polo-Dev --configuration DevDebug",
-    "run:ios:beta": "react-native run-ios --scheme polo-Beta --configuration BetaDebug",
-    "run:ios:prod": "react-native run-ios --scheme polo-Prod --configuration ProdDebug",
-    "build:ios:dev:release": "cd ios && xcodebuild -scheme polo-Dev build",
-    "build:ios:beta:release": "cd ios && xcodebuild -scheme polo-Beta build",
-    "build:ios:prod:release": "cd ios && xcodebuild -scheme polo-Prod build"
+    "test": "jest"
   },
   "dependencies": {
     "@ham2k/lib-callsigns": "^0.1",

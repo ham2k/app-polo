@@ -147,7 +147,7 @@ export default function Notices () {
         styles.root,
         {
           height: visible ? undefined : 0,
-          paddingBottom: visible ? safeArea.bottom + styles.oneSpace : 0,
+          paddingBottom: visible ? safeArea.bottom : 0,
           flexDirection: 'column'
         }
       ]}
@@ -155,7 +155,7 @@ export default function Notices () {
       {overlayText && (
         <Ham2kDialog visible={true}>
           <Dialog.Content>
-            <Ham2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>{overlayText}</Ham2kMarkdown>
+            <Ham2kMarkdown styles={styles} style={{ paddingTop: 3 * styles.oneSpace, color: styles.colors.onBackground }}>{overlayText}</Ham2kMarkdown>
           </Dialog.Content>
         </Ham2kDialog>
       )}
@@ -181,6 +181,7 @@ export default function Notices () {
               <Button
                 mode={'contained'}
                 theme={ styles.buttonTheme }
+                style={{ paddingHorizontal: styles.oneSpace }}
                 compact={true}
                 disabled={notice.action === 'disabled'}
                 onPress={() => handleAction(notice)}

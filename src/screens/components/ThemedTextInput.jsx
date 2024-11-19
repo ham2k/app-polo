@@ -76,7 +76,8 @@ export default function ThemedTextInput (props) {
     }
     event.nativeEvent.text = text
 
-    setLocalValue(text)
+    actualInnerRef.current.setNativeProps({ text })
+    // setLocalValue(text)
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId, ref: actualInnerRef })
     if (spaceAdded) {
