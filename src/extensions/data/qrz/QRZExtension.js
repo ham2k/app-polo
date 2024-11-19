@@ -33,17 +33,29 @@ const LookupHook = {
     return !online || (lookedUp.name && lookedUp.grid)
   },
   lookupCallWithDispatch: async (callInfo, { settings, online, dispatch }) => {
+    let qrzPromise
+    let qrzLookup
     if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && callInfo?.baseCall?.length > 2) {
-      const qrzPromise = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: callInfo.call }))
+      qrzPromise = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: callInfo.call }))
       await Promise.all(dispatch(apiQRZ.util.getRunningQueriesThunk()))
-      const qrzLookup = await dispatch((_dispatch, getState) => apiQRZ.endpoints.lookupCall.select({ call: callInfo.call })(getState()))
+      qrzLookup = await dispatch((_dispatch, getState) => apiQRZ.endpoints.lookupCall.select({ call: callInfo.call })(getState()))
       qrzPromise.unsubscribe && qrzPromise.unsubscribe()
+
+      // If not found and the call had modifiers, try the base call
+      if (!qrzLookup?.error?.indexOf('not found') >= 0 && callInfo.baseCall !== callInfo.call) {
+        qrzPromise = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: callInfo.baseCall }))
+        await Promise.all(dispatch(apiQRZ.util.getRunningQueriesThunk()))
+        qrzLookup = await dispatch((_dispatch, getState) => apiQRZ.endpoints.lookupCall.select({ call: callInfo.baseCall })(getState()))
+        qrzPromise.unsubscribe && qrzPromise.unsubscribe()
+      }
 
       let matchingQRZCall = qrzLookup?.data?.allCalls?.find(call => call === callInfo.call)
       if (!matchingQRZCall && callInfo.baseCall) matchingQRZCall = qrzLookup?.data?.allCalls?.find(call => call === callInfo.baseCall)
 
       if (matchingQRZCall) {
         return { ...qrzLookup.data, call: matchingQRZCall, source: 'qrz.com' }
+      } else if (qrzLookup?.error) {
+        return { error: qrzLookup.error, call: callInfo.call, source: 'qrz.com' }
       }
     }
     return {}
