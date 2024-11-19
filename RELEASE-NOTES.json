@@ -3,6 +3,7 @@
     "name": "December '24 (Pre 0)",
     "changes": [
       "Fixed problems with external keyboards on Android",
+      "Fixed lookup of portable calls",
       "Add HamQTH callsign lookup"
     ]
   },

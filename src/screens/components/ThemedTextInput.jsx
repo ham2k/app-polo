@@ -40,7 +40,6 @@ export default function ThemedTextInput (props) {
   }, [value])
 
   const handleChange = useCallback((event) => {
-    console.log('handleChange', event.nativeEvent)
     let { text } = event.nativeEvent
     let spaceAdded = false
 

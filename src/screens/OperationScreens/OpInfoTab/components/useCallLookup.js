@@ -96,8 +96,6 @@ function _extractCallInfo (qso) {
 }
 
 async function _performLookup ({ qso, call, theirInfo, online, settings, dispatch, skipLookup = false }) {
-  // if (!call || call.length < 3) return { guess: theirInfo, lookup: {}, lookups: {}, theirInfo }
-
   const { lookups } = await _lookupCall(theirInfo, { online, settings, dispatch, skipLookup: false })
   const { refs } = await _lookupRefs(qso?.refs, { online, settings, dispatch, skipLookup: false })
 
