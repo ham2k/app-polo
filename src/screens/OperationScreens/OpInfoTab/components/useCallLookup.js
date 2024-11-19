@@ -17,6 +17,7 @@ import { selectSettings } from '../../../../store/settings'
 
 import { findHooks } from '../../../../extensions/registry'
 import { LOCATION_ACCURACY } from '../../../../extensions/constants'
+import { removeEmptyValues } from '../../../../tools/objectTools'
 
 const EMOJI_REGEX = emojiRegex()
 
@@ -118,8 +119,8 @@ async function _lookupCall (theirInfo, { online, settings, dispatch, skipLookup 
           data = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online }))
         }
         if (data) {
-          lookups[hook.key] = data
-          Object.keys(filterFalsyNotZero(data)).forEach(key => { lookedUp[key] = true })
+          lookups[hook.key] = removeEmptyValues(data)
+          Object.keys(data).forEach(key => { lookedUp[key] = true })
         }
       }
     }
@@ -153,7 +154,7 @@ function _mergeData ({ theirInfo, lookups, refs }) {
     if (lookups[key].call === theirInfo.call || lookups[key].call === theirInfo.baseCall) {
       mergedLookup = {
         sources: [],
-        ...filterFalsyNotZero(lookups[key]),
+        ...lookups[key],
         ...mergedLookup,
         notes: [...mergedLookup.notes ?? [], ...lookups[key].notes ?? []],
         history: [...mergedLookup.history ?? [], ...lookups[key].history ?? []]
@@ -206,13 +207,4 @@ function _mergeData ({ theirInfo, lookups, refs }) {
   }
 
   return { guess: newGuess, lookup: mergedLookup }
-}
-
-function filterFalsyNotZero (obj) {
-  return Object.keys(obj).reduce((acc, key) => {
-    if (obj[key] || obj[key] === 0) {
-      acc[key] = obj[key]
-    }
-    return acc
-  }, {})
 }
