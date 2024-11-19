@@ -54,9 +54,8 @@ function prepareStyles (baseStyles) {
       backgroundColor: 'rgb(252,244,167)'
     },
     noticeContainer: {
-      padding: baseStyles.oneSpace * 2,
+      padding: baseStyles.oneSpace * 1.5,
       width: '100%',
-      height: 140,
       backgroundColor: 'rgb(252,244,167)',
       borderColor: 'rgb(197,191,131)',
       borderTopWidth: 1,
