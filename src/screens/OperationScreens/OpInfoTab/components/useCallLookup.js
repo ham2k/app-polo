@@ -121,7 +121,7 @@ async function _lookupCall (theirInfo, { online, settings, dispatch, skipLookup 
         }
         if (data) {
           lookups[hook.key] = data
-          Object.keys(data).forEach(key => { lookedUp[key] = true })
+          Object.keys(filterFalsyNotZero(data)).forEach(key => { lookedUp[key] = true })
         }
       }
     }
@@ -151,16 +151,17 @@ function _mergeData ({ theirInfo, lookups, refs }) {
   let mergedLookup = {}
   const newGuess = { ...theirInfo }
 
-  for (const key in lookups) {
+  for (const key in lookups) { // High to low priority
     if (lookups[key].call === theirInfo.call || lookups[key].call === theirInfo.baseCall) {
       mergedLookup = {
+        sources: [],
+        ...filterFalsyNotZero(lookups[key]),
         ...mergedLookup,
-        ...lookups[key],
         notes: [...mergedLookup.notes ?? [], ...lookups[key].notes ?? []],
         history: [...mergedLookup.history ?? [], ...lookups[key].history ?? []]
       }
       if (lookups[key].source) {
-        mergedLookup.sources = (mergedLookup.sources || []) + [lookups[key].source]
+        mergedLookup.sources.push(lookups[key].source)
       }
     }
   }
@@ -207,4 +208,13 @@ function _mergeData ({ theirInfo, lookups, refs }) {
   }
 
   return { guess: newGuess, lookup: mergedLookup }
+}
+
+function filterFalsyNotZero (obj) {
+  return Object.keys(obj).reduce((acc, key) => {
+    if (obj[key] || obj[key] === 0) {
+      acc[key] = obj[key]
+    }
+    return acc
+  }, {})
 }
