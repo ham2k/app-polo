@@ -58,9 +58,10 @@ export function registerWWBOTADataFile () {
                     const ref = row.Reference
                     if (ref) {
                       row.Maidenhead &&= row.Maidenhead.replace(/[A-Z]{2}$/, x => x.toLowerCase())
+                      const entityPrefix = ref.split('-')[0].split('/')[1]
                       const data = {
                         ref,
-                        entityPrefix: ref.split('-')[0].split('/')[1],
+                        entityPrefix: entityPrefix === 'IT' ? 'I' : entityPrefix,
                         name: row.Name,
                         type: row.Type,
                         grid: row.Maidenhead,

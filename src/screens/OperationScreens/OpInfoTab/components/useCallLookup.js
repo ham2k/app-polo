@@ -17,6 +17,7 @@ import { selectSettings } from '../../../../store/settings'
 
 import { findHooks } from '../../../../extensions/registry'
 import { LOCATION_ACCURACY } from '../../../../extensions/constants'
+import { removeEmptyValues } from '../../../../tools/objectTools'
 
 const EMOJI_REGEX = emojiRegex()
 
@@ -118,7 +119,7 @@ async function _lookupCall (theirInfo, { online, settings, dispatch, skipLookup 
           data = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online }))
         }
         if (data) {
-          lookups[hook.key] = data
+          lookups[hook.key] = removeEmptyValues(data)
           Object.keys(data).forEach(key => { lookedUp[key] = true })
         }
       }
@@ -149,16 +150,17 @@ function _mergeData ({ theirInfo, lookups, refs }) {
   let mergedLookup = {}
   const newGuess = { ...theirInfo }
 
-  for (const key in lookups) {
+  for (const key in lookups) { // High to low priority
     if (lookups[key].call === theirInfo.call || lookups[key].call === theirInfo.baseCall) {
       mergedLookup = {
-        ...mergedLookup,
+        sources: [],
         ...lookups[key],
+        ...mergedLookup,
         notes: [...mergedLookup.notes ?? [], ...lookups[key].notes ?? []],
         history: [...mergedLookup.history ?? [], ...lookups[key].history ?? []]
       }
       if (lookups[key].source) {
-        mergedLookup.sources = (mergedLookup.sources || []) + [lookups[key].source]
+        mergedLookup.sources.push(lookups[key].source)
       }
     }
   }

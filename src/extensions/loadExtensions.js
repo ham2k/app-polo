@@ -26,6 +26,7 @@ import CallNotesExtension from './data/call-notes/CallNotesExtension'
 import CallHistoryExtension from './data/call-history/CallHistoryExtension'
 import QRZExtension from './data/qrz/QRZExtension'
 import HamDBExtension from './data/hamdb/HamDBExtension'
+import HamQTHExtension from './data/hamqth/HamQTHExtension'
 import SatellitesExtension from './activities/satellites/SatellitesExtension'
 
 import NYQPExtension from './contests/nyqp/NYQPExtension'
@@ -68,6 +69,7 @@ const loadExtensions = () => async (dispatch, getState) => {
 
   registerExtension(QRZExtension)
   registerExtension(HamDBExtension)
+  registerExtension(HamQTHExtension)
 
   registerExtension(SatellitesExtension)
 

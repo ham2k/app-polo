@@ -1,5 +1,7 @@
 /*
+/
  * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024 Steven Hiscocks <steven@hiscocks.me.uk>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -13,27 +15,27 @@ import { capitalizeString } from '../../../tools/capitalizeString'
 
 /**
 
-  QRZ.com XML API
-  https://www.qrz.com/XML/current_spec.html
+  HamQTH.com XML API
+  https://www.hamqth.com/developers.php
 
  */
 
 const DEBUG = false
 
-const BASE_URL = 'https://xmldata.qrz.com/'
+const BASE_URL = 'https://www.hamqth.com/'
 
 const apiState = {}
 
 function defaultParams (api) {
   const session = apiState.session
   return {
-    s: session,
-    agent: `ham2k-polo-${packageJson.version}`
+    id: session,
+    prg: `ham2k-polo-${packageJson.version}`
   }
 }
 
 const baseQueryWithSettings = fetchBaseQuery({
-  baseUrl: `${BASE_URL}/xml/current`,
+  baseUrl: `${BASE_URL}/xml.php`,
   prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
   },
@@ -42,7 +44,7 @@ const baseQueryWithSettings = fetchBaseQuery({
       const body = await response.text()
       const parser = new XMLParser()
       const xml = parser.parse(body)
-      if (DEBUG) console.log(`QRZApi ${response.url} ${response.status}`)
+      if (DEBUG) console.log(`HamQTHApi ${response.url} ${response.status}`)
       if (DEBUG) console.log('-- url', response.url)
       if (DEBUG) console.log('-- response', xml)
       return xml
@@ -57,26 +59,26 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQueryWithSettings(args, api, extraOptions)
 
   if ((result.error && result.error.status === 401) ||
-    result.data?.QRZDatabase?.Session?.Error?.startsWith('Invalid session key') ||
-    result.data?.QRZDatabase?.Session?.Error?.startsWith('Session Timeout') ||
-    result.data?.QRZDatabase?.Session?.Error?.startsWith('Username / password required')
+    result.data?.HamQTH?.session?.error?.startsWith('Username or password missing') ||
+    result.data?.HamQTH?.session?.error?.startsWith('Session does not exist or expired') ||
+    result.data?.HamQTH?.session?.error?.startsWith('Wrong user name or password')
   ) {
     apiState.session = undefined
     // try to get a new session key
-    const { login, password } = api.getState().settings?.accounts?.qrz ?? {}
+    const { login, password } = api.getState().settings?.accounts?.hamqth ?? {}
     if (DEBUG) console.log('baseQueryWithReauth second call')
     result = await baseQueryWithSettings({
       url: '',
       params: {
         ...defaultParams(api),
-        username: login,
-        password
+        u: login,
+        p: password
       }
     }, api, extraOptions)
 
-    if (result.data?.QRZDatabase?.Session?.Error) return { error: result.data?.QRZDatabase?.Session?.Error, meta: result.meta }
+    if (result.data?.HamQTH?.session?.error) return { error: result.data?.HamQTH?.session?.error, meta: result.meta }
 
-    const session = result.data?.QRZDatabase?.Session?.Key
+    const session = result.data?.HamQTH?.session?.session_id
     if (session) {
       if (DEBUG) console.log('New Session', session)
       apiState.session = session
@@ -86,19 +88,19 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       result = await baseQueryWithSettings(args, api, extraOptions)
     } else {
       apiState.session = undefined
-      return { error: 'Unexpected error logging into QRZ.com', result }
+      return { error: 'Unexpected error logging into HamQTH' }
     }
   }
   return result
 }
 
-export const apiQRZ = createApi({
-  reducerPath: 'apiQRZ',
+export const apiHamQTH = createApi({
+  reducerPath: 'apiHamQTH',
   baseQuery: baseQueryWithReauth,
   endpoints: builder => ({
 
     // Lookup a callsign
-    //   https://xmldata.qrz.com/xml/current/?s=SESSIONKEY;callsign=xx1xxx
+    //   https://www.hamqth.com/xml.php?id=SESSIONKEY&callsign=xx2xxx&prg=YOUR_PROGRAM_NAME
 
     lookupCall: builder.query({
       keepUnusedDataFor: 60 * 60 * 12, // 12 hours
@@ -116,45 +118,42 @@ export const apiQRZ = createApi({
 
         if (response.data) {
           const xml = response.data
-          const error = xml?.QRZDatabase?.Session?.Error
+          const error = xml?.HamQTH?.session?.error
 
           if (error) {
-            if (error.startsWith('Not found')) {
+            if (error.startsWith('Callsign not found')) {
               return { error: `${call} not found`, data: undefined }
             } else {
               return { ...response, error, data: undefined }
             }
           } else {
-            const callsignInfo = xml?.QRZDatabase?.Callsign || {}
+            const callsignInfo = xml?.HamQTH?.search || {}
+
+            // Image always returned...lets drop default images
+            let image = castString(callsignInfo.picture)
+            if (image.startsWith('https://www.hamqth.com/images/default/')) {
+              image = undefined
+            }
 
             return {
               ...response,
               error: undefined,
               data: {
-                name: [
-                  capitalizeString(callsignInfo.fname, { content: 'name', force: false }),
-                  callsignInfo.nickname ? `“${capitalizeString(callsignInfo.nickname, { content: 'name', force: false })}”` : undefined,
-                  capitalizeString(callsignInfo.name, { content: 'name', force: false })
-                ].filter(x => x).join(' '),
-                call: castString(callsignInfo.call),
-                allCalls: [castString(callsignInfo.call)].concat(castString(callsignInfo.aliases).split(',')).concat([castString(callsignInfo.xref)]).filter(x => x),
-                firstName: castString(callsignInfo.fname),
-                lastName: castString(callsignInfo.name),
-                tz: castString(callsignInfo.TimeZone),
-                gmtOffset: castNumber(callsignInfo.GMTOffset),
-                city: capitalizeString(callsignInfo.addr2, { content: 'address', force: false }),
-                state: castString(callsignInfo.state),
+                name: capitalizeString(callsignInfo.nick, { content: 'name', force: false }),
+                call: castString(callsignInfo.callsign).toUpperCase(),
+                gmtOffset: castNumber(callsignInfo.utc_offset),
+                city: capitalizeString(callsignInfo.qth, { content: 'address', force: false }),
+                state: castString(callsignInfo.us_state),
                 country: capitalizeString(callsignInfo.country, { force: false }),
-                postal: castString(callsignInfo.zip),
-                county: capitalizeString(callsignInfo.county, { force: false }),
+                postal: castString(callsignInfo.adr_zip),
+                county: capitalizeString(callsignInfo.us_county, { force: false }),
                 grid: castString(callsignInfo.grid),
-                cqZone: castNumber(callsignInfo.cqzone),
-                ituZone: castNumber(callsignInfo.ituzone),
-                dxccCode: castNumber(callsignInfo.dxcc),
-                lat: castNumber(callsignInfo.lat),
-                lon: castNumber(callsignInfo.lon),
-                image: castString(callsignInfo.image),
-                imageInfo: (callsignInfo.imageinfo || '').split(':')
+                cqZone: castNumber(callsignInfo.CQ),
+                ituZone: castNumber(callsignInfo.itu),
+                dxccCode: castNumber(callsignInfo.adif),
+                lat: castNumber(callsignInfo.latitude),
+                lon: castNumber(callsignInfo.longitude),
+                image
               },
               meta: response.meta
             }
@@ -179,10 +178,10 @@ function castNumber (value) {
   return number
 }
 
-export const { actions } = apiQRZ
+export const { actions } = apiHamQTH
 
-export const { useLookupCallQuery } = apiQRZ
+export const { useLookupCallQuery } = apiHamQTH
 
-export const { endpoints, reducerPath, reducer, middleware } = apiQRZ
+export const { endpoints, reducerPath, reducer, middleware } = apiHamQTH
 
-export default apiQRZ.reducer
+export default apiHamQTH.reducer

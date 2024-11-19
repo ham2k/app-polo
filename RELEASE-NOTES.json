@@ -2,8 +2,11 @@
   "24.11.99-pre0": {
     "name": "December '24 (Pre 0)",
     "changes": [
+      "Add HamQTH callsign lookup (by M1SDH)",
+      "Merge spots of multi-operator activations (by M1SDH)",
       "Fixed problems with external keyboards on Android",
-      "Fixed lookup of portable calls"
+      "Fixed lookup of portable calls",
+      "Fix reference prefix for ITABOTA (by M1SDH)"
     ]
   },
   "24.11.2": {
