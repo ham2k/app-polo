@@ -2,7 +2,22 @@
   "24.11.99-pre0": {
     "name": "December '24 (Pre 0)",
     "changes": [
-      "Merge spots of multi-operator activations"
+      "Merge spots of multi-operator activations",
+      "Fixed problems with external keyboards on Android",
+      "Fixed lookup of portable calls",
+      "Add HamQTH callsign lookup"
+    ]
+  },
+  "24.11.2": {
+    "name": "November '24",
+    "changes": [
+      "Fix crash for some devices when opening an operation"
+    ]
+  },
+  "24.11.1": {
+    "name": "November '24",
+    "changes": [
+      "Fix problems with name lookups and POTA references"
     ]
   },
   "24.11.0": {

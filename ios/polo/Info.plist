@@ -87,8 +87,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CodePushDeploymentKey</key>
-	<string>j1Ux2KScamgLBBbu3v0EgeFWLhWtLdfLk_A7d</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

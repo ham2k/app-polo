@@ -20,6 +20,7 @@ import qsosReducer from './qsos'
 import stationReducer from './station'
 import timeReducer from './time'
 import { reducer as apiQRZReducer, middleware as apiQRZMiddleware } from './apis/apiQRZ'
+import { reducer as apiHamQTHReducer, middleware as apiHamQTHMiddleware } from './apis/apiHamQTH'
 import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apis/apiPOTA'
 import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './apis/apiSOTA'
 import { reducer as apiGMAReducer, middleware as apiGMAMiddleware } from './apis/apiGMA'
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   time: timeReducer,
   dataFiles: dataFilesReducer,
   apiQRZ: apiQRZReducer,
+  apiHamQTH: apiHamQTHReducer,
   apiPOTA: apiPOTAReducer,
   apiSOTA: apiSOTAReducer,
   apiGMA: apiGMAReducer
@@ -93,6 +95,7 @@ export const store = configureStore({
     })
 
     middlewares.push(apiQRZMiddleware)
+    middlewares.push(apiHamQTHMiddleware)
     middlewares.push(apiPOTAMiddleware)
     middlewares.push(apiSOTAMiddleware)
     middlewares.push(apiGMAMiddleware)
