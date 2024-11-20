@@ -26,67 +26,72 @@ export default function ThemedTextInput (props) {
     onChangeText, onChange, onSubmitEditing, onSpace, onFocus, onBlur,
     innerRef, focusedRef,
     fieldId,
+    multiline,
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
     keyboard
   } = props
   const themeStyles = useThemedStyles()
-  const [localValue, setLocalValue] = useState(value)
+  const [originalValue, setOriginalValue] = useState(value)
 
   const alternateInnerRef = useRef()
   const actualInnerRef = innerRef ?? alternateInnerRef
 
   useEffect(() => {
-    setLocalValue(`${value}`)
+    setOriginalValue(`${value}`)
   }, [value])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
     let spaceAdded = false
 
-    // Lets check if what changed was the addition of a space
-    if ((text !== localValue) && (text.replace(SPACES_REGEX, '') === localValue)) {
-      spaceAdded = true
-    } else if (text.match(ONLY_SPACES_REGEX) && localValue !== '') { // or a space replacing the entire value
-      spaceAdded = true
-      text = localValue
+    if (multiline) {
+      // We cannot do any transformations on multiline inputs
+    } else {
+      // Lets check if what changed was the addition of a space
+      if ((text !== originalValue) && (text.replace(SPACES_REGEX, '') === originalValue)) {
+        spaceAdded = true
+      } else if (text.match(ONLY_SPACES_REGEX) && originalValue !== '') { // or a space replacing the entire value
+        spaceAdded = true
+        text = originalValue
+      }
+
+      text = text.replace(LEFT_TRIM_REGEX, '')
+
+      if (uppercase) {
+        text = text.toUpperCase()
+      }
+      if (trim) {
+        text = text.trim()
+      }
+      if (noSpaces) {
+        text = text.replace(SPACES_REGEX, '')
+      }
+      if (periodToSlash) {
+        text = text.replaceAll('.', '/')
+      }
+      if (numeric) {
+        text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+      }
+      if (decimal) {
+        text = text.replace(NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+      }
+      if (rst) {
+        text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '')
+      }
+      event.nativeEvent.text = text
+
+      actualInnerRef.current.setNativeProps({ text })
     }
 
-    text = text.replace(LEFT_TRIM_REGEX, '')
-
-    if (uppercase) {
-      text = text.toUpperCase()
-    }
-    if (trim) {
-      text = text.trim()
-    }
-    if (noSpaces) {
-      text = text.replace(SPACES_REGEX, '')
-    }
-    if (periodToSlash) {
-      text = text.replaceAll('.', '/')
-    }
-    if (numeric) {
-      text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
-    }
-    if (decimal) {
-      text = text.replace(NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
-    }
-    if (rst) {
-      text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '')
-    }
-    event.nativeEvent.text = text
-
-    actualInnerRef.current.setNativeProps({ text })
-    // setLocalValue(text)
     onChangeText && onChangeText(text)
     onChange && onChange({ ...event, fieldId, ref: actualInnerRef })
     if (spaceAdded) {
       onSpace && onSpace({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
     }
   }, [
-    localValue,
+    originalValue,
     fieldId, actualInnerRef,
-    uppercase, noSpaces, periodToSlash, numeric, decimal, trim, rst,
+    multiline, uppercase, noSpaces, periodToSlash, numeric, decimal, trim, rst,
     onChangeText, onChange, onSpace
   ])
 
@@ -94,7 +99,7 @@ export default function ThemedTextInput (props) {
   const [isFocused, setIsFocused] = useState(false)
 
   useEffect(() => {
-    if (focusedRef && isFocused) {
+    if (focusedRef && isFocused && !multiline) {
       focusedRef.current = {
         onNumberKey: (number) => {
           if (!isFocused) return
@@ -103,15 +108,15 @@ export default function ThemedTextInput (props) {
 
           if (!start && !end) {
             // If selection position is unknown, we assume the cursor is at the end of the string
-            start = localValue.length
-            end = localValue.length
+            start = originalValue.length
+            end = originalValue.length
           }
 
-          const newValue = localValue.substring(0, start) + number + localValue.substring(end)
+          const newValue = originalValue.substring(0, start) + number + originalValue.substring(end)
 
           handleChange && handleChange({ nativeEvent: { text: newValue, target: actualInnerRef.current._nativeTag } })
 
-          if (localValue.length === start && localValue.length === end) {
+          if (originalValue.length === start && originalValue.length === end) {
             // Cursor was at the end of the original value
             // Since the handleChange method might modify the value, and does not cause
             // a call to onSelectionChange, we need to mark the current selection state as 'unknown'
@@ -122,7 +127,7 @@ export default function ThemedTextInput (props) {
         }
       }
     }
-  }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, localValue, actualInnerRef])
+  }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, originalValue, actualInnerRef, multiline])
 
   const handleSelectionChange = useCallback((event) => {
     const { nativeEvent: { selection: { start, end } } } = event
@@ -199,7 +204,7 @@ export default function ThemedTextInput (props) {
 
         ref={actualInnerRef}
 
-        value={localValue || ''}
+        value={value || ''}
         placeholder={placeholder || ''}
         style={[
           colorStyles.nativeInput,
@@ -225,7 +230,7 @@ export default function ThemedTextInput (props) {
       />
     )
   }, [
-    keyboardOptions, actualInnerRef, localValue, placeholder, colorStyles, themeStyles, textStyle,
+    value, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
     onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange
   ])
 
