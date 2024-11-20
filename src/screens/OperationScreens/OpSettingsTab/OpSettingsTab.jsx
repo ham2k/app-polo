@@ -21,7 +21,6 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { buildTitleForOperation } from '../OperationScreen'
 
 function prepareStyles (baseStyles) {
   return {
@@ -84,14 +83,6 @@ export default function OpSettingsTab ({ navigation, route }) {
       <Ham2kListSection>
 
         <Ham2kListItem
-          title={operation.userTitle || 'Operation Details'}
-          description={operation.notes || buildTitleForOperation(operation)}
-          titleStyle={{ color: stationInfoColor }}
-          left={() => <List.Icon color={stationInfoColor} style={{ marginLeft: styles.oneSpace * 2 }} icon="book-outline" />}
-          onPress={() => navigation.navigate('OperationDetails', { operation: operation.uuid })}
-        />
-
-        <Ham2kListItem
           title="Station Info"
           description={() => <Ham2kMarkdown style={{ ...styles.list.description, color: stationInfoColor }} compact={true}>{stationInfo}</Ham2kMarkdown>}
           titleStyle={{ color: stationInfoColor }}
@@ -114,6 +105,14 @@ export default function OpSettingsTab ({ navigation, route }) {
             onDialogDone={() => setCurrentDialog('')}
           />
         )}
+
+        <Ham2kListItem
+          title={operation?.userTitle || 'Operation Details'}
+          description={operation?.notes || operation?.userTitle ? 'Add notes for this operation' : 'Add a title or notes for this operation'}
+          titleStyle={{ color: stationInfoColor }}
+          left={() => <List.Icon color={stationInfoColor} style={{ marginLeft: styles.oneSpace * 2 }} icon="book-outline" />}
+          onPress={() => navigation.navigate('OperationDetails', { operation: operation.uuid })}
+        />
 
         {opSettingsHooks.filter(hook => hook.category === 'detail').map((hook) => (
           <hook.OpSettingItem key={hook.key} operation={operation} styles={styles} settings={settings} />
