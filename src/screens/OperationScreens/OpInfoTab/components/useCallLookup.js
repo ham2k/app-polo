@@ -120,7 +120,7 @@ async function _lookupCall (theirInfo, { online, settings, dispatch, skipLookup 
         }
         if (data) {
           lookups[hook.key] = removeEmptyValues(data)
-          Object.keys(data).forEach(key => { lookedUp[key] = true })
+          Object.keys(lookups[hook.key]).forEach(key => { lookedUp[key] = true })
         }
       }
     }
