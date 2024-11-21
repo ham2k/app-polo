@@ -32,7 +32,8 @@ export async function createTables (dbParams = {}) {
     await dbExecute(`
         CREATE TABLE IF NOT EXISTS operations (
           uuid TEXT PRIMARY KEY NOT NULL,
-          data TEXT
+          data TEXT,
+          synced BOOLEAN DEFAULT false
         )`, [], dbParams)
     await dbExecute(`
         CREATE TABLE IF NOT EXISTS qsos (
@@ -44,7 +45,8 @@ export async function createTables (dbParams = {}) {
           mode TEXT,
           band TEXT,
           startOnMillis INTEGER,
-          data TEXT
+          data TEXT,
+          synced BOOLEAN DEFAULT false
         )`, [], dbParams)
     await dbExecute(`
         CREATE TABLE IF NOT EXISTS lookups (
@@ -149,14 +151,26 @@ export async function createTables (dbParams = {}) {
       logTimer('migration4', 'End of transaction')
     }
 
+    if (version < 5) {
+      console.log('createTables -- creating version 5')
+      await dbExecute(`
+        ALTER TABLE operations ADD COLUMN synced BOOLEAN DEFAULT false
+      `, [], dbParams)
+      await dbExecute(`
+        ALTER TABLE qsos ADD COLUMN synced BOOLEAN DEFAULT false
+      `, [], dbParams)
+
+      await dbExecute('UPDATE version SET version = 5', [], dbParams)
+    }
+
     // TODO: Uncomment this block when we're close to releasing the December '24 version
-    // if (version < 5) {
-    //   console.log('createTables -- creating version 4')
+    // if (version < 6) {
+    //   console.log('createTables -- creating version 6')
     //   await dbExecute(`
     //     ALTER TABLE qsos RENAME COLUMN startedOnMillis TO startedAtMillis
     //   `, [], { db })
 
-    //   await dbExecute('UPDATE version SET version = 4', [], dbParams)
+    //   await dbExecute('UPDATE version SET version = 6', [], dbParams)
     // }
   }
 }

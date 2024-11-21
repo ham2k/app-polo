@@ -36,10 +36,16 @@ export const getOperations = () => async (dispatch, getState) => {
   return dispatch(actions.setOperations(ophash))
 }
 
-export const saveOperation = (operation) => async (dispatch, getState) => {
+export const queryOperations = async (query, params) => {
+  let ops = []
+  ops = await dbSelectAll(`SELECT * FROM operations ${query}`, params, { row: prepareOperationRow })
+  return ops
+}
+
+export const saveOperation = (operation, { synced = false } = {}) => async (dispatch, getState) => {
   const { uuid } = operation
   const json = JSON.stringify(operation)
-  await dbExecute('INSERT INTO operations (uuid, data) VALUES (?, ?) ON CONFLICT DO UPDATE SET data = ?', [uuid, json, json])
+  await dbExecute('INSERT INTO operations (uuid, data, synced) VALUES (?, ?, ?) ON CONFLICT DO UPDATE SET data = ?, synced = ?', [uuid, json, synced, json, synced])
 }
 
 export const addNewOperation = (operation) => async (dispatch) => {

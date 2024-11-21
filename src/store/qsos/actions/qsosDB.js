@@ -13,10 +13,12 @@ import GLOBAL from '../../../GLOBAL'
 import { actions } from '../qsosSlice'
 import { actions as operationActions, saveOperation } from '../../operations'
 import { dbExecute, dbSelectAll, dbTransaction } from '../../db/db'
+import { syncLatestQSOs } from '../../sync'
 
 export const prepareQSORow = (row) => {
   const data = JSON.parse(row.data)
   data.uuid = row.uuid
+  data.operation = row.operation
   if (data.startOnMillis) data.startAtMillis = data.startOnMillis
   if (data.startOn) data.startAt = data.startOn
   if (data.endOnMillis) data.endAtMillis = data.endOnMillis
@@ -59,9 +61,23 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
   }
 }
 
-export const addQSO = ({ uuid, qso }) => addQSOs({ uuid, qsos: [qso] })
+export const queryQSOs = async (query, params) => {
+  let qsos = []
+  qsos = await dbSelectAll(`SELECT * FROM qsos ${query}`, params, { row: prepareQSORow })
+  return qsos
+}
 
-export const addQSOs = ({ uuid, qsos }) => async (dispatch, getState) => {
+export const markQSOsAsSynced = async (qsos) => {
+  await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `"${q.uuid}"`).join(',')})`, [])
+}
+
+export const resetSyncedStatus = async (qsos) => {
+  await dbExecute('UPDATE qsos SET synced = false', [])
+}
+
+export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
+
+export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
   const now = Date.now()
 
   for (const qso of qsos) {
@@ -86,12 +102,12 @@ export const addQSOs = ({ uuid, qsos }) => async (dispatch, getState) => {
     // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     await dbExecute(`
       INSERT INTO qsos
-      (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      ON CONFLICT DO UPDATE SET operation = ?, key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?
+      (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT DO UPDATE SET operation = ?, key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, synced = ?
       `, [
       qso.uuid,
-      qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis,
-      qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis
+      qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, synced,
+      qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, synced
     ]
     )
   }
@@ -112,22 +128,32 @@ export const addQSOs = ({ uuid, qsos }) => async (dispatch, getState) => {
   info.startAtMillisMax = startAtMillisMax
   info.qsoCount = finalQSOs.filter(q => !q.deleted).length
 
-  dispatch(operationActions.setOperation(info))
-  dispatch(saveOperation(info))
+  setImmediate(() => {
+    dispatch(operationActions.setOperation(info))
+    dispatch(saveOperation(info))
+    syncLatestQSOs({ dispatch, settings: getState().settings })
+  })
 }
 
 export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getState) => {
+  const now = Date.now()
+
   for (const qso of qsos) {
     qso.our = { ...qso.our, ...data.our } // Batch Update only changes `our` data
     qso.key = qsoKey(qso)
+    qso.uuid = qso.uuid || UUID.v1()
+    qso.createdAtMillis = qso.createdAtMillis || now
+    qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId
+    qso.updatedAtMillis = now
+    qso.updatedOnDeviceId = GLOBAL.deviceId
 
     // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     await dbExecute(`
       UPDATE qsos
-      SET key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?
+      SET key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, synced = ?
       WHERE uuid = ?
       `, [
-      qso.key, JSON.stringify(qso), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis,
+      qso.key, JSON.stringify(qso), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, false,
       qso.uuid
     ])
 
@@ -136,24 +162,32 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
   // Since the batch update does not change operation counts or times, no need to do anything else here
 }
 
-export const saveQSOsForOperation = (uuid) => async (dispatch, getState) => {
+export const saveQSOsForOperation = (uuid, { synced = false }) => async (dispatch, getState) => {
+  const now = Date.now()
+
   return dbTransaction(async transaction => {
     const qsos = getState().qsos.qsos[uuid]
 
     // Save new QSOs
     for (const qso of qsos) {
+      qso.key = qsoKey(qso)
+      qso.uuid = qso.uuid || UUID.v1()
+      qso.createdAtMillis = qso.createdAtMillis || now
+      qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId
+      qso.updatedAtMillis = now
+      qso.updatedOnDeviceId = GLOBAL.deviceId
+
       const json = JSON.stringify(qso)
 
       // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
       await dbExecute(`
         INSERT INTO qsos
-        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT DO UPDATE SET operation = ?, key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?
+        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT DO UPDATE SET operation = ?, key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, synced = ?
       `, [
         qso.uuid,
-        uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis,
-        uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis,
-        json
+        uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, synced,
+        uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, synced
       ])
     }
   })

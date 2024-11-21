@@ -61,11 +61,12 @@ function MainApp ({ navigationTheme }) {
       // Some top-level functions need access to settings info that's only available in the store at this point
       GLOBAL.consentAppData = settings.consentAppData
       GLOBAL.consentOpData = settings.consentOpData
-      GLOBAL.deviceId = await DeviceInfo.getUniqueId()
-      GLOBAL.deviceName = await DeviceInfo.getDeviceName()
+      GLOBAL.deviceId = GLOBAL.deviceId || await DeviceInfo.getUniqueId()
+      GLOBAL.deviceName = GLOBAL.deviceName || await DeviceInfo.getDeviceName()
+      GLOBAL.syncEnabled = settings?.extensions?.['ham2k-lofi']?.enabled
       console.log('GLOBAL', GLOBAL)
     })
-  }, [settings?.consentAppData, settings?.consentOpData])
+  }, [settings?.consentAppData, settings?.consentOpData, settings?.extensions])
 
   const routeNameRef = React.useRef()
   const navigationRef = React.useRef()

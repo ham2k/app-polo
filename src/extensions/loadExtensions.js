@@ -22,12 +22,13 @@ import WWBOTAExtension from './activities/wwbota/WWBOTAExtension'
 import ECAExtension from './activities/eca/ECAExtension'
 import ELAExtension from './activities/ela/ELAExtension'
 import SiOTAExtentsion from './activities/siota/SiOTAExtension'
+
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 import CallHistoryExtension from './data/call-history/CallHistoryExtension'
 import QRZExtension from './data/qrz/QRZExtension'
 import HamDBExtension from './data/hamdb/HamDBExtension'
 import HamQTHExtension from './data/hamqth/HamQTHExtension'
-import SatellitesExtension from './activities/satellites/SatellitesExtension'
+import Ham2KLoFiSyncExtension from './data/ham2k-lofi-sync/Ham2KLoFiSyncExtension'
 
 import NYQPExtension from './contests/nyqp/NYQPExtension'
 
@@ -37,6 +38,7 @@ import DebuggingCommands from './commands/DebuggingCommands'
 import OperatorCommands from './commands/OperatorCommands'
 import MiscCommands from './commands/MiscCommands'
 
+import SatellitesExtension from './activities/satellites/SatellitesExtension'
 import WABExtension from './other/wab/WABExtension'
 
 const loadExtensions = () => async (dispatch, getState) => {
@@ -70,6 +72,8 @@ const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(QRZExtension)
   registerExtension(HamDBExtension)
   registerExtension(HamQTHExtension)
+
+  registerExtension(Ham2KLoFiSyncExtension)
 
   registerExtension(SatellitesExtension)
 

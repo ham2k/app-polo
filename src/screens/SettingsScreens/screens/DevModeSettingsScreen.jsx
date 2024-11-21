@@ -6,27 +6,30 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { List } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import DocumentPicker from 'react-native-document-picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
+import DeviceInfo from 'react-native-device-info'
 
 import packageJson from '../../../../package.json'
 
 import { DevModeSettingsForDistribution, reportError } from '../../../distro'
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { loadQSOs } from '../../../store/qsos'
+import { loadQSOs, resetSyncedStatus } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
 import { generateExport, importQSON, selectOperationsList } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
-import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
-import DeviceInfo from 'react-native-device-info'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
+import { SyncServiceDialog } from '../components/SyncServiceDialog'
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
+import { dbSelectAll } from '../../../store/db/db'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 function prepareStyles (baseStyles) {
   return {
@@ -46,6 +49,20 @@ export default function DevModeSettingsScreen ({ navigation }) {
 
   const settings = useSelector(selectSettings)
   const operations = useSelector(selectOperationsList)
+
+  const [currentDialog, setCurrentDialog] = useState()
+
+  const [syncStatus, setSyncStatus] = useState()
+  useEffect(() => {
+    setImmediate(async () => {
+      setSyncStatus(await syncCountDescription())
+    })
+  }, [])
+
+  const handleResetSyncStatus = useCallback(async () => {
+    await resetSyncedStatus()
+    setSyncStatus(await syncCountDescription())
+  }, [])
 
   const handleExportFiles = useCallback(async () => {
     let paths = []
@@ -116,6 +133,32 @@ export default function DevModeSettingsScreen ({ navigation }) {
             onPress={handleImportFiles}
           />
         </Ham2kListSection>
+        <Ham2kListSection title={'Sync Services'}>
+          <Ham2kListItem
+            title="Ham2K Log Filer"
+            description={settings?.extensions?.['ham2k-lofi']?.enabled ? settings?.extensions?.['ham2k-lofi']?.server : 'Disabled'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync-circle" color={styles.colors.devMode} />}
+            titleStyle={{ color: styles.colors.devMode, marginLeft: 0 }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            onPress={() => setCurrentDialog('ham2k-lofi')}
+          />
+          {currentDialog === 'ham2k-lofi' && (
+            <SyncServiceDialog
+              settings={settings}
+              styles={styles}
+              visible={true}
+              onDialogDone={() => setCurrentDialog('')}
+            />
+          )}
+          <Ham2kListItem
+            title="Reset Sync Status"
+            description={syncStatus}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-remove" color={styles.colors.devMode} />}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            onPress={handleResetSyncStatus}
+          />
+        </Ham2kListSection>
         <Ham2kListSection title={'System Information'}>
           <View style={{ paddingHorizontal: styles.oneSpace * 2 }}>
             <Ham2kMarkdown styles={{ markdown: { heading3: { ...styles.markdown.heading3, marginTop: styles.oneSpace } } }}>
@@ -152,4 +195,13 @@ function systemInfo () {
 * ${fmtGigabytes(DeviceInfo.getTotalDiskCapacitySync())} storage - ${fmtGigabytes(DeviceInfo.getFreeDiskStorageSync())} free
 ${DeviceInfo.isKeyboardConnectedSync() ? '* Keyboard connected\n' : ''}
   `
+}
+
+async function syncCountDescription () {
+  const result = await dbSelectAll('SELECT COUNT(*) as count, synced FROM qsos WHERE operation != "historical" GROUP BY synced')
+  const counts = result.reduce((acc, row) => {
+    acc[row.synced ? 'synced' : 'unsynced'] = row.count
+    return acc
+  }, {})
+  return `${fmtNumber(counts.synced || 0)} synced, ${fmtNumber(counts.unsynced || 0)} unsynced`
 }
