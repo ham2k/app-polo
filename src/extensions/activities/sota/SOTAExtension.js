@@ -196,7 +196,6 @@ const ReferenceHandler = {
   },
 
   suggestExportOptions: ({ operation, qsos, ref, settings }) => {
-    console.log('suggestExportOptions', { ref })
     if (ref?.type === Info.activationType && ref?.ref) {
       console.log('SOTA Activator')
       return [{

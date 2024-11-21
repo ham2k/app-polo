@@ -10,10 +10,11 @@ import React, { useCallback } from 'react'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 
-const ADD_DASHES_REGEX = /([A-Z]+)(\d+|TEST)/gi
-const ADD_COMMAS_REGEX = /(\d\d+)\s*[,]*\s*([A-Z]+)/gi
 const NO_PREFIX_REGEX = /^(\d\d+|TEST)/gi
-const REPEAT_PREFIX_REGEX = /(\w+)-(\d+)(\s+,\s*|,\s*|\s+)(\d\d+|TEST)/gi
+const ADD_DASHES_REGEX = /([A-Z]+)(\d+|TEST)/gi
+const ADD_COMMAS_REGEX = /(\w+)-(\d+)[\s,]$/gi
+const DELETE_TRAILING_PREFIX_REGEX = /(\w+)-(\d+)[, ]+(\w+)$/gi
+const DELETE_INVALID_CHARACTERS = /[^A-Z0-9-,?]/gi
 
 export default function POTAInput (props) {
   const { textStyle, onChange, defaultPrefix, onChangeText, fieldId } = props
@@ -23,10 +24,11 @@ export default function POTAInput (props) {
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
 
-    text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix ?? 'K'}-${p1}`)
+    text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix ?? 'US'}-${p1}`)
     text = text.replace(ADD_DASHES_REGEX, (match, p1, p2) => `${p1}-${p2}`)
-    text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1},${p2}`)
-    text = text.replace(REPEAT_PREFIX_REGEX, (match, p1, p2, p3, p4) => `${p1}-${p2},${p1}-${p4}`)
+    text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1}-${p2},${p1}-`)
+    text = text.replace(DELETE_TRAILING_PREFIX_REGEX, (match, p1, p2, p3) => p1 !== p3 ? `${p1}-${p2}` : match)
+    text = text.replace(DELETE_INVALID_CHARACTERS, '')
 
     event.nativeEvent.text = text
 

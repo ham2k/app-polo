@@ -302,16 +302,27 @@ export default function OperationScreen (props) {
   }
 }
 
-export function buildTitleForOperation (operation) {
+export function buildTitleForOperation (operation, { includeCall = true } = {}) {
   if (operation?.stationCall) {
     let call = operation?.stationCall
     if (operation.operatorCall && operation.operatorCall !== operation.stationCall) {
       call = `${call} (op ${operation.operatorCall})`
     }
-    let title = [operation.title, operation.userTitle].filter(x => x).join(' - ')
+    const parts = []
+    if (operation.userTitle) {
+      parts.push(operation.userTitle)
+    }
+    if (operation.title && operation.title !== 'New Operation') {
+      parts.push(operation.title)
+    }
+    let title = parts.join(' ')
     title = title || 'General Operation'
 
-    return [call ? slashZeros(call) : '', title].join(' ')
+    if (includeCall) {
+      return [call ? slashZeros(call) : '', title].join(' ')
+    } else {
+      return title
+    }
   } else {
     return 'New Operation'
   }
