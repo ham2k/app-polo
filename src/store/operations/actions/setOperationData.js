@@ -82,7 +82,8 @@ export const setOperationData = (data) => async (dispatch, getState) => {
       data.subtitle = ''
     }
 
-    if (!data.grid && (!operation.grid || operation.gridSource === 'refs')) {
+    // If no grid is set, or the grid is set from refs, and this update include refs, then update the grid too
+    if (!data.grid && data.refs && (!operation.grid || operation.gridSource === 'refs')) {
       const gridRef = (data.refs || []).find(ref => ref.grid)
       if (gridRef) {
         data.grid = gridRef.grid
