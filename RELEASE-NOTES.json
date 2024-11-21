@@ -1,11 +1,12 @@
 {
-  "24.11.99-pre0": {
-    "name": "December '24 (Pre 0)",
+  "24.11.99-pre1": {
+    "name": "December '24 (Pre 1)",
     "changes": [
       "Add HamQTH callsign lookup (by M1SDH)",
       "Merge spots of multi-operator activations (by M1SDH)",
       "Improve operation title handling",
       "Fix problems with external keyboards on Android",
+      "Fix bugs in various input fields",
       "Fix lookup of portable calls",
       "Fix reference prefix for ITABOTA (by M1SDH)"
     ]
