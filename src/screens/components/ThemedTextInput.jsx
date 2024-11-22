@@ -31,14 +31,13 @@ export default function ThemedTextInput (props) {
     keyboard
   } = props
   const themeStyles = useThemedStyles()
-  const [originalValue, setOriginalValue] = useState(value)
 
   const alternateInnerRef = useRef()
   const actualInnerRef = innerRef ?? alternateInnerRef
 
-  useEffect(() => {
-    setOriginalValue(`${value}`)
-  }, [value])
+  const strValue = typeof value === 'string' ? value : `${value}`
+
+  const originalValue = useMemo(() => strValue, [strValue])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
@@ -204,7 +203,7 @@ export default function ThemedTextInput (props) {
 
         ref={actualInnerRef}
 
-        value={value || ''}
+        value={strValue}
         placeholder={placeholder || ''}
         style={[
           colorStyles.nativeInput,
@@ -230,7 +229,7 @@ export default function ThemedTextInput (props) {
       />
     )
   }, [
-    value, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
+    strValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
     onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange
   ])
 

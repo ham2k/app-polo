@@ -20,6 +20,10 @@ import { TimeInput } from '../components/TimeInput'
 import { DateInput } from '../components/DateInput'
 import FrequencyInput from '../components/FrequencyInput'
 import RSTInput from '../components/RSTInput'
+import { parseFreqInMHz } from '../../tools/frequencyFormats'
+import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
 const QSO_SECTIONS = [
   {
@@ -29,7 +33,7 @@ const QSO_SECTIONS = [
     fields: [
       { key: 'time', label: 'Time', type: 'time', getter: ({ qso }) => qso.startAtMillis },
       { key: 'date', label: 'Date', type: 'date', getter: ({ qso }) => qso.startAtMillis },
-      { key: 'freq', label: 'Frequency', type: 'freq' },
+      { key: 'freq', label: 'Frequency', type: 'freq', setter: frequencySetter, getter: ({ qso }) => qso.freq },
       { key: 'mode', label: 'Mode', type: 'mode' },
       { key: 'band', label: 'Band', type: 'band' },
       { key: 'power', label: 'Power', type: 'number' }
@@ -40,7 +44,7 @@ const QSO_SECTIONS = [
     key: 'their',
     data: 'their',
     fields: [
-      { key: 'call', label: 'Station Call', type: 'callsign', minSpaces: 14, style: { flex: 1 } },
+      { key: 'call', label: 'Station Call', type: 'callsign', setter: callParsingSetter, minSpaces: 14, style: { flex: 1 } },
       { key: 'sent', label: 'RST', type: 'rst' },
       { key: 'exchange', label: 'Exchange', type: 'text' },
       { key: 'name', label: 'Name', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 } },
@@ -62,7 +66,7 @@ const QSO_SECTIONS = [
     key: 'our',
     data: 'our',
     fields: [
-      { key: 'call', label: 'Station Call', type: 'callsign', minSpaces: 11, style: { flex: 1 } },
+      { key: 'call', label: 'Station Call', type: 'callsign', setter: callParsingSetter, minSpaces: 11, style: { flex: 1 } },
       { key: 'operatorCall', label: 'Operator Call', type: 'callsign', minSpaces: 11, style: { flex: 1 } },
       { key: 'sent', label: 'RST', type: 'rst', minSpaces: 4, style: { flex: 1 } },
       { key: 'exchange', label: 'Exchange', type: 'text', minSpaces: 8, style: { flex: 1 } }
@@ -276,4 +280,22 @@ export const editQSOControl = {
     navigation.navigate('EditQSO', { operation, qso })
   },
   optionType: 'mandatory'
+}
+
+function callParsingSetter ({ qso, field, section, value, changes }) {
+  let guess = parseCallsign(value)
+  if (guess?.baseCall) {
+    annotateFromCountryFile(guess)
+  } else if (value) {
+    guess = annotateFromCountryFile({ prefix: value, baseCall: value })
+  }
+  return { ...changes, [section.key]: { call: value, guess } }
+}
+
+function frequencySetter ({ qso, field, section, value, changes, vfo }) {
+  const freq = value ? parseFreqInMHz(value) : undefined
+  const band = freq ? bandForFrequency(freq) : undefined
+  const mode = freq ? (modeForFrequency(freq, qso.our) ?? qso?.mode ?? 'SSB') : qso?.mode
+
+  return { ...changes, freq, band, mode }
 }
