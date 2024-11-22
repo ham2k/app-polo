@@ -13,7 +13,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import KeepAwake from '@sayem314/react-native-keep-awake'
 
 import { loadOperation, selectOperation } from '../../store/operations'
-import { loadQSOs, lookupAllQSOs } from '../../store/qsos'
+import { loadQSOs, lookupAllQSOs, confirmSpots } from '../../store/qsos'
 import { selectSettings, setSettings } from '../../store/settings'
 import { startTickTock, stopTickTock } from '../../store/time'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
@@ -29,6 +29,7 @@ import { selectRuntimeOnline } from '../../store/runtime'
 import { useUIState } from '../../store/ui'
 import { Icon, Menu, Text } from 'react-native-paper'
 import { slashZeros } from '../../tools/stringTools'
+import { hasRef } from '../../tools/refTools'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -351,6 +352,18 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
         onPress={() => hideAndRun(() => dispatch(lookupAllQSOs(operation.uuid)))}
         title={'Lookup all QSOs'}
       />
+      {hasRef(operation, 'potaActivation') &&
+        <Menu.Item
+          leadingIcon="list-status"
+          onPress={() => hideAndRun(() => {
+            console.log(operation)
+            return dispatch(confirmSpots(operation.uuid, {
+              call: operation.stationCall,
+              operation
+            }))
+          })}
+          title={'Confirm Spots'}
+        />}
     </>
   )
 }

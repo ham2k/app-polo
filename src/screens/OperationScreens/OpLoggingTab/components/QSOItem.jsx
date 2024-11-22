@@ -88,6 +88,9 @@ const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress,
           {qso.notes && (
             <Icon source="note-outline" size={styles.normalFontSize} style={styles.fields.icon} />
           )}
+          {qso.spotConfirmed && (
+            <View style={styles.fields.icon}><Icon source="check-circle" size={styles.normalFontSize} style={styles.fields.icon} /></View>
+          )}
           {(qso.refs || []).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.iconForQSO).map(({ ref, handler }, i) => (
             <View key={i} style={styles.fields.icon}><Icon key={i} source={handler?.iconForQSO} size={styles.normalFontSize} color={styles.fields.icon.color} /></View>
           ))}
