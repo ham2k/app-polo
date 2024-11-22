@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "24.11.99-pre1",
-  "versionName": "December '24 (Pre 1)",
+  "version": "24.11.99-pre2",
+  "versionName": "December '24 (Pre 2)",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -11,7 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@ham2k/lib-callsigns": "^0.1",
+    "@ham2k/lib-callsigns": "^0.2",
     "@ham2k/lib-country-files": "^0.10",
     "@ham2k/lib-dxcc-data": "^0.3",
     "@ham2k/lib-format-tools": "^0.3",
