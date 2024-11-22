@@ -24,6 +24,7 @@ import { parseFreqInMHz } from '../../tools/frequencyFormats'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import GridInput from '../components/GridInput'
 
 const QSO_SECTIONS = [
   {
@@ -258,7 +259,7 @@ function QSOField ({ qso, field, section, styles, onChange }) {
     )
   } else if (field.type === 'grid') {
     return (
-      <ThemedTextInput
+      <GridInput
         {...props}
       />
     )
