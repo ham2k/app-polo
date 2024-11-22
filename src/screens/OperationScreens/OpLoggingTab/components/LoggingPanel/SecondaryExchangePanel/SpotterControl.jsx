@@ -48,7 +48,7 @@ export function SpotterControlInputs (props) {
             message: `Spot at ${fmtFreqInMHz(vfo.freq)}`,
             disabled: false
           })
-          if (comments === undefined) setComments(operation?.spottedFreq ? 'QSY' : 'QRV with Ham2K PoLo')
+          if (comments === undefined) setComments(operation?.spottedFreq ? 'QSY ' : 'QRV ')
         } else if (now - (operation?.spottedAt || 0) > (1000 * SECONDS_UNTIL_RESPOT)) {
           setSpotterUI({
             message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
