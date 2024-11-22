@@ -44,7 +44,7 @@ export function TimeInput (props) {
   const handleChange = useCallback((event) => {
     const { text } = event.nativeEvent
     actualInnerRef.current.setNativeProps({ text })
-    // setLocalValue(text)
+    setLocalValue(text)
 
     let fullBaseTime
     let newValue
@@ -85,7 +85,7 @@ export function TimeInput (props) {
         onChange && onChange({ value: newValue, fieldId })
       }
     }
-  }, [fieldId, onChange, originalValue, valueInMillis])
+  }, [actualInnerRef, fieldId, onChange, originalValue, valueInMillis])
 
   return (
     <ThemedTextInput

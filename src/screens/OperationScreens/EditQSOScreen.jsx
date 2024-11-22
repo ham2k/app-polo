@@ -32,8 +32,8 @@ const QSO_SECTIONS = [
     key: 'qso',
     data: '',
     fields: [
-      { key: 'time', label: 'Time', type: 'time', getter: ({ qso }) => qso.startAtMillis },
-      { key: 'date', label: 'Date', type: 'date', getter: ({ qso }) => qso.startAtMillis },
+      { key: 'time', setKey: 'startAtMillis', label: 'Time', type: 'time', getter: ({ qso }) => qso.startAtMillis },
+      { key: 'date', setKey: 'startAtMillis', label: 'Date', type: 'date', getter: ({ qso }) => qso.startAtMillis },
       { key: 'freq', label: 'Frequency', type: 'freq', setter: frequencySetter, getter: ({ qso }) => qso.freq },
       { key: 'mode', label: 'Mode', type: 'mode' },
       { key: 'band', label: 'Band', type: 'band' },
@@ -121,9 +121,9 @@ export default function EditQSOScreen ({ navigation, route }) {
       if (field?.setter) {
         changes = field.setter({ qso, field, section, value, changes })
       } else if (section.data) {
-        changes[section.data] = { [field.key]: value }
+        changes[section.data] = { [field.setKey || field.key]: value }
       } else {
-        changes[field.key] = value
+        changes[field.setKey || field.key] = value
       }
       updateQSO(changes)
     }
