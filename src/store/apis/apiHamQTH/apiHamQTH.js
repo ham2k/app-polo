@@ -135,6 +135,9 @@ export const apiHamQTH = createApi({
               image = undefined
             }
 
+            let grid = castString(callsignInfo.grid)
+            grid &&= grid.replace(/(?<=^[A-Z]{2}[0-9]{2})[A-Z]{2}/, x => x.toLowerCase())
+
             return {
               ...response,
               error: undefined,
@@ -147,7 +150,7 @@ export const apiHamQTH = createApi({
                 country: capitalizeString(callsignInfo.country, { force: false }),
                 postal: castString(callsignInfo.adr_zip),
                 county: capitalizeString(callsignInfo.us_county, { force: false }),
-                grid: castString(callsignInfo.grid),
+                grid,
                 cqZone: castNumber(callsignInfo.CQ),
                 ituZone: castNumber(callsignInfo.itu),
                 dxccCode: castNumber(callsignInfo.adif),
