@@ -12,6 +12,8 @@ import { Info } from './WWBOTAInfo'
 import { WWBOTAActivityOptions } from './WWBOTAActivityOptions'
 import { wwbotaFindOneByReference, registerWWBOTADataFile } from './WWBOTADataFile'
 import { WWBOTALoggingControl } from './WWBOTALoggingControl'
+import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
+import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 
 const Extension = {
@@ -19,6 +21,7 @@ const Extension = {
   category: 'locationBased',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
+    registerHook('spots', { hook: SpotsHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
     registerHook('ref:ukbota', { hook: ReferenceHandler }) // Legacy
@@ -46,6 +49,85 @@ const ActivityHook = {
   Options: WWBOTAActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType
+}
+
+const SpotsHook = {
+  ...Info,
+  sourceName: 'WWBOTA',
+  fetchSpots: async ({ online, settings, dispatch }) => {
+    let spots = []
+    if (online) {
+      const apiPromise = await dispatch(apiWWBOTA.endpoints.spots.initiate({}, { forceRefetch: true }))
+      await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, getState) => apiWWBOTA.endpoints.spots.select({})(getState()))
+
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+      spots = apiResults.data || []
+    }
+
+    const qsos = []
+    for (const spot of spots) {
+      if (!spot.frequency) {
+        continue
+      }
+      // Time
+      const [date, updatedAt] = spot.updated.split(' ', 2)
+      const [day, month, year] = date.split('/', 3)
+      const spotTime = Date.parse(`${year}-${month}-${day}T${updatedAt}:00Z`)
+
+      // Refs
+      const refs = []
+      const refRegex = /\b(B\/(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*))[- ]?([0-9]{4}(?:[ ,][0-9]{4})*)\b/gi
+      for (const match of spot.info.matchAll(refRegex)) {
+        const prefix = match[1].toUpperCase()
+        refs.push(...match[2].split(/[ ,]/).map(refNum => `${prefix}-${refNum}`))
+      }
+      let label
+      if (refs.length === 0) { // No reference found
+        continue
+      } else if (refs.length === 1) { // One, so let's display name
+        const refDetails = await wwbotaFindOneByReference(refs[0])
+        label = `${refs[0]}: ${refDetails?.name ?? 'Unknown Bunker'}`
+      } else { // More than one, just list references
+        label = refs.join(' ')
+      }
+
+      const qso = {
+        their: { call: spot.call },
+        freq: spot.frequency,
+        band: spot.frequency ? bandForFrequency(spot.frequency) : 'other',
+        mode: spot.frequency ? modeForFrequency(spot.mode) : 'SSB',
+        refs: refs.map(ref => ({
+          ref,
+          type: Info.huntingType
+        })),
+        spot: {
+          timeInMillis: spotTime,
+          source: Info.key,
+          icon: Info.icon,
+          label,
+          type: spot.state,
+          sourceInfo: {
+            comments: spot.info,
+            spotter: spot.spotter
+          }
+        }
+      }
+      qsos.push(qso)
+    }
+
+    qsos.sort((a, b) => b.spot.timeInMillis - a.spot.timeInMillis).filter(qso => qso.spot.type !== 'TEST')
+
+    const dedupedQSOs = []
+    const includedCalls = {}
+    for (const qso of qsos) {
+      if (!includedCalls[qso.their.call]) {
+        includedCalls[qso.their.call] = true
+        if (qso.spot.type === 'Live' || qso.spot.type === 'QSY') dedupedQSOs.push(qso)
+      }
+    }
+    return dedupedQSOs
+  }
 }
 
 const HunterLoggingControl = {
