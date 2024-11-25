@@ -44,7 +44,7 @@ export default function ThemedTextInput (props) {
     let spaceAdded = false
 
     if (multiline) {
-      // We cannot do any transformations on multiline inputs
+      // We should not do any transformations on multiline inputs
     } else {
       // Lets check if what changed was the addition of a space
       if ((text !== originalValue) && (text.replace(SPACES_REGEX, '') === originalValue)) {
@@ -82,10 +82,19 @@ export default function ThemedTextInput (props) {
       actualInnerRef.current.setNativeProps({ text })
     }
 
-    onChangeText && onChangeText(text)
-    onChange && onChange({ ...event, fieldId, ref: actualInnerRef })
-    if (spaceAdded) {
-      onSpace && onSpace({ nativeEvent: { key: ' ', target: event?.nativeEvent?.target } })
+    const changeEvent = { ...event, fieldId, ref: actualInnerRef }
+    const spaceEvent = { nativeEvent: { key: ' ', target: event.nativeEvent.target } }
+    if (Platform.OS === 'android') {
+      // This minimizes issues when using external keyboards on Android
+      setTimeout(() => {
+        onChangeText && onChangeText(text)
+        onChange && onChange(changeEvent)
+        if (spaceAdded) onSpace && onSpace(spaceEvent)
+      }, 15)
+    } else {
+      onChangeText && onChangeText(text)
+      onChange && onChange(changeEvent)
+      if (spaceAdded) onSpace && onSpace(spaceEvent)
     }
   }, [
     originalValue,
@@ -160,7 +169,6 @@ export default function ThemedTextInput (props) {
 
   const keyboardOptions = useMemo(() => {
     const dumbDownKeyboardProps = {
-      autoCapitalize: uppercase ? 'characters' : 'none',
       autoComplete: 'off',
       autoCorrect: false,
       disableFullScreenUI: false,
@@ -180,19 +188,19 @@ export default function ThemedTextInput (props) {
       // textContentType: Platform.OS === 'android' ? 'password' : 'none',
     }
 
+    if (multiline) dumbDownKeyboardProps.autoCapitalize = 'sentences'
+    else if (uppercase) dumbDownKeyboardProps.autoCapitalize = 'characters'
+
+    if (keyboard === 'numbers') dumbDownKeyboardProps.keyboardType = 'numbers-and-punctuation'
+
     if (keyboard === 'dumb') {
       return dumbDownKeyboardProps
-    } else if (keyboard === 'numbers') {
-      return {
-        ...dumbDownKeyboardProps,
-        keyboardType: 'numbers-and-punctuation'
-      }
     } else {
       return {
         keyboardAppearance: (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
       }
     }
-  }, [keyboard, themeStyles.isDarkMode, uppercase])
+  }, [keyboard, themeStyles.isDarkMode, uppercase, multiline])
 
   const renderInput = useCallback((props) => {
     return (
@@ -225,12 +233,13 @@ export default function ThemedTextInput (props) {
         onChangeText={undefined}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        selection={currentSelection}
         onSelectionChange={handleSelectionChange}
       />
     )
   }, [
     strValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
-    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange
+    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange, currentSelection
   ])
 
   return (

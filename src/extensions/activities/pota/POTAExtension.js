@@ -216,7 +216,7 @@ const ReferenceHandler = {
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
-    const { band, mode, key, startAtMillis } = qso
+    const { band, mode, uuid, startAtMillis } = qso
 
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
@@ -234,7 +234,7 @@ const ReferenceHandler = {
 
     if (value === 0) return { value: 0 } // If not activating, only counts if other QSO has a POTA ref
 
-    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.key !== key)
+    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
     if (nearDupes.length === 0) {
       return { value, refCount, type }

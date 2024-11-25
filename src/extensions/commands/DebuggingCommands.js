@@ -5,8 +5,6 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { qsoKey } from '@ham2k/lib-qson-tools'
-
 import { addQSO } from '../../store/qsos'
 import { annotateQSO } from '../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
 import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
@@ -108,9 +106,8 @@ const SeedCommandHook = {
         oneQSO.our = { call: ourInfo.call, operatorCall: ourInfo.operatorCall || operation.operatorCall, sent: randomRST(oneQSO.mode) }
         oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
 
-        oneQSO.key = qsoKey(oneQSO)
         await dispatch(addQSO({ uuid: operation.uuid, qso: oneQSO }))
-        updateLoggingState({ selectedKey: undefined, lastKey: oneQSO.key })
+        updateLoggingState({ selectedUUID: undefined, lastUUID: oneQSO.uuid })
 
         count--
         startAtMillis = startAtMillis + times.pop()

@@ -12,8 +12,8 @@ import { IconButton, Text } from 'react-native-paper'
 import cloneDeep from 'clone-deep'
 import { useDispatch, batch } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import UUID from 'react-native-uuid'
 
-import { qsoKey } from '@ham2k/lib-qson-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
@@ -50,7 +50,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       setLoggingState({
         ...loggingState,
         qso: newQSO,
-        selectedKey: newQSO?.key,
+        selectedUUID: newQSO?.uuid,
         originalQSO: cloneDeep(newQSO),
         hasChanges: !!qsoValue?._isSuggested,
         ...more?.otherStateChanges
@@ -102,7 +102,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
   useEffect(() => { // Manage the QSO Queue
     // When there is no current QSO, pop one from the queue or create a new one
     // If the currently selected QSO changes, push the current one to the queue and load the new one
-    if (!loggingState?.selectedKey || (loggingState?.selectedKey === 'new-qso' && !qso)) {
+    if (!loggingState?.selectedUUID) {
       let nextQSO
       const otherStateChanges = {}
       if (loggingState?.qsoQueue?.length > 0) {
@@ -117,15 +117,15 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
           mainFieldRef.current.focus()
         }
       }, 10)
-    } else if (((qso && qso?.key !== loggingState?.selectedKey) || !qso) && loggingState?.selectedKey !== 'new-qso') {
+    } else if ((qso?.uuid !== loggingState?.selectedUUID) || !qso) {
       let nextQSO
       const otherStateChanges = {}
 
-      if (loggingState?.selectedKey === 'suggested-qso') {
+      if (loggingState?.suggestedQSO) {
         nextQSO = prepareSuggestedQSO(loggingState?.suggestedQSO, qsos, operation, vfo, settings)
         otherStateChanges.suggestedQSO = undefined
       } else {
-        nextQSO = qsos.find(q => q.key === loggingState?.selectedKey)
+        nextQSO = qsos.find(q => q.uuid === loggingState?.selectedUUID)
         if (nextQSO) nextQSO = prepareExistingQSO(nextQSO)
         else nextQSO = prepareNewQSO(operation, qsos, settings)
       }
@@ -142,7 +142,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         }
       }, 10)
     }
-  }, [loggingState?.selectedKey, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO])
+  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO])
 
   useEffect(() => { // Validate and analize the callsign
     let call = qso?.their?.call ?? ''
@@ -244,8 +244,8 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         dispatch(addQSO({ uuid: operation.uuid, qso }))
         updateLoggingState({
           qso: undefined,
-          selectedKey: undefined,
-          lastKey: qso.key,
+          selectedUUID: undefined,
+          lastUUID: qso.uuid,
           originalQSO: undefined,
           hasChanges: false,
           undoInfo: undefined
@@ -269,7 +269,6 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
 
           delete qso._isNew
           delete qso._willBeDeleted
-          delete qso._suggestedKey
           delete qso.deleted
 
           qso.freq = qso.freq ?? vfo.freq
@@ -292,24 +291,19 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
           qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
 
           let call = qso?.their?.call
-          let lastKey
+          let lastUUID
 
           const calls = call = call.split(',')
           for (let i = 0; i < calls.length; i++) {
             let oneQSO = qso
             if (calls.length > 1) { // If this is a multi-call QSO, we need to clone and annotate the QSO for each call
               oneQSO = cloneDeep(qso)
+              if (i > 0) oneQSO.uuid = null
               oneQSO.their.call = calls[i].trim()
               oneQSO.their.guess = {}
               oneQSO.their.lookup = {}
               oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
-
-              if (i > 0 && oneQSO._originalKey) {
-                delete oneQSO._originalKey // Only the first call in a multi-call QSO should have the original key
-              }
             }
-
-            oneQSO.key = qsoKey(oneQSO)
 
             if (DEBUG) logTimer('submit', 'handleSubmit before dispatch')
             dispatch(addQSO({ uuid: operation.uuid, qso: oneQSO }))
@@ -317,10 +311,10 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
 
             trackEvent(eventName, { their_prefix: oneQSO.their.entityPrefix ?? oneQSO.their.guess.entityPrefix, refs: (oneQSO.refs || []).map(r => r.type).join(',') })
 
-            lastKey = oneQSO.key
+            lastUUID = oneQSO.uuid
           }
           if (DEBUG) logTimer('submit', 'handleSubmit before setQSO')
-          setQSO(undefined, { otherStateChanges: { lastKey } }) // Let queue management decide what to do
+          setQSO(undefined, { otherStateChanges: { lastUUID } }) // Let queue management decide what to do
           if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
         })
         if (DEBUG) logTimer('submit', 'handleSubmit after batchedUpdates')
@@ -625,12 +619,12 @@ function prepareStyles (themeStyles, themeColor) {
 
 function prepareNewQSO (operation, qsos, vfo, settings) {
   const qso = {
+    uuid: UUID.v1(),
     band: vfo.band,
     freq: vfo.freq,
     mode: vfo.mode,
     power: vfo.power,
-    _isNew: true,
-    key: 'new-qso'
+    _isNew: true
   }
   if (operation._nextManualTime) {
     qso.startAtMillis = operation._nextManualTime
@@ -649,7 +643,6 @@ function prepareNewQSO (operation, qsos, vfo, settings) {
 
 function prepareExistingQSO (qso) {
   const clone = cloneDeep(qso || {})
-  clone._originalKey = qso?.key
   clone._isNew = false
 
   return clone
@@ -659,7 +652,8 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   const clone = cloneDeep(qso || {})
   clone._isNew = true
   clone._isSuggested = true
-  clone.key = 'new-qso'
+  clone.uuid = UUID.v1()
+
   if (clone.freq) {
     clone.band = bandForFrequency(clone.freq)
     if (!clone.mode) {

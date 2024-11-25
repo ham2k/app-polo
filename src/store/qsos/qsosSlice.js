@@ -7,15 +7,14 @@
 
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 
-import { qsoKey } from '@ham2k/lib-qson-tools'
 import { selectSettings } from '../settings'
 import { selectOperation } from '../operations'
 import { analyzeAndSectionQSOs } from '../../extensions/scoring'
 
 const INITIAL_STATE = {
   status: 'ready',
-  keys: {},
-  qsos: {}
+  qsos: {},
+  byUUID: {}
 }
 
 export const qsosSlice = createSlice({
@@ -31,28 +30,23 @@ export const qsosSlice = createSlice({
       action.payload.qsos.forEach((qso, index) => { qso._number = index + 1 })
 
       state.qsos[action.payload.uuid] = action.payload.qsos
-      state.keys[action.payload.uuid] = {}
-      action.payload.qsos.forEach(qso => { state.keys[action.payload.uuid][qso.key] = qso })
+      state.byUUID[action.payload.uuid] = {}
+      action.payload.qsos.forEach(qso => { state.byUUID[action.payload.uuid][qso.uuid] = qso })
     },
     addQSO: (state, action) => {
       if (!state.qsos[action.payload.uuid]) state.qsos[action.payload.uuid] = []
-      if (!state.keys[action.payload.uuid]) state.keys[action.payload.uuid] = {}
+      if (!state.byUUID[action.payload.uuid]) state.byUUID[action.payload.uuid] = {}
       const qsos = state.qsos[action.payload.uuid]
-      const keys = state.keys[action.payload.uuid]
+      const byUUID = state.byUUID[action.payload.uuid]
 
       const qso = action.payload.qso
-      if (!qso.key) qso.key = qsoKey(qso)
 
-      if (keys[qso._originalKey ?? qso.key]) {
+      if (byUUID[qso.uuid]) {
         // Find old QSO and replace it with the new one
-        const pos = qsos.findIndex(q => q.key === (qso._originalKey ?? qso.key))
+        const pos = qsos.findIndex(q => q.uuid === qso.uuid)
         const oldQSO = qsos[pos]
         qsos[pos] = qso
-        if (qso._originalKey) {
-          delete keys[qso._originalKey]
-          delete qso._originalKey
-        }
-        keys[qso.key] = qso
+        byUUID[qso.uuid] = qso
         if (oldQSO?.startAtMillis !== qso.startAtMillis) {
           qsos.sort((a, b) => a.startAtMillis - b.startAtMillis)
           qsos.forEach((q, index) => {
@@ -61,7 +55,7 @@ export const qsosSlice = createSlice({
         }
       } else {
         // Add new QSO to the end of the array
-        keys[qso.key] = qso
+        byUUID[qso.uuid] = qso
         qsos[qsos.length] = qso
         if (qsos.length > 1 && qsos[qsos.length - 2].startAtMillis > qso.startAtMillis) {
           qsos.sort((a, b) => a.startAtMillis - b.startAtMillis)
@@ -77,9 +71,9 @@ export const qsosSlice = createSlice({
     },
     unsetQSOs: (state, action) => {
       state.qsos[action.payload] = undefined
-      state.keys[actions.payload] = undefined
+      state.byUUID[actions.payload] = undefined
       delete state.qsos[action.payload]
-      delete state.keys[action.payload]
+      delete state.byUUID[action.payload]
     }
   }
 

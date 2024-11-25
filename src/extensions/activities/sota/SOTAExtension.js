@@ -240,14 +240,14 @@ const ReferenceHandler = {
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
-    const { key, startAtMillis } = qso
+    const { uuid, startAtMillis } = qso
     const theirRef = findRef(qso, Info.huntingType)
     const refCount = theirRef ? 1 : 0
     const points = refCount
 
     if (!theirRef && !ref?.ref) return { value: 0 } // If not activating, only counts if other QSO has a SOTA ref
 
-    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.key !== key)
+    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
     if (nearDupes.length === 0) {
       return { value: 1, refCount, points, type: Info.activationType }

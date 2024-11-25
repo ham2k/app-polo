@@ -193,10 +193,10 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
       if (!sections || !sections.length) return
       let sectionIndex = sections.length - 1
       let itemIndex = sections[sectionIndex].data.length - 1
-      if (loggingState?.lastKey) {
+      if (loggingState?.lastUUID) {
         sections.find((section, i) => {
           return section.data.find((qso, j) => {
-            if (qso.key === loggingState?.lastKey) {
+            if (qso.uuid === loggingState?.lastUUID) {
               sectionIndex = i
               itemIndex = j
               return true
@@ -208,7 +208,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
 
       listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
     }, 50)
-  }, [listRef, loggingState?.lastKey, sections])
+  }, [listRef, loggingState?.lastUUID, sections])
 
   const refHandlers = useMemo(() => {
     const types = {}
@@ -228,12 +228,12 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
   }, [qsos, operation])
 
   const handlePress = useCallback(({ qso }) => {
-    if (qso.key === loggingState?.selectedKey) {
-      updateLoggingState({ selectedKey: undefined })
+    if (qso.uuid === loggingState?.selectedUUID) {
+      updateLoggingState({ selectedUUID: undefined })
     } else {
-      updateLoggingState({ selectedKey: qso.key })
+      updateLoggingState({ selectedUUID: qso.uuid })
     }
-  }, [loggingState?.selectedKey, updateLoggingState])
+  }, [loggingState?.selectedUUID, updateLoggingState])
 
   const timeFormatFunction = useMemo(() => {
     if (styles.extendedWidth) {
@@ -260,7 +260,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
         qso={qso}
         operation={operation}
         settings={settings}
-        selected={qso.key === loggingState?.selectedKey}
+        selected={qso.uuid === loggingState?.selectedUUID}
         ourInfo={ourInfo}
         onPress={handlePress}
         timeFormatFunction={timeFormatFunction}
@@ -268,7 +268,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
         refHandlers={refHandlers}
       />
     )
-  }, [operation, settings, loggingState?.selectedKey, ourInfo, handlePress, timeFormatFunction, refHandlers, stylesForDeleted, stylesForOtherOperator, styles])
+  }, [operation, settings, loggingState?.selectedUUID, ourInfo, handlePress, timeFormatFunction, refHandlers, stylesForDeleted, stylesForOtherOperator, styles])
 
   const renderHeader = useCallback(({ section, index }) => {
     return (
@@ -291,7 +291,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
     [styles]
   )
 
-  const extractKey = useCallback((item, index) => item.key, [])
+  const extractKey = useCallback((item, index) => item.uuid, [])
 
   return (
     <SectionList

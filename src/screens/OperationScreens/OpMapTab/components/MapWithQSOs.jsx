@@ -17,7 +17,7 @@ const TRANSP_PNG = require('../../../../../assets/images/transp-16.png')
 
 const METERS_IN_ONE_DEGREE = 111111
 
-export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedKey }) {
+export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedUUID }) {
   // Maps change with the actual device color scheme, not the user preferences in the app
   const deviceColorScheme = useColorScheme()
 
@@ -121,38 +121,38 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
           mapStyles={mapStyles}
           styles={styles}
           metersPerOneSpace={scale?.metersPerOneSpace}
-          selectedKey={selectedKey}
+          selectedUUID={selectedUUID}
         />
       )}
     </MapView>
   )
 }
 
-const MapMarkers = React.memo(function MapMarkers ({ qth, qsos, selectedKey, mapStyles, styles, metersPerOneSpace }) {
+const MapMarkers = React.memo(function MapMarkers ({ qth, qsos, selectedUUID, mapStyles, styles, metersPerOneSpace }) {
   const ref = useRef()
 
   useEffect(() => {
     if (ref.current) {
       ref.current.showCallout()
     }
-  }, [ref, selectedKey])
+  }, [ref, selectedUUID])
 
   return (
     <>
       {qth.latitude && qth.longitude && qsos.map(({ qso, location, strength }) => (
         <Polyline
-          key={`${qso.key}-line-${metersPerOneSpace}`}
+          key={`${qso.uuid}-line-${metersPerOneSpace}`}
           geodesic={true}
           coordinates={[location, qth]}
           {...mapStyles.line}
         />
       ))}
       {qsos.map(({ qso, location, strength, distanceStr }) => (
-        <React.Fragment key={qso.key}>
+        <React.Fragment key={qso.uuid}>
           <Marker
-            key={`${qso.key}-marker-${metersPerOneSpace}`}
+            key={`${qso.uuid}-marker-${metersPerOneSpace}`}
             coordinate={location}
-            ref={selectedKey && selectedKey === qso.key ? ref : undefined}
+            ref={selectedUUID && selectedUUID === qso.uuid ? ref : undefined}
             anchor={{ x: 0.5, y: 0.5 }}
             flat={true}
             tracksViewChanges={false}
@@ -173,7 +173,7 @@ const MapMarkers = React.memo(function MapMarkers ({ qth, qsos, selectedKey, map
             </Callout>
           </Marker>
           <Circle
-            key={`${qso.key}-circle-${metersPerOneSpace}`}
+            key={`${qso.uuid}-circle-${metersPerOneSpace}`}
             center={location}
             radius={radiusForMarker({ qso, strength, location, metersPerOneSpace, size: mapStyles.marker.size })}
             fillColor={colorForMarker({ qso, location, strength, styles, mapStyles })}

@@ -8,9 +8,9 @@
 export const DefaultScoringHandler = {
   key: 'defaultOperation',
   scoringForQSO: ({ qso, qsos, operation, ref }) => {
-    const { band, mode, key, startAtMillis } = qso
+    const { band, mode, uuid, startAtMillis } = qso
 
-    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.key !== key)
+    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
     if (nearDupes.length === 0) {
       return { count: 1, type: 'defaultOperation' }
