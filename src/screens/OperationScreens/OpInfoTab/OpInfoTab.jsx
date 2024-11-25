@@ -24,8 +24,8 @@ export default function OpInfoTab ({ navigation, route }) {
   const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid))
 
   const themeColor = useMemo(() => {
-    return (loggingState.selectedKey === 'new-qso') ? 'tertiary' : 'secondary'
-  }, [loggingState?.selectedKey])
+    return (!loggingState?.qso?._isNew ? 'secondary' : 'tertiary')
+  }, [loggingState?.qso?._isNew])
 
   const styles = useThemedStyles()
 

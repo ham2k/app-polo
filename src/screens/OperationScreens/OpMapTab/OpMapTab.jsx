@@ -67,7 +67,7 @@ export default function OpMapTab ({ navigation, route }) {
         qth={qth}
         qsos={qsos}
         settings={settings}
-        selectedKey={loggingState?.selectedKey}
+        selectedUUID={loggingState?.selectedUUID}
       />
       <View style={{ position: 'absolute', bottom: styles.oneSpace * 2, right: styles.oneSpace * 2 }}>
         <IconButton

@@ -238,7 +238,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
   return (
-    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6 }}>
+    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6 }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
         <View style={{ alignSelf: 'flex-start', flex: 0 }}>
