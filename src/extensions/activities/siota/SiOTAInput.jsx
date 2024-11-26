@@ -15,22 +15,17 @@ const ADD_COMMAS_REGEX = /(VK-[A-Z]{3}\d+)\s*[,]*\s*VK-/gi
 const NO_PREFIX_REGEX = /(?<!VK-)([A-Z]{3}\d+)/gi
 
 export default function SiOTAInput (props) {
-  const { textStyle, onChange, onChangeText, fieldId } = props
+  const { textStyle } = props
 
   const styles = useThemedStyles()
 
-  const handleChange = useCallback((event) => {
-    let { text } = event.nativeEvent
-
+  const textTransformer = useCallback((text) => {
     text = text.replace(NO_PREFIX_REGEX, (match, p1) => `VK-${p1}`)
     text = text.replace(ADD_DASHES_REGEX, (match, p1) => `VK-${p1}`)
     text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1}, VK-`)
 
-    event.nativeEvent.text = text
-
-    onChangeText && onChangeText(text)
-    onChange && onChange({ ...event, fieldId })
-  }, [onChange, onChangeText, fieldId])
+    return text
+  }, [])
 
   return (
     <ThemedTextInput
@@ -40,7 +35,7 @@ export default function SiOTAInput (props) {
       nospaces={true}
       placeholder={'VK-…'}
       textStyle={[textStyle, styles?.text?.callsign]}
-      onChange={handleChange}
+      textTransformer={textTransformer}
     />
   )
 }

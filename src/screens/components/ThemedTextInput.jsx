@@ -27,7 +27,7 @@ export default function ThemedTextInput (props) {
     innerRef, focusedRef,
     fieldId,
     multiline,
-    uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
+    uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst, textTransformer,
     keyboard
   } = props
   const themeStyles = useThemedStyles()
@@ -46,39 +46,53 @@ export default function ThemedTextInput (props) {
     if (multiline) {
       // We should not do any transformations on multiline inputs
     } else {
-      // Lets check if what changed was the addition of a space
-      if ((text !== originalValue) && (text.replace(SPACES_REGEX, '') === originalValue)) {
-        spaceAdded = true
-      } else if (text.match(ONLY_SPACES_REGEX) && originalValue !== '') { // or a space replacing the entire value
-        spaceAdded = true
-        text = originalValue
+      if (text.length < originalValue.length) {
+        // When deleting, don't re-format the text
+      } else {
+        // Lets check if what changed was the addition of a space
+        if ((text !== originalValue) && (text.replace(SPACES_REGEX, '') === originalValue)) {
+          spaceAdded = true
+        } else if (text.match(ONLY_SPACES_REGEX) && originalValue !== '') { // or a space replacing the entire value
+          spaceAdded = true
+          text = originalValue
+        }
+
+        text = text.replace(LEFT_TRIM_REGEX, '')
+
+        if (uppercase) {
+          text = text.toUpperCase()
+        }
+        if (trim) {
+          text = text.trim()
+        }
+        if (noSpaces) {
+          text = text.replace(SPACES_REGEX, '')
+        }
+        if (periodToSlash) {
+          text = text.replaceAll('.', '/')
+        }
+        if (numeric) {
+          text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+        }
+        if (decimal) {
+          text = text.replace(NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+        }
+        if (rst) {
+          text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '')
+        }
+
+        if (textTransformer) {
+          text = textTransformer(text)
+        }
+
+        // console.log('Values', { text, originalValue, length: text.length, originalLength: originalValue.length, start: currentSelection?.start, end: currentSelection?.end })
+        if (text.length !== originalValue.length + 1) {
+          // console.log('reset selection')
+          setCurrentSelection({})
+        }
       }
 
-      text = text.replace(LEFT_TRIM_REGEX, '')
-
-      if (uppercase) {
-        text = text.toUpperCase()
-      }
-      if (trim) {
-        text = text.trim()
-      }
-      if (noSpaces) {
-        text = text.replace(SPACES_REGEX, '')
-      }
-      if (periodToSlash) {
-        text = text.replaceAll('.', '/')
-      }
-      if (numeric) {
-        text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
-      }
-      if (decimal) {
-        text = text.replace(NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
-      }
-      if (rst) {
-        text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '')
-      }
       event.nativeEvent.text = text
-
       actualInnerRef.current.setNativeProps({ text })
     }
 
@@ -90,7 +104,7 @@ export default function ThemedTextInput (props) {
         onChangeText && onChangeText(text)
         onChange && onChange(changeEvent)
         if (spaceAdded) onSpace && onSpace(spaceEvent)
-      }, 15)
+      }, 50)
     } else {
       onChangeText && onChangeText(text)
       onChange && onChange(changeEvent)
@@ -99,7 +113,7 @@ export default function ThemedTextInput (props) {
   }, [
     originalValue,
     fieldId, actualInnerRef,
-    multiline, uppercase, noSpaces, periodToSlash, numeric, decimal, trim, rst,
+    multiline, uppercase, noSpaces, periodToSlash, numeric, decimal, trim, rst, textTransformer,
     onChangeText, onChange, onSpace
   ])
 
@@ -176,16 +190,16 @@ export default function ThemedTextInput (props) {
       importantForAutofill: 'no',
       inputMode: undefined,
       spellCheck: false,
-      textContentType: 'none',
+      // textContentType: 'none',
 
       // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
-      keyboardAppearance: (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
+      keyboardAppearance: (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light',
 
       // On Android, "visible-password" would enable numbers in the keyboard, and disable autofill
       // but it has serious lag issues https://github.com/facebook/react-native/issues/35735
-      // keyboardType: 'visible-password',
+      keyboardType: 'visible-password',
       // secureTextEntry: Platform.OS === 'android'
-      // textContentType: Platform.OS === 'android' ? 'password' : 'none',
+      textContentType: Platform.OS === 'android' ? 'password' : 'none'
     }
 
     if (multiline) dumbDownKeyboardProps.autoCapitalize = 'sentences'
@@ -233,13 +247,12 @@ export default function ThemedTextInput (props) {
         onChangeText={undefined}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        selection={currentSelection}
         onSelectionChange={handleSelectionChange}
       />
     )
   }, [
     strValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
-    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange, currentSelection
+    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange
   ])
 
   return (

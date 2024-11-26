@@ -16,16 +16,17 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findBestHook } from '../../../../extensions/registry'
 
-const QSOItem = React.memo(function QSOItem ({ qso, operation, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
-  const theirInfo = useMemo(() => {
-    if (qso?.their?.entityPrefix) {
-      return qso?.their
-    } else {
-      let info = {}
-      info = parseCallsign(qso?.their?.call)
-      return annotateFromCountryFile(info)
-    }
-  }, [qso?.their])
+const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
+  const theirInfo = qso?.their || {}
+  // const theirInfo = useMemo(() => {
+  //   if (qso?.their?.entityPrefix) {
+  //     return qso?.their
+  //   } else {
+  //     let info = {}
+  //     info = parseCallsign(qso?.their?.call)
+  //     return annotateFromCountryFile(info)
+  //   }
+  // }, [qso?.their])
 
   const freqParts = useMemo(() => {
     if (qso.freq) {

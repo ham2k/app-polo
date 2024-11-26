@@ -10,31 +10,25 @@ import React, { useCallback } from 'react'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 
-const NO_PREFIX_REGEX = /^(\d\d+|TEST)/gi
+const NO_PREFIX_REGEX = /(?:^|,)(\d\d+|TEST)/gi
 const ADD_DASHES_REGEX = /([A-Z]+)(\d+|TEST)/gi
 const ADD_COMMAS_REGEX = /(\w+)-(\d+)[\s,]$/gi
 const DELETE_TRAILING_PREFIX_REGEX = /(\w+)-(\d+)[, ]+(\w+)$/gi
 const DELETE_INVALID_CHARACTERS = /[^A-Z0-9-,?]/gi
 
 export default function POTAInput (props) {
-  const { textStyle, onChange, defaultPrefix, onChangeText, fieldId } = props
+  const { textStyle, defaultPrefix } = props
 
   const styles = useThemedStyles()
 
-  const handleChange = useCallback((event) => {
-    let { text } = event.nativeEvent
-
+  const textTransformer = useCallback((text) => {
     text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix ?? 'US'}-${p1}`)
     text = text.replace(ADD_DASHES_REGEX, (match, p1, p2) => `${p1}-${p2}`)
     text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1}-${p2},${p1}-`)
     text = text.replace(DELETE_TRAILING_PREFIX_REGEX, (match, p1, p2, p3) => p1 !== p3 ? `${p1}-${p2}` : match)
     text = text.replace(DELETE_INVALID_CHARACTERS, '')
-
-    event.nativeEvent.text = text
-
-    onChangeText && onChangeText(text)
-    onChange && onChange({ ...event, fieldId })
-  }, [onChange, onChangeText, fieldId, defaultPrefix])
+    return text
+  }, [defaultPrefix])
 
   return (
     <ThemedTextInput
@@ -44,7 +38,7 @@ export default function POTAInput (props) {
       nospaces={true}
       placeholder={`${defaultPrefix ?? 'US'}-…`}
       textStyle={[textStyle, styles?.text?.callsign]}
-      onChange={handleChange}
+      textTransformer={textTransformer}
     />
   )
 }

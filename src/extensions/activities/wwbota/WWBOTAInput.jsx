@@ -17,24 +17,19 @@ const NO_PREFIX_REGEX = /^(\d\d+)/gi
 const REPEAT_PREFIX_REGEX = /([\w/]+)-(\d+)(\s+,\s*|,\s*|\s+)(\d\d+)/gi
 
 export default function WWBOTAInput (props) {
-  const { textStyle, onChange, defaultPrefix, onChangeText, fieldId } = props
+  const { textStyle, defaultPrefix } = props
 
   const styles = useThemedStyles()
 
-  const handleChange = useCallback((event) => {
-    let { text } = event.nativeEvent
-
+  const textTransformer = useCallback(text => {
     text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix ?? 'B/?'}-${p1}`)
     text = text.replace(ADD_SLASHES_REGEX, (match, p1, p2) => `B/${p1}`)
     text = text.replace(ADD_DASHES_REGEX, (match, p1, p2) => `B/${p1}-${p2}`)
     text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1},${p2}`)
     text = text.replace(REPEAT_PREFIX_REGEX, (match, p1, p2, p3, p4) => `${p1}-${p2},${p1}-${p4}`)
 
-    event.nativeEvent.text = text
-
-    onChangeText && onChangeText(text)
-    onChange && onChange({ ...event, fieldId })
-  }, [onChange, onChangeText, fieldId, defaultPrefix])
+    return text
+  }, [defaultPrefix])
 
   return (
     <ThemedTextInput
@@ -44,7 +39,7 @@ export default function WWBOTAInput (props) {
       nospaces={true}
       placeholder={`${defaultPrefix ?? 'B/G'}-…`}
       textStyle={[textStyle, styles?.text?.callsign]}
-      onChange={handleChange}
+      textTransformer={textTransformer}
     />
   )
 }

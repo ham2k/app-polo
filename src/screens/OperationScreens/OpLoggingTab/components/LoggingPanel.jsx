@@ -20,7 +20,7 @@ import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
 import { setOperationData } from '../../../../store/operations'
 import { useUIState } from '../../../../store/ui'
-import { addQSO } from '../../../../store/qsos'
+import { addQSO, addQSOs } from '../../../../store/qsos'
 import { setVFO } from '../../../../store/station/stationSlice'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { parseFreqInMHz } from '../../../../tools/frequencyFormats'
@@ -252,72 +252,69 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         })
         trackEvent(eventName, { their_prefix: qso.their.entityPrefix ?? qso.their.guess.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
       } else if (isValidQSO && !qso.deleted) {
-        await batch(async () => {
-          setCurrentSecondaryControl(undefined)
+        setCurrentSecondaryControl(undefined)
 
-          if (qso?._isNew && qso?._manualTime && qso.startAtMillis) {
-            let nextManualTime = qso.startAtMillis + (60 * 1000)
-            if (qsos.length > 0) {
-              const diff = Math.abs(qso.startAtMillis - qsos[qsos.length - 1].startAtMillis)
-              if (diff >= 1000) {
-                nextManualTime = qso.startAtMillis + Math.min(diff, 60 * 5000)
-              }
+        if (qso?._isNew && qso?._manualTime && qso.startAtMillis) {
+          let nextManualTime = qso.startAtMillis + (60 * 1000)
+          if (qsos.length > 0) {
+            const diff = Math.abs(qso.startAtMillis - qsos[qsos.length - 1].startAtMillis)
+            if (diff >= 1000) {
+              nextManualTime = qso.startAtMillis + Math.min(diff, 60 * 5000)
             }
-            // No need to await this one, can happen in parallel
-            dispatch(setOperationData({ uuid: operation.uuid, _nextManualTime: nextManualTime }))
           }
+          // No need to await this one, can happen in parallel
+          dispatch(setOperationData({ uuid: operation.uuid, _nextManualTime: nextManualTime }))
+        }
 
-          delete qso._isNew
-          delete qso._willBeDeleted
-          delete qso.deleted
+        delete qso._isNew
+        delete qso._willBeDeleted
+        delete qso.deleted
 
-          qso.freq = qso.freq ?? vfo.freq
-          if (qso.freq) {
-            qso.band = bandForFrequency(qso.freq)
-          } else {
-            qso.band = qso.band ?? vfo.band
+        qso.freq = qso.freq ?? vfo.freq
+        if (qso.freq) {
+          qso.band = bandForFrequency(qso.freq)
+        } else {
+          qso.band = qso.band ?? vfo.band
+        }
+        qso.mode = qso.mode ?? vfo.mode
+
+        if (!qso.startAtMillis) qso.startAtMillis = (new Date()).getTime()
+        qso.startAt = new Date(qso.startAtMillis).toISOString()
+        if (qso.endAtMillis) qso.endAt = new Date(qso.endAtMillis).toISOString()
+        qso.our = qso.our || {}
+        qso.our.call = qso.our.call || ourInfo?.call
+        qso.our.operatorCall = qso.our.operatorCall || operation.operatorCall
+        qso.our.sent = qso.our.sent || defaultRSTForMode(qso.mode)
+
+        qso.their = qso.their || {}
+        qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
+
+        let call = qso?.their?.call
+        let lastUUID
+
+        const calls = call = call.split(',')
+        const multiQSOs = []
+        for (let i = 0; i < calls.length; i++) {
+          let oneQSO = qso
+          if (calls.length > 1) { // If this is a multi-call QSO, we need to clone and annotate the QSO for each call
+            oneQSO = cloneDeep(qso)
+            if (i > 0) oneQSO.uuid = null
+            oneQSO.their.call = calls[i].trim()
+            oneQSO.their.guess = {}
+            oneQSO.their.lookup = {}
+            oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
           }
-          qso.mode = qso.mode ?? vfo.mode
+          multiQSOs.push(oneQSO)
 
-          if (!qso.startAtMillis) qso.startAtMillis = (new Date()).getTime()
-          qso.startAt = new Date(qso.startAtMillis).toISOString()
-          if (qso.endAtMillis) qso.endAt = new Date(qso.endAtMillis).toISOString()
-          qso.our = qso.our || {}
-          qso.our.call = qso.our.call || ourInfo?.call
-          qso.our.operatorCall = qso.our.operatorCall || operation.operatorCall
-          qso.our.sent = qso.our.sent || defaultRSTForMode(qso.mode)
+          trackEvent(eventName, { their_prefix: oneQSO.their.entityPrefix ?? oneQSO.their.guess.entityPrefix, refs: (oneQSO.refs || []).map(r => r.type).join(',') })
 
-          qso.their = qso.their || {}
-          qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
+          lastUUID = oneQSO.uuid
+        }
+        dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
+        if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 
-          let call = qso?.their?.call
-          let lastUUID
-
-          const calls = call = call.split(',')
-          for (let i = 0; i < calls.length; i++) {
-            let oneQSO = qso
-            if (calls.length > 1) { // If this is a multi-call QSO, we need to clone and annotate the QSO for each call
-              oneQSO = cloneDeep(qso)
-              if (i > 0) oneQSO.uuid = null
-              oneQSO.their.call = calls[i].trim()
-              oneQSO.their.guess = {}
-              oneQSO.their.lookup = {}
-              oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
-            }
-
-            if (DEBUG) logTimer('submit', 'handleSubmit before dispatch')
-            dispatch(addQSO({ uuid: operation.uuid, qso: oneQSO }))
-            if (DEBUG) logTimer('submit', 'handleSubmit before updateLoggingState')
-
-            trackEvent(eventName, { their_prefix: oneQSO.their.entityPrefix ?? oneQSO.their.guess.entityPrefix, refs: (oneQSO.refs || []).map(r => r.type).join(',') })
-
-            lastUUID = oneQSO.uuid
-          }
-          if (DEBUG) logTimer('submit', 'handleSubmit before setQSO')
-          setQSO(undefined, { otherStateChanges: { lastUUID } }) // Let queue management decide what to do
-          if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
-        })
-        if (DEBUG) logTimer('submit', 'handleSubmit after batchedUpdates')
+        setQSO(undefined, { otherStateChanges: { lastUUID } }) // Let queue management decide what to do
+        if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
       }
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
     }, 10)

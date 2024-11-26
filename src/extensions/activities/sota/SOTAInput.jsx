@@ -12,21 +12,17 @@ import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 const ADD_DASHES_REGEX = /^([A-Z0-9]{1,3})\/{0,1}([A-Z0-9]{2,2})-{0,1}(\d+)/g
 
 export default function SOTAInput (props) {
-  const { textStyle, onChange, onChangeText, fieldId } = props
+  const { textStyle } = props
 
   const styles = useThemedStyles()
 
-  const handleChange = useCallback((event) => {
-    let { text } = event.nativeEvent
+  const textTransformer = useCallback(text => {
     text = text.replace(ADD_DASHES_REGEX, (match, p1, p2, p3) => (
       `${p1}/${p2}-${p3}`)
     )
 
-    event.nativeEvent.text = text
-
-    onChangeText && onChangeText(text)
-    onChange && onChange({ ...event, fieldId })
-  }, [onChange, onChangeText, fieldId])
+    return text
+  }, [])
 
   return (
     <ThemedTextInput
@@ -36,7 +32,7 @@ export default function SOTAInput (props) {
       nospaces={true}
       placeholder={'SOTA Reference'}
       textStyle={[textStyle, styles?.text?.callsign]}
-      onChange={handleChange}
+      textTransformer={textTransformer}
     />
   )
 }
