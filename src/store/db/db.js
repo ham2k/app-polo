@@ -7,6 +7,8 @@
 
 import SQLite from 'react-native-sqlite-2'
 import { createTables } from './createTables'
+import { ToastAndroid } from 'react-native'
+import { logRemotely, reportData } from '../../distro'
 
 const DB_NAME = 'polo.sqlite'
 const DB_DISPLAY_NAME = 'Ham2K Portable Logger Database'
@@ -54,6 +56,7 @@ export function dbExecute (sql, params, options = {}) {
         resolve(results)
       },
       (tx, error) => {
+        logRemotely({ error: `Error in dbExecute: ${error.message}`, sql, params })
         console.info('Error executing SQL', { sql, params, error })
         reject(error)
       }

@@ -108,21 +108,21 @@ export async function createTables (dbParams = {}) {
 
       console.log('createTables -- creating version 4')
       logTimer('migration4', 'Alter table')
-      await dbExecute(`
-            ALTER TABLE qsos ADD COLUMN uuid TEXT
-          `, [], { dbParams })
-      let qsos
-      while (!qsos || qsos.length > 0) {
-        logTimer('migration4', 'New uuid batch')
-        qsos = await dbSelectAll(`
-              SELECT * FROM qsos WHERE uuid IS NULL LIMIT 1000
+      try {
+        await dbExecute(`
+              ALTER TABLE qsos ADD COLUMN uuid TEXT
             `, [], { dbParams })
-        for (const qso of qsos) {
-          await dbExecute(`
-                UPDATE qsos SET uuid = ? WHERE key = ? AND operation = ?
-              `, [UUID.v1(), qso.key, qso.operation], { dbParams })
+      } catch (e) {
+        if (e.message.includes('duplicate column name')) {
+          // Ignore error
+        } else {
+          throw e
         }
       }
+      const uuidSuffix = UUID.v4().split('-').slice(1).join('-')
+      await dbExecute(`
+            UPDATE qsos SET uuid = lower(hex(randomblob(4))) || "-" || ?
+          `, [uuidSuffix], { dbParams })
       await dbExecute(`
         CREATE TABLE IF NOT EXISTS qsos_new (
           uuid TEXT PRIMARY KEY NOT NULL,
