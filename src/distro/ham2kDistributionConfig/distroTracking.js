@@ -14,7 +14,6 @@ import GLOBAL from '../../GLOBAL'
 
 import { hashCode } from '../../tools/hashCode'
 import packageJson from '../../../package.json'
-import { ToastAndroid } from 'react-native'
 
 let logSequence = 0
 
