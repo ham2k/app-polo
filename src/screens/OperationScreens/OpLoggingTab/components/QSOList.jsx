@@ -258,7 +258,6 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
     return (
       <QSOItem
         qso={qso}
-        operation={operation}
         settings={settings}
         selected={qso.uuid === loggingState?.selectedUUID}
         ourInfo={ourInfo}
