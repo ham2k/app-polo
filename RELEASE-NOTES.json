@@ -5,6 +5,7 @@
       "Add HamQTH callsign lookup (by M1SDH)",
       "Merge spots of multi-operator activations (by M1SDH)",
       "Improve operation title handling",
+      "Faster data downloads for POTA, SOTA and WWFF",
       "Fix problems with external keyboards on Android",
       "Fix bugs in various input fields",
       "Fix lookup of portable calls",

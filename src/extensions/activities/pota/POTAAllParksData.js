@@ -10,9 +10,11 @@ import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessBatchedLines } from '../../../store/dataFiles/actions/dataFileFS'
-import { Platform } from 'react-native'
+import { logTimer } from '../../../tools/perfTools'
 
 export const POTAAllParks = { prefixByDXCCCode: {} }
+
+const DEBUG = true
 
 export function registerPOTAAllParksData () {
   registerDataFile({
@@ -42,9 +44,10 @@ export function registerPOTAAllParksData () {
       const expectedReferences = 62000
 
       // Since the work is split in two phases, and their speeds are different,
-      // we need to adjust the expected steps based on a ratio
+      // we need to adjust the expected steps based on a ratio.
+      // The ratio comes from the time in seconds it takes to complete each phase in an emulator
       const fetchWorkRatio = 1
-      const dbWorkRatio = Platform.OS === 'android' ? 7 : 3 // Inserts in android seem to be much slower
+      const dbWorkRatio = 2
       const expectedSteps = expectedReferences * (fetchWorkRatio + dbWorkRatio)
 
       let completedSteps = 0
@@ -52,13 +55,15 @@ export function registerPOTAAllParksData () {
       let totalActiveParks = 0
       const startTime = Date.now()
 
+      if (DEBUG) logTimer('pota-all-parks', 'Start', { reset: true })
+
       let headers
       const prefixByDXCCCode = {}
 
       const { etag } = await fetchAndProcessBatchedLines({
         ...args,
         url,
-        chunkSize: 262144,
+        chunkSize: 524288,
         processLineBatch: (lines) => {
           if (!headers) {
             headers = parsePOTACSVRow(lines.shift()).filter(x => x)
@@ -96,26 +101,27 @@ export function registerPOTAAllParksData () {
           })
         }
       })
+      if (DEBUG) logTimer('pota-all-parks', 'File Read')
 
       while (dataRows.length > 0) {
-        const batch = dataRows.splice(0, 223) // prime number chunks make for more "random" progress updates
+        const batch = dataRows.splice(0, 1571) // prime number chunks make for more "random" progress updates
         await (() => new Promise(resolve => {
           setTimeout(() => {
             db.transaction(async transaction => {
-              for (const rowData of batch) {
-                const jsonRowData = JSON.stringify(rowData)
-                transaction.executeSql(`
+              transaction.executeSql(`
+                  DELETE FROM lookups WHERE category = ? AND key IN ?
+                `,
+              ['pota', batch.map(rowData => rowData.ref)]
+              )
+              transaction.executeSql(`
                   INSERT INTO lookups
                     (category, subCategory, key, name, data, lat, lon, flags, updated)
                   VALUES
-                    (?, ?, ?, ?, ?, ?, ?, ?, 1)
-                  ON CONFLICT DO
-                  UPDATE SET
-                    subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                  `, ['pota', `${rowData.dxccCode}`, rowData.ref, rowData.name, jsonRowData, rowData.lat, rowData.lon, rowData.active, `${rowData.dxccCode}`, rowData.name, jsonRowData, rowData.lat, rowData.lon, rowData.active]
-                )
-                completedSteps += dbWorkRatio
-              }
+                    ${batch.map(rowData => '(?, ?, ?, ?, ?, ?, ?, ?, 1)').join(' ')}
+                `,
+              batch.flatMap(rowData => ['pota', `${rowData.dxccCode}`, rowData.ref, rowData.name, JSON.stringify(rowData), rowData.lat, rowData.lon, rowData.active])
+              )
+              completedSteps += dbWorkRatio * batch.length
 
               options.onStatus && options.onStatus({
                 key,
@@ -128,14 +134,14 @@ export function registerPOTAAllParksData () {
           }, 0)
         }))()
       }
-
+      if (DEBUG) logTimer('pota-all-parks', 'Rows Inserted')
       db.transaction(transaction => {
         transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['pota'])
       })
-      console.log('totalParks', totalParks)
-      console.log('totalActiveParks', totalActiveParks)
-      console.log('seconds', (Date.now() - startTime) / 1000)
-      console.log('per second', (totalParks / (Date.now() - startTime) / 1000))
+      if (DEBUG) console.log('totalParks', totalParks)
+      if (DEBUG) console.log('totalActiveParks', totalActiveParks)
+      if (DEBUG) console.log('seconds', (Date.now() - startTime) / 1000)
+      if (DEBUG) console.log('per second', (totalParks / (Date.now() - startTime) / 1000))
 
       return { totalParks, totalActiveParks, prefixByDXCCCode, etag }
     },

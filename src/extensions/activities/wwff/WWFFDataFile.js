@@ -10,7 +10,6 @@ import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
-import { Platform } from 'react-native'
 import { fetchAndProcessBatchedLines } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const WWFFData = { prefixByDXCCCode: {} }
@@ -41,9 +40,10 @@ export function registerWWFFDataFile () {
       const expectedReferences = 63000
 
       // Since the work is split in two phases, and their speeds are different,
-      // we need to adjust the expected steps based on a ratio
+      // we need to adjust the expected steps based on a ratio.
+      // The ratio comes from the time in seconds it takes to complete each phase in an emulator
       const fetchWorkRatio = 1
-      const dbWorkRatio = Platform.OS === 'android' ? 7 : 3 // Inserts in android seem to be much slower
+      const dbWorkRatio = 2
       const expectedSteps = expectedReferences * (fetchWorkRatio + dbWorkRatio)
 
       let completedSteps = 0
@@ -56,7 +56,7 @@ export function registerWWFFDataFile () {
       const { etag } = await fetchAndProcessBatchedLines({
         ...args,
         url,
-        chunkSize: 262144,
+        chunkSize: 524288,
         processLineBatch: (lines) => {
           if (!headers) {
             headers = parseWWFFCSVRow(lines.shift()).filter(x => x)
@@ -93,26 +93,25 @@ export function registerWWFFDataFile () {
       })
 
       while (dataRows.length > 0) {
-        const batch = dataRows.splice(0, 223) // prime number chunks make for more "random" progress updates
+        const batch = dataRows.splice(0, 1571) // prime number chunks make for more "random" progress updates
         await (() => new Promise(resolve => {
           setTimeout(() => {
             db.transaction(async transaction => {
-              for (const rowData of batch) {
-                const jsonRowData = JSON.stringify(rowData)
-                transaction.executeSql(`
+              transaction.executeSql(`
+                  DELETE FROM lookups WHERE category = ? AND key IN ?
+                `,
+              ['pota', batch.map(rowData => rowData.ref)]
+              )
+              transaction.executeSql(`
                   INSERT INTO lookups
                     (category, subCategory, key, name, data, lat, lon, flags, updated)
                   VALUES
-                    (?, ?, ?, ?, ?, ?, ?, ?, 1)
-                  ON CONFLICT DO
-                  UPDATE SET
-                    subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                  `, ['wwff', `${rowData.dxccCode}`, rowData.ref, rowData.name, jsonRowData, rowData.lat, rowData.lon, 1, `${rowData.dxccCode}`, rowData.name, jsonRowData, rowData.lat, rowData.lon, 1]
-                )
-
-                completedSteps += dbWorkRatio
-                totalReferences++
-              }
+                    ${batch.map(rowData => '(?, ?, ?, ?, ?, ?, ?, ?, 1)').join(' ')}
+                `,
+              batch.flatMap(rowData => ['pota', `${rowData.dxccCode}`, rowData.ref, rowData.name, JSON.stringify(rowData), rowData.lat, rowData.lon, rowData.active])
+              )
+              completedSteps += dbWorkRatio * batch.length
+              totalReferences += batch.length
 
               options.onStatus && options.onStatus({
                 key,
