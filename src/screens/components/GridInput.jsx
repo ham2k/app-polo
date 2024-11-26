@@ -14,7 +14,7 @@ const VALID_MAIDENHEAD_REGEX = /^([A-R]{2}|[A-R]{2}[0-9]{2}|[A-R]{2}[0-9]{2}[a-x
 const PARTIAL_MAIDENHEAD_REGEX = /^([A-R]{0,2}|[A-R]{2}[0-9]{0,2}|[A-R]{2}[0-9]{2}[a-x]{0,2}||[A-R]{2}[0-9]{2}[a-x]{2}[0-9]{0,2})$/
 
 export default function GridInput (props) {
-  const { value, onChange, onChangeText, fieldId, innerRef } = props
+  const { value, innerRef } = props
 
   // eslint-disable-next-line no-unused-vars
   let [mode, setMode] = useUIState('NumberKeys', 'mode', 'numbers')
@@ -42,22 +42,11 @@ export default function GridInput (props) {
     setIsValidValue(VALID_MAIDENHEAD_REGEX.test(localValue))
   }, [localValue])
 
-  const handleChange = useCallback((event) => {
-    let { text } = event.nativeEvent
-
+  const textTransformer = useCallback(text => {
     text = text.substring(0, 4).toUpperCase() + text.substring(4).toLowerCase()
-    if (PARTIAL_MAIDENHEAD_REGEX.test(text)) {
-      actualInnerRef?.current?.setNativeProps({ text })
-    }
 
-    if (text !== value) {
-      onChangeText && onChangeText(text)
-      onChange && onChange({ nativeEvent: { text }, fieldId })
-    } else if (text === '') {
-      onChangeText && onChangeText(undefined)
-      onChange && onChange({ nativeEvent: { text: undefined }, fieldId })
-    }
-  }, [fieldId, onChange, onChangeText, value, actualInnerRef])
+    return text
+  }, [])
 
   return (
     <ThemedTextInput
@@ -67,7 +56,7 @@ export default function GridInput (props) {
       noSpaces={true}
       maxLength={8}
       error={value && !isValid}
-      onChange={handleChange}
+      textTransformer={textTransformer}
     />
   )
 }
