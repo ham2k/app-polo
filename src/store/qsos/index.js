@@ -11,6 +11,6 @@ export * from './qsosSlice'
 export * from './actions/qsosDB'
 export * from './actions/lookupQSOs'
 export * from './actions/findQSOHistory'
-export * from './actions/confirmSpots'
+export * from './actions/confirmFromSpots'
 
 export default reducer

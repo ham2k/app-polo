@@ -13,7 +13,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import KeepAwake from '@sayem314/react-native-keep-awake'
 
 import { loadOperation, selectOperation } from '../../store/operations'
-import { loadQSOs, lookupAllQSOs, confirmSpots } from '../../store/qsos'
+import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../store/qsos'
 import { selectSettings, setSettings } from '../../store/settings'
 import { startTickTock, stopTickTock } from '../../store/time'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
@@ -356,11 +356,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
         <Menu.Item
           leadingIcon="list-status"
           onPress={() => hideAndRun(() => {
-            console.log(operation)
-            return dispatch(confirmSpots(operation.uuid, {
-              call: operation.stationCall,
-              operation
-            }))
+            return dispatch(confirmFromSpots({ operation }))
           })}
           title={'Confirm Spots'}
         />}
