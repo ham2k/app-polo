@@ -8,12 +8,16 @@
 const timerLast = {}
 const timerStart = {}
 
-export function logTimer (timer, msg, { reset } = {}) {
+export function logTimer (timer, msg, { reset, sinceLast } = { reset: false, sinceLast: false }) {
   const now = Date.now()
   if (reset || !timerStart[timer]) {
     timerStart[timer] = now
     timerLast[timer] = now
   }
-  console.info(`[${timer}] ${now - timerLast[timer]} ms - ${msg}`)
+  if (sinceLast) {
+    console.info(`[${timer}] ${now - timerLast[timer]} ms since last - ${msg}`)
+  } else {
+    console.info(`[${timer}] ${now - timerStart[timer]} ms total - ${msg}`)
+  }
   timerLast[timer] = now
 }

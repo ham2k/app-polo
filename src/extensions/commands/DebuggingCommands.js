@@ -5,13 +5,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { addQSO } from '../../store/qsos'
+import { addQSOs } from '../../store/qsos'
 import { annotateQSO } from '../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
 import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
 import { poissonRandom } from '../../tools/randomTools'
 import { setSystemFlag } from '../../store/system'
 import { DevSettings } from 'react-native'
 import { setSettings } from '../../store/settings'
+import { logTimer } from '../../tools/perfTools'
 
 const Info = {
   key: 'commands-debug',
@@ -83,6 +84,8 @@ const SeedCommandHook = {
       const calls = getAllCallsFromNotes().filter(x => x)
       if (calls.length === 0) calls.concat(['KI2D', 'M1SDH', 'EI5IYB', 'M0LZN', 'WV3H', 'LB4FH', 'VK1AO'])
 
+      logTimer('seeding', 'Start', { reset: true })
+      const qsos = []
       while (count > 0) {
         const index = Math.floor(Math.random() * calls.length)
         let call = calls[index] || 'N0CALL'
@@ -106,12 +109,16 @@ const SeedCommandHook = {
         oneQSO.our = { call: ourInfo.call, operatorCall: ourInfo.operatorCall || operation.operatorCall, sent: randomRST(oneQSO.mode) }
         oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
 
-        await dispatch(addQSO({ uuid: operation.uuid, qso: oneQSO }))
-        updateLoggingState({ selectedUUID: undefined, lastUUID: oneQSO.uuid })
+        qsos.push(oneQSO)
 
         count--
         startAtMillis = startAtMillis + times.pop()
+        logTimer('seeding', 'Seeded one', { sinceLast: true })
       }
+      await dispatch(addQSOs({ uuid: operation.uuid, qsos }))
+      updateLoggingState({ selectedUUID: undefined, lastUUID: qsos[qsos.length - 1]?.uuid })
+
+      logTimer('seeding', 'Done seeding')
     }, 0)
     return `Seeding the log with ${count} QSOs`
   }
