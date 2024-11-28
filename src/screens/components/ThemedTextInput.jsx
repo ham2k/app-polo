@@ -38,87 +38,92 @@ export default function ThemedTextInput (props) {
   const strValue = typeof value === 'string' ? value : `${value}`
 
   const originalValue = useMemo(() => strValue, [strValue])
+  const [currentSelection, setCurrentSelection] = useState({})
+
+  const [isFocused, setIsFocused] = useState(false)
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
     let spaceAdded = false
 
-    if (multiline) {
-      // We should not do any transformations on multiline inputs
+    if (multiline || text.length < originalValue.length) {
+      // We should not do any transformations:
+      //  - on multiline inputs
+      //  - or when deleting
     } else {
-      if (text.length < originalValue.length) {
-        // When deleting, don't re-format the text
-      } else {
-        // Lets check if what changed was the addition of a space
-        if ((text !== originalValue) && (text.replace(SPACES_REGEX, '') === originalValue)) {
-          spaceAdded = true
-        } else if (text.match(ONLY_SPACES_REGEX) && originalValue !== '') { // or a space replacing the entire value
-          spaceAdded = true
-          text = originalValue
-        }
+      // Lets check if what changed was the addition of a space
+      if ((text !== originalValue) && (text.replace(SPACES_REGEX, '') === originalValue)) {
+        spaceAdded = true
+      } else if (text.match(ONLY_SPACES_REGEX) && originalValue !== '') { // or a space replacing the entire value
+        spaceAdded = true
+        text = originalValue
+      }
 
-        text = text.replace(LEFT_TRIM_REGEX, '')
+      text = text.replace(LEFT_TRIM_REGEX, '')
 
-        if (uppercase) {
-          text = text.toUpperCase()
-        }
-        if (trim) {
-          text = text.trim()
-        }
-        if (noSpaces) {
-          text = text.replace(SPACES_REGEX, '')
-        }
-        if (periodToSlash) {
-          text = text.replaceAll('.', '/')
-        }
-        if (numeric) {
-          text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
-        }
-        if (decimal) {
-          text = text.replace(NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
-        }
-        if (rst) {
-          text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '')
-        }
+      if (uppercase) {
+        text = text.toUpperCase()
+      }
+      if (trim) {
+        text = text.trim()
+      }
+      if (noSpaces) {
+        text = text.replace(SPACES_REGEX, '')
+      }
+      if (periodToSlash) {
+        text = text.replaceAll('.', '/')
+      }
+      if (numeric) {
+        text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+      }
+      if (decimal) {
+        text = text.replace(NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+      }
+      if (rst) {
+        text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '')
+      }
 
-        if (textTransformer) {
-          text = textTransformer(text)
-        }
+      if (textTransformer) {
+        text = textTransformer(text)
+      }
 
-        // console.log('Values', { text, originalValue, length: text.length, originalLength: originalValue.length, start: currentSelection?.start, end: currentSelection?.end })
-        if (text.length !== originalValue.length + 1) {
-          // console.log('reset selection')
-          setCurrentSelection({})
-        }
+      if (text.length !== originalValue.length) {
+        setCurrentSelection({
+          start: (currentSelection?.start || originalValue.length) + (text.length - originalValue.length),
+          end: (currentSelection?.end || originalValue.length) + (text.length - originalValue)
+        })
       }
 
       event.nativeEvent.text = text
-      actualInnerRef.current.setNativeProps({ text })
     }
 
-    const changeEvent = { ...event, fieldId, ref: actualInnerRef }
+    const changeEvent = { ...event }
+    changeEvent.fieldId = fieldId
+    changeEvent.ref = actualInnerRef
+    changeEvent.nativeEvent.text = text
     const spaceEvent = { nativeEvent: { key: ' ', target: event.nativeEvent.target } }
-    if (Platform.OS === 'android') {
-      // This minimizes issues when using external keyboards on Android
-      setTimeout(() => {
-        onChangeText && onChangeText(text)
-        onChange && onChange(changeEvent)
-        if (spaceAdded) onSpace && onSpace(spaceEvent)
-      }, 50)
-    } else {
-      onChangeText && onChangeText(text)
-      onChange && onChange(changeEvent)
-      if (spaceAdded) onSpace && onSpace(spaceEvent)
-    }
+    // if (Platform.OS === 'android') {
+    //   // This delay minimizes issues when using external keyboards on Android
+    //   // setTimeout(() => {
+    //   onChangeText && onChangeText(text)
+    //   onChange && onChange(changeEvent)
+    //   if (spaceAdded) onSpace && onSpace(spaceEvent)
+    //   // }, 50)
+    // } else {
+    actualInnerRef.current.setNativeProps({ text })
+    onChangeText && onChangeText(text)
+    onChange && onChange(changeEvent)
+    if (spaceAdded) onSpace && onSpace(spaceEvent)
+    // }
   }, [
-    originalValue,
-    fieldId, actualInnerRef,
-    multiline, uppercase, noSpaces, periodToSlash, numeric, decimal, trim, rst, textTransformer,
-    onChangeText, onChange, onSpace
+    multiline, fieldId, actualInnerRef, originalValue,
+    uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
+    textTransformer, currentSelection, onChangeText, onChange, onSpace
   ])
 
-  const [currentSelection, setCurrentSelection] = useState({})
-  const [isFocused, setIsFocused] = useState(false)
+  if (fieldId === 'pota') console.log('render', { strValue, fieldId, currentSelection })
+  useEffect(() => { if (fieldId === 'pota') console.log('originalValue', originalValue) }, [fieldId, originalValue])
+  useEffect(() => { if (fieldId === 'pota') console.log('currentSelection', currentSelection) }, [currentSelection, fieldId])
 
   useEffect(() => {
     if (focusedRef && isFocused && !multiline) {
@@ -136,26 +141,22 @@ export default function ThemedTextInput (props) {
 
           const newValue = originalValue.substring(0, start) + number + originalValue.substring(end)
 
-          handleChange && handleChange({ nativeEvent: { text: newValue, target: actualInnerRef.current._nativeTag } })
+          handleChange && handleChange({
+            nativeEvent: { text: newValue, target: actualInnerRef.current._nativeTag },
+            fromVirtualNumericKeys: true
+          })
 
-          if (originalValue.length === start && originalValue.length === end) {
-            // Cursor was at the end of the original value
-            // Since the handleChange method might modify the value, and does not cause
-            // a call to onSelectionChange, we need to mark the current selection state as 'unknown'
-            setCurrentSelection({})
-          } else {
-            setCurrentSelection({ start: start + 1, end: end + 1 })
-          }
+          setCurrentSelection({ start: start + 1, end: end + 1 })
+          actualInnerRef.current.setSelection(start + 1, end + 1)
         }
       }
     }
-  }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, originalValue, actualInnerRef, multiline])
+  }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, originalValue, actualInnerRef, multiline, setCurrentSelection])
 
   const handleSelectionChange = useCallback((event) => {
     const { nativeEvent: { selection: { start, end } } } = event
-
     setCurrentSelection({ start, end })
-  }, [])
+  }, [setCurrentSelection])
 
   const handleFocus = useCallback((event) => {
     setIsFocused(true)
@@ -248,6 +249,7 @@ export default function ThemedTextInput (props) {
         onFocus={handleFocus}
         onBlur={handleBlur}
         onSelectionChange={handleSelectionChange}
+        // selection={{ start: currentSelection.start, end: currentSelection.end }}
       />
     )
   }, [

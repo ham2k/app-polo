@@ -10,7 +10,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Keyboard, View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
 import cloneDeep from 'clone-deep'
-import { useDispatch, batch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import UUID from 'react-native-uuid'
 
