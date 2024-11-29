@@ -9,7 +9,7 @@ import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessBatchedLines } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const WWFFData = { prefixByDXCCCode: {} }
@@ -29,11 +29,6 @@ export function registerWWFFDataFile () {
 
       const url = 'https://wwff.co/wwff-data/wwff_directory.csv'
 
-      const db = await database()
-      db.transaction(transaction => {
-        transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['wwff'])
-      })
-
       const dataRows = []
 
       // Since we're streaming, we cannot know how many references there are beforehand, so we need to take a guess
@@ -42,8 +37,8 @@ export function registerWWFFDataFile () {
       // Since the work is split in two phases, and their speeds are different,
       // we need to adjust the expected steps based on a ratio.
       // The ratio comes from the time in seconds it takes to complete each phase in an emulator
-      const fetchWorkRatio = 1
-      const dbWorkRatio = 2
+      const fetchWorkRatio = 1.1
+      const dbWorkRatio = 1
       const expectedSteps = expectedReferences * (fetchWorkRatio + dbWorkRatio)
 
       let completedSteps = 0
@@ -53,10 +48,12 @@ export function registerWWFFDataFile () {
       let headers
       const prefixByDXCCCode = {}
 
+      await dbExecute('DELETE FROM lookups WHERE category = ?', ['wwff'])
+
       const { etag } = await fetchAndProcessBatchedLines({
         ...args,
         url,
-        chunkSize: 524288,
+        chunkSize: 131072,
         processLineBatch: (lines) => {
           if (!headers) {
             headers = parseWWFFCSVRow(lines.shift()).filter(x => x)
@@ -95,42 +92,29 @@ export function registerWWFFDataFile () {
       while (dataRows.length > 0) {
         const batch = dataRows.splice(0, 1571) // prime number chunks make for more "random" progress updates
         await (() => new Promise(resolve => {
-          setTimeout(() => {
-            db.transaction(async transaction => {
-              transaction.executeSql(`
-                  DELETE FROM lookups WHERE category = ? AND key IN ?
-                `,
-              ['pota', batch.map(rowData => rowData.ref)]
-              )
-              transaction.executeSql(`
-                  INSERT INTO lookups
-                    (category, subCategory, key, name, data, lat, lon, flags, updated)
-                  VALUES
-                    ${batch.map(rowData => '(?, ?, ?, ?, ?, ?, ?, ?, 1)').join(' ')}
-                `,
-              batch.flatMap(rowData => ['pota', `${rowData.dxccCode}`, rowData.ref, rowData.name, JSON.stringify(rowData), rowData.lat, rowData.lon, rowData.active])
-              )
-              completedSteps += dbWorkRatio * batch.length
-              totalReferences += batch.length
+          setTimeout(async () => {
+            await dbExecute(
+              `
+                INSERT INTO lookups
+                  (category, subCategory, key, name, data, lat, lon, flags, updated)
+                VALUES
+                  ${batch.map(rowData => '(?, ?, ?, ?, ?, ?, ?, ?, 1)').join(', ')}
+              `,
+              batch.flatMap(rowData => ['wwff', `${rowData.dxccCode}`, rowData.ref, rowData.name, JSON.stringify(rowData), rowData.lat, rowData.lon, rowData.active])
+            )
+            completedSteps += dbWorkRatio * batch.length
+            totalReferences += batch.length
 
-              options.onStatus && options.onStatus({
-                key,
-                definition,
-                status: 'progress',
-                progress: `Loaded \`${fmtNumber(Math.round(completedSteps / (fetchWorkRatio + dbWorkRatio)))}\` references.\n\n\`${fmtPercent(Math.min(completedSteps / expectedSteps, 1), 'integer')}\` • ${fmtNumber(Math.max(expectedSteps - completedSteps, 1) * ((Date.now() - startTime) / 1000) / completedSteps, 'oneDecimal')} seconds left.`
-              })
-              resolve()
+            options.onStatus && options.onStatus({
+              key,
+              definition,
+              status: 'progress',
+              progress: `Loaded \`${fmtNumber(Math.round(completedSteps / (fetchWorkRatio + dbWorkRatio)))}\` references.\n\n\`${fmtPercent(Math.min(completedSteps / expectedSteps, 1), 'integer')}\` • ${fmtNumber(Math.max(expectedSteps - completedSteps, 1) * ((Date.now() - startTime) / 1000) / completedSteps, 'oneDecimal')} seconds left.`
             })
+            resolve()
           }, 0)
         }))()
       }
-
-      db.transaction(transaction => {
-        transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wwff'])
-      })
-      console.log('totalReferences', totalReferences)
-      console.log('seconds', (Date.now() - startTime) / 1000)
-      console.log('per second', (totalReferences / (Date.now() - startTime) / 1000))
 
       return { totalReferences, prefixByDXCCCode, etag }
     },
