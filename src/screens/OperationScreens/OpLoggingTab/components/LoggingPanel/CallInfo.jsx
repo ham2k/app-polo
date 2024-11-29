@@ -37,6 +37,8 @@ export const MESSAGES_FOR_SCORING = {
   'wwbotaActivation.newRef': 'New Bunker'
 }
 
+const DEBUG = false
+
 function prepareStyles (baseStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   return {
@@ -237,6 +239,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     return []
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
+  if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
   return (
     <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6 }}>
 

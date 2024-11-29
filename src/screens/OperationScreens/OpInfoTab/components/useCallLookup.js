@@ -21,47 +21,61 @@ import { removeEmptyValues } from '../../../../tools/objectTools'
 
 const EMOJI_REGEX = emojiRegex()
 
+const DEBUG = false
+
 export const useCallLookup = (qso) => {
   const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
 
-  const [lookupInfos, setLookupInfos] = useState({})
+  const [cachedLookups, origsetCachedLookups] = useState({})
+  const setCachedLookups = (newLookups) => {
+    if (DEBUG) console.log('* setCachedLookups', Object.keys(newLookups).map(k => `${k}:${newLookups[k].status}`).join(', '))
+    origsetCachedLookups(newLookups)
+  }
 
-  const { call, theirInfo, cacheKey } = useMemo(() => _extractCallInfo(qso), [qso])
+  const { call, theirInfo, cacheKey, baseCacheKey } = useMemo(() => _extractCallInfo(qso), [qso])
+
+  if (DEBUG) console.log('\n\nuseCallLookup', { call, cacheKey })
 
   useEffect(() => {
-    // console.log('useCallLookup effect', { call, cacheKey, cachedCount: Object.keys(lookupInfos).length })
-    if (call && call.length > 2 && (!lookupInfos[cacheKey] || lookupInfos[cacheKey].status === 'prefilled')) {
-      // console.log('useCallLookup effect not cached', { cacheKey, source: lookupInfos[cacheKey]?.status })
-      setLookupInfos({ ...lookupInfos, [cacheKey]: { ...lookupInfos[cacheKey], status: 'looking' } })
+    if (DEBUG) console.log('-- useCallLookup effect', { call, cacheKey, cached: Object.keys(cachedLookups) })
+    if (call && call.length > 2 && (!cachedLookups[cacheKey] || cachedLookups[cacheKey].status === 'prefilled')) {
+      if (DEBUG) console.log('  -- useCallLookup effect not cached', { cacheKey, source: cachedLookups[cacheKey]?.status })
+      setCachedLookups({ ...cachedLookups, [cacheKey]: { ...cachedLookups[cacheKey], status: 'looking' } })
       setTimeout(async () => {
         // First do an offline lookup, to use things like local history as fast as possible
         const offlineLookup = await _performLookup({ qso, call, theirInfo, online: false, skipLookup: true, settings, dispatch })
-        // console.log('filling lookupInfos with offline lookup', { name: offlineLookup.guess.name, locationLabel: offlineLookup.guess.locationLabel, state: offlineLookup.guess.state })
-        setLookupInfos({ ...lookupInfos, [cacheKey]: { call, cacheKey, ...offlineLookup, status: 'offline' } })
+        if (offlineLookup?.guess?.name || offlineLookup?.guess?.city || offlineLookup?.guess?.grid || offlineLookup?.guess?.locationLabel) {
+          if (DEBUG) console.log('  -- filling cachedLookups with offline lookup', { name: offlineLookup.guess.name, locationLabel: offlineLookup.guess.locationLabel, state: offlineLookup.guess.state })
+          setCachedLookups({ ...cachedLookups, [cacheKey]: { call, cacheKey, ...offlineLookup, status: 'offline' } })
+        }
 
         // And then a full lookup for slower online sources
         const onlineLookup = await _performLookup({ qso, call, theirInfo, online, settings, dispatch })
-        // console.log('filling lookupInfos with online lookup', { name: onlineLookup.guess.name, locationLabel: onlineLookup.guess.locationLabel, state: onlineLookup.guess.state })
-        setLookupInfos({ ...lookupInfos, [cacheKey]: { call, cacheKey, ...onlineLookup, status: 'online' } })
+        if (onlineLookup?.guess?.name || onlineLookup?.guess?.city || onlineLookup?.guess?.grid || onlineLookup?.guess?.locationLabel) {
+          if (DEBUG) console.log('  -- filling cachedLookups with online lookup', { name: onlineLookup.guess.name, locationLabel: onlineLookup.guess.locationLabel, state: onlineLookup.guess.state })
+          setCachedLookups({ ...cachedLookups, [cacheKey]: { call, cacheKey, ...onlineLookup, status: 'online' } })
+        } else {
+          setCachedLookups({ ...cachedLookups, [cacheKey]: { ...cachedLookups[cacheKey], status: 'looked' } })
+        }
       }, 0)
     } else {
-      // console.log('useCallLookup effect cached', { cacheKey })
+      if (DEBUG) console.log('  -- useCallLookup effect cached', { cacheKey })
     }
-  }, [call, online, settings, dispatch, lookupInfos, qso, cacheKey, theirInfo])
+  }, [call, online, settings, dispatch, cachedLookups, qso, cacheKey, theirInfo])
 
-  if (lookupInfos[cacheKey]) {
-    // console.log('useCallLookup returns', cacheKey)
-    return lookupInfos[cacheKey]
-  } else if (lookupInfos[`${call}-no-refs`]) {
-    // console.log('useCallLookup returns without refs', cacheKey)
-    setLookupInfos({ ...lookupInfos, [cacheKey]: { ...lookupInfos[`${call}-no-refs`], status: 'prefilled' } })
-    return lookupInfos[`${call}-no-refs`]
+  if (cachedLookups[cacheKey]) {
+    if (DEBUG) console.log('-- useCallLookup returns', cacheKey, { city: cachedLookups[cacheKey]?.guess?.city, locationLabel: cachedLookups[cacheKey]?.guess?.locationLabel, status: cachedLookups[cacheKey]?.status })
+    return cachedLookups[cacheKey]
+  } else if (cachedLookups[baseCacheKey]) {
+    if (DEBUG) console.log('-- useCallLookup returns without refs', baseCacheKey, { city: cachedLookups[baseCacheKey]?.guess?.city, locationLabel: cachedLookups[baseCacheKey]?.guess?.locationLabel, status: 'newly prefilled' })
+    setCachedLookups({ ...cachedLookups, [cacheKey]: { ...cachedLookups[`${call}-no-refs`], status: 'prefilled' } })
+    return cachedLookups[`${call}-no-refs`]
   } else {
-    // console.log('useCallLookup returns barebones', cacheKey)
+    if (DEBUG) console.log('-- useCallLookup returns barebones', cacheKey, { city: theirInfo?.city, locationLabel: undefined, status: 'newly prefilled' })
     const lookupInfo = { call, cacheKey, theirInfo, guess: theirInfo, lookup: {}, lookups: {}, status: 'prefilled' }
-    setLookupInfos({ ...lookupInfos, [cacheKey]: lookupInfo })
+    setCachedLookups({ ...cachedLookups, [cacheKey]: lookupInfo })
     return lookupInfo
   }
 }
@@ -92,8 +106,9 @@ function _extractCallInfo (qso) {
   }
 
   const cacheKey = `${call}-${qso?.refs?.map(r => `${r.type || r.key}:${r.ref}`).join(',') || 'no-refs'}`
+  const baseCacheKey = `${call}-no-refs`
 
-  return { call, theirInfo, cacheKey }
+  return { call, theirInfo, cacheKey, baseCacheKey }
 }
 
 async function _performLookup ({ qso, call, theirInfo, online, settings, dispatch, skipLookup = false }) {
