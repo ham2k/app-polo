@@ -6,11 +6,12 @@
  */
 
 import React, { useCallback, useMemo, useRef } from 'react'
-import { FlatList, useWindowDimensions } from 'react-native'
+import { FlatList, useWindowDimensions, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import SpotItem, { guessItemHeight } from './SpotItem'
 import { RefreshControl } from 'react-native-gesture-handler'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function prepareStyles (themeStyles, themeColor) {
   const DEBUG = false
@@ -101,6 +102,8 @@ function prepareStyles (themeStyles, themeColor) {
 export default function SpotList ({ spots, loading, refresh, style, onPress }) {
   const styles = useThemedStyles(prepareStyles)
 
+  const safeArea = useSafeAreaInsets()
+
   const { width } = useWindowDimensions()
   const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
 
@@ -135,6 +138,7 @@ export default function SpotList ({ spots, loading, refresh, style, onPress }) {
       refreshControl={
         <RefreshControl refreshing={loading} onRefresh={refresh} />
       }
+      ListFooterComponent={<View style={{ height: safeArea.bottom }}/>}
     />
   )
 }
