@@ -1,6 +1,6 @@
 {
-  "24.11.99-pre3": {
-    "name": "December '24 (Pre 3)",
+  "24.11.99-pre4": {
+    "name": "December '24 (Pre 4)",
     "changes": [
       "Add HamQTH callsign lookup (by M1SDH)",
       "Merge spots of multi-operator activations (by M1SDH)",
