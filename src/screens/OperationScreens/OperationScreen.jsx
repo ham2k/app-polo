@@ -159,10 +159,10 @@ export default function OperationScreen (props) {
                 justifyContent: 'center',
                 alignItems: 'center'
               }}
+              accesibilityLabel={'Pane Separator'}
               {...panResponder.panHandlers}
             >
               <View style={{ marginLeft: styles.oneSpace * -0.7, opacity: 0.8 }}>
-
                 <Icon source="dots-vertical" color={styles.colors.onPrimary} size={styles.oneSpace * 3.5} />
               </View>
             </View>
@@ -202,14 +202,15 @@ export default function OperationScreen (props) {
                 >
                   <Tab.Screen
                     name="OpInfo"
-                    options={{ title: 'Info' }}
+                    options={{ title: 'Info', tabBarAccessibilityLabel: 'Info Tab' }}
+                    accessibilityLabel="Operation Info"
                     component={OpInfoTab}
                     initialParams={{ uuid: operation.uuid, operation, splitView }}
                   />
 
                   <Tab.Screen
                     name="OpSpots"
-                    options={{ title: 'Spots' }}
+                    options={{ title: 'Spots', tabBarAccessibilityLabel: 'Spots Tab' }}
                     component={OpSpotsTab}
                     initialParams={{ uuid: operation.uuid, operation, splitView }}
                     screenOptions={{ lazy: true }}
@@ -217,7 +218,7 @@ export default function OperationScreen (props) {
 
                   <Tab.Screen
                     name="OpMap"
-                    options={{ title: 'Map' }}
+                    options={{ title: 'Map', tabBarAccessibilityLabel: 'Map Tab' }}
                     component={OpMapTab}
                     initialParams={{ uuid: operation.uuid, operation, splitView }}
                     screenOptions={{ lazy: true }}
@@ -226,7 +227,10 @@ export default function OperationScreen (props) {
 
                   <Tab.Screen
                     name="OpSettings"
-                    options={{ title: (dimensions.width / 4) > (styles.oneSpace * 34) ? 'Operation' : 'Oper.' }}
+                    options={{
+                      title: (dimensions.width / 4) > (styles.oneSpace * 34) ? 'Operation' : 'Oper.',
+                      tabBarAccessibilityLabel: 'Operation Settings Tab'
+                    }}
                     component={OpSettingsTab}
                     initialParams={{ uuid: operation.uuid, operation, splitView }}
                     splitView={splitView}
@@ -266,14 +270,14 @@ export default function OperationScreen (props) {
             >
               <Tab.Screen
                 name="OpLog"
-                options={{ title: 'QSOs' }}
+                options={{ title: 'QSOs', tabBarAccessibilityLabel: 'Q sos Tab' }}
                 component={OpLoggingTab}
                 initialParams={{ uuid: operation.uuid, operation }}
               />
 
               <Tab.Screen
                 name="OpSpots"
-                options={{ title: 'Spots' }}
+                options={{ title: 'Spots', tabBarAccessibilityLabel: 'Spots Tab' }}
                 component={OpSpotsTab}
                 initialParams={{ uuid: operation.uuid, operation }}
                 screenOptions={ { lazy: true }}
@@ -281,7 +285,7 @@ export default function OperationScreen (props) {
 
               <Tab.Screen
                 name="OpMap"
-                options={{ title: 'Map' }}
+                options={{ title: 'Map', tabBarAccessibilityLabel: 'Map Tab' }}
                 component={OpMapTab}
                 initialParams={{ uuid: operation.uuid, operation }}
                 screenOptions={ { lazy: true }}
@@ -289,7 +293,10 @@ export default function OperationScreen (props) {
 
               <Tab.Screen
                 name="OpSettings"
-                options={{ title: (dimensions.width / 4) > (styles.oneSpace * 10.5) ? 'Operation' : 'Oper.' }}
+                options={{
+                  title: (dimensions.width / 4) > (styles.oneSpace * 10.5) ? 'Operation' : 'Oper.',
+                  tabBarAccessibilityLabel: 'Operation Settings Tab'
+                }}
                 component={OpSettingsTab}
                 initialParams={{ uuid: operation.uuid, operation }}
               />

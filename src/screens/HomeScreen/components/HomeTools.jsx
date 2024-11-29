@@ -195,6 +195,7 @@ export default function HomeTools ({ settings, styles, style }) {
           <IconButton
             icon="format-list-bulleted"
             iconColor={styles.colors.onPrimary}
+            accessibilityLabel={'Spots'}
             size={styles.oneSpace * 3.5}
             style={{ flex: 0 }}
             onPress={() => navigation.navigate('Spots')}

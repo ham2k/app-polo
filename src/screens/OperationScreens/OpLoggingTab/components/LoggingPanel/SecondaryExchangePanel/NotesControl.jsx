@@ -42,6 +42,7 @@ export const notesControl = {
     if (qso?.notes) parts.unshift('✓')
     return parts.join(' ')
   },
+  accessibilityLabel: 'Notes',
   InputComponent: NotesControlInputs,
   inputWidthMultiplier: 40,
   optionType: 'optional'

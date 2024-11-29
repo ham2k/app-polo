@@ -31,7 +31,11 @@ const PositionedControlChip = (props) => {
   } else {
     return (
       <View onLayout={handleLayout}>
-        <LoggerChip {...props} onChange={handleChange}>
+        <LoggerChip
+          {...props}
+          onChange={handleChange}
+          accessibilityLabel={control.accessibilityLabel ? stringOrFunction(control.accessibilityLabel, { operation, vfo, qso, settings }) : undefined}
+        >
           {control.label ? stringOrFunction(control.label, { operation, qso, vfo, settings }) : control.key}
         </LoggerChip>
       </View>
@@ -158,9 +162,10 @@ export const SecondaryControlSelectionsubPanel = ({
                 styles={styles}
                 style={{ flex: 0 }}
                 themeColor={themeColor}
+                accesibilityLabel="Show Secondary Control Settings"
                 onChange={() => setCurrentSecondaryControl('manage-controls')}
               >
-                <Icon source="cog" size={styles.oneSpace * 2} />
+                <Icon source="cog" size={styles.oneSpace * 2} accesibilityLabel="Show Secondary Control Settings" />
               </LoggerChip>
             </View>
           </View>
@@ -180,6 +185,7 @@ export const SecondaryControlSelectionsubPanel = ({
           <IconButton
             icon={chipContainerOpen ? 'chevron-down' : 'chevron-left'}
             onPress={() => handleContainerToggle(!chipContainerOpen)}
+            accessibilityLabel={chipContainerOpen ? 'Hide most secondary controls' : 'Show all secondary controls'}
           />
         </View>
       </View>

@@ -15,7 +15,8 @@ export default function LoggerChip ({
   styles, style, themeColor, textStyle,
   selected,
   disabled,
-  onChange
+  onChange,
+  accessibilityLabel
 }) {
   themeColor = themeColor ?? 'primary'
 
@@ -84,6 +85,7 @@ export default function LoggerChip ({
       textStyle={[baseTextStyle, textStyle]}
       disabled={disabled}
       onPress={handlePress}
+      accessibilityLabel={accessibilityLabel}
     >
       {children}
     </Chip>
