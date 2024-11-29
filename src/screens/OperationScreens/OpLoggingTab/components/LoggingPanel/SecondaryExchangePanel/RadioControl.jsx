@@ -94,6 +94,19 @@ export const radioControl = {
     parts.push(`${qso?.mode ?? vfo?.mode ?? 'SSB'}`)
     return parts.join(' • ')
   },
+  accessibilityLabel: ({ qso, operation, vfo, settings }) => {
+    const parts = []
+    if (qso?.freq ?? vfo?.freq) {
+      parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo?.freq)} MHz`)
+    } else if (qso?.band ?? operation?.band) {
+      parts.push(`${qso?.band ?? operation?.band}`)
+    } else {
+      parts.push('Band???')
+    }
+
+    parts.push(`${qso?.mode ?? vfo?.mode ?? 'SSB'}`)
+    return `Radio Controls, ${parts.join(', ')}`
+  },
   InputComponent: RadioControlInputs,
   inputWidthMultiplier: 43,
   optionType: 'mandatory'

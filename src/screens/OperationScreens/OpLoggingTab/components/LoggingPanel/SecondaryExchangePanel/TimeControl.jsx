@@ -81,6 +81,7 @@ export const timeControl = {
       )
     }
   },
+  accessibilityLabel: 'Time Controls',
   InputComponent: TimeControlInputs,
   optionType: 'mandatory'
 }

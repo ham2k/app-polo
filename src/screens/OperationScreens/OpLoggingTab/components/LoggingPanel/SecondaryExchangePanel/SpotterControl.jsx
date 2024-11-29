@@ -160,6 +160,7 @@ export const spotterControl = {
   label: ({ operation, qso }) => {
     return 'Self-Spotting'
   },
+  accesibilityLabel: 'Self-Spotting Controls',
   InputComponent: SpotterControlInputs,
   inputWidthMultiplier: 40,
   optionType: 'mandatory',

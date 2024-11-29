@@ -55,6 +55,7 @@ export const powerControl = {
       return 'Power'
     }
   },
+  accessibilityLabel: 'Power Controls',
   InputComponent: TxPowerControl,
   inputWidthMultiplier: 10,
   optionType: 'optional'

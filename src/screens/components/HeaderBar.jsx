@@ -10,6 +10,7 @@ import React, { useCallback, useState } from 'react'
 import { Appbar, Menu, Text } from 'react-native-paper'
 import { StatusBar, View } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { tweakStringForVoiceOver } from '../../tools/a11yTools'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
@@ -80,12 +81,13 @@ function prepareStyles (baseStyles, options) {
 
 export default function HeaderBar ({
   route, options, navigation, back, close, title, subTitle,
-  rightAction, rightMenuItems, headerBackVisible, closeInsteadOfBack, onRightActionPress
+  rightAction, rightMenuItems, rightA11yLabel, headerBackVisible, closeInsteadOfBack, onRightActionPress
 }) {
   title = title || options?.title
   subTitle = subTitle || options?.subTitle
   rightAction = rightAction ?? options?.rightAction
   rightMenuItems = rightMenuItems ?? options?.rightMenuItems
+  rightA11yLabel = rightA11yLabel ?? options?.rightA11yLabel ?? rightAction
   onRightActionPress = onRightActionPress ?? options?.onRightActionPress
   closeInsteadOfBack = closeInsteadOfBack ?? options?.closeInsteadOfBack
   headerBackVisible = headerBackVisible ?? options?.headerBackVisible ?? true
@@ -121,12 +123,13 @@ export default function HeaderBar ({
             <Appbar.Action
               isLeading
               onPress={navigation.goBack}
+              accessibilityLabel={closeInsteadOfBack ? 'Close' : 'Back'}
               icon={closeInsteadOfBack ? 'close' : 'arrow-left'}
               size={styles.oneSpace * 2.5}
               theme={styles.appBarTheme}
             />
           ) : (
-            <Text style={styles.screenTitleLight} numberOfLines={1} adjustsFontSizeToFit={false}>Ham2K</Text>
+            <Text style={styles.screenTitleLight} numberOfLines={1} adjustsFontSizeToFit={false} accessible={false}>Ham2K</Text>
           )
         )}
       </View>
@@ -134,14 +137,23 @@ export default function HeaderBar ({
       <Appbar.Content
         style={styles.content}
         title={
-          title && subTitle ? (
-            <>
-              <Text adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={styles.screenTitleSmall}>{title}</Text>
-              <Text adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}>{subTitle}</Text>
-            </>
-          ) : (
-            <Text adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.8} maxFontSizeMultiplier={1} style={styles.screenTitle}>{title}</Text>
-          )
+            title && subTitle ? (
+              <>
+                <Text
+                  adjustsFontSizeToFit={false}
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}
+                  minimumFontScale={0.9}
+                  style={styles.screenTitleSmall}
+                  accessibilityLabel={tweakStringForVoiceOver([title, subTitle].filter(x => x).join(', '))}
+                >
+                  {title}
+                </Text>
+                <Text accessible={false} adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}>{subTitle}</Text>
+              </>
+            ) : (
+              <Text adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.8} maxFontSizeMultiplier={1} style={styles.screenTitle}>{title}</Text>
+            )
         }
       />
 
@@ -157,6 +169,7 @@ export default function HeaderBar ({
                   isLeading
                   onPress={onRightActionShowMenu}
                   icon={'dots-vertical'}
+                  accessibilityLabel={'Menu'}
                   size={styles.oneSpace * 2.5}
                   theme={styles.appBarTheme}
                 />
@@ -172,12 +185,13 @@ export default function HeaderBar ({
             <Appbar.Action
               isLeading
               onPress={onRightActionPress}
+              accessibilityLabel={rightA11yLabel}
               icon={rightAction}
               size={styles.oneSpace * 2.5}
               theme={styles.appBarTheme}
             />
           ) : (
-            <Text>{' '}</Text>
+            <Text accessible={false}>{' '}</Text>
           )
         )}
       </View>

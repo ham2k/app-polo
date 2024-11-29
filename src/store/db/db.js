@@ -7,8 +7,7 @@
 
 import SQLite from 'react-native-sqlite-2'
 import { createTables } from './createTables'
-import { ToastAndroid } from 'react-native'
-import { logRemotely, reportData } from '../../distro'
+import { logRemotely } from '../../distro'
 
 const DB_NAME = 'polo.sqlite'
 const DB_DISPLAY_NAME = 'Ham2K Portable Logger Database'

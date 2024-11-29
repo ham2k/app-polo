@@ -140,7 +140,7 @@ export default function HomeScreen ({ navigation }) {
   }, [])
 
   useEffect(() => {
-    navigation.setOptions({ rightAction: 'cog', onRightActionPress: () => navigation.navigate('Settings') })
+    navigation.setOptions({ rightAction: 'cog', rightA11yLabel: 'Settings', onRightActionPress: () => navigation.navigate('Settings') })
   }, [navigation])
 
   const handleNewOperation = useCallback(async () => {
@@ -172,6 +172,7 @@ export default function HomeScreen ({ navigation }) {
       <View style={{ flex: 1, width: '100%', padding: 0, margin: 0 }}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <FlatList
+            accesibilityLabel="Operation List"
             style={{ flex: 1 }}
             data={operations}
             renderItem={renderRow}
@@ -185,6 +186,7 @@ export default function HomeScreen ({ navigation }) {
         <AnimatedFAB
           icon="plus"
           label="New Operation"
+          accessibilityLabel="New Operation"
           extended={isExtended}
           style={[{
             right: Math.max(styles.oneSpace * 2, safeArea.right),

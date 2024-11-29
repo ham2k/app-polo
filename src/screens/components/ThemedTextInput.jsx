@@ -260,6 +260,7 @@ export default function ThemedTextInput (props) {
   return (
     <TextInput
       {...props}
+      accessibilityLabel={props.accessibilityLabel ?? props.label}
       style={[
         colorStyles.paperInput,
         {

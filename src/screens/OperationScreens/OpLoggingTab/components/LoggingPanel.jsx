@@ -463,6 +463,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                   loggingState?.undoInfo ? (
                     <IconButton
                       icon={'undo'}
+                      accessibilityLabel="Undo"
                       size={styles.infoPanel.button.size}
                       iconColor={styles.infoPanel.button.color}
                       onPress={handleUnwipe}
@@ -470,6 +471,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                   ) : (
                     <IconButton
                       icon={'backspace-outline'}
+                      accessibilityLabel="Erase"
                       size={styles.infoPanel.button.size}
                       iconColor={styles.infoPanel.button.color}
                       disabled={!loggingState?.hasChanges}
@@ -480,6 +482,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                   (qso?.deleted || qso?._willBeDeleted || loggingState?.undoInfo) ? (
                     <IconButton
                       icon={'undo'}
+                      accessibilityLabel="Undo"
                       size={styles.infoPanel.button.size}
                       iconColor={styles.infoPanel.button.color}
                       onPress={loggingState?.undoInfo ? handleUnwipe : handleUndelete}
@@ -487,6 +490,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                   ) : (
                     <IconButton
                       icon={'trash-can-outline'}
+                      accessibilityLabel="Delete"
                       size={styles.infoPanel.button.size}
                       iconColor={styles.infoPanel.button.color}
                       disabled={false}
@@ -520,6 +524,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
           <View style={{ flex: 0, justifyContent: 'center', alignItems: 'center', [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.halfSpace }}>
             <IconButton
               icon={qso?._isNew ? 'upload' : (qso?._willBeDeleted ? 'trash-can' : 'content-save')}
+              accessibilityLabel={qso?._isNew ? 'Add QSO' : 'Save QSO'}
               size={styles.oneSpace * 4}
               mode="contained"
               disabled={!((isValidQSO && isValidOperation) || commandInfo?.match)}

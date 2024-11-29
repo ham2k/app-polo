@@ -11,6 +11,7 @@ import { Text, TouchableRipple } from 'react-native-paper'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { fmtDateZuluDynamic } from '../../../tools/timeFormats'
+import { tweakStringForVoiceOver } from '../../../tools/a11yTools'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { buildTitleForOperation } from '../../OperationScreens/OperationScreen'
 
@@ -24,7 +25,11 @@ export default function OperationItem ({ operation, settings, onPress, styles })
   }, [operation])
 
   return (
-    <TouchableRipple onPress={pressHandler} style={styles.rowRoot}>
+    <TouchableRipple
+      onPress={pressHandler}
+      style={styles.rowRoot}
+      accessibilityLabel={tweakStringForVoiceOver(`${operation.stationCall || settings.operatorCall} ${title} ${operation.subtitle}, ${operation.qsoCount ?? 0} Q sos, ${fmtDateZuluDynamic(operation.startAtMillisMax)}`)}
+    >
       <View style={styles.row}>
         <View style={styles.rowTop}>
           <View style={styles.rowTopLeft}>

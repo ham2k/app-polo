@@ -57,6 +57,7 @@ export const SecondaryControlManagementSubPanel = ({
               <control.LabelComponent
                 qso={qso} operation={operation} vfo={vfo} settings={settings}
                 icon={control.icon}
+                accessibilityLabel={control.accessibilityLabel}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 disabled={control.optionType === 'mandatory'}
                 selected={false}
@@ -65,6 +66,7 @@ export const SecondaryControlManagementSubPanel = ({
             ) : (
               <LoggerChip
                 icon={control.icon}
+                accessibilityLabel={control.accessibilityLabel}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 disabled={control.optionType === 'mandatory'}
                 selected={false}
@@ -103,6 +105,7 @@ export const SecondaryControlManagementSubPanel = ({
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={false}
                 disabled={control.optionType === 'mandatory'}
+                accessibilityLabel={control.accessibilityLabel}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               />
             ) : (
@@ -111,6 +114,7 @@ export const SecondaryControlManagementSubPanel = ({
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={false}
                 disabled={control.optionType === 'mandatory'}
+                accessibilityLabel={control.accessibilityLabel ? stringOrFunction(control.accessibilityLabel, { operation, vfo, qso, settings }) : undefined}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               >
                 {control.label ? stringOrFunction(control.label, { operation, vfo, qso, settings }) : control.key}
@@ -128,7 +132,7 @@ export const SecondaryControlManagementSubPanel = ({
               selected={true}
               onChange={() => setCurrentSecondaryControl('manage-controls')}
             >
-              <Icon source="cog" size={styles.oneSpace * 2} color={styles.colors[`on${styles.upcasedThemeColor}`]} />
+              <Icon source="cog" accesibilityLabel={'Hide Secondary Control Settings'} size={styles.oneSpace * 2} color={styles.colors[`on${styles.upcasedThemeColor}`]} />
             </LoggerChip>
           </View>
         </View>
