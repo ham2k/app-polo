@@ -96,8 +96,7 @@ export const addQSOs = ({ uuid, qsos }) => async (dispatch, getState) => {
     )
   }
 
-  const state = getState()
-  const info = state.operations.info[uuid]
+  const info = getState().operations.info[uuid]
   let { startAtMillisMin, startAtMillisMax } = info
 
   for (const qso of qsos) {
@@ -107,15 +106,14 @@ export const addQSOs = ({ uuid, qsos }) => async (dispatch, getState) => {
     if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
   }
 
-  const finalQSOs = state.qsos.qsos[uuid]
+  const finalQSOs = getState().qsos.qsos[uuid]
 
-  // No need to save operation to the db, because min/max times and counts are recalculated on load
-  dispatch(operationActions.setOperation({ uuid, startAtMillisMin, startAtMillisMax, qsoCount: finalQSOs.filter(q => !q.deleted).length }))
+  info.startAtMillisMin = startAtMillisMin
+  info.startAtMillisMax = startAtMillisMax
+  info.qsoCount = finalQSOs.filter(q => !q.deleted).length
 
-  const operation = getState().operations.info[uuid]
-  setTimeout(() => {
-    dispatch(saveOperation(operation))
-  }, 0)
+  dispatch(operationActions.setOperation(info))
+  dispatch(saveOperation(info))
 }
 
 export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getState) => {
