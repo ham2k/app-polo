@@ -25,6 +25,8 @@ const LARGE_BATCH_SIZE = 50 // QSOs or Operations to send on a regular sync loop
 
 const DEBUG = true
 
+let errorCount = 0
+
 export async function syncLatestQSOs ({ getState, dispatch }) {
   scheduleDebouncedFunctionForSyncLoop(async () => {
     await syncOneBatchOfChanges({ getState, dispatch, batchSize: SMALL_BATCH_SIZE })
@@ -99,9 +101,16 @@ async function syncOneBatchOfChanges ({ qsos, operations, getState, dispatch, ba
       if (DEBUG) console.log(' -- scheduling next loop')
       scheduleNextSyncLoop({ getState, dispatch })
     }
+
+    errorCount = 0
   } catch (error) {
     console.error('Error syncing QSOs', error)
-    scheduleNextSyncLoop({ getState, dispatch })
+    errorCount += 1
+    if (errorCount < 8) {
+      const delay = (settings.syncLoopDelay || SYNC_LOOP_DELAY) + (2 ** errorCount) * 1000
+      console.log(' -- retrying in ', delay)
+      scheduleNextSyncLoop({ getState, dispatch, delay })
+    }
   }
 }
 
