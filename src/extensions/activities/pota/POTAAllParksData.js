@@ -41,8 +41,8 @@ export function registerPOTAAllParksData () {
       // Since the work is split in two phases, and their speeds are different,
       // we need to adjust the expected steps based on a ratio.
       // The ratio comes from the time in seconds it takes to complete each phase in an emulator
-      const fetchWorkRatio = 1.1
-      const dbWorkRatio = 1
+      const fetchWorkRatio = 1
+      const dbWorkRatio = 1.5
       const expectedSteps = expectedReferences * (fetchWorkRatio + dbWorkRatio)
 
       let completedSteps = 0
