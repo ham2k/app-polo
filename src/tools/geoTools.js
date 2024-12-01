@@ -67,7 +67,7 @@ export function locationForQSONInfo (qsonInfo) {
   try {
     const grid = qsonInfo?.grid ?? qsonInfo?.guess?.grid
 
-    if (grid) {
+    if (grid && grid !== 'AA00' && grid !== 'AA00aa') {
       const [latitude, longitude] = gridToLocation(grid)
       return { latitude, longitude }
     }

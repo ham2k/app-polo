@@ -13,9 +13,14 @@ import { reportError } from '../../../distro'
 import { actions } from '../operationsSlice'
 import { actions as qsosActions } from '../../qsos'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
+import { syncLatestOperations } from '../../sync'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
+  if (row.startAtMillisMin) data.startAtMillisMin = row.startAtMillisMin
+  if (row.startAtMillisMax) data.startAtMillisMax = row.startAtMillisMax
+  if (row.qsoCount) data.qsoCount = row.qsoCount
+
   if (data.startOnMillisMin) data.startAtMillisMin = data.startOnMillisMin
   if (data.startOnMillisMax) data.startAtMillisMax = data.startOnMillisMax
   if (data.createdOnMillis) data.createdAtMillis = data.createdOnMillis
@@ -45,10 +50,48 @@ export const getOperations = () => async (dispatch, getState) => {
   return dispatch(actions.setOperations(ophash))
 }
 
-export const saveOperation = (operation) => async (dispatch, getState) => {
-  const { uuid } = operation
-  const json = JSON.stringify(operation)
-  await dbExecute('INSERT INTO operations (uuid, data) VALUES (?, ?) ON CONFLICT DO UPDATE SET data = ?', [uuid, json, json])
+export const queryOperations = async (query, params) => {
+  let ops = []
+  ops = await dbSelectAll(`SELECT * FROM operations ${query}`, params, { row: prepareOperationRow })
+  return ops
+}
+export const saveOperation = (operation, { synced = false } = {}) => async (dispatch, getState) => {
+  const { uuid, startAtMillisMin, startAtMillisMax, qsoCount } = operation
+  const operationClone = { ...operation }
+  console.log('saveOperation', operation)
+  delete operationClone.startAtMillisMin
+  delete operationClone.startAtMillisMax
+  delete operationClone.qsoCount
+  const json = JSON.stringify(operationClone)
+  await dbExecute(
+    `
+      INSERT INTO operations
+        (uuid, data, startAtMillisMin, startAtMillisMax, qsoCount, synced)
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON CONFLICT DO
+        UPDATE SET data = ?, startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ?, synced = ?
+    `,
+    [
+      uuid,
+      json, startAtMillisMin, startAtMillisMax, qsoCount, synced,
+      json, startAtMillisMin, startAtMillisMax, qsoCount, synced
+    ]
+  )
+  if (!synced) {
+    setImmediate(() => {
+      syncLatestOperations({ dispatch, getState })
+    })
+  }
+}
+
+export const saveOperationAdditionalData = (operation) => async (dispatch, getState) => {
+  const { uuid, startAtMillisMin, startAtMillisMax, qsoCount } = operation
+  await dbExecute(
+    `
+      UPDATE operations SET startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ? WHERE uuid = ?
+    `,
+    [startAtMillisMin, startAtMillisMax, qsoCount, uuid]
+  )
 }
 
 export const addNewOperation = (operation) => async (dispatch) => {

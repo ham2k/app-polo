@@ -10,23 +10,12 @@ import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { parseCallsign } from '@ham2k/lib-callsigns'
 
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findBestHook } from '../../../../extensions/registry'
 
 const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
-  const theirInfo = qso?.their || {}
-  // const theirInfo = useMemo(() => {
-  //   if (qso?.their?.entityPrefix) {
-  //     return qso?.their
-  //   } else {
-  //     let info = {}
-  //     info = parseCallsign(qso?.their?.call)
-  //     return annotateFromCountryFile(info)
-  //   }
-  // }, [qso?.their])
+  const theirInfo = { ...qso?.their?.guess, ...qso?.their }
 
   const freqParts = useMemo(() => {
     if (qso.freq) {
@@ -65,25 +54,21 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         </Text>
         <Text style={styles.fields.call}>
           {qso.their?.call ?? '?'}
-          {styles.narrowWidth && qso.their?.guess?.emoji && (
-            ' ' + qso.their?.guess?.emoji
+          {styles.narrowWidth && theirInfo?.emoji && (
+            ' ' + theirInfo?.emoji
           )}
         </Text>
         <Text style={styles.fields.location}>
           {theirInfo?.entityPrefix && (settings.dxFlags === 'all' || (settings.dxFlags !== 'none' && theirInfo.entityPrefix !== ourInfo?.entityPrefix)) && (
             ' ' + DXCC_BY_PREFIX[theirInfo.entityPrefix]?.flag
           )}
-          {(!!settings.showStateField && (qso?.their?.state || qso?.their?.guess?.state)) && (
-            qso?.their?.state || qso?.their?.guess?.state
-          )}
+          {(!!settings.showStateField && theirInfo?.state)}
         </Text>
         <Text style={styles.fields.name}>
-          {!styles.narrowWidth && qso.their?.guess?.emoji && (
-            qso.their?.guess?.emoji + ' '
+          {!styles.narrowWidth && theirInfo?.emoji && (
+            theirInfo?.emoji + ' '
           )}
-          {styles.smOrLarger && (
-            qso.their?.name ?? qso.their?.guess?.name ?? ''
-          )}
+          {styles.smOrLarger && theirInfo?.name}
         </Text>
         <View style={styles.fields.icons}>
           {qso.notes && (

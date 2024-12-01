@@ -31,6 +31,7 @@ const Hooks = {
   screen: [],
   setting: [],
   spots: [],
+  sync: [],
   lookup: [],
   export: [],
   account: [],

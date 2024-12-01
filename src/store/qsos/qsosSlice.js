@@ -27,8 +27,6 @@ export const qsosSlice = createSlice({
       state.status = action.payload
     },
     setQSOs: (state, action) => {
-      action.payload.qsos.forEach((qso, index) => { qso._number = index + 1 })
-
       state.qsos[action.payload.uuid] = action.payload.qsos
       state.byUUID[action.payload.uuid] = {}
       action.payload.qsos.forEach(qso => { state.byUUID[action.payload.uuid][qso.uuid] = qso })
@@ -49,9 +47,6 @@ export const qsosSlice = createSlice({
         byUUID[qso.uuid] = qso
         if (oldQSO?.startAtMillis !== qso.startAtMillis) {
           qsos.sort((a, b) => a.startAtMillis - b.startAtMillis)
-          qsos.forEach((q, index) => {
-            if (q._number !== index + 1) q._number = index + 1
-          })
         }
       } else {
         // Add new QSO to the end of the array
@@ -59,11 +54,6 @@ export const qsosSlice = createSlice({
         qsos[qsos.length] = qso
         if (qsos.length > 1 && qsos[qsos.length - 2].startAtMillis > qso.startAtMillis) {
           qsos.sort((a, b) => a.startAtMillis - b.startAtMillis)
-          qsos.forEach((q, index) => {
-            if (q._number !== index + 1) q._number = index + 1
-          })
-        } else {
-          qso._number = qsos.length
         }
       }
     },
