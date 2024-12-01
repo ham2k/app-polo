@@ -1,6 +1,6 @@
 {
-  "24.11.99-pre4": {
-    "name": "December '24 (Pre 4)",
+  "24.11.99-pre5": {
+    "name": "December '24 (Pre 5)",
     "changes": [
       "First steps at making the app more accessible for sight-impaired users",
       "Add HamQTH callsign lookup (by M1SDH)",
