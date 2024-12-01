@@ -7,6 +7,7 @@
       "Merge spots of multi-operator activations (by M1SDH)",
       "Improve operation title handling",
       "Faster data downloads for POTA, SOTA and WWFF",
+      "Ignore grid AA00aa",
       "Fix problems with external keyboards on Android",
       "Fix bugs in various input fields",
       "Fix lookup of portable calls",
