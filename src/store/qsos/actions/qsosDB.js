@@ -68,14 +68,6 @@ export const queryQSOs = async (query, params) => {
   return qsos
 }
 
-export const markQSOsAsSynced = async (qsos) => {
-  await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `"${q.uuid}"`).join(',')})`, [])
-}
-
-export const resetSyncedStatus = async (qsos) => {
-  await dbExecute('UPDATE qsos SET synced = false', [])
-}
-
 export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
 
 export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {

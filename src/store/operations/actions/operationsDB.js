@@ -45,7 +45,6 @@ export const queryOperations = async (query, params) => {
   ops = await dbSelectAll(`SELECT * FROM operations ${query}`, params, { row: prepareOperationRow })
   return ops
 }
-
 export const saveOperation = (operation, { synced = false } = {}) => async (dispatch, getState) => {
   const { uuid, startAtMillisMin, startAtMillisMax, qsoCount } = operation
   const operationClone = { ...operation }

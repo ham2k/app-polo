@@ -18,7 +18,7 @@ import DeviceInfo from 'react-native-device-info'
 import packageJson from '../../../../package.json'
 
 import { DevModeSettingsForDistribution, reportError } from '../../../distro'
-import { loadQSOs, resetSyncedStatus } from '../../../store/qsos'
+import { loadQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
 import { generateExport, importQSON, selectOperationsList } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
@@ -30,6 +30,7 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
 import { dbSelectAll } from '../../../store/db/db'
 import { fmtNumber } from '@ham2k/lib-format-tools'
+import { resetSyncedStatus } from '../../../store/sync'
 
 function prepareStyles (baseStyles) {
   return {

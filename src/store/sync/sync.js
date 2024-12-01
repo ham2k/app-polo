@@ -7,7 +7,9 @@
 
 import { findHooks } from '../../extensions/registry'
 import GLOBAL from '../../GLOBAL'
-import { markQSOsAsSynced, queryQSOs } from '../qsos'
+import { dbExecute } from '../db/db'
+import { queryOperations } from '../operations'
+import { queryQSOs } from '../qsos'
 
 const SYNC_LOOP_DELAY = 1000 // 30 seconds
 
@@ -33,14 +35,22 @@ async function syncOneBatchOfQSOs ({ settings, dispatch, batchSize = LARGE_BATCH
     if (DEBUG) console.log(' -- syncHook', syncHook.key)
 
     const qsos = await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT ?', [batchSize])
-    if (DEBUG) console.log(' -- ', qsos?.map(qso => qso.key)?.join(', '))
+    const opIds = qsos.map(q => `"${q.operation}"`).join(',')
+    const operations = await queryOperations(`WHERE uuid IN (${opIds}) AND synced IS false`, [])
+    operations.forEach(op => {
+      delete op.startAtMillisMin
+      delete op.startAtMillisMax
+      delete op.qsoCount
+    })
+
     if (qsos.length > 0) {
       if (DEBUG) console.log(' -- calling hook')
-      const ok = await syncHook.sendChanges({ qsos, settings, dispatch })
+      const ok = await syncHook.sendChanges({ qsos, operations, settings, dispatch })
       if (DEBUG) console.log(' -- result', ok)
       if (ok) {
         if (DEBUG) console.log(' -- marking as synced')
         markQSOsAsSynced(qsos)
+        markOperationsAsSynced(operations)
       }
       if (DEBUG) console.log(' -- cleaning')
       if (qsos.length === batchSize) {
@@ -73,4 +83,19 @@ function scheduleNextSyncLoop ({ settings, dispatch }) {
   if (!nextSyncLoopInterval || nextSyncLoopInterval === true) {
     nextSyncLoopInterval = setInterval(() => syncOneBatchOfQSOs({ settings, dispatch }), SYNC_LOOP_DELAY)
   }
+}
+
+export async function markQSOsAsSynced (qsos) {
+  if (!qsos || qsos.length === 0) return
+  await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `"${q.uuid}"`).join(',')})`, [])
+}
+
+export async function markOperationsAsSynced (operations) {
+  if (!operations || operations.length === 0) return
+  await dbExecute(`UPDATE operations SET synced = true WHERE uuid IN (${operations.map(q => `"${q.uuid}"`).join(',')})`, [])
+}
+
+export async function resetSyncedStatus () {
+  await dbExecute('UPDATE qsos SET synced = false', [])
+  await dbExecute('UPDATE operations SET synced = false', [])
 }
