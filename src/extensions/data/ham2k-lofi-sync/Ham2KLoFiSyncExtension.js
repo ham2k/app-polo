@@ -5,11 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import UUID from 'react-native-uuid'
-
 import packageJson from '../../../../package.json'
 import GLOBAL from '../../../GLOBAL'
-import { setExtensionSettings } from '../../../store/settings'
+import { setExtensionSettings, setSettings } from '../../../store/settings'
 
 export const Info = {
   key: 'ham2k-lofi',
@@ -30,7 +28,8 @@ const Extension = {
 }
 export default Extension
 
-const DEBUG = false
+const DEBUG = true
+
 const SyncHook = {
   ...Info,
   sendChanges: async ({ qsos, operations, settings, dispatch }) => {
@@ -43,8 +42,8 @@ const SyncHook = {
       retries--
 
       if (!token) {
-        secret = secret || UUID.v4()
         if (DEBUG) console.log('Ham2K LoFi Authenticating')
+        secret = 'device'
         const response = await fetch(`${server}/v1/client`, {
           method: 'POST',
           headers: {
@@ -56,12 +55,17 @@ const SyncHook = {
               key: GLOBAL.deviceId,
               name: GLOBAL.deviceName,
               secret
+            },
+            account: {
+              call: settings.operationCall
             }
           })
         })
 
+        const json = await response.json()
+        processResponseMeta({ json, response, dispatch, settings })
+
         if (response.status === 200) {
-          const json = await response.json()
           if (DEBUG) console.log('-- auth ok', json)
           token = json.token
           dispatch(setExtensionSettings({ key: 'ham2k-lofi', token, secret }))
@@ -90,7 +94,12 @@ const SyncHook = {
               operations
             })
           })
-          if (DEBUG) console.log(' -- response', response.status, await response.json())
+
+          const json = await response.json()
+          if (DEBUG) console.log(' -- response', response.status, json)
+
+          processResponseMeta({ json, response, dispatch, settings })
+
           if (response.status === 401) {
             if (DEBUG) console.log(' -- auth failed')
             token = null
@@ -100,5 +109,21 @@ const SyncHook = {
       }
     }
     return false
+  }
+}
+
+function processResponseMeta ({ json, response, dispatch, settings }) {
+  try {
+    if (json?.meta?.suggestedSyncBatchSize || json?.meta?.suggested_sync_batch_size) {
+      dispatch(setSettings({ syncBatchSize: Number.parseInt(json.meta.suggestedSyncBatchSize || json.meta.suggested_sync_batch_size, 10) }))
+    }
+    if (json?.meta?.suggestedSyncLoopDelay || json?.meta?.suggested_sync_loop_delay) {
+      dispatch(setSettings({ syncLoopDelay: Number.parseInt(json.meta.suggestedSyncLoopDelay || json.meta.suggested_sync_loop_delay, 10) * 1000 }))
+    }
+    if (json?.meta?.suggestedSyncCheckPeriod || json?.meta?.suggested_sync_check_period) {
+      dispatch(setSettings({ syncCheckPeriod: Number.parseInt(json.meta.suggestedSyncCheckPeriod || json.meta.suggested_sync_check_period, 10) * 1000 }))
+    }
+  } catch (e) {
+    console.error('Error parsing sync meta', e, json)
   }
 }

@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Provider, useSelector } from 'react-redux'
+import { Provider, useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -42,6 +42,7 @@ import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
 import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
 import RootErrorBoundary from './screens/components/RootErrorBoundary'
 import DeviceInfo from 'react-native-device-info'
+import { useSyncLoop } from './store/sync'
 
 const Stack = createNativeStackNavigator()
 
@@ -52,12 +53,13 @@ const paperSettings = {
 function MainApp ({ navigationTheme }) {
   const [appState, setAppState] = useState('starting')
 
+  const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
 
   useConfigForDistribution({ settings })
 
   useEffect(() => {
-    setTimeout(async () => {
+    setImmediate(async () => {
       // Some top-level functions need access to settings info that's only available in the store at this point
       GLOBAL.consentAppData = settings.consentAppData
       GLOBAL.consentOpData = settings.consentOpData
@@ -66,7 +68,12 @@ function MainApp ({ navigationTheme }) {
       GLOBAL.syncEnabled = settings?.extensions?.['ham2k-lofi']?.enabled
       console.log('GLOBAL', GLOBAL)
     })
-  }, [settings?.consentAppData, settings?.consentOpData, settings?.extensions])
+  // `exhaustive-deps` is confused by the `?.[]` syntax and wants `settings?.extensions` to be a dependency
+  // but we want the more specific dependency, so we disable the rule here
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings?.consentAppData, settings?.consentOpData, settings?.extensions?.['ham2k-lofi']?.enabled])
+
+  useSyncLoop({ dispatch, settings })
 
   const routeNameRef = React.useRef()
   const navigationRef = React.useRef()

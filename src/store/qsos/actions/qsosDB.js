@@ -11,7 +11,7 @@ import { qsoKey } from '@ham2k/lib-qson-tools'
 import GLOBAL from '../../../GLOBAL'
 
 import { actions } from '../qsosSlice'
-import { actions as operationActions, saveOperation } from '../../operations'
+import { actions as operationActions, saveOperationAdditionalData } from '../../operations'
 import { dbExecute, dbSelectAll, dbTransaction } from '../../db/db'
 import { syncLatestQSOs } from '../../sync'
 
@@ -57,7 +57,7 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
     operationInfo = { ...operationInfo, startAtMillisMin, startAtMillisMax, qsoCount }
     setImmediate(() => {
       dispatch(operationActions.setOperation(operationInfo))
-      dispatch(saveOperation(operationInfo))
+      dispatch(saveOperationAdditionalData(operationInfo))
     })
   }
 }
@@ -123,8 +123,8 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
   setImmediate(() => {
     console.log('op update', { startAtMillisMin, startAtMillisMax, qsoCount: operationInfo.qsoCount })
     dispatch(operationActions.setOperation(operationInfo))
-    dispatch(saveOperation(operationInfo))
-    syncLatestQSOs({ dispatch, settings: getState().settings })
+    dispatch(saveOperationAdditionalData(operationInfo))
+    if (!synced) syncLatestQSOs({ dispatch, getState })
   })
 }
 

@@ -37,11 +37,11 @@ export const startTickTock = () => (dispatch, getState) => {
   interval = setInterval(() => {
     const now = Date.now()
     const seconds = Math.floor(now / 1000) * 1000
-    const tenSeconds = Math.floor(now / 10000) * 10000
+    const fiveSeconds = Math.floor(now / 5000) * 5000
     const thirtySeconds = Math.floor(now / 30000) * 30000
     const oneMinute = Math.floor(now / 60000) * 60000
     const fiveMinutes = Math.floor(now / 300000) * 300000
-    const values = { now, seconds, tenSeconds, thirtySeconds, oneMinute, fiveMinutes }
+    const values = { now, seconds, fiveSeconds, thirtySeconds, oneMinute, fiveMinutes }
     dispatch(actions.setValues(values))
   }, 1000)
   dispatch(actions.saveInterval(interval))
@@ -62,8 +62,8 @@ export const selectSecondsTick = (state) => {
   return state?.time?.seconds
 }
 
-export const selectTenSecondsTick = (state) => {
-  return state?.time?.tenSeconds
+export const selectFiveSecondsTick = (state) => {
+  return state?.time?.fiveSeconds
 }
 
 export const selectThirtySecondsTick = (state) => {

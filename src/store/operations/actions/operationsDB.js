@@ -13,6 +13,7 @@ import { reportError } from '../../../distro'
 import { actions } from '../operationsSlice'
 import { actions as qsosActions } from '../../qsos'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
+import { syncLatestOperations } from '../../sync'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
@@ -66,6 +67,21 @@ export const saveOperation = (operation, { synced = false } = {}) => async (disp
       json, startAtMillisMin, startAtMillisMax, qsoCount, synced,
       json, startAtMillisMin, startAtMillisMax, qsoCount, synced
     ]
+  )
+  if (!synced) {
+    setImmediate(() => {
+      syncLatestOperations({ dispatch, getState })
+    })
+  }
+}
+
+export const saveOperationAdditionalData = (operation) => async (dispatch, getState) => {
+  const { uuid, startAtMillisMin, startAtMillisMax, qsoCount } = operation
+  await dbExecute(
+    `
+      UPDATE operations SET startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ? WHERE uuid = ?
+    `,
+    [startAtMillisMin, startAtMillisMax, qsoCount, uuid]
   )
 }
 

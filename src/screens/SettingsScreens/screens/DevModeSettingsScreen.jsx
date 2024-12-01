@@ -31,6 +31,7 @@ import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
 import { dbSelectAll } from '../../../store/db/db'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { resetSyncedStatus } from '../../../store/sync'
+import { selectFiveSecondsTick } from '../../../store/time'
 
 function prepareStyles (baseStyles) {
   return {
@@ -53,12 +54,13 @@ export default function DevModeSettingsScreen ({ navigation }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
+  const fiveSecondTick = useSelector(selectFiveSecondsTick)
   const [syncStatus, setSyncStatus] = useState()
   useEffect(() => {
     setImmediate(async () => {
       setSyncStatus(await syncCountDescription())
     })
-  }, [])
+  }, [fiveSecondTick])
 
   const handleResetSyncStatus = useCallback(async () => {
     await resetSyncedStatus()
