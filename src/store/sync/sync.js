@@ -13,6 +13,8 @@ import { queryOperations } from '../operations'
 import { queryQSOs } from '../qsos'
 import { selectOneMinuteTick, startTickTock } from '../time'
 import { useSelector } from 'react-redux'
+import { logRemotely } from '../../distro'
+import { log } from '@react-native-firebase/crashlytics'
 
 const SYNC_LOOP_DEBOUNCE_DELAY = 1000 * 0.5 // 500ms, minimum time to wait for more changes before starting a new sync loop
 const SYNC_LOOP_DEBOUNCE_MAX = 1000 * 3 // 3 seconds, maximum time to wait for more changes before starting a new sync loop
@@ -42,7 +44,7 @@ export async function syncLatestOperations ({ getState, dispatch }) {
 async function syncOneBatchOfChanges ({ qsos, operations, getState, dispatch, batchSize = 0 }) {
   if (DEBUG) console.log('syncOneBatchOfChanges')
   takeOverSyncLoop()
-
+  logRemotely({ message: 'syncOneBatchOfChanges', global: GLOBAL.syncEnabled, qsos: qsos?.length, operations: operations?.length, batchSize })
   if (!GLOBAL.syncEnabled) return
 
   const settings = getState().settings
@@ -55,7 +57,7 @@ async function syncOneBatchOfChanges ({ qsos, operations, getState, dispatch, ba
 
   try {
     const syncHook = findHooks('sync')[0] // only one sync source
-
+    logRemotely({ message: 'syncOneBatchOfChanges - hook', hook: syncHook?.key, batchSize })
     if (!syncHook) return
 
     if (DEBUG) console.log(' -- syncing', { hook: syncHook.key, batchSize })
@@ -77,6 +79,7 @@ async function syncOneBatchOfChanges ({ qsos, operations, getState, dispatch, ba
       delete op.qsoCount
     })
 
+    logRemotely({ message: 'syncing', qsos: qsos.length, operations: operations.length })
     if (qsos.length > 0 || operations.length > 0) {
       if (DEBUG) console.log(' -- calling hook')
       const ok = await syncHook.sendChanges({ qsos, operations, settings, dispatch })
@@ -104,11 +107,13 @@ async function syncOneBatchOfChanges ({ qsos, operations, getState, dispatch, ba
 
     errorCount = 0
   } catch (error) {
+    logRemotely({ error: 'Error syncing QSOs', message: error.message })
     console.error('Error syncing QSOs', error)
     errorCount += 1
     if (errorCount < 8) {
       const delay = (settings.syncLoopDelay || SYNC_LOOP_DELAY) + (2 ** errorCount) * 1000
       console.log(' -- retrying in ', delay)
+      logRemotely({ message: 'retrying in', delay })
       scheduleNextSyncLoop({ getState, dispatch, delay })
     }
   }
@@ -168,6 +173,7 @@ export function scheduleNextSyncLoop ({ getState, dispatch, delay = 0 }, loop) {
 
   if (!nextSyncLoopInterval || nextSyncLoopInterval === true) {
     if (DEBUG) console.log(' -- scheduling next loop', delay)
+    logRemotely({ message: 'scheduling next loop', delay })
     nextSyncLoopInterval = setTimeout(() => syncOneBatchOfChanges({ getState, dispatch }), delay)
   }
 }
@@ -193,7 +199,6 @@ export function useSyncLoop ({ dispatch, settings }) {
   useEffect(() => {
     setImmediate(() => {
       dispatch(startTickTock())
-
       console.log('sync tick', oneMinuteTick, GLOBAL.lastSyncLoop)
       if (GLOBAL.syncEnabled) {
         const maxTime = settings.syncCheckPeriod || SYNC_CHECK_PERIOD
