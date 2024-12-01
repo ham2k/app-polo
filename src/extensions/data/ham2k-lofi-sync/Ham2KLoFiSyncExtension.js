@@ -6,6 +6,7 @@
  */
 
 import packageJson from '../../../../package.json'
+import { logRemotely } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
 import { setExtensionSettings, setSettings } from '../../../store/settings'
 
@@ -13,6 +14,8 @@ export const Info = {
   key: 'ham2k-lofi',
   icon: 'account-search',
   name: 'Ham2k Log Filer Sync',
+  hidden: true,
+  alwaysEnabled: true,
   description: 'Cloud backup and sync for Ham2K apps',
   shortName: 'LoFi',
   infoURL: 'https://ham2k.com/'
@@ -40,6 +43,7 @@ const SyncHook = {
     let retries = 2 // just so that we can re-authenticate if needed
     while (retries > 0) {
       retries--
+      logRemotely({ message: 'sending changes', qsos: qsos?.length, operations: operations?.length, server, token })
 
       if (!token) {
         if (DEBUG) console.log('Ham2K LoFi Authenticating')
@@ -57,7 +61,7 @@ const SyncHook = {
               secret
             },
             account: {
-              call: settings.operationCall
+              call: settings.operatorCall
             }
           })
         })
