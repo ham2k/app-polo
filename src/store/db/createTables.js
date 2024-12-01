@@ -33,6 +33,9 @@ export async function createTables (dbParams = {}) {
         CREATE TABLE IF NOT EXISTS operations (
           uuid TEXT PRIMARY KEY NOT NULL,
           data TEXT,
+          startOnMillisMin INTEGER,
+          startOnMillisMax INTEGER,
+          qsoCount INTEGER,
           synced BOOLEAN DEFAULT false
         )`, [], dbParams)
     await dbExecute(`
@@ -163,14 +166,46 @@ export async function createTables (dbParams = {}) {
       await dbExecute('UPDATE version SET version = 5', [], dbParams)
     }
 
+    if (version < 6) {
+      console.log('createTables -- creating version 6')
+      await dbExecute(`
+        ALTER TABLE operations ADD COLUMN startAtMillisMin INTEGER DEFAULT 0
+      `, [], dbParams)
+      await dbExecute(`
+        ALTER TABLE operations ADD COLUMN startAtMillisMax INTEGER DEFAULT 0
+      `, [], dbParams)
+      await dbExecute(`
+        ALTER TABLE operations ADD COLUMN qsoCount INTEGER DEFAULT 0
+      `, [], dbParams)
+
+      await dbExecute(`
+        UPDATE operations SET
+          startAtMillisMin = json_extract(data, "$.startAtMillisMin"),
+          startAtMillisMax = json_extract(data, "$.startAtMillisMax"),
+          qsoCount = json_extract(data, "$.qsoCount")
+      `, [], dbParams)
+      await dbExecute(`
+        UPDATE operations SET
+          startAtMillisMin = json_extract(data, "$.startOnMillisMin")
+        WHERE startAtMillisMin = 0 OR startAtMillisMin IS NULL
+      `, [], dbParams)
+      await dbExecute(`
+        UPDATE operations SET
+          startAtMillisMax = json_extract(data, "$.startOnMillisMax")
+        WHERE startAtMillisMax = 0 OR startAtMillisMax IS NULL
+      `, [], dbParams)
+
+      await dbExecute('UPDATE version SET version = 6', [], dbParams)
+    }
+
     // TODO: Uncomment this block when we're close to releasing the December '24 version
-    // if (version < 6) {
-    //   console.log('createTables -- creating version 6')
+    // if (version < 7) {
+    //   console.log('createTables -- creating version 7')
     //   await dbExecute(`
     //     ALTER TABLE qsos RENAME COLUMN startedOnMillis TO startedAtMillis
     //   `, [], { db })
 
-    //   await dbExecute('UPDATE version SET version = 6', [], dbParams)
+    //   await dbExecute('UPDATE version SET version = 7', [], dbParams)
     // }
   }
 }

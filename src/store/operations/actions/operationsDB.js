@@ -16,6 +16,10 @@ import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 
 const prepareOperationRow = (row) => {
   const data = JSON.parse(row.data)
+  if (row.startAtMillisMin) data.startAtMillisMin = row.startAtMillisMin
+  if (row.startAtMillisMax) data.startAtMillisMax = row.startAtMillisMax
+  if (row.qsoCount) data.qsoCount = row.qsoCount
+
   if (data.startOnMillisMin) data.startAtMillisMin = data.startOnMillisMin
   if (data.startOnMillisMax) data.startAtMillisMax = data.startOnMillisMax
   if (data.createdOnMillis) data.createdAtMillis = data.createdOnMillis
@@ -43,9 +47,27 @@ export const queryOperations = async (query, params) => {
 }
 
 export const saveOperation = (operation, { synced = false } = {}) => async (dispatch, getState) => {
-  const { uuid } = operation
-  const json = JSON.stringify(operation)
-  await dbExecute('INSERT INTO operations (uuid, data, synced) VALUES (?, ?, ?) ON CONFLICT DO UPDATE SET data = ?, synced = ?', [uuid, json, synced, json, synced])
+  const { uuid, startAtMillisMin, startAtMillisMax, qsoCount } = operation
+  const operationClone = { ...operation }
+  console.log('saveOperation', operation)
+  delete operationClone.startAtMillisMin
+  delete operationClone.startAtMillisMax
+  delete operationClone.qsoCount
+  const json = JSON.stringify(operationClone)
+  await dbExecute(
+    `
+      INSERT INTO operations
+        (uuid, data, startAtMillisMin, startAtMillisMax, qsoCount, synced)
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON CONFLICT DO
+        UPDATE SET data = ?, startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ?, synced = ?
+    `,
+    [
+      uuid,
+      json, startAtMillisMin, startAtMillisMax, qsoCount, synced,
+      json, startAtMillisMin, startAtMillisMax, qsoCount, synced
+    ]
+  )
 }
 
 export const addNewOperation = (operation) => async (dispatch) => {

@@ -38,7 +38,6 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
 
   let startAtMillisMin, startAtMillisMax
   qsos.forEach((qso, index) => {
-    qso._number = index + 1
     if (qso.startAtMillis) {
       if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
       if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
@@ -48,16 +47,18 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
   dispatch(actions.setQSOs({ uuid, qsos }))
   dispatch(actions.setQSOsStatus({ uuid, status: 'ready' }))
 
-  const qsoCount = qsos.filter(qso => !qso.deleted).length
-  const operation = getState().operations.info[uuid]
+  let operationInfo = getState().operations.info[uuid]
 
-  if (startAtMillisMin !== operation?.startAtMillisMin ||
-  startAtMillisMax !== operation?.startAtMillisMax ||
-  qsoCount !== operation?.qsoCount) {
-    dispatch(operationActions.setOperation({ uuid, startAtMillisMin, startAtMillisMax, qsoCount }))
-    setTimeout(() => {
-      dispatch(saveOperation(operation))
-    }, 0)
+  const qsoCount = qsos.filter(qso => !qso.deleted).length
+
+  if (startAtMillisMin !== operationInfo?.startAtMillisMin ||
+  startAtMillisMax !== operationInfo?.startAtMillisMax ||
+  qsoCount !== operationInfo?.qsoCount) {
+    operationInfo = { ...operationInfo, startAtMillisMin, startAtMillisMax, qsoCount }
+    setImmediate(() => {
+      dispatch(operationActions.setOperation(operationInfo))
+      dispatch(saveOperation(operationInfo))
+    })
   }
 }
 
@@ -93,7 +94,6 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     const qsoClone = { ...qso }
     delete qsoClone._isNew
     delete qsoClone._isLookup
-    delete qsoClone._number
     if (qsoClone.their?.lookup) {
       delete qsoClone.their.lookup
     }
@@ -112,8 +112,8 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     )
   }
 
-  const info = getState().operations.info[uuid]
-  let { startAtMillisMin, startAtMillisMax } = info
+  const operationInfo = getState().operations.info[uuid]
+  let { startAtMillisMin, startAtMillisMax } = operationInfo
 
   for (const qso of qsos) {
     dispatch(actions.addQSO({ uuid, qso }))
@@ -124,13 +124,14 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
 
   const finalQSOs = getState().qsos.qsos[uuid]
 
-  info.startAtMillisMin = startAtMillisMin
-  info.startAtMillisMax = startAtMillisMax
-  info.qsoCount = finalQSOs.filter(q => !q.deleted).length
+  operationInfo.startAtMillisMin = startAtMillisMin
+  operationInfo.startAtMillisMax = startAtMillisMax
+  operationInfo.qsoCount = finalQSOs.filter(q => !q.deleted).length
 
   setImmediate(() => {
-    dispatch(operationActions.setOperation(info))
-    dispatch(saveOperation(info))
+    console.log('op update', { startAtMillisMin, startAtMillisMax, qsoCount: operationInfo.qsoCount })
+    dispatch(operationActions.setOperation(operationInfo))
+    dispatch(saveOperation(operationInfo))
     syncLatestQSOs({ dispatch, settings: getState().settings })
   })
 }
