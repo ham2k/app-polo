@@ -87,11 +87,23 @@ export default function ThemedTextInput (props) {
         text = textTransformer(text)
       }
 
+      // console.log('handleChange', { text, originalValue })
       if (text.length !== originalValue.length) {
-        setCurrentSelection({
-          start: (currentSelection?.start || originalValue.length) + (text.length - originalValue.length),
-          end: (currentSelection?.end || originalValue.length) + (text.length - originalValue)
-        })
+        const selectionFromVirtualNumericKeys = event.selectionFromVirtualNumericKeys ?? {}
+        const start = selectionFromVirtualNumericKeys.start ?? currentSelection.start ?? originalValue.length
+        const end = selectionFromVirtualNumericKeys.end ?? currentSelection.end ?? originalValue.length
+        // console.log('move cursor to', {
+        //   start: start + (text.length - originalValue.length),
+        //   end: end + (text.length - originalValue.length)
+        // })
+        // Sometimes, updating the value causes the native text field to also update the selection
+        // to a value that is not the one we want. So we have to delay our update in order to overwrite it.
+        setTimeout(() => {
+          setCurrentSelection({
+            start: start + (text.length - originalValue.length),
+            end: end + (text.length - originalValue.length)
+          })
+        }, 1)
       }
 
       event.nativeEvent.text = text
@@ -121,33 +133,29 @@ export default function ThemedTextInput (props) {
     textTransformer, currentSelection, onChangeText, onChange, onSpace
   ])
 
-  if (fieldId === 'pota') console.log('render', { strValue, fieldId, currentSelection })
-  useEffect(() => { if (fieldId === 'pota') console.log('originalValue', originalValue) }, [fieldId, originalValue])
-  useEffect(() => { if (fieldId === 'pota') console.log('currentSelection', currentSelection) }, [currentSelection, fieldId])
+  // if (fieldId === 'theirCall') console.log('render', { strValue, fieldId, currentSelection })
+  // useEffect(() => { if (fieldId === 'pota') console.log('originalValue', originalValue) }, [fieldId, originalValue])
+  // useEffect(() => { if (fieldId === 'pota') console.log('currentSelection', currentSelection) }, [currentSelection, fieldId])
 
   useEffect(() => {
+    // if (fieldId === 'theirCall') console.log('focusedRef useEffect', { currentSelection })
     if (focusedRef && isFocused && !multiline) {
       focusedRef.current = {
         onNumberKey: (number) => {
           if (!isFocused) return
 
           let { start, end } = currentSelection
-
-          if (!start && !end) {
-            // If selection position is unknown, we assume the cursor is at the end of the string
-            start = originalValue.length
-            end = originalValue.length
-          }
+          // If selection position is unknown, we assume the cursor is at the end of the string
+          start = start ?? originalValue.length ?? 0
+          end = end ?? originalValue.length ?? 0
 
           const newValue = originalValue.substring(0, start) + number + originalValue.substring(end)
-
+          // console.log('onNumberKey', { start, end, newValue })
           handleChange && handleChange({
             nativeEvent: { text: newValue, target: actualInnerRef.current._nativeTag },
-            fromVirtualNumericKeys: true
+            fromVirtualNumericKeys: true,
+            selectionFromVirtualNumericKeys: { start, end }
           })
-
-          setCurrentSelection({ start: start + 1, end: end + 1 })
-          actualInnerRef.current.setSelection(start + 1, end + 1)
         }
       }
     }
@@ -208,13 +216,9 @@ export default function ThemedTextInput (props) {
 
     if (keyboard === 'numbers') dumbDownKeyboardProps.keyboardType = 'numbers-and-punctuation'
 
-    if (keyboard === 'dumb') {
-      return dumbDownKeyboardProps
-    } else {
-      return {
-        keyboardAppearance: (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
-      }
-    }
+    dumbDownKeyboardProps.keyboardAppearance = (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
+
+    return dumbDownKeyboardProps
   }, [keyboard, themeStyles.isDarkMode, uppercase, multiline])
 
   const renderInput = useCallback((props) => {
@@ -249,12 +253,12 @@ export default function ThemedTextInput (props) {
         onFocus={handleFocus}
         onBlur={handleBlur}
         onSelectionChange={handleSelectionChange}
-        // selection={{ start: currentSelection.start, end: currentSelection.end }}
+        selection={currentSelection}
       />
     )
   }, [
     strValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
-    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange
+    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange, currentSelection
   ])
 
   return (
