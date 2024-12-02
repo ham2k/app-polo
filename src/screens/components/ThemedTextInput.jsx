@@ -98,12 +98,16 @@ export default function ThemedTextInput (props) {
         // })
         // Sometimes, updating the value causes the native text field to also update the selection
         // to a value that is not the one we want. So we have to delay our update in order to overwrite it.
+        setCurrentSelection({
+          start: start + (text.length - originalValue.length),
+          end: end + (text.length - originalValue.length)
+        })
         setTimeout(() => {
           setCurrentSelection({
             start: start + (text.length - originalValue.length),
             end: end + (text.length - originalValue.length)
           })
-        }, 1)
+        }, 20)
       }
 
       event.nativeEvent.text = text
