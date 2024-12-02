@@ -11,7 +11,8 @@
       "Fix problems with external keyboards on Android",
       "Fix bugs in various input fields",
       "Fix lookup of portable calls",
-      "Fix reference prefix for ITABOTA (by M1SDH)"
+      "Fix reference prefix for ITABOTA (by M1SDH)",
+      "Fix SOTA self-spot reliability (by M1SDH)"
     ]
   },
   "24.11.2": {
