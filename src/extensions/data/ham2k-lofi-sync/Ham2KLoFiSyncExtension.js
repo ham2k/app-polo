@@ -5,10 +5,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import Config from 'react-native-config'
 import packageJson from '../../../../package.json'
 import { logRemotely } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
-import { setExtensionSettings, setSettings } from '../../../store/settings'
+import { selectExtensionSettings, selectSettings } from '../../../store/settings'
 
 export const Info = {
   key: 'ham2k-lofi',
@@ -35,19 +36,24 @@ const DEBUG = true
 
 const SyncHook = {
   ...Info,
-  sendChanges: async ({ qsos, operations, settings, dispatch }) => {
-    let { server, secret, token } = settings?.extensions?.['ham2k-lofi']
+  sendChanges: ({ qsos, operations }) => async (dispatch, getState) => {
+    console.log('sendChanges')
+    console.log('settings', Object.keys(getState().settings.extensions))
+    let { server } = selectExtensionSettings(getState(), Info.key) || {}
+    const { operatorCall } = selectSettings(getState())
+    let token = GLOBAL.syncLoFiToken
+    const secret = Config.HAM2K_LOFI_SECRET || 'no-secret'
 
     if (server.endsWith('/')) server = server.slice(0, -1)
 
     let retries = 2 // just so that we can re-authenticate if needed
     while (retries > 0) {
       retries--
-      logRemotely({ message: 'sending changes', qsos: qsos?.length, operations: operations?.length, server, token })
+      logRemotely({ message: 'sending changes', qsos: qsos?.length, operations: operations?.length, server, token, secret })
+      if (DEBUG) console.log('sending changes', { qsos: qsos?.length, operations: operations?.length, server, token, secret })
 
       if (!token) {
         if (DEBUG) console.log('Ham2K LoFi Authenticating')
-        secret = 'device'
         const response = await fetch(`${server}/v1/client`, {
           method: 'POST',
           headers: {
@@ -61,21 +67,21 @@ const SyncHook = {
               secret
             },
             account: {
-              call: settings.operatorCall
+              call: operatorCall
             }
           })
         })
 
         const json = await response.json()
-        processResponseMeta({ json, response, dispatch, settings })
+        processResponseMeta({ json, response, dispatch })
 
         if (response.status === 200) {
           if (DEBUG) console.log('-- auth ok', json)
           token = json.token
-          dispatch(setExtensionSettings({ key: 'ham2k-lofi', token, secret }))
+          GLOBAL.syncLoFiToken = token
         } else {
           if (DEBUG) console.log('-- auth failed')
-          dispatch(setExtensionSettings({ key: 'ham2k-lofi', token: null }))
+          GLOBAL.syncLoFiToken = token
           throw new Error('Authentication Failed')
         }
       }
@@ -102,7 +108,7 @@ const SyncHook = {
           const json = await response.json()
           if (DEBUG) console.log(' -- response', response.status, json)
 
-          processResponseMeta({ json, response, dispatch, settings })
+          processResponseMeta({ json, response, dispatch })
 
           if (response.status === 401) {
             if (DEBUG) console.log(' -- auth failed')
@@ -116,16 +122,22 @@ const SyncHook = {
   }
 }
 
-function processResponseMeta ({ json, response, dispatch, settings }) {
+function processResponseMeta ({ json, response, dispatch }) {
   try {
     if (json?.meta?.suggestedSyncBatchSize || json?.meta?.suggested_sync_batch_size) {
-      dispatch(setSettings({ syncBatchSize: Number.parseInt(json.meta.suggestedSyncBatchSize || json.meta.suggested_sync_batch_size, 10) }))
+      GLOBAL.syncBatchSize = Number.parseInt(json.meta.suggestedSyncBatchSize || json.meta.suggested_sync_batch_size, 10)
+      if (GLOBAL.syncBatchSize < 1) GLOBAL.syncBatchSize = undefined
+      if (isNaN(GLOBAL.syncBatchSize)) GLOBAL.syncBatchSize = undefined
     }
     if (json?.meta?.suggestedSyncLoopDelay || json?.meta?.suggested_sync_loop_delay) {
-      dispatch(setSettings({ syncLoopDelay: Number.parseInt(json.meta.suggestedSyncLoopDelay || json.meta.suggested_sync_loop_delay, 10) * 1000 }))
+      GLOBAL.syncLoopDelay = Number.parseInt(json.meta.suggestedSyncLoopDelay || json.meta.suggested_sync_loop_delay, 10) * 1000
+      if (GLOBAL.syncLoopDelay < 1) GLOBAL.syncLoopDelay = undefined
+      if (isNaN(GLOBAL.syncLoopDelay)) GLOBAL.syncLoopDelay = undefined
     }
     if (json?.meta?.suggestedSyncCheckPeriod || json?.meta?.suggested_sync_check_period) {
-      dispatch(setSettings({ syncCheckPeriod: Number.parseInt(json.meta.suggestedSyncCheckPeriod || json.meta.suggested_sync_check_period, 10) * 1000 }))
+      GLOBAL.syncCheckPeriod = Number.parseInt(json.meta.suggestedSyncCheckPeriod || json.meta.suggested_sync_check_period, 10) * 1000
+      if (GLOBAL.syncCheckPeriod < 1) GLOBAL.syncCheckPeriod = undefined
+      if (isNaN(GLOBAL.syncCheckPeriod)) GLOBAL.syncCheckPeriod = undefined
     }
   } catch (e) {
     console.error('Error parsing sync meta', e, json)

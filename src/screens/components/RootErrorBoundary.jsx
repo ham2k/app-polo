@@ -17,6 +17,7 @@ import packageJson from '../../../package.json'
 
 import { reportError } from '../../distro'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import GLOBAL from '../../GLOBAL'
 
 function prepareStyles (baseStyles) {
   return {
@@ -104,6 +105,7 @@ function detailsText (error) {
 
   let platform = `Platform ${DeviceInfo.getSystemName()} ${DeviceInfo.getSystemVersion()}`
   platform += ` - ${DeviceInfo.getManufacturerSync()} ${DeviceInfo.getDeviceId()}`
+  platform += ` - ${GLOBAL.deviceId.slice(0, 8)}`
   platform += ` -  ${DeviceInfo.getInstallerPackageNameSync()} - ${DeviceInfo.getInstallReferrerSync()}`
 
   return [error.message, stack, version, platform].join('\n\n')
