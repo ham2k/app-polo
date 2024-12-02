@@ -14,43 +14,40 @@ import { queryQSOs } from '../qsos'
 import { selectOneMinuteTick, startTickTock } from '../time'
 import { useSelector } from 'react-redux'
 import { logRemotely } from '../../distro'
-import { log } from '@react-native-firebase/crashlytics'
 
 const SYNC_LOOP_DEBOUNCE_DELAY = 1000 * 0.5 // 500ms, minimum time to wait for more changes before starting a new sync loop
 const SYNC_LOOP_DEBOUNCE_MAX = 1000 * 3 // 3 seconds, maximum time to wait for more changes before starting a new sync loop
 
-const SYNC_LOOP_DELAY = 1000 * 5 // 5 seconds, time between sending batches of changes
-const SYNC_CHECK_PERIOD = 1000 * 60 * 1 // 1 minutes, time between checking if a new sync loop is needed
+const DEFAULT_SYNC_LOOP_DELAY = 1000 * 5 // 5 seconds, time between sending batches of changes
+const DEFAULT_SYNC_CHECK_PERIOD = 1000 * 60 * 1 // 1 minutes, time between checking if a new sync loop is needed
 
 const SMALL_BATCH_SIZE = 5 // QSOs or Operations to send on a quick `syncLatest...`
-const LARGE_BATCH_SIZE = 50 // QSOs or Operations to send on a regular sync loop
+const DEFAULT_LARGE_BATCH_SIZE = 50 // QSOs or Operations to send on a regular sync loop
 
-const DEBUG = true
+const DEBUG = false
 
 let errorCount = 0
 
-export async function syncLatestQSOs ({ getState, dispatch }) {
+export async function syncLatestQSOs ({ dispatch }) {
   scheduleDebouncedFunctionForSyncLoop(async () => {
-    await syncOneBatchOfChanges({ getState, dispatch, batchSize: SMALL_BATCH_SIZE })
+    await syncOneBatchOfChanges({ dispatch, batchSize: SMALL_BATCH_SIZE })
   })
 }
 
-export async function syncLatestOperations ({ getState, dispatch }) {
+export async function syncLatestOperations ({ dispatch }) {
   scheduleDebouncedFunctionForSyncLoop(async () => {
-    await syncOneBatchOfChanges({ getState, dispatch, batchSize: SMALL_BATCH_SIZE })
+    await syncOneBatchOfChanges({ dispatch, batchSize: SMALL_BATCH_SIZE })
   })
 }
 
-async function syncOneBatchOfChanges ({ qsos, operations, getState, dispatch, batchSize = 0 }) {
+async function syncOneBatchOfChanges ({ qsos, operations, dispatch, batchSize = 0 }) {
   if (DEBUG) console.log('syncOneBatchOfChanges')
   takeOverSyncLoop()
   logRemotely({ message: 'syncOneBatchOfChanges', global: GLOBAL.syncEnabled, qsos: qsos?.length, operations: operations?.length, batchSize })
   if (!GLOBAL.syncEnabled) return
 
-  const settings = getState().settings
-
   if (!batchSize) {
-    batchSize = settings.syncBatchSize || LARGE_BATCH_SIZE
+    batchSize = GLOBAL.syncBatchSize || DEFAULT_LARGE_BATCH_SIZE
   }
 
   let scheduleAnotherLoop = true
@@ -82,7 +79,7 @@ async function syncOneBatchOfChanges ({ qsos, operations, getState, dispatch, ba
     logRemotely({ message: 'syncing', qsos: qsos.length, operations: operations.length })
     if (qsos.length > 0 || operations.length > 0) {
       if (DEBUG) console.log(' -- calling hook')
-      const ok = await syncHook.sendChanges({ qsos, operations, settings, dispatch })
+      const ok = await dispatch(syncHook.sendChanges({ qsos, operations }))
       if (DEBUG) console.log(' -- result', ok)
       if (ok) {
         if (DEBUG) console.log(' -- marking as synced')
@@ -91,7 +88,7 @@ async function syncOneBatchOfChanges ({ qsos, operations, getState, dispatch, ba
         GLOBAL.lastSyncLoop = Date.now()
       }
     } else {
-      console.log(' -- no changes to sync')
+      if (DEBUG) console.log(' -- no changes to sync')
     }
 
     if (qsos.length < batchSize && operations.length < batchSize) {
@@ -102,7 +99,7 @@ async function syncOneBatchOfChanges ({ qsos, operations, getState, dispatch, ba
 
     if (scheduleAnotherLoop || lastDebouncedSync > 0) {
       if (DEBUG) console.log(' -- scheduling next loop')
-      scheduleNextSyncLoop({ getState, dispatch })
+      scheduleNextSyncLoop({ dispatch })
     }
 
     errorCount = 0
@@ -111,10 +108,10 @@ async function syncOneBatchOfChanges ({ qsos, operations, getState, dispatch, ba
     console.error('Error syncing QSOs', error)
     errorCount += 1
     if (errorCount < 8) {
-      const delay = (settings.syncLoopDelay || SYNC_LOOP_DELAY) + (2 ** errorCount) * 1000
-      console.log(' -- retrying in ', delay)
+      const delay = (GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY) + (2 ** errorCount) * 1000
+      if (DEBUG) console.log(' -- retrying in ', delay)
       logRemotely({ message: 'retrying in', delay })
-      scheduleNextSyncLoop({ getState, dispatch, delay })
+      scheduleNextSyncLoop({ dispatch, delay })
     }
   }
 }
@@ -164,17 +161,15 @@ export function scheduleDebouncedFunctionForSyncLoop (fn) {
   }
 }
 
-export function scheduleNextSyncLoop ({ getState, dispatch, delay = 0 }, loop) {
-  const settings = getState().settings
-
+export function scheduleNextSyncLoop ({ dispatch, delay = 0 }, loop) {
   if (!delay) {
-    delay = settings.syncLoopDelay || SYNC_LOOP_DELAY
+    delay = GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY
   }
 
   if (!nextSyncLoopInterval || nextSyncLoopInterval === true) {
     if (DEBUG) console.log(' -- scheduling next loop', delay)
     logRemotely({ message: 'scheduling next loop', delay })
-    nextSyncLoopInterval = setTimeout(() => syncOneBatchOfChanges({ getState, dispatch }), delay)
+    nextSyncLoopInterval = setTimeout(() => syncOneBatchOfChanges({ dispatch }), delay)
   }
 }
 
@@ -199,16 +194,16 @@ export function useSyncLoop ({ dispatch, settings }) {
   useEffect(() => {
     setImmediate(() => {
       dispatch(startTickTock())
-      console.log('sync tick', oneMinuteTick, GLOBAL.lastSyncLoop)
+      if (DEBUG) console.log('sync tick', oneMinuteTick, GLOBAL.lastSyncLoop)
       if (GLOBAL.syncEnabled) {
-        const maxTime = settings.syncCheckPeriod || SYNC_CHECK_PERIOD
+        const maxTime = GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD
 
-        console.log('-- sync enabled', (oneMinuteTick - (GLOBAL.lastSyncLoop || 0)))
+        if (DEBUG) console.log('-- sync enabled', (oneMinuteTick - (GLOBAL.lastSyncLoop || 0)))
         if ((oneMinuteTick - (GLOBAL.lastSyncLoop || 0)) > maxTime) {
-          console.log('-- sync due')
-          dispatch((_dispatch, getState) => scheduleNextSyncLoop({ getState, dispatch: _dispatch }))
+          if (DEBUG) console.log('-- sync due')
+          scheduleNextSyncLoop({ dispatch })
         }
       }
     })
-  }, [settings?.syncCheckPeriod, dispatch, oneMinuteTick])
+  }, [dispatch, oneMinuteTick])
 }

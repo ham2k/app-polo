@@ -77,9 +77,9 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     qso.uuid = qso.uuid || UUID.v1()
     qso.operation = uuid
     qso.createdAtMillis = qso.createdAtMillis || now
-    qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId
+    qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
     qso.updatedAtMillis = now
-    qso.updatedOnDeviceId = GLOBAL.deviceId
+    qso.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
 
     qso.key = qsoKey(qso)
 
@@ -136,9 +136,9 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
     qso.key = qsoKey(qso)
     qso.uuid = qso.uuid || UUID.v1()
     qso.createdAtMillis = qso.createdAtMillis || now
-    qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId
+    qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
     qso.updatedAtMillis = now
-    qso.updatedOnDeviceId = GLOBAL.deviceId
+    qso.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
 
     // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     await dbExecute(`
@@ -166,9 +166,9 @@ export const saveQSOsForOperation = (uuid, { synced = false }) => async (dispatc
       qso.key = qsoKey(qso)
       qso.uuid = qso.uuid || UUID.v1()
       qso.createdAtMillis = qso.createdAtMillis || now
-      qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId
+      qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
       qso.updatedAtMillis = now
-      qso.updatedOnDeviceId = GLOBAL.deviceId
+      qso.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
 
       const json = JSON.stringify(qso)
 

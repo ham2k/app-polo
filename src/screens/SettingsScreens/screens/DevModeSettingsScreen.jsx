@@ -32,6 +32,7 @@ import { dbSelectAll } from '../../../store/db/db'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { resetSyncedStatus } from '../../../store/sync'
 import { selectFiveSecondsTick } from '../../../store/time'
+import GLOBAL from '../../../GLOBAL'
 
 function prepareStyles (baseStyles) {
   return {
@@ -190,7 +191,8 @@ function systemInfo () {
 
 * ${DeviceInfo.getSystemName()} ${DeviceInfo.getSystemVersion()}
 * ${DeviceInfo.getManufacturerSync()} ${DeviceInfo.getDeviceId()}
-*  ${DeviceInfo.getInstallerPackageNameSync()} - ${DeviceInfo.getInstallReferrerSync()}
+* ${DeviceInfo.getInstallerPackageNameSync()} - ${DeviceInfo.getInstallReferrerSync()}
+* Device ${GLOBAL.deviceId.slice(0, 8)}… "${GLOBAL.deviceName}"
 
 ### Resources
 
