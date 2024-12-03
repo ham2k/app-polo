@@ -124,7 +124,7 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
   const accountSettingHooks = useMemo(() => {
     const hooks = findHooks('setting').filter(hook => hook.category === 'account' && hook.SettingItem)
     return hooks
-  }, [])
+  }, [settings]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <ScrollView style={{ flex: 1 }}>
