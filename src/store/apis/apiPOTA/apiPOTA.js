@@ -85,6 +85,22 @@ export const apiPOTA = createApi({
         })
         return response
       }
+    }),
+
+    spotComments: builder.query({
+      query: ({ call, park }) => `spot/comments/${encodeURIComponent(call)}/${park}`,
+      keepUnusedDataFor: 15,
+      transformResponse: (response) => {
+        if (response === null) {
+          return []
+        }
+        response.forEach(spot => {
+          spot.frequency = Number.parseFloat(spot.frequency)
+          spot.band = bandForFrequency(spot.frequency)
+          spot.timeInMillis = Date.parse(spot.spotTime + 'Z')
+        })
+        return response
+      }
     })
   })
 })
@@ -128,6 +144,6 @@ export function useLookupParkQuery (arg, options) {
   }
 }
 
-export const { endpoints, reducerPath, reducer, middleware, useSpotsQuery } = apiPOTA
+export const { endpoints, reducerPath, reducer, middleware, useSpotsQuery, useSpotCommentsQuery } = apiPOTA
 
 export default apiPOTA.reducer

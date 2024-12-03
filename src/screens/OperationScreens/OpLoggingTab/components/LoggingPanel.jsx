@@ -184,7 +184,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       } else if (value) {
         guess = annotateFromCountryFile({ prefix: value, baseCall: value })
       }
-      updateQSO({ their: { call: value, guess } })
+      updateQSO({ their: { call: value, guess }, qsl: undefined })
     } else if (fieldId === 'theirSent') {
       updateQSO({ their: { sent: value } })
     } else if (fieldId === 'ourSent') {
