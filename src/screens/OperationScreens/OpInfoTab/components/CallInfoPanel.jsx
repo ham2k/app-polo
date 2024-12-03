@@ -194,6 +194,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                 confirmations.map((confirmation, i) => (
                   <View key={i} style={styles.section}>
                     <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>{confirmation.title}</Text>
+                    {confirmation.isGuess && <Text style={{ fontWeight: 'bold' }}>Potential call: {confirmation.call}</Text>}
                     <Ham2kMarkdown>{confirmation.note}</Ham2kMarkdown>
                   </View>
                 ))

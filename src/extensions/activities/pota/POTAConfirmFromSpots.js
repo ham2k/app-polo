@@ -15,7 +15,21 @@ export const ConfirmFromSpotsHook = {
   ...Info,
   confirmationName,
 
-  confirmQSO: async ({ operation, qso, timestamp, dispatch }) => {
+  fetchConfirmation: (qso) => {
+    const potaSpot = qso?.qsl && qso.qsl[confirmationName]
+    if (!potaSpot || !potaSpot.spot) {
+      return
+    }
+
+    return {
+      title: 'POTA Spot',
+      note: potaSpot.spot.comments,
+      call: potaSpot.spot.spotter,
+      isGuess: potaSpot.isGuess
+    }
+  },
+
+  fetchSpots: async ({ operation, dispatch }) => {
     if (!operation.stationCall) {
       return
     }
@@ -25,58 +39,22 @@ export const ConfirmFromSpotsHook = {
       return
     }
 
-    const args = { call: operation.stationCall, park, timestamp }
-    const apiPromise = await dispatch(apiPOTA.endpoints.spotComments.initiate(args))
+    const args = { call: operation.stationCall, park }
+    const apiPromise = await dispatch(apiPOTA.endpoints.spotComments.initiate(args, { forceRefetch: true }))
     await Promise.all(dispatch(apiPOTA.util.getRunningQueriesThunk()))
     apiPromise.unsubscribe?.()
 
     const spots = apiPromise.data
 
-    const spot = spots.find(it => it.spotter === qso.their.call)
-    if (!spot) {
-      return
-    }
-
-    if (spot.source.toUpperCase() === 'RBN') {
-      return
-    }
-
-    if (spot.mode !== qso.mode) {
-      return
-    }
-
-    if (!sameUTCDay(spot.timeInMillis, qso.startAtMillis)) {
-      return
-    }
-
-    return {
-      received: true,
-      comment: spot.comments
-    }
-  },
-
-  fetchConfirmation: (qso) => {
-    const potaSpot = qso?.qsl && qso.qsl[confirmationName]
-    if (!potaSpot || !potaSpot.received) {
-      return
-    }
-
-    return {
-      title: 'POTA Spot',
-      note: potaSpot.comment
-    }
+    return spots
+      .filter(spot => spot.source.toUpperCase() !== 'RBN')
+      .map(spot => {
+        return {
+          call: spot.spotter,
+          timeInMillis: spot.timeInMillis,
+          mode: spot.mode,
+          spot
+        }
+      })
   }
-}
-
-function sameUTCDay (aMillis, bMillis) {
-  if (!aMillis || !bMillis) {
-    return false
-  }
-
-  const dateA = new Date(aMillis)
-  const dateB = new Date(bMillis)
-
-  return dateA.getUTCDate() === dateB.getUTCDate() &&
-    dateA.getUTCMonth() === dateB.getUTCMonth() &&
-    dateA.getUTCFullYear() === dateB.getUTCFullYear()
 }
