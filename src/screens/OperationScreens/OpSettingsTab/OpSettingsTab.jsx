@@ -57,7 +57,7 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const [stationInfo, stationInfoColor] = useMemo(() => {
     const stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
-    const operatorCall = operation?.operatorCall ?? settings?.operatorCall ?? ''
+    const operatorCall = operation?.local?.operatorCall ?? settings?.operatorCall ?? ''
     if (stationCall && operatorCall && stationCall !== operatorCall) {
       return [`\`${stationCall}\` (operated by \`${operatorCall}\`)`, styles.colors.onSurface]
     } else if (stationCall) {
@@ -65,7 +65,7 @@ export default function OpSettingsTab ({ navigation, route }) {
     } else {
       return ['NO STATION CALLSIGN DEFINED', styles.colors.error]
     }
-  }, [operation?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors])
+  }, [operation?.local?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors])
 
   const refHandlers = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]
@@ -83,7 +83,7 @@ export default function OpSettingsTab ({ navigation, route }) {
       <Ham2kListSection>
 
         <Ham2kListItem
-          title="Station Info"
+          title="Station & Operator"
           description={() => <Ham2kMarkdown style={{ ...styles.list.description, color: stationInfoColor }} compact={true}>{stationInfo}</Ham2kMarkdown>}
           titleStyle={{ color: stationInfoColor }}
           left={() => <List.Icon color={stationInfoColor} style={{ marginLeft: styles.oneSpace * 2 }} icon="radio-tower" />}

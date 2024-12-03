@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { setOperationData } from '../../store/operations'
+import { setOperationLocalData } from '../../store/operations'
 import { fmtDateTimeZuluDynamic } from '../../tools/timeFormats'
 
 const Info = {
@@ -109,15 +109,15 @@ const NowTimeCommandHook = {
   invokeCommand: (match, { qso, handleFieldChange, dispatch, operation }) => {
     if (match[1] === 'NOW') {
       handleFieldChange({ fieldId: 'time', value: new Date().valueOf() })
-      dispatch(setOperationData({ uuid: operation.uuid, _manualTime: false }))
+      dispatch(setOperationLocalData({ uuid: operation.uuid, _manualTime: false }))
       return 'Time set to now'
     } else if (match[1] === 'TODAY') {
       handleFieldChange({ fieldId: 'time', value: new Date().valueOf() })
-      dispatch(setOperationData({ uuid: operation.uuid, _manualTime: true }))
+      dispatch(setOperationLocalData({ uuid: operation.uuid, _manualTime: true }))
       return 'Time set to today'
     } else if (match[1] === 'YESTERDAY') {
       handleFieldChange({ fieldId: 'time', value: new Date().valueOf() - 1000 * 60 * 60 * 24 })
-      dispatch(setOperationData({ uuid: operation.uuid, _manualTime: true }))
+      dispatch(setOperationLocalData({ uuid: operation.uuid, _manualTime: true }))
       return 'Time set to yesterday'
     }
   }

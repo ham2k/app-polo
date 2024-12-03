@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { setOperationData } from '../../store/operations'
+import { setOperationLocalData } from '../../store/operations'
 
 const Info = {
   key: 'commands-operator',
@@ -37,7 +37,7 @@ const OperatorCommandHook = {
     if (match[2].length < 3) return ''
     const operatorCall = match[2].toUpperCase()
     if (operatorCall) {
-      dispatch(setOperationData({ uuid: operation.uuid, operatorCall }))
+      dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall }))
       return `Operator set to ${operatorCall}`
     }
   }

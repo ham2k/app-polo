@@ -6,7 +6,7 @@
  */
 
 import SQLite from 'react-native-sqlite-2'
-import { createTables } from './createTables'
+import { createTables } from './dbSchema'
 import { logRemotely } from '../../distro'
 
 const DB_NAME = 'polo.sqlite'
@@ -56,8 +56,13 @@ export function dbExecute (sql, params, options = {}) {
       },
       (tx, error) => {
         logRemotely({ error: `Error in dbExecute: ${error.message}`, sql, params })
-        console.info('Error executing SQL', { sql, params, error })
-        reject(error)
+        if (options.ignoreError && error.message.indexOf(options.ignoreError) >= 0) {
+          console.info('Ignoring error in SQL', { sql, params, error })
+          resolve(false)
+        } else {
+          console.info('Error executing SQL', { sql, params, error })
+          reject(error)
+        }
       }
     )
   })

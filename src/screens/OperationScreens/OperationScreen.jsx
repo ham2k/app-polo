@@ -70,7 +70,7 @@ export default function OperationScreen (props) {
     let options = {}
     if (operation?.stationCall) {
       options = {
-        title: buildTitleForOperation({ operatorCall: operation.operatorCall, stationCall: operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
+        title: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
         subTitle: operation.subtitle
       }
     } else {
@@ -310,18 +310,18 @@ export default function OperationScreen (props) {
   }
 }
 
-export function buildTitleForOperation (operation, { includeCall = true } = {}) {
-  if (operation?.stationCall) {
-    let call = operation?.stationCall
-    if (operation.operatorCall && operation.operatorCall !== operation.stationCall) {
-      call = `${call} (op ${operation.operatorCall})`
+export function buildTitleForOperation (operationAttrs, { includeCall = true } = {}) {
+  if (operationAttrs.stationCall) {
+    let call = operationAttrs.stationCall
+    if (operationAttrs.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
+      call = `${call} (op ${operationAttrs.operatorCall})`
     }
     const parts = []
-    if (operation.userTitle) {
-      parts.push(operation.userTitle)
+    if (operationAttrs.userTitle) {
+      parts.push(operationAttrs.userTitle)
     }
-    if (operation.title && operation.title !== 'New Operation') {
-      parts.push(operation.title)
+    if (operationAttrs.title && operationAttrs.title !== 'New Operation') {
+      parts.push(operationAttrs.title)
     }
     let title = parts.join(' ')
     title = title || 'General Operation'

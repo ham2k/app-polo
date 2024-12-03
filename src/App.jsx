@@ -129,7 +129,7 @@ function MainApp ({ navigationTheme }) {
           />
 
           <Stack.Screen name="OperationStationInfo"
-            options={{ title: 'Station Info', headerBackTitle: 'Operation' }}
+            options={{ title: 'Station & Operator Info', headerBackTitle: 'Operation' }}
             component={OperationStationInfoScreen}
           />
 

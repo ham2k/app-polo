@@ -11,7 +11,7 @@ import { qsoKey } from '@ham2k/lib-qson-tools'
 import GLOBAL from '../../../GLOBAL'
 
 import { actions } from '../qsosSlice'
-import { actions as operationActions, saveOperationAdditionalData } from '../../operations'
+import { actions as operationActions, saveOperationLocalData } from '../../operations'
 import { dbExecute, dbSelectAll, dbTransaction } from '../../db/db'
 import { syncLatestQSOs } from '../../sync'
 
@@ -19,6 +19,8 @@ export const prepareQSORow = (row) => {
   const data = JSON.parse(row.data)
   data.uuid = row.uuid
   data.operation = row.operation
+  // data.deleted = row.deleted // Let the `deleted` in the data take precedence
+
   if (data.startOnMillis) data.startAtMillis = data.startOnMillis
   if (data.startOn) data.startAt = data.startOn
   if (data.endOnMillis) data.endAtMillis = data.endOnMillis
@@ -57,7 +59,7 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
     operationInfo = { ...operationInfo, startAtMillisMin, startAtMillisMax, qsoCount }
     setImmediate(() => {
       dispatch(operationActions.setOperation(operationInfo))
-      dispatch(saveOperationAdditionalData(operationInfo))
+      dispatch(saveOperationLocalData(operationInfo))
     })
   }
 }
@@ -94,12 +96,12 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     await dbExecute(`
       INSERT INTO qsos
-      (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      ON CONFLICT DO UPDATE SET operation = ?, key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, synced = ?
+      (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, deleted, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT DO UPDATE SET operation = ?, key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, deleted = ?, synced = ?
       `, [
       qso.uuid,
-      qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, synced,
-      qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, synced
+      qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced,
+      qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced
     ]
     )
   }
@@ -123,7 +125,7 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
   setImmediate(() => {
     console.log('op update', { startAtMillisMin, startAtMillisMax, qsoCount: operationInfo.qsoCount })
     dispatch(operationActions.setOperation(operationInfo))
-    dispatch(saveOperationAdditionalData(operationInfo))
+    dispatch(saveOperationLocalData(operationInfo))
     if (!synced) syncLatestQSOs({ dispatch, getState })
   })
 }
@@ -143,10 +145,10 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
     // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     await dbExecute(`
       UPDATE qsos
-      SET key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, synced = ?
+      SET key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, deleted = ?, synced = ?
       WHERE uuid = ?
       `, [
-      qso.key, JSON.stringify(qso), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, false,
+      qso.key, JSON.stringify(qso), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, false,
       qso.uuid
     ])
 
@@ -175,12 +177,12 @@ export const saveQSOsForOperation = (uuid, { synced = false }) => async (dispatc
       // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
       await dbExecute(`
         INSERT INTO qsos
-        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT DO UPDATE SET operation = ?, key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, synced = ?
+        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, deleted, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT DO UPDATE SET operation = ?, key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, deleted, synced = ?
       `, [
         qso.uuid,
-        uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, synced,
-        uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, synced
+        uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced,
+        uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced
       ])
     }
   })

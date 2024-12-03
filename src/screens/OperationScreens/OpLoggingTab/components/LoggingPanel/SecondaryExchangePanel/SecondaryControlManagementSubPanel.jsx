@@ -12,7 +12,7 @@ import { Icon, Text } from 'react-native-paper'
 
 import LoggerChip from '../../../../components/LoggerChip'
 import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
-import { setOperationData } from '../../../../../../store/operations'
+import { setOperationLocalData } from '../../../../../../store/operations'
 import { setSettings } from '../../../../../../store/settings'
 
 export const SecondaryControlManagementSubPanel = ({
@@ -28,7 +28,7 @@ export const SecondaryControlManagementSubPanel = ({
     } else {
       controls[key] = true
     }
-    dispatch(setOperationData({ uuid: operation.uuid, secondaryControls: controls }))
+    dispatch(setOperationLocalData({ uuid: operation.uuid, secondaryControls: controls }))
     dispatch(setSettings({ secondaryControls: controls }))
   }, [dispatch, operation.uuid, secondaryControlSettings])
 

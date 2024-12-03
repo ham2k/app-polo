@@ -18,7 +18,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
-import { setOperationData } from '../../../../store/operations'
+import { setOperationData, setOperationLocalData } from '../../../../store/operations'
 import { useUIState } from '../../../../store/ui'
 import { addQSO, addQSOs } from '../../../../store/qsos'
 import { setVFO } from '../../../../store/station/stationSlice'
@@ -263,7 +263,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
             }
           }
           // No need to await this one, can happen in parallel
-          dispatch(setOperationData({ uuid: operation.uuid, _nextManualTime: nextManualTime }))
+          dispatch(setOperationLocalData({ uuid: operation.uuid, _nextManualTime: nextManualTime }))
         }
 
         delete qso._isNew
@@ -283,7 +283,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         if (qso.endAtMillis) qso.endAt = new Date(qso.endAtMillis).toISOString()
         qso.our = qso.our || {}
         qso.our.call = qso.our.call || ourInfo?.call
-        qso.our.operatorCall = qso.our.operatorCall || operation.operatorCall
+        qso.our.operatorCall = qso.our.operatorCall || operation.local?.operatorCall
         qso.our.sent = qso.our.sent || defaultRSTForMode(qso.mode)
 
         qso.their = qso.their || {}
@@ -628,8 +628,8 @@ function prepareNewQSO (operation, qsos, vfo, settings) {
     power: vfo.power,
     _isNew: true
   }
-  if (operation._nextManualTime) {
-    qso.startAtMillis = operation._nextManualTime
+  if (operation.local?._nextManualTime) {
+    qso.startAtMillis = operation.local?._nextManualTime
     qso._manualTime = true
   }
 

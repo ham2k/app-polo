@@ -19,7 +19,7 @@ import ThemedTextInput from '../../../../../components/ThemedTextInput'
 import { selectRuntimeOnline } from '../../../../../../store/runtime'
 import { findHooks } from '../../../../../../extensions/registry'
 import { findRef } from '../../../../../../tools/refTools'
-import { setOperationData } from '../../../../../../store/operations'
+import { setOperationLocalData } from '../../../../../../store/operations'
 
 const SECONDS_UNTIL_RESPOT = 30
 
@@ -43,20 +43,20 @@ export function SpotterControlInputs (props) {
   useEffect(() => {
     if (!inProgress) {
       if (vfo?.freq) {
-        if (vfo.freq !== operation?.spottedFreq) {
+        if (vfo.freq !== operation?.local?.spottedFreq) {
           setSpotterUI({
             message: `Spot at ${fmtFreqInMHz(vfo.freq)}`,
             disabled: false
           })
-          if (comments === undefined) setComments(operation?.spottedFreq ? 'QSY ' : 'QRV ')
-        } else if (now - (operation?.spottedAt || 0) > (1000 * SECONDS_UNTIL_RESPOT)) {
+          if (comments === undefined) setComments(operation?.local?.spottedFreq ? 'QSY ' : 'QRV ')
+        } else if (now - (operation?.local?.spottedAt || 0) > (1000 * SECONDS_UNTIL_RESPOT)) {
           setSpotterUI({
             message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
             disabled: false
           })
-        } else if (comments?.length > 0 && (now - (operation?.spottedAt || 0) < (1000 * 1))) {
+        } else if (comments?.length > 0 && (now - (operation?.local?.spottedAt || 0) < (1000 * 1))) {
           setSpotterUI({
-            message: `Spotted ${fmtDateTimeRelative(operation?.spottedAt)}`,
+            message: `Spotted ${fmtDateTimeRelative(operation?.local?.spottedAt)}`,
             disabled: false
           })
           setComments(undefined)
@@ -67,7 +67,7 @@ export function SpotterControlInputs (props) {
           })
         } else {
           setSpotterUI({
-            message: `Spotted ${fmtDateTimeRelative(operation?.spottedAt)}`,
+            message: `Spotted ${fmtDateTimeRelative(operation?.local?.spottedAt)}`,
             disabled: false
           })
         }
@@ -78,7 +78,7 @@ export function SpotterControlInputs (props) {
         })
       }
     }
-  }, [inProgress, vfo?.freq, operation?.spottedFreq, operation?.spottedAt, operation, now, comments])
+  }, [inProgress, vfo?.freq, operation?.local?.spottedFreq, operation?.local?.spottedAt, operation, now, comments])
 
   const activityHooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ operation, settings }), [operation, settings])
 
@@ -142,7 +142,7 @@ export async function postSpots ({ operation, vfo, comments, activityHooksWithSp
   setInProgress && setInProgress(false)
   setComments && setComments(undefined)
   if (ok) {
-    dispatch(setOperationData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
+    dispatch(setOperationLocalData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
     setCurrentSecondaryControl && setCurrentSecondaryControl(undefined)
   }
 }

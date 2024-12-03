@@ -106,7 +106,7 @@ const SeedCommandHook = {
           startAt: new Date(startAtMillis).toISOString()
         }
         oneQSO.their = { call, sent: randomRST(oneQSO.mode) }
-        oneQSO.our = { call: ourInfo.call, operatorCall: ourInfo.operatorCall || operation.operatorCall, sent: randomRST(oneQSO.mode) }
+        oneQSO.our = { call: ourInfo.call, operatorCall: ourInfo.operatorCall || operation.local?.operatorCall, sent: randomRST(oneQSO.mode) }
         oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
 
         qsos.push(oneQSO)

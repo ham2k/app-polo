@@ -15,23 +15,69 @@ import { actions as qsosActions } from '../../qsos'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { syncLatestOperations } from '../../sync'
 
-const prepareOperationRow = (row) => {
+const operationFromRow = (row) => {
   const data = JSON.parse(row.data)
+
+  data.local = JSON.parse(row.localData) || {}
+
+  data.uuid = row.uuid
+  data.deleted = row.deleted
+
+  // Backwards compatibility, remove in the future
+  if (data.createdOnMillis) {
+    data.createdAtMillis = data.createdOnMillis
+    delete data.createdOnMillis
+  }
+  if (data.updatedOnMillis) {
+    data.updatedAtMillis = data.updatedOnMillis
+    delete data.updatedOnMillis
+  }
+  if (data.startOnMillisMin) delete data.startOnMillisMin
+  if (data.startOnMillisMax) delete data.startOnMillisMax
+  if (data.startAtMillisMin) delete data.startAtMillisMin
+  if (data.startAtMillisMax) delete data.startAtMillisMax
+
+  ;['mode', 'band', 'power', 'freq', 'operatorCall', 'spottedAt', 'spottedFreq', 'secondaryControls'].forEach((key) => {
+    if (data[key]) {
+      data.local[key] = data[key]
+      delete data[key]
+    }
+  })
+
+  // Inject values from row into data
   if (row.startAtMillisMin) data.startAtMillisMin = row.startAtMillisMin
   if (row.startAtMillisMax) data.startAtMillisMax = row.startAtMillisMax
   if (row.qsoCount) data.qsoCount = row.qsoCount
 
-  if (data.startOnMillisMin) data.startAtMillisMin = data.startOnMillisMin
-  if (data.startOnMillisMax) data.startAtMillisMax = data.startOnMillisMax
-  if (data.createdOnMillis) data.createdAtMillis = data.createdOnMillis
-  if (data.updatedOnMillis) data.updatedAtMillis = data.updatedOnMillis
-
-  data.uuid = row.uuid
   return data
 }
 
-export const getOperations = () => async (dispatch, getState) => {
-  const oplist = await dbSelectAll('SELECT * FROM operations', [], { row: prepareOperationRow })
+const rowFromOperation = (operation) => {
+  const { uuid, local, deleted, startAtMillisMin, startAtMillisMax, qsoCount } = operation
+  const operationClone = { ...operation }
+  delete operationClone.local
+  delete operationClone.startAtMillisMin
+  delete operationClone.startAtMillisMax
+  delete operationClone.qsoCount
+  const data = JSON.stringify(operationClone)
+  const localData = JSON.stringify(local)
+
+  return { uuid, data, localData, startAtMillisMin, startAtMillisMax, qsoCount, deleted }
+}
+
+export const loadOperations = () => async (dispatch, getState) => {
+  const oplist = await dbSelectAll('SELECT * FROM operations WHERE deleted = 0', [], { row: operationFromRow })
+
+  const ophash = oplist.reduce((acc, op) => {
+    acc[op.uuid] = op
+    return acc
+  }, {})
+
+  return dispatch(actions.setOperations(ophash))
+}
+
+export const loadDeletedOperations = () => async (dispatch, getState) => {
+  const oplist = await dbSelectAll('SELECT * FROM operations WHERE deleted = 1', [], { row: operationFromRow })
 
   const ophash = oplist.reduce((acc, op) => {
     acc[op.uuid] = op
@@ -43,29 +89,25 @@ export const getOperations = () => async (dispatch, getState) => {
 
 export const queryOperations = async (query, params) => {
   let ops = []
-  ops = await dbSelectAll(`SELECT * FROM operations ${query}`, params, { row: prepareOperationRow })
+  ops = await dbSelectAll(`SELECT * FROM operations ${query}`, params, { row: operationFromRow })
   return ops
 }
+
 export const saveOperation = (operation, { synced = false } = {}) => async (dispatch, getState) => {
-  const { uuid, startAtMillisMin, startAtMillisMax, qsoCount } = operation
-  const operationClone = { ...operation }
-  console.log('saveOperation', operation)
-  delete operationClone.startAtMillisMin
-  delete operationClone.startAtMillisMax
-  delete operationClone.qsoCount
-  const json = JSON.stringify(operationClone)
+  const row = rowFromOperation(operation)
+  console.log('saveOperation', row)
   await dbExecute(
     `
       INSERT INTO operations
-        (uuid, data, startAtMillisMin, startAtMillisMax, qsoCount, synced)
-      VALUES (?, ?, ?, ?, ?, ?)
+        (uuid, data, localData, startAtMillisMin, startAtMillisMax, qsoCount, deleted, synced)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT DO
-        UPDATE SET data = ?, startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ?, synced = ?
+        UPDATE SET data = ?, localData = ?, startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ?, deleted = ?, synced = ?
     `,
     [
-      uuid,
-      json, startAtMillisMin, startAtMillisMax, qsoCount, synced,
-      json, startAtMillisMin, startAtMillisMax, qsoCount, synced
+      row.uuid,
+      row.data, row.localData, row.startAtMillisMin, row.startAtMillisMax, row.qsoCount, row.deleted, synced,
+      row.data, row.localData, row.startAtMillisMin, row.startAtMillisMax, row.qsoCount, row.deleted, synced
     ]
   )
   if (!synced) {
@@ -75,13 +117,13 @@ export const saveOperation = (operation, { synced = false } = {}) => async (disp
   }
 }
 
-export const saveOperationAdditionalData = (operation) => async (dispatch, getState) => {
-  const { uuid, startAtMillisMin, startAtMillisMax, qsoCount } = operation
+export const saveOperationLocalData = (operation) => async (dispatch, getState) => {
+  const row = rowFromOperation(operation)
   await dbExecute(
     `
-      UPDATE operations SET startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ? WHERE uuid = ?
+      UPDATE operations SET localData = ?, startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ? WHERE uuid = ?
     `,
-    [startAtMillisMin, startAtMillisMax, qsoCount, uuid]
+    [row.localData, row.startAtMillisMin, row.startAtMillisMax, row.qsoCount, row.uuid]
   )
 }
 
@@ -95,15 +137,23 @@ export const addNewOperation = (operation) => async (dispatch) => {
 }
 
 export const loadOperation = (uuid) => async (dispatch) => {
-  const operation = await dbSelectOne('SELECT * FROM operations WHERE uuid = ?', [uuid], { row: prepareOperationRow })
+  const operation = await dbSelectOne('SELECT * FROM operations WHERE uuid = ?', [uuid], { row: operationFromRow })
   dispatch(actions.setOperation(operation))
 }
 
 export const deleteOperation = (uuid) => async (dispatch) => {
-  await dbExecute('DELETE FROM operations WHERE uuid = ?', [uuid])
-  await dbExecute('DELETE FROM qsos WHERE operation = ?', [uuid])
+  await dbExecute('UPDATE operations SET deleted = ? WHERE uuid = ?', [true, uuid])
+  await dbExecute('UPDATE qsos SET deleted = ? WHERE operation = ?', [true, uuid])
   await dispatch(actions.unsetOperation(uuid))
   await dispatch(qsosActions.unsetQSOs(uuid))
+}
+
+export const restoreOperation = (uuid) => async (dispatch) => {
+  await dbExecute('UPDATE operations SET deleted = ? WHERE uuid = ?', [false, uuid])
+  await dbExecute('UPDATE qsos SET deleted = json_extract("data", "$.deleted") WHERE operation = ?', [true, uuid])
+  await dispatch(actions.unsetOperation(uuid))
+  await dispatch(qsosActions.unsetQSOs(uuid))
+  await dispatch(loadOperation(uuid))
 }
 
 const UUID_REGEX = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/i

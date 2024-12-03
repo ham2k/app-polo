@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux'
 import TimeChip from '../../../../components/TimeChip'
 import { TimeInput } from '../../../../../components/TimeInput'
 import { DateInput } from '../../../../../components/DateInput'
-import { setOperationData } from '../../../../../../store/operations'
+import { setOperationLocalData } from '../../../../../../store/operations'
 import ThemedButton from '../../../../../components/ThemedButton'
 
 const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
@@ -46,7 +46,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
         fieldId={'date'}
         focusedRef={focusedRef}
       />
-      {qso?._isNew && (operation._nextManualTime || qso?.startAtMillis) && (
+      {qso?._isNew && (operation.local?._nextManualTime || qso?.startAtMillis) && (
         <View flexDirection="column" alignItems={'center'} justifyContent={'center'}>
           <ThemedButton
             themeColor="tertiaryLighter"
@@ -54,7 +54,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
             icon={'play'}
             onPress={(value) => {
               handleFieldChange({ fieldId: 'time', value: undefined })
-              dispatch(setOperationData({ uuid: operation.uuid, _nextManualTime: undefined }))
+              dispatch(setOperationLocalData({ uuid: operation.uuid, _nextManualTime: undefined }))
               ref.current?.blur()
             }}
           >
@@ -71,7 +71,7 @@ export const timeControl = {
   icon: 'clock-outline',
   order: 0,
   LabelComponent: (props) => {
-    if (props.operation?._nextManualTime) {
+    if (props.operation?.local?._nextManualTime) {
       return (
         <TimeChip {...props} icon={'pause'} time={props?.qso?.startAtMillis} />
       )
