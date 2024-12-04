@@ -11,6 +11,7 @@ import debounce from 'debounce'
 import { saveOperation, saveOperationLocalData } from './operationsDB'
 import { findHooks } from '../../../extensions/registry'
 import { reportError } from '../../../distro'
+import GLOBAL from '../../../GLOBAL'
 
 function debounceableDispatch (dispatch, action) {
   return dispatch(action())
@@ -41,6 +42,12 @@ export const setOperationData = (data) => async (dispatch, getState) => {
   try {
     const { uuid } = data
     const operation = selectOperation(getState(), uuid) ?? {}
+    const now = Date.now()
+
+    operation.createdAtMillis = operation.createdAtMillis || now
+    operation.createdOnDeviceId = operation.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
+    operation.updatedAtMillis = now
+    operation.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
 
     if (data.refs) {
       const decoratedRefs = []

@@ -14,6 +14,7 @@ import { actions } from '../operationsSlice'
 import { actions as qsosActions } from '../../qsos'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { syncLatestOperations } from '../../sync'
+import GLOBAL from '../../../GLOBAL'
 
 const operationFromRow = (row) => {
   const data = JSON.parse(row.data)
@@ -128,9 +129,13 @@ export const saveOperationLocalData = (operation) => async (dispatch, getState) 
 }
 
 export const addNewOperation = (operation) => async (dispatch) => {
+  const now = Date.now()
   operation.uuid = UUID.v1()
-  operation.qsoCount = 0
-  operation.createdAtMillis = Math.floor(Date.now() / 1000) * 1000
+  operation.createdAtMillis = operation.createdAtMillis || now
+  operation.createdOnDeviceId = operation.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
+  operation.updatedAtMillis = now
+  operation.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
+
   dispatch(actions.setOperation(operation))
   await dispatch(saveOperation(operation))
   return operation
