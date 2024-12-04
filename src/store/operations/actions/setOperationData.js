@@ -8,7 +8,7 @@
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { actions, selectOperation } from '../operationsSlice'
 import debounce from 'debounce'
-import { saveOperation } from './operationsDB'
+import { saveOperation, saveOperationLocalData } from './operationsDB'
 import { findHooks } from '../../../extensions/registry'
 import { reportError } from '../../../distro'
 
@@ -17,10 +17,9 @@ function debounceableDispatch (dispatch, action) {
 }
 const debouncedDispatch = debounce(debounceableDispatch, 2000)
 
-export const setOperationData = (data) => async (dispatch, getState) => {
+export const setOperationLocalData = (data) => async (dispatch, getState) => {
   try {
     const { uuid } = data
-    const operation = selectOperation(getState(), uuid) ?? {}
 
     if (data.power) data.power = parseInt(data.power, 10)
 
@@ -29,6 +28,19 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     } else if (data.band) {
       data.freq = undefined
     }
+
+    await dispatch(actions.setOperationLocal(data))
+    const savedOperation = selectOperation(getState(), uuid) ?? {}
+    return debouncedDispatch(dispatch, () => saveOperationLocalData(savedOperation))
+  } catch (e) {
+    reportError('Error in setOperationData', e)
+  }
+}
+
+export const setOperationData = (data) => async (dispatch, getState) => {
+  try {
+    const { uuid } = data
+    const operation = selectOperation(getState(), uuid) ?? {}
 
     if (data.refs) {
       const decoratedRefs = []

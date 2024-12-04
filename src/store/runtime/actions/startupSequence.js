@@ -7,7 +7,7 @@
 
 import { startupStepsForDistribution } from '../../../distro'
 import loadExtensions from '../../../extensions/loadExtensions'
-import { getOperations } from '../../operations'
+import { loadOperations } from '../../operations'
 import { selectSettings } from '../../settings'
 import { addRuntimeMessage, resetRuntimeMessages } from '../runtimeSlice'
 import { setupOnlineStatusMonitoring } from './onlineStatus'
@@ -38,7 +38,7 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
       async () => await dispatch(setupOnlineStatusMonitoring()),
       async () => await dispatch(loadExtensions()),
-      async () => await dispatch(getOperations()),
+      async () => await dispatch(loadOperations()),
       async () => await minimumTimePromise,
       ...startupStepsForDistribution({ settings, dispatch })
     ]

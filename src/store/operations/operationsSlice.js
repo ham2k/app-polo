@@ -18,11 +18,13 @@ const INITIAL_STATE = {
 }
 
 const OPERATION_INITIAL_STATE = {
-  operatorCall: '',
   stationCall: '',
-  band: undefined,
-  freq: undefined,
-  mode: 'SSB'
+  local: {
+    operatorCall: '',
+    band: undefined,
+    freq: undefined,
+    mode: 'SSB'
+  }
 }
 
 export const operationsSlice = createSlice({
@@ -38,7 +40,21 @@ export const operationsSlice = createSlice({
       state.info = action.payload
     },
     setOperation: (state, action) => {
-      state.info[action.payload.uuid] = { ...OPERATION_INITIAL_STATE, ...state.info[action.payload.uuid], ...action.payload }
+      state.info[action.payload.uuid] = {
+        ...OPERATION_INITIAL_STATE,
+        ...state.info[action.payload.uuid],
+        ...action.payload
+      }
+    },
+    setOperationLocal: (state, action) => {
+      state.info[action.payload.uuid] = {
+        ...OPERATION_INITIAL_STATE,
+        ...state.info[action.payload.uuid],
+        local: {
+          ...state.info[action.payload.uuid],
+          ...action.payload
+        }
+      }
     },
     unsetOperation: (state, action) => {
       state.info[action.payload] = undefined

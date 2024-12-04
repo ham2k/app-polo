@@ -12,7 +12,7 @@ import { ScrollView, View } from 'react-native'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings } from '../../../store/settings'
-import { selectOperation, setOperationData } from '../../../store/operations'
+import { selectOperation, setOperationData, setOperationLocalData } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import CallsignInput from '../../components/CallsignInput'
@@ -35,7 +35,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
 
   const [originalValues] = useState({
     stationCall: operation.stationCall,
-    operatorCall: operation.operatorCall
+    operatorCall: operation.local?.operatorCall ?? ''
   })
 
   const [extraState, setExtraState] = useState({
@@ -46,20 +46,19 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   const stations = useMemo(() => {
     const set = new Set()
     qsos.forEach(qso => set.add(qso?.our?.call ?? ''))
-    return [...set]
+    return [...set].filter(Boolean)
   }, [qsos])
 
   const operators = useMemo(() => {
     const set = new Set()
     qsos.forEach(qso => set.add(qso?.our?.operatorCall || ''))
-    return [...set]
+    return [...set].filter(Boolean)
   }, [qsos])
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       const newExtraState = {}
       const singleStation = stations.length === 1 && stations[0]
-
       if (stations.length === 0 || singleStation === operation.stationCall) {
         newExtraState.messageForStationCall = ''
         newExtraState.actionForStationCall = ''
@@ -72,35 +71,32 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
       }
 
       const singleOperator = operators.length === 1 && operators[0]
-      if (operators.length === 0 || singleOperator === operation.operatorCall) {
+      console.log('stations', { stations, operators })
+      if (operators.length === 0 || singleOperator === operation.local?.operatorCall) {
         newExtraState.messageForOperatorCall = ''
         newExtraState.actionForOperatorCall = ''
-      } else if (operators.length === 1 && singleOperator !== operation.operatorCall) {
-        newExtraState.messageForOperatorCall = `${singleOperator || 'No call'} used so far.\n${operation.operatorCall} will be used for new QSOs.`
-        newExtraState.actionForOperatorCall = `Update ${operation.operatorCall} as operator for all QSOs`
+      } else if (operators.length === 1 && singleOperator !== operation.local?.operatorCall) {
+        newExtraState.messageForOperatorCall = `${singleOperator || 'No call'} used so far.\n${operation.local?.operatorCall} will be used for new QSOs.`
+        newExtraState.actionForOperatorCall = `Update ${operation.local?.operatorCall} as operator for all QSOs`
       } else {
-        newExtraState.messageForOperatorCall = `This activity already has QSOs using multiple operator callsigns: ${joinAnd(operators)}.\n\n${operation.operatorCall} will only be used for new QSOs.`
+        newExtraState.messageForOperatorCall = `This activity already has QSOs using multiple operator callsigns: ${joinAnd(operators)}.\n\n${operation.local?.operatorCall} will only be used for new QSOs.`
         newExtraState.actionForOperatorCall = ''
       }
 
       setExtraState(newExtraState)
     }, 500)
     return () => clearTimeout(timeout)
-  }, [stations, operators, qsos.length, settings.stationCall, settings.operatorCall, operation.stationCall, operation.operatorCall, originalValues.stationCall, originalValues.operatorCall])
+  }, [stations, operators, qsos.length, settings.stationCall, settings.operatorCall, operation.stationCall, operation.local?.operatorCall, originalValues.stationCall, originalValues.operatorCall])
 
   useEffect(() => { // Set initial values if needed
     if (!operation) return
-    const changes = {}
+
     if (operation.stationCall === undefined) {
-      changes.stationCall = settings?.stationCall || settings?.operatorCall || ''
+      dispatch(setOperationData({ uuid: operation.uuid, stationCall: settings?.stationCall || settings?.operatorCall || '' }))
     }
 
-    if (operation.operatorCall === undefined && operation.stationCall !== settings?.operatorCall) {
-      changes.operatorCall = settings?.operatorCall || ''
-    }
-
-    if (Object.keys(changes).length > 0) {
-      dispatch(setOperationData({ uuid: operation.uuid, ...changes }))
+    if (operation.local.operatorCall === undefined && operation.stationCall !== settings?.operatorCall) {
+      dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall: settings?.operatorCall || '' }))
     }
   }, [dispatch, operation, settings?.operatorCall, settings?.stationCall])
 
@@ -109,7 +105,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   }, [dispatch, operation.uuid])
 
   const onChangeOperator = useCallback((text) => {
-    dispatch(setOperationData({ uuid: operation.uuid, operatorCall: text }))
+    dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall: text }))
   }, [dispatch, operation.uuid])
 
   const handleUpdateStation = useCallback(() => {
@@ -117,8 +113,8 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   }, [dispatch, operation.uuid, operation.stationCall, qsos])
 
   const handleUpdateOperator = useCallback(() => {
-    dispatch(batchUpdateQSOs({ uuid: operation.uuid, qsos, data: { our: { operatorCall: operation.operatorCall } } }))
-  }, [dispatch, operation.uuid, operation.operatorCall, qsos])
+    dispatch(batchUpdateQSOs({ uuid: operation.uuid, qsos, data: { our: { operatorCall: operation.local.operatorCall } } }))
+  }, [dispatch, operation.uuid, operation.local.operatorCall, qsos])
 
   return (
     <ScreenContainer>
@@ -148,7 +144,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
           <Text variant="bodyMedium">Who is operating the station? (optional)</Text>
           <CallsignInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            value={operation?.operatorCall || ''}
+            value={operation.local.operatorCall || ''}
             label="Operator Callsign"
             placeholder={'N0CALL'}
             onChangeText={onChangeOperator}

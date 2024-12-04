@@ -17,6 +17,7 @@ import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 
 import { useCallLookup } from './useCallLookup'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
+import { findHooks } from '../../../../extensions/registry'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const HISTORY_QSOS_TO_SHOW = 3
@@ -129,6 +130,10 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
     return [thisTitle, thisQs, title, recent, andMore]
   }, [lookup.history, operation])
 
+  const confirmations = findHooks('confirmation')
+    .map(hook => hook?.fetchConfirmation(qso))
+    .filter(confirmation => confirmation !== undefined)
+
   const safeArea = useSafeAreaInsets()
 
   return (
@@ -187,6 +192,16 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                 ))}
               </View>
             )}
+
+            {confirmations.length > 0 &&
+                confirmations.map((confirmation, i) => (
+                  <View key={i} style={styles.section}>
+                    <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>{confirmation.title}</Text>
+                    {confirmation.isGuess && <Text style={{ fontWeight: 'bold' }}>Potential call: {confirmation.call}</Text>}
+                    <Ham2kMarkdown>{confirmation.note}</Ham2kMarkdown>
+                  </View>
+                ))
+            }
 
             {thisOpTitle && (
               <View style={styles.section}>

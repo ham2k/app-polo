@@ -5,12 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import reducer from './qsosSlice'
+import reducer from './apiWWBOTA'
 
-export * from './qsosSlice'
-export * from './actions/qsosDB'
-export * from './actions/lookupQSOs'
-export * from './actions/findQSOHistory'
-export * from './actions/confirmFromSpots'
+export * from './apiWWBOTA'
 
 export default reducer

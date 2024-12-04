@@ -24,6 +24,7 @@ import { reducer as apiHamQTHReducer, middleware as apiHamQTHMiddleware } from '
 import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apis/apiPOTA'
 import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './apis/apiSOTA'
 import { reducer as apiGMAReducer, middleware as apiGMAMiddleware } from './apis/apiGMA'
+import { reducer as apiWWBOTAReducer, middleware as apiWWBOTAMiddleware } from './apis/apiWWBOTA'
 import dataFilesReducer from './dataFiles'
 
 // Redux Toolkit uses Immer, which freezes state by default.
@@ -47,7 +48,8 @@ const rootReducer = combineReducers({
   apiHamQTH: apiHamQTHReducer,
   apiPOTA: apiPOTAReducer,
   apiSOTA: apiSOTAReducer,
-  apiGMA: apiGMAReducer
+  apiGMA: apiGMAReducer,
+  apiWWBOTA: apiWWBOTAReducer
 })
 
 const persistConfig = {
@@ -99,6 +101,7 @@ export const store = configureStore({
     middlewares.push(apiPOTAMiddleware)
     middlewares.push(apiSOTAMiddleware)
     middlewares.push(apiGMAMiddleware)
+    middlewares.push(apiWWBOTAMiddleware)
 
     return middlewares
   },

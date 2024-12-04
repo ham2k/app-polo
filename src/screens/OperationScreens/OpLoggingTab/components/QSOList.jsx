@@ -249,7 +249,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
     let qsoStyles
     if (qso.deleted) {
       qsoStyles = stylesForDeleted
-    } else if (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.operatorCall) {
+    } else if (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.local?.operatorCall) {
       qsoStyles = stylesForOtherOperator
     } else {
       qsoStyles = styles

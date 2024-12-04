@@ -13,7 +13,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import KeepAwake from '@sayem314/react-native-keep-awake'
 
 import { loadOperation, selectOperation } from '../../store/operations'
-import { loadQSOs, lookupAllQSOs } from '../../store/qsos'
+import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../store/qsos'
 import { selectSettings, setSettings } from '../../store/settings'
 import { startTickTock, stopTickTock } from '../../store/time'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
@@ -29,6 +29,7 @@ import { selectRuntimeOnline } from '../../store/runtime'
 import { useUIState } from '../../store/ui'
 import { Icon, Menu, Text } from 'react-native-paper'
 import { slashZeros } from '../../tools/stringTools'
+import { hasRef } from '../../tools/refTools'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -69,7 +70,7 @@ export default function OperationScreen (props) {
     let options = {}
     if (operation?.stationCall) {
       options = {
-        title: buildTitleForOperation({ operatorCall: operation.operatorCall, stationCall: operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
+        title: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
         subTitle: operation.subtitle
       }
     } else {
@@ -309,18 +310,18 @@ export default function OperationScreen (props) {
   }
 }
 
-export function buildTitleForOperation (operation, { includeCall = true } = {}) {
-  if (operation?.stationCall) {
-    let call = operation?.stationCall
-    if (operation.operatorCall && operation.operatorCall !== operation.stationCall) {
-      call = `${call} (op ${operation.operatorCall})`
+export function buildTitleForOperation (operationAttrs, { includeCall = true } = {}) {
+  if (operationAttrs.stationCall) {
+    let call = operationAttrs.stationCall
+    if (operationAttrs.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
+      call = `${call} (op ${operationAttrs.operatorCall})`
     }
     const parts = []
-    if (operation.userTitle) {
-      parts.push(operation.userTitle)
+    if (operationAttrs.userTitle) {
+      parts.push(operationAttrs.userTitle)
     }
-    if (operation.title && operation.title !== 'New Operation') {
-      parts.push(operation.title)
+    if (operationAttrs.title && operationAttrs.title !== 'New Operation') {
+      parts.push(operationAttrs.title)
     }
     let title = parts.join(' ')
     title = title || 'General Operation'
@@ -369,6 +370,14 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
         onPress={() => hideAndRun(() => dispatch(lookupAllQSOs(operation.uuid)))}
         title={'Lookup all QSOs'}
       />
+      {hasRef(operation, 'potaActivation') &&
+        <Menu.Item
+          leadingIcon="list-status"
+          onPress={() => hideAndRun(() => {
+            return dispatch(confirmFromSpots({ operation }))
+          })}
+          title={'Confirm Spots'}
+        />}
     </>
   )
 }

@@ -35,7 +35,8 @@ const Hooks = {
   lookup: [],
   export: [],
   account: [],
-  opSetting: []
+  opSetting: [],
+  confirmation: []
 }
 
 const VALID_HOOK_REGEX = /^(ref:\w+)/

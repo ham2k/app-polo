@@ -22,8 +22,8 @@ export const SecondaryExchangePanel = (props) => {
   const { currentSecondaryControl, operation, vfo, settings } = props
 
   const secondaryControlSettings = useMemo(() => (
-    operation?.secondaryControls ?? settings?.secondaryControls ?? {}
-  ), [operation?.secondaryControls, settings?.secondaryControls])
+    operation?.local?.secondaryControls ?? settings?.secondaryControls ?? {}
+  ), [operation?.local?.secondaryControls, settings?.secondaryControls])
 
   const allControls = useMemo(() => {
     const newControls = {

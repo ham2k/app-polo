@@ -16,6 +16,7 @@ import { POTAPostSpot } from './POTAPostSpot'
 import { apiPOTA } from '../../../store/apis/apiPOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
+import { ConfirmFromSpotsHook } from './POTAConfirmFromSpots'
 
 const Extension = {
   ...Info,
@@ -24,6 +25,7 @@ const Extension = {
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook('spots', { hook: SpotsHook })
+    registerHook('confirmation', { hook: ConfirmFromSpotsHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 

@@ -92,7 +92,7 @@ const ReferenceHandler = {
     headers.push(['CALLSIGN', operation.stationCall || settings.operatorCall])
     headers.push(['LOCATION', ref.location])
     headers.push(['NAME', ''])
-    if (operation.operatorCall) headers.push(['OPERATORS', operation.operatorCall])
+    if (operation.local?.operatorCall) headers.push(['OPERATORS', operation.local.operatorCall])
     if (operation.grid) headers.push(['GRID-LOCATOR', operation.grid])
     return headers
   },

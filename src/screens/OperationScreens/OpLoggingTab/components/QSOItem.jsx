@@ -41,6 +41,9 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
     onPress && onPress({ qso })
   }, [qso, onPress])
 
+  const confirmedBySpot = Object.values(qso?.qsl ?? {}).some(spot => spot?.isGuess === false)
+  const bustedBySpot = Object.values(qso?.qsl ?? {}).some(spot => spot?.isGuess === true)
+
   return (
     <TouchableRipple onPress={pressHandler} style={selected ? styles.selectedRow : styles.unselectedRow}>
       <View style={styles.compactRow}>
@@ -73,6 +76,9 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         <View style={styles.fields.icons}>
           {qso.notes && (
             <Icon source="note-outline" size={styles.normalFontSize} style={styles.fields.icon} />
+          )}
+          {(confirmedBySpot || bustedBySpot) && (
+            <View style={styles.fields.icon}><Icon source={`${confirmedBySpot ? 'check' : 'help'}-circle`} size={styles.normalFontSize} style={styles.fields.icon} /></View>
           )}
           {(qso.refs || []).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.iconForQSO).map(({ ref, handler }, i) => (
             <View key={i} style={styles.fields.icon}><Icon key={i} source={handler?.iconForQSO} size={styles.normalFontSize} color={styles.fields.icon.color} /></View>

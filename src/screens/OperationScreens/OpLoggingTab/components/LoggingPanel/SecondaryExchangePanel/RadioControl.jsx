@@ -85,8 +85,8 @@ export const radioControl = {
     const parts = []
     if (qso?.freq ?? vfo?.freq) {
       parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo?.freq)} MHz`)
-    } else if (qso?.band ?? operation?.band) {
-      parts.push(`${qso?.band ?? operation?.band}`)
+    } else if (qso?.band ?? operation?.local?.band) {
+      parts.push(`${qso?.band ?? operation?.local?.band}`)
     } else {
       parts.push('Band???')
     }
@@ -98,8 +98,8 @@ export const radioControl = {
     const parts = []
     if (qso?.freq ?? vfo?.freq) {
       parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo?.freq)} MHz`)
-    } else if (qso?.band ?? operation?.band) {
-      parts.push(`${qso?.band ?? operation?.band}`)
+    } else if (qso?.band ?? operation?.local?.band) {
+      parts.push(`${qso?.band ?? operation?.local?.band}`)
     } else {
       parts.push('Band???')
     }

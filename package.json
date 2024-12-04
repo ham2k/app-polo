@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "24.11.99-pre5",
-  "versionName": "December '24 (Pre 5)",
+  "version": "24.11.99-pre6",
+  "versionName": "December '24 (Pre 6)",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -50,6 +50,7 @@
     "debounce": "^2.1",
     "deepmerge": "^4.3",
     "emoji-regex": "^10.3",
+    "fast-levenshtein": "^3.0.0",
     "fast-xml-parser": "^4.4",
     "fuzzball": "^2.1",
     "proj4": "^2.11",

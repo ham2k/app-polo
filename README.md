@@ -4,7 +4,7 @@ The fastest, easiest, bestest way to log your amateur radio operations on the go
 
 ### Our Community
 
-* [Forums](https://forums.ham2.com) - Please use our forums to report bugs, suggestions and issues in general.
+* [Forums](https://forums.ham2k.com) - Please use our forums to report bugs, suggestions and issues in general.
 
 * [Discord](https://discord.gg/rT6B2fP7pU) - Come here for casual discussions, development help and to share your operation photos and videos.
 

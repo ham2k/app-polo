@@ -20,7 +20,12 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title, exportT
   }
   const operationWithoutRefs = { ...operation, refs: [] }
 
-  if (operation.stationCall !== settings.operatorCall) common.operatorCall = settings.operatorCall
+  if (operation.stationCall !== settings.operatorCall) {
+    common.operatorCall = settings.operatorCall
+  }
+  if (operation.local?.operatorCall) {
+    common.operatorCall = operation.local.operatorCall
+  }
 
   let str = ''
 
