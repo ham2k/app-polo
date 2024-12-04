@@ -1,10 +1,12 @@
 {
-  "24.11.99-pre5": {
-    "name": "December '24 (Pre 5)",
+  "24.11.99-pre6": {
+    "name": "December '24 (Pre 6)",
     "changes": [
       "First steps at making the app more accessible for sight-impaired users",
       "Add HamQTH callsign lookup (by M1SDH)",
       "Merge spots of multi-operator activations (by M1SDH)",
+      "Use spot comments to confirm POTA contacts (by NA7DO)",
+      "WWBOTA cluster spots (by M1SDH)",
       "Improve operation title handling",
       "Faster data downloads for POTA, SOTA and WWFF",
       "Ignore grid AA00aa",
@@ -12,8 +14,7 @@
       "Fix bugs in various input fields",
       "Fix lookup of portable calls",
       "Fix reference prefix for ITABOTA (by M1SDH)",
-      "Fix SOTA self-spot reliability (by M1SDH)",
-      "Add fetching WWBOTA cluster spots (by M1SDH)"
+      "Fix SOTA self-spot reliability (by M1SDH)"
     ]
   },
   "24.11.2": {
