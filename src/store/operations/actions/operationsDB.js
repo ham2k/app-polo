@@ -67,7 +67,7 @@ const rowFromOperation = (operation) => {
 }
 
 export const loadOperations = () => async (dispatch, getState) => {
-  const oplist = await dbSelectAll('SELECT * FROM operations WHERE deleted = 0', [], { row: operationFromRow })
+  const oplist = await dbSelectAll('SELECT * FROM operations WHERE deleted = 0 OR deleted IS NULL', [], { row: operationFromRow })
 
   const ophash = oplist.reduce((acc, op) => {
     acc[op.uuid] = op
@@ -107,8 +107,8 @@ export const saveOperation = (operation, { synced = false } = {}) => async (disp
     `,
     [
       row.uuid,
-      row.data, row.localData, row.startAtMillisMin, row.startAtMillisMax, row.qsoCount, row.deleted, synced,
-      row.data, row.localData, row.startAtMillisMin, row.startAtMillisMax, row.qsoCount, row.deleted, synced
+      row.data, row.localData, row.startAtMillisMin, row.startAtMillisMax, row.qsoCount, !!row.deleted, !!synced,
+      row.data, row.localData, row.startAtMillisMin, row.startAtMillisMax, row.qsoCount, !!row.deleted, !!synced
     ]
   )
   if (!synced) {
@@ -155,7 +155,7 @@ export const deleteOperation = (uuid) => async (dispatch) => {
 
 export const restoreOperation = (uuid) => async (dispatch) => {
   await dbExecute('UPDATE operations SET deleted = ? WHERE uuid = ?', [false, uuid])
-  await dbExecute('UPDATE qsos SET deleted = json_extract("data", "$.deleted") WHERE operation = ?', [true, uuid])
+  await dbExecute('UPDATE qsos SET deleted = ifnull(json_extract("data", "$.deleted"), false) WHERE operation = ?', [uuid])
   await dispatch(actions.unsetOperation(uuid))
   await dispatch(qsosActions.unsetQSOs(uuid))
   await dispatch(loadOperation(uuid))
