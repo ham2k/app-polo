@@ -35,28 +35,35 @@ export default function ThemedTextInput (props) {
   const alternateInnerRef = useRef()
   const actualInnerRef = innerRef ?? alternateInnerRef
 
-  const strValue = typeof value === 'string' ? value : `${value}`
+  const stringValue = useMemo(() => {
+    if (typeof value === 'string') return value
+    else return `${value}`
+  }, [value])
 
-  const originalValue = useMemo(() => strValue, [strValue])
   const [currentSelection, setCurrentSelection] = useState({})
-
   const [isFocused, setIsFocused] = useState(false)
+
+  useEffect(() => {
+    if (currentSelection.start > stringValue.length) {
+      setCurrentSelection({ start: stringValue.length, end: stringValue.length })
+    }
+  }, [stringValue, currentSelection])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
     let spaceAdded = false
 
-    if (multiline || text.length < originalValue.length) {
+    if (multiline || text.length < stringValue.length) {
       // We should not do any transformations:
       //  - on multiline inputs
       //  - or when deleting
     } else {
       // Lets check if what changed was the addition of a space
-      if ((text !== originalValue) && (text.replace(SPACES_REGEX, '') === originalValue)) {
+      if ((text !== stringValue) && (text.replace(SPACES_REGEX, '') === stringValue)) {
         spaceAdded = true
-      } else if (text.match(ONLY_SPACES_REGEX) && originalValue !== '') { // or a space replacing the entire value
+      } else if (text.match(ONLY_SPACES_REGEX) && stringValue !== '') { // or a space replacing the entire value
         spaceAdded = true
-        text = originalValue
+        text = stringValue
       }
 
       text = text.replace(LEFT_TRIM_REGEX, '')
@@ -87,25 +94,20 @@ export default function ThemedTextInput (props) {
         text = textTransformer(text)
       }
 
-      // console.log('handleChange', { text, originalValue })
-      if (text.length !== originalValue.length) {
+      if (text.length !== stringValue.length) {
         const selectionFromVirtualNumericKeys = event.selectionFromVirtualNumericKeys ?? {}
-        const start = selectionFromVirtualNumericKeys.start ?? currentSelection.start ?? originalValue.length
-        const end = selectionFromVirtualNumericKeys.end ?? currentSelection.end ?? originalValue.length
-        // console.log('move cursor to', {
-        //   start: start + (text.length - originalValue.length),
-        //   end: end + (text.length - originalValue.length)
-        // })
+        const start = selectionFromVirtualNumericKeys.start ?? currentSelection.start ?? stringValue.length
+        const end = selectionFromVirtualNumericKeys.end ?? currentSelection.end ?? stringValue.length
         // Sometimes, updating the value causes the native text field to also update the selection
         // to a value that is not the one we want. So we have to delay our update in order to overwrite it.
         setCurrentSelection({
-          start: start + (text.length - originalValue.length),
-          end: end + (text.length - originalValue.length)
+          start: start + (text.length - stringValue.length),
+          end: end + (text.length - stringValue.length)
         })
         setTimeout(() => {
           setCurrentSelection({
-            start: start + (text.length - originalValue.length),
-            end: end + (text.length - originalValue.length)
+            start: start + (text.length - stringValue.length),
+            end: end + (text.length - stringValue.length)
           })
         }, 20)
       }
@@ -132,17 +134,12 @@ export default function ThemedTextInput (props) {
     if (spaceAdded) onSpace && onSpace(spaceEvent)
     // }
   }, [
-    multiline, fieldId, actualInnerRef, originalValue,
+    multiline, fieldId, actualInnerRef, stringValue,
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
     textTransformer, currentSelection, onChangeText, onChange, onSpace
   ])
 
-  // if (fieldId === 'theirCall') console.log('render', { strValue, fieldId, currentSelection })
-  // useEffect(() => { if (fieldId === 'pota') console.log('originalValue', originalValue) }, [fieldId, originalValue])
-  // useEffect(() => { if (fieldId === 'pota') console.log('currentSelection', currentSelection) }, [currentSelection, fieldId])
-
   useEffect(() => {
-    // if (fieldId === 'theirCall') console.log('focusedRef useEffect', { currentSelection })
     if (focusedRef && isFocused && !multiline) {
       focusedRef.current = {
         onNumberKey: (number) => {
@@ -150,11 +147,11 @@ export default function ThemedTextInput (props) {
 
           let { start, end } = currentSelection
           // If selection position is unknown, we assume the cursor is at the end of the string
-          start = start ?? originalValue.length ?? 0
-          end = end ?? originalValue.length ?? 0
+          start = start ?? stringValue.length ?? 0
+          end = end ?? stringValue.length ?? 0
 
-          const newValue = originalValue.substring(0, start) + number + originalValue.substring(end)
-          // console.log('onNumberKey', { start, end, newValue })
+          const newValue = stringValue.substring(0, start) + number + stringValue.substring(end)
+
           handleChange && handleChange({
             nativeEvent: { text: newValue, target: actualInnerRef.current._nativeTag },
             fromVirtualNumericKeys: true,
@@ -163,7 +160,7 @@ export default function ThemedTextInput (props) {
         }
       }
     }
-  }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, originalValue, actualInnerRef, multiline, setCurrentSelection])
+  }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, stringValue, actualInnerRef, multiline, setCurrentSelection])
 
   const handleSelectionChange = useCallback((event) => {
     const { nativeEvent: { selection: { start, end } } } = event
@@ -234,7 +231,7 @@ export default function ThemedTextInput (props) {
 
         ref={actualInnerRef}
 
-        value={strValue}
+        value={stringValue}
         placeholder={placeholder || ''}
         style={[
           colorStyles.nativeInput,
@@ -261,7 +258,7 @@ export default function ThemedTextInput (props) {
       />
     )
   }, [
-    strValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
+    stringValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
     onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange, currentSelection
   ])
 

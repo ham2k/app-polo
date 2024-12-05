@@ -15,6 +15,7 @@ import systemReducer from './system'
 import runtimeReducer from './runtime'
 import uiReducer from './ui'
 import settingsReducer from './settings'
+import localReducer from './local'
 import operationsReducer from './operations'
 import qsosReducer from './qsos'
 import stationReducer from './station'
@@ -36,6 +37,7 @@ setAutoFreeze(false)
 
 const rootReducer = combineReducers({
   settings: settingsReducer,
+  local: localReducer,
   system: systemReducer,
   runtime: runtimeReducer,
   ui: uiReducer,
@@ -56,7 +58,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   version: LATEST_VERSION,
-  whitelist: ['settings', 'system', 'station'], // Don't include `qsos` nor `time`
+  whitelist: ['settings', 'local', 'system', 'station'], // Don't include `qsos` nor `time`
   migrate: createMigrate(migrations, { debug: true })
 }
 

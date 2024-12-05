@@ -36,90 +36,87 @@ const DEBUG = true
 
 const SyncHook = {
   ...Info,
-  sendChanges: ({ qsos, operations }) => async (dispatch, getState) => {
+  sendChanges: (changes) => async (dispatch, getState) => {
     console.log('sendChanges')
-    console.log('settings', Object.keys(getState().settings.extensions))
-    let { server } = selectExtensionSettings(getState(), Info.key) || {}
-    const { operatorCall } = selectSettings(getState())
-    let token = GLOBAL.syncLoFiToken
-    const secret = Config.HAM2K_LOFI_SECRET || 'no-secret'
 
-    if (server.endsWith('/')) server = server.slice(0, -1)
+    const body = JSON.stringify(changes)
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/sync', method: 'POST', body })
+    return (response.status === 200)
+  }
+}
 
-    let retries = 2 // just so that we can re-authenticate if needed
-    while (retries > 0) {
-      retries--
-      logRemotely({ message: 'sending changes', qsos: qsos?.length, operations: operations?.length, server, token, secret })
-      if (DEBUG) console.log('sending changes', { qsos: qsos?.length, operations: operations?.length, server, token, secret })
+async function requestWithAuth ({ dispatch, getState, url, method, body }) {
+  console.log('Ham2K LoFi request', { url, method })
+  let { server } = selectExtensionSettings(getState(), Info.key) || {}
+  const { operatorCall } = selectSettings(getState())
+  let token = GLOBAL.syncLoFiToken
+  const secret = Config.HAM2K_LOFI_SECRET || 'no-secret'
 
-      if (!token) {
-        if (DEBUG) console.log('Ham2K LoFi Authenticating')
-        const response = await fetch(`${server}/v1/client`, {
-          method: 'POST',
-          headers: {
-            'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
-            'Content-Type': 'application/json'
+  if (server.endsWith('/')) server = server.slice(0, -1)
+
+  let retries = 2 // just so that we can re-authenticate if needed
+  while (retries > 0) {
+    retries--
+    if (!token) {
+      if (DEBUG) console.log('-- Ham2K LoFi Authenticating', { server, token, secret })
+      const response = await fetch(`${server}/v1/client`, {
+        method: 'POST',
+        headers: {
+          'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          client: {
+            key: GLOBAL.deviceId,
+            name: GLOBAL.deviceName,
+            secret
           },
-          body: JSON.stringify({
-            client: {
-              key: GLOBAL.deviceId,
-              name: GLOBAL.deviceName,
-              secret
-            },
-            account: {
-              call: operatorCall
-            }
-          })
-        })
-
-        const json = await response.json()
-        processResponseMeta({ json, response, dispatch })
-
-        if (response.status === 200) {
-          if (DEBUG) console.log('-- auth ok', json)
-          token = json.token
-          GLOBAL.syncLoFiToken = token
-        } else {
-          if (DEBUG) console.log('-- auth failed')
-          GLOBAL.syncLoFiToken = token
-          throw new Error('Authentication Failed')
-        }
-      }
-
-      qsos = qsos ?? []
-      operations = operations ?? []
-
-      if (server) {
-        if (DEBUG) console.log('Syncing', { token, server, qsos: qsos?.length, operations: operations?.length })
-        if (qsos.length > 0) {
-          const response = await fetch(`${server}/v1/sync`, {
-            method: 'POST',
-            headers: {
-              'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({
-              qsos,
-              operations
-            })
-          })
-
-          const json = await response.json()
-          if (DEBUG) console.log(' -- response', response.status, json)
-
-          processResponseMeta({ json, response, dispatch })
-
-          if (response.status === 401) {
-            if (DEBUG) console.log(' -- auth failed')
-            token = null
+          account: {
+            call: operatorCall
           }
-          if (response.status === 200) return true
-        }
+        })
+      })
+
+      const json = await response.json()
+      processResponseMeta({ json, response, dispatch })
+
+      if (response.status === 200) {
+        if (DEBUG) console.log('-- auth ok', json)
+        token = json.token
+        GLOBAL.syncLoFiToken = token
+      } else {
+        logRemotely({ message: '-- Ham2K LoFi Authentication failed', server, token, secret, url, body })
+        if (DEBUG) console.log('-- auth failed')
+        GLOBAL.syncLoFiToken = token
+        throw new Error('Authentication Failed')
       }
     }
-    return false
+
+    if (DEBUG) console.log('-- request', { url, method, body })
+    const response = await fetch(`${server}/${url}`, {
+      method,
+      headers: {
+        'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body
+    })
+
+    const json = await response.json()
+    if (DEBUG) console.log(' -- response', response.status, json)
+
+    processResponseMeta({ json, response, dispatch })
+
+    if (response.status === 401) {
+      if (DEBUG) console.log(' -- auth failed')
+      // Auth failed, do another loop
+      token = null
+    } else {
+      return response
+    }
   }
+  return false
 }
 
 function processResponseMeta ({ json, response, dispatch }) {
