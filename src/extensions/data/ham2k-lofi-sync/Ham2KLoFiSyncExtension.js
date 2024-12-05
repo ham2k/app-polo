@@ -48,6 +48,8 @@ const SyncHook = {
 async function requestWithAuth ({ dispatch, getState, url, method, body }) {
   console.log('Ham2K LoFi request', { url, method })
   let { server } = selectExtensionSettings(getState(), Info.key) || {}
+  server = server ?? 'https://dev.lofi.ham2k.net'
+
   const { operatorCall } = selectSettings(getState())
   let token = GLOBAL.syncLoFiToken
   const secret = Config.HAM2K_LOFI_SECRET || 'no-secret'
