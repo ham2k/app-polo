@@ -65,7 +65,7 @@ function MainApp ({ navigationTheme }) {
       GLOBAL.consentOpData = settings.consentOpData
       GLOBAL.deviceId = GLOBAL.deviceId || await DeviceInfo.getUniqueId()
       GLOBAL.deviceName = GLOBAL.deviceName || await DeviceInfo.getDeviceName()
-      GLOBAL.syncEnabled = settings?.extensions?.['ham2k-lofi']?.enabled
+      GLOBAL.syncEnabled = !settings?.extensions?.['ham2k-lofi']?.enabled === false || settings.consentAppData || settings.consentOpData
       console.log('GLOBAL', GLOBAL)
     })
   // `exhaustive-deps` is confused by the `?.[]` syntax and wants `settings?.extensions` to be a dependency

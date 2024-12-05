@@ -82,10 +82,17 @@ async function syncOneBatchOfChanges ({ qsos, operations, dispatch, batchSize = 
 
     if (GLOBAL.settingsSynced === false) {
       changes.settings = dispatch((_dispatch, getState) => getState().settings)
+      console.log(' -- settings', changes.settings)
     }
 
     logRemotely({ message: 'syncing', qsos: qsos.length, operations: operations.length })
     if (Object.keys(changes).length > 0) {
+      changes.meta = changes.meta || {}
+      changes.meta.consent = {
+        app: GLOBAL.consentAppData,
+        operation: GLOBAL.consentOpData
+      }
+
       if (DEBUG) console.log(' -- calling hook')
       const ok = await dispatch(syncHook.sendChanges(changes))
       if (DEBUG) console.log(' -- result', ok)
