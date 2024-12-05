@@ -6,7 +6,6 @@
  */
 
 import { createSelector, createSlice } from '@reduxjs/toolkit'
-import { Platform } from 'react-native'
 
 const initialState = {
   extensions: {}
