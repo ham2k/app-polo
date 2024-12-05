@@ -59,15 +59,19 @@ async function syncOneBatchOfChanges ({ qsos, operations, dispatch, batchSize = 
 
     if (DEBUG) console.log(' -- syncing', { hook: syncHook.key, batchSize })
 
+    let changes = {}
+
     // If no qsos are specified, look for a batch of unsynced qsos
     qsos = qsos || await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT ?', [batchSize])
     if (qsos.length > 0) {
       const opIds = qsos.map(q => `"${q.operation}"`).join(',')
       // Ensure the operations referenced by the `qsos` are also included in the batch
       operations = (operations || []).concat(await queryOperations(`WHERE uuid IN (${opIds}) AND synced IS false LIMIT ?`, [batchSize]))
+      changes = { qsos, operations }
     } else {
       // If not qsos are selected then look for a batch of unsynced operations
       operations = operations || await queryOperations('WHERE synced IS false LIMIT ?', [batchSize])
+      changes = { operations }
     }
 
     operations.forEach(op => {
@@ -76,15 +80,20 @@ async function syncOneBatchOfChanges ({ qsos, operations, dispatch, batchSize = 
       delete op.qsoCount
     })
 
+    if (GLOBAL.settingsSynced === false) {
+      changes.settings = dispatch((_dispatch, getState) => getState().settings)
+    }
+
     logRemotely({ message: 'syncing', qsos: qsos.length, operations: operations.length })
-    if (qsos.length > 0 || operations.length > 0) {
+    if (Object.keys(changes).length > 0) {
       if (DEBUG) console.log(' -- calling hook')
-      const ok = await dispatch(syncHook.sendChanges({ qsos, operations }))
+      const ok = await dispatch(syncHook.sendChanges(changes))
       if (DEBUG) console.log(' -- result', ok)
       if (ok) {
         if (DEBUG) console.log(' -- marking as synced')
-        markQSOsAsSynced(qsos)
-        markOperationsAsSynced(operations)
+        if (changes.qsos) markQSOsAsSynced(qsos)
+        if (changes.operations) markOperationsAsSynced(operations)
+        if (changes.settings) GLOBAL.settingsSynced = true
         GLOBAL.lastSyncLoop = Date.now()
       }
     } else {
@@ -190,6 +199,10 @@ export async function resetSyncedStatus () {
 
 export function useSyncLoop ({ dispatch, settings }) {
   const oneMinuteTick = useSelector(selectOneMinuteTick)
+
+  useEffect(() => {
+    GLOBAL.settingsSynced = false
+  }, [settings])
 
   useEffect(() => {
     setImmediate(() => {
