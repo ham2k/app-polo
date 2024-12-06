@@ -69,12 +69,12 @@ namespace :release do
 
 
     puts "Promoting Android #{latest_android_release["label"]} - #{latest_android_release["description"]}"
-    system "appcenter codepush promote -a Ham2K/polo-android -s Development -d Staging -t $POLO_BASE_VERSION -r 100"
-    system "appcenter codepush promote -a Ham2K/polo-android -s Development -d Production -t $POLO_BASE_VERSION -r 100"
+    system "appcenter codepush promote -a Ham2K/polo-android -s Development -d Staging -t $POLO_BASE_VERSION -r 100 -l #{latest_android_release["label"]}"
+    system "appcenter codepush promote -a Ham2K/polo-android -s Development -d Production -t $POLO_BASE_VERSION -r 100  -l #{latest_android_release["label"]}"
 
     puts "Promoting iOS #{latest_ios_release["label"]} - #{latest_ios_release["description"]}"
-    system "appcenter codepush promote -a Ham2K/polo-ios -s Development -d Staging -t $POLO_BASE_VERSION -r 100"
-    system "appcenter codepush promote -a Ham2K/polo-ios -s Development -d Production -t $POLO_BASE_VERSION -r 100"
+    system "appcenter codepush promote -a Ham2K/polo-ios -s Development -d Staging -t $POLO_BASE_VERSION -r 100 -l #{latest_ios_release["label"]}"
+    system "appcenter codepush promote -a Ham2K/polo-ios -s Development -d Production -t $POLO_BASE_VERSION -r 100 -l #{latest_ios_release["label"]}"
   end
 
   task :promote_unstable => :dotenv do
@@ -84,12 +84,12 @@ namespace :release do
     latest_ios_release = ios_release_data.find { |d| d["deployment"]["name"] == "Staging" }["deployment"]["latestRelease"]
 
     puts "Promoting Android #{latest_android_release["label"]} - #{latest_android_release["description"]}"
-    system "appcenter codepush promote -a Ham2K/polo-android -s Staging -d Development -t $POLO_BASE_VERSION -r 100"
-    system "appcenter codepush promote -a Ham2K/polo-android -s Staging -d Production -t $POLO_BASE_VERSION -r 100"
+    system "appcenter codepush promote -a Ham2K/polo-android -s Staging -d Development -t $POLO_BASE_VERSION -r 100 -l #{latest_android_release["label"]}"
+    system "appcenter codepush promote -a Ham2K/polo-android -s Staging -d Production -t $POLO_BASE_VERSION -r 100 -l #{latest_android_release["label"]}"
 
     puts "Promoting iOS #{latest_ios_release["label"]} - #{latest_ios_release["description"]}"
-    system "appcenter codepush promote -a Ham2K/polo-ios -s Staging -d Development -t $POLO_BASE_VERSION -r 100"
-    system "appcenter codepush promote -a Ham2K/polo-ios -s Staging -d Production -t $POLO_BASE_VERSION -r 100"
+    system "appcenter codepush promote -a Ham2K/polo-ios -s Staging -d Development -t $POLO_BASE_VERSION -r 100 -l #{latest_ios_release["label"]}"
+    system "appcenter codepush promote -a Ham2K/polo-ios -s Staging -d Production -t $POLO_BASE_VERSION -r 100 -l #{latest_ios_release["label"]}"
   end
 
   task :discord => :dotenv do
