@@ -49,15 +49,46 @@ namespace :release do
     puts "You need to be on the unstable track to test this.  (enter \"konami\" on any operation log, and then use Developer Settings to change your release track)"
   end
 
+  task :list => :dotenv do
+    system "appcenter codepush deployment list -a Ham2K/polo-android"
+    system "appcenter codepush deployment list -a Ham2K/polo-ios"
+  end
+
   task :stable => :dotenv do
     release_version = JSON.parse(File.read('package.json'))['version']
 
     system "appcenter codepush release-react -a Ham2K/polo-android -d Production -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
-    system "appcenter codepush release-react -a Ham2K/polo-android -d Production -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
+    system "appcenter codepush release-react -a Ham2K/polo-ios -d Production -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
   end
 
-  task :promote => :dotenv do
+  task :promote_bleeding => :dotenv do
+    android_release_data = JSON.parse(`appcenter codepush deployment list -a Ham2K/polo-android --output json`)
+    ios_release_data = JSON.parse(`appcenter codepush deployment list -a Ham2K/polo-ios --output json`)
+    latest_android_release = android_release_data.find { |d| d["deployment"]["name"] == "Development" }["deployment"]["latestRelease"]
+    latest_ios_release = ios_release_data.find { |d| d["deployment"]["name"] == "Development" }["deployment"]["latestRelease"]
+
+
+    puts "Promoting Android #{latest_android_release["label"]} - #{latest_android_release["description"]}"
+    system "appcenter codepush promote -a Ham2K/polo-android -s Development -d Staging -t $POLO_BASE_VERSION -r 100"
+    system "appcenter codepush promote -a Ham2K/polo-android -s Development -d Production -t $POLO_BASE_VERSION -r 100"
+
+    puts "Promoting iOS #{latest_ios_release["label"]} - #{latest_ios_release["description"]}"
+    system "appcenter codepush promote -a Ham2K/polo-ios -s Development -d Staging -t $POLO_BASE_VERSION -r 100"
+    system "appcenter codepush promote -a Ham2K/polo-ios -s Development -d Production -t $POLO_BASE_VERSION -r 100"
+  end
+
+  task :promote_unstable => :dotenv do
+    android_release_data = JSON.parse(`appcenter codepush deployment list -a Ham2K/polo-android --output json`)
+    ios_release_data = JSON.parse(`appcenter codepush deployment list -a Ham2K/polo-ios --output json`)
+    latest_android_release = android_release_data.find { |d| d["deployment"]["name"] == "Staging" }["deployment"]["latestRelease"]
+    latest_ios_release = ios_release_data.find { |d| d["deployment"]["name"] == "Staging" }["deployment"]["latestRelease"]
+
+    puts "Promoting Android #{latest_android_release["label"]} - #{latest_android_release["description"]}"
+    system "appcenter codepush promote -a Ham2K/polo-android -s Staging -d Development -t $POLO_BASE_VERSION -r 100"
     system "appcenter codepush promote -a Ham2K/polo-android -s Staging -d Production -t $POLO_BASE_VERSION -r 100"
+
+    puts "Promoting iOS #{latest_ios_release["label"]} - #{latest_ios_release["description"]}"
+    system "appcenter codepush promote -a Ham2K/polo-ios -s Staging -d Development -t $POLO_BASE_VERSION -r 100"
     system "appcenter codepush promote -a Ham2K/polo-ios -s Staging -d Production -t $POLO_BASE_VERSION -r 100"
   end
 
