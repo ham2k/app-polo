@@ -10,6 +10,7 @@
       "Improve operation title handling",
       "Faster data downloads for POTA, SOTA and WWFF",
       "Ignore grid AA00aa",
+      "Operation Location screen",
       "Preliminary work for Sync Service",
       "Fix problems with external keyboards on Android",
       "Fix bugs in various input fields",
