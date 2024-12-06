@@ -16,7 +16,6 @@ import { useSelector } from 'react-redux'
 import { selectOperation } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
-import { LocationDialog } from './components/LocationDialog'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
@@ -94,17 +93,8 @@ export default function OpSettingsTab ({ navigation, route }) {
           title="Location"
           description={operation.grid ? `Grid ${operation.grid}` : 'No location set'}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="map-marker-radius" />}
-          onPress={() => setCurrentDialog('location')}
+          onPress={() => navigation.navigate('OperationLocation', { operation: operation.uuid })}
         />
-        {currentDialog === 'location' && (
-          <LocationDialog
-            settings={settings}
-            operation={operation}
-            styles={styles}
-            visible={true}
-            onDialogDone={() => setCurrentDialog('')}
-          />
-        )}
 
         <Ham2kListItem
           title={operation?.userTitle || 'Operation Details'}

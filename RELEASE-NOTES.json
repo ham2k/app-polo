@@ -1,6 +1,6 @@
 {
-  "24.11.99-pre7": {
-    "name": "December '24 (Pre 7)",
+  "24.11.99-rc1": {
+    "name": "December '24 (Release Candidate 1)",
     "changes": [
       "First steps at making the app more accessible for sight-impaired users",
       "Add HamQTH callsign lookup (by M1SDH)",
@@ -10,7 +10,9 @@
       "Improve operation title handling",
       "Faster data downloads for POTA, SOTA and WWFF",
       "Ignore grid AA00aa",
+      "Operation Location screen",
       "Preliminary work for Sync Service",
+      "Make Anna happy and allow using number keys on spotting comments",
       "Fix problems with external keyboards on Android",
       "Fix bugs in various input fields",
       "Fix lookup of portable calls",

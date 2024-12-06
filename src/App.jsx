@@ -12,6 +12,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import DeviceInfo from 'react-native-device-info'
 
 import 'react-native-gesture-handler' // This must be included in the top component file
 
@@ -21,9 +22,11 @@ import { usePrepareThemes } from './styles/tools/usePrepareThemes'
 
 import { persistor, store } from './store'
 import { selectSettings } from './store/settings'
+import { useSyncLoop } from './store/sync'
 
 import { AppWrappedForDistribution, trackNavigation, useConfigForDistribution } from './distro'
 
+import RootErrorBoundary from './screens/components/RootErrorBoundary'
 import HeaderBar from './screens/components/HeaderBar'
 
 import StartScreen from './screens/StartScreen/StartScreen'
@@ -40,9 +43,7 @@ import MainSettingsScreen from './screens/SettingsScreens/screens/MainSettingsSc
 import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
 import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
-import RootErrorBoundary from './screens/components/RootErrorBoundary'
-import DeviceInfo from 'react-native-device-info'
-import { useSyncLoop } from './store/sync'
+import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/OperationLocationScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -131,6 +132,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="OperationStationInfo"
             options={{ title: 'Station & Operator Info', headerBackTitle: 'Operation' }}
             component={OperationStationInfoScreen}
+          />
+
+          <Stack.Screen name="OperationLocation"
+            options={{ title: 'Operation Location', headerBackTitle: 'Operation' }}
+            component={OperationLocationScreen}
           />
 
           <Stack.Screen name="OperationAddActivity"

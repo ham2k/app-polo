@@ -90,7 +90,7 @@ async function syncOneBatchOfChanges ({ qsos, operations, dispatch, batchSize = 
       changes.meta = changes.meta || {}
       changes.meta.consent = {
         app: GLOBAL.consentAppData,
-        operation: GLOBAL.consentOpData
+        public: GLOBAL.consentOpData
       }
 
       if (DEBUG) console.log(' -- calling hook')
