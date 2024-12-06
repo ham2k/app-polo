@@ -94,7 +94,7 @@ export default function OperationLocationScreen ({ navigation, route }) {
         <Ham2kListSection title={'Selected Location'}>
           <GridInput
             style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
-            value={operation?.grid}
+            value={operation?.grid || ''}
             label="Maidenhead Grid Square Locator"
             placeholder={settings?.useGrid8 ? 'AA00aa00' : 'AA00aa'}
             onChangeText={handleChangeGrid}
