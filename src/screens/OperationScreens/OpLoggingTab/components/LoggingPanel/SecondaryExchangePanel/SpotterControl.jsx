@@ -24,7 +24,7 @@ import { setOperationLocalData } from '../../../../../../store/operations'
 const SECONDS_UNTIL_RESPOT = 30
 
 export function SpotterControlInputs (props) {
-  const { operation, vfo, styles, style, settings, setCurrentSecondaryControl } = props
+  const { operation, vfo, styles, style, settings, setCurrentSecondaryControl, focusedRef } = props
 
   const online = useSelector(selectRuntimeOnline)
 
@@ -90,6 +90,7 @@ export function SpotterControlInputs (props) {
     <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
       <ThemedTextInput
         innerRef={ref}
+        focusedRef={focusedRef}
         style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace, flex: 1 }}
         label={'Comments'}
         value={comments ?? ''}
