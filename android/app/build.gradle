@@ -1,4 +1,6 @@
 apply plugin: "com.android.application"
+apply plugin: "com.google.gms.google-services"
+apply plugin: "com.google.firebase.crashlytics"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply from: project(":react-native-config").projectDir.getPath() + "/dotenv.gradle"
@@ -97,10 +99,10 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file(project.env.get("MYAPP_UPLOAD_STORE_FILE"))
-            storePassword project.env.get("MYAPP_UPLOAD_STORE_PASSWORD")
-            keyAlias project.env.get("MYAPP_UPLOAD_KEY_ALIAS")
-            keyPassword project.env.get("MYAPP_UPLOAD_KEY_PASSWORD")
+            storeFile file(MYAPP_UPLOAD_STORE_FILE)
+            storePassword MYAPP_UPLOAD_STORE_PASSWORD
+            keyAlias MYAPP_UPLOAD_KEY_ALIAS
+            keyPassword MYAPP_UPLOAD_KEY_PASSWORD
         }
     }
     buildTypes {
@@ -120,6 +122,11 @@ android {
             initWith release
             applicationIdSuffix ".prod"
         }
+    }
+    android.buildTypes.each { buildType ->
+       // to prevent incorrect long value restoration from strings.xml we need to wrap it with double quotes
+        // https://github.com/microsoft/cordova-plugin-code-push/issues/264
+        buildType.resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
     }
 }
 

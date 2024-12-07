@@ -7,3 +7,7 @@ ruby ">= 2.6.10"
 # bound in the template on Cocoapods with next React Native release.
 gem 'cocoapods', '>= 1.13', '< 1.15'
 gem 'activesupport', '>= 6.1.7.3', '< 7.1.0'
+
+# Ham2K-specific gems
+gem "rake"
+gem "dotenv"
