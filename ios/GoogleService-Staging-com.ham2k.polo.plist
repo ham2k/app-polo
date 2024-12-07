@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDm84wEezhV5Jy_GQRZiCIrS2iWk2fiBYU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>545346794805</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ham2k.polo</string>
+	<key>PROJECT_ID</key>
+	<string>ham2k-polo-staging</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ham2k-polo-staging.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:545346794805:ios:5f1b4b98376512e859087c</string>
+</dict>
+</plist>
