@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "675275536936",
+    "project_id": "ham2k-polo",
+    "storage_bucket": "ham2k-polo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675275536936:android:3bbd748f3112eccfc7d31d",
+        "android_client_info": {
+          "package_name": "com.ham2k.polo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbj_tEwTSWQ0X8B8iLcRWER_QyOuLLkk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
