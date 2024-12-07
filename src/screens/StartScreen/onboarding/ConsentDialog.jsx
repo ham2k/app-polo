@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, Switch, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
-import { View } from 'react-native'
+import { Linking, View } from 'react-native'
 import { setSystemFlag } from '../../../store/system'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
 
@@ -40,6 +40,13 @@ export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPreviou
     <Ham2kDialog visible={true} dismissable={false}>
       <Dialog.Title style={{ textAlign: 'center' }}>Data & Privacy</Dialog.Title>
       <Dialog.Content>
+        <Text style={{ fontSize: styles.normalFontSize, marginBottom: styles.oneSpace * 2, textAlign: 'center' }}>
+          By continuing to use this app, you're agreeing to our{' '}
+          <Text style={{ textDecorationLine: 'underline' }} onPress={async () => await Linking.openURL('https://ham2k.com/legal/privacy')}>
+            Privacy Policy
+          </Text>.
+        </Text>
+
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'left', marginBottom: styles.oneSpace * 2, marginTop: styles.oneSpace * 2 }}>
           To help us make the app better, we'd like to collect performance, crash, and app usage data.
         </Text>
