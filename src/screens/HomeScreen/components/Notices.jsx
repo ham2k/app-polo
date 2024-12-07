@@ -18,6 +18,7 @@ import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { dismissNotice, selectNotices } from '../../../store/system/systemSlice'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { trackEvent, handleNoticeActionForDistribution } from '../../../distro'
+import KeepAwake from '@sayem314/react-native-keep-awake'
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -153,6 +154,7 @@ export default function Notices () {
     >
       {overlayText && (
         <Ham2kDialog visible={true}>
+          <KeepAwake />
           <Dialog.Content>
             <Ham2kMarkdown styles={styles} style={{ paddingTop: 3 * styles.oneSpace, color: styles.colors.onBackground }}>{overlayText}</Ham2kMarkdown>
           </Dialog.Content>

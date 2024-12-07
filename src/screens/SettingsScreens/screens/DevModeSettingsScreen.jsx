@@ -8,7 +8,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useState } from 'react'
 import { List } from 'react-native-paper'
-import { ScrollView, View } from 'react-native'
+import { Platform, ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import DocumentPicker from 'react-native-document-picker'
 import RNFetchBlob from 'react-native-blob-util'
@@ -69,14 +69,7 @@ export default function DevModeSettingsScreen ({ navigation }) {
   }, [])
 
   const handleExportFiles = useCallback(async () => {
-    let paths = []
-    for (const operation of operations) {
-      await dispatch(loadQSOs(operation.uuid))
-      const qsonPaths = await dispatch(generateExport(operation.uuid, 'qson'))
-      if (qsonPaths?.length > 0) {
-        paths = paths.concat(qsonPaths)
-      }
-    }
+    const paths = []
     if (paths.length > 0) {
       Share.open({
         urls: paths.map(p => `file://${p}`),
@@ -92,6 +85,31 @@ export default function DevModeSettingsScreen ({ navigation }) {
       })
     }
   }, [dispatch, operations])
+
+  const handleExportDB = useCallback(async () => {
+    const paths = []
+    if (Platform.OS === 'ios') {
+      paths.push(`${RNFetchBlob.fs.dirs.DocumentDir}/../Library/NoCloud/polo.sqlite`)
+    } else if (Platform.OS === 'android') {
+      paths.push(`${RNFetchBlob.fs.dirs.DocumentDir}/polo.sqlite`)
+    }
+
+    console.log(paths)
+    if (paths.length > 0) {
+      Share.open({
+        urls: paths.map(p => `file://${p}`),
+        type: 'text/plain' // There is no official QSON mime type
+      }).then((x) => {
+        console.info('Shared', x)
+      }).catch((e) => {
+        console.info('Sharing Error', e)
+      }).finally(() => {
+        // Deleting these file causes GMail on Android to fail to attach it
+        // So for the time being, we're leaving them in place.
+        // dispatch(deleteExport(path))
+      })
+    }
+  }, [])
 
   const handleImportFiles = useCallback(() => {
     DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
@@ -123,11 +141,11 @@ export default function DevModeSettingsScreen ({ navigation }) {
         <DevModeSettingsForDistribution styles={styles} dispatch={dispatch} settings={settings} operations={operations} />
         <Ham2kListSection title={'Data'}>
           <Ham2kListItem
-            title="Export all operation data"
+            title="Export Database"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
-            onPress={handleExportFiles}
+            onPress={handleExportDB}
           />
           <Ham2kListItem
             title="Import QSON file"

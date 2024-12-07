@@ -137,6 +137,10 @@ export async function createTables (dbParams = {}) {
               `, [UUID.v1(), qso.key, qso.operation], dbParams)
         }
       }
+      const uuidSuffix = UUID.v4().split('-').slice(1).join('-')
+      await dbExecute(`
+            UPDATE qsos SET uuid = lower(hex(randomblob(4))) || "-" || ?
+          `, [uuidSuffix], { dbParams })
       await dbExecute(`
         CREATE TABLE IF NOT EXISTS qsos_new (
           uuid TEXT PRIMARY KEY NOT NULL,

@@ -222,8 +222,13 @@ export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch,
 
   const streamingPromise = new Promise((resolve, reject) => {
     let previousChunk = ''
-    RNFetchBlob.fs.readStream(response.data, 'utf8', chunkSize ?? 4096).then(stream => {
-      stream.onData(chunk => {
+    RNFetchBlob.fs.readStream(response.data, 'base64', chunkSize ?? 4096).then(stream => {
+      stream.onData(chunk64 => {
+        // The utf8 encoder in RNFetchBlob often breaks when there are some odd characters.
+        // whereas `Buffer` is more resilient, so we go thru extra hoops, which are slower but more reliable
+        const buffer = Buffer.from(chunk64, 'base64')
+        let chunk = buffer.toString('utf8')
+
         // If the chunk ends with a complete line, then it ends in "\n" and `lines` will have an empty element as last.
         // but if it's not a complete line, then the last element will be the partial line.
         // In either case, we save it as `previousChunk` and remove it from the array,

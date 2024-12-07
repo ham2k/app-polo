@@ -16,6 +16,7 @@ import { selectSectionedQSOs } from '../../../store/qsos'
 import { CallInfoPanel } from './components/CallInfoPanel'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { OpInfoPanel } from './components/OpInfoPanel'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function OpInfoTab ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
@@ -28,10 +29,20 @@ export default function OpInfoTab ({ navigation, route }) {
   }, [loggingState?.qso?._isNew])
 
   const styles = useThemedStyles()
+  const safeArea = useSafeAreaInsets()
 
   return (
-    <View style={{ height: '100%', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch', backgroundColor: styles.theme.colors[`${themeColor}Container`] }}>
-      <OpInfoPanel styles={styles} style={{ maxHeight: '60%' }} qsos={qsos} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
+    <View
+      style={{
+        height: '100%',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        backgroundColor: styles.theme.colors[`${themeColor}Container`],
+        paddingRight: safeArea.right
+      }}
+    >
+      <OpInfoPanel styles={styles} style={{ maxHeight: '95%' }} qsos={qsos} qso={loggingState.qso} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
       <CallInfoPanel styles={styles} style={{ flexDirection: 'column-reverse' }} qso={loggingState.qso} operation={operation} sections={sections} themeColor={themeColor} />
     </View>
   )

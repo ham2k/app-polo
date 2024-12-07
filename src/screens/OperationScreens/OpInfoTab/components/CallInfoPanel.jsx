@@ -18,6 +18,7 @@ import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 import { useCallLookup } from './useCallLookup'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 import { findHooks } from '../../../../extensions/registry'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const HISTORY_QSOS_TO_SHOW = 3
 
@@ -133,6 +134,8 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
     .map(hook => hook?.fetchConfirmation(qso))
     .filter(confirmation => confirmation !== undefined)
 
+  const safeArea = useSafeAreaInsets()
+
   return (
     <GestureHandlerRootView style={[style, styles.root]}>
       <ScrollView>
@@ -214,7 +217,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                 ))}
               </View>
             )}
-            <View style={styles.section}>
+            <View style={[styles.section, { marginBottom: safeArea.bottom }]}>
               <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
                 {historyTitle}
               </Text>
