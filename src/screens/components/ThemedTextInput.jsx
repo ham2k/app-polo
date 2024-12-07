@@ -40,14 +40,16 @@ export default function ThemedTextInput (props) {
     else return `${value}`
   }, [value])
 
+  const trackSelection = useMemo(() => !!focusedRef, [focusedRef])
+
   const [currentSelection, setCurrentSelection] = useState({})
   const [isFocused, setIsFocused] = useState(false)
 
   useEffect(() => {
-    if (currentSelection.start > stringValue.length) {
+    if (trackSelection && currentSelection.start > stringValue.length) {
       setCurrentSelection({ start: stringValue.length, end: stringValue.length })
     }
-  }, [stringValue, currentSelection])
+  }, [trackSelection, stringValue, currentSelection])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
@@ -94,7 +96,7 @@ export default function ThemedTextInput (props) {
         text = textTransformer(text)
       }
 
-      if (text.length !== stringValue.length) {
+      if (trackSelection && text.length !== stringValue.length) {
         const selectionFromVirtualNumericKeys = event.selectionFromVirtualNumericKeys ?? {}
         const start = selectionFromVirtualNumericKeys.start ?? currentSelection.start ?? stringValue.length
         const end = selectionFromVirtualNumericKeys.end ?? currentSelection.end ?? stringValue.length
@@ -136,7 +138,7 @@ export default function ThemedTextInput (props) {
   }, [
     multiline, fieldId, actualInnerRef, stringValue,
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
-    textTransformer, currentSelection, onChangeText, onChange, onSpace
+    textTransformer, currentSelection, onChangeText, onChange, onSpace, trackSelection
   ])
 
   useEffect(() => {
@@ -163,9 +165,11 @@ export default function ThemedTextInput (props) {
   }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, stringValue, actualInnerRef, multiline, setCurrentSelection])
 
   const handleSelectionChange = useCallback((event) => {
-    const { nativeEvent: { selection: { start, end } } } = event
-    setCurrentSelection({ start, end })
-  }, [setCurrentSelection])
+    if (trackSelection) {
+      const { nativeEvent: { selection: { start, end } } } = event
+      setCurrentSelection({ start, end })
+    }
+  }, [setCurrentSelection, trackSelection])
 
   const handleFocus = useCallback((event) => {
     setIsFocused(true)
@@ -253,13 +257,13 @@ export default function ThemedTextInput (props) {
         onChangeText={undefined}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        onSelectionChange={handleSelectionChange}
-        selection={currentSelection}
+        onSelectionChange={trackSelection ? handleSelectionChange : undefined}
+        selection={trackSelection ? currentSelection : undefined}
       />
     )
   }, [
     stringValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
-    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange, currentSelection
+    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange, currentSelection, trackSelection
   ])
 
   return (
