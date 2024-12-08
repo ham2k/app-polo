@@ -35,6 +35,8 @@ export default function ThemedTextInput (props) {
   const alternateInnerRef = useRef()
   const actualInnerRef = innerRef ?? alternateInnerRef
 
+  const selectionRef = useRef({})
+
   const stringValue = useMemo(() => {
     if (typeof value === 'string') return value
     else return `${value}`
@@ -42,14 +44,14 @@ export default function ThemedTextInput (props) {
 
   const trackSelection = useMemo(() => !!focusedRef, [focusedRef])
 
-  const [currentSelection, setCurrentSelection] = useState({})
   const [isFocused, setIsFocused] = useState(false)
 
   useEffect(() => {
-    if (trackSelection && currentSelection.start > stringValue.length) {
-      setCurrentSelection({ start: stringValue.length, end: stringValue.length })
+    if (trackSelection && (selectionRef.current.start || 0) > stringValue.length) {
+      selectionRef.current.start = stringValue.length
+      selectionRef.current.end = stringValue.length
     }
-  }, [trackSelection, stringValue, currentSelection])
+  }, [trackSelection, stringValue])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
@@ -98,20 +100,16 @@ export default function ThemedTextInput (props) {
 
       if (trackSelection && text.length !== stringValue.length) {
         const selectionFromVirtualNumericKeys = event.selectionFromVirtualNumericKeys ?? {}
-        const start = selectionFromVirtualNumericKeys.start ?? currentSelection.start ?? stringValue.length
-        const end = selectionFromVirtualNumericKeys.end ?? currentSelection.end ?? stringValue.length
+        const start = selectionFromVirtualNumericKeys.start ?? selectionRef.current.start ?? stringValue.length
+        const end = selectionFromVirtualNumericKeys.end ?? selectionRef.current.end ?? stringValue.length
         // Sometimes, updating the value causes the native text field to also update the selection
         // to a value that is not the one we want. So we have to delay our update in order to overwrite it.
-        setCurrentSelection({
-          start: start + (text.length - stringValue.length),
-          end: end + (text.length - stringValue.length)
-        })
+        selectionRef.current.start = start + (text.length - stringValue.length)
+        selectionRef.current.end = end + (text.length - stringValue.length)
         setTimeout(() => {
-          setCurrentSelection({
-            start: start + (text.length - stringValue.length),
-            end: end + (text.length - stringValue.length)
-          })
-        }, 20)
+          selectionRef.current.start = start + (text.length - stringValue.length)
+          selectionRef.current.end = end + (text.length - stringValue.length)
+        }, 10)
       }
 
       event.nativeEvent.text = text
@@ -122,14 +120,6 @@ export default function ThemedTextInput (props) {
     changeEvent.ref = actualInnerRef
     changeEvent.nativeEvent.text = text
     const spaceEvent = { nativeEvent: { key: ' ', target: event.nativeEvent.target } }
-    // if (Platform.OS === 'android') {
-    //   // This delay minimizes issues when using external keyboards on Android
-    //   // setTimeout(() => {
-    //   onChangeText && onChangeText(text)
-    //   onChange && onChange(changeEvent)
-    //   if (spaceAdded) onSpace && onSpace(spaceEvent)
-    //   // }, 50)
-    // } else {
     actualInnerRef.current.setNativeProps({ text })
     onChangeText && onChangeText(text)
     onChange && onChange(changeEvent)
@@ -138,7 +128,7 @@ export default function ThemedTextInput (props) {
   }, [
     multiline, fieldId, actualInnerRef, stringValue,
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
-    textTransformer, currentSelection, onChangeText, onChange, onSpace, trackSelection
+    textTransformer, onChangeText, onChange, onSpace, trackSelection
   ])
 
   useEffect(() => {
@@ -147,7 +137,7 @@ export default function ThemedTextInput (props) {
         onNumberKey: (number) => {
           if (!isFocused) return
 
-          let { start, end } = currentSelection
+          let { start, end } = selectionRef.current
           // If selection position is unknown, we assume the cursor is at the end of the string
           start = start ?? stringValue.length ?? 0
           end = end ?? stringValue.length ?? 0
@@ -162,14 +152,15 @@ export default function ThemedTextInput (props) {
         }
       }
     }
-  }, [currentSelection, fieldId, focusedRef, handleChange, isFocused, stringValue, actualInnerRef, multiline, setCurrentSelection])
+  }, [fieldId, focusedRef, handleChange, isFocused, stringValue, actualInnerRef, multiline])
 
   const handleSelectionChange = useCallback((event) => {
     if (trackSelection) {
       const { nativeEvent: { selection: { start, end } } } = event
-      setCurrentSelection({ start, end })
+      selectionRef.current.start = start
+      selectionRef.current.end = end
     }
-  }, [setCurrentSelection, trackSelection])
+  }, [trackSelection])
 
   const handleFocus = useCallback((event) => {
     setIsFocused(true)
@@ -196,34 +187,37 @@ export default function ThemedTextInput (props) {
   }, [themeStyles, themeColor])
 
   const keyboardOptions = useMemo(() => {
-    const dumbDownKeyboardProps = {
-      autoComplete: 'off',
-      autoCorrect: false,
-      disableFullScreenUI: false,
-      enterKeyHint: 'send',
-      importantForAutofill: 'no',
-      inputMode: undefined,
-      spellCheck: false,
-      // textContentType: 'none',
+    let keyboardOpts
 
-      // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
-      keyboardAppearance: (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light',
-
-      // On Android, "visible-password" would enable numbers in the keyboard, and disable autofill
-      // but it has serious lag issues https://github.com/facebook/react-native/issues/35735
-      keyboardType: 'visible-password',
-      // secureTextEntry: Platform.OS === 'android'
-      textContentType: Platform.OS === 'android' ? 'password' : 'none'
+    if (multiline || keyboard === 'normal' || !keyboard) {
+      keyboardOpts = {
+        autoCapitalize: 'sentences',
+        inputMode: 'text'
+      }
+    } else if (keyboard === 'dumb' || keyboard === 'numbers') {
+      keyboardOpts = {
+        autoComplete: 'off',
+        autoCorrect: false,
+        disableFullScreenUI: false, // Android only
+        importantForAutofill: 'no', // Android only
+        textContentType: 'none', // iOS only
+        spellCheck: false,
+        keyboardType: Platform.OS === 'android' ? 'visible-password' : 'default'
+      }
+      if (keyboard === 'numbers') {
+        keyboardOpts.keyboardType = Platform.OS === 'android' ? 'visible-password' : 'numbers-and-punctuation'
+        keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
+      }
     }
 
-    if (multiline) dumbDownKeyboardProps.autoCapitalize = 'sentences'
-    else if (uppercase) dumbDownKeyboardProps.autoCapitalize = 'characters'
+    if (uppercase) keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
 
-    if (keyboard === 'numbers') dumbDownKeyboardProps.keyboardType = 'numbers-and-punctuation'
+    keyboardOpts.enterKeyHint = 'send'
 
-    dumbDownKeyboardProps.keyboardAppearance = (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
+    // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
+    keyboardOpts.keyboardAppearance = (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
 
-    return dumbDownKeyboardProps
+    return keyboardOpts
   }, [keyboard, themeStyles.isDarkMode, uppercase, multiline])
 
   const renderInput = useCallback((props) => {
@@ -258,12 +252,12 @@ export default function ThemedTextInput (props) {
         onFocus={handleFocus}
         onBlur={handleBlur}
         onSelectionChange={trackSelection ? handleSelectionChange : undefined}
-        selection={trackSelection ? currentSelection : undefined}
+        selection={trackSelection ? selectionRef.current : undefined} // Using a ref for props is frowned upon, but this is the only way to update the selection without causing further updates
       />
     )
   }, [
     stringValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
-    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange, currentSelection, trackSelection
+    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange, trackSelection
   ])
 
   return (
