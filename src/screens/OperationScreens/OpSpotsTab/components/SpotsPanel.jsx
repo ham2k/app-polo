@@ -195,19 +195,18 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
   const mergedOpSpots = useMemo(() => {
     const mOpSpots = []
     scoredSpots.forEach((spot) => {
-      const refSet = new Set(spot.refs.map(x => x.ref))
       // Not digital as could be multiple people on one freq. e.g. FT8
       const matchingSpot = superModeForMode(spot.mode) !== 'DATA' && mOpSpots.find(opSpot => (
         spot.spot.type === opSpot.spot.type && // Don't mix scoring and dupes
-        Math.abs(spot.freq - opSpot.freq) <= 0.1 && // 0.1 kHz
-        Math.abs(spot.spot.timeInMillis - opSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
-        spot.refs.length === opSpot.refs.length && // all refs match
-        opSpot.refs.every(ref => refSet.has(ref.ref))
+          Math.abs(spot.freq - opSpot.freq) <= 0.1 && // 0.1 kHz
+          Math.abs(spot.spot.timeInMillis - opSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
+          spot.refs.length === opSpot.refs.length && // all refs match
+          opSpot.refs.every(ref => spot.refs.find(x => x.ref))
       ))
       if (matchingSpot) {
-        matchingSpot.their.call = `${matchingSpot.their.call},${spot.their.call}`
+        matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call},${spot.their.call}` }
       } else {
-        mOpSpots.push({ ...spot, their: { call: spot.their.call } })
+        mOpSpots.push(spot)
       }
     })
     return mOpSpots
