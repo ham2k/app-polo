@@ -187,34 +187,37 @@ export default function ThemedTextInput (props) {
   }, [themeStyles, themeColor])
 
   const keyboardOptions = useMemo(() => {
-    const dumbDownKeyboardProps = {
-      autoComplete: 'off',
-      autoCorrect: false,
-      disableFullScreenUI: false,
-      enterKeyHint: 'send',
-      importantForAutofill: 'no',
-      inputMode: undefined,
-      spellCheck: false,
-      // textContentType: 'none',
+    let keyboardOpts
 
-      // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
-      keyboardAppearance: (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light',
-
-      // On Android, "visible-password" would enable numbers in the keyboard, and disable autofill
-      // but it has serious lag issues https://github.com/facebook/react-native/issues/35735
-      keyboardType: 'visible-password',
-      // secureTextEntry: Platform.OS === 'android'
-      textContentType: Platform.OS === 'android' ? 'password' : 'none'
+    if (multiline || keyboard === 'normal' || !keyboard) {
+      keyboardOpts = {
+        autoCapitalize: 'sentences',
+        inputMode: 'text'
+      }
+    } else if (keyboard === 'dumb' || keyboard === 'numbers') {
+      keyboardOpts = {
+        autoComplete: 'off',
+        autoCorrect: false,
+        disableFullScreenUI: false, // Android only
+        importantForAutofill: 'no', // Android only
+        textContentType: 'none', // iOS only
+        spellCheck: false,
+        keyboardType: Platform.OS === 'android' ? 'visible-password' : 'default'
+      }
+      if (keyboard === 'numbers') {
+        keyboardOpts.keyboardType = Platform.OS === 'android' ? 'visible-password' : 'numbers-and-punctuation'
+        keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
+      }
     }
 
-    if (multiline) dumbDownKeyboardProps.autoCapitalize = 'sentences'
-    else if (uppercase) dumbDownKeyboardProps.autoCapitalize = 'characters'
+    if (uppercase) keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
 
-    if (keyboard === 'numbers') dumbDownKeyboardProps.keyboardType = 'numbers-and-punctuation'
+    keyboardOpts.enterKeyHint = 'send'
 
-    dumbDownKeyboardProps.keyboardAppearance = (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
+    // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
+    keyboardOpts.keyboardAppearance = (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
 
-    return dumbDownKeyboardProps
+    return keyboardOpts
   }, [keyboard, themeStyles.isDarkMode, uppercase, multiline])
 
   const renderInput = useCallback((props) => {
