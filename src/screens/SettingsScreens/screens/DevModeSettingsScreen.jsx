@@ -8,7 +8,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useState } from 'react'
 import { List } from 'react-native-paper'
-import { Platform, ScrollView, View } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import DocumentPicker from 'react-native-document-picker'
 import RNFetchBlob from 'react-native-blob-util'
@@ -18,9 +18,8 @@ import DeviceInfo from 'react-native-device-info'
 import packageJson from '../../../../package.json'
 
 import { DevModeSettingsForDistribution, reportError } from '../../../distro'
-import { loadQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
-import { generateExport, importQSON, selectOperationsList } from '../../../store/operations'
+import { importQSON, selectOperationsList } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
@@ -28,7 +27,7 @@ import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { SyncServiceDialog } from '../components/SyncServiceDialog'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
-import { dbSelectAll } from '../../../store/db/db'
+import { dbSelectAll, pathForDatabase, replaceDatabase, resetDatabase } from '../../../store/db/db'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { resetSyncedStatus } from '../../../store/sync'
 import { selectFiveSecondsTick } from '../../../store/time'
@@ -68,31 +67,9 @@ export default function DevModeSettingsScreen ({ navigation }) {
     setSyncStatus(await syncCountDescription())
   }, [])
 
-  const handleExportFiles = useCallback(async () => {
-    const paths = []
-    if (paths.length > 0) {
-      Share.open({
-        urls: paths.map(p => `file://${p}`),
-        type: 'text/plain' // There is no official QSON mime type
-      }).then((x) => {
-        console.info('Shared', x)
-      }).catch((e) => {
-        console.info('Sharing Error', e)
-      }).finally(() => {
-        // Deleting these file causes GMail on Android to fail to attach it
-        // So for the time being, we're leaving them in place.
-        // dispatch(deleteExport(path))
-      })
-    }
-  }, [dispatch, operations])
-
   const handleExportDB = useCallback(async () => {
     const paths = []
-    if (Platform.OS === 'ios') {
-      paths.push(`${RNFetchBlob.fs.dirs.DocumentDir}/../Library/NoCloud/polo.sqlite`)
-    } else if (Platform.OS === 'android') {
-      paths.push(`${RNFetchBlob.fs.dirs.DocumentDir}/polo.sqlite`)
-    }
+    paths.push(pathForDatabase())
 
     console.log(paths)
     if (paths.length > 0) {
@@ -109,6 +86,33 @@ export default function DevModeSettingsScreen ({ navigation }) {
         // dispatch(deleteExport(path))
       })
     }
+  }, [])
+
+  const handleImportDB = useCallback(async () => {
+    DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
+      const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
+      await replaceDatabase(filename)
+      RNFetchBlob.fs.unlink(filename)
+    }).catch((error) => {
+      console.log(error)
+      if (error.indexOf('cancelled') >= 0) {
+        // ignore
+      } else {
+        reportError('Error importing database', error)
+      }
+    })
+  }, [])
+
+  const handleWipeDB = useCallback(() => {
+    Alert.alert('Wipe Database?', 'Are you sure you want to delete all Operations, QSOs and other data?', [
+      { text: 'No, Cancel', onPress: () => {} },
+      {
+        text: 'Yes, Wipe It!',
+        onPress: async () => {
+          await resetDatabase()
+        }
+      }
+    ])
   }, [])
 
   const handleImportFiles = useCallback(() => {
@@ -139,20 +143,39 @@ export default function DevModeSettingsScreen ({ navigation }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <DevModeSettingsForDistribution styles={styles} dispatch={dispatch} settings={settings} operations={operations} />
-        <Ham2kListSection title={'Data'}>
-          <Ham2kListItem
-            title="Export Database"
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
-            titleStyle={{ color: styles.colors.devMode }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            onPress={handleExportDB}
-          />
+        <Ham2kListSection title={'Import'}>
           <Ham2kListItem
             title="Import QSON file"
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-download" color={styles.colors.devMode} />}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleImportFiles}
+          />
+        </Ham2kListSection>
+        <Ham2kListSection title={'Manage Database'}>
+          <Ham2kListItem
+            title="Export Database"
+            description={'Export the current database file'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            onPress={handleExportDB}
+          />
+          <Ham2kListItem
+            title="Replace Database"
+            description={'Import a new database file and replace all data'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-edit" color={styles.colors.devMode} />}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            onPress={handleImportDB}
+          />
+          <Ham2kListItem
+            title="Wipe Database"
+            description={'Delete all data from the database.'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-remove" color={styles.colors.devMode} />}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            onPress={handleWipeDB}
           />
         </Ham2kListSection>
         <Ham2kListSection title={'Sync Services'}>

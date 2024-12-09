@@ -167,6 +167,16 @@ export function fmtDateTimeRelative (t, { now = null, roundTo = false } = {}) {
   }
 }
 
+export function fmtTimestamp (t) {
+  t = prepareTimeValue(t)
+
+  if (t && t.toISOString) {
+    return t.toISOString().substring(0, 19).replace(/[-:T]/g, '')
+  } else {
+    return ''
+  }
+}
+
 export function fmtADIFDate (t) {
   t = prepareTimeValue(t)
 

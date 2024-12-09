@@ -5,7 +5,6 @@ PODS:
   - AppAuth/Core (1.7.5)
   - AppAuth/ExternalUserAgent (1.7.5):
     - AppAuth/Core
-  - Base64 (1.1.2)
   - boost (1.83.0)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.74.2)
@@ -14,8 +13,6 @@ PODS:
   - hermes-engine (0.74.2):
     - hermes-engine/Pre-built (= 0.74.2)
   - hermes-engine/Pre-built (0.74.2)
-  - JWT (3.0.0-beta.14):
-    - Base64 (~> 1.1.2)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1022,6 +1019,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-restart (0.0.27):
+    - React-Core
   - react-native-safe-area-context (4.11.0):
     - React-Core
   - react-native-splash-screen (3.3.0):
@@ -1393,7 +1392,6 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.0)
-  - SSZipArchive (2.5.5)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1438,6 +1436,7 @@ DEPENDENCIES:
   - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
+  - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-sqlite-2 (from `../node_modules/react-native-sqlite-2`)
@@ -1476,10 +1475,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppAuth
-    - Base64
-    - JWT
     - SocketRocket
-    - SSZipArchive
 
 EXTERNAL SOURCES:
   boost:
@@ -1561,6 +1557,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
+  react-native-restart:
+    :path: "../node_modules/react-native-restart"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
@@ -1632,14 +1630,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
-  Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: 4bc164e5b5e6cfc288d2b5ff28643ea15fa1a589
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: fdfdfe5479092de0c4bdbebedd9056951f092c4f
   hermes-engine: 01d3e052018c2a13937aca1860fbedbccd4a41b7
-  JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
   RCTDeprecation: b03c35057846b685b3ccadc9bfe43e349989cdb2
   RCTRequired: 194626909cfa8d39ca6663138c417bc6c431648c
@@ -1673,6 +1669,7 @@ SPEC CHECKSUMS:
   react-native-maps: 2e6e9896195781327ee15b33e3e84bf73c08207a
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-pager-view: ec794201907d9b62825bcf2a3a6ed3ff493c2ab8
+  react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
   react-native-safe-area-context: 851c62c48dce80ccaa5637b6aa5991a1bc36eca9
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-sqlite-2: 21c4a9d439e92193a8712c68492731c014671b53
@@ -1707,7 +1704,6 @@ SPEC CHECKSUMS:
   RNShare: 0fad69ae2d71de9d1f7b9a43acf876886a6cb99c
   RNVectorIcons: 3e3d9442edd8b15b0ef3cac19960048380a10399
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  SSZipArchive: c69881e8ac5521f0e622291387add5f60f30f3c4
   Yoga: 9ad2c02dbd9811bb5a35fe23081cb0f5d5a3f9dd
 
 PODFILE CHECKSUM: 3e927f4b45f71da8b64d9e8b24e6cb1020fe9e40
