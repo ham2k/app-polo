@@ -115,3 +115,14 @@ appcenter codepush release-react -a Ham2K/polo-ios -d Staging -t $BASE_VERSION
 
 * Announce in Discord #polo-releases
 * Send email to testers
+
+
+# Creating a new release branch
+
+Say you want to start a new release branch for January 2025:
+
+1- Rebase `dist/reference-release` on top of `main`, and force push to `ham2k/app-polo-dist`
+2- Check for changes from the previous release and apply to `dist/reference-release`
+  * [via github](https://github.com/ham2k/app-polo-dist/compare/dist/release-december..dist/reference-release)
+  * `git diff dist/release-december..dist/reference-release`
+3- Create a new branch `dist/release-january` from `dist/reference-release`
