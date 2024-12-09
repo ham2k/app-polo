@@ -11,7 +11,7 @@ namespace :release do
     appcenter_push_release(deployment: 'Development', platform: 'android', version: release_info[:version])
     appcenter_push_release(deployment: 'Development', platform: 'ios', version: release_info[:version])
 
-    system "git tag -a #{release_info[:version]}-bundle-bleeding -m ''"
+    system "git tag -a #{release_version}-bundle-bleeding"
   end
 
   task :unstable => :dotenv do
@@ -21,7 +21,7 @@ namespace :release do
     appcenter_promote_release(from: 'Staging', to: 'Development', platform: 'android')
     appcenter_promote_release(from: 'Staging', to: 'Development', platform: 'ios')
 
-    system "git tag -a #{release_info[:version]}-bundle-unstable -m ''"
+    system "git tag -a #{release_version}-bundle-unstable"
   end
 
   task :unstable_only => :dotenv do
@@ -29,7 +29,7 @@ namespace :release do
     appcenter_push_release(deployment: 'Staging', platform: 'android', version: release_info[:version])
     appcenter_push_release(deployment: 'Staging', platform: 'ios', version: release_info[:version])
 
-    system "git tag -a #{release_info[:version]}-bundle-unstable -m ''"
+    system "git tag -a #{release_version}-bundle-unstable"
   end
 
   task :promote_unstable => :dotenv do
@@ -48,7 +48,7 @@ namespace :release do
     appcenter_promote_release(from: 'Production', to: 'Staging', platform: 'android')
     appcenter_promote_release(from: 'Production', to: 'Staging', platform: 'ios')
 
-    system "git tag -a #{release_info[:version]}-bundle-stable -m ''"
+    system "git tag -a #{release_version}-bundle-stable"
   end
 
   task :list => :dotenv do
