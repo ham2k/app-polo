@@ -35,8 +35,8 @@ export async function createTables (dbParams = {}) {
           uuid TEXT PRIMARY KEY NOT NULL,
           data TEXT,
           localData TEXT,
-          startOnMillisMin INTEGER,
-          startOnMillisMax INTEGER,
+          startAtMillisMin INTEGER,
+          startAtMillisMax INTEGER,
           qsoCount INTEGER,
           deleted BOOLEAN DEFAULT false,
           synced BOOLEAN DEFAULT false
