@@ -49,14 +49,30 @@ function prepareStyles (themeStyles, themeColor) {
         textAlign: 'right',
         fontSize: themeStyles.normalFontSize * 0.7
       },
+      callAndEmoji: {
+        ...commonStyles,
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: themeStyles.oneSpace * 1.45,
+        minWidth: themeStyles.oneSpace * 5
+      },
       call: {
         ...commonStyles,
         ...themeStyles.text.callsign,
-        flex: 1,
         fontWeight: 'bold',
-        marginLeft: themeStyles.oneSpace * 1.45,
-        minWidth: themeStyles.oneSpace * 5,
         textAlign: 'left'
+      },
+      emoji: {
+        ...commonStyles,
+        flex: 0,
+        textAlign: 'left',
+        marginRight: 0,
+        paddingLeft: themeStyles.oneSpace * 1,
+        marginTop: themeStyles.isIOS ? 0 : themeStyles.oneSpace * -0.5,
+        textShadowColor: themeStyles.isDarkMode ? 'rgb(200, 200, 200)' : 'rgb(90, 90, 90)',
+        textShadowOffset: { width: 0, height: 0 },
+        textShadowRadius: 3
       },
       band: {
         ...commonStyles,

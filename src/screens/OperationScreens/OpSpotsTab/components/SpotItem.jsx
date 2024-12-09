@@ -63,10 +63,12 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
             <Text style={[styles.fields.freqKHz, commonStyle]}>.{freqParts[1]}</Text>
             <Text style={[styles.fields.freqHz, commonStyle]}>.{freqParts[2]}</Text>
           </Text>
-          <Text style={[styles.fields.call, commonStyle]}>
-            {spot.their?.call ?? '?'}
-            {spot.their?.guess?.emoji && ' ' + spot.their?.guess?.emoji}
-          </Text>
+          <View style={styles.fields.callAndEmoji}>
+            <Text style={[styles.fields.call, commonStyle]}>{spot.their?.call ?? '?'}</Text>
+            {spot.their?.guess?.emoji && (
+              <Text style={[styles.fields.emoji, commonStyle, { lineHeight: 20 }]}>{spot.their?.guess?.emoji}</Text>
+            )}
+          </View>
           <Text style={[styles.fields.time, commonStyle]}>{fmtDateTimeRelative(spot.spot?.timeInMillis, { roundTo: 'minutes' })}</Text>
         </View>
         <View style={styles.doubleRowInnerRow}>
