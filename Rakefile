@@ -7,46 +7,48 @@ require 'uri'
 
 namespace :release do
   task :bleeding => :dotenv do
-    release_version = JSON.parse(File.read('package.json'))['version']
-    system "appcenter codepush release-react -a Ham2K/polo-android -d Development -t $POLO_BASE_VERSION --description \"Release #{release_version}*\""
-    system "appcenter codepush release-react -a Ham2K/polo-ios -d Development -t $POLO_BASE_VERSION --description \"Release #{release_version}*\""
+    release_info = get_release_info
+    appcenter_push_release(deployment: 'Development', platform: 'android', version: release_info[:version])
+    appcenter_push_release(deployment: 'Development', platform: 'ios', version: release_info[:version])
+
+    system "git tag -a #{release_version}-bundle-bleeding"
   end
 
   task :unstable => :dotenv do
-    release_version = JSON.parse(File.read('package.json'))['version']
-    all_release_notes = JSON.parse(File.read('RELEASE-NOTES.json'))
+    release_info = get_release_info
+    appcenter_push_release(deployment: 'Staging', platform: 'android', version: release_info[:version])
+    appcenter_push_release(deployment: 'Staging', platform: 'ios', version: release_info[:version])
+    appcenter_promote_release(from: 'Staging', to: 'Development', platform: 'android')
+    appcenter_promote_release(from: 'Staging', to: 'Development', platform: 'ios')
 
-    if all_release_notes[release_version].nil?
-      puts "No release notes found for #{release_version}"
-      exit 1
-    end
+    system "git tag -a #{release_version}-bundle-unstable"
+  end
 
-    release_notes = all_release_notes[release_version]['changes']
+  task :unstable_only => :dotenv do
+    release_info = get_release_info
+    appcenter_push_release(deployment: 'Staging', platform: 'android', version: release_info[:version])
+    appcenter_push_release(deployment: 'Staging', platform: 'ios', version: release_info[:version])
 
-    release_description = <<~EOF
-      # Release #{release_version} (Supplemental)
+    system "git tag -a #{release_version}-bundle-unstable"
+  end
 
-      #{release_notes.map { |note| "- #{note}" }.join("\n")}
-    EOF
+  task :promote_unstable => :dotenv do
+    appcenter_promote_release(from: 'Staging', to: 'Development', platform: 'android')
+    appcenter_promote_release(from: 'Staging', to: 'Development', platform: 'ios')
+    appcenter_promote_release(from: 'Staging', to: 'Stable', platform: 'android')
+    appcenter_promote_release(from: 'Staging', to: 'Stable', platform: 'ios')
+  end
 
-    puts "Releasing #{release_version} bundle to Staging in AppCenter"
-    puts "=================================================================="
-    cmd = "appcenter codepush release-react -a Ham2K/polo-android -d Staging -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
-    puts "$ #{cmd}"
-    system cmd
+  task :stable => :dotenv do
+    release_info = get_release_info
+    appcenter_push_release(deployment: 'Production', platform: 'android', version: release_info[:version])
+    appcenter_push_release(deployment: 'Production', platform: 'ios', version: release_info[:version])
+    appcenter_promote_release(from: 'Production', to: 'Development', platform: 'android')
+    appcenter_promote_release(from: 'Production', to: 'Development', platform: 'ios')
+    appcenter_promote_release(from: 'Production', to: 'Staging', platform: 'android')
+    appcenter_promote_release(from: 'Production', to: 'Staging', platform: 'ios')
 
-    cmd = "appcenter codepush release-react -a Ham2K/polo-ios -d Staging -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
-    puts "$ #{cmd}"
-    system cmd
-
-    cmd = "git tag -a #{release_version}-bundle -m 'Release #{release_version}'"
-    puts "$ #{cmd}"
-    system cmd
-    puts "=================================================================="
-    puts ""
-    puts release_description
-    puts ""
-    puts "You need to be on the unstable track to test this.  (enter \"konami\" on any operation log, and then use Developer Settings to change your release track)"
+    system "git tag -a #{release_version}-bundle-stable"
   end
 
   task :list => :dotenv do
@@ -54,53 +56,8 @@ namespace :release do
     system "appcenter codepush deployment list -a Ham2K/polo-ios"
   end
 
-  task :stable => :dotenv do
-    release_version = JSON.parse(File.read('package.json'))['version']
-
-    system "appcenter codepush release-react -a Ham2K/polo-android -d Production -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
-    system "appcenter codepush release-react -a Ham2K/polo-ios -d Production -t $POLO_BASE_VERSION --description \"Release #{release_version}\""
-  end
-
-  task :promote_bleeding => :dotenv do
-    android_release_data = JSON.parse(`appcenter codepush deployment list -a Ham2K/polo-android --output json`)
-    ios_release_data = JSON.parse(`appcenter codepush deployment list -a Ham2K/polo-ios --output json`)
-    latest_android_release = android_release_data.find { |d| d["deployment"]["name"] == "Development" }["deployment"]["latestRelease"]
-    latest_ios_release = ios_release_data.find { |d| d["deployment"]["name"] == "Development" }["deployment"]["latestRelease"]
-
-
-    puts "Promoting Android #{latest_android_release["label"]} - #{latest_android_release["description"]}"
-    system "appcenter codepush promote -a Ham2K/polo-android -s Development -d Staging -t $POLO_BASE_VERSION -r 100 -l #{latest_android_release["label"]}"
-    system "appcenter codepush promote -a Ham2K/polo-android -s Development -d Production -t $POLO_BASE_VERSION -r 100  -l #{latest_android_release["label"]}"
-
-    puts "Promoting iOS #{latest_ios_release["label"]} - #{latest_ios_release["description"]}"
-    system "appcenter codepush promote -a Ham2K/polo-ios -s Development -d Staging -t $POLO_BASE_VERSION -r 100 -l #{latest_ios_release["label"]}"
-    system "appcenter codepush promote -a Ham2K/polo-ios -s Development -d Production -t $POLO_BASE_VERSION -r 100 -l #{latest_ios_release["label"]}"
-  end
-
-  task :promote_unstable => :dotenv do
-    android_release_data = JSON.parse(`appcenter codepush deployment list -a Ham2K/polo-android --output json`)
-    ios_release_data = JSON.parse(`appcenter codepush deployment list -a Ham2K/polo-ios --output json`)
-    latest_android_release = android_release_data.find { |d| d["deployment"]["name"] == "Staging" }["deployment"]["latestRelease"]
-    latest_ios_release = ios_release_data.find { |d| d["deployment"]["name"] == "Staging" }["deployment"]["latestRelease"]
-
-    puts "Promoting Android #{latest_android_release["label"]} - #{latest_android_release["description"]}"
-    system "appcenter codepush promote -a Ham2K/polo-android -s Staging -d Development -t $POLO_BASE_VERSION -r 100 -l #{latest_android_release["label"]}"
-    system "appcenter codepush promote -a Ham2K/polo-android -s Staging -d Production -t $POLO_BASE_VERSION -r 100 -l #{latest_android_release["label"]}"
-
-    puts "Promoting iOS #{latest_ios_release["label"]} - #{latest_ios_release["description"]}"
-    system "appcenter codepush promote -a Ham2K/polo-ios -s Staging -d Development -t $POLO_BASE_VERSION -r 100 -l #{latest_ios_release["label"]}"
-    system "appcenter codepush promote -a Ham2K/polo-ios -s Staging -d Production -t $POLO_BASE_VERSION -r 100 -l #{latest_ios_release["label"]}"
-  end
-
   task :discord => :dotenv do
-    release_version = JSON.parse(File.read('package.json'))['version']
-    release_notes = JSON.parse(File.read('RELEASE-NOTES.json'))[release_version]['changes']
-
-    release_description = <<-EOF
-  # Release #{release_version} (Supplemental)
-
-  #{release_notes.map { |note| "- #{note}" }.join("\n")}
-  EOF
+    release_description = get_release_info[:markdown]
 
     uri = URI.parse(ENV['DISCORD_WEBHOOK_URL'])
     header = {'Content-Type': 'application/json'}
@@ -112,11 +69,11 @@ namespace :release do
     response = http.request(request)
   end
 
-
   task :forums => :dotenv do
-    release_version = JSON.parse(File.read('package.json'))['version']
-    release_version_name = JSON.parse(File.read('package.json'))['versionName']
-    release_notes = JSON.parse(File.read('RELEASE-NOTES.json'))[release_version]['changes']
+    release_info = get_release_info
+    release_version = release_info[:version]
+    release_version_name = release_info[:version_name]
+    release_notes = release_info[:changes]
 
     if release_version =~ /\.99/
       release_track = "Test"
@@ -155,7 +112,6 @@ Direct update inside the app. Look for a notification or go to the Settings Scre
 EOF
     end
 
-
     puts "---------------------"
     puts release_description
     puts "---------------------"
@@ -168,5 +124,44 @@ EOF
     # request.body = {content: release_description}.to_json
 
     # response = http.request(request)
+  end
+
+  def appcenter_push_release(deployment:, platform:, version:)
+    puts "Pushing #{version} for #{platform} #{deployment}"
+    system "appcenter codepush release-react -a Ham2K/polo-#{platform} -d #{deployment} -t $POLO_BASE_VERSION --description \"Release #{version}*\""
+  end
+
+  def appcenter_get_latest_release(deployment:, platform:)
+    JSON.parse("appcenter codepush deployment list -a Ham2K/polo-#{platform} --output json")
+        .find { |d| d["deployment"]["name"] == deployment }["deployment"]["latestRelease"]
+  end
+
+  def appcenter_promote_release(from:, to:, platform:)
+    latest_release = appcenter_get_latest_release(deployment: from, platform: platform)
+    puts "Promoting #{latest_release["label"]} to #{platform} #{latest_release["description"]}"
+    system "appcenter codepush promote -a Ham2K/polo-#{platform} -s #{from} -d #{to} -t $POLO_BASE_VERSION -r 100 -l #{latest_release["label"]}"
+  end
+
+
+  def get_release_info
+    packageJSON = JSON.parse(File.read('package.json'))
+    version = packageJSON['version']
+    version_name = packageJSON['versionName']
+    all_release_notes = JSON.parse(File.read('RELEASE-NOTES.json'))
+
+    if all_release_notes[version].nil?
+      puts "No release notes found for #{release_version}"
+      exit 1
+    end
+
+    changes = all_release_notes[version]['changes']
+
+    markdown = <<~EOF
+      # Release #{version}
+
+      #{changes.map { |note| "- #{note}" }.join("\n")}
+    EOF
+
+    return { version:, version_name:, markdown:, changes: }
   end
 end
