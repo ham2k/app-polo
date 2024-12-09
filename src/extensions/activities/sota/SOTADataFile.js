@@ -65,7 +65,7 @@ export function registerSOTADataFile () {
 
           for (const line of lines) {
             const row = parseSOTACSVRow(line, { headers })
-            if (row.SummitCode && row.ValidTo === '31/12/2099') {
+            if (row.SummitCode && isValidDateAsOfToday(row.ValidTo)) {
               const lon = Number.parseFloat(row.Longitude) || 0
               const lat = Number.parseFloat(row.Latitude) || 0
               const rowData = {
@@ -178,4 +178,13 @@ function parseSOTACSVRow (row, options) {
   } else {
     return parts
   }
+}
+
+function isValidDateAsOfToday (str) {
+  if (str === '31/12/2099') return true
+
+  const [day, month, year] = str.split('/').map(Number)
+  const date = new Date(year, month - 1, day)
+  const today = new Date()
+  return (today - date) / 1000 * 60 * 60 * 24 < 14 // Accept up to 14 days past the validity date
 }
