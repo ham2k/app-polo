@@ -1,9 +1,9 @@
 PODS:
-  - AppAuth (1.7.5):
-    - AppAuth/Core (= 1.7.5)
-    - AppAuth/ExternalUserAgent (= 1.7.5)
-  - AppAuth/Core (1.7.5)
-  - AppAuth/ExternalUserAgent (1.7.5):
+  - AppAuth (1.7.6):
+    - AppAuth/Core (= 1.7.6)
+    - AppAuth/ExternalUserAgent (= 1.7.6)
+  - AppAuth/Core (1.7.6)
+  - AppAuth/ExternalUserAgent (1.7.6):
     - AppAuth/Core
   - boost (1.83.0)
   - DoubleConversion (1.1.6)
@@ -941,8 +941,8 @@ PODS:
   - React-Mapbuffer (0.74.2):
     - glog
     - React-debug
-  - react-native-app-auth (8.0.0):
-    - AppAuth (>= 1.7.3)
+  - react-native-app-auth (8.0.1):
+    - AppAuth (>= 1.7.6)
     - React-Core
   - react-native-blob-util (0.19.11):
     - React-Core
@@ -994,11 +994,11 @@ PODS:
     - Yoga
   - react-native-keep-awake (1.2.3):
     - React-Core
-  - react-native-maps (1.18.0):
+  - react-native-maps (1.20.1):
     - React-Core
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-pager-view (6.4.1):
+  - react-native-pager-view (6.6.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1021,7 +1021,7 @@ PODS:
     - Yoga
   - react-native-restart (0.0.27):
     - React-Core
-  - react-native-safe-area-context (4.11.0):
+  - react-native-safe-area-context (5.0.0):
     - React-Core
   - react-native-splash-screen (3.3.0):
     - React-Core
@@ -1256,11 +1256,11 @@ PODS:
     - React-logger (= 0.74.2)
     - React-perflogger (= 0.74.2)
     - React-utils (= 0.74.2)
-  - RNCAsyncStorage (2.0.0):
+  - RNCAsyncStorage (2.1.0):
     - React-Core
-  - RNDeviceInfo (13.0.0):
+  - RNDeviceInfo (14.0.1):
     - React-Core
-  - RNGestureHandler (2.20.0):
+  - RNGestureHandler (2.21.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1281,7 +1281,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated (3.15.4):
+  - RNReanimated (3.16.4):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1301,10 +1301,32 @@ PODS:
     - React-utils
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 3.15.4)
-    - RNReanimated/worklets (= 3.15.4)
+    - RNReanimated/reanimated (= 3.16.4)
+    - RNReanimated/worklets (= 3.16.4)
     - Yoga
-  - RNReanimated/reanimated (3.15.4):
+  - RNReanimated/reanimated (3.16.4):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - RNReanimated/reanimated/apple (= 3.16.4)
+    - Yoga
+  - RNReanimated/reanimated/apple (3.16.4):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1325,7 +1347,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated/worklets (3.15.4):
+  - RNReanimated/worklets (3.16.4):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1629,7 +1651,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
+  AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: 4bc164e5b5e6cfc288d2b5ff28643ea15fa1a589
@@ -1660,17 +1682,17 @@ SPEC CHECKSUMS:
   React-jsitracing: 34bc0fbc606f69e66f05286d94d5cd6cbf2ef562
   React-logger: 29fa3e048f5f67fe396bc08af7606426d9bd7b5d
   React-Mapbuffer: 86703e9e4f6522053568300827b436ccc01e1101
-  react-native-app-auth: c4a3b4edc11100070d8d7bc48d55fb66668cead9
+  react-native-app-auth: 79605228ffe689f63ad5b046319f5e154e3e96c2
   react-native-blob-util: 39a20f2ef11556d958dc4beb0aa07d1ef2690745
   react-native-config: 8f7283449bbb048902f4e764affbbf24504454af
   react-native-document-picker: 7bddf5a35d8829e9c6b8158bc44eb4229b01a7ea
   react-native-geolocation: 997e9bf75e3996045de9d24fc9ef976b2fc95aad
   react-native-keep-awake: 5cfb49d1b2ee4321b2ffbc651e2d6d64d6f66772
-  react-native-maps: 2e6e9896195781327ee15b33e3e84bf73c08207a
+  react-native-maps: ee1e65647460c3d41e778071be5eda10e3da6225
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
-  react-native-pager-view: ec794201907d9b62825bcf2a3a6ed3ff493c2ab8
+  react-native-pager-view: d88b1fd9034e8406c8dc09652cfe4ddbe65c61fe
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
-  react-native-safe-area-context: 851c62c48dce80ccaa5637b6aa5991a1bc36eca9
+  react-native-safe-area-context: ab7beb734b0f9f79f55ae144a6c946a6422f55d6
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-sqlite-2: 21c4a9d439e92193a8712c68492731c014671b53
   React-nativeconfig: 5d452e509d6fbedc1522e21b566451fc673ac6b7
@@ -1696,10 +1718,10 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 1f0b3361460921edcbe9042ce690e5ca6dab9639
   React-utils: 5a40a1bb87d8c2d42a6bbbb7ead6d95785ca6042
   ReactCommon: e5866ad8f7487779853fa3fe33f1c075207c3262
-  RNCAsyncStorage: d35c79ffba52c1013013e16b1fc295aec2feabb6
-  RNDeviceInfo: 55264dd7cc939dad6e9c231a7621311f5277f1dc
-  RNGestureHandler: 83fd202dbc0b8971414c5c7c56ddd9f5cde05911
-  RNReanimated: 4e3738c07d997c502b5fa407524700dfa8712777
+  RNCAsyncStorage: cc6479c4acd84cc7004946946c8afe30b018184d
+  RNDeviceInfo: 825f0d2f4381327317f12d1522720a8f76e6a19e
+  RNGestureHandler: 38b7949a58a56ae0e2a3c38920cb6852cafb6b9f
+  RNReanimated: 13f9f061449dd7a1f6e1b8fb4caf18b880b41bd1
   RNScreens: db442e7b8c7bc8befec2ce057927305ff8598cc8
   RNShare: 0fad69ae2d71de9d1f7b9a43acf876886a6cb99c
   RNVectorIcons: 3e3d9442edd8b15b0ef3cac19960048380a10399
