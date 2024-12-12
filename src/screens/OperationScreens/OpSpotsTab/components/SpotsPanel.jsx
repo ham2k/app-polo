@@ -201,7 +201,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
           Math.abs(spot.freq - opSpot.freq) <= 0.1 && // 0.1 kHz
           Math.abs(spot.spot.timeInMillis - opSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
           spot.refs.length === opSpot.refs.length && // all refs match
-          opSpot.refs.every(ref => spot.refs.find(x => x.ref))
+          opSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
       ))
       if (matchingSpot) {
         matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call}, ${spot.their.call}` }
