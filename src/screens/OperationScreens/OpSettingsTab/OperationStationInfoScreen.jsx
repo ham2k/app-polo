@@ -89,19 +89,38 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   }, [stations, operators, qsos.length, settings.stationCall, settings.operatorCall, operation.stationCall, operation.local?.operatorCall, originalValues.stationCall, originalValues.operatorCall])
 
   useEffect(() => { // Set initial values if needed
-    if (!operation) return
+    if (!operation?.uuid) return
 
     if (operation.stationCall === undefined) {
       dispatch(setOperationData({ uuid: operation.uuid, stationCall: settings?.stationCall || settings?.operatorCall || '' }))
     }
 
-    if (operation.local.operatorCall === undefined && operation.stationCall !== settings?.operatorCall) {
+    if (operation.local?.operatorCall === undefined &&
+    operation.stationCall !== settings?.operatorCall &&
+    (!operation.stationCallPlusArray || operation.stationCallPlusArray.indexOf(settings?.operatorCall) === -1)) {
       dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall: settings?.operatorCall || '' }))
     }
-  }, [dispatch, operation, settings?.operatorCall, settings?.stationCall])
+  }, [dispatch, operation.uuid, operation.stationCall, operation.stationCallPlusArray, operation.local?.operatorCall, settings?.operatorCall, settings?.stationCall])
 
   const onChangeStation = useCallback((text) => {
-    dispatch(setOperationData({ uuid: operation.uuid, stationCall: text }))
+    const calls = text.split(/[, ]+/).filter(Boolean)
+    if (calls.length > 1) {
+      dispatch(setOperationData({
+        uuid: operation.uuid,
+        stationCall: calls[0],
+        stationCallPlus: `${calls[0]}+${calls.slice(1).length}`,
+        stationCallPlusArray: calls.slice(1),
+        allStationCalls: text
+      }))
+    } else {
+      dispatch(setOperationData({
+        uuid: operation.uuid,
+        stationCall: calls[0],
+        stationCallPlus: calls[0],
+        stationCallPlusArray: undefined,
+        allStationCalls: text
+      }))
+    }
   }, [dispatch, operation.uuid])
 
   const onChangeOperator = useCallback((text) => {
@@ -123,9 +142,10 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
           <Text variant="bodyMedium">What is the callsign used on the air?</Text>
           <CallsignInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            value={operation?.stationCall || ''}
+            value={operation.allStationCalls || operation.stationCall || ''}
             label="Station Callsign"
             placeholder={'N0CALL'}
+            allowMultiple={true}
             onChangeText={onChangeStation}
           />
           {extraState.messageForStationCall && (

@@ -65,7 +65,7 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
       const exportTitle = option.exportTitle || `${handler.shortName ?? handler.name} ${DATA_FORMAT_DESCRIPTIONS[option.format] || DATA_FORMAT_DESCRIPTIONS.other}`
       const exportType = option.exportType || handler.key
 
-      exports.push({ ...option, handler, ref, fileName, title, exportTitle, exportType })
+      exports.push({ ...option, handler, ref, fileName, title, exportTitle, exportType, operation, ourInfo })
     })
   })
 

@@ -22,6 +22,9 @@ import { buildTitleForOperation } from '../OperationScreen'
 import { reportError, trackEvent } from '../../../distro'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 export default function OperationDataScreen (props) {
   const { navigation, route } = props
@@ -42,7 +45,7 @@ export default function OperationDataScreen (props) {
     let options = { title: 'Operation Data' }
     if (operation?.stationCall) {
       options = {
-        subTitle: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCall, title: operation.title, userTitle: operation.userTitle })
+        subTitle: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCallPlus, title: operation.title, userTitle: operation.userTitle })
       }
     } else {
       options = { subTitle: 'New Operation' }
@@ -56,7 +59,25 @@ export default function OperationDataScreen (props) {
     return ourInfo.call && operation.qsoCount > 0
   }, [operation.qsoCount, ourInfo.call])
 
-  const exportOptions = useMemo(() => dataExportOptions({ operation, qsos, settings, ourInfo }), [operation, ourInfo, qsos, settings])
+  const exportOptions = useMemo(() => {
+    if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
+      const ourInfos = [ourInfo]
+      ourInfos.push(...operation.stationCallPlusArray.map(call => {
+        let info = parseCallsign(call)
+        info = annotateFromCountryFile(info)
+        if (info.entityPrefix) {
+          info = { ...info, ...DXCC_BY_PREFIX[info.entityPrefix] }
+        }
+        return info
+      }))
+      return ourInfos.map(info => {
+        const operationClone = { ...operation, stationCall: info?.call || operation.stationCall || settings.operatorCall, operatorCall: info?.call }
+        return dataExportOptions({ operation: operationClone, qsos, settings, ourInfo: info })
+      }).flat()
+    } else {
+      return dataExportOptions({ operation, qsos, settings, ourInfo })
+    }
+  }, [operation, ourInfo, qsos, settings])
 
   const handleExports = useCallback(({ options }) => {
     options.forEach((option) => {

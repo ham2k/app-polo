@@ -138,7 +138,9 @@ export default function OperationBadgeScreen ({ navigation, route }) {
       >
         <View style={{ flexDirection: 'column', alignItems: 'flex-start', maxWidth: '75%' }}>
           <Text style={styles.title}>
-            {slashZeros(operation?.stationCall || settings?.operatorCall)} {operation?.title}
+            {slashZeros(operation?.stationCall || settings?.operatorCall)}
+            {operation?.stationCallPlusArray && operation.stationCallPlusArray.length > 0 ? ` + ${slashZeros(operation.stationCallPlusArray.join(', '))}` : ''}
+            {' '}{operation?.title}
           </Text>
           <Text style={styles.subTitle}>{operation?.subtitle}</Text>
         </View>

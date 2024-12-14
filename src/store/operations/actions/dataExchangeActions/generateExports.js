@@ -15,13 +15,18 @@ export const generateExportsForOptions = (uuid, exports) => async (dispatch, get
   const operation = state.operations.info[uuid]
   const settings = state.settings
 
-  const qsos = state.qsos.qsos[uuid].map(qso => {
-    return { ...qso, our: { ...qso.our, call: operation.stationCall || settings.operatorCall } }
-  })
-
   const paths = []
   for (const oneExport of exports) {
-    paths.push(await generateExportFile({ uuid, qsos, operation, settings, ...oneExport }))
+    const operationData = oneExport.operation || operation
+
+    let qsos = state.qsos.qsos[uuid].map(qso => {
+      return { ...qso, our: { ...qso.our, call: operationData.stationCall } }
+    })
+    // When doing multioperator operations, with operators also working each other,
+    // we want to exclude these QSOs from the combinations
+    qsos = qsos.filter(qso => qso.our.call !== qso.their.call)
+
+    paths.push(await generateExportFile({ uuid, qsos, operation: operationData, settings, ...oneExport }))
   }
 
   return paths.filter(x => x)

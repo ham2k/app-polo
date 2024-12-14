@@ -28,12 +28,12 @@ export default function OperationItem ({ operation, settings, onPress, styles })
     <TouchableRipple
       onPress={pressHandler}
       style={styles.rowRoot}
-      accessibilityLabel={tweakStringForVoiceOver(`${operation.stationCall || settings.operatorCall} ${title} ${operation.subtitle}, ${operation.qsoCount ?? 0} Q sos, ${fmtDateZuluDynamic(operation.startAtMillisMax)}`)}
+      accessibilityLabel={tweakStringForVoiceOver(`${operation.stationCallPlus || operation.stationCall} ${title} ${operation.subtitle}, ${operation.qsoCount ?? 0} Q sos, ${fmtDateZuluDynamic(operation.startAtMillisMax)}`)}
     >
       <View style={styles.row}>
         <View style={styles.rowTop}>
           <View style={styles.rowTopLeft}>
-            <Ham2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCall || settings.operatorCall}`**{' '}{title}</Ham2kMarkdown>
+            <Ham2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCallPlus || operation.stationCall}`**{' '}{title}</Ham2kMarkdown>
           </View>
           <View style={styles.rowTopRight}>
             <View style={styles.countContainer}>

@@ -70,7 +70,7 @@ export default function OperationScreen (props) {
     let options = {}
     if (operation?.stationCall) {
       options = {
-        title: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
+        title: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation?.stationCallPlus || operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
         subTitle: operation.subtitle
       }
     } else {

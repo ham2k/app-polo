@@ -17,17 +17,24 @@ const LETTERS_REGEX = /[A-Z]+/
 const ONLY_NUMBER_REGEX = /^\s*[+-]*\d+(\.\d+)*$/
 
 export default function CallsignInput (props) {
-  const { value, textStyle } = props
+  const { value, textStyle, allowMultiple } = props
   const styles = useThemedStyles()
 
   const isValid = useMemo(() => {
-    const callInfo = parseCallsign(value)
-    if (callInfo?.baseCall) {
-      return true
-    } else {
+    const values = value.split(/[, +]+/)
+    if (values.length > 1 && !allowMultiple) {
       return false
     }
-  }, [value])
+    console.log('values', values)
+    return values.every(v => {
+      const callInfo = parseCallsign(v)
+      if (callInfo?.baseCall) {
+        return true
+      } else {
+        return false
+      }
+    })
+  }, [value, allowMultiple])
 
   let [mode, setMode] = useUIState('NumberKeys', 'mode', 'numbers')
   useEffect(() => {
