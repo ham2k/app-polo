@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, RadioButton, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
-import { View } from 'react-native'
+import { Pressable, View } from 'react-native'
+import Share from 'react-native-share'
 
 import { setSettings } from '../../store/settings'
 import { Ham2kDialog } from '../../screens/components/Ham2kDialog'
 import { UPDATE_TRACK_LABELS } from './VersionSettingsForDistribution'
+import { pathForDatabase } from '../../store/db/db'
 
 export function UpdateTracksDialog ({ visible, settings, styles, onDialogDone, dismissable }) {
   const dispatch = useDispatch()
@@ -20,6 +22,27 @@ export function UpdateTracksDialog ({ visible, settings, styles, onDialogDone, d
   useEffect(() => {
     setValue(settings?.updateTrack || 'Production')
   }, [settings])
+
+  const handleExportDB = useCallback(async () => {
+    const paths = []
+    paths.push(pathForDatabase())
+
+    console.log(paths)
+    if (paths.length > 0) {
+      Share.open({
+        urls: paths.map(p => `file://${p}`),
+        type: 'text/plain' // There is no official QSON mime type
+      }).then((x) => {
+        console.info('Shared', x)
+      }).catch((e) => {
+        console.info('Sharing Error', e)
+      }).finally(() => {
+        // Deleting these file causes GMail on Android to fail to attach it
+        // So for the time being, we're leaving them in place.
+        // dispatch(deleteExport(path))
+      })
+    }
+  }, [])
 
   const handleAccept = useCallback(() => {
     dispatch(setSettings({ updateTrack: value }))
@@ -53,6 +76,9 @@ export function UpdateTracksDialog ({ visible, settings, styles, onDialogDone, d
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="Development" />
             <Text onPress={() => setValue('Development')} style={styles.rowText}>{UPDATE_TRACK_LABELS.Development}</Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: styles.oneSpace * 8 }}>
+            <Pressable onPress={handleExportDB} style={{ flexDirection: 'row', alignItems: 'center' }}><Text>Export Database</Text></Pressable>
           </View>
         </RadioButton.Group>
       </Dialog.Content>
