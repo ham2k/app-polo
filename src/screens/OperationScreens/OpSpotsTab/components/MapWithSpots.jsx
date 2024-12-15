@@ -215,7 +215,7 @@ function radiusForMarker ({ age, location, size, metersPerOneSpace }) {
   const latitude = Math.abs(location.latitude ?? location.lat)
   const latitudeScale = Math.cos(latitude * Math.PI / 180)
   const baseRadius = (metersPerOneSpace * size * latitudeScale) / 2
-  return baseRadius * (1.3 - age / 1800000.0 * 0.6)
+  return Math.max(baseRadius * (1.3 - age / 1800000.0 * 0.6), 10000.0)
 }
 
 function colorForMarker ({ spot, styles }) {
