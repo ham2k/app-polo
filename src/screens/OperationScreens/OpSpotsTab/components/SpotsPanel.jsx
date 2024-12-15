@@ -284,14 +284,12 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
           {showMap ? (
             <MapWithSpots
               spots={mergedOpSpots}
-              loading={spotsState.loading}
               // Operation may or may not exist depending on if we have one active or not
               operation={operation}
-              refresh={refresh}
               onPress={handlePress}
               styles={styles}
               settings={settings}
-              selectedKey={null}
+              selectedUUID={null}
             />
           ) : (
             <SpotList spots={mergedOpSpots} loading={spotsState.loading} refresh={refresh} onPress={handlePress} />
