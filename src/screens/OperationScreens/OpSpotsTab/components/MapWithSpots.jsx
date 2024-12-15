@@ -19,7 +19,6 @@ const TRANSP_PNG = require('../../../../../assets/images/transp-16.png')
 
 const METERS_IN_ONE_DEGREE = 111111
 
-// @todo handle onPress
 export default function MapWithSpots ({ styles, operation, spots, settings, selectedUUID, onPress }) {
   // Maps change with the actual device color scheme, not the user preferences in the app
   const deviceColorScheme = useColorScheme()
@@ -145,13 +144,14 @@ export default function MapWithSpots ({ styles, operation, spots, settings, sele
           styles={styles}
           metersPerOneSpace={scale?.metersPerOneSpace}
           selectedUUID={selectedUUID}
+          onPress={onPress}
         />
       )}
     </MapView>
   )
 }
 
-const MapMarkers = React.memo(function MapMarkers ({ spots, selectedUUID, mapStyles, styles, metersPerOneSpace }) {
+const MapMarkers = React.memo(function MapMarkers ({ spots, selectedUUID, mapStyles, styles, metersPerOneSpace, onPress }) {
   const ref = useRef()
 
   useEffect(() => {
@@ -173,9 +173,9 @@ const MapMarkers = React.memo(function MapMarkers ({ spots, selectedUUID, mapSty
             tracksViewChanges={false}
             image={TRANSP_PNG}
           >
-            <Callout>
+            <Callout onPress={() => onPress && onPress({ spot })}>
               <View>
-                <Text style={{ fontWeight: 'bold', color: '#333' }}>
+                <Text style={ callsignStyle({ spot, styles }) }>
                   {spot.their?.call}
                 </Text>
                 <Text style={{ color: '#333' }}>
@@ -219,11 +219,28 @@ function radiusForMarker ({ age, location, size, metersPerOneSpace }) {
 }
 
 function colorForMarker ({ spot, styles }) {
+  if (spot.spot?.type === 'duplicate') {
+    return 'grey'
+  }
   return styles.colors.bands[spot.band] || styles.colors.bands.default
 }
 
 function colorForText ({ spot, styles }) {
   return styles.colors.bands[spot.band] || styles.colors.bands.default
+}
+
+function callsignStyle ({ spot, styles }) {
+  if (spot.spot?.type === 'duplicate') {
+    return {
+      textDecorationLine: 'line-through',
+      textDecorationColor: styles.colors.onBackground
+    }
+  } else {
+    return {
+      fontWeight: 'bold',
+      color: '#333'
+    }
+  }
 }
 
 function formatFreq (freqkhz) {
