@@ -283,7 +283,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
           </View>
           {showMap ? (
             <MapWithSpots
-              spots={scoredSpots}
+              spots={mergedOpSpots}
               loading={spotsState.loading}
               // Operation may or may not exist depending on if we have one active or not
               operation={operation}
