@@ -57,6 +57,8 @@ export function registerWWBOTADataFile () {
                     const row = parseWWBOTACSVRow(line, { headers })
                     const ref = row.Reference
                     if (ref) {
+                      // Use Locator if Maidenhead field not present
+                      row.Maidenhead ||= row.Locator
                       row.Maidenhead &&= row.Maidenhead.replace(/[A-Z]{2}$/, x => x.toLowerCase())
                       const entityPrefix = ref.split('-')[0].split('/')[1]
                       const data = {
