@@ -58,7 +58,7 @@ export default function OpSettingsTab ({ navigation, route }) {
     console.log('stationInfo', operation)
     let stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
     if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
-      stationCall += ` + ${operation.stationCallPlusArray.join(", ")}`
+      stationCall += ` + ${operation.stationCallPlusArray.join(', ')}`
       console.log('**', stationCall)
     }
     const operatorCall = operation?.local?.operatorCall ?? settings?.operatorCall ?? ''
@@ -69,7 +69,7 @@ export default function OpSettingsTab ({ navigation, route }) {
     } else {
       return ['NO STATION CALLSIGN DEFINED', styles.colors.error]
     }
-  }, [operation?.local?.operatorCall, operation?.stationCall, settings?.operatorCall, settings?.stationCall, styles.colors])
+  }, [operation, settings?.operatorCall, settings?.stationCall, styles.colors.error, styles.colors.onSurface])
 
   const refHandlers = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]
