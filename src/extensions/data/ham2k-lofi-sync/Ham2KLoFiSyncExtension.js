@@ -9,7 +9,7 @@ import Config from 'react-native-config'
 import packageJson from '../../../../package.json'
 import { logRemotely } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
-import { selectExtensionSettings, selectSettings } from '../../../store/settings'
+import { selectExtensionSettings, selectSettings, setExtensionSettings } from '../../../store/settings'
 
 export const Info = {
   key: 'ham2k-lofi',
@@ -36,66 +36,122 @@ const DEBUG = true
 
 const SyncHook = {
   ...Info,
-  sendChanges: (changes) => async (dispatch, getState) => {
-    console.log('sendChanges')
+  sync: (params) => async (dispatch, getState) => {
+    console.log('sync', { meta: params.meta })
 
-    const body = JSON.stringify(changes)
+    const body = JSON.stringify(params)
     const response = await requestWithAuth({ dispatch, getState, url: 'v1/sync', method: 'POST', body })
-    return (response.status === 200)
-  }
-}
+    return response
+  },
 
-async function requestWithAuth ({ dispatch, getState, url, method, body }) {
-  console.log('Ham2K LoFi request', { url, method })
-  let { server } = selectExtensionSettings(getState(), Info.key) || {}
-  server = server ?? 'https://dev.lofi.ham2k.net'
+  getAccountData: () => async (dispatch, getState) => {
+    const { account } = selectExtensionSettings(getState(), Info.key) || {}
 
-  const { operatorCall } = selectSettings(getState())
-  let token = GLOBAL.syncLoFiToken
-  const secret = Config.HAM2K_LOFI_SECRET || 'no-secret'
-
-  if (server.endsWith('/')) server = server.slice(0, -1)
-
-  let retries = 2 // just so that we can re-authenticate if needed
-  while (retries > 0) {
-    retries--
-    if (!token) {
-      if (DEBUG) console.log('-- Ham2K LoFi Authenticating', { server, token, secret })
-      const response = await fetch(`${server}/v1/client`, {
-        method: 'POST',
-        headers: {
-          'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          client: {
-            key: GLOBAL.deviceId,
-            name: GLOBAL.deviceName,
-            secret
-          },
-          account: {
-            call: operatorCall
-          }
-        })
-      })
-
-      const json = await response.json()
-      processResponseMeta({ json, response, dispatch })
-
-      if (response.status === 200) {
-        if (DEBUG) console.log('-- auth ok', json)
-        token = json.token
-        GLOBAL.syncLoFiToken = token
-      } else {
-        logRemotely({ message: '-- Ham2K LoFi Authentication failed', server, token, secret, url, body })
-        if (DEBUG) console.log('-- auth failed')
-        GLOBAL.syncLoFiToken = token
-        throw new Error('Authentication Failed')
+    const results = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}`, method: 'GET' })
+    if (results.ok) {
+      if (results.json.account) {
+        dispatch(setExtensionSettings({ key: Info.key, account: results.json.account }))
+      }
+      if (results.json.clients) {
+        dispatch(setExtensionSettings({ key: Info.key, clients: results.json.clients }))
       }
     }
 
-    if (DEBUG) console.log('-- request', { url, method, body })
-    const response = await fetch(`${server}/${url}`, {
+    return results
+  },
+
+  setAccountData: (data) => async (dispatch, getState) => {
+    const { account } = selectExtensionSettings(getState(), Info.key) || {}
+    const body = JSON.stringify(data)
+    const results = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}`, method: 'PATCH', body })
+
+    return results
+  }
+
+}
+
+async function requestWithAuth ({ dispatch, getState, url, method, body, params }) {
+  try {
+    console.log('Ham2K LoFi request', { url, method })
+    let { server, account } = selectExtensionSettings(getState(), Info.key) || {}
+    server = server ?? 'https://dev.lofi.ham2k.net'
+
+    const { operatorCall } = selectSettings(getState())
+    let token = GLOBAL.syncLoFiToken
+    const secret = Config.HAM2K_LOFI_SECRET || 'no-secret'
+
+    if (server.endsWith('/')) server = server.slice(0, -1)
+
+    let retries = 2 // just so that we can re-authenticate if needed
+    while (retries > 0) {
+      retries--
+      if (!token) {
+        if (DEBUG) console.log('-- Ham2K LoFi Authenticating', { server, token, secret })
+        const response = await fetch(`${server}/v1/client`, {
+          method: 'POST',
+          headers: {
+            'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            client: {
+              key: GLOBAL.deviceId,
+              name: GLOBAL.deviceName,
+              secret
+            },
+            account: {
+              call: operatorCall
+            }
+          })
+        })
+
+        const json = await response.json()
+        processResponseMeta({ json, account, response, dispatch })
+
+        if (response.status === 200) {
+          if (DEBUG) console.log('-- auth ok', json)
+          token = json.token
+          GLOBAL.syncLoFiToken = token
+        } else {
+          logRemotely({ message: '-- Ham2K LoFi Authentication failed', server, token, secret, url, body })
+          if (DEBUG) console.log('-- auth failed')
+          GLOBAL.syncLoFiToken = token
+          throw new Error('Authentication Failed')
+        }
+      }
+
+      if (DEBUG) console.log('-- request', { url, method, body })
+      const response = await fetch(`${server}/${url}`, {
+        method,
+        headers: {
+          'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body
+      })
+
+      const json = await response.json()
+      if (DEBUG) console.log(' -- response', response.status, json)
+
+      processResponseMeta({ json, account, response, dispatch })
+
+      if (response.status === 401) {
+        if (DEBUG) console.log(' -- auth failed')
+        // Auth failed, do another loop
+        token = null
+      } else {
+        return { ok: response.status >= 200 && response.status < 300, status: response.status, json }
+      }
+    }
+
+    if (DEBUG) console.log('-- request', { url, method, params })
+    const urlObj = new URL(`${server}/${url}`)
+    if (params) {
+      Object.keys(params).forEach(key => urlObj.searchParams.append(key, params[key]))
+    }
+
+    const response = await fetch(urlObj, {
       method,
       headers: {
         'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
@@ -106,7 +162,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body }) {
     })
 
     const json = await response.json()
-    if (DEBUG) console.log(' -- response', response.status, json)
+    // if (DEBUG) console.log(' -- response', response.status, json)
 
     processResponseMeta({ json, response, dispatch })
 
@@ -115,24 +171,37 @@ async function requestWithAuth ({ dispatch, getState, url, method, body }) {
       // Auth failed, do another loop
       token = null
     } else {
-      return response
+      return { ok: response.status >= 200 && response.status < 300, status: response.status, json }
+    }
+  } catch (e) {
+    if (DEBUG) console.error('Error in requestWithAuth', e)
+    if (e.message === 'Network request failed') {
+      return { ok: false, status: 0, json: { error: 'Network request failed' } }
+    } else {
+      throw e
     }
   }
-  return false
+  return { ok: false, status: 401, json: {} }
 }
 
-function processResponseMeta ({ json, response, dispatch }) {
+function processResponseMeta ({ json, account, response, dispatch }) {
   try {
+    if (json?.account && (!account || Object.keys(json.account).find(k => account[k] !== json.account[k]))) {
+      dispatch(setExtensionSettings({ key: Info.key, account: json.account }))
+    }
+
     if (json?.meta?.suggestedSyncBatchSize || json?.meta?.suggested_sync_batch_size) {
       GLOBAL.syncBatchSize = Number.parseInt(json.meta.suggestedSyncBatchSize || json.meta.suggested_sync_batch_size, 10)
       if (GLOBAL.syncBatchSize < 1) GLOBAL.syncBatchSize = undefined
       if (isNaN(GLOBAL.syncBatchSize)) GLOBAL.syncBatchSize = undefined
     }
+
     if (json?.meta?.suggestedSyncLoopDelay || json?.meta?.suggested_sync_loop_delay) {
       GLOBAL.syncLoopDelay = Number.parseInt(json.meta.suggestedSyncLoopDelay || json.meta.suggested_sync_loop_delay, 10) * 1000
       if (GLOBAL.syncLoopDelay < 1) GLOBAL.syncLoopDelay = undefined
       if (isNaN(GLOBAL.syncLoopDelay)) GLOBAL.syncLoopDelay = undefined
     }
+
     if (json?.meta?.suggestedSyncCheckPeriod || json?.meta?.suggested_sync_check_period) {
       GLOBAL.syncCheckPeriod = Number.parseInt(json.meta.suggestedSyncCheckPeriod || json.meta.suggested_sync_check_period, 10) * 1000
       if (GLOBAL.syncCheckPeriod < 1) GLOBAL.syncCheckPeriod = undefined

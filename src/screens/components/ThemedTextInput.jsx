@@ -187,7 +187,7 @@ export default function ThemedTextInput (props) {
   }, [themeStyles, themeColor])
 
   const keyboardOptions = useMemo(() => {
-    let keyboardOpts
+    let keyboardOpts = {}
 
     if (multiline || keyboard === 'normal' || !keyboard) {
       keyboardOpts = {
@@ -207,6 +207,12 @@ export default function ThemedTextInput (props) {
       if (keyboard === 'numbers') {
         keyboardOpts.keyboardType = Platform.OS === 'android' ? 'visible-password' : 'numbers-and-punctuation'
         keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
+      }
+    } else if (keyboard === 'email') {
+      keyboardOpts = {
+        autoCompleteType: 'email',
+        keyboardType: 'email-address',
+        autoCapitalize: 'none'
       }
     }
 

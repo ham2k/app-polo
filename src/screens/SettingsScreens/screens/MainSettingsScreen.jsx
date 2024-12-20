@@ -36,6 +36,7 @@ import FeaturesSettingsScreen from './FeaturesSettingsScreen'
 import GeneralSettingsScreen from './GeneralSettingsScreen'
 import LoggingSettingsScreen from './LoggingSettingsScreen'
 import VersionSettingsScreen from './VersionSettingsScreen'
+import SyncSettingsScreen from './SyncSettingsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -174,6 +175,13 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
         />
 
         <Ham2kListItem
+          title="Sync Settings"
+          description="Cloud sync and backup"
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync" />}
+          onPress={() => navigation.navigate('SyncSettings')}
+        />
+
+        <Ham2kListItem
           title="App Features"
           description={'Manage features like POTA, SOTA, etc'}
           onPress={() => navigation.navigate('FeaturesSettings')}
@@ -295,6 +303,11 @@ function settingsScreensArray ({ includeMain, topLevelBack }) {
     <Stack.Screen name="DataSettings" key="DataSettings"
       options={{ title: 'Data Settings', headerBackVisible: topLevelBack }}
       component={DataSettingsScreen}
+    />,
+
+    <Stack.Screen name="SyncSettings" key="SyncSettings"
+      options={{ title: 'Sync Settings', headerBackVisible: topLevelBack }}
+      component={SyncSettingsScreen}
     />,
 
     <Stack.Screen name="VersionSettings" key="VersionSettings"

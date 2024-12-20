@@ -70,10 +70,6 @@ export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) 
           value={serverOption}
           style={{ width: '100%' }}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: styles.oneSpace * 6 }}>
-            <RadioButton value="disabled" />
-            <Text onPress={() => setServerOption('disabled')} style={styles.rowText}>Disabled</Text>
-          </View>
           {Object.keys(SERVERS).map((key) => (
             <View key={key} style={{ flexDirection: 'row', alignItems: 'center', height: styles.oneSpace * 6 }}>
               <RadioButton value={key} />
@@ -82,7 +78,7 @@ export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) 
           ))}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="other" />
-            <Text onPress={() => setServerOption('other')} style={styles.rowText}>Other</Text>
+            <Text onPress={() => setServerOption('other')} style={styles.rowText}>Custom</Text>
             <TextInput style={{ marginLeft: styles.oneSpace, flex: 1 }} value={otherServer} onChangeText={setOtherServer} />
           </View>
         </RadioButton.Group>

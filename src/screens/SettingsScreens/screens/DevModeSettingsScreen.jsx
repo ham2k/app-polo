@@ -19,7 +19,7 @@ import packageJson from '../../../../package.json'
 
 import { DevModeSettingsForDistribution, reportError } from '../../../distro'
 import { selectSettings } from '../../../store/settings'
-import { importQSON, selectOperationsList } from '../../../store/operations'
+import { importQSON, resetSyncedStatus, selectOperationsList } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
@@ -29,9 +29,9 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
 import { dbSelectAll, pathForDatabase, replaceDatabase, resetDatabase } from '../../../store/db/db'
 import { fmtNumber } from '@ham2k/lib-format-tools'
-import { resetSyncedStatus } from '../../../store/sync'
 import { selectFiveSecondsTick } from '../../../store/time'
 import GLOBAL from '../../../GLOBAL'
+import { selectLocalData, setLocalData } from '../../../store/local'
 
 function prepareStyles (baseStyles) {
   return {
@@ -108,12 +108,13 @@ export default function DevModeSettingsScreen ({ navigation }) {
       { text: 'No, Cancel', onPress: () => {} },
       {
         text: 'Yes, Wipe It!',
-        onPress: async () => {
-          await resetDatabase()
+        onPress: () => {
+          dispatch(setLocalData({ sync: { lastOperationSyncedAtMillis: 0, completedFullSync: false } }))
+          setTimeout(async () => await resetDatabase(), 50)
         }
       }
     ])
-  }, [])
+  }, [dispatch])
 
   const handleImportFiles = useCallback(() => {
     DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
@@ -246,8 +247,8 @@ ${DeviceInfo.isKeyboardConnectedSync() ? '* Keyboard connected\n' : ''}
 async function syncCountDescription () {
   const result = await dbSelectAll('SELECT COUNT(*) as count, synced FROM qsos WHERE operation != "historical" GROUP BY synced')
   const counts = result.reduce((acc, row) => {
-    acc[row.synced ? 'synced' : 'unsynced'] = row.count
+    acc[row.synced ? 'synced' : 'pending'] = row.count
     return acc
   }, {})
-  return `${fmtNumber(counts.synced || 0)} synced, ${fmtNumber(counts.unsynced || 0)} unsynced`
+  return `${fmtNumber(counts.synced || 0)} synced, ${fmtNumber(counts.pending || 0)} pending`
 }

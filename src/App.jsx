@@ -61,12 +61,13 @@ function MainApp ({ navigationTheme }) {
 
   useEffect(() => {
     setImmediate(async () => {
-      // Some top-level functions need access to settings info that's only available in the store at this point
+      // Some top-level functions need access to settings info that's only available in the store at this point,
+      // so we set them in the GLOBAL object here.
       GLOBAL.consentAppData = settings.consentAppData
       GLOBAL.consentOpData = settings.consentOpData
       GLOBAL.deviceId = GLOBAL.deviceId || await DeviceInfo.getUniqueId()
       GLOBAL.deviceName = GLOBAL.deviceName || await DeviceInfo.getDeviceName()
-      GLOBAL.syncEnabled = !settings?.extensions?.['ham2k-lofi']?.enabled === false || settings.consentAppData || settings.consentOpData
+      GLOBAL.syncEnabled = settings?.extensions?.['ham2k-lofi']?.enabled === false ? false : settings.consentAppData || settings.consentOpData
       console.log('GLOBAL', GLOBAL)
     })
   // `exhaustive-deps` is confused by the `?.[]` syntax and wants `settings?.extensions` to be a dependency

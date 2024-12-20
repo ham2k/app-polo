@@ -38,6 +38,7 @@
     "fast-levenshtein": "^3.0.0",
     "fast-xml-parser": "^4.4",
     "fuzzball": "^2.1",
+    "just-diff": "^6.0.2",
     "proj4": "^2.11",
     "react": "18.2.0",
     "react-error-boundary": "^4.0.13",
