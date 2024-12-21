@@ -42,8 +42,12 @@ export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPreviou
       <Dialog.Content>
         <Text style={{ fontSize: styles.normalFontSize, marginBottom: styles.oneSpace * 2, textAlign: 'center' }}>
           By continuing to use this app, you're agreeing to our{' '}
-          <Text style={{ textDecorationLine: 'underline' }} onPress={async () => await Linking.openURL('https://ham2k.com/legal/privacy')}>
+          <Text style={{ textDecorationLine: 'underline' }} onPress={async () => await Linking.openURL('https://ham2k.com/legal/privacy/')}>
             Privacy Policy
+          </Text>
+          {' and '}
+          <Text style={{ textDecorationLine: 'underline' }} onPress={async () => await Linking.openURL('https://ham2k.com/legal/terms-of-service/')}>
+            Terms Of Service
           </Text>.
         </Text>
 
