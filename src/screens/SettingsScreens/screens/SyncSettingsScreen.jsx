@@ -6,9 +6,9 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Dialog, List, Switch, Text } from 'react-native-paper'
+import { List, Switch, Text } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -17,7 +17,7 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { SyncServiceDialog } from '../components/SyncServiceDialog'
-import { SyncEmailDialog } from '../components/SyncEmailDialog'
+import { SyncAccountDialog } from '../components/SyncAccountDialog'
 import { findHooks } from '../../../extensions/registry'
 
 const LOFI_SERVER_LABELS = {
@@ -56,7 +56,7 @@ export default function SyncSettingsScreen ({ navigation }) {
         return `${lofiSettings?.account?.email} (confirmed)`
       }
     } else {
-      return 'No email configured!'
+      return 'You\'ll need to enter an email for account recovery.'
     }
   }, [lofiSettings?.account])
 
@@ -67,7 +67,7 @@ export default function SyncSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
-        <Ham2kListSection title={'Ham2K Log Filer - Sync Server'}>
+        <Ham2kListSection title={'Ham2K Log Filer - Sync Server (BETA)'}>
           <Ham2kListItem
             title="Sync Service"
             description={settings?.extensions?.['ham2k-lofi']?.enabled ? 'Enabled' : 'Disabled'}
@@ -77,33 +77,23 @@ export default function SyncSettingsScreen ({ navigation }) {
           />
           <View style={{ margin: styles.oneSpace * 2, flexDirection: 'column' }}>
             <Text style={styles.paragraph}>
-              Ham2K LoFi provides a reliable sync service for all your devices and provides a backup for all your operation data in the cloud.
+              Ham2K LoFi provides a reliable sync service for all your devices and provides a backup
+              for your operation data in the cloud.
             </Text>
             <Text style={styles.paragraph}>
-              <Text style={styles.text.bold}>Basic service is free</Text> and allows you to sync recent data (up to 7 days) between two devices or apps.
+              <Text style={styles.text.bold}>Basic service is free</Text> and allows you to sync recent
+              data (up to 7 days) between two devices or apps.
             </Text>
             <Text style={styles.paragraph}>
-              <Text style={styles.text.bold}>Full service requires a paid subscription</Text> and includes unlimited data sync between any number of devices or apps.
+              <Text style={styles.text.bold}>Full service requires a paid subscription</Text> and
+              includes all your operations synced between any reasonable number of devices or apps.
             </Text>
             <Text style={styles.paragraph}>
-              <Text style={styles.text.bold}>Pricing: </Text> $19.99/year (or $1.99/month)
+              While the LoFi service is in BETA for
+              the next couple of months, the service will be free. After that prices will depend
+              on the country and currency but will not be more than $30/year or equivalent, and probably less.
             </Text>
           </View>
-
-          <Ham2kListItem
-            title={`Account ${accountTitle}`}
-            description={accountInfo}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
-            onPress={() => setCurrentDialog('syncEmail')}
-          />
-          {currentDialog === 'syncEmail' && (
-            <SyncEmailDialog
-              styles={styles}
-              visible={true}
-              syncHook={syncHook}
-              onDialogDone={() => setCurrentDialog('')}
-            />
-          )}
 
           {settings.devMode && (
             <>
@@ -125,6 +115,31 @@ export default function SyncSettingsScreen ({ navigation }) {
               )}
             </>
           )}
+
+          <Ham2kListItem
+            title={`Account ${accountTitle}`}
+            description={accountInfo}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
+            onPress={() => setCurrentDialog('syncEmail')}
+          />
+          {currentDialog === 'syncEmail' && (
+            <SyncAccountDialog
+              styles={styles}
+              visible={true}
+              syncHook={syncHook}
+              onDialogDone={() => setCurrentDialog('')}
+            />
+          )}
+        </Ham2kListSection>
+        <Ham2kListSection title={'Devices'}>
+          {(lofiSettings?.clients || []).map((client) => (
+            <Ham2kListItem
+              key={client.uuid}
+              title={client.name}
+              // description={client?.uuid?.slice(0, 8)}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone" />}
+            />
+          ))}
         </Ham2kListSection>
 
       </ScrollView>
