@@ -50,7 +50,13 @@ export async function findQSOHistory (call, options = {}) {
     whereArgs
   )
 
-  rows = rows.filter(rows => !rows.deleted)
+  rows = rows.filter(row => !row.deleted)
+  rows.forEach(row => {
+    if (row.startOnMillis) {
+      row.startAtMillis = row.startOnMillis
+      delete row.startOnMillis
+    }
+  })
 
   const mostRecentQSO = rows[0] && prepareQSORow(rows[0])
 

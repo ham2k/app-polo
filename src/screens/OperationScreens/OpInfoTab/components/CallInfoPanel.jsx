@@ -126,7 +126,8 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
     } else {
       andMore = ''
     }
-
+    console.log('history', operation.stationCall)
+    if (lookup.history) console.log(lookup.history.map(q => ({ key: q.key, ourCall: q.ourCall, theirCall: q.theirCall })))
     return [thisTitle, thisQs, title, recent, andMore]
   }, [lookup.history, operation])
 
@@ -210,9 +211,12 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                 </Text>
                 {thisOpQSOs.map((q, i) => (
                   <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
-                    <Text style={{}}>{q.band}</Text>
-                    <Text style={{}}>{q.mode}</Text>
-                    <Text style={{}}>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
+                    <Text>{q.band}</Text>
+                    <Text>{q.mode}</Text>
+                    <Text>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
+                    {(q.ourCall || q.our?.call) !== operation.stationCall && (
+                      <Text>with {(q.ourCall || q.our?.call)}</Text>
+                    )}
                   </View>
                 ))}
               </View>
@@ -226,6 +230,9 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                   <Text style={{}}>{q.band}</Text>
                   <Text style={{}}>{q.mode}</Text>
                   <Text style={{}}>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
+                  {(q.ourCall || q.our?.call) !== operation.stationCall && (
+                    <Text>with {(q.ourCall || q.our?.call)}</Text>
+                  )}
                 </View>
               ))}
               {historyAndMore && (
