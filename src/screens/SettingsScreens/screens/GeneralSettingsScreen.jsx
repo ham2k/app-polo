@@ -146,6 +146,13 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={async () => await Linking.openURL('https://ham2k.com/legal/privacy/')}
           />
 
+          <Ham2kListItem
+            title="Terms Of Service"
+            description={'Read our Terms Of Service'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-document-outline" />}
+            onPress={async () => await Linking.openURL('https://ham2k.com/legal/terms-of-service/')}
+          />
+
         </Ham2kListSection>
       </ScrollView>
     </ScreenContainer>
