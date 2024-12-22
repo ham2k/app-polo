@@ -211,6 +211,20 @@ export function fmtCabrilloTime (t) {
   return fmtADIFTime(t).substring(0, 4)
 }
 
+export function fmtCabrilloDate (t) {
+  t = prepareTimeValue(t)
+
+  if (t && t.toISOString) {
+    return t.toISOString().substring(0, 10)
+  } else {
+    return ''
+  }
+}
+
+export function fmtCabrilloTime (t) {
+  return fmtADIFTime(t).substring(0, 4)
+}
+
 export function fmtISODate (t) {
   t = prepareTimeValue(t)
 
