@@ -31,7 +31,7 @@ import { dbSelectAll, pathForDatabase, replaceDatabase, resetDatabase } from '..
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { selectFiveSecondsTick } from '../../../store/time'
 import GLOBAL from '../../../GLOBAL'
-import { selectLocalData, setLocalData } from '../../../store/local'
+import { setLocalData } from '../../../store/local'
 
 function prepareStyles (baseStyles) {
   return {
