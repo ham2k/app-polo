@@ -36,10 +36,10 @@ export const deleteExport = (path) => async (dispatch) => {
   await RNFetchBlob.fs.unlink(path)
 }
 
-export const generateExportFile = async ({ uuid, fileName, format, operation, exportData, ...rest }) => {
+export const generateExportFile = async ({ uuid, fileName, format, operation, qsos, exportData, ...rest }) => {
   let data
   if (format === 'qson') {
-    data = JSON.stringify({ operation: { ...operation, ...exportData }, fileName, format, ...rest })
+    data = JSON.stringify({ operation: { ...operation, ...exportData }, qsos })
   } else if (format === 'adif') {
     data = qsonToADIF({ operation: { ...operation, ...exportData }, fileName, format, ...rest })
   } else if (format === 'cabrillo') {

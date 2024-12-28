@@ -47,12 +47,13 @@ export const operationsSlice = createSlice({
       }
     },
     setOperationLocal: (state, action) => {
-      state.info[action.payload.uuid] = {
+      const { uuid, ...localData } = action.payload
+      state.info[uuid] = {
         ...OPERATION_INITIAL_STATE,
-        ...state.info[action.payload.uuid],
+        ...state.info[uuid],
         local: {
-          ...state.info[action.payload.uuid],
-          ...action.payload
+          ...state.info[uuid].local,
+          ...localData
         }
       }
     },
