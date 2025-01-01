@@ -5,24 +5,25 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ImageBackground, Pressable, View, useWindowDimensions } from 'react-native'
-import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import { useDispatch, useSelector } from 'react-redux'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Text } from 'react-native-paper'
+import { useDispatch, useSelector } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SplashScreen from 'react-native-splash-screen'
 
 import { selectRuntimeMessages } from '../../store/runtime'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Ham2kMarkdown } from '../components/Ham2kMarkdown'
 import { earlyStartupSequence, startupSequence } from '../../store/runtime/actions/startupSequence'
-import { OnboardingManager } from './onboarding/OnboardingManager'
-import { selectSettings } from '../../store/settings'
 import { selectSystemFlag, setSystemFlag } from '../../store/system'
+import { selectSettings } from '../../store/settings'
+import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { OnboardingManager } from './onboarding/OnboardingManager'
 
 import { enableStartupInterruptionDialogForDistribution, StartupInterruptionDialogForDistribution } from '../../distro'
 
+import releaseNotes from '../../../RELEASE-NOTES.json'
 import packageJson from '../../../package.json'
 
 const SPLASH_IMAGE = require('./img/launch_screen.jpg')
@@ -60,6 +61,10 @@ function prepareStyles (baseTheme, height) {
       justifyContent: 'flex-end',
       alignItems: 'center',
       overflow: 'hidden'
+    },
+    captionBox: {
+      justifyContent: 'flex-end',
+      alignItems: 'center'
     },
     ham2k: {
       fontSize: baseTheme.normalFontSize * 1.7,
@@ -101,6 +106,16 @@ function prepareStyles (baseTheme, height) {
       color: '#FFFFFF', // '#D0D0D0',
       textAlign: 'center'
     },
+    caption: {
+      textShadowColor: '#000',
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace,
+      fontSize: 18,
+      fontWeight: 'normal',
+      color: '#D0D0D0', // '#D0D0D0',
+      textAlign: 'center',
+      padding: baseTheme.oneSpace
+    },
     markdown: {
       ...baseTheme.markdown,
       body: {
@@ -135,6 +150,11 @@ export default function StartScreen ({ setAppState }) {
   const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
   const dispatch = useDispatch()
   const messages = useSelector(selectRuntimeMessages)
+
+  const photoCaption = useMemo(() => {
+    const version = Object.keys(releaseNotes).find((v) => releaseNotes[v].photoCaption)
+    return releaseNotes[version].photoCaption
+  }, [])
 
   useEffect(() => {
     SplashScreen.hide()
@@ -209,6 +229,9 @@ export default function StartScreen ({ setAppState }) {
             {messages.map((msg, i) => (
               <Ham2kMarkdown key={i} styles={styles}>{msg.message}</Ham2kMarkdown>
             ))}
+          </View>
+          <View style={styles.captionBox}>
+            <Text style={styles.caption}>{photoCaption}</Text>
           </View>
         </GestureHandlerRootView>
       </SafeAreaView>
