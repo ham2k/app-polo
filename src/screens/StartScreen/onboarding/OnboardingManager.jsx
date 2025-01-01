@@ -10,6 +10,8 @@ import { WelcomeDialog } from './WelcomeDialog'
 import { CallsignDialog } from './CallsignDialog'
 import { ActivitiesDialog } from './ActivitiesDialog'
 import { ConsentDialog } from './ConsentDialog'
+import { AccountDialog } from './AccountDialog'
+import { AccountVerificationDialog } from './AccountVerificationDialog'
 
 export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
   const [step, setStep] = useState('welcome')
@@ -22,6 +24,24 @@ export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
           styles={styles}
           onDialogPrevious={() => onOnboardingDone()}
           onDialogNext={() => setStep('callsign')}
+          onAccountConnect={() => setStep('account')}
+        />
+      )}
+      {step === 'account' && (
+        <AccountDialog
+          settings={settings}
+          styles={styles}
+          onDialogPrevious={() => setStep('welcome')}
+          onDialogNext={() => setStep('accountVerification')}
+        />
+      )}
+      {step === 'accountVerification' && (
+        <AccountVerificationDialog
+          settings={settings}
+          styles={styles}
+          onDialogPrevious={() => setStep('account')}
+          onDialogNext={() => onOnboardingDone()}
+          onAccountReady={() => onOnboardingDone}
         />
       )}
       {step === 'callsign' && (

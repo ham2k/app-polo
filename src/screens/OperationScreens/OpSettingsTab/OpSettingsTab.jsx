@@ -144,17 +144,6 @@ export default function OpSettingsTab ({ navigation, route }) {
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
           onPress={() => navigation.navigate('OperationData', { operation: operation.uuid })}
         />
-        { settings.devMode && (
-
-          <Ham2kListItem
-            title="Ham2K LoFi Sync"
-            description={operation.uuid}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync-circle" color={styles.colors.devMode} />}
-            titleStyle={{ color: styles.colors.devMode }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            onPress={() => {}}
-          />
-        )}
       </Ham2kListSection>
 
       <Ham2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>

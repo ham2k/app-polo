@@ -163,6 +163,23 @@ export async function resetSyncedStatus () {
   await dbExecute('UPDATE operations SET synced = false', [])
 }
 
+export async function getSyncCounts () {
+  const counts = {}
+
+  const opCounts = await dbSelectAll('SELECT COUNT(*) as count, synced FROM operations GROUP BY synced')
+  const qsoCounts = await dbSelectAll('SELECT COUNT(*) as count, synced FROM qsos WHERE operation != "historical" GROUP BY synced')
+  counts.operations = opCounts.reduce((acc, row) => {
+    acc[row.synced ? 'synced' : 'pending'] = row.count
+    return acc
+  }, {})
+  counts.qsos = qsoCounts.reduce((acc, row) => {
+    acc[row.synced ? 'synced' : 'pending'] = row.count
+    return acc
+  }, {})
+
+  return counts
+}
+
 export const addNewOperation = (operation) => async (dispatch) => {
   const now = Date.now()
   operation.uuid = UUID.v1()

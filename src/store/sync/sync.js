@@ -244,9 +244,11 @@ function _scheduleNextSyncLoop ({ dispatch, delay = 0 }, loop) {
   }
 }
 
-export function useSyncLoop ({ dispatch, settings }) {
+export function useSyncLoop ({ dispatch, settings, appState }) {
   const [lastSettings, setLastSettings] = useState()
   useEffect(() => {
+    if (appState === 'starting') return
+
     if (settings !== lastSettings) { // Have to check because we update `lastSettings` in this effect
       if (VERBOSE > 2) console.log('Settings Changed')
       if (lastSettings === undefined) {
@@ -257,10 +259,11 @@ export function useSyncLoop ({ dispatch, settings }) {
       setLastSettings(settings)
       GLOBAL.settingsSynced = false
     }
-  }, [settings, lastSettings])
+  }, [settings, lastSettings, appState])
 
   const tick = useSelector(selectFiveSecondsTick)
   useEffect(() => {
+    if (appState === 'starting') return
     setImmediate(() => {
       dispatch(startTickTock())
       console.log('sync tick', tick, GLOBAL.lastSyncLoop)
@@ -274,12 +277,5 @@ export function useSyncLoop ({ dispatch, settings }) {
         }
       }
     })
-  }, [dispatch, tick])
+  }, [appState, dispatch, tick])
 }
-
-// export function useSyncOperations ({ dispatch, settings }) {
-//   if (GLOBAL.syncEnabled) {
-//     const localData = dispatch((_dispatch, getState) => selectLocalData(getState()))
-//     const { lastRootSync } = localData
-//   }
-// }

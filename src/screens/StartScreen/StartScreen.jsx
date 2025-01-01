@@ -16,7 +16,7 @@ import SplashScreen from 'react-native-splash-screen'
 import { selectRuntimeMessages } from '../../store/runtime'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Ham2kMarkdown } from '../components/Ham2kMarkdown'
-import { startupSequence } from '../../store/runtime/actions/startupSequence'
+import { earlyStartupSequence, startupSequence } from '../../store/runtime/actions/startupSequence'
 import { OnboardingManager } from './onboarding/OnboardingManager'
 import { selectSettings } from '../../store/settings'
 import { selectSystemFlag, setSystemFlag } from '../../store/system'
@@ -142,37 +142,52 @@ export default function StartScreen ({ setAppState }) {
 
   const versionName = packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`
 
-  const [startupPhase, setStartupPhase] = useState('hold')
+  const [startupPhase, setStartupPhase] = useState(undefined)
 
-  useEffect(() => { // Determine the startup phase
-    if (startupPhase !== 'hold') return
-    if (!onboardedOn || !settings?.operatorCall) {
-      setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
-    } else {
-      // If startup interruption is enabled, give the user some milliseconds to trigger it
-      if (enableStartupInterruptionDialogForDistribution({ settings })) {
-        const timeout = setTimeout(() => {
-          if (startupPhase === 'hold') {
-            setStartupPhase('start')
-          }
-        }, 500)
-        return () => clearTimeout(timeout)
+  useEffect(() => { // Determine actions based on the startup phase
+    /*
+     * Statup phases are:
+     *  - undefined
+     *  - 'earlyStart' : Perform early startup and then proceed to 'hold'
+     *  - 'hold'       : Hold for a sec and continue to either 'onboarding' or 'start'
+     *  - 'onboarding' : Show onboarding dialogs until ready
+     *  - 'start'      : Trigger startup sequence, which will start the main app when ready
+     *  - 'starting'   : startup sequence is in process
+     */
+    if (startupPhase === undefined) {
+      // Load early extensions and such
+      setStartupPhase('earlyStart')
+      dispatch(earlyStartupSequence(() => { setStartupPhase('hold') }))
+    } else if (startupPhase === 'hold') {
+      // Hold for a second and decide if we need to show onboarding or not
+      if (!onboardedOn || !settings?.operatorCall) {
+        setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
       } else {
-        setStartupPhase('start')
+        // If startup interruption is enabled, give the user some milliseconds to trigger it
+        if (enableStartupInterruptionDialogForDistribution({ settings })) {
+          const timeout = setTimeout(() => {
+            if (startupPhase === 'hold') {
+              setStartupPhase('start')
+            }
+          }, 500)
+          return () => clearTimeout(timeout)
+        } else {
+          setStartupPhase('start')
+        }
       }
+    } else if (startupPhase === 'start') {
+      // Once ready, begin the startup sequence
+      setStartupPhase('starting')
+      dispatch(startupSequence(() => setAppState('ready')))
     }
-  }, [startupPhase, onboardedOn, settings])
+  }, [startupPhase, onboardedOn, settings, dispatch, setAppState])
 
   const handleOnboardingDone = useCallback(() => {
     dispatch(setSystemFlag('onboardedOn', Date.now()))
     setStartupPhase('start')
   }, [dispatch, setStartupPhase])
 
-  useEffect(() => { // Once ready, begin the startup sequence
-    if (startupPhase === 'start') {
-      setStartupPhase('starting')
-      dispatch(startupSequence(() => setAppState('ready')))
-    }
+  useEffect(() => {
   }, [dispatch, setAppState, startupPhase])
 
   const handleInterruption = useCallback(() => { // If the uer taps the screen, show the track selection dialog

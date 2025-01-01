@@ -8,10 +8,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Dialog, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectExtensionSettings, setExtensionSettings } from '../../../store/settings'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
 import EmailInput from '../../components/EmailInput'
 import CallsignInput from '../../components/CallsignInput'
+import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 
 export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDialogDone }) {
   const dispatch = useDispatch()
@@ -21,7 +21,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
 
   useEffect(() => { setTimeout(() => callRef?.current?.focus(), 0) }, [])
 
-  const lofiSettings = useSelector(state => selectExtensionSettings(state, 'ham2k-lofi'))
+  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 
   const [dialogVisible, setDialogVisible] = useState(false)
   const [call, setCall] = useState('')
@@ -29,9 +29,9 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
   const [errors, setErrors] = useState({})
 
   useEffect(() => {
-    setCall(lofiSettings?.account?.call)
-    setEmail(lofiSettings?.account?.pending_email ?? lofiSettings?.account?.email)
-  }, [lofiSettings?.account?.call, lofiSettings?.account?.email, lofiSettings?.account?.pending_email])
+    setCall(lofiData?.account?.call)
+    setEmail(lofiData?.account?.pending_email ?? lofiData?.account?.email)
+  }, [lofiData?.account?.call, lofiData?.account?.email, lofiData?.account?.pending_email])
 
   useEffect(() => {
     setDialogVisible(visible)
@@ -49,7 +49,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
     const result = await dispatch(syncHook.setAccountData({ pending_email: email, call }))
     console.log('result', result)
     if (result.ok) {
-      dispatch(setExtensionSettings({ key: 'ham2k-lofi', account: result.json.account }))
+      dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: result.json.account }))
       setDialogVisible(false)
       onDialogDone && onDialogDone()
     } else {
@@ -65,11 +65,11 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
   }, [call, email, dispatch, onDialogDone, syncHook])
 
   const handleCancel = useCallback(() => {
-    setCall(lofiSettings.call)
-    setEmail(lofiSettings.pending_email || lofiSettings.email)
+    setCall(lofiData.call)
+    setEmail(lofiData.pending_email || lofiData.email)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [lofiSettings, onDialogDone])
+  }, [lofiData, onDialogDone])
 
   return (
     <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>

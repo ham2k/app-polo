@@ -6,7 +6,7 @@
  */
 
 import { startupStepsForDistribution } from '../../../distro'
-import loadExtensions from '../../../extensions/loadExtensions'
+import { loadExtensions, loadEarlyExtensions } from '../../../extensions/loadExtensions'
 import { loadOperations } from '../../operations'
 import { selectSettings } from '../../settings'
 import { addRuntimeMessage, resetRuntimeMessages } from '../runtimeSlice'
@@ -24,6 +24,14 @@ const MESSAGES = [
   'Engaging the warp drive' // K4HNT
 ]
 
+export const earlyStartupSequence = (onReady) => (dispatch, getState) => {
+  setImmediate(async () => {
+    await dispatch(setupOnlineStatusMonitoring())
+    await dispatch(loadEarlyExtensions())
+    onReady && onReady()
+  })
+}
+
 export const startupSequence = (onReady) => (dispatch, getState) => {
   const settings = selectSettings(getState()) || {}
 
@@ -36,7 +44,6 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
 
     const steps = [
       async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
-      async () => await dispatch(setupOnlineStatusMonitoring()),
       async () => await dispatch(loadExtensions()),
       async () => await dispatch(loadOperations()),
       async () => await minimumTimePromise,

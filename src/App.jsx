@@ -75,7 +75,7 @@ function MainApp ({ navigationTheme }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings?.consentAppData, settings?.consentOpData, settings?.extensions?.['ham2k-lofi']?.enabled])
 
-  useSyncLoop({ dispatch, settings })
+  useSyncLoop({ dispatch, settings, appState })
 
   const routeNameRef = React.useRef()
   const navigationRef = React.useRef()

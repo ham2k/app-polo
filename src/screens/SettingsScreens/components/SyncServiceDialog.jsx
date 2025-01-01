@@ -8,9 +8,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Dialog, RadioButton, Text, TextInput } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectExtensionSettings, setExtensionSettings } from '../../../store/settings'
 import { View } from 'react-native'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
+import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 
 const SERVERS = {
   dev: 'https://dev.lofi.ham2k.net',
@@ -25,7 +25,7 @@ const OPTION_FOR_SERVER = Object.keys(SERVERS).reduce((acc, key) => {
 export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
 
-  const lofiSettings = useSelector(state => selectExtensionSettings(state, 'ham2k-lofi'))
+  const lofiSettings = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 
   const [dialogVisible, setDialogVisible] = useState(false)
 
@@ -46,11 +46,11 @@ export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) 
 
   const handleAccept = useCallback(() => {
     if (serverOption === 'disabled') {
-      dispatch(setExtensionSettings({ key: 'ham2k-lofi', enabled: false }))
+      dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: false }))
     } else if (serverOption === 'other') {
-      dispatch(setExtensionSettings({ key: 'ham2k-lofi', enabled: true, server: otherServer }))
+      dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: true, server: otherServer }))
     } else {
-      dispatch(setExtensionSettings({ key: 'ham2k-lofi', enabled: true, server: SERVERS[serverOption] }))
+      dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: true, server: SERVERS[serverOption] }))
     }
     setDialogVisible(false)
     onDialogDone && onDialogDone()

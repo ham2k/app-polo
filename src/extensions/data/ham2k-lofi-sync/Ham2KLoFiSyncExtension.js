@@ -9,7 +9,8 @@ import Config from 'react-native-config'
 import packageJson from '../../../../package.json'
 import { logRemotely } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
-import { selectExtensionSettings, selectSettings, setExtensionSettings } from '../../../store/settings'
+import { selectSettings } from '../../../store/settings'
+import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 
 export const Info = {
   key: 'ham2k-lofi',
@@ -44,16 +45,21 @@ const SyncHook = {
     return response
   },
 
-  getAccountData: () => async (dispatch, getState) => {
-    const { account } = selectExtensionSettings(getState(), Info.key) || {}
+  linkClient: (email) => async (dispatch, getState) => {
+    const results = await requestWithAuth({ dispatch, getState, url: 'v1/clients/link', method: 'POST', body: JSON.stringify({ email }) })
+    return results
+  },
 
-    const results = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}`, method: 'GET' })
+  getAccountData: () => async (dispatch, getState) => {
+    const results = await requestWithAuth({ dispatch, getState, url: 'v1/accounts', method: 'GET' })
     if (results.ok) {
-      if (results.json.account) {
-        dispatch(setExtensionSettings({ key: Info.key, account: results.json.account }))
-      }
-      if (results.json.clients) {
-        dispatch(setExtensionSettings({ key: Info.key, clients: results.json.clients }))
+      const updates = {}
+      if (results.json.current_account) updates.account = results.json.current_account
+      if (results.json.current_client) updates.client = results.json.current_client
+      if (results.json.clients) updates.allClients = results.json.clients
+      if (results.json.accounts) updates.allAccounts = results.json.accounts
+      if (Object.keys(updates).length > 0) {
+        dispatch(setLocalExtensionData({ key: Info.key, ...updates }))
       }
     }
 
@@ -61,19 +67,18 @@ const SyncHook = {
   },
 
   setAccountData: (data) => async (dispatch, getState) => {
-    const { account } = selectExtensionSettings(getState(), Info.key) || {}
+    const { account } = selectLocalExtensionData(getState(), Info.key) || {}
     const body = JSON.stringify(data)
     const results = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}`, method: 'PATCH', body })
 
     return results
   }
-
 }
 
 async function requestWithAuth ({ dispatch, getState, url, method, body, params }) {
   try {
     console.log('Ham2K LoFi request', { url, method })
-    let { server, account } = selectExtensionSettings(getState(), Info.key) || {}
+    let { server, account } = selectLocalExtensionData(getState(), Info.key) || {}
     server = server ?? 'https://dev.lofi.ham2k.net'
 
     const { operatorCall } = selectSettings(getState())
@@ -187,7 +192,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
 function processResponseMeta ({ json, account, response, dispatch }) {
   try {
     if (json?.account && (!account || Object.keys(json.account).find(k => account[k] !== json.account[k]))) {
-      dispatch(setExtensionSettings({ key: Info.key, account: json.account }))
+      dispatch(setLocalExtensionData({ key: Info.key, account: json.account }))
     }
 
     if (json?.meta?.suggestedSyncBatchSize || json?.meta?.suggested_sync_batch_size) {
