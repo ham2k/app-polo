@@ -41,9 +41,9 @@ export const generateExportFile = async ({ uuid, fileName, format, operation, qs
   if (format === 'qson') {
     data = JSON.stringify({ operation: { ...operation, ...exportData }, qsos })
   } else if (format === 'adif') {
-    data = qsonToADIF({ operation: { ...operation, ...exportData }, fileName, format, ...rest })
+    data = qsonToADIF({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
   } else if (format === 'cabrillo') {
-    data = qsonToCabrillo({ operation: { ...operation, ...exportData }, fileName, format, ...rest })
+    data = qsonToCabrillo({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
   }
 
   if (fileName && data) {
