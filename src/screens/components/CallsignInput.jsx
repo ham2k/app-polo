@@ -25,7 +25,7 @@ export default function CallsignInput (props) {
     if (values.length > 1 && !allowMultiple) {
       return false
     }
-    console.log('values', values)
+
     return values.every(v => {
       const callInfo = parseCallsign(v)
       if (callInfo?.baseCall) {

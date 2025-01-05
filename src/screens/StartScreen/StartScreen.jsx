@@ -28,7 +28,7 @@ import packageJson from '../../../package.json'
 
 const SPLASH_IMAGE = require('./img/launch_screen.jpg')
 
-function prepareStyles (baseTheme, height) {
+function prepareStyles (baseTheme, height, dialogVisible) {
   return {
     ...baseTheme,
     root: {
@@ -45,7 +45,7 @@ function prepareStyles (baseTheme, height) {
       justifyContent: 'space-between'
     },
     titleBoxTop: {
-      height: '50%',
+      height: dialogVisible ? '10%' : '30%',
       justifyContent: 'flex-end'
     },
     titleBoxBottom: {
@@ -144,8 +144,6 @@ function prepareStyles (baseTheme, height) {
 export default function StartScreen ({ setAppState }) {
   const { height } = useWindowDimensions()
 
-  const styles = useThemedStyles(prepareStyles, height)
-
   const settings = useSelector(selectSettings)
   const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
   const dispatch = useDispatch()
@@ -163,6 +161,8 @@ export default function StartScreen ({ setAppState }) {
   const versionName = packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`
 
   const [startupPhase, setStartupPhase] = useState(undefined)
+
+  const styles = useThemedStyles(prepareStyles, height, startupPhase === 'onboarding')
 
   useEffect(() => { // Determine actions based on the startup phase
     /*
@@ -216,8 +216,8 @@ export default function StartScreen ({ setAppState }) {
 
   return (
     <ImageBackground source={SPLASH_IMAGE} style={styles.root}>
-      <SafeAreaView>
-        <GestureHandlerRootView style={styles.container}>
+      <GestureHandlerRootView>
+        <SafeAreaView style={styles.container}>
           <Pressable style={styles.titleBoxTop} onPress={() => { handleInterruption(); return true }}>
             <Text style={styles.ham2k}>Ham2K</Text>
           </Pressable>
@@ -233,22 +233,22 @@ export default function StartScreen ({ setAppState }) {
           <View style={styles.captionBox}>
             <Text style={styles.caption}>{photoCaption}</Text>
           </View>
-        </GestureHandlerRootView>
-      </SafeAreaView>
-      {startupPhase === 'dialog' && (
-        <StartupInterruptionDialogForDistribution
-          settings={settings}
-          styles={styles}
-          setStartupPhase={setStartupPhase}
-        />
-      )}
-      {startupPhase === 'onboarding' && (
-        <OnboardingManager
-          settings={settings}
-          styles={styles}
-          onOnboardingDone={handleOnboardingDone}
-        />
-      )}
+        </SafeAreaView>
+        {startupPhase === 'dialog' && (
+          <StartupInterruptionDialogForDistribution
+            settings={settings}
+            styles={styles}
+            setStartupPhase={setStartupPhase}
+          />
+        )}
+        {startupPhase === 'onboarding' && (
+          <OnboardingManager
+            settings={settings}
+            styles={styles}
+            onOnboardingDone={handleOnboardingDone}
+          />
+        )}
+      </GestureHandlerRootView>
     </ImageBackground>
   )
 }

@@ -121,7 +121,7 @@ async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch,
       if (VERBOSE > 2) console.log(' -- calling hook', { meta: syncParams.meta, sync: syncParams.meta?.sync, operations: syncParams.operations?.length, qsos: syncParams.qsos?.length, settings: Object.keys(syncParams?.settings || {}).length })
       if (VERBOSE > 1) logTimer('sync', 'sync', { reset: true })
       const response = await dispatch(syncHook.sync(syncParams))
-      if (VERBOSE > 2) console.log(' -- response', { ok: response.ok, operations: response.json.operations.length, qsos: response.json.qsos.length, meta: response.json.meta })
+      if (VERBOSE > 2) console.log(' -- response', { ok: response.ok, operations: response?.json?.operations?.length, qsos: response?.json?.qsos?.length, meta: response?.json?.meta })
       if (response.ok) {
         if (VERBOSE > 1) logTimer('sync', 'Response parsed')
         if (VERBOSE > 1) console.log(' -- synced ok')

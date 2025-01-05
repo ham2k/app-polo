@@ -19,7 +19,7 @@ export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevio
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   const [value, setValue] = useState('')
-
+  console.log('settings', settings)
   useEffect(() => {
     if (settings?.operatorCall === 'N0CALL') {
       setValue('')

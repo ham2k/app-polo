@@ -11,13 +11,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
 import { findHooks } from '../../../extensions/registry'
 import { selectLocalExtensionData } from '../../../store/local'
+import { setSettings } from '../../../store/settings'
+import { selectFiveSecondsTick } from '../../../store/time'
 
-export function AccountVerificationDialog ({ settings, styles, onDialogNext, onDialogPrevious, onAccountReady, nextLabel, previousLabel }) {
+export function ExistingSyncVerificationDialog ({ settings, styles, onDialogNext, onDialogPrevious, onAccountReady, nextLabel, previousLabel }) {
   const dispatch = useDispatch()
 
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 
   const [status, setStatus] = useState(undefined)
+
+  const tick = useSelector(selectFiveSecondsTick)
 
   const syncHook = useMemo(() => {
     return findHooks('sync')[0]
@@ -28,12 +32,19 @@ export function AccountVerificationDialog ({ settings, styles, onDialogNext, onD
       setStatus('pendingApproval')
       setImmediate(async () => {
         const results = await dispatch(syncHook.getAccountData())
-        if (results?.current_account?.email) {
-          setStatus('linking')
+        console.log('results', results)
+        if (results?.json?.current_account?.email) {
+          console.log('EMAIL!!!')
+          if (Object.keys(results.json?.settings ?? {}).length > 1) {
+            dispatch(setSettings(results.json.settings))
+          } else if (Object.keys(results.json?.suggested_settings ?? {}).length > 1) {
+            dispatch(setSettings(results.json.suggested_settings))
+          }
+          onAccountReady && onAccountReady()
         }
       })
     }
-  }, [dispatch, syncHook, status])
+  }, [dispatch, syncHook, status, onAccountReady, tick])
 
   const handleNext = useCallback(() => {
     if (status === 'ready') {

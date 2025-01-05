@@ -10,8 +10,7 @@ import { WelcomeDialog } from './WelcomeDialog'
 import { CallsignDialog } from './CallsignDialog'
 import { ActivitiesDialog } from './ActivitiesDialog'
 import { ConsentDialog } from './ConsentDialog'
-import { AccountDialog } from './AccountDialog'
-import { AccountVerificationDialog } from './AccountVerificationDialog'
+import { SyncAccountDialog } from './SyncAccountDialog'
 
 export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
   const [step, setStep] = useState('welcome')
@@ -24,24 +23,16 @@ export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
           styles={styles}
           onDialogPrevious={() => onOnboardingDone()}
           onDialogNext={() => setStep('callsign')}
-          onAccountConnect={() => setStep('account')}
+          onAccountConnect={() => setStep('existingAccount')}
         />
       )}
-      {step === 'account' && (
-        <AccountDialog
+      {step === 'existingAccount' && (
+        <SyncAccountDialog
+          inputMode="existing"
           settings={settings}
           styles={styles}
           onDialogPrevious={() => setStep('welcome')}
-          onDialogNext={() => setStep('accountVerification')}
-        />
-      )}
-      {step === 'accountVerification' && (
-        <AccountVerificationDialog
-          settings={settings}
-          styles={styles}
-          onDialogPrevious={() => setStep('account')}
           onDialogNext={() => onOnboardingDone()}
-          onAccountReady={() => onOnboardingDone}
         />
       )}
       {step === 'callsign' && (
@@ -57,6 +48,15 @@ export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
           settings={settings}
           styles={styles}
           onDialogPrevious={() => setStep('callsign')}
+          onDialogNext={() => setStep('newAccount')}
+        />
+      )}
+      {step === 'newAccount' && (
+        <SyncAccountDialog
+          inputMode="new"
+          settings={settings}
+          styles={styles}
+          onDialogPrevious={() => setStep('activities')}
           onDialogNext={() => setStep('consent')}
         />
       )}
@@ -64,7 +64,7 @@ export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
         <ConsentDialog
           settings={settings}
           styles={styles}
-          onDialogPrevious={() => setStep('activities')}
+          onDialogPrevious={() => setStep('newAccount')}
           onDialogNext={() => onOnboardingDone()}
           nextLabel={'Done'}
         />
