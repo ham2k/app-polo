@@ -112,7 +112,15 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
           })
         })
 
-        const json = await response.json()
+        const responseBody = await response.text()
+        // console.log(' -- auth response body', responseBody)
+        // const json = await response.json()
+        let json
+        try {
+          json = JSON.parse(responseBody)
+        } catch (e) {
+          json = {}
+        }
         processResponseMeta({ json, account, response, dispatch })
 
         if (response.status === 200) {
@@ -138,8 +146,15 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
         body
       })
 
-      const json = await response.json()
-      if (DEBUG) console.log(' -- response', response.status, json)
+      const responseBody = await response.text()
+      // console.log(' -- main response body', responseBody)
+      // const json = await response.json()
+      let json
+      try {
+        json = JSON.parse(responseBody)
+      } catch (e) {
+        json = {}
+      }
 
       processResponseMeta({ json, account, response, dispatch })
 
@@ -150,37 +165,6 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       } else {
         return { ok: response.status >= 200 && response.status < 300, status: response.status, json }
       }
-    }
-
-    if (DEBUG) console.log('-- request', { url, method, params })
-    const urlObj = new URL(`${server}/${url}`)
-    if (params) {
-      Object.keys(params).forEach(key => urlObj.searchParams.append(key, params[key]))
-    }
-
-    const response = await fetch(urlObj, {
-      method,
-      headers: {
-        'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body
-    })
-    const b = await response.body()
-    console.log('body', b)
-
-    const json = await response.json()
-    // if (DEBUG) console.log(' -- response', response.status, json)
-
-    processResponseMeta({ json, response, dispatch })
-
-    if (response.status === 401) {
-      if (DEBUG) console.log(' -- auth failed')
-      // Auth failed, do another loop
-      token = null
-    } else {
-      return { ok: response.status >= 200 && response.status < 300, status: response.status, json }
     }
   } catch (e) {
     if (DEBUG) console.error('Error in requestWithAuth', e)
