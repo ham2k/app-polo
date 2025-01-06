@@ -44,6 +44,7 @@ import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
 import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
 import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/OperationLocationScreen'
+import { selectLocalExtensionData } from './store/local'
 
 const Stack = createNativeStackNavigator()
 
@@ -56,6 +57,7 @@ function MainApp ({ navigationTheme }) {
 
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
+  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 
   useConfigForDistribution({ settings })
 
@@ -67,13 +69,10 @@ function MainApp ({ navigationTheme }) {
       GLOBAL.consentOpData = settings.consentOpData
       GLOBAL.deviceId = GLOBAL.deviceId || await DeviceInfo.getUniqueId()
       GLOBAL.deviceName = GLOBAL.deviceName || await DeviceInfo.getDeviceName()
-      GLOBAL.syncEnabled = settings?.extensions?.['ham2k-lofi']?.enabled === false ? false : settings.consentAppData || settings.consentOpData
+      GLOBAL.syncEnabled = lofiData?.enabled === false ? false : settings.consentAppData || settings.consentOpData
       console.log('GLOBAL', GLOBAL)
     })
-  // `exhaustive-deps` is confused by the `?.[]` syntax and wants `settings?.extensions` to be a dependency
-  // but we want the more specific dependency, so we disable the rule here
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings?.consentAppData, settings?.consentOpData, settings?.extensions?.['ham2k-lofi']?.enabled])
+  }, [settings?.consentAppData, settings?.consentOpData, lofiData?.enabled])
 
   useSyncLoop({ dispatch, settings, appState })
 

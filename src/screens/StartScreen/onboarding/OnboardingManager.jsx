@@ -48,7 +48,7 @@ export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
           settings={settings}
           styles={styles}
           onDialogPrevious={() => setStep('callsign')}
-          onDialogNext={() => setStep('newAccount')}
+          onDialogNext={() => setStep(settings.devMode ? 'newAccount' : 'consent')}
         />
       )}
       {step === 'newAccount' && (
@@ -64,7 +64,7 @@ export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
         <ConsentDialog
           settings={settings}
           styles={styles}
-          onDialogPrevious={() => setStep('newAccount')}
+          onDialogPrevious={() => setStep(settings.devMode ? 'newAccount' : 'activities')}
           onDialogNext={() => onOnboardingDone()}
           nextLabel={'Done'}
         />

@@ -179,32 +179,6 @@ export default function DevModeSettingsScreen ({ navigation }) {
             onPress={handleWipeDB}
           />
         </Ham2kListSection>
-        <Ham2kListSection title={'Sync Services'}>
-          <Ham2kListItem
-            title="Ham2K Log Filer"
-            description={settings?.extensions?.['ham2k-lofi']?.enabled ? settings?.extensions?.['ham2k-lofi']?.server : 'Disabled'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync-circle" color={styles.colors.devMode} />}
-            titleStyle={{ color: styles.colors.devMode, marginLeft: 0 }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            onPress={() => setCurrentDialog('ham2k-lofi')}
-          />
-          {currentDialog === 'ham2k-lofi' && (
-            <SyncServiceDialog
-              settings={settings}
-              styles={styles}
-              visible={true}
-              onDialogDone={() => setCurrentDialog('')}
-            />
-          )}
-          <Ham2kListItem
-            title="Reset Sync Status"
-            description={syncStatus}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-remove" color={styles.colors.devMode} />}
-            titleStyle={{ color: styles.colors.devMode }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            onPress={handleResetSyncStatus}
-          />
-        </Ham2kListSection>
         <Ham2kListSection title={'System Information'}>
           <View style={{ paddingHorizontal: styles.oneSpace * 2 }}>
             <Ham2kMarkdown styles={{ markdown: { heading3: { ...styles.markdown.heading3, marginTop: styles.oneSpace } } }}>

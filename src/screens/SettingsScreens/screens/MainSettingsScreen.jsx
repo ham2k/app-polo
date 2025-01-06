@@ -174,12 +174,14 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
           onPress={() => navigation.navigate('DataSettings')}
         />
 
-        <Ham2kListItem
-          title="Sync Settings"
-          description="Cloud sync and backup"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync" />}
-          onPress={() => navigation.navigate('SyncSettings')}
-        />
+        {settings.devMode && (
+          <Ham2kListItem
+            title="Sync Settings"
+            description="Cloud sync and backup"
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={styles.colors.devMode} icon="sync" />}
+            onPress={() => navigation.navigate('SyncSettings')}
+          />
+        )}
 
         <Ham2kListItem
           title="App Features"

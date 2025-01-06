@@ -93,9 +93,9 @@ export default function SyncSettingsScreen ({ navigation }) {
         <Ham2kListSection title={'Ham2K Log Filer - Sync Server (BETA)'}>
           <Ham2kListItem
             title="Sync Service"
-            description={settings?.extensions?.['ham2k-lofi']?.enabled ? 'Enabled' : 'Disabled'}
+            description={lofiData?.enabled !== false ? 'Enabled' : 'Disabled'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync-circle" />}
-            right={() => <Switch value={!!settings?.extensions?.['ham2k-lofi']?.enabled} onValueChange={(value) => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: value })) } />}
+            right={() => <Switch value={lofiData?.enabled !== false} onValueChange={(value) => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: value })) } />}
             onPress={() => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: !lofiData.enabled }))}
           />
           <Ham2kListItem
@@ -136,20 +136,20 @@ export default function SyncSettingsScreen ({ navigation }) {
         </Ham2kListSection>
         <Ham2kListSection title={'This Device'}>
           <Ham2kListItem
-            key={lofiData.client.uuid}
-            title={`${lofiData.client.name} (${lofiData.client.uuid.slice(0, 8)})`}
+            key={lofiData?.client?.uuid}
+            title={`${lofiData?.client?.name} (${lofiData?.client?.uuid?.slice(0, 8)})`}
             description={syncStatus}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone" />}
           />
         </Ham2kListSection>
 
-        {(lofiData?.allClients || []).filter(client => client.uuid !== lofiData.client.uuid).length > 0 && (
+        {(lofiData?.allClients || []).filter(client => client.uuid !== lofiData?.client?.uuid).length > 0 && (
           <Ham2kListSection title={'Other Devices'}>
-            {(lofiData?.allClients || []).filter(client => client.uuid !== lofiData.client.uuid).map((client) => (
+            {(lofiData?.allClients || []).filter(client => client.uuid !== lofiData?.client?.uuid).map((client) => (
               <Ham2kListItem
                 key={client.uuid}
                 title={client.name}
-                description={client.uuid === lofiData.client?.uuid ? 'This device' : client.uuid.slice(0, 8)}
+                description={client.uuid === lofiData?.client?.uuid ? 'This device' : client.uuid.slice(0, 8)}
                 left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone" />}
               />
             ))}
