@@ -29,6 +29,10 @@ import packageJson from '../../../package.json'
 const SPLASH_IMAGE = require('./img/launch_screen.jpg')
 
 function prepareStyles (baseTheme, height, dialogVisible) {
+  const isLightImage = true
+  const baseColor = isLightImage ? '#000' : '#FFF'
+  const haloColor = isLightImage ? '#FFF' : '#000'
+
   return {
     ...baseTheme,
     root: {
@@ -70,49 +74,49 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       fontSize: baseTheme.normalFontSize * 1.7,
       lineHeight: baseTheme.normalFontSize * 2,
       fontWeight: 400,
-      textShadowColor: '#000',
+      textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace * 1.5,
-      color: '#FFF',
+      color: baseColor,
       textAlign: 'center'
     },
     polo: {
       fontSize: baseTheme.normalFontSize * 2.3,
       lineHeight: baseTheme.normalFontSize * 3,
-      textShadowColor: '#000',
+      textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace * 2,
       fontFamily: 'Roboto Slab Black',
-      color: '#FFF',
+      color: baseColor,
       textAlign: 'center'
     },
     version: {
       fontSize: baseTheme.normalFontSize * 1.3,
       lineHeight: baseTheme.normalFontSize * 2,
       fontWeight: 400,
-      textShadowColor: '#000',
+      textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace * 1,
-      color: '#FFF',
+      color: baseColor,
       textAlign: 'center',
       marginTop: baseTheme.oneSpace
     },
     message: {
-      textShadowColor: '#000',
+      textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace,
       fontSize: 20,
       fontWeight: 'bold',
-      color: '#FFFFFF', // '#D0D0D0',
+      color: baseColor, // '#D0D0D0',
       textAlign: 'center'
     },
     caption: {
-      textShadowColor: '#000',
+      textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace,
       fontSize: 18,
       fontWeight: 'normal',
-      color: '#D0D0D0', // '#D0D0D0',
+      color: baseColor, // '#D0D0D0',
       textAlign: 'center',
       padding: baseTheme.oneSpace
     },
@@ -120,16 +124,18 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       ...baseTheme.markdown,
       body: {
         ...baseTheme.markdown.body,
-        color: '#FFFFFF', // '#D0D0D0',
-        fontSize: baseTheme.normalFontSize,
+        color: baseColor, // '#D0D0D0',
+        fontSize: baseTheme.normalFontSize * 1.2,
         textAlign: 'center',
         marginLeft: baseTheme.oneSpace * 3,
         marginRight: baseTheme.oneSpace * 3
       },
       paragraph: {
-        textShadowColor: '#000',
+        backgroundColor: 'rgba(255,255,255,.3)',
+        paddingHorizontal: baseTheme.oneSpace * 0.5,
+        textShadowColor: 'rgba(255,255,255,1)',
         textShadowOffset: { width: 0, height: 0 },
-        textShadowRadius: baseTheme.oneSpace,
+        textShadowRadius: baseTheme.oneSpace * 0.5,
         textAlign: 'center',
         alignItems: 'center',
         margin: 0,
