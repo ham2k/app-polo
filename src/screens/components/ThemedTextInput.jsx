@@ -182,7 +182,8 @@ export default function ThemedTextInput (props) {
         color: themeColor ? themeStyles.theme.colors[themeColor] : themeStyles.theme.colors.onBackground
       },
       selectionColor: themeColor ? themeStyles.theme.colors[`${themeColor}Light`] : themeStyles.theme.colors.primaryLight,
-      cursorColor: themeColor ? themeStyles.theme.colors[`${themeColor}`] : themeStyles.theme.colors.primary
+      cursorColor: themeColor ? themeStyles.theme.colors[`${themeColor}`] : themeStyles.theme.colors.primary,
+      errorColor: themeStyles.theme.colors.error
     }
   }, [themeStyles, themeColor])
 
@@ -281,7 +282,7 @@ export default function ThemedTextInput (props) {
         style
       ]}
       maxFontSizeMultiplier={1} // This affects the size of the label
-      textColor={colorStyles.paperInput.color}
+      textColor={error ? colorStyles.errorColor : colorStyles.paperInput.color}
       selectionColor={colorStyles.paperInput.color}
       underlineColor={colorStyles.paperInput.color}
       activeUnderlineColor={colorStyles.paperInput.color}

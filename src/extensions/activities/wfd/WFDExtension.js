@@ -5,15 +5,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+import React from 'react'
 
-import { setOperationData } from '../../../store/operations'
+import { superModeForMode } from '@ham2k/lib-operation-data'
+
 import { findRef, replaceRef } from '../../../tools/refTools'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import { ListRow } from '../../../screens/components/ListComponents'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
-import { superModeForMode } from '@ham2k/lib-operation-data'
+import ThemedTextInputWithSuggestions from '../../../screens/components/ThemedTextInputWithSuggestions'
+
+import { WFDActivityOptions } from './WFDActivityOptions'
+import { ARRL_SECTIONS, RAC_SECTIONS } from '../fd/FDSections'
 
 /*
  NOTES:
@@ -29,7 +30,7 @@ import { superModeForMode } from '@ham2k/lib-operation-data'
 
  */
 
-const Info = {
+export const Info = {
   key: 'wfd',
   icon: 'snowflake',
   name: 'Winter Field Day',
@@ -46,11 +47,12 @@ const Extension = {
     registerHook(`ref:${Info.key}`, { hook: ReferenceHandler })
   }
 }
+
 export default Extension
 
 const ActivityHook = {
   ...Info,
-  Options: ActivityOptions,
+  Options: WFDActivityOptions,
   mainExchangeForOperation
 }
 
@@ -97,6 +99,8 @@ const ReferenceHandler = {
   },
 
   qsoToCabrilloParts: ({ qso, ref, operation, settings, parts }) => {
+    parts = parts || []
+
     const ourCall = operation.stationCall || settings.operatorCall
     const qsoRef = findRef(qso, Info.key)
 
@@ -136,6 +140,13 @@ const ReferenceHandler = {
   }
 }
 
+const WFD_CLASS_REGEX = /^[1-9]+[HIMO]$/
+
+export const WFD_LOCATION_VALUES = { ...ARRL_SECTIONS, ...RAC_SECTIONS, MX: 'Mexico', DX: 'DX' }
+export const WFD_LOCATIONS = Object.keys(WFD_LOCATION_VALUES)
+
+export const WFD_LOCATION_SUGGESTIONS = Object.entries(WFD_LOCATION_VALUES)
+
 function mainExchangeForOperation (props) {
   const { qso, updateQSO, styles, refStack } = props
 
@@ -153,9 +164,11 @@ function mainExchangeForOperation (props) {
       label={'Class'}
       placeholder={''}
       mode={'flat'}
+      keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
       value={ref?.class || ''}
+      error={ref?.class && !ref.class.match(WFD_CLASS_REGEX)}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text }),
         their: { exchange: [text, ref?.location].join(' ') }
@@ -163,7 +176,7 @@ function mainExchangeForOperation (props) {
     />
   )
   fields.push(
-    <ThemedTextInput
+    <ThemedTextInputWithSuggestions
       {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}
@@ -172,9 +185,13 @@ function mainExchangeForOperation (props) {
       label={'Loc'}
       placeholder={''}
       mode={'flat'}
+      keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
       value={ref?.location || ''}
+      error={ref?.location && !WFD_LOCATIONS.includes(ref.location)}
+      suggestions={WFD_LOCATION_SUGGESTIONS}
+      minimumLengthForSuggestions={3}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text }),
         their: { arrlSection: text, exchange: [ref?.class, text].join(' ') }
@@ -182,48 +199,4 @@ function mainExchangeForOperation (props) {
     />
   )
   return fields
-}
-
-export function ActivityOptions (props) {
-  const { styles, operation } = props
-
-  const dispatch = useDispatch()
-
-  const ref = useMemo(() => findRef(operation, Info.key), [operation])
-
-  const handleChange = useCallback((value) => {
-    if (value?.class) value.class = value.class.toUpperCase()
-    if (value?.location) value.location = value.location.toUpperCase()
-
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, ...value }) }))
-  }, [dispatch, operation, ref])
-
-  return (
-    <Ham2kListSection title={'Exchange Information'}>
-      <ListRow>
-        <ThemedTextInput
-          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-          textStyle={styles.text.callsign}
-          label={'Class'}
-          mode={'flat'}
-          uppercase={true}
-          noSpaces={true}
-          value={ref?.class || ''}
-          onChangeText={(text) => handleChange({ class: text })}
-        />
-      </ListRow>
-      <ListRow>
-        <ThemedTextInput
-          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-          textStyle={styles.text.callsign}
-          label={'Location'}
-          mode={'flat'}
-          uppercase={true}
-          noSpaces={true}
-          value={ref?.location || ''}
-          onChangeText={(text) => handleChange({ location: text })}
-        />
-      </ListRow>
-    </Ham2kListSection>
-  )
 }

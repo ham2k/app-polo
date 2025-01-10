@@ -19,6 +19,7 @@
     "@ham2k/lib-operation-data": "^0.8.4",
     "@ham2k/lib-qson-adif": "^0.5",
     "@ham2k/lib-qson-tools": "^0.6",
+    "@nozbe/microfuzz": "^1.0.0",
     "@react-native-async-storage/async-storage": "^2.1",
     "@react-native-community/geolocation": "^3.2",
     "@react-native-community/netinfo": "^11.3",

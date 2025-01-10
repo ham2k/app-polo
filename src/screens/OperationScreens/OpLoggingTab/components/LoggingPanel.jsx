@@ -18,7 +18,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
-import { setOperationData, setOperationLocalData } from '../../../../store/operations'
+import { setOperationLocalData } from '../../../../store/operations'
 import { useUIState } from '../../../../store/ui'
 import { addQSO, addQSOs } from '../../../../store/qsos'
 import { setVFO } from '../../../../store/station/stationSlice'
@@ -399,6 +399,13 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     }
   }, [])
 
+  const opMessage = useMemo(() => {
+    if (operationError) return operationError
+    if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information' }
+    if (commandInfo?.message) return { text: `**${commandInfo.message}**`, icon: 'chevron-right-box' }
+    return undefined
+  }, [operationError, commandInfo?.message, loggingState.infoMessage])
+
   return (
     <View style={[styles.root, style]}>
       <SafeAreaView edges={[isKeyboardVisible ? '' : 'bottom', 'left', 'right'].filter(x => x)}>
@@ -433,7 +440,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                     </Text>
                   </View>
                 ) : (
-                  !commandInfo?.message && qso?.their?.call?.length > 2 ? (
+                  !opMessage && qso?.their?.call?.length > 2 ? (
                     <CallInfo
                       qso={qso}
                       qsos={activeQSOs}
@@ -447,7 +454,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                     />
                   ) : (
                     <OpInfo
-                      message={commandInfo?.message || operationError}
+                      message={opMessage}
                       operation={operation}
                       vfo={vfo}
                       styles={styles}
