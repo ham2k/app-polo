@@ -3,7 +3,8 @@
     "name": "January '25 (pre 0)",
     "photoCaption": "KI2D at POTA US-0059",
     "changes": [
-      "Support for Winter Field Day 2025"
+      "Support for Winter Field Day 2025",
+      "Better handling of operator callsign in operation title"
     ]
   },
   "24.12.2": {

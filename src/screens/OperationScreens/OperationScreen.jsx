@@ -30,6 +30,7 @@ import { useUIState } from '../../store/ui'
 import { Icon, Menu, Text } from 'react-native-paper'
 import { slashZeros } from '../../tools/stringTools'
 import { hasRef } from '../../tools/refTools'
+import { parseCallsign } from '@ham2k/lib-callsigns'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -314,7 +315,11 @@ export function buildTitleForOperation (operationAttrs, { includeCall = true } =
   if (operationAttrs.stationCall) {
     let call = operationAttrs.stationCall
     if (operationAttrs.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
-      call = `${call} (op ${operationAttrs.operatorCall})`
+      const stationCallInfo = parseCallsign(operationAttrs.stationCall)
+      const operatorCallInfo = parseCallsign(operationAttrs.operatorCall)
+      if (stationCallInfo?.baseCall !== operatorCallInfo?.baseCall) {
+        call = `${call} (op ${operationAttrs.operatorCall})`
+      }
     }
     const parts = []
     if (operationAttrs.userTitle) {
