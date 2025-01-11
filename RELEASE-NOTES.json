@@ -4,7 +4,8 @@
     "photoCaption": "KI2D at POTA US-0059",
     "changes": [
       "Support for Winter Field Day 2025",
-      "Better handling of operator callsign in operation title"
+      "Better handling of operator callsign in operation title",
+      "Include base frequency in ADIF export when only band was specified"
     ]
   },
   "24.12.2": {
