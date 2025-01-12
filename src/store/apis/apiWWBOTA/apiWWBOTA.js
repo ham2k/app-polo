@@ -14,7 +14,7 @@ const DEBUG = false
 
 const apiState = {}
 
-const NONCE_RE = /id="wdtNonceFrontendServerSide_18"[^>]+ value="([0-9a-f]+)"/
+const NONCE_RE = /id="wdtNonceFrontendServerSide_24"[^>]+ value="([0-9a-f]+)"/
 
 const baseQueryFetchNonce = fetchBaseQuery({
   baseUrl: 'https://wwbota.org/',
@@ -75,7 +75,7 @@ export const apiWWBOTA = createApi({
   endpoints: builder => ({
     spots: builder.query({
       query: () => ({
-        url: 'wp-admin/admin-ajax.php?action=get_wdtable&table_id=18',
+        url: 'wp-admin/admin-ajax.php?action=get_wdtable&table_id=24',
         method: 'POST',
         body: Object.entries({
           draw: 1,
