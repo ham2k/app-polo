@@ -30,7 +30,7 @@ const DEFAULT_LARGE_BATCH_SIZE = 50 // QSOs or Operations to send on a regular s
 
 const OPERATION_BATCH_RATIO = 5 // Operation data is much smaller, so we can send more of them in a batch
 
-const VERBOSE = 4
+const VERBOSE = 0
 
 let errorCount = 0
 
@@ -244,7 +244,7 @@ function _scheduleNextSyncLoop ({ dispatch, delay = 0 }, loop) {
   }
 }
 
-export function useSyncLoop ({ dispatch, settings, appState }) {
+export function useSyncLoop ({ dispatch, settings, online, appState }) {
   const [lastSettings, setLastSettings] = useState()
   useEffect(() => {
     if (appState === 'starting') return
@@ -266,8 +266,8 @@ export function useSyncLoop ({ dispatch, settings, appState }) {
     if (appState === 'starting') return
     setImmediate(() => {
       dispatch(startTickTock())
-      console.log('sync tick', tick, GLOBAL.lastSyncLoop)
-      if (GLOBAL.syncEnabled) {
+      if (VERBOSE > 1) console.log('sync tick', tick, GLOBAL.lastSyncLoop)
+      if (GLOBAL.syncEnabled && online) {
         const maxTime = GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD
 
         if (VERBOSE > 1) console.log('-- sync enabled', { lastSyncLoop: GLOBAL.lastSyncLoop, delta: (tick - (GLOBAL.lastSyncLoop || 0)) })
@@ -277,5 +277,5 @@ export function useSyncLoop ({ dispatch, settings, appState }) {
         }
       }
     })
-  }, [appState, dispatch, tick])
+  }, [appState, dispatch, online, tick])
 }

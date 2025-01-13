@@ -45,6 +45,7 @@ import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
 import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
 import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/OperationLocationScreen'
 import { selectLocalExtensionData } from './store/local'
+import { selectRuntimeOnline } from './store/runtime'
 
 const Stack = createNativeStackNavigator()
 
@@ -57,6 +58,7 @@ function MainApp ({ navigationTheme }) {
 
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
+  const online = useSelector(selectRuntimeOnline)
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 
   useConfigForDistribution({ settings })
@@ -74,7 +76,7 @@ function MainApp ({ navigationTheme }) {
     })
   }, [settings?.consentAppData, settings?.consentOpData, lofiData?.enabled])
 
-  useSyncLoop({ dispatch, settings, appState })
+  useSyncLoop({ dispatch, settings, online, appState })
 
   const routeNameRef = React.useRef()
   const navigationRef = React.useRef()
