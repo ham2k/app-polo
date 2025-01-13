@@ -20,7 +20,7 @@ const Extension = {
   category: 'lookup',
   enabledByDefault: true,
   onActivation: ({ registerHook }) => {
-    registerHook('lookup', { hook: LookupHook, priority: -1 })
+    registerHook('lookup', { hook: LookupHook, priority: 100 })
     registerHook('setting', { hook: SettingHook })
   }
 }

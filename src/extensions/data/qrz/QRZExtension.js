@@ -21,7 +21,7 @@ const Extension = {
   category: 'lookup',
   enabledByDefault: true,
   onActivation: ({ registerHook }) => {
-    registerHook('lookup', { hook: LookupHook, priority: 100 })
+    registerHook('lookup', { hook: LookupHook, priority: 99 })
     registerHook('account', { hook: AccountHook })
   }
 }
@@ -33,6 +33,7 @@ const LookupHook = {
     return !online || (lookedUp.name && lookedUp.grid)
   },
   lookupCallWithDispatch: async (callInfo, { settings, online, dispatch }) => {
+    console.log('QRZ lookup', { call: callInfo.call, online })
     let qrzPromise
     let qrzLookup
     if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && callInfo?.baseCall?.length > 2) {

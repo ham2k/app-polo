@@ -28,10 +28,10 @@ export const useCallLookup = (qso) => {
   const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
 
-  const [cachedLookups, origsetCachedLookups] = useState({})
+  const [cachedLookups, origSetCachedLookups] = useState({})
   const setCachedLookups = (newLookups) => {
     if (DEBUG) console.log('* setCachedLookups', Object.keys(newLookups).map(k => `${k}:${newLookups[k].status}`).join(', '))
-    origsetCachedLookups(newLookups)
+    origSetCachedLookups(newLookups)
   }
 
   const { call, theirInfo, cacheKey, baseCacheKey } = useMemo(() => _extractCallInfo(qso), [qso])
@@ -46,11 +46,11 @@ export const useCallLookup = (qso) => {
 
       setCachedLookups({ ...cachedLookups, [cacheKey]: { ...cachedLookups[cacheKey], status: 'looking' } })
 
-      setTimeout(async () => {
+      setImmediate(async () => {
         // First do an offline lookup, to use things like local history as fast as possible
-        const offlineLookup = await _performLookup({ qso, call, theirInfo, online: false, skipLookup: true, settings, dispatch })
+        const offlineLookup = await _performLookup({ qso, call, theirInfo, online: false, settings, dispatch })
 
-        if (offlineLookup?.guess?.name || offlineLookup?.guess?.city || offlineLookup?.guess?.grid || offlineLookup?.guess?.locationLabel) {
+        if (offlineLookup?.guess?.name || offlineLookup?.guess?.city || offlineLookup?.guess?.grid || offlineLookup?.guess?.locationLabel || offlineLookup?.guess?.note) {
           if (DEBUG) console.log('  -- filling cachedLookups with offline lookup', { name: offlineLookup.guess.name, locationLabel: offlineLookup.guess.locationLabel, state: offlineLookup.guess.state })
           setCachedLookups({ ...cachedLookups, [cacheKey]: { call, cacheKey, ...offlineLookup, status: 'offline' } })
         }
@@ -58,13 +58,13 @@ export const useCallLookup = (qso) => {
         // And then a full lookup for slower online sources
         const onlineLookup = await _performLookup({ qso, call, theirInfo, online, settings, dispatch })
 
-        if (onlineLookup?.guess?.name || onlineLookup?.guess?.city || onlineLookup?.guess?.grid || onlineLookup?.guess?.locationLabel) {
+        if (onlineLookup?.guess?.name || onlineLookup?.guess?.city || onlineLookup?.guess?.grid || onlineLookup?.guess?.locationLabel || onlineLookup?.guess?.note) {
           if (DEBUG) console.log('  -- filling cachedLookups with online lookup', { name: onlineLookup.guess.name, locationLabel: onlineLookup.guess.locationLabel, state: onlineLookup.guess.state })
           setCachedLookups({ ...cachedLookups, [cacheKey]: { call, cacheKey, ...onlineLookup, status: 'online' } })
         } else {
           setCachedLookups({ ...cachedLookups, [cacheKey]: { ...cachedLookups[cacheKey], status: 'looked' } })
         }
-      }, 0)
+      })
     } else {
       if (DEBUG) console.log('  -- useCallLookup effect cached', { cacheKey })
     }
@@ -88,7 +88,7 @@ export const useCallLookup = (qso) => {
   }
 }
 
-export async function annotateQSO ({ qso, online, settings, dispatch, skipLookup = false }) {
+export async function annotateQSO ({ qso, online, settings, dispatch, mode = 'full' }) {
   const { call, theirInfo } = _extractCallInfo(qso)
 
   const { guess, lookup } = await _performLookup({ qso, call, theirInfo, online, settings, dispatch })
@@ -119,32 +119,31 @@ function _extractCallInfo (qso) {
   return { call, theirInfo, cacheKey, baseCacheKey }
 }
 
-async function _performLookup ({ qso, call, theirInfo, online, settings, dispatch, skipLookup = false }) {
-  const { lookups } = await _lookupCall(theirInfo, { online, settings, dispatch, skipLookup: false })
-  const { refs } = await _lookupRefs(qso?.refs, { online, settings, dispatch, skipLookup: false })
-
+async function _performLookup ({ qso, call, theirInfo, online, settings, dispatch }) {
+  const { lookups } = await _lookupCall(theirInfo, { online, settings, dispatch })
+  const { refs } = await _lookupRefs(qso?.refs, { online, settings, dispatch })
   const { guess, lookup } = _mergeData({ theirInfo, lookups, refs })
+  if (DEBUG) console.log('  -- performLookup', { call, keys: Object.keys(lookups), guess, lookup })
 
   return { guess, lookup, lookups, theirInfo }
 }
 
-async function _lookupCall (theirInfo, { online, settings, dispatch, skipLookup = false }) {
+async function _lookupCall (theirInfo, { online, settings, dispatch }) {
   const lookups = {}
-  if (!skipLookup) {
-    const lookupHooks = findHooks('lookup')
-    const lookedUp = {}
-    for (const hook of lookupHooks) {
-      if (!hook?.shouldSkipLookup || !hook.shouldSkipLookup({ online, lookedUp })) {
-        let data
-        if (hook?.lookupCallWithDispatch) {
-          data = await hook.lookupCallWithDispatch(theirInfo, { settings, dispatch, online })
-        } else if (hook?.lookupCall) {
-          data = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online }))
-        }
-        if (data) {
-          lookups[hook.key] = removeEmptyValues(data)
-          Object.keys(lookups[hook.key]).forEach(key => { lookedUp[key] = true })
-        }
+  const lookupHooks = findHooks('lookup')
+  const lookedUp = {}
+  for (const hook of lookupHooks) {
+    if (DEBUG) console.log('  -- lookupCall', hook.key, { online, lookedUp })
+    if (!hook?.shouldSkipLookup || !hook.shouldSkipLookup({ online, lookedUp })) {
+      let data
+      if (hook?.lookupCallWithDispatch) {
+        data = await hook.lookupCallWithDispatch(theirInfo, { settings, dispatch, online })
+      } else if (hook?.lookupCall) {
+        data = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online }))
+      }
+      if (data) {
+        lookups[hook.key] = removeEmptyValues(data)
+        Object.keys(lookups[hook.key]).forEach(key => { lookedUp[key] = true })
       }
     }
   }
@@ -152,7 +151,7 @@ async function _lookupCall (theirInfo, { online, settings, dispatch, skipLookup 
   return { lookups }
 }
 
-async function _lookupRefs (refs, { online, settings, dispatch, skipLookup = false }) {
+async function _lookupRefs (refs, { online, settings, dispatch }) {
   let newRefs = []
   for (const ref of (refs || [])) {
     const hooks = findHooks(`ref:${ref.type}`)
