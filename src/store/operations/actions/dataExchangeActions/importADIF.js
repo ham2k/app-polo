@@ -13,7 +13,7 @@ import { adifToQSON } from '@ham2k/lib-qson-adif'
 
 import { reportError } from '../../../../distro'
 
-import { addQSO, actions as qsosActions, saveQSOsForOperation } from '../../../qsos'
+import { addQSOs, actions as qsosActions, saveQSOsForOperation } from '../../../qsos'
 import { annotateQSO } from '../../../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
 
 const ADIF_FILENAME_REGEX = /.+\.(adi|adif)$/i
@@ -44,11 +44,11 @@ export const importADIFIntoOperation = (path, operation) => async (dispatch) => 
         return newQSO
       })
 
-      for (let qso of qsos) {
-        qso = await annotateQSO({ qso, online: false, dispatch, settings: {} })
+      qsos.map(async qso => {
+        return await annotateQSO({ qso, online: false, dispatch, settings: {} })
+      })
 
-        await dispatch(addQSO({ uuid: operation.uuid, qso }))
-      }
+      await dispatch(addQSOs({ uuid: operation.uuid, qsos }))
 
       await dispatch(saveQSOsForOperation(operation.uuid))
       dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'ready' }))

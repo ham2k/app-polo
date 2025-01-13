@@ -302,7 +302,8 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
             oneQSO.their.call = calls[i].trim()
             oneQSO.their.guess = {}
             oneQSO.their.lookup = {}
-            oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
+            oneQSO = await annotateQSO({ qso: oneQSO, online: false, settings, dispatch })
+            oneQSO._needsLookup = true
           }
           multiQSOs.push(oneQSO)
 

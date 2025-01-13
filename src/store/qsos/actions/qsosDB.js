@@ -15,6 +15,9 @@ import { actions as operationActions, saveOperationLocalData } from '../../opera
 import { dbExecute, dbSelectAll, dbTransaction } from '../../db/db'
 import { sendQSOsToSyncService } from '../../sync'
 import { logTimer } from '../../../tools/perfTools'
+import { annotateQSO } from '../../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
+import { selectSettings } from '../../settings'
+import { selectRuntimeOnline } from '../../runtime'
 
 export const prepareQSORow = (row) => {
   const data = JSON.parse(row.data)
@@ -73,13 +76,15 @@ export const queryQSOs = async (query, params) => {
 
 export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
 
+const DEBUG = false
+
 export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
   const now = Date.now()
 
-  logTimer('addQSOs', 'Start', { reset: true })
+  if (DEBUG) logTimer('addQSOs', 'Start', { reset: true })
   const qsosToSave = [...qsos]
   while (qsosToSave.length > 0) {
-    logTimer('addQSOs', 'batch')
+    if (DEBUG) logTimer('addQSOs', 'batch')
     const batch = qsosToSave.splice(0, 50)
     const batchData = []
     for (const qso of batch) {
@@ -94,7 +99,7 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
 
       const qsoClone = { ...qso }
       delete qsoClone._isNew
-      delete qsoClone._isLookup
+      delete qsoClone._needsLookup
       if (qsoClone.their?.lookup) {
         delete qsoClone.their.lookup
       }
@@ -102,8 +107,21 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
       batchData.push([
         qso.uuid, qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced
       ])
+
+      if (qso._needsLookup) { // After inserting the QSO, maybe do a full data lookup if needed
+        setTimeout(async () => {
+          console.log(' late lookup for', { call: qso.their.call })
+          delete qso._needsLookup
+          const state = getState()
+          const settings = selectSettings(state)
+          const online = selectRuntimeOnline(state)
+          const annotatedQSO = await annotateQSO({ qso, online, settings, dispatch })
+          dispatch(addQSO({ uuid, qso: annotatedQSO }))
+        })
+      }
     }
-    logTimer('addQSOs', 'batch data ready')
+
+    if (DEBUG) logTimer('addQSOs', 'batch data ready')
     // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     await dbExecute(`
       INSERT INTO qsos
@@ -114,14 +132,14 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
         DO UPDATE SET operation = excluded.operation, key = excluded.key, data = excluded.data, ourCall = excluded.ourCall, theirCall = excluded.theirCall, mode = excluded.mode, band = excluded.band, startOnMillis = excluded.startOnMillis, deleted = excluded.deleted, synced = excluded.synced
       `, batchData.flat()
     )
-    logTimer('addQSOs', 'sql insert')
+    if (DEBUG) logTimer('addQSOs', 'sql insert')
   }
-  logTimer('addQSOs', 'done inserting')
+  if (DEBUG) logTimer('addQSOs', 'done inserting')
 
   const operationInfo = getState().operations.info[uuid]
   if (getState().qsos.qsos[uuid]) { // QSOs are for an operation that's currently in memory
     let { startAtMillisMin, startAtMillisMax } = operationInfo
-    logTimer('addQSOs', 'got op info')
+    if (DEBUG) logTimer('addQSOs', 'got op info')
 
     for (const qso of qsos) {
       dispatch(actions.addQSO({ uuid, qso }))
@@ -129,7 +147,7 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
       if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
       if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
     }
-    logTimer('addQSOs', 'added qsos to state')
+    if (DEBUG) logTimer('addQSOs', 'added qsos to state')
 
     const finalQSOs = getState().qsos.qsos[uuid]
 
@@ -147,16 +165,16 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
   if (!synced) {
     setImmediate(() => {
       sendQSOsToSyncService({ dispatch, getState })
-      logTimer('addQSOs', 'done updating operation')
+      if (DEBUG) logTimer('addQSOs', 'done updating operation')
     })
   }
 }
 
 export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
   const uuids = qsos.map((q) => `"${q.uuid}"`).join(',')
-  logTimer('sync', 'Start of mergeSyncQSOs')
+  if (DEBUG) logTimer('sync', 'Start of mergeSyncQSOs')
   const existingQSOs = await dbSelectAll('SELECT * FROM qsos WHERE uuid IN (?)', [uuids], { row: prepareQSORow })
-  logTimer('sync', 'Retrieved QSOs', { sinceLast: true })
+  if (DEBUG) logTimer('sync', 'Retrieved QSOs', { sinceLast: true })
   console.log('-- ', { qsos: qsos.length })
 
   let lastSyncedAtMillis = 0
@@ -174,10 +192,10 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
     qsosForOperation[qso.operation].push(qso)
     lastSyncedAtMillis = Math.max(lastSyncedAtMillis, qso.syncedAtMillis)
   }
-  logTimer('sync', 'Compared QSOs', { sinceLast: true })
+  if (DEBUG) logTimer('sync', 'Compared QSOs', { sinceLast: true })
   for (const uuid in qsosForOperation) {
     await dispatch(addQSOs({ uuid, qsos: qsosForOperation[uuid], synced: true }))
-    logTimer('sync', 'Saved QSOs', { sinceLast: true })
+    if (DEBUG) logTimer('sync', 'Saved QSOs', { sinceLast: true })
   }
 
   return lastSyncedAtMillis
