@@ -15,7 +15,7 @@ import { findRef } from '../../../../../tools/refTools'
 import { findHooks } from '../../../../../extensions/registry'
 
 export const MainExchangePanel = ({
-  qso, operation, vfo, settings, style, styles, themeColor, onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef
+  qso, qsos, operation, vfo, settings, style, styles, themeColor, onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef
 }) => {
   const { width } = useWindowDimensions()
 
@@ -129,7 +129,7 @@ export const MainExchangePanel = ({
     if (activity.hideStateField) hideStateField = true
     fields = fields.concat(
       activity.mainExchangeForOperation(
-        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
+        { qso, qsos, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
       ) || []
     )
   })

@@ -14,7 +14,8 @@ import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 import ThemedTextInputWithSuggestions from '../../../screens/components/ThemedTextInputWithSuggestions'
 
 import { WFDActivityOptions } from './WFDActivityOptions'
-import { ARRL_SECTIONS, RAC_SECTIONS } from '../fd/FDSections'
+import { ABBREVIATED_SECTION_NAMES, ARRL_SECTIONS, RAC_SECTIONS } from '../fd/FDSections'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 /*
  NOTES:
@@ -35,8 +36,7 @@ export const Info = {
   icon: 'snowflake',
   name: 'Winter Field Day',
   shortName: 'WFD',
-  infoURL: 'https://www.winterfieldday.org/',
-  defaultValue: { class: '', location: '' }
+  infoURL: 'https://www.winterfieldday.org/'
 }
 
 const Extension = {
@@ -112,45 +112,166 @@ const ReferenceHandler = {
     parts.push((qsoRef?.location ?? '').padEnd(3, ' '))
     return parts
   },
+
+  adifFieldsForOneQSO: ({ qso, operation }) => {
+    return ([{ CONTEST_ID: 'WFD' }])
+  },
+
   relevantInfoForQSOItem: ({ qso, operation }) => {
     return [qso.their.exchange]
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+  scoringForQSO: ({ qso, qsos, operation, ref, score }) => {
     const { band, mode, uuid, startAtMillis } = qso
     const superMode = superModeForMode(mode)
 
+    const qsoRef = findRef(qso, Info.key)
+
     const nearDupes = qsos.filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
+    const value = superMode === 'PHONE' ? 1 : 2
+    const scoring = { value, theirSection: qsoRef?.location, mode: superMode, band }
+
+    if (WFD_LOCATION_VALUES[qsoRef?.location]) {
+      if (score?.arrlSections?.[qsoRef?.location] || score?.racSections?.[qsoRef?.location] || score?.otherSections?.[qsoRef?.location]) {
+        scoring.infos = [`${ABBREVIATED_SECTION_NAMES[qsoRef?.location] || WFD_LOCATION_VALUES[qsoRef?.location]}`]
+      } else {
+        scoring.notices = [`${ABBREVIATED_SECTION_NAMES[qsoRef?.location] || WFD_LOCATION_VALUES[qsoRef?.location]}`]
+      }
+    }
+
     if (nearDupes.length === 0) {
-      return { counts: 1, type: Info.activationType }
+      return scoring
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => superModeForMode(q.mode) === superMode).length !== 0
       if (sameBand && sameMode) {
-        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { ...scoring, value: 0, alerts: ['duplicate'] }
       } else {
-        const notices = []
+        const notices = [...(scoring.notices || [])]
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        return { counts: 1, notices, type: Info.activationType }
+        return { ...scoring, notices }
       }
     }
+  },
+
+  accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
+    if (!qsoScore.value) return score
+
+    if (!score?.key) score = undefined // Reset if score doesn't have the right shape
+    score = score ?? {
+      key: ref?.type,
+      icon: Info.icon,
+      label: Info.shortName,
+      total: 0,
+      qsoCount: 0,
+      qsoPoints: 0,
+      mults: 0,
+      modes: {},
+      arrlSections: {},
+      racSections: {},
+      otherSections: {}
+    }
+
+    score.qsoCount = score.qsoCount + 1
+    score.qsoPoints = score.qsoPoints + qsoScore.value
+
+    score.modes[qsoScore.mode] = (score.modes[qsoScore.mode] || 0) + 1
+    if (ARRL_SECTIONS[qsoScore.theirSection]) {
+      score.arrlSections[qsoScore.theirSection] = (score.arrlSections[qsoScore.theirSection] || 0) + 1
+    } else if (RAC_SECTIONS[qsoScore.theirSection]) {
+      score.racSections[qsoScore.theirSection] = (score.racSections[qsoScore.theirSection] || 0) + 1
+    } else if (qsoScore.theirSection === 'MX' || qsoScore.theirSection === 'DX') {
+      score.otherSections[qsoScore.theirSection] = (score.otherSections[qsoScore.theirSection] || 0) + 1
+    }
+
+    score.mults = Object.keys(score.arrlSections).length + Object.keys(score.racSections).length + Object.keys(score.otherSections).length
+    score.total = score.qsoPoints * score.mults
+
+    return score
+  },
+
+  summarizeScore: ({ score, operation, ref, section }) => {
+    if (!score.total) {
+      score.summary = '0 pts'
+      score.longSummary = '0 pts\nNo valid QSOs yet!'
+      return score
+    }
+
+    score.summary = `${fmtNumber(score.total)} pts`
+
+    const parts = []
+    parts.push(`**${fmtNumber(score.qsoPoints)} Points x ${score.mults} Mults = ${fmtNumber(score.total)} Total Points**`)
+    parts.push(
+      Object.keys(score.modes ?? {}).sort().map(mode => {
+        if (score?.modes[mode]) {
+          return (`${fmtNumber(score.modes[mode])} ${mode} QSOs`)
+        } else {
+          return null
+        }
+      }).filter(x => x).join(' • ')
+    )
+
+    let line
+
+    parts.push(`### ${Object.keys(score?.arrlSections ?? {}).length} ARRL Sections`)
+    line = ''
+    Object.keys(ARRL_SECTIONS).forEach(s => {
+      s = s.toUpperCase()
+      if (score.arrlSections[s]) {
+        line += `**~~${s}~~**  `
+      } else {
+        line += `${s}  `
+      }
+    })
+    parts.push(line)
+
+    parts.push(`### ${Object.keys(score?.racSections ?? {}).length} RAC Sections`)
+    line = ''
+    Object.keys(RAC_SECTIONS).forEach(s => {
+      s = s.toUpperCase()
+      if (score.racSections[s]) {
+        line += `**~~${s}~~**  `
+      } else {
+        line += `${s}  `
+      }
+    })
+    parts.push(line)
+
+    parts.push(`### ${Object.keys(score?.otherSections ?? {}).length} Other`)
+    line = ''
+    ;['MX', 'DX'].forEach(s => {
+      if (score.otherSections[s]) {
+        line += `**~~${s}~~**  `
+      } else {
+        line += `${s}  `
+      }
+    })
+
+    parts.push(line)
+
+    score.longSummary = '\n' + parts.join('\n')
+
+    return score
   }
 }
 
 const WFD_CLASS_REGEX = /^[1-9]+[HIMO]$/
 
-export const WFD_LOCATION_VALUES = { ...ARRL_SECTIONS, ...RAC_SECTIONS, MX: 'Mexico', DX: 'DX' }
+export const WFD_LOCATION_VALUES = { ...ARRL_SECTIONS, ...RAC_SECTIONS, MX: 'Mexico', DX: 'Other DX' }
 export const WFD_LOCATIONS = Object.keys(WFD_LOCATION_VALUES)
 
-export const WFD_LOCATION_SUGGESTIONS = Object.entries(WFD_LOCATION_VALUES)
+export const K_LOCATION_SUGGESTIONS = Object.entries(ARRL_SECTIONS)
+export const VE_LOCATION_SUGGESTIONS = Object.entries(RAC_SECTIONS)
+export const OTHER_LOCATION_SUGGESTIONS = [['MX', 'Mexico'], ['DX', 'Other DX']]
+export const ALL_LOCATION_SUGGESTIONS = Object.entries(WFD_LOCATION_VALUES)
 
 function mainExchangeForOperation (props) {
-  const { qso, updateQSO, styles, refStack } = props
+  const { qso, qsos, operation, updateQSO, styles, refStack } = props
 
-  const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: '', location: '' }
+  const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
 
   const fields = []
 
@@ -167,7 +288,7 @@ function mainExchangeForOperation (props) {
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
-      value={ref?.class || ''}
+      value={ref?.class ?? _defaultClassFor({ qso, qsos, operation }) ?? ''}
       error={ref?.class && !ref.class.match(WFD_CLASS_REGEX)}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text }),
@@ -188,9 +309,9 @@ function mainExchangeForOperation (props) {
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
-      value={ref?.location || ''}
+      value={ref?.location ?? _defaultLocationFor({ qso, qsos, operation }) ?? ''}
       error={ref?.location && !WFD_LOCATIONS.includes(ref.location)}
-      suggestions={WFD_LOCATION_SUGGESTIONS}
+      suggestions={_suggestionsFor(qso)}
       minimumLengthForSuggestions={3}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text }),
@@ -199,4 +320,29 @@ function mainExchangeForOperation (props) {
     />
   )
   return fields
+}
+
+function _suggestionsFor (qso) {
+  const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+  if (prefix === 'K') return K_LOCATION_SUGGESTIONS
+  else if (prefix === 'VE') return VE_LOCATION_SUGGESTIONS
+  else if (prefix) return OTHER_LOCATION_SUGGESTIONS
+  else return ALL_LOCATION_SUGGESTIONS
+}
+
+function _defaultClassFor ({ qso, qsos, operation }) {
+  const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
+  if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.class
+  else return undefined
+}
+
+function _defaultLocationFor ({ qso, qsos, operation }) {
+  const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
+  if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.location
+
+  const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+  if (prefix === 'K' || prefix === 'VE') return undefined
+  else if (prefix === 'XE') return 'MX'
+  else if (prefix) return 'DX'
+  else return undefined
 }

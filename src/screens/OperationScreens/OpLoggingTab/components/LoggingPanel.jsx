@@ -441,29 +441,32 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                     </Text>
                   </View>
                 ) : (
-                  !opMessage && qso?.their?.call?.length > 2 ? (
-                    <CallInfo
-                      qso={qso}
-                      qsos={activeQSOs}
-                      sections={sections}
-                      operation={operation}
-                      vfo={vfo}
-                      settings={settings}
-                      styles={styles}
-                      themeColor={themeColor}
-                      updateQSO={updateQSO}
-                    />
-                  ) : (
-                    <OpInfo
-                      message={opMessage}
-                      operation={operation}
-                      vfo={vfo}
-                      styles={styles}
-                      settings={settings}
-                      qsos={activeQSOs}
-                      themeColor={themeColor}
-                    />
-                  )
+                  <>
+                    {qso?.their?.call?.length > 2 && (
+                      <CallInfo
+                        qso={qso}
+                        qsos={activeQSOs}
+                        sections={sections}
+                        operation={operation}
+                        vfo={vfo}
+                        settings={settings}
+                        styles={styles}
+                        themeColor={themeColor}
+                        updateQSO={updateQSO}
+                      />
+                    )}
+                    {(opMessage || (qso?.their?.call?.length || 0) < 2) && (
+                      <OpInfo
+                        message={opMessage}
+                        operation={operation}
+                        vfo={vfo}
+                        styles={styles}
+                        settings={settings}
+                        qsos={activeQSOs}
+                        themeColor={themeColor}
+                      />
+                    )}
+                  </>
                 )}
               </View>
               <View style={styles.infoPanel.buttonContainer}>
@@ -516,6 +519,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
           <MainExchangePanel
             style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}
             qso={qso}
+            qsos={qsos}
             operation={operation}
             vfo={vfo}
             settings={settings}

@@ -187,8 +187,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     const scoringHandlers = scoringHandlersForOperation(operation, settings)
 
     const lastSection = sections && sections[sections.length - 1]
-
-    const scores = scoringHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, score: lastSection?.scores?.[ref.key], operation, ref })).filter(x => x)
+    const scores = scoringHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, score: lastSection?.scores?.[ref.type || ref.key], operation, ref })).filter(x => x)
 
     return scores
   }, [operation, qso, qsos, sections, settings])
@@ -199,6 +198,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       const messageLevelPair = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
         if (score?.notices && score?.notices[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.notices[0]}`] ?? MESSAGES_FOR_SCORING[score?.notices[0]] ?? score?.notices[0], 'notice']
         if (score?.alerts && score?.alerts[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.alerts[0]}`] ?? MESSAGES_FOR_SCORING[score?.alerts[0]] ?? score?.alerts[0], 'alert']
+        if (score?.infos && score?.infos[0]) return [score?.infos[0], 'info']
         return []
       }).filter(x => x.length)[0]
 

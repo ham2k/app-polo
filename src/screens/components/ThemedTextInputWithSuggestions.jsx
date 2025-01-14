@@ -48,16 +48,16 @@ export default function ThemedTextInputWithSuggestions (props) {
   useEffect(() => {
     if (isFocused) {
       const directMatch = suggestions.find(item => item[0] === value)
-      console.log({ minimumLengthForSuggestions })
+
       if (directMatch) {
-        const suggestionsMessage = `**${directMatch[0]}**: ${directMatch[1]}`
-        setBestSuggestion(undefined)
-        updateLoggingState({ infoMessage: suggestionsMessage })
+        // const suggestionsMessage = `**${directMatch[0]}**: ${directMatch[1]}`
+        // setBestSuggestion(undefined)
+        // updateLoggingState({ infoMessage: suggestionsMessage })
+        updateLoggingState({ infoMessage: undefined })
       } else if (value?.length >= (minimumLengthForSuggestions ?? 3)) {
         const results = fuzzySearch(value)
         if (results.length > 0) {
           const suggestionsList = results?.slice(0, 4)?.map(({ item, matches }, index) => {
-            console.log('item', { item, matches: matches[0] })
             return `**\`${item[0]}\`**: ${item[1]}${index === 0 ? ' ← `[SPACE]`' : ''}`
           })
           if (results?.length > 4) {

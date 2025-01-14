@@ -83,6 +83,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         style={flexZero}
         operation={operation}
         qsos={qsos}
+        sections={sections}
         activeQSOs={activeQSOs}
         vfo={vfo}
         settings={settings}

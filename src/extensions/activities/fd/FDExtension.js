@@ -109,6 +109,11 @@ const ReferenceHandler = {
     parts.push((qsoRef?.location ?? '').padEnd(3, ' '))
     return parts
   },
+
+  adifFieldsForOneQSO: ({ qso, operation }) => {
+    return ([{ CONTEST_ID: 'ARRL-FIELD-DAY' }])
+  },
+
   relevantInfoForQSOItem: ({ qso, operation }) => {
     return [qso.their.exchange]
   },
