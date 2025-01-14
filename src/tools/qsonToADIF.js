@@ -114,6 +114,8 @@ function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
     { TIME_ON: fmtADIFTime(qso.startAtMillis + timeOfffset) },
     { RST_RCVD: qso.their.sent },
     { RST_SENT: qso.our.sent },
+    { SRX_STRING: qso.their.exchange },
+    { STX_STRING: qso.our.exchange },
     { STATION_CALLSIGN: qso.our.call || common.stationCall },
     { OPERATOR: qso.our.operatorCall || common.operatorCall || qso.our.call || common.stationCall },
     { NOTES: qso.notes },

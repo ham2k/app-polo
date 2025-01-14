@@ -7,7 +7,8 @@
       "Support for Winter Field Day 2025",
       "Better handling of operator callsign in operation title",
       "Fix lookup of callsign notes when offline",
-      "Include base frequency in ADIF export when only band was specified"
+      "Include base frequency in ADIF export when only band was specified",
+      "Include contest exchange in ADIF export"
     ]
   },
   "24.12.2": {
