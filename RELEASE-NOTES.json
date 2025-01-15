@@ -9,7 +9,8 @@
       "Include base frequency in ADIF export when only band was specified",
       "Include contest exchange in ADIF export",
       "Fixed lookup of callsign notes when offline",
-      "Fixed historic ADIF import"
+      "Fixed WWBOTA spots",
+      "Fixed historic ADIF and QSON imports"
     ]
   },
   "24.12.2": {
