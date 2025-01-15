@@ -110,7 +110,6 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
 
       if (qso._needsLookup) { // After inserting the QSO, maybe do a full data lookup if needed
         setTimeout(async () => {
-          console.log(' late lookup for', { call: qso.their.call })
           delete qso._needsLookup
           const state = getState()
           const settings = selectSettings(state)
@@ -156,7 +155,7 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     operationInfo.qsoCount = finalQSOs.filter(q => !q.deleted).length
 
     setImmediate(() => {
-      console.log('op update', { startAtMillisMin, startAtMillisMax, qsoCount: operationInfo.qsoCount })
+      if (DEBUG) console.log('op update', { startAtMillisMin, startAtMillisMax, qsoCount: operationInfo.qsoCount })
       dispatch(operationActions.setOperation(operationInfo))
       dispatch(saveOperationLocalData(operationInfo))
     })

@@ -33,7 +33,6 @@ const LookupHook = {
     return !online || (lookedUp.name && lookedUp.grid)
   },
   lookupCallWithDispatch: async (callInfo, { settings, online, dispatch }) => {
-    console.log('QRZ lookup', { call: callInfo.call, online })
     let qrzPromise
     let qrzLookup
     if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && callInfo?.baseCall?.length > 2) {
