@@ -311,6 +311,13 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
 
           lastUUID = oneQSO.uuid
         }
+
+        findHooks('activity').filter(activity => activity.processQSOBeforeSave).forEach(activity => {
+          multiQSOs.forEach(q => {
+            activity.processQSOBeforeSave({ qso: q, operation, qsos, vfo, settings })
+          })
+        })
+
         dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
         if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 

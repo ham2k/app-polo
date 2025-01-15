@@ -53,7 +53,8 @@ export default Extension
 const ActivityHook = {
   ...Info,
   Options: WFDActivityOptions,
-  mainExchangeForOperation
+  mainExchangeForOperation,
+  processQSOBeforeSave
 }
 
 const ReferenceHandler = {
@@ -291,8 +292,7 @@ function mainExchangeForOperation (props) {
       value={ref?.class ?? _defaultClassFor({ qso, qsos, operation }) ?? ''}
       error={ref?.class && !ref.class.match(WFD_CLASS_REGEX)}
       onChangeText={(text) => updateQSO({
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text }),
-        their: { exchange: [text, ref?.location].join(' ') }
+        refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text })
       })}
     />
   )
@@ -314,12 +314,21 @@ function mainExchangeForOperation (props) {
       suggestions={_suggestionsFor(qso)}
       minimumLengthForSuggestions={3}
       onChangeText={(text) => updateQSO({
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text }),
-        their: { arrlSection: text, exchange: [ref?.class, text].join(' ') }
+        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text })
       })}
     />
   )
   return fields
+}
+
+function processQSOBeforeSave ({ qso, qsos, operation }) {
+  const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
+  ref.class = ref.class ?? _defaultClassFor({ qso, qsos, operation })
+  ref.location = ref.location ?? _defaultLocationFor({ qso, qsos, operation })
+
+  qso.refs = replaceRef(qso.refs, Info.key, ref)
+  qso.their.exchange = [ref.class, ref.location].join(' ')
+  return qso
 }
 
 function _suggestionsFor (qso) {
