@@ -6,9 +6,10 @@
       "Activate with more than one operator",
       "Support for Winter Field Day 2025",
       "Better handling of operator callsign in operation title",
-      "Fix lookup of callsign notes when offline",
       "Include base frequency in ADIF export when only band was specified",
-      "Include contest exchange in ADIF export"
+      "Include contest exchange in ADIF export",
+      "Fixed lookup of callsign notes when offline",
+      "Fixed historic ADIF import"
     ]
   },
   "24.12.2": {

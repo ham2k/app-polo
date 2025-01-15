@@ -233,8 +233,10 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
   // Since the batch update does not change operation counts or times, no need to do anything else here
 }
 
-export const saveQSOsForOperation = (uuid, { synced = false }) => async (dispatch, getState) => {
+export const saveQSOsForOperation = (uuid, { synced } = {}) => async (dispatch, getState) => {
   const now = Date.now()
+
+  synced = synced || false
 
   return dbTransaction(async transaction => {
     const qsos = getState().qsos.qsos[uuid]
@@ -253,7 +255,7 @@ export const saveQSOsForOperation = (uuid, { synced = false }) => async (dispatc
       // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
       await dbExecute(`
         INSERT INTO qsos
-        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, deleted, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, deleted, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT DO UPDATE SET operation = excluded.operation, key = excluded.key, data = excluded.data, ourCall = excluded.ourCall, theirCall = excluded.theirCall, mode = excluded.mode, band = excluded.band, startOnMillis = excluded.startOnMillis, deleted = excluded.deleted, synced = excluded.synced
       `, [
         qso.uuid,
