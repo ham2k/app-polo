@@ -19,7 +19,10 @@ import { View } from 'react-native'
 export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const dispatch = useDispatch()
 
-  dispatch(startTickTock())
+  useEffect(() => {
+    dispatch(startTickTock())
+  }, [dispatch])
+
   const tick = useSelector(selectFiveSecondsTick)
 
   const ref = useRef()
