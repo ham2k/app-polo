@@ -23,6 +23,7 @@ import { selectSettings } from '../../../store/settings'
 import { selectFiveSecondsTick } from '../../../store/time'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { getSyncCounts, resetSyncedStatus } from '../../../store/operations'
+import GLOBAL from '../../../GLOBAL'
 
 const LOFI_SERVER_LABELS = {
   'https://dev.lofi.ham2k.net': 'Ham2K LoFi (Development)',
@@ -50,7 +51,7 @@ export default function SyncSettingsScreen ({ navigation }) {
 
   const accountTitle = useMemo(() => {
     if (!lofiData?.account) {
-      return 'not set'
+      return `Device not linked! (${GLOBAL.deviceId.slice(0, 8)})`
     } else {
       return `${lofiData?.account?.call} (${lofiData?.account?.uuid.slice(0, 8)})`
     }
