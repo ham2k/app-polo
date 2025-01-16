@@ -263,7 +263,7 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
         />
         <Ham2kListItem
           title="Contact Us"
-          description={'Email help@ham2k.com'}
+          description={'help@ham2k.com\n   (but try the Forums or Chat first!)'}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-alert-outline" />}
           onPress={async () => await Linking.openURL('mailto:help@ham2k.com')}
         />
