@@ -48,7 +48,7 @@ namespace :release do
     appcenter_promote_release(from: 'Production', to: 'Staging', platform: 'android')
     appcenter_promote_release(from: 'Production', to: 'Staging', platform: 'ios')
 
-    system "git tag -a #{release_version}-bundle-stable"
+    system "git tag -a #{release_info[:version]}-bundle-stable"
   end
 
   task :list => :dotenv do
@@ -132,7 +132,7 @@ EOF
   end
 
   def appcenter_get_latest_release(deployment:, platform:)
-    JSON.parse("appcenter codepush deployment list -a Ham2K/polo-#{platform} --output json")
+    JSON.parse(`appcenter codepush deployment list -a Ham2K/polo-#{platform} --output json`)
         .find { |d| d["deployment"]["name"] == deployment }["deployment"]["latestRelease"]
   end
 
