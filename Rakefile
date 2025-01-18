@@ -48,7 +48,7 @@ namespace :release do
     appcenter_promote_release(from: 'Production', to: 'Staging', platform: 'android')
     appcenter_promote_release(from: 'Production', to: 'Staging', platform: 'ios')
 
-    system "git tag -a #{release_version}-bundle-stable"
+    system "git tag -a #{release_info[:version]}-bundle-stable"
   end
 
   task :list => :dotenv do
