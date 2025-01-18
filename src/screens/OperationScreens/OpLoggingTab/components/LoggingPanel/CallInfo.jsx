@@ -97,10 +97,10 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
   // console.log('CallInfo render with', { call, guessLocation: guess?.locationLabel, name: guess?.name, state: guess?.state })
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    updateQSO && updateQSO({ their: { guess, lookup } })
-    // Ignore warning about `updateQSO
-    //   eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guess, lookup])
+    if (qso?.their?.call === call && guess?.matchSource && qso?.their?.guess?.matchSource !== guess?.matchSource) {
+      updateQSO && updateQSO({ their: { guess, lookup } })
+    }
+  }, [updateQSO, guess, lookup, call, qso?.their?.call, qso?.their?.guess?.matchSource])
 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess.dxccCode)
