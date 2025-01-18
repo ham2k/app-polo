@@ -45,7 +45,7 @@ export default function OpLoggingTab ({ navigation, route }) {
 
   useEffect(() => { // Inject suggested-qso when present
     if (route?.params?.qso?._suggestedKey && loggingState?.suggestedQSO?._suggestedKey !== route.params.qso._suggestedKey && loggingState?.qso?._suggestedKey !== route.params.qso._suggestedKey) {
-      setLoggingState({ ...loggingState, selectedUUID: 'suggested-qso', suggestedQSO: route.params.qso })
+      setLoggingState({ ...loggingState, selectedUUID: 'suggested-qso', suggestedQSO: { ...route.params.qso, _isSuggested: true } })
       if (route?.params?.splitView) {
         navigation.navigate('Operation', { ...route?.params, qso: undefined })
       } else {

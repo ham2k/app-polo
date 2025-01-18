@@ -489,7 +489,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                   ) : (
                     <IconButton
                       icon={'backspace-outline'}
-                      accessibilityLabel="Erase"
+                      accessibilityLabel="Erase Data"
                       size={styles.infoPanel.button.size}
                       iconColor={styles.infoPanel.button.color}
                       disabled={!loggingState?.hasChanges}
@@ -508,7 +508,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                   ) : (
                     <IconButton
                       icon={'trash-can-outline'}
-                      accessibilityLabel="Delete"
+                      accessibilityLabel="Delete QSO"
                       size={styles.infoPanel.button.size}
                       iconColor={styles.infoPanel.button.color}
                       disabled={false}
