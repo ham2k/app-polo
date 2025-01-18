@@ -17,7 +17,7 @@ import packageJson from '../../../package.json'
 
 let logSequence = 0
 
-const WATCHED_CALLS = ['KI2D', 'HB9HUP', 'LZ3AW', 'N1BS', 'N4KPT']
+const WATCHED_CALLS = ['KI2D']//, 'HB9HUP', 'LZ3AW', 'N1BS', 'N4KPT']
 export function logRemotely (payload) {
   try {
     if (GLOBAL.consentAppData) {
