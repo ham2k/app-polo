@@ -30,17 +30,13 @@ export const useCallLookup = (qso) => {
   const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
 
-  // const [cachedLookups, origSetCachedLookups] = useState({})
-  // const setCachedLookups = (newLookups) => {
-  //   if (DEBUG) console.log('* setCachedLookups', Object.keys(newLookups).map(k => `${k}:${newLookups[k].status}`).join(', '))
-  //   origSetCachedLookups(newLookups)
-  // }
-
+  // We don't really use `currentLookup`, but it's here to trigger a re-render when it changes
+  // eslint-disable-next-line no-unused-vars
   const [currentLookup, setCurrentLookup] = useState({})
 
-  const { call, theirInfo, cacheKey, baseCacheKey } = useMemo(() => _extractCallInfo(qso), [qso])
+  const { call, theirInfo, cacheKey, baseCacheKey } = useMemo(() => _extractCallInfo(qso?.their?.call, qso?.refs), [qso?.their?.call, qso?.refs])
 
-  if (DEBUG) console.log('\n\nuseCallLookup', { call, cacheKey })
+  if (DEBUG) console.log('\n\nuseCallLookup', { call, cacheKey, baseCacheKey })
 
   useEffect(() => {
     if (DEBUG) console.log('-- useCallLookup effect', { call, cacheKey, cached: Object.keys(cachedLookups) })
@@ -54,7 +50,7 @@ export const useCallLookup = (qso) => {
 
       setImmediate(async () => {
         // First do an offline lookup, to use things like local history as fast as possible
-        const offlineLookup = await _performLookup({ qso, call, theirInfo, online: false, settings, dispatch })
+        const offlineLookup = await _performLookup({ call, refs: qso?.refs, theirInfo, online: false, settings, dispatch })
 
         if (offlineLookup?.guess?.name || offlineLookup?.guess?.city || offlineLookup?.guess?.grid || offlineLookup?.guess?.locationLabel || offlineLookup?.guess?.note) {
           if (DEBUG) console.log('  -- filling cachedLookups with offline lookup', { name: offlineLookup.guess.name, locationLabel: offlineLookup.guess.locationLabel, state: offlineLookup.guess.state })
@@ -65,9 +61,9 @@ export const useCallLookup = (qso) => {
 
         if (online) {
           // And then a full lookup for slower online sources
-          const onlineLookup = await _performLookup({ qso, call, theirInfo, online, settings, dispatch })
+          const onlineLookup = await _performLookup({ call, refs: qso?.refs, theirInfo, online, settings, dispatch })
 
-          if (onlineLookup?.guess?.name || onlineLookup?.guess?.city || onlineLookup?.guess?.grid || onlineLookup?.guess?.locationLabel || onlineLookup?.guess?.note) {
+          if (onlineLookup?.guess?.name || onlineLookup?.guess?.city || onlineLookup?.guess?.grid || onlineLookup?.guess?.locationLabel || onlineLookup?.guess?.note || onlineLookup?.lookup?.image) {
             if (DEBUG) console.log('  -- filling cachedLookups with online lookup', { name: onlineLookup.guess.name, locationLabel: onlineLookup.guess.locationLabel, state: onlineLookup.guess.state })
             // setCachedLookups({ ...cachedLookups, [cacheKey]: { call, cacheKey, ...onlineLookup, status: 'online' } })
             cachedLookups[cacheKey] = { call, cacheKey, ...onlineLookup, status: 'online' }
@@ -81,12 +77,12 @@ export const useCallLookup = (qso) => {
     } else {
       if (DEBUG) console.log('  -- useCallLookup effect cached', { cacheKey })
     }
-  }, [call, online, settings, dispatch, qso, cacheKey, theirInfo])
+  }, [call, online, dispatch, cacheKey, theirInfo, qso?.refs, settings])
 
-  if (currentLookup && currentLookup === cachedLookups[cacheKey]) {
-    if (DEBUG) console.log('-- useCallLookup returns', cacheKey, { city: currentLookup?.guess?.city, locationLabel: currentLookup?.guess?.locationLabel, status: currentLookup?.status })
+  if (cachedLookups[cacheKey]) {
+    if (DEBUG) console.log('-- useCallLookup returns', cacheKey, { city: cachedLookups[cacheKey]?.guess?.city, locationLabel: cachedLookups[cacheKey]?.guess?.locationLabel, status: cachedLookups[cacheKey]?.status })
 
-    return currentLookup
+    return cachedLookups[cacheKey]
   } else if (cachedLookups[baseCacheKey]) {
     if (DEBUG) console.log('-- useCallLookup returns without refs', baseCacheKey, { city: cachedLookups[baseCacheKey]?.guess?.city, locationLabel: cachedLookups[baseCacheKey]?.guess?.locationLabel, status: 'newly prefilled' })
     // setCachedLookups({ ...cachedLookups, [cacheKey]: { ...cachedLookups[`${call}-no-refs`], status: 'prefilled' } })
@@ -114,33 +110,33 @@ export async function annotateQSO ({ qso, online, settings, dispatch, mode = 'fu
   return { ...qso, their: { ...qso.their, ...theirInfo, guess, lookup } }
 }
 
-function _extractCallInfo (qso) {
+function _extractCallInfo (call, refs) {
   // Pick the last call in the list, and ignore any under 3 characters or with a question mark
-  const calls = qso?.their?.call?.split(',')?.filter(x => x && x.length > 2 && x.indexOf('?') < 0) ?? []
-  let call = calls[calls.length - 1]
+  const calls = call?.split(',')?.filter(x => x && x.length > 2 && x.indexOf('?') < 0) ?? []
+  let oneCall = calls[calls.length - 1]
 
   // Remove any trailing slash
-  if (call?.endsWith('/')) call = call.slice(0, -1)
+  if (oneCall?.endsWith('/')) oneCall = oneCall.slice(0, -1)
 
   // if (!call || call.length < 3) return { call: '', theirInfo: {}, cacheKey: 'no-call' }
 
-  let theirInfo = parseCallsign(call)
+  let theirInfo = parseCallsign(oneCall)
   if (theirInfo?.baseCall) {
     theirInfo = annotateFromCountryFile(theirInfo)
-  } else if (call) {
-    theirInfo = annotateFromCountryFile({ prefix: call, baseCall: call })
+  } else if (oneCall) {
+    theirInfo = annotateFromCountryFile({ prefix: oneCall, baseCall: oneCall })
   }
 
-  const cacheKey = `${call}-${qso?.refs?.map(r => `${r.type || r.key}:${r.ref}`).join(',') || 'no-refs'}`
-  const baseCacheKey = `${call}-no-refs`
+  const cacheKey = `${oneCall}-${refs?.map(r => `${r.type || r.key}:${r.ref}`).join(',') || 'no-refs'}`
+  const baseCacheKey = `${oneCall}-no-refs`
 
-  return { call, theirInfo, cacheKey, baseCacheKey }
+  return { call: oneCall, theirInfo, cacheKey, baseCacheKey }
 }
 
-async function _performLookup ({ qso, call, theirInfo, online, settings, dispatch }) {
+async function _performLookup ({ refs, call, theirInfo, online, settings, dispatch }) {
   const { lookups } = await _lookupCall(theirInfo, { online, settings, dispatch })
-  const { refs } = await _lookupRefs(qso?.refs, { online, settings, dispatch })
-  const { guess, lookup } = _mergeData({ theirInfo, lookups, refs })
+  const { refs: lookedUpRefs } = await _lookupRefs(refs, { online, settings, dispatch })
+  const { guess, lookup } = _mergeData({ theirInfo, lookups, refs: lookedUpRefs })
   if (DEBUG) console.log('  -- performLookup', { call, keys: Object.keys(lookups), guess, lookup })
 
   return { guess, lookup, lookups, theirInfo }

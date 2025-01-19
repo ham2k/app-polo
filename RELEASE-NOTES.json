@@ -5,6 +5,7 @@
     "changes": [
       "Activate with more than one operator",
       "Support for Winter Field Day 2025",
+      "Allow toggling of QRZ images (happy Dan?)",
       "Better handling of operator callsign in operation title",
       "Include base frequency in ADIF export when only band was specified",
       "Include contest exchange in ADIF export",
