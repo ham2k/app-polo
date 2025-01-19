@@ -30,7 +30,7 @@ export default Extension
 const LookupHook = {
   ...Info,
   shouldSkipLookup: ({ online, lookedUp }) => {
-    return !online || (lookedUp.name && lookedUp.grid)
+    return !online || (lookedUp.name && lookedUp.grid && lookedUp.city && lookedUp.image)
   },
   lookupCallWithDispatch: async (callInfo, { settings, online, dispatch }) => {
     let qrzPromise

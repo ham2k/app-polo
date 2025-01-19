@@ -126,8 +126,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
     } else {
       andMore = ''
     }
-    console.log('history', operation.stationCall)
-    if (lookup.history) console.log(lookup.history.map(q => ({ key: q.key, ourCall: q.ourCall, theirCall: q.theirCall })))
+
     return [thisTitle, thisQs, title, recent, andMore]
   }, [lookup.history, operation])
 
