@@ -19,6 +19,7 @@ import { UpdateTracksDialog } from './UpdateTracksDialog'
 
 export * from './distroTracking'
 export * from './distroConfig'
+export * from './MainSettingsForDistribution'
 export * from './DevModeSettingsForDistribution'
 export * from './VersionSettingsForDistribution'
 
