@@ -37,6 +37,7 @@ import GeneralSettingsScreen from './GeneralSettingsScreen'
 import LoggingSettingsScreen from './LoggingSettingsScreen'
 import VersionSettingsScreen from './VersionSettingsScreen'
 import SyncSettingsScreen from './SyncSettingsScreen'
+import { MainSettingsForDistribution } from '../../../distro'
 
 const Stack = createNativeStackNavigator()
 
@@ -224,6 +225,8 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
           <hook.SettingItem key={hook.key} settings={settings} styles={styles} />
         ))}
       </Ham2kListSection>
+
+      <MainSettingsForDistribution settings={settings} styles={styles} />
 
       <Ham2kListSection>
         <Ham2kListSubheader>About Ham2K</Ham2kListSubheader>

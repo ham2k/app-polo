@@ -105,6 +105,12 @@ export function StartupInterruptionDialogForDistribution ({ settings, styles, se
   )
 }
 
+export function MainSettingsForDistribution ({ settings, styles }) {
+  return (
+    <></>
+  )
+}
+
 export function DevModeSettingsForDistribution ({ settings, styles, dispatch, operations }) {
   return (
     <></>
