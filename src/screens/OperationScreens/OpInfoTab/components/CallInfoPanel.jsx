@@ -5,8 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useMemo } from 'react'
-import { Chip, Text } from 'react-native-paper'
+import React, { useCallback, useMemo } from 'react'
+import { Button, Chip, Icon, IconButton, Text } from 'react-native-paper'
 import { View, Image, Linking } from 'react-native'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
@@ -19,6 +19,8 @@ import { useCallLookup } from './useCallLookup'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 import { findHooks } from '../../../../extensions/registry'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectSettings, setSettings } from '../../../../store/settings'
 
 const HISTORY_QSOS_TO_SHOW = 3
 
@@ -80,6 +82,8 @@ function prepareStyles (baseStyles, themeColor) {
 
 export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) {
   const styles = useThemedStyles(prepareStyles, themeColor)
+  const dispatch = useDispatch()
+  const settings = useSelector(selectSettings)
 
   const call = useMemo(() => {
     const calls = qso?.their?.call?.split(',')?.filter(x => x)
@@ -136,6 +140,10 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
 
   const safeArea = useSafeAreaInsets()
 
+  const handleToggleImage = useCallback(() => {
+    dispatch(setSettings({ showLookupImages: !settings?.showLookupImages }))
+  }, [dispatch, settings?.showLookupImages])
+
   return (
     <GestureHandlerRootView style={[style, styles.root]}>
       <ScrollView>
@@ -171,16 +179,39 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
               </View>
               <View style={{ flex: 1, marginLeft: styles.oneSpace, maxWidth: '50%', alignItems: 'center' }}>
                 {lookup?.image && (
-                  <Image source={{ uri: lookup.image }} style={{ width: '100%', height: styles.oneSpace * 20, borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
+                  settings?.showLookupImages !== false ? (
+                    <View style={{ width: '100%', height: styles.oneSpace * 20, marginBottom: styles.oneSpace }}>
+                      <Image source={{ uri: lookup.image }} style={{ height: '100%', borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
+                      <IconButton
+                        theme={styles.chipTheme} textStyle={styles.chipTextStyle}
+                        icon="eye-off"
+                        mode="contained"
+                        onPress={handleToggleImage}
+                        style={{ position: 'absolute', right: 0, bottom: 0 }}
+                      />
+                    </View>
+                  ) : (
+                    <Chip
+                      theme={styles.chipTheme} textStyle={styles.chipTextStyle}
+                      icon="eye"
+                      mode="flat"
+                      onPress={handleToggleImage}
+                      style={{ marginBottom: styles.oneSpace }}
+                    >
+                      Show Image
+                    </Chip>
+                  )
                 )}
-                <Chip
-                  theme={styles.chipTheme} textStyle={styles.chipTextStyle}
-                  icon="web"
-                  mode="flat"
-                  onPress={() => Linking.openURL(`https://qrz.com/db/${call}`)}
-                >
-                  qrz.com
-                </Chip>
+                <View flexDirection="row" style={{ gap: styles.oneSpace }}>
+                  <Chip
+                    theme={styles.chipTheme} textStyle={styles.chipTextStyle}
+                    icon="web"
+                    mode="flat"
+                    onPress={() => Linking.openURL(`https://qrz.com/db/${call}`)}
+                  >
+                    QRZ
+                  </Chip>
+                </View>
               </View>
             </View>
 
