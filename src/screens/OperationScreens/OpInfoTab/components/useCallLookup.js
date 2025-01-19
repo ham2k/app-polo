@@ -103,7 +103,7 @@ export const useCallLookup = (qso) => {
 }
 
 export async function annotateQSO ({ qso, online, settings, dispatch, mode = 'full' }) {
-  const { call, theirInfo } = _extractCallInfo(qso)
+  const { call, theirInfo } = _extractCallInfo(qso?.their?.call, qso?.refs)
 
   const { guess, lookup } = await _performLookup({ qso, call, theirInfo, online, settings, dispatch })
 
