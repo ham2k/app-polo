@@ -640,7 +640,7 @@ function prepareStyles (themeStyles, themeColor) {
 
 function prepareNewQSO (operation, qsos, vfo, settings) {
   const qso = {
-    uuid: UUID.v1(),
+    uuid: UUID.v4(),
     band: vfo.band,
     freq: vfo.freq,
     mode: vfo.mode,
@@ -673,7 +673,7 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   const clone = cloneDeep(qso || {})
   clone._isNew = true
   clone._isSuggested = true
-  clone.uuid = UUID.v1()
+  clone.uuid = UUID.v4()
 
   if (clone.freq) {
     clone.band = bandForFrequency(clone.freq)

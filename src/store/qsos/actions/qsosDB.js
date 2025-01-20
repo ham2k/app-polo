@@ -88,7 +88,7 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     const batch = qsosToSave.splice(0, 50)
     const batchData = []
     for (const qso of batch) {
-      qso.uuid = qso.uuid || UUID.v1()
+      qso.uuid = qso.uuid || UUID.v4()
       qso.operation = uuid
       qso.createdAtMillis = qso.createdAtMillis || now
       qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
@@ -211,7 +211,7 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
   for (const qso of qsos) {
     qso.our = { ...qso.our, ...data.our } // Batch Update only changes `our` data
     qso.key = qsoKey(qso)
-    qso.uuid = qso.uuid || UUID.v1()
+    qso.uuid = qso.uuid || UUID.v4()
     qso.createdAtMillis = qso.createdAtMillis || now
     qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
     qso.updatedAtMillis = now
@@ -243,7 +243,7 @@ export const saveQSOsForOperation = (uuid, { synced } = {}) => async (dispatch, 
     // Save new QSOs
     for (const qso of qsos) {
       qso.key = qsoKey(qso)
-      qso.uuid = qso.uuid || UUID.v1()
+      qso.uuid = qso.uuid || UUID.v4()
       qso.createdAtMillis = qso.createdAtMillis || now
       qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
       qso.updatedAtMillis = now

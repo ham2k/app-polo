@@ -182,7 +182,7 @@ export async function getSyncCounts () {
 
 export const addNewOperation = (operation) => async (dispatch) => {
   const now = Date.now()
-  operation.uuid = UUID.v1()
+  operation.uuid = UUID.v4()
   operation.createdAtMillis = operation.createdAtMillis || now
   operation.createdOnDeviceId = operation.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
   operation.updatedAtMillis = now

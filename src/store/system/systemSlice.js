@@ -34,7 +34,7 @@ export const systemSlice = createSlice({
     },
     addNotice: (state, action) => {
       state.notices = state.notices || []
-      action.payload.key = action.payload.key || UUID.v1()
+      action.payload.key = action.payload.key || UUID.v4()
       action.payload.timestamp = action.payload.timestamp || new Date().valueOf
 
       state.notices = state.notices.filter(notice => notice.key !== action.payload.key)
