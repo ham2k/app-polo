@@ -20,7 +20,7 @@ export const importQSON = (path) => async (dispatch) => {
   const matches = path.match(QSON_FILENAME_REGEX)
   if (matches) {
     // const originalUUID = matches[1]
-    const uuid = UUID.v1()
+    const uuid = UUID.v4()
     dispatch(actions.setOperation({ uuid, status: 'loading' }))
     dispatch(qsosActions.setQSOsStatus({ uuid, status: 'loading' }))
 

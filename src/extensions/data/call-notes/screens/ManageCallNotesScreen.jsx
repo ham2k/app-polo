@@ -121,7 +121,7 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
   }, [dispatch, extSettings.enabledNotes])
 
   const handleNewFile = useCallback(() => {
-    const identifier = UUID.v1()
+    const identifier = UUID.v4()
     dispatch(setExtensionSettings({ key: Info.key, customFiles: [...customFiles, { name: '', identifier }] }))
     CallNotesData.activeFiles[identifier] = true
     setSelectedFile(identifier)
