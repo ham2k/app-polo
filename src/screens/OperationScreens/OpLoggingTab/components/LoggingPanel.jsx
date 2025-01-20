@@ -289,10 +289,10 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         qso.their = qso.their || {}
         qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
 
-        let call = qso?.their?.call
+        const call = qso?.their?.call
         let lastUUID
 
-        const calls = call = call.split(',')
+        const calls = call.split(',')
         const multiQSOs = []
         for (let i = 0; i < calls.length; i++) {
           let oneQSO = qso
