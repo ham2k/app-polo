@@ -52,6 +52,9 @@ export default Extension
 
 const ActivityHook = {
   ...Info,
+
+  hideStateField: true,
+
   Options: WFDActivityOptions,
   mainExchangeForOperation,
   processQSOBeforeSave
