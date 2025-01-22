@@ -353,6 +353,13 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
         Logging Settings
       </Text>
       <Menu.Item
+        leadingIcon="signal"
+        trailingIcon={settings.showRSTFields !== false ? 'check-circle-outline' : 'circle-outline'}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showRSTFields: !settings.showRSTFields }))) }}
+        title={'RST Fields'}
+
+      />
+      <Menu.Item
         leadingIcon="select-marker"
         trailingIcon={settings.showStateField !== false ? 'check-circle-outline' : 'circle-outline'}
         onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: !settings.showStateField }))) }}

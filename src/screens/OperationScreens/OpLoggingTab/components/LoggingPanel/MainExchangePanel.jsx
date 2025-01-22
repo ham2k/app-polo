@@ -7,7 +7,7 @@
 
 import React, { useCallback, useMemo, useRef } from 'react'
 
-import { View, findNodeHandle, useWindowDimensions } from 'react-native'
+import { View, findNodeHandle } from 'react-native'
 import CallsignInput from '../../../../components/CallsignInput'
 import RSTInput from '../../../../components/RSTInput'
 import ThemedTextInput from '../../../../components/ThemedTextInput'
@@ -17,8 +17,6 @@ import { findHooks } from '../../../../../extensions/registry'
 export const MainExchangePanel = ({
   qso, qsos, operation, vfo, settings, style, styles, themeColor, onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef
 }) => {
-  const { width } = useWindowDimensions()
-
   // We need to pre-allocate a ref for the main field, in case `mainFieldRef` is not provided
   // but since hooks cannot be called conditionally, we just need to create it whether we need it or not
   const alternateCallFieldRef = useRef()
@@ -91,38 +89,42 @@ export const MainExchangePanel = ({
       focusedRef={focusedRef}
     />
   )
-  const rstFieldRefs = [refStack.shift(), refStack.shift()]
-  if (settings.switchSentRcvd) rstFieldRefs.reverse()
-  const rstFieldProps = {
-    themeColor,
-    style: [styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }],
-    onChange: handleRSTChange,
-    onSubmitEditing,
-    onSpace: spaceHandler,
-    focusedRef,
-    radioMode: qso?.mode ?? vfo?.mode ?? 'SSB'
+
+  if (settings.showRSTFields !== false) {
+    const rstFieldRefs = [refStack.shift(), refStack.shift()]
+    if (settings.switchSentRcvd) rstFieldRefs.reverse()
+    const rstFieldProps = {
+      themeColor,
+      style: [styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }],
+      onChange: handleRSTChange,
+      onSubmitEditing,
+      onSpace: spaceHandler,
+      focusedRef,
+      radioMode: qso?.mode ?? vfo?.mode ?? 'SSB'
+    }
+
+    const rstFields = [
+      <RSTInput
+        {...rstFieldProps}
+        key="sent"
+        innerRef={rstFieldRefs.shift()}
+        value={qso?.our?.sent ?? ''}
+        label="Sent"
+        fieldId={'ourSent'}
+      />,
+      <RSTInput
+        {...rstFieldProps}
+        key="received"
+        innerRef={rstFieldRefs.shift()}
+        value={qso?.their?.sent || ''}
+        label="Rcvd"
+        fieldId={'theirSent'}
+      />
+    ]
+    if (settings.switchSentRcvd) rstFields.reverse()
+    fields = fields.concat(rstFields)
   }
 
-  const rstFields = [
-    <RSTInput
-      {...rstFieldProps}
-      key="sent"
-      innerRef={rstFieldRefs.shift()}
-      value={qso?.our?.sent ?? ''}
-      label="Sent"
-      fieldId={'ourSent'}
-    />,
-    <RSTInput
-      {...rstFieldProps}
-      key="received"
-      innerRef={rstFieldRefs.shift()}
-      value={qso?.their?.sent || ''}
-      label="Rcvd"
-      fieldId={'theirSent'}
-    />
-  ]
-  if (settings.switchSentRcvd) rstFields.reverse()
-  fields = fields.concat(rstFields)
   let hideStateField = false
 
   findHooks('activity').filter(activity => activity.mainExchangeForOperation && findRef(operation, activity.key)).forEach(activity => {
@@ -163,10 +165,6 @@ export const MainExchangePanel = ({
         focusedRef={focusedRef}
       />
     )
-  }
-
-  if (fields.length > 4 && width / styles.oneSpace < 60) {
-    fields = [fields[0], ...fields.slice(3)] // exclude the RST fields
   }
 
   return (
