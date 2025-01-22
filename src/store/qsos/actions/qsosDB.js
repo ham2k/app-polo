@@ -15,7 +15,7 @@ import { actions as operationActions, saveOperationLocalData } from '../../opera
 import { dbExecute, dbSelectAll, dbTransaction } from '../../db/db'
 import { sendQSOsToSyncService } from '../../sync'
 import { logTimer } from '../../../tools/perfTools'
-import { annotateQSO } from '../../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
+import { annotateQSO } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 import { selectSettings } from '../../settings'
 import { selectRuntimeOnline } from '../../runtime'
 

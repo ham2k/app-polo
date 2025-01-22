@@ -5,17 +5,18 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { addQSOs } from '../../store/qsos'
-import { annotateQSO } from '../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
-import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
-import { poissonRandom } from '../../tools/randomTools'
-import { setSystemFlag } from '../../store/system'
 import { DevSettings } from 'react-native'
-import { setSettings } from '../../store/settings'
-import { logTimer } from '../../tools/perfTools'
+
+import { persistor } from '../../store'
+import { addQSOs } from '../../store/qsos'
 import { resetDatabase } from '../../store/db/db'
 import { setLocalData } from '../../store/local'
-import { persistor } from '../../store'
+import { setSettings } from '../../store/settings'
+import { setSystemFlag } from '../../store/system'
+import { poissonRandom } from '../../tools/randomTools'
+import { logTimer } from '../../tools/perfTools'
+import { annotateQSO } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
 
 const Info = {
   key: 'commands-debug',

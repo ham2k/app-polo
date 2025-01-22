@@ -12,12 +12,12 @@ import emojiRegex from 'emoji-regex'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
-import { selectRuntimeOnline } from '../../../../store/runtime'
-import { selectSettings } from '../../../../store/settings'
+import { selectRuntimeOnline } from '../../../../../store/runtime'
+import { selectSettings } from '../../../../../store/settings'
 
-import { findHooks } from '../../../../extensions/registry'
-import { LOCATION_ACCURACY } from '../../../../extensions/constants'
-import { removeEmptyValues } from '../../../../tools/objectTools'
+import { findHooks } from '../../../../../extensions/registry'
+import { LOCATION_ACCURACY } from '../../../../../extensions/constants'
+import { removeEmptyValues } from '../../../../../tools/objectTools'
 
 const EMOJI_REGEX = emojiRegex()
 

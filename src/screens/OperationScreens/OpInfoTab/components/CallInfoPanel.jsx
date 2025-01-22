@@ -6,21 +6,21 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Button, Chip, Icon, IconButton, Text } from 'react-native-paper'
+import { Chip, IconButton, Text } from 'react-native-paper'
 import { View, Image, Linking } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
+import { selectSettings, setSettings } from '../../../../store/settings'
+import { findHooks } from '../../../../extensions/registry'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { capitalizeString } from '../../../../tools/capitalizeString'
 import { fmtDateTimeDynamic } from '../../../../tools/timeFormats'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
-
-import { useCallLookup } from './useCallLookup'
-import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
-import { findHooks } from '../../../../extensions/registry'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectSettings, setSettings } from '../../../../store/settings'
+import { useCallLookup } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
 
 const HISTORY_QSOS_TO_SHOW = 3
 

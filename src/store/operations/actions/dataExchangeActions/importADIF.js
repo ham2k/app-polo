@@ -14,7 +14,7 @@ import { adifToQSON } from '@ham2k/lib-qson-adif'
 import { reportError } from '../../../../distro'
 
 import { addQSOs, actions as qsosActions, saveQSOsForOperation } from '../../../qsos'
-import { annotateQSO } from '../../../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
+import { annotateQSO } from '../../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 
 const ADIF_FILENAME_REGEX = /.+\.(adi|adif)$/i
 
