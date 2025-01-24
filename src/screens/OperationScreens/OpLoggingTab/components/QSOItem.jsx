@@ -29,7 +29,10 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
     let info = []
     try {
       (refHandlers || []).forEach(handler => {
-        info = info.concat(handler.relevantInfoForQSOItem({ qso }))
+        const x = handler.relevantInfoForQSOItem({ qso })
+        if (x) {
+          info = info.concat(x.trim())
+        }
       })
     } catch (e) {
       console.error('Error in QSOItem', e)
@@ -87,12 +90,12 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         {extraInfo ? (
           <>
             {styles.mdOrLarger && (
-              <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
+              <Text style={styles.fields.signal}>A{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
             )}
-            <Text style={styles.fields.exchange}>{extraInfo}</Text>
+            <Text style={styles.fields.exchange}>X{extraInfo}</Text>
           </>
         ) : (
-          <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
+          <Text style={styles.fields.signal}>B{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
         )}
       </View>
     </TouchableRipple>
