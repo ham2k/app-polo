@@ -14,7 +14,7 @@ export async function findQSOHistory (call, options = {}) {
   const whereArgs = [call]
 
   if (options.baseCall) {
-    whereClauses[0] = `${whereClauses[0]} OR qsos.theirCall = ?`
+    whereClauses[0] = `(${whereClauses[0]} OR qsos.theirCall = ?)`
     whereArgs.push(options.baseCall)
   }
 
@@ -44,6 +44,7 @@ export async function findQSOHistory (call, options = {}) {
     LEFT OUTER JOIN operations ON operations.uuid = qsos.operation
     WHERE
       (operations.uuid IS NOT NULL OR qsos.operation = 'historical')  -- avoid orphaned qsos
+      AND (qsos.deleted IS NULL OR qsos.deleted = 0)
       AND ${whereClauses.join(' AND ')}
     ORDER BY startOnMillis DESC
     `,

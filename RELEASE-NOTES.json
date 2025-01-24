@@ -10,7 +10,8 @@
     "photoCaption": "KI2D at POTA US-0059",
     "changes": [
       "Fixed missing RST in log display",
-      "Fixed bad frequencies in ADIF when only band was specified"
+      "Fixed bad frequencies in ADIF when only band was specified",
+      "Fixed history lookups not excluding deleted QSOs"
     ]
   },
   "25.1.0": {
