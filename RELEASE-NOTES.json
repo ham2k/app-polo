@@ -3,12 +3,18 @@
     "name": "February '25 (pre 1)",
     "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA 0004",
     "changes": [
-      "Option to toggle RST fields"
+    ]
+  },
+  "25.1.1": {
+    "name": "January '25",
+    "photoCaption": "KI2D at POTA US-0059",
+    "changes": [
+      "Fixed missing RST in log display",
+      "Fixed bad frequencies in ADIF when only band was specified"
     ]
   },
   "25.1.0": {
     "name": "January '25",
-    "photoCaption": "KI2D at POTA US-0059",
     "changes": [
       "Activate with more than one operator",
       "Support for Winter Field Day 2025",
