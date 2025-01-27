@@ -55,7 +55,6 @@ export default function OpSettingsTab ({ navigation, route }) {
   const [currentDialog, setCurrentDialog] = useState()
 
   const [stationInfo, stationInfoColor] = useMemo(() => {
-    console.log('stationInfo', operation)
     let stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
     if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
       stationCall += ` + ${operation.stationCallPlusArray.join(', ')}`

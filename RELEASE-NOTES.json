@@ -1,7 +1,13 @@
 {
-  "25.1.1": {
+  "25.1.2": {
     "name": "January '25",
     "photoCaption": "KI2D at POTA US-0059",
+    "changes": [
+      "Fixed ADIF export for Winter Field Day"
+    ]
+  },
+  "25.1.1": {
+    "name": "January '25",
     "changes": [
       "Fixed missing RST in log display",
       "Fixed bad frequencies in ADIF when only band was specified",

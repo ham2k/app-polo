@@ -117,8 +117,15 @@ const ReferenceHandler = {
     return parts
   },
 
-  adifFieldsForOneQSO: ({ qso, operation }) => {
-    return ([{ CONTEST_ID: 'WFD' }])
+  adifFieldsForOneQSO: ({ qso, ref, operation }) => {
+    ref = ref || findRef(operation, Info.key)
+    const qsoRef = findRef(qso, Info.key)
+
+    return ([
+      { MY_CLASS: ref?.class }, { MY_ARRL_SECT: ref?.location },
+      { CLASS: qsoRef?.class }, { ARRL_SECT: qsoRef?.location },
+      { CONTEST_ID: 'WFD' }
+    ])
   },
 
   relevantInfoForQSOItem: ({ qso, operation }) => {

@@ -71,7 +71,6 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
       }
 
       const singleOperator = operators.length === 1 && operators[0]
-      console.log('stations', { stations, operators })
       if (operators.length === 0 || singleOperator === operation.local?.operatorCall) {
         newExtraState.messageForOperatorCall = ''
         newExtraState.actionForOperatorCall = ''

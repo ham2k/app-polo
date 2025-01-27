@@ -62,7 +62,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title, exportT
       ;(qso.refs || []).forEach(ref => {
         const exportHandler = findBestHook(`ref:${ref.type}`)
         if (exportHandler && exportHandler.key !== handler.key && exportHandler.adifFieldsForOneQSO) {
-          const refFields = exportHandler.adifFieldsForOneQSO({ qso, operation: operationWithoutRefs, common, exportType })
+          const refFields = exportHandler.adifFieldsForOneQSO({ qso, ref, operation: operationWithoutRefs, common, exportType })
           refFields.forEach(refField => {
             const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
             if (existingField) {
