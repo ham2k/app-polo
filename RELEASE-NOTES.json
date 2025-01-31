@@ -8,7 +8,8 @@
   "25.1.3": {
     "name": "January '25",
     "changes": [
-      "Fixed callsign lookup issues"
+      "Fixed callsign lookup issues",
+      "Fixed ADIF logs for multi-operator operations"
     ]
   },
   "25.1.2": {

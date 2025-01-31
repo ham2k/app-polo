@@ -23,8 +23,8 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title, exportT
   if (operation.stationCall !== settings.operatorCall) {
     common.operatorCall = settings.operatorCall
   }
-  if (operation.local?.operatorCall) {
-    common.operatorCall = operation.local.operatorCall
+  if (operation.local?.operatorCall || operation.operatorCall) {
+    common.operatorCall = operation.local?.operatorCall || operation.operatorCall
   }
 
   let str = ''

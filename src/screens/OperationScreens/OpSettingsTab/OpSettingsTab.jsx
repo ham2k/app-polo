@@ -59,7 +59,6 @@ export default function OpSettingsTab ({ navigation, route }) {
     let stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
     if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
       stationCall += ` + ${operation.stationCallPlusArray.join(', ')}`
-      console.log('**', stationCall)
     }
     const operatorCall = operation?.local?.operatorCall ?? settings?.operatorCall ?? ''
     if (stationCall && operatorCall && stationCall !== operatorCall) {
