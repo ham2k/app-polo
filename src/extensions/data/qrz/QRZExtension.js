@@ -55,7 +55,11 @@ const LookupHook = {
       if (matchingQRZCall) {
         return { ...qrzLookup.data, call: matchingQRZCall, source: 'qrz.com' }
       } else if (qrzLookup?.error) {
-        return { error: qrzLookup.error, call: callInfo.call, source: 'qrz.com' }
+        if (callInfo?.baseCall?.length > 3) {
+          return { name: qrzLookup.error, error: qrzLookup.error, call: callInfo.call, source: 'qrz.com' }
+        } else {
+          return { error: qrzLookup.error, call: callInfo.call, source: 'qrz.com' }
+        }
       }
     }
     return {}

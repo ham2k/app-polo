@@ -95,9 +95,9 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   //   console.log('CallInfo effect')
   // }, [call, guess])
 
-  // console.log('CallInfo render with', { call, guessLocation: guess?.locationLabel, name: guess?.name, state: guess?.state })
+  // console.log('CallInfo render with', { qsoCall: qso?.their?.call, qsoName: qso?.their?.guess?.name, qsoStatus: qso?.their?.lookup?.status, lookupCall: call, lookupName: guess?.name, lookupStatus: status, lookupWhen: when })
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    // console.log('CallInfo effect', { call, status, lookup, qsoLook: qso?.their?.lookup?.status, state: guess?.state, qsoState: qso?.their?.guess?.state })
+    // console.log('CallInfo effect')
     if (qso?.their?.call === call && status && qso?.their?.lookup?.status !== status) {
       // console.log('-- updateQSO!')
       updateQSO && updateQSO({ their: { guess, lookup: { ...lookup, status } } })

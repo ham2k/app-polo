@@ -30,7 +30,13 @@ export const uiSlice = createSlice({
       const { component, ...data } = action.payload
       state[component] = state[component] || {}
       deepMergeState(state[component], data)
-
+      // if (component === 'OpLoggingTab' && data.loggingState?.qso) {
+      //   console.log('====================')
+      //   console.log('updateStateForComponent', component)
+      //   console.log(' -- payload ', { theirCall: data.loggingState.qso?.their?.call, name: data.loggingState.qso?.their?.guess?.name, status: data.loggingState.qso?.their?.lookup?.status, keys: Object.keys(data.loggingState.qso), keysTheir: Object.keys(data.loggingState.qso?.their || {}) })
+      //   console.log(' -- state', { theirCall: state[component].loggingState.qso?.their?.call, name: state[component].loggingState.qso?.their?.guess?.name, status: state[component].loggingState.qso?.their?.lookup?.status })
+      //   console.log('====================')
+      // }
       if (DEBUG) console.log('updateStateForComponent', state[component])
     }
   }
