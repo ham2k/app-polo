@@ -1,7 +1,13 @@
 {
+  "25.1.3-pre3": {
+    "name": "January '25 - Bleeding Edge",
+    "photoCaption": "KI2D at POTA US-0059",
+    "changes": [
+      "Fixed QRZ lookup issues"
+    ]
+  },
   "25.1.2": {
     "name": "January '25",
-    "photoCaption": "KI2D at POTA US-0059",
     "changes": [
       "Fixed ADIF export for Winter Field Day"
     ]

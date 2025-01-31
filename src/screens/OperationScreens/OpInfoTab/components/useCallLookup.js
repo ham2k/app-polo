@@ -23,7 +23,11 @@ const EMOJI_REGEX = emojiRegex()
 
 const DEBUG = false
 
-const cachedLookups = {}
+const cachedLookups = {} // Use a global cache
+
+export const resetCallLookupCache = () => {
+  Object.assign(cachedLookups, {})
+}
 
 export const useCallLookup = (qso) => {
   const online = useSelector(selectRuntimeOnline)
@@ -44,8 +48,7 @@ export const useCallLookup = (qso) => {
     if (call && call.length > 2 && (!cachedLookups[cacheKey] || cachedLookups[cacheKey].status === 'prefilled')) {
       if (DEBUG) console.log('  -- useCallLookup effect not cached', { cacheKey, source: cachedLookups[cacheKey]?.status })
 
-      // setCachedLookups({ ...cachedLookups, [cacheKey]: { ...cachedLookups[cacheKey], status: 'looking' } })
-      cachedLookups[cacheKey] = { ...cachedLookups[cacheKey], status: 'looking' }
+      cachedLookups[cacheKey] = { ...cachedLookups[cacheKey], status: 'looking', when: new Date() }
       setCurrentLookup(cachedLookups[cacheKey])
 
       setImmediate(async () => {
@@ -53,9 +56,8 @@ export const useCallLookup = (qso) => {
         const offlineLookup = await _performLookup({ call, refs: qso?.refs, theirInfo, online: false, settings, dispatch })
 
         if (offlineLookup?.guess?.name || offlineLookup?.guess?.city || offlineLookup?.guess?.grid || offlineLookup?.guess?.locationLabel || offlineLookup?.guess?.note) {
-          if (DEBUG) console.log('  -- filling cachedLookups with offline lookup', { name: offlineLookup.guess.name, locationLabel: offlineLookup.guess.locationLabel, state: offlineLookup.guess.state })
-          // setCachedLookups({ ...cachedLookups, [cacheKey]: { call, cacheKey, ...offlineLookup, status: 'offline' } })
-          cachedLookups[cacheKey] = { call, cacheKey, ...offlineLookup, status: 'offline' }
+          if (DEBUG) console.log('  -- filling cachedLookups with offline lookup', { name: offlineLookup.guess.name })
+          cachedLookups[cacheKey] = { call, cacheKey, ...offlineLookup, status: 'offline', when: new Date() }
           setCurrentLookup(cachedLookups[cacheKey])
         }
 
@@ -64,12 +66,12 @@ export const useCallLookup = (qso) => {
           const onlineLookup = await _performLookup({ call, refs: qso?.refs, theirInfo, online, settings, dispatch })
 
           if (onlineLookup?.guess?.name || onlineLookup?.guess?.city || onlineLookup?.guess?.grid || onlineLookup?.guess?.locationLabel || onlineLookup?.guess?.note || onlineLookup?.lookup?.image) {
-            if (DEBUG) console.log('  -- filling cachedLookups with online lookup', { name: onlineLookup.guess.name, locationLabel: onlineLookup.guess.locationLabel, state: onlineLookup.guess.state })
-            // setCachedLookups({ ...cachedLookups, [cacheKey]: { call, cacheKey, ...onlineLookup, status: 'online' } })
-            cachedLookups[cacheKey] = { call, cacheKey, ...onlineLookup, status: 'online' }
+            if (DEBUG) console.log('  -- filling cachedLookups with online lookup', { name: onlineLookup.guess.name })
+            cachedLookups[cacheKey] = { call, cacheKey, ...onlineLookup, status: 'online', when: new Date() }
             setCurrentLookup(cachedLookups[cacheKey])
           } else {
-            cachedLookups[cacheKey] = { ...cachedLookups[cacheKey], status: 'looked' } // Nothing changed
+            if (DEBUG) console.log('  -- keeping cachedLookups as is but marking as "looked"', { name: onlineLookup.guess.name })
+            cachedLookups[cacheKey] = { ...cachedLookups[cacheKey], status: 'looked', when: new Date() } // Nothing changed
             setCurrentLookup(cachedLookups[cacheKey])
           }
         }
@@ -80,21 +82,19 @@ export const useCallLookup = (qso) => {
   }, [call, online, dispatch, cacheKey, theirInfo, qso?.refs, settings])
 
   if (cachedLookups[cacheKey]) {
-    if (DEBUG) console.log('-- useCallLookup returns', cacheKey, { city: cachedLookups[cacheKey]?.guess?.city, locationLabel: cachedLookups[cacheKey]?.guess?.locationLabel, status: cachedLookups[cacheKey]?.status })
+    if (DEBUG) console.log('-- useCallLookup returns', cacheKey, { name: cachedLookups[cacheKey]?.guess?.name, status: cachedLookups[cacheKey]?.status })
 
     return cachedLookups[cacheKey]
   } else if (cachedLookups[baseCacheKey]) {
-    if (DEBUG) console.log('-- useCallLookup returns without refs', baseCacheKey, { city: cachedLookups[baseCacheKey]?.guess?.city, locationLabel: cachedLookups[baseCacheKey]?.guess?.locationLabel, status: 'newly prefilled' })
-    // setCachedLookups({ ...cachedLookups, [cacheKey]: { ...cachedLookups[`${call}-no-refs`], status: 'prefilled' } })
-    const prefill = { ...cachedLookups[baseCacheKey], status: 'prefilled' }
+    if (DEBUG) console.log('-- useCallLookup returns without refs', baseCacheKey, { name: cachedLookups[baseCacheKey]?.guess?.name, status: 'newly prefilled' })
+    const prefill = { ...cachedLookups[baseCacheKey], status: 'prefilled', when: new Date() }
     cachedLookups[cacheKey] = prefill
     setCurrentLookup(cachedLookups[cacheKey])
 
     return prefill
   } else {
-    if (DEBUG) console.log('-- useCallLookup returns barebones', cacheKey, { city: theirInfo?.city, locationLabel: undefined, status: 'newly prefilled' })
-    const prefill = { call, cacheKey, theirInfo, guess: theirInfo, lookup: {}, lookups: {}, status: 'prefilled' }
-    // setCachedLookups({ ...cachedLookups, [cacheKey]: prefill })
+    if (DEBUG) console.log('-- useCallLookup returns barebones', cacheKey, { name: theirInfo?.name, locationLabel: undefined, status: 'newly prefilled' })
+    const prefill = { call, cacheKey, theirInfo, guess: theirInfo, lookup: {}, lookups: {}, status: 'prefilled', when: new Date() }
     cachedLookups[cacheKey] = prefill
     setCurrentLookup(cachedLookups[cacheKey])
 
@@ -156,6 +156,7 @@ async function _lookupCall (theirInfo, { online, settings, dispatch }) {
         data = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online }))
       }
       if (data) {
+        if (DEBUG) console.log('  -- lookupCall data', hook.key, { data })
         lookups[hook.key] = removeEmptyValues(data)
         Object.keys(lookups[hook.key]).forEach(key => { lookedUp[key] = true })
       }
@@ -187,14 +188,16 @@ function _mergeData ({ theirInfo, lookups, refs }) {
   const newGuess = { ...theirInfo }
 
   for (const key in lookups) { // High to low priority
+    if (DEBUG) console.log('mergeData', key)
     if (lookups[key].call === theirInfo.call || lookups[key].call === theirInfo.baseCall) {
       mergedLookup = {
         sources: [],
-        ...lookups[key],
-        ...mergedLookup,
+        ...lookups[key], // Use new data from this key's lookup
+        ...mergedLookup, // But override with any data already present, based on priority
         notes: [...mergedLookup.notes ?? [], ...lookups[key].notes ?? []],
         history: [...mergedLookup.history ?? [], ...lookups[key].history ?? []]
       }
+      if (DEBUG) console.log('-- data matches', { key, lookupName: lookups[key]?.name, mergedName: mergedLookup?.name })
       if (lookups[key].source) {
         mergedLookup.sources.push(lookups[key].source)
       }

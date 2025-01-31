@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Button, Chip, Icon, IconButton, Text } from 'react-native-paper'
+import { Chip, IconButton, Text } from 'react-native-paper'
 import { View, Image, Linking } from 'react-native'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 

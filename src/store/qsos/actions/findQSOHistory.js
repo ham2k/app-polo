@@ -44,7 +44,8 @@ export async function findQSOHistory (call, options = {}) {
     LEFT OUTER JOIN operations ON operations.uuid = qsos.operation
     WHERE
       (operations.uuid IS NOT NULL OR qsos.operation = 'historical')  -- avoid orphaned qsos
-      AND (qsos.deleted IS NULL OR qsos.deleted = 0)
+      AND (operations.deleted = 0 OR operations.deleted IS NULL)
+      AND (qsos.deleted = 0 OR qsos.deleted IS NULL)
       AND ${whereClauses.join(' AND ')}
     ORDER BY startOnMillis DESC
     `,
