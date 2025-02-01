@@ -126,3 +126,33 @@ Say you want to start a new release branch for January 2025:
   * [via github](https://github.com/ham2k/app-polo-dist/compare/dist/release-december..dist/reference-release)
   * `git diff dist/release-december..dist/reference-release`
 3- Create a new branch `dist/release-january` from `dist/reference-release`
+
+---
+
+## In-App Purchases
+
+Entitlements
+  supporter_2024
+  supporter_2025
+  ham2k_lofi
+
+Products
+  S:     55 - supporter
+  M:     57 - Roger Roger
+  L:     59 - Loud and clear
+  XL:    59 Plus - Booming!
+
+  {platform}_supporter_once_s_sku $4.99
+  {platform}_supporter_once_m_sku $9.99
+  {platform}_supporter_once_l_sku $19.99
+  {platform}_supporter_once_xl_sku $49.99
+
+  {platform}_supporter_month_s_sku $1.99
+  {platform}_supporter_month_m_sku $4.99
+  {platform}_supporter_month_l_sku $9.99
+  {platform}_supporter_month_xl_sku $19.99
+
+  {platform}_supporter_year_s_sku $19.99
+  {platform}_supporter_year_m_sku $49.99
+  {platform}_supporter_year_l_sku $99.99
+  {platform}_supporter_year_xl_sku $199.99
