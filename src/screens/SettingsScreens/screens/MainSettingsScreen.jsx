@@ -6,8 +6,8 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useMemo, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { List, Text } from 'react-native-paper'
 import { Linking, ScrollView, useWindowDimensions, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -16,6 +16,7 @@ import packageJson from '../../../../package.json'
 import { findHooks } from '../../../extensions/registry'
 
 import { selectSettings } from '../../../store/settings'
+import { fetchFeatureFlags } from '../../../store/system/fetchFeatureFlags'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 import { Ham2kListItem } from '../../components/Ham2kListItem'
@@ -37,6 +38,7 @@ import GeneralSettingsScreen from './GeneralSettingsScreen'
 import LoggingSettingsScreen from './LoggingSettingsScreen'
 import VersionSettingsScreen from './VersionSettingsScreen'
 import SyncSettingsScreen from './SyncSettingsScreen'
+
 import { MainSettingsForDistribution } from '../../../distro'
 
 const Stack = createNativeStackNavigator()
@@ -45,6 +47,12 @@ export default function MainSettingsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
 
   const settings = useSelector(selectSettings)
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    // Refresh feature flags when the settings screen is opened, or if callsign changes
+    dispatch(fetchFeatureFlags())
+  }, [dispatch, settings?.operatorCall])
 
   const headerOptions = useMemo(() => {
     let options = {}
