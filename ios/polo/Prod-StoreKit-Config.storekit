@@ -1,0 +1,159 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "76F9140A",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "6741362733",
+      "localizations" : [
+        {
+          "description" : "Show your support for Ham2K!!!",
+          "displayName" : "One-time Contribution",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "ios_supporter_once_s_sku",
+      "referenceName" : "iOS Supporter Once S",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6478713938",
+    "_developerTeamID" : "T56H72Q4W5",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 760153082.29253495,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21558679",
+      "localizations" : [
+
+      ],
+      "name" : "Ham2K Supporter",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "19.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6741376908",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Your contribution, once a year",
+              "displayName" : "Annual Supporter",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "ios_supporter_annual_s",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Supporter Annual S",
+          "subscriptionGroupID" : "21558679",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "1.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6741363325",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Your contribution, once a month.",
+              "displayName" : "Monthly Supporter",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "ios_supporter_monthly_s_sku",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Supporter Monthly S",
+          "subscriptionGroupID" : "21558679",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

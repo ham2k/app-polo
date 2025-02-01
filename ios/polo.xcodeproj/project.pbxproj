@@ -23,6 +23,7 @@
 		547C6D2E8A864A0EA2664E86 /* Roboto Condensed ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52E51D689542480FA9E55C4C /* Roboto Condensed ExtraBold.ttf */; };
 		5C2AFBACD3C741EEA619B61D /* Roboto Condensed Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C66C002B48D24A32BC280E2D /* Roboto Condensed Medium.ttf */; };
 		6C77CB69AB8A41BC8B6A080C /* Roboto Mono Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83A8D54793464474BD06F48F /* Roboto Mono Bold.ttf */; };
+		7216101F2D4EADD90013AC64 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7216101E2D4EADD90013AC64 /* StoreKit.framework */; };
 		72FD72302C98557B00AA9DDE /* GoogleService-Prod.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72FD722F2C98557B00AA9DDE /* GoogleService-Prod.plist */; };
 		72FD72322C9858F800AA9DDE /* GoogleService-Staging-com.ham2k.polo.dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72FD72312C9858F800AA9DDE /* GoogleService-Staging-com.ham2k.polo.dev.plist */; };
 		72FD72352C98606D00AA9DDE /* GoogleService-Staging-com.ham2k.polo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72FD72342C98606D00AA9DDE /* GoogleService-Staging-com.ham2k.polo.plist */; };
@@ -85,6 +86,7 @@
 		5C0B5909F8BC4EDA8E81F330 /* Roboto Slab Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Slab Medium.ttf"; path = "../assets/fonts/Roboto Slab Medium.ttf"; sourceTree = "<group>"; };
 		692647BAF0BD378FFAA5F85B /* Pods-polo-poloTests.prodrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.prodrelease.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.prodrelease.xcconfig"; sourceTree = "<group>"; };
 		720996792BA85FB5002C388D /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		7216101E2D4EADD90013AC64 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		72A0D32B2B162706007E568A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		72A0D32C2B162706007E568A /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		72FD722F2C98557B00AA9DDE /* GoogleService-Prod.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Prod.plist"; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C99970C5E764057ED7FB43FB /* Pods_polo.framework in Frameworks */,
+				7216101F2D4EADD90013AC64 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +175,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7216101E2D4EADD90013AC64 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				9488FFB79CC2CF0F3FEA7DD2 /* Pods_polo.framework */,
 				83B9B9B4DF9DAD8DC5CBA474 /* Pods_polo_poloTests.framework */,
