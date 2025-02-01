@@ -38,6 +38,7 @@ import GeneralSettingsScreen from './GeneralSettingsScreen'
 import LoggingSettingsScreen from './LoggingSettingsScreen'
 import VersionSettingsScreen from './VersionSettingsScreen'
 import SyncSettingsScreen from './SyncSettingsScreen'
+import { fetchFeatureFlags } from '../../../store/system/fetchFeatureFlags'
 
 import { MainSettingsForDistribution } from '../../../distro'
 
