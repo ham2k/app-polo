@@ -72,6 +72,8 @@
     "react-native-markdown-display": "^7.0",
     "react-native-pager-view": "^6.3",
     "react-native-paper": "^5.12",
+    "react-native-purchases": "^8.5.2",
+    "react-native-purchases-ui": "^8.5.2",
     "react-native-reanimated": "^3.15",
     "react-native-restart": "^0.0.27",
     "react-native-safe-area-context": "^5.0",
