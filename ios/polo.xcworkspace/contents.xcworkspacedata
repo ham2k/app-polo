@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:polo/Test-StoreKit-Config.storekit">
+   </FileRef>
+   <FileRef
+      location = "group:polo/Prod-StoreKit-Config.storekit">
+   </FileRef>
+   <FileRef
       location = "group:polo.xcodeproj">
    </FileRef>
    <FileRef

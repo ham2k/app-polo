@@ -17,6 +17,9 @@ import GLOBAL from '../../GLOBAL'
 import packageJson from '../../../package.json'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import Purchases from 'react-native-purchases'
+import { Platform } from 'react-native'
+import Config from 'react-native-config'
 
 export function useConfigForDistribution ({ settings }) {
   // Keep track of consent
@@ -85,4 +88,15 @@ export function useConfigForDistribution ({ settings }) {
       }
     }
   }, [settings?.operatorCall, settings?.consentAppData])
+
+  useEffect(() => {
+    Purchases.setLogLevel(Purchases.LOG_LEVEL.VERBOSE)
+    if (Platform.OS === 'ios') {
+      console.log('Configuring RevenueCat for iOS', Config.REVENUECAT_IOS_API_KEY)
+      Purchases.configure({ apiKey: Config.REVENUECAT_IOS_API_KEY })
+    } else if (Platform.OS === 'android') {
+      console.log('Configuring RevenueCat for Android', Config.REVENUECAT_ANDROID_API_KEY)
+      Purchases.configure({ apiKey: Config.REVENUECAT_ANDROID_API_KEY })
+    }
+  }, [])
 }
