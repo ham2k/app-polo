@@ -27,6 +27,8 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation))
   const qsos = useSelector(state => selectQSOs(state, route.params.operation))
 
+  const [doReload, setDoReload] = useState()
+
   useEffect(() => {
     if (!operation) {
       navigation.goBack()
@@ -71,7 +73,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
       }
 
       const singleOperator = operators.length === 1 && operators[0]
-      console.log('stations', { stations, operators })
+
       if (operators.length === 0 || singleOperator === operation.local?.operatorCall) {
         newExtraState.messageForOperatorCall = ''
         newExtraState.actionForOperatorCall = ''
@@ -107,15 +109,16 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
     if (calls.length > 1) {
       dispatch(setOperationData({
         uuid: operation.uuid,
-        stationCall: calls[0],
+        stationCall: calls[0] || '',
         stationCallPlus: `${calls[0]}+${calls.slice(1).length}`,
         stationCallPlusArray: calls.slice(1),
         allStationCalls: text
       }))
+      dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall: '' }))
     } else {
       dispatch(setOperationData({
         uuid: operation.uuid,
-        stationCall: calls[0],
+        stationCall: calls[0] || '',
         stationCallPlus: calls[0],
         stationCallPlusArray: undefined,
         allStationCalls: text
@@ -129,6 +132,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
 
   const handleUpdateStation = useCallback(() => {
     dispatch(batchUpdateQSOs({ uuid: operation.uuid, qsos, data: { our: { call: operation.stationCall } } }))
+    setDoReload(Date.now())
   }, [dispatch, operation.uuid, operation.stationCall, qsos])
 
   const handleUpdateOperator = useCallback(() => {
@@ -168,6 +172,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
             label="Operator Callsign"
             placeholder={'N0CALL'}
             onChangeText={onChangeOperator}
+            disabled={operation.stationCallPlusArray?.length > 0}
           />
           {extraState.messageForOperatorCall && (
             <Text variant="bodyMedium" style={{ color: styles.colors.primary, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
