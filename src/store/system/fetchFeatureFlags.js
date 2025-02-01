@@ -14,7 +14,7 @@ import { selectRawSettings } from '../settings'
 import { selectRuntimeOnline } from '../runtime'
 import { setFeatureFlags } from './systemSlice'
 
-const DEBUG = false
+const DEBUG = true
 
 export const fetchFeatureFlags = () => async (dispatch, getState) => {
   const state = getState()
