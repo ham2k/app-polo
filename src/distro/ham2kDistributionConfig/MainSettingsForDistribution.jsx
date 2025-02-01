@@ -8,32 +8,99 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Image, View } from 'react-native'
+import { useSelector } from 'react-redux'
+import RevenueCatUI, { PAYWALL_RESULT } from 'react-native-purchases-ui'
+
 import { Ham2kListSection } from '../../screens/components/Ham2kListSection'
 import { Ham2kListSubheader } from '../../screens/components/Ham2kListSubheader'
-import { Image, View } from 'react-native'
 import { selectFeatureFlag } from '../../store/system'
-import { useSelector } from 'react-redux'
+import { TouchableRipple } from 'react-native-paper'
+import Purchases from 'react-native-purchases'
+import { selectLocalExtensionData } from '../../store/local'
+
+const CONTRIBUTE_NOW = require('./badges/contribute-now.png')
+const CONTRIBUTE_MORE = require('./badges/contribute-more.png')
 
 const BADGE_2024 = require('./badges/2024-supporter.png')
 const BADGE_2025 = require('./badges/2025-supporter.png')
 
 const BADGES = {
-  '2024-supporter': BADGE_2024,
-  '2025-supporter': BADGE_2025
+  supporter_2024: BADGE_2024,
+  supporter_2025: BADGE_2025
 }
 
 export function MainSettingsForDistribution ({ settings, styles }) {
+  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
+
   const badgeFlags = useSelector(state => selectFeatureFlag(state, 'badges'))
 
-  const badges = useMemo(() => {
-    if (!badgeFlags) return []
-    return Object.keys(BADGES).filter(badge => badgeFlags[badge])
-  }, [badgeFlags])
+  const [entitlementFlags, setEntitlementFlags] = useState({})
 
-  if (badges.length === 0) return null
+  useEffect(() => {
+    setImmediate(async () => {
+      const customerInfo = await Purchases.getCustomerInfo()
+      console.log('customerInfo', Object.keys(customerInfo.entitlements.active))
+      // Access entitlements
+      const entitlements = customerInfo.entitlements
+      const newFlags = {}
+      Object.keys(entitlements.active).forEach(key => {
+        newFlags[key] = true
+      })
+      setEntitlementFlags(newFlags)
+    })
+  }, [])
+
+  const badges = useMemo(() => {
+    console.log('entitlementFlags', entitlementFlags)
+    return Object.keys(BADGES).filter(badge => entitlementFlags?.[badge] || badgeFlags?.[badge])
+  }, [entitlementFlags, badgeFlags])
+
+  const presentPaywall = useCallback(async () => {
+    Purchases.setAttributes({
+      callsign: settings?.operatorCall,
+      $displayName: settings?.operatorCall,
+      $email: `${settings?.operatorCall?.toLowerCase()}@call.ham`,
+      ham2k_lofi_account: lofiData?.account?.uuid,
+      ham2k_lofi_callsign: lofiData?.account?.call,
+      ham2k_lofi_email: lofiData?.account?.email,
+      ham2k_lofi_device: lofiData?.client?.uuid
+    })
+
+    const paywallResult = await RevenueCatUI.presentPaywall()
+
+    switch (paywallResult) {
+      case PAYWALL_RESULT.NOT_PRESENTED:
+      case PAYWALL_RESULT.ERROR:
+      case PAYWALL_RESULT.CANCELLED:
+        console.log('Paywall not presented', paywallResult)
+        return false
+      case PAYWALL_RESULT.PURCHASED:
+      case PAYWALL_RESULT.RESTORED:
+        break // continue below
+      default:
+        console.log('Paywall default', paywallResult)
+        return false
+    }
+
+    const customerInfo = await Purchases.getCustomerInfo()
+    const entitlements = customerInfo.entitlements
+    const newFlags = {}
+    Object.keys(entitlements.active).forEach(key => {
+      newFlags[key] = true
+    })
+    setEntitlementFlags(newFlags)
+
+    return true
+  }, [settings?.operatorCall])
+
   return (
     <Ham2kListSection>
-      <Ham2kListSubheader>{settings.operatorCall} is a Supporter of Ham2K</Ham2kListSubheader>
+      <Ham2kListSubheader>
+        {settings.operatorCall}
+        {badges.length === 0 ? ' could be ' : ' is '}
+        a Supporter of Ham2K
+      </Ham2kListSubheader>
       <View style={{ marginHorizontal: styles.oneSpace * 2, flexDirection: 'row' }}>
         {badges.map(badge => (
           <Image
@@ -47,6 +114,16 @@ export function MainSettingsForDistribution ({ settings, styles }) {
             }}
           />
         ))}
+        <TouchableRipple onPress={presentPaywall}>
+          <Image source={badges.length === 0 ? CONTRIBUTE_NOW : CONTRIBUTE_MORE}
+            style={{
+              resizeMode: 'cover',
+              height: styles.oneSpace * 15,
+              width: styles.oneSpace * 15,
+              margin: 0
+            }}
+          />
+        </TouchableRipple>
       </View>
     </Ham2kListSection>
   )
