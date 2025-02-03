@@ -48,14 +48,18 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       flexDirection: 'column',
       justifyContent: 'space-between'
     },
+    titleBoxSpacer: {
+      height: dialogVisible ? '10%' : '30%'
+    },
     titleBoxTop: {
-      height: dialogVisible ? '10%' : '30%',
+      backgroundColor: 'rgba(255,255,255,.2)',
       justifyContent: 'flex-end'
     },
     titleBoxBottom: {
       // marginTop: height * 0.15
       justifyContent: 'flex-start',
       marginBottom: baseTheme.oneSpace * 2,
+      backgroundColor: 'rgba(255,255,255,.2)',
       flex: 0
     },
     messagesBox: {
@@ -76,7 +80,7 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       fontWeight: 400,
       textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 1.5,
+      textShadowRadius: baseTheme.oneSpace * 1, // 1.5,
       color: baseColor,
       textAlign: 'center'
     },
@@ -96,10 +100,10 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       fontWeight: 400,
       textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 1,
+      textShadowRadius: baseTheme.oneSpace * 2,
       color: baseColor,
       textAlign: 'center',
-      marginTop: baseTheme.oneSpace
+      paddingTop: baseTheme.oneSpace
     },
     message: {
       textShadowColor: haloColor,
@@ -224,6 +228,7 @@ export default function StartScreen ({ setAppState }) {
     <ImageBackground source={SPLASH_IMAGE} style={styles.root}>
       <GestureHandlerRootView>
         <SafeAreaView style={styles.container}>
+          <View style={styles.titleBoxSpacer} />
           <Pressable style={styles.titleBoxTop} onPress={() => { handleInterruption(); return true }}>
             <Text style={styles.ham2k}>Ham2K</Text>
           </Pressable>
