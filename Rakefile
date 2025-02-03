@@ -8,52 +8,52 @@ require 'uri'
 namespace :release do
   task :bleeding => :dotenv do
     release_info = get_release_info
-    appcenter_push_release(deployment: 'Development', platform: 'android', version: release_info[:version])
-    appcenter_push_release(deployment: 'Development', platform: 'ios', version: release_info[:version])
+    revopush_push_release(deployment: 'Development', platform: 'android', version: release_info[:version])
+    revopush_push_release(deployment: 'Development', platform: 'ios', version: release_info[:version])
 
     system "git tag -a #{release_info[:version]}-bundle-bleeding -m ''"
   end
 
   task :unstable => :dotenv do
     release_info = get_release_info
-    appcenter_push_release(deployment: 'Staging', platform: 'android', version: release_info[:version])
-    appcenter_push_release(deployment: 'Staging', platform: 'ios', version: release_info[:version])
-    appcenter_promote_release(from: 'Staging', to: 'Development', platform: 'android')
-    appcenter_promote_release(from: 'Staging', to: 'Development', platform: 'ios')
+    revopush_push_release(deployment: 'Staging', platform: 'android', version: release_info[:version])
+    revopush_push_release(deployment: 'Staging', platform: 'ios', version: release_info[:version])
+    revopush_promote_release(from: 'Staging', to: 'Development', platform: 'android')
+    revopush_promote_release(from: 'Staging', to: 'Development', platform: 'ios')
 
     system "git tag -a #{release_info[:version]}-bundle-unstable -m ''"
   end
 
   task :unstable_only => :dotenv do
     release_info = get_release_info
-    appcenter_push_release(deployment: 'Staging', platform: 'android', version: release_info[:version])
-    appcenter_push_release(deployment: 'Staging', platform: 'ios', version: release_info[:version])
+    revopush_push_release(deployment: 'Staging', platform: 'android', version: release_info[:version])
+    revopush_push_release(deployment: 'Staging', platform: 'ios', version: release_info[:version])
 
     system "git tag -a #{release_info[:version]}-bundle-unstable -m ''"
   end
 
   task :promote_unstable => :dotenv do
-    appcenter_promote_release(from: 'Staging', to: 'Development', platform: 'android')
-    appcenter_promote_release(from: 'Staging', to: 'Development', platform: 'ios')
-    appcenter_promote_release(from: 'Staging', to: 'Stable', platform: 'android')
-    appcenter_promote_release(from: 'Staging', to: 'Stable', platform: 'ios')
+    revopush_promote_release(from: 'Staging', to: 'Development', platform: 'android')
+    revopush_promote_release(from: 'Staging', to: 'Development', platform: 'ios')
+    revopush_promote_release(from: 'Staging', to: 'Stable', platform: 'android')
+    revopush_promote_release(from: 'Staging', to: 'Stable', platform: 'ios')
   end
 
   task :stable => :dotenv do
     release_info = get_release_info
-    appcenter_push_release(deployment: 'Production', platform: 'android', version: release_info[:version])
-    appcenter_push_release(deployment: 'Production', platform: 'ios', version: release_info[:version])
-    appcenter_promote_release(from: 'Production', to: 'Development', platform: 'android')
-    appcenter_promote_release(from: 'Production', to: 'Development', platform: 'ios')
-    appcenter_promote_release(from: 'Production', to: 'Staging', platform: 'android')
-    appcenter_promote_release(from: 'Production', to: 'Staging', platform: 'ios')
+    revopush_push_release(deployment: 'Production', platform: 'android', version: release_info[:version])
+    revopush_push_release(deployment: 'Production', platform: 'ios', version: release_info[:version])
+    revopush_promote_release(from: 'Production', to: 'Development', platform: 'android')
+    revopush_promote_release(from: 'Production', to: 'Development', platform: 'ios')
+    revopush_promote_release(from: 'Production', to: 'Staging', platform: 'android')
+    revopush_promote_release(from: 'Production', to: 'Staging', platform: 'ios')
 
     system "git tag -a #{release_info[:version]}-bundle-stable -m ''"
   end
 
   task :list => :dotenv do
-    system "appcenter codepush deployment list -a Ham2K/polo-android"
-    system "appcenter codepush deployment list -a Ham2K/polo-ios"
+    system "revopush deployment list -a polo-android"
+    system "revopush deployment list -a polo-ios"
   end
 
   task :discord => :dotenv do
@@ -126,22 +126,23 @@ EOF
     # response = http.request(request)
   end
 
-  def appcenter_push_release(deployment:, platform:, version:)
+  def revopush_push_release(deployment:, platform:, version:)
     puts "Pushing #{version} for #{platform} #{deployment}"
-    system "appcenter codepush release-react -a Ham2K/polo-#{platform} -d #{deployment} -t $POLO_BASE_VERSION --description \"Release #{version}*\""
+    cmd = "revopush release-react polo-#{platform} #{platform} -d #{deployment} --targetBinaryVersion #{ENV['POLO_BASE_VERSION']} --description \"Release #{version}*\""
+    puts "$ #{cmd}"
+    system cmd
   end
 
-  def appcenter_get_latest_release(deployment:, platform:)
-    JSON.parse(`appcenter codepush deployment list -a Ham2K/polo-#{platform} --output json`)
-        .find { |d| d["deployment"]["name"] == deployment }["deployment"]["latestRelease"]
+  def revopush_get_latest_release(deployment:, platform:)
+    JSON.parse(`revopush deployment list polo-#{platform} --format json`)
+        .find { |d| d["name"] == deployment }["package"]["label"]
   end
 
-  def appcenter_promote_release(from:, to:, platform:)
-    latest_release = appcenter_get_latest_release(deployment: from, platform: platform)
+  def revopush_promote_release(from:, to:, platform:)
+    latest_release = revopush_get_latest_release(deployment: from, platform: platform)
     puts "Promoting #{latest_release["label"]} to #{platform} #{latest_release["description"]}"
-    system "appcenter codepush promote -a Ham2K/polo-#{platform} -s #{from} -d #{to} -t $POLO_BASE_VERSION -r 100 -l #{latest_release["label"]}"
+    system "revopush promote polo-#{platform} #{from} #{to} --targetBinaryVersion #{ENV['POLO_BASE_VERSION']} -r 100 -l #{latest_release["label"]}"
   end
-
 
   def get_release_info
     packageJSON = JSON.parse(File.read('package.json'))
