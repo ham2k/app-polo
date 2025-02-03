@@ -14,6 +14,7 @@ import { Ham2kDialog } from '../../components/Ham2kDialog'
 import { apiQRZ } from '../../../store/apis/apiQRZ'
 import { View } from 'react-native'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
+import { resetCallLookupCache } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 
 export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
@@ -73,6 +74,7 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
 
   const handleAccept = useCallback(() => {
     dispatch(setAccountInfo({ qrz: { login, password, session: undefined } }))
+    dispatch(resetCallLookupCache())
     setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [login, password, dispatch, onDialogDone])

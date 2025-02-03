@@ -25,7 +25,7 @@ const DEBUG = false
 
 const cachedLookups = {} // Use a global cache
 
-export const resetCallLookupCache = () => {
+export const resetCallLookupCache = () => (dispatch, getState) => {
   Object.assign(cachedLookups, {})
 }
 
@@ -65,7 +65,7 @@ export const useCallLookup = (qso) => {
           // And then a full lookup for slower online sources
           const onlineLookup = await _performLookup({ call, refs: qso?.refs, theirInfo, online, settings, dispatch })
 
-          if (onlineLookup?.guess?.name || onlineLookup?.guess?.city || onlineLookup?.guess?.grid || onlineLookup?.guess?.locationLabel || onlineLookup?.guess?.note || onlineLookup?.lookup?.image) {
+          if (onlineLookup?.guess?.name || onlineLookup?.guess?.city || onlineLookup?.guess?.grid || onlineLookup?.guess?.locationLabel || onlineLookup?.guess?.note || onlineLookup?.lookup?.image || onlineLookup?.lookup?.error) {
             if (DEBUG) console.log('  -- filling cachedLookups with online lookup', { name: onlineLookup.guess.name })
             cachedLookups[cacheKey] = { call, cacheKey, ...onlineLookup, status: 'online', when: new Date() }
             setCurrentLookup(cachedLookups[cacheKey])

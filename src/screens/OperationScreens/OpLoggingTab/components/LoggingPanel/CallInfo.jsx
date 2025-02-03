@@ -178,12 +178,12 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     if (guess.note) {
       parts.push(guess.note)
     } else {
-      // if (qrz?.error) parts.push(qrz.error)
+      if (lookup?.error) parts.push(lookup.error)
       parts.push(qso?.their?.name ?? guess.name)
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qso?.their?.name, guess.name, guess.note])
+  }, [qso?.their?.name, guess.name, guess.note, lookup?.error])
 
   const scoreInfo = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)
