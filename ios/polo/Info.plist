@@ -90,7 +90,11 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>CodePushDeploymentKey</key>
-	<string>j1Ux2KScamgLBBbu3v0EgeFWLhWtLdfLk_A7d</string>
+	<string>Your_Deployment_Key</string>
+	<key>CodePushServerURL</key>
+	<string>https://api.revopush.org</string>
+	<key>CodePushDeploymentKey</key>
+	<string>RM65RMaL4D1qa1_EWfl247NSTbN8NJou3zF_Wl</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
