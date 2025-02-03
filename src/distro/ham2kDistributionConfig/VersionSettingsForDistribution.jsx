@@ -20,9 +20,9 @@ import DeviceInfo from 'react-native-device-info'
 import { List } from 'react-native-paper'
 
 export const UPDATE_TRACK_KEYS = {
-  Production: (Platform.OS === 'ios') ? 'sC0Sy_ImAi-XZCBDK-mdoLYO2FR7CD2vXw1MD' : 'XfaqlzjBp9SWZLCZQSfezxEOdlkNgLu4PYrDN',
-  Staging: (Platform.OS === 'ios') ? 'j1Ux2KScamgLBBbu3v0EgeFWLhWtLdfLk_A7d' : 'EIfkyoFTrEig6wBclCA0MBeY9H2GZBO1RoTaf',
-  Development: (Platform.OS === 'ios') ? 'GgYMX5qJm-w6SDnyfAsfBEFcDPPPgWpxOANAI' : 'fDguTumb3gkMNGzZjZE8tcab6tD_KV2hohf3y'
+  Production: (Platform.OS === 'ios') ? 'L5UdzrmFT0208XFi1CucrMvAcGrCNJou3zF_Wl' : 'rdesZCuf2YV7ltHu66Wlrv2pErQ1NJou3zF_Wl',
+  Staging: (Platform.OS === 'ios') ? 'e9hQcRNGE0vmPR0dICjAF9ybtf1PNJou3zF_Wl' : 'AS96FcFi8MU0ctXGV5UtexduM6FANJou3zF_Wl',
+  Development: (Platform.OS === 'ios') ? 'RM65RMaL4D1qa1_EWfl247NSTbN8NJou3zF_Wl' : 'BQMJ_XUuhnUNcRVdJooruI5h8TZ3NJou3zF_Wl'
 }
 export const UPDATE_TRACK_LABELS = {
   Production: 'Stable(ish)',
