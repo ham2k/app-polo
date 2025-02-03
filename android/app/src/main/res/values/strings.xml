@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">PoLo</string>
-    <string moduleConfig="true" name="CodePushDeploymentKey">EIfkyoFTrEig6wBclCA0MBeY9H2GZBO1RoTaf</string>
+    <string moduleConfig="true" name="CodePushServerUrl">https://api.revopush.org</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">BQMJ_XUuhnUNcRVdJooruI5h8TZ3NJou3zF_Wl</string>
 </resources>
