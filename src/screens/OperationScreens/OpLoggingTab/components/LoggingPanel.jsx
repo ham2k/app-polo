@@ -32,7 +32,7 @@ import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
-import { annotateQSO } from './LoggingPanel/useCallLookup'
+import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
 import { useNavigation } from '@react-navigation/native'
 import { findHooks } from '../../../../extensions/registry'
 import { trackEvent } from '../../../../distro'
@@ -112,6 +112,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
       }
       setQSO(nextQSO, { otherStateChanges })
+      dispatch(resetCallLookupCache())
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
         if (mainFieldRef?.current) {
           mainFieldRef.current.focus()

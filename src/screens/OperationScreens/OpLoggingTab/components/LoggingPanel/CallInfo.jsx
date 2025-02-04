@@ -88,21 +88,19 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   const styles = useThemedStyles(prepareStyles, themeColor)
   const online = useSelector(selectRuntimeOnline)
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
-  // console.log('\n\nCallInfo render')
-  const { call, guess, lookup, refs, status } = useCallLookup(qso)
 
-  // useEffect(() => {
-  //   console.log('CallInfo effect')
-  // }, [call, guess])
+  const { call, guess, lookup, refs, status, when } = useCallLookup(qso)
 
-  // console.log('CallInfo render with', { qsoCall: qso?.their?.call, qsoName: qso?.their?.guess?.name, qsoStatus: qso?.their?.lookup?.status, lookupCall: call, lookupName: guess?.name, lookupStatus: status, lookupWhen: when })
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    // console.log('CallInfo effect')
+    // console.log('CallInfo effect', { qsoCall: qso?.their?.call, qsoName: qso?.their?.guess?.name, qsoStatus: qso?.their?.lookup?.status, lookupCall: call, lookupName: guess?.name, lookupStatus: status })
     if (qso?.their?.call === call && status && qso?.their?.lookup?.status !== status) {
       // console.log('-- updateQSO!')
+      // We need to first clear the guess and lookup, otherwise the new values will be merged with the old ones
+      updateQSO && updateQSO({ their: { guess: undefined, lookup: undefined } })
+      // Then we update the QSO with the new values
       updateQSO && updateQSO({ their: { guess, lookup: { ...lookup, status } } })
     }
-  }, [updateQSO, guess, lookup, call, qso?.their?.call, qso?.their?.lookup?.status, status, qso?.their?.guess?.state])
+  }, [updateQSO, guess, lookup, call, qso?.their?.call, qso?.their?.lookup?.status, status, qso?.their?.guess.state, qso?.their?.guess?.name, when])
 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess.dxccCode)

@@ -31,7 +31,6 @@ import { Icon, Menu, Text } from 'react-native-paper'
 import { slashZeros } from '../../tools/stringTools'
 import { hasRef } from '../../tools/refTools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
-import { resetCallLookupCache } from './OpLoggingTab/components/LoggingPanel/useCallLookup'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -51,10 +50,6 @@ export default function OperationScreen (props) {
   useEffect(() => { // Ensure the clock is ticking
     dispatch(startTickTock())
     return () => dispatch(stopTickTock())
-  }, [dispatch])
-
-  useEffect(() => { // Reset caches
-    dispatch(resetCallLookupCache())
   }, [dispatch])
 
   useEffect(() => { // When starting, make sure all operation data is loaded
