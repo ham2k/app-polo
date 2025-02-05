@@ -9,7 +9,7 @@ import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/d
 import { findRef, refsToString } from '../../../tools/refTools'
 
 import { SOTAActivityOptions } from './SOTAActivityOptions'
-import { registerSOTADataFile, sotaFindOneByReference } from './SOTADataFile'
+import { registerSOTADataFile, sotaFindAllByLocation, sotaFindOneByReference } from './SOTADataFile'
 import { Info } from './SOTAInfo'
 import { SOTALoggingControl } from './SOTALoggingControl'
 import { SOTAAccountSetting } from './SOTAAccount'
@@ -17,6 +17,10 @@ import { SOTAPostSpot } from './SOTAPostSpot'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,
@@ -168,6 +172,24 @@ const ReferenceHandler = {
   },
 
   iconForQSO: Info.icon,
+
+  cloneRefTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+    if (operation?.grid) {
+      let info = parseCallsign(operation.stationCall || '')
+      info = annotateFromCountryFile(info)
+      const [lat, lon] = gridToLocation(operation.grid)
+
+      let nearby = await sotaFindAllByLocation(info.dxccCode, lat, lon, 0.25)
+      nearby = nearby.map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, { lat, lon })
+      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
+
+      return { type: ref.type, ref: nearby[0]?.ref }
+    } else {
+      return { type: ref.type }
+    }
+  },
 
   decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {

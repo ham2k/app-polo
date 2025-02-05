@@ -158,7 +158,7 @@ export default function OpSettingsTab ({ navigation, route }) {
         />
         <Ham2kListItem
           title="Clone Operation"
-          description="Start a new operation with the same settings"
+          description="Start a new operation with similar settings"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
           onPress={cloneOperation}
         />

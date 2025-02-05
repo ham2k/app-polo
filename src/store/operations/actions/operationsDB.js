@@ -7,16 +7,19 @@
 
 import UUID from 'react-native-uuid'
 import RNFetchBlob from 'react-native-blob-util'
+import Geolocation from '@react-native-community/geolocation'
 
 import { reportError } from '../../../distro'
 
-import { actions } from '../operationsSlice'
+import { findBestHook } from '../../../extensions/registry'
+import GLOBAL from '../../../GLOBAL'
 import { actions as qsosActions } from '../../qsos'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { sendOperationsToSyncService } from '../../sync'
-import GLOBAL from '../../../GLOBAL'
 import { selectSettings } from '../../settings'
+import { actions } from '../operationsSlice'
 import { mergeDataIntoOperation } from './setOperationData'
+import { locationToGrid6, locationToGrid8 } from '@ham2k/lib-maidenhead-grid'
 
 const operationFromRow = (row) => {
   const data = JSON.parse(row.data)
@@ -204,9 +207,60 @@ export const addNewOperationFromTemplate = (template) => async (dispatch, getSta
     operatorCall: template?.operatorCall,
     allStationCalls: template?.allStationCalls,
     stationCallPlus: template?.stationCallPlus,
-    stationCallPlusArray: template?.stationCallPlusArray,
+    stationCallPlusArray: template?.stationCallPlusArray
+  }
+  console.log('template', template)
 
-    refs: (template?.refs ?? []).map((ref) => ({ ...ref, ref: undefined }))
+  if (template.grid) {
+    newOperationData.grid = await new Promise((resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        info => {
+          const { latitude, longitude } = info.coords
+          if (settings?.useGrid8) resolve(locationToGrid8(latitude, longitude))
+          else resolve(locationToGrid6(latitude, longitude))
+        },
+        error => {
+          console.info('Geolocation error', error)
+          resolve()
+        }, {
+          enableHighAccuracy: true,
+          timeout: 5 * 1000 /* 5 seconds */,
+          maximumAge: 1000 * 60 * 5 /* 5 minutes */
+        }
+      )
+    })
+  }
+
+  const includedRefTypes = {}
+  newOperationData.refs = []
+  for (const ref of (template?.refs ?? [])) {
+    if (includedRefTypes[ref.type]) continue
+
+    includedRefTypes[ref.type] = true
+
+    const hook = findBestHook(`ref:${ref.type}`)
+    if (hook?.cloneRefTemplateWithDispatch) {
+      try {
+        // Let the hook decide how to clone the ref
+        newOperationData.refs.push(await dispatch(hook.cloneRefTemplateWithDispatch({ ref, operation: newOperationData })))
+      } catch (error) {
+        console.error('Error cloning ref', error)
+      }
+    } else if (hook?.cloneRefTemplate) {
+      try {
+        // Let the hook decide how to clone the ref
+        newOperationData.refs.push(hook.cloneRefTemplate({ ref, operation: newOperationData }))
+      } catch (error) {
+        console.error('Error cloning ref', error)
+      }
+    } else if (ref.ref) {
+      // Activities that use `ref` tend to also store more information
+      // so we default to just cloning the type
+      newOperationData.refs.push({ type: ref.type })
+    } else {
+      // Other activities we probably want to default to copying all the data
+      newOperationData.refs.push({ ...ref, ref: undefined })
+    }
   }
 
   let operation = await dispatch(mergeDataIntoOperation({ operation: {}, data: newOperationData }))

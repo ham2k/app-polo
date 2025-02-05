@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
-import { addNewOperation, addNewOperationFromTemplate, selectOperationsList } from '../../store/operations'
+import { addNewOperationFromTemplate, selectOperationsList } from '../../store/operations'
 import { selectRawSettings, selectSettings } from '../../store/settings'
 import Notices from './components/Notices'
 import OperationItem from './components/OperationItem'
