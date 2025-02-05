@@ -143,7 +143,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         }
       }, 10)
     }
-  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO])
+  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch])
 
   useEffect(() => { // Validate and analize the callsign
     let call = qso?.their?.call ?? ''

@@ -27,6 +27,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation))
   const qsos = useSelector(state => selectQSOs(state, route.params.operation))
 
+  // eslint-disable-next-line no-unused-vars
   const [doReload, setDoReload] = useState()
 
   useEffect(() => {

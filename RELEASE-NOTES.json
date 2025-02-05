@@ -3,7 +3,9 @@
     "name": "February '25 (pre 1)",
     "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA 0004",
     "changes": [
-      "Better handling and display of QRZ errors"
+      "Better handling and display of QRZ errors",
+      "New Operation now copies settings from the most recent one",
+      "Option to clone any operation settings"
     ]
   },
   "25.1.3": {

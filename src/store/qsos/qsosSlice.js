@@ -83,7 +83,10 @@ export const selectQSOs = createSelector(
 )
 
 export const selectSectionedQSOs = createSelector(
-  (state, uuid) => selectQSOs(state, uuid),
+  (state, uuid) => {
+    console.log('selectSectionedQSOs', uuid)
+    return selectQSOs(state, uuid)
+  },
   (state, uuid) => selectSettings(state),
   (state, uuid) => selectOperation(state, uuid),
   (qsos, settings, operation) => analyzeAndSectionQSOs({ qsos, settings, operation })

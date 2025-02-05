@@ -15,6 +15,8 @@ import { actions as qsosActions } from '../../qsos'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { sendOperationsToSyncService } from '../../sync'
 import GLOBAL from '../../../GLOBAL'
+import { selectSettings } from '../../settings'
+import { mergeDataIntoOperation } from './setOperationData'
 
 const operationFromRow = (row) => {
   const data = JSON.parse(row.data)
@@ -190,6 +192,25 @@ export const addNewOperation = (operation) => async (dispatch) => {
 
   dispatch(actions.setOperation(operation))
   await dispatch(saveOperation(operation))
+  return operation
+}
+
+export const addNewOperationFromTemplate = (template) => async (dispatch, getState) => {
+  template = template || {}
+  const settings = selectSettings(getState())
+  const newOperationData = {
+    title: 'New Operation',
+    stationCall: template?.stationCall ?? settings.operatorCall,
+    operatorCall: template?.operatorCall,
+    allStationCalls: template?.allStationCalls,
+    stationCallPlus: template?.stationCallPlus,
+    stationCallPlusArray: template?.stationCallPlusArray,
+
+    refs: (template?.refs ?? []).map((ref) => ({ ...ref, ref: undefined }))
+  }
+
+  let operation = await dispatch(mergeDataIntoOperation({ operation: {}, data: newOperationData }))
+  operation = await dispatch(addNewOperation(operation))
   return operation
 }
 
