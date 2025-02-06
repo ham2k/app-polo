@@ -21,7 +21,7 @@
       "localizations" : [
         {
           "description" : "5 5 we hear you!",
-          "displayName" : "One Time Contribution",
+          "displayName" : "This app is nice.",
           "locale" : "en_US"
         }
       ],
@@ -30,13 +30,13 @@
       "type" : "NonConsumable"
     },
     {
-      "displayPrice" : "9.99",
+      "displayPrice" : "12.99",
       "familyShareable" : false,
       "internalID" : "AF0AA783",
       "localizations" : [
         {
           "description" : "",
-          "displayName" : "One Time Contribution",
+          "displayName" : "This app is great!",
           "locale" : "en_US"
         }
       ],
@@ -45,13 +45,13 @@
       "type" : "NonConsumable"
     },
     {
-      "displayPrice" : "0.99",
+      "displayPrice" : "29.99",
       "familyShareable" : false,
       "internalID" : "B130D08F",
       "localizations" : [
         {
           "description" : "",
-          "displayName" : "",
+          "displayName" : "This app is AWESOME!",
           "locale" : "en_US"
         }
       ],
