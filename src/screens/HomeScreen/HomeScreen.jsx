@@ -144,10 +144,16 @@ export default function HomeScreen ({ navigation }) {
   }, [navigation])
 
   const handleNewOperation = useCallback(async () => {
-    const operation = await dispatch(addNewOperationFromTemplate(operations[0]))
+    let template
+    if (settings.cloneLastOperation !== false) {
+      template = operations[0]
+    } else {
+      template = {}
+    }
+    const operation = await dispatch(addNewOperationFromTemplate(template))
     trackEvent('create_operation')
     navigation.navigate('Operation', { uuid: operation.uuid, operation, _isNew: true })
-  }, [dispatch, navigation, operations])
+  }, [dispatch, navigation, operations, settings.cloneLastOperation])
 
   const navigateToOperation = useCallback((operation) => {
     navigation.navigate('Operation', { uuid: operation.uuid, operation })

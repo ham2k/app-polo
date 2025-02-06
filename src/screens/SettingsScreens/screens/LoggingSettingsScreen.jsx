@@ -42,8 +42,15 @@ export default function LoggingSettingsScreen ({ navigation }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <Ham2kListSection>
+          <Ham2kListItem title={'Clone Settings from Previous'}
+            description={settings.cloneLastOperation !== false ? 'Settings for new operations are based on the most recent one' : 'New operations start with default settings' }
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
+            right={() => <Switch value={settings.cloneLastOperation !== false} onValueChange={(value) => dispatch(setSettings({ cloneLastOperation: value })) } />}
+            onPress={() => dispatch(setSettings({ cloneLastOperation: !settings.cloneLastOperation }))}
+          />
+
           <Ham2kListItem title={'Leftie Mode'}
-            description={settings.leftieMode ? 'Improved layout for left-handed users' : 'Regular layout for right-handed users' }
+            description={settings.leftieMode ? 'Use layout for left-handed users' : 'Use layout for right-handed users' }
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="hand-front-left-outline" />}
             right={() => <Switch value={!!settings.leftieMode} onValueChange={(value) => dispatch(setSettings({ leftieMode: value })) } />}
             onPress={() => dispatch(setSettings({ leftieMode: !settings.leftieMode }))}
