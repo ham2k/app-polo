@@ -9,7 +9,7 @@
       }
     ]
   },
-  "identifier" : "76F9140A",
+  "identifier" : "7B86B79C",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -20,9 +20,7 @@
     "_applicationInternalID" : "6478713938",
     "_developerTeamID" : "T56H72Q4W5",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 760549951.57152402,
-    "_locale" : "en_US",
-    "_storefront" : "USA",
+    "_lastSynchronizedDate" : 760492255.82588303,
     "_storeKitErrors" : [
       {
         "current" : null,

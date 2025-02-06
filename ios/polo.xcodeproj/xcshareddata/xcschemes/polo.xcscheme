@@ -79,7 +79,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <StoreKitConfigurationFileReference
-         identifier = "../polo/Prod-StoreKit-Config.storekit">
+         identifier = "../polo/Test-StoreKit-Config.storekit">
       </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
