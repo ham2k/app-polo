@@ -14,13 +14,57 @@
 
   ],
   "products" : [
-
+    {
+      "displayPrice" : "29.99",
+      "familyShareable" : false,
+      "internalID" : "6741682786",
+      "localizations" : [
+        {
+          "description" : "Help Ham2K with your support!",
+          "displayName" : "This app is AWESOME!!!",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "ios_supporter_2025_l_sku",
+      "referenceName" : "Supporter 2025 L",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "12.99",
+      "familyShareable" : false,
+      "internalID" : "6741682830",
+      "localizations" : [
+        {
+          "description" : "Help Ham2K with your support!",
+          "displayName" : "This app is great!",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "ios_supporter_2025_m_sku",
+      "referenceName" : "Supporter 2025 M",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "6741682765",
+      "localizations" : [
+        {
+          "description" : "Help Ham2k with your support!",
+          "displayName" : "This app is nice.",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "ios_supporter_2025_s_sku",
+      "referenceName" : "Supporter 2025 S",
+      "type" : "NonConsumable"
+    }
   ],
   "settings" : {
     "_applicationInternalID" : "6478713938",
     "_developerTeamID" : "T56H72Q4W5",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 760549951.57152402,
+    "_lastSynchronizedDate" : 760625008.63582206,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
