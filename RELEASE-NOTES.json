@@ -5,9 +5,7 @@
     "changes": [
       "Belgian Lighthouses and Lightships",
       "Better handling and display of QRZ errors",
-      "Option to clone any operation settings",
-      "POTA self-spotting tweaks and fixes",
-      "Text expansion for callsign notes (prepend with `..` or `//`)"
+      "Option to clone any operation settings"
     ]
   },
   "25.1.3": {
