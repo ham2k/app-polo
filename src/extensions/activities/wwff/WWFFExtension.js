@@ -140,7 +140,11 @@ const ReferenceHandler = {
 
   iconForQSO: Info.icon,
 
-  cloneRefTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+  extractTemplate: ({ ref, operation }) => {
+    return { type: ref.type }
+  },
+
+  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
     if (operation?.grid) {
       let info = parseCallsign(operation.stationCall || '')
       info = annotateFromCountryFile(info)

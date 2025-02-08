@@ -6,14 +6,14 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { List } from 'react-native-paper'
 
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNewOperationFromTemplate, selectOperation } from '../../../store/operations'
+import { addNewOperation, fillOperationFromTemplate, getOperationTemplate, selectOperation, setOperationData } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
@@ -57,8 +57,19 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
+  const [usedTemplate, setUsedTemplate] = useState(operation.template)
+
+  useEffect(() => {
+    if (operation.template) {
+      console.log('template effect', operation.template)
+      const template = operation.template
+      delete operation.template
+      dispatch(setOperationData({ ...operation, template: undefined }))
+      dispatch(fillOperationFromTemplate(operation, template))
+    }
+  }, [dispatch, operation])
+
   const [stationInfo, stationInfoColor] = useMemo(() => {
-    console.log('stationInfo', operation)
     let stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
     if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
       stationCall += ` + ${operation.stationCallPlusArray.join(', ')}`
@@ -85,7 +96,8 @@ export default function OpSettingsTab ({ navigation, route }) {
   const opSettingsHooks = useMemo(() => findHooks('opSetting'), [])
 
   const cloneOperation = useCallback(async () => {
-    const newOperation = await dispatch(addNewOperationFromTemplate(operation))
+    const template = await dispatch(getOperationTemplate(operation))
+    const newOperation = await dispatch(addNewOperation({ template }))
     trackEvent('create_operation')
 
     navigation.navigate('Home')
