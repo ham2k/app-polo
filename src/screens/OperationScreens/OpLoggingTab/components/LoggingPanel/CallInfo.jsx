@@ -100,7 +100,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       // Then we update the QSO with the new values
       updateQSO && updateQSO({ their: { guess, lookup: { ...lookup, status } } })
     }
-  }, [updateQSO, guess, lookup, call, qso?.their?.call, qso?.their?.lookup?.status, status, qso?.their?.guess.state, qso?.their?.guess?.name, when])
+  }, [updateQSO, guess, lookup, call, qso?.their?.call, qso?.their?.lookup?.status, status, qso?.their?.guess?.state, qso?.their?.guess?.name, when])
 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess.dxccCode)
@@ -176,12 +176,12 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     if (guess.note) {
       parts.push(guess.note)
     } else {
-      if (lookup?.error) parts.push(lookup.error)
+      if (lookup?.error && call?.length > 3) parts.push(lookup.error)
       parts.push(qso?.their?.name ?? guess.name)
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qso?.their?.name, guess.name, guess.note, lookup?.error])
+  }, [guess.note, guess.name, lookup.error, call?.length, qso?.their?.name])
 
   const scoreInfo = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)

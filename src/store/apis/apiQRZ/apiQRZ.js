@@ -67,6 +67,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       url: '',
       params: {
         ...defaultParams(api),
+        s: undefined,
         username: login,
         password
       }
