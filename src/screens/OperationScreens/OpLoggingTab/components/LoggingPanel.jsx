@@ -409,9 +409,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
   }, [])
 
   const opMessage = useMemo(() => {
-    if (operationError) return operationError
-    if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information' }
-    if (commandInfo?.message) return { text: `**${commandInfo.message}**`, icon: 'chevron-right-box' }
+    if (operationError) return { text: operationError, icon: 'alert-circle', hideCallInfo: true }
+    if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information', hideCallInfo: false }
+    if (commandInfo?.message) return { text: `**${commandInfo.message}**`, icon: 'chevron-right-box', hideCallInfo: true }
     return undefined
   }, [operationError, commandInfo?.message, loggingState.infoMessage])
 
@@ -450,7 +450,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                   </View>
                 ) : (
                   <>
-                    {qso?.their?.call?.length > 2 && (
+                    {!opMessage?.hideCallInfo && qso?.their?.call?.length > 2 && (
                       <CallInfo
                         qso={qso}
                         qsos={activeQSOs}
@@ -463,7 +463,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                         updateQSO={updateQSO}
                       />
                     )}
-                    {(opMessage || (qso?.their?.call?.length || 0) < 2) && (
+                    {(opMessage?.text || (qso?.their?.call?.length || 0) < 2) && (
                       <OpInfo
                         message={opMessage}
                         operation={operation}
