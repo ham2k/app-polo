@@ -48,7 +48,12 @@ export function SpotterControlInputs (props) {
             message: `Spot at ${fmtFreqInMHz(vfo.freq)}`,
             disabled: false
           })
-          if (comments === undefined) setComments(operation?.local?.spottedFreq ? 'QSY ' : 'QRV ')
+          console.log('comments', `[${comments}]`)
+          if (comments === undefined || comments.indexOf('QRV') === 0) {
+            let suggested = operation?.local?.spottedFreq ? 'QSY ' : 'QRV '
+            if (operation?.stationCallPlusArray?.length > 0) suggested += `${operation?.stationCallPlusArray?.length + 1} ops `
+            setComments(suggested)
+          }
         } else if (now - (operation?.local?.spottedAt || 0) > (1000 * SECONDS_UNTIL_RESPOT)) {
           setSpotterUI({
             message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
