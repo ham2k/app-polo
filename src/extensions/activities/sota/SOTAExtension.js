@@ -223,7 +223,6 @@ const ReferenceHandler = {
 
   suggestExportOptions: ({ operation, qsos, ref, settings }) => {
     if (ref?.type === Info.activationType && ref?.ref) {
-      console.log('SOTA Activator')
       return [{
         format: 'adif',
         exportType: `${Info.key}-activator`,

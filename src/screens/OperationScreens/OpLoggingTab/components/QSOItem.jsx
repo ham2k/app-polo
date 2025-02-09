@@ -30,14 +30,12 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
     try {
       (refHandlers || []).forEach(handler => {
         const x = handler.relevantInfoForQSOItem({ qso })
-        if (x) {
-          info = info.concat(x.trim())
-        }
+        if (x) info = info.concat(x)
       })
     } catch (e) {
       console.error('Error in QSOItem', e)
     }
-    return info.filter(x => x).join(' ')
+    return info.filter(x => x).map(x => x.trim()).join(' ')
   }, [qso, refHandlers])
 
   const pressHandler = useCallback(() => {
