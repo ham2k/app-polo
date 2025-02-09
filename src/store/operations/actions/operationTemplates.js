@@ -11,8 +11,7 @@ import { findBestHook } from '../../../extensions/registry'
 import { locationToGrid6, locationToGrid8 } from '@ham2k/lib-maidenhead-grid'
 import { setOperationData } from './setOperationData'
 
-export const getOperationTemplate = (operation) => async (dispatch, getState) => {
-  const settings = selectSettings(getState())
+export const getOperationTemplate = ({ operation, settings }) => {
   const template = {
     stationCall: operation?.stationCall ?? settings.operatorCall,
     operatorCall: operation?.operatorCall,
@@ -20,7 +19,6 @@ export const getOperationTemplate = (operation) => async (dispatch, getState) =>
     stationCallPlus: operation?.stationCallPlus,
     stationCallPlusArray: operation?.stationCallPlusArray
   }
-  console.log('template', template)
 
   if (operation.grid) {
     template.grid = true
@@ -52,6 +50,41 @@ export const getOperationTemplate = (operation) => async (dispatch, getState) =>
   }
 
   return template
+}
+
+export const getAllOperationTemplates = ({ settings, operations }) => {
+  const templateKeys = {}
+  const templates = []
+  for (const operation of operations) {
+    const template = getOperationTemplate({ operation, settings })
+
+    const keyParts = [template.allStationCalls ?? template.stationCall]
+    if (template.operatorCall) keyParts.push(template.operatorCall)
+
+    template.callsDescription = template.allStationCalls ?? template.stationCall
+    if (template.operatorCall && template.operatorCall !== template.allStationCalls) template.callsDescription += ` (op ${template.operatorCall})`
+
+    if (template.refs.length > 0) {
+      keyParts.push(...template.refs.map(r => r.type).sort())
+      template.refsDescription = template.refs.map(r => {
+        const hook = findBestHook(`ref:${r.type}`)
+        return hook?.shortName ?? r.type.toUpperCase()
+      }).sort().join(', ')
+    }
+
+    if (template.grid) keyParts.push('grid')
+    const key = keyParts.join('|')
+
+    template.key = key
+
+    if (templateKeys[key]) {
+      templateKeys[key] += 1
+    } else {
+      templateKeys[key] = 1
+      templates.push(template)
+    }
+  }
+  return templates.map(t => ({ ...t, count: templateKeys[t.key] })).sort((a, b) => b.count - a.count)
 }
 
 export const fillOperationFromTemplate = (operation, template) => async (dispatch, getState) => {

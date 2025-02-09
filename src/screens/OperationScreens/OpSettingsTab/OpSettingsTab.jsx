@@ -13,7 +13,7 @@ import { List } from 'react-native-paper'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNewOperation, fillOperationFromTemplate, getOperationTemplate, selectOperation, setOperationData } from '../../../store/operations'
+import { addNewOperation, fillOperationFromTemplate, getAllOperationTemplates, getOperationTemplate, selectOperation, selectOperationsList, setOperationData } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
@@ -57,15 +57,27 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
-  const [usedTemplate, setUsedTemplate] = useState(operation.template)
+  const [templates, setTemplates] = useState()
+  const [templateLimit, setTemplateLimit] = useState(3)
+  useEffect(() => {
+    if (operation._isNew) {
+      dispatch(async (_dispatch, getState) => {
+        const operations = selectOperationsList(getState())
+        const newTemplates = getAllOperationTemplates({ operations, settings })
+        const currentTemplate = getOperationTemplate({ operation, settings })
+        setTemplates(newTemplates.filter(t => t.key !== currentTemplate.key))
+        dispatch(setOperationData({ uuid: operation.uuid, _isNew: undefined }))
+      })
+    }
+  }, [dispatch, operation, settings])
 
   useEffect(() => {
     if (operation.template) {
-      console.log('template effect', operation.template)
       const template = operation.template
       delete operation.template
-      dispatch(setOperationData({ ...operation, template: undefined }))
+      dispatch(setOperationData({ uuid: operation.uuid, template: undefined, _isNew: undefined }))
       dispatch(fillOperationFromTemplate(operation, template))
+      setTemplates([])
     }
   }, [dispatch, operation])
 
@@ -96,7 +108,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   const opSettingsHooks = useMemo(() => findHooks('opSetting'), [])
 
   const cloneOperation = useCallback(async () => {
-    const template = await dispatch(getOperationTemplate(operation))
+    const template = getOperationTemplate({ operation, settings })
     const newOperation = await dispatch(addNewOperation({ template }))
     trackEvent('create_operation')
 
@@ -104,11 +116,36 @@ export default function OpSettingsTab ({ navigation, route }) {
     setTimeout(() => {
       navigation.navigate('Operation', { uuid: newOperation.uuid, operation: newOperation, _isNew: true }, false)
     }, 100)
-  }, [dispatch, navigation, operation])
+  }, [dispatch, navigation, operation, settings])
 
   return (
     <ScrollView style={{ flex: 1 }}>
       <Ham2kListSection>
+
+        {templates?.length > 0 && (
+          <>
+            {templates.slice(0, templateLimit).map((template) => (
+              <Ham2kListItem
+                key={template.key}
+                title={`${template.callsDescription}`}
+                description={`Template for ${template.refsDescription ?? 'General Operation'}`}
+                titleStyle={{ color: styles.colors.important }}
+                descriptionStyle={{ color: styles.colors.important }}
+                left={() => <List.Icon color={styles.colors.important} style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
+                onPress={() => { dispatch(setOperationData({ uuid: operation.uuid, template })) }}
+              />
+            ))}
+            {templates.length > templateLimit && (
+              <Ham2kListItem
+                title={'Show More Templates'}
+                description={`${templates.length - templateLimit} more templates available`}
+                titleStyle={{ color: styles.colors.important }}
+                descriptionStyle={{ color: styles.colors.important }}
+                onPress={() => { setTemplateLimit(templateLimit + 10) }}
+              />
+            )}
+          </>
+        )}
 
         <Ham2kListItem
           title="Station & Operator"
@@ -169,7 +206,7 @@ export default function OpSettingsTab ({ navigation, route }) {
           onPress={() => navigation.navigate('OperationData', { operation: operation.uuid })}
         />
         <Ham2kListItem
-          title="Clone Operation"
+          title="Use as template"
           description="Start a new operation with similar settings"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
           onPress={cloneOperation}

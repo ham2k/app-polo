@@ -196,6 +196,8 @@ export const addNewOperation = (operation) => async (dispatch, getState) => {
   operation.stationCall = operation.stationCall || settings.operatorCall
   operation.refs = operation.refs || []
 
+  operation._isNew = true
+
   dispatch(actions.setOperation(operation))
   await dispatch(saveOperation(operation))
   return operation

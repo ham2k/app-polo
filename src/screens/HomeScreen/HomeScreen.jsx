@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
-import { addNewOperation, getOperationTemplate, selectOperationsList } from '../../store/operations'
+import { addNewOperation, selectOperationsList } from '../../store/operations'
 import { selectRawSettings, selectSettings } from '../../store/settings'
 import Notices from './components/Notices'
 import OperationItem from './components/OperationItem'
@@ -144,16 +144,10 @@ export default function HomeScreen ({ navigation }) {
   }, [navigation])
 
   const handleNewOperation = useCallback(async () => {
-    let operation
-    if (false) { // settings.cloneLastOperation !== false) {
-      const template = await dispatch(getOperationTemplate(operations[0]))
-      operation = await dispatch(addNewOperation({ template }))
-    } else {
-      operation = await dispatch(addNewOperation())
-    }
+    const operation = await dispatch(addNewOperation())
     trackEvent('create_operation')
     navigation.navigate('Operation', { uuid: operation.uuid, operation, _isNew: true })
-  }, [dispatch, navigation, operations])
+  }, [dispatch, navigation])
 
   const navigateToOperation = useCallback((operation) => {
     navigation.navigate('Operation', { uuid: operation.uuid, operation })
