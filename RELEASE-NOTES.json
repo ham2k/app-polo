@@ -1,14 +1,14 @@
 {
-  "25.2.0-pre4": {
-    "name": "February '25 (pre 4)",
+  "25.2.0-pre6": {
+    "name": "February '25 (pre 6)",
     "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA 0004",
     "changes": [
-      "Belgium Castles and Fortresses"
+      "Operation Templates",
+      "Belgian Lighthouses and Lightships (by M1SDH)",
+      "Belgium Castles and Fortresses (by M1SDH)",
       "Better handling and display of QRZ errors",
-      "Option to clone any operation settings",
       "POTA self-spotting tweaks and fixes",
-      "Text expansion for callsign notes (prepend with `..` or `//`)",
-      "Add Belgian Lighthouses and Lightships"
+      "Text expansion for callsign notes (prepend with `..` or `//`)"
     ]
   },
   "25.1.3": {
