@@ -6,20 +6,21 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { List } from 'react-native-paper'
 
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { useSelector } from 'react-redux'
-import { selectOperation } from '../../../store/operations'
+import { useDispatch, useSelector } from 'react-redux'
+import { addNewOperation, fillOperationFromTemplate, getOperationTemplate, selectOperation, setOperationData } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
+import { trackEvent } from '../../../distro'
 
 function prepareStyles (baseStyles) {
   return {
@@ -52,14 +53,26 @@ export default function OpSettingsTab ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
 
+  const dispatch = useDispatch()
+
   const [currentDialog, setCurrentDialog] = useState()
 
+  const [usedTemplate, setUsedTemplate] = useState(operation.template)
+
+  useEffect(() => {
+    if (operation.template) {
+      console.log('template effect', operation.template)
+      const template = operation.template
+      delete operation.template
+      dispatch(setOperationData({ ...operation, template: undefined }))
+      dispatch(fillOperationFromTemplate(operation, template))
+    }
+  }, [dispatch, operation])
+
   const [stationInfo, stationInfoColor] = useMemo(() => {
-    console.log('stationInfo', operation)
     let stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
     if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
       stationCall += ` + ${operation.stationCallPlusArray.join(', ')}`
-      console.log('**', stationCall)
     }
     const operatorCall = operation?.local?.operatorCall ?? settings?.operatorCall ?? ''
     if (stationCall && operatorCall && stationCall !== operatorCall) {
@@ -81,6 +94,17 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const activityHooks = useMemo(() => findHooks('activity'), [])
   const opSettingsHooks = useMemo(() => findHooks('opSetting'), [])
+
+  const cloneOperation = useCallback(async () => {
+    const template = await dispatch(getOperationTemplate(operation))
+    const newOperation = await dispatch(addNewOperation({ template }))
+    trackEvent('create_operation')
+
+    navigation.navigate('Home')
+    setTimeout(() => {
+      navigation.navigate('Operation', { uuid: newOperation.uuid, operation: newOperation, _isNew: true }, false)
+    }, 100)
+  }, [dispatch, navigation, operation])
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -143,6 +167,12 @@ export default function OpSettingsTab ({ navigation, route }) {
           description="Export, import and manage data"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
           onPress={() => navigation.navigate('OperationData', { operation: operation.uuid })}
+        />
+        <Ham2kListItem
+          title="Clone Operation"
+          description="Start a new operation with similar settings"
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
+          onPress={cloneOperation}
         />
       </Ham2kListSection>
 

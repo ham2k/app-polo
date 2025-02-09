@@ -138,7 +138,7 @@ export default function SyncSettingsScreen ({ navigation }) {
         <Ham2kListSection title={'This Device'}>
           <Ham2kListItem
             key={lofiData?.client?.uuid}
-            title={`${lofiData?.client?.name} (${lofiData?.client?.uuid?.slice(0, 8)})`}
+            title={lofiData?.client?.name ? `${lofiData?.client?.name} (${lofiData?.client?.uuid?.slice(0, 8) ?? '?'})` : 'Not authenticated'}
             description={syncStatus}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone" />}
           />

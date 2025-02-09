@@ -117,14 +117,15 @@ const ReferenceHandler = {
     return parts
   },
 
-  adifFieldsForOneQSO: ({ qso, operation }) => {
-    return ([{ CONTEST_ID: 'WFD' }])
+  adifFieldsForOneQSO: ({ qso, operation, common, ref, mainHandler }) => {
+    // Include `CONTEST_ID` even if we're not the main handler, if the Operation is a WFD operation
+    if (findRef(common, Info.key)) {
+      return ([{ CONTEST_ID: 'WFD' }])
+    }
   },
 
   relevantInfoForQSOItem: ({ qso, operation }) => {
-    if (operation?.refs?.find(r => r.type === Info.key)) {
-      return [qso.their.exchange]
-    }
+    return [qso.their.exchange]
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref, score }) => {
@@ -327,12 +328,15 @@ function mainExchangeForOperation (props) {
 }
 
 function processQSOBeforeSave ({ qso, qsos, operation }) {
-  const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
-  ref.class = ref.class ?? _defaultClassFor({ qso, qsos, operation })
-  ref.location = ref.location ?? _defaultLocationFor({ qso, qsos, operation })
-
-  qso.refs = replaceRef(qso.refs, Info.key, ref)
-  qso.their.exchange = [ref.class, ref.location].join(' ')
+  if (findRef(operation, Info.key)) {
+    const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
+    ref.class = ref.class ?? _defaultClassFor({ qso, qsos, operation })
+    ref.location = ref.location ?? _defaultLocationFor({ qso, qsos, operation })
+    if (ref.class || ref.location) {
+      qso.refs = replaceRef(qso.refs, Info.key, ref)
+      qso.their.exchange = [ref.class, ref.location].join(' ')
+    }
+  }
   return qso
 }
 

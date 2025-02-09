@@ -42,81 +42,87 @@ export const setOperationData = (data) => async (dispatch, getState) => {
   try {
     const { uuid } = data
     const operation = selectOperation(getState(), uuid) ?? {}
-    const now = Date.now()
+    const mergedOperation = await dispatch(mergeDataIntoOperation({ operation, data }))
 
-    operation.createdAtMillis = operation.createdAtMillis || now
-    operation.createdOnDeviceId = operation.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
-    operation.updatedAtMillis = now
-    operation.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
-
-    if (data.refs) {
-      const decoratedRefs = []
-      for (const ref of data.refs) {
-        let decoratedRef = ref
-        const hooks = findHooks(`ref:${ref.type}`)
-        for (const hook of hooks) {
-          if (hook?.decorateRefWithDispatch) {
-            decoratedRef = await dispatch(hook.decorateRefWithDispatch(decoratedRef))
-          } else if (hook?.decorateRef) {
-            decoratedRef = hook.decorateRef(decoratedRef)
-          }
-        }
-        decoratedRefs.push(decoratedRef)
-      }
-
-      data.refs = decoratedRefs.filter(ref => ref?.type)
-    }
-
-    if (data.description) {
-      data.title = data.description
-      data.subtitle = ''
-    } else if (data.refs && !operation.description) {
-      const referenceTitles = data.refs.map(ref => {
-        const hooks = findHooks(`ref:${ref?.type}`)
-        return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref)).filter(x => x)[0]
-      }).filter(x => x)
-
-      const titleParts = []
-
-      const plainTitles = referenceTitles.map(ref => ref.title).filter(x => x).join(', ')
-      const forTitles = referenceTitles.map(ref => ref.for).filter(x => x).join(', ')
-      const atTitles = referenceTitles.map(ref => ref.at).filter(x => x).join(', ')
-      if (plainTitles) titleParts.push(plainTitles)
-      if (forTitles) titleParts.push('for ' + forTitles)
-      if (atTitles) titleParts.push('at ' + atTitles)
-
-      const subtitleParts = referenceTitles.map(ref => ref.subtitle).filter(x => x)
-
-      if (titleParts.length) {
-        data.title = titleParts.join(' ')
-        data.subtitle = subtitleParts.join(' • ')
-      } else {
-        data.title = 'General Operation'
-        data.subtitle = ''
-      }
-    }
-
-    if (!operation.title && (!data.title || data.title === 'at ')) {
-      data.title = 'General Operation'
-      data.subtitle = ''
-    }
-
-    // If no grid is set, or the grid is set from refs, and this update include refs, then update the grid too
-    if (!data.grid && data.refs && (!operation.grid || operation.gridSource === 'refs')) {
-      const gridRef = (data.refs || []).find(ref => ref.grid)
-      if (gridRef) {
-        data.grid = gridRef.grid
-        data.gridSource = 'refs'
-      } else {
-        data.grid = ''
-        data.gridSource = ''
-      }
-    }
-
-    await dispatch(actions.setOperation(data))
+    await dispatch(actions.setOperation(mergedOperation))
     const savedOperation = selectOperation(getState(), uuid) ?? {}
     return debouncedDispatch(dispatch, () => saveOperation(savedOperation))
   } catch (e) {
     reportError('Error in setOperationData', e)
   }
+}
+
+export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, getState) => {
+  const now = Date.now()
+
+  operation.createdAtMillis = operation.createdAtMillis || now
+  operation.createdOnDeviceId = operation.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
+  operation.updatedAtMillis = now
+  operation.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
+
+  if (data.refs) {
+    const decoratedRefs = []
+    for (const ref of data.refs) {
+      let decoratedRef = ref
+      const hooks = findHooks(`ref:${ref.type}`)
+      for (const hook of hooks) {
+        if (hook?.decorateRefWithDispatch) {
+          decoratedRef = await dispatch(hook.decorateRefWithDispatch(decoratedRef))
+        } else if (hook?.decorateRef) {
+          decoratedRef = hook.decorateRef(decoratedRef)
+        }
+      }
+      decoratedRefs.push(decoratedRef)
+    }
+
+    data.refs = decoratedRefs.filter(ref => ref?.type)
+  }
+
+  if (data.description) {
+    data.title = data.description
+    data.subtitle = ''
+  } else if (data.refs && !operation.description) {
+    const referenceTitles = data.refs.map(ref => {
+      const hooks = findHooks(`ref:${ref?.type}`)
+      return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref)).filter(x => x)[0]
+    }).filter(x => x)
+
+    const titleParts = []
+
+    const plainTitles = referenceTitles.map(ref => ref.title).filter(x => x).join(', ')
+    const forTitles = referenceTitles.map(ref => ref.for).filter(x => x).join(', ')
+    const atTitles = referenceTitles.map(ref => ref.at).filter(x => x).join(', ')
+    if (plainTitles) titleParts.push(plainTitles)
+    if (forTitles) titleParts.push('for ' + forTitles)
+    if (atTitles) titleParts.push('at ' + atTitles)
+
+    const subtitleParts = referenceTitles.map(ref => ref.subtitle).filter(x => x)
+
+    if (titleParts.length) {
+      data.title = titleParts.join(' ')
+      data.subtitle = subtitleParts.join(' • ')
+    } else {
+      data.title = 'General Operation'
+      data.subtitle = ''
+    }
+  }
+
+  if (!operation.title && (!data.title || data.title === 'at ')) {
+    data.title = 'General Operation'
+    data.subtitle = ''
+  }
+
+  // If no grid is set, or the grid is set from refs, and this update include refs, then update the grid too
+  if (!data.grid && data.refs && (!operation.grid || operation.gridSource === 'refs')) {
+    const gridRef = (data.refs || []).find(ref => ref.grid)
+    if (gridRef) {
+      data.grid = gridRef.grid
+      data.gridSource = 'refs'
+    } else {
+      data.grid = ''
+      data.gridSource = ''
+    }
+  }
+
+  return { ...operation, ...data }
 }

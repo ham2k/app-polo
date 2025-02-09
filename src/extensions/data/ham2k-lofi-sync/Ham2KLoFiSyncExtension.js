@@ -33,7 +33,7 @@ const Extension = {
 }
 export default Extension
 
-const DEFAULT_LOFI_SERVER = 'http://10.136.1.123:3000' // 'https://dev.lofi.ham2k.net'
+const DEFAULT_LOFI_SERVER = 'https://dev.lofi.ham2k.net'
 
 const DEBUG = true
 
@@ -80,10 +80,11 @@ const SyncHook = {
 async function requestWithAuth ({ dispatch, getState, url, method, body, params }) {
   try {
     console.log('Ham2K LoFi request', { url, method })
+    const settings = selectSettings(getState())
+
     let { server, account } = selectLocalExtensionData(getState(), Info.key) || {}
     server = server ?? DEFAULT_LOFI_SERVER
 
-    const { operatorCall } = selectSettings(getState())
     let token = GLOBAL.syncLoFiToken
     const secret = Config.HAM2K_LOFI_SECRET || 'no-secret'
 
@@ -107,7 +108,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
               secret
             },
             account: {
-              call: operatorCall
+              call: settings.operatorCall
             }
           })
         })

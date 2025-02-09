@@ -48,5 +48,6 @@ export const POTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
         return false
       }
     }
+    return true
   }
 }

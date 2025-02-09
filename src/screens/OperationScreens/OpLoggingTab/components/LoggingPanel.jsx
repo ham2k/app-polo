@@ -32,7 +32,7 @@ import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
-import { annotateQSO } from './LoggingPanel/useCallLookup'
+import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
 import { useNavigation } from '@react-navigation/native'
 import { findHooks } from '../../../../extensions/registry'
 import { trackEvent } from '../../../../distro'
@@ -112,6 +112,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
       }
       setQSO(nextQSO, { otherStateChanges })
+      dispatch(resetCallLookupCache())
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
         if (mainFieldRef?.current) {
           mainFieldRef.current.focus()
@@ -142,7 +143,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         }
       }, 10)
     }
-  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO])
+  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch])
 
   useEffect(() => { // Validate and analize the callsign
     let call = qso?.their?.call ?? ''
@@ -184,7 +185,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       } else if (value) {
         guess = annotateFromCountryFile({ prefix: value, baseCall: value })
       }
-      updateQSO({ their: { call: value, guess }, qsl: undefined })
+      updateQSO({ their: { call: value, guess, lookup: undefined }, qsl: undefined })
     } else if (fieldId === 'theirSent') {
       updateQSO({ their: { sent: value } })
     } else if (fieldId === 'ourSent') {
@@ -408,9 +409,9 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
   }, [])
 
   const opMessage = useMemo(() => {
-    if (operationError) return operationError
-    if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information' }
-    if (commandInfo?.message) return { text: `**${commandInfo.message}**`, icon: 'chevron-right-box' }
+    if (operationError) return { text: operationError, icon: 'alert-circle', hideCallInfo: true }
+    if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information', hideCallInfo: false }
+    if (commandInfo?.message) return { text: `**${commandInfo.message}**`, icon: 'chevron-right-box', hideCallInfo: true }
     return undefined
   }, [operationError, commandInfo?.message, loggingState.infoMessage])
 
@@ -449,7 +450,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                   </View>
                 ) : (
                   <>
-                    {qso?.their?.call?.length > 2 && (
+                    {!opMessage?.hideCallInfo && qso?.their?.call?.length > 2 && (
                       <CallInfo
                         qso={qso}
                         qsos={activeQSOs}
@@ -462,7 +463,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                         updateQSO={updateQSO}
                       />
                     )}
-                    {(opMessage || (qso?.their?.call?.length || 0) < 2) && (
+                    {(opMessage?.text || (qso?.their?.call?.length || 0) < 2) && (
                       <OpInfo
                         message={opMessage}
                         operation={operation}

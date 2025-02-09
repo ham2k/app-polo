@@ -30,14 +30,12 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
     try {
       (refHandlers || []).forEach(handler => {
         const x = handler.relevantInfoForQSOItem({ qso })
-        if (x) {
-          info = info.concat(x.trim())
-        }
+        if (x) info = info.concat(x)
       })
     } catch (e) {
       console.error('Error in QSOItem', e)
     }
-    return info.filter(x => x).join(' ')
+    return info.filter(x => x).map(x => x.trim()).join(' ')
   }, [qso, refHandlers])
 
   const pressHandler = useCallback(() => {
@@ -90,12 +88,12 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         {extraInfo ? (
           <>
             {styles.mdOrLarger && (
-              <Text style={styles.fields.signal}>A{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
+              <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
             )}
-            <Text style={styles.fields.exchange}>X{extraInfo}</Text>
+            <Text style={styles.fields.exchange}>{extraInfo}</Text>
           </>
         ) : (
-          <Text style={styles.fields.signal}>B{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
+          <Text style={styles.fields.signal}>{settings.switchSentRcvd ? qso?.their?.sent : qso?.our?.sent}{' '}{settings.switchSentRcvd ? qso?.our?.sent : qso?.their?.sent}</Text>
         )}
       </View>
     </TouchableRipple>

@@ -9,12 +9,16 @@ import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/d
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './WWFFInfo'
-import { registerWWFFDataFile, wwffFindOneByReference } from './WWFFDataFile'
+import { registerWWFFDataFile, wwffFindAllByLocation, wwffFindOneByReference } from './WWFFDataFile'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
 import { WWFFPostSpot } from './WWFFPostSpot'
 import { apiGMA } from '../../../store/apis/apiGMA'
 import { LOCATION_ACCURACY } from '../../constants'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,
@@ -135,6 +139,28 @@ const ReferenceHandler = {
   },
 
   iconForQSO: Info.icon,
+
+  extractTemplate: ({ ref, operation }) => {
+    return { type: ref.type }
+  },
+
+  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+    if (operation?.grid) {
+      let info = parseCallsign(operation.stationCall || '')
+      info = annotateFromCountryFile(info)
+      const [lat, lon] = gridToLocation(operation.grid)
+
+      let nearby = await wwffFindAllByLocation(info.dxccCode, lat, lon, 0.25)
+      nearby = nearby.map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, { lat, lon })
+      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
+
+      return { type: ref.type, ref: nearby[0]?.ref }
+    } else {
+      return { type: ref.type }
+    }
+  },
 
   decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {

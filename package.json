@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "25.2.0-pre1",
-  "versionName": "February '25 (pre 1)",
+  "version": "25.2.0-pre4",
+  "versionName": "February '25 (pre 4)",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -11,8 +11,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@ham2k/lib-callsigns": "^0.2",
-    "@ham2k/lib-country-files": "^0.10",
+    "@ham2k/lib-callsigns": "0.3.1",
+    "@ham2k/lib-country-files": "0.10.20250131",
     "@ham2k/lib-dxcc-data": "^0.3",
     "@ham2k/lib-format-tools": "^0.3",
     "@ham2k/lib-maidenhead-grid": "^0.2",

@@ -22,6 +22,7 @@ import WWBOTAExtension from './activities/wwbota/WWBOTAExtension'
 import BCAExtension from './activities/bca/BCAExtension'
 import ECAExtension from './activities/eca/ECAExtension'
 import ELAExtension from './activities/ela/ELAExtension'
+import BLHAExtension from './activities/blha/BLHAExtension'
 import SiOTAExtentsion from './activities/siota/SiOTAExtension'
 
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
@@ -63,6 +64,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(BCAExtension)
   registerExtension(ECAExtension)
   registerExtension(ELAExtension)
+  registerExtension(BLHAExtension)
   registerExtension(SiOTAExtentsion)
 
   registerExtension(NYQPExtension)

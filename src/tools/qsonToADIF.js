@@ -23,8 +23,8 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title, exportT
   if (operation.stationCall !== settings.operatorCall) {
     common.operatorCall = settings.operatorCall
   }
-  if (operation.local?.operatorCall) {
-    common.operatorCall = operation.local.operatorCall
+  if (operation.local?.operatorCall || operation.operatorCall) {
+    common.operatorCall = operation.local?.operatorCall || operation.operatorCall
   }
 
   let str = ''
@@ -36,9 +36,9 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title, exportT
   if (operation.userTitle) str += adifField('X_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
   if (operation.notes) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
   if (handler.adifFieldsForHeader) {
-    str += escapeForHeader(handler.adifFieldsForHeader({ qsos, operation, common }) ?? []).join('\n')
+    str += escapeForHeader(handler.adifFieldsForHeader({ qsos, operation, common, mainHandler: true }) ?? []).join('\n')
   }
-  if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common })) + '\n'
+  if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common, mainHandler: true })) + '\n'
   str += '<EOH>\n'
 
   qsos.forEach(qso => {
@@ -46,9 +46,9 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title, exportT
 
     let handlerFieldCombinations
     if (handler?.adifFieldCombinationsForOneQSO) {
-      handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common, exportType })
+      handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common, exportType, mainHandler: true })
     } else if (handler?.adifFieldsForOneQSO) {
-      handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common, exportType })]
+      handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common, exportType, mainHandler: true })]
     } else {
       handlerFieldCombinations = [[]]
     }
@@ -62,7 +62,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title, exportT
       ;(qso.refs || []).forEach(ref => {
         const exportHandler = findBestHook(`ref:${ref.type}`)
         if (exportHandler && exportHandler.key !== handler.key && exportHandler.adifFieldsForOneQSO) {
-          const refFields = exportHandler.adifFieldsForOneQSO({ qso, operation: operationWithoutRefs, common, exportType })
+          const refFields = exportHandler.adifFieldsForOneQSO({ qso, operation: operationWithoutRefs, common, exportType, ref }) || []
           refFields.forEach(refField => {
             const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
             if (existingField) {

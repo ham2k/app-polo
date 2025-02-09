@@ -1,14 +1,31 @@
 {
-  "25.2.0-pre1": {
-    "name": "February '25 (pre 1)",
+  "25.2.0-pre4": {
+    "name": "February '25 (pre 4)",
     "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA 0004",
     "changes": [
-      "Add Belgium Castles and Fortresses"
+      "Belgium Castles and Fortresses"
+      "Better handling and display of QRZ errors",
+      "Option to clone any operation settings",
+      "POTA self-spotting tweaks and fixes",
+      "Text expansion for callsign notes (prepend with `..` or `//`)",
+      "Add Belgian Lighthouses and Lightships"
+    ]
+  },
+  "25.1.3": {
+    "name": "January '25",
+    "changes": [
+      "Fixed callsign lookup issues",
+      "Fixed ADIF logs for multi-operator operations"
+    ]
+  },
+  "25.1.2": {
+    "name": "January '25",
+    "changes": [
+      "Fixed ADIF export for Winter Field Day"
     ]
   },
   "25.1.1": {
     "name": "January '25",
-    "photoCaption": "KI2D at POTA US-0059",
     "changes": [
       "Fixed missing RST in log display",
       "Fixed bad frequencies in ADIF when only band was specified",

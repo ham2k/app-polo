@@ -27,6 +27,8 @@ const Extension = {
 }
 export default Extension
 
+const EMPTY_RECORD = { name: '', city: '', state: '', grid: '', locationLabel: '', locationAccuracy: undefined, image: '' }
+
 const LookupHook = {
   ...Info,
   shouldSkipLookup: ({ online, lookedUp }) => {
@@ -55,7 +57,7 @@ const LookupHook = {
       if (matchingQRZCall) {
         return { ...qrzLookup.data, call: matchingQRZCall, source: 'qrz.com' }
       } else if (qrzLookup?.error) {
-        return { error: qrzLookup.error, call: callInfo.call, source: 'qrz.com' }
+        return { ...EMPTY_RECORD, error: `QRZ: ${qrzLookup.error}`, call: callInfo.call, source: 'qrz.com' }
       }
     }
     return {}

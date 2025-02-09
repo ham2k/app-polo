@@ -60,6 +60,7 @@ export default function OperationScreen (props) {
   }, [route.params.operation.uuid, dispatch])
 
   const [lastTracking, setLastTracking] = useState(0)
+
   useEffect(() => {
     if (Date.now() - lastTracking > 1000 * 60 * 5 && online) {
       trackOperation({ settings, operation })

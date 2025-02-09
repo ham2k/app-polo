@@ -10,11 +10,12 @@ import RNFetchBlob from 'react-native-blob-util'
 
 import { reportError } from '../../../distro'
 
-import { actions } from '../operationsSlice'
+import GLOBAL from '../../../GLOBAL'
 import { actions as qsosActions } from '../../qsos'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { sendOperationsToSyncService } from '../../sync'
-import GLOBAL from '../../../GLOBAL'
+import { actions } from '../operationsSlice'
+import { selectSettings } from '../../settings'
 
 const operationFromRow = (row) => {
   const data = JSON.parse(row.data)
@@ -180,13 +181,20 @@ export async function getSyncCounts () {
   return counts
 }
 
-export const addNewOperation = (operation) => async (dispatch) => {
+export const addNewOperation = (operation) => async (dispatch, getState) => {
+  const settings = selectSettings(getState())
+
+  operation = operation || {}
   const now = Date.now()
   operation.uuid = UUID.v4()
   operation.createdAtMillis = operation.createdAtMillis || now
   operation.createdOnDeviceId = operation.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
   operation.updatedAtMillis = now
   operation.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
+
+  operation.title = operation.title || 'New Operation'
+  operation.stationCall = operation.stationCall || settings.operatorCall
+  operation.refs = operation.refs || []
 
   dispatch(actions.setOperation(operation))
   await dispatch(saveOperation(operation))
