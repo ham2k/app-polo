@@ -4,8 +4,9 @@
     "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA 0004",
     "changes": [
       "Better handling and display of QRZ errors",
-      "New Operation now copies settings from the most recent one",
-      "Option to clone any operation settings"
+      "Option to clone any operation settings",
+      "POTA self-spotting tweaks and fixes",
+      "Text expansion for callsign notes (prepend with `..` or `//`)"
     ]
   },
   "25.1.3": {
