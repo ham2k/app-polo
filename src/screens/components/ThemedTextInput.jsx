@@ -109,7 +109,7 @@ export default function ThemedTextInput (props) {
         setTimeout(() => {
           selectionRef.current.start = start + (text.length - stringValue.length)
           selectionRef.current.end = end + (text.length - stringValue.length)
-        }, 10)
+        }, 5)
       }
 
       event.nativeEvent.text = text
