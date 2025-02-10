@@ -60,13 +60,13 @@ export default function OpSettingsTab ({ navigation, route }) {
   const [templates, setTemplates] = useState()
   const [templateLimit, setTemplateLimit] = useState(3)
   useEffect(() => {
-    if (operation._isNew) {
+    if (operation._useTemplates) {
       dispatch(async (_dispatch, getState) => {
         const operations = selectOperationsList(getState())
         const newTemplates = getAllOperationTemplates({ operations, settings })
         const currentTemplate = getOperationTemplate({ operation, settings })
         setTemplates(newTemplates.filter(t => t.key !== currentTemplate.key))
-        dispatch(setOperationData({ uuid: operation.uuid, _isNew: undefined }))
+        dispatch(setOperationData({ uuid: operation.uuid, _useTemplates: undefined }))
       })
     }
   }, [dispatch, operation, settings])
@@ -75,7 +75,7 @@ export default function OpSettingsTab ({ navigation, route }) {
     if (operation.template) {
       const template = operation.template
       delete operation.template
-      dispatch(setOperationData({ uuid: operation.uuid, template: undefined, _isNew: undefined }))
+      dispatch(setOperationData({ uuid: operation.uuid, template: undefined, _useTemplates: undefined }))
       dispatch(fillOperationFromTemplate(operation, template))
       setTemplates([])
     }
@@ -98,6 +98,7 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const refHandlers = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]
+    console.log('TYPES', types, operation?.refs.map(r => r.type))
     const handlers = types.map(type => (
       findBestHook(`ref:${type}`) || defaultReferenceHandlerFor(type)
     ))
@@ -109,7 +110,7 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const cloneOperation = useCallback(async () => {
     const template = getOperationTemplate({ operation, settings })
-    const newOperation = await dispatch(addNewOperation({ template }))
+    const newOperation = await dispatch(addNewOperation({ template, _useTemplates: false }))
     trackEvent('create_operation')
 
     navigation.navigate('Home')

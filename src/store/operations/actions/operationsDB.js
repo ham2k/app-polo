@@ -61,6 +61,7 @@ const rowFromOperation = (operation) => {
   delete operationClone.startAtMillisMin
   delete operationClone.startAtMillisMax
   delete operationClone.qsoCount
+  delete operationClone._useTemplates
   const data = JSON.stringify(operationClone)
   const localData = JSON.stringify(local)
 
@@ -196,7 +197,7 @@ export const addNewOperation = (operation) => async (dispatch, getState) => {
   operation.stationCall = operation.stationCall || settings.operatorCall
   operation.refs = operation.refs || []
 
-  operation._isNew = true
+  operation._isNew = operation._isNew ?? true
 
   dispatch(actions.setOperation(operation))
   await dispatch(saveOperation(operation))

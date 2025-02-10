@@ -140,6 +140,24 @@ const ReferenceHandler = {
 
   iconForQSO: Info.icon,
 
+  decorateRefWithDispatch: (ref) => async () => {
+    if (ref.ref) {
+      const data = await wwffFindOneByReference(ref.ref)
+      if (data) {
+        return {
+          ...ref,
+          name: data.name,
+          location: data.region,
+          grid: data.grid,
+          accuracy: LOCATION_ACCURACY.REASONABLE,
+          label: `${Info.shortName} ${ref.ref}: ${data.name}`
+        }
+      } else {
+        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
+      }
+    }
+  },
+
   extractTemplate: ({ ref, operation }) => {
     return { type: ref.type }
   },
@@ -156,27 +174,10 @@ const ReferenceHandler = {
         distance: distanceOnEarth(result, { lat, lon })
       })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
 
-      return { type: ref.type, ref: nearby[0]?.ref }
+      if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
+      else return { type: ref.type, name: 'No parks nearby!' }
     } else {
       return { type: ref.type }
-    }
-  },
-
-  decorateRefWithDispatch: (ref) => async () => {
-    if (ref.ref) {
-      const data = await wwffFindOneByReference(ref.ref)
-      if (data) {
-        return {
-          ...ref,
-          name: data.name,
-          location: data.region,
-          grid: data.grid,
-          accuracy: LOCATION_ACCURACY.REASONABLE,
-          label: `${Info.shortName} ${ref.ref}: ${data.name}`
-        }
-      } else {
-        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
-      }
     }
   },
 

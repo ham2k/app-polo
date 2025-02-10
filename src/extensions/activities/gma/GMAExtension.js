@@ -5,15 +5,19 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../../tools/refTools'
 import { LOCATION_ACCURACY } from '../../constants'
 
 import { GMAActivityOptions } from './GMAActivityOptions'
-import { registerGMADataFile, gmaFindOneByReference } from './GMADataFile'
+import { registerGMADataFile, gmaFindOneByReference, gmaFindAllByLocation } from './GMADataFile'
 import { Info } from './GMAInfo'
 import { GMALoggingControl } from './GMALoggingControl'
 import { GMAPostSpot } from './GMAPostSpot'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,
@@ -100,6 +104,29 @@ const ReferenceHandler = {
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
       }
+    }
+  },
+
+  extractTemplate: ({ ref, operation }) => {
+    return { type: ref.type }
+  },
+
+  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+    if (operation?.grid) {
+      let info = parseCallsign(operation.stationCall || '')
+      info = annotateFromCountryFile(info)
+      const [lat, lon] = gridToLocation(operation.grid)
+
+      let nearby = await gmaFindAllByLocation(info.dxccCode, lat, lon, 0.25)
+      nearby = nearby.map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, { lat, lon })
+      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
+
+      if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
+      else return { type: ref.type, name: 'No summits nearby!' }
+    } else {
+      return { type: ref.type }
     }
   },
 

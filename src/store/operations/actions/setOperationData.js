@@ -67,9 +67,9 @@ export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, 
       const hooks = findHooks(`ref:${ref.type}`)
       for (const hook of hooks) {
         if (hook?.decorateRefWithDispatch) {
-          decoratedRef = await dispatch(hook.decorateRefWithDispatch(decoratedRef))
+          decoratedRef = await dispatch(hook.decorateRefWithDispatch(decoratedRef)) ?? ref
         } else if (hook?.decorateRef) {
-          decoratedRef = hook.decorateRef(decoratedRef)
+          decoratedRef = hook.decorateRef(decoratedRef) ?? ref
         }
       }
       decoratedRefs.push(decoratedRef)

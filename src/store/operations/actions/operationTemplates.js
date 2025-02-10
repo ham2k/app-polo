@@ -72,7 +72,11 @@ export const getAllOperationTemplates = ({ settings, operations }) => {
       }).sort().join(', ')
     }
 
-    if (template.grid) keyParts.push('grid')
+    if (template.grid) {
+      keyParts.push('grid')
+      template.refsDescription += ' (nearest)'
+    }
+
     const key = keyParts.join('|')
 
     template.key = key
@@ -152,7 +156,7 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
       newRef = { type: ref.type }
     } else {
       // Other activities we probably want to default to copying all the data
-      newRef = { ...ref, ref: undefined }
+      newRef = { ...ref }
     }
     operation.refs.push(newRef)
     dispatch(setOperationData({ uuid, refs: operation.refs }))

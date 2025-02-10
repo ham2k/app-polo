@@ -146,28 +146,6 @@ const ReferenceHandler = {
 
   iconForQSO: Info.icon,
 
-  extractTemplate: ({ ref, operation }) => {
-    return { type: ref.type }
-  },
-
-  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
-    if (operation?.grid) {
-      let info = parseCallsign(operation.stationCall || '')
-      info = annotateFromCountryFile(info)
-      const [lat, lon] = gridToLocation(operation.grid)
-
-      let nearby = await potaFindParksByLocation(info.dxccCode, lat, lon, 0.25)
-      nearby = nearby.map(result => ({
-        ...result,
-        distance: distanceOnEarth(result, { lat, lon })
-      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
-
-      return { type: ref.type, ref: nearby[0]?.ref }
-    } else {
-      return { type: ref.type }
-    }
-  },
-
   decorateRefWithDispatch: (ref) => async () => {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', shortName: '', location: '' }
 
@@ -194,6 +172,29 @@ const ReferenceHandler = {
       return { name: Info.unknownReferenceName ?? 'Unknown reference', ...ref }
     }
     return result
+  },
+
+  extractTemplate: ({ ref, operation }) => {
+    return { type: ref.type }
+  },
+
+  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+    if (operation?.grid) {
+      let info = parseCallsign(operation.stationCall || '')
+      info = annotateFromCountryFile(info)
+      const [lat, lon] = gridToLocation(operation.grid)
+
+      let nearby = await potaFindParksByLocation(info.dxccCode, lat, lon, 0.25)
+      nearby = nearby.map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, { lat, lon })
+      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
+
+      if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
+      else return { type: ref.type, name: 'No parks nearby!' }
+    } else {
+      return { type: ref.type }
+    }
   },
 
   suggestOperationTitle: (ref) => {

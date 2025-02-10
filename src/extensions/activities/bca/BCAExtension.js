@@ -9,10 +9,14 @@ import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/d
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './BCAInfo'
-import { bcaFindOneByReference, registerBCADataFile } from './BCADataFile'
+import { bcaFindAllByLocation, bcaFindOneByReference, registerBCADataFile } from './BCADataFile'
 import { BCAActivityOptions } from './BCAActivityOptions'
 import { BCAPostSpot } from './BCAPostSpot'
 import { LOCATION_ACCURACY } from '../../constants'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,
@@ -65,6 +69,29 @@ const ReferenceHandler = {
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
       }
+    }
+  },
+
+  extractTemplate: ({ ref, operation }) => {
+    return { type: ref.type }
+  },
+
+  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+    if (operation?.grid) {
+      let info = parseCallsign(operation.stationCall || '')
+      info = annotateFromCountryFile(info)
+      const [lat, lon] = gridToLocation(operation.grid)
+
+      let nearby = await bcaFindAllByLocation(info.dxccCode, lat, lon, 0.25)
+      nearby = nearby.map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, { lat, lon })
+      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
+
+      if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
+      else return { type: ref.type, name: 'No castles nearby!' }
+    } else {
+      return { type: ref.type }
     }
   },
 

@@ -67,6 +67,10 @@ const ReferenceHandler = {
     return ref // Custom so no known extra data
   },
 
+  extractTemplate: ({ ref, operation }) => {
+    return { ...ref }
+  },
+
   suggestOperationTitle: (ref) => {
     if (ref.type === Info.activationType && ref.ref) {
       return {
