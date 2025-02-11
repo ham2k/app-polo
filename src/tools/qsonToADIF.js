@@ -12,7 +12,9 @@ import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
 import { adifModeAndSubmodeForMode, frequencyForBand, modeForFrequency } from '@ham2k/lib-operation-data'
 
-export function qsonToADIF ({ operation, settings, qsos, handler, title, exportType }) {
+export function qsonToADIF ({ operation, settings, qsos, handler, title, exportType, privateExport }) {
+  privateExport = privateExport ?? (exportType === 'full-adif')
+
   const common = {
     refs: operation.refs,
     grid: operation.grid,
@@ -34,11 +36,11 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title, exportT
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
   if (operation.userTitle) str += adifField('X_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
-  if (operation.notes) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
+  if (operation.notes && privateExport) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
   if (handler.adifFieldsForHeader) {
-    str += escapeForHeader(handler.adifFieldsForHeader({ qsos, operation, common, mainHandler: true }) ?? []).join('\n')
+    str += escapeForHeader(handler.adifFieldsForHeader({ qsos, operation, common, mainHandler: true, privateExport }) ?? []).join('\n')
   }
-  if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common, mainHandler: true })) + '\n'
+  if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common, mainHandler: true, privateExport })) + '\n'
   str += '<EOH>\n'
 
   qsos.forEach(qso => {
@@ -46,23 +48,23 @@ export function qsonToADIF ({ operation, settings, qsos, handler, title, exportT
 
     let handlerFieldCombinations
     if (handler?.adifFieldCombinationsForOneQSO) {
-      handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common, exportType, mainHandler: true })
+      handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common, exportType, mainHandler: true, privateExport })
     } else if (handler?.adifFieldsForOneQSO) {
-      handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common, exportType, mainHandler: true })]
+      handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common, exportType, mainHandler: true, privateExport })]
     } else {
       handlerFieldCombinations = [[]]
     }
 
     if (handlerFieldCombinations === false || handlerFieldCombinations[0] === false) return
 
-    handlerFieldCombinations.forEach((combinationFields, index) => {
-      let fields = adifFieldsForOneQSO(qso, operation, common, index * 1000)
+    handlerFieldCombinations.forEach((combinationFields, n) => {
+      let fields = adifFieldsForOneQSO({ qso, operation, common, privateExport, timeOffset: n * 1000 })
       fields = fields.concat(combinationFields)
 
       ;(qso.refs || []).forEach(ref => {
         const exportHandler = findBestHook(`ref:${ref.type}`)
         if (exportHandler && exportHandler.key !== handler.key && exportHandler.adifFieldsForOneQSO) {
-          const refFields = exportHandler.adifFieldsForOneQSO({ qso, operation: operationWithoutRefs, common, exportType, ref }) || []
+          const refFields = exportHandler.adifFieldsForOneQSO({ qso, operation: operationWithoutRefs, common, exportType, ref, privateExport }) || []
           refFields.forEach(refField => {
             const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
             if (existingField) {
@@ -103,28 +105,29 @@ function modeToADIF (mode, freq, qsoInfo) {
   }
 }
 
-function adifFieldsForOneQSO (qso, operation, common, timeOfffset = 0) {
+function adifFieldsForOneQSO ({ qso, operation, common, privateExport, timeOffset }) {
+  timeOffset = timeOffset ?? 0
   return [
     { CALL: qso.their.call },
     ...modeToADIF(qso.mode, qso.freq, qso?.our),
     { BAND: qso.band && qso.band !== 'other' ? qso.band : undefined },
     { FREQ: ((qso.freq || frequencyForBand(qso.band, qso.mode)) / 1000).toFixed(6) },
     { TX_PWR: qso.power },
-    { QSO_DATE: fmtADIFDate(qso.startAtMillis + timeOfffset) },
-    { TIME_ON: fmtADIFTime(qso.startAtMillis + timeOfffset) },
+    { QSO_DATE: fmtADIFDate(qso.startAtMillis + timeOffset) },
+    { TIME_ON: fmtADIFTime(qso.startAtMillis + timeOffset) },
     { RST_RCVD: qso.their.sent },
     { RST_SENT: qso.our.sent },
     { SRX_STRING: qso.their.exchange },
     { STX_STRING: qso.our.exchange },
     { STATION_CALLSIGN: qso.our.call || common.stationCall },
     { OPERATOR: qso.our.operatorCall || common.operatorCall || qso.our.call || common.stationCall },
-    { NOTES: qso.notes },
-    { COMMENT: qso.notes },
-    { GRIDSQUARE: qso.their?.grid ?? qso.their?.guess?.grid },
-    { MY_GRIDSQUARE: qso?.our?.grid ?? common.grid },
-    { NAME: qso.their?.name ?? qso.their?.guess?.name },
+    { NOTES: privateExport && (qso.notes) },
+    { COMMENT: privateExport && (qso.notes) },
+    { GRIDSQUARE: privateExport && (qso.their?.grid ?? qso.their?.guess?.grid) },
+    { MY_GRIDSQUARE: privateExport && (qso?.our?.grid ?? common.grid) },
+    { NAME: privateExport && (qso.their?.name ?? qso.their?.guess?.name) },
     { DXCC: qso.their?.dxccCode ?? qso.their?.guess?.dxccCode },
-    { QTH: qso.their?.city ?? qso.their?.guess?.city },
+    { QTH: privateExport && (qso.their?.city ?? qso.their?.guess?.city) },
     { COUNTRY: qso.their?.country ?? qso.their?.guess?.country },
     { STATE: qso.their?.state ?? qso.their?.guess?.state },
     { CQZ: qso.their?.cqZone ?? qso.their?.guess?.cqZone },

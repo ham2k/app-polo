@@ -29,10 +29,10 @@ const ExportHandler = {
       priority: -1,
       icon: 'file-swap-outline',
       format: 'adif',
-      exportType: 'core-adif',
-      nameTemplate: settings.useCompactFileNames ? '{call}@{compactDate}-{title}-Generic' : '{date} {call} {title} - Generic',
+      exportType: 'full-adif',
+      nameTemplate: settings.useCompactFileNames ? '{call}@{compactDate}-{title}-full' : '{date} {call} {title} - Full',
       titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`,
-      exportTitle: 'Generic ADIF Export',
+      exportTitle: 'Full ADIF Export',
       selectedByDefault: false
     }])
   }
