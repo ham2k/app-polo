@@ -21,7 +21,7 @@
       "localizations" : [
         {
           "description" : "Help Ham2K with your support!",
-          "displayName" : "This app is AWESOME!!!",
+          "displayName" : "Show a lot of support!!!",
           "locale" : "en_US"
         }
       ],
@@ -36,7 +36,7 @@
       "localizations" : [
         {
           "description" : "Help Ham2K with your support!",
-          "displayName" : "This app is great!",
+          "displayName" : "Show your support!",
           "locale" : "en_US"
         }
       ],
@@ -51,7 +51,7 @@
       "localizations" : [
         {
           "description" : "Help Ham2k with your support!",
-          "displayName" : "This app is nice.",
+          "displayName" : "Show a bit of support…",
           "locale" : "en_US"
         }
       ],
@@ -64,7 +64,7 @@
     "_applicationInternalID" : "6478713938",
     "_developerTeamID" : "T56H72Q4W5",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 760625008.63582206,
+    "_lastSynchronizedDate" : 760928578.32079303,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
