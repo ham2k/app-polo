@@ -9,12 +9,12 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Image, View } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import RevenueCatUI, { PAYWALL_RESULT } from 'react-native-purchases-ui'
 
 import { Ham2kListSection } from '../../screens/components/Ham2kListSection'
 import { Ham2kListSubheader } from '../../screens/components/Ham2kListSubheader'
-import { selectFeatureFlag } from '../../store/system'
+import { selectFeatureFlag, setSystemFlag } from '../../store/system'
 import { TouchableRipple } from 'react-native-paper'
 import Purchases from 'react-native-purchases'
 import { selectLocalExtensionData } from '../../store/local'
@@ -31,6 +31,8 @@ const BADGES = {
 }
 
 export function MainSettingsForDistribution ({ settings, styles }) {
+  const dispatch = useDispatch()
+
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 
   const badgeFlags = useSelector(state => selectFeatureFlag(state, 'badges'))
@@ -40,7 +42,7 @@ export function MainSettingsForDistribution ({ settings, styles }) {
   useEffect(() => {
     setImmediate(async () => {
       const customerInfo = await Purchases.getCustomerInfo()
-      console.log('customerInfo', Object.keys(customerInfo.entitlements.active))
+
       // Access entitlements
       const entitlements = customerInfo.entitlements
       const newFlags = {}
@@ -52,7 +54,6 @@ export function MainSettingsForDistribution ({ settings, styles }) {
   }, [])
 
   const badges = useMemo(() => {
-    console.log('entitlementFlags', entitlementFlags)
     return Object.keys(BADGES).filter(badge => entitlementFlags?.[badge] || badgeFlags?.[badge])
   }, [entitlementFlags, badgeFlags])
 
@@ -77,9 +78,12 @@ export function MainSettingsForDistribution ({ settings, styles }) {
         return false
       case PAYWALL_RESULT.PURCHASED:
       case PAYWALL_RESULT.RESTORED:
+        dispatch(setSystemFlag('lastPaywallOn', Date.now()))
+        dispatch(setSystemFlag('lastPurchasedOn', Date.now()))
         break // continue below
       default:
         console.log('Paywall default', paywallResult)
+        dispatch(setSystemFlag('lastPaywallOn', Date.now()))
         return false
     }
 
@@ -92,7 +96,7 @@ export function MainSettingsForDistribution ({ settings, styles }) {
     setEntitlementFlags(newFlags)
 
     return true
-  }, [settings?.operatorCall])
+  }, [dispatch, lofiData?.account?.call, lofiData?.account?.email, lofiData?.account?.uuid, lofiData?.client?.uuid, settings?.operatorCall])
 
   return (
     <Ham2kListSection>
