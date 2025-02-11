@@ -98,7 +98,6 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const refHandlers = useMemo(() => {
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]
-    console.log('TYPES', types, operation?.refs.map(r => r.type))
     const handlers = types.map(type => (
       findBestHook(`ref:${type}`) || defaultReferenceHandlerFor(type)
     ))
@@ -121,33 +120,33 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   return (
     <ScrollView style={{ flex: 1 }}>
+
+      {templates?.length > 0 && (
+        <Ham2kListSection>
+          {templates.slice(0, templateLimit).map((template) => (
+            <Ham2kListItem
+              key={template.key}
+              title={`${template.callsDescription}`}
+              description={`Template for ${template.refsDescription ?? 'General Operation'}`}
+              titleStyle={{ color: styles.colors.important }}
+              descriptionStyle={{ color: styles.colors.important }}
+              left={() => <List.Icon color={styles.colors.important} style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
+              onPress={() => { dispatch(setOperationData({ uuid: operation.uuid, template })) }}
+            />
+          ))}
+          {templates.length > templateLimit && (
+            <Ham2kListItem
+              title={'Show More Templates'}
+              description={`${templates.length - templateLimit} templates available`}
+              titleStyle={{ color: styles.colors.important }}
+              descriptionStyle={{ color: styles.colors.important }}
+              onPress={() => { setTemplateLimit(templateLimit + 10) }}
+            />
+          )}
+        </Ham2kListSection>
+      )}
+
       <Ham2kListSection>
-
-        {templates?.length > 0 && (
-          <>
-            {templates.slice(0, templateLimit).map((template) => (
-              <Ham2kListItem
-                key={template.key}
-                title={`${template.callsDescription}`}
-                description={`Template for ${template.refsDescription ?? 'General Operation'}`}
-                titleStyle={{ color: styles.colors.important }}
-                descriptionStyle={{ color: styles.colors.important }}
-                left={() => <List.Icon color={styles.colors.important} style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
-                onPress={() => { dispatch(setOperationData({ uuid: operation.uuid, template })) }}
-              />
-            ))}
-            {templates.length > templateLimit && (
-              <Ham2kListItem
-                title={'Show More Templates'}
-                description={`${templates.length - templateLimit} more templates available`}
-                titleStyle={{ color: styles.colors.important }}
-                descriptionStyle={{ color: styles.colors.important }}
-                onPress={() => { setTemplateLimit(templateLimit + 10) }}
-              />
-            )}
-          </>
-        )}
-
         <Ham2kListItem
           title="Station & Operator"
           description={() => <Ham2kMarkdown style={{ ...styles.list.description, color: stationInfoColor }} compact={true}>{stationInfo}</Ham2kMarkdown>}

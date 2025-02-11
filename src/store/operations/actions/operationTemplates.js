@@ -55,7 +55,14 @@ export const getOperationTemplate = ({ operation, settings }) => {
 export const getAllOperationTemplates = ({ settings, operations }) => {
   const templateKeys = {}
   const templates = []
+  let firstKey = null
+
+  // the first one is the new operation for which we want to provide templates, so we should ignore it
+  operations = operations.slice(1)
+
   for (const operation of operations) {
+    if (operation.deleted) continue
+
     const template = getOperationTemplate({ operation, settings })
 
     const keyParts = [template.allStationCalls ?? template.stationCall]
@@ -79,6 +86,8 @@ export const getAllOperationTemplates = ({ settings, operations }) => {
 
     const key = keyParts.join('|')
 
+    if (!firstKey) firstKey = key
+
     template.key = key
 
     if (templateKeys[key]) {
@@ -88,7 +97,11 @@ export const getAllOperationTemplates = ({ settings, operations }) => {
       templates.push(template)
     }
   }
-  return templates.map(t => ({ ...t, count: templateKeys[t.key] })).sort((a, b) => b.count - a.count)
+  const sortedTemplates = templates.map(t => ({ ...t, count: templateKeys[t.key] })).sort((a, b) => b.count - a.count)
+  const mostRecentOpTemplate = sortedTemplates.find(t => t.key === firstKey)
+  const sortedWithoutMostRecent = sortedTemplates.filter(t => t.key !== mostRecentOpTemplate.key)
+
+  return [mostRecentOpTemplate, ...sortedWithoutMostRecent]
 }
 
 export const fillOperationFromTemplate = (operation, template) => async (dispatch, getState) => {
@@ -96,7 +109,7 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
 
   const settings = selectSettings(getState())
   const updates = {}
-  console.log('Filing template', template)
+
   updates.stationCall = template.stationCall ?? settings.operatorCall
   updates.operatorCall = template.operatorCall
   if (template.allStationCalls) updates.allStationCalls = template.allStationCalls
@@ -104,7 +117,6 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
   if (template.stationCallPlusArray) updates.stationCallPlusArray = template.stationCallPlusArray
   dispatch(setOperationData({ uuid, ...updates }))
   operation = { ...operation, ...updates }
-  console.log('Filled operation, callsigns', operation)
 
   if (template.grid) {
     operation.grid = await new Promise((resolve, reject) => {
@@ -125,7 +137,6 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
       )
     })
     dispatch(setOperationData({ uuid, grid: operation.grid }))
-    console.log('Filled operation, grid', operation.grid)
   }
 
   const includedRefTypes = {}
@@ -160,7 +171,5 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
     }
     operation.refs.push(newRef)
     dispatch(setOperationData({ uuid, refs: operation.refs }))
-    console.log('Filled operation, ref', ref)
   }
-  console.log('Template operation final', operation)
 }
