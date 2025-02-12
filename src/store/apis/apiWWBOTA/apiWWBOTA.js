@@ -92,8 +92,8 @@ export const apiWWBOTA = createApi({
         }
         if (DEBUG) console.log(response)
         return response.data.map(spot => ({
-          call: spot[0],
-          state: spot[1], // LIVE, QSY, QRT or TEST
+          call: spot[0]?.trim(),
+          state: spot[1]?.trim(), // LIVE, QSY, QRT or TEST
           frequency: parseFloat(spot[2]),
           info: spot[3],
           index: spot[4],
