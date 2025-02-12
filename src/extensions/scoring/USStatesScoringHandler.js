@@ -12,12 +12,16 @@ export const USStatesScoringHandler = {
   weight: 102,
 
   scoringForQSO: ({ qso, qsos, operation, score, ref }) => {
-    // console.log('scoringForQSO', qso.their)
     const entityPrefix = qso.their?.entityPrefix ?? qso.their?.guess?.entityPrefix
 
-    if (entityPrefix !== 'K' && entityPrefix !== 'KH6' && entityPrefix !== 'KL7') return {}
+    if (entityPrefix !== 'K' && entityPrefix !== 'KH6' && entityPrefix !== 'KL') return {}
 
-    const state = (qso?.their?.state ?? qso?.their?.guess?.state ?? '').toUpperCase()
+    let state = (qso?.their?.state ?? qso?.their?.guess?.state ?? '').toUpperCase()
+    if (entityPrefix === 'KH6') state = state || 'HI'
+    if (entityPrefix === 'KL') state = state || 'AK'
+
+    if (!Object.keys(US_STATES).includes(state.toLowerCase())) return {}
+
     if (score?.states?.[state]) {
       return { count: 0, type: 'was', alerts: ['workedBefore'], state }
     } else {
