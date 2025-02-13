@@ -168,7 +168,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       }
     }
   } catch (e) {
-    if (DEBUG) console.error('Error in requestWithAuth', e)
+    if (DEBUG) console.log('Error in requestWithAuth', e)
     if (e.message === 'Network request failed') {
       return { ok: false, status: 0, json: { error: 'Network request failed' } }
     } else {
@@ -202,6 +202,6 @@ function processResponseMeta ({ json, account, response, dispatch }) {
       if (isNaN(GLOBAL.syncCheckPeriod)) GLOBAL.syncCheckPeriod = undefined
     }
   } catch (e) {
-    console.error('Error parsing sync meta', e, json)
+    console.log('Error parsing sync meta', e, json)
   }
 }
