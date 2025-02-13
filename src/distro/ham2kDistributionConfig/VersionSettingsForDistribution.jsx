@@ -128,7 +128,7 @@ export function VersionSettingsForDistribution ({ settings, styles }) {
     <Ham2kListSection>
 
       <Ham2kListItem title={currentVersionLabel}
-        description={`${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
+        description={`${packageJson.version} - Base Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
         left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
       />
 
