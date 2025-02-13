@@ -239,7 +239,7 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
       <Ham2kListSection>
         <Ham2kListSubheader>About Ham2K</Ham2kListSubheader>
         <Ham2kListItem
-          title={packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`}
+          title={packageJson.versionName ? `${packageJson.versionName} Release (${packageJson.version})` : `Version ${packageJson.version}`}
           description={'See recent changes'}
           onPress={() => navigation.navigate('VersionSettings')}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
