@@ -111,16 +111,21 @@ async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch,
         app: GLOBAL.consentAppData,
         public: GLOBAL.consentOpData
       }
-      syncParams.meta.sync = {
-        operations: {
-          sinceMillis: (localData?.sync?.lastOperationSyncedAtMillis || 0) + 1000,
-          limit: batchSize * OPERATION_BATCH_RATIO,
-          anyClient: !localData?.sync?.completedFullSync
-        },
-        qsos: {
-          sinceMillis: (localData?.sync?.lastQSOSyncedAtMillis || 0) + 1000,
-          limit: batchSize,
-          anyClient: !localData?.sync?.completedFullSync
+
+      if (inboundSync) {
+        syncParams.meta.inboundSync = inboundSync
+
+        syncParams.meta.sync = {
+          operations: {
+            sinceMillis: (localData?.sync?.lastOperationSyncedAtMillis || 0) + 1000,
+            limit: batchSize * OPERATION_BATCH_RATIO,
+            anyClient: !localData?.sync?.completedFullSync
+          },
+          qsos: {
+            sinceMillis: (localData?.sync?.lastQSOSyncedAtMillis || 0) + 1000,
+            limit: batchSize,
+            anyClient: !localData?.sync?.completedFullSync
+          }
         }
       }
 
