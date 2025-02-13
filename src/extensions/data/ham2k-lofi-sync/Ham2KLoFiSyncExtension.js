@@ -128,11 +128,14 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
           if (DEBUG) console.log('-- auth ok', json)
           token = json.token
           GLOBAL.syncLoFiToken = token
-        } else {
+        } else if (response.status === 401) {
           logRemotely({ message: '-- Ham2K LoFi Authentication failed', server, token, secret, url, body })
           if (DEBUG) console.log('-- auth failed')
-          GLOBAL.syncLoFiToken = token
           throw new Error('Authentication Failed')
+        } else {
+          logRemotely({ message: `-- Ham2K LoFi Server Error ${response.status}`, server, token, secret, url, body })
+          if (DEBUG) console.log('-- auth failed')
+          throw new Error(`Server Error ${response.status}`)
         }
       }
 
@@ -168,7 +171,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       }
     }
   } catch (e) {
-    if (DEBUG) console.error('Error in requestWithAuth', e)
+    if (DEBUG) console.log('Error in requestWithAuth', e)
     if (e.message === 'Network request failed') {
       return { ok: false, status: 0, json: { error: 'Network request failed' } }
     } else {
@@ -202,6 +205,6 @@ function processResponseMeta ({ json, account, response, dispatch }) {
       if (isNaN(GLOBAL.syncCheckPeriod)) GLOBAL.syncCheckPeriod = undefined
     }
   } catch (e) {
-    console.error('Error parsing sync meta', e, json)
+    console.log('Error parsing sync meta', e, json)
   }
 }

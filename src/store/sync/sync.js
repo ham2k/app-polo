@@ -18,6 +18,7 @@ import { markQSOsAsSynced, mergeSyncQSOs, queryQSOs } from '../qsos'
 import { selectFiveSecondsTick, startTickTock } from '../time'
 import { selectLocalData, setLocalData } from '../local'
 import { logTimer } from '../../tools/perfTools'
+import { selectFeatureFlag } from '../system'
 
 const SYNC_LOOP_DEBOUNCE_DELAY = 1000 * 0.5 // 500ms, minimum time to wait for more changes before starting a new sync loop
 const SYNC_LOOP_DEBOUNCE_MAX = 1000 * 3 // 3 seconds, maximum time to wait for more changes before starting a new sync loop
@@ -47,6 +48,11 @@ export async function sendOperationsToSyncService ({ dispatch }) {
 }
 
 async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch, batchSize = 0 }) {
+  let inboundSync = false
+  dispatch((_dispatch, getState) => {
+    inboundSync = selectFeatureFlag(getState(), 'inboundSync', false)
+  })
+
   if (VERBOSE > 0) console.log('sendOneBatchOfUpdatesToSyncService')
   _takeOverSyncLoop()
   logRemotely({ message: 'sendOneBatchOfUpdatesToSyncService', global: GLOBAL.syncEnabled, qsos: qsos?.length, operations: operations?.length, batchSize })
@@ -105,16 +111,21 @@ async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch,
         app: GLOBAL.consentAppData,
         public: GLOBAL.consentOpData
       }
-      syncParams.meta.sync = {
-        operations: {
-          sinceMillis: (localData?.sync?.lastOperationSyncedAtMillis || 0) + 1000,
-          limit: batchSize * OPERATION_BATCH_RATIO,
-          anyClient: !localData?.sync?.completedFullSync
-        },
-        qsos: {
-          sinceMillis: (localData?.sync?.lastQSOSyncedAtMillis || 0) + 1000,
-          limit: batchSize,
-          anyClient: !localData?.sync?.completedFullSync
+
+      if (inboundSync) {
+        syncParams.meta.inboundSync = inboundSync
+
+        syncParams.meta.sync = {
+          operations: {
+            sinceMillis: (localData?.sync?.lastOperationSyncedAtMillis || 0) + 1000,
+            limit: batchSize * OPERATION_BATCH_RATIO,
+            anyClient: !localData?.sync?.completedFullSync
+          },
+          qsos: {
+            sinceMillis: (localData?.sync?.lastQSOSyncedAtMillis || 0) + 1000,
+            limit: batchSize,
+            anyClient: !localData?.sync?.completedFullSync
+          }
         }
       }
 
@@ -131,13 +142,13 @@ async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch,
         GLOBAL.lastSyncLoop = Date.now()
 
         const syncTimes = {}
-        if (response.json.operations?.length > 0) {
+        if (inboundSync && response.json.operations?.length > 0) {
           if (VERBOSE > 1) console.log(' -- new operations', response.json.operations.length)
           syncTimes.lastOperationSyncedAtMillis = await dispatch(mergeSyncOperations({ operations: response.json.operations }))
           if (VERBOSE > 1) logTimer('sync', 'Done merging operations')
         }
 
-        if (response.json.qsos?.length > 0) {
+        if (inboundSync && response.json.qsos?.length > 0) {
           if (VERBOSE > 1) console.log(' -- new qsos', response.json.qsos.length)
           syncTimes.lastQSOSyncedAtMillis = await dispatch(mergeSyncQSOs({ qsos: response.json.qsos }))
           if (VERBOSE > 1) logTimer('sync', 'Done merging qsos')
@@ -173,7 +184,7 @@ async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch,
     errorCount = 0
   } catch (error) {
     logRemotely({ error: 'Error syncing', message: error.message })
-    console.error('Error syncing', error)
+    console.log('Error syncing', error)
 
     _releaseSyncLoop()
 
