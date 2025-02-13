@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
@@ -17,6 +17,7 @@ import { selectSettings, setSettings } from '../../../store/settings'
 import { FlagsDialog } from '../components/FlagsDialog'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { findHooks } from '../../../extensions/registry'
 
 function prepareStyles (baseStyles) {
   return {
@@ -37,6 +38,11 @@ export default function LoggingSettingsScreen ({ navigation }) {
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
+
+  const extensionSettingHooks = useMemo(() => {
+    const hooks = findHooks('setting').filter(hook => hook.category === 'logging' && hook.SettingItem)
+    return hooks
+  }, [])
 
   return (
     <ScreenContainer>
@@ -106,6 +112,15 @@ export default function LoggingSettingsScreen ({ navigation }) {
             onPress={() => navigation.navigate('BandModeSettings')}
           />
         </Ham2kListSection>
+
+        {extensionSettingHooks.length > 0 && (
+          <Ham2kListSection title={'Extensions'}>
+            {extensionSettingHooks.map((hook) => (
+              <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
+            ))}
+          </Ham2kListSection>
+        )}
+
       </ScrollView>
     </ScreenContainer>
   )
