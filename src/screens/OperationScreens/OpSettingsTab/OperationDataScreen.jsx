@@ -45,7 +45,7 @@ export default function OperationDataScreen (props) {
     let options = { title: 'Operation Data' }
     if (operation?.stationCall) {
       options = {
-        subTitle: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCallPlus, title: operation.title, userTitle: operation.userTitle })
+        subTitle: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCallPlus || operation.stationCall, title: operation.title, userTitle: operation.userTitle })
       }
     } else {
       options = { subTitle: 'New Operation' }
