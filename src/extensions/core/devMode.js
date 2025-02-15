@@ -34,9 +34,9 @@ const ExportHandler = {
         icon: 'briefcase-upload',
         format: 'qson',
         exportType: 'devmode-qson',
-        nameTemplate: settings.useCompactFileNames ? '{call}@{shortUUID}-{compactDate}' : '{date} {call} {title} ({shortUUID})',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`,
-        exportTitle: 'Developer Mode: QSON Export',
+        nameTemplate: '{{op.date}}.{{log.station}}.{{first8 op.uuid}}',
+        titleTemplate: '{{log.station}}: {{log.title}} on {{op.date}}',
+        exportLabel: 'Developer Mode: QSON Export',
         devMode: true,
         selectedByDefault: false
       }])

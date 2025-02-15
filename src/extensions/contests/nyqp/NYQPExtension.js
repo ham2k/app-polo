@@ -68,15 +68,15 @@ const ReferenceHandler = {
     if (ref?.type === Info?.key) {
       return [{
         format: 'adif',
-        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
         exportType: 'nyqp-adif',
-        titleTemplate: `{call}: ${Info.name} on {date}`
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       },
       {
         format: 'cabrillo',
-        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
         exportType: 'nyqp-cabrillo',
-        titleTemplate: `{call}: ${Info.name} on {date}`
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       }]
     }
   },

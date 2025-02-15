@@ -127,7 +127,7 @@ export default function OperationDataScreen (props) {
 
   const selectedExportOptions = useMemo(() => exportOptions.filter(option => (settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false), [exportOptions, settings.exportTypes])
 
-  const exportTitle = useMemo(() => {
+  const exportLabel = useMemo(() => {
     if (selectedExportOptions.length === 0) return 'Select from the export options below'
     if (selectedExportOptions.length === 1 && exportOptions.length === 1) return 'Export 1 file'
     if (selectedExportOptions.length === 1) return 'Export 1 selected file'
@@ -139,7 +139,7 @@ export default function OperationDataScreen (props) {
     <ScrollView style={{ flex: 1 }}>
       <Ham2kListSection title={'Export QSOs'}>
         <Ham2kListItem
-          title={exportTitle}
+          title={exportLabel}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
           onPress={() => readyToExport && handleExports({ options: selectedExportOptions })}
           style={{ opacity: readyToExport ? 1 : 0.5 }}
@@ -153,7 +153,7 @@ export default function OperationDataScreen (props) {
             />
             <Ham2kListItem
               key={option.fileName}
-              title={option.exportTitle}
+              title={option.exportLabel}
               description={option.fileName}
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={option.devMode ? styles.colors.devMode : styles.colors.onBackground} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
               onPress={() => readyToExport && handleExports({ options: [option] })}

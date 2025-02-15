@@ -66,7 +66,16 @@ const ActivityHook = {
 
   Options: SOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'A/BC-1234', name: 'Example Summit' }] },
+      // Hunting in a different operation
+      { refs: [{}], qsos: [{ refs: [{ type: Info.huntingType, ref: 'A/BC-1234', name: 'Example Summit' }] }] }
+    ]
+  }
 }
 
 const SpotsHook = {
@@ -227,22 +236,22 @@ const ReferenceHandler = {
       return [{
         format: 'adif',
         exportType: `${Info.key}-activator`,
-        exportData: { refs: [ref] },
-        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+        exportName: 'SOTA Activation',
+        exportData: { refs: [ref] }, // exports only see this one ref
+        nameTemplate: '{{>RefActivityName}}',
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     } else { // "export" hook
       const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType))
       const isSOTAActivation = findRef(operation, Info.activationType)
       if (!hasSOTA || isSOTAActivation) return null
-      console.log('SOTA Hunter')
       return [{
         format: 'adif',
         exportType: `${Info.key}-hunter`,
-        templateData: { modifier: 'SOTA Hunted', modifierDashed: 'sota-hunted' },
-        nameTemplate: settings.useCompactFileNames ? '{call}@{modifierDashed}-{titleDashed}-{compactDate}' : '{date} {call} {modifier} {title}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`,
-        exportTitle: 'SOTA Hunted'
+        exportName: 'SOTA Hunter',
+        templateData: { handlerShortName: 'SOTA Hunted' },
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       }]
     }
   },

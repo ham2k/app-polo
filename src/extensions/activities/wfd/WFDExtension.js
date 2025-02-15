@@ -57,7 +57,14 @@ const ActivityHook = {
 
   Options: WFDActivityOptions,
   mainExchangeForOperation,
-  processQSOBeforeSave
+  processQSOBeforeSave,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      { refs: [{ type: Info.key, class: '1A', location: 'ENY' }] }
+    ]
+  }
+
 }
 
 const ReferenceHandler = {
@@ -80,13 +87,15 @@ const ReferenceHandler = {
     if (ref?.type === Info?.key) {
       return [{
         format: 'adif',
-        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
-        titleTemplate: `{call}: ${Info.name} on {date}`
+        exportName: 'Winter Field Day',
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       },
       {
         format: 'cabrillo',
-        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
-        titleTemplate: `{call}: ${Info.name} on {date}`
+        exportName: 'Winter Field Day',
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       }]
     }
   },

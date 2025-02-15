@@ -193,10 +193,10 @@ const ReferenceHandler = {
     if (ref?.type === Info.activationType && ref?.ref) {
       return [{
         format: 'adif',
-        exportData: { refs: [ref] },
+        exportData: { refs: [ref] }, // exports only see this one ref
         // Note that compact format uses a space instead of - because of WWFF requirements
-        nameTemplate: '{call}@{ref} {compactDate}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+        nameTemplate: '{{log.station}}@{{log.ref}} {{compact op.date}}',
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     }
   },

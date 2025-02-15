@@ -30,9 +30,8 @@ const ExportHandler = {
       icon: 'file-swap-outline',
       format: 'adif',
       exportType: 'full-adif',
-      nameTemplate: settings.useCompactFileNames ? '{call}@{compactDate}-{title}-full' : '{date} {call} {title} - Full',
-      titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`,
-      exportTitle: 'Full ADIF Export',
+      templateData: { modifier: 'Full' },
+      exportLabel: 'Full ADIF Export',
       selectedByDefault: false
     }])
   }

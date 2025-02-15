@@ -57,7 +57,14 @@ const ActivityHook = {
   postSpot: POTAPostSpot,
   Options: POTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'EX-1234', name: 'Example National Park', shortName: 'Example NP' }] }
+    ]
+  }
 }
 
 const SpotsHook = {
@@ -210,9 +217,10 @@ const ReferenceHandler = {
       return [{
         format: 'adif',
         exportType: `${Info.key}-activator`,
-        exportData: { refs: [ref] },
-        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+        exportName: 'POTA Activation',
+        exportData: { refs: [ref] }, // exports only see this one ref
+        nameTemplate: '{{>RefActivityName}}',
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     }
   },

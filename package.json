@@ -39,6 +39,7 @@
     "fast-levenshtein": "^3.0.0",
     "fast-xml-parser": "^4.4",
     "fuzzball": "^2.1",
+    "handlebars": "^4.7.8",
     "just-diff": "^6.0.2",
     "proj4": "^2.11",
     "react": "18.2.0",

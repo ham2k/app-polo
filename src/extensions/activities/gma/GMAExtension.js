@@ -142,9 +142,10 @@ const ReferenceHandler = {
     if (ref?.type === Info.activationType && ref?.ref) {
       return [{
         format: 'adif',
-        exportData: { refs: [ref] },
-        nameTemplate: settings.useCompactFileNames ? '{call}@GMA-{ref}-{compactDate}' : '{date} {call} at GMA {ref}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+        exportData: { refs: [ref] }, // exports only see this one ref
+        templateData: { refPrefix: 'GMA' },
+        nameTemplate: '{{>RefActivityName}}',
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     }
   },
