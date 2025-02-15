@@ -109,9 +109,10 @@ export default function OperationDataScreen (props) {
   const handleImportADIF = useCallback(() => {
     DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
       const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
-      const count = await dispatch(importADIFIntoOperation(filename, operation))
+      const { adifCount, importCount } = await dispatch(importADIFIntoOperation(filename, operation, qsos))
       trackEvent('import_adif', {
-        import_count: count,
+        import_count: importCount,
+        adif_count: adifCount,
         qso_count: operation.qsoCount,
         refs: (operation.refs || []).map(r => r.type).join(',')
       })
@@ -123,7 +124,7 @@ export default function OperationDataScreen (props) {
         reportError('Error importing ADIF', error)
       }
     })
-  }, [dispatch, operation])
+  }, [dispatch, operation, qsos])
 
   const selectedExportOptions = useMemo(() => exportOptions.filter(option => (settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false), [exportOptions, settings.exportTypes])
 
