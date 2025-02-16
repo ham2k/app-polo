@@ -6,7 +6,7 @@
  */
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
+import { filterRefs, findRef, mergeRefs, refsToString } from '../../../tools/refTools'
 
 import { Info } from './POTAInfo'
 import { POTAActivityOptions } from './POTAActivityOptions'
@@ -103,7 +103,7 @@ const SpotsHook = {
   },
   extraSpotInfo: async ({ online, settings, dispatch, spot }) => {
     if (online) {
-      const spotRef = spot.refs?.find(ref => ref.type === Info.huntingType)
+      const spotRef = findRef(spot, Info.huntingType)
       if (spotRef) {
         const args = { call: spot.their.call, park: spotRef.ref }
         const spotCommentPromise = await dispatch(apiPOTA.endpoints.spotComments.initiate(args))
@@ -116,11 +116,11 @@ const SpotsHook = {
           x => x.source?.startsWith('Ham2K Portable Logger') && x.comments.match(/\b[0-9]+-fer: .+$/)
         )
         if (filteredSpotComment) {
-          filteredSpotComment.comments.match(/\b[0-9]+-fer: (.+)$/)[1].split(' ').forEach(ref => {
-            if (!spot.refs.find(x => x.ref === ref && x.type === Info.huntingType)) {
-              spot.refs.push({ ref, type: Info.huntingType })
-            }
-          })
+          const newRefs = filteredSpotComment.comments
+            .match(/\b[0-9]+-fer: (.+)$/)[1]
+            .split(' ')
+            .map(ref => ({ ref, type: Info.huntingType }))
+          spot.refs = mergeRefs(spot.refs, newRefs)
         }
       }
     }
