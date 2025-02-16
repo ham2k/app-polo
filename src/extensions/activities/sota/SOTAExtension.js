@@ -232,7 +232,7 @@ const ReferenceHandler = {
         titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
       }]
     } else { // "export" hook
-      const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType))
+      const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType) && !q.deleted)
       const isSOTAActivation = findRef(operation, Info.activationType)
       if (!hasSOTA || isSOTAActivation) return null
       console.log('SOTA Hunter')
