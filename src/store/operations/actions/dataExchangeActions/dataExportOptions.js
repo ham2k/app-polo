@@ -20,8 +20,8 @@ Each of these handlers can suggest zero or more export options, for which they p
 - A templateData object (a set of key-value pairs that are passed to the name and title templates)
 
 PoLo provides a set of general name and title templates:
-- RefActivityBaseNameNormal: `2025-01-01 N0CALL at EX-123`
-- RefActivityBaseNameCompact: `N0CALL@EX-123-20250101`
+- RefActivityBaseNameNormal: `2025-01-01 N0CALL at XX-123`
+- RefActivityBaseNameCompact: `N0CALL@XX-123-20250101`
 - RefActivityBaseName: either of the two above, depending on the setting `useCompactFileNames`
 - OtherActivityBaseNameNormal: `2025-01-01 N0CALL for WFD`
 - OtherActivityBaseNameCompact: `N0CALL-WFD-20250101`
@@ -75,6 +75,7 @@ import { fmtISODate } from '../../../../tools/timeFormats'
 import { findBestHook, findHooks } from '../../../../extensions/registry'
 import Handlebars from 'handlebars'
 import { joinAnd } from '../../../../tools/joinAnd'
+import { selectExportSettings } from '../../../settings'
 
 export const DATA_EXTENSIONS = {
   adif: 'adi',
@@ -126,18 +127,34 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
 
   handlersWithOptions.forEach(({ handler, ref, options }) => {
     options.forEach(option => {
-      const nameTemplate = compileTemplateForOperation(option.nameTemplate || '{{> DefaultName}}', { settings })
-      const titleTemplate = compileTemplateForOperation(option.titleTemplate || '{{> DefaultTitle}}', { settings })
+      const key = `${handler.key}-${option.format}-${option.exportType ?? 'export'}`
+      const exportSettings = selectExportSettings({ settings }, key)
+
+      const nameTemplate = compileTemplateForOperation(exportSettings?.nameTemplate || option.nameTemplate || '{{> DefaultName}}', { settings })
+      const titleTemplate = compileTemplateForOperation(exportSettings?.titleTemplate || option.titleTemplate || '{{> DefaultTitle}}', { settings })
 
       const context = templateContextForOneExport({ option, settings, operation, ourInfo, handler, ref })
       const partials = basePartialTemplates({ settings })
       const data = extraDataForTemplates({ settings })
 
-      const title = titleTemplate(context, { data, partials }).replaceAll(/\s+/g, ' ').trim()
+      let title
+      try {
+        title = titleTemplate(context, { data, partials }).replaceAll(/\s+/g, ' ').trim()
+      } catch (e) {
+        console.log('Error compiling title template', e)
+        title = `ERROR: ${e.message}`
+      }
 
       context.log.title = title
 
-      let fileName = nameTemplate(context, { data, partials }).replaceAll(/\s+/g, ' ').trim()
+      let fileName
+      try {
+        fileName = nameTemplate(context, { data, partials }).replaceAll(/\s+/g, ' ').trim()
+      } catch (e) {
+        console.log('Error compiling name template', e)
+        fileName = `ERROR: ${e.message}`
+      }
+
       const extension = DATA_EXTENSIONS[option.format] || DATA_EXTENSIONS.other
       if (!fileName.endsWith(`.${extension}`)) {
         fileName = `${fileName}.${extension}`
@@ -155,26 +172,36 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
 }
 
 export function compileTemplateForOperation (template, { settings }) {
-  const compiled = Handlebars.compile(template ?? '', { noEscape: true })
-
-  return compiled
+  try {
+    const compiled = Handlebars.compile(template ?? '', { noEscape: true })
+    return compiled
+  } catch (e) {
+    console.log('Error compiling template', e)
+    return Handlebars.compile(`ERROR IN TEMPLATE {{{{raw}}}}${template}{{{{/raw}}}}`)
+  }
 }
 
-export function runTemplateForOperation (compiled, { settings, operation, ourInfo, handler, ref }) {
-  const context = templateContextForOneExport({ settings, operation, ourInfo, handler, ref })
-  const partials = basePartialTemplates({ settings })
-  const data = extraDataForTemplates({ settings })
+export function runTemplateForOperation (template, { settings, operation, ourInfo, handler, ref, qso }) {
+  try {
+    const compiled = Handlebars.compile(template ?? '', { noEscape: true })
+    const context = templateContextForOneExport({ settings, operation, ourInfo, handler, ref, qso })
+    const partials = basePartialTemplates({ settings })
+    const data = extraDataForTemplates({ settings })
 
-  return compiled(context, { data, partials })
+    return compiled(context, { data, partials })
+  } catch (e) {
+    console.log('Error running template', e)
+    return `ERROR: ${template}`
+  }
 }
 
-export function templateContextForOneExport ({ option, settings, operation, ourInfo, handler, ref }) {
+export function templateContextForOneExport ({ option, settings, operation, ourInfo, handler, qso, ref }) {
   return {
     settings: {
       useCompactFileNames: settings.useCompactFileNames
     },
     log: {
-      station: ourInfo.call,
+      station: ourInfo?.call,
       callInfo: ourInfo,
       ref: ref?.ref,
       refName: ref?.name,
@@ -182,22 +209,26 @@ export function templateContextForOneExport ({ option, settings, operation, ourI
       handlerType: handler?.type,
       handlerName: handler?.name,
       handlerShortName: handler?.shortName,
-      exportFormat: option.format,
-      exportType: option.exportType,
-      exportName: option.exportName,
-      ...option.templateData
+      exportFormat: option?.format,
+      exportType: option?.exportType,
+      exportName: option?.exportName,
+      ...option?.templateData
     },
     op: {
-      allStations: operation.allStations,
-      operator: operation.operator,
-      date: fmtISODate(operation.startAtMillisMax),
-      startDate: fmtISODate(operation.startAtMillisMin),
-      endDate: fmtISODate(operation.endAtMillisMax),
-      uuid: operation.uuid,
-      title: operation.title, // " at K-TEST"
-      userTitle: operation.userTitle,
-      userNotes: operation.userNotes
-    }
+      station: operation?.stationCall,
+      operator: operation?.operator,
+      allStations: [operation?.stationCall, ...(operation?.stationCallPlusArray || [])],
+      otherStations: operation?.stationCallPlusArray || [],
+      date: fmtISODate(operation?.startAtMillisMax),
+      startDate: fmtISODate(operation?.startAtMillisMin),
+      endDate: fmtISODate(operation?.endAtMillisMax),
+      uuid: operation?.uuid,
+      title: operation?.title, // " at K-TEST"
+      userTitle: operation?.userTitle,
+      userNotes: operation?.userNotes,
+      refs: operation?.refs
+    },
+    qso
   }
 }
 
@@ -211,7 +242,10 @@ export function basePartialTemplates ({ settings }) {
     DefaultNameCompact: '{{#dash}}{{log.station}}-{{compact op.date}}-{{downcase op.title}}-{{downcase log.modifier}}{{/dash}}',
     RefActivityTitle: '{{log.station}}: {{log.handlerShortName}} at {{log.ref}} on {{op.date}}',
     OtherActivityTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}',
-    DefaultTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}'
+    DefaultTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}',
+    ADIFNotes: '{{qso.notes}}',
+    ADIFComment: '{{qso.notes}}',
+    ADIFQslMsg: '{{#joinAnd op.refs}}{{ref}}{{/joinAnd}}'
   }
 
   partials.RefActivityName = settings?.useCompactFileNames ? partials.RefActivityNameCompact : partials.RefActivityNameNormal
@@ -284,4 +318,11 @@ Handlebars.registerHelper('first8', (x) => x.slice(0, 8))
 Handlebars.registerHelper('join', (x) => Handlebars.Utils.isArray(x) ? x.filter(e => e).join(' ') : x)
 Handlebars.registerHelper('joinComma', (x) => Handlebars.Utils.isArray(x) ? x.filter(e => e).join(', ') : x)
 Handlebars.registerHelper('joinCommaCompact', (x) => Handlebars.Utils.isArray(x) ? x.filter(e => e).join(',') : x)
-Handlebars.registerHelper('joinAnd', (x) => Handlebars.Utils.isArray(x) ? joinAnd(x.filter(e => e)) : x)
+
+Handlebars.registerHelper('joinAnd', function (...args) {
+  const options = args.pop()
+  console.log('joinAnd', args)
+  if (args.length === 0) args = [this]
+  const parts = args.flat().map(x => options?.fn ? options.fn(x) : x).filter(x => x)
+  return joinAnd(parts)
+})

@@ -32,6 +32,7 @@ import BandModeSettingsScreen from './BandModeSettingsScreen'
 import CreditsSettingsScreen from './CreditsSettingsScreen'
 import DataSettingsScreen from './DataSettingsScreen'
 import DevModeSettingsScreen from './DevModeSettingsScreen'
+import ExportSettingsScreen from './ExportSettingsScreen'
 import ExtensionScreen from './ExtensionScreen'
 import FeaturesSettingsScreen from './FeaturesSettingsScreen'
 import GeneralSettingsScreen from './GeneralSettingsScreen'
@@ -341,6 +342,11 @@ function settingsScreensArray ({ includeMain, topLevelBack }) {
     <Stack.Screen name="BandModeSettings" key="BandModeSettings"
       options={{ title: 'Bands & Modes' }}
       component={BandModeSettingsScreen}
+    />,
+
+    <Stack.Screen name="ExportSettings" key="ExportSettings"
+      options={{ title: 'Export Settings' }}
+      component={ExportSettingsScreen}
     />,
 
     <Stack.Screen name="ExtensionScreen" key="ExtensionScreen"

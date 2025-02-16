@@ -111,6 +111,13 @@ export default function LoggingSettingsScreen ({ navigation }) {
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="radio" />}
             onPress={() => navigation.navigate('BandModeSettings')}
           />
+
+          <Ham2kListItem
+            title="Export Settings"
+            description={'Customize filenames and other settings'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-export-outline" />}
+            onPress={() => navigation.navigate('ExportSettings')}
+          />
         </Ham2kListSection>
 
         {extensionSettingHooks.length > 0 && (

@@ -239,7 +239,8 @@ const ReferenceHandler = {
         exportName: 'SOTA Activation',
         exportData: { refs: [ref] }, // exports only see this one ref
         nameTemplate: '{{>RefActivityName}}',
-        titleTemplate: '{{>RefActivityTitle}}'
+        titleTemplate: '{{>RefActivityTitle}}',
+        ADIFCommentTemplate: 's{{qso.our.sent}} r{{qso.their.sent}} {{>ADIFNotes}}'
       }]
     } else { // "export" hook
       const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType))
@@ -251,7 +252,8 @@ const ReferenceHandler = {
         exportName: 'SOTA Hunter',
         templateData: { handlerShortName: 'SOTA Hunted' },
         nameTemplate: '{{>OtherActivityName}}',
-        titleTemplate: '{{>OtherActivityTitle}}'
+        titleTemplate: '{{>OtherActivityTitle}}',
+        ADIFCommentTemplate: 's{{qso.our.sent}} r{{qso.their.sent}} {{>ADIFNotes}}'
       }]
     }
   },
@@ -265,9 +267,10 @@ const ReferenceHandler = {
     const fields = []
     if (activationRef) fields.push({ MY_SOTA_REF: activationRef.ref })
     if (huntingRef) fields.push({ SOTA_REF: huntingRef.ref })
+
     // SOTA does not save signal reports, so most operators like to include this in the comments
     // Also, SOTA does not process the NOTES field, so we include our notes and signal reports in the COMMENT field
-    fields.push({ COMMENT: [`s${qso.our.sent} r${qso.their.sent}`, qso.notes, qso.comments].filter(x => x).join(' - ') })
+    // fields.push({ COMMENT: [`s${qso.our.sent} r${qso.their.sent}`, qso.notes, qso.comments].filter(x => x).join(' - ') })
 
     return fields
   },
