@@ -112,8 +112,9 @@ const SpotsHook = {
         spotCommentPromise.unsubscribe && spotCommentPromise.unsubscribe()
         const spotComments = spotCommentResults.data || []
 
-        const filteredSpotComment = spotComments.find(
-          x => x.source?.startsWith('Ham2K Portable Logger') && x.comments.match(/\b[0-9]+-fer: .+$/)
+        const filteredSpotComment = spotComments.find(x =>
+          x.source.startsWith('Ham2K Portable Logger') &&
+          x.comments.match(/\b[0-9]+-fer:(?: [A-Z0-9]+-(?:[0-9]{4,5}|TEST)){2,}$/)
         )
         if (filteredSpotComment) {
           const newRefs = filteredSpotComment.comments
