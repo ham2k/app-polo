@@ -1,4 +1,11 @@
 {
+  "25.2.99-pre1": {
+    "name": "March '25 (pre1)",
+    "photoCaption": "KE8PZN, WD4DAN & Friends at POTA US-8353",
+    "changes": [
+      "Export settings, with templates"
+    ]
+  },
   "25.2.0": {
     "name": "February '25",
     "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA-0004",

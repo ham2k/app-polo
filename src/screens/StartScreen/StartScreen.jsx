@@ -49,17 +49,17 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       justifyContent: 'space-between'
     },
     titleBoxSpacer: {
-      height: dialogVisible ? '10%' : '30%'
+      height: dialogVisible ? '10%' : '10%'
     },
     titleBoxTop: {
-      backgroundColor: 'rgba(255,255,255,.2)',
+      backgroundColor: 'rgba(255,255,255,.1)',
       justifyContent: 'flex-end'
     },
     titleBoxBottom: {
       // marginTop: height * 0.15
       justifyContent: 'flex-start',
       marginBottom: baseTheme.oneSpace * 2,
-      backgroundColor: 'rgba(255,255,255,.2)',
+      backgroundColor: 'rgba(255,255,255,.1)',
       flex: 0
     },
     messagesBox: {
@@ -72,7 +72,8 @@ function prepareStyles (baseTheme, height, dialogVisible) {
     },
     captionBox: {
       justifyContent: 'flex-end',
-      alignItems: 'center'
+      alignItems: 'center',
+      backgroundColor: 'rgba(255,255,255,.15)'
     },
     ham2k: {
       fontSize: baseTheme.normalFontSize * 1.7,
