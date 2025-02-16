@@ -100,6 +100,30 @@ const SpotsHook = {
 
       return qso
     })
+  },
+  extraSpotInfo: async ({ online, settings, dispatch, spot }) => {
+    if (online) {
+      const spotRef = spot.refs?.find(ref => ref.type === Info.huntingType)
+      if (spotRef) {
+        const args = { call: spot.their.call, park: spotRef.ref }
+        const spotCommentPromise = await dispatch(apiPOTA.endpoints.spotComments.initiate(args))
+        await Promise.all(dispatch(apiPOTA.util.getRunningQueriesThunk()))
+        const spotCommentResults = await dispatch((_dispatch, getState) => apiPOTA.endpoints.spotComments.select(args)(getState()))
+        spotCommentPromise.unsubscribe && spotCommentPromise.unsubscribe()
+        const spotComments = spotCommentResults.data || []
+
+        const filteredSpotComment = spotComments.find(
+          x => x.source?.startsWith('Ham2K Portable Logger') && x.comments.match(/\b[0-9]+-fer: .+$/)
+        )
+        if (filteredSpotComment) {
+          filteredSpotComment.comments.match(/\b[0-9]+-fer: (.+)$/)[1].split(' ').forEach(ref => {
+            if (!spot.refs.find(x => x.ref === ref && x.type === Info.huntingType)) {
+              spot.refs.push({ ref, type: Info.huntingType })
+            }
+          })
+        }
+      }
+    }
   }
 }
 
