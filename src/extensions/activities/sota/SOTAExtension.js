@@ -71,9 +71,9 @@ const ActivityHook = {
   sampleOperations: ({ settings, callInfo }) => {
     return [
       // Regular Activation
-      { refs: [{ type: Info.activationType, ref: 'A/BC-1234', name: 'Example Summit' }] },
+      { refs: [{ type: Info.activationType, ref: 'A/BC-1234', name: 'Example Summit', shortName: 'Example Summit', program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] },
       // Hunting in a different operation
-      { refs: [{}], qsos: [{ refs: [{ type: Info.huntingType, ref: 'A/BC-1234', name: 'Example Summit' }] }] }
+      { refs: [{}], qsos: [{ refs: [{ type: Info.huntingType, ref: 'A/BC-1234', name: 'Example Summit', shortName: 'Example Summit', program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] }] }
     ]
   }
 }
@@ -192,7 +192,9 @@ const ReferenceHandler = {
           location: data.region,
           grid: data.grid,
           accuracy: LOCATION_ACCURACY.ACCURATE,
-          label: `${Info.shortName} ${ref.ref}: ${data.name}`
+          label: `${Info.shortName} ${ref.ref}: ${data.name}`,
+          shortLabel: `${Info.shortName} ${ref.ref}`,
+          program: Info.shortName
         }
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }

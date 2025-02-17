@@ -60,6 +60,14 @@ const ReferenceHandler = {
     return [`NYQP ${date.getFullYear()}`, ref?.location].filter(x => x).join(' • ')
   },
 
+  decorateRef: (ref) => {
+    return {
+      ...ref,
+      label: `${Info.name}: ${ref.location}`,
+      shortLabel: `${Info.shortName}: ${ref.location}`
+    }
+  },
+
   suggestOperationTitle: (ref) => {
     return { for: Info.shortName, subtitle: ref?.location }
   },

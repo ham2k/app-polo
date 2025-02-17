@@ -47,7 +47,14 @@ const ActivityHook = {
   },
   Options: SiOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'VK-ABC123', name: 'Example Silo', shortName: 'Example Silo', program: Info.shortName, label: `${Info.shortName} VK-ABC123: Example Silo`, shortLabel: `${Info.shortName} VK-ABC123` }] }
+    ]
+  }
 }
 
 const HunterLoggingControl = {
@@ -104,7 +111,9 @@ const ReferenceHandler = {
         state: data.state,
         grid: data.grid,
         accuracy: LOCATION_ACCURACY.ACCURATE,
-        label: `${Info.shortName} ${ref.ref}: ${data.name}`
+        label: `${Info.shortName} ${ref.ref}: ${data.name}`,
+        shortLabel: `${Info.shortName} ${ref.ref}`,
+        program: Info.shortName
       }
     } else {
       return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }

@@ -52,9 +52,15 @@ const ActivityHook = {
   },
   Options: WWBOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
-}
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
 
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'B/XX-1234', name: 'Example Bunker', shortName: 'Example Bunker', program: 'XXBOTA', label: 'XX Bunkers On The Air B/XX-1234: Example Bunker', shortLabel: 'XXBOTA B/XX-1234' }] }
+    ]
+  }
+}
 const SpotsHook = {
   ...Info,
   sourceName: 'WWBOTA',
@@ -181,6 +187,8 @@ const ReferenceHandler = {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', location: '' }
 
     const data = await wwbotaFindOneByReference(ref.ref)
+    const program = ref.ref.split('-')[0].split('/')[1]
+
     let result
     if (data?.name) {
       result = {
@@ -189,7 +197,9 @@ const ReferenceHandler = {
         location: data.area,
         grid: data.grid,
         accuracy: LOCATION_ACCURACY.ACCURATE,
-        label: `${Info.shortName} ${ref.ref}: ${data.name}`
+        label: `${program} ${ref.ref}: ${data.name}`,
+        shortLabel: `${program} ${ref.ref}`,
+        program
       }
     } else {
       return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }

@@ -45,7 +45,14 @@ const ActivityHook = {
       return []
     }
   },
-  Options: CustomActivityOptions
+  Options: CustomActivityOptions,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [ReferenceHandler.decorateRef({ type: Info.activationType, ref: 'ABC123', mySig: 'EXOTA' })] }
+    ]
+  }
 }
 
 const ReferenceHandler = {
@@ -64,7 +71,7 @@ const ReferenceHandler = {
   iconForQSO: Info.icon,
 
   decorateRef: (ref) => {
-    return ref // Custom so no known extra data
+    return { ...ref, program: ref.mySig, label: `${ref.mySig} ${ref.ref}: ${ref.name}`, shortLabel: `${ref.mySig} ${ref.ref}` }
   },
 
   extractTemplate: ({ ref, operation }) => {

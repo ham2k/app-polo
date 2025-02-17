@@ -52,7 +52,12 @@ export default Extension
 const ActivityHook = {
   ...Info,
   Options: ActivityOptions,
-  mainExchangeForOperation
+  mainExchangeForOperation,
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      { refs: [ReferenceHandler.decorateRef({ type: Info.key, class: '1A', location: 'ENY' })] }
+    ]
+  }
 }
 
 const ReferenceHandler = {
@@ -65,6 +70,14 @@ const ReferenceHandler = {
     else date = new Date()
     const ref = findRef(operation, Info.key)
     return [`FD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')
+  },
+
+  decorateRef: (ref) => {
+    return {
+      ...ref,
+      label: `${Info.name}: ${ref.class} ${ref.location}`,
+      shortLabel: `${Info.shortName}: ${ref.class} ${ref.location}`
+    }
   },
 
   suggestOperationTitle: (ref) => {

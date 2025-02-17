@@ -195,6 +195,12 @@ export default function ThemedTextInput (props) {
         autoCapitalize: 'sentences',
         inputMode: 'text'
       }
+    } else if (keyboard === 'code') {
+      keyboardOpts = {
+        autoCapitalize: 'none',
+        inputMode: 'text',
+        keyboardType: 'ascii-capable'
+      }
     } else if (keyboard === 'dumb' || keyboard === 'numbers') {
       keyboardOpts = {
         autoComplete: 'off',

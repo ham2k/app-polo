@@ -49,7 +49,15 @@ const ActivityHook = {
   postSpot: GMAPostSpot,
   Options: GMAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'A/BC-1234', name: 'Example Mountain Summit', shortName: 'Example Mt. Summit', program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Mountain Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] }
+    ]
+  }
+
 }
 
 const HunterLoggingControl = {
@@ -99,10 +107,12 @@ const ReferenceHandler = {
           name: data.name,
           grid: data.grid,
           accuracy: LOCATION_ACCURACY.REASONABLE,
-          label: `${Info.shortName} ${ref.ref}: ${data.name}`
+          label: `${Info.shortName} ${ref.ref}: ${data.name}`,
+          shortLabel: `${Info.shortName} ${ref.ref}`,
+          program: Info.shortName
         }
       } else {
-        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
+        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference', program: Info.shortName }
       }
     }
   },

@@ -16,7 +16,7 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { basePartialTemplates, DATA_FORMAT_DESCRIPTIONS, runTemplateForOperation } from '../../../store/operations'
-import { List, Switch, Text } from 'react-native-paper'
+import { IconButton, List, Switch, Text } from 'react-native-paper'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import ThemedTextInput from '../../components/ThemedTextInput'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
@@ -39,7 +39,11 @@ export default function ExportSettingsScreen ({ navigation }) {
       stationCall: 'N0CALL',
       startAtMillisMin: now.getTime(),
       startAtMillisMax: now.getTime() + 1000 * 60 * 60 * 2,
-      refs: [{ type: 'potaActivation', ref: 'XX-1234' }, { type: 'wwff', ref: 'XXFF-0001' }]
+      refs: [
+        { type: 'potaActivation', ref: 'XX-1234', shortLabel: 'POTA XX-1234', label: 'POTA: XX-1234 Example NP', program: 'POTA' },
+        { type: 'wwff', ref: 'XXFF-0001', shortLabel: 'WWFF XXFF-0001', label: 'WWFF: XXFF-0001 Example NP', program: 'WWFF' },
+        { type: 'wfd', class: '1O', location: 'ENY', shortLabel: 'WFD: 1O ENY', label: 'Winter Field Day: 10 ENY' }
+      ]
     },
     qso: { notes: 'Good Contact!', their: { sent: '59', exchange: 'MA' }, our: { sent: '55', exchange: 'NY' } }
   }), [now])
@@ -109,7 +113,7 @@ export default function ExportSettingsScreen ({ navigation }) {
       ],
       settings: defaultRefSettings
     })
-    console.log(newExportTypes[0])
+
     activityHooks.forEach(hook => {
       const sampleOperations = (hook.sampleOperations && hook.sampleOperations({ settings })) || []
       sampleOperations.forEach(operation => {
@@ -120,7 +124,7 @@ export default function ExportSettingsScreen ({ navigation }) {
             options.forEach(option => {
               const key = `${hook.key}-${option.format}-${option.exportType ?? 'ref'}`
               const exportSettings = selectExportSettings({ settings }, key)
-              console.log('adding', { key, sampleTemplateData, operation, refs: operation.refs })
+
               const data = {
                 key,
                 name: `${option.exportName || hook.shortName} (${DATA_FORMAT_DESCRIPTIONS[option.format] || option.format})`,
@@ -166,7 +170,6 @@ export default function ExportSettingsScreen ({ navigation }) {
                 })
               }
               newExportTypes.push(data)
-              console.log('added sample data', newExportTypes[newExportTypes.length - 1].sampleData)
             })
           }
         })
@@ -279,6 +282,7 @@ Attributes for the log being exported
             <Ham2kListItem
               title={exportType.name}
               description={exportType.description}
+              descriptionStyle={{ opacity: exportType.description === 'Using defaults' ? 0.5 : 1 }}
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={expanded[exportType.key] ? 'chevron-down' : 'chevron-right'} />}
               onPress={() => setExpanded({ ...expanded, [exportType.key]: !expanded[exportType.key] })}
             />
@@ -290,21 +294,7 @@ Attributes for the log being exported
                   right={() => <Switch value={!!exportType.settings?.active} onValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, active: value })) } />}
                   onPress={() => dispatch(setExportSettings({ key: exportType.key, active: !exportType.settings?.active }))}
                 />
-                {exportType.editableSettings.map(setting => (
-                  <View key={setting.key} style={{ marginLeft: styles.oneSpace * 1, marginBottom: styles.oneSpace * 2 }}>
-                    <ThemedTextInput
-                      style={{ width: '100%', flex: 1 }}
-                      label={setting.label}
-                      value={exportType?.settings?.active === false ? '' : exportType?.settings?.[setting.key] || setting.default || ''}
-                      placeholder={setting.default}
-                      disabled={exportType?.settings?.active === false}
-                      onChangeText={(value) => dispatch(setExportSettings({ key: exportType.key, [setting.key]: value })) }
-                    />
-                    <Text style={{ marginTop: styles.oneSpace, fontSize: styles.smallerFontSize, marginHorizontal: styles.oneSpace * 1 }}>
-                      {runTemplateForOperation(exportType?.settings?.[setting.key] || setting.default, { settings, ...exportType.sampleData })}
-                    </Text>
-                  </View>
-                ))}
+                {exportType.editableSettings.map(setting => <OneExportSetting key={setting.key} setting={setting} styles={styles} dispatch={dispatch} exportType={exportType} sampleData={exportType.sampleData} />)}
               </View>
             )}
           </React.Fragment>
@@ -314,5 +304,37 @@ Attributes for the log being exported
         </Ham2kListSection>
       </ScrollView>
     </ScreenContainer>
+  )
+}
+
+function OneExportSetting ({ setting, styles, sampleData, dispatch, exportType }) {
+  const example = useMemo(() => {
+    return runTemplateForOperation(exportType?.settings?.[setting.key] || setting.default, { settings: {}, ...sampleData })
+  }, [exportType, sampleData, setting.default, setting.key])
+
+  const isDefault = useMemo(() => {
+    return setting.default === exportType?.settings?.[setting.key] || exportType?.settings?.[setting.key] === null
+  }, [exportType, setting.default, setting.key])
+
+  return (
+    <View key={setting.key} style={{ marginLeft: styles.oneSpace * 1, marginBottom: styles.oneSpace * 2 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+        <ThemedTextInput
+          style={{ flex: 1, fontWeight: isDefault ? 'regular' : 'bold' }}
+          label={setting.label}
+          keyboard="code"
+          value={exportType?.settings?.active === false ? '' : exportType?.settings?.[setting.key] ?? setting.default ?? ''}
+          placeholder={setting.default}
+          disabled={exportType?.settings?.active === false}
+          onChangeText={(value) => dispatch(setExportSettings({ key: exportType.key, [setting.key]: value })) }
+        />
+
+        <IconButton icon="backspace-outline" onPress={() => dispatch(setExportSettings({ key: exportType.key, [setting.key]: null })) } />
+      </View>
+      <Text style={{ marginTop: styles.oneSpace, fontSize: styles.smallerFontSize, marginHorizontal: styles.oneSpace * 1 }}>
+        {example}
+      </Text>
+    </View>
   )
 }

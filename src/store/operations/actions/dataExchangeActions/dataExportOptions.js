@@ -74,7 +74,6 @@ Templates are also provided with the following helper functions:
 import { fmtISODate } from '../../../../tools/timeFormats'
 import { findBestHook, findHooks } from '../../../../extensions/registry'
 import Handlebars from 'handlebars'
-import { joinAnd } from '../../../../tools/joinAnd'
 import { selectExportSettings } from '../../../settings'
 
 export const DATA_EXTENSIONS = {
@@ -245,7 +244,7 @@ export function basePartialTemplates ({ settings }) {
     DefaultTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}',
     ADIFNotes: '{{qso.notes}}',
     ADIFComment: '{{qso.notes}}',
-    ADIFQslMsg: '{{#joinAnd op.refs}}{{ref}}{{/joinAnd}}'
+    ADIFQslMsg: '{{#join op.refs separator=", " final=" & "}}{{or shortLabel label key}}{{/join}}'
   }
 
   partials.RefActivityName = settings?.useCompactFileNames ? partials.RefActivityNameCompact : partials.RefActivityNameNormal
@@ -315,14 +314,33 @@ Handlebars.registerHelper('titlecase', function (...args) {
 
 Handlebars.registerHelper('compact', (x) => x.replace(/[^a-zA-Z0-9]/g, ''))
 Handlebars.registerHelper('first8', (x) => x.slice(0, 8))
-Handlebars.registerHelper('join', (x) => Handlebars.Utils.isArray(x) ? x.filter(e => e).join(' ') : x)
 Handlebars.registerHelper('joinComma', (x) => Handlebars.Utils.isArray(x) ? x.filter(e => e).join(', ') : x)
 Handlebars.registerHelper('joinCommaCompact', (x) => Handlebars.Utils.isArray(x) ? x.filter(e => e).join(',') : x)
 
-Handlebars.registerHelper('joinAnd', function (...args) {
+Handlebars.registerHelper('join', function (...args) {
   const options = args.pop()
-  console.log('joinAnd', args)
+  const separator = options?.hash?.separator || ', '
+  const final = options?.hash?.final || separator
+
   if (args.length === 0) args = [this]
   const parts = args.flat().map(x => options?.fn ? options.fn(x) : x).filter(x => x)
-  return joinAnd(parts)
+  if (parts.length === 0) return ''
+  if (parts.length === 1) return parts[0]
+  if (parts.length === 2) return parts.join(final)
+  return parts.slice(0, -1).join(separator) + final + parts.slice(-1)
+})
+
+Handlebars.registerHelper('or', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  return args.find(x => !Handlebars.Utils.isEmpty(x)) || false
+})
+
+Handlebars.registerHelper('and', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  if (args.every(x => !Handlebars.Utils.isEmpty(x))) {
+    return args[args.length - 1]
+  }
+  return false
 })

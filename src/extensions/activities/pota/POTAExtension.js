@@ -62,7 +62,7 @@ const ActivityHook = {
   sampleOperations: ({ settings, callInfo }) => {
     return [
       // Regular Activation
-      { refs: [{ type: Info.activationType, ref: 'EX-1234', name: 'Example National Park', shortName: 'Example NP' }] }
+      { refs: [{ type: Info.activationType, ref: 'XX-1234', name: 'Example National Park', shortName: 'Example NP', program: Info.shortName, label: `${Info.shortName} XX-1234: Example National Park`, shortLabel: `${Info.shortName} XX-1234` }] }
     ]
   }
 }
@@ -164,7 +164,9 @@ const ReferenceHandler = {
         ...ref,
         name: data.name,
         location: data.location,
-        label: `${Info.shortName} ${ref.ref}: ${data.name}`
+        label: `${Info.shortName} ${ref.ref}: ${data.name}`,
+        shortLabel: `${Info.shortName} ${ref.ref}`,
+        program: Info.shortName
       }
       if (data?.location?.indexOf(',') < 0) {
         result.accuracy = LOCATION_ACCURACY.REASONABLE

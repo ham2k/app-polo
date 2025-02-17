@@ -29,7 +29,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   templates.notesTemplate = compileTemplateForOperation(templates.exportSettings?.ADIFNotesTemplate || ADIFNotesTemplate || '{{>ADIFNotes}}', templates)
   templates.commentsTemplate = compileTemplateForOperation(templates.exportSettings?.ADIFCommentTemplate || ADIFCommentTemplate || '{{>ADIFComment}}', templates)
   templates.qslmsgTemplate = compileTemplateForOperation(templates.exportSettings?.ADIFQslMsgTemplate || ADIFQslMsgTemplate || '{{>ADIFQslMsg}}', templates)
-
+  console.log('qsl message template', templates.qslmsgTemplate)
   const common = {
     refs: operation.refs,
     grid: operation.grid,

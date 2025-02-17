@@ -38,7 +38,14 @@ const ActivityHook = {
   ...Info,
   MainExchangePanel: null,
   Options: ELAActivityOptions,
-  postSpot: ELAPostSpot
+  postSpot: ELAPostSpot,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'G-01012', program: Info.shortName, name: 'Example Lighthouse', shortName: 'Example Lighthouse', label: `${Info.shortName} G-01012: Example Lighthouse`, shortLabel: `${Info.shortName} G-01012` }] }
+    ]
+  }
 }
 
 const ReferenceHandler = {
@@ -64,10 +71,12 @@ const ReferenceHandler = {
           location: reference.region,
           grid: reference.grid,
           accuracy: LOCATION_ACCURACY.REASONABLE,
-          label: `${Info.shortName} ${ref.ref}: ${reference.name}`
+          label: `${Info.shortName} ${ref.ref}: ${reference.name}`,
+          shortLabel: `${Info.shortName} ${ref.ref}`,
+          program: Info.shortName
         }
       } else {
-        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
+        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference', program: Info.shortName }
       }
     }
   },

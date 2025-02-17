@@ -51,7 +51,14 @@ const ActivityHook = {
   postSpot: WWFFPostSpot,
   Options: WWFFActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'XXWW-1234', name: 'Example National Park', shortName: 'Example NP', program: Info.shortName, label: `${Info.shortName} XXWW-1234: Example NationalPark`, shortLabel: `${Info.shortName} XXWW-1234` }] }
+    ]
+  }
 }
 
 const SpotsHook = {
@@ -150,7 +157,9 @@ const ReferenceHandler = {
           location: data.region,
           grid: data.grid,
           accuracy: LOCATION_ACCURACY.REASONABLE,
-          label: `${Info.shortName} ${ref.ref}: ${data.name}`
+          label: `${Info.shortName} ${ref.ref}: ${data.name}`,
+          shortLabel: `${Info.shortName} ${ref.ref}`,
+          program: Info.shortName
         }
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
