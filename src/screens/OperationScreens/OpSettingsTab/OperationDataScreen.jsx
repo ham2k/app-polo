@@ -66,7 +66,7 @@ export default function OperationDataScreen (props) {
         let info = parseCallsign(call)
         info = annotateFromCountryFile(info)
         if (info.entityPrefix) {
-          info = { ...info, ...DXCC_BY_PREFIX[info.entityPrefix] }
+          info = { ...info, ...DXCC_BY_PREFIX[info?.entityPrefix] }
         }
         return info
       }))

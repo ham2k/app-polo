@@ -108,7 +108,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     let leftParts = []
     let rightParts = []
 
-    const entity = DXCC_BY_PREFIX[guess.entityPrefix]
+    const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
     if (guess.postindicators && guess.postindicators.find(ind => ['P', 'M', 'AM', 'MM', 'PM'].indexOf(ind) >= 0)) {
       isOnTheGo = true

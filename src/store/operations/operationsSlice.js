@@ -113,7 +113,7 @@ export const selectOperationCallInfo = createSelector(
     if (info.baseCall) {
       info = annotateFromCountryFile(info)
       if (info.entityPrefix) {
-        info = { ...info, ...DXCC_BY_PREFIX[info.entityPrefix] }
+        info = { ...info, ...DXCC_BY_PREFIX[info?.entityPrefix] }
       }
     }
     return info
