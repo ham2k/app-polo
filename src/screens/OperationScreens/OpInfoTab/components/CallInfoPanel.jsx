@@ -96,7 +96,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
 
   const { guess, lookup } = useCallLookup(qso)
 
-  const entity = DXCC_BY_PREFIX[guess.entityPrefix]
+  const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
   const [thisOpTitle, thisOpQSOs, historyTitle, historyRecent, historyAndMore] = useMemo(() => {
     const thisQs = (lookup.history || []).filter(q => operation && q.operation === operation?.uuid)
