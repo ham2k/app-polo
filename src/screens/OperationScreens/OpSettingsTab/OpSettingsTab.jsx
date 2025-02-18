@@ -65,7 +65,7 @@ export default function OpSettingsTab ({ navigation, route }) {
         const operations = selectOperationsList(getState())
         const newTemplates = getAllOperationTemplates({ operations, settings })
         const currentTemplate = getOperationTemplate({ operation, settings })
-        setTemplates(newTemplates.filter(t => t.key !== currentTemplate.key))
+        setTemplates(newTemplates.filter(t => t?.key !== currentTemplate?.key))
         dispatch(setOperationData({ uuid: operation.uuid, _useTemplates: undefined }))
       })
     }
