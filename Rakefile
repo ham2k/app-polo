@@ -128,7 +128,7 @@ EOF
 
   def revopush_push_release(deployment:, platform:, version:)
     puts "Pushing #{version} for #{platform} #{deployment}"
-    cmd = "revopush release-react polo-#{platform} #{platform} -d #{deployment} --targetBinaryVersion #{ENV['POLO_BASE_VERSION']} --description \"Release #{version}*\""
+    cmd = "revopush release-react polo-#{platform} #{platform} -d #{deployment} --targetBinaryVersion #{ENV['POLO_BASE_VERSION']} --description \"Release #{version}\""
     puts "$ #{cmd}"
     system cmd
   end
