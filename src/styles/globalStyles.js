@@ -188,24 +188,27 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       },
       paragraph: {
         marginTop: 0,
-        marginBottom: halfSpace
+        marginBottom: oneSpace
       },
       heading1: {
         fontFamily,
         fontWeight: 'bold',
         fontSize: normalFontSize * 1.4,
+        color: theme.colors.onBackground,
         marginBottom: halfSpace
       },
       heading2: {
         fontFamily,
         fontWeight: 'bold',
         fontSize: normalFontSize * 1.2,
+        color: theme.colors.onBackground,
         marginBottom: halfSpace
       },
       heading3: {
         fontFamily,
         fontWeight: 'bold',
         fontSize: normalFontSize * 1,
+        color: theme.colors.onBackground,
         marginBottom: halfSpace
       },
       bullet_list_icon: {

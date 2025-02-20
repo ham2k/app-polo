@@ -45,7 +45,8 @@ export const DXCCScoringHandler = {
     }
 
     if (count >= 2) {
-      score.longSummary = `${count} DXCC entities\n`
+      score.label = `${count} DXCC Entities`
+      score.longSummary = '\n'
       Object.keys(score.entities ?? {})
         .map(entityPrefix => DXCC_BY_PREFIX[entityPrefix])
         .sort((a, b) => score.entities[b.entityPrefix] - score.entities[a.entityPrefix])

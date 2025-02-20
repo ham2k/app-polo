@@ -1,4 +1,11 @@
 {
+  "25.2.0-qp4": {
+    "name": "February '25 (QP4)",
+    "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA-0004",
+    "changes": [
+      "QSO Parties: NC, SC, OK, ID and WI (Early Access)"
+    ]
+  },
   "25.2.0": {
     "name": "February '25",
     "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA-0004",

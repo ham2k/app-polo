@@ -36,8 +36,8 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
 
   const baseNameParts = {
     call: ourInfo.call,
-    date: fmtISODate(operation.startAtMillisMax),
-    compactDate: fmtISODate(operation.startAtMillisMax).replace(/-/g, ''),
+    date: fmtISODate(operation.startAtMillisMax || Date.now()),
+    compactDate: fmtISODate(operation.startAtMillisMax || Date.now()).replace(/-/g, ''),
     title: operation.title,
     uuid: operation.uuid,
     shortUUID: operation.uuid.split('-')[0]

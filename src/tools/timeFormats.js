@@ -244,6 +244,8 @@ export function fmtTimeBetween (t1, t2, { roundTo = false } = {}) {
 
     if (roundTo === 'minutes') {
       diff = Math.round(diff / (60 * 1000)) * (60 * 1000)
+    } else if (roundTo === 'hours') {
+      diff = Math.round(diff / (60 * 60 * 1000)) * (60 * 60 * 1000)
     }
 
     if (diff < 0) {
@@ -259,7 +261,11 @@ export function fmtTimeBetween (t1, t2, { roundTo = false } = {}) {
         return `${Math.floor(diff / (60 * 1000))}m ${Math.floor((diff % (60 * 1000)) / 1000)}s`
       }
     } else if (diff < 1000 * 60 * 60 * 24) {
-      return `${Math.floor(diff / (60 * 60 * 1000))}h ${Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000))}m`
+      if (roundTo === 'hours') {
+        return `${Math.floor(diff / (60 * 60 * 1000))}h`
+      } else {
+        return `${Math.floor(diff / (60 * 60 * 1000))}h ${Math.floor((diff % (60 * 60 * 1000)) / 1000)}s`
+      }
     } else {
       return `${Math.floor(diff / (60 * 60 * 24 * 1000))}d ${Math.floor((diff % (60 * 60 * 24 * 1000)) / (60 * 60 * 1000))}h`
     }
@@ -267,3 +273,18 @@ export function fmtTimeBetween (t1, t2, { roundTo = false } = {}) {
     return ''
   }
 }
+
+export function fmtDateTimeNiceRange (t1, t2) {
+  t1 = prepareTimeValue(t1)
+  t2 = prepareTimeValue(t2)
+  const diffInDays = (t2 - t1) / (1000 * 60 * 60 * 24)
+  if (diffInDays < 7) {
+    return t1.toLocaleTimeString(undefined, { hour: '', weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })
+  } else {
+    return [fmtDateTimeNice(t1), fmtDateTimeNice(t2)].join(' - ')
+  }
+}
+
+// return t.toLocaleTimeString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+
+// return t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric', year: 'numeric' })
