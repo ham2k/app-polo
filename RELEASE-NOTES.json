@@ -3,12 +3,18 @@
     "name": "March '25 (pre1)",
     "photoCaption": "KE8PZN, WD4DAN & Friends at POTA US-8353",
     "changes": [
+      "QSO Parties: NC, SC, OK, ID and WI",
       "Export settings, with templates"
+    ]
+  },
+  "25.2.1": {
+    "name": "February '25",
+    "changes": [
+      "QSO Parties: NC, SC, OK (Early Access)"
     ]
   },
   "25.2.0": {
     "name": "February '25",
-    "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA-0004",
     "changes": [
       "Operation Templates",
       "Belgian Lighthouses and Lightships (by M1SDH)",

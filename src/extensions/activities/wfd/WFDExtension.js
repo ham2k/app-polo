@@ -241,31 +241,31 @@ const ReferenceHandler = {
     let line
 
     parts.push(`### ${Object.keys(score?.arrlSections ?? {}).length} ARRL Sections`)
-    line = ''
+    line = '> '
     Object.keys(ARRL_SECTIONS).forEach(s => {
       s = s.toUpperCase()
       if (score.arrlSections[s]) {
-        line += `**~~${s}~~**  `
+        line += `**~~${s}~~**${s.length === 2 ? ' ' : ''} `
       } else {
-        line += `${s}  `
+        line += `${s}${s.length === 2 ? ' ' : ''} `
       }
     })
     parts.push(line)
 
     parts.push(`### ${Object.keys(score?.racSections ?? {}).length} RAC Sections`)
-    line = ''
+    line = '> '
     Object.keys(RAC_SECTIONS).forEach(s => {
       s = s.toUpperCase()
       if (score.racSections[s]) {
-        line += `**~~${s}~~**  `
+        line += `**~~${s}~~**${s.length === 2 ? ' ' : ''} `
       } else {
-        line += `${s}  `
+        line += `${s}${s.length === 2 ? ' ' : ''} `
       }
     })
     parts.push(line)
 
     parts.push(`### ${Object.keys(score?.otherSections ?? {}).length} Other`)
-    line = ''
+    line = '> '
     ;['MX', 'DX'].forEach(s => {
       if (score.otherSections[s]) {
         line += `**~~${s}~~**  `

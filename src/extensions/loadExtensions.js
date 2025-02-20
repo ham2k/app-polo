@@ -32,7 +32,7 @@ import HamDBExtension from './data/hamdb/HamDBExtension'
 import HamQTHExtension from './data/hamqth/HamQTHExtension'
 import Ham2KLoFiSyncExtension from './data/ham2k-lofi-sync/Ham2KLoFiSyncExtension'
 
-import NYQPExtension from './contests/nyqp/NYQPExtension'
+import QSOPartiesExtension from './contests/qp/QSOPartiesExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
@@ -67,7 +67,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(BLHAExtension)
   registerExtension(SiOTAExtentsion)
 
-  registerExtension(NYQPExtension)
+  registerExtension(QSOPartiesExtension)
 
   registerExtension(RadioCommands)
   registerExtension(TimeCommands)

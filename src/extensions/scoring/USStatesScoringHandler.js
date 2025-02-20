@@ -53,10 +53,11 @@ export const USStatesScoringHandler = {
     }
 
     if (count >= 3) {
-      score.longSummary = `${count} US States`
+      score.label = `${count} US States`
+      score.longSummary = ''
       // for (let row = 0; row < 5; row++) {
       // Object.keys(US_STATES).slice(row * 10, row * 10 + 10).forEach(state => {
-      score.longSummary += '\n'
+      score.longSummary += '\n> '
       Object.keys(US_STATES).forEach(state => {
         state = state.toUpperCase()
         if (score.states[state]) {

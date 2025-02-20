@@ -102,8 +102,8 @@ export function baseNamePartsFor ({ operation, ourInfo }) {
   return {
     call: ourInfo.call,
     baseCall: ourInfo.baseCall,
-    date: fmtISODate(operation.startAtMillisMax),
-    compactDate: fmtISODate(operation.startAtMillisMax).replace(/-/g, ''),
+    date: fmtISODate(operation.startAtMillisMax || Date.now()),
+    compactDate: fmtISODate(operation.startAtMillisMax || Date.now()).replace(/-/g, ''),
     title: operation.title,
     uuid: operation.uuid,
     shortUUID: operation.uuid.split('-')[0]
