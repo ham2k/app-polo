@@ -47,6 +47,13 @@ export function reportError (...params) {
 
     if (message) {
       console.log('Reporting Error', message)
+      if (error?.stack) {
+        const stackLines = error.stack.split('\n')
+        const fileLines = stackLines.filter(line => line.includes('.js:') || line.includes('.jsx:'))
+        if (fileLines.length > 0) {
+          console.log(fileLines.slice(0, 10).join('\n'))
+        }
+      }
       firebaseCrashlytics?.crashlytics()?.recordError(new Error(message), message)
     }
     if (error) {
