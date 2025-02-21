@@ -10,9 +10,6 @@
   "cabrilloName": "BC-QSO-PARTY",
   "notes": "",
   "lastUpdated": "2025-02-19 15:00Z",
-  "exchange": [
-    "Location:county/state/province/dx"
-  ],
   "bonusStations": {
     "VO7ODX": 20
   },
@@ -21,14 +18,12 @@
     "stateCountsForInState": false,
     "selfSpotting": false,
     "countyLine": true,
-    "bonusPostMultiplier": true,
     "entity": "VE",
     "bonusPerBandMode": null,
     "multsPerBandMode": true,
     "dxIsMultiplier": false,
     "dxEntityIsMultiplier": true
   },
-  "uniqueness": "perBandAndMode",
   "entry": {
     "In State": {
       "Category": {

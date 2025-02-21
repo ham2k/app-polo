@@ -9,9 +9,6 @@
   "notes": "FT8/FT4 is allowed, but not supported in PoLo.",
   "lastUpdated": "2025-02-19 15:00Z",
   "openQuestions": "Does any county count as VT multiplier for in-state stations?",
-  "exchange": [
-    "Location:county/state/province/entity"
-  ],
   "specialCalls": [
     "W1NVT"
   ],
@@ -22,10 +19,10 @@
     "countyLine": true,
     "multsPerBand": true,
     "specialCallIsMultiplier": true,
+    "dxLocationIsPrefix": true,
     "dxIsMultiplier": false,
     "dxEntityIsMultiplier": true
   },
-  "uniqueness": "perBandAndMode",
   "entry": {
     "In State": {
       "Category": {

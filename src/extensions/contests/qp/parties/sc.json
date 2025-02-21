@@ -8,10 +8,6 @@
   "lastUpdated": "2025-02-19 15:00Z",
   "cabrilloName": "SC-QSO-PARTY",
   "notes": "FT8/FT4 is allowed, but not supported in PoLo.",
-  "exchange": [
-    "Location:county/state/province/dx"
-  ],
-  "uniqueness": "perBandAndMode",
   "bonusStations": {
     "W4CAE": 350,
     "WW4SF": 250,
@@ -22,7 +18,6 @@
     "stateCountsForInState": true,
     "selfSpotting": true,
     "countyLine": true,
-    "bonusPostMultiplier": true,
     "inStateToOutOfStatePointsDouble": true,
     "bonusPerBandMode": true,
     "multsPerBandMode": true,

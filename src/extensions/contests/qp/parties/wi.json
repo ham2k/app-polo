@@ -10,10 +10,6 @@
   "internalNotes": "",
   "lastUpdated": "2025-02-19 12:00Z",
   "status": "Updated for 2025, but not verified",
-  "exchange": [
-    "Location:county/state/province/entity"
-  ],
-  "uniqueness": "perBandAndMode",
   "bonusStations": {
     "W9FK": 100
   },

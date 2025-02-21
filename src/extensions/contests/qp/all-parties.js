@@ -4,6 +4,9 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+
+// https://www.contestcalendar.com/stateparties.html
+
 import sevenqp from './parties/7qp.json'
 import al from './parties/al.json'
 import ar from './parties/ar.json'
@@ -35,6 +38,7 @@ import neqp from './parties/neqp.json'
 import nh from './parties/nh.json'
 import nj from './parties/nj.json'
 import nm from './parties/nm.json'
+import ns from './parties/ns.json'
 import nv from './parties/nv.json'
 import ny from './parties/ny.json'
 import oh from './parties/oh.json'
@@ -54,5 +58,5 @@ import wv from './parties/wv.json'
 export default [
   sevenqp, al, ar, az, bc, ca, co, cpqp, de, fl, ga, hi, ia, id, il,
   indiana, ks, ky, la, md, mi, mn, mo, ms, nc, nd, ne, neqp, nh, nj,
-  nm, nv, ny, oh, ok, on, pa, qc, sc, sd, tn, tx, va, wa, wi, wv
+  nm, ns, nv, ny, oh, ok, on, pa, qc, sc, sd, tn, tx, va, wa, wi, wv
 ]

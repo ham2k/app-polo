@@ -10,11 +10,7 @@
   "cabrilloName": "MN-QSO-PARTY",
   "notes": "",
   "lastUpdated": "2025-02-19 15:00Z",
-  "exchange": [
-    "Name",
-    "Location:county/state/province/dx"
-  ],
-  "multipliers": "overall:county/state/province/dx",
+  "exchange": [ "Name", "Location" ],
   "options": {
     "dcCountsAsMaryland": false,
     "stateCountsForInState": false,
@@ -23,7 +19,6 @@
     "multsPerBandMode": false,
     "dxIsMultiplier": true
   },
-  "uniqueness": "perBandAndMode",
   "entry": {
     "In State": {
       "Category": {

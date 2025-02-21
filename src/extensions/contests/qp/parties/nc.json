@@ -10,10 +10,6 @@
   "internalNotes": "Best doc so far, but worst county list.",
   "lastUpdated": "2025-02-19 12:00Z",
   "status": "Verified for 2025",
-  "exchange": [
-    "Location:county/state/province/dx"
-  ],
-  "uniqueness": "perBandAndMode",
   "bonusStations": {
     "K4MN": 50,
     "WA4TRS": 50,
@@ -36,7 +32,6 @@
     "selfCountsForCounty": true,
     "selfSpotting": true,
     "countyLine": true,
-    "bonusPostMultiplier": true,
     "dxIsMultiplier": true
   },
   "entry": {
