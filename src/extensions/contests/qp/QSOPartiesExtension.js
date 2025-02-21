@@ -19,7 +19,8 @@ import RAW_CANADIAN_PROVINCES from '../../../data/canadianProvinces.json'
 import { Info } from './QSOPartiesInfo'
 import { ActivityOptions } from './QSOPartiesActivityOptions'
 
-import QSO_PARTY_DATA from './qso-parties.json'
+import RAW_QSO_PARTY_DATA from './all-parties.js'
+export const QSO_PARTY_DATA = Object.fromEntries(RAW_QSO_PARTY_DATA.map(party => [party.key, party]))
 
 const INVALID_BANDS = ['60m', '30m', '17m', '12m']
 
@@ -120,7 +121,6 @@ const ReferenceHandler = {
   },
 
   suggestOperationTitle: (ref) => {
-    console.log('title', ref)
     if (ref?.ref) {
       const qp = qpData({ ref })
       return { for: qp.short ?? qp.key + 'QP', subtitle: ref?.location }
@@ -135,7 +135,7 @@ const ReferenceHandler = {
       return [{
         format: 'adif',
         exportType: 'qp-adif',
-        exportName: `${qp.name} ADIF`,
+        exportLabel: `${qp.name} ADIF`,
         templateData: { handlerShortName: qp.short, handlerName: qp.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
@@ -143,7 +143,7 @@ const ReferenceHandler = {
       {
         format: 'cabrillo',
         exportType: 'qp-cabrillo',
-        exportName: `${qp.name} Cabrillo`,
+        exportLabel: `${qp.name} Cabrillo`,
         templateData: { handlerShortName: qp.short, handlerName: qp.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
@@ -253,7 +253,7 @@ const ReferenceHandler = {
 
   scoringForQSO: ({ qso, qsos, operation, ref, score }) => {
     const qp = qpData({ ref })
-    console.log('scoring', qp)
+
     let ourLocations = ref?.location
     let weAreInState
     if (ref?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
@@ -280,8 +280,6 @@ const ReferenceHandler = {
       theirLocations = [qso?.their?.state ?? qso?.their?.guess?.state]
       theyAreInState = false
     }
-
-    console.log('scoring', { ourLocations, weAreInState, theirLocations, theyAreInState })
 
     if (!weAreInState && !theyAreInState) {
       theirLocations = []
@@ -390,9 +388,11 @@ const ReferenceHandler = {
     }
 
     if (qp.options.selfCountsForCounty && !score.counties[ref?.location]) {
-      score.counties[ref.location] = 1
-      const multPrefix = qpMultPrefix({ qp, band: qsoScore.band, mode: qsoScore.mode })
-      score.mults[multPrefix + ref.location] = 1
+      if (qp.counties[ref.location]) {
+        score.counties[ref.location] = 1
+        const multPrefix = qpMultPrefix({ qp, band: qsoScore.band, mode: qsoScore.mode })
+        score.mults[multPrefix + ref.location] = 1
+      }
     }
 
     score.qsoPoints = score.qsoPoints + qsoScore.value

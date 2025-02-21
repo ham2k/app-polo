@@ -49,7 +49,7 @@ function prepareStyles (baseStyles, themeColor) {
         marginLeft: 0,
         paddingHorizontal: 0,
         fontSize: baseStyles.smallFontSize,
-        color: baseStyles.colors.onBackgroundLight,
+        color: baseStyles.colors.onBackgroundLighter,
         opacity: 1
       }
     }

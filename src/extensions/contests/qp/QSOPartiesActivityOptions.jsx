@@ -13,10 +13,8 @@ import { ListRow } from '../../../screens/components/ListComponents'
 import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 
-import QSO_PARTY_DATA from './qso-parties.json'
-
 import { Info } from './QSOPartiesInfo'
-import { qpData, qpIsInState, qpNameForLocation, qpNormalizeLocation } from './QSOPartiesExtension'
+import { qpData, qpIsInState, qpNameForLocation, qpNormalizeLocation, QSO_PARTY_DATA } from './QSOPartiesExtension'
 import ThemedDropDown from '../../../screens/components/ThemedDropDown'
 import { Ham2kMarkdown } from '../../../screens/components/Ham2kMarkdown'
 import { fmtDateTimeNice, fmtTimeBetween, prepareTimeValue } from '../../../tools/timeFormats'

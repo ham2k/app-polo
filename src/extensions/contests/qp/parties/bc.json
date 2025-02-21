@@ -1,0 +1,115 @@
+{
+  "key": "BC",
+  "name": "British Columbia QSO Party",
+  "short": "BCQP",
+  "url": "https://www.orcadxcc.org/bcqp_rules.html",
+  "start": "2025-2-1 16:00Z",
+  "end": "2025-2-2 03:59Z",
+  "secondStart": "2025-2-2 16:00Z",
+  "secondEnd": "2025-2-2 23:59Z",
+  "cabrilloName": "BC-QSO-PARTY",
+  "notes": "",
+  "lastUpdated": "2025-02-19 15:00Z",
+  "exchange": [
+    "Location:county/state/province/dx"
+  ],
+  "bonusStations": {
+    "VO7ODX": 20
+  },
+  "options": {
+    "dcCountsAsMaryland": true,
+    "stateCountsForInState": false,
+    "selfSpotting": false,
+    "countyLine": true,
+    "bonusPostMultiplier": true,
+    "entity": "VE",
+    "bonusPerBandMode": null,
+    "multsPerBandMode": true,
+    "dxIsMultiplier": false,
+    "dxEntityIsMultiplier": true
+  },
+  "uniqueness": "perBandAndMode",
+  "entry": {
+    "In State": {
+      "Category": {
+        "SOAB": "Single Operator All Bands",
+        "MOAB": "Multi Operator All Bands"
+      },
+      "Mode": {
+        "PHONE": "Phone",
+        "CW": "CW",
+        "MIX": "Mixed"
+      },
+      "Power": {
+        "QRP": "5 W or less",
+        "LOW": "100 W or less",
+        "HIGH": "1500 W or less"
+      }
+    },
+    "Out of State": {
+      "Category": {
+        "SOAB": "Single Operator All Bands",
+        "MOAB": "Multi Operator All Bands"
+      },
+      "Mode": {
+        "PHONE": "Phone",
+        "CW": "CW",
+        "MIX": "Mixed"
+      },
+      "Power": {
+        "QRP": "5 W or less",
+        "LOW": "100 W or less",
+        "HIGH": "1500 W or less"
+      }
+    }
+  },
+  "points": {
+    "PHONE": 2,
+    "CW": 4,
+    "DATA": 0
+  },
+  "counties": {
+    "ABF": "Abbotsford",
+    "BNS": "Burnaby North-Seymour",
+    "BUS": "Burnaby South",
+    "CHP": "Chilliwack-Hope",
+    "CLC": "Cloverdale-Langley City",
+    "CML": "Cowichan-Malahat-Langford",
+    "COA": "Courtenay-Alberni",
+    "CPC": "Coquitlam-Port Coquitlam",
+    "CPG": "Cariboo-Prince George",
+    "CSN": "Central Okanagan-Similkameen-Nicola",
+    "DEL": "Delta",
+    "ESQ": "Esquimalt-Saanich-Sooke",
+    "FPK": "Fleetwood-Port Kells",
+    "KEL": "Kelowna-Lake Country",
+    "KOC": "Kootenay-Columbia",
+    "KTC": "Kamloops-Thompson-Cariboo",
+    "LAA": "Langley-Aldergrove",
+    "MMF": "Mission-Matsqui-Fraser Canyon",
+    "NAL": "Nanaimo-Ladysmith",
+    "NOS": "North Okanagan-Shuswap",
+    "NPR": "North Island-Powell River",
+    "NVA": "North Vancouver",
+    "NWB": "New Westminster-Burnaby",
+    "PMC": "Port Moody-Coquitlam",
+    "PMM": "Pitt Meadows-Maple Ridge",
+    "PPN": "Prince George-Peace River-Northern Rockies",
+    "RIC": "Richmond Center",
+    "SBV": "Skeena-Bulkley Valley",
+    "SGI": "Saanich-Gulf Islands",
+    "STR": "Steveston-Richmond East",
+    "SUC": "Surrey Centre",
+    "SUN": "Surrey-Newton",
+    "SWK": "South Okanagan-West Kootenay",
+    "SWR": "South Surrey-White Rock",
+    "VAC": "Vancouver Centre",
+    "VAE": "Vancouver East",
+    "VAG": "Vancouver-Granville",
+    "VAK": "Vancouver Kingsway",
+    "VAQ": "Vancouver Quadra",
+    "VAS": "Vancouver South",
+    "VIC": "Victoria",
+    "WVS": "West Vancouver-Sunshine Coast-Sea to Sky Country"
+  }
+}

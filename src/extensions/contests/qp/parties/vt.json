@@ -1,0 +1,81 @@
+{
+  "key": "VT",
+  "name": "Vermont QSO Party",
+  "short": "VTQP",
+  "url": "https://www.ranv.org/vtqso.html",
+  "start": "2025-2-1 00:00Z",
+  "end": "2025-2-2 23:59Z",
+  "cabrilloName": "VT-QSO-PARTY",
+  "notes": "FT8/FT4 is allowed, but not supported in PoLo.",
+  "lastUpdated": "2025-02-19 15:00Z",
+  "openQuestions": "Does any county count as VT multiplier for in-state stations?",
+  "exchange": [
+    "Location:county/state/province/entity"
+  ],
+  "specialCalls": [
+    "W1NVT"
+  ],
+  "options": {
+    "dcCountsAsMaryland": true,
+    "stateCountsForInState": true,
+    "onlineLookup": false,
+    "countyLine": true,
+    "multsPerBand": true,
+    "specialCallIsMultiplier": true,
+    "dxIsMultiplier": false,
+    "dxEntityIsMultiplier": true
+  },
+  "uniqueness": "perBandAndMode",
+  "entry": {
+    "In State": {
+      "Category": {
+        "SO": "Single Operator",
+        "MO": "Multi Operator",
+        "MR": "Mobile/Rover"
+      },
+      "Power": {
+        "QRP": "5 W or less",
+        "LOW": "100 W or less",
+        "HIGH": "1500 W or less"
+      }
+    },
+    "Out of State": {
+      "Category": {
+        "SO": "Single Operator",
+        "MO": "Multi Operator",
+        "MR": "Mobile/Rover"
+      },
+      "Power": {
+        "QRP": "5 W or less",
+        "LOW": "100 W or less",
+        "HIGH": "1500 W or less"
+      }
+    }
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 3,
+    "DATA": 2
+  },
+  "powerMultiplier": {
+    "QRP": 2,
+    "LOW": 1.5,
+    "HIGH": 1
+  },
+  "counties": {
+    "ADD": "Addison",
+    "BEN": "Bennington",
+    "CAL": "Caledonia",
+    "CHI": "Chittenden",
+    "ESS": "Essex",
+    "FRA": "Franklin",
+    "GRA": "Grand Isle",
+    "LAM": "Lamoille",
+    "ORA": "Orange",
+    "ORL": "Orleans",
+    "RUT": "Rutland",
+    "WAS": "Washington",
+    "WNH": "Windham",
+    "WNS": "Windsor"
+  }
+}
