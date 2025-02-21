@@ -1,0 +1,77 @@
+{
+  "key": "ID",
+  "name": "Idaho QSO Party",
+  "short": "IDQP",
+  "url": "https://idahoqsoparty.org/",
+  "start": "2025-3-8 19:00Z",
+  "end": "2025-3-9 18:59Z",
+  "cabrilloName": "ID-QSO-PARTY",
+  "notes": "Scoring does not include bonus points. QRP points will be incorrect.",
+  "internalNotes": "For QRP all modes score as 5. Worst rules doc so far.",
+  "lastUpdated": "2025-02-19 12:00Z",
+  "status": "Updated for 2025, but not verified",
+  "exchange": [
+    "Location:county/state/province/entity"
+  ],
+  "uniqueness": "perBandAndMode",
+  "bonusStations": {
+    "K7S": 100,
+    "K7P": 100,
+    "K7U": 100,
+    "K7D": 100
+  },
+  "bonus": {
+    "Bonus Station Sweep": 100
+  },
+  "options": {
+    "dcCountsAsMaryland": true,
+    "multsPerMode": true,
+    "countyLine": true,
+    "selfSpotting": true,
+    "dxEntityIsMultiplier": true,
+    "dxLocationIsPrefix": true,
+    "removeCountySuffixes": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2,
+    "DATA": 2
+  },
+  "counties": {
+    "ADA": "Ada",
+    "BNV": "Bonneville",
+    "CUS": "Custer",
+    "KOO": "Kootenai",
+    "OWY": "Owyhee",
+    "BOI": "Boise",
+    "CLA": "Clark",
+    "JEF": "Jefferson",
+    "NEZ": "Nez",
+    "WAS": "Washington",
+    "ADM": "Adams",
+    "BOU": "Boundary",
+    "ELM": "Elmore",
+    "LAT": "Latah",
+    "PAY": "Payette",
+    "BAN": "Bannock",
+    "BUT": "Butte",
+    "FRA": "Franklin",
+    "LEM": "Lemhi",
+    "POW": "Power",
+    "BEN": "Benewah",
+    "CAN": "Canyon",
+    "GEM": "Gem",
+    "LIN": "Lincoln",
+    "TET": "Teton",
+    "BIN": "Bingham",
+    "CAR": "Caribou",
+    "GOO": "Gooding",
+    "MAD": "Madison",
+    "TWI": "Twin",
+    "BLA": "Blaine",
+    "CAS": "Cassia",
+    "IDA": "Idaho",
+    "MIN": "Minidoka",
+    "VAL": "Valley"
+  }
+}
