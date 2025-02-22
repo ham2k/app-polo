@@ -41,6 +41,11 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
     }
 
     for (const [confirmationName, spots] of Object.entries(hookSpots)) {
+      // Skip if qso already has a confirmation
+      if (qso.qsl?.[confirmationName]?.isGuess === false) {
+        break
+      }
+
       let currentSpot
       // At most two characters can be wrong
       let currentDistance = 3
@@ -70,14 +75,17 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
 
       if (currentSpot) {
         const qsl = qso.qsl || {}
+        const isGuess = currentDistance !== 0
         qsl[confirmationName] = {
           spot: currentSpot.spot,
-          isGuess: currentDistance !== 0
+          isGuess
         }
+        const notes = [qso.notes, isGuess ? undefined : currentSpot.note].filter(n => !!n).join(' | ')
         dispatch(actions.addQSO({
           uuid: options.operation.uuid,
           qso: {
             ...qso,
+            notes: notes.length > 0 ? notes : undefined,
             qsl
           }
         }))
