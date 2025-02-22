@@ -245,7 +245,7 @@ const ReferenceHandler = {
         ADIFCommentTemplate: 's{{qso.our.sent}} r{{qso.their.sent}} {{>ADIFNotes}}'
       }]
     } else { // "export" hook
-      const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType))
+      const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType) && !q.deleted)
       const isSOTAActivation = findRef(operation, Info.activationType)
       if (!hasSOTA || isSOTAActivation) return null
       return [{
