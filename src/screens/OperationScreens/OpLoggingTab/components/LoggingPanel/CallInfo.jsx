@@ -47,6 +47,7 @@ function prepareStyles (baseStyles, themeColor) {
     history: {
       pill: {
         marginRight: baseStyles.halfSpace,
+        marginTop: baseStyles.oneSpace * 0.25,
         borderRadius: 3,
         // marginTop: baseStyles.oneSpace * 0.25,
         paddingHorizontal: baseStyles.oneSpace * 0.5,
@@ -92,7 +93,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
   const { call, guess, lookup, refs, status, when } = useCallLookup(qso)
 
-  const { call: theirCall, allCalls, partialCalls } = useMemo(() => parseStackedCalls(qso?.their?.call ?? ''), [qso?.their?.call])
+  const { call: theirCall, allCalls } = useMemo(() => parseStackedCalls(qso?.their?.call ?? ''), [qso?.their?.call])
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
     // console.log('CallInfo effect', { qsoCall: theirCall, qsoName: qso?.their?.guess?.name, qsoStatus: qso?.their?.lookup?.status, lookupCall: call, lookupName: guess?.name, lookupStatus: status })
@@ -191,7 +192,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     }
 
     return info
-  }, [guess.note, guess.name, call, theirCall, lookup.error, qso?.their?.name])
+  }, [guess.note, guess.name, call, theirCall, allCalls.length, lookup.error, qso?.their?.name])
 
   const scoreInfo = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)
