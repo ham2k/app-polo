@@ -5,7 +5,8 @@
     "changes": [
       "QSO Parties: NC, SC, OK, ID and WI",
       "Export settings, with templates",
-      "Stacking partial calls (use `//` or `..` to stack calls)"
+      "Stacking partial calls (use `//` or `..` to stack calls)",
+      "Assorted fixes and improvements (with contributions from M1SDH, NA7DO & M0TRT)"
     ]
   },
   "25.2.1": {

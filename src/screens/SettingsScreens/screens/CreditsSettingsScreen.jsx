@@ -35,6 +35,7 @@ export default function CreditsSettingsScreen ({ navigation }) {
         <Ham2kListSection>
           <Ham2kListItem title={'Created by Sebastián Delmont • KI2D'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'KI2D' })}
           />
 
           <Ham2kListItem title={'Ham2K PoLo is Open Source'}
@@ -63,6 +64,12 @@ export default function CreditsSettingsScreen ({ navigation }) {
             description={'Developer'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
             onPress={() => navigation.navigate('CallInfo', { call: 'NA7DO' })}
+          />
+          <Ham2kListItem
+            title={'Ian Renton • M0TRT'}
+            description={'Developer'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'M0TRT' })}
           />
           <Ham2kListItem
             title={'Ciemon Dunville • G0TRT'}
