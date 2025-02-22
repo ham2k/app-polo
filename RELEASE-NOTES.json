@@ -4,7 +4,8 @@
     "photoCaption": "KE8PZN, WD4DAN & Friends at POTA US-8353",
     "changes": [
       "QSO Parties: NC, SC, OK, ID and WI",
-      "Export settings, with templates"
+      "Export settings, with templates",
+      "Stacking partial calls (use `//` or `..` to stack calls)"
     ]
   },
   "25.2.1": {

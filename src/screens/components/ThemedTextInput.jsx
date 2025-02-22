@@ -265,7 +265,10 @@ export default function ThemedTextInput (props) {
         onFocus={handleFocus}
         onBlur={handleBlur}
         onSelectionChange={trackSelection ? handleSelectionChange : undefined}
-        selection={trackSelection ? selectionRef.current : undefined} // Using a ref for props is frowned upon, but this is the only way to update the selection without causing further updates
+
+        // Using a ref for props is frowned upon, but this is the only way to update the selection without causing further updates
+        // Also, iOS seems to work fine without controlled selection, while Android seems to need it
+        selection={Platform.OS === 'android' && trackSelection ? selectionRef.current : undefined}
       />
     )
   }, [

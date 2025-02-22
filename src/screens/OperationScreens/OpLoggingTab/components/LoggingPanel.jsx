@@ -105,12 +105,20 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     if (!loggingState?.selectedUUID) {
       let nextQSO
       const otherStateChanges = {}
+
       if (loggingState?.qsoQueue?.length > 0) {
         nextQSO = loggingState.qsoQueue.pop() ?? prepareNewQSO(operation, qsos, vfo, settings)
         otherStateChanges.qsoQueue = loggingState.qsoQueue
       } else {
         nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
       }
+
+      if (loggingState.partialCalls) {
+        otherStateChanges.partialCalls = undefined
+        nextQSO.their = nextQSO.their || {}
+        nextQSO.their.call = loggingState.partialCalls
+      }
+
       setQSO(nextQSO, { otherStateChanges })
       dispatch(resetCallLookupCache())
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
@@ -143,14 +151,10 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         }
       }, 10)
     }
-  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch])
+  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch, loggingState.partialCalls])
 
   useEffect(() => { // Validate and analize the callsign
-    let call = qso?.their?.call ?? ''
-    if (call.indexOf(',') >= 0) {
-      const calls = call = call.split(',')
-      call = calls[calls.length - 1].trim()
-    }
+    const { call } = parseStackedCalls(qso?.their?.call ?? '')
 
     const callInfo = parseCallsign(call)
 
@@ -290,17 +294,17 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         qso.their = qso.their || {}
         qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
 
-        let call = qso?.their?.call
         let lastUUID
 
-        const calls = call = call.split(',')
+        const { call, allCalls, partialCalls } = parseStackedCalls(qso?.their?.call ?? '')
         const multiQSOs = []
-        for (let i = 0; i < calls.length; i++) {
+        for (let i = 0; i < allCalls.length; i++) {
           let oneQSO = qso
-          if (calls.length > 1) { // If this is a multi-call QSO, we need to clone and annotate the QSO for each call
+          qso.their.call = call
+          if (allCalls.length > 1) { // If this is a multi-call QSO, we need to clone and annotate the QSO for each call
             oneQSO = cloneDeep(qso)
             if (i > 0) oneQSO.uuid = null
-            oneQSO.their.call = calls[i].trim()
+            oneQSO.their.call = allCalls[i].trim()
             oneQSO.their.guess = {}
             oneQSO.their.lookup = {}
             oneQSO = await annotateQSO({ qso: oneQSO, online: false, settings, dispatch })
@@ -322,7 +326,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
         if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 
-        setQSO(undefined, { otherStateChanges: { lastUUID } }) // Let queue management decide what to do
+        setQSO(undefined, { otherStateChanges: { lastUUID, partialCalls } }) // Let queue management decide what to do
         if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
       }
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
@@ -695,4 +699,14 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   })
 
   return clone
+}
+
+export function parseStackedCalls (input) {
+  input = (input || '').trim()
+  const parts = input.split('//').filter(x => x)
+  const partialCalls = parts.slice(0, parts.length - 1).join('//')
+  const actuallCalls = parts[parts.length - 1] || ''
+  const allCalls = actuallCalls.split(',').filter(x => x)
+  const call = allCalls[allCalls.length - 1] || ''
+  return { call, allCalls, partialCalls }
 }

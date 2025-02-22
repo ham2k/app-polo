@@ -19,6 +19,8 @@ import { findHooks } from '../../../../../extensions/registry'
 import { LOCATION_ACCURACY } from '../../../../../extensions/constants'
 import { removeEmptyValues } from '../../../../../tools/objectTools'
 
+import { parseStackedCalls } from '../LoggingPanel'
+
 const EMOJI_REGEX = emojiRegex()
 
 const DEBUG = false
@@ -114,7 +116,8 @@ export async function annotateQSO ({ qso, online, settings, dispatch, mode = 'fu
 
 function _extractCallInfo (call, refs) {
   // Pick the last call in the list, and ignore any under 3 characters or with a question mark
-  const calls = call?.split(',')?.filter(x => x && x.length > 2 && x.indexOf('?') < 0) ?? []
+  const { allCalls } = parseStackedCalls(call)
+  const calls = allCalls.filter(x => x && x.length > 2 && x.indexOf('?') < 0) ?? []
   let oneCall = calls[calls.length - 1]
 
   // Remove any trailing slash

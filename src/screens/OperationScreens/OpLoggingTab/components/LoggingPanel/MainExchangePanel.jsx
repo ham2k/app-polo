@@ -87,6 +87,7 @@ export const MainExchangePanel = ({
       fieldId={'theirCall'}
       onSpace={spaceHandler}
       focusedRef={focusedRef}
+      allowMultiple={true}
     />
   )
 
