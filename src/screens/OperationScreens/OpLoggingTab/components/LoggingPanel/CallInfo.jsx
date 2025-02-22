@@ -205,18 +205,28 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   const scoringMessages = useMemo(() => {
     if (scoreInfo?.length > 0) {
       // Order by value, as those that provide points/QSOs/etc. more important
-      const messageLevelPairs = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
+      const allMessages = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
         const alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
         const notices = (score?.notices || []).map(notice => ({ msg: notice, level: 'notice', key: `${score.type}.${notice}` }))
         const infos = (score?.infos || []).map(info => ({ msg: info, level: 'info', key: `${score.type}.${info}` }))
-
         return [...notices, ...alerts, ...infos].map(oneInfo => ({
           ...oneInfo,
           msg: MESSAGES_FOR_SCORING[oneInfo.key] ?? MESSAGES_FOR_SCORING[oneInfo.msg] ?? oneInfo.msg
         }))
-      }).flat().filter(x => x).slice(0, 3)
+      }).flat()
 
-      return messageLevelPairs
+      const filteredPairs = []
+      // Remove messages with the same message
+      allMessages.forEach(msg => {
+        if (msg.msg && !filteredPairs.find(x => x.msg === msg.msg && x.level === msg.level)) {
+          filteredPairs.push(msg)
+        }
+      })
+      console.log('--------------------------------')
+      console.log(allMessages)
+      console.log(filteredPairs)
+
+      return filteredPairs.slice(0, 3)
     }
 
     if (lookup?.history?.length > 0) {
@@ -255,7 +265,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
   if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
   return (
-    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6 }}>
+    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
         <View style={{ alignSelf: 'flex-start', flex: 0 }}>
@@ -287,16 +297,27 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
               </Text>
             )}
           </View>
-          {(stationInfo || scoringMessages.length > 0) && (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-              <View style={{ flex: 1, minWidth: stationInfo.length > 25 ? '80%' : undefined }}>
+          {(stationInfo || scoringMessages?.length === 1) && (
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+              {stationInfo && (
                 <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
-              </View>
+              )}
+              {scoringMessages?.length === 1 && (
+                <View style={{ flex: 1, alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                  {scoringMessages.map((msg) => (
+                    <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
+                      <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
+          )}
+          {scoringMessages?.length > 1 && (
+            <View style={{ alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
               {scoringMessages.map((msg) => (
-                <View style={{ flex: 0 }} key={msg.key}>
-                  <View style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
-                    <Text style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
-                  </View>
+                <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
+                  <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
                 </View>
               ))}
             </View>
