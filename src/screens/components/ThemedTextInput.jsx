@@ -19,6 +19,8 @@ const NOT_NUMBER_WITH_SIGNS_REGEX = /[^0-9+-]/g
 const NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX = /[^0-9+-,.]/g
 const SIGN_AFTER_A_DIGIT_REGEX = /([\d,.])[+-]/g
 
+const DEBUG = false
+
 export default function ThemedTextInput (props) {
   const {
     style, themeColor, textStyle,
@@ -47,21 +49,24 @@ export default function ThemedTextInput (props) {
   const [isFocused, setIsFocused] = useState(false)
 
   useEffect(() => {
+    if (DEBUG && fieldId === 'theirCall') console.log('useEffect end of string', { stringValue, sel: selectionRef?.current })
     if (trackSelection && (selectionRef.current.start || 0) > stringValue.length) {
       selectionRef.current.start = stringValue.length
       selectionRef.current.end = stringValue.length
+      if (DEBUG && fieldId === 'theirCall') console.log('useEffect end of string set to', { stringValue, sel: selectionRef?.current })
     }
-  }, [trackSelection, stringValue])
+  }, [trackSelection, stringValue, fieldId])
 
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
     let spaceAdded = false
-
+    if (DEBUG) console.log('handleChange', { text })
     if (multiline || text.length < stringValue.length) {
       // We should not do any transformations:
       //  - on multiline inputs
       //  - or when deleting
     } else {
+      if (DEBUG) console.log('handleChange else', { text })
       // Lets check if what changed was the addition of a space
       if ((text !== stringValue) && (text.replace(SPACES_REGEX, '') === stringValue)) {
         spaceAdded = true
@@ -82,6 +87,7 @@ export default function ThemedTextInput (props) {
         text = text.replace(SPACES_REGEX, '')
       }
       if (periodToSlash) {
+        if (DEBUG) console.log('handleChange periodToSlash', { text })
         text = text.replaceAll('.', '/')
       }
       if (numeric) {
@@ -97,8 +103,9 @@ export default function ThemedTextInput (props) {
       if (textTransformer) {
         text = textTransformer(text)
       }
-
+      if (DEBUG) console.log('handleChange after transformations', { text })
       if (trackSelection && text.length !== stringValue.length) {
+        if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed?', { selectionRef: selectionRef.current, stringValue })
         const selectionFromVirtualNumericKeys = event.selectionFromVirtualNumericKeys ?? {}
         const start = selectionFromVirtualNumericKeys.start ?? selectionRef.current.start ?? stringValue.length
         const end = selectionFromVirtualNumericKeys.end ?? selectionRef.current.end ?? stringValue.length
@@ -106,9 +113,11 @@ export default function ThemedTextInput (props) {
         // to a value that is not the one we want. So we have to delay our update in order to overwrite it.
         selectionRef.current.start = start + (text.length - stringValue.length)
         selectionRef.current.end = end + (text.length - stringValue.length)
+        if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed', { start, end, text, stringValue })
         setTimeout(() => {
           selectionRef.current.start = start + (text.length - stringValue.length)
           selectionRef.current.end = end + (text.length - stringValue.length)
+          if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed timeout', { start, end, text, stringValue })
         }, 5)
       }
 
@@ -120,7 +129,8 @@ export default function ThemedTextInput (props) {
     changeEvent.ref = actualInnerRef
     changeEvent.nativeEvent.text = text
     const spaceEvent = { nativeEvent: { key: ' ', target: event.nativeEvent.target } }
-    actualInnerRef.current.setNativeProps({ text })
+    // actualInnerRef.current.setNativeProps({ text })
+    if (DEBUG) console.log('handleChange setNativeProps', { text })
     onChangeText && onChangeText(text)
     onChange && onChange(changeEvent)
     if (spaceAdded) onSpace && onSpace(spaceEvent)
@@ -157,10 +167,11 @@ export default function ThemedTextInput (props) {
   const handleSelectionChange = useCallback((event) => {
     if (trackSelection) {
       const { nativeEvent: { selection: { start, end } } } = event
+      if (DEBUG && fieldId === 'theirCall') console.log('handleSelectionChange', { start, end })
       selectionRef.current.start = start
       selectionRef.current.end = end
     }
-  }, [trackSelection])
+  }, [fieldId, trackSelection])
 
   const handleFocus = useCallback((event) => {
     setIsFocused(true)
@@ -233,6 +244,7 @@ export default function ThemedTextInput (props) {
     return keyboardOpts
   }, [keyboard, themeStyles.isDarkMode, uppercase, multiline])
 
+  if (DEBUG && fieldId === 'theirCall') console.log('renderInput', { stringValue, sel: selectionRef?.current, trackSelection })
   const renderInput = useCallback((props) => {
     return (
       <NativeTextInput
@@ -241,8 +253,8 @@ export default function ThemedTextInput (props) {
         {...props}
 
         ref={actualInnerRef}
-
-        value={stringValue}
+        value={undefined}
+        // value={stringValue}
         placeholder={placeholder || ''}
         style={[
           colorStyles.nativeInput,
@@ -268,8 +280,9 @@ export default function ThemedTextInput (props) {
 
         // Using a ref for props is frowned upon, but this is the only way to update the selection without causing further updates
         // Also, iOS seems to work fine without controlled selection, while Android seems to need it
-        selection={Platform.OS === 'android' && trackSelection ? selectionRef.current : undefined}
-      />
+        // selection={Platform.OS === 'android' && trackSelection ? selectionRef.current : undefined}
+      >{stringValue}</NativeTextInput>
+      // >{stringValue.slice(0, 1)}<Text style={{ fontWeight: 'bold', color: 'red' }}>{stringValue.slice(1, 5)}</Text>{stringValue.slice(5)}</NativeTextInput>
     )
   }, [
     stringValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
