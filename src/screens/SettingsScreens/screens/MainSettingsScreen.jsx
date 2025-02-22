@@ -264,14 +264,32 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
         <Ham2kListItem
           title="Ham2K Forums"
           description={'Find help, give feedback, discuss ideas…'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="forum" />}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="forum-outline" />}
           onPress={async () => await Linking.openURL('https://forums.ham2k.com/')}
         />
         <Ham2kListItem
           title="Ham2K Chat"
           description={'The discord server for our online community'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="chat" />}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="chat-outline" />}
           onPress={async () => await Linking.openURL('https://discord.gg/c4Th9QkByJ')}
+        />
+        <Ham2kListItem
+          title="Ham2K YouTube"
+          description={'Videos and Live Streams'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="youtube" />}
+          onPress={async () => await Linking.openURL('https://www.youtube.com/@Ham2KApps')}
+        />
+        <Ham2kListItem
+          title="Ham2K Instagram"
+          description={'Because you cannot have too many photos…'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="instagram" />}
+          onPress={async () => await Linking.openURL('https://www.instagram.com/ham2kapps/')}
+        />
+        <Ham2kListItem
+          title="Ham2K BlueSky"
+          description={'Follow us for news and updates'}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="butterfly-outline" />}
+          onPress={async () => await Linking.openURL('https://bsky.app/profile/ham2k.com')}
         />
         <Ham2kListItem
           title="Contact Us"
