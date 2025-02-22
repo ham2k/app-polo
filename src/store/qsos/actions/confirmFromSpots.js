@@ -32,6 +32,8 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
     hookSpots[hook.confirmationName] = spots
   })))
 
+  const stationCall = options.operation.stationCall
+  const qsoCalls = new Set(qsos.map(qso => qso?.their?.call))
   for (const qso of qsos) {
     const call = qso?.their?.call
     if (!call) {
@@ -40,9 +42,13 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
 
     for (const [confirmationName, spots] of Object.entries(hookSpots)) {
       let currentSpot
-      // At least two characters should be correct
-      let currentDistance = Math.max(call.length - 1, 0)
+      // At most two characters can be wrong
+      let currentDistance = 3
       for (const spot of spots) {
+        if (stationCall.split('/').some(part => part === spot.call)) {
+          continue
+        }
+
         if (spot.mode !== qso.mode) {
           continue
         }
@@ -51,7 +57,11 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
           continue
         }
 
-        const distance = getDistance(call, spot.call)
+        const distance = spot.call === call
+          ? 0 // Use the spot if it matches the QSO call exactly
+          : qsoCalls.has(spot.call)
+            ? Number.MAX_VALUE // Skip the spot if it matches another QSO in the log
+            : getDistance(call, spot.call) // Calculate distance if the spot hasn't been used
         if (distance < currentDistance) {
           currentDistance = distance
           currentSpot = spot
