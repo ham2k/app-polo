@@ -221,7 +221,7 @@ function strengthForQSO (qso) {
   }
 }
 
-function stylesForMap ({ longitudeDelta, metersPerPixel, count, deviceColorScheme }) {
+export function stylesForMap ({ longitudeDelta, metersPerPixel, count, deviceColorScheme }) {
   // in iOS, maps change with the actual device color scheme, not the user preferences in the app
 
   if (count > 50) {
