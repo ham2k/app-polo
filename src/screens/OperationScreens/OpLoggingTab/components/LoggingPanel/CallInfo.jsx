@@ -17,7 +17,7 @@ import { scoringHandlersForOperation } from '../../../../../extensions/scoring'
 import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { startOfDayInMillis, yesterdayInMillis } from '../../../../../tools/timeTools'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
-import { useCallLookup } from '../../../OpInfoTab/components/useCallLookup'
+import { useCallLookup } from './useCallLookup'
 import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../../store/operations'
 import { selectRuntimeOnline } from '../../../../../store/runtime'
@@ -88,19 +88,19 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   const styles = useThemedStyles(prepareStyles, themeColor)
   const online = useSelector(selectRuntimeOnline)
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
-  // console.log('\n\nCallInfo render')
-  const { call, guess, lookup, refs } = useCallLookup(qso)
 
-  // useEffect(() => {
-  //   console.log('CallInfo effect')
-  // }, [call, guess])
+  const { call, guess, lookup, refs, status, when } = useCallLookup(qso)
 
-  // console.log('CallInfo render with', { call, guessLocation: guess?.locationLabel, name: guess?.name, state: guess?.state })
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    updateQSO && updateQSO({ their: { guess, lookup } })
-    // Ignore warning about `updateQSO
-    //   eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guess, lookup])
+    // console.log('CallInfo effect', { qsoCall: qso?.their?.call, qsoName: qso?.their?.guess?.name, qsoStatus: qso?.their?.lookup?.status, lookupCall: call, lookupName: guess?.name, lookupStatus: status })
+    if (qso?.their?.call === call && status && qso?.their?.lookup?.status !== status) {
+      // console.log('-- updateQSO!')
+      // We need to first clear the guess and lookup, otherwise the new values will be merged with the old ones
+      updateQSO && updateQSO({ their: { guess: undefined, lookup: undefined } })
+      // Then we update the QSO with the new values
+      updateQSO && updateQSO({ their: { guess, lookup: { ...lookup, status } } })
+    }
+  }, [updateQSO, guess, lookup, call, qso?.their?.call, qso?.their?.lookup?.status, status, qso?.their?.guess?.state, qso?.their?.guess?.name, when])
 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess.dxccCode)
@@ -108,7 +108,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     let leftParts = []
     let rightParts = []
 
-    const entity = DXCC_BY_PREFIX[guess.entityPrefix]
+    const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
     if (guess.postindicators && guess.postindicators.find(ind => ['P', 'M', 'AM', 'MM', 'PM'].indexOf(ind) >= 0)) {
       isOnTheGo = true
@@ -176,33 +176,37 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     if (guess.note) {
       parts.push(guess.note)
     } else {
-      // if (qrz?.error) parts.push(qrz.error)
+      if (lookup?.error && call?.length > 3) parts.push(lookup.error)
       parts.push(qso?.their?.name ?? guess.name)
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qso?.their?.name, guess.name, guess.note])
+  }, [guess.note, guess.name, lookup.error, call?.length, qso?.their?.name])
 
   const scoreInfo = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)
 
     const lastSection = sections && sections[sections.length - 1]
-
-    const scores = scoringHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, score: lastSection?.scores?.[ref.key], operation, ref })).filter(x => x)
+    const scores = scoringHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, score: lastSection?.scores?.[ref.type || ref.key], operation, ref })).filter(x => x)
 
     return scores
   }, [operation, qso, qsos, sections, settings])
 
-  const [historyMessage, historyLevel] = useMemo(() => {
+  const scoringMessages = useMemo(() => {
     if (scoreInfo?.length > 0) {
       // Order by value, as those that provide points/QSOs/etc. more important
-      const messageLevelPair = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
-        if (score?.notices && score?.notices[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.notices[0]}`] ?? MESSAGES_FOR_SCORING[score?.notices[0]] ?? score?.notices[0], 'notice']
-        if (score?.alerts && score?.alerts[0]) return [MESSAGES_FOR_SCORING[`${score.type}.${score?.alerts[0]}`] ?? MESSAGES_FOR_SCORING[score?.alerts[0]] ?? score?.alerts[0], 'alert']
-        return []
-      }).filter(x => x.length)[0]
+      const messageLevelPairs = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
+        const alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
+        const notices = (score?.notices || []).map(notice => ({ msg: notice, level: 'notice', key: `${score.type}.${notice}` }))
+        const infos = (score?.infos || []).map(info => ({ msg: info, level: 'info', key: `${score.type}.${info}` }))
 
-      if (messageLevelPair) return messageLevelPair
+        return [...notices, ...alerts, ...infos].map(oneInfo => ({
+          ...oneInfo,
+          msg: MESSAGES_FOR_SCORING[oneInfo.key] ?? MESSAGES_FOR_SCORING[oneInfo.msg] ?? oneInfo.msg
+        }))
+      }).flat().filter(x => x).slice(0, 3)
+
+      return messageLevelPairs
     }
 
     if (lookup?.history?.length > 0) {
@@ -273,18 +277,18 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
               </Text>
             )}
           </View>
-          {(stationInfo || historyMessage) && (
+          {(stationInfo || scoringMessages.length > 0) && (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
               <View style={{ flex: 1, minWidth: stationInfo.length > 25 ? '80%' : undefined }}>
                 <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
               </View>
-              {historyMessage && (
-                <View style={{ flex: 0 }}>
-                  <View style={[styles.history.pill, historyLevel && styles.history[historyLevel]]}>
-                    <Text style={[styles.history.text, historyLevel && styles.history[historyLevel]]}>{historyMessage}</Text>
+              {scoringMessages.map((msg) => (
+                <View style={{ flex: 0 }} key={msg.key}>
+                  <View style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
+                    <Text style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
                   </View>
                 </View>
-              )}
+              ))}
             </View>
           )}
         </View>

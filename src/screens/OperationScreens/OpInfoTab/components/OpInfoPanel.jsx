@@ -31,6 +31,27 @@ function prepareStyles (baseStyles, themeColor) {
     },
     icon: {
       // maxWidth: baseStyles.oneSpace * 8
+    },
+    scoringMarkdown: {
+      // For scoring summaries, we want most text to be small, monospaced, and light
+      // And then we override blockquotes to be regular text
+      // This allow for nice checklists
+      s: {
+        color: baseStyles.colors.onBackground,
+        textDecorationLine: 'line-through'
+      },
+      blockquote: {
+        ...baseStyles.markdown.body,
+        ...baseStyles.text.callsign,
+        backgroundColor: undefined,
+        borderColor: undefined,
+        borderLeftWidth: 0,
+        marginLeft: 0,
+        paddingHorizontal: 0,
+        fontSize: baseStyles.smallFontSize,
+        color: baseStyles.colors.onBackgroundLighter,
+        opacity: 1
+      }
     }
   }
 }
@@ -114,9 +135,9 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                           />
                         )}
                       </View>
-                      <Ham2kMarkdown style={{ width: '93%' }}>
+                      <Ham2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
                         {score.label && (
-                          ` ${score.label}${refKeys.length > 1 ? `×${refKeys.length}:` : ':'}`
+                          `### ${score.label}${refKeys.length > 1 ? `×${refKeys.length}:` : ':'}`
                         )}
                         {' '}{score.longSummary ?? score.summary}
                       </Ham2kMarkdown>
@@ -154,9 +175,9 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                         />
                       )}
                     </View>
-                    <Ham2kMarkdown style={{ width: '93%' }}>
+                    <Ham2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
                       {score.label && (
-                        ` ${score.label}${refKeys.length > 1 ? `×${refKeys.length}:` : ':'}`
+                        `### ${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ''}`
                       )}
                       {' '}{score.longSummary ?? score.summary}
                     </Ham2kMarkdown>

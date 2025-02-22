@@ -5,14 +5,18 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { addQSOs } from '../../store/qsos'
-import { annotateQSO } from '../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
-import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
-import { poissonRandom } from '../../tools/randomTools'
-import { setSystemFlag } from '../../store/system'
 import { DevSettings } from 'react-native'
+
+import { persistor } from '../../store'
+import { addQSOs } from '../../store/qsos'
+import { resetDatabase } from '../../store/db/db'
+import { setLocalData } from '../../store/local'
 import { setSettings } from '../../store/settings'
+import { setSystemFlag } from '../../store/system'
+import { poissonRandom } from '../../tools/randomTools'
 import { logTimer } from '../../tools/perfTools'
+import { annotateQSO } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
 
 const Info = {
   key: 'commands-debug',
@@ -28,6 +32,8 @@ const Extension = {
     registerHook('command', { priority: 100, hook: ErrorCommandHook })
     registerHook('command', { priority: 100, hook: SeedCommandHook })
     registerHook('command', { priority: 100, hook: OnboardCommandHook })
+    registerHook('command', { priority: 100, hook: WipeDBCommandHook })
+    registerHook('command', { priority: 100, hook: FactoryResetCommandHook })
   }
 }
 
@@ -59,6 +65,40 @@ const OnboardCommandHook = {
     dispatch(setSettings({ operatorCall: undefined }))
     setTimeout(() => DevSettings.reload(), 500)
     return 'Onboarding process resetted'
+  }
+}
+
+const WipeDBCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-wipedb',
+  match: /WIPEDB!/i,
+  describeCommand: (match) => {
+    return 'Delete database (but keep settings)?'
+  },
+  invokeCommand: (match, { dispatch }) => {
+    dispatch(setLocalData({ sync: { lastOperationSyncedAtMillis: 0, completedFullSync: false } }))
+    setTimeout(async () => {
+      await resetDatabase()
+    }, 1000)
+    return 'Wiping Database…'
+  }
+}
+
+const FactoryResetCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-factory',
+  match: /FACTORY!/i,
+  describeCommand: (match) => {
+    return 'Delete all data and settings?'
+  },
+  invokeCommand: (match, { dispatch, settings }) => {
+    setTimeout(async () => {
+      await persistor.purge()
+      await resetDatabase()
+    }, 1000)
+    return 'Factoy Reset in progress…'
   }
 }
 

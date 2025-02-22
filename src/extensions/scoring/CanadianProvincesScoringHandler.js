@@ -48,9 +48,10 @@ export const CanadianProvincesScoringHandler = {
     }
 
     if (count >= 2) {
-      score.longSummary = `${count} Canadian Provinces`
+      score.label = `${count} Canadian Provinces`
+      score.longSummary = ''
       for (let row = 0; row < 2; row++) {
-        score.longSummary += '\n'
+        score.longSummary += '\n> '
         Object.keys(CANADIAN_PROVINCES).slice(row * 7, row * 7 + 7).forEach(state => {
           state = state.toUpperCase()
           if (score.states[state]) {

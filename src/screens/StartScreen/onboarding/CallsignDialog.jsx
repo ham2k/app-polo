@@ -6,11 +6,14 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Button, Dialog, Text } from 'react-native-paper'
-import CallsignInput from '../../components/CallsignInput'
 import { useDispatch } from 'react-redux'
+import { Button, Dialog, Text } from 'react-native-paper'
+import RNRestart from 'react-native-restart'
+
+import CallsignInput from '../../components/CallsignInput'
 import { setSettings } from '../../../store/settings'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
+import { persistor } from '../../../store'
 
 export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const dispatch = useDispatch()
@@ -19,7 +22,7 @@ export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevio
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
 
   const [value, setValue] = useState('')
-
+  console.log('settings', settings)
   useEffect(() => {
     if (settings?.operatorCall === 'N0CALL') {
       setValue('')
@@ -33,9 +36,16 @@ export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevio
   }, [setValue])
 
   const handleNext = useCallback(() => {
-    dispatch(setSettings({ operatorCall: value }))
-
-    onDialogNext && onDialogNext()
+    if (value === 'DEVMODE' || value === 'KONAMI') {
+      setImmediate(async () => {
+        await dispatch(setSettings({ devMode: true }))
+        await persistor.flush()
+        setTimeout(() => RNRestart.restart(), 1000)
+      })
+    } else {
+      dispatch(setSettings({ operatorCall: value }))
+      onDialogNext && onDialogNext()
+    }
   }, [value, dispatch, onDialogNext])
 
   const handlePrevious = useCallback(() => {

@@ -7,6 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { List } from 'react-native-paper'
+import emojiRegex from 'emoji-regex'
 
 import packageJson from '../../../../package.json'
 import { registerDataFile, unRegisterDataFile } from '../../../store/dataFiles'
@@ -14,6 +15,8 @@ import { fetchAndProcessURL, loadDataFile, removeDataFile } from '../../../store
 import { selectExtensionSettings } from '../../../store/settings'
 import ManageCallNotesScreen from './screens/ManageCallNotesScreen'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
+
+const EMOJI_REGEX = emojiRegex()
 
 export const Info = {
   key: 'call-notes',
@@ -86,7 +89,9 @@ const Extension = {
       }
     })
 
-    registerHook('lookup', { hook: LookupHook, priority: -1 })
+    registerHook('lookup', { hook: LookupHook, priority: 100 })
+
+    registerHook('command', { priority: 200, hook: NoteExpansionCommandHook })
   },
   onDeactivationDispatch: () => async (dispatch, getState) => {
     for (const file of CallNotesData.files) {
@@ -110,6 +115,30 @@ const LookupHook = {
   lookupCallWithDispatch: async (callInfo, { settings, operation, online, dispatch }) => {
     const callNotes = findAllCallNotes(callInfo?.baseCall)
     return { notes: callNotes, call: callInfo?.baseCall, source: 'Call Notes' }
+  }
+}
+
+const NoteExpansionCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'call-notes-expansion',
+  match: /^(\.\.|\/\/)([\w\d]+)/i,
+  describeCommand: (match) => {
+    if (match[2].length < 3) return ''
+    const callNotes = findAllCallNotes(match[2])
+    if (callNotes && callNotes[0]?.note) {
+      const matches = callNotes[0].note && callNotes[0].note.match(EMOJI_REGEX)
+      const emoji = matches ? `${matches[0]} ` : ''
+
+      return `${emoji}Expand to ${_cleanNote(callNotes[0].note)}?`
+    }
+  },
+  invokeCommand: (match, { dispatch, operation, handleFieldChange }) => {
+    if (match[2].length < 3) return ''
+    const callNotes = findAllCallNotes(match[2])
+    if (callNotes && callNotes[0]?.note) {
+      handleFieldChange({ fieldId: 'theirCall', value: _cleanNote(callNotes[0].note) })
+    }
   }
 }
 
@@ -233,4 +262,8 @@ async function resolveDownloadUrl (url) {
   } else {
     return url
   }
+}
+
+function _cleanNote (note) {
+  return note.replaceAll(/[^A-Za-z0-9,-/]/g, '').trim().toUpperCase()
 }

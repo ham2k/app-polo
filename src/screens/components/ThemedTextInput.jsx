@@ -109,7 +109,7 @@ export default function ThemedTextInput (props) {
         setTimeout(() => {
           selectionRef.current.start = start + (text.length - stringValue.length)
           selectionRef.current.end = end + (text.length - stringValue.length)
-        }, 10)
+        }, 5)
       }
 
       event.nativeEvent.text = text
@@ -182,17 +182,24 @@ export default function ThemedTextInput (props) {
         color: themeColor ? themeStyles.theme.colors[themeColor] : themeStyles.theme.colors.onBackground
       },
       selectionColor: themeColor ? themeStyles.theme.colors[`${themeColor}Light`] : themeStyles.theme.colors.primaryLight,
-      cursorColor: themeColor ? themeStyles.theme.colors[`${themeColor}`] : themeStyles.theme.colors.primary
+      cursorColor: themeColor ? themeStyles.theme.colors[`${themeColor}`] : themeStyles.theme.colors.primary,
+      errorColor: themeStyles.theme.colors.error
     }
   }, [themeStyles, themeColor])
 
   const keyboardOptions = useMemo(() => {
-    let keyboardOpts
+    let keyboardOpts = {}
 
     if (multiline || keyboard === 'normal' || !keyboard) {
       keyboardOpts = {
         autoCapitalize: 'sentences',
         inputMode: 'text'
+      }
+    } else if (keyboard === 'code') {
+      keyboardOpts = {
+        autoCapitalize: 'none',
+        inputMode: 'text',
+        keyboardType: 'ascii-capable'
       }
     } else if (keyboard === 'dumb' || keyboard === 'numbers') {
       keyboardOpts = {
@@ -207,6 +214,12 @@ export default function ThemedTextInput (props) {
       if (keyboard === 'numbers') {
         keyboardOpts.keyboardType = Platform.OS === 'android' ? 'visible-password' : 'numbers-and-punctuation'
         keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
+      }
+    } else if (keyboard === 'email') {
+      keyboardOpts = {
+        autoCompleteType: 'email',
+        keyboardType: 'email-address',
+        autoCapitalize: 'none'
       }
     }
 
@@ -275,7 +288,7 @@ export default function ThemedTextInput (props) {
         style
       ]}
       maxFontSizeMultiplier={1} // This affects the size of the label
-      textColor={colorStyles.paperInput.color}
+      textColor={error ? colorStyles.errorColor : colorStyles.paperInput.color}
       selectionColor={colorStyles.paperInput.color}
       underlineColor={colorStyles.paperInput.color}
       activeUnderlineColor={colorStyles.paperInput.color}

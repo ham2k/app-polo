@@ -21,16 +21,18 @@ const Extension = {
   category: 'lookup',
   enabledByDefault: true,
   onActivation: ({ registerHook }) => {
-    registerHook('lookup', { hook: LookupHook, priority: 100 })
+    registerHook('lookup', { hook: LookupHook, priority: 99 })
     registerHook('account', { hook: AccountHook })
   }
 }
 export default Extension
 
+const EMPTY_RECORD = { name: '', city: '', state: '', grid: '', locationLabel: '', locationAccuracy: undefined, image: '' }
+
 const LookupHook = {
   ...Info,
   shouldSkipLookup: ({ online, lookedUp }) => {
-    return !online || (lookedUp.name && lookedUp.grid)
+    return !online || (lookedUp.name && lookedUp.grid && lookedUp.city && lookedUp.image)
   },
   lookupCallWithDispatch: async (callInfo, { settings, online, dispatch }) => {
     let qrzPromise
@@ -55,7 +57,7 @@ const LookupHook = {
       if (matchingQRZCall) {
         return { ...qrzLookup.data, call: matchingQRZCall, source: 'qrz.com' }
       } else if (qrzLookup?.error) {
-        return { error: qrzLookup.error, call: callInfo.call, source: 'qrz.com' }
+        return { ...EMPTY_RECORD, error: `QRZ: ${qrzLookup.error}`, call: callInfo.call, source: 'qrz.com' }
       }
     }
     return {}

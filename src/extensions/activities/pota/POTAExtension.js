@@ -6,17 +6,21 @@
  */
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
+import { filterRefs, findRef, mergeRefs, refsToString } from '../../../tools/refTools'
 
 import { Info } from './POTAInfo'
 import { POTAActivityOptions } from './POTAActivityOptions'
-import { potaFindParkByReference, registerPOTAAllParksData } from './POTAAllParksData'
+import { potaFindParkByReference, potaFindParksByLocation, registerPOTAAllParksData } from './POTAAllParksData'
 import { POTALoggingControl } from './POTALoggingControl'
 import { POTAPostSpot } from './POTAPostSpot'
 import { apiPOTA } from '../../../store/apis/apiPOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 import { ConfirmFromSpotsHook } from './POTAConfirmFromSpots'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { distanceOnEarth } from '../../../tools/geoTools'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 
 const Extension = {
   ...Info,
@@ -53,7 +57,14 @@ const ActivityHook = {
   postSpot: POTAPostSpot,
   Options: POTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'XX-1234', name: 'Example National Park', shortName: 'Example NP', program: Info.shortName, label: `${Info.shortName} XX-1234: Example National Park`, shortLabel: `${Info.shortName} XX-1234` }] }
+    ]
+  }
 }
 
 const SpotsHook = {
@@ -96,6 +107,31 @@ const SpotsHook = {
 
       return qso
     })
+  },
+  extraSpotInfo: async ({ online, settings, dispatch, spot }) => {
+    if (online) {
+      const spotRef = findRef(spot, Info.huntingType)
+      if (spotRef) {
+        const args = { call: spot.their.call, park: spotRef.ref }
+        const spotCommentPromise = await dispatch(apiPOTA.endpoints.spotComments.initiate(args))
+        await Promise.all(dispatch(apiPOTA.util.getRunningQueriesThunk()))
+        const spotCommentResults = await dispatch((_dispatch, getState) => apiPOTA.endpoints.spotComments.select(args)(getState()))
+        spotCommentPromise.unsubscribe && spotCommentPromise.unsubscribe()
+        const spotComments = spotCommentResults.data || []
+
+        const filteredSpotComment = spotComments.find(x =>
+          x.source.startsWith('Ham2K Portable Logger') &&
+          x.comments.match(/\b[0-9]+-fer:(?: [A-Z0-9]+-(?:[0-9]{4,5}|TEST)){2,}$/)
+        )
+        if (filteredSpotComment) {
+          const newRefs = filteredSpotComment.comments
+            .match(/\b[0-9]+-fer: (.+)$/)[1]
+            .split(' ')
+            .map(ref => ({ ref, type: Info.huntingType }))
+          spot.refs = mergeRefs(spot.refs, newRefs)
+        }
+      }
+    }
   }
 }
 
@@ -153,7 +189,9 @@ const ReferenceHandler = {
         ...ref,
         name: data.name,
         location: data.location,
-        label: `${Info.shortName} ${ref.ref}: ${data.name}`
+        label: `${Info.shortName} ${ref.ref}: ${data.name}`,
+        shortLabel: `${Info.shortName} ${ref.ref}`,
+        program: Info.shortName
       }
       if (data?.location?.indexOf(',') < 0) {
         result.accuracy = LOCATION_ACCURACY.REASONABLE
@@ -170,6 +208,29 @@ const ReferenceHandler = {
     return result
   },
 
+  extractTemplate: ({ ref, operation }) => {
+    return { type: ref.type }
+  },
+
+  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+    if (operation?.grid) {
+      let info = parseCallsign(operation.stationCall || '')
+      info = annotateFromCountryFile(info)
+      const [lat, lon] = gridToLocation(operation.grid)
+
+      let nearby = await potaFindParksByLocation(info.dxccCode, lat, lon, 0.25)
+      nearby = nearby.map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, { lat, lon })
+      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
+
+      if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
+      else return { type: ref.type, name: 'No parks nearby!' }
+    } else {
+      return { type: ref.type }
+    }
+  },
+
   suggestOperationTitle: (ref) => {
     if (ref.type === Info.activationType && ref.ref) {
       return { at: ref.ref, subtitle: ref.name, shortSubtitle: ref.shortName }
@@ -183,9 +244,10 @@ const ReferenceHandler = {
       return [{
         format: 'adif',
         exportType: `${Info.key}-activator`,
-        exportData: { refs: [ref] },
-        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+        exportName: 'POTA Activation',
+        exportData: { refs: [ref] }, // exports only see this one ref
+        nameTemplate: '{{>RefActivityName}}',
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     }
   },

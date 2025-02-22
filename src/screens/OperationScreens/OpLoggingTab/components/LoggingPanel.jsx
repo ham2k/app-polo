@@ -18,7 +18,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
-import { setOperationData, setOperationLocalData } from '../../../../store/operations'
+import { setOperationLocalData } from '../../../../store/operations'
 import { useUIState } from '../../../../store/ui'
 import { addQSO, addQSOs } from '../../../../store/qsos'
 import { setVFO } from '../../../../store/station/stationSlice'
@@ -32,7 +32,7 @@ import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
-import { annotateQSO } from '../../OpInfoTab/components/useCallLookup'
+import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
 import { useNavigation } from '@react-navigation/native'
 import { findHooks } from '../../../../extensions/registry'
 import { trackEvent } from '../../../../distro'
@@ -112,6 +112,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
       }
       setQSO(nextQSO, { otherStateChanges })
+      dispatch(resetCallLookupCache())
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
         if (mainFieldRef?.current) {
           mainFieldRef.current.focus()
@@ -142,7 +143,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         }
       }, 10)
     }
-  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO])
+  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch])
 
   useEffect(() => { // Validate and analize the callsign
     let call = qso?.their?.call ?? ''
@@ -184,7 +185,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       } else if (value) {
         guess = annotateFromCountryFile({ prefix: value, baseCall: value })
       }
-      updateQSO({ their: { call: value, guess }, qsl: undefined })
+      updateQSO({ their: { call: value, guess, lookup: undefined }, qsl: undefined })
     } else if (fieldId === 'theirSent') {
       updateQSO({ their: { sent: value } })
     } else if (fieldId === 'ourSent') {
@@ -302,7 +303,8 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
             oneQSO.their.call = calls[i].trim()
             oneQSO.their.guess = {}
             oneQSO.their.lookup = {}
-            oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
+            oneQSO = await annotateQSO({ qso: oneQSO, online: false, settings, dispatch })
+            oneQSO._needsLookup = true
           }
           multiQSOs.push(oneQSO)
 
@@ -310,6 +312,13 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
 
           lastUUID = oneQSO.uuid
         }
+
+        findHooks('activity').filter(activity => activity.processQSOBeforeSave).forEach(activity => {
+          multiQSOs.forEach(q => {
+            activity.processQSOBeforeSave({ qso: q, operation, qsos, vfo, settings })
+          })
+        })
+
         dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
         if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 
@@ -399,6 +408,13 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     }
   }, [])
 
+  const opMessage = useMemo(() => {
+    if (operationError) return { text: operationError, icon: 'alert-circle', hideCallInfo: true }
+    if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information', hideCallInfo: false }
+    if (commandInfo?.message) return { text: `**${commandInfo.message}**`, icon: 'chevron-right-box', hideCallInfo: true }
+    return undefined
+  }, [operationError, commandInfo?.message, loggingState.infoMessage])
+
   return (
     <View style={[styles.root, style]}>
       <SafeAreaView edges={[isKeyboardVisible ? '' : 'bottom', 'left', 'right'].filter(x => x)}>
@@ -433,29 +449,32 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                     </Text>
                   </View>
                 ) : (
-                  !commandInfo?.message && qso?.their?.call?.length > 2 ? (
-                    <CallInfo
-                      qso={qso}
-                      qsos={activeQSOs}
-                      sections={sections}
-                      operation={operation}
-                      vfo={vfo}
-                      settings={settings}
-                      styles={styles}
-                      themeColor={themeColor}
-                      updateQSO={updateQSO}
-                    />
-                  ) : (
-                    <OpInfo
-                      message={commandInfo?.message || operationError}
-                      operation={operation}
-                      vfo={vfo}
-                      styles={styles}
-                      settings={settings}
-                      qsos={activeQSOs}
-                      themeColor={themeColor}
-                    />
-                  )
+                  <>
+                    {!opMessage?.hideCallInfo && qso?.their?.call?.length > 2 && (
+                      <CallInfo
+                        qso={qso}
+                        qsos={activeQSOs}
+                        sections={sections}
+                        operation={operation}
+                        vfo={vfo}
+                        settings={settings}
+                        styles={styles}
+                        themeColor={themeColor}
+                        updateQSO={updateQSO}
+                      />
+                    )}
+                    {(opMessage?.text || (qso?.their?.call?.length || 0) < 2) && (
+                      <OpInfo
+                        message={opMessage}
+                        operation={operation}
+                        vfo={vfo}
+                        styles={styles}
+                        settings={settings}
+                        qsos={activeQSOs}
+                        themeColor={themeColor}
+                      />
+                    )}
+                  </>
                 )}
               </View>
               <View style={styles.infoPanel.buttonContainer}>
@@ -508,6 +527,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
           <MainExchangePanel
             style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}
             qso={qso}
+            qsos={qsos}
             operation={operation}
             vfo={vfo}
             settings={settings}
@@ -621,7 +641,7 @@ function prepareStyles (themeStyles, themeColor) {
 
 function prepareNewQSO (operation, qsos, vfo, settings) {
   const qso = {
-    uuid: UUID.v1(),
+    uuid: UUID.v4(),
     band: vfo.band,
     freq: vfo.freq,
     mode: vfo.mode,
@@ -654,7 +674,7 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   const clone = cloneDeep(qso || {})
   clone._isNew = true
   clone._isSuggested = true
-  clone.uuid = UUID.v1()
+  clone.uuid = UUID.v4()
 
   if (clone.freq) {
     clone.band = bandForFrequency(clone.freq)

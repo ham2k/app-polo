@@ -6,8 +6,8 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useMemo, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { List, Text } from 'react-native-paper'
 import { Linking, ScrollView, useWindowDimensions, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -16,6 +16,7 @@ import packageJson from '../../../../package.json'
 import { findHooks } from '../../../extensions/registry'
 
 import { selectSettings } from '../../../store/settings'
+import { fetchFeatureFlags } from '../../../store/system/fetchFeatureFlags'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 import { Ham2kListItem } from '../../components/Ham2kListItem'
@@ -31,11 +32,15 @@ import BandModeSettingsScreen from './BandModeSettingsScreen'
 import CreditsSettingsScreen from './CreditsSettingsScreen'
 import DataSettingsScreen from './DataSettingsScreen'
 import DevModeSettingsScreen from './DevModeSettingsScreen'
+import ExportSettingsScreen from './ExportSettingsScreen'
 import ExtensionScreen from './ExtensionScreen'
 import FeaturesSettingsScreen from './FeaturesSettingsScreen'
 import GeneralSettingsScreen from './GeneralSettingsScreen'
 import LoggingSettingsScreen from './LoggingSettingsScreen'
 import VersionSettingsScreen from './VersionSettingsScreen'
+import SyncSettingsScreen from './SyncSettingsScreen'
+
+import { MainSettingsForDistribution } from '../../../distro'
 
 const Stack = createNativeStackNavigator()
 
@@ -43,6 +48,12 @@ export default function MainSettingsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
 
   const settings = useSelector(selectSettings)
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    // Refresh feature flags when the settings screen is opened, or if callsign changes
+    dispatch(fetchFeatureFlags())
+  }, [dispatch, settings?.operatorCall])
 
   const headerOptions = useMemo(() => {
     let options = {}
@@ -173,6 +184,15 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
           onPress={() => navigation.navigate('DataSettings')}
         />
 
+        {settings.devMode && (
+          <Ham2kListItem
+            title="Sync Settings"
+            description="Cloud sync and backup"
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={styles.colors.devMode} icon="sync" />}
+            onPress={() => navigation.navigate('SyncSettings')}
+          />
+        )}
+
         <Ham2kListItem
           title="App Features"
           description={'Manage features like POTA, SOTA, etc'}
@@ -215,10 +235,12 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
         ))}
       </Ham2kListSection>
 
+      <MainSettingsForDistribution settings={settings} styles={styles} />
+
       <Ham2kListSection>
         <Ham2kListSubheader>About Ham2K</Ham2kListSubheader>
         <Ham2kListItem
-          title={packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`}
+          title={packageJson.versionName ? `${packageJson.versionName} Release (${packageJson.version})` : `Version ${packageJson.version}`}
           description={'See recent changes'}
           onPress={() => navigation.navigate('VersionSettings')}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
@@ -253,7 +275,7 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
         />
         <Ham2kListItem
           title="Contact Us"
-          description={'Email help@ham2k.com'}
+          description={'help@ham2k.com\n   (but try the Forums or Chat first!)'}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-alert-outline" />}
           onPress={async () => await Linking.openURL('mailto:help@ham2k.com')}
         />
@@ -297,6 +319,11 @@ function settingsScreensArray ({ includeMain, topLevelBack }) {
       component={DataSettingsScreen}
     />,
 
+    <Stack.Screen name="SyncSettings" key="SyncSettings"
+      options={{ title: 'Sync Settings', headerBackVisible: topLevelBack }}
+      component={SyncSettingsScreen}
+    />,
+
     <Stack.Screen name="VersionSettings" key="VersionSettings"
       options={{ title: 'Version Information', headerBackVisible: topLevelBack }}
       component={VersionSettingsScreen}
@@ -315,6 +342,11 @@ function settingsScreensArray ({ includeMain, topLevelBack }) {
     <Stack.Screen name="BandModeSettings" key="BandModeSettings"
       options={{ title: 'Bands & Modes' }}
       component={BandModeSettingsScreen}
+    />,
+
+    <Stack.Screen name="ExportSettings" key="ExportSettings"
+      options={{ title: 'Export Settings' }}
+      component={ExportSettingsScreen}
     />,
 
     <Stack.Screen name="ExtensionScreen" key="ExtensionScreen"

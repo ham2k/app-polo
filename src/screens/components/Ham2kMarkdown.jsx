@@ -11,6 +11,13 @@ import Markdown from 'react-native-markdown-display'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
+/*
+ * For more styling info, see
+ *  - https://www.npmjs.com/package/react-native-markdown-display#rules-and-styles
+ *  - https://github.com/iamacup/react-native-markdown-display/blob/master/src/lib/styles.js
+ *
+ */
+
 export function Ham2kMarkdown ({ children, styles, style, compact }) {
   const defaultStyles = useThemedStyles()
   const markdownStyle = useMemo(() => {

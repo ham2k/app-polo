@@ -45,7 +45,14 @@ const ActivityHook = {
       return []
     }
   },
-  Options: CustomActivityOptions
+  Options: CustomActivityOptions,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [ReferenceHandler.decorateRef({ type: Info.activationType, ref: 'ABC123', mySig: 'EXOTA' })] }
+    ]
+  }
 }
 
 const ReferenceHandler = {
@@ -64,7 +71,11 @@ const ReferenceHandler = {
   iconForQSO: Info.icon,
 
   decorateRef: (ref) => {
-    return ref // Custom so no known extra data
+    return { ...ref, program: ref.mySig, label: `${ref.mySig} ${ref.ref}: ${ref.name}`, shortLabel: `${ref.mySig} ${ref.ref}` }
+  },
+
+  extractTemplate: ({ ref, operation }) => {
+    return { ...ref }
   },
 
   suggestOperationTitle: (ref) => {
@@ -82,9 +93,10 @@ const ReferenceHandler = {
     if (ref?.type === Info.activationType && ref?.ref) {
       return [{
         format: 'adif',
-        exportData: { refs: [ref] },
-        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+        exportData: { refs: [ref] }, // exports only see this one ref
+        templateData: { refPrefix: ref.mySig || 'Custom' },
+        nameTemplate: '{{>RefActivityName}}',
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     }
   },

@@ -15,13 +15,18 @@ export const generateExportsForOptions = (uuid, exports) => async (dispatch, get
   const operation = state.operations.info[uuid]
   const settings = state.settings
 
-  const qsos = state.qsos.qsos[uuid].map(qso => {
-    return { ...qso, our: { ...qso.our, call: operation.stationCall || settings.operatorCall } }
-  })
-
   const paths = []
   for (const oneExport of exports) {
-    paths.push(await generateExportFile({ uuid, qsos, operation, settings, ...oneExport }))
+    const operationData = oneExport.operation || operation
+
+    let qsos = state.qsos.qsos[uuid].map(qso => {
+      return { ...qso, our: { ...qso.our, call: operationData.stationCall } }
+    })
+    // When doing multioperator operations, with operators also working each other,
+    // we want to exclude these QSOs from the combinations
+    qsos = qsos.filter(qso => qso.our.call !== qso.their.call)
+
+    paths.push(await generateExportFile({ uuid, qsos, operation: operationData, settings, ...oneExport }))
   }
 
   return paths.filter(x => x)
@@ -31,14 +36,14 @@ export const deleteExport = (path) => async (dispatch) => {
   await RNFetchBlob.fs.unlink(path)
 }
 
-export const generateExportFile = async ({ uuid, fileName, format, operation, exportData, ...rest }) => {
+export const generateExportFile = async ({ uuid, fileName, format, operation, qsos, exportData, ...rest }) => {
   let data
   if (format === 'qson') {
-    data = JSON.stringify({ operation: { ...operation, ...exportData }, fileName, format, ...rest })
+    data = JSON.stringify({ operation: { ...operation, ...exportData }, qsos })
   } else if (format === 'adif') {
-    data = qsonToADIF({ operation: { ...operation, ...exportData }, fileName, format, ...rest })
+    data = qsonToADIF({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
   } else if (format === 'cabrillo') {
-    data = qsonToCabrillo({ operation: { ...operation, ...exportData }, fileName, format, ...rest })
+    data = qsonToCabrillo({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
   }
 
   if (fileName && data) {

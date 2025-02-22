@@ -1,7 +1,77 @@
 {
-  "24.12.99-pre0": {
-    "name": "January '25 (pre 0)",
+  "25.2.99-pre1": {
+    "name": "March '25 (pre1)",
+    "photoCaption": "KE8PZN, WD4DAN & Friends at POTA US-8353",
     "changes": [
+      "QSO Parties: NC, SC, OK, ID and WI",
+      "Export settings, with templates"
+    ]
+  },
+  "25.2.1": {
+    "name": "February '25",
+    "changes": [
+      "QSO Parties: NC, SC, OK (Early Access)"
+    ]
+  },
+  "25.2.0": {
+    "name": "February '25",
+    "changes": [
+      "Operation Templates",
+      "Belgian Lighthouses and Lightships (by M1SDH)",
+      "Belgium Castles and Fortresses (by M1SDH)",
+      "Better handling and display of QRZ errors",
+      "POTA self-spotting tweaks and fixes",
+      "Exclude private information from most ADIF exports (hat tip to OH3CUF)",
+      "Text expansion for callsign notes (prepend with `..` or `//`)"
+    ]
+  },
+  "25.1.3": {
+    "name": "January '25",
+    "changes": [
+      "Fixed callsign lookup issues",
+      "Fixed ADIF logs for multi-operator operations"
+    ]
+  },
+  "25.1.2": {
+    "name": "January '25",
+    "changes": [
+      "Fixed ADIF export for Winter Field Day"
+    ]
+  },
+  "25.1.1": {
+    "name": "January '25",
+    "changes": [
+      "Fixed missing RST in log display",
+      "Fixed bad frequencies in ADIF when only band was specified",
+      "Fixed history lookups not excluding deleted QSOs"
+    ]
+  },
+  "25.1.0": {
+    "name": "January '25",
+    "changes": [
+      "Activate with more than one operator",
+      "Support for Winter Field Day 2025",
+      "Allow toggling of QRZ images (happy Dan?)",
+      "Better handling of operator callsign in operation title",
+      "Include base frequency in ADIF export when only band was specified",
+      "Include contest exchange in ADIF export",
+      "Fixed lookup of callsign notes when offline",
+      "Fixed WWBOTA spots",
+      "Fixed historic ADIF and QSON imports"
+    ]
+  },
+  "24.12.2": {
+    "name": "December '24",
+    "changes": [
+      "Fixed WWBOTA input and grid",
+      "Fixed colors in location screen in forced dark mode",
+      "Fixed missing dates for historic records"
+    ]
+  },
+  "24.12.1": {
+    "name": "December '24",
+    "changes": [
+      "Fixed issue with spots for multi-operator activations"
     ]
   },
   "24.12.0": {

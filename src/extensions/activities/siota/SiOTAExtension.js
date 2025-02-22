@@ -10,9 +10,13 @@ import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './SiOTAInfo'
 import { SiOTAActivityOptions } from './SiOTAActivityOptions'
-import { siotaFindOneByReference, registerSiOTADataFile } from './SiOTADataFile'
+import { siotaFindOneByReference, registerSiOTADataFile, siotaFindAllByLocation } from './SiOTADataFile'
 import { SiOTALoggingControl } from './SiOTALoggingControl'
 import { LOCATION_ACCURACY } from '../../constants'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,
@@ -43,7 +47,14 @@ const ActivityHook = {
   },
   Options: SiOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'VK-ABC123', name: 'Example Silo', shortName: 'Example Silo', program: Info.shortName, label: `${Info.shortName} VK-ABC123: Example Silo`, shortLabel: `${Info.shortName} VK-ABC123` }] }
+    ]
+  }
 }
 
 const HunterLoggingControl = {
@@ -100,12 +111,37 @@ const ReferenceHandler = {
         state: data.state,
         grid: data.grid,
         accuracy: LOCATION_ACCURACY.ACCURATE,
-        label: `${Info.shortName} ${ref.ref}: ${data.name}`
+        label: `${Info.shortName} ${ref.ref}: ${data.name}`,
+        shortLabel: `${Info.shortName} ${ref.ref}`,
+        program: Info.shortName
       }
     } else {
       return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
     }
     return result
+  },
+
+  extractTemplate: ({ ref, operation }) => {
+    return { type: ref.type }
+  },
+
+  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+    if (operation?.grid) {
+      let info = parseCallsign(operation.stationCall || '')
+      info = annotateFromCountryFile(info)
+      const [lat, lon] = gridToLocation(operation.grid)
+
+      let nearby = await siotaFindAllByLocation(info.dxccCode, lat, lon, 0.25)
+      nearby = nearby.map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, { lat, lon })
+      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
+
+      if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
+      else return { type: ref.type, name: 'No silos nearby!' }
+    } else {
+      return { type: ref.type }
+    }
   },
 
   suggestOperationTitle: (ref) => {
@@ -120,9 +156,9 @@ const ReferenceHandler = {
     if (ref?.type === Info.activationType && ref?.ref) {
       return [{
         format: 'adif',
-        exportData: { refs: [ref] },
-        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+        exportData: { refs: [ref] }, // exports only see this one ref
+        nameTemplate: '{{>RefActivityName}}',
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     }
   },

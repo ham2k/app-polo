@@ -13,12 +13,13 @@ import { adifToQSON } from '@ham2k/lib-qson-adif'
 
 import { reportError } from '../../../../distro'
 
-import { addQSO, actions as qsosActions, saveQSOsForOperation } from '../../../qsos'
-import { annotateQSO } from '../../../../screens/OperationScreens/OpInfoTab/components/useCallLookup'
+import { addQSOs, actions as qsosActions, saveQSOsForOperation } from '../../../qsos'
+import { annotateQSO } from '../../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { DefaultScoringHandler } from '../../../../extensions/scoring/DefaultScoringHandler'
 
 const ADIF_FILENAME_REGEX = /.+\.(adi|adif)$/i
 
-export const importADIFIntoOperation = (path, operation) => async (dispatch) => {
+export const importADIFIntoOperation = (path, operation, operationQSOs) => async (dispatch) => {
   const matches = path.match(ADIF_FILENAME_REGEX)
   if (matches) {
     dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'loading' }))
@@ -28,7 +29,10 @@ export const importADIFIntoOperation = (path, operation) => async (dispatch) => 
       const adif = buffer.toString('utf8')
 
       const data = adifToQSON(adif)
-      const qsos = data.qsos.map((qso) => {
+      const dedupedQSOs = data.qsos.filter(
+        (qso) => DefaultScoringHandler.scoringForQSO({ qso, qsos: operationQSOs, operation })?.count !== 0
+      )
+      const qsos = dedupedQSOs.map((qso) => {
         const newQSO = { ...qso }
         newQSO.refs = (qso.refs || []).map(ref => {
           if (ref.type.match(/Activation$/i)) {
@@ -44,15 +48,15 @@ export const importADIFIntoOperation = (path, operation) => async (dispatch) => 
         return newQSO
       })
 
-      for (let qso of qsos) {
-        qso = await annotateQSO({ qso, online: false, skipLookup: false, dispatch, settings: {} })
+      qsos.map(async qso => {
+        return await annotateQSO({ qso, online: false, dispatch, settings: {} })
+      })
 
-        await dispatch(addQSO({ uuid: operation.uuid, qso }))
-      }
+      await dispatch(addQSOs({ uuid: operation.uuid, qsos }))
 
       await dispatch(saveQSOsForOperation(operation.uuid))
       dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'ready' }))
-      return qsos.length
+      return { adifCount: data.qsos.length, importCount: qsos.length }
     } catch (error) {
       reportError('Error importing ADIF into Operation', error)
     }

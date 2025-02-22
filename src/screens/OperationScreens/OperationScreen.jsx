@@ -30,6 +30,7 @@ import { useUIState } from '../../store/ui'
 import { Icon, Menu, Text } from 'react-native-paper'
 import { slashZeros } from '../../tools/stringTools'
 import { hasRef } from '../../tools/refTools'
+import { parseCallsign } from '@ham2k/lib-callsigns'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -59,6 +60,7 @@ export default function OperationScreen (props) {
   }, [route.params.operation.uuid, dispatch])
 
   const [lastTracking, setLastTracking] = useState(0)
+
   useEffect(() => {
     if (Date.now() - lastTracking > 1000 * 60 * 5 && online) {
       trackOperation({ settings, operation })
@@ -70,7 +72,7 @@ export default function OperationScreen (props) {
     let options = {}
     if (operation?.stationCall) {
       options = {
-        title: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
+        title: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation?.stationCallPlus || operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
         subTitle: operation.subtitle
       }
     } else {
@@ -314,7 +316,11 @@ export function buildTitleForOperation (operationAttrs, { includeCall = true } =
   if (operationAttrs.stationCall) {
     let call = operationAttrs.stationCall
     if (operationAttrs.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
-      call = `${call} (op ${operationAttrs.operatorCall})`
+      const stationCallInfo = parseCallsign(operationAttrs.stationCall)
+      const operatorCallInfo = parseCallsign(operationAttrs.operatorCall)
+      if (stationCallInfo?.baseCall !== operatorCallInfo?.baseCall) {
+        call = `${call} (op ${operationAttrs.operatorCall})`
+      }
     }
     const parts = []
     if (operationAttrs.userTitle) {
@@ -347,6 +353,13 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Text style={{ marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
         Logging Settings
       </Text>
+      <Menu.Item
+        leadingIcon="signal"
+        trailingIcon={settings.showRSTFields !== false ? 'check-circle-outline' : 'circle-outline'}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showRSTFields: !settings.showRSTFields }))) }}
+        title={'RST Fields'}
+
+      />
       <Menu.Item
         leadingIcon="select-marker"
         trailingIcon={settings.showStateField !== false ? 'check-circle-outline' : 'circle-outline'}

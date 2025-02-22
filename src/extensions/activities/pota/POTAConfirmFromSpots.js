@@ -53,6 +53,7 @@ export const ConfirmFromSpotsHook = {
           call: spot.spotter,
           timeInMillis: spot.timeInMillis,
           mode: spot.mode,
+          note: spot.comments,
           spot
         }
       })

@@ -9,12 +9,16 @@ import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/d
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './WWFFInfo'
-import { registerWWFFDataFile, wwffFindOneByReference } from './WWFFDataFile'
+import { registerWWFFDataFile, wwffFindAllByLocation, wwffFindOneByReference } from './WWFFDataFile'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
 import { WWFFPostSpot } from './WWFFPostSpot'
 import { apiGMA } from '../../../store/apis/apiGMA'
 import { LOCATION_ACCURACY } from '../../constants'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,
@@ -47,7 +51,14 @@ const ActivityHook = {
   postSpot: WWFFPostSpot,
   Options: WWFFActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'XXWW-1234', name: 'Example National Park', shortName: 'Example NP', program: Info.shortName, label: `${Info.shortName} XXWW-1234: Example NationalPark`, shortLabel: `${Info.shortName} XXWW-1234` }] }
+    ]
+  }
 }
 
 const SpotsHook = {
@@ -146,11 +157,36 @@ const ReferenceHandler = {
           location: data.region,
           grid: data.grid,
           accuracy: LOCATION_ACCURACY.REASONABLE,
-          label: `${Info.shortName} ${ref.ref}: ${data.name}`
+          label: `${Info.shortName} ${ref.ref}: ${data.name}`,
+          shortLabel: `${Info.shortName} ${ref.ref}`,
+          program: Info.shortName
         }
       } else {
         return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
       }
+    }
+  },
+
+  extractTemplate: ({ ref, operation }) => {
+    return { type: ref.type }
+  },
+
+  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+    if (operation?.grid) {
+      let info = parseCallsign(operation.stationCall || '')
+      info = annotateFromCountryFile(info)
+      const [lat, lon] = gridToLocation(operation.grid)
+
+      let nearby = await wwffFindAllByLocation(info.dxccCode, lat, lon, 0.25)
+      nearby = nearby.map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, { lat, lon })
+      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
+
+      if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
+      else return { type: ref.type, name: 'No parks nearby!' }
+    } else {
+      return { type: ref.type }
     }
   },
 
@@ -166,10 +202,10 @@ const ReferenceHandler = {
     if (ref?.type === Info.activationType && ref?.ref) {
       return [{
         format: 'adif',
-        exportData: { refs: [ref] },
+        exportData: { refs: [ref] }, // exports only see this one ref
         // Note that compact format uses a space instead of - because of WWFF requirements
-        nameTemplate: '{call}@{ref} {compactDate}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+        nameTemplate: '{{log.station}}@{{log.ref}} {{compact op.date}}',
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     }
   },

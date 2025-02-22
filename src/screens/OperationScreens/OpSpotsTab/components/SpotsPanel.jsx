@@ -20,14 +20,14 @@ import { selectSettings, setSettings } from '../../../../store/settings'
 import { useUIState } from '../../../../store/ui'
 import { selectVFO } from '../../../../store/station'
 import { useFindHooks } from '../../../../extensions/registry'
+import { scoringHandlersForOperation } from '../../../../extensions/scoring'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-import { annotateQSO } from '../../OpInfoTab/components/useCallLookup'
+import { annotateQSO } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
 import SpotList from './SpotList'
 import MapWithSpots from './MapWithSpots'
 import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
 import SpotListMapToggle from './SpotListMapToggle'
-import { scoringHandlersForOperation } from '../../../../extensions/scoring'
 
 export const LABEL_FOR_MODE = {
   CW: 'CW',
@@ -118,7 +118,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
                   spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
                 }
 
-                annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, dispatch, skipLookup: true }))
+                annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, dispatch, mode: 'quick' }))
               }
               updateSpotsState({ spots: { [hook.key]: annotatedSpots } })
             })

@@ -22,6 +22,9 @@ import { buildTitleForOperation } from '../OperationScreen'
 import { reportError, trackEvent } from '../../../distro'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 export default function OperationDataScreen (props) {
   const { navigation, route } = props
@@ -42,7 +45,7 @@ export default function OperationDataScreen (props) {
     let options = { title: 'Operation Data' }
     if (operation?.stationCall) {
       options = {
-        subTitle: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCall, title: operation.title, userTitle: operation.userTitle })
+        subTitle: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCallPlus || operation.stationCall, title: operation.title, userTitle: operation.userTitle })
       }
     } else {
       options = { subTitle: 'New Operation' }
@@ -56,7 +59,25 @@ export default function OperationDataScreen (props) {
     return ourInfo.call && operation.qsoCount > 0
   }, [operation.qsoCount, ourInfo.call])
 
-  const exportOptions = useMemo(() => dataExportOptions({ operation, qsos, settings, ourInfo }), [operation, ourInfo, qsos, settings])
+  const exportOptions = useMemo(() => {
+    if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
+      const ourInfos = [ourInfo]
+      ourInfos.push(...operation.stationCallPlusArray.map(call => {
+        let info = parseCallsign(call)
+        info = annotateFromCountryFile(info)
+        if (info.entityPrefix) {
+          info = { ...info, ...DXCC_BY_PREFIX[info?.entityPrefix] }
+        }
+        return info
+      }))
+      return ourInfos.map(info => {
+        const operationClone = { ...operation, stationCall: info?.call || operation.stationCall || settings.operatorCall, operatorCall: info?.call }
+        return dataExportOptions({ operation: operationClone, qsos, settings, ourInfo: info })
+      }).flat()
+    } else {
+      return dataExportOptions({ operation, qsos, settings, ourInfo })
+    }
+  }, [operation, ourInfo, qsos, settings])
 
   const handleExports = useCallback(({ options }) => {
     options.forEach((option) => {
@@ -88,9 +109,10 @@ export default function OperationDataScreen (props) {
   const handleImportADIF = useCallback(() => {
     DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
       const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
-      const count = await dispatch(importADIFIntoOperation(filename, operation))
+      const { adifCount, importCount } = await dispatch(importADIFIntoOperation(filename, operation, qsos))
       trackEvent('import_adif', {
-        import_count: count,
+        import_count: importCount,
+        adif_count: adifCount,
         qso_count: operation.qsoCount,
         refs: (operation.refs || []).map(r => r.type).join(',')
       })
@@ -102,11 +124,11 @@ export default function OperationDataScreen (props) {
         reportError('Error importing ADIF', error)
       }
     })
-  }, [dispatch, operation])
+  }, [dispatch, operation, qsos])
 
   const selectedExportOptions = useMemo(() => exportOptions.filter(option => (settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false), [exportOptions, settings.exportTypes])
 
-  const exportTitle = useMemo(() => {
+  const exportLabel = useMemo(() => {
     if (selectedExportOptions.length === 0) return 'Select from the export options below'
     if (selectedExportOptions.length === 1 && exportOptions.length === 1) return 'Export 1 file'
     if (selectedExportOptions.length === 1) return 'Export 1 selected file'
@@ -118,7 +140,7 @@ export default function OperationDataScreen (props) {
     <ScrollView style={{ flex: 1 }}>
       <Ham2kListSection title={'Export QSOs'}>
         <Ham2kListItem
-          title={exportTitle}
+          title={exportLabel}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
           onPress={() => readyToExport && handleExports({ options: selectedExportOptions })}
           style={{ opacity: readyToExport ? 1 : 0.5 }}
@@ -132,9 +154,9 @@ export default function OperationDataScreen (props) {
             />
             <Ham2kListItem
               key={option.fileName}
-              title={option.exportTitle}
+              title={option.exportLabel}
               description={option.fileName}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={option.devMode ? styles.colors.devMode : styles.colors.onBackground} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
               onPress={() => readyToExport && handleExports({ options: [option] })}
               descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
               titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
@@ -152,6 +174,20 @@ export default function OperationDataScreen (props) {
           onPress={() => handleImportADIF()}
         />
       </Ham2kListSection>
+
+      { settings.devMode && (
+
+        <Ham2kListSection title={'Ham2K LoFi Sync'} titleStyle={{ color: styles.colors.devMode }}>
+          <Ham2kListItem
+            title="Operation"
+            description={operation.uuid}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync-circle" color={styles.colors.devMode} />}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            onPress={() => {}}
+          />
+        </Ham2kListSection>
+      )}
     </ScrollView>
   )
 }

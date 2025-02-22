@@ -27,6 +27,9 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation))
   const qsos = useSelector(state => selectQSOs(state, route.params.operation))
 
+  // eslint-disable-next-line no-unused-vars
+  const [doReload, setDoReload] = useState()
+
   useEffect(() => {
     if (!operation) {
       navigation.goBack()
@@ -71,7 +74,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
       }
 
       const singleOperator = operators.length === 1 && operators[0]
-      console.log('stations', { stations, operators })
+
       if (operators.length === 0 || singleOperator === operation.local?.operatorCall) {
         newExtraState.messageForOperatorCall = ''
         newExtraState.actionForOperatorCall = ''
@@ -89,19 +92,39 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   }, [stations, operators, qsos.length, settings.stationCall, settings.operatorCall, operation.stationCall, operation.local?.operatorCall, originalValues.stationCall, originalValues.operatorCall])
 
   useEffect(() => { // Set initial values if needed
-    if (!operation) return
+    if (!operation?.uuid) return
 
     if (operation.stationCall === undefined) {
       dispatch(setOperationData({ uuid: operation.uuid, stationCall: settings?.stationCall || settings?.operatorCall || '' }))
     }
 
-    if (operation.local.operatorCall === undefined && operation.stationCall !== settings?.operatorCall) {
+    if (operation.local?.operatorCall === undefined &&
+    operation.stationCall !== settings?.operatorCall &&
+    (!operation.stationCallPlusArray || operation.stationCallPlusArray.indexOf(settings?.operatorCall) === -1)) {
       dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall: settings?.operatorCall || '' }))
     }
-  }, [dispatch, operation, settings?.operatorCall, settings?.stationCall])
+  }, [dispatch, operation.uuid, operation.stationCall, operation.stationCallPlusArray, operation.local?.operatorCall, settings?.operatorCall, settings?.stationCall])
 
   const onChangeStation = useCallback((text) => {
-    dispatch(setOperationData({ uuid: operation.uuid, stationCall: text }))
+    const calls = text.split(/[, ]+/).filter(Boolean)
+    if (calls.length > 1) {
+      dispatch(setOperationData({
+        uuid: operation.uuid,
+        stationCall: calls[0] || '',
+        stationCallPlus: `${calls[0]}+${calls.slice(1).length}`,
+        stationCallPlusArray: calls.slice(1),
+        allStationCalls: text
+      }))
+      dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall: '' }))
+    } else {
+      dispatch(setOperationData({
+        uuid: operation.uuid,
+        stationCall: calls[0] || '',
+        stationCallPlus: calls[0],
+        stationCallPlusArray: undefined,
+        allStationCalls: text
+      }))
+    }
   }, [dispatch, operation.uuid])
 
   const onChangeOperator = useCallback((text) => {
@@ -110,6 +133,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
 
   const handleUpdateStation = useCallback(() => {
     dispatch(batchUpdateQSOs({ uuid: operation.uuid, qsos, data: { our: { call: operation.stationCall } } }))
+    setDoReload(Date.now())
   }, [dispatch, operation.uuid, operation.stationCall, qsos])
 
   const handleUpdateOperator = useCallback(() => {
@@ -123,9 +147,10 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
           <Text variant="bodyMedium">What is the callsign used on the air?</Text>
           <CallsignInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            value={operation?.stationCall || ''}
+            value={operation.allStationCalls || operation.stationCall || ''}
             label="Station Callsign"
             placeholder={'N0CALL'}
+            allowMultiple={true}
             onChangeText={onChangeStation}
           />
           {extraState.messageForStationCall && (
@@ -148,6 +173,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
             label="Operator Callsign"
             placeholder={'N0CALL'}
             onChangeText={onChangeOperator}
+            disabled={operation.stationCallPlusArray?.length > 0}
           />
           {extraState.messageForOperatorCall && (
             <Text variant="bodyMedium" style={{ color: styles.colors.primary, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>

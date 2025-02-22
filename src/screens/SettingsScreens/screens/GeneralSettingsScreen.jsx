@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,6 +18,7 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kListSubheader } from '../../components/Ham2kListSubheader'
+import { findHooks } from '../../../extensions/registry'
 
 function prepareStyles (baseStyles) {
   return {
@@ -38,6 +39,11 @@ export default function GeneralSettingsScreen ({ navigation }) {
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
+
+  const extensionSettingHooks = useMemo(() => {
+    const hooks = findHooks('setting').filter(hook => hook.category === 'general' && hook.SettingItem)
+    return hooks
+  }, [])
 
   return (
     <ScreenContainer>
@@ -139,6 +145,15 @@ export default function GeneralSettingsScreen ({ navigation }) {
             onPress={() => dispatch(setSettings({ consentAppData: !settings.consentOpData }))}
           />
         </Ham2kListSection>
+
+        {extensionSettingHooks.length > 0 && (
+          <Ham2kListSection title={'Extensions'}>
+            {extensionSettingHooks.map((hook) => (
+              <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
+            ))}
+          </Ham2kListSection>
+        )}
+
       </ScrollView>
     </ScreenContainer>
   )

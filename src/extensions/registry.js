@@ -111,6 +111,8 @@ export async function activateEnabledExtensions (dispatch, getState) {
 }
 
 export const activateExtension = (extension) => async (dispatch) => {
+  if (extension.activated) return true
+
   if (extension.onActivation) {
     extension.onActivation({
       registerHook: (hookCategory, props) => { registerHook(hookCategory, { ...props, extension }) }
@@ -121,16 +123,20 @@ export const activateExtension = (extension) => async (dispatch) => {
       registerHook: (hookCategory, props) => { registerHook(hookCategory, { ...props, extension }) }
     }))
   }
+  extension.activated = true
 }
 
 export const deactivateExtension = (extension) => async (dispatch) => {
-  if (extension.onDeactivation) {
-    extension.onDeactivation({})
-  }
-  if (extension.onDeactivationDispatch) {
-    await dispatch(extension.onDeactivationDispatch({}))
+  if (extension.activated) {
+    if (extension.onDeactivation) {
+      extension.onDeactivation({})
+    }
+    if (extension.onDeactivationDispatch) {
+      await dispatch(extension.onDeactivationDispatch({}))
+    }
   }
   Object.keys(Hooks).forEach(hookCategory => {
     unregisterAllHooks({ extension })
   })
+  extension.activated = false
 }

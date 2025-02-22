@@ -52,7 +52,12 @@ export default Extension
 const ActivityHook = {
   ...Info,
   Options: ActivityOptions,
-  mainExchangeForOperation
+  mainExchangeForOperation,
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      { refs: [ReferenceHandler.decorateRef({ type: Info.key, class: '1A', location: 'ENY' })] }
+    ]
+  }
 }
 
 const ReferenceHandler = {
@@ -67,6 +72,14 @@ const ReferenceHandler = {
     return [`FD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')
   },
 
+  decorateRef: (ref) => {
+    return {
+      ...ref,
+      label: `${Info.name}: ${ref.class} ${ref.location}`,
+      shortLabel: `${Info.shortName}: ${ref.class} ${ref.location}`
+    }
+  },
+
   suggestOperationTitle: (ref) => {
     return { for: Info.shortName, subtitle: [ref?.class, ref?.location].filter(x => x).join(' ') }
   },
@@ -75,13 +88,13 @@ const ReferenceHandler = {
     if (ref?.type === Info?.key) {
       return [{
         format: 'adif',
-        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
-        titleTemplate: `{call}: ${Info.name} on {date}`
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       },
       {
         format: 'cabrillo',
-        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
-        titleTemplate: `{call}: ${Info.name} on {date}`
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       }]
     }
   },
@@ -109,6 +122,14 @@ const ReferenceHandler = {
     parts.push((qsoRef?.location ?? '').padEnd(3, ' '))
     return parts
   },
+
+  adifFieldsForOneQSO: ({ qso, operation, common, ref, mainHandler }) => {
+    // Include `CONTEST_ID` even if we're not the main handler, if the Operation is a FD operation
+    if (findRef(common, Info.key)) {
+      return ([{ CONTEST_ID: 'ARRL-FIELD-DAY' }])
+    }
+  },
+
   relevantInfoForQSOItem: ({ qso, operation }) => {
     return [qso.their.exchange]
   },

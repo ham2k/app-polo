@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 
@@ -17,6 +17,7 @@ import { selectSettings, setSettings } from '../../../store/settings'
 import { FlagsDialog } from '../components/FlagsDialog'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { findHooks } from '../../../extensions/registry'
 
 function prepareStyles (baseStyles) {
   return {
@@ -38,12 +39,24 @@ export default function LoggingSettingsScreen ({ navigation }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
+  const extensionSettingHooks = useMemo(() => {
+    const hooks = findHooks('setting').filter(hook => hook.category === 'logging' && hook.SettingItem)
+    return hooks
+  }, [])
+
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1 }}>
         <Ham2kListSection>
+          {/* <Ham2kListItem title={'Clone Settings from Previous'}
+            description={settings.cloneLastOperation !== false ? 'Settings for new operations are based on the most recent one' : 'New operations start with default settings' }
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
+            right={() => <Switch value={settings.cloneLastOperation !== false} onValueChange={(value) => dispatch(setSettings({ cloneLastOperation: value })) } />}
+            onPress={() => dispatch(setSettings({ cloneLastOperation: !settings.cloneLastOperation }))}
+          /> */}
+
           <Ham2kListItem title={'Leftie Mode'}
-            description={settings.leftieMode ? 'Improved layout for left-handed users' : 'Regular layout for right-handed users' }
+            description={settings.leftieMode ? 'Use layout for left-handed users' : 'Use layout for right-handed users' }
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="hand-front-left-outline" />}
             right={() => <Switch value={!!settings.leftieMode} onValueChange={(value) => dispatch(setSettings({ leftieMode: value })) } />}
             onPress={() => dispatch(setSettings({ leftieMode: !settings.leftieMode }))}
@@ -98,7 +111,23 @@ export default function LoggingSettingsScreen ({ navigation }) {
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="radio" />}
             onPress={() => navigation.navigate('BandModeSettings')}
           />
+
+          <Ham2kListItem
+            title="Export Settings"
+            description={'Customize filenames and other settings'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-export-outline" />}
+            onPress={() => navigation.navigate('ExportSettings')}
+          />
         </Ham2kListSection>
+
+        {extensionSettingHooks.length > 0 && (
+          <Ham2kListSection title={'Extensions'}>
+            {extensionSettingHooks.map((hook) => (
+              <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
+            ))}
+          </Ham2kListSection>
+        )}
+
       </ScrollView>
     </ScreenContainer>
   )

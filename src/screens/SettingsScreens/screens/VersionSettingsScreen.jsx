@@ -71,6 +71,7 @@ export default function VersionSettingsScreen ({ navigation }) {
               height: '100%'
             }}
           />
+
         </Pressable>
       ) : (
         <ScrollView style={{ flex: 1 }}>

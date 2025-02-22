@@ -60,6 +60,14 @@ const ReferenceHandler = {
     return [`NYQP ${date.getFullYear()}`, ref?.location].filter(x => x).join(' • ')
   },
 
+  decorateRef: (ref) => {
+    return {
+      ...ref,
+      label: `${Info.name}: ${ref.location}`,
+      shortLabel: `${Info.shortName}: ${ref.location}`
+    }
+  },
+
   suggestOperationTitle: (ref) => {
     return { for: Info.shortName, subtitle: ref?.location }
   },
@@ -68,15 +76,15 @@ const ReferenceHandler = {
     if (ref?.type === Info?.key) {
       return [{
         format: 'adif',
-        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
         exportType: 'nyqp-adif',
-        titleTemplate: `{call}: ${Info.name} on {date}`
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       },
       {
         format: 'cabrillo',
-        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
         exportType: 'nyqp-cabrillo',
-        titleTemplate: `{call}: ${Info.name} on {date}`
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       }]
     }
   },
