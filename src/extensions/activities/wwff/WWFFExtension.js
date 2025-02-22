@@ -248,7 +248,6 @@ const ReferenceHandler = {
       } else {
         const notices = []
         if (refs.length > 0 && !sameRefs) notices.push('newRef') // only if at new ref
-        if (!sameDay) notices.push('newDay')
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
