@@ -24,7 +24,7 @@ import { selectRuntimeOnline } from '../../../../../store/runtime'
 import { parseStackedCalls } from '../LoggingPanel'
 
 export const MESSAGES_FOR_SCORING = {
-  duplicate: 'Dupe!!!',
+  duplicate: 'Dupe!',
   invalidBand: 'Invalid Band',
   newBand: 'New Band',
   newMode: 'New Mode',
@@ -34,6 +34,8 @@ export const MESSAGES_FOR_SCORING = {
   'potaActivation.newRef': 'New Park',
   'sotaActivation.newDay': 'New SOTA Day',
   'sotaActivation.newRef': 'New Summit',
+  'sotaActivation.duplicate': 'SOTA Dupe!',
+  'wwffActivation.duplicate': 'WWFF Dupe!',
   'wwbotaActivation.newDay': 'New WWBOTA Day',
   'wwbotaActivation.newRef': 'New Bunker'
 }
@@ -203,10 +205,11 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     return scores
   }, [operation, qso, qsos, sections, settings])
 
-  const scoringMessages = useMemo(() => {
+  const messages = useMemo(() => {
+    const newMessages = []
     if (scoreInfo?.length > 0) {
       // Order by value, as those that provide points/QSOs/etc. more important
-      const allMessages = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
+      const allScoringMessages = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
         const alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
         const notices = (score?.notices || []).map(notice => ({ msg: notice, level: 'notice', key: `${score.type}.${notice}` }))
         const infos = (score?.infos || []).map(info => ({ msg: info, level: 'info', key: `${score.type}.${info}` }))
@@ -216,21 +219,15 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
         }))
       }).flat()
 
-      const filteredPairs = []
       // Remove messages with the same message
-      allMessages.forEach(msg => {
-        if (msg.msg && !filteredPairs.find(x => x.msg === msg.msg && x.level === msg.level)) {
-          filteredPairs.push(msg)
+      allScoringMessages.forEach(msg => {
+        if (msg.msg && !newMessages.find(x => x.msg === msg.msg && x.level === msg.level)) {
+          newMessages.push(msg)
         }
       })
-      console.log('--------------------------------')
-      console.log(allMessages)
-      console.log(filteredPairs)
-
-      return filteredPairs.slice(0, 3)
     }
 
-    if (lookup?.history?.length > 0) {
+    if (lookup?.history?.length > 0 && !newMessages.find(x => x.key.indexOf('.duplicate') >= 0)) {
       const parts = []
       const today = startOfDayInMillis()
       const yesterday = yesterdayInMillis()
@@ -259,9 +256,9 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
         parts.push(`${count} QSOs`)
       }
 
-      return [parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), 'info']
+      newMessages.push({ msg: parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), level: 'info', key: 'history' })
     }
-    return []
+    return newMessages
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
   if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
@@ -298,14 +295,14 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
               </Text>
             )}
           </View>
-          {(stationInfo || scoringMessages?.length === 1) && (
+          {(stationInfo || messages?.length === 1) && (
             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
               {stationInfo && (
                 <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
               )}
-              {scoringMessages?.length === 1 && (
-                <View style={{ flex: 1, alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                  {scoringMessages.map((msg) => (
+              {messages?.length === 1 && (
+                <View style={{ flex: 1, marginLeft: styles.halfSpace, alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                  {messages.map((msg) => (
                     <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
                       <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
                     </View>
@@ -314,9 +311,9 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
               )}
             </View>
           )}
-          {scoringMessages?.length > 1 && (
+          {messages?.length > 1 && (
             <View style={{ alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-              {scoringMessages.map((msg) => (
+              {messages.slice(0, 4).map((msg) => (
                 <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
                   <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
                 </View>
