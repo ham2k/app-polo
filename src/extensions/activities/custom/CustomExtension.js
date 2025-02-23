@@ -101,6 +101,15 @@ const ReferenceHandler = {
     }
   },
 
+  adifFieldsForOneQSO: ({ qso, operation }) => {
+    const huntingRefs = filterRefs(qso, Info.huntingType)
+    const activationRef = findRef(operation, Info.activationType)
+    const fields = []
+    if (activationRef) fields.push({ MY_SIG: activationRef.mySig }, { MY_SIG_INFO: activationRef.mySigInfo })
+    if (huntingRefs.length > 0) fields.push({ SIG: huntingRefs[0].mySig }, { SIG_INFO: huntingRefs[0].ref })
+    return fields
+  },
+
   adifFieldCombinationsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)

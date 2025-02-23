@@ -251,9 +251,11 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
-
-    if (huntingRefs) return ([{ SIG: 'WWBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }])
-    else return []
+    const activationRef = findRef(operation, Info.activationType)
+    const fields = []
+    if (activationRef) fields.push({ MY_SIG: 'WWBOTA' }, { MY_SIG_INFO: activationRef.ref })
+    if (huntingRefs.length > 0) fields.push({ SIG: 'WWBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') })
+    return fields
   },
 
   adifFieldCombinationsForOneQSO: ({ qso, operation }) => {
