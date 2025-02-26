@@ -225,7 +225,8 @@ export function templateContextForOneExport ({ option, settings, operation, ourI
       title: operation?.title, // " at K-TEST"
       userTitle: operation?.userTitle,
       userNotes: operation?.userNotes,
-      refs: operation?.refs
+      refs: operation?.refs,
+      grid: operation?.grid
     },
     qso
   }
