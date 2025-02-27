@@ -28,6 +28,8 @@ export function scoringHandlersForOperation (operation, settings) {
     }
   })
 
+  if (scoringHandlers.length === 0) scoringHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
+
   // Get handlers for general hunting activities
   findHooks('activity').forEach(hook => {
     const type = hook.generalHuntingType && hook.generalHuntingType({ operation, settings })
@@ -37,8 +39,6 @@ export function scoringHandlersForOperation (operation, settings) {
       scoringKeys[handler.key] = true
     }
   })
-
-  if (scoringHandlers.length === 0) scoringHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
 
   scoringHandlers.push({ handler: DXCCScoringHandler, ref: {} })
   scoringKeys[DXCCScoringHandler.key] = true
