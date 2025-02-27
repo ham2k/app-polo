@@ -29,7 +29,7 @@ const osGridPrefixes = [
 ]
 
 const CI_BBOX = [-2.988281, 48.980217, -1.625977, 49.759978]
-const NI_BBOX = [-8.187561, 53.977090, -5.248718, 55.394712]
+const IRE_BBOX = [-10.909424, 51.406059, -5.383301, 55.391592]
 
 function OSGBPrefix (e, n) {
   return osGridPrefixes?.[Math.floor(n / 100000)]?.[Math.floor(e / 100000)]
@@ -64,8 +64,8 @@ export function locationToWABSquare (latitude, longitude) {
       latitude > CI_BBOX[1] && latitude < CI_BBOX[3]) {
     prefixFunc = MGRSPrefix
     projection = 'EPSG:32630'
-  } else if (longitude > NI_BBOX[0] && longitude < NI_BBOX[2] &&
-             latitude > NI_BBOX[1] && latitude < NI_BBOX[3]) {
+  } else if (longitude > IRE_BBOX[0] && longitude < IRE_BBOX[2] &&
+             latitude > IRE_BBOX[1] && latitude < IRE_BBOX[3]) {
     prefixFunc = IrishPrefix
     projection = 'EPSG:29903'
   }
