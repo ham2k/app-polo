@@ -112,7 +112,7 @@ export default Extension
 const LookupHook = {
   ...Info,
   extension: Extension,
-  lookupCallWithDispatch: async (callInfo, { settings, operation, online, dispatch }) => {
+  lookupCallWithDispatch: (callInfo, { settings, operation, online }) => async (dispatch) => {
     const callNotes = findAllCallNotes(callInfo?.baseCall)
     return { notes: callNotes, call: callInfo?.baseCall, source: 'Call Notes' }
   }

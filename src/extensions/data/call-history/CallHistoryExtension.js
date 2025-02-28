@@ -29,7 +29,7 @@ export default Extension
 const LookupHook = {
   ...Info,
 
-  lookupCallWithDispatch: async (callInfo, { settings, operation, online, dispatch }) => {
+  lookupCallWithDispatch: (callInfo, { settings, operation, online }) => async (dispatch) => {
     const { history, mostRecentQSO } = await findQSOHistory(callInfo?.call, { baseCall: callInfo?.baseCall })
     // console.log('History lookup', { call: callInfo.call, history: history.length, name: mostRecentQSO?.their?.name, guessName: mostRecentQSO?.their?.guess?.name })
     // console.log('-- ', mostRecentQSO)

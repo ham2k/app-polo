@@ -39,7 +39,7 @@ const LookupHook = {
   shouldSkipLookup: ({ online, lookedUp }) => {
     return !online || (lookedUp.name && lookedUp.grid)
   },
-  lookupCallWithDispatch: async (callInfo, { settings, online, dispatch }) => {
+  lookupCallWithDispatch: (callInfo, { settings, online }) => async (dispatch) => {
     if (online && settings?.accounts?.hamqth?.login && settings?.accounts?.hamqth?.password && callInfo?.baseCall?.length > 2) {
       const promise = await dispatch(apiHamQTH.endpoints.lookupCall.initiate({ call: callInfo.call }))
       await Promise.all(dispatch(apiHamQTH.util.getRunningQueriesThunk()))
