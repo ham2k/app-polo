@@ -87,10 +87,10 @@ const SpotsHook = {
 
       // Refs
       const refs = []
-      const refRegex = /\b(B\/(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*))[- ]?([0-9]{4}(?:[ ,][0-9]{4})*)\b/gi
+      const refRegex = /\b(B\/(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*))(?:- ?| -?)?([0-9]{4}(?:(?:(?<sep>[ ,/])[0-9]{4})(?:\k<sep>[0-9]{4})*)?)\b/gi
       for (const match of spot.info.matchAll(refRegex)) {
         const prefix = match[1].toUpperCase()
-        refs.push(...match[2].split(/[ ,]/).map(refNum => `${prefix}-${refNum}`))
+        refs.push(...match[2].split(/[ ,/]/).map(refNum => `${prefix}-${refNum}`))
       }
       let label
       if (refs.length === 0) { // No reference found

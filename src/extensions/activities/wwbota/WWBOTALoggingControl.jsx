@@ -13,6 +13,7 @@ import { selectOperationCallInfo } from '../../../store/operations'
 
 import { Info } from './WWBOTAInfo'
 import WWBOTAInput from './WWBOTAInput'
+import { wwbotaPrefixForDXCCPrefix } from './WWBOTADataFile'
 
 const MATCH_SYMBOLS_REGEX = /[ ,.]+$/
 
@@ -45,10 +46,9 @@ export function WWBOTALoggingControl (props) {
 
   const defaultPrefix = useMemo(() => {
     if (qso?.their?.guess?.entityPrefix) {
-      const prefix = qso?.their?.guess?.entityPrefix
-      return `B/${prefix === 'I' ? 'IT' : prefix}`
+      return (wwbotaPrefixForDXCCPrefix(qso?.their.guess.entityPrefix) ?? 'B/?')
     } else if (ourInfo?.entityPrefix) {
-      return `B/${ourInfo?.entityPrefix}`
+      return (wwbotaPrefixForDXCCPrefix(ourInfo?.entityPrefix) ?? 'B/?')
     } else {
       return 'B/?'
     }
