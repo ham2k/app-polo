@@ -103,10 +103,22 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       // console.log('-- updateQSO!')
       // We need to first clear the guess and lookup, otherwise the new values will be merged with the old ones
       updateQSO && updateQSO({ their: { guess: undefined, lookup: undefined } })
+
+      const updates = { their: { guess, lookup: { ...lookup, status } } }
+
+      if (guess?.refs?.length > 0) {
+        updates.refs = qso?.refs || []
+        for (const ref of guess.refs) { // guess refs should already be filtered, but this prevents infinite updates in any case
+          if (!updates.refs.find(r => r.type === ref.type)) {
+            updates.refs.push(ref)
+          }
+        }
+      }
+
       // Then we update the QSO with the new values
-      updateQSO && updateQSO({ their: { guess, lookup: { ...lookup, status } } })
+      updateQSO && updateQSO(updates)
     }
-  }, [updateQSO, guess, lookup, call, theirCall, qso?.their?.lookup?.status, status, qso?.their?.guess?.state, qso?.their?.guess?.name, when])
+  }, [updateQSO, guess, lookup, call, theirCall, qso?.their?.lookup?.status, status, qso?.their.guess.state, qso?.their.guess.name, when, qso?.refs])
 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess.dxccCode)

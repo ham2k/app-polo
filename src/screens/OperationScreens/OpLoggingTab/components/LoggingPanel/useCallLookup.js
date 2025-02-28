@@ -140,7 +140,7 @@ function _extractCallInfo (call, refs) {
 
 async function _performLookup ({ refs, call, theirInfo, online, settings, dispatch, mode = 'full' }) {
   const { lookups } = await _lookupCall(theirInfo, { online, settings, dispatch, mode })
-  const { refs: lookedUpRefs } = await _lookupRefs(refs, { online, settings, dispatch, mode })
+  const { refs: lookedUpRefs } = await _lookupRefs(refs, { lookups, online, settings, dispatch, mode })
   const { guess, lookup } = _mergeData({ theirInfo, lookups, refs: lookedUpRefs })
   if (DEBUG) console.log('  -- performLookup', { call, keys: Object.keys(lookups), guess, lookup })
 
@@ -248,6 +248,12 @@ function _mergeData ({ theirInfo, lookups, refs }) {
         newGuess.state = ref.state
       }
     }
+  }
+
+  const refsFromLookups = Object.keys(lookups || {}).map(key => lookups[key].refs).filter(x => x).flat()
+  const newRefs = refsFromLookups.filter(ref => !refs.find(r => r.type === ref.type))
+  if (newRefs.length > 0) {
+    newGuess.refs = newRefs
   }
 
   return { guess: newGuess, lookup: mergedLookup }

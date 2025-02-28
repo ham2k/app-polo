@@ -31,7 +31,7 @@ import QRZExtension from './data/qrz/QRZExtension'
 import HamDBExtension from './data/hamdb/HamDBExtension'
 import HamQTHExtension from './data/hamqth/HamQTHExtension'
 import Ham2KLoFiSyncExtension from './data/ham2k-lofi-sync/Ham2KLoFiSyncExtension'
-
+import SpotHistoryExtension from './data/spot-history/SpotHistoryExtension'
 import QSOPartiesExtension from './contests/qp/QSOPartiesExtension'
 
 import RadioCommands from './commands/RadioCommands'
@@ -77,6 +77,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
 
   registerExtension(CallNotesExtension)
   registerExtension(CallHistoryExtension)
+  registerExtension(SpotHistoryExtension)
 
   registerExtension(QRZExtension)
   registerExtension(HamDBExtension)

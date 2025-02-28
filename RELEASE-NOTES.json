@@ -6,6 +6,7 @@
       "QSO Parties: NC, SC, OK, ID and WI",
       "Export settings, with templates",
       "Stacking partial calls (use `//` or `..` to stack calls)",
+      "Use spots to prefill QSO references",
       "Add Worked All Ireland squares",
       "Guess correct WWBOTA default prefix",
       "Minor improvements extracting references from WWBOTA cluster",
