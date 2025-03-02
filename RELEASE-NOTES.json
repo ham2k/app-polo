@@ -14,10 +14,31 @@
       "Contributions from M1SDH, NA7DO & M0TRT"
     ]
   },
+  "25.2.4": {
+    "name": "February '25",
+    "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA-0004",
+    "changes": [
+      "Idaho QSO Party counties",
+      "Fixed display of time elapsed in operation",
+      "Fixed missing history messages"
+    ]
+  },
+  "25.2.3": {
+    "name": "February '25",
+    "changes": [
+      "Fixed problem with layout of notices in call info panel"
+    ]
+  },
+  "25.2.2": {
+    "name": "February '25",
+    "changes": [
+      "Bug fixes for QSO Parties (Early Access)"
+    ]
+  },
   "25.2.1": {
     "name": "February '25",
     "changes": [
-      "QSO Parties: NC, SC, OK (Early Access)"
+      "QSO Parties: NC, SC, OK, ID and WI (Early Access)"
     ]
   },
   "25.2.0": {
