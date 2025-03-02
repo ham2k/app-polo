@@ -13,7 +13,8 @@ import { TextInput as NativeTextInput, Platform } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 const LEFT_TRIM_REGEX = /^\s+/
-const SPACES_REGEX = /\s/g
+const SPACE_REGEX = /\s/g
+const DOUBLE_SPACE_REGEX = /\s\s/g
 const ONLY_SPACES_REGEX = /^\s+$/g
 const NOT_NUMBER_WITH_SIGNS_REGEX = /[^0-9+-]/g
 const NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX = /[^0-9+-,.]/g
@@ -39,10 +40,13 @@ export default function ThemedTextInput (props) {
 
   const selectionRef = useRef({})
 
+  const [extraSpace, setExtraSpace] = useState(false)
+
   const stringValue = useMemo(() => {
-    if (typeof value === 'string') return value
+    if (extraSpace) return `${value} `
+    else if (typeof value === 'string') return value
     else return `${value}`
-  }, [value])
+  }, [value, extraSpace])
 
   const trackSelection = useMemo(() => !!focusedRef, [focusedRef])
 
@@ -68,73 +72,85 @@ export default function ThemedTextInput (props) {
     } else {
       if (DEBUG) console.log('handleChange else', { text })
       // Lets check if what changed was the addition of a space
-      if ((text !== stringValue) && (text.replace(SPACES_REGEX, '') === stringValue)) {
+      if (noSpaces && (text !== stringValue) && (text.replace(SPACE_REGEX, '') === stringValue)) {
         spaceAdded = true
+        text = stringValue
+      } else if (noSpaces === false && (text !== stringValue) && (text.replace(DOUBLE_SPACE_REGEX, ' ') === stringValue)) {
+        spaceAdded = true
+        text = stringValue.trim()
       } else if (text.match(ONLY_SPACES_REGEX) && stringValue !== '') { // or a space replacing the entire value
         spaceAdded = true
         text = stringValue
       }
 
-      text = text.replace(LEFT_TRIM_REGEX, '')
+      if (spaceAdded) {
+        const spaceEvent = { nativeEvent: { key: ' ', target: event.nativeEvent.target } }
+        onSpace && onSpace(spaceEvent)
 
-      if (uppercase) {
-        text = text.toUpperCase()
-      }
-      if (trim) {
-        text = text.trim()
-      }
-      if (noSpaces) {
-        text = text.replace(SPACES_REGEX, '')
-      }
-      if (periodToSlash) {
-        if (DEBUG) console.log('handleChange periodToSlash', { text })
-        text = text.replaceAll('.', '/')
-      }
-      if (numeric) {
-        text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
-      }
-      if (decimal) {
-        text = text.replace(NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
-      }
-      if (rst) {
-        text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '')
-      }
+        // When we detect a space was added, we need don't send any new values upstream
+        // but this means the native component now believes it has a value with a space at the end.
+        // So we need to update what we pass as `children` (via `stringValue`) to include that space
+        // so that the native component syncs up, and then we remove the space and render it again.
+        setExtraSpace(true)
+        setTimeout(() => setExtraSpace(false), 50)
+        return
+      } else {
+        text = text.replace(LEFT_TRIM_REGEX, '')
 
-      if (textTransformer) {
-        text = textTransformer(text)
-      }
-      if (DEBUG) console.log('handleChange after transformations', { text })
-      if (trackSelection && text.length !== stringValue.length) {
-        if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed?', { selectionRef: selectionRef.current, stringValue })
-        const selectionFromVirtualNumericKeys = event.selectionFromVirtualNumericKeys ?? {}
-        const start = selectionFromVirtualNumericKeys.start ?? selectionRef.current.start ?? stringValue.length
-        const end = selectionFromVirtualNumericKeys.end ?? selectionRef.current.end ?? stringValue.length
-        // Sometimes, updating the value causes the native text field to also update the selection
-        // to a value that is not the one we want. So we have to delay our update in order to overwrite it.
-        selectionRef.current.start = start + (text.length - stringValue.length)
-        selectionRef.current.end = end + (text.length - stringValue.length)
-        if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed', { start, end, text, stringValue })
-        setTimeout(() => {
+        if (uppercase) {
+          text = text.toUpperCase()
+        }
+        if (trim) {
+          text = text.trim()
+        }
+        if (noSpaces) {
+          text = text.replace(SPACE_REGEX, '')
+        }
+        if (periodToSlash) {
+          if (DEBUG) console.log('handleChange periodToSlash', { text })
+          text = text.replaceAll('.', '/')
+        }
+        if (numeric) {
+          text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+        }
+        if (decimal) {
+          text = text.replace(NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
+        }
+        if (rst) {
+          text = text.replace(NOT_NUMBER_WITH_SIGNS_REGEX, '')
+        }
+
+        if (textTransformer) {
+          text = textTransformer(text)
+        }
+        if (DEBUG) console.log('handleChange after transformations', { text })
+        if (trackSelection && text.length !== stringValue.length) {
+          if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed?', { selectionRef: selectionRef.current, stringValue })
+          const selectionFromVirtualNumericKeys = event.selectionFromVirtualNumericKeys ?? {}
+          const start = selectionFromVirtualNumericKeys.start ?? selectionRef.current.start ?? stringValue.length
+          const end = selectionFromVirtualNumericKeys.end ?? selectionRef.current.end ?? stringValue.length
+          // Sometimes, updating the value causes the native text field to also update the selection
+          // to a value that is not the one we want. So we have to delay our update in order to overwrite it.
           selectionRef.current.start = start + (text.length - stringValue.length)
           selectionRef.current.end = end + (text.length - stringValue.length)
-          if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed timeout', { start, end, text, stringValue })
-        }, 5)
+          if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed', { start, end, text, stringValue })
+          setTimeout(() => {
+            selectionRef.current.start = start + (text.length - stringValue.length)
+            selectionRef.current.end = end + (text.length - stringValue.length)
+            if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed timeout', { start, end, text, stringValue })
+          }, 5)
+        }
+
+        event.nativeEvent.text = text
       }
-
-      event.nativeEvent.text = text
     }
-
     const changeEvent = { ...event }
     changeEvent.fieldId = fieldId
     changeEvent.ref = actualInnerRef
     changeEvent.nativeEvent.text = text
-    const spaceEvent = { nativeEvent: { key: ' ', target: event.nativeEvent.target } }
-    // actualInnerRef.current.setNativeProps({ text })
     if (DEBUG) console.log('handleChange setNativeProps', { text })
     onChangeText && onChangeText(text)
     onChange && onChange(changeEvent)
-    if (spaceAdded) onSpace && onSpace(spaceEvent)
-    // }
   }, [
     multiline, fieldId, actualInnerRef, stringValue,
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
