@@ -215,7 +215,7 @@ function mainExchangeForOperation (props) {
       textStyle={styles.text.callsign}
       label={'Exchange'}
       placeholder={qso?.their?.state ?? qso?.their?.guess?.state}
-      mode={'flat'}
+      keyboard="dumb"
       uppercase={true}
       noSpaces={false}
       value={ref?.exchange || ''}

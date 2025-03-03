@@ -118,7 +118,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       // Then we update the QSO with the new values
       updateQSO && updateQSO(updates)
     }
-  }, [updateQSO, guess, lookup, call, theirCall, qso?.their?.lookup?.status, status, qso?.their.guess.state, qso?.their.guess.name, when, qso?.refs])
+  }, [updateQSO, guess, lookup, call, theirCall, qso?.their?.lookup?.status, status, qso?.their?.guess?.state, qso?.their?.guess?.name, when, qso?.refs])
 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess.dxccCode)
