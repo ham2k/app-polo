@@ -75,7 +75,7 @@ export default function DevModeSettingsScreen ({ navigation }) {
     if (paths.length > 0) {
       Share.open({
         urls: paths.map(p => `file://${p}`),
-        type: 'text/plain' // There is no official QSON mime type
+        type: 'raw'
       }).then((x) => {
         console.info('Shared', x)
       }).catch((e) => {
