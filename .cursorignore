@@ -1,0 +1,44 @@
+# Ignore node_modules and build artifacts
+node_modules/
+dist/
+build/
+android/build/
+ios/build/
+
+out/
+.next/
+.cache/
+
+# Ignore dependency files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# Ignore version control
+.git/
+.svn/
+.hg/
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Ignore OS specific files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore temporary files
+*.tmp
+*.temp

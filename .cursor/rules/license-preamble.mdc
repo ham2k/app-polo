@@ -1,0 +1,40 @@
+---
+description: 
+globs: 
+---
+ # License Preamble
+
+<rule>
+name: license_preamble
+description: Defines the required license and copyright header for all new source files
+filters:
+  - type: glob
+    pattern: "**/*.{js,jsx,json}"
+  - type: event
+    pattern: "file_create"
+
+actions:
+  - type: inform
+    message: |
+      Every new source file must begin with the following header:
+
+      ```javascript
+      /*
+       * Copyright ©️ 2025 Sebastian Delmont <sd@ham2k.com>
+       *
+       * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+       * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+       */
+      ```
+
+      The header should be followed by a blank line before any imports or code begin.
+
+      The copyright line should reflect the current year, and the name and email of the author.
+
+      It's ok if some files include multiple authors. Or if the author
+      of a specific file is not Sebastian Delmont.
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>

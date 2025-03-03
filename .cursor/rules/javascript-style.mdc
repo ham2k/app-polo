@@ -1,0 +1,68 @@
+---
+description: Standards for JavaScript code style and package management.
+globs: **/*.{js,jsx}
+---
+# JavaScript Style Guide
+
+Standards for JavaScript code style and package management.
+
+<rule>
+name: javascript_style
+description: Defines JavaScript coding standards and package management practices
+filters:
+  - type: glob
+    pattern: "**/*.{js,jsx}"
+  - type: event
+    pattern: "file_create"
+
+actions:
+  - type: inform
+    message: |
+      When writing JavaScript code:
+
+      1. Line Endings:
+         - Do not use semicolons at the end of lines
+         ```javascript
+         // Good
+         const myFunction = () => {
+           return something
+         }
+
+         // Bad
+         const myFunction = () => {
+           return something;
+         };
+         ```
+
+      2. Package Management:
+         - Use `npm` for all package management
+         - Do not use yarn or other package managers
+         - Keep package.json and package-lock.json in sync
+
+      3. Dependencies:
+         - Before adding new packages, check if:
+           1. An existing project dependency can be used
+           2. A dependency of an existing package can be used
+           3. A new package is truly needed
+
+examples:
+  - input: |
+      // Bad: Using semicolons
+      import React from 'react';
+
+      const Component = () => {
+        return <div>Hello</div>;
+      };
+
+      // Good: No semicolons
+      import React from 'react'
+
+      const Component = () => {
+        return <div>Hello</div>
+      }
+    output: "Correctly formatted JavaScript code"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>
