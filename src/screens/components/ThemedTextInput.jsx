@@ -196,8 +196,8 @@ export default function ThemedTextInput (props) {
 
   const handleBlur = useCallback((event) => {
     setIsFocused(false)
-    onBlur && onBlur({ ...event, ref: actualInnerRef.current })
-  }, [onBlur, actualInnerRef])
+    onBlur && onBlur({ ...event, fieldId, ref: actualInnerRef.current })
+  }, [onBlur, fieldId, actualInnerRef])
 
   const colorStyles = useMemo(() => {
     return {
