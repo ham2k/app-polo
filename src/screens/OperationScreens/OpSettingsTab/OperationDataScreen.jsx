@@ -91,8 +91,7 @@ export default function OperationDataScreen (props) {
     dispatch(generateExportsForOptions(operation.uuid, options)).then((paths) => {
       if (paths?.length > 0) {
         Share.open({
-          urls: paths.map(p => `file://${p}`),
-          type: 'raw'
+          urls: paths.map(p => `file://${p}`)
         }).then((x) => {
           console.info('Shared', x)
         }).catch((e) => {
