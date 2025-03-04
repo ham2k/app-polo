@@ -72,7 +72,7 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
     <Ham2kDialog visible={true} onDismiss={onDialogDone}>
       <Dialog.Title style={{ textAlign: 'center' }}>{def.name}</Dialog.Title>
       <Dialog.Content>
-        <Ham2kMarkdown>{def.description}</Ham2kMarkdown>
+        <Ham2kMarkdown>{def.buildDescription ? def.buildDescription({ data: info }) : def.description}</Ham2kMarkdown>
       </Dialog.Content>
       <Dialog.Content>
         {info?.status === 'fetching' ? (

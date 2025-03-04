@@ -147,6 +147,14 @@ export const createDataFileDefinition = (file) => ({
   name: `Notes: ${file.name}`,
   icon: 'file-account-outline',
   description: `${file.builtin ? 'Built-in' : "User's"} Callsign Notes`,
+  buildDescription: ({ data }) => {
+    console.log('descriptiondata', data)
+    if (data?.data) {
+      return `${Object.keys(data?.data || {}).length} ${file.builtin ? 'Built-in' : 'User'} callsign notes loaded.`
+    } else {
+      return 'Failed to load!'
+    }
+  },
   fetch: createCallNotesFetcher(file),
   onLoad: createCallNotesLoader(file),
   maxAgeInDays: 1
@@ -160,7 +168,7 @@ const createCallNotesFetcher = (file) => async () => {
   return fetchAndProcessURL({
     url,
     process: async (body) => {
-      const data = {}
+      const entries = {}
 
       body.split(/[\n\r]+/).forEach(line => {
         line = line.trim()
@@ -169,12 +177,12 @@ const createCallNotesFetcher = (file) => async () => {
         const [call, ...noteWords] = line.split(/\s+/)
 
         if (call.length > 2 && noteWords.length > 0) {
-          data[call] = data[call] || []
-          data[call].push({ source: file.name, note: noteWords.join(' '), call })
+          entries[call] = entries[call] || []
+          entries[call].push({ source: file.name, note: noteWords.join(' '), call })
         }
       })
 
-      return data
+      return entries
     }
   })
 }
@@ -232,6 +240,7 @@ export const useAllCallNotesFinder = (call) => {
 async function resolveDownloadUrl (url) {
   url = url.trim()
 
+  // Dropbox
   if (url.match(/^https:\/\/(www\.)*dropbox\.com\//i)) {
     url = url.replaceAll(/[&?]raw=\d/g, '').replaceAll(/[&?]dl=\d/g, '')
     if (url.match(/\?/)) {
@@ -239,6 +248,7 @@ async function resolveDownloadUrl (url) {
     } else {
       return `${url}?dl=1&raw=1`
     }
+  // Apple iCloud Drive
   } else if (url.match(/^https:\/\/(www\.)*icloud\.com\/iclouddrive/i)) {
     const parts = url.match(/iclouddrive\/([\w_]+)/)
     const response = await fetch('https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve', {
@@ -252,13 +262,33 @@ async function resolveDownloadUrl (url) {
       const body = await response.text()
       const json = JSON.parse(body)
       return json?.results && json?.results[0] && json?.results[0].rootRecord?.fields?.fileContent?.value?.downloadURL
+    } else {
+      return url
     }
+  // Google Drive
   } else if (url.match(/^https:\/\/drive\.google\.com\//i)) {
     const parts = url.match(/file\/d\/([\w_-]+)/)
     return `https://drive.google.com/uc?id=${parts[1]}&export=download`
+  // Google Docs
   } else if (url.match(/^https:\/\/docs\.google\.com\/document/i)) {
     const parts = url.match(/\/d\/([\w_-]+)/)
     return `https://docs.google.com/document/export?format=txt&id=${parts[1]}`
+  // GitHub Gist
+  } else if (url.match(/^https:\/\/gist\.github\.com\//i)) {
+    console.log('gist url', url)
+    const response = await fetch(url, {
+      headers: { 'User-Agent': `Ham2K Portable Logger/${packageJson.version}` }
+    })
+    if (response.status === 200) {
+      const body = await response.text()
+      const parts = body.match(/<a href="([^"]+\/raw\/[^"]+)"/)
+      console.log('parts', parts)
+      if (parts) {
+        return `https://gist.githubusercontent.com${parts[1]}`
+      } else {
+        return url
+      }
+    }
   } else {
     return url
   }

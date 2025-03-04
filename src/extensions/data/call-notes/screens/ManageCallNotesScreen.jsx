@@ -22,6 +22,7 @@ import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
 import { Ham2kListItem } from '../../../../screens/components/Ham2kListItem'
 import { Ham2kListSection } from '../../../../screens/components/Ham2kListSection'
 import { Ham2kDialog } from '../../../../screens/components/Ham2kDialog'
+import { Ham2kMarkdown } from '../../../../screens/components/Ham2kMarkdown'
 
 const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDialogDone }) => {
   const def = useMemo(() => extSettings.customFiles.find(f => f.identifier === identifier), [extSettings.customFiles, identifier])
@@ -170,11 +171,37 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
           />
         )}
         <Ham2kListSection title={'About Callsign Notes'}>
-          <Text style={{ marginHorizontal: styles.oneSpace * 2 }}>
-            Callsign notes are stored on simple text files, one call per line followed by
-            information you want shown in the logging screen. You can use the builtin files
-            or add your own.
-          </Text>
+          <Ham2kMarkdown style={{ marginHorizontal: styles.oneSpace * 2 }}>
+            {`
+Callsign notes are stored on simple text files, one call per line followed by information you want shown in the logging screen. You can use the builtin files or add your own.
+
+Provide a direct link to a plain text file, or a "share link" from a service like:
+
+* [Google Docs](https://docs.google.com/)
+* [Google Drive](https://drive.google.com/)
+* [GitHub Gists](https://gist.github.com/)
+* [Dropbox](https://www.dropbox.com/)
+* [Apple iCloud Drive](https://www.icloud.com/)
+
+Lines on that file should look like this and can support basic markdown formatting:
+
+\`\`\`
+K2HRC 🎉 Ham2K Radio Club!!!
+
+KE8PZN 👑 James POTA King
+
+WD4DAN Dan POTA _Royalty_
+
+DAN WD4DAN,WD4JMM
+\`\`\`
+
+
+If the entry starts with an emoji, it will be used instead of the default ⭐.
+
+Entries can be used for "callsign expansion" if you first type \`..\` or \`//\` in the callsign field, such as \`//DAN\` in the example above.
+
+          `}
+          </Ham2kMarkdown>
         </Ham2kListSection>
       </ScrollView>
     </ScreenContainer>
