@@ -73,10 +73,10 @@ export const MainExchangePanel = ({
   }, [handleFieldChange, spaceHandler, rstLength, settings])
 
   const handleRSTBlur = useCallback((event) => {
-    let text = event?.nativeEvent?.text
+    let text = event?.value || event?.nativeEvent?.text
     const mode = qso?.mode ?? vfo?.mode ?? 'SSB'
 
-    text = text.trim()
+    text = text?.trim() || ''
     if (text.length === 1) {
       let readability = '5'
       const strength = text
@@ -91,7 +91,8 @@ export const MainExchangePanel = ({
       } else {
         text = `${readability}${strength}`
       }
-      handleFieldChange && handleFieldChange({ ...event, nativeEvent: { ...event?.nativeEvent, text } })
+
+      handleFieldChange && handleFieldChange({ ...event, value: text, nativeEvent: { ...event?.nativeEvent, text } })
     }
 
     return true
