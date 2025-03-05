@@ -39,6 +39,7 @@ export function DateInput (props) {
     setLocalValue(fmtISODate(valueInMillis))
     setOriginalValue(valueInMillis)
     onBlur && onBlur(event)
+    return true
   }, [valueInMillis, onBlur])
 
   const handleChange = useCallback((event) => {

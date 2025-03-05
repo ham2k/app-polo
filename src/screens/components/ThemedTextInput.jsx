@@ -148,7 +148,7 @@ export default function ThemedTextInput (props) {
     changeEvent.fieldId = fieldId
     changeEvent.ref = actualInnerRef
     changeEvent.nativeEvent.text = text
-    if (DEBUG) console.log('handleChange setNativeProps', { text })
+    if (DEBUG) console.log('handleChange final', { text })
     onChangeText && onChangeText(text)
     onChange && onChange(changeEvent)
   }, [
