@@ -1,6 +1,6 @@
 {
-  "25.2.99-pre1": {
-    "name": "March '25 (pre1)",
+  "25.2.99-pre3": {
+    "name": "March '25 (pre 3)",
     "photoCaption": "KE8PZN, WD4DAN & Friends at POTA US-8353",
     "changes": [
       "QSO Parties: OK, ID, WI, LA, MO, MS",
@@ -8,8 +8,8 @@
       "Export settings, with templates",
       "Stacking partial calls (use `//` or `..` to stack calls)",
       "Use spots to prefill QSO references",
-      "Option to hide deleted QSOs",
-      "Add Worked All Ireland squares",
+      "Option to hide deleted QSOs (as suggested by many)",
+      "Add Worked All Ireland squares (as suggested by EI2LH)",
       "Guess correct WWBOTA default prefix, and other WWBOTA fixes",
       "Fixed exports to GMail and other apps on Android",
       "RST input auto-complete on single digit entry (as suggested by HB9BRJ)",
