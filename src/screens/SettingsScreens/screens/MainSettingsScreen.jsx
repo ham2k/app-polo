@@ -116,7 +116,7 @@ export default function MainSettingsScreen ({ navigation, route }) {
     return (
       <Stack.Navigator
         id="SettingsNavigator"
-        initialRouteName={route?.params?.screen ?? 'MainSettings'}
+        initialRouteName={route?.params?.screen ?? 'MainSettingsOptions'}
         screenOptions={{
           header: HeaderBar,
           animation: 'slide_from_right',
@@ -166,37 +166,37 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
         <Ham2kListItem
           title="General Settings"
           description={'Dark mode, numbers row, units, and more'}
-          onPress={() => navigation.navigate('GeneralSettings')}
+          onPress={() => navigation.navigate('Settings', { screen: 'GeneralSettings' })}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cogs" />}
         />
 
         <Ham2kListItem
           title="Logging Settings"
           description={'Customize the logging experience'}
-          onPress={() => navigation.navigate('LoggingSettings')}
+          onPress={() => navigation.navigate('Settings', { screen: 'LoggingSettings' })}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="book-edit-outline" />}
         />
 
         <Ham2kListItem
           title="Data Settings"
           description="Data files, callsign notes, and more"
+          onPress={() => navigation.navigate('Settings', { screen: 'DataSettings' })}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />}
-          onPress={() => navigation.navigate('DataSettings')}
         />
 
         {settings.devMode && (
           <Ham2kListItem
             title="Sync Settings"
             description="Cloud sync and backup"
+            onPress={() => navigation.navigate('Settings', { screen: 'SyncSettings' })}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={styles.colors.devMode} icon="sync" />}
-            onPress={() => navigation.navigate('SyncSettings')}
           />
         )}
 
         <Ham2kListItem
           title="App Features"
           description={'Manage features like POTA, SOTA, etc'}
-          onPress={() => navigation.navigate('FeaturesSettings')}
+          onPress={() => navigation.navigate('Settings', { screen: 'FeaturesSettings' })}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="format-list-bulleted" />}
         />
 
@@ -204,7 +204,7 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
           <Ham2kListItem
             title="Developer Settings"
             description={'Here be dragons'}
-            onPress={() => navigation.navigate('DevModeSettings')}
+            onPress={() => navigation.navigate('Settings', { screen: 'DevModeSettings' })}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="fire" color={styles.colors.devMode} />}
@@ -242,13 +242,13 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
         <Ham2kListItem
           title={packageJson.versionName ? `${packageJson.versionName} Release (${packageJson.version})` : `Version ${packageJson.version}`}
           description={'See recent changes'}
-          onPress={() => navigation.navigate('VersionSettings')}
+          onPress={() => navigation.navigate('Settings', { screen: 'VersionSettings' })}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
         />
         <Ham2kListItem
           title="Credits"
           description={'Sebastián Delmont KI2D & Team PoLo'}
-          onPress={() => navigation.navigate('CreditsSettings')}
+          onPress={() => navigation.navigate('Settings', { screen: 'CreditsSettings' })}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account-group" />}
         />
       </Ham2kListSection>
@@ -258,44 +258,44 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
         <Ham2kListItem
           title="Read The Fine Manual"
           description={'Browse the documentation for PoLo'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-document-multiple-outline" />}
           onPress={async () => await Linking.openURL('https://polo.ham2k.com/docs/')}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-document-multiple-outline" />}
         />
         <Ham2kListItem
           title="Ham2K Forums"
           description={'Find help, give feedback, discuss ideas…'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="forum-outline" />}
           onPress={async () => await Linking.openURL('https://forums.ham2k.com/')}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="forum-outline" />}
         />
         <Ham2kListItem
           title="Ham2K Chat"
           description={'The discord server for our online community'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="chat-outline" />}
           onPress={async () => await Linking.openURL('https://discord.gg/c4Th9QkByJ')}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="chat-outline" />}
         />
         <Ham2kListItem
           title="Ham2K YouTube"
           description={'Videos and Live Streams'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="youtube" />}
           onPress={async () => await Linking.openURL('https://www.youtube.com/@Ham2KApps')}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="youtube" />}
         />
         <Ham2kListItem
           title="Ham2K Instagram"
           description={'Because you cannot have too many photos…'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="instagram" />}
           onPress={async () => await Linking.openURL('https://www.instagram.com/ham2kapps/')}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="instagram" />}
         />
         <Ham2kListItem
           title="Ham2K BlueSky"
           description={'Follow us for news and updates'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="butterfly-outline" />}
           onPress={async () => await Linking.openURL('https://bsky.app/profile/ham2k.com')}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="butterfly-outline" />}
         />
         <Ham2kListItem
           title="Contact Us"
           description={'help@ham2k.com\n   (but try the Forums or Chat first!)'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-alert-outline" />}
           onPress={async () => await Linking.openURL('mailto:help@ham2k.com')}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-alert-outline" />}
         />
       </Ham2kListSection>
     </ScrollView>

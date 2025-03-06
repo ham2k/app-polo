@@ -98,6 +98,24 @@ export function usePrepareThemes () {
         text: colors.onBackground,
         border: colors.outline,
         notification: colors.primary
+      },
+      fonts: {
+        regular: {
+          fontFamily: fontConfig.default.fontFamily,
+          fontWeight: '400'
+        },
+        medium: {
+          fontFamily: fontConfig.titleMedium.fontFamily,
+          fontWeight: '500'
+        },
+        bold: {
+          fontFamily: fontConfig.titleMedium.fontFamily,
+          fontWeight: '600'
+        },
+        heavy: {
+          fontFamily: fontConfig.titleMedium.fontFamily,
+          fontWeight: '700'
+        }
       }
     }
   }, [colors, colorScheme])

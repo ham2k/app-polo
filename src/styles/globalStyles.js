@@ -72,8 +72,11 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       color: theme.colors.onPrimary
     },
     screenTabBarLabel: {
+      fontFamily: normalFontFamily,
+      fontWeight: '500',
       color: theme.colors.onPrimary,
-      fontSize: sizeInfo.smOrSmaller ? smallFontSize : normalFontSize
+      textTransform: 'uppercase',
+      fontSize: smallFontSize // sizeInfo.smOrSmaller ? smallFontSize : normalFontSize
     },
     screenTabBarIndicator: {
       backgroundColor: theme.colors.onPrimary,

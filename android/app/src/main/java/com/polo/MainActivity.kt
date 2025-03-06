@@ -16,14 +16,10 @@ class MainActivity : ReactActivity() {
   override fun getMainComponentName(): String = "polo"
 
 
-  /**
-   * Required for React Navigation
-   */
   override fun onCreate(savedInstanceState: android.os.Bundle?) {
     SplashScreen.show(this)
-    super.onCreate(null)
+    super.onCreate(null)  // Required by react-native-screens / react-native-navigation
   }
-
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
