@@ -10,7 +10,7 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView, View } from 'react-native'
 import { Checkbox, List, Menu, Text } from 'react-native-paper'
-import DocumentPicker from 'react-native-document-picker'
+import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 
@@ -106,8 +106,16 @@ export default function OperationDataScreen (props) {
   }, [dispatch, operation])
 
   const handleImportADIF = useCallback(() => {
-    DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
-      const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
+    pick({ mode: 'import' }).then(async (files) => {
+      const [localCopy] = await keepLocalCopy({
+        files: files.map(file => ({
+          uri: file.uri,
+          fileName: file.name ?? 'fallbackName'
+        })),
+        destination: 'cachesDirectory'
+      })
+
+      const filename = decodeURIComponent(localCopy.fileCopyUri.replace('file://', ''))
       const { adifCount, importCount } = await dispatch(importADIFIntoOperation(filename, operation, qsos))
       trackEvent('import_adif', {
         import_count: importCount,

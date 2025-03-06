@@ -16,6 +16,7 @@ import { reportError } from '../../../distro'
 import packageJson from '../../../../package.json'
 
 import { addNotice } from '../../system/systemSlice'
+import { Platform } from 'react-native'
 
 /*
  * Loading lifecycle:
@@ -182,6 +183,9 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
   }
 
   if (DEBUG_FETCH) console.log('-- Reading file', response.data)
+
+  // The utf8 encoder in RNFetchBlob often breaks when there are some odd characters.
+  // whereas `Buffer` is more resilient, so we go thru extra hoops, which are slower but more reliable
   const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
   if (DEBUG_FETCH) console.log('-- Decoding', data64.length, 'bytes')
   const buffer = Buffer.from(data64, 'base64')
@@ -229,32 +233,53 @@ export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch,
 
   const streamingPromise = new Promise((resolve, reject) => {
     let previousChunk = ''
-    RNFetchBlob.fs.readStream(response.data, 'base64', chunkSize ?? 4096).then(stream => {
-      stream.onData(chunk64 => {
-        // The utf8 encoder in RNFetchBlob often breaks when there are some odd characters.
-        // whereas `Buffer` is more resilient, so we go thru extra hoops, which are slower but more reliable
-        const buffer = Buffer.from(chunk64, 'base64')
-        let chunk = buffer.toString('utf8')
 
-        // If the chunk ends with a complete line, then it ends in "\n" and `lines` will have an empty element as last.
-        // but if it's not a complete line, then the last element will be the partial line.
-        // In either case, we save it as `previousChunk` and remove it from the array,
-        // and in the next chunk we'll prepend it to the first line.
-        chunk = previousChunk + chunk
-        const lines = chunk.split('\n')
-        previousChunk = lines.pop()
+    if (Platform.OS === 'ios') {
+      // There's a crashing bug in RNFetchBlob streams: https://github.com/RonRadtke/react-native-blob-util/issues/391
+      // So until that's fixed, we'll use regular `readFile` instead for iOS
+      // The utf8 encoder in RNFetchBlob often breaks when there are some odd characters.
+      // whereas `Buffer` is more resilient, so we go thru extra hoops, which are slower but more reliable
+      RNFetchBlob.fs.readFile(response.data, 'utf8').then(body => {
+        // if (DEBUG_FETCH) console.log('-- Decoding', data64.length, 'bytes')
+        // const buffer = Buffer.from(data64, 'base64')
+        // const body = buffer.toString('utf8')
+        const lines = body.split('\n')
         processLineBatch(lines)
-      })
-      stream.onEnd(() => {
         processEndOfBatch && processEndOfBatch()
         resolve()
-      })
-      stream.onError((err) => {
-        console.log('Error reading stream', err)
+      }).catch(err => {
+        console.log('Error reading file', err)
         reject(err)
       })
-      stream.open()
-    })
+    } else {
+      RNFetchBlob.fs.readStream(response.data, 'utf8', chunkSize ?? 4096).then(stream => {
+        stream.onData(chunk64 => {
+          // The utf8 encoder in RNFetchBlob often breaks when there are some odd characters.
+          // whereas `Buffer` is more resilient, so we go thru extra hoops, which are slower but more reliable
+          // const buffer = Buffer.from(chunk64, 'base64')
+          // let chunk = buffer.toString('utf8')
+          let chunk = chunk64
+
+          // If the chunk ends with a complete line, then it ends in "\n" and `lines` will have an empty element as last.
+          // but if it's not a complete line, then the last element will be the partial line.
+          // In either case, we save it as `previousChunk` and remove it from the array,
+          // and in the next chunk we'll prepend it to the first line.
+          chunk = previousChunk + chunk
+          const lines = chunk.split('\n')
+          previousChunk = lines.pop()
+          processLineBatch(lines)
+        })
+        stream.onEnd(() => {
+          processEndOfBatch && processEndOfBatch()
+          resolve()
+        })
+        stream.onError((err) => {
+          console.log('Error reading stream', err)
+          reject(err)
+        })
+        stream.open()
+      })
+    }
   })
 
   await streamingPromise

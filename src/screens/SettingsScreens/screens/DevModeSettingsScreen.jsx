@@ -10,7 +10,7 @@ import React, { useCallback } from 'react'
 import { IconButton, List } from 'react-native-paper'
 import { Alert, ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import DocumentPicker from 'react-native-document-picker'
+import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 import DeviceInfo from 'react-native-device-info'
@@ -75,8 +75,15 @@ export default function DevModeSettingsScreen ({ navigation }) {
   }, [])
 
   const handleImportDB = useCallback(async () => {
-    DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
-      const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
+    pick({ mode: 'import' }).then(async (files) => {
+      const [localCopy] = await keepLocalCopy({
+        files: files.map(file => ({
+          uri: file.uri,
+          fileName: file.name ?? 'fallbackName'
+        })),
+        destination: 'cachesDirectory'
+      })
+      const filename = decodeURIComponent(localCopy.fileCopyUri.replace('file://', ''))
       await replaceDatabase(filename)
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
