@@ -194,6 +194,7 @@ export default function HomeScreen ({ navigation }) {
               right: Math.max(styles.oneSpace * 2, safeArea.right),
               bottom: Math.max(styles.oneSpace * 2, safeArea.bottom)
             }}
+            onPress={handleNewOperation}
           />
         ) : ( // As of March 8, 2025, AnimatedFABs show a weird inner shadow on Android
           <FAB
