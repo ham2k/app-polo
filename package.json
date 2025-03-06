@@ -27,7 +27,7 @@
     "@react-navigation/native": "^6.1",
     "@react-navigation/native-stack": "^6.11",
     "@reduxjs/toolkit": "^2.2",
-    "@sayem314/react-native-keep-awake": "github:sd/react-native-keep-awake",
+    "@sayem314/react-native-keep-awake": "github:ham2k/react-native-keep-awake",
     "auto-bind": "^5.0",
     "base64-js": "^1.5",
     "buffer": "^6.0",
