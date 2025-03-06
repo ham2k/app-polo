@@ -7,13 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* poloTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* poloTests.m */; };
 		07A0902DFB974D1CB3152257 /* Roboto Condensed Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD16A78FD39D4B129049E76A /* Roboto Condensed Light.ttf */; };
 		0A22A3007B4E477BB0B7A498 /* Roboto Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F99153778C1418285DADE13 /* Roboto Light.ttf */; };
 		0F80D62E977D4D87ADC28752 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 136015CF8403421FA231F743 /* Roboto.ttf */; };
-		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
-		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+    761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		17AA7B9063DA4E6C8920B82A /* Roboto Condensed Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD2495B3B1DD4FD5AD92CE01 /* Roboto Condensed Bold.ttf */; };
 		193F1C968C304118B80AA47C /* Roboto Condensed Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 10BDDF29EBA2446999C4DDED /* Roboto Condensed Thin.ttf */; };
 		25027BB41CF84D1E8D9E7A2B /* Roboto Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9BBC9CE4DC36464AAA683059 /* Roboto Medium.ttf */; };
@@ -25,7 +22,6 @@
 		6C77CB69AB8A41BC8B6A080C /* Roboto Mono Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83A8D54793464474BD06F48F /* Roboto Mono Bold.ttf */; };
 		7889B4E4799A496E8CF794F7 /* Roboto Mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0CD45E9F2B3048D58AC8061C /* Roboto Mono.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		8FF6921ADAB530148E4AD52F /* Pods_polo_poloTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83B9B9B4DF9DAD8DC5CBA474 /* Pods_polo_poloTests.framework */; };
 		90D83B5736CA4A8E9B72F795 /* Roboto Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C7F72824C3B04653AF0F08A0 /* Roboto Thin.ttf */; };
 		926EE64DDE9F46908A85DE3B /* Roboto Slab Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5C0B5909F8BC4EDA8E81F330 /* Roboto Slab Medium.ttf */; };
 		A0C46A3953964C91BD928C19 /* Roboto Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A09E710A695D4C2EA0A456BF /* Roboto Bold.ttf */; };
@@ -52,23 +48,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* poloTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = poloTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* poloTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = poloTests.m; sourceTree = "<group>"; };
 		01ADCF23075EB4C25894D688 /* Pods-polo.prodrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.prodrelease.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.prodrelease.xcconfig"; sourceTree = "<group>"; };
 		0CD45E9F2B3048D58AC8061C /* Roboto Mono.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Mono.ttf"; path = "../assets/fonts/Roboto Mono.ttf"; sourceTree = "<group>"; };
 		0F99153778C1418285DADE13 /* Roboto Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Light.ttf"; path = "../assets/fonts/Roboto Light.ttf"; sourceTree = "<group>"; };
 		10BDDF29EBA2446999C4DDED /* Roboto Condensed Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Condensed Thin.ttf"; path = "../assets/fonts/Roboto Condensed Thin.ttf"; sourceTree = "<group>"; };
 		136015CF8403421FA231F743 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = ../assets/fonts/Roboto.ttf; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Ham2K Portable Logger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ham2K Portable Logger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = polo/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = polo/AppDelegate.mm; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = polo/Images.xcassets; sourceTree = "<group>"; };
+    761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = polo/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = polo/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = polo/main.m; sourceTree = "<group>"; };
 		1C9746486FD59ECA88E77FF4 /* Pods-polo.devrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.devrelease.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.devrelease.xcconfig"; sourceTree = "<group>"; };
 		20CFD5EF5FB847249CAAC60D /* Roboto Slab Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Slab Black.ttf"; path = "../assets/fonts/Roboto Slab Black.ttf"; sourceTree = "<group>"; };
-		285067297FE013E512E294F1 /* Pods-polo-poloTests.betadebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.betadebug.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.betadebug.xcconfig"; sourceTree = "<group>"; };
 		2908BA1A9DF8FB525A4E57EF /* Pods-polo.betarelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.betarelease.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.betarelease.xcconfig"; sourceTree = "<group>"; };
 		2DEB1B947A9040BC81142CDB /* Roboto Mono Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Mono Thin.ttf"; path = "../assets/fonts/Roboto Mono Thin.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-polo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.debug.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -78,17 +68,12 @@
 		52E51D689542480FA9E55C4C /* Roboto Condensed ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Condensed ExtraBold.ttf"; path = "../assets/fonts/Roboto Condensed ExtraBold.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-polo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.release.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.release.xcconfig"; sourceTree = "<group>"; };
 		59232FB52CBE4FBEA9C17B56 /* Roboto Slab ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Slab ExtraBold.ttf"; path = "../assets/fonts/Roboto Slab ExtraBold.ttf"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.debug.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5C0B5909F8BC4EDA8E81F330 /* Roboto Slab Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Slab Medium.ttf"; path = "../assets/fonts/Roboto Slab Medium.ttf"; sourceTree = "<group>"; };
-		692647BAF0BD378FFAA5F85B /* Pods-polo-poloTests.prodrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.prodrelease.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.prodrelease.xcconfig"; sourceTree = "<group>"; };
 		720996792BA85FB5002C388D /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		72A0D32B2B162706007E568A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		72A0D32C2B162706007E568A /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
-		73051291BC6C08E39ED86A73 /* Pods-polo-poloTests.betarelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.betarelease.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.betarelease.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = polo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		83A8D54793464474BD06F48F /* Roboto Mono Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Mono Bold.ttf"; path = "../assets/fonts/Roboto Mono Bold.ttf"; sourceTree = "<group>"; };
-		83B9B9B4DF9DAD8DC5CBA474 /* Pods_polo_poloTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_polo_poloTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-polo-poloTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.release.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.release.xcconfig"; sourceTree = "<group>"; };
 		9488FFB79CC2CF0F3FEA7DD2 /* Pods_polo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_polo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B7A9A648EECA029024A1016 /* Pods-polo.betadebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.betadebug.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.betadebug.xcconfig"; sourceTree = "<group>"; };
 		9BBC9CE4DC36464AAA683059 /* Roboto Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Medium.ttf"; path = "../assets/fonts/Roboto Medium.ttf"; sourceTree = "<group>"; };
@@ -97,7 +82,6 @@
 		A5AF322C92F54A8898C60664 /* Roboto Mono Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Mono Light.ttf"; path = "../assets/fonts/Roboto Mono Light.ttf"; sourceTree = "<group>"; };
 		AD2495B3B1DD4FD5AD92CE01 /* Roboto Condensed Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Condensed Bold.ttf"; path = "../assets/fonts/Roboto Condensed Bold.ttf"; sourceTree = "<group>"; };
 		BD16A78FD39D4B129049E76A /* Roboto Condensed Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Condensed Light.ttf"; path = "../assets/fonts/Roboto Condensed Light.ttf"; sourceTree = "<group>"; };
-		C0EC58EF309D62377C5D6926 /* Pods-polo-poloTests.proddebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.proddebug.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.proddebug.xcconfig"; sourceTree = "<group>"; };
 		C18DD4ABE0104CD9AFAA7268 /* Roboto Slab Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Slab Thin.ttf"; path = "../assets/fonts/Roboto Slab Thin.ttf"; sourceTree = "<group>"; };
 		C66C002B48D24A32BC280E2D /* Roboto Condensed Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Condensed Medium.ttf"; path = "../assets/fonts/Roboto Condensed Medium.ttf"; sourceTree = "<group>"; };
 		C7F72824C3B04653AF0F08A0 /* Roboto Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Thin.ttf"; path = "../assets/fonts/Roboto Thin.ttf"; sourceTree = "<group>"; };
@@ -107,19 +91,9 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EDCB747124D4D5E23AC68F85 /* Pods-polo.devdebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo.devdebug.xcconfig"; path = "Target Support Files/Pods-polo/Pods-polo.devdebug.xcconfig"; sourceTree = "<group>"; };
 		F01A4B0548424FF59FDD0947 /* Roboto Condensed Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Condensed Black.ttf"; path = "../assets/fonts/Roboto Condensed Black.ttf"; sourceTree = "<group>"; };
-		F50C8E7CD66012C66E6F4144 /* Pods-polo-poloTests.devrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.devrelease.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.devrelease.xcconfig"; sourceTree = "<group>"; };
-		FB2513710CEE4903AC7C2032 /* Pods-polo-poloTests.devdebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-polo-poloTests.devdebug.xcconfig"; path = "Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests.devdebug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		00E356EB1AD99517003FC87E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8FF6921ADAB530148E4AD52F /* Pods_polo_poloTests.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -131,15 +105,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* poloTests */ = {
-			isa = PBXGroup;
-			children = (
-				00E356F21AD99517003FC87E /* poloTests.m */,
-				00E356F01AD99517003FC87E /* Supporting Files */,
-			);
-			path = poloTests;
-			sourceTree = "<group>";
-		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,12 +116,10 @@
 		13B07FAE1A68108700A75B9A /* polo */ = {
 			isa = PBXGroup;
 			children = (
-				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
+				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
-				13B07FB71A68108700A75B9A /* main.m */,
 				720996792BA85FB5002C388D /* Config.xcconfig */,
 				EAEEA1DF5608CEBDB7C04460 /* PrivacyInfo.xcprivacy */,
 			);
@@ -168,7 +131,6 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				9488FFB79CC2CF0F3FEA7DD2 /* Pods_polo.framework */,
-				83B9B9B4DF9DAD8DC5CBA474 /* Pods_polo_poloTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -194,7 +156,6 @@
 			children = (
 				13B07FAE1A68108700A75B9A /* polo */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* poloTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				72A0D32F2B162732007E568A /* Fonts */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
@@ -210,7 +171,6 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* Ham2K Portable Logger.app */,
-				00E356EE1AD99517003FC87E /* poloTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -252,20 +212,12 @@
 			children = (
 				3B4392A12AC88292D35C810B /* Pods-polo.debug.xcconfig */,
 				5709B34CF0A7D63546082F79 /* Pods-polo.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-polo-poloTests.release.xcconfig */,
 				D3C0AACBADED1145A6C4DF2D /* Pods-polo.proddebug.xcconfig */,
 				9B7A9A648EECA029024A1016 /* Pods-polo.betadebug.xcconfig */,
 				EDCB747124D4D5E23AC68F85 /* Pods-polo.devdebug.xcconfig */,
 				01ADCF23075EB4C25894D688 /* Pods-polo.prodrelease.xcconfig */,
 				2908BA1A9DF8FB525A4E57EF /* Pods-polo.betarelease.xcconfig */,
 				1C9746486FD59ECA88E77FF4 /* Pods-polo.devrelease.xcconfig */,
-				C0EC58EF309D62377C5D6926 /* Pods-polo-poloTests.proddebug.xcconfig */,
-				285067297FE013E512E294F1 /* Pods-polo-poloTests.betadebug.xcconfig */,
-				FB2513710CEE4903AC7C2032 /* Pods-polo-poloTests.devdebug.xcconfig */,
-				692647BAF0BD378FFAA5F85B /* Pods-polo-poloTests.prodrelease.xcconfig */,
-				73051291BC6C08E39ED86A73 /* Pods-polo-poloTests.betarelease.xcconfig */,
-				F50C8E7CD66012C66E6F4144 /* Pods-polo-poloTests.devrelease.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -273,27 +225,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* poloTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "poloTests" */;
-			buildPhases = (
-				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
-				00E356EA1AD99517003FC87E /* Sources */,
-				00E356EB1AD99517003FC87E /* Frameworks */,
-				00E356EC1AD99517003FC87E /* Resources */,
-				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
-				F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				00E356F51AD99517003FC87E /* PBXTargetDependency */,
-			);
-			name = poloTests;
-			productName = poloTests;
-			productReference = 00E356EE1AD99517003FC87E /* poloTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		13B07F861A680F5B00A75B9A /* polo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "polo" */;
@@ -346,7 +277,6 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* polo */,
-				00E356ED1AD99517003FC87E /* poloTests */,
 			);
 		};
 /* End PBXProject section */
@@ -429,28 +359,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-polo/Pods-polo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-polo-poloTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -473,23 +381,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -507,40 +398,14 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-polo/Pods-polo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-polo-poloTests/Pods-polo-poloTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		00E356EA1AD99517003FC87E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				00E356F31AD99517003FC87E /* poloTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
-				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -555,59 +420,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		00E356F61AD99517003FC87E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-polo-poloTests.debug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = T56H72Q4W5;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = poloTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/polo.app/polo";
-			};
-			name = Debug;
-		};
-		00E356F71AD99517003FC87E /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-polo-poloTests.release.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = T56H72Q4W5;
-				INFOPLIST_FILE = poloTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/polo.app/polo";
-			};
-			name = Release;
-		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-polo.debug.xcconfig */;
@@ -617,6 +429,7 @@
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = polo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo _";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -645,6 +458,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo _";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -815,7 +629,7 @@
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD = "";
 				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -857,6 +671,7 @@
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = polo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo 𝛼";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -874,34 +689,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = DevDebug;
-		};
-		72A4720A2B2FBBE8002E100B /* DevDebug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = FB2513710CEE4903AC7C2032 /* Pods-polo-poloTests.devdebug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = T56H72Q4W5;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = poloTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/polo.app/polo";
 			};
 			name = DevDebug;
 		};
@@ -1056,7 +843,7 @@
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD = "";
 				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1098,6 +885,7 @@
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = polo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo β";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1115,34 +903,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = BetaDebug;
-		};
-		72A4720D2B2FBBFA002E100B /* BetaDebug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 285067297FE013E512E294F1 /* Pods-polo-poloTests.betadebug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = T56H72Q4W5;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = poloTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/polo.app/polo";
 			};
 			name = BetaDebug;
 		};
@@ -1297,7 +1057,7 @@
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD = "";
 				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1339,6 +1099,7 @@
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = polo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1356,34 +1117,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = ProdDebug;
-		};
-		72A472102B2FBC00002E100B /* ProdDebug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0EC58EF309D62377C5D6926 /* Pods-polo-poloTests.proddebug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = T56H72Q4W5;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = poloTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/polo.app/polo";
 			};
 			name = ProdDebug;
 		};
@@ -1534,7 +1267,7 @@
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD = "";
 				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1575,6 +1308,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo 𝛼";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1591,31 +1325,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = DevRelease;
-		};
-		72A472132B2FBC06002E100B /* DevRelease */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F50C8E7CD66012C66E6F4144 /* Pods-polo-poloTests.devrelease.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = T56H72Q4W5;
-				INFOPLIST_FILE = poloTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/polo.app/polo";
 			};
 			name = DevRelease;
 		};
@@ -1766,7 +1475,7 @@
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD = "";
 				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1807,6 +1516,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo β";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1823,31 +1533,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = BetaRelease;
-		};
-		72A472162B2FBC0D002E100B /* BetaRelease */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 73051291BC6C08E39ED86A73 /* Pods-polo-poloTests.betarelease.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = T56H72Q4W5;
-				INFOPLIST_FILE = poloTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/polo.app/polo";
 			};
 			name = BetaRelease;
 		};
@@ -1998,7 +1683,7 @@
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD = "";
 				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2039,6 +1724,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = T56H72Q4W5;
 				INFOPLIST_FILE = polo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ham2K PoLo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2055,31 +1741,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = ProdRelease;
-		};
-		72A472192B2FBC12002E100B /* ProdRelease */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 692647BAF0BD378FFAA5F85B /* Pods-polo-poloTests.prodrelease.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = T56H72Q4W5;
-				INFOPLIST_FILE = poloTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/polo.app/polo";
 			};
 			name = ProdRelease;
 		};
@@ -2234,7 +1895,7 @@
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD = "";
 				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2414,7 +2075,7 @@
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
 					" ${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD = "";
 				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2450,21 +2111,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "poloTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				00E356F61AD99517003FC87E /* Debug */,
-				72A472102B2FBC00002E100B /* ProdDebug */,
-				72A4720D2B2FBBFA002E100B /* BetaDebug */,
-				72A4720A2B2FBBE8002E100B /* DevDebug */,
-				00E356F71AD99517003FC87E /* Release */,
-				72A472192B2FBC12002E100B /* ProdRelease */,
-				72A472162B2FBC0D002E100B /* BetaRelease */,
-				72A472132B2FBC06002E100B /* DevRelease */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "polo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
