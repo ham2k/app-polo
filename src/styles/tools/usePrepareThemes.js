@@ -80,11 +80,21 @@ export function usePrepareThemes () {
   }, [colorScheme])
 
   const paperTheme = useMemo(() => {
+    const baseTheme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
     return {
-      ...(colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme),
-      colors,
-      fonts,
-      sizes
+      ...baseTheme,
+      colors: {
+        ...baseTheme.colors,
+        ...colors
+      },
+      fonts: {
+        ...baseTheme.fonts,
+        ...fonts
+      },
+      sizes: {
+        ...baseTheme.sizes,
+        ...sizes
+      }
     }
   }, [colors, fonts, colorScheme, sizes])
 

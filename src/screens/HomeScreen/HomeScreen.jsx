@@ -7,8 +7,8 @@
 
 import React, { useCallback, useEffect } from 'react'
 
-import { FlatList, View } from 'react-native'
-import { AnimatedFAB, Text } from 'react-native-paper'
+import { FlatList, Platform, View } from 'react-native'
+import { AnimatedFAB, FAB, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -183,17 +183,32 @@ export default function HomeScreen ({ navigation }) {
             onScroll={handleScroll}
           />
         </GestureHandlerRootView>
-        <AnimatedFAB
-          icon="plus"
-          label="New Operation"
-          accessibilityLabel="New Operation"
-          extended={isExtended}
-          style={[{
-            right: Math.max(styles.oneSpace * 2, safeArea.right),
-            bottom: Math.max(styles.oneSpace * 2, safeArea.bottom)
-          }]}
-          onPress={handleNewOperation}
-        />
+        {Platform.OS === 'ios' ? (
+          <AnimatedFAB
+            icon="plus"
+            label="New Operation"
+            accessibilityLabel="New Operation"
+            mode="elevated"
+            extended={isExtended}
+            style={{
+              right: Math.max(styles.oneSpace * 2, safeArea.right),
+              bottom: Math.max(styles.oneSpace * 2, safeArea.bottom)
+            }}
+          />
+        ) : ( // As of March 8, 2025, AnimatedFABs show a weird inner shadow on Android
+          <FAB
+            icon="plus"
+            label="New Operation"
+            accessibilityLabel="New Operation"
+            mode="elevated"
+            style={{
+              position: 'absolute',
+              right: Math.max(styles.oneSpace * 2, safeArea.right),
+              bottom: Math.max(styles.oneSpace * 2, safeArea.bottom)
+            }}
+            onPress={handleNewOperation}
+          />
+        )}
       </View>
 
       <HomeTools settings={settings} styles={styles} />
