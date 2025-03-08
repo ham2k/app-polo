@@ -49,7 +49,7 @@
     "react-native-blob-util": "^0.21",
     "react-native-config": "^1.5",
     "react-native-device-info": "^14.0",
-    "react-native-document-picker": "^9.3",
+    "@react-native-documents/picker": "^10.1.1",
     "react-native-drawer-layout": "^4.1.1",
     "react-native-gesture-handler": "^2.24",
     "react-native-get-item-layout-section-list": "^0.1.0",

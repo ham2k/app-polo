@@ -5,7 +5,10 @@ import ReactAppDependencyProvider
 import react_native_splash_screen
 
 @main
-class AppDelegate: RCTAppDelegate {
+class AppDelegate: RCTAppDelegate, RNAppAuthAuthorizationFlowManager {
+
+  public weak var authorizationFlowManagerDelegate: RNAppAuthAuthorizationFlowManagerDelegate? // <-- this property is required by the protocol
+
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     self.moduleName = "polo"
     self.dependencyProvider = RCTAppDependencyProvider()
@@ -20,6 +23,14 @@ class AppDelegate: RCTAppDelegate {
     //   react_native_splash_screen.RNSplashScreen.show()
     // }
     return ret
+  }
+
+  //"open url" delegate function for managing deep linking needs to call the resumeExternalUserAgentFlowWithURL method
+  override func application(
+      _ app: UIApplication,
+      open url: URL,
+      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+      return authorizationFlowManagerDelegate?.resumeExternalUserAgentFlow(with: url) ?? false
   }
 
   override func sourceURL(for bridge: RCTBridge) -> URL? {
