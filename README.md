@@ -107,6 +107,7 @@ npm install
 
 # For android
 rm -rf android/app/.cxx
+rm -rf android/build
 (cd android && ./gradlew clean)
 
 # For iOS
@@ -114,7 +115,7 @@ rm -rf ~/Library/Caches/CocoaPods
 rm -rf ios/Pods
 rm -rf ios/Podfile.lock
 rm -rf ios/build
-(cd ios && RCT_NEW_ARCH_ENABLED=1 pod install)
+(cd ios && pod install)
 
 # For all platforms
 watchman watch-del .
