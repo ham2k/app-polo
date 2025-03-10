@@ -200,7 +200,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
     let info = parts.filter(x => x).join(' • ')
 
-    // if (partialCalls || allCalls.length > 1) {
+    // if (callStack || allCalls.length > 1) {
     if ((call !== theirCall || allCalls.length > 1) && theirCall.length > 2) {
       info = `**${theirCall}**: ${info}`
     }

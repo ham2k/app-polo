@@ -113,10 +113,10 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
       }
 
-      if (loggingState.partialCalls) {
-        otherStateChanges.partialCalls = undefined
+      if (loggingState.callStack) {
+        otherStateChanges.callStack = undefined
         nextQSO.their = nextQSO.their || {}
-        nextQSO.their.call = loggingState.partialCalls
+        nextQSO.their.call = loggingState.callStack
       }
 
       setQSO(nextQSO, { otherStateChanges })
@@ -151,7 +151,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         }
       }, 10)
     }
-  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch, loggingState.partialCalls])
+  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch, loggingState.callStack])
 
   useEffect(() => { // Validate and analize the callsign
     const { call } = parseStackedCalls(qso?.their?.call ?? '')
@@ -296,7 +296,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
 
         let lastUUID
 
-        const { call, allCalls, partialCalls } = parseStackedCalls(qso?.their?.call ?? '')
+        const { call, allCalls, callStack } = parseStackedCalls(qso?.their?.call ?? '')
         const multiQSOs = []
         for (let i = 0; i < allCalls.length; i++) {
           let oneQSO = qso
@@ -326,7 +326,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
         if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 
-        setQSO(undefined, { otherStateChanges: { lastUUID, partialCalls } }) // Let queue management decide what to do
+        setQSO(undefined, { otherStateChanges: { lastUUID, callStack } }) // Let queue management decide what to do
         if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
       }
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
@@ -702,11 +702,40 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
 }
 
 export function parseStackedCalls (input) {
+  // Stacked calls are separated by `//`
+  // The last part of the stack that is a valid call is extracted as `call`
+  // along with any other comma-separated calls that were part of that stack part, as `allCalls`.
+  // The rest of the stack is returned as a string in`callStack`.
+
   input = (input || '').trim()
   const parts = input.split('//').filter(x => x)
-  const partialCalls = parts.slice(0, parts.length - 1).join('//')
-  const actuallCalls = parts[parts.length - 1] || ''
-  const allCalls = actuallCalls.split(',').filter(x => x)
-  const call = allCalls[allCalls.length - 1] || ''
-  return { call, allCalls, partialCalls }
+
+  let call = null
+  let allCalls = null
+  const stack = []
+  let i = parts.length - 1
+  while (i >= 0) {
+    if (call) {
+      // if we already have a call, everything else goes to the stack
+      stack.unshift(parts[i])
+    } else {
+      // Otherwise we look to see if the current part is a valid call
+
+      // But first, we look for multiple calls and pick the last
+      allCalls = parts[i].split(',').filter(x => x)
+      call = allCalls[allCalls?.length - 1]
+
+      const parsedCall = parseCallsign(call)
+
+      // if not valid, add it to the stack and keep trying with the next part
+      if (!parsedCall.baseCall) {
+        call = null
+        allCalls = null
+        stack.unshift(parts[i])
+      }
+    }
+    i--
+  }
+
+  return { call: call || '', allCalls: allCalls || [], callStack: stack.join('//') }
 }
