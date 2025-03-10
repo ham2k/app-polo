@@ -18,7 +18,7 @@ Can also be defined as `inStateExchange` and `outOfStateExchange` to have differ
 
 Relevant `"options"`:
 
-- `dxLocationIsPrefix`: If true, DX location is logged as prefix. (OK, ID, LA)
+- `dxLocationIsPrefix`: If false, DX is logged as just "DX". If true, DX location is logged as DXCC prefix. (OK, ID, LA)
 
 ### Points
 
