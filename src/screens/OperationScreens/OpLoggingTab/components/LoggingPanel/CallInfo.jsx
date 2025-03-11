@@ -128,7 +128,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
-    if (guess.postindicators && guess.postindicators.find(ind => ['P', 'M', 'AM', 'MM', 'PM'].indexOf(ind) >= 0)) {
+    if (guess?.postindicators?.find(ind => ['P', 'M', 'AM', 'MM', 'PM'].indexOf(ind) >= 0)) {
       isOnTheGo = true
       if (guess.postindicators.indexOf('P') >= 0) leftParts.push('[Portable]')
       else if (guess.postindicators.indexOf('M') >= 0) leftParts.push('[Mobile]')
