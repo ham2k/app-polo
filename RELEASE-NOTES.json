@@ -3,7 +3,7 @@
     "name": "March '25 (pre 3)",
     "photoCaption": "KE8PZN, WD4DAN & Friends at POTA US-8353",
     "changes": [
-      "QSO Parties: OK, ID, WI, LA, MO, MS",
+      "QSO Parties: OK, ID, WI, LA, MS, MO, NM, ND, GA, NE, MI, OH, PA",
       "Generic Simple Contest activity",
       "Export settings, with templates",
       "Stacking partial calls (use `//` or `..` to stack calls)",
@@ -14,7 +14,7 @@
       "Fixed exports to GMail and other apps on Android",
       "RST input auto-complete on single digit entry (as suggested by HB9BRJ)",
       "Assorted fixes and improvements",
-      "Contributions from M1SDH, NA7DO & M0TRT"
+      "Contributions from M1SDH, NA7DO, M0TRT, W8NI, KC1VOP"
     ]
   },
   "25.2.4": {
