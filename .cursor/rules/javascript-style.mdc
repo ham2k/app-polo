@@ -1,6 +1,7 @@
 ---
 description: Standards for JavaScript code style and package management.
 globs: **/*.{js,jsx}
+alwaysApply: false
 ---
 # JavaScript Style Guide
 

@@ -1,6 +1,7 @@
 ---
 description: Standards for React component development and file organization.
 globs: **/*.{js,jsx}
+alwaysApply: false
 ---
 # React Development Conventions
 

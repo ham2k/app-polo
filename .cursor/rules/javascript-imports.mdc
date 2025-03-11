@@ -1,6 +1,7 @@
 ---
 description: JS Imports
 globs: 
+alwaysApply: false
 ---
  # Import Sorting Convention
 
