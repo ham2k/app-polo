@@ -317,11 +317,16 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
           lastUUID = oneQSO.uuid
         }
 
-        findHooks('activity').filter(activity => activity.processQSOBeforeSave).forEach(activity => {
-          multiQSOs.forEach(q => {
-            activity.processQSOBeforeSave({ qso: q, operation, qsos, vfo, settings })
-          })
-        })
+        const activities = findHooks('activity').filter(activity => activity.processQSOBeforeSaveWithDispatch || activity.processQSOBeforeSave)
+        for (const activity of activities) {
+          for (const q of multiQSOs) {
+            if (activity.processQSOBeforeSaveWithDispatch) {
+              await activity.processQSOBeforeSaveWithDispatch({ qso: q, operation, qsos, vfo, settings, dispatch })
+            } else {
+              activity.processQSOBeforeSave({ qso: q, operation, qsos, vfo, settings })
+            }
+          }
+        }
 
         dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
         if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')

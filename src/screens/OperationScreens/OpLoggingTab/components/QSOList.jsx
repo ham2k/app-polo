@@ -150,7 +150,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
         flex: 0,
         minWidth: themeStyles.oneSpace * 8.5,
         marginLeft: themeStyles.oneSpace,
-        textAlign: 'left'
+        textAlign: 'right'
       },
       icons: {
         ...commonStyles,

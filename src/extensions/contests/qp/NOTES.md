@@ -10,9 +10,9 @@ Defaults to `"exchange": ["Location"]`. [Not Implemented yet]
 
 Can also be defined as `inStateExchange` and `outOfStateExchange` to have different exchanges for in-state and out-of-state stations. [Not Implemented yet]
 
-- `Location`
+- `Number`: Has to be listed first (VA)
+- `Location`: Includes suggestions from County Lists
 - `Name` (MN) [Not Implemented yet]
-- `Number` (VA) [Not Implemented yet]
 - `TheirNumber` (NS) [Not Implemented yet]
 - `OurNumber` (NS) [Not Implemented yet]
 

@@ -11,6 +11,7 @@ import { fmtNumber } from '@ham2k/lib-format-tools'
 import { superModeForMode } from '@ham2k/lib-operation-data'
 
 import { findRef, replaceRef } from '../../../tools/refTools'
+import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 import ThemedTextInputWithSuggestions from '../../../screens/components/ThemedTextInputWithSuggestions'
 
 import RAW_US_STATES from '../../../data/usStates.json'
@@ -20,6 +21,7 @@ import { Info } from './QSOPartiesInfo'
 import { ActivityOptions } from './QSOPartiesActivityOptions'
 
 import RAW_QSO_PARTY_DATA from './all-parties.js'
+import { setOperationData } from '../../../store/operations'
 export const QSO_PARTY_DATA = Object.fromEntries(RAW_QSO_PARTY_DATA.map(party => [party.key, party]))
 
 const INVALID_BANDS = ['60m', '30m', '17m', '12m']
@@ -85,7 +87,8 @@ const ActivityHook = {
   hideStateField: true,
 
   mainExchangeForOperation,
-  processQSOBeforeSave,
+  prepareNewQSO,
+  processQSOBeforeSaveWithDispatch,
 
   sampleOperations: ({ settings, callInfo }) => {
     return [
@@ -155,10 +158,18 @@ const ReferenceHandler = {
     const ref = findRef(operation, Info.key)
     const qsoRef = findRef(qso, Info.key)
     const qp = qpData({ ref })
+
+    const hasNumbers = (qp?.exchange?.[0] === 'Number')
+
     const fields = [
       { CONTEST_ID: qp.cabrilloName },
       { STX_STRING: ref?.location }
     ]
+
+    if (hasNumbers) {
+      fields[1] = { STX_STRING: `${qsoRef.ourNumber} ${fields[1]?.STX_STRING}` }
+      fields.push({ STX: qsoRef.ourNumber })
+    }
 
     if (qsoRef?.location) {
       fields.push({ SRX_STRING: qsoRef.location })
@@ -168,6 +179,11 @@ const ReferenceHandler = {
       } else {
         fields.push({ SRX_STRING: 'DX' })
       }
+    }
+
+    if (hasNumbers) {
+      fields[3] = { SRX_STRING: `${qsoRef.theirNumber} ${fields[3]?.SRX_STRING}` }
+      fields.push({ SRX: qsoRef.theirNumber })
     }
 
     return fields
@@ -196,6 +212,9 @@ const ReferenceHandler = {
 
   qsoToCabrilloParts: ({ qso, ref, operation, settings }) => {
     const qp = qpData({ ref })
+
+    const hasNumbers = (qp?.exchange?.[0] === 'Number')
+
     let ourLocations = ref?.location
     let weAreInState
     if (ref?.location?.match(SLASH_OR_COMMA_REGEX)) {
@@ -234,14 +253,16 @@ const ReferenceHandler = {
     const rows = []
     for (const ourLocation of ourLocations) {
       for (const theirLocation of theirLocations) {
-        rows.push([
-          (ourCall ?? ' ').padEnd(13, ' '),
-          (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59').padEnd(3, ' '),
-          (ourLocation ?? ' ').padEnd(6, ' '),
-          (qso?.their?.call ?? '').padEnd(13, ' '),
-          (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59').padEnd(3, ' '),
-          (theirLocation ?? ' ').padEnd(6, ' ')
-        ])
+        const row = []
+        row.push((ourCall ?? ' ').padEnd(13, ' '))
+        row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59').padEnd(3, ' '))
+        if (hasNumbers) row.push((qsoRef.ourNumber ?? ' ').padEnd(6, ' '))
+        row.push((ourLocation ?? ' ').padEnd(6, ' '))
+        row.push((qso?.their?.call ?? '').padEnd(13, ' '))
+        row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59').padEnd(3, ' '))
+        if (hasNumbers) row.push((qsoRef.theirNumber ?? ' ').padEnd(6, ' '))
+        row.push((theirLocation ?? ' ').padEnd(6, ' '))
+        rows.push(row)
       }
     }
     return rows
@@ -566,6 +587,47 @@ function mainExchangeForOperation (props) {
   const qp = qpData({ ref: opRef })
 
   const fields = []
+  console.log('main exchange for QP', { ourNumber: ref?.ourNumber, nextNumber: operation?.nextNumber })
+  if (qp?.exchange?.[0] === 'Number') {
+    fields.push(
+      <ThemedTextInput
+        {...props}
+        key={`${Info.key}/ourNumber`}
+        // innerRef={refStack.shift()}   // Don't use a `ref` so that this input cannot be focused using the space key
+        skipFocus={true}
+        style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }]}
+        textStyle={styles.text.callsign}
+        label={'Our #'}
+        placeholder={ref?.ourNumber ?? operation?.nextNumber ?? '1'}
+        keyboard={'numbers'}
+        numeric={true}
+        noSpaces={true}
+        value={ref?.ourNumber ?? operation?.nextNumber ?? '1'}
+        onChangeText={(text) => updateQSO({
+          refs: replaceRef(qso?.refs, Info.key, { ...ref, ourNumber: text })
+        })}
+      />
+    )
+
+    fields.push(
+      <ThemedTextInput
+        {...props}
+        key={`${Info.key}/theirNumber`}
+        innerRef={refStack.shift()}
+        style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }]}
+        textStyle={styles.text.callsign}
+        label={'Their #'}
+        placeholder={ref?.theirNumber ?? ''}
+        keyboard={'numbers'}
+        numeric={true}
+        noSpaces={true}
+        value={ref?.theirNumber ?? ''}
+        onChangeText={(text) => updateQSO({
+          refs: replaceRef(qso?.refs, Info.key, { ...ref, theirNumber: text })
+        })}
+      />
+    )
+  }
 
   fields.push(
     <ThemedTextInputWithSuggestions
@@ -592,13 +654,30 @@ function mainExchangeForOperation (props) {
   return fields
 }
 
-function processQSOBeforeSave ({ qso, qsos, operation }) {
-  if (findRef(operation, Info.key)) {
+function prepareNewQSO ({ operation, qso }) {
+  const ref = findRef(qso.refs, Info.key) || { type: Info.refType }
+  ref.ourNumber = `${operation.nextNumber || 1}`
+  qso.refs = replaceRef(qso.refs, Info.refType, ref)
+}
+
+async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatch }) {
+  const opRef = findRef(operation, Info.key)
+  if (opRef) {
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
     ref.location = ref.location ?? _defaultLocationFor({ qso, qsos, operation })
-    if (ref.class || ref.location) {
+
+    if (ref.location || ref.ourNumber || ref.theirNumber) {
       qso.refs = replaceRef(qso.refs, Info.key, ref)
-      qso.their.exchange = [ref.class, ref.location].join(' ')
+      qso.their.exchange = [ref.theirNumber, ref.location].filter(x => x).join(' ')
+      console.log('processQSOBeforeSaveWithDispatch', { ref, ourNumber: ref.ourNumber, nextNumber: operation.nextNumber })
+      if (ref.ourNumber) {
+        qso.our.exchange = [ref.ourNumber, opRef.location].filter(x => x).join(' ')
+        const num = parseInt(ref.ourNumber, 10)
+        if (!isNaN(num)) {
+          await dispatch(setOperationData({ uuid: operation.uuid, nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1 }))
+          console.log('set nextNumber', { nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1 })
+        }
+      }
     }
   }
   return qso
