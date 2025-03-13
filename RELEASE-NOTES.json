@@ -1,6 +1,12 @@
 {
-  "25.2.99-pre3": {
-    "name": "March '25 (pre 3)",
+  "25.3.99": {
+    "name": "April '25 (pre 1)",
+    "photoCaption": "VK4KC at POTA AU-8817",
+    "changes": [
+    ]
+  },
+  "25.3.0": {
+    "name": "March '25",
     "photoCaption": "KE8PZN, WD4DAN & Friends at POTA US-8353",
     "changes": [
       "QSO Parties: OK, ID, WI, VA, LA, MS, MO, NM, ND, GA, NE, MI, FL, OH, PA",
