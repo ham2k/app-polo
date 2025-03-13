@@ -1,11 +1,11 @@
 {
   "key": "AR",
   "name": "Arkansas QSO Party",
-  "url": https://arkqp.com,
+  "url": "https://arkqp.com",
   "start": "2025-5-17 14:00Z",
   "end": "2025-5-18 02:00Z",
-  "cabrilloName": "ARQSO-PARTY",
-  "internalNotes": Please verify points different based on station,
+  "cabrilloName": "AR-QSO-PARTY",
+  "internalNotes": "Attention-points based on type of station",
   "lastUpdated": "2025-3-13 23:15z",
   "status": unverified,
 }
