@@ -42,7 +42,7 @@ export const fetchDataFile = (key, options = {}) => async (dispatch, getState) =
     options.onStatus && await options.onStatus({ key, definition, status: 'loaded', data })
 
     let loadedOk
-    if (definition.onLoad) loadedOk = await definition.onLoad(data, options)
+    if (definition.onLoad) loadedOk = await definition.onLoad(data, { options, dispatch, getState })
     if (loadedOk === undefined || loadedOk === null) loadedOk = true
 
     return loadedOk
@@ -55,7 +55,7 @@ export const fetchDataFile = (key, options = {}) => async (dispatch, getState) =
   }
 }
 
-export const readDataFile = (key, options = {}) => async (dispatch) => {
+export const readDataFile = (key, options = {}) => async (dispatch, getState) => {
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
@@ -76,7 +76,7 @@ export const readDataFile = (key, options = {}) => async (dispatch) => {
     dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', date }))
 
     let loadedOk
-    if (definition.onLoad) loadedOk = await definition.onLoad(data, options)
+    if (definition.onLoad) loadedOk = await definition.onLoad(data, { options, dispatch, getState })
     if (loadedOk === undefined || loadedOk === null) loadedOk = true
 
     return loadedOk
@@ -157,6 +157,8 @@ export const loadAllDataFiles = () => async (dispatch) => {
 const DEBUG_FETCH = true
 
 export async function fetchAndProcessURL ({ url, key, process, definition, info, options }) {
+  url = await resolveDownloadUrl(url)
+
   const headers = {
     'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
   }
@@ -172,7 +174,7 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
   if (response.respInfo.status === 304) {
     if (DEBUG_FETCH) console.log('-- 304 Not Modified')
     return info?.data
-  } else if (response.respInfo.status >= 301 || response.respInfo.status <= 308) {
+  } else if (response.respInfo.status >= 301 && response.respInfo.status <= 308) {
     if (DEBUG_FETCH) console.log(`-- ${response.respInfo.status} Redirect`)
     return await fetchAndProcessURL({ url: response.respInfo.headers.location, key, process, definition, info, options })
   } else if (response.respInfo.status !== 200) {
@@ -199,6 +201,8 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
 }
 
 export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options }) {
+  url = await resolveDownloadUrl(url)
+
   if (!processLineBatch) {
     console.error('No processLineBatch function provided for batched lines')
     return
@@ -269,4 +273,61 @@ export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch,
 function filenameForDefinition (definition) {
   const basename = [definition.key, definition.version].filter(x => x).join('-')
   return `${RNFetchBlob.fs.dirs.DocumentDir}/data/${basename}.json`
+}
+
+export async function resolveDownloadUrl (url) {
+  url = url.trim()
+
+  // Dropbox
+  if (url.match(/^https:\/\/(www\.)*dropbox\.com\//i)) {
+    url = url.replaceAll(/[&?]raw=\d/g, '').replaceAll(/[&?]dl=\d/g, '')
+    if (url.match(/\?/)) {
+      return `${url}&dl=1&raw=1`
+    } else {
+      return `${url}?dl=1&raw=1`
+    }
+  // Apple iCloud Drive
+  } else if (url.match(/^https:\/\/(www\.)*icloud\.com\/iclouddrive/i)) {
+    const parts = url.match(/iclouddrive\/([\w_]+)/)
+    const response = await fetch('https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve', {
+      method: 'POST',
+      headers: { 'User-Agent': `Ham2K Portable Logger/${packageJson.version}` },
+      body: JSON.stringify({
+        shortGUIDs: [{ value: parts[1] }]
+      })
+    })
+    if (response.status === 200) {
+      const body = await response.text()
+      const json = JSON.parse(body)
+      return json?.results && json?.results[0] && json?.results[0].rootRecord?.fields?.fileContent?.value?.downloadURL
+    } else {
+      return url
+    }
+  // Google Drive
+  } else if (url.match(/^https:\/\/drive\.google\.com\//i)) {
+    const parts = url.match(/file\/d\/([\w_-]+)/)
+    return `https://drive.google.com/uc?id=${parts[1]}&export=download`
+  // Google Docs
+  } else if (url.match(/^https:\/\/docs\.google\.com\/document/i)) {
+    const parts = url.match(/\/d\/([\w_-]+)/)
+    return `https://docs.google.com/document/export?format=txt&id=${parts[1]}`
+  // GitHub Gist
+  } else if (url.match(/^https:\/\/gist\.github\.com\//i)) {
+    console.log('gist url', url)
+    const response = await fetch(url, {
+      headers: { 'User-Agent': `Ham2K Portable Logger/${packageJson.version}` }
+    })
+    if (response.status === 200) {
+      const body = await response.text()
+      const parts = body.match(/<a href="([^"]+\/raw\/[^"]+)"/)
+      console.log('parts', parts)
+      if (parts) {
+        return `https://gist.githubusercontent.com${parts[1]}`
+      } else {
+        return url
+      }
+    }
+  } else {
+    return url
+  }
 }
