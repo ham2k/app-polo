@@ -136,6 +136,16 @@ export default function DevModeSettingsScreen ({ navigation }) {
     const restrictedData = { extensions, exports }
 
     dispatch(mergeSettings(restrictedData))
+
+    let msg = ''
+    if (Object.keys(extensions || {}).length > 0) {
+      msg += `Extensions: ${Object.keys(extensions || {}).join(', ')}\n`
+    }
+    if (Object.keys(exports || {}).length > 0) {
+      msg += `Exports: ${Object.keys(exports || {}).join(', ')}\n`
+    }
+    console.log('settings loaded', { extensions, exports })
+    Alert.alert('Settings Loaded', msg)
   }, [dispatch, settings])
 
   const shareSystemInfo = useCallback(() => {
@@ -188,25 +198,23 @@ export default function DevModeSettingsScreen ({ navigation }) {
           />
         </Ham2kListSection>
 
-        {settings['extensions/core-devSettings'] && (
-          <Ham2kListSection title={'Download Advanced Settings'}>
-            <ListRow style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-              <ThemedTextInput
-                label="Location"
-                value={settings.devSettingsLocation ?? ''}
-                inputMode={'url'}
-                placeholder={'https://example.com/dir/settings.yml'}
-                onChangeText={(value) => dispatch(setSettings({ devSettingsLocation: value })) }
-                style={{ flex: 1 }}
-              />
-              <IconButton icon="download" mode="contained"
-                containerColor={styles.colors.devMode} iconColor={styles.colors.background}
-                onPress={downloadDevSettings}
-              />
-            </ListRow>
+        <Ham2kListSection title={'Download Advanced Settings'}>
+          <ListRow style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+            <ThemedTextInput
+              label="Location"
+              value={settings.devSettingsLocation ?? ''}
+              inputMode={'url'}
+              placeholder={'https://example.com/dir/settings.yml'}
+              onChangeText={(value) => dispatch(setSettings({ devSettingsLocation: value })) }
+              style={{ flex: 1 }}
+            />
+            <IconButton icon="download" mode="contained"
+              containerColor={styles.colors.devMode} iconColor={styles.colors.background}
+              onPress={downloadDevSettings}
+            />
+          </ListRow>
 
-          </Ham2kListSection>
-        )}
+        </Ham2kListSection>
 
         <Ham2kListSection title={'System Information'}>
           <View style={{ paddingHorizontal: styles.oneSpace * 2 }}>
@@ -245,13 +253,4 @@ function systemInfo () {
 * ${fmtGigabytes(DeviceInfo.getTotalDiskCapacitySync())} storage - ${fmtGigabytes(DeviceInfo.getFreeDiskStorageSync())} free
 ${DeviceInfo.isKeyboardConnectedSync() ? '* Keyboard connected\n' : ''}
   `
-}
-
-async function syncCountDescription () {
-  const result = await dbSelectAll('SELECT COUNT(*) as count, synced FROM qsos WHERE operation != "historical" GROUP BY synced')
-  const counts = result.reduce((acc, row) => {
-    acc[row.synced ? 'synced' : 'pending'] = row.count
-    return acc
-  }, {})
-  return `${fmtNumber(counts.synced || 0)} synced, ${fmtNumber(counts.pending || 0)} pending`
 }

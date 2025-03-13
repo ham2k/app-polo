@@ -203,7 +203,7 @@ export function runTemplateForOperation (template, { settings, operation, ourInf
   }
 }
 
-export function templateContextForOneExport ({ option, settings, operation, ourInfo, handler, qso, ref }) {
+export function templateContextForOneExport ({ option, settings, operation, ourInfo, handler, qso, ref, context }) {
   return {
     settings: {
       useCompactFileNames: settings.useCompactFileNames
@@ -239,7 +239,8 @@ export function templateContextForOneExport ({ option, settings, operation, ourI
       refs: operation?.refs,
       grid: operation?.grid
     },
-    qso
+    qso,
+    ...(context || {})
   }
 }
 
