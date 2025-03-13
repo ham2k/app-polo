@@ -172,6 +172,9 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
   if (response.respInfo.status === 304) {
     if (DEBUG_FETCH) console.log('-- 304 Not Modified')
     return info?.data
+  } else if (response.respInfo.status >= 301 || response.respInfo.status <= 308) {
+    if (DEBUG_FETCH) console.log(`-- ${response.respInfo.status} Redirect`)
+    return await fetchAndProcessURL({ url: response.respInfo.headers.location, key, process, definition, info, options })
   } else if (response.respInfo.status !== 200) {
     throw new Error(`Failed to fetch ${url}: ${response.respInfo.status}`)
   }
