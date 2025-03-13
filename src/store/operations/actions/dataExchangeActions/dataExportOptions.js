@@ -80,7 +80,7 @@ Templates are also provided with the following helper functions:
 
  */
 
-import { fmtISODate } from '../../../../tools/timeFormats'
+import { fmtISODate, fmtTimeZulu } from '../../../../tools/timeFormats'
 import { findBestHook, findHooks } from '../../../../extensions/registry'
 import Handlebars from 'handlebars'
 import { selectExportSettings } from '../../../settings'
