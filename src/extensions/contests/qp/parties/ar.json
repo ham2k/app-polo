@@ -7,7 +7,7 @@
   "cabrilloName": "AR-QSO-PARTY",
   "internalNotes": "Attention-points based on type of station",
   "lastUpdated": "2025-3-13 23:15z",
-  "status": unverified,
+  "status": "unverified",
 }
 "options": {
     "dcCountsAsMaryland": true,
