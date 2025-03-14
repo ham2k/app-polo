@@ -19,7 +19,7 @@ export const POTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
   ].filter(Boolean)
 
   const refs = filterRefs(operation, 'potaActivation')
-  if (refs.length > 0) {
+  if (refs.length > 0 && refs[0]?.ref) {
     const ref = refs[0]
     const refComment = refs.length > 1 ? `${refs.length}-fer: ${refs.map((x) => (x.ref)).join(' ')}` : ''
 

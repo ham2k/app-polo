@@ -80,7 +80,7 @@ Templates are also provided with the following helper functions:
 
  */
 
-import { fmtISODate } from '../../../../tools/timeFormats'
+import { fmtISODate, fmtTimeZulu } from '../../../../tools/timeFormats'
 import { findBestHook, findHooks } from '../../../../extensions/registry'
 import Handlebars from 'handlebars'
 import { selectExportSettings } from '../../../settings'
@@ -203,7 +203,7 @@ export function runTemplateForOperation (template, { settings, operation, ourInf
   }
 }
 
-export function templateContextForOneExport ({ option, settings, operation, ourInfo, handler, qso, ref }) {
+export function templateContextForOneExport ({ option, settings, operation, ourInfo, handler, qso, ref, context }) {
   return {
     settings: {
       useCompactFileNames: settings.useCompactFileNames
@@ -239,7 +239,8 @@ export function templateContextForOneExport ({ option, settings, operation, ourI
       refs: operation?.refs,
       grid: operation?.grid
     },
-    qso
+    qso,
+    ...(context || {})
   }
 }
 
