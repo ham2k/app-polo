@@ -21,9 +21,10 @@ import { useCallLookup } from './useCallLookup'
 import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../../store/operations'
 import { selectRuntimeOnline } from '../../../../../store/runtime'
+import { parseStackedCalls } from '../LoggingPanel'
 
 export const MESSAGES_FOR_SCORING = {
-  duplicate: 'Dupe!!!',
+  duplicate: 'Dupe!',
   invalidBand: 'Invalid Band',
   newBand: 'New Band',
   newMode: 'New Mode',
@@ -33,6 +34,8 @@ export const MESSAGES_FOR_SCORING = {
   'potaActivation.newRef': 'New Park',
   'sotaActivation.newDay': 'New SOTA Day',
   'sotaActivation.newRef': 'New Summit',
+  'sotaActivation.duplicate': 'SOTA Dupe!',
+  'wwffActivation.duplicate': 'WWFF Dupe!',
   'wwbotaActivation.newDay': 'New WWBOTA Day',
   'wwbotaActivation.newRef': 'New Bunker'
 }
@@ -46,6 +49,7 @@ function prepareStyles (baseStyles, themeColor) {
     history: {
       pill: {
         marginRight: baseStyles.halfSpace,
+        marginTop: baseStyles.oneSpace * 0.25,
         borderRadius: 3,
         // marginTop: baseStyles.oneSpace * 0.25,
         paddingHorizontal: baseStyles.oneSpace * 0.5,
@@ -91,16 +95,30 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
   const { call, guess, lookup, refs, status, when } = useCallLookup(qso)
 
+  const { call: theirCall, allCalls } = useMemo(() => parseStackedCalls(qso?.their?.call ?? ''), [qso?.their?.call])
+
   useEffect(() => { // Merge all data sources and update guesses and QSO
-    // console.log('CallInfo effect', { qsoCall: qso?.their?.call, qsoName: qso?.their?.guess?.name, qsoStatus: qso?.their?.lookup?.status, lookupCall: call, lookupName: guess?.name, lookupStatus: status })
-    if (qso?.their?.call === call && status && qso?.their?.lookup?.status !== status) {
+    // console.log('CallInfo effect', { qsoCall: theirCall, qsoName: qso?.their?.guess?.name, qsoStatus: qso?.their?.lookup?.status, lookupCall: call, lookupName: guess?.name, lookupStatus: status })
+    if (theirCall === call && status && qso?.their?.lookup?.status !== status) {
       // console.log('-- updateQSO!')
       // We need to first clear the guess and lookup, otherwise the new values will be merged with the old ones
       updateQSO && updateQSO({ their: { guess: undefined, lookup: undefined } })
+
+      const updates = { their: { guess, lookup: { ...lookup, status } } }
+
+      if (guess?.refs?.length > 0) {
+        updates.refs = qso?.refs || []
+        for (const ref of guess.refs) { // guess refs should already be filtered, but this prevents infinite updates in any case
+          if (!updates.refs.find(r => r.type === ref.type)) {
+            updates.refs.push(ref)
+          }
+        }
+      }
+
       // Then we update the QSO with the new values
-      updateQSO && updateQSO({ their: { guess, lookup: { ...lookup, status } } })
+      updateQSO && updateQSO(updates)
     }
-  }, [updateQSO, guess, lookup, call, qso?.their?.call, qso?.their?.lookup?.status, status, qso?.their?.guess?.state, qso?.their?.guess?.name, when])
+  }, [updateQSO, guess, lookup, call, theirCall, qso?.their?.lookup?.status, status, qso?.their?.guess?.state, qso?.their?.guess?.name, when, qso?.refs])
 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess.dxccCode)
@@ -110,7 +128,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
     const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
-    if (guess.postindicators && guess.postindicators.find(ind => ['P', 'M', 'AM', 'MM', 'PM'].indexOf(ind) >= 0)) {
+    if (guess?.postindicators?.find(ind => ['P', 'M', 'AM', 'MM', 'PM'].indexOf(ind) >= 0)) {
       isOnTheGo = true
       if (guess.postindicators.indexOf('P') >= 0) leftParts.push('[Portable]')
       else if (guess.postindicators.indexOf('M') >= 0) leftParts.push('[Mobile]')
@@ -180,8 +198,15 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       parts.push(qso?.their?.name ?? guess.name)
     }
 
-    return parts.filter(x => x).join(' • ')
-  }, [guess.note, guess.name, lookup.error, call?.length, qso?.their?.name])
+    let info = parts.filter(x => x).join(' • ')
+
+    // if (callStack || allCalls.length > 1) {
+    if ((call !== theirCall || allCalls.length > 1) && theirCall.length > 2) {
+      info = `**${theirCall}**: ${info}`
+    }
+
+    return info
+  }, [guess.note, guess.name, call, theirCall, allCalls.length, lookup.error, qso?.their?.name])
 
   const scoreInfo = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)
@@ -192,24 +217,29 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     return scores
   }, [operation, qso, qsos, sections, settings])
 
-  const scoringMessages = useMemo(() => {
+  const messages = useMemo(() => {
+    const newMessages = []
     if (scoreInfo?.length > 0) {
       // Order by value, as those that provide points/QSOs/etc. more important
-      const messageLevelPairs = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
+      const allScoringMessages = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
         const alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
         const notices = (score?.notices || []).map(notice => ({ msg: notice, level: 'notice', key: `${score.type}.${notice}` }))
         const infos = (score?.infos || []).map(info => ({ msg: info, level: 'info', key: `${score.type}.${info}` }))
-
         return [...notices, ...alerts, ...infos].map(oneInfo => ({
           ...oneInfo,
           msg: MESSAGES_FOR_SCORING[oneInfo.key] ?? MESSAGES_FOR_SCORING[oneInfo.msg] ?? oneInfo.msg
         }))
-      }).flat().filter(x => x).slice(0, 3)
+      }).flat()
 
-      return messageLevelPairs
+      // Remove messages with the same message
+      allScoringMessages.forEach(msg => {
+        if (msg.msg && !newMessages.find(x => x.msg === msg.msg && x.level === msg.level)) {
+          newMessages.push(msg)
+        }
+      })
     }
 
-    if (lookup?.history?.length > 0) {
+    if (lookup?.history?.length > 0 && !newMessages.find(x => x.key.indexOf('.duplicate') >= 0)) {
       const parts = []
       const today = startOfDayInMillis()
       const yesterday = yesterdayInMillis()
@@ -238,14 +268,14 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
         parts.push(`${count} QSOs`)
       }
 
-      return [parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), 'info']
+      newMessages.push({ msg: parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), level: 'info', key: 'history' })
     }
-    return []
+    return newMessages
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
   if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
   return (
-    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6 }}>
+    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
         <View style={{ alignSelf: 'flex-start', flex: 0 }}>
@@ -277,16 +307,27 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
               </Text>
             )}
           </View>
-          {(stationInfo || scoringMessages.length > 0) && (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-              <View style={{ flex: 1, minWidth: stationInfo.length > 25 ? '80%' : undefined }}>
+          {(stationInfo || messages?.length === 1) && (
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+              {stationInfo && (
                 <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
-              </View>
-              {scoringMessages.map((msg) => (
-                <View style={{ flex: 0 }} key={msg.key}>
-                  <View style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
-                    <Text style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
-                  </View>
+              )}
+              {messages?.length === 1 && (
+                <View style={{ flex: 1, marginLeft: styles.halfSpace, alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                  {messages.map((msg) => (
+                    <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
+                      <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
+          )}
+          {messages?.length > 1 && (
+            <View style={{ alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+              {messages.slice(0, 4).map((msg) => (
+                <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
+                  <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
                 </View>
               ))}
             </View>

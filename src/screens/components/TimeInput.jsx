@@ -39,12 +39,12 @@ export function TimeInput (props) {
     setLocalValue(fmtTimeZulu(valueInMillis, { showZ: false }))
     setOriginalValue(valueInMillis)
     onBlur && onBlur(event)
+    return true
   }, [valueInMillis, onBlur])
 
   const handleChange = useCallback((event) => {
     const { text } = event.nativeEvent
-    actualInnerRef.current.setNativeProps({ text })
-    setLocalValue(text)
+    setLocalValue(text?.trim())
 
     let fullBaseTime
     let newValue
@@ -85,7 +85,7 @@ export function TimeInput (props) {
         onChange && onChange({ value: newValue, fieldId })
       }
     }
-  }, [actualInnerRef, fieldId, onChange, originalValue, valueInMillis])
+  }, [fieldId, onChange, originalValue, valueInMillis])
 
   return (
     <ThemedTextInput
@@ -95,6 +95,7 @@ export function TimeInput (props) {
       label={label ?? 'Time'}
       placeholder={nowStr}
       onChange={handleChange}
+      onBlur={handleBlur}
       onEndEditing={handleBlur}
       keyboard={'numbers'}
     />

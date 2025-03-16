@@ -36,7 +36,6 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
     stationCall: operation.stationCall ?? settings.operatorCall,
     templates
   }
-  const operationWithoutRefs = { ...operation } // lets see how it works if we do include refs ... // , refs: [] }
 
   if (operation.stationCall !== settings.operatorCall) {
     common.operatorCall = settings.operatorCall
@@ -62,6 +61,9 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   qsos.forEach(qso => {
     if (qso.deleted) return
 
+    // Get the base handler's field combinations for this QSO
+    // it might return an array of arrays,
+    // meaning this QSO has to be represented by multiple ADIF rows (think POTA P2P, or QSO Party county line operations)
     let handlerFieldCombinations
     if (handler?.adifFieldCombinationsForOneQSO) {
       handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common, exportType, mainHandler: true, privateExport, templates })
@@ -73,18 +75,26 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
 
     if (handlerFieldCombinations === false || handlerFieldCombinations[0] === false) return
 
+    // Now, for each field combination, we will generate an ADIF row
     handlerFieldCombinations.forEach((combinationFields, n) => {
+      // We start with the general ADIF fields
       let fields = adifFieldsForOneQSO({ qso, operation, common, privateExport, templates, timeOffset: n * 1000 })
+      // Then we append the fields from the main handler's combinations
       fields = fields.concat(combinationFields)
 
-      ;(qso.refs || []).forEach(ref => {
-        const exportHandler = findBestHook(`ref:${ref.type}`)
-        if (exportHandler && exportHandler.key !== handler.key && exportHandler.adifFieldsForOneQSO) {
-          const refFields = exportHandler.adifFieldsForOneQSO({ qso, operation: operationWithoutRefs, common, exportType, ref, privateExport, templates }) || []
+      // And finally, we look at any handlers for other refs in the operation, or refs in the QSO itself
+      // and ask them for more fields to add to this QSO.
+      ;[...qso.refs || [], ...operation.refs || []].forEach(ref => {
+        const secondaryRefHandler = findBestHook(`ref:${ref.type}`)
+
+        if (secondaryRefHandler?.key === handler.key) return // Skip if it happens to be the same as the main handler
+
+        if (secondaryRefHandler && secondaryRefHandler.key !== handler.key && secondaryRefHandler.adifFieldsForOneQSO) {
+          const refFields = secondaryRefHandler.adifFieldsForOneQSO({ qso, operation, common, exportType, ref, privateExport, templates }) || []
           refFields.forEach(refField => {
             const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
             if (existingField) {
-              // Another field with the same name already exists. Keep the first one defined and ignore this one
+              // If another field with the same name already exists. Keep the first one defined and ignore this one
               // unless it is `false`, in which case the field should be removed.
               if (refField[1] === false) {
                 existingField[1] = false

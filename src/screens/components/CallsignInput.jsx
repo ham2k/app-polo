@@ -12,6 +12,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { useUIState } from '../../store/ui/useUIState'
 import ThemedTextInput from './ThemedTextInput'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { parseStackedCalls } from '../OperationScreens/OpLoggingTab/components/LoggingPanel'
 
 const LETTERS_REGEX = /[A-Z]+/
 const ONLY_NUMBER_REGEX = /^\s*[+-]*\d+(\.\d+)*$/
@@ -21,12 +22,12 @@ export default function CallsignInput (props) {
   const styles = useThemedStyles()
 
   const isValid = useMemo(() => {
-    const values = value.split(/[, +]+/)
-    if (values.length > 1 && !allowMultiple) {
+    const { allCalls } = parseStackedCalls(value)
+    if (allCalls.length > 1 && !allowMultiple) {
       return false
     }
 
-    return values.every(v => {
+    return allCalls.every(v => {
       const callInfo = parseCallsign(v)
       if (callInfo?.baseCall) {
         return true

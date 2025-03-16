@@ -32,7 +32,7 @@ const LookupHook = {
   shouldSkipLookup: ({ online, lookedUp }) => {
     return !online || (lookedUp.name && lookedUp.grid)
   },
-  lookupCallWithDispatch: async (callInfo, { settings, online, dispatch }) => {
+  lookupCallWithDispatch: (callInfo, { settings, online }) => async (dispatch) => {
     const call = callInfo?.baseCall ?? ''
     if (online && call.length > 2) {
       try {

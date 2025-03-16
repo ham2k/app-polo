@@ -19,6 +19,8 @@ import { findHooks } from '../../../../../extensions/registry'
 import { LOCATION_ACCURACY } from '../../../../../extensions/constants'
 import { removeEmptyValues } from '../../../../../tools/objectTools'
 
+import { parseStackedCalls } from '../LoggingPanel'
+
 const EMOJI_REGEX = emojiRegex()
 
 const DEBUG = false
@@ -107,14 +109,15 @@ export const useCallLookup = (qso) => {
 export async function annotateQSO ({ qso, online, settings, dispatch, mode = 'full' }) {
   const { call, theirInfo } = _extractCallInfo(qso?.their?.call, qso?.refs)
 
-  const { guess, lookup } = await _performLookup({ qso, call, theirInfo, online, settings, dispatch })
+  const { guess, lookup } = await _performLookup({ qso, call, theirInfo, online, settings, dispatch, mode })
 
   return { ...qso, their: { ...qso.their, ...theirInfo, guess, lookup } }
 }
 
 function _extractCallInfo (call, refs) {
   // Pick the last call in the list, and ignore any under 3 characters or with a question mark
-  const calls = call?.split(',')?.filter(x => x && x.length > 2 && x.indexOf('?') < 0) ?? []
+  const { allCalls } = parseStackedCalls(call)
+  const calls = allCalls.filter(x => x && x.length > 2 && x.indexOf('?') < 0) ?? []
   let oneCall = calls[calls.length - 1]
 
   // Remove any trailing slash
@@ -135,16 +138,16 @@ function _extractCallInfo (call, refs) {
   return { call: oneCall, theirInfo, cacheKey, baseCacheKey }
 }
 
-async function _performLookup ({ refs, call, theirInfo, online, settings, dispatch }) {
-  const { lookups } = await _lookupCall(theirInfo, { online, settings, dispatch })
-  const { refs: lookedUpRefs } = await _lookupRefs(refs, { online, settings, dispatch })
+async function _performLookup ({ refs, call, theirInfo, online, settings, dispatch, mode = 'full' }) {
+  const { lookups } = await _lookupCall(theirInfo, { online, settings, dispatch, mode })
+  const { refs: lookedUpRefs } = await _lookupRefs(refs, { lookups, online, settings, dispatch, mode })
   const { guess, lookup } = _mergeData({ theirInfo, lookups, refs: lookedUpRefs })
   if (DEBUG) console.log('  -- performLookup', { call, keys: Object.keys(lookups), guess, lookup })
 
   return { guess, lookup, lookups, theirInfo }
 }
 
-async function _lookupCall (theirInfo, { online, settings, dispatch }) {
+async function _lookupCall (theirInfo, { online, settings, dispatch, mode = 'full' }) {
   const lookups = {}
   const lookupHooks = findHooks('lookup')
   const lookedUp = {}
@@ -153,9 +156,9 @@ async function _lookupCall (theirInfo, { online, settings, dispatch }) {
     if (!hook?.shouldSkipLookup || !hook.shouldSkipLookup({ online, lookedUp })) {
       let data
       if (hook?.lookupCallWithDispatch) {
-        data = await hook.lookupCallWithDispatch(theirInfo, { settings, dispatch, online })
+        data = await dispatch(hook.lookupCallWithDispatch(theirInfo, { settings, online, mode }))
       } else if (hook?.lookupCall) {
-        data = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online }))
+        data = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online, mode }))
       }
       if (data) {
         if (DEBUG) console.log('  -- lookupCall data', hook.key, { data })
@@ -168,13 +171,13 @@ async function _lookupCall (theirInfo, { online, settings, dispatch }) {
   return { lookups }
 }
 
-async function _lookupRefs (refs, { online, settings, dispatch }) {
+async function _lookupRefs (refs, { online, settings, dispatch, mode = 'full' }) {
   let newRefs = []
   for (const ref of (refs || [])) {
     const hooks = findHooks(`ref:${ref.type}`)
     for (const hook of hooks) {
       if (hook?.decorateRefWithDispatch && dispatch) {
-        newRefs.push(await dispatch(hook.decorateRefWithDispatch(ref)))
+        newRefs.push(await dispatch(hook.decorateRefWithDispatch(ref, { online, settings, mode })))
       } else if (hook?.decorateRef) {
         newRefs.push(hook.decorateRef(ref))
       }
@@ -245,6 +248,12 @@ function _mergeData ({ theirInfo, lookups, refs }) {
         newGuess.state = ref.state
       }
     }
+  }
+
+  const refsFromLookups = Object.keys(lookups || {}).map(key => lookups[key].refs).filter(x => x).flat()
+  const newRefs = refsFromLookups.filter(ref => !refs.find(r => r.type === ref.type))
+  if (newRefs.length > 0) {
+    newGuess.refs = newRefs
   }
 
   return { guess: newGuess, lookup: mergedLookup }

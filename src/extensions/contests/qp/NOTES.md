@@ -10,15 +10,15 @@ Defaults to `"exchange": ["Location"]`. [Not Implemented yet]
 
 Can also be defined as `inStateExchange` and `outOfStateExchange` to have different exchanges for in-state and out-of-state stations. [Not Implemented yet]
 
-- `Location`
+- `Number`: Has to be listed first (VA)
+- `Location`: Includes suggestions from County Lists
 - `Name` (MN) [Not Implemented yet]
-- `Number` (VA) [Not Implemented yet]
 - `TheirNumber` (NS) [Not Implemented yet]
 - `OurNumber` (NS) [Not Implemented yet]
 
 Relevant `"options"`:
 
-- `dxLocationIsPrefix`: If true, DX location is logged as prefix. (OK, ID)
+- `dxLocationIsPrefix`: If false, DX is logged as just "DX". If true, DX location is logged as prefix. (OK, ID, LA)
 
 ### Points
 
@@ -36,6 +36,7 @@ Relevant `"options"`:
 - `qsosPerBand`: If true, QSOs are counted per band. (?)
 - `qsosPerMode`: If true, QSOs are counted per mode. (?)
 - `inStateToOutOfStatePointsDouble`: If true, in-state to out-of-state QSOs are worth double points (Used by SC)
+- `dataAndCWCountAsSameMode`: If true, DATA and CW are counted as the same mode. (LA)
 
 ### Multipliers
 
@@ -52,9 +53,9 @@ Relevant `"options"`:
 - `multsPerBandMode`: If true (default), multipliers are awarded per band and mode (Most). If false they are awarded only once overall, unless `multsPerBand` or `multsPerMode` is also true.
 - `multsPerBand`: If true, multipliers are awarded per band. (VT)
 - `multsPerMode`: If true, multipliers are awarded per mode. (ID)
-- `dxIsMultiplier`: If true (default), DX stations are awarded multipliers. (Many)
-- `dxEntityIsMultiplier`: If true, DX Entity Prefix is awarded a multiplier. (Many)
-- `specialCallIsMultiplier`: If true, special calls are awarded multipliers. (VT)
+- `dxIsMultiplier`: If true (default), DX stations count as a single multiplier "DX". (Many)
+- `dxEntityIsMultiplier`: If true, each DX Entity Prefix is awarded as a multiplier. (Many)
+- `specialCallIsMultiplier`: If true, special calls are awarded as multipliers. (VT)
 
 ### Bonuses
 
@@ -76,3 +77,4 @@ Relevant `"options"`:
 - Implement dxEntityIsMultiplier
 - Implement dxLocationIsPrefix
 - Implement removeCountySuffixes
+- Implement dataAndCWCountAsSameMode

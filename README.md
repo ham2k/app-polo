@@ -88,9 +88,6 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 ### Updating the splash screen
 
 * Start with a 2048x2048 image.
-  * https://firefly.adobe.com/
-  * https://app.leonardo.ai/image-generation
-
 * Go to [AppIcon](https://www.appicon.co/#image-sets) > Image Sets, upload the image, generate and download the image set
 * On `android/app/src/main/res` replace `launch_screen` in each subdirectory.
 * On `ios/polo/Images.xcassets/LaunchScreen.imageset` replace the three versions of `launch_screen`
@@ -110,6 +107,7 @@ npm install
 
 # For android
 rm -rf android/app/.cxx
+rm -rf android/build
 (cd android && ./gradlew clean)
 
 # For iOS
@@ -117,7 +115,7 @@ rm -rf ~/Library/Caches/CocoaPods
 rm -rf ios/Pods
 rm -rf ios/Podfile.lock
 rm -rf ios/build
-(cd ios && RCT_NEW_ARCH_ENABLED=1 pod install)
+(cd ios && pod install)
 
 # For all platforms
 watchman watch-del .

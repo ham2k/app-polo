@@ -33,19 +33,36 @@ export default function ExportSettingsScreen ({ navigation }) {
   const now = useMemo(() => new Date(), [])
   const sampleTemplateData = useMemo(() => ({
     ourInfo: {
-      call: 'N0CALL'
+      call: 'K2HRC'
     },
     operation: {
-      stationCall: 'N0CALL',
+      stationCall: 'K2HRC',
+      operatorCall: 'KI2D',
       startAtMillisMin: now.getTime(),
       startAtMillisMax: now.getTime() + 1000 * 60 * 60 * 2,
       refs: [
         { type: 'potaActivation', ref: 'XX-1234', shortLabel: 'POTA XX-1234', label: 'POTA: XX-1234 Example NP', program: 'POTA' },
         { type: 'wwff', ref: 'XXFF-0001', shortLabel: 'WWFF XXFF-0001', label: 'WWFF: XXFF-0001 Example NP', program: 'WWFF' },
         { type: 'wfd', class: '1O', location: 'ENY', shortLabel: 'WFD: 1O ENY', label: 'Winter Field Day: 10 ENY' }
-      ]
+      ],
+      userTitle: 'My Special Operation',
+      userNotes: 'Went early in the morning…',
+      grid: 'AA00',
+      uuid: '123e4567-e89b-12d3-a456-426614174000'
     },
-    qso: { notes: 'Good Contact!', their: { sent: '59', exchange: 'MA' }, our: { sent: '55', exchange: 'NY' } }
+    qso: {
+      notes: 'Good Contact!',
+      their: {
+        call: 'N0CALL',
+        sent: '59',
+        exchange: 'MA',
+        grid: 'FF99'
+      },
+      our: {
+        sent: '55',
+        exchange: 'NY'
+      }
+    }
   }), [now])
 
   const exportTypes = useMemo(() => {
@@ -265,10 +282,15 @@ Attributes for the log being exported
 \`{{op.userNotes}}\` → \`Went early in the morning…\`
 \`{{op.uuid}}\` → \`123e4567-e89b-12d3-a456-426614174000\`
 \`{{first8 op.uuid}}\` → \`123e4567\`
+\`{{op.grid}}\` → \`AA00\` Grid for this operation
 
 ### QSO Information
 \`{{qso.notes}}\` → \`Terrible audio!\`
 \`{{qso.uuid}}\` → \`123e4567-e89b-12d3-a456-426614174000\`
+\`{{qso.their.sent}}\` → \`59\` The signal report they sent
+\`{{qso.our.sent}}\` → \`55\` The signal report we sent
+\`{{qso.their.grid}}\` → \`FF99\` The grid they reported
+\`{{qso.their.refs}}\` → A list of all the references they reported
 \`{{first8 qso.uuid}}\` → \`123e4567\`
 `
   }, [now])

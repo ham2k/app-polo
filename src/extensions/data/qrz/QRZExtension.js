@@ -34,7 +34,7 @@ const LookupHook = {
   shouldSkipLookup: ({ online, lookedUp }) => {
     return !online || (lookedUp.name && lookedUp.grid && lookedUp.city && lookedUp.image)
   },
-  lookupCallWithDispatch: async (callInfo, { settings, online, dispatch }) => {
+  lookupCallWithDispatch: (callInfo, { settings, online }) => async (dispatch) => {
     let qrzPromise
     let qrzLookup
     if (online && settings?.accounts?.qrz?.login && settings?.accounts?.qrz?.password && callInfo?.baseCall?.length > 2) {

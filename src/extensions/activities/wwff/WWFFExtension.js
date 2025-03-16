@@ -218,7 +218,9 @@ const ReferenceHandler = {
     if (huntingRef) fields.push({ SIG: 'WWFF' }, { SIG_INFO: huntingRef.ref }, { WWFF_REF: huntingRef.ref })
 
     if (exportType === 'wwff') {
-      fields.push({ POTA_REF: false }, { MY_POTA_REF: false }) // Delete POTA references, since some WWFF admins will reject logs that include them.
+      // Delete POTA references, since some WWFF admins will reject logs that include them.
+      fields.push({ POTA_REF: false }, { MY_POTA_REF: false })
+      if (!huntingRef) fields.push({ SIG: false }, { SIG_INFO: false })
     }
     return fields
   },
@@ -248,7 +250,6 @@ const ReferenceHandler = {
       } else {
         const notices = []
         if (refs.length > 0 && !sameRefs) notices.push('newRef') // only if at new ref
-        if (!sameDay) notices.push('newDay')
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 

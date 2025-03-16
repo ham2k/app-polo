@@ -80,6 +80,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
   }, [dispatch, settings.spots])
 
   const [spotsState, , updateSpotsState] = useUIState('OpSpotsTab', 'spotsState', { spots: {}, lastFetched: 0, loading: false })
+  // The keys used to get this state are also referenced in `SpotHistoryExtension`
 
   const allOperations = useSelector(selectAllOperations)
 
@@ -89,7 +90,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
 
   const [showMap, setShowMap] = useState(false)
 
-  const spotsHooks = useFindHooks('spots')
+  const spotsHooks = useFindHooks('spots', { filter: 'fetchSpots' })
 
   useEffect(() => { // Refresh periodically
     const interval = setInterval(() => {
@@ -118,7 +119,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
                   spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
                 }
 
-                annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, dispatch, mode: 'quick' }))
+                annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, dispatch, mode: 'spots' }))
               }
               updateSpotsState({ spots: { [hook.key]: annotatedSpots } })
             })

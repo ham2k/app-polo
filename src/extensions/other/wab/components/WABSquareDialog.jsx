@@ -6,17 +6,17 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, Dialog, Text, TouchableRipple } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
-import { setOperationData } from '../../../../store/operations'
+import { selectOperationCallInfo, setOperationData } from '../../../../store/operations'
 import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
 import { Ham2kDialog } from '../../../../screens/components/Ham2kDialog'
 import { locationToWABSquare } from '../WABLocation'
 
-const VALID_WAB_REGEX = /^(W[AV][0-9]{2}|[CDGHJ][0-9]{2}|[HJNOST][A-HJ-Z][0-9]{2}|)$/
-const PARTIAL_WAB_REGEX = /^([CDGHJNOSTW]{0,1}|W[AV][0-9]{0,2}|[CDGHJ][0-9]{0,2}|[HJNOST][A-Z][0-9]{0,2})$/
+const VALID_WAB_REGEX = /^(W[AV][0-9]{2}|[BCDFGHJLMNOQRSTVWX][0-9]{2}|[HJNOST][A-HJ-Z][0-9]{2}|)$/
+const PARTIAL_WAB_REGEX = /^([CDGHJNOSTW]{0,1}|W[AV][0-9]{0,2}|[BCDFGHJLMNOQRSTVWX][0-9]{0,2}|[HJNOST][A-Z][0-9]{0,2})$/
 
 export function WABSquareDialog ({ operation, visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
@@ -25,6 +25,8 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
 
   const [square, setSquareValue] = useState('')
   const [isValid, setIsValidValue] = useState()
+
+  const callInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   useEffect(() => {
     setDialogVisible(visible)
@@ -95,14 +97,14 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
 
   return (
     <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <Dialog.Title style={{ textAlign: 'center' }}>Worked All Britain Square</Dialog.Title>
+      <Dialog.Title style={{ textAlign: 'center' }}>{'Worked All ' + (callInfo?.entityPrefix?.[0] === 'G' ? 'Britain' : 'Ireland') + ' Square'}</Dialog.Title>
       <Dialog.Content>
-        <Text variant="bodyMedium">Enter WAB Square</Text>
+        <Text variant="bodyMedium">Enter Square</Text>
         <ThemedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={square}
-          label="WAB Square"
-          placeholder={'e.g. SU14'}
+          label="Square"
+          placeholder={callInfo?.entityPrefix?.[0] === 'G' ? 'e.g. SU14' : 'e.g. N93'}
           onChangeText={handSquareChange}
           error={!isValid}
         />

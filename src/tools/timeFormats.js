@@ -264,7 +264,7 @@ export function fmtTimeBetween (t1, t2, { roundTo = false } = {}) {
       if (roundTo === 'hours') {
         return `${Math.floor(diff / (60 * 60 * 1000))}h`
       } else {
-        return `${Math.floor(diff / (60 * 60 * 1000))}h ${Math.floor((diff % (60 * 60 * 1000)) / 1000)}s`
+        return `${Math.floor(diff / (60 * 60 * 1000))}h ${Math.floor((diff % (60 * 1000)) / 1000)}m`
       }
     } else {
       return `${Math.floor(diff / (60 * 60 * 24 * 1000))}d ${Math.floor((diff % (60 * 60 * 24 * 1000)) / (60 * 60 * 1000))}h`

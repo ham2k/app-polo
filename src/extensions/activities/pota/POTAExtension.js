@@ -254,28 +254,35 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
+    const activationRefs = filterRefs(operation, Info.activationType)
 
-    if (huntingRefs && huntingRefs[0]) return ([{ SIG: 'POTA' }, { SIG_INFO: huntingRefs[0]?.ref }, { POTA_REF: huntingRefs.map(ref => ref?.ref).filter(x => x).join(',') }])
-    else return []
+    const fields = []
+    if (huntingRefs && huntingRefs[0]) {
+      fields.push({ SIG: 'POTA' }, { SIG_INFO: huntingRefs[0]?.ref }, { POTA_REF: huntingRefs.map(ref => ref?.ref).filter(x => x).join(',') })
+    }
+    if (activationRefs && activationRefs[0]) {
+      fields.push({ MY_SIG: 'POTA' }, { MY_SIG_INFO: activationRefs[0]?.ref }, { MY_POTA_REF: activationRefs.map(ref => ref?.ref).filter(x => x).join(',') })
+    }
+    return fields
   },
 
   adifFieldCombinationsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
-    let activationADIF = []
+    let activationFields = []
     if (activationRef) {
-      activationADIF = [
+      activationFields = [
         { MY_SIG: 'POTA' }, { MY_SIG_INFO: activationRef.ref }, { MY_POTA_REF: activationRef.ref }
       ]
     }
 
     if (huntingRefs.length > 0) {
       return huntingRefs.map(huntingRef => [
-        ...activationADIF,
+        ...activationFields,
         { SIG: 'POTA' }, { SIG_INFO: huntingRef.ref }, { POTA_REF: huntingRef.ref }
       ])
     } else {
-      return [activationADIF]
+      return [activationFields]
     }
   },
 

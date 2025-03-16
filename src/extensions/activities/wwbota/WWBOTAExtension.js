@@ -87,10 +87,10 @@ const SpotsHook = {
 
       // Refs
       const refs = []
-      const refRegex = /\b(B\/(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*))[- ]?([0-9]{4}(?:[ ,][0-9]{4})*)\b/gi
+      const refRegex = /\b(B\/(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*))(?:- ?| -?)?([0-9]{4}(?:(?:(?<sep>[ ,/])[0-9]{4})(?:\k<sep>[0-9]{4})*)?)\b/gi
       for (const match of spot.info.matchAll(refRegex)) {
         const prefix = match[1].toUpperCase()
-        refs.push(...match[2].split(/[ ,]/).map(refNum => `${prefix}-${refNum}`))
+        refs.push(...match[2].split(/[ ,/]/).map(refNum => `${prefix}-${refNum}`))
       }
       let label
       if (refs.length === 0) { // No reference found
@@ -251,9 +251,11 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
-
-    if (huntingRefs) return ([{ SIG: 'WWBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }])
-    else return []
+    const activationRef = findRef(operation, Info.activationType)
+    const fields = []
+    if (activationRef) fields.push({ MY_SIG: 'WWBOTA' }, { MY_SIG_INFO: activationRef.ref })
+    if (huntingRefs.length > 0) fields.push({ SIG: 'WWBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') })
+    return fields
   },
 
   adifFieldCombinationsForOneQSO: ({ qso, operation }) => {

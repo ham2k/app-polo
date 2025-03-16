@@ -72,6 +72,32 @@ export const MainExchangePanel = ({
     }
   }, [handleFieldChange, spaceHandler, rstLength, settings])
 
+  const handleRSTBlur = useCallback((event) => {
+    let text = event?.value || event?.nativeEvent?.text
+    const mode = qso?.mode ?? vfo?.mode ?? 'SSB'
+
+    text = text?.trim() || ''
+    if (text.length === 1) {
+      let readability = '5'
+      const strength = text
+      const tone = '9'
+      if (strength === '1' || strength === '2' || strength === '3') {
+        readability = '3'
+      } else if (strength === '4') {
+        readability = '4'
+      }
+      if (mode === 'CW' || mode === 'RTTY') {
+        text = `${readability}${strength}${tone}`
+      } else {
+        text = `${readability}${strength}`
+      }
+
+      handleFieldChange && handleFieldChange({ ...event, value: text, nativeEvent: { ...event?.nativeEvent, text } })
+    }
+
+    return true
+  }, [handleFieldChange, qso?.mode, vfo?.mode])
+
   let fields = []
   fields.push(
     <CallsignInput
@@ -87,6 +113,7 @@ export const MainExchangePanel = ({
       fieldId={'theirCall'}
       onSpace={spaceHandler}
       focusedRef={focusedRef}
+      allowMultiple={true}
     />
   )
 
@@ -97,6 +124,7 @@ export const MainExchangePanel = ({
       themeColor,
       style: [styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }],
       onChange: handleRSTChange,
+      onBlur: handleRSTBlur,
       onSubmitEditing,
       onSpace: spaceHandler,
       focusedRef,

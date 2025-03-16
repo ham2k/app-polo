@@ -6,32 +6,34 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useCallback, useEffect, useState } from 'react'
-import { List } from 'react-native-paper'
+import React, { useCallback } from 'react'
+import { IconButton, List } from 'react-native-paper'
 import { Alert, ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import DocumentPicker from 'react-native-document-picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 import DeviceInfo from 'react-native-device-info'
+import YAML from 'yaml'
 
 import packageJson from '../../../../package.json'
 
 import { DevModeSettingsForDistribution, reportError } from '../../../distro'
-import { selectSettings } from '../../../store/settings'
-import { importQSON, resetSyncedStatus, selectOperationsList } from '../../../store/operations'
+import { mergeSettings, selectSettings, setSettings } from '../../../store/settings'
+import { importQSON, selectOperationsList } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
-import { SyncServiceDialog } from '../components/SyncServiceDialog'
+import { ListRow } from '../../components/ListComponents'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
 import { dbSelectAll, pathForDatabase, replaceDatabase, resetDatabase } from '../../../store/db/db'
 import { fmtNumber } from '@ham2k/lib-format-tools'
-import { selectFiveSecondsTick } from '../../../store/time'
 import GLOBAL from '../../../GLOBAL'
 import { setLocalData } from '../../../store/local'
+import ThemedTextInput from '../../components/ThemedTextInput'
+import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 function prepareStyles (baseStyles) {
   return {
@@ -52,21 +54,6 @@ export default function DevModeSettingsScreen ({ navigation }) {
   const settings = useSelector(selectSettings)
   const operations = useSelector(selectOperationsList)
 
-  const [currentDialog, setCurrentDialog] = useState()
-
-  const fiveSecondTick = useSelector(selectFiveSecondsTick)
-  const [syncStatus, setSyncStatus] = useState()
-  useEffect(() => {
-    setImmediate(async () => {
-      setSyncStatus(await syncCountDescription())
-    })
-  }, [fiveSecondTick])
-
-  const handleResetSyncStatus = useCallback(async () => {
-    await resetSyncedStatus()
-    setSyncStatus(await syncCountDescription())
-  }, [])
-
   const handleExportDB = useCallback(async () => {
     const paths = []
     paths.push(pathForDatabase())
@@ -74,8 +61,7 @@ export default function DevModeSettingsScreen ({ navigation }) {
     console.log(paths)
     if (paths.length > 0) {
       Share.open({
-        urls: paths.map(p => `file://${p}`),
-        type: 'text/plain' // There is no official QSON mime type
+        urls: paths.map(p => 'file://' + p)
       }).then((x) => {
         console.info('Shared', x)
       }).catch((e) => {
@@ -130,6 +116,38 @@ export default function DevModeSettingsScreen ({ navigation }) {
     })
   }, [dispatch])
 
+  const downloadDevSettings = useCallback(async () => {
+    if (!settings.devSettingsLocation) {
+      Alert.alert('No location provided', 'Please provide a location for the dev settings')
+      return
+    }
+
+    const data = await fetchAndProcessURL({
+      url: settings.devSettingsLocation ?? '',
+      process: async (body) => {
+        if (body.startsWith('{')) {
+          return JSON.parse(body)
+        } else {
+          return YAML.parse(body)
+        }
+      }
+    })
+    const { extensions, exports } = data
+    const restrictedData = { extensions, exports }
+
+    dispatch(mergeSettings(restrictedData))
+
+    let msg = ''
+    if (Object.keys(extensions || {}).length > 0) {
+      msg += `Extensions: ${Object.keys(extensions || {}).join(', ')}\n`
+    }
+    if (Object.keys(exports || {}).length > 0) {
+      msg += `Exports: ${Object.keys(exports || {}).join(', ')}\n`
+    }
+    console.log('settings loaded', { extensions, exports })
+    Alert.alert('Settings Loaded', msg)
+  }, [dispatch, settings])
+
   const shareSystemInfo = useCallback(() => {
     Share.open({
       title: 'Ham2K PoLo System Information',
@@ -179,6 +197,25 @@ export default function DevModeSettingsScreen ({ navigation }) {
             onPress={handleWipeDB}
           />
         </Ham2kListSection>
+
+        <Ham2kListSection title={'Download Advanced Settings'}>
+          <ListRow style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+            <ThemedTextInput
+              label="Location"
+              value={settings.devSettingsLocation ?? ''}
+              inputMode={'url'}
+              placeholder={'https://example.com/dir/settings.yml'}
+              onChangeText={(value) => dispatch(setSettings({ devSettingsLocation: value })) }
+              style={{ flex: 1 }}
+            />
+            <IconButton icon="download" mode="contained"
+              containerColor={styles.colors.devMode} iconColor={styles.colors.background}
+              onPress={downloadDevSettings}
+            />
+          </ListRow>
+
+        </Ham2kListSection>
+
         <Ham2kListSection title={'System Information'}>
           <View style={{ paddingHorizontal: styles.oneSpace * 2 }}>
             <Ham2kMarkdown styles={{ markdown: { heading3: { ...styles.markdown.heading3, marginTop: styles.oneSpace } } }}>
@@ -216,13 +253,4 @@ function systemInfo () {
 * ${fmtGigabytes(DeviceInfo.getTotalDiskCapacitySync())} storage - ${fmtGigabytes(DeviceInfo.getFreeDiskStorageSync())} free
 ${DeviceInfo.isKeyboardConnectedSync() ? '* Keyboard connected\n' : ''}
   `
-}
-
-async function syncCountDescription () {
-  const result = await dbSelectAll('SELECT COUNT(*) as count, synced FROM qsos WHERE operation != "historical" GROUP BY synced')
-  const counts = result.reduce((acc, row) => {
-    acc[row.synced ? 'synced' : 'pending'] = row.count
-    return acc
-  }, {})
-  return `${fmtNumber(counts.synced || 0)} synced, ${fmtNumber(counts.pending || 0)} pending`
 }

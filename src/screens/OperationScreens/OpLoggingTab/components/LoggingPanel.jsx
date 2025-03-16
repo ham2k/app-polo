@@ -105,12 +105,20 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     if (!loggingState?.selectedUUID) {
       let nextQSO
       const otherStateChanges = {}
+
       if (loggingState?.qsoQueue?.length > 0) {
         nextQSO = loggingState.qsoQueue.pop() ?? prepareNewQSO(operation, qsos, vfo, settings)
         otherStateChanges.qsoQueue = loggingState.qsoQueue
       } else {
         nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
       }
+
+      if (loggingState.callStack) {
+        otherStateChanges.callStack = undefined
+        nextQSO.their = nextQSO.their || {}
+        nextQSO.their.call = loggingState.callStack
+      }
+
       setQSO(nextQSO, { otherStateChanges })
       dispatch(resetCallLookupCache())
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
@@ -143,14 +151,10 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         }
       }, 10)
     }
-  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch])
+  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch, loggingState.callStack])
 
   useEffect(() => { // Validate and analize the callsign
-    let call = qso?.their?.call ?? ''
-    if (call.indexOf(',') >= 0) {
-      const calls = call = call.split(',')
-      call = calls[calls.length - 1].trim()
-    }
+    const { call } = parseStackedCalls(qso?.their?.call ?? '')
 
     const callInfo = parseCallsign(call)
 
@@ -290,17 +294,17 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         qso.their = qso.their || {}
         qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
 
-        let call = qso?.their?.call
         let lastUUID
 
-        const calls = call = call.split(',')
+        const { call, allCalls, callStack } = parseStackedCalls(qso?.their?.call ?? '')
         const multiQSOs = []
-        for (let i = 0; i < calls.length; i++) {
+        for (let i = 0; i < allCalls.length; i++) {
           let oneQSO = qso
-          if (calls.length > 1) { // If this is a multi-call QSO, we need to clone and annotate the QSO for each call
+          qso.their.call = call
+          if (allCalls.length > 1) { // If this is a multi-call QSO, we need to clone and annotate the QSO for each call
             oneQSO = cloneDeep(qso)
             if (i > 0) oneQSO.uuid = null
-            oneQSO.their.call = calls[i].trim()
+            oneQSO.their.call = allCalls[i].trim()
             oneQSO.their.guess = {}
             oneQSO.their.lookup = {}
             oneQSO = await annotateQSO({ qso: oneQSO, online: false, settings, dispatch })
@@ -313,16 +317,21 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
           lastUUID = oneQSO.uuid
         }
 
-        findHooks('activity').filter(activity => activity.processQSOBeforeSave).forEach(activity => {
-          multiQSOs.forEach(q => {
-            activity.processQSOBeforeSave({ qso: q, operation, qsos, vfo, settings })
-          })
-        })
+        const activities = findHooks('activity').filter(activity => activity.processQSOBeforeSaveWithDispatch || activity.processQSOBeforeSave)
+        for (const activity of activities) {
+          for (const q of multiQSOs) {
+            if (activity.processQSOBeforeSaveWithDispatch) {
+              await activity.processQSOBeforeSaveWithDispatch({ qso: q, operation, qsos, vfo, settings, dispatch })
+            } else {
+              activity.processQSOBeforeSave({ qso: q, operation, qsos, vfo, settings })
+            }
+          }
+        }
 
         dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
         if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 
-        setQSO(undefined, { otherStateChanges: { lastUUID } }) // Let queue management decide what to do
+        setQSO(undefined, { otherStateChanges: { lastUUID, callStack } }) // Let queue management decide what to do
         if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
       }
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
@@ -695,4 +704,43 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   })
 
   return clone
+}
+
+export function parseStackedCalls (input) {
+  // Stacked calls are separated by `//`
+  // The last part of the stack that is a valid call is extracted as `call`
+  // along with any other comma-separated calls that were part of that stack part, as `allCalls`.
+  // The rest of the stack is returned as a string in`callStack`.
+
+  input = (input || '').trim()
+  const parts = input.split('//').filter(x => x)
+
+  let call = null
+  let allCalls = null
+  const stack = []
+  let i = parts.length - 1
+  while (i >= 0) {
+    if (call) {
+      // if we already have a call, everything else goes to the stack
+      stack.unshift(parts[i])
+    } else {
+      // Otherwise we look to see if the current part is a valid call
+
+      // But first, we look for multiple calls and pick the last
+      allCalls = parts[i].split(',').filter(x => x)
+      call = allCalls[allCalls?.length - 1]
+
+      const parsedCall = parseCallsign(call)
+
+      // if not valid, add it to the stack and keep trying with the next part
+      if (!parsedCall.baseCall) {
+        call = null
+        allCalls = null
+        stack.unshift(parts[i])
+      }
+    }
+    i--
+  }
+
+  return { call: call || '', allCalls: allCalls || [], callStack: stack.join('//') }
 }

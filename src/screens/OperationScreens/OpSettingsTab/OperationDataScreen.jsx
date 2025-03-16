@@ -91,8 +91,7 @@ export default function OperationDataScreen (props) {
     dispatch(generateExportsForOptions(operation.uuid, options)).then((paths) => {
       if (paths?.length > 0) {
         Share.open({
-          urls: paths.map(p => `file://${p}`),
-          type: 'text/plain' // There is no official mime type for our files
+          urls: paths.map(p => `file://${p}`)
         }).then((x) => {
           console.info('Shared', x)
         }).catch((e) => {

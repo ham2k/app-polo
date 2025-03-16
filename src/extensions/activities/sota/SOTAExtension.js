@@ -252,7 +252,7 @@ const ReferenceHandler = {
         format: 'adif',
         exportType: `${Info.key}-hunter`,
         exportName: 'SOTA Hunter',
-        templateData: { handlerShortName: 'SOTA Hunted' },
+        templateData: { handlerShortName: 'SOTA Hunted', handlerName: 'SOTA Hunted', includeTime: true },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}',
         ADIFCommentTemplate: 's{{qso.our.sent}} r{{qso.their.sent}} {{>ADIFNotes}}'

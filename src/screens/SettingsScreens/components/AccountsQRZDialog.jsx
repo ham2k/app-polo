@@ -15,6 +15,7 @@ import { apiQRZ } from '../../../store/apis/apiQRZ'
 import { View } from 'react-native'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { resetCallLookupCache } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { parseCallsign } from '@ham2k/lib-callsigns'
 
 export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
@@ -59,10 +60,12 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
   }, [setPassword])
 
   const handleTest = useCallback(async () => {
+    const callInfo = parseCallsign(settings?.operatorCall)
     await dispatch(setAccountInfo({ qrz: { login, password, session: undefined } }))
-    const qrzPromise = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: settings?.operatorCall }, { forceRefetch: true }))
+
+    const qrzPromise = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: callInfo.baseCall }, { forceRefetch: true }))
     await Promise.all(dispatch(apiQRZ.util.getRunningQueriesThunk()))
-    const qrzLookup = await dispatch((_dispatch, getState) => apiQRZ.endpoints.lookupCall.select({ call: settings?.operatorCall })(getState()))
+    const qrzLookup = await dispatch((_dispatch, getState) => apiQRZ.endpoints.lookupCall.select({ call: callInfo.baseCall })(getState()))
     qrzPromise.unsubscribe && qrzPromise.unsubscribe()
 
     if (qrzLookup?.error) {

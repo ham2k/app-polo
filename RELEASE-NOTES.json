@@ -1,16 +1,53 @@
 {
-  "25.2.99-pre1": {
-    "name": "March '25 (pre1)",
+  "25.3.99": {
+    "name": "April '25 (pre 1)",
+    "photoCaption": "VK4KC at POTA AU-8817",
+    "changes": [
+    ]
+  },
+  "25.3.0": {
+    "name": "March '25",
     "photoCaption": "KE8PZN, WD4DAN & Friends at POTA US-8353",
     "changes": [
-      "QSO Parties: NC, SC, OK, ID and WI",
-      "Export settings, with templates"
+      "QSO Parties: OK, ID, WI, VA, LA, MS, MO, NM, ND, GA, NE, MI, FL, OH, PA",
+      "Generic Simple Contest activity",
+      "Export settings, with templates",
+      "Stacking partial calls (use `//` or `..` to stack calls)",
+      "Use spots to prefill QSO references",
+      "Option to hide deleted QSOs (as suggested by many)",
+      "Add Worked All Ireland squares (as suggested by EI2LH)",
+      "Guess correct WWBOTA default prefix, and other WWBOTA fixes",
+      "Fixed exports to GMail and other apps on Android",
+      "RST input auto-complete on single digit entry (as suggested by HB9BRJ)",
+      "Assorted fixes and improvements",
+      "Contributions from M1SDH, NA7DO, M0TRT, W8NI, KC1VOP"
+    ]
+  },
+  "25.2.4": {
+    "name": "February '25",
+    "photoCaption": "LB4FH at POTA NO-2526, LABOTA B/LA-0004",
+    "changes": [
+      "Idaho QSO Party counties",
+      "Fixed display of time elapsed in operation",
+      "Fixed missing history messages"
+    ]
+  },
+  "25.2.3": {
+    "name": "February '25",
+    "changes": [
+      "Fixed problem with layout of notices in call info panel"
+    ]
+  },
+  "25.2.2": {
+    "name": "February '25",
+    "changes": [
+      "Bug fixes for QSO Parties (Early Access)"
     ]
   },
   "25.2.1": {
     "name": "February '25",
     "changes": [
-      "QSO Parties: NC, SC, OK (Early Access)"
+      "QSO Parties: NC, SC, OK, ID and WI (Early Access)"
     ]
   },
   "25.2.0": {

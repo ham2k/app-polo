@@ -84,7 +84,6 @@ export default function ThemedTextInputWithSuggestions (props) {
       changeEvent.fieldId = fieldId
       changeEvent.ref = actualInnerRef
       changeEvent.nativeEvent.text = bestSuggestion
-      actualInnerRef.current.setNativeProps({ bestSuggestion })
       onChangeText && onChangeText(bestSuggestion)
       onChange && onChange(changeEvent)
     }

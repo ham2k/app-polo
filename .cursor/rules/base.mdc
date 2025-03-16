@@ -1,0 +1,35 @@
+---
+description: Ham2K PoLo Overview
+globs: **/*.js, **/*.jsx, **/*.json, README.md, NOTES.md,
+---
+# Ham2K PoLo Overview
+
+A guide to this application architecture.
+
+<rule>
+name: polo_overview
+description: Documents the core architecture, patterns, and components of the Ham2K Portable Logger to provide context for AI assistance
+filters:
+  - type: event
+    pattern: "cursor_init"
+  - type: glob
+    pattern:
+      - "**/*.{js,jsx,json}"
+      - "**/README.md"
+      - "**/NOTES.md"
+      - "package.json"
+      - "RELEASE-NOTES.json"
+      - "Gemfile"
+
+actions:
+  - type: inform
+    message: 
+      # Ham2K Portable Logger
+
+      Ham2K Portable Logger, or PoLo for short, is an Amateur Radio logging tool built in React Native.
+
+
+metadata:
+  priority: high
+  version: 1.0
+</rule> 
