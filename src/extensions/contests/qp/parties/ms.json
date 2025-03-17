@@ -12,7 +12,7 @@
   "options": {
     "dxLocationIsPrefix": true,
     "dxIsMultiplier": false,
-    "dxEntityIsMultiplier": false,
+    "dxEntityIsMultiplier": true,
     "stateCountsForInState": false,
     "dcCountsAsMaryland": true,
     "multsPerBandMode": false,
@@ -70,7 +70,7 @@
     "LIN": "Lincoln",
     "LOW": "Lowndes",
     "MRN": "Marion",
-    "MES": "Madison",
+    "MAD": "Madison",
     "MGY": "Montgomery",
     "MON": "Monroe",
     "MAR": "Marshall",
