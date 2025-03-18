@@ -139,7 +139,7 @@ export default function ExportSettingsScreen ({ navigation }) {
           if (refHook?.suggestExportOptions) {
             const options = (refHook.suggestExportOptions && refHook.suggestExportOptions({ operation, qsos: operation.qsos, ref, settings })) || []
             options.forEach(option => {
-              const key = `${hook.key}-${option.format}-${option.exportType ?? 'ref'}`
+              const key = `${hook.key}-${option.format}-${option.exportType ?? 'export'}`
               const exportSettings = selectExportSettings({ settings }, key)
 
               const data = {
