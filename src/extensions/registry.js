@@ -64,7 +64,7 @@ export function findHooks (hookCategory, { key } = {}) {
   return hooks
 }
 
-export function useFindHooks (hookCategory, { key } = {}) {
+export function useFindHooks (hookCategory, { key, filter } = {}) {
   const settings = useSelector(selectSettings)
 
   const activeExtensionHash = useMemo(() => {
@@ -72,7 +72,13 @@ export function useFindHooks (hookCategory, { key } = {}) {
     return extensions.filter(extension => isExtensionEnabled(extension, settings)).join('|')
   }, [settings])
 
-  return useMemo(() => findHooks(hookCategory, { key }), [activeExtensionHash, hookCategory, key]) // eslint-disable-line react-hooks/exhaustive-deps
+  return useMemo(() => {
+    let hooks = findHooks(hookCategory, { key })
+    if (filter) {
+      hooks = hooks.filter(h => h[filter])
+    }
+    return hooks
+  }, [activeExtensionHash, hookCategory, key, filter]) // eslint-disable-line react-hooks/exhaustive-deps -- because we want to refresh if the exension hash changes
 }
 
 export function findBestHook (hookCategory, options) {

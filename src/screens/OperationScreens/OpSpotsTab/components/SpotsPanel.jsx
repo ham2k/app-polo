@@ -86,7 +86,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
 
   const [showControls, setShowControls] = useState(false)
 
-  const spotsHooks = useFindHooks('spots')
+  const spotsHooks = useFindHooks('spots', { filter: 'fetchSpots' })
 
   useEffect(() => { // Refresh periodically
     const interval = setInterval(() => {

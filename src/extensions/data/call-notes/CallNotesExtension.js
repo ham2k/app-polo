@@ -9,7 +9,6 @@ import React, { useMemo } from 'react'
 import { List } from 'react-native-paper'
 import emojiRegex from 'emoji-regex'
 
-import packageJson from '../../../../package.json'
 import { registerDataFile, unRegisterDataFile } from '../../../store/dataFiles'
 import { fetchAndProcessURL, loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { selectExtensionSettings } from '../../../store/settings'
@@ -148,7 +147,6 @@ export const createDataFileDefinition = (file) => ({
   icon: 'file-account-outline',
   description: `${file.builtin ? 'Built-in' : "User's"} Callsign Notes`,
   buildDescription: ({ data }) => {
-    console.log('descriptiondata', data)
     if (data?.data) {
       return `${Object.keys(data?.data || {}).length} ${file.builtin ? 'Built-in' : 'User'} callsign notes loaded.`
     } else {
@@ -163,10 +161,8 @@ export const createDataFileDefinition = (file) => ({
 const createCallNotesFetcher = (file) => async () => {
   if (!file.location) return {}
 
-  const url = await resolveDownloadUrl(file.location)
-
   return fetchAndProcessURL({
-    url,
+    url: file.location,
     process: async (body) => {
       const entries = {}
 
@@ -235,63 +231,6 @@ export const useAllCallNotesFinder = (call) => {
   return useMemo(() => {
     return findAllCallNotes(call)
   }, [call])
-}
-
-async function resolveDownloadUrl (url) {
-  url = url.trim()
-
-  // Dropbox
-  if (url.match(/^https:\/\/(www\.)*dropbox\.com\//i)) {
-    url = url.replaceAll(/[&?]raw=\d/g, '').replaceAll(/[&?]dl=\d/g, '')
-    if (url.match(/\?/)) {
-      return `${url}&dl=1&raw=1`
-    } else {
-      return `${url}?dl=1&raw=1`
-    }
-  // Apple iCloud Drive
-  } else if (url.match(/^https:\/\/(www\.)*icloud\.com\/iclouddrive/i)) {
-    const parts = url.match(/iclouddrive\/([\w_]+)/)
-    const response = await fetch('https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve', {
-      method: 'POST',
-      headers: { 'User-Agent': `Ham2K Portable Logger/${packageJson.version}` },
-      body: JSON.stringify({
-        shortGUIDs: [{ value: parts[1] }]
-      })
-    })
-    if (response.status === 200) {
-      const body = await response.text()
-      const json = JSON.parse(body)
-      return json?.results && json?.results[0] && json?.results[0].rootRecord?.fields?.fileContent?.value?.downloadURL
-    } else {
-      return url
-    }
-  // Google Drive
-  } else if (url.match(/^https:\/\/drive\.google\.com\//i)) {
-    const parts = url.match(/file\/d\/([\w_-]+)/)
-    return `https://drive.google.com/uc?id=${parts[1]}&export=download`
-  // Google Docs
-  } else if (url.match(/^https:\/\/docs\.google\.com\/document/i)) {
-    const parts = url.match(/\/d\/([\w_-]+)/)
-    return `https://docs.google.com/document/export?format=txt&id=${parts[1]}`
-  // GitHub Gist
-  } else if (url.match(/^https:\/\/gist\.github\.com\//i)) {
-    console.log('gist url', url)
-    const response = await fetch(url, {
-      headers: { 'User-Agent': `Ham2K Portable Logger/${packageJson.version}` }
-    })
-    if (response.status === 200) {
-      const body = await response.text()
-      const parts = body.match(/<a href="([^"]+\/raw\/[^"]+)"/)
-      console.log('parts', parts)
-      if (parts) {
-        return `https://gist.githubusercontent.com${parts[1]}`
-      } else {
-        return url
-      }
-    }
-  } else {
-    return url
-  }
 }
 
 function _cleanNote (note) {

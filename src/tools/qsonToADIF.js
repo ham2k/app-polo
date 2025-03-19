@@ -87,7 +87,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
       ;[...qso.refs || [], ...operation.refs || []].forEach(ref => {
         const secondaryRefHandler = findBestHook(`ref:${ref.type}`)
 
-        if (secondaryRefHandler.key === handler.key) return // Skip if it happens to be the same as the main handler
+        if (secondaryRefHandler?.key === handler.key) return // Skip if it happens to be the same as the main handler
 
         if (secondaryRefHandler && secondaryRefHandler.key !== handler.key && secondaryRefHandler.adifFieldsForOneQSO) {
           const refFields = secondaryRefHandler.adifFieldsForOneQSO({ qso, operation, common, exportType, ref, privateExport, templates }) || []

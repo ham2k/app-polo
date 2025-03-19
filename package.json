@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "25.2.99-pre3",
-  "versionName": "March '25 (pre 3)",
+  "version": "25.3.99-pre1",
+  "versionName": "April '25 (pre 1)",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -16,7 +16,7 @@
     "@ham2k/lib-dxcc-data": "^0.3",
     "@ham2k/lib-format-tools": "^0.3",
     "@ham2k/lib-maidenhead-grid": "^0.2",
-    "@ham2k/lib-operation-data": "^0.8.4",
+    "@ham2k/lib-operation-data": "^0.9.0",
     "@ham2k/lib-qson-adif": "^0.5",
     "@ham2k/lib-qson-tools": "^0.6",
     "@nozbe/microfuzz": "^1.0.0",
@@ -67,7 +67,8 @@
     "react-native-uuid": "^2.0",
     "react-native-vector-icons": "^10.1",
     "react-redux": "^9.1",
-    "redux-persist": "^6.0"
+    "redux-persist": "^6.0",
+    "yaml": "^2.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24",
