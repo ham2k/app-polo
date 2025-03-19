@@ -1,10 +1,13 @@
 {
   "key": "TN",
   "name": "Tennessee QSO Party",
+  "start": "2025-9-7 17:00Z",
+  "end": "2025-9-8 02:59Z",
   "short": "TNQP",
   "url": "https://tnqp.org/rules/",
-  "start": "2025-9-7 17:00Z",
-  "end": "2025-9-8 03:00Z",
+  "cabrilloName": "TN-QSO-PARTY",
+  "notes": "Contributed by KQ4URU.",
+  "lastUpdated": "2025-03-19 23:15z",
   "status": "Based on 2025 rules",
   "bonusStations": {
     "K4TCG": 100
@@ -13,15 +16,14 @@
     "roverPerCountyActivated": 500
   },
   "options": {
-    "onlineLookup": true,
     "dcCountsAsMaryland": true,
-    "stateCountsForInState": false,
     "selfSpotting": true,
     "countyLine": true,
-    "qsoPerMode": true,
-    "multsPerBand": true,
     "dxEntityIsMultiplier": true,
-    "dataAndCWCountAsSameMode": false
+    "dxLocationIsPrefix": true,
+    "multsPerBand": true,
+    "stateCountsForInState": false,
+    "selfMobileCountsForCounty": true
   },
   "points": {
     "PHONE": 3,
@@ -64,7 +66,7 @@
     "HAMI": "Hamilton",
     "HANC": "Hancock",
     "HARD": "Hardeman",
-    "HARN": "Hardin", 
+    "HARN": "Hardin",
     "HAWK": "Hawkins",
     "HAYW": "Haywood",
     "HEND": "Henderson",

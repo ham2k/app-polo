@@ -1,8 +1,25 @@
 {
   "key": "IN",
   "name": "Indiana QSO Party",
+  "short": "INQP",
+  "url": "http://www.hdxcc.org/inqp/",
   "start": "2025-5-3 15:00Z",
-  "end": "2025-5-4 02:59Z"
+  "end": "2025-5-4 02:59Z",
+  "cabrilloName": "IN-QSO-PARTY",
+  "notes": "Contributed by W1GRL",
+  "lastUpdated": "2025-03-19 23:15z",
+  "status": "Updated for 2025, but not verified",
+  "options": {
+    "dcCountsAsMaryland": true,
+    "stateCountsForInState": false,
+    "countyLine": true,
+    "dxIsMultiplier": false,
+    "selfSpotting": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2
+  },
   "counties": {
     "INADA": "Adams",
     "INALL": "Allen",
@@ -95,7 +112,7 @@
     "INWAY": "Wayne",
     "INWEL": "Wells",
     "INWHT": "White",
-    "INWHL": "Whitley",
+    "INWHL": "Whitley"
   }
 }
 

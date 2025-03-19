@@ -2,9 +2,23 @@
   "key": "NEQP",
   "name": "New England QSO Party",
   "start": "2025-5-3 20:00Z",
-  "end": "2025-5-4 05:00Z",
+  "end": "2025-5-4 04:59Z",
   "secondStart": "2025-5-4 13:00Z",
-  "secondEnd": "2025-5-4 24:00Z"
+  "secondEnd": "2025-5-4 23:59Z",
+  "short": "NEQP",
+  "url": "https://www.neqp.org/",
+  "cabrilloName": "NEQP",
+  "notes": "",
+  "lastUpdated": "2025-03-19 23:15z",
+  "status": "Updated for 2025, but not verified",
+  "options": {
+    "countyLine": true,
+    "stateCountsForInState": false,
+    "dcCountsAsMaryland": true,
+    "dxIsMultiplier": false,
+    "dxEntityIsMultiplier": true,
+    "selfSpotting": true
+  },
    "counties": {
      "CTCAP": "Capital Region",
      "CTGBR": "Greater Bridgeport",
@@ -73,6 +87,6 @@
      "VTRUT": "Rutland",
      "VTWAS": "Washington",
      "VTWNH": "Windham",
-     "VTWND": "Windsor",
+     "VTWND": "Windsor"
    }
 }
