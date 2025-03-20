@@ -5,7 +5,23 @@
   "end": "2025-5-4 05:00Z",
   "secondStart": "2025-5-4 13:00Z",
   "secondEnd": "2025-5-4 24:00Z"
-   "counties": {
+  "cabrilloName": "New-England-QSO-PARTY",
+  "lastUpdated": "2025-03-20 12:00Z",
+  "status": "Entered by W1GRL (counties) and  W1BOY",
+  "options": {
+    "countyLine": true,
+    "selfSpotting": true,
+    "dxEntityIsMultiplier": true,
+    "stateCountsForInState": true,
+    "dcCountsAsMaryland": true,
+    "dataAndCWCountAsSameMode": true,
+    "multsPerBandMode": false
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2
+  },
+  "counties": {
      "CTCAP": "Capital Region",
      "CTGBR": "Greater Bridgeport",
      "CTLCR": "Lower CT River",
