@@ -733,7 +733,7 @@ export function parseStackedCalls (input) {
       const parsedCall = parseCallsign(call)
 
       // if not valid, add it to the stack and keep trying with the next part
-      if (!parsedCall.baseCall) {
+      if (!parsedCall.baseCall && !(call?.indexOf('?') >= 0)) {
         call = null
         allCalls = null
         stack.unshift(parts[i])

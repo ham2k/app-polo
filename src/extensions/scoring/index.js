@@ -131,5 +131,5 @@ export function analyzeAndSectionQSOs ({ qsos, operation, settings, showDeletedQ
     }
   })
 
-  return { qsos: showDeletedQSOs === false ? qsos : activeQSOs, activeQSOs, sections }
+  return { qsos, activeQSOs, sections }
 }

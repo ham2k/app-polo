@@ -2,26 +2,30 @@
   "key": "NEQP",
   "name": "New England QSO Party",
   "start": "2025-5-3 20:00Z",
-  "end": "2025-5-4 05:00Z",
+  "end": "2025-5-4 04:59Z",
   "secondStart": "2025-5-4 13:00Z",
-  "secondEnd": "2025-5-4 24:00Z"
-  "cabrilloName": "New-England-QSO-PARTY",
+  "secondEnd": "2025-5-4 23:59Z",
+  "short": "NEQP",
+  "url": "https://www.neqp.org/",
+  "cabrilloName": "NEQP",
+  "notes": "Contributed by W1GRL & W1BOY",
   "lastUpdated": "2025-03-20 12:00Z",
-  "status": "Entered by W1GRL (counties) and  W1BOY",
+  "status": "Updated for 2025, but not verified",
   "options": {
     "countyLine": true,
-    "selfSpotting": true,
-    "dxEntityIsMultiplier": true,
-    "stateCountsForInState": true,
+    "stateCountsForInState": false,
     "dcCountsAsMaryland": true,
-    "dataAndCWCountAsSameMode": true,
     "multsPerBandMode": false
+    "dxIsMultiplier": false,
+    "dxEntityIsMultiplier": true,
+    "dataAndCWCountAsSameMode": true,
+    "selfSpotting": true
   },
   "points": {
     "PHONE": 1,
     "CW": 2
   },
-  "counties": {
+   "counties": {
      "CTCAP": "Capital Region",
      "CTGBR": "Greater Bridgeport",
      "CTLCR": "Lower CT River",
@@ -89,6 +93,6 @@
      "VTRUT": "Rutland",
      "VTWAS": "Washington",
      "VTWNH": "Windham",
-     "VTWND": "Windsor",
+     "VTWND": "Windsor"
    }
 }

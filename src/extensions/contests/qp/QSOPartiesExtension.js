@@ -587,7 +587,7 @@ function mainExchangeForOperation (props) {
   const qp = qpData({ ref: opRef })
 
   const fields = []
-  console.log('main exchange for QP', { ourNumber: ref?.ourNumber, nextNumber: operation?.nextNumber })
+  // console.log('main exchange for QP', { ourNumber: ref?.ourNumber, nextNumber: operation?.nextNumber })
   if (qp?.exchange?.[0] === 'Number') {
     fields.push(
       <ThemedTextInput
