@@ -8,16 +8,22 @@
   "short": "NEQP",
   "url": "https://www.neqp.org/",
   "cabrilloName": "NEQP",
-  "notes": "",
-  "lastUpdated": "2025-03-19 23:15z",
+  "notes": "Contributed by W1GRL & W1BOY",
+  "lastUpdated": "2025-03-20 12:00Z",
   "status": "Updated for 2025, but not verified",
   "options": {
     "countyLine": true,
     "stateCountsForInState": false,
     "dcCountsAsMaryland": true,
+    "multsPerBandMode": false
     "dxIsMultiplier": false,
     "dxEntityIsMultiplier": true,
+    "dataAndCWCountAsSameMode": true,
     "selfSpotting": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2
   },
    "counties": {
      "CTCAP": "Capital Region",

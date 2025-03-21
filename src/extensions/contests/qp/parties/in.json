@@ -6,20 +6,22 @@
   "start": "2025-5-3 15:00Z",
   "end": "2025-5-4 02:59Z",
   "cabrilloName": "IN-QSO-PARTY",
-  "notes": "Contributed by W1GRL",
-  "lastUpdated": "2025-03-19 23:15z",
+  "notes": "Contributed by W1GRL & W1BOY",
+  "lastUpdated": "2025-03-20 12:00Z",
   "status": "Updated for 2025, but not verified",
   "options": {
     "dcCountsAsMaryland": true,
     "stateCountsForInState": false,
     "countyLine": true,
+    "multsPerBandMode": false,
+    "multsPerMode": true
     "dxIsMultiplier": false,
     "selfSpotting": true
   },
   "points": {
     "PHONE": 1,
     "CW": 2
-  },
+  },  
   "counties": {
     "INADA": "Adams",
     "INALL": "Allen",
