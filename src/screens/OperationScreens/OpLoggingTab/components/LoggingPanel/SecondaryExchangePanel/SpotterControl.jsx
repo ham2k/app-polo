@@ -49,7 +49,7 @@ export function SpotterControlInputs (props) {
             disabled: false
           })
 
-          if (comments === undefined || comments.indexOf('QRV') === 0) {
+          if (comments === undefined || comments === 'QRV ') {
             let suggested = operation?.local?.spottedFreq ? 'QSY ' : 'QRV '
             if (operation?.stationCallPlusArray?.length > 0) suggested += `${operation?.stationCallPlusArray?.length + 1} ops `
             setComments(suggested)
