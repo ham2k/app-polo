@@ -2,10 +2,10 @@
   "key": "DE",
   "name": "Delaware QSO Party",
   "start": "2025-5-3 17:00Z",
-  "end": "2025-5-4 23:59Z"
+  "end": "2025-5-4 23:59Z",
   "counties": {
     "NDE": "New Castle County",
     "KDE": "Kent County",
-    "SDE": "Sussex County",
+    "SDE": "Sussex County"
   }
 }

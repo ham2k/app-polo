@@ -14,14 +14,14 @@
     "stateCountsForInState": false,
     "countyLine": true,
     "multsPerBandMode": false,
-    "multsPerMode": true
+    "multsPerMode": true,
     "dxIsMultiplier": false,
     "selfSpotting": true
   },
   "points": {
     "PHONE": 1,
     "CW": 2
-  },  
+  },
   "counties": {
     "INADA": "Adams",
     "INALL": "Allen",

@@ -2,7 +2,7 @@
   "key": "WV",
   "name": "West Virginia QSO Party",
   "start": "2025-6-14 16:00Z",
-  "end": "2025-6-15 04:00Z"
+  "end": "2025-6-15 04:00Z",
   "counties": {
     "BAR": "Barbour",
     "BER": "Berkeley",
@@ -15,7 +15,7 @@
     "DOD": "Doddridge",
     "FAY": "Fayette",
     "GIL": "Gilmer",
-    "GRA": "Grant", 
+    "GRA": "Grant",
     "GRE": "Greenbrier",
     "HAM": "Hampshire",
     "HAN": "Hancock",
@@ -58,6 +58,6 @@
     "WET": "Wetzel",
     "WIR": "Wirt",
     "WOO": "Wood",
-    "WYO": "Wyoming",
+    "WYO": "Wyoming"
   }
 }
