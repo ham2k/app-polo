@@ -2,5 +2,6 @@
   "key": "NV",
   "name": "Nevada QSO Party",
   "start": "2025-10-11 03:00Z",
-  "end": "2025-10-12 21:00Z"
+  "end": "2025-10-12 21:00Z",
+  "status": "Pending"
 }

@@ -4,5 +4,6 @@
   "start": "2025-4-19 18:00Z",
   "end": "2025-4-20 05:00Z",
   "secondStart": "2025-4-20 12:00Z",
-  "secondEnd": "2025-4-20 18:00Z"
+  "secondEnd": "2025-4-20 18:00Z",
+  "status": "Pending"
 }
