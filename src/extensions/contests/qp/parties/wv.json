@@ -1,8 +1,28 @@
 {
   "key": "WV",
   "name": "West Virginia QSO Party",
-  "start": "2025-6-14 16:00Z",
-  "end": "2025-6-15 04:00Z",
+  "start": "2025-6-21 16:00Z",
+  "end": "2025-6-22 04:00Z",
+  "cabrilloName": "WV-QSO-PARTY",
+  "notes": "Counties entered by W1GRL and rules by W1BOY",
+  "internalNotes": "",
+  "lastUpdated": "2025-03-22 18:30Z",
+  "status": "Mobile operation bonus 100 pts/county needs to be implemented",
+  "options": {
+    "dcCountsAsMaryland": true,
+    "countyLine": true,
+    "selfSpotting": true,
+    "dxEntityIsMultiplier": true,
+    "stateCountsForInState": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2,
+    "DATA": 2
+  },
+  "bonusStations": {
+    "W8WVA": 100
+  },
   "counties": {
     "BAR": "Barbour",
     "BER": "Berkeley",
