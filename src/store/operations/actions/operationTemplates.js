@@ -107,6 +107,8 @@ export const getAllOperationTemplates = ({ settings, operations }) => {
 export const fillOperationFromTemplate = (operation, template) => async (dispatch, getState) => {
   const uuid = operation.uuid
 
+  operation.refs = operation.refs ?? []
+
   const settings = selectSettings(getState())
   const updates = {}
 
