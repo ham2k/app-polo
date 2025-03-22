@@ -7,14 +7,20 @@
   "end": "2025-4-13 01:59Z",
   "cabrilloName": "NM-QSO-PARTY",
   "internalNotes": "Contributed by W8NI",
-  "lastUpdated": "2025-03-10 16:00Z",
-  "status": "No Rules!!!",
+  "lastUpdated": "2025-03-22 16:00Z",
+  "status": "Rules added by W1BOY - Power multiplier and Mobile Operations Bonus needs to be implemented",
   "options": {
+    "dcCountsAsMaryland": true,
+    "stateCountsForInState": true,
+    "countyLine": true,
+    "multsPerBandMode": false,
+    "dxEntityIsMultiplier": true,
+    "selfSpotting": true
   },
   "points": {
     "PHONE": 1,
-    "CW": 1,
-    "DIGI": 1
+    "CW": 2,
+    "DIGI": 2
   },
   "counties": {
     "BER": "Bernalillo",
