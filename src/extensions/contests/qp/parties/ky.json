@@ -1,13 +1,13 @@
-{
+internalNotes{
   "key": "KY",
   "name": "Kentucky QSO Party",
   "start": "2025-6-7 13:00Z",
   "end": "2025-6-8 01:00Z",
   "cabrilloName": "KY-QSO-PARTY",
   "notes": "Counties entered by W1GRL and rules by W1BOY",
-  "internalNotes": "",
+  "internalNotes": "Power multiplier needs to be implemented",
   "lastUpdated": "2025-03-22 19:00Z",
-  "status": "Power multiplier needs to be implemented",
+  "status": "See internalNotes",
   "options": {
     "dcCountsAsMaryland": false,
     "countyLine": true,
