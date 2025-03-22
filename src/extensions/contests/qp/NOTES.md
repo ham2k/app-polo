@@ -54,6 +54,7 @@ Relevant `"options"`:
 
 - `stateCountsForInState`: If true, an in-state station gets the state as a multiplier when working any other station in the state. This is usually implied in the rules if in-state multipliers lists 50 states. If it says 49 states, then this option should be false.
 - `dcCountsAsMaryland`: If true, the District of Columbia will be counted as Maryland. If the rules say "50 states" and no mention of DC, then this option should be true. If the rules mention DC explicitly, then this option should be false.
+- `alaskaAndHawaiiAreDX`: If true, Alaska and Hawaii are counted as DX and not US States. (NEQP)
 - `selfCountsForCounty`: If true, a station can count itself as a multiplier for the county of operation. (NC, VA). Some QPs require a minimum number of QSOs, but we don't support this variation yet.
 - `selfMobileCountsForCounty`: If true, a station can count itself as a multiplier for the county of operation when operating mobile or portable. Some QPs require a minimum number of QSOs, but we don't support this variation yet. (TN)
 - `multsPerBandMode`: If true (default), multipliers are awarded per band and mode (Most). If false they are awarded only once overall, unless `multsPerBand` or `multsPerMode` is also true.
@@ -82,6 +83,7 @@ Relevant `"options"`:
 - Implement specialCallIsMultiplier
 - Implement dxIsMultiplier
 - Implement dxEntityIsMultiplier
+- Implement alaskaAndHawaiiAreDX
 - Implement dxLocationIsPrefix
 - Implement removeCountySuffixes
 - Implement dataAndCWCountAsSameMode

@@ -13,8 +13,9 @@
   "status": "Updated for 2025, but not verified",
   "options": {
     "countyLine": true,
-    "stateCountsForInState": false,
+    "stateCountsForInState": true,
     "dcCountsAsMaryland": true,
+    "alaskaAndHawaiiAreDX": true,
     "multsPerBandMode": false,
     "dxIsMultiplier": false,
     "dxEntityIsMultiplier": true,
