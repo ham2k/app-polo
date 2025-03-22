@@ -5,9 +5,9 @@
   "end": "2025-6-22 04:00Z",
   "cabrilloName": "WV-QSO-PARTY",
   "notes": "Counties entered by W1GRL and rules by W1BOY",
-  "internalNotes": "",
-  "lastUpdated": "2025-03-22 18:30Z",
-  "status": "Mobile operation bonus 100 pts/county needs to be implemented",
+  "internalNotes": "Mobile operation bonus 100 pts/county needs to be implemented",
+  "lastUpdated": "2025-03-22 22:00Z",
+  "status": "See internalNotes",
   "options": {
     "dcCountsAsMaryland": true,
     "countyLine": true,
