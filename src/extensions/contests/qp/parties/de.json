@@ -4,9 +4,9 @@
   "start": "2025-5-3 17:00Z",
   "end": "2025-5-4 23:59Z",
   "cabrilloName": "DE-QSO-PARTY",
-  "internalNotes": "Contributed by W1GRL and W1BOY",
-  "lastUpdated": "2025-03-22 16:00Z",
-  "status": "Power multiplier needs to be implemented, DE stations no county multipliers",
+  "internalNotes": "Power multiplier needs to be implemented, DE stations no county multipliers",
+  "lastUpdated": "2025-03-22 22:00Z",
+  "status": "See internalNotes",
   "options": {
     "dcCountsAsMaryland": true,
     "stateCountsForInState": true,
