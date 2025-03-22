@@ -33,7 +33,7 @@ const Extension = {
 }
 export default Extension
 
-const DEFAULT_LOFI_SERVER = 'https://dev.lofi.ham2k.net'
+export const DEFAULT_LOFI_SERVER = 'https://lofi.ham2k.net'
 
 const DEBUG = true
 

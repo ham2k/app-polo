@@ -24,6 +24,7 @@ import { selectFiveSecondsTick } from '../../../store/time'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { getSyncCounts, resetSyncedStatus } from '../../../store/operations'
 import GLOBAL from '../../../GLOBAL'
+import { DEFAULT_LOFI_SERVER } from '../../../extensions/data/ham2k-lofi-sync/Ham2KLoFiSyncExtension'
 
 const LOFI_SERVER_LABELS = {
   'https://dev.lofi.ham2k.net': 'Ham2K LoFi (Development)',
@@ -57,6 +58,10 @@ export default function SyncSettingsScreen ({ navigation }) {
     }
   }, [lofiData?.account])
 
+  useEffect(() => {
+    console.log('LOFI', lofiData)
+  }, [lofiData])
+
   const accountInfo = useMemo(() => {
     if (lofiData?.account?.email) {
       if (lofiData?.account?.pending_email && lofiData?.account?.pending_email !== lofiData?.account?.email) {
@@ -64,13 +69,19 @@ export default function SyncSettingsScreen ({ navigation }) {
       } else {
         return `${lofiData?.account?.email} (confirmed)`
       }
+    } else if (lofiData?.account?.pending_email) {
+      return `${lofiData?.account?.pending_email} (pending confirmation)`
     } else {
       return 'You\'ll need to enter an email for account recovery.'
     }
   }, [lofiData?.account])
 
   const serverLabel = useMemo(() => {
-    return LOFI_SERVER_LABELS[lofiData.server] || `Custom (${lofiData.server})`
+    if (lofiData?.server) {
+      return LOFI_SERVER_LABELS[lofiData.server] || `Custom (${lofiData.server})`
+    } else {
+      return LOFI_SERVER_LABELS[DEFAULT_LOFI_SERVER] || DEFAULT_LOFI_SERVER
+    }
   }, [lofiData.server])
 
   const fiveSecondTick = useSelector(selectFiveSecondsTick)
@@ -116,7 +127,7 @@ export default function SyncSettingsScreen ({ navigation }) {
 
           <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
             <Text style={styles.paragraph}>
-              Ham2K LoFi provides a reliable sync service for all your devices and provides a backup
+              Ham2K LoFi offers a reliable sync service between all your devices and provides a backup
               for your operation data in the cloud.
             </Text>
             <Text style={styles.paragraph}>
@@ -129,7 +140,7 @@ export default function SyncSettingsScreen ({ navigation }) {
             </Text>
             <Text style={styles.paragraph}>
               While the LoFi service is in BETA for
-              the next couple of months, the service will be free. After that prices will depend
+              the next couple of months, the service will remain free. After that prices will depend
               on the country and currency but will not be more than US$30/year or equivalent, and probably less.
             </Text>
           </View>

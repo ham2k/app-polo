@@ -13,8 +13,8 @@ import { Ham2kDialog } from '../../components/Ham2kDialog'
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 
 const SERVERS = {
+  prod: 'https://lofi.ham2k.net',
   dev: 'https://dev.lofi.ham2k.net',
-  // prod: 'https://lofi.ham2k.net',
   local: 'http://localhost:3000'
 }
 const OPTION_FOR_SERVER = Object.keys(SERVERS).reduce((acc, key) => {
