@@ -69,13 +69,13 @@ export default function ExportSettingsScreen ({ navigation }) {
     const activityHooks = findHooks('activity')
     const newExportTypes = []
 
-    const defaultRefSettings = selectExportSettings({ settings }, 'default-ref')
+    const defaultRefSettings = selectExportSettings({ settings }, 'default')
     const defaultPartials = basePartialTemplates({}) // without settings to get original defaults
 
     newExportTypes.push({
-      key: 'default-ref',
-      name: 'Default for Reference Activities',
-      description: defaultRefSettings.active ? 'Using custom settings' : 'Using defaults',
+      key: 'default',
+      name: 'Defaults',
+      description: 'Base settings for all exports',
       sampleData: {
         ...sampleTemplateData,
         ref: { type: 'potaActivation', ref: 'XX-1234' },
@@ -131,7 +131,12 @@ export default function ExportSettingsScreen ({ navigation }) {
       settings: defaultRefSettings
     })
 
+    const addedHooks = {}
+
     activityHooks.forEach(hook => {
+      if (addedHooks[hook.key]) return
+      addedHooks[hook.key] = true
+
       const sampleOperations = (hook.sampleOperations && hook.sampleOperations({ settings })) || []
       sampleOperations.forEach(operation => {
         (operation?.refs || []).forEach(ref => {
@@ -142,10 +147,15 @@ export default function ExportSettingsScreen ({ navigation }) {
               const key = `${hook.key}-${option.format}-${option.exportType ?? 'export'}`
               const exportSettings = selectExportSettings({ settings }, key)
 
+              const description = [
+                exportSettings.customTemplates ? 'Custom templates' : 'Default templates',
+                exportSettings.privateData ?? refHook?.privateDataDefault ? 'Include Private data' : ''
+              ].filter(x => x).join(' • ')
+
               const data = {
                 key,
                 name: `${option.exportName || hook.shortName} (${DATA_FORMAT_DESCRIPTIONS[option.format] || option.format})`,
-                description: exportSettings.active ? 'Using custom settings' : 'Using defaults',
+                description,
                 hook,
                 refHook,
                 defaults: option,
@@ -191,61 +201,72 @@ export default function ExportSettingsScreen ({ navigation }) {
           }
         })
       })
+    })
 
-      const exportHooks = findHooks('export').filter(h => h.key === hook.key)
-      exportHooks.forEach(exportHook => {
-        sampleOperations.forEach(operation => {
-          const options = (exportHook.suggestExportOptions && exportHook.suggestExportOptions({ operation, qsos: operation.qsos, settings })) || []
-          options.forEach(option => {
-            const key = `${hook.key}-${option.format}-${option.exportType ?? 'export'}`
-            const exportSettings = selectExportSettings({ settings }, key)
-            const data = {
-              key,
-              name: `${option.exportName || hook.shortName} (${DATA_FORMAT_DESCRIPTIONS[option.format] || option.format})`,
-              description: exportSettings.active ? 'Using custom settings' : 'Using defaults',
-              hook,
-              exportHook,
-              sampleData: {
-                ...sampleTemplateData,
-                operation: { ...sampleTemplateData.operation, ...operation }
+    const exportHooks = findHooks('export')
+    exportHooks.forEach(exportHook => {
+      if (addedHooks[exportHook.key]) return
+      addedHooks[exportHook.key] = true
+
+      const sampleOperations = (exportHook.sampleOperations && exportHook.sampleOperations({ settings })) || []
+      sampleOperations.forEach(operation => {
+        const options = (exportHook.suggestExportOptions && exportHook.suggestExportOptions({ operation, qsos: operation.qsos, settings })) || []
+        options.forEach(option => {
+          const key = `${exportHook.key}-${option.format}-${option.exportType ?? 'export'}`
+          const exportSettings = selectExportSettings({ settings }, key)
+
+          const description = [
+            exportSettings.customTemplates ? 'Custom templates' : 'Default templates',
+            exportSettings.privateData ?? exportHook?.privateDataDefault ? 'Include Private data' : ''
+          ].filter(x => x).join(' • ')
+
+          const data = {
+            key,
+            name: `${option.exportName || exportHook.shortName} (${DATA_FORMAT_DESCRIPTIONS[option.format] || option.format})`,
+            description,
+            hook: exportHook,
+            exportHook,
+            sampleData: {
+              ...sampleTemplateData,
+              operation: { ...sampleTemplateData.operation, ...operation }
+            },
+            defaults: option,
+            settings: exportSettings,
+            editableSettings: [
+              {
+                key: 'nameTemplate',
+                label: 'File name template',
+                default: option.nameTemplate
               },
-              defaults: option,
-              settings: exportSettings,
-              editableSettings: [
-                {
-                  key: 'nameTemplate',
-                  label: 'File name template',
-                  default: option.nameTemplate
-                },
-                {
-                  key: 'titleTemplate',
-                  label: 'Title template',
-                  default: option.titleTemplate
-                }
-              ]
-            }
-            if (option.format === 'adif') {
-              data.editableSettings.push({
-                key: 'ADIFNotesTemplate',
-                label: 'ADIF QSO Notes',
-                default: option.ADIFNotesTemplate || defaultPartials.ADIFNotes
-              })
-              data.editableSettings.push({
-                key: 'ADIFCommentTemplate',
-                label: 'ADIF QSO Comments',
-                default: option.ADIFCommentTemplate || defaultPartials.ADIFComment
-              })
-              data.editableSettings.push({
-                key: 'ADIFQslMsgTemplate',
-                label: 'ADIF QSL Message',
-                default: option.ADIFQslMsgTemplate || defaultPartials.ADIFQslMsg
-              })
-            }
-            newExportTypes.push(data)
-          })
+              {
+                key: 'titleTemplate',
+                label: 'Title template',
+                default: option.titleTemplate
+              }
+            ]
+          }
+          if (option.format === 'adif') {
+            data.editableSettings.push({
+              key: 'ADIFNotesTemplate',
+              label: 'ADIF QSO Notes',
+              default: option.ADIFNotesTemplate || defaultPartials.ADIFNotes
+            })
+            data.editableSettings.push({
+              key: 'ADIFCommentTemplate',
+              label: 'ADIF QSO Comments',
+              default: option.ADIFCommentTemplate || defaultPartials.ADIFComment
+            })
+            data.editableSettings.push({
+              key: 'ADIFQslMsgTemplate',
+              label: 'ADIF QSL Message',
+              default: option.ADIFQslMsgTemplate || defaultPartials.ADIFQslMsg
+            })
+          }
+          newExportTypes.push(data)
         })
       })
     })
+
     return newExportTypes
   }, [sampleTemplateData, settings])
 
@@ -310,13 +331,25 @@ Attributes for the log being exported
             />
             {expanded[exportType.key] && (
               <View style={{ marginLeft: styles.oneSpace * 5, borderBottomWidth: 2, marginRight: styles.oneSpace * 2, paddingBottom: styles.oneSpace * 2, borderColor: styles.colors.border }}>
-                <Ham2kListItem
-                  title="Use custom settings"
-                  // description={exportType.settings?.active ? 'Use settings the below' : 'Use default settings'}
-                  right={() => <Switch value={!!exportType.settings?.active} onValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, active: value })) } />}
-                  onPress={() => dispatch(setExportSettings({ key: exportType.key, active: !exportType.settings?.active }))}
-                />
-                {exportType.editableSettings.map(setting => <OneExportSetting key={setting.key} setting={setting} styles={styles} dispatch={dispatch} exportType={exportType} sampleData={exportType.sampleData} />)}
+                {(exportType.key === 'default' || exportType.defaults.format === 'adif') && (
+                  <Ham2kListItem
+                    title="Include Private Data"
+                    description={'Notes, names, addresses and other private information'}
+                    right={() => <Switch value={exportType.settings?.privateData ?? exportType.hook?.privateDataDefault} onValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, privateData: value })) } />}
+                    onPress={() => dispatch(setExportSettings({ key: exportType.key, privateData: !exportType.settings?.privateData }))}
+                  />
+                )}
+                {exportType.key !== 'default' && (
+                  <Ham2kListItem
+                    title="Custom templates"
+                    description={exportType.settings?.customTemplates ? 'Use the templates below' : 'Use default templates'}
+                    right={() => <Switch value={!!exportType.settings?.customTemplates} onValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, customTemplates: value })) } />}
+                    onPress={() => dispatch(setExportSettings({ key: exportType.key, customTemplates: !exportType.settings?.customTemplates }))}
+                  />
+                )}
+                {(exportType?.settings?.customTemplates || exportType.key === 'default') && (
+                  exportType.editableSettings.map(setting => <OneExportSetting key={setting.key} setting={setting} settings={settings} styles={styles} dispatch={dispatch} exportType={exportType} sampleData={exportType.sampleData} />)
+                )}
               </View>
             )}
           </React.Fragment>
@@ -329,10 +362,10 @@ Attributes for the log being exported
   )
 }
 
-function OneExportSetting ({ setting, styles, sampleData, dispatch, exportType }) {
+function OneExportSetting ({ setting, settings, styles, sampleData, dispatch, exportType }) {
   const example = useMemo(() => {
-    return runTemplateForOperation(exportType?.settings?.[setting.key] || setting.default, { settings: {}, ...sampleData })
-  }, [exportType, sampleData, setting.default, setting.key])
+    return runTemplateForOperation(exportType?.settings?.[setting.key] || setting.default, { settings, ...sampleData })
+  }, [exportType, sampleData, setting.default, setting.key, settings])
 
   const isDefault = useMemo(() => {
     return setting.default === exportType?.settings?.[setting.key] || exportType?.settings?.[setting.key] === null
@@ -346,9 +379,9 @@ function OneExportSetting ({ setting, styles, sampleData, dispatch, exportType }
           style={{ flex: 1, fontWeight: isDefault ? 'regular' : 'bold' }}
           label={setting.label}
           keyboard="code"
-          value={exportType?.settings?.active === false ? '' : exportType?.settings?.[setting.key] ?? setting.default ?? ''}
+          value={exportType?.settings?.customTemplates === false ? '' : exportType?.settings?.[setting.key] ?? setting.default ?? ''}
           placeholder={setting.default}
-          disabled={exportType?.settings?.active === false}
+          disabled={exportType?.settings?.customTemplates === false}
           onChangeText={(value) => dispatch(setExportSettings({ key: exportType.key, [setting.key]: value })) }
         />
 

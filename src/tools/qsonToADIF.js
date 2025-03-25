@@ -14,14 +14,17 @@ import { fmtADIFDate, fmtADIFTime } from './timeFormats'
 
 import { adifModeAndSubmodeForMode, frequencyForBand, modeForFrequency } from '@ham2k/lib-operation-data'
 
-export function qsonToADIF ({ operation, settings, qsos, handler, format, title, exportType, privateExport, ADIFNotesTemplate, ADIFCommentTemplate, ADIFQslMsgTemplate }) {
-  privateExport = privateExport ?? (exportType === 'full-adif')
-
+export function qsonToADIF ({ operation, settings, qsos, handler, format, title, exportType, ADIFNotesTemplate, ADIFCommentTemplate, ADIFQslMsgTemplate }) {
   const templates = {
     key: `${handler.key}-${format}-${exportType ?? 'export'}`
   }
 
-  templates.exportSettings = selectExportSettings({ settings }, templates.key)
+  const defaultSettings = selectExportSettings({ settings }, 'default')
+  const handlerSettings = selectExportSettings({ settings }, templates.key)
+
+  templates.exportSettings = { ...defaultSettings, ...handlerSettings }
+  const privateData = (templates.exportSettings.privateData ?? handlerSettings.privateDataDefault)
+
   templates.context = templateContextForOneExport({ settings, operation, handler })
   templates.partials = basePartialTemplates({ settings })
   templates.data = extraDataForTemplates({ settings })
@@ -29,7 +32,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   templates.notesTemplate = compileTemplateForOperation(templates.exportSettings?.ADIFNotesTemplate || ADIFNotesTemplate || '{{>ADIFNotes}}', templates)
   templates.commentsTemplate = compileTemplateForOperation(templates.exportSettings?.ADIFCommentTemplate || ADIFCommentTemplate || '{{>ADIFComment}}', templates)
   templates.qslmsgTemplate = compileTemplateForOperation(templates.exportSettings?.ADIFQslMsgTemplate || ADIFQslMsgTemplate || '{{>ADIFQslMsg}}', templates)
-  console.log('qsl message template', templates.qslmsgTemplate)
+
   const common = {
     refs: operation.refs,
     grid: operation.grid,
@@ -45,17 +48,16 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   }
 
   let str = ''
-
   str += `ADIF for ${title || (common.stationCall + ' ' + operation?.title) || 'Operation'} \n`
   str += adifField('ADIF_VER', '3.1.4', { newLine: true })
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
-  if (operation.userTitle) str += adifField('X_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
-  if (operation.notes && privateExport) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
+  if (operation.userTitle && privateData) str += adifField('X_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
+  if (operation.notes && privateData) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
   if (handler.adifFieldsForHeader) {
-    str += escapeForHeader(handler.adifFieldsForHeader({ qsos, operation, common, mainHandler: true, privateExport, templates }) ?? []).join('\n')
+    str += escapeForHeader(handler.adifFieldsForHeader({ qsos, operation, common, mainHandler: true, privateData, templates }) ?? []).join('\n')
   }
-  if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common, mainHandler: true, privateExport, templates })) + '\n'
+  if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common, mainHandler: true, privateData, templates })) + '\n'
   str += '<EOH>\n'
 
   qsos.forEach(qso => {
@@ -66,9 +68,9 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
     // meaning this QSO has to be represented by multiple ADIF rows (think POTA P2P, or QSO Party county line operations)
     let handlerFieldCombinations
     if (handler?.adifFieldCombinationsForOneQSO) {
-      handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common, exportType, mainHandler: true, privateExport, templates })
+      handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common, exportType, mainHandler: true, privateData, templates })
     } else if (handler?.adifFieldsForOneQSO) {
-      handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common, exportType, mainHandler: true, templates, privateExport })]
+      handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common, exportType, mainHandler: true, templates, privateData })]
     } else {
       handlerFieldCombinations = [[]]
     }
@@ -78,7 +80,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
     // Now, for each field combination, we will generate an ADIF row
     handlerFieldCombinations.forEach((combinationFields, n) => {
       // We start with the general ADIF fields
-      let fields = adifFieldsForOneQSO({ qso, operation, common, privateExport, templates, timeOffset: n * 1000 })
+      let fields = adifFieldsForOneQSO({ qso, operation, common, privateData, templates, timeOffset: n * 1000 })
       // Then we append the fields from the main handler's combinations
       fields = fields.concat(combinationFields)
 
@@ -90,7 +92,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
         if (secondaryRefHandler?.key === handler.key) return // Skip if it happens to be the same as the main handler
 
         if (secondaryRefHandler && secondaryRefHandler.key !== handler.key && secondaryRefHandler.adifFieldsForOneQSO) {
-          const refFields = secondaryRefHandler.adifFieldsForOneQSO({ qso, operation, common, exportType, ref, privateExport, templates }) || []
+          const refFields = secondaryRefHandler.adifFieldsForOneQSO({ qso, operation, common, exportType, ref, privateData, templates }) || []
           refFields.forEach(refField => {
             const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
             if (existingField) {
@@ -131,7 +133,7 @@ function modeToADIF (mode, freq, qsoInfo) {
   }
 }
 
-function adifFieldsForOneQSO ({ qso, operation, common, privateExport, templates, timeOffset }) {
+function adifFieldsForOneQSO ({ qso, operation, common, privateData, templates, timeOffset }) {
   timeOffset = timeOffset ?? 0
   const fields = [
     { CALL: qso.their.call },
@@ -147,11 +149,11 @@ function adifFieldsForOneQSO ({ qso, operation, common, privateExport, templates
     { STX_STRING: qso.our.exchange },
     { STATION_CALLSIGN: qso.our.call || common.stationCall },
     { OPERATOR: qso.our.operatorCall || common.operatorCall || qso.our.call || common.stationCall },
-    { GRIDSQUARE: privateExport && (qso.their?.grid ?? qso.their?.guess?.grid) },
-    { MY_GRIDSQUARE: privateExport && (qso?.our?.grid ?? common.grid) },
-    { NAME: privateExport && (qso.their?.name ?? qso.their?.guess?.name) },
+    { GRIDSQUARE: privateData && (qso.their?.grid ?? qso.their?.guess?.grid) },
+    { MY_GRIDSQUARE: privateData && (qso?.our?.grid ?? common.grid) },
+    { NAME: privateData && (qso.their?.name ?? qso.their?.guess?.name) },
     { DXCC: qso.their?.dxccCode ?? qso.their?.guess?.dxccCode },
-    { QTH: privateExport && (qso.their?.city ?? qso.their?.guess?.city) },
+    { QTH: privateData && (qso.their?.city ?? qso.their?.guess?.city) },
     { COUNTRY: qso.their?.country ?? qso.their?.guess?.country },
     { STATE: qso.their?.state ?? qso.their?.guess?.state },
     { CQZ: qso.their?.cqZone ?? qso.their?.guess?.cqZone },
@@ -159,7 +161,7 @@ function adifFieldsForOneQSO ({ qso, operation, common, privateExport, templates
     { ARRL_SECT: qso.their.arrlSection }
   ]
 
-  const templateContext = { ...templates.context, qso: { ...qso, notes: privateExport ? '' : qso.notes } }
+  const templateContext = { ...templates.context, qso: { ...qso, notes: privateData ? '' : qso.notes } }
   let val
   if (templates.notesTemplate) {
     try {

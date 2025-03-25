@@ -161,7 +161,7 @@ export default function OperationDataScreen (props) {
             />
             <Ham2kListItem
               key={option.fileName}
-              title={option.exportLabel}
+              title={option.exportLabel || option.exportName}
               description={option.fileName}
               left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={option.devMode ? styles.colors.devMode : styles.colors.onBackground} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
               onPress={() => readyToExport && handleExports({ options: [option] })}

@@ -36,7 +36,7 @@ const ExportHandler = {
         exportType: 'devmode-qson',
         nameTemplate: '{{op.date}}.{{log.station}}.{{first8 op.uuid}}',
         titleTemplate: '{{log.station}}: {{log.title}} on {{op.date}}',
-        exportLabel: 'Developer Mode: QSON Export',
+        exportName: 'Developer Mode: QSON Export',
         devMode: true,
         selectedByDefault: false
       }])

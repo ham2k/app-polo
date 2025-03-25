@@ -136,7 +136,12 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
   handlersWithOptions.forEach(({ handler, ref, options }) => {
     options.forEach(option => {
       const key = `${handler.key}-${option.format}-${option.exportType ?? 'export'}`
-      const exportSettings = selectExportSettings({ settings }, key)
+      let exportSettings = selectExportSettings({ settings }, key)
+      if (exportSettings.customTemplates === false) {
+        const { privateData } = exportSettings
+        exportSettings = selectExportSettings({ settings }, 'default')
+        exportSettings.private = privateData
+      }
 
       const nameTemplate = compileTemplateForOperation(exportSettings?.nameTemplate || option.nameTemplate || '{{> DefaultName}}', { settings })
       const titleTemplate = compileTemplateForOperation(exportSettings?.titleTemplate || option.titleTemplate || '{{> DefaultTitle}}', { settings })
@@ -169,7 +174,7 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
       }
       fileName = fileName.replace(/[/\\:]/g, '-')
 
-      const exportLabel = option.exportLabel || `${handler.shortName ?? handler.name} ${DATA_FORMAT_DESCRIPTIONS[option.format] || DATA_FORMAT_DESCRIPTIONS.other}`
+      const exportLabel = option.exportLabel || option.exportName || `${handler.shortName ?? handler.name} ${DATA_FORMAT_DESCRIPTIONS[option.format] || DATA_FORMAT_DESCRIPTIONS.other}`
       const exportType = option.exportType || handler.key
 
       exports.push({ ...option, handler, ref, fileName, title, exportLabel, exportType, operation, ourInfo })
@@ -212,8 +217,10 @@ export function templateContextForOneExport ({ option, settings, operation, ourI
       station: ourInfo?.call,
       callInfo: ourInfo,
       ref: ref?.ref,
-      refName: ref?.name,
-      refShortName: ref?.shortName,
+      refName: ref?.name ?? ref?.label,
+      refLabel: ref?.label ?? ref?.name,
+      refShortName: ref?.shortName ?? ref?.shortLabel ?? ref?.name ?? ref?.label,
+      refShortLabel: ref?.shortLabel ?? ref?.shortName ?? ref?.label ?? ref?.name,
       handlerType: handler?.type,
       handlerName: handler?.name,
       handlerShortName: handler?.shortName,
@@ -245,19 +252,24 @@ export function templateContextForOneExport ({ option, settings, operation, ourI
 }
 
 export function basePartialTemplates ({ settings }) {
-  const partials = {
+  let partials = {
     RefActivityNameNormal: '{{op.date}}{{#if log.includeTime}} {{op.startTime}}{{/if}} {{log.station}} at {{#if log.refPrefix}}{{log.refPrefix}} {{/if}}{{log.ref}}',
     RefActivityNameCompact: '{{log.station}}@{{#if log.refPrefix}}{{dash (downcase log.refPrefix)}}-{{/if}}{{log.ref}}-{{compact op.date}}',
     OtherActivityNameNormal: '{{op.date}}{{#if log.includeTime}} {{op.startTime}}{{/if}} {{log.station}} for {{log.handlerShortName}}',
     OtherActivityNameCompact: '{{log.station}}-{{dash (downcase log.handlerShortName)}}{{#if log.includeTime}}-{{op.startTime}}{{/if}}-{{compact op.date}}',
     DefaultNameNormal: '{{op.date}}{{#if log.includeTime}} {{op.startTime}}{{/if}} {{log.station}} {{op.title}} {{log.modifier}}',
     DefaultNameCompact: '{{#dash}}{{log.station}}-{{compact op.date}}{{#if log.includeTime}}-{{op.startTime}}{{/if}}-{{downcase op.title}}-{{downcase log.modifier}}{{/dash}}',
-    RefActivityTitle: '{{log.station}}: {{log.handlerShortName}} at {{log.ref}} on {{op.date}}',
+    RefActivityTitle: '{{log.station}}: {{log.handlerShortName}} at {{#trim}}{{log.ref}} {{log.refShortLabel}}{{/trim}} on {{op.date}}',
     OtherActivityTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}',
     DefaultTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}',
     ADIFNotes: '{{qso.notes}}',
     ADIFComment: '{{qso.notes}}',
     ADIFQslMsg: '{{#join op.refs separator=", " final=" & "}}{{or shortLabel label key}}{{/join}}'
+  }
+
+  if (settings) {
+    const defaults = selectExportSettings({ settings }, 'default')
+    partials = { ...partials, ...defaults }
   }
 
   partials.RefActivityName = settings?.useCompactFileNames ? partials.RefActivityNameCompact : partials.RefActivityNameNormal

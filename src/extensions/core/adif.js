@@ -24,15 +24,23 @@ export default Extension
 const ExportHandler = {
   ...Info,
 
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      { refs: [{ type: 'potaActivation', ref: 'XX-1234', name: 'Example National Park', shortName: 'Example NP', program: Info.shortName, label: `${Info.shortName} XX-1234: Example National Park`, shortLabel: `${Info.shortName} XX-1234` }] }
+    ]
+  },
+
   suggestExportOptions: ({ operation, qsos, ref, settings }) => {
     return ([{
       priority: -1,
       icon: 'file-swap-outline',
       format: 'adif',
       exportType: 'full-adif',
+      name: 'Full ADIF Export',
       templateData: { modifier: 'Full' },
-      exportLabel: 'Full ADIF Export',
-      selectedByDefault: false
+      exportName: 'Full ADIF Export',
+      selectedByDefault: false,
+      privateDataDefault: true
     }])
   }
 }

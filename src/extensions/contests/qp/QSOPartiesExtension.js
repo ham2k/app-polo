@@ -138,7 +138,7 @@ const ReferenceHandler = {
       return [{
         format: 'adif',
         exportType: 'qp-adif',
-        exportLabel: `${qp.name} ADIF`,
+        exportName: `${qp.name ?? 'QSO Party'} ADIF`,
         templateData: { handlerShortName: qp.short, handlerName: qp.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
@@ -146,7 +146,7 @@ const ReferenceHandler = {
       {
         format: 'cabrillo',
         exportType: 'qp-cabrillo',
-        exportLabel: `${qp.name} Cabrillo`,
+        exportName: `${qp.name ?? 'QSO Party'} Cabrillo`,
         templateData: { handlerShortName: qp.short, handlerName: qp.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
