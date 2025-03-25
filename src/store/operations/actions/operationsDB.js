@@ -18,9 +18,11 @@ import { actions } from '../operationsSlice'
 import { selectSettings } from '../../settings'
 
 const operationFromRow = (row) => {
-  const data = JSON.parse(row.data)
+  if (!row) return {}
 
-  data.local = JSON.parse(row.localData) || {}
+  const data = row.data ? JSON.parse(row.data) : {}
+
+  data.local = row.localData ? JSON.parse(row.localData) || {} : {}
 
   data.uuid = row.uuid
   data.deleted = row.deleted
