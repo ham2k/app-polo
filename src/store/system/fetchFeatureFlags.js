@@ -37,14 +37,14 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
     annotateFromCountryFile(callInfo)
     const baseCall = callInfo.baseCall
 
-    const cleanCall = call.toLowerCase().replace(/[^a-z0-9]/g, '-')
-    const cleanBaseCall = baseCall.toLowerCase().replace(/[^a-z0-9]/g, '-')
-    const cleanEntityPrefix = callInfo.entityPrefix.toLowerCase().replace(/[^a-z0-9]/g, '-')
-    const callFolder = cleanBaseCall.slice(0, 2)
+    const cleanCall = call?.toLowerCase()?.replace(/[^a-z0-9]/g, '-')
+    const cleanBaseCall = baseCall?.toLowerCase()?.replace(/[^a-z0-9]/g, '-')
+    const cleanEntityPrefix = callInfo?.entityPrefix?.toLowerCase()?.replace(/[^a-z0-9]/g, '-')
+    const callFolder = cleanBaseCall?.slice(0, 2)
 
     if (cleanEntityPrefix) locations.push(`entities/${cleanEntityPrefix}.json`)
-    if (cleanCall !== cleanBaseCall) locations.push(`${callFolder}/${cleanBaseCall}.json`)
-    locations.push(`${callFolder}/${cleanCall}.json`)
+    if (cleanCall && cleanCall !== cleanBaseCall) locations.push(`${callFolder}/${cleanBaseCall}.json`)
+    if (cleanCall) locations.push(`${callFolder}/${cleanCall}.json`)
   }
 
   let flags = {}

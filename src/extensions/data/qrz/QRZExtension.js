@@ -44,7 +44,7 @@ const LookupHook = {
       qrzPromise.unsubscribe && qrzPromise.unsubscribe()
 
       // If not found and the call had modifiers, try the base call
-      if (!qrzLookup?.error?.indexOf('not found') >= 0 && callInfo.baseCall !== callInfo.call) {
+      if ((qrzLookup?.error && qrzLookup?.error?.indexOf('not found') < 0) && callInfo.baseCall && callInfo.baseCall !== callInfo.call) {
         qrzPromise = await dispatch(apiQRZ.endpoints.lookupCall.initiate({ call: callInfo.baseCall }))
         await Promise.all(dispatch(apiQRZ.util.getRunningQueriesThunk()))
         qrzLookup = await dispatch((_dispatch, getState) => apiQRZ.endpoints.lookupCall.select({ call: callInfo.baseCall })(getState()))
