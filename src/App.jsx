@@ -24,7 +24,7 @@ import { persistor, store } from './store'
 import { selectSettings } from './store/settings'
 import { useSyncLoop } from './store/sync'
 
-import { AppWrappedForDistribution, trackNavigation, useConfigForDistribution } from './distro'
+import { AppWrappedForDistribution, trackNavigation, useConfigForDistribution, onNavigationReadyForDistribution } from './distro'
 
 import RootErrorBoundary from './screens/components/RootErrorBoundary'
 import HeaderBar from './screens/components/HeaderBar'
@@ -89,6 +89,8 @@ function MainApp ({ navigationTheme }) {
         theme={navigationTheme}
         ref={navigationRef}
         onReady={() => {
+          onNavigationReadyForDistribution(navigationRef)
+
           if (routeNameRef.current === undefined) {
             trackNavigation({ settings, currentRouteName: navigationRef.current.getCurrentRoute().name })
           }
