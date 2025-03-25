@@ -123,7 +123,7 @@ const NoteExpansionCommandHook = {
   key: 'call-notes-expansion',
   match: /^(\.\.|\/\/)([\w\d]+)/i,
   describeCommand: (match) => {
-    if (match[2].length < 3) return ''
+    if (match[2].length < 2) return ''
     const callNotes = findAllCallNotes(match[2])
     if (callNotes && callNotes[0]?.note) {
       const matches = callNotes[0].note && callNotes[0].note.match(EMOJI_REGEX)
@@ -133,7 +133,7 @@ const NoteExpansionCommandHook = {
     }
   },
   invokeCommand: (match, { dispatch, operation, handleFieldChange }) => {
-    if (match[2].length < 3) return ''
+    if (match[2].length < 2) return ''
     const callNotes = findAllCallNotes(match[2])
     if (callNotes && callNotes[0]?.note) {
       handleFieldChange({ fieldId: 'theirCall', value: _cleanNote(callNotes[0].note) })
