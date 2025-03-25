@@ -90,6 +90,10 @@ export function startupStepsForDistribution ({ settings, dispatch }) {
   ]
 }
 
+export function reduxEnhancersForDistribution () {
+  return []
+}
+
 export function handleNoticeActionForDistribution ({ notice, dispatch, setOverlayText }) {
   return true
 }
