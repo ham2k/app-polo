@@ -3,6 +3,25 @@
   "name": "Kentucky QSO Party",
   "start": "2025-6-7 13:00Z",
   "end": "2025-6-8 01:00Z",
+  "cabrilloName": "KY-QSO-PARTY",
+  "notes": "Counties entered by W1GRL and rules by W1BOY",
+  "internalNotes": "Power multiplier needs to be implemented",
+  "lastUpdated": "2025-03-22 19:00Z",
+  "status": "See internalNotes",
+  "options": {
+    "dcCountsAsMaryland": false,
+    "countyLine": true,
+    "selfSpotting": true,
+    "dxIsMultiplier": false,
+    "stateCountsForInState": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2
+  },
+  "bonusStations": {
+    "K4KCG": 100
+  },
   "counties": {
     "ADA": "Adair",
     "ALL": "Allen",

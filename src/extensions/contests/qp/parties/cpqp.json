@@ -3,6 +3,23 @@
   "name": "Canadian Prairies QSO Party",
   "start": "2025-5-10 17:00Z",
   "end": "2025-5-11 03:00Z",
+  "cabrilloName": "CP-QSO-PARTY",
+  "notes": "Counties entered by W1GRL, rules by W1BOY",
+  "internalNotes": "",
+  "lastUpdated": "2025-03-22 18:00Z",
+  "status": "Updated for 2025, but not verified",
+  "options": {
+    "dcCountsAsMaryland": true,
+    "countyLine": false,
+    "selfSpotting": false,
+    "multsPerBand": true
+    "dxIsMultiplier": false,
+    "stateCountsForInState": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 1
+  },
   "counties": {
     "BAR": "Banff - Airdrie",
     "BOW": "Bow River",
