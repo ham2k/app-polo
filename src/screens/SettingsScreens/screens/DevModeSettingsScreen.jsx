@@ -110,8 +110,15 @@ export default function DevModeSettingsScreen ({ navigation }) {
   }, [dispatch])
 
   const handleImportFiles = useCallback(() => {
-    DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
-      const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
+    pick({ mode: 'import' }).then(async (files) => {
+      const [localCopy] = await keepLocalCopy({
+        files: files.map(file => ({
+          uri: file.uri,
+          fileName: file.name ?? 'fallbackName'
+        })),
+        destination: 'cachesDirectory'
+      })
+      const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
       await dispatch(importQSON(filename))
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
