@@ -3,7 +3,7 @@
     "name": "April '25 (pre 1)",
     "photoCaption": "VK4KC at POTA AU-8817",
     "changes": [
-      "Upgraded core framework to latest version (React Native 0.78.5)",
+      "Upgraded core framework to latest version (React Native 0.78)",
       "Improved Export Settings, and moved them under General Settings",
       "QSO Parties: AR, IN, TN, NEQP, 7QP (Thanks to W1GRL, W1BOY, W8NI, KQ4URU)"
     ]
