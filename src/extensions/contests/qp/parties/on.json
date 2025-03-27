@@ -6,4 +6,73 @@
   "secondStart": "2025-4-20 12:00Z",
   "secondEnd": "2025-4-20 18:00Z",
   "status": "Pending"
+  "cabrilloName": "ON-QSO-PARTY",
+  "notes": "Contributed by W1GRL & W1BOY",
+  "lastUpdated": "2025-03-27 20:00Z",
+  "status": "Updated for 2025, but not verified",
+  "options": {
+    "countyLine": true,
+    "dcCountsAsMaryland": false,
+    "stateCountsForInState": false,
+    "multsPerBandMode": false,
+    "multsPerBand": true,
+    "dxEntityIsMultiplier": true,
+    "selfSpotting": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2
+  },
+  "counties": {
+     "ALG": "Algoma District",
+     "BRA": "City of Brant"
+     "BFD": "City of Brantford"
+     "BRU": "Bruce County"
+     "CHK": "City of Chatham-Kent"
+     "COC": "Cochrane District"
+     "DUF": "Dufferin County"
+     "DUR": "Durham Regional Municipality"
+     "ELG": "Elgin County"
+     "ESX": "Essex County"
+     "FRO": "Frontenac County"
+     "GRY": "Grey County"
+     "HAL": "Town of Haldimand"
+     "HLB": "Haliburton County"
+     "HTN": "Halton Regional Municipality"
+     "HAM": "City of Hamilton"
+     "HAS": "Hastings County"
+     "HUR": "Huron County"
+     "KAW": "City of Kawartha Lakes"
+     "KEN": "Kenora District"
+     "LAM": "Lambton County"
+     "LAN": "Lanark County"
+     "LGR": "Leeds & Grenville United Counties"
+     "LXA": "Lennox-Addington County"
+     "MAN": "Manitoulin District"
+     "MSX": "Middlesex County"
+     "MUS": "Muskoka District"
+     "NIA": "Niagara Regional Municipality"
+     "NIP": "Nipissing District"
+     "NFK": "Town of Norfolk"
+     "NOR": "Northumberland County"
+     "OTT": "City of Ottawa"
+     "OXF": "Oxford County"
+     "PSD": "Parry Sound District"
+     "PEL": "Peel Regional Municipality"
+     "PER": "Perth County"
+     "PET": "Peterborough County"
+     "PRU": "United Counties of Prescott & Russell"
+     "PED": "City of Prince Edward"
+     "RAI": "Rainy River District"
+     "REN": "Renfrew County"
+     "SIM": "Simcoe County"
+     "SDG": "United Counties of Stormont, Dundas & Glengarry"
+     "SUD": "Sudbury District"
+     "TBY": "Thunder Bay District"
+     "TIM": "Timiskaming District"
+     "TOR": "City of Toronto"
+     "WAT": "Waterloo Regional Municipality"
+     "WEL": "Wellington County"
+     "YRK": "York Regional Municipality"
+   }
 }
