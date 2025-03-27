@@ -15,7 +15,7 @@
     "dcCountsAsMaryland": false,
     "stateCountsForInState": false,
     "multsPerBandMode": false,
-    "multsPerMode": true,
+    "multsPerBand": true,
     "dxEntityIsMultiplier": true,
     "selfSpotting": true
   },
