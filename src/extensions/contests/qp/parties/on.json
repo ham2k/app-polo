@@ -6,7 +6,24 @@
   "secondStart": "2025-4-20 12:00Z",
   "secondEnd": "2025-4-20 18:00Z",
   "status": "Pending"
-   "counties": {
+  "cabrilloName": "ON-QSO-PARTY",
+  "notes": "Contributed by W1GRL & W1BOY",
+  "lastUpdated": "2025-03-27 20:00Z",
+  "status": "Updated for 2025, but not verified",
+  "options": {
+    "countyLine": true,
+    "dcCountsAsMaryland": false,
+    "stateCountsForInState": false,
+    "multsPerBandMode": false,
+    "multsPerMode": true,
+    "dxEntityIsMultiplier": true,
+    "selfSpotting": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2
+  },
+  "counties": {
      "ALG": "Algoma District",
      "BRA": "City of Brant"
      "BFD": "City of Brantford"
