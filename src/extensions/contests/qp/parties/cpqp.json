@@ -12,7 +12,7 @@
     "dcCountsAsMaryland": true,
     "countyLine": false,
     "selfSpotting": false,
-    "multsPerBand": true
+    "multsPerBand": true,
     "dxIsMultiplier": false,
     "stateCountsForInState": true
   },
