@@ -26,6 +26,8 @@ const BASE_URL = 'https://www.hamqth.com/'
 
 const apiState = {}
 
+const API_TIMEOUT = 5000 // 5 seconds -- this one is a bit slow
+
 function defaultParams (api) {
   const session = apiState.session
   return {
@@ -36,6 +38,7 @@ function defaultParams (api) {
 
 const baseQueryWithSettings = fetchBaseQuery({
   baseUrl: `${BASE_URL}/xml.php`,
+  timeout: API_TIMEOUT,
   prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
   },

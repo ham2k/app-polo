@@ -23,6 +23,8 @@ const DEBUG = false
 
 const BASE_URL = 'https://xmldata.qrz.com/'
 
+const API_TIMEOUT = 3000 // 3 seconds
+
 function defaultParams (api) {
   const session = api.getState().settings?.accounts?.qrz?.session
   return {
@@ -33,6 +35,7 @@ function defaultParams (api) {
 
 const baseQueryWithSettings = fetchBaseQuery({
   baseUrl: `${BASE_URL}/xml/current`,
+  timeout: API_TIMEOUT,
   prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
   },

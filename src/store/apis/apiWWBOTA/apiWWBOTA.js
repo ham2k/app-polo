@@ -16,8 +16,11 @@ const apiState = {}
 
 const NONCE_RE = /id="wdtNonceFrontendServerSide_24"[^>]+ value="([0-9a-f]+)"/
 
+const API_TIMEOUT = 3000 // 3 seconds
+
 const baseQueryFetchNonce = fetchBaseQuery({
   baseUrl: 'https://wwbota.org/',
+  timeout: API_TIMEOUT,
   prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
   },
@@ -33,6 +36,7 @@ const baseQueryFetchNonce = fetchBaseQuery({
 
 const baseQuery = fetchBaseQuery({
   baseUrl: 'https://wwbota.org/',
+  timeout: API_TIMEOUT,
   prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('Referer', 'https://wwbota.org/cluster/')
     headers.set('Accept', 'application/json')
