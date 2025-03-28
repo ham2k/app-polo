@@ -49,38 +49,57 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
 
   let flags = {}
   const fetchedLocations = {}
-  while (locations.length > 0) {
-    const location = locations.pop()
-    try {
-      const response = await fetch(`${Config.POLO_FLAGS_BASE_URL}/${location}`)
-      fetchedLocations[location] = true
+  try {
+    while (locations.length > 0) {
+      const location = locations.pop()
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 2000) // 2 seconds timeout
 
-      if (DEBUG) console.log('Fetching flags from', `${Config.POLO_FLAGS_BASE_URL}/${location}`)
+        const response = await fetch(`${Config.POLO_FLAGS_BASE_URL}/${location}`, {
+          signal: controller.signal
+        })
+        clearTimeout(timeoutId) // Clear timeout if fetch succeeds
 
-      if (response.ok) {
-        const data = await response.json()
-        if (DEBUG) console.log('-- data', data)
+        fetchedLocations[location] = true
 
-        if (typeof data?.more === 'string') {
-          if (!fetchedLocations[data.more]) {
-            locations.push(data.more)
-          }
-        } else if (Array.isArray(data?.more)) {
-          data.more.forEach(item => {
-            if (typeof item === 'string' && !fetchedLocations[item]) {
-              locations.push(item)
+        if (DEBUG) console.log('Fetching flags from', `${Config.POLO_FLAGS_BASE_URL}/${location}`)
+
+        if (response.ok) {
+          const data = await response.json()
+          if (DEBUG) console.log('-- data', data)
+
+          if (typeof data?.more === 'string') {
+            if (!fetchedLocations[data.more]) {
+              locations.push(data.more)
             }
-          })
-        }
+          } else if (Array.isArray(data?.more)) {
+            data.more.forEach(item => {
+              if (typeof item === 'string' && !fetchedLocations[item]) {
+                locations.push(item)
+              }
+            })
+          }
 
-        flags = deepmerge(flags, data)
-      } else {
-        if (DEBUG) console.log('-- status', response.status)
+          flags = deepmerge(flags, data)
+        } else {
+          if (DEBUG) console.log('-- status', response.status)
+        }
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          throw new Error('Request timed out after 2 seconds') // Re-raise to stop all further fetches
+        }
+        console.error('Error fetching flags from', location, error)
       }
-    } catch (error) {
-      if (DEBUG) console.log('Error fetching flags from', location, error)
+    }
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      console.error('Request timed out after 2 seconds')
+    } else {
+      console.error('Error fetching flags', error)
     }
   }
   console.log('Flags', flags)
+
   dispatch(setFeatureFlags(flags))
 }
