@@ -3,71 +3,71 @@
   "name": "Colorado QSO Party",
   "start": "2025-8-30 13:00Z",
   "end": "2025-8-31 04:00Z",
-  "status": "Pending"
-   "counties": {
-     "ADA": "Adams"
-     "ALA": "Alamosa"
-     "ARA": "Arapahoe"
-     "ARC": "Archuleta"
-     "BAC": "Baca"
-     "BEN": "Bent"
-     "BOU": "Boulder"
-     "BRO": "Broomfield"
-     "CHA": "Chaffee"
-     "CHE": "Cheyenne"
-     "CLC": "Clear Creek"
-     "CON": "Conejos"
-     "COS": "Costilla"
-     "CRO": "Crowley"
-     "CUS": "Custer"
-     "DEL": "Delta"
-     "DEN": "Denver"
-     "DOL": "Dolores"
-     "DOU": "Douglas"
-     "EAG": "Eagle"
-     "ELP": "El Paso"
-     "ELB": "Elbert"
-     "FRE": "Fremont"
-     "GAR": "Garfield"
-     "GIL": "Gilpin"
-     "GRA": "Grand"
-     "GUN": "Gunnison"
-     "HIN": "Hinsdale"
-     "HUE": "Huerfano"
-     "JAC": "Jackson"
-     "JEF": "Jefferson"
-     "KIO": "Kiowa"
-     "KIC": "Kit Carson"
-     "LAK": "Lake"
-     "LAP": "La Plata"
-     "LAR": "Larimer"
-     "LAA": "Las Animas"
-     "LIN": "Lincoln"
-     "LOG": "Logan"
-     "MES": "Mesa"
-     "MIN": "Mineral"
-     "MOF": "Moffat"
-     "MON": "Montezuma"
-     "MOT": "Montrose"
-     "MOR": "Morgan"
-     "OTE": "Otero"
-     "OUR": "Ouray"
-     "PAR": "Park"
-     "PHI": "Phillips"
-     "PIT": "Pitkin"
-     "PRO": "Prowers"
-     "PUE": "Pueblo"
-     "RIB": "Rio Blanco"
-     "RIG": "Rio Grande"
-     "ROU": "Routt"
-     "SAG": "Saguache"
-     "SAJ": "San Juan"
-     "SAM": "San Miguel"
-     "SED": "Sedgwick"
-     "SUM": "Summit"
-     "TEL": "Teller"
-     "WAS": "Washington"
-     "WEL": "Weld"
-     "YUM": "Yuma"
-   }
+  "status": "Pending",
+  "counties": {
+    "ADA": "Adams",
+    "ALA": "Alamosa",
+    "ARA": "Arapahoe",
+    "ARC": "Archuleta",
+    "BAC": "Baca",
+    "BEN": "Bent",
+    "BOU": "Boulder",
+    "BRO": "Broomfield",
+    "CHA": "Chaffee",
+    "CHE": "Cheyenne",
+    "CLC": "Clear Creek",
+    "CON": "Conejos",
+    "COS": "Costilla",
+    "CRO": "Crowley",
+    "CUS": "Custer",
+    "DEL": "Delta",
+    "DEN": "Denver",
+    "DOL": "Dolores",
+    "DOU": "Douglas",
+    "EAG": "Eagle",
+    "ELP": "El Paso",
+    "ELB": "Elbert",
+    "FRE": "Fremont",
+    "GAR": "Garfield",
+    "GIL": "Gilpin",
+    "GRA": "Grand",
+    "GUN": "Gunnison",
+    "HIN": "Hinsdale",
+    "HUE": "Huerfano",
+    "JAC": "Jackson",
+    "JEF": "Jefferson",
+    "KIO": "Kiowa",
+    "KIC": "Kit Carson",
+    "LAK": "Lake",
+    "LAP": "La Plata",
+    "LAR": "Larimer",
+    "LAA": "Las Animas",
+    "LIN": "Lincoln",
+    "LOG": "Logan",
+    "MES": "Mesa",
+    "MIN": "Mineral",
+    "MOF": "Moffat",
+    "MON": "Montezuma",
+    "MOT": "Montrose",
+    "MOR": "Morgan",
+    "OTE": "Otero",
+    "OUR": "Ouray",
+    "PAR": "Park",
+    "PHI": "Phillips",
+    "PIT": "Pitkin",
+    "PRO": "Prowers",
+    "PUE": "Pueblo",
+    "RIB": "Rio Blanco",
+    "RIG": "Rio Grande",
+    "ROU": "Routt",
+    "SAG": "Saguache",
+    "SAJ": "San Juan",
+    "SAM": "San Miguel",
+    "SED": "Sedgwick",
+    "SUM": "Summit",
+    "TEL": "Teller",
+    "WAS": "Washington",
+    "WEL": "Weld",
+    "YUM": "Yuma"
+  }
 }

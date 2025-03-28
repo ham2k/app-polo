@@ -3,32 +3,32 @@
   "name": "Maryland-DC QSO Party",
   "start": "2025-8-9 14:00Z",
   "end": "2025-8-10 03:59Z",
-  "status": "Pending"
-   "counties": {
-     "ALY": "Allegany"
-     "ANA": "Anne Arundel"
-     "BAL": "Baltimore City"
-     "BCT": "Baltimore County"
-     "CLV": "Calvert"
-     "CLN": "Caroline"
-     "CRL": "Carroll"
-     "CEC": "Cecil"
-     "CHS": "Charles"
-     "DRC": "Dorchester"
-     "FRD": "Frederick"
-     "GAR": "Garrett"
-     "HFD": "Harford"
-     "HWD": "Howard"
-     "KEN": "Kent"
-     "MON": "Montgomery"
-     "PGE": "Prince George's"
-     "QAN": "Queen Anne's"
-     "STM": "Saint Mary's"
-     "SMR": "Somerset"
-     "TAL": "Talbot"
-     "WAS": "Washington"
-     "WIC": "Wicomico"
-     "WRC": "Worcester"
-     "WDC": "Washington DC"
+  "status": "Pending",
+  "counties": {
+    "ALY": "Allegany",
+    "ANA": "Anne Arundel",
+    "BAL": "Baltimore City",
+    "BCT": "Baltimore County",
+    "CLV": "Calvert",
+    "CLN": "Caroline",
+    "CRL": "Carroll",
+    "CEC": "Cecil",
+    "CHS": "Charles",
+    "DRC": "Dorchester",
+    "FRD": "Frederick",
+    "GAR": "Garrett",
+    "HFD": "Harford",
+    "HWD": "Howard",
+    "KEN": "Kent",
+    "MON": "Montgomery",
+    "PGE": "Prince George's",
+    "QAN": "Queen Anne's",
+    "STM": "Saint Mary's",
+    "SMR": "Somerset",
+    "TAL": "Talbot",
+    "WAS": "Washington",
+    "WIC": "Wicomico",
+    "WRC": "Worcester",
+    "WDC": "Washington DC"
    }
 }

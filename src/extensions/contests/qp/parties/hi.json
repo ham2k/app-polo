@@ -3,21 +3,21 @@
   "name": "Hawaii QSO Party",
   "start": "2025-8-23 04:00Z",
   "end": "2025-8-25 03:59Z",
-  "status": "Pending"
-   "counties": {
-     "KAU": "Kauai"
-     "NII": "Niihau"
-     "KAL": "Kalawao"
-     "HON": "Honolulu"
-     "LHN": "Leeward"
-     "PRL": "Pearl Harbor Area"
-     "WHN": "Windward"
-     "LNI": "Lana'i"
-     "MAU": "Maui"
-     "MOL": "Molokai"
-     "HIL": "Hilo"
-     "KOH": "Kohala"
-     "KON": "Kona"
-     "VOL": "Volcano Park"
-   }
+  "status": "Pending",
+  "counties": {
+    "KAU": "Kauai",
+    "NII": "Niihau",
+    "KAL": "Kalawao",
+    "HON": "Honolulu",
+    "LHN": "Leeward",
+    "PRL": "Pearl Harbor Area",
+    "WHN": "Windward",
+    "LNI": "Lana'i",
+    "MAU": "Maui",
+    "MOL": "Molokai",
+    "HIL": "Hilo",
+    "KOH": "Kohala",
+    "KON": "Kona",
+    "VOL": "Volcano Park"
+  }
 }
