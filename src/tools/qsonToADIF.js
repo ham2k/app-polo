@@ -20,7 +20,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   }
 
   const defaultSettings = selectExportSettings({ settings }, 'default')
-  const handlerSettings = selectExportSettings({ settings }, templates.key)
+  const handlerSettings = selectExportSettings({ settings }, templates.key, (handler?.defaultExportSettings && handler?.defaultExportSettings()))
 
   templates.exportSettings = { ...defaultSettings, ...handlerSettings }
   const privateData = (templates.exportSettings.privateData ?? handlerSettings.privateDataDefault)

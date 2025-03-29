@@ -145,7 +145,7 @@ export default function ExportSettingsScreen ({ navigation }) {
             const options = (refHook.suggestExportOptions && refHook.suggestExportOptions({ operation, qsos: operation.qsos, ref, settings })) || []
             options.forEach(option => {
               const key = `${hook.key}-${option.format}-${option.exportType ?? 'export'}`
-              const exportSettings = selectExportSettings({ settings }, key)
+              const exportSettings = selectExportSettings({ settings }, key, (refHook?.defaultExportSettings && refHook?.defaultExportSettings()))
 
               const description = [
                 exportSettings.customTemplates ? 'Custom templates' : 'Default templates',
@@ -213,7 +213,7 @@ export default function ExportSettingsScreen ({ navigation }) {
         const options = (exportHook.suggestExportOptions && exportHook.suggestExportOptions({ operation, qsos: operation.qsos, settings })) || []
         options.forEach(option => {
           const key = `${exportHook.key}-${option.format}-${option.exportType ?? 'export'}`
-          const exportSettings = selectExportSettings({ settings }, key)
+          const exportSettings = selectExportSettings({ settings }, key, (exportHook?.defaultExportSettings && exportHook?.defaultExportSettings()))
 
           const description = [
             exportSettings.customTemplates ? 'Custom templates' : 'Default templates',

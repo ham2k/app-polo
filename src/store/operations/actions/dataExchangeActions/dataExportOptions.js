@@ -136,13 +136,12 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
   handlersWithOptions.forEach(({ handler, ref, options }) => {
     options.forEach(option => {
       const key = `${handler.key}-${option.format}-${option.exportType ?? 'export'}`
-      let exportSettings = selectExportSettings({ settings }, key)
+      let exportSettings = selectExportSettings({ settings }, key, (handler?.defaultExportSettings && handler?.defaultExportSettings()))
       if (exportSettings.customTemplates === false) {
         const { privateData } = exportSettings
         exportSettings = selectExportSettings({ settings }, 'default')
         exportSettings.private = privateData
       }
-
       const nameTemplate = compileTemplateForOperation(exportSettings?.nameTemplate || option.nameTemplate || '{{> DefaultName}}', { settings })
       const titleTemplate = compileTemplateForOperation(exportSettings?.titleTemplate || option.titleTemplate || '{{> DefaultTitle}}', { settings })
 

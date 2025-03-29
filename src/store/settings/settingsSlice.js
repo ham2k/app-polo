@@ -141,9 +141,14 @@ export const selectExtensionSettings = createSelector(
 )
 
 export const selectExportSettings = createSelector(
-  (state, key) => state?.settings?.exports,
-  (state, key) => key,
-  (exportsSettings, key) => exportsSettings?.[key] || {}
+  (state, key, defaults) => state?.settings?.exports,
+  (state, key, defaults) => key,
+  (state, key, defaults) => defaults,
+  (exportsSettings, key, defaults) => {
+    const settings = exportsSettings?.[key] ?? {}
+    if (Object.keys(settings).length === 0) return defaults ?? {}
+    else return settings
+  }
 )
 
 export const selectOperatorCall = createSelector(

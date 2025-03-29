@@ -1,6 +1,6 @@
 {
-  "25.3.99-pre4": {
-    "name": "April '25 (pre 4)",
+  "25.3.99-pre5": {
+    "name": "April '25 (pre 5)",
     "photoCaption": "VK4KC at POTA AU-8817",
     "changes": [
       "Upgraded core framework to latest version (React Native 0.78)",
