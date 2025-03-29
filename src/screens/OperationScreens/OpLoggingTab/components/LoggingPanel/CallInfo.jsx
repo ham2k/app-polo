@@ -137,7 +137,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       else if (guess.postindicators.indexOf('PM') >= 0) leftParts.push('[ 🪂 ]')
     }
 
-    if (operation.grid && guess.grid) {
+    if (operation?.grid && guess?.grid) {
       const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
       let bearing
       if (settings.showBearing) {
