@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Mapbox, { Camera, CircleLayer, LineLayer, MapView, MarkerView, ShapeSource } from '@rnmapbox/maps'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
@@ -190,10 +190,11 @@ function geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
 }
 
 function getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
-  const features = mappableQSOs.map(mappableQSO => geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).filter(x => x)
+  const features = mappableQSOs.map(mappableQSO => geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
 
   return {
-    type: 'FeatureCollection', features
+    type: 'FeatureCollection',
+    features
   }
 }
 
@@ -202,13 +203,16 @@ function geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
     const start = [mappableQSO.location.longitude, mappableQSO.location.latitude]
     const end = [qth.longitude, qth.latitude]
 
-    return {
+    const segments = generateGeodesicPoints(start, end)
+
+    // If we have multiple segments, create separate features
+    return segments.map(segment => ({
       type: 'Feature',
       geometry: {
         type: 'LineString',
-        coordinates: generateGeodesicPoints(start, end)
+        coordinates: segment
       }
-    }
+    }))
   }
 }
 
@@ -216,7 +220,7 @@ function colorForText ({ qso, styles, mapStyles }) {
   return styles.colors.bands[qso.band] || styles.colors.bands.default
 }
 
-function generateGeodesicPoints (start, end, numPoints = 48) {
+function generateGeodesicPoints (start, end, numPoints = 100) {
   const [lon1, lat1] = start
   const [lon2, lat2] = end
 
@@ -232,7 +236,9 @@ function generateGeodesicPoints (start, end, numPoints = 48) {
     Math.cos(φ1) * Math.cos(φ2) * Math.pow(Math.sin((λ2 - λ1) / 2), 2)
   ))
 
-  const points = []
+  const segments = [[]] // Start with first segment
+  let prevLon = null
+  let prevPoint = null
 
   for (let i = 0; i <= numPoints; i++) {
     const f = i / numPoints
@@ -251,11 +257,65 @@ function generateGeodesicPoints (start, end, numPoints = 48) {
     const φ = Math.atan2(z, Math.sqrt(x * x + y * y))
 
     // Convert back to degrees
-    points.push([
-      ((λ * 180) / Math.PI + 540) % 360 - 180, // Normalize longitude to [-180, 180]
-      (φ * 180) / Math.PI
-    ])
+    const lon = ((λ * 180) / Math.PI + 540) % 360 - 180
+    const lat = (φ * 180) / Math.PI
+    const point = [lon, lat]
+
+    // Handle date line crossing
+    if (prevPoint !== null && Math.abs(lon - prevLon) > 180) {
+      // Calculate the fraction where we cross the meridian
+      const f1 = (i - 1) / numPoints
+      const f2 = i / numPoints
+
+      // Binary search to find the exact crossing point
+      let fa = f1
+      let fb = f2
+      let crossingLat = null
+
+      for (let j = 0; j < 8; j++) { // Increase iterations for more precision
+        const fm = (fa + fb) / 2
+
+        // Calculate point at fm
+        const Am = Math.sin((1 - fm) * d) / Math.sin(d)
+        const Bm = Math.sin(fm * d) / Math.sin(d)
+
+        const xm = Am * Math.cos(φ1) * Math.cos(λ1) + Bm * Math.cos(φ2) * Math.cos(λ2)
+        const ym = Am * Math.cos(φ1) * Math.sin(λ1) + Bm * Math.cos(φ2) * Math.sin(λ2)
+        const zm = Am * Math.sin(φ1) + Bm * Math.sin(φ2)
+
+        const λm = Math.atan2(ym, xm)
+        const lonm = ((λm * 180) / Math.PI + 540) % 360 - 180
+
+        if (Math.abs(lonm) > 179.99) {
+          // We found our crossing point
+          crossingLat = (Math.atan2(zm, Math.sqrt(xm * xm + ym * ym)) * 180) / Math.PI
+          break
+        }
+
+        // Adjust search interval
+        if ((prevLon < 0 && lonm < 0) || (prevLon > 0 && lonm > 0)) {
+          fa = fm
+        } else {
+          fb = fm
+        }
+      }
+
+      // Only add crossing points if we found a valid latitude
+      if (crossingLat !== null && !isNaN(crossingLat)) {
+        if (prevLon < 0) {
+          segments[segments.length - 1].push([-180, crossingLat])
+          segments.push([[180, crossingLat]]) // Start new segment
+        } else {
+          segments[segments.length - 1].push([180, crossingLat])
+          segments.push([[-180, crossingLat]]) // Start new segment
+        }
+      }
+    }
+
+    segments[segments.length - 1].push(point)
+    prevLon = lon
+    prevPoint = point
   }
 
-  return points
+  return segments
 }
