@@ -115,7 +115,8 @@ export default function OperationDataScreen (props) {
         destination: 'cachesDirectory'
       })
 
-      const filename = decodeURIComponent(localCopy.fileCopyUri.replace('file://', ''))
+
+      const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
       const { adifCount, importCount } = await dispatch(importADIFIntoOperation(filename, operation, qsos))
       trackEvent('import_adif', {
         import_count: importCount,
