@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import Mapbox, { Camera, CircleLayer, LineLayer, MapView, MarkerView, ShapeSource } from '@rnmapbox/maps'
+import Mapbox, { StyleURL, Camera, CircleLayer, LineLayer, MapView, MarkerView, ShapeSource } from '@rnmapbox/maps'
 import { Platform, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Config from 'react-native-config'
@@ -88,6 +88,7 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
       scaleBarEnabled={false}
       onPress={handleMapPress}
       requestDisallowInterceptTouchEvent={true}
+      styleUrl={StyleURL.Outdoors}
     >
       <Camera
         centerCoordinate={[initialRegion.longitude, initialRegion.latitude]}
