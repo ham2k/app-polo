@@ -5,9 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import Mapbox, { Camera, CircleLayer, LineLayer, MapView, MarkerView, ShapeSource } from '@rnmapbox/maps'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Config from 'react-native-config'
 
@@ -83,10 +83,11 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
       projection={'mercator'}
       compassEnabled={false}
       rotateEnabled={false}
-      attributionPosition={{ bottom: 8, left: 90 }}
+      attributionPosition={{ bottom: Platform.OS === 'ios' ? 8 : 10, left: Platform.OS === 'ios' ? 90 : 100 }}
       logoPosition={{ bottom: 10, left: 10 }}
       scaleBarEnabled={false}
       onPress={handleMapPress}
+      requestDisallowInterceptTouchEvent={true}
     >
       <Camera
         centerCoordinate={[initialRegion.longitude, initialRegion.latitude]}
