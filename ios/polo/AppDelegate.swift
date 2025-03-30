@@ -5,7 +5,7 @@ import ReactAppDependencyProvider
 import react_native_splash_screen
 
 @main
-class AppDelegate: RCTAppDelegate {
+class AppDelegate: RCTAppDelegate, RNAppAuthAuthorizationFlowManager {
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     self.moduleName = "polo"
     self.dependencyProvider = RCTAppDependencyProvider()
