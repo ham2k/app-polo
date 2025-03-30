@@ -4,6 +4,7 @@
     "photoCaption": "VK4KC at POTA AU-8817",
     "changes": [
       "Upgraded core framework to latest version (React Native 0.78)",
+      "New Maps engine (Mapbox) that can fully zoom out now!",
       "Improved Export Settings, and moved them under General Settings",
       "QSO Parties: AR, IN, TN, NEQP, 7QP, AL, NM, DE, CPQP, KY, WV (With contributions from W1GRL, W1BOY, W8NI, KQ4URU, W1WC)",
       "Better handling of bad Internet service",

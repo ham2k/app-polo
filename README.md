@@ -41,6 +41,15 @@ Then clone this repository, `cd` into it and install the dependencies:
 npm install
 ```
 
+### Maps
+
+In order to use Mapbox maps in your local builds, you need to:
+
+1. Signup for a Mapbox account
+2. Create an access token with `downloads:read` scope
+3. Save the access token to `.env` as `MAPBOX_ACCESS_TOKEN`
+
+### Build
 And finally, build the app for your target platform:
 
 ```
@@ -51,6 +60,8 @@ npm run ios
 # Android
 npm run android
 ```
+
+
 ### Debug Menu
 
 iOS: Cmd ⌘ + D
@@ -92,6 +103,7 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 * On `android/app/src/main/res` replace `launch_screen` in each subdirectory.
 * On `ios/polo/Images.xcassets/LaunchScreen.imageset` replace the three versions of `launch_screen`
 * On `src/screens/StartScreen/img` replace the three versions of `launch_screen`.
+
 
 ---
 
