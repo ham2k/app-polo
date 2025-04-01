@@ -23,13 +23,13 @@ const TRANSP_PNG = require('../../../../../assets/images/transp-16.png')
 const METERS_IN_ONE_DEGREE = 111111
 
 // const MAP_ENGINE = "NativeMaps"
-const MAP_ENGINE = "Mapbox"
+const MAP_ENGINE = 'Mapbox'
 
-if (MAP_ENGINE === "Mapbox") {
+if (MAP_ENGINE === 'Mapbox') {
   Mapbox.setAccessToken(Config.MAPBOX_ACCESS_TOKEN)
 }
 
-export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedUUID }) {
+export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedUUID, projection }) {
   // Maps change with the actual device color scheme, not the user preferences in the app
   const deviceColorScheme = useColorScheme()
 
@@ -49,7 +49,10 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
 
   const initialRegion = useMemo(() => {
     const { latitude, longitude } = qth
-    let latitudeMin = latitude ?? 0; let latitudeMax = latitude ?? 0; let longitudeMin = longitude ?? 0; let longitudeMax = longitude ?? 0
+    let latitudeMin = latitude ?? 0
+    let latitudeMax = latitude ?? 0
+    let longitudeMin = longitude ?? 0
+    let longitudeMax = longitude ?? 0
     for (const { location } of mappableQSOs) {
       latitudeMin = Math.min(latitudeMin, location.latitude)
       latitudeMax = Math.max(latitudeMax, location.latitude)
@@ -60,14 +63,18 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
       latitude: latitudeMin + (latitudeMax - latitudeMin) / 2,
       longitude: longitudeMin + (longitudeMax - longitudeMin) / 2,
       latitudeDelta: Math.abs(latitudeMax - latitudeMin),
-      longitudeDelta: Math.abs(longitudeMax - longitudeMin)
+      longitudeDelta: Math.abs(longitudeMax - longitudeMin),
+      boundingBox: [
+        [longitudeMin, latitudeMin],
+        [longitudeMax, latitudeMax]
+      ]
     }
   }, [qth, mappableQSOs])
 
-  if (MAP_ENGINE === "Mapbox") {
-    return <MapboxMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} qsos={qsos} settings={settings} selectedUUID={selectedUUID} />
+  if (MAP_ENGINE === 'Mapbox') {
+    return <MapboxMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} qsos={qsos} settings={settings} selectedUUID={selectedUUID} projection={projection} />
   } else {
-    return <NativeMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} settings={settings} selectedUUID={selectedUUID} />
+    return <NativeMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} settings={settings} selectedUUID={selectedUUID} projection={projection} />
   }
 }
 
@@ -87,4 +94,3 @@ function strengthForQSO (qso) {
     return 5
   }
 }
-

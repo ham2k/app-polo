@@ -5,17 +5,21 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useMemo, useState } from 'react'
-import Mapbox, { StyleURL, Camera, CircleLayer, LineLayer, MapView, MarkerView, ShapeSource } from '@rnmapbox/maps'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
+import Mapbox, { StyleURL, Camera, CircleLayer, LineLayer, MapView, MarkerView, ShapeSource, Atmosphere } from '@rnmapbox/maps'
 import { Platform, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Config from 'react-native-config'
 
 import { fmtShortTimeZulu } from '../../../../tools/timeFormats'
 
+if (Platform.OS === 'ios') {
+  Mapbox.setWellKnownTileServer('mapbox')
+}
+
 Mapbox.setAccessToken(Config.MAPBOX_ACCESS_TOKEN)
 
-export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion, operation, qth, qsos, settings, selectedUUID }) {
+export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion, operation, qth, qsos, settings, selectedUUID, projection }) {
   const qsosGeoJSON = useMemo(() => geoJSONMarkersForQSOs({ mappableQSOs, qth, operation, styles }), [mappableQSOs, qth, operation, styles])
   const linesGeoJSON = useMemo(() => getJSONLinesForQSOs({ mappableQSOs, qth, operation, styles }), [mappableQSOs, qth, operation, styles])
 
@@ -77,37 +81,76 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
     }
   }, [selectedFeature])
 
+  const mapRef = useRef()
+  const [camera, setCamera] = useState(null)
+  const cameraRefCallback = useCallback((currentRef) => {
+    if (!camera && currentRef) {
+      setCamera(currentRef)
+
+      if (initialRegion.boundingBox[0] && initialRegion.boundingBox[0][0]) {
+        setTimeout(() => {
+          currentRef.setCamera({
+            centerCoordinate: [qth?.longitude ?? 0, qth?.latitude ?? 0],
+            zoomLevel: 3,
+            animationDuration: 0
+          })
+          console.log('fitBounds')
+          currentRef.fitBounds(
+            initialRegion.boundingBox[0],
+            initialRegion.boundingBox[1],
+            [20, 20],
+            500
+          )
+        }, 0)
+      }
+    }
+  }, [initialRegion, qth, camera])
+
   return (
     <MapView
+      ref={mapRef}
       style={styles.root}
-      projection={'mercator'}
+      projection={projection}
       compassEnabled={false}
-      rotateEnabled={false}
+      rotateEnabled={projection === 'globe'}
       attributionPosition={{ bottom: Platform.OS === 'ios' ? 8 : 10, left: Platform.OS === 'ios' ? 90 : 100 }}
       logoPosition={{ bottom: 10, left: 10 }}
       scaleBarEnabled={false}
       onPress={handleMapPress}
       requestDisallowInterceptTouchEvent={true}
-      styleUrl={StyleURL.Outdoors}
+      styleUrl={StyleURL.Satellite}
     >
       <Camera
-        centerCoordinate={[initialRegion.longitude, initialRegion.latitude]}
-        bounds={[
-          [initialRegion.longitude - initialRegion.longitudeDelta / 2, initialRegion.latitude - initialRegion.latitudeDelta / 2],
-          [initialRegion.longitude + initialRegion.longitudeDelta / 2, initialRegion.latitude + initialRegion.latitudeDelta / 2]
-        ]}
+        ref={cameraRefCallback}
+        centerCoordinate={[qth?.longitude ?? 0, qth?.latitude ?? 0]}
+        zoomLevel={3}
+        animationDuration={0}
       />
+
+      {projection === 'globe' && (
+        <>
+          <Atmosphere
+            style={{
+              color: 'rgb(115, 155, 197)',
+              highColor: 'rgb(41, 74, 149)',
+              horizonBlend: 0.02,
+              spaceColor: 'rgb(11, 11, 11)',
+              starIntensity: 0.6
+            }}
+          />
+        </>
+      )}
 
       <FeatureCallout feature={selectedFeature} qth={qth} operation={operation} styles={styles} />
 
       {qsosGeoJSON && (
         <ShapeSource id="qsos-source" shape={qsosGeoJSON} onPress={handleMapPress}>
-          <CircleLayer id="qsos-circles" style={circleStyles} layerIndex={130} />
+          <CircleLayer id="qsos-circles" style={circleStyles} layerIndex={100} />
         </ShapeSource>
       )}
       {linesGeoJSON && (
         <ShapeSource id="qsos-lines-source" shape={linesGeoJSON} onPress={handleMapPress}>
-          <LineLayer id="qsos-lines" style={linesStyles} layerIndex={129} />
+          <LineLayer id="qsos-lines" style={linesStyles} layerIndex={99} />
         </ShapeSource>
       )}
 
