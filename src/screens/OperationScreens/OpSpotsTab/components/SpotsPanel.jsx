@@ -205,7 +205,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
           opSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
       ))
       if (matchingSpot) {
-        matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call}, ${spot.their.call}` }
+        matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call},${spot.their.call}` }
       } else {
         mOpSpots.push(spot)
       }
