@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../../store/operations'
 import { selectRuntimeOnline } from '../../../../../store/runtime'
 import { parseStackedCalls } from '../LoggingPanel'
+import { sanitizeForMarkdown } from '../../../../../tools/stringTools'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!',
@@ -195,7 +196,9 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       parts.push(guess.note)
     } else {
       if (lookup?.error && call?.length > 3) parts.push(lookup.error)
-      parts.push(qso?.their?.name ?? guess.name)
+      const name = sanitizeForMarkdown(qso?.their?.name ?? guess.name ?? '')
+
+      parts.push(name)
     }
 
     let info = parts.filter(x => x).join(' • ')
@@ -274,6 +277,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
   if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
+  console.log('CallInfo render with', { call, locationInfo, stationInfo })
   return (
     <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
 
