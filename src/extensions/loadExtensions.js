@@ -35,6 +35,7 @@ import SpotHistoryExtension from './data/spot-history/SpotHistoryExtension'
 import SpotDiscordExtension from './data/spot-discord/SpotDiscordExtension'
 import QSOPartiesExtension from './contests/qp/QSOPartiesExtension'
 import SimpleContestExtension from './contests/simple-contest/SimpleContestExtension'
+import GAPOTAExtension from './contests/gapota/GAPOTAExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
@@ -71,7 +72,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
 
   registerExtension(QSOPartiesExtension)
   registerExtension(SimpleContestExtension)
-
+  registerExtension(GAPOTAExtension)
   registerExtension(RadioCommands)
   registerExtension(TimeCommands)
   registerExtension(DebuggingCommands)

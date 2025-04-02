@@ -183,6 +183,9 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
               spot.spot.type = 'scoring'
             }
           }
+          if (score?.emoji) {
+            spot.spot.emoji = score.emoji
+          }
 
           if (score.notices) {
             score.notices.forEach(notice => (spot.spot.flags[notice] = true))

@@ -1,12 +1,13 @@
 {
-  "25.3.99-pre5": {
-    "name": "April '25 (pre 5)",
+  "25.3.99-pre12": {
+    "name": "April '25 (pre 12)",
     "photoCaption": "VK4KC at POTA AU-8817",
     "changes": [
       "Upgraded core framework to latest version (React Native 0.78)",
       "New Maps engine (Mapbox) that can fully zoom out now!",
       "Improved Export Settings, and moved them under General Settings",
       "QSO Parties: AR, IN, TN, NEQP, 7QP, AL, NM, DE, CPQP, KY, WV (With contributions from W1GRL, W1BOY, W8NI, KQ4URU, W1WC)",
+      "Georgia State Parks On The Air (as suggested by KO4GBB",
       "Better handling of bad Internet service",
       "Assorted bug fixes (With contributions from NA7DO)"
     ]
