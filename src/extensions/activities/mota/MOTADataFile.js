@@ -56,9 +56,8 @@ export function registerMOTADataFile () {
                   for (const line of batch) {
                     const row = parseMOTACSVRow(line, { headers })
                     if (row.valid_to === '21991231') {
-                      // Yes, latitude and longitude are the wrong way around!
-                      const lon = Number.parseFloat(row.Latitude)
-                      const lat = Number.parseFloat(row.Longitude)
+                      const lon = Number.parseFloat(row.Longitude)
+                      const lat = Number.parseFloat(row.Latitude)
                       const grid = !row.Locator ? locationToGrid6(lat, lon) : row.Locator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
                       const data = {
                         ref: row.Reference.toUpperCase(),
