@@ -7,7 +7,8 @@
       "Improved Export Settings, and moved them under General Settings",
       "QSO Parties: AR, IN, TN, NEQP, 7QP, AL, NM, DE, CPQP, KY, WV (With contributions from W1GRL, W1BOY, W8NI, KQ4URU, W1WC)",
       "Better handling of bad Internet service",
-      "Assorted bug fixes (With contributions from NA7DO)"
+      "Assorted bug fixes (With contributions from NA7DO)",
+      "Add Mills on the Air (MOTA) programme"
     ]
   },
   "25.3.0": {
