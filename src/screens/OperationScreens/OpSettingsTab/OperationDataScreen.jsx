@@ -8,7 +8,7 @@
 
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ScrollView, View } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 import { Checkbox, List, Menu, Text } from 'react-native-paper'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
@@ -115,7 +115,6 @@ export default function OperationDataScreen (props) {
         destination: 'cachesDirectory'
       })
 
-
       const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
       const { adifCount, importCount } = await dispatch(importADIFIntoOperation(filename, operation, qsos))
       trackEvent('import_adif', {
@@ -129,6 +128,7 @@ export default function OperationDataScreen (props) {
       if (error.indexOf('cancelled') >= 0) {
         // ignore
       } else {
+        Alert.alert('Error importing ADIF', error.message)
         reportError('Error importing ADIF', error)
       }
     })

@@ -9,7 +9,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Dialog, List, Text } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { Alert, ScrollView } from 'react-native'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber } from '@ham2k/lib-format-tools'
@@ -179,6 +179,7 @@ export default function DataSettingsScreen ({ navigation }) {
       if (error.indexOf('cancelled') >= 0) {
         // ignore
       } else {
+        Alert.alert('Error importing historical ADIF', error.message)
         reportError('Error importing historical ADIF', error)
       }
     })
@@ -188,6 +189,7 @@ export default function DataSettingsScreen ({ navigation }) {
     try {
       await dispatch(deleteHistoricalRecords())
     } catch (error) {
+      Alert.alert('Error deleting historical records', error.message)
       reportError('Error deleting historical records', error)
     }
 

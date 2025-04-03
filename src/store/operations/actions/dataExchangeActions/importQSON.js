@@ -13,8 +13,9 @@ import { reportError } from '../../../../distro'
 import { actions } from '../../operationsSlice'
 import { actions as qsosActions, saveQSOsForOperation } from '../../../qsos'
 import { saveOperation } from '../operationsDB'
+import { Alert } from 'react-native'
 
-const QSON_FILENAME_REGEX = /.+\.qson$/i
+const QSON_FILENAME_REGEX = /.+\.(qson|json)$/i
 
 export const importQSON = (path) => async (dispatch) => {
   const matches = path.match(QSON_FILENAME_REGEX)
@@ -38,9 +39,11 @@ export const importQSON = (path) => async (dispatch) => {
       dispatch(qsosActions.setQSOsStatus({ uuid: data.operation.uuid, status: 'ready' }))
       dispatch(actions.setOperation({ uuid, status: 'ready' }))
     } catch (error) {
+      Alert.alert('Error importing QSON', error.message)
       reportError('Error importing QSON', error)
     }
   } else {
+    Alert.alert('Invalid Name', 'The file name must end with .qson or .json')
     reportError('Invalid Path importing QSON', path)
   }
 }
