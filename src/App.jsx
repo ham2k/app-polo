@@ -46,6 +46,7 @@ import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/Ope
 import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/OperationLocationScreen'
 import { selectLocalExtensionData } from './store/local'
 import { selectRuntimeOnline } from './store/runtime'
+import { selectFeatureFlags } from './store/system'
 
 const Stack = createNativeStackNavigator()
 
@@ -58,10 +59,11 @@ function MainApp ({ navigationTheme }) {
 
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
+  const flags = useSelector(selectFeatureFlags)
   const online = useSelector(selectRuntimeOnline)
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 
-  useConfigForDistribution({ settings })
+  useConfigForDistribution({ settings, flags })
 
   useEffect(() => {
     setImmediate(async () => {

@@ -74,4 +74,9 @@ export const selectFeatureFlag = createSelector(
   (featureFlags, flag, defaultValue) => featureFlags[flag] ?? defaultValue
 )
 
+export const selectFeatureFlags = createSelector(
+  (state) => state?.system?.featureFlags || {},
+  (featureFlags) => featureFlags
+)
+
 export default systemSlice.reducer
