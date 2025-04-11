@@ -161,7 +161,7 @@ function adifFieldsForOneQSO ({ qso, operation, common, privateData, templates, 
     { ARRL_SECT: qso.their.arrlSection }
   ]
 
-  const templateContext = { ...templates.context, qso: { ...qso, notes: privateData ? '' : qso.notes } }
+  const templateContext = { ...templates.context, qso: { ...qso, notes: privateData ? qso.notes : '' } }
   let val
   if (templates.notesTemplate) {
     try {
