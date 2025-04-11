@@ -158,13 +158,13 @@ export default function DataSettingsScreen ({ navigation }) {
         destination: 'cachesDirectory'
       })
 
+      const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
+
       setLoadingHistoricalMessage('Importing ADIF records... Please be patient!')
       const interval = setInterval(async () => {
         const count = await dispatch(countHistoricalRecords())
         setHistoricalCount(count)
       }, 1000)
-
-      const filename = decodeURIComponent(localCopy.fileCopyUri.replace('file://', ''))
 
       await dispatch(importHistoricalADIF(filename))
       RNFetchBlob.fs.unlink(filename)
