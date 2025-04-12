@@ -5,33 +5,17 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import MapView, { Marker, Polyline, Circle, Callout } from 'react-native-maps'
-import { View, useColorScheme, Platform } from 'react-native'
+import React, { useMemo } from 'react'
 
-import { fmtShortTimeZulu } from '../../../../tools/timeFormats'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../../tools/geoTools'
-import { Text } from 'react-native-paper'
-import Mapbox from '@rnmapbox/maps'
-import Config from 'react-native-config'
 
 import MapboxMapWithQSOs from './MapboxMapWithQSOs'
 import NativeMapWithQSOs from './NativeMapWithQSOs'
-
-const TRANSP_PNG = require('../../../../../assets/images/transp-16.png')
-
-const METERS_IN_ONE_DEGREE = 111111
-
-// const MAP_ENGINE = "NativeMaps"
-const MAP_ENGINE = 'Mapbox'
-
-if (MAP_ENGINE === 'Mapbox') {
-  Mapbox.setAccessToken(Config.MAPBOX_ACCESS_TOKEN)
-}
+import { selectFeatureFlag } from '../../../../store/system'
+import { useSelector } from 'react-redux'
 
 export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedUUID, projection }) {
-  // Maps change with the actual device color scheme, not the user preferences in the app
-  const deviceColorScheme = useColorScheme()
+  const mapEngine = useSelector(state => selectFeatureFlag(state, 'mapEngine')) || 'Mapbox'
 
   const mappableQSOs = useMemo(() => {
     const activeQSOs = qsos.filter(qso => !qso.deleted)
@@ -71,7 +55,7 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     }
   }, [qth, mappableQSOs])
 
-  if (MAP_ENGINE === 'Mapbox') {
+  if (mapEngine === 'Mapbox') {
     return <MapboxMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} qsos={qsos} settings={settings} selectedUUID={selectedUUID} projection={projection} />
   } else {
     return <NativeMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} settings={settings} selectedUUID={selectedUUID} projection={projection} />
