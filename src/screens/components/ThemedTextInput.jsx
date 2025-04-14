@@ -276,9 +276,9 @@ export default function ThemedTextInput (props) {
           colorStyles.nativeInput,
           props.style,
           {
-            fontFamily: themeStyles.fontFamily
-            // fontSize: themeStyles.normalFontSize * 4,
-            // lineHeight: themeStyles.normalFontSize * 5
+            fontFamily: themeStyles.monospacedFontFamily,
+            fontVariant: ['tabular-nums'],
+            fontWeight: 'regular'
           },
           textStyle
         ]}

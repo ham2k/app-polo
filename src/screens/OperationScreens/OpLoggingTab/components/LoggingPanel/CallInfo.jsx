@@ -312,10 +312,12 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
             )}
           </View>
           {(stationInfo || messages?.length === 1) && (
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-              {stationInfo && (
-                <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
-              )}
+            <View style={{ flexDirection: 'row', width: '100%', alignItems: 'flex-start' }}>
+              <View style={{ maxWidth: messages?.length === 1 ? '70%' : undefined }}>
+                {stationInfo && (
+                  <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
+                )}
+              </View>
               {messages?.length === 1 && (
                 <View style={{ flex: 1, marginLeft: styles.halfSpace, alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                   {messages.map((msg) => (

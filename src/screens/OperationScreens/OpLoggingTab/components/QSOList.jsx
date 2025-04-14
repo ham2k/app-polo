@@ -62,6 +62,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
     fields: {
       header: {
         ...commonStyles,
+        fontFamily: themeStyles.fontFamily,
         flex: 0,
         marginLeft: 0,
         textAlign: 'left'
