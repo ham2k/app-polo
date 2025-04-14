@@ -48,7 +48,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   }
 
   let str = ''
-  str += `ADIF for ${title || (common.stationCall + ' ' + operation?.title) || 'Operation'} \n`
+  str += `ADIF for ${title || ([common.stationCall, operation?.title, operation.subTitle].filter(x => x).join(' ')) || 'Operation'} \n`
   str += adifField('ADIF_VER', '3.1.4', { newLine: true })
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })

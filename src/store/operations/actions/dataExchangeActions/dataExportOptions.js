@@ -260,7 +260,7 @@ export function basePartialTemplates ({ settings }) {
     DefaultNameCompact: '{{#dash}}{{log.station}}-{{compact op.date}}{{#if log.includeTime}}-{{op.startTime}}{{/if}}-{{downcase op.title}}-{{downcase log.modifier}}{{/dash}}',
     RefActivityTitle: '{{log.station}}: {{log.handlerShortName}} at {{#trim}}{{log.ref}} {{log.refShortLabel}}{{/trim}} on {{op.date}}',
     OtherActivityTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}',
-    DefaultTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}',
+    DefaultTitle: '{{log.station}}: {{#join op.refs separator=", " final=" & "}}{{or shortLabel label key}}{{/join}} on {{op.date}}',
     ADIFNotes: '{{qso.notes}}',
     ADIFComment: '{{qso.notes}}',
     ADIFQslMsg: '{{#join op.refs separator=", " final=" & "}}{{or shortLabel label key}}{{/join}}'
