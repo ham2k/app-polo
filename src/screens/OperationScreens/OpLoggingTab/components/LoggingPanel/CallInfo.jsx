@@ -164,12 +164,12 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
     if (qso?.their?.city || qso?.their?.state) {
       rightParts.push([qso?.their?.city, qso?.their?.state].filter(x => x).join(', '))
-    } else if (guess.locationLabel) {
+    } else if (guess?.locationLabel) {
       rightParts.push(guess.locationLabel)
-    } else if (!isOnTheGo && (guess.city || guess.state)) {
+    } else if (!isOnTheGo && (guess?.city || guess?.state)) {
       rightParts.push([guess.city, guess.state].filter(x => x).join(', '))
     }
-    if (entity && entity.entityPrefix === ourInfo.entityPrefix) {
+    if (entity?.entityPrefix === ourInfo.entityPrefix) {
       leftParts = [...leftParts, ...rightParts]
       rightParts = []
     }
