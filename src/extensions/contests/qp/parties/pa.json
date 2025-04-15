@@ -23,7 +23,7 @@
   },
   "points": {
     "PHONE": 1,
-    "CW": 2,
+    "CW": 2
   },
   "counties": {
     "ADA": "Adams",
@@ -92,6 +92,6 @@
     "WAY": "Wayne",
     "WES": "Westmoreland",
     "WYO": "Wyoming",
-    "YOR": "York",
+    "YOR": "York"
   }
 }
