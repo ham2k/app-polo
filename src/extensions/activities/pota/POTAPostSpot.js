@@ -42,12 +42,14 @@ export const POTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
         if (response.status !== 200) {
           const body = await response.text()
           Alert.alert('Error posting POTA spot', `Server responded with error ${response.status}: ${body}`)
-          reportError('POTA Spotter http error', response, body)
+          // reportError('POTA Spotter http error', response, body)
           return false
         }
       } catch (error) {
         Alert.alert('Error posting POTA spot', error.message)
-        reportError('POTA Spotter error', error)
+        if (error.message !== 'Network request failed') {
+          reportError('POTA Spotter error', error)
+        }
         return false
       }
     }
