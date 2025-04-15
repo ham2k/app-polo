@@ -38,7 +38,8 @@ export const MESSAGES_FOR_SCORING = {
   'sotaActivation.duplicate': 'SOTA Dupe!',
   'wwffActivation.duplicate': 'WWFF Dupe!',
   'wwbotaActivation.newDay': 'New WWBOTA Day',
-  'wwbotaActivation.newRef': 'New Bunker'
+  'wwbotaActivation.newRef': 'New Bunker',
+  'motaActivation.newRef': 'New Mill'
 }
 
 const DEBUG = false
