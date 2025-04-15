@@ -1,6 +1,6 @@
 {
-  "25.4.0-rc1": {
-    "name": "April '25 (rc 1)",
+  "25.4.0": {
+    "name": "April '25",
     "photoCaption": "VK4KC at POTA AU-8817",
     "changes": [
       "Upgraded core framework to latest version (React Native 0.78)",
@@ -10,7 +10,7 @@
       "Georgia State Parks On The Air (as suggested by KO4GBB",
       "Better handling of bad Internet service",
       "Assorted bug fixes (With contributions from NA7DO)",
-      "Add Mills on the Air (MOTA) programme"
+      "Add Mills on the Air (MOTA) programme (by M1SDH)"
     ]
   },
   "25.3.0": {
