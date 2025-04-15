@@ -1,0 +1,34 @@
+{
+  "key": "ACQP",
+  "name": "Atlantic Canadia QSO Party",
+  "short": "ACQP",
+  "url": "https://www.acqp.ca/",
+  "end": "2025-6-8 01:59Z",
+  "cabrilloName": "ACQP",
+  "notes": "",
+  "internalNotes": "",
+  "lastUpdated": "2025-04-15 12:00Z",
+  "status": "Updated for 2025, but not verified",
+  "options": {
+    "countyLine": true,
+    "selfSpotting": true,
+    "dcCountsAsMaryland": true,
+    "dxIsMultiplier": false,
+    "multsPerBand": true,
+    "stateCountsForInState": true,
+    "countiesCountForInState": false,
+    "entity": "VE"
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 1
+  },
+  "bonusStations": {
+    "VE1RAC": 5,
+    "VE9RAC": 5,
+    "VY2RAC": 5,
+    "VO1RAC": 5
+  },
+  "counties": {
+  }
+}

@@ -13,7 +13,8 @@
     "stateCountsForInState": false,
     "multsPerBandMode": false,
     "dxIsMultiplier": true,
-    "selfSpotting": true
+    "selfSpotting": true,
+    "entity": "VE"
   },
   "points": {
     "PHONE": 1,

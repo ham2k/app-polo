@@ -35,6 +35,12 @@ Additionally, the `"pointMultipliers":` section is used to define additional poi
 - `PORTABLE`: Portable points multiplier
 - `MOBILE`: Mobile points multiplier
 
+And the `powerMultiplier` section is used to define additional point multipliers for certain power levels.
+
+- `QRP`: QRP points multiplier
+- `LP`: LP points multiplier
+- `HP`: HP points multiplier
+
 Relevant `"options"`:
 
 - `qsosPerBandMode`: If true (default), QSOs are counted per band and mode (Most). If false they are counted only once overall, unless `qsosPerBand` or `qsosPerMode` is also true.
@@ -52,11 +58,13 @@ And also by default, multipliers are awarded per band and mode.
 
 Relevant `"options"`:
 
+- `entity`: Defaults to `K` for US States. Set to `VE` for Canadian events.
 - `stateCountsForInState`: If true, an in-state station gets the state as a multiplier when working any other station in the state. This is usually implied in the rules if in-state multipliers lists 50 states. If it says 49 states, then this option should be false.
 - `dcCountsAsMaryland`: If true, the District of Columbia will be counted as Maryland. If the rules say "50 states" and no mention of DC, then this option should be true. If the rules mention DC explicitly, then this option should be false.
 - `alaskaAndHawaiiAreDX`: If true, Alaska and Hawaii are counted as DX and not US States. (NEQP)
 - `selfCountsForCounty`: If true, a station can count itself as a multiplier for the county of operation. (NC, VA). Some QPs require a minimum number of QSOs, but we don't support this variation yet.
 - `selfMobileCountsForCounty`: If true, a station can count itself as a multiplier for the county of operation when operating mobile or portable. Some QPs require a minimum number of QSOs, but we don't support this variation yet. (TN)
+- `countiesCountForInState`: If false, in-state stations do not get counties as multipliers. (ACQP, CPQP, DEQP)
 - `multsPerBandMode`: If true (default), multipliers are awarded per band and mode (Most). If false they are awarded only once overall, unless `multsPerBand` or `multsPerMode` is also true.
 - `multsPerBand`: If true, multipliers are awarded per band. (VT, TN)
 - `multsPerMode`: If true, multipliers are awarded per mode. (ID)
@@ -71,22 +79,20 @@ Relevant `"options"`:
 - `bonusPerBandMode`: If true, bonus points are awarded per band and mode. (Some)
 
 ### Other Options
-
+- `countyToState`: Provides a mapping of county abbreviations to state abbreviations. Needed for some multi-state events (CPQP)
 - `onlineLookup`: If false, should not use online lookup for states or counties. (VT) [Not Implemented yet]
 - `selfSpotting`: If true, stations can spot themselves. (Many) [Not Implemented yet]
-- `countyLine`: Stations can operate from two counties at the same time. (Many) [Not Implemented yet]
+- `countyLine`: Stations can operate from two counties at the same time. (Many)
 - `removeCountySuffixes`: If true, county suffixes are removed from logged callsigns in Cabrillo Output. (ID) [Not Implemented yet]
 
 ### TODO
 
 - Capture location from roaming suffix when logging (i.e. KI2D/SUL)
 - Implement specialCallIsMultiplier
-- Implement dxIsMultiplier
-- Implement dxEntityIsMultiplier
 - Implement alaskaAndHawaiiAreDX
-- Implement dxLocationIsPrefix
 - Implement removeCountySuffixes
 - Implement dataAndCWCountAsSameMode
+- Implement powerMultiplier
 - Implement support for selfCountsForCounty and selfMobileCountsForCountywith a minimum number of QSOs
 - Implement dxEntityMultiplierMax (7QP)
 - 7QP allows for multi-county locations to be entered with an abbreviated second location, so that "ORDES/ORJEF" can be entered as "ORDES/JEF".

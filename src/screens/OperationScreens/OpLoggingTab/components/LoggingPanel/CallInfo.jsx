@@ -278,7 +278,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
   if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
-  console.log('CallInfo render with', { call, locationInfo, stationInfo })
+
   return (
     <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
 
