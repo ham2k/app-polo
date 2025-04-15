@@ -1,5 +1,6 @@
 /*
  * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2025 Steven Hiscocks <steven@hiscocks.me.uk>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -12,6 +13,7 @@ import { Info } from './WWBOTAInfo'
 import { WWBOTAActivityOptions } from './WWBOTAActivityOptions'
 import { wwbotaFindOneByReference, registerWWBOTADataFile, wwbotaFindAllByLocation } from './WWBOTADataFile'
 import { WWBOTALoggingControl } from './WWBOTALoggingControl'
+import { WWBOTAPostSpot } from './WWBOTAPostSpot'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
@@ -50,6 +52,8 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
+  postSpot: WWBOTAPostSpot,
+
   Options: WWBOTAActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,

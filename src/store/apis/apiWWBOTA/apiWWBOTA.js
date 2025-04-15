@@ -27,6 +27,13 @@ export const apiWWBOTA = createApi({
     spots: builder.query({
       query: () => 'spots/',
       keepUnusedDataFor: 60 * 60 // 1 hour
+    }),
+    spot: builder.query({
+      query: (body) => ({
+        url: 'spots/',
+        method: 'POST',
+        body
+      })
     })
   })
 })
