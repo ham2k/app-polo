@@ -165,7 +165,18 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     }
   }, [qso?.their?.call])
 
-  const [commandInfo, setCommandInfo] = useState()
+  const [commandInfo, actualSetCommandInfo] = useState()
+  const setCommandInfo = useCallback((info) => {
+    if (commandInfo?.timeoutId) {
+      clearTimeout(commandInfo.timeoutId)
+    }
+    if (info?.timeout) {
+      info.timeoutId = setTimeout(() => {
+        actualSetCommandInfo(undefined)
+      }, info.timeout)
+    }
+    actualSetCommandInfo(info)
+  }, [actualSetCommandInfo, commandInfo?.timeoutId])
 
   const handleFieldChange = useCallback((event) => { // Handle form fields and update QSO info
     const { fieldId, alsoClearTheirCall } = event
@@ -216,7 +227,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       updateQSO({ power: value })
       if (qso?._isNew) dispatch(setVFO({ power: value }))
     }
-  }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO])
+  }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, setCommandInfo, updateQSO])
 
   const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
     if (DEBUG) logTimer('submit', 'handleSubmit start', { reset: true })
@@ -231,10 +242,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })
       if (commandResult) {
         trackEvent('command', { command })
-        setCommandInfo({ message: commandResult || undefined, match: undefined })
-        setTimeout(() => {
-          setCommandInfo({ message: undefined, match: undefined })
-        }, 3000)
+        setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
         return
       }
 
@@ -337,10 +345,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
     }, 10)
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
-  }, [
-    qso, qsos, vfo, setQSO, loggingState?.originalQSO, operation, settings, online, ourInfo,
-    handleFieldChange, isValidQSO, dispatch, updateQSO, updateLoggingState, setCurrentSecondaryControl
-  ])
+  }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, isValidQSO, setCommandInfo, setCurrentSecondaryControl, setQSO])
 
   const handleWipe = useCallback(() => { // Wipe a new QSO
     if (qso?._isNew) {
