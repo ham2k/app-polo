@@ -8,8 +8,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { View, Platform, UIManager, LayoutAnimation } from 'react-native'
-import { Button, Dialog } from 'react-native-paper'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Button, Dialog, IconButton, Surface } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
@@ -19,6 +18,7 @@ import { dismissNotice, selectNotices } from '../../../store/system/systemSlice'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { trackEvent, handleNoticeActionForDistribution } from '../../../distro'
 import KeepAwake from '@sayem314/react-native-keep-awake'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -52,14 +52,15 @@ function prepareStyles (baseStyles) {
   return {
     ...baseStyles,
     root: {
-      backgroundColor: 'rgb(252,244,167)'
+      backgroundColor: 'rgb(252,244,167)',
+      margin: baseStyles.oneSpace
     },
     noticeContainer: {
-      padding: baseStyles.oneSpace * 1.5,
+      padding: baseStyles.oneSpace * 2,
       width: '100%',
       backgroundColor: 'rgb(252,244,167)',
-      borderColor: 'rgb(197,191,131)',
-      borderTopWidth: 1,
+      // borderColor: 'rgb(197,191,131)',
+      // borderTopWidth: 1,
       flexDirection: 'column',
       gap: baseStyles.oneSpace
     },
@@ -76,22 +77,23 @@ function prepareStyles (baseStyles) {
   }
 }
 
-export default function Notices () {
+export default function Notices ({ paddingForSafeArea = false }) {
   const styles = useThemedStyles(prepareStyles)
+  const safeArea = useSafeAreaInsets()
 
   const dispatch = useDispatch()
   const notices = useSelector(selectNotices)
 
-  const safeArea = useSafeAreaInsets()
+  const [performingAction, setPerformingAction] = useState(false)
 
   const [currentNotice, setCurrentNotice] = useState()
   useEffect(() => {
-    if (!currentNotice && notices.length > 0) {
+    if (!performingAction && !currentNotice && notices.length > 0) {
       setCurrentNotice(notices[0])
-    } else if (!notices.find(n => n.id === currentNotice.id)) {
+    } else if (!performingAction && !notices.find(n => n.id === currentNotice.id)) {
       setCurrentNotice(notices[0])
     }
-  }, [notices, currentNotice])
+  }, [notices, currentNotice, performingAction])
 
   const [visible, setVisible] = useState()
   useEffect(() => {
@@ -106,22 +108,26 @@ export default function Notices () {
   const [overlayText, setOverlayText] = useState()
 
   const handleAction = useCallback(async (notice) => {
-    setVisible(false)
+    try {
+      setVisible(false)
+      setPerformingAction(true)
 
-    trackEvent('accept_notice', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
+      trackEvent('accept_notice', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
 
-    LayoutAnimation.configureNext(DismissNoticeAnimation,
-      async () => { // animation ended
-        await dispatch(dismissNotice(notice))
-        setCurrentNotice(undefined)
-      },
-      async () => { // animation failed
-        await dispatch(dismissNotice(notice))
-        setCurrentNotice(undefined)
-      }
-    )
+      LayoutAnimation.configureNext(DismissNoticeAnimation,
+        async () => { // animation ended
+          setCurrentNotice(undefined)
+          await dispatch(dismissNotice(notice))
+        },
+        async () => { // animation failed
+          setCurrentNotice(undefined)
+        }
+      )
 
-    await performAction(notice, dispatch, setOverlayText)
+      await performAction(notice, dispatch, setOverlayText)
+    } finally {
+      setPerformingAction(false)
+    }
   }, [dispatch])
 
   const handleDismiss = useCallback((notice) => {
@@ -147,7 +153,6 @@ export default function Notices () {
         styles.root,
         {
           height: visible ? undefined : 0,
-          paddingBottom: visible ? safeArea.bottom : 0,
           flexDirection: 'column'
         }
       ]}
@@ -162,27 +167,22 @@ export default function Notices () {
       )}
 
       {[currentNotice].filter(x => x).map((notice, index) => (
-        <View
+        <Surface
           key={index}
-          style={styles.noticeContainer}
+          elevation={3}
+          style={[styles.noticeContainer, { paddingBottom: paddingForSafeArea ? safeArea.bottom : (styles.noticeContainer.paddingBottom ?? styles.noticeContainer.padding) }]}
         >
-          <Ham2kMarkdown style={styles.noticeText}>{notice.text}</Ham2kMarkdown>
+          <Ham2kMarkdown style={styles.noticeText}>
+            {notice.title && `### ${notice.title}\n\n`}
+            {notice.text}
+          </Ham2kMarkdown>
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
-            <Button
-              style={{ width: styles.oneSpace * 12 }}
-              theme={ styles.buttonTheme }
-              mode={'outlined'}
-              compact={true}
-              onPress={() => handleDismiss(notice)}
-            >
-              Dismiss
-            </Button>
             {notice.action && (
               <Button
                 mode={'contained'}
                 theme={ styles.buttonTheme }
-                style={{ paddingHorizontal: styles.oneSpace }}
+                style={{ paddingHorizontal: styles.oneSpace, marginLeft: -styles.oneSpace }}
                 compact={true}
                 disabled={notice.action === 'disabled'}
                 onPress={() => handleAction(notice)}
@@ -190,8 +190,15 @@ export default function Notices () {
                 {notice.actionLabel}
               </Button>
             )}
+            <IconButton
+              icon={'close'}
+              mode={'outlined'}
+              compact={true}
+              onPress={() => handleDismiss(notice)}
+              style={{ padding: 0, margin: 0, marginRight: -0.5 * styles.oneSpace }}
+            />
           </View>
-        </View>
+        </Surface>
       ))}
     </View>
   )

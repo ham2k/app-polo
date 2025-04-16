@@ -12,7 +12,7 @@ import { addQSOs } from '../../store/qsos'
 import { resetDatabase } from '../../store/db/db'
 import { setLocalData } from '../../store/local'
 import { setSettings } from '../../store/settings'
-import { setSystemFlag } from '../../store/system'
+import { addNotice, setSystemFlag } from '../../store/system'
 import { poissonRandom } from '../../tools/randomTools'
 import { logTimer } from '../../tools/perfTools'
 import { annotateQSO } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
@@ -30,6 +30,7 @@ const Extension = {
   alwaysEnabled: true,
   onActivation: ({ registerHook }) => {
     registerHook('command', { priority: 100, hook: ErrorCommandHook })
+    registerHook('command', { priority: 100, hook: NoticeCommandHook })
     registerHook('command', { priority: 100, hook: SeedCommandHook })
     registerHook('command', { priority: 100, hook: OnboardCommandHook })
     registerHook('command', { priority: 100, hook: WipeDBCommandHook })
@@ -49,6 +50,30 @@ const ErrorCommandHook = {
   },
   invokeCommand: (match, { handleFieldChange }) => {
     throw new Error('Test error!')
+  }
+}
+
+const NoticeCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-notice',
+  match: /NOTICE/i,
+  describeCommand: (match) => {
+    return 'Show a notice?'
+  },
+  invokeCommand: (match, { dispatch }) => {
+    dispatch(addNotice({
+      key: 'debug-notice',
+      title: 'Sample Notice',
+      text: 'This is a sample notice. With **some text** and a ~~button~~.',
+      actionLabel: 'Do it!',
+      action: 'dialog',
+      actionArgs: {
+        dialogTitle: 'Sample Notice Dialog',
+        dialogText: 'This is a sample dialog. With **some text** and a ~~button~~ . \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      }
+    }))
+    return 'Notice shown'
   }
 }
 

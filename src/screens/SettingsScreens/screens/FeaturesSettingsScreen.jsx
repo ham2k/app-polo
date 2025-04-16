@@ -110,7 +110,7 @@ export default function FeaturesSettingsScreen ({ navigation }) {
 
       </ScrollView>
 
-      <Notices />
+      <Notices paddingForSafeArea={true} />
     </ScreenContainer>
   )
 }

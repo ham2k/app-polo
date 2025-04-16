@@ -105,7 +105,7 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
       console.info(`Data for ${definition.key} not found, fetching a fresh version`)
       dispatch(addRuntimeMessage(`Downloading ${definition.name}`))
       if (noticesInsteadOfFetch) {
-        await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for '${definition.name}' has to be downloaded.`, actionLabel: 'Download Now', action: 'fetch', actionArgs: { key: definition.key } }))
+        await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for **${definition.name}** has to be downloaded.`, actionLabel: 'Download Now', action: 'fetch', actionArgs: { key: definition.key } }))
       } else {
         await dispatch(fetchDataFile(key))
       }
@@ -116,13 +116,13 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
       dispatch(addRuntimeMessage(`Loading ${definition.name}`))
       if (date && maxAgeInDays && (Date.now() - Date.parse(date)) / 1000 / 60 / 60 / 24 > maxAgeInDays) {
         if (noticesInsteadOfFetch) {
-          await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for '${definition.name}' has not been updated in a while.`, actionLabel: 'Refresh Now', action: 'fetch', actionArgs: { key: definition.key } }))
+          await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for **${definition.name}** has not been updated in a while.`, actionLabel: 'Refresh Now', action: 'fetch', actionArgs: { key: definition.key } }))
         } else {
           await dispatch(fetchDataFile(key))
         }
       } else if (!readOk) {
         if (noticesInsteadOfFetch) {
-          await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for '${definition.name}' has to be downloaded.`, actionLabel: 'Download Now', action: 'fetch', actionArgs: { key: definition.key } }))
+          await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for **${definition.name}** has to be downloaded.`, actionLabel: 'Download Now', action: 'fetch', actionArgs: { key: definition.key } }))
         } else {
           await dispatch(fetchDataFile(key))
         }
