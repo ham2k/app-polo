@@ -28,8 +28,7 @@ import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { ListRow } from '../../components/ListComponents'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
-import { dbSelectAll, pathForDatabase, replaceDatabase, resetDatabase } from '../../../store/db/db'
-import { fmtNumber } from '@ham2k/lib-format-tools'
+import { pathForDatabase, replaceDatabase, resetDatabase } from '../../../store/db/db'
 import GLOBAL from '../../../GLOBAL'
 import { setLocalData } from '../../../store/local'
 import ThemedTextInput from '../../components/ThemedTextInput'
@@ -83,7 +82,7 @@ export default function DevModeSettingsScreen ({ navigation }) {
         })),
         destination: 'cachesDirectory'
       })
-      const filename = decodeURIComponent(localCopy.fileCopyUri.replace('file://', ''))
+      const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
       await replaceDatabase(filename)
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
