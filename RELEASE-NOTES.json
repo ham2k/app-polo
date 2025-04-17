@@ -1,4 +1,13 @@
 {
+  "25.4.1": {
+    "name": "April '25 (patch 1)",
+    "changes": [
+      "Fixed crash when selecting POTA references",
+      "Fixed file selection in dev mode",
+      "Fixed command message clearing",
+      "Better handling of safe areas in split mode screens"
+    ]
+  },
   "25.4.0": {
     "name": "April '25",
     "photoCaption": "VK4KC at POTA AU-8817",
