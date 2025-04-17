@@ -9,6 +9,7 @@
 import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -30,7 +31,8 @@ function prepareStyles (baseStyles) {
   }
 }
 
-export default function LoggingSettingsScreen ({ navigation }) {
+export default function LoggingSettingsScreen ({ navigation, splitView }) {
+  const safeAreaInsets = useSafeAreaInsets()
   const dispatch = useDispatch()
 
   const styles = useThemedStyles(prepareStyles)
@@ -46,7 +48,7 @@ export default function LoggingSettingsScreen ({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection>
           {/* <Ham2kListItem title={'Clone Settings from Previous'}
             description={settings.cloneLastOperation !== false ? 'Settings for new operations are based on the most recent one' : 'New operations start with default settings' }

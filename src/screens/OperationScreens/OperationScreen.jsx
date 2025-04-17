@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Animated, PanResponder, Platform, View, useWindowDimensions } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 
@@ -40,6 +40,7 @@ const MIN_WIDTH_RIGHT = 40
 export default function OperationScreen (props) {
   const { navigation, route } = props
   const styles = useThemedStyles()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
@@ -151,8 +152,8 @@ export default function OperationScreen (props) {
                 height: '100%'
               }}
             >
-              <HeaderBar options={headerOptions} navigation={navigation} back={true} rightAction={'cog'} />
-              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView } }} />
+              <HeaderBar options={headerOptions} navigation={navigation} back={true} rightAction={'cog'} splitView={splitView} />
+              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView } }} splitView={splitView} />
             </Animated.View>
             <View
               style={{
@@ -194,7 +195,7 @@ export default function OperationScreen (props) {
                   screenOptions={{
                     tabBarItemStyle: [{ width: (dimensions.width - mainPaneWidth) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                     tabBarLabelStyle: styles.screenTabBarLabel,
-                    tabBarStyle: styles.screenTabBar,
+                    tabBarStyle: [styles.screenTabBar, { paddingRight: safeAreaInsets.right }],
                     tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryHighlight, height: styles.halfSpace * 1.5 },
                     // See https://github.com/react-navigation/react-navigation/issues/11301
                     // on iOS, if the keyboard is open, tabs get stuck when switching

@@ -19,6 +19,7 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kListSubheader } from '../../components/Ham2kListSubheader'
 import { findHooks } from '../../../extensions/registry'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function prepareStyles (baseStyles) {
   return {
@@ -31,10 +32,11 @@ function prepareStyles (baseStyles) {
   }
 }
 
-export default function GeneralSettingsScreen ({ navigation }) {
+export default function GeneralSettingsScreen ({ navigation, splitView }) {
   const dispatch = useDispatch()
 
   const styles = useThemedStyles(prepareStyles)
+  const safeAreaInsets = useSafeAreaInsets()
 
   const settings = useSelector(selectSettings)
 
@@ -47,7 +49,7 @@ export default function GeneralSettingsScreen ({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection>
           <Ham2kListItem
             title="Theme"

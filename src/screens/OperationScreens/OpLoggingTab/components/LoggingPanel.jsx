@@ -39,7 +39,9 @@ import { trackEvent } from '../../../../distro'
 
 const DEBUG = false
 
-export default function LoggingPanel ({ style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo }) {
+export default function LoggingPanel ({
+  style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo, splitView
+}) {
   const navigation = useNavigation()
 
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
@@ -431,7 +433,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
 
   return (
     <View style={[styles.root, style]}>
-      <SafeAreaView edges={[isKeyboardVisible ? '' : 'bottom', 'left', 'right'].filter(x => x)}>
+      <SafeAreaView edges={[isKeyboardVisible ? '' : 'bottom', 'left', splitView ? '' : 'right'].filter(x => x)}>
 
         <View style={{ width: '100%', flexDirection: 'row', minHeight: 20 }}>
           <View style={{ flex: 1, flexDirection: 'column' }}>

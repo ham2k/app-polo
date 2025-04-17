@@ -10,6 +10,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dialog, List, Switch, Text } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
@@ -37,8 +38,9 @@ const FeatureItem = ({ extension, settings, info, styles, onChange, category }) 
   )
 }
 
-export default function FeaturesSettingsScreen ({ navigation }) {
+export default function FeaturesSettingsScreen ({ navigation, splitView }) {
   const styles = useThemedStyles()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const settings = useSelector(selectSettings)
 
@@ -76,7 +78,7 @@ export default function FeaturesSettingsScreen ({ navigation }) {
           </Dialog.Content>
         </Ham2kDialog>
       )}
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         {featureGroups.map(({ category, label, extensions, popular }) => (
 
           <Ham2kListSection title={label} key={category} titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}>

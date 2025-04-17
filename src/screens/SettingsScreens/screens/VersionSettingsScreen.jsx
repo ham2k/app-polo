@@ -11,6 +11,7 @@ import { List } from 'react-native-paper'
 import { useSelector } from 'react-redux'
 import { Image, Pressable, ScrollView } from 'react-native'
 import Markdown from 'react-native-markdown-display'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import releaseNotes from '../../../../RELEASE-NOTES.json'
 
@@ -21,7 +22,6 @@ import { VersionSettingsForDistribution } from '../../../distro'
 import { selectSettings } from '../../../store/settings'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
-
 const SPLASH_IMAGE = require('../../../screens/StartScreen/img/launch_screen.jpg')
 
 function prepareStyles (baseStyles) {
@@ -35,8 +35,9 @@ function prepareStyles (baseStyles) {
   }
 }
 
-export default function VersionSettingsScreen ({ navigation }) {
+export default function VersionSettingsScreen ({ navigation, splitView }) {
   const styles = useThemedStyles(prepareStyles)
+  const safeAreaInsets = useSafeAreaInsets()
 
   const settings = useSelector(selectSettings)
 
@@ -74,7 +75,7 @@ export default function VersionSettingsScreen ({ navigation }) {
 
         </Pressable>
       ) : (
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
           <VersionSettingsForDistribution settings={settings} styles={styles} />
 
           <Ham2kListSection>

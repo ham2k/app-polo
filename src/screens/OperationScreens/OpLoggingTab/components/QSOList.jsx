@@ -16,8 +16,9 @@ import { findHooks } from '../../../../extensions/registry'
 import QSOHeader from './QSOHeader'
 import getItemLayout from 'react-native-get-item-layout-section-list'
 import { fmtShortTimeZulu, fmtTimeZulu } from '../../../../tools/timeFormats'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
+function prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeArea }) {
   const extendedWidth = width / themeStyles.oneSpace > 80
   const narrowWidth = width / themeStyles.oneSpace < 50
 
@@ -55,9 +56,14 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
     },
     unselectedRow: {
     },
+    compactRow: {
+      ...themeStyles.compactRow,
+      paddingLeft: safeArea?.left || 0
+    },
     headerRow: {
       ...themeStyles.compactRow,
-      backgroundColor: themeStyles.colors.surfaceVariant
+      backgroundColor: themeStyles.colors.surfaceVariant,
+      paddingLeft: safeArea?.left || 0
     },
     fields: {
       header: {
@@ -174,6 +180,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
 
 const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress }) {
   const { width } = useWindowDimensions()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const [componentWidth, setComponentWidth] = useUIState()
   const handleLayout = useCallback((event) => {
@@ -182,9 +189,9 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
 
   const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
-  const styles = useThemedStyles(prepareStyles, false, false, componentWidth ?? width)
-  const stylesForDeleted = useThemedStyles(prepareStyles, true, false, componentWidth ?? width)
-  const stylesForOtherOperator = useThemedStyles(prepareStyles, false, true, componentWidth ?? width)
+  const styles = useThemedStyles(prepareStyles, { isDeleted: false, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets })
+  const stylesForDeleted = useThemedStyles(prepareStyles, { isDeleted: true, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets })
+  const stylesForOtherOperator = useThemedStyles(prepareStyles, { isDeleted: false, isOtherOperator: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets })
 
   const listRef = useRef()
 
