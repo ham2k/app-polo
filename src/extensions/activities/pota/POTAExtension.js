@@ -94,7 +94,7 @@ const SpotsHook = {
           timeInMillis: Date.parse(spot.spotTime + 'Z'),
           source: Info.key,
           icon: Info.icon,
-          label: `POTA ${spot.reference}: ${spot.locationDesc ? spot.locationDesc.split('-')[1] + ' •' : ''} ${spot.name}`,
+          label: `${spot.reference}: ${[_simplifyPOTAStates(spot.locationDesc), spot.name].filter(x => x).join(' • ')}`,
           sourceInfo: {
             source: spot.source,
             id: spot.spotId,
@@ -380,5 +380,16 @@ const ReferenceHandler = {
     score.longSummary = [score.summary, `${score.value} Contacts`].filter(x => x).join(' • ')
 
     return score
+  }
+}
+
+function _simplifyPOTAStates (locationDesc) {
+  if (!locationDesc) return ''
+  const states = locationDesc.split(',')
+  const oneState = states[0].split('-', 2)[1].trim()
+  if (states.length > 1) {
+    return `${oneState}+${states.length - 1}`
+  } else {
+    return oneState
   }
 }
