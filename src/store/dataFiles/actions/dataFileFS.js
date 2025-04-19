@@ -172,13 +172,13 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
   const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, headers)
   if (DEBUG_FETCH) console.log('-- Response status', response?.respInfo?.status)
   if (DEBUG_FETCH) console.log('-- Response headers', response?.respInfo?.headers)
-  if (response.respInfo.status === 304) {
+  if (response?.respInfo?.status === 304) {
     if (DEBUG_FETCH) console.log('-- 304 Not Modified')
     return info?.data
-  } else if (response.respInfo.status >= 301 && response.respInfo.status <= 308) {
-    if (DEBUG_FETCH) console.log(`-- ${response.respInfo.status} Redirect`)
-    return await fetchAndProcessURL({ url: response.respInfo.headers.location, key, process, definition, info, options })
-  } else if (response.respInfo.status !== 200) {
+  } else if (response?.respInfo?.status >= 301 && response?.respInfo?.status <= 308) {
+    if (DEBUG_FETCH) console.log(`-- ${response?.respInfo?.status} Redirect`)
+    return await fetchAndProcessURL({ url: response.respInfo.headers?.location, key, process, definition, info, options })
+  } else if (response?.respInfo?.status !== 200) {
     throw new Error(`Failed to fetch ${url}: ${response.respInfo.status}`)
   }
 
@@ -331,7 +331,12 @@ export async function resolveDownloadUrl (url) {
   // Google Drive
   } else if (url.match(/^https:\/\/drive\.google\.com\//i)) {
     const parts = url.match(/file\/d\/([\w_-]+)/)
-    return `https://drive.google.com/uc?id=${parts[1]}&export=download`
+    if (parts) {
+      return `https://drive.google.com/uc?id=${parts[1]}&export=download`
+    } else {
+      console.log('No parts found for Google Drive URL', url)
+      return url
+    }
   // Google Docs
   } else if (url.match(/^https:\/\/docs\.google\.com\/document/i)) {
     const parts = url.match(/\/d\/([\w_-]+)/)
