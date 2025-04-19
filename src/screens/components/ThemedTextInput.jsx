@@ -7,10 +7,12 @@
 
 /* eslint-disable no-shadow */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-
-import { TextInput } from 'react-native-paper'
 import { TextInput as NativeTextInput, Platform } from 'react-native'
+import { useSelector } from 'react-redux'
+import { TextInput } from 'react-native-paper'
+
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { selectSettings } from '../../store/settings'
 
 const LEFT_TRIM_REGEX = /^\s+/
 const SPACE_REGEX = /\s/g
@@ -34,6 +36,7 @@ export default function ThemedTextInput (props) {
     keyboard
   } = props
   const themeStyles = useThemedStyles()
+  const settings = useSelector(selectSettings)
 
   const alternateInnerRef = useRef()
   const actualInnerRef = innerRef ?? alternateInnerRef
@@ -225,7 +228,6 @@ export default function ThemedTextInput (props) {
     } else if (keyboard === 'code') {
       keyboardOpts = {
         autoCapitalize: 'none',
-        inputMode: 'text',
         keyboardType: 'ascii-capable'
       }
     } else if (keyboard === 'dumb' || keyboard === 'numbers') {
@@ -252,13 +254,24 @@ export default function ThemedTextInput (props) {
 
     if (uppercase) keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
 
+    keyboardOpts.autoFocus = false
+    keyboardOpts.importantForAutofill = 'no' // Android only
+    keyboardOpts.disableFullScreenUI = true // Android only
+
     keyboardOpts.enterKeyHint = 'send'
 
     // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
     keyboardOpts.keyboardAppearance = (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
 
+    if (settings.smartKeyboard === false) {
+      if (keyboardOpts.keyboardType === 'visible-password') {
+        keyboardOpts.keyboardType = 'default'
+        keyboardOpts.autoCapitalize = 'characters'
+      }
+    }
+
     return keyboardOpts
-  }, [keyboard, themeStyles.isDarkMode, uppercase, multiline])
+  }, [keyboard, themeStyles.isDarkMode, uppercase, multiline, settings.smartKeyboard])
 
   if (DEBUG && fieldId === 'theirCall') console.log('renderInput', { stringValue, sel: selectionRef?.current, trackSelection })
   const renderInput = useCallback((props) => {

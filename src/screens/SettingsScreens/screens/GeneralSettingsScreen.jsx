@@ -8,7 +8,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { Platform, ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -129,6 +129,16 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
             right={() => <Switch value={!!settings.useGrid8} onValueChange={(value) => dispatch(setSettings({ useGrid8: value })) } />}
             onPress={() => dispatch(setSettings({ useGrid8: !settings.useGrid8 }))}
           />
+
+          {Platform.OS === 'android' && (
+            <Ham2kListItem
+              title="Smart Keyboard Features"
+              description={settings.smartKeyboard !== false ? 'Enable smart keyboard features' : 'Use simpler keyboards for compatibility reasons with some devices'}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="keyboard-outline" />}
+              right={() => <Switch value={settings.smartKeyboard !== false} onValueChange={(value) => dispatch(setSettings({ smartKeyboard: value })) } />}
+              onPress={() => dispatch(setSettings({ smartKeyboard: !settings.smartKeyboard }))}
+            />
+          )}
 
           <Ham2kListItem
             title="Export Settings"
