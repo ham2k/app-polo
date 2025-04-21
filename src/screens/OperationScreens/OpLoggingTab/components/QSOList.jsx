@@ -70,7 +70,7 @@ function prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeAr
         ...commonStyles,
         fontFamily: themeStyles.fontFamily,
         flex: 0,
-        marginLeft: 0,
+        marginLeft: themeStyles.oneSpace,
         textAlign: 'left'
       },
       number: {
@@ -87,7 +87,7 @@ function prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeAr
         ...themeStyles.text.lighter,
         flex: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 7,
-        marginLeft: 0,
+        marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
       freq: {
