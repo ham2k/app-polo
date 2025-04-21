@@ -57,7 +57,8 @@ const LookupHook = {
       if (matchingQRZCall) {
         return { ...qrzLookup.data, call: matchingQRZCall, source: 'qrz.com' }
       } else if (qrzLookup?.error) {
-        return { ...EMPTY_RECORD, error: `QRZ: ${qrzLookup.error}`, call: callInfo.call, source: 'qrz.com' }
+        const errorMessage = qrzLookup.error.error || qrzLookup.error
+        return { ...EMPTY_RECORD, error: `QRZ: ${errorMessage}`, call: callInfo.call, source: 'qrz.com' }
       }
     }
     return {}

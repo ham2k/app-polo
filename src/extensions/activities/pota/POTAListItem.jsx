@@ -43,7 +43,7 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, se
       title={
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
           <Text style={{ fontWeight: 'bold' }}>
-            {pota?.data?.ref ?? activityRef}
+            {pota?.data?.ref ?? activityRef ?? ''}
           </Text>
           {/* <Text>
             {(pota?.data?.locationDesc ?? refData?.locationDesc) && ` (${pota?.data?.locationDesc ?? refData?.locationDesc})`}

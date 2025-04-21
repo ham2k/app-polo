@@ -199,7 +199,7 @@ const ReferenceHandler = {
 
         if (data.ref?.startsWith('US-') || data.ref?.startsWith('CA-') || data.ref?.startsWith('AU-')) {
           // For US, Canada or Australia, use the state/province.
-          result.state = (data.location || '').split('-').pop().trim()
+          result.state = (data.location || '').split('-')[1]?.trim()
         }
       }
     } else {

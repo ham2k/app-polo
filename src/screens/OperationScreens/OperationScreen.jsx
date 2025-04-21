@@ -316,7 +316,7 @@ export default function OperationScreen (props) {
 export function buildTitleForOperation (operationAttrs, { includeCall = true } = {}) {
   if (operationAttrs.stationCall) {
     let call = operationAttrs.stationCall
-    if (operationAttrs.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
+    if (operationAttrs?.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
       const stationCallInfo = parseCallsign(operationAttrs.stationCall)
       const operatorCallInfo = parseCallsign(operationAttrs.operatorCall)
       if (stationCallInfo?.baseCall !== operatorCallInfo?.baseCall) {
