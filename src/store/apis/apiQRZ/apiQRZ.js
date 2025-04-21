@@ -10,6 +10,7 @@ import { XMLParser } from 'fast-xml-parser'
 
 import packageJson from '../../../../package.json'
 import { capitalizeString } from '../../../tools/capitalizeString'
+import { setAccountInfo } from '../../settings'
 
 /**
 
@@ -22,10 +23,10 @@ const DEBUG = false
 
 const BASE_URL = 'https://xmldata.qrz.com/'
 
-const apiState = {}
+const API_TIMEOUT = 3000 // 3 seconds
 
 function defaultParams (api) {
-  const session = apiState.session
+  const session = api.getState().settings?.accounts?.qrz?.session
   return {
     s: session,
     agent: `ham2k-polo-${packageJson.version}`
@@ -34,6 +35,7 @@ function defaultParams (api) {
 
 const baseQueryWithSettings = fetchBaseQuery({
   baseUrl: `${BASE_URL}/xml/current`,
+  timeout: API_TIMEOUT,
   prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
   },
@@ -61,7 +63,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     result.data?.QRZDatabase?.Session?.Error?.startsWith('Session Timeout') ||
     result.data?.QRZDatabase?.Session?.Error?.startsWith('Username / password required')
   ) {
-    apiState.session = undefined
     // try to get a new session key
     const { login, password } = api.getState().settings?.accounts?.qrz ?? {}
     if (DEBUG) console.log('baseQueryWithReauth second call')
@@ -69,6 +70,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       url: '',
       params: {
         ...defaultParams(api),
+        s: undefined,
         username: login,
         password
       }
@@ -76,16 +78,16 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
     if (result.data?.QRZDatabase?.Session?.Error) return { error: result.data?.QRZDatabase?.Session?.Error, meta: result.meta }
 
-    const session = result.data?.QRZDatabase?.Session?.Key
-    if (session) {
-      if (DEBUG) console.log('New Session', session)
-      apiState.session = session
+    const newSession = result.data?.QRZDatabase?.Session?.Key
+    if (newSession) {
+      if (DEBUG) console.log('New Session', newSession)
+      await api.dispatch(setAccountInfo({ qrz: { ...api.getState().settings?.accounts?.qrz, session: newSession } }))
       args.params = { ...args.params, ...defaultParams(api) } // Refresh params to include new session info
 
       if (DEBUG) console.log('baseQueryWithReauth third call')
       result = await baseQueryWithSettings(args, api, extraOptions)
     } else {
-      apiState.session = undefined
+      await api.dispatch(setAccountInfo({ qrz: { ...api.getState().settings?.accounts?.qrz, session: undefined } }))
       return { error: 'Unexpected error logging into QRZ.com', result }
     }
   }

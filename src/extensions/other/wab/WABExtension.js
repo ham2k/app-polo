@@ -9,9 +9,9 @@ import { WABOpSetting } from './components/WABOpSetting'
 
 export const Info = {
   key: 'wab-square',
-  name: 'Worked All Britain (WAB)',
+  name: 'Worked All Britain/Ireland',
   icon: 'selection-marker',
-  description: 'Add WAB Square to operation'
+  description: 'Add WAB/WAI Square to operation'
 }
 
 const Extension = {

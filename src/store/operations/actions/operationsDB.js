@@ -10,16 +10,19 @@ import RNFetchBlob from 'react-native-blob-util'
 
 import { reportError } from '../../../distro'
 
-import { actions } from '../operationsSlice'
+import GLOBAL from '../../../GLOBAL'
 import { actions as qsosActions } from '../../qsos'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
-import { syncLatestOperations } from '../../sync'
-import GLOBAL from '../../../GLOBAL'
+import { sendOperationsToSyncService } from '../../sync'
+import { actions } from '../operationsSlice'
+import { selectSettings } from '../../settings'
 
 const operationFromRow = (row) => {
-  const data = JSON.parse(row.data)
+  if (!row) return {}
 
-  data.local = JSON.parse(row.localData) || {}
+  const data = row.data ? JSON.parse(row.data) : {}
+
+  data.local = row.localData ? JSON.parse(row.localData) || {} : {}
 
   data.uuid = row.uuid
   data.deleted = row.deleted
@@ -60,6 +63,7 @@ const rowFromOperation = (operation) => {
   delete operationClone.startAtMillisMin
   delete operationClone.startAtMillisMax
   delete operationClone.qsoCount
+  delete operationClone._useTemplates
   const data = JSON.stringify(operationClone)
   const localData = JSON.stringify(local)
 
@@ -96,7 +100,6 @@ export const queryOperations = async (query, params) => {
 
 export const saveOperation = (operation, { synced = false } = {}) => async (dispatch, getState) => {
   const row = rowFromOperation(operation)
-  console.log('saveOperation', row)
   await dbExecute(
     `
       INSERT INTO operations
@@ -113,7 +116,7 @@ export const saveOperation = (operation, { synced = false } = {}) => async (disp
   )
   if (!synced) {
     setImmediate(() => {
-      syncLatestOperations({ dispatch, getState })
+      sendOperationsToSyncService({ dispatch, getState })
     })
   }
 }
@@ -128,13 +131,75 @@ export const saveOperationLocalData = (operation) => async (dispatch, getState) 
   )
 }
 
-export const addNewOperation = (operation) => async (dispatch) => {
+export const mergeSyncOperations = ({ operations }) => async (dispatch, getState) => {
+  const uuids = operations.map((op) => `"${op.uuid}"`).join(',')
+  const existingOps = await dbSelectAll('SELECT * FROM operations WHERE uuid IN (?)', [uuids], { row: operationFromRow })
+
+  let lastSyncedAtMillis = 0
+
+  for (const operation of operations) {
+    const existing = existingOps.find((op) => op.uuid === operation.uuid)
+    if (existing) {
+      if (existing.updatedAtMillis >= operation.updatedAtMillis) {
+        continue
+      } else {
+        operation.local = existing.local
+        operation.startAtMillisMin = existing.startAtMillisMin
+        operation.startAtMillisMax = existing.startAtMillisMax
+        operation.qsoCount = existing.qsoCount
+      }
+    }
+    await dispatch(saveOperation(operation, { synced: true }))
+    dispatch(actions.setOperation(operation))
+    lastSyncedAtMillis = Math.max(lastSyncedAtMillis, operation.syncedAtMillis)
+  }
+
+  return lastSyncedAtMillis
+}
+
+export async function markOperationsAsSynced (operations) {
+  if (!operations || operations.length === 0) return
+  await dbExecute(`UPDATE operations SET synced = true WHERE uuid IN (${operations.map(q => `"${q.uuid}"`).join(',')})`, [])
+}
+
+export async function resetSyncedStatus () {
+  await dbExecute('UPDATE qsos SET synced = false', [])
+  await dbExecute('UPDATE operations SET synced = false', [])
+}
+
+export async function getSyncCounts () {
+  const counts = {}
+
+  const opCounts = await dbSelectAll('SELECT COUNT(*) as count, synced FROM operations GROUP BY synced')
+  const qsoCounts = await dbSelectAll('SELECT COUNT(*) as count, synced FROM qsos WHERE operation != "historical" GROUP BY synced')
+  counts.operations = opCounts.reduce((acc, row) => {
+    acc[row.synced ? 'synced' : 'pending'] = row.count
+    return acc
+  }, {})
+  counts.qsos = qsoCounts.reduce((acc, row) => {
+    acc[row.synced ? 'synced' : 'pending'] = row.count
+    return acc
+  }, {})
+
+  return counts
+}
+
+export const addNewOperation = (operation) => async (dispatch, getState) => {
+  const settings = selectSettings(getState())
+
+  operation = operation || {}
   const now = Date.now()
-  operation.uuid = UUID.v1()
+  operation.uuid = UUID.v4()
   operation.createdAtMillis = operation.createdAtMillis || now
   operation.createdOnDeviceId = operation.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
   operation.updatedAtMillis = now
   operation.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
+
+  operation.title = operation.title || 'New Operation'
+  operation.stationCall = operation.stationCall || settings.operatorCall
+  operation.refs = operation.refs || []
+
+  operation._isNew = operation._isNew ?? true
 
   dispatch(actions.setOperation(operation))
   await dispatch(saveOperation(operation))
@@ -146,11 +211,15 @@ export const loadOperation = (uuid) => async (dispatch) => {
   dispatch(actions.setOperation(operation))
 }
 
-export const deleteOperation = (uuid) => async (dispatch) => {
-  await dbExecute('UPDATE operations SET deleted = ? WHERE uuid = ?', [true, uuid])
+export const deleteOperation = (uuid) => async (dispatch, getState) => {
+  await dbExecute('UPDATE operations SET deleted = ?, synced = ? WHERE uuid = ?', [true, false, uuid])
   await dbExecute('UPDATE qsos SET deleted = ? WHERE operation = ?', [true, uuid])
   await dispatch(actions.unsetOperation(uuid))
   await dispatch(qsosActions.unsetQSOs(uuid))
+
+  setImmediate(() => {
+    sendOperationsToSyncService({ dispatch, getState })
+  })
 }
 
 export const restoreOperation = (uuid) => async (dispatch) => {

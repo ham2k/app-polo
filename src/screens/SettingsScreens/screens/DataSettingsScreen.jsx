@@ -9,8 +9,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Dialog, List, Text } from 'react-native-paper'
-import { ScrollView } from 'react-native'
-import DocumentPicker from 'react-native-document-picker'
+import { Alert, ScrollView } from 'react-native'
+import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
@@ -72,7 +72,7 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
     <Ham2kDialog visible={true} onDismiss={onDialogDone}>
       <Dialog.Title style={{ textAlign: 'center' }}>{def.name}</Dialog.Title>
       <Dialog.Content>
-        <Ham2kMarkdown>{def.description}</Ham2kMarkdown>
+        <Ham2kMarkdown>{def.buildDescription ? def.buildDescription({ data: info }) : def.description}</Ham2kMarkdown>
       </Dialog.Content>
       <Dialog.Content>
         {info?.status === 'fetching' ? (
@@ -149,14 +149,22 @@ export default function DataSettingsScreen ({ navigation }) {
   }, [dispatch])
 
   const handleImportHistoricalFile = useCallback(() => {
-    DocumentPicker.pickSingle({ mode: 'import', copyTo: 'cachesDirectory' }).then(async (file) => {
+    pick({ mode: 'import' }).then(async (files) => {
+      const [localCopy] = await keepLocalCopy({
+        files: files.map(file => ({
+          uri: file.uri,
+          fileName: file.name ?? 'fallbackName'
+        })),
+        destination: 'cachesDirectory'
+      })
+
+      const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
+
       setLoadingHistoricalMessage('Importing ADIF records... Please be patient!')
       const interval = setInterval(async () => {
         const count = await dispatch(countHistoricalRecords())
         setHistoricalCount(count)
       }, 1000)
-
-      const filename = decodeURIComponent(file.fileCopyUri.replace('file://', ''))
 
       await dispatch(importHistoricalADIF(filename))
       RNFetchBlob.fs.unlink(filename)
@@ -171,6 +179,7 @@ export default function DataSettingsScreen ({ navigation }) {
       if (error.indexOf('cancelled') >= 0) {
         // ignore
       } else {
+        Alert.alert('Error importing historical ADIF', error.message)
         reportError('Error importing historical ADIF', error)
       }
     })
@@ -180,6 +189,7 @@ export default function DataSettingsScreen ({ navigation }) {
     try {
       await dispatch(deleteHistoricalRecords())
     } catch (error) {
+      Alert.alert('Error deleting historical records', error.message)
       reportError('Error deleting historical records', error)
     }
 

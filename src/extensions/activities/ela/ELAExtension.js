@@ -9,10 +9,14 @@ import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/d
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './ELAInfo'
-import { elaFindOneByReference, registerELADataFile } from './ELADataFile'
+import { elaFindAllByLocation, elaFindOneByReference, registerELADataFile } from './ELADataFile'
 import { ELAActivityOptions } from './ELAActivityOptions'
 import { ELAPostSpot } from './ELAPostSpot'
 import { LOCATION_ACCURACY } from '../../constants'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,
@@ -34,7 +38,14 @@ const ActivityHook = {
   ...Info,
   MainExchangePanel: null,
   Options: ELAActivityOptions,
-  postSpot: ELAPostSpot
+  postSpot: ELAPostSpot,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'G-01012', program: Info.shortName, name: 'Example Lighthouse', shortName: 'Example Lighthouse', label: `${Info.shortName} G-01012: Example Lighthouse`, shortLabel: `${Info.shortName} G-01012` }] }
+    ]
+  }
 }
 
 const ReferenceHandler = {
@@ -60,11 +71,36 @@ const ReferenceHandler = {
           location: reference.region,
           grid: reference.grid,
           accuracy: LOCATION_ACCURACY.REASONABLE,
-          label: `${Info.shortName} ${ref.ref}: ${reference.name}`
+          label: `${Info.shortName} ${ref.ref}: ${reference.name}`,
+          shortLabel: `${Info.shortName} ${ref.ref}`,
+          program: Info.shortName
         }
       } else {
-        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
+        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference', program: Info.shortName }
       }
+    }
+  },
+
+  extractTemplate: ({ ref, operation }) => {
+    return { type: ref.type }
+  },
+
+  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+    if (operation?.grid) {
+      let info = parseCallsign(operation.stationCall || '')
+      info = annotateFromCountryFile(info)
+      const [lat, lon] = gridToLocation(operation.grid)
+
+      let nearby = await elaFindAllByLocation(info.dxccCode, lat, lon, 0.25)
+      nearby = nearby.map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, { lat, lon })
+      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
+
+      if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
+      else return { type: ref.type, name: 'No lighthouses nearby!' }
+    } else {
+      return { type: ref.type }
     }
   },
 
@@ -80,9 +116,9 @@ const ReferenceHandler = {
     if (ref?.type === Info.activationType && ref?.ref) {
       return [{
         format: 'adif',
-        exportData: { refs: [ref] },
-        nameTemplate: settings.useCompactFileNames ? '{call} @ {ref} {compactDate}' : '{date} {call} at {ref}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+        exportData: { refs: [ref] }, // exports only see this one ref
+        nameTemplate: '{{log.station}} @ {{log.ref}} {{compact op.date}}',
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     }
   },
@@ -90,7 +126,7 @@ const ReferenceHandler = {
   adifFieldsForOneQSO: ({ qso, operation }) => {
     const activationRef = findRef(operation, Info.activationType)
     const fields = []
-    if (activationRef) fields.push({ MY_SIG_INFO: activationRef.ref })
+    if (activationRef) fields.push({ MY_SIG: Info.shortName }, { MY_SIG_INFO: activationRef.ref })
 
     return fields
   },

@@ -1,0 +1,39 @@
+{
+  "key": "HI",
+  "name": "Hawaii QSO Party",
+  "start": "2025-8-23 04:00Z",
+  "end": "2025-8-25 03:59Z",
+  "cabrilloName": "HI-QSO-PARTY",
+  "notes": "Contributed by W1GRL & W1BOY",
+  "internalNotes": "HI stations mults not per band, non-HI stations mults are per band",
+  "lastUpdated": "2025-04-01 18:00Z",
+  "status": "Updated for 2025, see internalNotes",
+  "options": {
+    "dcCountsAsMaryland": false,
+    "stateCountsForInState": true,
+    "countyLine": false,
+    "dxEntityIsMultiplier": true,
+    "selfSpotting": true
+  },
+  "points": {
+    "PHONE": 2,
+    "CW": 3,
+    "Digital": 3
+  },
+  "counties": {
+    "KAU": "Kauai",
+    "NII": "Niihau",
+    "KAL": "Kalawao",
+    "HON": "Honolulu",
+    "LHN": "Leeward",
+    "PRL": "Pearl Harbor Area",
+    "WHN": "Windward",
+    "LNI": "Lana'i",
+    "MAU": "Maui",
+    "MOL": "Molokai",
+    "HIL": "Hilo",
+    "KOH": "Kohala",
+    "KON": "Kona",
+    "VOL": "Volcano Park"
+  }
+}

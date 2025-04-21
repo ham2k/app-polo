@@ -10,11 +10,15 @@ import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './WWBOTAInfo'
 import { WWBOTAActivityOptions } from './WWBOTAActivityOptions'
-import { wwbotaFindOneByReference, registerWWBOTADataFile } from './WWBOTADataFile'
+import { wwbotaFindOneByReference, registerWWBOTADataFile, wwbotaFindAllByLocation } from './WWBOTADataFile'
 import { WWBOTALoggingControl } from './WWBOTALoggingControl'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,
@@ -48,9 +52,15 @@ const ActivityHook = {
   },
   Options: WWBOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType
-}
+  generalHuntingType: ({ operation, settings }) => Info.huntingType,
 
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      // Regular Activation
+      { refs: [{ type: Info.activationType, ref: 'B/XX-1234', name: 'Example Bunker', shortName: 'Example Bunker', program: 'XXBOTA', label: 'XX Bunkers On The Air B/XX-1234: Example Bunker', shortLabel: 'XXBOTA B/XX-1234' }] }
+    ]
+  }
+}
 const SpotsHook = {
   ...Info,
   sourceName: 'WWBOTA',
@@ -77,10 +87,10 @@ const SpotsHook = {
 
       // Refs
       const refs = []
-      const refRegex = /\b(B\/(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*))[- ]?([0-9]{4}(?:[ ,][0-9]{4})*)\b/gi
+      const refRegex = /\b(B\/(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*))(?:- ?| -?)?([0-9]{4}(?:(?:(?<sep>[ ,/])[0-9]{4})(?:\k<sep>[0-9]{4})*)?)\b/gi
       for (const match of spot.info.matchAll(refRegex)) {
         const prefix = match[1].toUpperCase()
-        refs.push(...match[2].split(/[ ,]/).map(refNum => `${prefix}-${refNum}`))
+        refs.push(...match[2].split(/[ ,/]/).map(refNum => `${prefix}-${refNum}`))
       }
       let label
       if (refs.length === 0) { // No reference found
@@ -177,6 +187,8 @@ const ReferenceHandler = {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', location: '' }
 
     const data = await wwbotaFindOneByReference(ref.ref)
+    const program = ref.ref.split('-')[0].split('/')[1]
+
     let result
     if (data?.name) {
       result = {
@@ -185,12 +197,37 @@ const ReferenceHandler = {
         location: data.area,
         grid: data.grid,
         accuracy: LOCATION_ACCURACY.ACCURATE,
-        label: `${Info.shortName} ${ref.ref}: ${data.name}`
+        label: `${program} ${ref.ref}: ${data.name}`,
+        shortLabel: `${program} ${ref.ref}`,
+        program
       }
     } else {
       return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
     }
     return result
+  },
+
+  extractTemplate: ({ ref, operation }) => {
+    return { type: ref.type }
+  },
+
+  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+    if (operation?.grid) {
+      let info = parseCallsign(operation.stationCall || '')
+      info = annotateFromCountryFile(info)
+      const [lat, lon] = gridToLocation(operation.grid)
+
+      let nearby = await wwbotaFindAllByLocation(info.dxccCode, lat, lon, 0.25)
+      nearby = nearby.map(result => ({
+        ...result,
+        distance: distanceOnEarth(result, { lat, lon })
+      })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
+
+      if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
+      else return { type: ref.type, name: 'No bunkers nearby!' }
+    } else {
+      return { type: ref.type }
+    }
   },
 
   suggestOperationTitle: (ref) => {
@@ -205,18 +242,20 @@ const ReferenceHandler = {
     if (ref?.type === Info.activationType && ref?.ref) {
       return [{
         format: 'adif',
-        exportData: { refs: [ref] },
-        nameTemplate: settings.useCompactFileNames ? '{call}@{ref}-{compactDate}' : '{date} {call} at {ref}',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`
+        exportData: { refs: [ref] }, // exports only see this one ref
+        nameTemplate: '{{>RefActivityName}}',
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     }
   },
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
-
-    if (huntingRefs) return ([{ SIG: 'WWBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') }])
-    else return []
+    const activationRef = findRef(operation, Info.activationType)
+    const fields = []
+    if (activationRef) fields.push({ MY_SIG: 'WWBOTA' }, { MY_SIG_INFO: activationRef.ref })
+    if (huntingRefs.length > 0) fields.push({ SIG: 'WWBOTA' }, { SIG_INFO: huntingRefs.map(ref => ref.ref).filter(x => x).join(',') })
+    return fields
   },
 
   adifFieldCombinationsForOneQSO: ({ qso, operation }) => {

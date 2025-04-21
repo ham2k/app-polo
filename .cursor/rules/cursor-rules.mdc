@@ -1,0 +1,182 @@
+---
+description: Cursor Rules
+globs: *.mdc
+alwaysApply: false
+---
+# Cursor Rules Location
+
+Rules for placing and organizing Cursor rule files in the repository.
+
+<rule>
+name: cursor_rules_location
+description: Standards for placing Cursor rule files in the correct directory
+filters:
+  # Match any .mdc files
+  - type: file_extension
+    pattern: "\\.mdc$"
+  # Match files that look like Cursor rules
+  - type: content
+    pattern: "(?s)<rule>.*?</rule>"
+  # Match file creation events
+  - type: event
+    pattern: "file_create"
+
+actions:
+  - type: reject
+    conditions:
+      - pattern: "^(?!\\.\\/\\.cursor\\/rules\\/.*\\.mdc$)"
+        message: "Cursor rule files (.mdc) must be placed in the .cursor/rules directory"
+
+  - type: suggest
+    message: |
+      When creating Cursor rules:
+
+      1. Always place rule files in PROJECT_ROOT/.cursor/rules/:
+         ```
+         .cursor/rules/
+         ├── your-rule-name.mdc
+         ├── another-rule.mdc
+         └── ...
+         ```
+
+      2. Follow the naming convention:
+         - Use kebab-case for filenames
+         - Always use .mdc extension
+         - Make names descriptive of the rule's purpose
+
+      3. Directory structure:
+         ```
+         PROJECT_ROOT/
+         ├── .cursor/
+         │   └── rules/
+         │       ├── your-rule-name.mdc
+         │       └── ...
+         └── ...
+         ```
+
+      4. Never place rule files:
+         - In the project root
+         - In subdirectories outside .cursor/rules
+         - In any other location
+
+examples:
+  - input: |
+      # Bad: Rule file in wrong location
+      rules/my-rule.mdc
+      my-rule.mdc
+      .rules/my-rule.mdc
+
+      # Good: Rule file in correct location
+      .cursor/rules/my-rule.mdc
+    output: "Correctly placed Cursor rule file"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>
+
+# Cursor Rules Format
+
+Standards for writing and formatting Cursor rule files (.mdc).
+
+<rule>
+name: cursor_rules_format
+description: Defines the required format and structure for Cursor rule files
+filters:
+  # Match any .mdc files
+  - type: file_extension
+    pattern: "\\.mdc$"
+  # Match files that look like Cursor rules
+  - type: content
+    pattern: "(?s)<rule>.*?</rule>"
+  # Match file modifications
+  - type: event
+    pattern: "(file_create|file_modify)"
+
+actions:
+  - type: reject
+    conditions:
+      - pattern: "^(?!# [A-Z][\\w\\s]+\\n\\n)"
+        message: "Rule files must start with a title (# Title) followed by a description"
+      
+      - pattern: "(?s)<rule>\\s*(?!name:)"
+        message: "Rule must begin with a 'name' field"
+      
+      - pattern: "(?s)<rule>[^>]*?(?!description:)"
+        message: "Rule must include a 'description' field"
+
+  - type: suggest
+    message: 
+      When writing Cursor rules:
+
+      1. File Structure:
+         ```
+         # Title Case Rule Name
+
+         Brief description of the rule's purpose.
+
+         <rule>
+         name: rule_name_in_snake_case
+         description: Detailed description of what the rule does
+         filters:
+           - type: [file_extension|content|event]
+             pattern: "regex_pattern"
+         actions:
+           - type: [reject|suggest|warn]
+             conditions: [...]
+             message: "Action message"
+         examples:
+           - input: "Example input"
+             output: "Expected output"
+         metadata:
+           priority: [low|medium|high]
+           version: x.y
+         </rule>
+         ```
+
+      2. Required Fields:
+         - name: snake_case identifier
+         - description: Clear explanation
+         - filters: At least one filter
+         - actions: At least one action
+
+      3. Optional but Recommended:
+         - examples: To demonstrate usage
+         - metadata: For versioning and priority
+
+      4. Formatting:
+         - Use YAML-style indentation
+         - Include clear error messages
+         - Document patterns with examples
+
+examples:
+  - input: 
+      # Bad Rule Format
+      <rule>
+      description: Missing name
+      </rule>
+
+      # Good Rule Format
+      # My Rule Name
+
+      Description of what this rule does.
+
+      <rule>
+      name: my_rule_name
+      description: Detailed description
+      filters:
+        - type: file_extension
+          pattern: "\\.txt$"
+      actions:
+        - type: suggest
+          message: "Suggestion message"
+      metadata:
+        priority: medium
+        version: 1.0
+      </rule>
+    output: "Correctly formatted rule file"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>

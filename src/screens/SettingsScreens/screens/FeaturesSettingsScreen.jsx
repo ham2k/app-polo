@@ -20,7 +20,7 @@ import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
 import Notices from '../../HomeScreen/components/Notices'
 
-const FeatureItem = ({ extension, settings, info, styles, onChange }) => {
+const FeatureItem = ({ extension, settings, info, styles, onChange, category }) => {
   const enabled = useMemo(() => settings[`extensions/${extension.key}`] ?? extension?.enabledByDefault, [settings, extension])
 
   return (
@@ -28,7 +28,9 @@ const FeatureItem = ({ extension, settings, info, styles, onChange }) => {
       key={extension.name}
       title={extension.name}
       description={extension.description}
-      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={extension.icon ?? 'format-list-bulleted'} />}
+      titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}
+      descriptionStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}
+      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={extension.icon ?? 'format-list-bulleted'} color={category === 'devmode' ? styles.colors.devMode : undefined} />}
       right={() => <Switch value={enabled} onValueChange={(value) => onChange && onChange(value) } />}
       onPress={() => onChange && onChange(!enabled)}
     />
@@ -42,7 +44,7 @@ export default function FeaturesSettingsScreen ({ navigation }) {
 
   const dispatch = useDispatch()
 
-  const featureGroups = useMemo(() => groupAndSortExtensions(allExtensions().filter(e => !e.alwaysEnabled)), [])
+  const featureGroups = useMemo(() => groupAndSortExtensions(allExtensions().filter(e => !e.alwaysEnabled), settings.devMode), [settings.devMode])
 
   const [showMoreForGroup, setShowMoreForGroup] = useState({})
 
@@ -77,11 +79,11 @@ export default function FeaturesSettingsScreen ({ navigation }) {
       <ScrollView style={{ flex: 1 }}>
         {featureGroups.map(({ category, label, extensions, popular }) => (
 
-          <Ham2kListSection title={label} key={category}>
+          <Ham2kListSection title={label} key={category} titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}>
             {showMoreForGroup[category] || popular.length === 0 ? (
               <>
                 {extensions.map((extension) => (
-                  <FeatureItem key={extension.key} extension={extension} settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
+                  <FeatureItem key={extension.key} extension={extension} category={category}settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
                 ))}
                 {popular.length > 0 && (
                   <Ham2kListItem
@@ -118,6 +120,7 @@ const CATEGORY_TITLES = {
   locationBased: 'Location-based Activities',
   contestsAndFieldOps: 'Contests & Field Ops',
   lookup: 'Data Lookup',
+  devmode: 'Developer Mode',
   other: 'Other Features'
 }
 
@@ -126,7 +129,7 @@ const CATEGORY_REGROUPINGS = {
   contests: 'contestsAndFieldOps'
 }
 
-const CATEGORIES_ORDER = ['locationBased', 'contestsAndFieldOps', 'lookup', 'core', 'other']
+const CATEGORIES_ORDER = ['locationBased', 'contestsAndFieldOps', 'lookup', 'core', 'other', 'devmode']
 
 const POPULAR_EXTENSIONS = [
   'pota',
@@ -134,7 +137,7 @@ const POPULAR_EXTENSIONS = [
   'sota'
 ]
 
-function groupAndSortExtensions (extensions) {
+function groupAndSortExtensions (extensions, devMode = false) {
   const groups = {}
   const popularForGroup = {}
   extensions.forEach((extension) => {
@@ -160,7 +163,7 @@ function groupAndSortExtensions (extensions) {
       extensions: (groups[category] || []).sort(extensionComparer),
       popular: (popularForGroup[category] || []).sort(extensionComparer)
     }
-  }).filter((group) => group.extensions.length > 0)
+  }).filter((group) => group.extensions.length > 0).filter((group) => devMode || group.category !== 'devmode')
 }
 
 function extensionComparer (a, b) {

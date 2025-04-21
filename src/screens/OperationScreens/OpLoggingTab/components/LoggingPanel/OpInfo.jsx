@@ -40,32 +40,32 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
   const styles = useThemedStyles(prepareStyles, themeColor)
 
   const { markdownMessage, markdownStyle, icon } = useMemo(() => {
-    if (message?.startsWith && message.startsWith('ERROR:')) {
+    if (message?.icon) {
+      return { markdownMessage: message?.text || '', icon: message.icon }
+    } else if (message?.startsWith && message.startsWith('ERROR:')) {
       return { markdownMessage: message.split('ERROR:')[1], markdownStyle: { color: styles.theme.colors.error }, icon: 'information' }
     } else if (message === true) {
       return { markdownMessage: '', icon: 'timer-outline' }
     } else if (message) {
       return { markdownMessage: message || '', icon: 'chevron-right-box' }
+    } else if (qsos.length === 0) {
+      return { markdownMessage: "No QSOs... Let's get on the air!", icon: undefined }
     } else {
       return { markdownMessage: '', icon: 'timer-outline' }
     }
-  }, [message, styles])
+  }, [message, qsos.length, styles.theme.colors.error])
 
   const line1 = useMemo(() => {
-    if (qsos.length === 0) {
-      return "No QSOs... Let's get on the air!"
-    } else {
-      const parts = []
+    const parts = []
 
-      parts.push(`${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`)
+    parts.push(`${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`)
 
-      if (now - operation.startAtMillisMax < 1000 * 60 * 60 * 4) {
-        if (qsos.length > 0) {
-          parts.push(`${fmtTimeBetween(operation.startAtMillisMax, now)} since last QSO`)
-        }
+    if (now - operation.startAtMillisMax < 1000 * 60 * 60 * 4) {
+      if (qsos.length > 0) {
+        parts.push(`${fmtTimeBetween(operation.startAtMillisMax, now)} since last QSO`)
       }
-      return parts.filter(x => x).join(' • ')
     }
+    return parts.filter(x => x).join(' • ')
   }, [qsos, operation, now])
 
   const line2 = useMemo(() => {
@@ -88,16 +88,18 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
     <TouchableRipple onPress={() => true} style={{ minHeight: styles.oneSpace * 6 }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
-        <View style={{ flex: 0, alignSelf: 'flex-start' }}>
-          <Icon
-            source={icon}
-            size={styles.oneSpace * 3}
-            color={styles.theme.colors[`${themeColor}ContainerVariant`]}
-          />
-        </View>
+        {icon && (
+          <View style={{ flex: 0, alignSelf: 'flex-start' }}>
+            <Icon
+              source={icon}
+              size={styles.oneSpace * 3}
+              color={styles.theme.colors[`${themeColor}ContainerVariant`]}
+            />
+          </View>
+        )}
         <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', paddingTop: styles.oneSpace * 0.3 }]}>
           {markdownMessage ? (
-            <Ham2kMarkdown style={{ ...markdownStyle, borderWidth: 0, borderColor: 'red', fontWeight: 'bold' }} styles={styles}>
+            <Ham2kMarkdown style={markdownStyle} styles={styles}>
               {markdownMessage}
             </Ham2kMarkdown>
           ) : (

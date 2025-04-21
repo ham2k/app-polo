@@ -134,7 +134,7 @@ export async function createTables (dbParams = {}) {
         for (const qso of qsos) {
           await dbExecute(`
                 UPDATE qsos SET uuid = ? WHERE key = ? AND operation = ?
-              `, [UUID.v1(), qso.key, qso.operation], dbParams)
+              `, [UUID.v4(), qso.key, qso.operation], dbParams)
         }
       }
       const uuidSuffix = UUID.v4().split('-').slice(1).join('-')

@@ -45,14 +45,16 @@ const SpotCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-misc-spot',
-  match: /^(SPOT|SPOTME|SPME|SELFSPOT|QRV|QRT|QSY)(|[/.][\w\d]*)$/i,
-  describeCommand: (match, { vfo }) => {
+  match: /^(SPOT|SPOTME|SPME|SELFSPOT|QRV|QRT|QSY)(|[/.][\w\d!,.-_]*)$/i,
+  describeCommand: (match, { vfo, operation }) => {
     let comments = match[2]?.substring(1) || ''
 
     if (!vfo.freq) return 'Cannot self-spot without frequency'
 
     if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
       comments = match[1]
+      console.log(operation)
+      if (operation?.stationCallPlusArray?.length > 0) comments += ` ${operation?.stationCallPlusArray?.length + 1} ops`
     }
 
     if (comments) {
@@ -68,10 +70,13 @@ const SpotCommandHook = {
 
     if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
       comments = match[1]
+      if (match[2]) comments += ` ${match[2].substring(1)}`
+
+      if (operation?.stationCallPlusArray?.length > 0) comments += ` ${operation?.stationCallPlusArray?.length + 1} ops`
     }
 
-    const activityHooksWithSpotting = retrieveHooksWithSpotting({ operation, settings })
-    postSpots({ operation, vfo, comments, activityHooksWithSpotting, dispatch })
+    const hooksWithSpotting = retrieveHooksWithSpotting({ operation, settings })
+    postSpots({ operation, vfo, comments, hooksWithSpotting, dispatch })
     if (comments) {
       return `Self-spotting at ${fmtFreqInMHz(vfo.freq)} with ‘${comments}’`
     } else {

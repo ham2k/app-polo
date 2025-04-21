@@ -62,6 +62,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
     fields: {
       header: {
         ...commonStyles,
+        fontFamily: themeStyles.fontFamily,
         flex: 0,
         marginLeft: 0,
         textAlign: 'left'
@@ -150,7 +151,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
         flex: 0,
         minWidth: themeStyles.oneSpace * 8.5,
         marginLeft: themeStyles.oneSpace,
-        textAlign: 'left'
+        textAlign: 'right'
       },
       icons: {
         ...commonStyles,

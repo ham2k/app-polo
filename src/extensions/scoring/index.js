@@ -28,6 +28,8 @@ export function scoringHandlersForOperation (operation, settings) {
     }
   })
 
+  if (scoringHandlers.length === 0) scoringHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
+
   // Get handlers for general hunting activities
   findHooks('activity').forEach(hook => {
     const type = hook.generalHuntingType && hook.generalHuntingType({ operation, settings })
@@ -37,8 +39,6 @@ export function scoringHandlersForOperation (operation, settings) {
       scoringKeys[handler.key] = true
     }
   })
-
-  if (scoringHandlers.length === 0) scoringHandlers.push({ handler: DefaultScoringHandler, ref: { type: 'defaultOperation' } })
 
   scoringHandlers.push({ handler: DXCCScoringHandler, ref: {} })
   scoringKeys[DXCCScoringHandler.key] = true
@@ -55,7 +55,7 @@ export function scoringHandlersForOperation (operation, settings) {
   return scoringHandlers
 }
 
-export function analyzeAndSectionQSOs ({ qsos, operation, settings }) {
+export function analyzeAndSectionQSOs ({ qsos, operation, settings, showDeletedQSOs = true }) {
   qsos = qsos ?? []
   operation = operation ?? {}
 
@@ -67,6 +67,8 @@ export function analyzeAndSectionQSOs ({ qsos, operation, settings }) {
 
   let currentSection = null
   for (const qso of qsos) {
+    if (showDeletedQSOs === false && qso.deleted) continue
+
     const day = qso.startAtMillis - (qso.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)
 
     if (!currentSection || currentSection.day !== day) {

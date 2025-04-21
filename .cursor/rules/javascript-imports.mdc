@@ -1,0 +1,51 @@
+---
+description: JS Imports
+globs: 
+alwaysApply: false
+---
+ # Import Sorting Convention
+
+<rule>
+
+name: import_sorting
+description: Defines the order of import statements in JavaScript files
+filters:
+  - type: glob
+    pattern: "**/*.{js,jsx}"
+
+actions:
+  - type: inform
+    message: |
+      Imports should be grouped in the following order, with blank lines between groups:
+
+      1. React import (if used)
+          ```javascript
+          import React from 'react'
+          ```
+
+      2. External non-Ham2K packages (alphabetically sorted)
+          ```javascript
+          import Config from 'react-native-config'
+          import { useNavigation } from '@react-navigation/native'
+          ```
+
+      3. Ham2K external packages (alphabetically sorted)
+          ```javascript
+          import { Ham2KClient } from '@ham2k/client'
+          import { QSOFormatter } from '@ham2k/formats'
+          ```
+
+      4. Internal imports (alphabetically sorted within subgroups)
+          ```javascript
+          // First: Core imports from src root
+          import GLOBAL from '../../../GLOBAL'
+          
+          // Then: Feature/component imports
+          import { logRemotely } from '../../../distro'
+          import { selectSettings } from '../../../store/settings'
+          ```
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>

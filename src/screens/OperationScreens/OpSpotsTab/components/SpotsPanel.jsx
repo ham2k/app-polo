@@ -20,14 +20,14 @@ import { selectSettings, setSettings } from '../../../../store/settings'
 import { useUIState } from '../../../../store/ui'
 import { selectVFO } from '../../../../store/station'
 import { useFindHooks } from '../../../../extensions/registry'
+import { scoringHandlersForOperation } from '../../../../extensions/scoring'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-import { annotateQSO } from '../../OpInfoTab/components/useCallLookup'
+import { annotateQSO } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
 import SpotList from './SpotList'
 import MapWithSpots from './MapWithSpots'
 import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
 import SpotListMapToggle from './SpotListMapToggle'
-import { scoringHandlersForOperation } from '../../../../extensions/scoring'
 
 export const LABEL_FOR_MODE = {
   CW: 'CW',
@@ -80,6 +80,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
   }, [dispatch, settings.spots])
 
   const [spotsState, , updateSpotsState] = useUIState('OpSpotsTab', 'spotsState', { spots: {}, lastFetched: 0, loading: false })
+  // The keys used to get this state are also referenced in `SpotHistoryExtension`
 
   const allOperations = useSelector(selectAllOperations)
 
@@ -89,7 +90,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
 
   const [showMap, setShowMap] = useState(false)
 
-  const spotsHooks = useFindHooks('spots')
+  const spotsHooks = useFindHooks('spots', { filter: 'fetchSpots' })
 
   useEffect(() => { // Refresh periodically
     const interval = setInterval(() => {
@@ -118,7 +119,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
                   spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
                 }
 
-                annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, dispatch, skipLookup: true }))
+                annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, dispatch, mode: 'spots' }))
               }
               updateSpotsState({ spots: { [hook.key]: annotatedSpots } })
             })
@@ -186,6 +187,9 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
               spot.spot.type = 'scoring'
             }
           }
+          if (score?.emoji) {
+            spot.spot.emoji = score.emoji
+          }
 
           if (score.notices) {
             score.notices.forEach(notice => (spot.spot.flags[notice] = true))
@@ -208,7 +212,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
           opSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
       ))
       if (matchingSpot) {
-        matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call}, ${spot.their.call}` }
+        matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call},${spot.their.call}` }
       } else {
         mOpSpots.push(spot)
       }

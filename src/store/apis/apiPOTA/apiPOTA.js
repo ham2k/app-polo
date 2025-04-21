@@ -41,10 +41,13 @@ import { reportError } from '../../../distro'
 
  */
 
+const API_TIMEOUT = 3000 // 3 seconds
+
 export const apiPOTA = createApi({
   reducerPath: 'apiPOTA',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.pota.app/',
+    timeout: API_TIMEOUT,
     prepareHeaders: (headers, { getState }) => {
       headers.set('Accept', 'application/json')
       headers.set('Content-type', 'application/json')

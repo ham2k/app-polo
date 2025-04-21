@@ -10,6 +10,7 @@ import { WelcomeDialog } from './WelcomeDialog'
 import { CallsignDialog } from './CallsignDialog'
 import { ActivitiesDialog } from './ActivitiesDialog'
 import { ConsentDialog } from './ConsentDialog'
+import { SyncAccountDialog } from './SyncAccountDialog'
 
 export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
   const [step, setStep] = useState('welcome')
@@ -22,6 +23,16 @@ export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
           styles={styles}
           onDialogPrevious={() => onOnboardingDone()}
           onDialogNext={() => setStep('callsign')}
+          onAccountConnect={() => setStep('existingAccount')}
+        />
+      )}
+      {step === 'existingAccount' && (
+        <SyncAccountDialog
+          inputMode="existing"
+          settings={settings}
+          styles={styles}
+          onDialogPrevious={() => setStep('welcome')}
+          onDialogNext={() => onOnboardingDone()}
         />
       )}
       {step === 'callsign' && (
@@ -37,6 +48,15 @@ export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
           settings={settings}
           styles={styles}
           onDialogPrevious={() => setStep('callsign')}
+          onDialogNext={() => setStep(settings.devMode ? 'newAccount' : 'consent')}
+        />
+      )}
+      {step === 'newAccount' && (
+        <SyncAccountDialog
+          inputMode="new"
+          settings={settings}
+          styles={styles}
+          onDialogPrevious={() => setStep('activities')}
           onDialogNext={() => setStep('consent')}
         />
       )}
@@ -44,7 +64,7 @@ export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
         <ConsentDialog
           settings={settings}
           styles={styles}
-          onDialogPrevious={() => setStep('activities')}
+          onDialogPrevious={() => setStep(settings.devMode ? 'newAccount' : 'activities')}
           onDialogNext={() => onOnboardingDone()}
           nextLabel={'Done'}
         />

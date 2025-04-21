@@ -5,15 +5,17 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+import React from 'react'
 
-import { setOperationData } from '../../../store/operations'
+import { superModeForMode } from '@ham2k/lib-operation-data'
+
 import { findRef, replaceRef } from '../../../tools/refTools'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import { ListRow } from '../../../screens/components/ListComponents'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
-import { superModeForMode } from '@ham2k/lib-operation-data'
+import ThemedTextInputWithSuggestions from '../../../screens/components/ThemedTextInputWithSuggestions'
+
+import { WFDActivityOptions } from './WFDActivityOptions'
+import { ABBREVIATED_SECTION_NAMES, ARRL_SECTIONS, RAC_SECTIONS } from '../fd/FDSections'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 /*
  NOTES:
@@ -29,13 +31,12 @@ import { superModeForMode } from '@ham2k/lib-operation-data'
 
  */
 
-const Info = {
+export const Info = {
   key: 'wfd',
   icon: 'snowflake',
   name: 'Winter Field Day',
   shortName: 'WFD',
-  infoURL: 'https://www.winterfieldday.org/',
-  defaultValue: { class: '', location: '' }
+  infoURL: 'https://www.winterfieldday.org/'
 }
 
 const Extension = {
@@ -46,12 +47,24 @@ const Extension = {
     registerHook(`ref:${Info.key}`, { hook: ReferenceHandler })
   }
 }
+
 export default Extension
 
 const ActivityHook = {
   ...Info,
-  Options: ActivityOptions,
-  mainExchangeForOperation
+
+  hideStateField: true,
+
+  Options: WFDActivityOptions,
+  mainExchangeForOperation,
+  processQSOBeforeSave,
+
+  sampleOperations: ({ settings, callInfo }) => {
+    return [
+      { refs: [ReferenceHandler.decorateRef({ type: Info.key, class: '1A', location: 'ENY' })] }
+    ]
+  }
+
 }
 
 const ReferenceHandler = {
@@ -66,6 +79,14 @@ const ReferenceHandler = {
     return [`WFD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')
   },
 
+  decorateRef: (ref) => {
+    return {
+      ...ref,
+      label: `${Info.name}: ${ref.class} ${ref.location}`,
+      shortLabel: `${Info.shortName}: ${ref.class} ${ref.location}`
+    }
+  },
+
   suggestOperationTitle: (ref) => {
     return { for: Info.shortName, subtitle: [ref?.class, ref?.location].filter(x => x).join(' ') }
   },
@@ -74,13 +95,15 @@ const ReferenceHandler = {
     if (ref?.type === Info?.key) {
       return [{
         format: 'adif',
-        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
-        titleTemplate: `{call}: ${Info.name} on {date}`
+        exportName: 'Winter Field Day',
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       },
       {
         format: 'cabrillo',
-        nameTemplate: settings.useCompactFileNames ? `{call}-${Info.shortName}-{compactDate}` : `{date} {call} for ${Info.shortName}`,
-        titleTemplate: `{call}: ${Info.name} on {date}`
+        exportName: 'Winter Field Day',
+        nameTemplate: '{{>OtherActivityName}}',
+        titleTemplate: '{{>OtherActivityTitle}}'
       }]
     }
   },
@@ -97,6 +120,8 @@ const ReferenceHandler = {
   },
 
   qsoToCabrilloParts: ({ qso, ref, operation, settings, parts }) => {
+    parts = parts || []
+
     const ourCall = operation.stationCall || settings.operatorCall
     const qsoRef = findRef(qso, Info.key)
 
@@ -108,38 +133,169 @@ const ReferenceHandler = {
     parts.push((qsoRef?.location ?? '').padEnd(3, ' '))
     return parts
   },
+
+  adifFieldsForOneQSO: ({ qso, operation, common, ref, mainHandler }) => {
+    // Include `CONTEST_ID` even if we're not the main handler, if the Operation is a WFD operation
+    if (findRef(common, Info.key)) {
+      return ([{ CONTEST_ID: 'WFD' }])
+    }
+  },
+
   relevantInfoForQSOItem: ({ qso, operation }) => {
     return [qso.their.exchange]
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+  scoringForQSO: ({ qso, qsos, operation, ref, score }) => {
     const { band, mode, uuid, startAtMillis } = qso
     const superMode = superModeForMode(mode)
 
+    const qsoRef = findRef(qso, Info.key)
+
     const nearDupes = qsos.filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
+    const value = superMode === 'PHONE' ? 1 : 2
+    const scoring = { value, theirSection: qsoRef?.location, mode: superMode, band }
+
+    if (WFD_LOCATION_VALUES[qsoRef?.location]) {
+      if (score?.arrlSections?.[qsoRef?.location] || score?.racSections?.[qsoRef?.location] || score?.otherSections?.[qsoRef?.location]) {
+        scoring.infos = [`${ABBREVIATED_SECTION_NAMES[qsoRef?.location] || WFD_LOCATION_VALUES[qsoRef?.location]}`]
+      } else {
+        scoring.notices = [`${ABBREVIATED_SECTION_NAMES[qsoRef?.location] || WFD_LOCATION_VALUES[qsoRef?.location]}`]
+      }
+    }
+
     if (nearDupes.length === 0) {
-      return { counts: 1, type: Info.activationType }
+      return scoring
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => superModeForMode(q.mode) === superMode).length !== 0
       if (sameBand && sameMode) {
-        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { ...scoring, value: 0, alerts: ['duplicate'] }
       } else {
-        const notices = []
+        const notices = [...(scoring.notices || [])]
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        return { counts: 1, notices, type: Info.activationType }
+        return { ...scoring, notices }
       }
     }
+  },
+
+  accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
+    if (!qsoScore.value) return score
+
+    if (!score?.key) score = undefined // Reset if score doesn't have the right shape
+    score = score ?? {
+      key: ref?.type,
+      icon: Info.icon,
+      label: Info.shortName,
+      total: 0,
+      qsoCount: 0,
+      qsoPoints: 0,
+      mults: 0,
+      modes: {},
+      arrlSections: {},
+      racSections: {},
+      otherSections: {}
+    }
+
+    score.qsoCount = score.qsoCount + 1
+    score.qsoPoints = score.qsoPoints + qsoScore.value
+
+    score.modes[qsoScore.mode] = (score.modes[qsoScore.mode] || 0) + 1
+    if (ARRL_SECTIONS[qsoScore.theirSection]) {
+      score.arrlSections[qsoScore.theirSection] = (score.arrlSections[qsoScore.theirSection] || 0) + 1
+    } else if (RAC_SECTIONS[qsoScore.theirSection]) {
+      score.racSections[qsoScore.theirSection] = (score.racSections[qsoScore.theirSection] || 0) + 1
+    } else if (qsoScore.theirSection === 'MX' || qsoScore.theirSection === 'DX') {
+      score.otherSections[qsoScore.theirSection] = (score.otherSections[qsoScore.theirSection] || 0) + 1
+    }
+
+    score.mults = Object.keys(score.arrlSections).length + Object.keys(score.racSections).length + Object.keys(score.otherSections).length
+    score.total = score.qsoPoints * score.mults
+
+    return score
+  },
+
+  summarizeScore: ({ score, operation, ref, section }) => {
+    if (!score.total) {
+      score.summary = '0 pts'
+      score.longSummary = '0 pts\nNo valid QSOs yet!'
+      return score
+    }
+
+    score.summary = `${fmtNumber(score.total)} pts`
+
+    const parts = []
+    parts.push(`**${fmtNumber(score.qsoPoints)} Points x ${score.mults} Mults = ${fmtNumber(score.total)} Total Points**`)
+    parts.push(
+      Object.keys(score.modes ?? {}).sort().map(mode => {
+        if (score?.modes[mode]) {
+          return (`${fmtNumber(score.modes[mode])} ${mode} QSOs`)
+        } else {
+          return null
+        }
+      }).filter(x => x).join(' • ')
+    )
+
+    let line
+
+    parts.push(`### ${Object.keys(score?.arrlSections ?? {}).length} ARRL Sections`)
+    line = '> '
+    Object.keys(ARRL_SECTIONS).forEach(s => {
+      s = s.toUpperCase()
+      if (score.arrlSections[s]) {
+        line += `**~~${s}~~**${s.length === 2 ? ' ' : ''} `
+      } else {
+        line += `${s}${s.length === 2 ? ' ' : ''} `
+      }
+    })
+    parts.push(line)
+
+    parts.push(`### ${Object.keys(score?.racSections ?? {}).length} RAC Sections`)
+    line = '> '
+    Object.keys(RAC_SECTIONS).forEach(s => {
+      s = s.toUpperCase()
+      if (score.racSections[s]) {
+        line += `**~~${s}~~**${s.length === 2 ? ' ' : ''} `
+      } else {
+        line += `${s}${s.length === 2 ? ' ' : ''} `
+      }
+    })
+    parts.push(line)
+
+    parts.push(`### ${Object.keys(score?.otherSections ?? {}).length} Other`)
+    line = '> '
+    ;['MX', 'DX'].forEach(s => {
+      if (score.otherSections[s]) {
+        line += `**~~${s}~~**  `
+      } else {
+        line += `${s}  `
+      }
+    })
+
+    parts.push(line)
+
+    score.longSummary = '\n' + parts.join('\n')
+
+    return score
   }
 }
 
-function mainExchangeForOperation (props) {
-  const { qso, updateQSO, styles, refStack } = props
+const WFD_CLASS_REGEX = /^[1-9]+[HIMO]$/
 
-  const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: '', location: '' }
+export const WFD_LOCATION_VALUES = { ...ARRL_SECTIONS, ...RAC_SECTIONS, MX: 'Mexico', DX: 'Other DX' }
+export const WFD_LOCATIONS = Object.keys(WFD_LOCATION_VALUES)
+
+export const K_LOCATION_SUGGESTIONS = Object.entries(ARRL_SECTIONS)
+export const VE_LOCATION_SUGGESTIONS = Object.entries(RAC_SECTIONS)
+export const OTHER_LOCATION_SUGGESTIONS = [['MX', 'Mexico'], ['DX', 'Other DX']]
+export const ALL_LOCATION_SUGGESTIONS = Object.entries(WFD_LOCATION_VALUES)
+
+function mainExchangeForOperation (props) {
+  const { qso, qsos, operation, updateQSO, styles, refStack } = props
+
+  const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
 
   const fields = []
 
@@ -153,17 +309,18 @@ function mainExchangeForOperation (props) {
       label={'Class'}
       placeholder={''}
       mode={'flat'}
+      keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
-      value={ref?.class || ''}
+      value={ref?.class ?? _defaultClassFor({ qso, qsos, operation }) ?? ''}
+      error={ref?.class && !ref.class.match(WFD_CLASS_REGEX)}
       onChangeText={(text) => updateQSO({
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text }),
-        their: { exchange: [text, ref?.location].join(' ') }
+        refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text })
       })}
     />
   )
   fields.push(
-    <ThemedTextInput
+    <ThemedTextInputWithSuggestions
       {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}
@@ -172,58 +329,55 @@ function mainExchangeForOperation (props) {
       label={'Loc'}
       placeholder={''}
       mode={'flat'}
+      keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
-      value={ref?.location || ''}
+      value={ref?.location ?? _defaultLocationFor({ qso, qsos, operation }) ?? ''}
+      error={ref?.location && !WFD_LOCATIONS.includes(ref.location)}
+      suggestions={_suggestionsFor(qso)}
+      minimumLengthForSuggestions={3}
       onChangeText={(text) => updateQSO({
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text }),
-        their: { arrlSection: text, exchange: [ref?.class, text].join(' ') }
+        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text })
       })}
     />
   )
   return fields
 }
 
-export function ActivityOptions (props) {
-  const { styles, operation } = props
+function processQSOBeforeSave ({ qso, qsos, operation }) {
+  if (findRef(operation, Info.key)) {
+    const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
+    ref.class = ref.class ?? _defaultClassFor({ qso, qsos, operation })
+    ref.location = ref.location ?? _defaultLocationFor({ qso, qsos, operation })
+    if (ref.class || ref.location) {
+      qso.refs = replaceRef(qso.refs, Info.key, ref)
+      qso.their.exchange = [ref.class, ref.location].join(' ')
+    }
+  }
+  return qso
+}
 
-  const dispatch = useDispatch()
+function _suggestionsFor (qso) {
+  const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+  if (prefix === 'K') return K_LOCATION_SUGGESTIONS
+  else if (prefix === 'VE') return VE_LOCATION_SUGGESTIONS
+  else if (prefix) return OTHER_LOCATION_SUGGESTIONS
+  else return ALL_LOCATION_SUGGESTIONS
+}
 
-  const ref = useMemo(() => findRef(operation, Info.key), [operation])
+function _defaultClassFor ({ qso, qsos, operation }) {
+  const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
+  if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.class
+  else return undefined
+}
 
-  const handleChange = useCallback((value) => {
-    if (value?.class) value.class = value.class.toUpperCase()
-    if (value?.location) value.location = value.location.toUpperCase()
+function _defaultLocationFor ({ qso, qsos, operation }) {
+  const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
+  if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.location
 
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, ...value }) }))
-  }, [dispatch, operation, ref])
-
-  return (
-    <Ham2kListSection title={'Exchange Information'}>
-      <ListRow>
-        <ThemedTextInput
-          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-          textStyle={styles.text.callsign}
-          label={'Class'}
-          mode={'flat'}
-          uppercase={true}
-          noSpaces={true}
-          value={ref?.class || ''}
-          onChangeText={(text) => handleChange({ class: text })}
-        />
-      </ListRow>
-      <ListRow>
-        <ThemedTextInput
-          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-          textStyle={styles.text.callsign}
-          label={'Location'}
-          mode={'flat'}
-          uppercase={true}
-          noSpaces={true}
-          value={ref?.location || ''}
-          onChangeText={(text) => handleChange({ location: text })}
-        />
-      </ListRow>
-    </Ham2kListSection>
-  )
+  const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+  if (prefix === 'K' || prefix === 'VE') return undefined
+  else if (prefix === 'XE') return 'MX'
+  else if (prefix) return 'DX'
+  else return undefined
 }

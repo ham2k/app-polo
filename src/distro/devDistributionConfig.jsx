@@ -90,6 +90,14 @@ export function startupStepsForDistribution ({ settings, dispatch }) {
   ]
 }
 
+export function reduxEnhancersForDistribution () {
+  return []
+}
+
+export function onNavigationReadyForDistribution (navigationRef) {
+  // Do nothing
+}
+
 export function handleNoticeActionForDistribution ({ notice, dispatch, setOverlayText }) {
   return true
 }
@@ -100,6 +108,12 @@ export function enableStartupInterruptionDialogForDistribution ({ settings }) {
 
 export function StartupInterruptionDialogForDistribution ({ settings, styles, setStartupPhase }) {
   useEffect(() => setStartupPhase('start'), [setStartupPhase])
+  return (
+    <></>
+  )
+}
+
+export function MainSettingsForDistribution ({ settings, styles }) {
   return (
     <></>
   )

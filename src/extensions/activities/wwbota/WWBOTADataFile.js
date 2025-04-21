@@ -8,11 +8,12 @@
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
+import { DXCC_BY_CODE } from '@ham2k/lib-dxcc-data'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fmtDateNice } from '../../../tools/timeFormats'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
-export const WWBOTAData = { }
+export const WWBOTAData = { prefixByDXCCPrefix: {} }
 
 export function registerWWBOTADataFile () {
   registerDataFile({
@@ -48,6 +49,8 @@ export function registerWWBOTADataFile () {
           let processedLines = 0
           const totalLines = lines.length
 
+          const prefixByDXCCPrefix = {}
+
           while (lines.length > 0) {
             const batch = lines.splice(0, 177)
             await (() => new Promise(resolve => {
@@ -57,16 +60,24 @@ export function registerWWBOTADataFile () {
                     const row = parseWWBOTACSVRow(line, { headers })
                     const ref = row.Reference
                     if (ref) {
+                      // Use Locator if Maidenhead field not present
+                      row.Maidenhead ||= row.Locator
                       row.Maidenhead &&= row.Maidenhead.replace(/[A-Z]{2}$/, x => x.toLowerCase())
-                      const entityPrefix = ref.split('-')[0].split('/')[1]
+                      const entity = DXCC_BY_CODE[row.DXCC]
+                      // fallback on code in reference
+                      const entityPrefix = entity?.entityPrefix || ref.split('-')[0].split('/')[1]
                       const data = {
                         ref,
-                        entityPrefix: entityPrefix === 'IT' ? 'I' : entityPrefix,
+                        entityPrefix,
                         name: row.Name,
                         type: row.Type,
                         grid: row.Maidenhead,
                         lat: Number.parseFloat(row.Lat),
                         lon: Number.parseFloat(row.Long)
+                      }
+
+                      if (!prefixByDXCCPrefix[data.entityPrefix]) {
+                        prefixByDXCCPrefix[data.entityPrefix] = ref.split('-')[0]
                       }
 
                       totalReferences++
@@ -105,7 +116,8 @@ export function registerWWBOTADataFile () {
 
           return {
             totalReferences,
-            version: fmtDateNice(new Date())
+            version: fmtDateNice(new Date()),
+            prefixByDXCCPrefix
           }
         }
       })
@@ -113,12 +125,17 @@ export function registerWWBOTADataFile () {
     onLoad: (data) => {
       WWBOTAData.totalRefs = data.totalRefs
       WWBOTAData.version = data.version
+      WWBOTAData.prefixByDXCCPrefix = data.prefixByDXCCPrefix
     },
     onRemove: async () => {
       await dbExecute('DELETE FROM lookups WHERE category = ?', ['wwbota'])
       await dbExecute('DELETE FROM lookups WHERE category = ?', ['ukbota']) // Legacy
     }
   })
+}
+
+export function wwbotaPrefixForDXCCPrefix (entityPrefix) {
+  return (WWBOTAData.prefixByDXCCPrefix && WWBOTAData.prefixByDXCCPrefix[entityPrefix]) || `B/${entityPrefix || '?'}`
 }
 
 export async function wwbotaFindOneByReference (ref) {

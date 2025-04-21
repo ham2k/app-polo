@@ -53,22 +53,14 @@ export default function ScreenContainer ({ children }) {
     }
   }, [])
 
-  if (Platform.OS === 'ios') {
-    return (
-      <KeyboardAvoidingView
-        style={styles.root}
-        behavior={'padding'}
-        keyboardVerticalOffset={headerHeight}
-        enabled={keyboardVisible}
-      >
-        {children}
-      </KeyboardAvoidingView>
-    )
-  } else {
-    return (
-      <View style={styles.root}>
-        {children}
-      </View>
-    )
-  }
+  return (
+    <KeyboardAvoidingView
+      style={styles.root}
+      behavior={'padding'}
+      keyboardVerticalOffset={headerHeight}
+      enabled={keyboardVisible}
+    >
+      {children}
+    </KeyboardAvoidingView>
+  )
 }

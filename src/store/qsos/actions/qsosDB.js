@@ -13,7 +13,11 @@ import GLOBAL from '../../../GLOBAL'
 import { actions } from '../qsosSlice'
 import { actions as operationActions, saveOperationLocalData } from '../../operations'
 import { dbExecute, dbSelectAll, dbTransaction } from '../../db/db'
-import { syncLatestQSOs } from '../../sync'
+import { sendQSOsToSyncService } from '../../sync'
+import { logTimer } from '../../../tools/perfTools'
+import { annotateQSO } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { selectSettings } from '../../settings'
+import { selectRuntimeOnline } from '../../runtime'
 
 export const prepareQSORow = (row) => {
   const data = JSON.parse(row.data)
@@ -72,62 +76,133 @@ export const queryQSOs = async (query, params) => {
 
 export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
 
+const DEBUG = false
+
 export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
   const now = Date.now()
 
-  for (const qso of qsos) {
-    qso.uuid = qso.uuid || UUID.v1()
-    qso.operation = uuid
-    qso.createdAtMillis = qso.createdAtMillis || now
-    qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
-    qso.updatedAtMillis = now
-    qso.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
+  if (DEBUG) logTimer('addQSOs', 'Start', { reset: true })
+  const qsosToSave = [...qsos]
+  while (qsosToSave.length > 0) {
+    if (DEBUG) logTimer('addQSOs', 'batch')
+    const batch = qsosToSave.splice(0, 50)
+    const batchData = []
+    for (const qso of batch) {
+      qso.uuid = qso.uuid || UUID.v4()
+      qso.operation = uuid
+      qso.createdAtMillis = qso.createdAtMillis || now
+      qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
+      qso.updatedAtMillis = now
+      qso.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
 
-    qso.key = qsoKey(qso)
+      qso.key = qsoKey(qso)
 
-    const qsoClone = { ...qso }
-    delete qsoClone._isNew
-    delete qsoClone._isLookup
-    if (qsoClone.their?.lookup) {
-      delete qsoClone.their.lookup
+      const qsoClone = { ...qso }
+      delete qsoClone._isNew
+      delete qsoClone._needsLookup
+      if (qsoClone.their?.lookup) {
+        delete qsoClone.their.lookup
+      }
+      const json = JSON.stringify(qsoClone)
+      batchData.push([
+        qso.uuid, qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced
+      ])
+
+      if (qso._needsLookup) { // After inserting the QSO, maybe do a full data lookup if needed
+        setTimeout(async () => {
+          delete qso._needsLookup
+          const state = getState()
+          const settings = selectSettings(state)
+          const online = selectRuntimeOnline(state)
+          const annotatedQSO = await annotateQSO({ qso, online, settings, dispatch })
+          dispatch(addQSO({ uuid, qso: annotatedQSO }))
+        })
+      }
     }
-    const json = JSON.stringify(qsoClone)
 
+    if (DEBUG) logTimer('addQSOs', 'batch data ready')
     // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     await dbExecute(`
       INSERT INTO qsos
-      (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, deleted, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      ON CONFLICT DO UPDATE SET operation = ?, key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, deleted = ?, synced = ?
-      `, [
-      qso.uuid,
-      qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced,
-      qso.operation, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced
-    ]
+        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, deleted, synced)
+      VALUES
+        ${batchData.map(q => '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').join(',')}
+      ON CONFLICT
+        DO UPDATE SET operation = excluded.operation, key = excluded.key, data = excluded.data, ourCall = excluded.ourCall, theirCall = excluded.theirCall, mode = excluded.mode, band = excluded.band, startOnMillis = excluded.startOnMillis, deleted = excluded.deleted, synced = excluded.synced
+      `, batchData.flat()
     )
+    if (DEBUG) logTimer('addQSOs', 'sql insert')
   }
+  if (DEBUG) logTimer('addQSOs', 'done inserting')
 
   const operationInfo = getState().operations.info[uuid]
-  let { startAtMillisMin, startAtMillisMax } = operationInfo
+  if (getState().qsos.qsos[uuid]) { // QSOs are for an operation that's currently in memory
+    let { startAtMillisMin, startAtMillisMax } = operationInfo
+    if (DEBUG) logTimer('addQSOs', 'got op info')
 
-  for (const qso of qsos) {
-    dispatch(actions.addQSO({ uuid, qso }))
+    for (const qso of qsos) {
+      dispatch(actions.addQSO({ uuid, qso }))
 
-    if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
-    if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
+      if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
+      if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
+    }
+    if (DEBUG) logTimer('addQSOs', 'added qsos to state')
+
+    const finalQSOs = getState().qsos.qsos[uuid]
+
+    operationInfo.startAtMillisMin = startAtMillisMin
+    operationInfo.startAtMillisMax = startAtMillisMax
+    operationInfo.qsoCount = finalQSOs.filter(q => !q.deleted).length
+
+    setImmediate(() => {
+      if (DEBUG) console.log('op update', { startAtMillisMin, startAtMillisMax, qsoCount: operationInfo.qsoCount })
+      dispatch(operationActions.setOperation(operationInfo))
+      dispatch(saveOperationLocalData(operationInfo))
+    })
   }
 
-  const finalQSOs = getState().qsos.qsos[uuid]
+  if (!synced) {
+    setImmediate(() => {
+      sendQSOsToSyncService({ dispatch, getState })
+      if (DEBUG) logTimer('addQSOs', 'done updating operation')
+    })
+  }
+}
 
-  operationInfo.startAtMillisMin = startAtMillisMin
-  operationInfo.startAtMillisMax = startAtMillisMax
-  operationInfo.qsoCount = finalQSOs.filter(q => !q.deleted).length
+export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
+  const uuids = qsos.map((q) => `"${q.uuid}"`).join(',')
+  if (DEBUG) logTimer('sync', 'Start of mergeSyncQSOs')
+  const existingQSOs = await dbSelectAll('SELECT * FROM qsos WHERE uuid IN (?)', [uuids], { row: prepareQSORow })
+  if (DEBUG) logTimer('sync', 'Retrieved QSOs', { sinceLast: true })
+  console.log('-- ', { qsos: qsos.length })
 
-  setImmediate(() => {
-    console.log('op update', { startAtMillisMin, startAtMillisMax, qsoCount: operationInfo.qsoCount })
-    dispatch(operationActions.setOperation(operationInfo))
-    dispatch(saveOperationLocalData(operationInfo))
-    if (!synced) syncLatestQSOs({ dispatch, getState })
-  })
+  let lastSyncedAtMillis = 0
+
+  const qsosForOperation = {}
+  for (const qso of qsos) {
+    const existing = existingQSOs.find((q) => q.uuid === qso.uuid)
+    if (existing) {
+      if (existing.updatedAtMillis >= qso.updatedAtMillis) {
+        continue
+      }
+    }
+
+    qsosForOperation[qso.operation] = qsosForOperation[qso.operation] || []
+    qsosForOperation[qso.operation].push(qso)
+    lastSyncedAtMillis = Math.max(lastSyncedAtMillis, qso.syncedAtMillis)
+  }
+  if (DEBUG) logTimer('sync', 'Compared QSOs', { sinceLast: true })
+  for (const uuid in qsosForOperation) {
+    await dispatch(addQSOs({ uuid, qsos: qsosForOperation[uuid], synced: true }))
+    if (DEBUG) logTimer('sync', 'Saved QSOs', { sinceLast: true })
+  }
+
+  return lastSyncedAtMillis
+}
+
+export async function markQSOsAsSynced (qsos) {
+  if (!qsos || qsos.length === 0) return
+  await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `"${q.uuid}"`).join(',')})`, [])
 }
 
 export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getState) => {
@@ -136,7 +211,7 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
   for (const qso of qsos) {
     qso.our = { ...qso.our, ...data.our } // Batch Update only changes `our` data
     qso.key = qsoKey(qso)
-    qso.uuid = qso.uuid || UUID.v1()
+    qso.uuid = qso.uuid || UUID.v4()
     qso.createdAtMillis = qso.createdAtMillis || now
     qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
     qso.updatedAtMillis = now
@@ -157,8 +232,10 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
   // Since the batch update does not change operation counts or times, no need to do anything else here
 }
 
-export const saveQSOsForOperation = (uuid, { synced = false }) => async (dispatch, getState) => {
+export const saveQSOsForOperation = (uuid, { synced } = {}) => async (dispatch, getState) => {
   const now = Date.now()
+
+  synced = synced || false
 
   return dbTransaction(async transaction => {
     const qsos = getState().qsos.qsos[uuid]
@@ -166,7 +243,7 @@ export const saveQSOsForOperation = (uuid, { synced = false }) => async (dispatc
     // Save new QSOs
     for (const qso of qsos) {
       qso.key = qsoKey(qso)
-      qso.uuid = qso.uuid || UUID.v1()
+      qso.uuid = qso.uuid || UUID.v4()
       qso.createdAtMillis = qso.createdAtMillis || now
       qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
       qso.updatedAtMillis = now
@@ -177,11 +254,10 @@ export const saveQSOsForOperation = (uuid, { synced = false }) => async (dispatc
       // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
       await dbExecute(`
         INSERT INTO qsos
-        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, deleted, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT DO UPDATE SET operation = ?, key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, deleted, synced = ?
+        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, deleted, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT DO UPDATE SET operation = excluded.operation, key = excluded.key, data = excluded.data, ourCall = excluded.ourCall, theirCall = excluded.theirCall, mode = excluded.mode, band = excluded.band, startOnMillis = excluded.startOnMillis, deleted = excluded.deleted, synced = excluded.synced
       `, [
         qso.uuid,
-        uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced,
         uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced
       ])
     }

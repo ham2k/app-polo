@@ -18,11 +18,11 @@ import { Info } from '../WABExtension'
 export function WABOpSetting ({ styles, operation, settings }) {
   const [currentDialog, setCurrentDialog] = useState()
   const callInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
-  if (callInfo?.entityPrefix?.[0] === 'G') {
+  if (callInfo?.entityPrefix?.[0] === 'G' || callInfo?.entityPrefix === 'EI') {
     return (
       <React.Fragment>
         <Ham2kListItem
-          title="Worked All Britain Square"
+          title={'Worked All ' + (callInfo?.entityPrefix?.[0] === 'G' ? 'Britain' : 'Ireland') + ' Square'}
           description={operation?.wabSquare ? `${operation.wabSquare}` : 'No square set'}
           onPress={() => setCurrentDialog('wabSquare')}
           // eslint-disable-next-line react/no-unstable-nested-components

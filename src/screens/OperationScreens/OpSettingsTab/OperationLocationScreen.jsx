@@ -104,12 +104,12 @@ export default function OperationLocationScreen ({ navigation, route }) {
           <Ham2kListItem
             title="Device GPS"
             description={locationGrid ?? locationMessage}
-            titleStyle={{ color: locationGrid && locationGrid === operation.grid ? styles.colors.primary : undefined }}
-            descriptionStyle={{ color: locationGrid && locationGrid === operation.grid ? styles.colors.primary : undefined }}
+            titleStyle={{ color: locationGrid && locationGrid === operation.grid ? styles.colors.primary : styles.colors.onBackground }}
+            descriptionStyle={{ color: locationGrid && locationGrid === operation.grid ? styles.colors.primary : styles.colors.onBackground }}
             left={() => (
               <List.Icon
                 style={{ marginLeft: styles.oneSpace * 2 }}
-                color={locationGrid && locationGrid === operation.grid ? styles.colors.primary : undefined}
+                color={locationGrid && locationGrid === operation.grid ? styles.colors.primary : styles.colors.onBackground}
                 icon="map-marker-radius"
               />
             )}
@@ -120,13 +120,13 @@ export default function OperationLocationScreen ({ navigation, route }) {
               key={index}
               title={ref.label}
               description={ref.grid}
-              titleStyle={{ color: ref.grid && operation.grid === ref.grid ? styles.colors.primary : undefined }}
-              descriptionStyle={{ color: ref.grid && operation.grid === ref.grid ? styles.colors.primary : undefined }}
+              titleStyle={{ color: ref.grid && operation.grid === ref.grid ? styles.colors.primary : styles.colors.onBackground }}
+              descriptionStyle={{ color: ref.grid && operation.grid === ref.grid ? styles.colors.primary : styles.colors.onBackground }}
               left={() => (
                 <List.Icon
                   style={{ marginLeft: styles.oneSpace * 2 }}
                   icon={handler.icon}
-                  color={ref.grid && operation.grid === ref.grid ? styles.colors.primary : undefined}
+                  color={ref.grid && operation.grid === ref.grid ? styles.colors.primary : styles.colors.onBackground}
                 />
               )}
               onPress={() => handleChangeGrid(ref.grid, ref.type)}

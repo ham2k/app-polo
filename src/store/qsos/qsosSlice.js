@@ -83,10 +83,13 @@ export const selectQSOs = createSelector(
 )
 
 export const selectSectionedQSOs = createSelector(
-  (state, uuid) => selectQSOs(state, uuid),
-  (state, uuid) => selectSettings(state),
-  (state, uuid) => selectOperation(state, uuid),
-  (qsos, settings, operation) => analyzeAndSectionQSOs({ qsos, settings, operation })
+  (state, uuid, showDeletedQSOs) => {
+    return selectQSOs(state, uuid)
+  },
+  (state, uuid, showDeletedQSOs) => selectSettings(state),
+  (state, uuid, showDeletedQSOs) => selectOperation(state, uuid),
+  (state, uuid, showDeletedQSOs) => showDeletedQSOs,
+  (qsos, settings, operation, showDeletedQSOs) => analyzeAndSectionQSOs({ qsos, settings, operation, showDeletedQSOs })
 )
 
 export default qsosSlice.reducer

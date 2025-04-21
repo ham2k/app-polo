@@ -9,7 +9,7 @@ import React, { useCallback } from 'react'
 import { Button, Dialog, Text } from 'react-native-paper'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
 
-export function WelcomeDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
+export function WelcomeDialog ({ settings, styles, onDialogNext, onDialogPrevious, onAccountConnect, nextLabel, previousLabel }) {
   const handleNext = useCallback(() => {
     onDialogNext && onDialogNext()
   }, [onDialogNext])
@@ -18,12 +18,30 @@ export function WelcomeDialog ({ settings, styles, onDialogNext, onDialogPreviou
     onDialogPrevious && onDialogPrevious()
   }, [onDialogPrevious])
 
+  const handleConnect = useCallback(() => {
+    onAccountConnect && onAccountConnect()
+  }, [onAccountConnect])
+
   return (
     <Ham2kDialog visible={true} dismissable={false}>
       <Dialog.Title style={{ textAlign: 'center' }}>Welcome to PoLo!</Dialog.Title>
-      <Dialog.Content>
-        <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>We have a few questions to help us better suit your needs.</Text>
-      </Dialog.Content>
+      {settings.devMode ? (
+        <Dialog.Content>
+          <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
+            Do you have an existing account?
+          </Text>
+          <Button onPress={handleConnect}>Connect with Ham2K Log Filer</Button>
+          <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center', paddingTop: styles.oneSpace * 2 }}>
+            Otherwise, we'll help you set up on this device.
+          </Text>
+        </Dialog.Content>
+      ) : (
+        <Dialog.Content>
+          <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
+            We have a few questions to help us better suit your needs.
+          </Text>
+        </Dialog.Content>
+      )}
       <Dialog.Actions style={{ justifyContent: 'space-between' }}>
         <Button onPress={handlePrevious}>{previousLabel ?? 'Skip'}</Button>
         <Button onPress={handleNext}>{nextLabel ?? 'Continue'}</Button>

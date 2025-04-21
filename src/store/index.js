@@ -27,6 +27,7 @@ import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './ap
 import { reducer as apiGMAReducer, middleware as apiGMAMiddleware } from './apis/apiGMA'
 import { reducer as apiWWBOTAReducer, middleware as apiWWBOTAMiddleware } from './apis/apiWWBOTA'
 import dataFilesReducer from './dataFiles'
+import { reduxEnhancersForDistribution } from '../distro'
 
 // Redux Toolkit uses Immer, which freezes state by default.
 // This is great, except that our log processing needs to mutate state when merging QSOs,
@@ -106,6 +107,9 @@ export const store = configureStore({
     middlewares.push(apiWWBOTAMiddleware)
 
     return middlewares
+  },
+  enhancers: (getDefaultEnhancers) => {
+    return getDefaultEnhancers().concat(reduxEnhancersForDistribution())
   },
   devTools: {
     actionSanitizer: reduxDevtoolsActionSanitizer,

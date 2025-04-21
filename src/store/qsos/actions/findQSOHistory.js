@@ -14,7 +14,7 @@ export async function findQSOHistory (call, options = {}) {
   const whereArgs = [call]
 
   if (options.baseCall) {
-    whereClauses[0] = `${whereClauses[0]} OR qsos.theirCall = ?`
+    whereClauses[0] = `(${whereClauses[0]} OR qsos.theirCall = ?)`
     whereArgs.push(options.baseCall)
   }
 
@@ -44,13 +44,21 @@ export async function findQSOHistory (call, options = {}) {
     LEFT OUTER JOIN operations ON operations.uuid = qsos.operation
     WHERE
       (operations.uuid IS NOT NULL OR qsos.operation = 'historical')  -- avoid orphaned qsos
+      AND (operations.deleted = 0 OR operations.deleted IS NULL)
+      AND (qsos.deleted = 0 OR qsos.deleted IS NULL)
       AND ${whereClauses.join(' AND ')}
     ORDER BY startOnMillis DESC
     `,
     whereArgs
   )
 
-  rows = rows.filter(rows => !rows.deleted)
+  rows = rows.filter(row => !row.deleted)
+  rows.forEach(row => {
+    if (row.startOnMillis) {
+      row.startAtMillis = row.startOnMillis
+      delete row.startOnMillis
+    }
+  })
 
   const mostRecentQSO = rows[0] && prepareQSORow(rows[0])
 

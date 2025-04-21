@@ -50,11 +50,11 @@ export default function OperationDetailsScreen ({ navigation, route }) {
           <ThemedTextInput
             style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
             value={operation?.notes || ''}
-            label="Operation Notes"
             placeholder={'Anything you want to write about this operation'}
             onChangeText={handleChangeNotes}
-            multiline={true}
-            numberOfLines={6}
+            // There's a bug in multiline inputs calling onChangeText multiple times
+            // multiline={true}
+            // numberOfLines={6}
           />
         </Ham2kListSection>
 

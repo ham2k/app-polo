@@ -34,9 +34,9 @@ const ExportHandler = {
         icon: 'briefcase-upload',
         format: 'qson',
         exportType: 'devmode-qson',
-        nameTemplate: settings.useCompactFileNames ? '{call}@{shortUUID}-{compactDate}' : '{date} {call} {title} ({shortUUID})',
-        titleTemplate: `{call}: ${Info.shortName} at ${[ref.ref, ref.name].filter(x => x).join(' - ')} on {date}`,
-        exportTitle: 'Developer Mode: QSON Export',
+        nameTemplate: '{{op.date}}.{{log.station}}.{{first8 op.uuid}}',
+        titleTemplate: '{{log.station}}: {{log.title}} on {{op.date}}',
+        exportName: 'Developer Mode: QSON Export',
         devMode: true,
         selectedByDefault: false
       }])
@@ -48,7 +48,7 @@ const KonamiCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-devmode-konami',
-  match: /^KONAMI$/i,
+  match: /^(KONAMI|DEVMODE)$/i,
   describeCommand: (match, { settings }) => {
     if (settings.devMode) {
       return 'Deactivate developer mode?'
@@ -58,59 +58,60 @@ const KonamiCommandHook = {
   },
   invokeCommand: (match, { dispatch, settings, handleFieldChange }) => {
     dispatch(setSettings({ devMode: !settings.devMode }))
-    handleFieldChange({ fieldId: 'theirCall', value: 'KONAMI!' })
-    animateCall([
-      'KONAMI!',
-      'KONAMI',
-      'KONAM',
-      'KONA',
-      'KON',
-      'KO',
-      'K',
-      '',
-      'D',
-      'DE',
-      'DEV',
-      'DEV ',
-      'DEV M',
-      'DEV MO',
-      'DEV MOD',
-      'DEV MODE',
-      `dEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DeV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEv MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV mODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MoDE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MOdE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MODe ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MOdE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MoDE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV mODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEv MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DeV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `dEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `dEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DeV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEv MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV mODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MoDE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MOdE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      `DEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
-      ''
-    ],
-    handleFieldChange, { time: 80 })
+    // handleFieldChange({ fieldId: 'theirCall', value: 'KONAMI!' })
+    // animateCall([
+    //   'KONAMI!',
+    //   'KONAMI',
+    //   'KONAM',
+    //   'KONA',
+    //   'KON',
+    //   'KO',
+    //   'K',
+    //   '',
+    //   'D',
+    //   'DE',
+    //   'DEV',
+    //   'DEV ',
+    //   'DEV M',
+    //   'DEV MO',
+    //   'DEV MOD',
+    //   'DEV MODE',
+    //   `dEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DeV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEv MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV mODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MoDE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MOdE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MODe ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MOdE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MoDE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV mODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEv MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DeV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `dEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `dEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DeV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEv MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV mODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MoDE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MOdE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   `DEV MODE ${!settings.devMode ? 'ON' : 'OFF'}`,
+    //   ''
+    // ],
+    // handleFieldChange, { time: 80 })
     if (settings.devMode) {
-      return 'Deactivated developer mode'
+      return 'Developer Mode: OFF'
     } else {
-      return 'Activated developer mode'
+      return 'Developer Mode: ON!!!'
     }
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function animateCall (cells, handleFieldChange, options = {}) {
   const { time = 100 } = options
   let i = 0

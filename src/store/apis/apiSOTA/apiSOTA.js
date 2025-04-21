@@ -21,6 +21,8 @@ import { setAccountInfo } from '../../settings'
 
 const DEBUG = false
 
+const API_TIMEOUT = 3000 // 3 seconds
+
 export const SOTASSOConfig = {
   issuer: 'https://sso.sota.org.uk/auth/realms/SOTA/',
   clientId: 'polo',
@@ -30,6 +32,7 @@ export const SOTASSOConfig = {
 
 const baseQueryWithSettings = fetchBaseQuery({
   baseUrl: 'https://',
+  timeout: API_TIMEOUT,
   prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('Accept', 'application/json')
     headers.set('Content-type', 'application/json')

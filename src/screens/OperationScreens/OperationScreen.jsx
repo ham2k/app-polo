@@ -30,6 +30,7 @@ import { useUIState } from '../../store/ui'
 import { Icon, Menu, Text } from 'react-native-paper'
 import { slashZeros } from '../../tools/stringTools'
 import { hasRef } from '../../tools/refTools'
+import { parseCallsign } from '@ham2k/lib-callsigns'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -59,6 +60,7 @@ export default function OperationScreen (props) {
   }, [route.params.operation.uuid, dispatch])
 
   const [lastTracking, setLastTracking] = useState(0)
+
   useEffect(() => {
     if (Date.now() - lastTracking > 1000 * 60 * 5 && online) {
       trackOperation({ settings, operation })
@@ -70,7 +72,7 @@ export default function OperationScreen (props) {
     let options = {}
     if (operation?.stationCall) {
       options = {
-        title: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
+        title: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation?.stationCallPlus || operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
         subTitle: operation.subtitle
       }
     } else {
@@ -314,7 +316,11 @@ export function buildTitleForOperation (operationAttrs, { includeCall = true } =
   if (operationAttrs.stationCall) {
     let call = operationAttrs.stationCall
     if (operationAttrs.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
-      call = `${call} (op ${operationAttrs.operatorCall})`
+      const stationCallInfo = parseCallsign(operationAttrs.stationCall)
+      const operatorCallInfo = parseCallsign(operationAttrs.operatorCall)
+      if (stationCallInfo?.baseCall !== operatorCallInfo?.baseCall) {
+        call = `${call} (op ${operationAttrs.operatorCall})`
+      }
     }
     const parts = []
     if (operationAttrs.userTitle) {
@@ -348,18 +354,32 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
         Logging Settings
       </Text>
       <Menu.Item
+        leadingIcon="signal"
+        trailingIcon={settings.showRSTFields === false ? 'circle-outline' : 'check-circle-outline'}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showRSTFields: settings.showRSTFields === false }))) }}
+        title={'RST Fields'}
+        contentStyle={{ minWidth: styles.oneSpace * 20 }}
+      />
+      <Menu.Item
         leadingIcon="select-marker"
-        trailingIcon={settings.showStateField !== false ? 'check-circle-outline' : 'circle-outline'}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: !settings.showStateField }))) }}
+        trailingIcon={settings.showStateField === false ? 'circle-outline' : 'check-circle-outline'}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: settings.showStateField === false }))) }}
         title={'State Field'}
-
+        contentStyle={{ minWidth: styles.oneSpace * 20 }}
+      />
+      <Menu.Item
+        leadingIcon="delete-off-outline"
+        trailingIcon={settings.showDeletedQSOs === false ? 'circle-outline' : 'check-circle-outline'}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showDeletedQSOs: settings.showDeletedQSOs === false }))) }}
+        title={'Show Deleted QSOs'}
+        contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
       <Menu.Item
         leadingIcon="numeric"
-        trailingIcon={settings.showNumbersRow !== false ? 'check-circle-outline' : 'circle-outline'}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))) }}
+        trailingIcon={settings.showNumbersRow === false ? 'circle-outline' : 'check-circle-outline'}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showNumbersRow: settings.showNumbersRow === false }))) }}
         title={'Numbers Row'}
-
+        contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
       <View style={{ height: 2, backgroundColor: styles.colors.onSurface, marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace }} />
       <Text style={{ marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
@@ -369,6 +389,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
         leadingIcon="search-web"
         onPress={() => hideAndRun(() => dispatch(lookupAllQSOs(operation.uuid)))}
         title={'Lookup all QSOs'}
+        contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
       {hasRef(operation, 'potaActivation') &&
         <Menu.Item
@@ -377,6 +398,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
             return dispatch(confirmFromSpots({ operation }))
           })}
           title={'Confirm Spots'}
+          contentStyle={{ minWidth: styles.oneSpace * 20 }}
         />}
     </>
   )

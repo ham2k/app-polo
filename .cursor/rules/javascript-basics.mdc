@@ -1,0 +1,8 @@
+---
+description: Javascript Basics
+globs: *.js, *.jsx
+alwaysApply: false
+---
+- we don't use semicolons to end lines
+- we use `npm` to manage our packages
+- consider using an existing package, or one of their dependencies, before suggesting a new package

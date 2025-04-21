@@ -5,29 +5,34 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ImageBackground, Pressable, View, useWindowDimensions } from 'react-native'
-import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import { useDispatch, useSelector } from 'react-redux'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Text } from 'react-native-paper'
+import { useDispatch, useSelector } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SplashScreen from 'react-native-splash-screen'
 
 import { selectRuntimeMessages } from '../../store/runtime'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Ham2kMarkdown } from '../components/Ham2kMarkdown'
-import { startupSequence } from '../../store/runtime/actions/startupSequence'
-import { OnboardingManager } from './onboarding/OnboardingManager'
-import { selectSettings } from '../../store/settings'
+import { earlyStartupSequence, startupSequence } from '../../store/runtime/actions/startupSequence'
 import { selectSystemFlag, setSystemFlag } from '../../store/system'
+import { selectSettings } from '../../store/settings'
+import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { OnboardingManager } from './onboarding/OnboardingManager'
 
 import { enableStartupInterruptionDialogForDistribution, StartupInterruptionDialogForDistribution } from '../../distro'
 
+import releaseNotes from '../../../RELEASE-NOTES.json'
 import packageJson from '../../../package.json'
 
 const SPLASH_IMAGE = require('./img/launch_screen.jpg')
 
-function prepareStyles (baseTheme, height) {
+function prepareStyles (baseTheme, height, dialogVisible) {
+  const isLightImage = true
+  const baseColor = isLightImage ? '#000' : '#FFF'
+  const haloColor = isLightImage ? '#FFF' : '#000'
+
   return {
     ...baseTheme,
     root: {
@@ -43,14 +48,18 @@ function prepareStyles (baseTheme, height) {
       flexDirection: 'column',
       justifyContent: 'space-between'
     },
+    titleBoxSpacer: {
+      height: dialogVisible ? '10%' : '10%'
+    },
     titleBoxTop: {
-      height: '50%',
+      backgroundColor: 'rgba(255,255,255,.1)',
       justifyContent: 'flex-end'
     },
     titleBoxBottom: {
       // marginTop: height * 0.15
       justifyContent: 'flex-start',
       marginBottom: baseTheme.oneSpace * 2,
+      backgroundColor: 'rgba(255,255,255,.1)',
       flex: 0
     },
     messagesBox: {
@@ -61,60 +70,77 @@ function prepareStyles (baseTheme, height) {
       alignItems: 'center',
       overflow: 'hidden'
     },
+    captionBox: {
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      backgroundColor: 'rgba(255,255,255,.15)'
+    },
     ham2k: {
       fontSize: baseTheme.normalFontSize * 1.7,
       lineHeight: baseTheme.normalFontSize * 2,
       fontWeight: 400,
-      textShadowColor: '#000',
+      textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 1.5,
-      color: '#FFF',
+      textShadowRadius: baseTheme.oneSpace * 1, // 1.5,
+      color: baseColor,
       textAlign: 'center'
     },
     polo: {
       fontSize: baseTheme.normalFontSize * 2.3,
       lineHeight: baseTheme.normalFontSize * 3,
-      textShadowColor: '#000',
+      textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace * 2,
       fontFamily: 'Roboto Slab Black',
-      color: '#FFF',
+      color: baseColor,
       textAlign: 'center'
     },
     version: {
       fontSize: baseTheme.normalFontSize * 1.3,
       lineHeight: baseTheme.normalFontSize * 2,
       fontWeight: 400,
-      textShadowColor: '#000',
+      textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 1,
-      color: '#FFF',
+      textShadowRadius: baseTheme.oneSpace * 2,
+      color: baseColor,
       textAlign: 'center',
-      marginTop: baseTheme.oneSpace
+      paddingTop: baseTheme.oneSpace
     },
     message: {
-      textShadowColor: '#000',
+      textShadowColor: haloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace,
       fontSize: 20,
       fontWeight: 'bold',
-      color: '#FFFFFF', // '#D0D0D0',
+      color: baseColor, // '#D0D0D0',
       textAlign: 'center'
+    },
+    caption: {
+      textShadowColor: haloColor,
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace,
+      fontSize: 18,
+      fontWeight: 'normal',
+      color: baseColor, // '#D0D0D0',
+      textAlign: 'center',
+      padding: baseTheme.oneSpace
     },
     markdown: {
       ...baseTheme.markdown,
       body: {
         ...baseTheme.markdown.body,
-        color: '#FFFFFF', // '#D0D0D0',
-        fontSize: baseTheme.normalFontSize,
+        color: baseColor, // '#D0D0D0',
+        fontSize: baseTheme.normalFontSize * 1.2,
         textAlign: 'center',
         marginLeft: baseTheme.oneSpace * 3,
         marginRight: baseTheme.oneSpace * 3
       },
       paragraph: {
-        textShadowColor: '#000',
+        backgroundColor: 'rgba(255,255,255,.3)',
+        paddingHorizontal: baseTheme.oneSpace * 0.5,
+        textShadowColor: 'rgba(255,255,255,1)',
         textShadowOffset: { width: 0, height: 0 },
-        textShadowRadius: baseTheme.oneSpace,
+        textShadowRadius: baseTheme.oneSpace * 0.5,
         textAlign: 'center',
         alignItems: 'center',
         margin: 0,
@@ -129,12 +155,15 @@ function prepareStyles (baseTheme, height) {
 export default function StartScreen ({ setAppState }) {
   const { height } = useWindowDimensions()
 
-  const styles = useThemedStyles(prepareStyles, height)
-
   const settings = useSelector(selectSettings)
   const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
   const dispatch = useDispatch()
   const messages = useSelector(selectRuntimeMessages)
+
+  const photoCaption = useMemo(() => {
+    const version = Object.keys(releaseNotes).find((v) => releaseNotes[v].photoCaption)
+    return releaseNotes[version].photoCaption
+  }, [])
 
   useEffect(() => {
     SplashScreen.hide()
@@ -142,37 +171,54 @@ export default function StartScreen ({ setAppState }) {
 
   const versionName = packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`
 
-  const [startupPhase, setStartupPhase] = useState('hold')
+  const [startupPhase, setStartupPhase] = useState(undefined)
 
-  useEffect(() => { // Determine the startup phase
-    if (startupPhase !== 'hold') return
-    if (!onboardedOn || !settings?.operatorCall) {
-      setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
-    } else {
-      // If startup interruption is enabled, give the user some milliseconds to trigger it
-      if (enableStartupInterruptionDialogForDistribution({ settings })) {
-        const timeout = setTimeout(() => {
-          if (startupPhase === 'hold') {
-            setStartupPhase('start')
-          }
-        }, 500)
-        return () => clearTimeout(timeout)
+  const styles = useThemedStyles(prepareStyles, height, startupPhase === 'onboarding')
+
+  useEffect(() => { // Determine actions based on the startup phase
+    /*
+     * Statup phases are:
+     *  - undefined
+     *  - 'earlyStart' : Perform early startup and then proceed to 'hold'
+     *  - 'hold'       : Hold for a sec and continue to either 'onboarding' or 'start'
+     *  - 'onboarding' : Show onboarding dialogs until ready
+     *  - 'start'      : Trigger startup sequence, which will start the main app when ready
+     *  - 'starting'   : startup sequence is in process
+     */
+    if (startupPhase === undefined) {
+      // Load early extensions and such
+      setStartupPhase('earlyStart')
+      dispatch(earlyStartupSequence(() => { setStartupPhase('hold') }))
+    } else if (startupPhase === 'hold') {
+      // Hold for a second and decide if we need to show onboarding or not
+      if (!onboardedOn || !settings?.operatorCall) {
+        setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
       } else {
-        setStartupPhase('start')
+        // If startup interruption is enabled, give the user some milliseconds to trigger it
+        if (enableStartupInterruptionDialogForDistribution({ settings })) {
+          const timeout = setTimeout(() => {
+            if (startupPhase === 'hold') {
+              setStartupPhase('start')
+            }
+          }, 500)
+          return () => clearTimeout(timeout)
+        } else {
+          setStartupPhase('start')
+        }
       }
+    } else if (startupPhase === 'start') {
+      // Once ready, begin the startup sequence
+      setStartupPhase('starting')
+      dispatch(startupSequence(() => setAppState('ready')))
     }
-  }, [startupPhase, onboardedOn, settings])
+  }, [startupPhase, onboardedOn, settings, dispatch, setAppState])
 
   const handleOnboardingDone = useCallback(() => {
     dispatch(setSystemFlag('onboardedOn', Date.now()))
     setStartupPhase('start')
   }, [dispatch, setStartupPhase])
 
-  useEffect(() => { // Once ready, begin the startup sequence
-    if (startupPhase === 'start') {
-      setStartupPhase('starting')
-      dispatch(startupSequence(() => setAppState('ready')))
-    }
+  useEffect(() => {
   }, [dispatch, setAppState, startupPhase])
 
   const handleInterruption = useCallback(() => { // If the uer taps the screen, show the track selection dialog
@@ -181,8 +227,9 @@ export default function StartScreen ({ setAppState }) {
 
   return (
     <ImageBackground source={SPLASH_IMAGE} style={styles.root}>
-      <SafeAreaView>
-        <GestureHandlerRootView style={styles.container}>
+      <GestureHandlerRootView>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.titleBoxSpacer} />
           <Pressable style={styles.titleBoxTop} onPress={() => { handleInterruption(); return true }}>
             <Text style={styles.ham2k}>Ham2K</Text>
           </Pressable>
@@ -195,22 +242,25 @@ export default function StartScreen ({ setAppState }) {
               <Ham2kMarkdown key={i} styles={styles}>{msg.message}</Ham2kMarkdown>
             ))}
           </View>
-        </GestureHandlerRootView>
-      </SafeAreaView>
-      {startupPhase === 'dialog' && (
-        <StartupInterruptionDialogForDistribution
-          settings={settings}
-          styles={styles}
-          setStartupPhase={setStartupPhase}
-        />
-      )}
-      {startupPhase === 'onboarding' && (
-        <OnboardingManager
-          settings={settings}
-          styles={styles}
-          onOnboardingDone={handleOnboardingDone}
-        />
-      )}
+          <View style={styles.captionBox}>
+            <Text style={styles.caption}>{photoCaption}</Text>
+          </View>
+        </SafeAreaView>
+        {startupPhase === 'dialog' && (
+          <StartupInterruptionDialogForDistribution
+            settings={settings}
+            styles={styles}
+            setStartupPhase={setStartupPhase}
+          />
+        )}
+        {startupPhase === 'onboarding' && (
+          <OnboardingManager
+            settings={settings}
+            styles={styles}
+            onOnboardingDone={handleOnboardingDone}
+          />
+        )}
+      </GestureHandlerRootView>
     </ImageBackground>
   )
 }

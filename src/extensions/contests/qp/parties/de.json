@@ -1,0 +1,34 @@
+{
+  "key": "DE",
+  "name": "Delaware QSO Party",
+  "url": "https://www.fsarc.org/qsoparty/qsohome.htm",
+  "start": "2025-5-3 17:00Z",
+  "end": "2025-5-4 23:59Z",
+  "cabrilloName": "DE-QSO-PARTY",
+  "internalNotes": "Power multiplier needs to be implemented, DE stations no county multipliers",
+  "lastUpdated": "2025-03-22 22:00Z",
+  "status": "See internalNotes",
+  "options": {
+    "dcCountsAsMaryland": true,
+    "stateCountsForInState": true,
+    "selfSpotting": true,
+    "dxEntityIsMultiplier": true,
+    "multsPerBandMode": false,
+    "dataAndCWCountAsSameMode": true,
+    "countiesCountForInState": false
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2
+  },
+  "powerMultiplier": {
+    "QRP": 3,
+    "LP": 2,
+    "HP": 1
+  },
+  "counties": {
+    "NDE": "New Castle County",
+    "KDE": "Kent County",
+    "SDE": "Sussex County"
+  }
+}

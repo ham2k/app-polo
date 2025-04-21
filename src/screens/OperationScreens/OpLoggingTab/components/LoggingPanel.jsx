@@ -18,7 +18,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
-import { setOperationData, setOperationLocalData } from '../../../../store/operations'
+import { setOperationLocalData } from '../../../../store/operations'
 import { useUIState } from '../../../../store/ui'
 import { addQSO, addQSOs } from '../../../../store/qsos'
 import { setVFO } from '../../../../store/station/stationSlice'
@@ -32,7 +32,7 @@ import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
-import { annotateQSO } from '../../OpInfoTab/components/useCallLookup'
+import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
 import { useNavigation } from '@react-navigation/native'
 import { findHooks } from '../../../../extensions/registry'
 import { trackEvent } from '../../../../distro'
@@ -105,13 +105,22 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     if (!loggingState?.selectedUUID) {
       let nextQSO
       const otherStateChanges = {}
+
       if (loggingState?.qsoQueue?.length > 0) {
         nextQSO = loggingState.qsoQueue.pop() ?? prepareNewQSO(operation, qsos, vfo, settings)
         otherStateChanges.qsoQueue = loggingState.qsoQueue
       } else {
         nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
       }
+
+      if (loggingState.callStack) {
+        otherStateChanges.callStack = undefined
+        nextQSO.their = nextQSO.their || {}
+        nextQSO.their.call = loggingState.callStack
+      }
+
       setQSO(nextQSO, { otherStateChanges })
+      dispatch(resetCallLookupCache())
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
         if (mainFieldRef?.current) {
           mainFieldRef.current.focus()
@@ -142,14 +151,10 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         }
       }, 10)
     }
-  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO])
+  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch, loggingState.callStack])
 
   useEffect(() => { // Validate and analize the callsign
-    let call = qso?.their?.call ?? ''
-    if (call.indexOf(',') >= 0) {
-      const calls = call = call.split(',')
-      call = calls[calls.length - 1].trim()
-    }
+    const { call } = parseStackedCalls(qso?.their?.call ?? '')
 
     const callInfo = parseCallsign(call)
 
@@ -184,7 +189,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
       } else if (value) {
         guess = annotateFromCountryFile({ prefix: value, baseCall: value })
       }
-      updateQSO({ their: { call: value, guess }, qsl: undefined })
+      updateQSO({ their: { call: value, guess, lookup: undefined }, qsl: undefined })
     } else if (fieldId === 'theirSent') {
       updateQSO({ their: { sent: value } })
     } else if (fieldId === 'ourSent') {
@@ -289,20 +294,21 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
         qso.their = qso.their || {}
         qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
 
-        let call = qso?.their?.call
         let lastUUID
 
-        const calls = call = call.split(',')
+        const { call, allCalls, callStack } = parseStackedCalls(qso?.their?.call ?? '')
         const multiQSOs = []
-        for (let i = 0; i < calls.length; i++) {
+        for (let i = 0; i < allCalls.length; i++) {
           let oneQSO = qso
-          if (calls.length > 1) { // If this is a multi-call QSO, we need to clone and annotate the QSO for each call
+          qso.their.call = call
+          if (allCalls.length > 1) { // If this is a multi-call QSO, we need to clone and annotate the QSO for each call
             oneQSO = cloneDeep(qso)
             if (i > 0) oneQSO.uuid = null
-            oneQSO.their.call = calls[i].trim()
+            oneQSO.their.call = allCalls[i].trim()
             oneQSO.their.guess = {}
             oneQSO.their.lookup = {}
-            oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
+            oneQSO = await annotateQSO({ qso: oneQSO, online: false, settings, dispatch })
+            oneQSO._needsLookup = true
           }
           multiQSOs.push(oneQSO)
 
@@ -310,10 +316,22 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
 
           lastUUID = oneQSO.uuid
         }
+
+        const activities = findHooks('activity').filter(activity => activity.processQSOBeforeSaveWithDispatch || activity.processQSOBeforeSave)
+        for (const activity of activities) {
+          for (const q of multiQSOs) {
+            if (activity.processQSOBeforeSaveWithDispatch) {
+              await activity.processQSOBeforeSaveWithDispatch({ qso: q, operation, qsos, vfo, settings, dispatch })
+            } else {
+              activity.processQSOBeforeSave({ qso: q, operation, qsos, vfo, settings })
+            }
+          }
+        }
+
         dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
         if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 
-        setQSO(undefined, { otherStateChanges: { lastUUID } }) // Let queue management decide what to do
+        setQSO(undefined, { otherStateChanges: { lastUUID, callStack } }) // Let queue management decide what to do
         if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
       }
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
@@ -399,6 +417,13 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
     }
   }, [])
 
+  const opMessage = useMemo(() => {
+    if (operationError) return { text: operationError, icon: 'alert-circle', hideCallInfo: true }
+    if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information', hideCallInfo: false }
+    if (commandInfo?.message) return { text: `**${commandInfo.message}**`, icon: 'chevron-right-box', hideCallInfo: true }
+    return undefined
+  }, [operationError, commandInfo?.message, loggingState.infoMessage])
+
   return (
     <View style={[styles.root, style]}>
       <SafeAreaView edges={[isKeyboardVisible ? '' : 'bottom', 'left', 'right'].filter(x => x)}>
@@ -433,29 +458,32 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
                     </Text>
                   </View>
                 ) : (
-                  !commandInfo?.message && qso?.their?.call?.length > 2 ? (
-                    <CallInfo
-                      qso={qso}
-                      qsos={activeQSOs}
-                      sections={sections}
-                      operation={operation}
-                      vfo={vfo}
-                      settings={settings}
-                      styles={styles}
-                      themeColor={themeColor}
-                      updateQSO={updateQSO}
-                    />
-                  ) : (
-                    <OpInfo
-                      message={commandInfo?.message || operationError}
-                      operation={operation}
-                      vfo={vfo}
-                      styles={styles}
-                      settings={settings}
-                      qsos={activeQSOs}
-                      themeColor={themeColor}
-                    />
-                  )
+                  <>
+                    {!opMessage?.hideCallInfo && qso?.their?.call?.length > 2 && (
+                      <CallInfo
+                        qso={qso}
+                        qsos={activeQSOs}
+                        sections={sections}
+                        operation={operation}
+                        vfo={vfo}
+                        settings={settings}
+                        styles={styles}
+                        themeColor={themeColor}
+                        updateQSO={updateQSO}
+                      />
+                    )}
+                    {(opMessage?.text || (qso?.their?.call?.length || 0) < 2) && (
+                      <OpInfo
+                        message={opMessage}
+                        operation={operation}
+                        vfo={vfo}
+                        styles={styles}
+                        settings={settings}
+                        qsos={activeQSOs}
+                        themeColor={themeColor}
+                      />
+                    )}
+                  </>
                 )}
               </View>
               <View style={styles.infoPanel.buttonContainer}>
@@ -508,6 +536,7 @@ export default function LoggingPanel ({ style, operation, vfo, qsos, sections, a
           <MainExchangePanel
             style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}
             qso={qso}
+            qsos={qsos}
             operation={operation}
             vfo={vfo}
             settings={settings}
@@ -621,7 +650,7 @@ function prepareStyles (themeStyles, themeColor) {
 
 function prepareNewQSO (operation, qsos, vfo, settings) {
   const qso = {
-    uuid: UUID.v1(),
+    uuid: UUID.v4(),
     band: vfo.band,
     freq: vfo.freq,
     mode: vfo.mode,
@@ -654,7 +683,7 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   const clone = cloneDeep(qso || {})
   clone._isNew = true
   clone._isSuggested = true
-  clone.uuid = UUID.v1()
+  clone.uuid = UUID.v4()
 
   if (clone.freq) {
     clone.band = bandForFrequency(clone.freq)
@@ -675,4 +704,43 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   })
 
   return clone
+}
+
+export function parseStackedCalls (input) {
+  // Stacked calls are separated by `//`
+  // The last part of the stack that is a valid call is extracted as `call`
+  // along with any other comma-separated calls that were part of that stack part, as `allCalls`.
+  // The rest of the stack is returned as a string in`callStack`.
+
+  input = (input || '').trim()
+  const parts = input.split('//').filter(x => x)
+
+  let call = null
+  let allCalls = null
+  const stack = []
+  let i = parts.length - 1
+  while (i >= 0) {
+    if (call) {
+      // if we already have a call, everything else goes to the stack
+      stack.unshift(parts[i])
+    } else {
+      // Otherwise we look to see if the current part is a valid call
+
+      // But first, we look for multiple calls and pick the last
+      allCalls = parts[i].split(',').filter(x => x)
+      call = allCalls[allCalls?.length - 1]
+
+      const parsedCall = parseCallsign(call)
+
+      // if not valid, add it to the stack and keep trying with the next part
+      if (!parsedCall.baseCall && !(call?.indexOf('?') >= 0)) {
+        call = null
+        allCalls = null
+        stack.unshift(parts[i])
+      }
+    }
+    i--
+  }
+
+  return { call: call || '', allCalls: allCalls || [], callStack: stack.join('//') }
 }

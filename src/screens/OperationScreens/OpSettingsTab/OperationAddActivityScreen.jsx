@@ -13,7 +13,7 @@ import { StackActions } from '@react-navigation/native'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
-import { replaceRefs } from '../../../tools/refTools'
+import { findRef, replaceRefs } from '../../../tools/refTools'
 import { findBestHook, useFindHooks } from '../../../extensions/registry'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
@@ -42,14 +42,18 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
 
   const addActivity = useCallback((activity) => {
     const type = activity.activationType || activity.refType || activity.key
-    dispatch(setOperationData({
-      uuid: operation.uuid,
-      refs: replaceRefs(
-        operation.refs,
-        type,
-        [{ type, ref: '', ...activity.defaultValue }]
-      )
-    }))
+
+    const ref = findRef(operation, type)
+    if (!ref) {
+      dispatch(setOperationData({
+        uuid: operation.uuid,
+        refs: replaceRefs(
+          operation.refs,
+          type,
+          [{ type, ref: '', ...activity.defaultValue }]
+        )
+      }))
+    }
 
     trackEvent('add_activity', { activity: activity?.key })
     navigation.dispatch(StackActions.replace('OperationActivityOptions', { operation: operation.uuid, activity: activity.key }))
@@ -76,7 +80,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
         <Ham2kListSection>
           <Ham2kListItem
             title="Can't find the activity you're looking for?"
-            description="There are more options in the App Features Settings"
+            description="There are more options in Settings > App Features"
             onPress={() => navigation.navigate('Settings', { screen: 'FeaturesSettings' })}
           />
         </Ham2kListSection>

@@ -40,12 +40,12 @@ export const BandsAndModesScoringHandler = {
     const bandCount = Object.keys(score.bands ?? {}).length
     const modeCount = Object.keys(score.modes ?? {}).length
 
-    const summaryTitleParts = []
-    if (bandCount >= 2) summaryTitleParts.push(`${bandCount} Bands`)
-    if (modeCount >= 2) summaryTitleParts.push(`${modeCount} Modes`)
+    const labelParts = []
+    if (bandCount >= 2) labelParts.push(`${bandCount} Bands`)
+    if (modeCount >= 2) labelParts.push(`${modeCount} Modes`)
+    if (labelParts.length > 0) score.label = labelParts.join(', ') + '\n'
 
     score.longSummary = ''
-    if (summaryTitleParts.length > 0) score.longSummary = summaryTitleParts.join(', ') + '\n'
 
     BANDS.forEach(band => {
       if (score?.bands?.[band]) {
@@ -59,7 +59,7 @@ export const BandsAndModesScoringHandler = {
         if (parts.length > 1) {
           parts.push(`Total ${score.bands[band]}`)
         }
-        score.longSummary += `${parts.join(' • ')}\n`
+        score.longSummary += ` ${parts.join(' • ')}\n`
       }
     })
 

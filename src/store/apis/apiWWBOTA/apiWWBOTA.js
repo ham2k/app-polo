@@ -14,10 +14,13 @@ const DEBUG = false
 
 const apiState = {}
 
-const NONCE_RE = /id="wdtNonceFrontendServerSide_18"[^>]+ value="([0-9a-f]+)"/
+const NONCE_RE = /id="wdtNonceFrontendServerSide_24"[^>]+ value="([0-9a-f]+)"/
+
+const API_TIMEOUT = 3000 // 3 seconds
 
 const baseQueryFetchNonce = fetchBaseQuery({
   baseUrl: 'https://wwbota.org/',
+  timeout: API_TIMEOUT,
   prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
   },
@@ -33,6 +36,7 @@ const baseQueryFetchNonce = fetchBaseQuery({
 
 const baseQuery = fetchBaseQuery({
   baseUrl: 'https://wwbota.org/',
+  timeout: API_TIMEOUT,
   prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('Referer', 'https://wwbota.org/cluster/')
     headers.set('Accept', 'application/json')
@@ -75,7 +79,7 @@ export const apiWWBOTA = createApi({
   endpoints: builder => ({
     spots: builder.query({
       query: () => ({
-        url: 'wp-admin/admin-ajax.php?action=get_wdtable&table_id=18',
+        url: 'wp-admin/admin-ajax.php?action=get_wdtable&table_id=24',
         method: 'POST',
         body: Object.entries({
           draw: 1,
@@ -92,8 +96,8 @@ export const apiWWBOTA = createApi({
         }
         if (DEBUG) console.log(response)
         return response.data.map(spot => ({
-          call: spot[0],
-          state: spot[1], // LIVE, QSY, QRT or TEST
+          call: spot[0]?.trim(),
+          state: spot[1]?.trim(), // LIVE, QSY, QRT or TEST
           frequency: parseFloat(spot[2]),
           info: spot[3],
           index: spot[4],

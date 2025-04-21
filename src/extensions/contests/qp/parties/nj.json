@@ -1,0 +1,30 @@
+{
+  "key": "NJ",
+  "name": "New Jersey QSO Party",
+  "start": "2025-9-20 14:00Z",
+  "end": "2025-9-21 01:59Z",
+  "status": "Pending",
+  "counties": {
+    "ATLA": "Atlantic",
+    "BERG": "Bergen",
+    "BURL": "Burlington",
+    "CAPE": "Cape May",
+    "CMDN": "Camden",
+    "CUMB": "Cumberland",
+    "ESSE": "Essex",
+    "GLOU": "Gloucester",
+    "SALE": "Salem",
+    "SUSS": "Sussex",
+    "WRRN": "Warren",
+    "HUDS": "Hudson",
+    "HUNT": "Hunterdon",
+    "MERC": "Mercer",
+    "MIDD": "Middlesex",
+    "MONM": "Monmouth",
+    "MORR": "Morris",
+    "OCEA": "Ocean",
+    "PASS": "Passaic",
+    "SOME": "Somerset",
+    "UNIO": "Union"
+  }
+}

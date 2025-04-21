@@ -1,0 +1,57 @@
+{
+  "key": "NS",
+  "name": "NSARA Contest (QSO Party)",
+  "disabled": true,
+  "short": "NSARA",
+  "url": "http://nsara.ca/",
+  "start": "2025-3-2 12:00Z",
+  "end": "2025-3-2 15:59Z",
+  "secondStart": "2025-3-2 18:00Z",
+  "secondEnd": "2025-3-2 21:59Z",
+  "cabrilloName": null,
+  "notes": "",
+  "internalNotes": "Needs support for sequence numbers.\nScoring changes when station contacted is remote.\nIs unique per mode???",
+  "lastUpdated": "2025-02-21 12:00Z",
+  "status": "Not supported",
+  "inStateExchange": [ "Location", "TheirNumber" ],
+  "outOfStateExchange": [ "Location", "OurNumber" ],
+  "bonusPoints": {
+    "qsoWithRover": 10,
+    "roverPerCountyActivated": 100
+  },
+  "options": {
+    "stateCountsForInState": false,
+    "selfCountsForCounty": true,
+    "selfSpotting": null,
+    "countyLine": null,
+    "qsoPerMode": true,
+    "multsPerMode": true,
+    "dxIsMultiplier": true,
+    "entity": "VE"
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 1,
+    "DATA": 1
+  },
+  "counties": {
+    "Annapolis": "Annapolis",
+    "Antigonish": "Antigonish",
+    "Cape Breton": "Cape Breton",
+    "Colchester": "Colchester",
+    "Cumberland": "Cumberland",
+    "Digby": "Digby",
+    "Guysborough": "Guysborough",
+    "Halifax": "Halifax",
+    "Hants": "Hants",
+    "Inverness": "Inverness",
+    "Kings": "Kings",
+    "Lunenburg": "Lunenburg",
+    "Pictou": "Pictou",
+    "Queens": "Queens",
+    "Richmond": "Richmond",
+    "Shelburne": "Shelburne",
+    "Victoria": "Victoria",
+    "Yarmouth": "Yarmouth"
+  }
+}

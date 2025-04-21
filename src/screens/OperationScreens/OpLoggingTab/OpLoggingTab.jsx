@@ -33,7 +33,7 @@ export default function OpLoggingTab ({ navigation, route }) {
   const settings = useSelector(selectSettings)
   const online = useSelector(selectRuntimeOnline)
 
-  const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid))
+  const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false))
 
   const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
@@ -70,7 +70,7 @@ export default function OpLoggingTab ({ navigation, route }) {
     <View style={flexOne}>
       <QSOList
         style={flexOne}
-        qsos={qsos}
+        qsos={settings.showDeletedQSOs === false ? activeQSOs : qsos}
         sections={sections}
         vfo={vfo}
         settings={settings}
@@ -83,6 +83,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         style={flexZero}
         operation={operation}
         qsos={qsos}
+        sections={sections}
         activeQSOs={activeQSOs}
         vfo={vfo}
         settings={settings}

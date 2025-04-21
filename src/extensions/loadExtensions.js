@@ -14,13 +14,16 @@ import ADIFExtension from './core/adif'
 import POTAExtension from './activities/pota/POTAExtension'
 import SOTAExtension from './activities/sota/SOTAExtension'
 import GMAExtension from './activities/gma/GMAExtension'
+import MOTAExtension from './activities/mota/MOTAExtension'
 import WWFFExtension from './activities/wwff/WWFFExtension'
 import FDExtension from './activities/fd/FDExtension'
 import WFDExtension from './activities/wfd/WFDExtension'
 import CustomExtension from './activities/custom/CustomExtension'
 import WWBOTAExtension from './activities/wwbota/WWBOTAExtension'
+import BCAExtension from './activities/bca/BCAExtension'
 import ECAExtension from './activities/eca/ECAExtension'
 import ELAExtension from './activities/ela/ELAExtension'
+import BLHAExtension from './activities/blha/BLHAExtension'
 import SiOTAExtentsion from './activities/siota/SiOTAExtension'
 
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
@@ -29,8 +32,11 @@ import QRZExtension from './data/qrz/QRZExtension'
 import HamDBExtension from './data/hamdb/HamDBExtension'
 import HamQTHExtension from './data/hamqth/HamQTHExtension'
 import Ham2KLoFiSyncExtension from './data/ham2k-lofi-sync/Ham2KLoFiSyncExtension'
-
-import NYQPExtension from './contests/nyqp/NYQPExtension'
+import SpotHistoryExtension from './data/spot-history/SpotHistoryExtension'
+import SpotDiscordExtension from './data/spot-discord/SpotDiscordExtension'
+import QSOPartiesExtension from './contests/qp/QSOPartiesExtension'
+import SimpleContestExtension from './contests/simple-contest/SimpleContestExtension'
+import GAPOTAExtension from './contests/gapota/GAPOTAExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
@@ -41,25 +47,34 @@ import MiscCommands from './commands/MiscCommands'
 import SatellitesExtension from './activities/satellites/SatellitesExtension'
 import WABExtension from './other/wab/WABExtension'
 
-const loadExtensions = () => async (dispatch, getState) => {
-  dispatch(addRuntimeMessage('Loading extensions'))
+export const loadEarlyExtensions = () => async (dispatch, getState) => {
   registerExtension(DevModeExtension)
+  registerExtension(Ham2KLoFiSyncExtension)
+  await activateEnabledExtensions(dispatch, getState)
+}
+
+export const loadExtensions = () => async (dispatch, getState) => {
+  dispatch(addRuntimeMessage('Loading extensions'))
   registerExtension(ADIFExtension)
   registerExtension(CountryFilesExtension)
   registerExtension(POTAExtension)
   registerExtension(SOTAExtension)
   registerExtension(GMAExtension)
+  registerExtension(MOTAExtension)
   registerExtension(WWFFExtension)
   registerExtension(CustomExtension)
   registerExtension(WFDExtension)
   registerExtension(FDExtension)
   registerExtension(WWBOTAExtension)
+  registerExtension(BCAExtension)
   registerExtension(ECAExtension)
   registerExtension(ELAExtension)
+  registerExtension(BLHAExtension)
   registerExtension(SiOTAExtentsion)
 
-  registerExtension(NYQPExtension)
-
+  registerExtension(QSOPartiesExtension)
+  registerExtension(SimpleContestExtension)
+  registerExtension(GAPOTAExtension)
   registerExtension(RadioCommands)
   registerExtension(TimeCommands)
   registerExtension(DebuggingCommands)
@@ -68,12 +83,12 @@ const loadExtensions = () => async (dispatch, getState) => {
 
   registerExtension(CallNotesExtension)
   registerExtension(CallHistoryExtension)
+  registerExtension(SpotHistoryExtension)
+  registerExtension(SpotDiscordExtension)
 
   registerExtension(QRZExtension)
   registerExtension(HamDBExtension)
   registerExtension(HamQTHExtension)
-
-  registerExtension(Ham2KLoFiSyncExtension)
 
   registerExtension(SatellitesExtension)
 

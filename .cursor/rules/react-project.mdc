@@ -1,0 +1,81 @@
+---
+description: Standards for React component development and file organization.
+globs: **/*.{js,jsx}
+alwaysApply: false
+---
+# React Development Conventions
+
+Standards for React component development and file organization.
+
+<rule>
+name: react_conventions
+description: Defines conventions for React components, hooks, and file organization
+filters:
+  - type: glob
+    pattern: "**/*.{js,jsx}"
+  - type: event
+    pattern: "file_create"
+
+actions:
+  - type: inform
+    message: |
+      When working with React:
+
+      1. Component Files:
+         - Use `.jsx` extension for files containing React components
+         - Name the file after the main component it exports
+         ```
+         // Component named UserProfile should be in:
+         src/components/UserProfile.jsx
+         ```
+
+      2. Hooks:
+         - Use React hooks instead of class components
+         - Custom hooks should start with 'use'
+         ```javascript
+         // Good
+         const useCallLookup = () => {
+           const [data, setData] = useState(null)
+           // ... hook logic
+         }
+
+         // Good
+         const MyComponent = () => {
+           const [value, setValue] = useState('')
+           // ... component logic
+         }
+
+         // Bad: Class component
+         class MyComponent extends React.Component {
+           // ... component logic
+         }
+         ```
+
+      3. Component Structure:
+         - One main component per file
+         - Helper components can be in the same file if they're not used elsewhere
+         - Export the main component as default
+
+examples:
+  - input: |
+      // Bad: Wrong file extension
+      // UserProfile.js
+      import React from 'react'
+      
+      export default function UserProfile() {
+        return <div>Profile</div>
+      }
+
+      // Good: Correct file extension and structure
+      // UserProfile.jsx
+      import React from 'react'
+      
+      export default function UserProfile() {
+        return <div>Profile</div>
+      }
+    output: "Correctly structured React component file"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>

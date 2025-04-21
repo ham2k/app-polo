@@ -10,6 +10,7 @@ import UUID from 'react-native-uuid'
 
 const initialState = {
   flags: {},
+  featureFlags: {},
   accounts: {},
   notices: []
 }
@@ -26,6 +27,9 @@ export const systemSlice = createSlice({
         state.flags[key] = action.payload[key]
       })
     },
+    setFeatureFlags: (state, action) => {
+      state.featureFlags = action.payload || {}
+    },
     setAccountInfo: (state, action) => {
       state.accounts = state.accounts || {}
       Object.keys(action.payload || {}).forEach(account => {
@@ -34,7 +38,7 @@ export const systemSlice = createSlice({
     },
     addNotice: (state, action) => {
       state.notices = state.notices || []
-      action.payload.key = action.payload.key || UUID.v1()
+      action.payload.key = action.payload.key || UUID.v4()
       action.payload.timestamp = action.payload.timestamp || new Date().valueOf
 
       state.notices = state.notices.filter(notice => notice.key !== action.payload.key)
@@ -48,7 +52,7 @@ export const systemSlice = createSlice({
 })
 
 export const { actions } = systemSlice
-export const { addNotice, dismissNotice } = systemSlice.actions
+export const { addNotice, dismissNotice, setFeatureFlags } = systemSlice.actions
 
 export const setSystemFlag = (flag, value) => (dispatch) => {
   dispatch(actions.setSystemFlag({ [flag]: value }))
@@ -62,5 +66,17 @@ export const selectSystemFlag = createSelector(
 )
 
 export const selectNotices = (state) => state?.system?.notices ?? []
+
+export const selectFeatureFlag = createSelector(
+  (state, flag, defaultValue) => state?.system?.featureFlags || {},
+  (_state, flag, _defaultValue) => flag,
+  (_state, _flag, defaultValue) => defaultValue,
+  (featureFlags, flag, defaultValue) => featureFlags[flag] ?? defaultValue
+)
+
+export const selectFeatureFlags = createSelector(
+  (state) => state?.system?.featureFlags || {},
+  (featureFlags) => featureFlags
+)
 
 export default systemSlice.reducer
