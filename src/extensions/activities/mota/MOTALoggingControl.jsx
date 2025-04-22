@@ -15,7 +15,7 @@ export function MOTALoggingControl (props) {
   const { qso, updateQSO, style, styles } = props
 
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
   const refsString = useMemo(() => {
     const refs = filterRefs(qso, Info.huntingType)

@@ -127,7 +127,7 @@ export default function LoggingPanel ({
         if (mainFieldRef?.current) {
           mainFieldRef.current.focus()
         }
-      }, 10)
+      }, 100)
     } else if ((qso?.uuid !== loggingState?.selectedUUID) || !qso) {
       let nextQSO
       const otherStateChanges = {}
@@ -151,7 +151,7 @@ export default function LoggingPanel ({
         if (mainFieldRef?.current) {
           mainFieldRef.current.focus()
         }
-      }, 10)
+      }, 100)
     }
   }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch, loggingState.callStack])
 

@@ -21,7 +21,7 @@ export function WWBOTALoggingControl (props) {
   const { qso, operation, updateQSO, style, styles } = props
 
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 

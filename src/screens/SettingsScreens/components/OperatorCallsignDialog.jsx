@@ -16,7 +16,7 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
   const dispatch = useDispatch()
 
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 500) }, [])
 
   const [dialogVisible, setDialogVisible] = useState(false)
   const [value, setValue] = useState('')
