@@ -34,6 +34,13 @@ export const apiWWBOTA = createApi({
         method: 'POST',
         body
       })
+    }),
+    editSpot: builder.query({
+      query: ({ id, body }) => ({
+        url: `spots/${id}`,
+        method: 'PUT',
+        body
+      })
     })
   })
 })

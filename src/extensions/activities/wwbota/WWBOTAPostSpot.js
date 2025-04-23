@@ -14,6 +14,7 @@ import { reportError } from '../../../distro'
 
 import { filterRefs } from '../../../tools/refTools'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
+import { Info } from './WWBOTAInfo'
 
 const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']
 
@@ -21,7 +22,7 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 
-  const refs = filterRefs(operation, 'wwbotaActivation')
+  const refs = filterRefs(operation, Info.activationType)
   let mode = vfo.mode
   if (!validModes.includes(mode)) {
     if (ADIF_SUBMODES.SSB.includes(mode)) {
@@ -57,7 +58,26 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
     type: comments.includes('QRT') ? 'QRT' : 'Live' // Also 'Test' when debugging
   }
   try {
-    await dispatch(apiWWBOTA.endpoints.spot.initiate(spot))
+    if (!operation?.spotIds) operation.spotIds = {}
+    let spotId = operation.spotIds?.[Info.key]
+    if (spotId) {
+      const apiPromise = await dispatch(apiWWBOTA.endpoints.editSpot.initiate({ id: spotId, body: spot }, { forceRefetch: true }))
+      await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.editSpot.select({ id: spotId, body: spot })(_getState()))
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+
+      if (apiResults?.error?.status === 404) {
+        spotId = undefined
+      }
+    }
+    if (!spotId) {
+      const apiPromise = await dispatch(apiWWBOTA.endpoints.spot.initiate(spot), { forceRefetch: true })
+      await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+
+      operation.spotIds[Info.key] = apiResults?.data?.id
+    }
   } catch (error) {
     Alert.alert('Error posting WWBOTA spot', error.message)
     reportError('Error posting WWBOTA spot', error)
