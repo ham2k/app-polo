@@ -1,6 +1,14 @@
 {
+  "25.5.0-pre1": {
+    "name": "May '25 (pre 1)",
+    "photoCaption": "G1JPV at POTA GB-1012",
+    "changes": [
+      "May Release"
+    ]
+  },
   "25.4.2": {
     "name": "April '25 (patch 2)",
+    "photoCaption": "VK4KC at POTA AU-8817",
     "changes": [
       "Added option to disable smart keyboard features for some Android devices",
       "Assorted bug fixes"
@@ -8,6 +16,7 @@
   },
   "25.4.1": {
     "name": "April '25 (patch 1)",
+    "photoCaption": "VK4KC at POTA AU-8817",
     "changes": [
       "Fixed crash when selecting POTA references",
       "Fixed file selection in dev mode",
