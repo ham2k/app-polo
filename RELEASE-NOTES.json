@@ -3,7 +3,9 @@
     "name": "May '25 (pre 1)",
     "photoCaption": "G1JPV at POTA GB-1012",
     "changes": [
-      "Fixed errors in time calculations"
+      "Fixed errors in time calculations",
+      "List formatting tweaks",
+      "Hide RST in list if fields are hidden"
     ]
   },
   "25.4.2": {

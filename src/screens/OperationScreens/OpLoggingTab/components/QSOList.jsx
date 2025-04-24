@@ -165,7 +165,7 @@ function prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeAr
         flexDirection: 'row',
         textAlign: 'right',
         marginLeft: themeStyles.oneSpace,
-        minWidth: themeStyles.oneSpace * 2,
+        minWidth: themeStyles.oneSpace * 0,
         maxWidth: themeStyles.oneSpace * 9
       },
       icon: {
