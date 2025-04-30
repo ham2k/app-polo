@@ -32,7 +32,7 @@ export function WWBOTALoggingControl (props) {
 
   const [innerValue, setInnerValue] = useState(refsString)
   useEffect(() => {
-    if (refsString.replace(MATCH_SYMBOLS_REGEX, '') !== innerValue.replace(MATCH_SYMBOLS_REGEX, '')) {
+    if (refsString?.replace(MATCH_SYMBOLS_REGEX, '') !== innerValue?.replace(MATCH_SYMBOLS_REGEX, '')) {
       setInnerValue(refsString)
     }
   }, [refsString, innerValue])

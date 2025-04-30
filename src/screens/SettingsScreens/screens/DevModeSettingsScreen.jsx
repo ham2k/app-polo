@@ -89,7 +89,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
       console.log(error)
-      if (error.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('cancelled') >= 0) {
         // ignore
       } else {
         reportError('Error importing database', error)
@@ -123,7 +123,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
       await dispatch(importQSON(filename))
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
-      if (error.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('cancelled') >= 0) {
         // ignore
       } else {
         reportError('Error importing QSON', error)

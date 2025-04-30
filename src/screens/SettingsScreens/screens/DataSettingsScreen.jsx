@@ -178,7 +178,7 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
 
       setHistoricalCount(count)
     }).catch((error) => {
-      if (error.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('cancelled') >= 0) {
         // ignore
       } else {
         Alert.alert('Error importing historical ADIF', error.message)
