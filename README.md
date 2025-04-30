@@ -127,12 +127,15 @@ rm -rf ~/Library/Caches/CocoaPods
 rm -rf ios/Pods
 rm -rf ios/Podfile.lock
 rm -rf ios/build
-(cd ios && pod install)
+(cd ios && pod update)
 
 # For all platforms
 watchman watch-del .
 watchman watch-project .
+
 npm start -- --reset-cache
+npm run ios
+npm run android
 ```
 
 ### "Unable to boot simulator" error for iOS Simulator

@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlo
 
   // "open url" delegate function, for react-native-app-auth
   public weak var authorizationFlowManagerDelegate: RNAppAuthAuthorizationFlowManagerDelegate?
-  override func application(
+  func application(
       _ app: UIApplication,
       open url: URL,
       options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
