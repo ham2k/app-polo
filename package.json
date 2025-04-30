@@ -47,7 +47,7 @@
     "proj4": "^2.11",
     "react": "19.0.0",
     "react-error-boundary": "^5.0",
-    "react-native": "0.78.1",
+    "react-native": "0.79.1",
     "react-native-app-auth": "^8.0",
     "react-native-blob-util": "^0.21",
     "react-native-config": "^1.5",
