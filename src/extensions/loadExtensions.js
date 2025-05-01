@@ -25,6 +25,7 @@ import ECAExtension from './activities/eca/ECAExtension'
 import ELAExtension from './activities/ela/ELAExtension'
 import BLHAExtension from './activities/blha/BLHAExtension'
 import SiOTAExtentsion from './activities/siota/SiOTAExtension'
+import PGAExtentsion from './activities/pga/PGAExtension'
 
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 import CallHistoryExtension from './data/call-history/CallHistoryExtension'
@@ -71,6 +72,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(ELAExtension)
   registerExtension(BLHAExtension)
   registerExtension(SiOTAExtentsion)
+  registerExtension(PGAExtentsion)
 
   registerExtension(QSOPartiesExtension)
   registerExtension(SimpleContestExtension)
