@@ -50,7 +50,7 @@ export async function sendOperationsToSyncService ({ dispatch }) {
 async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch, batchSize = 0 }) {
   let inboundSync = false
   dispatch((_dispatch, getState) => {
-    inboundSync = selectFeatureFlag(getState(), 'inboundSync', false)
+    inboundSync = selectFeatureFlag(getState(), 'inboundSync') || false
   })
 
   if (VERBOSE > 0) console.log('sendOneBatchOfUpdatesToSyncService')

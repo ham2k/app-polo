@@ -68,15 +68,11 @@ export const selectSystemFlag = createSelector(
 export const selectNotices = (state) => state?.system?.notices ?? []
 
 export const selectFeatureFlag = createSelector(
-  (state, flag, defaultValue) => state?.system?.featureFlags || {},
-  (_state, flag, _defaultValue) => flag,
-  (_state, _flag, defaultValue) => defaultValue,
-  (featureFlags, flag, defaultValue) => featureFlags[flag] ?? defaultValue
+  (state, flag) => state?.system?.featureFlags || {},
+  (_state, flag) => flag,
+  (featureFlags, flag) => featureFlags[flag]
 )
 
-export const selectFeatureFlags = createSelector(
-  (state) => state?.system?.featureFlags || {},
-  (featureFlags) => featureFlags
-)
+export const selectFeatureFlags = (state) => state?.system?.featureFlags || {}
 
 export default systemSlice.reducer

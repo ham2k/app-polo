@@ -11,14 +11,16 @@ import { Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ADIF_MODES_AND_SUBMODES, BANDS, MAIN_MODES, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { selectSettings, setSettings } from '../../../store/settings'
 import ScreenContainer from '../../components/ScreenContainer'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 
-export default function BandModeSettingsScreen ({ navigation }) {
+export default function BandModeSettingsScreen ({ navigation, splitView }) {
   const dispatch = useDispatch()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const settings = useSelector(selectSettings)
 
@@ -96,7 +98,7 @@ export default function BandModeSettingsScreen ({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection title={'Bands'}>
           {bandOptions.map((band) => (
             <Ham2kListItem

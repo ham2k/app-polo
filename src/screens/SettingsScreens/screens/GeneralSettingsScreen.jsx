@@ -8,7 +8,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { Platform, ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -19,6 +19,7 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kListSubheader } from '../../components/Ham2kListSubheader'
 import { findHooks } from '../../../extensions/registry'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function prepareStyles (baseStyles) {
   return {
@@ -31,10 +32,11 @@ function prepareStyles (baseStyles) {
   }
 }
 
-export default function GeneralSettingsScreen ({ navigation }) {
+export default function GeneralSettingsScreen ({ navigation, splitView }) {
   const dispatch = useDispatch()
 
   const styles = useThemedStyles(prepareStyles)
+  const safeAreaInsets = useSafeAreaInsets()
 
   const settings = useSelector(selectSettings)
 
@@ -47,7 +49,7 @@ export default function GeneralSettingsScreen ({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection>
           <Ham2kListItem
             title="Theme"
@@ -127,6 +129,16 @@ export default function GeneralSettingsScreen ({ navigation }) {
             right={() => <Switch value={!!settings.useGrid8} onValueChange={(value) => dispatch(setSettings({ useGrid8: value })) } />}
             onPress={() => dispatch(setSettings({ useGrid8: !settings.useGrid8 }))}
           />
+
+          {Platform.OS === 'android' && (
+            <Ham2kListItem
+              title="Smart Keyboard Features"
+              description={settings.smartKeyboard !== false ? 'Enable smart keyboard features' : 'Use simpler keyboards for compatibility reasons with some devices'}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="keyboard-outline" />}
+              right={() => <Switch value={settings.smartKeyboard !== false} onValueChange={(value) => dispatch(setSettings({ smartKeyboard: value })) } />}
+              onPress={() => dispatch(setSettings({ smartKeyboard: !settings.smartKeyboard }))}
+            />
+          )}
 
           <Ham2kListItem
             title="Export Settings"

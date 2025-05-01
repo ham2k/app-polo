@@ -13,7 +13,7 @@ import { selectSettings } from '../../../store/settings'
 import { findBestHook } from '../../../extensions/registry'
 import ScreenContainer from '../../components/ScreenContainer'
 
-export default function ExtensionScreen ({ navigation, route }) {
+export default function ExtensionScreen ({ navigation, route, splitView }) {
   const styles = useThemedStyles()
 
   const settings = useSelector(selectSettings)
@@ -32,7 +32,7 @@ export default function ExtensionScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
-      <screenHook.ScreenComponent styles={styles} settings={settings} navigation={navigation} route={route} dispatch={dispatch} />
+      <screenHook.ScreenComponent styles={styles} settings={settings} navigation={navigation} route={route} dispatch={dispatch} splitView={splitView} />
     </ScreenContainer>
   )
 }

@@ -47,7 +47,7 @@ export function ActivityOptions (props) {
       }
 
       return {
-        label: `${QSO_PARTY_DATA[key].name.replace(' QSO Party', '')} (${timeDiff})`,
+        label: `${QSO_PARTY_DATA[key].name?.replace(' QSO Party', '')} (${timeDiff})`,
         value: key,
         days
       }

@@ -18,6 +18,7 @@ export default function MOTAInput (props) {
   const styles = useThemedStyles()
 
   const textTransformer = useCallback(text => {
+    text = text || ''
     text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `X${p1}`)
     text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `X${p1},X`)
     return text

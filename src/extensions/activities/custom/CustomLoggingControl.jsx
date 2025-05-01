@@ -18,7 +18,7 @@ export function CustomLoggingControl (props) {
   useEffect(() => {
     setTimeout(() => {
       ref?.current?.focus()
-    }, 0)
+    }, 200)
   }, [ref])
 
   const refsString = useMemo(() => {

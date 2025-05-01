@@ -115,7 +115,7 @@ export default function OperationDataScreen (props) {
         destination: 'cachesDirectory'
       })
 
-      const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
+      const filename = decodeURIComponent(localCopy?.localUri?.replace('file://', ''))
       const { adifCount, importCount } = await dispatch(importADIFIntoOperation(filename, operation, qsos))
       trackEvent('import_adif', {
         import_count: importCount,
@@ -125,7 +125,7 @@ export default function OperationDataScreen (props) {
       })
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
-      if (error.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('cancelled') >= 0) {
         // ignore
       } else {
         Alert.alert('Error importing ADIF', error.message)

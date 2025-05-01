@@ -26,7 +26,7 @@ export function DeleteOperationDialog ({ operation, visible, settings, styles, o
   const handleAccept = useCallback(() => {
     setDialogVisible(false)
     dispatch(deleteOperation(operation.uuid)).then(() => {
-      navigation.navigate('Home')
+      navigation.popTo('Home')
     })
     trackEvent('delete_operation', {})
     onDialogDone && onDialogDone()

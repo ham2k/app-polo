@@ -193,7 +193,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
   const stationInfo = useMemo(() => {
     const parts = []
-    if (guess.note) {
+    if (guess?.note) {
       parts.push(guess.note)
     } else {
       if (lookup?.error && call?.length > 3) parts.push(lookup.error)
@@ -210,7 +210,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     }
 
     return info
-  }, [guess.note, guess.name, call, theirCall, allCalls.length, lookup.error, qso?.their?.name])
+  }, [guess?.note, guess?.name, call, theirCall, allCalls?.length, lookup?.error, qso?.their?.name])
 
   const scoreInfo = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)

@@ -19,7 +19,7 @@ export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevio
   const dispatch = useDispatch()
 
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 500) }, [])
 
   const [value, setValue] = useState('')
   console.log('settings', settings)

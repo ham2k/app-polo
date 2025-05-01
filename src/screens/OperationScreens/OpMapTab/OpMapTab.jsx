@@ -19,6 +19,7 @@ import { selectSettings } from '../../../store/settings'
 
 import { useUIState } from '../../../store/ui'
 import MapWithQSOs from './components/MapWithQSOs'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -40,6 +41,7 @@ function prepareStyles (baseStyles, themeColor) {
 export default function OpMapTab ({ navigation, route }) {
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor)
+  const safeAreaInsets = useSafeAreaInsets()
 
   const settings = useSelector(selectSettings)
 
@@ -72,7 +74,7 @@ export default function OpMapTab ({ navigation, route }) {
         settings={settings}
         selectedUUID={loggingState?.selectedUUID}
       />
-      <View style={{ position: 'absolute', bottom: styles.oneSpace * 2, right: styles.oneSpace * 2 }}>
+      <View style={{ position: 'absolute', bottom: styles.oneSpace * 1 + safeAreaInsets.bottom, right: styles.oneSpace * 1 + safeAreaInsets.right }}>
         {projection === 'mercator' ? (
           <IconButton
             icon="earth"

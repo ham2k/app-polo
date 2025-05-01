@@ -20,6 +20,7 @@ export default function SiOTAInput (props) {
   const styles = useThemedStyles()
 
   const textTransformer = useCallback((text) => {
+    text = text || ''
     text = text.replace(NO_PREFIX_REGEX, (match, p1) => `VK-${p1}`)
     text = text.replace(ADD_DASHES_REGEX, (match, p1) => `VK-${p1}`)
     text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `${p1}, VK-`)

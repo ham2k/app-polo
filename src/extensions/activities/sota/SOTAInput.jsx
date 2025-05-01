@@ -17,6 +17,7 @@ export default function SOTAInput (props) {
   const styles = useThemedStyles()
 
   const textTransformer = useCallback(text => {
+    text = text || ''
     text = text.replace(ADD_DASHES_REGEX, (match, p1, p2, p3) => (
       `${p1}/${p2}-${p3}`)
     )

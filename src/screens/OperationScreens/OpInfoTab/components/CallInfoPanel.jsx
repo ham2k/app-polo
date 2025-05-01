@@ -219,7 +219,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
               <View style={styles.section}>
                 <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Notes</Text>
                 {lookup.notes.map((note, i) => (
-                  <Ham2kMarkdown key={i}>{note.note}</Ham2kMarkdown>
+                  <Ham2kMarkdown key={i}>{note?.note}</Ham2kMarkdown>
                 ))}
               </View>
             )}
@@ -229,7 +229,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                   <View key={i} style={styles.section}>
                     <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>{confirmation.title}</Text>
                     {confirmation.isGuess && <Text style={{ fontWeight: 'bold' }}>Potential call: {confirmation.call}</Text>}
-                    <Ham2kMarkdown>{confirmation.note}</Ham2kMarkdown>
+                    <Ham2kMarkdown>{confirmation?.note}</Ham2kMarkdown>
                   </View>
                 ))
             }

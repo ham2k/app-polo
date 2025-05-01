@@ -112,7 +112,7 @@ export default function OpSettingsTab ({ navigation, route }) {
     const newOperation = await dispatch(addNewOperation({ template, _useTemplates: false }))
     trackEvent('create_operation')
 
-    navigation.navigate('Home')
+    navigation.popTo('Home')
     setTimeout(() => {
       navigation.navigate('Operation', { uuid: newOperation.uuid, operation: newOperation, _isNew: true }, false)
     }, 100)

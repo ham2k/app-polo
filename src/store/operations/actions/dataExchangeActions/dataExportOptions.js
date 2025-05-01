@@ -381,3 +381,63 @@ Handlebars.registerHelper('and', function (...args) {
   }
   return false
 })
+
+Handlebars.registerHelper('eq', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  // eslint-disable-next-line eqeqeq
+  return args[0] == args[1]
+})
+
+Handlebars.registerHelper('ne', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  // eslint-disable-next-line eqeqeq
+  return args[0] != args[1]
+})
+
+Handlebars.registerHelper('gt', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] > args[1]
+})
+
+Handlebars.registerHelper('ge', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] >= args[1]
+})
+
+Handlebars.registerHelper('lt', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] < args[1]
+})
+
+Handlebars.registerHelper('le', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] <= args[1]
+})
+
+Handlebars.registerHelper('includes', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  return args[0].includes(args[1])
+})
+
+Handlebars.registerHelper('startsWith', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  return args[0].startsWith(args[1])
+})
+
+Handlebars.registerHelper('endsWith', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  return args[0].endsWith(args[1])
+})

@@ -9,6 +9,7 @@
 import React from 'react'
 import { List } from 'react-native-paper'
 import { Linking, ScrollView } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -26,12 +27,13 @@ function prepareStyles (baseStyles) {
   }
 }
 
-export default function CreditsSettingsScreen ({ navigation }) {
+export default function CreditsSettingsScreen ({ navigation, splitView }) {
   const styles = useThemedStyles(prepareStyles)
+  const safeAreaInsets = useSafeAreaInsets()
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection>
           <Ham2kListItem title={'Created by Sebastián Delmont • KI2D'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}

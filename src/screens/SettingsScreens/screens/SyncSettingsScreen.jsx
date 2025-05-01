@@ -10,6 +10,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { List, Switch, Text } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import ScreenContainer from '../../components/ScreenContainer'
@@ -31,8 +32,9 @@ const LOFI_SERVER_LABELS = {
   'https://lofi.ham2k.net': 'Ham2K LoFi (Official)'
 }
 
-export default function SyncSettingsScreen ({ navigation }) {
+export default function SyncSettingsScreen ({ navigation, splitView }) {
   const styles = useThemedStyles()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
@@ -101,7 +103,7 @@ export default function SyncSettingsScreen ({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection title={'Ham2K Log Filer - Sync Server (BETA)'}>
           <Ham2kListItem
             title="Sync Service"

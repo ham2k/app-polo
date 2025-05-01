@@ -89,7 +89,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
       setExtraState(newExtraState)
     }, 500)
     return () => clearTimeout(timeout)
-  }, [stations, operators, qsos.length, settings.stationCall, settings.operatorCall, operation.stationCall, operation.local?.operatorCall, originalValues.stationCall, originalValues.operatorCall])
+  }, [stations, operators, qsos.length, settings.stationCall, settings.operatorCall, operation.stationCall, operation.local?.operatorCall, originalValues?.stationCall, originalValues?.operatorCall])
 
   useEffect(() => { // Set initial values if needed
     if (!operation?.uuid) return
@@ -137,8 +137,8 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   }, [dispatch, operation.uuid, operation.stationCall, qsos])
 
   const handleUpdateOperator = useCallback(() => {
-    dispatch(batchUpdateQSOs({ uuid: operation.uuid, qsos, data: { our: { operatorCall: operation.local.operatorCall } } }))
-  }, [dispatch, operation.uuid, operation.local.operatorCall, qsos])
+    dispatch(batchUpdateQSOs({ uuid: operation.uuid, qsos, data: { our: { operatorCall: operation.local?.operatorCall } } }))
+  }, [dispatch, operation.uuid, operation.local?.operatorCall, qsos])
 
   return (
     <ScreenContainer>
@@ -169,7 +169,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
           <Text variant="bodyMedium">Who is operating the station? (optional)</Text>
           <CallsignInput
             style={[styles.input, { marginTop: styles.oneSpace }]}
-            value={operation.local.operatorCall || ''}
+            value={operation.local?.operatorCall || ''}
             label="Operator Callsign"
             placeholder={'N0CALL'}
             onChangeText={onChangeOperator}

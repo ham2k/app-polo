@@ -13,7 +13,7 @@ import { fmtNumber } from '@ham2k/lib-format-tools'
 
 const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
   const handleOnChange = (event) => {
     const value = event?.value || event?.nativeEvent?.text

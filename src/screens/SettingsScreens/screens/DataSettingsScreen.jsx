@@ -13,6 +13,7 @@ import { Alert, ScrollView } from 'react-native'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber } from '@ham2k/lib-format-tools'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { reportError } from '../../../distro'
 
@@ -118,8 +119,9 @@ const ConfirmClearHistoryDialog = ({ onDialogDelete, onDialogDone }) => {
   )
 }
 
-export default function DataSettingsScreen ({ navigation }) {
+export default function DataSettingsScreen ({ navigation, splitView }) {
   const styles = useThemedStyles()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
@@ -176,7 +178,7 @@ export default function DataSettingsScreen ({ navigation }) {
 
       setHistoricalCount(count)
     }).catch((error) => {
-      if (error.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('cancelled') >= 0) {
         // ignore
       } else {
         Alert.alert('Error importing historical ADIF', error.message)
@@ -206,7 +208,7 @@ export default function DataSettingsScreen ({ navigation }) {
         </Ham2kDialog>
       )}
 
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection title={'Offline Data'}>
           {sortedDataFileDefinitions.map((def) => (
             <React.Fragment key={def.key}>
