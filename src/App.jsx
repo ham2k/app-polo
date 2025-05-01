@@ -47,6 +47,7 @@ import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/Op
 import { selectLocalExtensionData } from './store/local'
 import { selectRuntimeOnline } from './store/runtime'
 import { selectFeatureFlags } from './store/system'
+import { useThemedStyles } from './styles/tools/useThemedStyles'
 
 const Stack = createNativeStackNavigator()
 
@@ -59,6 +60,8 @@ function MainApp ({ navigationTheme }) {
 
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
+  const styles = useThemedStyles()
+
   const flags = useSelector(selectFeatureFlags)
   const online = useSelector(selectRuntimeOnline)
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
@@ -116,7 +119,7 @@ function MainApp ({ navigationTheme }) {
           }}
         >
           <Stack.Screen name="Home"
-            options={{ title: 'Portable Logger' }}
+            options={{ title: 'Portable Logger', navigationBarColor: styles.colors.primary }}
             component={HomeScreen}
           />
 
