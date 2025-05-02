@@ -55,7 +55,7 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
     freq: vfo.freq / 1000, // MHz
     mode,
     comment,
-    type: comments.includes('QRT') ? 'QRT' : 'Live' // Also 'Test' when debugging
+    type: comments.match(/QRT/i) ? 'QRT' : 'Live' // Also 'Test' when debugging
   }
   try {
     if (!operation?.spotIds) operation.spotIds = {}
