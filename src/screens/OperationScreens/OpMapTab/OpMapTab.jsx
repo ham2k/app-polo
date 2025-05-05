@@ -12,7 +12,7 @@ import { IconButton } from 'react-native-paper'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { selectOperation } from '../../../store/operations'
+import { selectOperation, selectOperationCallInfo } from '../../../store/operations'
 import { selectQSOs } from '../../../store/qsos'
 import { View } from 'react-native'
 import { selectSettings } from '../../../store/settings'
@@ -20,6 +20,7 @@ import { selectSettings } from '../../../store/settings'
 import { useUIState } from '../../../store/ui'
 import MapWithQSOs from './components/MapWithQSOs'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { parseCallsign } from '@ham2k/lib-callsigns'
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -46,6 +47,7 @@ export default function OpMapTab ({ navigation, route }) {
   const settings = useSelector(selectSettings)
 
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
+  const operationCallInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const [loggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
@@ -53,13 +55,22 @@ export default function OpMapTab ({ navigation, route }) {
 
   const qth = useMemo(() => {
     try {
-      if (!operation?.grid) return {}
-      const [latitude, longitude] = gridToLocation(operation.grid)
-      return { latitude, longitude }
+      if (operation.grid) {
+        const [latitude, longitude] = gridToLocation(operation.grid)
+        return { latitude, longitude }
+      } else if (operationCallInfo?.lat && operationCallInfo?.lon) {
+        console.log(operationCallInfo)
+        if (operationCallInfo.entityPrefix === 'K') {
+          // this data is incorrect in BigCTY, so until it gets fixed there we need to hardcode it.
+          return { latitude: 37.60, longitude: -91.87 }
+        } else {
+          return { latitude: operationCallInfo.lat, longitude: operationCallInfo.lon }
+        }
+      }
     } catch (e) {
       return {}
     }
-  }, [operation?.grid])
+  }, [operation.grid, operationCallInfo])
 
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
 

@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Mapbox, { StyleURL, Camera, CircleLayer, LineLayer, MapView, MarkerView, ShapeSource, Atmosphere } from '@rnmapbox/maps'
 import { Platform, View } from 'react-native'
 import { Text } from 'react-native-paper'
@@ -18,6 +18,9 @@ if (Platform.OS === 'ios') {
 }
 
 Mapbox.setAccessToken(Config.MAPBOX_ACCESS_TOKEN)
+
+const DEFAULT_CENTER = [-42.16482008420197, 33.73113551794721]
+const DEFAULT_ZOOM = 2
 
 export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion, operation, qth, qsos, settings, selectedUUID, projection }) {
   const qsosGeoJSON = useMemo(() => geoJSONMarkersForQSOs({ mappableQSOs, qth, operation, styles }), [mappableQSOs, qth, operation, styles])
@@ -86,22 +89,21 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
   const cameraRefCallback = useCallback((currentRef) => {
     if (!camera && currentRef) {
       setCamera(currentRef)
+    }
+  }, [camera])
 
-      if (initialRegion.boundingBox[0] && initialRegion.boundingBox[0][0]) {
+  useEffect(() => {
+    console.log('useEffect', initialRegion, camera)
+    if (camera) {
+      if (initialRegion?.latitudeDelta > 0) {
         setTimeout(() => {
-          currentRef.setCamera({
-            centerCoordinate: [qth?.longitude ?? 0, qth?.latitude ?? 0],
-            zoomLevel: 3,
-            animationDuration: 0
-          })
-          console.log('fitBounds')
-          currentRef.fitBounds(
+          camera.fitBounds(
             initialRegion.boundingBox[0],
             initialRegion.boundingBox[1],
-            [20, 20],
+            [50, 50],
             500
           )
-        }, 0)
+        }, 100)
       }
     }
   }, [initialRegion, qth, camera])
@@ -122,8 +124,8 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
     >
       <Camera
         ref={cameraRefCallback}
-        centerCoordinate={[qth?.longitude ?? 0, qth?.latitude ?? 0]}
-        zoomLevel={3}
+        centerCoordinate={qth?.longitude && qth?.latitude ? [qth.longitude, qth.latitude] : DEFAULT_CENTER}
+        zoomLevel={DEFAULT_ZOOM}
         animationDuration={0}
       />
 
