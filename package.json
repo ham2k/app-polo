@@ -40,7 +40,7 @@
     "deepmerge": "4.3.1",
     "emoji-regex": "10.4.0",
     "fast-levenshtein": "3.0.0",
-    "fast-xml-parser": "4.4.0",
+    "fast-xml-parser": "4.4.1",
     "fuzzball": "2.2.2",
     "handlebars": "4.7.8",
     "just-diff": "6.0.2",
