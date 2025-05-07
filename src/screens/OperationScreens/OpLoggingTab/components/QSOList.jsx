@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { SectionList, View, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem from './QSOItem'
@@ -182,7 +182,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
   const { width } = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
 
-  const [componentWidth, setComponentWidth] = useUIState()
+  const [componentWidth, setComponentWidth] = useState()
   const handleLayout = useCallback((event) => {
     setComponentWidth(event?.nativeEvent?.layout?.width)
   }, [setComponentWidth])

@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Animated, PanResponder, Platform, View, useWindowDimensions } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -88,7 +88,7 @@ export default function OperationScreen (props) {
   const dimensions = useWindowDimensions()
 
   const [panesState, , updatePanesState] = useUIState('OperationScreen', 'panes', {
-    mainPaneWidth: dimensions?.width * 0.8,
+    mainPaneWidth: settings.loggingPaneWidth ?? dimensions?.width * 0.8,
     resizingActive: false,
     mainPaneDelta: 0
   })
@@ -101,18 +101,19 @@ export default function OperationScreen (props) {
     if (isNaN(panesState.mainPaneWidth) || !panesState.mainPaneWidth) {
       return (dimensions.width - styles.oneSpace * MIN_WIDTH_LEFT) + (panesState.mainPaneDelta || 0)
     } else {
-      return Math.max(
+      const width = Math.max(
         Math.min(
           panesState.mainPaneWidth + (panesState.mainPaneDelta || 0),
           dimensions.width - styles.oneSpace * MIN_WIDTH_RIGHT
         ),
         styles.oneSpace * MIN_WIDTH_LEFT
       )
+      return width
     }
-  }, [dimensions.width, panesState, styles.oneSpace])
+  }, [dimensions, panesState, styles.oneSpace])
 
-  const panResponder = useRef(
-    PanResponder.create({
+  const panResponder = useMemo(() => {
+    return PanResponder.create({
       onStartShouldSetPanResponder: (event, gestureState) => true,
       onStartShouldSetPanResponderCapture: (event, gestureState) => true,
       onMoveShouldSetPanResponder: (event, gestureState) => true,
@@ -120,7 +121,7 @@ export default function OperationScreen (props) {
       onMoveShouldSetResponderCapture: (event, gestureState) => true,
 
       onPanResponderGrant: (event, gestureState) => {
-        updatePanesState({ resizingActive: true })
+        updatePanesState({ mainPaneDelta: 0, resizingActive: true })
       },
 
       onPanResponderMove: (event, gestureState) => {
@@ -131,13 +132,14 @@ export default function OperationScreen (props) {
         updatePanesState({ resizingActive: false })
       }
     })
-  ).current
+  }, [updatePanesState])
 
   useEffect(() => {
     if (panesState.resizingActive === false && panesState.mainPaneDelta !== 0) {
       updatePanesState({ mainPaneWidth, mainPaneDelta: 0 })
+      dispatch(setSettings({ loggingPaneWidth: mainPaneWidth }))
     }
-  }, [panesState.resizingActive, panesState.mainPaneDelta, mainPaneWidth, updatePanesState])
+  }, [panesState.resizingActive, panesState.mainPaneDelta, mainPaneWidth, updatePanesState, panesState, dispatch])
 
   if (splitView) {
     return (

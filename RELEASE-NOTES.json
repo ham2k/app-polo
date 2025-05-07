@@ -4,6 +4,7 @@
     "photoCaption": "G1JPV at POTA GB-1012",
     "changes": [
       "Fixed errors in time calculations",
+      "Fixed split view resizing",
       "List formatting tweaks",
       "Hide RST in list if fields are hidden",
       "Map improvements, including signal strength",
