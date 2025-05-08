@@ -43,7 +43,7 @@ export const SOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
         frequency: `${vfo.freq / 1000}`, // string
         mode,
         comments,
-        type: comments.includes('QRT') ? 'QRT' : 'NORMAL' // Also 'TEST' when debugging
+        type: comments.match(/QRT/i) ? 'QRT' : 'NORMAL' // Also 'TEST' when debugging
       }
 
       // Errors will be logged by apiSOTA
