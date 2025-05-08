@@ -80,7 +80,7 @@ const SpotsHook = {
       apiPromise.unsubscribe && apiPromise.unsubscribe()
       spots = apiResults.data || {}
     }
-    return spots.map(spot => {
+    return spots.filter(spot => !spot.comments?.match(/QRT/i)).map(spot => {
       const qso = {
         their: { call: spot.activator },
         freq: spot.frequency,
