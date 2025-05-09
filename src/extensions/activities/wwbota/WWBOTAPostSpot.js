@@ -12,6 +12,7 @@ import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
 
 import { reportError } from '../../../distro'
 
+import { setOperationData } from '../../../store/operations'
 import { filterRefs } from '../../../tools/refTools'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 import { Info } from './WWBOTAInfo'
@@ -58,8 +59,7 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
     type: comments.includes('QRT') ? 'QRT' : 'Live' // Also 'Test' when debugging
   }
   try {
-    if (!operation?.spotIds) operation.spotIds = {}
-    let spotId = operation.spotIds?.[Info.key]
+    let spotId = operation?.spotIds?.[Info.key]
     if (spotId) {
       const apiPromise = await dispatch(apiWWBOTA.endpoints.editSpot.initiate({ id: spotId, body: spot }, { forceRefetch: true }))
       await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
@@ -76,7 +76,10 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
       const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
       apiPromise.unsubscribe && apiPromise.unsubscribe()
 
-      operation.spotIds[Info.key] = apiResults?.data?.id
+      dispatch(setOperationData({
+        uuid: operation.uuid,
+        spotIds: { ...operation?.spotIds, [Info.key]: apiResults?.data?.id }
+      }))
     }
   } catch (error) {
     Alert.alert('Error posting WWBOTA spot', error.message)
