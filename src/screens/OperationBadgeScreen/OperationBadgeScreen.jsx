@@ -119,7 +119,8 @@ export default function OperationBadgeScreen ({ navigation, route }) {
   }, [operation])
 
   const opStats = useMemo(() => {
-    return `${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`
+    const activeQSOsLength = qsos.filter(qso => !qso.deleted).length
+    return `${activeQSOsLength} ${activeQSOsLength === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`
   }, [qsos, operation])
 
   const [projection, setProjection] = useState('mercator')
