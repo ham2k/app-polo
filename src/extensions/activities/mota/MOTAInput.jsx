@@ -22,7 +22,7 @@ export default function MOTAInput (props) {
     text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `X${p1}`)
     text = text.replace(ADD_COMMAS_REGEX, (match, p1, p2) => `X${p1},X`)
     return text
-  })
+  }, [])
 
   return (
     <ThemedTextInput
