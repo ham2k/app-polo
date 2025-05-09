@@ -158,8 +158,6 @@ export default function HomeTools ({ settings, styles, style }) {
         edges={[isKeyboardVisible ? '' : 'bottom', 'left', 'right'].filter(x => x)}
         style={{ flex: 0, flexDirection: 'column', width: '100%', backgroundColor: styles.colors.primary }}
       >
-        <Notices />
-
         <View
           style={{ flexDirection: 'row', padding: styles.oneSpace, margin: 0, paddingBottom: styles.oneSpace, ...keyboardExtraStyles }}
         >
@@ -204,6 +202,9 @@ export default function HomeTools ({ settings, styles, style }) {
             onPress={() => navigation.navigate('Spots')}
           />
         </View>
+
+        <Notices />
+
         {isKeyboardVisible && settings.showNumbersRow && (
           <NumberKeys settings={settings} themeColor={'primary'} onNumberKeyPressed={handleNumberKey} enabled={!!isFocused} />
         )}

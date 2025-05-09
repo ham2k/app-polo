@@ -52,8 +52,10 @@ function prepareStyles (baseStyles) {
   return {
     ...baseStyles,
     root: {
-      backgroundColor: 'rgb(252,244,167)',
-      margin: baseStyles.oneSpace
+      maxWidth: baseStyles.oneSpace * 60,
+      alignSelf: 'center',
+      margin: baseStyles.oneSpace,
+      marginTop: baseStyles.oneSpace * 2
     },
     noticeContainer: {
       padding: baseStyles.oneSpace * 2,
@@ -153,7 +155,8 @@ export default function Notices ({ paddingForSafeArea = false }) {
         styles.root,
         {
           height: visible ? undefined : 0,
-          flexDirection: 'column'
+          flexDirection: 'column',
+          paddingBottom: paddingForSafeArea ? safeArea.bottom : 0
         }
       ]}
     >
@@ -170,7 +173,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
         <Surface
           key={index}
           elevation={3}
-          style={[styles.noticeContainer, { paddingBottom: paddingForSafeArea ? safeArea.bottom : (styles.noticeContainer.paddingBottom ?? styles.noticeContainer.padding) }]}
+          style={styles.noticeContainer}
         >
           <Ham2kMarkdown style={styles.noticeText}>
             {notice.title && `### ${notice.title}\n\n`}
