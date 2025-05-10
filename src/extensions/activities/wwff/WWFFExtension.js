@@ -205,7 +205,8 @@ const ReferenceHandler = {
         exportData: { refs: [ref] }, // exports only see this one ref
         // Note that compact format uses a space instead of - because of WWFF requirements
         nameTemplate: '{{log.station}}@{{log.ref}} {{compact op.date}}',
-        titleTemplate: '{{>RefActivityTitle}}'
+        titleTemplate: '{{>RefActivityTitle}}',
+        ADIFQslMsgTemplate: ' ' // Don't include
       }]
     }
   },
