@@ -8,7 +8,8 @@
       "Hide RST in list if fields are hidden",
       "Map improvements, including signal strength",
       "Add Polish Gmina Award (by M1SDH, as suggested by SP9MKP)",
-      "Add self-spotting for Bunkers on the Air (WWBOTA) programme (by M1SDH)"
+      "Add self-spotting for Bunkers on the Air (WWBOTA) programme (by M1SDH)",
+      "Add new WWFF Spotline API (by M1SDH)"
     ]
   },
   "25.4.2": {
