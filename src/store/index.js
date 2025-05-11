@@ -26,6 +26,7 @@ import { reducer as apiHamQTHReducer, middleware as apiHamQTHMiddleware } from '
 import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apis/apiPOTA'
 import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './apis/apiSOTA'
 import { reducer as apiGMAReducer, middleware as apiGMAMiddleware } from './apis/apiGMA'
+import { reducer as apiWWFFReducer, middleware as apiWWFFMiddleware } from './apis/apiWWFF'
 import { reducer as apiWWBOTAReducer, middleware as apiWWBOTAMiddleware } from './apis/apiWWBOTA'
 import { reduxEnhancersForDistribution } from '../distro'
 
@@ -52,6 +53,7 @@ const rootReducer = combineReducers({
   apiPOTA: apiPOTAReducer,
   apiSOTA: apiSOTAReducer,
   apiGMA: apiGMAReducer,
+  apiWWFF: apiWWFFReducer,
   apiWWBOTA: apiWWBOTAReducer
 })
 
@@ -104,6 +106,7 @@ export const store = configureStore({
     middlewares.push(apiPOTAMiddleware)
     middlewares.push(apiSOTAMiddleware)
     middlewares.push(apiGMAMiddleware)
+    middlewares.push(apiWWFFMiddleware)
     middlewares.push(apiWWBOTAMiddleware)
 
     return middlewares
