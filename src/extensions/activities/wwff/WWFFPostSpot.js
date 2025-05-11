@@ -31,7 +31,7 @@ export const WWFFPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
     const apiResults = await dispatch((_dispatch, _getState) => apiWWFF.endpoints.spot.select(spot)(_getState()))
     apiPromise.unsubscribe && apiPromise.unsubscribe()
     if (apiResults?.error) {
-      Alert.alert('Error posting WWFF spot', `Server responded with status ${apiResults.error?.status}`)
+      Alert.alert('Error posting WWFF spot', `Server responded with status ${apiResults.error?.status} ${apiResults.error?.data?.error}`)
       return false
     }
   } catch (error) {
