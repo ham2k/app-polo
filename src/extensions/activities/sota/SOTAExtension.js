@@ -4,6 +4,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+import { Alert } from 'react-native'
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../../tools/refTools'
@@ -61,7 +62,11 @@ const ActivityHook = {
 
   postSpot: SOTAPostSpot,
   isSpotEnabled: ({ operation, settings }) => {
-    return !!settings?.accounts?.sota?.idToken
+    const enabled = !!settings?.accounts?.sota?.idToken
+    if (!enabled) {
+      Alert.alert('Warning', 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings')
+    }
+    return enabled
   },
 
   Options: SOTAActivityOptions,
