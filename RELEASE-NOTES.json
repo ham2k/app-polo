@@ -7,6 +7,7 @@
       "List formatting tweaks",
       "Hide RST in list if fields are hidden",
       "Map improvements, including signal strength",
+      "Show warning/error message when SOTA account not logged in for self-spotting",
       "Add Polish Gmina Award (by M1SDH, as suggested by SP9MKP)",
       "Add self-spotting for Bunkers on the Air (WWBOTA) programme (by M1SDH)"
     ]
