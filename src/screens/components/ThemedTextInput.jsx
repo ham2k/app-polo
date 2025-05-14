@@ -67,7 +67,7 @@ export default function ThemedTextInput (props) {
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
 
-    if (!text) return
+    if (text === undefined || text === null) return
 
     let spaceAdded = false
     if (DEBUG) console.log('handleChange', { text })
