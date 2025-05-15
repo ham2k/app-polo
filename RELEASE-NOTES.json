@@ -6,6 +6,7 @@
       "Fixed errors in time calculations",
       "Fixed split view resizing",
       "Fixed number key input and field clearing errors",
+      "Fixed ADIF export errors",
       "List formatting tweaks",
       "Hide RST in list if fields are hidden",
       "Map improvements, including signal strength",
