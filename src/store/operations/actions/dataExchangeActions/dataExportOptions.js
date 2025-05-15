@@ -374,7 +374,7 @@ Handlebars.registerHelper('join', function (...args) {
 Handlebars.registerHelper('or', function (...args) {
   // eslint-disable-next-line no-unused-vars
   const options = args.pop()
-  return args.find(x => !Handlebars.Utils.isEmpty(x)) || false
+  return args.find(x => !Handlebars.Utils.isEmpty(x)) || ''
 })
 
 Handlebars.registerHelper('and', function (...args) {
