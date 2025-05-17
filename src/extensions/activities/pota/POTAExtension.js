@@ -386,7 +386,7 @@ const ReferenceHandler = {
 function _simplifyPOTAStates (locationDesc) {
   if (!locationDesc) return ''
   const states = locationDesc.split(',')
-  const oneState = states[0].split('-', 2)[1].trim()
+  const oneState = states[0].split('-', 2)[1]?.trim()
   if (states.length > 1) {
     return `${oneState}+${states.length - 1}`
   } else {
