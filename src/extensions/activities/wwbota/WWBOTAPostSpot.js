@@ -8,8 +8,6 @@
 
 import { Alert } from 'react-native'
 
-import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
-
 import { reportError } from '../../../distro'
 
 import { setOperationData } from '../../../store/operations'
@@ -17,23 +15,11 @@ import { filterRefs } from '../../../tools/refTools'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 import { Info } from './WWBOTAInfo'
 
-const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']
-
 export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 
   const refs = filterRefs(operation, Info.activationType)
-  let mode = vfo.mode
-  if (!validModes.includes(mode)) {
-    if (ADIF_SUBMODES.SSB.includes(mode)) {
-      mode = 'SSB'
-    } else if (mode === 'DIGITALVOICE' || ADIF_SUBMODES.DIGITALVOICE.includes(mode)) {
-      mode = 'DV'
-    } else {
-      mode = 'Data' // Reasonable guess
-    }
-  }
 
   const schemeRefs = {}
   refs.forEach((ref) => {
@@ -54,7 +40,7 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
     spotter: activatorCallsign,
     call: activatorCallsign,
     freq: vfo.freq / 1000, // MHz
-    mode,
+    mode: vfo.mode || null,
     comment,
     type: comments.match(/QRT/i) ? 'QRT' : 'Live' // Also 'Test' when debugging
   }
