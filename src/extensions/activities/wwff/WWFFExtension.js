@@ -215,7 +215,11 @@ const ReferenceHandler = {
         exportData: { refs: [ref] }, // exports only see this one ref
         // Note that compact format uses a space instead of - because of WWFF requirements
         nameTemplate: '{{log.station}}@{{log.ref}} {{compact op.date}}',
-        titleTemplate: '{{>RefActivityTitle}}'
+        titleTemplate: '{{>RefActivityTitle}}',
+        // WWFF prefers ADIF files with no notes, comments, or QSL messages
+        ADIFNotesTemplate: '',
+        ADIFCommentTemplate: '',
+        ADIFQslMsgTemplate: ''
       }]
     }
   },
