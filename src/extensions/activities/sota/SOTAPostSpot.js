@@ -12,7 +12,7 @@ import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
 
 import { reportError } from '../../../distro'
 
-import { filterRefs } from '../../../tools/refTools'
+import { findRef } from '../../../tools/refTools'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
 
 const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']
@@ -21,36 +21,48 @@ export const SOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 
-  const refs = filterRefs(operation, 'sotaActivation')
+  const ref = findRef(operation, 'sotaActivation')
+  const [associationCode, summitCode] = ref.ref.split('/', 2)
+
+  let mode = vfo.mode
+  if (!validModes.includes(mode)) {
+    if (ADIF_SUBMODES.SSB.includes(mode)) {
+      mode = 'SSB'
+    } else if (mode === 'DIGITALVOICE' || ADIF_SUBMODES.DIGITALVOICE.includes(mode)) {
+      mode = 'DV'
+    } else {
+      mode = 'Data' // Reasonable guess
+    }
+  }
+
+  const spot = {
+    associationCode,
+    summitCode,
+    activatorCallsign,
+    frequency: `${vfo.freq / 1000}`, // string
+    mode,
+    comments,
+    type: comments.match(/QRT/i) ? 'QRT' : 'NORMAL' // Also 'TEST' when debugging
+  }
+
   try {
-    for (const ref of refs) { // Should only be one
-      const [associationCode, summitCode] = ref.ref.split('/', 2)
+    const apiPromise = await dispatch(apiSOTA.endpoints.spot.initiate(spot))
+    await Promise.all(dispatch(apiSOTA.util.getRunningQueriesThunk()))
+    const apiResults = await dispatch((_dispatch, _getState) => apiSOTA.endpoints.spot.select(spot)(_getState()))
+    apiPromise.unsubscribe && apiPromise.unsubscribe()
 
-      let mode = vfo.mode
-      if (!validModes.includes(mode)) {
-        if (ADIF_SUBMODES.SSB.includes(mode)) {
-          mode = 'SSB'
-        } else if (mode === 'DIGITALVOICE' || ADIF_SUBMODES.DIGITALVOICE.includes(mode)) {
-          mode = 'DV'
-        } else {
-          mode = 'Data' // Reasonable guess
-        }
+    if (apiResults?.error) {
+      if (apiResults.error?.status === 403) { // Forbidden, not logged in
+        Alert.alert('Error posting SOTA spot', 'SOTA account logged out. Please log in again in PoLo settings')
+      } else {
+        Alert.alert('Error posting SOTA spot', `${apiResults.error?.status} ${apiResults.error?.data?.message}`)
       }
-      const spot = {
-        associationCode,
-        summitCode,
-        activatorCallsign,
-        frequency: `${vfo.freq / 1000}`, // string
-        mode,
-        comments,
-        type: comments.match(/QRT/i) ? 'QRT' : 'NORMAL' // Also 'TEST' when debugging
-      }
-
-      // Errors will be logged by apiSOTA
-      await dispatch(apiSOTA.endpoints.spot.initiate(spot))
+      return false
     }
   } catch (error) {
     Alert.alert('Error posting SOTA spot', error.message)
     reportError('Error posting SOTA spot', error)
+    return false
   }
+  return true
 }
