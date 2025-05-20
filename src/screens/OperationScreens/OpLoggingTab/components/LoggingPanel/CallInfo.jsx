@@ -197,7 +197,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       parts.push(guess.note)
     } else {
       if (lookup?.error && call?.length > 3) parts.push(lookup.error)
-      const name = sanitizeForMarkdown(qso?.their?.name ?? guess.name ?? '')
+      const name = sanitizeForMarkdown(qso?.their?.name ?? guess?.name ?? '')
 
       parts.push(name)
     }
