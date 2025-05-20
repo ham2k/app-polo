@@ -6,11 +6,11 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { ImageBackground, Pressable, View, useWindowDimensions } from 'react-native'
+import { ImageBackground, Pressable, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaFrame } from 'react-native-safe-area-context'
 import SplashScreen from 'react-native-splash-screen'
 
 import { selectRuntimeMessages } from '../../store/runtime'
@@ -159,7 +159,8 @@ function prepareStyles (baseTheme, height, dialogVisible) {
 }
 
 export default function StartScreen ({ setAppState }) {
-  const { height } = useWindowDimensions()
+  const { height } = useSafeAreaFrame()
+  // const { height } = useWindowDimensions() <-- broken on iOS, no rotation
 
   const settings = useSelector(selectSettings)
   const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))

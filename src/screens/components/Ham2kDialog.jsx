@@ -10,11 +10,13 @@ import { useWindowDimensions, KeyboardAvoidingView, Platform } from 'react-nativ
 import { Dialog, Portal } from 'react-native-paper'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 export function Ham2kDialog ({ children, ...moreProps }) {
   const styles = useThemedStyles()
 
-  const { width } = useWindowDimensions()
+  const { width } = useSafeAreaFrame()
+  // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
 
   const style = useMemo(() => {
     return {
