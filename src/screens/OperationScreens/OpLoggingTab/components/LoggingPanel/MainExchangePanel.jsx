@@ -49,7 +49,7 @@ export const MainExchangePanel = ({
         const next = (pos + 1) % renderedRefs.length
         setTimeout(() => {
           renderedRefs[next]?.current?.focus()
-        }, 0)
+        }, 100)
       }
     }
   }, [refs])

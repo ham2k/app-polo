@@ -6,6 +6,7 @@
  */
 
 import { reportError } from '../../../distro'
+import { Alert } from 'react-native'
 
 import packageJson from '../../../../package.json'
 import { filterRefs } from '../../../tools/refTools'
@@ -40,11 +41,15 @@ export const POTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
         })
         if (response.status !== 200) {
           const body = await response.text()
-          reportError('POTA Spotter http error', response, body)
+          Alert.alert('Error posting POTA spot', `Server responded with error ${response.status}: ${body}`)
+          // reportError('POTA Spotter http error', response, body)
           return false
         }
       } catch (error) {
-        reportError('POTA Spotter error', error)
+        Alert.alert('Error posting POTA spot', error.message)
+        if (error.message !== 'Network request failed') {
+          reportError('POTA Spotter error', error)
+        }
         return false
       }
     }

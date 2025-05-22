@@ -26,7 +26,8 @@
     "countyLine": null,
     "qsoPerMode": true,
     "multsPerMode": true,
-    "dxIsMultiplier": true
+    "dxIsMultiplier": true,
+    "entity": "VE"
   },
   "points": {
     "PHONE": 1,

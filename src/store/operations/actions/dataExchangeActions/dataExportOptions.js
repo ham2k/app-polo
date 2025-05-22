@@ -136,16 +136,14 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
   handlersWithOptions.forEach(({ handler, ref, options }) => {
     options.forEach(option => {
       const key = `${handler.key}-${option.format}-${option.exportType ?? 'export'}`
-      let exportSettings = selectExportSettings({ settings }, key)
+      let exportSettings = selectExportSettings({ settings }, key, (handler?.defaultExportSettings && handler?.defaultExportSettings()))
       if (exportSettings.customTemplates === false) {
         const { privateData } = exportSettings
         exportSettings = selectExportSettings({ settings }, 'default')
         exportSettings.private = privateData
       }
-
       const nameTemplate = compileTemplateForOperation(exportSettings?.nameTemplate || option.nameTemplate || '{{> DefaultName}}', { settings })
       const titleTemplate = compileTemplateForOperation(exportSettings?.titleTemplate || option.titleTemplate || '{{> DefaultTitle}}', { settings })
-
       const context = templateContextForOneExport({ option, settings, operation, ourInfo, handler, ref })
       const partials = basePartialTemplates({ settings })
       const data = extraDataForTemplates({ settings })
@@ -177,6 +175,7 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
       const exportLabel = option.exportLabel || option.exportName || `${handler.shortName ?? handler.name} ${DATA_FORMAT_DESCRIPTIONS[option.format] || DATA_FORMAT_DESCRIPTIONS.other}`
       const exportType = option.exportType || handler.key
 
+      console.log('dataExportOptions', { exportSettings, option, title, fileName, exportLabel, exportType })
       exports.push({ ...option, handler, ref, fileName, title, exportLabel, exportType, operation, ourInfo })
     })
   })
@@ -217,10 +216,10 @@ export function templateContextForOneExport ({ option, settings, operation, ourI
       station: ourInfo?.call,
       callInfo: ourInfo,
       ref: ref?.ref,
-      refName: ref?.name ?? ref?.label,
-      refLabel: ref?.label ?? ref?.name,
-      refShortName: ref?.shortName ?? ref?.shortLabel ?? ref?.name ?? ref?.label,
-      refShortLabel: ref?.shortLabel ?? ref?.shortName ?? ref?.label ?? ref?.name,
+      refName: ref?.name ?? ref?.label ?? ref?.subtitle,
+      refLabel: ref?.label ?? ref?.name ?? ref?.subtitle,
+      refShortName: ref ? (ref.shortName ?? ref.shortLabel ?? ref.shortSubtitle ?? ref.name ?? ref.label ?? ref.subtitle) : '',
+      refShortLabel: ref ? (ref.shortLabel ?? ref.shortName ?? ref.shortSubtitle ?? ref.label ?? ref.name ?? ref.subtitle) : '',
       handlerType: handler?.type,
       handlerName: handler?.name,
       handlerShortName: handler?.shortName,
@@ -259,9 +258,9 @@ export function basePartialTemplates ({ settings }) {
     OtherActivityNameCompact: '{{log.station}}-{{dash (downcase log.handlerShortName)}}{{#if log.includeTime}}-{{op.startTime}}{{/if}}-{{compact op.date}}',
     DefaultNameNormal: '{{op.date}}{{#if log.includeTime}} {{op.startTime}}{{/if}} {{log.station}} {{op.title}} {{log.modifier}}',
     DefaultNameCompact: '{{#dash}}{{log.station}}-{{compact op.date}}{{#if log.includeTime}}-{{op.startTime}}{{/if}}-{{downcase op.title}}-{{downcase log.modifier}}{{/dash}}',
-    RefActivityTitle: '{{log.station}}: {{log.handlerShortName}} at {{#trim}}{{log.ref}} {{log.refShortLabel}}{{/trim}} on {{op.date}}',
+    RefActivityTitle: '{{log.station}}: {{log.handlerShortName}} at {{#trim}}{{log.ref}} {{log.refName}}{{/trim}} on {{op.date}}',
     OtherActivityTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}',
-    DefaultTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}',
+    DefaultTitle: '{{log.station}}: {{#join op.refs separator=", " final=" & "}}{{or shortLabel label key}}{{/join}} on {{op.date}}',
     ADIFNotes: '{{qso.notes}}',
     ADIFComment: '{{qso.notes}}',
     ADIFQslMsg: '{{#join op.refs separator=", " final=" & "}}{{or shortLabel label key}}{{/join}}'
@@ -275,6 +274,10 @@ export function basePartialTemplates ({ settings }) {
   partials.RefActivityName = settings?.useCompactFileNames ? partials.RefActivityNameCompact : partials.RefActivityNameNormal
   partials.OtherActivityName = settings?.useCompactFileNames ? partials.OtherActivityNameCompact : partials.OtherActivityNameNormal
   partials.DefaultName = settings?.useCompactFileNames ? partials.DefaultNameCompact : partials.DefaultNameNormal
+
+  Object.keys(partials).forEach(key => {
+    partials[key] = partials[key] ?? ''
+  })
 
   return partials
 }
@@ -371,7 +374,7 @@ Handlebars.registerHelper('join', function (...args) {
 Handlebars.registerHelper('or', function (...args) {
   // eslint-disable-next-line no-unused-vars
   const options = args.pop()
-  return args.find(x => !Handlebars.Utils.isEmpty(x)) || false
+  return args.find(x => !Handlebars.Utils.isEmpty(x)) || ''
 })
 
 Handlebars.registerHelper('and', function (...args) {
@@ -381,4 +384,64 @@ Handlebars.registerHelper('and', function (...args) {
     return args[args.length - 1]
   }
   return false
+})
+
+Handlebars.registerHelper('eq', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  // eslint-disable-next-line eqeqeq
+  return args[0] == args[1]
+})
+
+Handlebars.registerHelper('ne', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  // eslint-disable-next-line eqeqeq
+  return args[0] != args[1]
+})
+
+Handlebars.registerHelper('gt', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] > args[1]
+})
+
+Handlebars.registerHelper('ge', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] >= args[1]
+})
+
+Handlebars.registerHelper('lt', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] < args[1]
+})
+
+Handlebars.registerHelper('le', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] <= args[1]
+})
+
+Handlebars.registerHelper('includes', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  return args[0].includes(args[1])
+})
+
+Handlebars.registerHelper('startsWith', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  return args[0].startsWith(args[1])
+})
+
+Handlebars.registerHelper('endsWith', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  return args[0].endsWith(args[1])
 })

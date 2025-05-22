@@ -9,10 +9,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Dialog, List, Text } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { Alert, ScrollView } from 'react-native'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber } from '@ham2k/lib-format-tools'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { reportError } from '../../../distro'
 
@@ -118,8 +119,9 @@ const ConfirmClearHistoryDialog = ({ onDialogDelete, onDialogDone }) => {
   )
 }
 
-export default function DataSettingsScreen ({ navigation }) {
+export default function DataSettingsScreen ({ navigation, splitView }) {
   const styles = useThemedStyles()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
@@ -158,13 +160,13 @@ export default function DataSettingsScreen ({ navigation }) {
         destination: 'cachesDirectory'
       })
 
+      const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
+
       setLoadingHistoricalMessage('Importing ADIF records... Please be patient!')
       const interval = setInterval(async () => {
         const count = await dispatch(countHistoricalRecords())
         setHistoricalCount(count)
       }, 1000)
-
-      const filename = decodeURIComponent(localCopy.fileCopyUri.replace('file://', ''))
 
       await dispatch(importHistoricalADIF(filename))
       RNFetchBlob.fs.unlink(filename)
@@ -176,9 +178,10 @@ export default function DataSettingsScreen ({ navigation }) {
 
       setHistoricalCount(count)
     }).catch((error) => {
-      if (error.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('cancelled') >= 0) {
         // ignore
       } else {
+        Alert.alert('Error importing historical ADIF', error.message)
         reportError('Error importing historical ADIF', error)
       }
     })
@@ -188,6 +191,7 @@ export default function DataSettingsScreen ({ navigation }) {
     try {
       await dispatch(deleteHistoricalRecords())
     } catch (error) {
+      Alert.alert('Error deleting historical records', error.message)
       reportError('Error deleting historical records', error)
     }
 
@@ -204,7 +208,7 @@ export default function DataSettingsScreen ({ navigation }) {
         </Ham2kDialog>
       )}
 
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection title={'Offline Data'}>
           {sortedDataFileDefinitions.map((def) => (
             <React.Fragment key={def.key}>

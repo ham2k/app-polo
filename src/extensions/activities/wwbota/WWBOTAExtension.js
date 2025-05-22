@@ -1,5 +1,6 @@
 /*
  * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2025 Steven Hiscocks <steven@hiscocks.me.uk>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -12,6 +13,7 @@ import { Info } from './WWBOTAInfo'
 import { WWBOTAActivityOptions } from './WWBOTAActivityOptions'
 import { wwbotaFindOneByReference, registerWWBOTADataFile, wwbotaFindAllByLocation } from './WWBOTADataFile'
 import { WWBOTALoggingControl } from './WWBOTALoggingControl'
+import { WWBOTAPostSpot } from './WWBOTAPostSpot'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
@@ -50,6 +52,8 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
+  postSpot: WWBOTAPostSpot,
+
   Options: WWBOTAActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,
@@ -77,38 +81,25 @@ const SpotsHook = {
 
     const qsos = []
     for (const spot of spots) {
-      if (!spot.frequency) {
-        continue
-      }
       // Time
-      const [date, updatedAt] = spot.updated.split(' ', 2)
-      const [day, month, year] = date.split('/', 3)
-      const spotTime = Date.parse(`${year}-${month}-${day}T${updatedAt}:00Z`)
+      const spotTime = Date.parse(spot.time)
 
       // Refs
-      const refs = []
-      const refRegex = /\b(B\/(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*))(?:- ?| -?)?([0-9]{4}(?:(?:(?<sep>[ ,/])[0-9]{4})(?:\k<sep>[0-9]{4})*)?)\b/gi
-      for (const match of spot.info.matchAll(refRegex)) {
-        const prefix = match[1].toUpperCase()
-        refs.push(...match[2].split(/[ ,/]/).map(refNum => `${prefix}-${refNum}`))
-      }
       let label
-      if (refs.length === 0) { // No reference found
-        continue
-      } else if (refs.length === 1) { // One, so let's display name
-        const refDetails = await wwbotaFindOneByReference(refs[0])
-        label = `${refs[0]}: ${refDetails?.name ?? 'Unknown Bunker'}`
+      const refDetails = await wwbotaFindOneByReference(spot.references[0].reference)
+      if (spot.references.length === 1) { // One, so let's display name
+        label = `${spot.references[0].reference}: ${refDetails?.name ?? 'Unknown Bunker'}`
       } else { // More than one, just list references
-        label = refs.join(' ')
+        label = spot.references.map(ref => ref.reference).join(' ')
       }
 
       const qso = {
-        their: { call: spot.call },
-        freq: spot.frequency,
-        band: spot.frequency ? bandForFrequency(spot.frequency) : 'other',
-        mode: spot.frequency ? modeForFrequency(spot.mode) : 'SSB',
-        refs: refs.map(ref => ({
-          ref,
+        their: { call: spot.call.toUpperCase() },
+        freq: spot.freq * 1000,
+        band: spot.freq ? bandForFrequency(spot.freq * 1000) : 'other',
+        mode: spot.mode?.toUpperCase() || (spot.freq ? modeForFrequency(spot.freq * 1000, { entityPrefix: refDetails.entityPrefix }) : 'SSB'),
+        refs: spot.references.map(ref => ({
+          ref: ref.reference,
           type: Info.huntingType
         })),
         spot: {
@@ -116,10 +107,10 @@ const SpotsHook = {
           source: Info.key,
           icon: Info.icon,
           label,
-          type: spot.state,
+          type: spot.type,
           sourceInfo: {
-            comments: spot.info,
-            spotter: spot.spotter
+            comments: spot.comment,
+            spotter: spot.spotter.toUpperCase()
           }
         }
       }
@@ -133,7 +124,7 @@ const SpotsHook = {
     for (const qso of qsos) {
       if (!includedCalls[qso.their.call]) {
         includedCalls[qso.their.call] = true
-        if (qso.spot.type === 'Live' || qso.spot.type === 'QSY') dedupedQSOs.push(qso)
+        if (qso.spot.type === 'Live') dedupedQSOs.push(qso)
       }
     }
     return dedupedQSOs
@@ -217,7 +208,7 @@ const ReferenceHandler = {
       info = annotateFromCountryFile(info)
       const [lat, lon] = gridToLocation(operation.grid)
 
-      let nearby = await wwbotaFindAllByLocation(info.dxccCode, lat, lon, 0.25)
+      let nearby = await wwbotaFindAllByLocation(info.entityPrefix, lat, lon, 0.25)
       nearby = nearby.map(result => ({
         ...result,
         distance: distanceOnEarth(result, { lat, lon })

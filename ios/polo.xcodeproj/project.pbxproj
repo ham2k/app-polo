@@ -63,6 +63,7 @@
 		722871012D79DD9F00B9131B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = polo/AppDelegate.swift; sourceTree = "<group>"; };
 		72A0D32B2B162706007E568A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		72A0D32C2B162706007E568A /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
+		72DF941A2DDB74C700C58922 /* polo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "polo-Bridging-Header.h"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = polo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		83A8D54793464474BD06F48F /* Roboto Mono Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Mono Bold.ttf"; path = "../assets/fonts/Roboto Mono Bold.ttf"; sourceTree = "<group>"; };
 		9488FFB79CC2CF0F3FEA7DD2 /* Pods_polo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_polo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				722871012D79DD9F00B9131B /* AppDelegate.swift */,
+				72DF941A2DDB74C700C58922 /* polo-Bridging-Header.h */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -406,6 +408,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
 				PRODUCT_NAME = "Ham2K Portable Logger";
+				SWIFT_OBJC_BRIDGING_HEADER = "polo/polo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -435,6 +438,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
 				PRODUCT_NAME = "Ham2K Portable Logger";
+				SWIFT_OBJC_BRIDGING_HEADER = "polo/polo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -561,6 +565,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.dev;
 				PRODUCT_NAME = "Ham2K Portable Logger";
+				SWIFT_OBJC_BRIDGING_HEADER = "polo/polo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -688,6 +693,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.beta;
 				PRODUCT_NAME = "Ham2K Portable Logger";
+				SWIFT_OBJC_BRIDGING_HEADER = "polo/polo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -815,6 +821,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.dev;
 				PRODUCT_NAME = "Ham2K Portable Logger";
+				SWIFT_OBJC_BRIDGING_HEADER = "polo/polo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -937,6 +944,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.dev;
 				PRODUCT_NAME = "Ham2K Portable Logger";
+				SWIFT_OBJC_BRIDGING_HEADER = "polo/polo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1058,6 +1066,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.beta;
 				PRODUCT_NAME = "Ham2K Portable Logger";
+				SWIFT_OBJC_BRIDGING_HEADER = "polo/polo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1179,6 +1188,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.prod;
 				PRODUCT_NAME = "Ham2K Portable Logger";
+				SWIFT_OBJC_BRIDGING_HEADER = "polo/polo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";

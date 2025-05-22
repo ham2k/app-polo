@@ -14,6 +14,7 @@ import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 import DeviceInfo from 'react-native-device-info'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import YAML from 'yaml'
 
 import packageJson from '../../../../package.json'
@@ -28,8 +29,7 @@ import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { ListRow } from '../../components/ListComponents'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
-import { dbSelectAll, pathForDatabase, replaceDatabase, resetDatabase } from '../../../store/db/db'
-import { fmtNumber } from '@ham2k/lib-format-tools'
+import { pathForDatabase, replaceDatabase, resetDatabase } from '../../../store/db/db'
 import GLOBAL from '../../../GLOBAL'
 import { setLocalData } from '../../../store/local'
 import ThemedTextInput from '../../components/ThemedTextInput'
@@ -46,8 +46,9 @@ function prepareStyles (baseStyles) {
   }
 }
 
-export default function DevModeSettingsScreen ({ navigation }) {
+export default function DevModeSettingsScreen ({ navigation, splitView }) {
   const styles = useThemedStyles(prepareStyles)
+  const safeAreaInsets = useSafeAreaInsets()
 
   const dispatch = useDispatch()
 
@@ -83,12 +84,12 @@ export default function DevModeSettingsScreen ({ navigation }) {
         })),
         destination: 'cachesDirectory'
       })
-      const filename = decodeURIComponent(localCopy.fileCopyUri.replace('file://', ''))
+      const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
       await replaceDatabase(filename)
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
       console.log(error)
-      if (error.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('cancelled') >= 0) {
         // ignore
       } else {
         reportError('Error importing database', error)
@@ -122,7 +123,7 @@ export default function DevModeSettingsScreen ({ navigation }) {
       await dispatch(importQSON(filename))
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
-      if (error.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('cancelled') >= 0) {
         // ignore
       } else {
         reportError('Error importing QSON', error)
@@ -174,7 +175,7 @@ export default function DevModeSettingsScreen ({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <DevModeSettingsForDistribution styles={styles} dispatch={dispatch} settings={settings} operations={operations} />
         <Ham2kListSection title={'Import'}>
           <Ham2kListItem

@@ -31,7 +31,7 @@ export function SpotterControlInputs (props) {
   const dispatch = useDispatch()
 
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
   const [spotterUI, setSpotterUI] = useState({})
   const [inProgress, setInProgress] = useState(false)

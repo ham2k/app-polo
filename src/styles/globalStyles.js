@@ -33,6 +33,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const normalFontFamily = 'Roboto'
   const condensedFontFamily = 'Roboto Condensed'
   const maybeCondensedFontFamily = size === 'xs' || size === 'sm' ? 'Roboto Condensed' : 'Roboto'
+  const monospacedFontFamily = 'Roboto Mono'
 
   const baseSpace = 8 // Guesstimage of the width of an 'm' in the base (root) font size
 
@@ -64,6 +65,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     normalFontFamily,
     condensedFontFamily,
     maybeCondensedFontFamily,
+    monospacedFontFamily,
 
     screenTabBar: {
       backgroundColor: theme.colors.primary
@@ -85,6 +87,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     dialog: {
     },
     title: {
+      fontFamily: boldTitleFontFamily,
       marginBottom: oneSpace,
       fontSize: largeFontSize,
       fontWeight: '500'
@@ -185,7 +188,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     },
     markdown: {
       body: {
-        fontFamily,
+        fontFamily: normalFontFamily,
         fontSize: normalFontSize,
         color: theme.colors.onBackground
       },
@@ -194,21 +197,21 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
         marginBottom: oneSpace
       },
       heading1: {
-        fontFamily,
+        fontFamily: normalFontFamily,
         fontWeight: 'bold',
         fontSize: normalFontSize * 1.4,
         color: theme.colors.onBackground,
         marginBottom: halfSpace
       },
       heading2: {
-        fontFamily,
+        fontFamily: normalFontFamily,
         fontWeight: 'bold',
         fontSize: normalFontSize * 1.2,
         color: theme.colors.onBackground,
         marginBottom: halfSpace
       },
       heading3: {
-        fontFamily,
+        fontFamily: normalFontFamily,
         fontWeight: 'bold',
         fontSize: normalFontSize * 1,
         color: theme.colors.onBackground,

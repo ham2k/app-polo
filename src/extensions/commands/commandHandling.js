@@ -48,6 +48,7 @@ export function checkAndProcessCommands (value, extraParams) {
 
       return result ?? true
     } catch (e) {
+      console.error('Error in checkAndProcessCommands', e)
       if (e.message === 'Test error!') {
         throw e
       } else {

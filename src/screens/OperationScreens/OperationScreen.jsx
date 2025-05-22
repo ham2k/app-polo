@@ -5,10 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Animated, PanResponder, Platform, View, useWindowDimensions } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 
@@ -40,6 +40,7 @@ const MIN_WIDTH_RIGHT = 40
 export default function OperationScreen (props) {
   const { navigation, route } = props
   const styles = useThemedStyles()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
@@ -87,7 +88,7 @@ export default function OperationScreen (props) {
   const dimensions = useWindowDimensions()
 
   const [panesState, , updatePanesState] = useUIState('OperationScreen', 'panes', {
-    mainPaneWidth: dimensions?.width * 0.8,
+    mainPaneWidth: settings.loggingPaneWidth ?? dimensions?.width * 0.8,
     resizingActive: false,
     mainPaneDelta: 0
   })
@@ -100,18 +101,19 @@ export default function OperationScreen (props) {
     if (isNaN(panesState.mainPaneWidth) || !panesState.mainPaneWidth) {
       return (dimensions.width - styles.oneSpace * MIN_WIDTH_LEFT) + (panesState.mainPaneDelta || 0)
     } else {
-      return Math.max(
+      const width = Math.max(
         Math.min(
           panesState.mainPaneWidth + (panesState.mainPaneDelta || 0),
           dimensions.width - styles.oneSpace * MIN_WIDTH_RIGHT
         ),
         styles.oneSpace * MIN_WIDTH_LEFT
       )
+      return width
     }
-  }, [dimensions.width, panesState, styles.oneSpace])
+  }, [dimensions, panesState, styles.oneSpace])
 
-  const panResponder = useRef(
-    PanResponder.create({
+  const panResponder = useMemo(() => {
+    return PanResponder.create({
       onStartShouldSetPanResponder: (event, gestureState) => true,
       onStartShouldSetPanResponderCapture: (event, gestureState) => true,
       onMoveShouldSetPanResponder: (event, gestureState) => true,
@@ -119,7 +121,7 @@ export default function OperationScreen (props) {
       onMoveShouldSetResponderCapture: (event, gestureState) => true,
 
       onPanResponderGrant: (event, gestureState) => {
-        updatePanesState({ resizingActive: true })
+        updatePanesState({ mainPaneDelta: 0, resizingActive: true })
       },
 
       onPanResponderMove: (event, gestureState) => {
@@ -130,13 +132,14 @@ export default function OperationScreen (props) {
         updatePanesState({ resizingActive: false })
       }
     })
-  ).current
+  }, [updatePanesState])
 
   useEffect(() => {
     if (panesState.resizingActive === false && panesState.mainPaneDelta !== 0) {
       updatePanesState({ mainPaneWidth, mainPaneDelta: 0 })
+      dispatch(setSettings({ loggingPaneWidth: mainPaneWidth }))
     }
-  }, [panesState.resizingActive, panesState.mainPaneDelta, mainPaneWidth, updatePanesState])
+  }, [panesState.resizingActive, panesState.mainPaneDelta, mainPaneWidth, updatePanesState, panesState, dispatch])
 
   if (splitView) {
     return (
@@ -151,8 +154,8 @@ export default function OperationScreen (props) {
                 height: '100%'
               }}
             >
-              <HeaderBar options={headerOptions} navigation={navigation} back={true} rightAction={'cog'} />
-              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView } }} />
+              <HeaderBar options={headerOptions} navigation={navigation} back={true} rightAction={'cog'} splitView={splitView} />
+              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView } }} splitView={splitView} />
             </Animated.View>
             <View
               style={{
@@ -194,7 +197,7 @@ export default function OperationScreen (props) {
                   screenOptions={{
                     tabBarItemStyle: [{ width: (dimensions.width - mainPaneWidth) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                     tabBarLabelStyle: styles.screenTabBarLabel,
-                    tabBarStyle: styles.screenTabBar,
+                    tabBarStyle: [styles.screenTabBar, { paddingRight: safeAreaInsets.right }],
                     tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryHighlight, height: styles.halfSpace * 1.5 },
                     // See https://github.com/react-navigation/react-navigation/issues/11301
                     // on iOS, if the keyboard is open, tabs get stuck when switching
@@ -315,7 +318,7 @@ export default function OperationScreen (props) {
 export function buildTitleForOperation (operationAttrs, { includeCall = true } = {}) {
   if (operationAttrs.stationCall) {
     let call = operationAttrs.stationCall
-    if (operationAttrs.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
+    if (operationAttrs?.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
       const stationCallInfo = parseCallsign(operationAttrs.stationCall)
       const operatorCallInfo = parseCallsign(operationAttrs.operatorCall)
       if (stationCallInfo?.baseCall !== operatorCallInfo?.baseCall) {

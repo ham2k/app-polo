@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../../store/operations'
 import { selectRuntimeOnline } from '../../../../../store/runtime'
 import { parseStackedCalls } from '../LoggingPanel'
+import { sanitizeForMarkdown } from '../../../../../tools/stringTools'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!',
@@ -37,7 +38,8 @@ export const MESSAGES_FOR_SCORING = {
   'sotaActivation.duplicate': 'SOTA Dupe!',
   'wwffActivation.duplicate': 'WWFF Dupe!',
   'wwbotaActivation.newDay': 'New WWBOTA Day',
-  'wwbotaActivation.newRef': 'New Bunker'
+  'wwbotaActivation.newRef': 'New Bunker',
+  'motaActivation.newRef': 'New Mill'
 }
 
 const DEBUG = false
@@ -137,7 +139,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       else if (guess.postindicators.indexOf('PM') >= 0) leftParts.push('[ 🪂 ]')
     }
 
-    if (operation.grid && guess.grid) {
+    if (operation?.grid && guess?.grid) {
       const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
       let bearing
       if (settings.showBearing) {
@@ -163,12 +165,12 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
     if (qso?.their?.city || qso?.their?.state) {
       rightParts.push([qso?.their?.city, qso?.their?.state].filter(x => x).join(', '))
-    } else if (guess.locationLabel) {
+    } else if (guess?.locationLabel) {
       rightParts.push(guess.locationLabel)
-    } else if (!isOnTheGo && (guess.city || guess.state)) {
+    } else if (!isOnTheGo && (guess?.city || guess?.state)) {
       rightParts.push([guess.city, guess.state].filter(x => x).join(', '))
     }
-    if (entity && entity.entityPrefix === ourInfo.entityPrefix) {
+    if (entity?.entityPrefix === ourInfo.entityPrefix) {
       leftParts = [...leftParts, ...rightParts]
       rightParts = []
     }
@@ -191,11 +193,13 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
   const stationInfo = useMemo(() => {
     const parts = []
-    if (guess.note) {
+    if (guess?.note) {
       parts.push(guess.note)
     } else {
       if (lookup?.error && call?.length > 3) parts.push(lookup.error)
-      parts.push(qso?.their?.name ?? guess.name)
+      const name = sanitizeForMarkdown(qso?.their?.name ?? guess.name ?? '')
+
+      parts.push(name)
     }
 
     let info = parts.filter(x => x).join(' • ')
@@ -206,7 +210,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     }
 
     return info
-  }, [guess.note, guess.name, call, theirCall, allCalls.length, lookup.error, qso?.their?.name])
+  }, [guess?.note, guess?.name, call, theirCall, allCalls?.length, lookup?.error, qso?.their?.name])
 
   const scoreInfo = useMemo(() => {
     const scoringHandlers = scoringHandlersForOperation(operation, settings)
@@ -274,6 +278,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
   if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
+
   return (
     <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
 
@@ -308,10 +313,12 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
             )}
           </View>
           {(stationInfo || messages?.length === 1) && (
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-              {stationInfo && (
-                <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
-              )}
+            <View style={{ flexDirection: 'row', width: '100%', alignItems: 'flex-start' }}>
+              <View style={{ maxWidth: messages?.length === 1 ? '70%' : undefined }}>
+                {stationInfo && (
+                  <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
+                )}
+              </View>
               {messages?.length === 1 && (
                 <View style={{ flex: 1, marginLeft: styles.halfSpace, alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                   {messages.map((msg) => (

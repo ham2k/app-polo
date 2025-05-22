@@ -80,7 +80,7 @@ const SpotsHook = {
       apiPromise.unsubscribe && apiPromise.unsubscribe()
       spots = apiResults.data || {}
     }
-    return spots.map(spot => {
+    return spots.filter(spot => !spot.comments?.match(/QRT/i)).map(spot => {
       const qso = {
         their: { call: spot.activator },
         freq: spot.frequency,
@@ -94,7 +94,7 @@ const SpotsHook = {
           timeInMillis: Date.parse(spot.spotTime + 'Z'),
           source: Info.key,
           icon: Info.icon,
-          label: `POTA ${spot.reference}: ${spot.locationDesc ? spot.locationDesc.split('-')[1] + ' •' : ''} ${spot.name}`,
+          label: `${spot.reference}: ${[_simplifyPOTAStates(spot.locationDesc), spot.name].filter(x => x).join(' • ')}`,
           sourceInfo: {
             source: spot.source,
             id: spot.spotId,
@@ -199,7 +199,7 @@ const ReferenceHandler = {
 
         if (data.ref?.startsWith('US-') || data.ref?.startsWith('CA-') || data.ref?.startsWith('AU-')) {
           // For US, Canada or Australia, use the state/province.
-          result.state = (data.location || '').split('-').pop().trim()
+          result.state = (data.location || '').split('-')[1]?.trim()
         }
       }
     } else {
@@ -380,5 +380,16 @@ const ReferenceHandler = {
     score.longSummary = [score.summary, `${score.value} Contacts`].filter(x => x).join(' • ')
 
     return score
+  }
+}
+
+function _simplifyPOTAStates (locationDesc) {
+  if (!locationDesc) return ''
+  const states = locationDesc.split(',')
+  const oneState = states[0].split('-', 2)[1]?.trim()
+  if (states.length > 1) {
+    return `${oneState}+${states.length - 1}`
+  } else {
+    return oneState
   }
 }

@@ -16,7 +16,8 @@
     "multsPerBandMode": false,
     "multsPerBand": true,
     "dxEntityIsMultiplier": true,
-    "selfSpotting": true
+    "selfSpotting": true,
+    "entity": "VE"
   },
   "points": {
     "PHONE": 1,

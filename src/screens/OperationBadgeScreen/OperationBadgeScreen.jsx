@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { StatusBar, View, useColorScheme } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
@@ -119,8 +119,11 @@ export default function OperationBadgeScreen ({ navigation, route }) {
   }, [operation])
 
   const opStats = useMemo(() => {
-    return `${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`
+    const activeQSOsLength = qsos.filter(qso => !qso.deleted).length
+    return `${activeQSOsLength} ${activeQSOsLength === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`
   }, [qsos, operation])
+
+  const [projection, setProjection] = useState('mercator')
 
   return (
     <>
@@ -131,6 +134,7 @@ export default function OperationBadgeScreen ({ navigation, route }) {
         qth={qth}
         qsos={qsos}
         settings={settings}
+        projection={projection}
       />
       <View style={[styles.titleContainer,
         { width: '100%', maxWidth: '100%', paddingTop: safeArea.top + styles.oneSpace, paddingHorizontal: Math.max(safeArea.left, safeArea.right) + (styles.oneSpace * 2), flexDirection: styles.portrait ? 'column' : 'row', justifyContent: 'space-between' }
@@ -157,7 +161,24 @@ export default function OperationBadgeScreen ({ navigation, route }) {
         <Text style={styles.ham2k}>Ham2K </Text>
         <Text style={styles.logger}>Portable Logger</Text>
       </View>
-      <View style={{ position: 'absolute', bottom: safeArea.bottom + styles.oneSpace, right: styles.oneSpace * 2 }}>
+      <View style={{ position: 'absolute', bottom: safeArea.bottom + styles.oneSpace, right: safeArea.right + styles.oneSpace }}>
+        {projection === 'mercator' ? (
+          <IconButton
+            icon="earth"
+            size={styles.oneSpace * 4}
+            mode={'contained'}
+            style={{ opacity: 0.7 }}
+            onPress={() => setProjection('globe')}
+          />
+        ) : (
+          <IconButton
+            icon="earth-box"
+            size={styles.oneSpace * 4}
+            mode={'contained'}
+            style={{ opacity: 0.7 }}
+            onPress={() => setProjection('mercator')}
+          />
+        ) }
         <IconButton
           icon="fullscreen-exit"
           size={styles.oneSpace * 4}

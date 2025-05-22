@@ -20,6 +20,7 @@ import { LOCATION_ACCURACY } from '../../../../../extensions/constants'
 import { removeEmptyValues } from '../../../../../tools/objectTools'
 
 import { parseStackedCalls } from '../LoggingPanel'
+import { reportError } from '../../../../../distro'
 
 const EMOJI_REGEX = emojiRegex()
 
@@ -155,15 +156,20 @@ async function _lookupCall (theirInfo, { online, settings, dispatch, mode = 'ful
     if (DEBUG) console.log('  -- lookupCall', hook.key, { online, lookedUp })
     if (!hook?.shouldSkipLookup || !hook.shouldSkipLookup({ online, lookedUp })) {
       let data
-      if (hook?.lookupCallWithDispatch) {
-        data = await dispatch(hook.lookupCallWithDispatch(theirInfo, { settings, online, mode }))
-      } else if (hook?.lookupCall) {
-        data = hook.lookupCall(hook.lookupCall(theirInfo, { settings, online, mode }))
-      }
-      if (data) {
-        if (DEBUG) console.log('  -- lookupCall data', hook.key, { data })
-        lookups[hook.key] = removeEmptyValues(data)
-        Object.keys(lookups[hook.key]).forEach(key => { lookedUp[key] = true })
+      try {
+        if (hook?.lookupCallWithDispatch) {
+          data = await dispatch(hook.lookupCallWithDispatch(theirInfo, { settings, online, mode }))
+        } else if (hook?.lookupCall) {
+          data = hook.lookupCall(theirInfo, { settings, online, mode })
+        }
+
+        if (data) {
+          if (DEBUG) console.log('  -- lookupCall data', hook.key, { data })
+          lookups[hook.key] = removeEmptyValues(data)
+          Object.keys(lookups[hook.key]).forEach(key => { lookedUp[key] = true })
+        }
+      } catch (error) {
+        reportError(`Error looking up call ${theirInfo?.call} on ${hook?.key}`, error)
       }
     }
   }
@@ -176,10 +182,14 @@ async function _lookupRefs (refs, { online, settings, dispatch, mode = 'full' })
   for (const ref of (refs || [])) {
     const hooks = findHooks(`ref:${ref.type}`)
     for (const hook of hooks) {
-      if (hook?.decorateRefWithDispatch && dispatch) {
-        newRefs.push(await dispatch(hook.decorateRefWithDispatch(ref, { online, settings, mode })))
-      } else if (hook?.decorateRef) {
-        newRefs.push(hook.decorateRef(ref))
+      try {
+        if (hook?.decorateRefWithDispatch && dispatch) {
+          newRefs.push(await dispatch(hook.decorateRefWithDispatch(ref, { online, settings, mode })))
+        } else if (hook?.decorateRef) {
+          newRefs.push(hook.decorateRef(ref))
+        }
+      } catch (error) {
+        reportError(`Error decorating ref ${ref?.type} ${ref?.ref} on ${hook?.key}`, error)
       }
     }
   }

@@ -18,6 +18,7 @@ import CallLookup from './CallLookup'
 import { trackEvent } from '../../../distro'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import Notices from './Notices'
 
 export default function HomeTools ({ settings, styles, style }) {
   const navigation = useNavigation()
@@ -201,6 +202,9 @@ export default function HomeTools ({ settings, styles, style }) {
             onPress={() => navigation.navigate('Spots')}
           />
         </View>
+
+        <Notices />
+
         {isKeyboardVisible && settings.showNumbersRow && (
           <NumberKeys settings={settings} themeColor={'primary'} onNumberKeyPressed={handleNumberKey} enabled={!!isFocused} />
         )}

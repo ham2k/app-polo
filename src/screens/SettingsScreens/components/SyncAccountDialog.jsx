@@ -19,7 +19,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
   const callRef = useRef()
   const emailRef = useRef()
 
-  useEffect(() => { setTimeout(() => callRef?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => callRef?.current?.focus(), 500) }, [])
 
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 

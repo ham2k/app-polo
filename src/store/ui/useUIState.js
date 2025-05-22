@@ -14,16 +14,14 @@ export function useUIState (component, key, initialValue) {
   const componentData = useSelector(state => selectStateForComponent(state, component))
   const setter = useCallback((newData) => dispatch(setStateForComponent({ component, [key]: newData })), [dispatch, component, key])
   const updater = useCallback((newData) => dispatch(updateStateForComponent({ component, [key]: newData })), [dispatch, component, key])
-  let data = (componentData && componentData[key]) ?? initialValue
 
   useEffect(() => {
-    if (data === undefined && initialValue !== undefined) {
+    if ((!componentData || componentData[key] === undefined) && initialValue !== undefined) {
       setter(initialValue)
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      data = initialValue
     }
-  }, [data, setter, initialValue])
+  }, [setter, initialValue, componentData, key, component])
+
+  const data = (componentData && componentData[key]) ?? initialValue
 
   return [data, setter, updater]
 }

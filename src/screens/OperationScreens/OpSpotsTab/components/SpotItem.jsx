@@ -85,6 +85,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
             </View>
           ))}
           <Text style={[styles.fields.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
+            {spot.spot.emoji}
             {spot.spot.label}
           </Text>
         </View>

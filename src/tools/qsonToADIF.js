@@ -20,7 +20,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   }
 
   const defaultSettings = selectExportSettings({ settings }, 'default')
-  const handlerSettings = selectExportSettings({ settings }, templates.key)
+  const handlerSettings = selectExportSettings({ settings }, templates.key, (handler?.defaultExportSettings && handler?.defaultExportSettings()))
 
   templates.exportSettings = { ...defaultSettings, ...handlerSettings }
   const privateData = (templates.exportSettings.privateData ?? handlerSettings.privateDataDefault)
@@ -48,7 +48,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   }
 
   let str = ''
-  str += `ADIF for ${title || (common.stationCall + ' ' + operation?.title) || 'Operation'} \n`
+  str += `ADIF for ${title || ([common.stationCall, operation?.title, operation.subTitle].filter(x => x).join(' ')) || 'Operation'} \n`
   str += adifField('ADIF_VER', '3.1.4', { newLine: true })
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
@@ -161,7 +161,7 @@ function adifFieldsForOneQSO ({ qso, operation, common, privateData, templates, 
     { ARRL_SECT: qso.their.arrlSection }
   ]
 
-  const templateContext = { ...templates.context, qso: { ...qso, notes: privateData ? '' : qso.notes } }
+  const templateContext = { ...templates.context, qso: { ...qso, notes: privateData ? qso.notes : '' } }
   let val
   if (templates.notesTemplate) {
     try {

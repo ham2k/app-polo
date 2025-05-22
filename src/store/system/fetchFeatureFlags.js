@@ -14,7 +14,7 @@ import { selectRawSettings } from '../settings'
 import { selectRuntimeOnline } from '../runtime'
 import { setFeatureFlags } from './systemSlice'
 
-const DEBUG = false
+const DEBUG = true
 
 export const fetchFeatureFlags = () => async (dispatch, getState) => {
   const state = getState()
@@ -54,7 +54,7 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
       const location = locations.pop()
       try {
         const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 2000) // 2 seconds timeout
+        const timeoutId = setTimeout(() => controller.abort(), 4000) // 4 second timeout
 
         const response = await fetch(`${Config.POLO_FLAGS_BASE_URL}/${location}`, {
           signal: controller.signal
@@ -87,14 +87,14 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
         }
       } catch (error) {
         if (error.name === 'AbortError') {
-          throw new Error('Request timed out after 2 seconds') // Re-raise to stop all further fetches
+          throw new Error('Request timed out after 4 seconds') // Re-raise to stop all further fetches
         }
         console.error('Error fetching flags from', location, error)
       }
     }
   } catch (error) {
     if (error.name === 'AbortError') {
-      console.error('Request timed out after 2 seconds')
+      console.error('Request timed out after 4 seconds')
     } else {
       console.error('Error fetching flags', error)
     }

@@ -9,6 +9,7 @@
 import React, { useMemo, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { selectExportSettings, selectSettings, setExportSettings } from '../../../store/settings'
 import ScreenContainer from '../../components/ScreenContainer'
@@ -22,8 +23,9 @@ import ThemedTextInput from '../../components/ThemedTextInput'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { fmtISODate } from '../../../tools/timeFormats'
 
-export default function ExportSettingsScreen ({ navigation }) {
+export default function ExportSettingsScreen ({ navigation, splitView }) {
   const dispatch = useDispatch()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const settings = useSelector(selectSettings)
   const styles = useThemedStyles()
@@ -145,7 +147,7 @@ export default function ExportSettingsScreen ({ navigation }) {
             const options = (refHook.suggestExportOptions && refHook.suggestExportOptions({ operation, qsos: operation.qsos, ref, settings })) || []
             options.forEach(option => {
               const key = `${hook.key}-${option.format}-${option.exportType ?? 'export'}`
-              const exportSettings = selectExportSettings({ settings }, key)
+              const exportSettings = selectExportSettings({ settings }, key, (refHook?.defaultExportSettings && refHook?.defaultExportSettings()))
 
               const description = [
                 exportSettings.customTemplates ? 'Custom templates' : 'Default templates',
@@ -213,7 +215,7 @@ export default function ExportSettingsScreen ({ navigation }) {
         const options = (exportHook.suggestExportOptions && exportHook.suggestExportOptions({ operation, qsos: operation.qsos, settings })) || []
         options.forEach(option => {
           const key = `${exportHook.key}-${option.format}-${option.exportType ?? 'export'}`
-          const exportSettings = selectExportSettings({ settings }, key)
+          const exportSettings = selectExportSettings({ settings }, key, (exportHook?.defaultExportSettings && exportHook?.defaultExportSettings()))
 
           const description = [
             exportSettings.customTemplates ? 'Custom templates' : 'Default templates',
@@ -318,7 +320,7 @@ Attributes for the log being exported
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection title={'Export Types'} />
         {exportTypes.map(exportType => (
           <React.Fragment key={exportType.key}>

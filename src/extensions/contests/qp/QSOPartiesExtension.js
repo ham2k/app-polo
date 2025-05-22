@@ -22,6 +22,7 @@ import { ActivityOptions } from './QSOPartiesActivityOptions'
 
 import RAW_QSO_PARTY_DATA from './all-parties.js'
 import { setOperationData } from '../../../store/operations'
+import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 export const QSO_PARTY_DATA = Object.fromEntries(RAW_QSO_PARTY_DATA.map(party => [party.key, party]))
 
 const INVALID_BANDS = ['60m', '30m', '17m', '12m']
@@ -119,14 +120,14 @@ const ReferenceHandler = {
     return {
       ...ref,
       label: `${qp.name}: ${ref?.location}`,
-      shortLabel: `${qp.short}: ${ref?.location}`
+      shortLabel: `${_qpShortForQP(qp)}: ${ref?.location}`
     }
   },
 
   suggestOperationTitle: (ref) => {
     if (ref?.ref) {
       const qp = qpData({ ref })
-      return { for: qp.short ?? qp.key + 'QP', subtitle: ref?.location }
+      return { for: _qpShortForQP(qp), subtitle: ref?.location }
     } else {
       return { for: Info.shortName }
     }
@@ -139,7 +140,7 @@ const ReferenceHandler = {
         format: 'adif',
         exportType: 'qp-adif',
         exportName: `${qp.name ?? 'QSO Party'} ADIF`,
-        templateData: { handlerShortName: qp.short, handlerName: qp.name },
+        templateData: { handlerShortName: _qpShortForQP(qp), handlerName: qp.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       },
@@ -147,7 +148,7 @@ const ReferenceHandler = {
         format: 'cabrillo',
         exportType: 'qp-cabrillo',
         exportName: `${qp.name ?? 'QSO Party'} Cabrillo`,
-        templateData: { handlerShortName: qp.short, handlerName: qp.name },
+        templateData: { handlerShortName: _qpShortForQP(qp), handlerName: qp.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       }]
@@ -298,7 +299,11 @@ const ReferenceHandler = {
       theirLocations = [qsoRef?.location]
       theyAreInState = !!qp.counties[qsoRef?.location]
     } else {
-      theirLocations = [qso?.their?.state ?? qso?.their?.guess?.state]
+      if (qso?.their?.guess?.entityCode === 'K' || qso?.their?.guess?.entityCode === 'VE') {
+        theirLocations = [qso?.their?.state ?? qso?.their?.guess?.state]
+      } else {
+        theirLocations = ['DX']
+      }
       theyAreInState = false
     }
 
@@ -328,7 +333,7 @@ const ReferenceHandler = {
     const multPrefix = qpMultPrefix({ qp, band, mode: superMode })
 
     theirLocations.forEach(loc => {
-      loc = qpNormalizeLocation({ qp, location: loc })
+      loc = qpNormalizeLocation({ qp, qso, location: loc, weAreInState, theyAreInState })
 
       if (loc) {
         if (qp?.counties?.[loc]) {
@@ -342,9 +347,17 @@ const ReferenceHandler = {
           scoring.mults.push(multPrefix + loc)
           scoring.province = loc
         } else {
-          // TODO: Handle variations on how DX entities are logged (DX vs Prefix) and multiplied (none, once, per entity)
-          scoring.mults.push(multPrefix + loc)
-          scoring.entity = loc
+          if (qp.options.dxIsMultiplier !== false) {
+            if (qp.options.dxEntityIsMultiplier) {
+              // TODO: Handle variations on how DX entities are logged (DX vs Prefix)
+              const dxcc = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+              scoring.mults.push(multPrefix + dxcc)
+              scoring.entity = dxcc
+            } else {
+              scoring.mults.push(multPrefix + loc)
+              scoring.entity = loc
+            }
+          }
         }
 
         if (score?.mults?.[multPrefix + loc]) {
@@ -500,19 +513,21 @@ const ReferenceHandler = {
 
     let line
 
-    const longestCounty = Math.max(...Object.keys(qp.counties ?? {}).map(c => c.length))
+    if (qp.options.countiesCountForInState !== false || !weAreInState) {
+      const longestCounty = Math.max(...Object.keys(qp.counties ?? {}).map(c => c.length))
 
-    parts.push(`### ${Object.keys(score?.counties ?? {}).length} ${qp.short ?? qp.key} Counties`)
-    line = '> '
-    Object.keys(qp.counties).forEach(county => {
-      county = county.toUpperCase()
-      if (score.counties[county]) {
-        line += `**~~${county}~~**${county.length < longestCounty ? ' '.repeat(longestCounty - county.length) : ''} `
-      } else {
-        line += `${county}${county.length < longestCounty ? ' '.repeat(longestCounty - county.length) : ''} `
-      }
-    })
-    parts.push(line)
+      parts.push(`### ${Object.keys(score?.counties ?? {}).length} ${_qpShortForQP(qp)} ${qp.options?.labelForCounties ?? 'Counties'}`)
+      line = '> '
+      Object.keys(qp.counties).forEach(county => {
+        county = county.toUpperCase()
+        if (score.counties[county]) {
+          line += `**~~${county}~~**${county.length < longestCounty ? ' '.repeat(longestCounty - county.length) : ''} `
+        } else {
+          line += `${county}${county.length < longestCounty ? ' '.repeat(longestCounty - county.length) : ''} `
+        }
+      })
+      parts.push(line)
+    }
 
     if (weAreInState) {
       parts.push(`### ${Object.keys(score?.states ?? {}).length} US States`)
@@ -546,18 +561,19 @@ const ReferenceHandler = {
       })
       parts.push(line)
 
-      parts.push('### Other Multipliers')
-      line = '> '
-      ;['DX'].forEach(entity => {
-        if (score.entities[entity]) {
-          line += `**~~${entity}~~** `
-        } else {
-          line += `${entity} `
-        }
-      })
-      parts.push(line)
+      if (qp.options.dxIsMultiplier !== false && Object.keys(score.entities).length > 0) {
+        parts.push('### Other Multipliers')
+        line = '> '
+        Object.keys(score.entities).sort().forEach(entity => {
+          if (score.entities[entity]) {
+            line += `**~~${entity}~~** `
+          } else {
+            line += `${entity} `
+          }
+        })
+        parts.push(line)
+      }
     }
-
     const longestBonus = Math.max(...Object.keys(qp.bonusStations ?? {}).map(s => s.length))
     if (qp.bonusStations) {
       parts.push(`### ${Object.keys(score?.bonusStations ?? {}).length} Bonus Stations`)
@@ -587,7 +603,6 @@ function mainExchangeForOperation (props) {
   const qp = qpData({ ref: opRef })
 
   const fields = []
-  // console.log('main exchange for QP', { ourNumber: ref?.ourNumber, nextNumber: operation?.nextNumber })
   if (qp?.exchange?.[0] === 'Number') {
     fields.push(
       <ThemedTextInput
@@ -642,8 +657,8 @@ function mainExchangeForOperation (props) {
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
-      value={ref?.location ?? _defaultLocationFor({ qso, qsos, operation }) ?? ''}
-      error={ref?.location && !qpNormalizeLocation({ qp, location: ref.location })}
+      value={ref?.location ?? _defaultLocationFor({ qp, qso, qsos, operation }) ?? ''}
+      error={ref?.location && !qpNormalizeLocation({ qp, qso, location: ref.location })}
       suggestions={_suggestionsFor({ qso, qp })}
       minimumLengthForSuggestions={3}
       onChangeText={(text) => updateQSO({
@@ -662,9 +677,10 @@ function prepareNewQSO ({ operation, qso }) {
 
 async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatch }) {
   const opRef = findRef(operation, Info.key)
+  const qp = qpData({ ref: opRef })
   if (opRef) {
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
-    ref.location = ref.location ?? _defaultLocationFor({ qso, qsos, operation })
+    ref.location = ref.location ?? _defaultLocationFor({ qp, qso, qsos, operation })
 
     if (ref.location || ref.ourNumber || ref.theirNumber) {
       qso.refs = replaceRef(qso.refs, Info.key, ref)
@@ -701,22 +717,43 @@ function _suggestionsFor ({ qso, qp }) {
   else return Object.entries({ ...qp.counties, ...US_STATES, ...CANADIAN_PROVINCES })
 }
 
-function _defaultLocationFor ({ qso, qsos, operation }) {
+function _defaultLocationFor ({ qso, qp, qsos, operation }) {
   const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
   if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.location
 
   const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
-  if (prefix === 'K' || prefix === 'VE') return undefined
-  else if (prefix) return 'DX'
-  else return undefined
+  if (prefix === 'K' || prefix === 'VE') {
+    return undefined
+  } else if (prefix) {
+    if (qp?.options?.dxLocationIsPrefix) {
+      return qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+    } else {
+      return 'DX'
+    }
+  } else {
+    return undefined
+  }
 }
 
 const SLASH_OR_COMMA_REGEX = /[/,]/
 
-export function qpNormalizeLocation ({ qp, location }) {
+export function qpNormalizeLocation ({ qp, qso, location, weAreInState, theyAreInState }) {
   location = location?.toUpperCase() || ''
   if (qp.counties[location]) {
-    return location
+    if (qp.options.countiesCountForInState === false) {
+      if (weAreInState && theyAreInState) {
+        if (qp.countyToState && qp.countyToState[location]) {
+          return qp.countyToState[location]
+        } else {
+          // Assume the county abbreviation includes the state as the first two characters
+          return location.substring(0, 2)
+        }
+      } else {
+        return location
+      }
+    } else {
+      return location
+    }
   } else if (location === 'DC' && qp.options.dcCountsAsMaryland) {
     return 'MD'
   } else if (location === 'MD' && qp.options.dcCountsAsMaryland) {
@@ -727,11 +764,10 @@ export function qpNormalizeLocation ({ qp, location }) {
     return location
   } else if (CANADIAN_PROVINCES[location]) {
     return location
-  } else if (location === 'DX') {
-    return 'DX'
-  // TODO: Add support for separate entities as multipliers
+  } else if (qp.options.dxEntityIsMultiplier) {
+    return qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
   } else {
-    return ''
+    return location
   }
 }
 
@@ -766,7 +802,13 @@ export function qpNameForLocation ({ qp, location }) {
   } else if (CANADIAN_PROVINCES[location]) {
     return `${CANADIAN_PROVINCES[location]}`
   } else if (location === 'DX') {
-    return 'Other country'
+    return 'DX Entity'
+  } else {
+    if (DXCC_BY_PREFIX[location]) {
+      return `${location}: ${DXCC_BY_PREFIX[location]?.name}`
+    } else {
+      return location
+    }
   }
 }
 
@@ -792,4 +834,10 @@ export function qpLabelForLocation ({ qp, location }) {
   } else if (location === 'DX') {
     return 'Out-of-state: *DX* Other country'
   }
+}
+
+function _qpShortForQP (qp) {
+  if (qp.short) return qp.short
+  if (qp.key.endsWith('QP')) return qp.key
+  else return `${qp.key}QP`
 }

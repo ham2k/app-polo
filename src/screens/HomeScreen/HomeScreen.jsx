@@ -17,7 +17,6 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import { addNewOperation, selectOperationsList } from '../../store/operations'
 import { selectRawSettings, selectSettings } from '../../store/settings'
-import Notices from './components/Notices'
 import OperationItem from './components/OperationItem'
 import HomeTools from './components/HomeTools'
 import { trackEvent, trackSettings } from '../../distro'
@@ -213,8 +212,6 @@ export default function HomeScreen ({ navigation }) {
       </View>
 
       <HomeTools settings={settings} styles={styles} />
-
-      <Notices />
     </ScreenContainer>
   )
 }

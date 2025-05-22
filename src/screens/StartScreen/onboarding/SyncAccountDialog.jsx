@@ -26,7 +26,7 @@ export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, 
   const tick = useSelector(selectFiveSecondsTick)
 
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 500) }, [])
 
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
   const [status, setStatus] = useState('input')

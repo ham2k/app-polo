@@ -22,6 +22,7 @@ export default function WWBOTAInput (props) {
   const styles = useThemedStyles()
 
   const textTransformer = useCallback(text => {
+    text = text || ''
     text = text.replace(NO_PREFIX_REGEX, (match, p1, p2) => `${defaultPrefix ?? 'B/?'}-${p1}`)
     text = text.replace(ADD_SLASHES_REGEX, (match, p1, p2) => `B/${p1}`)
     text = text.replace(ADD_DASHES_REGEX, (match, p1, p2) => `B/${p1}-${p2}`)

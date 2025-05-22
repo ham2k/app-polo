@@ -45,3 +45,7 @@ export function slashZeros (text) {
   // See "Combining Solidus" in https://en.wikipedia.org/wiki/Slashed_zero
   return text.replace(/0/g, '0̸')
 }
+
+export function sanitizeForMarkdown (text) {
+  return text?.replace(/^[-* \t–—]+/g, '')
+}

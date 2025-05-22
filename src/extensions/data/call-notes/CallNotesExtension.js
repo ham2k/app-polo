@@ -234,5 +234,6 @@ export const useAllCallNotesFinder = (call) => {
 }
 
 function _cleanNote (note) {
+  note = note || ''
   return note.replaceAll(/[^A-Za-z0-9,-/]/g, '').trim().toUpperCase()
 }

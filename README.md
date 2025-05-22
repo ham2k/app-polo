@@ -41,6 +41,15 @@ Then clone this repository, `cd` into it and install the dependencies:
 npm install
 ```
 
+### Maps
+
+In order to use Mapbox maps in your local builds, you need to:
+
+1. Signup for a Mapbox account
+2. Create an access token with `downloads:read` scope
+3. Save the access token to `.env` as `MAPBOX_ACCESS_TOKEN`
+
+### Build
 And finally, build the app for your target platform:
 
 ```
@@ -51,6 +60,8 @@ npm run ios
 # Android
 npm run android
 ```
+
+
 ### Debug Menu
 
 iOS: Cmd ⌘ + D
@@ -93,6 +104,7 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 * On `ios/polo/Images.xcassets/LaunchScreen.imageset` replace the three versions of `launch_screen`
 * On `src/screens/StartScreen/img` replace the three versions of `launch_screen`.
 
+
 ---
 
 # Known Issues
@@ -115,12 +127,15 @@ rm -rf ~/Library/Caches/CocoaPods
 rm -rf ios/Pods
 rm -rf ios/Podfile.lock
 rm -rf ios/build
-(cd ios && pod install)
+(cd ios && pod update)
 
 # For all platforms
 watchman watch-del .
 watchman watch-project .
+
 npm start -- --reset-cache
+npm run ios
+npm run android
 ```
 
 ### "Unable to boot simulator" error for iOS Simulator

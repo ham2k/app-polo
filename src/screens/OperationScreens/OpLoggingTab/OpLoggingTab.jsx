@@ -23,7 +23,7 @@ import { selectSectionedQSOs } from '../../../store/qsos'
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
 
-export default function OpLoggingTab ({ navigation, route }) {
+export default function OpLoggingTab ({ navigation, route, splitView }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const vfo = useSelector(state => selectVFO(state))
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
@@ -89,6 +89,7 @@ export default function OpLoggingTab ({ navigation, route }) {
         settings={settings}
         ourInfo={ourInfo}
         online={online}
+        splitView={splitView}
       />
     </View>
   )

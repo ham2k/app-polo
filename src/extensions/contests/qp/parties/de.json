@@ -1,6 +1,7 @@
 {
   "key": "DE",
   "name": "Delaware QSO Party",
+  "url": "https://www.fsarc.org/qsoparty/qsohome.htm",
   "start": "2025-5-3 17:00Z",
   "end": "2025-5-4 23:59Z",
   "cabrilloName": "DE-QSO-PARTY",
@@ -13,11 +14,17 @@
     "selfSpotting": true,
     "dxEntityIsMultiplier": true,
     "multsPerBandMode": false,
-    "dataAndCWCountAsSameMode": true
+    "dataAndCWCountAsSameMode": true,
+    "countiesCountForInState": false
   },
   "points": {
     "PHONE": 1,
     "CW": 2
+  },
+  "powerMultiplier": {
+    "QRP": 3,
+    "LP": 2,
+    "HP": 1
   },
   "counties": {
     "NDE": "New Castle County",

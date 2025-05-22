@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { SectionList, View, useWindowDimensions } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem from './QSOItem'
@@ -16,8 +16,9 @@ import { findHooks } from '../../../../extensions/registry'
 import QSOHeader from './QSOHeader'
 import getItemLayout from 'react-native-get-item-layout-section-list'
 import { fmtShortTimeZulu, fmtTimeZulu } from '../../../../tools/timeFormats'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
+function prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeArea }) {
   const extendedWidth = width / themeStyles.oneSpace > 80
   const narrowWidth = width / themeStyles.oneSpace < 50
 
@@ -55,15 +56,21 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
     },
     unselectedRow: {
     },
+    compactRow: {
+      ...themeStyles.compactRow,
+      paddingLeft: safeArea?.left || 0
+    },
     headerRow: {
       ...themeStyles.compactRow,
-      backgroundColor: themeStyles.colors.surfaceVariant
+      backgroundColor: themeStyles.colors.surfaceVariant,
+      paddingLeft: safeArea?.left || 0
     },
     fields: {
       header: {
         ...commonStyles,
+        fontFamily: themeStyles.fontFamily,
         flex: 0,
-        marginLeft: 0,
+        marginLeft: themeStyles.oneSpace,
         textAlign: 'left'
       },
       number: {
@@ -80,7 +87,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
         ...themeStyles.text.lighter,
         flex: 0,
         minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 7,
-        marginLeft: 0,
+        marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
       freq: {
@@ -158,7 +165,7 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
         flexDirection: 'row',
         textAlign: 'right',
         marginLeft: themeStyles.oneSpace,
-        minWidth: themeStyles.oneSpace * 2,
+        minWidth: themeStyles.oneSpace * 0,
         maxWidth: themeStyles.oneSpace * 9
       },
       icon: {
@@ -173,17 +180,18 @@ function prepareStyles (themeStyles, isDeleted, isOtherOperator, width) {
 
 const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress }) {
   const { width } = useWindowDimensions()
+  const safeAreaInsets = useSafeAreaInsets()
 
-  const [componentWidth, setComponentWidth] = useUIState()
+  const [componentWidth, setComponentWidth] = useState()
   const handleLayout = useCallback((event) => {
     setComponentWidth(event?.nativeEvent?.layout?.width)
   }, [setComponentWidth])
 
   const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
-  const styles = useThemedStyles(prepareStyles, false, false, componentWidth ?? width)
-  const stylesForDeleted = useThemedStyles(prepareStyles, true, false, componentWidth ?? width)
-  const stylesForOtherOperator = useThemedStyles(prepareStyles, false, true, componentWidth ?? width)
+  const styles = useThemedStyles(prepareStyles, { isDeleted: false, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets })
+  const stylesForDeleted = useThemedStyles(prepareStyles, { isDeleted: true, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets })
+  const stylesForOtherOperator = useThemedStyles(prepareStyles, { isDeleted: false, isOtherOperator: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets })
 
   const listRef = useRef()
 

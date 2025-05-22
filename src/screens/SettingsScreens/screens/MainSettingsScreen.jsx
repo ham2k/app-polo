@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { List, Text } from 'react-native-paper'
 import { Linking, ScrollView, useWindowDimensions, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import packageJson from '../../../../package.json'
 import { findHooks } from '../../../extensions/registry'
@@ -83,8 +84,8 @@ export default function MainSettingsScreen ({ navigation, route }) {
                 borderRightWidth: styles.oneSpace
               }}
             >
-              <HeaderBar options={headerOptions} navigation={navigation} back={true} />
-              <MainSettingsOptions settings={settings} styles={styles} navigation={navigation} />
+              <HeaderBar options={headerOptions} navigation={navigation} back={true} splitView={splitView} />
+              <MainSettingsOptions settings={settings} styles={styles} navigation={navigation} splitView={splitView} />
             </View>
             <View
               style={{
@@ -105,7 +106,7 @@ export default function MainSettingsScreen ({ navigation, route }) {
                   freezeOnBlur: true
                 }}
               >
-                {settingsScreensArray({ includeMain: false, topLevelBack: false })}
+                {settingsScreensArray({ includeMain: false, topLevelBack: false, splitView })}
               </Stack.Navigator>
             </View>
           </View>
@@ -129,7 +130,8 @@ export default function MainSettingsScreen ({ navigation, route }) {
   }
 }
 
-function MainSettingsOptions ({ settings, styles, navigation }) {
+function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
+  const safeAreaInsets = useSafeAreaInsets()
   const [currentDialog, setCurrentDialog] = useState()
 
   const accountSettingHooks = useMemo(() => {
@@ -138,7 +140,7 @@ function MainSettingsOptions ({ settings, styles, navigation }) {
   }, [settings]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: safeAreaInsets.left, marginRight: splitView ? 0 : safeAreaInsets.right }}>
       <Ham2kListSection>
 
         <Ham2kListItem
@@ -311,11 +313,12 @@ function MainSettingsOptionsScreen ({ navigation }) {
       navigation={navigation}
       settings={settings}
       styles={styles}
+      splitView={false}
     />
   )
 }
 
-function settingsScreensArray ({ includeMain, topLevelBack }) {
+function settingsScreensArray ({ includeMain, topLevelBack, splitView }) {
   const screens = [
     <Stack.Screen name="GeneralSettings" key="GeneralSettings"
       options={{ title: 'General Settings', headerBackVisible: topLevelBack }}

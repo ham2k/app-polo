@@ -11,6 +11,7 @@ import { Appbar, Menu, Text } from 'react-native-paper'
 import { StatusBar, View } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { tweakStringForVoiceOver } from '../../tools/a11yTools'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
@@ -80,7 +81,7 @@ function prepareStyles (baseStyles, options) {
 }
 
 export default function HeaderBar ({
-  route, options, navigation, back, close, title, subTitle,
+  route, options, navigation, back, close, title, subTitle, splitView,
   rightAction, rightMenuItems, rightA11yLabel, headerBackVisible, closeInsteadOfBack, onRightActionPress
 }) {
   title = title || options?.title
@@ -93,6 +94,7 @@ export default function HeaderBar ({
   headerBackVisible = headerBackVisible ?? options?.headerBackVisible ?? true
 
   const styles = useThemedStyles(prepareStyles, { back, close })
+  const safeAreaInsets = useSafeAreaInsets()
 
   if (closeInsteadOfBack) {
     close = back
@@ -106,11 +108,12 @@ export default function HeaderBar ({
   // TODO: Once React Native fixes adjustsFontSizeToFit on iOS so it doesn't scale the font up, add it back to the Text components below
 
   return (
-    <Appbar.Header
+    <Appbar
       theme={styles.appBarTheme}
       dark={true}
       mode={'center-aligned'}
-      style={styles.root}
+      safeAreaInsets={{ left: safeAreaInsets.left, right: splitView ? 0 : safeAreaInsets.right, top: safeAreaInsets.top, bottom: 0 }}
+      style={[styles.root, { height: styles.root.height + safeAreaInsets.top }]}
     >
       <StatusBar
         barStyle={'light-content'}
@@ -196,6 +199,6 @@ export default function HeaderBar ({
         )}
       </View>
 
-    </Appbar.Header>
+    </Appbar>
   )
 }

@@ -30,6 +30,8 @@ const ExportHandler = {
     ]
   },
 
+  defaultExportSettings: () => ({ privateData: true }),
+
   suggestExportOptions: ({ operation, qsos, ref, settings }) => {
     return ([{
       priority: -1,

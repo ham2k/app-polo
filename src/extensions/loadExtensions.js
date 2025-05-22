@@ -14,6 +14,7 @@ import ADIFExtension from './core/adif'
 import POTAExtension from './activities/pota/POTAExtension'
 import SOTAExtension from './activities/sota/SOTAExtension'
 import GMAExtension from './activities/gma/GMAExtension'
+import MOTAExtension from './activities/mota/MOTAExtension'
 import WWFFExtension from './activities/wwff/WWFFExtension'
 import FDExtension from './activities/fd/FDExtension'
 import WFDExtension from './activities/wfd/WFDExtension'
@@ -24,6 +25,7 @@ import ECAExtension from './activities/eca/ECAExtension'
 import ELAExtension from './activities/ela/ELAExtension'
 import BLHAExtension from './activities/blha/BLHAExtension'
 import SiOTAExtentsion from './activities/siota/SiOTAExtension'
+import PGAExtentsion from './activities/pga/PGAExtension'
 
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 import CallHistoryExtension from './data/call-history/CallHistoryExtension'
@@ -35,6 +37,7 @@ import SpotHistoryExtension from './data/spot-history/SpotHistoryExtension'
 import SpotDiscordExtension from './data/spot-discord/SpotDiscordExtension'
 import QSOPartiesExtension from './contests/qp/QSOPartiesExtension'
 import SimpleContestExtension from './contests/simple-contest/SimpleContestExtension'
+import GAPOTAExtension from './contests/gapota/GAPOTAExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
@@ -58,6 +61,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(POTAExtension)
   registerExtension(SOTAExtension)
   registerExtension(GMAExtension)
+  registerExtension(MOTAExtension)
   registerExtension(WWFFExtension)
   registerExtension(CustomExtension)
   registerExtension(WFDExtension)
@@ -68,10 +72,11 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(ELAExtension)
   registerExtension(BLHAExtension)
   registerExtension(SiOTAExtentsion)
+  registerExtension(PGAExtentsion)
 
   registerExtension(QSOPartiesExtension)
   registerExtension(SimpleContestExtension)
-
+  registerExtension(GAPOTAExtension)
   registerExtension(RadioCommands)
   registerExtension(TimeCommands)
   registerExtension(DebuggingCommands)

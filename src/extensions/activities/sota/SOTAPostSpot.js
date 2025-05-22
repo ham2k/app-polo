@@ -6,9 +6,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { Alert } from 'react-native'
+
 import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
 
-import { filterRefs } from '../../../tools/refTools'
+import { reportError } from '../../../distro'
+
+import { findRef } from '../../../tools/refTools'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
 
 const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']
@@ -17,31 +21,48 @@ export const SOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 
-  const refs = filterRefs(operation, 'sotaActivation')
-  for (const ref of refs) { // Should only be one
-    const [associationCode, summitCode] = ref.ref.split('/', 2)
+  const ref = findRef(operation, 'sotaActivation')
+  const [associationCode, summitCode] = ref.ref.split('/', 2)
 
-    let mode = vfo.mode
-    if (!validModes.includes(mode)) {
-      if (ADIF_SUBMODES.SSB.includes(mode)) {
-        mode = 'SSB'
-      } else if (mode === 'DIGITALVOICE' || ADIF_SUBMODES.DIGITALVOICE.includes(mode)) {
-        mode = 'DV'
-      } else {
-        mode = 'Data' // Reasonable guess
-      }
+  let mode = vfo.mode
+  if (!validModes.includes(mode)) {
+    if (ADIF_SUBMODES.SSB.includes(mode)) {
+      mode = 'SSB'
+    } else if (mode === 'DIGITALVOICE' || ADIF_SUBMODES.DIGITALVOICE.includes(mode)) {
+      mode = 'DV'
+    } else {
+      mode = 'Data' // Reasonable guess
     }
-    const spot = {
-      associationCode,
-      summitCode,
-      activatorCallsign,
-      frequency: `${vfo.freq / 1000}`, // string
-      mode,
-      comments,
-      type: comments.includes('QRT') ? 'QRT' : 'NORMAL' // Also 'TEST' when debugging
-    }
-
-    // Errors will be logged by apiSOTA
-    await dispatch(apiSOTA.endpoints.spot.initiate(spot))
   }
+
+  const spot = {
+    associationCode,
+    summitCode,
+    activatorCallsign,
+    frequency: `${vfo.freq / 1000}`, // string
+    mode,
+    comments,
+    type: comments.match(/QRT/i) ? 'QRT' : 'NORMAL' // Also 'TEST' when debugging
+  }
+
+  try {
+    const apiPromise = await dispatch(apiSOTA.endpoints.spot.initiate(spot))
+    await Promise.all(dispatch(apiSOTA.util.getRunningQueriesThunk()))
+    const apiResults = await dispatch((_dispatch, _getState) => apiSOTA.endpoints.spot.select(spot)(_getState()))
+    apiPromise.unsubscribe && apiPromise.unsubscribe()
+
+    if (apiResults?.error) {
+      if (apiResults.error?.status === 403) { // Forbidden, not logged in
+        Alert.alert('Error posting SOTA spot', 'SOTA account logged out. Please log in again in PoLo settings')
+      } else {
+        Alert.alert('Error posting SOTA spot', `${apiResults.error?.status} ${apiResults.error?.data?.message}`)
+      }
+      return false
+    }
+  } catch (error) {
+    Alert.alert('Error posting SOTA spot', error.message)
+    reportError('Error posting SOTA spot', error)
+    return false
+  }
+  return true
 }

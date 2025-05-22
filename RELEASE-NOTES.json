@@ -1,13 +1,51 @@
 {
-  "25.3.99-pre4": {
-    "name": "April '25 (pre 4)",
+  "25.5.0-pre1": {
+    "name": "May '25 (pre 1)",
+    "photoCaption": "G1JPV at POTA GB-1012",
+    "changes": [
+      "Fixed errors in time calculations",
+      "Fixed split view resizing",
+      "Fixed number key input and field clearing errors",
+      "Fixed ADIF export errors",
+      "List formatting tweaks",
+      "Hide RST in list if fields are hidden",
+      "Map improvements, including signal strength",
+      "Filter out QRT POTA spots",
+      "Show warning/error message when SOTA account not logged in for self-spotting",
+      "Add Polish Gmina Award (by M1SDH, as suggested by SP9MKP)",
+      "Add self-spotting for Bunkers on the Air (WWBOTA) programme (by M1SDH)"
+    ]
+  },
+  "25.4.2": {
+    "name": "April '25 (patch 2)",
+    "photoCaption": "VK4KC at POTA AU-8817",
+    "changes": [
+      "Added option to disable smart keyboard features for some Android devices",
+      "Assorted bug fixes"
+    ]
+  },
+  "25.4.1": {
+    "name": "April '25 (patch 1)",
+    "photoCaption": "VK4KC at POTA AU-8817",
+    "changes": [
+      "Fixed crash when selecting POTA references",
+      "Fixed file selection in dev mode",
+      "Fixed command message clearing",
+      "Better handling of safe areas in split mode screens"
+    ]
+  },
+  "25.4.0": {
+    "name": "April '25",
     "photoCaption": "VK4KC at POTA AU-8817",
     "changes": [
       "Upgraded core framework to latest version (React Native 0.78)",
+      "New Maps engine (Mapbox) that can fully zoom out now!",
       "Improved Export Settings, and moved them under General Settings",
-      "QSO Parties: AR, IN, TN, NEQP, 7QP, AL, NM, DE, CPQP, KY, WV (With contributions from W1GRL, W1BOY, W8NI, KQ4URU, W1WC)",
       "Better handling of bad Internet service",
-      "Assorted bug fixes (With contributions from NA7DO)"
+      "Mills on the Air (MOTA) programme (by M1SDH)",
+      "QSO Parties: AR, IN, TN, NEQP, 7QP, AL, NM, DE, CPQP, KY, WV, ACQP, CPQP (with contributions from W1GRL, W1BOY, W8NI, KQ4URU, W1WC)",
+      "Georgia State Parks On The Air (as suggested by KO4GBB)",
+      "Assorted bug fixes (with contributions from NA7DO)"
     ]
   },
   "25.3.0": {

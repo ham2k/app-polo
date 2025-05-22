@@ -22,7 +22,7 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, se
   const description = useMemo(() => {
     let desc
     if (online && pota?.error) {
-      desc = pota.error
+      desc = `Error: ${pota.error}`
     } else if (!pota?.data?.name && !refData?.name) {
       desc = 'Unknown Park'
     } else {
@@ -43,13 +43,13 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, se
       title={
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
           <Text style={{ fontWeight: 'bold' }}>
-            {pota?.data?.ref ?? activityRef}
+            {pota?.data?.ref ?? activityRef ?? ''}
           </Text>
           {/* <Text>
             {(pota?.data?.locationDesc ?? refData?.locationDesc) && ` (${pota?.data?.locationDesc ?? refData?.locationDesc})`}
           </Text> */}
           <Text>
-            {(typeof refData?.distance === 'number') && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
+            {(typeof refData?.distance === 'number') ? fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away' : ''}
           </Text>
         </View>
       }

@@ -12,7 +12,7 @@ import { addQSOs } from '../../store/qsos'
 import { resetDatabase } from '../../store/db/db'
 import { setLocalData } from '../../store/local'
 import { setSettings } from '../../store/settings'
-import { setSystemFlag } from '../../store/system'
+import { addNotice, setSystemFlag } from '../../store/system'
 import { poissonRandom } from '../../tools/randomTools'
 import { logTimer } from '../../tools/perfTools'
 import { annotateQSO } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
@@ -30,6 +30,7 @@ const Extension = {
   alwaysEnabled: true,
   onActivation: ({ registerHook }) => {
     registerHook('command', { priority: 100, hook: ErrorCommandHook })
+    registerHook('command', { priority: 100, hook: NoticeCommandHook })
     registerHook('command', { priority: 100, hook: SeedCommandHook })
     registerHook('command', { priority: 100, hook: OnboardCommandHook })
     registerHook('command', { priority: 100, hook: WipeDBCommandHook })
@@ -49,6 +50,30 @@ const ErrorCommandHook = {
   },
   invokeCommand: (match, { handleFieldChange }) => {
     throw new Error('Test error!')
+  }
+}
+
+const NoticeCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-notice',
+  match: /NOTICE/i,
+  describeCommand: (match) => {
+    return 'Show a notice?'
+  },
+  invokeCommand: (match, { dispatch }) => {
+    dispatch(addNotice({
+      key: 'debug-notice',
+      title: 'Sample Notice',
+      text: 'This is a sample notice. With **some text** and a ~~button~~.',
+      actionLabel: 'Do it!',
+      action: 'dialog',
+      actionArgs: {
+        dialogTitle: 'Sample Notice Dialog',
+        dialogText: 'This is a sample dialog. With **some text** and a ~~button~~ . \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      }
+    }))
+    return 'Notice shown'
   }
 }
 
@@ -114,51 +139,59 @@ const SeedCommandHook = {
   invokeCommand: (match, { handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
     let count = parseInt(match[1], 10)
     setTimeout(async () => {
-      let startAtMillis = Date.now()
-      const times = []
-      for (let i = 0; i < count; i++) {
-        const t = poissonRandom(120) * 1000 // mean of 120 seconds per QSO
-        times.push(t)
-        startAtMillis -= t
-      }
-      const calls = getAllCallsFromNotes().filter(x => x)
-      if (calls.length === 0) calls.concat(['KI2D', 'M1SDH', 'EI5IYB', 'M0LZN', 'WV3H', 'LB4FH', 'VK1AO'])
+      try {
+        let startAtMillis = Date.now()
 
-      logTimer('seeding', 'Start', { reset: true })
-      const qsos = []
-      while (count > 0) {
-        const index = Math.floor(Math.random() * calls.length)
-        let call = calls[index] || 'N0CALL'
-
-        if (Math.random() > 0.20) { // On 80% of the calls, replace the digit with something random
-          call = call.replace(/(?<=\w)(\d)/, (m, p1) => {
-            return (parseInt(p1, 10) + Math.floor(Math.random() * 10)) % 10
-          })
+        const times = []
+        for (let i = 0; i < count; i++) {
+          const t = poissonRandom(120) * 1000 // mean of 120 seconds per QSO
+          times.push(t)
+          startAtMillis -= t
         }
+        const calls = getAllCallsFromNotes().filter(x => x)
+        if (calls.length === 0) calls.concat(['KI2D', 'M1SDH', 'EI5IYB', 'M0LZN', 'WV3H', 'LB4FH', 'VK1AO'])
 
-        calls.splice(index, 1)
+        logTimer('seeding', 'Start', { reset: true })
+        const qsos = []
+        while (count > 0) {
+          const index = Math.floor(Math.random() * calls.length)
+          let call = calls[index] || 'N0CALL'
 
-        let oneQSO = {
-          mode: qso?.mode ?? vfo?.mode ?? 'SSB',
-          band: qso?.band ?? vfo?.band ?? '20m',
-          freq: qso?.freq ?? vfo?.freq,
-          startAtMillis,
-          startAt: new Date(startAtMillis).toISOString()
+          if (Math.random() > 0.20) { // On 80% of the calls, replace the digit with something random
+            call = call.replace(/(?<=\w)(\d)/, (m, p1) => {
+              return (parseInt(p1, 10) + Math.floor(Math.random() * 10)) % 10
+            })
+          }
+
+          calls.splice(index, 1)
+
+          let oneQSO = {
+            mode: qso?.mode ?? vfo?.mode ?? 'SSB',
+            band: qso?.band ?? vfo?.band ?? '20m',
+            freq: qso?.freq ?? vfo?.freq,
+            startAtMillis,
+            startAt: new Date(startAtMillis).toISOString()
+          }
+          oneQSO.their = { call, sent: randomRST(oneQSO.mode) }
+          oneQSO.our = { call: ourInfo.call, operatorCall: ourInfo.operatorCall || operation.local?.operatorCall, sent: randomRST(oneQSO.mode) }
+          console.log('annotating', oneQSO)
+          oneQSO = await annotateQSO({ qso: oneQSO, online: false, settings, dispatch })
+
+          qsos.push(oneQSO)
+          console.log('qsos ongoing', qsos)
+
+          count--
+          startAtMillis = startAtMillis + times.pop()
+          logTimer('seeding', 'Seeded one', { sinceLast: true })
         }
-        oneQSO.their = { call, sent: randomRST(oneQSO.mode) }
-        oneQSO.our = { call: ourInfo.call, operatorCall: ourInfo.operatorCall || operation.local?.operatorCall, sent: randomRST(oneQSO.mode) }
-        oneQSO = await annotateQSO({ qso: oneQSO, online, settings, dispatch })
+        console.log('adding', qsos)
+        await dispatch(addQSOs({ uuid: operation.uuid, qsos }))
+        updateLoggingState({ selectedUUID: undefined, lastUUID: qsos[qsos.length - 1]?.uuid })
 
-        qsos.push(oneQSO)
-
-        count--
-        startAtMillis = startAtMillis + times.pop()
-        logTimer('seeding', 'Seeded one', { sinceLast: true })
+        logTimer('seeding', 'Done seeding')
+      } catch (e) {
+        console.error('Error while seeding', e)
       }
-      await dispatch(addQSOs({ uuid: operation.uuid, qsos }))
-      updateLoggingState({ selectedUUID: undefined, lastUUID: qsos[qsos.length - 1]?.uuid })
-
-      logTimer('seeding', 'Done seeding')
     }, 0)
     return `Seeding the log with ${count} QSOs`
   }

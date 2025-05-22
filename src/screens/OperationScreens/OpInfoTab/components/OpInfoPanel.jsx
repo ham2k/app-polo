@@ -101,7 +101,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
   return (
     <GestureHandlerRootView style={[style, styles.root]}>
       <View style={styles.section}>
-        <Text style={[styles.markdown.heading2, { fontWeight: 'bold' }]}>
+        <Text style={styles.markdown.heading2}>
           Operation Stats
         </Text>
         {line1 && <Text style={styles.markdown.body} numberOfLines={2} ellipsizeMode={'tail'}>{line1}</Text>}

@@ -183,6 +183,9 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
               spot.spot.type = 'scoring'
             }
           }
+          if (score?.emoji) {
+            spot.spot.emoji = score.emoji
+          }
 
           if (score.notices) {
             score.notices.forEach(notice => (spot.spot.flags[notice] = true))
@@ -205,7 +208,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
           opSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
       ))
       if (matchingSpot) {
-        matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call}, ${spot.their.call}` }
+        matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call},${spot.their.call}` }
       } else {
         mOpSpots.push(spot)
       }
