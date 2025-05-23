@@ -1,11 +1,12 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useMemo } from 'react'
+import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import { setOperationData } from '../../../store/operations'
@@ -13,11 +14,10 @@ import { findRef, replaceRef } from '../../../tools/refTools'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 import { ListRow } from '../../../screens/components/ListComponents'
 import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
-import { Info } from './WFDExtension'
-import { View } from 'react-native'
 import { Ham2kMarkdown } from '../../../screens/components/Ham2kMarkdown'
+import { Info } from './FDExtension'
 
-export function WFDActivityOptions (props) {
+export function FDActivityOptions (props) {
   const { styles, operation } = props
 
   const dispatch = useDispatch()
@@ -59,17 +59,19 @@ export function WFDActivityOptions (props) {
       </ListRow>
       <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
         <Ham2kMarkdown>{`
-Class for Winter Field Day is, for example \`2M\`:
+Class for ARRL Field Day is, for example \`2A\`:
 
 - \`1\`, \`2\`, \`3\`... for the number of transmitters.
-- \`H\` for Home Station
-- \`I\` for Indoors
-- \`O\` for Outdoors
-- \`M\` for Mobile or Mobile Stationary
+- \`A\` for Group (3 or more) Portable Station
+- \`B\` for One or two person Portable Station
+- \`C\` for Mobile Station
+- \`D\` for Home Station
+- \`E\` for Home Station on Emergency Power
+- \`F\` for Emergency Operation Center
 
 Location is the ARRL Section, RAC Section, \`MX\` for Mexico, or \`DX\` for anywhere else.
 
-More info in the **[official rules](https://www.winterfieldday.com/sop.php)**.
+More info in the **[official rules](https://www.arrl.org/field-day-rules)**.
           `}</Ham2kMarkdown>
       </View>
     </Ham2kListSection>

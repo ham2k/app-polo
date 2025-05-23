@@ -61,7 +61,7 @@ const ActivityHook = {
 
   sampleOperations: ({ settings, callInfo }) => {
     return [
-      { refs: [ReferenceHandler.decorateRef({ type: Info.key, class: '1A', location: 'ENY' })] }
+      { refs: [ReferenceHandler.decorateRef({ type: Info.key, class: '1O', location: 'ENY' })] }
     ]
   }
 
@@ -95,13 +95,13 @@ const ReferenceHandler = {
     if (ref?.type === Info?.key) {
       return [{
         format: 'adif',
-        exportName: 'Winter Field Day',
+        exportName: 'Winter Field Day (ADIF)',
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       },
       {
         format: 'cabrillo',
-        exportName: 'Winter Field Day',
+        exportName: 'Winter Field Day (Cabrillo)',
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       }]
