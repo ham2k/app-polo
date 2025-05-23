@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
 import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../../../tools/timeFormats'
 import { useDispatch, useSelector } from 'react-redux'
@@ -42,7 +43,7 @@ export function SpotterControlInputs (props) {
 
   useEffect(() => {
     if (inProgress) {
-      if (qso && qso.their?.guess?.baseCall && qso.freq) {
+      if (qso && parseCallsign(qso.their?.call)?.baseCall && qso.freq) {
         setSpotterUI({
           message: `Spot at ${fmtFreqInMHz(qso.freq)}`,
           disabled: false
@@ -97,7 +98,7 @@ export function SpotterControlInputs (props) {
     }
   }, [qso, inProgress, vfo?.freq, operation?.local?.spottedFreq, operation?.local?.spottedAt, operation, now, comments])
 
-  const isSelfSpotting = useMemo(() => !qso?.their?.guess?.baseCall, [qso])
+  const isSelfSpotting = useMemo(() => !qso || !parseCallsign(qso.their?.call)?.baseCall, [qso])
   const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings }), [isSelfSpotting, qso, operation, settings])
 
   const handleSpotting = useCallback(async () => {
@@ -205,7 +206,7 @@ export const spotterControl = {
   order: 100,
   icon: 'hand-wave',
   label: ({ qso }) => {
-    return qso?.their?.guess?.baseCall ? 'Spotting' : 'Self-Spotting'
+    return qso && parseCallsign(qso.their?.call)?.baseCall ? 'Spotting' : 'Self-Spotting'
   },
   accesibilityLabel: 'Self-Spotting Controls',
   InputComponent: SpotterControlInputs,
