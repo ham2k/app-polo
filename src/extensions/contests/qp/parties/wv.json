@@ -2,18 +2,21 @@
   "key": "WV",
   "name": "West Virginia QSO Party",
   "start": "2025-6-21 16:00Z",
-  "end": "2025-6-22 04:00Z",
-  "cabrilloName": "WV-QSO-PARTY",
-  "notes": "Counties entered by W1GRL and rules by W1BOY",
-  "internalNotes": "Mobile operation bonus 100 pts/county needs to be implemented",
-  "lastUpdated": "2025-03-22 22:00Z",
-  "status": "See internalNotes",
+  "end": "2025-6-22 03:59Z",
+  "url": "https://www.qsl.net/wvqp/",
+  "cabrilloName": "WVQP",
+  "notes": "Mobile operation bonus not included in score. Counties entered by W1GRL and rules by W1BOY",
+  "internalNotes": "",
+  "lastUpdated": "2025-05-23 12:00Z",
+  "status": "Updated for 2025, but not verified",
   "options": {
     "dcCountsAsMaryland": true,
     "countyLine": true,
     "selfSpotting": true,
     "dxEntityIsMultiplier": true,
-    "stateCountsForInState": true
+    "stateCountsForInState": true,
+    "bonusPerBandMode": true,
+    "bonusPostMultiplier": true
   },
   "points": {
     "PHONE": 1,
@@ -58,7 +61,7 @@
     "MRO": "Monroe",
     "MOR": "Morgan",
     "NIC": "Nicholas",
-    "OHI": "Ohio",
+    "OHI": "Ohio County",
     "PEN": "Pendleton",
     "PLE": "Pleasants",
     "POC": "Pocahontas",
@@ -78,6 +81,6 @@
     "WET": "Wetzel",
     "WIR": "Wirt",
     "WOO": "Wood",
-    "WYO": "Wyoming"
+    "WYO": "Wyoming County"
   }
 }
