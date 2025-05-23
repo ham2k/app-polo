@@ -8,7 +8,7 @@
 import { filterRefs } from '../../../tools/refTools'
 import { POTAPostSpotAPI } from './POTAPostSpotAPI'
 
-export const POTAPostSelfSpot = ({ operation, vfo, comments }) => async (_dispatch, getState) => {
+export const POTAPostSelfSpot = ({ operation, vfo, comments }) => (_dispatch, getState) => {
   const state = getState()
 
   const calls = [

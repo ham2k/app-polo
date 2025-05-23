@@ -41,7 +41,19 @@ export function SpotterControlInputs (props) {
   const now = useSelector(selectSecondsTick)
 
   useEffect(() => {
-    if (!inProgress) {
+    if (inProgress) {
+      if (qso && qso.their?.guess?.baseCall && qso.freq) {
+        setSpotterUI({
+          message: `Spot at ${fmtFreqInMHz(qso.freq)}`,
+          disabled: false
+        })
+      } else {
+        setSpotterUI({
+          message: 'First set a frequency to spot.',
+          disabled: true
+        })
+      }
+    } else {
       if (qso?.freq) {
         setSpotterUI({
           message: `Spot at ${fmtFreqInMHz(qso.freq)}`,
@@ -81,21 +93,16 @@ export function SpotterControlInputs (props) {
             disabled: false
           })
         }
-      } else {
-        setSpotterUI({
-          message: 'First set a frequency to spot.',
-          disabled: true
-        })
       }
     }
-  }, [qso?.freq, inProgress, vfo?.freq, operation?.local?.spottedFreq, operation?.local?.spottedAt, operation, now, comments])
+  }, [qso, inProgress, vfo?.freq, operation?.local?.spottedFreq, operation?.local?.spottedAt, operation, now, comments])
 
-  const isSelfSpotting = useMemo(() => !qso || qso._isNew, [qso])
+  const isSelfSpotting = useMemo(() => !qso?.their?.guess?.baseCall, [qso])
   const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings }), [isSelfSpotting, qso, operation, settings])
 
   const handleSpotting = useCallback(async () => {
-    postSpots({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl })
-  }, [isSelfSpotting, qso, hooksWithSpotting, dispatch, operation, vfo, comments, setCurrentSecondaryControl])
+    postSpots({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings })
+  }, [isSelfSpotting, qso, hooksWithSpotting, dispatch, operation, vfo, comments, setCurrentSecondaryControl, settings])
 
   return (
     <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
@@ -143,7 +150,7 @@ export function retrieveHooksWithSpotting ({ isSelfSpotting, qso, operation, set
   return [...activityHooks, ...spottingHooks]
 }
 
-export async function postSpots ({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl }) {
+export async function postSpots ({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings }) {
   hooksWithSpotting = hooksWithSpotting || []
   comments = comments || ''
 
@@ -175,7 +182,7 @@ export async function postSpots ({ isSelfSpotting, qso, operation, vfo, comments
       disabled: true
     })
 
-    status[hook.key] = await dispatch(isSelfSpotting ? hook.postSelfSpot({ operation, vfo, comments, qCode, qRest }) : hook.postOtherSpot({ qso, comments, qCode, qRest }))
+    status[hook.key] = await dispatch(isSelfSpotting ? hook.postSelfSpot({ operation, vfo, comments, qCode, qRest }) : hook.postOtherSpot({ qso, comments, spotterCall: operation.stationCall || settings.operatorCall }))
     ok = ok && status[hook.key]
     setSpotStatus && setSpotStatus(status)
   }
@@ -198,7 +205,7 @@ export const spotterControl = {
   order: 100,
   icon: 'hand-wave',
   label: ({ qso }) => {
-    return qso?._isNew ? 'Self-Spotting' : 'Spotting'
+    return qso?.their?.guess?.baseCall ? 'Spotting' : 'Self-Spotting'
   },
   accesibilityLabel: 'Self-Spotting Controls',
   InputComponent: SpotterControlInputs,

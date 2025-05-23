@@ -8,7 +8,7 @@
 import { filterRefs } from '../../../tools/refTools'
 import { POTAPostSpotAPI } from './POTAPostSpotAPI'
 
-export const POTAPostOtherSpot = ({ qso, comments }) => async () => {
+export const POTAPostOtherSpot = ({ comments, qso, spotterCall }) => () => {
   const refs = filterRefs(qso, 'pota')
 
   return POTAPostSpotAPI({
@@ -17,6 +17,6 @@ export const POTAPostOtherSpot = ({ qso, comments }) => async () => {
     freq: qso.freq,
     mode: qso.mode,
     refs,
-    spotterCall: qso.our.call
+    spotterCall: qso.our?.call ?? spotterCall // with in-progress QSOs our call is still null
   })
 }
