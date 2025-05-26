@@ -105,7 +105,7 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
           ) : (
             <>
               {line1 && <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.textLine}>{line1}</Text>}
-              {line2 && <Text numberOfLines={2} ellipsizeMode={'tail'} styles={styles.textLine}>{line2}</Text>}
+              {line2 && <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.textLine}>{line2}</Text>}
             </>
           )}
         </View>
