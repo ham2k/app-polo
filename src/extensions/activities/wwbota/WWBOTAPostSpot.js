@@ -46,10 +46,11 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
   }
   try {
     let spotId = operation?.spotIds?.[Info.key]
+    let apiResults
     if (spotId) {
       const apiPromise = await dispatch(apiWWBOTA.endpoints.editSpot.initiate({ id: spotId, body: spot }, { forceRefetch: true }))
       await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
-      const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.editSpot.select({ id: spotId, body: spot })(_getState()))
+      apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.editSpot.select({ id: spotId, body: spot })(_getState()))
       apiPromise.unsubscribe && apiPromise.unsubscribe()
 
       if (apiResults?.error?.status === 404) {
@@ -59,16 +60,25 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
     if (!spotId) {
       const apiPromise = await dispatch(apiWWBOTA.endpoints.spot.initiate(spot), { forceRefetch: true })
       await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
-      const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
+      apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
       apiPromise.unsubscribe && apiPromise.unsubscribe()
 
-      dispatch(setOperationData({
-        uuid: operation.uuid,
-        spotIds: { ...operation?.spotIds, [Info.key]: apiResults?.data?.id }
-      }))
+      if (apiResults?.data?.id) {
+        dispatch(setOperationData({
+          uuid: operation.uuid,
+          spotIds: { ...operation?.spotIds, [Info.key]: apiResults?.data?.id }
+        }))
+      }
+    }
+    if (apiResults?.error) {
+      console.log(apiResults)
+      Alert.alert('Error posting WWBOTA spot', `${apiResults.error?.status} ${apiResults.error?.data?.detail}`)
+      return false
     }
   } catch (error) {
     Alert.alert('Error posting WWBOTA spot', error.message)
     reportError('Error posting WWBOTA spot', error)
+    return false
   }
+  return true
 }
