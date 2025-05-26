@@ -16,7 +16,7 @@ import GLOBAL from '../../../GLOBAL'
 function debounceableDispatch (dispatch, action) {
   return dispatch(action())
 }
-const debouncedDispatch = debounce(debounceableDispatch, 2000)
+export const debouncedDispatch = debounce(debounceableDispatch, 2000)
 
 export const setOperationLocalData = (data) => async (dispatch, getState) => {
   try {

@@ -10,7 +10,7 @@ import { Alert } from 'react-native'
 
 import { reportError } from '../../../distro'
 
-import { setOperationData } from '../../../store/operations'
+import { setOperationData, debouncedDispatch } from '../../../store/operations'
 import { filterRefs } from '../../../tools/refTools'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 import { Info } from './WWBOTAInfo'
@@ -64,10 +64,11 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
       apiPromise.unsubscribe && apiPromise.unsubscribe()
 
       if (apiResults?.data?.id) {
-        dispatch(setOperationData({
+        await dispatch(setOperationData({
           uuid: operation.uuid,
           spotIds: { ...operation?.spotIds, [Info.key]: apiResults?.data?.id }
         }))
+        debouncedDispatch.flush()
       }
     }
     if (apiResults?.error) {
