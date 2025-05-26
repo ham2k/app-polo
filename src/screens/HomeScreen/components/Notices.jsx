@@ -149,6 +149,8 @@ export default function Notices ({ paddingForSafeArea = false }) {
     )
   }, [dispatch])
 
+  if (notices.length === 0 && !overlayText) return null
+
   return (
     <View
       style={[
