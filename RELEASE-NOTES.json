@@ -1,6 +1,14 @@
 {
-  "25.5.0-pre1": {
-    "name": "May '25 (pre 1)",
+  "25.5.1": {
+    "name": "May '25 (patch 1)",
+    "photoCaption": "G1JPV at POTA GB-1012",
+    "changes": [
+      "New WWFF Spotline API (by M1SDH)",
+      "Better scoring for Field Day"
+    ]
+  },
+  "25.5.0": {
+    "name": "May '25",
     "photoCaption": "G1JPV at POTA GB-1012",
     "changes": [
       "ARRL Field Day 2025",
