@@ -9,6 +9,7 @@ import { Alert } from 'react-native'
 
 import { findRef } from '../../../tools/refTools'
 import { apiWWFF } from '../../../store/apis/apiWWFF'
+import { GMACommonPostSpot } from '../gma/GMACommonPostSpot'
 import { reportError } from '../../../distro'
 
 export const WWFFPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
@@ -24,6 +25,9 @@ export const WWFFPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
     remarks: comments,
     spotter: activatorCallsign
   }
+
+  // Lets also post to legacy GMA API, but ignore status
+  dispatch(GMACommonPostSpot({ operation, vfo, comments, refs: [ref], url: 'https://www.cqgma.org/wwff/spotwwff.php' }))
 
   try {
     const apiPromise = await dispatch(apiWWFF.endpoints.spot.initiate(spot, { forceRefetch: true }))
