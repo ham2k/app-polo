@@ -13,7 +13,8 @@ import { registerWWFFDataFile, wwffFindAllByLocation, wwffFindOneByReference } f
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
 import { WWFFPostSpot } from './WWFFPostSpot'
-import { apiGMA } from '../../../store/apis/apiGMA'
+import { apiWWFF } from '../../../store/apis/apiWWFF'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -67,42 +68,51 @@ const SpotsHook = {
   fetchSpots: async ({ online, settings, dispatch }) => {
     let spots = []
     if (online) {
-      const apiPromise = await dispatch(apiGMA.endpoints.spots.initiate('wwff', { forceRefetch: true }))
-      await Promise.all(dispatch(apiGMA.util.getRunningQueriesThunk()))
-      const apiResults = await dispatch((_dispatch, getState) => apiGMA.endpoints.spots.select('wwff')(getState()))
+      const apiPromise = await dispatch(apiWWFF.endpoints.spots.initiate({}, { forceRefetch: true }))
+      await Promise.all(dispatch(apiWWFF.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, getState) => apiWWFF.endpoints.spots.select({})(getState()))
 
       apiPromise.unsubscribe && apiPromise.unsubscribe()
       spots = apiResults.data || []
     }
-    const qsos = spots.map(spot => {
+
+    const today = new Date()
+    const qsos = []
+    for (const spot of spots) {
+      const spotTime = spot.spot_time * 1000
+      if ((today - spotTime) > 1000 * 60 * 60) {
+        continue // Some spots can be several hours old: cut off at 1 hour
+      }
+      const refDetails = await wwffFindOneByReference(spot.reference)
       const qso = {
-        their: { call: spot.ACTIVATOR },
-        freq: spot.frequency,
-        band: spot.band,
-        mode: spot.mode,
+        their: { call: spot.activator?.toUpperCase() },
+        freq: spot.frequency_khz,
+        band: spot.frequency_khz ? bandForFrequency(spot.frequency_khz) : 'other',
+        mode: spot.mode?.toUpperCase(),
         refs: [{
-          ref: spot.REF,
+          ref: spot.reference,
           type: Info.huntingType
         }],
         spot: {
-          timeInMillis: spot.timeInMillis,
+          timeInMillis: spotTime,
           source: Info.key,
           icon: Info.icon,
-          label: `${spot.REF}: ${spot.NAME}`,
+          label: `${spot.reference}: ${refDetails?.name ?? 'Unknown Park'}`,
+          type: spot.remarks.match(/QRT/i) ? 'QRT' : undefined,
           sourceInfo: {
-            comments: spot.TEXT,
-            spotter: spot.SPOTTER
+            comments: spot.remarks,
+            spotter: spot.spotter?.toUpperCase()
           }
         }
       }
-      return qso
-    })
+      qsos.push(qso)
+    }
     const dedupedQSOs = []
     const includedCalls = {}
     for (const qso of qsos) {
       if (!includedCalls[qso.their.call]) {
         includedCalls[qso.their.call] = true
-        dedupedQSOs.push(qso)
+        if (qso.spot.type !== 'QRT') dedupedQSOs.push(qso)
       }
     }
     return dedupedQSOs
