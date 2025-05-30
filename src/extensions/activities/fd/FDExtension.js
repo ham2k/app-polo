@@ -186,11 +186,11 @@ const ReferenceHandler = {
     score = score ?? {
       key: ref?.type,
       icon: Info.icon,
-      label: Info.shortName,
+      label: Info.name,
       total: 0,
       qsoCount: 0,
       qsoPoints: 0,
-      mults: 0,
+      powerMult: 1,
       modes: {},
       arrlSections: {},
       racSections: {},
@@ -209,8 +209,12 @@ const ReferenceHandler = {
       score.otherSections[qsoScore.theirSection] = (score.otherSections[qsoScore.theirSection] || 0) + 1
     }
 
-    score.mults = Object.keys(score.arrlSections).length + Object.keys(score.racSections).length + Object.keys(score.otherSections).length
-    score.total = score.qsoPoints * score.mults
+    if (ref?.transmitterPower === '5W' && ref?.powerSource === 'BATTERIES') score.powerMult = 5
+    else if (ref?.transmitterPower === '5W') score.powerMult = 2
+    else if (ref?.transmitterPower === '100W') score.powerMult = 2
+    else score.powerMult = 1
+
+    score.total = score.qsoPoints * score.powerMult
 
     return score
   },
@@ -225,7 +229,7 @@ const ReferenceHandler = {
     score.summary = `${fmtNumber(score.total)} pts`
 
     const parts = []
-    parts.push(`**${fmtNumber(score.qsoPoints)} Points x ${score.mults} Mults = ${fmtNumber(score.total)} Total Points**`)
+    parts.push(`**${fmtNumber(score.qsoPoints)} QSO points x ${score.powerMult} power mult = ${fmtNumber(score.total)} points**`)
     parts.push(
       Object.keys(score.modes ?? {}).sort().map(mode => {
         if (score?.modes[mode]) {

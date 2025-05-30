@@ -188,7 +188,7 @@ const ReferenceHandler = {
     score = score ?? {
       key: ref?.type,
       icon: Info.icon,
-      label: Info.shortName,
+      label: Info.name,
       total: 0,
       qsoCount: 0,
       qsoPoints: 0,
