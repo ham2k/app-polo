@@ -11,6 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
+import { KeyboardProvider } from 'react-native-keyboard-controller'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import DeviceInfo from 'react-native-device-info'
 
@@ -216,9 +217,11 @@ const App = () => (
   <AppWrappedForDistribution>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <SafeAreaProvider>
-          <ThemedApp />
-        </SafeAreaProvider>
+        <KeyboardProvider>
+          <SafeAreaProvider>
+            <ThemedApp />
+          </SafeAreaProvider>
+        </KeyboardProvider>
       </PersistGate>
     </Provider>
   </AppWrappedForDistribution>

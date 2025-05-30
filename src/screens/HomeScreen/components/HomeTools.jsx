@@ -85,7 +85,7 @@ export default function HomeTools ({ settings, styles, style }) {
         setKeyboardExtraStyles({})
       } else {
         setIsKeyboardVisible(false)
-        setKeyboardExtraStyles({ paddingBottom: metrics.height - 10 })
+        setKeyboardExtraStyles({}) //{ paddingBottom: metrics.height - 10 })
       }
     })
     const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {

@@ -8,7 +8,8 @@
 import React, { useEffect, useState } from 'react'
 import { useHeaderHeight } from '@react-navigation/elements'
 
-import { KeyboardAvoidingView, Platform, View, Keyboard } from 'react-native'
+import { Keyboard } from 'react-native'
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 function prepareStyles (baseStyles) {
@@ -57,7 +58,7 @@ export default function ScreenContainer ({ children }) {
     <KeyboardAvoidingView
       style={styles.root}
       behavior={'padding'}
-      keyboardVerticalOffset={headerHeight}
+      // keyboardVerticalOffset={headerHeight}
       enabled={keyboardVisible}
     >
       {children}

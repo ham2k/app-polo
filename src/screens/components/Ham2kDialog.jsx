@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { useWindowDimensions, KeyboardAvoidingView, Platform } from 'react-native'
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { Dialog, Portal } from 'react-native-paper'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
@@ -26,29 +26,16 @@ export function Ham2kDialog ({ children, ...moreProps }) {
     }
   }, [moreProps.style, styles, width])
 
-  if (Platform.OS === 'ios') {
-    return (
-      <Portal>
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
-          <Dialog
-            {...moreProps}
-            style={style}
-          >
-            {children}
-          </Dialog>
-        </KeyboardAvoidingView>
-      </Portal>
-    )
-  } else {
-    return (
-      <Portal>
+  return (
+    <Portal>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
         <Dialog
           {...moreProps}
           style={style}
         >
           {children}
         </Dialog>
-      </Portal>
-    )
-  }
+      </KeyboardAvoidingView>
+    </Portal>
+  )
 }
