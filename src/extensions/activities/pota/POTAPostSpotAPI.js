@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2025 Phillip Kessels <dl9pk@darc.de>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -9,17 +9,8 @@ import { reportError } from '../../../distro'
 import { Alert } from 'react-native'
 
 import packageJson from '../../../../package.json'
-import { filterRefs } from '../../../tools/refTools'
 
-export const POTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
-  const state = getState()
-
-  const calls = [
-    operation.stationCall || state.settings.operatorCall,
-    ...(operation?.stationCallPlusArray || [])
-  ].filter(Boolean)
-
-  const refs = filterRefs(operation, 'potaActivation')
+export const POTAPostSpotAPI = async ({ calls, comments, freq, mode, refs, spotterCall }) => {
   if (refs.length > 0 && refs[0]?.ref) {
     const ref = refs[0]
     const refComment = refs.length > 1 ? `${refs.length}-fer: ${refs.map((x) => (x.ref)).join(' ')}` : ''
@@ -31,10 +22,10 @@ export const POTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
           headers: { 'User-Agent': `Ham2K Portable Logger/${packageJson.version}` },
           body: JSON.stringify({
             activator: call,
-            spotter: call,
-            frequency: vfo.freq,
+            spotter: spotterCall,
+            frequency: freq,
             reference: ref.ref,
-            mode: vfo?.mode ?? 'SSB',
+            mode: mode ?? 'SSB',
             source: 'Ham2K Portable Logger',
             comments: [comments, refComment].filter((x) => (x)).join(' ')
           })
