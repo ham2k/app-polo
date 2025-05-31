@@ -64,7 +64,7 @@ const ActivityHook = {
 
 const SpotsHook = {
   ...Info,
-  sourceName: 'WWFFwatch',
+  sourceName: 'WWFF Spotline',
   fetchSpots: async ({ online, settings, dispatch }) => {
     let spots = []
     if (online) {
