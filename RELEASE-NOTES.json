@@ -1,4 +1,12 @@
 {
+  "25.5.2": {
+    "name": "May '25 (patch 2)",
+    "photoCaption": "G1JPV at POTA GB-1012",
+    "changes": [
+      "Corrected WWFF Spots service name",
+      "Tweaks to Map and Spots"
+    ]
+  },
   "25.5.1": {
     "name": "May '25 (patch 1)",
     "photoCaption": "G1JPV at POTA GB-1012",
