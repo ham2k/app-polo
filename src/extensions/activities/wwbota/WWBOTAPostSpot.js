@@ -20,55 +20,56 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 
   const refs = filterRefs(operation, Info.activationType)
-
-  const schemeRefs = {}
-  refs.forEach((ref) => {
-    const [scheme, num] = ref.ref.split('-')
-    if (!schemeRefs[scheme]) {
-      schemeRefs[scheme] = []
-    }
-    schemeRefs[scheme].push(num)
-  })
-
-  const comment = [
-    Object.entries(schemeRefs).map(([scheme, nums]) => `${scheme}-${nums.join(',')}`).join(' '),
-    operation.wabSquare && `WAB ${operation.wabSquare}`,
-    comments
-  ].filter(x => x).join(' ')
-
-  const spot = {
-    spotter: activatorCallsign,
-    call: activatorCallsign,
-    freq: vfo.freq / 1000, // MHz
-    mode: vfo.mode || null,
-    comment,
-    type: comments.match(/QRT/i) ? 'QRT' : 'Live' // Also 'Test' when debugging
-  }
-  try {
-    let spotId = operation?.spotIds?.[Info.key]
-    if (spotId) {
-      const apiPromise = await dispatch(apiWWBOTA.endpoints.editSpot.initiate({ id: spotId, body: spot }, { forceRefetch: true }))
-      await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
-      const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.editSpot.select({ id: spotId, body: spot })(_getState()))
-      apiPromise.unsubscribe && apiPromise.unsubscribe()
-
-      if (apiResults?.error?.status === 404) {
-        spotId = undefined
+  if (refs.length) {
+    const schemeRefs = {}
+    refs.forEach((ref) => {
+      const [scheme, num] = ref.ref.split('-')
+      if (!schemeRefs[scheme]) {
+        schemeRefs[scheme] = []
       }
-    }
-    if (!spotId) {
-      const apiPromise = await dispatch(apiWWBOTA.endpoints.spot.initiate(spot), { forceRefetch: true })
-      await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
-      const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
-      apiPromise.unsubscribe && apiPromise.unsubscribe()
+      schemeRefs[scheme].push(num)
+    })
 
-      dispatch(setOperationData({
-        uuid: operation.uuid,
-        spotIds: { ...operation?.spotIds, [Info.key]: apiResults?.data?.id }
-      }))
+    const comment = [
+      Object.entries(schemeRefs).map(([scheme, nums]) => `${scheme}-${nums.join(',')}`).join(' '),
+      operation.wabSquare && `WAB ${operation.wabSquare}`,
+      comments
+    ].filter(x => x).join(' ')
+
+    const spot = {
+      spotter: activatorCallsign,
+      call: activatorCallsign,
+      freq: vfo.freq / 1000, // MHz
+      mode: vfo.mode || null,
+      comment,
+      type: comments.match(/QRT/i) ? 'QRT' : 'Live' // Also 'Test' when debugging
     }
-  } catch (error) {
-    Alert.alert('Error posting WWBOTA spot', error.message)
-    reportError('Error posting WWBOTA spot', error)
+    try {
+      let spotId = operation?.spotIds?.[Info.key]
+      if (spotId) {
+        const apiPromise = await dispatch(apiWWBOTA.endpoints.editSpot.initiate({ id: spotId, body: spot }, { forceRefetch: true }))
+        await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
+        const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.editSpot.select({ id: spotId, body: spot })(_getState()))
+        apiPromise.unsubscribe && apiPromise.unsubscribe()
+
+        if (apiResults?.error?.status === 404) {
+          spotId = undefined
+        }
+      }
+      if (!spotId) {
+        const apiPromise = await dispatch(apiWWBOTA.endpoints.spot.initiate(spot), { forceRefetch: true })
+        await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
+        const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
+        apiPromise.unsubscribe && apiPromise.unsubscribe()
+
+        dispatch(setOperationData({
+          uuid: operation.uuid,
+          spotIds: { ...operation?.spotIds, [Info.key]: apiResults?.data?.id }
+        }))
+      }
+    } catch (error) {
+      Alert.alert('Error posting WWBOTA spot', error.message)
+      reportError('Error posting WWBOTA spot', error)
+    }
   }
 }
