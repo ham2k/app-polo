@@ -79,6 +79,7 @@ const SpotsHook = {
     const today = new Date()
     const qsos = []
     for (const spot of spots) {
+      if (!spot) continue
       const spotTime = spot.spot_time * 1000
       if ((today - spotTime) > 1000 * 60 * 60) {
         continue // Some spots can be several hours old: cut off at 1 hour
