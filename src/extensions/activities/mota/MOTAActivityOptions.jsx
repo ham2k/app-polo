@@ -53,8 +53,8 @@ export function MOTAActivityOptions (props) {
         console.info('Geolocation error', error)
       }, {
         enableHighAccuracy: true,
-        timeout: 30 * 1000 /* 30 seconds */,
-        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+        timeout: 1000 * 30 /* 30 seconds */,
+        maximumAge: 1000 * 60 /* 1 minute */
       }
     )
   }, [])
@@ -130,7 +130,6 @@ export function MOTAActivityOptions (props) {
     })
   }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
 
-
   const handleAddReference = useCallback((ref) => {
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, [...refs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]) }))
   }, [dispatch, operation, refs])
@@ -142,7 +141,7 @@ export function MOTAActivityOptions (props) {
   return (
     <>
       <Ham2kListSection title={title}>
-      {refDatas.map((refData, index) => (
+        {refDatas.map((refData, index) => (
           <MOTAListItem
             key={refData.ref}
             activityRef={refData.ref}
