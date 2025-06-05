@@ -95,6 +95,12 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
     return () => clearInterval(interval)
   })
 
+  useEffect(() => { // Ensure we refresh if we've been offline for too long
+    if (spotsState.lastFetched - Date.now() > 1000 * 2 * REFRESH_INTERVAL_IN_SECONDS) {
+      updateSpotsState({ lastFetched: 0 })
+    }
+  }, [spotsState.lastFetched, updateSpotsState])
+
   const refresh = useCallback(() => {
     updateSpotsState({ lastFetched: 0 })
   }, [updateSpotsState])

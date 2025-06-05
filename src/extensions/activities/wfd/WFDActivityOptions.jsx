@@ -62,7 +62,10 @@ export function WFDActivityOptions (props) {
 Class for Winter Field Day is, for example \`2M\`:
 
 - \`1\`, \`2\`, \`3\`... for the number of transmitters.
-- \`H\` for Home Station, \`I\` for Indoors, \`O\` for Outdoors, \`M\` for Mobile or Mobile Stationary.
+- \`H\` for Home Station
+- \`I\` for Indoors
+- \`O\` for Outdoors
+- \`M\` for Mobile or Mobile Stationary
 
 Location is the ARRL Section, RAC Section, \`MX\` for Mexico, or \`DX\` for anywhere else.
 

@@ -24,6 +24,11 @@ buildscript {
 allprojects {
     repositories {
         maven {
+            // react-native-ble-plx
+            url 'https://www.jitpack.io'
+        }
+
+        maven {
             url 'https://api.mapbox.com/downloads/v2/releases/maven'
             authentication {
                 basic(BasicAuthentication)

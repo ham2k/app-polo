@@ -52,14 +52,16 @@ function prepareStyles (baseStyles) {
   return {
     ...baseStyles,
     root: {
-      maxWidth: baseStyles.oneSpace * 60,
+      minWidth: baseStyles.oneSpace * 40,
+      maxWidth: "80%",
       alignSelf: 'center',
+      flexDirection: 'column',
+      alignItems: 'stretch',
       margin: baseStyles.oneSpace,
       marginTop: baseStyles.oneSpace * 2
     },
     noticeContainer: {
       padding: baseStyles.oneSpace * 2,
-      width: '100%',
       backgroundColor: 'rgb(252,244,167)',
       // borderColor: 'rgb(197,191,131)',
       // borderTopWidth: 1,
@@ -148,6 +150,8 @@ export default function Notices ({ paddingForSafeArea = false }) {
       }
     )
   }, [dispatch])
+
+  if (notices.length === 0 && !overlayText) return null
 
   return (
     <View

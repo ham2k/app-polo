@@ -133,8 +133,8 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
           resolve()
         }, {
           enableHighAccuracy: true,
-          timeout: 5 * 1000 /* 5 seconds */,
-          maximumAge: 1000 * 60 * 5 /* 5 minutes */
+          timeout: 1000 * 15 /* 15 seconds */,
+          maximumAge: 1000 * 60 /* 1 minute */
         }
       )
     })

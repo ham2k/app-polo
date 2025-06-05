@@ -27,6 +27,7 @@ export const WWFFPostSpot = ({ operation, vfo, comments }) => async (dispatch, g
       spotter: activatorCallsign
     }
 
+    // TODO: Remove this once everybody has properly moved to the new service
     // Lets also post to legacy GMA API, but ignore status
     dispatch(GMACommonPostSpot({ operation, vfo, comments, refs: [ref], url: 'https://www.cqgma.org/wwff/spotwwff.php' }))
 

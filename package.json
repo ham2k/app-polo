@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "25.5.0-pre1",
-  "versionName": "May '25 (pre 1)",
+  "version": "25.5.2",
+  "versionName": "May '25 (patch 2)",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -49,6 +49,7 @@
     "react-error-boundary": "6.0.0",
     "react-native": "0.79.2",
     "react-native-app-auth": "8.0.2",
+    "react-native-ble-plx": "^3.5.0",
     "react-native-blob-util": "0.21.2",
     "react-native-config": "1.5.5",
     "react-native-device-info": "14.0.4",
@@ -58,7 +59,7 @@
     "react-native-maps": "1.23.7",
     "react-native-markdown-display": "7.0.2",
     "react-native-pager-view": "6.7.1",
-    "react-native-paper": "5.14.1",
+    "react-native-paper": "5.14.5",
     "react-native-reanimated": "3.17.5",
     "react-native-restart": "0.0.27",
     "react-native-safe-area-context": "5.4.0",

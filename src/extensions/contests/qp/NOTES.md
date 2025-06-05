@@ -12,7 +12,7 @@ Can also be defined as `inStateExchange` and `outOfStateExchange` to have differ
 
 - `Number`: Has to be listed first (VA)
 - `Location`: Includes suggestions from County Lists
-- `Name` (MN) [Not Implemented yet]
+- `Name` (MN, CO) [Not Implemented yet]
 - `TheirNumber` (NS) [Not Implemented yet]
 - `OurNumber` (NS) [Not Implemented yet]
 
@@ -68,6 +68,7 @@ Relevant `"options"`:
 - `multsPerBandMode`: If true (default), multipliers are awarded per band and mode (Most). If false they are awarded only once overall, unless `multsPerBand` or `multsPerMode` is also true.
 - `multsPerBand`: If true, multipliers are awarded per band. (VT, TN)
 - `multsPerMode`: If true, multipliers are awarded per mode. (ID)
+- `inStateMultsPerBand`: If true, in-state multipliers are awarded per band. (HI)
 - `dxIsMultiplier`: If true (default), DX stations count as a single multiplier "DX". (Many)
 - `dxEntityIsMultiplier`: If true, each DX Entity Prefix is awarded as a multiplier. (Many)
 - `dxEntityMultiplierMax`: If set, limits the number of DX Entity Prefixes that can be awarded as multipliers. (7QP)
@@ -93,6 +94,7 @@ Relevant `"options"`:
 - Implement removeCountySuffixes
 - Implement dataAndCWCountAsSameMode
 - Implement powerMultiplier
+- Implement inStateMultsPerBand
 - Implement support for selfCountsForCounty and selfMobileCountsForCountywith a minimum number of QSOs
 - Implement dxEntityMultiplierMax (7QP)
 - 7QP allows for multi-county locations to be entered with an abbreviated second location, so that "ORDES/ORJEF" can be entered as "ORDES/JEF".

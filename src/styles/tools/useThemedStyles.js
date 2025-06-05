@@ -9,14 +9,16 @@ import { useMemo } from 'react'
 import { useTheme } from 'react-native-paper'
 
 import { prepareGlobalStyles } from '../globalStyles'
-import { useColorScheme, useWindowDimensions } from 'react-native'
+import { useColorScheme } from 'react-native'
 import { useSelector } from 'react-redux'
 import { selectSettings } from '../../store/settings'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 export function useThemedStyles (styleMassager, extraArg1, extraArg2, extraArg3, extraArg4) {
   const theme = useTheme()
 
-  const { width, height } = useWindowDimensions()
+  const { width, height } = useSafeAreaFrame()
+  // const { width, height } = useWindowDimensions() <-- broken on iOS, no rotation
 
   const settings = useSelector(selectSettings)
 

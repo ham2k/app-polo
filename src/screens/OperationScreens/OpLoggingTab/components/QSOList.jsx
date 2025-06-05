@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { SectionList, View, useWindowDimensions } from 'react-native'
+import { SectionList, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import QSOItem from './QSOItem'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
@@ -16,7 +16,7 @@ import { findHooks } from '../../../../extensions/registry'
 import QSOHeader from './QSOHeader'
 import getItemLayout from 'react-native-get-item-layout-section-list'
 import { fmtShortTimeZulu, fmtTimeZulu } from '../../../../tools/timeFormats'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeArea }) {
   const extendedWidth = width / themeStyles.oneSpace > 80
@@ -179,7 +179,8 @@ function prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeAr
 }
 
 const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress }) {
-  const { width } = useWindowDimensions()
+  const { width } = useSafeAreaFrame()
+  // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
   const safeAreaInsets = useSafeAreaInsets()
 
   const [componentWidth, setComponentWidth] = useState()

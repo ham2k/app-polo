@@ -7,8 +7,8 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Animated, PanResponder, Platform, View, useWindowDimensions } from 'react-native'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Animated, PanResponder, Platform, View } from 'react-native'
+import { SafeAreaView, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 
@@ -85,7 +85,8 @@ export default function OperationScreen (props) {
     return options
   }, [dispatch, online, operation, settings, styles])
 
-  const dimensions = useWindowDimensions()
+  const dimensions = useSafeAreaFrame()
+  // const dimensions = useWindowDimensions() <-- broken on iOS, no rotation
 
   const [panesState, , updatePanesState] = useUIState('OperationScreen', 'panes', {
     mainPaneWidth: settings.loggingPaneWidth ?? dimensions?.width * 0.8,

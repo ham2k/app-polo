@@ -48,6 +48,7 @@ import { selectLocalExtensionData } from './store/local'
 import { selectRuntimeOnline } from './store/runtime'
 import { selectFeatureFlags } from './store/system'
 import { useThemedStyles } from './styles/tools/useThemedStyles'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 const Stack = createNativeStackNavigator()
 
@@ -215,7 +216,9 @@ const App = () => (
   <AppWrappedForDistribution>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ThemedApp />
+        <SafeAreaProvider>
+          <ThemedApp />
+        </SafeAreaProvider>
       </PersistGate>
     </Provider>
   </AppWrappedForDistribution>

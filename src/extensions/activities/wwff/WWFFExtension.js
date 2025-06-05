@@ -64,7 +64,7 @@ const ActivityHook = {
 
 const SpotsHook = {
   ...Info,
-  sourceName: 'WWFFwatch',
+  sourceName: 'WWFF Spotline',
   fetchSpots: async ({ online, settings, dispatch }) => {
     let spots = []
     if (online) {
@@ -79,6 +79,7 @@ const SpotsHook = {
     const today = new Date()
     const qsos = []
     for (const spot of spots) {
+      if (!spot) continue
       const spotTime = spot.spot_time * 1000
       if ((today - spotTime) > 1000 * 60 * 60) {
         continue // Some spots can be several hours old: cut off at 1 hour
@@ -215,7 +216,11 @@ const ReferenceHandler = {
         exportData: { refs: [ref] }, // exports only see this one ref
         // Note that compact format uses a space instead of - because of WWFF requirements
         nameTemplate: '{{log.station}}@{{log.ref}} {{compact op.date}}',
-        titleTemplate: '{{>RefActivityTitle}}'
+        titleTemplate: '{{>RefActivityTitle}}',
+        // WWFF prefers ADIF files with no notes, comments, or QSL messages
+        ADIFNotesTemplate: '',
+        ADIFCommentTemplate: '',
+        ADIFQslMsgTemplate: ''
       }]
     }
   },

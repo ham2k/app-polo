@@ -246,8 +246,7 @@ const ReferenceHandler = {
         exportName: 'SOTA Activation',
         exportData: { refs: [ref] }, // exports only see this one ref
         nameTemplate: '{{>RefActivityName}}',
-        titleTemplate: '{{>RefActivityTitle}}',
-        ADIFCommentTemplate: 's{{qso.our.sent}} r{{qso.their.sent}} {{>ADIFNotes}}'
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     } else { // "export" hook
       const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType) && !q.deleted)
@@ -259,8 +258,7 @@ const ReferenceHandler = {
         exportName: 'SOTA Hunter',
         templateData: { handlerShortName: 'SOTA Hunted', handlerName: 'SOTA Hunted', includeTime: true },
         nameTemplate: '{{>OtherActivityName}}',
-        titleTemplate: '{{>OtherActivityTitle}}',
-        ADIFCommentTemplate: 's{{qso.our.sent}} r{{qso.their.sent}} {{>ADIFNotes}}'
+        titleTemplate: '{{>OtherActivityTitle}}'
       }]
     }
   },
