@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { IconButton } from 'react-native-paper'
+import { IconButton, Text } from 'react-native-paper'
 
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
@@ -20,7 +20,6 @@ import { selectSettings } from '../../../store/settings'
 import { useUIState } from '../../../store/ui'
 import MapWithQSOs from './components/MapWithQSOs'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { parseCallsign } from '@ham2k/lib-callsigns'
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -58,19 +57,13 @@ export default function OpMapTab ({ navigation, route }) {
       if (operation.grid) {
         const [latitude, longitude] = gridToLocation(operation.grid)
         return { latitude, longitude }
-      } else if (operationCallInfo?.lat && operationCallInfo?.lon) {
-        console.log(operationCallInfo)
-        if (operationCallInfo.entityPrefix === 'K') {
-          // this data is incorrect in BigCTY, so until it gets fixed there we need to hardcode it.
-          return { latitude: 37.60, longitude: -91.87 }
-        } else {
-          return { latitude: operationCallInfo.lat, longitude: operationCallInfo.lon }
-        }
+      } else {
+        return {}
       }
     } catch (e) {
       return {}
     }
-  }, [operation.grid, operationCallInfo])
+  }, [operation.grid])
 
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
 
@@ -85,6 +78,24 @@ export default function OpMapTab ({ navigation, route }) {
         settings={settings}
         selectedUUID={loggingState?.selectedUUID}
       />
+      {!qth.latitude && (
+        <View style={{
+          position: 'absolute',
+          top: styles.oneSpace * 1,
+          left: styles.oneSpace * 1 + safeAreaInsets.left,
+          right: styles.oneSpace * 1 + safeAreaInsets.right,
+          backgroundColor: 'red',
+          opacity: 0.8
+        }}
+        >
+          <Text
+            style={{ color: 'white', padding: styles.oneSpace, textAlign: 'center' }}
+            onPress={() => navigation.navigate('OperationLocation', { operation: operation.uuid })}
+          >
+            No QTH location. Tap here to change.
+          </Text>
+        </View>
+      )}
       <View style={{ position: 'absolute', bottom: styles.oneSpace * 1 + safeAreaInsets.bottom, right: styles.oneSpace * 1 + safeAreaInsets.right }}>
         {projection === 'mercator' ? (
           <IconButton
