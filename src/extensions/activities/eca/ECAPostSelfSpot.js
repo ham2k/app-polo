@@ -8,7 +8,7 @@
 import { filterRefs } from '../../../tools/refTools'
 import { GMACommonPostSelfSpot } from '../gma/GMACommonPostSelfSpot'
 
-export const ECAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+export const ECAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const refs = filterRefs(operation, 'ecaActivation')
   if (refs.length) {
     return dispatch(GMACommonPostSelfSpot({ operation, vfo, comments, refs }))
