@@ -29,7 +29,7 @@ export default Extension
 
 const SpotsHook = {
   ...Info,
-  postSpot: ({ operation, vfo, comments, qCode, qRest }) => async (dispatch, getState) => {
+  postSelfSpot: ({ operation, vfo, comments, qCode, qRest }) => async (dispatch, getState) => {
     const settings = getState().settings
     const ourInfo = selectOperationCallInfo(getState(), operation.uuid)
 
