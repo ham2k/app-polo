@@ -6,11 +6,11 @@
  */
 
 import { filterRefs } from '../../../tools/refTools'
-import { GMACommonPostSpot } from '../gma/GMACommonPostSpot'
+import { GMACommonPostSelfSpot } from '../gma/GMACommonPostSelfSpot'
 
 export const MOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const refs = filterRefs(operation, 'motaActivation')
   if (refs.length) {
-    return dispatch(GMACommonPostSpot({ operation, vfo, comments, refs }))
+    return dispatch(GMACommonPostSelfSpot({ operation, vfo, comments, refs }))
   }
 }

@@ -8,14 +8,14 @@
 import { Alert } from 'react-native'
 
 import { filterRefs } from '../../../tools/refTools'
-import { GMACommonPostSpot } from '../gma/GMACommonPostSpot'
+import { GMACommonPostSelfSpot } from '../gma/GMACommonPostSelfSpot'
 import { reportError } from '../../../distro'
 
 export const WWFFPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const refs = filterRefs(operation, 'wwffActivation')
   try {
     if (refs.length) {
-      return dispatch(GMACommonPostSpot({ operation, vfo, comments, refs, url: 'https://www.cqgma.org/wwff/spotwwff.php' }))
+      return dispatch(GMACommonPostSelfSpot({ operation, vfo, comments, refs, url: 'https://www.cqgma.org/wwff/spotwwff.php' }))
     }
   } catch (error) {
     Alert.alert('Error posting WWFF spot', error.message)
