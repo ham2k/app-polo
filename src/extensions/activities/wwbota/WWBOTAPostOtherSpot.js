@@ -10,16 +10,12 @@ import { Alert } from 'react-native'
 
 import { reportError } from '../../../distro'
 
-import { setOperationData } from '../../../store/operations'
 import { filterRefs } from '../../../tools/refTools'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 import { Info } from './WWBOTAInfo'
 
-export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
-  const state = getState()
-  const activatorCallsign = operation.stationCall || state.settings.operatorCall
-
-  const refs = filterRefs(operation, Info.activationType)
+export const WWBOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dispatch) => {
+  const refs = filterRefs(qso, Info.huntingType)
 
   const schemeRefs = {}
   refs.forEach((ref) => {
@@ -32,20 +28,20 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
 
   const comment = [
     Object.entries(schemeRefs).map(([scheme, nums]) => `${scheme}-${nums.join(',')}`).join(' '),
-    operation.wabSquare && `WAB ${operation.wabSquare}`,
+    qso.wabSquare && `WAB ${qso.wabSquare}`,
     comments
   ].filter(x => x).join(' ')
 
   const spot = {
-    spotter: activatorCallsign,
-    call: activatorCallsign,
-    freq: vfo.freq / 1000, // MHz
-    mode: vfo.mode || null,
+    spotter: qso.our?.call ?? spotterCall,
+    call: qso.their.call,
+    freq: qso.freq / 1000, // MHz
+    mode: qso.mode || null,
     comment,
     type: comments.match(/QRT/i) ? 'QRT' : 'Live' // Also 'Test' when debugging
   }
   try {
-    let spotId = operation?.spotIds?.[Info.key]
+    let spotId = qso?.spotIds?.[Info.key]
     if (spotId) {
       const apiPromise = await dispatch(apiWWBOTA.endpoints.editSpot.initiate({ id: spotId, body: spot }, { forceRefetch: true }))
       await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
@@ -59,13 +55,8 @@ export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch,
     if (!spotId) {
       const apiPromise = await dispatch(apiWWBOTA.endpoints.spot.initiate(spot), { forceRefetch: true })
       await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
-      const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
+      await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
       apiPromise.unsubscribe && apiPromise.unsubscribe()
-
-      dispatch(setOperationData({
-        uuid: operation.uuid,
-        spotIds: { ...operation?.spotIds, [Info.key]: apiResults?.data?.id }
-      }))
     }
   } catch (error) {
     Alert.alert('Error posting WWBOTA spot', error.message)

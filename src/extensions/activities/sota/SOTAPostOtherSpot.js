@@ -17,7 +17,7 @@ import { apiSOTA } from '../../../store/apis/apiSOTA'
 
 const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']
 
-export const SOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dispatch, getState) => {
+export const SOTAPostOtherSpot = ({ comments, qso }) => async (dispatch) => {
   const activatorCallsign = qso.their.call
 
   const ref = findRef(qso, 'sota')
