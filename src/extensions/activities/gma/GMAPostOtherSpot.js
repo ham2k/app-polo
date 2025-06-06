@@ -16,7 +16,7 @@ export const GMAPostOtherSpot = ({ comments, qso, spotterCall }) => () => {
     call: qso.their.call,
     comments: [comments, refComment],
     freq: qso.freq,
-    mode: qso.mode ?? "SSB",
+    mode: qso.mode ?? 'SSB',
     ref: refs[0].ref,
     spotterCall: qso.our?.call ?? spotterCall // with in-progress QSOs our call is still null
   })
