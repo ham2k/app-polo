@@ -9,7 +9,8 @@ export const handlers = [
   'https://www.cqgma.org/spotsmart2.php',
   'https://api-db2.sota.org.uk/api/spots',
   'https://api.wwbota.org/spots/*',
-  'https://www.cqgma.org/wwff/spotwwff.php'
+  'https://www.cqgma.org/wwff/spotwwff.php',
+  'https://spots.wwff.co/*'
 ].map((spotUrl) =>
   ['post', 'put'].map((method) =>
     http[method](spotUrl, ({ request }) => {
