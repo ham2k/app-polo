@@ -12,7 +12,7 @@ import { Info } from './WWFFInfo'
 import { registerWWFFDataFile, wwffFindAllByLocation, wwffFindOneByReference } from './WWFFDataFile'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
-import { WWFFPostSpot } from './WWFFPostSpot'
+import { WWFFPostSelfSpot } from './WWFFPostSelfSpot'
 import { apiGMA } from '../../../store/apis/apiGMA'
 import { LOCATION_ACCURACY } from '../../constants'
 import { parseCallsign } from '@ham2k/lib-callsigns'
@@ -48,7 +48,7 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  postSpot: WWFFPostSpot,
+  postSelfSpot: WWFFPostSelfSpot,
   Options: WWFFActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,

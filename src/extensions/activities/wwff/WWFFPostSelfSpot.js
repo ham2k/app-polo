@@ -11,7 +11,7 @@ import { filterRefs } from '../../../tools/refTools'
 import { GMACommonPostSelfSpot } from '../gma/GMACommonPostSelfSpot'
 import { reportError } from '../../../distro'
 
-export const WWFFPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+export const WWFFPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const refs = filterRefs(operation, 'wwffActivation')
   try {
     if (refs.length) {
