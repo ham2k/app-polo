@@ -6,7 +6,8 @@ const logSpot = async (request) => {
 
 export const handlers = [
   'https://api.pota.app/spot',
-  'https://www.cqgma.org/spotsmart2.php'
+  'https://www.cqgma.org/spotsmart2.php',
+  'https://api-db2.sota.org.uk/api/spots'
 ].map((spotUrl) =>
   http.post(spotUrl, ({ request }) => {
     logSpot(request)

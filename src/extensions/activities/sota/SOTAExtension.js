@@ -14,7 +14,7 @@ import { registerSOTADataFile, sotaFindAllByLocation, sotaFindOneByReference } f
 import { Info } from './SOTAInfo'
 import { SOTALoggingControl } from './SOTALoggingControl'
 import { SOTAAccountSetting } from './SOTAAccount'
-import { SOTAPostSpot } from './SOTAPostSpot'
+import { SOTAPostSelfSpot } from './SOTAPostSelfSpot'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
@@ -60,7 +60,7 @@ const ActivityHook = {
     }
   },
 
-  postSpot: SOTAPostSpot,
+  postSelfSpot: SOTAPostSelfSpot,
   isSpotEnabled: ({ operation, settings }) => {
     const enabled = !!settings?.accounts?.sota?.idToken
     if (!enabled) {
