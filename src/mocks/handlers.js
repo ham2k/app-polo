@@ -1,13 +1,16 @@
 import { http, HttpResponse } from 'msw'
 
 const logSpot = async (request) => {
-  console.info('[SPOT]', await request.clone().text(), { request })
+  console.info('[SPOT]', request.url, await request.clone().text(), { request })
 }
 
 export const handlers = [
-  http.post('https://api.pota.app/spot', ({ request }) => {
+  'https://api.pota.app/spot',
+  'https://www.cqgma.org/spotsmart2.php'
+].map((spotUrl) =>
+  http.post(spotUrl, ({ request }) => {
     logSpot(request)
 
     return new HttpResponse(null, { status: 200 })
   })
-]
+)
