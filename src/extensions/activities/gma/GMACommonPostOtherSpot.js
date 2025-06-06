@@ -9,7 +9,7 @@
 import { filterRefs } from '../../../tools/refTools'
 import { GMAPostSpotAPI } from './GMAPostSpotAPI'
 
-export const GMACommonPostOtherSpot = ({ comments, refFilter, qso, spotterCall }) => () => {
+export const GMACommonPostOtherSpot = ({ comments, refFilter, qso, spotterCall, url }) => () => {
   const refs = filterRefs(qso, refFilter)
   if (refs.length === 0) return false
 
@@ -21,6 +21,7 @@ export const GMACommonPostOtherSpot = ({ comments, refFilter, qso, spotterCall }
     freq: qso.freq,
     mode: qso.mode ?? 'SSB',
     ref: refs[0].ref,
-    spotterCall: qso.our?.call ?? spotterCall // with in-progress QSOs our call is still null
+    spotterCall: qso.our?.call ?? spotterCall, // with in-progress QSOs our call is still null,
+    url
   })
 }

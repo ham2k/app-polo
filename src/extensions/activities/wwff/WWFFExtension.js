@@ -19,6 +19,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { WWFFPostOtherSpot } from './WWFFPostOtherSpot'
 
 const Extension = {
   ...Info,
@@ -48,6 +49,7 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
+  postOtherSpot: WWFFPostOtherSpot,
   postSelfSpot: WWFFPostSelfSpot,
   Options: WWFFActivityOptions,
 
