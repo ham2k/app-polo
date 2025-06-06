@@ -11,13 +11,15 @@ import { GMAPostSpotAPI } from './GMAPostSpotAPI'
 
 export const GMACommonPostOtherSpot = ({ comments, refFilter, qso, spotterCall }) => () => {
   const refs = filterRefs(qso, refFilter)
+  if (refs.length === 0) return false
+
   const refComment = refs.length > 1 ? `also ${refs.slice(1).map((x) => (x.ref)).join(' ')}` : ''
 
   return GMAPostSpotAPI({
-    calls: [qso.their.call],
+    call: qso.their.call,
     comments: [comments, refComment],
     freq: qso.freq,
-    mode: qso.mode,
+    mode: qso.mode ?? 'SSB',
     ref: refs[0].ref,
     spotterCall: qso.our?.call ?? spotterCall // with in-progress QSOs our call is still null
   })

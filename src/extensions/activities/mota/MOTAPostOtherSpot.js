@@ -5,8 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { GMACommonPostOtherSpot } from './GMACommonPostOtherSpot'
+import { GMACommonPostOtherSpot } from '../gma/GMACommonPostOtherSpot'
 
-export const GMAPostOtherSpot = ({ comments, qso, spotterCall }) => (dispatch) => {
-  return dispatch(GMACommonPostOtherSpot({ comments, refFilter: 'gma', qso, spotterCall }))
+export const MOTAPostOtherSpot = ({ comments, qso, spotterCall }) => (dispatch) => {
+  return dispatch(GMACommonPostOtherSpot({ comments, refFilter: 'mota', qso, spotterCall }))
 }
