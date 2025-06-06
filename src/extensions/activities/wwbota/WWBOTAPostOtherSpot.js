@@ -41,23 +41,10 @@ export const WWBOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (di
     type: comments.match(/QRT/i) ? 'QRT' : 'Live' // Also 'Test' when debugging
   }
   try {
-    let spotId = qso?.spotIds?.[Info.key]
-    if (spotId) {
-      const apiPromise = await dispatch(apiWWBOTA.endpoints.editSpot.initiate({ id: spotId, body: spot }, { forceRefetch: true }))
-      await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
-      const apiResults = await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.editSpot.select({ id: spotId, body: spot })(_getState()))
-      apiPromise.unsubscribe && apiPromise.unsubscribe()
-
-      if (apiResults?.error?.status === 404) {
-        spotId = undefined
-      }
-    }
-    if (!spotId) {
-      const apiPromise = await dispatch(apiWWBOTA.endpoints.spot.initiate(spot), { forceRefetch: true })
-      await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
-      await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
-      apiPromise.unsubscribe && apiPromise.unsubscribe()
-    }
+    const apiPromise = await dispatch(apiWWBOTA.endpoints.spot.initiate(spot), { forceRefetch: true })
+    await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
+    await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
+    apiPromise.unsubscribe && apiPromise.unsubscribe()
   } catch (error) {
     Alert.alert('Error posting WWBOTA spot', error.message)
     reportError('Error posting WWBOTA spot', error)
