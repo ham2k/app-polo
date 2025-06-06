@@ -11,7 +11,7 @@ import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { Info } from './ECAInfo'
 import { ecaFindAllByLocation, ecaFindOneByReference, registerECADataFile } from './ECADataFile'
 import { ECAActivityOptions } from './ECAActivityOptions'
-import { ECAPostSpot } from './ECAPostSpot'
+import { ECAPostSelfSpot } from './ECAPostSelfSpot'
 import { LOCATION_ACCURACY } from '../../constants'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -38,7 +38,7 @@ const ActivityHook = {
   ...Info,
   MainExchangePanel: null,
   Options: ECAActivityOptions,
-  postSpot: ECAPostSpot,
+  postSelfSpot: ECAPostSelfSpot,
   sampleOperations: ({ settings, callInfo }) => {
     return [
       // Regular Activation

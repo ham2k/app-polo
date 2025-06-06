@@ -11,7 +11,7 @@ import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { Info } from './BLHAInfo'
 import { blhaFindAllByLocation, blhaFindOneByReference, registerBLHADataFile } from './BLHADataFile'
 import { BLHAActivityOptions } from './BLHAActivityOptions'
-import { BLHAPostSpot } from './BLHAPostSpot'
+import { BLHAPostSelfSpot } from './BLHAPostSelfSpot'
 import { LOCATION_ACCURACY } from '../../constants'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -38,7 +38,7 @@ const ActivityHook = {
   ...Info,
   MainExchangePanel: null,
   Options: BLHAActivityOptions,
-  postSpot: BLHAPostSpot,
+  postSelfSpot: BLHAPostSelfSpot,
 
   sampleOperations: ({ settings, callInfo }) => {
     return [

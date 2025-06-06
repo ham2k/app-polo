@@ -14,10 +14,11 @@ import { MOTAActivityOptions } from './MOTAActivityOptions'
 import { registerMOTADataFile, motaFindOneByReference, motaFindAllByLocation } from './MOTADataFile'
 import { Info } from './MOTAInfo'
 import { MOTALoggingControl } from './MOTALoggingControl'
-import { MOTAPostSpot } from './MOTAPostSpot'
+import { MOTAPostSelfSpot } from './MOTAPostSelfSpot'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { MOTAPostOtherSpot } from './MOTAPostOtherSpot'
 
 const Extension = {
   ...Info,
@@ -46,7 +47,8 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  postSpot: MOTAPostSpot,
+  postOtherSpot: MOTAPostOtherSpot,
+  postSelfSpot: MOTAPostSelfSpot,
   Options: MOTAActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,

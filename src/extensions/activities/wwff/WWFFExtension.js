@@ -12,7 +12,7 @@ import { Info } from './WWFFInfo'
 import { registerWWFFDataFile, wwffFindAllByLocation, wwffFindOneByReference } from './WWFFDataFile'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
-import { WWFFPostSpot } from './WWFFPostSpot'
+import { WWFFPostSelfSpot } from './WWFFPostSelfSpot'
 import { apiWWFF } from '../../../store/apis/apiWWFF'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
@@ -20,6 +20,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { WWFFPostOtherSpot } from './WWFFPostOtherSpot'
 
 const Extension = {
   ...Info,
@@ -49,7 +50,8 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  postSpot: WWFFPostSpot,
+  postOtherSpot: WWFFPostOtherSpot,
+  postSelfSpot: WWFFPostSelfSpot,
   Options: WWFFActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,

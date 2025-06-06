@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
 import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../../../tools/timeFormats'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,7 +25,7 @@ import { setOperationLocalData } from '../../../../../../store/operations'
 const SECONDS_UNTIL_RESPOT = 30
 
 export function SpotterControlInputs (props) {
-  const { operation, vfo, styles, style, settings, setCurrentSecondaryControl, focusedRef } = props
+  const { qso, operation, vfo, styles, style, settings, setCurrentSecondaryControl, focusedRef } = props
 
   const online = useSelector(selectRuntimeOnline)
 
@@ -41,8 +42,25 @@ export function SpotterControlInputs (props) {
   const now = useSelector(selectSecondsTick)
 
   useEffect(() => {
-    if (!inProgress) {
-      if (vfo?.freq) {
+    if (inProgress) {
+      if (qso && parseCallsign(qso.their?.call)?.baseCall && qso.freq) {
+        setSpotterUI({
+          message: `Spot at ${fmtFreqInMHz(qso.freq)}`,
+          disabled: false
+        })
+      } else {
+        setSpotterUI({
+          message: 'First set a frequency to spot.',
+          disabled: true
+        })
+      }
+    } else {
+      if (qso?.freq) {
+        setSpotterUI({
+          message: `Spot at ${fmtFreqInMHz(qso.freq)}`,
+          disabled: false
+        })
+      } else if (vfo?.freq) {
         if (vfo.freq !== operation?.local?.spottedFreq) {
           setSpotterUI({
             message: `Spot at ${fmtFreqInMHz(vfo.freq)}`,
@@ -76,20 +94,16 @@ export function SpotterControlInputs (props) {
             disabled: false
           })
         }
-      } else {
-        setSpotterUI({
-          message: 'First set a frequency to spot.',
-          disabled: true
-        })
       }
     }
-  }, [inProgress, vfo?.freq, operation?.local?.spottedFreq, operation?.local?.spottedAt, operation, now, comments])
+  }, [qso, inProgress, vfo?.freq, operation?.local?.spottedFreq, operation?.local?.spottedAt, operation, now, comments])
 
-  const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ operation, settings }), [operation, settings])
+  const isSelfSpotting = useMemo(() => !qso || !parseCallsign(qso.their?.call)?.baseCall, [qso])
+  const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings }), [isSelfSpotting, qso, operation, settings])
 
   const handleSpotting = useCallback(async () => {
-    postSpots({ operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl })
-  }, [hooksWithSpotting, dispatch, operation, vfo, comments, setCurrentSecondaryControl])
+    postSpots({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings })
+  }, [isSelfSpotting, qso, hooksWithSpotting, dispatch, operation, vfo, comments, setCurrentSecondaryControl, settings])
 
   return (
     <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
@@ -127,14 +141,17 @@ export function SpotterControlInputs (props) {
   )
 }
 
-export function retrieveHooksWithSpotting ({ operation, settings }) {
-  const activityHooks = findHooks('activity').filter((x) => (findRef(operation.refs, x.activationType) && x.postSpot && (!x.isSpotEnabled || (x.isSpotEnabled && x.isSpotEnabled({ operation, settings })))))
-  const spottingHooks = findHooks('spots').filter((x) => x.postSpot)
+export function retrieveHooksWithSpotting ({ isSelfSpotting, qso, operation, settings }) {
+  const spotMethodKey = isSelfSpotting ? 'postSelfSpot' : 'postOtherSpot'
+  const spotEnabledKey = isSelfSpotting ? 'isSelfSpotEnabled' : 'isOtherSpotEnabled'
+
+  const activityHooks = findHooks('activity').filter((x) => (findRef((isSelfSpotting ? operation : qso).refs, isSelfSpotting ? x.activationType : x.huntingType) && x[spotMethodKey] && (!x[spotEnabledKey] || (x[spotEnabledKey] && x[spotEnabledKey]({ operation, settings })))))
+  const spottingHooks = findHooks('spots').filter((x) => x[spotMethodKey])
 
   return [...activityHooks, ...spottingHooks]
 }
 
-export async function postSpots ({ operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl }) {
+export async function postSpots ({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings }) {
   hooksWithSpotting = hooksWithSpotting || []
   comments = comments || ''
 
@@ -166,14 +183,14 @@ export async function postSpots ({ operation, vfo, comments, hooksWithSpotting, 
       disabled: true
     })
 
-    status[hook.key] = await dispatch(hook.postSpot({ operation, vfo, comments, qCode, qRest }))
+    status[hook.key] = await dispatch(isSelfSpotting ? hook.postSelfSpot({ operation, vfo, comments, qCode, qRest }) : hook.postOtherSpot({ qso, comments, spotterCall: operation.stationCall || settings.operatorCall }))
     ok = ok && status[hook.key]
     setSpotStatus && setSpotStatus(status)
   }
   setInProgress && setInProgress(false)
   setComments && setComments(undefined)
   if (ok) {
-    dispatch(setOperationLocalData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
+    if (!isSelfSpotting) dispatch(setOperationLocalData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
     setCurrentSecondaryControl && setCurrentSecondaryControl(undefined)
   }
 }
@@ -188,12 +205,12 @@ export const spotterControl = {
   key: 'spotter',
   order: 100,
   icon: 'hand-wave',
-  label: ({ operation, qso }) => {
-    return 'Self-Spotting'
+  label: ({ qso }) => {
+    return qso && parseCallsign(qso.their?.call)?.baseCall ? 'Spotting' : 'Self-Spotting'
   },
   accesibilityLabel: 'Self-Spotting Controls',
   InputComponent: SpotterControlInputs,
   inputWidthMultiplier: 40,
   optionType: 'mandatory',
-  onlyNewQSOs: true
+  onlyNewQSOs: false
 }

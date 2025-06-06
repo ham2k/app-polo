@@ -14,10 +14,11 @@ import { GMAActivityOptions } from './GMAActivityOptions'
 import { registerGMADataFile, gmaFindOneByReference, gmaFindAllByLocation } from './GMADataFile'
 import { Info } from './GMAInfo'
 import { GMALoggingControl } from './GMALoggingControl'
-import { GMAPostSpot } from './GMAPostSpot'
+import { GMAPostSelfSpot } from './GMAPostSelfSpot'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { GMAPostOtherSpot } from './GMAPostOtherSpot'
 
 const Extension = {
   ...Info,
@@ -46,7 +47,8 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  postSpot: GMAPostSpot,
+  postOtherSpot: GMAPostOtherSpot,
+  postSelfSpot: GMAPostSelfSpot,
   Options: GMAActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,

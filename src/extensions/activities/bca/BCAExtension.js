@@ -11,7 +11,7 @@ import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { Info } from './BCAInfo'
 import { bcaFindAllByLocation, bcaFindOneByReference, registerBCADataFile } from './BCADataFile'
 import { BCAActivityOptions } from './BCAActivityOptions'
-import { BCAPostSpot } from './BCAPostSpot'
+import { BCAPostSelfSpot } from './BCAPostSelfSpot'
 import { LOCATION_ACCURACY } from '../../constants'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -38,7 +38,7 @@ const ActivityHook = {
   ...Info,
   MainExchangePanel: null,
   Options: BCAActivityOptions,
-  postSpot: BCAPostSpot,
+  postSelfSpot: BCAPostSelfSpot,
 
   sampleOperations: ({ settings, callInfo }) => {
     return [
