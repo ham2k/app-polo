@@ -22,6 +22,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { SOTAPostOtherSpot } from './SOTAPostOtherSpot'
 
 const Extension = {
   ...Info,
@@ -60,6 +61,7 @@ const ActivityHook = {
     }
   },
 
+  postOtherSpot: SOTAPostOtherSpot,
   postSelfSpot: SOTAPostSelfSpot,
   isSpotEnabled: ({ operation, settings }) => {
     const enabled = !!settings?.accounts?.sota?.idToken
