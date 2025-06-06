@@ -8,7 +8,7 @@
 import { filterRefs } from '../../../tools/refTools'
 import { GMACommonPostSelfSpot } from '../gma/GMACommonPostSelfSpot'
 
-export const BLHAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+export const BLHAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const refs = filterRefs(operation, 'blhaActivation')
   if (refs.length) {
     return dispatch(GMACommonPostSelfSpot({ operation, vfo, comments, refs }))
