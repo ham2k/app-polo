@@ -32,15 +32,7 @@ export function usePrepareThemes () {
 
   const sizes = useComputeSizes()
 
-  const fonts = useMemo(() => {
-    const { fontScaleAdjustment } = sizes
-    Object.keys(fontConfig).forEach(variant => {
-      if (fontConfig[variant].fontSize) fontConfig[variant].fontSize = fontConfig[variant].fontSize * fontScaleAdjustment
-      if (fontConfig[variant].lineHeight) fontConfig[variant].lineHeight = fontConfig[variant].lineHeight * fontScaleAdjustment
-    })
-    const configuredFonts = configureFonts({ config: fontConfig })
-    return configuredFonts
-  }, [sizes])
+  const fonts = useMemo(() => configureFonts({ config: fontConfig }), [])
 
   const colors = useMemo(() => {
     const loadedColors = colorScheme === 'dark' ? darkColors.colors : lightColors.colors

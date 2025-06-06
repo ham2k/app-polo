@@ -6,7 +6,8 @@
  */
 
 import { useMemo } from 'react'
-import { PixelRatio, Dimensions } from 'react-native'
+import { PixelRatio } from 'react-native'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 /*
  * Compute the different screen size values and ratios needed to properly layout our screens
@@ -74,6 +75,10 @@ export function computeSizes ({ width, height, fontScale, pixelRatio }) {
   const landscape = !portrait
 
   return {
+    width,
+    height,
+    scaledWidth: width / pixelScaleAdjustment,
+    scaledHeight: height / pixelScaleAdjustment,
     size,
     portrait,
     landscape,
@@ -92,7 +97,9 @@ export function computeSizes ({ width, height, fontScale, pixelRatio }) {
 }
 
 export function useComputeSizes () {
-  const { width, height } = Dimensions.get('window')
+  const { width, height } = useSafeAreaFrame()
+  // const { width, height } = useWindowDimensions() <-- broken on iOS, no rotation
+
   const pixelRatio = PixelRatio.get()
   const fontScale = PixelRatio.getFontScale()
 

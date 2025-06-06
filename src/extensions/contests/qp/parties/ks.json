@@ -1,11 +1,28 @@
 {
   "key": "KS",
   "name": "Kansas QSO Party",
+  "short": "KSQP",
+  "url": "https://ksqsoparty.org/",
   "start": "2025-8-30 14:00Z",
-  "end": "2025-8-31 02:00Z",
+  "end": "2025-8-31 01:59Z",
   "secondStart": "2025-8-30 14:00Z",
-  "secondEnd": "2025-8-31 20:00Z",
-  "status": "Pending",
+  "secondEnd": "2025-8-31 19:59Z",
+  "cabrilloName": "KS-QSO-PARTY",
+  "notes": "",
+  "internalNotes": "",
+  "lastUpdated": "2025-05-23 12:00Z",
+  "status": "Updated for 2025, but not verified",
+  "options": {
+    "dcCountsAsMaryland": false,
+    "stateCountsForInState": true,
+    "selfSpotting": true,
+    "countyLine": true,
+    "dxIsMultiplier": true,
+    "bonusPerBandMode": false
+  },
+  "bonusStations": {
+    "KS0KS": 100
+  },
   "counties": {
     "ALL": "Allen",
     "AND": "Anderson",
@@ -107,7 +124,7 @@
     "TRE": "Trego",
     "WAB": "Wabaunsee",
     "WAL": "Wallace",
-    "WAS": "Washington",
+    "WAS": "Washington County",
     "WIC": "Wichita",
     "WIL": "Wilson",
     "WOO": "Woodson",

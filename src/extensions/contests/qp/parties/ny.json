@@ -35,7 +35,7 @@
     "CLI": "Clinton",
     "COL": "Columbia",
     "COR": "Cortland",
-    "DEL": "Delaware",
+    "DEL": "Delaware County",
     "DUT": "Dutchess",
     "ERI": "Erie",
     "ESS": "Essex",
@@ -53,7 +53,7 @@
     "MON": "Monroe",
     "MTG": "Montgomery",
     "NAS": "Nassau",
-    "NEW": "New York",
+    "NEW": "New York County",
     "NIA": "Niagara",
     "ONE": "Oneida",
     "ONO": "Onondaga",
@@ -80,10 +80,10 @@
     "TOM": "Tompkins",
     "ULS": "Ulster",
     "WAR": "Warren",
-    "WAS": "Washington",
+    "WAS": "Washington County",
     "WAY": "Wayne",
     "WES": "Westchester",
-    "WYO": "Wyoming",
+    "WYO": "Wyoming County",
     "YAT": "Yates"
   }
 }

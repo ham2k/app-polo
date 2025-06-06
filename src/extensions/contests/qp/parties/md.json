@@ -3,19 +3,23 @@
   "name": "Maryland-DC QSO Party",
   "start": "2025-8-9 14:00Z",
   "end": "2025-8-10 03:59Z",
+  "url": "https://www.w3vpr.org/Maryland-DC_QSO_Party",
   "status": "Updated for 2025, but not verified",
   "cabrilloName": "MDC-QSO-PARTY",
-  "notes": "Contributed by W1GRL & W1BOY",
-  "internalNotes": "Power multiplier needs to be implemented, Station category multiplier needs to be implemented, Bonus points for working at least 13 or all MDCjurisdictions",
-  "lastUpdated": "2025-04-01 17:00Z",
+  "notes": "Scoring does not include Power and Category multipliers and some bonus points.Contributed by W1GRL & W1BOY",
+  "internalNotes": "Bonus points for working at least 13 or all MDCjurisdictions",
+  "lastUpdated": "2025-05-23 12:00Z",
   "options": {
     "dcCountsAsMaryland": false,
+    "dxLocationIsPrefix": true,
     "stateCountsForInState": false,
+    "selfSpotting": false,
+
     "countyLine": false,
     "multsPerBandMode": false,
     "dxEntityIsMultiplier": true,
     "bonusPostMultiplier": true,
-    "selfSpotting": false
+    "bonusPerBandMode": false
   },
   "points": {
     "PHONE": 1,
@@ -46,7 +50,7 @@
     "STM": "Saint Mary's",
     "SMR": "Somerset",
     "TAL": "Talbot",
-    "WAS": "Washington",
+    "WAS": "Washington County",
     "WIC": "Wicomico",
     "WRC": "Worcester",
     "WDC": "Washington DC"

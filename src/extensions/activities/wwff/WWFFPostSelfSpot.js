@@ -7,18 +7,44 @@
 
 import { Alert } from 'react-native'
 
-import { filterRefs } from '../../../tools/refTools'
-import { GMACommonPostSelfSpot } from '../gma/GMACommonPostSelfSpot'
+import { findRef } from '../../../tools/refTools'
+import { apiWWFF } from '../../../store/apis/apiWWFF'
+import { GMACommonPostSpot } from '../gma/GMACommonPostSpot'
 import { reportError } from '../../../distro'
 
 export const WWFFPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
-  const refs = filterRefs(operation, 'wwffActivation')
-  try {
-    if (refs.length) {
-      return dispatch(GMACommonPostSelfSpot({ operation, vfo, comments, refs, url: 'https://www.cqgma.org/wwff/spotwwff.php' }))
+  const state = getState()
+  const activatorCallsign = operation.stationCall || state.settings.operatorCall
+  const ref = findRef(operation, 'wwffActivation')
+
+  if (ref && ref.ref) {
+    const spot = {
+      activator: activatorCallsign,
+      frequency_khz: vfo.freq,
+      mode: vfo.mode,
+      reference: ref.ref,
+      remarks: comments,
+      spotter: activatorCallsign
     }
-  } catch (error) {
-    Alert.alert('Error posting WWFF spot', error.message)
-    reportError('Error posting WWFF spot', error)
+
+    // TODO: Remove this once everybody has properly moved to the new service
+    // Lets also post to legacy GMA API, but ignore status
+    dispatch(GMACommonPostSpot({ operation, vfo, comments, refs: [ref], url: 'https://www.cqgma.org/wwff/spotwwff.php' }))
+
+    try {
+      const apiPromise = await dispatch(apiWWFF.endpoints.spot.initiate(spot, { forceRefetch: true }))
+      await Promise.all(dispatch(apiWWFF.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, _getState) => apiWWFF.endpoints.spot.select(spot)(_getState()))
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+      if (apiResults?.error) {
+        Alert.alert('Error posting WWFF spot', `Server responded with status ${apiResults.error?.status} ${apiResults.error?.data?.error}`)
+        return false
+      }
+    } catch (error) {
+      Alert.alert('Error posting WWFF spot', error.message)
+      reportError('Error posting WWFF spot', error)
+      return false
+    }
+    return true
   }
 }

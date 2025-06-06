@@ -50,8 +50,8 @@ export function PGAActivityOptions (props) {
         console.info('Geolocation error', error)
       }, {
         enableHighAccuracy: true,
-        timeout: 30 * 1000 /* 30 seconds */,
-        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+        timeout: 1000 * 30 /* 30 seconds */,
+        maximumAge: 1000 * 60 /* 1 minute */
       }
     )
   }, [])

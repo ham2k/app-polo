@@ -22,47 +22,49 @@ export const SOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatc
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 
   const ref = findRef(operation, 'sotaActivation')
-  const [associationCode, summitCode] = ref.ref.split('/', 2)
+  if (ref && ref.ref) {
+    const [associationCode, summitCode] = ref.ref.split('/', 2)
 
-  let mode = vfo.mode
-  if (!validModes.includes(mode)) {
-    if (ADIF_SUBMODES.SSB.includes(mode)) {
-      mode = 'SSB'
-    } else if (mode === 'DIGITALVOICE' || ADIF_SUBMODES.DIGITALVOICE.includes(mode)) {
-      mode = 'DV'
-    } else {
-      mode = 'Data' // Reasonable guess
-    }
-  }
-
-  const spot = {
-    associationCode,
-    summitCode,
-    activatorCallsign,
-    frequency: `${vfo.freq / 1000}`, // string
-    mode,
-    comments,
-    type: comments.match(/QRT/i) ? 'QRT' : 'NORMAL' // Also 'TEST' when debugging
-  }
-
-  try {
-    const apiPromise = await dispatch(apiSOTA.endpoints.spot.initiate(spot))
-    await Promise.all(dispatch(apiSOTA.util.getRunningQueriesThunk()))
-    const apiResults = await dispatch((_dispatch, _getState) => apiSOTA.endpoints.spot.select(spot)(_getState()))
-    apiPromise.unsubscribe && apiPromise.unsubscribe()
-
-    if (apiResults?.error) {
-      if (apiResults.error?.status === 403) { // Forbidden, not logged in
-        Alert.alert('Error posting SOTA spot', 'SOTA account logged out. Please log in again in PoLo settings')
+    let mode = vfo.mode
+    if (!validModes.includes(mode)) {
+      if (ADIF_SUBMODES.SSB.includes(mode)) {
+        mode = 'SSB'
+      } else if (mode === 'DIGITALVOICE' || ADIF_SUBMODES.DIGITALVOICE.includes(mode)) {
+        mode = 'DV'
       } else {
-        Alert.alert('Error posting SOTA spot', `${apiResults.error?.status} ${apiResults.error?.data?.message}`)
+        mode = 'Data' // Reasonable guess
       }
+    }
+
+    const spot = {
+      associationCode,
+      summitCode,
+      activatorCallsign,
+      frequency: `${vfo.freq / 1000}`, // string
+      mode,
+      comments,
+      type: comments.match(/QRT/i) ? 'QRT' : 'NORMAL' // Also 'TEST' when debugging
+    }
+
+    try {
+      const apiPromise = await dispatch(apiSOTA.endpoints.spot.initiate(spot))
+      await Promise.all(dispatch(apiSOTA.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, _getState) => apiSOTA.endpoints.spot.select(spot)(_getState()))
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+
+      if (apiResults?.error) {
+        if (apiResults.error?.status === 403) { // Forbidden, not logged in
+          Alert.alert('Error posting SOTA spot', 'SOTA account logged out. Please log in again in PoLo settings')
+        } else {
+          Alert.alert('Error posting SOTA spot', `${apiResults.error?.status} ${apiResults.error?.data?.message}`)
+        }
+        return false
+      }
+    } catch (error) {
+      Alert.alert('Error posting SOTA spot', error.message)
+      reportError('Error posting SOTA spot', error)
       return false
     }
-  } catch (error) {
-    Alert.alert('Error posting SOTA spot', error.message)
-    reportError('Error posting SOTA spot', error)
-    return false
+    return true
   }
-  return true
 }

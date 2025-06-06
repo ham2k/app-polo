@@ -36,6 +36,12 @@
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location will be used to determine your Maidenhead Grid Square to include in your own logs.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location will be used to determine your Maidenhead Grid Square to include in your own logs.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Bluetooth will be used to control certain radios and other devices.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photos are not used in this app, but a third party library might use them when sharing to Instagram.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialIcons.ttf</string>

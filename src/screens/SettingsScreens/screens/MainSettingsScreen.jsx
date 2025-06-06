@@ -9,9 +9,9 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { List, Text } from 'react-native-paper'
-import { Linking, ScrollView, useWindowDimensions, View } from 'react-native'
+import { Linking, ScrollView, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import packageJson from '../../../../package.json'
 import { findHooks } from '../../../extensions/registry'
@@ -63,7 +63,8 @@ export default function MainSettingsScreen ({ navigation, route }) {
     return options
   }, [])
 
-  const dimensions = useWindowDimensions()
+  const dimensions = useSafeAreaFrame()
+  // const dimensions = useWindowDimensions() <-- broken on iOS, no rotation
 
   const splitView = useMemo(() => {
     return !settings.dontSplitViews && (dimensions.width / styles.oneSpace > 95)

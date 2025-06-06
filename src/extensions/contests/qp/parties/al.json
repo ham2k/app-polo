@@ -21,7 +21,6 @@
     "CW": 2
   },
   "counties": {
-    "ARK": "Arkansas",
     "AUTA":	"Autauga",
     "BALD":	"Baldwin",
     "BARB":	"Barbour",
@@ -86,7 +85,7 @@
     "TPOO":	"Tallapoosa",
     "TUSC":	"Tuscaloosa",
     "WLKR":	"Walker",
-    "WASH":	"Washington",
+    "WASH":	"Washington County",
     "WLCX":	"Wilcox",
     "WINS":	"Winston"
   }
