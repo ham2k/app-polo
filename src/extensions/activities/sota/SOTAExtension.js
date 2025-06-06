@@ -63,7 +63,14 @@ const ActivityHook = {
 
   postOtherSpot: SOTAPostOtherSpot,
   postSelfSpot: SOTAPostSelfSpot,
-  isSpotEnabled: ({ operation, settings }) => {
+  isOtherSpotEnabled: ({ settings }) => {
+    const enabled = !!settings?.accounts?.sota?.idToken
+    if (!enabled) {
+      Alert.alert('Warning', 'Not logged into SOTAWatch for spotting. Please go to PoLo settings')
+    }
+    return enabled
+  },
+  isSelfSpotEnabled: ({ settings }) => {
     const enabled = !!settings?.accounts?.sota?.idToken
     if (!enabled) {
       Alert.alert('Warning', 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings')
