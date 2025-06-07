@@ -277,6 +277,10 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     return newMessages
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
+  const messagesAreLong = useMemo(() => {
+    return messages?.length > 1 || (messages?.length === 1 && messages[0]?.msg?.length >= 8)
+  }, [messages])
+
   if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
 
   return (
@@ -312,14 +316,14 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
               </Text>
             )}
           </View>
-          {(stationInfo || messages?.length === 1) && (
+          {(stationInfo || !messagesAreLong) && (
             <View style={{ flexDirection: 'row', width: '100%', alignItems: 'flex-start' }}>
               <View style={{ maxWidth: messages?.length === 1 ? '70%' : undefined }}>
                 {stationInfo && (
                   <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
                 )}
               </View>
-              {messages?.length === 1 && (
+              {!messagesAreLong && (
                 <View style={{ flex: 1, marginLeft: styles.halfSpace, alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                   {messages.map((msg) => (
                     <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
@@ -330,7 +334,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
               )}
             </View>
           )}
-          {messages?.length > 1 && (
+          {messagesAreLong && (
             <View style={{ alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
               {messages.slice(0, 4).map((msg) => (
                 <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>

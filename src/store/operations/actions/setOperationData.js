@@ -85,7 +85,7 @@ export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, 
     const referenceTitles = data.refs.map(ref => {
       const hooks = findHooks(`ref:${ref?.type}`)
       return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref)).filter(x => x)[0]
-    }).filter(x => x)
+    }).filter(x => x).sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
 
     const titleParts = []
 
@@ -103,7 +103,7 @@ export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, 
       data.subtitle = subtitleParts.join(' • ')
     } else {
       data.title = 'General Operation'
-      data.subtitle = ''
+      data.subtitle = subtitleParts.join(' • ')
     }
   }
 

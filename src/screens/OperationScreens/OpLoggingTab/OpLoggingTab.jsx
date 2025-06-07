@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect } from 'react'
 
 import { View } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, selectOperationCallInfo } from '../../../store/operations'
@@ -19,6 +19,8 @@ import { selectVFO } from '../../../store/station/stationSlice'
 import QSOList from './components/QSOList'
 import LoggingPanel from './components/LoggingPanel'
 import { selectSectionedQSOs } from '../../../store/qsos'
+import { findBestHook, findHooks } from '../../../extensions/registry'
+import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
@@ -27,6 +29,7 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const vfo = useSelector(state => selectVFO(state))
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+  const dispatch = useDispatch()
 
   const styles = useThemedStyles()
 
@@ -61,6 +64,27 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
       navigation.setOptions({ title: `${activeQSOs.length} ${activeQSOs.length !== 1 ? 'Qs' : 'Q'}`, iconName: 'radio' })
     }
   }, [navigation, activeQSOs, styles?.smOrLarger])
+
+  useEffect(() => { // Setup reference handlers
+    const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]
+    const refHooks = types.map(type => (
+      findBestHook(`ref:${type}`) || defaultReferenceHandlerFor(type)
+    ))
+    const activityHooks = findHooks('activity')
+
+    const hooksWithSetupHandler = []
+    hooksWithSetupHandler.push(...refHooks.filter(hook => hook.setupHandlerForActiveOperation))
+    hooksWithSetupHandler.push(...activityHooks.filter(hook => hook.setupHandlerForActiveOperation))
+    if (hooksWithSetupHandler.length > 0) {
+      setTimeout(async () => {
+        hooksWithSetupHandler.forEach(hook => {
+          hook.setupHandlerForActiveOperation({ operation, settings, dispatch })
+        })
+      }, 1)
+    }
+  // We don't want to re-run this again if settings change
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [operation?.uuid, operation?.refs?.map(r => r.type)?.join(','), dispatch])
 
   const showOpInfo = useCallback(() => {
     navigation.navigate('OpInfo', { operation, uuid: operation.uuid })
