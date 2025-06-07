@@ -7,16 +7,10 @@
 
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { actions, selectOperation } from '../operationsSlice'
-import debounce from 'debounce'
 import { saveOperation, saveOperationLocalData } from './operationsDB'
 import { findHooks } from '../../../extensions/registry'
 import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
-
-function debounceableDispatch (dispatch, action) {
-  return dispatch(action())
-}
-const debouncedDispatch = debounce(debounceableDispatch, 2000)
 
 export const setOperationLocalData = (data) => async (dispatch, getState) => {
   try {
@@ -32,7 +26,7 @@ export const setOperationLocalData = (data) => async (dispatch, getState) => {
 
     await dispatch(actions.setOperationLocal(data))
     const savedOperation = selectOperation(getState(), uuid) ?? {}
-    return debouncedDispatch(dispatch, () => saveOperationLocalData(savedOperation))
+    return dispatch(saveOperationLocalData(savedOperation))
   } catch (e) {
     reportError('Error in setOperationData', e)
   }
@@ -46,8 +40,9 @@ export const setOperationData = (data) => async (dispatch, getState) => {
 
     await dispatch(actions.setOperation(mergedOperation))
     const savedOperation = selectOperation(getState(), uuid) ?? {}
-    return debouncedDispatch(dispatch, () => saveOperation(savedOperation))
+    return dispatch(saveOperation(savedOperation))
   } catch (e) {
+    console.log('Error in setOperationData', e)
     reportError('Error in setOperationData', e)
   }
 }
