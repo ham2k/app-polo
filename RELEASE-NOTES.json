@@ -1,4 +1,12 @@
 {
+  "25.7.0": {
+    "name": "July '25 (pre 1)",
+    "photoCaption": "LB4FH/MM at NO-2619",
+    "changes": [
+      "Thirteen Colonies Special Event",
+      "Better handling of screen padding and safe areas"
+    ]
+  },
   "25.5.2": {
     "name": "May '25 (patch 2)",
     "photoCaption": "G1JPV at POTA GB-1012",
