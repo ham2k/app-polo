@@ -15,7 +15,7 @@ import { filterRefs } from '../../../tools/refTools'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 import { Info } from './WWBOTAInfo'
 
-export const WWBOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+export const WWBOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 

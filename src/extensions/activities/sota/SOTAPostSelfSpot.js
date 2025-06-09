@@ -17,7 +17,7 @@ import { apiSOTA } from '../../../store/apis/apiSOTA'
 
 const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']
 
-export const SOTAPostSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+export const SOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 

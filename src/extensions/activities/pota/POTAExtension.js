@@ -12,7 +12,8 @@ import { Info } from './POTAInfo'
 import { POTAActivityOptions } from './POTAActivityOptions'
 import { potaFindParkByReference, potaFindParksByLocation, registerPOTAAllParksData } from './POTAAllParksData'
 import { POTALoggingControl } from './POTALoggingControl'
-import { POTAPostSpot } from './POTAPostSpot'
+import { POTAPostOtherSpot } from './POTAPostOtherSpot'
+import { POTAPostSelfSpot } from './POTAPostSelfSpot'
 import { apiPOTA } from '../../../store/apis/apiPOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
@@ -54,7 +55,8 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  postSpot: POTAPostSpot,
+  postOtherSpot: POTAPostOtherSpot,
+  postSelfSpot: POTAPostSelfSpot,
   Options: POTAActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,

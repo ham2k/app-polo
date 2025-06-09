@@ -14,7 +14,7 @@ import { registerSOTADataFile, sotaFindAllByLocation, sotaFindOneByReference } f
 import { Info } from './SOTAInfo'
 import { SOTALoggingControl } from './SOTALoggingControl'
 import { SOTAAccountSetting } from './SOTAAccount'
-import { SOTAPostSpot } from './SOTAPostSpot'
+import { SOTAPostSelfSpot } from './SOTAPostSelfSpot'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
@@ -22,6 +22,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { SOTAPostOtherSpot } from './SOTAPostOtherSpot'
 
 const Extension = {
   ...Info,
@@ -60,8 +61,16 @@ const ActivityHook = {
     }
   },
 
-  postSpot: SOTAPostSpot,
-  isSpotEnabled: ({ operation, settings }) => {
+  postOtherSpot: SOTAPostOtherSpot,
+  postSelfSpot: SOTAPostSelfSpot,
+  isOtherSpotEnabled: ({ settings }) => {
+    const enabled = !!settings?.accounts?.sota?.idToken
+    if (!enabled) {
+      Alert.alert('Warning', 'Not logged into SOTAWatch for spotting. Please go to PoLo settings')
+    }
+    return enabled
+  },
+  isSelfSpotEnabled: ({ settings }) => {
     const enabled = !!settings?.accounts?.sota?.idToken
     if (!enabled) {
       Alert.alert('Warning', 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings')

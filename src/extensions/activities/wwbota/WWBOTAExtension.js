@@ -13,7 +13,7 @@ import { Info } from './WWBOTAInfo'
 import { WWBOTAActivityOptions } from './WWBOTAActivityOptions'
 import { wwbotaFindOneByReference, registerWWBOTADataFile, wwbotaFindAllByLocation } from './WWBOTADataFile'
 import { WWBOTALoggingControl } from './WWBOTALoggingControl'
-import { WWBOTAPostSpot } from './WWBOTAPostSpot'
+import { WWBOTAPostSelfSpot } from './WWBOTAPostSelfSpot'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
@@ -21,6 +21,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { WWBOTAPostOtherSpot } from './WWBOTAPostOtherSpot'
 
 const Extension = {
   ...Info,
@@ -52,7 +53,8 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  postSpot: WWBOTAPostSpot,
+  postOtherSpot: WWBOTAPostOtherSpot,
+  postSelfSpot: WWBOTAPostSelfSpot,
 
   Options: WWBOTAActivityOptions,
 
