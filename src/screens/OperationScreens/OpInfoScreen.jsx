@@ -6,16 +6,21 @@
  */
 
 import React from 'react'
-import { ScrollView } from 'react-native'
+import { useSelector } from 'react-redux'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import { OpInfoPanel } from './OpInfoTab/components/OpInfoPanel'
-import { useSelector } from 'react-redux'
 import { selectSectionedQSOs } from '../../store/qsos'
+
+import { OpInfoPanel } from './OpInfoTab/components/OpInfoPanel'
+import ScreenContainer from '../components/ScreenContainer'
 
 export default function OpInfoScreen ({ navigation, route }) {
   const call = route?.params?.call
   const operation = route?.params?.operation ?? {}
+
+  const safeAreaInsets = useSafeAreaInsets()
 
   const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid))
 
@@ -26,16 +31,26 @@ export default function OpInfoScreen ({ navigation, route }) {
   // }, [navigation, call])
 
   return (
-    <ScrollView style={{ height: '100%' }} contentContainerStyle={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch' }}>
-      <OpInfoPanel
-        styles={styles}
-        themeColor={'tertiary'}
-        call={call}
-        sections={sections}
-        qsos={qsos}
-        activeQSOs={activeQSOs}
-        operation={operation}
-      />
-    </ScrollView>
+    <ScreenContainer>
+      <GestureHandlerRootView
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'stretch'
+        }}
+      >
+        <OpInfoPanel
+          style={{ paddingBottom: safeAreaInsets.bottom, paddingRight: safeAreaInsets.right, paddingLeft: safeAreaInsets.left }}
+          styles={styles}
+          themeColor={'tertiary'}
+          call={call}
+          sections={sections}
+          qsos={qsos}
+          activeQSOs={activeQSOs}
+          operation={operation}
+        />
+      </GestureHandlerRootView>
+    </ScreenContainer>
   )
 }

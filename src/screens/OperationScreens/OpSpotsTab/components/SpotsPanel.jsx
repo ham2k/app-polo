@@ -43,7 +43,7 @@ export const LONG_LABEL_FOR_MODE = {
 
 const REFRESH_INTERVAL_IN_SECONDS = 60
 
-function prepareStyles (baseStyles, themeColor) {
+function prepareStyles (baseStyles, themeColor, style) {
   return {
     ...baseStyles,
     panel: {
@@ -51,7 +51,8 @@ function prepareStyles (baseStyles, themeColor) {
       borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
       borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
       borderBottomWidth: 1,
-      padding: baseStyles.oneSpace,
+      paddingTop: baseStyles.oneSpace,
+      paddingBottom: baseStyles.oneSpace,
       flexDirection: 'column'
     },
     container: {
@@ -63,9 +64,9 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
+export default function SpotsPanel ({ operation, qsos, sections, onSelect, style }) {
   const themeColor = 'tertiary'
-  const styles = useThemedStyles(prepareStyles, themeColor)
+  const styles = useThemedStyles(prepareStyles, themeColor, style)
 
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
@@ -227,10 +228,11 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
   }, [onSelect])
 
   return (
-    <GestureHandlerRootView style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column', alignItems: 'stretch' }]}>
+    <GestureHandlerRootView style={[{ flex: 1, flexDirection: 'column', alignItems: 'stretch' }]}>
       {showControls ? (
-        <View style={[styles.panel, { flex: 1, padding: 0, flexDirection: 'column', alignItems: 'stretch' }]}>
+        <View style={[styles.panel, { flex: 1, paddingBottom: 0 }]}>
           <SpotFilterControls
+            style={{ paddingBottom: Math.min(style?.paddingBottom ?? 0, styles.oneSpace * 2) }}
             rawSpots={spotsState.rawSpots}
             filteredSpots={scoredSpots}
             options={options}
@@ -279,7 +281,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
               </Text>
             </TouchableOpacity>
           </View>
-          <SpotList spots={mergedOpSpots} loading={spotsState.loading} refresh={refresh} onPress={handlePress} />
+          <SpotList spots={mergedOpSpots} loading={spotsState.loading} refresh={refresh} onPress={handlePress} style={{ paddingBottom: style?.paddingBottom, paddingRight: style?.paddingRight, paddingLeft: style?.paddingLeft }} />
         </>
       )}
     </GestureHandlerRootView>

@@ -15,7 +15,7 @@ import { tweakStringForVoiceOver } from '../../../tools/a11yTools'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { buildTitleForOperation } from '../../OperationScreens/OperationScreen'
 
-export default function OperationItem ({ operation, settings, onPress, styles }) {
+export default function OperationItem ({ operation, settings, onPress, styles, style }) {
   const pressHandler = useCallback(() => {
     onPress && onPress(operation)
   }, [onPress, operation])
@@ -24,13 +24,21 @@ export default function OperationItem ({ operation, settings, onPress, styles })
     return buildTitleForOperation(operation, { includeCall: false })
   }, [operation])
 
+  const rowStyle = useMemo(() => {
+    return {
+      ...styles.row,
+      paddingHorizontal: 0,
+      paddingLeft: Math.max(styles?.row?.paddingHorizontal, style?.paddingLeft ?? 0),
+      paddingRight: Math.max(styles.row.paddingHorizontal, style?.paddingRight ?? 0)
+    }
+  }, [styles, style])
   return (
     <TouchableRipple
       onPress={pressHandler}
       style={styles.rowRoot}
       accessibilityLabel={tweakStringForVoiceOver(`${operation.stationCallPlus || operation.stationCall} ${title} ${operation.subtitle}, ${operation.qsoCount ?? 0} Q sos, ${fmtDateZuluDynamic(operation.startAtMillisMax)}`)}
     >
-      <View style={styles.row}>
+      <View style={rowStyle}>
         <View style={styles.rowTop}>
           <View style={styles.rowTopLeft}>
             <Ham2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCallPlus || operation.stationCall}`**{' '}{title}</Ham2kMarkdown>

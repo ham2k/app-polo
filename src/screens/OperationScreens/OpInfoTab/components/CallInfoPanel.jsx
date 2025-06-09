@@ -9,8 +9,7 @@ import React, { useCallback, useMemo } from 'react'
 import { Chip, IconButton, Text } from 'react-native-paper'
 import { View, Image, Linking } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { ScrollView } from 'react-native-gesture-handler'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
@@ -24,12 +23,16 @@ import { useCallLookup } from '../../OpLoggingTab/components/LoggingPanel/useCal
 
 const HISTORY_QSOS_TO_SHOW = 3
 
-function prepareStyles (baseStyles, themeColor) {
+function prepareStyles (baseStyles, themeColor, style) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   return {
     ...baseStyles,
     root: {
-      padding: baseStyles.oneSpace * 2,
+      ...style,
+      paddingTop: baseStyles.oneSpace * 2,
+      paddingLeft: Math.max(style?.paddingLeft || 0, baseStyles.oneSpace * 2),
+      paddingRight: Math.max(style?.paddingRight || 0, baseStyles.oneSpace * 2),
+      // paddingBottom is applied instead as a margin on the last section
       flexDirection: 'column',
       gap: baseStyles.oneSpace * 2
     },
@@ -81,7 +84,7 @@ function prepareStyles (baseStyles, themeColor) {
 }
 
 export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) {
-  const styles = useThemedStyles(prepareStyles, themeColor)
+  const styles = useThemedStyles(prepareStyles, themeColor, style)
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
 
@@ -138,142 +141,136 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
     .map(hook => hook?.fetchConfirmation(qso))
     .filter(confirmation => confirmation !== undefined)
 
-  const safeArea = useSafeAreaInsets()
-
   const handleToggleImage = useCallback(() => {
     dispatch(setSettings({ showLookupImages: !settings?.showLookupImages }))
   }, [dispatch, settings?.showLookupImages])
 
+  if (!call) return null
+
   return (
-    <GestureHandlerRootView style={[style, styles.root]}>
-      <ScrollView>
-        {call && (
-          <>
-            <View style={[styles.section, { flexDirection: 'row' }]}>
-              <View style={{ flex: 1, flexDirection: 'column' }}>
+    <ScrollView style={styles.root}>
+      <View style={[styles.section, { flexDirection: 'row' }]}>
+        <View style={{ flex: 1, flexDirection: 'column' }}>
 
-                <View style={{ flexDirection: 'row' }}>
-                  {/* <View>
-                  <Icon source={'account'} size={styles.oneSpace * 4} />
-                </View> */}
-                  <View>
-                    <Text variant="headlineSmall" style={styles.text.callsign}>
-                      {call}
-                    </Text>
-                  </View>
-                </View>
-
-                <View>
-                  <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
-                    {capitalizeString(lookup?.name, { content: 'name', force: false })}
-                  </Text>
-                  {lookup?.city && (
-                    <Text>
-                      {[capitalizeString(lookup.city, { content: 'address', force: false }), lookup.state].filter(x => x).join(', ')}
-                    </Text>
-                  )}
-                  {entity && (
-                    <Text>{entity.flag} {entity.shortName}</Text>
-                  )}
-                </View>
-              </View>
-              <View style={{ flex: 1, marginLeft: styles.oneSpace, maxWidth: '50%', alignItems: 'center' }}>
-                {lookup?.image && (
-                  settings?.showLookupImages !== false ? (
-                    <View style={{ width: '100%', height: styles.oneSpace * 20, marginBottom: styles.oneSpace }}>
-                      <Image source={{ uri: lookup.image }} style={{ height: '100%', borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
-                      <IconButton
-                        theme={styles.chipTheme} textStyle={styles.chipTextStyle}
-                        icon="eye-off"
-                        mode="contained"
-                        onPress={handleToggleImage}
-                        style={{ position: 'absolute', right: 0, bottom: 0 }}
-                      />
-                    </View>
-                  ) : (
-                    <Chip
-                      theme={styles.chipTheme} textStyle={styles.chipTextStyle}
-                      icon="eye"
-                      mode="flat"
-                      onPress={handleToggleImage}
-                      style={{ marginBottom: styles.oneSpace }}
-                    >
-                      Show Image
-                    </Chip>
-                  )
-                )}
-                <View flexDirection="row" style={{ gap: styles.oneSpace }}>
-                  <Chip
-                    theme={styles.chipTheme} textStyle={styles.chipTextStyle}
-                    icon="web"
-                    mode="flat"
-                    onPress={() => Linking.openURL(`https://qrz.com/db/${call}`)}
-                  >
-                    QRZ
-                  </Chip>
-                </View>
-              </View>
-            </View>
-
-            {lookup?.notes && (
-              <View style={styles.section}>
-                <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Notes</Text>
-                {lookup.notes.map((note, i) => (
-                  <Ham2kMarkdown key={i}>{note?.note}</Ham2kMarkdown>
-                ))}
-              </View>
-            )}
-
-            {confirmations.length > 0 &&
-                confirmations.map((confirmation, i) => (
-                  <View key={i} style={styles.section}>
-                    <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>{confirmation.title}</Text>
-                    {confirmation.isGuess && <Text style={{ fontWeight: 'bold' }}>Potential call: {confirmation.call}</Text>}
-                    <Ham2kMarkdown>{confirmation?.note}</Ham2kMarkdown>
-                  </View>
-                ))
-            }
-
-            {thisOpTitle && (
-              <View style={styles.section}>
-                <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
-                  {thisOpTitle}
-                </Text>
-                {thisOpQSOs.map((q, i) => (
-                  <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
-                    <Text>{q.band}</Text>
-                    <Text>{q.mode}</Text>
-                    <Text>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
-                    {(q.ourCall || q.our?.call) !== operation.stationCall && (
-                      <Text>with {(q.ourCall || q.our?.call)}</Text>
-                    )}
-                  </View>
-                ))}
-              </View>
-            )}
-            <View style={[styles.section, { marginBottom: safeArea.bottom }]}>
-              <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
-                {historyTitle}
+          <View style={{ flexDirection: 'row' }}>
+            {/* <View>
+              <Icon source={'account'} size={styles.oneSpace * 4} />
+            </View> */}
+            <View>
+              <Text variant="headlineSmall" style={styles.text.callsign}>
+                {call}
               </Text>
-              {historyRecent.map((q, i) => (
-                <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
-                  <Text style={{}}>{q.band}</Text>
-                  <Text style={{}}>{q.mode}</Text>
-                  <Text style={{}}>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
-                  {(q.ourCall || q.our?.call) !== operation.stationCall && (
-                    <Text>with {(q.ourCall || q.our?.call)}</Text>
-                  )}
-                </View>
-              ))}
-              {historyAndMore && (
-                <Text style={{}}>
-                  {historyAndMore}
-                </Text>
+            </View>
+          </View>
+
+          <View>
+            <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
+              {capitalizeString(lookup?.name, { content: 'name', force: false })}
+            </Text>
+            {lookup?.city && (
+              <Text>
+                {[capitalizeString(lookup.city, { content: 'address', force: false }), lookup.state].filter(x => x).join(', ')}
+              </Text>
+            )}
+            {entity && (
+              <Text>{entity.flag} {entity.shortName}</Text>
+            )}
+          </View>
+        </View>
+        <View style={{ flex: 1, marginLeft: styles.oneSpace, maxWidth: '50%', alignItems: 'center' }}>
+          {lookup?.image && (
+            settings?.showLookupImages !== false ? (
+              <View style={{ width: '100%', height: styles.oneSpace * 20, marginBottom: styles.oneSpace }}>
+                <Image source={{ uri: lookup.image }} style={{ height: '100%', borderWidth: styles.oneSpace * 0.7, borderColor: 'white', marginBottom: styles.oneSpace }} />
+                <IconButton
+                  theme={styles.chipTheme} textStyle={styles.chipTextStyle}
+                  icon="eye-off"
+                  mode="contained"
+                  onPress={handleToggleImage}
+                  style={{ position: 'absolute', right: 0, bottom: 0 }}
+                />
+              </View>
+            ) : (
+              <Chip
+                theme={styles.chipTheme} textStyle={styles.chipTextStyle}
+                icon="eye"
+                mode="flat"
+                onPress={handleToggleImage}
+                style={{ marginBottom: styles.oneSpace }}
+              >
+                Show Image
+              </Chip>
+            )
+          )}
+          <View flexDirection="row" style={{ gap: styles.oneSpace }}>
+            <Chip
+              theme={styles.chipTheme} textStyle={styles.chipTextStyle}
+              icon="web"
+              mode="flat"
+              onPress={() => Linking.openURL(`https://qrz.com/db/${call}`)}
+            >
+              QRZ
+            </Chip>
+          </View>
+        </View>
+      </View>
+
+      {lookup?.notes && (
+        <View style={styles.section}>
+          <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Notes</Text>
+          {lookup.notes.map((note, i) => (
+            <Ham2kMarkdown key={i}>{note?.note}</Ham2kMarkdown>
+          ))}
+        </View>
+      )}
+
+      {confirmations.length > 0 &&
+            confirmations.map((confirmation, i) => (
+              <View key={i} style={styles.section}>
+                <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>{confirmation.title}</Text>
+                {confirmation.isGuess && <Text style={{ fontWeight: 'bold' }}>Potential call: {confirmation.call}</Text>}
+                <Ham2kMarkdown>{confirmation?.note}</Ham2kMarkdown>
+              </View>
+            ))
+        }
+
+      {thisOpTitle && (
+        <View style={styles.section}>
+          <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
+            {thisOpTitle}
+          </Text>
+          {thisOpQSOs.map((q, i) => (
+            <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
+              <Text>{q.band}</Text>
+              <Text>{q.mode}</Text>
+              <Text>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
+              {(q.ourCall || q.our?.call) !== operation.stationCall && (
+                <Text>with {(q.ourCall || q.our?.call)}</Text>
               )}
             </View>
-          </>
+          ))}
+        </View>
+      )}
+      <View style={[styles.section, { marginBottom: style.paddingBottom }]}>
+        <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
+          {historyTitle}
+        </Text>
+        {historyRecent.map((q, i) => (
+          <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
+            <Text style={{}}>{q.band}</Text>
+            <Text style={{}}>{q.mode}</Text>
+            <Text style={{}}>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
+            {(q.ourCall || q.our?.call) !== operation.stationCall && (
+              <Text>with {(q.ourCall || q.our?.call)}</Text>
+            )}
+          </View>
+        ))}
+        {historyAndMore && (
+          <Text style={{}}>
+            {historyAndMore}
+          </Text>
         )}
-      </ScrollView>
-    </GestureHandlerRootView>
+      </View>
+    </ScrollView>
   )
 }

@@ -6,8 +6,10 @@
  */
 
 import React, { useEffect } from 'react'
-import { ScrollView } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import ScreenContainer from '../components/ScreenContainer'
 import { CallInfoPanel } from '../OperationScreens/OpInfoTab/components/CallInfoPanel'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { slashZeros } from '../../tools/stringTools'
@@ -18,20 +20,31 @@ export default function CallInfoScreen ({ navigation, route }) {
   const qso = route?.params?.qso ?? { their: { call } }
 
   const styles = useThemedStyles()
+  const safeAreaInsets = useSafeAreaInsets()
 
   useEffect(() => {
     navigation.setOptions({ title: slashZeros(call) })
   }, [navigation, call])
 
   return (
-    <ScrollView style={{ height: '100%' }} contentContainerStyle={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch' }}>
-      <CallInfoPanel
-        styles={styles}
-        themeColor={'tertiary'}
-        call={call}
-        qso={qso}
-        operation={operation}
-      />
-    </ScrollView>
+    <ScreenContainer>
+      <GestureHandlerRootView
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'stretch'
+        }}
+      >
+        <CallInfoPanel
+          styles={styles}
+          style={{ paddingBottom: safeAreaInsets.bottom, paddingRight: safeAreaInsets.right, paddingLeft: safeAreaInsets.left }}
+          themeColor={'tertiary'}
+          call={call}
+          qso={qso}
+          operation={operation}
+        />
+      </GestureHandlerRootView>
+    </ScreenContainer>
   )
 }

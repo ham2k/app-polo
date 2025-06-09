@@ -190,13 +190,12 @@ export default function OperationScreen (props) {
                   alignItems: 'stretch'
                 }}
               >
-
                 <Tab.Navigator
                   id={'OperationScreen_TabNavigator'}
                   initialLayout={{ width: (dimensions.width - mainPaneWidth), height: dimensions.height }}
                   initialRouteName={ operation?.qsoCount > 0 ? 'OpInfo' : 'OpSettings' }
                   screenOptions={{
-                    tabBarItemStyle: [{ width: (dimensions.width - mainPaneWidth) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
+                    tabBarItemStyle: [{ width: (dimensions.width - mainPaneWidth - safeAreaInsets.right) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                     tabBarLabelStyle: styles.screenTabBarLabel,
                     tabBarStyle: [styles.screenTabBar, { paddingRight: safeAreaInsets.right }],
                     tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryHighlight, height: styles.halfSpace * 1.5 },

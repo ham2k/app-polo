@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Text } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings } from '../../../store/settings'
@@ -142,51 +143,53 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace, paddingHorizontal: styles.oneSpace * 2 }}>
-        <Ham2kListSection>
-          <Text variant="bodyMedium">What is the callsign used on the air?</Text>
-          <CallsignInput
-            style={[styles.input, { marginTop: styles.oneSpace }]}
-            value={operation.allStationCalls || operation.stationCall || ''}
-            label="Station Callsign"
-            placeholder={'N0CALL'}
-            allowMultiple={true}
-            onChangeText={onChangeStation}
-          />
-          {extraState.messageForStationCall && (
-            <Text variant="bodyMedium" style={{ color: styles.colors.primary, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
-              {extraState.messageForStationCall}
-            </Text>
-          )}
-          {extraState.actionForStationCall && (
-            <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
-              <Button mode="outlined" style={{ flex: 0 }} onPress={handleUpdateStation}>{extraState.actionForStationCall}</Button>
-            </View>
-          )}
-        </Ham2kListSection>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace, paddingHorizontal: styles.oneSpace * 2 }}>
+          <Ham2kListSection>
+            <Text variant="bodyMedium">What is the callsign used on the air?</Text>
+            <CallsignInput
+              style={[styles.input, { marginTop: styles.oneSpace }]}
+              value={operation.allStationCalls || operation.stationCall || ''}
+              label="Station Callsign"
+              placeholder={'N0CALL'}
+              allowMultiple={true}
+              onChangeText={onChangeStation}
+            />
+            {extraState.messageForStationCall && (
+              <Text variant="bodyMedium" style={{ color: styles.colors.primary, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
+                {extraState.messageForStationCall}
+              </Text>
+            )}
+            {extraState.actionForStationCall && (
+              <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
+                <Button mode="outlined" style={{ flex: 0 }} onPress={handleUpdateStation}>{extraState.actionForStationCall}</Button>
+              </View>
+            )}
+          </Ham2kListSection>
 
-        <Ham2kListSection style={{ marginTop: styles.oneSpace * 3 }}>
-          <Text variant="bodyMedium">Who is operating the station? (optional)</Text>
-          <CallsignInput
-            style={[styles.input, { marginTop: styles.oneSpace }]}
-            value={operation.local?.operatorCall || ''}
-            label="Operator Callsign"
-            placeholder={'N0CALL'}
-            onChangeText={onChangeOperator}
-            disabled={operation.stationCallPlusArray?.length > 0}
-          />
-          {extraState.messageForOperatorCall && (
-            <Text variant="bodyMedium" style={{ color: styles.colors.primary, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
-              {extraState.messageForOperatorCall}
-            </Text>
-          )}
-          {extraState.actionForOperatorCall && (
-            <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
-              <Button mode="outlined" style={{ flex: 0 }}onPress={handleUpdateOperator}>{extraState.actionForOperatorCall}</Button>
-            </View>
-          )}
-        </Ham2kListSection>
-      </ScrollView>
+          <Ham2kListSection style={{ marginTop: styles.oneSpace * 3 }}>
+            <Text variant="bodyMedium">Who is operating the station? (optional)</Text>
+            <CallsignInput
+              style={[styles.input, { marginTop: styles.oneSpace }]}
+              value={operation.local?.operatorCall || ''}
+              label="Operator Callsign"
+              placeholder={'N0CALL'}
+              onChangeText={onChangeOperator}
+              disabled={operation.stationCallPlusArray?.length > 0}
+            />
+            {extraState.messageForOperatorCall && (
+              <Text variant="bodyMedium" style={{ color: styles.colors.primary, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
+                {extraState.messageForOperatorCall}
+              </Text>
+            )}
+            {extraState.actionForOperatorCall && (
+              <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
+                <Button mode="outlined" style={{ flex: 0 }}onPress={handleUpdateOperator}>{extraState.actionForOperatorCall}</Button>
+              </View>
+            )}
+          </Ham2kListSection>
+        </ScrollView>
+      </SafeAreaView>
     </ScreenContainer>
   )
 }

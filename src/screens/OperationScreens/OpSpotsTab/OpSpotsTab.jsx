@@ -13,13 +13,17 @@ import { selectSettings } from '../../../store/settings'
 import { selectQSOs } from '../../../store/qsos'
 
 import SpotsPanel from './components/SpotsPanel'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function OpSpotsTab ({ navigation, route }) {
+  const dispatch = useDispatch()
+  const safeArea = useSafeAreaInsets()
+
   const operation = route.params.operation
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
-  const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
   const online = useSelector(selectRuntimeOnline)
+
   const spotsHooks = useFindHooks('spots')
 
   const extraSpotInfoHooks = useMemo(() => spotsHooks.filter(hook => hook?.extraSpotInfo), [spotsHooks])
@@ -39,6 +43,6 @@ export default function OpSpotsTab ({ navigation, route }) {
   }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings])
 
   return (
-    <SpotsPanel operation={operation} qsos={qsos} onSelect={handleSelect} />
+    <SpotsPanel operation={operation} qsos={qsos} onSelect={handleSelect} style={{ paddingBottom: safeArea.bottom, paddingRight: safeArea.right }} />
   )
 }

@@ -13,7 +13,7 @@ import SpotItem, { guessItemHeight } from './SpotItem'
 import { RefreshControl } from 'react-native-gesture-handler'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-function prepareStyles (themeStyles, themeColor) {
+function prepareStyles (themeStyles, style) {
   const DEBUG = false
 
   const commonStyles = {
@@ -24,6 +24,11 @@ function prepareStyles (themeStyles, themeColor) {
 
   return {
     ...themeStyles,
+    doubleRow: {
+      ...themeStyles.doubleRow,
+      paddingRight: Math.max(style?.paddingRight ?? 0, themeStyles.oneSpace * 2),
+      paddingLeft: Math.max(style?.paddingLeft ?? 0, themeStyles.oneSpace * 2)
+    },
     fields: {
       freq: {
         ...commonStyles,
@@ -116,7 +121,7 @@ function prepareStyles (themeStyles, themeColor) {
 }
 
 export default function SpotList ({ spots, loading, refresh, style, onPress }) {
-  const styles = useThemedStyles(prepareStyles)
+  const styles = useThemedStyles(prepareStyles, style)
 
   const safeArea = useSafeAreaInsets()
 
@@ -127,12 +132,14 @@ export default function SpotList ({ spots, loading, refresh, style, onPress }) {
 
   const listRef = useRef()
 
+  const { paddingRight, paddingLeft, ...restOfStyle } = useMemo(() => style, [style])
+
   const renderRow = useCallback(({ item, index }) => {
     const spot = item
     return (
-      <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} extendedWidth={extendedWidth} />
+      <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} />
     )
-  }, [styles, onPress, extendedWidth])
+  }, [styles, onPress, extendedWidth, paddingRight, paddingLeft])
 
   const calculateLayout = useCallback((data, index) => {
     const height = guessItemHeight(spots[index], styles)
@@ -141,7 +148,7 @@ export default function SpotList ({ spots, loading, refresh, style, onPress }) {
 
   return (
     <FlatList
-      style={style}
+      style={restOfStyle}
       ref={listRef}
       data={spots}
       renderItem={renderRow}

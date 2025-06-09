@@ -9,21 +9,25 @@ import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { View } from 'react-native'
 import { Icon, Text } from 'react-native-paper'
+import { ScrollView } from 'react-native-gesture-handler'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { fmtDateZuluDynamic, fmtTimeBetween } from '../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../store/time'
-import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
-import { fmtNumber } from '@ham2k/lib-format-tools'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-function prepareStyles (baseStyles, themeColor) {
+function prepareStyles (baseStyles, themeColor, style) {
   return {
     ...baseStyles,
     root: {
-      padding: baseStyles.oneSpace * 2,
-      flexDirection: 'column'
+      ...style,
+      paddingTop: baseStyles.oneSpace * 2,
+      paddingLeft: Math.max(style?.paddingLeft || 0, baseStyles.oneSpace * 2),
+      paddingRight: Math.max(style?.paddingRight || 0, baseStyles.oneSpace * 2),
+      paddingBottom: Math.max(style?.paddingBottom || 0, baseStyles.oneSpace * 2),
+      flexDirection: 'column',
+      gap: baseStyles.oneSpace * 2
     },
     section: {
       flexDirection: 'column',
@@ -57,7 +61,7 @@ function prepareStyles (baseStyles, themeColor) {
 }
 
 export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, themeColor }) {
-  const styles = useThemedStyles(prepareStyles, themeColor)
+  const styles = useThemedStyles(prepareStyles, themeColor, style)
 
   const now = useSelector(selectSecondsTick)
 
@@ -96,10 +100,8 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
     return parts.filter(x => x).join(' • ')
   }, [activeQSOs])
 
-  const safeArea = useSafeAreaInsets()
-
   return (
-    <GestureHandlerRootView style={[style, styles.root]}>
+    <ScrollView style={styles.root}>
       <View style={styles.section}>
         <Text style={styles.markdown.heading2}>
           Operation Stats
@@ -107,90 +109,85 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
         {line1 && <Text style={styles.markdown.body} numberOfLines={2} ellipsizeMode={'tail'}>{line1}</Text>}
         {line2 && <Text style={styles.markdown.body} numberOfLines={2} ellipsizeMode={'tail'}>{line2}</Text>}
       </View>
-      {!qso?.their?.call && (
-        <ScrollView style={[styles.section, { width: '100%' }]}>
-          {sections.map(section => (
-            <View key={section.day} style={{ flexDirection: 'column', marginVertical: styles.oneSpace }}>
-              <Text style={[styles.markdown.body, { marginBottom: styles.halfSpace }]}>
-                <Text style={{ fontWeight: 'bold' }}>{fmtDateZuluDynamic(section.day)}: </Text>
-                <Text>
-                  {section.count === 0 ? 'No QSOs' : section.count === 1 ? '1 QSO' : `${fmtNumber(section.count ?? 0)} QSOs`}
-                </Text>
-              </Text>
-              {Object.keys(section.scores ?? {}).filter(key => section.scores[key].for === 'day').sort((a, b) => (section.scores[a].weight ?? 0) - (section.scores[b].weight ?? 0)).map(key => {
-                const score = section.scores[key]
-
-                const refKeys = Object.keys(score.refs ?? { one: true })
-
-                if ((score.summary || score.longSummary) && (score.icon || score.label)) {
-                  return (
-                    <View key={key} style={{ maxWidth: '100%', flexDirection: 'row', alignItems: 'flex-start', marginBottom: styles.oneSpace }}>
-                      <View style={{ width: styles.oneSpace * 3, marginTop: styles.oneSpace * 0.2 }}>
-                        {score.icon && (
-                          <Icon
-                            source={score.icon}
-                            size={styles.normalFontSize}
-                            color={score.activated === true ? styles.colors.important : undefined}
-                            style={styles.icon}
-                          />
-                        )}
-                      </View>
-                      <Ham2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
-                        {score.label && (
-                          `### ${score.label}${refKeys.length > 1 ? `×${refKeys.length}:` : ':'}`
-                        )}
-                        {' '}{score.longSummary ?? score.summary}
-                      </Ham2kMarkdown>
-                    </View>
-                  )
-                } else {
-                  return null
-                }
-              })}
-            </View>
-          ))}
-
-          <View style={{ flexDirection: 'column', marginTop: styles.oneSpace, marginBottom: safeArea.bottom }}>
-            <Text style={[styles.markdown.body, { marginBottom: styles.halfSpace }]}>
-              <Text style={{ fontWeight: 'bold' }}>Operation Totals: </Text>
-              <Text>
-                {operation.qsoCount === 0 ? 'No QSOs' : operation.qsoCount === 1 ? '1 QSO' : `${fmtNumber(operation.qsoCount ?? 0)} QSOs`}
-              </Text>
+      {sections.map(section => (
+        <View key={section.day} style={{ flexDirection: 'column', marginVertical: styles.oneSpace }}>
+          <Text style={[styles.markdown.body, { marginBottom: styles.halfSpace }]}>
+            <Text style={{ fontWeight: 'bold' }}>{fmtDateZuluDynamic(section.day)}: </Text>
+            <Text>
+              {section.count === 0 ? 'No QSOs' : section.count === 1 ? '1 QSO' : `${fmtNumber(section.count ?? 0)} QSOs`}
             </Text>
-            {Object.keys(lastSection?.scores ?? {}).filter(key => lastSection.scores[key].for !== 'day').sort((a, b) => (lastSection.scores[a].weight ?? 0) - (lastSection.scores[b].weight ?? 0)).map(key => {
-              const score = lastSection.scores[key]
+          </Text>
+          {Object.keys(section.scores ?? {}).filter(key => section.scores[key].for === 'day').sort((a, b) => (section.scores[a].weight ?? 0) - (section.scores[b].weight ?? 0)).map(key => {
+            const score = section.scores[key]
 
-              const refKeys = Object.keys(score.refs ?? { one: true })
+            const refKeys = Object.keys(score.refs ?? { one: true })
 
-              if ((score.summary || score.longSummary) && (score.icon || score.label)) {
-                return (
-                  <View key={key} style={{ maxWidth: '100%', flexDirection: 'row', alignItems: 'flex-start', marginBottom: styles.oneSpace }}>
-                    <View style={{ width: styles.oneSpace * 3, marginTop: styles.oneSpace * 0.2 }}>
-                      {score.icon && (
-                        <Icon
-                          source={score.icon}
-                          size={styles.normalFontSize}
-                          color={score.activated === true ? styles.colors.important : undefined}
-                          style={styles.icon}
-                        />
-                      )}
-                    </View>
-                    <Ham2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
-                      {score.label && (
-                        `### ${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ''}`
-                      )}
-                      {' '}{score.longSummary ?? score.summary}
-                    </Ham2kMarkdown>
+            if ((score.summary || score.longSummary) && (score.icon || score.label)) {
+              return (
+                <View key={key} style={{ maxWidth: '100%', flexDirection: 'row', alignItems: 'flex-start', marginBottom: styles.oneSpace }}>
+                  <View style={{ width: styles.oneSpace * 3, marginTop: styles.oneSpace * 0.2 }}>
+                    {score.icon && (
+                      <Icon
+                        source={score.icon}
+                        size={styles.normalFontSize}
+                        color={score.activated === true ? styles.colors.important : undefined}
+                        style={styles.icon}
+                      />
+                    )}
                   </View>
-                )
-              } else {
-                return null
-              }
-            })}
-          </View>
+                  <Ham2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
+                    {score.label && (
+                      `### ${score.label}${refKeys.length > 1 ? `×${refKeys.length}:` : ':'}`
+                    )}
+                    {' '}{score.longSummary ?? score.summary}
+                  </Ham2kMarkdown>
+                </View>
+              )
+            } else {
+              return null
+            }
+          })}
+        </View>
+      ))}
 
-        </ScrollView>
-      )}
-    </GestureHandlerRootView>
+      <View style={{ flexDirection: 'column', marginTop: styles.oneSpace }}>
+        <Text style={[styles.markdown.body, { marginBottom: styles.halfSpace }]}>
+          <Text style={{ fontWeight: 'bold' }}>Operation Totals: </Text>
+          <Text>
+            {operation.qsoCount === 0 ? 'No QSOs' : operation.qsoCount === 1 ? '1 QSO' : `${fmtNumber(operation.qsoCount ?? 0)} QSOs`}
+          </Text>
+        </Text>
+        {Object.keys(lastSection?.scores ?? {}).filter(key => lastSection.scores[key].for !== 'day').sort((a, b) => (lastSection.scores[a].weight ?? 0) - (lastSection.scores[b].weight ?? 0)).map(key => {
+          const score = lastSection.scores[key]
+
+          const refKeys = Object.keys(score.refs ?? { one: true })
+
+          if ((score.summary || score.longSummary) && (score.icon || score.label)) {
+            return (
+              <View key={key} style={{ maxWidth: '100%', flexDirection: 'row', alignItems: 'flex-start', marginBottom: styles.oneSpace }}>
+                <View style={{ width: styles.oneSpace * 3, marginTop: styles.oneSpace * 0.2 }}>
+                  {score.icon && (
+                    <Icon
+                      source={score.icon}
+                      size={styles.normalFontSize}
+                      color={score.activated === true ? styles.colors.important : undefined}
+                      style={styles.icon}
+                    />
+                  )}
+                </View>
+                <Ham2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
+                  {score.label && (
+                    `### ${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ''}`
+                  )}
+                  {' '}{score.longSummary ?? score.summary}
+                </Ham2kMarkdown>
+              </View>
+            )
+          } else {
+            return null
+          }
+        })}
+      </View>
+    </ScrollView>
   )
 }

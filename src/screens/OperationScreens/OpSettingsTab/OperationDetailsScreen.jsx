@@ -8,6 +8,7 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
@@ -37,28 +38,26 @@ export default function OperationDetailsScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace }}>
-        <Ham2kListSection title={'Title'}>
-          <ThemedTextInput
-            style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
-            value={operation?.userTitle || ''}
-            placeholder={'New Operation'}
-            onChangeText={handleChangeTitle}
-          />
-        </Ham2kListSection>
-        <Ham2kListSection title={'Notes'}>
-          <ThemedTextInput
-            style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
-            value={operation?.notes || ''}
-            placeholder={'Anything you want to write about this operation'}
-            onChangeText={handleChangeNotes}
-            // There's a bug in multiline inputs calling onChangeText multiple times
-            // multiline={true}
-            // numberOfLines={6}
-          />
-        </Ham2kListSection>
-
-      </ScrollView>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace }}>
+          <Ham2kListSection title={'Title'}>
+            <ThemedTextInput
+              style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
+              value={operation?.userTitle || ''}
+              placeholder={'New Operation'}
+              onChangeText={handleChangeTitle}
+            />
+          </Ham2kListSection>
+          <Ham2kListSection title={'Notes'}>
+            <ThemedTextInput
+              style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
+              value={operation?.notes || ''}
+              placeholder={'Anything you want to write about this operation'}
+              onChangeText={handleChangeNotes}
+            />
+          </Ham2kListSection>
+        </ScrollView>
+      </SafeAreaView>
     </ScreenContainer>
   )
 }

@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
@@ -52,21 +53,23 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
-        {activity?.Options && <activity.Options operation={operation} styles={styles} settings={settings} />}
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
+          {activity?.Options && <activity.Options operation={operation} styles={styles} settings={settings} />}
 
-        <Ham2kListSection>
-          <ListSeparator />
-          <Ham2kListItem
-            title={`Remove ${activity?.shortName ?? activity?.name ?? handler?.name} from this operation`}
-            titleStyle={{ color: styles.theme.colors.error }}
+          <Ham2kListSection>
+            <ListSeparator />
+            <Ham2kListItem
+              title={`Remove ${activity?.shortName ?? activity?.name ?? handler?.name} from this operation`}
+              titleStyle={{ color: styles.theme.colors.error }}
             // eslint-disable-next-line react/no-unstable-nested-components
-            left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.oneSpace * 2 }} icon="delete" />}
-            onPress={handleRemoveActivity}
-          />
-        </Ham2kListSection>
+              left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.oneSpace * 2 }} icon="delete" />}
+              onPress={handleRemoveActivity}
+            />
+          </Ham2kListSection>
 
-      </ScrollView>
+        </ScrollView>
+      </SafeAreaView>
     </ScreenContainer>
   )
 }

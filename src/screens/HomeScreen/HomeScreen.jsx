@@ -154,9 +154,16 @@ export default function HomeScreen ({ navigation }) {
 
   const renderRow = useCallback(({ item }) => {
     return (
-      <OperationItem key={item.uuid} operation={item} settings={settings} styles={styles} onPress={navigateToOperation} />
+      <OperationItem
+        key={item.uuid}
+        operation={item}
+        settings={settings}
+        styles={styles}
+        style={{ paddingLeft: safeArea.left, paddingRight: safeArea.right }}
+        onPress={navigateToOperation}
+      />
     )
-  }, [navigateToOperation, styles, settings])
+  }, [navigateToOperation, styles, settings, safeArea])
 
   const [isExtended, setIsExtended] = React.useState(true)
 

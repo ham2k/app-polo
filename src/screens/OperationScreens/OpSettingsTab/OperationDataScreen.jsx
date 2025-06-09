@@ -13,6 +13,7 @@ import { Checkbox, List, Menu, Text } from 'react-native-paper'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { dataExportOptions, generateExportsForOptions, importADIFIntoOperation, loadOperation, selectOperation, selectOperationCallInfo } from '../../../store/operations'
 import { loadQSOs, selectQSOs } from '../../../store/qsos'
@@ -25,6 +26,7 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
+import ScreenContainer from '../../components/ScreenContainer'
 
 export default function OperationDataScreen (props) {
   const { navigation, route } = props
@@ -145,58 +147,62 @@ export default function OperationDataScreen (props) {
   }, [exportOptions.length, selectedExportOptions.length])
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <Ham2kListSection title={'Export QSOs'}>
-        <Ham2kListItem
-          title={exportLabel}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
-          onPress={() => readyToExport && handleExports({ options: selectedExportOptions })}
-          style={{ opacity: readyToExport ? 1 : 0.5 }}
-          disabled={!readyToExport}
-        />
-        {exportOptions.map((option) => (
-          <View key={`${option.exportType}-${option.fileName}`} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'center' }}>
-            <Checkbox
-              status={(settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
-              onPress={() => dispatch(setSettings({ exportTypes: { ...settings.exportTypes, [option.exportType]: !((settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false) } }))}
-            />
+    <ScreenContainer>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
+          <Ham2kListSection title={'Export QSOs'}>
             <Ham2kListItem
-              key={option.fileName}
-              title={option.exportLabel || option.exportName}
-              description={option.fileName}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={option.devMode ? styles.colors.devMode : styles.colors.onBackground} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
-              onPress={() => readyToExport && handleExports({ options: [option] })}
-              descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
-              titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
-              style={{ opacity: readyToExport ? 1 : 0.5, flex: 1 }}
+              title={exportLabel}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
+              onPress={() => readyToExport && handleExports({ options: selectedExportOptions })}
+              style={{ opacity: readyToExport ? 1 : 0.5 }}
               disabled={!readyToExport}
             />
-          </View>
-        ))}
-      </Ham2kListSection>
+            {exportOptions.map((option) => (
+              <View key={`${option.exportType}-${option.fileName}`} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'center' }}>
+                <Checkbox
+                  status={(settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
+                  onPress={() => dispatch(setSettings({ exportTypes: { ...settings.exportTypes, [option.exportType]: !((settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false) } }))}
+                />
+                <Ham2kListItem
+                  key={option.fileName}
+                  title={option.exportLabel || option.exportName}
+                  description={option.fileName}
+                  left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={option.devMode ? styles.colors.devMode : styles.colors.onBackground} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
+                  onPress={() => readyToExport && handleExports({ options: [option] })}
+                  descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
+                  titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
+                  style={{ opacity: readyToExport ? 1 : 0.5, flex: 1 }}
+                  disabled={!readyToExport}
+                />
+              </View>
+            ))}
+          </Ham2kListSection>
 
-      <Ham2kListSection title={'Import QSOs'}>
-        <Ham2kListItem
-          title="Add QSOs from ADIF file"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-import-outline" />}
-          onPress={() => handleImportADIF()}
-        />
-      </Ham2kListSection>
+          <Ham2kListSection title={'Import QSOs'}>
+            <Ham2kListItem
+              title="Add QSOs from ADIF file"
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-import-outline" />}
+              onPress={() => handleImportADIF()}
+            />
+          </Ham2kListSection>
 
-      { settings.devMode && (
+          { settings.devMode && (
 
-        <Ham2kListSection title={'Ham2K LoFi Sync'} titleStyle={{ color: styles.colors.devMode }}>
-          <Ham2kListItem
-            title="Operation"
-            description={operation.uuid}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync-circle" color={styles.colors.devMode} />}
-            titleStyle={{ color: styles.colors.devMode }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            onPress={() => {}}
-          />
-        </Ham2kListSection>
-      )}
-    </ScrollView>
+            <Ham2kListSection title={'Ham2K LoFi Sync'} titleStyle={{ color: styles.colors.devMode }}>
+              <Ham2kListItem
+                title="Operation"
+                description={operation.uuid}
+                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync-circle" color={styles.colors.devMode} />}
+                titleStyle={{ color: styles.colors.devMode }}
+                descriptionStyle={{ color: styles.colors.devMode }}
+                onPress={() => {}}
+              />
+            </Ham2kListSection>
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    </ScreenContainer>
   )
 }
 
