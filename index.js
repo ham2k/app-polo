@@ -8,16 +8,21 @@ import { name as appName } from './app.json'
 
 LogBox.ignoreLogs([/Open debugger to view warnings/])
 
-const enableMocking = () => {
-  if (!__DEV__) return
+/* Uncomment these lines to enable development mode mocking of third-party APIs */
+/*   see src/mocks/handlers.js for list of mocked servers                       */
 
-  const polyfillContext = require.context('./', false, /msw\.polyfills\.js/)
-  polyfillContext('./msw.polyfills.js')
+// const enableMocking = () => {
+//   if (!__DEV__) return
 
-  const serverContext = require.context('./src/mocks', false, /server\.js/)
-  const { server } = serverContext('./server.js')
-  server.listen()
-}
+//   const polyfillContext = require.context('./', false, /msw\.polyfills\.js/)
+//   polyfillContext('./msw.polyfills.js')
 
-enableMocking()
+//   const serverContext = require.context('./src/mocks', false, /server\.js/)
+//   const { server } = serverContext('./server.js')
+//   server.listen()
+// }
+// enableMocking()
+
+/* End of uncommenting */
+
 AppRegistry.registerComponent(appName, () => App)

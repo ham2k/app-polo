@@ -74,6 +74,12 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             onPress={() => navigation.navigate('CallInfo', { call: 'M0TRT' })}
           />
           <Ham2kListItem
+            title={'Phil Kessels • DL9PK'}
+            description={'Developer'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'DL9PK' })}
+          />
+          <Ham2kListItem
             title={'Ciemon Dunville • G0TRT'}
             description={'Documentation'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}

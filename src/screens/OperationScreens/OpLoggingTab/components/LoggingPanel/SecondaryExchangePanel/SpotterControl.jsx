@@ -34,76 +34,97 @@ export function SpotterControlInputs (props) {
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
-  const [spotterUI, setSpotterUI] = useState({})
   const [inProgress, setInProgress] = useState(false)
   const [spotStatus, setSpotStatus] = useState({})
   const [comments, setComments] = useState()
 
   const now = useSelector(selectSecondsTick)
 
-  useEffect(() => {
+  const isSelfSpotting = useMemo(() => !qso || !parseCallsign(qso.their?.call)?.baseCall, [qso])
+
+  const { spotterMessage, spotterDisabled } = useMemo(() => {
+    const freq = qso?.freq || vfo?.freq
+
     if (inProgress) {
-      if (qso && parseCallsign(qso.their?.call)?.baseCall && qso.freq) {
-        setSpotterUI({
-          message: `Spot at ${fmtFreqInMHz(qso.freq)}`,
-          disabled: false
-        })
+      if (isSelfSpotting) {
+        return {
+          spotterMessage: `Self-spotting at ${fmtFreqInMHz(freq)}`,
+          spotterDisabled: true
+        }
       } else {
-        setSpotterUI({
-          message: 'First set a frequency to spot.',
-          disabled: true
-        })
+        return {
+          spotterMessage: `Spotting ${qso?.their?.call} at ${fmtFreqInMHz(freq)}`,
+          spotterDisabled: true
+        }
       }
     } else {
-      if (qso?.freq) {
-        setSpotterUI({
-          message: `Spot at ${fmtFreqInMHz(qso.freq)}`,
-          disabled: false
-        })
-      } else if (vfo?.freq) {
-        if (vfo.freq !== operation?.local?.spottedFreq) {
-          setSpotterUI({
-            message: `Spot at ${fmtFreqInMHz(vfo.freq)}`,
-            disabled: false
-          })
-
+      if (isSelfSpotting) {
+        if (!vfo?.freq) {
+          return {
+            spotterMessage: 'First set a frequency to spot.',
+            spotterDisabled: true
+          }
+        } else if (vfo.freq !== operation?.local?.spottedFreq) {
           if (comments === undefined || comments === 'QRV ') {
             let suggested = operation?.local?.spottedFreq ? 'QSY ' : 'QRV '
             if (operation?.stationCallPlusArray?.length > 0) suggested += `${operation?.stationCallPlusArray?.length + 1} ops `
             setComments(suggested)
           }
+          return {
+            spotterMessage: `Self-spot at ${fmtFreqInMHz(vfo.freq)}`,
+            spotterDisabled: false
+          }
         } else if (now - (operation?.local?.spottedAt || 0) > (1000 * SECONDS_UNTIL_RESPOT)) {
-          setSpotterUI({
-            message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
-            disabled: false
-          })
+          return {
+            spotterMessage: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
+            spotterDisabled: false
+          }
         } else if (comments?.length > 0 && (now - (operation?.local?.spottedAt || 0) < (1000 * 1))) {
-          setSpotterUI({
-            message: `Spotted ${fmtDateTimeRelative(operation?.local?.spottedAt)}`,
-            disabled: false
-          })
           setComments(undefined)
+          return {
+            spotterMessage: `Self-spotted ${fmtDateTimeRelative(operation?.local?.spottedAt)}`,
+            spotterDisabled: false
+          }
         } else if (comments?.length > 0) {
-          setSpotterUI({
-            message: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
-            disabled: false
-          })
+          return {
+            spotterMessage: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
+            spotterDisabled: false
+          }
         } else {
-          setSpotterUI({
-            message: `Spotted ${fmtDateTimeRelative(operation?.local?.spottedAt)}`,
-            disabled: false
-          })
+          return {
+            spotterMessage: `Self-spotted ${fmtDateTimeRelative(operation?.local?.spottedAt)}`,
+            spotterDisabled: false
+          }
+        }
+      } else {
+        if (!qso?.startAtMillis || (now - qso?.startAtMillis) < (1000 * 60 * 10)) {
+          return {
+            spotterMessage: `Spot ${qso?.their?.call} at ${fmtFreqInMHz(freq)}`,
+            spotterDisabled: false
+          }
+        } else {
+          return {
+            spotterMessage: `Too late to spot ${qso?.their?.call}`,
+            spotterDisabled: true
+          }
         }
       }
     }
-  }, [qso, inProgress, vfo?.freq, operation?.local?.spottedFreq, operation?.local?.spottedAt, operation, now, comments])
+  }, [
+    now, comments, inProgress, isSelfSpotting,
+    qso?.freq, qso?.their?.call, qso?.startAtMillis, vfo.freq,
+    operation?.local?.spottedFreq, operation?.local?.spottedAt,
+    operation?.stationCallPlusArray?.length
+  ])
 
-  const isSelfSpotting = useMemo(() => !qso || !parseCallsign(qso.their?.call)?.baseCall, [qso])
   const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings }), [isSelfSpotting, qso, operation, settings])
 
   const handleSpotting = useCallback(async () => {
-    postSpots({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings })
-  }, [isSelfSpotting, qso, hooksWithSpotting, dispatch, operation, vfo, comments, setCurrentSecondaryControl, settings])
+    postSpots({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings })
+  }, [
+    isSelfSpotting, qso, hooksWithSpotting, dispatch, operation, vfo, comments,
+    setCurrentSecondaryControl, settings
+  ])
 
   return (
     <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
@@ -114,7 +135,7 @@ export function SpotterControlInputs (props) {
         label={'Comments'}
         value={comments ?? ''}
         onChangeText={setComments}
-        disabled={!online || spotterUI.disabled}
+        disabled={!online || spotterDisabled}
       />
 
       <ThemedButton
@@ -122,10 +143,10 @@ export function SpotterControlInputs (props) {
         mode="contained"
         icon={online ? 'hand-wave' : 'cloud-off-outline'}
         onPress={handleSpotting}
-        disabled={!online || spotterUI.disabled}
+        disabled={!online || spotterDisabled}
         // minWidth={styles.oneSpace * 18}
       >
-        {spotterUI.message}
+        {spotterMessage}
       </ThemedButton>
       <View style={{ flex: 0, flexDirection: 'row', position: 'absolute', top: styles.oneSpace * -1, right: 0 }}>
         {hooksWithSpotting.map((x, n) => (
