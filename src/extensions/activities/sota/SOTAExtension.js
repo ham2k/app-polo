@@ -50,6 +50,8 @@ const Extension = {
 }
 export default Extension
 
+let lastAuthenticationCheck
+
 const ActivityHook = {
   ...Info,
   MainExchangePanel: null,
@@ -66,18 +68,18 @@ const ActivityHook = {
   isOtherSpotEnabled: ({ settings, operation }) => {
     const enabled = !!settings?.accounts?.sota?.idToken
     const now = new Date().getTime()
-    if (!enabled && (!operation?.local?.sotaSpotWarnTime || (now - operation.local.sotaWarnTime > 1000 * 60 * 30))) {
+    if (!enabled && (!lastAuthenticationCheck || (now - lastAuthenticationCheck > 1000 * 60 * 30))) {
       Alert.alert('Warning', 'Not logged into SOTAWatch for spotting. Please go to PoLo settings')
-      operation.local.sotaSpotWarnTime = now
+      lastAuthenticationCheck = now
     }
     return enabled
   },
   isSelfSpotEnabled: ({ settings, operation }) => {
     const enabled = !!settings?.accounts?.sota?.idToken
     const now = new Date().getTime()
-    if (!enabled && (!operation?.local?.sotaSpotWarnTime || (now - operation.local.sotaWarnTime > 1000 * 60 * 30))) {
+    if (!enabled && (!lastAuthenticationCheck || (now - lastAuthenticationCheck > 1000 * 60 * 30))) {
       Alert.alert('Warning', 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings')
-      operation.local.sotaSpotWarnTime = now
+      lastAuthenticationCheck = now
     }
     return enabled
   },
