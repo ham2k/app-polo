@@ -63,17 +63,21 @@ const ActivityHook = {
 
   postOtherSpot: SOTAPostOtherSpot,
   postSelfSpot: SOTAPostSelfSpot,
-  isOtherSpotEnabled: ({ settings }) => {
+  isOtherSpotEnabled: ({ settings, operation }) => {
     const enabled = !!settings?.accounts?.sota?.idToken
-    if (!enabled) {
+    const now = new Date().getTime()
+    if (!enabled && (!operation?.local?.sotaSpotWarnTime || (now - operation.local.sotaWarnTime > 1000 * 60 * 30))) {
       Alert.alert('Warning', 'Not logged into SOTAWatch for spotting. Please go to PoLo settings')
+      operation.local.sotaSpotWarnTime = now
     }
     return enabled
   },
-  isSelfSpotEnabled: ({ settings }) => {
+  isSelfSpotEnabled: ({ settings, operation }) => {
     const enabled = !!settings?.accounts?.sota?.idToken
-    if (!enabled) {
+    const now = new Date().getTime()
+    if (!enabled && (!operation?.local?.sotaSpotWarnTime || (now - operation.local.sotaWarnTime > 1000 * 60 * 30))) {
       Alert.alert('Warning', 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings')
+      operation.local.sotaSpotWarnTime = now
     }
     return enabled
   },
