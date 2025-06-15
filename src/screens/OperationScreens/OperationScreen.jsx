@@ -353,7 +353,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
 
   return (
     <>
-      <Text style={{ marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
+      <Text style={{ minWidth: styles.oneSpace * 28, marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
         Logging Settings
       </Text>
       <Menu.Item
