@@ -67,6 +67,33 @@ export default function OpMapTab ({ navigation, route }) {
 
   const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
 
+  const [dismissedWarnings, setDismissedWarnings] = useState({})
+
+  const warnings = useMemo(() => {
+    const _warnings = []
+    if (!qth.latitude) {
+      _warnings.push({
+        key: 'no-location',
+        text: 'No lines? You need to set your location first.\nTap here to do that.',
+        onPress: () => navigation.navigate('OperationLocation', { operation: operation.uuid }),
+        style: {
+          backgroundColor: 'red',
+          opacity: 0.8
+        }
+      })
+    }
+
+    const qsosWithNoLocation = qsos.filter(qso => !qso.their?.grid)
+    if (qsosWithNoLocation.length / qsos.length > 0.5) {
+      _warnings.push({
+        key: 'many-no-location',
+        text: 'Many of these QSOs have no precise location.\nYou need a paid QRZ.com account for location lookups.',
+        onPress: () => navigation.navigate('Settings')
+      })
+    }
+    return _warnings
+  }, [navigation, operation.uuid, qsos, qth.latitude])
+
   return (
     <>
       <MapWithQSOs
@@ -78,22 +105,36 @@ export default function OpMapTab ({ navigation, route }) {
         settings={settings}
         selectedUUID={loggingState?.selectedUUID}
       />
-      {!qth.latitude && (
-        <View style={{
-          position: 'absolute',
-          top: styles.oneSpace * 1,
-          left: styles.oneSpace * 1 + safeAreaInsets.left,
-          right: styles.oneSpace * 1 + safeAreaInsets.right,
-          backgroundColor: 'red',
-          opacity: 0.8
-        }}
-        >
-          <Text
-            style={{ color: 'white', padding: styles.oneSpace, textAlign: 'center' }}
-            onPress={() => navigation.navigate('OperationLocation', { operation: operation.uuid })}
-          >
-            No QTH location. Tap here to change.
-          </Text>
+      {warnings.length > 0 && (
+        <View style={{ position: 'absolute', top: styles.oneSpace * 1, left: styles.oneSpace * 1 + safeAreaInsets.left, right: styles.oneSpace * 1 + safeAreaInsets.right }}>
+          {warnings.filter(warning => !dismissedWarnings[warning.key]).map((warning, index) => (
+            <View
+              key={index}
+              style={{
+                backgroundColor: 'red',
+                opacity: 0.8,
+                marginBottom: styles.oneSpace * 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Text
+                style={{ color: 'white', padding: styles.oneSpace, flex: 1 }}
+                onPress={warning.onPress}
+              >
+                {warning.text}
+              </Text>
+              <IconButton
+                icon="close"
+                iconColor="white"
+                style={{ flex: 0, minWidth: styles.oneSpace * 4 }}
+                size={styles.oneSpace * 2}
+                mode={'default'}
+                onPress={() => setDismissedWarnings({ ...dismissedWarnings, [warning.key]: true })}
+              />
+            </View>
+          ))}
         </View>
       )}
       <View style={{ position: 'absolute', bottom: styles.oneSpace * 1 + safeAreaInsets.bottom, right: styles.oneSpace * 1 + safeAreaInsets.right }}>
