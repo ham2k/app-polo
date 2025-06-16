@@ -298,8 +298,8 @@ const ReferenceHandler = {
       const sameDay = nearDupes.filter(q => (q.startAtMillis - (q.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
       if (sameBand && sameDay) {
-        if (refCount > 0 && !sameRefs) { // Doesn't count towards activation, but towards B2B award.
-          return { value: 0, refCount, notices: ['newRef'], type: Info.activationType }
+        if (refCount > 0 && !sameRefs) {
+          return { value: 1, refCount, notices: ['newRef'], type: Info.activationType }
         }
         return { value: 0, refCount: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
