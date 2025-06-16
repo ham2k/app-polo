@@ -46,6 +46,7 @@
 	<array>
 		<string>MaterialIcons.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
+		<string>FontAwesome6_Solid.ttf</string>
 		<string>Roboto Mono Bold.ttf</string>
 		<string>Roboto Mono Light.ttf</string>
 		<string>Roboto Mono Medium.ttf</string>
