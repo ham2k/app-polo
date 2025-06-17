@@ -12,6 +12,7 @@ import { XMLParser } from 'fast-xml-parser'
 
 import packageJson from '../../../../package.json'
 import { capitalizeString } from '../../../tools/capitalizeString'
+import { setAccountInfo } from '../../settings'
 
 /**
 
@@ -24,12 +25,10 @@ const DEBUG = false
 
 const BASE_URL = 'https://www.hamqth.com/'
 
-const apiState = {}
-
 const API_TIMEOUT = 5000 // 5 seconds -- this one is a bit slow
 
 function defaultParams (api) {
-  const session = apiState.session
+  const session = api.getState().settings?.accounts?.hamqth?.session
   return {
     id: session,
     prg: `ham2k-polo-${packageJson.version}`
@@ -66,7 +65,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     result.data?.HamQTH?.session?.error?.startsWith('Session does not exist or expired') ||
     result.data?.HamQTH?.session?.error?.startsWith('Wrong user name or password')
   ) {
-    apiState.session = undefined
     // try to get a new session key
     const { login, password } = api.getState().settings?.accounts?.hamqth ?? {}
     if (DEBUG) console.log('baseQueryWithReauth second call')
@@ -84,13 +82,13 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     const session = result.data?.HamQTH?.session?.session_id
     if (session) {
       if (DEBUG) console.log('New Session', session)
-      apiState.session = session
+      await api.dispatch(setAccountInfo({ hamqth: { ...api.getState().settings?.accounts?.hamqth, session } }))
       args.params = { ...args.params, ...defaultParams(api) } // Refresh params to include new session info
 
       if (DEBUG) console.log('baseQueryWithReauth third call')
       result = await baseQueryWithSettings(args, api, extraOptions)
     } else {
-      apiState.session = undefined
+      await api.dispatch(setAccountInfo({ hamqth: { ...api.getState().settings?.accounts?.hamqth, session: undefined } }))
       return { error: 'Unexpected error logging into HamQTH' }
     }
   }
