@@ -116,8 +116,9 @@ export default function HeaderBar ({
       style={[styles.root, { height: styles.root.height + safeAreaInsets.top }]}
     >
       <StatusBar
-        barStyle={'light-content'}
-        backgroundColor={styles.colors.primary}
+        // barStyle={'light-content'}
+        translucent={true}
+        backgroundColor={'transparent'}
       />
 
       <View flexDirection="row" justifyContent="flex-start" style={styles.sideContent}>
