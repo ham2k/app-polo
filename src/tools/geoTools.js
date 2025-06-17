@@ -75,7 +75,7 @@ export function locationForQSONInfo (qsonInfo) {
     const entityPrefix = qsonInfo?.entityPrefix ?? qsonInfo?.guess?.entityPrefix
     const state = qsonInfo?.state ?? qsonInfo?.guess?.state
     if (entityPrefix) {
-      const loc = DXCC_LOCATIONS[[entityPrefix, state].join('-')] || DXCC_LOCATIONS[entityPrefix]
+      const loc = DXCC_LOCATIONS[[entityPrefix, state?.toUpperCase()].join('-')] || DXCC_LOCATIONS[entityPrefix]
       if (loc) return { latitude: loc[1], longitude: loc[0] }
     }
     return null
