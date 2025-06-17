@@ -12,7 +12,7 @@ import { IconButton, Text } from 'react-native-paper'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { selectOperation, selectOperationCallInfo } from '../../../store/operations'
+import { selectOperation } from '../../../store/operations'
 import { selectQSOs } from '../../../store/qsos'
 import { View } from 'react-native'
 import { selectSettings } from '../../../store/settings'
@@ -46,7 +46,6 @@ export default function OpMapTab ({ navigation, route }) {
   const settings = useSelector(selectSettings)
 
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
-  const operationCallInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const [loggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
@@ -74,7 +73,7 @@ export default function OpMapTab ({ navigation, route }) {
     if (!qth.latitude) {
       _warnings.push({
         key: 'no-location',
-        text: 'No lines? You need to set your location first.\nTap here to do that.',
+        text: 'No lines?\nYou need to set your location first.\n\nTap here to do that.',
         onPress: () => navigation.navigate('OperationLocation', { operation: operation.uuid }),
         style: {
           backgroundColor: 'red',
@@ -83,11 +82,12 @@ export default function OpMapTab ({ navigation, route }) {
       })
     }
 
-    const qsosWithNoLocation = qsos.filter(qso => !qso.their?.grid)
-    if (qsosWithNoLocation.length / qsos.length > 0.5) {
+    const qsosWithNoLocation = qsos.filter(qso => !qso.their?.grid && !qso.their?.guess?.grid)
+
+    if (qsosWithNoLocation.length / qsos.length > 0.5 && qsos.length > 5) {
       _warnings.push({
         key: 'many-no-location',
-        text: 'Many of these QSOs have no precise location.\nYou need a paid QRZ.com account for location lookups.',
+        text: 'Many of these QSOs have no precise location.\n\nYou might need a paid QRZ.com account for location lookups.',
         onPress: () => navigation.navigate('Settings')
       })
     }

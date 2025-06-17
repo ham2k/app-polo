@@ -93,7 +93,6 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
   }, [camera])
 
   useEffect(() => {
-    console.log('useEffect', initialRegion, camera)
     if (camera) {
       if (initialRegion?.latitudeDelta > 0) {
         setTimeout(() => {
