@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,7 +7,8 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { StatusBar, View, useColorScheme } from 'react-native'
+import { View, useColorScheme } from 'react-native'
+import { SystemBars } from 'react-native-edge-to-edge'
 import { IconButton, Text } from 'react-native-paper'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
@@ -127,7 +128,8 @@ export default function OperationBadgeScreen ({ navigation, route }) {
 
   return (
     <>
-      <StatusBar hidden />
+      <SystemBars hidden />
+
       <MapWithQSOs
         styles={styles}
         operation={operation}

@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,10 +8,12 @@
 import React, { useCallback, useState } from 'react'
 
 import { Appbar, Menu, Text } from 'react-native-paper'
-import { StatusBar, View } from 'react-native'
+import { View } from 'react-native'
+import { SystemBars } from 'react-native-edge-to-edge'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { tweakStringForVoiceOver } from '../../tools/a11yTools'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
@@ -115,11 +117,7 @@ export default function HeaderBar ({
       safeAreaInsets={{ left: safeAreaInsets.left, right: splitView ? 0 : safeAreaInsets.right, top: safeAreaInsets.top, bottom: 0 }}
       style={[styles.root, { height: styles.root.height + safeAreaInsets.top }]}
     >
-      <StatusBar
-        // barStyle={'light-content'}
-        translucent={true}
-        backgroundColor={'transparent'}
-      />
+      <SystemBars style="light" />
 
       <View flexDirection="row" justifyContent="flex-start" style={styles.sideContent}>
         {headerBackVisible && (
