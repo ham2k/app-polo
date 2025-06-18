@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux'
 import { selectSecondsTick } from '../../../../../store/time'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
+import { useNavigation } from '@react-navigation/native'
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -35,6 +36,7 @@ function prepareStyles (baseStyles, themeColor) {
 }
 
 export function OpInfo ({ message, clearMessage, operation, qsos, style, themeColor }) {
+  const navigation = useNavigation()
   const now = useSelector(selectSecondsTick)
 
   const styles = useThemedStyles(prepareStyles, themeColor)
@@ -85,7 +87,7 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
   }, [qsos])
 
   return (
-    <TouchableRipple onPress={() => true} style={{ minHeight: styles.oneSpace * 6 }}>
+    <TouchableRipple onPress={() => navigation.navigate('OpInfo', { operation, uuid: operation.uuid })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
         {icon && (
