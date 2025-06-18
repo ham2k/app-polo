@@ -37,15 +37,17 @@ export function countTemplate (count, { zero, one, more }, context = {}) {
 }
 
 export function sanitizeToISO8859 (text) {
-  // eslint-disable-next-line no-control-regex
+  if (!text) return ''
   return text.replace(/[”“]/g, '"').replace(/[‘’]/g, "'").replace(/[^\x00-\xFF]/g, '·')
 }
 
 export function slashZeros (text) {
   // See "Combining Solidus" in https://en.wikipedia.org/wiki/Slashed_zero
+  if (!text) return ''
   return text.replace(/0/g, '0̸')
 }
 
 export function sanitizeForMarkdown (text) {
-  return text?.replace(/^[-* \t–—]+/g, '')
+  if (!text) return ''
+  return text.replace(/^[-* \t–—]+/g, '')
 }
