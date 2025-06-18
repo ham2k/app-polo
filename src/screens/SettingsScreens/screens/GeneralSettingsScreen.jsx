@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,8 +8,9 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
-import { Platform, ScrollView } from 'react-native'
+import { Platform, ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
@@ -19,7 +20,6 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kListSubheader } from '../../components/Ham2kListSubheader'
 import { findHooks } from '../../../extensions/registry'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function prepareStyles (baseStyles) {
   return {
@@ -49,7 +49,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+      <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection>
           <Ham2kListItem
             title="Theme"
@@ -173,6 +173,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
           </Ham2kListSection>
         )}
 
+        <View style={{ height: safeAreaInsets.bottom }} />
       </ScrollView>
     </ScreenContainer>
   )

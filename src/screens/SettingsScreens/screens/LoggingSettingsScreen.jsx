@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,12 +8,12 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useMemo, useState } from 'react'
 import { List, Switch } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { useDispatch, useSelector } from 'react-redux'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { FlagsDialog } from '../components/FlagsDialog'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
@@ -48,7 +48,7 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+      <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection>
           {/* <Ham2kListItem title={'Clone Settings from Previous'}
             description={settings.cloneLastOperation !== false ? 'Settings for new operations are based on the most recent one' : 'New operations start with default settings' }
@@ -122,6 +122,8 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
             ))}
           </Ham2kListSection>
         )}
+
+        <View style={{ height: safeAreaInsets.bottom }} />
 
       </ScrollView>
     </ScreenContainer>

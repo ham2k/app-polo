@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -78,7 +78,7 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
           </Dialog.Content>
         </Ham2kDialog>
       )}
-      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+      <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         {featureGroups.map(({ category, label, extensions, popular }) => (
 
           <Ham2kListSection title={label} key={category} titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}>
@@ -110,6 +110,7 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
           </Ham2kListSection>
         ))}
 
+        <View style={{ height: safeAreaInsets.bottom }} />
       </ScrollView>
 
       <Notices paddingForSafeArea={true} />

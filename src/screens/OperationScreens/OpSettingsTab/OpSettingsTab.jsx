@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,14 +7,15 @@
 
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { ScrollView } from 'react-native'
-import { List } from 'react-native-paper'
-
-import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import { List } from 'react-native-paper'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
 import { addNewOperation, fillOperationFromTemplate, getAllOperationTemplates, getOperationTemplate, selectOperation, selectOperationsList, setOperationData } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
@@ -117,6 +118,8 @@ export default function OpSettingsTab ({ navigation, route }) {
       navigation.navigate('Operation', { uuid: newOperation.uuid, operation: newOperation, _isNew: true }, false)
     }, 100)
   }, [dispatch, navigation, operation, settings])
+
+  const safeAreaInsets = useSafeAreaInsets()
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -230,6 +233,7 @@ export default function OpSettingsTab ({ navigation, route }) {
           />
         )}
       </Ham2kListSection>
+      <View style={{ height: safeAreaInsets.bottom }} />
     </ScrollView>
 
   )

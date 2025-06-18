@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -134,14 +134,14 @@ export default function MainSettingsScreen ({ navigation, route }) {
 function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
   const safeAreaInsets = useSafeAreaInsets()
   const [currentDialog, setCurrentDialog] = useState()
-
+  console.log('safe area', safeAreaInsets)
   const accountSettingHooks = useMemo(() => {
     const hooks = findHooks('setting').filter(hook => hook.category === 'account' && hook.SettingItem)
     return hooks
   }, [settings]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: safeAreaInsets.left, marginRight: splitView ? 0 : safeAreaInsets.right }}>
+    <ScrollView style={{ flex: 1, marginLeft: safeAreaInsets.left, marginRight: splitView ? 0 : safeAreaInsets.right }}>
       <Ham2kListSection>
 
         <Ham2kListItem
@@ -256,7 +256,7 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
         />
       </Ham2kListSection>
 
-      <Ham2kListSection>
+      <Ham2kListSection style={{ marginBottom: safeAreaInsets.bottom }}>
         <Ham2kListSubheader>Need Help?</Ham2kListSubheader>
         <Ham2kListItem
           title="Read The Fine Manual"
@@ -301,6 +301,9 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-alert-outline" />}
         />
       </Ham2kListSection>
+
+      <View style={{ height: safeAreaInsets.bottom }} />
+
     </ScrollView>
   )
 }

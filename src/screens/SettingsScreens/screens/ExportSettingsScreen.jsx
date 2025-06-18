@@ -320,7 +320,7 @@ Attributes for the log being exported
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+      <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection title={'Export Types'} />
         {exportTypes.map(exportType => (
           <React.Fragment key={exportType.key}>
@@ -359,6 +359,9 @@ Attributes for the log being exported
         <Ham2kListSection title={'Template Help'}>
           <Ham2kMarkdown style={{ margin: styles.oneSpace * 2 }}>{templateHelp}</Ham2kMarkdown>
         </Ham2kListSection>
+
+        <View style={{ height: safeAreaInsets.bottom }} />
+
       </ScrollView>
     </ScreenContainer>
   )

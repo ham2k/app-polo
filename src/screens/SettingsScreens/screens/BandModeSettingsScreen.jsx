@@ -8,7 +8,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Switch } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ADIF_MODES_AND_SUBMODES, BANDS, MAIN_MODES, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -98,7 +98,7 @@ export default function BandModeSettingsScreen ({ navigation, splitView }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+      <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection title={'Bands'}>
           {bandOptions.map((band) => (
             <Ham2kListItem
@@ -128,6 +128,8 @@ export default function BandModeSettingsScreen ({ navigation, splitView }) {
             onPress={() => setMoreModes(moreModes + 1 % 3)}
           />
         </Ham2kListSection>
+
+        <View style={{ height: safeAreaInsets.bottom }} />
       </ScrollView>
     </ScreenContainer>
   )

@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -33,7 +33,7 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+      <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection>
           <Ham2kListItem title={'Created by Sebastián Delmont • KI2D'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
@@ -93,6 +93,8 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
           />
 
         </Ham2kListSection>
+
+        <View style={{ height: safeAreaInsets.bottom }} />
 
       </ScrollView>
     </ScreenContainer>

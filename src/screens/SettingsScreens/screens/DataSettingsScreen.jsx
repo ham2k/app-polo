@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -9,7 +9,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Dialog, List, Text } from 'react-native-paper'
-import { Alert, ScrollView } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber } from '@ham2k/lib-format-tools'
@@ -208,7 +208,7 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
         </Ham2kDialog>
       )}
 
-      <ScrollView style={{ flex: 1, paddingBottom: safeAreaInsets.bottom, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+      <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <Ham2kListSection title={'Offline Data'}>
           {sortedDataFileDefinitions.map((def) => (
             <React.Fragment key={def.key}>
@@ -253,12 +253,14 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
           }
         </Ham2kListSection>
 
-        {extensionSettingHooks.length > 0 && (
-          <Ham2kListSection title={'Extensions'}>
+        {extensionSettingHooks.length > 0 ? (
+          <Ham2kListSection title={'Extensions'} style={{ marginBottom: safeAreaInsets.bottom }}>
             {extensionSettingHooks.map((hook) => (
               <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
             ))}
           </Ham2kListSection>
+        ) : (
+          <View style={{ height: safeAreaInsets.bottom }} />
         )}
       </ScrollView>
     </ScreenContainer>
