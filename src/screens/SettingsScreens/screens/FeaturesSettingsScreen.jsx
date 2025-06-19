@@ -137,7 +137,10 @@ const CATEGORIES_ORDER = ['locationBased', 'contestsAndFieldOps', 'lookup', 'cor
 const POPULAR_EXTENSIONS = [
   'pota',
   'wwff',
-  'sota'
+  'sota',
+  'fd',
+  'colonies',
+  'qp'
 ]
 
 function groupAndSortExtensions (extensions, devMode = false) {
