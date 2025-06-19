@@ -69,7 +69,7 @@ export const { setTransceiverState, setCurrentTransceiver, setVFO } = stationSli
 export const selectTransceiver = createSelector(
   (state) => state?.station?.transceivers || state?.station?.devices,
   (state, transceiver) => transceiver || state?.station?.currentTransceiver || 'default',
-  (transceivers, name) => transceivers[name] ?? {}
+  (transceivers, name) => (transceivers && transceivers[name]) ?? {}
 )
 
 export const selectVFO = createSelector(
