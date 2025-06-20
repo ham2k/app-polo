@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { superModeForMode } from '@ham2k/lib-operation-data'
-import { fmtNumber } from '@ham2k/lib-format-tools'
+import { fmtInteger, fmtNumber } from '@ham2k/lib-format-tools'
 
 import { findRef, replaceRef } from '../../../tools/refTools'
 import ThemedTextInput from '../../../screens/components/ThemedTextInput'
@@ -140,7 +140,15 @@ const ReferenceHandler = {
   },
 
   relevantInfoForQSOItem: ({ qso, operation }) => {
-    return [qso.their.exchange]
+    console.log('relevantInfoForQSOItem', qso)
+    let exchange = qso?.their?.exchange
+    if (exchange?.startsWith('PC')) { // "Please Copy…"
+      exchange = '+' + exchange.slice(2)
+    } else if (exchange?.startsWith('P') || exchange?.startsWith('C')) { // "Please Copy…"
+      exchange = '+' + exchange.slice(1)
+    }
+    const parts = exchange?.split(' ')
+    return [[parts[0].padStart(3, ' '), parts[1].padStart(3, ' ')].join(' ')]
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref, score }) => {
@@ -160,6 +168,10 @@ const ReferenceHandler = {
       } else {
         scoring.notices = [`${ABBREVIATED_SECTION_NAMES[qsoRef?.location] || FD_LOCATION_VALUES[qsoRef?.location]}`]
       }
+    }
+
+    if (qso?.their?.exchange?.startsWith('P') || qso?.their?.exchange?.startsWith('C')) {
+      scoring.pleaseCopy = 1
     }
 
     if (nearDupes.length === 0) {
@@ -188,6 +200,7 @@ const ReferenceHandler = {
       icon: Info.icon,
       label: Info.name,
       total: 0,
+      pleaseCopy: 0,
       qsoCount: 0,
       qsoPoints: 0,
       powerMult: 1,
@@ -199,6 +212,8 @@ const ReferenceHandler = {
 
     score.qsoCount = score.qsoCount + 1
     score.qsoPoints = score.qsoPoints + qsoScore.value
+
+    score.pleaseCopy = score.pleaseCopy + (qsoScore.pleaseCopy || 0)
 
     score.modes[qsoScore.mode] = (score.modes[qsoScore.mode] || 0) + 1
     if (ARRL_SECTIONS[qsoScore.theirSection]) {
@@ -239,6 +254,10 @@ const ReferenceHandler = {
         }
       }).filter(x => x).join(' • ')
     )
+
+    if (score.pleaseCopy) {
+      parts.push(`🙏 ${score.pleaseCopy} Please Copys (${fmtInteger(score.pleaseCopy / score.qsoCount * 100)}%)\n\n`)
+    }
 
     let line
 
@@ -284,7 +303,7 @@ const ReferenceHandler = {
   }
 }
 
-const FD_CLASS_REGEX = /^(\d+)([ABCDEF])$/
+const FD_CLASS_REGEX = /^(PC|)(\d+)([ABCDEF])$/
 
 export const FD_LOCATION_VALUES = { ...ARRL_SECTIONS, ...RAC_SECTIONS, MX: 'Mexico', DX: 'Other DX' }
 export const FD_LOCATIONS = Object.keys(FD_LOCATION_VALUES)
