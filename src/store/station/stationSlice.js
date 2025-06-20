@@ -9,7 +9,7 @@ import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 
 const initialState = {
-  transceivers: {},
+  devices: {},
   currentTransceiver: 'default'
 }
 
@@ -22,26 +22,23 @@ export const stationSlice = createSlice({
     setTransceiverState: (state, action) => {
       let { name, ...data } = action.payload
       name = name ?? state.currentTransceiver ?? 'default'
-      if (state.transceivers) {
-        state.transceivers[name] = { ...state.transceivers[name], ...data }
-      } else {
-        state.devices[name] = { ...state.devices[name], ...data }
+      if (!state.devices) {
+        state.devices = state.transceivers || {}
       }
+
+      state.devices[name] = { ...state.devices[name], ...data }
     },
     setVFO: (state, action) => {
       let { name, ...data } = action.payload
       name = name ?? state.currentTransceiver ?? 'default'
       if (data.freq) data.band = bandForFrequency(data.freq)
       let mode
-      if (state.transceivers) {
-        state.transceivers[name] = state.transceivers[name] || {}
-        state.transceivers[name].vfo = state.transceivers[name].vfo || {}
-        mode = state.transceivers[name].vfo.mode
-      } else {
-        state.devices[name] = state.devices[name] || {}
-        state.devices[name].vfo = state.devices[name].vfo || {}
-        mode = state.devices[name].vfo.mode
+      if (!state.devices) {
+        state.devices = state.transceivers || {}
       }
+      state.devices[name] = state.devices[name] || {}
+      state.devices[name].vfo = state.devices[name].vfo || {}
+      mode = state.devices[name].vfo.mode
 
       if (mode === 'USB') {
         if (data.band === '160m' || data.band === '80m' || data.band === '40m') {
@@ -52,11 +49,7 @@ export const stationSlice = createSlice({
           data.mode = 'USB'
         }
       }
-      if (state.transceivers) {
-        state.transceivers[name].vfo = { ...state.transceivers[name].vfo, ...data }
-      } else {
-        state.devices[name].vfo = { ...state.devices[name].vfo, ...data }
-      }
+      state.devices[name].vfo = { ...state.devices[name].vfo, ...data }
     },
     setCurrentTransceiver: (state, action) => {
       state.currentTransceiver = action.payload
@@ -67,9 +60,9 @@ export const stationSlice = createSlice({
 export const { setTransceiverState, setCurrentTransceiver, setVFO } = stationSlice.actions
 
 export const selectTransceiver = createSelector(
-  (state) => state?.station?.transceivers || state?.station?.devices,
+  (state) => state?.station?.devices || state?.station?.transceivers,
   (state, transceiver) => transceiver || state?.station?.currentTransceiver || 'default',
-  (transceivers, name) => (transceivers && transceivers[name]) ?? {}
+  (devices, name) => (devices && devices[name]) ?? {}
 )
 
 export const selectVFO = createSelector(
