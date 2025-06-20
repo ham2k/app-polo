@@ -88,15 +88,13 @@ export function FDActivityOptions (props) {
         </View>
       </Ham2kListSection>
       <Ham2kListSection title={'Additional Information'}>
-        <ListRow>
+        <ListRow style={{ maxWidth: styles.oneSpace * 80 }}>
           <ThemedDropDown
             label="Highest Transmitter Power"
             value={ref?.transmitterPower}
             placeholder="100W"
             onChangeText={handleTransmitterPowerChange}
-            dropDownContainerMaxHeight={styles.oneSpace * 45}
-            style={{ width: styles.oneSpace * (styles.size === 'xs' ? 13 : 15) }}
-            list={[
+            options={[
               { label: 'QRP: 5W or less', value: '5W' },
               { label: 'QRO: 100W or less', value: '100W' },
               { label: 'More than 100W', value: '500W' }
@@ -104,15 +102,13 @@ export function FDActivityOptions (props) {
           />
 
         </ListRow>
-        <ListRow>
+        <ListRow style={{ maxWidth: styles.oneSpace * 80 }}>
           <ThemedDropDown
             label="Power Source"
             value={ref?.powerSource}
             placeholder="Select a power source"
             onChangeText={handlePowerSourceChange}
-            dropDownContainerMaxHeight={styles.oneSpace * 45}
-            style={{ width: styles.oneSpace * (styles.size === 'xs' ? 13 : 15) }}
-            list={[
+            options={[
               { label: 'Batteries, Solar, Wind', value: 'BATTERIES' },
               { label: 'Commercial Power, Generator', value: 'GENERATOR' }
             ]}

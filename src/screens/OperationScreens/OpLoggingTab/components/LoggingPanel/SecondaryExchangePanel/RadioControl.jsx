@@ -48,7 +48,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
         dropDownContainerMaxHeight={styles.oneSpace * 19}
         fieldId={'band'}
         style={{ width: styles.oneSpace * (styles.size === 'xs' ? 13 : 15) }}
-        list={bandOptions}
+        options={bandOptions}
       />
       <FrequencyInput
         innerRef={ref}
@@ -71,7 +71,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
         dropDownContainerMaxHeight={styles.oneSpace * 19}
         fieldId={'mode'}
         style={{ width: styles.oneSpace * (styles.size === 'xs' ? 12 : 14) }}
-        list={modeOptions}
+        options={modeOptions}
       />
     </View>
   )

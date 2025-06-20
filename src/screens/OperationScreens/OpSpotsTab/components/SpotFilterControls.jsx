@@ -60,8 +60,7 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
             value={filterState.band || 'any'}
             onChange={(event) => updateFilterState({ band: event.nativeEvent.text })}
             fieldId={'band'}
-            style={{ width: '100%' }}
-            list={[
+            options={[
               { value: 'any', label: 'All Bands' },
               { value: 'auto', label: `Automatic (Currently ${vfo?.band})` },
               ...options.band
@@ -75,8 +74,7 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
             value={filterState.mode || 'any'}
             onChange={(event) => updateFilterState({ mode: event.nativeEvent.text })}
             fieldId={'mode'}
-            style={{ width: '100%' }}
-            list={[
+            options={[
               { value: 'any', label: 'All Modes' },
               { value: 'auto', label: `Automatic (Currently ${LONG_LABEL_FOR_MODE[superModeForMode(vfo?.mode)]})` },
               ...options.mode
@@ -90,8 +88,7 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
             value={filterState.ageInMinutes || 0}
             onChange={(event) => updateFilterState({ ageInMinutes: Number.parseInt(event.nativeEvent.text, 10) })}
             fieldId={'age'}
-            style={{ width: '100%' }}
-            list={[
+            options={[
               { value: 0, label: 'Any age' },
               { value: 10, label: '10 minutes' },
               { value: 20, label: '20 minutes' },

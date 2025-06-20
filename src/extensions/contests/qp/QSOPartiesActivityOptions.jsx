@@ -71,7 +71,7 @@ export function ActivityOptions (props) {
   return (
     <>
       <Ham2kListSection title={'Which QSO Party?'}>
-        <ListRow>
+        <ListRow style={{ maxWidth: styles.oneSpace * 80 }}>
           <ThemedDropDown
             // label="Which QSO Party?"
             value={ref?.ref}
@@ -79,7 +79,7 @@ export function ActivityOptions (props) {
             onChangeText={handlePartyChange}
             dropDownContainerMaxHeight={styles.oneSpace * 45}
             style={{ width: styles.oneSpace * (styles.size === 'xs' ? 13 : 15) }}
-            list={partyOptions}
+            options={partyOptions}
           />
         </ListRow>
       </Ham2kListSection>

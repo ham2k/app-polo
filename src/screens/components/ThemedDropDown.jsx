@@ -14,7 +14,7 @@ export default function ThemedDropDown (props) {
   const {
     style, themeColor,
     label,
-    value, list, fieldId,
+    value, options, fieldId,
     onChange, onChangeText
   } = props
   const themeStyles = useThemedStyles()
@@ -60,7 +60,7 @@ export default function ThemedDropDown (props) {
       iconStyle={{ padding: 0, margin: 0, width: themeStyles.oneSpace * 2.1 }}
       showDropDown={onShow}
       onDismiss={onDismiss}
-      list={list}
+      list={options}
       keyboardShouldPersistTaps="handled"
     />
   )

@@ -80,7 +80,7 @@ export function SatellitesLoggingControl (props) {
       dropDownContainerMaxHeight={styles.oneSpace * 19}
       fieldId={'satellite'}
       style={{ ...style, width: styles.oneSpace * 40 }}
-      list={options}
+      options={options}
     />
   )
 }
