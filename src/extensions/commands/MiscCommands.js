@@ -53,7 +53,6 @@ const SpotCommandHook = {
 
     if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
       comments = match[1]
-      console.log(operation)
       if (operation?.stationCallPlusArray?.length > 0) comments += ` ${operation?.stationCallPlusArray?.length + 1} ops`
     }
 
@@ -75,8 +74,8 @@ const SpotCommandHook = {
       if (operation?.stationCallPlusArray?.length > 0) comments += ` ${operation?.stationCallPlusArray?.length + 1} ops`
     }
 
-    const hooksWithSpotting = retrieveHooksWithSpotting({ operation, settings })
-    postSpots({ operation, vfo, comments, hooksWithSpotting, dispatch })
+    const hooksWithSpotting = retrieveHooksWithSpotting({ isSelfSpotting: true, operation, settings })
+    postSpots({ isSelfSpotting: true, operation, vfo, comments, hooksWithSpotting, dispatch })
     if (comments) {
       return `Self-spotting at ${fmtFreqInMHz(vfo.freq)} with ‘${comments}’`
     } else {

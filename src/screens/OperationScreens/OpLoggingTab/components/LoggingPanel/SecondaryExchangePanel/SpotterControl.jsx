@@ -166,7 +166,7 @@ export function retrieveHooksWithSpotting ({ isSelfSpotting, qso, operation, set
   const spotMethodKey = isSelfSpotting ? 'postSelfSpot' : 'postOtherSpot'
   const spotEnabledKey = isSelfSpotting ? 'isSelfSpotEnabled' : 'isOtherSpotEnabled'
 
-  const activityHooks = findHooks('activity').filter((x) => (findRef((isSelfSpotting ? operation : qso).refs, isSelfSpotting ? x.activationType : x.huntingType) && x[spotMethodKey] && (!x[spotEnabledKey] || (x[spotEnabledKey] && x[spotEnabledKey]({ operation, settings })))))
+  const activityHooks = findHooks('activity').filter((x) => (findRef((isSelfSpotting ? operation : qso)?.refs, isSelfSpotting ? x.activationType : x.huntingType) && x[spotMethodKey] && (!x[spotEnabledKey] || (x[spotEnabledKey] && x[spotEnabledKey]({ operation, settings })))))
   const spottingHooks = findHooks('spots').filter((x) => x[spotMethodKey])
 
   return [...activityHooks, ...spottingHooks]
@@ -211,7 +211,7 @@ export async function postSpots ({ isSelfSpotting, qso, operation, vfo, comments
   setInProgress && setInProgress(false)
   setComments && setComments(undefined)
   if (ok) {
-    if (!isSelfSpotting) dispatch(setOperationLocalData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
+    if (isSelfSpotting) dispatch(setOperationLocalData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
     setCurrentSecondaryControl && setCurrentSecondaryControl(undefined)
   }
 }
