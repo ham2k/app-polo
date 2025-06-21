@@ -30,7 +30,7 @@ export default function ThemedTextInput (props) {
     label, placeholder, value, error,
     onChangeText, onChange, onSubmitEditing, onSpace, onFocus, onBlur,
     innerRef, focusedRef,
-    fieldId,
+    fieldId, objectId,
     multiline,
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst, textTransformer,
     keyboard
@@ -152,13 +152,14 @@ export default function ThemedTextInput (props) {
     }
     const changeEvent = { ...event }
     changeEvent.fieldId = fieldId
+    changeEvent.objectId = objectId
     changeEvent.ref = actualInnerRef
     changeEvent.nativeEvent.text = text
     if (DEBUG) console.log('handleChange final', { text })
     onChangeText && onChangeText(text)
     onChange && onChange(changeEvent)
   }, [
-    multiline, fieldId, actualInnerRef, stringValue,
+    multiline, fieldId, objectId, actualInnerRef, stringValue,
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
     textTransformer, onChangeText, onChange, onSpace, trackSelection
   ])
@@ -184,7 +185,7 @@ export default function ThemedTextInput (props) {
         }
       }
     }
-  }, [fieldId, focusedRef, handleChange, isFocused, stringValue, actualInnerRef, multiline])
+  }, [focusedRef, handleChange, isFocused, stringValue, actualInnerRef, multiline])
 
   const handleSelectionChange = useCallback((event) => {
     if (trackSelection) {
@@ -202,8 +203,8 @@ export default function ThemedTextInput (props) {
 
   const handleBlur = useCallback((event) => {
     setIsFocused(false)
-    onBlur && onBlur({ ...event, value: stringValue?.trim() || '', fieldId, ref: actualInnerRef.current })
-  }, [onBlur, fieldId, actualInnerRef, stringValue])
+    onBlur && onBlur({ ...event, value: stringValue?.trim() || '', fieldId, objectId, ref: actualInnerRef.current })
+  }, [onBlur, stringValue, fieldId, objectId, actualInnerRef])
 
   const colorStyles = useMemo(() => {
     return {

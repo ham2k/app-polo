@@ -9,7 +9,7 @@ import React, { useCallback, useMemo, useRef } from 'react'
 
 import { View, findNodeHandle } from 'react-native'
 import CallsignInput from '../../../../components/CallsignInput'
-import RSTInput from '../../../../components/RSTInput'
+import RSTInput, { expandRSTValues } from '../../../../components/RSTInput'
 import ThemedTextInput from '../../../../components/ThemedTextInput'
 import { findRef } from '../../../../../tools/refTools'
 import { findHooks } from '../../../../../extensions/registry'
@@ -73,30 +73,17 @@ export const MainExchangePanel = ({
   }, [handleFieldChange, spaceHandler, rstLength, settings])
 
   const handleRSTBlur = useCallback((event) => {
-    let text = event?.value || event?.nativeEvent?.text
+    const text = event?.value || event?.nativeEvent?.text
     const mode = qso?.mode ?? vfo?.mode ?? 'SSB'
-
-    text = text?.trim() || ''
-    if (text.length === 1) {
-      let readability = '5'
-      const strength = text
-      const tone = '9'
-      if (strength === '1' || strength === '2' || strength === '3') {
-        readability = '3'
-      } else if (strength === '4') {
-        readability = '4'
+    if (text.trim().length === 1) {
+      const expanded = expandRSTValues(text, mode)
+      if (expanded !== text) {
+        handleFieldChange && handleFieldChange({ ...event, value: expanded, nativeEvent: { ...event?.nativeEvent, text } })
       }
-      if (mode === 'CW' || mode === 'RTTY') {
-        text = `${readability}${strength}${tone}`
-      } else {
-        text = `${readability}${strength}`
-      }
-
-      handleFieldChange && handleFieldChange({ ...event, value: text, nativeEvent: { ...event?.nativeEvent, text } })
     }
 
     return true
-  }, [handleFieldChange, qso?.mode, vfo?.mode])
+  }, [handleFieldChange, qso, vfo?.mode])
 
   let fields = []
   fields.push(

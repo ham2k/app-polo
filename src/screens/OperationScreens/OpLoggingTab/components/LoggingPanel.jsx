@@ -36,6 +36,7 @@ import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
 import { useNavigation } from '@react-navigation/native'
 import { findHooks } from '../../../../extensions/registry'
 import { trackEvent } from '../../../../distro'
+import { expandRSTValues } from '../../../components/RSTInput'
 
 const DEBUG = false
 
@@ -233,12 +234,8 @@ export default function LoggingPanel ({
 
   const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
     if (DEBUG) logTimer('submit', 'handleSubmit start', { reset: true })
-    // Ensure the focused component has a chance to update values
-    //   NOTE: This is a hack that can break on newer versions of React Native
-    const component = focusedRef?.current?._internalFiberInstanceHandleDEV
-    component?.memoizedProps?.onBlur()
 
-    setTimeout(async () => { // Run inside a setTimeout to allow the state to update
+    setTimeout(async () => { // Run inside a setTimeout to allow for async functions
       // First, try to process any commands
       const command = qso?.their?.call
       const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })
@@ -299,11 +296,11 @@ export default function LoggingPanel ({
         qso.our = qso.our || {}
         qso.our.call = qso.our.call || ourInfo?.call
         qso.our.operatorCall = qso.our.operatorCall || operation.local?.operatorCall
-        qso.our.sent = qso.our.sent || defaultRSTForMode(qso.mode)
+        qso.our.sent = expandRSTValues(qso.our.sent, qso.mode)
 
         qso.their = qso.their || {}
-        qso.their.sent = qso.their.sent || defaultRSTForMode(qso.mode)
-
+        qso.their.sent = expandRSTValues(qso.their.sent, qso.mode)
+        console.log('LoggingPanel', qso.our.sent, qso.their.sent)
         let lastUUID
 
         const { call, allCalls, callStack } = parseStackedCalls(qso?.their?.call ?? '')
@@ -338,14 +335,22 @@ export default function LoggingPanel ({
           }
         }
 
-        dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
-        if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
+        setTimeout(() => {
+          // Add the QSO to the operation, and set a new QSO
+          // But leave enough time for blur effects to take place before being overwritten by the new setQSO
+          // Just 10ms did not seemed to be enough in tests, but 50ms is fine.
 
-        setQSO(undefined, { otherStateChanges: { lastUUID, callStack } }) // Let queue management decide what to do
+          dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
+          if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
+
+          // Let queue management decide what to do next
+          setQSO(undefined, { otherStateChanges: { lastUUID, callStack } })
+        }, 50)
+
         if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
       }
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
-    }, 10)
+    }, 0)
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
   }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, isValidQSO, setCommandInfo, setCurrentSecondaryControl, setQSO])
 
@@ -577,12 +582,6 @@ export default function LoggingPanel ({
       </SafeAreaView>
     </View>
   )
-}
-
-export function defaultRSTForMode (mode) {
-  if (mode === 'CW' || mode === 'RTTY') return '599'
-  if (mode === 'FT8' || mode === 'FT4') return '+0'
-  return '59'
 }
 
 function prepareStyles (themeStyles, themeColor) {
