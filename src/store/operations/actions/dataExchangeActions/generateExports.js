@@ -6,16 +6,18 @@
  */
 
 import RNFetchBlob from 'react-native-blob-util'
+import base64 from 'react-native-base64'
 
 import { qsonToADIF } from '../../../../tools/qsonToADIF'
 import { qsonToCabrillo } from '../../../../tools/qsonToCabrillo'
 
-export const generateExportsForOptions = (uuid, exports) => async (dispatch, getState) => {
+export const generateExportsForOptions = (uuid, exports, options = {}) => async (dispatch, getState) => {
   const state = getState()
   const operation = state.operations.info[uuid]
   const settings = state.settings
 
-  const paths = []
+  const results = []
+
   for (const oneExport of exports) {
     const operationData = oneExport.operation || operation
 
@@ -25,11 +27,28 @@ export const generateExportsForOptions = (uuid, exports) => async (dispatch, get
     // When doing multioperator operations, with operators also working each other,
     // we want to exclude these QSOs from the combinations
     qsos = qsos.filter(qso => qso.our.call !== qso.their.call)
-
-    paths.push(await generateExportFile({ uuid, qsos, operation: operationData, settings, ...oneExport }))
+    console.log('generateExportsForOptions oneExport', oneExport)
+    if (options.dataURI) {
+      const uri = await generateExportDataURI({ uuid, qsos, operation: operationData, settings, ...oneExport })
+      if (uri) {
+        results.push({
+          uri,
+          fileName: oneExport.fileName
+        })
+      }
+    } else {
+      const path = await generateExportFile({ uuid, qsos, operation: operationData, settings, ...oneExport })
+      if (path) {
+        results.push({
+          path,
+          uri: `file://${path}`,
+          fileName: oneExport.fileName
+        })
+      }
+    }
   }
-
-  return paths.filter(x => x)
+  console.log('generateExportsForOptions', results)
+  return results
 }
 
 export const deleteExport = (path) => async (dispatch) => {
@@ -53,4 +72,22 @@ export const generateExportFile = async ({ uuid, fileName, format, operation, qs
   } else {
     return false
   }
+}
+
+export const generateExportDataURI = async ({ uuid, fileName, format, operation, qsos, exportData, ...rest }) => {
+  let data
+  let type
+  if (format === 'qson') {
+    data = JSON.stringify({ operation: { ...operation, ...exportData }, qsos })
+    type = 'application/json'
+  } else if (format === 'adif') {
+    data = qsonToADIF({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
+    type = 'text/plain'
+  } else if (format === 'cabrillo') {
+    data = qsonToCabrillo({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
+    type = 'text/plain'
+  }
+
+  const uri = `data:${type};base64,${base64.encode(data)}`
+  return uri
 }

@@ -175,7 +175,7 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
       const exportLabel = option.exportLabel || option.exportName || `${handler.shortName ?? handler.name} ${DATA_FORMAT_DESCRIPTIONS[option.format] || DATA_FORMAT_DESCRIPTIONS.other}`
       const exportType = option.exportType || handler.key
 
-      console.log('dataExportOptions', { exportSettings, option, title, fileName, exportLabel, exportType })
+      // console.log('dataExportOptions', { exportSettings, option, title, fileName, exportLabel, exportType })
       exports.push({ ...option, handler, ref, fileName, title, exportLabel, exportType, operation, ourInfo })
     })
   })

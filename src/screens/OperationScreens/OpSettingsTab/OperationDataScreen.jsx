@@ -90,11 +90,20 @@ export default function OperationDataScreen (props) {
         refs: (option.operationData?.refs || []).map(r => r.type).join(',')
       })
     })
-    dispatch(generateExportsForOptions(operation.uuid, options)).then((paths) => {
-      if (paths?.length > 0) {
-        Share.open({
-          urls: paths.map(p => `file://${p}`)
-        }).then((x) => {
+    console.log('handle exports', options)
+    dispatch(generateExportsForOptions(operation.uuid, options, { dataURI: false })).then((exports) => {
+      console.log('generated exports', exports)
+      if (exports?.length > 0) {
+        const shareOptions = {
+          urls: exports.map(e => e.uri),
+          mimeType: 'application/octet-stream',
+          filenames: exports.map(e => e.fileName)
+          // showAppsToView: true,
+          // title: 'Ham2K PoLo Export',
+          // subject: 'Ham2K PoLo Export'
+        }
+
+        Share.open(shareOptions).then((x) => {
           console.info('Shared', x)
         }).catch((e) => {
           console.info('Sharing Error', e)
