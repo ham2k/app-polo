@@ -28,6 +28,8 @@ import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './ap
 import { reducer as apiGMAReducer, middleware as apiGMAMiddleware } from './apis/apiGMA'
 import { reducer as apiWWFFReducer, middleware as apiWWFFMiddleware } from './apis/apiWWFF'
 import { reducer as apiWWBOTAReducer, middleware as apiWWBOTAMiddleware } from './apis/apiWWBOTA'
+import { reducer as apiZLOTAReducer, middleware as apiZLOTAMiddleware } from './apis/apiZLOTA'
+
 import { reduxEnhancersForDistribution } from '../distro'
 
 // Redux Toolkit uses Immer, which freezes state by default.
@@ -54,7 +56,8 @@ const rootReducer = combineReducers({
   apiSOTA: apiSOTAReducer,
   apiGMA: apiGMAReducer,
   apiWWFF: apiWWFFReducer,
-  apiWWBOTA: apiWWBOTAReducer
+  apiWWBOTA: apiWWBOTAReducer,
+  apiZLOTA: apiZLOTAReducer
 })
 
 const persistConfig = {
@@ -108,6 +111,7 @@ export const store = configureStore({
     middlewares.push(apiGMAMiddleware)
     middlewares.push(apiWWFFMiddleware)
     middlewares.push(apiWWBOTAMiddleware)
+    middlewares.push(apiZLOTAMiddleware)
 
     return middlewares
   },
