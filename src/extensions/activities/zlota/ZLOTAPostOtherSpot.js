@@ -33,7 +33,8 @@ export const ZLOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dis
       const apiResults = await dispatch((_dispatch, _getState) => apiZLOTA.endpoints.spot.select(spot)(_getState()))
       apiPromise.unsubscribe && apiPromise.unsubscribe()
 
-      if (!apiResults?.data?.success) {
+      // Ignore timeout as this seems to happen, despite successful spot???
+      if (!apiResults?.data?.success && apiResults?.error?.status !== 'TIMEOUT_ERROR') {
         Alert.alert('Error posting ZLOTA spot', apiResults?.data?.message)
         return false
       }
