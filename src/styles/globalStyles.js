@@ -207,6 +207,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
         fontFamily: normalFontFamily,
         fontWeight: 'bold',
         fontSize: normalFontSize * 1.2,
+        lineHeight: normalFontSize * 2,
         color: theme.colors.onBackground,
         marginBottom: halfSpace
       },
