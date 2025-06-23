@@ -120,10 +120,6 @@ const ReferenceHandler = {
   adifFieldsForOneQSO: ({ qso, operation, common, ref, mainHandler }) => {
   },
 
-  relevantInfoForQSOItem: ({ qso, operation }) => {
-    return [qso.their.exchange]
-  },
-
   scoringForQSO: ({ qso, qsos, operation, ref, score }) => {
     const { band, mode, uuid, startAtMillis } = qso
 

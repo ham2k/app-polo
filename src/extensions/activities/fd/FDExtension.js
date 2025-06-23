@@ -147,8 +147,8 @@ const ReferenceHandler = {
     } else if (exchange?.startsWith('P') || exchange?.startsWith('C')) { // "Please Copy…"
       exchange = '+' + exchange.slice(1)
     }
-    const parts = exchange?.split(' ')
-    return [[parts[0].padStart(3, ' '), parts[1].padStart(3, ' ')].join(' ')]
+    const parts = exchange?.split(' ') || []
+    return [[parts[0]?.padStart(3, ' ') || '', parts[1]?.padStart(3, ' ') || ''].join(' ')]
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref, score }) => {

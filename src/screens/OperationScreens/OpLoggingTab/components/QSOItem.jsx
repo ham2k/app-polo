@@ -18,10 +18,10 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
   const theirInfo = { ...qso?.their?.guess, ...qso?.their }
 
   const freqParts = useMemo(() => {
-    if (qso.freq) {
+    if (qso?.freq) {
       return partsForFreqInMHz(qso.freq)
     } else {
-      return [null, qso.band, null]
+      return [null, qso?.band, null]
     }
   }, [qso])
 
