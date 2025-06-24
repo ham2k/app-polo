@@ -33,6 +33,7 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
       if (uri) {
         results.push({
           uri,
+          type: mimeTypeForFormat(format),
           fileName: oneExport.fileName
         })
       }
@@ -42,9 +43,11 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
         results.push({
           path,
           uri: `file://${path}`,
+          type: mimeTypeForFormat(oneExport?.format),
           fileName: oneExport.fileName
         })
       }
+      console.log('results', results)
     }
   }
   console.log('generateExportsForOptions', results)
@@ -76,18 +79,27 @@ export const generateExportFile = async ({ uuid, fileName, format, operation, qs
 
 export const generateExportDataURI = async ({ uuid, fileName, format, operation, qsos, exportData, ...rest }) => {
   let data
-  let type
+  const type = mimeTypeForFormat(format)
   if (format === 'qson') {
     data = JSON.stringify({ operation: { ...operation, ...exportData }, qsos })
-    type = 'application/json'
   } else if (format === 'adif') {
     data = qsonToADIF({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
-    type = 'text/plain'
   } else if (format === 'cabrillo') {
     data = qsonToCabrillo({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
-    type = 'text/plain'
   }
 
   const uri = `data:${type};base64,${base64.encode(data)}`
   return uri
+}
+
+const mimeTypeForFormat = (format) => {
+  switch (format) {
+    case 'qson':
+      return 'application/json'
+    case 'adif':
+      return 'text/plain'
+    case 'cabrillo':
+      return 'text/plain'
+  }
+  return 'text/plain'
 }

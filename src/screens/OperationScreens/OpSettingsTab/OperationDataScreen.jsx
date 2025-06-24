@@ -91,18 +91,20 @@ export default function OperationDataScreen (props) {
       })
     })
     console.log('handle exports', options)
-    dispatch(generateExportsForOptions(operation.uuid, options, { dataURI: false })).then((exports) => {
+    const useDataURIs = false
+    dispatch(generateExportsForOptions(operation.uuid, options, { dataURI: useDataURIs })).then((exports) => {
       console.log('generated exports', exports)
       if (exports?.length > 0) {
         const shareOptions = {
           urls: exports.map(e => e.uri),
-          mimeType: 'application/octet-stream',
-          filenames: exports.map(e => e.fileName)
-          // showAppsToView: true,
-          // title: 'Ham2K PoLo Export',
-          // subject: 'Ham2K PoLo Export'
+          mimeType: 'text/plain',
+          showAppsToView: true
+        }
+        if (useDataURIs) {
+          shareOptions.filenames = exports.map(e => e.fileName)
         }
 
+        console.log('share options', shareOptions)
         Share.open(shareOptions).then((x) => {
           console.info('Shared', x)
         }).catch((e) => {

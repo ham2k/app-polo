@@ -8,7 +8,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react'
 import { List } from 'react-native-paper'
-import { Linking, ScrollView } from 'react-native'
+import { Linking, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import ScreenContainer from '../../components/ScreenContainer'
@@ -62,20 +62,17 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             onPress={() => navigation.navigate('CallInfo', { call: 'M1SDH' })}
           />
           <Ham2kListItem
-            title={'Aldo Mendoza • NA7DO'}
-            description={'Developer'}
+            title={'Alan McDonald • VK1AO'}
+            description={'Lead Support & Documentation'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
-            onPress={() => navigation.navigate('CallInfo', { call: 'NA7DO' })}
+            onPress={() => navigation.navigate('CallInfo', { call: 'VK1AO' })}
           />
-          <Ham2kListItem
-            title={'Ian Renton • M0TRT'}
-            description={'Developer'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
-            onPress={() => navigation.navigate('CallInfo', { call: 'M0TRT' })}
-          />
+
+        </Ham2kListSection>
+        <Ham2kListSection title={'More code and docs contributors'}>
           <Ham2kListItem
             title={'Phil Kessels • DL9PK'}
-            description={'Developer'}
+            description={'Code: spotting others'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
             onPress={() => navigation.navigate('CallInfo', { call: 'DL9PK' })}
           />
@@ -86,14 +83,54 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             onPress={() => navigation.navigate('CallInfo', { call: 'G0TRT' })}
           />
           <Ham2kListItem
-            title={'Alan McDonald • VK1AO'}
+            title={'Woody • KC1VOP'}
             description={'Documentation'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
-            onPress={() => navigation.navigate('CallInfo', { call: 'VK1AO' })}
+            onPress={() => navigation.navigate('CallInfo', { call: 'KC1VOP' })}
           />
-
+          <Ham2kListItem
+            title={'John • KQ4URU'}
+            description={'Code: QSO Party data and rules'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'KQ4URU' })}
+          />
+          <Ham2kListItem
+            title={'Aldo Mendoza • NA7DO'}
+            description={'Code: power controls, confirm QSOs from spots, lots of small fixes'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'NA7DO' })}
+          />
+          <Ham2kListItem
+            title={'Ian Renton • M0TRT'}
+            description={'Code: assorted bug fixes'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'M0TRT' })}
+          />
+          <Ham2kListItem
+            title={'Stan • W1BOY'}
+            description={'Code: QSO Party data and rules. Documentation'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'W1BOY' })}
+          />
+          <Ham2kListItem
+            title={'Marion • W1GRL'}
+            description={'Code: QSO Party data and rules. Documentation'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'W1GRL' })}
+          />
+          <Ham2kListItem
+            title={'Bryan • W1WC'}
+            description={'Code: QSO Party data and rules. Documentation'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'W1WC' })}
+          />
+          <Ham2kListItem
+            title={'Kevin • W8NI'}
+            description={'Code: QSO Party data and rules. Documentation'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'W8NI' })}
+          />
         </Ham2kListSection>
-
         <View style={{ height: safeAreaInsets.bottom }} />
 
       </ScrollView>
