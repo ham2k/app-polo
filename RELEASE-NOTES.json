@@ -1,8 +1,9 @@
 {
-  "25.7.0-pre2": {
-    "name": "July '25 (pre 2)",
+  "25.7.0-rc2": {
+    "name": "July '25 (RC 2)",
     "photoCaption": "LB4FH/MM at NO-2619",
     "changes": [
+      "ARRL Field Day 2025",
       "Spot other operators (by DL9PK)",
       "Thirteen Colonies Special Event",
       "Better handling of screen padding and safe areas",
