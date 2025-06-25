@@ -58,7 +58,7 @@ export function registerECADataFile () {
                     const grid = (!isNaN(lat) && !isNaN(lon)) ? locationToGrid6(lat, lon) : null
                     const data = {
                       ref: reference.WCA,
-                      name: reference.NAME_OF_CASTLE.trim(),
+                      name: reference.NAME_OF_CASTLE?.trim(),
                       location: reference.LOCATION,
                       lat: isNaN(lat) ? null : lat,
                       lon: isNaN(lon) ? null : lon,

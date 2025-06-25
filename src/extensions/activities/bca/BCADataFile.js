@@ -57,7 +57,7 @@ export function registerBCADataFile () {
                     const grid = locationToGrid6(lat, lon)
                     const data = {
                       ref: reference.properties.reference,
-                      name: reference.properties.name.trim(),
+                      name: reference.properties.name?.trim(),
                       lat,
                       lon,
                       grid

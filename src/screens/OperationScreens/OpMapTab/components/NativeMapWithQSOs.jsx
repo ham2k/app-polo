@@ -58,7 +58,7 @@ export default function NativeMapWithQSOs ({ styles, mappableQSOs, initialRegion
       cameraZoomRange={{ animated: false }}
       mapType={styles.isIOS ? 'mutedStandard' : 'terrain'}
     >
-      {qth.latitude && qth.longitude && scale?.metersPerOneSpace && (
+      {qth?.latitude && qth?.longitude && scale?.metersPerOneSpace && (
         <>
           <Marker
             key={'qth-marker'}
@@ -96,7 +96,7 @@ export default function NativeMapWithQSOs ({ styles, mappableQSOs, initialRegion
 }
 
 function radiusForMarker ({ qso, strength, location, size, metersPerOneSpace }) {
-  const latitude = Math.abs(location.latitude ?? location.lat)
+  const latitude = Math.abs(location?.latitude ?? location?.lat ?? 0)
 
   const latitudeScale = Math.cos(latitude * Math.PI / 180)
 

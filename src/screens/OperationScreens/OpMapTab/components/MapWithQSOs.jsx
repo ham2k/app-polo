@@ -38,10 +38,10 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     let longitudeMin = longitude ?? 0
     let longitudeMax = longitude ?? 0
     for (const { location } of mappableQSOs) {
-      latitudeMin = Math.min(latitudeMin, location.latitude)
-      latitudeMax = Math.max(latitudeMax, location.latitude)
-      longitudeMin = Math.min(longitudeMin, location.longitude)
-      longitudeMax = Math.max(longitudeMax, location.longitude)
+      latitudeMin = Math.min(latitudeMin, location?.latitude ?? 0)
+      latitudeMax = Math.max(latitudeMax, location?.latitude ?? 0)
+      longitudeMin = Math.min(longitudeMin, location?.longitude ?? 0)
+      longitudeMax = Math.max(longitudeMax, location?.longitude ?? 0)
     }
     return {
       latitude: latitudeMin + (latitudeMax - latitudeMin) / 2,

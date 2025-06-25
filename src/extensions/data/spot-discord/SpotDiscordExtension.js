@@ -59,7 +59,7 @@ const SpotsHook = {
       const payload = {}
       for (const attr of ['content', 'username', 'avatar_url']) {
         if (webhook[attr]) {
-          payload[attr] = compileTemplateForOperation(webhook[attr], { settings })(context, { data, partials }).trim()
+          payload[attr] = compileTemplateForOperation(webhook[attr], { settings })(context, { data, partials })?.trim()
         }
       }
 

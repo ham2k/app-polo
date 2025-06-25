@@ -73,7 +73,7 @@ export const MainExchangePanel = ({
   }, [handleFieldChange, spaceHandler, rstLength, settings])
 
   const handleRSTBlur = useCallback((event) => {
-    const text = event?.value || event?.nativeEvent?.text
+    const text = event?.value || event?.nativeEvent?.text || ''
     const mode = qso?.mode ?? vfo?.mode ?? 'SSB'
     if (text.trim().length === 1) {
       const expanded = expandRSTValues(text, mode)

@@ -167,7 +167,7 @@ const createCallNotesFetcher = (file) => async () => {
       const entries = {}
 
       body.split(/[\n\r]+/).forEach(line => {
-        line = line.trim()
+        line = line?.trim()
         if (!line) return
         if (line.startsWith('#')) return
         const [call, ...noteWords] = line.split(/\s+/)

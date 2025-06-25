@@ -35,7 +35,7 @@ export function CustomActivityOptions (props) {
   const handleAddReference = useCallback((refMySigInfo, refName, refMySig) => {
     const data = {
       type: Info.activationType,
-      ref: [refMySig.trim(), refMySigInfo.trim()].filter(x => x).join(' '),
+      ref: [refMySig?.trim(), refMySigInfo?.trim()].filter(x => x).join(' '),
       name: refName,
       mySig: refMySig,
       mySigInfo: refMySigInfo

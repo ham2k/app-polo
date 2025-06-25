@@ -25,7 +25,7 @@ export const NativeMapMarkers = React.memo(function MapMarkers ({ qth, qsos, sel
 
   return (
     <>
-      {qth.latitude && qth.longitude && qsos.map(({ qso, location, strength }) => (
+      {qth?.latitude && qth?.longitude && qsos.map(({ qso, location, strength }) => (
         <Polyline
           key={`${qso.uuid}-line-${metersPerOneSpace}`}
           geodesic={true}
@@ -72,7 +72,7 @@ export const NativeMapMarkers = React.memo(function MapMarkers ({ qth, qsos, sel
 })
 
 function radiusForMarker ({ qso, strength, location, size, metersPerOneSpace }) {
-  const latitude = Math.abs(location.latitude ?? location.lat)
+  const latitude = Math.abs(location?.latitude ?? location?.lat ?? 0)
 
   const latitudeScale = Math.cos(latitude * Math.PI / 180)
 

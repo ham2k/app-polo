@@ -80,7 +80,7 @@ const SpotsHook = {
       const apiResults = await dispatch((_dispatch, getState) => apiPOTA.endpoints.spots.select({})(getState()))
 
       apiPromise.unsubscribe && apiPromise.unsubscribe()
-      spots = apiResults.data || {}
+      spots = apiResults.data || []
     }
     return spots.filter(spot => !spot.comments?.match(/QRT/i)).map(spot => {
       const qso = {

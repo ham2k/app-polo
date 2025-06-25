@@ -92,7 +92,7 @@ export default function OpMapTab ({ navigation, route }) {
       })
     }
     return _warnings
-  }, [navigation, operation.uuid, qsos, qth.latitude])
+  }, [navigation, operation.uuid, qsos, qth?.latitude])
 
   return (
     <>

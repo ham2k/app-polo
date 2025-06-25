@@ -190,7 +190,7 @@ const FeatureCallout = ({ feature, qth, operation, styles }) => {
 }
 
 function _geoJSONMarkerForQTH ({ qth, operation, styles }) {
-  if (qth.latitude && qth.longitude) {
+  if (qth?.latitude && qth?.longitude) {
     return {
       type: 'Feature',
       geometry: {
@@ -208,7 +208,7 @@ function _geoJSONMarkerForQTH ({ qth, operation, styles }) {
 
 function _geoJSONMarkersForQSOs ({ mappableQSOs, qth, operation, styles }) {
   const features = []
-  if (qth.latitude && qth.longitude) {
+  if (qth?.latitude && qth?.longitude) {
     features.push(_geoJSONMarkerForQTH({ qth, operation, styles }))
   }
   features.push(...mappableQSOs.map(mappableQSO => _geoJSONMarkerForQSO({ mappableQSO, qth, operation, styles })).filter(x => x))
@@ -249,7 +249,7 @@ function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
 function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
   if (mappableQSO.location) {
     const start = [mappableQSO.location.longitude, mappableQSO.location.latitude]
-    const end = [qth.longitude, qth.latitude]
+    const end = [qth?.longitude, qth?.latitude]
 
     const segments = _generateGeodesicPoints(start, end)
 

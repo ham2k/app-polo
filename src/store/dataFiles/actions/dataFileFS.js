@@ -204,7 +204,7 @@ export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch,
 }
 
 export async function resolveDownloadUrl (url) {
-  url = url.trim()
+  url = url?.trim() || ''
 
   // Dropbox
   if (url.match(/^https:\/\/(www\.)*dropbox\.com\//i)) {
