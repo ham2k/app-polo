@@ -15,6 +15,11 @@ import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 import CallsignInput from '../../../screens/components/CallsignInput'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
 import { Ham2kDialog } from '../../../screens/components/Ham2kDialog'
+import { apiHamQTH } from '../../../store/apis/apiHamQTH'
+import { View } from 'react-native'
+import { Ham2kMarkdown } from '../../../screens/components/Ham2kMarkdown'
+import { resetCallLookupCache } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { parseCallsign } from '@ham2k/lib-callsigns'
 
 export function HamQTHAccountSetting ({ settings, styles }) {
   const [currentDialog, setCurrentDialog] = useState()
@@ -43,8 +48,14 @@ function AccountsHamQTHDialog ({ visible, settings, styles, onDialogDone }) {
 
   const [dialogVisible, setDialogVisible] = useState(false)
 
+  const [originalValues] = useState({
+    login: settings?.accounts?.hamqth?.login || '',
+    password: settings?.accounts?.hamqth?.password || ''
+  })
+
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
+  const [testResult, setTestResult] = useState(null)
 
   useEffect(() => {
     setDialogVisible(visible)
@@ -57,23 +68,44 @@ function AccountsHamQTHDialog ({ visible, settings, styles, onDialogDone }) {
 
   const onChangeLogin = useCallback((text) => {
     setLogin(text)
+    setTestResult(null)
   }, [setLogin])
+
   const onChangePassword = useCallback((text) => {
     setPassword(text)
+    setTestResult(null)
   }, [setPassword])
 
+  const handleTest = useCallback(async () => {
+    const callInfo = parseCallsign(settings?.operatorCall)
+    await dispatch(setAccountInfo({ hamqth: { login, password, session: undefined } }))
+
+    const hamQTHPromise = await dispatch(apiHamQTH.endpoints.lookupCall.initiate({ call: callInfo.baseCall }, { forceRefetch: true }))
+    await Promise.all(dispatch(apiHamQTH.util.getRunningQueriesThunk()))
+    const hamQTHLookup = await dispatch((_dispatch, getState) => apiHamQTH.endpoints.lookupCall.select({ call: callInfo.baseCall })(getState()))
+    hamQTHPromise.unsubscribe && hamQTHPromise.unsubscribe()
+
+    if (hamQTHLookup?.error) {
+      setTestResult(`‼️ ${hamQTHLookup?.error}`)
+    } else {
+      setTestResult(`✅ ${settings?.operatorCall}: ${hamQTHLookup?.data?.name}`)
+    }
+  }, [dispatch, login, password, settings?.operatorCall])
+
   const handleAccept = useCallback(() => {
-    dispatch(setAccountInfo({ hamqth: { login, password } }))
+    dispatch(setAccountInfo({ hamqth: { login, password, session: undefined } }))
+    dispatch(resetCallLookupCache())
     setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [login, password, dispatch, onDialogDone])
 
   const handleCancel = useCallback(() => {
-    setLogin(settings?.accounts?.hamqth?.login || '')
-    setPassword(settings?.accounts?.hamqth?.password || '')
+    dispatch(setAccountInfo({ hamqth: originalValues }))
+    setLogin(originalValues.login || '')
+    setPassword(originalValues.password || '')
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [settings, onDialogDone])
+  }, [originalValues, dispatch, onDialogDone])
 
   return (
     <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
@@ -99,6 +131,10 @@ function AccountsHamQTHDialog ({ visible, settings, styles, onDialogDone }) {
           placeholder="your password"
           onChangeText={onChangePassword}
         />
+        <View style={{ marginTop: styles.oneSpace, flexDirection: 'row' }}>
+          {!testResult && <Button onPress={handleTest}>{'Check Credentials'}</Button>}
+          {testResult && <Ham2kMarkdown style={{ flex: 1, marginTop: styles.oneSpace * 0.6 }}>{testResult}</Ham2kMarkdown>}
+        </View>
       </Dialog.Content>
       <Dialog.Actions>
         <Button onPress={handleCancel}>Cancel</Button>
