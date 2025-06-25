@@ -66,7 +66,11 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
       }).then((x) => {
         console.info('Shared', x)
       }).catch((e) => {
-        console.info('Sharing Error', e)
+        if (e.message.includes('User cancelled')) {
+          // Do nothing
+        } else {
+          console.info('Sharing Error', e)
+        }
       }).finally(() => {
         // Deleting these file causes GMail on Android to fail to attach it
         // So for the time being, we're leaving them in place.
