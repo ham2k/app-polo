@@ -278,14 +278,20 @@ const ReferenceHandler = {
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation, exportType }) => {
+  adifFieldsForOneQSO: ({ qso, operation, common, exportType }) => {
     const huntingRef = findRef(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
 
     if (!activationRef && !huntingRef) return false
 
     const fields = []
-    if (activationRef) fields.push({ MY_SOTA_REF: activationRef.ref })
+
+    if (activationRef) {
+      fields.push({ MY_SOTA_REF: activationRef.ref })
+      fields.push({ GRIDSQUARE: (qso.their?.grid ?? qso.their?.guess?.grid) })
+      fields.push({ MY_GRIDSQUARE: (qso?.our?.grid ?? common.grid) })
+    }
+
     if (huntingRef) fields.push({ SOTA_REF: huntingRef.ref })
 
     // SOTA does not save signal reports, so most operators like to include this in the comments

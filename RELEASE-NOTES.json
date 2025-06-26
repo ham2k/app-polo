@@ -1,4 +1,11 @@
 {
+  "25.7.1": {
+    "name": "July '25 (patch 1)",
+    "photoCaption": "LB4FH/MM at NO-2619",
+    "changes": [
+      "Include grid in SOTA ADIF exports"
+    ]
+  },
   "25.7.0": {
     "name": "July '25",
     "photoCaption": "LB4FH/MM at NO-2619",
