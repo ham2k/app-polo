@@ -3,7 +3,8 @@
     "name": "July '25 (patch 1)",
     "photoCaption": "LB4FH/MM at NO-2619",
     "changes": [
-      "Include grid in SOTA ADIF exports"
+      "Include grid in SOTA exports",
+      "Thirteen Colonies ADIF export"
     ]
   },
   "25.7.0": {

@@ -107,17 +107,25 @@ const ReferenceHandler = {
   },
 
   suggestExportOptions: ({ operation, ref, settings }) => {
-    // if (ref?.type === Info?.key) {
-    //   return [{
-    //     format: 'adif',
-    //     exportName: 'Thirteen Colonies QSOs (ADIF)',
-    //     nameTemplate: '{{>OtherActivityName}}',
-    //     titleTemplate: '{{>OtherActivityTitle}}'
-    //   }]
-    // }
-  },
-
-  adifFieldsForOneQSO: ({ qso, operation, common, ref, mainHandler }) => {
+    if (ref?.type === Info?.key) {
+      return [{
+        format: 'adif',
+        exportName: 'Thirteen Colonies',
+        nameTemplate: settings?.useCompactFileNames ? `{{log.station}}-13Col-${ref.year}` : `{{log.station}} Thirteen Colonies ${ref.year}`,
+        titleTemplate: `{{log.station}} for Thirteen Colonies ${ref.year}`,
+        selectQSOsToExport: async ({ qsos }) => {
+          const checklist = await _fetchColoniesExtendedChecklist({ operation })
+          const selectedQSOs = {}
+          for (const key in checklist) {
+            if (checklist[key].length > 0) {
+              const qso = checklist[key][0]
+              selectedQSOs[qso.key] = qso
+            }
+          }
+          return Object.values(selectedQSOs).sort((a, b) => a.startAtMillis - b.startAtMillis)
+        }
+      }]
+    }
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref, score }) => {
@@ -307,6 +315,28 @@ async function _fetchColoniesChecklist ({ operation }) {
       checklist[call] = (checklist[call] || 0) + 1
       checklist[`MIXED-${call}`] = (checklist[`MIXED-${call}`] || 0) + 1
       checklist[`${mode}-${call}`] = (checklist[`${mode}-${call}`] || 0) + 1
+    }
+  }
+  return checklist
+}
+
+async function _fetchColoniesExtendedChecklist ({ operation }) {
+  const { startMillis, endMillis } = _dateRangeForSpecialEvent({ operation })
+
+  const calls = Object.keys(THIRTEEN_COLONIES_CALLS)
+  calls.push(...Object.keys(THIRTEEN_COLONIES_SPECIAL_STATIONS))
+
+  const qsos = await findQSOsInOtherOps(calls, { startMillis, endMillis }) // don't filter by operation
+  const checklist = {}
+  for (const qso of qsos) {
+    const mode = superModeForMode(qso?.mode)
+    const call = qso?.their?.call
+    const colony = THIRTEEN_COLONIES_CALLS[call]
+    const special = THIRTEEN_COLONIES_SPECIAL_STATIONS[call]
+    if (colony || special) {
+      checklist[call] = (checklist[call] || []).concat(qso)
+      checklist[`MIXED-${call}`] = (checklist[`MIXED-${call}`] || []).concat(qso)
+      checklist[`${mode}-${call}`] = (checklist[`${mode}-${call}`] || []).concat(qso)
     }
   }
   return checklist

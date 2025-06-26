@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -33,7 +33,7 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
       if (uri) {
         results.push({
           uri,
-          type: mimeTypeForFormat(format),
+          type: mimeTypeForFormat(oneExport?.format),
           fileName: oneExport.fileName
         })
       }
@@ -60,12 +60,24 @@ export const deleteExport = (path) => async (dispatch) => {
 
 export const generateExportFile = async ({ uuid, fileName, format, operation, qsos, exportData, ...rest }) => {
   let data
+
+  if (rest?.selectQSOsToExport) {
+    qsos = await rest.selectQSOsToExport({ qsos, format, operation, exportData, ...rest })
+  }
+
   if (format === 'qson') {
     data = JSON.stringify({ operation: { ...operation, ...exportData }, qsos })
   } else if (format === 'adif') {
     data = qsonToADIF({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
   } else if (format === 'cabrillo') {
     data = qsonToCabrillo({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
+  } else {
+    const generateExportData = rest?.generateExportData ?? rest?.handler?.generateExportData
+    if (generateExportData) {
+      data = await generateExportData({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
+    } else {
+      data = ''
+    }
   }
 
   if (fileName && data) {
@@ -86,6 +98,13 @@ export const generateExportDataURI = async ({ uuid, fileName, format, operation,
     data = qsonToADIF({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
   } else if (format === 'cabrillo') {
     data = qsonToCabrillo({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
+  } else {
+    const generateExportData = rest?.generateExportData ?? rest?.handler?.generateExportData
+    if (generateExportData) {
+      data = await generateExportData({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
+    } else {
+      data = ''
+    }
   }
 
   const uri = `data:${type};base64,${base64.encode(data)}`
@@ -99,6 +118,8 @@ const mimeTypeForFormat = (format) => {
     case 'adif':
       return 'text/plain'
     case 'cabrillo':
+      return 'text/plain'
+    case 'text':
       return 'text/plain'
   }
   return 'text/plain'
