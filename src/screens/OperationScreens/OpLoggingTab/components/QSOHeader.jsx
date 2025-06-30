@@ -1,17 +1,18 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React from 'react'
-import { Icon, Text, TouchableRipple } from 'react-native-paper'
+import { Text, TouchableRipple } from 'react-native-paper'
 
 import { fmtDateZuluDynamic } from '../../../../tools/timeFormats'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { View } from 'react-native'
+import { Ham2KIcon } from '../../../components/Ham2KIcon'
 
 const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings, onHeaderPress }) {
   return (
@@ -44,8 +45,8 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
             return (
               <Text key={key} style={[styles.fields.header, { marginLeft: styles.oneSpace, textAlign: 'right', opacity: score.activated === false ? 0.5 : 1 }]}>
                 {score.icon ? (
-                  <Icon
-                    source={score.icon}
+                  <Ham2KIcon
+                    name={score.icon}
                     size={styles.normalFontSize}
                     color={score.activated === true ? styles.colors.important : undefined }
                     style={styles.fields.icon}

@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -11,6 +11,7 @@ import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
+import { paperNameOrHam2KIcon } from '../../../components/Ham2KIcon'
 
 export function guessItemHeight (qso, styles) {
   return styles.doubleRow.height + styles.doubleRow.borderBottomWidth
@@ -78,7 +79,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
             <View key={subSpot.source} style={[styles.fields.icon, commonStyle, refStyle]}>
               <Icon
                 key={subSpot.source}
-                source={subSpot.icon}
+                source={paperNameOrHam2KIcon(subSpot.icon)}
                 size={styles.oneSpace * 2.3}
                 color={(subSpot?.type === 'scoring' && refStyle?.color) || commonStyle?.color}
               />

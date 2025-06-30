@@ -15,6 +15,7 @@ import { selectSecondsTick } from '../../../../../store/time'
 import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 import { useNavigation } from '@react-navigation/native'
+import { paperNameOrHam2KIcon } from '../../../../components/Ham2KIcon'
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -93,7 +94,7 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
         {icon && (
           <View style={{ flex: 0, alignSelf: 'flex-start' }}>
             <Icon
-              source={icon}
+              source={paperNameOrHam2KIcon(icon)}
               size={styles.oneSpace * 3}
               color={styles.theme.colors[`${themeColor}ContainerVariant`]}
             />

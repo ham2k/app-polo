@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -21,6 +21,7 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { ListSeparator } from '../../components/ListComponents'
 import { trackEvent } from '../../../distro'
+import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
 
 export default function OperationAddActivityScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -71,7 +72,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
                 title={activity.name}
                 description={currentActivities[activity.key] ?? ''}
               // eslint-disable-next-line react/no-unstable-nested-components
-                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={activity.icon} />}
+                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(activity.icon)} />}
                 onPress={() => addActivity(activity)}
               />
             ))}

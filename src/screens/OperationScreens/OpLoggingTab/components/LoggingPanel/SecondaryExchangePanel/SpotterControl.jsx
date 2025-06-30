@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,19 +8,19 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
-import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
-import { fmtDateTimeRelative } from '../../../../../../tools/timeFormats'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectSecondsTick } from '../../../../../../store/time'
 import { View } from 'react-native'
-import { Icon } from 'react-native-paper'
-import ThemedButton from '../../../../../components/ThemedButton'
+import { useDispatch, useSelector } from 'react-redux'
 
-import ThemedTextInput from '../../../../../components/ThemedTextInput'
+import { selectSecondsTick } from '../../../../../../store/time'
 import { selectRuntimeOnline } from '../../../../../../store/runtime'
+import { setOperationLocalData } from '../../../../../../store/operations'
+import ThemedButton from '../../../../../components/ThemedButton'
+import ThemedTextInput from '../../../../../components/ThemedTextInput'
+import { Ham2KIcon } from '../../../../../components/Ham2KIcon'
 import { findHooks } from '../../../../../../extensions/registry'
 import { findRef } from '../../../../../../tools/refTools'
-import { setOperationLocalData } from '../../../../../../store/operations'
+import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
+import { fmtDateTimeRelative } from '../../../../../../tools/timeFormats'
 
 const SECONDS_UNTIL_RESPOT = 30
 
@@ -150,9 +150,9 @@ export function SpotterControlInputs (props) {
       </ThemedButton>
       <View style={{ flex: 0, flexDirection: 'row', position: 'absolute', top: styles.oneSpace * -1, right: 0 }}>
         {hooksWithSpotting.map((x, n) => (
-          <Icon
+          <Ham2KIcon
             key={x.key}
-            source={x.icon}
+            name={x.icon}
             size={styles.oneSpace * 2.3}
             color={styles.colors[colorForStatus(spotStatus[x.key])]}
           />

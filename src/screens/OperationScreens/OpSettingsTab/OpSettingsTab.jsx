@@ -22,6 +22,7 @@ import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { trackEvent } from '../../../distro'
+import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
 
 function prepareStyles (baseStyles) {
   return {
@@ -185,7 +186,7 @@ export default function OpSettingsTab ({ navigation, route }) {
             title={handler.name}
             description={(handler.description && handler.description(operation)) || handler.descriptionPlaceholder}
             left={
-                  () => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={handler.icon} />
+                  () => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(handler.icon)} />
                 }
             onPress={() => navigation.navigate('OperationActivityOptions', { operation: operation.uuid, activity: handler.key })}
           />

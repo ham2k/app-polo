@@ -20,6 +20,7 @@ import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
 import Notices from '../../HomeScreen/components/Notices'
+import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
 
 const FeatureItem = ({ extension, settings, info, styles, onChange, category }) => {
   const enabled = useMemo(() => settings[`extensions/${extension.key}`] ?? extension?.enabledByDefault, [settings, extension])
@@ -31,7 +32,7 @@ const FeatureItem = ({ extension, settings, info, styles, onChange, category }) 
       description={extension.description}
       titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}
       descriptionStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}
-      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={extension.icon ?? 'format-list-bulleted'} color={category === 'devmode' ? styles.colors.devMode : undefined} />}
+      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(extension.icon ?? 'format-list-bulleted')} color={category === 'devmode' ? styles.colors.devMode : undefined} />}
       right={() => <Switch value={enabled} onValueChange={(value) => onChange && onChange(value) } />}
       onPress={() => onChange && onChange(!enabled)}
     />

@@ -1,18 +1,19 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Icon, Text, TouchableRipple } from 'react-native-paper'
+import { Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findBestHook } from '../../../../extensions/registry'
+import { Ham2KIcon } from '../../../components/Ham2KIcon'
 
 const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
   const theirInfo = { ...qso?.their?.guess, ...qso?.their }
@@ -76,13 +77,13 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
         </Text>
         <View style={styles.fields.icons}>
           {qso.notes && (
-            <Icon source="note-outline" size={styles.normalFontSize} style={styles.fields.icon} />
+            <Ham2KIcon source="note-outline" size={styles.normalFontSize} style={styles.fields.icon} />
           )}
           {(confirmedBySpot || bustedBySpot) && (
-            <View style={styles.fields.icon}><Icon source={`${confirmedBySpot ? 'check' : 'help'}-circle`} size={styles.normalFontSize} style={styles.fields.icon} /></View>
+            <View style={styles.fields.icon}><Ham2KIcon name={`${confirmedBySpot ? 'check' : 'help'}-circle`} size={styles.normalFontSize} style={styles.fields.icon} /></View>
           )}
           {(qso.refs || []).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.iconForQSO).map(({ ref, handler }, i) => (
-            <View key={i} style={styles.fields.icon}><Icon key={i} source={handler?.iconForQSO} size={styles.normalFontSize} color={styles.fields.icon.color} /></View>
+            <View key={i} style={styles.fields.icon}><Ham2KIcon key={i} name={handler?.iconForQSO} size={styles.normalFontSize} color={styles.fields.icon.color} /></View>
           ))}
         </View>
         {extraInfo ? (

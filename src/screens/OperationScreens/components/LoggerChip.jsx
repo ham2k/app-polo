@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,6 +8,7 @@
 import React, { useCallback, useMemo } from 'react'
 
 import { Chip } from 'react-native-paper'
+import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
 
 export default function LoggerChip ({
   children,
@@ -78,7 +79,7 @@ export default function LoggerChip ({
 
   return (
     <Chip
-      icon={icon}
+      icon={paperNameOrHam2KIcon(icon)}
       mode={mode}
       theme={colorizedTheme}
       style={[style]}

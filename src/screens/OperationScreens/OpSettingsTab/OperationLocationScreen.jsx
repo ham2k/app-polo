@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -24,6 +24,7 @@ import GridInput from '../../components/GridInput'
 import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { findBestHook } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
+import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
 
 export default function OperationLocationScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -128,7 +129,7 @@ export default function OperationLocationScreen ({ navigation, route }) {
                 left={() => (
                   <List.Icon
                     style={{ marginLeft: styles.oneSpace * 2 }}
-                    icon={handler.icon}
+                    icon={paperNameOrHam2KIcon(handler.icon)}
                     color={ref.grid && operation.grid === ref.grid ? styles.colors.primary : styles.colors.onBackground}
                   />
                 )}

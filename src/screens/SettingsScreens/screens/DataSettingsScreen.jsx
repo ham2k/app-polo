@@ -31,10 +31,11 @@ import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { Ham2kDialog } from '../../components/Ham2kDialog'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import KeepAwake from '@sayem314/react-native-keep-awake'
+import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
 
 const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
   const Icon = useMemo(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={def.icon ?? 'file-outline'} />
+    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(def.icon ?? 'file-outline')} />
   ), [def.icon, styles])
   return (
     <Ham2kListItem

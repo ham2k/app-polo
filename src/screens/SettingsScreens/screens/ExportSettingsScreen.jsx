@@ -22,6 +22,7 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import ThemedTextInput from '../../components/ThemedTextInput'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { fmtISODate } from '../../../tools/timeFormats'
+import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
 
 export default function ExportSettingsScreen ({ navigation, splitView }) {
   const dispatch = useDispatch()
@@ -328,7 +329,7 @@ Attributes for the log being exported
               title={exportType.name}
               description={exportType.description}
               descriptionStyle={{ opacity: exportType.description === 'Using defaults' ? 0.5 : 1 }}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={expanded[exportType.key] ? 'chevron-down' : 'chevron-right'} />}
+              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(expanded[exportType.key] ? 'chevron-down' : 'chevron-right')} />}
               onPress={() => setExpanded({ ...expanded, [exportType.key]: !expanded[exportType.key] })}
             />
             {expanded[exportType.key] && (

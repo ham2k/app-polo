@@ -15,6 +15,7 @@ import { fmtDistance } from '../../../tools/geoTools'
 import { Info } from './ZLOTAInfo'
 import { zlotaFindOneByReference } from './ZLOTADataFile'
 import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
+import { paperNameOrHam2KIcon } from '../../../screens/components/Ham2KIcon'
 
 export function ZLOTAListItem ({ activityRef, refData, allRefs, style, styles, settings, onPress, onAddReference, onRemoveReference, online }) {
   const [reference, setReference] = useState()
@@ -40,7 +41,7 @@ export function ZLOTAListItem ({ activityRef, refData, allRefs, style, styles, s
       }
       description={reference?.ref ? [reference?.name, reference?.assetType].filter(x => x).join(' • ') : 'Unknown Reference'}
       onPress={onPress}
-      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={Info.icon} />}
+      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(Info.icon)} />}
       right={() => (
         isInRefs ? (
           onRemoveReference && <IconButton icon="minus-circle-outline" onPress={() => onRemoveReference(activityRef)} />

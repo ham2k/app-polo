@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { View } from 'react-native'
-import { Icon, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
@@ -16,6 +16,7 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { fmtDateZuluDynamic, fmtTimeBetween } from '../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../store/time'
 import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
+import { Ham2KIcon } from '../../../components/Ham2KIcon'
 
 function prepareStyles (baseStyles, themeColor, style) {
   return {
@@ -127,8 +128,8 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                 <View key={key} style={{ maxWidth: '100%', flexDirection: 'row', alignItems: 'flex-start', marginBottom: styles.oneSpace }}>
                   <View style={{ width: styles.oneSpace * 3, marginTop: styles.oneSpace * 0.2 }}>
                     {score.icon && (
-                      <Icon
-                        source={score.icon}
+                      <Ham2KIcon
+                        name={score.icon}
                         size={styles.normalFontSize}
                         color={score.activated === true ? styles.colors.important : undefined}
                         style={styles.icon}
@@ -167,8 +168,8 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
               <View key={key} style={{ maxWidth: '100%', flexDirection: 'row', alignItems: 'flex-start', marginBottom: styles.oneSpace }}>
                 <View style={{ width: styles.oneSpace * 3, marginTop: styles.oneSpace * 0.2 }}>
                   {score.icon && (
-                    <Icon
-                      source={score.icon}
+                    <Ham2KIcon
+                      name={score.icon}
                       size={styles.normalFontSize}
                       color={score.activated === true ? styles.colors.important : undefined}
                       style={styles.icon}

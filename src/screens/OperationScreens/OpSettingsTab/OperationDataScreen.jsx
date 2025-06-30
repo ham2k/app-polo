@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -27,6 +27,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import ScreenContainer from '../../components/ScreenContainer'
+import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
 
 export default function OperationDataScreen (props) {
   const { navigation, route } = props
@@ -183,7 +184,7 @@ export default function OperationDataScreen (props) {
                   key={option.fileName}
                   title={option.exportLabel || option.exportName}
                   description={option.fileName}
-                  left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={option.devMode ? styles.colors.devMode : styles.colors.onBackground} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
+                  left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={option.devMode ? styles.colors.devMode : styles.colors.onBackground} icon={paperNameOrHam2KIcon(option.icon ?? option.handler.icon ?? 'file-outline')} />}
                   onPress={() => readyToExport && handleExports({ options: [option] })}
                   descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
                   titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
