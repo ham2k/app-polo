@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -42,17 +42,29 @@ export const systemSlice = createSlice({
       action.payload.timestamp = action.payload.timestamp || new Date().valueOf
 
       state.notices = state.notices.filter(notice => notice.key !== action.payload.key)
-      state.notices.push(action.payload)
+      if (!action.payload.unique || !state.notices.find(notice => notice.unique === action.payload.unique)) {
+        state.notices.push(action.payload)
+      }
     },
     dismissNotice: (state, action) => {
       state.notices = state.notices || []
+
+      state.dismissedNotices = state.dismissedNotices || {}
+      state.dismissedNotices[action.payload.key] = Date.now()
+
       state.notices = state.notices.filter(notice => notice.key !== action.payload.key)
+      if (action.payload.unique) {
+        state.notices = state.notices.filter(notice => notice.unique !== action.payload.unique)
+      }
+    },
+    clearNoticesDismissed: (state) => {
+      state.dismissedNotices = {}
     }
   }
 })
 
 export const { actions } = systemSlice
-export const { addNotice, dismissNotice, setFeatureFlags } = systemSlice.actions
+export const { addNotice, dismissNotice, clearNoticesDismissed, setFeatureFlags } = systemSlice.actions
 
 export const setSystemFlag = (flag, value) => (dispatch) => {
   dispatch(actions.setSystemFlag({ [flag]: value }))
@@ -66,6 +78,8 @@ export const selectSystemFlag = createSelector(
 )
 
 export const selectNotices = (state) => state?.system?.notices ?? []
+
+export const selectDismissedNotices = (state) => state?.system?.dismissedNotices ?? {}
 
 export const selectFeatureFlag = createSelector(
   (state, flag) => state?.system?.featureFlags || {},

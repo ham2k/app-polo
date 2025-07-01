@@ -1,64 +1,300 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { View, Platform, UIManager, LayoutAnimation } from 'react-native'
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { useDispatch } from 'react-redux'
+import { Linking, Platform, ScrollView, View } from 'react-native'
 import { Button, Dialog, IconButton, Surface } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 import { Ham2kDialog } from '../../components/Ham2kDialog'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
-import { dismissNotice, selectNotices } from '../../../store/system/systemSlice'
+import { dismissNotice, useNotices } from '../../../store/system'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { trackEvent, handleNoticeActionForDistribution } from '../../../distro'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Ham2KIcon } from '../../components/Ham2KIcon'
+import { useNavigation } from '@react-navigation/native'
 
-if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true)
+export default function Notices ({ paddingForSafeArea = false }) {
+  const safeArea = useSafeAreaInsets()
+  const styles = useThemedStyles(prepareStyles)
+
+  const dispatch = useDispatch()
+  const navigation = useNavigation()
+  const notices = useNotices({ dispatch })
+
+  const [currentNotice, setCurrentNotice] = useState(notices[0])
+  const [visible, setVisible] = useState(false)
+
+  // Animated values for smooth height and opacity transitions
+  const animationProgress = useSharedValue(0)
+  const animationHeight = useSharedValue(0)
+
+  useEffect(() => {
+    if (notices.length > 0 && !visible) {
+      setVisible(true)
+      setCurrentNotice(notices[0])
+      animationProgress.value = withTiming(1, { duration: 500 })
+    } else if (notices.length === 0 && visible) {
+      animationProgress.value = withTiming(0, { duration: 500 })
+      setTimeout(() => {
+        setVisible(false)
+        setCurrentNotice(undefined)
+      }, 500)
+    }
+  }, [notices, visible, animationProgress])
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      height: animationProgress.value * animationHeight.value,
+      opacity: animationProgress.value
+    }
+  })
+
+  const handleLayout = useCallback((event) => {
+    const { height: layoutHeight } = event.nativeEvent.layout
+    animationHeight.value = layoutHeight
+  }, [animationHeight])
+
+  const [dialogTitle, setDialogTitle] = useState()
+  const [dialogText, setDialogText] = useState()
+
+  const handleAction = useCallback((notice, action) => {
+    trackEvent('accept_notice', { notice_action: action.action, notice_key: notice.actionArgs?.key })
+
+    dispatch(dismissNotice(notice))
+    if (notices[1]) {
+      setCurrentNotice(notices[1])
+    }
+    performAction({ notice, action, dispatch, navigation, setDialogText, setDialogTitle })
+  }, [dispatch, navigation, notices])
+
+  const handleDismiss = useCallback((notice) => {
+    trackEvent('dismiss_notice', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
+
+    dispatch(dismissNotice(notice))
+    if (notices[1]) {
+      setCurrentNotice(notices[1])
+    }
+  }, [dispatch, notices])
+
+  if (!currentNotice && !dialogText) return null
+
+  return (
+    <>
+      <Animated.View
+        style={[styles.root, animatedStyle, { marginBottom: paddingForSafeArea ? safeArea.bottom : 0 }]}
+      >
+        {notices[1] && (
+          <OneNotice style={styles.noticeContainerStacked} notice={{}} styles={styles} handleAction={handleAction} handleDismiss={handleDismiss} />
+        )}
+
+        {currentNotice && (
+          <OneNotice
+            notice={currentNotice}
+            styles={styles}
+            handleAction={handleAction}
+            handleDismiss={handleDismiss}
+            onLayout={handleLayout}
+          />
+        )}
+
+      </Animated.View>
+
+      {dialogText && (
+        <>
+          <KeepAwake />
+          <Ham2kDialog
+            visible={true}
+            style={{ marginTop: 50, marginBottom: 50 }}
+            onDismiss={() => {
+              setDialogText(undefined)
+              setDialogTitle(undefined)
+            }}
+          >
+            {dialogTitle && (
+              <Dialog.Title>{dialogTitle}</Dialog.Title>
+            )}
+            <Dialog.ScrollArea>
+              <ScrollView fadingEdgeLength={styles.oneSpace * 10} style={{ maxHeight: styles.oneSpace * 28 }}>
+                <Ham2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
+                  {dialogText}
+                </Ham2kMarkdown>
+              </ScrollView>
+            </Dialog.ScrollArea>
+          </Ham2kDialog>
+        </>
+      )}
+    </>
+  )
+}
+
+export function NoticeList ({ notices, style }) {
+  const dispatch = useDispatch()
+  const navigation = useNavigation()
+  const styles = useThemedStyles(prepareStyles)
+
+  const [dialogTitle, setDialogTitle] = useState()
+  const [dialogText, setDialogText] = useState()
+
+  const handleAction = useCallback((notice, action) => {
+    performAction({ notice, action, dispatch, navigation, setDialogText, setDialogTitle })
+  }, [dispatch, navigation])
+
+  return (
+    <>
+      {notices.map(notice => (
+        <View key={notice.key} style={{ marginVertical: styles.oneSpace, marginHorizontal: styles.oneSpace * 2 }}>
+          <OneNotice
+            notice={notice}
+            styles={styles}
+            handleAction={handleAction}
+            handleDismiss={false}
+          />
+        </View>
+      ))}
+
+      {dialogText && (
+        <>
+          <KeepAwake />
+          <Ham2kDialog
+            visible={true}
+            style={{ marginTop: 50, marginBottom: 50 }}
+            onDismiss={() => {
+              setDialogText(undefined)
+              setDialogTitle(undefined)
+            }}
+          >
+            {dialogTitle && (
+              <Dialog.Title>{dialogTitle}</Dialog.Title>
+            )}
+            <Dialog.ScrollArea>
+              <ScrollView fadingEdgeLength={styles.oneSpace * 10} style={{ maxHeight: styles.oneSpace * 28 }}>
+                <Ham2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
+                  {dialogText}
+                </Ham2kMarkdown>
+              </ScrollView>
+            </Dialog.ScrollArea>
+          </Ham2kDialog>
+        </>
+      )}
+    </>
+  )
+}
+
+export function OneNotice ({ notice, style, styles, handleAction, handleDismiss, onLayout }) {
+  return (
+    <Surface
+      elevation={3}
+      style={[styles.noticeContainer, style]}
+      onLayout={onLayout}
+    >
+      {(notice.title || notice.icon) && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace }}>
+          {notice.icon && (
+            <Ham2KIcon name={notice.icon} size={styles.oneSpace * 3} />
+          )}
+          {notice.title && (
+            <Ham2kMarkdown style={styles.noticeText}>## {notice.title}</Ham2kMarkdown>
+          )}
+        </View>
+      )}
+
+      <Ham2kMarkdown style={styles.noticeText}>
+        {notice.text}
+      </Ham2kMarkdown>
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
+        <ScrollView horizontal style={{ flex: 1, marginLeft: -styles.oneSpace, paddingLeft: styles.oneSpace }}>
+          {notice?.actions?.map((action, index) => (
+            <Button
+              key={index}
+              mode={'contained'}
+              theme={ styles.buttonTheme }
+              style={{ paddingHorizontal: styles.oneSpace, marginLeft: -styles.oneSpace, marginRight: styles.oneSpace * 2 }}
+              compact={true}
+              disabled={action === 'disabled'}
+              onPress={() => handleAction(notice, action)}
+            >
+              {action.label ?? 'Ok!'}
+            </Button>
+          ))}
+        </ScrollView>
+        {handleDismiss ? (
+          <IconButton
+            icon="close"
+            mode="outlined"
+            compact={true}
+            onPress={() => handleDismiss(notice)}
+            style={{ padding: 0, margin: 0, marginRight: -0.5 * styles.oneSpace }}
+          />
+        ) : (
+          <View style={{ width: styles.oneSpace * 2 }} />
+        )}
+      </View>
+    </Surface>
+  )
+}
+async function performAction ({ notice, action, dispatch, navigation, setDialogText, setDialogTitle }) {
+  if (typeof action !== 'object') return
+
+  if (action.action === 'fetch' && action.args?.key) {
+    await dispatch(fetchDataFile(action.args.key, {
+      onStatus: ({ key, definition, status, progress }) => {
+        if (status === 'fetching' || status === 'loading') {
+          setDialogText(`### Fetching '${definition.name}'…`)
+        } else if (status === 'progress') {
+          setDialogText(`### Fetching '${definition.name}'\n\n${progress}`)
+        } else if (status === 'loaded' || status === 'error') {
+          setDialogText('')
+        }
+      }
+    }))
+  } else if (action.action === 'dialog') {
+    if (Platform.OS === 'ios') {
+      setDialogTitle(action.args?.['dialogTitle.ios'] ?? action.args?.dialogTitle)
+      setDialogText(action.args?.['dialogText.ios'] ?? action.args?.dialogText)
+    } else if (Platform.OS === 'android') {
+      setDialogTitle(action.args?.['dialogTitle.android'] ?? action.args?.dialogTitle)
+      setDialogText(action.args?.['dialogText.android'] ?? action.args?.dialogText)
+    } else {
+      setDialogTitle(action.args?.dialogTitle)
+      setDialogText(action.args?.dialogText)
+    }
+  } else if (action.action === 'navigate' || action.action === 'navigation') {
+    if (typeof action.args === 'string') {
+      navigation.navigate(action.args)
+    } else {
+      navigation.navigate(...action.args)
+    }
+  } else if (action.action === 'link') {
+    Linking.openURL(action.args?.url ?? action.args?.link ?? action.args?.href)
+  } else {
+    return handleNoticeActionForDistribution({ notice, action, dispatch, navigation, setOverlayText: setDialogText, setOverlayTitle: setDialogTitle })
   }
 }
 
-const NewNoticeAnimation = {
-  duration: 500,
-  create: {
-    type: 'easeInEaseOut',
-    property: 'opacity'
-  },
-  update: {
-    type: 'easeInEaseOut'
-  }
-}
-
-const DismissNoticeAnimation = {
-  duration: 250,
-  create: {
-    type: 'easeInEaseOut',
-    property: 'opacity'
-  },
-  update: {
-    type: 'easeInEaseOut'
-  }
-}
-
-function prepareStyles (baseStyles) {
+function prepareStyles (baseStyles, paddingForSafeArea, safeArea) {
   return {
     ...baseStyles,
     root: {
       minWidth: baseStyles.oneSpace * 40,
-      maxWidth: "80%",
+      maxWidth: '85%',
+      maxHeight: baseStyles.oneSpace * 30,
       alignSelf: 'center',
       flexDirection: 'column',
       alignItems: 'stretch',
       margin: baseStyles.oneSpace,
-      marginTop: baseStyles.oneSpace * 2
+      marginTop: baseStyles.oneSpace * 2,
+      paddingBottom: paddingForSafeArea ? safeArea.bottom : 0
     },
     noticeContainer: {
       padding: baseStyles.oneSpace * 2,
@@ -66,7 +302,19 @@ function prepareStyles (baseStyles) {
       // borderColor: 'rgb(197,191,131)',
       // borderTopWidth: 1,
       flexDirection: 'column',
-      gap: baseStyles.oneSpace
+      justifyContent: 'space-between',
+      // flex: 1,
+      gap: baseStyles.oneSpace,
+      zIndex: 0
+    },
+    noticeContainerStacked: {
+      position: 'absolute',
+      flex: 1,
+      top: 4,
+      left: 4,
+      right: -4,
+      bottom: -4,
+      zIndex: -1
     },
     noticeText: {
       color: 'rgb(97, 92, 47)'
@@ -78,153 +326,5 @@ function prepareStyles (baseStyles) {
         onPrimary: 'rgb(252,244,167)'
       }
     }
-  }
-}
-
-export default function Notices ({ paddingForSafeArea = false }) {
-  const styles = useThemedStyles(prepareStyles)
-  const safeArea = useSafeAreaInsets()
-
-  const dispatch = useDispatch()
-  const notices = useSelector(selectNotices)
-
-  const [performingAction, setPerformingAction] = useState(false)
-
-  const [currentNotice, setCurrentNotice] = useState()
-  useEffect(() => {
-    if (!performingAction && !currentNotice && notices.length > 0) {
-      setCurrentNotice(notices[0])
-    } else if (!performingAction && !notices.find(n => n.id === currentNotice.id)) {
-      setCurrentNotice(notices[0])
-    }
-  }, [notices, currentNotice, performingAction])
-
-  const [visible, setVisible] = useState()
-  useEffect(() => {
-    if (currentNotice) {
-      LayoutAnimation.configureNext(NewNoticeAnimation)
-      setVisible(true)
-    } else {
-      setVisible(false)
-    }
-  }, [currentNotice])
-
-  const [overlayText, setOverlayText] = useState()
-
-  const handleAction = useCallback(async (notice) => {
-    try {
-      setVisible(false)
-      setPerformingAction(true)
-
-      trackEvent('accept_notice', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
-
-      LayoutAnimation.configureNext(DismissNoticeAnimation,
-        async () => { // animation ended
-          setCurrentNotice(undefined)
-          await dispatch(dismissNotice(notice))
-        },
-        async () => { // animation failed
-          setCurrentNotice(undefined)
-        }
-      )
-
-      await performAction(notice, dispatch, setOverlayText)
-    } finally {
-      setPerformingAction(false)
-    }
-  }, [dispatch])
-
-  const handleDismiss = useCallback((notice) => {
-    setVisible(false)
-
-    trackEvent('dismiss_notice', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
-
-    LayoutAnimation.configureNext(DismissNoticeAnimation,
-      async () => { // animation ended
-        await dispatch(dismissNotice(notice))
-        setCurrentNotice(undefined)
-      },
-      async () => { // animation failed
-        await dispatch(dismissNotice(notice))
-        setCurrentNotice(undefined)
-      }
-    )
-  }, [dispatch])
-
-  if (notices.length === 0 && !overlayText) return null
-
-  return (
-    <View
-      style={[
-        styles.root,
-        {
-          height: visible ? undefined : 0,
-          flexDirection: 'column',
-          paddingBottom: paddingForSafeArea ? safeArea.bottom : 0
-        }
-      ]}
-    >
-      {overlayText && (
-        <Ham2kDialog visible={true}>
-          <KeepAwake />
-          <Dialog.Content>
-            <Ham2kMarkdown styles={styles} style={{ paddingTop: 3 * styles.oneSpace, color: styles.colors.onBackground }}>{overlayText}</Ham2kMarkdown>
-          </Dialog.Content>
-        </Ham2kDialog>
-      )}
-
-      {[currentNotice].filter(x => x).map((notice, index) => (
-        <Surface
-          key={index}
-          elevation={3}
-          style={styles.noticeContainer}
-        >
-          <Ham2kMarkdown style={styles.noticeText}>
-            {notice.title && `### ${notice.title}\n\n`}
-            {notice.text}
-          </Ham2kMarkdown>
-
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
-            {notice.action && (
-              <Button
-                mode={'contained'}
-                theme={ styles.buttonTheme }
-                style={{ paddingHorizontal: styles.oneSpace, marginLeft: -styles.oneSpace }}
-                compact={true}
-                disabled={notice.action === 'disabled'}
-                onPress={() => handleAction(notice)}
-              >
-                {notice.actionLabel}
-              </Button>
-            )}
-            <IconButton
-              icon={'close'}
-              mode={'outlined'}
-              compact={true}
-              onPress={() => handleDismiss(notice)}
-              style={{ padding: 0, margin: 0, marginRight: -0.5 * styles.oneSpace }}
-            />
-          </View>
-        </Surface>
-      ))}
-    </View>
-  )
-}
-
-async function performAction (notice, dispatch, setOverlayText) {
-  if (notice.action === 'fetch' && notice.actionArgs?.key) {
-    await dispatch(fetchDataFile(notice.actionArgs.key, {
-      onStatus: ({ key, definition, status, progress }) => {
-        if (status === 'fetching' || status === 'loading') {
-          setOverlayText(`### Fetching '${definition.name}'…`)
-        } else if (status === 'progress') {
-          setOverlayText(`### Fetching '${definition.name}'\n\n${progress}`)
-        } else if (status === 'loaded' || status === 'error') {
-          setOverlayText('')
-        }
-      }
-    }))
-  } else {
-    return handleNoticeActionForDistribution({ notice, dispatch, setOverlayText })
   }
 }

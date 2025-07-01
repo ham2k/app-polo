@@ -44,6 +44,6 @@ export function Ham2kMarkdown ({ children, styles, style, compact }) {
     return combinedStyle
   }, [styles, style, defaultStyles, compact])
 
-  if (children.join) children = children.join('')
+  if (children?.join) children = children.join('')
   if (children) return <Markdown style={markdownStyle}>{children}</Markdown>
 }

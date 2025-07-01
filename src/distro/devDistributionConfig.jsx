@@ -98,8 +98,12 @@ export function onNavigationReadyForDistribution (navigationRef) {
   // Do nothing
 }
 
-export function handleNoticeActionForDistribution ({ notice, dispatch, setOverlayText }) {
+export function handleNoticeActionForDistribution ({ notice, action, dispatch, navigate, setOverlayText, setOverlayTitle }) {
   return true
+}
+
+export function processNoticeTemplateDataForDistribution (data) {
+  // Do nothing
 }
 
 export function enableStartupInterruptionDialogForDistribution ({ settings }) {

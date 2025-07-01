@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -28,10 +28,10 @@ export function Ham2kDialog ({ children, ...moreProps }) {
 
   return (
     <Portal>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'height'}>
+      <KeyboardAvoidingView style={{ flex: 1, paddingTop: 100, paddingBottom: 100 }} behavior={'height'}>
         <Dialog
           {...moreProps}
-          style={style}
+          style={[style]}
         >
           {children}
         </Dialog>

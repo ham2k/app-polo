@@ -42,6 +42,7 @@ import VersionSettingsScreen from './VersionSettingsScreen'
 import SyncSettingsScreen from './SyncSettingsScreen'
 
 import { MainSettingsForDistribution } from '../../../distro'
+import NoticesSettingsScreen from './NoticesSettingsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -254,6 +255,12 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
           onPress={() => navigation.navigate('Settings', { screen: 'CreditsSettings' })}
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account-group" />}
         />
+        <Ham2kListItem
+          title="Recent Notices"
+          description={'Messages you might have missed?'}
+          onPress={() => navigation.navigate('Settings', { screen: 'NoticesSettings' })}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="bell-outline" />}
+        />
       </Ham2kListSection>
 
       <Ham2kListSection style={{ marginBottom: safeAreaInsets.bottom }}>
@@ -372,6 +379,11 @@ function settingsScreensArray ({ includeMain, topLevelBack, splitView }) {
     <Stack.Screen name="ExportSettings" key="ExportSettings"
       options={{ title: 'Export Settings' }}
       component={ExportSettingsScreen}
+    />,
+
+    <Stack.Screen name="NoticesSettings" key="NoticesSettings"
+      options={{ title: 'Recent Notices' }}
+      component={NoticesSettingsScreen}
     />,
 
     <Stack.Screen name="ExtensionScreen" key="ExtensionScreen"

@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -13,8 +13,11 @@ import deepmerge from 'deepmerge'
 import { selectRawSettings } from '../settings'
 import { selectRuntimeOnline } from '../runtime'
 import { setFeatureFlags } from './systemSlice'
+import { reportError } from '../../distro'
 
 const DEBUG = true
+
+const MAX_REQUEST_TIME = 5000
 
 export const fetchFeatureFlags = () => async (dispatch, getState) => {
   const state = getState()
@@ -54,7 +57,7 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
       const location = locations.pop()
       try {
         const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 4000) // 4 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), MAX_REQUEST_TIME) // timeout
 
         const response = await fetch(`${Config.POLO_FLAGS_BASE_URL}/${location}`, {
           signal: controller.signal
@@ -87,14 +90,15 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
         }
       } catch (error) {
         if (error.name === 'AbortError') {
-          throw new Error('Request timed out after 4 seconds') // Re-raise to stop all further fetches
+          throw new Error('Request timed') // Re-raise to stop all further fetches
         }
-        console.error('Error fetching flags from', location, error)
+        // console.error('Error fetching flags from', location, error)
+        reportError(`Error fetching flags from \`${location}\``, error)
       }
     }
   } catch (error) {
     if (error.name === 'AbortError') {
-      console.error('Request timed out after 4 seconds')
+      console.error('Request timed')
     } else {
       console.error('Error fetching flags', error)
     }

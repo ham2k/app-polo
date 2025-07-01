@@ -137,5 +137,3 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
     </ScreenContainer>
   )
 }
-
-// ))}

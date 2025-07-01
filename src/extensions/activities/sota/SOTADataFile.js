@@ -11,6 +11,7 @@ import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 import { registerDataFile } from '../../../store/dataFiles'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessBatchedLines } from '../../../store/dataFiles/actions/dataFileFS'
+import { Info } from './SOTAInfo'
 
 export const SOTAData = {}
 
@@ -19,6 +20,8 @@ export function registerSOTADataFile () {
     key: 'sota-all-summits',
     name: 'SOTA: All Summits',
     description: 'Database of all SOTA references',
+    title: Info.name,
+    titleIcon: Info.icon,
     infoURL: 'https://www.sotadata.org.uk/en/summits',
     icon: 'file-image-outline',
     maxAgeInDays: 100,
