@@ -4,7 +4,8 @@
     "photoCaption": "LB4FH/MM at NO-2619",
     "changes": [
       "Include grid in SOTA exports",
-      "Thirteen Colonies ADIF export"
+      "Thirteen Colonies ADIF export",
+      "Fixed ADIF export for FREQ field (caused problems in SOTA site and 40m QSOs)"
     ]
   },
   "25.7.0": {
@@ -82,7 +83,7 @@
       "Improved Export Settings, and moved them under General Settings",
       "Better handling of bad Internet service",
       "Mills on the Air (MOTA) programme (by M1SDH)",
-      "QSO Parties: AR, IN, TN, NEQP, 7QP, AL, NM, DE, CPQP, KY, WV, ACQP, CPQP (with contributions from W1GRL, W1BOY, W8NI, KQ4URU, W1WC)",
+      "QSO Parties: AR, IN, TN, NEQP, 7QP, AL, NM, DE, KY, WV, ACQP, CPQP (with contributions from W1GRL, W1BOY, W8NI, KQ4URU, W1WC)",
       "Georgia State Parks On The Air (as suggested by KO4GBB)",
       "Assorted bug fixes (with contributions from NA7DO)"
     ]
