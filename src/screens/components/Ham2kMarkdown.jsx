@@ -10,6 +10,7 @@ import React, { useMemo } from 'react'
 import Markdown from 'react-native-markdown-display'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { StyleSheet } from 'react-native'
 
 /*
  * For more styling info, see
@@ -20,8 +21,11 @@ import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export function Ham2kMarkdown ({ children, styles, style, compact }) {
   const defaultStyles = useThemedStyles()
+  // Ensure style is a single object even if passed as an array
+  style = StyleSheet.flatten(style)
+
   const markdownStyle = useMemo(() => {
-    const combinedStyle = { ...defaultStyles?.markdown, ...styles?.markdown }
+    let combinedStyle = { ...defaultStyles?.markdown, ...styles?.markdown }
     if (style) combinedStyle.body = { ...combinedStyle?.body, ...style }
     if (compact) {
       combinedStyle.paragraph = {
@@ -41,9 +45,26 @@ export function Ham2kMarkdown ({ children, styles, style, compact }) {
         marginBottom: style.marginBottom ?? 0
       }
     }
+    if (style?.color) combinedStyle = _recursivelyReplace(combinedStyle, { color: style.color })
     return combinedStyle
   }, [styles, style, defaultStyles, compact])
 
   if (children?.join) children = children.join('')
   if (children) return <Markdown style={markdownStyle}>{children}</Markdown>
+}
+
+function _recursivelyReplace (obj, replacement) {
+  if (typeof obj === 'object') {
+    for (const [key, value] of Object.entries(obj)) {
+      for (const [replacementKey, replacementValue] of Object.entries(replacement)) {
+        if (key === replacementKey) {
+          obj[key] = replacementValue
+        }
+      }
+      if (typeof value === 'object') {
+        obj[key] = _recursivelyReplace(value, replacement)
+      }
+    }
+  }
+  return obj
 }

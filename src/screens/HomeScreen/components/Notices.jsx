@@ -200,7 +200,7 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
       {(notice.title || notice.icon) && (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace }}>
           {notice.icon && (
-            <Ham2KIcon name={notice.icon} size={styles.oneSpace * 3} />
+            <Ham2KIcon name={notice.icon} size={styles.oneSpace * 3} color={styles.noticeText.color} />
           )}
           {notice.title && (
             <Ham2kMarkdown style={styles.noticeText}>## {notice.title}</Ham2kMarkdown>
@@ -232,6 +232,8 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
           <IconButton
             icon="close"
             mode="outlined"
+            theme={ styles.buttonTheme }
+            iconColor={styles.noticeText.color}
             compact={true}
             onPress={() => handleDismiss(notice)}
             style={{ padding: 0, margin: 0, marginRight: -0.5 * styles.oneSpace }}
