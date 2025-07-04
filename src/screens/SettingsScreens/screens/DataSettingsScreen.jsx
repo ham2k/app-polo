@@ -161,7 +161,7 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
         destination: 'cachesDirectory'
       })
 
-      const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
+      const filename = decodeURIComponent(localCopy.localUri?.replace('file://', ''))
 
       setLoadingHistoricalMessage('Importing ADIF records... Please be patient!')
       const interval = setInterval(async () => {
