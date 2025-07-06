@@ -12,6 +12,11 @@ import { Info } from './SiOTAInfo'
 import { SiOTAActivityOptions } from './SiOTAActivityOptions'
 import { siotaFindOneByReference, registerSiOTADataFile, siotaFindAllByLocation } from './SiOTADataFile'
 import { SiOTALoggingControl } from './SiOTALoggingControl'
+import { SiOTAPostSelfSpot } from './SiOTAPostSelfSpot'
+import { SiOTAPostOtherSpot } from './SiOTAPostOtherSpot'
+import { PnPAccountSetting } from './PnPAccount'
+import { apiPnP } from '../../../store/apis/apiPnP'
+import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -23,8 +28,16 @@ const Extension = {
   category: 'locationBased',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
+    registerHook('spots', { hook: SpotsHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+    registerHook('setting', {
+      hook: {
+        key: 'pnp-account',
+        category: 'account',
+        SettingItem: PnPAccountSetting
+      }
+    })
 
     registerSiOTADataFile()
     await dispatch(loadDataFile('siota-all-silos', { noticesInsteadOfFetch: true }))
@@ -45,6 +58,17 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
+  postSelfSpot: SiOTAPostSelfSpot,
+  postOtherSpot: SiOTAPostOtherSpot,
+  isOtherSpotEnabled: ({ settings, operation }) => {
+    const enabled = !!settings?.accounts?.pnp?.apiKey
+    return enabled
+  },
+  isSelfSpotEnabled: ({ settings, operation }) => {
+    const enabled = !!settings?.accounts?.pnp?.apiKey
+    return enabled
+  },
+
   Options: SiOTAActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,
@@ -54,6 +78,61 @@ const ActivityHook = {
       // Regular Activation
       { refs: [{ type: Info.activationType, ref: 'VK-ABC123', name: 'Example Silo', shortName: 'Example Silo', program: Info.shortName, label: `${Info.shortName} VK-ABC123: Example Silo`, shortLabel: `${Info.shortName} VK-ABC123` }] }
     ]
+  }
+}
+
+const SpotsHook = {
+  ...Info,
+  sourceName: 'PnP',
+  fetchSpots: async ({ online, settings, dispatch }) => {
+    let spots = []
+    if (online) {
+      const apiPromise = await dispatch(apiPnP.endpoints.spots.initiate({}, { forceRefetch: true }))
+      await Promise.all(dispatch(apiPnP.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, getState) => apiPnP.endpoints.spots.select({})(getState()))
+
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+      spots = apiResults.data || []
+    }
+    spots.reverse() // Newest to oldest
+    const qsos = []
+    for (const spot of spots) {
+      if (Info.referenceRegex.test(spot.actSiteID)) {
+        const spotTime = Date.parse(spot.actTime)
+        const freq = parseFloat(spot.actFreq) * 1000
+        const qso = {
+          their: { call: spot.actCallsign.toUpperCase().trim() },
+          freq,
+          band: freq ? bandForFrequency(freq) : 'other',
+          mode: spot.actMode?.toUpperCase() || (freq ? modeForFrequency(freq, { ituRegion: 3, countryCode: 'AU', entityPrefix: 'VK' }) : 'SSB'),
+          refs: [{
+            ref: spot.actSiteID,
+            type: Info.huntingType
+          }],
+          spot: {
+            timeInMillis: spotTime,
+            source: Info.key,
+            icon: Info.icon,
+            label: `${spot.actSiteID}: ${spot?.actLocation || 'Unknown Reference'}`,
+            sourceInfo: {
+              comments: spot.actComments,
+              spotter: spot.actSpoter.toUpperCase().trim()
+            }
+          }
+        }
+        qsos.push(qso)
+      }
+    }
+    const dedupedQSOs = []
+    const includedCalls = {}
+    for (const qso of qsos) {
+      if (!includedCalls[qso.their.call]) {
+        includedCalls[qso.their.call] = true
+        dedupedQSOs.push(qso)
+      }
+    }
+
+    return dedupedQSOs
   }
 }
 
