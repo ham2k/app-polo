@@ -195,10 +195,10 @@ function _geoJSONMarkerForQTH ({ qth, operation, styles }) {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: [qth.longitude, qth.latitude]
+        coordinates: [Number(qth.longitude.toFixed(5)), Number(qth.latitude.toFixed(5))]
       },
       properties: {
-        color: styles.colors.bands.default,
+        color: styles.colors.bands.other,
         strenghtFactor: 1,
         callout: `QTH: ${operation.grid}`
       }
@@ -208,10 +208,11 @@ function _geoJSONMarkerForQTH ({ qth, operation, styles }) {
 
 function _geoJSONMarkersForQSOs ({ mappableQSOs, qth, operation, styles }) {
   const features = []
+  features.push(...mappableQSOs.map(mappableQSO => _geoJSONMarkerForQSO({ mappableQSO, qth, operation, styles })).filter(x => x))
+
   if (qth?.latitude && qth?.longitude) {
     features.push(_geoJSONMarkerForQTH({ qth, operation, styles }))
   }
-  features.push(...mappableQSOs.map(mappableQSO => _geoJSONMarkerForQSO({ mappableQSO, qth, operation, styles })).filter(x => x))
 
   return {
     type: 'FeatureCollection',
@@ -225,7 +226,7 @@ function _geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: [mappableQSO.location.longitude, mappableQSO.location.latitude]
+        coordinates: [Number(mappableQSO.location.longitude.toFixed(5)), Number(mappableQSO.location.latitude.toFixed(5))]
       },
       properties: {
         color: styles.colors.bands[mappableQSO.qso.band] || styles.colors.bands.default,
@@ -248,8 +249,8 @@ function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
 
 function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
   if (mappableQSO.location) {
-    const start = [mappableQSO.location.longitude, mappableQSO.location.latitude]
-    const end = [qth?.longitude, qth?.latitude]
+    const start = [Number(mappableQSO.location.longitude.toFixed(5)), Number(mappableQSO.location.latitude.toFixed(5))]
+    const end = [Number(qth?.longitude.toFixed(5)), Number(qth?.latitude.toFixed(5))]
 
     const segments = _generateGeodesicPoints(start, end)
 

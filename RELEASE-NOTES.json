@@ -4,7 +4,8 @@
     "photoCaption": "LB4FH/MM at NO-2619",
     "changes": [
       "Fixed bug in export for Satellite activities",
-      "Tweaks to WWFF Spotline API"
+      "Tweaks to WWFF Spotline API",
+      "Fixed missing points on map"
     ]
   },
   "25.7.1": {
