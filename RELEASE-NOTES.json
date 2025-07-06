@@ -3,7 +3,8 @@
     "name": "July '25 (patch 1)",
     "photoCaption": "LB4FH/MM at NO-2619",
     "changes": [
-      "Fixed bug in export for Satellite activities"
+      "Fixed bug in export for Satellite activities",
+      "Tweaks to WWFF Spotline API"
     ]
   },
   "25.7.1": {
