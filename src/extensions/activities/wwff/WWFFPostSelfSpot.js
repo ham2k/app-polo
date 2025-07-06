@@ -10,7 +10,6 @@ import { Alert } from 'react-native'
 import { findRef } from '../../../tools/refTools'
 import { apiWWFF } from '../../../store/apis/apiWWFF'
 import { reportError } from '../../../distro'
-import { GMACommonPostSelfSpot } from '../gma/GMACommonPostSelfSpot'
 
 export const WWFFPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
   const state = getState()
@@ -26,10 +25,6 @@ export const WWFFPostSelfSpot = ({ operation, vfo, comments }) => async (dispatc
       remarks: comments,
       spotter: activatorCallsign
     }
-
-    // TODO: Remove this once everybody has properly moved to the new service
-    // Lets also post to legacy GMA API, but ignore status
-    dispatch(GMACommonPostSelfSpot({ operation, vfo, comments, refs: [ref], url: 'https://www.cqgma.org/wwff/spotwwff.php' }))
 
     try {
       const apiPromise = await dispatch(apiWWFF.endpoints.spot.initiate(spot, { forceRefetch: true }))
