@@ -120,6 +120,9 @@ export default function OperationDataScreen (props) {
           // dispatch(deleteExport(path))
         })
       }
+    }).catch((error) => {
+      console.error('Error generating exports', error)
+      reportError('Error generating exports', error)
     })
   }, [dispatch, operation])
 
