@@ -8,7 +8,8 @@
       "New Zealand On The Air (by M1SDH)",
       "Spot other operators (by DL9PK)",
       "Better handling of screen padding and safe areas",
-      "Assorted bug fixes"
+      "Assorted bug fixes",
+      "Add SiOTA spots support via ParksnPeaks"
     ]
   },
   "25.5.2": {
