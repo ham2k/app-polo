@@ -36,8 +36,9 @@ export const WWFFPostSelfSpot = ({ operation, vfo, comments }) => async (dispatc
       await Promise.all(dispatch(apiWWFF.util.getRunningQueriesThunk()))
       const apiResults = await dispatch((_dispatch, _getState) => apiWWFF.endpoints.spot.select(spot)(_getState()))
       apiPromise.unsubscribe && apiPromise.unsubscribe()
-      if (apiResults?.error) {
-        Alert.alert('Error posting WWFF spot', `Server responded with status ${apiResults.error?.status} ${apiResults.error?.data?.error}`)
+      // Don't worry about duplicates
+      if (apiResults?.error && !apiResults?.error?.data?.message?.match(/Duplicate spot detected/)) {
+        Alert.alert('Error posting WWFF spot', `Server responded with status ${apiResults.error?.status} ${apiResults.error?.data?.message}`)
         return false
       }
     } catch (error) {
