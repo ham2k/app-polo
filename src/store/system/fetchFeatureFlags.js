@@ -15,7 +15,7 @@ import { selectRuntimeOnline } from '../runtime'
 import { setFeatureFlags } from './systemSlice'
 import { reportError } from '../../distro'
 
-const DEBUG = true
+const DEBUG = false
 
 const MAX_REQUEST_TIME = 5000
 

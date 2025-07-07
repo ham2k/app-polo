@@ -35,12 +35,12 @@ export default Extension
 
 export const DEFAULT_LOFI_SERVER = 'https://lofi.ham2k.net'
 
-const DEBUG = true
+const DEBUG = false
 
 const SyncHook = {
   ...Info,
   sync: (params) => async (dispatch, getState) => {
-    console.log('sync', { meta: params.meta })
+    if (DEBUG) console.log('sync', { meta: params.meta })
 
     const body = JSON.stringify(params)
     const response = await requestWithAuth({ dispatch, getState, url: 'v1/sync', method: 'POST', body })
@@ -79,7 +79,7 @@ const SyncHook = {
 
 async function requestWithAuth ({ dispatch, getState, url, method, body, params }) {
   try {
-    console.log('Ham2K LoFi request', { url, method })
+    if (DEBUG) console.log('Ham2K LoFi request', { url, method })
     const settings = selectSettings(getState())
 
     let { server, account } = selectLocalExtensionData(getState(), Info.key) || {}
@@ -114,7 +114,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
         })
 
         const responseBody = await response.text()
-        // console.log(' -- auth response body', responseBody)
+        // if (DEBUG) console.log(' -- auth response body', responseBody)
         // const json = await response.json()
         let json
         try {
@@ -151,7 +151,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       })
 
       const responseBody = await response.text()
-      // console.log(' -- main response body', responseBody)
+      // if (DEBUG) console.log(' -- main response body', responseBody)
       // const json = await response.json()
       let json
       try {
