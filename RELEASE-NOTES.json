@@ -1,11 +1,12 @@
 {
   "25.7.2": {
-    "name": "July '25 (patch 1)",
+    "name": "July '25 (patch 2)",
     "photoCaption": "LB4FH/MM at NO-2619",
     "changes": [
       "Fixed bug in export for Satellite activities",
       "Tweaks to WWFF Spotline API",
-      "Fixed missing points on map"
+      "Fixed missing points on map",
+      "Fixed taps on QSO list headers"
     ]
   },
   "25.7.1": {

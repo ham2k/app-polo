@@ -15,8 +15,10 @@ import { View } from 'react-native'
 import { Ham2KIcon } from '../../../components/Ham2KIcon'
 
 const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings, onHeaderPress }) {
+  // NOTE: We're using onPresOut instead of onPress because of a bug in SectionList
+  // See https://github.com/facebook/react-native/issues/51290
   return (
-    <TouchableRipple onPress={onHeaderPress}>
+    <TouchableRipple onPressOut={onHeaderPress}>
       <View style={styles.headerRow}>
         <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
           {fmtDateZuluDynamic(section.day)}
