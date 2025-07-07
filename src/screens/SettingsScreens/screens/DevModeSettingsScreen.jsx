@@ -66,7 +66,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
       }).then((x) => {
         console.info('Shared', x)
       }).catch((e) => {
-        if (e.message.includes('User cancelled')) {
+        if (e.message.includes('user canceled')) {
           // Do nothing
         } else {
           console.info('Sharing Error', e)
@@ -93,7 +93,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
       console.log(error)
-      if (error?.message?.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('user canceled') >= 0) {
         // ignore
       } else {
         reportError('Error importing database', error)
@@ -127,7 +127,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
       await dispatch(importQSON(filename))
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
-      if (error?.message?.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('user canceled') >= 0) {
         // ignore
       } else {
         reportError('Error importing QSON', error)

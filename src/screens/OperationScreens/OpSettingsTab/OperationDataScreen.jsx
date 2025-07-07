@@ -111,7 +111,7 @@ export default function OperationDataScreen (props) {
         Share.open(shareOptions).then((x) => {
           console.info('Shared', x)
         }).catch((e) => {
-          if (e.message.includes('User cancelled')) {
+          if (e.message.includes('user canceled')) {
             // Do nothing
           } else {
             console.info('Sharing Error', e)
@@ -148,7 +148,7 @@ export default function OperationDataScreen (props) {
       })
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
-      if (error?.message?.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('user canceled') >= 0) {
         // ignore
       } else {
         Alert.alert('Error importing ADIF', error.message)
