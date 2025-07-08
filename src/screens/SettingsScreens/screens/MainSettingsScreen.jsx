@@ -40,6 +40,7 @@ import GeneralSettingsScreen from './GeneralSettingsScreen'
 import LoggingSettingsScreen from './LoggingSettingsScreen'
 import VersionSettingsScreen from './VersionSettingsScreen'
 import SyncSettingsScreen from './SyncSettingsScreen'
+import WavelogSettingsScreen from './WavelogSettingsScreen'
 
 import { MainSettingsForDistribution } from '../../../distro'
 import NoticesSettingsScreen from './NoticesSettingsScreen'
@@ -215,6 +216,13 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
           />
         )}
 
+        <Ham2kListItem
+          title="Wavelog Settings"
+          description={'Configure Wavelog API connection'}
+          onPress={() => navigation.navigate('Settings', { screen: 'WavelogSettings' })}
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cloud-upload-outline" />}
+        />
+
       </Ham2kListSection>
 
       <Ham2kListSection>
@@ -389,6 +397,11 @@ function settingsScreensArray ({ includeMain, topLevelBack, splitView }) {
     <Stack.Screen name="ExtensionScreen" key="ExtensionScreen"
       options={{ title: 'Extension' }}
       component={ExtensionScreen}
+    />,
+
+    <Stack.Screen name="WavelogSettings" key="WavelogSettings"
+      options={{ title: 'Wavelog Settings', headerBackVisible: topLevelBack }}
+      component={WavelogSettingsScreen}
     />
 
   ]

@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { addNewOperation, fillOperationFromTemplate, getAllOperationTemplates, getOperationTemplate, selectOperation, selectOperationsList, setOperationData } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
+import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../../store/qsos'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
@@ -23,6 +24,7 @@ import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { trackEvent } from '../../../distro'
 import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
+import { ExportWavelogDialog } from './components/ExportWavelogDialog'
 
 function prepareStyles (baseStyles) {
   return {
@@ -121,6 +123,28 @@ export default function OpSettingsTab ({ navigation, route }) {
   }, [dispatch, navigation, operation, settings])
 
   const safeAreaInsets = useSafeAreaInsets()
+  const [showExportWavelog, setShowExportWavelog] = useState(false)
+
+  // Ensure QSOs are loaded for this operation
+  useEffect(() => {
+    setImmediate(async () => {
+      await dispatch(loadOperation(route.params.operation.uuid))
+      await dispatch(loadQSOs(route.params.operation.uuid))
+    })
+  }, [route.params.operation.uuid, dispatch])
+
+  // DEBUG: Log the full qsos state to find the correct structure
+  const qsosState = useSelector(state => state.qsos)
+  useEffect(() => {
+    console.log('qsosState', qsosState)
+  }, [qsosState])
+
+  // Try to select QSOs from the most likely locations
+  const qsos = useSelector(state =>
+    Array.isArray(state.qsos?.qsos?.[operation.uuid])
+      ? state.qsos.qsos[operation.uuid]
+      : []
+  )
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -210,11 +234,25 @@ export default function OpSettingsTab ({ navigation, route }) {
           onPress={() => navigation.navigate('OperationData', { operation: operation.uuid })}
         />
         <Ham2kListItem
+          title="Export QSOs to Wavelog"
+          description="Send all QSOs for this operation to Wavelog"
+          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cloud-upload-outline" />}
+          onPress={() => setShowExportWavelog(true)}
+        />
+        <Ham2kListItem
           title="Use as template"
           description="Start a new operation with similar settings"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
           onPress={cloneOperation}
         />
+        {showExportWavelog && (
+          <ExportWavelogDialog
+            operation={operation}
+            qsos={qsos || []}
+            visible={showExportWavelog}
+            onDialogDone={() => setShowExportWavelog(false)}
+          />
+        )}
       </Ham2kListSection>
 
       <Ham2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
