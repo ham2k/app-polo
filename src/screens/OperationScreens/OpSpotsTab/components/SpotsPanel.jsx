@@ -227,12 +227,14 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
     onSelect && onSelect({ spot })
   }, [onSelect])
 
+  console.log('panel style', style)
+
   return (
     <GestureHandlerRootView style={[{ flex: 1, flexDirection: 'column', alignItems: 'stretch' }]}>
       {showControls ? (
         <View style={[styles.panel, { flex: 1, paddingBottom: 0 }]}>
           <SpotFilterControls
-            style={{ paddingBottom: Math.min(style?.paddingBottom ?? 0, styles.oneSpace * 2) }}
+            style={{ paddingBottom: Math.max(style?.paddingBottom ?? 0, styles.oneSpace * 2), paddingRight: style.paddingRight ?? 0 }}
             rawSpots={spotsState.rawSpots}
             filteredSpots={scoredSpots}
             options={options}

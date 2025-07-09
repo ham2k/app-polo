@@ -19,10 +19,16 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { CONTINENTS } from '@ham2k/lib-dxcc-data'
 
 export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, options, filterState, updateFilterState, counts, operation, onDone, refreshSpots, styles, style, themeColor, settings, online }) {
+  console.log('controls style', style)
   return (
     <ScrollView
       style={{ flex: 1 }}
-      contentContainerStyle={{ flexDirection: 'column', alignItems: 'center', gap: styles.oneSpace }}
+      contentContainerStyle={{
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: styles.oneSpace,
+        marginRight: style.paddingRight
+      }}
     >
       <SpotFilterIndicators
         options={options}
@@ -53,11 +59,12 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
         <Text style={[styles.markdown.heading2, { marginTop: styles.halfSpace, textAlign: 'center' }]}>
           Filters
         </Text>
-        <View style={{ flexDirection: 'row', alignItems: 'stretch' }}>
+        <View style={{ flexDirection: 'row', width: '100%', alignItems: 'stretch' }}>
           <ThemedDropDown
             label="Band"
             themeColor={themeColor}
             value={filterState.band || 'any'}
+            style={{ width: '100%' }}
             onChange={(event) => updateFilterState({ band: event.nativeEvent.text })}
             fieldId={'band'}
             options={[
@@ -72,6 +79,7 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
           <ThemedDropDown
             label="Mode"
             value={filterState.mode || 'any'}
+            style={{ width: '100%' }}
             onChange={(event) => updateFilterState({ mode: event.nativeEvent.text })}
             fieldId={'mode'}
             options={[
@@ -86,6 +94,7 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
           <ThemedDropDown
             label="Maximum Age"
             value={filterState.ageInMinutes || 0}
+            style={{ width: '100%' }}
             onChange={(event) => updateFilterState({ ageInMinutes: Number.parseInt(event.nativeEvent.text, 10) })}
             fieldId={'age'}
             options={[

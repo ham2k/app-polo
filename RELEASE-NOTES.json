@@ -1,4 +1,11 @@
 {
+  "25.7.3": {
+    "name": "July '25 (patch 3)",
+    "photoCaption": "LB4FH/MM at NO-2619",
+    "changes": [
+      "Adjusted styles in spots filter controls"
+    ]
+  },
   "25.7.2": {
     "name": "July '25 (patch 2)",
     "photoCaption": "LB4FH/MM at NO-2619",
