@@ -234,7 +234,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       {showControls ? (
         <View style={[styles.panel, { flex: 1, paddingBottom: 0 }]}>
           <SpotFilterControls
-            style={{ paddingBottom: Math.max(style?.paddingBottom ?? 0, styles.oneSpace * 2), paddingRight: style.paddingRight ?? 0 }}
+            style={{ paddingBottom: Math.max(style?.paddingBottom ?? 0 + styles.oneSpace, styles.oneSpace * 2), paddingRight: style?.paddingRight ?? 0 }}
             rawSpots={spotsState.rawSpots}
             filteredSpots={scoredSpots}
             options={options}
