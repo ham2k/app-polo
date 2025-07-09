@@ -195,7 +195,7 @@ function _geoJSONMarkerForQTH ({ qth, operation, styles }) {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: [Number(qth.longitude.toFixed(5)), Number(qth.latitude.toFixed(5))]
+        coordinates: _coordsFromLatLon(qth)
       },
       properties: {
         color: styles.colors.bands.other,
@@ -221,12 +221,12 @@ function _geoJSONMarkersForQSOs ({ mappableQSOs, qth, operation, styles }) {
 }
 
 function _geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
-  if (mappableQSO.location) {
+  if (mappableQSO?.location && mappableQSO.location.latitude && mappableQSO.location.longitude) {
     return {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: [Number(mappableQSO.location.longitude.toFixed(5)), Number(mappableQSO.location.latitude.toFixed(5))]
+        coordinates: _coordsFromLatLon(mappableQSO.location)
       },
       properties: {
         color: styles.colors.bands[mappableQSO.qso.band] || styles.colors.bands.default,
@@ -248,9 +248,9 @@ function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
 }
 
 function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
-  if (mappableQSO.location) {
-    const start = [Number(mappableQSO.location.longitude.toFixed(5)), Number(mappableQSO.location.latitude.toFixed(5))]
-    const end = [Number(qth?.longitude.toFixed(5)), Number(qth?.latitude.toFixed(5))]
+  if (mappableQSO?.location && mappableQSO.location.latitude && mappableQSO.location.longitude) {
+    const start = _coordsFromLatLon(mappableQSO.location)
+    const end = _coordsFromLatLon(qth)
 
     const segments = _generateGeodesicPoints(start, end)
 
@@ -263,6 +263,10 @@ function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
       }
     }))
   }
+}
+
+function _coordsFromLatLon ({ latitude, longitude }) {
+  return [Number(longitude?.toFixed(5) ?? 0), Number(latitude?.toFixed(5) ?? 0)]
 }
 
 function _colorForText ({ qso, styles, mapStyles }) {
