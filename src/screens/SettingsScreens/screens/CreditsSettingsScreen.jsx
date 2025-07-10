@@ -130,6 +130,13 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
             onPress={() => navigation.navigate('CallInfo', { call: 'W8NI' })}
           />
+          <Ham2kListItem
+            title={'Emma • VA2EMZ/K0UWU'}
+            description={'Code: Wavelog Sync'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            onPress={() => navigation.navigate('CallInfo', { call: 'W9ILY' })}
+          />
+
         </Ham2kListSection>
         <View style={{ height: safeAreaInsets.bottom }} />
 
