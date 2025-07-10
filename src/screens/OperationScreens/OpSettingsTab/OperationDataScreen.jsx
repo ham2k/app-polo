@@ -6,7 +6,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Alert, ScrollView, View } from 'react-native'
 import { Checkbox, List, Menu, Text } from 'react-native-paper'
@@ -28,6 +28,7 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import ScreenContainer from '../../components/ScreenContainer'
 import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
+import { ExportWavelogDialog } from './components/ExportWavelogDialog'
 
 export default function OperationDataScreen (props) {
   const { navigation, route } = props
@@ -38,6 +39,8 @@ export default function OperationDataScreen (props) {
   const qsos = useSelector(state => selectQSOs(state, operation?.uuid))
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
   const settings = useSelector(selectSettings)
+
+  const [showExportWavelog, setShowExportWavelog] = useState(false)
 
   useEffect(() => { // When starting, make sure all operation data is loaded
     dispatch(loadQSOs(route.params.operation))
@@ -218,6 +221,27 @@ export default function OperationDataScreen (props) {
                 onPress={() => {}}
               />
             </Ham2kListSection>
+          )}
+          { settings.wavelogExperiments && (
+          <Ham2kListSection title={'Wavelog Export'} titleStyle={{ color: styles.colors.devMode }}>
+            <Ham2kListItem
+                      title="Export QSOs to Wavelog"
+                      description="Send all QSOs for this operation to Wavelog"
+                      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cloud-upload-outline" color={styles.colors.devMode} />}
+                      onPress={() => setShowExportWavelog(true)}
+                      titleStyle={{ color: styles.colors.devMode }}
+                      descriptionStyle={{ color: styles.colors.devMode }}
+                    />
+          </Ham2kListSection>
+          
+          )}
+          { showExportWavelog && (
+            <ExportWavelogDialog
+              operation={operation}
+              qsos={qsos || []}
+              visible={showExportWavelog}
+              onDialogDone={() => setShowExportWavelog(false)}
+            />
           )}
         </ScrollView>
       </SafeAreaView>

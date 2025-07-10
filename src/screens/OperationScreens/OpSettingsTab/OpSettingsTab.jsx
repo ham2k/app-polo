@@ -24,7 +24,6 @@ import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { trackEvent } from '../../../distro'
 import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
-import { ExportWavelogDialog } from './components/ExportWavelogDialog'
 
 function prepareStyles (baseStyles) {
   return {
@@ -234,25 +233,11 @@ export default function OpSettingsTab ({ navigation, route }) {
           onPress={() => navigation.navigate('OperationData', { operation: operation.uuid })}
         />
         <Ham2kListItem
-          title="Export QSOs to Wavelog"
-          description="Send all QSOs for this operation to Wavelog"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cloud-upload-outline" />}
-          onPress={() => setShowExportWavelog(true)}
-        />
-        <Ham2kListItem
           title="Use as template"
           description="Start a new operation with similar settings"
           left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
           onPress={cloneOperation}
         />
-        {showExportWavelog && (
-          <ExportWavelogDialog
-            operation={operation}
-            qsos={qsos || []}
-            visible={showExportWavelog}
-            onDialogDone={() => setShowExportWavelog(false)}
-          />
-        )}
       </Ham2kListSection>
 
       <Ham2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
