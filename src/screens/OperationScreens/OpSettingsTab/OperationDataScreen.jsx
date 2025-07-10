@@ -40,12 +40,11 @@ export default function OperationDataScreen (props) {
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
   const settings = useSelector(selectSettings)
 
-  const [showExportWavelog, setShowExportWavelog] = useState(false)
-
   useEffect(() => { // When starting, make sure all operation data is loaded
     dispatch(loadQSOs(route.params.operation))
     dispatch(loadOperation(route.params.operation))
   }, [route.params.operation, dispatch])
+  const [showExportWavelog, setShowExportWavelog] = useState(false)
 
   useEffect(() => {
     let options = { title: 'Operation Data' }

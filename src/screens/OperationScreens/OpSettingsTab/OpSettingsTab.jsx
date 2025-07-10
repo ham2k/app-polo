@@ -122,28 +122,6 @@ export default function OpSettingsTab ({ navigation, route }) {
   }, [dispatch, navigation, operation, settings])
 
   const safeAreaInsets = useSafeAreaInsets()
-  const [showExportWavelog, setShowExportWavelog] = useState(false)
-
-  // Ensure QSOs are loaded for this operation
-  useEffect(() => {
-    setImmediate(async () => {
-      await dispatch(loadOperation(route.params.operation.uuid))
-      await dispatch(loadQSOs(route.params.operation.uuid))
-    })
-  }, [route.params.operation.uuid, dispatch])
-
-  // DEBUG: Log the full qsos state to find the correct structure
-  const qsosState = useSelector(state => state.qsos)
-  useEffect(() => {
-    console.log('qsosState', qsosState)
-  }, [qsosState])
-
-  // Try to select QSOs from the most likely locations
-  const qsos = useSelector(state =>
-    Array.isArray(state.qsos?.qsos?.[operation.uuid])
-      ? state.qsos.qsos[operation.uuid]
-      : []
-  )
 
   return (
     <ScrollView style={{ flex: 1 }}>

@@ -216,17 +216,6 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
           />
         )}
 
-        {settings.wavelogExperiments && (
-          <Ham2kListItem
-            title="Wavelog Settings"
-            description={'Configure Wavelog API connection'}
-            onPress={() => navigation.navigate('Settings', { screen: 'WavelogSettings' })}
-            titleStyle={{ color: styles.colors.devMode }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cloud-upload-outline" color={styles.colors.devMode} />}
-          />
-        )}
-
       </Ham2kListSection>
 
       <Ham2kListSection>
@@ -249,6 +238,16 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
         {accountSettingHooks.map((hook) => (
           <hook.SettingItem key={hook.key} settings={settings} styles={styles} />
         ))}
+        {settings.wavelogExperiments && (
+          <Ham2kListItem
+            title="Wavelog Settings"
+            description={'Configure Wavelog API connection'}
+            onPress={() => navigation.navigate('Settings', { screen: 'WavelogSettings' })}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cloud-upload-outline" color={styles.colors.devMode} />}
+          />
+        )}
       </Ham2kListSection>
 
       <MainSettingsForDistribution settings={settings} styles={styles} />
