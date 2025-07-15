@@ -20,28 +20,46 @@
 	<string>$(POLO_BASE_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.ham2k.polo</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.ham2k.polo</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(POLO_BUILD)</string>
+	<key>CodePushDeploymentKey</key>
+	<string>RM65RMaL4D1qa1_EWfl247NSTbN8NJou3zF_Wl</string>
+	<key>CodePushServerURL</key>
+	<string>https://api.revopush.org</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MBXAccessToken</key>
+	<string>$(MAPBOX_ACCESS_TOKEN)</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<!-- Do not change NSAllowsArbitraryLoads to true, or you will risk app rejection! -->
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Your location will be used to determine your Maidenhead Grid Square to include in your own logs.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Your location will be used to determine your Maidenhead Grid Square to include in your own logs.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Bluetooth will be used to control certain radios and other devices.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location will be used to determine your Maidenhead Grid Square to include in your own logs.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location will be used to determine your Maidenhead Grid Square to include in your own logs.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photos are not used in this app, but a third party library might use them when sharing to Instagram.</string>
+	<key>RCTNewArchEnabled</key>
+	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialIcons.ttf</string>
