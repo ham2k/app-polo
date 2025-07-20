@@ -1,4 +1,11 @@
 {
+  "25.8.0-pre1": {
+    "name": "August '25 (pre 1)",
+    "photoCaption": "W2UD with N2PTA at US-6462 for FD",
+    "changes": [
+      "Pre-release"
+    ]
+  },
   "25.7.3": {
     "name": "July '25 (patch 3)",
     "photoCaption": "LB4FH/MM at NO-2619",
