@@ -57,9 +57,9 @@ export function fmtDistance (dist, options) {
   if (!dist) return ''
 
   if (options.units === 'miles') {
-    return `${dist.toFixed(0).replace(THOUSANDS_DELIMITER_REGEX, '$1,$2')} mi`
+    return `${dist.toFixed(1).replace(THOUSANDS_DELIMITER_REGEX, '$1,$2')} mi`
   } else {
-    return `${dist.toFixed(0).replace(THOUSANDS_DELIMITER_REGEX, '$1.$2')} km`
+    return `${dist.toFixed(1).replace(THOUSANDS_DELIMITER_REGEX, '$1.$2')} km`
   }
 }
 
