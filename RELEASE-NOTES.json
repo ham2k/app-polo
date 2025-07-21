@@ -4,7 +4,8 @@
     "photoCaption": "W2UD with N2PTA at US-6462 for FD",
     "changes": [
       "Experimental support for WaveLog (by K0UWU)",
-      "Performance improvements (by NA7DO)"
+      "Performance improvements (by NA7DO)",
+      "Allow WWBOTA across borders"
     ]
   },
   "25.7.3": {

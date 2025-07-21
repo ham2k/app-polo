@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -144,8 +144,8 @@ export async function wwbotaFindOneByReference (ref) {
 
 export async function wwbotaFindAllByName (entityPrefix, name) {
   const results = await dbSelectAll(
-    'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
-    ['wwbota', entityPrefix, `%${name}%`, `%${name}%`],
+    'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
+    ['wwbota', `%${name}%`, `%${name}%`],
     { row: row => JSON.parse(row.data) }
   )
   return results
@@ -153,8 +153,8 @@ export async function wwbotaFindAllByName (entityPrefix, name) {
 
 export async function wwbotaFindAllByLocation (entityPrefix, lat, lon, delta = 1) {
   const results = await dbSelectAll(
-    'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
-    ['wwbota', entityPrefix, lat - delta, lat + delta, lon - delta, lon + delta],
+    'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
+    ['wwbota', lat - delta, lat + delta, lon - delta, lon + delta],
     { row: row => JSON.parse(row.data) }
   )
   return results
