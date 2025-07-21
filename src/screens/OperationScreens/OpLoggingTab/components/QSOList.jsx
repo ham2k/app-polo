@@ -190,9 +190,19 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
 
   const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
-  const styles = useThemedStyles(prepareStyles, { isDeleted: false, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets })
-  const stylesForDeleted = useThemedStyles(prepareStyles, { isDeleted: true, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets })
-  const stylesForOtherOperator = useThemedStyles(prepareStyles, { isDeleted: false, isOtherOperator: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets })
+  const stylesArgs = useMemo(() => ({
+    isDeleted: false, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
+  }), [componentWidth, width, safeAreaInsets])
+  const deletedStylesArgs = useMemo(() => ({
+    isDeleted: true, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
+  }), [componentWidth, width, safeAreaInsets])
+  const otherOpStylesArgs = useMemo(() => ({
+    isDeleted: false, isOtherOperator: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
+  }), [componentWidth, width, safeAreaInsets])
+
+  const styles = useThemedStyles(prepareStyles, stylesArgs)
+  const stylesForDeleted = useThemedStyles(prepareStyles, deletedStylesArgs)
+  const stylesForOtherOperator = useThemedStyles(prepareStyles, otherOpStylesArgs)
 
   const listRef = useRef()
 
@@ -300,6 +310,9 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
   )
 
   const extractKey = useCallback((item, index) => item.uuid, [])
+  const emptyComponent = useCallback(() => (
+    <ListEmptyComponent styles={styles} vfo={vfo} />
+  ), [styles, vfo])
 
   return (
     <SectionList
@@ -311,7 +324,7 @@ const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, op
       renderSectionHeader={renderHeader}
       getItemLayout={calculateLayout}
       keyExtractor={extractKey}
-      ListEmptyComponent={<ListEmptyComponent styles={styles} vfo={vfo} />}
+      ListEmptyComponent={emptyComponent}
       keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
       initialNumToRender={20}
       windowSize={2}
