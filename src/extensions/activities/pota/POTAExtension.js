@@ -14,7 +14,7 @@ import { potaFindParkByReference, potaFindParksByLocation, registerPOTAAllParksD
 import { POTALoggingControl } from './POTALoggingControl'
 import { POTAPostOtherSpot } from './POTAPostOtherSpot'
 import { POTAPostSelfSpot } from './POTAPostSelfSpot'
-import { apiPOTA } from '../../../store/apis/apiPOTA'
+import { apiPOTA, directLookupPark } from '../../../store/apis/apiPOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 import { ConfirmFromSpotsHook } from './POTAConfirmFromSpots'
@@ -180,12 +180,11 @@ const ReferenceHandler = {
 
   iconForQSO: Info.icon,
 
-  decorateRefWithDispatch: (ref) => async () => {
+  decorateRefWithDispatch: (ref) => async (dispatch) => {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', shortName: '', location: '' }
+    let result
 
     const data = await potaFindParkByReference(ref.ref)
-
-    let result
     if (data?.name) {
       result = {
         ...ref,
@@ -205,7 +204,29 @@ const ReferenceHandler = {
         }
       }
     } else {
-      return { name: Info.unknownReferenceName ?? 'Unknown reference', ...ref }
+      const lookup = await dispatch(directLookupPark(ref.ref))
+
+      if (lookup?.name) {
+        result = {
+          ...ref,
+          name: lookup.name,
+          location: lookup.locationDesc,
+          label: `${Info.shortName} ${ref.ref}: ${lookup.name}`,
+          shortLabel: `${Info.shortName} ${ref.ref}`,
+          program: Info.shortName
+        }
+        if (lookup.locationDesc?.indexOf(',') < 0) {
+          result.accuracy = LOCATION_ACCURACY.REASONABLE
+          result.grid = lookup.grid6
+        }
+
+        if (lookup.ref?.startsWith('US-') || lookup.ref?.startsWith('CA-') || lookup.ref?.startsWith('AU-')) {
+          // For US, Canada or Australia, use the state/province.
+          result.state = (lookup.location || '').split('-')[1]?.trim()
+        }
+      } else {
+        return { name: Info.unknownReferenceName ?? 'Unknown reference', ...ref }
+      }
     }
     return result
   },

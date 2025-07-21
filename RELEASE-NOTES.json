@@ -5,7 +5,8 @@
     "changes": [
       "Experimental support for WaveLog (by K0UWU)",
       "Performance improvements (by NA7DO)",
-      "Allow WWBOTA across borders"
+      "Allow WWBOTA across borders",
+      "Fix 'unknown park' for new POTA references"
     ]
   },
   "25.7.3": {
