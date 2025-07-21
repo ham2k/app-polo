@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { addNewOperation, fillOperationFromTemplate, getAllOperationTemplates, getOperationTemplate, selectOperation, selectOperationsList, setOperationData } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
+import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../../store/qsos'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'

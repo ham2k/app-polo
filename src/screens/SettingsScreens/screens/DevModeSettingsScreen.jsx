@@ -7,7 +7,7 @@
 
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback } from 'react'
-import { IconButton, List } from 'react-native-paper'
+import { IconButton, List, Switch } from 'react-native-paper'
 import { Alert, ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
@@ -188,6 +188,17 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleImportFiles}
+          />
+        </Ham2kListSection>
+        <Ham2kListSection title={'Experiments'}>
+          <Ham2kListItem
+            title="Enable Wavelog Experiments"
+            description={settings.wavelogExperiments ? 'Experimental Wavelog features are enabled' : 'Wavelog is Disabled'}
+            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="test-tube" color={styles.colors.devMode} />}
+            right={() => <Switch value={!!settings.wavelogExperiments} onValueChange={(value) => dispatch(setSettings({ wavelogExperiments: value }))} />}
+            onPress={() => dispatch(setSettings({ wavelogExperiments: !settings.wavelogExperiments }))}
+            titleStyle={{ color: styles.colors.devMode }}
+            descriptionStyle={{ color: styles.colors.devMode }}
           />
         </Ham2kListSection>
         <Ham2kListSection title={'Manage Database'}>
