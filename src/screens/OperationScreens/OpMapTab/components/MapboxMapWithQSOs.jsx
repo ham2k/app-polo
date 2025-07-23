@@ -239,11 +239,13 @@ function _geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
 }
 
 function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
-  const features = mappableQSOs.map(mappableQSO => _geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
+  if (qth?.latitude && qth?.longitude) {
+    const features = mappableQSOs.map(mappableQSO => _geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
 
-  return {
-    type: 'FeatureCollection',
-    features
+    return {
+      type: 'FeatureCollection',
+      features
+    }
   }
 }
 
