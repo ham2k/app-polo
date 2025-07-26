@@ -19,8 +19,8 @@ import { findHooks } from '../../../../../extensions/registry'
 import { LOCATION_ACCURACY } from '../../../../../extensions/constants'
 import { removeEmptyValues } from '../../../../../tools/objectTools'
 
-import { parseStackedCalls } from '../LoggingPanel'
 import { reportError } from '../../../../../distro'
+import { parseStackedCalls } from '../../../../../tools/callsignTools'
 
 const EMOJI_REGEX = emojiRegex()
 

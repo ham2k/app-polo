@@ -22,8 +22,8 @@ import { selectRuntimeOnline } from '../../../../../store/runtime'
 import { sanitizeForMarkdown } from '../../../../../tools/stringTools'
 
 import { useCallLookup } from './useCallLookup'
-import { parseStackedCalls } from '../LoggingPanel'
 import { H2kMarkdown } from '../../../../../ui'
+import { parseStackedCalls } from '../../../../../tools/callsignTools'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!',
