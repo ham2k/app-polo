@@ -29,6 +29,7 @@ import { reducer as apiGMAReducer, middleware as apiGMAMiddleware } from './apis
 import { reducer as apiWWFFReducer, middleware as apiWWFFMiddleware } from './apis/apiWWFF'
 import { reducer as apiWWBOTAReducer, middleware as apiWWBOTAMiddleware } from './apis/apiWWBOTA'
 import { reducer as apiZLOTAReducer, middleware as apiZLOTAMiddleware } from './apis/apiZLOTA'
+import { reducer as apiPnPReducer, middleware as apiPnPMiddleware } from './apis/apiPnP'
 
 import { reduxEnhancersForDistribution } from '../distro'
 
@@ -57,7 +58,8 @@ const rootReducer = combineReducers({
   apiGMA: apiGMAReducer,
   apiWWFF: apiWWFFReducer,
   apiWWBOTA: apiWWBOTAReducer,
-  apiZLOTA: apiZLOTAReducer
+  apiZLOTA: apiZLOTAReducer,
+  apiPnP: apiPnPReducer
 })
 
 const persistConfig = {
@@ -112,6 +114,7 @@ export const store = configureStore({
     middlewares.push(apiWWFFMiddleware)
     middlewares.push(apiWWBOTAMiddleware)
     middlewares.push(apiZLOTAMiddleware)
+    middlewares.push(apiPnPMiddleware)
 
     return middlewares
   },
