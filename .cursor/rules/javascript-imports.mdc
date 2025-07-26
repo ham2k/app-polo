@@ -1,7 +1,7 @@
 ---
 description: JS Imports
-globs:
-alwaysApply: false
+globs: *.js, *.jsx
+alwaysApply: true
 ---
  # Import Sorting Convention
 
