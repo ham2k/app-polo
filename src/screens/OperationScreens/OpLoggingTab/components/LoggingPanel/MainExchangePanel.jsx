@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,11 +8,10 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 
 import { View, findNodeHandle } from 'react-native'
-import CallsignInput from '../../../../components/CallsignInput'
-import RSTInput, { expandRSTValues } from '../../../../components/RSTInput'
-import ThemedTextInput from '../../../../components/ThemedTextInput'
 import { findRef } from '../../../../../tools/refTools'
 import { findHooks } from '../../../../../extensions/registry'
+import { H2kCallsignInput, H2kRSTInput, H2kTextInput } from '../../../../../ui'
+import { expandRSTValues } from '../../../../../tools/callsignTools'
 
 export const MainExchangePanel = ({
   qso, qsos, operation, vfo, settings, style, styles, themeColor, onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef
@@ -87,7 +86,7 @@ export const MainExchangePanel = ({
 
   let fields = []
   fields.push(
-    <CallsignInput
+    <H2kCallsignInput
       key="call"
       innerRef={refStack.shift()}
       themeColor={themeColor}
@@ -119,7 +118,7 @@ export const MainExchangePanel = ({
     }
 
     const rstFields = [
-      <RSTInput
+      <H2kRSTInput
         {...rstFieldProps}
         key="sent"
         innerRef={rstFieldRefs.shift()}
@@ -127,7 +126,7 @@ export const MainExchangePanel = ({
         label="Sent"
         fieldId={'ourSent'}
       />,
-      <RSTInput
+      <H2kRSTInput
         {...rstFieldProps}
         key="received"
         innerRef={rstFieldRefs.shift()}
@@ -161,7 +160,7 @@ export const MainExchangePanel = ({
 
   if (settings.showStateField && !hideStateField) {
     fields.push(
-      <ThemedTextInput
+      <H2kTextInput
         key="state"
         innerRef={refStack.shift()}
         themeColor={themeColor}

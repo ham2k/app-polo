@@ -5,10 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Dialog, List, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { Alert, ScrollView, View } from 'react-native'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
@@ -26,23 +25,16 @@ import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats
 import { findHooks } from '../../../extensions/registry'
 import { countTemplate } from '../../../tools/stringTools'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
-import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import KeepAwake from '@sayem314/react-native-keep-awake'
-import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kListSection, H2kMarkdown } from '../../../ui'
 
 const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
-  const Icon = useMemo(() => (
-    <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(def.icon ?? 'file-outline')} />
-  ), [def.icon, styles])
   return (
-    <Ham2kListItem
+    <H2kListItem
       key={def.name}
       title={def.name}
       description={`Updated ${fmtDateTimeRelative(info?.date)}`}
-      left={() => Icon}
+      leftIcon={def.icon ?? 'file-outline'}
       onPress={onPress}
     />
   )
@@ -71,29 +63,29 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
   }, [def.key, def.name, dispatch])
 
   return (
-    <Ham2kDialog visible={true} onDismiss={onDialogDone}>
-      <Dialog.Title style={{ textAlign: 'center' }}>{def.name}</Dialog.Title>
-      <Dialog.Content>
-        <Ham2kMarkdown>{def.buildDescription ? def.buildDescription({ data: info }) : def.description}</Ham2kMarkdown>
-      </Dialog.Content>
-      <Dialog.Content>
+    <H2kDialog visible={true} onDismiss={onDialogDone}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{def.name}</H2kDialogTitle>
+      <H2kDialogContent>
+        <H2kMarkdown>{def.buildDescription ? def.buildDescription({ data: info }) : def.description}</H2kMarkdown>
+      </H2kDialogContent>
+      <H2kDialogContent>
         {info?.status === 'fetching' ? (
           <>
-            <Ham2kMarkdown>{statusText}</Ham2kMarkdown>
+            <H2kMarkdown>{statusText}</H2kMarkdown>
             <KeepAwake />
           </>
         ) : (
-          <Ham2kMarkdown>
+          <H2kMarkdown>
             Updated on {fmtDateTimeNice(info?.date)}
             {info?.version && `\n\nVersion: ${info.version}`}
-          </Ham2kMarkdown>
+          </H2kMarkdown>
         )}
-      </Dialog.Content>
-      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
-        <Button onPress={handleRefresh} disabled={info?.status === 'fetching'}>Refresh</Button>
-        <Button onPress={onDialogDone}>Done</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions style={{ justifyContent: 'space-between' }}>
+        <H2kButton onPress={handleRefresh} disabled={info?.status === 'fetching'}>Refresh</H2kButton>
+        <H2kButton onPress={onDialogDone}>Done</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }
 
@@ -104,19 +96,19 @@ const ConfirmClearHistoryDialog = ({ onDialogDelete, onDialogDone }) => {
   }
 
   return (
-    <Ham2kDialog visible={true} onDismiss={onDialogDone}>
-      <Dialog.Title style={{ textAlign: 'center' }}>Are you sure?</Dialog.Title>
-      <Dialog.Content>
+    <H2kDialog visible={true} onDismiss={onDialogDone}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>Are you sure?</H2kDialogTitle>
+      <H2kDialogContent>
         <Text variant="bodyMedium" style={{ textAlign: 'center' }}>This will remove all historical records previously imported from ADIF files</Text>
-      </Dialog.Content>
-      <Dialog.Content>
+      </H2kDialogContent>
+      <H2kDialogContent>
         <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Records from operations will not be deleted</Text>
-      </Dialog.Content>
-      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
-        <Button onPress={handleDelete}>Delete</Button>
-        <Button onPress={onDialogDone}>Cancel</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions style={{ justifyContent: 'space-between' }}>
+        <H2kButton onPress={handleDelete}>Delete</H2kButton>
+        <H2kButton onPress={onDialogDone}>Cancel</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }
 
@@ -202,15 +194,15 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
   return (
     <ScreenContainer>
       {loadingHistoricalMessage && (
-        <Ham2kDialog visible={true}>
-          <Dialog.Content>
+        <H2kDialog visible={true}>
+          <H2kDialogContent>
             <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{loadingHistoricalMessage}</Text>
-          </Dialog.Content>
-        </Ham2kDialog>
+          </H2kDialogContent>
+        </H2kDialog>
       )}
 
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <Ham2kListSection title={'Offline Data'}>
+        <H2kListSection title={'Offline Data'}>
           {sortedDataFileDefinitions.map((def) => (
             <React.Fragment key={def.key}>
               <DataFileDefinitionItem def={def} settings={settings} info={dataFileInfos[def.key]} styles={styles} onPress={() => setSelectedDefinition(def.key)} />
@@ -226,22 +218,22 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
               )}
             </React.Fragment>
           ))}
-        </Ham2kListSection>
+        </H2kListSection>
 
-        <Ham2kListSection title={'Log Data'}>
-          <Ham2kListItem
+        <H2kListSection title={'Log Data'}>
+          <H2kListItem
             title="Import History from ADIF"
             description={historicalCount && countTemplate(historicalCount, { zero: 'No records', one: '1 record', more: '{fmtCount} records' }, { fmtCount: fmtNumber(historicalCount) })}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="database-import-outline" />}
+            leftIcon={'database-import-outline'}
             onPress={handleImportHistoricalFile}
           />
           {
             historicalCount > 0 &&
               <>
-                <Ham2kListItem
+                <H2kListItem
                   title="Clear ADIF History"
                   description="Remove ADIF imported records"
-                  left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="database-remove-outline" />}
+                  leftIcon={'database-remove-outline'}
                   onPress={() => setShowClearHistoricalRecordsDialog(true)}
                 />
                 { showClearHistoricalRecordsDialog &&
@@ -252,14 +244,14 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
                 }
               </>
           }
-        </Ham2kListSection>
+        </H2kListSection>
 
         {extensionSettingHooks.length > 0 ? (
-          <Ham2kListSection title={'Extensions'} style={{ marginBottom: safeAreaInsets.bottom }}>
+          <H2kListSection title={'Extensions'} style={{ marginBottom: safeAreaInsets.bottom }}>
             {extensionSettingHooks.map((hook) => (
               <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
         ) : (
           <View style={{ height: safeAreaInsets.bottom }} />
         )}

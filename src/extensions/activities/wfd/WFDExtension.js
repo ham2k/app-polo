@@ -10,12 +10,10 @@ import React from 'react'
 import { superModeForMode } from '@ham2k/lib-operation-data'
 
 import { findRef, replaceRef } from '../../../tools/refTools'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import ThemedTextInputWithSuggestions from '../../../screens/components/ThemedTextInputWithSuggestions'
+import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui'
 
 import { WFDActivityOptions } from './WFDActivityOptions'
 import { ABBREVIATED_SECTION_NAMES, ARRL_SECTIONS, RAC_SECTIONS } from '../fd/FDSections'
-import { fmtNumber } from '@ham2k/lib-format-tools'
 
 /*
  NOTES:
@@ -300,7 +298,7 @@ function mainExchangeForOperation (props) {
   const fields = []
 
   fields.push(
-    <ThemedTextInput
+    <H2kTextInput
       {...props}
       key={`${Info.key}/class`}
       innerRef={refStack.shift()}
@@ -320,7 +318,7 @@ function mainExchangeForOperation (props) {
     />
   )
   fields.push(
-    <ThemedTextInputWithSuggestions
+    <H2kTextInputWithSuggestions
       {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}

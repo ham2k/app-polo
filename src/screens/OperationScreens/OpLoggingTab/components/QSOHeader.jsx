@@ -6,13 +6,12 @@
  */
 
 import React from 'react'
+import { View } from 'react-native'
 import { Text, TouchableRipple } from 'react-native-paper'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { fmtDateZuluDynamic } from '../../../../tools/timeFormats'
-
-import { fmtNumber } from '@ham2k/lib-format-tools'
-import { View } from 'react-native'
-import { Ham2KIcon } from '../../../components/Ham2KIcon'
+import { H2kIcon } from '../../../../ui'
 
 const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings, onHeaderPress }) {
   // NOTE: We're using onPresOut instead of onPress because of a bug in SectionList
@@ -47,7 +46,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
             return (
               <Text key={key} style={[styles.fields.header, { marginLeft: styles.oneSpace, textAlign: 'right', opacity: score.activated === false ? 0.5 : 1 }]}>
                 {score.icon ? (
-                  <Ham2KIcon
+                  <H2kIcon
                     name={score.icon}
                     size={styles.normalFontSize}
                     color={score.activated === true ? styles.colors.important : undefined }

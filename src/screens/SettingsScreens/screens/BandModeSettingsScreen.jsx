@@ -1,13 +1,11 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Switch } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ADIF_MODES_AND_SUBMODES, BANDS, MAIN_MODES, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
@@ -15,8 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { selectSettings, setSettings } from '../../../store/settings'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { H2kListItem, H2kListSection } from '../../../ui'
 
 export default function BandModeSettingsScreen ({ navigation, splitView }) {
   const dispatch = useDispatch()
@@ -99,35 +96,37 @@ export default function BandModeSettingsScreen ({ navigation, splitView }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <Ham2kListSection title={'Bands'}>
+        <H2kListSection title={'Bands'}>
           {bandOptions.map((band) => (
-            <Ham2kListItem
+            <H2kListItem
               key={band}
               title={band}
-              right={() => <Switch value={settings.bands.includes(band)} onValueChange={(value) => setBand(band, value)} />}
+              rightSwitchValue={settings.bands.includes(band)}
+              rightSwitchOnValueChange={(value) => setBand(band, value)}
               onPress={() => setBand(band, !settings.bands.includes(band))}
             />
           ))}
-          <Ham2kListItem
+          <H2kListItem
             title={moreBands ? 'Show common bands' : 'Show all bands'}
             onPress={() => setMoreBands(!moreBands)}
           />
-        </Ham2kListSection>
+        </H2kListSection>
 
-        <Ham2kListSection title={'Modes'}>
+        <H2kListSection title={'Modes'}>
           {modeOptions.map((mode) => (
-            <Ham2kListItem
+            <H2kListItem
               key={mode}
               title={mode}
-              right={() => <Switch value={settings.modes.includes(mode)} onValueChange={(value) => setMode(mode, value)} />}
+              rightSwitchValue={settings.modes.includes(mode)}
+              rightSwitchOnValueChange={(value) => setMode(mode, value)}
               onPress={() => setMode(mode, !settings.modes.includes(mode))}
             />
           ))}
-          <Ham2kListItem
+          <H2kListItem
             title={{ 0: 'Show more modes', 1: 'Show even more modes', 2: 'Show fewer modes' }[moreModes] ?? 'Show more modes'}
             onPress={() => setMoreModes(moreModes + 1 % 3)}
           />
-        </Ham2kListSection>
+        </H2kListSection>
 
         <View style={{ height: safeAreaInsets.bottom }} />
       </ScrollView>

@@ -8,7 +8,7 @@
 import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 
-import ThemedTextInput from '../../../../../components/ThemedTextInput'
+import { H2kTextInput } from '../../../../../../ui'
 
 const NotesControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const ref = useRef()
@@ -16,7 +16,7 @@ const NotesControlInputs = ({ qso, operation, settings, disabled, icon, style, s
 
   return (
     <View style={[style, { flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }]}>
-      <ThemedTextInput
+      <H2kTextInput
         innerRef={ref}
         themeColor={themeColor}
         style={[styles.input, { minWidth: styles.oneSpace * 20, width: '100%' }]}

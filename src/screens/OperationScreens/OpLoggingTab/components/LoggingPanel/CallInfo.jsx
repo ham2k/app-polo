@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -9,20 +9,21 @@ import React, { useEffect, useMemo } from 'react'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
-
 import { scoringHandlersForOperation } from '../../../../../extensions/scoring'
 import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { startOfDayInMillis, yesterdayInMillis } from '../../../../../tools/timeTools'
-import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
-import { useCallLookup } from './useCallLookup'
 import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../../store/operations'
 import { selectRuntimeOnline } from '../../../../../store/runtime'
-import { parseStackedCalls } from '../LoggingPanel'
 import { sanitizeForMarkdown } from '../../../../../tools/stringTools'
+
+import { useCallLookup } from './useCallLookup'
+import { parseStackedCalls } from '../LoggingPanel'
+import { H2kMarkdown } from '../../../../../ui'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!',
@@ -320,7 +321,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
             <View style={{ flexDirection: 'row', width: '100%', alignItems: 'flex-start' }}>
               <View style={{ maxWidth: messages?.length === 1 ? '70%' : undefined }}>
                 {stationInfo && (
-                  <Ham2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</Ham2kMarkdown>
+                  <H2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</H2kMarkdown>
                 )}
               </View>
               {!messagesAreLong && (

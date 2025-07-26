@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -10,11 +10,9 @@ import { hashCode } from '../tools/hashCode'
 import packageJson from '../../package.json'
 import { addRuntimeMessage } from '../store/runtime'
 
-import { Ham2kListSection } from '../screens/components/Ham2kListSection'
-import { Ham2kListItem } from '../screens/components/Ham2kListItem'
 import DeviceInfo from 'react-native-device-info'
-import { List } from 'react-native-paper'
 import GLOBAL from '../GLOBAL'
+import { H2kListSection, H2kListItem } from '../ui'
 
 export function reportError (error, ...extra) {
   console.error(error, ...extra)
@@ -141,12 +139,11 @@ export function VersionSettingsForDistribution ({ settings, styles }) {
   }, [])
 
   return (
-    <Ham2kListSection>
-      <Ham2kListItem title={currentVersionLabel}
+    <H2kListSection>
+      <H2kListItem title={currentVersionLabel}
         description={`${packageJson.version} - Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`}
-        // eslint-disable-next-line react/no-unstable-nested-components
-        left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
+        leftIcon={'information-outline'}
       />
-    </Ham2kListSection>
+    </H2kListSection>
   )
 }

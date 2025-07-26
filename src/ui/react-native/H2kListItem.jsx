@@ -17,7 +17,7 @@ export function H2kListItem ({
   disabled, style,
   title, titlePrimary, titleSecondary,
   description, descriptionPrimary, descriptionSecondary,
-  leftIcon, left,
+  leftIcon, leftIconColor, left,
   rightIcon, right, onPressRight,
   rightSwitchValue, rightSwitchOnValueChange,
   ...moreProps
@@ -75,16 +75,16 @@ export function H2kListItem ({
 
   const leftElement = useMemo(() => {
     if (left) {
-      return left()
+      return left
     } else if (leftIcon) {
-      return () => <List.Icon icon={paperNameOrHam2KIcon(leftIcon)} style={{ marginLeft: styles.oneSpace * 2 }} />
+      return () => <List.Icon icon={paperNameOrHam2KIcon(leftIcon)} style={{ marginLeft: styles.oneSpace * 2 }} color={leftIconColor} />
     }
     return null
-  }, [leftIcon, left, styles])
+  }, [leftIcon, leftIconColor, left, styles])
 
   const rightElement = useMemo(() => {
     if (right) {
-      return right()
+      return right
     } else if (rightSwitchValue) {
       return () => <Switch value={rightSwitchValue} onValueChange={rightSwitchOnValueChange} />
     } else if (rightIcon) {

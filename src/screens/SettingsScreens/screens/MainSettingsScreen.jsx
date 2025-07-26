@@ -5,10 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useMemo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { Linking, ScrollView, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -20,12 +19,9 @@ import { selectSettings } from '../../../store/settings'
 import { fetchFeatureFlags } from '../../../store/system/fetchFeatureFlags'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import { Ham2kListSubheader } from '../../components/Ham2kListSubheader'
+import { H2kListItem, H2kListSection, H2kListSubheader } from '../../../ui'
 import ScreenContainer from '../../components/ScreenContainer'
 import HeaderBar from '../../components/HeaderBar'
-
 import { OperatorCallsignDialog } from '../components/OperatorCallsignDialog'
 import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
 
@@ -144,9 +140,9 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
 
   return (
     <ScrollView style={{ flex: 1, marginLeft: safeAreaInsets.left, marginRight: splitView ? 0 : safeAreaInsets.right }}>
-      <Ham2kListSection>
+      <H2kListSection>
 
-        <Ham2kListItem
+        <H2kListItem
           title="Operator Callsign"
           description={
             settings.operatorCall ? (
@@ -155,7 +151,7 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
               <Text style={{ color: 'red' }}>Please enter a callsign!</Text>
             )
           }
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
+          leftIcon="card-account-details"
           onPress={() => setCurrentDialog('operatorCall')}
         />
         {currentDialog === 'operatorCall' && (
@@ -167,64 +163,64 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
           />
         )}
 
-        <Ham2kListSubheader>Settings</Ham2kListSubheader>
-        <Ham2kListItem
+        <H2kListSubheader>Settings</H2kListSubheader>
+        <H2kListItem
           title="General Settings"
           description={'Dark mode, numbers row, units, and more'}
           onPress={() => navigation.navigate('Settings', { screen: 'GeneralSettings' })}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cogs" />}
+          leftIcon="cogs"
         />
 
-        <Ham2kListItem
+        <H2kListItem
           title="Logging Settings"
           description={'Customize the logging experience'}
           onPress={() => navigation.navigate('Settings', { screen: 'LoggingSettings' })}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="book-edit-outline" />}
+          leftIcon="book-edit-outline"
         />
 
-        <Ham2kListItem
+        <H2kListItem
           title="Data Settings"
           description="Data files, callsign notes, and more"
           onPress={() => navigation.navigate('Settings', { screen: 'DataSettings' })}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-cabinet" />}
+          leftIcon="file-cabinet"
         />
 
         {settings.devMode && (
-          <Ham2kListItem
+          <H2kListItem
             title="Sync Settings"
             description="Cloud sync and backup"
             onPress={() => navigation.navigate('Settings', { screen: 'SyncSettings' })}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={styles.colors.devMode} icon="sync" />}
+            leftIcon="sync"
+            leftIconColor={styles.colors.devMode}
           />
         )}
 
-        <Ham2kListItem
+        <H2kListItem
           title="App Features"
           description={'Manage features like POTA, SOTA, etc'}
           onPress={() => navigation.navigate('Settings', { screen: 'FeaturesSettings' })}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="format-list-bulleted" />}
+          leftIcon="format-list-bulleted"
         />
 
         {settings.devMode && (
-          <Ham2kListItem
+          <H2kListItem
             title="Developer Settings"
             description={'Here be dragons'}
             onPress={() => navigation.navigate('Settings', { screen: 'DevModeSettings' })}
-            titleStyle={{ color: styles.colors.devMode }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="fire" color={styles.colors.devMode} />}
+            leftIcon="fire"
+            leftIconColor={styles.colors.devMode}
           />
         )}
 
-      </Ham2kListSection>
+      </H2kListSection>
 
-      <Ham2kListSection>
-        <Ham2kListSubheader>Accounts</Ham2kListSubheader>
+      <H2kListSection>
+        <H2kListSubheader>Accounts</H2kListSubheader>
 
-        <Ham2kListItem
+        <H2kListItem
           title="QRZ (for callsign lookups)"
           description={settings?.accounts?.qrz ? `Login: ${settings.accounts.qrz.login}` : 'No account'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />}
+          leftIcon="web"
           onPress={() => setCurrentDialog('accountsQRZ')}
         />
         {currentDialog === 'accountsQRZ' && (
@@ -239,86 +235,85 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
           <hook.SettingItem key={hook.key} settings={settings} styles={styles} />
         ))}
         {settings.wavelogExperiments && (
-          <Ham2kListItem
+          <H2kListItem
             title="Wavelog Settings"
             description={'Configure Wavelog API connection'}
             onPress={() => navigation.navigate('Settings', { screen: 'WavelogSettings' })}
-            titleStyle={{ color: styles.colors.devMode }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cloud-upload-outline" color={styles.colors.devMode} />}
+            leftIcon="cloud-upload-outline"
+            leftIconColor={styles.colors.devMode}
           />
         )}
-      </Ham2kListSection>
+      </H2kListSection>
 
       <MainSettingsForDistribution settings={settings} styles={styles} />
 
-      <Ham2kListSection>
-        <Ham2kListSubheader>About Ham2K</Ham2kListSubheader>
-        <Ham2kListItem
+      <H2kListSection>
+        <H2kListSubheader>About Ham2K</H2kListSubheader>
+        <H2kListItem
           title={packageJson.versionName ? `${packageJson.versionName} Release (${packageJson.version})` : `Version ${packageJson.version}`}
           description={'See recent changes'}
           onPress={() => navigation.navigate('Settings', { screen: 'VersionSettings' })}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="information-outline" />}
+          leftIcon="information-outline"
         />
-        <Ham2kListItem
+        <H2kListItem
           title="Credits"
           description={'Sebastián Delmont KI2D & Team PoLo'}
           onPress={() => navigation.navigate('Settings', { screen: 'CreditsSettings' })}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account-group" />}
+          leftIcon="account-group"
         />
-        <Ham2kListItem
+        <H2kListItem
           title="Recent Notices"
           description={'Messages you might have missed?'}
           onPress={() => navigation.navigate('Settings', { screen: 'NoticesSettings' })}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="bell-outline" />}
+          leftIcon="bell-outline"
         />
-      </Ham2kListSection>
+      </H2kListSection>
 
-      <Ham2kListSection style={{ marginBottom: safeAreaInsets.bottom }}>
-        <Ham2kListSubheader>Need Help?</Ham2kListSubheader>
-        <Ham2kListItem
+      <H2kListSection style={{ marginBottom: safeAreaInsets.bottom }}>
+        <H2kListSubheader>Need Help?</H2kListSubheader>
+        <H2kListItem
           title="Read The Fine Manual"
           description={'Browse the documentation for PoLo'}
           onPress={async () => await Linking.openURL('https://polo.ham2k.com/docs/')}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-document-multiple-outline" />}
+          leftIcon="file-document-multiple-outline"
         />
-        <Ham2kListItem
+        <H2kListItem
           title="Ham2K Forums"
           description={'Find help, give feedback, discuss ideas…'}
           onPress={async () => await Linking.openURL('https://forums.ham2k.com/')}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="forum-outline" />}
+          leftIcon="forum-outline"
         />
-        <Ham2kListItem
+        <H2kListItem
           title="Ham2K Chat"
           description={'The discord server for our online community'}
           onPress={async () => await Linking.openURL('https://discord.gg/c4Th9QkByJ')}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="chat-outline" />}
+          leftIcon="chat-outline"
         />
-        <Ham2kListItem
+        <H2kListItem
           title="Ham2K YouTube"
           description={'Videos and Live Streams'}
           onPress={async () => await Linking.openURL('https://www.youtube.com/@Ham2KApps')}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="youtube" />}
+          leftIcon="youtube"
         />
-        <Ham2kListItem
+        <H2kListItem
           title="Ham2K Instagram"
           description={'Because you cannot have too many photos…'}
           onPress={async () => await Linking.openURL('https://www.instagram.com/ham2kapps/')}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="instagram" />}
+          leftIcon="instagram"
         />
-        <Ham2kListItem
+        <H2kListItem
           title="Ham2K BlueSky"
           description={'Follow us for news and updates'}
           onPress={async () => await Linking.openURL('https://bsky.app/profile/ham2k.com')}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="butterfly-outline" />}
+          leftIcon="butterfly-outline"
         />
-        <Ham2kListItem
+        <H2kListItem
           title="Contact Us"
           description={'help@ham2k.com\n   (but try the Forums or Chat first!)'}
           onPress={async () => await Linking.openURL('mailto:help@ham2k.com')}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="email-alert-outline" />}
+          leftIcon="email-alert-outline"
         />
-      </Ham2kListSection>
+      </H2kListSection>
 
       <View style={{ height: safeAreaInsets.bottom }} />
 

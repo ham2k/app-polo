@@ -8,8 +8,8 @@
 import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 
-import ThemedTextInput from '../../../../../components/ThemedTextInput'
 import { fmtNumber } from '@ham2k/lib-format-tools'
+import { H2kTextInput } from '../../../../../../ui'
 
 const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const ref = useRef()
@@ -27,7 +27,7 @@ const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, style
 
   return (
     <View style={[style, { flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }]}>
-      <ThemedTextInput
+      <H2kTextInput
         innerRef={ref}
         themeColor={themeColor}
         style={[styles.input, { minWidth: styles.oneSpace * 10, width: '100%' }]}

@@ -6,9 +6,10 @@
  */
 
 /* eslint-disable react/no-unstable-nested-components */
+
 import React, { useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Dialog, List, Switch, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -16,24 +17,23 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { activateExtension, allExtensions, deactivateExtension } from '../../../extensions/registry'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
 import Notices from '../../HomeScreen/components/Notices'
-import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
+import { H2kDialog, H2kDialogContent, H2kListItem, H2kListSection } from '../../../ui'
 
 const FeatureItem = ({ extension, settings, info, styles, onChange, category }) => {
   const enabled = useMemo(() => settings[`extensions/${extension.key}`] ?? extension?.enabledByDefault, [settings, extension])
 
   return (
-    <Ham2kListItem
+    <H2kListItem
       key={extension.name}
       title={extension.name}
       description={extension.description}
       titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}
       descriptionStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}
-      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(extension.icon ?? 'format-list-bulleted')} color={category === 'devmode' ? styles.colors.devMode : undefined} />}
-      right={() => <Switch value={enabled} onValueChange={(value) => onChange && onChange(value) } />}
+      leftIcon={extension.icon ?? 'format-list-bulleted'}
+      leftIconColor={category === 'devmode' ? styles.colors.devMode : undefined}
+      rightSwitchValue={enabled}
+      rightSwitchOnValueChange={(value) => onChange && onChange(value)}
       onPress={() => onChange && onChange(!enabled)}
     />
   )
@@ -73,23 +73,23 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
   return (
     <ScreenContainer>
       {slowOperationMessage && (
-        <Ham2kDialog visible={true}>
-          <Dialog.Content>
+        <H2kDialog visible={true}>
+          <H2kDialogContent>
             <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{slowOperationMessage}</Text>
-          </Dialog.Content>
-        </Ham2kDialog>
+          </H2kDialogContent>
+        </H2kDialog>
       )}
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         {featureGroups.map(({ category, label, extensions, popular }) => (
 
-          <Ham2kListSection title={label} key={category} titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}>
+          <H2kListSection title={label} key={category} titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}>
             {showMoreForGroup[category] || popular.length === 0 ? (
               <>
                 {extensions.map((extension) => (
                   <FeatureItem key={extension.key} extension={extension} category={category}settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
                 ))}
                 {popular.length > 0 && (
-                  <Ham2kListItem
+                  <H2kListItem
                     title={`Fewer ${label}...`}
                     left={() => <View style={{ width: styles.oneSpace * 5 }} />}
                     onPress={() => setShowMoreForGroup({ ...showMoreForGroup, [category]: false })}
@@ -101,14 +101,14 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
                 {popular.map((extension) => (
                   <FeatureItem key={extension.key} extension={extension} settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
                 ))}
-                <Ham2kListItem
+                <H2kListItem
                   title={`More ${label}...`}
                   left={() => <View style={{ width: styles.oneSpace * 5 }} />}
                   onPress={() => setShowMoreForGroup({ ...showMoreForGroup, [category]: true })}
                 />
               </>
             )}
-          </Ham2kListSection>
+          </H2kListSection>
         ))}
 
         <View style={{ height: safeAreaInsets.bottom }} />

@@ -1,17 +1,17 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, Switch, Text } from 'react-native-paper'
+import { Switch, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
 import { View } from 'react-native'
 import { setSystemFlag } from '../../../store/system'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 
 export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const dispatch = useDispatch()
@@ -37,9 +37,9 @@ export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPreviou
   }, [onDialogPrevious])
 
   return (
-    <Ham2kDialog visible={true} dismissable={false}>
-      <Dialog.Title style={{ textAlign: 'center' }}>Data & Privacy</Dialog.Title>
-      <Dialog.Content>
+    <H2kDialog visible={true} dismissable={false}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>Data & Privacy</H2kDialogTitle>
+      <H2kDialogContent>
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'left', marginBottom: styles.oneSpace * 2, marginTop: styles.oneSpace * 2 }}>
           To help us make the app better, we'd like to collect performance, crash, and app usage data.
         </Text>
@@ -59,11 +59,11 @@ export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPreviou
             Share Operation Data
           </Text>
         </View>
-      </Dialog.Content>
-      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
-        <Button onPress={handlePrevious}>{previousLabel ?? 'Back'}</Button>
-        <Button onPress={handleNext}>{nextLabel ?? 'Next'}</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions style={{ justifyContent: 'space-between' }}>
+        <H2kButton onPress={handlePrevious}>{previousLabel ?? 'Back'}</H2kButton>
+        <H2kButton onPress={handleNext}>{nextLabel ?? 'Next'}</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

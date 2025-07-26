@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 /*
  * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
@@ -8,7 +7,6 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Geolocation from '@react-native-community/geolocation'
@@ -19,12 +17,9 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings } from '../../../store/settings'
 import { selectOperation, setOperationData } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import GridInput from '../../components/GridInput'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
 import { findBestHook } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
+import { H2kGridInput, H2kListItem, H2kListSection } from '../../../ui'
 
 export default function OperationLocationScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -95,48 +90,38 @@ export default function OperationLocationScreen ({ navigation, route }) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace }}>
-          <Ham2kListSection title={'Selected Location'}>
-            <GridInput
+          <H2kListSection title={'Selected Location'}>
+            <H2kGridInput
               style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
               value={operation?.grid || ''}
               label="Maidenhead Grid Square Locator"
               placeholder={settings?.useGrid8 ? 'AA00aa00' : 'AA00aa'}
               onChangeText={handleChangeGrid}
             />
-          </Ham2kListSection>
-          <Ham2kListSection title={'Suggested Locations'} style={{ marginTop: styles.oneSpace * 3 }}>
-            <Ham2kListItem
+          </H2kListSection>
+          <H2kListSection title={'Suggested Locations'} style={{ marginTop: styles.oneSpace * 3 }}>
+            <H2kListItem
               title="Device GPS"
               description={locationGrid ?? locationMessage}
               titleStyle={{ color: locationGrid && locationGrid === operation.grid ? styles.colors.primary : styles.colors.onBackground }}
               descriptionStyle={{ color: locationGrid && locationGrid === operation.grid ? styles.colors.primary : styles.colors.onBackground }}
-              left={() => (
-                <List.Icon
-                  style={{ marginLeft: styles.oneSpace * 2 }}
-                  color={locationGrid && locationGrid === operation.grid ? styles.colors.primary : styles.colors.onBackground}
-                  icon="map-marker-radius"
-                />
-              )}
+              leftIcon={'map-marker-radius'}
+              leftIconColor={locationGrid && locationGrid === operation.grid ? styles.colors.primary : styles.colors.onBackground}
               onPress={() => locationGrid && handleChangeGrid(locationGrid, 'gps')}
             />
             {refsWithHandlers.map(({ ref, handler }, index) => (
-              <Ham2kListItem
+              <H2kListItem
                 key={index}
                 title={ref.label}
                 description={ref.grid}
                 titleStyle={{ color: ref.grid && operation.grid === ref.grid ? styles.colors.primary : styles.colors.onBackground }}
                 descriptionStyle={{ color: ref.grid && operation.grid === ref.grid ? styles.colors.primary : styles.colors.onBackground }}
-                left={() => (
-                  <List.Icon
-                    style={{ marginLeft: styles.oneSpace * 2 }}
-                    icon={paperNameOrHam2KIcon(handler.icon)}
-                    color={ref.grid && operation.grid === ref.grid ? styles.colors.primary : styles.colors.onBackground}
-                  />
-                )}
+                leftIcon={handler.icon}
+                leftIconColor={ref.grid && operation.grid === ref.grid ? styles.colors.primary : styles.colors.onBackground}
                 onPress={() => handleChangeGrid(ref.grid, ref.type)}
               />
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
         </ScrollView>
       </SafeAreaView>
     </ScreenContainer>

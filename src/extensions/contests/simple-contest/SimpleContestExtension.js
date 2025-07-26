@@ -4,15 +4,17 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+
 import React from 'react'
 import { findRef, replaceRef } from '../../../tools/refTools'
-
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 
 import { superModeForMode } from '@ham2k/lib-operation-data'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
+import { H2kTextInput } from '../../../ui'
+
 import { ActivityOptions } from './SimpleContestActivityOptions'
+
 export const Info = {
   key: 'simple-contest',
   icon: 'flag-checkered',
@@ -207,7 +209,7 @@ function mainExchangeForOperation (props) {
   const fields = []
 
   fields.push(
-    <ThemedTextInput
+    <H2kTextInput
       {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}

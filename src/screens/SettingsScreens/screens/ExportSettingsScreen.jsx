@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 /*
  * Copyright ©️ 2025 Sebastian Delmont <sd@ham2k.com>
  *
@@ -8,21 +7,17 @@
 
 import React, { useMemo, useState } from 'react'
 import { ScrollView, View } from 'react-native'
+import { IconButton, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { selectExportSettings, selectSettings, setExportSettings } from '../../../store/settings'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { basePartialTemplates, DATA_FORMAT_DESCRIPTIONS, runTemplateForOperation } from '../../../store/operations'
-import { IconButton, List, Switch, Text } from 'react-native-paper'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import ThemedTextInput from '../../components/ThemedTextInput'
-import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { fmtISODate } from '../../../tools/timeFormats'
-import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
+import { H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 export default function ExportSettingsScreen ({ navigation, splitView }) {
   const dispatch = useDispatch()
@@ -322,31 +317,33 @@ Attributes for the log being exported
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <Ham2kListSection title={'Export Types'} />
+        <H2kListSection title={'Export Types'} />
         {exportTypes.map(exportType => (
           <React.Fragment key={exportType.key}>
-            <Ham2kListItem
+            <H2kListItem
               title={exportType.name}
               description={exportType.description}
               descriptionStyle={{ opacity: exportType.description === 'Using defaults' ? 0.5 : 1 }}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(expanded[exportType.key] ? 'chevron-down' : 'chevron-right')} />}
+              leftIcon={expanded[exportType.key] ? 'chevron-down' : 'chevron-right'}
               onPress={() => setExpanded({ ...expanded, [exportType.key]: !expanded[exportType.key] })}
             />
             {expanded[exportType.key] && (
               <View style={{ marginLeft: styles.oneSpace * 5, borderBottomWidth: 2, marginRight: styles.oneSpace * 2, paddingBottom: styles.oneSpace * 2, borderColor: styles.colors.border }}>
                 {(exportType.key === 'default' || exportType.defaults.format === 'adif') && (
-                  <Ham2kListItem
+                  <H2kListItem
                     title="Include Private Data"
                     description={'Notes, names, addresses and other private information'}
-                    right={() => <Switch value={exportType.settings?.privateData ?? exportType.hook?.privateDataDefault} onValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, privateData: value })) } />}
+                    rightSwitchValue={exportType.settings?.privateData ?? exportType.hook?.privateDataDefault}
+                    rightSwitchOnValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, privateData: value }))}
                     onPress={() => dispatch(setExportSettings({ key: exportType.key, privateData: !exportType.settings?.privateData }))}
                   />
                 )}
                 {exportType.key !== 'default' && (
-                  <Ham2kListItem
+                  <H2kListItem
                     title="Custom templates"
                     description={exportType.settings?.customTemplates ? 'Use the templates below' : 'Use default templates'}
-                    right={() => <Switch value={!!exportType.settings?.customTemplates} onValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, customTemplates: value })) } />}
+                    rightSwitchValue={!!exportType.settings?.customTemplates}
+                    rightSwitchOnValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, customTemplates: value }))}
                     onPress={() => dispatch(setExportSettings({ key: exportType.key, customTemplates: !exportType.settings?.customTemplates }))}
                   />
                 )}
@@ -357,9 +354,9 @@ Attributes for the log being exported
             )}
           </React.Fragment>
         ))}
-        <Ham2kListSection title={'Template Help'}>
-          <Ham2kMarkdown style={{ margin: styles.oneSpace * 2 }}>{templateHelp}</Ham2kMarkdown>
-        </Ham2kListSection>
+        <H2kListSection title={'Template Help'}>
+          <H2kMarkdown style={{ margin: styles.oneSpace * 2 }}>{templateHelp}</H2kMarkdown>
+        </H2kListSection>
 
         <View style={{ height: safeAreaInsets.bottom }} />
 
@@ -381,7 +378,7 @@ function OneExportSetting ({ setting, settings, styles, sampleData, dispatch, ex
     <View key={setting.key} style={{ marginLeft: styles.oneSpace * 1, marginBottom: styles.oneSpace * 2 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-        <ThemedTextInput
+        <H2kTextInput
           style={{ flex: 1, fontWeight: isDefault ? 'regular' : 'bold' }}
           label={setting.label}
           keyboard="code"

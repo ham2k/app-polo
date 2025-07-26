@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -13,15 +13,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { SafeAreaView, useSafeAreaFrame } from 'react-native-safe-area-context'
 import SplashScreen from 'react-native-splash-screen'
 
+import { enableStartupInterruptionDialogForDistribution, StartupInterruptionDialogForDistribution } from '../../distro'
+
 import { selectRuntimeMessages } from '../../store/runtime'
-import { Ham2kMarkdown } from '../components/Ham2kMarkdown'
 import { earlyStartupSequence, startupSequence } from '../../store/runtime/actions/startupSequence'
 import { selectSystemFlag, setSystemFlag } from '../../store/system'
 import { selectSettings } from '../../store/settings'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { OnboardingManager } from './onboarding/OnboardingManager'
-
-import { enableStartupInterruptionDialogForDistribution, StartupInterruptionDialogForDistribution } from '../../distro'
+import { H2kMarkdown } from '../../ui'
 
 import releaseNotes from '../../../RELEASE-NOTES.json'
 import packageJson from '../../../package.json'
@@ -249,7 +249,7 @@ export default function StartScreen ({ setAppState }) {
           </Pressable>
           <View style={styles.messagesBox}>
             {messages.map((msg, i) => (
-              <Ham2kMarkdown key={i} styles={styles}>{msg.message}</Ham2kMarkdown>
+              <H2kMarkdown key={i} styles={styles}>{msg.message}</H2kMarkdown>
             ))}
           </View>
           <View style={styles.captionBox}>

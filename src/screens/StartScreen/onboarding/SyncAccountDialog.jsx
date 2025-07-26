@@ -1,20 +1,21 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Button, Dialog, Switch, Text } from 'react-native-paper'
+import { Switch, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
-import EmailInput from '../../components/EmailInput'
+
 import { findHooks } from '../../../extensions/registry'
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 import { setSettings } from '../../../store/settings'
 import { selectFiveSecondsTick, startTickTock } from '../../../store/time'
 import { View } from 'react-native'
+import H2kEmailInput from '../../../ui/react-native/H2kEmailInput'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 
 export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const dispatch = useDispatch()
@@ -91,9 +92,9 @@ export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, 
   }, [onDialogPrevious, status])
 
   return (
-    <Ham2kDialog visible={true} dismissable={false}>
-      <Dialog.Title style={{ textAlign: 'center' }}>Ham2K Log Filer</Dialog.Title>
-      <Dialog.Content>
+    <H2kDialog visible={true} dismissable={false}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>Ham2K Log Filer</H2kDialogTitle>
+      <H2kDialogContent>
         {status === 'input' && (
           <>
             {inputMode === 'existing' ? (
@@ -109,7 +110,7 @@ export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, 
               </View>
             )}
 
-            <EmailInput
+            <H2kEmailInput
               innerRef={ref}
               style={[styles.input, { marginTop: styles.oneSpace * 2 }]}
               value={email ?? ''}
@@ -147,11 +148,11 @@ export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, 
           </>
         )}
 
-      </Dialog.Content>
-      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
-        <Button onPress={handlePrevious}>{previousLabel ?? 'Back'}</Button>
-        <Button onPress={handleNext} disabled={status === 'pending'}>{status === 'pending' ? 'Waiting...' : 'Continue'}</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions style={{ justifyContent: 'space-between' }}>
+        <H2kButton onPress={handlePrevious}>{previousLabel ?? 'Back'}</H2kButton>
+        <H2kButton onPress={handleNext} disabled={status === 'pending'}>{status === 'pending' ? 'Waiting...' : 'Continue'}</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

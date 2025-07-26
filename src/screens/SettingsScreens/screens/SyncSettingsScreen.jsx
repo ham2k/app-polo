@@ -5,10 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, Switch, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -16,8 +15,7 @@ import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { H2kListItem, H2kListSection } from '../../../ui'
 import { SyncServiceDialog } from '../components/SyncServiceDialog'
 import { SyncAccountDialog } from '../components/SyncAccountDialog'
 import { findHooks } from '../../../extensions/registry'
@@ -107,18 +105,19 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <Ham2kListSection title={'Ham2K Log Filer - Sync Server (BETA)'}>
-          <Ham2kListItem
+        <H2kListSection title={'Ham2K Log Filer - Sync Server (BETA)'}>
+          <H2kListItem
             title="Sync Service"
             description={lofiData?.enabled !== false ? 'Enabled' : 'Disabled'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync-circle" />}
-            right={() => <Switch value={lofiData?.enabled !== false} onValueChange={(value) => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: value })) } />}
+            leftIcon="sync-circle"
+            rightSwitchValue={lofiData?.enabled !== false}
+            rightSwitchOnValueChange={(value) => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: value }))}
             onPress={() => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: !lofiData.enabled }))}
           />
-          <Ham2kListItem
+          <H2kListItem
             title={`Account ${accountTitle}`}
             description={accountInfo}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="card-account-details" />}
+            leftIcon="card-account-details"
             onPress={() => setCurrentDialog('syncAccount')}
           />
           {currentDialog === 'syncAccount' && (
@@ -150,35 +149,36 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
             </Text>
           </View>
 
-        </Ham2kListSection>
-        <Ham2kListSection title={'This Device'}>
-          <Ham2kListItem
+        </H2kListSection>
+        <H2kListSection title={'This Device'}>
+          <H2kListItem
             key={lofiData?.client?.uuid}
             title={lofiData?.client?.name ? `${lofiData?.client?.name} (${lofiData?.client?.uuid?.slice(0, 8) ?? '?'})` : 'Not authenticated'}
             description={syncStatus}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone" />}
+            leftIcon="cellphone"
           />
-        </Ham2kListSection>
+        </H2kListSection>
 
         {(lofiData?.allClients || []).filter(client => client.uuid !== lofiData?.client?.uuid).length > 0 && (
-          <Ham2kListSection title={'Other Devices'}>
+          <H2kListSection title={'Other Devices'}>
             {(lofiData?.allClients || []).filter(client => client.uuid !== lofiData?.client?.uuid).map((client) => (
-              <Ham2kListItem
+              <H2kListItem
                 key={client.uuid}
                 title={client.name}
                 description={client.uuid === lofiData?.client?.uuid ? 'This device' : client.uuid.slice(0, 8)}
-                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone" />}
+                leftIcon="cellphone"
               />
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
         )}
 
         {settings.devMode && (
-          <Ham2kListSection title={'Dev Settings'} titleStyle={{ color: styles.colors.devMode }}>
-            <Ham2kListItem
+          <H2kListSection title={'Dev Settings'} titleStyle={{ color: styles.colors.devMode }}>
+            <H2kListItem
               title="LoFi Server"
               description={serverLabel}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={styles.colors.devMode} icon="server" />}
+              leftIcon="server"
+              leftIconColor={styles.colors.devMode}
               onPress={() => setCurrentDialog('ham2k-lofi')}
               titleStyle={{ color: styles.colors.devMode }}
               descriptionStyle={{ color: styles.colors.devMode }}
@@ -192,16 +192,17 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
               />
             )}
 
-            <Ham2kListItem
+            <H2kListItem
               title="Reset Sync Status"
               description={''}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-remove" color={styles.colors.devMode} />}
+              leftIcon="cellphone-remove"
+              leftIconColor={styles.colors.devMode}
               titleStyle={{ color: styles.colors.devMode }}
               descriptionStyle={{ color: styles.colors.devMode }}
               onPress={handleResetSyncStatus}
             />
 
-          </Ham2kListSection>
+          </H2kListSection>
         )}
 
         <View style={{ height: safeAreaInsets.bottom }} />

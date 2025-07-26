@@ -15,20 +15,20 @@ import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
+
 import { dataExportOptions, generateExportsForOptions, importADIFIntoOperation, loadOperation, selectOperation, selectOperationCallInfo } from '../../../store/operations'
 import { loadQSOs, selectQSOs } from '../../../store/qsos'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { buildTitleForOperation } from '../OperationScreen'
 import { reportError, trackEvent } from '../../../distro'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
+import { H2kListItem, H2kListSection } from '../../../ui'
+
 import ScreenContainer from '../../components/ScreenContainer'
-import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
 import { ExportWavelogDialog } from './components/ExportWavelogDialog'
+import { buildTitleForOperation } from '../OperationScreen'
 
 export default function OperationDataScreen (props) {
   const { navigation, route } = props
@@ -171,10 +171,10 @@ export default function OperationDataScreen (props) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
-          <Ham2kListSection title={'Export QSOs'}>
-            <Ham2kListItem
+          <H2kListSection title={'Export QSOs'}>
+            <H2kListItem
               title={exportLabel}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
+              leftIcon="share"
               onPress={() => readyToExport && handleExports({ options: selectedExportOptions })}
               style={{ opacity: readyToExport ? 1 : 0.5 }}
               disabled={!readyToExport}
@@ -185,11 +185,12 @@ export default function OperationDataScreen (props) {
                   status={(settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
                   onPress={() => dispatch(setSettings({ exportTypes: { ...settings.exportTypes, [option.exportType]: !((settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false) } }))}
                 />
-                <Ham2kListItem
+                <H2kListItem
                   key={option.fileName}
                   title={option.exportLabel || option.exportName}
                   description={option.fileName}
-                  left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={option.devMode ? styles.colors.devMode : styles.colors.onBackground} icon={paperNameOrHam2KIcon(option.icon ?? option.handler.icon ?? 'file-outline')} />}
+                  leftIcon={option.icon ?? option.handler.icon ?? 'file-outline'}
+                  leftIconColor={option.devMode ? styles.colors.devMode : styles.colors.onBackground}
                   onPress={() => readyToExport && handleExports({ options: [option] })}
                   descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
                   titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
@@ -198,41 +199,42 @@ export default function OperationDataScreen (props) {
                 />
               </View>
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
 
-          <Ham2kListSection title={'Import QSOs'}>
-            <Ham2kListItem
+          <H2kListSection title={'Import QSOs'}>
+            <H2kListItem
               title="Add QSOs from ADIF file"
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-import-outline" />}
+              leftIcon="file-import-outline"
               onPress={() => handleImportADIF()}
             />
-          </Ham2kListSection>
+          </H2kListSection>
 
           { settings.devMode && (
 
-            <Ham2kListSection title={'Ham2K LoFi Sync'} titleStyle={{ color: styles.colors.devMode }}>
-              <Ham2kListItem
+            <H2kListSection title={'Ham2K LoFi Sync'} titleStyle={{ color: styles.colors.devMode }}>
+              <H2kListItem
                 title="Operation"
                 description={operation.uuid}
-                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync-circle" color={styles.colors.devMode} />}
+                leftIcon="sync-circle"
+                leftIconColor={styles.colors.devMode}
                 titleStyle={{ color: styles.colors.devMode }}
                 descriptionStyle={{ color: styles.colors.devMode }}
                 onPress={() => {}}
               />
-            </Ham2kListSection>
+            </H2kListSection>
           )}
           { settings.wavelogExperiments && (
-          <Ham2kListSection title={'Wavelog Export'} titleStyle={{ color: styles.colors.devMode }}>
-            <Ham2kListItem
-                      title="Export QSOs to Wavelog"
-                      description="Send all QSOs for this operation to Wavelog"
-                      left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cloud-upload-outline" color={styles.colors.devMode} />}
-                      onPress={() => setShowExportWavelog(true)}
-                      titleStyle={{ color: styles.colors.devMode }}
-                      descriptionStyle={{ color: styles.colors.devMode }}
-                    />
-          </Ham2kListSection>
-          
+            <H2kListSection title={'Wavelog Export'} titleStyle={{ color: styles.colors.devMode }}>
+              <H2kListItem
+                title="Export QSOs to Wavelog"
+                description="Send all QSOs for this operation to Wavelog"
+                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cloud-upload-outline" color={styles.colors.devMode} />}
+                onPress={() => setShowExportWavelog(true)}
+                titleStyle={{ color: styles.colors.devMode }}
+                descriptionStyle={{ color: styles.colors.devMode }}
+              />
+            </H2kListSection>
+
           )}
           { showExportWavelog && (
             <ExportWavelogDialog

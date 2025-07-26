@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -18,8 +18,8 @@ import { findHooks } from '../../../../extensions/registry'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { capitalizeString } from '../../../../tools/capitalizeString'
 import { fmtDateTimeDynamic } from '../../../../tools/timeFormats'
-import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
 import { useCallLookup } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { H2kMarkdown } from '../../../../ui'
 
 const HISTORY_QSOS_TO_SHOW = 3
 
@@ -219,7 +219,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
         <View style={styles.section}>
           <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>Notes</Text>
           {lookup.notes.map((note, i) => (
-            <Ham2kMarkdown key={i}>{note?.note}</Ham2kMarkdown>
+            <H2kMarkdown key={i}>{note?.note}</H2kMarkdown>
           ))}
         </View>
       )}
@@ -229,7 +229,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
               <View key={i} style={styles.section}>
                 <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>{confirmation.title}</Text>
                 {confirmation.isGuess && <Text style={{ fontWeight: 'bold' }}>Potential call: {confirmation.call}</Text>}
-                <Ham2kMarkdown>{confirmation?.note}</Ham2kMarkdown>
+                <H2kMarkdown>{confirmation?.note}</H2kMarkdown>
               </View>
             ))
         }

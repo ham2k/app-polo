@@ -8,7 +8,7 @@
 import React, { useCallback, useMemo } from 'react'
 
 import { Chip } from 'react-native-paper'
-import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
+import { paperNameOrHam2KIcon } from '../../../ui'
 
 export default function LoggerChip ({
   children,

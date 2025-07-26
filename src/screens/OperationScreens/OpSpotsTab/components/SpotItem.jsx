@@ -11,7 +11,7 @@ import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
-import { paperNameOrHam2KIcon } from '../../../components/Ham2KIcon'
+import { paperNameOrHam2KIcon } from '../../../../ui'
 
 export function guessItemHeight (qso, styles) {
   return styles.doubleRow.height + styles.doubleRow.borderBottomWidth

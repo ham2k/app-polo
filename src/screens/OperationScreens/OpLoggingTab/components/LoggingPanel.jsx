@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -36,8 +36,7 @@ import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
 import { useNavigation } from '@react-navigation/native'
 import { findHooks } from '../../../../extensions/registry'
 import { trackEvent } from '../../../../distro'
-import { expandRSTValues } from '../../../components/RSTInput'
-import { parseStackedCalls } from '../../../../tools/callsignTools'
+import { expandRSTValues, parseStackedCalls } from '../../../../tools/callsignTools'
 
 const DEBUG = false
 

@@ -10,13 +10,13 @@ import { useSelector } from 'react-redux'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
+
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { fmtDateZuluDynamic, fmtTimeBetween } from '../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../store/time'
-import { Ham2kMarkdown } from '../../../components/Ham2kMarkdown'
-import { Ham2KIcon } from '../../../components/Ham2KIcon'
+import { H2kIcon, H2kMarkdown } from '../../../../ui'
 
 function prepareStyles (baseStyles, themeColor, style) {
   return {
@@ -128,7 +128,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                 <View key={key} style={{ maxWidth: '100%', flexDirection: 'row', alignItems: 'flex-start', marginBottom: styles.oneSpace }}>
                   <View style={{ width: styles.oneSpace * 3, marginTop: styles.oneSpace * 0.2 }}>
                     {score.icon && (
-                      <Ham2KIcon
+                      <H2kIcon
                         name={score.icon}
                         size={styles.normalFontSize}
                         color={score.activated === true ? styles.colors.important : undefined}
@@ -136,12 +136,12 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                       />
                     )}
                   </View>
-                  <Ham2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
+                  <H2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
                     {score.label && (
                       `### ${score.label}${refKeys.length > 1 ? `×${refKeys.length}:` : ':'}`
                     )}
                     {' '}{score.longSummary ?? score.summary}
-                  </Ham2kMarkdown>
+                  </H2kMarkdown>
                 </View>
               )
             } else {
@@ -168,7 +168,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
               <View key={key} style={{ maxWidth: '100%', flexDirection: 'row', alignItems: 'flex-start', marginBottom: styles.oneSpace }}>
                 <View style={{ width: styles.oneSpace * 3, marginTop: styles.oneSpace * 0.2 }}>
                   {score.icon && (
-                    <Ham2KIcon
+                    <H2kIcon
                       name={score.icon}
                       size={styles.normalFontSize}
                       color={score.activated === true ? styles.colors.important : undefined}
@@ -176,12 +176,12 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                     />
                   )}
                 </View>
-                <Ham2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
+                <H2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
                   {score.label && (
                     `### ${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ''}`
                   )}
                   {' '}{score.longSummary ?? score.summary}
-                </Ham2kMarkdown>
+                </H2kMarkdown>
               </View>
             )
           } else {

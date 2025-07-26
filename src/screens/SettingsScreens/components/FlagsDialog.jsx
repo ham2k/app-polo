@@ -1,16 +1,16 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, RadioButton, Text } from 'react-native-paper'
+import { RadioButton, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { setSettings } from '../../../store/settings'
 import { View } from 'react-native'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 
 export function FlagsDialog ({ visible, settings, styles, onDialogDone }) {
   const dispatch = useDispatch()
@@ -39,9 +39,9 @@ export function FlagsDialog ({ visible, settings, styles, onDialogDone }) {
   }, [settings, onDialogDone])
 
   return (
-    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <Dialog.Title style={{ textAlign: 'center' }}>Show Flags</Dialog.Title>
-      <Dialog.Content>
+    <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>Show Flags</H2kDialogTitle>
+      <H2kDialogContent>
         <RadioButton.Group
           onValueChange={(v) => setValue(v)}
           value={value}
@@ -59,11 +59,11 @@ export function FlagsDialog ({ visible, settings, styles, onDialogDone }) {
             <Text onPress={() => setValue('none')} style={styles.rowText}>Don't show any flags</Text>
           </View>
         </RadioButton.Group>
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={handleCancel}>Cancel</Button>
-        <Button onPress={handleAccept}>Ok</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions>
+        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
+        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

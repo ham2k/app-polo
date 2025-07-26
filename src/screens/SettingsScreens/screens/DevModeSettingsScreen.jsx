@@ -18,22 +18,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import YAML from 'yaml'
 
 import packageJson from '../../../../package.json'
+import GLOBAL from '../../../GLOBAL'
 
 import { DevModeSettingsForDistribution, reportError } from '../../../distro'
 import { mergeSettings, selectSettings, setSettings } from '../../../store/settings'
 import { importQSON, selectOperationsList } from '../../../store/operations'
+import { pathForDatabase, replaceDatabase, resetDatabase } from '../../../store/db/db'
+import { setLocalData } from '../../../store/local'
+import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
-import { ListRow } from '../../components/ListComponents'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
-import { pathForDatabase, replaceDatabase, resetDatabase } from '../../../store/db/db'
-import GLOBAL from '../../../GLOBAL'
-import { setLocalData } from '../../../store/local'
-import ThemedTextInput from '../../components/ThemedTextInput'
-import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
+import { H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 function prepareStyles (baseStyles) {
   return {
@@ -181,17 +177,18 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <DevModeSettingsForDistribution styles={styles} dispatch={dispatch} settings={settings} operations={operations} />
-        <Ham2kListSection title={'Import'}>
-          <Ham2kListItem
+        <H2kListSection title={'Import'}>
+          <H2kListItem
             title="Import QSON file"
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-download" color={styles.colors.devMode} />}
+            leftIcon={'briefcase-download'}
+            leftIconColor={styles.colors.devMode}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleImportFiles}
           />
-        </Ham2kListSection>
-        <Ham2kListSection title={'Experiments'}>
-          <Ham2kListItem
+        </H2kListSection>
+        <H2kListSection title={'Experiments'}>
+          <H2kListItem
             title="Enable Wavelog Experiments"
             description={settings.wavelogExperiments ? 'Experimental Wavelog features are enabled' : 'Wavelog is Disabled'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="test-tube" color={styles.colors.devMode} />}
@@ -200,9 +197,9 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
           />
-        </Ham2kListSection>
-        <Ham2kListSection title={'Manage Database'}>
-          <Ham2kListItem
+        </H2kListSection>
+        <H2kListSection title={'Manage Database'}>
+          <H2kListItem
             title="Export Database"
             description={'Export the current database file'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
@@ -210,7 +207,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleExportDB}
           />
-          <Ham2kListItem
+          <H2kListItem
             title="Replace Database"
             description={'Import a new database file and replace all data'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-edit" color={styles.colors.devMode} />}
@@ -218,7 +215,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleImportDB}
           />
-          <Ham2kListItem
+          <H2kListItem
             title="Wipe Database"
             description={'Delete all data from the database.'}
             left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-remove" color={styles.colors.devMode} />}
@@ -226,11 +223,11 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleWipeDB}
           />
-        </Ham2kListSection>
+        </H2kListSection>
 
-        <Ham2kListSection title={'Download Advanced Settings'}>
-          <ListRow style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-            <ThemedTextInput
+        <H2kListSection title={'Download Advanced Settings'}>
+          <H2kListItem style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+            <H2kTextInput
               label="Location"
               value={settings.devSettingsLocation ?? ''}
               inputMode={'url'}
@@ -242,22 +239,22 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
               containerColor={styles.colors.devMode} iconColor={styles.colors.background}
               onPress={downloadDevSettings}
             />
-          </ListRow>
+          </H2kListItem>
 
-        </Ham2kListSection>
+        </H2kListSection>
 
-        <Ham2kListSection title={'System Information'}>
+        <H2kListSection title={'System Information'}>
           <View style={{ paddingHorizontal: styles.oneSpace * 2 }}>
-            <Ham2kMarkdown styles={{ markdown: { heading3: { ...styles.markdown.heading3, marginTop: styles.oneSpace } } }}>
+            <H2kMarkdown styles={{ markdown: { heading3: { ...styles.markdown.heading3, marginTop: styles.oneSpace } } }}>
               {systemInfo()}
-            </Ham2kMarkdown>
+            </H2kMarkdown>
           </View>
-          <Ham2kListItem
+          <H2kListItem
             title="Share with the Development Team"
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
+            leftIcon={'share'}
             onPress={shareSystemInfo}
           />
-        </Ham2kListSection>
+        </H2kListSection>
 
         <View style={{ height: safeAreaInsets.bottom }} />
 

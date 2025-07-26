@@ -9,21 +9,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { List } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { addNewOperation, fillOperationFromTemplate, getAllOperationTemplates, getOperationTemplate, selectOperation, selectOperationsList, setOperationData } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
-import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../../store/qsos'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { trackEvent } from '../../../distro'
-import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
+import { H2kListItem, H2kListSection, H2kMarkdown } from '../../../ui'
 
 function prepareStyles (baseStyles) {
   return {
@@ -127,20 +122,21 @@ export default function OpSettingsTab ({ navigation, route }) {
     <ScrollView style={{ flex: 1 }}>
 
       {templates?.length > 0 && (
-        <Ham2kListSection>
+        <H2kListSection>
           {templates.slice(0, templateLimit).map((template) => (
-            <Ham2kListItem
+            <H2kListItem
               key={template.key}
               title={`${template.callsDescription}`}
               description={`Template for ${template.refsDescription ?? 'General Operation'}`}
               titleStyle={{ color: styles.colors.important }}
               descriptionStyle={{ color: styles.colors.important }}
-              left={() => <List.Icon color={styles.colors.important} style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
+              leftIcon={'content-copy'}
+              leftIconColor={styles.colors.important}
               onPress={() => { dispatch(setOperationData({ uuid: operation.uuid, template })) }}
             />
           ))}
           {templates.length > templateLimit && (
-            <Ham2kListItem
+            <H2kListItem
               title={'Show More Templates'}
               description={`${templates.length - templateLimit} templates available`}
               titleStyle={{ color: styles.colors.important }}
@@ -148,81 +144,82 @@ export default function OpSettingsTab ({ navigation, route }) {
               onPress={() => { setTemplateLimit(templateLimit + 10) }}
             />
           )}
-        </Ham2kListSection>
+        </H2kListSection>
       )}
 
-      <Ham2kListSection>
-        <Ham2kListItem
+      <H2kListSection>
+        <H2kListItem
           title="Station & Operator"
-          description={() => <Ham2kMarkdown style={{ ...styles.list.description, color: stationInfoColor }} compact={true}>{stationInfo}</Ham2kMarkdown>}
+          description={() => <H2kMarkdown style={{ ...styles.list.description, color: stationInfoColor }} compact={true}>{stationInfo}</H2kMarkdown>}
           titleStyle={{ color: stationInfoColor }}
-          left={() => <List.Icon color={stationInfoColor} style={{ marginLeft: styles.oneSpace * 2 }} icon="radio-tower" />}
+          leftIcon={'radio-tower'}
+          leftIconColor={stationInfoColor}
           onPress={() => navigation.navigate('OperationStationInfo', { operation: operation.uuid })}
         />
 
-        <Ham2kListItem
+        <H2kListItem
           title="Location"
           description={operation.grid ? `Grid ${operation.grid}` : 'No location set'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="map-marker-radius" />}
+          leftIcon={'map-marker-radius'}
           onPress={() => navigation.navigate('OperationLocation', { operation: operation.uuid })}
         />
 
-        <Ham2kListItem
+        <H2kListItem
           title={operation?.userTitle || 'Operation Details'}
           description={operation?.notes || operation?.userTitle ? 'Add notes for this operation' : 'Add a title or notes for this operation'}
           titleStyle={{ color: stationInfoColor }}
-          left={() => <List.Icon color={stationInfoColor} style={{ marginLeft: styles.oneSpace * 2 }} icon="book-outline" />}
+          leftIcon={'book-outline'}
+          leftIconColor={stationInfoColor}
           onPress={() => navigation.navigate('OperationDetails', { operation: operation.uuid })}
         />
 
         {opSettingsHooks.filter(hook => hook.category === 'detail').map((hook) => (
           <hook.OpSettingItem key={hook.key} operation={operation} styles={styles} settings={settings} />
         ))}
-      </Ham2kListSection>
+      </H2kListSection>
 
-      <Ham2kListSection title={'Activities'}>
+      <H2kListSection title={'Activities'}>
         {refHandlers.map((handler) => (
-          <Ham2kListItem
+          <H2kListItem
             key={handler.key}
             title={handler.name}
             description={(handler.description && handler.description(operation)) || handler.descriptionPlaceholder}
-            left={
-                  () => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(handler.icon)} />
-                }
+            leftIcon={handler.icon}
             onPress={() => navigation.navigate('OperationActivityOptions', { operation: operation.uuid, activity: handler.key })}
           />
         ))}
-        <Ham2kListItem
+        <H2kListItem
           key="addActivity"
           title="Add Activity"
           disabled={activityHooks.length === 0}
           style={{ opacity: activityHooks.length === 0 ? 0.5 : 1 }}
           description={activityHooks.length > 0 ? 'POTA, SOTA, Field Day and more!' : 'First enable some activity features in the main settings screen'}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="plus" />}
+          leftIcon={'plus'}
           onPress={() => navigation.navigate('OperationAddActivity', { operation: operation.uuid })}
         />
-      </Ham2kListSection>
+      </H2kListSection>
 
-      <Ham2kListSection title={'Operation Data'}>
-        <Ham2kListItem
+      <H2kListSection title={'Operation Data'}>
+        <H2kListItem
           title="Manage Operation Logs"
           description="Export, import and manage data"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
+          leftIcon={'share'}
           onPress={() => navigation.navigate('OperationData', { operation: operation.uuid })}
         />
-        <Ham2kListItem
+        <H2kListItem
           title="Use as template"
           description="Start a new operation with similar settings"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
+          leftIcon={'content-copy'}
           onPress={cloneOperation}
         />
-      </Ham2kListSection>
+      </H2kListSection>
 
-      <Ham2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
-        <Ham2kListItem
+      <H2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
+        <H2kListItem
           title="Delete Operation"
           titleStyle={{ color: styles.theme.colors.error }}
-          left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.oneSpace * 2 }} icon="delete" />}
+          leftIcon={'delete'}
+          leftIconColor={styles.theme.colors.error}
           onPress={() => setCurrentDialog('delete')}
         />
         {currentDialog === 'delete' && (
@@ -234,7 +231,7 @@ export default function OpSettingsTab ({ navigation, route }) {
             onDialogDone={() => setCurrentDialog('')}
           />
         )}
-      </Ham2kListSection>
+      </H2kListSection>
       <View style={{ height: safeAreaInsets.bottom }} />
     </ScrollView>
 

@@ -15,10 +15,9 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings } from '../../../store/settings'
 import { selectOperation, setOperationData, setOperationLocalData } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import CallsignInput from '../../components/CallsignInput'
 import { batchUpdateQSOs, selectQSOs } from '../../../store/qsos'
 import { joinAnd } from '../../../tools/joinAnd'
+import { H2kCallsignInput, H2kListSection } from '../../../ui'
 
 export default function OperationStationInfoScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -145,9 +144,9 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace, paddingHorizontal: styles.oneSpace * 2 }}>
-          <Ham2kListSection>
+          <H2kListSection>
             <Text variant="bodyMedium">What is the callsign used on the air?</Text>
-            <CallsignInput
+            <H2kCallsignInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={operation.allStationCalls || operation.stationCall || ''}
               label="Station Callsign"
@@ -165,11 +164,11 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
                 <Button mode="outlined" style={{ flex: 0 }} onPress={handleUpdateStation}>{extraState.actionForStationCall}</Button>
               </View>
             )}
-          </Ham2kListSection>
+          </H2kListSection>
 
-          <Ham2kListSection style={{ marginTop: styles.oneSpace * 3 }}>
+          <H2kListSection style={{ marginTop: styles.oneSpace * 3 }}>
             <Text variant="bodyMedium">Who is operating the station? (optional)</Text>
-            <CallsignInput
+            <H2kCallsignInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={operation.local?.operatorCall || ''}
               label="Operator Callsign"
@@ -187,7 +186,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
                 <Button mode="outlined" style={{ flex: 0 }}onPress={handleUpdateOperator}>{extraState.actionForOperatorCall}</Button>
               </View>
             )}
-          </Ham2kListSection>
+          </H2kListSection>
         </ScrollView>
       </SafeAreaView>
     </ScreenContainer>

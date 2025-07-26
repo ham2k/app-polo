@@ -5,9 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useMemo, useState } from 'react'
-import { List, Switch } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -16,9 +14,8 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { FlagsDialog } from '../components/FlagsDialog'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findHooks } from '../../../extensions/registry'
+import { H2kListItem, H2kListSection } from '../../../ui'
 
 function prepareStyles (baseStyles) {
   return {
@@ -49,24 +46,18 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <Ham2kListSection>
-          {/* <Ham2kListItem title={'Clone Settings from Previous'}
-            description={settings.cloneLastOperation !== false ? 'Settings for new operations are based on the most recent one' : 'New operations start with default settings' }
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
-            right={() => <Switch value={settings.cloneLastOperation !== false} onValueChange={(value) => dispatch(setSettings({ cloneLastOperation: value })) } />}
-            onPress={() => dispatch(setSettings({ cloneLastOperation: !settings.cloneLastOperation }))}
-          /> */}
-
-          <Ham2kListItem title={'Leftie Mode'}
+        <H2kListSection>
+          <H2kListItem title={'Leftie Mode'}
             description={settings.leftieMode ? 'Use layout for left-handed users' : 'Use layout for right-handed users' }
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="hand-front-left-outline" />}
-            right={() => <Switch value={!!settings.leftieMode} onValueChange={(value) => dispatch(setSettings({ leftieMode: value })) } />}
+            leftIcon="hand-front-left-outline"
+            rightSwitchValue={!!settings.leftieMode}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ leftieMode: value }))}
             onPress={() => dispatch(setSettings({ leftieMode: !settings.leftieMode }))}
           />
 
-          <Ham2kListItem title={'Country Flags'}
+          <H2kListItem title={'Country Flags'}
             description={{ none: "Don't show any flags", all: 'Show flags for all contacts' }[settings.dxFlags] || 'Show only for DX contacts'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="flag" />}
+            leftIcon="flag"
             onPress={() => setCurrentDialog('flags')}
           />
           {currentDialog === 'flags' && (
@@ -77,50 +68,54 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
               onDialogDone={() => setCurrentDialog('')}
             />
           )}
-          <Ham2kListItem title={'State Field'}
+          <H2kListItem title={'State Field'}
             description={settings.showStateField ? 'Include State field in main exchange' : "Don't include State field" }
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="select-marker" />}
-            right={() => <Switch value={!!settings.showStateField} onValueChange={(value) => dispatch(setSettings({ showStateField: value })) } />}
+            leftIcon="select-marker"
+            rightSwitchValue={!!settings.showStateField}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ showStateField: value }))}
             onPress={() => dispatch(setSettings({ showStateField: !settings.showStateField }))}
           />
 
-          <Ham2kListItem title={'Show Bearing'}
+          <H2kListItem title={'Show Bearing'}
             description={settings.showBearing ? 'Show estimated bearing to station' : "Don't show bearing information" }
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="compass-outline" />}
-            right={() => <Switch value={!!settings.showBearing} onValueChange={(value) => dispatch(setSettings({ showBearing: value })) } />}
+            leftIcon="compass-outline"
+            rightSwitchValue={!!settings.showBearing}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ showBearing: value }))}
             onPress={() => dispatch(setSettings({ showBearing: !settings.showBearing }))}
           />
 
-          <Ham2kListItem
+          <H2kListItem
             title="Switch signal report order"
             description={!settings.switchSentRcvd ? 'Sent first, Rcvd second' : 'Rcvd first, Sent second'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="arrow-left-right" />}
-            right={() => <Switch value={!!settings.switchSentRcvd} onValueChange={(value) => dispatch(setSettings({ switchSentRcvd: value })) } />}
+            leftIcon="arrow-left-right"
+            rightSwitchValue={!!settings.switchSentRcvd}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ switchSentRcvd: value }))}
             onPress={() => dispatch(setSettings({ switchSentRcvd: !settings.switchSentRcvd }))}
           />
 
-          <Ham2kListItem
+          <H2kListItem
             title="Jump to next field on RST entry"
             description={settings.jumpAfterRST ? 'Jump after RST is entered' : "Don't jump automatically" }
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="redo" />}
-            right={() => <Switch value={!!settings.jumpAfterRST} onValueChange={(value) => dispatch(setSettings({ jumpAfterRST: value })) } />}
+            leftIcon="redo"
+            rightSwitchValue={!!settings.jumpAfterRST}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ jumpAfterRST: value }))}
             onPress={() => dispatch(setSettings({ jumpAfterRST: !settings.jumpAfterRST }))}
           />
 
-          <Ham2kListItem
+          <H2kListItem
             title="Bands & Modes"
             description={[(settings.bands || []).join(', '), (settings.modes || []).join(', ')].join(' • ')}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="radio" />}
+            leftIcon="radio"
             onPress={() => navigation.navigate('BandModeSettings')}
           />
-        </Ham2kListSection>
+        </H2kListSection>
 
         {extensionSettingHooks.length > 0 && (
-          <Ham2kListSection title={'Extensions'}>
+          <H2kListSection title={'Extensions'}>
             {extensionSettingHooks.map((hook) => (
               <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
         )}
 
         <View style={{ height: safeAreaInsets.bottom }} />

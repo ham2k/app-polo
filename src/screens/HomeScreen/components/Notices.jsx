@@ -13,15 +13,13 @@ import { Button, Dialog, IconButton, Surface } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
-import { Ham2kDialog } from '../../components/Ham2kDialog'
-import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { dismissNotice, useNotices } from '../../../store/system'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { trackEvent, handleNoticeActionForDistribution } from '../../../distro'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Ham2KIcon } from '../../components/Ham2KIcon'
 import { useNavigation } from '@react-navigation/native'
+import { H2kDialog, H2kDialogTitle, H2kIcon, H2kMarkdown } from '../../../ui'
 
 export default function Notices ({ paddingForSafeArea = false }) {
   const safeArea = useSafeAreaInsets()
@@ -112,7 +110,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
       {dialogText && (
         <>
           <KeepAwake />
-          <Ham2kDialog
+          <H2kDialog
             visible={true}
             style={{ marginTop: 50, marginBottom: 50 }}
             onDismiss={() => {
@@ -121,16 +119,16 @@ export default function Notices ({ paddingForSafeArea = false }) {
             }}
           >
             {dialogTitle && (
-              <Dialog.Title>{dialogTitle}</Dialog.Title>
+              <H2kDialogTitle>{dialogTitle}</H2kDialogTitle>
             )}
             <Dialog.ScrollArea>
               <ScrollView fadingEdgeLength={styles.oneSpace * 10} style={{ maxHeight: styles.oneSpace * 28 }}>
-                <Ham2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
+                <H2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
                   {dialogText}
-                </Ham2kMarkdown>
+                </H2kMarkdown>
               </ScrollView>
             </Dialog.ScrollArea>
-          </Ham2kDialog>
+          </H2kDialog>
         </>
       )}
     </>
@@ -165,7 +163,7 @@ export function NoticeList ({ notices, style }) {
       {dialogText && (
         <>
           <KeepAwake />
-          <Ham2kDialog
+          <H2kDialog
             visible={true}
             style={{ marginTop: 50, marginBottom: 50 }}
             onDismiss={() => {
@@ -174,16 +172,16 @@ export function NoticeList ({ notices, style }) {
             }}
           >
             {dialogTitle && (
-              <Dialog.Title>{dialogTitle}</Dialog.Title>
+              <H2kDialogTitle>{dialogTitle}</H2kDialogTitle>
             )}
             <Dialog.ScrollArea>
               <ScrollView fadingEdgeLength={styles.oneSpace * 10} style={{ maxHeight: styles.oneSpace * 28 }}>
-                <Ham2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
+                <H2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
                   {dialogText}
-                </Ham2kMarkdown>
+                </H2kMarkdown>
               </ScrollView>
             </Dialog.ScrollArea>
-          </Ham2kDialog>
+          </H2kDialog>
         </>
       )}
     </>
@@ -200,17 +198,17 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
       {(notice.title || notice.icon) && (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace }}>
           {notice.icon && (
-            <Ham2KIcon name={notice.icon} size={styles.oneSpace * 3} color={styles.noticeText.color} />
+            <H2kIcon name={notice.icon} size={styles.oneSpace * 3} color={styles.noticeText.color} />
           )}
           {notice.title && (
-            <Ham2kMarkdown style={styles.noticeText}>## {notice.title}</Ham2kMarkdown>
+            <H2kMarkdown style={styles.noticeText}>## {notice.title}</H2kMarkdown>
           )}
         </View>
       )}
 
-      <Ham2kMarkdown style={styles.noticeText}>
+      <H2kMarkdown style={styles.noticeText}>
         {notice.text}
-      </Ham2kMarkdown>
+      </H2kMarkdown>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
         <ScrollView horizontal style={{ flex: 1, marginLeft: -styles.oneSpace, paddingLeft: styles.oneSpace }}>

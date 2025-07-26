@@ -6,16 +6,15 @@
  */
 
 import React, { useMemo } from 'react'
-import { Icon, Text, TouchableRipple } from 'react-native-paper'
-
 import { View } from 'react-native'
-import { fmtTimeBetween } from '../../../../../tools/timeFormats'
-import { useSelector } from 'react-redux'
-import { selectSecondsTick } from '../../../../../store/time'
-import { Ham2kMarkdown } from '../../../../components/Ham2kMarkdown'
-import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
+import { Text, TouchableRipple } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
-import { paperNameOrHam2KIcon } from '../../../../components/Ham2KIcon'
+import { useSelector } from 'react-redux'
+
+import { fmtTimeBetween } from '../../../../../tools/timeFormats'
+import { selectSecondsTick } from '../../../../../store/time'
+import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
+import { H2kIcon, H2kMarkdown } from '../../../../../ui'
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -93,8 +92,8 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
         {icon && (
           <View style={{ flex: 0, alignSelf: 'flex-start' }}>
-            <Icon
-              source={paperNameOrHam2KIcon(icon)}
+            <H2kIcon
+              source={icon}
               size={styles.oneSpace * 3}
               color={styles.theme.colors[`${themeColor}ContainerVariant`]}
             />
@@ -102,9 +101,9 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
         )}
         <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', paddingTop: styles.oneSpace * 0.3 }]}>
           {markdownMessage ? (
-            <Ham2kMarkdown style={markdownStyle} styles={styles}>
+            <H2kMarkdown style={markdownStyle} styles={styles}>
               {markdownMessage}
-            </Ham2kMarkdown>
+            </H2kMarkdown>
           ) : (
             <>
               {line1 && <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.textLine}>{line1}</Text>}

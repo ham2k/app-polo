@@ -7,25 +7,18 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { StackActions } from '@react-navigation/native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
 import { findRef, replaceRefs } from '../../../tools/refTools'
 import { findBestHook, useFindHooks } from '../../../extensions/registry'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import { ListSeparator } from '../../components/ListComponents'
 import { trackEvent } from '../../../distro'
-import { paperNameOrHam2KIcon } from '../../components/Ham2KIcon'
+import { H2kListItem, H2kListSection, H2kListSeparator } from '../../../ui'
 
 export default function OperationAddActivityScreen ({ navigation, route }) {
-  const styles = useThemedStyles()
-
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
   const currentActivities = useMemo(() => {
@@ -65,28 +58,27 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
-          <Ham2kListSection>
+          <H2kListSection>
             {activityHooks.map((activity) => (
-              <Ham2kListItem
+              <H2kListItem
                 key={activity.key}
                 title={activity.name}
                 description={currentActivities[activity.key] ?? ''}
-              // eslint-disable-next-line react/no-unstable-nested-components
-                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(activity.icon)} />}
+                leftIcon={activity.icon}
                 onPress={() => addActivity(activity)}
               />
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
 
-          <ListSeparator />
+          <H2kListSeparator />
 
-          <Ham2kListSection>
-            <Ham2kListItem
+          <H2kListSection>
+            <H2kListItem
               title="Can't find the activity you're looking for?"
               description="There are more options in Settings > App Features"
               onPress={() => navigation.navigate('Settings', { screen: 'FeaturesSettings' })}
             />
-          </Ham2kListSection>
+          </H2kListSection>
         </ScrollView>
       </SafeAreaView>
     </ScreenContainer>

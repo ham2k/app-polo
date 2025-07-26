@@ -7,7 +7,6 @@
 
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -18,10 +17,8 @@ import { findBestHook } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { replaceRefs } from '../../../tools/refTools'
 import ScreenContainer from '../../components/ScreenContainer'
-import { ListSeparator } from '../../components/ListComponents'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { trackEvent } from '../../../distro'
+import { H2kListItem, H2kListSection, H2kListSeparator } from '../../../ui'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -57,16 +54,16 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
         <ScrollView style={{ flex: 1 }}>
           {activity?.Options && <activity.Options operation={operation} styles={styles} settings={settings} />}
 
-          <Ham2kListSection>
-            <ListSeparator />
-            <Ham2kListItem
+          <H2kListSection>
+            <H2kListSeparator />
+            <H2kListItem
               title={`Remove ${activity?.shortName ?? activity?.name ?? handler?.name} from this operation`}
               titleStyle={{ color: styles.theme.colors.error }}
-            // eslint-disable-next-line react/no-unstable-nested-components
-              left={() => <List.Icon color={styles.theme.colors.error} style={{ marginLeft: styles.oneSpace * 2 }} icon="delete" />}
+              leftIcon="delete"
+              leftIconColor={styles.theme.colors.error}
               onPress={handleRemoveActivity}
             />
-          </Ham2kListSection>
+          </H2kListSection>
 
         </ScrollView>
       </SafeAreaView>

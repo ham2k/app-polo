@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -13,8 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import ThemedTextInput from '../../components/ThemedTextInput'
+import { H2kListSection, H2kTextInput } from '../../../ui'
 
 export default function OperationDetailsScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -40,22 +39,22 @@ export default function OperationDetailsScreen ({ navigation, route }) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace }}>
-          <Ham2kListSection title={'Title'}>
-            <ThemedTextInput
+          <H2kListSection title={'Title'}>
+            <H2kTextInput
               style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
               value={operation?.userTitle || ''}
               placeholder={'New Operation'}
               onChangeText={handleChangeTitle}
             />
-          </Ham2kListSection>
-          <Ham2kListSection title={'Notes'}>
-            <ThemedTextInput
+          </H2kListSection>
+          <H2kListSection title={'Notes'}>
+            <H2kTextInput
               style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
               value={operation?.notes || ''}
               placeholder={'Anything you want to write about this operation'}
               onChangeText={handleChangeNotes}
             />
-          </Ham2kListSection>
+          </H2kListSection>
         </ScrollView>
       </SafeAreaView>
     </ScreenContainer>

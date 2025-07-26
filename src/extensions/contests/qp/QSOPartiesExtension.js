@@ -9,10 +9,11 @@ import React from 'react'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { superModeForMode } from '@ham2k/lib-operation-data'
+import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import { findRef, replaceRef } from '../../../tools/refTools'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import ThemedTextInputWithSuggestions from '../../../screens/components/ThemedTextInputWithSuggestions'
+import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui/index.js'
+import { setOperationData } from '../../../store/operations'
 
 import RAW_US_STATES from '../../../data/usStates.json'
 import RAW_CANADIAN_PROVINCES from '../../../data/canadianProvinces.json'
@@ -21,8 +22,7 @@ import { Info } from './QSOPartiesInfo'
 import { ActivityOptions } from './QSOPartiesActivityOptions'
 
 import RAW_QSO_PARTY_DATA from './all-parties.js'
-import { setOperationData } from '../../../store/operations'
-import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
+
 export const QSO_PARTY_DATA = Object.fromEntries(RAW_QSO_PARTY_DATA.map(party => [party.key, party]))
 
 const INVALID_BANDS = ['60m', '30m', '17m', '12m']
@@ -605,7 +605,7 @@ function mainExchangeForOperation (props) {
   const fields = []
   if (qp?.exchange?.[0] === 'Number') {
     fields.push(
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
         key={`${Info.key}/ourNumber`}
         // innerRef={refStack.shift()}   // Don't use a `ref` so that this input cannot be focused using the space key
@@ -625,7 +625,7 @@ function mainExchangeForOperation (props) {
     )
 
     fields.push(
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
         key={`${Info.key}/theirNumber`}
         innerRef={refStack.shift()}
@@ -645,7 +645,7 @@ function mainExchangeForOperation (props) {
   }
 
   fields.push(
-    <ThemedTextInputWithSuggestions
+    <H2kTextInputWithSuggestions
       {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}

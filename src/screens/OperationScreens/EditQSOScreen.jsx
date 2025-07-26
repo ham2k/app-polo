@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -9,22 +9,16 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { ScrollView, View } from 'react-native'
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
+
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { useUIState } from '../../store/ui'
 import { selectOperation } from '../../store/operations'
-import ScreenContainer from '../components/ScreenContainer'
-import { Ham2kListSection } from '../components/Ham2kListSection'
-import CallsignInput from '../components/CallsignInput'
-import ThemedTextInput from '../components/ThemedTextInput'
-import { TimeInput } from '../components/TimeInput'
-import { DateInput } from '../components/DateInput'
-import FrequencyInput from '../components/FrequencyInput'
-import RSTInput from '../components/RSTInput'
 import { parseFreqInMHz } from '../../tools/frequencyFormats'
-import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import GridInput from '../components/GridInput'
+import { H2kCallsignInput, H2kDateInput, H2kFrequencyInput, H2kGridInput, H2kListSection, H2kRSTInput, H2kTextInput, H2kTimeInput } from '../../ui'
+import ScreenContainer from '../components/ScreenContainer'
 
 const QSO_SECTIONS = [
   {
@@ -148,7 +142,7 @@ export default function EditQSOScreen ({ navigation, route }) {
 
 function QSOSection ({ qso, section, styles, onChange }) {
   return (
-    <Ham2kListSection title={section.section}>
+    <H2kListSection title={section.section}>
       <View
         style={{
           paddingVertical: styles.oneSpace,
@@ -170,7 +164,7 @@ function QSOSection ({ qso, section, styles, onChange }) {
           </React.Fragment>
         ))}
       </View>
-    </Ham2kListSection>
+    </H2kListSection>
   )
 }
 
@@ -202,77 +196,77 @@ function QSOField ({ qso, field, section, styles, onChange }) {
   }
   if (field.type === 'text') {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
       />
     )
   } else if (field.type === 'upcasedText') {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
         uppercase={true}
       />
     )
   } else if (field.type === 'number') {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
       />
     )
   } else if (field.type === 'callsign') {
     return (
-      <CallsignInput
+      <H2kCallsignInput
         {...props}
       />
     )
   } else if (field.type === 'time') {
     return (
-      <TimeInput
+      <H2kTimeInput
         {...props}
         valueInMillis={value}
       />
     )
   } else if (field.type === 'date') {
     return (
-      <DateInput
+      <H2kDateInput
         {...props}
         valueInMillis={value}
       />
     )
   } else if (field.type === 'freq') {
     return (
-      <FrequencyInput
+      <H2kFrequencyInput
         {...props}
       />
     )
   } else if (field.type === 'mode') {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
       />
     )
   } else if (field.type === 'band') {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
       />
     )
   } else if (field.type === 'rst') {
     return (
-      <RSTInput
+      <H2kRSTInput
         {...props}
         radioMode={qso?.mode ?? 'SSB'}
       />
     )
   } else if (field.type === 'grid') {
     return (
-      <GridInput
+      <H2kGridInput
         {...props}
       />
     )
   } else {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
       />
     )

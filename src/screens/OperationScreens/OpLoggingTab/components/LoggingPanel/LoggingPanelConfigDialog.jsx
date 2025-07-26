@@ -7,18 +7,17 @@
 
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Button, Checkbox, Dialog, List } from 'react-native-paper'
+import { Checkbox, Dialog } from 'react-native-paper'
 import { ScrollView } from 'react-native'
+
 import { stringOrFunction } from '../../../../../tools/stringOrFunction'
+import { findHooks } from '../../../../../extensions/registry'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogTitle, H2kListItem, H2kListSection } from '../../../../../ui'
+
 import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
-import { findHooks } from '../../../../../extensions/registry'
-import { Ham2kListItem } from '../../../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../../../components/Ham2kListSection'
-import { Ham2kDialog } from '../../../../components/Ham2kDialog'
 import { powerControl } from './SecondaryExchangePanel/TxPowerControl'
-import { paperNameOrHam2KIcon } from '../../../../components/Ham2KIcon'
 
 export function LoggingPanelConfigDialog ({ visible, operation, vfo, settings, styles, onDialogDone }) {
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -69,18 +68,18 @@ export function LoggingPanelConfigDialog ({ visible, operation, vfo, settings, s
   }, [settings, onDialogDone, setValue])
 
   return (
-    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel} >
-      <Dialog.Title style={{ textAlign: 'center' }}>Logging Options</Dialog.Title>
+    <H2kDialog visible={dialogVisible} onDismiss={handleCancel} >
+      <H2kDialogTitle style={{ textAlign: 'center' }}>Logging Options</H2kDialogTitle>
       <Dialog.ScrollArea style={{ padding: 0, paddingHorizontal: styles.oneSpace, maxHeight: '80%' }}>
 
         <ScrollView>
-          <Ham2kListSection>
+          <H2kListSection>
             {sortedControls.map(control => (
-              <Ham2kListItem
+              <H2kListItem
                 style={{ paddingTop: 20, margin: 0 }}
                 title={stringOrFunction(control.optionLabel ?? control.label ?? control.key, { operation, vfo, settings })}
                 description={stringOrFunction(control.optionDescription, { operation, vfo, settings })}
-                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={paperNameOrHam2KIcon(control.icon)} />}
+                leftIcon={control.icon}
                 right={() => {
                   if (control.optionType === 'mandatory') {
                     return <Checkbox status={'checked'} disabled={true} />
@@ -91,14 +90,14 @@ export function LoggingPanelConfigDialog ({ visible, operation, vfo, settings, s
                 onPress={() => 1}
               />
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
         </ScrollView>
       </Dialog.ScrollArea>
 
-      <Dialog.Actions>
-        <Button onPress={handleCancel}>Cancel</Button>
-        <Button onPress={handleAccept}>Ok</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      <H2kDialogActions>
+        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
+        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

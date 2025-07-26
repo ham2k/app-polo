@@ -7,13 +7,15 @@
 
 import React from 'react'
 
+import { bandForFrequency } from '@ham2k/lib-operation-data'
+
 import { findRef, replaceRef } from '../../../tools/refTools'
-import GridInput from '../../../screens/components/GridInput'
-import { SatelliteData, registerSatelliteData } from './SatelliteData'
+import { loadDataFile } from '../../../store/dataFiles/actions/dataFileFS'
+import { H2kGridInput } from '../../../ui'
+
 import { Info } from './SatellitesInfo'
 import { SatellitesLoggingControl } from './SatellitesLoggingControl'
-import { loadDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { SatelliteData, registerSatelliteData } from './SatelliteData'
 
 const Extension = {
   ...Info,
@@ -67,7 +69,7 @@ function mainExchangeForQSO (props) {
 
   if (findRef(qso, Info.refType)) {
     fields.push(
-      <GridInput
+      <H2kGridInput
         {...props}
         themeColor={themeColor}
         key={`${Info.key}/grid`}

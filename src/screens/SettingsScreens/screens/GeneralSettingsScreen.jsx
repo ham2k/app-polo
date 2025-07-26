@@ -5,9 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useMemo, useState } from 'react'
-import { List, Switch } from 'react-native-paper'
 import { Platform, ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -16,10 +14,8 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { ThemeDialog } from '../components/ThemeDialog'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import { Ham2kListSubheader } from '../../components/Ham2kListSubheader'
 import { findHooks } from '../../../extensions/registry'
+import { H2kListItem, H2kListSection, H2kListSubheader } from '../../../ui'
 
 function prepareStyles (baseStyles) {
   return {
@@ -50,11 +46,11 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <Ham2kListSection>
-          <Ham2kListItem
+        <H2kListSection>
+          <H2kListItem
             title="Theme"
             description={{ dark: 'Always in Dark Mode', light: 'Always in Light Mode' }[settings.theme] || 'Same as device theme'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={{ dark: 'weather-night', light: 'white-balance-sunny' }[settings.theme] || 'theme-light-dark'} />}
+            leftIcon={{ dark: 'weather-night', light: 'white-balance-sunny' }[settings.theme] || 'theme-light-dark'}
             onPress={() => setCurrentDialog('theme')}
           />
           {currentDialog === 'theme' && (
@@ -66,111 +62,121 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
             />
           )}
 
-          <Ham2kListItem
+          <H2kListItem
             title="Show numbers row"
             description={settings.showNumbersRow ? 'Quick buttons for numbers' : "Don't show numbers row"}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="numeric" />}
-            right={() => <Switch value={!!settings.showNumbersRow} onValueChange={(value) => dispatch(setSettings({ showNumbersRow: value })) } />}
+            leftIcon="numeric"
+            rightSwitchValue={!!settings.showNumbersRow}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ showNumbersRow: value }))}
             onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showNumbersRow }))}
           />
 
           {settings.showNumbersRow && (
-            <Ham2kListItem
+            <H2kListItem
               style={{ marginLeft: styles.oneSpace * 8 }}
               title="Extra key in numbers row"
               description={settings.showExtraInNumbersRow ? 'Include slash or period' : 'Just show the numbers'}
               disabled={!settings.showNumbersRow}
-              right={() => <Switch disabled={!settings.showNumbersRow} value={!!settings.showExtraInNumbersRow} onValueChange={(value) => dispatch(setSettings({ showExtraInNumbersRow: value })) } />}
+              rightSwitchValue={!!settings.showExtraInNumbersRow}
+              rightSwitchOnValueChange={(value) => dispatch(setSettings({ showExtraInNumbersRow: value }))}
               onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showExtraInNumbersRow }))}
             />
           )}
 
           {settings.showNumbersRow && (
-            <Ham2kListItem
+            <H2kListItem
               style={{ marginLeft: styles.oneSpace * 8 }}
               title="Use vibration in numbers row"
               description={settings.vibrateNumbersRow !== false ? 'Vibrate when pressing numbers' : "Don't vibrate when pressing numbers"}
               disabled={!settings.showNumbersRow}
-              right={() => <Switch disabled={!settings.showNumbersRow} value={settings.vibrateNumbersRow !== false} onValueChange={(value) => dispatch(setSettings({ vibrateNumbersRow: value })) } />}
+              rightSwitchValue={!!settings.vibrateNumbersRow}
+              rightSwitchOnValueChange={(value) => dispatch(setSettings({ vibrateNumbersRow: value }))}
               onPress={() => dispatch(setSettings({ showNumbersRow: !settings.vibrateNumbersRow }))}
             />
           )}
 
-          <Ham2kListItem
+          <H2kListItem
             title="Use Metric Units"
             description={settings.distanceUnits === 'miles' ? 'Use Miles for distances' : 'Use Kilometers for distances'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="tape-measure" />}
-            right={() => <Switch value={settings.distanceUnits !== 'miles'} onValueChange={(value) => dispatch(setSettings({ distanceUnits: settings.distanceUnits === 'miles' ? 'km' : 'miles' })) } />}
+            leftIcon="tape-measure"
+            rightSwitchValue={settings.distanceUnits !== 'miles'}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ distanceUnits: settings.distanceUnits === 'miles' ? 'km' : 'miles' }))}
             onPress={() => dispatch(setSettings({ distanceUnits: settings.distanceUnits === 'miles' ? 'km' : 'miles' }))}
           />
 
-          <Ham2kListItem
+          <H2kListItem
             title="Keep device awake"
             description={settings.keepDeviceAwake ? 'Prevent device from locking screen' : 'Allow regular screen locking'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="coffee" />}
-            right={() => <Switch value={!!settings.keepDeviceAwake} onValueChange={(value) => dispatch(setSettings({ keepDeviceAwake: value })) } />}
+            leftIcon="coffee"
+            rightSwitchValue={!!settings.keepDeviceAwake}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ keepDeviceAwake: value }))}
             onPress={() => dispatch(setSettings({ keepDeviceAwake: !settings.keepDeviceAwake }))}
           />
 
           {styles.mdOrLarger && (
-            <Ham2kListItem
+            <H2kListItem
               title="Use Split Views"
               description={settings.dontSplitViews ? "Don't use split views" : 'Use Split Views when screen is large enough' }
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="arrow-split-vertical" />}
-              right={() => <Switch value={!settings.dontSplitViews} onValueChange={(value) => dispatch(setSettings({ dontSplitViews: !value })) } />}
+              leftIcon="arrow-split-vertical"
+              rightSwitchValue={!settings.dontSplitViews}
+              rightSwitchOnValueChange={(value) => dispatch(setSettings({ dontSplitViews: !value }))}
               onPress={() => dispatch(setSettings({ dontSplitViews: !settings.dontSplitViews }))}
             />
           )}
 
-          <Ham2kListItem
+          <H2kListItem
             title="High precision location"
             description={settings.useGrid8 ? 'Use 8-digit grids' : 'Use 6-digit grids'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="select-marker" />}
-            right={() => <Switch value={!!settings.useGrid8} onValueChange={(value) => dispatch(setSettings({ useGrid8: value })) } />}
+            leftIcon="select-marker"
+            rightSwitchValue={!!settings.useGrid8}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ useGrid8: value }))}
             onPress={() => dispatch(setSettings({ useGrid8: !settings.useGrid8 }))}
           />
 
           {Platform.OS === 'android' && (
-            <Ham2kListItem
+            <H2kListItem
               title="Smart Keyboard Features"
               description={settings.smartKeyboard !== false ? 'Enable smart keyboard features' : 'Use simpler keyboards for compatibility reasons with some devices'}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="keyboard-outline" />}
-              right={() => <Switch value={settings.smartKeyboard !== false} onValueChange={(value) => dispatch(setSettings({ smartKeyboard: value })) } />}
+              leftIcon="keyboard-outline"
+              rightSwitchValue={!!settings.smartKeyboard}
+              rightSwitchOnValueChange={(value) => dispatch(setSettings({ smartKeyboard: value }))}
               onPress={() => dispatch(setSettings({ smartKeyboard: !settings.smartKeyboard }))}
             />
           )}
 
-          <Ham2kListItem
+          <H2kListItem
             title="Export Settings"
             description={'Customize filenames and other settings'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-export-outline" />}
+            leftIcon="file-export-outline"
             onPress={() => navigation.navigate('ExportSettings')}
           />
 
-          <Ham2kListSubheader>Privacy</Ham2kListSubheader>
-          <Ham2kListItem
+          <H2kListSubheader>Privacy</H2kListSubheader>
+          <H2kListItem
             title="Share app usage data"
             description={settings.consentAppData ? 'Help us improve the app by sharing usage, crash and performance data' : 'Keep app usage data private.\nThe Ham2K team won\'t be able to detect crashes or other issues.'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-lock" />}
-            right={() => <Switch value={!!settings.consentAppData} onValueChange={(value) => dispatch(setSettings({ consentAppData: value })) } />}
+            leftIcon="cellphone-lock"
+            rightSwitchValue={!!settings.consentAppData}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ consentAppData: value }))}
             onPress={() => dispatch(setSettings({ consentAppData: !settings.consentAppData }))}
           />
 
-          <Ham2kListItem
+          <H2kListItem
             title="Share operation data"
             description={settings.consentOpData ? 'Share some operation data publicly and with other users' : 'Keep operation data private'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cellphone-lock" />}
-            right={() => <Switch value={!!settings.consentOpData} onValueChange={(value) => dispatch(setSettings({ consentOpData: value })) } />}
+            leftIcon="cellphone-lock"
+            rightSwitchValue={!!settings.consentOpData}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ consentOpData: value }))}
             onPress={() => dispatch(setSettings({ consentAppData: !settings.consentOpData }))}
           />
-        </Ham2kListSection>
+        </H2kListSection>
 
         {extensionSettingHooks.length > 0 && (
-          <Ham2kListSection title={'Extensions'}>
+          <H2kListSection title={'Extensions'}>
             {extensionSettingHooks.map((hook) => (
               <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
         )}
 
         <View style={{ height: safeAreaInsets.bottom }} />

@@ -7,21 +7,17 @@
 
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState } from 'react'
-import { List } from 'react-native-paper'
 import { useSelector } from 'react-redux'
 import { Image, Pressable, ScrollView, View } from 'react-native'
-import Markdown from 'react-native-markdown-display'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import releaseNotes from '../../../../RELEASE-NOTES.json'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { ListRow } from '../../components/ListComponents'
 import { VersionSettingsForDistribution } from '../../../distro'
 import { selectSettings } from '../../../store/settings'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { H2kListItem, H2kListSection, H2kListRow, H2kMarkdown } from '../../../ui'
 
 const SPLASH_IMAGE = require('../../../screens/StartScreen/img/launch_screen.jpg')
 
@@ -79,10 +75,10 @@ export default function VersionSettingsScreen ({ navigation, splitView }) {
         <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
           <VersionSettingsForDistribution settings={settings} styles={styles} />
 
-          <Ham2kListSection>
-            <Ham2kListItem
+          <H2kListSection>
+            <H2kListItem
               title={'Recent Changes'}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="newspaper-variant-outline" />}
+              leftIcon="newspaper-variant-outline"
               right={() => (
                 <Pressable onPress={() => setShowImage(true)}>
                   <Image source={SPLASH_IMAGE} style={{ width: 64, height: 64 }} />
@@ -91,18 +87,18 @@ export default function VersionSettingsScreen ({ navigation, splitView }) {
             />
 
             {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
-              <ListRow key={i} style={styles.listRow}>
+              <H2kListRow key={i} style={styles.listRow}>
 
-                <Markdown style={styles.markdown}>
+                <H2kMarkdown style={styles.markdown}>
                   {
   `## ${releaseNotes[release].name ? `${releaseNotes[release].name} Release` : `Version ${release}`}
   ${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
   `
                   }
-                </Markdown>
-              </ListRow>
+                </H2kMarkdown>
+              </H2kListRow>
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
 
           <View style={{ height: safeAreaInsets.bottom }} />
 

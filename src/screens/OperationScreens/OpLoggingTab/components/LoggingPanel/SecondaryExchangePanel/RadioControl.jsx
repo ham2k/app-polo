@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,10 +8,10 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { View } from 'react-native'
 
-import ThemedDropDown from '../../../../../components/ThemedDropDown'
-import FrequencyInput from '../../../../../components/FrequencyInput'
-import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 import { ADIF_MODES_AND_SUBMODES, BANDS, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
+
+import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
+import { H2kDropDown, H2kFrequencyInput } from '../../../../../../ui'
 
 const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const ref = useRef()
@@ -39,7 +39,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
 
   return (
     <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
-      <ThemedDropDown
+      <H2kDropDown
         label="Band"
         themeColor={themeColor}
         value={qso?._isNew ? (qso?.band ?? vfo?.band ?? '') : (qso?.band ?? '') }
@@ -50,7 +50,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
         style={{ width: styles.oneSpace * (styles.size === 'xs' ? 13 : 15) }}
         options={bandOptions}
       />
-      <FrequencyInput
+      <H2kFrequencyInput
         innerRef={ref}
         themeColor={themeColor}
         style={{ width: styles.oneSpace * (styles.size === 'xs' ? 10 : 11) }}
@@ -63,7 +63,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
         fieldId={'freq'}
         focusedRef={focusedRef}
       />
-      <ThemedDropDown
+      <H2kDropDown
         label="Mode"
         value={qso?._isNew ? (qso?.mode ?? vfo?.mode ?? '') : (qso?.mode ?? '') }
         onChange={handleFieldChange}

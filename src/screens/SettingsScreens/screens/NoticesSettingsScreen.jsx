@@ -7,15 +7,16 @@
 
 import React, { useMemo } from 'react'
 import { ScrollView, View } from 'react-native'
+import { Text } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+import { fmtDateDayMonth } from '@ham2k/lib-format-tools'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { useNotices } from '../../../store/system'
 import { NoticeList } from '../../HomeScreen/components/Notices'
-import { Text } from 'react-native-paper'
-import { fmtDateDayMonth } from '@ham2k/lib-format-tools'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { H2kListSection } from '../../../ui'
 
 function prepareStyles (baseStyles) {
   return {
@@ -59,12 +60,12 @@ export default function NoticesSettingsScreen ({ navigation, splitView }) {
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         {noticesGroupedByDismissedOn.length > 0 ? (
           noticesGroupedByDismissedOn.map(([label, groupNotices]) => (
-            <Ham2kListSection
+            <H2kListSection
               key={label}
               title={label}
             >
               <NoticeList notices={groupNotices} />
-            </Ham2kListSection>
+            </H2kListSection>
           ))
         ) : (
           <Text style={{ margin: styles.oneSpace * 2, textAlign: 'center' }}>No recent notices</Text>

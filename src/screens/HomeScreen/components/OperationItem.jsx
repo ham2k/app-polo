@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,12 +8,13 @@
 import React, { useCallback, useMemo } from 'react'
 import { View } from 'react-native'
 import { Text, TouchableRipple } from 'react-native-paper'
+
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { fmtDateZuluDynamic } from '../../../tools/timeFormats'
 import { tweakStringForVoiceOver } from '../../../tools/a11yTools'
-import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
 import { buildTitleForOperation } from '../../OperationScreens/OperationScreen'
+import { H2kMarkdown } from '../../../ui'
 
 export default function OperationItem ({ operation, settings, onPress, styles, style }) {
   const pressHandler = useCallback(() => {
@@ -41,7 +42,7 @@ export default function OperationItem ({ operation, settings, onPress, styles, s
       <View style={rowStyle}>
         <View style={styles.rowTop}>
           <View style={styles.rowTopLeft}>
-            <Ham2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCallPlus || operation.stationCall}`**{' '}{title}</Ham2kMarkdown>
+            <H2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCallPlus || operation.stationCall}`**{' '}{title}</H2kMarkdown>
           </View>
           <View style={styles.rowTopRight}>
             <View style={styles.countContainer}>

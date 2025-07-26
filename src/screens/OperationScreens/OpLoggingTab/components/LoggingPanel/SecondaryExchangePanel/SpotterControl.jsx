@@ -14,13 +14,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectSecondsTick } from '../../../../../../store/time'
 import { selectRuntimeOnline } from '../../../../../../store/runtime'
 import { setOperationLocalData } from '../../../../../../store/operations'
-import ThemedButton from '../../../../../components/ThemedButton'
-import ThemedTextInput from '../../../../../components/ThemedTextInput'
-import { Ham2KIcon } from '../../../../../components/Ham2KIcon'
 import { findHooks } from '../../../../../../extensions/registry'
 import { findRef } from '../../../../../../tools/refTools'
 import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../../../tools/timeFormats'
+import { H2kButton, H2kIcon, H2kTextInput } from '../../../../../../ui'
 
 const SECONDS_UNTIL_RESPOT = 30
 
@@ -128,7 +126,7 @@ export function SpotterControlInputs (props) {
 
   return (
     <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
-      <ThemedTextInput
+      <H2kTextInput
         innerRef={ref}
         focusedRef={focusedRef}
         style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace, flex: 1 }}
@@ -138,7 +136,7 @@ export function SpotterControlInputs (props) {
         disabled={!online || spotterDisabled}
       />
 
-      <ThemedButton
+      <H2kButton
         themeColor="tertiaryLighter"
         mode="contained"
         icon={online ? 'hand-wave' : 'cloud-off-outline'}
@@ -147,10 +145,10 @@ export function SpotterControlInputs (props) {
         // minWidth={styles.oneSpace * 18}
       >
         {spotterMessage}
-      </ThemedButton>
+      </H2kButton>
       <View style={{ flex: 0, flexDirection: 'row', position: 'absolute', top: styles.oneSpace * -1, right: 0 }}>
         {hooksWithSpotting.map((x, n) => (
-          <Ham2KIcon
+          <H2kIcon
             key={x.key}
             name={x.icon}
             size={styles.oneSpace * 2.3}

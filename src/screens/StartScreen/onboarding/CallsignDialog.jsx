@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,13 +7,12 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Dialog, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import RNRestart from 'react-native-restart'
 
-import CallsignInput from '../../components/CallsignInput'
 import { setSettings } from '../../../store/settings'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
 import { persistor } from '../../../store'
+import { H2kButton, H2kCallsignInput, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 
 export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const dispatch = useDispatch()
@@ -53,13 +52,13 @@ export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevio
   }, [onDialogPrevious])
 
   return (
-    <Ham2kDialog visible={true} dismissable={false}>
-      <Dialog.Title style={{ textAlign: 'center' }}>What's your callsign?</Dialog.Title>
-      <Dialog.Content>
+    <H2kDialog visible={true} dismissable={false}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>What's your callsign?</H2kDialogTitle>
+      <H2kDialogContent>
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
           You need an Amateur Radio Operator License in order to find this app useful
         </Text>
-        <CallsignInput
+        <H2kCallsignInput
           innerRef={ref}
           style={[styles.input, { marginTop: styles.oneSpace * 2 }]}
           value={value ?? ''}
@@ -67,11 +66,11 @@ export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevio
           placeholder="N0CALL"
           onChangeText={onChangeText}
         />
-      </Dialog.Content>
-      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
-        <Button onPress={handlePrevious}>{previousLabel ?? 'Back'}</Button>
-        <Button onPress={handleNext}>{nextLabel ?? 'Next'}</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions style={{ justifyContent: 'space-between' }}>
+        <H2kButton onPress={handlePrevious}>{previousLabel ?? 'Back'}</H2kButton>
+        <H2kButton onPress={handleNext}>{nextLabel ?? 'Next'}</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

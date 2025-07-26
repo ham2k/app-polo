@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,15 +8,15 @@
 import React from 'react'
 import { View } from 'react-native'
 import { SegmentedButtons, Switch, Text } from 'react-native-paper'
+import { ScrollView } from 'react-native-gesture-handler'
 
 import { superModeForMode } from '@ham2k/lib-operation-data'
+import { CONTINENTS } from '@ham2k/lib-dxcc-data'
 
-import ThemedDropDown from '../../../components/ThemedDropDown'
-import ThemedButton from '../../../components/ThemedButton'
+import { H2kButton, H2kDropDown } from '../../../../ui'
+
 import { LONG_LABEL_FOR_MODE } from './SpotsPanel'
 import SpotFilterIndicators from './SpotFilterIndicators'
-import { ScrollView } from 'react-native-gesture-handler'
-import { CONTINENTS } from '@ham2k/lib-dxcc-data'
 
 export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, options, filterState, updateFilterState, counts, operation, onDone, refreshSpots, styles, style, themeColor, settings, online }) {
   console.log('controls style', style)
@@ -43,7 +43,7 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
         onPress={() => onDone()}
       />
       <View style={{ flex: 0, maxWidth: styles.oneSpace * 35 }}>
-        <ThemedButton style={{}} onPress={() => onDone()} mode="contained" themeColor={themeColor}>
+        <H2kButton style={{}} onPress={() => onDone()} mode="contained" themeColor={themeColor}>
           {!counts.all ? (
             'No spots'
           ) : (
@@ -53,14 +53,14 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
               `Show ${filteredSpots.length} out of ${counts?.all} Spots`
             )
           )}
-        </ThemedButton>
+        </H2kButton>
       </View>
       <View style={{ flex: 0, flexDirection: 'column', marginTop: styles.oneSpace * 2, maxWidth: styles.oneSpace * 35, gap: styles.oneSpace, alignItems: 'stretch' }}>
         <Text style={[styles.markdown.heading2, { marginTop: styles.halfSpace, textAlign: 'center' }]}>
           Filters
         </Text>
         <View style={{ flexDirection: 'row', width: '100%', alignItems: 'stretch' }}>
-          <ThemedDropDown
+          <H2kDropDown
             label="Band"
             themeColor={themeColor}
             value={filterState.band || 'any'}
@@ -76,7 +76,7 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
           />
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'stretch' }}>
-          <ThemedDropDown
+          <H2kDropDown
             label="Mode"
             value={filterState.mode || 'any'}
             style={{ width: '100%' }}
@@ -91,7 +91,7 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
           />
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'stretch' }}>
-          <ThemedDropDown
+          <H2kDropDown
             label="Maximum Age"
             value={filterState.ageInMinutes || 0}
             style={{ width: '100%' }}
