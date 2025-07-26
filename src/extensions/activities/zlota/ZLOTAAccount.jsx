@@ -10,8 +10,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { setAccountInfo } from '../../../store/settings'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kTextInput } from '../../../ui'
-import H2kCallsignInput from '../../../ui/react-native/H2kCallsignInput'
+import { H2kButton, H2kCallsignInput, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kTextInput } from '../../../ui'
 
 export function ZLOTAAccountSetting ({ settings, styles }) {
   const [currentDialog, setCurrentDialog] = useState()

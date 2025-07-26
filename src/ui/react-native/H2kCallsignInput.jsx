@@ -17,7 +17,7 @@ import { H2kTextInput } from './H2kTextInput'
 const LETTERS_REGEX = /[A-Z]+/
 const ONLY_NUMBER_REGEX = /^\s*[+-]*\d+(\.\d+)*$/
 
-export default function H2kCallsignInput (props) {
+export function H2kCallsignInput (props) {
   const { value, allowMultiple } = props
 
   const isValid = useMemo(() => {
