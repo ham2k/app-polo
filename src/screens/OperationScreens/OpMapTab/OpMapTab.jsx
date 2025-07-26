@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { IconButton, Text } from 'react-native-paper'
 
@@ -14,7 +14,7 @@ import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation } from '../../../store/operations'
 import { selectQSOs } from '../../../store/qsos'
-import { View } from 'react-native'
+import { Keyboard, View } from 'react-native'
 import { selectSettings } from '../../../store/settings'
 
 import { useUIState } from '../../../store/ui'
@@ -94,6 +94,38 @@ export default function OpMapTab ({ navigation, route }) {
     return _warnings
   }, [navigation, operation.uuid, qsos, qth?.latitude])
 
+  const [keyboardPaddingBottom, setKeyboardPaddingBottom] = useState(0)
+  useEffect(() => {
+    if (Keyboard.isVisible()) {
+      const metrics = Keyboard.metrics()
+      if (metrics.height > 100) {
+        setKeyboardPaddingBottom(0)
+      } else {
+        setKeyboardPaddingBottom(metrics.height - 10)
+      }
+    }
+
+    const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      const metrics = Keyboard.metrics()
+      if (metrics.height > 100) {
+        // On iPads, when there's an external keyboard connected, the OS still shows a small
+        // button on the bottom right with some options
+        // This is considered "keyboard visible", which causes KeyboardAvoidingView to leave an ugly empty padding
+        setKeyboardPaddingBottom(0)
+      } else {
+        setKeyboardPaddingBottom(metrics.height - 10)
+      }
+    })
+    const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardPaddingBottom(0)
+    })
+
+    return () => {
+      didShowSubscription.remove()
+      didHideSubscription.remove()
+    }
+  }, [])
+
   return (
     <>
       <MapWithQSOs
@@ -137,7 +169,7 @@ export default function OpMapTab ({ navigation, route }) {
           ))}
         </View>
       )}
-      <View style={{ position: 'absolute', bottom: styles.oneSpace * 1 + safeAreaInsets.bottom, right: styles.oneSpace * 1 + safeAreaInsets.right }}>
+      <View style={{ position: 'absolute', bottom: styles.oneSpace * 1 + safeAreaInsets.bottom + keyboardPaddingBottom, right: styles.oneSpace * 1 + safeAreaInsets.right }}>
         {projection === 'mercator' ? (
           <IconButton
             icon="earth"
