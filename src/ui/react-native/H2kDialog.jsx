@@ -59,3 +59,7 @@ export function H2kDialogCloseButton (props) {
 export function H2kDialogScrollArea (props) {
   return <Dialog.ScrollArea {...props} />
 }
+
+export function H2kDialogIcon (props) {
+  return <Dialog.Icon {...props} />
+}
