@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,7 +8,7 @@
 import React, { useCallback } from 'react'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
+import { H2kTextInput } from '../../../ui'
 
 const ADD_DASHES_REGEX = /(?:B?\/)?([0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*)(\d+)(?!-)$/gi
 const ADD_SLASHES_REGEX = /^B?((?<!\/)(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*)-)$/gi
@@ -33,7 +33,7 @@ export default function WWBOTAInput (props) {
   }, [defaultPrefix])
 
   return (
-    <ThemedTextInput
+    <H2kTextInput
       {...props}
       keyboard="dumb"
       uppercase={true}

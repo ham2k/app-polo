@@ -20,7 +20,7 @@ export function registerSiOTADataFile () {
     key: 'siota-all-silos',
     name: 'SiOTA: All Silos',
     description: 'Database of all SiOTA references',
-    infoURL: 'https://silobase.org',
+    infoURL: 'https://www.silosontheair.com',
     icon: 'file-cloud-outline',
     maxAgeInDays: 100,
     enabledByDefault: true,

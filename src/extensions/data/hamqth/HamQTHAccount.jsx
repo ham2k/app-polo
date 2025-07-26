@@ -1,34 +1,30 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  * Copyright ©️ 2024 Steven Hiscocks <steven@hiscocks.me.uk>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, List, Text } from 'react-native-paper'
-import { useDispatch } from 'react-redux'
-import { setAccountInfo } from '../../../store/settings'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import CallsignInput from '../../../screens/components/CallsignInput'
-import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
-import { Ham2kDialog } from '../../../screens/components/Ham2kDialog'
-import { apiHamQTH } from '../../../store/apis/apiHamQTH'
 import { View } from 'react-native'
-import { Ham2kMarkdown } from '../../../screens/components/Ham2kMarkdown'
-import { resetCallLookupCache } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { useDispatch } from 'react-redux'
+
 import { parseCallsign } from '@ham2k/lib-callsigns'
+
+import { setAccountInfo } from '../../../store/settings'
+import { apiHamQTH } from '../../../store/apis/apiHamQTH'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kMarkdown, H2kText, H2kTextInput } from '../../../ui'
+import { resetCallLookupCache } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 
 export function HamQTHAccountSetting ({ settings, styles }) {
   const [currentDialog, setCurrentDialog] = useState()
   return (
-    <React.Fragment>
-      <Ham2kListItem
+    <>
+      <H2kListItem
         title="HamQTH (for callsign lookups)"
         description={settings?.accounts?.hamqth ? `Login: ${settings.accounts.hamqth.login}` : 'No account'}
-        left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />}
+        leftIcon={'web'}
         onPress={() => setCurrentDialog('accountsHamQTH')}
       />
       {currentDialog === 'accountsHamQTH' && (
@@ -39,7 +35,7 @@ export function HamQTHAccountSetting ({ settings, styles }) {
           onDialogDone={() => setCurrentDialog('')}
         />
       )}
-    </React.Fragment>
+    </>
   )
 }
 
@@ -108,18 +104,18 @@ function AccountsHamQTHDialog ({ visible, settings, styles, onDialogDone }) {
   }, [originalValues, dispatch, onDialogDone])
 
   return (
-    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <Dialog.Title style={{ textAlign: 'center' }}>HamQTH Account</Dialog.Title>
-      <Dialog.Content>
-        <Text variant="bodyMedium">Please enter the details for your HamQTH account:</Text>
-        <CallsignInput
+    <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>HamQTH Account</H2kDialogTitle>
+      <H2kDialogContent>
+        <H2kText variant="bodyMedium">Please enter the details for your HamQTH account:</H2kText>
+        <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={login}
           label="Callsign"
           placeholder="your account callsign"
           onChangeText={onChangeLogin}
         />
-        <ThemedTextInput
+        <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={password}
           label="Password"
@@ -132,14 +128,14 @@ function AccountsHamQTHDialog ({ visible, settings, styles, onDialogDone }) {
           onChangeText={onChangePassword}
         />
         <View style={{ marginTop: styles.oneSpace, flexDirection: 'row' }}>
-          {!testResult && <Button onPress={handleTest}>{'Check Credentials'}</Button>}
-          {testResult && <Ham2kMarkdown style={{ flex: 1, marginTop: styles.oneSpace * 0.6 }}>{testResult}</Ham2kMarkdown>}
+          {!testResult && <H2kButton onPress={handleTest}>{'Check Credentials'}</H2kButton>}
+          {testResult && <H2kMarkdown style={{ flex: 1, marginTop: styles.oneSpace * 0.6 }}>{testResult}</H2kMarkdown>}
         </View>
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={handleCancel}>Cancel</Button>
-        <Button onPress={handleAccept}>Ok</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions>
+        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
+        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

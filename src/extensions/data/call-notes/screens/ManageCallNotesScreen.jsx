@@ -1,29 +1,24 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Dialog, List, Switch } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import UUID from 'react-native-uuid'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { BUILT_IN_NOTES, CallNotesData, Info, createDataFileDefinition } from '../CallNotesExtension'
 import { loadDataFile } from '../../../../store/dataFiles/actions/dataFileFS'
 import { registerDataFile, unRegisterDataFile } from '../../../../store/dataFiles'
 import { selectExtensionSettings, setExtensionSettings } from '../../../../store/settings'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import ScreenContainer from '../../../../screens/components/ScreenContainer'
-import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
-import { Ham2kListItem } from '../../../../screens/components/Ham2kListItem'
-import { Ham2kListSection } from '../../../../screens/components/Ham2kListSection'
-import { Ham2kDialog } from '../../../../screens/components/Ham2kDialog'
-import { Ham2kMarkdown } from '../../../../screens/components/Ham2kMarkdown'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../../ui'
+
+import { BUILT_IN_NOTES, CallNotesData, Info, createDataFileDefinition } from '../CallNotesExtension'
 
 const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDialogDone }) => {
   const def = useMemo(() => extSettings.customFiles.find(f => f.identifier === identifier), [extSettings.customFiles, identifier])
@@ -76,16 +71,16 @@ const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDia
   }, [originalLocation, def, onDialogDone, identifier, dispatch])
 
   return (
-    <Ham2kDialog visible={true} onDismiss={onDialogDone}>
-      <Dialog.Title style={{ textAlign: 'center' }}>Callsign Notes File</Dialog.Title>
-      <Dialog.Content>
-        <ThemedTextInput
+    <H2kDialog visible={true} onDismiss={onDialogDone}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>Callsign Notes File</H2kDialogTitle>
+      <H2kDialogContent>
+        <H2kTextInput
           label="Name"
           value={def.name ?? ''}
           placeholder={'Name for your Callsign Notes File'}
           onChangeText={(value) => updateDef({ name: value }) }
         />
-        <ThemedTextInput
+        <H2kTextInput
           label="Location"
           value={def.location ?? ''}
           inputMode={'url'}
@@ -93,12 +88,12 @@ const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDia
           placeholder={'https://example.com/dir/notes.txt'}
           onChangeText={(value) => updateDef({ location: value }) }
         />
-      </Dialog.Content>
-      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
-        <Button onPress={handleDelete}>Delete</Button>
-        <Button onPress={handleDone}>Done</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions style={{ justifyContent: 'space-between' }}>
+        <H2kButton onPress={handleDelete}>Delete</H2kButton>
+        <H2kButton onPress={handleDone}>Done</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }
 
@@ -133,36 +128,38 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
-          <Ham2kListSection title={'Builtin'}>
+          <H2kListSection title={'Builtin'}>
             {BUILT_IN_NOTES.map(def => (
-              <Ham2kListItem
+              <H2kListItem
                 key={def.name}
                 title={def.name}
                 description={def.description}
-                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-account-outline" />}
-                right={() => <Switch value={extSettings?.enabledNotes?.[def.identifier] !== false} onValueChange={(value) => handleToggle(def.identifier, value) } />}
+                leftIcon={'file-account-outline'}
+                rightSwitchValue={extSettings?.enabledNotes?.[def.identifier] !== false}
+                rightSwitchOnValueChange={(value) => handleToggle(def.identifier, value)}
               />
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
 
-          <Ham2kListSection title="Custom">
+          <H2kListSection title="Custom">
             {customFiles.map((def, i) => (
-              <Ham2kListItem key={i}
+              <H2kListItem key={i}
                 title={def.name}
                 description={def.location}
-                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-account-outline" />}
-                right={() => <Switch value={extSettings?.enabledNotes?.[def.identifier] !== false} onValueChange={(value) => handleToggle(def.identifier, value) } />}
+                leftIcon={'file-account-outline'}
+                rightSwitchValue={extSettings?.enabledNotes?.[def.identifier] !== false}
+                rightSwitchOnValueChange={(value) => handleToggle(def.identifier, value)}
                 onPress={() => setSelectedFile(def.identifier)}
               />
             ))}
 
-            <Ham2kListItem
+            <H2kListItem
               title={'Add a new file'}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="plus" />}
+              leftIcon={'plus'}
               onPress={handleNewFile}
             />
 
-          </Ham2kListSection>
+          </H2kListSection>
           {selectedFile !== undefined && (
             <FileDefinitionDialog
               identifier={selectedFile}
@@ -172,8 +169,8 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
               onDialogDone={() => setSelectedFile(undefined)}
             />
           )}
-          <Ham2kListSection title={'About Callsign Notes'}>
-            <Ham2kMarkdown style={{ marginHorizontal: styles.oneSpace * 2 }}>
+          <H2kListSection title={'About Callsign Notes'}>
+            <H2kMarkdown style={{ marginHorizontal: styles.oneSpace * 2 }}>
               {`
 Callsign notes are stored on simple text files, one call per line followed by information you want shown in the logging screen. You can use the builtin files or add your own.
 
@@ -203,8 +200,8 @@ If the entry starts with an emoji, it will be used instead of the default ⭐.
 Entries can be used for "callsign expansion" if you first type \`..\` or \`//\` in the callsign field, such as \`//DAN\` in the example above.
 
           `}
-            </Ham2kMarkdown>
-          </Ham2kListSection>
+            </H2kMarkdown>
+          </H2kListSection>
         </ScrollView>
       </SafeAreaView>
     </ScreenContainer>

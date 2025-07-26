@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,18 +7,16 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Searchbar } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
 import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
-import { ListRow } from '../../../screens/components/ListComponents'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
 import { Info } from './BCAInfo'
 import { bcaFindAllByLocation, bcaFindAllByName, bcaFindOneByReference } from './BCADataFile'
 import { BCAListItem } from './BCAListItem'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
 export function BCAActivityOptions (props) {
   const NEARBY_DEGREES = 0.25
@@ -142,7 +140,7 @@ export function BCAActivityOptions (props) {
 
   return (
     <>
-      <Ham2kListSection title={title}>
+      <H2kListSection title={title}>
         {refDatas.map((refData, index) => (
           <BCAListItem
             key={refData.ref}
@@ -156,17 +154,17 @@ export function BCAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </Ham2kListSection>
+      </H2kListSection>
 
-      <ListRow>
-        <Searchbar
+      <H2kListRow>
+        <H2kSearchBar
           placeholder={'Castles by name or reference…'}
           value={search}
           onChangeText={setSearch}
         />
-      </ListRow>
+      </H2kListRow>
 
-      <Ham2kListSection title={resultsMessage}>
+      <H2kListSection title={resultsMessage}>
         {results.map((result) => (
           <BCAListItem
             key={result.ref}
@@ -180,7 +178,7 @@ export function BCAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </Ham2kListSection>
+      </H2kListSection>
     </>
   )
 }

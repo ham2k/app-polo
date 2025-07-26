@@ -1,29 +1,26 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  * Copyright ©️ 2024-2025 Steven Hiscocks <steven@hiscocks.me.uk>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, List, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
+
 import { setAccountInfo } from '../../../store/settings'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import CallsignInput from '../../../screens/components/CallsignInput'
-import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
-import { Ham2kDialog } from '../../../screens/components/Ham2kDialog'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kTextInput } from '../../../ui'
+import H2kCallsignInput from '../../../ui/react-native/H2kCallsignInput'
 
 export function ZLOTAAccountSetting ({ settings, styles }) {
   const [currentDialog, setCurrentDialog] = useState()
   return (
-    <React.Fragment>
-      <Ham2kListItem
+    <>
+      <H2kListItem
         title="ZLOTA (ZLOTA spotting)"
         description={settings?.accounts?.zlota?.userId ? `Callsign: ${settings.accounts.zlota.userId}` : 'No account'}
-        left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />}
+        leftIcon={'web'}
         onPress={() => setCurrentDialog('accountsZLOTA')}
       />
       {currentDialog === 'accountsZLOTA' && (
@@ -34,7 +31,7 @@ export function ZLOTAAccountSetting ({ settings, styles }) {
           onDialogDone={() => setCurrentDialog('')}
         />
       )}
-    </React.Fragment>
+    </>
   )
 }
 
@@ -76,18 +73,18 @@ function AccountsZLOTADialog ({ visible, settings, styles, onDialogDone }) {
   }, [settings, onDialogDone])
 
   return (
-    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <Dialog.Title style={{ textAlign: 'center' }}>ZLOTA Account</Dialog.Title>
-      <Dialog.Content>
-        <Text variant="bodyMedium">Please enter the details for your ZLOTA account:</Text>
-        <CallsignInput
+    <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>ZLOTA Account</H2kDialogTitle>
+      <H2kDialogContent>
+        <H2kText variant="bodyMedium">Please enter the details for your ZLOTA account:</H2kText>
+        <H2kCallsignInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={userId}
           label="Callsign"
           placeholder="your account callsign"
           onChangeText={onChangeUserId}
         />
-        <ThemedTextInput
+        <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={pin}
           label="PIN (not password)"
@@ -99,11 +96,11 @@ function AccountsZLOTADialog ({ visible, settings, styles, onDialogDone }) {
           placeholder="your PIN"
           onChangeText={onChangePin}
         />
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={handleCancel}>Cancel</Button>
-        <Button onPress={handleAccept}>Ok</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions>
+        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
+        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

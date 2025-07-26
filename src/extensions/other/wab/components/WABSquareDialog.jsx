@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,12 +7,12 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Dialog, Text, TouchableRipple } from 'react-native-paper'
+import { TouchableRipple } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
 import { selectOperationCallInfo, setOperationData } from '../../../../store/operations'
-import ThemedTextInput from '../../../../screens/components/ThemedTextInput'
-import { Ham2kDialog } from '../../../../screens/components/Ham2kDialog'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kText, H2kTextInput } from '../../../../ui'
+
 import { locationToWABSquare } from '../WABLocation'
 
 const VALID_WAB_REGEX = /^(W[AV][0-9]{2}|[BCDFGHJLMNOQRSTVWX][0-9]{2}|[HJNOST][A-HJ-Z][0-9]{2}|)$/
@@ -96,11 +96,11 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
   }, [])
 
   return (
-    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <Dialog.Title style={{ textAlign: 'center' }}>{'Worked All ' + (callInfo?.entityPrefix?.[0] === 'G' ? 'Britain' : 'Ireland') + ' Square'}</Dialog.Title>
-      <Dialog.Content>
-        <Text variant="bodyMedium">Enter Square</Text>
-        <ThemedTextInput
+    <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{'Worked All ' + (callInfo?.entityPrefix?.[0] === 'G' ? 'Britain' : 'Ireland') + ' Square'}</H2kDialogTitle>
+      <H2kDialogContent>
+        <H2kText variant="bodyMedium">Enter Square</H2kText>
+        <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={square}
           label="Square"
@@ -110,17 +110,17 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
         />
         {wabSquare && (
           <TouchableRipple onPress={() => setSquareValue(wabSquare)} style={{ marginTop: styles.oneSpace }}>
-            <Text variant="bodyMedium" style={{ marginTop: styles.oneSpace, marginBottom: styles.oneSpace }}>
-              <Text>Current Square: </Text>
-              <Text style={{ color: styles.colors.primary, fontWeight: 'bold' }}>{wabSquare}</Text>
-            </Text>
+            <H2kText variant="bodyMedium" style={{ marginTop: styles.oneSpace, marginBottom: styles.oneSpace }}>
+              <H2kText>Current Square: </H2kText>
+              <H2kText style={{ color: styles.colors.primary, fontWeight: 'bold' }}>{wabSquare}</H2kText>
+            </H2kText>
           </TouchableRipple>
         )}
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={handleCancel}>Cancel</Button>
-        <Button onPress={handleAccept} disabled={!isValid}>Ok</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions>
+        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
+        <H2kButton onPress={handleAccept} disabled={!isValid}>Ok</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

@@ -6,14 +6,13 @@
  */
 
 import React, { useMemo } from 'react'
-import { List } from 'react-native-paper'
 import emojiRegex from 'emoji-regex'
 
 import { registerDataFile, unRegisterDataFile } from '../../../store/dataFiles'
 import { fetchAndProcessURL, loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { selectExtensionSettings } from '../../../store/settings'
 import ManageCallNotesScreen from './screens/ManageCallNotesScreen'
-import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
+import { H2kListItem } from '../../../ui'
 
 const EMOJI_REGEX = emojiRegex()
 
@@ -70,12 +69,11 @@ const Extension = {
         key: 'call-notes-settings',
         category: 'data',
         SettingItem: ({ navigation, styles }) => (
-          <Ham2kListItem
+          <H2kListItem
             title="Callsign Notes"
             description={''}
             onPress={() => navigation.navigate('ExtensionScreen', { key: 'call-notes-settings' })}
-            // eslint-disable-next-line react/no-unstable-nested-components
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-account-outline" />}
+            leftIcon={'file-account-outline'}
           />
         )
       }

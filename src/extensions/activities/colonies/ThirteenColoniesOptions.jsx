@@ -6,13 +6,10 @@
  */
 
 import React, { useMemo } from 'react'
-import { View } from 'react-native'
 
-import { Ham2kMarkdown } from '../../../screens/components/Ham2kMarkdown'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
-import { ListRow } from '../../../screens/components/ListComponents'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
+import { H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 import { findRef } from '../../../tools/refTools'
+
 import { Info } from './ThirteenColoniesExtension'
 
 export function ThirteenColoniesOptions ({ styles, operation }) {
@@ -28,9 +25,9 @@ export function ThirteenColoniesOptions ({ styles, operation }) {
 
   return (
     <>
-      <Ham2kListSection title={'Settings'}>
-        <ListRow>
-          <ThemedTextInput
+      <H2kListSection title={'Settings'}>
+        <H2kListRow>
+          <H2kTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={'Year'}
@@ -40,29 +37,29 @@ export function ThirteenColoniesOptions ({ styles, operation }) {
             disabled={true}
             value={ref?.year || '2025'}
           />
-        </ListRow>
-      </Ham2kListSection>
+        </H2kListRow>
+      </H2kListSection>
       {isInTestMode && (
-        <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, marginBottom: styles.oneSpace, flexDirection: 'column' }}>
-          <Ham2kMarkdown style={{ color: 'red' }}>{`
+        <H2kListRow style={{ marginTop: styles.oneSpace * 2, marginBottom: styles.oneSpace }}>
+          <H2kMarkdown style={{ color: 'red' }}>{`
 Since the event for this year has not started yet, you can test your operation with QSOs from the last seven days.
-            `}</Ham2kMarkdown>
-        </View>
+            `}</H2kMarkdown>
+        </H2kListRow>
       )}
-      <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, marginBottom: styles.oneSpace, flexDirection: 'column' }}>
-        <Ham2kMarkdown>{`
+      <H2kListRow style={{ marginTop: styles.oneSpace * 2, marginBottom: styles.oneSpace }}>
+        <H2kMarkdown>{`
 NOTE: PoLo will report your results using all QSOs in the date range, including any other operations present on this device.
-            `}</Ham2kMarkdown>
-      </View>
+            `}</H2kMarkdown>
+      </H2kListRow>
 
-      <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, marginBottom: styles.oneSpace, flexDirection: 'column' }}>
-        <Ham2kMarkdown>{`
+      <H2kListRow style={{ marginTop: styles.oneSpace * 2, marginBottom: styles.oneSpace }}>
+        <H2kMarkdown>{`
 The 13 Colonies Special Event runs every year from 9am ET July 1st to midnight ET July 7th.
 
 More info at [http://www.13colonies.us/](http://www.13colonies.us/)
 
-            `}</Ham2kMarkdown>
-      </View>
+            `}</H2kMarkdown>
+      </H2kListRow>
     </>
   )
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  * Copyright ©️ 2025 Steven Hiscocks <steven@hiscocks.me.uk>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
@@ -9,7 +9,7 @@
 import React, { useCallback } from 'react'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
+import { H2kTextInput } from '../../../ui'
 
 const ADD_PREFIX_REGEX = /(?<=^|,)([BHILPV])/gi
 const ADD_DASHES_REGEX = /\bZL([BHILPV]\/[A-Z]+)([0-9]+)$/gi
@@ -34,7 +34,7 @@ export default function ZLOTAInput (props) {
   }, [])
 
   return (
-    <ThemedTextInput
+    <H2kTextInput
       {...props}
       keyboard="dumb"
       uppercase={true}

@@ -9,15 +9,11 @@ import { useDispatch } from 'react-redux'
 import { findRef, replaceRef } from '../../../tools/refTools'
 
 import { setOperationData } from '../../../store/operations'
-import { ListRow } from '../../../screens/components/ListComponents'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-
-import { Info } from './QSOPartiesInfo'
-import { qpData, qpIsInState, qpNameForLocation, qpNormalizeLocation, QSO_PARTY_DATA } from './QSOPartiesExtension'
-import ThemedDropDown from '../../../screens/components/ThemedDropDown'
-import { Ham2kMarkdown } from '../../../screens/components/Ham2kMarkdown'
+import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 import { fmtDateTimeNice, fmtTimeBetween, prepareTimeValue } from '../../../tools/timeFormats'
+
+import { qpData, qpIsInState, qpNameForLocation, qpNormalizeLocation, QSO_PARTY_DATA } from './QSOPartiesExtension'
+import { Info } from './QSOPartiesInfo'
 
 export function ActivityOptions (props) {
   const { styles, operation } = props
@@ -70,9 +66,9 @@ export function ActivityOptions (props) {
 
   return (
     <>
-      <Ham2kListSection title={'Which QSO Party?'}>
-        <ListRow style={{ maxWidth: styles.oneSpace * 80 }}>
-          <ThemedDropDown
+      <H2kListSection title={'Which QSO Party?'}>
+        <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
+          <H2kDropDown
             // label="Which QSO Party?"
             value={ref?.ref}
             placeholder="Select a QSO Party"
@@ -81,14 +77,14 @@ export function ActivityOptions (props) {
             style={{ width: styles.oneSpace * (styles.size === 'xs' ? 13 : 15) }}
             options={partyOptions}
           />
-        </ListRow>
-      </Ham2kListSection>
+        </H2kListRow>
+      </H2kListSection>
 
       {qp && (
         <>
-          <Ham2kListSection title={'Your Exchange'}>
-            <ListRow>
-              <ThemedTextInput
+          <H2kListSection title={'Your Exchange'}>
+            <H2kListRow>
+              <H2kTextInput
                 label="Location"
                 value={ref?.location || ''}
                 uppercase={true}
@@ -96,20 +92,20 @@ export function ActivityOptions (props) {
               />
               {ref?.location?.length > 1 && (
                 qpNormalizeLocation({ location: ref.location, qp }) ? (
-                  <Ham2kMarkdown style={{ padding: styles.oneSpace }}>
+                  <H2kMarkdown style={{ padding: styles.oneSpace }}>
                     {qpIsInState({ location: ref.location, qp }) ? 'In-state: ' : 'Out-of-state: ' }{qpNameForLocation({ location: ref.location, qp })}
-                  </Ham2kMarkdown>
+                  </H2kMarkdown>
                 ) : (
-                  <Ham2kMarkdown style={{ padding: styles.oneSpace, color: 'red' }}>
+                  <H2kMarkdown style={{ padding: styles.oneSpace, color: 'red' }}>
                     Not found!
-                  </Ham2kMarkdown>
+                  </H2kMarkdown>
                 )
               )}
-            </ListRow>
-          </Ham2kListSection>
-          <Ham2kListSection title={'Entry Information'}>
-            <ListRow>
-              <ThemedTextInput
+            </H2kListRow>
+          </H2kListSection>
+          <H2kListSection title={'Entry Information'}>
+            <H2kListRow>
+              <H2kTextInput
                 label="E-Mail"
                 autoComplete="email"
                 inputMode="email"
@@ -118,11 +114,11 @@ export function ActivityOptions (props) {
                 value={ref?.email || ''}
                 onChangeText={handleEmailChange}
               />
-            </ListRow>
-          </Ham2kListSection>
-          <Ham2kListSection title={'Information'}>
-            <ListRow>
-              <Ham2kMarkdown style={{ marginHorizontal: styles.oneSpace }} styles={{ markdown: { paragraph: { marginBottom: styles.oneSpace } } }}>{`
+            </H2kListRow>
+          </H2kListSection>
+          <H2kListSection title={'Information'}>
+            <H2kListRow>
+              <H2kMarkdown style={{ marginHorizontal: styles.oneSpace }} styles={{ markdown: { paragraph: { marginBottom: styles.oneSpace } } }}>{`
 **Official Site:**
 [${qp.url}](${qp.url})
 
@@ -143,9 +139,9 @@ ${qp.lastUpdated ? `**Last Updated:** ${qp.lastUpdated}` : ''}
 
 ${qp.status ? `**Status:** ${qp.status}` : ''}
 `}
-              </Ham2kMarkdown>
-            </ListRow>
-          </Ham2kListSection>
+              </H2kMarkdown>
+            </H2kListRow>
+          </H2kListSection>
         </>
       )}
     </>

@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -10,12 +10,8 @@ import { useDispatch } from 'react-redux'
 
 import { setOperationData } from '../../../store/operations'
 import { findRef, replaceRef } from '../../../tools/refTools'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import { ListRow } from '../../../screens/components/ListComponents'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 import { Info } from './WFDExtension'
-import { View } from 'react-native'
-import { Ham2kMarkdown } from '../../../screens/components/Ham2kMarkdown'
+import { H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 export function WFDActivityOptions (props) {
   const { styles, operation } = props
@@ -32,9 +28,9 @@ export function WFDActivityOptions (props) {
   }, [dispatch, operation, ref])
 
   return (
-    <Ham2kListSection title={'Exchange Information'}>
-      <ListRow>
-        <ThemedTextInput
+    <H2kListSection title={'Exchange Information'}>
+      <H2kListRow>
+        <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
           textStyle={styles.text.callsign}
           label={'Class'}
@@ -44,9 +40,9 @@ export function WFDActivityOptions (props) {
           value={ref?.class || ''}
           onChangeText={(text) => handleChange({ class: text })}
         />
-      </ListRow>
-      <ListRow>
-        <ThemedTextInput
+      </H2kListRow>
+      <H2kListRow>
+        <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
           textStyle={styles.text.callsign}
           label={'Location'}
@@ -56,9 +52,9 @@ export function WFDActivityOptions (props) {
           value={ref?.location || ''}
           onChangeText={(text) => handleChange({ location: text })}
         />
-      </ListRow>
-      <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
-        <Ham2kMarkdown>{`
+      </H2kListRow>
+      <H2kListRow style={{ marginTop: styles.oneSpace * 4 }}>
+        <H2kMarkdown>{`
 Class for Winter Field Day is, for example \`2M\`:
 
 - \`1\`, \`2\`, \`3\`... for the number of transmitters.
@@ -70,8 +66,8 @@ Class for Winter Field Day is, for example \`2M\`:
 Location is the ARRL Section, RAC Section, \`MX\` for Mexico, or \`DX\` for anywhere else.
 
 More info in the **[official rules](https://www.winterfieldday.com/sop.php)**.
-          `}</Ham2kMarkdown>
-      </View>
-    </Ham2kListSection>
+          `}</H2kMarkdown>
+      </H2kListRow>
+    </H2kListSection>
   )
 }

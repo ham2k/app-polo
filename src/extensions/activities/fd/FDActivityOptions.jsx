@@ -6,17 +6,13 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import { setOperationData } from '../../../store/operations'
 import { findRef, replaceRef } from '../../../tools/refTools'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import { ListRow } from '../../../screens/components/ListComponents'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
-import { Ham2kMarkdown } from '../../../screens/components/Ham2kMarkdown'
+import { H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput, H2kDropDown } from '../../../ui'
+
 import { Info } from './FDExtension'
-import ThemedDropDown from '../../../screens/components/ThemedDropDown'
 
 export function FDActivityOptions (props) {
   const { styles, operation } = props
@@ -44,9 +40,9 @@ export function FDActivityOptions (props) {
 
   return (
     <>
-      <Ham2kListSection title={'Exchange Information'}>
-        <ListRow>
-          <ThemedTextInput
+      <H2kListSection title={'Exchange Information'}>
+        <H2kListRow>
+          <H2kTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={'Class'}
@@ -56,9 +52,9 @@ export function FDActivityOptions (props) {
             value={ref?.class || ''}
             onChangeText={(text) => handleChange({ class: text })}
           />
-        </ListRow>
-        <ListRow>
-          <ThemedTextInput
+        </H2kListRow>
+        <H2kListRow>
+          <H2kTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={'Location'}
@@ -68,9 +64,9 @@ export function FDActivityOptions (props) {
             value={ref?.location || ''}
             onChangeText={(text) => handleChange({ location: text })}
           />
-        </ListRow>
-        <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
-          <Ham2kMarkdown>{`
+        </H2kListRow>
+        <H2kListRow style={{ marginTop: styles.oneSpace * 4 }}>
+          <H2kMarkdown>{`
   Class for ARRL Field Day is, for example \`2A\`:
 
   - \`1\`, \`2\`, \`3\`... for the number of transmitters.
@@ -84,12 +80,12 @@ export function FDActivityOptions (props) {
   Location is the ARRL Section, RAC Section, \`MX\` for Mexico, or \`DX\` for anywhere else.
 
   More info in the **[official rules](https://www.arrl.org/field-day-rules)**.
-            `}</Ham2kMarkdown>
-        </View>
-      </Ham2kListSection>
-      <Ham2kListSection title={'Additional Information'}>
-        <ListRow style={{ maxWidth: styles.oneSpace * 80 }}>
-          <ThemedDropDown
+            `}</H2kMarkdown>
+        </H2kListRow>
+      </H2kListSection>
+      <H2kListSection title={'Additional Information'}>
+        <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
+          <H2kDropDown
             label="Highest Transmitter Power"
             value={ref?.transmitterPower}
             placeholder="100W"
@@ -101,9 +97,9 @@ export function FDActivityOptions (props) {
             ]}
           />
 
-        </ListRow>
-        <ListRow style={{ maxWidth: styles.oneSpace * 80 }}>
-          <ThemedDropDown
+        </H2kListRow>
+        <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
+          <H2kDropDown
             label="Power Source"
             value={ref?.powerSource}
             placeholder="Select a power source"
@@ -113,8 +109,8 @@ export function FDActivityOptions (props) {
               { label: 'Commercial Power, Generator', value: 'GENERATOR' }
             ]}
           />
-        </ListRow>
-      </Ham2kListSection>
+        </H2kListRow>
+      </H2kListSection>
     </>
   )
 }
