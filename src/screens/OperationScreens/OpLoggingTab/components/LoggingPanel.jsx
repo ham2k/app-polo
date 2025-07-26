@@ -37,6 +37,7 @@ import { useNavigation } from '@react-navigation/native'
 import { findHooks } from '../../../../extensions/registry'
 import { trackEvent } from '../../../../distro'
 import { expandRSTValues } from '../../../components/RSTInput'
+import { parseStackedCalls } from '../../../../tools/callsignTools'
 
 const DEBUG = false
 
@@ -710,43 +711,4 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   })
 
   return clone
-}
-
-export function parseStackedCalls (input) {
-  // Stacked calls are separated by `//`
-  // The last part of the stack that is a valid call is extracted as `call`
-  // along with any other comma-separated calls that were part of that stack part, as `allCalls`.
-  // The rest of the stack is returned as a string in`callStack`.
-
-  input = (input || '').trim()
-  const parts = input.split('//').filter(x => x)
-
-  let call = null
-  let allCalls = null
-  const stack = []
-  let i = parts.length - 1
-  while (i >= 0) {
-    if (call) {
-      // if we already have a call, everything else goes to the stack
-      stack.unshift(parts[i])
-    } else {
-      // Otherwise we look to see if the current part is a valid call
-
-      // But first, we look for multiple calls and pick the last
-      allCalls = parts[i].split(',').filter(x => x)
-      call = allCalls[allCalls?.length - 1]
-
-      const parsedCall = parseCallsign(call)
-
-      // if not valid, add it to the stack and keep trying with the next part
-      if (!parsedCall.baseCall && !(call?.indexOf('?') >= 0)) {
-        call = null
-        allCalls = null
-        stack.unshift(parts[i])
-      }
-    }
-    i--
-  }
-
-  return { call: call || '', allCalls: allCalls || [], callStack: stack.join('//') }
 }
