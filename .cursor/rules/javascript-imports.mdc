@@ -1,6 +1,6 @@
 ---
 description: JS Imports
-globs: 
+globs:
 alwaysApply: false
 ---
  # Import Sorting Convention
@@ -39,10 +39,15 @@ actions:
           ```javascript
           // First: Core imports from src root
           import GLOBAL from '../../../GLOBAL'
-          
+
           // Then: Feature/component imports
           import { logRemotely } from '../../../distro'
           import { selectSettings } from '../../../store/settings'
+          ```
+
+      5. Internal imports from the same directory
+          ```javascript
+          import { Info } from './Info'
           ```
 
 metadata:
