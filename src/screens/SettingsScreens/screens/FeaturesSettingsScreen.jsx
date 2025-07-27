@@ -139,8 +139,7 @@ const POPULAR_EXTENSIONS = [
   'pota',
   'wwff',
   'sota',
-  'fd',
-  'colonies',
+  'naqp',
   'qp'
 ]
 

@@ -41,6 +41,7 @@ import SpotDiscordExtension from './data/spot-discord/SpotDiscordExtension'
 import QSOPartiesExtension from './contests/qp/QSOPartiesExtension'
 import SimpleContestExtension from './contests/simple-contest/SimpleContestExtension'
 import GAPOTAExtension from './contests/gapota/GAPOTAExtension'
+import NAQPExtension from './contests/naqp/NAQPExtension'
 
 import RadioCommands from './commands/RadioCommands'
 import TimeCommands from './commands/TimeCommands'
@@ -83,6 +84,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(QSOPartiesExtension)
   registerExtension(SimpleContestExtension)
   registerExtension(GAPOTAExtension)
+  registerExtension(NAQPExtension)
   registerExtension(RadioCommands)
   registerExtension(TimeCommands)
   registerExtension(DebuggingCommands)
