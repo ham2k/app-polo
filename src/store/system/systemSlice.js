@@ -78,13 +78,13 @@ export const selectSystemFlag = createSelector(
 )
 
 export const selectNotices = createSelector(
-  (state) => state?.system?.notices ?? [],
-  (notices) => notices
+  (state) => state?.system,
+  (system) => system.notices ?? []
 )
 
 export const selectDismissedNotices = createSelector(
-  (state) => state?.system?.dismissedNotices ?? {},
-  (dismissedNotices) => dismissedNotices
+  (state) => state?.system,
+  (system) => system.dismissedNotices ?? {}
 )
 
 export const selectFeatureFlag = createSelector(
@@ -93,6 +93,9 @@ export const selectFeatureFlag = createSelector(
   (featureFlags, flag) => featureFlags[flag]
 )
 
-export const selectFeatureFlags = (state) => state?.system?.featureFlags || {}
+export const selectFeatureFlags = createSelector(
+  (state) => state?.system,
+  (system) => system.featureFlags ?? {}
+)
 
 export default systemSlice.reducer
