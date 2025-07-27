@@ -6,7 +6,6 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { useHeaderHeight } from '@react-navigation/elements'
 
 import { Keyboard } from 'react-native'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
@@ -27,7 +26,6 @@ function prepareStyles (baseStyles) {
 }
 
 export default function ScreenContainer ({ children }) {
-  const headerHeight = useHeaderHeight()
   const styles = useThemedStyles(prepareStyles)
 
   const [keyboardVisible, setKeyboardVisible] = useState()

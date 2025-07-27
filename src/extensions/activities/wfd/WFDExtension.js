@@ -8,6 +8,7 @@
 import React from 'react'
 
 import { superModeForMode } from '@ham2k/lib-operation-data'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { findRef, replaceRef } from '../../../tools/refTools'
 import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui'
