@@ -27,7 +27,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
 
   const dispatch = useDispatch()
   const navigation = useNavigation()
-  const notices = useNotices({ dispatch })
+  const notices = useNotices({ dispatch, includeTransient: true })
 
   const [currentNotice, setCurrentNotice] = useState(notices[0])
   const [visible, setVisible] = useState(false)

@@ -77,9 +77,15 @@ export const selectSystemFlag = createSelector(
   (flags, flag, defaultValue) => flags[flag] ?? defaultValue
 )
 
-export const selectNotices = (state) => state?.system?.notices ?? []
+export const selectNotices = createSelector(
+  (state) => state?.system?.notices ?? [],
+  (notices) => notices
+)
 
-export const selectDismissedNotices = (state) => state?.system?.dismissedNotices ?? {}
+export const selectDismissedNotices = createSelector(
+  (state) => state?.system?.dismissedNotices ?? {},
+  (dismissedNotices) => dismissedNotices
+)
 
 export const selectFeatureFlag = createSelector(
   (state, flag) => state?.system?.featureFlags || {},
