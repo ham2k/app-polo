@@ -6,7 +6,8 @@
       "Experimental support for WaveLog (by K0UWU)",
       "Performance improvements (by NA7DO)",
       "Allow WWBOTA across borders",
-      "Fix 'unknown park' for new POTA references"
+      "Fix 'unknown park' for new POTA references",
+      "Add Canadian Historical Sites on the Air (by M1SDH)"
     ]
   },
   "25.7.3": {
