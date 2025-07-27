@@ -85,7 +85,7 @@ export function H2kListItem ({
   const rightElement = useMemo(() => {
     if (right) {
       return right
-    } else if (rightSwitchValue) {
+    } else if (rightSwitchOnValueChange || rightSwitchValue) {
       return () => <Switch value={rightSwitchValue} onValueChange={rightSwitchOnValueChange} />
     } else if (rightIcon) {
       if (onPressRight) {
