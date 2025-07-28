@@ -13,7 +13,7 @@ import GLOBAL from '../../GLOBAL'
 
 import { findHooks } from '../../extensions/registry'
 import { logRemotely } from '../../distro'
-import { markOperationsAsSynced, mergeSyncOperations, queryOperations } from '../operations'
+import { markOperationsAsSynced, mergeSyncOperations, queryOperations, resetSyncedStatus } from '../operations'
 import { markQSOsAsSynced, mergeSyncQSOs, queryQSOs } from '../qsos'
 import { selectFiveSecondsTick, startTickTock } from '../time'
 import { selectLocalData, setLocalData } from '../local'
@@ -37,25 +37,25 @@ let errorCount = 0
 
 export async function sendQSOsToSyncService ({ dispatch }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
-    await sendOneBatchOfUpdatesToSyncService({ dispatch, batchSize: SMALL_BATCH_SIZE })
+    await doOneRoundOfSyncing({ dispatch, batchSize: SMALL_BATCH_SIZE })
   })
 }
 
 export async function sendOperationsToSyncService ({ dispatch }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
-    await sendOneBatchOfUpdatesToSyncService({ dispatch, batchSize: SMALL_BATCH_SIZE })
+    await doOneRoundOfSyncing({ dispatch, batchSize: SMALL_BATCH_SIZE })
   })
 }
 
-async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch, batchSize = 0 }) {
+async function doOneRoundOfSyncing ({ qsos, operations, dispatch, batchSize = 0 }) {
   let inboundSync = false
   dispatch((_dispatch, getState) => {
     inboundSync = selectFeatureFlag(getState(), 'inboundSync') || false
   })
 
-  if (VERBOSE > 0) console.log('sendOneBatchOfUpdatesToSyncService')
+  if (VERBOSE > 0) console.log('doOneRoundOfSyncing')
   _takeOverSyncLoop()
-  logRemotely({ message: 'sendOneBatchOfUpdatesToSyncService', global: GLOBAL.syncEnabled, qsos: qsos?.length, operations: operations?.length, batchSize })
+  logRemotely({ message: 'doOneRoundOfSyncing', global: GLOBAL.syncEnabled, qsos: qsos?.length, operations: operations?.length, batchSize })
   if (!GLOBAL.syncEnabled) return
 
   if (!batchSize) {
@@ -70,15 +70,15 @@ async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch,
     const localData = dispatch((_dispatch, getState) => selectLocalData(getState()))
 
     const syncHook = findHooks('sync')[0] // only one sync source
-    logRemotely({ message: 'sendOneBatchOfUpdatesToSyncService - hook', hook: syncHook?.key, batchSize })
+    logRemotely({ message: 'doOneRoundOfSyncing - hook', hook: syncHook?.key, batchSize })
     if (!syncHook) return
 
     if (VERBOSE > 1) console.log(' -- syncing', { hook: syncHook.key, batchSize })
 
-    let syncParams = {}
+    let syncParams
 
     // If no qsos are specified, look for a batch of unsynced qsos
-    qsos = qsos || await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT ?', [batchSize])
+    qsos = qsos || await queryQSOs('WHERE synced IS false ORDER BY startOnMillis DESC LIMIT ?', [batchSize])
     if (qsos.length > 0) {
       const opIds = qsos.map(q => `"${q.operation}"`).join(',')
       // Ensure the operations referenced by the `qsos` are also included in the batch
@@ -88,6 +88,20 @@ async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch,
       // If not qsos are selected then look for a batch of unsynced operations
       operations = operations || await queryOperations('WHERE synced IS false LIMIT ?', [batchSize])
       syncParams = { operations }
+    }
+
+    if (GLOBAL.syncVerbose || GLOBAL.syncVerboseNextRound) {
+      const qsoCount = await queryQSOs('SELECT COUNT(*) as count FROM qsos', [])
+      const unsyncedQSOCount = await queryQSOs('SELECT COUNT(*) as count FROM qsos WHERE synced IS false', [])
+      const operationCount = await queryOperations('SELECT COUNT(*) as count FROM operations', [])
+      const unsyncedOperationCount = await queryOperations('SELECT COUNT(*) as count FROM operations WHERE synced IS false', [])
+      syncParams.meta = {
+        qsoCount: qsoCount[0].count,
+        unsyncedQSOCount: unsyncedQSOCount[0].count,
+        operationCount: operationCount[0].count,
+        unsyncedOperationCount: unsyncedOperationCount[0].count
+      }
+      GLOBAL.syncVerboseNextRound = false
     }
 
     // Remove local data from the syncParams
@@ -133,6 +147,9 @@ async function sendOneBatchOfUpdatesToSyncService ({ qsos, operations, dispatch,
       if (VERBOSE > 1) logTimer('sync', 'sync', { reset: true })
       const response = await dispatch(syncHook.sync(syncParams))
       if (VERBOSE > 2) console.log(' -- response', { ok: response.ok, operations: response?.json?.operations?.length, qsos: response?.json?.qsos?.length, meta: response?.json?.meta })
+
+      await _processResponseMeta({ json: response.json, dispatch })
+
       if (response.ok) {
         if (VERBOSE > 1) logTimer('sync', 'Response parsed')
         if (VERBOSE > 1) console.log(' -- synced ok')
@@ -251,7 +268,7 @@ function _scheduleNextSyncLoop ({ dispatch, delay = 0 }, loop) {
   if (!nextSyncLoopInterval || nextSyncLoopInterval === true) {
     if (VERBOSE > 1) console.log(' -- scheduling next loop', delay)
     logRemotely({ message: 'scheduling next loop', delay })
-    nextSyncLoopInterval = setTimeout(() => sendOneBatchOfUpdatesToSyncService({ dispatch }), delay)
+    nextSyncLoopInterval = setTimeout(() => doOneRoundOfSyncing({ dispatch }), delay)
   }
 }
 
@@ -289,4 +306,40 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
       }
     })
   }, [appState, dispatch, online, tick])
+}
+
+async function _processResponseMeta ({ json, dispatch }) {
+  try {
+    if (json?.meta?.resetSyncedStatus || json?.meta?.reset_synced_status) {
+      dispatch(resetSyncedStatus())
+    }
+
+    if (json?.meta?.syncVerbose || json?.meta?.sync_verbose) {
+      GLOBAL.syncVerbose = true
+    }
+
+    if (json?.meta?.syncVerboseNextRound || json?.meta?.sync_verbose_next_round) {
+      GLOBAL.syncVerboseNextRound = true
+    }
+
+    if (json?.meta?.suggestedSyncBatchSize || json?.meta?.suggested_sync_batch_size) {
+      GLOBAL.syncBatchSize = Number.parseInt(json.meta.suggestedSyncBatchSize || json.meta.suggested_sync_batch_size, 10)
+      if (GLOBAL.syncBatchSize < 1) GLOBAL.syncBatchSize = undefined
+      if (isNaN(GLOBAL.syncBatchSize)) GLOBAL.syncBatchSize = undefined
+    }
+
+    if (json?.meta?.suggestedSyncLoopDelay || json?.meta?.suggested_sync_loop_delay) {
+      GLOBAL.syncLoopDelay = Number.parseInt(json.meta.suggestedSyncLoopDelay || json.meta.suggested_sync_loop_delay, 10) * 1000
+      if (GLOBAL.syncLoopDelay < 1) GLOBAL.syncLoopDelay = undefined
+      if (isNaN(GLOBAL.syncLoopDelay)) GLOBAL.syncLoopDelay = undefined
+    }
+
+    if (json?.meta?.suggestedSyncCheckPeriod || json?.meta?.suggested_sync_check_period) {
+      GLOBAL.syncCheckPeriod = Number.parseInt(json.meta.suggestedSyncCheckPeriod || json.meta.suggested_sync_check_period, 10) * 1000
+      if (GLOBAL.syncCheckPeriod < 1) GLOBAL.syncCheckPeriod = undefined
+      if (isNaN(GLOBAL.syncCheckPeriod)) GLOBAL.syncCheckPeriod = undefined
+    }
+  } catch (e) {
+    console.log('Error parsing sync meta', e, json)
+  }
 }

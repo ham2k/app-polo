@@ -11,6 +11,7 @@ import { logRemotely } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
 import { selectSettings } from '../../../store/settings'
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
+import { Platform } from 'react-native'
 
 export const Info = {
   key: 'ham2k-lofi',
@@ -98,7 +99,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
         const response = await fetch(`${server}/v1/client`, {
           method: 'POST',
           headers: {
-            'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
+            'User-Agent': _buildUserAgent(),
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -122,7 +123,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
         } catch (e) {
           json = {}
         }
-        processResponseMeta({ json, account, response, dispatch })
+        _processResponseMeta({ json, account, response, dispatch })
 
         if (response.status === 200) {
           if (DEBUG) console.log('-- auth ok', json)
@@ -160,7 +161,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
         json = {}
       }
 
-      processResponseMeta({ json, account, response, dispatch })
+      _processResponseMeta({ json, account, response, dispatch })
 
       if (response.status === 401) {
         if (DEBUG) console.log(' -- auth failed')
@@ -181,30 +182,22 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
   return { ok: false, status: 401, json: {} }
 }
 
-function processResponseMeta ({ json, account, response, dispatch }) {
+function _processResponseMeta ({ json, account, response, dispatch }) {
   try {
     if (json?.account && (!account || Object.keys(json.account).find(k => account[k] !== json.account[k]))) {
       dispatch(setLocalExtensionData({ key: Info.key, account: json.account }))
     }
-
-    if (json?.meta?.suggestedSyncBatchSize || json?.meta?.suggested_sync_batch_size) {
-      GLOBAL.syncBatchSize = Number.parseInt(json.meta.suggestedSyncBatchSize || json.meta.suggested_sync_batch_size, 10)
-      if (GLOBAL.syncBatchSize < 1) GLOBAL.syncBatchSize = undefined
-      if (isNaN(GLOBAL.syncBatchSize)) GLOBAL.syncBatchSize = undefined
-    }
-
-    if (json?.meta?.suggestedSyncLoopDelay || json?.meta?.suggested_sync_loop_delay) {
-      GLOBAL.syncLoopDelay = Number.parseInt(json.meta.suggestedSyncLoopDelay || json.meta.suggested_sync_loop_delay, 10) * 1000
-      if (GLOBAL.syncLoopDelay < 1) GLOBAL.syncLoopDelay = undefined
-      if (isNaN(GLOBAL.syncLoopDelay)) GLOBAL.syncLoopDelay = undefined
-    }
-
-    if (json?.meta?.suggestedSyncCheckPeriod || json?.meta?.suggested_sync_check_period) {
-      GLOBAL.syncCheckPeriod = Number.parseInt(json.meta.suggestedSyncCheckPeriod || json.meta.suggested_sync_check_period, 10) * 1000
-      if (GLOBAL.syncCheckPeriod < 1) GLOBAL.syncCheckPeriod = undefined
-      if (isNaN(GLOBAL.syncCheckPeriod)) GLOBAL.syncCheckPeriod = undefined
-    }
   } catch (e) {
-    console.log('Error parsing sync meta', e, json)
+    console.log('Error parsing ham2k-lofi sync meta', e, json)
+  }
+}
+
+function _buildUserAgent () {
+  if (Platform.OS === 'ios') {
+    return `Ham2K Portable Logger/${packageJson.version} iOS ${Platform.Version} ${[Platform.isIphone && 'iPhone', Platform.isIPad && 'iPad', Platform.isTV && 'TV', Platform.isMacCatalyst && 'Catalyst', Platform.isMac && 'Mac'].filter(Boolean).join(' ')}`
+  } else if (Platform.OS === 'android') {
+    return `Ham2K Portable Logger/${packageJson.version} Android ${Platform.Version} ${Platform.Manufacturer} ${Platform.Model} ${Platform.Fingerprint} `
+  } else {
+    return `Ham2K Portable Logger/${packageJson.version} ${Platform.OS}`
   }
 }
