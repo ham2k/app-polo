@@ -1,6 +1,6 @@
 {
-  "25.8.0-pre1": {
-    "name": "August '25 (pre 1)",
+  "25.8.0-pre3": {
+    "name": "August '25 (pre 3)",
     "photoCaption": "W2UD with N2PTA at US-6462 for FD",
     "changes": [
       "North American QSO Party (NAQP)",
@@ -8,7 +8,7 @@
       "Performance improvements (by NA7DO)",
       "Allow WWBOTA across borders",
       "Fix 'unknown park' for new POTA references",
-      "Add SiOTA spots support via ParksnPeaks (by M1SDH)"
+      "Add SiOTA spots support via ParksnPeaks (by M1SDH)",
       "Add Canadian Historical Sites on the Air (by M1SDH)"
     ]
   },
