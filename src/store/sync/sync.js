@@ -16,7 +16,7 @@ import { logRemotely } from '../../distro'
 import { markOperationsAsSynced, mergeSyncOperations, queryOperations, resetSyncedStatus } from '../operations'
 import { markQSOsAsSynced, mergeSyncQSOs, queryQSOs } from '../qsos'
 import { selectFiveSecondsTick, startTickTock } from '../time'
-import { selectLocalData, setLocalData } from '../local'
+import { selectLocalData, selectLocalExtensionData, setLocalData, setLocalExtensionData } from '../local'
 import { logTimer } from '../../tools/perfTools'
 import { selectFeatureFlag } from '../system'
 
@@ -288,6 +288,15 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
       GLOBAL.settingsSynced = false
     }
   }, [settings, lastSettings, appState])
+
+  // Phase out dev.lofi.ham2k.net
+  const { server } = useSelector(state => selectLocalExtensionData('ham2k-lofi'))
+  useEffect(() => {
+    if (server === 'https://dev.lofi.ham2k.net') {
+      dispatch(setLocalExtensionData({ key: 'ham2k-lofi', server: 'https://lofi.ham2k.net' }))
+      dispatch(resetSyncedStatus())
+    }
+  }, [server, dispatch])
 
   const tick = useSelector(selectFiveSecondsTick)
   useEffect(() => {

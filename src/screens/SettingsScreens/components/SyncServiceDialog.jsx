@@ -15,7 +15,7 @@ import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitl
 
 const SERVERS = {
   prod: 'https://lofi.ham2k.net',
-  dev: 'https://dev.lofi.ham2k.net',
+  // dev: 'https://dev.lofi.ham2k.net',
   local: 'http://localhost:3000'
 }
 const OPTION_FOR_SERVER = Object.keys(SERVERS).reduce((acc, key) => {

@@ -29,7 +29,7 @@ import GLOBAL from '../../../GLOBAL'
 import { DEFAULT_LOFI_SERVER } from '../../../extensions/data/ham2k-lofi-sync/Ham2KLoFiSyncExtension'
 
 const LOFI_SERVER_LABELS = {
-  'https://dev.lofi.ham2k.net': 'Ham2K LoFi (Development)',
+  // 'https://dev.lofi.ham2k.net': 'Ham2K LoFi (Development)',
   'https://lofi.ham2k.net': 'Ham2K LoFi (Official)'
 }
 
