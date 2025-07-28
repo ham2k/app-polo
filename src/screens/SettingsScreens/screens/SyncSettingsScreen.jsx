@@ -125,7 +125,12 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
               styles={styles}
               visible={true}
               syncHook={syncHook}
-              onDialogDone={() => setCurrentDialog('')}
+              onDialogDone={() => {
+                setCurrentDialog('')
+                setImmediate(async () => {
+                  setSyncStatus(await syncCountDescription())
+                })
+              }}
             />
           )}
 

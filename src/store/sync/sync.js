@@ -78,7 +78,7 @@ async function doOneRoundOfSyncing ({ qsos, operations, dispatch, batchSize = 0 
     let syncParams
 
     // If no qsos are specified, look for a batch of unsynced qsos
-    qsos = qsos || await queryQSOs('WHERE synced IS false ORDER BY startOnMillis DESC LIMIT ?', [batchSize])
+    qsos = qsos || await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT ?', [batchSize])
     if (qsos.length > 0) {
       const opIds = qsos.map(q => `"${q.operation}"`).join(',')
       // Ensure the operations referenced by the `qsos` are also included in the batch
@@ -91,8 +91,8 @@ async function doOneRoundOfSyncing ({ qsos, operations, dispatch, batchSize = 0 
     }
 
     if (GLOBAL.syncVerbose || GLOBAL.syncVerboseNextRound) {
-      const qsoCount = await queryQSOs('SELECT COUNT(*) as count FROM qsos', [])
-      const unsyncedQSOCount = await queryQSOs('SELECT COUNT(*) as count FROM qsos WHERE synced IS false', [])
+      const qsoCount = await queryQSOs('SELECT COUNT(*) as count AND operation != "historical" FROM qsos', [])
+      const unsyncedQSOCount = await queryQSOs('SELECT COUNT(*) as count AND operation != "historical" FROM qsos WHERE synced IS false', [])
       const operationCount = await queryOperations('SELECT COUNT(*) as count FROM operations', [])
       const unsyncedOperationCount = await queryOperations('SELECT COUNT(*) as count FROM operations WHERE synced IS false', [])
       syncParams.meta = {
@@ -290,13 +290,13 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
   }, [settings, lastSettings, appState])
 
   // Phase out dev.lofi.ham2k.net
-  const { server } = useSelector(state => selectLocalExtensionData('ham2k-lofi'))
+  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
   useEffect(() => {
-    if (server === 'https://dev.lofi.ham2k.net') {
+    if (lofiData?.server === 'https://dev.lofi.ham2k.net') {
       dispatch(setLocalExtensionData({ key: 'ham2k-lofi', server: 'https://lofi.ham2k.net' }))
-      dispatch(resetSyncedStatus())
+      resetSyncedStatus()
     }
-  }, [server, dispatch])
+  }, [lofiData?.server, dispatch])
 
   const tick = useSelector(selectFiveSecondsTick)
   useEffect(() => {
@@ -320,7 +320,7 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
 async function _processResponseMeta ({ json, dispatch }) {
   try {
     if (json?.meta?.resetSyncedStatus || json?.meta?.reset_synced_status) {
-      dispatch(resetSyncedStatus())
+      await resetSyncedStatus()
     }
 
     if (json?.meta?.syncVerbose || json?.meta?.sync_verbose) {
