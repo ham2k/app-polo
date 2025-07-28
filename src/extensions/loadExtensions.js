@@ -28,6 +28,7 @@ import SiOTAExtentsion from './activities/siota/SiOTAExtension'
 import PGAExtentsion from './activities/pga/PGAExtension'
 import ThirteenColoniesExtension from './activities/colonies/ThirteenColoniesExtension'
 import ZLOTAExtension from './activities/zlota/ZLOTAExtension'
+import HSOTAExtension from './activities/hsota/HSOTAExtension'
 
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 import CallHistoryExtension from './data/call-history/CallHistoryExtension'
@@ -77,6 +78,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(PGAExtentsion)
   registerExtension(ThirteenColoniesExtension)
   registerExtension(ZLOTAExtension)
+  registerExtension(HSOTAExtension)
 
   registerExtension(QSOPartiesExtension)
   registerExtension(SimpleContestExtension)
