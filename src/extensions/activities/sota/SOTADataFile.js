@@ -36,7 +36,7 @@ export function registerSOTADataFile () {
       const dataRows = []
 
       // Since we're streaming, we cannot know how many references there are beforehand, so we need to take a guess
-      const expectedSumits = 166000
+      const expectedSumits = 169000
 
       // Since the work is split in two phases, and their speeds are different,
       // we need to adjust the expected steps based on a ratio.
