@@ -1,8 +1,9 @@
 {
-  "25.8.0-pre3": {
-    "name": "August '25 (pre 3)",
+  "25.8.0": {
+    "name": "August '25",
     "photoCaption": "W2UD with N2PTA at US-6462 for FD",
     "changes": [
+      "Fixed crashes on 32-bit Android devices",
       "North American QSO Party (NAQP)",
       "Experimental support for WaveLog (by K0UWU)",
       "Performance improvements (by NA7DO)",
