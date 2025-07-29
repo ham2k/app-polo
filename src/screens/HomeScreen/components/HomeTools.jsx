@@ -203,7 +203,7 @@ export default function HomeTools ({ settings, styles, style }) {
           />
         </View>
 
-        <Notices />
+        <Notices paddingForSafeArea={false} />
 
         {isKeyboardVisible && settings.showNumbersRow && (
           <NumberKeys settings={settings} themeColor={'primary'} onNumberKeyPressed={handleNumberKey} enabled={!!isFocused} />

@@ -11,9 +11,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
-import { KeyboardProvider } from 'react-native-keyboard-controller'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import DeviceInfo from 'react-native-device-info'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { KeyboardProvider } from 'react-native-keyboard-controller'
 
 import 'react-native-gesture-handler' // This must be included in the top component file
 
@@ -24,12 +25,15 @@ import { usePrepareThemes } from './styles/tools/usePrepareThemes'
 import { persistor, store } from './store'
 import { selectSettings } from './store/settings'
 import { useSyncLoop } from './store/sync'
+import { selectLocalExtensionData } from './store/local'
+import { selectRuntimeOnline } from './store/runtime'
+import { selectFeatureFlags } from './store/system'
+import { useThemedStyles } from './styles/tools/useThemedStyles'
 
 import { AppWrappedForDistribution, trackNavigation, useConfigForDistribution, onNavigationReadyForDistribution } from './distro'
 
 import RootErrorBoundary from './screens/components/RootErrorBoundary'
 import HeaderBar from './screens/components/HeaderBar'
-
 import StartScreen from './screens/StartScreen/StartScreen'
 import HomeScreen from './screens/HomeScreen/HomeScreen'
 import OperationScreen from './screens/OperationScreens/OperationScreen'
@@ -45,11 +49,6 @@ import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
 import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
 import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/OperationLocationScreen'
-import { selectLocalExtensionData } from './store/local'
-import { selectRuntimeOnline } from './store/runtime'
-import { selectFeatureFlags } from './store/system'
-import { useThemedStyles } from './styles/tools/useThemedStyles'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 const Stack = createNativeStackNavigator()
 

@@ -23,7 +23,7 @@ import { H2kDialog, H2kDialogTitle, H2kIcon, H2kMarkdown } from '../../../ui'
 
 export default function Notices ({ paddingForSafeArea = false }) {
   const safeArea = useSafeAreaInsets()
-  const styles = useThemedStyles(prepareStyles)
+  const styles = useThemedStyles(prepareStyles, paddingForSafeArea, safeArea)
 
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -87,25 +87,22 @@ export default function Notices ({ paddingForSafeArea = false }) {
   if (!currentNotice && !dialogText) return null
 
   return (
-    <>
-      <Animated.View
-        style={[styles.root, animatedStyle, { marginBottom: paddingForSafeArea ? safeArea.bottom : 0 }]}
-      >
-        {notices[1] && (
-          <OneNotice style={styles.noticeContainerStacked} notice={{}} styles={styles} handleAction={handleAction} handleDismiss={handleDismiss} />
-        )}
+    <Animated.View
+      style={[styles.root, animatedStyle]}
+    >
+      {notices[1] && (
+        <OneNotice style={styles.noticeContainerStacked} notice={{}} styles={styles} handleAction={handleAction} handleDismiss={handleDismiss} />
+      )}
 
-        {currentNotice && (
-          <OneNotice
-            notice={currentNotice}
-            styles={styles}
-            handleAction={handleAction}
-            handleDismiss={handleDismiss}
-            onLayout={handleLayout}
-          />
-        )}
-
-      </Animated.View>
+      {currentNotice && (
+        <OneNotice
+          notice={currentNotice}
+          styles={styles}
+          handleAction={handleAction}
+          handleDismiss={handleDismiss}
+          onLayout={handleLayout}
+        />
+      )}
 
       {dialogText && (
         <>
@@ -131,7 +128,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
           </H2kDialog>
         </>
       )}
-    </>
+    </Animated.View>
   )
 }
 
@@ -243,6 +240,7 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
     </Surface>
   )
 }
+
 async function performAction ({ notice, action, dispatch, navigation, setDialogText, setDialogTitle }) {
   if (typeof action !== 'object') return
 
@@ -294,7 +292,7 @@ function prepareStyles (baseStyles, paddingForSafeArea, safeArea) {
       alignItems: 'stretch',
       margin: baseStyles.oneSpace,
       marginTop: baseStyles.oneSpace * 2,
-      paddingBottom: paddingForSafeArea ? safeArea.bottom : 0
+      marginBottom: paddingForSafeArea ? safeArea.bottom + baseStyles.oneSpace * 2 : baseStyles.oneSpace * 2
     },
     noticeContainer: {
       padding: baseStyles.oneSpace * 2,
