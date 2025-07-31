@@ -38,5 +38,7 @@ describe('parseFreqInMHz', () => {
     expect(parseFreqInMHz('7125,500')).toEqual(7125.500)
     expect(parseFreqInMHz('7.125.500')).toEqual(7125.500)
     expect(parseFreqInMHz('146.520.500')).toEqual(146520.500)
+    expect(parseFreqInMHz('14652')).toEqual(146520)
+    expect(parseFreqInMHz('146520')).toEqual(146520)
   })
 })

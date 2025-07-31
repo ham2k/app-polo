@@ -44,7 +44,17 @@ export function parseFreqInMHz (freq) {
 
     let numericFreq = parseFloat(freq)
     if (numericFreq < 1000) {
+      // General case: 14.000 -> 14,000
       numericFreq *= 1000
+    } else if (numericFreq >= 14400 && numericFreq < 14800) {
+      // 14652 -> 146,520
+      numericFreq *= 10
+    } else if (numericFreq >= 22200 && numericFreq < 22500) {
+      // 22252 -> 222,520
+      numericFreq *= 10
+    } else if (numericFreq >= 42000 && numericFreq < 45000) {
+      // 43520 -> 435,200
+      numericFreq *= 10
     }
     return numericFreq
   } else {
