@@ -35,6 +35,7 @@ export default function OpInfoTab ({ navigation, route }) {
     <GestureHandlerRootView
       style={{
         flexDirection: 'column',
+        flex: 1,
         justifyContent: 'space-between',
         alignItems: 'stretch',
         paddingRight: safeAreaInsets.right,

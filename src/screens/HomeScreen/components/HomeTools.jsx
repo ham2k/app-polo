@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 
 import { NumberKeys } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/NumberKeys'
 import { useUIState } from '../../../store/ui/useUIState'
+import { useKeyboardVisible } from '../../components/useKeyboardVisible'
 
 import CallLookup from './CallLookup'
 import { trackEvent } from '../../../distro'
@@ -61,43 +62,7 @@ export default function HomeTools ({ settings, styles, style }) {
     navigation.navigate('CallInfo', { call })
   }, [navigation])
 
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
-  const [keyboardExtraStyles, setKeyboardExtraStyles] = useState({})
-  useEffect(() => {
-    if (Keyboard.isVisible()) {
-      const metrics = Keyboard.metrics()
-      if (metrics.height > 100) {
-        setIsKeyboardVisible(true)
-        setKeyboardExtraStyles({})
-      } else {
-        setIsKeyboardVisible(false)
-        setKeyboardExtraStyles({ paddingBottom: metrics.height - 10 })
-      }
-    }
-
-    const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
-      const metrics = Keyboard.metrics()
-      if (metrics.height > 100) {
-        // On iPads, when there's an external keyboard connected, the OS still shows a small
-        // button on the bottom right with some options
-        // This is considered "keyboard visible", which causes KeyboardAvoidingView to leave an ugly empty padding
-        setIsKeyboardVisible(true)
-        setKeyboardExtraStyles({})
-      } else {
-        setIsKeyboardVisible(false)
-        setKeyboardExtraStyles({})
-      }
-    })
-    const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-      setIsKeyboardVisible(false)
-      setKeyboardExtraStyles({})
-    })
-
-    return () => {
-      didShowSubscription.remove()
-      didHideSubscription.remove()
-    }
-  }, [])
+  const { isKeyboardVisible, keyboardExtraStyles } = useKeyboardVisible()
 
   const [currentSelection, setCurrentSelection] = useState({})
   const [isFocused, setIsFocused] = useState(false)
@@ -159,7 +124,7 @@ export default function HomeTools ({ settings, styles, style }) {
         style={{ flex: 0, flexDirection: 'column', width: '100%', backgroundColor: styles.colors.primary }}
       >
         <View
-          style={{ flexDirection: 'row', padding: styles.oneSpace, margin: 0, paddingBottom: styles.oneSpace, ...keyboardExtraStyles }}
+          style={{ flexDirection: 'row', margin: styles.oneSpace, ...keyboardExtraStyles }}
         >
           <Searchbar
             {...{

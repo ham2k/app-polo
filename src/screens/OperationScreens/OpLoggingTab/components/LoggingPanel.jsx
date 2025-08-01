@@ -7,12 +7,13 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { Keyboard, View } from 'react-native'
+import { View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
 import cloneDeep from 'clone-deep'
 import { useDispatch } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import UUID from 'react-native-uuid'
+import { useNavigation } from '@react-navigation/native'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -27,16 +28,17 @@ import { parseFreqInMHz } from '../../../../tools/frequencyFormats'
 import { logTimer } from '../../../../tools/perfTools'
 import { joinAnd } from '../../../../tools/joinAnd'
 import { checkAndDescribeCommands, checkAndProcessCommands } from '../../../../extensions/commands/commandHandling'
+import { useKeyboardVisible } from '../../../components/useKeyboardVisible'
+import { findHooks } from '../../../../extensions/registry'
+import { trackEvent } from '../../../../distro'
+import { expandRSTValues, parseStackedCalls } from '../../../../tools/callsignTools'
+
 import { SecondaryExchangePanel } from './LoggingPanel/SecondaryExchangePanel'
 import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
-import { useNavigation } from '@react-navigation/native'
-import { findHooks } from '../../../../extensions/registry'
-import { trackEvent } from '../../../../distro'
-import { expandRSTValues, parseStackedCalls } from '../../../../tools/callsignTools'
 
 const DEBUG = false
 
@@ -391,43 +393,7 @@ export default function LoggingPanel ({
     focusedRef.current.onNumberKey && focusedRef.current.onNumberKey(number)
   }, [focusedRef])
 
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
-  const [keyboardExtraStyles, setKeyboardExtraStyles] = useState({})
-  useEffect(() => {
-    if (Keyboard.isVisible()) {
-      const metrics = Keyboard.metrics()
-      if (metrics.height > 100) {
-        setIsKeyboardVisible(true)
-        setKeyboardExtraStyles({})
-      } else {
-        setIsKeyboardVisible(false)
-        setKeyboardExtraStyles({ paddingBottom: metrics.height - 10 })
-      }
-    }
-
-    const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
-      const metrics = Keyboard.metrics()
-      if (metrics.height > 100) {
-        // On iPads, when there's an external keyboard connected, the OS still shows a small
-        // button on the bottom right with some options
-        // This is considered "keyboard visible", which causes KeyboardAvoidingView to leave an ugly empty padding
-        setIsKeyboardVisible(true)
-        setKeyboardExtraStyles({})
-      } else {
-        setIsKeyboardVisible(false)
-        setKeyboardExtraStyles({ paddingBottom: metrics.height - 10 })
-      }
-    })
-    const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-      setIsKeyboardVisible(false)
-      setKeyboardExtraStyles({})
-    })
-
-    return () => {
-      didShowSubscription.remove()
-      didHideSubscription.remove()
-    }
-  }, [])
+  const { isKeyboardVisible, keyboardExtraStyles } = useKeyboardVisible()
 
   const opMessage = useMemo(() => {
     if (operationError) return { text: operationError, icon: 'alert-circle', hideCallInfo: true }
@@ -596,7 +562,8 @@ function prepareStyles (themeStyles, themeColor) {
     root: {
       borderTopColor: themeStyles.theme.colors[`${themeColor}Light`],
       borderTopWidth: 1,
-      backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
+      backgroundColor: themeStyles.theme.colors[`${themeColor}Container`],
+      paddingBottom: themeStyles.oneSpace
     },
     input: {
       backgroundColor: themeStyles.theme.colors.background,
