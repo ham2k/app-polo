@@ -10,7 +10,7 @@ import React, { useCallback } from 'react'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { H2kTextInput } from '../../../ui'
 
-const NO_PREFIX_REGEX = /(?:^|,)(\d\d+|TEST)/gi
+const NO_PREFIX_REGEX = /(?:^|, )(\d\d+|TEST)/gi
 const ADD_DASHES_REGEX = /([A-Z]+)(\d+|TEST)/gi
 const ADD_COMMAS_REGEX = /(\w+)-(\d+)[\s,]$/gi
 const DELETE_TRAILING_PREFIX_REGEX = /(\w+)-(\d+)[, ]+(\w+)$/gi

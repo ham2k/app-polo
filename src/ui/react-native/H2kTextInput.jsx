@@ -45,22 +45,25 @@ export function H2kTextInput (props) {
 
   const [extraSpace, setExtraSpace] = useState(false)
 
-  const stringValue = useMemo(() => {
-    if (extraSpace) return `${value} `
-    else if (typeof value === 'string') return value
-    else return `${value}`
-  }, [value, extraSpace])
+  let stringValue
+  if (extraSpace) stringValue = `${value} `
+  else if (typeof value === 'string') stringValue = value
+  else stringValue = `${value}`
+
+  // We need to keep a "global" value reference because on Android, the value is not updated immediately
+  // when the user types, so we need to keep track of previous onChange values
+  const lastChangeRef = useRef()
 
   const trackSelection = useMemo(() => !!focusedRef, [focusedRef])
 
   const [isFocused, setIsFocused] = useState(false)
 
   useEffect(() => {
-    if (DEBUG && fieldId === 'theirCall') console.log('useEffect end of string', { stringValue, sel: selectionRef?.current })
+    if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) useEffect end of string`, { stringValue, sel: selectionRef?.current })
     if (trackSelection && (selectionRef.current.start || 0) > stringValue.length) {
       selectionRef.current.start = stringValue.length
       selectionRef.current.end = stringValue.length
-      if (DEBUG && fieldId === 'theirCall') console.log('useEffect end of string set to', { stringValue, sel: selectionRef?.current })
+      if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) useEffect end of string set to`, { stringValue, sel: selectionRef?.current })
     }
   }, [trackSelection, stringValue, fieldId])
 
@@ -70,13 +73,20 @@ export function H2kTextInput (props) {
     if (text === undefined || text === null) return
 
     let spaceAdded = false
-    if (DEBUG) console.log('handleChange', { text })
-    if (multiline || text.length < stringValue.length) {
+
+    if (lastChangeRef.current === undefined) lastChangeRef.current = stringValue
+
+    if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange`, { text, stringValue, lastChange: lastChangeRef.current })
+    if (multiline || text.length < lastChangeRef.length) {
+      lastChangeRef.current = text
+      if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange multiline or deleting`)
       // We should not do any transformations:
       //  - on multiline inputs
       //  - or when deleting
     } else {
-      if (DEBUG) console.log('handleChange else', { text })
+      lastChangeRef.current = text
+
+      if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange else`, { text })
       // Lets check if what changed was the addition of a space
       if (noSpaces && (text !== stringValue) && (text.replace(SPACE_REGEX, '') === stringValue)) {
         spaceAdded = true
@@ -113,7 +123,7 @@ export function H2kTextInput (props) {
           text = text.replace(SPACE_REGEX, '')
         }
         if (periodToSlash) {
-          if (DEBUG) console.log('handleChange periodToSlash', { text })
+          if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange periodToSlash`, { text })
           text = text.replaceAll('.', '/')
         }
         if (numeric) {
@@ -129,9 +139,9 @@ export function H2kTextInput (props) {
         if (textTransformer) {
           text = textTransformer(text)
         }
-        if (DEBUG) console.log('handleChange after transformations', { text })
+        if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange after transformations`, { text })
         if (trackSelection && text.length !== stringValue.length) {
-          if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed?', { selectionRef: selectionRef.current, stringValue })
+          if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed?`, { selectionRef: selectionRef.current, stringValue })
           const selectionFromVirtualNumericKeys = event.selectionFromVirtualNumericKeys ?? {}
           const start = selectionFromVirtualNumericKeys.start ?? selectionRef.current.start ?? stringValue.length
           const end = selectionFromVirtualNumericKeys.end ?? selectionRef.current.end ?? stringValue.length
@@ -139,11 +149,11 @@ export function H2kTextInput (props) {
           // to a value that is not the one we want. So we have to delay our update in order to overwrite it.
           selectionRef.current.start = start + (text.length - stringValue.length)
           selectionRef.current.end = end + (text.length - stringValue.length)
-          if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed', { start, end, text, stringValue })
+          if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed`, { start, end, text, stringValue })
           setTimeout(() => {
             selectionRef.current.start = start + (text.length - stringValue.length)
             selectionRef.current.end = end + (text.length - stringValue.length)
-            if (DEBUG && fieldId === 'theirCall') console.log('handleChange length changed timeout', { start, end, text, stringValue })
+            if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed timeout`, { start, end, text, stringValue })
           }, 5)
         }
 
@@ -155,7 +165,7 @@ export function H2kTextInput (props) {
     changeEvent.objectId = objectId
     changeEvent.ref = actualInnerRef
     changeEvent.nativeEvent.text = text
-    if (DEBUG) console.log('handleChange final', { text })
+    if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange final`, { text })
     onChangeText && onChangeText(text)
     onChange && onChange(changeEvent)
   }, [
@@ -190,7 +200,7 @@ export function H2kTextInput (props) {
   const handleSelectionChange = useCallback((event) => {
     if (trackSelection) {
       const { nativeEvent: { selection: { start, end } } } = event
-      if (DEBUG && fieldId === 'theirCall') console.log('handleSelectionChange', { start, end })
+      if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleSelectionChange`, { start, end })
       selectionRef.current.start = start
       selectionRef.current.end = end
     }
@@ -256,7 +266,8 @@ export function H2kTextInput (props) {
       }
     }
 
-    if (uppercase) keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
+    // if (uppercase) keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
+    if (uppercase) keyboardOpts.autoCapitalize = 'characters'
 
     keyboardOpts.autoFocus = false
     keyboardOpts.importantForAutofill = 'no' // Android only
@@ -277,7 +288,7 @@ export function H2kTextInput (props) {
     return keyboardOpts
   }, [keyboard, themeStyles.isDarkMode, uppercase, multiline, settings.smartKeyboard])
 
-  if (DEBUG && fieldId === 'theirCall') console.log('renderInput', { stringValue, sel: selectionRef?.current, trackSelection })
+  if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) renderInput`, { stringValue, sel: selectionRef?.current, trackSelection })
   const renderInput = useCallback((props) => {
     return (
       <NativeTextInput

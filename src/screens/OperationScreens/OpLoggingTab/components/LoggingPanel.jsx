@@ -46,7 +46,6 @@ export default function LoggingPanel ({
   style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo, splitView
 }) {
   const navigation = useNavigation()
-
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   const [qso, setQSO, updateQSO] = useMemo(() => {
@@ -302,7 +301,6 @@ export default function LoggingPanel ({
 
         qso.their = qso.their || {}
         qso.their.sent = expandRSTValues(qso.their.sent, qso.mode)
-        console.log('LoggingPanel', qso.our.sent, qso.their.sent)
         let lastUUID
 
         const { call, allCalls, callStack } = parseStackedCalls(qso?.their?.call ?? '')

@@ -60,6 +60,7 @@ export function POTALoggingControl (props) {
       style={[style, { maxWidth: '95%', minWidth: styles.oneSpace * 30, width: Math.max(16, refsString?.length || 0) * styles.oneSpace * 1.3 }]}
       contentStyle={[]}
       value={innerValue}
+      fieldId="potaReference"
       label="Their POTA"
       defaultPrefix={defaultPrefix}
       onChangeText={handleChangeText}

@@ -30,7 +30,6 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   const vfo = useSelector(state => selectVFO(state))
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
   const dispatch = useDispatch()
-
   const styles = useThemedStyles()
 
   const settings = useSelector(selectSettings)
@@ -39,6 +38,21 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false))
 
   const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+
+  // console.log('OpLoggingTab render')
+  // useEffect(() => console.log('-- OpLoggingTab navigation', navigation), [navigation])
+  // useEffect(() => console.log('-- OpLoggingTab route', route), [route])
+  // useEffect(() => console.log('-- OpLoggingTab operation', operation), [operation])
+  // useEffect(() => console.log('-- OpLoggingTab vfo', vfo), [vfo])
+  // useEffect(() => console.log('-- OpLoggingTab ourInfo', ourInfo), [ourInfo])
+  // useEffect(() => console.log('-- OpLoggingTab dispatch', dispatch), [dispatch])
+  // useEffect(() => console.log('-- OpLoggingTab styles', styles), [styles])
+  // useEffect(() => console.log('-- OpLoggingTab settings', settings), [settings])
+  // useEffect(() => console.log('-- OpLoggingTab online', online), [online])
+  // useEffect(() => console.log('-- OpLoggingTab sections', sections), [sections])
+  // useEffect(() => console.log('-- OpLoggingTab qsos', qsos), [qsos])
+  // useEffect(() => console.log('-- OpLoggingTab activeQSOs', activeQSOs), [activeQSOs])
+  // useEffect(() => console.log('-- OpLoggingTab loggingState', loggingState), [loggingState])
 
   useEffect(() => { // Reset logging state when operation changes
     if (loggingState?.operationUUID !== operation?.uuid) {
@@ -90,6 +104,10 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
     navigation.navigate('OpInfo', { operation, uuid: operation.uuid })
   }, [navigation, operation])
 
+  const handleSelectQSO = useCallback((uuid) => {
+    setLoggingState({ ...loggingState, selectedUUID: uuid })
+  }, [loggingState, setLoggingState])
+
   return (
     <View style={flexOne}>
       <QSOList
@@ -101,6 +119,9 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
         operation={operation}
         ourInfo={ourInfo}
         onHeaderPress={showOpInfo}
+        lastUUID={loggingState?.lastUUID}
+        selectedUUID={loggingState?.selectedUUID}
+        onSelectQSO={handleSelectQSO}
       />
 
       <LoggingPanel

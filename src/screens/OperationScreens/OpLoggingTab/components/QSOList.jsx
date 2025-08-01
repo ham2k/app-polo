@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,17 +8,201 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { SectionList, View } from 'react-native'
 import { Text } from 'react-native-paper'
-import QSOItem from './QSOItem'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
+import getItemLayout from 'react-native-get-item-layout-section-list'
+
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
+import { findHooks } from '../../../../extensions/registry'
 import { useUIState } from '../../../../store/ui'
 import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
-import { findHooks } from '../../../../extensions/registry'
-import QSOHeader from './QSOHeader'
-import getItemLayout from 'react-native-get-item-layout-section-list'
 import { fmtShortTimeZulu, fmtTimeZulu } from '../../../../tools/timeFormats'
-import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-function prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeArea }) {
+import QSOItem from './QSOItem'
+import QSOHeader from './QSOHeader'
+
+
+const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress, lastUUID, selectedUUID, onSelectQSO }) {
+  const { width } = useSafeAreaFrame()
+  // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
+  const safeAreaInsets = useSafeAreaInsets()
+
+  const [componentWidth, setComponentWidth] = useState()
+  const handleLayout = useCallback((event) => {
+    setComponentWidth(event?.nativeEvent?.layout?.width)
+  }, [setComponentWidth])
+
+  const stylesArgs = useMemo(() => ({
+    isDeleted: false, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
+  }), [componentWidth, width, safeAreaInsets])
+  const deletedStylesArgs = useMemo(() => ({
+    isDeleted: true, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
+  }), [componentWidth, width, safeAreaInsets])
+  const otherOpStylesArgs = useMemo(() => ({
+    isDeleted: false, isOtherOperator: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
+  }), [componentWidth, width, safeAreaInsets])
+
+  const styles = useThemedStyles(_prepareStyles, stylesArgs)
+  const stylesForDeleted = useThemedStyles(_prepareStyles, deletedStylesArgs)
+  const stylesForOtherOperator = useThemedStyles(_prepareStyles, otherOpStylesArgs)
+
+  const listRef = useRef()
+
+  // console.log('QSOList render')
+  // useEffect(() => console.log('-- QSOList sections', sections), [sections])
+  // useEffect(() => console.log('-- QSOList lastUUID', lastUUID), [lastUUID])
+  // useEffect(() => console.log('-- QSOList selectedUUID', selectedUUID), [selectedUUID])
+  // useEffect(() => console.log('-- QSOList styles', styles), [styles])
+  // useEffect(() => console.log('-- QSOList stylesForDeleted', stylesForDeleted), [stylesForDeleted])
+  // useEffect(() => console.log('-- QSOList stylesForOtherOperator', stylesForOtherOperator), [stylesForOtherOperator])
+  // useEffect(() => console.log('-- QSOList listRef', listRef), [listRef])
+
+  // When the lastQSO changes, scroll to it
+  useEffect(() => {
+    setTimeout(() => {
+      if (!sections || !sections.length) return
+      let sectionIndex = sections.length - 1
+      let itemIndex = sections[sectionIndex].data.length - 1
+      if (lastUUID) {
+        sections.find((section, i) => {
+          return section.data.find((qso, j) => {
+            if (qso.uuid === lastUUID) {
+              sectionIndex = i
+              itemIndex = j
+              return true
+            }
+            return false
+          })
+        })
+      }
+
+      listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
+    }, 50)
+  }, [listRef, lastUUID, sections])
+
+  const refHandlers = useMemo(() => {
+    const types = {}
+    ;(operation?.refs || []).forEach((ref) => {
+      types[ref.type] = true
+    })
+    qsos.forEach((qso) => {
+      (qso.refs || []).forEach((ref) => {
+        types[ref.type] = true
+      })
+    })
+    let handlers = []
+    Object.keys(types).forEach(key => {
+      handlers = handlers.concat(findHooks(`ref:${key}`).filter(h => h.relevantInfoForQSOItem))
+    })
+    return handlers.filter(x => x)
+  }, [qsos, operation])
+
+  const handlePress = useCallback(({ qso }) => {
+    if (qso.uuid === selectedUUID) {
+      onSelectQSO(undefined)
+    } else {
+      onSelectQSO(qso.uuid)
+    }
+  }, [selectedUUID, onSelectQSO])
+
+  const timeFormatFunction = useMemo(() => {
+    if (styles.extendedWidth) {
+      return fmtTimeZulu
+    } else {
+      return fmtShortTimeZulu
+    }
+  }, [styles])
+
+  const renderRow = useCallback(({ item, index }) => {
+    const qso = item
+
+    let qsoStyles
+    if (qso.deleted) {
+      qsoStyles = stylesForDeleted
+    } else if (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.local?.operatorCall) {
+      qsoStyles = stylesForOtherOperator
+    } else {
+      qsoStyles = styles
+    }
+
+    return (
+      <QSOItem
+        qso={qso}
+        settings={settings}
+        selected={qso.uuid === selectedUUID}
+        ourInfo={ourInfo}
+        onPress={handlePress}
+        timeFormatFunction={timeFormatFunction}
+        styles={qsoStyles}
+        refHandlers={refHandlers}
+      />
+    )
+  }, [operation, settings, selectedUUID, ourInfo, handlePress, timeFormatFunction, refHandlers, stylesForDeleted, stylesForOtherOperator, styles])
+
+  const renderHeader = useCallback(({ section, index }) => {
+    return (
+      <QSOHeader
+        section={section}
+        operation={operation}
+        settings={settings}
+        styles={styles}
+        onHeaderPress={onHeaderPress}
+      />
+    )
+  }, [operation, settings, styles, onHeaderPress])
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- useCallback prefers to see an inline function
+  const calculateLayout = useCallback(
+    getItemLayout({
+      getItemHeight: styles.compactRow.height + styles.compactRow.borderBottomWidth,
+      getSectionHeaderHeight: styles.headerRow.height + styles.headerRow.borderBottomWidth
+    }),
+    [styles]
+  )
+
+  const extractKey = useCallback((item, index) => item.uuid, [])
+  const emptyComponent = useCallback(() => (
+    <ListEmptyComponent styles={styles} vfo={vfo} />
+  ), [styles, vfo])
+
+  return (
+    <SectionList
+      style={style}
+      ref={listRef}
+      onLayout={handleLayout}
+      sections={sections || []}
+      renderItem={renderRow}
+      renderSectionHeader={renderHeader}
+      getItemLayout={calculateLayout}
+      keyExtractor={extractKey}
+      ListEmptyComponent={emptyComponent}
+      keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
+      initialNumToRender={20}
+      windowSize={2}
+      maxToRenderPerBatch={30}
+      updateCellsBatchingPeriod={100}
+      stickySectionHeadersEnabled={true}
+      removeClippedSubviews={false} // Buggy on Android
+    />
+  )
+})
+
+const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo }) {
+  return (
+    <View style={{ flexDirection: 'column' }}>
+      <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
+        No QSOs yet!
+      </Text>
+      <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
+        Currently set to
+      </Text>
+      <Text style={{ flex: 1, marginTop: styles.oneSpace * 1, textAlign: 'center', fontWeight: 'bold' }}>
+        {[vfo.freq ? fmtFreqInMHz(vfo.freq) + ' MHz' : vfo.band, vfo.mode].filter(x => x).join(' • ')}
+      </Text>
+    </View>
+  )
+})
+
+function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeArea }) {
   const extendedWidth = width / themeStyles.oneSpace > 80
   const narrowWidth = width / themeStyles.oneSpace < 50
 
@@ -178,178 +362,5 @@ function prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeAr
   }
 }
 
-const QSOList = function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress }) {
-  const { width } = useSafeAreaFrame()
-  // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
-  const safeAreaInsets = useSafeAreaInsets()
-
-  const [componentWidth, setComponentWidth] = useState()
-  const handleLayout = useCallback((event) => {
-    setComponentWidth(event?.nativeEvent?.layout?.width)
-  }, [setComponentWidth])
-
-  const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
-
-  const stylesArgs = useMemo(() => ({
-    isDeleted: false, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
-  }), [componentWidth, width, safeAreaInsets])
-  const deletedStylesArgs = useMemo(() => ({
-    isDeleted: true, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
-  }), [componentWidth, width, safeAreaInsets])
-  const otherOpStylesArgs = useMemo(() => ({
-    isDeleted: false, isOtherOperator: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
-  }), [componentWidth, width, safeAreaInsets])
-
-  const styles = useThemedStyles(prepareStyles, stylesArgs)
-  const stylesForDeleted = useThemedStyles(prepareStyles, deletedStylesArgs)
-  const stylesForOtherOperator = useThemedStyles(prepareStyles, otherOpStylesArgs)
-
-  const listRef = useRef()
-
-  // When the lastQSO changes, scroll to it
-  useEffect(() => {
-    setTimeout(() => {
-      if (!sections || !sections.length) return
-      let sectionIndex = sections.length - 1
-      let itemIndex = sections[sectionIndex].data.length - 1
-      if (loggingState?.lastUUID) {
-        sections.find((section, i) => {
-          return section.data.find((qso, j) => {
-            if (qso.uuid === loggingState?.lastUUID) {
-              sectionIndex = i
-              itemIndex = j
-              return true
-            }
-            return false
-          })
-        })
-      }
-
-      listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
-    }, 50)
-  }, [listRef, loggingState?.lastUUID, sections])
-
-  const refHandlers = useMemo(() => {
-    const types = {}
-    ;(operation?.refs || []).forEach((ref) => {
-      types[ref.type] = true
-    })
-    qsos.forEach((qso) => {
-      (qso.refs || []).forEach((ref) => {
-        types[ref.type] = true
-      })
-    })
-    let handlers = []
-    Object.keys(types).forEach(key => {
-      handlers = handlers.concat(findHooks(`ref:${key}`).filter(h => h.relevantInfoForQSOItem))
-    })
-    return handlers.filter(x => x)
-  }, [qsos, operation])
-
-  const handlePress = useCallback(({ qso }) => {
-    if (qso.uuid === loggingState?.selectedUUID) {
-      updateLoggingState({ selectedUUID: undefined })
-    } else {
-      updateLoggingState({ selectedUUID: qso.uuid })
-    }
-  }, [loggingState?.selectedUUID, updateLoggingState])
-
-  const timeFormatFunction = useMemo(() => {
-    if (styles.extendedWidth) {
-      return fmtTimeZulu
-    } else {
-      return fmtShortTimeZulu
-    }
-  }, [styles])
-
-  const renderRow = useCallback(({ item, index }) => {
-    const qso = item
-
-    let qsoStyles
-    if (qso.deleted) {
-      qsoStyles = stylesForDeleted
-    } else if (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.local?.operatorCall) {
-      qsoStyles = stylesForOtherOperator
-    } else {
-      qsoStyles = styles
-    }
-
-    return (
-      <QSOItem
-        qso={qso}
-        settings={settings}
-        selected={qso.uuid === loggingState?.selectedUUID}
-        ourInfo={ourInfo}
-        onPress={handlePress}
-        timeFormatFunction={timeFormatFunction}
-        styles={qsoStyles}
-        refHandlers={refHandlers}
-      />
-    )
-  }, [operation, settings, loggingState?.selectedUUID, ourInfo, handlePress, timeFormatFunction, refHandlers, stylesForDeleted, stylesForOtherOperator, styles])
-
-  const renderHeader = useCallback(({ section, index }) => {
-    return (
-      <QSOHeader
-        section={section}
-        operation={operation}
-        settings={settings}
-        styles={styles}
-        onHeaderPress={onHeaderPress}
-      />
-    )
-  }, [operation, settings, styles, onHeaderPress])
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- useCallback prefers to see an inline function
-  const calculateLayout = useCallback(
-    getItemLayout({
-      getItemHeight: styles.compactRow.height + styles.compactRow.borderBottomWidth,
-      getSectionHeaderHeight: styles.headerRow.height + styles.headerRow.borderBottomWidth
-    }),
-    [styles]
-  )
-
-  const extractKey = useCallback((item, index) => item.uuid, [])
-  const emptyComponent = useCallback(() => (
-    <ListEmptyComponent styles={styles} vfo={vfo} />
-  ), [styles, vfo])
-
-  return (
-    <SectionList
-      style={style}
-      ref={listRef}
-      onLayout={handleLayout}
-      sections={sections || []}
-      renderItem={renderRow}
-      renderSectionHeader={renderHeader}
-      getItemLayout={calculateLayout}
-      keyExtractor={extractKey}
-      ListEmptyComponent={emptyComponent}
-      keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
-      initialNumToRender={20}
-      windowSize={2}
-      maxToRenderPerBatch={30}
-      updateCellsBatchingPeriod={100}
-      stickySectionHeadersEnabled={true}
-      removeClippedSubviews={false} // Buggy on Android
-    />
-  )
-}
-
-const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo }) {
-  return (
-    <View style={{ flexDirection: 'column' }}>
-      <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
-        No QSOs yet!
-      </Text>
-      <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
-        Currently set to
-      </Text>
-      <Text style={{ flex: 1, marginTop: styles.oneSpace * 1, textAlign: 'center', fontWeight: 'bold' }}>
-        {[vfo.freq ? fmtFreqInMHz(vfo.freq) + ' MHz' : vfo.band, vfo.mode].filter(x => x).join(' • ')}
-      </Text>
-    </View>
-  )
-})
-
 export default QSOList
+
