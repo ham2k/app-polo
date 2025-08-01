@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Animated, PanResponder, Platform, View } from 'react-native'
+import { Animated, PanResponder, View } from 'react-native'
 import { SafeAreaView, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import KeepAwake from '@sayem314/react-native-keep-awake'
@@ -199,9 +199,7 @@ export default function OperationScreen (props) {
                     tabBarLabelStyle: styles.screenTabBarLabel,
                     tabBarStyle: [styles.screenTabBar, { paddingRight: safeAreaInsets.right }],
                     tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryHighlight, height: styles.halfSpace * 1.5 },
-                    // See https://github.com/react-navigation/react-navigation/issues/11301
-                    // on iOS, if the keyboard is open, tabs get stuck when switching
-                    animationEnabled: Platform.OS !== 'ios',
+                    animationEnabled: true,
                     freezeOnBlur: true,
                     lazy: true
                   }}
@@ -267,9 +265,7 @@ export default function OperationScreen (props) {
                 tabBarLabelStyle: styles.screenTabBarLabel,
                 tabBarStyle: styles.screenTabBar,
                 tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryLighter, height: styles.halfSpace * 1.5 },
-                // See https://github.com/react-navigation/react-navigation/issues/11301
-                // on iOS, if the keyboard is open, tabs get stuck when switching
-                animationEnabled: Platform.OS !== 'ios',
+                animationEnabled: true,
                 freezeOnBlur: true,
                 lazy: true
               }}
