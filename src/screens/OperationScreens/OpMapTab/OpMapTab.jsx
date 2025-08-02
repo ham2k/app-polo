@@ -73,7 +73,7 @@ export default function OpMapTab ({ navigation, route }) {
     if (!qth.latitude) {
       _warnings.push({
         key: 'no-location',
-        text: 'No lines?\nYou need to set your location first.\n\nTap here to do that.',
+        text: 'No lines?\nYou need to set your location first.\n\nTap here to do it.',
         onPress: () => navigation.navigate('OperationLocation', { operation: operation.uuid }),
         style: {
           backgroundColor: 'red',

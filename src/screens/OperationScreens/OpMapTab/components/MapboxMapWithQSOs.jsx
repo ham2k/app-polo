@@ -22,7 +22,23 @@ Mapbox.setAccessToken(Config.MAPBOX_ACCESS_TOKEN)
 const DEFAULT_CENTER = [-42.16482008420197, 33.73113551794721]
 const DEFAULT_ZOOM = 2
 
+// Mapbox patches for React Native 0.77+ and Android compilation errors come from
+// https://github.com/rnmapbox/maps/issues/3753
+// TODO: Periodically check if the bug is fixed.
+
 export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion, operation, qth, qsos, settings, selectedUUID, projection }) {
+  // There's a bug in MapBox and iOS where the app crashes if markers are rendered right away.
+  // See https://github.com/rnmapbox/maps/issues/3886
+  //     https://github.com/rnmapbox/maps/issues/3891
+  // TODO: Periodically check if the bug is fixed.
+  let [mapHasLoaded, setMapHasLoaded] = useState(Platform.OS !== 'ios')
+  const projectionRef = useRef(projection)
+  if (projectionRef.current !== projection) {
+    setMapHasLoaded(false)
+    mapHasLoaded = false
+    projectionRef.current = projection
+  }
+
   const qsosGeoJSON = useMemo(() => _geoJSONMarkersForQSOs({ mappableQSOs, qth, operation, styles }), [mappableQSOs, qth, operation, styles])
   const linesGeoJSON = useMemo(() => _getJSONLinesForQSOs({ mappableQSOs, qth, operation, styles }), [mappableQSOs, qth, operation, styles])
 
@@ -120,41 +136,48 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
       onPress={handleMapPress}
       requestDisallowInterceptTouchEvent={true}
       styleUrl={StyleURL.Satellite}
+      onDidFinishRenderingFrame={() => {
+        // See comments about bug near the top of the file.
+        if (!mapHasLoaded) {
+          setTimeout(() => setMapHasLoaded(true), 800)
+        }
+      }}
     >
-      <Camera
-        ref={cameraRefCallback}
-        centerCoordinate={qth?.longitude && qth?.latitude ? [qth.longitude, qth.latitude] : DEFAULT_CENTER}
-        zoomLevel={DEFAULT_ZOOM}
-        animationDuration={0}
-      />
-
       {projection === 'globe' && (
+        <Atmosphere
+          style={{
+            color: 'rgb(115, 155, 197)',
+            highColor: 'rgb(41, 74, 149)',
+            horizonBlend: 0.02,
+            spaceColor: 'rgb(11, 11, 11)',
+            starIntensity: 0.6
+          }}
+        />
+      )}
+
+      {mapHasLoaded && (
         <>
-          <Atmosphere
-            style={{
-              color: 'rgb(115, 155, 197)',
-              highColor: 'rgb(41, 74, 149)',
-              horizonBlend: 0.02,
-              spaceColor: 'rgb(11, 11, 11)',
-              starIntensity: 0.6
-            }}
+          <Camera
+            ref={cameraRefCallback}
+            centerCoordinate={qth?.longitude && qth?.latitude ? [qth.longitude, qth.latitude] : DEFAULT_CENTER}
+            zoomLevel={DEFAULT_ZOOM}
+            animationDuration={0}
           />
+
+          <FeatureCallout feature={selectedFeature} qth={qth} operation={operation} styles={styles} />
+
+          {qsosGeoJSON && (
+            <ShapeSource id="qsos-source" shape={qsosGeoJSON} onPress={handleMapPress}>
+              <CircleLayer id="qsos-circles" style={circleStyles} layerIndex={100} />
+            </ShapeSource>
+          )}
+          {linesGeoJSON && (
+            <ShapeSource id="qsos-lines-source" shape={linesGeoJSON} onPress={handleMapPress}>
+              <LineLayer id="qsos-lines" style={linesStyles} layerIndex={99} />
+            </ShapeSource>
+          )}
         </>
       )}
-
-      <FeatureCallout feature={selectedFeature} qth={qth} operation={operation} styles={styles} />
-
-      {qsosGeoJSON && (
-        <ShapeSource id="qsos-source" shape={qsosGeoJSON} onPress={handleMapPress}>
-          <CircleLayer id="qsos-circles" style={circleStyles} layerIndex={100} />
-        </ShapeSource>
-      )}
-      {linesGeoJSON && (
-        <ShapeSource id="qsos-lines-source" shape={linesGeoJSON} onPress={handleMapPress}>
-          <LineLayer id="qsos-lines" style={linesStyles} layerIndex={99} />
-        </ShapeSource>
-      )}
-
     </MapView>
   )
 }
