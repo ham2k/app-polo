@@ -12,12 +12,16 @@ import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../to
 import { Info } from './WWFFInfo'
 import { WWFFData } from './WWFFDataFile'
 import WWFFInput from './WWFFInput'
+import { useSelector } from 'react-redux'
+import { selectOperationCallInfo } from '../../../store/operations'
 
 export function WWFFLoggingControl (props) {
-  const { qso, updateQSO, style, styles } = props
+  const { qso, operation, updateQSO, style, styles } = props
 
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
+
+  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
   const refsString = useMemo(() => {
     const refs = filterRefs(qso, Info.huntingType)
@@ -33,10 +37,12 @@ export function WWFFLoggingControl (props) {
   const defaultPrefix = useMemo(() => {
     if (qso?.their?.guess?.dxccCode) {
       return WWFFData.prefixByDXCCCode[qso?.their.guess.dxccCode] ?? 'KFF'
+    } else if (ourInfo?.dxccCode) {
+      return WWFFData.prefixByDXCCCode[ourInfo.dxccCode] ?? 'KFF'
     } else {
       return 'KFF'
     }
-  }, [qso?.their?.guess?.dxccCode])
+  }, [qso?.their?.guess?.dxccCode, ourInfo?.dxccCode])
 
   return (
     <WWFFInput
