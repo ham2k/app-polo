@@ -44,7 +44,7 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
 
   let startAtMillisMin, startAtMillisMax
   qsos.forEach((qso, index) => {
-    if (qso.startAtMillis) {
+    if (qso.startAtMillis && !qso.deleted) {
       if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
       if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
     }
@@ -143,8 +143,10 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     for (const qso of qsos) {
       dispatch(actions.addQSO({ uuid, qso }))
 
-      if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
-      if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
+      if (!qso.deleted) {
+        if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
+        if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
+      }
     }
     if (DEBUG) logTimer('addQSOs', 'added qsos to state')
 
