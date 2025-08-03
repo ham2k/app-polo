@@ -250,7 +250,7 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
       <H2kListSection>
         <H2kListSubheader>About Ham2K</H2kListSubheader>
         <H2kListItem
-          title={packageJson.versionName ? `${packageJson.versionName} Release (${packageJson.version})` : `Version ${packageJson.version}`}
+          title={packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`}
           description={'See recent changes'}
           onPress={() => navigation.navigate('Settings', { screen: 'VersionSettings' })}
           leftIcon="information-outline"
