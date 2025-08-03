@@ -9,12 +9,16 @@
 import { Alert } from 'react-native'
 
 import { reportError } from '../../../distro'
+import GLOBAL from '../../../GLOBAL'
 
 import { filterRefs } from '../../../tools/refTools'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
+
 import { Info } from './WWBOTAInfo'
 
 export const WWBOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dispatch) => {
+  if (GLOBAL?.flags?.services?.wwbota === false) return false
+
   const refs = filterRefs(qso, Info.huntingType)
 
   const schemeRefs = {}

@@ -9,13 +9,17 @@
 import { Alert } from 'react-native'
 
 import { reportError } from '../../../distro'
+import GLOBAL from '../../../GLOBAL'
 
 import { setOperationData } from '../../../store/operations'
 import { filterRefs } from '../../../tools/refTools'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
+
 import { Info } from './WWBOTAInfo'
 
 export const WWBOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+  if (GLOBAL?.flags?.services?.wwbota === false) return false
+
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  * Copyright ©️ 2025 Phillip Kessels <dl9pk@darc.de>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
@@ -9,8 +10,11 @@ import { reportError } from '../../../distro'
 import { Alert } from 'react-native'
 
 import packageJson from '../../../../package.json'
+import GLOBAL from '../../../GLOBAL'
 
 export const POTAPostSpotAPI = async ({ calls, comments, freq, mode, refs, spotterCall }) => {
+  if (GLOBAL?.flags?.services?.pota === false) return false
+
   if (refs.length > 0 && refs[0]?.ref) {
     const ref = refs[0]
     const refComment = refs.length > 1 ? `${refs.length}-fer: ${refs.map((x) => (x.ref)).join(' ')}` : ''

@@ -9,12 +9,16 @@
 import { Alert } from 'react-native'
 
 import { reportError } from '../../../distro'
+import GLOBAL from '../../../GLOBAL'
 
 import { filterRefs } from '../../../tools/refTools'
 import { apiZLOTA } from '../../../store/apis/apiZLOTA'
+
 import { Info } from './ZLOTAInfo'
 
 export const ZLOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dispatch, getState) => {
+  if (GLOBAL?.flags?.services?.zlota === false) return false
+
   const refs = filterRefs(qso, Info.activationType)
 
   if (refs.length > 0) {

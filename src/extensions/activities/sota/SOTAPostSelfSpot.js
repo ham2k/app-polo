@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  * Copyright ©️ 2024 Steven Hiscocks <steven@hiscocks.me.uk>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
@@ -11,6 +11,7 @@ import { Alert } from 'react-native'
 import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
 
 import { reportError } from '../../../distro'
+import GLOBAL from '../../../GLOBAL'
 
 import { findRef } from '../../../tools/refTools'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
@@ -18,6 +19,8 @@ import { apiSOTA } from '../../../store/apis/apiSOTA'
 const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']
 
 export const SOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+  if (GLOBAL?.flags?.services?.sota === false) return false
+
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 

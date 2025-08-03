@@ -9,12 +9,16 @@
 import { Alert } from 'react-native'
 
 import { reportError } from '../../../distro'
+import GLOBAL from '../../../GLOBAL'
 
 import { findRef } from '../../../tools/refTools'
 import { apiPnP } from '../../../store/apis/apiPnP'
+
 import { Info } from './SiOTAInfo'
 
 export const SiOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+  if (GLOBAL?.flags?.services?.pnp === false) return false
+
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 

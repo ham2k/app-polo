@@ -8,6 +8,7 @@
 // See https://discord.com/developers/docs/resources/webhook#execute-webhook
 
 import packageJson from '../../../../package.json'
+import GLOBAL from '../../../GLOBAL'
 
 import { basePartialTemplates, compileTemplateForOperation, extraDataForTemplates, selectOperationCallInfo, templateContextForOneExport } from '../../../store/operations'
 
@@ -30,6 +31,8 @@ export default Extension
 const SpotsHook = {
   ...Info,
   postSelfSpot: ({ operation, vfo, comments, qCode, qRest }) => async (dispatch, getState) => {
+    if (GLOBAL?.flags?.services?.discord === false) return true
+
     const settings = getState().settings
     const ourInfo = selectOperationCallInfo(getState(), operation.uuid)
 

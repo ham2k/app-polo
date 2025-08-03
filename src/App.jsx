@@ -71,16 +71,20 @@ function MainApp ({ navigationTheme }) {
 
   useEffect(() => {
     setImmediate(async () => {
-      // Some top-level functions need access to settings info that's only available in the store at this point,
-      // so we set them in the GLOBAL object here.
-      GLOBAL.consentAppData = settings.consentAppData
-      GLOBAL.consentOpData = settings.consentOpData
-      GLOBAL.deviceId = GLOBAL.deviceId || await DeviceInfo.getUniqueId()
-      GLOBAL.deviceName = GLOBAL.deviceName || await DeviceInfo.getDeviceName()
-      GLOBAL.syncEnabled = lofiData?.enabled === false ? false : settings.consentAppData || settings.consentOpData
-      console.log('GLOBAL', GLOBAL)
+      GLOBAL.deviceId = GLOBAL.deviceId || (await DeviceInfo.getUniqueId())
+      GLOBAL.deviceName = GLOBAL.deviceName || (await DeviceInfo.getDeviceName())
     })
-  }, [settings?.consentAppData, settings?.consentOpData, lofiData?.enabled])
+  }, [])
+
+  useEffect(() => {
+    // Some top-level functions need access to settings info that's only available in the store at this point,
+    // so we set them in the GLOBAL object here.
+    GLOBAL.consentAppData = settings.consentAppData
+    GLOBAL.consentOpData = settings.consentOpData
+    GLOBAL.syncEnabled = lofiData?.enabled === false ? false : settings.consentAppData || settings.consentOpData
+    GLOBAL.flags = flags
+    console.log('GLOBAL', GLOBAL)
+  }, [settings?.consentAppData, settings?.consentOpData, lofiData?.enabled, flags])
 
   useSyncLoop({ dispatch, settings, online, appState })
 

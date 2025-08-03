@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -12,6 +12,7 @@ import { Info } from './POTAInfo'
 import { POTAActivityOptions } from './POTAActivityOptions'
 import { potaFindParkByReference, potaFindParksByLocation, registerPOTAAllParksData } from './POTAAllParksData'
 import { POTALoggingControl } from './POTALoggingControl'
+
 import { POTAPostOtherSpot } from './POTAPostOtherSpot'
 import { POTAPostSelfSpot } from './POTAPostSelfSpot'
 import { apiPOTA, directLookupPark } from '../../../store/apis/apiPOTA'
@@ -22,6 +23,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import GLOBAL from '../../../GLOBAL'
 
 const Extension = {
   ...Info,
@@ -73,6 +75,8 @@ const SpotsHook = {
   ...Info,
   sourceName: 'POTA.app',
   fetchSpots: async ({ online, settings, dispatch }) => {
+    if (GLOBAL?.flags?.services?.pota === false) return []
+
     let spots = []
     if (online) {
       const apiPromise = await dispatch(apiPOTA.endpoints.spots.initiate({}, { forceRefetch: true }))
@@ -111,6 +115,8 @@ const SpotsHook = {
     })
   },
   extraSpotInfo: async ({ online, settings, dispatch, spot }) => {
+    if (GLOBAL?.flags?.services?.pota === false) return
+
     if (online) {
       const spotRef = findRef(spot, Info.huntingType)
       if (spotRef) {

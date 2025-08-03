@@ -6,6 +6,7 @@
  */
 
 import packageJson from '../../../../package.json'
+import GLOBAL from '../../../GLOBAL'
 import { capitalizeString } from '../../../tools/capitalizeString'
 
 export const Info = {
@@ -30,9 +31,13 @@ export default Extension
 const LookupHook = {
   ...Info,
   shouldSkipLookup: ({ online, lookedUp }) => {
+    if (GLOBAL?.flags?.services?.hamdb === false) return true
+
     return !online || (lookedUp.name && lookedUp.grid)
   },
   lookupCallWithDispatch: (callInfo, { settings, online }) => async (dispatch) => {
+    if (GLOBAL?.flags?.services?.hamdb === false) return {}
+
     const call = callInfo?.baseCall ?? ''
     if (online && call.length > 2) {
       try {

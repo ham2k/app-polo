@@ -6,11 +6,16 @@
  */
 
 import { Alert } from 'react-native'
-import { apiWWFF } from '../../../store/apis/apiWWFF'
-import { findRef } from '../../../tools/refTools'
+
+import GLOBAL from '../../../GLOBAL'
 import { reportError } from '../../../distro'
 
+import { apiWWFF } from '../../../store/apis/apiWWFF'
+import { findRef } from '../../../tools/refTools'
+
 export const WWFFPostOtherSpot = ({ comments, qso, spotterCall }) => async (dispatch) => {
+  if (GLOBAL?.flags?.services?.wwff === false) return false
+
   const ref = findRef(qso, 'wwff')
 
   if (ref && ref.ref) {

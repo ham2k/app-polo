@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  * Copyright ©️ 2025 Steven Hiscocks <steven@hiscocks.me.uk>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
@@ -9,6 +9,15 @@
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
+
+import GLOBAL from '../../../GLOBAL'
+
+import { apiZLOTA } from '../../../store/apis/apiZLOTA'
+import { LOCATION_ACCURACY } from '../../constants'
+import { distanceOnEarth } from '../../../tools/geoTools'
+
 import { Info } from './ZLOTAInfo'
 import { ZLOTAActivityOptions } from './ZLOTAActivityOptions'
 import { zlotaFindOneByReference, registerZLOTADataFile, zlotaFindAllByLocation } from './ZLOTADataFile'
@@ -16,11 +25,6 @@ import { ZLOTALoggingControl } from './ZLOTALoggingControl'
 import { ZLOTAPostSelfSpot } from './ZLOTAPostSelfSpot'
 import { ZLOTAPostOtherSpot } from './ZLOTAPostOtherSpot'
 import { ZLOTAAccountSetting } from './ZLOTAAccount'
-import { apiZLOTA } from '../../../store/apis/apiZLOTA'
-import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
-import { LOCATION_ACCURACY } from '../../constants'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,
@@ -84,6 +88,8 @@ const SpotsHook = {
   ...Info,
   sourceName: 'ZLOTA',
   fetchSpots: async ({ online, settings, dispatch }) => {
+    if (GLOBAL?.flags?.services?.zlota === false) return []
+
     let spots = []
     if (online) {
       const apiPromise = await dispatch(apiZLOTA.endpoints.spots.initiate({}, { forceRefetch: true }))

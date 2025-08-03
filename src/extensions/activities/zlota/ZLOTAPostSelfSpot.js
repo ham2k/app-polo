@@ -9,12 +9,15 @@
 import { Alert } from 'react-native'
 
 import { reportError } from '../../../distro'
+import GLOBAL from '../../../GLOBAL'
 
 import { filterRefs } from '../../../tools/refTools'
 import { apiZLOTA } from '../../../store/apis/apiZLOTA'
 import { Info } from './ZLOTAInfo'
 
 export const ZLOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+  if (GLOBAL?.flags?.services?.zlota === false) return false
+
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
 

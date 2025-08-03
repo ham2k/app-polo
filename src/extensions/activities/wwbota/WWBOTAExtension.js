@@ -22,6 +22,7 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { WWBOTAPostOtherSpot } from './WWBOTAPostOtherSpot'
+import GLOBAL from '../../../GLOBAL'
 
 const Extension = {
   ...Info,
@@ -71,6 +72,8 @@ const SpotsHook = {
   ...Info,
   sourceName: 'WWBOTA',
   fetchSpots: async ({ online, settings, dispatch }) => {
+    if (GLOBAL?.flags?.services?.pota === false) return []
+
     let spots = []
     if (online) {
       const apiPromise = await dispatch(apiWWBOTA.endpoints.spots.initiate({}, { forceRefetch: true }))

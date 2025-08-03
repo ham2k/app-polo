@@ -7,11 +7,15 @@
 
 import { Alert } from 'react-native'
 
+import { reportError } from '../../../distro'
+import GLOBAL from '../../../GLOBAL'
+
 import { findRef } from '../../../tools/refTools'
 import { apiWWFF } from '../../../store/apis/apiWWFF'
-import { reportError } from '../../../distro'
 
 export const WWFFPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+  if (GLOBAL?.flags?.services?.wwff === false) return false
+
   const state = getState()
   const activatorCallsign = operation.stationCall || state.settings.operatorCall
   const ref = findRef(operation, 'wwffActivation')

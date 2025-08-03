@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -22,6 +22,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import GLOBAL from '../../../GLOBAL'
 
 const Extension = {
   ...Info,
@@ -85,6 +86,8 @@ const SpotsHook = {
   ...Info,
   sourceName: 'PnP',
   fetchSpots: async ({ online, settings, dispatch }) => {
+    if (GLOBAL?.flags?.services?.pnp === false) return []
+
     let spots = []
     if (online) {
       const apiPromise = await dispatch(apiPnP.endpoints.spots.initiate({}, { forceRefetch: true }))

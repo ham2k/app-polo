@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  * Copyright ©️ 2024 Steven Hiscocks <steven@hiscocks.me.uk>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
@@ -7,9 +7,14 @@
  */
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
+
+import GLOBAL from '../../../GLOBAL'
+
 import { GMAPostSpotAPI } from './GMAPostSpotAPI'
 
 export const GMACommonPostSelfSpot = ({ operation, vfo, comments, refs, url }) => async (dispatch, getState) => {
+  if (GLOBAL?.flags?.services?.gma === false) return false
+
   const state = getState()
   const call = operation.stationCall || state.settings.operatorCall
   const baseCall = parseCallsign(call).baseCall

@@ -79,6 +79,8 @@ const SyncHook = {
 }
 
 async function requestWithAuth ({ dispatch, getState, url, method, body, params }) {
+  if (GLOBAL?.flags?.services?.lofi === false) return { ok: false, status: 500, json: {} }
+
   try {
     if (DEBUG) console.log('Ham2K LoFi request', { url, method })
     const settings = selectSettings(getState())

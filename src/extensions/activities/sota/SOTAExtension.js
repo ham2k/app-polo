@@ -5,9 +5,17 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 import { Alert } from 'react-native'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
+import GLOBAL from '../../../GLOBAL'
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../../tools/refTools'
+import { apiSOTA } from '../../../store/apis/apiSOTA'
+import { LOCATION_ACCURACY } from '../../constants'
+import { distanceOnEarth } from '../../../tools/geoTools'
 
 import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { registerSOTADataFile, sotaFindAllByLocation, sotaFindOneByReference } from './SOTADataFile'
@@ -15,13 +23,6 @@ import { Info } from './SOTAInfo'
 import { SOTALoggingControl } from './SOTALoggingControl'
 import { SOTAAccountSetting } from './SOTAAccount'
 import { SOTAPostSelfSpot } from './SOTAPostSelfSpot'
-import { apiSOTA } from '../../../store/apis/apiSOTA'
-import { bandForFrequency } from '@ham2k/lib-operation-data'
-import { LOCATION_ACCURACY } from '../../constants'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
 import { SOTAPostOtherSpot } from './SOTAPostOtherSpot'
 
 const Extension = {
@@ -102,6 +103,8 @@ const SpotsHook = {
   ...Info,
   sourceName: 'SOTAWatch',
   fetchSpots: async ({ online, settings, dispatch }) => {
+    if (GLOBAL?.flags?.services?.sota === false) return []
+
     let spots = []
     if (online) {
       const apiEpochPromise = await dispatch(apiSOTA.endpoints.epoch.initiate({}, { forceRefetch: true }))
