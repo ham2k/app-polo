@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -11,12 +11,15 @@ import { Button, Text } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
+
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings } from '../../../store/settings'
 import { selectOperation, setOperationData, setOperationLocalData } from '../../../store/operations'
-import ScreenContainer from '../../components/ScreenContainer'
 import { batchUpdateQSOs, selectQSOs } from '../../../store/qsos'
+import ScreenContainer from '../../components/ScreenContainer'
 import { joinAnd } from '../../../tools/joinAnd'
+import { slashZeros } from '../../../tools/stringTools'
 import { H2kCallsignInput, H2kListSection } from '../../../ui'
 
 export default function OperationStationInfoScreen ({ navigation, route }) {
@@ -62,14 +65,32 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
     const timeout = setTimeout(() => {
       const newExtraState = {}
       const singleStation = stations.length === 1 && stations[0]
-      if (stations.length === 0 || singleStation === operation.stationCall) {
+      const allCalls = [operation.stationCall]
+
+      if (operation.stationCallPlusArray) allCalls.push(...operation.stationCallPlusArray)
+      if (operation.local?.operatorCall) allCalls.push(operation.local?.operatorCall)
+
+      const badCalls = allCalls.filter(c => !parseCallsign(c).baseCall)
+
+      if (badCalls.length === 1) {
+        newExtraState.messageForStationCall = `Invalid callsign: ${slashZeros(badCalls[0])}`
+        newExtraState.colorForStationCall = styles.colors.error
+        newExtraState.actionForStationCall = ''
+      } else if (badCalls.length > 1) {
+        newExtraState.messageForStationCall = `Invalid callsigns: ${slashZeros(joinAnd(badCalls))}`
+        newExtraState.colorForStationCall = styles.colors.error
+        newExtraState.actionForStationCall = ''
+      } else if (stations.length === 0 || singleStation === operation.stationCall) {
         newExtraState.messageForStationCall = ''
+        newExtraState.colorForStationCall = styles.colors.primary
         newExtraState.actionForStationCall = ''
       } else if (stations.length === 1 && singleStation !== operation.stationCall) {
-        newExtraState.messageForStationCall = `${singleStation || 'No call'} used so far.\n${operation.stationCall} will be used for new QSOs.`
-        newExtraState.actionForStationCall = `Update ${operation.stationCall} on ${qsos.length} existing QSOs`.replaceAll('1 existing QSOs', '1 existing QSO')
+        newExtraState.messageForStationCall = `${singleStation || 'No call'} used so far.\n${slashZeros(operation.stationCall)} will be used for new QSOs.`
+        newExtraState.colorForStationCall = styles.colors.primary
+        newExtraState.actionForStationCall = `Update ${slashZeros(operation.stationCall)} on ${qsos.length} existing QSOs`.replaceAll('1 existing QSOs', '1 existing QSO')
       } else {
-        newExtraState.messageForStationCall = `This activity already has QSOs using multiple station callsigns: ${joinAnd(stations)}.\n\n${operation.stationCall} will only be used for new QSOs.`
+        newExtraState.messageForStationCall = `This activity already has QSOs using multiple station callsigns: ${slashZeros(joinAnd(stations))}.\n\n${slashZeros(operation.stationCall)} will only be used for new QSOs.`
+        newExtraState.colorForStationCall = styles.colors.primary
         newExtraState.actionForStationCall = ''
       }
 
@@ -77,19 +98,22 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
 
       if (operators.length === 0 || singleOperator === operation.local?.operatorCall) {
         newExtraState.messageForOperatorCall = ''
+        newExtraState.colorForOperatorCall = styles.colors.primary
         newExtraState.actionForOperatorCall = ''
       } else if (operators.length === 1 && singleOperator !== operation.local?.operatorCall) {
-        newExtraState.messageForOperatorCall = `${singleOperator || 'No call'} used so far.\n${operation.local?.operatorCall} will be used for new QSOs.`
-        newExtraState.actionForOperatorCall = `Update ${operation.local?.operatorCall} as operator for all QSOs`
+        newExtraState.messageForOperatorCall = `${singleOperator || 'No call'} used so far.\n${slashZeros(operation.local?.operatorCall)} will be used for new QSOs.`
+        newExtraState.colorForOperatorCall = styles.colors.primary
+        newExtraState.actionForOperatorCall = `Update ${slashZeros(operation.local?.operatorCall)} as operator for all QSOs`
       } else {
-        newExtraState.messageForOperatorCall = `This activity already has QSOs using multiple operator callsigns: ${joinAnd(operators)}.\n\n${operation.local?.operatorCall} will only be used for new QSOs.`
+        newExtraState.messageForOperatorCall = `This activity already has QSOs using multiple operator callsigns: ${slashZeros(joinAnd(operators))}.\n\n${slashZeros(operation.local?.operatorCall)} will only be used for new QSOs.`
+        newExtraState.colorForOperatorCall = styles.colors.primary
         newExtraState.actionForOperatorCall = ''
       }
 
       setExtraState(newExtraState)
-    }, 500)
+    }, 100)
     return () => clearTimeout(timeout)
-  }, [stations, operators, qsos.length, settings.stationCall, settings.operatorCall, operation.stationCall, operation.local?.operatorCall, originalValues?.stationCall, originalValues?.operatorCall])
+  }, [stations, operators, qsos.length, settings.stationCall, settings.operatorCall, operation.stationCall, operation.local?.operatorCall, originalValues.stationCall, originalValues.operatorCall, operation.stationCallPlusArray, operation, styles.colors.error, styles.colors.primary])
 
   useEffect(() => { // Set initial values if needed
     if (!operation?.uuid) return
@@ -155,7 +179,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
               onChangeText={onChangeStation}
             />
             {extraState.messageForStationCall && (
-              <Text variant="bodyMedium" style={{ color: styles.colors.primary, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
+              <Text variant="bodyMedium" style={{ color: extraState.colorForStationCall, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
                 {extraState.messageForStationCall}
               </Text>
             )}
@@ -177,7 +201,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
               disabled={operation.stationCallPlusArray?.length > 0}
             />
             {extraState.messageForOperatorCall && (
-              <Text variant="bodyMedium" style={{ color: styles.colors.primary, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
+              <Text variant="bodyMedium" style={{ color: extraState.colorForOperatorCall, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
                 {extraState.messageForOperatorCall}
               </Text>
             )}

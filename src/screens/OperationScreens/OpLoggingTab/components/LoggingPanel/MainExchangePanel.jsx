@@ -100,6 +100,7 @@ export const MainExchangePanel = ({
       onSpace={spaceHandler}
       focusedRef={focusedRef}
       allowMultiple={true}
+      allowStack={true}
     />
   )
 

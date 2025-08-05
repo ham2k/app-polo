@@ -18,11 +18,15 @@ const LETTERS_REGEX = /[A-Z]+/
 const ONLY_NUMBER_REGEX = /^\s*[+-]*\d+(\.\d+)*$/
 
 export function H2kCallsignInput (props) {
-  const { value, allowMultiple } = props
+  const { value, allowMultiple, allowStack, error } = props
 
   const isValid = useMemo(() => {
-    const { allCalls } = parseStackedCalls(value)
+    const { allCalls, callStack } = parseStackedCalls(value)
     if (allCalls.length > 1 && !allowMultiple) {
+      return false
+    }
+
+    if (callStack && !allowStack) {
       return false
     }
 
@@ -55,7 +59,7 @@ export function H2kCallsignInput (props) {
       uppercase={true}
       noSpaces={true}
       periodToSlash={mode === 'callsign'}
-      error={value && !isValid}
+      error={error || (value && !isValid)}
     />
   )
 }

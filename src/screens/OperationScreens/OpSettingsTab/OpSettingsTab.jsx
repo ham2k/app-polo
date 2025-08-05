@@ -11,13 +11,16 @@ import { ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
+
+import { trackEvent } from '../../../distro'
+
 import { addNewOperation, fillOperationFromTemplate, getAllOperationTemplates, getOperationTemplate, selectOperation, selectOperationsList, setOperationData } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { trackEvent } from '../../../distro'
 import { H2kListItem, H2kListSection, H2kMarkdown } from '../../../ui'
 
 function prepareStyles (baseStyles) {
@@ -81,10 +84,25 @@ export default function OpSettingsTab ({ navigation, route }) {
 
   const [stationInfo, stationInfoColor] = useMemo(() => {
     let stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
+    const allCalls = [stationCall]
+
     if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
+      allCalls.push(...operation.stationCallPlusArray)
       stationCall += ` + ${operation.stationCallPlusArray.join(', ')}`
     }
     const operatorCall = operation?.local?.operatorCall ?? settings?.operatorCall ?? ''
+
+    const badCalls = allCalls.filter(c => {
+      const info = parseCallsign(c)
+      return !info.baseCall
+    })
+
+    if (badCalls.length === 1) {
+      return [`Invalid Callsign ${stationCall}`, styles.colors.error]
+    } else if (badCalls.length > 1) {
+      return [`Invalid Callsigns ${badCalls.join(', ')}`, styles.colors.error]
+    }
+
     if (stationCall && operatorCall && stationCall !== operatorCall) {
       return [`\`${stationCall}\` (operated by \`${operatorCall}\`)`, styles.colors.onSurface]
     } else if (stationCall) {
@@ -167,9 +185,7 @@ export default function OpSettingsTab ({ navigation, route }) {
         <H2kListItem
           title={operation?.userTitle || 'Operation Details'}
           description={operation?.notes || operation?.userTitle ? 'Add notes for this operation' : 'Add a title or notes for this operation'}
-          titleStyle={{ color: stationInfoColor }}
           leftIcon={'book-outline'}
-          leftIconColor={stationInfoColor}
           onPress={() => navigation.navigate('OperationDetails', { operation: operation.uuid })}
         />
 
