@@ -102,8 +102,8 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
   const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 
   const [thisOpTitle, thisOpQSOs, historyTitle, historyRecent, historyAndMore] = useMemo(() => {
-    const thisQs = (lookup.history || []).filter(q => operation && q.operation === operation?.uuid)
-    const otherOps = (lookup.history || []).filter(q => q.operation !== operation?.uuid)
+    const thisQs = (lookup?.history || []).filter(q => operation && q.operation === operation?.uuid)
+    const otherOps = (lookup?.history || []).filter(q => q.operation !== operation?.uuid)
 
     const recent = otherOps?.slice(0, HISTORY_QSOS_TO_SHOW) || []
     let thisTitle
@@ -135,7 +135,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
     }
 
     return [thisTitle, thisQs, title, recent, andMore]
-  }, [lookup.history, operation])
+  }, [lookup?.history, operation])
 
   const confirmations = findHooks('confirmation')
     .map(hook => hook?.fetchConfirmation(qso))
