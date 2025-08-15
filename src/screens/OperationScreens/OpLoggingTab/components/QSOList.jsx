@@ -13,13 +13,11 @@ import getItemLayout from 'react-native-get-item-layout-section-list'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { findHooks } from '../../../../extensions/registry'
-import { useUIState } from '../../../../store/ui'
 import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtShortTimeZulu, fmtTimeZulu } from '../../../../tools/timeFormats'
 
 import QSOItem from './QSOItem'
 import QSOHeader from './QSOHeader'
-
 
 const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress, lastUUID, selectedUUID, onSelectQSO }) {
   const { width } = useSafeAreaFrame()
@@ -363,4 +361,3 @@ function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeA
 }
 
 export default QSOList
-

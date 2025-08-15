@@ -560,8 +560,7 @@ function prepareStyles (themeStyles, themeColor) {
     root: {
       borderTopColor: themeStyles.theme.colors[`${themeColor}Light`],
       borderTopWidth: 1,
-      backgroundColor: themeStyles.theme.colors[`${themeColor}Container`],
-      paddingBottom: themeStyles.oneSpace
+      backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
     },
     input: {
       backgroundColor: themeStyles.theme.colors.background,

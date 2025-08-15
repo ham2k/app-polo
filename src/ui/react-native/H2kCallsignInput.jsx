@@ -38,7 +38,7 @@ export function H2kCallsignInput (props) {
         return false
       }
     })
-  }, [value, allowMultiple])
+  }, [value, allowMultiple, allowStack])
 
   let [mode, setMode] = useUIState('NumberKeys', 'mode', 'numbers')
   useEffect(() => {
