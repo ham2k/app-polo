@@ -41,7 +41,9 @@ export function H2kTextInput (props) {
   const alternateInnerRef = useRef()
   const actualInnerRef = innerRef ?? alternateInnerRef
 
-  const selectionRef = useRef({})
+  // We need to keep a "global" value reference because on Android, the value is not updated immediately
+  // when the user types, so we need to keep track of previous onChange values
+  const lastChangeRef = useRef()
 
   const [extraSpace, setExtraSpace] = useState(false)
 
@@ -50,23 +52,53 @@ export function H2kTextInput (props) {
   else if (typeof value === 'string') stringValue = value
   else stringValue = `${value}`
 
-  // We need to keep a "global" value reference because on Android, the value is not updated immediately
-  // when the user types, so we need to keep track of previous onChange values
-  const lastChangeRef = useRef()
-
+  // BEGIN VIRTUAL NUMERIC KEY FUNCTIONALITY, PART 1
+  // In order to provide virtual numeric keys, we need to keep track of where the cursor is.
+  // `selectionRef` is where we store this cursor position.
+  // This involves several moving parts, to keep track of the cursor position,
+  // and to provide a callback to the virtual numeric keys to insert numbers.
+  // We use `focusedRef` to provide the callback, which is updated in a `useEffect` on "PART 2" below.
+  const selectionRef = useRef({})
   const trackSelection = useMemo(() => !!focusedRef, [focusedRef])
 
-  const [isFocused, setIsFocused] = useState(false)
-
   useEffect(() => {
-    if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) useEffect end of string`, { stringValue, sel: selectionRef?.current })
-    if (trackSelection && (selectionRef.current.start || 0) > stringValue.length) {
-      selectionRef.current.start = stringValue.length
-      selectionRef.current.end = stringValue.length
-      if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) useEffect end of string set to`, { stringValue, sel: selectionRef?.current })
-    }
-  }, [trackSelection, stringValue, fieldId])
+    if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) useEffect check end of string?`, { stringValue, start: selectionRef?.current.start, end: selectionRef?.current.end, lastChange: lastChangeRef.current, trackSelection })
+    if (!trackSelection) return
 
+    if (!stringValue) {
+      // If value is empty or null, reset the selection to an empty object,
+      selectionRef.current = {}
+    } else if ((selectionRef.current.start || 0) >= stringValue.length) {
+      // If value changes to anything shorter than the previous cursor position, reset the selection to an empty object.
+      selectionRef.current = {}
+      if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) useEffect end of string set to`, { stringValue, start: selectionRef?.current.start, end: selectionRef?.current.end, lastChange: lastChangeRef.current, trackSelection })
+    } else if (lastChangeRef.current !== stringValue) {
+      // If the value has changed, reset the selection to an empty object.
+      selectionRef.current = {}
+      if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) useEffect value changed set to`, { stringValue, start: selectionRef?.current.start, end: selectionRef?.current.end, lastChange: lastChangeRef.current, trackSelection })
+    }
+  }, [trackSelection, stringValue, lastChangeRef, fieldId])
+
+  const handleSelectionChange = useCallback((event) => {
+    if (trackSelection) {
+      const { nativeEvent: { selection: { start, end } } } = event
+      if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleSelectionChange`, { start, end })
+      if (start === end && start >= stringValue.length - 1) {
+        // If the selection is at the end of the string, reset current selection
+        selectionRef.current = {}
+      } else {
+        selectionRef.current.start = start
+        selectionRef.current.end = end
+      }
+    }
+  }, [fieldId, trackSelection, stringValue])
+  // END VIRTUAL NUMERIC KEY FUNCTIONALITY, PART 1
+
+  // The general `handleChange` function takes care of several things:
+  // - track if a space was added, for fields where this jumps to the next field
+  // - formatting and cleanup, with lower or uppercasing, trimming, converting periods to slashes, etc.
+  // - invoking any `textTransformer` function pased as a prop
+  // - update cursor position based on what changed
   const handleChange = useCallback((event) => {
     let { text } = event.nativeEvent
 
@@ -76,17 +108,21 @@ export function H2kTextInput (props) {
 
     if (lastChangeRef.current === undefined) lastChangeRef.current = stringValue
 
-    if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange`, { text, stringValue, lastChange: lastChangeRef.current })
+    if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange`, { text, stringValue, lastChange: lastChangeRef.current, start: selectionRef?.current.start, end: selectionRef?.current.end, trackSelection })
     if (multiline || text.length < lastChangeRef.length) {
       lastChangeRef.current = text
-      if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange multiline or deleting`)
+      if (selectionRef.current.start > 0) {
+        selectionRef.current.start = selectionRef.current.start + (text.length - lastChangeRef.current.length)
+        selectionRef.current.end = selectionRef.current.end + (text.length - lastChangeRef.current.length)
+      }
+      if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange multiline or deleting`, { start: selectionRef?.current.start, end: selectionRef?.current.end, text, lastChange: lastChangeRef.current, trackSelection })
       // We should not do any transformations:
-      //  - on multiline inputs
-      //  - or when deleting
+      // - on multiline inputs
+      // - or when deleting
     } else {
       lastChangeRef.current = text
 
-      if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange else`, { text })
+      // if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange else`, { text })
       // Lets check if what changed was the addition of a space
       if (noSpaces && (text !== stringValue) && (text.replace(SPACE_REGEX, '') === stringValue)) {
         spaceAdded = true
@@ -123,7 +159,7 @@ export function H2kTextInput (props) {
           text = text.replace(SPACE_REGEX, '')
         }
         if (periodToSlash) {
-          if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange periodToSlash`, { text })
+          // if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange periodToSlash`, { text })
           text = text.replaceAll('.', '/')
         }
         if (numeric) {
@@ -139,21 +175,28 @@ export function H2kTextInput (props) {
         if (textTransformer) {
           text = textTransformer(text)
         }
+
         if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange after transformations`, { text })
         if (trackSelection && text.length !== stringValue.length) {
-          if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed?`, { selectionRef: selectionRef.current, stringValue })
+          if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed?`, { stringValue, start: selectionRef?.current.start, end: selectionRef?.current.end, lastChange: lastChangeRef.current, trackSelection })
           const selectionFromVirtualNumericKeys = event.selectionFromVirtualNumericKeys ?? {}
           const start = selectionFromVirtualNumericKeys.start ?? selectionRef.current.start ?? stringValue.length
           const end = selectionFromVirtualNumericKeys.end ?? selectionRef.current.end ?? stringValue.length
-          // Sometimes, updating the value causes the native text field to also update the selection
-          // to a value that is not the one we want. So we have to delay our update in order to overwrite it.
           selectionRef.current.start = start + (text.length - stringValue.length)
           selectionRef.current.end = end + (text.length - stringValue.length)
-          if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed`, { start, end, text, stringValue })
+          if (selectionRef.current.start === selectionRef.current.end && selectionRef.current.start >= stringValue.length - 1) {
+            selectionRef.current = {}
+          }
+          if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed`, { start: selectionRef.current.start, end: selectionRef.current.end, text, stringValue })
           setTimeout(() => {
+            // Sometimes, updating the value causes the native text field to also update the selection
+            // to a value that is not the one we want. So we have to repeat our update in order to overwrite it.
             selectionRef.current.start = start + (text.length - stringValue.length)
             selectionRef.current.end = end + (text.length - stringValue.length)
-            if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed timeout`, { start, end, text, stringValue })
+            if (selectionRef.current.start === selectionRef.current.end && selectionRef.current.start >= stringValue.length - 1) {
+              selectionRef.current = {}
+            }
+            if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed timeout`, { start: selectionRef.current.start, end: selectionRef.current.end, text, stringValue })
           }, 5)
         }
 
@@ -173,6 +216,25 @@ export function H2kTextInput (props) {
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst,
     textTransformer, onChangeText, onChange, onSpace, trackSelection
   ])
+
+  // BEGIN VIRTUAL NUMERIC KEY FUNCTIONALITY, PART 2
+  // If this input is focused, we update `focusedRef` to provide a callback that can be used
+  // by virtual numeric keys to insert a number at the current cursor position.
+  // This has to be done in a second "PART" because it depends on the `handleChange` function,
+
+  // So we track focus changes and when this field becomes focused, we update `focusedRef` with
+  // a function pointing at this field's `handleChange` function.
+  // And when a different field becomes focused, their `useEffect` will overwrite the callback in
+  // the shared `focusedRef`.
+  const [isFocused, setIsFocused] = useState(false)
+  const handleFocus = useCallback((event) => {
+    setIsFocused(true)
+    onFocus && onFocus({ ...event, ref: actualInnerRef })
+  }, [onFocus, actualInnerRef])
+  const handleBlur = useCallback((event) => {
+    setIsFocused(false)
+    onBlur && onBlur({ ...event, value: stringValue?.trim() || '', fieldId, objectId, ref: actualInnerRef.current })
+  }, [onBlur, stringValue, fieldId, objectId, actualInnerRef])
 
   useEffect(() => {
     if (focusedRef && isFocused && !multiline) {
@@ -196,25 +258,7 @@ export function H2kTextInput (props) {
       }
     }
   }, [focusedRef, handleChange, isFocused, stringValue, actualInnerRef, multiline])
-
-  const handleSelectionChange = useCallback((event) => {
-    if (trackSelection) {
-      const { nativeEvent: { selection: { start, end } } } = event
-      if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleSelectionChange`, { start, end })
-      selectionRef.current.start = start
-      selectionRef.current.end = end
-    }
-  }, [fieldId, trackSelection])
-
-  const handleFocus = useCallback((event) => {
-    setIsFocused(true)
-    onFocus && onFocus({ ...event, ref: actualInnerRef })
-  }, [onFocus, actualInnerRef])
-
-  const handleBlur = useCallback((event) => {
-    setIsFocused(false)
-    onBlur && onBlur({ ...event, value: stringValue?.trim() || '', fieldId, objectId, ref: actualInnerRef.current })
-  }, [onBlur, stringValue, fieldId, objectId, actualInnerRef])
+  // END VIRTUAL NUMERIC KEY FUNCTIONALITY, PART 2
 
   const colorStyles = useMemo(() => {
     return {
@@ -288,7 +332,8 @@ export function H2kTextInput (props) {
     return keyboardOpts
   }, [keyboard, themeStyles.isDarkMode, uppercase, multiline, settings.smartKeyboard])
 
-  if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) renderInput`, { stringValue, sel: selectionRef?.current, trackSelection })
+  if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) renderInput`, { stringValue, start: selectionRef?.current.start, end: selectionRef?.current.end, lastChange: lastChangeRef.current, trackSelection })
+
   const renderInput = useCallback((props) => {
     return (
       <NativeTextInput

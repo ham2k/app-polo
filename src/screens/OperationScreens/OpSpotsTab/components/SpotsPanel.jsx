@@ -227,8 +227,6 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
     onSelect && onSelect({ spot })
   }, [onSelect])
 
-  console.log('panel style', style)
-
   return (
     <GestureHandlerRootView style={[{ flex: 1, flexDirection: 'column', alignItems: 'stretch' }]}>
       {showControls ? (
