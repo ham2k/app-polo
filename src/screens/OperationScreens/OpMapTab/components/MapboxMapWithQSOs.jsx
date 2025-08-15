@@ -31,11 +31,12 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
   // See https://github.com/rnmapbox/maps/issues/3886
   //     https://github.com/rnmapbox/maps/issues/3891
   // TODO: Periodically check if the bug is fixed.
-  let [mapHasLoaded, setMapHasLoaded] = useState(Platform.OS !== 'ios')
+  const defaultLoadedState = Platform.OS !== 'ios'
+  let [mapHasLoaded, setMapHasLoaded] = useState(defaultLoadedState)
   const projectionRef = useRef(projection)
   if (projectionRef.current !== projection) {
-    setMapHasLoaded(false)
-    mapHasLoaded = false
+    setMapHasLoaded(defaultLoadedState)
+    mapHasLoaded = defaultLoadedState
     projectionRef.current = projection
   }
 
@@ -213,7 +214,7 @@ const FeatureCallout = ({ feature, qth, operation, styles }) => {
 }
 
 function _geoJSONMarkerForQTH ({ qth, operation, styles }) {
-  if (qth?.latitude && qth?.longitude) {
+  if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
     return {
       type: 'Feature',
       geometry: {
@@ -233,7 +234,7 @@ function _geoJSONMarkersForQSOs ({ mappableQSOs, qth, operation, styles }) {
   const features = []
   features.push(...mappableQSOs.map(mappableQSO => _geoJSONMarkerForQSO({ mappableQSO, qth, operation, styles })).filter(x => x))
 
-  if (qth?.latitude && qth?.longitude) {
+  if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
     features.push(_geoJSONMarkerForQTH({ qth, operation, styles }))
   }
 
@@ -244,7 +245,7 @@ function _geoJSONMarkersForQSOs ({ mappableQSOs, qth, operation, styles }) {
 }
 
 function _geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
-  if (mappableQSO?.location && mappableQSO.location.latitude && mappableQSO.location.longitude) {
+  if (mappableQSO?.location?.latitude !== undefined && mappableQSO?.location?.longitude !== undefined) {
     return {
       type: 'Feature',
       geometry: {
@@ -262,7 +263,7 @@ function _geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
 }
 
 function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
-  if (qth?.latitude && qth?.longitude) {
+  if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
     const features = mappableQSOs.map(mappableQSO => _geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
 
     return {
@@ -273,7 +274,7 @@ function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
 }
 
 function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
-  if (mappableQSO?.location && mappableQSO.location.latitude && mappableQSO.location.longitude) {
+  if (mappableQSO?.location?.latitude !== undefined && mappableQSO?.location?.longitude !== undefined) {
     const start = _coordsFromLatLon(mappableQSO.location)
     const end = _coordsFromLatLon(qth)
 
