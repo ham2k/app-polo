@@ -1,4 +1,12 @@
 {
+  "25.8.1": {
+    "name": "August '25 (patch 1)",
+    "photoCaption": "W2UD with N2PTA at US-6462 for FD",
+    "changes": [
+      "Fixed bug on Android where maps would not show markers after changing views",
+      "Fixed bug in handling of virtual numeric keys"
+    ]
+  },
   "25.8.0": {
     "name": "August '25",
     "photoCaption": "W2UD with N2PTA at US-6462 for FD",
