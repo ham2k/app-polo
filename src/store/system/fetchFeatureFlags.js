@@ -54,7 +54,7 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
   const fetchedLocations = {}
   try {
     while (locations.length > 0) {
-      const location = locations.pop()
+      const location = locations.shift()
       try {
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), MAX_REQUEST_TIME) // timeout
