@@ -122,12 +122,27 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
       dispatch(setOperationData({ uuid: operation.uuid, stationCall: settings?.stationCall || settings?.operatorCall || '' }))
     }
 
-    if (operation.local?.operatorCall === undefined &&
-    operation.stationCall !== settings?.operatorCall &&
-    (!operation.stationCallPlusArray || operation.stationCallPlusArray.indexOf(settings?.operatorCall) === -1)) {
+    if (
+      operation.local?.operatorCall === undefined &&
+      operation.stationCall !== settings?.operatorCall &&
+      (!operation.stationCallPlusArray || operation.stationCallPlusArray.length === 0) &&
+      settings?.suggestDefaultOperator !== false
+    ) {
       dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall: settings?.operatorCall || '' }))
+    } else if (
+      operation.local?.operatorCall !== undefined &&
+      operation.local?.operatorCall === settings?.operatorCall &&
+      (operation.stationCall === settings?.operatorCall ||
+        (operation.stationCallPlusArray && operation.stationCallPlusArray?.indexOf(settings?.operatorCall) >= 0)
+      )
+    ) {
+      dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall: undefined }))
+    } else if (
+      operation.stationCallPlusArray?.length > 0
+    ) {
+      dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall: undefined }))
     }
-  }, [dispatch, operation.uuid, operation.stationCall, operation.stationCallPlusArray, operation.local?.operatorCall, settings?.operatorCall, settings?.stationCall])
+  }, [dispatch, operation.uuid, operation.stationCall, operation.stationCallPlusArray, operation.local?.operatorCall, settings?.operatorCall, settings?.stationCall, settings?.suggestDefaultOperator])
 
   const onChangeStation = useCallback((text) => {
     const calls = text.split(/[, ]+/).filter(Boolean)

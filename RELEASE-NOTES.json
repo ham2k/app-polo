@@ -1,4 +1,11 @@
 {
+  "25.8.2": {
+    "name": "August '25 (patch 2)",
+    "photoCaption": "W2UD with N2PTA at US-6462 for FD",
+    "changes": [
+      "Fixed bug in handling of default operator and added new setting to control it"
+    ]
+  },
   "25.8.1": {
     "name": "August '25 (patch 1)",
     "photoCaption": "W2UD with N2PTA at US-6462 for FD",

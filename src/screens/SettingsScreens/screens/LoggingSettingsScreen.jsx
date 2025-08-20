@@ -103,6 +103,15 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
           />
 
           <H2kListItem
+            title="Suggest default operator"
+            description={settings.suggestDefaultOperator ? `Set ${settings?.operatorCall} as operator in operations where station call is different` : "Don't suggest default operator regardless of station call used" }
+            leftIcon="account-question"
+            rightSwitchValue={settings.suggestDefaultOperator !== false}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ suggestDefaultOperator: value }))}
+            onPress={() => dispatch(setSettings({ suggestDefaultOperator: !settings.suggestDefaultOperator }))}
+          />
+
+          <H2kListItem
             title="Bands & Modes"
             description={[(settings.bands || []).join(', '), (settings.modes || []).join(', ')].join(' • ')}
             leftIcon="radio"
