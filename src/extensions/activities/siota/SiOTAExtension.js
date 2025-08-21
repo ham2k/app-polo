@@ -116,7 +116,7 @@ const SpotsHook = {
             timeInMillis: spotTime,
             source: Info.key,
             icon: Info.icon,
-            label: `${spot.actSiteID}: ${spot?.actLocation || 'Unknown Reference'}`,
+            label: `${spot.actSiteID}: ${spot?.altLocation || 'Unknown Reference'}`,
             sourceInfo: {
               comments: spot.actComments,
               spotter: spot.actSpoter.toUpperCase().trim()
