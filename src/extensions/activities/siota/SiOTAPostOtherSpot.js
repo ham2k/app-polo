@@ -15,7 +15,7 @@ import { apiPnP } from '../../../store/apis/apiPnP'
 import { Info } from './SiOTAInfo'
 
 export const SiOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dispatch, getState) => {
-  const ref = findRef(qso, Info.activationType)
+  const ref = findRef(qso, Info.huntingType)
 
   if (ref) {
     const spot = {
