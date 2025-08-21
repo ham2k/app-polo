@@ -9,7 +9,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { H2kButton, H2kCallsignInput, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kTextInput } from '../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kTextInput } from '../../../ui'
 import { setAccountInfo } from '../../../store/settings'
 
 export function PnPAccountSetting ({ settings, styles }) {
@@ -76,11 +76,11 @@ function AccountsPnPDialog ({ visible, settings, styles, onDialogDone }) {
       <H2kDialogTitle style={{ textAlign: 'center' }}>ParksnPeaks Account</H2kDialogTitle>
       <H2kDialogContent>
         <H2kText variant="bodyMedium">Please enter the details for your ParksnPeaks account:</H2kText>
-        <H2kCallsignInput
+        <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={userId}
-          label="Callsign"
-          placeholder="your account callsign"
+          label="Username (not callsign)"
+          placeholder="your account username"
           onChangeText={onChangeUserId}
         />
         <H2kTextInput
