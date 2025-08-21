@@ -101,7 +101,7 @@ const SpotsHook = {
     const qsos = []
     for (const spot of spots) {
       if (Info.referenceRegex.test(spot.actSiteID)) {
-        const spotTime = Date.parse(spot.actTime)
+        const spotTime = Date.parse(spot.actTime + 'Z')
         const freq = parseFloat(spot.actFreq) * 1000
         const qso = {
           their: { call: spot.actCallsign.toUpperCase().trim() },
