@@ -34,7 +34,7 @@ export const SiOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dis
       apiPromise.unsubscribe && apiPromise.unsubscribe()
 
       if (apiResults?.error || apiResults?.data?.match(/Failure/)) {
-        Alert.alert('Error posting SiOTA spot', apiResults?.error ? apiResults.error?.data : apiResults?.data)
+        Alert.alert('Error posting SiOTA spot', apiResults?.error ? apiResults.error?.error : apiResults?.data)
         return false
       }
     } catch (error) {
