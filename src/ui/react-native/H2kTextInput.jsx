@@ -83,9 +83,10 @@ export function H2kTextInput (props) {
     if (trackSelection) {
       const { nativeEvent: { selection: { start, end } } } = event
       if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleSelectionChange`, { start, end })
-      if (start === end && start >= stringValue.length - 1) {
+      if (start === end && start > stringValue.length) {
         // If the selection is at the end of the string, reset current selection
-        selectionRef.current = {}
+        selectionRef.current.start = undefined
+        selectionRef.current.end = undefined
       } else {
         selectionRef.current.start = start
         selectionRef.current.end = end
@@ -108,14 +109,14 @@ export function H2kTextInput (props) {
 
     if (lastChangeRef.current === undefined) lastChangeRef.current = stringValue
 
-    if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange`, { text, stringValue, lastChange: lastChangeRef.current, start: selectionRef?.current.start, end: selectionRef?.current.end, trackSelection })
+    if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange`, selectionRef?.current.start, selectionRef?.current.end, text, stringValue, { lastChange: lastChangeRef.current, trackSelection })
     if (multiline || text.length < lastChangeRef.length) {
       lastChangeRef.current = text
       if (selectionRef.current.start > 0) {
         selectionRef.current.start = selectionRef.current.start + (text.length - lastChangeRef.current.length)
         selectionRef.current.end = selectionRef.current.end + (text.length - lastChangeRef.current.length)
       }
-      if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange multiline or deleting`, { start: selectionRef?.current.start, end: selectionRef?.current.end, text, lastChange: lastChangeRef.current, trackSelection })
+      if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange multiline or deleting`, selectionRef?.current.start, selectionRef?.current.end, text, { lastChange: lastChangeRef.current, trackSelection })
       // We should not do any transformations:
       // - on multiline inputs
       // - or when deleting
@@ -159,7 +160,7 @@ export function H2kTextInput (props) {
           text = text.replace(SPACE_REGEX, '')
         }
         if (periodToSlash) {
-          // if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange periodToSlash`, { text })
+          // if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange periodToSlash`, text)
           text = text.replaceAll('.', '/')
         }
         if (numeric) {
@@ -176,27 +177,45 @@ export function H2kTextInput (props) {
           text = textTransformer(text)
         }
 
-        if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange after transformations`, { text })
+        if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange after transformations`, text)
         if (trackSelection && text.length !== stringValue.length) {
-          if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed?`, { stringValue, start: selectionRef?.current.start, end: selectionRef?.current.end, lastChange: lastChangeRef.current, trackSelection })
+          if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed?`, selectionRef?.current.start, selectionRef?.current.end, text, stringValue, { lastChange: lastChangeRef.current })
           const selectionFromVirtualNumericKeys = event.selectionFromVirtualNumericKeys ?? {}
           const start = selectionFromVirtualNumericKeys.start ?? selectionRef.current.start ?? stringValue.length
           const end = selectionFromVirtualNumericKeys.end ?? selectionRef.current.end ?? stringValue.length
-          selectionRef.current.start = start + (text.length - stringValue.length)
-          selectionRef.current.end = end + (text.length - stringValue.length)
-          if (selectionRef.current.start === selectionRef.current.end && selectionRef.current.start >= stringValue.length - 1) {
-            selectionRef.current = {}
+
+          let newCursor
+
+          if (start !== end) {
+            // If there was a selection, and not just a cursor…
+            if (stringValue.length - text.length === end - start) {
+              // if the selection got deleted, we leave the cursor at the start of the selection
+              newCursor = start
+            } else {
+              // Otherwise we move the cursor to the end of the inserted text
+              newCursor = Math.max(0, end + (text.length - stringValue.length))
+            }
+          } else {
+            // Otherwise we move the cursor by as many characters got added (or deleted)
+            newCursor = Math.max(0, start + (text.length - stringValue.length))
           }
-          if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed`, { start: selectionRef.current.start, end: selectionRef.current.end, text, stringValue })
+
+          if (newCursor >= text.length) {
+            // If we're at the end of the text, just leave selection empty
+            newCursor = undefined
+          }
+
+          selectionRef.current.start = newCursor
+          selectionRef.current.end = newCursor
+
+          if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed`, selectionRef.current.start, selectionRef.current.end, text, stringValue)
           setTimeout(() => {
             // Sometimes, updating the value causes the native text field to also update the selection
             // to a value that is not the one we want. So we have to repeat our update in order to overwrite it.
-            selectionRef.current.start = start + (text.length - stringValue.length)
-            selectionRef.current.end = end + (text.length - stringValue.length)
-            if (selectionRef.current.start === selectionRef.current.end && selectionRef.current.start >= stringValue.length - 1) {
-              selectionRef.current = {}
-            }
-            if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed timeout`, { start: selectionRef.current.start, end: selectionRef.current.end, text, stringValue })
+            selectionRef.current.start = newCursor
+            selectionRef.current.end = newCursor
+
+            if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed timeout`, selectionRef.current.start, selectionRef.current.end, text, stringValue)
           }, 5)
         }
 
