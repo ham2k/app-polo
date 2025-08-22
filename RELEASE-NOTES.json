@@ -5,7 +5,8 @@
     "changes": [
       "Fixed bug in handling of default operator and added new setting to control it",
       "Fixed handling of duplicates when importing ADIF records",
-      "Extra key in numbers row for Android"
+      "Extra key in numbers row for Android",
+      "Fixed bug in Kansas QSO Party scoring"
     ]
   },
   "25.8.1": {

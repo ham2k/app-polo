@@ -289,7 +289,7 @@ const ReferenceHandler = {
 
     const qsoRef = findRef(qso, Info.key)
 
-    let theirLocations
+    let theirLocations = []
     let theyAreInState
     if (qsoRef?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
       theirLocations = qsoRef?.location.split(SLASH_OR_COMMA_REGEX, 2)
@@ -323,8 +323,9 @@ const ReferenceHandler = {
 
     const locationMultiplier = ourLocations.length * theirLocations.length // For county line operations
 
-    let value = (qp.points[superMode] || 1) * locationMultiplier
-    if (qp.inStateToOutOfStatePointsDouble && weAreInState && !theyAreInState) {
+    let value = (qp?.points?.[superMode] || 1) * locationMultiplier
+
+    if (qp?.inStateToOutOfStatePointsDouble && weAreInState && !theyAreInState) {
       value = value * 2
     }
 
