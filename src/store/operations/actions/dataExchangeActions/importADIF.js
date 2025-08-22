@@ -16,7 +16,6 @@ import { reportError } from '../../../../distro'
 
 import { addQSOs, actions as qsosActions, saveQSOsForOperation } from '../../../qsos'
 import { annotateQSO } from '../../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
-import { DefaultScoringHandler } from '../../../../extensions/scoring/DefaultScoringHandler'
 
 export const importADIFIntoOperation = (path, operation, operationQSOs) => async (dispatch) => {
   dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'loading' }))
@@ -26,9 +25,12 @@ export const importADIFIntoOperation = (path, operation, operationQSOs) => async
     const adif = buffer.toString('utf8')
 
     const data = adifToQSON(adif)
-    const dedupedQSOs = data.qsos.filter(
-      (qso) => DefaultScoringHandler.scoringForQSO({ qso, qsos: operationQSOs, operation })?.count !== 0
-    )
+
+    const dedupedQSOs = data.qsos.filter(qso => {
+      const key = qsoKey(qso)
+      return !operationQSOs.find(q => q.key === key)
+    })
+
     const qsos = dedupedQSOs.map((qso) => {
       const newQSO = { ...qso }
       newQSO.refs = (qso.refs || []).map(ref => {

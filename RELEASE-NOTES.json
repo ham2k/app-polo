@@ -3,7 +3,8 @@
     "name": "August '25 (patch 2)",
     "photoCaption": "W2UD with N2PTA at US-6462 for FD",
     "changes": [
-      "Fixed bug in handling of default operator and added new setting to control it"
+      "Fixed bug in handling of default operator and added new setting to control it",
+      "Fixed handling of duplicates when importing ADIF records"
     ]
   },
   "25.8.1": {
