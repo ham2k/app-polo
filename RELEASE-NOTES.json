@@ -4,7 +4,8 @@
     "photoCaption": "W2UD with N2PTA at US-6462 for FD",
     "changes": [
       "Fixed bug in handling of default operator and added new setting to control it",
-      "Fixed handling of duplicates when importing ADIF records"
+      "Fixed handling of duplicates when importing ADIF records",
+      "Extra key in numbers row for Android"
     ]
   },
   "25.8.1": {

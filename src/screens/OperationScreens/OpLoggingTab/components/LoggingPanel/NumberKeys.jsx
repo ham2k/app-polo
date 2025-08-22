@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { Text, View, Platform, Vibration } from 'react-native'
+import { Text, View, Vibration } from 'react-native'
 import { TouchableRipple } from 'react-native-paper'
 
 import { useUIState } from '../../../../../store/ui/useUIState'
@@ -72,15 +72,11 @@ export function NumberKeys ({ themeColor, onNumberKeyPressed, settings, enabled 
       <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('8')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>8</Text></TouchableRipple>
       <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('9')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>9</Text></TouchableRipple>
       <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('0')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>0</Text></TouchableRipple>
-      {settings?.showExtraInNumbersRow && Platform.OS === 'ios' && !Platform.isPad && (
-        mode === 'callsign' ? (
-          <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('/')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>/</Text></TouchableRipple>
-        ) : (
-          <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('.')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>.</Text></TouchableRipple>
-        )
-      )}
-      {settings?.showExtraInNumbersRow && Platform.OS === 'ios' && Platform.isPad && (
+      {settings?.showExtraInNumbersRow && mode === 'callsign' && (
         <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('/')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>/</Text></TouchableRipple>
+      )}
+      {settings?.showExtraInNumbersRow && mode === 'numbers' && (
+        <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('.')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>.</Text></TouchableRipple>
       )}
     </View>
   )
