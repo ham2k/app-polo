@@ -152,7 +152,7 @@ const SpotsHook = {
           timeInMillis: Date.parse(spot.timeStamp),
           source: Info.key,
           icon: Info.icon,
-          label: `SOTA ${spot.summitCode}: ${spot.summitName}`,
+          label: `${spot.points ? String.fromCodePoint(10121 + spot.points) : ''} ${spot.summitCode}: ${spot.summitName}`,
           sourceInfo: {
             id: spot.id,
             comments: spot.comments,
