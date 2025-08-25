@@ -29,15 +29,15 @@ import packageJson from '../../../package.json'
 const SPLASH_IMAGE = require('./img/launch_screen.jpg')
 
 function prepareStyles (baseTheme, height, dialogVisible) {
-  const characterizeTopHalf = 'dark' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
-  const characterizeBottomHalf = 'light' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
+  const characterizeTopHalf = 'light' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
+  const characterizeBottomHalf = 'dark' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
 
   const topTextColor = { light: '#000', mediumLight: '#000', medium: '#FFF', mediumDark: '#FFF', dark: '#FFF' }[characterizeTopHalf]
   const topHaloColor = { light: '#FFF', mediumLight: '#FFF', medium: '#000', mediumDark: '#000', dark: '#000' }[characterizeTopHalf]
   const topBackColor = { light: 'rgba(0,0,0,0)', mediumLight: 'rgba(0,0,0,.3)', medium: 'rgba(0,0,0,.15)', mediumDark: 'rgba(255,255,255,.1)', dark: 'rgba(255,255,255,.0)' }[characterizeTopHalf]
   const bottomTextColor = { light: '#000', mediumLight: '#000', medium: '#FFF', mediumDark: '#FFF', dark: '#FFF' }[characterizeBottomHalf]
   const bottomHaloColor = { light: '#FFF', mediumLight: '#FFF', medium: '#000', mediumDark: '#000', dark: '#000' }[characterizeBottomHalf]
-  const bottomBackColor = { light: 'rgba(255,255,255,0.3)', mediumLight: 'rgba(0,0,0,.3)', medium: 'rgba(0,0,0,.15)', mediumDark: 'rgba(255,255,255,0)', dark: 'rgba(255,255,255,.0)' }[characterizeBottomHalf]
+  const bottomBackColor = { light: 'rgba(255,255,255,0.3)', mediumLight: 'rgba(0,0,0,.3)', medium: 'rgba(0,0,0,.15)', mediumDark: 'rgba(255,255,255,0)', dark: 'rgba(0,0,0,.20)' }[characterizeBottomHalf]
 
   return {
     ...baseTheme,
