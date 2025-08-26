@@ -29,7 +29,12 @@ export default function Notices ({ paddingForSafeArea = false }) {
   const navigation = useNavigation()
   const notices = useNotices({ dispatch, includeTransient: true })
 
-  const [currentNotice, setCurrentNotice] = useState(notices[0])
+  const [currentNotice, setCurrentNotice] = useState()
+
+  useEffect(() => {
+    setCurrentNotice(notices[0])
+  }, [notices])
+
   const [visible, setVisible] = useState(false)
 
   // Animated values for smooth height and opacity transitions
