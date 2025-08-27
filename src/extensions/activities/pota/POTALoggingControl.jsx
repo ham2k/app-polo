@@ -38,7 +38,9 @@ export function POTALoggingControl (props) {
   }, [refsString, innerValue])
 
   const handleChangeText = useCallback((value) => {
-    const refs = stringToRefs(Info.huntingType, value)
+    let refs = stringToRefs(Info.huntingType, value)
+    refs = refs.map(r => ({ ...r, label: `${Info.shortName} ${r.ref}` }))
+
     setInnerValue(value)
     updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
   }, [qso, updateQSO])

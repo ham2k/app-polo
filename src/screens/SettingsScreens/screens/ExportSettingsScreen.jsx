@@ -309,7 +309,7 @@ Attributes for the log being exported
 \`{{qso.their.sent}}\` → \`59\` The signal report they sent
 \`{{qso.our.sent}}\` → \`55\` The signal report we sent
 \`{{qso.their.grid}}\` → \`FF99\` The grid they reported
-\`{{qso.their.refs}}\` → A list of all the references they reported
+\`{{qso.refs}}\` → A list of all the references for the QSO (includes both Operation refs and QSO-only refs)
 \`{{first8 qso.uuid}}\` → \`123e4567\`
 `
   }, [now])
