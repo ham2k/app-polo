@@ -31,15 +31,19 @@ export function useKeyboardVisible () {
 
     const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
       const metrics = Keyboard.metrics()
-      if (metrics.height > 100) {
+      if ((metrics?.height || 0) > 100) {
         setIsKeyboardVisible(true)
         setKeyboardExtraStyles({})
       } else {
         setIsKeyboardVisible(false)
-        setKeyboardExtraStyles({ paddingBottom: metrics.height - (Platform.OS === 'ios' ? 10 : 0) })
+        setKeyboardExtraStyles({ paddingBottom: (metrics?.height || 0) - (Platform.OS === 'ios' ? 10 : 0) })
       }
     })
     const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardVisible(false)
+      setKeyboardExtraStyles({})
+    })
+    const willHideSubscription = Keyboard.addListener('keyboardWillHide', () => {
       setIsKeyboardVisible(false)
       setKeyboardExtraStyles({})
     })
@@ -47,6 +51,7 @@ export function useKeyboardVisible () {
     return () => {
       didShowSubscription.remove()
       didHideSubscription.remove()
+      willHideSubscription.remove()
     }
   }, [])
 

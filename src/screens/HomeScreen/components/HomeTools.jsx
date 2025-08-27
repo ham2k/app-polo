@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useCallback, useEffect, useRef } from 'react'
-import { Keyboard, Platform, View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { IconButton, Searchbar } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
