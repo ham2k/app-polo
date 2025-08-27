@@ -6,7 +6,7 @@
  */
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { replaceRef } from '../../../tools/refTools'
+import { findRef, replaceRef } from '../../../tools/refTools'
 
 import { setOperationData } from '../../../store/operations'
 import { H2kListRow, H2kListSection, H2kMarkdown } from '../../../ui'
@@ -19,7 +19,9 @@ export function ActivityOptions (props) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ref: 'GA POTA' }) }))
+    if (!findRef(operation?.refs, Info.key)) {
+      dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ref: 'GA POTA' }) }))
+    }
   }, [dispatch, operation])
 
   return (
