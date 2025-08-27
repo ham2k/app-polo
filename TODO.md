@@ -29,3 +29,7 @@ for other icon sets, instead of the current implementation in Ham2kIcon
 https://github.com/oblador/react-native-vector-icons/blob/master/MIGRATION.md
 
 
+### React Native Paper
+
+There's a bug with Menu anchors that we're using a patch for.
+See https://github.com/callstack/react-native-paper/issues/4763
