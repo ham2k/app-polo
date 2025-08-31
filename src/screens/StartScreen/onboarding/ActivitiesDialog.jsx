@@ -42,25 +42,61 @@ export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrev
       <H2kDialogContent>
         <Text style={{ fontSize: styles.normalFontSize, marginBottom: styles.oneSpace * 2, textAlign: 'center' }}>Are you interested in any of these popular activation programs?</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace }}>
-          <Switch value={values['extensions/pota']} onValueChange={(value) => setValues({ ...values, 'extensions/pota': value }) } />
+          <Switch
+            value={values['extensions/pota']}
+            onValueChange={(value) => {
+              // Workaround for Switch component not updating immediately inside Portal.
+              // See https://github.com/callstack/react-native-paper/issues/4789
+              setTimeout(() => {
+                setValues({ ...values, 'extensions/pota': value })
+              }, 10)
+            }}
+          />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, 'extensions/pota': !values['extensions/pota'] })}>
             Parks On The Air
           </Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace, marginTop: styles.oneSpace }}>
-          <Switch value={values['extensions/sota']} onValueChange={(value) => setValues({ ...values, 'extensions/sota': value }) } />
+          <Switch
+            value={values['extensions/sota']}
+            onValueChange={(value) => {
+              // Workaround for Switch component not updating immediately inside Portal.
+              // See https://github.com/callstack/react-native-paper/issues/4789
+              setTimeout(() => {
+                setValues({ ...values, 'extensions/sota': value })
+              }, 10)
+            }}
+          />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, 'extensions/sota': !values['extensions/sota'] })}>
             Summits On The Air
           </Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace, marginTop: styles.oneSpace }}>
-          <Switch value={values['extensions/wwff']} onValueChange={(value) => setValues({ ...values, 'extensions/wwff': value }) } />
+          <Switch
+            value={values['extensions/wwff']}
+            onValueChange={(value) => {
+              // Workaround for Switch component not updating immediately inside Portal.
+              // See https://github.com/callstack/react-native-paper/issues/4789
+              setTimeout(() => {
+                setValues({ ...values, 'extensions/wwff': value })
+              }, 10)
+            }}
+          />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, 'extensions/wwff': !values['extensions/wwff'] })}>
             Worldwide Fauna & Flora
           </Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace, marginTop: styles.oneSpace }}>
-          <Switch value={values['extensions/satellites']} onValueChange={(value) => setValues({ ...values, 'extensions/satellites': value }) } />
+          <Switch
+            value={values['extensions/satellites']}
+            onValueChange={(value) => {
+              // Workaround for Switch component not updating immediately inside Portal.
+              // See https://github.com/callstack/react-native-paper/issues/4789
+              setTimeout(() => {
+                setValues({ ...values, 'extensions/satellites': value })
+              }, 10)
+            }}
+          />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, 'extensions/satellites': !values['extensions/satellites'] })}>
             Satellites
           </Text>

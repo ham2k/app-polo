@@ -44,7 +44,16 @@ export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPreviou
           To help us make the app better, we'd like to collect performance, crash, and app usage data.
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace }}>
-          <Switch value={values.consentAppData} onValueChange={(value) => setValues({ ...values, consentAppData: value }) } />
+          <Switch
+            value={values.consentAppData}
+            onValueChange={(value) => {
+              // Workaround for Switch component not updating immediately inside Portal.
+              // See https://github.com/callstack/react-native-paper/issues/4789
+              setTimeout(() => {
+                setValues({ ...values, consentAppData: value })
+              }, 10)
+            }}
+          />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, consentAppData: !values.consentAppData })}>
             Share Usage Data
           </Text>
@@ -54,7 +63,16 @@ export function ConsentDialog ({ settings, styles, onDialogNext, onDialogPreviou
           Some features might involve sharing your operation data with other users. You can opt-out at any time.
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace }}>
-          <Switch value={values.consentOpData} onValueChange={(value) => setValues({ ...values, consentOpData: value }) } />
+          <Switch
+            value={values.consentOpData}
+            onValueChange={(value) => {
+              // Workaround for Switch component not updating immediately inside Portal.
+              // See https://github.com/callstack/react-native-paper/issues/4789
+              setTimeout(() => {
+                setValues({ ...values, consentOpData: value })
+              }, 10)
+            }}
+          />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, consentOpData: !values.consentOpData })}>
             Share Operation Data
           </Text>

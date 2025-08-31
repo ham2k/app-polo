@@ -33,3 +33,16 @@ https://github.com/oblador/react-native-vector-icons/blob/master/MIGRATION.md
 
 There's a bug with Menu anchors that we're using a patch for.
 See https://github.com/callstack/react-native-paper/issues/4763
+
+There's a bug with Switch not updating immediately inside Portal.
+See https://github.com/callstack/react-native-paper/issues/4789.
+All Switches inside Dialogs should use code like
+```
+onValueChange={(v) => {
+  dispatch(setSettings({ key: 'example', enabled: !v }))
+  setTimeout(() => {
+    dispatch(setSettings({ key: 'example', enabled: v }))
+  }, 100)
+}
+```
+
