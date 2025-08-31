@@ -53,6 +53,11 @@ const SyncHook = {
     return response
   },
 
+  resetClient: (email) => async (dispatch, getState) => {
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/client/reset', method: 'POST', body: JSON.stringify({ email }) })
+    return response
+  },
+
   getAccountData: () => async (dispatch, getState) => {
     const results = await requestWithAuth({ dispatch, getState, url: 'v1/accounts', method: 'GET' })
     if (results.ok) {
