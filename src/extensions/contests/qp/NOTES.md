@@ -69,6 +69,7 @@ Relevant `"options"`:
 - `multsPerBand`: If true, multipliers are awarded per band. (VT, TN)
 - `multsPerMode`: If true, multipliers are awarded per mode. (ID)
 - `inStateMultsPerBand`: If true, in-state multipliers are awarded per band. (HI)
+- `outOfStateMultsPerBand`: If true, out-of-state multipliers are awarded per band. (NH)
 - `dxIsMultiplier`: If true (default), DX stations count as a single multiplier "DX". (Many)
 - `dxEntityIsMultiplier`: If true, each DX Entity Prefix is awarded as a multiplier. (Many)
 - `dxEntityMultiplierMax`: If set, limits the number of DX Entity Prefixes that can be awarded as multipliers. (7QP)
@@ -94,7 +95,5 @@ Relevant `"options"`:
 - Implement removeCountySuffixes
 - Implement dataAndCWCountAsSameMode
 - Implement powerMultiplier
-- Implement inStateMultsPerBand
 - Implement support for selfCountsForCounty and selfMobileCountsForCountywith a minimum number of QSOs
-- Implement dxEntityMultiplierMax (7QP)
 - 7QP allows for multi-county locations to be entered with an abbreviated second location, so that "ORDES/ORJEF" can be entered as "ORDES/JEF".

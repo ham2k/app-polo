@@ -1,11 +1,29 @@
 {
   "key": "NH",
   "name": "New Hampshire QSO Party",
+  "short": "NHQP",
+  "url": "https://w1wqm.org/nh-qso-party/",
   "start": "2025-9-20 16:00Z",
   "end": "2025-9-21 04:00Z",
-  "secondStart": "2025-9-21 12:00Z",
-  "secondEnd": "2025-9-21 22:00Z",
-  "status": "Pending",
+  "cabrilloName": "NH-QSO-PARTY",
+  "status": "Verified for 2025",
+  "lastUpdated": "2025-09-04 12:00Z",
+  "options": {
+    "selfSpotting": true,
+    "dcCountsAsMaryland": true,
+    "dxLocationIsPrefix": false,
+    "dxIsMultiplier": true,
+    "dxEntityMultiplierMax": 10,
+    "multsPerBandMode": false,
+    "outOfStateMultsPerBand": true,
+    "stateCountsForInState": true,
+    "countyLine": false
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2,
+    "DIGI": 2
+  },
   "counties": {
     "BEL": "Belknap",
     "CAR": "Carroll",

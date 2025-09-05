@@ -314,7 +314,7 @@ const ReferenceHandler = {
     const { band, mode, key, startAtMillis } = qso
 
     if (INVALID_BANDS.indexOf(band) >= 0 || (qp.options?.invalidBands || []).indexOf(band) >= 0) {
-      return { value: 0, alerts: ['invalidBand'], type: Info.key }
+      return { value: 0, alerts: ['invalidBand'], type: Info.key, weAreInState }
     }
 
     const superMode = superModeForMode(mode)
@@ -329,41 +329,59 @@ const ReferenceHandler = {
       value = value * 2
     }
 
-    const scoring = { value, theirLocations, mode: superMode, band, type: Info.key, infos: [], notices: [], errors: [], mults: [], bonuses: [] }
+    const multPrefix = qpMultPrefix({ qp, band, mode: superMode, weAreInState, theyAreInState })
 
-    const multPrefix = qpMultPrefix({ qp, band, mode: superMode })
+    const scoring = {
+      value,
+      theirLocations,
+      weAreInState,
+      theyAreInState,
+      multPrefix,
+      mode: superMode,
+      band,
+      type: Info.key,
+      infos: [],
+      notices: [],
+      errors: [],
+      mults: [],
+      bonuses: []
+    }
 
     theirLocations.forEach(loc => {
       loc = qpNormalizeLocation({ qp, qso, location: loc, weAreInState, theyAreInState })
-
+      let mult
       if (loc) {
         if (qp?.counties?.[loc]) {
-          scoring.mults.push(multPrefix + loc)
+          mult = multPrefix + loc
           scoring.counties = scoring.counties ?? []
           scoring.counties.push(loc)
         } else if (US_STATES[loc]) {
-          scoring.mults.push(multPrefix + loc)
+          mult = multPrefix + loc
           scoring.state = loc
         } else if (CANADIAN_PROVINCES[loc]) {
-          scoring.mults.push(multPrefix + loc)
+          mult = multPrefix + loc
           scoring.province = loc
         } else {
           if (qp.options.dxIsMultiplier !== false) {
-            if (qp.options.dxEntityIsMultiplier) {
-              // TODO: Handle variations on how DX entities are logged (DX vs Prefix)
-              const dxcc = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
-              scoring.mults.push(multPrefix + dxcc)
-              scoring.entity = dxcc
+            if (!qp.options.dxEntityMultiplierMax || scoring.entities.length < qp.options.dxEntityMultiplierMax) {
+              if (qp.options.dxEntityIsMultiplier) {
+                const dxcc = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+                loc = dxcc
+              }
+              mult = multPrefix + loc
+              scoring.entity = loc
             } else {
-              scoring.mults.push(multPrefix + loc)
+              // Don't count as multiplier if we're over max
               scoring.entity = loc
             }
           }
         }
 
-        if (score?.mults?.[multPrefix + loc]) {
+        if (mult) scoring.mults.push(mult)
+
+        if (score?.mults?.[mult]) {
           scoring.infos.push(`${qpNameForLocation({ qp, location: loc })}`)
-        } else {
+        } else if (loc) {
           scoring.notices.push(`${qpNameForLocation({ qp, location: loc })}`)
         }
       }
@@ -408,6 +426,7 @@ const ReferenceHandler = {
       key: ref?.type,
       icon: Info.icon,
       label: qp.name,
+      weAreInState: qsoScore.weAreInState,
       total: 0,
       bonus: 0,
       qsoCount: 0,
@@ -425,8 +444,7 @@ const ReferenceHandler = {
     if (qp.options.selfCountsForCounty && !score.counties[ref?.location]) {
       if (qp.counties[ref.location]) {
         score.counties[ref.location] = 1
-        const multPrefix = qpMultPrefix({ qp, band: qsoScore.band, mode: qsoScore.mode })
-        score.mults[multPrefix + ref.location] = 1
+        score.mults[`${qsoScore.multPrefix}${ref.location}`] = 1
       }
     }
 
@@ -776,12 +794,12 @@ export function qpData ({ ref }) {
   return QSO_PARTY_DATA[ref?.ref] || { options: {}, counties: {}, points: {}, short: 'QSO Party' }
 }
 
-export function qpMultPrefix ({ qp, band, mode }) {
-  if (qp.options.multsPerBandMode) {
+export function qpMultPrefix ({ qp, band, mode, weAreInState }) {
+  if (qp.options.multsPerBandMode || (qp.options.inStateMultsPerBand && weAreInState) || (qp.options.outOfStateMultsPerBand && !weAreInState)) {
     return `${band}:${mode}:`
-  } else if (qp.options.multsPerBand) {
+  } else if (qp.options.multsPerBand || (qp.options.inStateMultsPerBand && weAreInState) || (qp.options.outOfStateMultsPerBand && !weAreInState)) {
     return `${band}:`
-  } else if (qp.options.multsPerMode) {
+  } else if (qp.options.multsPerMode || (qp.options.inStateMultsPerBand && weAreInState) || (qp.options.outOfStateMultsPerBand && !weAreInState)) {
     return `${mode}:`
   } else {
     return ''

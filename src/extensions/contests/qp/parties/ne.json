@@ -30,7 +30,6 @@
     "selfSpotting": true,
     "countyLine": true,
     "multsPerBandMode": false,
-    "dxEntryIsPrefix": true,
     "dxLocationIsPrefix": true
   },
   "points": {

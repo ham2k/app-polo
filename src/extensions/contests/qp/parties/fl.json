@@ -21,7 +21,7 @@
     "stateCountsForInState": true,
     "selfSpotting": false,
     "countyLine": false,
-    "dxEntryIsPrefix": true,
+    "dxLocationIsPrefix": true,
     "dxIsMultiplier": false,
     "multsPerBandMode": false,
     "multsPerMode": true
