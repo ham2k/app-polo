@@ -4,6 +4,7 @@
     "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
     "changes": [
       "NH QSO Party",
+      "Fixed bug in scoring for duplicates",
       "Fixed popup menu in Operation Screen",
       "Fixed bug with settings switches"
     ]

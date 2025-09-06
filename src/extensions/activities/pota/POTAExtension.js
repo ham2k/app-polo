@@ -344,9 +344,10 @@ const ReferenceHandler = {
 
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
+      const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0
       const sameDay = nearDupes.filter(q => (q.startAtMillis - (q.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
-      if (sameBand && sameMode && sameDay && (sameRefs || refs.length === 0)) {
+      if (sameBandMode && sameDay && (sameRefs || refs.length === 0)) {
         return { value: 0, refCount, alerts: ['duplicate'], type }
       } else {
         const notices = []

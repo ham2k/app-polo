@@ -405,7 +405,8 @@ const ReferenceHandler = {
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => superModeForMode(q.mode) === superMode).length !== 0
-      if (sameBand && sameMode) {
+      const sameBandMode = nearDupes.filter(q => q.band === band && superModeForMode(q.mode) === superMode).length !== 0
+      if (sameBandMode) {
         return { ...scoring, value: 0, alerts: ['duplicate'] }
       } else {
         const notices = [...(scoring.notices || [])]

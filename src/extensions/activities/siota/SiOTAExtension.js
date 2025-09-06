@@ -291,9 +291,10 @@ const ReferenceHandler = {
 
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
+      const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0
       const sameDay = nearDupes.filter(q => (q.startAtMillis - (q.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
-      if (sameBand && sameDay && sameMode) {
+      if (sameBandMode && sameDay) {
         if (points > 0 && !sameRefs) { // Doesn't count towards activation, but towards Silo 2 Silo award.
           return { counts: 0, points, notices: ['newRef'], type: Info.activationType }
         }
