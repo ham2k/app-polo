@@ -53,29 +53,43 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     }
   }, [dispatch, syncHook])
 
-  const accountTitle = useMemo(() => {
-    if (!lofiData?.account) {
-      return `Device not linked! (${GLOBAL.deviceId.slice(0, 8)})`
-    } else {
-      return `${lofiData?.account?.call} (${lofiData?.account?.uuid.slice(0, 8)})`
-    }
-  }, [lofiData?.account])
-
   useEffect(() => {
     console.log('LOFI', lofiData)
   }, [lofiData])
 
-  const accountInfo = useMemo(() => {
-    if (lofiData?.account?.email) {
-      if (lofiData?.account?.pending_email && lofiData?.account?.pending_email !== lofiData?.account?.email) {
-        return `${lofiData?.account?.pending_email} (pending confirmation)`
-      } else {
-        return `${lofiData?.account?.email} (confirmed)`
-      }
-    } else if (lofiData?.account?.pending_email) {
-      return `${lofiData?.account?.pending_email} (pending confirmation)`
+  const accountTitle = useMemo(() => {
+    if (!lofiData?.account) {
+      return `Device not linked! (${GLOBAL.deviceId.slice(0, 8).toUpperCase()})`
     } else {
-      return 'You\'ll need to enter an email for account recovery.'
+      if (lofiData?.account?.email) {
+        if (lofiData?.account?.pending_email && lofiData?.account?.pending_email !== lofiData?.account?.email) {
+          return lofiData.account.pending_email
+        } else {
+          return lofiData.account.email
+        }
+      } else if (lofiData?.account?.pending_email) {
+        return lofiData.account.pending_email
+      } else {
+        return `Anonymous Account (#${lofiData?.account?.uuid.slice(0, 8).toUpperCase()})`
+      }
+    }
+  }, [lofiData?.account])
+
+  const accountInfo = useMemo(() => {
+    if (!lofiData?.account) {
+      return 'Enable sync to link this device'
+    } else {
+      if (lofiData?.account?.email) {
+        if (lofiData?.account?.pending_email && lofiData?.account?.pending_email !== lofiData?.account?.email) {
+          return '(pending email confirmation)'
+        } else {
+          return `Account #${lofiData?.account?.uuid.slice(0, 8).toUpperCase()}`
+        }
+      } else if (lofiData?.account?.pending_email) {
+        return '(pending email confirmation)'
+      } else {
+        return 'Tap to configure'
+      }
     }
   }, [lofiData?.account])
 
@@ -115,7 +129,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
             onPress={() => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: !lofiData.enabled }))}
           />
           <H2kListItem
-            title={`Account ${accountTitle}`}
+            title={accountTitle}
             description={accountInfo}
             leftIcon="card-account-details"
             onPress={() => setCurrentDialog('syncAccount')}
@@ -129,6 +143,9 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
                 setCurrentDialog('')
                 setImmediate(async () => {
                   setSyncStatus(await syncCountDescription())
+                  if (syncHook) {
+                    dispatch(syncHook.getAccountData())
+                  }
                 })
               }}
             />
@@ -158,7 +175,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
         <H2kListSection title={'This Device'}>
           <H2kListItem
             key={lofiData?.client?.uuid}
-            title={lofiData?.client?.name ? `${lofiData?.client?.name} (${lofiData?.client?.uuid?.slice(0, 8) ?? '?'})` : 'Not authenticated'}
+            title={lofiData?.client?.name ? `${lofiData?.client?.name} (${lofiData?.client?.uuid?.slice(0, 8)?.toUpperCase() ?? '?'})` : 'Not authenticated'}
             description={syncStatus}
             leftIcon="cellphone"
           />
@@ -170,7 +187,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
               <H2kListItem
                 key={client.uuid}
                 title={client.name}
-                description={client.uuid === lofiData?.client?.uuid ? 'This device' : client.uuid.slice(0, 8)}
+                description={client.uuid === lofiData?.client?.uuid ? 'This device' : client.uuid.slice(0, 8)?.toUpperCase()}
                 leftIcon="cellphone"
               />
             ))}
@@ -193,7 +210,15 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
                 settings={settings}
                 styles={styles}
                 visible={true}
-                onDialogDone={() => setCurrentDialog('')}
+                onDialogDone={() => {
+                  setCurrentDialog('')
+                  setImmediate(async () => {
+                    if (syncHook) {
+                      dispatch(syncHook.getAccountData())
+                    }
+                    setSyncStatus(await syncCountDescription())
+                  })
+                }}
               />
             )}
 

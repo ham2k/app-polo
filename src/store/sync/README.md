@@ -44,3 +44,45 @@ Sync hooks are implemented in extensions such as `ham2k-lofi-sync`. They are use
 
 They are responsible for managing authentication, calling APIs to submit the payload, receiving any response and passing it back to the sync function.
 
+
+-------
+
+# Scenarios
+
+### New install, device is known to sync server
+
+As the first step in onboarding, we give users three options:
+- Continue with existing account
+- Connect to a new account
+- Disable sync
+
+### New install on a new device
+
+During onboarding, we ask
+- Connect to an existing Ham2K Log Filer account
+- Start with a new account
+- Disable cloud sync
+
+In all cases, they start with an empty database.
+
+If they want a new account, or they disable cloud sync, we continue with the regular onboarding process, asking for their callsign, activities, consent, etc.
+
+If they want to connect to an existing account, we can ask them to enter an email, tell them to go
+check their email, and wait for the server to confirm this client has been linked to an account.
+The user might cancel this wait and go back to the original question.
+Once the client is linked, we sync their settings, and then proceed to ask them the consent questions.
+
+### Existing install, cloud sync was disabled
+
+In sync settings, the user can enable syncing. When they do, we'll connect to the current client and
+continue syncing.
+
+### Existing install, syncing with new account
+
+In sync settings, the user can enter an email address, which they'll confirm separately.
+
+If the email they enter corresponds to an existing account, they'll be asked if they want to re-sync the existing operations into the new account. If they don't, AND all existing data has been synced, then they'll be invited to restart the app with a clean database before continuing.
+
+### Existing install, syncing with existing account
+
+

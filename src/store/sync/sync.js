@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { diff } from 'just-diff'
 
@@ -23,7 +23,7 @@ import { selectFeatureFlag } from '../system'
 const SYNC_LOOP_DEBOUNCE_DELAY = 1000 * 0.5 // 500ms, minimum time to wait for more changes before starting a new sync loop
 const SYNC_LOOP_DEBOUNCE_MAX = 1000 * 3 // 3 seconds, maximum time to wait for more changes before starting a new sync loop
 
-const DEFAULT_SYNC_LOOP_DELAY = 1000 * 5 // 5 seconds, time between sending batches of changes
+const DEFAULT_SYNC_LOOP_DELAY = 1000 * 5 // 5 seconds, time between sending batches of changes inside a sync loop
 const DEFAULT_SYNC_CHECK_PERIOD = 10000 // 1000 * 60 * 1 // 1 minutes, time between checking if a new sync loop is needed
 
 const SMALL_BATCH_SIZE = 5 // QSOs or Operations to send on a quick `syncLatest...`
@@ -37,34 +37,152 @@ let errorCount = 0
 
 export async function sendQSOsToSyncService ({ dispatch }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
-    await doOneRoundOfSyncing({ dispatch, batchSize: SMALL_BATCH_SIZE })
+    await _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly: true })
   })
 }
 
 export async function sendOperationsToSyncService ({ dispatch }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
-    await doOneRoundOfSyncing({ dispatch, batchSize: SMALL_BATCH_SIZE })
+    await _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly: true })
   })
 }
 
-async function doOneRoundOfSyncing ({ qsos, operations, dispatch, batchSize = 0 }) {
+/*
+ * A "sync loop" is one or more "paginated" sync operations in quick succession
+ * that continue until all QSOs and Operations have been synced.
+ *
+ * Every 5 seconds, the `useSyncLoop` hook will check to see
+ * if it's been more than `SYNC_CHECK_PERIOD` since the last sync loop,
+ * and if so, it will start a new one.
+ *
+ * Inside the sync loop, `_doOneRoundOfSyncing` is called until there are no more changes to sync,
+ * with a `SYNC_LOOP_DELAY` before each call.
+ *
+ * Independently, the QSO and Operation stores, when there are updates,
+ * will call `sendQSOsToSyncService` or `sendOperationsToSyncService`
+ * to trigger a single round of syncing with a small batch size.
+ */
+
+// TODO: detect when account changed, show a message and ask the user
+// if they want to drop existing QSOs and start anew with the new account sync,
+// or they want to keep the current data and sync it into the new account.
+
+export function useSyncLoop ({ dispatch, settings, online, appState }) {
+  const localData = useSelector(selectLocalData)
+  const [lastSettings, setLastSettings] = useState()
+
+  const syncHook = useMemo(() => {
+    return findHooks('sync')[0]
+  }, [])
+
+  const [currentAccountUUID, setCurrentAccountUUID] = useState()
+  useEffect(() => {
+    if (online && syncHook) {
+      setImmediate(async () => {
+        const results = await dispatch(syncHook.getAccountData())
+        if (results.ok) {
+          const json = results.json
+          if (json?.current_account?.uuid) {
+            setCurrentAccountUUID(json?.current_account?.uuid)
+          }
+        }
+      })
+    }
+  }, [dispatch, online, syncHook])
+
+  const [goAheadWithSync, setGoAheadWithSync] = useState(false)
+  useEffect(() => {
+    if (currentAccountUUID && (currentAccountUUID === localData?.sync?.lastSyncAccountUUID || !localData?.sync?.lastSyncAccountUUID)) {
+      setGoAheadWithSync(true)
+    } else if (currentAccountUUID && localData?.sync?.lastSyncAccountUUID !== currentAccountUUID) {
+      // Account changed!!! Disable sync until the user updates their settings
+      setGoAheadWithSync(false)
+    }
+  }, [localData?.sync?.lastSyncAccountUUID, currentAccountUUID])
+
+  useEffect(() => {
+    if (appState === 'starting') return
+
+    if (settings !== lastSettings) { // Have to check because we update `lastSettings` in this effect
+      if (VERBOSE > 2) console.log('Settings Changed')
+      if (lastSettings === undefined) {
+        if (VERBOSE > 2) console.log('--- first settings')
+      } else {
+        if (VERBOSE > 2) console.log('-- diffs', diff(lastSettings, settings))
+      }
+      setLastSettings(settings)
+      GLOBAL.settingsSynced = false
+    }
+  }, [settings, lastSettings, appState])
+
+  // Phase out dev.lofi.ham2k.net
+  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
+  useEffect(() => {
+    if (lofiData?.server === 'https://dev.lofi.ham2k.net') {
+      dispatch(setLocalExtensionData({ key: 'ham2k-lofi', server: 'https://lofi.ham2k.net' }))
+      resetSyncedStatus()
+    }
+  }, [lofiData?.server, dispatch])
+
+  const tick = useSelector(selectFiveSecondsTick)
+  useEffect(() => {
+    if (appState === 'starting') return
+    setImmediate(() => {
+      dispatch(startTickTock())
+      if (VERBOSE > 1) console.log('sync tick', tick, GLOBAL.lastSyncLoop)
+      if (goAheadWithSync && GLOBAL.syncEnabled && online) {
+        const maxTime = GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD
+
+        if (VERBOSE > 1) console.log('-- sync enabled', { lastSyncLoop: GLOBAL.lastSyncLoop, delta: (tick - (GLOBAL.lastSyncLoop || 0)) })
+        if (tick && (tick - (GLOBAL.lastSyncLoop || 0)) > maxTime) {
+          if (VERBOSE > 1) console.log('-- sync due')
+          _scheduleNextSyncLoop({ dispatch, delay: 1 })
+        }
+      }
+    })
+  }, [appState, dispatch, online, goAheadWithSync, tick])
+}
+
+function _scheduleNextSyncLoop ({ dispatch, delay = 0 }, loop) {
+  if (!delay) {
+    delay = GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY
+  }
+
+  if (!nextSyncLoopInterval || nextSyncLoopInterval === true) {
+    if (VERBOSE > 1) console.log(' -- scheduling next loop', delay)
+    logRemotely({ message: 'scheduling next loop', delay })
+    nextSyncLoopInterval = setTimeout(() => _doOneRoundOfSyncing({ dispatch }), delay)
+  }
+}
+
+/*
+ * `_doOneRoundOfSyncing` is the core of the sync loop.
+ * It is responsible for:
+ * - Selecting the QSOs and Operations to sync
+ * - Calling the sync hook
+ * - Processing the response
+ * - Scheduling the next sync loop
+ * - Handling errors
+ */
+async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
   let inboundSync = false
   dispatch((_dispatch, getState) => {
     inboundSync = selectFeatureFlag(getState(), 'inboundSync') || false
   })
 
-  if (VERBOSE > 0) console.log('doOneRoundOfSyncing')
-  _takeOverSyncLoop()
-  logRemotely({ message: 'doOneRoundOfSyncing', global: GLOBAL.syncEnabled, qsos: qsos?.length, operations: operations?.length, batchSize })
-  if (!GLOBAL.syncEnabled) return
-
-  if (!batchSize) {
+  let batchSize
+  if (oneSmallBatchOnly) {
+    batchSize = SMALL_BATCH_SIZE
+  } else {
     batchSize = GLOBAL.syncBatchSize || DEFAULT_LARGE_BATCH_SIZE
   }
 
+  if (VERBOSE > 0) console.log('_doOneRoundOfSyncing')
+  _takeOverSyncLoop()
+  logRemotely({ message: 'doOneRoundOfSyncing', global: GLOBAL.syncEnabled, batchSize })
+  if (!GLOBAL.syncEnabled) return
+
   let scheduleAnotherLoop = true
-  let sentAllUpdates = false
-  let receivedAllUpdates = false
 
   try {
     const localData = dispatch((_dispatch, getState) => selectLocalData(getState()))
@@ -75,61 +193,61 @@ async function doOneRoundOfSyncing ({ qsos, operations, dispatch, batchSize = 0 
 
     if (VERBOSE > 1) console.log(' -- syncing', { hook: syncHook.key, batchSize })
 
-    let syncParams
+    let syncPayload
 
-    // If no qsos are specified, look for a batch of unsynced qsos
-    qsos = qsos || await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT ?', [batchSize])
+    // Prepare a batch of QSOs to sync
+    const qsos = await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT ?', [batchSize])
     if (qsos.length > 0) {
       const opIds = qsos.map(q => `"${q.operation}"`).join(',')
       // Ensure the operations referenced by the `qsos` are also included in the batch
-      operations = (operations || []).concat(await queryOperations(`WHERE uuid IN (${opIds}) AND synced IS false LIMIT ?`, [batchSize * OPERATION_BATCH_RATIO]))
-      syncParams = { qsos, operations }
+      const operations = await queryOperations(`WHERE uuid IN (${opIds}) AND synced IS false LIMIT ?`, [batchSize * OPERATION_BATCH_RATIO])
+      syncPayload = { qsos, operations }
     } else {
       // If not qsos are selected then look for a batch of unsynced operations
-      operations = operations || await queryOperations('WHERE synced IS false LIMIT ?', [batchSize])
-      syncParams = { operations }
+      const operations = await queryOperations('WHERE synced IS false LIMIT ?', [batchSize])
+      syncPayload = { operations }
     }
 
+    // If verbose is enabled, include more detailed information
     if (GLOBAL.syncVerbose || GLOBAL.syncVerboseNextRound) {
       const qsoCount = await queryQSOs('SELECT COUNT(*) as count AND operation != "historical" FROM qsos', [])
       const unsyncedQSOCount = await queryQSOs('SELECT COUNT(*) as count AND operation != "historical" FROM qsos WHERE synced IS false', [])
       const operationCount = await queryOperations('SELECT COUNT(*) as count FROM operations', [])
       const unsyncedOperationCount = await queryOperations('SELECT COUNT(*) as count FROM operations WHERE synced IS false', [])
-      syncParams.meta = {
+      syncPayload.meta = {
         qsoCount: qsoCount[0].count,
         unsyncedQSOCount: unsyncedQSOCount[0].count,
         operationCount: operationCount[0].count,
         unsyncedOperationCount: unsyncedOperationCount[0].count
       }
       GLOBAL.syncVerboseNextRound = false
+      if (VERBOSE > 1) console.log(' -- verbose meta', { qsoCount: qsoCount[0].count, unsyncedQSOCount: unsyncedQSOCount[0].count, operationCount: operationCount[0].count, unsyncedOperationCount: unsyncedOperationCount[0].count })
     }
 
-    // Remove local data from the syncParams
-    if (syncParams.operations) syncParams.operations = syncParams.operations.map(op => { op = { ...op }; delete op.local; return op })
+    // Remove operation local data from the syncParams
+    if (syncPayload.operations) {
+      syncPayload.operations = syncPayload.operations.map(op => { op = { ...op }; delete op.local; return op })
+    }
 
-    // operations.forEach(op => {
-    //   delete op.startAtMillisMin
-    //   delete op.startAtMillisMax
-    //   delete op.qsoCount
-    // })
-
+    // Decide if we should sync the settings too
     if (GLOBAL.settingsSynced === false) {
-      syncParams.settings = dispatch((_dispatch, getState) => getState().settings)
+      syncPayload.settings = dispatch((_dispatch, getState) => getState().settings)
       if (VERBOSE > 1) console.log(' -- syncing settings')
     }
 
-    logRemotely({ message: 'syncing', qsos: qsos.length, operations: operations.length })
-    if (Object.keys(syncParams).length > 0) {
-      syncParams.meta = syncParams.meta || {}
-      syncParams.meta.consent = {
+    logRemotely({ message: 'syncing', qsos: syncPayload.qsos?.length, operations: syncPayload.operations?.length, settings: !!syncPayload.settings, meta: !!syncPayload.meta })
+    if (Object.keys(syncPayload).length > 0) {
+      syncPayload.meta = syncPayload.meta || {}
+      syncPayload.meta.lastSyncAccountUUID = localData?.sync?.lastSyncAccountUUID
+      syncPayload.meta.consent = {
         app: GLOBAL.consentAppData,
         public: GLOBAL.consentOpData
       }
 
       if (inboundSync) {
-        syncParams.meta.inboundSync = inboundSync
+        syncPayload.meta.inboundSync = inboundSync
 
-        syncParams.meta.sync = {
+        syncPayload.meta.sync = {
           operations: {
             sinceMillis: (localData?.sync?.lastOperationSyncedAtMillis || 0) + 1000,
             limit: batchSize * OPERATION_BATCH_RATIO,
@@ -143,49 +261,69 @@ async function doOneRoundOfSyncing ({ qsos, operations, dispatch, batchSize = 0 
         }
       }
 
-      if (VERBOSE > 2) console.log(' -- calling hook', { meta: syncParams.meta, sync: syncParams.meta?.sync, operations: syncParams.operations?.length, qsos: syncParams.qsos?.length, settings: Object.keys(syncParams?.settings || {}).length })
+      // Call the server's `sync` endpoint
+      if (VERBOSE > 2) console.log(' -- calling hook', { meta: syncPayload.meta, sync: syncPayload.meta?.sync, operations: syncPayload.operations?.length, qsos: syncPayload.qsos?.length, settings: Object.keys(syncPayload?.settings || {}).length })
       if (VERBOSE > 1) logTimer('sync', 'sync', { reset: true })
-      const response = await dispatch(syncHook.sync(syncParams))
+      const response = await dispatch(syncHook.sync(syncPayload))
       if (VERBOSE > 2) console.log(' -- response', { ok: response.ok, operations: response?.json?.operations?.length, qsos: response?.json?.qsos?.length, meta: response?.json?.meta })
 
-      await _processResponseMeta({ json: response.json, dispatch })
-
-      if (response.ok) {
-        if (VERBOSE > 1) logTimer('sync', 'Response parsed')
-        if (VERBOSE > 1) console.log(' -- synced ok')
-        if (syncParams.qsos) markQSOsAsSynced(qsos)
-        if (syncParams.operations) markOperationsAsSynced(operations)
-        if (syncParams.settings) GLOBAL.settingsSynced = true
-        GLOBAL.lastSyncLoop = Date.now()
-
-        const syncTimes = {}
-        if (inboundSync && response.json.operations?.length > 0) {
-          if (VERBOSE > 1) console.log(' -- new operations', response.json.operations.length)
-          syncTimes.lastOperationSyncedAtMillis = await dispatch(mergeSyncOperations({ operations: response.json.operations }))
-          if (VERBOSE > 1) logTimer('sync', 'Done merging operations')
-        }
-
-        if (inboundSync && response.json.qsos?.length > 0) {
-          if (VERBOSE > 1) console.log(' -- new qsos', response.json.qsos.length)
-          syncTimes.lastQSOSyncedAtMillis = await dispatch(mergeSyncQSOs({ qsos: response.json.qsos }))
-          if (VERBOSE > 1) logTimer('sync', 'Done merging qsos')
-        }
-
-        sentAllUpdates = (qsos.length < batchSize && operations.length < batchSize * OPERATION_BATCH_RATIO)
-        receivedAllUpdates = ((response.json.operations?.length || 0) < batchSize * OPERATION_BATCH_RATIO) && ((response.json.qsos?.length || 0) < batchSize)
-
-        if (sentAllUpdates && receivedAllUpdates) {
-          if (VERBOSE > 1) console.log(' -- no more changes to sync!!! loop complete')
-          scheduleAnotherLoop = false
-          GLOBAL.lastFullSync = Date.now()
-          syncTimes.completedFullSync = true
-        }
-
-        if (Object.keys(syncTimes).length > 0) {
-          dispatch(setLocalData({ sync: { ...localData.sync, ...syncTimes } }))
-        }
+      if (localData?.sync?.lastSyncAccountUUID && localData.sync.lastSyncAccountUUID !== response.json.account?.uuid) {
+        // Do not process the response unless the account matches the previous sync
+        // When the account changes, some other part of the app will ask the user
+        // what to do about it and will reset `lastSyncAccountUUID`
+        if (VERBOSE > 1) console.log(' -- account changed', { lastSyncAccountUUID: localData.sync.lastSyncAccountUUID, newAccountUUID: response.json.account?.uuid })
       } else {
-        if (VERBOSE > 1) console.log(' -- sync failed', response)
+        await _processResponseMeta({ json: response.json, dispatch })
+
+        if (response.ok) {
+          if (VERBOSE > 1) logTimer('sync', 'Response parsed')
+          if (VERBOSE > 1) console.log(' -- synced ok')
+
+          // Mark the QSOs and Operations as synced
+          if (syncPayload.qsos) markQSOsAsSynced(syncPayload.qsos)
+          if (syncPayload.operations) markOperationsAsSynced(syncPayload.operations)
+          if (syncPayload.settings) GLOBAL.settingsSynced = true
+          GLOBAL.lastSyncLoop = Date.now()
+
+          // Merge QSOs and operations sent from the server
+          const syncTimes = {}
+          if (inboundSync && response.json.operations?.length > 0) {
+            if (VERBOSE > 1) console.log(' -- new operations', response.json.operations.length)
+            syncTimes.lastOperationSyncedAtMillis = await dispatch(mergeSyncOperations({ operations: response.json.operations }))
+            if (VERBOSE > 1) logTimer('sync', 'Done merging operations')
+          }
+
+          if (inboundSync && response.json.qsos?.length > 0) {
+            if (VERBOSE > 1) console.log(' -- new qsos', response.json.qsos.length)
+            syncTimes.lastQSOSyncedAtMillis = await dispatch(mergeSyncQSOs({ qsos: response.json.qsos }))
+            if (VERBOSE > 1) logTimer('sync', 'Done merging qsos')
+          }
+
+          if (oneSmallBatchOnly) {
+            // When doing a small batch, we don't want to schedule more loops
+            scheduleAnotherLoop = false
+          } else {
+            // When doing a regular batch, we want to check
+            // if there are any pending QSOs or Operations to keep syncing
+            const anyPendingQSO = await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT 1')
+            const anyPendingOperation = await queryOperations('WHERE synced IS false LIMIT 1')
+            const receivedAllUpdates = ((response.json.operations?.length || 0) < batchSize * OPERATION_BATCH_RATIO) && ((response.json.qsos?.length || 0) < batchSize)
+
+            if (anyPendingQSO.length === 0 && anyPendingOperation.length === 0 && receivedAllUpdates) {
+              if (VERBOSE > 1) console.log(' -- no more changes to sync!!! loop complete')
+              scheduleAnotherLoop = false
+              GLOBAL.lastFullSync = Date.now()
+              syncTimes.completedFullSync = true
+            }
+          }
+
+          // And finally update the last sync times and account id
+          if (Object.keys(syncTimes).length > 0) {
+            dispatch(setLocalData({ sync: { ...localData.sync, ...syncTimes, lastSyncAccountUUID: response.json.account?.uuid } }))
+          }
+        } else {
+          if (VERBOSE > 1) console.log(' -- sync failed', response)
+        }
       }
     } else {
       if (VERBOSE > 1) console.log(' -- no changes to sync')
@@ -258,63 +396,6 @@ function _scheduleDebouncedFunctionForSyncLoop (fn) {
     console.log('-- something else is running')
     lastDebouncedSync = Date.now()
   }
-}
-
-function _scheduleNextSyncLoop ({ dispatch, delay = 0 }, loop) {
-  if (!delay) {
-    delay = GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY
-  }
-
-  if (!nextSyncLoopInterval || nextSyncLoopInterval === true) {
-    if (VERBOSE > 1) console.log(' -- scheduling next loop', delay)
-    logRemotely({ message: 'scheduling next loop', delay })
-    nextSyncLoopInterval = setTimeout(() => doOneRoundOfSyncing({ dispatch }), delay)
-  }
-}
-
-export function useSyncLoop ({ dispatch, settings, online, appState }) {
-  const [lastSettings, setLastSettings] = useState()
-  useEffect(() => {
-    if (appState === 'starting') return
-
-    if (settings !== lastSettings) { // Have to check because we update `lastSettings` in this effect
-      if (VERBOSE > 2) console.log('Settings Changed')
-      if (lastSettings === undefined) {
-        if (VERBOSE > 2) console.log('--- first settings')
-      } else {
-        if (VERBOSE > 2) console.log('-- diffs', diff(lastSettings, settings))
-      }
-      setLastSettings(settings)
-      GLOBAL.settingsSynced = false
-    }
-  }, [settings, lastSettings, appState])
-
-  // Phase out dev.lofi.ham2k.net
-  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
-  useEffect(() => {
-    if (lofiData?.server === 'https://dev.lofi.ham2k.net') {
-      dispatch(setLocalExtensionData({ key: 'ham2k-lofi', server: 'https://lofi.ham2k.net' }))
-      resetSyncedStatus()
-    }
-  }, [lofiData?.server, dispatch])
-
-  const tick = useSelector(selectFiveSecondsTick)
-  useEffect(() => {
-    if (appState === 'starting') return
-    setImmediate(() => {
-      dispatch(startTickTock())
-      if (VERBOSE > 1) console.log('sync tick', tick, GLOBAL.lastSyncLoop)
-      if (GLOBAL.syncEnabled && online) {
-        const maxTime = GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD
-
-        if (VERBOSE > 1) console.log('-- sync enabled', { lastSyncLoop: GLOBAL.lastSyncLoop, delta: (tick - (GLOBAL.lastSyncLoop || 0)) })
-        if (tick && (tick - (GLOBAL.lastSyncLoop || 0)) > maxTime) {
-          if (VERBOSE > 1) console.log('-- sync due')
-          _scheduleNextSyncLoop({ dispatch, delay: 1 })
-        }
-      }
-    })
-  }, [appState, dispatch, online, tick])
 }
 
 async function _processResponseMeta ({ json, dispatch }) {
