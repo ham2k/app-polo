@@ -57,6 +57,7 @@ export default function LoggingPanel ({
         selectedUUID: newQSO?.uuid,
         originalQSO: cloneDeep(newQSO),
         hasChanges: !!qsoValue?._isSuggested,
+        infoMessage: undefined,
         ...more?.otherStateChanges
       })
     }
