@@ -223,7 +223,11 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
         <H2kListSection title={'Log Data'}>
           <H2kListItem
             title="Import History from ADIF"
-            description={historicalCount && countTemplate(historicalCount, { zero: 'No records', one: '1 record', more: '{fmtCount} records' }, { fmtCount: fmtNumber(historicalCount) })}
+            description={historicalCount ? (
+              countTemplate(historicalCount, { zero: 'No records', one: '1 record', more: '{fmtCount} records' }, { fmtCount: fmtNumber(historicalCount) })
+            ) : (
+              'Used for offline lookups and QSO statistics'
+            )}
             leftIcon={'database-import-outline'}
             onPress={handleImportHistoricalFile}
           />
