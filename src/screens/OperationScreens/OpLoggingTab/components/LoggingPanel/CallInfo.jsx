@@ -245,14 +245,16 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     }
 
     if (lookup?.history?.length > 0 && !newMessages.find(x => x.key.indexOf('.duplicate') >= 0)) {
+      const historyMinusThis = lookup?.history.filter(x => x.startAtMillis !== qso?.startAtMillis)
+
       const parts = []
       const today = startOfDayInMillis()
       const yesterday = yesterdayInMillis()
       const lastWeek = startOfDayInMillis() - 6 * 24 * 60 * 60 * 1000
-      let count = lookup?.history.length
-      const countToday = lookup?.history.filter(x => x.startAtMillis >= today).length
-      const countYesterday = lookup?.history.filter(x => x.startAtMillis >= yesterday).length - countToday
-      const countLastWeek = lookup?.history.filter(x => x.startAtMillis >= lastWeek).length
+      let count = historyMinusThis.length
+      const countToday = historyMinusThis.filter(x => x.startAtMillis >= today).length
+      const countYesterday = historyMinusThis.filter(x => x.startAtMillis >= yesterday).length - countToday
+      const countLastWeek = historyMinusThis.filter(x => x.startAtMillis >= lastWeek).length - countToday
 
       if (qso?.startAtMillis) {
         parts.push('') // add an empty element to force a join that includes a "+"

@@ -6,7 +6,9 @@
       "NH QSO Party",
       "Fixed bug in scoring for duplicates",
       "Fixed popup menu in Operation Screen",
-      "Fixed bug with settings switches"
+      "Fixed bug with settings switches",
+      "Fixed bug in history count",
+      "Internal framework updates"
     ]
   },
   "25.8.2": {
