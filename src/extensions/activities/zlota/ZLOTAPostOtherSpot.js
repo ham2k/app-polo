@@ -19,7 +19,7 @@ import { Info } from './ZLOTAInfo'
 export const ZLOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dispatch, getState) => {
   if (GLOBAL?.flags?.services?.zlota === false) return false
 
-  const refs = filterRefs(qso, Info.activationType)
+  const refs = filterRefs(qso, Info.huntingType)
 
   if (refs.length > 0) {
     const spot = {

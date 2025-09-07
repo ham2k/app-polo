@@ -4,7 +4,8 @@
     "photoCaption": "W2UD with N2PTA at US-6462 for FD",
     "changes": [
       "Fixed bug on Android where maps would not show markers after changing views",
-      "Fixed bug in handling of virtual numeric keys"
+      "Fixed bug in handling of virtual numeric keys",
+      "Various fixes for spots with SiOTA and ZLOTA"
     ]
   },
   "25.8.0": {

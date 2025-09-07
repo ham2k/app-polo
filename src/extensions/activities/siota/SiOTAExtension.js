@@ -101,7 +101,7 @@ const SpotsHook = {
     const qsos = []
     for (const spot of spots) {
       if (Info.referenceRegex.test(spot.actSiteID)) {
-        const spotTime = Date.parse(spot.actTime)
+        const spotTime = Date.parse(spot.actTime + 'Z')
         const freq = parseFloat(spot.actFreq) * 1000
         const qso = {
           their: { call: spot.actCallsign.toUpperCase().trim() },
@@ -116,7 +116,7 @@ const SpotsHook = {
             timeInMillis: spotTime,
             source: Info.key,
             icon: Info.icon,
-            label: `${spot.actSiteID}: ${spot?.actLocation || 'Unknown Reference'}`,
+            label: `${spot.actSiteID}: ${spot?.altLocation || 'Unknown Reference'}`,
             sourceInfo: {
               comments: spot.actComments,
               spotter: spot.actSpoter.toUpperCase().trim()
