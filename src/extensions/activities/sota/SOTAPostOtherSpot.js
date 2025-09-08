@@ -41,7 +41,7 @@ export const SOTAPostOtherSpot = ({ comments, qso }) => async (dispatch) => {
     associationCode,
     summitCode,
     activatorCallsign,
-    frequency: `${qso.freq / 1000}`, // string
+    frequency: `${(qso.freq / 1000).toFixed(6)}`, // string
     mode,
     comments,
     type: comments.match(/QRT/i) ? 'QRT' : 'NORMAL' // Also 'TEST' when debugging
