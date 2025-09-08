@@ -1,13 +1,17 @@
 {
   "key": "WA",
-  "name": "Washington St Salmon Run",
-  "url": "https://salmonrun.wwdxc.org",
-  "cabrilloName": "WA-SALMON-RUN",
+  "name": "Washington Salmon Run",
+  "short": "WAQP",
+  "url": "https://www.warsalmonrun.org/",
   "start": "2025-9-20 16:00Z",
-  "end": "2025-9-21 07:00Z",
+  "end": "2025-9-21 06:59Z",
   "secondStart": "2025-9-21 16:00Z",
   "secondEnd": "2025-9-21 23:59Z",
-  "notes": "Scoring does not include bonus station points per mode.",
+  "cabrilloName": "WA-SALMON-RUN",
+  "internalNotes": "",
+  "lastUpdated": "2025-09-08 12:00Z",
+  "notes": "Contributed by K5EM",
+  "status": "Updated for 2025, but not verified",
   "bonusStations": {
     "W7DX": 500
   },
@@ -16,16 +20,17 @@
     "CW": 3
   },
   "options": {
-    "countyLine": true,
+    "dcCountsAsMaryland": true,
     "dxLocationIsPrefix": true,
+    "selfSpotting": true,
+    "countyLine": true,
+    "stateCountsForInState": false,
+    "bonusPostMultiplier": true,
     "dxIsMultiplier": false,
     "dxEntityIsMultiplier": true,
     "dxEntityMultiplierMax": 10,
-    "removeCountySuffixes": true,
-    "selfSpotting": true,
-    "stateCountsForInState": false,
-    "bonusPostMultiplier": true,
-    "bonusPerMode": true
+    "bonusPerMode": true,
+    "multsPerBandMode": false
   },
   "counties": {
     "ADA": "Adams",

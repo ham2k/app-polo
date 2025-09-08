@@ -10,7 +10,7 @@ Defaults to `"exchange": ["Location"]`. [Not Implemented yet]
 
 Can also be defined as `inStateExchange` and `outOfStateExchange` to have different exchanges for in-state and out-of-state stations. [Not Implemented yet]
 
-- `Number`: Has to be listed first (VA)
+- `Number`: Has to be listed first (VA, CA)
 - `Location`: Includes suggestions from County Lists
 - `Name` (MN, CO) [Not Implemented yet]
 - `TheirNumber` (NS) [Not Implemented yet]
@@ -79,6 +79,7 @@ Relevant `"options"`:
 
 - `bonusPostMultiplier`: If true (default), bonus points are added after the multiplier is applied. (BC, SC, NC)
 - `bonusPerBandMode`: If true, bonus points are awarded per band and mode. (Some)
+- `bonusPerMode`: If true, bonus points are awarded per mode. (WA Salmon Run)
 
 ### Other Options
 - `countyToState`: Provides a mapping of county abbreviations to state abbreviations. Needed for some multi-state events (CPQP)

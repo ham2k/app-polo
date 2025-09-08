@@ -1,9 +1,29 @@
 {
   "key": "CA",
   "name": "California QSO Party",
+  "short": "CAQP",
+  "url": "https://www.cqp.org/",
   "start": "2025-10-4 16:00Z",
-  "end": "2025-10-5 22:00Z",
-  "status": "Pending"
+  "end": "2025-10-5 21:59Z",
+  "cabrilloName": "CA-QSO-PARTY",
+  "notes": "Contributed by W1GRL & W1BOY",
+  "internalNotes": "",
+  "lastUpdated": "2025-09-08 12:00Z",
+  "status": "Updated for 2025, but not verified",
+  "exchange": [ "Number", "Location" ],
+  "options": {
+    "countyLine": true,
+    "stateCountsForInState": true,
+    "dcCountsAsMaryland": true,
+    "dxLocationIsPrefix": false,
+    "dxIsMultiplier": false,
+    "selfSpotting": true,
+    "multsPerBandMode": false
+  },
+  "points": {
+    "PHONE": 2,
+    "CW": 3
+  },
   "counties": {
     "ALAM": "Alameda",
     "ALPI": "Alpine",

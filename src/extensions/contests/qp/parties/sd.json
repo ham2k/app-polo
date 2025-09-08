@@ -3,7 +3,8 @@
   "name": "South Dakota QSO Party",
   "start": "2025-10-11 18:00Z",
   "end": "2025-10-12 18:00Z",
-  "status": "Pending"
+  "notes": "Contributed by W1GRL & W1BOY",
+  "status": "Pending",
   "counties": {
     "AURO": "Aurora",
     "BEAD": "Beadle",

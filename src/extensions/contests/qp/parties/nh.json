@@ -16,7 +16,7 @@
     "dxEntityMultiplierMax": 10,
     "multsPerBandMode": false,
     "outOfStateMultsPerBand": true,
-    "stateCountsForInState": true,
+    "stateCountsForInState": false,
     "countyLine": false
   },
   "points": {

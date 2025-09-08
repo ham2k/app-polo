@@ -389,7 +389,12 @@ const ReferenceHandler = {
 
     const baseCall = qso?.their?.baseCall || qso?.their?.guess?.baseCall
     if (qp?.bonusStations?.[baseCall]) {
-      const bonusPrefix = (qp.options?.bonusPerBandMode) ? `${band}:${superMode}:` : ''
+      let bonusPrefix = ''
+      if (qp.options?.bonusPerBandMode) {
+        bonusPrefix = `${band}:${superMode}:`
+      } else if (qp.options?.bonusPerMode) {
+        bonusPrefix = `${superMode}:`
+      }
       scoring.bonusStation = baseCall
       scoring.bonuses.push(bonusPrefix + baseCall)
       if (score?.bonuses?.[bonusPrefix + baseCall]) {
