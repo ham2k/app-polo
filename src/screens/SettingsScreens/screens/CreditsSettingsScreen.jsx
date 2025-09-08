@@ -67,10 +67,10 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             onPress={() => navigation.navigate('CallInfo', { call: 'G0TRT' })}
           />
           <H2kListItem
-            title={'Emma • K4UWU/VA2EMZ'}
+            title={'Emma • K0UWU/VA2EMZ'}
             description={'Code: WaveLog support'}
             leftIcon="account"
-            onPress={() => navigation.navigate('CallInfo', { call: 'K4UWU' })}
+            onPress={() => navigation.navigate('CallInfo', { call: 'K0UWU' })}
           />
           <H2kListItem
             title={'Woody • KC1VOP'}
