@@ -43,7 +43,7 @@ export const SOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatc
       associationCode,
       summitCode,
       activatorCallsign,
-      frequency: `${vfo.freq / 1000}`, // string
+      frequency: (vfo.freq / 1000).toFixed(5).replace(/0?0$/, ''), // string
       mode,
       comments,
       type: comments.match(/QRT/i) ? 'QRT' : 'NORMAL' // Also 'TEST' when debugging
