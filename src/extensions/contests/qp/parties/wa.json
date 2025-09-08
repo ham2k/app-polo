@@ -1,11 +1,32 @@
 {
   "key": "WA",
   "name": "Washington St Salmon Run",
+  "url": "https://salmonrun.wwdxc.org",
+  "cabrilloName": "WA-SALMON-RUN",
   "start": "2025-9-20 16:00Z",
   "end": "2025-9-21 07:00Z",
   "secondStart": "2025-9-21 16:00Z",
   "secondEnd": "2025-9-21 23:59Z",
-  "status": "Pending"
+  "notes": "Scoring does not include bonus station points per mode.",
+  "bonusStations": {
+    "W7DX": 500
+  },
+  "points": {
+    "PHONE": 2,
+    "CW": 3
+  },
+  "options": {
+    "countyLine": true,
+    "dxLocationIsPrefix": true,
+    "dxIsMultiplier": false,
+    "dxEntityIsMultiplier": true,
+    "dxEntityMultiplierMax": 10,
+    "removeCountySuffixes": true,
+    "selfSpotting": true,
+    "stateCountsForInState": false,
+    "bonusPostMultiplier": true,
+    "bonusPerMode": true
+  },
   "counties": {
     "ADA": "Adams",
     "ASO": "Asotin",
