@@ -8,12 +8,14 @@
 import React, { useCallback, useState } from 'react'
 
 import { Appbar, Menu, Text } from 'react-native-paper'
-import { View } from 'react-native'
+import { Image, View } from 'react-native'
 import { SystemBars } from 'react-native-edge-to-edge'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import { tweakStringForVoiceOver } from '../../tools/a11yTools'
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { tweakStringForVoiceOver } from '../../../tools/a11yTools'
+
+import LOGO from './img/ham2k-800-filled.png'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
@@ -71,7 +73,8 @@ function prepareStyles (baseStyles, options) {
     },
     sideContent: {
       flex: 0,
-      width: baseStyles.oneSpace * ((options.back || options.close) ? 4 : 8)
+      width: baseStyles.oneSpace * ((options.back || options.close) ? 4 : 8),
+      alignItems: 'flex-end',
     },
     appBarTheme: {
       colors: {
@@ -114,7 +117,7 @@ export default function HeaderBar ({
       theme={styles.appBarTheme}
       dark={true}
       mode={'center-aligned'}
-      safeAreaInsets={{ left: safeAreaInsets.left, right: splitView ? 0 : safeAreaInsets.right, top: safeAreaInsets.top, bottom: 0 }}
+      safeAreaInsets={{ left: Math.max(safeAreaInsets.left, styles.oneSpace * 2), right: splitView ? 0 : Math.max(safeAreaInsets.right, styles.oneSpace * 2), top: safeAreaInsets.top, bottom: 0 }}
       style={[styles.root, { height: styles.root.height + safeAreaInsets.top }]}
     >
       <SystemBars style="light" />
@@ -122,16 +125,19 @@ export default function HeaderBar ({
       <View flexDirection="row" justifyContent="flex-start" style={styles.sideContent}>
         {headerBackVisible && (
           back ? (
-            <Appbar.Action
-              isLeading
-              onPress={navigation.goBack}
-              accessibilityLabel={closeInsteadOfBack ? 'Close' : 'Back'}
-              icon={closeInsteadOfBack ? 'close' : 'arrow-left'}
-              size={styles.oneSpace * 2.5}
-              theme={styles.appBarTheme}
-            />
+            <View style={{ marginLeft: -styles.oneSpace * 2 }}>
+              <Appbar.Action
+                isLeading
+                onPress={navigation.goBack}
+                accessibilityLabel={closeInsteadOfBack ? 'Close' : 'Back'}
+                icon={closeInsteadOfBack ? 'close' : 'arrow-left'}
+                size={styles.oneSpace * 2.5}
+                theme={styles.appBarTheme}
+              />
+            </View>
           ) : (
-            <Text style={styles.screenTitleLight} numberOfLines={1} adjustsFontSizeToFit={false} accessible={false}>Ham2K</Text>
+            <Image source={LOGO} style={{ height: 18, width: 60, marginLeft: styles.oneSpace * 0 }} resizeMode="contain" />
+            // <Text style={styles.screenTitleLight} numberOfLines={1} adjustsFontSizeToFit={false} accessible={false}>Ham2K</Text>
           )
         )}
       </View>
@@ -161,7 +167,7 @@ export default function HeaderBar ({
 
       <View flexDirection="row" justifyContent="flex-end" style={styles.sideContent}>
         {rightMenuItems ? (
-          <>
+          <View style={{ marginRight: -styles.oneSpace * 2 }}>
             <Menu
               visible={showMenu}
               onDismiss={() => setShowMenu(false)}
@@ -181,17 +187,19 @@ export default function HeaderBar ({
                 React.cloneElement(child, { setShowMenu })
               ))}
             </Menu>
-          </>
+          </View>
         ) : (
           rightAction ? (
-            <Appbar.Action
-              isLeading
-              onPress={onRightActionPress}
-              accessibilityLabel={rightA11yLabel}
-              icon={rightAction}
-              size={styles.oneSpace * 2.5}
-              theme={styles.appBarTheme}
-            />
+            <View style={{ marginRight: -styles.oneSpace * 2 }}>
+              <Appbar.Action
+                isLeading
+                onPress={onRightActionPress}
+                accessibilityLabel={rightA11yLabel}
+                icon={rightAction}
+                size={styles.oneSpace * 2.5}
+                theme={styles.appBarTheme}
+                />
+            </View>
           ) : (
             <Text accessible={false}>{' '}</Text>
           )

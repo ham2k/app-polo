@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { ImageBackground, Pressable, View } from 'react-native'
+import { Image, ImageBackground, Pressable, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
@@ -27,14 +27,15 @@ import releaseNotes from '../../../RELEASE-NOTES.json'
 import packageJson from '../../../package.json'
 
 const SPLASH_IMAGE = require('./img/launch_screen.jpg')
+const HAM2K_LOGO = require('./img/ham2k-3000-filled.png')
 
 function prepareStyles (baseTheme, height, dialogVisible) {
-  const characterizeTopHalf = 'light' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
+  const characterizeTopHalf = 'mediumLight' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
   const characterizeBottomHalf = 'dark' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
 
   const topTextColor = { light: '#000', mediumLight: '#000', medium: '#FFF', mediumDark: '#FFF', dark: '#FFF' }[characterizeTopHalf]
   const topHaloColor = { light: '#FFF', mediumLight: '#FFF', medium: '#000', mediumDark: '#000', dark: '#000' }[characterizeTopHalf]
-  const topBackColor = { light: 'rgba(0,0,0,0)', mediumLight: 'rgba(0,0,0,.3)', medium: 'rgba(0,0,0,.15)', mediumDark: 'rgba(255,255,255,.1)', dark: 'rgba(255,255,255,.0)' }[characterizeTopHalf]
+  const topBackColor = { light: 'rgba(0,0,0,0)', mediumLight: 'rgba(0,0,0,0)', medium: 'rgba(0,0,0,.15)', mediumDark: 'rgba(255,255,255,.1)', dark: 'rgba(255,255,255,.0)' }[characterizeTopHalf]
   const bottomTextColor = { light: '#000', mediumLight: '#000', medium: '#FFF', mediumDark: '#FFF', dark: '#FFF' }[characterizeBottomHalf]
   const bottomHaloColor = { light: '#FFF', mediumLight: '#FFF', medium: '#000', mediumDark: '#000', dark: '#000' }[characterizeBottomHalf]
   const bottomBackColor = { light: 'rgba(255,255,255,0.3)', mediumLight: 'rgba(0,0,0,.3)', medium: 'rgba(0,0,0,.15)', mediumDark: 'rgba(255,255,255,0)', dark: 'rgba(0,0,0,.20)' }[characterizeBottomHalf]
@@ -104,13 +105,25 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       color: topTextColor,
       textAlign: 'center'
     },
+    credits: {
+      fontSize: baseTheme.normalFontSize * 1.1,
+      lineHeight: baseTheme.normalFontSize * 2,
+      fontWeight: 400,
+      textShadowColor: topHaloColor,
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace * 1, // 1.5,
+      fontFamily: 'Roboto Slab',
+      color: topTextColor,
+      textAlign: 'center',
+      paddingBottom: baseTheme.oneSpace
+    },
     version: {
       fontSize: baseTheme.normalFontSize * 1.3,
       lineHeight: baseTheme.normalFontSize * 2,
       fontWeight: 400,
       textShadowColor: topHaloColor,
-      textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 2,
+      textShadowOffset: { width: 3, height: 0 },
+      textShadowRadius: baseTheme.oneSpace * 0.5,
       color: topTextColor,
       textAlign: 'center',
       paddingTop: baseTheme.oneSpace
@@ -241,10 +254,11 @@ export default function StartScreen ({ setAppState }) {
         <SafeAreaView style={styles.container}>
           <View style={styles.titleBoxSpacer} />
           <Pressable style={styles.titleBoxTop} onPress={() => { handleInterruption(); return true }}>
-            <Text style={styles.ham2k}>Ham2K</Text>
+            <Image source={HAM2K_LOGO} style={{ height: 60, width: 500, alignSelf: 'center' }} resizeMode="contain" />
           </Pressable>
           <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }}>
             <Text style={styles.polo} onPressIn={handleInterruption}>Portable Logger</Text>
+            <Text style={styles.credits} onPressIn={handleInterruption}>by KI2D and friends</Text>
             <Text style={styles.version}>{versionName}</Text>
           </Pressable>
           <View style={styles.messagesBox}>
