@@ -2626,13 +2626,13 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - rnmapbox-maps (10.1.39):
+  - rnmapbox-maps (10.1.43):
     - MapboxMaps (= 10.19.4)
     - React
     - React-Core
-    - rnmapbox-maps/DynamicLibrary (= 10.1.39)
+    - rnmapbox-maps/DynamicLibrary (= 10.1.43)
     - Turf
-  - rnmapbox-maps/DynamicLibrary (10.1.39):
+  - rnmapbox-maps/DynamicLibrary (10.1.43):
     - boost
     - DoubleConversion
     - fast_float
@@ -3365,7 +3365,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: afe7c3711dc256e492aa3a50dcac43eecebd0ae5
   RNDeviceInfo: feea80a690d2bde1fe51461cf548039258bd03f2
   RNGestureHandler: 8c4c3ff641284e689208dc01e51d5c1e6807cf3c
-  rnmapbox-maps: 74783de65b08cdc9978f2b204e976060928f6edd
+  rnmapbox-maps: 15a99766179031c1ba94b6ee4765334b6c974bb8
   RNReanimated: 85c7e9b322a5e0b68941941e53c038ab32cfe25a
   RNScreens: 12bacab6e07bebf85543440b64f91de5cb0c8cff
   RNShare: 4c4a5ed0fd6702ee62e8adbb61065b53bf5ec9b4
