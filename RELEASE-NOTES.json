@@ -8,6 +8,7 @@
       "Fixed popup menu in Operation Screen",
       "Fixed bug with settings switches",
       "Fixed bug in history count",
+      "Fixed bug in map missing lines",
       "Work around SOTA API frequency issues",
       "Internal framework updates"
     ]

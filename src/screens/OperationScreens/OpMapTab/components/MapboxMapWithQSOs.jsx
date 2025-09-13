@@ -278,6 +278,10 @@ function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
     const start = _coordsFromLatLon(mappableQSO.location)
     const end = _coordsFromLatLon(qth)
 
+    if (start[0] === end[0] && start[1] === end[1]) {
+      return null
+    }
+
     const segments = _generateGeodesicPoints(start, end)
 
     // If we have multiple segments, create separate features
