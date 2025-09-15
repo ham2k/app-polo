@@ -74,7 +74,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       }
 
       listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
-    }, 50)
+    }, 100)
   }, [listRef, lastUUID, sections])
 
   const refHandlers = useMemo(() => {
