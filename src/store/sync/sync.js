@@ -23,8 +23,8 @@ import { selectFeatureFlag } from '../system'
 const SYNC_LOOP_DEBOUNCE_DELAY = 1000 * 0.5 // 500ms, minimum time to wait for more changes before starting a new sync loop
 const SYNC_LOOP_DEBOUNCE_MAX = 1000 * 3 // 3 seconds, maximum time to wait for more changes before starting a new sync loop
 
-const DEFAULT_SYNC_LOOP_DELAY = 1000 * 5 // 5 seconds, time between sending batches of changes inside a sync loop
-const DEFAULT_SYNC_CHECK_PERIOD = 10000 // 1000 * 60 * 1 // 1 minutes, time between checking if a new sync loop is needed
+const DEFAULT_SYNC_LOOP_DELAY = 1000 * 20 // 5 seconds, time between sending batches of changes inside a sync loop
+const DEFAULT_SYNC_CHECK_PERIOD = 1000 * 10 // 1000 * 60 * 1 // 1 minutes, time between checking if a new sync loop is needed
 
 const SMALL_BATCH_SIZE = 5 // QSOs or Operations to send on a quick `syncLatest...`
 const DEFAULT_LARGE_BATCH_SIZE = 50 // QSOs or Operations to send on a regular sync loop
@@ -92,11 +92,18 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
 
   const [goAheadWithSync, setGoAheadWithSync] = useState(false)
   useEffect(() => {
+    if (VERBOSE > 1) console.log('goAheadWithSync', { currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
     if (currentAccountUUID && (currentAccountUUID === localData?.sync?.lastSyncAccountUUID || !localData?.sync?.lastSyncAccountUUID)) {
+      if (VERBOSE > 1) console.log(' -- go ahead with sync')
       setGoAheadWithSync(true)
     } else if (currentAccountUUID && localData?.sync?.lastSyncAccountUUID !== currentAccountUUID) {
       // Account changed!!! Disable sync until the user updates their settings
+      if (VERBOSE > 1) console.log(' -- account changed, sync disabled')
       setGoAheadWithSync(false)
+    } else {
+      if (VERBOSE > 1) console.log(' -- no account, sync enabled')
+      // No account, try to sync anyway
+      setGoAheadWithSync(true)
     }
   }, [localData?.sync?.lastSyncAccountUUID, currentAccountUUID])
 

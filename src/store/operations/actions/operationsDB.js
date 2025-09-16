@@ -6,6 +6,7 @@
  */
 
 import UUID from 'react-native-uuid'
+import RNRestart from 'react-native-restart'
 import RNFetchBlob from 'react-native-blob-util'
 
 import { reportError } from '../../../distro'
@@ -16,6 +17,7 @@ import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { sendOperationsToSyncService } from '../../sync'
 import { actions } from '../operationsSlice'
 import { selectSettings } from '../../settings'
+import { setLocalData } from '../../local'
 
 const operationFromRow = (row) => {
   if (!row) return {}
@@ -162,9 +164,21 @@ export async function markOperationsAsSynced (operations) {
   await dbExecute(`UPDATE operations SET synced = true WHERE uuid IN (${operations.map(q => `"${q.uuid}"`).join(',')})`, [])
 }
 
-export async function resetSyncedStatus () {
+export const resetSyncedStatus = () => async (dispatch) => {
   await dbExecute('UPDATE qsos SET synced = false', [])
   await dbExecute('UPDATE operations SET synced = false', [])
+
+  dispatch(setLocalData({ sync: {} }))
+}
+
+export const clearAllOperationData = () => async (dispatch) => {
+  await dbExecute('DELETE FROM operations', [])
+  await dbExecute('DELETE FROM qsos', [])
+
+  await dispatch(setLocalData({ sync: {} }))
+  setTimeout(() => {
+    RNRestart.restart()
+  }, 1000)
 }
 
 export async function getSyncCounts () {

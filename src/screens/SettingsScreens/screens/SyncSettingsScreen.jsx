@@ -8,21 +8,21 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'react-native-paper'
-import { ScrollView, View } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import ScreenContainer from '../../components/ScreenContainer'
-import { H2kListItem, H2kListSection } from '../../../ui'
+import { H2kButton, H2kListItem, H2kListSection } from '../../../ui'
 import { SyncServiceDialog } from '../components/SyncServiceDialog'
 import { SyncAccountDialog } from '../components/SyncAccountDialog'
 import { findHooks } from '../../../extensions/registry'
-import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
+import { selectLocalExtensionData, setLocalExtensionData, selectLocalData } from '../../../store/local'
 import { selectSettings } from '../../../store/settings'
 import { selectFiveSecondsTick } from '../../../store/time'
-import { getSyncCounts, resetSyncedStatus } from '../../../store/operations'
+import { clearAllOperationData, getSyncCounts, resetSyncedStatus } from '../../../store/operations'
 
 import GLOBAL from '../../../GLOBAL'
 
@@ -39,6 +39,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
 
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
+  const localData = useSelector(selectLocalData)
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 
   const [currentDialog, setCurrentDialog] = useState()
@@ -61,26 +62,26 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     if (!lofiData?.account) {
       return `Device not linked! (${GLOBAL.deviceId.slice(0, 8).toUpperCase()})`
     } else {
-      if (lofiData?.account?.email) {
-        if (lofiData?.account?.pending_email && lofiData?.account?.pending_email !== lofiData?.account?.email) {
-          return lofiData.account.pending_email
-        } else {
-          return lofiData.account.email
-        }
+      if (lofiData?.pending_link_email) {
+        return lofiData.pending_link_email
       } else if (lofiData?.account?.pending_email) {
         return lofiData.account.pending_email
+      } else if (lofiData?.account?.email) {
+        return lofiData.account.email
       } else {
         return `Anonymous Account (#${lofiData?.account?.uuid.slice(0, 8).toUpperCase()})`
       }
     }
-  }, [lofiData?.account])
+  }, [lofiData?.account, lofiData?.pending_link_email])
 
   const accountInfo = useMemo(() => {
     if (!lofiData?.account) {
       return 'Enable sync to link this device'
     } else {
       if (lofiData?.account?.email) {
-        if (lofiData?.account?.pending_email && lofiData?.account?.pending_email !== lofiData?.account?.email) {
+        if (lofiData?.pending_link_email && lofiData?.pending_link_email !== lofiData?.account?.email) {
+          return '(pending email confirmation)'
+        } else if (lofiData?.account?.pending_email && lofiData?.account?.pending_email !== lofiData?.account?.email) {
           return '(pending email confirmation)'
         } else {
           return `Account #${lofiData?.account?.uuid.slice(0, 8).toUpperCase()}`
@@ -91,7 +92,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
         return 'Tap to configure'
       }
     }
-  }, [lofiData?.account])
+  }, [lofiData?.account, lofiData?.pending_link_email])
 
   const serverLabel = useMemo(() => {
     if (lofiData?.server) {
@@ -110,11 +111,43 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   }, [fiveSecondTick])
 
   const handleResetSyncStatus = useCallback(async () => {
-    await resetSyncedStatus()
+    await dispatch(resetSyncedStatus())
     setSyncStatus(await syncCountDescription())
-  }, [])
+  }, [dispatch])
 
-  useEffect(() => console.log('LOFI', lofiData), [lofiData])
+  const askAboutMergingAccounts = useMemo(() => {
+    return lofiData?.account?.uuid && localData?.sync?.lastSyncAccountUUID && (lofiData.account.uuid !== localData.sync.lastSyncAccountUUID)
+  }, [lofiData?.account?.uuid, localData?.sync?.lastSyncAccountUUID])
+
+  const handleReplaceLocalData = useCallback(async () => {
+    Alert.alert(
+      'Replace Local Data?',
+      'Are you sure you want to replace all local data with the operations and QSOs from the new account? If you have unsynced data, it will be lost.',
+      [
+        { text: 'No, Cancel', onPress: () => {} },
+        {
+          text: 'Yes, Replace It All!',
+          onPress: async () => {
+            await dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_email: undefined }))
+            await dispatch(clearAllOperationData())
+          }
+        }
+      ]
+    )
+  }, [dispatch])
+
+  const handleCombineLocalData = useCallback(async () => {
+    Alert.alert('Combine Local Data?', 'Are you sure you want to combine these operations and QSOs into the new account? This operation cannot be undone.', [
+      { text: 'No, Cancel', onPress: () => {} },
+      {
+        text: 'Yes, Combine Them!',
+        onPress: async () => {
+          await dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_email: undefined }))
+          await dispatch(resetSyncedStatus())
+        }
+      }
+    ])
+  }, [dispatch])
 
   return (
     <ScreenContainer>
@@ -149,6 +182,21 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
                 })
               }}
             />
+          )}
+
+          {askAboutMergingAccounts && (
+            <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column', marginBottom: styles.oneSpace * 4 }}>
+              <Text style={[styles.paragraph, { color: styles.colors.error }]}>
+                This device was last synced with a different account (#{localData.sync.lastSyncAccountUUID.slice(0, 8).toUpperCase()}).
+              </Text>
+              <Text style={[styles.paragraph, { color: styles.colors.error }]}>
+                In order to continue syncing, you need to decide betwee the following options:
+              </Text>
+
+              <H2kButton mode="contained" style={{ marginTop: styles.oneSpace * 2 }} onPress={handleReplaceLocalData}>Replace local data with the new account</H2kButton>
+
+              <H2kButton mode="contained" style={{ marginTop: styles.oneSpace * 2 }} onPress={handleCombineLocalData}>Combine local data into the new account</H2kButton>
+            </View>
           )}
 
           <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>

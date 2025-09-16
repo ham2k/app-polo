@@ -6,16 +6,16 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { RadioButton, Text, TextInput } from 'react-native-paper'
+import { RadioButton, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { View } from 'react-native'
 
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kTextInput } from '../../../ui'
 
 const SERVERS = {
   prod: 'https://lofi.ham2k.net',
-  // dev: 'https://dev.lofi.ham2k.net',
+  test: 'https://test.lofi.ham2k.net',
   local: 'http://localhost:3000'
 }
 const OPTION_FOR_SERVER = Object.keys(SERVERS).reduce((acc, key) => {
@@ -80,7 +80,7 @@ export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="other" />
             <Text onPress={() => setServerOption('other')} style={styles.rowText}>Custom</Text>
-            <TextInput style={{ marginLeft: styles.oneSpace, flex: 1 }} value={otherServer} onChangeText={setOtherServer} />
+            <H2kTextInput keyboard="dumb"style={{ marginLeft: styles.oneSpace, flex: 1 }} value={otherServer} onChangeText={setOtherServer} />
           </View>
         </RadioButton.Group>
       </H2kDialogContent>

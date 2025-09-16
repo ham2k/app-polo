@@ -203,7 +203,7 @@ export const loadAllDataFiles = () => async (dispatch) => {
   }
 }
 
-const DEBUG_FETCH = true
+const DEBUG_FETCH = false
 
 export async function fetchAndProcessURL ({ url, key, process, definition, info, options }) {
   url = await resolveDownloadUrl(url)

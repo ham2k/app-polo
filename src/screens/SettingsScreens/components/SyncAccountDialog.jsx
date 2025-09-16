@@ -5,13 +5,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 import H2kEmailInput from '../../../ui/react-native/H2kEmailInput'
+import { View } from 'react-native'
 
 export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDialogDone }) {
   const dispatch = useDispatch()
@@ -28,8 +29,12 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
   const [errors, setErrors] = useState({})
 
   useEffect(() => {
-    setEmail(lofiData?.account?.pending_email ?? lofiData?.account?.email)
-  }, [lofiData?.account?.call, lofiData?.account?.email, lofiData?.account?.pending_email])
+    if (lofiData?.pending_link_email) {
+      setEmail(lofiData?.pending_link_email)
+    } else {
+      setEmail(lofiData?.account?.pending_email ?? lofiData?.account?.email)
+    }
+  }, [lofiData?.account?.email, lofiData?.account?.pending_email, lofiData?.pending_link_email])
 
   useEffect(() => {
     setDialogVisible(visible)
@@ -41,17 +46,32 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
 
   const handleAccept = useCallback(async () => {
     const result = await dispatch(syncHook.setAccountData({ pending_email: email }))
-
+    // console.log('account change result', result)
     if (result.ok) {
-      dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: result.json.account }))
+      dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: result.json.account, pending_email: email }))
       setDialogVisible(false)
       onDialogDone && onDialogDone()
+    } else if (result.json.account_errors?.pending_email?.find(e => e.suggested_action === 'link')) {
+      const linkResult = await dispatch(syncHook.linkClient(email))
+      if (linkResult.ok) {
+        dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: linkResult.json.account, pending_email: email }))
+        setDialogVisible(false)
+        onDialogDone && onDialogDone()
+      } else {
+        const newErrors = {
+          default: [linkResult.json.error]
+        }
+        Object.keys(linkResult.json?.account_errors || {}).forEach(key => {
+          newErrors[key] = linkResult.json.account_errors[key].error
+        })
+        setErrors(newErrors)
+      }
     } else {
       const newErrors = {
         default: [result.json.error]
       }
       Object.keys(result.json?.account_errors || {}).forEach(key => {
-        newErrors[key] = result.json.account_errors[key].error
+        newErrors[key] = result.json.account_errors[key]
       })
 
       setErrors(newErrors)
@@ -59,10 +79,26 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
   }, [email, dispatch, onDialogDone, syncHook])
 
   const handleCancel = useCallback(() => {
-    setEmail(lofiData.pending_email || lofiData.email)
+    setEmail(lofiData.pending_link_email || lofiData.account.email)
     setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [lofiData, onDialogDone])
+
+  const showResend = useMemo(() => {
+    const pending = (lofiData?.pending_link_email || lofiData?.account?.pending_email)
+    // console.log('showResend', { pending, email })
+    if (pending && pending === email) {
+      return true
+    } else {
+      return false
+    }
+  }, [lofiData?.pending_link_email, lofiData?.account?.pending_email, email])
+
+  const handleResend = useCallback(() => {
+    dispatch(syncHook.resendEmail(email))
+    setDialogVisible(false)
+    onDialogDone && onDialogDone()
+  }, [email, dispatch, syncHook, onDialogDone])
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
@@ -70,7 +106,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
       <H2kDialogContent>
         {errors?.default?.length > 0 && (
           <Text style={{ color: 'red', textAlign: 'center', marginTop: styles.oneSpace }}>
-            {errors.default.join('\n')}
+            {errors.default.map(e => e?.error || e).join('\n')}
           </Text>
         )}
         <H2kEmailInput
@@ -83,13 +119,21 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
         />
         {errors.pending_email?.length > 0 && (
           <Text style={{ color: 'red', textAlign: 'center', marginTop: styles.oneSpace }}>
-            Email {errors.pending_email.join(', ')}
+            Email {errors.pending_email.map(e => e?.error || e).join(', ')}
           </Text>
         )}
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+        {showResend ? (
+          <H2kButton onPress={handleResend} style={{ alignSelf: 'flex-start' }}>Resend</H2kButton>
+        ) : (
+          // Otherwise the "Ok" button jumps around!
+          <View style={{ flex: 0, width: styles.oneSpace }} />
+        )}
+        <View style={{ flex: 1 }} />
+
+        <H2kButton style={{ flex: 0 }} onPress={handleCancel}>Cancel</H2kButton>
+        <H2kButton style={{ flex: 0 }} onPress={handleAccept}>Ok</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

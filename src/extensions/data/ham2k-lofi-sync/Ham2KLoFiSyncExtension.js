@@ -80,6 +80,13 @@ const SyncHook = {
     const results = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}`, method: 'PATCH', body })
 
     return results
+  },
+
+  resendEmail: () => async (dispatch, getState) => {
+    const { account } = selectLocalExtensionData(getState(), Info.key) || {}
+    const response = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}/resend_email`, method: 'POST' })
+
+    return response
   }
 }
 
