@@ -218,7 +218,7 @@ const ReferenceHandler = {
 
     let ourLocations = ref?.location
     let weAreInState
-    if (ref?.location?.match(SLASH_OR_COMMA_REGEX)) {
+    if (ref?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
       ourLocations = ref.location.split(SLASH_OR_COMMA_REGEX, 2)
       weAreInState = ref.location.split(SLASH_OR_COMMA_REGEX).every(c => qp.counties[c])
     } else {
@@ -230,7 +230,7 @@ const ReferenceHandler = {
 
     let theirLocations
     let theyAreInState
-    if (qsoRef?.location?.match(SLASH_OR_COMMA_REGEX)) {
+    if (qsoRef?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
       theirLocations = qsoRef?.location.split(SLASH_OR_COMMA_REGEX, 2)
       theyAreInState = theirLocations.every(c => qp.counties[c])
     } else if (qsoRef?.location) {
@@ -280,7 +280,7 @@ const ReferenceHandler = {
     let weAreInState
     if (ref?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
       ourLocations = ref.location.split(SLASH_OR_COMMA_REGEX, 2)
-      if (!qp.countyLine) ourLocations = ourLocations.slice(0, 1)
+      if (!qp.options?.countyLine) ourLocations = ourLocations.slice(0, 1)
       weAreInState = ref.location.split(SLASH_OR_COMMA_REGEX).every(c => qp.counties[c])
     } else {
       ourLocations = [ref?.location]
@@ -293,7 +293,7 @@ const ReferenceHandler = {
     let theyAreInState
     if (qsoRef?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
       theirLocations = qsoRef?.location.split(SLASH_OR_COMMA_REGEX, 2)
-      if (!qp.countyLine) theirLocations = theirLocations.slice(0, 1)
+      if (!qp?.options?.countyLine) theirLocations = theirLocations.slice(0, 1)
       theyAreInState = theirLocations.every(c => qp.counties[c])
     } else if (qsoRef?.location) {
       theirLocations = [qsoRef?.location]
@@ -674,7 +674,7 @@ function mainExchangeForOperation (props) {
       {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}
-      style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
+      style={[styles.input, { minWidth: styles.oneSpace * (qp.options?.countyLine ? 9 : 7), flex: 1 }]}
       textStyle={styles.text.callsign}
       label={'Location'}
       placeholder={''}
