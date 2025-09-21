@@ -1,5 +1,7 @@
 # .env
 .env.local
+.mise.toml.local
+mise.toml.local
 
 # react-native-config codegen
 ios/tmp.xcconfig
