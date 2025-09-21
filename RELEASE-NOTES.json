@@ -1,4 +1,11 @@
 {
+  "25.9.3": {
+    "name": "September '25 (patch 3)",
+    "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
+    "changes": [
+      "Fixed bug in WWFF duplicate checking"
+    ]
+  },
   "25.9.2": {
     "name": "September '25 (patch 2)",
     "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
