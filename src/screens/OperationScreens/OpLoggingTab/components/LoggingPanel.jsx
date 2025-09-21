@@ -86,7 +86,7 @@ export default function LoggingPanel ({
     if (control === currentSecondaryControl) {
       control = undefined
     }
-    mainFieldRef.current.focus()
+    mainFieldRef.current?.focus()
     setTimeout(() => reallySetCurrentSecondaryControl(control), 0)
   }, [currentSecondaryControl, reallySetCurrentSecondaryControl])
 
@@ -127,9 +127,7 @@ export default function LoggingPanel ({
       setQSO(nextQSO, { otherStateChanges })
       dispatch(resetCallLookupCache())
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
-        if (mainFieldRef?.current) {
-          mainFieldRef.current.focus()
-        }
+        mainFieldRef?.current?.focus()
       }, 100)
     } else if ((qso?.uuid !== loggingState?.selectedUUID) || !qso) {
       let nextQSO
@@ -151,9 +149,7 @@ export default function LoggingPanel ({
       setQSO(nextQSO, { otherStateChanges })
 
       setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
-        if (mainFieldRef?.current) {
-          mainFieldRef.current.focus()
-        }
+        mainFieldRef?.current?.focus()
       }, 100)
     }
   }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch, loggingState.callStack])
@@ -320,7 +316,7 @@ export default function LoggingPanel ({
           }
           multiQSOs.push(oneQSO)
 
-          trackEvent(eventName, { their_prefix: oneQSO.their.entityPrefix ?? oneQSO.their.guess.entityPrefix, refs: (oneQSO.refs || []).map(r => r.type).join(',') })
+          trackEvent(eventName, { their_prefix: oneQSO.their?.entityPrefix ?? oneQSO.their?.guess?.entityPrefix, refs: (oneQSO.refs || []).map(r => r.type).join(',') })
 
           lastUUID = oneQSO.uuid
         }
@@ -388,8 +384,7 @@ export default function LoggingPanel ({
   const focusedRef = useRef()
 
   const handleNumberKey = useCallback((number) => {
-    if (!focusedRef.current) return
-    focusedRef.current.onNumberKey && focusedRef.current.onNumberKey(number)
+    focusedRef.current?.onNumberKey(number)
   }, [focusedRef])
 
   const { isKeyboardVisible, keyboardExtraStyles } = useKeyboardVisible()

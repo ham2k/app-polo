@@ -18,9 +18,7 @@ export const NativeMapMarkers = React.memo(function MapMarkers ({ qth, qsos, sel
   const ref = useRef()
 
   useEffect(() => {
-    if (ref.current) {
-      ref.current.showCallout()
-    }
+    ref.current?.showCallout()
   }, [ref, selectedUUID])
 
   return (

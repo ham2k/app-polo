@@ -363,7 +363,7 @@ const ReferenceHandler = {
           scoring.province = loc
         } else {
           if (qp.options.dxIsMultiplier !== false) {
-            if (!qp.options.dxEntityMultiplierMax || scoring.entities.length < qp.options.dxEntityMultiplierMax) {
+            if (!qp.options.dxEntityMultiplierMax || scoring.entities?.length < qp.options.dxEntityMultiplierMax) {
               if (qp.options.dxEntityIsMultiplier) {
                 const dxcc = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
                 loc = dxcc

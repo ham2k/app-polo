@@ -1,4 +1,18 @@
 {
+  "25.9.2": {
+    "name": "September '25 (patch 2)",
+    "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
+    "changes": [
+      "Fixed bug in NH QP handling"
+    ]
+  },
+  "25.9.1": {
+    "name": "September '25 (patch 1)",
+    "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
+    "changes": [
+      "Last minute fixes for New Hampshire & Salmon Run QSO Parties"
+    ]
+  },
   "25.9.0": {
     "name": "September '25",
     "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",

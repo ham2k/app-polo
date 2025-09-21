@@ -31,7 +31,7 @@ export default function HomeTools ({ settings, styles, style }) {
   useEffect(() => { setLocalValue(search) }, [search])
 
   const handleChangeText = useCallback((value) => {
-    actualInnerRef.current.setNativeProps({ text: value.toUpperCase() })
+    actualInnerRef.current?.setNativeProps({ text: value.toUpperCase() })
     if (Platform.OS === 'android') {
       // This minimizes issues when using external keyboards on Android
       setTimeout(() => setSearch(value.toUpperCase()), 15)

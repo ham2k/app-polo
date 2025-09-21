@@ -102,9 +102,9 @@ function MainApp ({ navigationTheme }) {
           onNavigationReadyForDistribution(navigationRef)
 
           if (routeNameRef.current === undefined) {
-            trackNavigation({ settings, currentRouteName: navigationRef.current.getCurrentRoute().name })
+            trackNavigation({ settings, currentRouteName: navigationRef.current?.getCurrentRoute()?.name })
           }
-          routeNameRef.current = navigationRef.current.getCurrentRoute().name
+          routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name
         }}
         onStateChange={() => {
           const previousRouteName = routeNameRef.current
