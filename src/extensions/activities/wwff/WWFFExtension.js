@@ -251,12 +251,12 @@ const ReferenceHandler = {
     const { band, mode, uuid, startAtMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
 
-    if (refs.length === 0 && !ref?.ref) return { value: 0 } // If not activating, only counts if other QSO has a WWFF ref
+    if (refs.length === 0 && !ref?.ref) return { value: 0, refCount: 0 } // If not activating, only counts if other QSO has a WWFF ref
 
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
     if (nearDupes.length === 0) {
-      return { value: 1, type: Info.activationType }
+      return { value: 1, refCount: 0, type: Info.activationType }
     } else {
       const thisQSOTime = qso.startAtMillis ?? Date.now()
 
@@ -264,13 +264,13 @@ const ReferenceHandler = {
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
       const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0
       if (sameBandMode) {
-        return { value: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { value: 0, refCount: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        return { value: 1, notices, type: Info.activationType }
+        return { value: 1, refCount: refs.length, notices, type: Info.activationType }
       }
     }
   },
@@ -283,19 +283,30 @@ const ReferenceHandler = {
       icon: Info.icon,
       label: Info.shortName,
       value: 0,
+      refCount: 0,
       summary: ''
     }
 
     score.value = score.value + qsoScore.value
+
+    score.refCount = score.refCount + (qsoScore.refCount ?? 0)
+
     return score
   },
 
   summarizeScore: ({ score, operation, ref, section }) => {
+    const activationRef = findRef(operation, Info.activationType)
+
     score.activated = score.value >= 44
     if (score.activated) {
       score.summary = '✓'
     } else {
       score.summary = `${score.value}/44`
+    }
+
+    if (score.refCount > 0) {
+      const label = activationRef?.ref ? 'P2P' : 'P'
+      score.summary = [score.summary, `${score.refCount} ${label}`].filter(x => x).join(' • ')
     }
 
     return score
