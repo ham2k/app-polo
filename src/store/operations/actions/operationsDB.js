@@ -12,6 +12,7 @@ import RNFetchBlob from 'react-native-blob-util'
 import { reportError } from '../../../distro'
 
 import GLOBAL from '../../../GLOBAL'
+import { persistor } from '../..'
 import { actions as qsosActions } from '../../qsos'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { sendOperationsToSyncService } from '../../sync'
@@ -137,7 +138,9 @@ export const mergeSyncOperations = ({ operations }) => async (dispatch, getState
   const uuids = operations.map((op) => `"${op.uuid}"`).join(',')
   const existingOps = await dbSelectAll('SELECT * FROM operations WHERE uuid IN (?)', [uuids], { row: operationFromRow })
 
-  let lastSyncedAtMillis = 0
+  const now = Date.now()
+  let earliestSyncedAtMillis = now
+  let latestSyncedAtMillis = 0
 
   for (const operation of operations) {
     const existing = existingOps.find((op) => op.uuid === operation.uuid)
@@ -153,10 +156,11 @@ export const mergeSyncOperations = ({ operations }) => async (dispatch, getState
     }
     await dispatch(saveOperation(operation, { synced: true }))
     dispatch(actions.setOperation(operation))
-    lastSyncedAtMillis = Math.max(lastSyncedAtMillis, operation.syncedAtMillis)
+    earliestSyncedAtMillis = Math.min(earliestSyncedAtMillis, operation.syncedAtMillis)
+    latestSyncedAtMillis = Math.max(latestSyncedAtMillis, operation.syncedAtMillis)
   }
 
-  return lastSyncedAtMillis
+  return { earliestSyncedAtMillis, latestSyncedAtMillis }
 }
 
 export async function markOperationsAsSynced (operations) {
@@ -168,14 +172,17 @@ export const resetSyncedStatus = () => async (dispatch) => {
   await dbExecute('UPDATE qsos SET synced = false', [])
   await dbExecute('UPDATE operations SET synced = false', [])
 
-  dispatch(setLocalData({ sync: {} }))
+  const localData = dispatch((_dispatch, getState) => selectLocalData(getState()))
+  dispatch(setLocalData({ sync: { lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID }}))
 }
 
 export const clearAllOperationData = () => async (dispatch) => {
   await dbExecute('DELETE FROM operations', [])
   await dbExecute('DELETE FROM qsos', [])
 
-  await dispatch(setLocalData({ sync: {} }))
+  dispatch(setLocalData({ sync: {} }))
+  await persistor.purge()
+
   setTimeout(() => {
     RNRestart.restart()
   }, 1000)

@@ -103,7 +103,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
       {
         text: 'Yes, Wipe It!',
         onPress: () => {
-          dispatch(setLocalData({ sync: { lastOperationSyncedAtMillis: 0, completedFullSync: false } }))
+          dispatch(setLocalData({ sync: { lastestOperationSyncedAtMillis: 0, completedFullSync: false } }))
           setTimeout(async () => await resetDatabase(), 50)
         }
       }

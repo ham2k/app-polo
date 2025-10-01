@@ -12,6 +12,7 @@ import { diff } from 'just-diff'
 import GLOBAL from '../../GLOBAL'
 
 import { findHooks } from '../../extensions/registry'
+import { addNotice } from '../system'
 import { logRemotely } from '../../distro'
 import { markOperationsAsSynced, mergeSyncOperations, queryOperations, resetSyncedStatus } from '../operations'
 import { markQSOsAsSynced, mergeSyncQSOs, queryQSOs } from '../qsos'
@@ -26,10 +27,10 @@ const SYNC_LOOP_DEBOUNCE_MAX = 1000 * 3 // 3 seconds, maximum time to wait for m
 const DEFAULT_SYNC_LOOP_DELAY = 1000 * 20 // 5 seconds, time between sending batches of changes inside a sync loop
 const DEFAULT_SYNC_CHECK_PERIOD = 1000 * 10 // 1000 * 60 * 1 // 1 minutes, time between checking if a new sync loop is needed
 
-const SMALL_BATCH_SIZE = 5 // QSOs or Operations to send on a quick `syncLatest...`
-const DEFAULT_LARGE_BATCH_SIZE = 50 // QSOs or Operations to send on a regular sync loop
+const SMALL_BATCH_SIZE = 10 // QSOs or Operations to send on a quick `syncLatest...`
+const DEFAULT_LARGE_BATCH_SIZE = 100 // QSOs or Operations to send on a regular sync loop
 
-const OPERATION_BATCH_RATIO = 5 // Operation data is much smaller, so we can send more of them in a batch
+const QSO_BATCH_RATIO = 20 // Rought average of QSOs per Operation
 
 const VERBOSE = 2
 
@@ -62,10 +63,6 @@ export async function sendOperationsToSyncService ({ dispatch }) {
  * will call `sendQSOsToSyncService` or `sendOperationsToSyncService`
  * to trigger a single round of syncing with a small batch size.
  */
-
-// TODO: detect when account changed, show a message and ask the user
-// if they want to drop existing QSOs and start anew with the new account sync,
-// or they want to keep the current data and sync it into the new account.
 
 export function useSyncLoop ({ dispatch, settings, online, appState }) {
   const localData = useSelector(selectLocalData)
@@ -100,6 +97,7 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
       // Account changed!!! Disable sync until the user updates their settings
       if (VERBOSE > 1) console.log(' -- account changed, sync disabled')
       setGoAheadWithSync(false)
+      _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID})
     } else {
       if (VERBOSE > 1) console.log(' -- no account, sync enabled')
       // No account, try to sync anyway
@@ -136,13 +134,13 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
     if (appState === 'starting') return
     setImmediate(() => {
       dispatch(startTickTock())
-      if (VERBOSE > 1) console.log('sync tick', tick, GLOBAL.lastSyncLoop)
+      if (VERBOSE > 2) console.log('sync tick', tick, GLOBAL.lastSyncLoop)
       if (goAheadWithSync && GLOBAL.syncEnabled && online) {
         const maxTime = GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD
 
-        if (VERBOSE > 1) console.log('-- sync enabled', { lastSyncLoop: GLOBAL.lastSyncLoop, delta: (tick - (GLOBAL.lastSyncLoop || 0)) })
+        if (VERBOSE > 2) console.log('-- sync enabled', { lastSyncLoop: GLOBAL.lastSyncLoop, delta: (tick - (GLOBAL.lastSyncLoop || 0)) })
         if (tick && (tick - (GLOBAL.lastSyncLoop || 0)) > maxTime) {
-          if (VERBOSE > 1) console.log('-- sync due')
+          if (VERBOSE > 2) console.log('-- sync due')
           _scheduleNextSyncLoop({ dispatch, delay: 1 })
         }
       }
@@ -161,6 +159,50 @@ function _scheduleNextSyncLoop ({ dispatch, delay = 0 }, loop) {
     nextSyncLoopInterval = setTimeout(() => _doOneRoundOfSyncing({ dispatch }), delay)
   }
 }
+
+// async function _doOnePageOfOperationsBackfill ( { dispatch }) {
+//   const batchSize = GLOBAL.syncBatchSize || DEFAULT_LARGE_BATCH_SIZE
+//   const localData = dispatch((_dispatch, getState) => selectLocalData(getState()))
+//   const syncHook = findHooks('sync')[0] // only one sync source
+//   if (!syncHook) return
+
+//   try {
+//     if (VERBOSE > 1) console.log(' -- backfilling operations', { hook: syncHook.key, batchSize })
+
+//     const params = {
+//       untilMillis: (localData?.sync?.earliestOperationBackfilledAtMillis || Date.now()) + 1,
+//       limit: batchSize
+//     }
+
+//     if (VERBOSE > 2) console.log(' -- calling hook', { params })
+//     if (VERBOSE > 1) logTimer('backfillOps' 'call', { reset: true })
+//     const response = await dispatch(syncHook.getOperations(params)
+//     if (VERBOSE > 2) console.log(' -- response', { ok: response.ok, operations: response?.json?.operations?.length, qsos: response?.json?.qsos?.length, meta: response?.json?.meta })
+
+//     if (await _processResponseMeta({ json: response.json, dispatch, localData })) {
+//       if (response.ok) {
+//         if (VERBOSE > 1) logTimer('backfillOps', 'Response parsed')
+//         if (VERBOSE > 1) console.log(' -- backfillOps response ok')
+
+//         // Merge QSOs and operations sent from the server
+//         const syncTimes = {}
+//         if (response.json.operations?.length > 0) {
+//           if (VERBOSE > 1) console.log(' -- new operations', response.json.operations.length)
+//           const { latestSyncedAtMillis } = await dispatch(mergeSyncOperations({ operations: response.json.operations }))
+//           syncTimes.lastestOperationSyncedAtMillis = latestSyncedAtMillis
+//           if (VERBOSE > 1) logTimer('sync', 'Done merging operations')
+//         }
+
+//         if (inboundSync && response.json.qsos?.length > 0) {
+//           if (VERBOSE > 1) console.log(' -- new qsos', response.json.qsos.length)
+//           const { latestSyncedAtMillis } = await dispatch(mergeSyncQSOs({ qsos: response.json.qsos }))
+//           syncTimes.lastestQSOSyncedAtMillis = latestSyncedAtMillis
+//           if (VERBOSE > 1) logTimer('sync', 'Done merging qsos')
+//         }
+//       }
+//     }
+//   }
+// }
 
 /*
  * `_doOneRoundOfSyncing` is the core of the sync loop.
@@ -203,11 +245,11 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
     let syncPayload
 
     // Prepare a batch of QSOs to sync
-    const qsos = await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT ?', [batchSize])
+    const qsos = await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT ?', [batchSize * QSO_BATCH_RATIO])
     if (qsos.length > 0) {
       const opIds = qsos.map(q => `"${q.operation}"`).join(',')
       // Ensure the operations referenced by the `qsos` are also included in the batch
-      const operations = await queryOperations(`WHERE uuid IN (${opIds}) AND synced IS false LIMIT ?`, [batchSize * OPERATION_BATCH_RATIO])
+      const operations = await queryOperations(`WHERE uuid IN (${opIds}) AND synced IS false LIMIT ?`, [batchSize])
       syncPayload = { qsos, operations }
     } else {
       // If not qsos are selected then look for a batch of unsynced operations
@@ -254,34 +296,48 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
       if (inboundSync) {
         syncPayload.meta.inboundSync = inboundSync
 
-        syncPayload.meta.sync = {
-          operations: {
-            sinceMillis: (localData?.sync?.lastOperationSyncedAtMillis || 0) + 1000,
-            limit: batchSize * OPERATION_BATCH_RATIO,
-            anyClient: !localData?.sync?.completedFullSync
-          },
-          qsos: {
-            sinceMillis: (localData?.sync?.lastQSOSyncedAtMillis || 0) + 1000,
-            limit: batchSize,
-            anyClient: !localData?.sync?.completedFullSync
+        let syncDirection
+
+        if (localData?.sync?.completedFullSync) {
+          syncDirection = 'backfill'
+          const now = Date.now()
+          syncPayload.meta.sync = {
+            operations: {
+              untilMillis: (localData?.sync?.earliestOperationSyncedAtMillis || now) - 1,
+              limit: batchSize,
+              anyClient: true
+            },
+            qsos: {
+              untilMillis: (localData?.sync?.earliestQSOSyncedAtMillis || now) - 1,
+              limit: batchSize * 5, // Don't multiply by QSO_BATCH_RATIO because we want a quick response
+              anyClient: true
+            }
+          }
+        } else {
+          syncDirection = 'forward'
+          syncPayload.meta.sync = {
+            operations: {
+              sinceMillis: (localData?.sync?.lastestOperationSyncedAtMillis || 0) + 1,
+              limit: batchSize,
+              anyClient: false
+            },
+            qsos: {
+              sinceMillis: (localData?.sync?.lastestQSOSyncedAtMillis || 0) + 1,
+              limit: batchSize * QSO_BATCH_RATIO,
+              anyClient: false
+            }
           }
         }
+        if (VERBOSE > 1) console.log(' -- sync direction', syncDirection, syncPayload.meta.sync, localData?.sync)
       }
 
       // Call the server's `sync` endpoint
       if (VERBOSE > 2) console.log(' -- calling hook', { meta: syncPayload.meta, sync: syncPayload.meta?.sync, operations: syncPayload.operations?.length, qsos: syncPayload.qsos?.length, settings: Object.keys(syncPayload?.settings || {}).length })
       if (VERBOSE > 1) logTimer('sync', 'sync', { reset: true })
       const response = await dispatch(syncHook.sync(syncPayload))
-      if (VERBOSE > 2) console.log(' -- response', { ok: response.ok, operations: response?.json?.operations?.length, qsos: response?.json?.qsos?.length, meta: response?.json?.meta })
+      if (VERBOSE > 1) console.log(' -- response', { ok: response.ok, operations: response?.json?.operations?.length, qsos: response?.json?.qsos?.length, meta: response?.json?.meta })
 
-      if (localData?.sync?.lastSyncAccountUUID && localData.sync.lastSyncAccountUUID !== response.json.account?.uuid) {
-        // Do not process the response unless the account matches the previous sync
-        // When the account changes, some other part of the app will ask the user
-        // what to do about it and will reset `lastSyncAccountUUID`
-        if (VERBOSE > 1) console.log(' -- account changed', { lastSyncAccountUUID: localData.sync.lastSyncAccountUUID, newAccountUUID: response.json.account?.uuid })
-      } else {
-        await _processResponseMeta({ json: response.json, dispatch })
-
+      if (await _processResponseMeta({ json: response.json, dispatch, localData })) {
         if (response.ok) {
           if (VERBOSE > 1) logTimer('sync', 'Response parsed')
           if (VERBOSE > 1) console.log(' -- synced ok')
@@ -295,14 +351,27 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
           // Merge QSOs and operations sent from the server
           const syncTimes = {}
           if (inboundSync && response.json.operations?.length > 0) {
-            if (VERBOSE > 1) console.log(' -- new operations', response.json.operations.length)
-            syncTimes.lastOperationSyncedAtMillis = await dispatch(mergeSyncOperations({ operations: response.json.operations }))
+            const { latestSyncedAtMillis, earliestSyncedAtMillis }  = await dispatch(mergeSyncOperations({ operations: response.json.operations }))
+            if (VERBOSE > 1) console.log(' -- new operations', response.json.operations.length, { latestSyncedAtMillis, earliestSyncedAtMillis })
+            syncTimes.lastestOperationSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestOperationSyncedAtMillis)
+
+            if (localData?.sync?.earliestOperationSyncedAtMillis) {
+              syncTimes.earliestOperationSyncedAtMillis = Math.min(earliestSyncedAtMillis, localData?.sync?.earliestOperationSyncedAtMillis)
+            } else {
+              syncTimes.earliestOperationSyncedAtMillis = earliestSyncedAtMillis
+            }
             if (VERBOSE > 1) logTimer('sync', 'Done merging operations')
           }
 
           if (inboundSync && response.json.qsos?.length > 0) {
-            if (VERBOSE > 1) console.log(' -- new qsos', response.json.qsos.length)
-            syncTimes.lastQSOSyncedAtMillis = await dispatch(mergeSyncQSOs({ qsos: response.json.qsos }))
+            const { latestSyncedAtMillis, earliestSyncedAtMillis } = await dispatch(mergeSyncQSOs({ qsos: response.json.qsos }))
+            if (VERBOSE > 1) console.log(' -- new qsos', response.json.qsos.length, { latestSyncedAtMillis, earliestSyncedAtMillis })
+            syncTimes.lastestQSOSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestQSOSyncedAtMillis)
+            if (localData?.sync?.earliestQSOSyncedAtMillis) {
+              syncTimes.earliestQSOSyncedAtMillis = Math.min(earliestSyncedAtMillis, localData?.sync?.earliestQSOSyncedAtMillis)
+            } else {
+              syncTimes.earliestQSOSyncedAtMillis = earliestSyncedAtMillis
+            }
             if (VERBOSE > 1) logTimer('sync', 'Done merging qsos')
           }
 
@@ -314,14 +383,17 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
             // if there are any pending QSOs or Operations to keep syncing
             const anyPendingQSO = await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT 1')
             const anyPendingOperation = await queryOperations('WHERE synced IS false LIMIT 1')
-            const receivedAllUpdates = ((response.json.operations?.length || 0) < batchSize * OPERATION_BATCH_RATIO) && ((response.json.qsos?.length || 0) < batchSize)
-
             if (anyPendingQSO.length === 0 && anyPendingOperation.length === 0 && receivedAllUpdates) {
               if (VERBOSE > 1) console.log(' -- no more changes to sync!!! loop complete')
               scheduleAnotherLoop = false
+            }
+
+            const receivedAllUpdates = ((response.json.operations?.length || 0) < syncPayload.meta.sync.operations.limit) && ((response.json.qsos?.length || 0) < syncPayload.meta.sync.qsos.limit)
+            if (receivedAllUpdates) {
               GLOBAL.lastFullSync = Date.now()
               syncTimes.completedFullSync = true
             }
+            if (VERBOSE > 1) console.log(' -- syncTimes', syncTimes)
           }
 
           // And finally update the last sync times and account id
@@ -405,7 +477,15 @@ function _scheduleDebouncedFunctionForSyncLoop (fn) {
   }
 }
 
-async function _processResponseMeta ({ json, dispatch }) {
+async function _processResponseMeta ({ json, dispatch, localData }) {
+  if (localData?.sync?.lastSyncAccountUUID && localData.sync.lastSyncAccountUUID !== json?.account?.uuid) {
+    // Do not process the response unless the account matches the previous sync
+    // Let the user know so they can address this in the settings.
+    if (VERBOSE > 1) console.log(' -- account changed, sync ignored', { lastSyncAccountUUID: localData.sync.lastSyncAccountUUID, newAccountUUID: json?.account?.uuid })
+    _addNoticeForAccountChanged({dispatch, currentAccountUUID: json?.account?.uuid, lastSyncAccountUUID: localData.sync.lastSyncAccountUUID})
+    return false
+  }
+
   try {
     if (json?.meta?.resetSyncedStatus || json?.meta?.reset_synced_status) {
       await resetSyncedStatus()
@@ -439,9 +519,10 @@ async function _processResponseMeta ({ json, dispatch }) {
   } catch (e) {
     console.log('Error parsing sync meta', e, json)
   }
+  return true
 }
 
-const _lastAccountNotified = 0
+let _lastAccountNotified = 0
 
 function _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAccountUUID}) {
   if (_lastAccountNotified === currentAccountUUID) return

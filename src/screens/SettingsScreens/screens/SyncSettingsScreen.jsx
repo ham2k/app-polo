@@ -106,9 +106,10 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   const [syncStatus, setSyncStatus] = useState()
   useEffect(() => {
     setImmediate(async () => {
+      dispatch(syncHook.getAccountData())
       setSyncStatus(await syncCountDescription())
     })
-  }, [fiveSecondTick])
+  }, [dispatch, fiveSecondTick, syncHook])
 
   const handleResetSyncStatus = useCallback(async () => {
     await dispatch(resetSyncedStatus())
@@ -128,8 +129,10 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
         {
           text: 'Yes, Replace It All!',
           onPress: async () => {
-            await dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_email: undefined }))
-            await dispatch(clearAllOperationData())
+            await dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
+            setTimeout(async () => {
+              await dispatch(clearAllOperationData())
+            }, 1000)
           }
         }
       ]
@@ -142,7 +145,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
       {
         text: 'Yes, Combine Them!',
         onPress: async () => {
-          await dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_email: undefined }))
+          await dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
           await dispatch(resetSyncedStatus())
         }
       }

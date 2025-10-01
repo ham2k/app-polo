@@ -178,7 +178,9 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
   if (DEBUG) logTimer('sync', 'Retrieved QSOs', { sinceLast: true })
   console.log('-- ', { qsos: qsos.length })
 
-  let lastSyncedAtMillis = 0
+  const now = Date.now()
+  let earliestSyncedAtMillis = now
+  let latestSyncedAtMillis = 0
 
   const qsosForOperation = {}
   for (const qso of qsos) {
@@ -191,7 +193,8 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
 
     qsosForOperation[qso.operation] = qsosForOperation[qso.operation] || []
     qsosForOperation[qso.operation].push(qso)
-    lastSyncedAtMillis = Math.max(lastSyncedAtMillis, qso.syncedAtMillis)
+    earliestSyncedAtMillis = Math.min(earliestSyncedAtMillis, qso.syncedAtMillis)
+    latestSyncedAtMillis = Math.max(latestSyncedAtMillis, qso.syncedAtMillis)
   }
   if (DEBUG) logTimer('sync', 'Compared QSOs', { sinceLast: true })
   for (const uuid in qsosForOperation) {
@@ -199,7 +202,7 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
     if (DEBUG) logTimer('sync', 'Saved QSOs', { sinceLast: true })
   }
 
-  return lastSyncedAtMillis
+  return { earliestSyncedAtMillis, latestSyncedAtMillis }
 }
 
 export async function markQSOsAsSynced (qsos) {

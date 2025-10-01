@@ -108,7 +108,7 @@ function MainApp ({ navigationTheme }) {
         }}
         onStateChange={() => {
           const previousRouteName = routeNameRef.current
-          const currentRouteName = navigationRef.current.getCurrentRoute().name
+          const currentRouteName = navigationRef.current?.getCurrentRoute()?.name
           if (previousRouteName !== currentRouteName) {
             trackNavigation({ settings, currentRouteName, previousRouteName })
           }

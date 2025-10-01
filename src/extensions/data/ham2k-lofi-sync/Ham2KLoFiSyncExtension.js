@@ -48,6 +48,20 @@ const SyncHook = {
     return response
   },
 
+  getOperations: (params) => async (dispatch, getState) => {
+    if (DEBUG) console.log('getOperations', { meta: params.meta })
+
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/operations', method: 'GET', params })
+    return response
+  },
+
+  getQSOs: (params) => async (dispatch, getState) => {
+    if (DEBUG) console.log('getQsos', { meta: params.meta })
+
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/qsos', method: 'GET', params })
+    return response
+  },
+
   linkClient: (email) => async (dispatch, getState) => {
     const response = await requestWithAuth({ dispatch, getState, url: 'v1/client/link', method: 'POST', body: JSON.stringify({ email }) })
     return response
@@ -168,6 +182,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       const responseBody = await response.text()
       // if (DEBUG) console.log(' -- main response body', responseBody)
       // const json = await response.json()
+      console.log(' -- body size: ', responseBody.length)
       let json
       try {
         json = JSON.parse(responseBody)
