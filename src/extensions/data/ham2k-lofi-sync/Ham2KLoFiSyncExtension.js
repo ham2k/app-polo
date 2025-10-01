@@ -182,7 +182,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       const responseBody = await response.text()
       // if (DEBUG) console.log(' -- main response body', responseBody)
       // const json = await response.json()
-      console.log(' -- body size: ', responseBody.length)
+      // if (DEBUG) console.log(' -- body size: ', responseBody.length)
       let json
       try {
         json = JSON.parse(responseBody)

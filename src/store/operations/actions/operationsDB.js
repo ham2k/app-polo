@@ -18,7 +18,7 @@ import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { sendOperationsToSyncService } from '../../sync'
 import { actions } from '../operationsSlice'
 import { selectSettings } from '../../settings'
-import { setLocalData } from '../../local'
+import { selectLocalData, setLocalData } from '../../local'
 
 const operationFromRow = (row) => {
   if (!row) return {}

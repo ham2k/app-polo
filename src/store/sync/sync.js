@@ -32,7 +32,7 @@ const DEFAULT_LARGE_BATCH_SIZE = 100 // QSOs or Operations to send on a regular 
 
 const QSO_BATCH_RATIO = 20 // Rought average of QSOs per Operation
 
-const VERBOSE = 2
+const VERBOSE = 0
 
 let errorCount = 0
 
@@ -97,6 +97,7 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
       // Account changed!!! Disable sync until the user updates their settings
       if (VERBOSE > 1) console.log(' -- account changed, sync disabled')
       setGoAheadWithSync(false)
+      logRemotely({ message: 'account changed, sync disabled', currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
       _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID})
     } else {
       if (VERBOSE > 1) console.log(' -- no account, sync enabled')
@@ -482,6 +483,7 @@ async function _processResponseMeta ({ json, dispatch, localData }) {
     // Do not process the response unless the account matches the previous sync
     // Let the user know so they can address this in the settings.
     if (VERBOSE > 1) console.log(' -- account changed, sync ignored', { lastSyncAccountUUID: localData.sync.lastSyncAccountUUID, newAccountUUID: json?.account?.uuid })
+      logRemotely({ message: 'account changed, sync ignored', currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
     _addNoticeForAccountChanged({dispatch, currentAccountUUID: json?.account?.uuid, lastSyncAccountUUID: localData.sync.lastSyncAccountUUID})
     return false
   }
