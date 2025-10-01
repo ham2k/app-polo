@@ -155,7 +155,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <H2kListSection title={'Ham2K Log Filer - Sync Server (BETA)'}>
+        <H2kListSection title={'Cloud Sync: Ham2K Log Filer (PRE-ALPHA)'}>
           <H2kListItem
             title="Sync Service"
             description={lofiData?.enabled !== false ? 'Enabled' : 'Disabled'}
@@ -218,7 +218,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
             <Text style={styles.paragraph}>
               While the LoFi service is in BETA for
               the next couple of months, the service will remain free. After that prices will depend
-              on the country and currency but will not be more than US$30/year or equivalent, and probably less.
+              on the country and currency but should not be more than US$30/year or equivalent, and probably less.
             </Text>
           </View>
 
