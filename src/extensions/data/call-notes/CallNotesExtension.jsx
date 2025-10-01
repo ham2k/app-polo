@@ -120,7 +120,9 @@ const NoteExpansionCommandHook = {
   extension: Extension,
   key: 'call-notes-expansion',
   match: /^(\.\.|\/\/)([\w\d]+)/i,
-  describeCommand: (match) => {
+  describeCommand: (match, { qso }) => {
+    if (!qso) return
+
     if (match[2].length < 2) return ''
     const callNotes = findAllCallNotes(match[2])
     if (callNotes && callNotes[0]?.note) {
@@ -130,7 +132,9 @@ const NoteExpansionCommandHook = {
       return `${emoji}Expand to ${_cleanNote(callNotes[0].note)}?`
     }
   },
-  invokeCommand: (match, { dispatch, operation, handleFieldChange }) => {
+  invokeCommand: (match, { dispatch, operation, handleFieldChange, qso }) => {
+    if (!qso) return
+
     if (match[2].length < 2) return ''
     const callNotes = findAllCallNotes(match[2])
     if (callNotes && callNotes[0]?.note) {

@@ -17,18 +17,35 @@ import { useKeyboardVisible } from '../../components/useKeyboardVisible'
 
 import CallLookup from './CallLookup'
 import { trackEvent } from '../../../distro'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import Notices from './Notices'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectRuntimeOnline } from '../../../store/runtime'
+import { checkAndDescribeCommands, checkAndProcessCommands } from '../../../extensions/commands/commandHandling'
 
 export default function HomeTools ({ settings, styles, style }) {
   const navigation = useNavigation()
+
+  const dispatch = useDispatch()
+  const online = useSelector(selectRuntimeOnline)
 
   const actualInnerRef = useRef()
 
   const [search, setSearch] = useState('')
   const [localValue, setLocalValue] = useState()
   useEffect(() => { setLocalValue(search) }, [search])
+
+  const [commandInfo, actualSetCommandInfo] = useState()
+  const setCommandInfo = useCallback((info) => {
+    if (commandInfo?.timeoutId) {
+      clearTimeout(commandInfo.timeoutId)
+    }
+    if (info?.timeout) {
+      info.timeoutId = setTimeout(() => {
+        actualSetCommandInfo(undefined)
+      }, info.timeout)
+    }
+    actualSetCommandInfo(info)
+  }, [actualSetCommandInfo, commandInfo?.timeoutId])
 
   const handleChangeText = useCallback((value) => {
     actualInnerRef.current?.setNativeProps({ text: value.toUpperCase() })
@@ -41,18 +58,11 @@ export default function HomeTools ({ settings, styles, style }) {
   }, [])
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      let theirInfo = parseCallsign(search)
-      if (theirInfo.baseCall) {
-        theirInfo = annotateFromCountryFile(theirInfo)
-      }
-      if (theirInfo.entityPrefix) {
-        trackEvent('search_callsign', { their_prefix: theirInfo.entityPrefix })
-      }
-    }, 2000)
-
-    return () => clearTimeout(timeout)
-  }, [search, settings?.operatorCall])
+    if (search?.length > 2) {
+      const commandDescription = checkAndDescribeCommands(search, { dispatch, settings, online })
+      setCommandInfo({ message: commandDescription || undefined, match: !!commandDescription || commandDescription === '' })
+    }
+  }, [dispatch, online, search, setCommandInfo, settings, settings.operatorCall])
 
   const handleClearSearch = useCallback(() => {
     setSearch('')
@@ -109,10 +119,19 @@ export default function HomeTools ({ settings, styles, style }) {
     setIsFocused(false)
   }, [])
 
+  const handleSubmit = useCallback((event) => {
+    const commandResult = checkAndProcessCommands(search, { dispatch, settings, online, updateQSO: () => setSearch('') })
+    if (commandResult) {
+      trackEvent('command', { command: search })
+      setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
+    }
+  }, [search, dispatch, settings, online, setCommandInfo])
+
   return (
     <>
       <CallLookup
         call={search}
+        commandInfo={commandInfo}
         settings={settings}
         styles={styles}
         style={{ backgroundColor: styles.colors.primaryContainer, borderTopWidth: 1, borderTopColor: styles.colors.primary }}
@@ -146,7 +165,8 @@ export default function HomeTools ({ settings, styles, style }) {
 
               onBlur: handleBlur,
               onFocus: handleFocus,
-              onSelectionChange: handleSelectionChange
+              onSelectionChange: handleSelectionChange,
+              onSubmitEditing: handleSubmit
             }}
             ref={actualInnerRef}
             placeholder={'Quick Call Lookup…'}

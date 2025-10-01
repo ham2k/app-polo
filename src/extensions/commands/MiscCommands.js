@@ -47,6 +47,8 @@ const SpotCommandHook = {
   key: 'commands-misc-spot',
   match: /^(SPOT|SPOTME|SPME|SELFSPOT|QRV|QRT|QSY)(|[/.][\w\d!,.-_]*)$/i,
   describeCommand: (match, { vfo, operation }) => {
+    if (!vfo || !operation) return
+
     let comments = match[2]?.substring(1) || ''
 
     if (!vfo.freq) return 'Cannot self-spot without frequency'
@@ -63,6 +65,8 @@ const SpotCommandHook = {
     }
   },
   invokeCommand: (match, { operation, vfo, dispatch, settings }) => {
+    if (!vfo || !operation) return
+
     let comments = match[2]?.substring(1) || ''
 
     if (!vfo.freq) return 'Cannot self-spot without frequency'

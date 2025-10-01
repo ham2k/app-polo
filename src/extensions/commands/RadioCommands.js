@@ -33,11 +33,15 @@ const BandCommandHook = {
   extension: Extension,
   key: 'commands-radio-band',
   match: /^(2|6|10|12|15|17|20|30|40|60|80|160)M{0,1}$/i,
-  describeCommand: (match) => {
+  describeCommand: (match, { qso }) => {
+    if (!qso) return
+
     if (match[0].length < 2) return ''
     return `Change band to ${match[1]}m?`
   },
-  invokeCommand: (match, { handleFieldChange }) => {
+  invokeCommand: (match, { handleFieldChange, qso }) => {
+    if (!qso) return
+
     handleFieldChange({ fieldId: 'band', value: match[1] + 'm' })
     return `Band set to ${match[1]}m`
   }
@@ -49,6 +53,8 @@ const FrequencyCommandHook = {
   key: 'commands-radio-frequency',
   match: /^([\d.]{1,})$/,
   describeCommand: (match, { qso, vfo, ourInfo }) => {
+    if (!qso) return
+
     let freq
     if (match[1].length < 3) return
     if (match[1].startsWith('..') && qso.freq) {
@@ -64,6 +70,8 @@ const FrequencyCommandHook = {
     }
   },
   invokeCommand: (match, { qso, handleFieldChange, vfo, ourInfo }) => {
+    if (!qso) return
+
     let freq
     if (match[1].startsWith('..') && qso.freq) {
       freq = parseFreqInMHz(`${Math.round(qso.freq)}${match[1].substring(1)}`)
@@ -87,9 +95,13 @@ const PowerCommandHook = {
   key: 'commands-radio-power',
   match: /^([\d.]{1,})[wW]$/,
   describeCommand: (match, { qso }) => {
+    if (!qso) return
+
     return `Change power to ${match[1]}W?`
   },
   invokeCommand: (match, { qso, handleFieldChange }) => {
+    if (!qso) return
+
     handleFieldChange({ fieldId: 'power', value: match[1] })
     return `Power set to ${match[1]}W`
   }
@@ -101,9 +113,13 @@ const ModeCommandHook = {
   key: 'commands-radio-mode',
   match: /^(CW|SSB|USB|LSB|FM|AM|FT8|FT4|RTTY|LSB|USB)$/i,
   describeCommand: (match, { qso }) => {
+    if (!qso) return
+
     return `Change mode to ${match[1]}?`
   },
-  invokeCommand: (match, { handleFieldChange }) => {
+  invokeCommand: (match, { handleFieldChange, qso }) => {
+    if (!qso) return
+
     handleFieldChange({ fieldId: 'mode', value: match[1] })
     return `Mode set to ${match[1]}`
   }

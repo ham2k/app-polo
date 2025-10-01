@@ -20,15 +20,15 @@ export function checkAndProcessCommands (value, extraParams) {
     // because the `qso` we have access here is the one from the time of the initial call to `checkAndProcessCommands`
     // not the one with updates from the command processing.
     const handleFieldChangeWrapper = (event) => {
-      handleFieldChange({ ...event, alsoClearTheirCall: true })
+      handleFieldChange && handleFieldChange({ ...event, alsoClearTheirCall: true })
       callWasCleared = true
     }
     const updateQSOWrapper = (args) => {
-      updateQSO({ their: { call: args.their?.call || '' } })
+      updateQSO && updateQSO({ ...args, their: { ...args?.their, call: args?.their?.call || '' } })
       callWasCleared = true
     }
     const handleSubmitWrapper = (args) => {
-      handleSubmit(handleSubmit)
+      handleSubmit && handleSubmit(args)
       callWasCleared = true
     }
 
@@ -43,7 +43,7 @@ export function checkAndProcessCommands (value, extraParams) {
         }
       )
       if (!callWasCleared) {
-        updateQSO({ their: { call: '' } })
+        updateQSO && updateQSO({ their: { call: '' } })
       }
 
       return result ?? true

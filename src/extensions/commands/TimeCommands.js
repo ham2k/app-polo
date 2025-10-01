@@ -32,7 +32,9 @@ const DirectTimeCommandHook = {
   extension: Extension,
   key: 'commands-time-direct',
   match: /^(\d{1,2}[-/]\d{2,2}|\d{1,2}:\d{2,2}|\d{1,2}:\d{2,2}:\d{2,2})$/i,
-  describeCommand: (match) => {
+  describeCommand: (match, { qso }) => {
+    if (!qso) return
+
     if (match[1].indexOf(':') > -1) {
       return `Set time to ${match[1]}?`
     } else {
@@ -40,6 +42,8 @@ const DirectTimeCommandHook = {
     }
   },
   invokeCommand: (match, { qso, handleFieldChange }) => {
+    if (!qso) return
+
     const baseTime = qso.startAtMillis ? new Date(qso.startAtMillis) : new Date()
     if (match[1].indexOf(':') > -1) {
       let time = match[1].padStart(5, '0')
@@ -61,7 +65,9 @@ const DeltaTimeCommandHook = {
   extension: Extension,
   key: 'commands-time-delta',
   match: /^([-+]\d+)([hmsdw])$/i,
-  describeCommand: (match) => {
+  describeCommand: (match, { qso }) => {
+    if (!qso) return
+
     if (match) {
       const delta = parseInt(match[1], 10)
       const units = match[2].toUpperCase()
@@ -74,6 +80,8 @@ const DeltaTimeCommandHook = {
     }
   },
   invokeCommand: (match, { qso, handleFieldChange }) => {
+    if (!qso) return
+
     const baseTime = qso.startAtMillis ? new Date(qso.startAtMillis) : new Date()
 
     if (match) {
@@ -97,7 +105,9 @@ const NowTimeCommandHook = {
   extension: Extension,
   key: 'commands-time-now',
   match: /^(NOW|TODAY|YESTERDAY)$/i,
-  describeCommand: (match) => {
+  describeCommand: (match, { qso }) => {
+    if (!qso) return
+
     if (match[1] === 'NOW') {
       return 'Change time to now?'
     } else if (match[1] === 'TODAY') {
@@ -107,6 +117,8 @@ const NowTimeCommandHook = {
     }
   },
   invokeCommand: (match, { qso, handleFieldChange, dispatch, operation }) => {
+    if (!qso) return
+
     if (match[1] === 'NOW') {
       handleFieldChange({ fieldId: 'time', value: new Date().valueOf() })
       dispatch(setOperationLocalData({ uuid: operation.uuid, _manualTime: false }))

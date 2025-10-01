@@ -54,7 +54,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
     } else if (result.json.account_errors?.pending_email?.find(e => e.suggested_action === 'link')) {
       const linkResult = await dispatch(syncHook.linkClient(email))
       if (linkResult.ok) {
-        dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: linkResult.json.account, pending_email: email }))
+        dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: linkResult.json.account, pending_link_email: email }))
         setDialogVisible(false)
         onDialogDone && onDialogDone()
       } else {
@@ -95,10 +95,20 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
   }, [lofiData?.pending_link_email, lofiData?.account?.pending_email, email])
 
   const handleResend = useCallback(() => {
-    dispatch(syncHook.resendEmail(email))
+    if (lofiData?.pending_link_email) {
+      dispatch(syncHook.linkClient(lofiData?.pending_link_email))
+    } else {
+      dispatch(syncHook.resendEmail())
+    }
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [email, dispatch, syncHook, onDialogDone])
+  }, [lofiData?.pending_link_email, onDialogDone, dispatch, syncHook])
+
+  const handleRevert = useCallback(() => {
+    dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined, pending_email: undefined }))
+    setDialogVisible(false)
+    onDialogDone && onDialogDone()
+  }, [dispatch, onDialogDone])
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
@@ -125,7 +135,10 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
       </H2kDialogContent>
       <H2kDialogActions>
         {showResend ? (
-          <H2kButton onPress={handleResend} style={{ alignSelf: 'flex-start' }}>Resend</H2kButton>
+          <>
+            <H2kButton onPress={handleResend} style={{ alignSelf: 'flex-start' }}>Resend</H2kButton>
+            <H2kButton onPress={handleRevert} style={{ alignSelf: 'flex-start' }}>Revert</H2kButton>
+          </>
         ) : (
           // Otherwise the "Ok" button jumps around!
           <View style={{ flex: 0, width: styles.oneSpace }} />

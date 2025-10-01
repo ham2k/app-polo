@@ -12,6 +12,7 @@ import { addQSOs } from '../../store/qsos'
 import { resetDatabase } from '../../store/db/db'
 import { setLocalData } from '../../store/local'
 import { setSettings } from '../../store/settings'
+import { clearAllOperationData } from '../../store/operations/actions/operationsDB'
 import { addNotice, clearNoticesDismissed, setSystemFlag } from '../../store/system'
 import { poissonRandom } from '../../tools/randomTools'
 import { logTimer } from '../../tools/perfTools'
@@ -34,6 +35,7 @@ const Extension = {
     registerHook('command', { priority: 100, hook: ResetNoticesCommandHook })
     registerHook('command', { priority: 100, hook: SeedCommandHook })
     registerHook('command', { priority: 100, hook: OnboardCommandHook })
+    registerHook('command', { priority: 100, hook: WipeOperationsCommandHook })
     registerHook('command', { priority: 100, hook: WipeDBCommandHook })
     registerHook('command', { priority: 100, hook: FactoryResetCommandHook })
   }
@@ -129,16 +131,33 @@ const OnboardCommandHook = {
   }
 }
 
+const WipeOperationsCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-wipeoperations',
+  match: /^(WIPE!|RESYNC)/i,
+  describeCommand: (match) => {
+    return 'Delete all operations and reset synced status?'
+  },
+  invokeCommand: (match, { dispatch }) => {
+    dispatch(setLocalData({ sync: { lastestOperationSyncedAtMillis: 0, completedFullSync: false } }))
+    setTimeout(async () => {
+      await dispatch(clearAllOperationData())
+    }, 1000)
+    return 'Wiping Operations…'
+  }
+}
+
 const WipeDBCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-debug-wipedb',
   match: /^WIPEDB!/i,
   describeCommand: (match) => {
-    return 'Delete database (but keep settings)?'
+    return 'Delete entire database (but keep settings)?'
   },
   invokeCommand: (match, { dispatch }) => {
-    dispatch(setLocalData({ sync: { lastOperationSyncedAtMillis: 0, completedFullSync: false } }))
+    dispatch(setLocalData({ sync: { lastestOperationSyncedAtMillis: 0, completedFullSync: false } }))
     setTimeout(async () => {
       await resetDatabase()
     }, 1000)
@@ -168,11 +187,15 @@ const SeedCommandHook = {
   extension: Extension,
   key: 'commands-debug-seed',
   match: /^SEED(\d+)$/i,
-  describeCommand: (match) => {
+  describeCommand: (match, { operation }) => {
+    if (!operation) return
+
     const count = parseInt(match[1], 10)
     return `Seed the log with ${count} QSOs?`
   },
   invokeCommand: (match, { handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
+    if (!operation) return
+
     let count = parseInt(match[1], 10)
     setTimeout(async () => {
       try {

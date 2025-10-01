@@ -122,7 +122,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   const handleReplaceLocalData = useCallback(async () => {
     Alert.alert(
       'Replace Local Data?',
-      'Are you sure you want to replace all local data with the operations and QSOs from the new account? If you have unsynced data, it will be lost.',
+      'Are you sure you want to replace all local data with the operations and QSOs from the new account?\n\nThe app will restart.\n\n If you have unsynced data, it will be lost.',
       [
         { text: 'No, Cancel', onPress: () => {} },
         {

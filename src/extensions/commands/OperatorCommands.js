@@ -29,11 +29,15 @@ const OperatorCommandHook = {
   extension: Extension,
   key: 'commands-operator-change',
   match: /^(OP\.|OP\/|OPER\.|OPER\/)([\w\d]+)$/i,
-  describeCommand: (match) => {
+  describeCommand: (match, { operation }) => {
+    if (!operation) return
+
     if (match[2].length < 3) return ''
     return `Change operator to ${match[2]}?`
   },
   invokeCommand: (match, { dispatch, operation, handleFieldChange }) => {
+    if (!operation) return
+
     if (match[2].length < 3) return ''
     const operatorCall = match[2].toUpperCase()
     if (operatorCall) {

@@ -3,7 +3,8 @@
     "name": "September '25 (patch 3)",
     "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
     "changes": [
-      "Fixed bug in WWFF duplicate checking, include P2P in summary"
+      "Fixed bug in WWFF duplicate checking, include P2P in summary",
+      "Some shortcut commands are now available on the Home Screen"
     ]
   },
   "25.9.2": {

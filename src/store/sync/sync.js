@@ -31,7 +31,7 @@ const DEFAULT_LARGE_BATCH_SIZE = 50 // QSOs or Operations to send on a regular s
 
 const OPERATION_BATCH_RATIO = 5 // Operation data is much smaller, so we can send more of them in a batch
 
-const VERBOSE = 0
+const VERBOSE = 2
 
 let errorCount = 0
 
@@ -439,4 +439,26 @@ async function _processResponseMeta ({ json, dispatch }) {
   } catch (e) {
     console.log('Error parsing sync meta', e, json)
   }
+}
+
+const _lastAccountNotified = 0
+
+function _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAccountUUID}) {
+  if (_lastAccountNotified === currentAccountUUID) return
+  _lastAccountNotified = currentAccountUUID
+  return dispatch(addNotice({
+    unique: 'sync:account-changed',
+    priority: -100,
+    transient: true,
+    title: 'Sync Paused!',
+    icon: 'cloud-alert',
+    text: 'Sync is paused because the account has changed. Please update your settings to continue syncing.',
+    actions: [
+      {
+        action: 'navigate',
+        label: 'Open Settings',
+        args: [ 'Settings', { screen: 'SyncSettings' } ]
+      }
+    ]
+  }))
 }
