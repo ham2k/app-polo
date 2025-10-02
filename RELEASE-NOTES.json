@@ -6,7 +6,8 @@
       "Fixed bug in WWFF duplicate checking, include P2P in summary",
       "Some shortcut commands are now available on the Home Screen",
       "Ham2K Log Filer Cloud Sync (pre-alpha)",
-      "Improve number keys on larger screens"
+      "Improve number keys on larger screens",
+      "Remember if secondary controls are open or not"
     ]
   },
   "25.9.2": {

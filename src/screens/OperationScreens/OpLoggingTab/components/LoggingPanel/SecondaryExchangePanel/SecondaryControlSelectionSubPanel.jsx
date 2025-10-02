@@ -11,6 +11,8 @@ import { Icon, IconButton } from 'react-native-paper'
 
 import LoggerChip from '../../../../components/LoggerChip'
 import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
+import { setSettings } from '../../../../../../store/settings'
+import { useDispatch } from 'react-redux'
 
 const PositionedControlChip = (props) => {
   const { control, operation, vfo, qso, settings, onChange } = props
@@ -48,6 +50,8 @@ export const SecondaryControlSelectionsubPanel = ({
   themeColor, currentSecondaryControl, setCurrentSecondaryControl,
   allControls, enabledControls
 }) => {
+  const dispatch = useDispatch()
+
   const [containerLayout, setContainerLayout] = useState()
 
   const [chipLayout, setChipLayout] = useState({})
@@ -98,10 +102,10 @@ export const SecondaryControlSelectionsubPanel = ({
     }
   }, [secondaryControl, chipLayout, containerLayout, currentSecondaryControl, styles])
 
-  const [chipContainerOpen, setChipContainerOpen] = useState(false)
+  const chipContainerOpen = useMemo(() => settings?.secondaryControlsOpen, [settings])
   const handleContainerToggle = useCallback((value) => {
-    setChipContainerOpen(value)
-  }, [])
+    dispatch(setSettings({ secondaryControlsOpen: !chipContainerOpen }))
+  }, [dispatch, chipContainerOpen])
 
   const [chipContainerStyle, chipScrollViewProps] = useMemo(() => {
     if (chipContainerOpen) {
