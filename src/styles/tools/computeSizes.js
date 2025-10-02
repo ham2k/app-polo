@@ -65,11 +65,11 @@ export function computeSizes ({ width, height, fontScale, pixelRatio }) {
   const pixelScaleAdjustment = fontScale * fontScaleAdjustment
 
   let size
-  if (width / pixelScaleAdjustment < 340) size = 'xs'
-  else if (width / pixelScaleAdjustment < 500) size = 'sm'
-  else if (width / pixelScaleAdjustment < 1000) size = 'md'
-  else if (width / pixelScaleAdjustment < 1200) size = 'lg'
-  else size = 'xl'
+  if (width / pixelScaleAdjustment < 340) size = 'xs' // Small phone
+  else if (width / pixelScaleAdjustment < 480) size = 'sm' // Regular phone
+  else if (width / pixelScaleAdjustment < 720) size = 'md' // Tablet
+  else if (width / pixelScaleAdjustment < 1000) size = 'lg' // Large Tablet
+  else size = 'xl' // Full desktop
 
   const portrait = height > width
   const landscape = !portrait

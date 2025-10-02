@@ -77,12 +77,20 @@ export default function LoggerChip ({
     return { mode, colorizedTheme, baseTextStyle }
   }, [themeColor, styles, selected, disabled])
 
+  const combinedStyle = useMemo(() => {
+    if (styles.mdOrLarger) {
+      return [style, { paddingTop: styles.oneSpace * 0.5, paddingBottom: styles.oneSpace * 0.5 }]
+    } else {
+      return style
+    }
+  }, [style, styles])
+
   return (
     <Chip
       icon={paperNameOrHam2KIcon(icon)}
       mode={mode}
       theme={colorizedTheme}
-      style={[style]}
+      style={combinedStyle}
       textStyle={[baseTextStyle, textStyle]}
       disabled={disabled}
       onPress={handlePress}

@@ -14,6 +14,10 @@ import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 
 function prepareStyles (baseStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
+  let vertPaddingMult = 0.5
+  if (baseStyles.mdOrLarger) vertPaddingMult = 2
+  else if (baseStyles.smOrLarger) vertPaddingMult = 1
+
   return {
     ...baseStyles,
     root: {
@@ -30,11 +34,11 @@ function prepareStyles (baseStyles, themeColor) {
     },
     keyTouchable: {
       flex: 1,
-      paddingVertical: baseStyles.oneSpace * (baseStyles.smOrLarger ? 1 : 0.5),
-      overflow: 'hidden', // or round borders never show
-      borderWidth: 1,
-      borderColor: baseStyles.theme.colors[`${themeColor}Light`],
-      borderRadius: baseStyles.oneSpace * 1.5
+      // borderWidth: 1,
+      // borderColor: 'red',
+      // borderRadius: baseStyles.oneSpace * 1.5,
+      // overflow: 'hidden', // or round borders never show
+      paddingVertical: baseStyles.oneSpace * vertPaddingMult
     },
     disabledRoot: {
       backgroundColor: baseStyles.theme.colors[`${themeColor}Container`]
