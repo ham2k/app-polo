@@ -185,7 +185,7 @@ export const clearAllOperationData = () => async (dispatch) => {
 
   setTimeout(() => {
     RNRestart.restart()
-  }, 1000)
+  }, 500)
 }
 
 export async function getSyncCounts () {

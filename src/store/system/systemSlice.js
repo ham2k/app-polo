@@ -57,6 +57,22 @@ export const systemSlice = createSlice({
         state.notices = state.notices.filter(notice => notice.unique !== action.payload.unique)
       }
     },
+    clearMatchingNotices: (state, action) => {
+      state.notices = state.notices || []
+
+      if (action.payload.unique) {
+        state.notices = state.notices.filter(notice => notice.unique !== action.payload.unique)
+      }
+      if (action.payload.uniquePrefix) {
+        state.notices = state.notices.filter(notice => !notice.unique.startsWith(action.payload.uniquePrefix))
+      }
+      if (action.payload.key) {
+        state.notices = state.notices.filter(notice => notice.key !== action.payload.key)
+      }
+      if (action.payload.keyPrefix) {
+        state.notices = state.notices.filter(notice => !notice.key.startsWith(action.payload.keyPrefix))
+      }
+    },
     clearNoticesDismissed: (state) => {
       state.dismissedNotices = {}
     }
@@ -64,7 +80,7 @@ export const systemSlice = createSlice({
 })
 
 export const { actions } = systemSlice
-export const { addNotice, dismissNotice, clearNoticesDismissed, setFeatureFlags } = systemSlice.actions
+export const { addNotice, dismissNotice, clearMatchingNotices, clearNoticesDismissed, setFeatureFlags } = systemSlice.actions
 
 export const setSystemFlag = (flag, value) => (dispatch) => {
   dispatch(actions.setSystemFlag({ [flag]: value }))

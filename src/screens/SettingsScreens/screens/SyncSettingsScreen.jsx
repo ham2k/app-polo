@@ -21,6 +21,7 @@ import { SyncAccountDialog } from '../components/SyncAccountDialog'
 import { findHooks } from '../../../extensions/registry'
 import { selectLocalExtensionData, setLocalExtensionData, selectLocalData } from '../../../store/local'
 import { selectSettings } from '../../../store/settings'
+import { clearMatchingNotices } from '../../../store/system'
 import { selectFiveSecondsTick } from '../../../store/time'
 import { clearAllOperationData, getSyncCounts, resetSyncedStatus } from '../../../store/operations'
 
@@ -130,9 +131,8 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
           text: 'Yes, Replace It All!',
           onPress: async () => {
             await dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
-            setTimeout(async () => {
-              await dispatch(clearAllOperationData())
-            }, 1000)
+            await dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
+            await dispatch(clearAllOperationData())
           }
         }
       ]
@@ -140,12 +140,13 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   }, [dispatch])
 
   const handleCombineLocalData = useCallback(async () => {
-    Alert.alert('Combine Local Data?', 'Are you sure you want to combine these operations and QSOs into the new account? This operation cannot be undone.', [
+    Alert.alert('Combine Local Data?', 'Are you sure you want to combine these operations and QSOs into the new account?\n\nThis can accidentally result in mixing unrelated logs!\n\nThis operation cannot be undone.', [
       { text: 'No, Cancel', onPress: () => {} },
       {
         text: 'Yes, Combine Them!',
         onPress: async () => {
           await dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
+          await dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
           await dispatch(resetSyncedStatus())
         }
       }
@@ -265,7 +266,8 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
                   setCurrentDialog('')
                   setImmediate(async () => {
                     if (syncHook) {
-                      dispatch(syncHook.getAccountData())
+                      await dispatch(syncHook.resetConnection())
+                      await dispatch(syncHook.getAccountData())
                     }
                     setSyncStatus(await syncCountDescription())
                   })

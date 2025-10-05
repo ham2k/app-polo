@@ -62,6 +62,10 @@ const SyncHook = {
     return response
   },
 
+  resetConnection: () => async (dispatch, getState) => {
+    GLOBAL.syncLoFiToken = undefined
+  },
+
   linkClient: (email) => async (dispatch, getState) => {
     const response = await requestWithAuth({ dispatch, getState, url: 'v1/client/link', method: 'POST', body: JSON.stringify({ email }) })
     return response
@@ -143,7 +147,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
         })
 
         const responseBody = await response.text()
-        // if (DEBUG) console.log(' -- auth response body', responseBody)
+        if (DEBUG) console.log(' -- auth response body', responseBody)
         // const json = await response.json()
         let json
         try {
@@ -168,7 +172,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
         }
       }
 
-      if (DEBUG) console.log('-- request', { url, method, body })
+      if (DEBUG) console.log('-- request', { url, method, body, token })
       const response = await fetch(`${server}/${url}`, {
         method,
         headers: {
@@ -180,9 +184,9 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       })
 
       const responseBody = await response.text()
-      // if (DEBUG) console.log(' -- main response body', responseBody)
+      if (DEBUG) console.log(' -- main response body', responseBody)
       // const json = await response.json()
-      // if (DEBUG) console.log(' -- body size: ', responseBody.length)
+      // if (DEBUG)console.log(' -- body size: ', responseBody.length)
       let json
       try {
         json = JSON.parse(responseBody)
