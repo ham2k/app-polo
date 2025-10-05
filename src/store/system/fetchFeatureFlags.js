@@ -14,6 +14,7 @@ import { selectRawSettings } from '../settings'
 import { selectRuntimeOnline } from '../runtime'
 import { setFeatureFlags } from './systemSlice'
 import { reportError } from '../../distro'
+import { fetchWithTimeout } from '../../tools/fetchWithTimeout'
 
 const DEBUG = false
 
@@ -55,14 +56,9 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
   try {
     while (locations.length > 0) {
       const location = locations.shift()
-      try {
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), MAX_REQUEST_TIME) // timeout
 
-        const response = await fetch(`${Config.POLO_FLAGS_BASE_URL}/${location}`, {
-          signal: controller.signal
-        })
-        clearTimeout(timeoutId) // Clear timeout if fetch succeeds
+      try {
+        const response = await fetchWithTimeout(`${Config.POLO_FLAGS_BASE_URL}/${location}`, { timeout: MAX_REQUEST_TIME })
 
         fetchedLocations[location] = true
 
@@ -89,19 +85,18 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
           if (DEBUG) console.log('-- status', response.status)
         }
       } catch (error) {
-        if (error.name === 'AbortError') {
-          throw new Error('Request timed') // Re-raise to stop all further fetches
+        // If there's a timeout, re-raise to stop all further fetches
+        if (error.name === 'FetchTimeoutError') {
+          throw error
         }
+        // But for any other error, just try the next location
+
         // console.error('Error fetching flags from', location, error)
         reportError(`Error fetching flags from \`${location}\``, error)
       }
     }
   } catch (error) {
-    if (error.name === 'AbortError') {
-      console.error('Request timed')
-    } else {
-      console.error('Error fetching flags', error)
-    }
+    console.error('Error fetching flags', error)
   }
   console.log('Flags', flags)
 
