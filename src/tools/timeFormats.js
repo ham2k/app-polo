@@ -65,7 +65,7 @@ export function fmtDateTimeZuluDynamic (t, { now, compact } = { now: null, compa
       } else {
         return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) + ' ' + fmtShortTimeZulu(t)
       }
-    } else if (diffInDays <= 365) {
+    } else if (diffInDays <= 274) { // 9 months
       if (compact) {
         return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
       } else {
@@ -98,7 +98,7 @@ export function fmtDateZuluDynamic (t, { now } = { now: null, compact: false }) 
       return 'Yesterday'
     } else if (diffInDays <= 7) {
       return t.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', timeZone: 'UTC' })
-    } else if (diffInDays <= 360) {
+    } else if (diffInDays <= 274) { // 9 months
       return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
     } else {
       return t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
