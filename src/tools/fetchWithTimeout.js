@@ -9,10 +9,11 @@ const DEFAULT_TIMEOUT = 10000 // 10 seconds
 
 export async function fetchWithTimeout (url, options) {
   const { timeout = DEFAULT_TIMEOUT, ...fetchOptions } = options || {}
+  let timeoutId
 
   try {
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), timeout)
+    timeoutId = setTimeout(() => controller.abort(), timeout)
 
     const response = await fetch(url, {
       ...fetchOptions,

@@ -6,12 +6,15 @@
  */
 
 import Config from 'react-native-config'
-import packageJson from '../../../../package.json'
-import { logRemotely } from '../../../distro'
-import GLOBAL from '../../../GLOBAL'
+import { Platform } from 'react-native'
+
 import { selectSettings } from '../../../store/settings'
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
-import { Platform } from 'react-native'
+import GLOBAL from '../../../GLOBAL'
+import { fetchWithTimeout } from '../../../tools/fetchWithTimeout'
+import { logRemotely } from '../../../distro'
+
+import packageJson from '../../../../package.json'
 
 export const Info = {
   key: 'ham2k-lofi',
@@ -128,7 +131,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       retries--
       if (!token) {
         if (DEBUG) console.log('-- Ham2K LoFi Authenticating', { server, token, secret })
-        const response = await fetch(`${server}/v1/client`, {
+        const response = await fetchWithTimeout(`${server}/v1/client`, {
           method: 'POST',
           headers: {
             'User-Agent': _buildUserAgent(),
@@ -173,7 +176,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       }
 
       if (DEBUG) console.log('-- request', { url, method, body, token })
-      const response = await fetch(`${server}/${url}`, {
+      const response = await fetchWithTimeout(`${server}/${url}`, {
         method,
         headers: {
           'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
@@ -208,6 +211,8 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
     if (DEBUG) console.log('Error in requestWithAuth', e)
     if (e.message === 'Network request failed') {
       return { ok: false, status: 0, json: { error: 'Network request failed' } }
+    } else if (e.name === 'FetchTimeoutError') {
+      return { ok: false, status: 504, json: { error: 'Request timed out' } }
     } else {
       throw e
     }

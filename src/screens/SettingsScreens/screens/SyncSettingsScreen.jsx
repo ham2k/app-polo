@@ -19,7 +19,7 @@ import { H2kButton, H2kListItem, H2kListSection } from '../../../ui'
 import { SyncServiceDialog } from '../components/SyncServiceDialog'
 import { SyncAccountDialog } from '../components/SyncAccountDialog'
 import { findHooks } from '../../../extensions/registry'
-import { selectLocalExtensionData, setLocalExtensionData, selectLocalData } from '../../../store/local'
+import { selectLocalExtensionData, setLocalExtensionData, selectLocalData, setLocalData } from '../../../store/local'
 import { selectSettings } from '../../../store/settings'
 import { clearMatchingNotices } from '../../../store/system'
 import { selectFiveSecondsTick } from '../../../store/time'
@@ -130,8 +130,8 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
         {
           text: 'Yes, Replace It All!',
           onPress: async () => {
-            await dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
-            await dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
+            dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
+            dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
             await dispatch(clearAllOperationData())
           }
         }
@@ -145,9 +145,10 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
       {
         text: 'Yes, Combine Them!',
         onPress: async () => {
-          await dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
-          await dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
+          dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
+          dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
           await dispatch(resetSyncedStatus())
+          dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))
         }
       }
     ])
@@ -194,7 +195,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
                 This device was last synced with a different account (#{localData.sync.lastSyncAccountUUID.slice(0, 8).toUpperCase()}).
               </Text>
               <Text style={[styles.paragraph, { color: styles.colors.error }]}>
-                In order to continue syncing, you need to decide betwee the following options:
+                In order to continue syncing, you need to decide between the following options:
               </Text>
 
               <H2kButton mode="contained" style={{ marginTop: styles.oneSpace * 2 }} onPress={handleReplaceLocalData}>Replace local data with the new account</H2kButton>

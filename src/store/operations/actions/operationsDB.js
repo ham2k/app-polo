@@ -154,12 +154,13 @@ export const mergeSyncOperations = ({ operations }) => async (dispatch, getState
         operation.qsoCount = existing.qsoCount
       }
     }
-    await dispatch(saveOperation(operation, { synced: true }))
-    dispatch(actions.setOperation(operation))
     earliestSyncedAtMillis = Math.min(earliestSyncedAtMillis, operation.syncedAtMillis)
     latestSyncedAtMillis = Math.max(latestSyncedAtMillis, operation.syncedAtMillis)
+
+    await dispatch(saveOperation(operation, { synced: true }))
   }
 
+  dispatch(actions.updateOperations(operations))
   return { earliestSyncedAtMillis, latestSyncedAtMillis }
 }
 
@@ -193,6 +194,7 @@ export async function getSyncCounts () {
 
   const opCounts = await dbSelectAll('SELECT COUNT(*) as count, synced FROM operations GROUP BY synced')
   const qsoCounts = await dbSelectAll('SELECT COUNT(*) as count, synced FROM qsos WHERE operation != "historical" GROUP BY synced')
+
   counts.operations = opCounts.reduce((acc, row) => {
     acc[row.synced ? 'synced' : 'pending'] = row.count
     return acc
@@ -201,6 +203,9 @@ export async function getSyncCounts () {
     acc[row.synced ? 'synced' : 'pending'] = row.count
     return acc
   }, {})
+
+  counts.operations.total = (counts.operations.synced || 0) + (counts.operations.pending || 0)
+  counts.qsos.total = (counts.qsos.synced || 0) + (counts.qsos.pending || 0)
 
   return counts
 }

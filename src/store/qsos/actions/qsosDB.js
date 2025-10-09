@@ -176,7 +176,6 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
   if (DEBUG) logTimer('sync', 'Start of mergeSyncQSOs')
   const existingQSOs = await dbSelectAll('SELECT * FROM qsos WHERE uuid IN (?)', [uuids], { row: prepareQSORow })
   if (DEBUG) logTimer('sync', 'Retrieved QSOs', { sinceLast: true })
-  console.log('-- ', { qsos: qsos.length })
 
   const now = Date.now()
   let earliestSyncedAtMillis = now
@@ -187,6 +186,7 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
     const existing = existingQSOs.find((q) => q.uuid === qso.uuid)
     if (existing) {
       if (existing.updatedAtMillis >= qso.updatedAtMillis) {
+        // TODO: Consider resending this QSO to the server?
         continue
       }
     }

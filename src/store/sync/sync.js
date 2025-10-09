@@ -13,8 +13,8 @@ import GLOBAL from '../../GLOBAL'
 
 import { findHooks } from '../../extensions/registry'
 import { addNotice } from '../system'
-import { logRemotely } from '../../distro'
-import { markOperationsAsSynced, mergeSyncOperations, queryOperations, resetSyncedStatus } from '../operations'
+// import { logRemotely } from '../../distro'
+import { getSyncCounts, markOperationsAsSynced, mergeSyncOperations, queryOperations, resetSyncedStatus } from '../operations'
 import { markQSOsAsSynced, mergeSyncQSOs, queryQSOs } from '../qsos'
 import { selectFiveSecondsTick, startTickTock } from '../time'
 import { selectLocalData, selectLocalExtensionData, setLocalData, setLocalExtensionData } from '../local'
@@ -28,11 +28,9 @@ const DEFAULT_SYNC_LOOP_DELAY = 1000 * 20 // 5 seconds, time between sending bat
 const DEFAULT_SYNC_CHECK_PERIOD = 1000 * 10 // 1000 * 60 * 1 // 1 minutes, time between checking if a new sync loop is needed
 
 const SMALL_BATCH_SIZE = 10 // QSOs or Operations to send on a quick `syncLatest...`
-const DEFAULT_LARGE_BATCH_SIZE = 100 // QSOs or Operations to send on a regular sync loop
+const DEFAULT_LARGE_BATCH_SIZE = 10 //200 // QSOs or Operations to send on a regular sync loop
 
-const QSO_BATCH_RATIO = 20 // Rought average of QSOs per Operation
-
-const VERBOSE = 0
+const VERBOSE = 1
 
 let errorCount = 0
 
@@ -97,7 +95,7 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
       // Account changed!!! Disable sync until the user updates their settings
       if (VERBOSE > 1) console.log(' -- account changed, sync disabled')
       setGoAheadWithSync(false)
-      logRemotely({ message: 'account changed, sync disabled', currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
+      // logRemotely({ message: 'account changed, sync disabled', currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
       _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID})
     } else {
       if (VERBOSE > 1) console.log(' -- no account, sync enabled')
@@ -135,13 +133,13 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
     if (appState === 'starting') return
     setImmediate(() => {
       dispatch(startTickTock())
-      if (VERBOSE > 2) console.log('sync tick', tick, GLOBAL.lastSyncLoop)
+      if (VERBOSE > 1) console.log('sync tick', tick, GLOBAL.lastSyncLoop)
       if (goAheadWithSync && GLOBAL.syncEnabled && online) {
         const maxTime = GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD
 
-        if (VERBOSE > 2) console.log('-- sync enabled', { lastSyncLoop: GLOBAL.lastSyncLoop, delta: (tick - (GLOBAL.lastSyncLoop || 0)) })
+        if (VERBOSE > 1) console.log('-- sync enabled', { lastSyncLoop: GLOBAL.lastSyncLoop, delta: (tick - (GLOBAL.lastSyncLoop || 0)) })
         if (tick && (tick - (GLOBAL.lastSyncLoop || 0)) > maxTime) {
-          if (VERBOSE > 2) console.log('-- sync due')
+          if (VERBOSE > 1) console.log('-- sync due')
           _scheduleNextSyncLoop({ dispatch, delay: 1 })
         }
       }
@@ -154,9 +152,10 @@ function _scheduleNextSyncLoop ({ dispatch, delay = 0 }, loop) {
     delay = GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY
   }
 
-  if (!nextSyncLoopInterval || nextSyncLoopInterval === true) {
+  if (VERBOSE > 2) console.log(' -- schedule next loop?')
+  if (!nextSyncLoopInterval) {
     if (VERBOSE > 1) console.log(' -- scheduling next loop', delay)
-    logRemotely({ message: 'scheduling next loop', delay })
+    // logRemotely({ message: 'scheduling next loop', delay })
     nextSyncLoopInterval = setTimeout(() => _doOneRoundOfSyncing({ dispatch }), delay)
   }
 }
@@ -176,17 +175,21 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
     inboundSync = selectFeatureFlag(getState(), 'inboundSync') || false
   })
 
-  let batchSize
+  let qsoBatchSize, operationBatchSize
   if (oneSmallBatchOnly) {
-    batchSize = SMALL_BATCH_SIZE
+    qsoBatchSize = SMALL_BATCH_SIZE
+    operationBatchSize = SMALL_BATCH_SIZE
   } else {
-    batchSize = GLOBAL.syncBatchSize || DEFAULT_LARGE_BATCH_SIZE
+    qsoBatchSize = GLOBAL.syncQSOBatchSize ?? GLOBAL.syncBatchSize ?? DEFAULT_LARGE_BATCH_SIZE
+    operationBatchSize = GLOBAL.syncOperationBatchSize ?? GLOBAL.syncBatchSize ?? DEFAULT_LARGE_BATCH_SIZE
   }
 
   if (VERBOSE > 0) console.log('_doOneRoundOfSyncing')
-  _takeOverSyncLoop()
-  logRemotely({ message: 'doOneRoundOfSyncing', global: GLOBAL.syncEnabled, batchSize })
+  // logRemotely({ message: 'doOneRoundOfSyncing', global: GLOBAL.syncEnabled, qsoBatchSize, operationBatchSize })
+
   if (!GLOBAL.syncEnabled) return
+
+  _takeOverSyncLoop()
 
   let scheduleAnotherLoop = true
 
@@ -194,40 +197,38 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
     const localData = dispatch((_dispatch, getState) => selectLocalData(getState()))
 
     const syncHook = findHooks('sync')[0] // only one sync source
-    logRemotely({ message: 'doOneRoundOfSyncing - hook', hook: syncHook?.key, batchSize })
+    // logRemotely({ message: 'doOneRoundOfSyncing - hook', hook: syncHook?.key })
     if (!syncHook) return
 
-    if (VERBOSE > 1) console.log(' -- syncing', { hook: syncHook.key, batchSize })
+    if (VERBOSE > 0) console.log(' -- syncing', syncHook.key, `qsoBatchSize: ${qsoBatchSize}, operationBatchSize: ${operationBatchSize}`, oneSmallBatchOnly, localData?.sync)
 
     let syncPayload
 
-    // Prepare a batch of QSOs to sync
-    const qsos = await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT ?', [batchSize * QSO_BATCH_RATIO])
+    const counts = await getSyncCounts()
+
+    // Prepare a batch of unsynced QSOs to send to the server
+    const qsos = await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT ?', [qsoBatchSize])
     if (qsos.length > 0) {
       const opIds = qsos.map(q => `"${q.operation}"`).join(',')
-      // Ensure the operations referenced by the `qsos` are also included in the batch
-      const operations = await queryOperations(`WHERE uuid IN (${opIds}) AND synced IS false LIMIT ?`, [batchSize])
+      // Ensure the Operations referenced by the `qsos` are also included in the batch
+      const operations = await queryOperations(`WHERE uuid IN (${opIds}) AND synced IS false LIMIT ?`, [operationBatchSize])
       syncPayload = { qsos, operations }
     } else {
-      // If not qsos are selected then look for a batch of unsynced operations
-      const operations = await queryOperations('WHERE synced IS false LIMIT ?', [batchSize])
+      // If not QSOs are selected then look for a batch of unsynced Operations
+      const operations = await queryOperations('WHERE synced IS false LIMIT ?', [operationBatchSize])
       syncPayload = { operations }
     }
 
-    // If verbose is enabled, include more detailed information
+    // Consider sending more details to the server
     if (GLOBAL.syncVerbose || GLOBAL.syncVerboseNextRound) {
-      const qsoCount = await queryQSOs('SELECT COUNT(*) as count AND operation != "historical" FROM qsos', [])
-      const unsyncedQSOCount = await queryQSOs('SELECT COUNT(*) as count AND operation != "historical" FROM qsos WHERE synced IS false', [])
-      const operationCount = await queryOperations('SELECT COUNT(*) as count FROM operations', [])
-      const unsyncedOperationCount = await queryOperations('SELECT COUNT(*) as count FROM operations WHERE synced IS false', [])
       syncPayload.meta = {
-        qsoCount: qsoCount[0].count,
-        unsyncedQSOCount: unsyncedQSOCount[0].count,
-        operationCount: operationCount[0].count,
-        unsyncedOperationCount: unsyncedOperationCount[0].count
+        qsoCount: counts.qsos.total,
+        unsyncedQSOCount: counts.qsos.pending,
+        operationCount: counts.operations.total,
+        unsyncedOperationCount: counts.operations.pending
       }
       GLOBAL.syncVerboseNextRound = false
-      if (VERBOSE > 1) console.log(' -- verbose meta', { qsoCount: qsoCount[0].count, unsyncedQSOCount: unsyncedQSOCount[0].count, operationCount: operationCount[0].count, unsyncedOperationCount: unsyncedOperationCount[0].count })
+      if (VERBOSE > 1) console.log(' -- verbose meta', syncPayload.meta)
     }
 
     // Remove operation local data from the syncParams
@@ -238,10 +239,9 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
     // Decide if we should sync the settings too
     if (GLOBAL.settingsSynced === false) {
       syncPayload.settings = dispatch((_dispatch, getState) => getState().settings)
-      if (VERBOSE > 1) console.log(' -- syncing settings')
+      if (VERBOSE > 2) console.log(' -- syncing settings')
     }
 
-    logRemotely({ message: 'syncing', qsos: syncPayload.qsos?.length, operations: syncPayload.operations?.length, settings: !!syncPayload.settings, meta: !!syncPayload.meta })
     if (Object.keys(syncPayload).length > 0) {
       syncPayload.meta = syncPayload.meta || {}
       syncPayload.meta.lastSyncAccountUUID = localData?.sync?.lastSyncAccountUUID
@@ -250,23 +250,24 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
         public: GLOBAL.consentOpData
       }
 
+      let syncDirection
+
       if (inboundSync) {
         syncPayload.meta.inboundSync = inboundSync
 
-        let syncDirection
 
-        if (localData?.sync?.completedFullSync) {
+        if (!localData?.sync?.completedFullSync) {
           syncDirection = 'backfill'
           const now = Date.now()
           syncPayload.meta.sync = {
             operations: {
-              untilMillis: (localData?.sync?.earliestOperationSyncedAtMillis || now) - 1,
-              limit: batchSize,
+              syncedUntilMillis: (localData?.sync?.earliestOperationSyncedAtMillis || now),
+              limit: operationBatchSize,
               anyClient: true
             },
             qsos: {
-              untilMillis: (localData?.sync?.earliestQSOSyncedAtMillis || now) - 1,
-              limit: batchSize * 5, // Don't multiply by QSO_BATCH_RATIO because we want a quick response
+              syncedUntilMillis: (localData?.sync?.earliestQSOSyncedAtMillis || now),
+              limit: qsoBatchSize,
               anyClient: true
             }
           }
@@ -274,30 +275,33 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
           syncDirection = 'forward'
           syncPayload.meta.sync = {
             operations: {
-              sinceMillis: (localData?.sync?.lastestOperationSyncedAtMillis || 0) + 1,
-              limit: batchSize,
+              syncedSinceMillis: (localData?.sync?.lastestOperationSyncedAtMillis || 0),
+              limit: operationBatchSize,
               anyClient: false
             },
             qsos: {
-              sinceMillis: (localData?.sync?.lastestQSOSyncedAtMillis || 0) + 1,
-              limit: batchSize * QSO_BATCH_RATIO,
+              syncedSinceMillis: (localData?.sync?.lastestQSOSyncedAtMillis || 0),
+              limit: qsoBatchSize,
               anyClient: false
             }
           }
         }
-        if (VERBOSE > 1) console.log(' -- sync direction', syncDirection, syncPayload.meta.sync, localData?.sync)
+        if (VERBOSE > 0) console.log(' -- sync direction', syncDirection, syncPayload.meta.sync, localData?.sync)
       }
+
+      // logRemotely({ message: 'syncing', qsos: syncPayload.qsos?.length, operations: syncPayload.operations?.length, settings: !!syncPayload.settings, meta: !!syncPayload.meta })
+      if (VERBOSE > 0) console.log(' -- sync payload', { qsos: syncPayload.qsos?.length, operations: syncPayload.operations?.length, settings: !!syncPayload.settings, meta: syncPayload.meta})
 
       // Call the server's `sync` endpoint
       if (VERBOSE > 2) console.log(' -- calling hook', { meta: syncPayload.meta, sync: syncPayload.meta?.sync, operations: syncPayload.operations?.length, qsos: syncPayload.qsos?.length, settings: Object.keys(syncPayload?.settings || {}).length })
       if (VERBOSE > 1) logTimer('sync', 'sync', { reset: true })
       const response = await dispatch(syncHook.sync(syncPayload))
-      if (VERBOSE > 1) console.log(' -- response', { ok: response.ok, operations: response?.json?.operations?.length, qsos: response?.json?.qsos?.length, meta: response?.json?.meta, account: response?.json?.account })
+      if (VERBOSE > 0) console.log(' -- response', { ok: response.ok, operations: response?.json?.operations?.length, qsos: response?.json?.qsos?.length, meta: response?.json?.meta, account: response?.json?.account })
 
-      if (await _processResponseMeta({ response, dispatch, localData })) {
+      const [metaOk, changesToSyncData] = await _processResponseMeta({ response, dispatch, localData })
+      if (metaOk) {
         if (response.ok) {
           if (VERBOSE > 1) logTimer('sync', 'Response parsed')
-          if (VERBOSE > 1) console.log(' -- synced ok')
 
           // Mark the QSOs and Operations as synced
           if (syncPayload.qsos) markQSOsAsSynced(syncPayload.qsos)
@@ -310,26 +314,19 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
           if (inboundSync && response.json.operations?.length > 0) {
             const { latestSyncedAtMillis, earliestSyncedAtMillis }  = await dispatch(mergeSyncOperations({ operations: response.json.operations }))
             if (VERBOSE > 1) console.log(' -- new operations', response.json.operations.length, { latestSyncedAtMillis, earliestSyncedAtMillis })
-            syncTimes.lastestOperationSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestOperationSyncedAtMillis)
 
-            if (localData?.sync?.earliestOperationSyncedAtMillis) {
-              syncTimes.earliestOperationSyncedAtMillis = Math.min(earliestSyncedAtMillis, localData?.sync?.earliestOperationSyncedAtMillis)
-            } else {
-              syncTimes.earliestOperationSyncedAtMillis = earliestSyncedAtMillis
-            }
-            if (VERBOSE > 1) logTimer('sync', 'Done merging operations')
+            syncTimes.lastestOperationSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestOperationSyncedAtMillis ?? 0)
+            syncTimes.earliestOperationSyncedAtMillis = Math.min(earliestSyncedAtMillis, localData?.sync?.earliestOperationSyncedAtMillis ?? earliestSyncedAtMillis)
+            if (VERBOSE > 1) logTimer('sync', 'Done merging operations', { latestSyncedAtMillis, earliestSyncedAtMillis })
           }
 
           if (inboundSync && response.json.qsos?.length > 0) {
             const { latestSyncedAtMillis, earliestSyncedAtMillis } = await dispatch(mergeSyncQSOs({ qsos: response.json.qsos }))
-            if (VERBOSE > 1) console.log(' -- new qsos', response.json.qsos.length, { latestSyncedAtMillis, earliestSyncedAtMillis })
-            syncTimes.lastestQSOSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestQSOSyncedAtMillis)
-            if (localData?.sync?.earliestQSOSyncedAtMillis) {
-              syncTimes.earliestQSOSyncedAtMillis = Math.min(earliestSyncedAtMillis, localData?.sync?.earliestQSOSyncedAtMillis)
-            } else {
-              syncTimes.earliestQSOSyncedAtMillis = earliestSyncedAtMillis
-            }
-            if (VERBOSE > 1) logTimer('sync', 'Done merging qsos')
+            if (VERBOSE > 1) console.log(' -- new qsos', response.json.qsos, { latestSyncedAtMillis, earliestSyncedAtMillis })
+
+            syncTimes.lastestQSOSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestQSOSyncedAtMillis ?? 0)
+            syncTimes.earliestQSOSyncedAtMillis = Math.min(earliestSyncedAtMillis, localData?.sync?.earliestQSOSyncedAtMillis ?? earliestSyncedAtMillis)
+            if (VERBOSE > 1) logTimer('sync', 'Done merging qsos', { latestSyncedAtMillis, earliestSyncedAtMillis })
           }
 
           if (oneSmallBatchOnly) {
@@ -340,23 +337,29 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
             // if there are any pending QSOs or Operations to keep syncing
             const anyPendingQSO = await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT 1')
             const anyPendingOperation = await queryOperations('WHERE synced IS false LIMIT 1')
+
+            const receivedAllUpdates = ((response.json.operations?.length || 0) < syncPayload.meta.sync.operations.limit) && ((response.json.qsos?.length || 0) < syncPayload.meta.sync.qsos.limit)
+
             if (anyPendingQSO.length === 0 && anyPendingOperation.length === 0 && receivedAllUpdates) {
               if (VERBOSE > 1) console.log(' -- no more changes to sync!!! loop complete')
               scheduleAnotherLoop = false
             }
 
-            const receivedAllUpdates = ((response.json.operations?.length || 0) < syncPayload.meta.sync.operations.limit) && ((response.json.qsos?.length || 0) < syncPayload.meta.sync.qsos.limit)
-            if (receivedAllUpdates) {
-              GLOBAL.lastFullSync = Date.now()
-              syncTimes.completedFullSync = true
+            if (syncDirection === 'backfill') {
+              if (receivedAllUpdates) {
+                GLOBAL.lastFullSync = Date.now()
+                syncTimes.completedFullSync = true
+              }
             }
             if (VERBOSE > 1) console.log(' -- syncTimes', syncTimes)
           }
 
           // And finally update the last sync times and account id
           if (Object.keys(syncTimes).length > 0) {
-            dispatch(setLocalData({ sync: { ...localData.sync, ...syncTimes, lastSyncAccountUUID: response.json.account?.uuid } }))
+            dispatch(setLocalData({ sync: { ...localData.sync, ...syncTimes, ...changesToSyncData, lastSyncAccountUUID: response.json.account?.uuid } }))
           }
+
+          if (VERBOSE > 1) console.log(' -- synced ok')
         } else {
           if (VERBOSE > 1) console.log(' -- sync failed', response)
         }
@@ -374,7 +377,7 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
 
     errorCount = 0
   } catch (error) {
-    logRemotely({ error: 'Error syncing', message: error.message })
+    // logRemotely({ error: 'Error syncing', message: error.message })
     console.log('Error syncing', error)
 
     _releaseSyncLoop()
@@ -383,7 +386,7 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
     if (errorCount < 8) {
       const delay = (GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY) + (2 ** errorCount) * 1000
       if (VERBOSE > 1) console.log(' -- retrying in ', delay)
-      logRemotely({ message: 'retrying in', delay })
+      // logRemotely({ message: 'retrying in', delay })
       _scheduleNextSyncLoop({ dispatch, delay })
     }
   }
@@ -437,51 +440,85 @@ function _scheduleDebouncedFunctionForSyncLoop (fn) {
 async function _processResponseMeta ({ response = {}, localData = {}, dispatch }) {
   const { json = {}, ok } = response
   const { meta = {}, account = {} } = json
+  const { sync = {} } = localData
+  const changesToSyncData = {}
 
-  if (ok && localData?.sync?.lastSyncAccountUUID && localData.sync.lastSyncAccountUUID !== json.account?.uuid) {
+  if (ok && sync.lastSyncAccountUUID && sync.lastSyncAccountUUID !== json.account?.uuid) {
     // Do not process the response unless the account matches the previous sync
     // Let the user know so they can address this in the settings.
     currentAccountUUID = account?.uuid
-    if (VERBOSE > 1) console.log(' -- account changed, sync ignored', { lastSyncAccountUUID: localData.sync.lastSyncAccountUUID, newAccountUUID: json.account?.uuid })
-      logRemotely({ message: 'account changed, sync ignored', currentAccountUUID, lastSyncAccountUUID: localData.sync?.lastSyncAccountUUID })
-    _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAccountUUID: localData.sync?.lastSyncAccountUUID})
+    if (VERBOSE > 1) console.log(' -- account changed, sync ignored', { lastSyncAccountUUID: sync.lastSyncAccountUUID, newAccountUUID: account.uuid })
+      // logRemotely({ message: 'account changed, sync ignored', currentAccountUUID, lastSyncAccountUUID: localData.sync?.lastSyncAccountUUID })
+    _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAccountUUID: sync.lastSyncAccountUUID})
     return false
   }
 
   try {
+    if ((meta.operations?.totalRecords || meta.operations?.total_records) !== sync.serverTotalOperations) {
+      changesToSyncData.serverTotalOperations = meta?.operations?.totalRecords ?? meta?.operations?.total_records ?? 0
+    }
+
+    if ((meta.operations?.recordsLeft || meta.operations?.records_left) !== sync.serverRemainingOperations) {
+      changesToSyncData.serverRemainingOperations = meta?.operations?.recordsLeft ?? meta?.operations?.records_left ?? 0
+    }
+
+    if ((meta.qsos?.totalRecords || meta.qsos?.total_records) !== sync.serverTotalQSOs) {
+      changesToSyncData.serverTotalQSOs = meta?.qsos?.totalRecords ?? meta?.qsos?.total_records ?? 0
+    }
+
+    if ((meta.qsos?.recordsLeft ?? meta.qsos?.records_left) !== sync.serverRemainingQSOs) {
+      changesToSyncData.serverRemainingQSOs = meta?.qsos?.recordsLeft ?? meta?.qsos?.records_left ?? 0
+    }
+
+    if ((account?.cutoffDate || account?.cutoff_date) !== sync.cutoffDate) {
+      changesToSyncData.cutoffDate = account?.cutoffDate ?? account?.cutoff_date
+    }
+
     if (meta.resetSyncedStatus || meta.reset_synced_status) {
       await resetSyncedStatus()
     }
 
-    if (meta.syncVerbose || meta.sync_verbose) {
+    if ((meta.syncVerbose || meta.sync_verbose) !== GLOBAL.syncVerbose) {
       GLOBAL.syncVerbose = true
     }
 
-    if (meta.syncVerboseNextRound || meta.sync_verbose_next_round) {
+    if ((meta.syncVerboseNextRound || meta.sync_verbose_next_round) !== GLOBAL.syncVerboseNextRound) {
       GLOBAL.syncVerboseNextRound = true
     }
 
     if (meta.suggestedSyncBatchSize || meta.suggested_sync_batch_size) {
-      GLOBAL.syncBatchSize = Number.parseInt(meta.suggestedSyncBatchSize ?? meta.suggested_sync_batch_size, 10)
+      GLOBAL.syncBatchSize = meta.suggestedSyncBatchSize ?? meta.suggested_sync_batch_size
       if (GLOBAL.syncBatchSize < 1) GLOBAL.syncBatchSize = undefined
       if (isNaN(GLOBAL.syncBatchSize)) GLOBAL.syncBatchSize = undefined
     }
 
+    if (meta.suggestedSyncQSOBatchSize || meta.suggested_sync_qso_batch_size) {
+      GLOBAL.syncQSOBatchSize = meta.suggestedSyncQSOBatchSize ?? meta.suggested_sync_qso_batch_size
+      if (GLOBAL.syncQSOBatchSize < 1) GLOBAL.syncQSOBatchSize = undefined
+      if (isNaN(GLOBAL.syncQSOBatchSize)) GLOBAL.syncQSOBatchSize = undefined
+    }
+
+    if (meta.suggestedSyncOperationBatchSize || meta.suggested_sync_operation_batch_size) {
+      GLOBAL.syncOperationBatchSize = meta.suggestedSyncOperationBatchSize ?? meta.suggested_sync_operation_batch_size
+      if (GLOBAL.syncOperationBatchSize < 1) GLOBAL.syncOperationBatchSize = undefined
+      if (isNaN(GLOBAL.syncOperationBatchSize)) GLOBAL.syncOperationBatchSize = undefined
+    }
+
     if (meta.suggestedSyncLoopDelay || meta.suggested_sync_loop_delay) {
-      GLOBAL.syncLoopDelay = Number.parseInt(meta.suggestedSyncLoopDelay ?? meta.suggested_sync_loop_delay, 10) * 1000
+      GLOBAL.syncLoopDelay = meta.suggestedSyncLoopDelay ?? meta.suggested_sync_loop_delay
       if (GLOBAL.syncLoopDelay < 1) GLOBAL.syncLoopDelay = undefined
       if (isNaN(GLOBAL.syncLoopDelay)) GLOBAL.syncLoopDelay = undefined
     }
 
     if (meta.suggestedSyncCheckPeriod || meta.suggested_sync_check_period) {
-      GLOBAL.syncCheckPeriod = Number.parseInt(meta.suggestedSyncCheckPeriod ?? meta.suggested_sync_check_period, 10) * 1000
+      GLOBAL.syncCheckPeriod = meta.suggestedSyncCheckPeriod ?? meta.suggested_sync_check_period
       if (GLOBAL.syncCheckPeriod < 1) GLOBAL.syncCheckPeriod = undefined
       if (isNaN(GLOBAL.syncCheckPeriod)) GLOBAL.syncCheckPeriod = undefined
     }
   } catch (e) {
     console.log('Error parsing sync meta', e, json)
   }
-  return true
+  return [true, changesToSyncData]
 }
 
 let _lastAccountNotified = 0

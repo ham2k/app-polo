@@ -46,6 +46,15 @@ export const operationsSlice = createSlice({
         ...action.payload
       }
     },
+    updateOperations: (state, action) => {
+      for (const operation of action.payload) {
+        state.info[operation.uuid] = {
+          ...OPERATION_INITIAL_STATE,
+          ...state.info[operation.uuid],
+          ...operation
+        }
+      }
+    },
     setOperationLocal: (state, action) => {
       const { uuid, ...localData } = action.payload
       state.info[uuid] = {

@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useCallback, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Platform, View } from 'react-native'
 import { IconButton, Searchbar } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -14,13 +15,14 @@ import { useNavigation } from '@react-navigation/native'
 import { NumberKeys } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/NumberKeys'
 import { useUIState } from '../../../store/ui/useUIState'
 import { useKeyboardVisible } from '../../components/useKeyboardVisible'
-
-import CallLookup from './CallLookup'
-import { trackEvent } from '../../../distro'
-import Notices from './Notices'
-import { useDispatch, useSelector } from 'react-redux'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { checkAndDescribeCommands, checkAndProcessCommands } from '../../../extensions/commands/commandHandling'
+
+import { trackEvent } from '../../../distro'
+
+import CallLookup from './CallLookup'
+import Notices from './Notices'
+import SyncProgress from './SyncProgress'
 
 export default function HomeTools ({ settings, styles, style }) {
   const navigation = useNavigation()
@@ -186,7 +188,10 @@ export default function HomeTools ({ settings, styles, style }) {
             style={{ flex: 0 }}
             onPress={() => navigation.navigate('Spots')}
           />
+
         </View>
+
+        <SyncProgress />
 
         <Notices paddingForSafeArea={false} />
 

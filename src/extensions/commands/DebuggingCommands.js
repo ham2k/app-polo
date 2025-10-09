@@ -9,11 +9,12 @@ import { DevSettings } from 'react-native'
 
 import { persistor } from '../../store'
 import { addQSOs } from '../../store/qsos'
+import { resetSyncedStatus } from '../../store/operations'
 import { resetDatabase } from '../../store/db/db'
 import { setLocalData } from '../../store/local'
 import { setSettings } from '../../store/settings'
 import { clearAllOperationData } from '../../store/operations/actions/operationsDB'
-import { addNotice, clearNoticesDismissed, setSystemFlag } from '../../store/system'
+import { addNotice, clearNoticesDismissed, clearMatchingNotices,setSystemFlag } from '../../store/system'
 import { poissonRandom } from '../../tools/randomTools'
 import { logTimer } from '../../tools/perfTools'
 import { annotateQSO } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
@@ -35,6 +36,7 @@ const Extension = {
     registerHook('command', { priority: 100, hook: ResetNoticesCommandHook })
     registerHook('command', { priority: 100, hook: SeedCommandHook })
     registerHook('command', { priority: 100, hook: OnboardCommandHook })
+    registerHook('command', { priority: 100, hook: ResyncLocalDataCommandHook })
     registerHook('command', { priority: 100, hook: WipeOperationsCommandHook })
     registerHook('command', { priority: 100, hook: WipeDBCommandHook })
     registerHook('command', { priority: 100, hook: FactoryResetCommandHook })
@@ -135,16 +137,33 @@ const WipeOperationsCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-debug-wipeoperations',
-  match: /^(WIPE!|RESYNC)/i,
+  match: /^(WIPE!|SYNCALL)/i,
   describeCommand: (match) => {
     return 'Delete all operations and reset synced status?'
   },
   invokeCommand: (match, { dispatch }) => {
-    dispatch(setLocalData({ sync: { lastestOperationSyncedAtMillis: 0, completedFullSync: false } }))
-    setTimeout(async () => {
+    setImmediate(async () => {
+      await dispatch(setLocalData({ sync: { lastestOperationSyncedAtMillis: 0, completedFullSync: false } }))
+      dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
       await dispatch(clearAllOperationData())
-    }, 1000)
-    return 'Wiping Operations…'
+    })
+    return 'Wiping data and resyncing all…'
+  }
+}
+
+const ResyncLocalDataCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-resynclocaldata',
+  match: /^(SYNCUP)/i,
+  describeCommand: (match) => {
+    return 'Re-send local data to sync service?'
+  },
+  invokeCommand: (match, { dispatch }) => {
+    setImmediate(async () => {
+      await dispatch(resetSyncedStatus())
+    })
+    return 'Re-sending…'
   }
 }
 
