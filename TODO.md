@@ -46,3 +46,7 @@ onValueChange={(v) => {
 }
 ```
 
+### Android Edge-to-edge
+
+The bottom nav bar is not fully transparent in Android.
+To fix, we need to use https://github.com/kadiraydinli/react-native-system-navigation-bar
