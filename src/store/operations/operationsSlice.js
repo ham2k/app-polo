@@ -48,10 +48,16 @@ export const operationsSlice = createSlice({
     },
     updateOperations: (state, action) => {
       for (const operation of action.payload) {
-        state.info[operation.uuid] = {
-          ...OPERATION_INITIAL_STATE,
-          ...state.info[operation.uuid],
-          ...operation
+        if (operation?.uuid) {
+          if (operation.deleted) {
+            state.info[operation.uuid] = undefined
+          } else {
+            state.info[operation.uuid] = {
+              ...OPERATION_INITIAL_STATE,
+              ...state.info[operation.uuid],
+              ...operation
+            }
+          }
         }
       }
     },
@@ -99,7 +105,7 @@ export const selectOperationCall = createSelector(
 export const selectOperationsList = createSelector(
   (state) => state?.operations?.info,
   (info) => {
-    return Object.values(info || {}).sort((a, b) => {
+    return Object.values(info || {}).filter((info) => info?.uuid && !info?.deleted).sort((a, b) => {
       return (b.startAtMillisMax ?? b.createdAtMillis ?? 0) - (a.startAtMillisMax ?? a.createdAtMillis ?? 0)
     })
   }

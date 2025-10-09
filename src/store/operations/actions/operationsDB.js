@@ -61,6 +61,7 @@ const operationFromRow = (row) => {
 
 const rowFromOperation = (operation) => {
   const { uuid, local, deleted, startAtMillisMin, startAtMillisMax, qsoCount } = operation
+
   const operationClone = { ...operation }
   delete operationClone.local
   delete operationClone.startAtMillisMin
@@ -88,7 +89,9 @@ export const loadDeletedOperations = () => async (dispatch, getState) => {
   const oplist = await dbSelectAll('SELECT * FROM operations WHERE deleted = 1', [], { row: operationFromRow })
 
   const ophash = oplist.reduce((acc, op) => {
-    acc[op.uuid] = op
+    if (op.uuid) {
+      acc[op.uuid] = op
+    }
     return acc
   }, {})
 
@@ -117,6 +120,7 @@ export const saveOperation = (operation, { synced = false } = {}) => async (disp
       row.data, row.localData, row.startAtMillisMin, row.startAtMillisMax, row.qsoCount, !!row.deleted, !!synced
     ]
   )
+
   if (!synced) {
     setImmediate(() => {
       sendOperationsToSyncService({ dispatch, getState })
