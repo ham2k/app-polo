@@ -19,7 +19,7 @@ import { trackEvent, handleNoticeActionForDistribution } from '../../../distro'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
-import { H2kDialog, H2kDialogTitle, H2kIcon, H2kMarkdown } from '../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogTitle, H2kIcon, H2kMarkdown } from '../../../ui'
 
 export default function Notices ({ paddingForSafeArea = false }) {
   const safeArea = useSafeAreaInsets()
@@ -67,8 +67,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
     animationHeight.value = layoutHeight
   }, [animationHeight])
 
-  const [dialogTitle, setDialogTitle] = useState()
-  const [dialogText, setDialogText] = useState()
+  const [dialog, setDialog] = useState()
 
   const handleAction = useCallback((notice, action) => {
     trackEvent('accept_notice', { notice_action: action.action, notice_key: notice.actionArgs?.key })
@@ -77,7 +76,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
     if (notices[1]) {
       setCurrentNotice(notices[1])
     }
-    performAction({ notice, action, dispatch, navigation, setDialogText, setDialogTitle })
+    performAction({ notice, action, dispatch, navigation, setDialog })
   }, [dispatch, navigation, notices])
 
   const handleDismiss = useCallback((notice) => {
@@ -89,7 +88,12 @@ export default function Notices ({ paddingForSafeArea = false }) {
     }
   }, [dispatch, notices])
 
-  if (!currentNotice && !dialogText) return null
+  const handleDialogAction = useCallback((notice, action) => {
+    performAction({ notice, action, dispatch, navigation, setDialog })
+    setDialog(undefined)
+  }, [dispatch, navigation])
+
+  if (!currentNotice && !dialog) return null
 
   return (
     <Animated.View
@@ -109,27 +113,46 @@ export default function Notices ({ paddingForSafeArea = false }) {
         />
       )}
 
-      {dialogText && (
+      {dialog && (
         <>
           <KeepAwake />
           <H2kDialog
             visible={true}
             style={{ marginTop: 50, marginBottom: 50 }}
             onDismiss={() => {
-              setDialogText(undefined)
-              setDialogTitle(undefined)
+              setDialog(undefined)
             }}
           >
-            {dialogTitle && (
-              <H2kDialogTitle>{dialogTitle}</H2kDialogTitle>
+            {dialog?.title && (
+              <H2kDialogTitle>{dialog?.title}</H2kDialogTitle>
             )}
             <Dialog.ScrollArea>
               <ScrollView fadingEdgeLength={styles.oneSpace * 10} style={{ maxHeight: styles.oneSpace * 28 }}>
                 <H2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
-                  {dialogText}
+                  {dialog?.text}
                 </H2kMarkdown>
               </ScrollView>
             </Dialog.ScrollArea>
+            <H2kDialogActions>
+              {dialog?.actions?.map((action, index) => (
+                <H2kButton
+                  key={index}
+                  mode={'contained'}
+                  theme={ styles.buttonTheme }
+                  style={{ paddingHorizontal: styles.oneSpace, marginLeft: -styles.oneSpace, marginRight: styles.oneSpace * 2 }}
+                  compact={true}
+                  disabled={action === 'disabled'}
+                  onPress={() => handleDialogAction(dialog, action)}
+                >
+                  {action.label ?? 'Ok!'}
+                </H2kButton>
+              ))}
+              <H2kButton
+                onPress={() => {
+                  setDialog(undefined)
+                }}
+              >Ok</H2kButton>
+            </H2kDialogActions>
           </H2kDialog>
         </>
       )}
@@ -142,11 +165,15 @@ export function NoticeList ({ notices, style }) {
   const navigation = useNavigation()
   const styles = useThemedStyles(prepareStyles)
 
-  const [dialogTitle, setDialogTitle] = useState()
-  const [dialogText, setDialogText] = useState()
+  const [dialog, setDialog] = useState()
 
   const handleAction = useCallback((notice, action) => {
-    performAction({ notice, action, dispatch, navigation, setDialogText, setDialogTitle })
+    performAction({ notice, action, dispatch, navigation, setDialog })
+  }, [dispatch, navigation])
+
+  const handleDialogAction = useCallback((notice, action) => {
+    performAction({ notice, action, dispatch, navigation, setDialog })
+    setDialog(undefined)
   }, [dispatch, navigation])
 
   return (
@@ -162,27 +189,46 @@ export function NoticeList ({ notices, style }) {
         </View>
       ))}
 
-      {dialogText && (
+      {dialog && (
         <>
           <KeepAwake />
           <H2kDialog
             visible={true}
             style={{ marginTop: 50, marginBottom: 50 }}
             onDismiss={() => {
-              setDialogText(undefined)
-              setDialogTitle(undefined)
+              setDialog(undefined)
             }}
           >
-            {dialogTitle && (
-              <H2kDialogTitle>{dialogTitle}</H2kDialogTitle>
+            {dialog?.title && (
+              <H2kDialogTitle>{dialog?.title}</H2kDialogTitle>
             )}
             <Dialog.ScrollArea>
               <ScrollView fadingEdgeLength={styles.oneSpace * 10} style={{ maxHeight: styles.oneSpace * 28 }}>
                 <H2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
-                  {dialogText}
+                  {dialog?.text}
                 </H2kMarkdown>
               </ScrollView>
             </Dialog.ScrollArea>
+            <H2kDialogActions>
+              {dialog?.actions?.map((action, index) => (
+                <H2kButton
+                  key={index}
+                  mode={'contained'}
+                  theme={ styles.buttonTheme }
+                  style={{ paddingHorizontal: styles.oneSpace, marginLeft: -styles.oneSpace, marginRight: styles.oneSpace * 2 }}
+                  compact={true}
+                  disabled={action === 'disabled'}
+                  onPress={() => handleDialogAction({}, action)}
+                >
+                  {action.label ?? 'Ok!'}
+                </H2kButton>
+              ))}
+              <H2kButton
+                onPress={() => {
+                  setDialog(undefined)
+                }}
+              >Ok</H2kButton>
+            </H2kDialogActions>
           </H2kDialog>
         </>
       )}
@@ -246,31 +292,40 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
   )
 }
 
-async function performAction ({ notice, action, dispatch, navigation, setDialogText, setDialogTitle }) {
+async function performAction ({ notice, action, dispatch, navigation, setDialog }) {
   if (typeof action !== 'object') return
 
   if (action.action === 'fetch' && action.args?.key) {
     await dispatch(fetchDataFile(action.args.key, {
       onStatus: ({ key, definition, status, progress }) => {
         if (status === 'fetching' || status === 'loading') {
-          setDialogText(`### Fetching '${definition.name}'…`)
+          setDialog({ text: `### Fetching '${definition.name}'…` })
         } else if (status === 'progress') {
-          setDialogText(`### Fetching '${definition.name}'\n\n${progress}`)
+          setDialog({ text: `### Fetching '${definition.name}'\n\n${progress}` })
         } else if (status === 'loaded' || status === 'error') {
-          setDialogText('')
+          setDialog({ text: '' })
         }
       }
     }))
   } else if (action.action === 'dialog') {
     if (Platform.OS === 'ios') {
-      setDialogTitle(action.args?.['dialogTitle.ios'] ?? action.args?.dialogTitle)
-      setDialogText(action.args?.['dialogText.ios'] ?? action.args?.dialogText)
+      setDialog({
+        title: action.args?.['dialogTitle.ios'] ?? action.args?.dialogTitle,
+        text: action.args?.['dialogText.ios'] ?? action.args?.dialogText,
+        actions: action.args?.['dialogActions.ios'] ?? action.args?.dialogActions
+      })
     } else if (Platform.OS === 'android') {
-      setDialogTitle(action.args?.['dialogTitle.android'] ?? action.args?.dialogTitle)
-      setDialogText(action.args?.['dialogText.android'] ?? action.args?.dialogText)
+      setDialog({
+        title: action.args?.['dialogTitle.android'] ?? action.args?.dialogTitle,
+        text: action.args?.['dialogText.android'] ?? action.args?.dialogText,
+        actions: action.args?.['dialogActions.android'] ?? action.args?.dialogActions
+      })
     } else {
-      setDialogTitle(action.args?.dialogTitle)
-      setDialogText(action.args?.dialogText)
+      setDialog({
+        title: action.args?.dialogTitle,
+        text: action.args?.dialogText,
+        actions: action.args?.dialogActions
+      })
     }
   } else if (action.action === 'navigate' || action.action === 'navigation') {
     if (typeof action.args === 'string') {
@@ -281,7 +336,7 @@ async function performAction ({ notice, action, dispatch, navigation, setDialogT
   } else if (action.action === 'link') {
     Linking.openURL(action.args?.url ?? action.args?.link ?? action.args?.href)
   } else {
-    return handleNoticeActionForDistribution({ notice, action, dispatch, navigation, setOverlayText: setDialogText, setOverlayTitle: setDialogTitle })
+    return handleNoticeActionForDistribution({ notice, action, dispatch, navigation, setDialog })
   }
 }
 

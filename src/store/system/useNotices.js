@@ -15,6 +15,7 @@ import packageJson from '../../../package.json'
 import { selectDismissedNotices, selectFeatureFlags, selectNotices } from './systemSlice'
 import { selectOperatorCallInfo } from '../settings'
 import { processNoticeTemplateDataForDistribution } from '../../distro'
+import { CallNotesData, findAllCallNotes } from '../../extensions/data/call-notes/CallNotesExtension'
 
 export function useNotices ({ dispatch, includeDismissed = false, includeTransient = false }) {
   const operatorCallInfo = useSelector(selectOperatorCallInfo)
@@ -62,6 +63,7 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
         if (notice.dateTo && notice.dateTo < now) return false
         if (notice.versions && notice.versions.length > 0 && !notice.versions.find(v => packageJson.version.startsWith(v))) return false
         if (notice.calls && notice.calls.length > 0 && !notice.calls.find(c => c.toUpperCase() === operatorCallInfo?.baseCall)) return false
+        if (notice.notes && !_findInHam2KNotes(operatorCallInfo?.baseCall, notice.notes)) return false
         if (notice.entities && notice.entities.length > 0 && !notice.entities.find(d => d.toUpperCase() === operatorCallInfo?.entityPrefix)) return false
         if (notice.countries && notice.countries.length > 0 && !notice.countries.find(c => c.toLowerCase() === operatorCallInfo?.countryCode)) return false
         if (notice.continents && notice.continents.length > 0 && !notice.continents.find(c => c.toUpperCase() === operatorCallInfo?.continent)) return false
@@ -122,3 +124,14 @@ function _adjustNotice (object, templateData) {
   }
   return object
 }
+
+const _findInHam2KNotes = (call, rule) => {
+  const notes = findAllCallNotes(call, { 'ham2k-hams-of-note': true })
+  if (rule === true || rule === 'any') return notes.length > 0
+  else if (rule === false || rule === 'none') return notes.length === 0
+  else if (typeof rule === 'string') return notes.find(n => n.note.toLowerCase().includes(rule.toLowerCase()))
+  else if (Array.isArray(rule)) return rule.some(r => notes.find(n => n.note.toLowerCase().includes(r.toLowerCase())))
+
+  return false
+}
+

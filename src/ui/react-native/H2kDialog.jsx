@@ -49,7 +49,7 @@ export function H2kDialogContent (props) {
 }
 
 export function H2kDialogActions (props) {
-  return <Dialog.Actions {...props} />
+  return <Dialog.Actions {...props} style={[{ justifyContent: 'space-between' }, props.style]} />
 }
 
 export function H2kDialogCloseButton (props) {
