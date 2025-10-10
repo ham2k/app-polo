@@ -12,6 +12,7 @@ import { View } from 'react-native'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
 import { paperNameOrHam2KIcon } from '../../../../ui'
+import GLOBAL from '../../../../GLOBAL'
 
 export function guessItemHeight (qso, styles) {
   return styles.doubleRow.height + styles.doubleRow.borderBottomWidth
@@ -19,41 +20,59 @@ export function guessItemHeight (qso, styles) {
 const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth }) {
   const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
 
-  const [commonStyle, bandStyle, modeStyle, refStyle] = useMemo(() => {
-    const workedStyles = []
+  if (spot?.their?.call === 'W8WR') spot.their.call = 'N2Y'
+
+  const [spotLabel, isSpecialCall] = useMemo(() => {
+    const call = spot?.their?.call?.toLowerCase()
+    return [GLOBAL?.flags?.specialCalls?.[call] ?? spot.spot.label, !!GLOBAL?.flags?.specialCalls?.[call]]
+  }, [spot?.their?.call, spot.spot.label])
+
+  const { commonStyle, bandStyle, modeStyle, refStyle, callStyle } = useMemo(() => {
+    const workedStyles = {}
     if (spot.spot?.type === 'self') {
-      workedStyles[0] = {
+      workedStyles.commonStyle = {
         color: styles.colors.tertiary,
         opacity: 0.7
       }
     }
     if (spot.spot?.type === 'duplicate') {
-      workedStyles[0] = {
+      workedStyles.commonStyle = {
         textDecorationLine: 'line-through',
         textDecorationColor: styles.colors.onBackground,
         opacity: 0.6
       }
     }
     if (spot.spot?.flags?.newBand) {
-      workedStyles[1] = {
+      workedStyles.bandStyle = {
         fontWeight: 'bold',
         color: styles.colors.important
       }
     }
     if (spot.spot?.flags?.newMode) {
-      workedStyles[2] = {
+      workedStyles.modeStyle = {
         fontWeight: 'bold',
         color: styles.colors.important
+      }
+    }
+    if (isSpecialCall) {
+      workedStyles.callStyle = {
+        fontWeight: 'bold',
+        color: styles.colors.bands['40m']
+      }
+      workedStyles.refStyle = {
+        fontWeight: 'bold',
+        color: styles.colors.bands['40m']
       }
     }
     if (spot.spot?.flags?.newRef || spot.spot?.flags?.newDay) {
-      workedStyles[3] = {
+      workedStyles.refStyle = {
         fontWeight: 'bold',
         color: styles.colors.important
       }
     }
+
     return workedStyles
-  }, [spot, styles])
+  }, [spot, styles, isSpecialCall])
 
   return (
     <TouchableRipple onPress={() => onPress && onPress({ spot })}>
@@ -65,7 +84,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
             <Text style={[styles.fields.freqHz, commonStyle]}>.{freqParts[2]}</Text>
           </Text>
           <View style={styles.fields.callAndEmoji}>
-            <Text style={[styles.fields.call, commonStyle]}>{spot.their?.call ?? '?'}</Text>
+            <Text style={[styles.fields.call, commonStyle, callStyle]}>{spot.their?.call ?? '?'}</Text>
             {spot.their?.guess?.emoji && (
               <Text style={[styles.fields.emoji, commonStyle, { lineHeight: 20 }]}>{spot.their?.guess?.emoji}</Text>
             )}
@@ -87,7 +106,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
           ))}
           <Text style={[styles.fields.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
             {spot.spot.emoji}
-            {spot.spot.label}
+            {spotLabel}
           </Text>
         </View>
       </View>
