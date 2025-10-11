@@ -74,7 +74,7 @@ function prepareStyles (baseStyles, options) {
     sideContent: {
       flex: 0,
       width: baseStyles.oneSpace * ((options.back || options.close) ? 4 : 8),
-      alignItems: 'flex-end',
+      alignItems: 'flex-end'
     },
     appBarTheme: {
       colors: {
@@ -198,7 +198,7 @@ export default function HeaderBar ({
                 icon={rightAction}
                 size={styles.oneSpace * 2.5}
                 theme={styles.appBarTheme}
-                />
+              />
             </View>
           ) : (
             <Text accessible={false}>{' '}</Text>

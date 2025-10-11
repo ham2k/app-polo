@@ -199,7 +199,8 @@ export default function OperationScreen (props) {
                     tabBarLabelStyle: styles.screenTabBarLabel,
                     tabBarStyle: [styles.screenTabBar, { paddingRight: safeAreaInsets.right }],
                     tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryHighlight, height: styles.halfSpace * 1.5 },
-                    animationEnabled: true,
+                    animationEnabled: false,
+                    swipeEnabled: false,
                     freezeOnBlur: true,
                     lazy: true
                   }}
@@ -265,7 +266,8 @@ export default function OperationScreen (props) {
                 tabBarLabelStyle: styles.screenTabBarLabel,
                 tabBarStyle: styles.screenTabBar,
                 tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryLighter, height: styles.halfSpace * 1.5 },
-                animationEnabled: true,
+                animationEnabled: false,
+                swipeEnabled: false,
                 freezeOnBlur: true,
                 lazy: true
               }}
