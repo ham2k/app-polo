@@ -34,18 +34,6 @@ const VERBOSE = 1
 
 let errorCount = 0
 
-export async function sendQSOsToSyncService ({ dispatch }) {
-  _scheduleDebouncedFunctionForSyncLoop(async () => {
-    await _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly: true })
-  })
-}
-
-export async function sendOperationsToSyncService ({ dispatch }) {
-  _scheduleDebouncedFunctionForSyncLoop(async () => {
-    await _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly: true })
-  })
-}
-
 /*
  * A "sync loop" is one or more "paginated" sync operations in quick succession
  * that continue until all QSOs and Operations have been synced.
@@ -133,32 +121,40 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
     if (appState === 'starting') return
     setImmediate(() => {
       dispatch(startTickTock())
-      if (VERBOSE > 1) console.log('sync tick', tick, GLOBAL.lastSyncLoop)
-      if (goAheadWithSync && GLOBAL.syncEnabled && online) {
-        const maxTime = GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD
+      const diff = ((tick || 0) - (GLOBAL.lastSyncLoop || 0))
+      const maxTime = (GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD) * 1000
 
-        if (VERBOSE > 1) console.log('-- sync enabled', { lastSyncLoop: GLOBAL.lastSyncLoop, delta: (tick - (GLOBAL.lastSyncLoop || 0)) })
-        if (tick && (tick - (GLOBAL.lastSyncLoop || 0)) > maxTime) {
-          if (VERBOSE > 1) console.log('-- sync due')
-          _scheduleNextSyncLoop({ dispatch, delay: 1 })
-        }
+      if (VERBOSE > 0) console.log('⏱️ Sync tick', tick, { last: GLOBAL.lastSyncLoop, tick, diff, max: maxTime, online })
+      if (goAheadWithSync && GLOBAL.syncEnabled && online && diff > maxTime) {
+        if (VERBOSE > 0) console.log('📅 Sync due')
+        _scheduleNextSyncLoop({ dispatch, delay: 1 })
       }
     })
   }, [appState, dispatch, online, goAheadWithSync, tick])
 }
 
-function _scheduleNextSyncLoop ({ dispatch, delay = 0 }, loop) {
-  if (!delay) {
+function _scheduleNextSyncLoop ({ dispatch, delay }, loop) {
+  if (delay === undefined) {
     delay = GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY
   }
 
-  if (VERBOSE > 2) console.log(' -- schedule next loop?')
   if (!nextSyncLoopInterval) {
-    if (VERBOSE > 1) console.log(' -- scheduling next loop', delay)
-    // logRemotely({ message: 'scheduling next loop', delay })
     nextSyncLoopInterval = setTimeout(() => _doOneRoundOfSyncing({ dispatch }), delay)
   }
 }
+
+export async function sendQSOsToSyncService ({ dispatch }) {
+  _scheduleDebouncedFunctionForSyncLoop(async () => {
+    await _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly: true })
+  })
+}
+
+export async function sendOperationsToSyncService ({ dispatch }) {
+  _scheduleDebouncedFunctionForSyncLoop(async () => {
+    await _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly: true })
+  })
+}
+
 
 /*
  * `_doOneRoundOfSyncing` is the core of the sync loop.
@@ -170,6 +166,12 @@ function _scheduleNextSyncLoop ({ dispatch, delay = 0 }, loop) {
  * - Handling errors
  */
 async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
+  if (!GLOBAL.syncEnabled) return
+
+  _takeOverSyncLoop()
+
+  if (VERBOSE > 0) console.log('🔄 Doing one round of syncing')
+
   let inboundSync = false
   dispatch((_dispatch, getState) => {
     inboundSync = selectFeatureFlag(getState(), 'inboundSync') || false
@@ -183,13 +185,6 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
     qsoBatchSize = GLOBAL.syncQSOBatchSize ?? GLOBAL.syncBatchSize ?? DEFAULT_LARGE_BATCH_SIZE
     operationBatchSize = GLOBAL.syncOperationBatchSize ?? GLOBAL.syncBatchSize ?? DEFAULT_LARGE_BATCH_SIZE
   }
-
-  if (VERBOSE > 0) console.log('_doOneRoundOfSyncing')
-  // logRemotely({ message: 'doOneRoundOfSyncing', global: GLOBAL.syncEnabled, qsoBatchSize, operationBatchSize })
-
-  if (!GLOBAL.syncEnabled) return
-
-  _takeOverSyncLoop()
 
   let scheduleAnotherLoop = true
 
@@ -384,7 +379,7 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
 
     errorCount += 1
     if (errorCount < 8) {
-      const delay = (GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY) + (2 ** errorCount) * 1000
+      const delay = (GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY) + ((2 ** errorCount) * 1000)
       if (VERBOSE > 1) console.log(' -- retrying in ', delay)
       // logRemotely({ message: 'retrying in', delay })
       _scheduleNextSyncLoop({ dispatch, delay })
@@ -508,12 +503,14 @@ async function _processResponseMeta ({ response = {}, localData = {}, dispatch }
       GLOBAL.syncLoopDelay = meta.suggestedSyncLoopDelay ?? meta.suggested_sync_loop_delay
       if (GLOBAL.syncLoopDelay < 1) GLOBAL.syncLoopDelay = undefined
       if (isNaN(GLOBAL.syncLoopDelay)) GLOBAL.syncLoopDelay = undefined
+      if (GLOBAL.syncLoopDelay < 250) GLOBAL.syncLoopDelay = GLOBAL.syncLoopDelay * 1000 // if someone is counting seconds, convert to millis
     }
 
     if (meta.suggestedSyncCheckPeriod || meta.suggested_sync_check_period) {
       GLOBAL.syncCheckPeriod = meta.suggestedSyncCheckPeriod ?? meta.suggested_sync_check_period
       if (GLOBAL.syncCheckPeriod < 1) GLOBAL.syncCheckPeriod = undefined
       if (isNaN(GLOBAL.syncCheckPeriod)) GLOBAL.syncCheckPeriod = undefined
+      if (GLOBAL.syncCheckPeriod < 250) GLOBAL.syncCheckPeriod = GLOBAL.syncCheckPeriod * 1000 // if someone is counting seconds, convert to millis
     }
   } catch (e) {
     console.log('Error parsing sync meta', e, json)
