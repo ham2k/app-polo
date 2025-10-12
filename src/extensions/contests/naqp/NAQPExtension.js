@@ -76,7 +76,7 @@ const ReferenceHandler = {
     const qsoRef = findRef(qso, Info.key)
 
     const fields = [
-      { CONTEST_ID: `NAQP-${ref.mode}` },
+      { CONTEST_ID: `NAQP-${ref?.mode}` },
       { STX_STRING: `${ref?.name} ${ref?.location}` },
       { SRX_STRING: `${qsoRef?.name} ${qsoRef?.location}` }
     ]
