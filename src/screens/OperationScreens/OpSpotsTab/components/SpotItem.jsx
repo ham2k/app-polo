@@ -70,6 +70,12 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
         color: styles.colors.important
       }
     }
+    if (spot.spot?.flags?.newMult) {
+      workedStyles.refStyle = {
+        fontWeight: 'bold',
+        color: styles.colors.bands['10m']
+      }
+    }
 
     return workedStyles
   }, [spot, styles, isSpecialCall])
@@ -79,9 +85,15 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
       <View style={styles.doubleRow}>
         <View style={styles.doubleRowInnerRow}>
           <Text style={[styles.fields.freq, commonStyle]}>
-            <Text style={[styles.fields.freqMHz, commonStyle]}>{freqParts[0]}</Text>
-            <Text style={[styles.fields.freqKHz, commonStyle]}>.{freqParts[1]}</Text>
-            <Text style={[styles.fields.freqHz, commonStyle]}>.{freqParts[2]}</Text>
+            {freqParts[0] && (
+              <Text style={[styles.fields.freqMHz, commonStyle]}>{freqParts[0]}</Text>
+            )}
+            {freqParts[1] && (
+              <Text style={[styles.fields.freqKHz, commonStyle]}>.{freqParts[1]}</Text>
+            )}
+            {freqParts[2] && (
+              <Text style={[styles.fields.freqHz, commonStyle]}>.{freqParts[2]}</Text>
+            )}
           </Text>
           <View style={styles.fields.callAndEmoji}>
             <Text style={[styles.fields.call, commonStyle, callStyle]}>{spot.their?.call ?? '?'}</Text>

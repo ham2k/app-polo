@@ -19,7 +19,7 @@ import { selectAllOperations, selectOperationCallInfo } from '../../../../store/
 import { selectSettings, setSettings } from '../../../../store/settings'
 import { useUIState } from '../../../../store/ui'
 import { selectVFO } from '../../../../store/station'
-import { useFindHooks } from '../../../../extensions/registry'
+import { findBestHook, findHooks } from '../../../../extensions/registry'
 import { scoringHandlersForOperation } from '../../../../extensions/scoring'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { annotateQSO } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
@@ -87,7 +87,21 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
 
   const [showControls, setShowControls] = useState(false)
 
-  const spotsHooks = useFindHooks('spots', { filter: 'fetchSpots' })
+  const spotsHooks = useMemo(() => {
+    const hooks = findHooks('spots', { filter: 'fetchSpots' })
+
+    ;(operation?.refs || []).forEach(ref => {
+      const refHook = findBestHook(`ref:${ref.type}`)
+      if (refHook?.activitySpecificSpots?.fetchSpots) {
+        hooks.push({
+          ...refHook.activitySpecificSpots,
+          sourceName: refHook.activitySpecificSpots.sourceNameForRef({ ref, operation })
+        })
+      }
+    })
+
+    return hooks
+  }, [operation])
 
   useEffect(() => { // Refresh periodically
     const interval = setInterval(() => {
@@ -112,7 +126,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       setTimeout(async () => {
         await Promise.all(
           spotsHooks.filter(hook => filterState.sources?.[hook.key] !== false).map(hook => {
-            return hook.fetchSpots({ online, settings, dispatch }).then(async spots => {
+            return hook.fetchSpots({ online, settings, dispatch, operation }).then(async spots => {
               const annotatedSpots = []
               for (const spot of spots) {
                 spot.our = spot.our || {}
@@ -177,7 +191,8 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       } else {
         scoringHandlers.forEach(({ handler, ref }) => {
           const lastSection = sections && sections[sections.length - 1]
-          const score = handler.scoringForQSO({ qso: spot, qsos, score: lastSection?.scores?.[ref.key], ref })
+          const score = handler.scoringForQSO({ qso: spot, qsos, score: lastSection?.scores?.[ref.key ?? ref.type], ref })
+
           if (score?.alerts && score?.alerts[0] === 'duplicate' && (spot.spot?.type !== 'scoring')) {
             spot.spot.type = 'duplicate'
           } else if (score?.value > 0 || score?.points > 0) {
@@ -196,6 +211,10 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
 
           if (score.notices) {
             score.notices.forEach(notice => (spot.spot.flags[notice] = true))
+          }
+
+          if (score.newMult) {
+            spot.spot.flags.newMult = true
           }
         })
       }

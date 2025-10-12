@@ -5,20 +5,23 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 import React, { useCallback, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
-import { findRef, replaceRef } from '../../../tools/refTools'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { setOperationData } from '../../../store/operations'
-import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { selectSettings } from '../../../store/settings'
+import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 import { fmtDateTimeNice, fmtTimeBetween, prepareTimeValue } from '../../../tools/timeFormats'
+import { findRef, replaceRef } from '../../../tools/refTools'
 
-import { qpData, qpIsInState, qpNameForLocation, qpNormalizeLocation, QSO_PARTY_DATA } from './QSOPartiesExtension'
 import { Info } from './QSOPartiesInfo'
+import { qpData, qpIsInState, qpNameForLocation, qpNormalizeLocation, QSO_PARTY_DATA } from './QSOPartiesExtension'
 
 export function ActivityOptions (props) {
   const { styles, operation } = props
 
   const dispatch = useDispatch()
+
+  const settings = useSelector(selectSettings)
 
   const ref = useMemo(() => findRef(operation, Info.key), [operation])
   const qp = useMemo(() => qpData({ ref }), [ref])
@@ -62,6 +65,16 @@ export function ActivityOptions (props) {
 
   const handleEmailChange = useCallback((value) => {
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, email: value }) }))
+  }, [dispatch, operation, ref])
+
+  const handleSpotToQPHubChange = useCallback((value) => {
+    if (value === undefined) value = !ref?.spotToQPHub
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, spotToQPHub: value }) }))
+  }, [dispatch, operation, ref])
+
+  const handleSpotToAPRSChange = useCallback((value) => {
+    if (value === undefined) value = !ref?.spotToAPRS
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, spotToAPRS: value }) }))
   }, [dispatch, operation, ref])
 
   return (
@@ -116,6 +129,41 @@ export function ActivityOptions (props) {
               />
             </H2kListRow>
           </H2kListSection>
+
+          {settings.devMode && qp?.options?.selfSpotting && (
+            <H2kListSection title={'Spotting'} titleStyle={{ color: styles.colors.devMode }}>
+              <H2kListRow>
+                <H2kListItem
+                  title="Spot to QSO Party Hub"
+                  description={ref?.spotToQPHub ? 'Yes, spot us!' : 'Disabled'}
+                  leftIcon="hand-wave"
+                  rightSwitchValue={ref?.spotToQPHub}
+                  rightSwitchOnValueChange={handleSpotToQPHubChange}
+                  onPress={handleSpotToQPHubChange}
+                  leftIconColor={styles.colors.devMode}
+                  titleStyle={{ color: styles.colors.devMode }}
+                  descriptionStyle={{ color: styles.colors.devMode }}
+                />
+
+                <H2kListItem
+                  title="Spot to APRS"
+                  description={ref?.spotToAPRS ? 'Yes, spot us!' : 'Disabled'}
+                  leftIcon="hand-wave"
+                  rightSwitchValue={ref?.spotToAPRS}
+                  rightSwitchOnValueChange={handleSpotToAPRSChange}
+                  onPress={handleSpotToAPRSChange}
+                  leftIconColor={styles.colors.devMode}
+                  titleStyle={{ color: styles.colors.devMode }}
+                  descriptionStyle={{ color: styles.colors.devMode }}
+                />
+
+                <H2kMarkdown style={{ color: styles.colors.devMode, marginHorizontal: styles.oneSpace }}>
+                  **Warning:** Self-spotting might not be allowed for all classes. Check the official rules before enabling these options.
+                </H2kMarkdown>
+              </H2kListRow>
+            </H2kListSection>
+          )}
+
           <H2kListSection title={'Information'}>
             <H2kListRow>
               <H2kMarkdown style={{ marginHorizontal: styles.oneSpace }} styles={{ markdown: { paragraph: { marginBottom: styles.oneSpace } } }}>{`

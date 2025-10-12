@@ -22,6 +22,7 @@ import { Info } from './QSOPartiesInfo'
 import { ActivityOptions } from './QSOPartiesActivityOptions'
 
 import RAW_QSO_PARTY_DATA from './all-parties.js'
+import { QSOPartiesPostSelfSpot, SpotsHook } from './QSOPartiesSpotting.js'
 
 export const QSO_PARTY_DATA = Object.fromEntries(RAW_QSO_PARTY_DATA.map(party => [party.key, party]))
 
@@ -95,7 +96,9 @@ const ActivityHook = {
     return [
       { refs: [ReferenceHandler.decorateRef({ type: Info.key, ref: 'NYQP', location: 'SUL' })] }
     ]
-  }
+  },
+
+  postSelfSpot: QSOPartiesPostSelfSpot
 
 }
 
@@ -291,21 +294,17 @@ const ReferenceHandler = {
 
     let theirLocations = []
     let theyAreInState
-    if (qsoRef?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
+    const locationGuess = qsoRef?.location ??_defaultLocationFor({ qso, qp, qsos, operation })
+
+    if (locationGuess?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
       theirLocations = qsoRef?.location.split(SLASH_OR_COMMA_REGEX, 2)
       if (!qp?.options?.countyLine) theirLocations = theirLocations.slice(0, 1)
       theyAreInState = theirLocations.every(c => qp.counties[c])
-    } else if (qsoRef?.location) {
-      theirLocations = [qsoRef?.location]
-      theyAreInState = !!qp.counties[qsoRef?.location]
     } else {
-      if (qso?.their?.guess?.entityCode === 'K' || qso?.their?.guess?.entityCode === 'VE') {
-        theirLocations = [qso?.their?.state ?? qso?.their?.guess?.state]
-      } else {
-        theirLocations = ['DX']
-      }
-      theyAreInState = false
+      theirLocations = [locationGuess]
+      theyAreInState = !!qp.counties[locationGuess]
     }
+    theirLocations = theirLocations.map(loc => qpNormalizeLocation({ qp, qso, location: loc, weAreInState, theyAreInState }))
 
     if (!weAreInState && !theyAreInState) {
       theirLocations = []
@@ -382,6 +381,7 @@ const ReferenceHandler = {
         if (score?.mults?.[mult]) {
           scoring.infos.push(`${qpNameForLocation({ qp, location: loc })}`)
         } else if (loc) {
+          scoring.newMult = true
           scoring.notices.push(`${qpNameForLocation({ qp, location: loc })}`)
         }
       }
@@ -411,12 +411,21 @@ const ReferenceHandler = {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => superModeForMode(q.mode) === superMode).length !== 0
       const sameBandMode = nearDupes.filter(q => q.band === band && superModeForMode(q.mode) === superMode).length !== 0
-      if (sameBandMode) {
+
+      const sameLocation = nearDupes.filter(q => {
+        const dupeRef = findRef(q, Info.key)
+        const dupeLocations = dupeRef?.location?.split(SLASH_OR_COMMA_REGEX)
+
+        return theirLocations.some(location => dupeLocations.includes(location))
+      }).length !== 0
+
+      if (sameBandMode && sameLocation) {
         return { ...scoring, value: 0, alerts: ['duplicate'] }
       } else {
         const notices = [...(scoring.notices || [])]
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
+        if (!sameLocation && theirLocations.length > 0) notices.push('newRef')
 
         return { ...scoring, notices }
       }
@@ -617,7 +626,9 @@ const ReferenceHandler = {
     score.longSummary = '\n' + parts.join('\n')
 
     return score
-  }
+  },
+
+  activitySpecificSpots: SpotsHook
 }
 
 function mainExchangeForOperation (props) {
@@ -710,13 +721,13 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
     if (ref.location || ref.ourNumber || ref.theirNumber) {
       qso.refs = replaceRef(qso.refs, Info.key, ref)
       qso.their.exchange = [ref.theirNumber, ref.location].filter(x => x).join(' ')
-      console.log('processQSOBeforeSaveWithDispatch', { ref, ourNumber: ref.ourNumber, nextNumber: operation.nextNumber })
+      // console.log('processQSOBeforeSaveWithDispatch', { ref, ourNumber: ref.ourNumber, nextNumber: operation.nextNumber })
       if (ref.ourNumber) {
         qso.our.exchange = [ref.ourNumber, opRef.location].filter(x => x).join(' ')
         const num = parseInt(ref.ourNumber, 10)
         if (!isNaN(num)) {
           await dispatch(setOperationData({ uuid: operation.uuid, nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1 }))
-          console.log('set nextNumber', { nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1 })
+          // console.log('set nextNumber', { nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1 })
         }
       }
     }

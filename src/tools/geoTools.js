@@ -95,3 +95,37 @@ export function bearingForQSON (qso) {
   const ourLocation = locationForQSONInfo(qso?.our)
   return (theirLocation && ourLocation) ? bearingOnEarth(ourLocation, theirLocation) : null
 }
+
+export function degreesInMinutes (degrees) {
+  const sign = degrees < 0 ? -1 : 1
+  degrees = Math.abs(degrees)
+  const d = Math.floor(degrees)
+  const fractM = (degrees - d) * 60
+  const m = Math.floor((degrees - d) * 60)
+  const s = Math.round(((degrees - d) * 60 - m) * 60)
+
+  return {
+    degrees: sign * d,
+    minutes: m,
+    fractionalMinutes: fractM,
+    seconds: s
+  }
+}
+
+export function latitudeInMinutes (latitude) {
+  const values = degreesInMinutes(latitude)
+  return {
+    ...values,
+    direction: values.degrees < 0 ? 'S' : 'N',
+    degrees: Math.abs(values.degrees),
+  }
+}
+
+export function longitudeInMinutes (longitude) {
+  const values = degreesInMinutes(longitude)
+  return {
+    ...values,
+    direction: values.degrees < 0 ? 'W' : 'E',
+    degrees: Math.abs(values.degrees),
+  }
+}

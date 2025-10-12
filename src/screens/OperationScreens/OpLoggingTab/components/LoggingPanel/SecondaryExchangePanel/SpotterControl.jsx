@@ -202,7 +202,7 @@ export async function postSpots ({ isSelfSpotting, qso, operation, vfo, comments
       disabled: true
     })
 
-    status[hook.key] = await dispatch(isSelfSpotting ? hook.postSelfSpot({ operation, vfo, comments, qCode, qRest }) : hook.postOtherSpot({ qso, comments, spotterCall: operation.stationCall || settings.operatorCall }))
+    status[hook.key] = await dispatch(isSelfSpotting ? hook.postSelfSpot({ operation, vfo, settings, comments, qCode, qRest }) : hook.postOtherSpot({ qso, comments, spotterCall: operation.stationCall || settings.operatorCall }))
     ok = ok && status[hook.key]
     setSpotStatus && setSpotStatus(status)
   }

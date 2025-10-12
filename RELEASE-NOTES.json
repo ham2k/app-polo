@@ -3,6 +3,7 @@
     "name": "September '25 (patch 3)",
     "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
     "changes": [
+      "QSO Party spotting, with qsopartyhq.com and mobiletracker.stateqso.com",
       "Fixed bug in WWFF duplicate checking, include P2P in summary",
       "Fixed bug in POTA duplicates on multi-day operations",
       "Some shortcut commands are now available on the Home Screen",

@@ -19,7 +19,6 @@ import { LONG_LABEL_FOR_MODE } from './SpotsPanel'
 import SpotFilterIndicators from './SpotFilterIndicators'
 
 export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, options, filterState, updateFilterState, counts, operation, onDone, refreshSpots, styles, style, themeColor, settings, online }) {
-  console.log('controls style', style)
   return (
     <ScrollView
       style={{ flex: 1 }}

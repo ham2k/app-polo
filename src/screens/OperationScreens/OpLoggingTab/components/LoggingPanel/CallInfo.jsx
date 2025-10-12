@@ -31,6 +31,7 @@ export const MESSAGES_FOR_SCORING = {
   newBand: 'New Band',
   newMode: 'New Mode',
   newRef: 'New Reference',
+  newMult: 'New Mult',
   newDay: 'New Day',
   'potaActivation.newDay': 'New POTA Day',
   'potaActivation.newRef': 'New Park',
@@ -230,6 +231,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
         const alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
         const notices = (score?.notices || []).map(notice => ({ msg: notice, level: 'notice', key: `${score.type}.${notice}` }))
         const infos = (score?.infos || []).map(info => ({ msg: info, level: 'info', key: `${score.type}.${info}` }))
+
         return [...notices, ...alerts, ...infos].map(oneInfo => ({
           ...oneInfo,
           msg: MESSAGES_FOR_SCORING[oneInfo.key] ?? MESSAGES_FOR_SCORING[oneInfo.msg] ?? oneInfo.msg
@@ -256,10 +258,6 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       const countYesterday = historyMinusThis.filter(x => x.startAtMillis >= yesterday).length - countToday
       const countLastWeek = historyMinusThis.filter(x => x.startAtMillis >= lastWeek).length - countToday
 
-      if (qso?.startAtMillis) {
-        parts.push('') // add an empty element to force a join that includes a "+"
-      }
-
       if (countLastWeek > countToday || countLastWeek > countYesterday) {
         // parts.push(`${countLastWeek} since ${fmtDateWeekDay(lastWeek)}`)
         parts.push(`${countLastWeek} in last 7 days`)
@@ -275,8 +273,15 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
         parts.push(`${count} QSOs`)
       }
 
-      newMessages.push({ msg: parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), level: 'info', key: 'history' })
+      if (parts.length > 0 && qso?.startAtMillis) {
+        parts.unshift('') // add an empty element to force a join that includes a "+"
+      }
+
+      if (parts.length > 0) {
+        newMessages.push({ msg: parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), level: 'info', key: 'history' })
+      }
     }
+
     return newMessages
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
