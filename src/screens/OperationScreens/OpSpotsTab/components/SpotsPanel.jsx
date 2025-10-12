@@ -27,6 +27,8 @@ import SpotList from './SpotList'
 import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
 
+import GLOBAL from '../../../../GLOBAL'
+
 export const LABEL_FOR_MODE = {
   CW: 'CW',
   PHONE: 'Phone',
@@ -218,6 +220,13 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
           }
         })
       }
+
+      const specialLabel = GLOBAL?.flags?.specialCalls?.[spot?.their?.call?.toLowerCase()]
+      if (specialLabel) {
+        spot.spot.flags.specialCall = true
+        spot.spot.callLabel = specialLabel
+      }
+
       return spot
     })
   }, [operation, settings, filteredSpots, ourInfo.call, sections, qsos])
@@ -225,6 +234,11 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   const mergedOpSpots = useMemo(() => {
     const mOpSpots = []
     scoredSpots.forEach((spot) => {
+      if (spot.spot?.key?.endsWith('-special')) {
+        mOpSpots.push(spot)
+        return
+      }
+
       // Not digital as could be multiple people on one freq. e.g. FT8
       const matchingSpot = superModeForMode(spot.mode) !== 'DATA' && mOpSpots.find(opSpot => (
         spot.spot.type === opSpot.spot.type && // Don't mix scoring and dupes
@@ -233,7 +247,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
           spot.refs.length === opSpot.refs.length && // all refs match
           opSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
       ))
-      if (matchingSpot) {
+      if (matchingSpot && !matchingSpot.spot?.key?.endsWith('-special')) {
         matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call},${spot.their.call}` }
       } else {
         mOpSpots.push(spot)
@@ -241,6 +255,59 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
     })
     return mOpSpots
   }, [scoredSpots])
+
+  const sectionedSpots = useMemo(() => {
+    const _sections = []
+    if (filterState.groupSpecialSpots !== false) {
+      const specialSpots = mergedOpSpots.filter(spot => spot.spot.flags?.specialCall)
+      if (specialSpots.length > 0) {
+        _sections.push({
+          key: 'special',
+          label: 'Special Spots',
+          data: specialSpots
+        })
+      }
+      const newMults = mergedOpSpots.filter(spot => spot.spot?.flags?.newMult)
+      if (newMults.length > 0) {
+        _sections.push({
+          key: 'newMults',
+          label: 'New Multipliers',
+          data: newMults
+        })
+      }
+    }
+
+    if (filterState.groupCallsWithNotes) {
+      const callsWithNotes = mergedOpSpots.filter(spot => spot.their?.guess?.emoji)
+      if (callsWithNotes.length > 0) {
+        _sections.push({
+          key: 'notes',
+          label: 'Calls of Note',
+          data: callsWithNotes
+        })
+      }
+    }
+
+    if (filterState.sortBy === 'time') {
+      _sections.push({
+        key: 'spots',
+        label: 'Most recent spots',
+        data: mergedOpSpots
+      })
+    } else {
+      BANDS.forEach(band => {
+        const group = mergedOpSpots.filter(spot => spot.band === band)
+        if (group.length > 0) {
+          _sections.push({
+            key: band,
+            label: `${band}`,
+            data: group
+          })
+        }
+      })
+    }
+    return _sections
+  }, [filterState.groupCallsWithNotes, filterState.groupSpecialSpots, filterState.sortBy, mergedOpSpots])
 
   const handlePress = useCallback(({ spot }) => {
     onSelect && onSelect({ spot })
@@ -300,7 +367,17 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
               </Text>
             </TouchableOpacity>
           </View>
-          <SpotList spots={mergedOpSpots} loading={spotsState.loading} refresh={refresh} onPress={handlePress} style={{ paddingBottom: style?.paddingBottom, paddingRight: style?.paddingRight, paddingLeft: style?.paddingLeft }} />
+          <SpotList
+            sections={sectionedSpots}
+            loading={spotsState.loading}
+            refresh={refresh}
+            onPress={handlePress}
+            style={{
+              paddingBottom: style?.paddingBottom,
+              paddingRight: style?.paddingRight,
+              paddingLeft: style?.paddingLeft
+            }}
+          />
         </>
       )}
     </GestureHandlerRootView>

@@ -12,20 +12,11 @@ import { View } from 'react-native'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
 import { paperNameOrHam2KIcon } from '../../../../ui'
-import GLOBAL from '../../../../GLOBAL'
 
-export function guessItemHeight (qso, styles) {
-  return styles.doubleRow.height + styles.doubleRow.borderBottomWidth
-}
 const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth }) {
   const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
 
   if (spot?.their?.call === 'W8WR') spot.their.call = 'N2Y'
-
-  const [spotLabel, isSpecialCall] = useMemo(() => {
-    const call = spot?.their?.call?.toLowerCase()
-    return [GLOBAL?.flags?.specialCalls?.[call] ?? spot.spot.label, !!GLOBAL?.flags?.specialCalls?.[call]]
-  }, [spot?.their?.call, spot.spot.label])
 
   const { commonStyle, bandStyle, modeStyle, refStyle, callStyle } = useMemo(() => {
     const workedStyles = {}
@@ -54,13 +45,11 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
         color: styles.colors.important
       }
     }
-    if (isSpecialCall) {
+    if (spot.spot?.flags?.specialCall) {
       workedStyles.callStyle = {
-        fontWeight: 'bold',
         color: styles.colors.bands['40m']
       }
       workedStyles.refStyle = {
-        fontWeight: 'bold',
         color: styles.colors.bands['40m']
       }
     }
@@ -71,6 +60,10 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
       }
     }
     if (spot.spot?.flags?.newMult) {
+      workedStyles.callStyle = {
+        fontWeight: 'bold',
+        color: styles.colors.bands['10m']
+      }
       workedStyles.refStyle = {
         fontWeight: 'bold',
         color: styles.colors.bands['10m']
@@ -78,7 +71,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
     }
 
     return workedStyles
-  }, [spot, styles, isSpecialCall])
+  }, [spot, styles])
 
   return (
     <TouchableRipple onPress={() => onPress && onPress({ spot })}>
@@ -100,6 +93,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
             {spot.their?.guess?.emoji && (
               <Text style={[styles.fields.emoji, commonStyle, { lineHeight: 20 }]}>{spot.their?.guess?.emoji}</Text>
             )}
+            <Text style={[styles.fields.label, commonStyle, callStyle, { marginLeft: styles.oneSpace }]}>{spot.spot.callLabel ?? ''}</Text>
           </View>
           <Text style={[styles.fields.time, commonStyle]}>{fmtDateTimeRelative(spot.spot?.timeInMillis, { roundTo: 'minutes' })}</Text>
         </View>
@@ -118,7 +112,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
           ))}
           <Text style={[styles.fields.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
             {spot.spot.emoji}
-            {spotLabel}
+            {spot.spot.label}
           </Text>
         </View>
       </View>

@@ -6,14 +6,79 @@
  */
 
 import React, { useCallback, useMemo, useRef } from 'react'
-import { FlatList, View } from 'react-native'
+import { SectionList, View } from 'react-native'
 import { Text } from 'react-native-paper'
-import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-import SpotItem, { guessItemHeight } from './SpotItem'
 import { RefreshControl } from 'react-native-gesture-handler'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
+import getItemLayout from 'react-native-get-item-layout-section-list'
 
-function prepareStyles (themeStyles, style) {
+import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
+import SpotItem from './SpotItem'
+import SpotHeader from './SpotHeader'
+
+export default function SpotList ({ sections, loading, refresh, style, onPress }) {
+  const styles = useThemedStyles(_prepareStyles, style)
+
+  const safeArea = useSafeAreaInsets()
+
+  const { width } = useSafeAreaFrame()
+  // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
+
+  const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
+
+  const listRef = useRef()
+
+  const { paddingRight, paddingLeft, ...restOfStyle } = useMemo(() => style, [style])
+
+  const renderHeader = useCallback(({ section, index }) => {
+    return (
+      <SpotHeader
+        section={section}
+        styles={styles}
+      />
+    )
+  }, [styles])
+
+  const renderRow = useCallback(({ item, index }) => {
+    const spot = item
+    return (
+      <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} />
+    )
+  }, [styles, onPress, extendedWidth, paddingRight, paddingLeft])
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const calculateLayout = useCallback(
+    getItemLayout({
+      getItemHeight: styles.doubleRow.height + styles.doubleRow.borderBottomWidth,
+      getSectionHeaderHeight: styles.headerRow.height + styles.headerRow.borderBottomWidth
+    }),
+    [styles]
+  )
+
+  return (
+    <SectionList
+      style={restOfStyle}
+      ref={listRef}
+      sections={sections || []}
+      renderItem={renderRow}
+      renderSectionHeader={renderHeader}
+      getItemLayout={calculateLayout}
+      ListEmptyComponent={<Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>No Spots!</Text>}
+      keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
+      initialNumToRender={20}
+      windowSize={2}
+      maxToRenderPerBatch={30}
+      updateCellsBatchingPeriod={100}
+      removeClippedSubviews={true}
+      refreshControl={
+        <RefreshControl refreshing={loading} onRefresh={refresh} />
+      }
+      ListFooterComponent={<View style={{ height: safeArea.bottom }}/>}
+    />
+  )
+}
+
+function _prepareStyles (themeStyles, style) {
   const DEBUG = false
 
   const commonStyles = {
@@ -28,6 +93,14 @@ function prepareStyles (themeStyles, style) {
       ...themeStyles.doubleRow,
       paddingRight: Math.max(style?.paddingRight ?? 0, themeStyles.oneSpace * 2),
       paddingLeft: Math.max(style?.paddingLeft ?? 0, themeStyles.oneSpace * 2)
+    },
+    headerRow: {
+      ...themeStyles.compactRow,
+      backgroundColor: themeStyles.colors.surfaceVariant,
+      paddingTop: themeStyles.oneSpace * 0.8,
+      paddingLeft: 0,
+      paddingRight: 0,
+      justifyContent: 'center'
     },
     fields: {
       freq: {
@@ -118,52 +191,4 @@ function prepareStyles (themeStyles, style) {
       }
     }
   }
-}
-
-export default function SpotList ({ spots, loading, refresh, style, onPress }) {
-  const styles = useThemedStyles(prepareStyles, style)
-
-  const safeArea = useSafeAreaInsets()
-
-  const { width } = useSafeAreaFrame()
-  // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
-
-  const extendedWidth = useMemo(() => width / styles.oneSpace > 60, [width, styles])
-
-  const listRef = useRef()
-
-  const { paddingRight, paddingLeft, ...restOfStyle } = useMemo(() => style, [style])
-
-  const renderRow = useCallback(({ item, index }) => {
-    const spot = item
-    return (
-      <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} />
-    )
-  }, [styles, onPress, extendedWidth, paddingRight, paddingLeft])
-
-  const calculateLayout = useCallback((data, index) => {
-    const height = guessItemHeight(spots[index], styles)
-    return { length: height, offset: height * index, index }
-  }, [styles, spots])
-
-  return (
-    <FlatList
-      style={restOfStyle}
-      ref={listRef}
-      data={spots}
-      renderItem={renderRow}
-      getItemLayout={calculateLayout}
-      ListEmptyComponent={<Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>No Spots!</Text>}
-      keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
-      initialNumToRender={20}
-      windowSize={2}
-      maxToRenderPerBatch={30}
-      updateCellsBatchingPeriod={100}
-      removeClippedSubviews={true}
-      refreshControl={
-        <RefreshControl refreshing={loading} onRefresh={refresh} />
-      }
-      ListFooterComponent={<View style={{ height: safeArea.bottom }}/>}
-    />
-  )
 }
