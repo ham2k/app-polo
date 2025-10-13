@@ -354,6 +354,8 @@ export function H2kTextInput (props) {
   if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) renderInput`, { stringValue, start: selectionRef?.current?.start, end: selectionRef?.current?.end, lastChange: lastChangeRef.current, trackSelection })
 
   const renderInput = useCallback((props) => {
+    const valueAsChild = (numeric || decimal || rst)
+
     return (
       <NativeTextInput
         {...keyboardOptions}
@@ -361,8 +363,7 @@ export function H2kTextInput (props) {
         {...props}
 
         ref={actualInnerRef}
-        value={undefined}
-        // value={stringValue}
+        value={valueAsChild ? undefined : stringValue}
         placeholder={placeholder || ''}
         style={[
           colorStyles.nativeInput,
@@ -385,15 +386,12 @@ export function H2kTextInput (props) {
         onFocus={handleFocus}
         onBlur={handleBlur}
         onSelectionChange={trackSelection ? handleSelectionChange : undefined}
-
-        // Using a ref for props is frowned upon, but this is the only way to update the selection without causing further updates
-        // Also, iOS seems to work fine without controlled selection, while Android seems to need it
-        // selection={Platform.OS === 'android' && trackSelection ? selectionRef.current : undefined}
-      >{stringValue}</NativeTextInput>
+      >{valueAsChild ? stringValue : null}</NativeTextInput>
       // >{stringValue.slice(0, 1)}<Text style={{ fontWeight: 'bold', color: 'red' }}>{stringValue.slice(1, 5)}</Text>{stringValue.slice(5)}</NativeTextInput>
     )
   }, [
     stringValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
+    numeric, decimal, rst,
     onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange, trackSelection
   ])
 
