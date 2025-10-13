@@ -74,12 +74,24 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
           {settings.showNumbersRow && (
             <H2kListItem
               style={{ marginLeft: styles.oneSpace * 8 }}
-              title="Extra key in numbers row"
-              description={settings.showExtraInNumbersRow ? 'Include slash or period' : 'Just show the numbers'}
+              title="Period in numbers row"
+              description={settings.showExtraInNumbersRow ? 'Include period (and slash)' : 'Just show the numbers'}
               disabled={!settings.showNumbersRow}
               rightSwitchValue={!!settings.showExtraInNumbersRow}
               rightSwitchOnValueChange={(value) => dispatch(setSettings({ showExtraInNumbersRow: value }))}
               onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showExtraInNumbersRow }))}
+            />
+          )}
+
+          {settings.showNumbersRow && (
+            <H2kListItem
+              style={{ marginLeft: styles.oneSpace * 8 }}
+              title="Comma in numbers row"
+              description={settings.showCommaInNumbersRow ? 'Include a comma key' : 'No comma key'}
+              disabled={!settings.showNumbersRow}
+              rightSwitchValue={!!settings.showCommaInNumbersRow}
+              rightSwitchOnValueChange={(value) => dispatch(setSettings({ showCommaInNumbersRow: value }))}
+              onPress={() => dispatch(setSettings({ showNumbersRow: !settings.showCommaInNumbersRow }))}
             />
           )}
 

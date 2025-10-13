@@ -5,6 +5,7 @@
     "changes": [
       "New York & Illinois QSO Parties",
       "QSO Party spotting, with qsopartyhq.com and mobiletracker.stateqso.com",
+      "Comma key, because K0GR wanted it",
       "Group spots by frequency, special calls, mults, etc",
       "Fixed bug in WWFF duplicate checking, include P2P in summary",
       "Fixed bug in POTA duplicates on multi-day operations",

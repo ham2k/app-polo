@@ -76,6 +76,9 @@ export function NumberKeys ({ themeColor, onNumberKeyPressed, settings, enabled 
       <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('8')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>8</Text></TouchableRipple>
       <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('9')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>9</Text></TouchableRipple>
       <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('0')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>0</Text></TouchableRipple>
+      {settings?.showCommaInNumbersRow && (
+        <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey(',')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>,</Text></TouchableRipple>
+      )}
       {settings?.showExtraInNumbersRow && mode === 'callsign' && (
         <TouchableRipple style={styles.keyTouchable} disabled={!enabled} onPress={() => handleKey('/')}><Text style={[styles.key, enabled ? styles.enabledKey : styles.disabledKey]}>/</Text></TouchableRipple>
       )}
