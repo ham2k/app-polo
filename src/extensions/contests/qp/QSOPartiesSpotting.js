@@ -31,11 +31,16 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
   const qp = qpData({ ref: opRef })
 
   const state = getState()
-  const call = operation.stationCall
 
   // console.log('QP Self Spotting', { opRef, operation })
 
   if (opRef?.spotToQPHub) {
+    let call = operation.stationCall
+
+    if (operation.local.isMultiStation) {
+      call = `${call}/M${operation.local.multiIdentifier ?? "0"}`
+    }
+
     // console.log('-- spot to QP Hub')
 
     const page = `${(qp?.qsoPartyHubName ?? qp?.short).toLowerCase()}-spots.php`
@@ -70,6 +75,12 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
   }
 
   if (opRef?.spotToAPRS && operation?.grid) {
+    let call = operation.stationCall
+
+    if (operation.local.isMultiStation) {
+      call = `${call}-${operation.local.multiIdentifier ?? "0"}`
+    }
+
     // console.log('-- spot to APRS')
 
     // See https://www.aprs-is.net/SendOnlyPorts.aspx and https://ham.packet-radio.net/packet/aprs-wb2osz/Understanding-APRS-Packets.pdf
@@ -112,7 +123,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
         body: `${call}>APRS,TCPIP*:${command}`
       })
       // console.log('-- Posted to APRS', header, message)
-      // console.log(response)
+      console.log(response)
     } catch (error) {
       console.log('Error reporting data:', error)
       return false
@@ -244,6 +255,7 @@ export const SpotsHook = {
 
 function _aprsPasscodeForCall (call) {
   call = call.toUpperCase()
+  call = call.split('-')[0]
   let passcode = 29666
   for (let index = 0; index < call.length; index += 2) {
     passcode = passcode ^ call.charCodeAt(index) * 256

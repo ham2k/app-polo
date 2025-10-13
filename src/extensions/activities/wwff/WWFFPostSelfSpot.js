@@ -17,7 +17,12 @@ export const WWFFPostSelfSpot = ({ operation, vfo, comments }) => async (dispatc
   if (GLOBAL?.flags?.services?.wwff === false) return false
 
   const state = getState()
-  const activatorCallsign = operation.stationCall || state.settings.operatorCall
+
+  let activatorCallsign = operation.stationCall || state.settings.operatorCall
+  if (operation.local.isMultiStation) {
+    activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? "0"}`
+  }
+
   const ref = findRef(operation, 'wwffActivation')
 
   if (ref && ref.ref) {

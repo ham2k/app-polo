@@ -22,7 +22,11 @@ export const SOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatc
   if (GLOBAL?.flags?.services?.sota === false) return false
 
   const state = getState()
-  const activatorCallsign = operation.stationCall || state.settings.operatorCall
+
+  let activatorCallsign = operation.stationCall || state.settings.operatorCall
+  if (operation.local.isMultiStation) {
+    activatorCallsign = `${mainCall}/M${operation.local.multiIdentifier ?? "0"}`
+  }
 
   const ref = findRef(operation, 'sotaActivation')
   if (ref && ref.ref) {

@@ -11,8 +11,13 @@ import { POTAPostSpotAPI } from './POTAPostSpotAPI'
 export const POTAPostSelfSpot = ({ operation, vfo, comments }) => (_dispatch, getState) => {
   const state = getState()
 
+  let mainCall = operation.stationCall || state.settings.operatorCall
+  if (operation.local.isMultiStation) {
+    mainCall = `${mainCall}/M${operation.local.multiIdentifier ?? "0"}`
+  }
+
   const calls = [
-    operation.stationCall || state.settings.operatorCall,
+    mainCall,
     ...(operation?.stationCallPlusArray || [])
   ].filter(Boolean)
 

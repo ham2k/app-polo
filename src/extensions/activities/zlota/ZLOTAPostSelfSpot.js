@@ -19,7 +19,10 @@ export const ZLOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispat
   if (GLOBAL?.flags?.services?.zlota === false) return false
 
   const state = getState()
-  const activatorCallsign = operation.stationCall || state.settings.operatorCall
+  let activatorCallsign = operation.stationCall || state.settings.operatorCall
+  if (operation.local.isMultiStation) {
+    activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? "0"}`
+  }
 
   const refs = filterRefs(operation, Info.activationType)
   if (refs.length > 0) {

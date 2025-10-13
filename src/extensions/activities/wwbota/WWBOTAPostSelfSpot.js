@@ -21,7 +21,10 @@ export const WWBOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispa
   if (GLOBAL?.flags?.services?.wwbota === false) return false
 
   const state = getState()
-  const activatorCallsign = operation.stationCall || state.settings.operatorCall
+  let activatorCallsign = operation.stationCall || state.settings.operatorCall
+  if (operation.local.isMultiStation) {
+    activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? "0"}`
+  }
 
   const refs = filterRefs(operation, Info.activationType)
   if (refs.length) {

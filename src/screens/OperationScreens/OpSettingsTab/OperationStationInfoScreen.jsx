@@ -20,7 +20,7 @@ import { batchUpdateQSOs, selectQSOs } from '../../../store/qsos'
 import ScreenContainer from '../../components/ScreenContainer'
 import { joinAnd } from '../../../tools/joinAnd'
 import { slashZeros } from '../../../tools/stringTools'
-import { H2kCallsignInput, H2kListSection } from '../../../ui'
+import { H2kCallsignInput, H2kListItem, H2kListSection, H2kTextInput } from '../../../ui'
 
 export default function OperationStationInfoScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -144,7 +144,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
     }
   }, [dispatch, operation.uuid, operation.stationCall, operation.stationCallPlusArray, operation.local?.operatorCall, settings?.operatorCall, settings?.stationCall, settings?.suggestDefaultOperator])
 
-  const onChangeStation = useCallback((text) => {
+  const handleChangeStation = useCallback((text) => {
     const calls = text.split(/[, ]+/).filter(Boolean)
     if (calls.length > 1) {
       dispatch(setOperationData({
@@ -166,19 +166,28 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
     }
   }, [dispatch, operation.uuid])
 
-  const onChangeOperator = useCallback((text) => {
+  const handleChangeOperator = useCallback((text) => {
     dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall: text }))
   }, [dispatch, operation.uuid])
 
-  const handleUpdateStation = useCallback(() => {
+  const handleReplaceStationInAllQSOs = useCallback(() => {
     dispatch(batchUpdateQSOs({ uuid: operation.uuid, qsos, data: { our: { call: operation.stationCall } } }))
     setDoReload(Date.now())
   }, [dispatch, operation.uuid, operation.stationCall, qsos])
 
-  const handleUpdateOperator = useCallback(() => {
+  const handleReplaceOperatorInAllQSOs = useCallback(() => {
     dispatch(batchUpdateQSOs({ uuid: operation.uuid, qsos, data: { our: { operatorCall: operation.local?.operatorCall } } }))
   }, [dispatch, operation.uuid, operation.local?.operatorCall, qsos])
 
+  const handleUpdateIsMultiStation = useCallback(() => {
+    dispatch(setOperationLocalData({ uuid: operation.uuid, isMultiStation: !operation.local.isMultiStation }))
+  }, [dispatch, operation.uuid, operation.local.isMultiStation])
+
+  const handleUpdateMultiIdentifier = useCallback((text) => {
+    console.log('handleUpdateMultiIdentifier', text)
+    dispatch(setOperationLocalData({ uuid: operation.uuid, multiIdentifier: text }))
+  }, [dispatch, operation.uuid])
+  console.log('operation.local.multiIdentifier', operation.local.multiIdentifier)
   return (
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
@@ -191,7 +200,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
               label="Station Callsign"
               placeholder={'N0CALL'}
               allowMultiple={true}
-              onChangeText={onChangeStation}
+              onChangeText={handleChangeStation}
             />
             {extraState.messageForStationCall && (
               <Text variant="bodyMedium" style={{ color: extraState.colorForStationCall, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
@@ -200,7 +209,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
             )}
             {extraState.actionForStationCall && (
               <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
-                <Button mode="outlined" style={{ flex: 0 }} onPress={handleUpdateStation}>{extraState.actionForStationCall}</Button>
+                <Button mode="outlined" style={{ flex: 0 }} onPress={handleReplaceStationInAllQSOs}>{extraState.actionForStationCall}</Button>
               </View>
             )}
           </H2kListSection>
@@ -209,10 +218,10 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
             <Text variant="bodyMedium">Who is operating the station? (optional)</Text>
             <H2kCallsignInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
-              value={operation.local?.operatorCall || ''}
+              value={operation.local?.operatorCall ?? ''}
               label="Operator Callsign"
               placeholder={'N0CALL'}
-              onChangeText={onChangeOperator}
+              onChangeText={handleChangeOperator}
               disabled={operation.stationCallPlusArray?.length > 0}
             />
             {extraState.messageForOperatorCall && (
@@ -222,10 +231,34 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
             )}
             {extraState.actionForOperatorCall && (
               <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
-                <Button mode="outlined" style={{ flex: 0 }}onPress={handleUpdateOperator}>{extraState.actionForOperatorCall}</Button>
+                <Button mode="outlined" style={{ flex: 0 }}onPress={handleReplaceOperatorInAllQSOs}>{extraState.actionForOperatorCall}</Button>
               </View>
             )}
           </H2kListSection>
+          {settings.devMode && (
+            <H2kListSection style={{ marginTop: styles.oneSpace * 3 }}>
+              <H2kListItem
+                title="Multi-station operation?"
+                description={operation.local.isMultiStation ? "Yes, we're one of many!" : 'No, just a regular station'}
+                leftIcon="account-group"
+                rightSwitchValue={operation.local.isMultiStation}
+                rightSwitchOnValueChange={handleUpdateIsMultiStation}
+                onPress={handleUpdateIsMultiStation}
+                leftIconColor={styles.colors.devMode}
+                titleStyle={{ color: styles.colors.devMode }}
+                descriptionStyle={{ color: styles.colors.devMode }}
+              />
+              <H2kTextInput
+                value={operation.local.multiIdentifier ?? ''}
+                onChangeText={handleUpdateMultiIdentifier}
+                label="Identifier for this station (numbers only)"
+                keyboard="numbers"
+                numeric={true}
+                disabled={!operation.local.isMultiStation}
+                themeColor={'devMode'}
+              />
+            </H2kListSection>
+          )}
         </ScrollView>
       </SafeAreaView>
     </ScreenContainer>
