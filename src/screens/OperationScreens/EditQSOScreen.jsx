@@ -19,6 +19,7 @@ import { selectOperation } from '../../store/operations'
 import { parseFreqInMHz } from '../../tools/frequencyFormats'
 import { H2kCallsignInput, H2kDateInput, H2kFrequencyInput, H2kGridInput, H2kListSection, H2kRSTInput, H2kTextInput, H2kTimeInput } from '../../ui'
 import ScreenContainer from '../components/ScreenContainer'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const QSO_SECTIONS = [
   {
@@ -83,6 +84,8 @@ const QSO_SECTIONS = [
 export default function EditQSOScreen ({ navigation, route }) {
   const styles = useThemedStyles()
 
+  const safeAreaInsets = useSafeAreaInsets()
+
   const operation = useSelector(state => selectOperation(state, route.params.operation?.uuid ?? route.params.operation))
 
   const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
@@ -131,18 +134,25 @@ export default function EditQSOScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
-        {QSO_SECTIONS.map((section) => (
-          <QSOSection key={section.section} qso={qso} section={section} styles={styles} onChange={handleChanges} />
+      <ScrollView style={{ flex: 1, marginLeft: safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+        {QSO_SECTIONS.map((section, index) => (
+          <QSOSection
+            key={section.section}
+            qso={qso}
+            section={section}
+            styles={styles}
+            style={{ marginBottom: (index === QSO_SECTIONS.length - 1 ? safeAreaInsets.bottom : 0) + styles.oneSpace }}
+            onChange={handleChanges}
+          />
         ))}
       </ScrollView>
     </ScreenContainer>
   )
 }
 
-function QSOSection ({ qso, section, styles, onChange }) {
+function QSOSection ({ qso, section, styles, onChange, style }) {
   return (
-    <H2kListSection title={section.section}>
+    <H2kListSection title={section.section} style={style}>
       <View
         style={{
           paddingVertical: styles.oneSpace,
