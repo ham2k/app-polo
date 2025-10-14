@@ -416,7 +416,7 @@ const ReferenceHandler = {
         const dupeRef = findRef(q, Info.key)
         const dupeLocations = dupeRef?.location?.split(SLASH_OR_COMMA_REGEX)
 
-        return theirLocations.some(location => dupeLocations.includes(location))
+        return theirLocations.some(location => dupeLocations?.includes(location))
       }).length !== 0
 
       if (sameBandMode && sameLocation) {

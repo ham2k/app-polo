@@ -1,4 +1,11 @@
 {
+  "25.9.4": {
+    "name": "September '25 (patch 4)",
+    "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
+    "changes": [
+      "Auto self-spotting every 10 minutes"
+    ]
+  },
   "25.9.3": {
     "name": "September '25 (patch 3)",
     "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",

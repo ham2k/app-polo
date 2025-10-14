@@ -21,6 +21,7 @@ import LoggingPanel from './components/LoggingPanel'
 import { selectSectionedQSOs } from '../../../store/qsos'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
+import { useAutoRespotting } from './components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
@@ -53,6 +54,8 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   // useEffect(() => console.log('-- OpLoggingTab qsos', qsos), [qsos])
   // useEffect(() => console.log('-- OpLoggingTab activeQSOs', activeQSOs), [activeQSOs])
   // useEffect(() => console.log('-- OpLoggingTab loggingState', loggingState), [loggingState])
+
+  useAutoRespotting({ operation, vfo, dispatch, settings })
 
   useEffect(() => { // Reset logging state when operation changes
     if (loggingState?.operationUUID !== operation?.uuid) {

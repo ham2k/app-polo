@@ -123,7 +123,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
         body: `${call}>APRS,TCPIP*:${command}`
       })
       // console.log('-- Posted to APRS', header, message)
-      console.log(response)
+      // console.log(response)
     } catch (error) {
       console.log('Error reporting data:', error)
       return false
