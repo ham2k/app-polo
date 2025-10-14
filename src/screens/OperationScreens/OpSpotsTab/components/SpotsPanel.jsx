@@ -127,7 +127,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       updateSpotsState({ loading: true })
       setTimeout(async () => {
         await Promise.all(
-          spotsHooks.filter(hook => filterState.sources?.[hook.key] !== false).map(hook => {
+          spotsHooks.filter(hook => filterState.sources?.[hook.key] !== false && hook.fetchSpots).map(hook => {
             return hook.fetchSpots({ online, settings, dispatch, operation }).then(async spots => {
               const annotatedSpots = []
               for (const spot of spots) {
