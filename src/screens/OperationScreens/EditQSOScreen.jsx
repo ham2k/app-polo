@@ -54,7 +54,8 @@ const QSO_SECTIONS = [
       { key: 'arrlSection', label: 'ARRL Section', type: 'upcasedText', minSpaces: 14, includeIf: ({ qso }) => qso?.their?.entityPrefix === 'K' || qso?.their?.guess?.entityPrefix === 'K' },
       { key: 'grid', label: 'Grid', type: 'grid', guess: true, breakBefore: true },
       { key: 'latitude', label: 'Latitude', type: 'float', guess: true },
-      { key: 'longitude', label: 'Longitude', type: 'float', guess: true }
+      { key: 'longitude', label: 'Longitude', type: 'float', guess: true },
+      { key: 'power', label: 'Power', type: 'number', guess: true }
     ]
   },
   {
@@ -179,6 +180,10 @@ function QSOSection ({ qso, section, styles, onChange, style }) {
 }
 
 function getValueForField ({ qso, field, section }) {
+  if (field.key === 'power') {
+    console.log('getValueForField', qso)
+  }
+
   const sectionData = (section.data ? qso[section.data] : qso) || {}
   if (field.getter) {
     return field.getter({ qso, field, section, sectionData })

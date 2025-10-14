@@ -141,6 +141,7 @@ function adifFieldsForOneQSO ({ qso, operation, common, privateData, templates, 
     { BAND: qso.band && qso.band !== 'other' ? qso.band : undefined },
     { FREQ: ((Number(qso.freq ?? frequencyForBand(qso.band, qso.mode)) / 1000).toFixed(6)) }, // Round to six decimals (Hz)
     { TX_PWR: qso.power },
+    { RX_PWR: qso?.their?.power ?? qso?.guess?.power ?? qso?.their?.guess?.indicators?.includes("QRP") ? 5 : undefined },
     { QSO_DATE: fmtADIFDate(qso.startAtMillis + timeOffset) },
     { TIME_ON: fmtADIFTime(qso.startAtMillis + timeOffset) },
     { RST_RCVD: qso.their.sent },
