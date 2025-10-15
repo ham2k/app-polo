@@ -133,7 +133,7 @@ export default function LoggingPanel ({
       }, 100)
     } else if ((qso?.uuid !== loggingState?.selectedUUID) || !qso) {
       let nextQSO
-      const otherStateChanges = {}
+      const otherStateChanges = { undoInfo: undefined }
 
       if (loggingState?.suggestedQSO) {
         nextQSO = prepareSuggestedQSO(loggingState?.suggestedQSO, qsos, operation, vfo, settings)
@@ -485,7 +485,7 @@ export default function LoggingPanel ({
                 ) : (
                   (qso?.deleted || qso?._willBeDeleted || loggingState?.undoInfo) ? (
                     <IconButton
-                      icon={'undo'}
+                      icon={loggingState.undoInfo ? 'undo' : 'delete-restore'}
                       accessibilityLabel="Undo"
                       size={styles.infoPanel.button.size}
                       iconColor={styles.infoPanel.button.color}

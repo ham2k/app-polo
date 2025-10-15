@@ -216,7 +216,7 @@ const ReferenceHandler = {
 }
 
 function mainExchangeForOperation (props) {
-  const { qso, qsos, updateQSO, styles, refStack } = props
+  const { qso, qsos, updateQSO, styles, disabled, refStack } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, name: undefined, location: undefined }
 
@@ -261,6 +261,7 @@ function mainExchangeForOperation (props) {
       uppercase={true}
       noSpaces={true}
       value={ref?.name ?? ''}
+      disabled={disabled}
       error={false}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, name: text, guess: false })
@@ -281,6 +282,7 @@ function mainExchangeForOperation (props) {
       uppercase={true}
       noSpaces={true}
       value={ref?.location ?? ''}
+      disabled={disabled}
       error={ref?.location && !VALID_LOCATIONS[ref.location]}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text, guess: false })

@@ -293,7 +293,7 @@ export const OTHER_LOCATION_SUGGESTIONS = [['MX', 'Mexico'], ['DX', 'Other DX']]
 export const ALL_LOCATION_SUGGESTIONS = Object.entries(WFD_LOCATION_VALUES)
 
 function mainExchangeForOperation (props) {
-  const { qso, qsos, operation, updateQSO, styles, refStack } = props
+  const { qso, qsos, operation, updateQSO, styles, refStack, disabled } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
 
@@ -312,6 +312,7 @@ function mainExchangeForOperation (props) {
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
+      disabled={disabled}
       value={ref?.class ?? _defaultClassFor({ qso, qsos, operation }) ?? ''}
       error={ref?.class && !ref.class.match(WFD_CLASS_REGEX)}
       onChangeText={(text) => updateQSO({
@@ -332,6 +333,7 @@ function mainExchangeForOperation (props) {
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
+      disabled={disabled}
       value={ref?.location ?? _defaultLocationFor({ qso, qsos, operation }) ?? ''}
       error={ref?.location && !WFD_LOCATIONS.includes(ref.location)}
       suggestions={_suggestionsFor(qso)}

@@ -333,6 +333,7 @@ function mainExchangeForOperation (props) {
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
+      disabled={disabled}
       value={ref?.class ?? _defaultClassFor({ qso, qsos, operation }) ?? ''}
       error={ref?.class && !ref.class.match(FD_CLASS_REGEX)}
       onChangeText={(text) => updateQSO({
@@ -353,6 +354,7 @@ function mainExchangeForOperation (props) {
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
+      disabled={disabled}
       value={ref?.location ?? _defaultLocationFor({ qso, qsos, operation }) ?? ''}
       error={ref?.location && !FD_LOCATIONS.includes(ref.location)}
       suggestions={_suggestionsFor(qso)}
