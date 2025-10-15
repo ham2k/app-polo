@@ -66,26 +66,32 @@ export function checkAndDescribeCommands (value, extraParams) {
 
   if (matchingCommand) {
     try {
-      let result
+      const result = {
+        match,
+        matchingCommand,
+        allowSpaces: !!matchingCommand.allowSpaces
+      }
+
       if (matchingCommand.describeCommand) {
-        result = matchingCommand.describeCommand(match, extraParams)
+        result.description = matchingCommand.describeCommand(match, extraParams)
       } else {
-        result = match?.[0]
+        result.description = match?.[0]
       }
 
       return result
     } catch (e) {
       reportError(`Error in checkAndDescribeCommands invocation for '${matchingCommand.key}'`, e)
-      return false
+      return {}
     }
   } else {
-    return false
+    return {}
   }
 }
 
 export function findMatchingCommand (value) {
   const hooks = findHooks('command')
   let match
+
   const matchingCommand = hooks.find(hook => {
     try {
       if (typeof hook?.match === 'function') {
@@ -109,3 +115,4 @@ export function findMatchingCommand (value) {
   })
   return { matchingCommand, match }
 }
+

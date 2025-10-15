@@ -57,7 +57,6 @@ export function H2kCallsignInput (props) {
       {...props}
       keyboard="dumb"
       uppercase={true}
-      noSpaces={true}
       periodToSlash={mode === 'callsign'}
       error={error || (value && !isValid)}
     />

@@ -3,7 +3,8 @@
     "name": "September '25 (patch 4)",
     "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
     "changes": [
-      "Auto self-spotting every 10 minutes"
+      "Auto self-spotting every 10 minutes",
+      "Allow spaces in commands (try 'SPOT HERE')"
     ]
   },
   "25.9.3": {

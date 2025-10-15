@@ -61,8 +61,8 @@ export default function HomeTools ({ settings, styles, style }) {
 
   useEffect(() => {
     if (search?.length > 2) {
-      const commandDescription = checkAndDescribeCommands(search, { dispatch, settings, online })
-      setCommandInfo({ message: commandDescription || undefined, match: !!commandDescription || commandDescription === '' })
+      const { description } = checkAndDescribeCommands(search, { dispatch, settings, online })
+      setCommandInfo({ message: description || undefined, match: !!description || description === '' })
     }
   }, [dispatch, online, search, setCommandInfo, settings, settings.operatorCall])
 

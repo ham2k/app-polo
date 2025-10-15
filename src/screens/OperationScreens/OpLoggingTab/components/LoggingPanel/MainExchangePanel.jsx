@@ -14,7 +14,9 @@ import { H2kCallsignInput, H2kRSTInput, H2kTextInput } from '../../../../../ui'
 import { expandRSTValues } from '../../../../../tools/callsignTools'
 
 export const MainExchangePanel = ({
-  qso, qsos, operation, vfo, settings, style, styles, themeColor, onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef
+  qso, qsos, operation, vfo, settings, style, styles, themeColor,
+  onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef,
+  allowSpacesInCallField
 }) => {
   // We need to pre-allocate a ref for the main field, in case `mainFieldRef` is not provided
   // but since hooks cannot be called conditionally, we just need to create it whether we need it or not
@@ -97,6 +99,7 @@ export const MainExchangePanel = ({
       onChange={handleFieldChange}
       onSubmitEditing={onSubmitEditing}
       fieldId={'theirCall'}
+      noSpaces={!allowSpacesInCallField}
       onSpace={spaceHandler}
       focusedRef={focusedRef}
       allowMultiple={true}

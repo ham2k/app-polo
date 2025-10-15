@@ -136,7 +136,7 @@ export function H2kTextInput (props) {
         text = stringValue
       }
 
-      if (spaceAdded) {
+      if (noSpaces && spaceAdded) {
         const spaceEvent = { nativeEvent: { key: ' ', target: event.nativeEvent.target } }
         onSpace && onSpace(spaceEvent)
 

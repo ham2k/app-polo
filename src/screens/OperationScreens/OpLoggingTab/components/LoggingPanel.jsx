@@ -48,6 +48,8 @@ export default function LoggingPanel ({
   const navigation = useNavigation()
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
+  const [allowSpacesInCallField, setAllowSpacesInCallField] = useState(false)
+
   const [qso, setQSO, updateQSO] = useMemo(() => {
     const qsoValue = loggingState?.qso
     const setQSOFunction = (newQSO, more) => {
@@ -189,11 +191,13 @@ export default function LoggingPanel ({
 
     if (alsoClearTheirCall && fieldId !== 'theirCall') { // This is used by command-handling to reset the call entry when a command was processed
       qso.their.call = ''
+      setAllowSpacesInCallField(false)
     }
 
     if (fieldId === 'theirCall') {
-      const commandDescription = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo })
-      setCommandInfo({ message: commandDescription || undefined, match: !!commandDescription || commandDescription === '' })
+      const { description, allowSpaces } = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo })
+      setCommandInfo({ message: description || undefined, match: !!{ description } || { description } === '' })
+      setAllowSpacesInCallField(allowSpaces)
 
       let guess = parseCallsign(value)
       if (guess?.baseCall) {
@@ -521,6 +525,7 @@ export default function LoggingPanel ({
             updateQSO={updateQSO}
             mainFieldRef={mainFieldRef}
             focusedRef={focusedRef}
+            allowSpacesInCallField={allowSpacesInCallField}
           />
           <View style={{ flex: 0, justifyContent: 'center', alignItems: 'center', [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.halfSpace }}>
             <IconButton
