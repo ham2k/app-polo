@@ -133,7 +133,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
               for (const spot of spots) {
                 spot.our = spot.our || {}
                 spot.timeInMillis = 0
-                spot.key = `${spot.spot.source}:${qsoKey(spot)}`
+                spot.key = `${spot.spot.subSource ?? spot.spot.source}:${qsoKey(spot)}`
                 if (!spot.mode) {
                   spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
                 }
@@ -218,6 +218,10 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
           if (score.newMult) {
             spot.spot.flags.newMult = true
           }
+
+          // if (spot?.their?.call === 'KI2D') {
+          //   console.log('KI2D spot', handler.key, score, { ...spot.spot.flags })
+          // }
         })
       }
 
@@ -226,40 +230,39 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
         spot.spot.flags.specialCall = true
         spot.spot.callLabel = specialLabel
       }
-
       return spot
     })
   }, [operation, settings, filteredSpots, ourInfo.call, sections, qsos])
 
   const mergedOpSpots = useMemo(() => {
-    const mOpSpots = []
+    const _mergedSpots = []
     scoredSpots.forEach((spot) => {
-      if (spot.spot?.key?.endsWith('-special')) {
-        mOpSpots.push(spot)
-        return
-      }
+      // if (spot.spot?.key?.endsWith('-special')) {
+      //   mOpSpots.push(spot)
+      //   return
+      // }
 
       // Not digital as could be multiple people on one freq. e.g. FT8
-      const matchingSpot = superModeForMode(spot.mode) !== 'DATA' && mOpSpots.find(opSpot => (
-        spot.spot.type === opSpot.spot.type && // Don't mix scoring and dupes
-          Math.abs(spot.freq - opSpot.freq) <= 0.1 && // 0.1 kHz
-          Math.abs(spot.spot.timeInMillis - opSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
-          spot.refs.length === opSpot.refs.length && // all refs match
-          opSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
+      const matchingSpot = superModeForMode(spot.mode) !== 'DATA' && _mergedSpots.find(otherSpot => (
+        spot.spot.type === otherSpot.spot.type && // Don't mix scoring and dupes
+          Math.abs(spot.freq - otherSpot.freq) <= 0.1 && // 0.1 kHz
+          Math.abs(spot.spot.timeInMillis - otherSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
+          spot.refs.length === otherSpot.refs.length && // all refs match
+          otherSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
       ))
-      if (matchingSpot && !matchingSpot.spot?.key?.endsWith('-special')) {
+      if (matchingSpot) {
         matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call},${spot.their.call}` }
       } else {
-        mOpSpots.push(spot)
+        _mergedSpots.push(spot)
       }
     })
-    return mOpSpots
+    return _mergedSpots
   }, [scoredSpots])
 
   const sectionedSpots = useMemo(() => {
     const _sections = []
     if (filterState.groupSpecialSpots !== false) {
-      const specialSpots = mergedOpSpots.filter(spot => spot.spot.flags?.specialCall)
+      const specialSpots = mergedOpSpots.filter(spot => spot.spot.flags?.specialCall && spot.spot?.type !== 'duplicate')
       if (specialSpots.length > 0) {
         _sections.push({
           key: 'special',
@@ -267,7 +270,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
           data: specialSpots
         })
       }
-      const newMults = mergedOpSpots.filter(spot => spot.spot?.flags?.newMult)
+      const newMults = mergedOpSpots.filter(spot => spot.spot?.flags?.newMult && spot.spot?.type !== 'duplicate')
       if (newMults.length > 0) {
         _sections.push({
           key: 'newMults',
@@ -278,7 +281,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
     }
 
     if (filterState.groupCallsWithNotes) {
-      const callsWithNotes = mergedOpSpots.filter(spot => spot.their?.guess?.emoji)
+      const callsWithNotes = mergedOpSpots.filter(spot => spot.their?.guess?.emoji && spot.spot?.type !== 'duplicate')
       if (callsWithNotes.length > 0) {
         _sections.push({
           key: 'notes',

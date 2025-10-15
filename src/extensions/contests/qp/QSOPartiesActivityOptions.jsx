@@ -8,13 +8,13 @@ import React, { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { setOperationData } from '../../../store/operations'
-import { selectSettings } from '../../../store/settings'
+import { selectOperatorCallInfo, selectSettings } from '../../../store/settings'
 import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 import { fmtDateTimeNice, fmtTimeBetween, prepareTimeValue } from '../../../tools/timeFormats'
 import { findRef, replaceRef } from '../../../tools/refTools'
 
 import { Info } from './QSOPartiesInfo'
-import { qpData, qpIsInState, qpNameForLocation, qpNormalizeLocation, QSO_PARTY_DATA } from './QSOPartiesExtension'
+import { qpData, qpParseLocations, QSO_PARTY_DATA } from './QSOPartiesExtension'
 
 export function ActivityOptions (props) {
   const { styles, operation } = props
@@ -23,8 +23,24 @@ export function ActivityOptions (props) {
 
   const settings = useSelector(selectSettings)
 
+  const ourInfo = useSelector(selectOperatorCallInfo)
+
   const ref = useMemo(() => findRef(operation, Info.key), [operation])
   const qp = useMemo(() => qpData({ ref }), [ref])
+
+  const locationLabel = useMemo(() => {
+    const locations = qpParseLocations({ location: ref?.location, qp, qso: { their: ourInfo } })
+
+    if (locations.length > 0) {
+      if (locations.find(loc => !loc.inState)) {
+        return 'Out-of-state: ' + locations.map(loc => loc.name).join(', ')
+      } else {
+        return 'In-state: ' + locations.map(loc => loc.name).join(', ')
+      }
+    } else {
+      return null
+    }
+  }, [ref?.location, qp, ourInfo])
 
   const partyOptions = useMemo(() => {
     const now = new Date()
@@ -103,10 +119,10 @@ export function ActivityOptions (props) {
                 uppercase={true}
                 onChangeText={handleLocationChange}
               />
-              {ref?.location?.length > 1 && (
-                qpNormalizeLocation({ location: ref.location, qp }) ? (
+              {ref?.location?.length >= 2 && (
+                locationLabel ? (
                   <H2kMarkdown style={{ padding: styles.oneSpace }}>
-                    {qpIsInState({ location: ref.location, qp }) ? 'In-state: ' : 'Out-of-state: ' }{qpNameForLocation({ location: ref.location, qp })}
+                    {locationLabel}
                   </H2kMarkdown>
                 ) : (
                   <H2kMarkdown style={{ padding: styles.oneSpace, color: 'red' }}>

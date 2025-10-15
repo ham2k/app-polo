@@ -69,11 +69,12 @@ export default function SpotList ({ sections, loading, refresh, style, onPress }
       windowSize={2}
       maxToRenderPerBatch={30}
       updateCellsBatchingPeriod={100}
-      removeClippedSubviews={true}
       refreshControl={
         <RefreshControl refreshing={loading} onRefresh={refresh} />
       }
       ListFooterComponent={<View style={{ height: safeArea.bottom }}/>}
+      stickySectionHeadersEnabled={true}
+      removeClippedSubviews={false} // Buggy on Android
     />
   )
 }

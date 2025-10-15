@@ -35,8 +35,8 @@ const Extension = {
   ...Info,
   category: 'contests',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
-    registerHook('activity', { hook: ActivityHook })
-    registerHook(`ref:${Info.key}`, { hook: ReferenceHandler })
+    registerHook('activity', { hook: ActivityHook, priority: 10 })
+    registerHook(`ref:${Info.key}`, { hook: ReferenceHandler, priority: 10 })
 
     // registerQPDefinitionsDataFile()
     // dispatch(loadDataFile('qp-definitions'))
@@ -304,7 +304,7 @@ const ReferenceHandler = {
       theirLocations = [locationGuess]
       theyAreInState = !!qp.counties[locationGuess]
     }
-    theirLocations = theirLocations.map(loc => qpNormalizeLocation({ qp, qso, location: loc, weAreInState, theyAreInState }))
+    theirLocations = theirLocations.map(loc => qpNormalizeLocation({ qp, qso, location: loc, weAreInState, theyAreInState })).filter(loc => loc)
 
     if (!weAreInState && !theyAreInState) {
       theirLocations = []
@@ -773,6 +773,20 @@ function _defaultLocationFor ({ qso, qp, qsos, operation }) {
 
 const SLASH_OR_COMMA_REGEX = /[/,]/
 
+export function qpParseLocations ({ qp, location, qso, weAreInState, theyAreInState }) {
+  const locations = location?.split(SLASH_OR_COMMA_REGEX) ?? []
+  return locations
+    .map(loc => qpNormalizeLocation({ qp, qso, location: loc, weAreInState, theyAreInState }))
+    .filter(loc => loc)
+    .map(loc => {
+      return ({
+        location: loc,
+        name: qpNameForLocation({ qp, location: loc }),
+        inState: qpIsInState({ qp, location: loc }),
+      })
+    })
+}
+
 export function qpNormalizeLocation ({ qp, qso, location, weAreInState, theyAreInState }) {
   location = location?.toUpperCase() || ''
   if (qp.counties[location]) {
@@ -800,10 +814,20 @@ export function qpNormalizeLocation ({ qp, qso, location, weAreInState, theyAreI
     return location
   } else if (CANADIAN_PROVINCES[location]) {
     return location
-  } else if (qp.options.dxEntityIsMultiplier) {
-    return qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
-  } else {
+  } else if ((qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix) === 'KL7') {
+    return 'AK'
+  } else if ((qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix) === 'KH6') {
+    return 'HI'
+  } else if (location === 'DX') {
     return location
+  } else if (qp.options.dxEntityIsMultiplier) {
+    if (DXCC_BY_PREFIX[location]) {
+      return location
+    } else {
+      return qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+    }
+  } else {
+    return ''
   }
 }
 

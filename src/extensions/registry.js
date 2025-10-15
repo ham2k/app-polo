@@ -94,9 +94,11 @@ function registerHook (hookCategory, { extension, hook, priority }) {
   if (!hook) hook = extension[hookCategory]
   if (!extension) extension = hook.extension
 
+  hook.priority = hook.priority || extension.priority || 0
+
   const newHooks = (Hooks[hookCategory] ?? []).filter(h => h.key !== (hook.key ?? extension.key))
   newHooks.push({ key: hook.key ?? extension.key, extension, hook, priority })
-  newHooks.sort((a, b) => (b.priority ?? b.extension?.priority ?? 0) - (a.priority ?? a.extension?.priority ?? 0))
+  newHooks.sort((a, b) => b.priority - a.priority)
   Hooks[hookCategory] = newHooks
 }
 

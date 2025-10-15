@@ -16,9 +16,12 @@ import { fetchWithTimeout } from '../../../tools/fetchWithTimeout'
 import GLOBAL from '../../../GLOBAL'
 import packageJson from '../../../../package.json'
 
-import { qpData } from './QSOPartiesExtension'
+import { qpData, qpParseLocations } from './QSOPartiesExtension'
 import { Info } from './QSOPartiesInfo'
 import { latitudeInMinutes, longitudeInMinutes } from '../../../tools/geoTools'
+import { capitalizeString } from '../../../tools/capitalizeString'
+
+const DEBUG = false
 
 const APRS_SERVER = 'https://ametx.com:8888'
 const MOBILE_TRACKER_SERVER = 'https://mobiletracker.stateqso.com'
@@ -29,6 +32,7 @@ const PARTY_HUB_SERVER = 'https://test.lofi.ham2k.net/ham2k-proxy/qsopartyhub'
 export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) => async (_dispatch, getState) => {
   const opRef = findRef(operation, Info.key)
   const qp = qpData({ ref: opRef })
+  const counties = qpParseLocations({ qp, location: opRef?.location, qso: {} })
 
   const state = getState()
 
@@ -45,11 +49,16 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
 
     const page = `${(qp?.qsoPartyHubName ?? qp?.short).toLowerCase()}-spots.php`
     const url = `${PARTY_HUB_SERVER}/${page}`
+
     const form = new FormData()
     form.append('station', call ?? '?')
     form.append('frequency', fmtFreqInMHz(vfo.freq) || '00')
-    form.append('county', opRef?.location || '')
-    form.append('comment', `${comments} [via Ham2K]`)
+    form.append('county', counties?.[0]?.location || '')
+    form.append('comment', [
+      counties?.length > 1 ? counties?.map(county => county.location)?.join('/') : '',
+      comments,
+      '[via Ham2K]'
+    ].filter(x => x).join(' '))
     form.append('poster', operation?.local?.operatorCall || settings?.operatorCall || '')
 
     try {
@@ -86,7 +95,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
     // See https://www.aprs-is.net/SendOnlyPorts.aspx and https://ham.packet-radio.net/packet/aprs-wb2osz/Understanding-APRS-Packets.pdf
 
     const header = `user ${call} pass ${_aprsPasscodeForCall(call)} vers Ham2K-PoLo ${packageJson?.version}`
-    const message = `${qp.aprsShort ?? qp.short} ${fmtFreqInMHz(vfo.freq)} ${opRef?.location}`
+    const message = `${qp.aprsShort ?? qp.short} ${fmtFreqInMHz(vfo.freq)} ${counties?.map(county => county.location)?.join('/')}`
 
     let command
     if (operation?.grid) {
@@ -132,8 +141,6 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
   return true
 }
 
-const DEBUG = false
-
 export const SpotsHook = {
   ...Info,
   sourceName: 'QSO Parties',
@@ -164,24 +171,35 @@ export const SpotsHook = {
         if (response.ok) {
           const data = await response.json()
           if (DEBUG) console.log('-- Data', data)
-          spots = data.features.map(feature => {
+          const rawSpots = data.features.map(feature => {
             const { properties } = feature
             const { call, frequency, text, county, countyCode } = properties ?? {}
+            const cleanText = text.replace(/^${qp.short} [\d\.]+/, '')
             return {
               their: { call },
               freq: parseFloat(frequency) * 1000,
+              band: bandForFrequency(parseFloat(frequency) * 1000),
+              mode: modeForFrequency(parseFloat(frequency) * 1000, { ituRegion: 2 }),
               refs: [{ type: Info.activationType, location: countyCode }],
               spot: {
                 timeInMillis: now.getTime(),
                 source: Info.key,
+                subSource: `${Info.key}/mobiletracker`,
                 icon: Info.icon,
-                label: `${qp.short}: ${[countyCode, text].filter(x => x).join(' • ')}`,
+                label: `${qp.short}: ${[countyCode, cleanText].filter(x => x).join(' • ')}`,
                 sourceInfo: {
                   source: 'Mobile Tracker',
                   comments: text,
                   spotter: call
                 }
               }
+            }
+          })
+          const includedSpots = {}
+          rawSpots.sort((a, b) => a.spot.timeInMillis - b.spot.timeInMillis).forEach(spot => {
+            if (!includedSpots[spot.their.call]) {
+              includedSpots[spot.their.call] = spot
+              spots.push(spot)
             }
           })
           if (DEBUG) console.log('-- Spots', spots)
@@ -225,6 +243,7 @@ export const SpotsHook = {
               spot: {
                 timeInMillis: Date.parse(cells[0] + "Z") ?? now,
                 source: Info.key,
+                subSource: `${Info.key}/qsopartyhub`,
                 icon: Info.icon,
                 label: `${qp.short}: ${[cells[3], cells[4]].filter(x => x).join(' • ')}`,
                 sourceInfo: {

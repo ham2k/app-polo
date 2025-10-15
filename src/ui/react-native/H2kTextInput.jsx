@@ -354,7 +354,7 @@ export function H2kTextInput (props) {
   if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) renderInput`, { stringValue, start: selectionRef?.current?.start, end: selectionRef?.current?.end, lastChange: lastChangeRef.current, trackSelection })
 
   const renderInput = useCallback((props) => {
-    const valueAsChild = (numeric || decimal || rst)
+    const valueAsChild = !(numeric || decimal || rst)
 
     return (
       <NativeTextInput

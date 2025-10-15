@@ -53,6 +53,8 @@ export function scoringHandlersForOperation (operation, settings) {
   scoringKeys[BandsAndModesScoringHandler.key] = true
 
   return scoringHandlers
+
+  return scoringHandlers.sort((a, b) => b.priority - a.priority)
 }
 
 export function analyzeAndSectionQSOs ({ qsos, operation, settings, showDeletedQSOs = true }) {
