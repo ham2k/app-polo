@@ -12,7 +12,6 @@ export function H2kIcon ({ ...props }) {
   const name = props.name ?? props.source ?? props.icon
 
   if (name?.startsWith && name.startsWith('fa-')) {
-    console.log('FA Icon', name)
     return <FontAwesome6Icon {...props} solid name={name.slice(3)} size={props.size ? props.size * 0.75 : undefined} />
   } else {
     return <PaperIcon source={name} {...props} />

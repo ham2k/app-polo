@@ -6,13 +6,13 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-
 import { Chip } from 'react-native-paper'
-import { paperNameOrHam2KIcon } from '../../../ui'
+
+import { H2kIcon } from '../../../ui'
 
 export default function LoggerChip ({
   children,
-  icon,
+  icon, iconColor,
   styles, style, themeColor, textStyle,
   selected,
   disabled,
@@ -85,9 +85,13 @@ export default function LoggerChip ({
     }
   }, [style, styles])
 
+  const ChipIcon = useMemo(() => {
+    return ({ props }) => <H2kIcon icon={icon} color={iconColor} {...props} />
+  }, [icon, iconColor])
+
   return (
     <Chip
-      icon={paperNameOrHam2KIcon(icon)}
+      icon={ChipIcon}
       mode={mode}
       theme={colorizedTheme}
       style={combinedStyle}

@@ -19,10 +19,11 @@ import { findRef } from '../../../../../../tools/refTools'
 import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../../../tools/timeFormats'
 import { H2kButton, H2kIcon, H2kTextInput } from '../../../../../../ui'
+import LoggerChip from '../../../../components/LoggerChip'
 
 const SECONDS_UNTIL_RESPOT = 30
 
-const MINUTES_FOR_AUTO_RESPOT = 0.3
+const MINUTES_FOR_AUTO_RESPOT = 10
 
 export function SpotterControlInputs (props) {
   const { qso, operation, vfo, styles, style, settings, setCurrentSecondaryControl, focusedRef } = props
@@ -230,7 +231,9 @@ export async function postSpots ({ isSelfSpotting, qso, operation, vfo, comments
   setComments && setComments(undefined)
   if (ok) {
     if (isSelfSpotting) dispatch(setOperationLocalData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq, spottedComments: comments }))
-    setCurrentSecondaryControl && setCurrentSecondaryControl(undefined)
+    setTimeout(() => {
+      setCurrentSecondaryControl && setCurrentSecondaryControl(undefined)
+    }, 5000)
   }
 }
 
@@ -267,15 +270,24 @@ const colorForStatus = (status) => {
 
 export const spotterControl = {
   key: 'spotter',
-  order: 100,
+  order: 50,
   icon: 'hand-wave',
-  label: ({ qso, operation }) => {
+  LabelComponent: ({ qso, operation, ...props }) => {
+    let label = props.label || 'Self-Spotting'
     if (qso?.their?.guess?.call && qso?.their?.guess?.baseCall) {
-      return 'Spotting'
+      label = 'Spotting'
     } else if (operation?.local?.autoRespotting) {
-      return 'Auto-respotting'
+      label = 'Auto-respotting'
+    }
+
+    if (operation?.local?.autoRespotting) {
+      return (
+        <LoggerChip {...props} icon={'recycle'} iconColor={'red'}accessibilityLabel={label + ' Controls'}>{label}</LoggerChip>
+      )
     } else {
-      return 'Self-Spotting'
+      return (
+        <LoggerChip {...props} accessibilityLabel={label + ' Controls'}>{label}</LoggerChip>
+      )
     }
   },
 
