@@ -278,7 +278,8 @@ export const spotterControl = {
       return 'Self-Spotting'
     }
   },
-  accesibilityLabel: 'Self-Spotting Controls',
+
+  accessibilityLabel: 'Self-Spotting Controls',
   InputComponent: SpotterControlInputs,
   inputWidthMultiplier: 40,
   optionType: 'mandatory',

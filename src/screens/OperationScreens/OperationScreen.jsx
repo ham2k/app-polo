@@ -166,7 +166,7 @@ export default function OperationScreen (props) {
                 justifyContent: 'center',
                 alignItems: 'center'
               }}
-              accesibilityLabel={'Pane Separator'}
+              accessibilityLabel={'Pane Separator'}
               {...panResponder.panHandlers}
             >
               <View style={{ marginLeft: styles.oneSpace * -0.7, opacity: 0.8 }}>

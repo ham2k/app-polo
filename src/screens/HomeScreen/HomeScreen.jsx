@@ -178,7 +178,7 @@ export default function HomeScreen ({ navigation }) {
       <View style={{ flex: 1, width: '100%', padding: 0, margin: 0 }}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <FlatList
-            accesibilityLabel="Operation List"
+            accessibilityLabel="Operation List"
             style={{ flex: 1 }}
             data={operations}
             renderItem={renderRow}

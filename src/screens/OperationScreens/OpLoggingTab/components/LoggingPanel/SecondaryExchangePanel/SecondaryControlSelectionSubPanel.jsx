@@ -178,10 +178,10 @@ export const SecondaryControlSelectionsubPanel = ({
                 styles={styles}
                 style={{ flex: 0 }}
                 themeColor={themeColor}
-                accesibilityLabel="Show Secondary Control Settings"
+                accessibilityLabel="Show Secondary Control Settings"
                 onChange={() => setCurrentSecondaryControl('manage-controls')}
               >
-                <Icon source="cog" size={styles.oneSpace * 2} accesibilityLabel="Show Secondary Control Settings" />
+                <Icon source="cog" size={styles.oneSpace * 2} accessibilityLabel="Show Secondary Control Settings" />
               </LoggerChip>
             </View>
           </View>
