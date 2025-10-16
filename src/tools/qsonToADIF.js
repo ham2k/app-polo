@@ -10,7 +10,7 @@ import { findBestHook } from '../extensions/registry'
 import { basePartialTemplates, compileTemplateForOperation, extraDataForTemplates, templateContextForOneExport } from '../store/operations'
 import { selectExportSettings } from '../store/settings'
 import { sanitizeToISO8859 } from './stringTools'
-import { fmtADIFDate, fmtADIFTime } from './timeFormats'
+import { fmtADIFDate, fmtADIFTime, fmtISODateTime } from './timeFormats'
 
 import { adifModeAndSubmodeForMode, frequencyForBand, modeForFrequency } from '@ham2k/lib-operation-data'
 
@@ -47,6 +47,9 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
     common.operatorCall = operation.local?.operatorCall || operation.operatorCall
   }
 
+  const eventQSOs = qsos.filter(qso => qso.event && !qso.deleted)
+  const nonEventQSOs = qsos.filter(qso => !qso.event &&  !qso.deleted)
+
   let str = ''
   str += `ADIF for ${title || ([common.stationCall, operation?.title, operation.subTitle].filter(x => x).join(' ')) || 'Operation'} \n`
   str += adifField('ADIF_VER', '3.1.5', { newLine: true })
@@ -54,15 +57,21 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
   if (operation.userTitle && privateData) str += adifField('X_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
   if (operation.notes && privateData) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
+
   if (handler.adifFieldsForHeader) {
     str += escapeForHeader(handler.adifFieldsForHeader({ qsos, operation, common, mainHandler: true, privateData, templates }) ?? []).join('\n')
   }
   if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common, mainHandler: true, privateData, templates })) + '\n'
-  str += '<EOH>\n'
 
-  qsos.forEach(qso => {
+  privateData && eventQSOs.forEach(qso => {
     if (qso.deleted) return
 
+    str += `• ${fmtISODateTime(qso.startAtMillis)} ${qso.event.event?.toUpperCase() || 'EVENT'}: ${qso.event.description ?? qso.event.note ?? qso.event.message}\n`
+  })
+
+  str += '<EOH>\n'
+
+  nonEventQSOs.forEach(qso => {
     // Get the base handler's field combinations for this QSO
     // it might return an array of arrays,
     // meaning this QSO has to be represented by multiple ADIF rows (think POTA P2P, or QSO Party county line operations)

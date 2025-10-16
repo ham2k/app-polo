@@ -63,7 +63,7 @@ export function analyzeAndSectionQSOs ({ qsos, operation, settings, showDeletedQ
 
   const scoringHandlers = scoringHandlersForOperation(operation, settings)
 
-  const activeQSOs = qsos.filter(qso => !qso.deleted)
+  const activeQSOs = qsos.filter(qso => !qso.deleted && !qso.event)
 
   const sections = []
 
@@ -98,7 +98,11 @@ export function analyzeAndSectionQSOs ({ qsos, operation, settings, showDeletedQ
     }
     currentSection.data.push(qso)
 
-    if (!qso.deleted) {
+    if (qso.deleted) {
+      currentSection.deleted = (currentSection.deleted || 0) + 1
+    } else if (qso.event) {
+      currentSection.events = (currentSection.events || 0) + 1
+    } else {
       currentSection.count = (currentSection.count || 0) + 1
 
       scoringHandlers.forEach(({ handler, ref }) => {
@@ -116,8 +120,6 @@ export function analyzeAndSectionQSOs ({ qsos, operation, settings, showDeletedQ
           reportError(`Error accumulating score for '${handler.key}' and qso '${qso.key}'`, e)
         }
       })
-    } else {
-      currentSection.deleted = (currentSection.deleted || 0) + 1
     }
   }
 

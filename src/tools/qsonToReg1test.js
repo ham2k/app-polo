@@ -36,7 +36,7 @@ export function qsonToReg1test ({ operation, qsos, settings, handler }) {
     str += `[Remarks]\n${operation.notes}\n`
   }
 
-  const actualQSOs = qsos.filter(qso => !qso.deleted)
+  const actualQSOs = qsos.filter(qso => !qso.deleted && !qso.event)
 
   str += `[QSORecords;${actualQSOs.length}]\n`
 

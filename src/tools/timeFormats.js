@@ -229,7 +229,7 @@ export function fmtISODateTime (t) {
   t = prepareTimeValue(t)
 
   if (t && t.toISOString) {
-    return t.toISOString()
+    return t.toISOString().substring(0, 19) + 'Z'
   } else {
     return ''
   }

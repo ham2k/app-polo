@@ -46,9 +46,13 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
   const confirmedBySpot = Object.values(qso?.qsl ?? {}).some(spot => spot?.isGuess === false)
   const bustedBySpot = Object.values(qso?.qsl ?? {}).some(spot => spot?.isGuess === true)
 
+  const rowStyle = useMemo(() => {
+    return { ...styles.compactRow, ...(selected ? styles.selectedRow : styles.unselectedRow) }
+  }, [selected, styles])
+
   return (
-    <TouchableRipple onPress={pressHandler} style={selected ? styles.selectedRow : styles.unselectedRow}>
-      <View style={styles.compactRow}>
+    <TouchableRipple onPress={pressHandler}>
+      <View style={rowStyle}>
         <Text style={styles.fields.time}>{timeFormatFunction(qso.startAtMillis)}</Text>
         <Text style={styles.fields.freq}>
           {freqParts[0] && <Text style={styles.fields.freqMHz}>{freqParts[0]}.</Text>}
@@ -102,4 +106,5 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
     </TouchableRipple>
   )
 })
+
 export default QSOItem

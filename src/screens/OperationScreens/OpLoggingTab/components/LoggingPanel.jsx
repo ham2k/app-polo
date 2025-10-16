@@ -42,6 +42,8 @@ import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
 
 const DEBUG = false
 
+let commandInfoTimeout
+
 export default function LoggingPanel ({
   style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo, splitView
 }) {
@@ -161,31 +163,33 @@ export default function LoggingPanel ({
 
     const callInfo = parseCallsign(call)
 
-    if (callInfo?.baseCall || call.indexOf('?') >= 0) {
+    if (qso?.event) {
+      setIsValidQSO(true)
+    } else if (callInfo?.baseCall || call.indexOf('?') >= 0) {
       setIsValidQSO(true)
     } else {
       setIsValidQSO(false)
     }
-  }, [qso?.their?.call])
+  }, [qso?.their?.call, qso?.event])
 
   const [commandInfo, actualSetCommandInfo] = useState()
   const setCommandInfo = useCallback((info) => {
-    if (commandInfo?.timeoutId) {
-      clearTimeout(commandInfo.timeoutId)
+    if (commandInfoTimeout) {
+      clearTimeout(commandInfoTimeout)
     }
     if (info?.timeout) {
-      info.timeoutId = setTimeout(() => {
+      commandInfoTimeout = setTimeout(() => {
         actualSetCommandInfo(undefined)
       }, info.timeout)
     }
     actualSetCommandInfo(info)
-  }, [actualSetCommandInfo, commandInfo?.timeoutId])
+  }, [actualSetCommandInfo])
 
   const handleFieldChange = useCallback((event) => { // Handle form fields and update QSO info
     const { fieldId, alsoClearTheirCall } = event
     const value = event?.value || event?.nativeEvent?.text
 
-    if (qso?.deleted || qso?._willBeDeleted) {
+    if (qso?.deleted || qso?._willBeDeleted || qso?.event) {
       return
     }
 
@@ -195,7 +199,7 @@ export default function LoggingPanel ({
     }
 
     if (fieldId === 'theirCall') {
-      const { description, allowSpaces } = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo })
+      const { description, allowSpaces } = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, setCommandInfo })
       setCommandInfo({ message: description || undefined, match: !!{ description } || { description } === '' })
       setAllowSpacesInCallField(allowSpaces)
 
@@ -238,13 +242,15 @@ export default function LoggingPanel ({
     if (DEBUG) logTimer('submit', 'handleSubmit start', { reset: true })
 
     setTimeout(async () => { // Run inside a setTimeout to allow for async functions
-      // First, try to process any commands
-      const command = qso?.their?.call
-      const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })
-      if (commandResult) {
-        trackEvent('command', { command })
-        setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
-        return
+      // First, try to process any commands, but only if we're not editing an event
+      if (!qso.event) {
+        const command = qso?.their?.call
+        const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit, setCommandInfo })
+        if (commandResult) {
+          trackEvent('command', { command })
+          setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
+          return
+        }
       }
 
       let eventName = 'edit_qso'
@@ -252,9 +258,9 @@ export default function LoggingPanel ({
       else if (qso?._isNew) eventName = 'add_qso'
       else if (qso?._willBeDeleted === false && qso?.deleted === false) eventName = 'undelete_qso'
 
-      if (qso._willBeDeleted) {
+      if (qso._willBeDeleted !== undefined) {
+        qso.deleted = qso._willBeDeleted
         delete qso._willBeDeleted
-        qso.deleted = true
         dispatch(addQSO({ uuid: operation.uuid, qso }))
         updateLoggingState({
           qso: undefined,
@@ -516,7 +522,7 @@ export default function LoggingPanel ({
             operation={operation}
             vfo={vfo}
             settings={settings}
-            disabled={qso?.deleted || qso?._willBeDeleted}
+            disabled={qso?.deleted || qso?._willBeDeleted || qso?.event}
             styles={styles}
             themeColor={themeColor}
             onSubmitEditing={handleSubmit}

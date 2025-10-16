@@ -55,7 +55,7 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
 
   let operationInfo = getState().operations.info[uuid]
 
-  const qsoCount = qsos.filter(qso => !qso.deleted).length
+  const qsoCount = qsos.filter(qso => !qso.deleted && !qso.event).length
 
   if (startAtMillisMin !== operationInfo?.startAtMillisMin ||
   startAtMillisMax !== operationInfo?.startAtMillisMax ||
@@ -76,6 +76,21 @@ export const queryQSOs = async (query, params) => {
 
 export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
 
+export const addEventQSO = ({ uuid, event, synced = false }) => {
+  const qso = {
+    startAtMillis: event.startAtMillis,
+    endAtMillis: event.endAtMillis,
+    our: { call: 'EVENT' },
+    their: { call: event?.event?.toUpperCase() ?? 'EVENT' },
+    freq: 0,
+    band: 'event',
+    mode: event.event ?? 'event',
+    event,
+  }
+
+  return addQSOs({ uuid, qsos: [qso], synced })
+}
+
 const DEBUG = false
 
 export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
@@ -90,6 +105,8 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     for (const qso of batch) {
       qso.uuid = qso.uuid || UUID.v4()
       qso.operation = uuid
+      qso.startAtMillis = qso.startAtMillis || qso.endAtMillis || now
+      qso.endAtMillis = qso.endAtMillis || qso.startAtMillis || now
       qso.createdAtMillis = qso.createdAtMillis || now
       qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
       qso.updatedAtMillis = now
@@ -143,7 +160,7 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     for (const qso of qsos) {
       dispatch(actions.addQSO({ uuid, qso }))
 
-      if (!qso.deleted) {
+      if (!qso.deleted && !qso.event) {
         if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
         if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
       }
@@ -154,7 +171,7 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
 
     operationInfo.startAtMillisMin = startAtMillisMin
     operationInfo.startAtMillisMax = startAtMillisMax
-    operationInfo.qsoCount = finalQSOs.filter(q => !q.deleted).length
+    operationInfo.qsoCount = finalQSOs.filter(q => !q.deleted && !q.event).length
 
     setImmediate(() => {
       if (DEBUG) console.log('op update', { startAtMillisMin, startAtMillisMax, qsoCount: operationInfo.qsoCount })

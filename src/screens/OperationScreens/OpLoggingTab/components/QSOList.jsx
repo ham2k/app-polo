@@ -18,6 +18,8 @@ import { fmtShortTimeZulu, fmtTimeZulu } from '../../../../tools/timeFormats'
 
 import QSOItem from './QSOItem'
 import QSOHeader from './QSOHeader'
+import EventItem from './EventItem'
+import EventNoteItem from './EventNoteItem'
 
 const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress, lastUUID, selectedUUID, onSelectQSO }) {
   const { width } = useSafeAreaFrame()
@@ -38,10 +40,14 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   const otherOpStylesArgs = useMemo(() => ({
     isDeleted: false, isOtherOperator: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
   }), [componentWidth, width, safeAreaInsets])
+  const eventStylesArgs = useMemo(() => ({
+    isDeleted: false, isOtherOperator: false, isEvent: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
+  }), [componentWidth, width, safeAreaInsets])
 
   const styles = useThemedStyles(_prepareStyles, stylesArgs)
   const stylesForDeleted = useThemedStyles(_prepareStyles, deletedStylesArgs)
   const stylesForOtherOperator = useThemedStyles(_prepareStyles, otherOpStylesArgs)
+  const stylesForEvent = useThemedStyles(_prepareStyles, eventStylesArgs)
 
   const listRef = useRef()
 
@@ -118,12 +124,23 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       qsoStyles = stylesForDeleted
     } else if (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.local?.operatorCall) {
       qsoStyles = stylesForOtherOperator
+    } else if (qso.event) {
+      qsoStyles = stylesForEvent
     } else {
       qsoStyles = styles
     }
 
+    let Component = QSOItem
+    if (qso.band === 'event') {
+      if (qso.mode === 'note') {
+        Component = EventNoteItem
+      } else {
+        Component = EventItem
+      }
+    }
+
     return (
-      <QSOItem
+      <Component
         qso={qso}
         settings={settings}
         selected={qso.uuid === selectedUUID}
@@ -134,7 +151,11 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
         refHandlers={refHandlers}
       />
     )
-  }, [operation, settings, selectedUUID, ourInfo, handlePress, timeFormatFunction, refHandlers, stylesForDeleted, stylesForOtherOperator, styles])
+  }, [
+    operation, settings, selectedUUID, ourInfo,
+    handlePress, timeFormatFunction, refHandlers,
+    stylesForDeleted, stylesForOtherOperator, stylesForEvent, styles
+  ])
 
   const renderHeader = useCallback(({ section, index }) => {
     return (
@@ -200,7 +221,7 @@ const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo
   )
 })
 
-function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeArea }) {
+function _prepareStyles (themeStyles, { isDeleted, isEvent, isOtherOperator, width, safeArea }) {
   const extendedWidth = width / themeStyles.oneSpace > 80
   const narrowWidth = width / themeStyles.oneSpace < 50
 
@@ -209,7 +230,8 @@ function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeA
   let commonStyles = {
     fontSize: themeStyles.normalFontSize,
     lineHeight: themeStyles.normalFontSize * 1.4,
-    borderWidth: DEBUG ? 1 : 0
+    borderWidth: DEBUG ? 1 : 0,
+    color: isEvent ? themeStyles.colors.onNoticeLight : themeStyles.colors.onBackground
   }
 
   if (isDeleted) {
@@ -237,6 +259,7 @@ function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeA
       backgroundColor: themeStyles.colors.secondaryContainer
     },
     unselectedRow: {
+      ...(isEvent ? { backgroundColor: themeStyles.colors.noticeLight } : {})
     },
     compactRow: {
       ...themeStyles.compactRow,

@@ -22,7 +22,7 @@ export function qsonToCabrillo ({ operation, qsos, settings, handler }) {
       .join('\n') + '\n'
   }
 
-  qsos.filter(qso => !qso.deleted).forEach(qso => {
+  qsos.filter(qso => !qso.deleted && !qso.event).forEach(qso => {
     let combinations = handler.qsoToCabrilloParts && handler.qsoToCabrilloParts({ qso, operation, ref })
     if (!Array.isArray(combinations?.[0])) {
       combinations = [combinations]
