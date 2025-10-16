@@ -5,7 +5,8 @@
     "changes": [
       "Annotations in the log (try 'NOTE' or 'WEATHER' or 'SOLAR')",
       "Auto self-spotting every 10 minutes",
-      "Allow spaces in commands (try 'SPOT HERE')"
+      "Allow spaces in commands (try 'SPOT HERE')",
+      "Fix missing keystrokes on Android when pressing 'send' too fast"
     ]
   },
   "25.9.3": {

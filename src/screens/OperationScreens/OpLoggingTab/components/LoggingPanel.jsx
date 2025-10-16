@@ -43,6 +43,7 @@ import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
 const DEBUG = false
 
 let commandInfoTimeout
+let submitTimeout
 
 export default function LoggingPanel ({
   style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo, splitView
@@ -238,7 +239,25 @@ export default function LoggingPanel ({
     }
   }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, setCommandInfo, updateQSO])
 
-  const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
+  // Since our fields and logic often perform some async work,
+  // we need to wait a few milliseconds before submitting to ensure all async work is complete.
+  // But we can't just use a timeout, because we need the function to bind to the latest values.
+  // So we use a state variable and a callback function to set it and an effect to actually submit..
+  const [doSubmit, setDoSubmit] = useState(false)
+
+  const handleSubmit = useCallback(() => { //
+    if (submitTimeout) clearTimeout(submitTimeout)
+
+    submitTimeout = setTimeout(() => {
+      setDoSubmit(true)
+    }, 50)
+  }, [setDoSubmit])
+
+  useEffect(() => { // Actually perform the submission: saving the QSO, or creating a new one
+    if (!doSubmit) return
+
+    setDoSubmit(false)
+
     if (DEBUG) logTimer('submit', 'handleSubmit start', { reset: true })
 
     setTimeout(async () => { // Run inside a setTimeout to allow for async functions
@@ -271,6 +290,12 @@ export default function LoggingPanel ({
           undoInfo: undefined
         })
         trackEvent(eventName, { their_prefix: qso.their.entityPrefix ?? qso.their.guess.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
+      } else if (qso.event && !qso.deleted) {
+        // Events are just saved as-is, no extra processing needed.
+        setTimeout(() => {
+          dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso] }))
+          setQSO(undefined, { otherStateChanges: { lastUUID: qso.uuid } })
+        }, 50)
       } else if (isValidQSO && !qso.deleted) {
         setCurrentSecondaryControl(undefined)
 
@@ -359,7 +384,11 @@ export default function LoggingPanel ({
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
     }, 0)
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
-  }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, isValidQSO, setCommandInfo, setCurrentSecondaryControl, setQSO])
+  }, [
+    qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo,
+    updateQSO, updateLoggingState, handleFieldChange, isValidQSO,
+    setCommandInfo, setCurrentSecondaryControl, setQSO, doSubmit, handleSubmit
+  ])
 
   const handleWipe = useCallback(() => { // Wipe a new QSO
     if (qso?._isNew) {
