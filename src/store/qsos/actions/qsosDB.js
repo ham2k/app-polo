@@ -58,8 +58,8 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
   const qsoCount = qsos.filter(qso => !qso.deleted && !qso.event).length
 
   if (startAtMillisMin !== operationInfo?.startAtMillisMin ||
-  startAtMillisMax !== operationInfo?.startAtMillisMax ||
-  qsoCount !== operationInfo?.qsoCount) {
+    startAtMillisMax !== operationInfo?.startAtMillisMax ||
+    qsoCount !== operationInfo?.qsoCount) {
     operationInfo = { ...operationInfo, startAtMillisMin, startAtMillisMax, qsoCount }
     setImmediate(() => {
       dispatch(operationActions.setOperation(operationInfo))
@@ -76,10 +76,10 @@ export const queryQSOs = async (query, params) => {
 
 export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
 
-export const addEventQSO = ({ uuid, event, synced = false }) => {
+export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = false }) => {
   const qso = {
-    startAtMillis: event.startAtMillis,
-    endAtMillis: event.endAtMillis,
+    startAtMillis,
+    endAtMillis,
     our: { call: 'EVENT' },
     their: { call: event?.event?.toUpperCase() ?? 'EVENT' },
     freq: 0,
@@ -222,7 +222,7 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
   return { earliestSyncedAtMillis, latestSyncedAtMillis }
 }
 
-export async function markQSOsAsSynced (qsos) {
+export async function markQSOsAsSynced(qsos) {
   if (!qsos || qsos.length === 0) return
   await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `"${q.uuid}"`).join(',')})`, [])
 }

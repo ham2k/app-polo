@@ -262,7 +262,9 @@ const ReferenceHandler = {
 
   suggestOperationTitle: (ref) => {
     if (ref.type === Info.activationType && ref.ref) {
-      return { at: ref.ref, subtitle: ref.name, shortSubtitle: ref.shortName }
+      return {
+        at: ref.ref, subtitle: ref.name, shortSubtitle: ref.shortName, description: `${Info.shortName}: ${ref.ref}`
+      }
     } else {
       return null
     }
@@ -315,16 +317,16 @@ const ReferenceHandler = {
     }
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+  scoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
     const { band, mode, uuid, startAtMillis } = qso
-
+    // console.log('  -- POTA scoringForQSO', { ...operation }, { ...scoredRef })
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const refCount = refs.length
     let value
     let type
-    if (ref?.ref) {
+    if (scoredRef?.ref) {
       type = Info.activationType
       value = refCount || 1
     } else {
@@ -334,7 +336,13 @@ const ReferenceHandler = {
 
     if (value === 0) return { value: 0 } // If not activating, only counts if other QSO has a POTA ref
 
-    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
+    const nearDupes = (qsos || []).filter(q => {
+      return !q.deleted
+        && (startAtMillis ? q.startAtMillis < startAtMillis : true)
+        && q.their.call === qso.their.call
+        && q.uuid !== uuid
+        && (scoredRef?.ref ? q.refs.find(r => r.ref === scoredRef.ref) : true)
+    })
 
     if (nearDupes.length === 0) {
       return { value, refCount, type }
@@ -348,7 +356,9 @@ const ReferenceHandler = {
       const sameBand = sameDayDupes.filter(q => q.band === band).length !== 0
       const sameMode = sameDayDupes.filter(q => q.mode === mode).length !== 0
       const sameBandMode = sameDayDupes.filter(q => q.band === band && q.mode === mode).length !== 0
+
       const sameRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
+
       if (sameBandMode && sameDay && (sameRefs || refs.length === 0)) {
         return { value: 0, refCount, alerts: ['duplicate'], type }
       } else {
@@ -379,8 +389,10 @@ const ReferenceHandler = {
     }
 
     if (!score.refs[ref.ref]) { // Track how many parks we're activating
-      score.refs[ref.ref] = true
+      score.refs[ref.ref] = 1
       score.primaryRef = score.primaryRef || ref.ref
+    } else {
+      score.refs[ref.ref] += 1
     }
 
     if (score.primaryRef === ref.ref) { // Only do scoring for the primary ref
@@ -393,6 +405,8 @@ const ReferenceHandler = {
   },
 
   summarizeScore: ({ score, operation, ref, section }) => {
+    console.log('  -- POTA summarizeScore', { ...score }, { ...operation }, { ...ref }, { ...section })
+
     score.activated = score.value >= 10
 
     if (score.activated) {
@@ -415,7 +429,7 @@ const ReferenceHandler = {
   }
 }
 
-function _simplifyPOTAStates (locationDesc) {
+function _simplifyPOTAStates(locationDesc) {
   if (!locationDesc) return ''
   const states = locationDesc.split(',')
   const oneState = states[0].split('-', 2)[1]?.trim()

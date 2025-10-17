@@ -38,7 +38,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
 
         <Text style={[styles.fields.header, { flex: 1 }]}>{' '}</Text>
 
-        {Object.keys(section.scores ?? {}).sort((a, b) => (section.scores[a].weight ?? 0) - (section.scores[b].weight ?? 0)).map(key => {
+        {Object.keys(section.scores ?? {}).sort((a, b) => (section.scores[a]?.weight ?? 0) - (section.scores[b]?.weight ?? 0)).map(key => {
           const score = section.scores[key] ?? {}
           const refKeys = Object.keys(score.refs ?? { one: true })
 

@@ -11,6 +11,7 @@ import { saveOperation, saveOperationLocalData } from './operationsDB'
 import { findHooks } from '../../../extensions/registry'
 import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
+import { addQSO, newEventQSO, selectQSOs } from '../../qsos'
 
 export const setOperationLocalData = (data) => async (dispatch, getState) => {
   try {
@@ -35,11 +36,17 @@ export const setOperationLocalData = (data) => async (dispatch, getState) => {
 export const setOperationData = (data) => async (dispatch, getState) => {
   try {
     const { uuid } = data
-    const operation = selectOperation(getState(), uuid) ?? {}
+    const state = getState()
+    const operation = selectOperation(state, uuid) ?? {}
+    const qsos = selectQSOs(state, uuid) ?? []
+
     const mergedOperation = await dispatch(mergeDataIntoOperation({ operation, data }))
+
+    await updateOperationBreakOrStart({ operation: mergedOperation, qsos, dispatch })
 
     await dispatch(actions.setOperation(mergedOperation))
     const savedOperation = selectOperation(getState(), uuid) ?? {}
+
     return dispatch(saveOperation(savedOperation))
   } catch (e) {
     console.log('Error in setOperationData', e)
@@ -120,4 +127,154 @@ export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, 
   }
 
   return { ...operation, ...data }
+}
+
+const DEBUG = true
+export async function markOperationStart({ operation, qsos, dispatch }) {
+  if (!operation) return
+  if (DEBUG) console.log('markOperationStart', operation, qsos)
+  if (qsos?.find(qso => qso.event?.event === 'start')) {
+    if (DEBUG) console.log('-- already started')
+    return
+  }
+
+  if (DEBUG) console.log('-- adding start event', captureOperationParameters({ operation }))
+  if (DEBUG) console.log('-- description', describeOperation({ operation }))
+  await dispatch(newEventQSO({
+    uuid: operation.uuid,
+    startAtMillis: qsos?.[0] ? qsos[0].startAtMillis - 1000 : Date.now(),
+    event: {
+      event: 'start',
+      operation: captureOperationParameters({ operation }),
+      description: describeOperation({ operation }),
+    }
+  }))
+}
+
+export async function updateOperationBreakOrStart({ operation, qsos, dispatch }) {
+  if (!operation) return
+
+  if (DEBUG) console.log('updateOperationBreakOrStart')
+  const lastBreakOrStart = qsos?.findLast(qso => qso.event?.event === 'break' || qso.event?.event === 'start')
+  if (!lastBreakOrStart) {
+    if (DEBUG) console.log('-- no last break or start')
+    // Do nothing, since the operation has no breaks or starts
+  } else {
+    const data = captureOperationParameters({ operation })
+    if (DEBUG) console.log('-- last break or start', lastBreakOrStart.event)
+    if (DEBUG) console.log('-- data', data)
+    if (DEBUG) console.log('-- describeOperation', describeOperation({ operation: data }))
+    // Compare current operation data with last break/start event data
+
+    if (JSON.stringify(data) === JSON.stringify(lastBreakOrStart?.event?.operation)) {
+      return // No changes needed if data matches
+    }
+
+    if (DEBUG) console.log('-- data changed, updating event')
+    await dispatch(addQSO({
+      uuid: operation.uuid,
+      qso: {
+        ...lastBreakOrStart,
+        event: {
+          ...lastBreakOrStart.event,
+          operation: data,
+          description: describeOperation({ operation: data }),
+        }
+      }
+    }))
+  }
+}
+
+export async function markOperationBreak({ operation, qsos, dispatch }) {
+  if (!operation) return
+
+  if (DEBUG) console.log('markOperationBreak')
+  const lastBreakOrStart = qsos?.findLast(qso => qso.event?.event === 'break' || qso.event?.event === 'start')
+  if (!lastBreakOrStart) {
+    if (DEBUG) console.log('-- no last break or start, adding start')
+    await markOperationStart({ operation, qsos, dispatch })
+  } else {
+    await updateOperationBreakOrStart({ operation, qsos, dispatch, lastBreakOrStart })
+  }
+
+  if (DEBUG) console.log('-- adding break event', captureOperationParameters({ operation }))
+  await dispatch(newEventQSO({
+    uuid: operation.uuid,
+    event: {
+      event: 'break',
+      operation: captureOperationParameters({ operation }),
+      description: describeOperation({ operation })
+    }
+  }))
+}
+
+export async function markOperationStop({ operation, qsos, dispatch }) {
+  if (!operation) return
+
+  const previousStop = qsos?.findLast(qso => qso.event?.event === 'stop')
+
+  if (previousStop) {
+    await dispatch(addQSO({
+      uuid: operation.uuid,
+      qso: {
+        ...previousStop,
+        startAtMillis: Date.now(),
+        endAtMillis: undefined,
+        event: {
+          ...previousStop.event,
+          operation: captureOperationParameters({ operation }),
+          description: describeOperation({ operation })
+        }
+      }
+    }))
+  } else {
+    await dispatch(newEventQSO({
+      uuid: operation.uuid,
+      startAtMillis: Date.now(),
+      endAtMillis: undefined,
+      event: {
+        event: 'stop'
+      }
+    }))
+  }
+}
+
+export function captureOperationParameters({ operation }) {
+  if (!operation) return {}
+  const params = {}
+  if (operation?.refs) params.refs = operation.refs
+  if (operation?.grid) params.grid = operation.grid
+  return params
+}
+
+export function describeOperation({ operation }) {
+  console.log('describeOperation', operation)
+  if (!operation) return ''
+
+  const referenceTitles = (operation?.refs ?? []).map(ref => {
+    const hooks = findHooks(`ref:${ref?.type}`)
+    return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref)).filter(x => x)[0]
+  }).filter(x => x).sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
+
+  const titleParts = []
+
+  referenceTitles.forEach(ref => {
+    if (ref.description) {
+      titleParts.push(ref.description)
+    } else if (ref.at) {
+      titleParts.push(`at ${ref.at}`)
+    } else if (ref.for) {
+      titleParts.push('for ' + ref.for)
+    } else if (ref.title) {
+      titleParts.push(ref.title)
+    } else if (ref.subtitle) {
+      titleParts.push(ref.subtitle)
+    }
+  })
+
+  if (operation.grid) {
+    titleParts.push(`at ${operation.grid}`)
+  }
+  console.log('-- titleParts', titleParts)
+  return titleParts.join(' ')
 }

@@ -215,7 +215,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   }, [guess?.note, guess?.name, call, theirCall, allCalls?.length, lookup?.error, qso?.their?.name])
 
   const scoreInfo = useMemo(() => {
-    const scoringHandlers = scoringHandlersForOperation(operation, settings)
+    const scoringHandlers = scoringHandlersForOperation({ operation, settings })
 
     const lastSection = sections && sections[sections.length - 1]
     const scores = scoringHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, score: lastSection?.scores?.[ref.type || ref.key], operation, ref })).filter(x => x)

@@ -180,7 +180,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   }, [spotsHooks, filterState, vfo, spotsState.spots])
 
   const scoredSpots = useMemo(() => {
-    const scoringHandlers = scoringHandlersForOperation(operation, settings)
+    const scoringHandlers = scoringHandlersForOperation({ operation, settings })
 
     return filteredSpots.map(rawSpot => {
       const spot = { ...rawSpot }

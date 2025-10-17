@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
@@ -118,7 +118,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
               {section.count === 0 ? 'No QSOs' : section.count === 1 ? '1 QSO' : `${fmtNumber(section.count ?? 0)} QSOs`}
             </Text>
           </Text>
-          {Object.keys(section.scores ?? {}).filter(key => section.scores[key].for === 'day').sort((a, b) => (section.scores[a].weight ?? 0) - (section.scores[b].weight ?? 0)).map(key => {
+          {Object.keys(section.scores ?? {}).filter(key => section.scores[key] && section.scores[key].for === 'day').sort((a, b) => (section.scores[a]?.weight ?? 0) - (section.scores[b]?.weight ?? 0)).map(key => {
             const score = section.scores[key]
 
             const refKeys = Object.keys(score.refs ?? { one: true })
@@ -158,7 +158,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
             {operation.qsoCount === 0 ? 'No QSOs' : operation.qsoCount === 1 ? '1 QSO' : `${fmtNumber(operation.qsoCount ?? 0)} QSOs`}
           </Text>
         </Text>
-        {Object.keys(lastSection?.scores ?? {}).filter(key => lastSection.scores[key].for !== 'day').sort((a, b) => (lastSection.scores[a].weight ?? 0) - (lastSection.scores[b].weight ?? 0)).map(key => {
+        {Object.keys(lastSection?.scores ?? {}).filter(key => lastSection.scores[key] && lastSection.scores[key].for !== 'day').sort((a, b) => (lastSection.scores[a].weight ?? 0) - (lastSection.scores[b].weight ?? 0)).map(key => {
           const score = lastSection.scores[key]
 
           const refKeys = Object.keys(score.refs ?? { one: true })

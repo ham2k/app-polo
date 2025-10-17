@@ -9,7 +9,7 @@ import { reportError } from '../../distro'
 
 import { findHooks } from '../registry'
 
-export function checkAndProcessCommands (value, extraParams) {
+export function checkAndProcessCommands(value, extraParams) {
   const { matchingCommand, match } = findMatchingCommand(value)
 
   if (matchingCommand && matchingCommand.invokeCommand) {
@@ -32,36 +32,36 @@ export function checkAndProcessCommands (value, extraParams) {
       callWasCleared = true
     }
 
-    try {
-      const result = matchingCommand.invokeCommand(
-        match,
-        {
-          ...extraParams,
-          handleFieldChange: handleFieldChangeWrapper,
-          updateQSO: updateQSOWrapper,
-          handleSubmit: handleSubmitWrapper
-        }
-      )
-      if (!callWasCleared) {
-        updateQSO && updateQSO({ their: { call: '' } })
+    // try {
+    const result = matchingCommand.invokeCommand(
+      match,
+      {
+        ...extraParams,
+        handleFieldChange: handleFieldChangeWrapper,
+        updateQSO: updateQSOWrapper,
+        handleSubmit: handleSubmitWrapper
       }
-
-      return result ?? true
-    } catch (e) {
-      console.error('Error in checkAndProcessCommands', e)
-      if (e.message === 'Test error!') {
-        throw e
-      } else {
-        reportError(`Error in checkAndProcessCommands invocation for '${matchingCommand.key}'`, e)
-        return false
-      }
+    )
+    if (!callWasCleared) {
+      updateQSO && updateQSO({ their: { call: '' } })
     }
+
+    return result ?? true
+    // } catch (e) {
+    //   console.error('Error in checkAndProcessCommands', e)
+    //   if (e.message === 'Test error!') {
+    //     throw e
+    //   } else {
+    //     reportError(`Error in checkAndProcessCommands invocation for '${matchingCommand.key}'`, e)
+    //     return false
+    //   }
+    // }
   } else {
     return false
   }
 }
 
-export function checkAndDescribeCommands (value, extraParams) {
+export function checkAndDescribeCommands(value, extraParams) {
   const { matchingCommand, match } = findMatchingCommand(value)
 
   if (matchingCommand) {
@@ -88,7 +88,7 @@ export function checkAndDescribeCommands (value, extraParams) {
   }
 }
 
-export function findMatchingCommand (value) {
+export function findMatchingCommand(value) {
   const hooks = findHooks('command')
   let match
 
