@@ -770,7 +770,7 @@ function _nearDupesFor({ qp, qso, qsos, operation, ourLocations, theirLocations,
 
   // debugger
   const nearDupes = qsos.filter(q => {
-    if (q.event?.event === 'break' || q.event?.event === 'start') {
+    if (!q.deleted && (q.event?.event === 'break' || q.event?.event === 'start')) {
       ourRollingLocations = qpParseLocations({ qp, location: findRef(q.event.operation, Info.key)?.location, weAreInState, theyAreInState })
     }
 

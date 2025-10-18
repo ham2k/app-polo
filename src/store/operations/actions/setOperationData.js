@@ -153,7 +153,7 @@ export async function updateOperationBreakOrStart({ operation, qsos, dispatch })
   if (!operation) return
 
   if (DEBUG) console.log('updateOperationBreakOrStart')
-  const lastBreakOrStart = qsos?.findLast(qso => qso.event?.event === 'break' || qso.event?.event === 'start')
+  const lastBreakOrStart = qsos?.findLast(qso => !qso.deleted && (qso.event?.event === 'break' || qso.event?.event === 'start'))
   if (!lastBreakOrStart) {
     if (DEBUG) console.log('-- no last break or start')
     // Do nothing, since the operation has no breaks or starts
@@ -188,7 +188,7 @@ export async function markOperationBreak({ operation, qsos, dispatch }) {
   if (!operation) return
 
   if (DEBUG) console.log('markOperationBreak')
-  const lastBreakOrStart = qsos?.findLast(qso => qso.event?.event === 'break' || qso.event?.event === 'start')
+  const lastBreakOrStart = qsos?.findLast(qso => !qso.deleted && (qso.event?.event === 'break' || qso.event?.event === 'start'))
   if (!lastBreakOrStart) {
     if (DEBUG) console.log('-- no last break or start, adding start')
     await markOperationStart({ operation, qsos, dispatch })
