@@ -122,10 +122,10 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
     let qsoStyles
     if (qso.deleted) {
       qsoStyles = stylesForDeleted
-    } else if (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.local?.operatorCall) {
-      qsoStyles = stylesForOtherOperator
     } else if (qso.event) {
       qsoStyles = stylesForEvent
+    } else if (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.local?.operatorCall) {
+      qsoStyles = stylesForOtherOperator
     } else {
       qsoStyles = styles
     }

@@ -23,7 +23,7 @@ const EventNoteItem = React.memo(function EventNoteItem ({ qso, ourInfo, onPress
         <Text style={styles.fields.icons}>
           <H2kIcon name="note-outline" size={styles.normalFontSize} style={styles.fields.icon} />
         </Text>
-        <Text style={styles.fields.location}>
+        <Text style={[styles.fields.location, { paddingTop: styles.oneSpace * 0.2, height: styles.oneSpace * 4 }]}>
           <H2kMarkdown>{qso.event.note}</H2kMarkdown>
         </Text>
       </View>
