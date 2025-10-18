@@ -57,34 +57,49 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
     }
   }, [message, qsos.length, styles.theme.colors.error])
 
+  const ourQSOs = useMemo(() => {
+    if (operation?.local?.operatorCall) {
+      return qsos.filter(q => q?.our?.operatorCall === operation?.local?.operatorCall)
+    }
+    return qsos
+  }, [qsos, operation?.local?.operatorCall])
+
   const line1 = useMemo(() => {
     const parts = []
 
-    parts.push(`${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`)
+    if (ourQSOs.length === 0) {
+      if (operation?.local?.operatorCall) {
+        return `No QSOs by ${operation?.local?.operatorCall} yet... Let's get on the air!`
+      } else {
+        return "No QSOs yet... Let's get on the air!"
+      }
+    }
 
-    if (now - operation.startAtMillisMax < 1000 * 60 * 60 * 4) {
-      if (qsos.length > 0) {
-        parts.push(`${fmtTimeBetween(operation.startAtMillisMax, now)} since last QSO`)
+    parts.push(`${ourQSOs.length} ${ourQSOs.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(ourQSOs[0].startAtMillis, ourQSOs[ourQSOs.length - 1].startAtMillis)}`)
+
+    if (now - ourQSOs[ourQSOs.length - 1].startAtMillis < 1000 * 60 * 60 * 4) {
+      if (ourQSOs.length > 0) {
+        parts.push(`${fmtTimeBetween(ourQSOs[ourQSOs.length - 1].startAtMillis, now)} since last QSO`)
       }
     }
     return parts.filter(x => x).join(' • ')
-  }, [qsos, operation, now])
+  }, [ourQSOs, now])
 
   const line2 = useMemo(() => {
     const parts = []
 
-    const last = qsos?.length - 1
+    const last = ourQSOs?.length - 1
     if (last > 9) {
-      const rate = (10 / ((qsos[last].startAtMillis - qsos[last - 9].startAtMillis) / 1000 / 60)) * 60
+      const rate = (10 / ((ourQSOs[last].startAtMillis - ourQSOs[last - 9].startAtMillis) / 1000 / 60)) * 60
       if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 10`)
     }
     if (last > 99) {
-      const rate = (100 / ((qsos[last].startAtMillis - qsos[last - 99].startAtMillis) / 1000 / 60)) * 60
+      const rate = (100 / ((ourQSOs[last].startAtMillis - ourQSOs[last - 99].startAtMillis) / 1000 / 60)) * 60
       if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 100`)
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qsos])
+  }, [ourQSOs])
 
   return (
     <TouchableRipple onPress={() => navigation.navigate('OpInfo', { operation, uuid: operation.uuid })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>

@@ -276,5 +276,5 @@ export function describeOperation({ operation }) {
     titleParts.push(`at ${operation.grid}`)
   }
   console.log('-- titleParts', titleParts)
-  return titleParts.join(' ')
+  return titleParts.join(' • ')
 }
