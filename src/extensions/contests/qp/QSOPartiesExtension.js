@@ -278,17 +278,17 @@ const ReferenceHandler = {
 
   scoringForQSO: ({ qso, qsos, operation, ref: scoredRef, score }) => {
     const qp = qpData({ ref: scoredRef })
-    console.log('scoringForQSO', qso.key, scoredRef)
+    // console.log('scoringForQSO', qso.key, scoredRef)
 
     let ourLocations = qpParseLocations({ qp, location: scoredRef?.location })
-    console.log('-- ourLocations', ourLocations)
+    // console.log('-- ourLocations', ourLocations)
     let weAreInState = ourLocations?.every(loc => loc.inState)
 
     const qsoRef = findRef(qso, Info.key)
 
     let theirLocations = qpParseLocations({ qp, location: qsoRef?.location, weAreInState })
     let theyAreInState = theirLocations?.every(loc => loc.inState)
-    console.log('-- theirLocations', theirLocations)
+    // console.log('-- theirLocations', theirLocations)
 
     const locationGuess = qsoRef?.location ?? _defaultLocationFor({ qso, qp, qsos, operation })
 

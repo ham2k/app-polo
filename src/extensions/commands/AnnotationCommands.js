@@ -27,6 +27,7 @@ const Extension = {
   alwaysEnabled: true,
   onActivation: ({ registerHook }) => {
     registerHook('command', { priority: 100, hook: NotesCommandHook })
+    registerHook('command', { priority: 100, hook: ChatCommandHook })
     registerHook('command', { priority: 100, hook: EarthWeatherCommandHook })
     registerHook('command', { priority: 100, hook: SolarWeatherCommandHook })
   }
@@ -38,7 +39,7 @@ const NotesCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-misc-spot',
-  match: /^(NOTES|NOTE)(|[ /.]|[\s\w\d!,.-_]*)$/i,
+  match: /^(NOTES|NOTE)(|[ /.]|.+)$/i,
   allowSpaces: true,
   describeCommand: (match, { operation }) => {
     if (!operation) { return false }
@@ -67,6 +68,45 @@ const NotesCommandHook = {
       dispatch(newEventQSO({ uuid: operation.uuid, event }))
 
       return `Note added!`
+    }
+  }
+}
+
+const ChatCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-misc-chat',
+  match: /^(CHAT)(|[ /.]|.+)$/i,
+  allowSpaces: true,
+  describeCommand: (match, { operation }) => {
+    if (!operation) { return false }
+
+    let note = match[2]?.substring(1) || ''
+
+    if (note) {
+      note = note.trim()
+      return `Send chat: ‘${note}’?`
+    } else {
+      return 'Send a chat? keep typing…'
+    }
+  },
+  invokeCommand: (match, { operation, dispatch, settings }) => {
+    if (!operation) { return }
+
+    let note = match[2]?.substring(1) || ''
+
+    if (note) {
+      note = note.trim()
+      const event = {
+        event: 'chat',
+        command: `CHAT ${note}`,
+        icon: 'chat-outline',
+        note,
+        description: `**${operation.local?.operatorCall}**: ${note}`
+      }
+      dispatch(newEventQSO({ uuid: operation.uuid, event }))
+
+      return `Chatted!`
     }
   }
 }

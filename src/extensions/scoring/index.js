@@ -15,7 +15,7 @@ import { reportError } from '../../distro'
 
 const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
-const VERBOSE = 1
+const VERBOSE = 0
 const DEBUG_KEYS = ['pota', 'qp']
 
 export function scoringHandlersForOperation({ operation, settings }) {

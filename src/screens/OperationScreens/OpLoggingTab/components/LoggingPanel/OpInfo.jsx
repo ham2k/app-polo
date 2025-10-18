@@ -83,7 +83,7 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
       }
     }
     return parts.filter(x => x).join(' • ')
-  }, [ourQSOs, now])
+  }, [ourQSOs, now, operation?.local?.operatorCall])
 
   const line2 = useMemo(() => {
     const parts = []

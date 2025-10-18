@@ -9,7 +9,7 @@ import React, { useCallback } from 'react'
 import { Text, TouchableRipple } from 'react-native-paper'
 import { View } from 'react-native'
 
-import { H2kIcon } from '../../../../ui'
+import { H2kIcon, H2kMarkdown } from '../../../../ui'
 
 const EventItem = React.memo(function NoteItem ({ qso, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
   const pressHandler = useCallback(() => {
@@ -23,8 +23,8 @@ const EventItem = React.memo(function NoteItem ({ qso, ourInfo, onPress, styles,
         <Text style={styles.fields.icons}>
           <H2kIcon name={qso.event.icon ?? 'information-outline'} size={styles.normalFontSize} style={styles.fields.icon} />
         </Text>
-        <Text style={styles.fields.location}>
-          {qso.event.description ?? qso.event.event.toUpperCase()}
+        <Text style={[styles.fields.location, { paddingTop: styles.oneSpace * 0.2, height: styles.oneSpace * 4 }]}>
+          <H2kMarkdown>{qso.event.description ?? qso.event.event.toUpperCase()}</H2kMarkdown>
         </Text>
       </View>
     </TouchableRipple>

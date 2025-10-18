@@ -80,7 +80,7 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
   const qso = {
     startAtMillis,
     endAtMillis,
-    our: { call: 'EVENT' },
+    our: { call: 'EVENT', operatorCall: operation?.local?.operatorCall },
     their: { call: event?.event?.toUpperCase() ?? 'EVENT' },
     freq: 0,
     band: 'event',
