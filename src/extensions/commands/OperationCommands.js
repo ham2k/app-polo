@@ -11,7 +11,6 @@ import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
 import { postSpots, retrieveHooksWithSpotting } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
 import { fmtFreqInMHz } from '../../tools/frequencyFormats'
-import { newEventQSO, addQSO } from '../../store/qsos'
 import { fetchWithTimeout } from '../../tools/fetchWithTimeout'
 import Geolocation from '@react-native-community/geolocation'
 import { findHooks } from '../registry'

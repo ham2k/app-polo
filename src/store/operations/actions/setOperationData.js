@@ -17,8 +17,6 @@ export const setOperationLocalData = (data) => async (dispatch, getState) => {
   try {
     const { uuid } = data
 
-    if (data.power) data.power = parseInt(data.power, 10)
-
     if (data.freq) {
       data.band = bandForFrequency(data.freq)
     } else if (data.band) {
@@ -146,7 +144,7 @@ export async function markOperationStart({ operation, qsos, dispatch }) {
     event: {
       event: 'start',
       operation: captureOperationParameters({ operation }),
-      description: describeOperation({ operation }),
+      operatorCall: operation?.local?.operatorCall
     }
   }))
 }
@@ -179,6 +177,7 @@ export async function updateOperationBreakOrStart({ operation, qsos, dispatch })
           ...lastBreakOrStart.event,
           operation: data,
           description: describeOperation({ operation: data }),
+          operatorCall: operation?.local?.operatorCall
         }
       }
     }))
@@ -203,7 +202,8 @@ export async function markOperationBreak({ operation, qsos, dispatch }) {
     event: {
       event: 'break',
       operation: captureOperationParameters({ operation }),
-      description: describeOperation({ operation })
+      description: describeOperation({ operation }),
+      operatorCall: operation?.local?.operatorCall
     }
   }))
 }
@@ -223,7 +223,8 @@ export async function markOperationStop({ operation, qsos, dispatch }) {
         event: {
           ...previousStop.event,
           operation: captureOperationParameters({ operation }),
-          description: describeOperation({ operation })
+          description: describeOperation({ operation }),
+          operatorCall: operation?.local?.operatorCall
         }
       }
     }))
@@ -233,7 +234,9 @@ export async function markOperationStop({ operation, qsos, dispatch }) {
       startAtMillis: Date.now(),
       endAtMillis: undefined,
       event: {
-        event: 'stop'
+        event: 'stop',
+        operation: captureOperationParameters({ operation }),
+        operatorCall: operation?.local?.operatorCall
       }
     }))
   }

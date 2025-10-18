@@ -63,7 +63,8 @@ const NotesCommandHook = {
       const event = {
         event: 'note',
         command: `NOTE ${note}`,
-        note
+        note,
+        operatorCall: operation?.local?.operatorCall
       }
       dispatch(newEventQSO({ uuid: operation.uuid, event }))
 
@@ -102,7 +103,8 @@ const ChatCommandHook = {
         command: `CHAT ${note}`,
         icon: 'chat-outline',
         note,
-        description: `**${operation.local?.operatorCall}**: ${note}`
+        description: `**${operation.local?.operatorCall}**: ${note}`,
+        operatorCall: operation?.local?.operatorCall
       }
       dispatch(newEventQSO({ uuid: operation.uuid, event }))
 
@@ -148,7 +150,8 @@ const EarthWeatherCommandHook = {
             event: 'weather',
             weatherData,
             icon: 'weather-sunny',
-            description: message
+            description: message,
+            operatorCall: operation?.local?.operatorCall
           }
         }))
       }
@@ -189,7 +192,8 @@ const SolarWeatherCommandHook = {
             event: 'solar',
             solarData,
             icon: 'sun-wireless',
-            description: message
+            description: message,
+            operatorCall: operation?.local?.operatorCall
           }
         }))
       }
