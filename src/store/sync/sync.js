@@ -50,7 +50,7 @@ let errorCount = 0
  * to trigger a single round of syncing with a small batch size.
  */
 
-export function useSyncLoop ({ dispatch, settings, online, appState }) {
+export function useSyncLoop({ dispatch, settings, online, appState }) {
   const localData = useSelector(selectLocalData)
   const [lastSettings, setLastSettings] = useState()
 
@@ -84,7 +84,7 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
       if (VERBOSE > 1) console.log(' -- account changed, sync disabled')
       setGoAheadWithSync(false)
       // logRemotely({ message: 'account changed, sync disabled', currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
-      _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID})
+      _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
     } else {
       if (VERBOSE > 1) console.log(' -- no account, sync enabled')
       // No account, try to sync anyway
@@ -122,7 +122,7 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
     setImmediate(() => {
       dispatch(startTickTock())
       const diff = ((tick || 0) - (GLOBAL.lastSyncLoop || 0))
-      const maxTime = (GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD) * 1000
+      const maxTime = (GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD)
 
       if (VERBOSE > 0) console.log('⏱️ Sync tick', tick, { last: GLOBAL.lastSyncLoop, tick, diff, max: maxTime, online })
       if (goAheadWithSync && GLOBAL.syncEnabled && online && diff > maxTime) {
@@ -133,7 +133,7 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
   }, [appState, dispatch, online, goAheadWithSync, tick])
 }
 
-function _scheduleNextSyncLoop ({ dispatch, delay }, loop) {
+function _scheduleNextSyncLoop({ dispatch, delay }, loop) {
   if (delay === undefined) {
     delay = GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY
   }
@@ -143,13 +143,13 @@ function _scheduleNextSyncLoop ({ dispatch, delay }, loop) {
   }
 }
 
-export async function sendQSOsToSyncService ({ dispatch }) {
+export async function sendQSOsToSyncService({ dispatch }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
     await _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly: true })
   })
 }
 
-export async function sendOperationsToSyncService ({ dispatch }) {
+export async function sendOperationsToSyncService({ dispatch }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
     await _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly: true })
   })
@@ -165,7 +165,7 @@ export async function sendOperationsToSyncService ({ dispatch }) {
  * - Scheduling the next sync loop
  * - Handling errors
  */
-async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
+async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
   if (!GLOBAL.syncEnabled) return
 
   _takeOverSyncLoop()
@@ -285,7 +285,7 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
       }
 
       // logRemotely({ message: 'syncing', qsos: syncPayload.qsos?.length, operations: syncPayload.operations?.length, settings: !!syncPayload.settings, meta: !!syncPayload.meta })
-      if (VERBOSE > 0) console.log(' -- sync payload', { qsos: syncPayload.qsos?.length, operations: syncPayload.operations?.length, settings: !!syncPayload.settings, meta: syncPayload.meta})
+      if (VERBOSE > 0) console.log(' -- sync payload', { qsos: syncPayload.qsos?.length, operations: syncPayload.operations?.length, settings: !!syncPayload.settings, meta: syncPayload.meta })
 
       // Call the server's `sync` endpoint
       if (VERBOSE > 2) console.log(' -- calling hook', { meta: syncPayload.meta, sync: syncPayload.meta?.sync, operations: syncPayload.operations?.length, qsos: syncPayload.qsos?.length, settings: Object.keys(syncPayload?.settings || {}).length })
@@ -307,7 +307,7 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
           // Merge QSOs and operations sent from the server
           const syncTimes = {}
           if (inboundSync && response.json.operations?.length > 0) {
-            const { latestSyncedAtMillis, earliestSyncedAtMillis }  = await dispatch(mergeSyncOperations({ operations: response.json.operations }))
+            const { latestSyncedAtMillis, earliestSyncedAtMillis } = await dispatch(mergeSyncOperations({ operations: response.json.operations }))
             if (VERBOSE > 1) console.log(' -- new operations', response.json.operations.length, { latestSyncedAtMillis, earliestSyncedAtMillis })
 
             syncTimes.lastestOperationSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestOperationSyncedAtMillis ?? 0)
@@ -390,7 +390,7 @@ async function _doOneRoundOfSyncing ({ dispatch, oneSmallBatchOnly = false }) {
 let nextSyncLoopInterval = 0
 let lastDebouncedSync = 0
 
-function _takeOverSyncLoop () {
+function _takeOverSyncLoop() {
   // No new loops will be scheduled as long as `nextSyncLoopInterval` is true
   if (nextSyncLoopInterval && nextSyncLoopInterval !== true) {
     clearTimeout(nextSyncLoopInterval)
@@ -399,7 +399,7 @@ function _takeOverSyncLoop () {
   lastDebouncedSync = 0
 }
 
-function _releaseSyncLoop () {
+function _releaseSyncLoop() {
   // Allow new loops to be scheduled
   lastDebouncedSync = 0
   if (nextSyncLoopInterval === true) {
@@ -408,7 +408,7 @@ function _releaseSyncLoop () {
   }
 }
 
-function _scheduleDebouncedFunctionForSyncLoop (fn) {
+function _scheduleDebouncedFunctionForSyncLoop(fn) {
   console.log('_scheduleDebouncedFunctionForSyncLoop')
   if (nextSyncLoopInterval !== true) {
     console.log(' -- debouncing')
@@ -432,7 +432,7 @@ function _scheduleDebouncedFunctionForSyncLoop (fn) {
   }
 }
 
-async function _processResponseMeta ({ response = {}, localData = {}, dispatch }) {
+async function _processResponseMeta({ response = {}, localData = {}, dispatch }) {
   const { json = {}, ok } = response
   const { meta = {}, account = {} } = json
   const { sync = {} } = localData
@@ -443,8 +443,8 @@ async function _processResponseMeta ({ response = {}, localData = {}, dispatch }
     // Let the user know so they can address this in the settings.
     currentAccountUUID = account?.uuid
     if (VERBOSE > 1) console.log(' -- account changed, sync ignored', { lastSyncAccountUUID: sync.lastSyncAccountUUID, newAccountUUID: account.uuid })
-      // logRemotely({ message: 'account changed, sync ignored', currentAccountUUID, lastSyncAccountUUID: localData.sync?.lastSyncAccountUUID })
-    _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAccountUUID: sync.lastSyncAccountUUID})
+    // logRemotely({ message: 'account changed, sync ignored', currentAccountUUID, lastSyncAccountUUID: localData.sync?.lastSyncAccountUUID })
+    _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAccountUUID: sync.lastSyncAccountUUID })
     return false
   }
 
@@ -520,7 +520,7 @@ async function _processResponseMeta ({ response = {}, localData = {}, dispatch }
 
 let _lastAccountNotified = 0
 
-function _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAccountUUID}) {
+function _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAccountUUID }) {
   if (_lastAccountNotified === currentAccountUUID) return
   _lastAccountNotified = currentAccountUUID
   return dispatch(addNotice({
@@ -534,7 +534,7 @@ function _addNoticeForAccountChanged({dispatch, currentAccountUUID, lastSyncAcco
       {
         action: 'navigate',
         label: 'Open Settings',
-        args: [ 'Settings', { screen: 'SyncSettings' } ]
+        args: ['Settings', { screen: 'SyncSettings' }]
       }
     ]
   }))
