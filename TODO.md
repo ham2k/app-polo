@@ -1,17 +1,17 @@
 # General Package Maintenance Tasks
 
+### React Native Screens
+
+To update past 4.16 we need to change some things on Android
+* https://github.com/software-mansion/react-native-screens/releases/tag/4.16.0
+* https://github.com/software-mansion/react-native-screens?tab=readme-ov-file#android
+
+
 
 ### React Native Share
 
 Versions 12.1.1 and later remove `root-path` from file sharing https://github.com/react-native-share/react-native-share/pull/1680
 This seems to break our file exports. We probably need to implement a [custom File Provider](https://react-native-share.github.io/react-native-share/docs/install#adding-your-implementation-of-fileprovider)
-
-
-### Mapbox
-
-There's a bug that prevents compilation with the latest versions. It's fixed using `patch-package` and a custom patch.
-
-The actual fix is supposed to have been merged in the upcoming 10.1.42 version, but it's not available yet.
 
 
 
@@ -27,6 +27,7 @@ They split the package into multiple packages. Also, we should change how PaperI
 for other icon sets, instead of the current implementation in Ham2kIcon
 
 https://github.com/oblador/react-native-vector-icons/blob/master/MIGRATION.md
+
 
 
 ### React Native Paper
@@ -46,7 +47,22 @@ onValueChange={(v) => {
 }
 ```
 
+
 ### Android Edge-to-edge
 
 The bottom nav bar is not fully transparent in Android.
 To fix, we need to use https://github.com/kadiraydinli/react-native-system-navigation-bar
+
+
+
+### React Native Config
+
+This issue prevents us from updating to 1.5.9
+https://github.com/lugg/react-native-config/issues/848
+
+
+
+### React Native SQLite
+
+Consider migrating to https://github.com/margelo/react-native-nitro-sqlite
+or https://github.com/OP-Engineering/op-sqlite
