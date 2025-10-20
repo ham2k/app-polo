@@ -8,6 +8,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { View } from 'react-native'
 import { Text, TouchableRipple } from 'react-native-paper'
+import { useSelector } from 'react-redux'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
@@ -15,8 +16,10 @@ import { fmtDateZuluDynamic } from '../../../tools/timeFormats'
 import { tweakStringForVoiceOver } from '../../../tools/a11yTools'
 import { buildTitleForOperation } from '../../OperationScreens/OperationScreen'
 import { H2kMarkdown } from '../../../ui'
+import { selectOperation } from '../../../store/operations'
 
-export default function OperationItem ({ operation, settings, onPress, styles, style }) {
+export default function OperationItem ({ operationId, settings, onPress, styles, style }) {
+  const operation = useSelector(state => selectOperation(state, operationId))
   const pressHandler = useCallback(() => {
     onPress && onPress(operation)
   }, [onPress, operation])
