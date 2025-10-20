@@ -15,7 +15,6 @@ Specific to React Native (0.72)
 * react-native-document-picker — MIT, android, ios, windows, supports New Architecture
 * react-native-drawer-layout — MIT, android, ios (maybe others?)
 * react-native-gesture-handler — MIT, android, ios (maybe mac?) supports New Architecture
-* react-native-maps — MIT, android, ios
 * react-native-markdown-display — MIT, js-only
 * react-native-pager-view — MIT, android, ios, supprots New Architecture?
 * react-native-paper — MIT, android, ios (maybe others?)

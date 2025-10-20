@@ -14,15 +14,16 @@ PODS:
   - hermes-engine (0.80.2):
     - hermes-engine/Pre-built (= 0.80.2)
   - hermes-engine/Pre-built (0.80.2)
-  - MapboxCommon (23.11.4)
-  - MapboxCoreMaps (10.19.2):
-    - MapboxCommon (~> 23.11)
-  - MapboxMaps (10.19.4):
-    - MapboxCommon (= 23.11.4)
-    - MapboxCoreMaps (= 10.19.2)
-    - MapboxMobileEvents (= 2.0.0)
-    - Turf (= 2.8.0)
-  - MapboxMobileEvents (2.0.0)
+  - JWT (3.0.0-beta.14):
+    - Base64 (~> 1.1.2)
+  - MapboxCommon (24.15.3):
+    - Turf (= 4.0.0)
+  - MapboxCoreMaps (11.15.3):
+    - MapboxCommon (= 24.15.3)
+  - MapboxMaps (11.15.3):
+    - MapboxCommon (= 24.15.3)
+    - MapboxCoreMaps (= 11.15.3)
+    - Turf (= 4.0.0)
   - MultiplatformBleAdapter (0.2.0)
   - RCT-Folly (2024.11.18.00):
     - boost
@@ -1876,67 +1877,6 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-maps (1.25.3):
-    - react-native-maps/Maps (= 1.25.3)
-  - react-native-maps/Generated (1.25.3):
-    - boost
-    - DoubleConversion
-    - fast_float
-    - fmt
-    - glog
-    - hermes-engine
-    - RCT-Folly
-    - RCT-Folly/Fabric
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-hermes
-    - React-ImageManager
-    - React-jsi
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-renderercss
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - SocketRocket
-    - Yoga
-  - react-native-maps/Maps (1.25.3):
-    - boost
-    - DoubleConversion
-    - fast_float
-    - fmt
-    - glog
-    - hermes-engine
-    - RCT-Folly
-    - RCT-Folly/Fabric
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-hermes
-    - React-ImageManager
-    - React-jsi
-    - react-native-maps/Generated
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-renderercss
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - SocketRocket
-    - Yoga
   - react-native-netinfo (11.4.1):
     - React-Core
   - react-native-pager-view (7.0.0):
@@ -2626,19 +2566,19 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - rnmapbox-maps (10.1.43):
-    - MapboxMaps (= 10.19.4)
+  - rnmapbox-maps (10.2.6):
+    - MapboxMaps (= 11.15.3)
     - React
     - React-Core
-    - rnmapbox-maps/DynamicLibrary (= 10.1.43)
+    - rnmapbox-maps/DynamicLibrary (= 10.2.6)
     - Turf
-  - rnmapbox-maps/DynamicLibrary (10.1.43):
+  - rnmapbox-maps/DynamicLibrary (10.2.6):
     - boost
     - DoubleConversion
     - fast_float
     - fmt
     - hermes-engine
-    - MapboxMaps (= 10.19.4)
+    - MapboxMaps (= 11.15.3)
     - RCT-Folly
     - RCT-Folly/Fabric
     - RCTRequired
@@ -2960,7 +2900,8 @@ PODS:
     - SocketRocket
     - Yoga
   - SocketRocket (0.7.1)
-  - Turf (2.8.0)
+  - SSZipArchive (2.5.5)
+  - Turf (4.0.0)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -3013,7 +2954,6 @@ DEPENDENCIES:
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - "react-native-keep-awake (from `../node_modules/@sayem314/react-native-keep-awake`)"
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
-  - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-restart (from `../node_modules/react-native-restart`)
@@ -3069,7 +3009,6 @@ SPEC REPOS:
     - MapboxCommon
     - MapboxCoreMaps
     - MapboxMaps
-    - MapboxMobileEvents
     - MultiplatformBleAdapter
     - SocketRocket
     - Turf
@@ -3172,8 +3111,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@sayem314/react-native-keep-awake"
   react-native-keyboard-controller:
     :path: "../node_modules/react-native-keyboard-controller"
-  react-native-maps:
-    :path: "../node_modules/react-native-maps"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-pager-view:
@@ -3278,10 +3215,10 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: bbc1152da7d2d40f9e59c28acc6576fcf5d28e2a
-  MapboxCommon: cc47fafe3fe5408ca49240aa80fa64f27f275711
-  MapboxCoreMaps: 35685edba03e44468aed57c3dfd7f8795edafda8
-  MapboxMaps: f87023cf0d72b180b40ea0b6fb4b2d7db6b73b71
-  MapboxMobileEvents: d044b9edbe0ec7df60f6c2c9634fe9a7f449266b
+  JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
+  MapboxCommon: 6ec87f5836c143ca213af8e3470665ab65a4e356
+  MapboxCoreMaps: 79c46da85dbfe6f7d8c46414b89fea14f1222de5
+  MapboxMaps: 191e37638b8465fe8db51d0302c44d536ebcd687
   MultiplatformBleAdapter: b1fddd0d499b96b607e00f0faa8e60648343dc1d
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
   RCTDeprecation: 300c5eb91114d4339b0bb39505d0f4824d7299b7
@@ -3323,8 +3260,7 @@ SPEC CHECKSUMS:
   react-native-document-picker: 08e841dbca40b023db0296be625866b89983ab0a
   react-native-geolocation: eb39c815c9b58ddc3efb552cafdd4b035e4cf682
   react-native-keep-awake: 69d5a82905f64f9d068eadb4579fa0f2feb88f2c
-  react-native-keyboard-controller: ea75cbb5e968979e3beba136e66c4330545e7be6
-  react-native-maps: 21591069871b4717904ccb6f7e331dd87745a5b4
+  react-native-keyboard-controller: 5ad6660e5eca37738404c2b3e6d4a3b23d1721cd
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-pager-view: e096aa3fab6204c6dc936a95a0ff512fe3531e40
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
@@ -3365,16 +3301,17 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: afe7c3711dc256e492aa3a50dcac43eecebd0ae5
   RNDeviceInfo: feea80a690d2bde1fe51461cf548039258bd03f2
   RNGestureHandler: 8c4c3ff641284e689208dc01e51d5c1e6807cf3c
-  rnmapbox-maps: 15a99766179031c1ba94b6ee4765334b6c974bb8
+  rnmapbox-maps: 97a325ad485e23ed46ddb0f83dc74a0cf9eb06d5
   RNReanimated: 85c7e9b322a5e0b68941941e53c038ab32cfe25a
   RNScreens: 12bacab6e07bebf85543440b64f91de5cb0c8cff
   RNShare: 4c4a5ed0fd6702ee62e8adbb61065b53bf5ec9b4
   RNVectorIcons: 0e8833406efa1e777fbcb433b8c62db21143c182
   RNWorklets: 7b2035827da11b56148d0a19fb6551e459546cc0
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
+  SSZipArchive: c69881e8ac5521f0e622291387add5f60f30f3c4
+  Turf: c9eb11a65d96af58cac523460fd40fec5061b081
   Yoga: ce248fb32065c9b00451491b06607f1c25b2f1ed
 
-PODFILE CHECKSUM: 00704e6fbb8bf25ffa4093b47cff2a7374227617
+PODFILE CHECKSUM: c77aae2e17d86273c1d15b0879ac849e6d048b91
 
 COCOAPODS: 1.16.2

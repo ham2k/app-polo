@@ -39,6 +39,7 @@ Then clone this repository, `cd` into it and install the dependencies:
 
 ```
 npm install
+# you might need to also run `npm install redux-persist` if you get errors about missing modules
 ```
 
 ### Maps
@@ -144,6 +145,14 @@ npm run android
 * Delete XCode caches
 
 https://github.com/shinydevelopment/SimulatorStatusMagic
+
+
+
+### "unable to resolve module redux-persist/integration/react"
+
+For some reason, sometimes the `redux-persist` does not install correctly
+the first time, so you need to run `npm install redux-persist` manually.
+
 
 ### Some troubleshooting links
 

@@ -10,13 +10,8 @@ import React, { useMemo } from 'react'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../../tools/geoTools'
 
 import MapboxMapWithQSOs from './MapboxMapWithQSOs'
-import NativeMapWithQSOs from './NativeMapWithQSOs'
-import { selectFeatureFlag } from '../../../../store/system'
-import { useSelector } from 'react-redux'
 
 export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedUUID, projection }) {
-  const mapEngine = useSelector(state => selectFeatureFlag(state, 'mapEngine')) || 'Mapbox'
-
   const mappableQSOs = useMemo(() => {
     const activeQSOs = qsos.filter(qso => !qso.deleted)
     return activeQSOs
@@ -55,11 +50,7 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     }
   }, [qth, mappableQSOs])
 
-  if (mapEngine === 'Mapbox') {
-    return <MapboxMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} qsos={qsos} settings={settings} selectedUUID={selectedUUID} projection={projection} />
-  } else {
-    return <NativeMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} settings={settings} selectedUUID={selectedUUID} projection={projection} />
-  }
+  return <MapboxMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} qsos={qsos} settings={settings} selectedUUID={selectedUUID} projection={projection} />
 }
 
 function strengthForQSO (qso) {
