@@ -501,7 +501,7 @@ const ReferenceHandler = {
 
     let weAreInState = false
     if (ref?.location?.match(SLASH_OR_COMMA_REGEX)) {
-      weAreInState = ref?.location?.split(SLASH_OR_COMMA_REGEX).every(c => qp.counties[c])
+      weAreInState = ref?.location?.split(SLASH_OR_COMMA_REGEX)?.every(c => qp.counties[c])
     } else if (qp.counties[ref?.location]) {
       weAreInState = true
     }

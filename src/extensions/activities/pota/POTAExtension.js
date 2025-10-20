@@ -341,7 +341,7 @@ const ReferenceHandler = {
         && (startAtMillis ? q.startAtMillis < startAtMillis : true)
         && q.their.call === qso.their.call
         && q.uuid !== uuid
-        && (scoredRef?.ref ? q.refs.find(r => r.ref === scoredRef.ref) : true)
+        && (scoredRef?.ref ? q.refs?.find(r => r?.ref === scoredRef.ref) : true)
     })
 
     if (nearDupes.length === 0) {
