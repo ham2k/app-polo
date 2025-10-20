@@ -105,6 +105,25 @@ export const selectOperationsList = createSelector(
   }
 )
 
+export const selectOperationIds = createSelector(
+  (state) => state?.operations?.info,
+  (info) => {
+    return Object.values(info || {}).sort((a, b) => {
+        return (b.startAtMillisMax ?? b.createdAtMillis ?? 0) - (a.startAtMillisMax ?? a.createdAtMillis ?? 0)
+      })
+      .map(op => op.uuid) // Just return the UUIDs
+  },
+  {
+    memoizeOptions: {
+      resultEqualityCheck: (prevIds, nextIds) => {
+        // Only return new array if order/length changed
+        if (prevIds.length !== nextIds.length) return false
+        return prevIds.every((id, index) => id === nextIds[index])
+      }
+    }
+  }
+)
+
 export const selectOperationCallInfo = createSelector(
   (state, uuid) => selectOperationCall(state, uuid),
   (state) => selectOperatorCall(state),
