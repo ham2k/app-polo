@@ -67,6 +67,8 @@ export function expandRSTValues (text, mode) {
     } else {
       text = `${readability}${strength}`
     }
+  } else if (text.length === 2 && mode === 'CW') {
+    text = `${text}9`
   }
 
   return text
