@@ -1665,7 +1665,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
-  - react-native-app-auth (8.0.3):
+  - react-native-app-auth (8.1.0):
     - AppAuth (>= 1.7.6)
     - React-Core
   - react-native-ble-plx (3.5.0):
@@ -1818,7 +1818,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-keyboard-controller (1.18.6):
+  - react-native-keyboard-controller (1.19.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -1837,7 +1837,7 @@ PODS:
     - React-hermes
     - React-ImageManager
     - React-jsi
-    - react-native-keyboard-controller/common (= 1.18.6)
+    - react-native-keyboard-controller/common (= 1.19.2)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1848,7 +1848,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-keyboard-controller/common (1.18.6):
+  - react-native-keyboard-controller/common (1.19.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -3253,14 +3253,14 @@ SPEC CHECKSUMS:
   React-logger: ea80169d826e0cd112fa4d68f58b2b3b968f1ecb
   React-Mapbuffer: 230c34b1cabd1c4815726c711b9df221c3d3fbfb
   React-microtasksnativemodule: 29d62f132e4aba34ebb7f2b936dde754eb08971b
-  react-native-app-auth: 149f01d2c824758453c9e7815217ded451974683
+  react-native-app-auth: 9b0a0e3ca279c3426a451e2607c8483808b8ed4a
   react-native-ble-plx: 7a08813424f5742d9003696aa3a92882cb53d7b6
   react-native-blob-util: cbd6b292d0f558f09dce85e6afe68074cd031f3e
   react-native-config: 3367df9c1f25bb96197007ec531c7087ed4554c3
   react-native-document-picker: 08e841dbca40b023db0296be625866b89983ab0a
   react-native-geolocation: eb39c815c9b58ddc3efb552cafdd4b035e4cf682
   react-native-keep-awake: 69d5a82905f64f9d068eadb4579fa0f2feb88f2c
-  react-native-keyboard-controller: 5ad6660e5eca37738404c2b3e6d4a3b23d1721cd
+  react-native-keyboard-controller: 66c0c988b96ae50f8960b0e90b8f52c691d61666
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-pager-view: e096aa3fab6204c6dc936a95a0ff512fe3531e40
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
