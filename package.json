@@ -9,6 +9,11 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
+    "clean:js": "rm -rf node_modules && npm install",
+    "clean:android": "(cd android && rm -rf app/.cxx && rm -rf build && ./gradlew clean)",
+    "clean:ios": "(cd ios && rm -rf ~/Library/Caches/CocoaPods &&rm -rf Pods && rm -rf Podfile.lock && rm -rf build && pod install)",
+    "clean:watchman": "watchman watch-del . && watchman watch-project .",
+    "clean:all": "npm run clean:js && npm run clean:android && npm run clean:ios && npm run clean:watchman",
     "postinstall": "patch-package"
   },
   "dependencies": {
