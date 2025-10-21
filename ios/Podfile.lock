@@ -14,8 +14,6 @@ PODS:
   - hermes-engine (0.80.2):
     - hermes-engine/Pre-built (= 0.80.2)
   - hermes-engine/Pre-built (0.80.2)
-  - JWT (3.0.0-beta.14):
-    - Base64 (~> 1.1.2)
   - MapboxCommon (24.15.3):
     - Turf (= 4.0.0)
   - MapboxCoreMaps (11.15.3):
@@ -1731,7 +1729,7 @@ PODS:
     - react-native-config/App (= 1.5.5)
   - react-native-config/App (1.5.5):
     - React-Core
-  - react-native-document-picker (10.1.5):
+  - react-native-document-picker (10.1.7):
     - boost
     - DoubleConversion
     - fast_float
@@ -2536,7 +2534,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNDeviceInfo (14.0.4):
+  - RNDeviceInfo (14.1.1):
     - React-Core
   - RNGestureHandler (2.28.0):
     - boost
@@ -2754,7 +2752,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNShare (12.1.0):
+  - RNShare (12.2.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2873,7 +2871,6 @@ PODS:
     - SocketRocket
     - Yoga
   - SocketRocket (0.7.1)
-  - SSZipArchive (2.5.5)
   - Turf (4.0.0)
   - Yoga (0.0.0)
 
@@ -3191,7 +3188,6 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: bbc1152da7d2d40f9e59c28acc6576fcf5d28e2a
-  JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
   MapboxCommon: 6ec87f5836c143ca213af8e3470665ab65a4e356
   MapboxCoreMaps: 79c46da85dbfe6f7d8c46414b89fea14f1222de5
   MapboxMaps: 191e37638b8465fe8db51d0302c44d536ebcd687
@@ -3233,7 +3229,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx: 7a08813424f5742d9003696aa3a92882cb53d7b6
   react-native-blob-util: cbd6b292d0f558f09dce85e6afe68074cd031f3e
   react-native-config: 3367df9c1f25bb96197007ec531c7087ed4554c3
-  react-native-document-picker: 08e841dbca40b023db0296be625866b89983ab0a
+  react-native-document-picker: e283c739831e67b6922793228f6a740310b42b3f
   react-native-geolocation: eb39c815c9b58ddc3efb552cafdd4b035e4cf682
   react-native-keep-awake: 69d5a82905f64f9d068eadb4579fa0f2feb88f2c
   react-native-keyboard-controller: 66c0c988b96ae50f8960b0e90b8f52c691d61666
@@ -3277,7 +3273,7 @@ SPEC CHECKSUMS:
   ReactCodegen: f8ae44cfcb65af88f409f4b094b879591232f12c
   ReactCommon: a237545f08f598b8b37dc3a9163c1c4b85817b0b
   RNCAsyncStorage: afe7c3711dc256e492aa3a50dcac43eecebd0ae5
-  RNDeviceInfo: feea80a690d2bde1fe51461cf548039258bd03f2
+  RNDeviceInfo: 8b6fa8379062949dd79a009cf3d6b02a9c03ca59
   RNGestureHandler: 8c4c3ff641284e689208dc01e51d5c1e6807cf3c
   rnmapbox-maps: 97a325ad485e23ed46ddb0f83dc74a0cf9eb06d5
   RNReanimated: 8b01d982d47570c64522199442251982f0d98a70
@@ -3285,10 +3281,9 @@ SPEC CHECKSUMS:
   RNShare: 0891bf652830fc11404c0b9d8ac9192d6e1ae557
   RNWorklets: 83f7f4cd8c2ef480a058ff347a74e44d5596a5f8
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  SSZipArchive: c69881e8ac5521f0e622291387add5f60f30f3c4
   Turf: c9eb11a65d96af58cac523460fd40fec5061b081
   Yoga: ce248fb32065c9b00451491b06607f1c25b2f1ed
 
-PODFILE CHECKSUM: c77aae2e17d86273c1d15b0879ac849e6d048b91
+PODFILE CHECKSUM: c2cd29b488045225db3d21a2c0f287093a42af77
 
 COCOAPODS: 1.16.2
