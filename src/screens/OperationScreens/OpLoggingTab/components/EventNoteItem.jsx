@@ -6,18 +6,18 @@
  */
 
 import React, { useCallback } from 'react'
-import { Text, TouchableRipple } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { View } from 'react-native'
 
-import { H2kIcon, H2kMarkdown } from '../../../../ui'
+import { H2kIcon, H2kMarkdown, H2kPressable } from '../../../../ui'
 
-const EventNoteItem = React.memo(function EventNoteItem ({ qso, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
+const EventNoteItem = React.memo(function EventNoteItem({ qso, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
   const pressHandler = useCallback(() => {
     onPress && onPress({ qso })
   }, [qso, onPress])
 
   return (
-    <TouchableRipple onPress={pressHandler} style={selected ? styles.selectedRow : styles.unselectedRow}>
+    <H2kPressable onPress={pressHandler} style={selected ? styles.selectedRow : styles.unselectedRow}>
       <View style={styles.compactRow}>
         <Text style={styles.fields.time}>{timeFormatFunction(qso.startAtMillis)}</Text>
         <Text style={styles.fields.icons}>
@@ -27,7 +27,7 @@ const EventNoteItem = React.memo(function EventNoteItem ({ qso, ourInfo, onPress
           <H2kMarkdown>{qso.event.note}</H2kMarkdown>
         </Text>
       </View>
-    </TouchableRipple>
+    </H2kPressable>
   )
 })
 

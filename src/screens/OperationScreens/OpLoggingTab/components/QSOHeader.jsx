@@ -7,17 +7,17 @@
 
 import React from 'react'
 import { View } from 'react-native'
-import { Text, TouchableRipple } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { fmtDateZuluDynamic } from '../../../../tools/timeFormats'
-import { H2kIcon } from '../../../../ui'
+import { H2kIcon, H2kPressable } from '../../../../ui'
 
-const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings, onHeaderPress }) {
+const QSOHeader = React.memo(function QSOHeader({ section, operation, styles, settings, onHeaderPress }) {
   // NOTE: We're using onPresOut instead of onPress because of a bug in SectionList
   // See https://github.com/facebook/react-native/issues/51290
   return (
-    <TouchableRipple onPressOut={onHeaderPress}>
+    <H2kPressable onPressOut={onHeaderPress}>
       <View style={styles.headerRow}>
         <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
           {fmtDateZuluDynamic(section.day)}
@@ -49,11 +49,11 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
                   <H2kIcon
                     name={score.icon}
                     size={styles.normalFontSize}
-                    color={score.activated === true ? styles.colors.important : undefined }
+                    color={score.activated === true ? styles.colors.important : undefined}
                     style={styles.fields.icon}
                   />
                 ) : (
-                `${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ' '}`
+                  `${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ' '}`
                 )}
                 {' '}{score.summary}
               </Text>
@@ -63,7 +63,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
           }
         })}
       </View>
-    </TouchableRipple>
+    </H2kPressable>
   )
 })
 export default QSOHeader

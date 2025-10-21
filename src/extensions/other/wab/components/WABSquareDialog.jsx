@@ -7,11 +7,10 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { TouchableRipple } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 
 import { selectOperationCallInfo, setOperationData } from '../../../../store/operations'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kText, H2kTextInput } from '../../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kPressable, H2kText, H2kTextInput } from '../../../../ui'
 
 import { locationToWABSquare } from '../WABLocation'
 
@@ -109,12 +108,12 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
           error={!isValid}
         />
         {wabSquare && (
-          <TouchableRipple onPress={() => setSquareValue(wabSquare)} style={{ marginTop: styles.oneSpace }}>
+          <H2kPressable onPress={() => setSquareValue(wabSquare)} style={{ marginTop: styles.oneSpace }}>
             <H2kText variant="bodyMedium" style={{ marginTop: styles.oneSpace, marginBottom: styles.oneSpace }}>
               <H2kText>Current Square: </H2kText>
               <H2kText style={{ color: styles.colors.primary, fontWeight: 'bold' }}>{wabSquare}</H2kText>
             </H2kText>
-          </TouchableRipple>
+          </H2kPressable>
         )}
       </H2kDialogContent>
       <H2kDialogActions>

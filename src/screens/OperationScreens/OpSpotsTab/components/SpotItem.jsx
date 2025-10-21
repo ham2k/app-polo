@@ -6,14 +6,14 @@
  */
 
 import React, { useMemo } from 'react'
-import { Icon, Text, TouchableRipple } from 'react-native-paper'
+import { Icon, Text } from 'react-native-paper'
 
 import { View } from 'react-native'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
-import { paperNameOrHam2KIcon } from '../../../../ui'
+import { paperNameOrHam2KIcon, H2kPressable } from '../../../../ui'
 
-const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth }) {
+const SpotItem = React.memo(function QSOItem({ spot, onPress, styles, extendedWidth }) {
   const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
 
   if (spot?.their?.call === 'W8WR') spot.their.call = 'N2Y'
@@ -74,7 +74,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
   }, [spot, styles])
 
   return (
-    <TouchableRipple onPress={() => onPress && onPress({ spot })}>
+    <H2kPressable onPress={() => onPress && onPress({ spot })}>
       <View style={styles.doubleRow}>
         <View style={styles.doubleRowInnerRow}>
           <Text style={[styles.fields.freq, commonStyle]}>
@@ -116,7 +116,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
           </Text>
         </View>
       </View>
-    </TouchableRipple>
+    </H2kPressable>
   )
 })
 export default SpotItem

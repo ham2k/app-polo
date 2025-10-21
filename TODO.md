@@ -1,6 +1,12 @@
 # General Package Maintenance Tasks
 
 
+### Pressable Ripple on Android
+
+See https://github.com/facebook/react-native/issues/52939
+We work around this by using a simpler Pressable component on Android, as part of H2kPressable.
+
+
 
 ### Splash Screen
 

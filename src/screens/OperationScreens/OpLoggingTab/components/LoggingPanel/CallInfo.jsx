@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import { Icon, Text, TouchableRipple } from 'react-native-paper'
+import { Icon, Text } from 'react-native-paper'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
@@ -20,10 +20,10 @@ import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../../store/operations'
 import { selectRuntimeOnline } from '../../../../../store/runtime'
 import { sanitizeForMarkdown } from '../../../../../tools/stringTools'
+import { H2kMarkdown, H2kPressable } from '../../../../../ui'
+import { parseStackedCalls } from '../../../../../tools/callsignTools'
 
 import { useCallLookup } from './useCallLookup'
-import { H2kMarkdown } from '../../../../../ui'
-import { parseStackedCalls } from '../../../../../tools/callsignTools'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!',
@@ -46,7 +46,7 @@ export const MESSAGES_FOR_SCORING = {
 
 const DEBUG = false
 
-function prepareStyles (baseStyles, themeColor) {
+function prepareStyles(baseStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   return {
     ...baseStyles,
@@ -91,7 +91,7 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, updateQSO, settings }) {
+export function CallInfo({ qso, qsos, sections, operation, style, themeColor, updateQSO, settings }) {
   const navigation = useNavigation()
   const styles = useThemedStyles(prepareStyles, themeColor)
   const online = useSelector(selectRuntimeOnline)
@@ -292,7 +292,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
 
   return (
-    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
+    <H2kPressable onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
         <View style={{ alignSelf: 'flex-start', flex: 0 }}>
@@ -353,6 +353,6 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
           )}
         </View>
       </View>
-    </TouchableRipple>
+    </H2kPressable>
   )
 }

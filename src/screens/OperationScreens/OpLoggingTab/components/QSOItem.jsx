@@ -6,16 +6,16 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Text, TouchableRipple } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { View } from 'react-native'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findBestHook } from '../../../../extensions/registry'
-import { H2kIcon } from '../../../../ui'
+import { H2kIcon, H2kPressable } from '../../../../ui'
 
-const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
+const QSOItem = React.memo(function QSOItem({ qso, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
   const theirInfo = { ...qso?.their?.guess, ...qso?.their }
 
   const freqParts = useMemo(() => {
@@ -51,7 +51,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
   }, [selected, styles])
 
   return (
-    <TouchableRipple onPress={pressHandler}>
+    <H2kPressable onPress={pressHandler}>
       <View style={rowStyle}>
         <Text style={styles.fields.time}>{timeFormatFunction(qso.startAtMillis)}</Text>
         <Text style={styles.fields.freq}>
@@ -103,7 +103,7 @@ const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, se
           )
         )}
       </View>
-    </TouchableRipple>
+    </H2kPressable>
   )
 })
 

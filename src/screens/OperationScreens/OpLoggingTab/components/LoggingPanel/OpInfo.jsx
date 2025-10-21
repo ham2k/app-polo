@@ -7,16 +7,16 @@
 
 import React, { useMemo } from 'react'
 import { View } from 'react-native'
-import { Text, TouchableRipple } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 
 import { fmtTimeBetween } from '../../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../../store/time'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
-import { H2kIcon, H2kMarkdown } from '../../../../../ui'
+import { H2kIcon, H2kMarkdown, H2kPressable } from '../../../../../ui'
 
-function prepareStyles (baseStyles, themeColor) {
+function prepareStyles(baseStyles, themeColor) {
   return {
     ...baseStyles,
     textLine: {
@@ -35,7 +35,7 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export function OpInfo ({ message, clearMessage, operation, qsos, style, themeColor }) {
+export function OpInfo({ message, clearMessage, operation, qsos, style, themeColor }) {
   const navigation = useNavigation()
   const now = useSelector(selectSecondsTick)
 
@@ -102,7 +102,7 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
   }, [ourQSOs])
 
   return (
-    <TouchableRipple onPress={() => navigation.navigate('OpInfo', { operation, uuid: operation.uuid })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
+    <H2kPressable onPress={() => navigation.navigate('OpInfo', { operation, uuid: operation.uuid })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
 
       <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
         {icon && (
@@ -127,6 +127,6 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
           )}
         </View>
       </View>
-    </TouchableRipple>
+    </H2kPressable>
   )
 }
