@@ -1,12 +1,5 @@
 # General Package Maintenance Tasks
 
-### React Native Screens
-
-To update past 4.16 we need to change some things on Android
-* https://github.com/software-mansion/react-native-screens/releases/tag/4.16.0
-* https://github.com/software-mansion/react-native-screens?tab=readme-ov-file#android
-
-
 
 ### React Native Share
 
