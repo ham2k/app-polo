@@ -405,8 +405,6 @@ const ReferenceHandler = {
   },
 
   summarizeScore: ({ score, operation, ref, section }) => {
-    console.log('  -- POTA summarizeScore', { ...score }, { ...operation }, { ...ref }, { ...section })
-
     score.activated = score.value >= 10
 
     if (score.activated) {

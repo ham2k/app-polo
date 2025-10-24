@@ -11,7 +11,7 @@ import { qsoKey } from '@ham2k/lib-qson-tools'
 import GLOBAL from '../../../GLOBAL'
 
 import { actions } from '../qsosSlice'
-import { actions as operationActions, saveOperationLocalData } from '../../operations'
+import { actions as operationActions, saveOperationLocalData, updateOperationInfo } from '../../operations'
 import { dbExecute, dbSelectAll, dbTransaction } from '../../db/db'
 import { sendQSOsToSyncService } from '../../sync'
 import { logTimer } from '../../../tools/perfTools'
@@ -92,7 +92,7 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
   return addQSOs({ uuid, qsos: [qso], synced })
 }
 
-const DEBUG = false
+const DEBUG = true
 
 export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
   const now = Date.now()
@@ -155,31 +155,14 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
 
   const operationInfo = getState().operations.info[uuid]
   if (getState().qsos.qsos[uuid]) { // QSOs are for an operation that's currently in memory
-    let { startAtMillisMin, startAtMillisMax } = operationInfo
-    if (DEBUG) logTimer('addQSOs', 'got op info')
-
+    console.log('addQSOs -- updating current operation in memory')
     for (const qso of qsos) {
       dispatch(actions.addQSO({ uuid, qso }))
-
-      if (!qso.deleted && !qso.event) {
-        if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
-        if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
-      }
     }
     if (DEBUG) logTimer('addQSOs', 'added qsos to state')
-
-    const finalQSOs = getState().qsos.qsos[uuid]
-
-    operationInfo.startAtMillisMin = startAtMillisMin
-    operationInfo.startAtMillisMax = startAtMillisMax
-    operationInfo.qsoCount = finalQSOs.filter(q => !q.deleted && !q.event).length
-
-    setImmediate(() => {
-      if (DEBUG) console.log('op update', { startAtMillisMin, startAtMillisMax, qsoCount: operationInfo.qsoCount })
-      dispatch(operationActions.setOperation(operationInfo))
-      dispatch(saveOperationLocalData(operationInfo))
-    })
   }
+  console.log('addQSOs -- update operation info', uuid)
+  dispatch(updateOperationInfo({ uuid }))
 
   if (!synced) {
     setImmediate(() => {
@@ -250,7 +233,7 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
       qso.uuid
     ])
 
-    dispatch(actions.addQSO({ uuid, qso }))
+    await dispatch(actions.addQSO({ uuid, qso }))
   }
   // Since the batch update does not change operation counts or times, no need to do anything else here
 }
@@ -285,4 +268,8 @@ export const saveQSOsForOperation = (uuid, { synced } = {}) => async (dispatch, 
       ])
     }
   })
+}
+
+function fingerprintQSOData(qso) {
+  return JSON.stringify(qso)
 }

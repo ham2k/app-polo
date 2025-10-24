@@ -53,13 +53,6 @@ export const setOperationData = (data) => async (dispatch, getState) => {
 }
 
 export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, getState) => {
-  const now = Date.now()
-
-  operation.createdAtMillis = operation.createdAtMillis || now
-  operation.createdOnDeviceId = operation.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
-  operation.updatedAtMillis = now
-  operation.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
-
   if (data.refs) {
     const decoratedRefs = []
     for (const ref of data.refs) {

@@ -30,7 +30,7 @@ const DEFAULT_SYNC_CHECK_PERIOD = 1000 * 10 // 1000 * 60 * 1 // 1 minutes, time 
 const SMALL_BATCH_SIZE = 10 // QSOs or Operations to send on a quick `syncLatest...`
 const DEFAULT_LARGE_BATCH_SIZE = 10 //200 // QSOs or Operations to send on a regular sync loop
 
-const VERBOSE = 0
+const VERBOSE = 2
 
 let errorCount = 0
 
@@ -228,7 +228,14 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
 
     // Remove operation local data from the syncParams
     if (syncPayload.operations) {
-      syncPayload.operations = syncPayload.operations.map(op => { op = { ...op }; delete op.local; return op })
+      syncPayload.operations = syncPayload.operations.map(op => {
+        op = { ...op };
+        delete op.local;
+        delete op.startAtMillisMin;
+        delete op.startAtMillisMax;
+        delete op.qsoCount;
+        return op
+      })
     }
 
     // Decide if we should sync the settings too
@@ -292,6 +299,8 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
       if (VERBOSE > 1) logTimer('sync', 'sync', { reset: true })
       const response = await dispatch(syncHook.sync(syncPayload))
       if (VERBOSE > 0) console.log(' -- response', { ok: response.ok, operations: response?.json?.operations?.length, qsos: response?.json?.qsos?.length, meta: response?.json?.meta, account: response?.json?.account })
+      if (VERBOSE > 1) console.log(' -- qsos', response?.json?.qsos)
+      if (VERBOSE > 1) console.log(' -- operations', response?.json?.operations)
 
       const [metaOk, changesToSyncData] = await _processResponseMeta({ response, dispatch, localData })
       if (metaOk) {
