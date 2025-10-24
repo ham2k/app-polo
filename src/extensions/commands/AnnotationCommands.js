@@ -38,7 +38,7 @@ export default Extension
 const NotesCommandHook = {
   ...Info,
   extension: Extension,
-  key: 'commands-misc-spot',
+  key: 'commands-misc-note',
   match: /^(NOTES|NOTE)(|[ /.]|.+)$/i,
   allowSpaces: true,
   describeCommand: (match, { operation }) => {

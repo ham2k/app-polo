@@ -45,9 +45,10 @@ const SpotCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-misc-spot',
-  match: /^(SPOT|SPOTME|SPME|SELFSPOT|QRV|QRT|QSY)(|[ /.]|[\s\w\d!,.-_]*)$/i,
+  match: /^(SPOT|SPOTME|SPME|SELFSPOT|QRV|QRT|QSY)(|[ /][\s\w\d!,.-_]*)$/i,
   allowSpaces: true,
   describeCommand: (match, { vfo, operation }) => {
+    console.log('spot command hook', match, vfo, operation)
     if (!vfo || !operation) return
 
     let comments = match[2]?.substring(1) || ''
@@ -55,7 +56,7 @@ const SpotCommandHook = {
     if (!vfo.freq) return 'Cannot self-spot without frequency'
 
     if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
-      comments = match[1]
+      comments = [match[1], comments].filter(x => x).join(' ')
       if (operation?.stationCallPlusArray?.length > 0) comments += ` ${operation?.stationCallPlusArray?.length + 1} ops`
     }
 
@@ -74,7 +75,7 @@ const SpotCommandHook = {
     if (!vfo.freq) return 'Cannot self-spot without frequency'
 
     if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
-      comments = match[1]
+      comments = [match[1], comments].filter(x => x).join(' ')
       if (match[2]) comments += ` ${match[2].substring(1)}`
 
       if (operation?.stationCallPlusArray?.length > 0) comments += ` ${operation?.stationCallPlusArray?.length + 1} ops`
