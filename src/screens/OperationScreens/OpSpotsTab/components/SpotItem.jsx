@@ -10,10 +10,13 @@ import { Icon, Text } from 'react-native-paper'
 
 import { View } from 'react-native'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
-import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
+import { fmtDateTimeRelative, prepareTimeValue } from '../../../../tools/timeFormats'
 import { paperNameOrHam2KIcon, H2kPressable } from '../../../../ui'
 
-const SpotItem = React.memo(function QSOItem({ spot, onPress, styles, extendedWidth }) {
+export function guessItemHeight (qso, styles) {
+  return styles.doubleRow.height + styles.doubleRow.borderBottomWidth
+}
+const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth, onLongPress, settings }) {
   const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
 
   if (spot?.their?.call === 'W8WR') spot.their.call = 'N2Y'
@@ -73,49 +76,120 @@ const SpotItem = React.memo(function QSOItem({ spot, onPress, styles, extendedWi
     return workedStyles
   }, [spot, styles])
 
+  function getTimeColor (millis) {
+    const t1 = prepareTimeValue(millis)
+    const t2 = prepareTimeValue(new Date())
+
+    if (t1 && t2) {
+      const diff = t2 - t1
+
+      if (diff > (20 * 60 * 1000)) {
+        return styles.mobile.time.oldest
+      } else if (diff > (15 * 60 * 1000)) {
+        return styles.mobile.time.old
+      } else if (diff <= (2 * 60 * 1000)) {
+        return styles.mobile.time.new
+      }
+    }
+    return styles.mobile.time.normal
+  };
+
   return (
-    <H2kPressable onPress={() => onPress && onPress({ spot })}>
-      <View style={styles.doubleRow}>
-        <View style={styles.doubleRowInnerRow}>
-          <Text style={[styles.fields.freq, commonStyle]}>
-            {freqParts[0] && (
-              <Text style={[styles.fields.freqMHz, commonStyle]}>{freqParts[0]}</Text>
-            )}
-            {freqParts[1] && (
-              <Text style={[styles.fields.freqKHz, commonStyle]}>.{freqParts[1]}</Text>
-            )}
-            {freqParts[2] && (
-              <Text style={[styles.fields.freqHz, commonStyle]}>.{freqParts[2]}</Text>
-            )}
-          </Text>
-          <View style={styles.fields.callAndEmoji}>
-            <Text style={[styles.fields.call, commonStyle, callStyle]}>{spot.their?.call ?? '?'}</Text>
-            {spot.their?.guess?.emoji && (
-              <Text style={[styles.fields.emoji, commonStyle, { lineHeight: 20 }]}>{spot.their?.guess?.emoji}</Text>
-            )}
-            <Text style={[styles.fields.label, commonStyle, callStyle, { marginLeft: styles.oneSpace }]}>{spot.spot.callLabel ?? ''}</Text>
-          </View>
-          <Text style={[styles.fields.time, commonStyle]}>{fmtDateTimeRelative(spot.spot?.timeInMillis, { roundTo: 'minutes' })}</Text>
-        </View>
-        <View style={styles.doubleRowInnerRow}>
-          <Text style={[styles.fields.band, commonStyle, bandStyle]}>{spot.band}</Text>
-          <Text style={[styles.fields.mode, commonStyle, modeStyle]}>{spot.mode}</Text>
-          {spot.spots.filter(s => s?.icon).map(subSpot => (
-            <View key={subSpot.subSource ?? subSpot.source} style={[styles.fields.icon, commonStyle, refStyle]}>
-              <Icon
-                key={subSpot.subSource ?? subSpot.source}
-                source={paperNameOrHam2KIcon(subSpot.icon)}
-                size={styles.oneSpace * 2.3}
-                color={(subSpot?.type === 'scoring' && refStyle?.color) || commonStyle?.color}
-              />
+    <H2kPressable
+      onPress={() => onPress && onPress({ spot })}
+      onLongPress={() => onLongPress && onLongPress({ spot })}
+      // rippleColor="rgba(0, 255, 255, .32)"
+      rippleColor={ (settings.mobileMode === true) ? 'rgba(0, 255, 255, .32)' : '' }
+    //   background={{
+    //     color: 'rgba(0, 255, 255, .32)',
+    //     foreground: true
+    //   }}
+    >
+      {settings.mobileMode === true ? (
+        <View style={styles.doubleRowMobileMode}>
+          <View style={styles.doubleRowMobileModeLeft}>
+            <View style={[styles.mobile.freq, commonStyle]}>
+              <View>
+                <Text style={[styles.mobile.freqMHz, commonStyle]}>{freqParts[0]}</Text>
+              </View>
+              <View style={{ display: 'flex', flexDirection: 'row' }}>
+                <Text style={[styles.mobile.freqKHz, commonStyle]}>.{freqParts[1]}</Text>
+                <Text style={[styles.mobile.freqHz, commonStyle]}>.{freqParts[2]}</Text>
+              </View>
             </View>
-          ))}
-          <Text style={[styles.fields.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
-            {spot.spot.emoji}
-            {spot.spot.label}
-          </Text>
+          </View>
+          <View style={styles.doubleRowMobileModeRight}>
+            <View style={styles.doubleRowInnerRowMobile}>
+              <View style={styles.fields.callAndEmoji}>
+                <Text style={[styles.mobile.call, commonStyle]}>{spot.their?.call ?? '?'}</Text>
+                {spot.their?.guess?.emoji && (
+                  <Text style={[styles.fields.emoji, commonStyle, { lineHeight: 20 }]}>{spot.their?.guess?.emoji}</Text>
+                )}
+              </View>
+              <Text style={[styles.fields.time, commonStyle, getTimeColor(spot.spot?.timeInMillis)]}>{fmtDateTimeRelative(spot.spot?.timeInMillis, { roundTo: 'minutes' })}</Text>
+            </View>
+            <View style={[styles.doubleRowInnerRowMobile, { marginTop: 5 }]}>
+              <Text style={[styles.mobile.mode, commonStyle, modeStyle]}>{spot.mode}</Text>
+              {spot.spots.filter(s => s?.icon).map(subSpot => (
+                <View key={subSpot.source} style={[styles.fields.icon, commonStyle, refStyle]}>
+                  <Icon
+                    key={subSpot.source}
+                    source={paperNameOrHam2KIcon(subSpot.icon)}
+                    size={styles.oneSpace * 2.3}
+                    color={(subSpot?.type === 'scoring' && refStyle?.color) || commonStyle?.color}
+                  />
+                </View>
+              ))}
+              <Text style={[styles.mobile.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
+                {spot.spot.emoji}
+                {spot.spot.label}
+              </Text>
+            </View>
+          </View>
         </View>
-      </View>
+      ) : (
+        <View style={styles.doubleRow}>
+          <View style={styles.doubleRowInnerRow}>
+            <Text style={[styles.fields.freq, commonStyle]}>
+              {freqParts[0] && (
+                <Text style={[styles.fields.freqMHz, commonStyle]}>{freqParts[0]}</Text>
+              )}
+              {freqParts[1] && (
+                <Text style={[styles.fields.freqKHz, commonStyle]}>.{freqParts[1]}</Text>
+              )}
+              {freqParts[2] && (
+                <Text style={[styles.fields.freqHz, commonStyle]}>.{freqParts[2]}</Text>
+              )}
+            </Text>
+            <View style={styles.fields.callAndEmoji}>
+              <Text style={[styles.fields.call, commonStyle, callStyle]}>{spot.their?.call ?? '?'}</Text>
+              {spot.their?.guess?.emoji && (
+                <Text style={[styles.fields.emoji, commonStyle, { lineHeight: 20 }]}>{spot.their?.guess?.emoji}</Text>
+              )}
+              <Text style={[styles.fields.label, commonStyle, callStyle, { marginLeft: styles.oneSpace }]}>{spot.spot.callLabel ?? ''}</Text>
+            </View>
+            <Text style={[styles.fields.time, commonStyle]}>{fmtDateTimeRelative(spot.spot?.timeInMillis, { roundTo: 'minutes' })}</Text>
+          </View>
+          <View style={styles.doubleRowInnerRow}>
+            <Text style={[styles.fields.band, commonStyle, bandStyle]}>{spot.band}</Text>
+            <Text style={[styles.fields.mode, commonStyle, modeStyle]}>{spot.mode}</Text>
+            {spot.spots.filter(s => s?.icon).map(subSpot => (
+              <View key={subSpot.subSource ?? subSpot.source} style={[styles.fields.icon, commonStyle, refStyle]}>
+                <Icon
+                  key={subSpot.subSource ?? subSpot.source}
+                  source={paperNameOrHam2KIcon(subSpot.icon)}
+                  size={styles.oneSpace * 2.3}
+                  color={(subSpot?.type === 'scoring' && refStyle?.color) || commonStyle?.color}
+                />
+              </View>
+            ))}
+            <Text style={[styles.fields.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
+              {spot.spot.emoji}
+              {spot.spot.label}
+            </Text>
+          </View>
+        </View>
+      )}
     </H2kPressable>
   )
 })

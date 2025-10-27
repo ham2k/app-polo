@@ -68,6 +68,7 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
               onDialogDone={() => setCurrentDialog('')}
             />
           )}
+
           <H2kListItem title={'State Field'}
             description={settings.showStateField ? 'Include State field in main exchange' : "Don't include State field" }
             leftIcon="select-marker"
@@ -100,6 +101,14 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
             rightSwitchValue={!!settings.jumpAfterRST}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ jumpAfterRST: value }))}
             onPress={() => dispatch(setSettings({ jumpAfterRST: !settings.jumpAfterRST }))}
+          />
+
+          <H2kListItem title={'Mobile Mode'}
+            description={settings.mobileMode ? 'Use mobile logging' : 'Use default logging' }
+            leftIcon="car"
+            rightSwitchValue={!!settings.mobileMode}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ mobileMode: value }))}
+            onPress={() => dispatch(setSettings({ mobileMode: !settings.mobileMode }))}
           />
 
           <H2kListItem

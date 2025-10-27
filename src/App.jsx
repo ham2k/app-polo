@@ -49,6 +49,7 @@ import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
 import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
 import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/OperationLocationScreen'
+import OpSpotsModal from './screens/OperationScreens/OpSpotsTab/OpSpotsModal'
 
 const Stack = createNativeStackNavigator()
 
@@ -191,6 +192,11 @@ function MainApp ({ navigationTheme }) {
           <Stack.Screen name="Settings"
             options={{ title: 'Settings', headerShown: false }}
             component={MainSettingsScreen}
+          />
+
+          <Stack.Screen name="OpSpotModal"
+            options={{ title: 'Spot Logged', headerShown: false, presentation: 'modal' }}
+            component={OpSpotsModal}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -42,7 +42,23 @@ export default function OpSpotsTab ({ navigation, route }) {
     }
   }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings])
 
+  const handleLongPress = useCallback(async ({ spot }) => {
+    if (spot._ourSpot) return
+
+    for (const hook of extraSpotInfoHooks) {
+      await hook.extraSpotInfo({ online, settings, dispatch, spot })
+    }
+
+    if (settings.mobileMode === true) {
+      if (route?.params?.splitView) {
+        navigation.navigate('Operation', { ...route?.params, qso: { ...spot, our: undefined, _suggestedKey: spot.key, key: undefined } })
+      } else {
+        navigation.navigate('OpSpotModal', { ...route?.params, qso: { ...spot, our: undefined, _suggestedKey: spot.key, key: undefined, _forceLog: true } })
+      }
+    }
+  }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings])
+
   return (
-    <SpotsPanel operation={operation} qsos={qsos} sections={sections} onSelect={handleSelect} style={{ paddingBottom: safeArea.bottom, paddingRight: safeArea.right }} />
+    <SpotsPanel operation={operation} qsos={qsos} sections={sections} onSelect={handleSelect} onLongPress={handleLongPress} style={{ paddingBottom: safeArea.bottom, paddingRight: safeArea.right }} />
   )
 }

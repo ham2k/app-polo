@@ -16,7 +16,7 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import SpotItem from './SpotItem'
 import SpotHeader from './SpotHeader'
 
-export default function SpotList ({ sections, loading, refresh, style, onPress }) {
+export default function SpotList ({ sections, loading, refresh, style, onPress, onLongPress, settings }) {
   const styles = useThemedStyles(_prepareStyles, style)
 
   const safeArea = useSafeAreaInsets()
@@ -42,9 +42,9 @@ export default function SpotList ({ sections, loading, refresh, style, onPress }
   const renderRow = useCallback(({ item, index }) => {
     const spot = item
     return (
-      <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} />
+      <SpotItem key={spot.key} spot={spot} onPress={onPress} onLongPress={onLongPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} settings={settings} />
     )
-  }, [styles, onPress, extendedWidth, paddingRight, paddingLeft])
+  }, [onPress, onLongPress, styles, paddingRight, paddingLeft, extendedWidth, settings])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const calculateLayout = useCallback(
@@ -79,7 +79,7 @@ export default function SpotList ({ sections, loading, refresh, style, onPress }
   )
 }
 
-function _prepareStyles (themeStyles, style) {
+function _prepareStyles (themeStyles, style, deviceColorScheme) {
   const DEBUG = false
 
   const commonStyles = {
@@ -87,6 +87,16 @@ function _prepareStyles (themeStyles, style) {
     lineHeight: themeStyles.normalFontSize * 1.3,
     borderWidth: DEBUG ? 1 : 0
   }
+
+  const mobileStyles = {
+    fontSize: themeStyles.normalFontSize * 1.2,
+    lineHeight: themeStyles.normalFontSize * 1.5,
+    borderWidth: 0 // debug
+  }
+
+  //   console.log(themeStyles)
+  //   console.log(style)
+  //   console.log(deviceColorScheme)
 
   return {
     ...themeStyles,
@@ -102,6 +112,62 @@ function _prepareStyles (themeStyles, style) {
       paddingLeft: 0,
       paddingRight: 0,
       justifyContent: 'center'
+    },
+    mobile: {
+      freq: {
+        ...mobileStyles,
+        ...themeStyles.text.numbers,
+        ...themeStyles.text.lighter,
+        flexDirection: 'column',
+        width: themeStyles.oneSpace * 11.15,
+        textAlign: 'center',
+        alignItems: 'center'
+      },
+      freqMHz: {
+        ...mobileStyles,
+        fontWeight: '600',
+        textAlign: 'right',
+        fontSize: themeStyles.normalFontSize * 1.0
+      },
+      freqKHz: {
+        ...mobileStyles,
+        textAlign: 'right',
+        fontWeight: '700'
+      },
+      freqHz: {
+        ...mobileStyles,
+        fontWeight: '600',
+        textAlign: 'right',
+        fontSize: themeStyles.normalFontSize
+      },
+      call: {
+        ...mobileStyles
+      },
+      label: {
+        fontSize: themeStyles.normalFontSize * 0.9
+      },
+      mode: {
+        fontSize: themeStyles.normalFontSize * 0.9,
+        flex: 0,
+        marginLeft: themeStyles.oneSpace * 0.5,
+        width: themeStyles.oneSpace * 4,
+        textAlign: 'right',
+        marginRight: themeStyles.oneSpace * 1.0
+      },
+      time: {
+        oldest: {
+          color: (themeStyles.theme.dark) ? '#f11818ff' : '#e70606ff'
+        },
+        old: {
+          color: (themeStyles.theme.dark) ? '#ff733fff' : '#9a4e0cff'
+        },
+        normal: {
+          color: (themeStyles.theme.dark) ? '#CCC' : '#222'
+        },
+        new: {
+          color: (themeStyles.theme.dark) ? '#11dda0ff' : '#128700ff'
+        }
+      }
     },
     fields: {
       freq: {
