@@ -42,7 +42,7 @@ const NotesCommandHook = {
   match: /^(NOTES|NOTE)(|[ /.]|.+)$/i,
   allowSpaces: true,
   describeCommand: (match, { operation }) => {
-    if (!operation) { return false }
+    if (!operation) { return "" }
 
     let note = match[2]?.substring(1) || ''
 
@@ -54,7 +54,7 @@ const NotesCommandHook = {
     }
   },
   invokeCommand: (match, { operation, dispatch, settings }) => {
-    if (!operation) { return }
+    if (!operation) { return "" }
 
     let note = match[2]?.substring(1) || ''
 
@@ -92,7 +92,7 @@ const ChatCommandHook = {
     }
   },
   invokeCommand: (match, { operation, dispatch, settings }) => {
-    if (!operation) { return }
+    if (!operation) { return "" }
 
     let note = match[2]?.substring(1) || ''
 
@@ -110,6 +110,7 @@ const ChatCommandHook = {
 
       return `Chatted!`
     }
+    return null
   }
 }
 
@@ -117,20 +118,27 @@ const EarthWeatherCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-misc-weather',
-  match: /^(WEATHER|WEATHER!)$/i,
+  match: /^(WEATHER)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation }) => {
-    if (match[1].includes('!') && operation) {
-      return `Fetch current weather and annotate operation?`
-    } else if (operation) {
-      return `Fetch current weather? (add '!' to annotate)`
-    } else {
-      return `Fetch current weather?`
-    }
+  describeCommand: (match, { operation, settings, setCommandInfo, setTimeoutForCommand }) => {
+    setTimeoutForCommand(async () => {
+      const weatherData = await _getWeatherData({ operation, settings })
+      const current = WEATHER_CODES[weatherData.current.weather_code]
+      const currentEmoji = weatherData.current.is_day ? (current?.dayEmoji ?? current?.emoji) : (current?.nightEmoji ?? current?.emoji) || '🌤️'
+      const currentDescription = weatherData.current.is_day ? (current?.dayDescription ?? current?.description) : (current?.nightDescription ?? current?.description)
+
+      const message = `${currentEmoji} `
+        + `${weatherData.current.temperature_2m}${weatherData.current_units.temperature_2m} `
+        + `${currentDescription} `
+        + `💧 ${weatherData.current.relative_humidity_2m}%, `
+        + `💨 ${weatherData.current.wind_speed_10m}${weatherData.current_units.wind_speed_10m}`
+      setCommandInfo && setCommandInfo({ message, match: true, timeout: 6000 })
+    })
+    return "Fetching current weather..."
   },
   invokeCommand: (match, { operation, dispatch, settings, setCommandInfo }) => {
+    if (!operation) return
     setTimeout(async () => {
-      console.log('weather!')
       const weatherData = await _getWeatherData({ operation, settings })
 
       const current = WEATHER_CODES[weatherData.current.weather_code]
@@ -143,21 +151,18 @@ const EarthWeatherCommandHook = {
         + `💧 ${weatherData.current.relative_humidity_2m}%, `
         + `💨 ${weatherData.current.wind_speed_10m}${weatherData.current_units.wind_speed_10m}`
 
-      console.log(message, weatherData)
-      if (match[1].includes('!') && operation) {
-        dispatch(newEventQSO({
-          uuid: operation.uuid, event: {
-            event: 'weather',
-            weatherData,
-            icon: 'weather-sunny',
-            description: message,
-            operatorCall: operation?.local?.operatorCall
-          }
-        }))
-      }
-      setCommandInfo && setCommandInfo({ message, match: true, timeout: 6000 })
-    }, 500)
-    return `Fetching current weather…`
+      dispatch(newEventQSO({
+        uuid: operation.uuid, event: {
+          event: 'weather',
+          weatherData,
+          icon: 'weather-sunny',
+          description: message,
+          operatorCall: operation?.local?.operatorCall
+        }
+      }))
+      setCommandInfo && setCommandInfo({ message, match: true, timeout: 1000 })
+    }, 1)
+    return null
   }
 }
 
@@ -165,41 +170,43 @@ const SolarWeatherCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-misc-solar',
-  match: /^(SOLAR|SOLAR!)$/i,
+  match: /^(SOLAR)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation }) => {
-    if (match[1].includes('!') && operation) {
-      return `Fetch solar weather and annotate operation?`
-    } else if (operation) {
-      return `Fetch solar weather? (add '!' to annotate)`
-    } else {
-      return `Fetch solar weather?`
-    }
-  },
-  invokeCommand: (match, { operation, dispatch, settings, setCommandInfo }) => {
-    setTimeout(async () => {
+  describeCommand: (match, { operation, settings, setCommandInfo, setTimeoutForCommand }) => {
+    setTimeoutForCommand(async () => {
       const solarData = await _getSolarData({ operation, settings })
-      console.log('☀️ Solar Data', solarData)
 
       const message = `${_emojiForSFI(solarData.solarflux)}SFI ${solarData.solarflux} `
         + `• ${_emojiForAIndex(solarData.aindex)}A ${solarData.aindex} `
         + `• ${_emojiForKIndex(solarData.kindex)}K ${solarData.kindex} `
         + `• ${_emojiForSN(solarData.sunspots)}SN ${solarData.sunspots}`
 
-      if (match[1].includes('!') && operation) {
-        dispatch(newEventQSO({
-          uuid: operation.uuid, event: {
-            event: 'solar',
-            solarData,
-            icon: 'sun-wireless',
-            description: message,
-            operatorCall: operation?.local?.operatorCall
-          }
-        }))
-      }
       setCommandInfo && setCommandInfo({ message, match: true, timeout: 6000 })
-    }, 500)
-    return `Fetching solar weather…`
+    })
+    return `Fetching solar weather...`
+  },
+  invokeCommand: (match, { operation, dispatch, settings, setCommandInfo }) => {
+    if (!operation) return
+    setTimeout(async () => {
+      const solarData = await _getSolarData({ operation, settings })
+
+      const message = `${_emojiForSFI(solarData.solarflux)}SFI ${solarData.solarflux} `
+        + `• ${_emojiForAIndex(solarData.aindex)}A ${solarData.aindex} `
+        + `• ${_emojiForKIndex(solarData.kindex)}K ${solarData.kindex} `
+        + `• ${_emojiForSN(solarData.sunspots)}SN ${solarData.sunspots}`
+
+      dispatch(newEventQSO({
+        uuid: operation.uuid, event: {
+          event: 'solar',
+          solarData,
+          icon: 'sun-wireless',
+          description: message,
+          operatorCall: operation?.local?.operatorCall
+        }
+      }))
+
+      setCommandInfo && setCommandInfo({ message, match: true, timeout: 1000 })
+    }, 1)
   }
 }
 
@@ -245,8 +252,6 @@ async function _getWeatherData({ operation, settings }) {
   }
 
   try {
-    console.log('weather?', latitude, longitude)
-
     const params = {
       latitude,
       longitude,

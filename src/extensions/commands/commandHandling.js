@@ -9,10 +9,25 @@ import { reportError } from '../../distro'
 
 import { findHooks } from '../registry'
 
+let commandDescriptionTimeout
+
+const setTimeoutForCommand = (callback, timeout = 1000) => {
+  if (commandDescriptionTimeout) {
+    clearTimeout(commandDescriptionTimeout)
+  }
+  console.log('setTimeoutForCommand', callback, timeout)
+  commandDescriptionTimeout = setTimeout(callback, timeout)
+}
+
 export function checkAndProcessCommands(value, extraParams) {
+  if (commandDescriptionTimeout) {
+    clearTimeout(commandDescriptionTimeout)
+  }
+
   const { matchingCommand, match } = findMatchingCommand(value)
 
   if (matchingCommand && matchingCommand.invokeCommand) {
+
     const { handleFieldChange, updateQSO, handleSubmit } = extraParams
     let callWasCleared = false
     // We need special wrappers for `handleFieldChange` and `updateQSO` in order to also reset the call if a command was processed
@@ -39,29 +54,30 @@ export function checkAndProcessCommands(value, extraParams) {
         ...extraParams,
         handleFieldChange: handleFieldChangeWrapper,
         updateQSO: updateQSOWrapper,
-        handleSubmit: handleSubmitWrapper
+        handleSubmit: handleSubmitWrapper,
+        setTimeoutForCommand: setTimeoutForCommand
       }
     )
     if (!callWasCleared) {
       updateQSO && updateQSO({ their: { call: '' } })
     }
 
-    return result ?? true
-    // } catch (e) {
-    //   console.error('Error in checkAndProcessCommands', e)
-    //   if (e.message === 'Test error!') {
-    //     throw e
-    //   } else {
-    //     reportError(`Error in checkAndProcessCommands invocation for '${matchingCommand.key}'`, e)
-    //     return false
-    //   }
-    // }
+    if (result || result === null || result === '') {
+      return result
+    } else {
+      return false
+    }
   } else {
     return false
   }
 }
 
 export function checkAndDescribeCommands(value, extraParams) {
+
+  if (commandDescriptionTimeout) {
+    clearTimeout(commandDescriptionTimeout)
+  }
+
   const { matchingCommand, match } = findMatchingCommand(value)
 
   if (matchingCommand) {
@@ -73,7 +89,7 @@ export function checkAndDescribeCommands(value, extraParams) {
       }
 
       if (matchingCommand.describeCommand) {
-        result.description = matchingCommand.describeCommand(match, extraParams)
+        result.description = matchingCommand.describeCommand(match, { ...extraParams, setTimeoutForCommand })
       } else {
         result.description = match?.[0]
       }
