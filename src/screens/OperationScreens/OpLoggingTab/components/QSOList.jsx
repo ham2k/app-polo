@@ -21,6 +21,8 @@ import QSOHeader from './QSOHeader'
 import EventItem from './EventItem'
 import EventNoteItem from './EventNoteItem'
 
+let scrollTimeout
+
 const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress, lastUUID, selectedUUID, onSelectQSO }) {
   const { width } = useSafeAreaFrame()
   // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
@@ -62,25 +64,34 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
 
   // When the lastQSO changes, scroll to it
   useEffect(() => {
-    setTimeout(() => {
-      if (!sections || !sections.length) return
-      let sectionIndex = sections.length - 1
-      let itemIndex = sections[sectionIndex].data.length - 1
-      if (lastUUID) {
-        sections.find((section, i) => {
-          return section.data.find((qso, j) => {
-            if (qso.uuid === lastUUID) {
-              sectionIndex = i
-              itemIndex = j
-              return true
-            }
-            return false
-          })
+    if (!sections || !sections.length) return
+    let sectionIndex = sections.length - 1
+    let itemIndex = sections[sectionIndex].data.length - 1
+    if (lastUUID) {
+      sections.find((section, i) => {
+        return section.data.find((qso, j) => {
+          if (qso.uuid === lastUUID) {
+            sectionIndex = i
+            itemIndex = j
+            return true
+          }
+          return false
         })
-      }
+      })
+    }
 
-      listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
-    }, 100)
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout)
+    }
+
+    scrollTimeout = setTimeout(() => {
+      try {
+        listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
+      } catch (e) {
+        // Sometimes the QSO list can change before this timeout call is executed
+        console.error('Error scrolling to last QSO', e)
+      }
+    }, 50)
   }, [listRef, lastUUID, sections])
 
   const refHandlers = useMemo(() => {
