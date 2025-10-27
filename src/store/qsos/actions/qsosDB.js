@@ -77,7 +77,6 @@ export const queryQSOs = async (query, params) => {
 export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
 
 export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = false }) => {
-  debugger
   const qso = {
     startAtMillis,
     endAtMillis,

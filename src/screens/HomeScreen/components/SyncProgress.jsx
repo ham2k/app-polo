@@ -14,10 +14,13 @@ import { useSelector } from 'react-redux'
 import { selectFiveSecondsTick } from '../../../store/time'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { selectLocalData } from '../../../store/local'
+import { selectSettings } from '../../../store/settings'
+import KeepAwake from '@sayem314/react-native-keep-awake'
 
 const DEBUG = 0
 
 export default function SyncProgress () {
+  const settings = useSelector(selectSettings)
   const styles = useThemedStyles()
   const localData = useSelector(selectLocalData)
 
@@ -81,6 +84,7 @@ export default function SyncProgress () {
     <Animated.View
       style={[styles.root, animatedStyle]}
     >
+      {settings.keepDeviceAwake && <KeepAwake />}
       <View
         style={{
           flexDirection: 'row',

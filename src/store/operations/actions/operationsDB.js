@@ -253,8 +253,13 @@ export async function getSyncCounts() {
     return acc
   }, {})
 
-  counts.operations.total = (counts.operations.synced || 0) + (counts.operations.pending || 0)
-  counts.qsos.total = (counts.qsos.synced || 0) + (counts.qsos.pending || 0)
+  counts.operations.synced = counts.operations.synced ?? 0
+  counts.operations.pending = counts.operations.pending ?? 0
+  counts.qsos.synced = counts.qsos.synced ?? 0
+  counts.qsos.pending = counts.qsos.pending ?? 0
+
+  counts.operations.total = counts.operations.synced + counts.operations.pending
+  counts.qsos.total = counts.qsos.synced + counts.qsos.pending
 
   return counts
 }

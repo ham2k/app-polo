@@ -30,7 +30,7 @@ const DEFAULT_SYNC_CHECK_PERIOD = 1000 * 10 // 1000 * 60 * 1 // 1 minutes, time 
 const SMALL_BATCH_SIZE = 10 // QSOs or Operations to send on a quick `syncLatest...`
 const DEFAULT_LARGE_BATCH_SIZE = 10 //200 // QSOs or Operations to send on a regular sync loop
 
-const VERBOSE = 2
+const VERBOSE = 1
 
 let errorCount = 0
 
@@ -116,17 +116,21 @@ export function useSyncLoop({ dispatch, settings, online, appState }) {
     }
   }, [lofiData?.server, dispatch])
 
+  useEffect(() => { // Ensure the clock is ticking
+    dispatch(startTickTock())
+    return () => dispatch(stopTickTock())
+  }, [dispatch])
+
   const tick = useSelector(selectFiveSecondsTick)
   useEffect(() => {
     if (appState === 'starting') return
     setImmediate(() => {
-      dispatch(startTickTock())
       const diff = ((tick || 0) - (GLOBAL.lastSyncLoop || 0))
       const maxTime = (GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD)
 
-      if (VERBOSE > 0) console.log('⏱️ Sync tick', tick, { last: GLOBAL.lastSyncLoop, tick, diff, max: maxTime, online })
+      if (VERBOSE >= 1) console.log('⏱️ Sync tick', tick, { last: GLOBAL.lastSyncLoop, tick, diff, max: maxTime, online })
       if (goAheadWithSync && GLOBAL.syncEnabled && online && diff > maxTime) {
-        if (VERBOSE > 0) console.log('📅 Sync due')
+        if (VERBOSE >= 1) console.log('📅 Sync due')
         _scheduleNextSyncLoop({ dispatch, delay: 1 })
       }
     })
@@ -137,6 +141,7 @@ function _scheduleNextSyncLoop({ dispatch, delay }, loop) {
   if (delay === undefined) {
     delay = GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY
   }
+  if (VERBOSE >= 1) console.log(' -- scheduling next sync loop', delay, nextSyncLoopInterval)
 
   if (!nextSyncLoopInterval) {
     nextSyncLoopInterval = setTimeout(() => _doOneRoundOfSyncing({ dispatch }), delay)
@@ -155,7 +160,6 @@ export async function sendOperationsToSyncService({ dispatch }) {
   })
 }
 
-
 /*
  * `_doOneRoundOfSyncing` is the core of the sync loop.
  * It is responsible for:
@@ -171,10 +175,20 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
   _takeOverSyncLoop()
 
   if (VERBOSE > 0) console.log('🔄 Doing one round of syncing')
+  if (VERBOSE >= 1) logTimer('sync', 'Start', { reset: true })
 
   let inboundSync = false
   dispatch((_dispatch, getState) => {
-    inboundSync = selectFeatureFlag(getState(), 'inboundSync') || false
+    const lofiData = selectLocalExtensionData(getState(), 'ham2k-lofi')
+    console.log('lofiData', lofiData)
+    if (lofiData?.account?.cutoff_date_millis
+      && (Date.now() - lofiData?.account?.cutoff_date_millis > 1000 * 60 * 60 * 24)) {
+      // If the sync server gave us a cutoff date more than 24h in the past,
+      // we assume the server wants us to sync
+      inboundSync = true
+    } else {
+      inboundSync = selectFeatureFlag(getState(), 'inboundSync') ?? false
+    }
   })
 
   let qsoBatchSize, operationBatchSize
@@ -215,16 +229,16 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
     }
 
     // Consider sending more details to the server
-    if (GLOBAL.syncVerbose || GLOBAL.syncVerboseNextRound) {
-      syncPayload.meta = {
-        qsoCount: counts.qsos.total,
-        unsyncedQSOCount: counts.qsos.pending,
-        operationCount: counts.operations.total,
-        unsyncedOperationCount: counts.operations.pending
-      }
-      GLOBAL.syncVerboseNextRound = false
-      if (VERBOSE > 1) console.log(' -- verbose meta', syncPayload.meta)
+    // if (GLOBAL.syncVerbose || GLOBAL.syncVerboseNextRound) {
+    syncPayload.meta = {
+      qsoCount: counts.qsos.total,
+      unsyncedQSOCount: counts.qsos.pending,
+      operationCount: counts.operations.total,
+      unsyncedOperationCount: counts.operations.pending
     }
+    //   GLOBAL.syncVerboseNextRound = false
+    //   if (VERBOSE > 1) console.log(' -- verbose meta', syncPayload.meta)
+    // }
 
     // Remove operation local data from the syncParams
     if (syncPayload.operations) {
@@ -296,7 +310,7 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
 
       // Call the server's `sync` endpoint
       if (VERBOSE > 2) console.log(' -- calling hook', { meta: syncPayload.meta, sync: syncPayload.meta?.sync, operations: syncPayload.operations?.length, qsos: syncPayload.qsos?.length, settings: Object.keys(syncPayload?.settings || {}).length })
-      if (VERBOSE > 1) logTimer('sync', 'sync', { reset: true })
+      if (VERBOSE >= 1) logTimer('sync', 'Sending request')
       const response = await dispatch(syncHook.sync(syncPayload))
       if (VERBOSE > 0) console.log(' -- response', { ok: response.ok, operations: response?.json?.operations?.length, qsos: response?.json?.qsos?.length, meta: response?.json?.meta, account: response?.json?.account })
       if (VERBOSE > 1) console.log(' -- qsos', response?.json?.qsos)
@@ -305,7 +319,7 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
       const [metaOk, changesToSyncData] = await _processResponseMeta({ response, dispatch, localData })
       if (metaOk) {
         if (response.ok) {
-          if (VERBOSE > 1) logTimer('sync', 'Response parsed')
+          if (VERBOSE >= 1) logTimer('sync', 'Response parsed')
 
           // Mark the QSOs and Operations as synced
           if (syncPayload.qsos) markQSOsAsSynced(syncPayload.qsos)
@@ -321,7 +335,7 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
 
             syncTimes.lastestOperationSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestOperationSyncedAtMillis ?? 0)
             syncTimes.earliestOperationSyncedAtMillis = Math.min(earliestSyncedAtMillis, localData?.sync?.earliestOperationSyncedAtMillis ?? earliestSyncedAtMillis)
-            if (VERBOSE > 1) logTimer('sync', 'Done merging operations', { latestSyncedAtMillis, earliestSyncedAtMillis })
+            if (VERBOSE >= 1) logTimer('sync', 'Done merging operations', { latestSyncedAtMillis, earliestSyncedAtMillis })
           }
 
           if (inboundSync && response.json.qsos?.length > 0) {
@@ -330,7 +344,7 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
 
             syncTimes.lastestQSOSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestQSOSyncedAtMillis ?? 0)
             syncTimes.earliestQSOSyncedAtMillis = Math.min(earliestSyncedAtMillis, localData?.sync?.earliestQSOSyncedAtMillis ?? earliestSyncedAtMillis)
-            if (VERBOSE > 1) logTimer('sync', 'Done merging qsos', { latestSyncedAtMillis, earliestSyncedAtMillis })
+            if (VERBOSE >= 1) logTimer('sync', 'Done merging qsos', { latestSyncedAtMillis, earliestSyncedAtMillis })
           }
 
           if (oneSmallBatchOnly) {
@@ -342,7 +356,7 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
             const anyPendingQSO = await queryQSOs('WHERE synced IS false AND operation != "historical" ORDER BY startOnMillis DESC LIMIT 1')
             const anyPendingOperation = await queryOperations('WHERE synced IS false LIMIT 1')
 
-            const receivedAllUpdates = ((response.json.operations?.length || 0) < syncPayload.meta.sync.operations.limit) && ((response.json.qsos?.length || 0) < syncPayload.meta.sync.qsos.limit)
+            const receivedAllUpdates = ((response.json.operations?.length || 0) < syncPayload.meta?.sync?.operations.limit) && ((response.json?.qsos?.length || 0) < syncPayload.meta?.sync?.qsos?.limit)
 
             if (anyPendingQSO.length === 0 && anyPendingOperation.length === 0 && receivedAllUpdates) {
               if (VERBOSE > 1) console.log(' -- no more changes to sync!!! loop complete')
@@ -479,7 +493,7 @@ async function _processResponseMeta({ response = {}, localData = {}, dispatch })
     }
 
     if (meta.resetSyncedStatus || meta.reset_synced_status) {
-      await resetSyncedStatus()
+      await dispatch(resetSyncedStatus())
     }
 
     if ((meta.syncVerbose || meta.sync_verbose) !== GLOBAL.syncVerbose) {
@@ -490,33 +504,34 @@ async function _processResponseMeta({ response = {}, localData = {}, dispatch })
       GLOBAL.syncVerboseNextRound = true
     }
 
-    if (meta.suggestedSyncBatchSize || meta.suggested_sync_batch_size) {
-      GLOBAL.syncBatchSize = meta.suggestedSyncBatchSize ?? meta.suggested_sync_batch_size
+    if (meta.suggestedSyncBatchSize || meta.suggested_sync_batch_size || meta.flags?.suggested_sync_batch_size) {
+      GLOBAL.syncBatchSize = meta.suggestedSyncBatchSize ?? meta.suggested_sync_batch_size ?? meta.flags?.suggested_sync_batch_size
       if (GLOBAL.syncBatchSize < 1) GLOBAL.syncBatchSize = undefined
       if (isNaN(GLOBAL.syncBatchSize)) GLOBAL.syncBatchSize = undefined
+      console.log('-- set syncBatchSize', GLOBAL.syncBatchSize, meta)
     }
 
-    if (meta.suggestedSyncQSOBatchSize || meta.suggested_sync_qso_batch_size) {
-      GLOBAL.syncQSOBatchSize = meta.suggestedSyncQSOBatchSize ?? meta.suggested_sync_qso_batch_size
+    if (meta.suggestedSyncQSOBatchSize || meta.suggested_sync_qso_batch_size || meta.flags?.suggested_sync_qso_batch_size) {
+      GLOBAL.syncQSOBatchSize = meta.suggestedSyncQSOBatchSize ?? meta.suggested_sync_qso_batch_size ?? meta.flags?.suggested_sync_qso_batch_size
       if (GLOBAL.syncQSOBatchSize < 1) GLOBAL.syncQSOBatchSize = undefined
       if (isNaN(GLOBAL.syncQSOBatchSize)) GLOBAL.syncQSOBatchSize = undefined
     }
 
-    if (meta.suggestedSyncOperationBatchSize || meta.suggested_sync_operation_batch_size) {
-      GLOBAL.syncOperationBatchSize = meta.suggestedSyncOperationBatchSize ?? meta.suggested_sync_operation_batch_size
+    if (meta.suggestedSyncOperationBatchSize || meta.suggested_sync_operation_batch_size || meta.flags?.suggested_sync_operation_batch_size) {
+      GLOBAL.syncOperationBatchSize = meta.suggestedSyncOperationBatchSize ?? meta.suggested_sync_operation_batch_size ?? meta.flags?.suggested_sync_operation_batch_size
       if (GLOBAL.syncOperationBatchSize < 1) GLOBAL.syncOperationBatchSize = undefined
       if (isNaN(GLOBAL.syncOperationBatchSize)) GLOBAL.syncOperationBatchSize = undefined
     }
 
-    if (meta.suggestedSyncLoopDelay || meta.suggested_sync_loop_delay) {
-      GLOBAL.syncLoopDelay = meta.suggestedSyncLoopDelay ?? meta.suggested_sync_loop_delay
+    if (meta.suggestedSyncLoopDelay || meta.suggested_sync_loop_delay || meta.flags?.suggested_sync_loop_delay) {
+      GLOBAL.syncLoopDelay = meta.suggestedSyncLoopDelay ?? meta.suggested_sync_loop_delay ?? meta.flags?.suggested_sync_loop_delay
       if (GLOBAL.syncLoopDelay < 1) GLOBAL.syncLoopDelay = undefined
       if (isNaN(GLOBAL.syncLoopDelay)) GLOBAL.syncLoopDelay = undefined
       if (GLOBAL.syncLoopDelay < 250) GLOBAL.syncLoopDelay = GLOBAL.syncLoopDelay * 1000 // if someone is counting seconds, convert to millis
     }
 
-    if (meta.suggestedSyncCheckPeriod || meta.suggested_sync_check_period) {
-      GLOBAL.syncCheckPeriod = meta.suggestedSyncCheckPeriod ?? meta.suggested_sync_check_period
+    if (meta.suggestedSyncCheckPeriod ?? meta.suggested_sync_check_period ?? meta.flags?.suggested_sync_check_period) {
+      GLOBAL.syncCheckPeriod = meta.suggestedSyncCheckPeriod ?? meta.suggested_sync_check_period ?? meta.flags?.suggested_sync_check_period
       if (GLOBAL.syncCheckPeriod < 1) GLOBAL.syncCheckPeriod = undefined
       if (isNaN(GLOBAL.syncCheckPeriod)) GLOBAL.syncCheckPeriod = undefined
       if (GLOBAL.syncCheckPeriod < 250) GLOBAL.syncCheckPeriod = GLOBAL.syncCheckPeriod * 1000 // if someone is counting seconds, convert to millis

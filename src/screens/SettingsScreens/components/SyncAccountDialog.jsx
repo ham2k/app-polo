@@ -24,7 +24,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
 
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 
-  const [dialogVisible, setDialogVisible] = useState(false)
+  const [dialogVisible, setDialogVisible] = useState(visible)
   const [email, setEmail] = useState('')
   const [errors, setErrors] = useState({})
 
@@ -46,7 +46,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
 
   const handleAccept = useCallback(async () => {
     const result = await dispatch(syncHook.setAccountData({ pending_email: email }))
-    // console.log('account change result', result)
+
     if (result.ok) {
       dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: result.json.account, pending_email: email }))
       setDialogVisible(false)
@@ -86,7 +86,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
 
   const showResend = useMemo(() => {
     const pending = (lofiData?.pending_link_email || lofiData?.account?.pending_email)
-    // console.log('showResend', { pending, email })
+
     if (pending && pending === email) {
       return true
     } else {
@@ -94,21 +94,56 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
     }
   }, [lofiData?.pending_link_email, lofiData?.account?.pending_email, email])
 
-  const handleResend = useCallback(() => {
+  const handleResend = useCallback(async () => {
     if (lofiData?.pending_link_email) {
-      dispatch(syncHook.linkClient(lofiData?.pending_link_email))
-    } else {
-      dispatch(syncHook.resendEmail())
-    }
-    setDialogVisible(false)
-    onDialogDone && onDialogDone()
-  }, [lofiData?.pending_link_email, onDialogDone, dispatch, syncHook])
+      const linkResult = await dispatch(syncHook.linkClient(lofiData?.pending_link_email))
 
-  const handleRevert = useCallback(() => {
+      if (linkResult.ok) {
+        dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: linkResult.json.account, pending_link_email: lofiData?.pending_link_email }))
+        setDialogVisible(false)
+        onDialogDone && onDialogDone()
+      } else {
+        const newErrors = {
+          default: [linkResult.json.error]
+        }
+        Object.keys(linkResult.json?.account_errors || {}).forEach(key => {
+          newErrors[key] = linkResult.json.account_errors[key].error
+        })
+        setErrors(newErrors)
+      }
+    } else {
+      const resendResult = await dispatch(syncHook.resendEmail())
+
+      if (resendResult.ok) {
+        dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: resendResult.json.account, pending_link_email: email }))
+        setDialogVisible(false)
+        onDialogDone && onDialogDone()
+      } else if (resendResult.json.account_errors?.pending_email?.find(e => e.suggested_action === 'link')) {
+        const linkResult = await dispatch(syncHook.linkClient(email))
+        if (linkResult.ok) {
+          dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: linkResult.json.account, pending_link_email: email }))
+          setDialogVisible(false)
+          onDialogDone && onDialogDone()
+        }
+      } else {
+        const newErrors = {
+          default: [resendResult.json.error]
+        }
+        Object.keys(resendResult.json?.account_errors || {}).forEach(key => {
+          newErrors[key] = resendResult.json.account_errors[key]
+        })
+
+        setErrors(newErrors)
+      }
+    }
+  }, [lofiData?.pending_link_email, dispatch, syncHook, onDialogDone, email])
+
+  const handleRevert = useCallback(async () => {
+    await dispatch(syncHook.setAccountData({ pending_email: '' }))
     dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined, pending_email: undefined }))
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [dispatch, onDialogDone])
+  }, [dispatch, onDialogDone, syncHook])
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
@@ -127,7 +162,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
           placeholder="you@example.com"
           onChangeText={onChangeEmail}
         />
-        {errors.pending_email?.length > 0 && (
+        {errors?.pending_email?.length > 0 && (
           <Text style={{ color: 'red', textAlign: 'center', marginTop: styles.oneSpace }}>
             Email {errors.pending_email.map(e => e?.error || e).join(', ')}
           </Text>

@@ -40,6 +40,7 @@ import WavelogSettingsScreen from './WavelogSettingsScreen'
 
 import { MainSettingsForDistribution } from '../../../distro'
 import NoticesSettingsScreen from './NoticesSettingsScreen'
+import { selectLocalExtensionData } from '../../../store/local'
 
 const Stack = createNativeStackNavigator()
 
@@ -132,11 +133,17 @@ export default function MainSettingsScreen ({ navigation, route }) {
 function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
   const safeAreaInsets = useSafeAreaInsets()
   const [currentDialog, setCurrentDialog] = useState()
-  console.log('safe area', safeAreaInsets)
+
   const accountSettingHooks = useMemo(() => {
     const hooks = findHooks('setting').filter(hook => hook.category === 'account' && hook.SettingItem)
     return hooks
   }, [settings]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
+  const showSyncSettings = useMemo(() => {
+    return lofiData?.account?.cutoff_date_millis &&
+    (Date.now() - lofiData?.account?.cutoff_date_millis > 1000 * 60 * 60 * 24)
+  }, [lofiData?.account?.cutoff_date_millis])
 
   return (
     <ScrollView style={{ flex: 1, marginLeft: safeAreaInsets.left, marginRight: splitView ? 0 : safeAreaInsets.right }}>
@@ -185,13 +192,12 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
           leftIcon="file-cabinet"
         />
 
-        {settings.devMode && (
+        {(settings.devMode || showSyncSettings) && (
           <H2kListItem
             title="Sync Settings"
             description="Cloud sync and backup"
             onPress={() => navigation.navigate('Settings', { screen: 'SyncSettings' })}
             leftIcon="sync"
-            leftIconColor={styles.colors.devMode}
           />
         )}
 
