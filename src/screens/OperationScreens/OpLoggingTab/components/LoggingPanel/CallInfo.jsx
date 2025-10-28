@@ -33,6 +33,8 @@ export const MESSAGES_FOR_SCORING = {
   newRef: 'New Reference',
   newMult: 'New Mult',
   newDay: 'New Day',
+  maybeDupe: 'Dupe?',
+  partialDupe: 'Dupe',
   'potaActivation.newDay': 'New POTA Day',
   'potaActivation.newRef': 'New Park',
   'sotaActivation.newDay': 'New SOTA Day',
@@ -46,7 +48,7 @@ export const MESSAGES_FOR_SCORING = {
 
 const DEBUG = false
 
-function prepareStyles(baseStyles, themeColor) {
+function prepareStyles (baseStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   return {
     ...baseStyles,
@@ -91,7 +93,7 @@ function prepareStyles(baseStyles, themeColor) {
   }
 }
 
-export function CallInfo({ qso, qsos, sections, operation, style, themeColor, updateQSO, settings }) {
+export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, themeColor, updateQSO, settings }) {
   const navigation = useNavigation()
   const styles = useThemedStyles(prepareStyles, themeColor)
   const online = useSelector(selectRuntimeOnline)
@@ -198,7 +200,7 @@ export function CallInfo({ qso, qsos, sections, operation, style, themeColor, up
     if (guess?.note) {
       parts.push(guess.note)
     } else {
-      if (lookup?.error && call?.length > 3) parts.push(lookup.error)
+      if (lookup?.error && call?.length > 2) parts.push(lookup.error)
       const name = sanitizeForMarkdown(qso?.their?.name ?? guess?.name ?? '')
 
       parts.push(name)
@@ -226,12 +228,21 @@ export function CallInfo({ qso, qsos, sections, operation, style, themeColor, up
   const messages = useMemo(() => {
     const newMessages = []
     if (scoreInfo?.length > 0) {
+      const hasValue = scoreInfo.find(score => score.value > 0)
+
       // Order by value, as those that provide points/QSOs/etc. more important
+      // console.log('scoreInfo', scoreInfo)
+
       const allScoringMessages = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
-        const alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
+        let alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
         const notices = (score?.notices || []).map(notice => ({ msg: notice, level: 'notice', key: `${score.type}.${notice}` }))
         const infos = (score?.infos || []).map(info => ({ msg: info, level: 'info', key: `${score.type}.${info}` }))
 
+        if (hasValue && alerts.find(alert => alert.msg === 'duplicate')) {
+          alerts = alerts.filter(alert => alert.msg !== 'duplicate')
+          notices.push({ msg: 'maybeDupe', level: 'notice', key: `${score.type}.duplicate` })
+        }
+        // console.log('-- ', alerts, notices, infos)
         return [...notices, ...alerts, ...infos].map(oneInfo => ({
           ...oneInfo,
           msg: MESSAGES_FOR_SCORING[oneInfo.key] ?? MESSAGES_FOR_SCORING[oneInfo.msg] ?? oneInfo.msg

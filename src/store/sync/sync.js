@@ -30,7 +30,7 @@ const DEFAULT_SYNC_CHECK_PERIOD = 1000 * 10 // 1000 * 60 * 1 // 1 minutes, time 
 const SMALL_BATCH_SIZE = 10 // QSOs or Operations to send on a quick `syncLatest...`
 const DEFAULT_LARGE_BATCH_SIZE = 10 //200 // QSOs or Operations to send on a regular sync loop
 
-const VERBOSE = 1
+const VERBOSE = 0
 
 let errorCount = 0
 
@@ -180,7 +180,7 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
   let inboundSync = false
   dispatch((_dispatch, getState) => {
     const lofiData = selectLocalExtensionData(getState(), 'ham2k-lofi')
-    console.log('lofiData', lofiData)
+
     if (lofiData?.account?.cutoff_date_millis
       && (Date.now() - lofiData?.account?.cutoff_date_millis > 1000 * 60 * 60 * 24)) {
       // If the sync server gave us a cutoff date more than 24h in the past,
@@ -508,7 +508,6 @@ async function _processResponseMeta({ response = {}, localData = {}, dispatch })
       GLOBAL.syncBatchSize = meta.suggestedSyncBatchSize ?? meta.suggested_sync_batch_size ?? meta.flags?.suggested_sync_batch_size
       if (GLOBAL.syncBatchSize < 1) GLOBAL.syncBatchSize = undefined
       if (isNaN(GLOBAL.syncBatchSize)) GLOBAL.syncBatchSize = undefined
-      console.log('-- set syncBatchSize', GLOBAL.syncBatchSize, meta)
     }
 
     if (meta.suggestedSyncQSOBatchSize || meta.suggested_sync_qso_batch_size || meta.flags?.suggested_sync_qso_batch_size) {

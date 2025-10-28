@@ -24,6 +24,7 @@ import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import GLOBAL from '../../../GLOBAL'
+import { filterNearDupes, filterQSOsWithSectionRefs } from '../../../tools/qsonTools'
 
 const Extension = {
   ...Info,
@@ -335,16 +336,13 @@ const ReferenceHandler = {
     }
 
     if (value === 0) return { value: 0 } // If not activating, only counts if other QSO has a POTA ref
+    // console.log('pota scoring', qso.their.call, scoredRef.type ?? '?', scoredRef.ref ?? '?')
 
-    const nearDupes = (qsos || []).filter(q => {
-      return !q.deleted
-        && (startAtMillis ? q.startAtMillis < startAtMillis : true)
-        && q.their.call === qso.their.call
-        && q.uuid !== uuid
-        && (scoredRef?.ref ? q.refs?.find(r => r?.ref === scoredRef.ref) : true)
-    })
+    const nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
+    // console.log('-- nearDupes', qso.uuid, qso.key, nearDupes)
 
     if (nearDupes.length === 0) {
+      // console.log('-- no dupes', { value, refCount, type })
       return { value, refCount, type }
     } else {
       const thisQSOTime = qso.startAtMillis ?? Date.now()
@@ -356,10 +354,12 @@ const ReferenceHandler = {
       const sameBand = sameDayDupes.filter(q => q.band === band).length !== 0
       const sameMode = sameDayDupes.filter(q => q.mode === mode).length !== 0
       const sameBandMode = sameDayDupes.filter(q => q.band === band && q.mode === mode).length !== 0
-
       const sameRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
-
+      const dupesHadRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).length !== 0).length !== 0
+      // console.log('-- ', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
       if (sameBandMode && sameDay && (sameRefs || refs.length === 0)) {
+        // console.log('-- duplicate', qso.uuid, { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
+        if (refs.length === 0 && dupesHadRefs && !qso.uuid) return { value: 0, refCount, notices: ['maybeDupe'], type }
         return { value: 0, refCount, alerts: ['duplicate'], type }
       } else {
         const notices = []
@@ -368,6 +368,7 @@ const ReferenceHandler = {
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
+        // console.log('-- near duplicate', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
         return { value, refCount, notices, type }
       }
     }

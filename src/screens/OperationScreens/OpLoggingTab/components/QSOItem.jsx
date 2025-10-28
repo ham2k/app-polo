@@ -15,7 +15,7 @@ import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { findBestHook } from '../../../../extensions/registry'
 import { H2kIcon, H2kPressable } from '../../../../ui'
 
-const QSOItem = React.memo(function QSOItem({ qso, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
+const QSOItem = React.memo(function QSOItem ({ qso, ourInfo, onPress, styles, selected, settings, timeFormatFunction, refHandlers }) {
   const theirInfo = { ...qso?.their?.guess, ...qso?.their }
 
   const freqParts = useMemo(() => {

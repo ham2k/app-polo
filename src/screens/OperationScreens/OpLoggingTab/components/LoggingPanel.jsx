@@ -473,7 +473,8 @@ export default function LoggingPanel ({
                     {!opMessage?.hideCallInfo && qso?.their?.call?.length > 2 && (
                       <CallInfo
                         qso={qso}
-                        qsos={activeQSOs}
+                        qsos={qsos}
+                        activeQSOs={activeQSOs}
                         sections={sections}
                         operation={operation}
                         vfo={vfo}
