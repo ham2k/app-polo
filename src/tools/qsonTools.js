@@ -15,7 +15,8 @@ export function filterQSOsWithSectionRefs({
 
   let sectionRefs = operation?.refs ?? []
   let sectionGrid = operation?.grid ?? undefined
-  let sectionIncludesRefs = (withSectionRefs ?? []).every(
+  withSectionRefs = (withSectionRefs ?? []).filter(ref => ref?.type && ref?.ref)
+  let sectionIncludesRefs = withSectionRefs.length === 0 || withSectionRefs.every(
     ref => sectionRefs.find(
       sectionRef => sectionRef.type === ref.type && sectionRef.ref === ref.ref
     )
@@ -27,7 +28,7 @@ export function filterQSOsWithSectionRefs({
       // console.log('-- section', qso.event)
       sectionRefs = qso.event.operation?.refs ?? []
       sectionGrid = qso.event.operation?.grid ?? undefined
-      sectionIncludesRefs = (withSectionRefs ?? []).every(
+      sectionIncludesRefs = withSectionRefs.length === 0 || withSectionRefs.every(
         ref => sectionRefs.find(
           sectionRef => sectionRef.type === ref.type && sectionRef.ref === ref.ref
         )
