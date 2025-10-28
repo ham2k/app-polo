@@ -120,7 +120,7 @@ export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, 
   return { ...operation, ...data }
 }
 
-const DEBUG = true
+const DEBUG = false
 export async function markOperationStart({ operation, qsos, dispatch }) {
   if (!operation) return
   if (DEBUG) console.log('markOperationStart', operation, qsos)
@@ -137,6 +137,7 @@ export async function markOperationStart({ operation, qsos, dispatch }) {
     event: {
       event: 'start',
       operation: captureOperationParameters({ operation }),
+      description: describeOperation({ operation }),
       operatorCall: operation?.local?.operatorCall
     }
   }))
@@ -244,7 +245,7 @@ export function captureOperationParameters({ operation }) {
 }
 
 export function describeOperation({ operation }) {
-  console.log('describeOperation', operation)
+  // console.log('describeOperation', operation)
   if (!operation) return ''
 
   const referenceTitles = (operation?.refs ?? []).map(ref => {

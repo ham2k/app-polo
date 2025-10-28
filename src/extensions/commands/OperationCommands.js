@@ -41,13 +41,15 @@ const StartOperationCommandHook = {
   key: 'commands-operation-start',
   match: /^(START)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation }) => {
+  describeCommand: (match, { operation, settings }) => {
     if (!operation) { return false }
+    if (!settings?.devMode) { return false }
 
     return 'Start the operation?'
   },
   invokeCommand: (match, { operation, qsos, dispatch, settings }) => {
     if (!operation) { return }
+    if (!settings?.devMode) { return false }
 
     markOperationStart({ operation, qsos, dispatch })
 
@@ -61,13 +63,15 @@ const BreakOperationCommandHook = {
   key: 'commands-operation-break',
   match: /^(BREAK)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation }) => {
+  describeCommand: (match, { operation, settings }) => {
     if (!operation) { return false }
+    if (!settings?.devMode) { return false }
 
     return 'Add a break?'
   },
   invokeCommand: (match, { operation, qsos, dispatch, settings }) => {
     if (!operation) { return }
+    if (!settings?.devMode) { return false }
 
     markOperationBreak({ operation, qsos, dispatch })
 
@@ -81,13 +85,15 @@ const StopOperationCommandHook = {
   key: 'commands-operation-stop',
   match: /^(STOP|END)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation }) => {
+  describeCommand: (match, { operation, settings }) => {
     if (!operation) { return false }
+    if (!settings?.devMode) { return false }
 
     return 'Stop the operation?'
   },
   invokeCommand: (match, { operation, qsos, dispatch, settings }) => {
     if (!operation) { return }
+    if (!settings?.devMode) { return false }
 
     markOperationStop({ operation, qsos, dispatch })
 

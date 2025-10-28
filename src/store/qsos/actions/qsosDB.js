@@ -91,7 +91,7 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
   return addQSOs({ uuid, qsos: [qso], synced })
 }
 
-const DEBUG = true
+const DEBUG = false
 
 export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
   const now = Date.now()
