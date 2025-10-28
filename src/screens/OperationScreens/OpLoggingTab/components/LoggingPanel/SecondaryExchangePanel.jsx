@@ -38,7 +38,7 @@ export const SecondaryExchangePanel = (props) => {
       findRef(operation, x.activationType) && x.postSpot &&
       (!x.isSpotEnabled || (x.isSpotEnabled && x.isSpotEnabled({ operation, settings }))))
     )
-    const otherSpottingHooks = findHooks('spots', { filter: 'postSpot' })
+    const otherSpottingHooks = findHooks('spots', { withFunction: 'postSpot' })
     if (activityHooksWithSpotting.length > 0 || otherSpottingHooks.length > 0) {
       newControls[spotterControl.key] = spotterControl
     }

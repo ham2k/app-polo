@@ -127,6 +127,11 @@ const ReferenceHandler = {
     }
   },
 
+  keyForRef: (ref) => {
+    const qp = qpData({ ref })
+    return `${Info.key}-${qp.short}`
+  },
+
   suggestOperationTitle: (ref) => {
     if (ref?.ref) {
       const qp = qpData({ ref })
@@ -151,6 +156,7 @@ const ReferenceHandler = {
         format: 'cabrillo',
         exportType: 'qp-cabrillo',
         exportName: `${qp.name ?? 'QSO Party'} Cabrillo`,
+        refKey: qp.short,
         templateData: { handlerShortName: _qpShortForQP(qp), handlerName: qp.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'

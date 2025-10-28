@@ -112,7 +112,7 @@ const KonamiCommandHook = {
 }
 
 // eslint-disable-next-line no-unused-vars
-function animateCall (cells, handleFieldChange, options = {}) {
+function animateCall(cells, handleFieldChange, options = {}) {
   const { time = 100 } = options
   let i = 0
   const interval = setInterval(() => {
