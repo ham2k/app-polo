@@ -14,7 +14,7 @@ import { fmtADIFDate, fmtADIFTime, fmtISODateTime } from './timeFormats'
 
 import { adifModeAndSubmodeForMode, frequencyForBand, modeForFrequency } from '@ham2k/lib-operation-data'
 
-export function qsonToADIF ({ operation, settings, qsos, handler, format, title, exportType, ADIFNotesTemplate, ADIFCommentTemplate, ADIFQslMsgTemplate }) {
+export function qsonToADIF({ operation, settings, qsos, handler, format, title, exportType, ADIFNotesTemplate, ADIFCommentTemplate, ADIFQslMsgTemplate }) {
   const templates = {
     key: `${handler.key}-${format}-${exportType ?? 'export'}`
   }
@@ -48,7 +48,6 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   }
 
   const eventQSOs = qsos.filter(qso => qso.event && !qso.deleted)
-  const nonEventQSOs = qsos.filter(qso => !qso.event &&  !qso.deleted)
 
   let str = ''
   str += `ADIF for ${title || ([common.stationCall, operation?.title, operation.subTitle].filter(x => x).join(' ')) || 'Operation'} \n`
@@ -71,7 +70,15 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
 
   str += '<EOH>\n'
 
-  nonEventQSOs.forEach(qso => {
+  qsos.forEach(qso => {
+    if (qso.deleted) return
+    if (qso.event) {
+      if (qso.event.event === 'break' || qso.event.event === 'start') {
+        operation = { ...operation, ...qso.event.operation }
+      }
+      return
+    }
+
     // Get the base handler's field combinations for this QSO
     // it might return an array of arrays,
     // meaning this QSO has to be represented by multiple ADIF rows (think POTA P2P, or QSO Party county line operations)
@@ -93,29 +100,29 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
       // Then we append the fields from the main handler's combinations
       fields = fields.concat(combinationFields)
 
-      // And finally, we look at any handlers for other refs in the operation, or refs in the QSO itself
-      // and ask them for more fields to add to this QSO.
-      ;[...qso.refs || [], ...operation.refs || []].forEach(ref => {
-        const secondaryRefHandler = findBestHook(`ref:${ref.type}`)
+        // And finally, we look at any handlers for other refs in the operation, or refs in the QSO itself
+        // and ask them for more fields to add to this QSO.
+        ;[...qso.refs || [], ...operation.refs || []].forEach(ref => {
+          const secondaryRefHandler = findBestHook(`ref:${ref.type}`)
 
-        if (secondaryRefHandler?.key === handler.key) return // Skip if it happens to be the same as the main handler
+          if (secondaryRefHandler?.key === handler.key) return // Skip if it happens to be the same as the main handler
 
-        if (secondaryRefHandler && secondaryRefHandler.key !== handler.key && secondaryRefHandler.adifFieldsForOneQSO) {
-          const refFields = secondaryRefHandler.adifFieldsForOneQSO({ qso, operation, common, exportType, ref, privateData, templates }) || []
-          refFields.forEach(refField => {
-            const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
-            if (existingField) {
-              // If another field with the same name already exists. Keep the first one defined and ignore this one
-              // unless it is `false`, in which case the field should be removed.
-              if (refField[1] === false) {
-                existingField[1] = false
+          if (secondaryRefHandler && secondaryRefHandler.key !== handler.key && secondaryRefHandler.adifFieldsForOneQSO) {
+            const refFields = secondaryRefHandler.adifFieldsForOneQSO({ qso, operation, common, exportType, ref, privateData, templates }) || []
+            refFields.forEach(refField => {
+              const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
+              if (existingField) {
+                // If another field with the same name already exists. Keep the first one defined and ignore this one
+                // unless it is `false`, in which case the field should be removed.
+                if (refField[1] === false) {
+                  existingField[1] = false
+                }
+              } else {
+                fields = fields.concat([refField])
               }
-            } else {
-              fields = fields.concat([refField])
-            }
-          })
-        }
-      })
+            })
+          }
+        })
 
       str += adifRow(fields)
     })
@@ -124,12 +131,12 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   return str
 }
 
-function escapeForHeader (str) {
+function escapeForHeader(str) {
   if (!str) return ''
   return str.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-function modeToADIF (mode, freq, qsoInfo) {
+function modeToADIF(mode, freq, qsoInfo) {
   const modeAndSubmode = adifModeAndSubmodeForMode(mode)
   if (modeAndSubmode.length > 1) {
     return [{ MODE: modeAndSubmode[0] }, { SUBMODE: modeAndSubmode[1] }]
@@ -142,7 +149,7 @@ function modeToADIF (mode, freq, qsoInfo) {
   }
 }
 
-function adifFieldsForOneQSO ({ qso, operation, common, privateData, templates, timeOffset }) {
+function adifFieldsForOneQSO({ qso, operation, common, privateData, templates, timeOffset }) {
   timeOffset = timeOffset ?? 0
   const fields = [
     { CALL: qso.their.call },
@@ -207,14 +214,14 @@ function adifFieldsForOneQSO ({ qso, operation, common, privateData, templates, 
   return fields
 }
 
-function adifRow (fields) {
+function adifRow(fields) {
   return fields
     .filter(field => field[1] !== false)
     .map(field => adifField(Object.keys(field)[0], Object.values(field)[0]))
     .join('') + '<EOR>\n'
 }
 
-function adifField (name, value, options = {}) {
+function adifField(name, value, options = {}) {
   if (!value && !options.force) return ''
   if (typeof value !== 'string') value = value.toString()
 

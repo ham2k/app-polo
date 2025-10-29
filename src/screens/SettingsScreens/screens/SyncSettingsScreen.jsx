@@ -227,7 +227,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
           )}
 
           <H2kListItem
-            title={`Current Subscription: ${lofiData?.subscription?.plan?.name ?? 'None'}`}
+            title={`${lofiData?.subscription?.plan?.name ?? 'No Active Plan'}`}
             description={lofiData?.subscription?.plan?.description ?? ''}
             leftIcon="calendar-clock"
             onPress={() => null}

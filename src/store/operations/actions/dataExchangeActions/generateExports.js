@@ -10,6 +10,7 @@ import base64 from 'react-native-base64'
 
 import { qsonToADIF } from '../../../../tools/qsonToADIF'
 import { qsonToCabrillo } from '../../../../tools/qsonToCabrillo'
+import { filterQSOsWithSectionRefs } from '../../../../tools/qsonTools'
 
 export const generateExportsForOptions = (uuid, exports, options = {}) => async (dispatch, getState) => {
   const state = getState()
@@ -21,12 +22,24 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
   for (const oneExport of exports) {
     const operationData = oneExport.operation || operation
 
+    console.log('oneExport', oneExport)
+    let operationRefs = operationData.refs
+    let includeQSOs = true
+
     let qsos = state.qsos.qsos[uuid].map(qso => {
       return { ...qso, our: { ...qso.our, call: operationData.stationCall } }
     })
+
     // When doing multioperator operations, with operators also working each other,
     // we want to exclude these QSOs from the combinations
     qsos = qsos.filter(qso => qso.our.call !== qso.their.call)
+
+    console.log('oneExport qsos', [...qsos])
+    console.log('oneExport ref', oneExport.ref)
+    qsos = filterQSOsWithSectionRefs({ qsos, operation: operationData, withSectionRefs: [oneExport.ref], withEvents: true })
+
+    console.log('filtered qsos', [...qsos])
+
     console.log('generateExportsForOptions oneExport', oneExport)
     if (options.dataURI) {
       const uri = await generateExportDataURI({ uuid, qsos, operation: operationData, settings, ...oneExport })

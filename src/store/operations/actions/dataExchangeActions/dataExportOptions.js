@@ -10,10 +10,11 @@
 # Explanation of how PoLo manages exports for one operation.
 
 For each station callsign in the operation, we collect "export options" from:
-- The handler for each reference in the operation.
+- The handler for each reference in the operation, including references in separate "breaks".
 - Any "export" handler.
 
 Each of these handlers can suggest zero or more export options, for which they provide:
+- A key (a unique identifier for the export option, which might group multiple references together)
 - A format (ADIF, Cabrillo, etc.)
 - A name template (e.g. "{{op.date}} {{op.call}} {{log.ref}}")
 - A title template (e.g. "{{log.call}} at {{log.ref}} on {{op.date}}")
@@ -108,7 +109,7 @@ export const DATA_FORMAT_DESCRIPTIONS = {
   other: 'Data'
 }
 
-export function baseNamePartsFor ({ operation, ourInfo }) {
+export function baseNamePartsFor({ operation, ourInfo }) {
   return {
     call: ourInfo.call,
     baseCall: ourInfo.baseCall,
@@ -120,34 +121,75 @@ export function baseNamePartsFor ({ operation, ourInfo }) {
   }
 }
 
-export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
+function getAllRefsForOperation({ operation, qsos }) {
+  const refs = qsos.filter(qso => !qso.deleted && (qso?.event?.event === 'start' || qso?.event?.event === 'break'))
+    .map(qso => qso?.event?.operation?.refs ?? [])
+    .flat().filter(ref => ref)
+
+  if (refs.length === 0) {
+    refs.push(...(operation?.refs || []))
+  }
+  return refs
+}
+
+function getExportOptionsForOperation({ operation, qsos, settings }) {
+  const refs = getAllRefsForOperation({ operation, qsos })
+  const exportOptions = {}
+
+  for (const ref of refs) {
+    const handler = findBestHook(`ref:${ref.type}`, { withFunction: 'suggestExportOptions' })
+
+    if (handler) {
+      const options = handler.suggestExportOptions({ operation, qsos, ref, settings })
+      for (const option of options) {
+        const refKey = handler.keyForRef ? handler.keyForRef(ref) : `${ref.type}-${ref.ref}`
+        const optionKey = `${handler.key}-${option.format}-${option.exportType ?? 'export'}`
+        const combinedKey = `${optionKey}-${refKey}`
+        exportOptions[combinedKey] = exportOptions[combinedKey] || { optionKey, refKey, handler, option, refs: [] }
+
+        const existingRef = exportOptions[combinedKey].refs.find(r => {
+          const existingRefKey = handler.keyForRef ? handler.keyForRef(r) : `${r.type}-${r.ref}`
+          return existingRefKey === refKey
+        })
+        if (!existingRef) {
+          exportOptions[combinedKey].refs.push(ref)
+        }
+      }
+    }
+  }
+
+  findHooks('export', { withFunction: 'suggestExportOptions' }).forEach(handler => {
+    const options = handler.suggestExportOptions({ operation, qsos, settings }) ?? []
+    for (const option of options) {
+      const optionKey = [handler.key, option.format, option.exportType ?? 'export'].filter(x => x).join('-')
+      exportOptions[optionKey] = exportOptions[optionKey] || { optionKey, refKey: null, handler, option, refs: [{ type: handler.key }] }
+    }
+  })
+  console.log('-- exportOptions', exportOptions)
+  return Object.values(exportOptions)
+}
+
+export function dataExportOptions({ operation, qsos, settings, ourInfo }) {
   const exports = []
 
+  const exportOptions = getExportOptionsForOperation({ operation, qsos, settings })
+
   const exportHandlersForRefs = (operation?.refs || [])
-    .map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))
-    .filter(x => x?.handler && x.handler.suggestExportOptions)
-  const exportHandlersForExports = findHooks('export')
-    .map(handler => ({ handler, ref: {} }))
-    .flat().filter(x => x.handler && x.handler.suggestExportOptions)
 
-  const handlersWithOptions = [...exportHandlersForRefs, ...exportHandlersForExports].map(({ handler, ref }) => (
-    { handler, ref, options: handler.suggestExportOptions && handler.suggestExportOptions({ operation, qsos, ref, settings }) }
-  )).flat().filter(({ options }) => options)
+  for (const { optionKey, refKey, handler, refs, option } of exportOptions) {
+    let exportSettings = selectExportSettings({ settings }, optionKey, (handler?.defaultExportSettings && handler?.defaultExportSettings()))
+    if (exportSettings.customTemplates === false) {
+      const { privateData } = exportSettings
+      exportSettings = selectExportSettings({ settings }, 'default')
+      exportSettings.private = privateData
+    }
+    const nameTemplate = compileTemplateForOperation(exportSettings?.nameTemplate || option.nameTemplate || '{{> DefaultName}}', { settings })
+    const titleTemplate = compileTemplateForOperation(exportSettings?.titleTemplate || option.titleTemplate || '{{> DefaultTitle}}', { settings })
+    const partials = basePartialTemplates({ settings })
+    const data = extraDataForTemplates({ settings })
 
-  handlersWithOptions.forEach(({ handler, ref, options }) => {
-    options.forEach(option => {
-      const key = `${handler.key}-${option.format}-${option.exportType ?? 'export'}`
-      let exportSettings = selectExportSettings({ settings }, key, (handler?.defaultExportSettings && handler?.defaultExportSettings()))
-      if (exportSettings.customTemplates === false) {
-        const { privateData } = exportSettings
-        exportSettings = selectExportSettings({ settings }, 'default')
-        exportSettings.private = privateData
-      }
-      const nameTemplate = compileTemplateForOperation(exportSettings?.nameTemplate || option.nameTemplate || '{{> DefaultName}}', { settings })
-      const titleTemplate = compileTemplateForOperation(exportSettings?.titleTemplate || option.titleTemplate || '{{> DefaultTitle}}', { settings })
+    for (const ref of refs) {
       const context = templateContextForOneExport({ option, settings, operation, ourInfo, handler, ref })
-      const partials = basePartialTemplates({ settings })
-      const data = extraDataForTemplates({ settings })
 
       let title
       try {
@@ -178,13 +220,13 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
 
       // console.log('dataExportOptions', { exportSettings, option, title, fileName, exportLabel, exportType })
       exports.push({ ...option, handler, ref, fileName, title, exportLabel, exportType, operation, ourInfo })
-    })
-  })
-
+    }
+  }
+  console.log('dataExportOptions', exports)
   return exports.sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
 }
 
-export function compileTemplateForOperation (template, { settings }) {
+export function compileTemplateForOperation(template, { settings }) {
   try {
     const compiled = Handlebars.compile(template ?? '', { noEscape: true })
     return compiled
@@ -194,7 +236,7 @@ export function compileTemplateForOperation (template, { settings }) {
   }
 }
 
-export function runTemplateForOperation (template, { settings, operation, ourInfo, handler, ref, qso }) {
+export function runTemplateForOperation(template, { settings, operation, ourInfo, handler, ref, qso }) {
   try {
     const compiled = Handlebars.compile(template ?? '', { noEscape: true })
     const context = templateContextForOneExport({ settings, operation, ourInfo, handler, ref, qso })
@@ -208,7 +250,7 @@ export function runTemplateForOperation (template, { settings, operation, ourInf
   }
 }
 
-export function templateContextForOneExport ({ option, settings, operation, ourInfo, handler, qso, ref, context }) {
+export function templateContextForOneExport({ option, settings, operation, ourInfo, handler, qso, ref, context }) {
   return {
     settings: {
       useCompactFileNames: settings.useCompactFileNames
@@ -251,7 +293,7 @@ export function templateContextForOneExport ({ option, settings, operation, ourI
   }
 }
 
-export function basePartialTemplates ({ settings }) {
+export function basePartialTemplates({ settings }) {
   let partials = {
     RefActivityNameNormal: '{{op.date}}{{#if log.includeTime}} {{op.startTime}}{{/if}} {{log.station}} at {{#if log.refPrefix}}{{log.refPrefix}} {{/if}}{{log.ref}}',
     RefActivityNameCompact: '{{log.station}}@{{#if log.refPrefix}}{{dash (downcase log.refPrefix)}}-{{/if}}{{log.ref}}-{{compact op.date}}',
@@ -283,7 +325,7 @@ export function basePartialTemplates ({ settings }) {
   return partials
 }
 
-export function extraDataForTemplates ({ settings }) {
+export function extraDataForTemplates({ settings }) {
   return {
     app: {
       name: 'Ham2K Portable Logger',
