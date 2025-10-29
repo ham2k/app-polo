@@ -53,7 +53,7 @@ export default function OpSpotsTab ({ navigation, route }) {
       if (route?.params?.splitView) {
         navigation.navigate('Operation', { ...route?.params, qso: { ...spot, our: undefined, _suggestedKey: spot.key, key: undefined } })
       } else {
-        navigation.navigate('OpSpotModal', { ...route?.params, qso: { ...spot, our: undefined, _suggestedKey: spot.key, key: undefined, _forceLog: true } })
+        navigation.navigate('OpSpotModal', { operation, qso: { ...spot, our: undefined, _suggestedKey: spot.key, key: undefined } })
       }
     }
   }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings])

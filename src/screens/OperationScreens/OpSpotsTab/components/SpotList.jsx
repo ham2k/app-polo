@@ -14,6 +14,7 @@ import getItemLayout from 'react-native-get-item-layout-section-list'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import SpotItem from './SpotItem'
+import MobileSpotItem from './MobileSpotItem'
 import SpotHeader from './SpotHeader'
 
 export default function SpotList ({ sections, loading, refresh, style, onPress, onLongPress, settings }) {
@@ -42,7 +43,12 @@ export default function SpotList ({ sections, loading, refresh, style, onPress, 
   const renderRow = useCallback(({ item, index }) => {
     const spot = item
     return (
-      <SpotItem key={spot.key} spot={spot} onPress={onPress} onLongPress={onLongPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} settings={settings} />
+      (settings.mobileMode ? (
+        <MobileSpotItem key={spot.key} spot={spot} onPress={onPress} onLongPress={onLongPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} settings={settings} />
+      ) : (
+        <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} settings={settings} />
+      )
+      )
     )
   }, [onPress, onLongPress, styles, paddingRight, paddingLeft, extendedWidth, settings])
 
@@ -144,6 +150,7 @@ function _prepareStyles (themeStyles, style, deviceColorScheme) {
         ...mobileStyles
       },
       label: {
+        flex: 1,
         fontSize: themeStyles.normalFontSize * 0.9
       },
       mode: {
