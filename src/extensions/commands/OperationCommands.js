@@ -5,15 +5,6 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { Alert, Linking } from 'react-native'
-import { XMLParser } from 'fast-xml-parser'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-
-import { postSpots, retrieveHooksWithSpotting } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
-import { fmtFreqInMHz } from '../../tools/frequencyFormats'
-import { fetchWithTimeout } from '../../tools/fetchWithTimeout'
-import Geolocation from '@react-native-community/geolocation'
-import { findHooks } from '../registry'
 import { markOperationBreak, markOperationStart, markOperationStop } from '../../store/operations'
 
 const Info = {
