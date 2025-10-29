@@ -9,7 +9,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { Linking, Platform, ScrollView, View } from 'react-native'
-import { Button, Dialog, IconButton, Surface } from 'react-native-paper'
+import { Surface } from 'react-native-paper'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
@@ -19,7 +19,7 @@ import { trackEvent, handleNoticeActionForDistribution } from '../../../distro'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogTitle, H2kIcon, H2kMarkdown } from '../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogScrollArea, H2kDialogTitle, H2kIcon, H2kIconButton, H2kMarkdown } from '../../../ui'
 
 export default function Notices ({ paddingForSafeArea = false }) {
   const safeArea = useSafeAreaInsets()
@@ -114,47 +114,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
       )}
 
       {dialog && (
-        <>
-          <KeepAwake />
-          <H2kDialog
-            visible={true}
-            style={{ marginTop: 50, marginBottom: 50 }}
-            onDismiss={() => {
-              setDialog(undefined)
-            }}
-          >
-            {dialog?.title && (
-              <H2kDialogTitle>{dialog?.title}</H2kDialogTitle>
-            )}
-            <Dialog.ScrollArea>
-              <ScrollView fadingEdgeLength={styles.oneSpace * 10} style={{ maxHeight: styles.oneSpace * 28 }}>
-                <H2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
-                  {dialog?.text}
-                </H2kMarkdown>
-              </ScrollView>
-            </Dialog.ScrollArea>
-            <H2kDialogActions>
-              {dialog?.actions?.map((action, index) => (
-                <H2kButton
-                  key={index}
-                  mode={'contained'}
-                  theme={ styles.buttonTheme }
-                  style={{ paddingHorizontal: styles.oneSpace, marginLeft: -styles.oneSpace, marginRight: styles.oneSpace * 2 }}
-                  compact={true}
-                  disabled={action === 'disabled'}
-                  onPress={() => handleDialogAction(dialog, action)}
-                >
-                  {action.label ?? 'Ok!'}
-                </H2kButton>
-              ))}
-              <H2kButton
-                onPress={() => {
-                  setDialog(undefined)
-                }}
-              >Ok</H2kButton>
-            </H2kDialogActions>
-          </H2kDialog>
-        </>
+        <OneDialog dialog={dialog} styles={styles} handleDialogAction={handleDialogAction} setDialog={setDialog} />
       )}
     </Animated.View>
   )
@@ -190,47 +150,7 @@ export function NoticeList ({ notices, style }) {
       ))}
 
       {dialog && (
-        <>
-          <KeepAwake />
-          <H2kDialog
-            visible={true}
-            style={{ marginTop: 50, marginBottom: 50 }}
-            onDismiss={() => {
-              setDialog(undefined)
-            }}
-          >
-            {dialog?.title && (
-              <H2kDialogTitle>{dialog?.title}</H2kDialogTitle>
-            )}
-            <Dialog.ScrollArea>
-              <ScrollView fadingEdgeLength={styles.oneSpace * 10} style={{ maxHeight: styles.oneSpace * 28 }}>
-                <H2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
-                  {dialog?.text}
-                </H2kMarkdown>
-              </ScrollView>
-            </Dialog.ScrollArea>
-            <H2kDialogActions>
-              {dialog?.actions?.map((action, index) => (
-                <H2kButton
-                  key={index}
-                  mode={'contained'}
-                  theme={ styles.buttonTheme }
-                  style={{ paddingHorizontal: styles.oneSpace, marginLeft: -styles.oneSpace, marginRight: styles.oneSpace * 2 }}
-                  compact={true}
-                  disabled={action === 'disabled'}
-                  onPress={() => handleDialogAction({}, action)}
-                >
-                  {action.label ?? 'Ok!'}
-                </H2kButton>
-              ))}
-              <H2kButton
-                onPress={() => {
-                  setDialog(undefined)
-                }}
-              >Ok</H2kButton>
-            </H2kDialogActions>
-          </H2kDialog>
-        </>
+        <OneDialog dialog={dialog} styles={styles} handleDialogAction={handleDialogAction} setDialog={setDialog} />
       )}
     </>
   )
@@ -261,7 +181,7 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
         <ScrollView horizontal style={{ flex: 1, marginLeft: -styles.oneSpace, paddingLeft: styles.oneSpace }}>
           {notice?.actions?.map((action, index) => (
-            <Button
+            <H2kButton
               key={index}
               mode={'contained'}
               theme={ styles.buttonTheme }
@@ -271,11 +191,11 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
               onPress={() => handleAction(notice, action)}
             >
               {action.label ?? 'Ok!'}
-            </Button>
+            </H2kButton>
           ))}
         </ScrollView>
         {handleDismiss ? (
-          <IconButton
+          <H2kIconButton
             icon="close"
             mode="outlined"
             theme={ styles.buttonTheme }
@@ -292,6 +212,49 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
   )
 }
 
+function OneDialog ({ dialog, styles, handleDialogAction, setDialog }) {
+  return (
+    <>
+      <KeepAwake />
+      <H2kDialog
+        visible={true}
+        style={{ marginTop: 50, marginBottom: 50 }}
+        onDismiss={() => {
+          setDialog(undefined)
+        }}
+      >
+        {dialog?.title && (
+          <H2kDialogTitle>{dialog?.title}</H2kDialogTitle>
+        )}
+        <H2kDialogScrollArea>
+          <H2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
+            {dialog?.text}
+          </H2kMarkdown>
+        </H2kDialogScrollArea>
+        <H2kDialogActions>
+          {dialog?.actions?.map((action, index) => (
+            <H2kButton
+              key={index}
+              mode={'contained'}
+              style={{ paddingHorizontal: styles.oneSpace, marginLeft: -styles.oneSpace, marginRight: styles.oneSpace * 2 }}
+              compact={true}
+              disabled={action === 'disabled'}
+              onPress={() => handleDialogAction(dialog, action)}
+            >
+              {action.label ?? 'Ok!'}
+            </H2kButton>
+          ))}
+          <H2kButton
+            onPress={() => {
+              setDialog(undefined)
+            }}
+          >Ok</H2kButton>
+        </H2kDialogActions>
+      </H2kDialog>
+    </>
+  )
+}
+
 async function performAction ({ notice, action, dispatch, navigation, setDialog }) {
   if (typeof action !== 'object') return
 
@@ -299,11 +262,13 @@ async function performAction ({ notice, action, dispatch, navigation, setDialog 
     await dispatch(fetchDataFile(action.args.key, {
       onStatus: ({ key, definition, status, progress }) => {
         if (status === 'fetching' || status === 'loading') {
-          setDialog({ text: `### Fetching '${definition.name}'…` })
+          setDialog({ title: definition.name, text: `### Fetching '${definition.name}'…` })
         } else if (status === 'progress') {
-          setDialog({ text: `### Fetching '${definition.name}'\n\n${progress}` })
-        } else if (status === 'loaded' || status === 'error') {
-          setDialog({ text: '' })
+          setDialog({ title: definition.name, text: `### Fetching '${definition.name}'\n\n${progress}` })
+        } else if (status === 'loaded') {
+          setDialog({ title: definition.name, text: `### Done fetching '${definition.name}'` })
+        } else if (status === 'error') {
+          setDialog({ title: definition.name, text: `Error fetching '${definition.name}'` })
         }
       }
     }))

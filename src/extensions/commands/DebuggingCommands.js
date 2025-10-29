@@ -14,7 +14,7 @@ import { resetDatabase } from '../../store/db/db'
 import { setLocalData } from '../../store/local'
 import { setSettings } from '../../store/settings'
 import { clearAllOperationData } from '../../store/operations/actions/operationsDB'
-import { addNotice, clearNoticesDismissed, clearMatchingNotices,setSystemFlag } from '../../store/system'
+import { addNotice, clearNoticesDismissed, clearMatchingNotices, setSystemFlag } from '../../store/system'
 import { poissonRandom } from '../../tools/randomTools'
 import { logTimer } from '../../tools/perfTools'
 import { annotateQSO } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
@@ -96,7 +96,11 @@ Four Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tem
 Five Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 Six Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        `
+        `,
+        dialogActions: [
+          { label: 'Change', action: 'navigate', args: ['Settings', { screen: 'DataSettings' }] },
+          { label: 'RTFM', action: 'link', args: { url: 'https://polo.ham2k.com/docs' } },
+        ]
       }
     }))
     return 'Notice shown'
@@ -275,7 +279,7 @@ const SeedCommandHook = {
   }
 }
 
-function randomRST (mode) {
+function randomRST(mode) {
   const n = Math.min(poissonRandom(7), 9)
   if (mode === 'CW' || mode === 'RTTY') {
     return `${Math.min(n, 5)}${n}${n}`

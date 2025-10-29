@@ -27,6 +27,7 @@ function prepareStyles (baseTheme, themeColor) {
 
 export function H2kButton (props) {
   const {
+    theme,
     themeColor = 'primary'
   } = props
 
@@ -35,7 +36,7 @@ export function H2kButton (props) {
   return (
     <Button
       {...props}
-      theme={themeStyles}
+      theme={theme ?? themeStyles}
     />
   )
 }
