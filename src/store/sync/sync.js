@@ -30,7 +30,7 @@ const DEFAULT_SYNC_CHECK_PERIOD = 1000 * 10 // 1000 * 60 * 1 // 1 minutes, time 
 const SMALL_BATCH_SIZE = 10 // QSOs or Operations to send on a quick `syncLatest...`
 const DEFAULT_LARGE_BATCH_SIZE = 10 //200 // QSOs or Operations to send on a regular sync loop
 
-const VERBOSE = 0
+const VERBOSE = 1
 
 let errorCount = 0
 
@@ -129,7 +129,7 @@ export function useSyncLoop({ dispatch, settings, online, appState }) {
       const maxTime = (GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD)
 
       if (VERBOSE >= 1) console.log('⏱️ Sync tick', tick, { last: GLOBAL.lastSyncLoop, tick, diff, max: maxTime, online })
-      if (goAheadWithSync && GLOBAL.syncEnabled && online && diff > maxTime) {
+      if (goAheadWithSync && GLOBAL.syncEnabled && online && !nextSyncLoopInterval && diff > maxTime) {
         if (VERBOSE >= 1) console.log('📅 Sync due')
         _scheduleNextSyncLoop({ dispatch, delay: 1 })
       }
@@ -389,7 +389,7 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
     _releaseSyncLoop()
 
     if (scheduleAnotherLoop || lastDebouncedSync > 0) {
-      if (VERBOSE > 1) console.log(' -- scheduling another loop')
+      if (VERBOSE >= 1) console.log(' -- scheduling another loop')
       _scheduleNextSyncLoop({ dispatch })
     }
 

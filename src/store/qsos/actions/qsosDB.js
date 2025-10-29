@@ -154,13 +154,12 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
 
   const operationInfo = getState().operations.info[uuid]
   if (getState().qsos.qsos[uuid]) { // QSOs are for an operation that's currently in memory
-    console.log('addQSOs -- updating current operation in memory')
     for (const qso of qsos) {
       dispatch(actions.addQSO({ uuid, qso }))
     }
     if (DEBUG) logTimer('addQSOs', 'added qsos to state')
   }
-  console.log('addQSOs -- update operation info', uuid)
+
   dispatch(updateOperationInfo({ uuid }))
 
   if (!synced) {

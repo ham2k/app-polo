@@ -181,7 +181,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <H2kListSection title={'Cloud Sync: Ham2K Log Filer (PRE-ALPHA)'}>
+        <H2kListSection title={'Cloud Sync: Ham2K Log Filer (ALPHA)'}>
           <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
             <Text style={styles.paragraph}>
               Ham2K LoFi offers a reliable sync service between all your devices and provides a backup
@@ -236,16 +236,17 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
           <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
             <Text style={styles.paragraph}>
               <Text style={styles.text.bold}>Basic service is free</Text> and allows you to sync recent
-              data (up to 7 days) between two devices or apps.
+              data (up to 7 days) between two devices or apps at limited speed.
             </Text>
             <Text style={styles.paragraph}>
               <Text style={styles.text.bold}>Full service requires a paid subscription</Text> and
-              includes all your operations synced between any reasonable number of devices or apps.
+              includes all your operations synced between any reasonable number of devices or apps at full speed.
             </Text>
             <Text style={styles.paragraph}>
-              While the LoFi service is in BETA for
-              the next couple of months, the service will remain free. After that prices will depend
-              on the country and currency but should not be more than US$30/year or equivalent, and probably less.
+              While the LoFi service is in its TESTING PERIOD for
+              the next couple of months, the service will remain free.
+              After that prices will depend on the country and currency
+              but should not be more than US$30/year or equivalent, and probably less.
             </Text>
           </View>
 

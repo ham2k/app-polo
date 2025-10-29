@@ -217,7 +217,6 @@ export const clearAllOperationData = () => async (dispatch) => {
 }
 
 export const updateOperationInfo = ({ uuid }) => async (dispatch, getState) => {
-  console.log('updateOperationInfo', uuid)
   const qsoData = await dbSelectAll(`
     SELECT
       MIN(startOnMillis) as startAtMillisMin, MAX(startOnMillis) as startAtMillisMax,
@@ -225,7 +224,7 @@ export const updateOperationInfo = ({ uuid }) => async (dispatch, getState) => {
     FROM qsos
     WHERE operation = ? AND band != 'event' AND (deleted = 0 OR deleted IS NULL)
   `, [uuid])
-  console.log('-- qsoData', qsoData)
+
   await dbExecute(`
     UPDATE operations
     SET startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ?
@@ -234,7 +233,7 @@ export const updateOperationInfo = ({ uuid }) => async (dispatch, getState) => {
 
   const operation = getState().operations.info[uuid]
   const operationInfo = { ...operation, startAtMillisMin: qsoData[0].startAtMillisMin, startAtMillisMax: qsoData[0].startAtMillisMax, qsoCount: qsoData[0].qsoCount }
-  console.log('-- operationInfo', operationInfo)
+
   dispatch(actions.setOperation(operationInfo))
 }
 
