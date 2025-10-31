@@ -134,11 +134,39 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       justifyContent: 'space-between',
       width: '100%'
     },
+    doubleRowMobileMode: {
+      height: oneSpace * 10,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.outline,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
     doubleRowInnerRow: {
       // borderWidth: 1,
       height: oneSpace * 2.6,
       flexDirection: 'row',
       width: '100%'
+    },
+    doubleRowInnerRowMobile: {
+      //borderWidth: 1,
+      height: oneSpace * 2.8,
+      flexDirection: 'row',
+      width: '80%'
+    },
+    doubleRowMobileModeLeft: {
+      //borderWidth: 1,
+      height: '100%',
+      flexDirection: 'row',
+      width:'20%',
+      alignItems: 'center'
+    },
+    doubleRowMobileModeRight: {
+      //borderWidth: 1,
+      height: '100%',
+      flexDirection: 'column',
+      width:'100%',
+      justifyContent: 'center'
     },
     rowText: {
       fontSize: normalFontSize,

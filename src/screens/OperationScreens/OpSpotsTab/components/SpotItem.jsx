@@ -13,7 +13,10 @@ import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
 import { paperNameOrHam2KIcon, H2kPressable } from '../../../../ui'
 
-const SpotItem = React.memo(function QSOItem({ spot, onPress, styles, extendedWidth }) {
+export function guessItemHeight (qso, styles) {
+  return styles.doubleRow.height + styles.doubleRow.borderBottomWidth
+}
+const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth, settings }) {
   const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
 
   if (spot?.their?.call === 'W8WR') spot.their.call = 'N2Y'
@@ -74,7 +77,9 @@ const SpotItem = React.memo(function QSOItem({ spot, onPress, styles, extendedWi
   }, [spot, styles])
 
   return (
-    <H2kPressable onPress={() => onPress && onPress({ spot })}>
+    <H2kPressable
+      onPress={() => onPress && onPress({ spot })}
+    >
       <View style={styles.doubleRow}>
         <View style={styles.doubleRowInnerRow}>
           <Text style={[styles.fields.freq, commonStyle]}>

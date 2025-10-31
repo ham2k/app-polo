@@ -55,6 +55,14 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
             onPress={() => dispatch(setSettings({ leftieMode: !settings.leftieMode }))}
           />
 
+          <H2kListItem title={'Big Thumb Mode'}
+            description={settings.bigThumbMode ? 'Use big thumb mode: log from spots list with a long press' : 'Use normal logging' }
+            leftIcon="thumb-up-outline"
+            rightSwitchValue={!!settings.bigThumbMode}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ bigThumbMode: value }))}
+            onPress={() => dispatch(setSettings({ bigThumbMode: !settings.bigThumbMode }))}
+          />
+
           <H2kListItem title={'Country Flags'}
             description={{ none: "Don't show any flags", all: 'Show flags for all contacts' }[settings.dxFlags] || 'Show only for DX contacts'}
             leftIcon="flag"
@@ -68,6 +76,7 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
               onDialogDone={() => setCurrentDialog('')}
             />
           )}
+
           <H2kListItem title={'State Field'}
             description={settings.showStateField ? 'Include State field in main exchange' : "Don't include State field" }
             leftIcon="select-marker"

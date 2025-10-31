@@ -66,7 +66,7 @@ function prepareStyles (baseStyles, themeColor, style) {
   }
 }
 
-export default function SpotsPanel ({ operation, qsos, sections, onSelect, style }) {
+export default function SpotsPanel ({ operation, qsos, sections, onSelect, style, onLongPress }) {
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor, style)
 
@@ -316,6 +316,10 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
     onSelect && onSelect({ spot })
   }, [onSelect])
 
+  const handleLongPress = useCallback(({ spot }) => {
+    onLongPress && onLongPress({ spot })
+  }, [onLongPress])
+
   return (
     <GestureHandlerRootView style={[{ flex: 1, flexDirection: 'column', alignItems: 'stretch' }]}>
       {showControls ? (
@@ -375,6 +379,8 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
             loading={spotsState.loading}
             refresh={refresh}
             onPress={handlePress}
+            onLongPress={handleLongPress}
+            settings={settings}
             style={{
               paddingBottom: style?.paddingBottom,
               paddingRight: style?.paddingRight,
