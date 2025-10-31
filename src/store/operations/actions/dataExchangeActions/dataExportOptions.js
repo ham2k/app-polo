@@ -140,7 +140,8 @@ function getExportOptionsForOperation({ operation, qsos, settings }) {
     const handler = findBestHook(`ref:${ref.type}`, { withFunction: 'suggestExportOptions' })
 
     if (handler) {
-      const options = handler.suggestExportOptions({ operation, qsos, ref, settings })
+      const options = (handler.suggestExportOptions({ operation, qsos, ref, settings }) ?? []).filter(x => x)
+
       for (const option of options) {
         const refKey = handler.keyForRef ? handler.keyForRef(ref) : `${ref.type}-${ref.ref}`
         const optionKey = `${handler.key}-${option.format}-${option.exportType ?? 'export'}`
@@ -159,7 +160,7 @@ function getExportOptionsForOperation({ operation, qsos, settings }) {
   }
 
   findHooks('export', { withFunction: 'suggestExportOptions' }).forEach(handler => {
-    const options = handler.suggestExportOptions({ operation, qsos, settings }) ?? []
+    const options = (handler.suggestExportOptions({ operation, qsos, settings }) ?? []).filter(x => x)
     for (const option of options) {
       const optionKey = [handler.key, option.format, option.exportType ?? 'export'].filter(x => x).join('-')
       exportOptions[optionKey] = exportOptions[optionKey] || { optionKey, refKey: null, handler, option, refs: [{ type: handler.key }] }
