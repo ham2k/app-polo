@@ -43,7 +43,7 @@ export default function SpotList ({ sections, loading, refresh, style, onPress, 
   const renderRow = useCallback(({ item, index }) => {
     const spot = item
     return (
-      (settings.mobileMode ? (
+      (settings.bigThumbMode ? (
         <MobileSpotItem key={spot.key} spot={spot} onPress={onPress} onLongPress={onLongPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} settings={settings} />
       ) : (
         <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} settings={settings} />

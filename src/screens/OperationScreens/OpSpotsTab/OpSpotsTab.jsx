@@ -49,14 +49,14 @@ export default function OpSpotsTab ({ navigation, route }) {
       await hook.extraSpotInfo({ online, settings, dispatch, spot })
     }
 
-    if (settings.mobileMode === true) {
+    if (settings.bigThumbMode === true) {
       if (route?.params?.splitView) {
         navigation.navigate('Operation', { ...route?.params, qso: { ...spot, our: undefined, _suggestedKey: spot.key, key: undefined } })
       } else {
         navigation.navigate('OpSpotModal', { operation, qso: { ...spot, our: undefined, _suggestedKey: spot.key, key: undefined } })
       }
     }
-  }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings])
+  }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings, operation])
 
   return (
     <SpotsPanel operation={operation} qsos={qsos} sections={sections} onSelect={handleSelect} onLongPress={handleLongPress} style={{ paddingBottom: safeArea.bottom, paddingRight: safeArea.right }} />

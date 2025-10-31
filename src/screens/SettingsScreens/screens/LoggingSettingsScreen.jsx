@@ -55,6 +55,14 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
             onPress={() => dispatch(setSettings({ leftieMode: !settings.leftieMode }))}
           />
 
+          <H2kListItem title={'Big Thumb Mode'}
+            description={settings.bigThumbMode ? 'Use big thumb mode: log from spots list with a long press' : 'Use normal logging' }
+            leftIcon="thumb-up-outline"
+            rightSwitchValue={!!settings.bigThumbMode}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ bigThumbMode: value }))}
+            onPress={() => dispatch(setSettings({ bigThumbMode: !settings.bigThumbMode }))}
+          />
+
           <H2kListItem title={'Country Flags'}
             description={{ none: "Don't show any flags", all: 'Show flags for all contacts' }[settings.dxFlags] || 'Show only for DX contacts'}
             leftIcon="flag"
@@ -101,14 +109,6 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
             rightSwitchValue={!!settings.jumpAfterRST}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ jumpAfterRST: value }))}
             onPress={() => dispatch(setSettings({ jumpAfterRST: !settings.jumpAfterRST }))}
-          />
-
-          <H2kListItem title={'Mobile Mode'}
-            description={settings.mobileMode ? 'Use mobile logging' : 'Use default logging' }
-            leftIcon="car"
-            rightSwitchValue={!!settings.mobileMode}
-            rightSwitchOnValueChange={(value) => dispatch(setSettings({ mobileMode: value }))}
-            onPress={() => dispatch(setSettings({ mobileMode: !settings.mobileMode }))}
           />
 
           <H2kListItem

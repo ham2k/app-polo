@@ -24,7 +24,7 @@ const DEBUG = false
 let submitTimeout
 
 function prepareStyles (themeStyles, themeColor) {
-  console.log(themeStyles)
+  // console.log(themeStyles)
 
   const white = '#fff'
   const black = '#000'
@@ -43,7 +43,9 @@ function prepareStyles (themeStyles, themeColor) {
     alignItems: 'center',
     flex: 0,
     justifyContent: 'center',
-    color: themeStyles.theme.colors[`on${themeColor}`]
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: grey3
   }
 
   return {
@@ -72,19 +74,24 @@ function prepareStyles (themeStyles, themeColor) {
     buttons: {
       log: {
         ...commonButton,
-        width: 200,
+        width: 175,
         height: 175,
-        backgroundColor: themeStyles.theme.colors.tertiaryContainer,
-        borderRadius: 10
+        backgroundColor: (themeStyles.theme.dark) ? '#149c21ff' : '#25582aff'
       },
       cancel: {
         ...commonButton,
-        width: 200,
+        width: 175,
         height: 175,
-        backgroundColor: (themeStyles.theme.dark) ? '#ff4444ff' : '#9f0101ff'
+        backgroundColor: (themeStyles.theme.dark) ? '#b83202ff' : '#9f0101ff'
       },
       text: {
-        fontSize: themeStyles.normalFontSize * 1.3
+        ...commonStyles,
+        fontSize: themeStyles.normalFontSize * 1.3,
+        lineHeight: themeStyles.normalFontSize * 1.5,
+        textAlign: 'center',
+        marginTop: 10,
+        marginBottom: 10,
+        color: white
       }
     },
     fields: {
@@ -275,17 +282,16 @@ export default function OpSpotsModal ({ navigation, route }) {
 
           dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
           if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
+
+          // logging is done at this point. we can navigate away from popup
+          navigation.goBack()
         }, 50)
 
       // if (DEBUG)
       //   logTimer('submit', 'handleSubmit after setQSO')
       }
     }, 0)
-  }, [dispatch, doSubmit, isValidQSO, operation, ourInfo?.call, qsos, route.params.qso, settings, vfo])
-
-  useEffect(() => {
-    handleSubmit()
-  }, [handleSubmit])
+  }, [dispatch, doSubmit, isValidQSO, operation, ourInfo?.call, qsos, route.params.qso, settings, vfo, navigation])
 
   return (
     <View
@@ -294,7 +300,6 @@ export default function OpSpotsModal ({ navigation, route }) {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: styles.theme.colors[`${themeColor}Container`],
         fontSize: 'large'
       }] }
     >
@@ -311,13 +316,26 @@ export default function OpSpotsModal ({ navigation, route }) {
         </>
       }
       <Text style={styles.fields.label}>{route.params.qso.spot.label}</Text>
-      <H2kPressable
-        style={[styles.buttons.log, { gap: 10, marginTop: 50, border: 1 }]}
-        onPress={() => navigation.goBack()}
-        rippleColor='rgba(0, 255, 255, .32)'
-      >
-        <Text style={styles.fields.label}>Press here to return to spots.</Text>
-      </H2kPressable>
+
+      <View flexDirection="row" gap="10">
+        <H2kPressable
+          style={[styles.buttons.log, { gap: 10, marginTop: 25, border: 1 }]}
+          onPress={() => {
+            // this triggers the log code above and navigates back to the spots list
+            handleSubmit()
+          }}
+          rippleColor='rgba(0, 255, 255, .32)'
+        >
+          <Text style={styles.buttons.text}>Log it!</Text>
+        </H2kPressable>
+        <H2kPressable
+          style={[styles.buttons.cancel, { gap: 10, marginTop: 25, border: 1 }]}
+          onPress={() => navigation.goBack()}
+          rippleColor='rgba(218, 68, 3, 0.32)'
+        >
+          <Text style={styles.buttons.text}>Cancel</Text>
+        </H2kPressable>
+      </View>
     </View>
   )
 }
