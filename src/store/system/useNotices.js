@@ -17,7 +17,7 @@ import { selectOperatorCallInfo } from '../settings'
 import { processNoticeTemplateDataForDistribution } from '../../distro'
 import { CallNotesData, findAllCallNotes } from '../../extensions/data/call-notes/CallNotesExtension'
 
-export function useNotices ({ dispatch, includeDismissed = false, includeTransient = false }) {
+export function useNotices({ dispatch, includeDismissed = false, includeTransient = false }) {
   const operatorCallInfo = useSelector(selectOperatorCallInfo)
   const systemNotices = useSelector(selectNotices)
   const featureFlags = useSelector(selectFeatureFlags)
@@ -57,10 +57,10 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
         }
 
         if (!includeTransient && notice.transient) return false
-
+        console.log('notice', notice)
         if (notice.platforms && !notice.platforms.includes(Platform.OS)) return false
-        if (notice.dateFrom && notice.dateFrom > now) return false
-        if (notice.dateTo && notice.dateTo < now) return false
+        if (notice.dateFrom && !(now > Date.parse(notice.dateFrom))) return false
+        if (notice.dateTo && !(now < Date.parse(notice.dateTo))) return false
         if (notice.versions && notice.versions.length > 0 && !notice.versions.find(v => packageJson.version.startsWith(v))) return false
         if (notice.calls && notice.calls.length > 0 && !notice.calls.find(c => c.toUpperCase() === operatorCallInfo?.baseCall)) return false
         if (notice.notes && !_findInHam2KNotes(operatorCallInfo?.baseCall, notice.notes)) return false
@@ -95,7 +95,7 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
   return notices
 }
 
-function _adjustNotice (object, templateData) {
+function _adjustNotice(object, templateData) {
   for (const key in object) {
     if (key.endsWith('.android') && Platform.OS === 'android') {
       object[key.slice(0, -7)] = object[key]
