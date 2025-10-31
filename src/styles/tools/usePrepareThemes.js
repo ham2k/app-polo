@@ -18,7 +18,7 @@ import lightColors from '../lightColors'
 import darkColors from '../darkColors'
 import fontConfig from '../fonts'
 
-export function usePrepareThemes () {
+export function usePrepareThemes() {
   const settings = useSelector(selectSettings)
 
   const deviceColorScheme = useColorScheme()
@@ -50,13 +50,16 @@ export function usePrepareThemes () {
         loadedColors[`${color}ContainerAlpha`] = Color(loadedColors[`${color}Container`]).alpha(0.8).string()
       })
       loadedColors.onBackgroundLight = Color(loadedColors.onBackground).darken(0.1).desaturate(0.1).hex()
-      loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).darken(0.5).hex()
+      loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).darken(0.25).hex()
+
+      loadedColors.primaryLighter = Color(loadedColors.primary).darken(0.3).desaturate(0.2).hex()
+
     } else {
       ['primary', 'secondary', 'tertiary'].forEach((color) => {
         const upcasedColor = color.charAt(0).toUpperCase() + color.slice(1)
         // loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(0.95).desaturate(0.7).hex()
         loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(1.3).desaturate(0.3).hex()
-        loadedColors[`${color}Lighter`] = Color(loadedColors[color]).lighten(1.9).desaturate(0.3).hex()
+        loadedColors[`${color}Lighter`] = Color(loadedColors[color]).lighten(1.9).desaturate(0.5).hex()
         loadedColors[`on${upcasedColor}Light`] = loadedColors[`on${upcasedColor}`]
         loadedColors[`on${upcasedColor}Lighter`] = Color(loadedColors[`on${upcasedColor}`]).darken(0.7).desaturate(0.2).hex()
         loadedColors[`${color}Highlight`] = Color(loadedColors[color]).lighten(1.9).desaturate(0.3).hex()
@@ -65,7 +68,7 @@ export function usePrepareThemes () {
         loadedColors[`${color}ContainerAlpha`] = Color(loadedColors[`${color}Container`]).alpha(0.8).string()
       })
       loadedColors.onBackgroundLight = Color(loadedColors.onBackground).lighten(3).hex()
-      loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).lighten(6).hex()
+      loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).lighten(5).hex()
     }
 
     return loadedColors

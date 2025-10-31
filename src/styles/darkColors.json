@@ -30,7 +30,7 @@
     "surfaceVariant": "rgb(64, 72, 76)",
     "onSurfaceVariant": "rgb(192, 200, 204)",
     "outline": "rgb(138, 146, 150)",
-    "outlineVariant": "rgb(64, 72, 76)",
+    "outlineVariant": "rgb(40, 48, 52)",
     "shadow": "rgb(0, 0, 0)",
     "scrim": "rgb(0, 0, 0)",
     "inverseSurface": "rgb(225, 226, 228)",

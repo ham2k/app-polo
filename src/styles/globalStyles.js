@@ -111,7 +111,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       paddingHorizontal: oneSpace * 2,
       paddingVertical: oneSpace,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.outline
+      borderBottomColor: theme.colors.outlineVariant
     },
     compactRow: {
       height: oneSpace * 4,
@@ -120,7 +120,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       paddingHorizontal: oneSpace,
       paddingVertical: halfSpace,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.outline,
+      borderBottomColor: theme.colors.outlineVariant,
       flexDirection: 'row',
       width: '100%'
     },
@@ -129,14 +129,14 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       paddingHorizontal: oneSpace,
       paddingVertical: oneSpace,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.outline,
+      borderBottomColor: theme.colors.outlineVariant,
       flexDirection: 'column',
       justifyContent: 'space-between',
       width: '100%'
     },
     doubleRowInnerRow: {
       // borderWidth: 1,
-      height: oneSpace * 2.6,
+      height: PixelRatio.roundToNearestPixel(oneSpace * 2.6),
       flexDirection: 'row',
       width: '100%'
     },
@@ -199,14 +199,14 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       heading1: {
         fontFamily: normalFontFamily,
         fontWeight: 'bold',
-        fontSize: normalFontSize * 1.4,
+        fontSize: PixelRatio.roundToNearestPixel(normalFontSize * 1.4),
         color: theme.colors.onBackground,
         marginBottom: halfSpace
       },
       heading2: {
         fontFamily: normalFontFamily,
         fontWeight: 'bold',
-        fontSize: normalFontSize * 1.2,
+        fontSize: PixelRatio.roundToNearestPixel(normalFontSize * 1.2),
         lineHeight: normalFontSize * 2,
         color: theme.colors.onBackground,
         marginBottom: halfSpace
@@ -222,7 +222,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
         marginLeft: halfSpace,
         marginRight: oneSpace * 1,
         fontSize: normalFontSize * 2,
-        marginTop: -normalFontSize * 0.7
+        marginTop: PixelRatio.roundToNearestPixel(-normalFontSize * 0.7)
       },
       bullet_list_content: {
         marginBottom: halfSpace

@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { SectionList, View } from 'react-native'
+import { PixelRatio, SectionList, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import getItemLayout from 'react-native-get-item-layout-section-list'
@@ -16,10 +16,11 @@ import { findHooks } from '../../../../extensions/registry'
 import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtShortTimeZulu, fmtTimeZulu } from '../../../../tools/timeFormats'
 
-import QSOItem from './QSOItem'
-import QSOHeader from './QSOHeader'
-import EventItem from './EventItem'
-import EventNoteItem from './EventNoteItem'
+import QSOItem from './entries/QSOItem'
+import QSOHeader from './entries/QSOHeader'
+import EventItem from './entries/EventItem'
+import EventNoteItem from './entries/EventNoteItem'
+import EventSegmentItem from './entries/EventSegmentItem'
 
 let scrollTimeout
 
@@ -33,23 +34,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
     setComponentWidth(event?.nativeEvent?.layout?.width)
   }, [setComponentWidth])
 
-  const stylesArgs = useMemo(() => ({
-    isDeleted: false, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
-  }), [componentWidth, width, safeAreaInsets])
-  const deletedStylesArgs = useMemo(() => ({
-    isDeleted: true, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
-  }), [componentWidth, width, safeAreaInsets])
-  const otherOpStylesArgs = useMemo(() => ({
-    isDeleted: false, isOtherOperator: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
-  }), [componentWidth, width, safeAreaInsets])
-  const eventStylesArgs = useMemo(() => ({
-    isDeleted: false, isOtherOperator: false, isEvent: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
-  }), [componentWidth, width, safeAreaInsets])
-
-  const styles = useThemedStyles(_prepareStyles, stylesArgs)
-  const stylesForDeleted = useThemedStyles(_prepareStyles, deletedStylesArgs)
-  const stylesForOtherOperator = useThemedStyles(_prepareStyles, otherOpStylesArgs)
-  const stylesForEvent = useThemedStyles(_prepareStyles, eventStylesArgs)
+  const styles = useThemedStyles(_prepareStyles, { componentWidth: componentWidth ?? width, safeArea: safeAreaInsets })
 
   const listRef = useRef()
 
@@ -130,20 +115,13 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
 
-    let qsoStyles
-    if (qso.deleted) {
-      qsoStyles = stylesForDeleted
-    } else if (qso.event) {
-      qsoStyles = stylesForEvent
-    } else if (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.local?.operatorCall) {
-      qsoStyles = stylesForOtherOperator
-    } else {
-      qsoStyles = styles
-    }
+    const isOtherOperator = (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.local?.operatorCall)
 
     let Component = QSOItem
     if (qso.band === 'event') {
-      if (qso.mode === 'note') {
+      if (qso.event?.event === 'start' || qso.event?.event === 'end' || qso.event?.event === 'break') {
+        Component = EventSegmentItem
+      } else if (qso.event?.event === 'note') {
         Component = EventNoteItem
       } else {
         Component = EventItem
@@ -158,15 +136,12 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
         ourInfo={ourInfo}
         onPress={handlePress}
         timeFormatFunction={timeFormatFunction}
-        styles={qsoStyles}
+        styles={styles}
+        isOtherOperator={isOtherOperator}
         refHandlers={refHandlers}
       />
     )
-  }, [
-    operation, settings, selectedUUID, ourInfo,
-    handlePress, timeFormatFunction, refHandlers,
-    stylesForDeleted, stylesForOtherOperator, stylesForEvent, styles
-  ])
+  }, [operation, settings, selectedUUID, ourInfo, handlePress, timeFormatFunction, refHandlers, styles])
 
   const renderHeader = useCallback(({ section, index }) => {
     return (
@@ -232,55 +207,92 @@ const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo
   )
 })
 
-function _prepareStyles (themeStyles, { isDeleted, isEvent, isOtherOperator, width, safeArea }) {
+function _prepareStyles (themeStyles, { width, safeArea }) {
   const extendedWidth = width / themeStyles.oneSpace > 80
   const narrowWidth = width / themeStyles.oneSpace < 50
 
   const DEBUG = false
 
-  let commonStyles = {
+  const commonStyles = {
     fontSize: themeStyles.normalFontSize,
-    lineHeight: themeStyles.normalFontSize * 1.4,
+    lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4)),
     borderWidth: DEBUG ? 1 : 0,
-    color: isEvent ? themeStyles.colors.onNoticeLight : themeStyles.colors.onBackground
+    color: themeStyles.colors.onBackground
   }
 
-  if (isDeleted) {
-    commonStyles = {
-      ...commonStyles,
-      textDecorationLine: 'line-through',
-      textDecorationColor: themeStyles.colors.onBackground,
-      color: themeStyles.colors.onBackgroundLighter
-      // opacity: 0.6
-    }
-  }
-
-  if (isOtherOperator) {
-    commonStyles = {
-      ...commonStyles,
-      opacity: 0.7
-    }
-  }
-
-  return {
+  const styles = {
     ...themeStyles,
     extendedWidth,
     narrowWidth,
-    selectedRow: {
-      backgroundColor: themeStyles.colors.secondaryContainer
-    },
-    unselectedRow: {
-      ...(isEvent ? { backgroundColor: themeStyles.colors.noticeLight } : {})
-    },
-    compactRow: {
-      ...themeStyles.compactRow,
+
+    row: {
+      height: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 4.3),
+      maxHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 4.3),
+      minHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 4.3),
+      paddingHorizontal: themeStyles.oneSpace,
+      paddingTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.6),
+      borderBottomWidth: 1,
+      borderBottomColor: themeStyles.colors.outlineVariant,
+      flexDirection: 'row',
+      width: '100%',
       paddingLeft: safeArea?.left || 0
+    },
+    rowInner: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      width: '100%'
+    },
+    selectedRow: {
+      backgroundColor: themeStyles.colors.secondaryContainer,
+      borderTopWidth: 3,
+      borderBottomWidth: 3,
+      borderTopColor: themeStyles.colors.secondary,
+      borderBottomColor: themeStyles.colors.secondary,
+      paddingTop: 1,
+      marginTop: 0 // PixelRatio.roundToNearestPixel(themeStyles.oneSpace * -0.1)
+      // marginBottom: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.4)
     },
     headerRow: {
       ...themeStyles.compactRow,
       backgroundColor: themeStyles.colors.surfaceVariant,
-      paddingLeft: safeArea?.left || 0
+      paddingLeft: safeArea?.left || 0,
+      borderTopWidth: 0,
+      borderBottomWidth: 2,
+      borderTopColor: themeStyles.colors.onBackgroundLight,
+      borderBottomColor: themeStyles.colors.onBackgroundLight
     },
+    eventRow: {
+      backgroundColor: 'rgb(252, 244, 167)',
+      opacity: themeStyles.isDarkMode ? 0.65 : 0.85
+      // borderTopColor: 'rgb(97, 92, 47)',
+      // borderTopWidth: 1
+    },
+    segmentRow: {
+      backgroundColor: themeStyles.colors.primaryLighter,
+      borderBottomWidth: 0
+      // borderTopWidth: 3,
+      // borderColor: themeStyles.colors.primary,
+      // paddingTop: 1,
+      // marginTop: 0
+    },
+
+    eventContent: {
+      color: 'rgb(97, 92, 47)'
+    },
+    segmentContent: {
+      color: themeStyles.colors.onPrimary
+    },
+    deletedContent: {
+      textDecorationLine: 'line-through',
+      textDecorationColor: themeStyles.colors.onBackground,
+      color: themeStyles.colors.onBackgroundLighter
+    },
+    otherOperatorContent: {
+      opacity: 0.7
+    },
+
     fields: {
       header: {
         ...commonStyles,
@@ -288,6 +300,17 @@ function _prepareStyles (themeStyles, { isDeleted, isEvent, isOtherOperator, wid
         flex: 0,
         marginLeft: themeStyles.oneSpace,
         textAlign: 'left'
+      },
+      event: {
+        ...commonStyles,
+        lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4)),
+        marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
+        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 3.5),
+        textAlign: 'left',
+        flex: 1
+      },
+      markdown: {
+        lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4))
       },
       number: {
         ...commonStyles,
@@ -312,28 +335,25 @@ function _prepareStyles (themeStyles, { isDeleted, isEvent, isOtherOperator, wid
         ...themeStyles.text.lighter,
         // fontFamily: 'Roboto',
         flex: 0,
-        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 8,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
+        marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.1),
         textAlign: 'right'
       },
       freqMHz: {
         ...commonStyles,
-        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         fontWeight: '600',
         textAlign: 'right'
       },
       freqKHz: {
         ...commonStyles,
-        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         textAlign: 'right'
       },
       freqHz: {
         ...commonStyles,
-        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         textAlign: 'right',
         fontWeight: '400',
-        fontSize: themeStyles.normalFontSize * 0.7
+        fontSize: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * 0.7)
       },
       call: {
         ...commonStyles,
@@ -352,10 +372,9 @@ function _prepareStyles (themeStyles, { isDeleted, isEvent, isOtherOperator, wid
       },
       location: {
         ...commonStyles,
-        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         flex: 0,
         marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
-        minWidth: themeStyles.oneSpace * 3.5,
+        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 3.5),
         textAlign: 'center'
       },
       signal: {
@@ -371,7 +390,7 @@ function _prepareStyles (themeStyles, { isDeleted, isEvent, isOtherOperator, wid
         ...commonStyles,
         ...themeStyles.text.callsign,
         flex: 0,
-        minWidth: themeStyles.oneSpace * 8.5,
+        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 8.5),
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
@@ -387,11 +406,27 @@ function _prepareStyles (themeStyles, { isDeleted, isEvent, isOtherOperator, wid
       icon: {
         ...commonStyles,
         flex: 0,
-        marginTop: themeStyles.oneSpace * 0.45,
-        width: themeStyles.oneSpace * 1.8
+        marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.45),
+        width: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 1.8)
       }
     }
   }
+
+  styles.deletedFields = {}
+  styles.otherOperatorFields = {}
+  for (const field in styles.fields) {
+    styles.deletedFields[field] = {
+      ...styles.fields[field],
+      ...styles.deletedContent
+    }
+
+    styles.otherOperatorFields[field] = {
+      ...styles.fields[field],
+      ...styles.otherOperatorContent
+    }
+  }
+
+  return styles
 }
 
 export default QSOList

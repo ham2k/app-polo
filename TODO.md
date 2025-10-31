@@ -1,3 +1,17 @@
+# Issues
+
+### Operation Settings and Performance
+
+Right now, all the operation settings screens change the operation data directly on each
+user interaction. So if you're changing the grid, each character updates the operation.
+
+This causes a lot of re-renders and background job, such as rescoring. On a large operation
+this can cause horrible lag.
+
+We need to figure out a way to somehow batch these changes.
+
+
+
 # General Package Maintenance Tasks
 
 

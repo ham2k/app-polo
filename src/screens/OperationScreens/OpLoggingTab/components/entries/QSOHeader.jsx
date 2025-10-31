@@ -8,17 +8,19 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
+
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
-import { fmtDateZuluDynamic } from '../../../../tools/timeFormats'
-import { H2kIcon, H2kPressable } from '../../../../ui'
+import { fmtDateZuluDynamic } from '../../../../../tools/timeFormats'
+import { H2kIcon, H2kPressable } from '../../../../../ui'
 
-const QSOHeader = React.memo(function QSOHeader({ section, operation, styles, settings, onHeaderPress }) {
+const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings, onHeaderPress }) {
   // NOTE: We're using onPresOut instead of onPress because of a bug in SectionList
   // See https://github.com/facebook/react-native/issues/51290
+
   return (
-    <H2kPressable onPressOut={onHeaderPress}>
-      <View style={styles.headerRow}>
+    <H2kPressable onPressOut={onHeaderPress} style={styles.headerRow}>
+      <View style={styles.rowInner}>
         <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
           {fmtDateZuluDynamic(section.day)}
         </Text>

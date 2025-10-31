@@ -13,7 +13,7 @@ import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
 import { paperNameOrHam2KIcon, H2kPressable } from '../../../../ui'
 
-const SpotItem = React.memo(function QSOItem({ spot, onPress, styles, extendedWidth }) {
+const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth }) {
   const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
 
   if (spot?.their?.call === 'W8WR') spot.their.call = 'N2Y'
