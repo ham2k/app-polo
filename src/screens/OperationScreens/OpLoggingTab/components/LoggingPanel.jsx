@@ -289,7 +289,7 @@ export default function LoggingPanel ({
           hasChanges: false,
           undoInfo: undefined
         })
-        trackEvent(eventName, { their_prefix: qso.their.entityPrefix ?? qso.their.guess.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
+        trackEvent(eventName, { their_prefix: qso.their?.entityPrefix ?? qso.their?.guess?.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
       } else if (qso.event && !qso.deleted) {
         // Events are just saved as-is, no extra processing needed.
         setTimeout(() => {
