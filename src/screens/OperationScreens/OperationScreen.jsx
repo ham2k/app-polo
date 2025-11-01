@@ -185,6 +185,7 @@ export default function OperationScreen (props) {
                 style={{
                   height: '100%',
                   width: '100%',
+                  paddingTop: styles.oneSpace * -1,
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                   alignItems: 'stretch'

@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Platform, View } from 'react-native'
+import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
@@ -14,7 +14,6 @@ import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { partsForFreqInMHz } from '../../../../../tools/frequencyFormats'
 import { findBestHook } from '../../../../../extensions/registry'
 import { H2kIcon, H2kPressable } from '../../../../../ui'
-import { slashZeros } from '../../../../../tools/stringTools'
 
 const QSOItem = React.memo(function QSOItem ({
   qso, ourInfo, onPress, styles, selected, isOtherOperator, settings, timeFormatFunction, refHandlers
@@ -86,7 +85,7 @@ const QSOItem = React.memo(function QSOItem ({
           </Text>}
         </Text>
         <Text style={fieldsStyle.call}>
-          {Platform.OS === 'ios' ? slashZeros(qso.their?.call ?? '?') : (qso.their?.call ?? '?')}
+          {qso.their?.call ?? '?'}
         </Text>
         <Text style={fieldsStyle.location} numberOfLines={1}>
           {theirInfo?.entityPrefix && (settings.dxFlags === 'all' || (settings.dxFlags !== 'none' && theirInfo.entityPrefix !== ourInfo?.entityPrefix)) && (

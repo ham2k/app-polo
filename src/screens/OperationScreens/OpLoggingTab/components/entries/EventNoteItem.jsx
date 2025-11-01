@@ -8,11 +8,8 @@
 import React, { useCallback, useMemo } from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
-import emojiRegex from 'emoji-regex'
 
 import { H2kIcon, H2kMarkdown, H2kPressable } from '../../../../../ui'
-
-const EMOJI_REGEX = emojiRegex()
 
 const EventNoteItem = React.memo(function EventNoteItem (
   { qso, ourInfo, onPress, styles, selected, isOtherOperator, settings, timeFormatFunction, refHandlers }

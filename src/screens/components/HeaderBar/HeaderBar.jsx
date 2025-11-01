@@ -19,11 +19,18 @@ import LOGO from './img/ham2k-800-filled.png'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
-function prepareStyles (baseStyles, options) {
+function prepareStyles (baseStyles, { back, close, safeAreaInsets, splitView }) {
   return ({
     ...baseStyles,
     root: {
-      height: baseStyles.oneSpace * 6
+      height: safeAreaInsets.top + baseStyles.oneSpace * 4,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingLeft: Math.max(safeAreaInsets.left, baseStyles.oneSpace * 2),
+      paddingRight: splitView ? 0 : Math.max(safeAreaInsets.right, baseStyles.oneSpace * 2),
+      paddingTop: safeAreaInsets.top - baseStyles.oneSpace,
+      paddingBottom: 0
     },
     content: {
       flex: 1,
@@ -73,7 +80,7 @@ function prepareStyles (baseStyles, options) {
     },
     sideContent: {
       flex: 0,
-      width: baseStyles.oneSpace * ((options.back || options.close) ? 4 : 8),
+      width: baseStyles.oneSpace * ((back || close) ? 4 : 8),
       alignItems: 'flex-end'
     },
     appBarTheme: {
@@ -98,8 +105,8 @@ export default function HeaderBar ({
   closeInsteadOfBack = closeInsteadOfBack ?? options?.closeInsteadOfBack
   headerBackVisible = headerBackVisible ?? options?.headerBackVisible ?? true
 
-  const styles = useThemedStyles(prepareStyles, { back, close })
   const safeAreaInsets = useSafeAreaInsets()
+  const styles = useThemedStyles(prepareStyles, { back, close, safeAreaInsets, splitView })
 
   if (closeInsteadOfBack) {
     close = back
@@ -118,7 +125,7 @@ export default function HeaderBar ({
       dark={true}
       mode={'center-aligned'}
       safeAreaInsets={{ left: Math.max(safeAreaInsets.left, styles.oneSpace * 2), right: splitView ? 0 : Math.max(safeAreaInsets.right, styles.oneSpace * 2), top: safeAreaInsets.top, bottom: 0 }}
-      style={[styles.root, { height: styles.root.height + safeAreaInsets.top }]}
+      style={styles.root}
     >
       <SystemBars style="light" />
 
