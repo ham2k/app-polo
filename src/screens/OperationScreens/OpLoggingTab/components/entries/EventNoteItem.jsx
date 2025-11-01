@@ -41,26 +41,14 @@ const EventNoteItem = React.memo(function EventNoteItem (
     }
   }, [qso.deleted, isOtherOperator, styles.deletedFields, styles.otherOperatorFields, styles.fields])
 
-  const textStyle = useMemo(() => {
-    if (qso.event?.note?.match(EMOJI_REGEX)) {
-      return {
-        ...fieldsStyle.event,
-        marginTop: styles.oneSpace * -0.2,
-        height: styles.oneSpace * 4.3
-      }
-    } else {
-      return fieldsStyle.event
-    }
-  }, [fieldsStyle.event, qso.event?.note, styles.oneSpace])
-
   return (
     <H2kPressable onPress={pressHandler} style={rowStyle}>
       <View style={styles.rowInner}>
         <Text style={[fieldsStyle.time, !selected && styles.eventContent]}>{timeFormatFunction(qso.startAtMillis)}</Text>
         <Text style={[fieldsStyle.icons, !selected && styles.eventContent]}>
-          <H2kIcon name="note-outline" size={styles.normalFontSize} style={fieldsStyle.icon} color={!selected && styles.eventContent.color}/>
+          <H2kIcon name="file-document-outline" size={styles.normalFontSize} style={fieldsStyle.icon} color={!selected && styles.eventContent.color}/>
         </Text>
-        <Text style={[textStyle, !selected && styles.eventContent]}>
+        <Text style={[fieldsStyle.event, !selected && styles.eventContent]}>
           <H2kMarkdown style={[fieldsStyle.markdown, !selected && { color: styles.eventContent.color }]}>{qso.event.note}</H2kMarkdown>
         </Text>
       </View>

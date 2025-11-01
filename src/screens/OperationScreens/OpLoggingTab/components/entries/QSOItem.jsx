@@ -81,15 +81,12 @@ const QSOItem = React.memo(function QSOItem ({
         <Text style={fieldsStyle.freq}>
           {freqParts[0] && <Text style={fieldsStyle.freqMHz}>{freqParts[0]}.</Text>}
           {freqParts[1] && <Text style={fieldsStyle.freqKHz}>{freqParts[1]}</Text>}
-          {freqParts[2] && <Text style={fieldsStyle.freqHz}>
-            {styles.mdOrLarger ? `.${freqParts[2]}` : `.${freqParts[2].substring(0, 1)}`}
+          {freqParts[2] && styles.hasFrequencyDecimals && <Text style={fieldsStyle.freqHz}>
+            {styles.sized({ xs: false, lg: true }) ? `.${freqParts[2]}` : `.${freqParts[2].substring(0, 1)}`}
           </Text>}
         </Text>
         <Text style={fieldsStyle.call}>
           {Platform.OS === 'ios' ? slashZeros(qso.their?.call ?? '?') : (qso.their?.call ?? '?')}
-          {styles.narrowWidth && theirInfo?.emoji && (
-            ' ' + theirInfo?.emoji
-          )}
         </Text>
         <Text style={fieldsStyle.location} numberOfLines={1}>
           {theirInfo?.entityPrefix && (settings.dxFlags === 'all' || (settings.dxFlags !== 'none' && theirInfo.entityPrefix !== ourInfo?.entityPrefix)) && (
@@ -98,7 +95,7 @@ const QSOItem = React.memo(function QSOItem ({
           {(!!settings.showStateField && theirInfo?.state)}
         </Text>
         <Text style={fieldsStyle.name} numberOfLines={1}>
-          {!styles.narrowWidth && theirInfo?.emoji && (
+          {theirInfo?.emoji && (
             theirInfo?.emoji + ' '
           )}
           {styles.smOrLarger && theirInfo?.name}
@@ -106,7 +103,7 @@ const QSOItem = React.memo(function QSOItem ({
         {(qso.notes || confirmedBySpot || bustedBySpot || refIcons.length > 0) && (
           <View style={fieldsStyle.icons}>
             {qso.notes && (
-              <H2kIcon source="note-outline" size={styles.normalFontSize} style={fieldsStyle.icon} />
+              <View style={fieldsStyle.icon}><H2kIcon source="file-document-outline" size={styles.normalFontSize} style={fieldsStyle.icon} /></View>
             )}
             {(confirmedBySpot || bustedBySpot) && (
               <View style={fieldsStyle.icon}><H2kIcon name={`${confirmedBySpot ? 'check' : 'help'}-circle`} size={styles.normalFontSize} style={fieldsStyle.icon} /></View>
