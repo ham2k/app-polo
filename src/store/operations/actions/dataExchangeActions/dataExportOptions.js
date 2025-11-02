@@ -148,7 +148,7 @@ function getExportOptionsForOperation({ operation, qsos, settings }) {
         const combinedKey = `${optionKey}-${refKey}`
         exportOptions[combinedKey] = exportOptions[combinedKey] || { optionKey, refKey, handler, option, refs: [] }
 
-        const existingRef = exportOptions[combinedKey].refs.find(r => {
+        const existingRef = exportOptions[combinedKey]?.refs?.find(r => {
           const existingRefKey = handler.keyForRef ? handler.keyForRef(r) : `${r.type}-${r.ref}`
           return existingRefKey === refKey
         })
