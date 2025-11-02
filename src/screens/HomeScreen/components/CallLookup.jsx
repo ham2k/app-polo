@@ -44,7 +44,7 @@ export default function CallLookup ({ call, commandInfo, settings, onPress, styl
     ]}
     >
       {visible && (
-        <View style={[style, { paddingHorizontal: styles.oneSpace, paddingTop: styles.halfSpace, paddingBottom: styles.oneSpace }]}>
+        <View style={[style, { paddingHorizontal: styles.oneSpace, paddingTop: styles.oneSpace, paddingBottom: styles.oneSpace }]}>
           {commandMessage?.text ? (
             <OpInfo
               message={commandMessage}

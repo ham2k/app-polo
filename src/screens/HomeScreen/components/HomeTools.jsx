@@ -138,7 +138,7 @@ export default function HomeTools ({ settings, styles, style }) {
         commandInfo={commandInfo}
         settings={settings}
         styles={styles}
-        style={{ backgroundColor: styles.colors.primaryContainer, borderTopWidth: 1, borderTopColor: styles.colors.primary }}
+        style={{ backgroundColor: styles.colors.primaryContainer, marginTop: styles.oneSpace, borderTopWidth: 1, borderTopColor: styles.colors.primary }}
         onPress={navigateToCall}
       />
 

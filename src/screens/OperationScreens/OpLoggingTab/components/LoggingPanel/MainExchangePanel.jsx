@@ -190,7 +190,7 @@ export const MainExchangePanel = ({
   }
 
   return (
-    <View style={{ ...style, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'stretch', gap: styles.oneSpace }}>
+    <View style={styles.mainExchangePanel.container}>
       {fields}
     </View>
   )

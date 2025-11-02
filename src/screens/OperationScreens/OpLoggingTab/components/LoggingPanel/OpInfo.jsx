@@ -13,33 +13,12 @@ import { useSelector } from 'react-redux'
 
 import { fmtTimeBetween } from '../../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../../store/time'
-import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 import { H2kIcon, H2kMarkdown, H2kPressable } from '../../../../../ui'
 
-function prepareStyles(baseStyles, themeColor) {
-  return {
-    ...baseStyles,
-    textLine: {
-      lineHeight: baseStyles.normalFontSize * 1.3,
-      marginBottom: baseStyles.oneSpace * 0.5
-    },
-    markdown: {
-      ...baseStyles.markdown,
-      paragraph: {
-        margin: 0,
-        marginTop: 0,
-        marginBottom: 0,
-        lineHeight: baseStyles.normalFontSize * 1.3
-      }
-    }
-  }
-}
-
-export function OpInfo({ message, clearMessage, operation, qsos, style, themeColor }) {
+export function OpInfo ({ message, clearMessage, operation, qsos, style, styles, themeColor }) {
   const navigation = useNavigation()
   const now = useSelector(selectSecondsTick)
-
-  const styles = useThemedStyles(prepareStyles, themeColor)
+  styles = prepareStyles(styles, { style })
 
   const { markdownMessage, markdownStyle, icon } = useMemo(() => {
     if (message?.icon) {
@@ -79,7 +58,7 @@ export function OpInfo({ message, clearMessage, operation, qsos, style, themeCol
 
     if (now - ourQSOs[ourQSOs.length - 1].startAtMillis < 1000 * 60 * 60 * 4) {
       if (ourQSOs.length > 0) {
-        parts.push(`${fmtTimeBetween(ourQSOs[ourQSOs.length - 1].startAtMillis, now)} since last QSO`)
+        parts.push(`${fmtTimeBetween(ourQSOs[ourQSOs.length - 1].startAtMillis, now)} since last`)
       }
     }
     return parts.filter(x => x).join(' • ')
@@ -102,9 +81,12 @@ export function OpInfo({ message, clearMessage, operation, qsos, style, themeCol
   }, [ourQSOs])
 
   return (
-    <H2kPressable onPress={() => navigation.navigate('OpInfo', { operation, uuid: operation.uuid })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
+    <H2kPressable
+      onPress={() => navigation.navigate('OpInfo', { operation, uuid: operation.uuid })}
+      style={styles.opInfoPanel.root}
+    >
 
-      <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }}>
         {icon && (
           <View style={{ flex: 0, alignSelf: 'flex-start' }}>
             <H2kIcon
@@ -116,7 +98,7 @@ export function OpInfo({ message, clearMessage, operation, qsos, style, themeCol
         )}
         <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', paddingTop: styles.oneSpace * 0.3 }]}>
           {markdownMessage ? (
-            <H2kMarkdown style={markdownStyle} styles={styles}>
+            <H2kMarkdown style={[markdownStyle, { marginTop: styles.oneSpace * -0.6 }]} styles={styles}>
               {markdownMessage}
             </H2kMarkdown>
           ) : (
@@ -129,4 +111,30 @@ export function OpInfo({ message, clearMessage, operation, qsos, style, themeCol
       </View>
     </H2kPressable>
   )
+}
+
+function prepareStyles (themeStyles, { style }) {
+  return {
+    ...themeStyles,
+
+    opInfoPanel: {
+      root: {
+        ...style
+      }
+    },
+
+    textLine: {
+      lineHeight: themeStyles.normalFontSize * 1.3,
+      marginBottom: themeStyles.oneSpace * 0.5
+    },
+    markdown: {
+      ...themeStyles.markdown,
+      paragraph: {
+        margin: 0,
+        marginTop: themeStyles.halfSpace,
+        marginBottom: 0,
+        lineHeight: themeStyles.normalFontSize * 1.3
+      }
+    }
+  }
 }

@@ -50,7 +50,7 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
  *    1: 462 • 2: 392 • 3: 352 • 4: 320 (width) Pixel 3a
  */
 
-export function computeSizes ({ width, height, fontScale, pixelRatio }) {
+export function computeSizes({ width, height, fontScale, pixelRatio }) {
   // If the screen is too small, and the font scale too large, nothing will fit, so we need to adjust our font sizes down
   let fontScaleAdjustment = 1
   if ((width / fontScale) < 300) {
@@ -64,12 +64,15 @@ export function computeSizes ({ width, height, fontScale, pixelRatio }) {
 
   const pixelScaleAdjustment = fontScale * fontScaleAdjustment
 
-  let size
-  if (width / pixelScaleAdjustment < 340) size = 'xs' // Small phone
-  else if (width / pixelScaleAdjustment < 480) size = 'sm' // Regular phone
-  else if (width / pixelScaleAdjustment < 720) size = 'md' // Tablet
-  else if (width / pixelScaleAdjustment < 1000) size = 'lg' // Large Tablet
-  else size = 'xl' // Full desktop
+  const sized = (options) => {
+    if (width / pixelScaleAdjustment < 340) return options.xs // Small phone
+    else if (width / pixelScaleAdjustment < 480) return options.sm ?? options.xs // Regular phone
+    else if (width / pixelScaleAdjustment < 720) return options.md ?? options.sm ?? options.xs // Tablet
+    else if (width / pixelScaleAdjustment < 1000) return options.lg ?? options.md ?? options.sm ?? options.xs // Large Tablet
+    else return options.xl ?? options.lg ?? options.md ?? options.sm ?? options.xs // Full desktop
+  }
+
+  const size = sized({ xs: 'xs', sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' })
 
   const portrait = height > width
   const landscape = !portrait
@@ -87,16 +90,16 @@ export function computeSizes ({ width, height, fontScale, pixelRatio }) {
     fontScaleAdjustment,
     pixelScaleAdjustment,
 
-    smOrLarger: size !== 'xs',
-    mdOrLarger: size !== 'xs' && size !== 'sm',
-    lgOrLarger: size !== 'xs' && size !== 'sm' && size !== 'md',
-    lgOrSmaller: size !== 'xl',
-    mdOrSmaller: size !== 'xl' && size !== 'lg',
-    smOrSmaller: size !== 'xl' && size !== 'lg' && size !== 'md'
+    smOrLarger: sized({ xs: false, sm: true }),
+    mdOrLarger: sized({ xs: false, md: true }),
+    lgOrLarger: sized({ xs: false, lg: true }),
+    lgOrSmaller: sized({ xs: true, xl: false }),
+    mdOrSmaller: sized({ xs: true, lg: false, xl: false }),
+    smOrSmaller: sized({ xs: true, lg: false, xl: false, md: false }),
   }
 }
 
-export function useComputeSizes () {
+export function useComputeSizes() {
   const { width, height } = useSafeAreaFrame()
   // const { width, height } = useWindowDimensions() <-- broken on iOS, no rotation
 

@@ -6,9 +6,9 @@
  */
 
 import { Icon as PaperIcon } from 'react-native-paper'
-import FontAwesome6Icon from "@react-native-vector-icons/fontawesome6"
+import FontAwesome6Icon from '@react-native-vector-icons/fontawesome6'
 
-export function H2kIcon({ ...props }) {
+export function H2kIcon ({ ...props }) {
   const name = props.name ?? props.source ?? props.icon
 
   if (name?.startsWith && name.startsWith('fa-')) {
@@ -18,7 +18,7 @@ export function H2kIcon({ ...props }) {
   }
 }
 
-export function paperNameOrHam2KIcon(name, ...args) {
+export function paperNameOrHam2KIcon (name, ...args) {
   if (name?.startsWith && name.startsWith('fa-')) {
     return (props) => <FontAwesome6Icon {...args} {...props} name={name.slice(3)} iconStyle="solid" size={props.size ? props.size * 0.75 : undefined} />
   } else {
