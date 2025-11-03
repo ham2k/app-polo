@@ -17,7 +17,7 @@ import { Alert } from 'react-native'
 
 const QSON_FILENAME_REGEX = /.+\.(qson|json)$/i
 
-export const importQSON = (path) => async (dispatch) => {
+export const importQSON = (path) => async (dispatch, getState) => {
   const matches = path.match(QSON_FILENAME_REGEX)
   if (matches) {
     // const originalUUID = matches[1]
@@ -30,11 +30,10 @@ export const importQSON = (path) => async (dispatch) => {
       const data = JSON.parse(json)
       data.operation.uuid = uuid
 
-      await dispatch(actions.setOperation(data.operation))
-      await dispatch(qsosActions.setQSOs({ uuid: data.operation.uuid, qsos: data.qsos }))
-
       await dispatch(saveOperation(data.operation))
-      await dispatch(saveQSOsForOperation(data.operation.uuid))
+      await dispatch(saveQSOsForOperation(data.operation.uuid, { qsos: data.qsos }))
+
+      await dispatch(actions.setOperation(data.operation))
 
       dispatch(qsosActions.setQSOsStatus({ uuid: data.operation.uuid, status: 'ready' }))
       dispatch(actions.setOperation({ uuid, status: 'ready' }))

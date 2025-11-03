@@ -236,13 +236,13 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
   // Since the batch update does not change operation counts or times, no need to do anything else here
 }
 
-export const saveQSOsForOperation = (uuid, { synced } = {}) => async (dispatch, getState) => {
+export const saveQSOsForOperation = (uuid, { qsos, synced } = {}) => async (dispatch, getState) => {
   const now = Date.now()
 
   synced = synced || false
 
   return dbTransaction(async transaction => {
-    const qsos = getState().qsos.qsos[uuid]
+    qsos = qsos || getState().qsos.qsos[uuid]
 
     // Save new QSOs
     for (const qso of qsos) {

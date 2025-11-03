@@ -51,9 +51,9 @@ export const importADIFIntoOperation = (path, operation, operationQSOs) => async
       return await annotateQSO({ qso, online: false, dispatch, settings: {} })
     })
 
+    await dispatch(saveQSOsForOperation(operation.uuid, { qsos }))
     await dispatch(addQSOs({ uuid: operation.uuid, qsos }))
 
-    await dispatch(saveQSOsForOperation(operation.uuid))
     dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'ready' }))
     return { adifCount: data.qsos.length, importCount: qsos.length }
   } catch (error) {
