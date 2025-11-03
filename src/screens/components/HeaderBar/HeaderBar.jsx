@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { Appbar, Menu, Text } from 'react-native-paper'
 import { Image, View } from 'react-native'
@@ -18,6 +18,160 @@ import { tweakStringForVoiceOver } from '../../../tools/a11yTools'
 import LOGO from './img/ham2k-800-filled.png'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
+
+export default function HeaderBar ({
+  route, options, navigation, title, subTitle, splitView,
+  leftAction, leftActionA11yLabel, onLeftActionPress,
+  rightAction, rightMenuItems, rightA11yLabel,
+  onRightActionPress
+}) {
+  title = title || options?.title
+  subTitle = subTitle || options?.subTitle
+  leftAction = leftAction ?? options?.leftAction
+  leftActionA11yLabel = leftActionA11yLabel ?? options?.leftActionA11yLabel
+  onLeftActionPress = onLeftActionPress ?? options?.onLeftActionPress
+  rightAction = rightAction ?? options?.rightAction
+  rightMenuItems = rightMenuItems ?? options?.rightMenuItems
+  rightA11yLabel = rightA11yLabel ?? options?.rightA11yLabel ?? rightAction
+  onRightActionPress = onRightActionPress ?? options?.onRightActionPress
+
+  const safeAreaInsets = useSafeAreaInsets()
+  const styles = useThemedStyles(prepareStyles, { leftAction, safeAreaInsets, splitView })
+
+  const [showMenu, setShowMenu] = useState(false)
+  const onRightActionShowMenu = useCallback(() => {
+    setShowMenu(true)
+  }, [setShowMenu])
+
+  // TODO: Once React Native fixes adjustsFontSizeToFit on iOS so it doesn't scale the font up, add it back to the Text components below
+
+  const leftActionIcon = useMemo(() => {
+    if (leftAction === 'logo' || leftAction === 'none') {
+      return false
+    } else if (leftAction === 'close') {
+      return 'close'
+    } else if (leftAction === 'back') {
+      return 'arrow-left'
+    } else if (leftAction === 'accept') {
+      return 'check'
+    } else if (leftAction === 'revert') {
+      return 'undo'
+    }
+    return 'arrow-left'
+  }, [leftAction])
+
+  const rightActionIcon = useMemo(() => {
+    if (rightAction === 'revert') {
+      return 'undo'
+    }
+    return rightAction
+  }, [rightAction])
+
+  const handleLeftActionPress = useCallback(() => {
+    if (onLeftActionPress) {
+      onLeftActionPress()
+    }
+    navigation.goBack()
+  }, [navigation, onLeftActionPress])
+
+  return (
+    <Appbar
+      theme={styles.appBarTheme}
+      dark={true}
+      mode={'center-aligned'}
+      safeAreaInsets={{ left: Math.max(safeAreaInsets.left, styles.oneSpace * 2), right: splitView ? 0 : Math.max(safeAreaInsets.right, styles.oneSpace * 2), top: safeAreaInsets.top, bottom: 0 }}
+      style={styles.root}
+    >
+      <SystemBars style="light" />
+
+      <View flexDirection="row" justifyContent="flex-start" style={styles.sideContent}>
+        {leftActionIcon && (
+          <View style={{ marginLeft: -styles.oneSpace * 2 }}>
+            <Appbar.Action
+              isLeading
+              onPress={handleLeftActionPress}
+              accessibilityLabel={leftActionA11yLabel ?? leftAction ?? 'Close'}
+              icon={leftActionIcon}
+              size={styles.oneSpace * 2.5}
+              theme={styles.appBarTheme}
+            />
+          </View>
+        )}
+        {leftAction === 'logo' && (
+          <Image source={LOGO} style={{ height: 18, width: 60, marginLeft: styles.oneSpace * 0 }} resizeMode="contain" />
+        )}
+        {leftAction === 'none' && (
+          <Text accessible={false}>{' '}</Text>
+        )}
+      </View>
+
+      <Appbar.Content
+        style={styles.content}
+        title={
+            title && subTitle ? (
+              <>
+                <Text
+                  adjustsFontSizeToFit={false}
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}
+                  minimumFontScale={0.9}
+                  style={styles.screenTitleSmall}
+                  accessibilityLabel={tweakStringForVoiceOver([title, subTitle].filter(x => x).join(', '))}
+                >
+                  {title}
+                </Text>
+                <Text accessible={false} adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}>{subTitle}</Text>
+              </>
+            ) : (
+              <Text adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.8} maxFontSizeMultiplier={1} style={styles.screenTitle}>{title}</Text>
+            )
+        }
+      />
+
+      <View flexDirection="row" justifyContent="flex-end" style={styles.sideContent}>
+        {rightMenuItems ? (
+          <View style={{ marginRight: -styles.oneSpace * 2 }}>
+            <Menu
+              visible={showMenu}
+              onDismiss={() => setShowMenu(false)}
+              anchorPosition={'bottom'}
+              anchor={
+                <Appbar.Action
+                  isLeading
+                  onPress={onRightActionShowMenu}
+                  icon={'dots-vertical'}
+                  accessibilityLabel={'Menu'}
+                  size={styles.oneSpace * 2.5}
+                  theme={styles.appBarTheme}
+                />
+              }
+            >
+              {React.Children.map(rightMenuItems, child => (
+                React.cloneElement(child, { setShowMenu })
+              ))}
+            </Menu>
+          </View>
+        ) : (
+          rightAction ? (
+            <View style={{ marginRight: -styles.oneSpace * 2 }}>
+              <Appbar.Action
+                isLeading
+                onPress={onRightActionPress}
+                accessibilityLabel={rightA11yLabel}
+                icon={rightActionIcon}
+                size={styles.oneSpace * 2.5}
+                theme={styles.appBarTheme}
+              />
+            </View>
+          ) : (
+            <Text accessible={false}>{' '}</Text>
+          )
+        )}
+      </View>
+
+    </Appbar>
+  )
+}
 
 function prepareStyles (baseStyles, { back, close, safeAreaInsets, splitView }) {
   return ({
@@ -90,129 +244,4 @@ function prepareStyles (baseStyles, { back, close, safeAreaInsets, splitView }) 
       }
     }
   })
-}
-
-export default function HeaderBar ({
-  route, options, navigation, back, close, title, subTitle, splitView,
-  rightAction, rightMenuItems, rightA11yLabel, headerBackVisible, closeInsteadOfBack, onRightActionPress
-}) {
-  title = title || options?.title
-  subTitle = subTitle || options?.subTitle
-  rightAction = rightAction ?? options?.rightAction
-  rightMenuItems = rightMenuItems ?? options?.rightMenuItems
-  rightA11yLabel = rightA11yLabel ?? options?.rightA11yLabel ?? rightAction
-  onRightActionPress = onRightActionPress ?? options?.onRightActionPress
-  closeInsteadOfBack = closeInsteadOfBack ?? options?.closeInsteadOfBack
-  headerBackVisible = headerBackVisible ?? options?.headerBackVisible ?? true
-
-  const safeAreaInsets = useSafeAreaInsets()
-  const styles = useThemedStyles(prepareStyles, { back, close, safeAreaInsets, splitView })
-
-  if (closeInsteadOfBack) {
-    close = back
-  }
-
-  const [showMenu, setShowMenu] = useState(false)
-  const onRightActionShowMenu = useCallback(() => {
-    setShowMenu(true)
-  }, [setShowMenu])
-
-  // TODO: Once React Native fixes adjustsFontSizeToFit on iOS so it doesn't scale the font up, add it back to the Text components below
-
-  return (
-    <Appbar
-      theme={styles.appBarTheme}
-      dark={true}
-      mode={'center-aligned'}
-      safeAreaInsets={{ left: Math.max(safeAreaInsets.left, styles.oneSpace * 2), right: splitView ? 0 : Math.max(safeAreaInsets.right, styles.oneSpace * 2), top: safeAreaInsets.top, bottom: 0 }}
-      style={styles.root}
-    >
-      <SystemBars style="light" />
-
-      <View flexDirection="row" justifyContent="flex-start" style={styles.sideContent}>
-        {headerBackVisible && (
-          back ? (
-            <View style={{ marginLeft: -styles.oneSpace * 2 }}>
-              <Appbar.Action
-                isLeading
-                onPress={navigation.goBack}
-                accessibilityLabel={closeInsteadOfBack ? 'Close' : 'Back'}
-                icon={closeInsteadOfBack ? 'close' : 'arrow-left'}
-                size={styles.oneSpace * 2.5}
-                theme={styles.appBarTheme}
-              />
-            </View>
-          ) : (
-            <Image source={LOGO} style={{ height: 18, width: 60, marginLeft: styles.oneSpace * 0 }} resizeMode="contain" />
-            // <Text style={styles.screenTitleLight} numberOfLines={1} adjustsFontSizeToFit={false} accessible={false}>Ham2K</Text>
-          )
-        )}
-      </View>
-
-      <Appbar.Content
-        style={styles.content}
-        title={
-            title && subTitle ? (
-              <>
-                <Text
-                  adjustsFontSizeToFit={false}
-                  numberOfLines={1}
-                  ellipsizeMode={'tail'}
-                  minimumFontScale={0.9}
-                  style={styles.screenTitleSmall}
-                  accessibilityLabel={tweakStringForVoiceOver([title, subTitle].filter(x => x).join(', '))}
-                >
-                  {title}
-                </Text>
-                <Text accessible={false} adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}>{subTitle}</Text>
-              </>
-            ) : (
-              <Text adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.8} maxFontSizeMultiplier={1} style={styles.screenTitle}>{title}</Text>
-            )
-        }
-      />
-
-      <View flexDirection="row" justifyContent="flex-end" style={styles.sideContent}>
-        {rightMenuItems ? (
-          <View style={{ marginRight: -styles.oneSpace * 2 }}>
-            <Menu
-              visible={showMenu}
-              onDismiss={() => setShowMenu(false)}
-              anchorPosition={'bottom'}
-              anchor={
-                <Appbar.Action
-                  isLeading
-                  onPress={onRightActionShowMenu}
-                  icon={'dots-vertical'}
-                  accessibilityLabel={'Menu'}
-                  size={styles.oneSpace * 2.5}
-                  theme={styles.appBarTheme}
-                />
-              }
-            >
-              {React.Children.map(rightMenuItems, child => (
-                React.cloneElement(child, { setShowMenu })
-              ))}
-            </Menu>
-          </View>
-        ) : (
-          rightAction ? (
-            <View style={{ marginRight: -styles.oneSpace * 2 }}>
-              <Appbar.Action
-                isLeading
-                onPress={onRightActionPress}
-                accessibilityLabel={rightA11yLabel}
-                icon={rightAction}
-                size={styles.oneSpace * 2.5}
-                theme={styles.appBarTheme}
-              />
-            </View>
-          ) : (
-            <Text accessible={false}>{' '}</Text>
-          )
-        )}
-      </View>
-
-    </Appbar>
-  )
 }

@@ -11,7 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
-import MaterialCommunityIcon from "@react-native-vector-icons/material-design-icons"
+import MaterialCommunityIcon from '@react-native-vector-icons/material-design-icons'
 import DeviceInfo from 'react-native-device-info'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
@@ -129,7 +129,7 @@ function MainApp ({ navigationTheme }) {
           />
 
           <Stack.Screen name="Operation"
-            options={{ title: 'Operation', headerShown: false, headerBackTitle: 'Home', closeInsteadOfBack: true }}
+            options={{ title: 'Operation', headerShown: false, headerBackTitle: 'Home', leftAction: 'close' }}
             component={OperationScreen}
           />
 

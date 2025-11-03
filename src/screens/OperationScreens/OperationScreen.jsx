@@ -79,7 +79,7 @@ export default function OperationScreen (props) {
     } else {
       options = { title: 'New Operation' }
     }
-    options.closeInsteadOfBack = true
+    options.leftAction = 'close'
     options.rightMenuItems = <OperationMenuItems {...{ operation, settings, styles, dispatch, online }} />
 
     return options
