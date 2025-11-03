@@ -15,7 +15,7 @@ import { fmtTimeBetween } from '../../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../../store/time'
 import { H2kIcon, H2kMarkdown, H2kPressable } from '../../../../../ui'
 
-export function OpInfo ({ message, clearMessage, operation, qsos, style, styles, themeColor }) {
+export function OpInfo ({ message, clearMessage, operation, activeQSOs, style, styles, themeColor }) {
   const navigation = useNavigation()
   const now = useSelector(selectSecondsTick)
   styles = prepareStyles(styles, { style })
@@ -29,19 +29,19 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, styles,
       return { markdownMessage: '', icon: 'timer-outline' }
     } else if (message) {
       return { markdownMessage: message || '', icon: 'chevron-right-box' }
-    } else if (qsos.length === 0) {
+    } else if (activeQSOs.length === 0) {
       return { markdownMessage: "No QSOs... Let's get on the air!", icon: undefined }
     } else {
       return { markdownMessage: '', icon: 'timer-outline' }
     }
-  }, [message, qsos.length, styles.theme.colors.error])
+  }, [message, activeQSOs.length, styles.theme.colors.error])
 
   const ourQSOs = useMemo(() => {
     if (operation?.local?.operatorCall) {
-      return qsos.filter(q => q?.our?.operatorCall === operation?.local?.operatorCall)
+      return activeQSOs.filter(q => q?.our?.operatorCall === operation?.local?.operatorCall)
     }
-    return qsos
-  }, [qsos, operation?.local?.operatorCall])
+    return activeQSOs
+  }, [activeQSOs, operation?.local?.operatorCall])
 
   const line1 = useMemo(() => {
     const parts = []

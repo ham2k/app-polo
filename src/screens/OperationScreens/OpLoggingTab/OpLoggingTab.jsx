@@ -71,8 +71,11 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
       } else {
         navigation.navigate('OpLog', { qso: undefined })
       }
+    } else if (route?.params?.selectedUUID) {
+      setLoggingState({ ...loggingState, selectedUUID: route.params.selectedUUID })
+      navigation.replace('Operation', { ...route?.params, selectedUUID: undefined })
     }
-  }, [loggingState, setLoggingState, navigation, route.params])
+  }, [loggingState, setLoggingState, navigation, route.params, operation.uuid])
 
   useEffect(() => { // Set navigation title
     if (styles?.smOrLarger) {

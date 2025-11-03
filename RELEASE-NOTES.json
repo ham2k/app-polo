@@ -3,7 +3,7 @@
     "name": "October '25 (pre 4)",
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
     "changes": [
-      "Annotations in the log (try 'NOTE' or 'WEATHER' or 'SOLAR')",
+      "Annotations in the log (try 'NOTE', 'TODO', 'WEATHER' or 'SOLAR')",
       "Auto self-spotting every 10 minutes",
       "Allow spaces in commands (try 'SPOT HERE')",
       "Fix missing keystrokes on Android when pressing 'send' too fast",

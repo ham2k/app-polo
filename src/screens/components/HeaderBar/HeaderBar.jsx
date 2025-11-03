@@ -23,13 +23,13 @@ function prepareStyles (baseStyles, { back, close, safeAreaInsets, splitView }) 
   return ({
     ...baseStyles,
     root: {
-      height: safeAreaInsets.top + baseStyles.oneSpace * 4,
+      height: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * 5,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingLeft: Math.max(safeAreaInsets.left, baseStyles.oneSpace * 2),
       paddingRight: splitView ? 0 : Math.max(safeAreaInsets.right, baseStyles.oneSpace * 2),
-      paddingTop: safeAreaInsets.top - baseStyles.oneSpace,
+      paddingTop: Math.min(safeAreaInsets.top, baseStyles.oneSpace * 8) - baseStyles.oneSpace,
       paddingBottom: 0
     },
     content: {

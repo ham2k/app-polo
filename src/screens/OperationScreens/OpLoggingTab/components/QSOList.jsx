@@ -59,15 +59,30 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   // useEffect(() => console.log('-- QSOList stylesForOtherOperator', stylesForOtherOperator), [stylesForOtherOperator])
   // useEffect(() => console.log('-- QSOList listRef', listRef), [listRef])
 
+  // When the list is first displayed, we want to jump to the bottom.
+  // When there's a new `lastUUID`, we also jump to it.
+  // And if there's a `selectedUUID`, we want to make sure it is visible.
+  // But when selection changes to "nothing", or to a uuid that cannot be found (new QSO),
+  // then we DO NOT want to jump back to the last QSO.
+  const jumpDataRef = useRef({ jumpedToLast: -1 })
+
   // When the lastQSO changes, scroll to it
   useEffect(() => {
     if (!sections || !sections.length) return
+
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout)
+    }
+
+    const targetUUID = selectedUUID || lastUUID
+
     let sectionIndex = sections.length - 1
     let itemIndex = sections[sectionIndex].data.length - 1
-    if (lastUUID) {
-      sections.find((section, i) => {
+
+    if (targetUUID && targetUUID !== jumpDataRef.current.jumpedToLast) {
+      const found = sections.find((section, i) => {
         return section.data.find((qso, j) => {
-          if (qso.uuid === lastUUID) {
+          if (qso.uuid === targetUUID) {
             sectionIndex = i
             itemIndex = j
             return true
@@ -75,21 +90,31 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
           return false
         })
       })
-    }
-
-    if (scrollTimeout) {
-      clearTimeout(scrollTimeout)
-    }
-
-    scrollTimeout = setTimeout(() => {
-      try {
-        listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
-      } catch (e) {
-        // Sometimes the QSO list can change before this timeout call is executed
-        console.error('Error scrolling to last QSO', e)
+      if (!found) {
+        return
       }
-    }, 50)
-  }, [listRef, lastUUID, sections])
+    }
+
+    if (targetUUID !== jumpDataRef.current.jumpedToLast) {
+      scrollTimeout = setTimeout(() => {
+        try {
+          listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
+        } catch (e) {
+          // Sometimes the QSO list can change before this timeout call is executed
+          console.error('Error scrolling to last QSO', e)
+        }
+      }, 50)
+    }
+
+    if (targetUUID === lastUUID) {
+      jumpDataRef.current.jumpedToLast = lastUUID
+    }
+    return () => {
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout)
+      }
+    }
+  }, [listRef, lastUUID, selectedUUID, sections])
 
   const refHandlers = useMemo(() => {
     const types = {}
@@ -134,6 +159,8 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       if (qso.event?.event === 'start' || qso.event?.event === 'end' || qso.event?.event === 'break') {
         Component = EventSegmentItem
       } else if (qso.event?.event === 'note') {
+        Component = EventNoteItem
+      } else if (qso.event?.event === 'todo') {
         Component = EventNoteItem
       } else {
         Component = EventItem

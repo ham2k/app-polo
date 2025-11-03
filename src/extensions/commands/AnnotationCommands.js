@@ -25,6 +25,7 @@ const Extension = {
   alwaysEnabled: true,
   onActivation: ({ registerHook }) => {
     registerHook('command', { priority: 100, hook: NotesCommandHook })
+    registerHook('command', { priority: 100, hook: TodoCommandHook })
     registerHook('command', { priority: 100, hook: ChatCommandHook })
     registerHook('command', { priority: 100, hook: EarthWeatherCommandHook })
     registerHook('command', { priority: 100, hook: SolarWeatherCommandHook })
@@ -41,12 +42,11 @@ const NotesCommandHook = {
   allowSpaces: true,
   describeCommand: (match, { operation }) => {
     if (!operation) { return "" }
-
     let note = match[2]?.substring(1) || ''
 
     if (note) {
       note = note.trim()
-      return `Add note: ‘${note}’?`
+      return `Add note: ‘${note}’…`
     } else {
       return 'Add a note? keep typing…'
     }
@@ -61,12 +61,53 @@ const NotesCommandHook = {
       const event = {
         event: 'note',
         command: `NOTE ${note}`,
+        icon: 'sticker-text-outline',
         note,
         operatorCall: operation?.local?.operatorCall
       }
       dispatch(newEventQSO({ uuid: operation.uuid, event }))
 
       return `Note added!`
+    }
+  }
+}
+
+const TodoCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-misc-todo',
+  match: /^(TODO)(|[ /.]|.+)$/i,
+  allowSpaces: true,
+  describeCommand: (match, { operation }) => {
+    if (!operation) { return "" }
+
+    let note = match[2]?.substring(1) || ''
+
+    if (note) {
+      note = note.trim()
+      return `Add to-do: ‘${note}’…`
+    } else {
+      return 'Add a to-do item? keep typing…'
+    }
+  },
+  invokeCommand: (match, { operation, dispatch, settings }) => {
+    if (!operation) { return "" }
+
+    let note = match[2]?.substring(1) || ''
+
+    if (note) {
+      note = note.trim()
+      const event = {
+        event: 'todo',
+        command: `TODO ${note}`,
+        icon: 'sticker-outline',
+        note,
+        done: false,
+        operatorCall: operation?.local?.operatorCall
+      }
+      dispatch(newEventQSO({ uuid: operation.uuid, event }))
+
+      return `To-do added!`
     }
   }
 }
@@ -84,7 +125,7 @@ const ChatCommandHook = {
 
     if (note) {
       note = note.trim()
-      return `Send chat: ‘${note}’?`
+      return `Send chat: ‘${note}’…`
     } else {
       return 'Send a chat? keep typing…'
     }

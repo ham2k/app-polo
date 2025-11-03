@@ -38,12 +38,24 @@ const EventNoteItem = React.memo(function EventNoteItem (
     }
   }, [qso.deleted, isOtherOperator, styles.deletedFields, styles.otherOperatorFields, styles.fields])
 
+  const icon = useMemo(() => {
+    if (qso.event?.event === 'todo' && qso.deleted) {
+      return 'sticker-outline'
+    } else if (qso.event?.event === 'todo' && qso.event?.done) {
+      return 'sticker-check-outline'
+    } else if (qso.event?.event === 'todo' && !qso.event?.done) {
+      return 'sticker'
+    } else {
+      return 'sticker-text-outline'
+    }
+  }, [qso.event?.event, qso.event?.done, qso.deleted])
+
   return (
     <H2kPressable onPress={pressHandler} style={rowStyle}>
       <View style={styles.rowInner}>
         <Text style={[fieldsStyle.time, !selected && styles.eventContent]}>{timeFormatFunction(qso.startAtMillis)}</Text>
         <Text style={[fieldsStyle.icons, !selected && styles.eventContent]}>
-          <H2kIcon name="file-document-outline" size={styles.normalFontSize} style={fieldsStyle.icon} color={!selected && styles.eventContent.color}/>
+          <H2kIcon name={icon} size={styles.normalFontSize} style={fieldsStyle.icon} color={!selected && styles.eventContent.color}/>
         </Text>
         <Text style={[fieldsStyle.event, !selected && styles.eventContent]}>
           <H2kMarkdown style={[fieldsStyle.markdown, !selected && { color: styles.eventContent.color }]}>{qso.event.note}</H2kMarkdown>

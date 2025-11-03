@@ -37,8 +37,10 @@ import { SecondaryExchangePanel } from './LoggingPanel/SecondaryExchangePanel'
 import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
+import { EventInfo } from './LoggingPanel/EventInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
+import EventEditingPanel from './LoggingPanel/EventEditingPanel/EventEditingPanel'
 
 const DEBUG = false
 
@@ -68,6 +70,7 @@ export default function LoggingPanel ({
     }
     const updateQSOFunction = (changes, more) => {
       const updatedQSO = { ...qsoValue, ...changes }
+      console.log('updateQSOFunction', changes)
       updateLoggingState({
         qso: changes,
         hasChanges: !!qsoValue?._isSuggested || JSON.stringify(updatedQSO) !== JSON.stringify(loggingState?.originalQSO),
@@ -189,8 +192,8 @@ export default function LoggingPanel ({
   const handleFieldChange = useCallback((event) => { // Handle form fields and update QSO info
     const { fieldId, alsoClearTheirCall } = event
     const value = event?.value || event?.nativeEvent?.text
-
-    if (qso?.deleted || qso?._willBeDeleted || qso?.event) {
+    console.log('handleFieldChange', fieldId, value)
+    if (qso?.deleted || qso?._willBeDeleted) {
       return
     }
 
@@ -238,6 +241,8 @@ export default function LoggingPanel ({
       if (qso?._isNew) dispatch(setVFO({ power: value }))
     } else if (fieldId === 'eventNote') {
       updateQSO({ event: { note: value } })
+    } else if (fieldId === 'eventDone') {
+      updateQSO({ event: { done: value } })
     }
   }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, setCommandInfo, updateQSO])
 
@@ -436,8 +441,6 @@ export default function LoggingPanel ({
   }, [operationError, commandInfo?.message, loggingState.infoMessage])
 
   const disableSubmit = useMemo(() => {
-    console.log('disableSubmit', isValidQSO, isValidOperation, commandInfo?.matchingCommand)
-    console.log('--', !((isValidQSO && isValidOperation) || commandInfo?.matchingCommand))
     return !((isValidQSO && isValidOperation) || commandInfo?.matchingCommand)
   }, [isValidQSO, isValidOperation, commandInfo?.matchingCommand])
 
@@ -469,62 +472,56 @@ export default function LoggingPanel ({
 
             <View style={styles.panels.container}>
 
-              {qso?.deleted || qso?._willBeDeleted ? (
-                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-                  <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
-                    {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
-                  </Text>
-                </View>
-              ) : (
-                <>
-                  {!opMessage?.hideCallInfo && qso?.their?.call?.length > 2 && (
-                    <CallInfo
-                      qso={qso}
-                      qsos={qsos}
-                      activeQSOs={activeQSOs}
-                      sections={sections}
-                      operation={operation}
-                      vfo={vfo}
-                      settings={settings}
-                      styles={styles}
-                      style={styles.callInfoPanel.container}
-                      themeColor={themeColor}
-                      updateQSO={updateQSO}
-                    />
-                  )}
-                  {(opMessage?.text || (qso?.their?.call?.length || 0) <= 2) && (
-                    <OpInfo
-                      message={opMessage}
-                      operation={operation}
-                      vfo={vfo}
-                      styles={styles}
-                      style={styles.opInfoPanel.container}
-                      settings={settings}
-                      qsos={activeQSOs}
-                      themeColor={themeColor}
-                    />
-                  )}
-                </>
-              )}
-
-              <MainExchangePanel
-                style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}
+              <PanelSelector
+                styles={styles}
+                themeColor={themeColor}
+                opMessage={opMessage}
                 qso={qso}
                 qsos={qsos}
                 operation={operation}
+                activeQSOs={activeQSOs}
+                sections={sections}
                 vfo={vfo}
                 settings={settings}
-                disabled={qso?.deleted || qso?._willBeDeleted || qso?.event}
-                styles={styles}
-                themeColor={themeColor}
-                onSubmitEditing={handleSubmit}
-                handleFieldChange={handleFieldChange}
-                setQSO={setQSO}
                 updateQSO={updateQSO}
-                mainFieldRef={mainFieldRef}
-                focusedRef={focusedRef}
-                allowSpacesInCallField={allowSpacesInCallField}
               />
+
+              {qso?.event ? (
+                <EventEditingPanel
+                  qso={qso}
+                  qsos={qsos}
+                  operation={operation}
+                  vfo={vfo}
+                  settings={settings}
+                  styles={styles}
+                  themeColor={themeColor}
+                  onSubmitEditing={handleSubmit}
+                  handleFieldChange={handleFieldChange}
+                  setQSO={setQSO}
+                  updateQSO={updateQSO}
+                  mainFieldRef={mainFieldRef}
+                  focusedRef={focusedRef}
+                />
+              ) : (
+                <MainExchangePanel
+                  style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}
+                  qso={qso}
+                  qsos={qsos}
+                  operation={operation}
+                  vfo={vfo}
+                  settings={settings}
+                  disabled={qso?.deleted || qso?._willBeDeleted || qso?.event}
+                  styles={styles}
+                  themeColor={themeColor}
+                  onSubmitEditing={handleSubmit}
+                  handleFieldChange={handleFieldChange}
+                  setQSO={setQSO}
+                  updateQSO={updateQSO}
+                  mainFieldRef={mainFieldRef}
+                  focusedRef={focusedRef}
+                  allowSpacesInCallField={allowSpacesInCallField}
+                />
+              )}
             </View>
 
             <View style={styles.actions.container}>
@@ -703,6 +700,14 @@ function prepareStyles (themeStyles, { style, themeColor, leftieMode, isKeyboard
       }
     },
 
+    eventInfoPanel: {
+      container: {
+        // flex: 1,
+        flexDirection: 'column',
+        paddingBottom: themeStyles.halfSpace
+      }
+    },
+
     mainExchangePanel: {
       container: {
         height: panelSize * 1.2,
@@ -806,4 +811,45 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   })
 
   return clone
+}
+
+const PanelSelector = ({ qso, opMessage, styles, ...props }) => {
+  if (qso?.deleted || qso?._willBeDeleted) {
+    return (
+      <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+        <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
+          {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
+        </Text>
+      </View>
+    )
+  } else if (qso?.event) {
+    return (
+      <EventInfo
+        qso={qso}
+        styles={styles}
+        style={styles.eventInfoPanel.container}
+        {...props}
+      />
+    )
+  } else if (!opMessage?.hideCallInfo && qso?.their?.call?.length > 2) {
+    return (
+      <CallInfo
+        qso={qso}
+        styles={styles}
+        style={styles.callInfoPanel.container}
+        {...props}
+      />
+    )
+  } else if (opMessage?.text || (qso?.their?.call?.length || 0) <= 2) {
+    return (
+      <OpInfo
+        message={opMessage}
+        styles={styles}
+        style={styles.opInfoPanel.container}
+        {...props}
+      />
+    )
+  } else {
+    return null
+  }
 }

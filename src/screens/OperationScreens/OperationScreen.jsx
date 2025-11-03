@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Animated, PanResponder, View } from 'react-native'
-import { SafeAreaView, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 
@@ -43,7 +43,7 @@ export default function OperationScreen (props) {
   const safeAreaInsets = useSafeAreaInsets()
 
   const dispatch = useDispatch()
-  const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
+  const operation = useSelector(state => selectOperation(state, route.params.operation?.uuid ?? route.params.uuid))
   const suggestedQSO = route?.params?.qso
   const settings = useSelector(selectSettings)
   const online = useSelector(selectRuntimeOnline)
@@ -55,10 +55,10 @@ export default function OperationScreen (props) {
 
   useEffect(() => { // When starting, make sure all operation data is loaded
     setImmediate(async () => {
-      await dispatch(loadOperation(route.params.operation.uuid))
+      await dispatch(loadOperation(route.params.operation?.uuid ?? route.params.uuid))
       await dispatch(loadQSOs(route.params.operation.uuid))
     })
-  }, [route.params.operation.uuid, dispatch])
+  }, [route.params?.operation?.uuid, route.params?.uuid, dispatch])
 
   const [lastTracking, setLastTracking] = useState(0)
 
@@ -156,7 +156,7 @@ export default function OperationScreen (props) {
               }}
             >
               <HeaderBar options={headerOptions} navigation={navigation} back={true} rightAction={'cog'} splitView={splitView} />
-              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView } }} splitView={splitView} />
+              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView, selectedUUID: route?.params?.selectedUUID } }} splitView={splitView} />
             </Animated.View>
             <View
               style={{
@@ -181,11 +181,11 @@ export default function OperationScreen (props) {
                 height: '100%'
               }}
             >
-              <SafeAreaView edges={['top']}
+              <View
                 style={{
                   height: '100%',
                   width: '100%',
-                  paddingTop: styles.oneSpace * -1,
+                  paddingTop: Math.max(safeAreaInsets.top, styles.oneSpace * 2) - styles.oneSpace * 1,
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                   alignItems: 'stretch'
@@ -243,7 +243,7 @@ export default function OperationScreen (props) {
                   />
 
                 </Tab.Navigator>
-              </SafeAreaView>
+              </View>
             </Animated.View>
 
           </View>

@@ -14,7 +14,7 @@ import { H2kIcon, H2kMarkdown, H2kPressable } from '../../../../../ui'
 
 const EMOJI_REGEX = emojiRegex()
 
-const EventItem = React.memo(function NoteItem (
+const EventItem = React.memo(function EventItem (
   { qso, ourInfo, onPress, styles, selected, isOtherOperator, settings, timeFormatFunction, refHandlers }
 ) {
   const pressHandler = useCallback(() => {
@@ -42,7 +42,7 @@ const EventItem = React.memo(function NoteItem (
   }, [qso.deleted, isOtherOperator, styles.eventContent, styles.deletedFields, styles.otherOperatorFields, styles.fields])
 
   const textStyle = useMemo(() => {
-    if (qso.event?.description.match(EMOJI_REGEX)) {
+    if (qso.event?.description?.match(EMOJI_REGEX)) {
       return {
         ...fieldsStyle.event,
         marginTop: styles.oneSpace * -0.2,
