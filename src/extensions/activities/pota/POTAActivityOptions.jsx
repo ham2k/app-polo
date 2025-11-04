@@ -6,10 +6,10 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
 
-import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
+import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { distanceOnEarth } from '../../../tools/geoTools'
@@ -19,24 +19,20 @@ import { Info } from './POTAInfo'
 import { potaFindParkByReference, potaFindParksByLocation, potaFindParksByName, potaPrefixForDXCCCode } from './POTAAllParksData'
 import { POTAListItem } from './POTAListItem'
 
-export function POTAActivityOptions (props) {
+export function POTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
   const NEARBY_DEGREES = 0.25
-
-  const { styles, operation, settings } = props
-
-  const dispatch = useDispatch()
 
   const online = useSelector(selectRuntimeOnline)
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const refs = useMemo(() => filterRefs(operation, Info.activationType).filter(ref => ref.ref), [operation])
+  const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (refs?.length === 0) return 'No parks selected for activation'
-    else if (refs?.length === 1) return 'Activating 1 park'
-    else return `Activating ${refs.length} parks`
-  }, [refs])
+    if (activityRefs?.length === 0) return 'No parks selected for activation'
+    else if (activityRefs?.length === 1) return 'Activating 1 park'
+    else return `Activating ${activityRefs.length} parks`
+  }, [activityRefs])
 
   const [search, setSearch] = useState('')
 
@@ -64,7 +60,7 @@ export function POTAActivityOptions (props) {
   useEffect(() => {
     setTimeout(async () => {
       const datas = []
-      for (const ref of refs) {
+      for (const ref of activityRefs) {
         const park = await potaFindParkByReference(ref.ref)
         const newData = { ...ref, ...park }
         if (location?.lat && location?.lon) {
@@ -74,7 +70,7 @@ export function POTAActivityOptions (props) {
       }
       setRefDatas(datas)
     }, 0)
-  }, [refs, location, settings.distanceUnits])
+  }, [activityRefs, location, settings.distanceUnits])
 
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
@@ -137,12 +133,12 @@ export function POTAActivityOptions (props) {
   }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
 
   const handleAddReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, [...refs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
+  }, [activityRefs, allRefs, setRefs])
 
   const handleRemoveReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, refs.filter(r => r.ref !== ref)) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== ref)))
+  }, [activityRefs, allRefs, setRefs])
 
   return (
     <>
@@ -152,7 +148,7 @@ export function POTAActivityOptions (props) {
             key={park.ref}
             activityRef={park.ref}
             refData={park}
-            allRefs={refs}
+            allRefs={activityRefs}
             styles={styles}
             settings={settings}
             online={online}
@@ -175,7 +171,7 @@ export function POTAActivityOptions (props) {
           <POTAListItem
             key={park.ref}
             activityRef={park.ref}
-            allRefs={refs}
+            allRefs={activityRefs}
             refData={park}
             styles={styles}
             settings={settings}

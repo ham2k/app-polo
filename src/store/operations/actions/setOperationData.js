@@ -23,15 +23,16 @@ export const setOperationLocalData = (data) => async (dispatch, getState) => {
       data.freq = undefined
     }
 
-    await dispatch(actions.setOperationLocal(data))
+    dispatch(actions.setOperationLocal(data))
     const savedOperation = selectOperation(getState(), uuid) ?? {}
-    return dispatch(saveOperationLocalData(savedOperation))
+    await dispatch(saveOperationLocalData(savedOperation))
   } catch (e) {
     reportError('Error in setOperationData', e)
   }
 }
 
 export const setOperationData = (data) => async (dispatch, getState) => {
+  console.log('setOperationData', data)
   try {
     const { uuid } = data
     const state = getState()
@@ -42,10 +43,11 @@ export const setOperationData = (data) => async (dispatch, getState) => {
 
     await updateOperationBreakOrStart({ operation: mergedOperation, qsos, dispatch })
 
-    await dispatch(actions.setOperation(mergedOperation))
+    dispatch(actions.setOperation(mergedOperation))
+
     const savedOperation = selectOperation(getState(), uuid) ?? {}
 
-    return dispatch(saveOperation(savedOperation))
+    await dispatch(saveOperation(savedOperation))
   } catch (e) {
     console.log('Error in setOperationData', e)
     reportError('Error in setOperationData', e)

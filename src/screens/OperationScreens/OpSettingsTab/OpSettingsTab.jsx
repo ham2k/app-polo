@@ -50,6 +50,7 @@ function prepareStyles (baseStyles) {
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles(prepareStyles)
+  const safeAreaInsets = useSafeAreaInsets()
 
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
@@ -134,8 +135,6 @@ export default function OpSettingsTab ({ navigation, route }) {
     }, 100)
   }, [dispatch, navigation, operation, settings])
 
-  const safeAreaInsets = useSafeAreaInsets()
-
   return (
     <ScrollView style={{ flex: 1 }}>
 
@@ -187,7 +186,7 @@ export default function OpSettingsTab ({ navigation, route }) {
 
         <H2kListItem
           title={operation?.userTitle || 'Operation Details'}
-          description={operation?.notes || operation?.userTitle ? 'Add notes for this operation' : 'Add a title or notes for this operation'}
+          description={operation?.userTitle ? (operation?.notes || 'Add notes for this operation') : 'Add a title or notes for this operation'}
           titleStyle={{ paddingRight: safeAreaInsets.right }}
           descriptionStyle={{ paddingRight: safeAreaInsets.right }}
           leftIcon={'book-outline'}

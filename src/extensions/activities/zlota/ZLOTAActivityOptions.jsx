@@ -6,10 +6,9 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
 
-import { setOperationData } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { distanceOnEarth } from '../../../tools/geoTools'
@@ -19,22 +18,18 @@ import { Info } from './ZLOTAInfo'
 import { zlotaFindAllByLocation, zlotaFindAllByName, zlotaFindOneByReference } from './ZLOTADataFile'
 import { ZLOTAListItem } from './ZLOTAListItem'
 
-export function ZLOTAActivityOptions (props) {
+export function ZLOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
   const NEARBY_DEGREES = 0.25
-
-  const { styles, operation, settings } = props
-
-  const dispatch = useDispatch()
 
   const online = useSelector(selectRuntimeOnline)
 
-  const refs = useMemo(() => filterRefs(operation, Info.activationType).filter(ref => ref.ref), [operation])
+  const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (refs?.length === 0) return 'No references selected for activation'
-    else if (refs?.length === 1) return `Activating 1 ${refs[0].assetType ?? 'reference'}`
-    else return `Activating ${refs.length} references`
-  }, [refs])
+    if (activityRefs?.length === 0) return 'No references selected for activation'
+    else if (activityRefs?.length === 1) return `Activating 1 ${activityRefs[0].assetType ?? 'reference'}`
+    else return `Activating ${activityRefs.length} references`
+  }, [activityRefs])
 
   const [search, setSearch] = useState('')
 
@@ -62,7 +57,7 @@ export function ZLOTAActivityOptions (props) {
   useEffect(() => {
     setTimeout(async () => {
       const datas = []
-      for (const ref of refs) {
+      for (const ref of activityRefs) {
         const result = await zlotaFindOneByReference(ref.ref)
         const newData = { ...ref, ...result }
         if (location?.lat && location?.lon) {
@@ -72,7 +67,7 @@ export function ZLOTAActivityOptions (props) {
       }
       setRefDatas(datas)
     }, 0)
-  }, [refs, location, settings.distanceUnits])
+  }, [activityRefs, location, settings.distanceUnits])
 
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
@@ -131,12 +126,12 @@ export function ZLOTAActivityOptions (props) {
   }, [search, nearbyResults, location, settings.distanceUnits])
 
   const handleAddReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, [...refs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
+  }, [activityRefs, allRefs, setRefs])
 
   const handleRemoveReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, refs.filter(r => r.ref !== ref)) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== ref)))
+  }, [activityRefs, allRefs, setRefs])
 
   return (
     <>
@@ -146,7 +141,7 @@ export function ZLOTAActivityOptions (props) {
             key={ref.ref}
             activityRef={ref.ref}
             refData={ref}
-            allRefs={refs}
+            allRefs={activityRefs}
             styles={styles}
             settings={settings}
             online={online}
@@ -169,7 +164,7 @@ export function ZLOTAActivityOptions (props) {
           <ZLOTAListItem
             key={ref.ref}
             activityRef={ref.ref}
-            allRefs={refs}
+            allRefs={activityRefs}
             refData={ref}
             styles={styles}
             settings={settings}

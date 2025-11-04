@@ -12,16 +12,16 @@ import { findRef } from '../../../tools/refTools'
 
 import { Info } from './ThirteenColoniesExtension'
 
-export function ThirteenColoniesOptions ({ styles, operation }) {
-  const ref = useMemo(() => findRef(operation, Info.key), [operation])
+export function ThirteenColoniesOptions ({ styles, operation, refs: allRefs, setRefs }) {
+  const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const isInTestMode = useMemo(() => {
     const today = new Date()
-    const year = ref?.year
+    const year = activityRef?.year
     const july1 = Date.parse(`${year}-07-01T00:00:00Z`)
 
     return today < july1
-  }, [ref?.year])
+  }, [activityRef?.year])
 
   return (
     <>
@@ -35,7 +35,7 @@ export function ThirteenColoniesOptions ({ styles, operation }) {
             uppercase={true}
             noSpaces={true}
             disabled={true}
-            value={ref?.year || '2025'}
+            value={activityRef?.year || '2025'}
           />
         </H2kListRow>
       </H2kListSection>

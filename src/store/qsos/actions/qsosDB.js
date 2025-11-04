@@ -213,6 +213,8 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
   const now = Date.now()
 
   for (const qso of qsos) {
+    if (qso.event) continue
+
     qso.our = { ...qso.our, ...data.our } // Batch Update only changes `our` data
     qso.key = qsoKey(qso)
     qso.uuid = qso.uuid || UUID.v4()

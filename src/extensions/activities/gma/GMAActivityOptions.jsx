@@ -6,10 +6,10 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
 
-import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
+import { selectOperationCallInfo } from '../../../store/operations'
 import { findRef, replaceRef } from '../../../tools/refTools'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
@@ -18,21 +18,17 @@ import { Info } from './GMAInfo'
 import { GMAListItem } from './GMAListItem'
 import { gmaFindAllByLocation, gmaFindAllByName, gmaFindOneByReference } from './GMADataFile'
 
-export function GMAActivityOptions (props) {
+export function GMAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
   const NEARBY_DEGREES = 0.25
-
-  const { styles, operation, settings } = props
-
-  const dispatch = useDispatch()
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const operationRef = useMemo(() => findRef(operation, Info.activationType) ?? {}, [operation])
+  const activityRef = useMemo(() => findRef(allRefs, Info.activationType) ?? {}, [allRefs])
 
   const title = useMemo(() => {
-    if (!operationRef?.ref) return 'No summit selected for activation'
+    if (!activityRef?.ref) return 'No summit selected for activation'
     else return 'Activating summit:'
-  }, [operationRef])
+  }, [activityRef])
 
   const [search, setSearch] = useState('')
 
@@ -59,14 +55,14 @@ export function GMAActivityOptions (props) {
   const [refData, setRefData] = useState({})
   useEffect(() => {
     setTimeout(async () => {
-      const lookupData = await gmaFindOneByReference(operationRef.ref)
-      const newData = { ...operationRef, ...lookupData }
+      const lookupData = await gmaFindOneByReference(activityRef.ref)
+      const newData = { ...activityRef, ...lookupData }
       if (location?.lat && location?.lon) {
         newData.distance = distanceOnEarth(newData, location, { units: settings.distanceUnits })
       }
       setRefData(newData)
     }, 0)
-  }, [operationRef, location, settings.distanceUnits])
+  }, [activityRef, location, settings.distanceUnits])
 
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
@@ -125,18 +121,12 @@ export function GMAActivityOptions (props) {
   }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
 
   const handleAddReference = useCallback((newRef) => {
-    dispatch(setOperationData({
-      uuid: operation.uuid,
-      refs: replaceRef(operation?.refs, Info.activationType, { type: Info.activationType, ref: newRef })
-    }))
-  }, [dispatch, operation])
+    setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: newRef }))
+  }, [allRefs, setRefs])
 
   const handleRemoveReference = useCallback((newRef) => {
-    dispatch(setOperationData({
-      uuid: operation.uuid,
-      refs: replaceRef(operation?.refs, Info.activationType, {})
-    }))
-  }, [dispatch, operation])
+    setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: newRef }))
+  }, [allRefs, setRefs])
 
   return (
     <>
@@ -168,7 +158,7 @@ export function GMAActivityOptions (props) {
           <GMAListItem
             key={result.ref}
             activityRef={result.ref}
-            operationRef={operationRef.ref}
+            operationRef={activityRef.ref}
             refData={result}
             styles={styles}
             settings={settings}

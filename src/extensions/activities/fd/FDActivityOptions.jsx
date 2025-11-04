@@ -6,20 +6,14 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
 
-import { setOperationData } from '../../../store/operations'
 import { findRef, replaceRef } from '../../../tools/refTools'
 import { H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput, H2kDropDown } from '../../../ui'
 
 import { Info } from './FDExtension'
 
-export function FDActivityOptions (props) {
-  const { styles, operation } = props
-
-  const dispatch = useDispatch()
-
-  const ref = useMemo(() => findRef(operation, Info.key), [operation])
+export function FDActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const handleChange = useCallback((value) => {
     if (value?.class) value.class = value.class.toUpperCase()
@@ -27,16 +21,16 @@ export function FDActivityOptions (props) {
     if (value?.transmitterPower) value.transmitterPower = value.transmitterPower.toUpperCase()
     if (value?.powerSource) value.powerSource = value.powerSource.toUpperCase()
 
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, ...value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, ...value }))
+  }, [activityRef, allRefs, setRefs])
 
   const handleTransmitterPowerChange = useCallback((value) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, transmitterPower: value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, transmitterPower: value }))
+  }, [activityRef, allRefs, setRefs])
 
   const handlePowerSourceChange = useCallback((value) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, powerSource: value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, powerSource: value }))
+  }, [activityRef, allRefs, setRefs])
 
   return (
     <>
@@ -49,7 +43,7 @@ export function FDActivityOptions (props) {
             mode={'flat'}
             uppercase={true}
             noSpaces={true}
-            value={ref?.class || ''}
+            value={activityRef?.class || ''}
             onChangeText={(text) => handleChange({ class: text })}
           />
         </H2kListRow>
@@ -61,7 +55,7 @@ export function FDActivityOptions (props) {
             mode={'flat'}
             uppercase={true}
             noSpaces={true}
-            value={ref?.location || ''}
+            value={activityRef?.location || ''}
             onChangeText={(text) => handleChange({ location: text })}
           />
         </H2kListRow>
@@ -87,7 +81,7 @@ export function FDActivityOptions (props) {
         <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
           <H2kDropDown
             label="Highest Transmitter Power"
-            value={ref?.transmitterPower}
+            value={activityRef?.transmitterPower}
             placeholder="100W"
             onChangeText={handleTransmitterPowerChange}
             options={[
@@ -101,7 +95,7 @@ export function FDActivityOptions (props) {
         <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
           <H2kDropDown
             label="Power Source"
-            value={ref?.powerSource}
+            value={activityRef?.powerSource}
             placeholder="Select a power source"
             onChangeText={handlePowerSourceChange}
             options={[

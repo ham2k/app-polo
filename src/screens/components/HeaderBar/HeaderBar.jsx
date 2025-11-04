@@ -55,14 +55,14 @@ export default function HeaderBar ({
     } else if (leftAction === 'accept') {
       return 'check'
     } else if (leftAction === 'revert') {
-      return 'undo'
+      return 'undo-variant'
     }
     return 'arrow-left'
   }, [leftAction])
 
   const rightActionIcon = useMemo(() => {
     if (rightAction === 'revert') {
-      return 'undo'
+      return 'undo-variant'
     }
     return rightAction
   }, [rightAction])
@@ -70,9 +70,10 @@ export default function HeaderBar ({
   const handleLeftActionPress = useCallback(() => {
     if (onLeftActionPress) {
       onLeftActionPress()
+    } else if (leftAction !== 'logo' && leftAction !== 'none') {
+      navigation.goBack()
     }
-    navigation.goBack()
-  }, [navigation, onLeftActionPress])
+  }, [navigation, onLeftActionPress, leftAction])
 
   return (
     <Appbar

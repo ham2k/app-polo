@@ -5,9 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 import React, { useCallback, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import { setOperationData } from '../../../store/operations'
 import { selectOperatorCallInfo, selectSettings } from '../../../store/settings'
 import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 import { fmtDateTimeNice, fmtTimeBetween, prepareTimeValue } from '../../../tools/timeFormats'
@@ -16,20 +15,17 @@ import { findRef, replaceRef } from '../../../tools/refTools'
 import { Info } from './QSOPartiesInfo'
 import { qpData, qpParseLocations, QSO_PARTY_DATA } from './QSOPartiesExtension'
 
-export function ActivityOptions (props) {
-  const { styles, operation } = props
-
-  const dispatch = useDispatch()
-
+export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
   const settings = useSelector(selectSettings)
 
   const ourInfo = useSelector(selectOperatorCallInfo)
 
-  const ref = useMemo(() => findRef(operation, Info.key), [operation])
-  const qp = useMemo(() => qpData({ ref }), [ref])
+  const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
+
+  const qp = useMemo(() => qpData({ ref: activityRef }), [activityRef])
 
   const locationLabel = useMemo(() => {
-    const locations = qpParseLocations({ location: ref?.location, qp, qso: { their: ourInfo } })
+    const locations = qpParseLocations({ location: activityRef?.location, qp, qso: { their: ourInfo } })
 
     if (locations.length > 0) {
       if (locations.find(loc => !loc.inState)) {
@@ -40,7 +36,7 @@ export function ActivityOptions (props) {
     } else {
       return null
     }
-  }, [ref?.location, qp, ourInfo])
+  }, [activityRef?.location, qp, ourInfo])
 
   const partyOptions = useMemo(() => {
     const now = new Date()
@@ -72,26 +68,26 @@ export function ActivityOptions (props) {
   }, [])
 
   const handlePartyChange = useCallback((value) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, ref: value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, ref: value }))
+  }, [activityRef, allRefs, setRefs])
 
   const handleLocationChange = useCallback((value) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, location: value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, location: value }))
+  }, [activityRef, allRefs, setRefs])
 
   const handleEmailChange = useCallback((value) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, email: value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, email: value }))
+  }, [activityRef, allRefs, setRefs])
 
   const handleSpotToQPHubChange = useCallback((value) => {
-    if (value === undefined) value = !ref?.spotToQPHub
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, spotToQPHub: value }) }))
-  }, [dispatch, operation, ref])
+    if (value === undefined) value = !activityRef?.spotToQPHub
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, spotToQPHub: value }))
+  }, [activityRef, allRefs, setRefs])
 
   const handleSpotToAPRSChange = useCallback((value) => {
-    if (value === undefined) value = !ref?.spotToAPRS
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, spotToAPRS: value }) }))
-  }, [dispatch, operation, ref])
+    if (value === undefined) value = !activityRef?.spotToAPRS
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, spotToAPRS: value }))
+  }, [activityRef, allRefs, setRefs])
 
   return (
     <>
@@ -99,7 +95,7 @@ export function ActivityOptions (props) {
         <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
           <H2kDropDown
             // label="Which QSO Party?"
-            value={ref?.ref}
+            value={activityRef?.ref}
             placeholder="Select a QSO Party"
             onChangeText={handlePartyChange}
             dropDownContainerMaxHeight={styles.oneSpace * 45}
@@ -115,11 +111,11 @@ export function ActivityOptions (props) {
             <H2kListRow>
               <H2kTextInput
                 label="Location"
-                value={ref?.location || ''}
+                value={activityRef?.location || ''}
                 uppercase={true}
                 onChangeText={handleLocationChange}
               />
-              {ref?.location?.length >= 2 && (
+              {activityRef?.location?.length >= 2 && (
                 locationLabel ? (
                   <H2kMarkdown style={{ padding: styles.oneSpace }}>
                     {locationLabel}
@@ -140,7 +136,7 @@ export function ActivityOptions (props) {
                 inputMode="email"
                 keyboardType="email-address"
                 autoCapitalize={'none'}
-                value={ref?.email || ''}
+                value={activityRef?.email || ''}
                 onChangeText={handleEmailChange}
               />
             </H2kListRow>
@@ -151,9 +147,9 @@ export function ActivityOptions (props) {
               <H2kListRow>
                 <H2kListItem
                   title="Spot to QSO Party Hub"
-                  description={ref?.spotToQPHub ? 'Yes, spot us!' : 'Disabled'}
+                  description={activityRef?.spotToQPHub ? 'Yes, spot us!' : 'Disabled'}
                   leftIcon="hand-wave"
-                  rightSwitchValue={ref?.spotToQPHub}
+                  rightSwitchValue={activityRef?.spotToQPHub}
                   rightSwitchOnValueChange={handleSpotToQPHubChange}
                   onPress={handleSpotToQPHubChange}
                   leftIconColor={styles.colors.devMode}
@@ -163,9 +159,9 @@ export function ActivityOptions (props) {
 
                 <H2kListItem
                   title="Spot to APRS"
-                  description={ref?.spotToAPRS ? 'Yes, spot us!' : 'Disabled'}
+                  description={activityRef?.spotToAPRS ? 'Yes, spot us!' : 'Disabled'}
                   leftIcon="hand-wave"
-                  rightSwitchValue={ref?.spotToAPRS}
+                  rightSwitchValue={activityRef?.spotToAPRS}
                   rightSwitchOnValueChange={handleSpotToAPRSChange}
                   onPress={handleSpotToAPRSChange}
                   leftIconColor={styles.colors.devMode}

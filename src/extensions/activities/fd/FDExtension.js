@@ -287,13 +287,13 @@ const ReferenceHandler = {
 
     parts.push(`### ${Object.keys(score?.otherSections ?? {}).length} Other`)
     line = '> '
-    ;['MX', 'DX'].forEach(s => {
-      if (score.otherSections[s]) {
-        line += `**~~${s}~~**  `
-      } else {
-        line += `${s}  `
-      }
-    })
+      ;['MX', 'DX'].forEach(s => {
+        if (score.otherSections[s]) {
+          line += `**~~${s}~~**  `
+        } else {
+          line += `${s}  `
+        }
+      })
 
     parts.push(line)
 
@@ -313,8 +313,8 @@ export const VE_LOCATION_SUGGESTIONS = Object.entries(RAC_SECTIONS)
 export const OTHER_LOCATION_SUGGESTIONS = [['MX', 'Mexico'], ['DX', 'Other DX']]
 export const ALL_LOCATION_SUGGESTIONS = Object.entries(FD_LOCATION_VALUES)
 
-function mainExchangeForOperation (props) {
-  const { qso, qsos, operation, updateQSO, styles, refStack } = props
+function mainExchangeForOperation(props) {
+  const { qso, qsos, operation, updateQSO, styles, refStack, disabled } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
 
@@ -367,7 +367,7 @@ function mainExchangeForOperation (props) {
   return fields
 }
 
-function processQSOBeforeSave ({ qso, qsos, operation }) {
+function processQSOBeforeSave({ qso, qsos, operation }) {
   if (findRef(operation, Info.key)) {
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
     ref.class = ref.class ?? _defaultClassFor({ qso, qsos, operation })
@@ -380,7 +380,7 @@ function processQSOBeforeSave ({ qso, qsos, operation }) {
   return qso
 }
 
-function _suggestionsFor (qso) {
+function _suggestionsFor(qso) {
   const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
   if (prefix === 'K') return K_LOCATION_SUGGESTIONS
   else if (prefix === 'VE') return VE_LOCATION_SUGGESTIONS
@@ -388,13 +388,13 @@ function _suggestionsFor (qso) {
   else return ALL_LOCATION_SUGGESTIONS
 }
 
-function _defaultClassFor ({ qso, qsos, operation }) {
+function _defaultClassFor({ qso, qsos, operation }) {
   const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
   if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.class
   else return undefined
 }
 
-function _defaultLocationFor ({ qso, qsos, operation }) {
+function _defaultLocationFor({ qso, qsos, operation }) {
   const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
   if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.location
 

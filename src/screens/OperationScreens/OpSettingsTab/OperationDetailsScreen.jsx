@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -21,19 +21,38 @@ export default function OperationDetailsScreen ({ navigation, route }) {
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
 
+  const [title, setTitle] = useState(operation?.userTitle || '')
+  const [notes, setNotes] = useState(operation?.notes || '')
+
   useEffect(() => {
     if (!operation) {
       navigation.goBack()
     }
-  }, [navigation, operation])
 
-  const handleChangeTitle = useCallback((userTitle) => {
-    dispatch(setOperationData({ uuid: operation.uuid, userTitle }))
-  }, [dispatch, operation.uuid])
+    navigation.setOptions({
+      leftAction: 'accept',
+      leftActionA11yLabel: 'Accept Changes',
+      rightAction: 'revert',
+      rightActionA11yLabel: 'Revert Changes',
+      onLeftActionPress: () => {
+        dispatch(setOperationData({ uuid: operation.uuid, userTitle: title, notes }))
+        navigation.goBack()
+      },
+      onRightActionPress: () => {
+        setTitle(operation?.userTitle || '')
+        setNotes(operation?.notes || '')
+        navigation.goBack()
+      }
+    })
+  }, [navigation, operation, dispatch, title, notes])
 
-  const handleChangeNotes = useCallback((notes) => {
-    dispatch(setOperationData({ uuid: operation.uuid, notes }))
-  }, [dispatch, operation.uuid])
+  const handleChangeTitle = useCallback((value) => {
+    setTitle(value)
+  }, [setTitle])
+
+  const handleChangeNotes = useCallback((value) => {
+    setNotes(value)
+  }, [setNotes])
 
   return (
     <ScreenContainer>
@@ -42,7 +61,7 @@ export default function OperationDetailsScreen ({ navigation, route }) {
           <H2kListSection title={'Title'}>
             <H2kTextInput
               style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
-              value={operation?.userTitle || ''}
+              value={title ?? ''}
               placeholder={'New Operation'}
               onChangeText={handleChangeTitle}
             />
@@ -50,7 +69,7 @@ export default function OperationDetailsScreen ({ navigation, route }) {
           <H2kListSection title={'Notes'}>
             <H2kTextInput
               style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
-              value={operation?.notes || ''}
+              value={notes ?? ''}
               placeholder={'Anything you want to write about this operation'}
               onChangeText={handleChangeNotes}
             />

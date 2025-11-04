@@ -19,6 +19,7 @@ import { sendOperationsToSyncService } from '../../sync'
 import { actions } from '../operationsSlice'
 import { selectSettings } from '../../settings'
 import { selectLocalData, setLocalData } from '../../local'
+import { computeSizes } from '../../../styles/tools/computeSizes'
 
 const operationFromRow = (row) => {
   if (!row) return {}
@@ -151,6 +152,7 @@ export const saveOperation = (operation, { synced = false } = {}) => async (disp
 
 export const saveOperationLocalData = (operation) => async (dispatch, getState) => {
   const row = rowFromOperation(operation)
+
   await dbExecute(
     `
       UPDATE operations SET localData = ?, startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ? WHERE uuid = ?
