@@ -25,6 +25,7 @@ import { SOTAAccountSetting } from './SOTAAccount'
 import { SOTAPostSelfSpot } from './SOTAPostSelfSpot'
 import { SOTAPostOtherSpot } from './SOTAPostOtherSpot'
 import { filterNearDupes } from '../../../tools/qsonTools'
+import { generateActivityDailyAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 const Extension = {
   ...Info,
@@ -305,7 +306,11 @@ const ReferenceHandler = {
     return fields
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
+  scoringForQSO: generateActivityScorer({ info: Info }),
+  accumulateScoreForDay: generateActivityDailyAccumulator({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info }),
+
+  originalScoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const { uuid, startAtMillis } = qso
@@ -342,7 +347,7 @@ const ReferenceHandler = {
     }
   },
 
-  accumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
+  originalAccumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
     if (!ref?.ref) return score // No scoring if not activating
     if (!score?.key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
@@ -361,7 +366,7 @@ const ReferenceHandler = {
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  originalSummarizeScore: ({ score, operation, ref, section }) => {
     score.activated = score.value >= 4
 
     if (score.activated) {

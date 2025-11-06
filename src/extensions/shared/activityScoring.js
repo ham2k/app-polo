@@ -11,8 +11,8 @@ import { filterNearDupes } from "../../tools/qsonTools"
 import { filterRefs } from "../../tools/refTools"
 
 const DEBUG = true
-const DEBUG_ACTIVITIES = ['POTA']
-const DEBUG_CALLS = ['KK1K', 'KK2K', 'KK3K']
+const DEBUG_ACTIVITIES = ['SOTA']
+const DEBUG_CALLS = ['KN2X']
 
 const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
@@ -127,8 +127,6 @@ export const generateActivityDailyAccumulator = ({ info }) => {
   return ({ qsoScore, score, operation, ref: scoredRef }) => {
     const DEBUG_THIS_ONE = DEBUG && DEBUG_ACTIVITIES.includes(shortName)
 
-    if (!qsoScore?.value) return score // No scoring if not activating
-
     if (!score?.key || score.key !== key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
       key,
@@ -142,8 +140,8 @@ export const generateActivityDailyAccumulator = ({ info }) => {
       for: 'day'
     }
 
-    if (scoredRef?.ref) {
-      score.activatedRefs[scoredRef.ref] = (score.activatedRefs[scoredRef.ref] ?? 0) + qsoScore.value
+    if (scoredRef?.ref && qsoScore?.value) {
+      score.activatedRefs[scoredRef.ref] = (score.activatedRefs[scoredRef.ref] ?? 0) + qsoScore?.value
       score.activatedQSOs = score.activatedQSOs + qsoScore.value
     }
 
@@ -188,9 +186,10 @@ export const generateActivitySumarizer = ({ info }) => {
 
   return ({ score, operation, ref: scoredRef, section, allSectionScores }) => {
     const DEBUG_THIS_ONE = DEBUG && DEBUG_ACTIVITIES.includes(shortName)
-    if (!score) return score
 
-    const activatedRefKeys = Object.keys(score.activatedRefs).sort()
+    if (DEBUG_THIS_ONE) console.log('summarizeScore', shortName, { ...score })
+
+    const activatedRefKeys = Object.keys(score.activatedRefs ?? {}).sort()
 
     const minMissing = Math.min(...Object.values(score.activatedRefs))
 
@@ -199,11 +198,14 @@ export const generateActivitySumarizer = ({ info }) => {
     const summaryParts = []
     if (activatedRefKeys.length > 0) {
       if (minMissing < qsosToActivate) {
-        summaryParts.push(`${minMissing}/10`)
+        summaryParts.push(`${minMissing}/${qsosToActivate}`)
+        score.activated = false
       } else if (activatedRefKeys.length < 6) {
         summaryParts.push(`✓`.repeat(activatedRefKeys.length))
+        score.activated = true
       } else {
         summaryParts.push(`✓ x ${activatedRefKeys.length}`)
+        score.activated = true
       }
     }
     if (score.huntedRefs.length > 0) {
@@ -228,16 +230,16 @@ export const generateActivitySumarizer = ({ info }) => {
     score.longSummary += qsoCounts.join(' • ')
 
     if (activatedRefKeys.length > 0) {
-      score.longSummary += `\n${activatedRefKeys.map(key => {
+      score.longSummary += `\n\n${activatedRefKeys.map(key => {
         if (score.activatedRefs[key] >= qsosToActivate) {
-          return `* ${key}: ✓ ${fmtNumber(score.activatedRefs[key])}`
+          return `✅ **${key}: ${fmtNumber(score.activatedRefs[key])}**`
         } else {
-          return `* ~~${key}: ${fmtNumber(score.activatedRefs[key])}/${qsosToActivate}~~`
+          return `❌ ${key}: ${fmtNumber(score.activatedRefs[key])}/${qsosToActivate}`
         }
       }).join('\n')}`
     }
 
-    if (allSectionScores.length > 1) {
+    if (allSectionScores?.length > 1) {
       const refTotals = allSectionScores.reduce((totals, sectionScore) => {
         Object.keys(sectionScore.activatedRefs).forEach(key => {
           if (sectionScore.activatedRefs[key] >= qsosToActivate) {
@@ -250,7 +252,7 @@ export const generateActivitySumarizer = ({ info }) => {
         return totals
       }, { activated: 0, hunted: 0, missed: 0 })
       if (refTotals.activated > 0 || refTotals.hunted > 0 || refTotals.missed > 0) {
-        score.longSummary += `\n---\n\n## Operation Totals\n `
+        score.longSummary += `\n\n---\n\n## Operation Totals\n `
         const totalsParts = []
         if (refTotals.activated > 0) {
           totalsParts.push(`**${refTotals.activated} ${refTotals.activated === 1 ? referenceActivatedLabel : referencesActivatedLabel}**`)
@@ -264,6 +266,9 @@ export const generateActivitySumarizer = ({ info }) => {
         score.longSummary += totalsParts.join('\n')
       }
     }
+
+    if (DEBUG_THIS_ONE) console.log(`-- summary for ${shortName}: ${score.summary}`)
+    if (DEBUG_THIS_ONE) console.log(`-- longSummary for ${shortName}: ${score.longSummary}`)
 
     return score
   }
