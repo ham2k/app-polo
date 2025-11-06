@@ -162,7 +162,9 @@ export function analyzeAndSectionQSOs({ qsos, operation, settings, showDeletedQS
     if (VERBOSE >= 2 && DEBUG_KEYS.includes(handler.key)) console.log(`-- ${handler.key}${handler.key !== key ? ` (${key})` : ' '} ${ref.ref ?? ref.location ?? ref.type}`, { ...currentSection?.scores?.[key] })
     if (handler.summarizeScore && currentSection?.scores?.[key]) {
       try {
-        currentSection.scores[key] = handler.summarizeScore({ score: currentSection.scores[key] ?? {}, operation, ref, section: currentSection })
+        const allSectionScores = sections.map(section => section.scores[key]).filter(x => x)
+
+        currentSection.scores[key] = handler.summarizeScore({ score: currentSection.scores[key] ?? {}, operation, ref, section: currentSection, allSectionScores })
         if (VERBOSE && DEBUG_KEYS.includes(handler.key)) console.log('---- Summarized', { ...currentSection.scores[key] })
       } catch (e) {
         reportError(`Error summarizing score for '${handler.key}'`, e)

@@ -17,5 +17,20 @@ export const Info = {
   activationType: 'potaActivation',
   descriptionPlaceholder: 'Enter POTA references',
   unknownReferenceName: 'Unknown Park',
-  referenceRegex: /^[A-Z0-9]+-(?:[0-9]{4,5}|TEST)$/i
+  referenceRegex: /^[A-Z0-9]+-(?:[0-9]{4,5}|TEST)$/i,
+  scoring: {
+    allowsMultipleReferences: true,
+    qsosToActivate: 10,
+    uniquePer: ['band', 'mode', 'day', 'ref'],
+    referenceLabel: 'park',
+    ref2refLabel: 'P2P',
+    activatorQSOLabel: 'activator QSO',
+    activatorQSOsLabel: 'activator QSOs',
+    hunterQSOLabel: 'hunter QSO',
+    hunterQSOsLabel: 'hunter QSOs',
+    referenceActivatedLabel: 'park activated',
+    referencesActivatedLabel: 'parks activated',
+    referenceHuntedLabel: 'park hunted',
+    referencesHuntedLabel: 'parks hunted',
+  }
 }

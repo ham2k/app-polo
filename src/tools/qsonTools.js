@@ -49,18 +49,18 @@ export function filterQSOsWithSectionRefs({
   })
 }
 
+/**
+ * Returns QSOs that happened before `qso`
+ * that happened on a section that includes the given `sectionRefs`
+ * and that also passes the given `filter` function
+ */
 export function filterNearDupes({ qso, filter, ...rest }) {
-  const { band, mode, uuid, startAtMillis, their } = qso
+  const { uuid, startAtMillis, their } = qso
   const { call } = their
 
   const actualFilter = ({ qso: q, sectionRefs, sectionGrid }) => {
-    // console.log('filterNearDupes', uuid, startAtMillis, q.uuid, q.key, q.startAtMillis)
-    // console.log('--', (startAtMillis ? q.startAtMillis < startAtMillis : true))
-    // console.log('--', call === q.their.call)
-    // console.log('--', uuid !== q.uuid)
-    // console.log('--', filter ? filter({ qso: q, sectionRefs, sectionGrid }) : true)
-
     const result = (startAtMillis ? q.startAtMillis < startAtMillis : true)
+      && !q.deleted && !q.event
       && call === q.their.call
       && uuid !== q.uuid
       && (filter ? filter({ qso: q, sectionRefs, sectionGrid }) : true)

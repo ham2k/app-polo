@@ -432,12 +432,12 @@ function _releaseSyncLoop() {
 }
 
 function _scheduleDebouncedFunctionForSyncLoop(fn) {
-  console.log('_scheduleDebouncedFunctionForSyncLoop')
+  if (VERBOSE >= 1) console.log('_scheduleDebouncedFunctionForSyncLoop')
   if (nextSyncLoopInterval !== true) {
-    console.log(' -- debouncing')
+    if (VERBOSE >= 1) console.log(' -- debouncing')
     clearTimeout(nextSyncLoopInterval)
     if (lastDebouncedSync && Date.now() - lastDebouncedSync > SYNC_LOOP_DEBOUNCE_MAX) {
-      console.log(' -- running immediate')
+      if (VERBOSE >= 1) console.log(' -- running immediate')
       lastDebouncedSync = 0
       _takeOverSyncLoop()
       setImmediate(async () => {
@@ -445,12 +445,12 @@ function _scheduleDebouncedFunctionForSyncLoop(fn) {
         _releaseSyncLoop()
       })
     } else {
-      console.log('-- scheduling in ', SYNC_LOOP_DEBOUNCE_DELAY)
+      if (VERBOSE >= 1) console.log('-- scheduling in ', SYNC_LOOP_DEBOUNCE_DELAY)
       nextSyncLoopInterval = setTimeout(fn, SYNC_LOOP_DEBOUNCE_DELAY)
       lastDebouncedSync = Date.now()
     }
   } else {
-    console.log('-- something else is running')
+    if (VERBOSE >= 1) console.log('-- something else is running')
     lastDebouncedSync = Date.now()
   }
 }

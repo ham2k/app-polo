@@ -20,6 +20,8 @@ export function OpInfo ({ message, clearMessage, operation, activeQSOs, style, s
   const now = useSelector(selectSecondsTick)
   styles = prepareStyles(styles, { style })
 
+  activeQSOs = activeQSOs ?? []
+
   const { markdownMessage, markdownStyle, icon } = useMemo(() => {
     if (message?.icon) {
       return { markdownMessage: message?.text || '', icon: message.icon }

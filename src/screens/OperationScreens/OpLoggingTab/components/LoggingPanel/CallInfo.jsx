@@ -183,21 +183,21 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
   const messages = useMemo(() => {
     const newMessages = []
     if (scoreInfo?.length > 0) {
-      const hasValue = scoreInfo.find(score => score.value > 0)
+      // const hasValue = scoreInfo.find(score => score.value > 0)
 
       // Order by value, as those that provide points/QSOs/etc. more important
       // console.log('scoreInfo', scoreInfo)
 
       const allScoringMessages = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
-        let alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
+        const alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
         const notices = (score?.notices || []).map(notice => ({ msg: notice, level: 'notice', key: `${score.type}.${notice}` }))
         const infos = (score?.infos || []).map(info => ({ msg: info, level: 'info', key: `${score.type}.${info}` }))
 
-        if (hasValue && alerts.find(alert => alert.msg === 'duplicate')) {
-          alerts = alerts.filter(alert => alert.msg !== 'duplicate')
-          notices.push({ msg: 'maybeDupe', level: 'notice', key: `${score.type}.duplicate` })
-        }
-        // console.log('-- ', alerts, notices, infos)
+        // if (hasValue && alerts.find(alert => alert.msg === 'duplicate')) {
+        //   alerts = alerts.filter(alert => alert.msg !== 'duplicate')
+        //   notices.push({ msg: 'maybeDupe', level: 'notice', key: `${score.type}.duplicate` })
+        // }
+        // console.log('-- allScoringMessages', alerts, notices, infos)
         return [...notices, ...alerts, ...infos].map(oneInfo => ({
           ...oneInfo,
           msg: MESSAGES_FOR_SCORING[oneInfo.key] ?? MESSAGES_FOR_SCORING[oneInfo.msg] ?? oneInfo.msg

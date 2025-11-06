@@ -24,6 +24,7 @@ import { SOTALoggingControl } from './SOTALoggingControl'
 import { SOTAAccountSetting } from './SOTAAccount'
 import { SOTAPostSelfSpot } from './SOTAPostSelfSpot'
 import { SOTAPostOtherSpot } from './SOTAPostOtherSpot'
+import { filterNearDupes } from '../../../tools/qsonTools'
 
 const Extension = {
   ...Info,
@@ -304,7 +305,7 @@ const ReferenceHandler = {
     return fields
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+  scoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const { uuid, startAtMillis } = qso
@@ -312,12 +313,12 @@ const ReferenceHandler = {
     const refCount = theirRef ? 1 : 0
     const points = refCount
 
-    if (!theirRef && !ref?.ref) return { value: 0 } // If not activating, only counts if other QSO has a SOTA ref
+    if (!theirRef && !scoredRef?.ref) return { value: 0 } // If not activating, only counts if other QSO has a SOTA ref
 
-    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
+    const nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
 
     if (nearDupes.length === 0) {
-      return { value: 1, refCount, points, type: Info.activationType }
+      return { value: 1, refCount, refs: [theirRef], points, type: Info.activationType }
     } else if (points > 0) {
       // Contacts with the same station don't count for the 4 QSOs needed to activate the summit
       // But might count for hunter points if they are for a new summit or day
@@ -328,16 +329,16 @@ const ReferenceHandler = {
       const sameRefs = nearDupes.filter(q => findRef(q, Info.huntingType)?.ref === theirRef.ref).length !== 0
       const sameDay = nearDupes.filter(q => (q.startAtMillis - (q.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
       if (sameDay && sameRefs) {
-        return { value: 0, refCount, points: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { value: 0, refCount, refs: [theirRef], points: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
         if (!sameRefs) notices.push('newRef')
         if (!sameDay) notices.push('newDay')
 
-        return { value: 0, refCount, points, notices, type: Info.activationType }
+        return { value: 0, refCount, refs: [theirRef], points, notices, type: Info.activationType }
       }
     } else {
-      return { value: 0, refCount, points: 0, alerts: ['duplicate'], type: Info.activationType }
+      return { value: 0, refCount, refs: [theirRef], points: 0, alerts: ['duplicate'], type: Info.activationType }
     }
   },
 

@@ -25,6 +25,7 @@ import { distanceOnEarth } from '../../../tools/geoTools'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import GLOBAL from '../../../GLOBAL'
 import { filterNearDupes, filterQSOsWithSectionRefs } from '../../../tools/qsonTools'
+import { generateActivityDailyAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 const Extension = {
   ...Info,
@@ -318,9 +319,15 @@ const ReferenceHandler = {
     }
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
+  scoringForQSO: generateActivityScorer({ info: Info }),
+  accumulateScoreForDay: generateActivityDailyAccumulator({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info }),
+
+  originalScoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
+    const DEBUG = qso.their.call === 'KK1K' || qso.their.call === 'KK3K'
+
     const { band, mode, uuid, startAtMillis } = qso
-    // console.log('  -- POTA scoringForQSO', { ...operation }, { ...scoredRef })
+    if (DEBUG) console.log('  -- POTA scoringForQSO', { ...operation }, { ...scoredRef })
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
@@ -339,10 +346,10 @@ const ReferenceHandler = {
     // console.log('pota scoring', qso.their.call, scoredRef.type ?? '?', scoredRef.ref ?? '?')
 
     const nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
-    // console.log('-- nearDupes', qso.uuid, qso.key, nearDupes)
+    if (DEBUG) console.log('-- nearDupes', qso.uuid, qso.key, nearDupes)
 
     if (nearDupes.length === 0) {
-      // console.log('-- no dupes', { value, refCount, type })
+      if (DEBUG) console.log('-- no dupes', { value, refCount, type })
       return { value, refCount, type }
     } else {
       const thisQSOTime = qso.startAtMillis ?? Date.now()
@@ -356,9 +363,11 @@ const ReferenceHandler = {
       const sameBandMode = sameDayDupes.filter(q => q.band === band && q.mode === mode).length !== 0
       const sameRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
       const dupesHadRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).length !== 0).length !== 0
-      // console.log('-- ', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
+
+      if (DEBUG) console.log('-- ', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
+
       if (sameBandMode && sameDay && (sameRefs || refs.length === 0)) {
-        // console.log('-- duplicate', qso.uuid, { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
+        if (DEBUG) console.log('-- duplicate', qso.uuid, { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
         if (refs.length === 0 && dupesHadRefs && !qso.uuid) return { value: 0, refCount, notices: ['maybeDupe'], type }
         return { value: 0, refCount, alerts: ['duplicate'], type }
       } else {
@@ -368,13 +377,13 @@ const ReferenceHandler = {
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        // console.log('-- near duplicate', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
+        if (DEBUG) console.log('-- near duplicate', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
         return { value, refCount, notices, type }
       }
     }
   },
 
-  accumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
+  originalAccumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
     if (!ref?.ref) return score // No scoring if not activating
     if (!score?.key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
@@ -405,7 +414,7 @@ const ReferenceHandler = {
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  originalSummarizeScore: ({ score, operation, ref, section }) => {
     score.activated = score.value >= 10
 
     if (score.activated) {

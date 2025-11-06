@@ -70,7 +70,6 @@ export default function LoggingPanel ({
     }
     const updateQSOFunction = (changes, more) => {
       const updatedQSO = { ...qsoValue, ...changes }
-      console.log('updateQSOFunction', changes)
       updateLoggingState({
         qso: changes,
         hasChanges: !!qsoValue?._isSuggested || JSON.stringify(updatedQSO) !== JSON.stringify(loggingState?.originalQSO),
@@ -192,7 +191,7 @@ export default function LoggingPanel ({
   const handleFieldChange = useCallback((event) => { // Handle form fields and update QSO info
     const { fieldId, alsoClearTheirCall } = event
     const value = event?.value || event?.nativeEvent?.text
-    console.log('handleFieldChange', fieldId, value)
+
     if (qso?.deleted || qso?._willBeDeleted) {
       return
     }
