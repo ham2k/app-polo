@@ -29,7 +29,7 @@ import packageJson from '../../../package.json'
 const SPLASH_IMAGE = require('./img/launch_screen.jpg')
 const HAM2K_LOGO = require('./img/ham2k-3000-filled.png')
 
-function prepareStyles(baseTheme, height, dialogVisible) {
+function prepareStyles (baseTheme, height, dialogVisible) {
   const characterizeTopHalf = 'medium' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
   const characterizeBottomHalf = 'dark' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
 
@@ -174,7 +174,7 @@ function prepareStyles(baseTheme, height, dialogVisible) {
   }
 }
 
-export default function StartScreen({ setAppState }) {
+export default function StartScreen ({ setAppState }) {
   const { height } = useSafeAreaFrame()
   // const { height } = useWindowDimensions() <-- broken on iOS, no rotation
 

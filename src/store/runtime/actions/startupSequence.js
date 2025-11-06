@@ -57,3 +57,10 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
     onReady && onReady()
   }, 0)
 }
+
+// This function is used to reload extensions if the app is hot-reloaded in development mode
+export const hotReloadSequence = async (dispatch, getState) => {
+  console.log('hotReloadSequence')
+  await dispatch(loadEarlyExtensions())
+  await dispatch(loadExtensions())
+}
