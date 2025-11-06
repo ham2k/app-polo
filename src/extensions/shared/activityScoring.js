@@ -188,6 +188,7 @@ export const generateActivitySumarizer = ({ info }) => {
 
   return ({ score, operation, ref: scoredRef, section, allSectionScores }) => {
     const DEBUG_THIS_ONE = DEBUG && DEBUG_ACTIVITIES.includes(shortName)
+    if (!score) return score
 
     const activatedRefKeys = Object.keys(score.activatedRefs).sort()
 
