@@ -89,7 +89,7 @@ export default function OpSettingsTab ({ navigation, route }) {
 
     if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
       allCalls.push(...operation.stationCallPlusArray)
-      stationCall += ` + ${operation.stationCallPlusArray.join(', ')}`
+      stationCall += `,${operation.stationCallPlusArray.join(',')}`
     }
     const operatorCall = operation?.local?.operatorCall ?? settings?.operatorCall ?? ''
 
@@ -104,7 +104,7 @@ export default function OpSettingsTab ({ navigation, route }) {
       return [`Invalid Callsigns ${badCalls.join(', ')}`, styles.colors.error]
     }
 
-    if (stationCall && operatorCall && stationCall !== operatorCall) {
+    if (stationCall && operatorCall && stationCall !== operatorCall && !operation.stationCallPlusArray?.length) {
       return [`\`${stationCall}\` (operated by \`${operatorCall}\`)`, styles.colors.onSurface]
     } else if (stationCall) {
       return [`\`${stationCall}\``, styles.colors.onSurface]

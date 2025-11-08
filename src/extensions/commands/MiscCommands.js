@@ -57,7 +57,9 @@ const SpotCommandHook = {
 
     if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
       comments = [match[1], comments].filter(x => x).join(' ')
-      if (operation?.stationCallPlusArray?.length > 0) comments += ` ${operation?.stationCallPlusArray?.length + 1} ops`
+      if (!comments.match(/QRT/i) && operation?.stationCallPlusArray?.length > 0) {
+        comments += ` (${operation?.stationCallPlusArray?.length + 1} ops)`
+      }
     }
 
     if (comments) {

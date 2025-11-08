@@ -74,7 +74,7 @@ export function SpotterControlInputs (props) {
         } else if (vfo.freq !== operation?.local?.spottedFreq) {
           if (comments === undefined || comments === 'QRV ') {
             let suggested = operation?.local?.spottedFreq ? 'QSY ' : 'QRV '
-            if (operation?.stationCallPlusArray?.length > 0) suggested += `${operation?.stationCallPlusArray?.length + 1} ops `
+            if (operation?.stationCallPlusArray?.length > 0) suggested += `(${operation?.stationCallPlusArray?.length + 1} ops) `
             setComments(suggested)
           }
           return {

@@ -257,7 +257,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={values.operatorCall ?? ''}
               label="Operator Callsign"
-              placeholder={'N0CALL'}
+              placeholder={operation.stationCallPlusArray?.length > 0 ? values.allStationCalls : 'N0CALL'}
               onChangeText={handleChangeOperator}
               disabled={operation.stationCallPlusArray?.length > 0}
             />
