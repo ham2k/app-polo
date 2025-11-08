@@ -47,5 +47,26 @@ export const Info = {
   activationType: 'wwffActivation',
   descriptionPlaceholder: 'Enter WWFF reference',
   unknownReferenceName: 'Unknown Park',
-  referenceRegex: /^[A-Z0-9]+FF-[0-9]{4,5}$/i
+  referenceRegex: /^[A-Z0-9]+FF-[0-9]{4,5}$/i,
+  scoring: {
+    activates: 'once',
+    qsosToActivate: 44,
+    allowsMultipleReferences: false,
+    uniquePer: ['band', 'mode', 'day'],
+    referenceLabel: 'Park',
+    referenceLabelPlural: 'Parks',
+    ref2refLabel: 'P2P',
+    ref2refShortName: 'P2P',
+    huntedShorterName: 'P',
+    activatorQSOLabel: 'Activator QSO',
+    activatorQSOsLabel: 'Activator QSOs',
+    hunterQSOLabel: 'Hunter QSO',
+    hunterQSOsLabel: 'Hunter QSOs',
+    referenceActivatedLabel: 'Park activated',
+    referencesActivatedLabel: 'Parks activated',
+    referenceHuntedLabel: 'Park hunted',
+    referencesHuntedLabel: 'Parks hunted',
+    referenceMissedLabel: 'Park incomplete',
+    referencesMissedLabel: 'Parks incomplete',
+  }
 }

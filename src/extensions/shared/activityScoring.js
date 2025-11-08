@@ -157,6 +157,43 @@ export const generateActivityDailyAccumulator = ({ info }) => {
   }
 }
 
+export const generateActivityOperationAccumulator = ({ info }) => {
+  const key = info.key
+  const icon = info.icon
+  const shortName = info.shortName ?? info.name
+
+  return ({ qsoScore, score, operation, ref: scoredRef }) => {
+    const DEBUG_THIS_ONE = DEBUG && DEBUG_ACTIVITIES.includes(shortName)
+
+    if (!score?.key || score.key !== key) score = undefined // Reset if score doesn't have the right shape
+    score = score ?? {
+      key,
+      icon,
+      label: shortName,
+      huntedQSOs: 0,
+      huntedQSOsWhileActivating: 0,
+      activatedQSOs: 0,
+      activatedRefs: {},
+      huntedRefs: {},
+      for: 'operation'
+    }
+
+    if (scoredRef?.ref && qsoScore?.value) {
+      score.activatedRefs[scoredRef.ref] = (score.activatedRefs[scoredRef.ref] ?? 0) + qsoScore?.value
+      score.activatedQSOs = score.activatedQSOs + qsoScore.value
+    }
+
+    if (qsoScore?.refs?.length > 0) {
+      qsoScore.refs.forEach(ref => {
+        score.huntedRefs[ref.ref] = (score.huntedRefs[ref.ref] ?? 0) + 1
+        score.huntedQSOs = score.huntedQSOs + 1
+        if (scoredRef?.ref) score.huntedQSOsWhileActivating = score.huntedQSOsWhileActivating + 1
+      })
+    }
+
+    return score
+  }
+}
 
 export const generateActivitySumarizer = ({ info }) => {
   const shortName = info.shortName ?? info.name

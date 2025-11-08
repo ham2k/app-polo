@@ -19,6 +19,7 @@ export const Info = {
   unknownReferenceName: 'Unknown Park',
   referenceRegex: /^[A-Z0-9]+-(?:[0-9]{4,5}|TEST)$/i,
   scoring: {
+    activates: 'daily',
     allowsMultipleReferences: true,
     qsosToActivate: 10,
     uniquePer: ['band', 'mode', 'day', 'ref'],
@@ -32,5 +33,7 @@ export const Info = {
     referencesActivatedLabel: 'parks activated',
     referenceHuntedLabel: 'park hunted',
     referencesHuntedLabel: 'parks hunted',
+    referenceMissedLabel: 'park incomplete',
+    referencesMissedLabel: 'parks incomplete',
   }
 }

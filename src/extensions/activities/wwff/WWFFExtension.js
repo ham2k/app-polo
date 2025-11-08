@@ -9,7 +9,6 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
-
 import GLOBAL from '../../../GLOBAL'
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
@@ -17,6 +16,7 @@ import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { apiWWFF } from '../../../store/apis/apiWWFF'
 import { LOCATION_ACCURACY } from '../../constants'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { generateActivityOperationAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 import { Info } from './WWFFInfo'
 import { registerWWFFDataFile, wwffFindAllByLocation, wwffFindOneByReference } from './WWFFDataFile'
@@ -247,7 +247,11 @@ const ReferenceHandler = {
     return fields
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+  scoringForQSO: generateActivityScorer({ info: Info }),
+  accumulateScoreForOperation: generateActivityOperationAccumulator({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info }),
+
+  originalScoringForQSO: ({ qso, qsos, operation, ref }) => {
     const { band, mode, uuid, startAtMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
 
@@ -275,7 +279,7 @@ const ReferenceHandler = {
     }
   },
 
-  accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
+  originalAccumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
     if (!ref?.ref) return score // No scoring if not activating
     if (!score?.key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
@@ -294,7 +298,7 @@ const ReferenceHandler = {
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  originalSummarizeScore: ({ score, operation, ref, section }) => {
     const activationRef = findRef(operation, Info.activationType)
 
     score.activated = score.value >= 44
