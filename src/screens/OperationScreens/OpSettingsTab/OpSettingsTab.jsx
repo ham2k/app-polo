@@ -22,6 +22,7 @@ import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { H2kListItem, H2kListSection, H2kMarkdown } from '../../../ui'
+import { joinCalls } from '../../../tools/joinAnd'
 
 function prepareStyles (baseStyles) {
   return {
@@ -84,14 +85,14 @@ export default function OpSettingsTab ({ navigation, route }) {
   }, [dispatch, operation])
 
   const [stationInfo, stationInfoColor] = useMemo(() => {
-    let stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
-    const allCalls = [stationCall]
-
-    if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
-      allCalls.push(...operation.stationCallPlusArray)
-      stationCall += `,${operation.stationCallPlusArray.join(',')}`
-    }
+    const stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
+    const allCalls = [stationCall, ...(operation.stationCallPlusArray ?? [])]
     const operatorCall = operation?.local?.operatorCall ?? settings?.operatorCall ?? ''
+
+    // if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
+    //   allCalls.push(...operation.stationCallPlusArray)
+    //   stationCall = joinCalls([stationCall, ...operation.stationCallPlusArray], { markdown: true })
+    // }
 
     const badCalls = allCalls.filter(c => {
       const info = parseCallsign(c)
@@ -101,13 +102,13 @@ export default function OpSettingsTab ({ navigation, route }) {
     if (badCalls.length === 1) {
       return [`Invalid Callsign ${stationCall}`, styles.colors.error]
     } else if (badCalls.length > 1) {
-      return [`Invalid Callsigns ${badCalls.join(', ')}`, styles.colors.error]
+      return [`Invalid Callsigns ${joinCalls(badCalls)}`, styles.colors.error]
     }
 
     if (stationCall && operatorCall && stationCall !== operatorCall && !operation.stationCallPlusArray?.length) {
       return [`\`${stationCall}\` (operated by \`${operatorCall}\`)`, styles.colors.onSurface]
     } else if (stationCall) {
-      return [`\`${stationCall}\``, styles.colors.onSurface]
+      return [`${joinCalls(allCalls, { markdown: true })}`, styles.colors.onSurface]
     } else {
       return ['NO STATION CALLSIGN DEFINED', styles.colors.error]
     }
@@ -177,7 +178,7 @@ export default function OpSettingsTab ({ navigation, route }) {
 
         <H2kListItem
           title="Location"
-          description={operation.grid ? `Grid ${operation.grid}` : 'No location set'}
+          description={() => <H2kMarkdown style={{ ...styles.list.description }} compact={true}>{operation.grid ? `Grid \`${operation.grid}\`` : 'No location set'}</H2kMarkdown>}
           titleStyle={{ paddingRight: safeAreaInsets.right }}
           descriptionStyle={{ paddingRight: safeAreaInsets.right }}
           leftIcon={'map-marker-radius'}

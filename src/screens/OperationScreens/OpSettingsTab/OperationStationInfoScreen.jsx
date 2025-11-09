@@ -18,9 +18,8 @@ import { selectSettings } from '../../../store/settings'
 import { selectOperation, setOperationData, setOperationLocalData } from '../../../store/operations'
 import { batchUpdateQSOs, selectQSOs } from '../../../store/qsos'
 import ScreenContainer from '../../components/ScreenContainer'
-import { joinAnd } from '../../../tools/joinAnd'
-import { slashZeros } from '../../../tools/stringTools'
-import { H2kCallsignInput, H2kListItem, H2kListSection, H2kTextInput } from '../../../ui'
+import { joinCalls } from '../../../tools/joinAnd'
+import { H2kCallsignInput, H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 export default function OperationStationInfoScreen ({ navigation, route }) {
   const styles = useThemedStyles()
@@ -83,7 +82,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
     return [...set].filter(Boolean)
   }, [qsos])
 
-  const operators = useMemo(() => {
+  const operatorsUsedInQSOs = useMemo(() => {
     const set = new Set()
     qsos.forEach(qso => !qso.deleted && !qso.event && set.add(qso?.our?.operatorCall || ''))
     return [...set].filter(Boolean)
@@ -95,16 +94,16 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
   } = useMemo(() => {
     const result = {}
     const singleStation = stations.length === 1 && stations[0]
-    const allCalls = [values.stationCall, ...(values.stationCallPlusArray || []), values.operatorCall].filter(Boolean)
+    const allCalls = [values.stationCall, ...(values.stationCallPlusArray || [])].filter(Boolean)
 
     const badCalls = allCalls.filter(c => !parseCallsign(c).baseCall)
 
     if (badCalls.length === 1) {
-      result.messageForStationCall = `Invalid callsign: ${slashZeros(badCalls[0])}`
+      result.messageForStationCall = `Invalid callsign: \`${badCalls[0]}\``
       result.colorForStationCall = styles.colors.error
       result.actionForStationCall = ''
     } else if (badCalls.length > 1) {
-      result.messageForStationCall = `Invalid callsigns: ${slashZeros(joinAnd(badCalls))}`
+      result.messageForStationCall = `Invalid callsigns: ${joinCalls(badCalls, { markdown: true })}`
       result.colorForStationCall = styles.colors.error
       result.actionForStationCall = ''
     } else if (stations.length === 0 || singleStation === values.stationCall) {
@@ -112,33 +111,42 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
       result.colorForStationCall = styles.colors.primary
       result.actionForStationCall = ''
     } else if (stations.length === 1 && singleStation !== values.stationCall) {
-      result.messageForStationCall = `${singleStation || 'No call'} used so far.\n${slashZeros(values.stationCall)} will be used for new QSOs.`
+      result.messageForStationCall = `${singleStation || 'No call'} used so far.\n\`${values.stationCall}\` will be used for new QSOs.`
       result.colorForStationCall = styles.colors.primary
-      result.actionForStationCall = `Update ${slashZeros(values.stationCall)} on ${qsos.length} existing QSOs`.replaceAll('1 existing QSOs', '1 existing QSO')
+      result.actionForStationCall = `Update \`${values.stationCall}\` on ${qsos.length} existing QSOs`.replaceAll('1 existing QSOs', '1 existing QSO')
     } else {
-      result.messageForStationCall = `This activity already has QSOs using multiple station callsigns: ${slashZeros(joinAnd(stations))}.\n\n${slashZeros(values.stationCall)} will only be used for new QSOs.`
+      result.messageForStationCall = `This activity already has QSOs using multiple station callsigns: ${joinCalls(stations, { markdown: true })}.\n\n\`${values.stationCall}\` will only be used for new QSOs.`
       result.colorForStationCall = styles.colors.primary
       result.actionForStationCall = ''
     }
 
-    const singleOperator = operators.length === 1 && operators[0]
+    const singleCurrentOperator = operatorsUsedInQSOs.length === 1 && operatorsUsedInQSOs[0]
+    const badOperatorCall = values.operatorCall && !parseCallsign(values.operatorCall).baseCall
 
-    if (operators.length === 0 || singleOperator === values.operatorCall) {
+    if (badOperatorCall) {
+      result.messageForOperatorCall = `Invalid callsign: \`${values.operatorCall}\``
+      result.colorForOperatorCall = styles.colors.error
+      result.actionForOperatorCall = ''
+    } else if (operatorsUsedInQSOs.length === 0 || singleCurrentOperator === values.operatorCall) {
       result.messageForOperatorCall = ''
       result.colorForOperatorCall = styles.colors.primary
       result.actionForOperatorCall = ''
-    } else if (operators.length === 1 && singleOperator !== values.operatorCall) {
-      result.messageForOperatorCall = `${singleOperator || 'No call'} used so far.\n${slashZeros(values.operatorCall)} will be used for new QSOs.`
+    } else if (operatorsUsedInQSOs.length === 1 && singleCurrentOperator !== values.operatorCall) {
+      if (singleCurrentOperator) {
+        result.messageForOperatorCall = `\`${singleCurrentOperator}\` used so far.\n\`${values.operatorCall}\` will be used for new QSOs.`
+      } else {
+        result.messageForOperatorCall = `No call used so far.\n\`${values.operatorCall}\` will be used for new QSOs.`
+      }
       result.colorForOperatorCall = styles.colors.primary
-      result.actionForOperatorCall = `Update ${slashZeros(values.operatorCall)} as operator for all QSOs`
+      result.actionForOperatorCall = `Update \`${values.operatorCall}\` as operator for all QSOs`
     } else {
-      result.messageForOperatorCall = `This activity already has QSOs using multiple operator callsigns: ${slashZeros(joinAnd(operators))}.\n\n${slashZeros(values.operatorCall)} will only be used for new QSOs.`
+      result.messageForOperatorCall = `This activity already has QSOs using multiple operator callsigns: ${joinCalls(operatorsUsedInQSOs, { markdown: true })}.\n\n\`${values.operatorCall}\` will only be used for new QSOs.`
       result.colorForOperatorCall = styles.colors.primary
       result.actionForOperatorCall = ''
     }
 
     return result
-  }, [stations, operators, qsos.length, values, styles.colors.error, styles.colors.primary])
+  }, [stations, operatorsUsedInQSOs, qsos.length, values, styles.colors.error, styles.colors.primary])
 
   useEffect(() => { // Set initial values if needed
     if (!operation?.uuid) return
@@ -240,9 +248,9 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
               onChangeText={handleChangeStation}
             />
             {messageForStationCall && (
-              <Text variant="bodyMedium" style={{ color: colorForStationCall, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
-                {messageForStationCall}
-              </Text>
+              <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
+                <H2kMarkdown style={{ ...styles.text.bodyMedium, color: colorForStationCall }}>{messageForStationCall}</H2kMarkdown>
+              </View>
             )}
             {actionForStationCall && (
               <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
@@ -252,19 +260,24 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
           </H2kListSection>
 
           <H2kListSection style={{ marginTop: styles.oneSpace * 3 }}>
-            <Text variant="bodyMedium">Who is operating the station? (optional)</Text>
+            <Text
+              variant="bodyMedium"
+              style={values.stationCallPlusArray?.length ? { opacity: 0.5 } : {}}
+            >
+              Who is operating the station? (optional)
+            </Text>
             <H2kCallsignInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={values.operatorCall ?? ''}
               label="Operator Callsign"
-              placeholder={operation.stationCallPlusArray?.length > 0 ? values.allStationCalls : 'N0CALL'}
+              placeholder={values.stationCallPlusArray?.length > 0 ? values.allStationCalls : 'N0CALL'}
               onChangeText={handleChangeOperator}
-              disabled={operation.stationCallPlusArray?.length > 0}
+              disabled={values.stationCallPlusArray?.length}
             />
             {messageForOperatorCall && (
-              <Text variant="bodyMedium" style={{ color: colorForOperatorCall, fontWeight: 'bold', textAlign: 'center', marginTop: styles.oneSpace * 2 }}>
-                {messageForOperatorCall}
-              </Text>
+              <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
+                <H2kMarkdown style={{ ...styles.text.bodyMedium, color: colorForOperatorCall, fontWeight: 'bold' }}>{messageForOperatorCall}</H2kMarkdown>
+              </View>
             )}
             {actionForOperatorCall && (
               <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
