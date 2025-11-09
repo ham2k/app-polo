@@ -349,7 +349,9 @@ export function buildTitleForOperation (operationAttrs, { includeCall = true } =
     if (operationAttrs.userTitle) {
       parts.push(operationAttrs.userTitle)
     }
-    if (operationAttrs.title && operationAttrs.title !== 'New Operation') {
+    if (operationAttrs.broaderTitle) {
+      parts.push(operationAttrs.broaderTitle)
+    } else if (operationAttrs.title && operationAttrs.title !== 'New Operation') {
       parts.push(operationAttrs.title)
     }
     let title = parts.join(' ')

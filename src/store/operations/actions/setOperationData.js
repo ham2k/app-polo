@@ -146,7 +146,21 @@ export async function updateOperationBreakOrStart ({ operation, qsos, dispatch }
   if (!operation) return
 
   if (DEBUG) console.log('updateOperationBreakOrStart')
-  const lastBreakOrStart = qsos?.findLast(qso => !qso.deleted && (qso.event?.event === 'break' || qso.event?.event === 'start'))
+
+  const allRefs = []
+  let lastBreakOrStart
+
+  for (const qso of qsos) {
+    if (!qso.deleted && (qso.event?.event === 'break' || qso.event?.event === 'start')) {
+      if (lastBreakOrStart) {
+        allRefs.push(...(lastBreakOrStart.event.operation?.refs ?? []))
+        // Don't collect `allRefs` from the last event, since we'll be replacing them with what's in `operation`
+      }
+      lastBreakOrStart = qso
+    }
+  }
+  allRefs.push(...(operation?.refs ?? []))
+
   if (!lastBreakOrStart) {
     if (DEBUG) console.log('-- no last break or start')
     // Do nothing, since the operation has no breaks or starts
@@ -175,6 +189,7 @@ export async function updateOperationBreakOrStart ({ operation, qsos, dispatch }
       }
     }))
   }
+  return { ...operation, allRefs }
 }
 
 export async function markOperationBreak ({ operation, qsos, dispatch }) {
