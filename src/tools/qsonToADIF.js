@@ -9,12 +9,15 @@ import packageJson from '../../package.json'
 import { findBestHook } from '../extensions/registry'
 import { basePartialTemplates, compileTemplateForOperation, extraDataForTemplates, templateContextForOneExport } from '../store/operations'
 import { selectExportSettings } from '../store/settings'
-import { sanitizeToISO8859 } from './stringTools'
+import { escapeToUnicodeEntities, sanitizeToISO8859 } from './stringTools'
 import { fmtADIFDate, fmtADIFTime, fmtISODateTime } from './timeFormats'
 
 import { adifModeAndSubmodeForMode, frequencyForBand, modeForFrequency } from '@ham2k/lib-operation-data'
 
-export function qsonToADIF({ operation, settings, qsos, handler, format, title, exportType, ADIFNotesTemplate, ADIFCommentTemplate, ADIFQslMsgTemplate }) {
+const DEBUG = false
+
+export function qsonToADIF({ operation, settings, qsos, handler, format, title, exportType, combineSegmentRefs, ADIFNotesTemplate, ADIFCommentTemplate, ADIFQslMsgTemplate }) {
+  if (DEBUG) console.log('qsonToADIF operation', { ...operation })
   const templates = {
     key: `${handler.key}-${format}-${exportType ?? 'export'}`
   }
@@ -33,7 +36,7 @@ export function qsonToADIF({ operation, settings, qsos, handler, format, title, 
   templates.commentsTemplate = compileTemplateForOperation(templates.exportSettings?.ADIFCommentTemplate || ADIFCommentTemplate || '{{>ADIFComment}}', templates)
   templates.qslmsgTemplate = compileTemplateForOperation(templates.exportSettings?.ADIFQslMsgTemplate || ADIFQslMsgTemplate || '{{>ADIFQslMsg}}', templates)
 
-  const common = {
+  let common = {
     refs: operation.refs,
     grid: operation.grid,
     stationCall: operation.stationCall ?? settings.operatorCall,
@@ -62,19 +65,29 @@ export function qsonToADIF({ operation, settings, qsos, handler, format, title, 
   }
   if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common, mainHandler: true, privateData, templates })) + '\n'
 
-  privateData && eventQSOs.forEach(qso => {
-    if (qso.deleted) return
-
-    str += `• ${fmtISODateTime(qso.startAtMillis)} ${qso.event.event?.toUpperCase() || 'EVENT'}: ${qso.event.description ?? qso.event.note ?? qso.event.message}\n`
-  })
-
   str += '<EOH>\n'
 
   qsos.forEach(qso => {
     if (qso.deleted) return
     if (qso.event) {
+      if (privateData) {
+        const eventRecord = `${fmtISODateTime(qso.startAtMillis)}: ${qso.event.note ?? qso.event.message ?? qso.event.description.replaceAll(/ • /g, ' * ')}`
+        if (qso.event.event === 'break' || qso.event.event === 'start') str += "\n"
+        str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}`, eventRecord, { newLine: true })
+        if (qso.event.event === 'break' || qso.event.event === 'start') str += "\n"
+      }
+
       if (qso.event.event === 'break' || qso.event.event === 'start') {
-        operation = { ...operation, ...qso.event.operation }
+        if (combineSegmentRefs) {
+          // Update all operation attributes, including regs
+          operation = { ...operation, ...qso.event.operation }
+          common = { ...common, ...qso.event.operation }
+        } else {
+          // Combine other attributes, but keep refs as initialized
+          operation = { ...operation, ...qso.event.operation, refs: operation.refs }
+          common = { ...common, ...qso.event.operation, refs: common.refs }
+        }
+        templates.context = templateContextForOneExport({ settings, operation, handler })
       }
       return
     }
@@ -225,7 +238,7 @@ function adifField(name, value, options = {}) {
   if (!value && !options.force) return ''
   if (typeof value !== 'string') value = value.toString()
 
-  value = sanitizeToISO8859(value)
+  value = escapeToUnicodeEntities(value)
 
   return `<${name}:${value?.length ?? 0}>${value}${options.newLine ? '\n' : ' '}`
 }

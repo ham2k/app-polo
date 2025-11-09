@@ -18,7 +18,7 @@ const REG1TEST_MODE = {
   SSTY: 8
 }
 
-export function qsonToReg1test ({ operation, qsos, settings, handler }) {
+export function qsonToReg1test({ operation, qsos, settings, handler, combineSegmentRefs }) {
   const ref = findRef(operation, handler.key)
 
   let str = ''
@@ -36,11 +36,27 @@ export function qsonToReg1test ({ operation, qsos, settings, handler }) {
     str += `[Remarks]\n${operation.notes}\n`
   }
 
-  const actualQSOs = qsos.filter(qso => !qso.deleted && !qso.event)
+  const actualCount = qsos.filter(qso => !qso.deleted && !qso.event).length
 
-  str += `[QSORecords;${actualQSOs.length}]\n`
+  str += `[QSORecords;${actualCount}]\n`
 
-  actualQSOs.forEach(qso => {
+  for (const qso of qsos) {
+    if (qso.deleted) return
+    if (qso.event) {
+      if (qso.event.event === 'break' || qso.event.event === 'start') {
+        if (combineSegmentRefs) {
+          // Update all operation attributes, including regs
+          operation = { ...operation, ...qso.event.operation }
+          common = { ...common, ...qso.event.operation }
+        } else {
+          // Combine other attributes, but keep refs as initialized
+          operation = { ...operation, ...qso.event.operation, refs: operation.refs }
+          common = { ...common, ...qso.event.operation, refs: common.refs }
+        }
+      }
+      return
+    }
+
     let combinations = handler.qsoToReg1testParts && handler.qsoToReg1testParts({ qso, operation, ref })
     if (!Array.isArray(combinations?.[0])) {
       combinations = [combinations]
@@ -61,7 +77,7 @@ export function qsonToReg1test ({ operation, qsos, settings, handler }) {
 
       str += parts.join(';') + '\n'
     })
-  })
+  }
 
   return str
 }

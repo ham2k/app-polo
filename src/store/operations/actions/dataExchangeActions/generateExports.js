@@ -12,6 +12,8 @@ import { qsonToADIF } from '../../../../tools/qsonToADIF'
 import { qsonToCabrillo } from '../../../../tools/qsonToCabrillo'
 import { filterQSOsWithSectionRefs } from '../../../../tools/qsonTools'
 
+const DEBUG = false
+
 export const generateExportsForOptions = (uuid, exports, options = {}) => async (dispatch, getState) => {
   const state = getState()
   const operation = state.operations.info[uuid]
@@ -19,10 +21,10 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
 
   const results = []
 
-  for (const oneExport of exports) {
-    const operationData = oneExport.operation || operation
+  for (const thisExport of exports) {
+    const operationData = thisExport.operation || operation
 
-    console.log('oneExport', oneExport)
+    if (DEBUG) console.log('💾 This Export', { ...thisExport })
     let operationRefs = operationData.refs
     let includeQSOs = true
 
@@ -34,36 +36,35 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
     // we want to exclude these QSOs from the combinations
     qsos = qsos.filter(qso => qso.our.call !== qso.their.call)
 
-    console.log('oneExport qsos', [...qsos])
-    console.log('oneExport ref', oneExport.ref)
-    qsos = filterQSOsWithSectionRefs({ qsos, operation: operationData, withSectionRefs: [oneExport.ref], withEvents: true })
+    if (DEBUG) console.log('-- this export qsos', [...qsos])
+    if (DEBUG) console.log('-- this export ref', thisExport.ref)
+    qsos = filterQSOsWithSectionRefs({ qsos, operation: operationData, withSectionRefs: [thisExport.ref], withEvents: true })
 
-    console.log('filtered qsos', [...qsos])
+    if (DEBUG) console.log('-- filtered qsos', [...qsos])
 
-    console.log('generateExportsForOptions oneExport', oneExport)
     if (options.dataURI) {
-      const uri = await generateExportDataURI({ uuid, qsos, operation: operationData, settings, ...oneExport })
+      const uri = await generateExportDataURI({ uuid, qsos, operation: operationData, settings, thisExport, ...thisExport })
       if (uri) {
         results.push({
           uri,
-          type: mimeTypeForFormat(oneExport?.format),
-          fileName: oneExport.fileName
+          type: mimeTypeForFormat(thisExport?.format),
+          fileName: thisExport.fileName
         })
       }
     } else {
-      const path = await generateExportFile({ uuid, qsos, operation: operationData, settings, ...oneExport })
+      const path = await generateExportFile({ uuid, qsos, operation: operationData, settings, thisExport, ...thisExport })
       if (path) {
         results.push({
           path,
           uri: `file://${path}`,
-          type: mimeTypeForFormat(oneExport?.format),
-          fileName: oneExport.fileName
+          type: mimeTypeForFormat(thisExport?.format),
+          fileName: thisExport.fileName
         })
       }
-      console.log('results', results)
+      if (DEBUG) console.log('-- results', [...results])
     }
   }
-  console.log('generateExportsForOptions', results)
+  if (DEBUG) console.log('-- final results', [...results])
   return results
 }
 

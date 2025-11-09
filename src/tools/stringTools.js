@@ -7,14 +7,14 @@
 
 import { capitalizeString } from './capitalizeString'
 
-export function camelCaseToWords (camelCase, { capitalize } = {}) {
+export function camelCaseToWords(camelCase, { capitalize } = {}) {
   let words = (camelCase || '').replace(/([A-Z])/g, ' $1')
   if (capitalize) words = capitalizeString(words)
 
   return words
 }
 
-export function simpleTemplate (template, values = {}, context = {}) {
+export function simpleTemplate(template, values = {}, context = {}) {
   return template.replace(/\{(.*?)}/g, (match, key) => {
     if (typeof values[key] === 'function') {
       return values[key](key, context)
@@ -26,7 +26,7 @@ export function simpleTemplate (template, values = {}, context = {}) {
   })
 }
 
-export function countTemplate (count, { zero, one, more }, context = {}) {
+export function countTemplate(count, { zero, one, more }, context = {}) {
   if (count === 0) {
     return simpleTemplate(zero ?? more, { ...context, count })
   } else if (count === 1) {
@@ -36,18 +36,22 @@ export function countTemplate (count, { zero, one, more }, context = {}) {
   }
 }
 
-export function sanitizeToISO8859 (text) {
+export function sanitizeToISO8859(text) {
   if (!text) return ''
   return text.replace(/[”“]/g, '"').replace(/[‘’]/g, "'").replace(/[^\x00-\xFF]/g, '·')
 }
 
-export function slashZeros (text) {
+export function escapeToUnicodeEntities(text) {
+  return String(text).replace(/[\u0080-\uFFFF]/g, ch => `&#${ch.codePointAt(0)};`)
+}
+
+export function slashZeros(text) {
   // See "Combining Solidus" in https://en.wikipedia.org/wiki/Slashed_zero
   if (!text) return ''
   return text.replace(/0/g, '0̸')
 }
 
-export function sanitizeForMarkdown (text) {
+export function sanitizeForMarkdown(text) {
   if (!text) return ''
   return text.replace(/^[-* \t–—]+/g, '')
 }

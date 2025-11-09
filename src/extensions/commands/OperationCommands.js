@@ -66,7 +66,7 @@ const BreakOperationCommandHook = {
 
     markOperationBreak({ operation, qsos, dispatch })
 
-    return `Operation broke!`
+    return `Added an operation break!`
   }
 }
 
