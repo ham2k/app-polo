@@ -97,7 +97,7 @@ const SpotsHook = {
       apiPromise.unsubscribe && apiPromise.unsubscribe()
       spots = apiResults.data || []
     }
-    spots.reverse() // Newest to oldest
+
     const qsos = []
     for (const spot of spots) {
       if (Info.referenceRegex.test(spot.actSiteID)) {
