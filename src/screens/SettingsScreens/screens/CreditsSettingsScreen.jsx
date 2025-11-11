@@ -53,7 +53,11 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
           />
 
         </H2kListSection>
+
         <H2kListSection title={'More code and docs contributors'}>
+
+          {/* Sorted by callsign alphabetically */}
+
           <H2kListItem
             title={'Phil Kessels • DL9PK'}
             description={'Code: spotting others'}
@@ -85,16 +89,16 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             onPress={() => navigation.navigate('CallInfo', { call: 'KQ4URU' })}
           />
           <H2kListItem
-            title={'Aldo Mendoza • NA7DO'}
-            description={'Code: power controls, confirm QSOs from spots, lots of small fixes'}
-            leftIcon="account"
-            onPress={() => navigation.navigate('CallInfo', { call: 'NA7DO' })}
-          />
-          <H2kListItem
             title={'Ian Renton • M0TRT'}
             description={'Code: assorted bug fixes'}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'M0TRT' })}
+          />
+          <H2kListItem
+            title={'Aldo Mendoza • NA7DO'}
+            description={'Code: power controls, confirm QSOs from spots, lots of small fixes'}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'NA7DO' })}
           />
           <H2kListItem
             title={'Stan • W1BOY'}
