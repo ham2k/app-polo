@@ -120,6 +120,12 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'W8NI' })}
           />
+          <H2kListItem
+            title={'Cainan • N9FZ'}
+            description={'Code: Big thumbs mode.'}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'N9FZ' })}
+          />
         </H2kListSection>
         <View style={{ height: safeAreaInsets.bottom }} />
 

@@ -55,14 +55,15 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
             onPress={() => dispatch(setSettings({ leftieMode: !settings.leftieMode }))}
           />
 
-          <H2kListItem title={'Big Thumb Mode'}
-            description={settings.bigThumbMode ? 'Use big thumb mode: log from spots list with a long press' : 'Use normal logging' }
-            leftIcon="thumb-up-outline"
-            rightSwitchValue={!!settings.bigThumbMode}
-            rightSwitchOnValueChange={(value) => dispatch(setSettings({ bigThumbMode: value }))}
-            onPress={() => dispatch(setSettings({ bigThumbMode: !settings.bigThumbMode }))}
-          />
-
+          {settings.devMode && (
+            <H2kListItem title={'Big Thumbs Mode'}
+              description={settings.bigThumbsMode ? 'Use big thumbs mode: log from spots list with a long press' : 'Use normal logging' }
+              leftIcon="thumb-up-outline"
+              rightSwitchValue={!!settings.bigThumbsMode}
+              rightSwitchOnValueChange={(value) => dispatch(setSettings({ bigThumbsMode: value }))}
+              onPress={() => dispatch(setSettings({ bigThumbMode: !settings.bigThumbsMode }))}
+            />
+          )}
           <H2kListItem title={'Country Flags'}
             description={{ none: "Don't show any flags", all: 'Show flags for all contacts' }[settings.dxFlags] || 'Show only for DX contacts'}
             leftIcon="flag"

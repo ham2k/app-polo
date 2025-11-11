@@ -49,7 +49,7 @@ export default function OpSpotsTab ({ navigation, route }) {
       await hook.extraSpotInfo({ online, settings, dispatch, spot })
     }
 
-    if (settings.bigThumbMode === true) {
+    if (settings.bigThumbsMode === true) {
       if (route?.params?.splitView) {
         navigation.navigate('Operation', { ...route?.params, qso: { ...spot, our: undefined, _suggestedKey: spot.key, key: undefined } })
       } else {

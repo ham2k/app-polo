@@ -1,4 +1,9 @@
-// cmw
+/*
+ * Copyright ©️ 2025 Cainan Whelchel <krinkl3@proton.me>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 
 import { useEffect, useState, useCallback } from 'react'
 import { View, Text } from 'react-native'
@@ -303,7 +308,7 @@ export default function OpSpotsModal ({ navigation, route }) {
         fontSize: 'large'
       }] }
     >
-      <Text style={[styles.title]}>Spot Logged</Text>
+      <Text style={[styles.title]}>Log Spot?</Text>
       <Text style={[styles.fields.band]}>{route.params.qso.band} : {route.params.qso.mode} </Text>
       {/* <Text style={styles.fields.call}>{route.params.qso.their.call}{route.params.qso.their.guess.emoji}</Text> */}
       <View style={styles.fields.callAndEmoji}>

@@ -14,7 +14,7 @@ import getItemLayout from 'react-native-get-item-layout-section-list'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import SpotItem from './SpotItem'
-import MobileSpotItem from './MobileSpotItem'
+import BigThumbsSpotItem from './BigThumbsSpotItem'
 import SpotHeader from './SpotHeader'
 
 export default function SpotList ({ sections, loading, refresh, style, onPress, onLongPress, settings }) {
@@ -43,8 +43,8 @@ export default function SpotList ({ sections, loading, refresh, style, onPress, 
   const renderRow = useCallback(({ item, index }) => {
     const spot = item
     return (
-      (settings.bigThumbMode ? (
-        <MobileSpotItem key={spot.key} spot={spot} onPress={onPress} onLongPress={onLongPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} settings={settings} />
+      (settings.bigThumbsMode ? (
+        <BigThumbsSpotItem key={spot.key} spot={spot} onPress={onPress} onLongPress={onLongPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} settings={settings} />
       ) : (
         <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} settings={settings} />
       )
@@ -94,7 +94,7 @@ function _prepareStyles (themeStyles, style, deviceColorScheme) {
     borderWidth: DEBUG ? 1 : 0
   }
 
-  const mobileStyles = {
+  const bigThumbsStyles = {
     fontSize: themeStyles.normalFontSize * 1.2,
     lineHeight: themeStyles.normalFontSize * 1.5,
     borderWidth: 0 // debug
@@ -119,9 +119,9 @@ function _prepareStyles (themeStyles, style, deviceColorScheme) {
       paddingRight: 0,
       justifyContent: 'center'
     },
-    mobile: {
+    bigThumbs: {
       freq: {
-        ...mobileStyles,
+        ...bigThumbsStyles,
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flexDirection: 'column',
@@ -130,24 +130,24 @@ function _prepareStyles (themeStyles, style, deviceColorScheme) {
         alignItems: 'center'
       },
       freqMHz: {
-        ...mobileStyles,
+        ...bigThumbsStyles,
         fontWeight: '600',
         textAlign: 'right',
         fontSize: themeStyles.normalFontSize * 1.0
       },
       freqKHz: {
-        ...mobileStyles,
+        ...bigThumbsStyles,
         textAlign: 'right',
         fontWeight: '700'
       },
       freqHz: {
-        ...mobileStyles,
+        ...bigThumbsStyles,
         fontWeight: '600',
         textAlign: 'right',
         fontSize: themeStyles.normalFontSize
       },
       call: {
-        ...mobileStyles
+        ...bigThumbsStyles
       },
       label: {
         flex: 1,

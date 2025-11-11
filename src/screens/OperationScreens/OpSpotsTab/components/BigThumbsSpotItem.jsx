@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2025 Cainan Whelchel <krinkl3@proton.me>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -14,12 +14,12 @@ import { fmtDateTimeRelative, prepareTimeValue } from '../../../../tools/timeFor
 import { paperNameOrHam2KIcon, H2kPressable } from '../../../../ui'
 
 /**
- * When settings Mobile Mode is true, this is used to render spots in SpotList.
+ * When Big Thumbs Mode is enabled, this is used to render spots in SpotList.
  *
  * It's the same as SpotItem but with some padding and different layout for better viewing
- * while mobile with a phone or tablet in a mounted holder.
+ * while the device is further away from the user.
  */
-const MobileSpotItem = React.memo(function QSOItemMobile ({ spot, styles, onPress, onLongPress }) {
+const BigThumbsSpotItem = React.memo(function QSOItemMobile ({ spot, styles, onPress, onLongPress }) {
   const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
 
   if (spot?.their?.call === 'W8WR') spot.their.call = 'N2Y'
@@ -39,7 +39,7 @@ const MobileSpotItem = React.memo(function QSOItemMobile ({ spot, styles, onPres
         opacity: 0.6
       }
     }
-    // no band on mobile spot item
+    // no band on big thumbs spot item
     // if (spot.spot?.flags?.newBand) {
     //   workedStyles.bandStyle = {
     //     fontWeight: 'bold',
@@ -88,14 +88,14 @@ const MobileSpotItem = React.memo(function QSOItemMobile ({ spot, styles, onPres
       const diff = t2 - t1
 
       if (diff > (20 * 60 * 1000)) {
-        return styles.mobile.time.oldest
+        return styles.bigThumbs.time.oldest
       } else if (diff > (15 * 60 * 1000)) {
-        return styles.mobile.time.old
+        return styles.bigThumbs.time.old
       } else if (diff <= (2 * 60 * 1000)) {
-        return styles.mobile.time.new
+        return styles.bigThumbs.time.new
       }
     }
-    return styles.mobile.time.normal
+    return styles.bigThumbs.time.normal
   };
 
   return (
@@ -106,14 +106,14 @@ const MobileSpotItem = React.memo(function QSOItemMobile ({ spot, styles, onPres
     >
       <View style={styles.doubleRowMobileMode}>
         <View style={styles.doubleRowMobileModeLeft}>
-          <View style={[styles.mobile.freq, commonStyle]}>
+          <View style={[styles.bigThumbs.freq, commonStyle]}>
             <View>
-              <Text style={[styles.mobile.freqMHz, commonStyle]}>{freqParts[0]}</Text>
+              <Text style={[styles.bigThumbs.freqMHz, commonStyle]}>{freqParts[0]}</Text>
             </View>
             <View style={{ display: 'flex', flexDirection: 'row' }}>
-              <Text style={[styles.mobile.freqKHz, commonStyle]}>.{freqParts[1]}</Text>
+              <Text style={[styles.bigThumbs.freqKHz, commonStyle]}>.{freqParts[1]}</Text>
               {freqParts[2] !== '000' && (
-                <Text style={[styles.mobile.freqHz, commonStyle]}>.{freqParts[2]}</Text>
+                <Text style={[styles.bigThumbs.freqHz, commonStyle]}>.{freqParts[2]}</Text>
               )}
             </View>
           </View>
@@ -121,7 +121,7 @@ const MobileSpotItem = React.memo(function QSOItemMobile ({ spot, styles, onPres
         <View style={styles.doubleRowMobileModeRight}>
           <View style={styles.doubleRowInnerRowMobile}>
             <View style={styles.fields.callAndEmoji}>
-              <Text style={[styles.mobile.call, commonStyle, callStyle]}>{spot.their?.call ?? '?'}</Text>
+              <Text style={[styles.bigThumbs.call, commonStyle, callStyle]}>{spot.their?.call ?? '?'}</Text>
               {spot.their?.guess?.emoji && (
                 <Text style={[styles.fields.emoji, commonStyle, { lineHeight: 20 }]}>{spot.their?.guess?.emoji}</Text>
               )}
@@ -129,7 +129,7 @@ const MobileSpotItem = React.memo(function QSOItemMobile ({ spot, styles, onPres
             <Text style={[styles.fields.time, commonStyle, getTimeColor(spot.spot?.timeInMillis)]}>{fmtDateTimeRelative(spot.spot?.timeInMillis, { roundTo: 'minutes' })}</Text>
           </View>
           <View style={[styles.doubleRowInnerRowMobile, { marginTop: 5 }]}>
-            <Text style={[styles.mobile.mode, commonStyle, modeStyle]}>{spot.mode}</Text>
+            <Text style={[styles.bigThumbs.mode, commonStyle, modeStyle]}>{spot.mode}</Text>
             {spot.spots.filter(s => s?.icon).map(subSpot => (
               <View key={subSpot.source} style={[styles.fields.icon, commonStyle, refStyle]}>
                 <Icon
@@ -140,7 +140,7 @@ const MobileSpotItem = React.memo(function QSOItemMobile ({ spot, styles, onPres
                 />
               </View>
             ))}
-            <Text style={[styles.mobile.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
+            <Text style={[styles.bigThumbs.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
               {spot.spot.emoji}
               {spot.spot.label}
             </Text>
@@ -150,4 +150,4 @@ const MobileSpotItem = React.memo(function QSOItemMobile ({ spot, styles, onPres
     </H2kPressable>
   )
 })
-export default MobileSpotItem
+export default BigThumbsSpotItem
