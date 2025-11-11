@@ -76,7 +76,7 @@ export const MainExchangePanel = ({
   const handleRSTBlur = useCallback((event) => {
     const text = event?.value || event?.nativeEvent?.text || ''
     const mode = qso?.mode ?? vfo?.mode ?? 'SSB'
-    if (text.trim().length === 1) {
+    if (text.trim().length === 1 || text.trim().length === 2) {
       const expanded = expandRSTValues(text, mode)
       if (expanded !== text) {
         handleFieldChange && handleFieldChange({ ...event, value: expanded, nativeEvent: { ...event?.nativeEvent, text } })
