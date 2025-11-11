@@ -38,7 +38,7 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
 
   const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false))
 
-  const [loggingState, setLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   // console.log('OpLoggingTab render')
   // useEffect(() => console.log('-- OpLoggingTab navigation', navigation), [navigation])
@@ -111,8 +111,8 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   }, [navigation, operation])
 
   const handleSelectQSO = useCallback((uuid) => {
-    setLoggingState({ ...loggingState, selectedUUID: uuid })
-  }, [loggingState, setLoggingState])
+    updateLoggingState({ selectedUUID: uuid })
+  }, [updateLoggingState])
 
   return (
     <View style={flexOne}>

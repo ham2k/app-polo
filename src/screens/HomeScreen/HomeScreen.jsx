@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { FlatList, Platform, View } from 'react-native'
 import { AnimatedFAB, FAB, Text } from 'react-native-paper'
@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
-import { addNewOperation, selectOperationsList } from '../../store/operations'
+import { addNewOperation, selectOperationIds } from '../../store/operations'
 import { selectRawSettings, selectSettings } from '../../store/settings'
 import OperationItem from './components/OperationItem'
 import HomeTools from './components/HomeTools'
@@ -117,7 +117,7 @@ function prepareStyles (baseStyles) {
 export default function HomeScreen ({ navigation }) {
   const styles = useThemedStyles(prepareStyles)
   const dispatch = useDispatch()
-  const operations = useSelector(selectOperationsList)
+  const operationIds = useSelector(selectOperationIds)
   const settings = useSelector(selectSettings)
   const rawSettings = useSelector(selectRawSettings)
   const online = useSelector(selectRuntimeOnline)
@@ -155,8 +155,8 @@ export default function HomeScreen ({ navigation }) {
   const renderRow = useCallback(({ item }) => {
     return (
       <OperationItem
-        key={item.uuid}
-        operation={item}
+        key={item}
+        operationId={item}
         settings={settings}
         styles={styles}
         style={{ paddingLeft: safeArea.left, paddingRight: safeArea.right }}
@@ -173,18 +173,26 @@ export default function HomeScreen ({ navigation }) {
     setIsExtended(currentScrollPosition <= styles.oneSpace * 8)
   }, [styles.oneSpace])
 
+  const listStyle = useMemo(() => ({ flex: 1 }), [])
+  const emptyTextStyle = useMemo(() => ({
+    flex: 1,
+    marginTop: styles.oneSpace * 8,
+    textAlign: 'çenter'
+  }), [styles.oneSpace])
+  const emptyListComponent = useMemo(() => (
+    <Text style={emptyTextStyle}>No Operations!</Text>
+  ), [emptyTextStyle])
+
   return (
     <ScreenContainer>
       <View style={{ flex: 1, width: '100%', padding: 0, margin: 0 }}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <FlatList
-            accessibilityLabel="Operation List"
-            style={{ flex: 1 }}
-            data={operations}
+            accesibilityLabel="Operation List"
+            style={listStyle}
+            data={operationIds}
             renderItem={renderRow}
-            ListEmptyComponent={
-              <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>No Operations!</Text>
-            }
+            ListEmptyComponent={emptyListComponent}
             keyboardShouldPersistTaps={'handled'}
             onScroll={handleScroll}
           />
