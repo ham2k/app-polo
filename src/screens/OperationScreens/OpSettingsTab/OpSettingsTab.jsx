@@ -22,6 +22,7 @@ import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { H2kListItem, H2kListSection, H2kMarkdown } from '../../../ui'
+import { joinCalls } from '../../../tools/joinAnd'
 
 function prepareStyles (baseStyles) {
   return {
@@ -50,6 +51,7 @@ function prepareStyles (baseStyles) {
 
 export default function OpSettingsTab ({ navigation, route }) {
   const styles = useThemedStyles(prepareStyles)
+  const safeAreaInsets = useSafeAreaInsets()
 
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
@@ -83,14 +85,14 @@ export default function OpSettingsTab ({ navigation, route }) {
   }, [dispatch, operation])
 
   const [stationInfo, stationInfoColor] = useMemo(() => {
-    let stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
-    const allCalls = [stationCall]
-
-    if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
-      allCalls.push(...operation.stationCallPlusArray)
-      stationCall += ` + ${operation.stationCallPlusArray.join(', ')}`
-    }
+    const stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
+    const allCalls = [stationCall, ...(operation.stationCallPlusArray ?? [])]
     const operatorCall = operation?.local?.operatorCall ?? settings?.operatorCall ?? ''
+
+    // if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
+    //   allCalls.push(...operation.stationCallPlusArray)
+    //   stationCall = joinCalls([stationCall, ...operation.stationCallPlusArray], { markdown: true })
+    // }
 
     const badCalls = allCalls.filter(c => {
       const info = parseCallsign(c)
@@ -100,13 +102,13 @@ export default function OpSettingsTab ({ navigation, route }) {
     if (badCalls.length === 1) {
       return [`Invalid Callsign ${stationCall}`, styles.colors.error]
     } else if (badCalls.length > 1) {
-      return [`Invalid Callsigns ${badCalls.join(', ')}`, styles.colors.error]
+      return [`Invalid Callsigns ${joinCalls(badCalls)}`, styles.colors.error]
     }
 
-    if (stationCall && operatorCall && stationCall !== operatorCall) {
+    if (stationCall && operatorCall && stationCall !== operatorCall && !operation.stationCallPlusArray?.length) {
       return [`\`${stationCall}\` (operated by \`${operatorCall}\`)`, styles.colors.onSurface]
     } else if (stationCall) {
-      return [`\`${stationCall}\``, styles.colors.onSurface]
+      return [`${joinCalls(allCalls, { markdown: true })}`, styles.colors.onSurface]
     } else {
       return ['NO STATION CALLSIGN DEFINED', styles.colors.error]
     }
@@ -134,8 +136,6 @@ export default function OpSettingsTab ({ navigation, route }) {
     }, 100)
   }, [dispatch, navigation, operation, settings])
 
-  const safeAreaInsets = useSafeAreaInsets()
-
   return (
     <ScrollView style={{ flex: 1 }}>
 
@@ -146,8 +146,8 @@ export default function OpSettingsTab ({ navigation, route }) {
               key={template.key}
               title={`${template.callsDescription}`}
               description={`Template for ${template.refsDescription ?? 'General Operation'}`}
-              titleStyle={{ color: styles.colors.important }}
-              descriptionStyle={{ color: styles.colors.important }}
+              titleStyle={{ color: styles.colors.important, paddingRight: safeAreaInsets.right }}
+              descriptionStyle={{ color: styles.colors.important, paddingRight: safeAreaInsets.right }}
               leftIcon={'content-copy'}
               leftIconColor={styles.colors.important}
               onPress={() => { dispatch(setOperationData({ uuid: operation.uuid, template })) }}
@@ -157,8 +157,8 @@ export default function OpSettingsTab ({ navigation, route }) {
             <H2kListItem
               title={'Show More Templates'}
               description={`${templates.length - templateLimit} templates available`}
-              titleStyle={{ color: styles.colors.important }}
-              descriptionStyle={{ color: styles.colors.important }}
+              titleStyle={{ color: styles.colors.important, paddingRight: safeAreaInsets.right }}
+              descriptionStyle={{ color: styles.colors.important, paddingRight: safeAreaInsets.right }}
               onPress={() => { setTemplateLimit(templateLimit + 10) }}
             />
           )}
@@ -169,7 +169,8 @@ export default function OpSettingsTab ({ navigation, route }) {
         <H2kListItem
           title="Station & Operator"
           description={() => <H2kMarkdown style={{ ...styles.list.description, color: stationInfoColor }} compact={true}>{stationInfo}</H2kMarkdown>}
-          titleStyle={{ color: stationInfoColor }}
+          titleStyle={{ color: stationInfoColor, paddingRight: safeAreaInsets.right }}
+          descriptionStyle={{ color: stationInfoColor, paddingRight: safeAreaInsets.right }}
           leftIcon={'radio-tower'}
           leftIconColor={stationInfoColor}
           onPress={() => navigation.navigate('OperationStationInfo', { operation: operation.uuid })}
@@ -177,20 +178,31 @@ export default function OpSettingsTab ({ navigation, route }) {
 
         <H2kListItem
           title="Location"
-          description={operation.grid ? `Grid ${operation.grid}` : 'No location set'}
+          description={() => <H2kMarkdown style={{ ...styles.list.description }} compact={true}>{operation.grid ? `Grid \`${operation.grid}\`` : 'No location set'}</H2kMarkdown>}
+          titleStyle={{ paddingRight: safeAreaInsets.right }}
+          descriptionStyle={{ paddingRight: safeAreaInsets.right }}
           leftIcon={'map-marker-radius'}
           onPress={() => navigation.navigate('OperationLocation', { operation: operation.uuid })}
         />
 
         <H2kListItem
           title={operation?.userTitle || 'Operation Details'}
-          description={operation?.notes || operation?.userTitle ? 'Add notes for this operation' : 'Add a title or notes for this operation'}
+          description={operation?.userTitle ? (operation?.notes || 'Add notes for this operation') : 'Add a title or notes for this operation'}
+          titleStyle={{ paddingRight: safeAreaInsets.right }}
+          descriptionStyle={{ paddingRight: safeAreaInsets.right }}
           leftIcon={'book-outline'}
           onPress={() => navigation.navigate('OperationDetails', { operation: operation.uuid })}
         />
 
         {opSettingsHooks.filter(hook => hook.category === 'detail').map((hook) => (
-          <hook.OpSettingItem key={hook.key} operation={operation} styles={styles} settings={settings} />
+          <hook.OpSettingItem
+            key={hook.key}
+            operation={operation}
+            styles={styles}
+            settings={settings}
+            titleStyle={{ paddingRight: safeAreaInsets.right }}
+            descriptionStyle={{ paddingRight: safeAreaInsets.right }}
+          />
         ))}
       </H2kListSection>
 
@@ -200,6 +212,8 @@ export default function OpSettingsTab ({ navigation, route }) {
             key={handler.key}
             title={handler.name}
             description={(handler.description && handler.description(operation)) || handler.descriptionPlaceholder}
+            titleStyle={{ paddingRight: safeAreaInsets.right }}
+            descriptionStyle={{ paddingRight: safeAreaInsets.right }}
             leftIcon={handler.icon}
             onPress={() => navigation.navigate('OperationActivityOptions', { operation: operation.uuid, activity: handler.key })}
           />
@@ -210,6 +224,8 @@ export default function OpSettingsTab ({ navigation, route }) {
           disabled={activityHooks.length === 0}
           style={{ opacity: activityHooks.length === 0 ? 0.5 : 1 }}
           description={activityHooks.length > 0 ? 'POTA, SOTA, Field Day and more!' : 'First enable some activity features in the main settings screen'}
+          titleStyle={{ paddingRight: safeAreaInsets.right }}
+          descriptionStyle={{ paddingRight: safeAreaInsets.right }}
           leftIcon={'plus'}
           onPress={() => navigation.navigate('OperationAddActivity', { operation: operation.uuid })}
         />
@@ -220,12 +236,16 @@ export default function OpSettingsTab ({ navigation, route }) {
           title="Manage Operation Logs"
           description="Export, import and manage data"
           leftIcon={'share'}
+          titleStyle={{ paddingRight: safeAreaInsets.right }}
+          descriptionStyle={{ paddingRight: safeAreaInsets.right }}
           onPress={() => navigation.navigate('OperationData', { operation: operation.uuid })}
         />
         <H2kListItem
           title="Use as template"
           description="Start a new operation with similar settings"
           leftIcon={'content-copy'}
+          titleStyle={{ paddingRight: safeAreaInsets.right }}
+          descriptionStyle={{ paddingRight: safeAreaInsets.right }}
           onPress={cloneOperation}
         />
       </H2kListSection>
@@ -233,7 +253,8 @@ export default function OpSettingsTab ({ navigation, route }) {
       <H2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
         <H2kListItem
           title="Delete Operation"
-          titleStyle={{ color: styles.theme.colors.error }}
+          titleStyle={{ color: styles.theme.colors.error, paddingRight: safeAreaInsets.right }}
+          descriptionStyle={{ paddingRight: safeAreaInsets.right }}
           leftIcon={'delete'}
           leftIconColor={styles.theme.colors.error}
           onPress={() => setCurrentDialog('delete')}

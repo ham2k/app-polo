@@ -6,13 +6,12 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import { Icon, Text, TouchableRipple } from 'react-native-paper'
+import { Icon, Text } from 'react-native-paper'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
-import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 import { scoringHandlersForOperation } from '../../../../../extensions/scoring'
 import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { startOfDayInMillis, yesterdayInMillis } from '../../../../../tools/timeTools'
@@ -20,10 +19,10 @@ import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../../store/operations'
 import { selectRuntimeOnline } from '../../../../../store/runtime'
 import { sanitizeForMarkdown } from '../../../../../tools/stringTools'
+import { H2kMarkdown, H2kPressable } from '../../../../../ui'
+import { parseStackedCalls } from '../../../../../tools/callsignTools'
 
 import { useCallLookup } from './useCallLookup'
-import { H2kMarkdown } from '../../../../../ui'
-import { parseStackedCalls } from '../../../../../tools/callsignTools'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!',
@@ -31,7 +30,10 @@ export const MESSAGES_FOR_SCORING = {
   newBand: 'New Band',
   newMode: 'New Mode',
   newRef: 'New Reference',
+  newMult: 'New Mult',
   newDay: 'New Day',
+  maybeDupe: 'Dupe?',
+  partialDupe: 'Dupe',
   'potaActivation.newDay': 'New POTA Day',
   'potaActivation.newRef': 'New Park',
   'sotaActivation.newDay': 'New SOTA Day',
@@ -45,56 +47,12 @@ export const MESSAGES_FOR_SCORING = {
 
 const DEBUG = false
 
-function prepareStyles (baseStyles, themeColor) {
-  const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
-  return {
-    ...baseStyles,
-    history: {
-      pill: {
-        marginRight: baseStyles.halfSpace,
-        marginTop: baseStyles.oneSpace * 0.25,
-        borderRadius: 3,
-        // marginTop: baseStyles.oneSpace * 0.25,
-        paddingHorizontal: baseStyles.oneSpace * 0.5,
-        backgroundColor: baseStyles.theme.colors[`${themeColor}Light`]
-      },
-      text: {
-        fontSize: baseStyles.smallFontSize,
-        lineHeight: baseStyles.normalFontSize * 1.3,
-        marginTop: baseStyles.oneSpace * 0.3,
-        fontWeight: 'normal',
-        color: baseStyles.theme.colors[`on${upcasedThemeColor}Container`]
-      },
-      alert: {
-        backgroundColor: 'red',
-        color: 'white'
-      },
-      notice: {
-        backgroundColor: 'green',
-        color: 'white'
-      },
-      info: {
-        backgroundColor: '#666',
-        color: 'white'
-      }
-    },
-    markdown: {
-      ...baseStyles.markdown,
-      paragraph: {
-        margin: 0,
-        marginTop: baseStyles.halfSpace,
-        marginBottom: 0,
-        lineHeight: baseStyles.normalFontSize * 1.3
-      }
-    }
-  }
-}
-
-export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, updateQSO, settings }) {
+export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, styles, themeColor, updateQSO, settings }) {
   const navigation = useNavigation()
-  const styles = useThemedStyles(prepareStyles, themeColor)
   const online = useSelector(selectRuntimeOnline)
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+
+  styles = prepareStyles(styles, { style })
 
   const { call, guess, lookup, refs, status, when } = useCallLookup(qso)
 
@@ -197,7 +155,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
     if (guess?.note) {
       parts.push(guess.note)
     } else {
-      if (lookup?.error && call?.length > 3) parts.push(lookup.error)
+      if (lookup?.error && call?.length > 2) parts.push(lookup.error)
       const name = sanitizeForMarkdown(qso?.their?.name ?? guess?.name ?? '')
 
       parts.push(name)
@@ -214,7 +172,7 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   }, [guess?.note, guess?.name, call, theirCall, allCalls?.length, lookup?.error, qso?.their?.name])
 
   const scoreInfo = useMemo(() => {
-    const scoringHandlers = scoringHandlersForOperation(operation, settings)
+    const scoringHandlers = scoringHandlersForOperation({ operation, settings })
 
     const lastSection = sections && sections[sections.length - 1]
     const scores = scoringHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, score: lastSection?.scores?.[ref.type || ref.key], operation, ref })).filter(x => x)
@@ -225,11 +183,21 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   const messages = useMemo(() => {
     const newMessages = []
     if (scoreInfo?.length > 0) {
+      // const hasValue = scoreInfo.find(score => score.value > 0)
+
       // Order by value, as those that provide points/QSOs/etc. more important
+      // console.log('scoreInfo', scoreInfo)
+
       const allScoringMessages = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
         const alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
         const notices = (score?.notices || []).map(notice => ({ msg: notice, level: 'notice', key: `${score.type}.${notice}` }))
         const infos = (score?.infos || []).map(info => ({ msg: info, level: 'info', key: `${score.type}.${info}` }))
+
+        // if (hasValue && alerts.find(alert => alert.msg === 'duplicate')) {
+        //   alerts = alerts.filter(alert => alert.msg !== 'duplicate')
+        //   notices.push({ msg: 'maybeDupe', level: 'notice', key: `${score.type}.duplicate` })
+        // }
+        // console.log('-- allScoringMessages', alerts, notices, infos)
         return [...notices, ...alerts, ...infos].map(oneInfo => ({
           ...oneInfo,
           msg: MESSAGES_FOR_SCORING[oneInfo.key] ?? MESSAGES_FOR_SCORING[oneInfo.msg] ?? oneInfo.msg
@@ -256,10 +224,6 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
       const countYesterday = historyMinusThis.filter(x => x.startAtMillis >= yesterday).length - countToday
       const countLastWeek = historyMinusThis.filter(x => x.startAtMillis >= lastWeek).length - countToday
 
-      if (qso?.startAtMillis) {
-        parts.push('') // add an empty element to force a join that includes a "+"
-      }
-
       if (countLastWeek > countToday || countLastWeek > countYesterday) {
         // parts.push(`${countLastWeek} since ${fmtDateWeekDay(lastWeek)}`)
         parts.push(`${countLastWeek} in last 7 days`)
@@ -275,8 +239,15 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
         parts.push(`${count} QSOs`)
       }
 
-      newMessages.push({ msg: parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), level: 'info', key: 'history' })
+      if (parts.length > 0 && qso?.startAtMillis) {
+        parts.unshift('') // add an empty element to force a join that includes a "+"
+      }
+
+      if (parts.length > 0) {
+        newMessages.push({ msg: parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), level: 'info', key: 'history' })
+      }
     }
+
     return newMessages
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
@@ -287,10 +258,13 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
   if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
 
   return (
-    <TouchableRipple onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
+    <H2kPressable
+      onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })}
+      style={styles.callInfoPanel.root}
+    >
 
-      <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', alignItems: 'stretch', gap: styles.halfSpace }]}>
-        <View style={{ alignSelf: 'flex-start', flex: 0 }}>
+      <View style={styles.callInfoPanel.innerContainer}>
+        <View style={styles.callInfoPanel.iconContainer}>
           {online ? (
             <Icon
               source={'account-outline'}
@@ -305,8 +279,8 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
             />
           )}
         </View>
-        <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch', paddingTop: styles.oneSpace * 0.3 }]}>
-          <View style={{ flexDirection: 'row' }}>
+        <View style={styles.callInfoPanel.rowsContainer}>
+          <View style={styles.callInfoPanel.firstRow}>
             {flag && (
               <Text style={{ flex: 0, fontFamily: styles.normalFontFamily, lineHeight: styles.normalFontSize * 1.3 }} numberOfLines={1} ellipsizeMode={'tail'}>
                 {flag}{' '}
@@ -314,32 +288,26 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
 
             )}
             {locationInfo && (
-              <Text style={{ flex: 1, fontFamily: locationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily, lineHeight: styles.normalFontSize * 1.3 }} numberOfLines={2} ellipsizeMode={'tail'}>
+              <Text style={{ flex: 1, fontFamily: locationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily, lineHeight: styles.normalFontSize * 1.3 }} numberOfLines={1} ellipsizeMode={'tail'}>
                 {locationInfo}
               </Text>
             )}
           </View>
-          {(stationInfo || !messagesAreLong) && (
-            <View style={{ flexDirection: 'row', width: '100%', alignItems: 'flex-start' }}>
-              <View style={{ maxWidth: messages?.length === 1 ? '70%' : undefined }}>
-                {stationInfo && (
-                  <H2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo}</H2kMarkdown>
-                )}
+          <View style={styles.callInfoPanel.secondRow}>
+            <H2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo ?? ''}</H2kMarkdown>
+            {messages.length > 0 && !messagesAreLong && (
+              <View style={{ flex: 1, marginLeft: styles.halfSpace, alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                {messages.map((msg) => (
+                  <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
+                    <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
+                  </View>
+                ))}
               </View>
-              {!messagesAreLong && (
-                <View style={{ flex: 1, marginLeft: styles.halfSpace, alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                  {messages.map((msg) => (
-                    <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
-                      <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-            </View>
-          )}
+            )}
+          </View>
           {messagesAreLong && (
-            <View style={{ alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-              {messages.slice(0, 4).map((msg) => (
+            <View style={styles.callInfoPanel.extraRow}>
+              {messages.map((msg) => (
                 <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
                   <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
                 </View>
@@ -348,6 +316,96 @@ export function CallInfo ({ qso, qsos, sections, operation, style, themeColor, u
           )}
         </View>
       </View>
-    </TouchableRipple>
+    </H2kPressable>
   )
+}
+
+function prepareStyles (themeStyles, { style }) {
+  return {
+    ...themeStyles,
+
+    callInfoPanel: {
+      root: {
+        ...style
+      },
+      innerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignContent: 'flex-start',
+        alignItems: 'stretch',
+        gap: themeStyles.halfSpace
+      },
+      iconContainer: {
+        flex: 0,
+        alignSelf: 'flex-start'
+      },
+      rowsContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'stretch',
+        paddingTop: themeStyles.oneSpace * 0.3
+      },
+      firstRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-start'
+      },
+      secondRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-start'
+      },
+      extraRow: {
+        alignSelf: 'flex-start',
+        minHeight: themeStyles.oneSpace * 2,
+        overflow: 'hidden',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start'
+      }
+    },
+
+    history: {
+      pill: {
+        marginRight: themeStyles.halfSpace,
+        marginTop: themeStyles.oneSpace * 0.25,
+        borderRadius: 3,
+        // marginTop: baseStyles.oneSpace * 0.25,
+        paddingHorizontal: themeStyles.oneSpace * 0.5,
+        backgroundColor: themeStyles.theme.colors[`${themeStyles.upcasedThemeColor}Light`]
+      },
+      text: {
+        fontSize: themeStyles.smallFontSize,
+        lineHeight: themeStyles.normalFontSize * 1.3,
+        marginTop: themeStyles.oneSpace * 0.3,
+        fontWeight: 'normal',
+        color: themeStyles.theme.colors[`on${themeStyles.upcasedThemeColor}Container`]
+      },
+      alert: {
+        backgroundColor: 'red',
+        color: 'white'
+      },
+      notice: {
+        backgroundColor: 'green',
+        color: 'white'
+      },
+      info: {
+        backgroundColor: '#666',
+        color: 'white'
+      }
+    },
+    textLine: {
+      lineHeight: themeStyles.normalFontSize * 1.3,
+      marginBottom: themeStyles.oneSpace * 0.5
+    },
+    markdown: {
+      ...themeStyles.markdown,
+      paragraph: {
+        margin: 0,
+        marginTop: themeStyles.halfSpace,
+        marginBottom: 0,
+        lineHeight: themeStyles.normalFontSize * 1.3
+      }
+    }
+  }
 }

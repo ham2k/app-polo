@@ -10,6 +10,9 @@ import base64 from 'react-native-base64'
 
 import { qsonToADIF } from '../../../../tools/qsonToADIF'
 import { qsonToCabrillo } from '../../../../tools/qsonToCabrillo'
+import { filterQSOsWithSectionRefs } from '../../../../tools/qsonTools'
+
+const DEBUG = false
 
 export const generateExportsForOptions = (uuid, exports, options = {}) => async (dispatch, getState) => {
   const state = getState()
@@ -18,39 +21,50 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
 
   const results = []
 
-  for (const oneExport of exports) {
-    const operationData = oneExport.operation || operation
+  for (const thisExport of exports) {
+    const operationData = thisExport.operation || operation
+
+    if (DEBUG) console.log('💾 This Export', { ...thisExport })
+    let operationRefs = operationData.refs
+    let includeQSOs = true
 
     let qsos = state.qsos.qsos[uuid].map(qso => {
       return { ...qso, our: { ...qso.our, call: operationData.stationCall } }
     })
+
     // When doing multioperator operations, with operators also working each other,
     // we want to exclude these QSOs from the combinations
     qsos = qsos.filter(qso => qso.our.call !== qso.their.call)
-    console.log('generateExportsForOptions oneExport', oneExport)
+
+    if (DEBUG) console.log('-- this export qsos', [...qsos])
+    if (DEBUG) console.log('-- this export ref', thisExport.ref)
+    qsos = filterQSOsWithSectionRefs({ qsos, operation: operationData, withSectionRefs: [thisExport.ref], withEvents: true })
+
+    if (DEBUG) console.log('-- filtered qsos', [...qsos])
+
     if (options.dataURI) {
-      const uri = await generateExportDataURI({ uuid, qsos, operation: operationData, settings, ...oneExport })
+      const uri = await generateExportDataURI({ uuid, qsos, operation: operationData, settings, thisExport, ...thisExport })
       if (uri) {
         results.push({
           uri,
-          type: mimeTypeForFormat(oneExport?.format),
-          fileName: oneExport.fileName
+          type: mimeTypeForFormat(thisExport?.format),
+          fileName: thisExport.fileName
         })
       }
     } else {
-      const path = await generateExportFile({ uuid, qsos, operation: operationData, settings, ...oneExport })
+      const path = await generateExportFile({ uuid, qsos, operation: operationData, settings, thisExport, ...thisExport })
       if (path) {
         results.push({
           path,
           uri: `file://${path}`,
-          type: mimeTypeForFormat(oneExport?.format),
-          fileName: oneExport.fileName
+          type: mimeTypeForFormat(thisExport?.format),
+          fileName: thisExport.fileName
         })
       }
-      console.log('results', results)
+      if (DEBUG) console.log('-- results', [...results])
     }
   }
-  console.log('generateExportsForOptions', results)
+  if (DEBUG) console.log('-- final results', [...results])
   return results
 }
 

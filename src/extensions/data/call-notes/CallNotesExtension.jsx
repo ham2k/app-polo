@@ -119,12 +119,14 @@ const NoteExpansionCommandHook = {
   ...Info,
   extension: Extension,
   key: 'call-notes-expansion',
-  match: /^(\.\.|\/\/)([\w\d]+)/i,
+  match: /(?:^\/\/([\w\d]+)$|^([\w\d]+)\/\/$|^(.*)\/\/([\w\d]+)\/\/$)/i,
   describeCommand: (match, { qso }) => {
     if (!qso) return
 
-    if (match[2].length < 2) return ''
-    const callNotes = findAllCallNotes(match[2])
+    const call = match[1] ?? match[2] ?? match[4]
+
+    if (call.length < 2) return ''
+    const callNotes = findAllCallNotes(call)
     if (callNotes && callNotes[0]?.note) {
       const matches = callNotes[0].note && callNotes[0].note.match(EMOJI_REGEX)
       const emoji = matches ? `${matches[0]} ` : ''
@@ -135,11 +137,18 @@ const NoteExpansionCommandHook = {
   invokeCommand: (match, { dispatch, operation, handleFieldChange, qso }) => {
     if (!qso) return
 
-    if (match[2].length < 2) return ''
-    const callNotes = findAllCallNotes(match[2])
+    const call = match[1] ?? match[2] ?? match[4]
+    const extra = match[3]
+
+    if (call.length < 2) return ''
+    const callNotes = findAllCallNotes(call)
     if (callNotes && callNotes[0]?.note) {
-      handleFieldChange({ fieldId: 'theirCall', value: _cleanNote(callNotes[0].note) })
+      handleFieldChange({
+        fieldId: 'theirCall',
+        value: [extra, _cleanNote(callNotes[0].note)].filter(x => x).join('//')
+      })
     }
+    return ''
   }
 }
 

@@ -37,14 +37,43 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
     return options.filter(x => x).map(mode => ({ value: mode, label: mode }))
   }, [vfo?.mode, qso?.mode, settings?.modes])
 
+  const bandValue = useMemo(() => {
+    if (qso?.event) {
+      return vfo?.band ?? ''
+    } else if (qso?._isNew) {
+      return qso?.band ?? vfo?.band ?? ''
+    } else {
+      return qso?.band ?? ''
+    }
+  }, [qso?._isNew, qso?.event, qso?.band, vfo?.band])
+
+  const freqValue = useMemo(() => {
+    if (qso?.event) {
+      return vfo?.freq ?? ''
+    } else if (qso?._isNew) {
+      return qso?.freq ?? vfo?.freq ?? ''
+    } else {
+      return qso?.freq ?? ''
+    }
+  }, [qso?._isNew, qso?.event, qso?.freq, vfo?.freq])
+
+  const modeValue = useMemo(() => {
+    if (qso?.event) {
+      return vfo?.mode ?? ''
+    } else if (qso?._isNew) {
+      return qso?.mode ?? vfo?.mode ?? ''
+    } else {
+      return qso?.mode ?? ''
+    }
+  }, [qso?._isNew, qso?.event, qso?.mode, vfo?.mode])
   return (
     <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
       <H2kDropDown
         label="Band"
         themeColor={themeColor}
-        value={qso?._isNew ? (qso?.band ?? vfo?.band ?? '') : (qso?.band ?? '') }
+        value={bandValue}
         onChange={handleFieldChange}
-        disabled={disabled}
+        disabled={disabled || qso?.event}
         dropDownContainerMaxHeight={styles.oneSpace * 19}
         fieldId={'band'}
         style={{ width: styles.oneSpace * (styles.size === 'xs' ? 13 : 15) }}
@@ -54,7 +83,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
         innerRef={ref}
         themeColor={themeColor}
         style={{ width: styles.oneSpace * (styles.size === 'xs' ? 10 : 11) }}
-        value={qso?._isNew ? (qso?.freq ?? vfo?.freq ?? '') : (qso?.freq ?? '') }
+        value={freqValue}
         disabled={disabled}
         label="Frequency"
         placeholder=""
@@ -65,7 +94,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
       />
       <H2kDropDown
         label="Mode"
-        value={qso?._isNew ? (qso?.mode ?? vfo?.mode ?? '') : (qso?.mode ?? '') }
+        value={modeValue}
         onChange={handleFieldChange}
         disabled={disabled}
         dropDownContainerMaxHeight={styles.oneSpace * 19}
@@ -83,15 +112,26 @@ export const radioControl = {
   order: 1,
   label: ({ qso, operation, vfo, settings }) => {
     const parts = []
-    if (qso?.freq ?? vfo?.freq) {
-      parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo?.freq)} MHz`)
-    } else if (qso?.band ?? operation?.local?.band) {
-      parts.push(`${qso?.band ?? operation?.local?.band}`)
+    if (qso?.event) {
+      if (vfo?.freq) {
+        parts.push(`${fmtFreqInMHz(vfo?.freq)} MHz`)
+      } else if (vfo?.band) {
+        parts.push(`${vfo?.band}`)
+      } else {
+        parts.push('Band???')
+      }
+      parts.push(`${vfo?.mode ?? 'SSB'}`)
     } else {
-      parts.push('Band???')
+      if (qso?.freq ?? vfo?.freq) {
+        parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo?.freq)} MHz`)
+      } else if (qso?.band ?? vfo?.band) {
+        parts.push(`${qso?.band ?? vfo?.band}`)
+      } else {
+        parts.push('Band???')
+      }
+      parts.push(`${qso?.mode ?? vfo?.mode ?? 'SSB'}`)
     }
 
-    parts.push(`${qso?.mode ?? vfo?.mode ?? 'SSB'}`)
     return parts.join(' • ')
   },
   accessibilityLabel: ({ qso, operation, vfo, settings }) => {

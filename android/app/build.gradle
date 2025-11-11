@@ -138,9 +138,3 @@ dependencies {
 
     implementation project(':react-native-splash-screen')
 }
-
-project.ext.vectoricons = [
-    iconFontNames: [ 'MaterialIcons.ttf', 'MaterialCommunityIcons.ttf', 'FontAwesome6_Solid.ttf' ] // Specify font files
-]
-apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
-

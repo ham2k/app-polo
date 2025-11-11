@@ -26,10 +26,10 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
   }
 
   const hookSpots = {}
-  await Promise.all(hooks.map(hook => hook.fetchSpots({
+  await Promise.all(hooks.map(hook => hook?.fetchSpots({
     operation: options.operation,
     dispatch
-  }).then(spots => {
+  })?.then(spots => {
     hookSpots[hook.confirmationName] = spots
   })))
 

@@ -14,7 +14,9 @@ import { H2kCallsignInput, H2kRSTInput, H2kTextInput } from '../../../../../ui'
 import { expandRSTValues } from '../../../../../tools/callsignTools'
 
 export const MainExchangePanel = ({
-  qso, qsos, operation, vfo, settings, style, styles, themeColor, onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef
+  qso, qsos, operation, vfo, settings, style, styles, themeColor, disabled,
+  onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef,
+  allowSpacesInCallField
 }) => {
   // We need to pre-allocate a ref for the main field, in case `mainFieldRef` is not provided
   // but since hooks cannot be called conditionally, we just need to create it whether we need it or not
@@ -97,10 +99,12 @@ export const MainExchangePanel = ({
       onChange={handleFieldChange}
       onSubmitEditing={onSubmitEditing}
       fieldId={'theirCall'}
+      noSpaces={!allowSpacesInCallField}
       onSpace={spaceHandler}
       focusedRef={focusedRef}
       allowMultiple={true}
       allowStack={true}
+      disabled={disabled}
     />
   )
 
@@ -126,6 +130,7 @@ export const MainExchangePanel = ({
         value={qso?.our?.sent ?? ''}
         label="Sent"
         fieldId={'ourSent'}
+        disabled={disabled}
       />,
       <H2kRSTInput
         {...rstFieldProps}
@@ -134,6 +139,7 @@ export const MainExchangePanel = ({
         value={qso?.their?.sent || ''}
         label="Rcvd"
         fieldId={'theirSent'}
+        disabled={disabled}
       />
     ]
     if (settings.switchSentRcvd) rstFields.reverse()
@@ -146,7 +152,7 @@ export const MainExchangePanel = ({
     if (activity.hideStateField) hideStateField = true
     fields = fields.concat(
       activity.mainExchangeForOperation(
-        { qso, qsos, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
+        { qso, qsos, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
       ) || []
     )
   })
@@ -154,7 +160,7 @@ export const MainExchangePanel = ({
     if (activity.hideStateField) hideStateField = true
     fields = fields.concat(
       activity.mainExchangeForQSO(
-        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
+        { qso, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
       ) || []
     )
   })
@@ -178,12 +184,13 @@ export const MainExchangePanel = ({
         keyboard={'dumb'}
         maxLength={5}
         focusedRef={focusedRef}
+        disabled={disabled}
       />
     )
   }
 
   return (
-    <View style={{ ...style, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'stretch', gap: styles.oneSpace }}>
+    <View style={styles.mainExchangePanel.container}>
       {fields}
     </View>
   )

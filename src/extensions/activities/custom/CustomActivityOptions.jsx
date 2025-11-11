@@ -6,29 +6,24 @@
  */
 
 import React, { useState, useMemo, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { H2kButton, H2kListRow, H2kListSection, H2kTextInput } from '../../../ui'
-import { setOperationData } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
 
 import { Info } from './CustomInfo'
 import { CustomListItem } from './CustomListItem'
 
-export function CustomActivityOptions (props) {
-  const { styles, operation } = props
+export function CustomActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
-  const dispatch = useDispatch()
+  const title = useMemo(() => {
+    if (activityRefs?.length === 0) return 'No references provided for activation'
+    else return 'Activating references:'
+  }, [activityRefs])
 
   const [mySig, setMySig] = useState('')
   const [mySigInfo, setMySigInfo] = useState('')
   const [name, setName] = useState('')
-  const refs = useMemo(() => filterRefs(operation, Info.activationType), [operation]).filter(ref => ref.ref)
-
-  const title = useMemo(() => {
-    if (refs?.length === 0) return 'No references provided for activation'
-    else return 'Activating references:'
-  }, [refs])
 
   const handleAddReference = useCallback((refMySigInfo, refName, refMySig) => {
     const data = {
@@ -38,17 +33,17 @@ export function CustomActivityOptions (props) {
       mySig: refMySig,
       mySigInfo: refMySigInfo
     }
-    if (data.ref !== '') dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, [...refs.filter(r => r.ref !== data.ref), data]) }))
-  }, [dispatch, operation, refs])
+    if (data.ref !== '') setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== data.ref), data]))
+  }, [activityRefs, allRefs, setRefs])
 
   const handleRemoveReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, refs.filter(r => r.ref !== ref)) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== ref)))
+  }, [activityRefs, allRefs, setRefs])
 
   return (
     <>
       <H2kListSection title={title}>
-        {refs.map((ref, index) => (
+        {activityRefs.map((ref, index) => (
           <CustomListItem
             key={ref.ref}
             activityRef={ref}
@@ -57,7 +52,7 @@ export function CustomActivityOptions (props) {
           />
         ))}
       </H2kListSection>
-      <H2kListSection title={refs?.length === 0 ? 'Add more references' : 'Add a reference'}>
+      <H2kListSection title={activityRefs?.length === 0 ? 'Add more references' : 'Add a reference'}>
         <H2kListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
           <H2kTextInput
             label="Activity - MY_SIG in ADIF (Optional)"
@@ -83,7 +78,7 @@ export function CustomActivityOptions (props) {
           />
         </H2kListRow>
         <H2kListRow>
-          <H2kButton icon="plus-circle" mode="contained" onPress = {() => handleAddReference(mySigInfo, name, mySig) }>Add</H2kButton>
+          <H2kButton icon="plus-circle" mode="contained" onPress = {() => handleAddReference(mySigInfo, name, mySig) }>Add {mySig} {mySigInfo}</H2kButton>
         </H2kListRow>
       </H2kListSection>
     </>

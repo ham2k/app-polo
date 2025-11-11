@@ -11,7 +11,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { selectSecondsTick } from '../../../../../../store/time'
+import { selectSecondsTick, selectThirtySecondsTick } from '../../../../../../store/time'
 import { selectRuntimeOnline } from '../../../../../../store/runtime'
 import { setOperationLocalData } from '../../../../../../store/operations'
 import { findHooks } from '../../../../../../extensions/registry'
@@ -19,8 +19,11 @@ import { findRef } from '../../../../../../tools/refTools'
 import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../../../tools/timeFormats'
 import { H2kButton, H2kIcon, H2kTextInput } from '../../../../../../ui'
+import LoggerChip from '../../../../components/LoggerChip'
 
 const SECONDS_UNTIL_RESPOT = 30
+
+const MINUTES_FOR_AUTO_RESPOT = 10
 
 export function SpotterControlInputs (props) {
   const { qso, operation, vfo, styles, style, settings, setCurrentSecondaryControl, focusedRef } = props
@@ -40,7 +43,7 @@ export function SpotterControlInputs (props) {
 
   const isSelfSpotting = useMemo(() => !qso || !parseCallsign(qso.their?.call)?.baseCall, [qso])
 
-  const { spotterMessage, spotterDisabled } = useMemo(() => {
+  const { spotterMessage, spotterDisabled, autoRespotting } = useMemo(() => {
     const freq = qso?.freq || vfo?.freq
 
     if (inProgress) {
@@ -62,22 +65,34 @@ export function SpotterControlInputs (props) {
             spotterMessage: 'First set a frequency to spot.',
             spotterDisabled: true
           }
+        } else if (operation?.local?.autoRespotting) {
+          return {
+            spotterMessage: 'Stop auto-respotting',
+            spotterDisabled: false,
+            autoRespotting: false
+          }
         } else if (vfo.freq !== operation?.local?.spottedFreq) {
           if (comments === undefined || comments === 'QRV ') {
             let suggested = operation?.local?.spottedFreq ? 'QSY ' : 'QRV '
-            if (operation?.stationCallPlusArray?.length > 0) suggested += `${operation?.stationCallPlusArray?.length + 1} ops `
+            if (operation?.stationCallPlusArray?.length > 0) suggested += `(${operation?.stationCallPlusArray?.length + 1} ops) `
             setComments(suggested)
           }
           return {
             spotterMessage: `Self-spot at ${fmtFreqInMHz(vfo.freq)}`,
             spotterDisabled: false
           }
+        } else if ((now - (operation?.local?.spottedAt || 0)) < (10 * 1000)) {
+          return {
+            spotterMessage: `Re-spot every ${MINUTES_FOR_AUTO_RESPOT} min`,
+            spotterDisabled: false,
+            autoRespotting: true
+          }
         } else if (now - (operation?.local?.spottedAt || 0) > (1000 * SECONDS_UNTIL_RESPOT)) {
           return {
             spotterMessage: `Re-spot at ${fmtFreqInMHz(vfo.freq)}`,
             spotterDisabled: false
           }
-        } else if (comments?.length > 0 && (now - (operation?.local?.spottedAt || 0) < (1000 * 1))) {
+        } else if (comments?.length > 0 && (now - (operation?.local?.spottedAt || 0) < (1000 * 15))) {
           setComments(undefined)
           return {
             spotterMessage: `Self-spotted ${fmtDateTimeRelative(operation?.local?.spottedAt)}`,
@@ -112,15 +127,22 @@ export function SpotterControlInputs (props) {
     now, comments, inProgress, isSelfSpotting,
     qso?.freq, qso?.their?.call, qso?.startAtMillis, vfo.freq,
     operation?.local?.spottedFreq, operation?.local?.spottedAt,
+    operation?.local?.autoRespotting,
     operation?.stationCallPlusArray?.length
   ])
 
   const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings }), [isSelfSpotting, qso, operation, settings])
 
   const handleSpotting = useCallback(async () => {
-    postSpots({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings })
+    if (autoRespotting === true) {
+      dispatch(setOperationLocalData({ uuid: operation.uuid, autoRespotting: true }))
+    } else if (autoRespotting === false) {
+      dispatch(setOperationLocalData({ uuid: operation.uuid, autoRespotting: false }))
+    } else {
+      postSpots({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings })
+    }
   }, [
-    isSelfSpotting, qso, hooksWithSpotting, dispatch, operation, vfo, comments,
+    isSelfSpotting, autoRespotting, qso, hooksWithSpotting, dispatch, operation, vfo, comments,
     setCurrentSecondaryControl, settings
   ])
 
@@ -201,17 +223,43 @@ export async function postSpots ({ isSelfSpotting, qso, operation, vfo, comments
       message: `Spotting ${hook.shortName ?? hook.name}…`,
       disabled: true
     })
-
-    status[hook.key] = await dispatch(isSelfSpotting ? hook.postSelfSpot({ operation, vfo, comments, qCode, qRest }) : hook.postOtherSpot({ qso, comments, spotterCall: operation.stationCall || settings.operatorCall }))
+    status[hook.key] = await dispatch(isSelfSpotting ? hook.postSelfSpot({ operation, vfo, settings, comments, qCode, qRest }) : hook.postOtherSpot({ qso, comments, spotterCall: operation.stationCall || settings.operatorCall }))
     ok = ok && status[hook.key]
     setSpotStatus && setSpotStatus(status)
   }
   setInProgress && setInProgress(false)
   setComments && setComments(undefined)
   if (ok) {
-    if (isSelfSpotting) dispatch(setOperationLocalData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq }))
-    setCurrentSecondaryControl && setCurrentSecondaryControl(undefined)
+    if (isSelfSpotting) dispatch(setOperationLocalData({ uuid: operation.uuid, spottedAt: new Date().getTime(), spottedFreq: vfo.freq, spottedComments: comments }))
+    setTimeout(() => {
+      setCurrentSecondaryControl && setCurrentSecondaryControl(undefined)
+    }, 5000)
   }
+}
+
+export function useAutoRespotting ({ operation, vfo, dispatch, settings }) {
+  const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting: true, operation, settings }), [operation, settings])
+
+  const thirtySecondsTick = useSelector(selectThirtySecondsTick)
+
+  useEffect(() => {
+    dispatch(setOperationLocalData({ uuid: operation.uuid, autoRespotting: false }))
+  // Disable autoRespotting on start
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (operation?.local?.autoRespotting) {
+      if (vfo?.freq !== operation?.local?.spottedFreq) {
+        dispatch(setOperationLocalData({ uuid: operation.uuid, autoRespotting: false }))
+      } else if (thirtySecondsTick - operation?.local?.spottedAt > MINUTES_FOR_AUTO_RESPOT * 60 * 1000) {
+        postSpots({ isSelfSpotting: true, operation, vfo, comments: operation?.local?.spottedComments ?? '', hooksWithSpotting, dispatch, settings })
+      }
+    }
+  // We want to be more selective with our deps.
+  // No need to include all `operation` or `vfo` or `settings`, even if they are passed to some functions
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [operation?.local?.autoRespotting, vfo?.freq, operation?.local?.spottedFreq, thirtySecondsTick])
 }
 
 const colorForStatus = (status) => {
@@ -222,12 +270,28 @@ const colorForStatus = (status) => {
 
 export const spotterControl = {
   key: 'spotter',
-  order: 100,
+  order: 50,
   icon: 'hand-wave',
-  label: ({ qso }) => {
-    return qso && parseCallsign(qso.their?.call)?.baseCall ? 'Spotting' : 'Self-Spotting'
+  LabelComponent: ({ qso, operation, ...props }) => {
+    let label = props.label || 'Self-Spotting'
+    if (qso?.their?.guess?.call && qso?.their?.guess?.baseCall) {
+      label = 'Spotting'
+    } else if (operation?.local?.autoRespotting) {
+      label = 'Auto-respotting'
+    }
+
+    if (operation?.local?.autoRespotting) {
+      return (
+        <LoggerChip {...props} icon={'recycle'} iconColor={'red'}accessibilityLabel={label + ' Controls'}>{label}</LoggerChip>
+      )
+    } else {
+      return (
+        <LoggerChip {...props} accessibilityLabel={label + ' Controls'}>{label}</LoggerChip>
+      )
+    }
   },
-  accesibilityLabel: 'Self-Spotting Controls',
+
+  accessibilityLabel: 'Self-Spotting Controls',
   InputComponent: SpotterControlInputs,
   inputWidthMultiplier: 40,
   optionType: 'mandatory',

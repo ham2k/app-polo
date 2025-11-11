@@ -37,16 +37,23 @@ import { SecondaryExchangePanel } from './LoggingPanel/SecondaryExchangePanel'
 import { NumberKeys } from './LoggingPanel/NumberKeys'
 import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
+import { EventInfo } from './LoggingPanel/EventInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
+import EventEditingPanel from './LoggingPanel/EventEditingPanel/EventEditingPanel'
 
 const DEBUG = false
+
+let commandInfoTimeout
+let submitTimeout
 
 export default function LoggingPanel ({
   style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo, splitView
 }) {
   const navigation = useNavigation()
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+
+  const [allowSpacesInCallField, setAllowSpacesInCallField] = useState(false)
 
   const [qso, setQSO, updateQSO] = useMemo(() => {
     const qsoValue = loggingState?.qso
@@ -73,9 +80,9 @@ export default function LoggingPanel ({
   }, [loggingState, setLoggingState, updateLoggingState])
 
   const themeColor = useMemo(() => (!qso || qso?._isNew) ? 'tertiary' : 'secondary', [qso])
-  const upcasedThemeColor = useMemo(() => themeColor.charAt(0).toUpperCase() + themeColor.slice(1), [themeColor])
+  const { isKeyboardVisible, keyboardExtraStyles } = useKeyboardVisible()
 
-  const styles = useThemedStyles(prepareStyles, themeColor)
+  const styles = useThemedStyles(prepareStyles, { style, themeColor, leftieMode: settings.leftieMode, isKeyboardVisible, keyboardExtraStyles })
 
   const dispatch = useDispatch()
 
@@ -131,7 +138,7 @@ export default function LoggingPanel ({
       }, 100)
     } else if ((qso?.uuid !== loggingState?.selectedUUID) || !qso) {
       let nextQSO
-      const otherStateChanges = {}
+      const otherStateChanges = { undoInfo: undefined }
 
       if (loggingState?.suggestedQSO) {
         nextQSO = prepareSuggestedQSO(loggingState?.suggestedQSO, qsos, operation, vfo, settings)
@@ -159,25 +166,27 @@ export default function LoggingPanel ({
 
     const callInfo = parseCallsign(call)
 
-    if (callInfo?.baseCall || call.indexOf('?') >= 0) {
+    if (qso?.event) {
+      setIsValidQSO(true)
+    } else if (callInfo?.baseCall || call.indexOf('?') >= 0) {
       setIsValidQSO(true)
     } else {
       setIsValidQSO(false)
     }
-  }, [qso?.their?.call])
+  }, [qso?.their?.call, qso?.event])
 
   const [commandInfo, actualSetCommandInfo] = useState()
   const setCommandInfo = useCallback((info) => {
-    if (commandInfo?.timeoutId) {
-      clearTimeout(commandInfo.timeoutId)
+    if (commandInfoTimeout) {
+      clearTimeout(commandInfoTimeout)
     }
     if (info?.timeout) {
-      info.timeoutId = setTimeout(() => {
+      commandInfoTimeout = setTimeout(() => {
         actualSetCommandInfo(undefined)
       }, info.timeout)
     }
     actualSetCommandInfo(info)
-  }, [actualSetCommandInfo, commandInfo?.timeoutId])
+  }, [actualSetCommandInfo])
 
   const handleFieldChange = useCallback((event) => { // Handle form fields and update QSO info
     const { fieldId, alsoClearTheirCall } = event
@@ -189,11 +198,13 @@ export default function LoggingPanel ({
 
     if (alsoClearTheirCall && fieldId !== 'theirCall') { // This is used by command-handling to reset the call entry when a command was processed
       qso.their.call = ''
+      setAllowSpacesInCallField(false)
     }
 
     if (fieldId === 'theirCall') {
-      const commandDescription = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo })
-      setCommandInfo({ message: commandDescription || undefined, match: !!commandDescription || commandDescription === '' })
+      const { description, allowSpaces, matchingCommand } = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, setCommandInfo })
+      setCommandInfo({ message: description || undefined, matchingCommand, match: !!matchingCommand })
+      setAllowSpacesInCallField(allowSpaces)
 
       let guess = parseCallsign(value)
       if (guess?.baseCall) {
@@ -227,20 +238,44 @@ export default function LoggingPanel ({
     } else if (fieldId === 'power') {
       updateQSO({ power: value })
       if (qso?._isNew) dispatch(setVFO({ power: value }))
+    } else if (fieldId === 'eventNote') {
+      updateQSO({ event: { note: value } })
+    } else if (fieldId === 'eventDone') {
+      updateQSO({ event: { done: value } })
     }
   }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, setCommandInfo, updateQSO])
 
-  const handleSubmit = useCallback(() => { // Save the QSO, or create a new one
+  // Since our fields and logic often perform some async work,
+  // we need to wait a few milliseconds before submitting to ensure all async work is complete.
+  // But we can't just use a timeout, because we need the function to bind to the latest values.
+  // So we use a state variable and a callback function to set it and an effect to actually submit..
+  const [doSubmit, setDoSubmit] = useState(false)
+
+  const handleSubmit = useCallback(() => { //
+    if (submitTimeout) clearTimeout(submitTimeout)
+
+    submitTimeout = setTimeout(() => {
+      setDoSubmit(true)
+    }, 50)
+  }, [setDoSubmit])
+
+  useEffect(() => { // Actually perform the submission: saving the QSO, or creating a new one
+    if (!doSubmit) return
+
+    setDoSubmit(false)
+
     if (DEBUG) logTimer('submit', 'handleSubmit start', { reset: true })
 
     setTimeout(async () => { // Run inside a setTimeout to allow for async functions
-      // First, try to process any commands
-      const command = qso?.their?.call
-      const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit })
-      if (commandResult) {
-        trackEvent('command', { command })
-        setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
-        return
+      // First, try to process any commands, but only if we're not editing an event
+      if (!qso.event) {
+        const command = qso?.their?.call
+        const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit, setCommandInfo })
+        if (commandResult) {
+          trackEvent('command', { command })
+          setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
+          return
+        }
       }
 
       let eventName = 'edit_qso'
@@ -248,9 +283,9 @@ export default function LoggingPanel ({
       else if (qso?._isNew) eventName = 'add_qso'
       else if (qso?._willBeDeleted === false && qso?.deleted === false) eventName = 'undelete_qso'
 
-      if (qso._willBeDeleted) {
+      if (qso._willBeDeleted !== undefined) {
+        qso.deleted = qso._willBeDeleted
         delete qso._willBeDeleted
-        qso.deleted = true
         dispatch(addQSO({ uuid: operation.uuid, qso }))
         updateLoggingState({
           qso: undefined,
@@ -260,7 +295,13 @@ export default function LoggingPanel ({
           hasChanges: false,
           undoInfo: undefined
         })
-        trackEvent(eventName, { their_prefix: qso.their.entityPrefix ?? qso.their.guess.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
+        trackEvent(eventName, { their_prefix: qso.their?.entityPrefix ?? qso.their?.guess?.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
+      } else if (qso.event && !qso.deleted) {
+        // Events are just saved as-is, no extra processing needed.
+        setTimeout(() => {
+          dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso] }))
+          setQSO(undefined, { otherStateChanges: { lastUUID: qso.uuid } })
+        }, 50)
       } else if (isValidQSO && !qso.deleted) {
         setCurrentSecondaryControl(undefined)
 
@@ -349,7 +390,11 @@ export default function LoggingPanel ({
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
     }, 0)
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
-  }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, isValidQSO, setCommandInfo, setCurrentSecondaryControl, setQSO])
+  }, [
+    qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo,
+    updateQSO, updateLoggingState, handleFieldChange, isValidQSO,
+    setCommandInfo, setCurrentSecondaryControl, setQSO, doSubmit, handleSubmit
+  ])
 
   const handleWipe = useCallback(() => { // Wipe a new QSO
     if (qso?._isNew) {
@@ -387,8 +432,6 @@ export default function LoggingPanel ({
     focusedRef.current?.onNumberKey(number)
   }, [focusedRef])
 
-  const { isKeyboardVisible, keyboardExtraStyles } = useKeyboardVisible()
-
   const opMessage = useMemo(() => {
     if (operationError) return { text: operationError, icon: 'alert-circle', hideCallInfo: true }
     if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information', hideCallInfo: false }
@@ -396,143 +439,150 @@ export default function LoggingPanel ({
     return undefined
   }, [operationError, commandInfo?.message, loggingState.infoMessage])
 
+  const disableSubmit = useMemo(() => {
+    return !((isValidQSO && isValidOperation) || commandInfo?.matchingCommand)
+  }, [isValidQSO, isValidOperation, commandInfo?.matchingCommand])
+
   return (
-    <View style={[styles.root, style]}>
+    <View style={styles.root}>
       <SafeAreaView edges={[isKeyboardVisible ? '' : 'bottom', 'left', splitView ? '' : 'right'].filter(x => x)}>
 
-        <View style={{ width: '100%', flexDirection: 'row', minHeight: 20 }}>
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-
-            <SecondaryExchangePanel
-              qso={qso}
-              operation={operation}
-              vfo={vfo}
-              settings={settings}
-              navigation={navigation}
-              setQSO={setQSO}
-              updateQSO={updateQSO}
-              disabled={qso?.deleted || qso?._willBeDeleted}
-              handleFieldChange={handleFieldChange}
-              onSubmitEditing={handleSubmit}
-              focusedRef={focusedRef}
-              styles={styles}
-              themeColor={themeColor}
-              currentSecondaryControl={currentSecondaryControl}
-              setCurrentSecondaryControl={setCurrentSecondaryControl}
-            />
-
-            <View style={[styles.infoPanel.container, { flexDirection: settings.leftieMode ? 'row-reverse' : 'row' }]}>
-              <View style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}>
-                {qso?.deleted || qso?._willBeDeleted ? (
-                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
-                      {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
-                    </Text>
-                  </View>
-                ) : (
-                  <>
-                    {!opMessage?.hideCallInfo && qso?.their?.call?.length > 2 && (
-                      <CallInfo
-                        qso={qso}
-                        qsos={activeQSOs}
-                        sections={sections}
-                        operation={operation}
-                        vfo={vfo}
-                        settings={settings}
-                        styles={styles}
-                        themeColor={themeColor}
-                        updateQSO={updateQSO}
-                      />
-                    )}
-                    {(opMessage?.text || (qso?.their?.call?.length || 0) < 2) && (
-                      <OpInfo
-                        message={opMessage}
-                        operation={operation}
-                        vfo={vfo}
-                        styles={styles}
-                        settings={settings}
-                        qsos={activeQSOs}
-                        themeColor={themeColor}
-                      />
-                    )}
-                  </>
-                )}
-              </View>
-              <View style={styles.infoPanel.buttonContainer}>
-                {qso?._isNew ? (
-                  loggingState?.undoInfo ? (
-                    <IconButton
-                      icon={'undo'}
-                      accessibilityLabel="Undo"
-                      size={styles.infoPanel.button.size}
-                      iconColor={styles.infoPanel.button.color}
-                      onPress={handleUnwipe}
-                    />
-                  ) : (
-                    <IconButton
-                      icon={'backspace-outline'}
-                      accessibilityLabel="Erase"
-                      size={styles.infoPanel.button.size}
-                      iconColor={styles.infoPanel.button.color}
-                      disabled={!loggingState?.hasChanges}
-                      onPress={handleWipe}
-                    />
-                  )
-                ) : (
-                  (qso?.deleted || qso?._willBeDeleted || loggingState?.undoInfo) ? (
-                    <IconButton
-                      icon={'undo'}
-                      accessibilityLabel="Undo"
-                      size={styles.infoPanel.button.size}
-                      iconColor={styles.infoPanel.button.color}
-                      onPress={loggingState?.undoInfo ? handleUnwipe : handleUndelete}
-                    />
-                  ) : (
-                    <IconButton
-                      icon={'trash-can-outline'}
-                      accessibilityLabel="Delete"
-                      size={styles.infoPanel.button.size}
-                      iconColor={styles.infoPanel.button.color}
-                      disabled={false}
-                      onPress={handleDelete}
-                    />
-                  )
-                )}
-              </View>
-
-            </View>
-
-          </View>
-        </View>
-        <View style={{ flexDirection: settings.leftieMode ? 'row-reverse' : 'row', alignItems: 'center', justifyItems: 'center', paddingVertical: styles.halfSpace, ...keyboardExtraStyles }}>
-          <MainExchangePanel
-            style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}
+        <View style={styles.innerContainer}>
+          <SecondaryExchangePanel
+            style={styles.secondary.container}
+            styles={styles}
             qso={qso}
-            qsos={qsos}
             operation={operation}
             vfo={vfo}
             settings={settings}
-            disabled={qso?.deleted || qso?._willBeDeleted}
-            styles={styles}
-            themeColor={themeColor}
-            onSubmitEditing={handleSubmit}
-            handleFieldChange={handleFieldChange}
+            navigation={navigation}
             setQSO={setQSO}
             updateQSO={updateQSO}
-            mainFieldRef={mainFieldRef}
+            disabled={qso?.deleted || qso?._willBeDeleted}
+            handleFieldChange={handleFieldChange}
+            onSubmitEditing={handleSubmit}
             focusedRef={focusedRef}
+            themeColor={themeColor}
+            currentSecondaryControl={currentSecondaryControl}
+            setCurrentSecondaryControl={setCurrentSecondaryControl}
           />
-          <View style={{ flex: 0, justifyContent: 'center', alignItems: 'center', [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.halfSpace }}>
-            <IconButton
-              icon={qso?._isNew ? 'upload' : (qso?._willBeDeleted ? 'trash-can' : 'content-save')}
-              accessibilityLabel={qso?._isNew ? 'Add QSO' : 'Save QSO'}
-              size={styles.oneSpace * 4}
-              mode="contained"
-              disabled={!((isValidQSO && isValidOperation) || commandInfo?.match)}
-              containerColor={styles.theme.colors[`${themeColor}ContainerVariant`]}
-              iconColor={styles.theme.colors[`on${upcasedThemeColor}`]}
-              onPress={handleSubmit}
-            />
+
+          <View style={styles.primary.container}>
+
+            <View style={styles.panels.container}>
+
+              <PanelSelector
+                styles={styles}
+                themeColor={themeColor}
+                opMessage={opMessage}
+                qso={qso}
+                qsos={qsos}
+                operation={operation}
+                activeQSOs={activeQSOs}
+                sections={sections}
+                vfo={vfo}
+                settings={settings}
+                updateQSO={updateQSO}
+              />
+
+              {qso?.event ? (
+                <EventEditingPanel
+                  qso={qso}
+                  qsos={qsos}
+                  operation={operation}
+                  vfo={vfo}
+                  settings={settings}
+                  styles={styles}
+                  themeColor={themeColor}
+                  onSubmitEditing={handleSubmit}
+                  handleFieldChange={handleFieldChange}
+                  setQSO={setQSO}
+                  updateQSO={updateQSO}
+                  mainFieldRef={mainFieldRef}
+                  focusedRef={focusedRef}
+                />
+              ) : (
+                <MainExchangePanel
+                  style={{ flex: 1, [settings.leftieMode ? 'paddingRight' : 'paddingLeft']: styles.oneSpace }}
+                  qso={qso}
+                  qsos={qsos}
+                  operation={operation}
+                  vfo={vfo}
+                  settings={settings}
+                  disabled={qso?.deleted || qso?._willBeDeleted || qso?.event}
+                  styles={styles}
+                  themeColor={themeColor}
+                  onSubmitEditing={handleSubmit}
+                  handleFieldChange={handleFieldChange}
+                  setQSO={setQSO}
+                  updateQSO={updateQSO}
+                  mainFieldRef={mainFieldRef}
+                  focusedRef={focusedRef}
+                  allowSpacesInCallField={allowSpacesInCallField}
+                />
+              )}
+            </View>
+
+            <View style={styles.actions.container}>
+
+              {qso?._isNew ? (
+                loggingState?.undoInfo ? (
+                  <IconButton
+                    icon={'undo'}
+                    accessibilityLabel="Undo"
+                    onPress={handleUnwipe}
+                    size={styles.actions.button.size}
+                    mode={styles.actions.button.mode}
+                    iconColor={styles.actions.button.color}
+                    containerColor={styles.actions.button.backgroundColor}
+                  />
+                ) : (
+                  <IconButton
+                    icon={'backspace-outline'}
+                    accessibilityLabel="Erase"
+                    onPress={handleWipe}
+                    disabled={!loggingState?.hasChanges}
+                    size={styles.actions.button.size}
+                    mode={styles.actions.button.mode}
+                    iconColor={styles.actions.button.color}
+                    containerColor={styles.actions.button.backgroundColor}
+                  />
+                )
+              ) : (
+                (qso?.deleted || qso?._willBeDeleted || loggingState?.undoInfo) ? (
+                  <IconButton
+                    icon={loggingState.undoInfo ? 'undo' : 'delete-restore'}
+                    accessibilityLabel="Undo"
+                    size={styles.actions.button.size}
+                    mode={styles.actions.button.mode}
+                    iconColor={styles.actions.button.color}
+                    containerColor={styles.actions.button.backgroundColor}
+                    onPress={loggingState?.undoInfo ? handleUnwipe : handleUndelete}
+                  />
+                ) : (
+                  <IconButton
+                    icon={'trash-can-outline'}
+                    accessibilityLabel="Delete"
+                    onPress={handleDelete}
+                    disabled={false}
+                    size={styles.actions.button.size}
+                    mode={styles.actions.button.mode}
+                    iconColor={styles.actions.button.color}
+                    containerColor={styles.actions.button.backgroundColor}
+                  />
+                )
+              )}
+
+              <IconButton
+                icon={qso?._isNew ? 'upload' : (qso?._willBeDeleted ? 'trash-can' : 'content-save')}
+                accessibilityLabel={qso?._isNew ? 'Add QSO' : 'Save QSO'}
+                onPress={handleSubmit}
+                disabled={disableSubmit}
+                size={styles.actions.importantButton.size}
+                mode={styles.actions.importantButton.mode}
+                theme={styles.actions.importantButton.theme}
+              />
+            </View>
           </View>
         </View>
 
@@ -544,41 +594,131 @@ export default function LoggingPanel ({
   )
 }
 
-function prepareStyles (themeStyles, themeColor) {
+function prepareStyles (themeStyles, { style, themeColor, leftieMode, isKeyboardVisible, keyboardExtraStyles }) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
-  const commonPanelHeight = themeStyles.oneSpace * 6
+  const panelSize = themeStyles.oneSpace * 6
+  const buttonSize = themeStyles.oneSpace * 4
+
+  const leftieRightieDirection = leftieMode ? 'row-reverse' : 'row'
 
   return {
     ...themeStyles,
-    commonPanelHeight,
+    panelSize,
     themeColor,
     upcasedThemeColor,
     root: {
       borderTopColor: themeStyles.theme.colors[`${themeColor}Light`],
-      borderTopWidth: 1,
-      backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
+      borderTopWidth: 3,
+      backgroundColor: themeStyles.theme.colors[`${themeColor}Container`],
+      ...style
     },
     input: {
       backgroundColor: themeStyles.theme.colors.background,
       color: themeStyles.theme.colors.onBackground
       // paddingRight: themeStyles.oneSpace
     },
-    infoPanel: {
+    innerContainer: {
+      flexDirection: 'column',
+      minHeight: panelSize * 3,
+      alignItems: 'stretch',
+      ...keyboardExtraStyles
+    },
+    secondary: { // Top section with row of secondary controls
       container: {
-        minHeight: commonPanelHeight,
-        flexDirection: 'row',
-        alignItems: 'center'
-      },
-      buttonContainer: {
-        justifyContent: 'flex-end',
-        alignSelf: 'flex-end',
-        marginBottom: commonPanelHeight / 2 - themeStyles.oneSpace * 4
-      },
-      button: {
-        size: themeStyles.oneSpace * 4,
-        color: themeStyles.theme.colors[themeColor]
       }
     },
+    primary: { // Bottom section with panels and fields and actions
+      container: {
+        flexDirection: leftieRightieDirection,
+        // [leftieMode ? 'paddingRight' : 'paddingLeft']: themeStyles.oneSpace,
+        paddingLeft: themeStyles.oneSpace,
+        paddingRight: themeStyles.oneSpace,
+        paddingBottom: themeStyles.oneSpace,
+        gap: themeStyles.oneSpace
+      }
+    },
+    panels: {
+      container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        alignSelf: 'flex-end'
+      }
+    },
+    actions: {
+      container: {
+        flex: 0,
+        minWidth: panelSize,
+        justifyContent: 'flex-end',
+        alignSelf: 'flex-end'
+        // marginTop: themeStyles.oneSpace * 2
+
+      },
+      button: {
+        size: buttonSize,
+        mode: 'default',
+        color: themeStyles.theme.colors[themeColor],
+        backgroundColor: themeStyles.theme.colors[`${themeColor}Container`]
+      },
+      importantButton: {
+        size: buttonSize,
+        mode: 'contained',
+        color: 'red', // themeStyles.theme.colors[`on${upcasedThemeColor}`],
+        disabledColor: 'blue', // themeStyles.theme.colors.onSurfaceDisabled,
+        backgroundColor: themeStyles.theme.colors[`${themeColor}ContainerVariant`],
+        theme: {
+          colors: {
+            // selected
+            onPrimary: themeStyles.theme.colors['{themeColor}Lighter'],
+            // unselected
+            primary: themeStyles.theme.colors[`on${upcasedThemeColor}`],
+            surfaceVariant: themeStyles.theme.colors[themeColor],
+            // disabled
+            onSurfaceDisabled: themeStyles.theme.colors.onSurfaceDisabled,
+            surfaceDisabled: themeStyles.theme.colors.surfaceDisabled
+          }
+        }
+      }
+    },
+
+    callInfoPanel: {
+      container: {
+        // flex: 1,
+        flexDirection: 'column',
+        minHeight: panelSize * 1.2,
+        paddingBottom: themeStyles.halfSpace
+      }
+    },
+
+    opInfoPanel: {
+      container: {
+        // flex: 1,
+        flexDirection: 'column',
+        minHeight: panelSize * 1.2,
+        paddingBottom: themeStyles.halfSpace
+      }
+    },
+
+    eventInfoPanel: {
+      container: {
+        // flex: 1,
+        flexDirection: 'column',
+        paddingBottom: themeStyles.halfSpace
+      }
+    },
+
+    mainExchangePanel: {
+      container: {
+        height: panelSize * 1.2,
+        minHeight: panelSize * 1.2,
+        maxHeight: panelSize * 1.2,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        gap: themeStyles.oneSpace
+      }
+    },
+
     secondaryControls: {
       headingContainer: {
         backgroundColor: themeStyles.theme.colors[themeColor],
@@ -590,7 +730,7 @@ function prepareStyles (themeStyles, themeColor) {
         color: themeStyles.theme.colors[`${themeColor}Container`]
       },
       controlContainer: {
-        minHeight: commonPanelHeight,
+        minHeight: panelSize,
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: themeStyles.theme.colors[themeColor],
@@ -670,4 +810,45 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   })
 
   return clone
+}
+
+const PanelSelector = ({ qso, opMessage, styles, ...props }) => {
+  if (qso?.deleted || qso?._willBeDeleted) {
+    return (
+      <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+        <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
+          {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
+        </Text>
+      </View>
+    )
+  } else if (qso?.event) {
+    return (
+      <EventInfo
+        qso={qso}
+        styles={styles}
+        style={styles.eventInfoPanel.container}
+        {...props}
+      />
+    )
+  } else if (!opMessage?.hideCallInfo && qso?.their?.call?.length > 2) {
+    return (
+      <CallInfo
+        qso={qso}
+        styles={styles}
+        style={styles.callInfoPanel.container}
+        {...props}
+      />
+    )
+  } else if (opMessage?.text || (qso?.their?.call?.length || 0) <= 2) {
+    return (
+      <OpInfo
+        message={opMessage}
+        styles={styles}
+        style={styles.opInfoPanel.container}
+        {...props}
+      />
+    )
+  } else {
+    return null
+  }
 }

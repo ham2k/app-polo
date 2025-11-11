@@ -71,11 +71,11 @@ export const timeControl = {
   LabelComponent: (props) => {
     if (props.operation?.local?._nextManualTime) {
       return (
-        <TimeChip {...props} icon={'pause'} time={props?.qso?.startAtMillis} />
+        <TimeChip {...props} icon={'pause'} iconColor={'red'} accessibilityLabel={'Time Controls'} time={props?.qso?.startAtMillis} />
       )
     } else {
       return (
-        <TimeChip {...props} time={props?.qso?.startAtMillis} />
+        <TimeChip {...props} accessibilityLabel={'Time Controls'} time={props?.qso?.startAtMillis} />
       )
     }
   },

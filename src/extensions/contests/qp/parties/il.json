@@ -1,9 +1,32 @@
 {
   "key": "IL",
   "name": "Illinois QSO Party",
+  "short": "ILQP",
+  "url": "https://w9awe.org/ilqp/",
   "start": "2025-10-19 17:00Z",
   "end": "2025-10-20 01:00Z",
-  "status": "Pending",
+  "cabrilloName": "IL-QSO-PARTY",
+  "notes": "",
+  "internalNotes": "Allows up to 4 counties in county line operations",
+  "lastUpdated": "2025-10-12 12:00Z",
+  "status": "Updated for 2025, but not verified",
+  "options": {
+    "countyLine": true,
+    "dxIsMultiplier": false,
+    "dxEntityIsMultiplier": true,
+    "dxEntityMultiplierMax": 5,
+    "selfSpotting": true,
+    "dcCountsAsMaryland": true
+  },
+  "bonusStations": {
+    "W9AWE": 100,
+    "W9OAB": 100
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2,
+    "DATA": 2
+  },
   "counties": {
     "ADAM": "Adams",
     "ALEX": "Alexander",

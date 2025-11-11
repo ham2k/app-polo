@@ -5,28 +5,22 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 import React, { useCallback, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
 import { findRef, replaceRef } from '../../../tools/refTools'
 
-import { setOperationData } from '../../../store/operations'
 import { H2kListSection, H2kListRow, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 import { Info } from './SimpleContestExtension'
 
-export function ActivityOptions (props) {
-  const { styles, operation } = props
-
-  const dispatch = useDispatch()
-
-  const ref = useMemo(() => findRef(operation, Info.key), [operation])
+export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
+  const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const handleIdChange = useCallback((value) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, contestIdentifier: value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, contestIdentifier: value }))
+  }, [activityRef, allRefs, setRefs])
 
   const handleExchangeChange = useCallback((value) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, exchange: value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, exchange: value }))
+  }, [activityRef, allRefs, setRefs])
 
   return (
     <>
@@ -35,13 +29,13 @@ export function ActivityOptions (props) {
 
           <H2kTextInput
             label="Contest Identifier"
-            value={ref?.contestIdentifier || ''}
+            value={activityRef?.contestIdentifier || ''}
             uppercase={true}
             onChangeText={handleIdChange}
           />
           <H2kTextInput
             label="Exchange Sent"
-            value={ref?.exchange || ''}
+            value={activityRef?.exchange || ''}
             uppercase={false}
             onChangeText={handleExchangeChange}
           />

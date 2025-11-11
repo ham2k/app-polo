@@ -51,7 +51,7 @@ const FrequencyCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-radio-frequency',
-  match: /^([\d.]{1,})$/,
+  match: /^([\d.,]{1,})$/,
   describeCommand: (match, { qso, vfo, ourInfo }) => {
     if (!qso) return
 
@@ -60,6 +60,8 @@ const FrequencyCommandHook = {
     if (match[1].startsWith('..') && qso.freq) {
       freq = parseFreqInMHz(`${Math.round(qso.freq)}${match[1].substring(1)}`)
     } else if (match[1].startsWith('.') && qso.freq) {
+      freq = parseFreqInMHz(`${Math.floor(qso.freq / 1000)}${match[1]}`)
+    } else if (match[1].startsWith(',') && qso.freq) {
       freq = parseFreqInMHz(`${Math.floor(qso.freq / 1000)}${match[1]}`)
     } else {
       freq = parseFreqInMHz(match[1])

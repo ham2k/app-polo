@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -28,6 +28,9 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const dispatch = useDispatch()
 
   const operation = useSelector(state => selectOperation(state, route.params.operation))
+
+  const [refs, setRefs] = useState(operation?.refs || [])
+
   const handler = useMemo(() => (
     findBestHook(`ref:${route.params.activity}`) || defaultReferenceHandlerFor(route.params.activity)
   ), [route.params.activity])
@@ -36,10 +39,22 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
   useEffect(() => { // Prepare the screen, set the activity title, etc
     if (activity && operation) {
       navigation.setOptions({
-        title: activity.name ?? `Activity "${activity.key}"`
+        title: activity.name ?? `Activity "${activity.key}"`,
+
+        leftAction: 'accept',
+        leftActionA11yLabel: 'Accept Changes',
+        rightAction: 'revert',
+        rightActionA11yLabel: 'Revert Changes',
+        onLeftActionPress: () => {
+          dispatch(setOperationData({ uuid: operation.uuid, refs }))
+          navigation.goBack()
+        },
+        onRightActionPress: () => {
+          navigation.goBack()
+        }
       })
     }
-  }, [navigation, activity, operation])
+  }, [navigation, activity, operation, dispatch, refs])
 
   const handleRemoveActivity = useCallback(() => {
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation, activity?.activationType ?? activity?.key ?? handler?.key, []) }))
@@ -52,7 +67,7 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
-          {activity?.Options && <activity.Options operation={operation} styles={styles} settings={settings} />}
+          {activity?.Options && <activity.Options operation={operation} styles={styles} settings={settings} refs={refs} setRefs={setRefs} />}
 
           <H2kListSection>
             <H2kListSeparator />

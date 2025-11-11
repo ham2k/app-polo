@@ -45,5 +45,21 @@ export const Info = {
   activationType: 'sotaActivation',
   descriptionPlaceholder: 'Enter SOTA reference',
   unknownReferenceName: 'Unknown Summit',
-  referenceRegex: /^[A-Z0-9]{1,3}\/[A-Z]{2}-[0-9]{3,}$/i
+  referenceRegex: /^[A-Z0-9]{1,3}\/[A-Z]{2}-[0-9]{3,}$/i,
+  scoring: {
+    activates: 'daily', // but points for activating that ref only accrue once per calendar year
+    allowsMultipleReferences: false,
+    qsosToActivate: 4,
+    uniquePer: ['day', 'ref'],
+    referenceLabel: 'summit',
+    ref2refLabel: 'S2S',
+    activatorQSOLabel: 'activator QSO',
+    activatorQSOsLabel: 'activator QSOs',
+    hunterQSOLabel: 'hunter QSO',
+    hunterQSOsLabel: 'hunter QSOs',
+    referenceActivatedLabel: 'summit activated',
+    referencesActivatedLabel: 'summits activated',
+    referenceHuntedLabel: 'summit hunted',
+    referencesHuntedLabel: 'summits hunted',
+  }
 }

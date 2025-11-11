@@ -7,18 +7,20 @@
 
 import React from 'react'
 import { View } from 'react-native'
-import { Text, TouchableRipple } from 'react-native-paper'
+import { Text } from 'react-native-paper'
+
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
-import { fmtDateZuluDynamic } from '../../../../tools/timeFormats'
-import { H2kIcon } from '../../../../ui'
+import { fmtDateZuluDynamic } from '../../../../../tools/timeFormats'
+import { H2kIcon, H2kPressable } from '../../../../../ui'
 
 const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings, onHeaderPress }) {
   // NOTE: We're using onPresOut instead of onPress because of a bug in SectionList
   // See https://github.com/facebook/react-native/issues/51290
+
   return (
-    <TouchableRipple onPressOut={onHeaderPress}>
-      <View style={styles.headerRow}>
+    <H2kPressable onPressOut={onHeaderPress} style={styles.headerRow}>
+      <View style={styles.rowInner}>
         <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
           {fmtDateZuluDynamic(section.day)}
         </Text>
@@ -38,7 +40,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
 
         <Text style={[styles.fields.header, { flex: 1 }]}>{' '}</Text>
 
-        {Object.keys(section.scores ?? {}).sort((a, b) => (section.scores[a].weight ?? 0) - (section.scores[b].weight ?? 0)).map(key => {
+        {Object.keys(section.scores ?? {}).sort((a, b) => (section.scores[a]?.weight ?? 0) - (section.scores[b]?.weight ?? 0)).map(key => {
           const score = section.scores[key] ?? {}
           const refKeys = Object.keys(score.refs ?? { one: true })
 
@@ -49,11 +51,11 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
                   <H2kIcon
                     name={score.icon}
                     size={styles.normalFontSize}
-                    color={score.activated === true ? styles.colors.important : undefined }
+                    color={score.activated === true ? styles.colors.important : undefined}
                     style={styles.fields.icon}
                   />
                 ) : (
-                `${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ' '}`
+                  `${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ' '}`
                 )}
                 {' '}{score.summary}
               </Text>
@@ -63,7 +65,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
           }
         })}
       </View>
-    </TouchableRipple>
+    </H2kPressable>
   )
 })
 export default QSOHeader

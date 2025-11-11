@@ -6,39 +6,34 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+
 import { findRef, replaceRef } from '../../../tools/refTools'
 
-import { setOperationData } from '../../../store/operations'
 import { H2kListSection, H2kListRow, H2kMarkdown, H2kTextInput, H2kDropDown } from '../../../ui'
 
 import { Info } from './NAQPInfo'
 
-export function ActivityOptions (props) {
-  const { styles, operation } = props
-
-  const dispatch = useDispatch()
-
-  const ref = useMemo(() => findRef(operation, Info.key), [operation])
+export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
+  const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const handleModeChange = useCallback((value) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, mode: value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, mode: value }))
+  }, [activityRef, allRefs, setRefs])
 
   const handleNameChange = useCallback((value) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, name: value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, name: value }))
+  }, [activityRef, allRefs, setRefs])
 
   const handleLocationChange = useCallback((value) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, location: value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, location: value }))
+  }, [activityRef, allRefs, setRefs])
   return (
     <>
       <H2kListSection title={'Exchange Details'}>
         <H2kListRow>
           <H2kDropDown
             label="Mode"
-            value={ref?.mode}
+            value={activityRef?.mode}
             placeholder="SSB"
             onChangeText={handleModeChange}
             options={[
@@ -50,14 +45,14 @@ export function ActivityOptions (props) {
 
           <H2kTextInput
             label="Your Name"
-            value={ref?.name || ''}
+            value={activityRef?.name || ''}
             uppercase={true}
             onChangeText={handleNameChange}
           />
 
           <H2kTextInput
             label="Your Location"
-            value={ref?.location || ''}
+            value={activityRef?.location || ''}
             uppercase={true}
             onChangeText={handleLocationChange}
           />

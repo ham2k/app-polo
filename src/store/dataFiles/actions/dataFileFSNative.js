@@ -9,40 +9,40 @@ import RNFetchBlob from 'react-native-blob-util'
 import { Buffer } from 'buffer'
 import { Platform } from 'react-native'
 
-export function filenameForDefinition (definition) {
+export function filenameForDefinition(definition) {
   const basename = [definition.key, definition.version].filter(x => x).join('-')
   return `${RNFetchBlob.fs.dirs.DocumentDir}/data/${basename}.json`
 }
 
-export async function ensureDataFileDirectoryExists () {
+export async function ensureDataFileDirectoryExists() {
   try { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/data/`) } catch (error) { /* ignore */ }
 }
 
-export async function saveDataFileToLocalFileSystem (name, data) {
+export async function saveDataFileToLocalFileSystem(name, data) {
   await RNFetchBlob.fs.writeFile(name, JSON.stringify(data))
 }
 
-export async function readDataFileFromLocalFileSystem (name) {
+export async function readDataFileFromLocalFileSystem(name) {
   const body = await RNFetchBlob.fs.readFile(name)
   return JSON.parse(body)
 }
 
-export async function getLastModifiedDate (name) {
+export async function getLastModifiedDate(name) {
   const stat = await RNFetchBlob.fs.stat(name)
   return new Date(stat.lastModified)
 }
 
-export async function existsInLocalFileSystem (name) {
+export async function existsInLocalFileSystem(name) {
   return await RNFetchBlob.fs.exists(name)
 }
 
-export async function removeDataFileFromLocalFileSystem (name) {
+export async function removeDataFileFromLocalFileSystem(name) {
   await RNFetchBlob.fs.unlink(name)
 }
 
-const DEBUG_FETCH = true
+const DEBUG_FETCH = false
 
-export async function fetchForDataFiles ({ url, headers, key, process, definition, info, options }) {
+export async function fetchForDataFiles({ url, headers, key, process, definition, info, options }) {
   const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, headers)
   if (DEBUG_FETCH) console.log('-- Response status', response?.respInfo?.status)
   if (DEBUG_FETCH) console.log('-- Response headers', response?.respInfo?.headers)
@@ -76,7 +76,7 @@ export async function fetchForDataFiles ({ url, headers, key, process, definitio
   return { body, etag, status: response.respInfo.status }
 }
 
-export async function fetchForDataFilesBatchedLines ({ url, headers, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options }) {
+export async function fetchForDataFilesBatchedLines({ url, headers, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options }) {
   const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, headers)
   if (DEBUG_FETCH) console.log('-- Response status', response?.respInfo?.status)
   if (DEBUG_FETCH) console.log('-- Response headers', response?.respInfo?.headers)

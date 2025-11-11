@@ -139,7 +139,7 @@ export default function HomeScreen ({ navigation }) {
   }, [])
 
   useEffect(() => {
-    navigation.setOptions({ rightAction: 'cog', rightA11yLabel: 'Settings', onRightActionPress: () => navigation.navigate('Settings') })
+    navigation.setOptions({ rightAction: 'cog', rightA11yLabel: 'Settings', onRightActionPress: () => navigation.navigate('Settings'), leftAction: 'logo' })
   }, [navigation])
 
   const handleNewOperation = useCallback(async () => {

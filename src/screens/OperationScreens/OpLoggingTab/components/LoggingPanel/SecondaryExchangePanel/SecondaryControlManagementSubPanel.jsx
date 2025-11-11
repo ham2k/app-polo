@@ -132,7 +132,7 @@ export const SecondaryControlManagementSubPanel = ({
               selected={true}
               onChange={() => setCurrentSecondaryControl('manage-controls')}
             >
-              <Icon source="cog" accesibilityLabel={'Hide Secondary Control Settings'} size={styles.oneSpace * 2} color={styles.colors[`on${styles.upcasedThemeColor}`]} />
+              <Icon source="cog" accessibilityLabel={'Hide Secondary Control Settings'} size={styles.oneSpace * 2} color={styles.colors[`on${styles.upcasedThemeColor}`]} />
             </LoggerChip>
           </View>
         </View>

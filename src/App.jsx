@@ -11,7 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider } from 'react-native-paper'
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcon from '@react-native-vector-icons/material-design-icons'
 import DeviceInfo from 'react-native-device-info'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
@@ -49,11 +49,21 @@ import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
 import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
 import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/OperationLocationScreen'
+import { hotReloadSequence } from './store/runtime/actions/startupSequence'
 
 const Stack = createNativeStackNavigator()
 
 const paperSettings = {
   icon: props => <MaterialCommunityIcon {...props} />
+}
+
+let _appHotReloaded = false
+if (module.hot) {
+  console.log('app module hot')
+  module.hot.accept(() => {
+    console.log('app hot reloaded')
+    _appHotReloaded = true
+  })
 }
 
 function MainApp ({ navigationTheme }) {
@@ -90,6 +100,14 @@ function MainApp ({ navigationTheme }) {
 
   const routeNameRef = React.useRef()
   const navigationRef = React.useRef()
+
+  useEffect(() => {
+    if (_appHotReloaded) {
+      dispatch(hotReloadSequence)
+      _appHotReloaded = false
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, _appHotReloaded])
 
   if (appState === 'starting') {
     return <StartScreen setAppState={setAppState} />
@@ -129,7 +147,7 @@ function MainApp ({ navigationTheme }) {
           />
 
           <Stack.Screen name="Operation"
-            options={{ title: 'Operation', headerShown: false, headerBackTitle: 'Home', closeInsteadOfBack: true }}
+            options={{ title: 'Operation', headerShown: false, headerBackTitle: 'Home', leftAction: 'close' }}
             component={OperationScreen}
           />
 

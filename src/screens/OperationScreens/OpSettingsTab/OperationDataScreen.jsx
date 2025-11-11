@@ -60,6 +60,10 @@ export default function OperationDataScreen (props) {
     navigation.setOptions(options)
   }, [dispatch, navigation, operation, settings, styles])
 
+  const pendingTodos = useMemo(() => {
+    return qsos.filter((qso) => !qso?.deleted && qso?.event?.event === 'todo' && !qso.event.done)
+  }, [qsos])
+
   const readyToExport = useMemo(() => {
     return ourInfo.call && operation.qsoCount > 0
   }, [operation.qsoCount, ourInfo.call])
@@ -167,11 +171,33 @@ export default function OperationDataScreen (props) {
     return `Export ${selectedExportOptions.length} selected files`
   }, [exportOptions.length, selectedExportOptions.length])
 
+  const handleNavigateToLoggingTab = useCallback(() => {
+    // Passing `selectedUUID` in `params` so that it makes it to the `OpLog` tab if it is present
+    // but also passing it directly so that it makes it to the main screen in split view.
+    navigation.popTo('Operation', {
+      uuid: operation.uuid,
+      screen: 'OpLog',
+      params: { selectedUUID: pendingTodos?.[0]?.uuid },
+      selectedUUID: pendingTodos?.[0]?.uuid
+    })
+  }, [navigation, operation.uuid, pendingTodos])
+
   return (
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
           <H2kListSection title={'Export QSOs'}>
+
+            {pendingTodos.length > 0 && (
+              <H2kListItem
+                title={`${pendingTodos.length} pending to-do item${pendingTodos.length !== 1 ? 's' : ''}`}
+                leftIcon="sticker"
+                titleStyle={{ color: styles.theme.colors.error }}
+                leftIconColor={styles.theme.colors.error}
+                onPress={handleNavigateToLoggingTab}
+              />
+            )}
+
             <H2kListItem
               title={exportLabel}
               leftIcon="share"

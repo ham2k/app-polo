@@ -30,7 +30,7 @@ export async function qsonToWavelog({ operation, qsos, settings }) {
   }
 
   // Compose ADIF string using qsonToADIF
-  let adifStr = qsonToADIF({ operation, qsos, settings, handler: { key: 'adif' } });
+  let adifStr = qsonToADIF({ operation, qsos, settings, handler: { key: 'adif' }, combineSegmentRefs: true });
   console.log('[Wavelog Export] Exporting QSOs:', qsos);
   console.log('[Wavelog Export] ADIF string:', adifStr);
 
@@ -87,6 +87,6 @@ export async function qsonToWavelog({ operation, qsos, settings }) {
     }
   } catch (e) {
     console.error('[Wavelog Export] Network error:', e);
-    return { success: false, message: 'Wavelog upload error: ' + e.message + ' (URL: ' + apiUrl + ')'};
+    return { success: false, message: 'Wavelog upload error: ' + e.message + ' (URL: ' + apiUrl + ')' };
   }
 }

@@ -49,15 +49,15 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     return findHooks('sync')[0]
   }, [])
 
+  // useEffect(() => {
+  //   console.log('LOFI', lofiData)
+  // }, [lofiData])
+
   useEffect(() => {
     if (syncHook) {
       dispatch(syncHook.getAccountData())
     }
   }, [dispatch, syncHook])
-
-  useEffect(() => {
-    console.log('LOFI', lofiData)
-  }, [lofiData])
 
   const accountTitle = useMemo(() => {
     if (!lofiData?.account) {
@@ -95,6 +95,34 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     }
   }, [lofiData?.account, lofiData?.pending_link_email])
 
+  const fiveSecondTick = useSelector(selectFiveSecondsTick)
+  const [syncStatus, setSyncStatus] = useState()
+  useEffect(() => {
+    if (!currentDialog) {
+      setImmediate(async () => {
+        dispatch(syncHook.getAccountData())
+        setSyncStatus(await _syncCountDescription())
+      })
+    }
+  }, [currentDialog, dispatch, fiveSecondTick, syncHook])
+
+  useEffect(() => {
+    if (currentDialog) {
+      GLOBAL.syncEnabled = false
+    } else {
+      GLOBAL.syncEnabled = true
+    }
+  }, [currentDialog])
+
+  const handleResetSyncStatus = useCallback(async () => {
+    await dispatch(resetSyncedStatus())
+    setSyncStatus(await _syncCountDescription())
+  }, [dispatch])
+
+  const askAboutMergingAccounts = useMemo(() => {
+    return lofiData?.account?.uuid && localData?.sync?.lastSyncAccountUUID && (lofiData.account.uuid !== localData.sync.lastSyncAccountUUID)
+  }, [lofiData?.account?.uuid, localData?.sync?.lastSyncAccountUUID])
+
   const serverLabel = useMemo(() => {
     if (lofiData?.server) {
       return LOFI_SERVER_LABELS[lofiData.server] || `Custom (${lofiData.server})`
@@ -103,23 +131,9 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     }
   }, [lofiData.server])
 
-  const fiveSecondTick = useSelector(selectFiveSecondsTick)
-  const [syncStatus, setSyncStatus] = useState()
-  useEffect(() => {
-    setImmediate(async () => {
-      dispatch(syncHook.getAccountData())
-      setSyncStatus(await syncCountDescription())
-    })
-  }, [dispatch, fiveSecondTick, syncHook])
-
-  const handleResetSyncStatus = useCallback(async () => {
-    await dispatch(resetSyncedStatus())
-    setSyncStatus(await syncCountDescription())
-  }, [dispatch])
-
-  const askAboutMergingAccounts = useMemo(() => {
-    return lofiData?.account?.uuid && localData?.sync?.lastSyncAccountUUID && (lofiData.account.uuid !== localData.sync.lastSyncAccountUUID)
-  }, [lofiData?.account?.uuid, localData?.sync?.lastSyncAccountUUID])
+  const serverCountDescription = useMemo(() => {
+    return _cloudCountDescription(lofiData?.operations, lofiData?.qsos)
+  }, [lofiData?.operations, lofiData?.qsos])
 
   const handleReplaceLocalData = useCallback(async () => {
     Alert.alert(
@@ -154,10 +168,26 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     ])
   }, [dispatch])
 
+  const handleDialogDone = useCallback(() => {
+    setCurrentDialog('')
+    setImmediate(async () => {
+      setSyncStatus(await _syncCountDescription())
+      if (syncHook) {
+        dispatch(syncHook.getAccountData())
+      }
+    })
+  }, [dispatch, syncHook])
+
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <H2kListSection title={'Cloud Sync: Ham2K Log Filer (PRE-ALPHA)'}>
+        <H2kListSection title={'Cloud Sync: Ham2K Log Filer (ALPHA)'}>
+          <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
+            <Text style={styles.paragraph}>
+              Ham2K LoFi offers a reliable sync service between all your devices and provides a backup
+              for your operation data in the cloud.
+            </Text>
+          </View>
           <H2kListItem
             title="Sync Service"
             description={lofiData?.enabled !== false ? 'Enabled' : 'Disabled'}
@@ -177,15 +207,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
               styles={styles}
               visible={true}
               syncHook={syncHook}
-              onDialogDone={() => {
-                setCurrentDialog('')
-                setImmediate(async () => {
-                  setSyncStatus(await syncCountDescription())
-                  if (syncHook) {
-                    dispatch(syncHook.getAccountData())
-                  }
-                })
-              }}
+              onDialogDone={handleDialogDone}
             />
           )}
 
@@ -204,23 +226,27 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
             </View>
           )}
 
+          <H2kListItem
+            title={`${lofiData?.subscription?.plan?.name ?? 'No Active Plan'}`}
+            description={lofiData?.subscription?.plan?.description ?? ''}
+            leftIcon="calendar-clock"
+            onPress={() => null}
+          />
+
           <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
             <Text style={styles.paragraph}>
-              Ham2K LoFi offers a reliable sync service between all your devices and provides a backup
-              for your operation data in the cloud.
-            </Text>
-            <Text style={styles.paragraph}>
               <Text style={styles.text.bold}>Basic service is free</Text> and allows you to sync recent
-              data (up to 7 days) between two devices or apps.
+              data (up to 7 days) between two devices or apps at limited speed.
             </Text>
             <Text style={styles.paragraph}>
               <Text style={styles.text.bold}>Full service requires a paid subscription</Text> and
-              includes all your operations synced between any reasonable number of devices or apps.
+              includes all your operations synced between any reasonable number of devices or apps at full speed.
             </Text>
             <Text style={styles.paragraph}>
-              While the LoFi service is in BETA for
-              the next couple of months, the service will remain free. After that prices will depend
-              on the country and currency but should not be more than US$30/year or equivalent, and probably less.
+              While the LoFi service is in its TESTING PERIOD for
+              the next couple of months, the service will remain free.
+              After that prices will depend on the country and currency
+              but should not be more than US$30/year or equivalent, and probably less.
             </Text>
           </View>
 
@@ -231,6 +257,15 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
             title={lofiData?.client?.name ? `${lofiData?.client?.name} (${lofiData?.client?.uuid?.slice(0, 8)?.toUpperCase() ?? '?'})` : 'Not authenticated'}
             description={syncStatus}
             leftIcon="cellphone"
+          />
+        </H2kListSection>
+
+        <H2kListSection title={'LoFi Server'}>
+          <H2kListItem
+            key={'lofi-server'}
+            title={serverLabel}
+            description={serverCountDescription}
+            leftIcon="cloud-sync-outline"
           />
         </H2kListSection>
 
@@ -263,16 +298,7 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
                 settings={settings}
                 styles={styles}
                 visible={true}
-                onDialogDone={() => {
-                  setCurrentDialog('')
-                  setImmediate(async () => {
-                    if (syncHook) {
-                      await dispatch(syncHook.resetConnection())
-                      await dispatch(syncHook.getAccountData())
-                    }
-                    setSyncStatus(await syncCountDescription())
-                  })
-                }}
+                onDialogDone={handleDialogDone}
               />
             )}
 
@@ -296,11 +322,30 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   )
 }
 
-async function syncCountDescription () {
+async function _syncCountDescription () {
   const counts = await getSyncCounts()
 
   return [
     `Operations: ${fmtNumber(counts?.operations?.synced || 0)} synced, ${fmtNumber(counts?.operations?.pending || 0)} pending`,
     `QSOs: ${fmtNumber(counts?.qsos?.synced || 0)} synced, ${fmtNumber(counts?.qsos?.pending || 0)} pending`
   ].join('\n')
+}
+
+function _cloudCountDescription (operations, qsos) {
+  if (!operations || !qsos || (operations?.total === 0 && qsos?.total === 0)) {
+    return 'No data stored'
+  }
+
+  const parts = []
+  if (operations?.total === operations?.syncable) {
+    parts.push(`Operations: ${fmtNumber(operations?.total || 0)} stored`)
+  } else {
+    parts.push(`Operations: ${fmtNumber(operations?.total || 0)} stored, ${fmtNumber(operations?.syncable || 0)} syncable`)
+  }
+  if (qsos?.total === qsos?.syncable) {
+    parts.push(`QSOs: ${fmtNumber(qsos?.total || 0)} stored`)
+  } else {
+    parts.push(`QSOs: ${fmtNumber(qsos?.total || 0)} stored, ${fmtNumber(qsos?.syncable || 0)} syncable`)
+  }
+  return parts.join('\n')
 }

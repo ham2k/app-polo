@@ -6,10 +6,8 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
 
-import { setOperationData } from '../../../store/operations'
 import { findRef, replaceRef } from '../../../tools/refTools'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
@@ -18,19 +16,15 @@ import { Info } from './PGAInfo'
 import { PGAListItem } from './PGAListItem'
 import { pgaFindAllByLocation, pgaFindAllByName, pgaFindOneByReference } from './PGADataFile'
 
-export function PGAActivityOptions (props) {
+export function PGAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
   const NEARBY_DEGREES = 0.25
 
-  const { styles, operation, settings } = props
-
-  const dispatch = useDispatch()
-
-  const operationRef = useMemo(() => findRef(operation, Info.activationType) ?? {}, [operation])
+  const activityRef = useMemo(() => findRef(allRefs, Info.activationType) ?? {}, [allRefs])
 
   const title = useMemo(() => {
-    if (!operationRef?.ref) return 'No gmina selected for activation'
+    if (!activityRef?.ref) return 'No gmina selected for activation'
     else return 'Activating gmina:'
-  }, [operationRef])
+  }, [activityRef])
 
   const [search, setSearch] = useState('')
 
@@ -57,14 +51,14 @@ export function PGAActivityOptions (props) {
   const [refData, setRefData] = useState({})
   useEffect(() => {
     setTimeout(async () => {
-      const lookupData = await pgaFindOneByReference(operationRef.ref)
-      const newData = { ...operationRef, ...lookupData }
+      const lookupData = await pgaFindOneByReference(activityRef.ref)
+      const newData = { ...activityRef, ...lookupData }
       if (location?.lat && location?.lon) {
         newData.distance = distanceOnEarth(newData, location, { units: settings.distanceUnits })
       }
       setRefData(newData)
     }, 0)
-  }, [operationRef, location, settings.distanceUnits])
+  }, [activityRef, location, settings.distanceUnits])
 
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
@@ -123,18 +117,12 @@ export function PGAActivityOptions (props) {
   }, [search, nearbyResults, location, settings.distanceUnits])
 
   const handleAddReference = useCallback((newRef) => {
-    dispatch(setOperationData({
-      uuid: operation.uuid,
-      refs: replaceRef(operation?.refs, Info.activationType, { type: Info.activationType, ref: newRef })
-    }))
-  }, [dispatch, operation])
+    setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: newRef }))
+  }, [allRefs, setRefs])
 
   const handleRemoveReference = useCallback((newRef) => {
-    dispatch(setOperationData({
-      uuid: operation.uuid,
-      refs: replaceRef(operation?.refs, Info.activationType, {})
-    }))
-  }, [dispatch, operation])
+    setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: newRef }))
+  }, [allRefs, setRefs])
 
   return (
     <>
@@ -166,7 +154,7 @@ export function PGAActivityOptions (props) {
           <PGAListItem
             key={result.ref}
             activityRef={result.ref}
-            operationRef={operationRef.ref}
+            operationRef={activityRef.ref}
             refData={result}
             styles={styles}
             settings={settings}

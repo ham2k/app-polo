@@ -19,6 +19,7 @@ import { selectOperation } from '../../store/operations'
 import { parseFreqInMHz } from '../../tools/frequencyFormats'
 import { H2kCallsignInput, H2kDateInput, H2kFrequencyInput, H2kGridInput, H2kListSection, H2kRSTInput, H2kTextInput, H2kTimeInput } from '../../ui'
 import ScreenContainer from '../components/ScreenContainer'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const QSO_SECTIONS = [
   {
@@ -53,7 +54,8 @@ const QSO_SECTIONS = [
       { key: 'arrlSection', label: 'ARRL Section', type: 'upcasedText', minSpaces: 14, includeIf: ({ qso }) => qso?.their?.entityPrefix === 'K' || qso?.their?.guess?.entityPrefix === 'K' },
       { key: 'grid', label: 'Grid', type: 'grid', guess: true, breakBefore: true },
       { key: 'latitude', label: 'Latitude', type: 'float', guess: true },
-      { key: 'longitude', label: 'Longitude', type: 'float', guess: true }
+      { key: 'longitude', label: 'Longitude', type: 'float', guess: true },
+      { key: 'power', label: 'Power', type: 'number', guess: true }
     ]
   },
   {
@@ -82,6 +84,8 @@ const QSO_SECTIONS = [
 
 export default function EditQSOScreen ({ navigation, route }) {
   const styles = useThemedStyles()
+
+  const safeAreaInsets = useSafeAreaInsets()
 
   const operation = useSelector(state => selectOperation(state, route.params.operation?.uuid ?? route.params.operation))
 
@@ -131,18 +135,25 @@ export default function EditQSOScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
-        {QSO_SECTIONS.map((section) => (
-          <QSOSection key={section.section} qso={qso} section={section} styles={styles} onChange={handleChanges} />
+      <ScrollView style={{ flex: 1, marginLeft: safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+        {QSO_SECTIONS.map((section, index) => (
+          <QSOSection
+            key={section.section}
+            qso={qso}
+            section={section}
+            styles={styles}
+            style={{ marginBottom: (index === QSO_SECTIONS.length - 1 ? safeAreaInsets.bottom : 0) + styles.oneSpace }}
+            onChange={handleChanges}
+          />
         ))}
       </ScrollView>
     </ScreenContainer>
   )
 }
 
-function QSOSection ({ qso, section, styles, onChange }) {
+function QSOSection ({ qso, section, styles, onChange, style }) {
   return (
-    <H2kListSection title={section.section}>
+    <H2kListSection title={section.section} style={style}>
       <View
         style={{
           paddingVertical: styles.oneSpace,
@@ -169,6 +180,10 @@ function QSOSection ({ qso, section, styles, onChange }) {
 }
 
 function getValueForField ({ qso, field, section }) {
+  if (field.key === 'power') {
+    console.log('getValueForField', qso)
+  }
+
   const sectionData = (section.data ? qso[section.data] : qso) || {}
   if (field.getter) {
     return field.getter({ qso, field, section, sectionData })

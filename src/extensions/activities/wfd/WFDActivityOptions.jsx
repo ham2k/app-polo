@@ -6,26 +6,20 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
 
-import { setOperationData } from '../../../store/operations'
 import { findRef, replaceRef } from '../../../tools/refTools'
 import { Info } from './WFDExtension'
 import { H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
-export function WFDActivityOptions (props) {
-  const { styles, operation } = props
-
-  const dispatch = useDispatch()
-
-  const ref = useMemo(() => findRef(operation, Info.key), [operation])
+export function WFDActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const handleChange = useCallback((value) => {
     if (value?.class) value.class = value.class.toUpperCase()
     if (value?.location) value.location = value.location.toUpperCase()
 
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, ...value }) }))
-  }, [dispatch, operation, ref])
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, ...value }))
+  }, [setRefs, allRefs, activityRef])
 
   return (
     <H2kListSection title={'Exchange Information'}>
@@ -37,7 +31,7 @@ export function WFDActivityOptions (props) {
           mode={'flat'}
           uppercase={true}
           noSpaces={true}
-          value={ref?.class || ''}
+          value={activityRef?.class || ''}
           onChangeText={(text) => handleChange({ class: text })}
         />
       </H2kListRow>
@@ -49,7 +43,7 @@ export function WFDActivityOptions (props) {
           mode={'flat'}
           uppercase={true}
           noSpaces={true}
-          value={ref?.location || ''}
+          value={activityRef?.location || ''}
           onChangeText={(text) => handleChange({ location: text })}
         />
       </H2kListRow>

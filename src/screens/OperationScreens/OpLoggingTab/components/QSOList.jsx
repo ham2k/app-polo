@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { SectionList, View } from 'react-native'
+import { PixelRatio, SectionList, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import getItemLayout from 'react-native-get-item-layout-section-list'
@@ -16,8 +16,13 @@ import { findHooks } from '../../../../extensions/registry'
 import { fmtFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtShortTimeZulu, fmtTimeZulu } from '../../../../tools/timeFormats'
 
-import QSOItem from './QSOItem'
-import QSOHeader from './QSOHeader'
+import QSOItem from './entries/QSOItem'
+import QSOHeader from './entries/QSOHeader'
+import EventItem from './entries/EventItem'
+import EventNoteItem from './entries/EventNoteItem'
+import EventSegmentItem from './entries/EventSegmentItem'
+
+let scrollTimeout
 
 const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress, lastUUID, selectedUUID, onSelectQSO }) {
   const { width } = useSafeAreaFrame()
@@ -29,19 +34,19 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
     setComponentWidth(event?.nativeEvent?.layout?.width)
   }, [setComponentWidth])
 
-  const stylesArgs = useMemo(() => ({
-    isDeleted: false, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
-  }), [componentWidth, width, safeAreaInsets])
-  const deletedStylesArgs = useMemo(() => ({
-    isDeleted: true, isOtherOperator: false, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
-  }), [componentWidth, width, safeAreaInsets])
-  const otherOpStylesArgs = useMemo(() => ({
-    isDeleted: false, isOtherOperator: true, componentWidth: componentWidth ?? width, safeArea: safeAreaInsets
-  }), [componentWidth, width, safeAreaInsets])
+  const { hasFrequencyDecimals, hasLongCall } = useMemo(() => {
+    const _hasDecimals = qsos.find(qso => (qso?.freq || 0) % 1 !== 0)
+    const _hasLongCall = qsos.find(qso => qso?.their?.call?.length > 6)
+    return {
+      hasFrequencyDecimals: _hasDecimals,
+      hasLongCall: _hasLongCall
+    }
+  }, [qsos])
 
-  const styles = useThemedStyles(_prepareStyles, stylesArgs)
-  const stylesForDeleted = useThemedStyles(_prepareStyles, deletedStylesArgs)
-  const stylesForOtherOperator = useThemedStyles(_prepareStyles, otherOpStylesArgs)
+  const styles = useThemedStyles(
+    _prepareStyles,
+    { componentWidth: componentWidth ?? width, safeArea: safeAreaInsets, hasFrequencyDecimals, hasLongCall }
+  )
 
   const listRef = useRef()
 
@@ -54,28 +59,62 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   // useEffect(() => console.log('-- QSOList stylesForOtherOperator', stylesForOtherOperator), [stylesForOtherOperator])
   // useEffect(() => console.log('-- QSOList listRef', listRef), [listRef])
 
+  // When the list is first displayed, we want to jump to the bottom.
+  // When there's a new `lastUUID`, we also jump to it.
+  // And if there's a `selectedUUID`, we want to make sure it is visible.
+  // But when selection changes to "nothing", or to a uuid that cannot be found (new QSO),
+  // then we DO NOT want to jump back to the last QSO.
+  const jumpDataRef = useRef({ jumpedToLast: -1 })
+
   // When the lastQSO changes, scroll to it
   useEffect(() => {
-    setTimeout(() => {
-      if (!sections || !sections.length) return
-      let sectionIndex = sections.length - 1
-      let itemIndex = sections[sectionIndex].data.length - 1
-      if (lastUUID) {
-        sections.find((section, i) => {
-          return section.data.find((qso, j) => {
-            if (qso.uuid === lastUUID) {
-              sectionIndex = i
-              itemIndex = j
-              return true
-            }
-            return false
-          })
-        })
-      }
+    if (!sections || !sections.length) return
 
-      listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
-    }, 100)
-  }, [listRef, lastUUID, sections])
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout)
+    }
+
+    const targetUUID = selectedUUID || lastUUID
+
+    let sectionIndex = sections.length - 1
+    let itemIndex = sections[sectionIndex].data.length - 1
+
+    if (targetUUID && targetUUID !== jumpDataRef.current.jumpedToLast) {
+      const found = sections.find((section, i) => {
+        return section.data.find((qso, j) => {
+          if (qso.uuid === targetUUID) {
+            sectionIndex = i
+            itemIndex = j
+            return true
+          }
+          return false
+        })
+      })
+      if (!found) {
+        return
+      }
+    }
+
+    if (targetUUID !== jumpDataRef.current.jumpedToLast) {
+      scrollTimeout = setTimeout(() => {
+        try {
+          listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
+        } catch (e) {
+          // Sometimes the QSO list can change before this timeout call is executed
+          console.error('Error scrolling to last QSO', e)
+        }
+      }, 50)
+    }
+
+    if (targetUUID === lastUUID) {
+      jumpDataRef.current.jumpedToLast = lastUUID
+    }
+    return () => {
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout)
+      }
+    }
+  }, [listRef, lastUUID, selectedUUID, sections])
 
   const refHandlers = useMemo(() => {
     const types = {}
@@ -103,7 +142,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   }, [selectedUUID, onSelectQSO])
 
   const timeFormatFunction = useMemo(() => {
-    if (styles.extendedWidth) {
+    if (styles.sized({ m: true })) {
       return fmtTimeZulu
     } else {
       return fmtShortTimeZulu
@@ -113,28 +152,35 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   const renderRow = useCallback(({ item, index }) => {
     const qso = item
 
-    let qsoStyles
-    if (qso.deleted) {
-      qsoStyles = stylesForDeleted
-    } else if (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.local?.operatorCall) {
-      qsoStyles = stylesForOtherOperator
-    } else {
-      qsoStyles = styles
+    const isOtherOperator = (qso.our?.operatorCall && qso.our?.operatorCall !== operation?.local?.operatorCall)
+
+    let Component = QSOItem
+    if (qso.band === 'event') {
+      if (qso.event?.event === 'start' || qso.event?.event === 'end' || qso.event?.event === 'break') {
+        Component = EventSegmentItem
+      } else if (qso.event?.event === 'note') {
+        Component = EventNoteItem
+      } else if (qso.event?.event === 'todo') {
+        Component = EventNoteItem
+      } else {
+        Component = EventItem
+      }
     }
 
     return (
-      <QSOItem
+      <Component
         qso={qso}
         settings={settings}
         selected={qso.uuid === selectedUUID}
         ourInfo={ourInfo}
         onPress={handlePress}
         timeFormatFunction={timeFormatFunction}
-        styles={qsoStyles}
+        styles={styles}
+        isOtherOperator={isOtherOperator}
         refHandlers={refHandlers}
       />
     )
-  }, [operation, settings, selectedUUID, ourInfo, handlePress, timeFormatFunction, refHandlers, stylesForDeleted, stylesForOtherOperator, styles])
+  }, [operation, settings, selectedUUID, ourInfo, handlePress, timeFormatFunction, refHandlers, styles])
 
   const renderHeader = useCallback(({ section, index }) => {
     return (
@@ -200,53 +246,105 @@ const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo
   )
 })
 
-function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeArea }) {
-  const extendedWidth = width / themeStyles.oneSpace > 80
-  const narrowWidth = width / themeStyles.oneSpace < 50
+function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFrequencyDecimals, hasLongCall }) {
+  const spaces = width / themeStyles.oneSpace
 
+  const sized = (options) => {
+    if (spaces > 100) return options.xl ?? options.lg ?? options.md ?? options.sm ?? options.xs
+    if (spaces > 80) return options.lg ?? options.md ?? options.sm ?? options.xs
+    if (spaces > 65) return options.md ?? options.sm ?? options.xs
+    if (spaces > 50) return options.sm ?? options.xs
+    return options.xs
+  }
+
+  const size = sized({ xs: 'xs', sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' })
+
+  // console.log('width', { width, spaces, size })
   const DEBUG = false
 
-  let commonStyles = {
+  const commonStyles = {
     fontSize: themeStyles.normalFontSize,
-    lineHeight: themeStyles.normalFontSize * 1.4,
-    borderWidth: DEBUG ? 1 : 0
+    lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4)),
+    borderWidth: DEBUG ? 1 : 0,
+    color: themeStyles.colors.onBackground
   }
 
-  if (isDeleted) {
-    commonStyles = {
-      ...commonStyles,
-      textDecorationLine: 'line-through',
-      textDecorationColor: themeStyles.colors.onBackground,
-      color: themeStyles.colors.onBackgroundLighter
-      // opacity: 0.6
-    }
-  }
-
-  if (isOtherOperator) {
-    commonStyles = {
-      ...commonStyles,
-      opacity: 0.7
-    }
-  }
-
-  return {
+  const styles = {
     ...themeStyles,
-    extendedWidth,
-    narrowWidth,
-    selectedRow: {
-      backgroundColor: themeStyles.colors.secondaryContainer
-    },
-    unselectedRow: {
-    },
-    compactRow: {
-      ...themeStyles.compactRow,
+    size,
+    sized,
+    spaces,
+    hasFrequencyDecimals,
+    hasLongCall,
+
+    row: {
+      height: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 4.4),
+      maxHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 4.4),
+      minHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 4.4),
+      paddingHorizontal: themeStyles.oneSpace,
+      paddingTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.65),
+      borderBottomWidth: 0.5,
+      borderBottomColor: themeStyles.colors.outlineVariant,
+      flexDirection: 'row',
+      width: '100%',
       paddingLeft: safeArea?.left || 0
+    },
+    rowInner: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      width: '100%'
+    },
+    selectedRow: {
+      backgroundColor: themeStyles.colors.secondaryContainer,
+      borderTopWidth: 3,
+      borderBottomWidth: 3,
+      borderTopColor: themeStyles.colors.secondary,
+      borderBottomColor: themeStyles.colors.secondary,
+      paddingTop: 1,
+      marginTop: 0 // PixelRatio.roundToNearestPixel(themeStyles.oneSpace * -0.1)
+      // marginBottom: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.4)
     },
     headerRow: {
       ...themeStyles.compactRow,
       backgroundColor: themeStyles.colors.surfaceVariant,
-      paddingLeft: safeArea?.left || 0
+      paddingLeft: safeArea?.left || 0,
+      borderTopWidth: 0,
+      borderBottomWidth: 2,
+      borderTopColor: themeStyles.colors.onBackgroundLight,
+      borderBottomColor: themeStyles.colors.onBackgroundLight
     },
+    eventRow: {
+      backgroundColor: 'rgb(252, 244, 167)',
+      opacity: themeStyles.isDarkMode ? 0.65 : 0.85
+      // borderTopColor: 'rgb(97, 92, 47)',
+      // borderTopWidth: 1
+    },
+    segmentRow: {
+      backgroundColor: themeStyles.colors.primaryLighter,
+      borderBottomWidth: 0
+      // borderTopWidth: 3,
+      // borderColor: themeStyles.colors.primary,
+      // paddingTop: 1,
+      // marginTop: 0
+    },
+
+    eventContent: {
+      color: 'rgb(21, 20, 10)'
+    },
+    segmentContent: {
+      color: themeStyles.colors.onPrimary
+    },
+    deletedContent: {
+      textDecorationLine: 'line-through',
+      textDecorationColor: themeStyles.colors.onBackground,
+      color: themeStyles.colors.onBackgroundLighter
+    },
+    otherOperatorContent: {
+      opacity: 0.7
+    },
+
     fields: {
       header: {
         ...commonStyles,
@@ -255,12 +353,23 @@ function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeA
         marginLeft: themeStyles.oneSpace,
         textAlign: 'left'
       },
+      event: {
+        ...commonStyles,
+        lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4)),
+        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
+        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 3.5),
+        textAlign: 'left',
+        flex: 1
+      },
+      markdown: {
+        lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4))
+      },
       number: {
         ...commonStyles,
         ...themeStyles.text.numbers,
         flex: 0,
         marginLeft: 0,
-        minWidth: extendedWidth ? themeStyles.oneSpace * 4 : themeStyles.oneSpace * 3,
+        minWidth: themeStyles.oneSpace * sized({ xs: 3, md: 4 }),
         textAlign: 'right'
       },
       time: {
@@ -268,7 +377,7 @@ function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeA
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 7,
+        minWidth: themeStyles.oneSpace * sized({ xs: 7, lg: 10 }),
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
@@ -278,50 +387,55 @@ function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeA
         ...themeStyles.text.lighter,
         // fontFamily: 'Roboto',
         flex: 0,
-        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
-        minWidth: extendedWidth ? themeStyles.oneSpace * 10 : themeStyles.oneSpace * 8,
-        marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
+        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * sized({
+          xs: hasFrequencyDecimals ? 7 : 6,
+          sm: hasFrequencyDecimals ? 8.5 : 7.5,
+          md: hasFrequencyDecimals ? 10 : 8,
+          lg: hasFrequencyDecimals ? 10 : 8
+        })),
+        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
+        marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.1),
         textAlign: 'right'
       },
       freqMHz: {
         ...commonStyles,
-        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         fontWeight: '600',
         textAlign: 'right'
       },
       freqKHz: {
         ...commonStyles,
-        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         textAlign: 'right'
       },
       freqHz: {
         ...commonStyles,
-        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         textAlign: 'right',
         fontWeight: '400',
-        fontSize: themeStyles.normalFontSize * 0.7
+        fontSize: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * 0.7)
       },
       call: {
         ...commonStyles,
         ...themeStyles.text.callsign,
         ...themeStyles.text.callsignBold,
         flex: 0,
-        marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
-        minWidth: themeStyles.oneSpace * 8,
+        minWidth: themeStyles.oneSpace * sized({
+          xs: hasLongCall ? 8 : 7,
+          sm: hasLongCall ? 9 : 8,
+          md: 10
+        }),
+        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
         textAlign: 'left'
       },
       name: {
         ...commonStyles,
         flex: 1,
-        marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
+        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
         textAlign: 'left'
       },
       location: {
         ...commonStyles,
-        lineHeight: themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4),
         flex: 0,
-        marginLeft: themeStyles.oneSpace * (extendedWidth ? 2 : 1),
-        minWidth: themeStyles.oneSpace * 3.5,
+        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
+        minWidth: themeStyles.oneSpace * sized({ xs: 4, md: 6 }),
         textAlign: 'center'
       },
       signal: {
@@ -329,7 +443,7 @@ function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeA
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        minWidth: themeStyles.oneSpace * 3,
+        minWidth: themeStyles.oneSpace * sized({ xs: 3, md: 9 }),
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
@@ -337,7 +451,7 @@ function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeA
         ...commonStyles,
         ...themeStyles.text.callsign,
         flex: 0,
-        minWidth: themeStyles.oneSpace * 8.5,
+        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 8.5),
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
@@ -346,18 +460,34 @@ function _prepareStyles (themeStyles, { isDeleted, isOtherOperator, width, safeA
         flex: 0,
         flexDirection: 'row',
         textAlign: 'right',
-        marginLeft: themeStyles.oneSpace,
+        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
         minWidth: themeStyles.oneSpace * 0,
         maxWidth: themeStyles.oneSpace * 9
       },
       icon: {
         ...commonStyles,
         flex: 0,
-        marginTop: themeStyles.oneSpace * 0.45,
-        width: themeStyles.oneSpace * 1.8
+        marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.45),
+        width: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 1.8)
       }
     }
   }
+
+  styles.deletedFields = {}
+  styles.otherOperatorFields = {}
+  for (const field in styles.fields) {
+    styles.deletedFields[field] = {
+      ...styles.fields[field],
+      ...styles.deletedContent
+    }
+
+    styles.otherOperatorFields[field] = {
+      ...styles.fields[field],
+      ...styles.otherOperatorContent
+    }
+  }
+
+  return styles
 }
 
 export default QSOList

@@ -6,10 +6,10 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
 
-import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
+import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { distanceOnEarth } from '../../../tools/geoTools'
@@ -19,24 +19,20 @@ import { Info } from './WWBOTAInfo'
 import { wwbotaFindAllByLocation, wwbotaFindAllByName, wwbotaFindOneByReference } from './WWBOTADataFile'
 import { WWBOTAListItem } from './WWBOTAListItem'
 
-export function WWBOTAActivityOptions (props) {
+export function WWBOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
   const NEARBY_DEGREES = 0.25
-
-  const { styles, operation, settings } = props
-
-  const dispatch = useDispatch()
 
   const online = useSelector(selectRuntimeOnline)
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const refs = useMemo(() => filterRefs(operation, Info.activationType).filter(ref => ref.ref), [operation])
+  const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (refs?.length === 0) return 'No bunkers selected for activation'
-    else if (refs?.length === 1) return 'Activating 1 bunker'
-    else return `Activating ${refs.length} bunkers`
-  }, [refs])
+    if (activityRefs?.length === 0) return 'No bunkers selected for activation'
+    else if (activityRefs?.length === 1) return 'Activating 1 bunker'
+    else return `Activating ${activityRefs.length} bunkers`
+  }, [activityRefs])
 
   const [search, setSearch] = useState('')
 
@@ -64,7 +60,7 @@ export function WWBOTAActivityOptions (props) {
   useEffect(() => {
     setTimeout(async () => {
       const datas = []
-      for (const ref of refs) {
+      for (const ref of activityRefs) {
         const result = await wwbotaFindOneByReference(ref.ref)
         const newData = { ...ref, ...result }
         if (location?.lat && location?.lon) {
@@ -74,7 +70,7 @@ export function WWBOTAActivityOptions (props) {
       }
       setRefDatas(datas)
     }, 0)
-  }, [refs, location, settings.distanceUnits])
+  }, [activityRefs, location, settings.distanceUnits])
 
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
@@ -133,12 +129,12 @@ export function WWBOTAActivityOptions (props) {
   }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
 
   const handleAddReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, [...refs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
+  }, [activityRefs, allRefs, setRefs])
 
   const handleRemoveReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, refs.filter(r => r.ref !== ref)) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== ref)))
+  }, [activityRefs, allRefs, setRefs])
 
   return (
     <>
@@ -148,7 +144,7 @@ export function WWBOTAActivityOptions (props) {
             key={bunker.ref}
             activityRef={bunker.ref}
             refData={bunker}
-            allRefs={refs}
+            allRefs={activityRefs}
             styles={styles}
             settings={settings}
             online={online}
@@ -171,7 +167,7 @@ export function WWBOTAActivityOptions (props) {
           <WWBOTAListItem
             key={ref.ref}
             activityRef={ref.ref}
-            allRefs={refs}
+            allRefs={activityRefs}
             refData={ref}
             styles={styles}
             settings={settings}

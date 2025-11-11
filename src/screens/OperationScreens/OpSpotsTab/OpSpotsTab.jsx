@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useFindHooks } from '../../../extensions/registry'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectSettings } from '../../../store/settings'
-import { selectQSOs } from '../../../store/qsos'
+import { selectSectionedQSOs } from '../../../store/qsos'
 
 import SpotsPanel from './components/SpotsPanel'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -19,9 +19,9 @@ export default function OpSpotsTab ({ navigation, route }) {
   const dispatch = useDispatch()
   const safeArea = useSafeAreaInsets()
 
-  const operation = route.params.operation
-  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
   const settings = useSelector(selectSettings)
+  const operation = route.params.operation
+  const { sections, qsos } = useSelector(state => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false))
   const online = useSelector(selectRuntimeOnline)
 
   const spotsHooks = useFindHooks('spots')
@@ -43,6 +43,6 @@ export default function OpSpotsTab ({ navigation, route }) {
   }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings])
 
   return (
-    <SpotsPanel operation={operation} qsos={qsos} onSelect={handleSelect} style={{ paddingBottom: safeArea.bottom, paddingRight: safeArea.right }} />
+    <SpotsPanel operation={operation} qsos={qsos} sections={sections} onSelect={handleSelect} style={{ paddingBottom: safeArea.bottom, paddingRight: safeArea.right }} />
   )
 }

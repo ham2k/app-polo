@@ -72,7 +72,7 @@ const SpotsHook = {
   ...Info,
   sourceName: 'WWBOTA',
   fetchSpots: async ({ online, settings, dispatch }) => {
-    if (GLOBAL?.flags?.services?.pota === false) return []
+    if (GLOBAL?.flags?.services?.wwbota === false) return []
 
     let spots = []
     if (online) {

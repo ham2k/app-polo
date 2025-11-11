@@ -21,6 +21,7 @@ import LoggingPanel from './components/LoggingPanel'
 import { selectSectionedQSOs } from '../../../store/qsos'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
+import { useAutoRespotting } from './components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
@@ -54,6 +55,8 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   // useEffect(() => console.log('-- OpLoggingTab activeQSOs', activeQSOs), [activeQSOs])
   // useEffect(() => console.log('-- OpLoggingTab loggingState', loggingState), [loggingState])
 
+  useAutoRespotting({ operation, vfo, dispatch, settings })
+
   useEffect(() => { // Reset logging state when operation changes
     if (loggingState?.operationUUID !== operation?.uuid) {
       setLoggingState({ operationUUID: operation?.uuid, selectedUUID: undefined })
@@ -68,8 +71,11 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
       } else {
         navigation.navigate('OpLog', { qso: undefined })
       }
+    } else if (route?.params?.selectedUUID) {
+      setLoggingState({ ...loggingState, selectedUUID: route.params.selectedUUID })
+      navigation.replace('Operation', { ...route?.params, selectedUUID: undefined })
     }
-  }, [loggingState, setLoggingState, navigation, route.params])
+  }, [loggingState, setLoggingState, navigation, route.params, operation.uuid])
 
   useEffect(() => { // Set navigation title
     if (styles?.smOrLarger) {

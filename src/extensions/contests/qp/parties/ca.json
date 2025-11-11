@@ -1,7 +1,7 @@
 {
   "key": "CA",
   "name": "California QSO Party",
-  "short": "CAQP",
+  "short": "CQP",
   "url": "https://www.cqp.org/",
   "start": "2025-10-4 16:00Z",
   "end": "2025-10-5 21:59Z",
@@ -10,7 +10,10 @@
   "internalNotes": "",
   "lastUpdated": "2025-09-08 12:00Z",
   "status": "Updated for 2025, but not verified",
-  "exchange": [ "Number", "Location" ],
+  "exchange": [
+    "Number",
+    "Location"
+  ],
   "options": {
     "countyLine": true,
     "stateCountsForInState": true,

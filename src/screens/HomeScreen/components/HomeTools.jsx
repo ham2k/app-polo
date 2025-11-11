@@ -24,6 +24,8 @@ import CallLookup from './CallLookup'
 import Notices from './Notices'
 import SyncProgress from './SyncProgress'
 
+let commandInfoTimeout
+
 export default function HomeTools ({ settings, styles, style }) {
   const navigation = useNavigation()
 
@@ -38,16 +40,16 @@ export default function HomeTools ({ settings, styles, style }) {
 
   const [commandInfo, actualSetCommandInfo] = useState()
   const setCommandInfo = useCallback((info) => {
-    if (commandInfo?.timeoutId) {
-      clearTimeout(commandInfo.timeoutId)
+    if (commandInfoTimeout) {
+      clearTimeout(commandInfoTimeout)
     }
     if (info?.timeout) {
-      info.timeoutId = setTimeout(() => {
+      commandInfoTimeout = setTimeout(() => {
         actualSetCommandInfo(undefined)
       }, info.timeout)
     }
     actualSetCommandInfo(info)
-  }, [actualSetCommandInfo, commandInfo?.timeoutId])
+  }, [actualSetCommandInfo])
 
   const handleChangeText = useCallback((value) => {
     actualInnerRef.current?.setNativeProps({ text: value.toUpperCase() })
@@ -61,8 +63,8 @@ export default function HomeTools ({ settings, styles, style }) {
 
   useEffect(() => {
     if (search?.length > 2) {
-      const commandDescription = checkAndDescribeCommands(search, { dispatch, settings, online })
-      setCommandInfo({ message: commandDescription || undefined, match: !!commandDescription || commandDescription === '' })
+      const { description } = checkAndDescribeCommands(search, { dispatch, settings, online, setCommandInfo })
+      setCommandInfo({ message: description || undefined, match: !!description || description === '' })
     }
   }, [dispatch, online, search, setCommandInfo, settings, settings.operatorCall])
 
@@ -122,7 +124,7 @@ export default function HomeTools ({ settings, styles, style }) {
   }, [])
 
   const handleSubmit = useCallback((event) => {
-    const commandResult = checkAndProcessCommands(search, { dispatch, settings, online, updateQSO: () => setSearch('') })
+    const commandResult = checkAndProcessCommands(search, { dispatch, settings, online, setCommandInfo, updateQSO: () => setSearch('') })
     if (commandResult) {
       trackEvent('command', { command: search })
       setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
@@ -136,7 +138,7 @@ export default function HomeTools ({ settings, styles, style }) {
         commandInfo={commandInfo}
         settings={settings}
         styles={styles}
-        style={{ backgroundColor: styles.colors.primaryContainer, borderTopWidth: 1, borderTopColor: styles.colors.primary }}
+        style={{ backgroundColor: styles.colors.primaryContainer, marginTop: styles.oneSpace, borderTopWidth: 1, borderTopColor: styles.colors.primary }}
         onPress={navigateToCall}
       />
 

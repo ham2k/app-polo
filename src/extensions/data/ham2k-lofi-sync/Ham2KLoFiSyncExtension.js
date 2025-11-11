@@ -82,11 +82,15 @@ const SyncHook = {
   getAccountData: () => async (dispatch, getState) => {
     const results = await requestWithAuth({ dispatch, getState, url: 'v1/accounts', method: 'GET' })
     if (results.ok) {
+      console.log('getAccountData', results.json)
       const updates = {}
       if (results.json.current_account) updates.account = results.json.current_account
       if (results.json.current_client) updates.client = results.json.current_client
       if (results.json.clients) updates.allClients = results.json.clients
       if (results.json.accounts) updates.allAccounts = results.json.accounts
+      if (results.json.subscription) updates.subscription = results.json.subscription
+      if (results.json.operations) updates.operations = results.json.operations
+      if (results.json.qsos) updates.qsos = results.json.qsos
       if (Object.keys(updates).length > 0) {
         dispatch(setLocalExtensionData({ key: Info.key, ...updates }))
       }
@@ -111,7 +115,7 @@ const SyncHook = {
   }
 }
 
-async function requestWithAuth ({ dispatch, getState, url, method, body, params }) {
+async function requestWithAuth({ dispatch, getState, url, method, body, params }) {
   if (GLOBAL?.flags?.services?.lofi === false) return { ok: false, status: 500, json: {} }
 
   try {
@@ -165,11 +169,11 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
           token = json.token
           GLOBAL.syncLoFiToken = token
         } else if (response.status === 401) {
-          logRemotely({ message: '-- Ham2K LoFi Authentication failed', server, token, secret, url, body })
+          // logRemotely({ message: '-- Ham2K LoFi Authentication failed', server, token, secret, url, body })
           if (DEBUG) console.log('-- auth failed')
           throw new Error('Authentication Failed')
         } else {
-          logRemotely({ message: `-- Ham2K LoFi Server Error ${response.status}`, server, token, secret, url, body })
+          // logRemotely({ message: `-- Ham2K LoFi Server Error ${response.status}`, server, token, secret, url, body })
           if (DEBUG) console.log('-- auth failed')
           throw new Error(`Server Error ${response.status}`)
         }
@@ -220,7 +224,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
   return { ok: false, status: 401, json: {} }
 }
 
-function _processResponseMeta ({ json, account, response, dispatch }) {
+function _processResponseMeta({ json, account, response, dispatch }) {
   try {
     if (json?.account && (!account || Object.keys(json.account).find(k => account[k] !== json.account[k]))) {
       dispatch(setLocalExtensionData({ key: Info.key, account: json.account }))
@@ -230,7 +234,7 @@ function _processResponseMeta ({ json, account, response, dispatch }) {
   }
 }
 
-function _buildUserAgent () {
+function _buildUserAgent() {
   if (Platform.OS === 'ios') {
     return `Ham2K Portable Logger/${packageJson.version} iOS ${Platform.Version} ${[Platform.isIphone && 'iPhone', Platform.isIPad && 'iPad', Platform.isTV && 'TV', Platform.isMacCatalyst && 'Catalyst', Platform.isMac && 'Mac'].filter(Boolean).join(' ')}`
   } else if (Platform.OS === 'android') {

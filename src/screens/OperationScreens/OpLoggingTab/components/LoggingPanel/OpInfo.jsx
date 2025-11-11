@@ -7,39 +7,20 @@
 
 import React, { useMemo } from 'react'
 import { View } from 'react-native'
-import { Text, TouchableRipple } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 
 import { fmtTimeBetween } from '../../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../../store/time'
-import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
-import { H2kIcon, H2kMarkdown } from '../../../../../ui'
+import { H2kIcon, H2kMarkdown, H2kPressable } from '../../../../../ui'
 
-function prepareStyles (baseStyles, themeColor) {
-  return {
-    ...baseStyles,
-    textLine: {
-      lineHeight: baseStyles.normalFontSize * 1.3,
-      marginBottom: baseStyles.oneSpace * 0.5
-    },
-    markdown: {
-      ...baseStyles.markdown,
-      paragraph: {
-        margin: 0,
-        marginTop: 0,
-        marginBottom: 0,
-        lineHeight: baseStyles.normalFontSize * 1.3
-      }
-    }
-  }
-}
-
-export function OpInfo ({ message, clearMessage, operation, qsos, style, themeColor }) {
+export function OpInfo ({ message, clearMessage, operation, activeQSOs, style, styles, themeColor }) {
   const navigation = useNavigation()
   const now = useSelector(selectSecondsTick)
+  styles = prepareStyles(styles, { style })
 
-  const styles = useThemedStyles(prepareStyles, themeColor)
+  activeQSOs = activeQSOs ?? []
 
   const { markdownMessage, markdownStyle, icon } = useMemo(() => {
     if (message?.icon) {
@@ -50,46 +31,64 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
       return { markdownMessage: '', icon: 'timer-outline' }
     } else if (message) {
       return { markdownMessage: message || '', icon: 'chevron-right-box' }
-    } else if (qsos.length === 0) {
+    } else if (activeQSOs.length === 0) {
       return { markdownMessage: "No QSOs... Let's get on the air!", icon: undefined }
     } else {
       return { markdownMessage: '', icon: 'timer-outline' }
     }
-  }, [message, qsos.length, styles.theme.colors.error])
+  }, [message, activeQSOs.length, styles.theme.colors.error])
+
+  const ourQSOs = useMemo(() => {
+    if (operation?.local?.operatorCall) {
+      return activeQSOs.filter(q => q?.our?.operatorCall === operation?.local?.operatorCall)
+    }
+    return activeQSOs
+  }, [activeQSOs, operation?.local?.operatorCall])
 
   const line1 = useMemo(() => {
     const parts = []
 
-    parts.push(`${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`)
+    if (ourQSOs.length === 0) {
+      if (operation?.local?.operatorCall) {
+        return `No QSOs by ${operation?.local?.operatorCall} yet... Let's get on the air!`
+      } else {
+        return "No QSOs yet... Let's get on the air!"
+      }
+    }
 
-    if (now - operation.startAtMillisMax < 1000 * 60 * 60 * 4) {
-      if (qsos.length > 0) {
-        parts.push(`${fmtTimeBetween(operation.startAtMillisMax, now)} since last QSO`)
+    parts.push(`${ourQSOs.length} ${ourQSOs.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(ourQSOs[0].startAtMillis, ourQSOs[ourQSOs.length - 1].startAtMillis)}`)
+
+    if (now - ourQSOs[ourQSOs.length - 1].startAtMillis < 1000 * 60 * 60 * 4) {
+      if (ourQSOs.length > 0) {
+        parts.push(`${fmtTimeBetween(ourQSOs[ourQSOs.length - 1].startAtMillis, now)} since last`)
       }
     }
     return parts.filter(x => x).join(' • ')
-  }, [qsos, operation, now])
+  }, [ourQSOs, now, operation?.local?.operatorCall])
 
   const line2 = useMemo(() => {
     const parts = []
 
-    const last = qsos?.length - 1
+    const last = ourQSOs?.length - 1
     if (last > 9) {
-      const rate = (10 / ((qsos[last].startAtMillis - qsos[last - 9].startAtMillis) / 1000 / 60)) * 60
+      const rate = (10 / ((ourQSOs[last].startAtMillis - ourQSOs[last - 9].startAtMillis) / 1000 / 60)) * 60
       if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 10`)
     }
     if (last > 99) {
-      const rate = (100 / ((qsos[last].startAtMillis - qsos[last - 99].startAtMillis) / 1000 / 60)) * 60
+      const rate = (100 / ((ourQSOs[last].startAtMillis - ourQSOs[last - 99].startAtMillis) / 1000 / 60)) * 60
       if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 100`)
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [qsos])
+  }, [ourQSOs])
 
   return (
-    <TouchableRipple onPress={() => navigation.navigate('OpInfo', { operation, uuid: operation.uuid })} style={{ minHeight: styles.oneSpace * 6, flexDirection: 'column', alignItems: 'stretch' }}>
+    <H2kPressable
+      onPress={() => navigation.navigate('OpInfo', { operation, uuid: operation.uuid })}
+      style={styles.opInfoPanel.root}
+    >
 
-      <View style={[style, { flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }]}>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }}>
         {icon && (
           <View style={{ flex: 0, alignSelf: 'flex-start' }}>
             <H2kIcon
@@ -101,7 +100,7 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
         )}
         <View style={[style, { flex: 1, flexDirection: 'column', justifyContent: 'flex-start', paddingTop: styles.oneSpace * 0.3 }]}>
           {markdownMessage ? (
-            <H2kMarkdown style={markdownStyle} styles={styles}>
+            <H2kMarkdown style={[markdownStyle, { marginTop: styles.oneSpace * -0.6 }]} styles={styles}>
               {markdownMessage}
             </H2kMarkdown>
           ) : (
@@ -112,6 +111,32 @@ export function OpInfo ({ message, clearMessage, operation, qsos, style, themeCo
           )}
         </View>
       </View>
-    </TouchableRipple>
+    </H2kPressable>
   )
+}
+
+function prepareStyles (themeStyles, { style }) {
+  return {
+    ...themeStyles,
+
+    opInfoPanel: {
+      root: {
+        ...style
+      }
+    },
+
+    textLine: {
+      lineHeight: themeStyles.normalFontSize * 1.3,
+      marginBottom: themeStyles.oneSpace * 0.5
+    },
+    markdown: {
+      ...themeStyles.markdown,
+      paragraph: {
+        margin: 0,
+        marginTop: themeStyles.halfSpace,
+        marginBottom: 0,
+        lineHeight: themeStyles.normalFontSize * 1.3
+      }
+    }
+  }
 }

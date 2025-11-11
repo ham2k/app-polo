@@ -19,7 +19,6 @@ import { LONG_LABEL_FOR_MODE } from './SpotsPanel'
 import SpotFilterIndicators from './SpotFilterIndicators'
 
 export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, options, filterState, updateFilterState, counts, operation, onDone, refreshSpots, styles, style, themeColor, settings, online }) {
-  console.log('controls style', style)
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -121,7 +120,42 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
             { value: 'frequency', label: 'By frequency' }
           ]}
         />
-
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'stretch', gap: styles.oneSpace }}>
+          <Text
+            style={{ fontSize: styles.normalFontSize, flex: 1 }}
+            onPress={() => {
+              updateFilterState({ groupSpecialSpots: !filterState.groupSpecialSpots })
+              refreshSpots()
+            }}
+          >
+            Group Special Spots First
+          </Text>
+          <Switch
+            value={filterState.groupSpecialSpots !== false}
+            onValueChange={(value) => {
+              updateFilterState({ groupSpecialSpots: value })
+              refreshSpots()
+            }}
+          />
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'stretch', gap: styles.oneSpace }}>
+          <Text
+            style={{ fontSize: styles.normalFontSize, flex: 1 }}
+            onPress={() => {
+              updateFilterState({ groupCallsWithNotes: !filterState.groupCallsWithNotes })
+              refreshSpots()
+            }}
+          >
+            Group Calls with Notes
+          </Text>
+          <Switch
+            value={filterState.groupCallsWithNotes}
+            onValueChange={(value) => {
+              updateFilterState({ groupCallsWithNotes: value })
+              refreshSpots()
+            }}
+          />
+        </View>
       </View>
       <View style={{ flexDirection: 'column', marginTop: styles.oneSpace * 2, maxWidth: styles.oneSpace * 35, gap: styles.oneSpace, alignItems: 'stretch' }}>
         <Text style={[styles.markdown.heading2, { marginTop: styles.halfSpace, textAlign: 'center' }]}>

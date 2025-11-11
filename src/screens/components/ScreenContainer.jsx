@@ -35,7 +35,6 @@ export default function ScreenContainer ({ children }) {
   useEffect(() => {
     const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
       const metrics = Keyboard.metrics()
-      console.log('keyboardDidShow', metrics, safeAreaInsets)
       setKeyboardVisible(true)
       if (Platform.OS === 'android') {
         setKeyboardHeight((metrics?.height ?? 0) + safeAreaInsets.bottom)

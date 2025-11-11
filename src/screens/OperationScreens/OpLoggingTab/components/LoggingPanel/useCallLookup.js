@@ -133,6 +133,10 @@ function _extractCallInfo (call, refs) {
     theirInfo = annotateFromCountryFile({ prefix: oneCall, baseCall: oneCall })
   }
 
+  if (theirInfo?.indicators?.includes('QRP')) {
+    theirInfo.power = 5
+  }
+
   const cacheKey = `${oneCall}-${refs?.map(r => `${r.type || r.key}:${r.ref}`).join(',') || 'no-refs'}`
   const baseCacheKey = `${oneCall}-no-refs`
 

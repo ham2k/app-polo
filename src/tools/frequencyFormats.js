@@ -25,6 +25,8 @@ export function fmtFreqInMHz (freq, { mode } = { mode: 'trim' }) {
 }
 
 export function partsForFreqInMHz (freq) {
+  if (!freq || freq === NaN) return ['?', '', '']
+
   const parts = fmtFreqInMHz(freq, { compact: false }).split(/[,.]/)
   parts[1] = parts[1] ?? '000'
   parts[2] = parts[2] ?? '000'

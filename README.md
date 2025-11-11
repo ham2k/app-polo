@@ -39,6 +39,7 @@ Then clone this repository, `cd` into it and install the dependencies:
 
 ```
 npm install
+# you might need to also run `npm install redux-persist` if you get errors about missing modules
 ```
 
 ### Maps
@@ -113,25 +114,16 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 
 ### Clean Build
 ```
-# For all platforms
-rm -rf node_modules
-npm install
+npm run clean:js  # wipe node_modules and reinstall
+npm run clean:android  # wipe android build and gradle caches
+npm run clean:ios  # wipe ios build and cocoapods caches, reinstall pods
+npm run clean:watchman  # wipe watchman caches
 
-# For android
-rm -rf android/app/.cxx
-rm -rf android/build
-(cd android && ./gradlew clean)
+# or
 
-# For iOS
-rm -rf ~/Library/Caches/CocoaPods
-rm -rf ios/Pods
-rm -rf ios/Podfile.lock
-rm -rf ios/build
-(cd ios && pod update)
+npm run clean:all  # wipe all caches and reinstall
 
-# For all platforms
-watchman watch-del .
-watchman watch-project .
+# and then
 
 npm start -- --reset-cache
 npm run ios
@@ -144,6 +136,14 @@ npm run android
 * Delete XCode caches
 
 https://github.com/shinydevelopment/SimulatorStatusMagic
+
+
+
+### "unable to resolve module redux-persist/integration/react"
+
+For some reason, sometimes the `redux-persist` does not install correctly
+the first time, so you need to run `npm install redux-persist` manually.
+
 
 ### Some troubleshooting links
 

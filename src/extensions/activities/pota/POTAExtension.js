@@ -24,6 +24,8 @@ import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import GLOBAL from '../../../GLOBAL'
+import { filterNearDupes, filterQSOsWithSectionRefs } from '../../../tools/qsonTools'
+import { generateActivityDailyAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 const Extension = {
   ...Info,
@@ -262,7 +264,9 @@ const ReferenceHandler = {
 
   suggestOperationTitle: (ref) => {
     if (ref.type === Info.activationType && ref.ref) {
-      return { at: ref.ref, subtitle: ref.name, shortSubtitle: ref.shortName }
+      return {
+        at: ref.ref, subtitle: ref.name, shortSubtitle: ref.shortName, description: `${Info.shortName}: ${ref.ref}`
+      }
     } else {
       return null
     }
@@ -315,16 +319,22 @@ const ReferenceHandler = {
     }
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
-    const { band, mode, uuid, startAtMillis } = qso
+  scoringForQSO: generateActivityScorer({ info: Info }),
+  accumulateScoreForDay: generateActivityDailyAccumulator({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info }),
 
+  originalScoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
+    const DEBUG = qso.their.call === 'KK1K' || qso.their.call === 'KK3K'
+
+    const { band, mode, uuid, startAtMillis } = qso
+    if (DEBUG) console.log('  -- POTA scoringForQSO', { ...operation }, { ...scoredRef })
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const refCount = refs.length
     let value
     let type
-    if (ref?.ref) {
+    if (scoredRef?.ref) {
       type = Info.activationType
       value = refCount || 1
     } else {
@@ -333,10 +343,13 @@ const ReferenceHandler = {
     }
 
     if (value === 0) return { value: 0 } // If not activating, only counts if other QSO has a POTA ref
+    // console.log('pota scoring', qso.their.call, scoredRef.type ?? '?', scoredRef.ref ?? '?')
 
-    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
+    const nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
+    if (DEBUG) console.log('-- nearDupes', qso.uuid, qso.key, nearDupes)
 
     if (nearDupes.length === 0) {
+      if (DEBUG) console.log('-- no dupes', { value, refCount, type })
       return { value, refCount, type }
     } else {
       const thisQSOTime = qso.startAtMillis ?? Date.now()
@@ -349,7 +362,13 @@ const ReferenceHandler = {
       const sameMode = sameDayDupes.filter(q => q.mode === mode).length !== 0
       const sameBandMode = sameDayDupes.filter(q => q.band === band && q.mode === mode).length !== 0
       const sameRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
+      const dupesHadRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).length !== 0).length !== 0
+
+      if (DEBUG) console.log('-- ', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
+
       if (sameBandMode && sameDay && (sameRefs || refs.length === 0)) {
+        if (DEBUG) console.log('-- duplicate', qso.uuid, { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
+        if (refs.length === 0 && dupesHadRefs && !qso.uuid) return { value: 0, refCount, notices: ['maybeDupe'], type }
         return { value: 0, refCount, alerts: ['duplicate'], type }
       } else {
         const notices = []
@@ -358,12 +377,13 @@ const ReferenceHandler = {
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
+        if (DEBUG) console.log('-- near duplicate', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
         return { value, refCount, notices, type }
       }
     }
   },
 
-  accumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
+  originalAccumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
     if (!ref?.ref) return score // No scoring if not activating
     if (!score?.key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
@@ -379,8 +399,10 @@ const ReferenceHandler = {
     }
 
     if (!score.refs[ref.ref]) { // Track how many parks we're activating
-      score.refs[ref.ref] = true
+      score.refs[ref.ref] = 1
       score.primaryRef = score.primaryRef || ref.ref
+    } else {
+      score.refs[ref.ref] += 1
     }
 
     if (score.primaryRef === ref.ref) { // Only do scoring for the primary ref
@@ -392,7 +414,7 @@ const ReferenceHandler = {
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  originalSummarizeScore: ({ score, operation, ref, section }) => {
     score.activated = score.value >= 10
 
     if (score.activated) {
@@ -415,7 +437,7 @@ const ReferenceHandler = {
   }
 }
 
-function _simplifyPOTAStates (locationDesc) {
+function _simplifyPOTAStates(locationDesc) {
   if (!locationDesc) return ''
   const states = locationDesc.split(',')
   const oneState = states[0].split('-', 2)[1]?.trim()

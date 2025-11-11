@@ -30,20 +30,34 @@ export default function OperationLocationScreen ({ navigation, route }) {
 
   const refsWithHandlers = useMemo(() => {
     return (operation?.refs || []).filter(ref => ref.grid).map(ref => {
-      console.log(ref)
       return { ref, handler: findBestHook(`ref:${ref.type}`) || defaultReferenceHandlerFor(ref.type) }
     })
   }, [operation?.refs])
+
+  const [grid, setGrid] = useState(operation?.grid || '')
+  const [gridSource, setGridSource] = useState(operation?.gridSource ?? operation?.source ?? '')
 
   useEffect(() => {
     if (!operation) {
       navigation.goBack()
     }
-  }, [navigation, operation])
+    navigation.setOptions({
+      leftAction: 'accept',
+      leftActionA11yLabel: 'Accept Changes',
+      rightAction: 'revert',
+      rightActionA11yLabel: 'Revert Changes',
+      onLeftActionPress: () => {
+        dispatch(setOperationData({ uuid: operation.uuid, grid, gridSource }))
+        navigation.goBack()
+      },
+      onRightActionPress: () => navigation.goBack()
+    })
+  }, [dispatch, grid, gridSource, navigation, operation])
 
-  const handleChangeGrid = useCallback((newGrid) => {
-    dispatch(setOperationData({ uuid: operation.uuid, grid: newGrid, source: 'manual' }))
-  }, [dispatch, operation.uuid])
+  const handleChangeGrid = useCallback((newGrid, newGridSource) => {
+    setGridSource(newGridSource ?? 'manual')
+    setGrid(newGrid)
+  }, [setGrid, setGridSource])
 
   const [locationGrid, setLocationGrid] = useState()
   const [locationMessage, setLocationMessage] = useState()
@@ -93,7 +107,7 @@ export default function OperationLocationScreen ({ navigation, route }) {
           <H2kListSection title={'Selected Location'}>
             <H2kGridInput
               style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
-              value={operation?.grid || ''}
+              value={grid || ''}
               label="Maidenhead Grid Square Locator"
               placeholder={settings?.useGrid8 ? 'AA00aa00' : 'AA00aa'}
               onChangeText={handleChangeGrid}

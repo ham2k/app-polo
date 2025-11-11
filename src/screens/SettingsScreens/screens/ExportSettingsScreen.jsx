@@ -136,11 +136,11 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
       addedHooks[hook.key] = true
 
       const sampleOperations = (hook.sampleOperations && hook.sampleOperations({ settings })) || []
-      sampleOperations.forEach(operation => {
-        (operation?.refs || []).forEach(ref => {
+      sampleOperations.forEach(sampleOperation => {
+        (sampleOperation?.refs || []).forEach(ref => {
           const refHook = findBestHook(`ref:${ref.type}`)
           if (refHook?.suggestExportOptions) {
-            const options = (refHook.suggestExportOptions && refHook.suggestExportOptions({ operation, qsos: operation.qsos, ref, settings })) || []
+            const options = (refHook.suggestExportOptions && refHook.suggestExportOptions({ operation: sampleOperation, qsos: sampleOperation.qsos, ref, settings })) || []
             options.forEach(option => {
               const key = `${hook.key}-${option.format}-${option.exportType ?? 'export'}`
               const exportSettings = selectExportSettings({ settings }, key, (refHook?.defaultExportSettings && refHook?.defaultExportSettings()))
@@ -160,7 +160,7 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
                 settings: exportSettings,
                 sampleData: {
                   ...sampleTemplateData,
-                  operation: { ...sampleTemplateData.operation, ...operation },
+                  operation: { ...sampleTemplateData.operation, ...sampleOperation },
                   ref,
                   handler: hook
                 },

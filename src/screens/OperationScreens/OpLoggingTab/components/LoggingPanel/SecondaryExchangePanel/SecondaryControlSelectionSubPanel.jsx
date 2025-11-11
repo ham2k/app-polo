@@ -54,6 +54,18 @@ export const SecondaryControlSelectionsubPanel = ({
 
   const [containerLayout, setContainerLayout] = useState()
 
+  const visibleButDisabledControls = useMemo(() => {
+    const _disabled = {}
+    enabledControls.forEach(control => {
+      if (qso?.event) {
+        _disabled[control.key] = control.key !== 'time'
+      } else if (control.onlyNewQSOs && !qso?._isNew) {
+        _disabled[control.key] = true
+      }
+    })
+    return _disabled
+  }, [enabledControls, qso?.event, qso?._isNew])
+
   const [chipLayout, setChipLayout] = useState({})
   const handleChipSelect = useCallback((key, value, layout) => {
     if (value) {
@@ -156,7 +168,7 @@ export const SecondaryControlSelectionsubPanel = ({
                 qso={qso} operation={operation} vfo={vfo} settings={settings}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={currentSecondaryControl === control.key}
-                disabled={control.onlyNewQSOs && !qso?._isNew}
+                disabled={visibleButDisabledControls[control.key]}
                 onChange={(value, measure) => handleChipSelect(control.key, value, measure)}
               />
             ))}
@@ -166,10 +178,10 @@ export const SecondaryControlSelectionsubPanel = ({
                 styles={styles}
                 style={{ flex: 0 }}
                 themeColor={themeColor}
-                accesibilityLabel="Show Secondary Control Settings"
+                accessibilityLabel="Show Secondary Control Settings"
                 onChange={() => setCurrentSecondaryControl('manage-controls')}
               >
-                <Icon source="cog" size={styles.oneSpace * 2} accesibilityLabel="Show Secondary Control Settings" />
+                <Icon source="cog" size={styles.oneSpace * 2} accessibilityLabel="Show Secondary Control Settings" />
               </LoggerChip>
             </View>
           </View>

@@ -7,12 +7,11 @@
 
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Checkbox, Dialog } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { Checkbox } from 'react-native-paper'
 
 import { stringOrFunction } from '../../../../../tools/stringOrFunction'
 import { findHooks } from '../../../../../extensions/registry'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogTitle, H2kListItem, H2kListSection } from '../../../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogScrollArea, H2kDialogTitle, H2kListItem, H2kListSection } from '../../../../../ui'
 
 import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
@@ -70,29 +69,26 @@ export function LoggingPanelConfigDialog ({ visible, operation, vfo, settings, s
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel} >
       <H2kDialogTitle style={{ textAlign: 'center' }}>Logging Options</H2kDialogTitle>
-      <Dialog.ScrollArea style={{ padding: 0, paddingHorizontal: styles.oneSpace, maxHeight: '80%' }}>
-
-        <ScrollView>
-          <H2kListSection>
-            {sortedControls.map(control => (
-              <H2kListItem
-                style={{ paddingTop: 20, margin: 0 }}
-                title={stringOrFunction(control.optionLabel ?? control.label ?? control.key, { operation, vfo, settings })}
-                description={stringOrFunction(control.optionDescription, { operation, vfo, settings })}
-                leftIcon={control.icon}
-                right={() => {
-                  if (control.optionType === 'mandatory') {
-                    return <Checkbox status={'checked'} disabled={true} />
-                  } else {
-                    return <Checkbox status={loggingControlSettings[control.key] ? 'checked' : 'unchecked'}/>
-                  }
-                }}
-                onPress={() => 1}
-              />
-            ))}
-          </H2kListSection>
-        </ScrollView>
-      </Dialog.ScrollArea>
+      <H2kDialogScrollArea>
+        <H2kListSection>
+          {sortedControls.map(control => (
+            <H2kListItem
+              style={{ paddingTop: 20, margin: 0 }}
+              title={stringOrFunction(control.optionLabel ?? control.label ?? control.key, { operation, vfo, settings })}
+              description={stringOrFunction(control.optionDescription, { operation, vfo, settings })}
+              leftIcon={control.icon}
+              right={() => {
+                if (control.optionType === 'mandatory') {
+                  return <Checkbox status={'checked'} disabled={true} />
+                } else {
+                  return <Checkbox status={loggingControlSettings[control.key] ? 'checked' : 'unchecked'}/>
+                }
+              }}
+              onPress={() => 1}
+            />
+          ))}
+        </H2kListSection>
+      </H2kDialogScrollArea>
 
       <H2kDialogActions>
         <H2kButton onPress={handleCancel}>Cancel</H2kButton>

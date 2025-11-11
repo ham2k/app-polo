@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -19,13 +19,15 @@ import { selectAllOperations, selectOperationCallInfo } from '../../../../store/
 import { selectSettings, setSettings } from '../../../../store/settings'
 import { useUIState } from '../../../../store/ui'
 import { selectVFO } from '../../../../store/station'
-import { useFindHooks } from '../../../../extensions/registry'
+import { findBestHook, findHooks } from '../../../../extensions/registry'
 import { scoringHandlersForOperation } from '../../../../extensions/scoring'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { annotateQSO } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
 import SpotList from './SpotList'
 import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
+
+import GLOBAL from '../../../../GLOBAL'
 
 export const LABEL_FOR_MODE = {
   CW: 'CW',
@@ -87,7 +89,21 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
 
   const [showControls, setShowControls] = useState(false)
 
-  const spotsHooks = useFindHooks('spots', { filter: 'fetchSpots' })
+  const spotsHooks = useMemo(() => {
+    const hooks = findHooks('spots', { withFunction: 'fetchSpots' })
+
+    ;(operation?.refs || []).forEach(ref => {
+      const refHook = findBestHook(`ref:${ref.type}`)
+      if (refHook?.activitySpecificSpots?.fetchSpots) {
+        hooks.push({
+          ...refHook.activitySpecificSpots,
+          sourceName: refHook.activitySpecificSpots.sourceNameForRef({ ref, operation })
+        })
+      }
+    })
+
+    return hooks
+  }, [operation])
 
   useEffect(() => { // Refresh periodically
     const interval = setInterval(() => {
@@ -111,13 +127,13 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       updateSpotsState({ loading: true })
       setTimeout(async () => {
         await Promise.all(
-          spotsHooks.filter(hook => filterState.sources?.[hook.key] !== false).map(hook => {
-            return hook.fetchSpots({ online, settings, dispatch }).then(async spots => {
+          spotsHooks.filter(hook => filterState.sources?.[hook.key] !== false && hook.fetchSpots).map(hook => {
+            return hook.fetchSpots({ online, settings, dispatch, operation }).then(async spots => {
               const annotatedSpots = []
               for (const spot of spots) {
                 spot.our = spot.our || {}
                 spot.timeInMillis = 0
-                spot.key = `${spot.spot.source}:${qsoKey(spot)}`
+                spot.key = `${spot.spot.subSource ?? spot.spot.source}:${qsoKey(spot)}`
                 if (!spot.mode) {
                   spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
                 }
@@ -164,7 +180,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   }, [spotsHooks, filterState, vfo, spotsState.spots])
 
   const scoredSpots = useMemo(() => {
-    const scoringHandlers = scoringHandlersForOperation(operation, settings)
+    const scoringHandlers = scoringHandlersForOperation({ operation, settings })
 
     return filteredSpots.map(rawSpot => {
       const spot = { ...rawSpot }
@@ -177,7 +193,8 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       } else {
         scoringHandlers.forEach(({ handler, ref }) => {
           const lastSection = sections && sections[sections.length - 1]
-          const score = handler.scoringForQSO({ qso: spot, qsos, score: lastSection?.scores?.[ref.key], ref })
+          const score = handler.scoringForQSO({ qso: spot, qsos, operation, score: lastSection?.scores?.[ref.key ?? ref.type], ref })
+
           if (score?.alerts && score?.alerts[0] === 'duplicate' && (spot.spot?.type !== 'scoring')) {
             spot.spot.type = 'duplicate'
           } else if (score?.value > 0 || score?.points > 0) {
@@ -197,31 +214,103 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
           if (score.notices) {
             score.notices.forEach(notice => (spot.spot.flags[notice] = true))
           }
+
+          if (score.newMult) {
+            spot.spot.flags.newMult = true
+          }
+
+          // if (spot?.their?.call === 'KI2D') {
+          //   console.log('KI2D spot', handler.key, score, { ...spot.spot.flags })
+          // }
         })
+      }
+
+      const specialLabel = GLOBAL?.flags?.specialCalls?.[spot?.their?.call?.toLowerCase()]
+      if (specialLabel) {
+        spot.spot.flags.specialCall = true
+        spot.spot.callLabel = specialLabel
       }
       return spot
     })
   }, [operation, settings, filteredSpots, ourInfo.call, sections, qsos])
 
   const mergedOpSpots = useMemo(() => {
-    const mOpSpots = []
+    const _mergedSpots = []
     scoredSpots.forEach((spot) => {
+      // if (spot.spot?.key?.endsWith('-special')) {
+      //   mOpSpots.push(spot)
+      //   return
+      // }
+
       // Not digital as could be multiple people on one freq. e.g. FT8
-      const matchingSpot = superModeForMode(spot.mode) !== 'DATA' && mOpSpots.find(opSpot => (
-        spot.spot.type === opSpot.spot.type && // Don't mix scoring and dupes
-          Math.abs(spot.freq - opSpot.freq) <= 0.1 && // 0.1 kHz
-          Math.abs(spot.spot.timeInMillis - opSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
-          spot.refs.length === opSpot.refs.length && // all refs match
-          opSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
+      const matchingSpot = superModeForMode(spot.mode) !== 'DATA' && _mergedSpots.find(otherSpot => (
+        spot.spot.type === otherSpot.spot.type && // Don't mix scoring and dupes
+          Math.abs(spot.freq - otherSpot.freq) <= 0.1 && // 0.1 kHz
+          Math.abs(spot.spot.timeInMillis - otherSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
+          spot.refs.length === otherSpot.refs.length && // all refs match
+          otherSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
       ))
       if (matchingSpot) {
         matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call},${spot.their.call}` }
       } else {
-        mOpSpots.push(spot)
+        _mergedSpots.push(spot)
       }
     })
-    return mOpSpots
+    return _mergedSpots
   }, [scoredSpots])
+
+  const sectionedSpots = useMemo(() => {
+    const _sections = []
+    if (filterState.groupSpecialSpots !== false) {
+      const specialSpots = mergedOpSpots.filter(spot => spot.spot.flags?.specialCall && spot.spot?.type !== 'duplicate')
+      if (specialSpots.length > 0) {
+        _sections.push({
+          key: 'special',
+          label: 'Special Spots',
+          data: specialSpots
+        })
+      }
+      const newMults = mergedOpSpots.filter(spot => spot.spot?.flags?.newMult && spot.spot?.type !== 'duplicate')
+      if (newMults.length > 0) {
+        _sections.push({
+          key: 'newMults',
+          label: 'New Multipliers',
+          data: newMults
+        })
+      }
+    }
+
+    if (filterState.groupCallsWithNotes) {
+      const callsWithNotes = mergedOpSpots.filter(spot => spot.their?.guess?.emoji && spot.spot?.type !== 'duplicate')
+      if (callsWithNotes.length > 0) {
+        _sections.push({
+          key: 'notes',
+          label: 'Calls of Note',
+          data: callsWithNotes
+        })
+      }
+    }
+
+    if (filterState.sortBy === 'time') {
+      _sections.push({
+        key: 'spots',
+        label: 'Most recent spots',
+        data: mergedOpSpots
+      })
+    } else {
+      BANDS.forEach(band => {
+        const group = mergedOpSpots.filter(spot => spot.band === band)
+        if (group.length > 0) {
+          _sections.push({
+            key: band,
+            label: `${band}`,
+            data: group
+          })
+        }
+      })
+    }
+    return _sections
+  }, [filterState.groupCallsWithNotes, filterState.groupSpecialSpots, filterState.sortBy, mergedOpSpots])
 
   const handlePress = useCallback(({ spot }) => {
     onSelect && onSelect({ spot })
@@ -281,7 +370,17 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
               </Text>
             </TouchableOpacity>
           </View>
-          <SpotList spots={mergedOpSpots} loading={spotsState.loading} refresh={refresh} onPress={handlePress} style={{ paddingBottom: style?.paddingBottom, paddingRight: style?.paddingRight, paddingLeft: style?.paddingLeft }} />
+          <SpotList
+            sections={sectionedSpots}
+            loading={spotsState.loading}
+            refresh={refresh}
+            onPress={handlePress}
+            style={{
+              paddingBottom: style?.paddingBottom,
+              paddingRight: style?.paddingRight,
+              paddingLeft: style?.paddingLeft
+            }}
+          />
         </>
       )}
     </GestureHandlerRootView>

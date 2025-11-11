@@ -203,7 +203,7 @@ const ReferenceHandler = {
 }
 
 function mainExchangeForOperation (props) {
-  const { qso, updateQSO, styles, refStack } = props
+  const { qso, updateQSO, styles, disabled, refStack } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, location: '' }
 
@@ -223,6 +223,7 @@ function mainExchangeForOperation (props) {
       noSpaces={false}
       value={ref?.exchange || ''}
       error={false}
+      disabled={disabled}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, exchange: text }),
         their: { exchange: text }

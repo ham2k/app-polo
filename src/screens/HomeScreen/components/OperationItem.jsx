@@ -15,8 +15,8 @@ import { fmtNumber } from '@ham2k/lib-format-tools'
 import { fmtDateZuluDynamic } from '../../../tools/timeFormats'
 import { tweakStringForVoiceOver } from '../../../tools/a11yTools'
 import { buildTitleForOperation } from '../../OperationScreens/OperationScreen'
-import { H2kMarkdown } from '../../../ui'
 import { selectOperation } from '../../../store/operations'
+import { H2kMarkdown, H2kPressable } from '../../../ui'
 
 export default function OperationItem ({ operationId, settings, onPress, styles, style }) {
   const operation = useSelector(state => selectOperation(state, operationId))
@@ -37,10 +37,10 @@ export default function OperationItem ({ operationId, settings, onPress, styles,
     }
   }, [styles, style])
   return (
-    <TouchableRipple
+    <H2kPressable
       onPress={pressHandler}
-      style={styles.rowRoot}
       accessibilityLabel={tweakStringForVoiceOver(`${operation.stationCallPlus || operation.stationCall} ${title} ${operation.subtitle}, ${operation.qsoCount ?? 0} Q sos, ${fmtDateZuluDynamic(operation.startAtMillisMax)}`)}
+      style={styles.rowRoot}
     >
       <View style={rowStyle}>
         <View style={styles.rowTop}>
@@ -64,6 +64,6 @@ export default function OperationItem ({ operationId, settings, onPress, styles,
           </View>
         </View>
       </View>
-    </TouchableRipple>
+    </H2kPressable>
   )
 }

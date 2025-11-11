@@ -16,7 +16,10 @@ export const GMACommonPostSelfSpot = ({ operation, vfo, comments, refs, url }) =
   if (GLOBAL?.flags?.services?.gma === false) return false
 
   const state = getState()
-  const call = operation.stationCall || state.settings.operatorCall
+  let call = operation.stationCall || state.settings.operatorCall
+  if (operation.local.isMultiStation) {
+    call = `${call}/M${operation.local.multiIdentifier ?? "0"}`
+  }
   const baseCall = parseCallsign(call).baseCall
 
   const mainRef = refs[0].ref

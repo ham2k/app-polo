@@ -9,12 +9,15 @@ import packageJson from '../../package.json'
 import { findBestHook } from '../extensions/registry'
 import { basePartialTemplates, compileTemplateForOperation, extraDataForTemplates, templateContextForOneExport } from '../store/operations'
 import { selectExportSettings } from '../store/settings'
-import { sanitizeToISO8859 } from './stringTools'
-import { fmtADIFDate, fmtADIFTime } from './timeFormats'
+import { escapeToUnicodeEntities, sanitizeToISO8859 } from './stringTools'
+import { fmtADIFDate, fmtADIFTime, fmtISODateTime } from './timeFormats'
 
 import { adifModeAndSubmodeForMode, frequencyForBand, modeForFrequency } from '@ham2k/lib-operation-data'
 
-export function qsonToADIF ({ operation, settings, qsos, handler, format, title, exportType, ADIFNotesTemplate, ADIFCommentTemplate, ADIFQslMsgTemplate }) {
+const DEBUG = false
+
+export function qsonToADIF({ operation, settings, qsos, handler, format, title, exportType, combineSegmentRefs, ADIFNotesTemplate, ADIFCommentTemplate, ADIFQslMsgTemplate }) {
+  if (DEBUG) console.log('qsonToADIF operation', { ...operation })
   const templates = {
     key: `${handler.key}-${format}-${exportType ?? 'export'}`
   }
@@ -33,7 +36,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   templates.commentsTemplate = compileTemplateForOperation(templates.exportSettings?.ADIFCommentTemplate || ADIFCommentTemplate || '{{>ADIFComment}}', templates)
   templates.qslmsgTemplate = compileTemplateForOperation(templates.exportSettings?.ADIFQslMsgTemplate || ADIFQslMsgTemplate || '{{>ADIFQslMsg}}', templates)
 
-  const common = {
+  let common = {
     refs: operation.refs,
     grid: operation.grid,
     stationCall: operation.stationCall ?? settings.operatorCall,
@@ -47,6 +50,8 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
     common.operatorCall = operation.local?.operatorCall || operation.operatorCall
   }
 
+  const eventQSOs = qsos.filter(qso => qso.event && !qso.deleted)
+
   let str = ''
   str += `ADIF for ${title || ([common.stationCall, operation?.title, operation.subTitle].filter(x => x).join(' ')) || 'Operation'} \n`
   str += adifField('ADIF_VER', '3.1.5', { newLine: true })
@@ -54,14 +59,38 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
   if (operation.userTitle && privateData) str += adifField('X_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
   if (operation.notes && privateData) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
+
   if (handler.adifFieldsForHeader) {
     str += escapeForHeader(handler.adifFieldsForHeader({ qsos, operation, common, mainHandler: true, privateData, templates }) ?? []).join('\n')
   }
   if (handler?.adifHeaderComment) str += escapeForHeader(handler.adifHeaderComment({ qsos, operation, common, mainHandler: true, privateData, templates })) + '\n'
+
   str += '<EOH>\n'
 
   qsos.forEach(qso => {
     if (qso.deleted) return
+    if (qso.event) {
+      if (privateData) {
+        const eventRecord = `${fmtISODateTime(qso.startAtMillis)}: ${qso.event.note ?? qso.event.message ?? qso.event.description.replaceAll(/ • /g, ' * ')}`
+        if (qso.event.event === 'break' || qso.event.event === 'start') str += "\n"
+        str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}`, eventRecord, { newLine: true })
+        if (qso.event.event === 'break' || qso.event.event === 'start') str += "\n"
+      }
+
+      if (qso.event.event === 'break' || qso.event.event === 'start') {
+        if (combineSegmentRefs) {
+          // Update all operation attributes, including regs
+          operation = { ...operation, ...qso.event.operation }
+          common = { ...common, ...qso.event.operation }
+        } else {
+          // Combine other attributes, but keep refs as initialized
+          operation = { ...operation, ...qso.event.operation, refs: operation.refs }
+          common = { ...common, ...qso.event.operation, refs: common.refs }
+        }
+        templates.context = templateContextForOneExport({ settings, operation, handler })
+      }
+      return
+    }
 
     // Get the base handler's field combinations for this QSO
     // it might return an array of arrays,
@@ -84,29 +113,29 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
       // Then we append the fields from the main handler's combinations
       fields = fields.concat(combinationFields)
 
-      // And finally, we look at any handlers for other refs in the operation, or refs in the QSO itself
-      // and ask them for more fields to add to this QSO.
-      ;[...qso.refs || [], ...operation.refs || []].forEach(ref => {
-        const secondaryRefHandler = findBestHook(`ref:${ref.type}`)
+        // And finally, we look at any handlers for other refs in the operation, or refs in the QSO itself
+        // and ask them for more fields to add to this QSO.
+        ;[...qso.refs || [], ...operation.refs || []].forEach(ref => {
+          const secondaryRefHandler = findBestHook(`ref:${ref.type}`)
 
-        if (secondaryRefHandler?.key === handler.key) return // Skip if it happens to be the same as the main handler
+          if (secondaryRefHandler?.key === handler.key) return // Skip if it happens to be the same as the main handler
 
-        if (secondaryRefHandler && secondaryRefHandler.key !== handler.key && secondaryRefHandler.adifFieldsForOneQSO) {
-          const refFields = secondaryRefHandler.adifFieldsForOneQSO({ qso, operation, common, exportType, ref, privateData, templates }) || []
-          refFields.forEach(refField => {
-            const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
-            if (existingField) {
-              // If another field with the same name already exists. Keep the first one defined and ignore this one
-              // unless it is `false`, in which case the field should be removed.
-              if (refField[1] === false) {
-                existingField[1] = false
+          if (secondaryRefHandler && secondaryRefHandler.key !== handler.key && secondaryRefHandler.adifFieldsForOneQSO) {
+            const refFields = secondaryRefHandler.adifFieldsForOneQSO({ qso, operation, common, exportType, ref, privateData, templates }) || []
+            refFields.forEach(refField => {
+              const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
+              if (existingField) {
+                // If another field with the same name already exists. Keep the first one defined and ignore this one
+                // unless it is `false`, in which case the field should be removed.
+                if (refField[1] === false) {
+                  existingField[1] = false
+                }
+              } else {
+                fields = fields.concat([refField])
               }
-            } else {
-              fields = fields.concat([refField])
-            }
-          })
-        }
-      })
+            })
+          }
+        })
 
       str += adifRow(fields)
     })
@@ -115,12 +144,12 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   return str
 }
 
-function escapeForHeader (str) {
+function escapeForHeader(str) {
   if (!str) return ''
   return str.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-function modeToADIF (mode, freq, qsoInfo) {
+function modeToADIF(mode, freq, qsoInfo) {
   const modeAndSubmode = adifModeAndSubmodeForMode(mode)
   if (modeAndSubmode.length > 1) {
     return [{ MODE: modeAndSubmode[0] }, { SUBMODE: modeAndSubmode[1] }]
@@ -133,7 +162,7 @@ function modeToADIF (mode, freq, qsoInfo) {
   }
 }
 
-function adifFieldsForOneQSO ({ qso, operation, common, privateData, templates, timeOffset }) {
+function adifFieldsForOneQSO({ qso, operation, common, privateData, templates, timeOffset }) {
   timeOffset = timeOffset ?? 0
   const fields = [
     { CALL: qso.their.call },
@@ -141,6 +170,7 @@ function adifFieldsForOneQSO ({ qso, operation, common, privateData, templates, 
     { BAND: qso.band && qso.band !== 'other' ? qso.band : undefined },
     { FREQ: ((Number(qso.freq ?? frequencyForBand(qso.band, qso.mode)) / 1000).toFixed(6)) }, // Round to six decimals (Hz)
     { TX_PWR: qso.power },
+    { RX_PWR: qso?.their?.power ?? qso?.guess?.power ?? qso?.their?.guess?.indicators?.includes("QRP") ? 5 : undefined },
     { QSO_DATE: fmtADIFDate(qso.startAtMillis + timeOffset) },
     { TIME_ON: fmtADIFTime(qso.startAtMillis + timeOffset) },
     { RST_RCVD: qso.their.sent },
@@ -197,18 +227,18 @@ function adifFieldsForOneQSO ({ qso, operation, common, privateData, templates, 
   return fields
 }
 
-function adifRow (fields) {
+function adifRow(fields) {
   return fields
     .filter(field => field[1] !== false)
     .map(field => adifField(Object.keys(field)[0], Object.values(field)[0]))
     .join('') + '<EOR>\n'
 }
 
-function adifField (name, value, options = {}) {
+function adifField(name, value, options = {}) {
   if (!value && !options.force) return ''
   if (typeof value !== 'string') value = value.toString()
 
-  value = sanitizeToISO8859(value)
+  value = escapeToUnicodeEntities(value)
 
   return `<${name}:${value?.length ?? 0}>${value}${options.newLine ? '\n' : ' '}`
 }

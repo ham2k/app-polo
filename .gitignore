@@ -3,6 +3,9 @@
 .mise.toml.local
 mise.toml.local
 
+# local files
+SCRATCHPAD.md
+
 # react-native-config codegen
 ios/tmp.xcconfig
 

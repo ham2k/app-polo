@@ -96,7 +96,7 @@ export function onNavigationReadyForDistribution (navigationRef) {
   // Do nothing
 }
 
-export function handleNoticeActionForDistribution ({ notice, action, dispatch, navigate, setOverlayText, setOverlayTitle }) {
+export function handleNoticeActionForDistribution ({ notice, action, dispatch, navigate, setDialog }) {
   return true
 }
 

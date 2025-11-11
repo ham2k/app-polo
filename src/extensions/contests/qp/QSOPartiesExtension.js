@@ -22,6 +22,7 @@ import { Info } from './QSOPartiesInfo'
 import { ActivityOptions } from './QSOPartiesActivityOptions'
 
 import RAW_QSO_PARTY_DATA from './all-parties.js'
+import { QSOPartiesPostSelfSpot, SpotsHook } from './QSOPartiesSpotting.js'
 
 export const QSO_PARTY_DATA = Object.fromEntries(RAW_QSO_PARTY_DATA.map(party => [party.key, party]))
 
@@ -34,8 +35,8 @@ const Extension = {
   ...Info,
   category: 'contests',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
-    registerHook('activity', { hook: ActivityHook })
-    registerHook(`ref:${Info.key}`, { hook: ReferenceHandler })
+    registerHook('activity', { hook: ActivityHook, priority: 10 })
+    registerHook(`ref:${Info.key}`, { hook: ReferenceHandler, priority: 10 })
 
     // registerQPDefinitionsDataFile()
     // dispatch(loadDataFile('qp-definitions'))
@@ -95,7 +96,9 @@ const ActivityHook = {
     return [
       { refs: [ReferenceHandler.decorateRef({ type: Info.key, ref: 'NYQP', location: 'SUL' })] }
     ]
-  }
+  },
+
+  postSelfSpot: QSOPartiesPostSelfSpot
 
 }
 
@@ -124,10 +127,15 @@ const ReferenceHandler = {
     }
   },
 
+  keyForRef: (ref) => {
+    const qp = qpData({ ref })
+    return `${Info.key}-${qp.short}`
+  },
+
   suggestOperationTitle: (ref) => {
     if (ref?.ref) {
       const qp = qpData({ ref })
-      return { for: _qpShortForQP(qp), subtitle: ref?.location }
+      return { for: _qpShortForQP(qp), subtitle: ref?.location, description: `${_qpShortForQP(qp)}: ${ref?.location}` }
     } else {
       return { for: Info.shortName }
     }
@@ -148,6 +156,7 @@ const ReferenceHandler = {
         format: 'cabrillo',
         exportType: 'qp-cabrillo',
         exportName: `${qp.name ?? 'QSO Party'} Cabrillo`,
+        refKey: qp.short,
         templateData: { handlerShortName: _qpShortForQP(qp), handlerName: qp.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
@@ -273,39 +282,21 @@ const ReferenceHandler = {
     return [qso.their.exchange]
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref, score }) => {
-    const qp = qpData({ ref })
+  scoringForQSO: ({ qso, qsos, operation, ref: scoredRef, score }) => {
+    const qp = qpData({ ref: scoredRef })
+    // console.log('scoringForQSO', qso.key, scoredRef)
 
-    let ourLocations = ref?.location
-    let weAreInState
-    if (ref?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
-      ourLocations = ref.location.split(SLASH_OR_COMMA_REGEX, 2)
-      if (!qp.options?.countyLine) ourLocations = ourLocations.slice(0, 1)
-      weAreInState = ref.location.split(SLASH_OR_COMMA_REGEX).every(c => qp.counties[c])
-    } else {
-      ourLocations = [ref?.location]
-      weAreInState = !!qp.counties[ref?.location]
-    }
+    let ourLocations = qpParseLocations({ qp, location: scoredRef?.location })
+    // console.log('-- ourLocations', ourLocations)
+    let weAreInState = ourLocations?.every(loc => loc.inState)
 
     const qsoRef = findRef(qso, Info.key)
 
-    let theirLocations = []
-    let theyAreInState
-    if (qsoRef?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
-      theirLocations = qsoRef?.location.split(SLASH_OR_COMMA_REGEX, 2)
-      if (!qp?.options?.countyLine) theirLocations = theirLocations.slice(0, 1)
-      theyAreInState = theirLocations.every(c => qp.counties[c])
-    } else if (qsoRef?.location) {
-      theirLocations = [qsoRef?.location]
-      theyAreInState = !!qp.counties[qsoRef?.location]
-    } else {
-      if (qso?.their?.guess?.entityCode === 'K' || qso?.their?.guess?.entityCode === 'VE') {
-        theirLocations = [qso?.their?.state ?? qso?.their?.guess?.state]
-      } else {
-        theirLocations = ['DX']
-      }
-      theyAreInState = false
-    }
+    let theirLocations = qpParseLocations({ qp, location: qsoRef?.location, weAreInState })
+    let theyAreInState = theirLocations?.every(loc => loc.inState)
+    // console.log('-- theirLocations', theirLocations)
+
+    const locationGuess = qsoRef?.location ?? _defaultLocationFor({ qso, qp, qsos, operation })
 
     if (!weAreInState && !theyAreInState) {
       theirLocations = []
@@ -319,7 +310,7 @@ const ReferenceHandler = {
 
     const superMode = superModeForMode(mode)
 
-    const nearDupes = qsos.filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.key !== key)
+    const nearDupes = _nearDupesFor({ qp, qso, qsos, operation, ourLocations, theirLocations, weAreInState, theyAreInState })
 
     const locationMultiplier = ourLocations.length * theirLocations.length // For county line operations
 
@@ -329,7 +320,7 @@ const ReferenceHandler = {
       value = value * 2
     }
 
-    const multPrefix = qpMultPrefix({ qp, band, mode: superMode, weAreInState, theyAreInState })
+    const multPrefix = qpMultPrefix({ qp, band, mode: superMode, ourLocations, weAreInState, theyAreInState })
 
     const scoring = {
       value,
@@ -347,8 +338,8 @@ const ReferenceHandler = {
       bonuses: []
     }
 
-    theirLocations.forEach(loc => {
-      loc = qpNormalizeLocation({ qp, qso, location: loc, weAreInState, theyAreInState })
+    theirLocations.forEach(location => {
+      const loc = location.location
       let mult
       if (loc) {
         if (qp?.counties?.[loc]) {
@@ -380,9 +371,10 @@ const ReferenceHandler = {
         if (mult) scoring.mults.push(mult)
 
         if (score?.mults?.[mult]) {
-          scoring.infos.push(`${qpNameForLocation({ qp, location: loc })}`)
+          scoring.infos.push(`${location.name}`)
         } else if (loc) {
-          scoring.notices.push(`${qpNameForLocation({ qp, location: loc })}`)
+          scoring.newMult = true
+          scoring.notices.push(`${location.name}`)
         }
       }
     })
@@ -411,12 +403,21 @@ const ReferenceHandler = {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => superModeForMode(q.mode) === superMode).length !== 0
       const sameBandMode = nearDupes.filter(q => q.band === band && superModeForMode(q.mode) === superMode).length !== 0
-      if (sameBandMode) {
+
+      const sameLocation = nearDupes.filter(q => {
+        const dupeRef = findRef(q, Info.key)
+        const dupeLocations = qpParseLocations({ qp, location: dupeRef?.location, weAreInState, theyAreInState })
+
+        return theirLocations.some(location => dupeLocations?.some(dupeLocation => dupeLocation.location === location.location))
+      }).length !== 0
+
+      if (sameBandMode && sameLocation) {
         return { ...scoring, value: 0, alerts: ['duplicate'] }
       } else {
         const notices = [...(scoring.notices || [])]
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
+        if (!sameLocation && theirLocations.length > 0) notices.push('newRef')
 
         return { ...scoring, notices }
       }
@@ -425,9 +426,9 @@ const ReferenceHandler = {
 
   accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
     const qp = qpData({ ref })
-    if (!qsoScore.value) return score
 
     if (!score?.key) score = undefined // Reset if score doesn't have the right shape
+
     score = score ?? {
       key: ref?.type,
       icon: Info.icon,
@@ -437,6 +438,7 @@ const ReferenceHandler = {
       bonus: 0,
       qsoCount: 0,
       qsoPoints: 0,
+      dupeCount: 0,
       modes: {},
       mults: {},
       bonuses: {},
@@ -445,6 +447,11 @@ const ReferenceHandler = {
       counties: {},
       entities: {},
       bonusStations: {}
+    }
+
+    if (qsoScore.value === 0) {
+      score.dupeCount = score.dupeCount + 1
+      return score
     }
 
     if (qp.options.selfCountsForCounty && !score.counties[ref?.location]) {
@@ -500,7 +507,7 @@ const ReferenceHandler = {
 
     let weAreInState = false
     if (ref?.location?.match(SLASH_OR_COMMA_REGEX)) {
-      weAreInState = ref?.location?.split(SLASH_OR_COMMA_REGEX).every(c => qp.counties[c])
+      weAreInState = ref?.location?.split(SLASH_OR_COMMA_REGEX)?.every(c => qp.counties[c])
     } else if (qp.counties[ref?.location]) {
       weAreInState = true
     }
@@ -523,7 +530,7 @@ const ReferenceHandler = {
         parts.push(`**${fmtNumber(score.qsoPoints)} points + ${fmtNumber(score.bonus)} bonus x ${score.mult} mults**`)
       }
     } else {
-      parts.push(`**${fmtNumber(score.qsoPoints)} points x ${score.mult} mults**`)
+      parts.push(`**${fmtNumber(score.qsoPoints)} points x ${score.mult} mults** ${score.dupeCount > 0 ? `(${score.dupeCount} dupe${score.dupeCount > 1 ? 's' : ''})` : ''}`)
     }
 
     parts.push(
@@ -617,11 +624,13 @@ const ReferenceHandler = {
     score.longSummary = '\n' + parts.join('\n')
 
     return score
-  }
+  },
+
+  activitySpecificSpots: SpotsHook
 }
 
-function mainExchangeForOperation (props) {
-  const { qso, qsos, operation, updateQSO, styles, refStack } = props
+function mainExchangeForOperation(props) {
+  const { qso, qsos, operation, updateQSO, styles, disabled, refStack } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
   const opRef = findRef(operation, Info.key)
@@ -643,6 +652,7 @@ function mainExchangeForOperation (props) {
         numeric={true}
         noSpaces={true}
         value={ref?.ourNumber ?? operation?.nextNumber ?? '1'}
+        disabled={disabled}
         onChangeText={(text) => updateQSO({
           refs: replaceRef(qso?.refs, Info.key, { ...ref, ourNumber: text })
         })}
@@ -662,6 +672,7 @@ function mainExchangeForOperation (props) {
         numeric={true}
         noSpaces={true}
         value={ref?.theirNumber ?? ''}
+        disabled={disabled}
         onChangeText={(text) => updateQSO({
           refs: replaceRef(qso?.refs, Info.key, { ...ref, theirNumber: text })
         })}
@@ -694,13 +705,13 @@ function mainExchangeForOperation (props) {
   return fields
 }
 
-function prepareNewQSO ({ operation, qso }) {
+function prepareNewQSO({ operation, qso }) {
   const ref = findRef(qso.refs, Info.key) || { type: Info.refType }
   ref.ourNumber = `${operation.nextNumber || 1}`
   qso.refs = replaceRef(qso.refs, Info.refType, ref)
 }
 
-async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatch }) {
+async function processQSOBeforeSaveWithDispatch({ qso, qsos, operation, dispatch }) {
   const opRef = findRef(operation, Info.key)
   const qp = qpData({ ref: opRef })
   if (opRef) {
@@ -710,13 +721,13 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
     if (ref.location || ref.ourNumber || ref.theirNumber) {
       qso.refs = replaceRef(qso.refs, Info.key, ref)
       qso.their.exchange = [ref.theirNumber, ref.location].filter(x => x).join(' ')
-      console.log('processQSOBeforeSaveWithDispatch', { ref, ourNumber: ref.ourNumber, nextNumber: operation.nextNumber })
+      // console.log('processQSOBeforeSaveWithDispatch', { ref, ourNumber: ref.ourNumber, nextNumber: operation.nextNumber })
       if (ref.ourNumber) {
         qso.our.exchange = [ref.ourNumber, opRef.location].filter(x => x).join(' ')
         const num = parseInt(ref.ourNumber, 10)
         if (!isNaN(num)) {
           await dispatch(setOperationData({ uuid: operation.uuid, nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1 }))
-          console.log('set nextNumber', { nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1 })
+          // console.log('set nextNumber', { nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1 })
         }
       }
     }
@@ -724,7 +735,7 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
   return qso
 }
 
-function _suggestionsFor ({ qso, qp }) {
+function _suggestionsFor({ qso, qp }) {
   const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
   if (prefix === 'K') {
     if (qp.options.entity !== 'VE') {
@@ -742,7 +753,7 @@ function _suggestionsFor ({ qso, qp }) {
   else return Object.entries({ ...qp.counties, ...US_STATES, ...CANADIAN_PROVINCES })
 }
 
-function _defaultLocationFor ({ qso, qp, qsos, operation }) {
+function _defaultLocationFor({ qso, qp, qsos, operation }) {
   const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
   if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.location
 
@@ -760,9 +771,47 @@ function _defaultLocationFor ({ qso, qp, qsos, operation }) {
   }
 }
 
+function _nearDupesFor({ qp, qso, qsos, operation, ourLocations, theirLocations, weAreInState, theyAreInState }) {
+  let ourRollingLocations = qpParseLocations({ qp, location: findRef(operation, Info.key)?.location, weAreInState, theyAreInState })
+
+  // debugger
+  const nearDupes = qsos.filter(q => {
+    if (!q.deleted && (q.event?.event === 'break' || q.event?.event === 'start')) {
+      ourRollingLocations = qpParseLocations({ qp, location: findRef(q.event.operation, Info.key)?.location, weAreInState, theyAreInState })
+    }
+
+    if (q.event || q.deleted || q.their?.call !== qso.their?.call || q.uuid === qso?.uuid) {
+      return false
+    }
+    if (qso?.startAtMillis && q.startAtMillis > qso?.startAtMillis) {
+      return false
+    }
+
+    if (ourRollingLocations.some(rollLoc => ourLocations.some(ourLoc => ourLoc.location === rollLoc.location))) {
+      return true
+    }
+    return false
+  })
+  return nearDupes
+}
+
 const SLASH_OR_COMMA_REGEX = /[/,]/
 
-export function qpNormalizeLocation ({ qp, qso, location, weAreInState, theyAreInState }) {
+export function qpParseLocations({ qp, location, qso, weAreInState, theyAreInState }) {
+  const locations = location?.split(SLASH_OR_COMMA_REGEX) ?? []
+  return locations
+    .map(loc => qpNormalizeLocation({ qp, qso, location: loc, weAreInState, theyAreInState }))
+    .filter(loc => loc)
+    .map(loc => {
+      return ({
+        location: loc,
+        name: qpNameForLocation({ qp, location: loc }),
+        inState: qpIsInState({ qp, location: loc }),
+      })
+    })
+}
+
+export function qpNormalizeLocation({ qp, qso, location, weAreInState, theyAreInState }) {
   location = location?.toUpperCase() || ''
   if (qp.counties[location]) {
     if (qp.options.countiesCountForInState === false) {
@@ -789,18 +838,28 @@ export function qpNormalizeLocation ({ qp, qso, location, weAreInState, theyAreI
     return location
   } else if (CANADIAN_PROVINCES[location]) {
     return location
-  } else if (qp.options.dxEntityIsMultiplier) {
-    return qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
-  } else {
+  } else if ((qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix) === 'KL7') {
+    return 'AK'
+  } else if ((qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix) === 'KH6') {
+    return 'HI'
+  } else if (location === 'DX') {
     return location
+  } else if (qp.options.dxEntityIsMultiplier) {
+    if (DXCC_BY_PREFIX[location]) {
+      return location
+    } else {
+      return qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+    }
+  } else {
+    return ''
   }
 }
 
-export function qpData ({ ref }) {
+export function qpData({ ref }) {
   return QSO_PARTY_DATA[ref?.ref] || { options: {}, counties: {}, points: {}, short: 'QSO Party' }
 }
 
-export function qpMultPrefix ({ qp, band, mode, weAreInState }) {
+export function qpMultPrefix({ qp, band, mode, weAreInState }) {
   if (qp.options.multsPerBandMode || (qp.options.inStateMultsPerBand && weAreInState) || (qp.options.outOfStateMultsPerBand && !weAreInState)) {
     return `${band}:${mode}:`
   } else if (qp.options.multsPerBand || (qp.options.inStateMultsPerBand && weAreInState) || (qp.options.outOfStateMultsPerBand && !weAreInState)) {
@@ -812,7 +871,7 @@ export function qpMultPrefix ({ qp, band, mode, weAreInState }) {
   }
 }
 
-export function qpNameForLocation ({ qp, location }) {
+export function qpNameForLocation({ qp, location }) {
   location = location?.toUpperCase() || ''
   if (qp.counties[location]) {
     return qp.counties[location]
@@ -837,12 +896,12 @@ export function qpNameForLocation ({ qp, location }) {
   }
 }
 
-export function qpIsInState ({ qp, location }) {
+export function qpIsInState({ qp, location }) {
   location = location?.toUpperCase() || ''
   return !!qp.counties[location]
 }
 
-export function qpLabelForLocation ({ qp, location }) {
+export function qpLabelForLocation({ qp, location }) {
   location = location?.toUpperCase() || ''
   if (qp.counties[location]) {
     return `In-state: *${location}* ${qp.counties[location]}`
@@ -861,7 +920,7 @@ export function qpLabelForLocation ({ qp, location }) {
   }
 }
 
-function _qpShortForQP (qp) {
+function _qpShortForQP(qp) {
   if (qp.short) return qp.short
   if (qp.key.endsWith('QP')) return qp.key
   else return `${qp.key}QP`

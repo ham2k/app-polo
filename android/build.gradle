@@ -8,7 +8,7 @@ buildscript {
         targetSdkVersion = 35
         ndkVersion = "27.1.12297006"
         kotlinVersion = "2.1.20"
-        RNMapboxMapsVersion = '11.11.0'
+        RNMapboxMapsVersion = '11.15.3'
     }
     repositories {
         google()

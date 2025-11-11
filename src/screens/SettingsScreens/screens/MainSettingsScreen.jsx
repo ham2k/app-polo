@@ -40,6 +40,7 @@ import WavelogSettingsScreen from './WavelogSettingsScreen'
 
 import { MainSettingsForDistribution } from '../../../distro'
 import NoticesSettingsScreen from './NoticesSettingsScreen'
+import { selectLocalExtensionData } from '../../../store/local'
 
 const Stack = createNativeStackNavigator()
 
@@ -57,7 +58,7 @@ export default function MainSettingsScreen ({ navigation, route }) {
   const headerOptions = useMemo(() => {
     let options = {}
     options = { title: 'Settings' }
-    options.closeInsteadOfBack = true
+    options.leftAction = 'close'
     return options
   }, [])
 
@@ -132,11 +133,17 @@ export default function MainSettingsScreen ({ navigation, route }) {
 function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
   const safeAreaInsets = useSafeAreaInsets()
   const [currentDialog, setCurrentDialog] = useState()
-  console.log('safe area', safeAreaInsets)
+
   const accountSettingHooks = useMemo(() => {
     const hooks = findHooks('setting').filter(hook => hook.category === 'account' && hook.SettingItem)
     return hooks
   }, [settings]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
+  const showSyncSettings = useMemo(() => {
+    return lofiData?.account?.cutoff_date_millis &&
+    (Date.now() - lofiData?.account?.cutoff_date_millis > 1000 * 60 * 60 * 24)
+  }, [lofiData?.account?.cutoff_date_millis])
 
   return (
     <ScrollView style={{ flex: 1, marginLeft: safeAreaInsets.left, marginRight: splitView ? 0 : safeAreaInsets.right }}>
@@ -185,13 +192,12 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
           leftIcon="file-cabinet"
         />
 
-        {settings.devMode && (
+        {(settings.devMode || showSyncSettings) && (
           <H2kListItem
             title="Sync Settings"
             description="Cloud sync and backup"
             onPress={() => navigation.navigate('Settings', { screen: 'SyncSettings' })}
             leftIcon="sync"
-            leftIconColor={styles.colors.devMode}
           />
         )}
 
@@ -338,42 +344,42 @@ function MainSettingsOptionsScreen ({ navigation }) {
 function settingsScreensArray ({ includeMain, topLevelBack, splitView }) {
   const screens = [
     <Stack.Screen name="GeneralSettings" key="GeneralSettings"
-      options={{ title: 'General Settings', headerBackVisible: topLevelBack }}
+      options={{ title: 'General Settings', leftAction: topLevelBack ? 'back' : 'none' }}
       component={GeneralSettingsScreen}
     />,
 
     <Stack.Screen name="LoggingSettings" key="LoggingSettings"
-      options={{ title: 'Logging Settings', headerBackVisible: topLevelBack }}
+      options={{ title: 'Logging Settings', leftAction: topLevelBack ? 'back' : 'none' }}
       component={LoggingSettingsScreen}
     />,
 
     <Stack.Screen name="FeaturesSettings" key="FeaturesSettings"
-      options={{ title: 'App Features', headerBackVisible: topLevelBack }}
+      options={{ title: 'App Features', leftAction: topLevelBack ? 'back' : 'none' }}
       component={FeaturesSettingsScreen}
     />,
 
     <Stack.Screen name="DataSettings" key="DataSettings"
-      options={{ title: 'Data Settings', headerBackVisible: topLevelBack }}
+      options={{ title: 'Data Settings', leftAction: topLevelBack ? 'back' : 'none' }}
       component={DataSettingsScreen}
     />,
 
     <Stack.Screen name="SyncSettings" key="SyncSettings"
-      options={{ title: 'Sync Settings', headerBackVisible: topLevelBack }}
+      options={{ title: 'Sync Settings', leftAction: topLevelBack ? 'back' : 'none' }}
       component={SyncSettingsScreen}
     />,
 
     <Stack.Screen name="VersionSettings" key="VersionSettings"
-      options={{ title: 'Version Information', headerBackVisible: topLevelBack }}
+      options={{ title: 'Version Information', leftAction: topLevelBack ? 'back' : 'none' }}
       component={VersionSettingsScreen}
     />,
 
     <Stack.Screen name="CreditsSettings" key="CreditsSettings"
-      options={{ title: 'Credits', headerBackVisible: topLevelBack }}
+      options={{ title: 'Credits', leftAction: topLevelBack ? 'back' : 'none' }}
       component={CreditsSettingsScreen}
     />,
 
     <Stack.Screen name="DevModeSettings" key="DevModeSettings"
-      options={{ title: 'Developer Settings', headerBackVisible: topLevelBack }}
+      options={{ title: 'Developer Settings', leftAction: topLevelBack ? 'back' : 'none' }}
       component={DevModeSettingsScreen}
     />,
 
@@ -398,7 +404,7 @@ function settingsScreensArray ({ includeMain, topLevelBack, splitView }) {
     />,
 
     <Stack.Screen name="WavelogSettings" key="WavelogSettings"
-      options={{ title: 'Wavelog Settings', headerBackVisible: topLevelBack }}
+      options={{ title: 'Wavelog Settings', leftAction: topLevelBack ? 'back' : 'none' }}
       component={WavelogSettingsScreen}
     />
 

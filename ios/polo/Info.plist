@@ -62,9 +62,6 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>MaterialIcons.ttf</string>
-		<string>MaterialCommunityIcons.ttf</string>
-		<string>FontAwesome6_Solid.ttf</string>
 		<string>Roboto Mono Bold.ttf</string>
 		<string>Roboto Mono Light.ttf</string>
 		<string>Roboto Mono Medium.ttf</string>
@@ -89,6 +86,10 @@
 		<string>Roboto Medium.ttf</string>
 		<string>Roboto Thin.ttf</string>
 		<string>Roboto.ttf</string>
+		<string>FontAwesome6_Brands.ttf</string>
+		<string>FontAwesome6_Regular.ttf</string>
+		<string>FontAwesome6_Solid.ttf</string>
+		<string>MaterialDesignIcons.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

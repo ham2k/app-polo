@@ -11,7 +11,7 @@ import { qsoKey } from '@ham2k/lib-qson-tools'
 import GLOBAL from '../../../GLOBAL'
 
 import { actions } from '../qsosSlice'
-import { actions as operationActions, saveOperationLocalData } from '../../operations'
+import { actions as operationActions, saveOperationLocalData, updateOperationInfo } from '../../operations'
 import { dbExecute, dbSelectAll, dbTransaction } from '../../db/db'
 import { sendQSOsToSyncService } from '../../sync'
 import { logTimer } from '../../../tools/perfTools'
@@ -55,11 +55,11 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
 
   let operationInfo = getState().operations.info[uuid]
 
-  const qsoCount = qsos.filter(qso => !qso.deleted).length
+  const qsoCount = qsos.filter(qso => !qso.deleted && !qso.event).length
 
   if (startAtMillisMin !== operationInfo?.startAtMillisMin ||
-  startAtMillisMax !== operationInfo?.startAtMillisMax ||
-  qsoCount !== operationInfo?.qsoCount) {
+    startAtMillisMax !== operationInfo?.startAtMillisMax ||
+    qsoCount !== operationInfo?.qsoCount) {
     operationInfo = { ...operationInfo, startAtMillisMin, startAtMillisMax, qsoCount }
     setImmediate(() => {
       dispatch(operationActions.setOperation(operationInfo))
@@ -76,6 +76,21 @@ export const queryQSOs = async (query, params) => {
 
 export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
 
+export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = false }) => {
+  const qso = {
+    startAtMillis,
+    endAtMillis,
+    our: { call: 'EVENT', operatorCall: event?.operatorCall },
+    their: { call: event?.event?.toUpperCase() ?? 'EVENT' },
+    freq: 0,
+    band: 'event',
+    mode: event.event ?? 'event',
+    event,
+  }
+
+  return addQSOs({ uuid, qsos: [qso], synced })
+}
+
 const DEBUG = false
 
 export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
@@ -90,6 +105,8 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     for (const qso of batch) {
       qso.uuid = qso.uuid || UUID.v4()
       qso.operation = uuid
+      qso.startAtMillis = qso.startAtMillis || qso.endAtMillis || now
+      qso.endAtMillis = qso.endAtMillis || qso.startAtMillis || now
       qso.createdAtMillis = qso.createdAtMillis || now
       qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
       qso.updatedAtMillis = now
@@ -137,31 +154,13 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
 
   const operationInfo = getState().operations.info[uuid]
   if (getState().qsos.qsos[uuid]) { // QSOs are for an operation that's currently in memory
-    let { startAtMillisMin, startAtMillisMax } = operationInfo
-    if (DEBUG) logTimer('addQSOs', 'got op info')
-
     for (const qso of qsos) {
       dispatch(actions.addQSO({ uuid, qso }))
-
-      if (!qso.deleted) {
-        if (qso.startAtMillis < startAtMillisMin || !startAtMillisMin) startAtMillisMin = qso.startAtMillis
-        if (qso.startAtMillis > startAtMillisMax || !startAtMillisMax) startAtMillisMax = qso.startAtMillis
-      }
     }
     if (DEBUG) logTimer('addQSOs', 'added qsos to state')
-
-    const finalQSOs = getState().qsos.qsos[uuid]
-
-    operationInfo.startAtMillisMin = startAtMillisMin
-    operationInfo.startAtMillisMax = startAtMillisMax
-    operationInfo.qsoCount = finalQSOs.filter(q => !q.deleted).length
-
-    setImmediate(() => {
-      if (DEBUG) console.log('op update', { startAtMillisMin, startAtMillisMax, qsoCount: operationInfo.qsoCount })
-      dispatch(operationActions.setOperation(operationInfo))
-      dispatch(saveOperationLocalData(operationInfo))
-    })
   }
+
+  dispatch(updateOperationInfo({ uuid }))
 
   if (!synced) {
     setImmediate(() => {
@@ -205,7 +204,7 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
   return { earliestSyncedAtMillis, latestSyncedAtMillis }
 }
 
-export async function markQSOsAsSynced (qsos) {
+export async function markQSOsAsSynced(qsos) {
   if (!qsos || qsos.length === 0) return
   await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `"${q.uuid}"`).join(',')})`, [])
 }
@@ -214,6 +213,8 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
   const now = Date.now()
 
   for (const qso of qsos) {
+    if (qso.event) continue
+
     qso.our = { ...qso.our, ...data.our } // Batch Update only changes `our` data
     qso.key = qsoKey(qso)
     qso.uuid = qso.uuid || UUID.v4()
@@ -232,18 +233,18 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
       qso.uuid
     ])
 
-    dispatch(actions.addQSO({ uuid, qso }))
+    await dispatch(actions.addQSO({ uuid, qso }))
   }
   // Since the batch update does not change operation counts or times, no need to do anything else here
 }
 
-export const saveQSOsForOperation = (uuid, { synced } = {}) => async (dispatch, getState) => {
+export const saveQSOsForOperation = (uuid, { qsos, synced } = {}) => async (dispatch, getState) => {
   const now = Date.now()
 
   synced = synced || false
 
   return dbTransaction(async transaction => {
-    const qsos = getState().qsos.qsos[uuid]
+    qsos = qsos || getState().qsos.qsos[uuid]
 
     // Save new QSOs
     for (const qso of qsos) {
@@ -267,4 +268,8 @@ export const saveQSOsForOperation = (uuid, { synced } = {}) => async (dispatch, 
       ])
     }
   })
+}
+
+function fingerprintQSOData(qso) {
+  return JSON.stringify(qso)
 }

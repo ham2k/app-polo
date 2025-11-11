@@ -8,7 +8,7 @@
 import { findRef } from './refTools'
 import { fmtCabrilloDate, fmtCabrilloTime } from './timeFormats'
 
-export function qsonToCabrillo ({ operation, qsos, settings, handler }) {
+export function qsonToCabrillo({ operation, qsos, settings, handler, combineSegmentRefs }) {
   const ref = findRef(operation, handler.key)
 
   let str = ''
@@ -22,7 +22,21 @@ export function qsonToCabrillo ({ operation, qsos, settings, handler }) {
       .join('\n') + '\n'
   }
 
-  qsos.filter(qso => !qso.deleted).forEach(qso => {
+  for (const qso of qsos) {
+    if (qso.deleted) return
+    if (qso.event) {
+      if (qso.event.event === 'break' || qso.event.event === 'start') {
+        if (combineSegmentRefs) {
+          // Update all operation attributes, including regs
+          operation = { ...operation, ...qso.event.operation }
+        } else {
+          // Combine other attributes, but keep refs as initialized
+          operation = { ...operation, ...qso.event.operation, refs: operation.refs }
+        }
+      }
+      return
+    }
+
     let combinations = handler.qsoToCabrilloParts && handler.qsoToCabrilloParts({ qso, operation, ref })
     if (!Array.isArray(combinations?.[0])) {
       combinations = [combinations]
@@ -35,7 +49,7 @@ export function qsonToCabrillo ({ operation, qsos, settings, handler }) {
       str += fmtCabrilloTime(qso?.startAtMillis ?? qso?.endAtMillis).padEnd(4, ' ') + ' '
       str += parts.join(' ') + '\n'
     })
-  })
+  }
 
   str += 'END-OF-LOG:\n'
   return str
@@ -61,12 +75,12 @@ const DEFAULT_FREQUENCIES_PER_BAND = {
   '13cm': '2.3G'
 }
 
-function cabrilloFreq (qso) {
+function cabrilloFreq(qso) {
   if (qso.freq) return `${qso.freq}`
   else return DEFAULT_FREQUENCIES_PER_BAND[qso.band] ?? '0'
 }
 
-function cabrilloMode (qso) {
+function cabrilloMode(qso) {
   if (qso?.mode === 'SSB') return 'PH'
   else if (qso?.mode === 'USB') return 'PH'
   else if (qso?.mode === 'LSB') return 'PH'

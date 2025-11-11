@@ -42,7 +42,8 @@ const ExportHandler = {
       templateData: { modifier: 'Full' },
       exportName: 'Full ADIF Export',
       selectedByDefault: false,
-      privateDataDefault: true
+      privateDataDefault: true,
+      combineSegmentRefs: true // This export should include ref changes from segments
     }])
   }
 }
