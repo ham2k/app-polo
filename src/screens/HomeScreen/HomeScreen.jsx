@@ -22,11 +22,25 @@ import HomeTools from './components/HomeTools'
 import { trackEvent, trackSettings } from '../../distro'
 import { selectRuntimeOnline } from '../../store/runtime'
 
-function prepareStyles (baseStyles) {
+function prepareStyles (baseStyles, { safeArea }) {
   const DEBUG = false
 
   return {
     ...baseStyles,
+    root: {
+      flex: 1,
+      width: '100%',
+      padding: 0,
+      margin: 0
+    },
+    list: {
+      flex: 1
+    },
+    fab: {
+      ...baseStyles.isAndroid ? { position: 'absolute' } : {},
+      right: Math.max(baseStyles.oneSpace * 2, safeArea.right),
+      bottom: Math.max(baseStyles.oneSpace * 2, safeArea.bottom)
+    },
     row: {
       ...baseStyles.row,
       // borderWidth: 1,
@@ -115,14 +129,14 @@ function prepareStyles (baseStyles) {
 }
 
 export default function HomeScreen ({ navigation }) {
-  const styles = useThemedStyles(prepareStyles)
+  const safeArea = useSafeAreaInsets()
+  const styles = useThemedStyles(prepareStyles, { safeArea })
+
   const dispatch = useDispatch()
   const operationIds = useSelector(selectOperationIds)
   const settings = useSelector(selectSettings)
   const rawSettings = useSelector(selectRawSettings)
   const online = useSelector(selectRuntimeOnline)
-
-  const safeArea = useSafeAreaInsets()
 
   useEffect(() => {
     if (!settings?.operatorCall) {
@@ -173,60 +187,42 @@ export default function HomeScreen ({ navigation }) {
     setIsExtended(currentScrollPosition <= styles.oneSpace * 8)
   }, [styles.oneSpace])
 
-  const listStyle = useMemo(() => ({ flex: 1 }), [])
-  const emptyTextStyle = useMemo(() => ({
-    flex: 1,
-    marginTop: styles.oneSpace * 8,
-    textAlign: 'çenter'
-  }), [styles.oneSpace])
-  const emptyListComponent = useMemo(() => (
-    <Text style={emptyTextStyle}>No Operations!</Text>
-  ), [emptyTextStyle])
+  const emptyListComponent = useMemo(() => <EmptyListComponent styles={styles} />, [styles])
 
   return (
     <ScreenContainer>
-      <View style={{ flex: 1, width: '100%', padding: 0, margin: 0 }}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={styles.root}>
+        <GestureHandlerRootView style={styles.root}>
           <FlatList
             accesibilityLabel="Operation List"
-            style={listStyle}
+            style={styles.list}
             data={operationIds}
             renderItem={renderRow}
             ListEmptyComponent={emptyListComponent}
             keyboardShouldPersistTaps={'handled'}
             onScroll={handleScroll}
           />
-        </GestureHandlerRootView>
-        {Platform.OS === 'ios' ? (
           <AnimatedFAB
             icon="plus"
             label="New Operation"
             accessibilityLabel="New Operation"
             mode="elevated"
             extended={isExtended}
-            style={{
-              right: Math.max(styles.oneSpace * 2, safeArea.right),
-              bottom: Math.max(styles.oneSpace * 2, safeArea.bottom)
-            }}
+            style={styles.fab}
             onPress={handleNewOperation}
           />
-        ) : ( // As of March 8, 2025, AnimatedFABs show a weird inner shadow on Android
-          <FAB
-            icon="plus"
-            label="New Operation"
-            accessibilityLabel="New Operation"
-            mode="elevated"
-            style={{
-              position: 'absolute',
-              right: Math.max(styles.oneSpace * 2, safeArea.right),
-              bottom: Math.max(styles.oneSpace * 2, safeArea.bottom)
-            }}
-            onPress={handleNewOperation}
-          />
-        )}
+        </GestureHandlerRootView>
       </View>
 
       <HomeTools settings={settings} styles={styles} />
     </ScreenContainer>
+  )
+}
+
+const EmptyListComponent = ({ styles }) => {
+  return (
+    <View style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
+      <Text style={{ textAlign: 'center' }}>No Operations!</Text>
+    </View>
   )
 }
