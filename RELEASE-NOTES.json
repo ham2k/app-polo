@@ -1,8 +1,9 @@
 {
-  "25.10.0-pre5": {
-    "name": "October '25 (pre 5)",
+  "25.10.0": {
+    "name": "October '25",
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
     "changes": [
+      "Ham2K Log Filer Cloud Sync (alpha testing)",
       "Annotations in the log (try 'NOTE', 'TODO', 'WEATHER' or 'SOLAR')",
       "Auto self-spotting every 10 minutes",
       "Allow spaces in commands (try 'SPOT HERE')",
