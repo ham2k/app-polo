@@ -274,17 +274,25 @@ const ReferenceHandler = {
     }
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+  scoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
     const { band, mode, uuid, startAtMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const points = refs.length
+
+    if (scoredRef?.ref) {
+      type = Info.activationType
+      value = refCount || 1
+    } else {
+      type = Info.huntingType
+      value = refCount
+    }
 
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
     if (nearDupes.length === 0) {
-      return { counts: 1, points, type: Info.activationType }
+      return { counts: 1, points, type }
     } else {
       const thisQSOTime = qso.startAtMillis ?? Date.now()
       const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
@@ -296,9 +304,9 @@ const ReferenceHandler = {
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
       if (sameBandMode && sameDay) {
         if (points > 0 && !sameRefs) { // Doesn't count towards activation, but towards Silo 2 Silo award.
-          return { counts: 0, points, notices: ['newRef'], type: Info.activationType }
+          return { counts: 0, points, notices: ['newRef'], type }
         }
-        return { counts: 0, points: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { counts: 0, points: 0, alerts: ['duplicate'], type }
       } else {
         const notices = []
         if (!sameDay) notices.push('newDay')
