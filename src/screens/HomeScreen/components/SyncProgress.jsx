@@ -19,7 +19,7 @@ import KeepAwake from '@sayem314/react-native-keep-awake'
 
 const DEBUG = 0
 
-export default function SyncProgress () {
+export default function SyncProgress ({ wrapper }) {
   const settings = useSelector(selectSettings)
   const styles = useThemedStyles()
   const localData = useSelector(selectLocalData)
@@ -80,38 +80,51 @@ export default function SyncProgress () {
     animationHeight.value = layoutHeight
   }, [animationHeight])
 
-  return (
-    <Animated.View
-      style={[styles.root, animatedStyle]}
-    >
-      {settings.keepDeviceAwake && <KeepAwake />}
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          height: styles.oneSpace * 2,
-          marginHorizontal: styles.oneSpace * 2
-        }}
-        onLayout={handleLayout}
+  const content = useMemo(() => {
+    return (
+      <Animated.View
+        style={[styles.root, animatedStyle]}
       >
-        <Icon source="cloud" size={styles.oneSpace * 2} color="white" />
+        {settings.keepDeviceAwake && <KeepAwake />}
         <View
           style={{
-            marginLeft: styles.oneSpace,
             flexDirection: 'row',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            flex: 1,
-            borderWidth: 0,
-            borderRadius: styles.oneSpace,
-            overflow: 'hidden',
-            backgroundColor: 'rgba(128, 128, 128, 0.5)'
+            height: styles.oneSpace * 2,
+            marginHorizontal: styles.oneSpace * 2
           }}
+          onLayout={handleLayout}
         >
-          <View style={{ flex: percentage, height: styles.oneSpace / 2, backgroundColor: 'white' }} />
+          <Icon source="cloud" size={styles.oneSpace * 2} color="white" />
+          <View
+            style={{
+              marginLeft: styles.oneSpace,
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              flex: 1,
+              borderWidth: 0,
+              borderRadius: styles.oneSpace,
+              overflow: 'hidden',
+              backgroundColor: 'rgba(128, 128, 128, 0.5)'
+            }}
+          >
+            <View style={{ flex: percentage, height: styles.oneSpace / 2, backgroundColor: 'white' }} />
+          </View>
         </View>
-      </View>
-    </Animated.View>
-  )
+      </Animated.View>
+    )
+  }, [styles.root, styles.oneSpace, animatedStyle, settings.keepDeviceAwake, handleLayout, percentage])
+
+  if (visible) {
+    if (wrapper) {
+      const Wrapper = wrapper
+      return <Wrapper>{content}</Wrapper>
+    } else {
+      return content
+    }
+  } else {
+    return null
+  }
 }

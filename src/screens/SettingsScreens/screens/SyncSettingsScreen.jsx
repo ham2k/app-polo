@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'react-native-paper'
 import { Alert, ScrollView, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
@@ -28,6 +28,7 @@ import { clearAllOperationData, getSyncCounts, resetSyncedStatus } from '../../.
 import GLOBAL from '../../../GLOBAL'
 
 import { DEFAULT_LOFI_SERVER } from '../../../extensions/data/ham2k-lofi-sync/Ham2KLoFiSyncExtension'
+import SyncProgress from '../../HomeScreen/components/SyncProgress'
 
 const LOFI_SERVER_LABELS = {
   // 'https://dev.lofi.ham2k.net': 'Ham2K LoFi (Development)',
@@ -138,7 +139,12 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   const handleReplaceLocalData = useCallback(async () => {
     Alert.alert(
       'Replace Local Data?',
-      'Are you sure you want to replace all local data with the operations and QSOs from the new account?\n\nThe app will restart.\n\n If you have unsynced data, it will be lost.',
+      'Are you sure you want to replace all data on this device\n' +
+      'with the operations and QSOs from the new account in the cloud?' +
+      '\n\n' +
+      'The app will restart.' +
+      '\n\n' +
+      'If you have unsynced data, IT WILL BE LOST.',
       [
         { text: 'No, Cancel', onPress: () => {} },
         {
@@ -154,18 +160,25 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   }, [dispatch])
 
   const handleCombineLocalData = useCallback(async () => {
-    Alert.alert('Combine Local Data?', 'Are you sure you want to combine these operations and QSOs into the new account?\n\nThis can accidentally result in mixing unrelated logs!\n\nThis operation cannot be undone.', [
-      { text: 'No, Cancel', onPress: () => {} },
-      {
-        text: 'Yes, Combine Them!',
-        onPress: async () => {
-          dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
-          dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
-          await dispatch(resetSyncedStatus())
-          dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))
+    Alert.alert('Combine Local Data?',
+      'Are you sure you want to combine these operations and QSOs into the new account?' +
+      '\n\n' +
+      'This will combine QSOs on this device with the ones in the cloud, ' +
+      'and can accidentally result in mixing unrelated logs!' +
+      '\n\n' +
+      'This operation cannot be undone.',
+      [
+        { text: 'No, Cancel', onPress: () => {} },
+        {
+          text: 'Yes, Combine Them!',
+          onPress: async () => {
+            dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
+            dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
+            await dispatch(resetSyncedStatus())
+            dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))
+          }
         }
-      }
-    ])
+      ])
   }, [dispatch])
 
   const handleDialogDone = useCallback(() => {
@@ -177,6 +190,17 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
       }
     })
   }, [dispatch, syncHook])
+
+  const progressWrapper = useMemo(() => {
+    return ({ children }) => (
+      <SafeAreaView
+        edges={['bottom', 'left', 'right'].filter(x => x)}
+        style={{ flex: 0, flexDirection: 'column', width: '100%', backgroundColor: styles.colors.primary }}
+      >
+        <View style={{ marginTop: styles.oneSpace }}>{children}</View>
+      </SafeAreaView>
+    )
+  }, [styles.oneSpace, styles.colors.primary])
 
   return (
     <ScreenContainer>
@@ -318,6 +342,11 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
         <View style={{ height: safeAreaInsets.bottom }} />
 
       </ScrollView>
+
+      <SyncProgress
+        wrapper={progressWrapper}
+      />
+
     </ScreenContainer>
   )
 }
