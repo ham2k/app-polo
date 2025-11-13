@@ -115,9 +115,8 @@ export const selectOperationIds = createSelector(
   (state) => state?.operations?.info,
   (info) => {
     return Object.values(info || {}).sort((a, b) => {
-        return (b.startAtMillisMax ?? b.createdAtMillis ?? 0) - (a.startAtMillisMax ?? a.createdAtMillis ?? 0)
-      })
-      .map(op => op.uuid) // Just return the UUIDs
+      return (b.startAtMillisMax ?? b.createdAtMillis ?? 0) - (a.startAtMillisMax ?? a.createdAtMillis ?? 0)
+    }).filter(Boolean).map(op => op.uuid) // Just return the UUIDs
   },
   {
     memoizeOptions: {

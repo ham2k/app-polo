@@ -61,16 +61,16 @@ export const systemSlice = createSlice({
       state.notices = state.notices || []
 
       if (action.payload.unique) {
-        state.notices = state.notices.filter(notice => notice.unique !== action.payload.unique)
+        state.notices = state.notices.filter(notice => notice?.unique && notice.unique !== action.payload.unique)
       }
       if (action.payload.uniquePrefix) {
-        state.notices = state.notices.filter(notice => !notice.unique.startsWith(action.payload.uniquePrefix))
+        state.notices = state.notices.filter(notice => notice?.unique && !notice.unique.startsWith(action.payload.uniquePrefix))
       }
       if (action.payload.key) {
-        state.notices = state.notices.filter(notice => notice.key !== action.payload.key)
+        state.notices = state.notices.filter(notice => notice?.key && notice.key !== action.payload.key)
       }
       if (action.payload.keyPrefix) {
-        state.notices = state.notices.filter(notice => !notice.key.startsWith(action.payload.keyPrefix))
+        state.notices = state.notices.filter(notice => notice?.key && !notice.key.startsWith(action.payload.keyPrefix))
       }
     },
     clearNoticesDismissed: (state) => {

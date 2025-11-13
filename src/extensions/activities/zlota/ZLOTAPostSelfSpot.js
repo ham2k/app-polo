@@ -20,7 +20,7 @@ export const ZLOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispat
 
   const state = getState()
   let activatorCallsign = operation.stationCall || state.settings.operatorCall
-  if (operation.local.isMultiStation) {
+  if (operation.local?.isMultiStation) {
     activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? "0"}`
   }
 

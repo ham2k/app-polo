@@ -12,7 +12,7 @@ export const POTAPostSelfSpot = ({ operation, vfo, comments }) => (_dispatch, ge
   const state = getState()
 
   let mainCall = operation.stationCall || state.settings.operatorCall
-  if (operation.local.isMultiStation) {
+  if (operation.local?.isMultiStation) {
     mainCall = `${mainCall}/M${operation.local.multiIdentifier ?? "0"}`
   }
 

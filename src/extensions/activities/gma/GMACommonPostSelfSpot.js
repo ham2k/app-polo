@@ -17,7 +17,7 @@ export const GMACommonPostSelfSpot = ({ operation, vfo, comments, refs, url }) =
 
   const state = getState()
   let call = operation.stationCall || state.settings.operatorCall
-  if (operation.local.isMultiStation) {
+  if (operation.local?.isMultiStation) {
     call = `${call}/M${operation.local.multiIdentifier ?? "0"}`
   }
   const baseCall = parseCallsign(call).baseCall

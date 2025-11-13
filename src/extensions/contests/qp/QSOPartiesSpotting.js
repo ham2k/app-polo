@@ -41,7 +41,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
   if (opRef?.spotToQPHub) {
     let call = operation.stationCall
 
-    if (operation.local.isMultiStation) {
+    if (operation.local?.isMultiStation) {
       call = `${call}/M${operation.local.multiIdentifier ?? "0"}`
     }
 
@@ -86,7 +86,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
   if (opRef?.spotToAPRS && operation?.grid) {
     let call = operation.stationCall
 
-    if (operation.local.isMultiStation) {
+    if (operation.local?.isMultiStation) {
       call = `${call}-${operation.local.multiIdentifier ?? "0"}`
     }
 
@@ -272,7 +272,7 @@ export const SpotsHook = {
   }
 }
 
-function _aprsPasscodeForCall (call) {
+function _aprsPasscodeForCall(call) {
   call = call.toUpperCase()
   call = call.split('-')[0]
   let passcode = 29666
