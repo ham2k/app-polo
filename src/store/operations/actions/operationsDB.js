@@ -20,6 +20,7 @@ import { actions } from '../operationsSlice'
 import { selectSettings } from '../../settings'
 import { selectLocalData, setLocalData } from '../../local'
 import { computeSizes } from '../../../styles/tools/computeSizes'
+import { fmtTimestamp } from '../../../tools/timeFormats'
 
 const operationFromRow = (row) => {
   if (!row) return {}
@@ -207,8 +208,13 @@ export const resetSyncedStatus = () => async (dispatch) => {
 }
 
 export const clearAllOperationData = () => async (dispatch) => {
-  await dbExecute('DELETE FROM operations', [])
-  await dbExecute('DELETE FROM qsos', [])
+  const timestamp = fmtTimestamp(Date.now())
+  await dbExecute(`ALTER TABLE operations RENAME TO bkp_${timestamp}_operations`)
+  await dbExecute(`ALTER TABLE qsos RENAME TO bkp_${timestamp}_qsos`)
+  await dbExecute(`CREATE TABLE operations AS SELECT * FROM bkp_${timestamp}_operations WHERE 0`)
+  await dbExecute(`CREATE TABLE qsos AS SELECT * FROM bkp_${timestamp}_qsos WHERE 0`)
+  // await dbExecute('DELETE FROM operations', [])
+  // await dbExecute('DELETE FROM qsos', [])
 
   dispatch(setLocalData({ sync: {} }))
   await persistor.purge()
