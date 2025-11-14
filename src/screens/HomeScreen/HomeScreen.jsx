@@ -7,8 +7,8 @@
 
 import React, { useCallback, useEffect, useMemo } from 'react'
 
-import { FlatList, Platform, View } from 'react-native'
-import { AnimatedFAB, FAB, Text } from 'react-native-paper'
+import { FlatList, View } from 'react-native'
+import { AnimatedFAB, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
