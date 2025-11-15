@@ -226,7 +226,8 @@ export const generateActivitySumarizer = ({ info }) => {
 
     if (DEBUG_THIS_ONE) console.log('summarizeScore', shortName, { ...score })
 
-    const activatedRefKeys = Object.keys(score.activatedRefs ?? {}).sort()
+    score.activatedRefs = score.activatedRefs ?? {}
+    const activatedRefKeys = Object.keys(score.activatedRefs).sort()
 
     const minMissing = Math.min(...Object.values(score.activatedRefs))
 

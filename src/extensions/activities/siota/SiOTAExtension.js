@@ -281,10 +281,10 @@ const ReferenceHandler = {
 
     if (scoredRef?.ref) {
       type = Info.activationType
-      value = refCount || 1
+      value = points || 1
     } else {
       type = Info.huntingType
-      value = refCount
+      value = points
     }
 
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
