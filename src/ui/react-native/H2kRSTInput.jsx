@@ -13,11 +13,12 @@ import { expandRSTValues } from '../../tools/callsignTools'
 import { H2kTextInput } from './H2kTextInput'
 
 export function H2kRSTInput (props) {
-  const { value, radioMode } = props
+  const { value, radioMode, settings } = props
 
   const [rstLength, placeholder] = useMemo(() => {
-    return [6, expandRSTValues('', radioMode)]
-  }, [radioMode])
+    return [6, expandRSTValues('', radioMode, { settings })]
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [radioMode, settings?.defaultReportCW, settings?.defaultReportFT8, settings?.defaultReport])
 
   // eslint-disable-next-line no-unused-vars
   let [mode, setMode] = useUIState('NumberKeys', 'mode', 'numbers')

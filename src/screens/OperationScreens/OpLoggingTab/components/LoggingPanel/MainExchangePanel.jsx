@@ -77,14 +77,14 @@ export const MainExchangePanel = ({
     const text = event?.value || event?.nativeEvent?.text || ''
     const mode = qso?.mode ?? vfo?.mode ?? 'SSB'
     if (text.trim().length === 1 || text.trim().length === 2) {
-      const expanded = expandRSTValues(text, mode)
+      const expanded = expandRSTValues(text, mode, { settings })
       if (expanded !== text) {
         handleFieldChange && handleFieldChange({ ...event, value: expanded, nativeEvent: { ...event?.nativeEvent, text } })
       }
     }
 
     return true
-  }, [handleFieldChange, qso, vfo?.mode])
+  }, [handleFieldChange, qso, vfo?.mode, settings])
 
   let fields = []
   fields.push(
@@ -131,6 +131,7 @@ export const MainExchangePanel = ({
         label="Sent"
         fieldId={'ourSent'}
         disabled={disabled}
+        settings={settings}
       />,
       <H2kRSTInput
         {...rstFieldProps}
@@ -140,6 +141,7 @@ export const MainExchangePanel = ({
         label="Rcvd"
         fieldId={'theirSent'}
         disabled={disabled}
+        settings={settings}
       />
     ]
     if (settings.switchSentRcvd) rstFields.reverse()

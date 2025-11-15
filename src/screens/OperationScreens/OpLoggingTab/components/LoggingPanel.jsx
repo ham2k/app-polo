@@ -335,10 +335,10 @@ export default function LoggingPanel ({
         qso.our = qso.our || {}
         qso.our.call = qso.our.call || ourInfo?.call
         qso.our.operatorCall = qso.our.operatorCall || operation.local?.operatorCall
-        qso.our.sent = expandRSTValues(qso.our.sent, qso.mode)
+        qso.our.sent = expandRSTValues(qso.our.sent, qso.mode, { settings })
 
         qso.their = qso.their || {}
-        qso.their.sent = expandRSTValues(qso.their.sent, qso.mode)
+        qso.their.sent = expandRSTValues(qso.their.sent, qso.mode, { settings })
         let lastUUID
 
         const { call, allCalls, callStack } = parseStackedCalls(qso?.their?.call ?? '')

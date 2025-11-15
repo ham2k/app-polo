@@ -265,11 +265,11 @@ const ReferenceHandler = {
       for (const theirLocation of theirLocations) {
         const row = []
         row.push((ourCall ?? ' ').padEnd(13, ' '))
-        row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59').padEnd(3, ' '))
+        row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
         if (hasNumbers) row.push((qsoRef.ourNumber ?? ' ').padEnd(6, ' '))
         row.push((ourLocation ?? ' ').padEnd(6, ' '))
         row.push((qso?.their?.call ?? '').padEnd(13, ' '))
-        row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59').padEnd(3, ' '))
+        row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
         if (hasNumbers) row.push((qsoRef.theirNumber ?? ' ').padEnd(6, ' '))
         row.push((theirLocation ?? ' ').padEnd(6, ' '))
         rows.push(row)

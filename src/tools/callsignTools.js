@@ -7,7 +7,7 @@
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
-export function parseStackedCalls (input) {
+export function parseStackedCalls(input) {
   // Stacked calls are separated by `//`
   // The last part of the stack that is a valid call is extracted as `call`
   // along with any other comma-separated calls that were part of that stack part, as `allCalls`.
@@ -46,12 +46,12 @@ export function parseStackedCalls (input) {
   return { call: call || '', allCalls: allCalls || [], callStack: stack.join('//') }
 }
 
-export function expandRSTValues (text, mode) {
+export function expandRSTValues(text, mode, { settings } = {}) {
   text = text?.trim() || ''
   if (text.length === 0) {
-    if (mode === 'CW' || mode === 'RTTY') return '599'
-    if (mode === 'FT8' || mode === 'FT4') return '+0'
-    return '59'
+    if (mode === 'CW' || mode === 'RTTY') return settings?.defaultReportCW || '599'
+    if (mode === 'FT8' || mode === 'FT4') return settings?.defaultReportFT8 || '+0'
+    return settings?.defaultReport || '59'
   } else if (text.length === 1) {
     let readability = '5'
     const strength = text

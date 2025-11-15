@@ -20,6 +20,7 @@ import { parseFreqInMHz } from '../../tools/frequencyFormats'
 import { H2kCallsignInput, H2kDateInput, H2kFrequencyInput, H2kGridInput, H2kListSection, H2kRSTInput, H2kTextInput, H2kTimeInput } from '../../ui'
 import ScreenContainer from '../components/ScreenContainer'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { selectSettings } from '../../store/settings'
 
 const QSO_SECTIONS = [
   {
@@ -84,6 +85,7 @@ const QSO_SECTIONS = [
 
 export default function EditQSOScreen ({ navigation, route }) {
   const styles = useThemedStyles()
+  const settings = useSelector(selectSettings)
 
   const safeAreaInsets = useSafeAreaInsets()
 
@@ -144,6 +146,7 @@ export default function EditQSOScreen ({ navigation, route }) {
             styles={styles}
             style={{ marginBottom: (index === QSO_SECTIONS.length - 1 ? safeAreaInsets.bottom : 0) + styles.oneSpace }}
             onChange={handleChanges}
+            settings={settings}
           />
         ))}
       </ScrollView>
@@ -151,7 +154,7 @@ export default function EditQSOScreen ({ navigation, route }) {
   )
 }
 
-function QSOSection ({ qso, section, styles, onChange, style }) {
+function QSOSection ({ qso, section, styles, onChange, style, settings }) {
   return (
     <H2kListSection title={section.section} style={style}>
       <View
@@ -168,7 +171,7 @@ function QSOSection ({ qso, section, styles, onChange, style }) {
             {field.breakBefore && (
               <View style={{ width: '100%', height: 0 }} />
             )}
-            <QSOField field={field} qso={qso} section={section} styles={styles} onChange={onChange} />
+            <QSOField field={field} qso={qso} section={section} styles={styles} onChange={onChange} settings={settings} />
             {field.breakAfter && (
               <View style={{ width: '100%', height: 0 }} />
             )}
@@ -194,7 +197,7 @@ function getValueForField ({ qso, field, section }) {
   }
 }
 
-function QSOField ({ qso, field, section, styles, onChange }) {
+function QSOField ({ qso, field, section, styles, onChange, settings }) {
   const value = getValueForField({ qso, field, section })
 
   const props = {
@@ -271,6 +274,7 @@ function QSOField ({ qso, field, section, styles, onChange }) {
       <H2kRSTInput
         {...props}
         radioMode={qso?.mode ?? 'SSB'}
+        settings={settings}
       />
     )
   } else if (field.type === 'grid') {

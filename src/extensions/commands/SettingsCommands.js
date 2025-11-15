@@ -92,6 +92,24 @@ const SETTINGS = {
     default: false,
     type: 'boolean'
   },
+  'defaultReportCW': {
+    alias: 'reportCW',
+    label: 'Default Report CW',
+    default: '599',
+    type: 'string'
+  },
+  'defaultReportFT8': {
+    aliases: ['reportFT8', 'reportFT4', 'defaultReportFT4'],
+    label: 'Default Report FT8/FT4',
+    default: '+0',
+    type: 'string'
+  },
+  'defaultReport': {
+    aliases: ['reportSSB', 'defaultReportSSB', 'reportRTTY', 'defaultReportRTTY'],
+    label: 'Default Report',
+    default: '59',
+    type: 'string'
+  },
 }
 const SETTINGS_BY_KEY = {}
 

@@ -111,10 +111,10 @@ const ReferenceHandler = {
     const rows = [
       [
         (ourCall ?? ' '),
-        (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59'),
+        (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59'),
         (ref?.exchange || ' '),
         (qso?.their?.call || ' '),
-        (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59'),
+        (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59'),
         (qsoRef?.exchange || ' ')
       ]
     ]
@@ -202,7 +202,7 @@ const ReferenceHandler = {
   }
 }
 
-function mainExchangeForOperation (props) {
+function mainExchangeForOperation(props) {
   const { qso, updateQSO, styles, disabled, refStack } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, location: '' }

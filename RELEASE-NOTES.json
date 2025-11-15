@@ -3,7 +3,8 @@
     "name": "October '25 (patch 1)",
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
     "changes": [
-      "Added advanced settings commands"
+      "Added advanced settings commands",
+      "Advanced setting for default signal reports (try 'SET DEFAULTREPORTCW 559')"
     ]
   },
   "25.10.0": {
