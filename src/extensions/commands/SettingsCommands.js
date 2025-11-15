@@ -1,0 +1,141 @@
+/*
+ * Copyright ©️ 2025 Sebastian Delmont <sd@ham2k.com>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
+import { setSettings } from "../../store/settings"
+
+const Info = {
+  key: 'commands-settings',
+  name: 'Settings Commands'
+}
+
+const Extension = {
+  ...Info,
+  category: 'commands',
+  hidden: true,
+  alwaysEnabled: true,
+  onActivation: ({ registerHook }) => {
+    registerHook('command', { priority: 100, hook: SetSettingCommandHook })
+  }
+}
+
+export default Extension
+
+const SetSettingCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-settings-set',
+  match: /^(SET)(|[ /]|.+)$$/i,
+  allowSpaces: true,
+  describeCommand: (match, { settings }) => {
+    let [name, ...value] = match[2]?.substring(1).split(' ')
+    value = value.join(' ')
+
+    const setting = SETTINGS_BY_KEY[name.toUpperCase()]
+    console.log('describe setting', name, 'value', value, setting)
+
+    if (!setting || !setting.key) return `Setting ${name}?`
+
+    const isDefault = settings[setting.key] === undefined
+    const currentValue = settings[setting.key] || setting.default
+
+    if (value) {
+      value = _coerceValue({ setting, value })
+
+      console.log('-- coerced value', value)
+      if (value !== currentValue) {
+        return `Change "${setting.label}" to \`${_describeValue({ setting, value })}\`?`
+      } else {
+        return `${setting.label}: \`${_describeValue({ setting, value: currentValue, isDefault })}\``
+      }
+    } else {
+      return `${setting.label}: \`${_describeValue({ setting, value: currentValue, isDefault })}\``
+    }
+  },
+  invokeCommand: (match, { operation, qsos, dispatch, settings }) => {
+    console.log('invoke', match)
+    let [name, ...value] = match[2]?.substring(1).split(' ')
+    value = value.join(' ')
+
+    const setting = SETTINGS_BY_KEY[name.toUpperCase()]
+
+    if (!setting || !setting.key) return ' '
+
+    if (value) {
+      value = _coerceValue({ setting, value })
+      if (value === settings[setting.key]) return ' '
+
+      console.log('-- changing value', setting.key, value)
+      dispatch(setSettings({ [setting.key]: value }))
+
+      return `"${setting.label}" set to \`${_describeValue({ setting, value })}\``
+    } else {
+      console.log('-- not changing value', setting.key, value)
+      return 'Not changed'
+    }
+  }
+}
+
+const SETTINGS = {
+  'devMode': {
+    alias: 'konami',
+    label: 'Developer Mode',
+    default: false,
+    type: 'boolean'
+  },
+  'showNumbersRow': {
+    alias: 'numbersRow',
+    label: 'Show Numbers Row',
+    default: false,
+    type: 'boolean'
+  },
+}
+const SETTINGS_BY_KEY = {}
+
+for (const key of Object.keys(SETTINGS)) {
+  const setting = SETTINGS[key]
+  const upcasedKey = key.toUpperCase()
+  SETTINGS_BY_KEY[upcasedKey] = { ...setting, key }
+
+  if (setting.aliases) {
+    for (const alias of setting.aliases) {
+      SETTINGS_BY_KEY[alias.toUpperCase()] = { ...setting, key }
+    }
+  } else if (setting.alias) {
+    SETTINGS_BY_KEY[setting.alias.toUpperCase()] = { ...setting, key }
+  }
+}
+
+function _describeValue({ setting, value, isDefault }) {
+  console.log('-- describe value', setting.type, value, typeof value)
+  let description
+  if (setting.type === 'boolean') {
+    description = value ? 'YES' : 'NO'
+  } else if (setting.type === 'string') {
+    description = `"${value}"`
+  } else if (setting.type === 'number') {
+    description = `${value}`
+  } else {
+    description = `"${value}"`
+  }
+  return isDefault ? `${description} *` : description
+}
+
+function _coerceValue({ setting, value }) {
+  console.log('-- coerce value', setting.type, value, typeof value)
+  if (setting.type === 'boolean') {
+    value = (value || '').trim().toUpperCase()
+    return value === 'Y' || value === '1' || value === 'T' || value === 'ON' || value === 'YES' || value === 'TRUE'
+  } else if (setting.type === 'string') {
+    value = (value || '').trim()
+    return String(value)
+  } else if (setting.type === 'number') {
+    value = (value || '').trim()
+    return Number(value)
+  }
+  return value
+}
+

@@ -50,6 +50,7 @@ import OperatorCommands from './commands/OperatorCommands'
 import MiscCommands from './commands/MiscCommands'
 import OperationCommands from './commands/OperationCommands'
 import AnnotationCommands from './commands/AnnotationCommands'
+import SettingsCommands from './commands/SettingsCommands'
 
 import SatellitesExtension from './activities/satellites/SatellitesExtension'
 import WABExtension from './other/wab/WABExtension'
@@ -94,6 +95,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(MiscCommands)
   registerExtension(OperationCommands)
   registerExtension(AnnotationCommands)
+  registerExtension(SettingsCommands)
 
   registerExtension(CallNotesExtension)
   registerExtension(CallHistoryExtension)
