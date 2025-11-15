@@ -15,7 +15,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 
 import { trackEvent } from '../../../distro'
 
-import { addNewOperation, fillOperationFromTemplate, getAllOperationTemplates, getOperationTemplate, selectOperation, selectOperationsList, setOperationData } from '../../../store/operations'
+import { addNewOperation, fillOperationFromTemplate, getAllOperationTemplates, getOperationTemplate, restoreOperation, selectOperation, selectOperationsList, setOperationData } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { DeleteOperationDialog } from './components/DeleteOperationDialog'
@@ -251,14 +251,25 @@ export default function OpSettingsTab ({ navigation, route }) {
       </H2kListSection>
 
       <H2kListSection titleStyle={{ color: styles.theme.colors.error }} title={'The Danger Zone'}>
-        <H2kListItem
-          title="Delete Operation"
-          titleStyle={{ color: styles.theme.colors.error, paddingRight: safeAreaInsets.right }}
-          descriptionStyle={{ paddingRight: safeAreaInsets.right }}
-          leftIcon={'delete'}
-          leftIconColor={styles.theme.colors.error}
-          onPress={() => setCurrentDialog('delete')}
-        />
+        {operation.deleted ? (
+          <H2kListItem
+            title="Undelete Operation"
+            titleStyle={{ color: styles.theme.colors.error, paddingRight: safeAreaInsets.right }}
+            descriptionStyle={{ paddingRight: safeAreaInsets.right }}
+            leftIcon={'delete-restore'}
+            leftIconColor={styles.theme.colors.error}
+            onPress={() => dispatch(restoreOperation(operation.uuid))}
+          />
+        ) : (
+          <H2kListItem
+            title="Delete Operation"
+            titleStyle={{ color: styles.theme.colors.error, paddingRight: safeAreaInsets.right }}
+            descriptionStyle={{ paddingRight: safeAreaInsets.right }}
+            leftIcon={'delete'}
+            leftIconColor={styles.theme.colors.error}
+            onPress={() => setCurrentDialog('delete')}
+          />
+        )}
         {currentDialog === 'delete' && (
           <DeleteOperationDialog
             settings={settings}

@@ -92,6 +92,18 @@ const SETTINGS = {
     default: false,
     type: 'boolean'
   },
+  'showDeletedOps': {
+    alias: 'deletedOps',
+    label: 'Show Deleted Operations',
+    default: false,
+    type: 'boolean'
+  },
+  'showDeletedQSOs': {
+    alias: 'deletedQSOs',
+    label: 'Show Deleted QSOs',
+    default: false,
+    type: 'boolean'
+  },
   'defaultReportCW': {
     alias: 'reportCW',
     label: 'Default Report CW',

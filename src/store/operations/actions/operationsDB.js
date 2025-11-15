@@ -79,7 +79,7 @@ const rowFromOperation = (operation) => {
 }
 
 export const loadOperations = () => async (dispatch, getState) => {
-  const oplist = await dbSelectAll('SELECT * FROM operations WHERE deleted = 0 OR deleted IS NULL', [], { row: operationFromRow })
+  const oplist = await dbSelectAll('SELECT * FROM operations', [], { row: operationFromRow })
 
   const ophash = oplist.reduce((acc, op) => {
     acc[op.uuid] = op

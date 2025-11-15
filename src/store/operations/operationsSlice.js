@@ -49,14 +49,10 @@ export const operationsSlice = createSlice({
     updateOperations: (state, action) => {
       for (const operation of action.payload) {
         if (operation?.uuid) {
-          if (operation.deleted) {
-            state.info[operation.uuid] = undefined
-          } else {
-            state.info[operation.uuid] = {
-              ...OPERATION_INITIAL_STATE,
-              ...state.info[operation.uuid],
-              ...operation
-            }
+          state.info[operation.uuid] = {
+            ...OPERATION_INITIAL_STATE,
+            ...state.info[operation.uuid],
+            ...operation
           }
         }
       }
@@ -104,8 +100,9 @@ export const selectOperationCall = createSelector(
 
 export const selectOperationsList = createSelector(
   (state) => state?.operations?.info,
-  (info) => {
-    return Object.values(info || {}).filter((info) => info?.uuid && !info?.deleted).sort((a, b) => {
+  (state) => state?.settings?.showDeletedOps,
+  (info, showDeletedOps) => {
+    return Object.values(info || {}).filter((info) => info?.uuid && (showDeletedOps || !info?.deleted)).sort((a, b) => {
       return (b.startAtMillisMax ?? b.createdAtMillis ?? 0) - (a.startAtMillisMax ?? a.createdAtMillis ?? 0)
     })
   }
@@ -113,8 +110,9 @@ export const selectOperationsList = createSelector(
 
 export const selectOperationIds = createSelector(
   (state) => state?.operations?.info,
-  (info) => {
-    return Object.values(info || {}).sort((a, b) => {
+  (state) => state?.settings?.showDeletedOps,
+  (info, showDeletedOps) => {
+    return Object.values(info || {}).filter(op => op?.uuid && (showDeletedOps || !op?.deleted)).sort((a, b) => {
       return (b.startAtMillisMax ?? b.createdAtMillis ?? 0) - (a.startAtMillisMax ?? a.createdAtMillis ?? 0)
     }).filter(Boolean).map(op => op.uuid) // Just return the UUIDs
   },

@@ -4,7 +4,8 @@
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
     "changes": [
       "Added advanced settings commands",
-      "Advanced setting for default signal reports (try 'SET DEFAULTREPORTCW 559')"
+      "Advanced setting for default signal reports (try 'SET DEFAULTREPORTCW 559')",
+      "Advanced setting to show and restore deleted operations (try 'SET DELETEDOPS Y')"
     ]
   },
   "25.10.0": {

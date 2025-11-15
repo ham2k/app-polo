@@ -31,11 +31,20 @@ export default function OperationItem ({ operationId, settings, onPress, styles,
   const rowStyle = useMemo(() => {
     return {
       ...styles.row,
+      ...(operation.deleted ? { opacity: 0.5 } : {}),
       paddingHorizontal: 0,
       paddingLeft: Math.max(styles?.row?.paddingHorizontal, style?.paddingLeft ?? 0),
       paddingRight: Math.max(styles.row.paddingHorizontal, style?.paddingRight ?? 0)
     }
-  }, [styles, style])
+  }, [styles, style, operation.deleted])
+
+  const textStyle = useMemo(() => {
+    return {
+      ...styles.rowText,
+      ...(operation.deleted ? { textDecorationLine: 'line-through' } : {})
+    }
+  }, [styles.rowText, operation.deleted])
+
   return (
     <H2kPressable
       onPress={pressHandler}
@@ -45,7 +54,7 @@ export default function OperationItem ({ operationId, settings, onPress, styles,
       <View style={rowStyle}>
         <View style={styles.rowTop}>
           <View style={styles.rowTopLeft}>
-            <H2kMarkdown style={styles.rowText} styles={styles}>**`{operation.stationCallPlus || operation.stationCall}`**{' '}{title}</H2kMarkdown>
+            <H2kMarkdown style={textStyle} styles={styles}>**`{operation.stationCallPlus || operation.stationCall}`**{' '}{title}</H2kMarkdown>
           </View>
           <View style={styles.rowTopRight}>
             <View style={styles.countContainer}>
