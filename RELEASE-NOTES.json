@@ -1,4 +1,12 @@
 {
+  "25.10.2": {
+    "name": "October '25 (patch 2)",
+    "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
+    "changes": [
+      "Fixed bug in scrolling to last QSO",
+      "Adjusted list layout for smaller screens"
+    ]
+  },
   "25.10.1": {
     "name": "October '25 (patch 1)",
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
