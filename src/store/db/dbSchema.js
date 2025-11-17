@@ -12,7 +12,9 @@ import { dbExecute, dbSelectAll, dbSelectOne } from './db'
 import { logTimer } from '../../tools/perfTools'
 import { Platform } from 'react-native'
 
-export async function createTables (dbParams = {}) {
+const CURRENT_VERSION = 8
+
+export async function createTables(dbParams = {}) {
   let version
   try {
     const row = await dbSelectOne('SELECT version FROM version ORDER BY version DESC LIMIT 1', [], dbParams)
@@ -68,7 +70,7 @@ export async function createTables (dbParams = {}) {
           updated INTEGER,
           PRIMARY KEY (category, key)
         )`, [], dbParams)
-    await dbExecute('INSERT INTO version (version) VALUES (?)', [7], dbParams)
+    await dbExecute('INSERT INTO version (version) VALUES (?)', [CURRENT_VERSION], dbParams)
   } else {
     // Upgrade from current version
     if (version < 2) {
@@ -117,7 +119,7 @@ export async function createTables (dbParams = {}) {
       } else if (Platform.OS === 'android') {
         file = `${RNFetchBlob.fs.dirs.DocumentDir}/polo.sqlite`
       }
-      try { await RNFetchBlob.fs.unlink(`${file}.v3`) } catch (e) {}
+      try { await RNFetchBlob.fs.unlink(`${file}.v3`) } catch (e) { }
       await RNFetchBlob.fs.cp(file, `${file}.v3`)
 
       console.log('createTables -- creating version 4')
@@ -232,6 +234,51 @@ export async function createTables (dbParams = {}) {
       `, [], dbParams)
 
       await dbExecute('UPDATE version SET version = 7', [], dbParams)
+    }
+
+    if (version < 8) {
+      // There's a small chance that tables were copied without an index in `clearAllOperationData`
+      // so we have to add them back.
+      console.log('createTables -- creating version 8')
+      const qsosIndex = await dbSelectAll("SELECT name FROM sqlite_master WHERE type='index' AND name IN ('sqlite_autoindex_qsos_1', 'replacement_autoindex_qsos_1')")
+      if (qsosIndex.length === 0) {
+        const dupeIds = await dbSelectAll("SELECT uuid FROM qsos GROUP BY uuid HAVING COUNT(*) > 1")
+        for (const dupeId of dupeIds) {
+          const rows = await dbSelectAll("SELECT * FROM qsos WHERE uuid = ?", [dupeId.uuid], dbParams)
+          // Sort rows based on the `updatedAtMillis` attribute in the JSON `data` column
+          // The row with the highest `updatedAtMillis` is assumed to be the most recent,
+          // so we will preserve only the latest record.
+          rows.sort((a, b) => {
+            const aUpdated = (() => { try { return JSON.parse(a.data)?.updatedAtMillis ?? 0 } catch { return 0 } })()
+            const bUpdated = (() => { try { return JSON.parse(b.data)?.updatedAtMillis ?? 0 } catch { return 0 } })()
+            return bUpdated - aUpdated
+          })
+          for (let i = 1; i < rows.length; i++) {
+            await dbExecute('DELETE FROM qsos WHERE uuid = ? AND data = ?', [dupeId.uuid, rows[i].data], dbParams)
+          }
+        }
+        await dbExecute('CREATE UNIQUE INDEX replacement_autoindex_qsos_1 ON qsos(uuid)')
+      }
+
+      const operationsIndex = await dbSelectAll("SELECT name FROM sqlite_master WHERE type='index' AND name IN ('sqlite_autoindex_operations_1', 'replacement_autoindex_operations_1')")
+      if (operationsIndex.length === 0) {
+        const dupeIds = await dbSelectAll("SELECT uuid FROM operations GROUP BY uuid HAVING COUNT(*) > 1")
+        for (const dupeId of dupeIds) {
+          const rows = await dbSelectAll("SELECT * FROM operations WHERE uuid = ?", [dupeId.uuid], dbParams)
+          rows.sort((a, b) => {
+            const aUpdated = (() => { try { return JSON.parse(a.data)?.updatedAtMillis ?? 0 } catch { return 0 } })()
+            const bUpdated = (() => { try { return JSON.parse(b.data)?.updatedAtMillis ?? 0 } catch { return 0 } })()
+            return bUpdated - aUpdated
+          })
+          for (let i = 1; i < rows.length; i++) {
+            await dbExecute('DELETE FROM operations WHERE uuid = ? AND data = ?', [dupeId.uuid, rows[i].data], dbParams)
+          }
+        }
+
+        await dbExecute('CREATE UNIQUE INDEX replacement_autoindex_operations_1 ON operations(uuid)')
+      }
+
+      await dbExecute('UPDATE version SET version = 8', [], dbParams)
     }
 
     // TODO: Uncomment this block when we're close to releasing the December '24 version
