@@ -197,7 +197,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   // eslint-disable-next-line react-hooks/exhaustive-deps -- useCallback prefers to see an inline function
   const calculateLayout = useCallback(
     getItemLayout({
-      getItemHeight: styles.compactRow.height + styles.compactRow.borderBottomWidth,
+      getItemHeight: styles.row.height + styles.row.borderBottomWidth,
       getSectionHeaderHeight: styles.headerRow.height + styles.headerRow.borderBottomWidth
     }),
     [styles]
@@ -269,6 +269,9 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
     color: themeStyles.colors.onBackground
   }
 
+  const heightFactor = 4
+  const paddingTopFactor = 0.4
+
   const styles = {
     ...themeStyles,
     size,
@@ -278,12 +281,12 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
     hasLongCall,
 
     row: {
-      height: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 4.4),
-      maxHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 4.4),
-      minHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 4.4),
+      height: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * heightFactor),
+      maxHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * heightFactor),
+      minHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * heightFactor),
       paddingHorizontal: themeStyles.oneSpace,
-      paddingTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.65),
-      borderBottomWidth: 0.5,
+      paddingTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * paddingTopFactor),
+      borderBottomWidth: PixelRatio.roundToNearestPixel(0.5),
       borderBottomColor: themeStyles.colors.outlineVariant,
       flexDirection: 'row',
       width: '100%',
@@ -303,8 +306,8 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
       borderTopColor: themeStyles.colors.secondary,
       borderBottomColor: themeStyles.colors.secondary,
       paddingTop: 1,
-      marginTop: 0 // PixelRatio.roundToNearestPixel(themeStyles.oneSpace * -0.1)
-      // marginBottom: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.4)
+      marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * -0.1),
+      marginBottom: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.1)
     },
     headerRow: {
       ...themeStyles.compactRow,
