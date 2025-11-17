@@ -45,6 +45,11 @@ export function escapeToUnicodeEntities(text) {
   return String(text).replace(/[\u0080-\uFFFF]/g, ch => `&#${ch.codePointAt(0)};`)
 }
 
+export function removeASCIIControlCharacters(text) {
+  if (!text) return ''
+  return text.replace(/[\x00-\x1F\x7F]/g, '')
+}
+
 export function slashZeros(text) {
   // See "Combining Solidus" in https://en.wikipedia.org/wiki/Slashed_zero
   if (!text) return ''

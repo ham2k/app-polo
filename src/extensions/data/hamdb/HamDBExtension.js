@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,6 +8,7 @@
 import packageJson from '../../../../package.json'
 import GLOBAL from '../../../GLOBAL'
 import { capitalizeString } from '../../../tools/capitalizeString'
+import { removeASCIIControlCharacters } from '../../../tools/stringTools'
 
 export const Info = {
   key: 'hamdb',
@@ -47,7 +48,7 @@ const LookupHook = {
         })
         if (response.status === 200) {
           const body = await response.text()
-          const json = JSON.parse(body)
+          const json = JSON.parse(removeASCIIControlCharacters(body))
 
           const data = json?.hamdb?.callsign ?? {}
           if (data.call === call) {
@@ -81,12 +82,12 @@ const LookupHook = {
   }
 }
 
-function castString (value) {
+function castString(value) {
   if (value === undefined || value === null) return ''
   return String(value)
 }
 
-function castNumber (value) {
+function castNumber(value) {
   if (value === undefined || value === null) return 0
   const number = Number(value)
   if (isNaN(number)) return null
