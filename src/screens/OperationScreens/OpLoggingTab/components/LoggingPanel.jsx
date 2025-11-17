@@ -290,7 +290,7 @@ export default function LoggingPanel ({
         updateLoggingState({
           qso: undefined,
           selectedUUID: undefined,
-          lastUUID: qso.uuid,
+          lastUUID: undefined, // qso.uuid,
           originalQSO: undefined,
           hasChanges: false,
           undoInfo: undefined

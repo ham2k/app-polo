@@ -10,7 +10,7 @@ import { fmtNumber } from "@ham2k/lib-format-tools"
 import { filterNearDupes } from "../../tools/qsonTools"
 import { filterRefs } from "../../tools/refTools"
 
-const DEBUG = true
+const DEBUG = false
 const DEBUG_ACTIVITIES = ['SOTA']
 const DEBUG_CALLS = ['KN2X']
 

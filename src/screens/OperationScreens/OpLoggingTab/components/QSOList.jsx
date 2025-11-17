@@ -68,6 +68,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
 
   // When the lastQSO changes, scroll to it
   useEffect(() => {
+    console.log('useEffect scroll to', { lastUUID, jumpedToLast: jumpDataRef?.current?.jumpedToLast, sections: sections?.length })
     if (!sections || !sections.length) return
 
     if (scrollTimeout) {
@@ -90,13 +91,18 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
           return false
         })
       })
-      if (!found) {
-        return
-      }
+      // TODO: Figure out how to only scroll when opening the operation,
+      // or when logging a new QSO, but not when just changing the selected QSO
+
+      // if (!found) {
+      //   return
+      // }
     }
+    console.log('scroll to?', { targetUUID, jumpedToLast: jumpDataRef.current.jumpedToLast })
 
     if (targetUUID !== jumpDataRef.current.jumpedToLast) {
       scrollTimeout = setTimeout(() => {
+        console.log('scrolling to')
         try {
           listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
         } catch (e) {
@@ -115,7 +121,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       }
     }
   }, [listRef, lastUUID, selectedUUID, sections])
-
+  console.log('QSLList last UUID', lastUUID)
   const refHandlers = useMemo(() => {
     const types = {}
     ;(operation?.refs || []).forEach((ref) => {
