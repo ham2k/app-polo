@@ -38,14 +38,24 @@ export const SecondaryExchangePanel = (props) => {
       findRef(operation, x.activationType) && x.postSelfSpot &&
       (!x.isSpotEnabled || (x.isSpotEnabled && x.isSpotEnabled({ operation, settings }))))
     )
-    const otherSpottingHooks = findHooks('spots', { withFunction: 'postOtherSpot' })
-    if (activityHooksWithSpotting.length > 0 || otherSpottingHooks.length > 0) {
+    if (activityHooksWithSpotting.length > 0) {
       newControls[spotterControl.key] = spotterControl
+    } else {
+      const otherSpottingHooks = findHooks('spots', { withFunction: 'postOtherSpot' })
+      if (otherSpottingHooks.length > 0) {
+        newControls[spotterControl.key] = { ...spotterControl, labelAsGeneralSpotting: true }
+      }
     }
     activityHooks.forEach(activity => {
       const activityControls = activity.loggingControls ? activity.loggingControls({ operation, vfo, settings }) : []
       for (const control of activityControls) {
         newControls[control.key] = control
+      }
+      if (activityControls.length > 0 && !newControls[spotterControl.key]) {
+        if (activity.postOtherSpot &&
+        (!activity.isOtherSpotEnabled || (activity.isOtherSpotEnabled && activity.isOtherSpotEnabled({ operation, settings })))) {
+          newControls[spotterControl.key] = { ...spotterControl, labelAsGeneralSpotting: true }
+        }
       }
     })
     return newControls

@@ -1,4 +1,11 @@
 {
+  "25.10.3": {
+    "name": "October '25 (patch 3)",
+    "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
+    "changes": [
+      "Properly show spotting controls, even in General Operations"
+    ]
+  },
   "25.10.2": {
     "name": "October '25 (patch 2)",
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",

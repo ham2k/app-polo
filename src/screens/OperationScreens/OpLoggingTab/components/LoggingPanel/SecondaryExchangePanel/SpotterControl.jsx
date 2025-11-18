@@ -43,6 +43,8 @@ export function SpotterControlInputs (props) {
 
   const isSelfSpotting = useMemo(() => !qso || !parseCallsign(qso.their?.call)?.baseCall, [qso])
 
+  const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings }), [isSelfSpotting, qso, operation, settings])
+
   const { spotterMessage, spotterDisabled, autoRespotting } = useMemo(() => {
     const freq = qso?.freq || vfo?.freq
 
@@ -58,7 +60,7 @@ export function SpotterControlInputs (props) {
           spotterDisabled: true
         }
       }
-    } else {
+    } else if (hooksWithSpotting.length > 0) {
       if (isSelfSpotting) {
         if (!vfo?.freq) {
           return {
@@ -122,16 +124,20 @@ export function SpotterControlInputs (props) {
           }
         }
       }
+    } else {
+      return {
+        spotterMessage: 'Nothing to spot',
+        spotterDisabled: true
+      }
     }
   }, [
     now, comments, inProgress, isSelfSpotting,
+    hooksWithSpotting.length,
     qso?.freq, qso?.their?.call, qso?.startAtMillis, vfo.freq,
     operation?.local?.spottedFreq, operation?.local?.spottedAt,
     operation?.local?.autoRespotting,
     operation?.stationCallPlusArray?.length
   ])
-
-  const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings }), [isSelfSpotting, qso, operation, settings])
 
   const handleSpotting = useCallback(async () => {
     if (autoRespotting === true) {
@@ -186,7 +192,14 @@ export function retrieveHooksWithSpotting ({ isSelfSpotting, qso, operation, set
   const spotMethodKey = isSelfSpotting ? 'postSelfSpot' : 'postOtherSpot'
   const spotEnabledKey = isSelfSpotting ? 'isSelfSpotEnabled' : 'isOtherSpotEnabled'
 
-  const activityHooks = findHooks('activity').filter((x) => (findRef((isSelfSpotting ? operation : qso)?.refs, isSelfSpotting ? x.activationType : x.huntingType) && x[spotMethodKey] && (!x[spotEnabledKey] || (x[spotEnabledKey] && x[spotEnabledKey]({ operation, settings })))))
+  const activityHooks = findHooks('activity').filter((x) => (
+    findRef(
+      (isSelfSpotting ? operation : qso)?.refs,
+      isSelfSpotting ? x.activationType : x.huntingType
+    ) && x[spotMethodKey] &&
+        (!x[spotEnabledKey] || (x[spotEnabledKey] && x[spotEnabledKey]({ operation, settings })))
+  ))
+
   const spottingHooks = findHooks('spots').filter((x) => x[spotMethodKey])
 
   return [...activityHooks, ...spottingHooks]
@@ -272,9 +285,11 @@ export const spotterControl = {
   key: 'spotter',
   order: 50,
   icon: 'hand-wave',
-  LabelComponent: ({ qso, operation, ...props }) => {
+  LabelComponent: ({ qso, operation, control, ...props }) => {
     let label = props.label || 'Self-Spotting'
-    if (qso?.their?.guess?.call && qso?.their?.guess?.baseCall) {
+    if (control.labelAsGeneralSpotting) {
+      label = 'Spotting'
+    } else if (qso?.their?.guess?.call && qso?.their?.guess?.baseCall) {
       label = 'Spotting'
     } else if (operation?.local?.autoRespotting) {
       label = 'Auto-respotting'

@@ -55,7 +55,7 @@ export const SecondaryControlManagementSubPanel = ({
           <View key={control.key} style={{ flex: 0, flexDirection: 'column' }}>
             {control.LabelComponent ? (
               <control.LabelComponent
-                qso={qso} operation={operation} vfo={vfo} settings={settings}
+                qso={qso} operation={operation} vfo={vfo} settings={settings} control={control}
                 icon={control.icon}
                 accessibilityLabel={control.accessibilityLabel}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
@@ -100,7 +100,7 @@ export const SecondaryControlManagementSubPanel = ({
           <View key={control.key} style={{ flex: 0, flexDirection: 'column' }}>
             {control.LabelComponent ? (
               <control.LabelComponent
-                qso={qso} operation={operation} vfo={vfo} settings={settings}
+                qso={qso} operation={operation} vfo={vfo} settings={settings} control={control}
                 icon={control.icon}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={false}
