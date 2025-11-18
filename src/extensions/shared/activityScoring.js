@@ -246,7 +246,7 @@ export const generateActivitySumarizer = ({ info }) => {
         score.activated = true
       }
     }
-    if (score.huntedRefs.length > 0) {
+    if (score.huntedRefs?.length > 0) {
       summaryParts.push(`${fmtNumber(Object.keys(score.huntedRefs.length))} ${activatedRefKeys.length > 0 ? ref2refShortLabel : huntedShortLabel}`)
     }
     score.summary = summaryParts.join(' +')
@@ -255,11 +255,11 @@ export const generateActivitySumarizer = ({ info }) => {
 
     score.longSummary = ''
     const qsoCounts = []
-    if (activatedRefKeys.length > 0) {
+    if (activatedRefKeys?.length > 0) {
       qsoCounts.push(`${fmtNumber(score.activatedQSOs)} ${activatorQSOLabel.length === 1 ? activatorQSOLabel : activatorQSOsLabel}`)
     }
-    if (score.huntedQSOs > 0) {
-      if (activatedRefKeys.length > 0) {
+    if (score?.huntedQSOs > 0) {
+      if (activatedRefKeys?.length > 0) {
         qsoCounts.push(`${fmtNumber(score.huntedQSOs)} ${ref2refQSOLabel.length === 1 ? ref2refQSOLabel : ref2refQSOsLabel}`)
       } else {
         qsoCounts.push(`${fmtNumber(score.huntedQSOs)} ${hunterQSOLabel.length === 1 ? hunterQSOLabel : hunterQSOsLabel}`)
@@ -286,7 +286,7 @@ export const generateActivitySumarizer = ({ info }) => {
             totals.missed += 1
           }
         })
-        totals.hunted += Object.keys(sectionScore.huntedRefs).length
+        totals.hunted += Object.keys(sectionScore?.huntedRefs || {}).length
         return totals
       }, { activated: 0, hunted: 0, missed: 0 })
       if (refTotals.activated > 0 || refTotals.hunted > 0 || refTotals.missed > 0) {

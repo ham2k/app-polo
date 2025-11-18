@@ -24,7 +24,7 @@ export function scoringHandlersForOperation({ operation, settings }) {
   // Get handlers for operation refs
   const scoringHandlers = []
 
-  const refs = operation?.refs || []
+  const refs = (operation?.refs || []).filter(Boolean)
 
   refs.forEach(ref => {
     const handler = findBestHook(`ref:${ref.type}`)
