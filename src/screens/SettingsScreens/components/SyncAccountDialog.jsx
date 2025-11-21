@@ -12,7 +12,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 import H2kEmailInput from '../../../ui/react-native/H2kEmailInput'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
+import { getSyncCounts } from '../../../store/operations'
 
 export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDialogDone }) {
   const dispatch = useDispatch()
@@ -52,6 +53,29 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
       setDialogVisible(false)
       onDialogDone && onDialogDone()
     } else if (result.json.account_errors?.pending_email?.find(e => e.suggested_action === 'link')) {
+      const counts = await getSyncCounts()
+      console.log('linking with pending data', counts)
+      if (counts?.qsos?.pending > 0 || counts?.operations?.pending > 0) {
+        const alertResponse = await new Promise((resolve) => {
+          Alert.alert(
+            'Potential for data loss!!!',
+            'You have not synced all the data in this device.\n\n' +
+              'If you link this device to a new account, ' +
+              'you will be asked if you want to replace its data with that from the new account.\n\n' +
+              'If this is the case, you might not be able to recover any existing activity ' +
+              'that has not been synced yet.\n\n' +
+              'We suggest you complete syncing this device first!',
+            [
+              { text: 'Go back and complete syncing first', style: 'cancel', onPress: () => resolve('cancel') },
+              { text: 'I know what I\'m doing! Continue Anyway', style: 'destructive', onPress: () => resolve('replace') }
+            ]
+          )
+        })
+        if (alertResponse === 'cancel') {
+          return
+        }
+      }
+
       const linkResult = await dispatch(syncHook.linkClient(email))
       if (linkResult.ok) {
         dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: linkResult.json.account, pending_link_email: email }))

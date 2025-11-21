@@ -1,9 +1,17 @@
 {
+  "25.10.4": {
+    "name": "October '25 (patch 4)",
+    "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
+    "changes": [
+      "Fixed bugs in sync service"
+    ]
+  },
   "25.10.3": {
     "name": "October '25 (patch 3)",
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
     "changes": [
-      "Properly show spotting controls, even in General Operations"
+      "Properly show spotting controls, even in General Operations",
+      "Fixed bugs in sync service"
     ]
   },
   "25.10.2": {

@@ -50,15 +50,20 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     return findHooks('sync')[0]
   }, [])
 
-  // useEffect(() => {
-  //   console.log('LOFI', lofiData)
-  // }, [lofiData])
-
   useEffect(() => {
-    if (syncHook) {
-      dispatch(syncHook.getAccountData())
+    console.log('LOFI', lofiData)
+  }, [lofiData])
+
+  const fiveSecondTick = useSelector(selectFiveSecondsTick)
+  const [syncStatus, setSyncStatus] = useState()
+  useEffect(() => {
+    if (!currentDialog) {
+      setImmediate(async () => {
+        dispatch(syncHook.getAccountData())
+        setSyncStatus(await _syncCountDescription())
+      })
     }
-  }, [dispatch, syncHook])
+  }, [currentDialog, dispatch, fiveSecondTick, syncHook])
 
   const accountTitle = useMemo(() => {
     if (!lofiData?.account) {
@@ -82,9 +87,9 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     } else {
       if (lofiData?.account?.email) {
         if (lofiData?.pending_link_email && lofiData?.pending_link_email !== lofiData?.account?.email) {
-          return '(pending email confirmation)'
+          return '(check your email inbox for confirmation)'
         } else if (lofiData?.account?.pending_email && lofiData?.account?.pending_email !== lofiData?.account?.email) {
-          return '(pending email confirmation)'
+          return '(check your email inbox for confirmation)'
         } else {
           return `Account #${lofiData?.account?.uuid.slice(0, 8).toUpperCase()}`
         }
@@ -95,17 +100,6 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
       }
     }
   }, [lofiData?.account, lofiData?.pending_link_email])
-
-  const fiveSecondTick = useSelector(selectFiveSecondsTick)
-  const [syncStatus, setSyncStatus] = useState()
-  useEffect(() => {
-    if (!currentDialog) {
-      setImmediate(async () => {
-        dispatch(syncHook.getAccountData())
-        setSyncStatus(await _syncCountDescription())
-      })
-    }
-  }, [currentDialog, dispatch, fiveSecondTick, syncHook])
 
   useEffect(() => {
     if (currentDialog) {
@@ -139,8 +133,8 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   const handleReplaceLocalData = useCallback(async () => {
     Alert.alert(
       'Replace Local Data?',
-      'Are you sure you want to replace all data on this device\n' +
-      'with the operations and QSOs from the new account in the cloud?' +
+      'Are you sure you want to replace all data on this device ' +
+      'with the operations and QSOs for the new account from the Sync Service?' +
       '\n\n' +
       'The app will restart.' +
       '\n\n' +
@@ -148,7 +142,8 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
       [
         { text: 'No, Cancel', onPress: () => {} },
         {
-          text: 'Yes, Replace It All!',
+          text: 'Yes, I\'ll take the risk! Replace It All!',
+          style: 'destructive',
           onPress: async () => {
             dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
             dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
@@ -161,16 +156,17 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
 
   const handleCombineLocalData = useCallback(async () => {
     Alert.alert('Combine Local Data?',
-      'Are you sure you want to combine these operations and QSOs into the new account?' +
+      'Are you sure you want to combine these operations and QSOs with the new account?' +
       '\n\n' +
-      'This will combine QSOs on this device with the ones in the cloud, ' +
+      'This will combine QSOs on this device with what\'s already in the Sync Service for the new account, ' +
       'and can accidentally result in mixing unrelated logs!' +
       '\n\n' +
       'This operation cannot be undone.',
       [
         { text: 'No, Cancel', onPress: () => {} },
         {
-          text: 'Yes, Combine Them!',
+          text: 'Yes, I\'ll take the risk! Combine Them!',
+          style: 'destructive',
           onPress: async () => {
             dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
             dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
@@ -180,6 +176,20 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
         }
       ])
   }, [dispatch])
+
+  const handleLinkBack = useCallback(async () => {
+    if (lofiData.previousAccount?.email) {
+      const linkResult = await dispatch(syncHook.linkClient(lofiData.previousAccount.email))
+      if (linkResult.ok) {
+        dispatch(setLocalExtensionData({ key: 'ham2k-lofi', account: linkResult.json.account, pending_link_email: lofiData.previousAccount.email }))
+        dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
+        // await dispatch(resetSyncedStatus())
+        // dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))
+      } else {
+        Alert.alert('Error linking back to previous account', linkResult.json.error)
+      }
+    }
+  }, [dispatch, lofiData.previousAccount?.email, syncHook])
 
   const handleDialogDone = useCallback(() => {
     setCurrentDialog('')
@@ -237,16 +247,39 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
 
           {askAboutMergingAccounts && (
             <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column', marginBottom: styles.oneSpace * 4 }}>
-              <Text style={[styles.paragraph, { color: styles.colors.error }]}>
+              <Text style={[styles.paragraph, styles.text.bold, { color: styles.colors.error }]}>
                 This device was last synced with a different account (#{localData.sync.lastSyncAccountUUID.slice(0, 8).toUpperCase()}).
               </Text>
-              <Text style={[styles.paragraph, { color: styles.colors.error }]}>
+              <Text style={[styles.paragraph, styles.text.bold, { color: styles.colors.error }]}>
                 In order to continue syncing, you need to decide between the following options:
               </Text>
 
-              <H2kButton mode="contained" style={{ marginTop: styles.oneSpace * 2 }} onPress={handleReplaceLocalData}>Replace local data with the new account</H2kButton>
+              <Text style={[styles.paragraph, { marginTop: styles.oneSpace * 1 }]}>
+                {lofiData?.account?.email ? (
+                  <><Text style={styles.text.bold}>Option #1:</Text> Replace data on this device with that from the <Text style={styles.text.bold}>{lofiData?.account?.email}</Text> account on the server.</>
+                ) : (
+                  <><Text style={styles.text.bold}>Option #1:</Text> Replace data on this device with that from the new account on the server. </>
+                )}
+              </Text>
+              <H2kButton mode="contained" style={{ marginBottom: styles.oneSpace * 1 }} onPress={handleReplaceLocalData}>Go with #1: replace with server data</H2kButton>
 
-              <H2kButton mode="contained" style={{ marginTop: styles.oneSpace * 2 }} onPress={handleCombineLocalData}>Combine local data into the new account</H2kButton>
+              <Text style={[styles.paragraph, { marginTop: styles.oneSpace * 1 }]}>
+                {lofiData?.account?.email ? (
+                  <><Text style={styles.text.bold}>Option #2:</Text> Combine data on this device with what's already on the server for <Text style={styles.text.bold}>{lofiData?.account?.email}</Text>.</>
+                ) : (
+                  <><Text style={styles.text.bold}>Option #2:</Text> Combine data on this device with what's already on the server for the new account. </>
+                )}
+              </Text>
+              <H2kButton mode="contained" style={{ marginBottom: styles.oneSpace * 1 }} onPress={handleCombineLocalData}>Go with #2: combine data</H2kButton>
+
+              {lofiData?.previousAccount?.email && (
+                <>
+                  <Text style={[styles.paragraph, { marginTop: styles.oneSpace * 1 }]}>
+                    <Text style={styles.text.bold}>Option #3:</Text> Link back with the previous account, <Text style={styles.text.bold}>{lofiData?.previousAccount?.email}</Text>.
+                  </Text>
+                  <H2kButton mode="contained" style={{ marginBottom: styles.oneSpace * 1 }} onPress={handleLinkBack}>Go with #3: previous account</H2kButton>
+                </>
+              )}
             </View>
           )}
 

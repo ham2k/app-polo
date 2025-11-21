@@ -83,9 +83,22 @@ const SyncHook = {
     const results = await requestWithAuth({ dispatch, getState, url: 'v1/accounts', method: 'GET' })
     if (results.ok) {
       console.log('getAccountData', results.json)
+
+      const currentData = selectLocalExtensionData(getState(), Info.key) || {}
+
       const updates = {}
-      if (results.json.current_account) updates.account = results.json.current_account
-      if (results.json.current_client) updates.client = results.json.current_client
+      if (results.json.current_account?.uuid) {
+        if (results.json.current_account.uuid !== currentData.account?.uuid) {
+          updates.previousAccount = currentData.account
+        }
+        updates.account = results.json.current_account
+      }
+      if (results.json.current_client?.uuid) {
+        if (results.json.current_client.uuid !== currentData.client?.uuid) {
+          updates.previousClient = currentData.client
+        }
+        updates.client = results.json.current_client
+      }
       if (results.json.clients) updates.allClients = results.json.clients
       if (results.json.accounts) updates.allAccounts = results.json.accounts
       if (results.json.subscription) updates.subscription = results.json.subscription

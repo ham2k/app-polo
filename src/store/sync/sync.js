@@ -468,7 +468,7 @@ async function _processResponseMeta({ response = {}, localData = {}, dispatch })
     if (VERBOSE > 1) console.log(' -- account changed, sync ignored', { lastSyncAccountUUID: sync.lastSyncAccountUUID, newAccountUUID: account.uuid })
     // logRemotely({ message: 'account changed, sync ignored', currentAccountUUID, lastSyncAccountUUID: localData.sync?.lastSyncAccountUUID })
     _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAccountUUID: sync.lastSyncAccountUUID })
-    return false
+    return [false, undefined]
   }
 
   try {
