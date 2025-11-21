@@ -11,6 +11,7 @@ import RNFetchBlob from 'react-native-blob-util'
 import { dbExecute, dbSelectAll, dbSelectOne } from './db'
 import { logTimer } from '../../tools/perfTools'
 import { Platform } from 'react-native'
+import { fmtTimestamp } from '../../tools/timeFormats'
 
 const CURRENT_VERSION = 8
 
@@ -240,6 +241,8 @@ export async function createTables(dbParams = {}) {
       // There's a small chance that tables were copied without an index in `clearAllOperationData`
       // so we have to add them back.
       console.log('createTables -- creating version 8')
+      const timestamp = fmtTimestamp(Date.now())
+
       const qsosIndex = await dbSelectAll("SELECT name FROM sqlite_master WHERE type='index' AND name IN ('sqlite_autoindex_qsos_1', 'replacement_autoindex_qsos_1')")
       if (qsosIndex.length === 0) {
         const dupeIds = await dbSelectAll("SELECT uuid FROM qsos GROUP BY uuid HAVING COUNT(*) > 1")
@@ -257,7 +260,7 @@ export async function createTables(dbParams = {}) {
             await dbExecute('DELETE FROM qsos WHERE uuid = ? AND data = ?', [dupeId.uuid, rows[i].data], dbParams)
           }
         }
-        await dbExecute('CREATE UNIQUE INDEX replacement_autoindex_qsos_1 ON qsos(uuid)')
+        await dbExecute(`CREATE UNIQUE INDEX replacement_${timestamp}_qsos_1 ON qsos(uuid)`)
       }
 
       const operationsIndex = await dbSelectAll("SELECT name FROM sqlite_master WHERE type='index' AND name IN ('sqlite_autoindex_operations_1', 'replacement_autoindex_operations_1')")
@@ -275,7 +278,7 @@ export async function createTables(dbParams = {}) {
           }
         }
 
-        await dbExecute('CREATE UNIQUE INDEX replacement_autoindex_operations_1 ON operations(uuid)')
+        await dbExecute(`CREATE UNIQUE INDEX replacement_${timestamp}_operations_1 ON operations(uuid)`)
       }
 
       await dbExecute('UPDATE version SET version = 8', [], dbParams)

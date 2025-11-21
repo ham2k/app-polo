@@ -213,16 +213,8 @@ export const clearAllOperationData = () => async (dispatch) => {
   await dbExecute(`ALTER TABLE qsos RENAME TO bkp_${timestamp}_qsos`)
   await dbExecute(`CREATE TABLE operations AS SELECT * FROM bkp_${timestamp}_operations WHERE 0`)
   await dbExecute(`CREATE TABLE qsos AS SELECT * FROM bkp_${timestamp}_qsos WHERE 0`)
-  await dbExecute('CREATE INDEX sqlite_autoindex_qsos_1 ON qsos(uuid) UNIQUE')
-  await dbExecute('CREATE INDEX sqlite_autoindex_operations_1 ON operations(uuid) UNIQUE')
-
-  const operationsIndex = await dbSelectAll(
-    "SELECT name FROM sqlite_master WHERE type='index' AND name='sqlite_autoindex_operations_1'"
-  )
-  if (operationsIndex.length === 0) {
-    await dbExecute('CREATE INDEX sqlite_autoindex_operations_1 ON operations(uuid) UNIQUE')
-  }
-
+  await dbExecute(`CREATE UNIQUE INDEX replacement_${timestamp}_qsos_1 ON qsos(uuid)`)
+  await dbExecute(`CREATE UNIQUE INDEX replacement_${timestamp}_operations_1 ON operations(uuid)`)
 
   dispatch(setLocalData({ sync: {} }))
   await persistor.purge()
