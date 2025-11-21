@@ -1,66 +1,73 @@
 /*
+ * Copyright ©️ 2025 Emma Ruby <k0uwu@0xem.ma>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
+/*
  * WavelogSettingsScreen.jsx
  * Settings screen for Wavelog integration (API URL + API Key + Station picker)
  */
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { View, ScrollView } from 'react-native';
-import { Text, TextInput, Button, List, HelperText } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { selectSettings, setSettings } from '../../../store/settings';
-import ScreenContainer from '../../components/ScreenContainer';
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles';
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { View, ScrollView } from 'react-native'
+import { Text, TextInput, Button, List, HelperText } from 'react-native-paper'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { selectSettings, setSettings } from '../../../store/settings'
+import ScreenContainer from '../../components/ScreenContainer'
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
-export default function WavelogSettingsScreen({ navigation }) {
-  const dispatch = useDispatch();
-  const safeAreaInsets = useSafeAreaInsets();
-  const styles = useThemedStyles();
-  const settings = useSelector(selectSettings);
-  const [apiUrl, setApiUrl] = useState(settings?.wavelog?.apiUrl || '');
-  const [apiKey, setApiKey] = useState(settings?.wavelog?.apiKey || '');
-  const [stations, setStations] = useState([]);
-  const [stationId, setStationId] = useState(settings?.wavelog?.stationId || '');
-  const [fetching, setFetching] = useState(false);
-  const [error, setError] = useState('');
-  const [saving, setSaving] = useState(false);
+export default function WavelogSettingsScreen ({ navigation }) {
+  const dispatch = useDispatch()
+  const safeAreaInsets = useSafeAreaInsets()
+  const styles = useThemedStyles()
+  const settings = useSelector(selectSettings)
+  const [apiUrl, setApiUrl] = useState(settings?.wavelog?.apiUrl || '')
+  const [apiKey, setApiKey] = useState(settings?.wavelog?.apiKey || '')
+  const [stations, setStations] = useState([])
+  const [stationId, setStationId] = useState(settings?.wavelog?.stationId || '')
+  const [fetching, setFetching] = useState(false)
+  const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
 
   const fetchStations = async () => {
-    setFetching(true);
-    setError('');
-    setStations([]);
+    setFetching(true)
+    setError('')
+    setStations([])
     try {
-      const url = `${apiUrl.replace(/\/$/, '')}/api/station_info/${apiKey}`;
-      const response = await fetch(url, { method: 'GET' });
-      if (!response.ok) throw new Error('Failed to fetch stations');
-      const data = await response.json();
+      const url = `${apiUrl.replace(/\/$/, '')}/api/station_info/${apiKey}`
+      const response = await fetch(url, { method: 'GET' })
+      if (!response.ok) throw new Error('Failed to fetch stations')
+      const data = await response.json()
       if (Array.isArray(data)) {
-        setStations(data);
+        setStations(data)
       } else if (Array.isArray(data.payload)) {
-        setStations(data.payload);
+        setStations(data.payload)
       } else {
-        setError('No stations found or invalid response');
+        setError('No stations found or invalid response')
       }
     } catch (e) {
-      setError('Error fetching stations: ' + e.message);
+      setError('Error fetching stations: ' + e.message)
     }
-    setFetching(false);
-  };
+    setFetching(false)
+  }
 
   const saveConfig = () => {
-    setSaving(true);
+    setSaving(true)
     dispatch(setSettings({
       wavelog: {
         apiUrl,
         apiKey,
         stationId
-      },
-    }));
-    setSaving(false);
-  };
+      }
+    }))
+    setSaving(false)
+  }
 
   return (
     <ScreenContainer>
-      <View style={{ flex: 1, padding: 16, paddingBottom: safeAreaInsets.bottom }}>
+      <View style={{ flex: 1, flexDirection: 'column', padding: 16, paddingBottom: safeAreaInsets.bottom }}>
         <Text variant="titleLarge" style={{ marginBottom: 16 }}>Wavelog Configuration</Text>
         <TextInput
           label="Wavelog API URL"
@@ -84,8 +91,8 @@ export default function WavelogSettingsScreen({ navigation }) {
           <ScrollView style={{ maxHeight: 300, marginBottom: 12 }}>
             <List.Section title="Select Station">
               {stations.map(station => {
-                const id = station.id || station.station_profile_id || station.station_id;
-                const profileName = station.station_profile_name || station.name || station.label || station.station_callsign || '';
+                const id = station.id || station.station_profile_id || station.station_id
+                const profileName = station.station_profile_name || station.name || station.label || station.station_callsign || ''
                 return (
                   <List.Item
                     key={id}
@@ -95,7 +102,7 @@ export default function WavelogSettingsScreen({ navigation }) {
                     left={props => <List.Icon {...props} icon={stationId === id ? 'check-circle' : 'radiobox-blank'} />}
                     style={{ backgroundColor: stationId === id ? styles.colors.primaryLighter : undefined }}
                   />
-                );
+                )
               })}
             </List.Section>
           </ScrollView>
@@ -106,10 +113,10 @@ export default function WavelogSettingsScreen({ navigation }) {
             {(() => {
               const selected = stations.find(station =>
                 (station.id || station.station_profile_id || station.station_id) === stationId
-              );
+              )
               return selected
                 ? (selected.station_profile_name || selected.name || selected.label || selected.station_callsign || stationId)
-                : stationId;
+                : stationId
             })()}
           </HelperText>
         )}
@@ -118,5 +125,5 @@ export default function WavelogSettingsScreen({ navigation }) {
         </Button>
       </View>
     </ScreenContainer>
-  );
+  )
 }
