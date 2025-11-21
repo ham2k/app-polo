@@ -81,6 +81,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
     let itemIndex = sections[sectionIndex].data.length - 1
 
     if (targetUUID && targetUUID !== jumpDataRef.current.jumpedToLast) {
+      // eslint-disable-next-line no-unused-vars
       const found = sections.find((section, i) => {
         return section.data.find((qso, j) => {
           if (qso.uuid === targetUUID) {
@@ -255,16 +256,6 @@ const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo
 function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFrequencyDecimals, hasLongCall }) {
   const spaces = width / themeStyles.oneSpace
 
-  const sized = (options) => {
-    if (spaces > 100) return options.xl ?? options.lg ?? options.md ?? options.sm ?? options.xs
-    if (spaces > 80) return options.lg ?? options.md ?? options.sm ?? options.xs
-    if (spaces > 65) return options.md ?? options.sm ?? options.xs
-    if (spaces > 50) return options.sm ?? options.xs
-    return options.xs
-  }
-
-  const size = sized({ xs: 'xs', sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' })
-
   // console.log('width', { width, spaces, size })
   const DEBUG = false
 
@@ -275,28 +266,30 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
     color: themeStyles.colors.onBackground
   }
 
-  const heightFactor = 4
-  const paddingTopFactor = 0.4
+  const heightFactor = themeStyles.sized({ xs: 1.85, md: 2.2 })
+  const paddingTopFactor = themeStyles.sized({ xs: 0.1, md: 0.1 })
+
+  const rowStyles = {
+    height: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * heightFactor),
+    maxHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * heightFactor),
+    minHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * heightFactor),
+    paddingHorizontal: themeStyles.oneSpace,
+    paddingTop: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * paddingTopFactor),
+    borderBottomWidth: PixelRatio.roundToNearestPixel(0.5),
+    borderBottomColor: themeStyles.colors.outlineVariant,
+    paddingLeft: safeArea?.left || 0,
+    flexDirection: 'row',
+    width: '100%'
+  }
 
   const styles = {
     ...themeStyles,
-    size,
-    sized,
     spaces,
     hasFrequencyDecimals,
     hasLongCall,
 
     row: {
-      height: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * heightFactor),
-      maxHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * heightFactor),
-      minHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * heightFactor),
-      paddingHorizontal: themeStyles.oneSpace,
-      paddingTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * paddingTopFactor),
-      borderBottomWidth: PixelRatio.roundToNearestPixel(0.5),
-      borderBottomColor: themeStyles.colors.outlineVariant,
-      flexDirection: 'row',
-      width: '100%',
-      paddingLeft: safeArea?.left || 0
+      ...rowStyles
     },
     rowInner: {
       flex: 1,
@@ -316,9 +309,8 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
       marginBottom: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.1)
     },
     headerRow: {
-      ...themeStyles.compactRow,
+      ...rowStyles,
       backgroundColor: themeStyles.colors.surfaceVariant,
-      paddingLeft: safeArea?.left || 0,
       borderTopWidth: 0,
       borderBottomWidth: 2,
       borderTopColor: themeStyles.colors.onBackgroundLight,
@@ -365,7 +357,7 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
       event: {
         ...commonStyles,
         lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4)),
-        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
+        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
         minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 3.5),
         textAlign: 'left',
         flex: 1
@@ -378,7 +370,7 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...themeStyles.text.numbers,
         flex: 0,
         marginLeft: 0,
-        minWidth: themeStyles.oneSpace * sized({ xs: 3, md: 4 }),
+        minWidth: themeStyles.oneSpace * themeStyles.sized({ xs: 3, md: 4 }),
         textAlign: 'right'
       },
       time: {
@@ -386,7 +378,7 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        minWidth: themeStyles.oneSpace * sized({ xs: 7, lg: 10 }),
+        minWidth: themeStyles.oneSpace * themeStyles.sized({ xs: 7, lg: 10 }),
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
@@ -396,13 +388,13 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...themeStyles.text.lighter,
         // fontFamily: 'Roboto',
         flex: 0,
-        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * sized({
+        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * themeStyles.sized({
           xs: hasFrequencyDecimals ? 7 : 6,
           sm: hasFrequencyDecimals ? 8.5 : 7.5,
           md: hasFrequencyDecimals ? 10 : 8,
           lg: hasFrequencyDecimals ? 10 : 8
         })),
-        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
+        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
         marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.1),
         textAlign: 'right'
       },
@@ -426,25 +418,25 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...themeStyles.text.callsign,
         ...themeStyles.text.callsignBold,
         flex: 0,
-        minWidth: themeStyles.oneSpace * sized({
+        minWidth: themeStyles.oneSpace * themeStyles.sized({
           xs: hasLongCall ? 8 : 7,
           sm: hasLongCall ? 9 : 8,
           md: 10
         }),
-        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
+        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
         textAlign: 'left'
       },
       name: {
         ...commonStyles,
         flex: 1,
-        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
+        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
         textAlign: 'left'
       },
       location: {
         ...commonStyles,
         flex: 0,
-        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
-        minWidth: themeStyles.oneSpace * sized({ xs: 4, md: 6 }),
+        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
+        minWidth: themeStyles.oneSpace * themeStyles.sized({ xs: 4, md: 6 }),
         textAlign: 'center'
       },
       signal: {
@@ -452,7 +444,7 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        minWidth: themeStyles.oneSpace * sized({ xs: 3, md: 9 }),
+        minWidth: themeStyles.oneSpace * themeStyles.sized({ xs: 3, md: 9 }),
         marginLeft: themeStyles.oneSpace,
         textAlign: 'right'
       },
@@ -469,7 +461,7 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         flex: 0,
         flexDirection: 'row',
         textAlign: 'right',
-        marginLeft: themeStyles.oneSpace * sized({ xs: 1, lg: 2 }),
+        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
         minWidth: themeStyles.oneSpace * 0,
         maxWidth: themeStyles.oneSpace * 9
       },

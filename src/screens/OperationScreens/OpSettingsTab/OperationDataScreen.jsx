@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 /*
  * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
@@ -9,7 +8,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Alert, ScrollView, View } from 'react-native'
-import { Checkbox, List, Menu, Text } from 'react-native-paper'
+import { Checkbox, Menu, Text } from 'react-native-paper'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
@@ -206,11 +205,13 @@ export default function OperationDataScreen (props) {
               disabled={!readyToExport}
             />
             {exportOptions.map((option) => (
-              <View key={`${option.exportType}-${option.fileName}`} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'center' }}>
-                <Checkbox
-                  status={(settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
-                  onPress={() => dispatch(setSettings({ exportTypes: { ...settings.exportTypes, [option.exportType]: !((settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false) } }))}
-                />
+              <View key={`${option.exportType}-${option.fileName}`} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'flex-start' }}>
+                <View style={{ marginTop: styles.oneSpace * 1 }}>
+                  <Checkbox
+                    status={(settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
+                    onPress={() => dispatch(setSettings({ exportTypes: { ...settings.exportTypes, [option.exportType]: !((settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false) } }))}
+                  />
+                </View>
                 <H2kListItem
                   key={option.fileName}
                   title={option.exportLabel || option.exportName}
@@ -254,7 +255,8 @@ export default function OperationDataScreen (props) {
               <H2kListItem
                 title="Export QSOs to Wavelog"
                 description="Send all QSOs for this operation to Wavelog"
-                left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="cloud-upload-outline" color={styles.colors.devMode} />}
+                leftIcon="cloud-upload-outline"
+                leftIconColor={styles.colors.devMode}
                 onPress={() => setShowExportWavelog(true)}
                 titleStyle={{ color: styles.colors.devMode }}
                 descriptionStyle={{ color: styles.colors.devMode }}

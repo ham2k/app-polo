@@ -4,6 +4,7 @@
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
     "changes": [
       "Adjust RST values when changing modes for existing QSOs",
+      "Accessibility improvements for screen readers and larger fonts",
       "Fixed bugs in sync service"
     ]
   },

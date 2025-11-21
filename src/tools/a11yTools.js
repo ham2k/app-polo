@@ -9,9 +9,9 @@
 const CALLSIGN_REGEXP =
   /(^|\W)([A-Z0-9]+\/){0,1}(5U[A-Z]*|[0-9][A-Z]{1,2}[0-9]|[ACDEHJLOPQSTUVXYZ][0-9]|[A-Z]{1,2}[0-9])([A-Z0-9]+)(\/[A-Z0-9/]+){0,1}(\W|$)/g
 
-export function tweakStringForVoiceOver (str) {
+export function tweakStringForVoiceOver(str) {
   str = str.replaceAll(CALLSIGN_REGEXP, (match, p1, p2, p3, p4, p5, p6, p7) => {
-    return p1 + [p2, p3, p4, p5].join('').split('').join(' ') + p6
+    return p1 + [p2, p3, p4, p5].join('').split('').join('.') + '.' + p6
   })
   str = str.replaceAll('QSOs', 'Q sos')
   str = str.replaceAll('QSO', 'Q so')

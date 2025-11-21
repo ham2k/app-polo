@@ -15,6 +15,44 @@ import { selectSettings, setSettings } from '../../../store/settings'
 import ScreenContainer from '../../components/ScreenContainer'
 import { H2kListItem, H2kListSection } from '../../../ui'
 
+const ACCESSIBILITY_TEXT_FOR_BAND = {
+  '160m': '160 Meters',
+  '80m': '80 Meters',
+  '60m': '60 Meters',
+  '40m': '40 Meters',
+  '30m': '30 Meters',
+  '20m': '20 Meters',
+  '17m': '17 Meters',
+  '15m': '15 Meters',
+  '12m': '12 Meters',
+  '10m': '10 Meters',
+  '6m': '6 Meters',
+  '2m': '2 Meters',
+  '70cm': '70 Centimeters',
+  '23cm': '23 Centimeters',
+  '13cm': '13 Centimeters',
+  '9cm': '9 Centimeters',
+  '6cm': '6 Centimeters',
+  '3cm': '3 Centimeters',
+  '1.25cm': '1.25 Centimeters',
+  '6mm': '6 Millimeters',
+  '4mm': '4 Millimeters',
+  '2.5mm': '2.5 Millimeters',
+  '2mm': '2 Millimeters',
+  '1mm': '1 Millimeters',
+  submm: 'Submillimeter',
+  other: 'Other Band'
+}
+
+const ACCESSIBILITY_TEXT_FOR_MODE = {
+  SSB: 'Single Sideband',
+  USB: 'Upper Sideband',
+  LSB: 'Lower Sideband',
+  RTTY: 'Ritty',
+  CW: 'C.W.',
+  other: 'Other Mode'
+}
+
 export default function BandModeSettingsScreen ({ navigation, splitView }) {
   const dispatch = useDispatch()
   const safeAreaInsets = useSafeAreaInsets()
@@ -101,6 +139,7 @@ export default function BandModeSettingsScreen ({ navigation, splitView }) {
             <H2kListItem
               key={band}
               title={band}
+              accessibilityTitle={ACCESSIBILITY_TEXT_FOR_BAND[band] || band}
               rightSwitchValue={settings.bands.includes(band)}
               rightSwitchOnValueChange={(value) => setBand(band, value)}
               onPress={() => setBand(band, !settings.bands.includes(band))}
@@ -117,6 +156,7 @@ export default function BandModeSettingsScreen ({ navigation, splitView }) {
             <H2kListItem
               key={mode}
               title={mode}
+              accessibilityTitle={ACCESSIBILITY_TEXT_FOR_MODE[mode] || mode}
               rightSwitchValue={settings.modes.includes(mode)}
               rightSwitchOnValueChange={(value) => setMode(mode, value)}
               onPress={() => setMode(mode, !settings.modes.includes(mode))}

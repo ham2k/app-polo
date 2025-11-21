@@ -99,7 +99,7 @@ export default function HeaderBar ({
           </View>
         )}
         {leftAction === 'logo' && (
-          <Image source={LOGO} style={{ height: 18, width: 60, marginLeft: styles.oneSpace * 0 }} resizeMode="contain" />
+          <Image source={LOGO} style={{ height: 3 * styles.oneSpace, width: 8 * styles.oneSpace, marginLeft: styles.oneSpace * 0 }} resizeMode="contain" />
         )}
         {leftAction === 'none' && (
           <Text accessible={false}>{' '}</Text>
@@ -118,6 +118,7 @@ export default function HeaderBar ({
                   minimumFontScale={0.9}
                   style={styles.screenTitleSmall}
                   accessibilityLabel={tweakStringForVoiceOver([title, subTitle].filter(x => x).join(', '))}
+                  accesibilityRole="header"
                 >
                   {title}
                 </Text>
@@ -197,41 +198,41 @@ function prepareStyles (baseStyles, { back, close, safeAreaInsets, splitView }) 
     },
     screenTitle: {
       fontFamily: baseStyles.boldTitleFontFamily,
-      fontSize: 20 * baseStyles.fontScaleAdjustment,
-      lineHeight: 22 * baseStyles.fontScaleAdjustment,
+      fontSize: 20 * baseStyles.fontScale,
+      lineHeight: 22 * baseStyles.fontScale,
       color: baseStyles.colors.onPrimary
     },
     screenTitleSmall: {
       fontFamily: 'Roboto Slab Medium',
-      fontSize: 17 * baseStyles.fontScaleAdjustment,
-      lineHeight: 20 * baseStyles.fontScaleAdjustment,
+      fontSize: 17 * baseStyles.fontScale,
+      lineHeight: 20 * baseStyles.fontScale,
       color: baseStyles.colors.onPrimary
     },
     screenSubTitle: {
       fontFamily: baseStyles.normalFontFamily,
-      fontSize: 13 * baseStyles.fontScaleAdjustment,
-      lineHeight: 14 * baseStyles.fontScaleAdjustment,
+      fontSize: 13 * baseStyles.fontScale,
+      lineHeight: 14 * baseStyles.fontScale,
       fontWeight: baseStyles.isIOS ? '400' : '100',
       color: baseStyles.colors.onPrimary
     },
     screenSubTitleCondensed: {
       fontFamily: baseStyles.maybeCondensedFontFamily,
-      fontSize: 13 * baseStyles.fontScaleAdjustment,
-      lineHeight: 14 * baseStyles.fontScaleAdjustment,
+      fontSize: 13 * baseStyles.fontScale,
+      lineHeight: 14 * baseStyles.fontScale,
       fontWeight: baseStyles.isIOS ? '400' : '100',
       color: baseStyles.colors.onPrimary
     },
     screenTitleLight: {
       fontFamily: baseStyles.normalFontFamily,
-      fontSize: 16 * baseStyles.fontScaleAdjustment,
+      fontSize: 16 * baseStyles.fontScale,
       color: baseStyles.colors.onPrimary,
       // fontWeight: baseStyles.isIOS ? '300' : '100',
       marginLeft: baseStyles.oneSpace
     },
     screenTitleBold: {
       fontFamily: 'Roboto Black',
-      fontSize: 20 * baseStyles.fontScaleAdjustment,
-      lineHeight: 22 * baseStyles.fontScaleAdjustment
+      fontSize: 20 * baseStyles.fontScale,
+      lineHeight: 22 * baseStyles.fontScale
     },
     sideContent: {
       flex: 0,

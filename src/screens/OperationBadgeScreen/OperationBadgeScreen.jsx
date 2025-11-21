@@ -57,31 +57,31 @@ function prepareStyles (baseTheme, themeColor, deviceColorScheme) {
       right: 100
     },
     title: {
-      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      fontSize: 18 * baseTheme.fontScale,
       color: '#222',
       fontFamily: baseTheme.boldTitleFontFamily
     },
     secondaryTitle: {
-      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      fontSize: 18 * baseTheme.fontScale,
       color: '#222',
       fontFamily: baseTheme.boldTitleFontFamily
     },
     subTitle: {
-      fontSize: 16 * baseTheme.fontScaleAdjustment,
+      fontSize: 16 * baseTheme.fontScale,
       color: '#222',
       fontFamily: baseTheme.normalFontFamily
     },
     ham2k: {
-      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      fontSize: 18 * baseTheme.fontScale,
       color: baseTheme.isIOS && deviceColorScheme === 'dark' ? '#CCC' : '#222',
       fontFamily: baseTheme.normalFontFamily,
-      lineHeight: 18 * baseTheme.fontScaleAdjustment
+      lineHeight: 18 * baseTheme.fontScale
     },
     logger: {
-      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      fontSize: 18 * baseTheme.fontScale,
       color: baseTheme.isIOS && deviceColorScheme === 'dark' ? '#CCC' : '#222',
       fontFamily: baseTheme.boldTitleFontFamily,
-      lineHeight: 18 * baseTheme.fontScaleAdjustment
+      lineHeight: 18 * baseTheme.fontScale
     }
   }
 }

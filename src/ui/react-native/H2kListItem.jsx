@@ -11,12 +11,14 @@ import { List, Switch, Text } from 'react-native-paper'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { H2kIconButton } from './H2kIconButton'
 import { View } from 'react-native'
-import { paperNameOrHam2KIcon } from './H2kIcon'
+import { H2kIcon, paperNameOrHam2KIcon } from './H2kIcon'
 
 export function H2kListItem ({
   disabled, style,
   title, titlePrimary, titleSecondary,
   description, descriptionPrimary, descriptionSecondary,
+  accessibilityLabel, accesibilityHint, accessibilityRole,
+  accessibilityTitle, accessibilityDescription,
   leftIcon, leftIconColor, left,
   rightIcon, right, onPressRight,
   rightSwitchValue, rightSwitchOnValueChange,
@@ -77,7 +79,7 @@ export function H2kListItem ({
     if (left) {
       return left
     } else if (leftIcon) {
-      return () => <List.Icon icon={paperNameOrHam2KIcon(leftIcon)} style={{ marginLeft: styles.oneSpace * 2 }} color={leftIconColor} />
+      return () => <View style={{ marginLeft: styles.oneSpace * 2 }}><H2kIcon icon={paperNameOrHam2KIcon(leftIcon)} color={leftIconColor} /></View>
     }
     return null
   }, [leftIcon, leftIconColor, left, styles])
@@ -91,11 +93,38 @@ export function H2kListItem ({
       if (onPressRight) {
         return () => <H2kIconButton icon={paperNameOrHam2KIcon(rightIcon)} style={{ marginRight: styles.oneSpace * 2 }} onPress={onPressRight} />
       } else {
-        return () => <List.Icon icon={paperNameOrHam2KIcon(rightIcon)} style={{ marginRight: styles.oneSpace * 2 }} />
+        return () => <View style={{ marginRight: styles.oneSpace * 2 }}><H2kIcon icon={paperNameOrHam2KIcon(rightIcon)} /></View>
       }
     }
     return null
   }, [right, rightSwitchValue, rightIcon, rightSwitchOnValueChange, onPressRight, styles.oneSpace])
+
+  const actualAccessibilityLabel = useMemo(() => {
+    if (accessibilityLabel) {
+      return accessibilityLabel
+    }
+    if (rightSwitchValue || rightSwitchOnValueChange) {
+      return [
+        accessibilityTitle || title,
+        rightSwitchValue ? 'On' : 'Off',
+        accessibilityDescription || description
+      ].filter(Boolean).join(', ')
+    }
+    return [accessibilityTitle || title, accessibilityDescription || description].filter(Boolean).join(', ')
+  }, [accessibilityTitle, accessibilityDescription, rightSwitchValue, rightSwitchOnValueChange, title, description, accessibilityLabel])
+
+  // NOTE: Ideally, we'd use `accessibilityHint` to describe the setting,
+  // but using it on `List.Item` seems to crash on iOS.  ¯\_(ツ)_/¯
+
+  const actualAccessibilityRole = useMemo(() => {
+    if (accessibilityRole) {
+      return accessibilityRole
+    }
+    if (rightSwitchValue || rightSwitchOnValueChange) {
+      return 'switch'
+    }
+    return 'button'
+  }, [accessibilityRole, rightSwitchOnValueChange, rightSwitchValue])
 
   return (
     <List.Item
@@ -105,6 +134,8 @@ export function H2kListItem ({
       description={descriptionElement}
       titleStyle={titleStyle}
       descriptionStyle={descriptionStyle}
+      accessibilityLabel={actualAccessibilityLabel}
+      accessibilityRole={actualAccessibilityRole}
       left={leftElement}
       right={rightElement}
     />

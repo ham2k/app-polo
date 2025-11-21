@@ -52,17 +52,19 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 export function computeSizes({ width, height, fontScale, pixelRatio }) {
   // If the screen is too small, and the font scale too large, nothing will fit, so we need to adjust our font sizes down
-  let fontScaleAdjustment = 1
-  if ((width / fontScale) < 300) {
-    fontScaleAdjustment = width / fontScale / 300
+  // console.log('width', width, 'fontScale', fontScale, 'pixelRatio', pixelRatio, 'width / fontScale', width / fontScale)
+
+  const smallestSize = Math.min(width, height)
+
+  if (smallestSize < 340 * fontScale) {
+    fontScale = 340 / smallestSize
+  } else if (smallestSize > 1000 * fontScale) {
+    fontScale = fontScale * 1.07
   }
 
-  // For Tablets, lets bump the font size a bit
-  if (width > 1000) {
-    fontScaleAdjustment = fontScaleAdjustment * 1.07
-  }
+  // console.log('fontScale', fontScale)
 
-  const pixelScaleAdjustment = fontScale * fontScaleAdjustment
+  const pixelScaleAdjustment = fontScale
 
   const sized = (options) => {
     if (width / pixelScaleAdjustment < 340) return options.xs // Small phone
@@ -83,11 +85,12 @@ export function computeSizes({ width, height, fontScale, pixelRatio }) {
     scaledWidth: width / pixelScaleAdjustment,
     scaledHeight: height / pixelScaleAdjustment,
     size,
+    sized,
     portrait,
     landscape,
     fontScale,
     pixelRatio,
-    fontScaleAdjustment,
+    fontScale,
     pixelScaleAdjustment,
 
     smOrLarger: sized({ xs: false, sm: true }),

@@ -17,6 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { selectSettings, setSettings } from '../../../store/settings'
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { H2kIcon } from '../../../ui'
 
 export default function WavelogSettingsScreen ({ navigation }) {
   const dispatch = useDispatch()
@@ -99,7 +100,7 @@ export default function WavelogSettingsScreen ({ navigation }) {
                     title={profileName}
                     description={station.station_callsign || station.label || ''}
                     onPress={() => setStationId(id)}
-                    left={props => <List.Icon {...props} icon={stationId === id ? 'check-circle' : 'radiobox-blank'} />}
+                    left={props => <H2kIcon {...props} icon={stationId === id ? 'check-circle' : 'radiobox-blank'} />}
                     style={{ backgroundColor: stationId === id ? styles.colors.primaryLighter : undefined }}
                   />
                 )

@@ -1,14 +1,10 @@
 # Issues
 
-### Operation Settings and Performance
+## Accessibility
 
-Right now, all the operation settings screens change the operation data directly on each
-user interaction. So if you're changing the grid, each character updates the operation.
+* In Data File Settings, cannot dismiss the dialog.
+"I could not double tap on the "Close modal” button to dismiss the screen. I used the VoiceOver two finger scrub gesture but should be able to double tap the button as well"
 
-This causes a lot of re-renders and background job, such as rescoring. On a large operation
-this can cause horrible lag.
-
-We need to figure out a way to somehow batch these changes.
 
 
 

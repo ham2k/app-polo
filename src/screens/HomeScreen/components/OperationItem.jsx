@@ -7,7 +7,7 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { View } from 'react-native'
-import { Text, TouchableRipple } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { useSelector } from 'react-redux'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
@@ -48,7 +48,7 @@ export default function OperationItem ({ operationId, settings, onPress, styles,
   return (
     <H2kPressable
       onPress={pressHandler}
-      accessibilityLabel={tweakStringForVoiceOver(`${operation.stationCallPlus || operation.stationCall} ${title} ${operation.subtitle}, ${operation.qsoCount ?? 0} Q sos, ${fmtDateZuluDynamic(operation.startAtMillisMax)}`)}
+      accessibilityLabel={tweakStringForVoiceOver(`${operation.stationCallPlus || operation.stationCall} ${title}, ${operation.subtitle}, ${operation.qsoCount ?? 0} Q sos, ${fmtDateZuluDynamic(operation.startAtMillisMax)}`)}
       style={styles.rowRoot}
     >
       <View style={rowStyle}>

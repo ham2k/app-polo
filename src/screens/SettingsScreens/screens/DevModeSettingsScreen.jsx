@@ -5,9 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback } from 'react'
-import { IconButton, List, Switch } from 'react-native-paper'
+import { IconButton } from 'react-native-paper'
 import { Alert, ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
@@ -191,8 +190,10 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
           <H2kListItem
             title="Enable Wavelog Experiments"
             description={settings.wavelogExperiments ? 'Experimental Wavelog features are enabled' : 'Wavelog is Disabled'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="test-tube" color={styles.colors.devMode} />}
-            right={() => <Switch value={!!settings.wavelogExperiments} onValueChange={(value) => dispatch(setSettings({ wavelogExperiments: value }))} />}
+            leftIcon={'test-tube'}
+            leftIconColor={styles.colors.devMode}
+            rightValue={!!settings.wavelogExperiments}
+            rightOnValueChange={(value) => dispatch(setSettings({ wavelogExperiments: value }))}
             onPress={() => dispatch(setSettings({ wavelogExperiments: !settings.wavelogExperiments }))}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
@@ -202,7 +203,8 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
           <H2kListItem
             title="Export Database"
             description={'Export the current database file'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-upload" color={styles.colors.devMode} />}
+            leftIcon={'briefcase-upload'}
+            leftIconColor={styles.colors.devMode}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleExportDB}
@@ -210,7 +212,8 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
           <H2kListItem
             title="Replace Database"
             description={'Import a new database file and replace all data'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-edit" color={styles.colors.devMode} />}
+            leftIcon={'briefcase-edit'}
+            leftIconColor={styles.colors.devMode}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleImportDB}
@@ -218,7 +221,8 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
           <H2kListItem
             title="Wipe Database"
             description={'Delete all data from the database.'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="briefcase-remove" color={styles.colors.devMode} />}
+            leftIcon={'briefcase-remove'}
+            leftIconColor={styles.colors.devMode}
             titleStyle={{ color: styles.colors.devMode }}
             descriptionStyle={{ color: styles.colors.devMode }}
             onPress={handleWipeDB}

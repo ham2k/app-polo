@@ -20,12 +20,13 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   theme = theme ?? DEFAULT_THEME
 
   const sizeInfo = theme.sizes
-  const { size, fontScaleAdjustment, pixelScaleAdjustment } = sizeInfo
+  const { size, sized, fontScale, pixelScaleAdjustment } = sizeInfo
 
-  const normalFontSize = 16 * fontScaleAdjustment
-  const largeFontSize = 24 * fontScaleAdjustment
-  const smallFontSize = 14 * fontScaleAdjustment
-  const smallerFontSize = 12 * fontScaleAdjustment
+  const normalFontSize = 16 * fontScale
+  const mediumFontSize = 20 * fontScale
+  const largeFontSize = 24 * fontScale
+  const smallFontSize = 14 * fontScale
+  const smallerFontSize = 12 * fontScale
 
   const fontFamily = 'Roboto'
   const boldTitleFontFamily = 'Roboto Slab Black'
@@ -54,10 +55,11 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     halfSpace,
 
     normalFontSize,
+    mediumFontSize,
     largeFontSize,
     smallFontSize,
     smallerFontSize,
-    fontScaleAdjustment,
+    fontScale,
 
     fontFamily,
     boldTitleFontFamily,
@@ -125,7 +127,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       width: '100%'
     },
     doubleRow: {
-      height: oneSpace * 7,
+      height: sized({ xs: oneSpace * 7, md: oneSpace * 8 }),
       paddingHorizontal: oneSpace,
       paddingVertical: oneSpace,
       borderBottomWidth: 1,
@@ -136,7 +138,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     },
     doubleRowInnerRow: {
       // borderWidth: 1,
-      height: PixelRatio.roundToNearestPixel(oneSpace * 2.6),
+      height: PixelRatio.roundToNearestPixel(sized({ xs: oneSpace * 2.6, md: oneSpace * 3.3 })),
       flexDirection: 'row',
       width: '100%'
     },
