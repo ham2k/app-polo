@@ -229,7 +229,9 @@ export default function LoggingPanel ({
       updateQSO({ band: value, freq: undefined })
       if (qso?._isNew) dispatch(setVFO({ band: value, freq: undefined }))
     } else if (fieldId === 'mode') {
-      updateQSO({ mode: value })
+      const { theirReport, ourReport } = _convertRSTValues({ theirReport: qso?.their?.sent, ourReport: qso?.our?.sent, mode: value, originalMode: qso?.mode }, { settings })
+      console.log('theirReport', theirReport, 'ourReport', ourReport)
+      updateQSO({ mode: value, their: { sent: theirReport ?? qso?.their?.sent }, our: { sent: ourReport ?? qso?.our?.sent } })
       if (qso?._isNew) dispatch(setVFO({ mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
       updateQSO({ startAtMillis: value, _manualTime: true })
@@ -851,4 +853,32 @@ const PanelSelector = ({ qso, opMessage, styles, ...props }) => {
   } else {
     return null
   }
+}
+
+const _convertRSTValues = ({ theirReport, ourReport, mode, originalMode }, { settings }) => {
+  console.log('conver rst values', theirReport, ourReport, mode, originalMode)
+  if ((mode === 'CW' || mode === 'RTTY') && (originalMode === 'SSB' || originalMode === 'USB' || originalMode === 'LSB')) {
+    console.log('converting cw to ssb')
+    if (theirReport) {
+      const [readability, strength, ...extra] = theirReport.split('')
+      theirReport = `${readability}${strength}${strength}${extra}`
+    }
+    if (ourReport) {
+      const [readability, strength, ...extra] = ourReport.split('')
+      ourReport = `${readability}${strength}${strength}${extra}`
+    }
+  } else if ((mode === 'SSB' || mode === 'USB' || mode === 'LSB') && (originalMode === 'CW' || mode === 'RTTY')) {
+    console.log('converting ssb to cw')
+    if (theirReport) {
+      // eslint-disable-next-line no-unused-vars
+      const [readability, strength, tone, ...extra] = theirReport.split('')
+      theirReport = `${readability}${strength}${extra}`
+    }
+    if (ourReport) {
+      // eslint-disable-next-line no-unused-vars
+      const [readability, strength, tone, ...extra] = ourReport.split('')
+      ourReport = `${readability}${strength}${extra}`
+    }
+  }
+  return { theirReport, ourReport }
 }
