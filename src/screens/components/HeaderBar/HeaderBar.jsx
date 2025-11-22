@@ -112,20 +112,29 @@ export default function HeaderBar ({
             title && subTitle ? (
               <>
                 <Text
-                  adjustsFontSizeToFit={false}
                   numberOfLines={1}
                   ellipsizeMode={'tail'}
-                  minimumFontScale={0.9}
                   style={styles.screenTitleSmall}
                   accessibilityLabel={tweakStringForVoiceOver([title, subTitle].filter(x => x).join(', '))}
                   accesibilityRole="header"
                 >
                   {title}
                 </Text>
-                <Text accessible={false} adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.9} style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}>{subTitle}</Text>
+                <Text
+                  accessible={false}
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}
+                  style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}
+                >{subTitle}</Text>
               </>
             ) : (
-              <Text adjustsFontSizeToFit={false} numberOfLines={1} ellipsizeMode={'tail'} minimumFontScale={0.8} maxFontSizeMultiplier={1} style={styles.screenTitle}>{title}</Text>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.screenTitle}
+                accessibilityLabel={tweakStringForVoiceOver(title)}
+                accesibilityRole="header"
+              >{title}</Text>
             )
         }
       />
@@ -198,41 +207,41 @@ function prepareStyles (baseStyles, { back, close, safeAreaInsets, splitView }) 
     },
     screenTitle: {
       fontFamily: baseStyles.boldTitleFontFamily,
-      fontSize: 20 * baseStyles.fontScale,
-      lineHeight: 22 * baseStyles.fontScale,
+      fontSize: 20 * baseStyles.fontScaleAdjustment,
+      lineHeight: 22 * baseStyles.fontScaleAdjustment,
       color: baseStyles.colors.onPrimary
     },
     screenTitleSmall: {
       fontFamily: 'Roboto Slab Medium',
-      fontSize: 17 * baseStyles.fontScale,
-      lineHeight: 20 * baseStyles.fontScale,
+      fontSize: 17 * baseStyles.fontScaleAdjustment,
+      lineHeight: 20 * baseStyles.fontScaleAdjustment,
       color: baseStyles.colors.onPrimary
     },
     screenSubTitle: {
       fontFamily: baseStyles.normalFontFamily,
-      fontSize: 13 * baseStyles.fontScale,
-      lineHeight: 14 * baseStyles.fontScale,
+      fontSize: 13 * baseStyles.fontScaleAdjustment,
+      lineHeight: 14 * baseStyles.fontScaleAdjustment,
       fontWeight: baseStyles.isIOS ? '400' : '100',
       color: baseStyles.colors.onPrimary
     },
     screenSubTitleCondensed: {
       fontFamily: baseStyles.maybeCondensedFontFamily,
-      fontSize: 13 * baseStyles.fontScale,
-      lineHeight: 14 * baseStyles.fontScale,
+      fontSize: 13 * baseStyles.fontScaleAdjustment,
+      lineHeight: 14 * baseStyles.fontScaleAdjustment,
       fontWeight: baseStyles.isIOS ? '400' : '100',
       color: baseStyles.colors.onPrimary
     },
     screenTitleLight: {
       fontFamily: baseStyles.normalFontFamily,
-      fontSize: 16 * baseStyles.fontScale,
+      fontSize: 16 * baseStyles.fontScaleAdjustment,
       color: baseStyles.colors.onPrimary,
       // fontWeight: baseStyles.isIOS ? '300' : '100',
       marginLeft: baseStyles.oneSpace
     },
     screenTitleBold: {
       fontFamily: 'Roboto Black',
-      fontSize: 20 * baseStyles.fontScale,
-      lineHeight: 22 * baseStyles.fontScale
+      fontSize: 20 * baseStyles.fontScaleAdjustment,
+      lineHeight: 22 * baseStyles.fontScaleAdjustment
     },
     sideContent: {
       flex: 0,

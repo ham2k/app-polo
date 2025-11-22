@@ -153,16 +153,18 @@ export function SpotterControlInputs (props) {
   ])
 
   return (
-    <View style={[style, { flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
-      <H2kTextInput
-        innerRef={ref}
-        focusedRef={focusedRef}
-        style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace, flex: 1 }}
-        label={'Comments'}
-        value={comments ?? ''}
-        onChangeText={setComments}
-        disabled={!online || spotterDisabled}
-      />
+    <View style={[style, { marginTop: styles.oneSpace * 1.1, flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
+      {!spotterDisabled && (
+        <H2kTextInput
+          innerRef={ref}
+          focusedRef={focusedRef}
+          style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace, flex: 1 }}
+          label={'Comments'}
+          value={comments ?? ''}
+          onChangeText={setComments}
+          disabled={!online || spotterDisabled}
+        />
+      )}
 
       <H2kButton
         themeColor="tertiaryLighter"
@@ -174,12 +176,12 @@ export function SpotterControlInputs (props) {
       >
         {spotterMessage}
       </H2kButton>
-      <View style={{ flex: 0, flexDirection: 'row', position: 'absolute', top: styles.oneSpace * -1, right: 0 }}>
+      <View style={{ flex: 0, flexDirection: 'row', position: 'absolute', top: styles.oneSpace * -2, right: 0 }}>
         {hooksWithSpotting.map((x, n) => (
           <H2kIcon
             key={x.key}
             name={x.icon}
-            size={styles.oneSpace * 2.3}
+            size={styles.normalFontSize * 1.2}
             color={styles.colors[colorForStatus(spotStatus[x.key])]}
           />
         ))}

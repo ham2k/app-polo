@@ -69,9 +69,9 @@ const QSOItem = React.memo(function QSOItem ({
 
   const refIcons = useMemo(() => {
     return (qso.refs || []).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.iconForQSO).map(({ ref, handler }, i) => (
-      <View key={i} style={fieldsStyle.icon}><H2kIcon key={i} name={handler?.iconForQSO} size={styles.normalFontSize} color={fieldsStyle.icon.color} /></View>
+      <H2kIcon key={i} name={handler?.iconForQSO} color={fieldsStyle.icon.color} />
     ))
-  }, [qso.refs, styles.normalFontSize, fieldsStyle.icon])
+  }, [qso.refs, fieldsStyle.icon])
 
   return (
     <H2kPressable onPress={pressHandler} style={rowStyle}>
@@ -100,15 +100,15 @@ const QSOItem = React.memo(function QSOItem ({
           {styles.smOrLarger && theirInfo?.name}
         </Text>
         {(qso.notes || confirmedBySpot || bustedBySpot || refIcons.length > 0) && (
-          <View style={fieldsStyle.icons}>
+          <Text style={fieldsStyle.icons}>
             {qso.notes && (
-              <View style={fieldsStyle.icon}><H2kIcon source="file-document-outline" size={styles.normalFontSize} style={fieldsStyle.icon} /></View>
+              <H2kIcon source="file-document-outline" style={fieldsStyle.icon} />
             )}
             {(confirmedBySpot || bustedBySpot) && (
-              <View style={fieldsStyle.icon}><H2kIcon name={`${confirmedBySpot ? 'check' : 'help'}-circle`} size={styles.normalFontSize} style={fieldsStyle.icon} /></View>
+              <H2kIcon name={`${confirmedBySpot ? 'check' : 'help'}-circle`} style={fieldsStyle.icon} />
             )}
             {refIcons}
-          </View>
+          </Text>
         )}
         {extraInfo ? (
           <>

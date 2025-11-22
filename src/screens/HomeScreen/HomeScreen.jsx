@@ -94,7 +94,7 @@ function prepareStyles (baseStyles, { safeArea }) {
       backgroundColor: DEBUG ? 'rgba(0,0,0,0.1)' : undefined,
       fontSize: baseStyles.normalFontSize,
       fontWeight: '600',
-      lineHeight: baseStyles.smallFontSize * 1.3
+      lineHeight: baseStyles.normalFontSize * 1.3
     },
     countText: {
       ...baseStyles.rowText,
@@ -112,8 +112,8 @@ function prepareStyles (baseStyles, { safeArea }) {
       ...baseStyles.rowText,
       backgroundColor: DEBUG ? 'rgba(0,0,0,0.1)' : undefined,
       fontSize: baseStyles.smallFontSize,
-      lineHeight: baseStyles.smallFontSize * 1.3,
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      lineHeight: baseStyles.smallFontSize * 1.3
     },
     markdown: {
       ...baseStyles.markdown,

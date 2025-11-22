@@ -86,8 +86,8 @@ export default function LoggerChip ({
   }, [style, styles])
 
   const ChipIcon = useMemo(() => {
-    return ({ props }) => <H2kIcon icon={icon} color={iconColor} {...props} />
-  }, [icon, iconColor])
+    return ({ props }) => <H2kIcon icon={icon} color={iconColor} size={styles.normalFontSize} {...props} />
+  }, [icon, iconColor, styles.normalFontSize])
 
   return (
     <Chip

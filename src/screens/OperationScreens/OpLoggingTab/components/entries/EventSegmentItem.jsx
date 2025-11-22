@@ -58,7 +58,7 @@ const EventSegmentItem = React.memo(function EventSegmentItem (
       <View style={styles.rowInner}>
         <Text style={fieldsStyle.time}>{timeFormatFunction(qso.startAtMillis)}</Text>
         <Text style={fieldsStyle.icons}>
-          <H2kIcon name={icon} size={styles.normalFontSize} style={fieldsStyle.icon} />
+          <H2kIcon name={icon} style={fieldsStyle.icon} />
         </Text>
         <Text style={fieldsStyle.location}>
           {description}

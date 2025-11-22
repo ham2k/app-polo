@@ -11,7 +11,7 @@ import { List, Switch, Text } from 'react-native-paper'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { H2kIconButton } from './H2kIconButton'
 import { View } from 'react-native'
-import { H2kIcon, paperNameOrHam2KIcon } from './H2kIcon'
+import { H2kIcon } from './H2kIcon'
 
 export function H2kListItem ({
   disabled, style,
@@ -79,10 +79,10 @@ export function H2kListItem ({
     if (left) {
       return left
     } else if (leftIcon) {
-      return () => <View style={{ marginLeft: styles.oneSpace * 2 }}><H2kIcon icon={paperNameOrHam2KIcon(leftIcon)} color={leftIconColor} /></View>
+      return () => <View style={{ marginLeft: styles.oneSpace * 2 }}><H2kIcon icon={leftIcon} color={leftIconColor} size={styles.normalFontSize * 1.5} /></View>
     }
     return null
-  }, [leftIcon, leftIconColor, left, styles])
+  }, [left, leftIcon, styles.oneSpace, styles.normalFontSize, leftIconColor])
 
   const rightElement = useMemo(() => {
     if (right) {
@@ -91,9 +91,9 @@ export function H2kListItem ({
       return () => <Switch value={rightSwitchValue} onValueChange={rightSwitchOnValueChange} />
     } else if (rightIcon) {
       if (onPressRight) {
-        return () => <H2kIconButton icon={paperNameOrHam2KIcon(rightIcon)} style={{ marginRight: styles.oneSpace * 2 }} onPress={onPressRight} />
+        return () => <H2kIconButton icon={rightIcon} size={styles.oneSpace * 3} style={{ marginRight: styles.oneSpace * 2 }} onPress={onPressRight} />
       } else {
-        return () => <View style={{ marginRight: styles.oneSpace * 2 }}><H2kIcon icon={paperNameOrHam2KIcon(rightIcon)} /></View>
+        return () => <View style={{ marginRight: styles.oneSpace * 2 }}><H2kIcon icon={rightIcon} /></View>
       }
     }
     return null

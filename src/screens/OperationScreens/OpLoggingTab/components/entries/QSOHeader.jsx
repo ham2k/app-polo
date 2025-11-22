@@ -50,7 +50,6 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
                 {score.icon ? (
                   <H2kIcon
                     name={score.icon}
-                    size={styles.normalFontSize}
                     color={score.activated === true ? styles.colors.important : undefined}
                     style={styles.fields.icon}
                   />

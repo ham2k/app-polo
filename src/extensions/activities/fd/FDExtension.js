@@ -139,7 +139,6 @@ const ReferenceHandler = {
   },
 
   relevantInfoForQSOItem: ({ qso, operation }) => {
-    console.log('relevantInfoForQSOItem', qso)
     let exchange = qso?.their?.exchange
     if (exchange?.startsWith('PC')) { // "Please Copy…"
       exchange = '+' + exchange.slice(2)

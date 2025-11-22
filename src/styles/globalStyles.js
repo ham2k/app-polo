@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -20,13 +20,15 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   theme = theme ?? DEFAULT_THEME
 
   const sizeInfo = theme.sizes
-  const { size, sized, fontScale, pixelScaleAdjustment } = sizeInfo
+  const { size, sized, fontScale, fontScaleAdjustment, pixelScaleAdjustment } = sizeInfo
 
-  const normalFontSize = 16 * fontScale
-  const mediumFontSize = 20 * fontScale
-  const largeFontSize = 24 * fontScale
-  const smallFontSize = 14 * fontScale
-  const smallerFontSize = 12 * fontScale
+  // Fonts are specificed in their "natural" sizes, and the OS scales them up or down
+  // based on the fontScale.
+  const normalFontSize = 16 * fontScaleAdjustment // sized({ xs: 16, md: 17 })
+  const mediumFontSize = 18 * fontScaleAdjustment // sized({ xs: 20, md: 21.5 })
+  const largeFontSize = 24 * fontScaleAdjustment // sized({ xs: 24, md: 26 })
+  const smallFontSize = 14 * fontScaleAdjustment // sized({ xs: 14, md: 15 })
+  const smallerFontSize = 12 * fontScaleAdjustment // sized({ xs: 12, md: 13 })
 
   const fontFamily = 'Roboto'
   const boldTitleFontFamily = 'Roboto Slab Black'
@@ -36,9 +38,9 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const maybeCondensedFontFamily = size === 'xs' || size === 'sm' ? 'Roboto Condensed' : 'Roboto'
   const monospacedFontFamily = 'Roboto Mono'
 
-  const baseSpace = 8 // Guesstimage of the width of an 'm' in the base (root) font size
+  const baseSpace = normalFontSize / 2 // Guesstimage of the width of an 'm' in the base (root) font size
 
-  const oneSpace = PixelRatio.roundToNearestPixel(baseSpace * pixelScaleAdjustment)
+  const oneSpace = PixelRatio.roundToNearestPixel(normalFontSize / 2 * fontScale) //normalFontSize / 2)
   const halfSpace = PixelRatio.roundToNearestPixel(oneSpace / 2)
 
   const styles = StyleSheet.create({
@@ -80,7 +82,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       fontWeight: '500',
       color: theme.colors.onPrimary,
       textTransform: 'uppercase',
-      fontSize: smallFontSize // sizeInfo.smOrSmaller ? smallFontSize : normalFontSize
+      fontSize: smallFontSize * fontScaleAdjustment
     },
     screenTabBarIndicator: {
       backgroundColor: theme.colors.onPrimary,
@@ -201,14 +203,14 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       heading1: {
         fontFamily: normalFontFamily,
         fontWeight: 'bold',
-        fontSize: PixelRatio.roundToNearestPixel(normalFontSize * 1.4),
+        fontSize: normalFontSize * 1.4,
         color: theme.colors.onBackground,
         marginBottom: halfSpace
       },
       heading2: {
         fontFamily: normalFontFamily,
         fontWeight: 'bold',
-        fontSize: PixelRatio.roundToNearestPixel(normalFontSize * 1.2),
+        fontSize: normalFontSize * 1.2,
         lineHeight: normalFontSize * 2,
         color: theme.colors.onBackground,
         marginBottom: halfSpace
@@ -224,7 +226,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
         marginLeft: halfSpace,
         marginRight: oneSpace * 1,
         fontSize: normalFontSize * 2,
-        marginTop: PixelRatio.roundToNearestPixel(-normalFontSize * 0.7)
+        marginTop: oneSpace * -1.6
       },
       bullet_list_content: {
         marginBottom: halfSpace

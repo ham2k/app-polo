@@ -84,7 +84,7 @@ function _prepareStyles (themeStyles, style) {
 
   const commonStyles = {
     fontSize: themeStyles.normalFontSize,
-    lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * 1.3),
+    lineHeight: themeStyles.normalFontSize * 1.3,
     borderWidth: DEBUG ? 1 : 0
   }
 
@@ -130,7 +130,7 @@ function _prepareStyles (themeStyles, style) {
         ...commonStyles,
         fontWeight: '400',
         textAlign: 'right',
-        fontSize: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * 0.7)
+        fontSize: themeStyles.normalFontSize * 0.7
       },
       callAndEmoji: {
         ...commonStyles,

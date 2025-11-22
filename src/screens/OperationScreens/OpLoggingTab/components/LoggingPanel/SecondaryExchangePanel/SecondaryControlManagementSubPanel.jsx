@@ -8,12 +8,13 @@
 import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { Icon, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 
 import LoggerChip from '../../../../components/LoggerChip'
 import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
 import { setOperationLocalData } from '../../../../../../store/operations'
 import { setSettings } from '../../../../../../store/settings'
+import { H2kIcon } from '../../../../../../ui'
 
 export const SecondaryControlManagementSubPanel = ({
   qso, operation, vfo, settings, styles, themeColor, currentSecondaryControl, setCurrentSecondaryControl,
@@ -130,9 +131,10 @@ export const SecondaryControlManagementSubPanel = ({
               style={{ flex: 0 }}
               themeColor={themeColor}
               selected={true}
+              accessibilityLabel={'Hide Secondary Control Settings'}
               onChange={() => setCurrentSecondaryControl('manage-controls')}
             >
-              <Icon source="cog" accessibilityLabel={'Hide Secondary Control Settings'} size={styles.oneSpace * 2} color={styles.colors[`on${styles.upcasedThemeColor}`]} />
+              <H2kIcon icon="cog" />
             </LoggerChip>
           </View>
         </View>

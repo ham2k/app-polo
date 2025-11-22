@@ -28,7 +28,6 @@ export function EventInfo ({ qso, operation, qsos, style, styles, themeColor }) 
         <View style={{ flex: 0, alignSelf: 'flex-start' }}>
           <H2kIcon
             source={event?.icon ?? 'information-outline'}
-            size={styles.oneSpace * 3}
             color={styles.theme.colors[`${themeColor}ContainerVariant`]}
           />
         </View>

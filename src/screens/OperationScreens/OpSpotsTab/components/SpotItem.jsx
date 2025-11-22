@@ -6,12 +6,12 @@
  */
 
 import React, { useMemo } from 'react'
-import { Icon, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 
 import { View } from 'react-native'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
-import { paperNameOrHam2KIcon, H2kPressable } from '../../../../ui'
+import { H2kPressable, H2kIcon } from '../../../../ui'
 
 const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth }) {
   const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
@@ -91,7 +91,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
           <View style={styles.fields.callAndEmoji}>
             <Text style={[styles.fields.call, commonStyle, callStyle]}>{spot.their?.call ?? '?'}</Text>
             {spot.their?.guess?.emoji && (
-              <Text style={[styles.fields.emoji, commonStyle, { lineHeight: 20 }]}>{spot.their?.guess?.emoji}</Text>
+              <Text style={[styles.fields.emoji, commonStyle, { lineHeight: 20 * styles.fontScaleAdjustment }]}>{spot.their?.guess?.emoji}</Text>
             )}
             <Text style={[styles.fields.label, commonStyle, callStyle, { marginLeft: styles.oneSpace }]}>{spot.spot.callLabel ?? ''}</Text>
           </View>
@@ -102,10 +102,10 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
           <Text style={[styles.fields.mode, commonStyle, modeStyle]}>{spot.mode}</Text>
           {spot.spots.filter(s => s?.icon).map(subSpot => (
             <View key={subSpot.subSource ?? subSpot.source} style={[styles.fields.icon, commonStyle, refStyle]}>
-              <Icon
+              <H2kIcon
                 key={subSpot.subSource ?? subSpot.source}
-                source={paperNameOrHam2KIcon(subSpot.icon)}
-                size={styles.oneSpace * 2.3}
+                name={subSpot.icon}
+                size={styles.normalFontSize * 1.2}
                 color={(subSpot?.type === 'scoring' && refStyle?.color) || commonStyle?.color}
               />
             </View>

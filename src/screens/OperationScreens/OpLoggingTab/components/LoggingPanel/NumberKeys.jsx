@@ -12,7 +12,7 @@ import { useUIState } from '../../../../../store/ui/useUIState'
 import { useThemedStyles } from '../../../../../styles/tools/useThemedStyles'
 import { H2kPressable } from '../../../../../ui'
 
-function prepareStyles(baseStyles, themeColor) {
+function prepareStyles (baseStyles, themeColor) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   let vertPaddingMult = 0.5
   if (baseStyles.mdOrLarger) vertPaddingMult = 2
@@ -53,7 +53,7 @@ function prepareStyles(baseStyles, themeColor) {
   }
 }
 
-export function NumberKeys({ themeColor, onNumberKeyPressed, settings, enabled }) {
+export function NumberKeys ({ themeColor, onNumberKeyPressed, settings, enabled }) {
   const styles = useThemedStyles(prepareStyles, themeColor)
 
   const [mode] = useUIState('NumberKeys', 'mode', 'numbers')

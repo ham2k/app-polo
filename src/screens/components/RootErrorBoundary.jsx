@@ -23,7 +23,7 @@ function prepareStyles (baseStyles) {
   return {
     ...baseStyles,
     root: {
-      padding: baseStyles.oneSpace * 2,
+      padding: baseStyles?.oneSpace * 2,
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',

@@ -132,7 +132,7 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       textShadowColor: bottomHaloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace,
-      fontSize: 20,
+      fontSize: baseTheme.normalFontSize * 1.25,
       fontWeight: 'bold',
       color: bottomTextColor,
       textAlign: 'center'
@@ -142,7 +142,7 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       textShadowColor: bottomHaloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace,
-      fontSize: 18,
+      fontSize: baseTheme.normalFontSize * 1.125,
       fontWeight: 'normal',
       textAlign: 'center',
       padding: baseTheme.oneSpace

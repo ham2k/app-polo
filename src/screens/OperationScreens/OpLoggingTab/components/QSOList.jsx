@@ -254,29 +254,31 @@ const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo
 })
 
 function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFrequencyDecimals, hasLongCall }) {
-  const spaces = width / themeStyles.oneSpace
+  const { oneSpace, sized, normalFontSize, colors, isIOS, isDarkMode } = themeStyles
 
   // console.log('width', { width, spaces, size })
   const DEBUG = false
 
+  const spaces = width / oneSpace
+
   const commonStyles = {
-    fontSize: themeStyles.normalFontSize,
-    lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4)),
+    fontSize: normalFontSize,
+    lineHeight: normalFontSize * (isIOS ? 1.5 : 1.4),
     borderWidth: DEBUG ? 1 : 0,
-    color: themeStyles.colors.onBackground
+    color: colors.onBackground
   }
 
-  const heightFactor = themeStyles.sized({ xs: 1.85, md: 2.2 })
-  const paddingTopFactor = themeStyles.sized({ xs: 0.1, md: 0.1 })
+  const heightFactor = sized({ xs: 3.5, sm: 4, md: 4.4 })
+  const paddingTopFactor = sized({ xs: 0.1, sm: 0.4, md: 0.6 })
 
   const rowStyles = {
-    height: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * heightFactor),
-    maxHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * heightFactor),
-    minHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * heightFactor),
-    paddingHorizontal: themeStyles.oneSpace,
-    paddingTop: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * paddingTopFactor),
-    borderBottomWidth: PixelRatio.roundToNearestPixel(0.5),
-    borderBottomColor: themeStyles.colors.outlineVariant,
+    height: PixelRatio.roundToNearestPixel(oneSpace * heightFactor),
+    maxHeight: PixelRatio.roundToNearestPixel(oneSpace * heightFactor),
+    minHeight: PixelRatio.roundToNearestPixel(oneSpace * heightFactor),
+    paddingHorizontal: oneSpace,
+    paddingTop: PixelRatio.roundToNearestPixel(oneSpace * paddingTopFactor),
+    borderBottomWidth: PixelRatio.roundToNearestPixel(1),
+    borderBottomColor: colors.outlineVariant,
     paddingLeft: safeArea?.left || 0,
     flexDirection: 'row',
     width: '100%'
@@ -299,34 +301,34 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
       width: '100%'
     },
     selectedRow: {
-      backgroundColor: themeStyles.colors.secondaryContainer,
+      backgroundColor: colors.secondaryContainer,
       borderTopWidth: 3,
       borderBottomWidth: 3,
-      borderTopColor: themeStyles.colors.secondary,
-      borderBottomColor: themeStyles.colors.secondary,
+      borderTopColor: colors.secondary,
+      borderBottomColor: colors.secondary,
       paddingTop: 1,
-      marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * -0.1),
-      marginBottom: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.1)
+      marginTop: PixelRatio.roundToNearestPixel(oneSpace * -0.1),
+      marginBottom: PixelRatio.roundToNearestPixel(oneSpace * 0.1)
     },
     headerRow: {
       ...rowStyles,
-      backgroundColor: themeStyles.colors.surfaceVariant,
+      backgroundColor: colors.surfaceVariant,
       borderTopWidth: 0,
       borderBottomWidth: 2,
-      borderTopColor: themeStyles.colors.onBackgroundLight,
-      borderBottomColor: themeStyles.colors.onBackgroundLight
+      borderTopColor: colors.onBackgroundLight,
+      borderBottomColor: colors.onBackgroundLight
     },
     eventRow: {
       backgroundColor: 'rgb(252, 244, 167)',
-      opacity: themeStyles.isDarkMode ? 0.65 : 0.85
+      opacity: isDarkMode ? 0.65 : 0.85
       // borderTopColor: 'rgb(97, 92, 47)',
       // borderTopWidth: 1
     },
     segmentRow: {
-      backgroundColor: themeStyles.colors.primaryLighter,
+      backgroundColor: colors.primaryLighter,
       borderBottomWidth: 0
       // borderTopWidth: 3,
-      // borderColor: themeStyles.colors.primary,
+      // borderColor: colors.primary,
       // paddingTop: 1,
       // marginTop: 0
     },
@@ -335,12 +337,12 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
       color: 'rgb(21, 20, 10)'
     },
     segmentContent: {
-      color: themeStyles.colors.onPrimary
+      color: colors.onPrimary
     },
     deletedContent: {
       textDecorationLine: 'line-through',
-      textDecorationColor: themeStyles.colors.onBackground,
-      color: themeStyles.colors.onBackgroundLighter
+      textDecorationColor: colors.onBackground,
+      color: colors.onBackgroundLighter
     },
     otherOperatorContent: {
       opacity: 0.7
@@ -351,26 +353,26 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...commonStyles,
         fontFamily: themeStyles.fontFamily,
         flex: 0,
-        marginLeft: themeStyles.oneSpace,
+        marginLeft: oneSpace,
         textAlign: 'left'
       },
       event: {
         ...commonStyles,
-        lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4)),
-        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
-        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 3.5),
+        lineHeight: normalFontSize * (isIOS ? 1.5 : 1.4),
+        marginLeft: oneSpace * sized({ xs: 1, lg: 2 }),
+        minWidth: PixelRatio.roundToNearestPixel(oneSpace * 3.5),
         textAlign: 'left',
         flex: 1
       },
       markdown: {
-        lineHeight: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * (themeStyles.isIOS ? 1.5 : 1.4))
+        lineHeight: normalFontSize * (isIOS ? 1.5 : 1.4)
       },
       number: {
         ...commonStyles,
         ...themeStyles.text.numbers,
         flex: 0,
         marginLeft: 0,
-        minWidth: themeStyles.oneSpace * themeStyles.sized({ xs: 3, md: 4 }),
+        minWidth: oneSpace * sized({ xs: 3, md: 4 }),
         textAlign: 'right'
       },
       time: {
@@ -378,8 +380,8 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        minWidth: themeStyles.oneSpace * themeStyles.sized({ xs: 7, lg: 10 }),
-        marginLeft: themeStyles.oneSpace,
+        minWidth: oneSpace * sized({ xs: 7, lg: 10 }),
+        marginLeft: oneSpace,
         textAlign: 'right'
       },
       freq: {
@@ -388,14 +390,14 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...themeStyles.text.lighter,
         // fontFamily: 'Roboto',
         flex: 0,
-        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * themeStyles.sized({
+        minWidth: PixelRatio.roundToNearestPixel(oneSpace * sized({
           xs: hasFrequencyDecimals ? 7 : 6,
           sm: hasFrequencyDecimals ? 8.5 : 7.5,
           md: hasFrequencyDecimals ? 10 : 8,
           lg: hasFrequencyDecimals ? 10 : 8
         })),
-        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
-        marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.1),
+        marginLeft: oneSpace * sized({ xs: 1, lg: 2 }),
+        marginTop: PixelRatio.roundToNearestPixel(oneSpace * 0.1),
         textAlign: 'right'
       },
       freqMHz: {
@@ -411,32 +413,32 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...commonStyles,
         textAlign: 'right',
         fontWeight: '400',
-        fontSize: PixelRatio.roundToNearestPixel(themeStyles.normalFontSize * 0.7)
+        fontSize: normalFontSize * 0.7
       },
       call: {
         ...commonStyles,
         ...themeStyles.text.callsign,
         ...themeStyles.text.callsignBold,
         flex: 0,
-        minWidth: themeStyles.oneSpace * themeStyles.sized({
+        minWidth: oneSpace * sized({
           xs: hasLongCall ? 8 : 7,
           sm: hasLongCall ? 9 : 8,
           md: 10
         }),
-        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
+        marginLeft: oneSpace * sized({ xs: 1, lg: 2 }),
         textAlign: 'left'
       },
       name: {
         ...commonStyles,
         flex: 1,
-        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
+        marginLeft: oneSpace * sized({ xs: 1, lg: 2 }),
         textAlign: 'left'
       },
       location: {
         ...commonStyles,
         flex: 0,
-        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
-        minWidth: themeStyles.oneSpace * themeStyles.sized({ xs: 4, md: 6 }),
+        marginLeft: oneSpace * sized({ xs: 1, lg: 2 }),
+        minWidth: oneSpace * sized({ xs: 4, md: 6 }),
         textAlign: 'center'
       },
       signal: {
@@ -444,32 +446,33 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...themeStyles.text.numbers,
         ...themeStyles.text.lighter,
         flex: 0,
-        minWidth: themeStyles.oneSpace * themeStyles.sized({ xs: 3, md: 9 }),
-        marginLeft: themeStyles.oneSpace,
+        minWidth: oneSpace * sized({ xs: 3, md: 9 }),
+        marginLeft: oneSpace,
         textAlign: 'right'
       },
       exchange: {
         ...commonStyles,
         ...themeStyles.text.callsign,
         flex: 0,
-        minWidth: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 8.5),
-        marginLeft: themeStyles.oneSpace,
+        minWidth: PixelRatio.roundToNearestPixel(oneSpace * 8.5),
+        marginLeft: oneSpace,
         textAlign: 'right'
       },
       icons: {
         ...commonStyles,
+        fontSize: normalFontSize * 0.8,
         flex: 0,
         flexDirection: 'row',
         textAlign: 'right',
-        marginLeft: themeStyles.oneSpace * themeStyles.sized({ xs: 1, lg: 2 }),
-        minWidth: themeStyles.oneSpace * 0,
-        maxWidth: themeStyles.oneSpace * 9
+        marginLeft: oneSpace * sized({ xs: 1, lg: 2 }),
+        minWidth: oneSpace * 0,
+        maxWidth: oneSpace * 9
       },
       icon: {
         ...commonStyles,
         flex: 0,
-        marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.45),
-        width: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 1.8)
+        marginTop: PixelRatio.roundToNearestPixel(oneSpace * 0.45),
+        width: PixelRatio.roundToNearestPixel(oneSpace * 1.8)
       }
     }
   }

@@ -403,8 +403,8 @@ export function H2kTextInput (props) {
         colorStyles.paperInput,
         {
           paddingHorizontal: props.dense ? themeStyles.halfSpace : themeStyles.oneSpace,
-          fontSize: themeStyles.normalFontSize * themeStyles.fontScale, // For some reason, this component does take into consideration `fontScale` so we have to multiply it ourselves
-          lineHeight: themeStyles.normalFontSize * themeStyles.fontScale * 1.2, // For some reason, this component does take into consideration `fontScale` so we have to multiply it ourselves
+          fontSize: themeStyles.normalFontSize * themeStyles.fontScale * themeStyles.fontScaleAdjustment, // For some reason, this component does take into consideration `fontScale` so we have to multiply it ourselves
+          lineHeight: themeStyles.normalFontSize * themeStyles.fontScale * themeStyles.fontScaleAdjustment * 1.2, // For some reason, this component does take into consideration `fontScale` so we have to multiply it ourselves
           fontFamily: themeStyles.fontFamily
         },
         style

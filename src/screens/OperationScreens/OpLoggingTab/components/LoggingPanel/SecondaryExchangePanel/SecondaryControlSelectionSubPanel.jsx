@@ -7,12 +7,12 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { Icon, IconButton } from 'react-native-paper'
 
 import LoggerChip from '../../../../components/LoggerChip'
 import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
 import { setSettings } from '../../../../../../store/settings'
 import { useDispatch } from 'react-redux'
+import { H2kIcon, H2kIconButton } from '../../../../../../ui'
 
 const PositionedControlChip = (props) => {
   const { control, operation, vfo, qso, settings, onChange } = props
@@ -181,7 +181,7 @@ export const SecondaryControlSelectionsubPanel = ({
                 accessibilityLabel="Show Secondary Control Settings"
                 onChange={() => setCurrentSecondaryControl('manage-controls')}
               >
-                <Icon source="cog" size={styles.oneSpace * 2} accessibilityLabel="Show Secondary Control Settings" />
+                <H2kIcon source="cog" />
               </LoggerChip>
             </View>
           </View>
@@ -198,8 +198,9 @@ export const SecondaryControlSelectionsubPanel = ({
             backgroundColor: chipContainerOpen ? undefined : styles.colors[`${themeColor}ContainerAlpha`]
           }}
         >
-          <IconButton
+          <H2kIconButton
             icon={chipContainerOpen ? 'chevron-down' : 'chevron-left'}
+            size={styles.oneSpace * 3}
             onPress={() => handleContainerToggle(!chipContainerOpen)}
             accessibilityLabel={chipContainerOpen ? 'Hide most secondary controls' : 'Show all secondary controls'}
           />

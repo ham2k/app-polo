@@ -25,8 +25,16 @@ export function H2kMarkdown ({ children, styles, style, compact }) {
   style = StyleSheet.flatten(style)
 
   const markdownStyle = useMemo(() => {
-    let combinedStyle = { ...defaultStyles?.markdown, ...styles?.markdown }
+    const combinedStyle = {}
+    Object.keys(defaultStyles?.markdown ?? {}).forEach(key => {
+      combinedStyle[key] = { ...defaultStyles?.markdown[key] }
+    })
+    Object.keys(styles?.markdown ?? {}).forEach(key => {
+      combinedStyle[key] = { ...combinedStyle[key], ...styles?.markdown[key] }
+    })
+
     if (style) combinedStyle.body = { ...combinedStyle?.body, ...style }
+
     if (compact) {
       combinedStyle.paragraph = {
         ...combinedStyle?.paragraph,
@@ -45,26 +53,17 @@ export function H2kMarkdown ({ children, styles, style, compact }) {
         marginBottom: style.marginBottom ?? 0
       }
     }
-    if (style?.color) combinedStyle = _recursivelyReplace(combinedStyle, { color: style.color })
+    if (style?.color) {
+      Object.keys(combinedStyle).forEach(key => {
+        if (combinedStyle[key]?.color) {
+          combinedStyle[key].color = style.color
+        }
+      })
+    }
+
     return combinedStyle
   }, [styles, style, defaultStyles, compact])
 
   if (children?.join) children = children.join('')
   if (children) return <Markdown style={markdownStyle}>{children}</Markdown>
-}
-
-function _recursivelyReplace (obj, replacement) {
-  if (typeof obj === 'object') {
-    for (const [key, value] of Object.entries(obj)) {
-      for (const [replacementKey, replacementValue] of Object.entries(replacement)) {
-        if (key === replacementKey) {
-          obj[key] = replacementValue
-        }
-      }
-      if (typeof value === 'object') {
-        obj[key] = _recursivelyReplace(value, replacement)
-      }
-    }
-  }
-  return obj
 }

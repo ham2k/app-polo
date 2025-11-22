@@ -234,7 +234,7 @@ export default function OperationScreen (props) {
                   <Tab.Screen
                     name="OpSettings"
                     options={{
-                      title: (dimensions.width / 4) > (styles.oneSpace * 34) ? 'Operation' : 'Oper.',
+                      title: ((dimensions.width - mainPaneWidth) / 4) > (styles.oneSpace * 14) ? 'Operation' : 'Oper.',
                       tabBarAccessibilityLabel: 'Operation Settings Tab'
                     }}
                     component={OpSettingsTab}
@@ -299,7 +299,7 @@ export default function OperationScreen (props) {
               <Tab.Screen
                 name="OpSettings"
                 options={{
-                  title: (dimensions.width / 4) > (styles.oneSpace * 10.5) ? 'Operation' : 'Oper.',
+                  title: (dimensions.width / 4) > (styles.oneSpace * 14) ? 'Operation' : 'Oper.',
                   tabBarAccessibilityLabel: 'Operation Settings Tab'
                 }}
                 component={OpSettingsTab}

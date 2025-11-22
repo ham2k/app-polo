@@ -90,11 +90,11 @@ export function OpInfo ({ message, clearMessage, operation, activeQSOs, style, s
 
       <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start', gap: styles.halfSpace }}>
         {icon && (
-          <View style={{ flex: 0, alignSelf: 'flex-start' }}>
+          <View style={{ flex: 0, alignSelf: 'flex-start', marginTop: styles.oneSpace * 0.3 }}>
             <H2kIcon
               source={icon}
-              size={styles.oneSpace * 3}
               color={styles.theme.colors[`${themeColor}ContainerVariant`]}
+              size={styles.normalFontSize * 1.3}
             />
           </View>
         )}

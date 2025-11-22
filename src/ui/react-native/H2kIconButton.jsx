@@ -6,7 +6,13 @@
  */
 
 import { IconButton } from 'react-native-paper'
+import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export function H2kIconButton (props) {
+  const styles = useThemedStyles()
+
+  props.size = (props.size ?? 24) * styles.fontScale * styles.fontScaleAdjustment
+  // Our component manages size in virtual pixels, but the underlying icons use "font size" units
+
   return <IconButton {...props} />
 }

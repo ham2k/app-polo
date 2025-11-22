@@ -130,9 +130,8 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                     {score.icon && (
                       <H2kIcon
                         name={score.icon}
-                        size={styles.normalFontSize}
                         color={score.activated === true ? styles.colors.important : undefined}
-                        style={styles.icon}
+                        size={styles.normalFontSize * 1.2}
                       />
                     )}
                   </View>
@@ -170,9 +169,8 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                   {score.icon && (
                     <H2kIcon
                       name={score.icon}
-                      size={styles.normalFontSize}
                       color={score.activated === true ? styles.colors.important : undefined}
-                      style={styles.icon}
+                      size={styles.normalFontSize * 1.2}
                     />
                   )}
                 </View>
