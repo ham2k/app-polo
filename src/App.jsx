@@ -8,9 +8,9 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Provider, useDispatch, useSelector } from 'react-redux'
+import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-import { PaperProvider } from 'react-native-paper'
+import { PaperProvider, Portal } from 'react-native-paper'
 import MaterialCommunityIcon from '@react-native-vector-icons/material-design-icons'
 import DeviceInfo from 'react-native-device-info'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -113,105 +113,107 @@ function MainApp ({ navigationTheme }) {
     return <StartScreen setAppState={setAppState} />
   } else {
     return (
-      <NavigationContainer
-        theme={navigationTheme}
-        ref={navigationRef}
-        onReady={() => {
-          onNavigationReadyForDistribution(navigationRef)
+      <Portal.Host>
+        <NavigationContainer
+          theme={navigationTheme}
+          ref={navigationRef}
+          onReady={() => {
+            onNavigationReadyForDistribution(navigationRef)
 
-          if (routeNameRef.current === undefined) {
-            trackNavigation({ settings, currentRouteName: navigationRef.current?.getCurrentRoute()?.name })
-          }
-          routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name
-        }}
-        onStateChange={() => {
-          const previousRouteName = routeNameRef.current
-          const currentRouteName = navigationRef.current?.getCurrentRoute()?.name
-          if (previousRouteName !== currentRouteName) {
-            trackNavigation({ settings, currentRouteName, previousRouteName })
-          }
-          routeNameRef.current = currentRouteName
-        }}
-      >
-        <Stack.Navigator
-          id="RootNavigator"
-          screenOptions={{
-            header: HeaderBar,
-            animation: 'slide_from_right',
-            freezeOnBlur: true
+            if (routeNameRef.current === undefined) {
+              trackNavigation({ settings, currentRouteName: navigationRef.current?.getCurrentRoute()?.name })
+            }
+            routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name
+          }}
+          onStateChange={() => {
+            const previousRouteName = routeNameRef.current
+            const currentRouteName = navigationRef.current?.getCurrentRoute()?.name
+            if (previousRouteName !== currentRouteName) {
+              trackNavigation({ settings, currentRouteName, previousRouteName })
+            }
+            routeNameRef.current = currentRouteName
           }}
         >
-          <Stack.Screen name="Home"
-            options={{ title: 'Portable Logger', navigationBarColor: styles.colors.primary }}
-            component={HomeScreen}
-          />
+          <Stack.Navigator
+            id="RootNavigator"
+            screenOptions={{
+              header: HeaderBar,
+              animation: 'slide_from_right',
+              freezeOnBlur: true
+            }}
+          >
+            <Stack.Screen name="Home"
+              options={{ title: 'Portable Logger', navigationBarColor: styles.colors.primary }}
+              component={HomeScreen}
+            />
 
-          <Stack.Screen name="Operation"
-            options={{ title: 'Operation', headerShown: false, headerBackTitle: 'Home', leftAction: 'close' }}
-            component={OperationScreen}
-          />
+            <Stack.Screen name="Operation"
+              options={{ title: 'Operation', headerShown: false, headerBackTitle: 'Home', leftAction: 'close' }}
+              component={OperationScreen}
+            />
 
-          <Stack.Screen name="OperationBadgeScreen"
-            options={{ headerMode: 'none', headerShown: false }}
-            component={OperationBadgeScreen}
-          />
+            <Stack.Screen name="OperationBadgeScreen"
+              options={{ headerMode: 'none', headerShown: false }}
+              component={OperationBadgeScreen}
+            />
 
-          <Stack.Screen name="OperationDetails"
-            options={{ title: 'Operation Details', headerBackTitle: 'Operation' }}
-            component={OperationDetailsScreen}
-          />
+            <Stack.Screen name="OperationDetails"
+              options={{ title: 'Operation Details', headerBackTitle: 'Operation' }}
+              component={OperationDetailsScreen}
+            />
 
-          <Stack.Screen name="OperationStationInfo"
-            options={{ title: 'Station & Operator Info', headerBackTitle: 'Operation' }}
-            component={OperationStationInfoScreen}
-          />
+            <Stack.Screen name="OperationStationInfo"
+              options={{ title: 'Station & Operator Info', headerBackTitle: 'Operation' }}
+              component={OperationStationInfoScreen}
+            />
 
-          <Stack.Screen name="OperationLocation"
-            options={{ title: 'Operation Location', headerBackTitle: 'Operation' }}
-            component={OperationLocationScreen}
-          />
+            <Stack.Screen name="OperationLocation"
+              options={{ title: 'Operation Location', headerBackTitle: 'Operation' }}
+              component={OperationLocationScreen}
+            />
 
-          <Stack.Screen name="OperationAddActivity"
-            options={{ title: 'Add Activity', headerBackTitle: 'Operation' }}
-            component={OperationAddActivityScreen}
-          />
+            <Stack.Screen name="OperationAddActivity"
+              options={{ title: 'Add Activity', headerBackTitle: 'Operation' }}
+              component={OperationAddActivityScreen}
+            />
 
-          <Stack.Screen name="OperationActivityOptions"
-            options={{ title: 'Activity Options', headerBackTitle: 'Operation' }}
-            component={OperationActivityOptionsScreen}
-          />
+            <Stack.Screen name="OperationActivityOptions"
+              options={{ title: 'Activity Options', headerBackTitle: 'Operation' }}
+              component={OperationActivityOptionsScreen}
+            />
 
-          <Stack.Screen name="OperationData"
-            options={{ title: 'Operation Data', headerBackTitle: 'Operation' }}
-            component={OperationDataScreen}
-          />
+            <Stack.Screen name="OperationData"
+              options={{ title: 'Operation Data', headerBackTitle: 'Operation' }}
+              component={OperationDataScreen}
+            />
 
-          <Stack.Screen name="CallInfo"
-            options={{ title: 'Callsign Info' }}
-            component={CallInfoScreen}
-          />
+            <Stack.Screen name="CallInfo"
+              options={{ title: 'Callsign Info' }}
+              component={CallInfoScreen}
+            />
 
-          <Stack.Screen name="Spots"
-            options={{ title: 'Spots' }}
-            component={SpotsScreen}
-          />
+            <Stack.Screen name="Spots"
+              options={{ title: 'Spots' }}
+              component={SpotsScreen}
+            />
 
-          <Stack.Screen name="EditQSO"
-            options={{ title: 'Edit QSO' }}
-            component={EditQSOScreen}
-          />
+            <Stack.Screen name="EditQSO"
+              options={{ title: 'Edit QSO' }}
+              component={EditQSOScreen}
+            />
 
-          <Stack.Screen name="OpInfo"
-            options={{ title: 'Operation Info' }}
-            component={OpInfoScreen}
-          />
+            <Stack.Screen name="OpInfo"
+              options={{ title: 'Operation Info' }}
+              component={OpInfoScreen}
+            />
 
-          <Stack.Screen name="Settings"
-            options={{ title: 'Settings', headerShown: false }}
-            component={MainSettingsScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Screen name="Settings"
+              options={{ title: 'Settings', headerShown: false }}
+              component={MainSettingsScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Portal.Host>
     )
   }
 }
@@ -241,7 +243,7 @@ function ThemedApp () {
 
 const App = () => (
   <AppWrappedForDistribution>
-    <Provider store={store}>
+    <ReduxProvider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <KeyboardProvider>
           <SafeAreaProvider>
@@ -249,7 +251,7 @@ const App = () => (
           </SafeAreaProvider>
         </KeyboardProvider>
       </PersistGate>
-    </Provider>
+    </ReduxProvider>
   </AppWrappedForDistribution>
 )
 
