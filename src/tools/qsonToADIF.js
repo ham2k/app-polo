@@ -238,6 +238,13 @@ function adifField(name, value, options = {}) {
   if (!value && !options.force) return ''
   if (typeof value !== 'string') value = value.toString()
 
+  if (name === 'NAME' || name === 'MY_NAME') {
+    // PoLo uses "smart" quotes and apostrophes in the NAME field,
+    // when a lookup returns a nickname.
+    value = value.replaceAll(/[“”]/g, '"')
+    value = value.replaceAll(/[‘’]/g, "'")
+  }
+
   value = escapeToUnicodeEntities(value)
 
   return `<${name}:${value?.length ?? 0}>${value}${options.newLine ? '\n' : ' '}`
