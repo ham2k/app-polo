@@ -56,6 +56,7 @@ function labelForBand (band, vfo) {
 
 function labelForMode (mode, vfo) {
   if (!mode || mode === 'any') return 'All modes'
+  else if (mode === 'notDigital') return `${LABEL_FOR_MODE.PHONE} + ${LABEL_FOR_MODE.CW}`
   else if (mode === 'auto') return vfo.mode ? LABEL_FOR_MODE[superModeForMode(vfo?.mode)] : 'Auto'
   else return LABEL_FOR_MODE[superModeForMode(mode)] || superModeForMode(mode)
 }

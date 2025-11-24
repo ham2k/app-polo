@@ -451,9 +451,17 @@ export function filterAndCount (rawSpots, filterState, vfo) {
       .sort((a, b) => ADIF_MODES.indexOf(a.mode) - ADIF_MODES.indexOf(b.mode))
       .map(a => ({ value: a.mode, label: `${LONG_LABEL_FOR_MODE[a.mode]} (${a.count})` }))
   )
+  results.options.mode.push({ value: 'notDigital', label: `${LONG_LABEL_FOR_MODE.PHONE} or ${LONG_LABEL_FOR_MODE.CW} (${(results.counts.mode.PHONE || 0) + (results.counts.mode.CW || 0)})` })
+
   if (filterState.mode && filterState.mode !== 'any') {
     const mode = filterState.mode === 'auto' ? superModeForMode(vfo.mode) : filterState.mode
-    results.spots = results.spots.filter(spot => superModeForMode(spot.mode) === mode)
+    results.spots = results.spots.filter(spot => {
+      if (mode === 'notDigital') {
+        return superModeForMode(spot.mode) !== 'DATA'
+      } else {
+        return superModeForMode(spot.mode) === mode
+      }
+    })
   }
 
   if (filterState.sortBy === 'time') {

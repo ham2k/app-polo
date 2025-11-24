@@ -5,6 +5,7 @@
     "changes": [
       "Adjust RST values when changing modes for existing QSOs",
       "Accessibility improvements for screen readers and larger fonts",
+      "Option in Spots to filter out digital modes and show only Phone & CW",
       "Fixed escaping of quotes in ADIF exports",
       "Fixed bugs in sync service"
     ]
