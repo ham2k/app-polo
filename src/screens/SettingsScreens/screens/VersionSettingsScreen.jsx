@@ -78,6 +78,7 @@ export default function VersionSettingsScreen ({ navigation, splitView }) {
           <H2kListSection>
             <H2kListItem
               title={'Recent Changes'}
+              description={`Cover photo: ${releaseNotes[Object.keys(releaseNotes)[0]].photoCaption}`}
               leftIcon="newspaper-variant-outline"
               right={() => (
                 <Pressable onPress={() => setShowImage(true)}>

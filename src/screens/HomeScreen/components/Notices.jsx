@@ -166,7 +166,7 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
       {(notice.title || notice.icon) && (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace }}>
           {notice.icon && (
-            <H2kIcon name={notice.icon} color={styles.noticeText.color} />
+            <H2kIcon name={notice.icon} color={styles.noticeText.color} size={styles.normalFontSize} />
           )}
           {notice.title && (
             <H2kMarkdown style={styles.noticeText}>## {notice.title}</H2kMarkdown>
