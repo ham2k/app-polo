@@ -147,3 +147,9 @@ export function VersionSettingsForDistribution ({ settings, styles }) {
     </H2kListSection>
   )
 }
+
+export function syncMetaForDistribution ({ settings }) {
+  return {
+    app: 'ham2k-polo'
+  }
+}

@@ -20,6 +20,7 @@ import { selectFiveSecondsTick, startTickTock, stopTickTock } from '../time'
 import { selectLocalData, selectLocalExtensionData, setLocalData, setLocalExtensionData } from '../local'
 import { logTimer } from '../../tools/perfTools'
 import { selectFeatureFlag } from '../system'
+import { syncMetaForDistribution } from '../../distro'
 
 const SYNC_LOOP_DEBOUNCE_DELAY = 1000 * 0.5 // 500ms, minimum time to wait for more changes before starting a new sync loop
 const SYNC_LOOP_DEBOUNCE_MAX = 1000 * 3 // 3 seconds, maximum time to wait for more changes before starting a new sync loop
@@ -150,13 +151,13 @@ function _scheduleNextSyncLoop({ dispatch, delay }, loop) {
 
 export async function sendQSOsToSyncService({ dispatch }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
-    await _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly: true })
+    await _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly: true })
   })
 }
 
 export async function sendOperationsToSyncService({ dispatch }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
-    await _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly: true })
+    await _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly: true })
   })
 }
 
@@ -169,7 +170,7 @@ export async function sendOperationsToSyncService({ dispatch }) {
  * - Scheduling the next sync loop
  * - Handling errors
  */
-async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
+async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = false }) {
   if (!GLOBAL.syncEnabled) return
 
   _takeOverSyncLoop()
@@ -228,17 +229,20 @@ async function _doOneRoundOfSyncing({ dispatch, oneSmallBatchOnly = false }) {
       syncPayload = { operations }
     }
 
-    // Consider sending more details to the server
-    // if (GLOBAL.syncVerbose || GLOBAL.syncVerboseNextRound) {
     syncPayload.meta = {
       qsoCount: counts.qsos.total,
       unsyncedQSOCount: counts.qsos.pending,
       operationCount: counts.operations.total,
-      unsyncedOperationCount: counts.operations.pending
+      unsyncedOperationCount: counts.operations.pending,
     }
-    //   GLOBAL.syncVerboseNextRound = false
-    //   if (VERBOSE > 1) console.log(' -- verbose meta', syncPayload.meta)
-    // }
+
+    if (!oneSmallBatchOnly) {
+      syncPayload.meta = {
+        ...syncMetaForDistribution({ settings }),
+        ...syncPayload.meta
+      }
+    }
+    if (VERBOSE >= 1) console.log(' -- sync payload meta 👋', syncPayload.meta)
 
     // Remove operation local data from the syncParams
     if (syncPayload.operations) {

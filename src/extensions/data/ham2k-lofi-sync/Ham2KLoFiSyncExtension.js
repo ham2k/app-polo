@@ -12,7 +12,7 @@ import { selectSettings } from '../../../store/settings'
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 import GLOBAL from '../../../GLOBAL'
 import { fetchWithTimeout } from '../../../tools/fetchWithTimeout'
-import { logRemotely } from '../../../distro'
+import { logRemotely, syncMetaForDistribution } from '../../../distro'
 
 import packageJson from '../../../../package.json'
 
@@ -162,6 +162,9 @@ async function requestWithAuth({ dispatch, getState, url, method, body, params }
             },
             account: {
               call: settings.operatorCall
+            },
+            meta: {
+              ...syncMetaForDistribution({ settings }),
             }
           })
         })
