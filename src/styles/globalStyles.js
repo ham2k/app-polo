@@ -14,6 +14,8 @@ const DEFAULT_THEME = {
   }
 }
 
+export const BASE_FONT_SIZE = 16
+
 export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const isIOS = Platform.OS === 'ios'
   const isDarkMode = colorScheme === 'dark'
@@ -160,11 +162,13 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       },
       title: {
         fontSize: normalFontSize,
+        lineHeight: normalFontSize * 1.2,
         fontWeight: '500',
         fontFamily: 'Roboto Medium'
       },
       description: {
         fontSize: normalFontSize,
+        lineHeight: normalFontSize * 1.2,
         paddingTop: halfSpace
       }
     },

@@ -16,6 +16,7 @@ import { ThemeDialog } from '../components/ThemeDialog'
 import ScreenContainer from '../../components/ScreenContainer'
 import { findHooks } from '../../../extensions/registry'
 import { H2kListItem, H2kListSection, H2kListSubheader } from '../../../ui'
+import { FontScaleDialog } from '../components/FontScaleDialog'
 
 function prepareStyles (baseStyles) {
   return {
@@ -55,6 +56,21 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
           />
           {currentDialog === 'theme' && (
             <ThemeDialog
+              settings={settings}
+              styles={styles}
+              visible={true}
+              onDialogDone={() => setCurrentDialog('')}
+            />
+          )}
+
+          <H2kListItem
+            title="Font Scale"
+            description={{ xs: 'Smallest', sm: 'Smaller', md: 'Normal', lg: 'Larger', xl: 'Largest' }[settings.fontScale || 'md']}
+            leftIcon={'format-size'}
+            onPress={() => setCurrentDialog('fontScale')}
+          />
+          {currentDialog === 'fontScale' && (
+            <FontScaleDialog
               settings={settings}
               styles={styles}
               visible={true}

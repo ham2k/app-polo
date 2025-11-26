@@ -49,15 +49,15 @@ export function ThemeDialog ({ visible, settings, styles, onDialogDone }) {
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="light" />
-            <Text onPress={() => setValue('light')} style={styles.rowText}>Always in Light Mode</Text>
+            <Text onPress={() => setValue('light')} style={[styles.rowText, { flex: 1 }]}>Always in Light Mode</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="dark" />
-            <Text onPress={() => setValue('dark')} style={styles.rowText}>Always in Dark Mode</Text>
+            <Text onPress={() => setValue('dark')} style={[styles.rowText, { flex: 1 }]}>Always in Dark Mode</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="auto" />
-            <Text onPress={() => setValue('auto')} style={styles.rowText}>Same as Device Theme</Text>
+            <Text onPress={() => setValue('auto')} style={[styles.rowText, { flex: 1 }]}>Same as Device Theme</Text>
           </View>
         </RadioButton.Group>
       </H2kDialogContent>

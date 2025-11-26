@@ -49,19 +49,27 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
  *    1: 462 • 2: 392 • 3: 352 • 4: 320 (width) Pixel 3a
  */
 
-export function computeSizes({ width, height, fontScale, pixelRatio }) {
-  console.log('width', width, 'fontScale', fontScale, 'pixelRatio', pixelRatio, 'width / fontScale', width / fontScale)
+export const SCALE_ADJUSTMENTS = {
+  xs: 0.85,
+  sm: 0.92,
+  md: 1.00,
+  lg: 1.12,
+  xl: 1.25
+}
 
+export function computeSizes({ width, height, fontScale, pixelRatio, settingsScale }) {
   const smallestSize = Math.min(width, height)
+
+  const settingsScaleAdjustment = SCALE_ADJUSTMENTS[settingsScale] ?? 1.0
 
   let fontScaleAdjustment = 1
 
   if (smallestSize < 320 * fontScale) {
     // If the screen is too small, and the font scale too large, nothing will fit, so we need to adjust our font sizes down
     fontScaleAdjustment = smallestSize / fontScale / 320
-  } else if (smallestSize > 1000 * fontScale) {
-    // fontScaleAdjustment = 1.07 // Bump it up a bit on larger screens
   }
+
+  fontScaleAdjustment = fontScaleAdjustment * settingsScaleAdjustment
 
   const pixelScaleAdjustment = fontScale * fontScaleAdjustment // combined scale
 
@@ -96,6 +104,8 @@ export function computeSizes({ width, height, fontScale, pixelRatio }) {
     fontScale,
     pixelRatio,
     fontScale,
+    settingsScale,
+    settingsScaleAdjustment,
     fontScaleAdjustment,
     pixelScaleAdjustment,
 
@@ -108,13 +118,13 @@ export function computeSizes({ width, height, fontScale, pixelRatio }) {
   }
 }
 
-export function useComputeSizes() {
+export function useComputeSizes({ settingsScale }) {
   const { width, height } = useSafeAreaFrame()
   // const { width, height } = useWindowDimensions() <-- broken on iOS, no rotation
 
   const pixelRatio = PixelRatio.get()
   const fontScale = PixelRatio.getFontScale()
 
-  const sizes = useMemo(() => computeSizes({ width, height, fontScale, pixelRatio }), [width, height, fontScale, pixelRatio])
+  const sizes = useMemo(() => computeSizes({ width, height, fontScale, pixelRatio, settingsScale }), [width, height, fontScale, pixelRatio, settingsScale])
   return sizes
 }

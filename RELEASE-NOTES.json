@@ -1,4 +1,11 @@
 {
+  "25.10.5": {
+    "name": "October '25 (patch 5)",
+    "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
+    "changes": [
+      "Added font scale settings"
+    ]
+  },
   "25.10.4": {
     "name": "October '25 (patch 4)",
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",

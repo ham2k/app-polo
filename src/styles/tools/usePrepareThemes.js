@@ -30,9 +30,20 @@ export function usePrepareThemes() {
     }
   }, [settings?.theme, deviceColorScheme])
 
-  const sizes = useComputeSizes()
+  const sizes = useComputeSizes({ settingsScale: settings.fontScale })
 
-  const fonts = useMemo(() => configureFonts({ config: fontConfig }), [])
+  const fonts = useMemo(() => {
+    const scaledFontConfig = {}
+    Object.keys(fontConfig).forEach((key) => {
+      scaledFontConfig[key] = {
+        ...fontConfig[key],
+        fontSize: fontConfig[key].fontSize * sizes.fontScaleAdjustment,
+        lineHeight: fontConfig[key].lineHeight * sizes.fontScaleAdjustment
+      }
+    })
+
+    return configureFonts({ config: scaledFontConfig })
+  }, [sizes.fontScaleAdjustment])
 
   const colors = useMemo(() => {
     const loadedColors = colorScheme === 'dark' ? darkColors.colors : lightColors.colors
@@ -76,6 +87,7 @@ export function usePrepareThemes() {
 
   const paperTheme = useMemo(() => {
     const baseTheme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
+
     return {
       ...baseTheme,
       colors: {

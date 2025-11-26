@@ -134,7 +134,7 @@ export const SecondaryControlManagementSubPanel = ({
               accessibilityLabel={'Hide Secondary Control Settings'}
               onChange={() => setCurrentSecondaryControl('manage-controls')}
             >
-              <H2kIcon icon="cog" />
+              <H2kIcon icon="cog" size={styles.normalFontSize} />
             </LoggerChip>
           </View>
         </View>
