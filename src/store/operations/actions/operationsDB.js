@@ -172,9 +172,9 @@ export const mergeSyncOperations = ({ operations }) => async (dispatch, getState
 
   for (const operation of operations) {
     delete operation.local
-    delete operation.startAtMillisMin
-    delete operation.startAtMillisMax
-    delete operation.qsoCount
+    // delete operation.startAtMillisMin
+    // delete operation.startAtMillisMax
+    // delete operation.qsoCount
 
     const existing = existingOps.find((op) => op.uuid === operation.uuid)
     if (existing) {

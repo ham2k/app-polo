@@ -21,6 +21,7 @@ import { selectLocalData, selectLocalExtensionData, setLocalData, setLocalExtens
 import { logTimer } from '../../tools/perfTools'
 import { selectFeatureFlag } from '../system'
 import { syncMetaForDistribution } from '../../distro'
+import { selectSettings } from '../settings'
 
 const SYNC_LOOP_DEBOUNCE_DELAY = 1000 * 0.5 // 500ms, minimum time to wait for more changes before starting a new sync loop
 const SYNC_LOOP_DEBOUNCE_MAX = 1000 * 3 // 3 seconds, maximum time to wait for more changes before starting a new sync loop
@@ -149,15 +150,15 @@ function _scheduleNextSyncLoop({ dispatch, delay }, loop) {
   }
 }
 
-export async function sendQSOsToSyncService({ dispatch }) {
+export async function sendQSOsToSyncService({ dispatch, getState }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
-    await _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly: true })
+    await _doOneRoundOfSyncing({ dispatch, settings: selectSettings(getState()), oneSmallBatchOnly: true })
   })
 }
 
-export async function sendOperationsToSyncService({ dispatch }) {
+export async function sendOperationsToSyncService({ dispatch, getState }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
-    await _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly: true })
+    await _doOneRoundOfSyncing({ dispatch, settings: selectSettings(getState()), oneSmallBatchOnly: true })
   })
 }
 
@@ -242,7 +243,6 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
         ...syncPayload.meta
       }
     }
-    if (VERBOSE >= 1) console.log(' -- sync payload meta 👋', syncPayload.meta)
 
     // Remove operation local data from the syncParams
     if (syncPayload.operations) {

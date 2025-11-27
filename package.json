@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "25.10.5",
-  "versionName": "October '25 (patch 5)",
+  "version": "25.10.6",
+  "versionName": "October '25 (patch 6)",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
