@@ -133,8 +133,13 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation, common, ref, mainHandler }) => {
     // Include `CONTEST_ID` even if we're not the main handler, if the Operation is a FD operation
-    if (findRef(common, Info.key)) {
-      return ([{ CONTEST_ID: 'ARRL-FIELD-DAY' }])
+    const opRef = findRef(common, Info.key)
+    if (opRef) {
+      return ([
+        { CONTEST_ID: 'ARRL-FIELD-DAY' },
+        { CLASS: opRef?.class },
+        { ARRL_SECT: opRef?.location }
+      ])
     }
   },
 
