@@ -9,7 +9,7 @@ import React, { useMemo } from 'react'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { Dialog, Portal } from 'react-native-paper'
 
-import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { BaseStylesContext, useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native'
 
@@ -34,7 +34,9 @@ export function H2kDialog ({ children, style, ...props }) {
           {...props}
           style={[actualStyle]}
         >
-          {children}
+          <BaseStylesContext.Provider value={styles}>
+            {children}
+          </BaseStylesContext.Provider>
         </Dialog>
       </KeyboardAvoidingView>
     </Portal>

@@ -5,15 +5,15 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { useContext, useMemo } from 'react'
-import { useTheme } from 'react-native-paper'
+import { createContext, useContext, useMemo } from 'react'
 
 import { prepareGlobalStyles } from '../globalStyles'
 import { useColorScheme } from 'react-native'
 import { useSelector } from 'react-redux'
 import { selectSettings } from '../../store/settings'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
-import { BaseStylesContext } from '../../App'
+
+export const BaseStylesContext = createContext()
 
 export function useBaseStyles({ theme }) {
   const { width, height } = useSafeAreaFrame()

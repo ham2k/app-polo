@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { createContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux'
@@ -28,7 +28,7 @@ import { useSyncLoop } from './store/sync'
 import { selectLocalExtensionData } from './store/local'
 import { selectRuntimeOnline } from './store/runtime'
 import { selectFeatureFlags } from './store/system'
-import { useBaseStyles, useThemedStyles } from './styles/tools/useThemedStyles'
+import { BaseStylesContext, useBaseStyles, useThemedStyles } from './styles/tools/useThemedStyles'
 
 import { AppWrappedForDistribution, trackNavigation, useConfigForDistribution, onNavigationReadyForDistribution } from './distro'
 
@@ -226,17 +226,15 @@ function ErrorWrappedApp (props) {
   )
 }
 
-export const BaseStylesContext = createContext()
-
 function ThemedApp () {
   const [paperTheme, navigationTheme] = usePrepareThemes()
   const baseStyles = useBaseStyles({ theme: paperTheme })
 
   return (
     <PaperProvider theme={paperTheme} settings={paperSettings}>
-      <BaseStylesContext value={baseStyles}>
+      <BaseStylesContext.Provider value={baseStyles}>
         <ErrorWrappedApp navigationTheme={navigationTheme} />
-      </BaseStylesContext>
+      </BaseStylesContext.Provider>
     </PaperProvider>
   )
 }
