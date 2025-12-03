@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -59,20 +59,22 @@ export default function OperationDetailsScreen ({ navigation, route }) {
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace }}>
           <H2kListSection title={'Title'}>
-            <H2kTextInput
-              style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
-              value={title ?? ''}
-              placeholder={'New Operation'}
-              onChangeText={handleChangeTitle}
-            />
+            <View style={{ marginHorizontal: styles.oneSpace * 2 }}>
+              <H2kTextInput
+                value={title ?? ''}
+                placeholder={'New Operation'}
+                onChangeText={handleChangeTitle}
+              />
+            </View>
           </H2kListSection>
           <H2kListSection title={'Notes'}>
-            <H2kTextInput
-              style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
-              value={notes ?? ''}
-              placeholder={'Anything you want to write about this operation'}
-              onChangeText={handleChangeNotes}
-            />
+            <View style={{ marginHorizontal: styles.oneSpace * 2 }}>
+              <H2kTextInput
+                value={notes ?? ''}
+                placeholder={'Anything you want to write about this operation'}
+                onChangeText={handleChangeNotes}
+              />
+            </View>
           </H2kListSection>
         </ScrollView>
       </SafeAreaView>

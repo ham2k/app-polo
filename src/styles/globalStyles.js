@@ -29,8 +29,10 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const normalFontSize = 16 * fontScaleAdjustment // sized({ xs: 16, md: 17 })
   const mediumFontSize = 18 * fontScaleAdjustment // sized({ xs: 20, md: 21.5 })
   const largeFontSize = 24 * fontScaleAdjustment // sized({ xs: 24, md: 26 })
+
   const smallFontSize = 14 * fontScaleAdjustment // sized({ xs: 14, md: 15 })
   const smallerFontSize = 12 * fontScaleAdjustment // sized({ xs: 12, md: 13 })
+  const smallestFontSize = 10 * fontScaleAdjustment // sized({ xs: 10, md: 11 })
 
   const fontFamily = 'Roboto'
   const boldTitleFontFamily = 'Roboto Slab Black'
@@ -63,6 +65,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     largeFontSize,
     smallFontSize,
     smallerFontSize,
+    smallestFontSize,
     fontScale,
 
     fontFamily,

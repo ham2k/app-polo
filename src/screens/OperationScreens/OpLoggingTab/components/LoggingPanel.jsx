@@ -716,7 +716,7 @@ function prepareStyles (themeStyles, { style, themeColor, leftieMode, isKeyboard
         maxHeight: panelSize * 1.2,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'stretch',
+        alignItems: 'center',
         gap: themeStyles.oneSpace
       }
     },

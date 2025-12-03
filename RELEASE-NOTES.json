@@ -1,4 +1,11 @@
 {
+  "25.10.7": {
+    "name": "October '25 (patch 7)",
+    "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
+    "changes": [
+      "More accessibility improvements, better text contrast in input fields"
+    ]
+  },
   "25.10.6": {
     "name": "October '25 (patch 6)",
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",

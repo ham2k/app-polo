@@ -5,11 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable no-shadow */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { TextInput as NativeTextInput, Platform } from 'react-native'
+import { TextInput as NativeTextInput, PixelRatio, Platform, StyleSheet, View } from 'react-native'
 import { useSelector } from 'react-redux'
-import { TextInput } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { selectSettings } from '../../store/settings'
@@ -26,7 +25,7 @@ const DEBUG = false
 
 export function H2kTextInput (props) {
   const {
-    style, themeColor, textStyle,
+    style, textStyle, themeColor, disabled,
     label, placeholder, value, error,
     onChangeText, onChange, onSubmitEditing, onSpace, onFocus, onBlur,
     innerRef, focusedRef,
@@ -35,7 +34,7 @@ export function H2kTextInput (props) {
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst, textTransformer,
     keyboard
   } = props
-  const themeStyles = useThemedStyles()
+  const styles = useThemedStyles(prepareStyles, { style, textStyle, error, themeColor, disabled })
   const settings = useSelector(selectSettings)
 
   const alternateInnerRef = useRef()
@@ -279,21 +278,6 @@ export function H2kTextInput (props) {
   }, [focusedRef, handleChange, isFocused, stringValue, actualInnerRef, multiline])
   // END VIRTUAL NUMERIC KEY FUNCTIONALITY, PART 2
 
-  const colorStyles = useMemo(() => {
-    return {
-      paperInput: {
-        color: themeColor ? themeStyles.theme.colors[themeColor] : themeStyles.theme.colors.onBackground,
-        backgroundColor: themeStyles.theme.colors.background
-      },
-      nativeInput: {
-        color: themeColor ? themeStyles.theme.colors[themeColor] : themeStyles.theme.colors.onBackground
-      },
-      selectionColor: themeColor ? themeStyles.theme.colors[`${themeColor}Light`] : themeStyles.theme.colors.primaryLight,
-      cursorColor: themeColor ? themeStyles.theme.colors[`${themeColor}`] : themeStyles.theme.colors.primary,
-      errorColor: themeStyles.theme.colors.error
-    }
-  }, [themeStyles, themeColor])
-
   const keyboardOptions = useMemo(() => {
     let keyboardOpts = {}
 
@@ -339,7 +323,7 @@ export function H2kTextInput (props) {
     keyboardOpts.enterKeyHint = 'send'
 
     // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
-    keyboardOpts.keyboardAppearance = (themeStyles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
+    keyboardOpts.keyboardAppearance = (styles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
 
     if (settings.smartKeyboard === false) {
       if (keyboardOpts.keyboardType === 'visible-password') {
@@ -349,14 +333,16 @@ export function H2kTextInput (props) {
     }
 
     return keyboardOpts
-  }, [keyboard, themeStyles.isDarkMode, uppercase, multiline, settings.smartKeyboard])
+  }, [keyboard, styles.isDarkMode, uppercase, multiline, settings.smartKeyboard])
 
   if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) renderInput`, { stringValue, start: selectionRef?.current?.start, end: selectionRef?.current?.end, lastChange: lastChangeRef.current, trackSelection })
 
-  const renderInput = useCallback((props) => {
-    const valueAsChild = !(numeric || decimal || rst)
+  const valueAsChild = !(numeric || decimal || rst)
 
-    return (
+  return (
+    <View style={styles.root}>
+      <Text style={styles.label}>{label}</Text>
+
       <NativeTextInput
         {...keyboardOptions}
 
@@ -365,20 +351,11 @@ export function H2kTextInput (props) {
         ref={actualInnerRef}
         value={valueAsChild ? undefined : stringValue}
         placeholder={placeholder || ''}
-        style={[
-          colorStyles.nativeInput,
-          props.style,
-          {
-            fontFamily: themeStyles.monospacedFontFamily,
-            fontVariant: ['tabular-nums'],
-            fontWeight: 'regular'
-          },
-          textStyle
-        ]}
+        style={styles.input}
         allowFontScaling={false}
-        placeholderTextColor={themeStyles.theme.colors.onBackgroundLighter}
-        cursorColor={colorStyles.cursorColor}
-        selectionColor={colorStyles.sectionColor}
+        placeholderTextColor={styles.theme.colors.onBackgroundLighter}
+        // cursorColor={colorStyles.cursorColor}
+        // selectionColor={colorStyles.sectionColor}
         onSubmitEditing={onSubmitEditing}
         blurOnSubmit={false} // Prevent keyboard from hiding
         onChange={handleChange}
@@ -387,42 +364,63 @@ export function H2kTextInput (props) {
         onBlur={handleBlur}
         onSelectionChange={trackSelection ? handleSelectionChange : undefined}
       >{valueAsChild ? stringValue : null}</NativeTextInput>
-      // >{stringValue.slice(0, 1)}<Text style={{ fontWeight: 'bold', color: 'red' }}>{stringValue.slice(1, 5)}</Text>{stringValue.slice(5)}</NativeTextInput>
-    )
-  }, [
-    stringValue, keyboardOptions, actualInnerRef, placeholder, colorStyles, themeStyles, textStyle,
-    numeric, decimal, rst,
-    onSubmitEditing, handleFocus, handleBlur, handleChange, handleSelectionChange, trackSelection
-  ])
 
-  return (
-    <TextInput
-      {...props}
-      accessibilityLabel={props.accessibilityLabel ?? props.label}
-      style={[
-        colorStyles.paperInput,
-        {
-          paddingHorizontal: props.dense ? themeStyles.halfSpace : themeStyles.oneSpace,
-          fontSize: themeStyles.normalFontSize * themeStyles.fontScale * themeStyles.fontScaleAdjustment, // For some reason, this component does take into consideration `fontScale` so we have to multiply it ourselves
-          lineHeight: themeStyles.normalFontSize * themeStyles.fontScale * themeStyles.fontScaleAdjustment * 1.2, // For some reason, this component does take into consideration `fontScale` so we have to multiply it ourselves
-          fontFamily: themeStyles.fontFamily
-        },
-        style
-      ]}
-      maxFontSizeMultiplier={1} // This affects the size of the label
-      textColor={error ? colorStyles.errorColor : colorStyles.paperInput.color}
-      selectionColor={colorStyles.paperInput.color}
-      underlineColor={colorStyles.paperInput.color}
-      activeUnderlineColor={colorStyles.paperInput.color}
-      mode={'flat'}
-      underlineStyle={{
-        borderRadius: 30
-      }}
-      value={value || ' '}
-      label={label}
-      placeholder={placeholder || ''}
-      render={renderInput}
-      error={error}
-    />
+    </View>
   )
+}
+
+function prepareStyles (themeStyles, { style, textStyle, error, themeColor, disabled }) {
+  let textColor = themeStyles.theme.colors.onBackground
+  let labelColor = themeStyles.theme.colors.onBackground
+  let borderColor = error ? themeStyles.theme.colors.error : themeStyles.theme.colors.outline
+
+  style = StyleSheet.flatten(style)
+
+  if (themeColor) {
+    borderColor = themeStyles.theme.colors[themeColor]
+  }
+
+  if (error) {
+    labelColor = themeStyles.theme.colors.error
+    borderColor = themeStyles.theme.colors.error
+  }
+
+  if (disabled) {
+    borderColor = themeStyles.theme.colors.outlineVariant
+    textColor = themeStyles.theme.colors.onSurfaceDisabled
+    labelColor = themeStyles.theme.colors.onSurfaceDisabled
+  }
+
+  return {
+    ...themeStyles,
+    root: {
+      ...style,
+      minHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 6),
+      backgroundColor: themeStyles.theme.colors.background,
+      borderTopLeftRadius: 4,
+      borderTopRightRadius: 4,
+      borderWidth: 0,
+      borderBottomWidth: PixelRatio.roundToNearestPixel(1.5),
+      borderBottomColor: borderColor,
+      paddingHorizontal: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.8),
+      paddingBottom: themeStyles.halfSpace,
+      paddingTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.2),
+      flexDirection: 'column',
+      gap: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.3),
+      justifyContent: 'flex-start'
+    },
+    label: {
+      fontSize: themeStyles.smallestFontSize,
+      color: labelColor,
+      opacity: 0.8
+    },
+    input: {
+      ...textStyle,
+      fontSize: themeStyles.normalFontSize,
+      fontFamily: themeStyles.monospacedFontFamily,
+      fontVariant: ['tabular-nums'],
+      fontWeight: 'regular',
+      color: textColor
+    }
+  }
 }
