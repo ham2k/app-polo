@@ -132,6 +132,8 @@ function getAllRefsForOperation({ operation, qsos }) {
   return refs
 }
 
+const DEBUG = false
+
 function getExportOptionsForOperation({ operation, qsos, settings }) {
   const refs = getAllRefsForOperation({ operation, qsos })
   const exportOptions = {}
@@ -166,7 +168,7 @@ function getExportOptionsForOperation({ operation, qsos, settings }) {
       exportOptions[optionKey] = exportOptions[optionKey] || { optionKey, refKey: null, handler, option, refs: [{ type: handler.key }] }
     }
   })
-  console.log('-- exportOptions', exportOptions)
+  if (DEBUG) console.log('-- exportOptions', exportOptions)
   return Object.values(exportOptions)
 }
 
@@ -223,7 +225,7 @@ export function dataExportOptions({ operation, qsos, settings, ourInfo }) {
       exports.push({ ...option, handler, ref, fileName, title, exportLabel, exportType, operation, ourInfo })
     }
   }
-  console.log('dataExportOptions', exports)
+  if (DEBUG) console.log('dataExportOptions', exports)
   return exports.sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
 }
 

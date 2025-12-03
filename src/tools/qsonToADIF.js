@@ -16,7 +16,7 @@ import { adifModeAndSubmodeForMode, frequencyForBand, modeForFrequency } from '@
 
 const DEBUG = false
 
-export function qsonToADIF({ operation, settings, qsos, handler, format, title, exportType, combineSegmentRefs, ADIFNotesTemplate, ADIFCommentTemplate, ADIFQslMsgTemplate }) {
+export function qsonToADIF({ operation, settings, qsos, handler, format, title, exportType, includeOtherRefs, combineSegmentRefs, ADIFNotesTemplate, ADIFCommentTemplate, ADIFQslMsgTemplate }) {
   if (DEBUG) console.log('qsonToADIF operation', { ...operation })
   const templates = {
     key: `${handler.key}-${format}-${exportType ?? 'export'}`
@@ -113,9 +113,11 @@ export function qsonToADIF({ operation, settings, qsos, handler, format, title, 
       // Then we append the fields from the main handler's combinations
       fields = fields.concat(combinationFields)
 
+      if (includeOtherRefs) {
         // And finally, we look at any handlers for other refs in the operation, or refs in the QSO itself
         // and ask them for more fields to add to this QSO.
-        ;[...qso.refs || [], ...operation.refs || []].forEach(ref => {
+        const refs = [...qso.refs || [], ...operation.refs || []]
+        refs.forEach(ref => {
           const secondaryRefHandler = findBestHook(`ref:${ref.type}`)
 
           if (secondaryRefHandler?.key === handler.key) return // Skip if it happens to be the same as the main handler
@@ -136,6 +138,7 @@ export function qsonToADIF({ operation, settings, qsos, handler, format, title, 
             })
           }
         })
+      }
 
       str += adifRow(fields)
     })

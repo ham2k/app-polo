@@ -43,6 +43,7 @@ const ExportHandler = {
       exportName: 'Full ADIF Export',
       selectedByDefault: false,
       privateDataDefault: true,
+      includeOtherRefs: true,
       combineSegmentRefs: true // This export should include ref changes from segments
     }])
   }
