@@ -1,0 +1,929 @@
+{
+  "screens": {
+    "start": {
+      "credits": "by ki2d and friends",
+      "Loading Extensions": "loading extensions",
+      "Development Build": "portable logger development build",
+      "messages": {
+        "Reticulating splines": "reticulating splines",
+        "Tuning the antenna": "tuning the antenna",
+        "Checking the tubes": "checking the tubes",
+        "Warming up the tubes": "warming up the tubes",
+        "Unfolding the map": "unfolding the map",
+        "Charging the flux capacitor": "charging the flux capacitor",
+        "Purging the dilithium chamber": "purging the dilithium chamber",
+        "Activating the turbo encabulator": "activating the turbo encabulator",
+        "Engaging the warp drive": "engaging the warp drive"
+      }
+    },
+    "home": {
+      "title": "portable logger",
+      "newOperation": "new operation",
+      "newOperation-a11y": "new operation",
+      "operationList-a11y": "operation list",
+      "noOperations": "no operations!",
+      "settings-a11y": "settings",
+      "quickCallLookupPlaceholder": "quick call lookup…",
+      "spots-a11y": "spots"
+    },
+    "operation": {
+      "title": "operation"
+    },
+    "operationDetails": {
+      "title": "operation details",
+      "operationTitle": "title",
+      "newOperation": "new operation",
+      "operationNotes": "notes",
+      "anythingYouWantToWriteAboutThisOperation": "anything you want to write about this operation"
+    },
+    "operationStationInfo": {
+      "title": "station & operator info",
+      "invalidCallsign": "invalid callsign: {{callsign}}",
+      "invalidCallsigns": "invalid callsigns: {{callsigns}}",
+      "singleStationUsed-md": "`{{oldStation}}` used so far.\n{{newStation}}` will be used for new qsos.",
+      "noStationUsed-md": "no call used so far.\n{{newStation}} will be used for new qsos.",
+      "updateStation-md_zero": "update `{{newStation}}` on zero existing qsos",
+      "updateStation-md_one": "update `{{newStation}}` on one existing qso",
+      "updateStation-md_other": "update `{{newStation}}` on {{count}} existing qsos",
+      "multipleStationsUsed-md": "this activity already has qsos using multiple station callsigns: `{{stations}}`.\n\n`{{newStation}}` will only be used for new qsos.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` used so far.\n{{newOperator}}` will be used for new qsos.",
+      "noOperatorUsed-md": "no call used so far.\n{{newOperator}} will be used for new qsos.",
+      "updateOperator-md": "update `{{newOperator}}` as operator for all qsos",
+      "multipleOperatorsUsed-md": "this activity already has qsos using multiple operator callsigns: `{{operators}}`.\n\n`{{newOperator}}` will only be used for new qsos.",
+      "whatIsTheCallsignUsedOnTheAir": "what is the callsign used on the air?",
+      "stationCallsign": "station callsign",
+      "whoIsOperatingTheStation": "who is operating the station? (optional)",
+      "operatorCallsign": "operator callsign",
+      "multiStationOperation": "multi-station operation?",
+      "multiStationOperationYes": "yes, we're one of many!",
+      "multiStationOperationNo": "no, just a regular station",
+      "identifierForThisStation": "identifier for this station (numbers only)"
+    },
+    "operationLocation": {
+      "title": "operation location",
+      "selectedLocation": "selected location",
+      "maidenheadGridSquareLocator": "maidenhead grid square locator",
+      "suggestedLocations": "suggested locations",
+      "deviceGps": "device gps",
+      "locating": "locating…",
+      "gpsError": "gps error",
+      "noGps": "no gps"
+    },
+    "operationAddActivity": {
+      "title": "add activity",
+      "cantFindActivity": "can't find the activity you're looking for?",
+      "thereAreMoreOptions": "there are more options in settings > app features"
+    },
+    "operationActivityOptions": {
+      "title": "activity options",
+      "removeActivity": "remove {{activity}} from this operation"
+    },
+    "operationData": {
+      "title": "operation data",
+      "selectFromTheExportOptionsBelow": "select from the export options below",
+      "exportSingeFile": "export one file",
+      "exportSelectedFiles_zero": "export 0 selected files",
+      "exportSelectedFiles_one": "export 1 selected file",
+      "exportSelectedFiles_other": "export {{count}} selected files",
+      "exportAllFiles": "export all files",
+      "exportQSOs": "export qsos",
+      "pendingToDoItems_zero": "no pending to-do items",
+      "pendingToDoItems_one": "1 pending to-do item",
+      "pendingToDoItems_other": "{{count}} pending to-do items",
+      "importQSOs": "import qsos",
+      "addQSOsFromADIFFile": "add qsos from adif file",
+      "ham2kLoFiSync": "ham2k lofi sync",
+      "operation": "operation",
+      "exportSettings": "export settings",
+      "useCompactFileNames": "use compact file names",
+      "wavelogExport": "wavelog export",
+      "exportQSOsToWavelogDescription": "send all qsos for this operation to wavelog",
+      "wavelogDialog": {
+        "title": "export qsos to wavelog",
+        "status": "export all qsos for this operation to wavelog.",
+        "exporting": "exporting to wavelog…"
+      },
+      "deleteOperationDialog": {
+        "title": "delete operation?",
+        "description": "are you sure you want to delete this operation?"
+      }
+    },
+    "callInfo": {
+      "title": "callsign info",
+      "messages": {
+        "duplicate": "duplicate",
+        "invalidBand": "invalid band",
+        "newBand": "new band",
+        "newMode": "new mode",
+        "newRef": "new reference",
+        "newMult": "new mult",
+        "newDay": "new day",
+        "maybeDupe": "dupe?",
+        "partialDupe": "dupe",
+        "potaActivation-newDay": "new pota day",
+        "potaActivation-newRef": "new park",
+        "sotaActivation-newDay": "new sota day",
+        "sotaActivation-newRef": "new summit",
+        "sotaActivation-duplicate": "sota dupe!",
+        "wwffActivation-duplicate": "wwff dupe!",
+        "wwbotaActivation-newDay": "new wwbota day",
+        "wwbotaActivation-newRef": "new bunker",
+        "motaActivation-newRef": "new mill"
+      },
+      "history": {
+        "last7days": "{{count}} in last 7 days",
+        "today": "{{count}} today",
+        "yesterday": "{{count}} yesterday",
+        "qsos_zero": "0 qsos",
+        "qsos_one": "1 qso",
+        "qsos_other": "{{count}} qsos"
+      },
+      "thisOpCount_zero": "0 qsos in this operation",
+      "thisOpCount_one": "1 qso in this operation",
+      "thisOpCount_other": "{{count}} qsos in this operation",
+      "otherOpsCount_zero": "0 qsos in other operations",
+      "otherOpsCount_one": "1 qso in other operations",
+      "otherOpsCount_other": "{{count}} qsos in other operations",
+      "andMoreCount_zero": "… and {{count}} more",
+      "andMoreCount_one": "… and {{count}} more",
+      "andMoreCount_other": "… and {{count}} more",
+      "showImage": "show image",
+      "notes": "notes",
+      "potentialCall": "potential call: {{call}}",
+      "withCall": "with {{call}}"
+    },
+    "spots": {
+      "title": "spots"
+    },
+    "editQSO": {
+      "title": "edit qso",
+      "sections": {
+        "qso": "qso details",
+        "their": "their info",
+        "our": "our info",
+        "more": "more"
+      },
+      "fields": {
+        "time": "time",
+        "date": "date",
+        "freq": "frequency",
+        "mode": "mode",
+        "band": "band",
+        "power": "power",
+        "call": "station call",
+        "sent": "rst",
+        "exchange": "exchange",
+        "name": "name",
+        "city": "city",
+        "state": "state/province",
+        "county": "county",
+        "entity": "entity",
+        "cqZone": "cq zone",
+        "ituZone": "itu zone",
+        "arrlSection": "arrl section",
+        "grid": "grid",
+        "latitude": "latitude",
+        "longitude": "longitude",
+        "notes": "notes"
+      }
+    },
+    "opInfo": {
+      "title": "operation info"
+    },
+    "settings": {
+      "title": "settings",
+      "sections": {
+        "settings": "settings",
+        "accounts": "accounts",
+        "about": "about ham2k",
+        "help": "need help?"
+      },
+      "operatorCallsign": {
+        "title": "operator callsign",
+        "noCall": "no call",
+        "dialogTitle": "operator callsign",
+        "pleaseEnterCallsign": "please enter a callsign!",
+        "callsignLabel": "operator's callsign"
+      },
+      "generalSettings": {
+        "title": "general settings",
+        "description": "dark mode, numbers row, units, and more"
+      },
+      "loggingSettings": {
+        "title": "logging settings",
+        "description": "customize the logging experience"
+      },
+      "dataSettings": {
+        "title": "data settings",
+        "description": "data files, callsign notes, and more"
+      },
+      "syncSettings": {
+        "title": "sync settings",
+        "description": "cloud sync and backup"
+      },
+      "appFeatures": {
+        "title": "app features",
+        "description": "manage features like pota, sota, etc"
+      },
+      "developerSettings": {
+        "title": "developer settings",
+        "description": "here be dragons"
+      },
+      "accountsQRZ": {
+        "title": "qrz (for callsign lookups)",
+        "description": "login: {{login}}",
+        "noAccount": "no account",
+        "errorEmail": "don't use your email for login.",
+        "dialogTitle": "qrz.com account",
+        "pleaseEnterDetails": "please enter the details for your qrz.com account:",
+        "loginLabel": "login (your callsign)",
+        "loginPlaceholder": "your login",
+        "passwordLabel": "password",
+        "passwordPlaceholder": "your password",
+        "checkCredentials": "check credentials"
+      },
+      "wavelogSettings": {
+        "title": "wavelog settings",
+        "description": "configure wavelog api connection"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} is a supporter of ham2k",
+        "couldBeASupporter": "{{callsign}} could be a supporter of ham2k"
+      },
+      "versionSettings": {
+        "description": "see recent changes"
+      },
+      "creditsSettings": {
+        "title": "credits",
+        "description": "sebastián delmont ki2d & team polo"
+      },
+      "noticesSettings": {
+        "title": "recent notices",
+        "description": "messages you might have missed?"
+      },
+      "readTheFineManual": {
+        "title": "read the fine manual",
+        "description": "browse the documentation for polo"
+      },
+      "ham2KForums": {
+        "title": "ham2k forums",
+        "description": "find help, give feedback, discuss ideas…"
+      },
+      "ham2KChat": {
+        "title": "ham2k chat",
+        "description": "the discord server for our online community"
+      },
+      "ham2KYouTube": {
+        "title": "ham2k youtube",
+        "description": "videos and live streams"
+      },
+      "ham2KInstagram": {
+        "title": "ham2k instagram",
+        "description": "because you cannot have too many photos…"
+      },
+      "ham2KBlueSky": {
+        "title": "ham2k bluesky",
+        "description": "follow us for news and updates"
+      },
+      "contactUs": {
+        "title": "contact us",
+        "description": "help@ham2k.com\n   (but try the forums or chat first!)"
+      }
+    },
+    "generalSettings": {
+      "title": "general settings",
+      "theme": {
+        "title": "theme",
+        "descriptionDark": "always in dark mode",
+        "descriptionLight": "always in light mode",
+        "descriptionDevice": "same as device theme",
+        "dialogTitle": "theme"
+      },
+      "fontScale": {
+        "title": "font scale",
+        "descriptionXS": "smallest",
+        "descriptionSM": "smaller",
+        "descriptionMD": "normal",
+        "descriptionLG": "larger",
+        "descriptionXL": "largest",
+        "dialogTitle": "font scale",
+        "dialogDescription": "these sizes are also affected by device settings, such as display and accessibility."
+      },
+      "language": {
+        "title": "language: {{lang}}",
+        "description": "change the language of the app",
+        "dialogTitle": "language",
+        "dialogDescription": "change the language",
+        "deviceDefault": "use device settings ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (device settings) is not currently supported."
+      },
+      "showNumbersRow": {
+        "title": "show numbers row",
+        "descriptionOn": "quick buttons for numbers",
+        "descriptionOff": "don't show numbers row"
+      },
+      "showExtraInNumbersRow": {
+        "title": "period in numbers row",
+        "descriptionOn": "include period (and slash)",
+        "descriptionOff": "just show the numbers"
+      },
+      "showCommaInNumbersRow": {
+        "title": "comma in numbers row",
+        "descriptionOn": "include a comma key",
+        "descriptionOff": "no comma key"
+      },
+      "vibrateNumbersRow": {
+        "title": "use vibration in numbers row",
+        "descriptionOn": "vibrate when pressing numbers",
+        "descriptionOff": "don't vibrate when pressing numbers"
+      },
+      "useMetricUnits": {
+        "title": "use metric units",
+        "descriptionOn": "use miles for distances",
+        "descriptionOff": "use kilometers for distances"
+      },
+      "keepDeviceAwake": {
+        "title": "keep device awake",
+        "descriptionOn": "prevent device from locking screen",
+        "descriptionOff": "allow regular screen locking"
+      },
+      "useSplitViews": {
+        "title": "use split views",
+        "descriptionOn": "use split views when screen is large enough",
+        "descriptionOff": "don't use split views"
+      },
+      "useGrid8": {
+        "title": "high precision location",
+        "descriptionOn": "use 8-digit grids",
+        "descriptionOff": "use 6-digit grids"
+      },
+      "smartKeyboard": {
+        "title": "smart keyboard features",
+        "descriptionOn": "enable smart keyboard features",
+        "descriptionOff": "use simpler keyboards for compatibility reasons with some devices"
+      },
+      "exportSettings": {
+        "title": "export settings",
+        "description": "customize filenames and other settings"
+      },
+      "privacy": {
+        "title": "privacy"
+      },
+      "shareAppUsageData": {
+        "title": "share app usage data",
+        "descriptionOn": "help us improve the app by sharing usage, crash and performance data",
+        "descriptionOff": "keep app usage data private.\nthe ham2k team won't be able to detect crashes or other issues."
+      },
+      "shareOperationData": {
+        "title": "share operation data",
+        "descriptionOn": "share some operation data publicly and with other users",
+        "descriptionOff": "keep operation data private"
+      },
+      "privacyPolicy": {
+        "title": "privacy policy",
+        "description": "read our privacy policy"
+      },
+      "termsOfService": {
+        "title": "terms of service",
+        "description": "read our terms of service"
+      }
+    },
+    "loggingSettings": {
+      "title": "logging settings",
+      "leftieMode": {
+        "title": "leftie mode",
+        "descriptionOn": "use layout for left-handed users",
+        "descriptionOff": "use layout for right-handed users"
+      },
+      "countryFlags": {
+        "title": "country flags",
+        "descriptionNone": "don't show any flags",
+        "descriptionAll": "show flags for all contacts",
+        "descriptionDefault": "show only for dx contacts"
+      },
+      "stateField": {
+        "title": "state field",
+        "descriptionOn": "include state field in main exchange",
+        "descriptionOff": "don't include state field"
+      },
+      "showBearing": {
+        "title": "show bearing",
+        "descriptionOn": "show estimated bearing to station",
+        "descriptionOff": "don't show bearing information"
+      },
+      "switchSignalReportOrder": {
+        "title": "switch signal report order",
+        "descriptionOn": "sent first, rcvd second",
+        "descriptionOff": "rcvd first, sent second"
+      },
+      "jumpAfterRST": {
+        "title": "jump to next field on rst entry",
+        "descriptionOn": "jump after rst is entered",
+        "descriptionOff": "don't jump automatically"
+      },
+      "suggestDefaultOperator": {
+        "title": "suggest default operator",
+        "descriptionOn": "set {{operatorCall}} as operator in operations where station call is different",
+        "descriptionOff": "don't suggest default operator regardless of station call used"
+      },
+      "bandsModes": {
+        "title": "bands & modes",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "extensions"
+      }
+    },
+    "featuresSettings": {
+      "title": "app features",
+      "activatingExtension": "activating extension, this may take a moment…",
+      "fewerOf": "fewer {{category}}…",
+      "moreOf": "more {{category}}…"
+    },
+    "dataSettings": {
+      "title": "data settings",
+      "offlineDataTitle": "offline data",
+      "extensionsTitle": "extensions",
+      "logDataTitle": "log data",
+      "importHistoryFromADIF": "import history from adif",
+      "importHistoryFromADIFDescription": "used for offline lookups and qso statistics",
+      "clearADIFHistory": "clear adif history",
+      "clearADIFHistoryDescription": "remove adif imported records",
+      "updatedRelative": "updated {{date}}",
+      "fetching-md": "### fetching **{{title}}**…",
+      "progress-md": "### fetching **{{title}}**\n\n{{progress}}",
+      "updated-md": "updated on {{date}}",
+      "version-md": "version: {{version}}",
+      "confirmClearHistory": {
+        "title": "are you sure?",
+        "description": "this will remove all historical records previously imported from adif files",
+        "recordsNotDeleted": "records from operations will not be deleted"
+      },
+      "importingHistoricalADIF": "importing adif records… please be patient!",
+      "errorImportingHistoricalADIF": "error importing historical adif",
+      "errorDeletingHistoricalRecords": "error deleting historical records",
+      "recordsCount_zero": "no records",
+      "recordsCount_one": "1 record",
+      "recordsCount_other": "{{fmtCount}} records"
+    },
+    "syncSettings": {
+      "title": "sync settings",
+      "description": "ham2k lofi offers a reliable sync service between all your devices and provides a backup for your operation data in the cloud.",
+      "syncService": "sync service",
+      "syncService.enabled": "enabled",
+      "syncService.disabled": "disabled",
+      "deviceNotLinked": "device not linked! ({{id}})",
+      "anonymousAccount": "anonymous account (#{{id}})",
+      "enableSyncToLinkDevice": "enable sync to link this device",
+      "checkEmailInboxForConfirmation": "(check your email inbox for confirmation)",
+      "accountNumber": "account #{{id}}",
+      "pendingEmailConfirmation": "(pending email confirmation)",
+      "tapToConfigure": "tap to configure",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "ham2k lofi (development)",
+        "https://lofi.ham2k.net": "ham2k lofi (official)",
+        "custom": "custom ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "this device was last synced with a different account (#{{id}}).\n\nin order to continue syncing, you need to decide between the following options:",
+        "option1withEmail-md": "option #1: replace data on this device with that from the **{{email}}** account on the server.",
+        "option1noEmail-md": "option #1: replace data on this device with that from the new account on the server.",
+        "option1button": "go with #1: replace with server data",
+        "option2withEmail-md": "option #2: combine data on this device with that from the **{{email}}** account on the server.",
+        "option2noEmail-md": "option #2: combine data on this device with that from the new account on the server.",
+        "option2button": "go with #2: combine data",
+        "option3-md": "option #3: link back with the previous account, **{{email}}**.",
+        "option3button": "go with #3: previous account",
+        "buttonCancel": "no, cancel",
+        "buttonProcees": "yes, i'll take the risk! replace it all!"
+      },
+      "combineDataAlert": {
+        "title": "combine local data?",
+        "text": "are you sure you want to combine these operations and qsos with the new account?\n\nthis will combine qsos on this device with what's already in the sync service for the new account, and can accidentally result in mixing unrelated logs!\n\nthis operation cannot be undone.",
+        "buttonCancel": "no, cancel",
+        "buttonProcees": "yes, i'll take the risk! combine them!"
+      },
+      "replaceDataAlert": {
+        "title": "replace local data?",
+        "text": "are you sure you want to replace all data on this device with the operations and qsos for the new account from the sync service?\n\nthe app will restart.\n\nif you have unsynced data, it will be lost.",
+        "buttonCancel": "no, cancel",
+        "buttonProcees": "yes, i'll take the risk! replace it all!"
+      },
+      "linkBackErrorAlert": {
+        "title": "error linking back to previous account",
+        "text": "an error occurred while linking back to the previous account.\n\n{{error}}\n\nplease try again later.",
+        "buttonCancel": "ok"
+      },
+      "syncServiceDescription-md": "basic service is free and allows you to sync recent data (up to 7 days) between two devices or apps at limited speed.\n\nfull service requires a paid subscription and includes all your operations synced between any reasonable number of devices or apps at full speed.\n\nwhile the lofi service is in its testing period for the next couple of months, the service will remain free. after that prices will depend on the country and currency but should not be more than us$30/year or equivalent, and probably less.",
+      "thisDevice": "this device",
+      "notAuthenticated": "not authenticated",
+      "lofiServer": "lofi server",
+      "otherDevices": "other devices",
+      "devSettings": "dev settings",
+      "resetSyncStatus": "reset sync status",
+      "noDataStored": "no data stored",
+      "syncCountDescription": {
+        "operations": "operations: {{synced}} synced, {{pending}} pending",
+        "qsos": "qsos: {{synced}} synced, {{pending}} pending"
+      },
+      "cloudCountDescription": {
+        "operations": "operations: {{total}} total",
+        "operationsSyncable": "operations: {{total}} stored, {{syncable}} syncable",
+        "qsos": "qsos: {{total}} stored",
+        "qsosSyncable": "qsos: {{total}} stored, {{syncable}} syncable"
+      }
+    },
+    "versionSettings": {
+      "title": "version information",
+      "recentChanges": "recent changes",
+      "coverPhoto": "cover photo: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "checking for patches…",
+      "newMajorReleaseAvailable": "new major release available",
+      "patchAvailable": "{{track}} patch available",
+      "checkForUpdates": "check for {{track}} updates",
+      "checkForUpdatesGeneric": "check for updates",
+      "updateAvailable": "update available",
+      "downloading": "downloading…",
+      "downloadingProgress": "downloading {{progress}}%",
+      "installing": "installing…",
+      "errorDownloadingUpdate": "error downloading update",
+      "errorCheckingForUpdates": "error checking for updates",
+      "noUpdatesAvailable": "no updates available",
+      "versionDescription": "{{version}} - base build {{build}}"
+    },
+    "creditsSettings": {
+      "title": "credits",
+      "createdBy": "created by {{callsign}}",
+      "openSource": "ham2k polo is open source",
+      "checkOutCode": "check out the code and contribute on github!",
+      "teamPoLo": "team polo",
+      "creator": "creator & lead developer",
+      "developer": "developer",
+      "leadSupport": "lead support & documentation",
+      "moreCodeAndDocsContributors": "more contributors…",
+      "contributorCode": "code contributor: {{contributions}}",
+      "contributorDocumentation": "documentation",
+      "translations": "translations"
+    },
+    "devModeSettings": {
+      "title": "developer settings",
+      "wipeDatabase": {
+        "title": "wipe database?",
+        "description": "are you sure you want to delete all operations, qsos and other data?",
+        "noCancel": "no, cancel",
+        "yesWipeIt": "yes, wipe it!"
+      },
+      "import": {
+        "title": "import",
+        "importQSONFile": "import qson file"
+      },
+      "experiments": {
+        "title": "experiments",
+        "enableWavelogExperiments": "enable wavelog experiments"
+      },
+      "manageDatabase": {
+        "title": "manage database",
+        "exportDatabase": "export database",
+        "exportDatabaseDescription": "export the current database file",
+        "replaceDatabase": "replace database",
+        "replaceDatabaseDescription": "import a new database file and replace all data",
+        "wipeDatabase": "wipe database",
+        "wipeDatabaseDescription": "delete all data from the database."
+      },
+      "internationalization": {
+        "title": "internationalization",
+        "crowdInPersonalTokenLabel": "crowdin personal access token",
+        "crowdInPersonalTokenPlaceholder": "get one from crowdin's account settings page",
+        "refreshCrowdInTranslations": {
+          "title": "refreshing translations…",
+          "starting": "please wait while we refresh the translations…",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "refresh completed!",
+          "errorTitle": "error refreshing translations",
+          "error": "error refreshing crowdin translations: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "download advanced settings",
+        "locationLabel": "location",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "system information",
+        "shareWithDevelopmentTeam": "share with the development team"
+      },
+      "updatePatches": {
+        "title": "update patches",
+        "selectTrackForPatches": "select track for patches",
+        "selectTrackForPatchesDescription": "select the track for patches",
+        "checkingForUpdates": "checking for updates…",
+        "checkForUpdates": "check for {{track}} updates",
+        "updateAvailable": "update available",
+        "updateAvailableForTrack": "{{track}} update available",
+        "downloading": "downloading…",
+        "downloadingProgress": "downloading {{progress}}%",
+        "installing": "installing…",
+        "errorDownloadingUpdate": "error downloading update",
+        "errorCheckingForUpdates": "error checking for updates",
+        "noUpdatesAvailable": "no updates available"
+      }
+    },
+    "bandModeSettings": {
+      "title": "bands & modes",
+      "bands": {
+        "title": "bands",
+        "showCommonBands": "show common bands",
+        "showAllBands": "show all bands",
+        "names": {
+          "160m-a11y": "160 meters",
+          "80m-a11y": "80 meters",
+          "60m-a11y": "60 meters",
+          "40m-a11y": "40 meters",
+          "30m-a11y": "30 meters",
+          "20m-a11y": "20 meters",
+          "17m-a11y": "17 meters",
+          "15m-a11y": "15 meters",
+          "12m-a11y": "12 meters",
+          "10m-a11y": "10 meters",
+          "6m-a11y": "6 meters",
+          "2m-a11y": "2 meters",
+          "70cm-a11y": "70 centimeters",
+          "23cm-a11y": "23 centimeters",
+          "13cm-a11y": "13 centimeters",
+          "9cm-a11y": "9 centimeters",
+          "6cm-a11y": "6 centimeters",
+          "3cm-a11y": "3 centimeters",
+          "1-25cm-a11y": "1.25 centimeters",
+          "6mm-a11y": "6 millimeters",
+          "4mm-a11y": "4 millimeters",
+          "2-5mm-a11y": "2.5 millimeters",
+          "2mm-a11y": "2 millimeters",
+          "1mm-a11y": "1 millimeters",
+          "submm-a11y": "submillimeter",
+          "other": "other",
+          "other-a11y": "other band"
+        }
+      },
+      "modes": {
+        "title": "modes",
+        "showMoreModes": "show more modes",
+        "showEvenMoreModes": "show even more modes",
+        "showFewerModes": "show fewer modes",
+        "names": {
+          "SSB-a11y": "single sideband",
+          "USB-a11y": "upper sideband",
+          "LSB-a11y": "lower sideband",
+          "RTTY-a11y": "ritty",
+          "CW-a11y": "c.w.",
+          "other": "other",
+          "other-a11y": "other mode"
+        }
+      }
+    },
+    "exportSettings": {
+      "title": "export settings",
+      "exportTypes": "export types",
+      "customTemplates": "custom templates",
+      "defaultTemplates": "default templates",
+      "customTemplatesDescription": "use custom templates for the export",
+      "defaultTemplatesDescription": "use default templates for the export",
+      "includePrivateData": "include private data",
+      "fileNameTemplate": "file name template",
+      "titleTemplate": "title template",
+      "adifNotes": "adif qso notes",
+      "adifComments": "adif qso comments",
+      "adifQslMessage": "adif qsl message",
+      "templateHelpTitle": "template help",
+      "includePrivateDataDescription": "names, notes, addresses, etc.",
+      "templateHelp-md": "some sample template elements…\n\n### log export\nattributes for the log being exported\n`{{log.station}}` → `{{call}}` station for this export\n`{{log.ref}}` → `xx-1234` reference for this export\n`{{log.refName}}` → `example national park` reference name for this export\n`{{log.refShortName}}` → `example np` short reference name for this export\n`{{log.handlerType}}` → `pota` handler type for this export\n`{{log.handlerName}}` → `parks on the air` handler name for this export\n`{{log.handlerShortName}}` → `pota` short handler name for this export\n\n### operation callsigns\n`{{op.station}}` → `{{call}}` first station for the operation\n`{{op.operator}}` → `{{call}}` operator for the operation\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` all stations for the operation\n`{{op.otherStations}}` → `{{otherCalls}}` other stations for the operation\n\n### operation date\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### other operation details\n`{{op.title}}` → `at xx-1234, xxff-0001`\n`{{op.userTitle}}` → `my special operation`\n`{{op.userNotes}}` → `went early in the morning…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `aa00` grid for this operation\n\n### qso information\n`{{qso.notes}}` → `terrible audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` the signal report they sent\n`{{qso.our.sent}}` → `55` the signal report we sent\n`{{qso.their.grid}}` → `ff99` the grid they reported\n`{{qso.refs}}` → a list of all the references for the qso (includes both operation refs and qso-only refs)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "defaults",
+        "description": "base settings for all exports",
+        "fileNameNormal": "file name for reference activities (normal)",
+        "fileNameCompact": "file name for reference activities (compact)",
+        "titleReferenceActivities": "title for reference activities",
+        "fileNameOtherActivitiesNormal": "file name for other activities (normal)",
+        "fileNameOtherActivitiesCompact": "file name for other activities (compact)",
+        "titleOtherActivities": "title for other activities",
+        "adifNotes": "adif qso notes",
+        "adifComments": "adif qso comments",
+        "adifQSLMessage": "adif qsl message"
+      }
+    },
+    "noticesSettings": {
+      "title": "recent notices",
+      "undated": "undated",
+      "noRecentNotices": "no recent notices"
+    },
+    "extensionSettings": {
+      "title": "extension"
+    },
+    "wavelogSettings": {
+      "title": "wavelog settings",
+      "noStationsFoundOrInvalidResponse": "no stations found or invalid response",
+      "errorFetchingStations": "error fetching stations: {{message}}",
+      "fetchStations": "fetch stations",
+      "selectStation": "select station",
+      "selectedStation": "selected station: {{station}}"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "pane separator",
+      "qsosTab": "qsos",
+      "qsosTab-a11y": "q sos tab",
+      "infoTab": "info",
+      "infoTab-a11y": "info tab",
+      "operationInfo-a11y": "operation info",
+      "spotsTab": "spots",
+      "spotsTab-a11y": "spots tab",
+      "mapTab": "map",
+      "mapTab-a11y": "map tab",
+      "settingsTab": "operation",
+      "settingsCompactTab": "oper.",
+      "settingsTab-a11y": "operation settings tab",
+      "menu": {
+        "loggingSettings": "logging settings",
+        "rstFields": "rst fields",
+        "stateField": "state field",
+        "showDeletedQSOs": "show deleted qsos",
+        "numbersRow": "numbers row",
+        "actions": "actions",
+        "lookupAllQSOs": "lookup all qsos",
+        "confirmSpots": "confirm spots"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "no qsos",
+      "qsosTabCount_one": "1 qso",
+      "qsosTabCount_other": "{{fmtCount}} qsos",
+      "qsosCompactTabCount_zero": "no qs",
+      "qsosCompactTabCount_one": "1 q",
+      "qsosCompactTabCount_other": "{{fmtCount}} qs",
+      "noQSOsYet": "no qsos yet!",
+      "currentlySetTo": "currently set to",
+      "missingInfoError": {
+        "message": "error: please enter **{{errors}}** for a valid operation",
+        "errors": {
+          "band": "band",
+          "callsign": "callsign"
+        }
+      },
+      "actions": {
+        "undo-a11y": "undo",
+        "erase-a11y": "erase",
+        "delete-a11y": "delete",
+        "addQSO-a11y": "add qso",
+        "saveQSO-a11y": "save qso"
+      },
+      "deletedQSO": "deleted qso",
+      "qsoWillBeDeleted": "qso will be deleted!",
+      "noQSOsBy-md": "no qsos by {{callsign}} yet… let's get on the air!",
+      "noQSOsYet-md": "no qsos yet… let's get on the air!",
+      "qsoCount_zero": "no qsos",
+      "qsoCount_one": "1 qso",
+      "qsoCount_other": "{{fmtCount}} qsos",
+      "qsosInTime": "{{countText}} in {{timeText}}",
+      "last10QSOs": "{{rate}} q/h for last 10",
+      "last100QSOs": "{{rate}} q/h for last 100",
+      "timeSinceLast": "{{time}} since last",
+      "moreLabel": "more",
+      "theirCallLabel": "their call",
+      "ourSentLabel": "sent",
+      "theirSentLabel": "rcvd",
+      "stateLabel": "state",
+      "timeLabel": "time",
+      "dateLabel": "date",
+      "timeControls-a11y": "time controls",
+      "powerLabel": "power",
+      "powerControls-a11y": "power controls",
+      "modeLabel": "mode",
+      "bandLabel": "band",
+      "frequencyLabel": "frequency",
+      "bandMissing": "band???",
+      "radioControls-a11y": "radio controls {{parts}}",
+      "notesLabel": "notes",
+      "notesLabel-a11y": "notes",
+      "activeControlsLabel": "active controls",
+      "activeControlsLabel-a11y": "active controls",
+      "selectToRemoveActiveControls": "select to remove them",
+      "selectToRemoveActiveControls-a11y": "select to remove them",
+      "moreControlsLabel": "more controls",
+      "moreControlsLabel-a11y": "more controls",
+      "selectToAddMoreControls": "select to add them",
+      "selectToAddMoreControls-a11y": "select to add them",
+      "showSecondaryControlSettings-a11y": "show secondary control settings",
+      "hideMostSecondaryControls-a11y": "hide most secondary controls",
+      "showAllSecondaryControls-a11y": "show all secondary controls",
+      "spotting": {
+        "selfSpottingAt": "self-spotting at {{freq}}",
+        "stopAutoRespotting": "stop auto-respotting",
+        "setFrequencyFirst": "first set a frequency to spot.",
+        "reSpotEvery": "re-spot every {{minutes}} min",
+        "reSpotAt": "re-spot at {{freq}}",
+        "selfSpottedAt": "self-spotted at {{time}}",
+        "spotAt": "spot {{call}} at {{freq}}",
+        "tooLateToSpot": "too late to spot {{call}}",
+        "nothingToSpot": "nothing to spot",
+        "selfSpottingLabel": "self-spotting",
+        "selfSpottingControls-a11y": "self-spotting controls",
+        "spottingLabel": "spotting",
+        "spottingControls-a11y": "spotting controls",
+        "autoRespottingLabel": "auto-respotting",
+        "autoRespottingControls-a11y": "auto-respotting controls",
+        "commentsLabel": "comments"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "no lines?\nyou need to set your location first.\n\ntap here to do it.",
+      "manyNoLocation": "many of these qsos have no precise location.\n\nyou might need a paid qrz.com account for location lookups."
+    },
+    "opSpotsTab": {
+      "noSpots": "no spots",
+      "spotsCount_zero": "no spots",
+      "spotsCount_one": "1 spot",
+      "spotsCount_other": "{{fmtCount}} spots",
+      "showingSpots": "showing {{count}} out of {{total}}",
+      "loadingSpots": "loading spots…",
+      "sections": {
+        "specialSpots": "special spots",
+        "newMultipliers": "new multipliers",
+        "callsOfNote": "calls of note",
+        "mostRecentSpots": "most recent spots"
+      },
+      "allBands": "all bands",
+      "auto": "auto",
+      "allModes": "all modes",
+      "filters": "filters",
+      "filtersBand": "band",
+      "filtersAllBands": "all bands",
+      "filtersBandAutomatic": "automatic (currently {{band}})",
+      "filtersMode": "mode",
+      "filtersAllModes": "all modes",
+      "filtersModeAutomatic": "automatic (currently {{mode}})",
+      "filtersMaximumAge": "maximum age",
+      "filtersAnyAge": "any age",
+      "filtersAge10Minutes": "10 minutes",
+      "filtersAge20Minutes": "20 minutes",
+      "filtersAge30Minutes": "30 minutes",
+      "filtersAge45Minutes": "45 minutes",
+      "filtersAge60Minutes": "60 minutes",
+      "filtersSorting": "sorting",
+      "filtersSortByTime": "by spot time",
+      "filtersSortByFrequency": "by frequency",
+      "filtersGroupSpecialSpots": "group special spots first",
+      "filtersGroupCallsWithNotes": "group calls with notes",
+      "filtersSpotSources": "spot sources",
+      "filtersFilterByContinent": "filter by continent",
+      "modeLabel": {
+        "CW": "cw",
+        "PHONE": "phone",
+        "DIGITAL": "digital",
+        "DATA": "digital",
+        "phoneOrCW": "phone or cw"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "invalid callsign {{callsign}}",
+      "invalidCallsigns": "invalid callsigns {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (operated by {{operator}})",
+      "noStationCallsignDefined": "no station callsign defined",
+      "showMoreTemplates": "show more templates",
+      "templatesAvailable_zero": "no templates available",
+      "templatesAvailable_one": "1 template available",
+      "templatesAvailable_other": "{{count}} templates available",
+      "stationAndOperatorTitle": "station & operator",
+      "locationTitle": "location",
+      "gridDescription-md": "grid `{{grid}}`",
+      "gridDescriptionNone-md": "no location set",
+      "operationDetailsTitle": "operation details",
+      "operationDetailsDescription": "add notes for this operation",
+      "addTitleOrNotesForOperation": "add a title or notes for this operation",
+      "activitiesTitle": "activities",
+      "addActivityTitle": "add activity",
+      "addActivityDescription": "pota, sota, field day and more!",
+      "addActivityDescription-noFeatures": "first enable some activity features in the main settings screen",
+      "operationDataTitle": "operation data",
+      "manageOperationLogsTitle": "manage operation logs",
+      "manageOperationLogsDescription": "export, import and manage data",
+      "useAsTemplateTitle": "use as template",
+      "useAsTemplateDescription": "start a new operation with similar settings",
+      "dangerZoneTitle": "the danger zone",
+      "undeleteOperationTitle": "undelete operation",
+      "deleteOperationTitle": "delete operation"
+    },
+    "opInfoPanel": {
+      "statsTitle": "operation stats",
+      "operationTotalsTitle-md": "operation totals:",
+      "qsosInTime_zero": "no qsos",
+      "qsosInTime_one": "1 qso in {{time}}",
+      "qsosInTime_other": "{{fmtCount}} qsos in {{time}}",
+      "qsoCount_zero": "no qsos",
+      "qsoCount_one": "1 qso",
+      "qsoCount_other": "{{fmtCount}} qsos",
+      "timeSinceLast": "{{time}} since last qso",
+      "last10QSOs": "{{rate}} q/h for last 10",
+      "last100QSOs": "{{rate}} q/h for last 100"
+    }
+  }
+}

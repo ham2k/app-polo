@@ -13,6 +13,7 @@ import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { reportError } from '../../../distro'
 
@@ -23,17 +24,20 @@ import { selectSettings } from '../../../store/settings'
 import { countHistoricalRecords, deleteHistoricalRecords, importHistoricalADIF } from '../../../store/operations'
 import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats'
 import { findHooks } from '../../../extensions/registry'
-import { countTemplate } from '../../../tools/stringTools'
 import ScreenContainer from '../../components/ScreenContainer'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kListSection, H2kMarkdown } from '../../../ui'
 
 const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
+  const { t } = useTranslation()
+
+  const name = t(`extensions.dataFiles.title.${def.key}`, def.title || def.name)
+
   return (
     <H2kListItem
       key={def.name}
-      title={def.name}
-      description={`Updated ${fmtDateTimeRelative(info?.date)}`}
+      title={name}
+      description={t('screens.dataSettings.updatedRelative', 'Updated! {{date}}', { date: fmtDateTimeRelative(info?.date) })}
       leftIcon={def.icon ?? 'file-outline'}
       onPress={onPress}
     />
@@ -41,32 +45,38 @@ const DataFileDefinitionItem = ({ def, settings, info, styles, onPress }) => {
 }
 
 const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone }) => {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [statusText, setStatusText] = useState()
 
+  const name = t(`extensions.dataFiles.title.${def.key}`, def.title || def.name)
+
   const handleRefresh = useCallback(() => {
-    setStatusText(`### Fetching '${def.name}'…`)
+    setStatusText(t('screens.dataSettings.fetching-md', '### Fetching {{title}}…', { title: name }))
 
     dispatch(fetchDataFile(def.key, {
       force: true,
       onStatus: ({ key, definition, status, progress }) => {
         if (status === 'fetching' || status === 'loading') {
-          setStatusText(`### Fetching '${definition.name}'…`)
+          setStatusText(t('screens.dataSettings.fetching-md', '### Fetching {{title}}…', { title: name }))
         } else if (status === 'progress') {
-          setStatusText(`### Fetching '${definition.name}'\n\n${progress}`)
+          setStatusText(t('screens.dataSettings.progress-md', `### Fetching {{title}}
+
+{{progress}}`, { title: name, progress }))
         } else if (status === 'loaded' || status === 'error') {
           setStatusText('')
         }
       }
     }))
-  }, [def.key, def.name, dispatch])
+  }, [def.key, dispatch, name, t])
 
   return (
     <H2kDialog visible={true} onDismiss={onDialogDone}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>{def.name}</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{name}</H2kDialogTitle>
       <H2kDialogContent>
-        <H2kMarkdown>{def.buildDescription ? def.buildDescription({ data: info }) : def.description}</H2kMarkdown>
+        <H2kMarkdown>{def.buildDescription ? def.buildDescription({ data: info, t }) : t([`extensions.dataFiles.description.${def.key}`, `extensions.dataFiles.description.${def.description}`], def.description)}</H2kMarkdown>
       </H2kDialogContent>
       <H2kDialogContent>
         {info?.status === 'fetching' ? (
@@ -76,20 +86,22 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
           </>
         ) : (
           <H2kMarkdown>
-            Updated on {fmtDateTimeNice(info?.date)}
-            {info?.version && `\n\nVersion: ${info.version}`}
+            {t('screens.dataSettings.updated-md', 'Updated on {{date}}', { date: fmtDateTimeNice(info?.date) })}
+            {info?.version && `\n\n${t('screens.dataSettings.version-md', 'Version: {{version}}', { version: info.version })}`}
           </H2kMarkdown>
         )}
       </H2kDialogContent>
       <H2kDialogActions style={{ justifyContent: 'space-between' }}>
-        <H2kButton onPress={handleRefresh} disabled={info?.status === 'fetching'}>Refresh</H2kButton>
-        <H2kButton onPress={onDialogDone}>Done</H2kButton>
+        <H2kButton onPress={handleRefresh} disabled={info?.status === 'fetching'}>{t('general.buttons.refresh', 'Refresh')}</H2kButton>
+        <H2kButton onPress={onDialogDone}>{t('general.buttons.done', 'Done')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )
 }
 
 const ConfirmClearHistoryDialog = ({ onDialogDelete, onDialogDone }) => {
+  const { t } = useTranslation()
+
   const handleDelete = () => {
     onDialogDelete()
     onDialogDone()
@@ -97,22 +109,24 @@ const ConfirmClearHistoryDialog = ({ onDialogDelete, onDialogDone }) => {
 
   return (
     <H2kDialog visible={true} onDismiss={onDialogDone}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>Are you sure?</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.dataSettings.confirmClearHistory.title', 'Are you sure?')}</H2kDialogTitle>
       <H2kDialogContent>
-        <Text variant="bodyMedium" style={{ textAlign: 'center' }}>This will remove all historical records previously imported from ADIF files</Text>
+        <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{t('screens.dataSettings.confirmClearHistory.description', 'This will remove all historical records previously imported from ADIF files')}</Text>
       </H2kDialogContent>
       <H2kDialogContent>
-        <Text variant="bodyMedium" style={{ textAlign: 'center' }}>Records from operations will not be deleted</Text>
+        <Text variant="bodyMedium" style={{ textAlign: 'center' }}>{t('screens.dataSettings.confirmClearHistory.recordsNotDeleted', 'Records from operations will not be deleted')}</Text>
       </H2kDialogContent>
       <H2kDialogActions style={{ justifyContent: 'space-between' }}>
-        <H2kButton onPress={handleDelete}>Delete</H2kButton>
-        <H2kButton onPress={onDialogDone}>Cancel</H2kButton>
+        <H2kButton onPress={handleDelete}>{t('general.buttons.delete', 'Delete')}</H2kButton>
+        <H2kButton onPress={onDialogDone}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )
 }
 
 export default function DataSettingsScreen ({ navigation, splitView }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles()
   const safeAreaInsets = useSafeAreaInsets()
 
@@ -155,7 +169,7 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
 
       const filename = decodeURIComponent(localCopy.localUri?.replace('file://', ''))
 
-      setLoadingHistoricalMessage('Importing ADIF records... Please be patient!')
+      setLoadingHistoricalMessage(t('screens.dataSettings.importingHistoricalADIF', 'Importing ADIF records... Please be patient!'))
       const interval = setInterval(async () => {
         const count = await dispatch(countHistoricalRecords())
         setHistoricalCount(count)
@@ -174,22 +188,22 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
       if (error?.message?.indexOf('user canceled') >= 0) {
         // ignore
       } else {
-        Alert.alert('Error importing historical ADIF', error.message)
+        Alert.alert(t('screens.dataSettings.errorImportingHistoricalADIF', 'Error importing historical ADIF'), error.message)
         reportError('Error importing historical ADIF', error)
       }
     })
-  }, [dispatch])
+  }, [dispatch, t])
 
   const handleClearHistoricalRecords = useCallback(async () => {
     try {
       await dispatch(deleteHistoricalRecords())
     } catch (error) {
-      Alert.alert('Error deleting historical records', error.message)
+      Alert.alert(t('screens.dataSettings.errorDeletingHistoricalRecords', 'Error deleting historical records'), error.message)
       reportError('Error deleting historical records', error)
     }
 
     setHistoricalCount(await dispatch(countHistoricalRecords()))
-  }, [dispatch])
+  }, [dispatch, t])
 
   return (
     <ScreenContainer>
@@ -202,7 +216,7 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
       )}
 
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <H2kListSection title={'Offline Data'}>
+        <H2kListSection title={t('screens.dataSettings.offlineDataTitle', 'Offline Data')}>
           {sortedDataFileDefinitions.map((def) => (
             <React.Fragment key={def.key}>
               <DataFileDefinitionItem def={def} settings={settings} info={dataFileInfos[def.key]} styles={styles} onPress={() => setSelectedDefinition(def.key)} />
@@ -220,13 +234,13 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
           ))}
         </H2kListSection>
 
-        <H2kListSection title={'Log Data'}>
+        <H2kListSection title={t('screens.dataSettings.logDataTitle', 'Log Data')}>
           <H2kListItem
-            title="Import History from ADIF"
+            title={t('screens.dataSettings.importHistoryFromADIF', 'Import History from ADIF')}
             description={historicalCount ? (
-              countTemplate(historicalCount, { zero: 'No records', one: '1 record', more: '{fmtCount} records' }, { fmtCount: fmtNumber(historicalCount) })
+              t('screens.dataSettings.recordsCount', '{{fmtCount}} records', { count: historicalCount, fmtCount: fmtNumber(historicalCount) })
             ) : (
-              'Used for offline lookups and QSO statistics'
+              t('screens.dataSettings.importHistoryFromADIFDescription', 'Used for offline lookups and QSO statistics')
             )}
             leftIcon={'database-import-outline'}
             onPress={handleImportHistoricalFile}
@@ -235,8 +249,8 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
             historicalCount > 0 &&
               <>
                 <H2kListItem
-                  title="Clear ADIF History"
-                  description="Remove ADIF imported records"
+                  title={t('screens.dataSettings.clearADIFHistory', 'Clear ADIF History')}
+                  description={t('screens.dataSettings.clearADIFHistoryDescription', 'Remove ADIF imported records')}
                   leftIcon={'database-remove-outline'}
                   onPress={() => setShowClearHistoricalRecordsDialog(true)}
                 />
@@ -251,7 +265,7 @@ export default function DataSettingsScreen ({ navigation, splitView }) {
         </H2kListSection>
 
         {extensionSettingHooks.length > 0 ? (
-          <H2kListSection title={'Extensions'} style={{ marginBottom: safeAreaInsets.bottom }}>
+          <H2kListSection title={t('screens.dataSettings.extensionsTitle', 'Extensions')} style={{ marginBottom: safeAreaInsets.bottom }}>
             {extensionSettingHooks.map((hook) => (
               <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
             ))}

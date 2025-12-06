@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { TouchableOpacity, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { useTranslation } from 'react-i18next'
 
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { BANDS, ADIF_MODES, superModeForMode, modeForFrequency } from '@ham2k/lib-operation-data'
@@ -28,6 +29,7 @@ import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
 
 import GLOBAL from '../../../../GLOBAL'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 export const LABEL_FOR_MODE = {
   CW: 'CW',
@@ -67,6 +69,8 @@ function prepareStyles (baseStyles, themeColor, style) {
 }
 
 export default function SpotsPanel ({ operation, qsos, sections, onSelect, style }) {
+  const { t } = useTranslation()
+
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor, style)
 
@@ -266,7 +270,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       if (specialSpots.length > 0) {
         _sections.push({
           key: 'special',
-          label: 'Special Spots',
+          label: t('screens.opSpotsTab.sections.specialSpots', 'Special Spots'),
           data: specialSpots
         })
       }
@@ -274,7 +278,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       if (newMults.length > 0) {
         _sections.push({
           key: 'newMults',
-          label: 'New Multipliers',
+          label: t('screens.opSpotsTab.sections.newMultipliers', 'New Multipliers'),
           data: newMults
         })
       }
@@ -285,7 +289,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       if (callsWithNotes.length > 0) {
         _sections.push({
           key: 'notes',
-          label: 'Calls of Note',
+          label: t('screens.opSpotsTab.sections.callsOfNote', 'Calls of Note'),
           data: callsWithNotes
         })
       }
@@ -294,7 +298,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
     if (filterState.sortBy === 'time') {
       _sections.push({
         key: 'spots',
-        label: 'Most recent spots',
+        label: t('screens.opSpotsTab.sections.mostRecentSpots', 'Most recent spots'),
         data: mergedOpSpots
       })
     } else {
@@ -303,14 +307,30 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
         if (group.length > 0) {
           _sections.push({
             key: band,
-            label: `${band}`,
+            label: t(`screens.opSpotsTab.sections.band${band}`, band),
             data: group
           })
         }
       })
     }
     return _sections
-  }, [filterState.groupCallsWithNotes, filterState.groupSpecialSpots, filterState.sortBy, mergedOpSpots])
+  }, [
+    filterState.groupCallsWithNotes, filterState.groupSpecialSpots,
+    filterState.sortBy, mergedOpSpots, t
+  ])
+
+  const spotCountText = useMemo(() => {
+    if (!counts.all) {
+      return t('screens.opSpotsTab.noSpots', 'No Spots')
+    } else {
+      if (filteredSpots.length !== counts.all) {
+        const total = t('screens.opSpotsTab.spotsCount', '{{count}} Spots', { count: counts.all, fmtCount: fmtNumber(counts.all) })
+        return t('screens.opSpotsTab.showingSpots', 'Showing {{count}} out of {{total}}', { count: filteredSpots.length, total })
+      } else {
+        return t('screens.opSpotsTab.spotsCount', '{{count}} Spots', { count: filteredSpots.length, fmtCount: fmtNumber(filteredSpots.length) })
+      }
+    }
+  }, [counts.all, filteredSpots.length, t])
 
   const handlePress = useCallback(({ spot }) => {
     onSelect && onSelect({ spot })
@@ -355,17 +375,9 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
             <TouchableOpacity onPress={() => setShowControls(true)} style={{ flex: 0, flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }}>
               <Text style={{ fontWeight: 'bold', marginTop: styles.halfSpace, textAlign: 'center' }}>
                 {spotsState.loading ? (
-                  'Loading Spots...'
+                  t('screens.opSpotsTab.loadingSpots', 'Loading Spots...')
                 ) : (
-                  !counts.all ? (
-                    'No Spots'
-                  ) : (
-                    (filteredSpots.length !== counts.all) ? (
-                      `Showing ${filteredSpots.length} out of ${counts.all} Spots`
-                    ) : (
-                      `${filteredSpots.length} Spots`
-                    )
-                  )
+                  spotCountText
                 )}
               </Text>
             </TouchableOpacity>
@@ -449,9 +461,9 @@ export function filterAndCount (rawSpots, filterState, vfo) {
     Object.keys(results.counts.mode)
       .map(key => ({ mode: key, count: results.counts.mode[key] }))
       .sort((a, b) => ADIF_MODES.indexOf(a.mode) - ADIF_MODES.indexOf(b.mode))
-      .map(a => ({ value: a.mode, label: `${LONG_LABEL_FOR_MODE[a.mode]} (${a.count})` }))
+      .map(a => ({ value: a.mode, label: `${GLOBAL.t(`screens.opSpotsTab.modeLabel.${a.mode}`, LONG_LABEL_FOR_MODE[a.mode] || a.mode)} (${a.count})` }))
   )
-  results.options.mode.push({ value: 'notDigital', label: `${LONG_LABEL_FOR_MODE.PHONE} or ${LONG_LABEL_FOR_MODE.CW} (${(results.counts.mode.PHONE || 0) + (results.counts.mode.CW || 0)})` })
+  results.options.mode.push({ value: 'notDigital', label: `${GLOBAL.t('screens.opSpotsTab.modeLabel.phoneOrCW', `${LONG_LABEL_FOR_MODE.PHONE} or ${LONG_LABEL_FOR_MODE.CW}`)} (${(results.counts.mode.PHONE || 0) + (results.counts.mode.CW || 0)})` })
 
   if (filterState.mode && filterState.mode !== 'any') {
     const mode = filterState.mode === 'auto' ? superModeForMode(vfo.mode) : filterState.mode

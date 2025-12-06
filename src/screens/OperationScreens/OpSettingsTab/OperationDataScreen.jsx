@@ -13,6 +13,7 @@ import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -30,6 +31,8 @@ import { ExportWavelogDialog } from './components/ExportWavelogDialog'
 import { buildTitleForOperation } from '../OperationScreen'
 
 export default function OperationDataScreen (props) {
+  const { t } = useTranslation()
+
   const { navigation, route } = props
   const styles = useThemedStyles()
 
@@ -46,18 +49,18 @@ export default function OperationDataScreen (props) {
   const [showExportWavelog, setShowExportWavelog] = useState(false)
 
   useEffect(() => {
-    let options = { title: 'Operation Data' }
+    let options = { title: t('screens.operationData.title', 'Operation Data') }
     if (operation?.stationCall) {
       options = {
         subTitle: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCallPlus || operation.stationCall, title: operation.title, userTitle: operation.userTitle })
       }
     } else {
-      options = { subTitle: 'New Operation' }
+      options = { subTitle: t('general.terms.newOperation', 'New Operation') }
     }
     options.rightMenuItems = <DataScreenMenuItems {...{ operation, settings, styles, dispatch }} />
 
     navigation.setOptions(options)
-  }, [dispatch, navigation, operation, settings, styles])
+  }, [dispatch, navigation, operation, settings, styles, t])
 
   const pendingTodos = useMemo(() => {
     return qsos.filter((qso) => !qso?.deleted && qso?.event?.event === 'todo' && !(qso.event?.data?.done ?? qso.event?.done))
@@ -154,21 +157,20 @@ export default function OperationDataScreen (props) {
       if (error?.message?.indexOf('user canceled') >= 0) {
         // ignore
       } else {
-        Alert.alert('Error importing ADIF', error.message)
+        Alert.alert(t('screens.operationData.errorImportingADIF', 'Error importing ADIF'), error.message)
         reportError('Error importing ADIF', error)
       }
     })
-  }, [dispatch, operation, qsos])
+  }, [dispatch, operation, qsos, t])
 
   const selectedExportOptions = useMemo(() => exportOptions.filter(option => (settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false), [exportOptions, settings.exportTypes])
 
   const exportLabel = useMemo(() => {
-    if (selectedExportOptions.length === 0) return 'Select from the export options below'
-    if (selectedExportOptions.length === 1 && exportOptions.length === 1) return 'Export 1 file'
-    if (selectedExportOptions.length === 1) return 'Export 1 selected file'
-    if (selectedExportOptions.length === exportOptions.length) return `Export all ${selectedExportOptions.length} files`
-    return `Export ${selectedExportOptions.length} selected files`
-  }, [exportOptions.length, selectedExportOptions.length])
+    if (selectedExportOptions.length === 0) return t('screens.operationData.selectFromTheExportOptionsBelow', 'Select from the export options below')
+    if (exportOptions.length === 1) return t('screens.operationData.exportSingeFile', 'Export one file')
+    if (selectedExportOptions.length === exportOptions.length) return t('screens.operationData.exportAllFiles', `Export all ${selectedExportOptions.length} files`)
+    return t('screens.operationData.exportSelectedFiles', 'Export {{count}} selected files', { count: selectedExportOptions.length })
+  }, [exportOptions.length, selectedExportOptions.length, t])
 
   const handleNavigateToLoggingTab = useCallback(() => {
     // Passing `selectedUUID` in `params` so that it makes it to the `OpLog` tab if it is present
@@ -185,11 +187,11 @@ export default function OperationDataScreen (props) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
-          <H2kListSection title={'Export QSOs'}>
+          <H2kListSection title={t('screens.operationData.exportQSOs', 'Export QSOs')}>
 
             {pendingTodos.length > 0 && (
               <H2kListItem
-                title={`${pendingTodos.length} pending to-do item${pendingTodos.length !== 1 ? 's' : ''}`}
+                title={t('screens.operationData.pendingToDoItems', '{{count}} pending to-do items', { count: pendingTodos.length })}
                 leftIcon="sticker"
                 titleStyle={{ color: styles.theme.colors.error }}
                 leftIconColor={styles.theme.colors.error}
@@ -228,9 +230,9 @@ export default function OperationDataScreen (props) {
             ))}
           </H2kListSection>
 
-          <H2kListSection title={'Import QSOs'}>
+          <H2kListSection title={t('screens.operationData.importQSOs', 'Import QSOs')}>
             <H2kListItem
-              title="Add QSOs from ADIF file"
+              title={t('screens.operationData.addQSOsFromADIFFile', 'Add QSOs from ADIF file')}
               leftIcon="file-import-outline"
               onPress={() => handleImportADIF()}
             />
@@ -238,9 +240,9 @@ export default function OperationDataScreen (props) {
 
           { settings.devMode && (
 
-            <H2kListSection title={'Ham2K LoFi Sync'} titleStyle={{ color: styles.colors.devMode }}>
+            <H2kListSection title={t('screens.operationData.ham2kLoFiSync', 'Ham2K LoFi Sync')} titleStyle={{ color: styles.colors.devMode }}>
               <H2kListItem
-                title="Operation"
+                title={t('screens.operationData.operation', 'Operation')}
                 description={operation.uuid}
                 leftIcon="sync-circle"
                 leftIconColor={styles.colors.devMode}
@@ -251,10 +253,10 @@ export default function OperationDataScreen (props) {
             </H2kListSection>
           )}
           { settings.wavelogExperiments && (
-            <H2kListSection title={'Wavelog Export'} titleStyle={{ color: styles.colors.devMode }}>
+            <H2kListSection title={t('screens.operationData.wavelogExport', 'Wavelog Export')} titleStyle={{ color: styles.colors.devMode }}>
               <H2kListItem
-                title="Export QSOs to Wavelog"
-                description="Send all QSOs for this operation to Wavelog"
+                title={t('screens.operationData.exportQSOsToWavelog', 'Export QSOs to Wavelog')}
+                description={t('screens.operationData.exportQSOsToWavelogDescription', 'Send all QSOs for this operation to Wavelog')}
                 leftIcon="cloud-upload-outline"
                 leftIconColor={styles.colors.devMode}
                 onPress={() => setShowExportWavelog(true)}
@@ -279,6 +281,8 @@ export default function OperationDataScreen (props) {
 }
 
 function DataScreenMenuItems ({ operation, settings, styles, dispatch, online, setShowMenu }) {
+  const { t } = useTranslation()
+
   const hideAndRun = useCallback((action) => {
     setShowMenu(false)
     setTimeout(() => action(), 10)
@@ -287,14 +291,13 @@ function DataScreenMenuItems ({ operation, settings, styles, dispatch, online, s
   return (
     <>
       <Text style={{ marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
-        Export Settings
+        {t('screens.operationData.exportSettings', 'Export Settings')}
       </Text>
       <Menu.Item
         leadingIcon="file-code-outline"
         trailingIcon={settings.useCompactFileNames ? 'check-circle-outline' : 'circle-outline'}
         onPress={() => { hideAndRun(() => dispatch(setSettings({ useCompactFileNames: !settings.useCompactFileNames }))) }}
-        title={'Use compact file names'}
-
+        title={t('screens.operationData.useCompactFileNames', 'Use compact file names')}
       />
     </>
   )

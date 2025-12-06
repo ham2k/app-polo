@@ -8,14 +8,18 @@
 import React, { useMemo } from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
+import { useTranslation } from 'react-i18next'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 
 import { fmtTimeBetween } from '../../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../../store/time'
 import { H2kIcon, H2kMarkdown, H2kPressable } from '../../../../../ui'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 export function OpInfo ({ message, clearMessage, operation, activeQSOs, style, styles, themeColor }) {
+  const { t } = useTranslation()
+
   const navigation = useNavigation()
   const now = useSelector(selectSecondsTick)
   styles = prepareStyles(styles, { style })
@@ -32,11 +36,11 @@ export function OpInfo ({ message, clearMessage, operation, activeQSOs, style, s
     } else if (message) {
       return { markdownMessage: message || '', icon: 'chevron-right-box' }
     } else if (activeQSOs.length === 0) {
-      return { markdownMessage: "No QSOs... Let's get on the air!", icon: undefined }
+      return { markdownMessage: t('screens.opLoggingTab.noQSOsYet-md', 'No QSOs... Let\'s get on the air!'), icon: undefined }
     } else {
       return { markdownMessage: '', icon: 'timer-outline' }
     }
-  }, [message, activeQSOs.length, styles.theme.colors.error])
+  }, [message, activeQSOs.length, styles.theme.colors.error, t])
 
   const ourQSOs = useMemo(() => {
     if (operation?.local?.operatorCall) {
@@ -50,21 +54,25 @@ export function OpInfo ({ message, clearMessage, operation, activeQSOs, style, s
 
     if (ourQSOs.length === 0) {
       if (operation?.local?.operatorCall) {
-        return `No QSOs by ${operation?.local?.operatorCall} yet... Let's get on the air!`
+        return t('screens.opLoggingTab.noQSOsBy-md', 'No QSOs by {{callsign}} yet... Let\'s get on the air!', { callsign: operation?.local?.operatorCall })
       } else {
-        return "No QSOs yet... Let's get on the air!"
+        return t('screens.opLoggingTab.noQSOsYet-md', 'No QSOs yet... Let\'s get on the air!')
       }
     }
 
-    parts.push(`${ourQSOs.length} ${ourQSOs.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(ourQSOs[0].startAtMillis, ourQSOs[ourQSOs.length - 1].startAtMillis)}`)
+    const countText = t('screens.opLoggingTab.qsoCount', '{{count}} QSOs', { count: ourQSOs.length, fmtCount: fmtNumber(ourQSOs.length) })
+    const timeText = fmtTimeBetween(ourQSOs[0].startAtMillis, ourQSOs[ourQSOs.length - 1].startAtMillis)
+    parts.push(t('screens.opLoggingTab.qsosInTime', '{{countText}} in {{timeText}}', { countText, timeText }))
 
     if (now - ourQSOs[ourQSOs.length - 1].startAtMillis < 1000 * 60 * 60 * 4) {
       if (ourQSOs.length > 0) {
-        parts.push(`${fmtTimeBetween(ourQSOs[ourQSOs.length - 1].startAtMillis, now)} since last`)
+        parts.push(
+          t('screens.opLoggingTab.timeSinceLast', '{{time}} since last', { time: fmtTimeBetween(ourQSOs[ourQSOs.length - 1].startAtMillis, now) })
+        )
       }
     }
     return parts.filter(x => x).join(' • ')
-  }, [ourQSOs, now, operation?.local?.operatorCall])
+  }, [ourQSOs, now, operation?.local?.operatorCall, t])
 
   const line2 = useMemo(() => {
     const parts = []
@@ -72,15 +80,15 @@ export function OpInfo ({ message, clearMessage, operation, activeQSOs, style, s
     const last = ourQSOs?.length - 1
     if (last > 9) {
       const rate = (10 / ((ourQSOs[last].startAtMillis - ourQSOs[last - 9].startAtMillis) / 1000 / 60)) * 60
-      if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 10`)
+      if (rate) parts.push(t('screens.opLoggingTab.last10QSOs', '{{rate}} Q/h for last 10', { rate: rate.toFixed(0) }))
     }
     if (last > 99) {
       const rate = (100 / ((ourQSOs[last].startAtMillis - ourQSOs[last - 99].startAtMillis) / 1000 / 60)) * 60
-      if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 100`)
+      if (rate) parts.push(t('screens.opLoggingTab.last100QSOs', '{{rate}} Q/h for last 100', { rate: rate.toFixed(0) }))
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [ourQSOs])
+  }, [ourQSOs, t])
 
   return (
     <H2kPressable

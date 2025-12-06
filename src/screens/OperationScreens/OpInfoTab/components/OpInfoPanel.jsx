@@ -10,11 +10,12 @@ import { useSelector } from 'react-redux'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useTranslation } from 'react-i18next'
 
-import { fmtNumber } from '@ham2k/lib-format-tools'
+import { capitalizeFirstLetter, fmtNumber } from '@ham2k/lib-format-tools'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-import { fmtDateZuluDynamic, fmtTimeBetween } from '../../../../tools/timeFormats'
+import { fmtDateFullZulu, fmtTimeBetween } from '../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../store/time'
 import { H2kIcon, H2kMarkdown } from '../../../../ui'
 
@@ -62,6 +63,8 @@ function prepareStyles (baseStyles, themeColor, style) {
 }
 
 export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, themeColor }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles(prepareStyles, themeColor, style)
 
   const now = useSelector(selectSecondsTick)
@@ -70,20 +73,20 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
 
   const line1 = useMemo(() => {
     if (activeQSOs.length === 0) {
-      return "No QSOs... Let's get on the air!"
+      return t('screens.opInfoPanel.noQSOs-md', 'No QSOs... Let\'s get on the air!')
     } else {
       const parts = []
 
-      parts.push(`${activeQSOs.length} ${activeQSOs.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`)
+      parts.push(t('screens.opInfoPanel.qsosInTime', '{{count}} QSOs in {{time}}', { count: activeQSOs.length, fmtCount: fmtNumber(activeQSOs.length), time: fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax) }))
 
       if (now - operation.startAtMillisMax < 1000 * 60 * 60 * 4) {
         if (activeQSOs.length > 0) {
-          parts.push(`${fmtTimeBetween(operation.startAtMillisMax, now)} since last QSO`)
+          parts.push(t('screens.opInfoPanel.timeSinceLast', '{{time}} since last QSO', { time: fmtTimeBetween(operation.startAtMillisMax, now) }))
         }
       }
       return parts.filter(x => x).join(' • ')
     }
-  }, [activeQSOs, operation, now])
+  }, [activeQSOs, operation, now, t])
 
   const line2 = useMemo(() => {
     const parts = []
@@ -91,21 +94,21 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
     const last = activeQSOs?.length - 1
     if (last > 9) {
       const rate = (10 / ((activeQSOs[last].startAtMillis - activeQSOs[last - 9].startAtMillis) / 1000 / 60)) * 60
-      if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 10`)
+      if (rate) parts.push(t('screens.opInfoPanel.last10QSOs', '{{rate}} Q/h for last 10', { rate: rate.toFixed(0) }))
     }
     if (last > 99) {
       const rate = (100 / ((activeQSOs[last].startAtMillis - activeQSOs[last - 99].startAtMillis) / 1000 / 60)) * 60
-      if (rate) parts.push(`${rate.toFixed(0)} Q/h for last 100`)
+      if (rate) parts.push(t('screens.opInfoPanel.last100QSOs', '{{rate}} Q/h for last 100', { rate: rate.toFixed(0) }))
     }
 
     return parts.filter(x => x).join(' • ')
-  }, [activeQSOs])
+  }, [activeQSOs, t])
 
   return (
     <ScrollView style={styles.root}>
       <View style={styles.section}>
         <Text style={styles.markdown.heading2}>
-          Operation Stats
+          {t('screens.opInfoPanel.statsTitle', 'Operation Stats')}
         </Text>
         {line1 && <Text style={styles.markdown.body} numberOfLines={2} ellipsizeMode={'tail'}>{line1}</Text>}
         {line2 && <Text style={styles.markdown.body} numberOfLines={2} ellipsizeMode={'tail'}>{line2}</Text>}
@@ -113,9 +116,9 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
       {sections.map(section => (
         <View key={section.day} style={{ flexDirection: 'column', marginVertical: styles.oneSpace }}>
           <Text style={[styles.markdown.body, { marginBottom: styles.halfSpace }]}>
-            <Text style={{ fontWeight: 'bold' }}>{fmtDateZuluDynamic(section.day)}: </Text>
+            <Text style={{ fontWeight: 'bold' }}>{capitalizeFirstLetter(fmtDateFullZulu(section.day))}: </Text>
             <Text>
-              {section.count === 0 ? 'No QSOs' : section.count === 1 ? '1 QSO' : `${fmtNumber(section.count ?? 0)} QSOs`}
+              {t('screens.opInfoPanel.qsoCount', '{{count}} QSOs', { count: section.count, fmtCount: fmtNumber(section.count ?? 0) })}
             </Text>
           </Text>
           {Object.keys(section.scores ?? {}).filter(key => section.scores[key] && section.scores[key].for === 'day').sort((a, b) => (section.scores[a]?.weight ?? 0) - (section.scores[b]?.weight ?? 0)).map(key => {
@@ -152,9 +155,10 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
 
       <View style={{ flexDirection: 'column', marginTop: styles.oneSpace }}>
         <Text style={[styles.markdown.body, { marginBottom: styles.halfSpace }]}>
-          <Text style={{ fontWeight: 'bold' }}>Operation Totals: </Text>
+          <Text style={{ fontWeight: 'bold' }}>{t('screens.opInfoPanel.operationTotalsTitle-md', 'Operation Totals:')}</Text>
           <Text>
-            {operation.qsoCount === 0 ? 'No QSOs' : operation.qsoCount === 1 ? '1 QSO' : `${fmtNumber(operation.qsoCount ?? 0)} QSOs`}
+            {' '}
+            {t('screens.opInfoPanel.qsoCount', '{{count}} QSOs', { count: operation.qsoCount, fmtCount: fmtNumber(operation.qsoCount ?? 0) })}
           </Text>
         </Text>
         {Object.keys(lastSection?.scores ?? {}).filter(key => lastSection.scores[key] && lastSection.scores[key].for !== 'day').sort((a, b) => (lastSection.scores[a].weight ?? 0) - (lastSection.scores[b].weight ?? 0)).map(key => {

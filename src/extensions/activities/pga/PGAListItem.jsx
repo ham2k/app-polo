@@ -22,7 +22,7 @@ export function PGAListItem ({ activityRef, refData, operationRef, style, settin
   return (
     <H2kListItem style={{ paddingRight: styles.oneSpace * 1 }}
       titlePrimary={reference?.ref ?? activityRef}
-      titleSecondary={(typeof refData?.distance === 'number') && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
+      titleSecondary={(typeof refData?.distance === 'number') && fmtDistance(refData.distance, { units: settings.distanceUnits, away: true })}
       description={reference?.name ? [reference?.name, reference?.county, reference?.province].filter(x => x).join(' • ') : Info.unknownReferenceName }
       onPress={onPress}
       leftIcon={Info.icon}

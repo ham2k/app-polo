@@ -317,7 +317,7 @@ const ReferenceHandler = {
       primaryRef: undefined
     }
 
-    if (!score.refs[ref.ref]) { // Track how many references we're activating...
+    if (!score.refs[ref.ref]) { // Track how many references we're activating…
       // ...and of what type
       score.refs[ref.ref] = ref.assetType || true
       score.primaryRef = score.primaryRef || ref.ref

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { locationToGrid6, locationToGrid8 } from '@ham2k/lib-maidenhead-grid'
 
@@ -22,6 +23,8 @@ import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { H2kGridInput, H2kListItem, H2kListSection } from '../../../ui'
 
 export default function OperationLocationScreen ({ navigation, route }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles()
 
   const dispatch = useDispatch()
@@ -43,16 +46,16 @@ export default function OperationLocationScreen ({ navigation, route }) {
     }
     navigation.setOptions({
       leftAction: 'accept',
-      leftActionA11yLabel: 'Accept Changes',
+      leftActionA11yLabel: t('general.buttons.accept-a11y', 'Accept Changes'),
       rightAction: 'revert',
-      rightActionA11yLabel: 'Revert Changes',
+      rightActionA11yLabel: t('general.buttons.revert-a11y', 'Revert Changes'),
       onLeftActionPress: () => {
         dispatch(setOperationData({ uuid: operation.uuid, grid, gridSource }))
         navigation.goBack()
       },
       onRightActionPress: () => navigation.goBack()
     })
-  }, [dispatch, grid, gridSource, navigation, operation])
+  }, [dispatch, grid, gridSource, navigation, operation, t])
 
   const handleChangeGrid = useCallback((newGrid, newGridSource) => {
     setGridSource(newGridSource ?? 'manual')
@@ -63,7 +66,7 @@ export default function OperationLocationScreen ({ navigation, route }) {
   const [locationMessage, setLocationMessage] = useState()
 
   useEffect(() => {
-    setLocationMessage('Locating…')
+    setLocationMessage(t('screens.operationLocation.locating', 'Locating…'))
     Geolocation.getCurrentPosition(
       info => {
         const { latitude, longitude } = info.coords
@@ -72,7 +75,7 @@ export default function OperationLocationScreen ({ navigation, route }) {
       },
       error => {
         console.info('Geolocation error', error)
-        setLocationMessage('GPS Error')
+        setLocationMessage(t('screens.operationLocation.gpsError', 'GPS Error'))
       }, {
         enableHighAccuracy: true,
         timeout: 1000 * 30 /* 30 seconds */,
@@ -88,7 +91,7 @@ export default function OperationLocationScreen ({ navigation, route }) {
       },
       error => {
         console.info('Geolocation watch error', error)
-        setLocationGrid('NO GPS')
+        setLocationGrid(t('screens.operationLocation.noGps', 'NO GPS'))
       }, {
         enableHighAccuracy: true,
         timeout: 1000 * 60 * 3 /* 3 minutes */,
@@ -98,24 +101,24 @@ export default function OperationLocationScreen ({ navigation, route }) {
     return () => {
       Geolocation.clearWatch(watchId)
     }
-  }, [settings?.useGrid8])
+  }, [settings?.useGrid8, t])
 
   return (
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace }}>
-          <H2kListSection title={'Selected Location'}>
+          <H2kListSection title={t('screens.operationLocation.selectedLocation', 'Selected Location')}>
             <H2kGridInput
               style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
               value={grid || ''}
-              label="Maidenhead Grid Square Locator"
+              label={t('screens.operationLocation.maidenheadGridSquareLocator', 'Maidenhead Grid Square Locator')}
               placeholder={settings?.useGrid8 ? 'AA00aa00' : 'AA00aa'}
               onChangeText={handleChangeGrid}
             />
           </H2kListSection>
-          <H2kListSection title={'Suggested Locations'} style={{ marginTop: styles.oneSpace * 3 }}>
+          <H2kListSection title={t('screens.operationLocation.suggestedLocations', 'Suggested Locations')} style={{ marginTop: styles.oneSpace * 3 }}>
             <H2kListItem
-              title="Device GPS"
+              title={t('screens.operationLocation.deviceGps', 'Device GPS')}
               description={locationGrid ?? locationMessage}
               titleStyle={{ color: locationGrid && locationGrid === operation.grid ? styles.colors.primary : styles.colors.onBackground }}
               descriptionStyle={{ color: locationGrid && locationGrid === operation.grid ? styles.colors.primary : styles.colors.onBackground }}

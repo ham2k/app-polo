@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -22,7 +22,7 @@ Mapbox.setAccessToken(Config.MAPBOX_ACCESS_TOKEN)
 const DEFAULT_CENTER = [-42.16482008420197, 33.73113551794721]
 const DEFAULT_ZOOM = 2
 
-export default function MapboxMapWithQSOs({ styles, mappableQSOs, initialRegion, operation, qth, qsos, settings, selectedUUID, projection }) {
+export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion, operation, qth, qsos, settings, selectedUUID, projection }) {
   const projectionRef = useRef(projection)
   if (projectionRef.current !== projection) {
     projectionRef.current = projection
@@ -194,7 +194,7 @@ const FeatureCallout = ({ feature, qth, operation, styles }) => {
   }
 }
 
-function _geoJSONMarkerForQTH({ qth, operation, styles }) {
+function _geoJSONMarkerForQTH ({ qth, operation, styles }) {
   if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
     return {
       type: 'Feature',
@@ -211,7 +211,7 @@ function _geoJSONMarkerForQTH({ qth, operation, styles }) {
   }
 }
 
-function _geoJSONMarkersForQSOs({ mappableQSOs, qth, operation, styles }) {
+function _geoJSONMarkersForQSOs ({ mappableQSOs, qth, operation, styles }) {
   const features = []
   features.push(...mappableQSOs.map(mappableQSO => _geoJSONMarkerForQSO({ mappableQSO, qth, operation, styles })).filter(x => x))
 
@@ -225,7 +225,7 @@ function _geoJSONMarkersForQSOs({ mappableQSOs, qth, operation, styles }) {
   }
 }
 
-function _geoJSONMarkerForQSO({ mappableQSO, qth, operation, styles }) {
+function _geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
   if (mappableQSO?.location?.latitude !== undefined && mappableQSO?.location?.longitude !== undefined) {
     return {
       type: 'Feature',
@@ -243,7 +243,7 @@ function _geoJSONMarkerForQSO({ mappableQSO, qth, operation, styles }) {
   }
 }
 
-function _getJSONLinesForQSOs({ mappableQSOs, qth, operation, styles }) {
+function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
   if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
     const features = mappableQSOs.map(mappableQSO => _geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
 
@@ -254,7 +254,7 @@ function _getJSONLinesForQSOs({ mappableQSOs, qth, operation, styles }) {
   }
 }
 
-function _geoJSONLineForQSO({ mappableQSO, qth, operation, styles }) {
+function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
   if (mappableQSO?.location?.latitude !== undefined && mappableQSO?.location?.longitude !== undefined) {
     const start = _coordsFromLatLon(mappableQSO.location)
     const end = _coordsFromLatLon(qth)
@@ -276,15 +276,15 @@ function _geoJSONLineForQSO({ mappableQSO, qth, operation, styles }) {
   }
 }
 
-function _coordsFromLatLon({ latitude, longitude }) {
+function _coordsFromLatLon ({ latitude, longitude }) {
   return [Number(longitude?.toFixed(5) ?? 0), Number(latitude?.toFixed(5) ?? 0)]
 }
 
-function _colorForText({ qso, styles, mapStyles }) {
+function _colorForText ({ qso, styles, mapStyles }) {
   return styles.colors.bands[qso.band] || styles.colors.bands.default
 }
 
-function _generateGeodesicPoints(start, end, numPoints = 100) {
+function _generateGeodesicPoints (start, end, numPoints = 100) {
   const [lon1, lat1] = start
   const [lon2, lat2] = end
 
@@ -384,7 +384,7 @@ function _generateGeodesicPoints(start, end, numPoints = 100) {
   return segments
 }
 
-function _radiusForStrength({ strength }) {
+function _radiusForStrength ({ strength }) {
   // A signal strength of 5 is 100% radius. 9 is 130% radius. 1 is 70% radius.
   return (1 + (((strength || 5) - 5) / ((9 - 1) / 2) * 0.30))
 }

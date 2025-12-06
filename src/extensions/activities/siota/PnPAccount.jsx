@@ -11,14 +11,17 @@ import { useDispatch } from 'react-redux'
 
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kTextInput } from '../../../ui'
 import { setAccountInfo } from '../../../store/settings'
+import { useTranslation } from 'react-i18next'
 
 export function PnPAccountSetting ({ settings, styles }) {
+  const { t } = useTranslation()
+
   const [currentDialog, setCurrentDialog] = useState()
   return (
     <React.Fragment>
       <H2kListItem
-        title="ParksnPeaks (SiOTA spotting)"
-        description={settings?.accounts?.pnp?.userId ? `Username: ${settings.accounts.pnp.userId}` : 'No account'}
+        title={t('extensions.siota.account.title', 'ParksnPeaks (SiOTA spotting)')}
+        description={settings?.accounts?.pnp?.userId ? t('extensions.siota.account.description', 'Username: {{username}}', { username: settings.accounts.pnp.userId }) : t('extensions.siota.account.noAccount', 'No account')}
         leftIcon="web"
         onPress={() => setCurrentDialog('accountsPnP')}
       />
@@ -35,6 +38,8 @@ export function PnPAccountSetting ({ settings, styles }) {
 }
 
 function AccountsPnPDialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -73,32 +78,32 @@ function AccountsPnPDialog ({ visible, settings, styles, onDialogDone }) {
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>ParksnPeaks Account</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.siota.account.dialogTitle', 'ParksnPeaks Account')}</H2kDialogTitle>
       <H2kDialogContent>
-        <H2kText variant="bodyMedium">Please enter the details for your ParksnPeaks account:</H2kText>
+        <H2kText variant="bodyMedium">{t('extensions.siota.account.pleaseEnterDetails', 'Please enter the details for your ParksnPeaks account:')}</H2kText>
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={userId}
-          label="Username (not callsign)"
-          placeholder="your account username"
+          label={t('extensions.siota.account.usernameLabel', 'Username (not callsign)')}
+          placeholder={t('extensions.siota.account.usernamePlaceholder', 'your account username')}
           onChangeText={onChangeUserId}
         />
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={apiKey}
-          label="API Key (not password)"
+          label={t('extensions.siota.account.apiKeyLabel', 'API Key (not password)')}
           autoComplete="current-password"
           keyboardType="default"
           textContentType="password"
           secureTextEntry={true}
           autoCapitalize={'none'}
-          placeholder="your API Key"
+          placeholder={t('extensions.siota.account.apiKeyPlaceholder', 'your API Key')}
           onChangeText={onChangeAPIKey}
         />
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

@@ -105,6 +105,36 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 * On `ios/polo/Images.xcassets/LaunchScreen.imageset` replace the three versions of `launch_screen`
 * On `src/screens/StartScreen/img` replace the three versions of `launch_screen`.
 
+# Translations
+
+Environment setup:
+```
+$ brew tap crowdin/crowdin && brew install crowdin
+```
+
+Update CrowdIn with base English translations:
+```
+$ crowdin push sources
+```
+
+Fetch updated translations from CrowdIn:
+```
+$ crowdin pull translations
+```
+
+## Notes on translation strings:
+
+* keys that end in `-md` are meant to be used with Markdown formatting.
+* keys that end in `-a11y` are meant to be used for accessibility labels, to be spoken aloud.
+* keys that end in `_zero`, `_one`, `_other` are meant to be used with pluralization.
+
+## Testing in-app
+
+In CrowdIn, create a "personal access token" at https://crowdin.com/settings#api-key
+
+In PoLo, enable Developer Mode and in the Developer Settings screen, enter that personal token into the "CrowdIn API Key" field.
+
+Then on the Quick Lookup field in the home screen, enter "CROWDIN" and press enter. This will refresh the current language in the app, and also fetch the list of all languages available in CrowdIn. After changing languages, and any time you reopen the app, you can enter "CROWDIN" again to fetch the latest version of the translations from CrowdIn.
 
 ---
 

@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { View, findNodeHandle } from 'react-native'
 import { findRef } from '../../../../../tools/refTools'
@@ -18,6 +19,8 @@ export const MainExchangePanel = ({
   onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef,
   allowSpacesInCallField
 }) => {
+  const { t } = useTranslation()
+
   // We need to pre-allocate a ref for the main field, in case `mainFieldRef` is not provided
   // but since hooks cannot be called conditionally, we just need to create it whether we need it or not
   const alternateCallFieldRef = useRef()
@@ -94,7 +97,7 @@ export const MainExchangePanel = ({
       themeColor={themeColor}
       style={[styles.input, { minWidth: styles.oneSpace * 10, flex: 10 }]}
       value={qso?.their?.call ?? ''}
-      label="Their Call"
+      label={t('screens.opLoggingTab.theirCallLabel', 'Their Call')}
       placeholder=""
       onChange={handleFieldChange}
       onSubmitEditing={onSubmitEditing}
@@ -128,7 +131,7 @@ export const MainExchangePanel = ({
         key="sent"
         innerRef={rstFieldRefs.shift()}
         value={qso?.our?.sent ?? ''}
-        label="Sent"
+        label={t('screens.opLoggingTab.ourSentLabel', 'Sent')}
         fieldId={'ourSent'}
         disabled={disabled}
         settings={settings}
@@ -138,7 +141,7 @@ export const MainExchangePanel = ({
         key="received"
         innerRef={rstFieldRefs.shift()}
         value={qso?.their?.sent || ''}
-        label="Rcvd"
+        label={t('screens.opLoggingTab.theirSentLabel', 'Rcvd')}
         fieldId={'theirSent'}
         disabled={disabled}
         settings={settings}
@@ -175,7 +178,7 @@ export const MainExchangePanel = ({
         themeColor={themeColor}
         style={[styles.input, { minWidth: styles.oneSpace * 5.7, flex: 1 }]}
         value={qso?.their?.state ?? ''}
-        label="State"
+        label={t('screens.opLoggingTab.stateLabel', 'State')}
         placeholder={qso?.their?.guess?.state ?? ''}
         uppercase={true}
         noSpaces={true}

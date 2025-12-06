@@ -29,20 +29,20 @@ const OperatorCommandHook = {
   extension: Extension,
   key: 'commands-operator-change',
   match: /^(OP\.|OP\/|OPER\.|OPER\/)([\w\d]+)$/i,
-  describeCommand: (match, { operation }) => {
+  describeCommand: (match, { operation, t }) => {
     if (!operation) return
 
     if (match[2].length < 3) return ''
-    return `Change operator to ${match[2]}?`
+    return t?.('extensions.commands-operator.change', 'Change operator to {{operator}}?', { operator: match[2] }) || `Change operator to ${match[2]}?`
   },
-  invokeCommand: (match, { dispatch, operation, handleFieldChange }) => {
+  invokeCommand: (match, { dispatch, operation, handleFieldChange, t }) => {
     if (!operation) return
 
     if (match[2].length < 3) return ''
     const operatorCall = match[2].toUpperCase()
     if (operatorCall) {
       dispatch(setOperationLocalData({ uuid: operation.uuid, operatorCall }))
-      return `Operator set to ${operatorCall}`
+      return t?.('extensions.commands-operator.changeConfirm', 'Operator set to {{operator}}', { operator: operatorCall }) || `Operator set to ${operatorCall}`
     }
   }
 }

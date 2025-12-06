@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { findRef, replaceRef } from '../../../tools/refTools'
 import { distanceOnEarth } from '../../../tools/geoTools'
@@ -17,14 +18,15 @@ import { PGAListItem } from './PGAListItem'
 import { pgaFindAllByLocation, pgaFindAllByName, pgaFindOneByReference } from './PGADataFile'
 
 export function PGAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
 
   const activityRef = useMemo(() => findRef(allRefs, Info.activationType) ?? {}, [allRefs])
 
   const title = useMemo(() => {
-    if (!activityRef?.ref) return 'No gmina selected for activation'
-    else return 'Activating gmina:'
-  }, [activityRef])
+    return t('extensions.pga.activityOptions.title', 'Activating {{count}} gminas', { count: 1 })
+  }, [t])
 
   const [search, setSearch] = useState('')
 
@@ -94,27 +96,27 @@ export function PGAActivityOptions ({ styles, operation, settings, refs: allRefs
         // If it's a naked reference, let's ensure the results include it, or else add a placeholder
         // just to cover any cases where the user knows about a new reference not included in our data
         if (nakedReference && !newResults.find(ref => ref.ref === nakedReference)) {
-          newResults.unshift({ ref: nakedReference, name: 'Unknown gmina' })
+          newResults.unshift({ ref: nakedReference, name: t('extensions.pga.activityOptions.unknownGmina', 'Unknown gmina') })
         }
 
         setResults(newResults.slice(0, 15))
         if (newResults.length === 0) {
-          setResultsMessage('No gminas found')
+          setResultsMessage(t('extensions.pga.activityOptions.noGminasFound', 'No gminas found'))
         } else if (newResults.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newResults.length} matches`)
+          setResultsMessage(t('extensions.pga.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newResults.length }))
         } else if (newResults.length === 1) {
-          setResultsMessage('One matching gminas')
+          setResultsMessage(t('extensions.pga.activityOptions.matchingGminas_one', '1 matching gmina'))
         } else {
-          setResultsMessage(`${newResults.length} matching gminas`)
+          setResultsMessage(t('extensions.pga.activityOptions.matchingGminas_other', '{{count}} matching gminas', { count: newResults.length }))
         }
       }, 0)
     } else {
       setResults(nearbyResults)
-      if (nearbyResults === undefined) setResultsMessage('Search for some gminas to activate!')
-      else if (nearbyResults.length === 0) setResultsMessage('No gminas nearby')
-      else setResultsMessage('Nearby gminas')
+      if (nearbyResults === undefined) setResultsMessage(t('extensions.pga.activityOptions.searchForGminas', 'Search for some gminas to activate!'))
+      else if (nearbyResults.length === 0) setResultsMessage(t('extensions.pga.activityOptions.noGminasNearby', 'No gminas nearby'))
+      else setResultsMessage(t('extensions.pga.activityOptions.nearbyGminas', 'Nearby gminas'))
     }
-  }, [search, nearbyResults, location, settings.distanceUnits])
+  }, [search, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((newRef) => {
     setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: newRef }))
@@ -143,7 +145,7 @@ export function PGAActivityOptions ({ styles, operation, settings, refs: allRefs
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={'Gminas by name or reference…'}
+          placeholder={t('extensions.pga.activityOptions.searchPlaceholder', 'Gminas by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />

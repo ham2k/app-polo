@@ -199,29 +199,7 @@ export const generateActivitySumarizer = ({ info }) => {
   const shortName = info.shortName ?? info.name
   const qsosToActivate = info.scoring?.qsosToActivate ?? 10
 
-  const referenceLabel = info.scoring?.referenceLabel ?? 'reference'
-  const referencesLabelPlural = info.scoring?.referenceLabelPlural ?? referenceLabel + 's'
-
-  const ref2refLabel = info.scoring?.ref2refLabel ?? (shortName.substring(0, 1) + 'S' + shortName.substring(0, 1))
-  const ref2refShortLabel = info.scoring?.ref2refShortName ?? ref2refLabel
-
-  const huntedShortLabel = info.scoring?.huntedShorterName ?? shortName.substring(0, 1)
-
-  const activatorQSOLabel = info.scoring?.activatorQSOLabel ?? 'activator QSO'
-  const activatorQSOsLabel = info.scoring?.activatorQSOsLabel ?? 'activator QSOs'
-  const ref2refQSOLabel = info.scoring?.ref2refQSOLabel ?? ref2refLabel + ' QSO'
-  const ref2refQSOsLabel = info.scoring?.ref2refQSOsLabel ?? ref2refLabel + ' QSOs'
-  const hunterQSOLabel = info.scoring?.hunterQSOLabel ?? 'hunter QSO'
-  const hunterQSOsLabel = info.scoring?.hunterQSOsLabel ?? 'hunter QSOs'
-
-  const referenceActivatedLabel = info.scoring?.referenceActivatedLabel ?? referenceLabel + ' activated'
-  const referencesActivatedLabel = info.scoring?.referencesActivatedLabel ?? referencesLabelPlural + ' activated'
-  const referenceMissedLabel = info.scoring?.referenceMissedLabel ?? referenceLabel + ' missed'
-  const referencesMissedLabel = info.scoring?.referencesMissedLabel ?? referencesLabelPlural + ' missed'
-  const referenceHuntedLabel = info.scoring?.referenceHuntedLabel ?? referenceLabel + ' hunted'
-  const referencesHuntedLabel = info.scoring?.referencesHuntedLabel ?? referencesLabelPlural + ' hunted'
-
-  return ({ score, operation, ref: scoredRef, section, allSectionScores }) => {
+  return ({ t, score, operation, ref: scoredRef, section, allSectionScores }) => {
     const DEBUG_THIS_ONE = DEBUG && DEBUG_ACTIVITIES.includes(shortName)
 
     if (DEBUG_THIS_ONE) console.log('summarizeScore', shortName, { ...score })
@@ -247,7 +225,12 @@ export const generateActivitySumarizer = ({ info }) => {
       }
     }
     if (score.huntedRefs?.length > 0) {
-      summaryParts.push(`${fmtNumber(Object.keys(score.huntedRefs.length))} ${activatedRefKeys.length > 0 ? ref2refShortLabel : huntedShortLabel}`)
+      const count = Object.keys(score.huntedRefs).length
+      if (activatedRefKeys.length > 0) {
+        summaryParts.push(t([`extensions.${info.key}.scoring.ref2refRefsCount`, "extensions.shared.scoring.ref2refRefsCount"], "{{fmtCount}} refs", { count, fmtCount: fmtNumber(count) }))
+      } else {
+        summaryParts.push(t([`extensions.${info.key}.scoring.huntedRefsCount`, "extensions.shared.scoring.huntedRefsCount"], "{{fmtCount}} refs", { count, fmtCount: fmtNumber(count) }))
+      }
     }
     score.summary = summaryParts.join(' +')
 
@@ -256,13 +239,13 @@ export const generateActivitySumarizer = ({ info }) => {
     score.longSummary = ''
     const qsoCounts = []
     if (activatedRefKeys?.length > 0) {
-      qsoCounts.push(`${fmtNumber(score.activatedQSOs)} ${activatorQSOLabel.length === 1 ? activatorQSOLabel : activatorQSOsLabel}`)
+      qsoCounts.push(t([`extensions.${info.key}.scoring.activatorQSOsCount`, "extensions.shared.scoring.activatorQSOsCount"], "{{fmtCount}} QSOs", { count: score.activatedQSOs, fmtCount: fmtNumber(score.activatedQSOs) }))
     }
     if (score?.huntedQSOs > 0) {
       if (activatedRefKeys?.length > 0) {
-        qsoCounts.push(`${fmtNumber(score.huntedQSOs)} ${ref2refQSOLabel.length === 1 ? ref2refQSOLabel : ref2refQSOsLabel}`)
+        qsoCounts.push(t([`extensions.${info.key}.scoring.ref2refQSOsCount`, "extensions.shared.scoring.ref2refQSOsCount"], "{{fmtCount}} QSOs", { count: score.huntedQSOs, fmtCount: fmtNumber(score.huntedQSOs) }))
       } else {
-        qsoCounts.push(`${fmtNumber(score.huntedQSOs)} ${hunterQSOLabel.length === 1 ? hunterQSOLabel : hunterQSOsLabel}`)
+        qsoCounts.push(t([`extensions.${info.key}.scoring.huntedQSOsCount`, "extensions.shared.scoring.huntedQSOsCount"], "{{fmtCount}} QSOs", { count: score.huntedQSOs, fmtCount: fmtNumber(score.huntedQSOs) }))
       }
     }
     score.longSummary += qsoCounts.join(' • ')
@@ -290,16 +273,16 @@ export const generateActivitySumarizer = ({ info }) => {
         return totals
       }, { activated: 0, hunted: 0, missed: 0 })
       if (refTotals.activated > 0 || refTotals.hunted > 0 || refTotals.missed > 0) {
-        score.longSummary += `\n\n---\n\n## Operation Totals\n `
+        score.longSummary += `\n\n---\n\n### ${t([`extensions.${info.key}.scoring.operationTotals`, "extensions.shared.scoring.operationTotals"], "Operation Totals:")}\n `
         const totalsParts = []
         if (refTotals.activated > 0) {
-          totalsParts.push(`**${refTotals.activated} ${refTotals.activated === 1 ? referenceActivatedLabel : referencesActivatedLabel}**`)
+          totalsParts.push(`**${t([`extensions.${info.key}.scoring.referencesActivatedCount`, "extensions.shared.scoring.referencesActivatedCount"], "{{fmtCount}} refs activated", { count: refTotals.activated, fmtCount: fmtNumber(refTotals.activated) })}**`)
         }
         if (refTotals.missed > 0) {
-          totalsParts.push(`${refTotals.missed} ${refTotals.missed === 1 ? referenceMissedLabel : referencesMissedLabel}`)
+          totalsParts.push(`${t([`extensions.${info.key}.scoring.referencesMissedCount`, "extensions.shared.scoring.referencesMissedCount"], "{{fmtCount}} refs missed", { count: refTotals.missed, fmtCount: fmtNumber(refTotals.missed) })}`)
         }
         if (refTotals.hunted > 0) {
-          totalsParts.push(`**${refTotals.hunted} ${refTotals.hunted === 1 ? referenceHuntedLabel : referencesHuntedLabel}**`)
+          totalsParts.push(`**${t([`extensions.${info.key}.scoring.referencesHuntedCount`, "extensions.shared.scoring.referencesHuntedCount"], "{{fmtCount}} refs hunted", { count: refTotals.hunted, fmtCount: fmtNumber(refTotals.hunted) })}**`)
         }
         score.longSummary += totalsParts.join('\n')
       }

@@ -12,6 +12,7 @@ import { Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { SafeAreaView, useSafeAreaFrame } from 'react-native-safe-area-context'
 import SplashScreen from 'react-native-splash-screen'
+import { useTranslation } from 'react-i18next'
 
 import { enableStartupInterruptionDialogForDistribution, StartupInterruptionDialogForDistribution } from '../../distro'
 
@@ -22,12 +23,127 @@ import { selectSettings } from '../../store/settings'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { OnboardingManager } from './onboarding/OnboardingManager'
 import { H2kMarkdown } from '../../ui'
+import { translatedVersionName } from '../../tools/i18nUtils'
 
 import releaseNotes from '../../../RELEASE-NOTES.json'
 import packageJson from '../../../package.json'
 
 const SPLASH_IMAGE = require('./img/launch_screen.jpg')
 const HAM2K_LOGO = require('./img/ham2k-3000-filled.png')
+
+export default function StartScreen ({ setAppState }) {
+  const { t } = useTranslation()
+  const { height } = useSafeAreaFrame()
+  // const { height } = useWindowDimensions() <-- broken on iOS, no rotation
+
+  const settings = useSelector(selectSettings)
+  const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
+  const dispatch = useDispatch()
+  const messages = useSelector(selectRuntimeMessages)
+
+  const photoCaption = useMemo(() => {
+    const version = Object.keys(releaseNotes).find((v) => releaseNotes[v].photoCaption)
+    return releaseNotes[version].photoCaption
+  }, [])
+
+  useEffect(() => {
+    SplashScreen.hide()
+  }, [])
+
+  const [startupPhase, setStartupPhase] = useState(undefined)
+
+  const styles = useThemedStyles(prepareStyles, height, startupPhase === 'onboarding')
+
+  useEffect(() => { // Determine actions based on the startup phase
+    /*
+     * Statup phases are:
+     *  - undefined
+     *  - 'earlyStart' : Perform early startup and then proceed to 'hold'
+     *  - 'hold'       : Hold for a sec and continue to either 'onboarding' or 'start'
+     *  - 'onboarding' : Show onboarding dialogs until ready
+     *  - 'start'      : Trigger startup sequence, which will start the main app when ready
+     *  - 'starting'   : startup sequence is in process
+     */
+    if (startupPhase === undefined) {
+      // Load early extensions and such
+      setStartupPhase('earlyStart')
+      dispatch(earlyStartupSequence(() => { setStartupPhase('hold') }))
+    } else if (startupPhase === 'hold') {
+      // Hold for a second and decide if we need to show onboarding or not
+      if (!onboardedOn || !settings?.operatorCall) {
+        setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
+      } else {
+        // If startup interruption is enabled, give the user some milliseconds to trigger it
+        if (enableStartupInterruptionDialogForDistribution({ settings })) {
+          const timeout = setTimeout(() => {
+            if (startupPhase === 'hold') {
+              setStartupPhase('start')
+            }
+          }, 500)
+          return () => clearTimeout(timeout)
+        } else {
+          setStartupPhase('start')
+        }
+      }
+    } else if (startupPhase === 'start') {
+      // Once ready, begin the startup sequence
+      setStartupPhase('starting')
+      dispatch(startupSequence(() => setAppState('ready')))
+    }
+  }, [startupPhase, onboardedOn, settings, dispatch, setAppState])
+
+  const handleOnboardingDone = useCallback(() => {
+    dispatch(setSystemFlag('onboardedOn', Date.now()))
+    setStartupPhase('start')
+  }, [dispatch, setStartupPhase])
+
+  useEffect(() => {
+  }, [dispatch, setAppState, startupPhase])
+
+  const handleInterruption = useCallback(() => { // If the uer taps the screen, show the track selection dialog
+    if (startupPhase === 'hold') setStartupPhase('dialog')
+  }, [setStartupPhase, startupPhase])
+
+  return (
+    <ImageBackground source={SPLASH_IMAGE} style={styles.root}>
+      <GestureHandlerRootView>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.titleBoxSpacer} />
+          <Pressable style={styles.titleBoxTop} onPress={() => { handleInterruption(); return true }}>
+            <Image source={HAM2K_LOGO} style={{ height: 60, width: 500, alignSelf: 'center' }} resizeMode="contain" />
+          </Pressable>
+          <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }}>
+            <Text style={styles.polo} onPressIn={handleInterruption}>Portable Logger</Text>
+            <Text style={styles.credits} onPressIn={handleInterruption}>{t('screens.start.credits', 'by KI2D and friends')}</Text>
+            <Text style={styles.version}>{translatedVersionName({ t, version: packageJson.version }).full}</Text>
+          </Pressable>
+          <View style={styles.messagesBox}>
+            {messages.map((msg, i) => (
+              <H2kMarkdown key={i} styles={styles}>{msg.message}</H2kMarkdown>
+            ))}
+          </View>
+          <View style={styles.captionBox}>
+            <Text style={styles.caption}>{photoCaption}</Text>
+          </View>
+        </SafeAreaView>
+        {startupPhase === 'dialog' && (
+          <StartupInterruptionDialogForDistribution
+            settings={settings}
+            styles={styles}
+            setStartupPhase={setStartupPhase}
+          />
+        )}
+        {startupPhase === 'onboarding' && (
+          <OnboardingManager
+            settings={settings}
+            styles={styles}
+            onOnboardingDone={handleOnboardingDone}
+          />
+        )}
+      </GestureHandlerRootView>
+    </ImageBackground>
+  )
+}
 
 function prepareStyles (baseTheme, height, dialogVisible) {
   const characterizeTopHalf = 'medium' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
@@ -172,119 +288,4 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       }
     }
   }
-}
-
-export default function StartScreen ({ setAppState }) {
-  const { height } = useSafeAreaFrame()
-  // const { height } = useWindowDimensions() <-- broken on iOS, no rotation
-
-  const settings = useSelector(selectSettings)
-  const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
-  const dispatch = useDispatch()
-  const messages = useSelector(selectRuntimeMessages)
-
-  const photoCaption = useMemo(() => {
-    const version = Object.keys(releaseNotes).find((v) => releaseNotes[v].photoCaption)
-    return releaseNotes[version].photoCaption
-  }, [])
-
-  useEffect(() => {
-    SplashScreen.hide()
-  }, [])
-
-  const versionName = packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`
-
-  const [startupPhase, setStartupPhase] = useState(undefined)
-
-  const styles = useThemedStyles(prepareStyles, height, startupPhase === 'onboarding')
-
-  useEffect(() => { // Determine actions based on the startup phase
-    /*
-     * Statup phases are:
-     *  - undefined
-     *  - 'earlyStart' : Perform early startup and then proceed to 'hold'
-     *  - 'hold'       : Hold for a sec and continue to either 'onboarding' or 'start'
-     *  - 'onboarding' : Show onboarding dialogs until ready
-     *  - 'start'      : Trigger startup sequence, which will start the main app when ready
-     *  - 'starting'   : startup sequence is in process
-     */
-    if (startupPhase === undefined) {
-      // Load early extensions and such
-      setStartupPhase('earlyStart')
-      dispatch(earlyStartupSequence(() => { setStartupPhase('hold') }))
-    } else if (startupPhase === 'hold') {
-      // Hold for a second and decide if we need to show onboarding or not
-      if (!onboardedOn || !settings?.operatorCall) {
-        setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
-      } else {
-        // If startup interruption is enabled, give the user some milliseconds to trigger it
-        if (enableStartupInterruptionDialogForDistribution({ settings })) {
-          const timeout = setTimeout(() => {
-            if (startupPhase === 'hold') {
-              setStartupPhase('start')
-            }
-          }, 500)
-          return () => clearTimeout(timeout)
-        } else {
-          setStartupPhase('start')
-        }
-      }
-    } else if (startupPhase === 'start') {
-      // Once ready, begin the startup sequence
-      setStartupPhase('starting')
-      dispatch(startupSequence(() => setAppState('ready')))
-    }
-  }, [startupPhase, onboardedOn, settings, dispatch, setAppState])
-
-  const handleOnboardingDone = useCallback(() => {
-    dispatch(setSystemFlag('onboardedOn', Date.now()))
-    setStartupPhase('start')
-  }, [dispatch, setStartupPhase])
-
-  useEffect(() => {
-  }, [dispatch, setAppState, startupPhase])
-
-  const handleInterruption = useCallback(() => { // If the uer taps the screen, show the track selection dialog
-    if (startupPhase === 'hold') setStartupPhase('dialog')
-  }, [setStartupPhase, startupPhase])
-
-  return (
-    <ImageBackground source={SPLASH_IMAGE} style={styles.root}>
-      <GestureHandlerRootView>
-        <SafeAreaView style={styles.container}>
-          <View style={styles.titleBoxSpacer} />
-          <Pressable style={styles.titleBoxTop} onPress={() => { handleInterruption(); return true }}>
-            <Image source={HAM2K_LOGO} style={{ height: 60, width: 500, alignSelf: 'center' }} resizeMode="contain" />
-          </Pressable>
-          <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }}>
-            <Text style={styles.polo} onPressIn={handleInterruption}>Portable Logger</Text>
-            <Text style={styles.credits} onPressIn={handleInterruption}>by KI2D and friends</Text>
-            <Text style={styles.version}>{versionName}</Text>
-          </Pressable>
-          <View style={styles.messagesBox}>
-            {messages.map((msg, i) => (
-              <H2kMarkdown key={i} styles={styles}>{msg.message}</H2kMarkdown>
-            ))}
-          </View>
-          <View style={styles.captionBox}>
-            <Text style={styles.caption}>{photoCaption}</Text>
-          </View>
-        </SafeAreaView>
-        {startupPhase === 'dialog' && (
-          <StartupInterruptionDialogForDistribution
-            settings={settings}
-            styles={styles}
-            setStartupPhase={setStartupPhase}
-          />
-        )}
-        {startupPhase === 'onboarding' && (
-          <OnboardingManager
-            settings={settings}
-            styles={styles}
-            onOnboardingDone={handleOnboardingDone}
-          />
-        )}
-      </GestureHandlerRootView>
-    </ImageBackground>
-  )
 }

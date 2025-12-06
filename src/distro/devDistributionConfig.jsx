@@ -6,13 +6,14 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
+import DeviceInfo from 'react-native-device-info'
+
 import { hashCode } from '../tools/hashCode'
 import packageJson from '../../package.json'
 import { addRuntimeMessage } from '../store/runtime'
-
-import DeviceInfo from 'react-native-device-info'
-import GLOBAL from '../GLOBAL'
 import { H2kListSection, H2kListItem } from '../ui'
+
+import GLOBAL from '../GLOBAL'
 
 export function reportError (error, ...extra) {
   console.error(error, ...extra)
@@ -83,7 +84,7 @@ export function useConfigForDistribution ({ settings }) {
 export function startupStepsForDistribution ({ settings, dispatch }) {
   return [
     async () => {
-      await dispatch(addRuntimeMessage('Portable Logger Development Build'))
+      await dispatch(addRuntimeMessage(GLOBAL.t('screens.start.Development Build', 'Portable Logger Development Build')))
     }
   ]
 }
@@ -150,6 +151,8 @@ export function VersionSettingsForDistribution ({ settings, styles }) {
 
 export function syncMetaForDistribution ({ settings }) {
   return {
-    app: 'ham2k-polo'
+    app: 'ham2k-polo',
+    language: GLOBAL.language,
+    locale: GLOBAL.locale
   }
 }

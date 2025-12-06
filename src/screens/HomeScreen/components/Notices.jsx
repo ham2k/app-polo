@@ -10,6 +10,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-na
 import { useDispatch } from 'react-redux'
 import { Linking, Platform, ScrollView, View } from 'react-native'
 import { Surface } from 'react-native-paper'
+import { useTranslation } from 'react-i18next'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
@@ -22,6 +23,8 @@ import { useNavigation } from '@react-navigation/native'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogScrollArea, H2kDialogTitle, H2kIcon, H2kIconButton, H2kMarkdown } from '../../../ui'
 
 export default function Notices ({ paddingForSafeArea = false }) {
+  const i18next = useTranslation()
+
   const safeArea = useSafeAreaInsets()
   const styles = useThemedStyles(prepareStyles, paddingForSafeArea, safeArea)
 
@@ -76,8 +79,8 @@ export default function Notices ({ paddingForSafeArea = false }) {
     if (notices[1]) {
       setCurrentNotice(notices[1])
     }
-    performAction({ notice, action, dispatch, navigation, setDialog })
-  }, [dispatch, navigation, notices])
+    performAction({ i18next, notice, action, dispatch, navigation, setDialog })
+  }, [dispatch, navigation, notices, i18next])
 
   const handleDismiss = useCallback((notice) => {
     trackEvent('dismiss_notice', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
@@ -89,9 +92,9 @@ export default function Notices ({ paddingForSafeArea = false }) {
   }, [dispatch, notices])
 
   const handleDialogAction = useCallback((notice, action) => {
-    performAction({ notice, action, dispatch, navigation, setDialog })
+    performAction({ i18next, notice, action, dispatch, navigation, setDialog })
     setDialog(undefined)
-  }, [dispatch, navigation])
+  }, [dispatch, navigation, i18next])
 
   if (!currentNotice && !dialog) return null
 
@@ -121,6 +124,8 @@ export default function Notices ({ paddingForSafeArea = false }) {
 }
 
 export function NoticeList ({ notices, style }) {
+  const i18next = useTranslation()
+
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const styles = useThemedStyles(prepareStyles)
@@ -128,13 +133,13 @@ export function NoticeList ({ notices, style }) {
   const [dialog, setDialog] = useState()
 
   const handleAction = useCallback((notice, action) => {
-    performAction({ notice, action, dispatch, navigation, setDialog })
-  }, [dispatch, navigation])
+    performAction({ i18next, notice, action, dispatch, navigation, setDialog })
+  }, [dispatch, navigation, i18next])
 
   const handleDialogAction = useCallback((notice, action) => {
-    performAction({ notice, action, dispatch, navigation, setDialog })
+    performAction({ i18next, notice, action, dispatch, navigation, setDialog })
     setDialog(undefined)
-  }, [dispatch, navigation])
+  }, [dispatch, navigation, i18next])
 
   return (
     <>
@@ -157,6 +162,7 @@ export function NoticeList ({ notices, style }) {
 }
 
 export function OneNotice ({ notice, style, styles, handleAction, handleDismiss, onLayout }) {
+  const { t } = useTranslation()
   return (
     <Surface
       elevation={3}
@@ -169,13 +175,13 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
             <H2kIcon name={notice.icon} color={styles.noticeText.color} size={styles.normalFontSize} />
           )}
           {notice.title && (
-            <H2kMarkdown style={styles.noticeText}>## {notice.title}</H2kMarkdown>
+            <H2kMarkdown style={styles.noticeText}>## {t(`general.notices.title.${notice.title}`, notice.title)}</H2kMarkdown>
           )}
         </View>
       )}
 
       <H2kMarkdown style={styles.noticeText}>
-        {notice.text}
+        {t(`general.notices.text.${notice.text}`, notice.text)}
       </H2kMarkdown>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
@@ -190,7 +196,7 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
               disabled={action === 'disabled'}
               onPress={() => handleAction(notice, action)}
             >
-              {action.label ?? 'Ok!'}
+              {t([`general.notices.action.${action.label}`, 'general.notices.action.ok'], action.label)}
             </H2kButton>
           ))}
         </ScrollView>
@@ -213,6 +219,8 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
 }
 
 function OneDialog ({ dialog, styles, handleDialogAction, setDialog }) {
+  const { t } = useTranslation()
+
   return (
     <>
       <KeepAwake />
@@ -224,11 +232,11 @@ function OneDialog ({ dialog, styles, handleDialogAction, setDialog }) {
         }}
       >
         {dialog?.title && (
-          <H2kDialogTitle>{dialog?.title}</H2kDialogTitle>
+          <H2kDialogTitle>{t([`general.notices.dialogTitle.${dialog.title}`, `general.notices.title.${dialog.title}`], dialog.title)}</H2kDialogTitle>
         )}
         <H2kDialogScrollArea>
           <H2kMarkdown styles={styles} style={{ color: styles.colors.onBackground }}>
-            {dialog?.text}
+            {t(`general.notices.dialogText.${dialog.text}`, dialog.text)}
           </H2kMarkdown>
         </H2kDialogScrollArea>
         <H2kDialogActions>
@@ -241,7 +249,7 @@ function OneDialog ({ dialog, styles, handleDialogAction, setDialog }) {
               disabled={action === 'disabled'}
               onPress={() => handleDialogAction(dialog, action)}
             >
-              {action.label ?? 'Ok!'}
+              {t([`general.notices.dialogAction.${action.label}`, `general.notices.action.${action.label}`], action.label) ?? t('general.notices.dialogAction.ok', 'general.notices.action.ok')}
             </H2kButton>
           ))}
           <H2kButton
@@ -255,35 +263,38 @@ function OneDialog ({ dialog, styles, handleDialogAction, setDialog }) {
   )
 }
 
-async function performAction ({ notice, action, dispatch, navigation, setDialog }) {
+async function performAction ({ i18next, languages, notice, action, dispatch, navigation, setDialog }) {
   if (typeof action !== 'object') return
 
   if (action.action === 'fetch' && action.args?.key) {
     await dispatch(fetchDataFile(action.args.key, {
       onStatus: ({ key, definition, status, progress }) => {
+        const title = i18next.t(`extensions.dataFiles.title.${definition.key}`, definition.title || definition.name)
         if (status === 'fetching' || status === 'loading') {
-          setDialog({ title: definition.name, text: `### Fetching '${definition.name}'…` })
+          setDialog({ title: definition.name, text: i18next.t('general.notices.dataFiles.fetching', { title }) })
         } else if (status === 'progress') {
-          setDialog({ title: definition.name, text: `### Fetching '${definition.name}'\n\n${progress}` })
+          setDialog({ title: definition.name, text: i18next.t('general.notices.dataFiles.progress', { title, progress }) })
         } else if (status === 'loaded') {
-          setDialog({ title: definition.name, text: `### Done fetching '${definition.name}'` })
+          setDialog({ title: definition.name, text: i18next.t('general.notices.dataFiles.done', { title }) })
         } else if (status === 'error') {
-          setDialog({ title: definition.name, text: `Error fetching '${definition.name}'` })
+          setDialog({ title: definition.name, text: i18next.t('general.notices.dataFiles.error', { title }) })
         }
       }
     }))
   } else if (action.action === 'dialog') {
+    console.log('🌎', i18next.language, i18next.languages)
+
     if (Platform.OS === 'ios') {
       setDialog({
-        title: action.args?.['dialogTitle.ios'] ?? action.args?.dialogTitle,
-        text: action.args?.['dialogText.ios'] ?? action.args?.dialogText,
-        actions: action.args?.['dialogActions.ios'] ?? action.args?.dialogActions
+        title: action.args?.[`dialogTitle-${i18next.language}-ios`] ?? action.args?.['dialogTitle-ios'] ?? action.args?.dialogTitle,
+        text: action.args?.['dialogText-ios'] ?? action.args?.dialogText,
+        actions: action.args?.['dialogActions-ios'] ?? action.args?.dialogActions
       })
     } else if (Platform.OS === 'android') {
       setDialog({
-        title: action.args?.['dialogTitle.android'] ?? action.args?.dialogTitle,
-        text: action.args?.['dialogText.android'] ?? action.args?.dialogText,
-        actions: action.args?.['dialogActions.android'] ?? action.args?.dialogActions
+        title: action.args?.['dialogTitle-android'] ?? action.args?.dialogTitle,
+        text: action.args?.['dialogText-android'] ?? action.args?.dialogText,
+        actions: action.args?.['dialogActions-android'] ?? action.args?.dialogActions
       })
     } else {
       setDialog({

@@ -15,20 +15,24 @@ import MaterialCommunityIcon from '@react-native-vector-icons/material-design-ic
 import DeviceInfo from 'react-native-device-info'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
+import { useTranslation } from 'react-i18next'
+import { getLocales } from 'react-native-localize'
 
 import 'react-native-gesture-handler' // This must be included in the top component file
 
 import GLOBAL from './GLOBAL'
 
 import { usePrepareThemes } from './styles/tools/usePrepareThemes'
+import { BaseStylesContext, useBaseStyles, useThemedStyles } from './styles/tools/useThemedStyles'
 
 import { persistor, store } from './store'
-import { selectSettings } from './store/settings'
+import { selectSettings, selectSettingsLanguage } from './store/settings'
 import { useSyncLoop } from './store/sync'
 import { selectLocalExtensionData } from './store/local'
 import { selectRuntimeOnline } from './store/runtime'
 import { selectFeatureFlags } from './store/system'
-import { BaseStylesContext, useBaseStyles, useThemedStyles } from './styles/tools/useThemedStyles'
+import { hotReloadSequence } from './store/runtime/actions/startupSequence'
+import { selectGlobalDialog } from './store/ui'
 
 import { AppWrappedForDistribution, trackNavigation, useConfigForDistribution, onNavigationReadyForDistribution } from './distro'
 
@@ -49,7 +53,8 @@ import SpotsScreen from './screens/SpotsScreen/SpotsScreen'
 import OpInfoScreen from './screens/OperationScreens/OpInfoScreen'
 import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/OperationDetailsScreen'
 import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/OperationLocationScreen'
-import { hotReloadSequence } from './store/runtime/actions/startupSequence'
+import { GlobalDialog } from './ui/react-native/GlobalDialog'
+import { initializeI18Next } from './i18n/i18n'
 
 const Stack = createNativeStackNavigator()
 
@@ -74,10 +79,13 @@ function MainApp ({ navigationTheme }) {
   const styles = useThemedStyles()
 
   const flags = useSelector(selectFeatureFlags)
+  const globalDialog = useSelector(selectGlobalDialog)
   const online = useSelector(selectRuntimeOnline)
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
 
   useConfigForDistribution({ settings, flags })
+
+  const { t, i18n } = useTranslation()
 
   useEffect(() => {
     setImmediate(async () => {
@@ -93,8 +101,12 @@ function MainApp ({ navigationTheme }) {
     GLOBAL.consentOpData = settings.consentOpData
     GLOBAL.syncEnabled = lofiData?.enabled === false ? false : settings.consentAppData || settings.consentOpData
     GLOBAL.flags = flags
+    GLOBAL.t = t
+    GLOBAL.language = i18n.language
+    GLOBAL.locale = getLocales()[0].languageCode
+
     console.log('GLOBAL', GLOBAL)
-  }, [settings?.consentAppData, settings?.consentOpData, lofiData?.enabled, flags])
+  }, [settings.consentAppData, settings.consentOpData, lofiData?.enabled, flags, t, i18n.language])
 
   useSyncLoop({ dispatch, settings, online, appState })
 
@@ -106,7 +118,7 @@ function MainApp ({ navigationTheme }) {
       dispatch(hotReloadSequence)
       _appHotReloaded = false
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, _appHotReloaded])
 
   if (appState === 'starting') {
@@ -143,12 +155,12 @@ function MainApp ({ navigationTheme }) {
             }}
           >
             <Stack.Screen name="Home"
-              options={{ title: 'Portable Logger', navigationBarColor: styles.colors.primary }}
+              options={{ title: t('screens.home.title', 'Portable Logger'), navigationBarColor: styles.colors.primary }}
               component={HomeScreen}
             />
 
             <Stack.Screen name="Operation"
-              options={{ title: 'Operation', headerShown: false, headerBackTitle: 'Home', leftAction: 'close' }}
+              options={{ title: t('screens.operation.title', 'Operation'), headerShown: false, headerBackTitle: 'Home', leftAction: 'close' }}
               component={OperationScreen}
             />
 
@@ -158,70 +170,85 @@ function MainApp ({ navigationTheme }) {
             />
 
             <Stack.Screen name="OperationDetails"
-              options={{ title: 'Operation Details', headerBackTitle: 'Operation' }}
+              options={{ title: t('screens.operationDetails.title', 'Operation Details'), headerBackTitle: 'Operation' }}
               component={OperationDetailsScreen}
             />
 
             <Stack.Screen name="OperationStationInfo"
-              options={{ title: 'Station & Operator Info', headerBackTitle: 'Operation' }}
+              options={{ title: t('screens.operationStationInfo.title', 'Station & Operator Info'), headerBackTitle: 'Operation' }}
               component={OperationStationInfoScreen}
             />
 
             <Stack.Screen name="OperationLocation"
-              options={{ title: 'Operation Location', headerBackTitle: 'Operation' }}
+              options={{ title: t('screens.operationLocation.title', 'Operation Location'), headerBackTitle: 'Operation' }}
               component={OperationLocationScreen}
             />
 
             <Stack.Screen name="OperationAddActivity"
-              options={{ title: 'Add Activity', headerBackTitle: 'Operation' }}
+              options={{ title: t('screens.operationAddActivity.title', 'Add Activity'), headerBackTitle: 'Operation' }}
               component={OperationAddActivityScreen}
             />
 
             <Stack.Screen name="OperationActivityOptions"
-              options={{ title: 'Activity Options', headerBackTitle: 'Operation' }}
+              options={{ title: t('screens.operationActivityOptions.title', 'Activity Options'), headerBackTitle: 'Operation' }}
               component={OperationActivityOptionsScreen}
             />
 
             <Stack.Screen name="OperationData"
-              options={{ title: 'Operation Data', headerBackTitle: 'Operation' }}
+              options={{ title: t('screens.operationData.title', 'Operation Data'), headerBackTitle: 'Operation' }}
               component={OperationDataScreen}
             />
 
             <Stack.Screen name="CallInfo"
-              options={{ title: 'Callsign Info' }}
+              options={{ title: t('screens.callInfo.title', 'Callsign Info') }}
               component={CallInfoScreen}
             />
 
             <Stack.Screen name="Spots"
-              options={{ title: 'Spots' }}
+              options={{ title: t('screens.spots.title', 'Spots') }}
               component={SpotsScreen}
             />
 
             <Stack.Screen name="EditQSO"
-              options={{ title: 'Edit QSO' }}
+              options={{ title: t('screens.editQSO.title', 'Edit QSO') }}
               component={EditQSOScreen}
             />
 
             <Stack.Screen name="OpInfo"
-              options={{ title: 'Operation Info' }}
+              options={{ title: t('screens.opInfo.title', 'Operation Info') }}
               component={OpInfoScreen}
             />
 
             <Stack.Screen name="Settings"
-              options={{ title: 'Settings', headerShown: false }}
+              options={{ title: t('screens.settings.title', 'Settings'), headerShown: false }}
               component={MainSettingsScreen}
             />
           </Stack.Navigator>
         </NavigationContainer>
+        {(globalDialog?.title || globalDialog?.content) && <GlobalDialog {...globalDialog} />}
       </Portal.Host>
     )
   }
 }
 
+function TranslatedApp (props) {
+  const language = useSelector(selectSettingsLanguage)
+  const [initialized, setInitialized] = useState(false)
+
+  useEffect(() => {
+    initializeI18Next(language)
+      .then(() => { setInitialized(true) })
+      .catch((error) => { console.log('🌎 Error', error); setInitialized(true) })
+  }, [language])
+
+  if (!initialized) return null
+  return <MainApp {...props} />
+}
+
 function ErrorWrappedApp (props) {
   return (
     <RootErrorBoundary>
-      <MainApp {...props} />
+      <TranslatedApp {...props} />
     </RootErrorBoundary>
   )
 }

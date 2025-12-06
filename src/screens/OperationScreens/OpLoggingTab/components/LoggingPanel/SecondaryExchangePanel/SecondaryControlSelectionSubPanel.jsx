@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,14 +7,17 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ScrollView, View } from 'react-native'
+import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 
 import LoggerChip from '../../../../components/LoggerChip'
 import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
 import { setSettings } from '../../../../../../store/settings'
-import { useDispatch } from 'react-redux'
 import { H2kIcon, H2kIconButton } from '../../../../../../ui'
 
 const PositionedControlChip = (props) => {
+  const { t } = useTranslation()
+
   const { control, operation, vfo, qso, settings, onChange } = props
 
   const [layout, setLayout] = useState([])
@@ -28,7 +31,7 @@ const PositionedControlChip = (props) => {
 
   if (control?.LabelComponent) {
     return (
-      <View onLayout={handleLayout}><control.LabelComponent {...props} onChange={handleChange} /></View>
+      <View onLayout={handleLayout}><control.LabelComponent t={t} {...props} onChange={handleChange} /></View>
     )
   } else {
     return (
@@ -36,9 +39,9 @@ const PositionedControlChip = (props) => {
         <LoggerChip
           {...props}
           onChange={handleChange}
-          accessibilityLabel={control.accessibilityLabel ? stringOrFunction(control.accessibilityLabel, { operation, vfo, qso, settings }) : undefined}
+          accessibilityLabel={control.accessibilityLabel ? stringOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
         >
-          {control.label ? stringOrFunction(control.label, { operation, qso, vfo, settings }) : control.key}
+          {control.label ? stringOrFunction(control.label, { t, operation, qso, vfo, settings }) : control.key}
         </LoggerChip>
       </View>
     )
@@ -50,6 +53,8 @@ export const SecondaryControlSelectionsubPanel = ({
   themeColor, currentSecondaryControl, setCurrentSecondaryControl,
   allControls, enabledControls
 }) => {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [containerLayout, setContainerLayout] = useState()
@@ -178,7 +183,7 @@ export const SecondaryControlSelectionsubPanel = ({
                 styles={styles}
                 style={{ flex: 0 }}
                 themeColor={themeColor}
-                accessibilityLabel="Show Secondary Control Settings"
+                accessibilityLabel={t('screens.opLoggingTab.showSecondaryControlSettings-a11y', 'Show Secondary Control Settings')}
                 onChange={() => setCurrentSecondaryControl('manage-controls')}
               >
                 <H2kIcon source="cog" size={styles.normalFontSize} />
@@ -202,7 +207,7 @@ export const SecondaryControlSelectionsubPanel = ({
             icon={chipContainerOpen ? 'chevron-down' : 'chevron-left'}
             size={styles.oneSpace * 3}
             onPress={() => handleContainerToggle(!chipContainerOpen)}
-            accessibilityLabel={chipContainerOpen ? 'Hide most secondary controls' : 'Show all secondary controls'}
+            accessibilityLabel={chipContainerOpen ? t('screens.opLoggingTab.hideMostSecondaryControls-a11y', 'Hide most secondary controls') : t('screens.opLoggingTab.showAllSecondaryControls-a11y', 'Show all secondary controls')}
           />
         </View>
       </View>

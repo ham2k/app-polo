@@ -1,9 +1,11 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+
+import GLOBAL from '../../GLOBAL'
 
 import { DefaultScoringHandler } from './DefaultScoringHandler'
 import { findBestHook, findHooks } from '../registry'
@@ -64,6 +66,8 @@ export function scoringHandlersForOperation({ operation, settings }) {
 }
 
 export function analyzeAndSectionQSOs({ qsos, operation, settings, showDeletedQSOs = true }) {
+  const t = GLOBAL?.t
+
   qsos = qsos ?? []
   operation = operation ?? {}
 
@@ -97,7 +101,7 @@ export function analyzeAndSectionQSOs({ qsos, operation, settings, showDeletedQS
         // Summarize previous section
         if (handler.summarizeScore && previousSection && previousSection.scores[key]) {
           try {
-            previousSection.scores[key] = handler.summarizeScore({ score: previousSection.scores[key] ?? {}, operation, ref, section: previousSection })
+            previousSection.scores[key] = handler.summarizeScore({ t, score: previousSection.scores[key] ?? {}, operation, ref, section: previousSection })
             if (VERBOSE && DEBUG_KEYS.includes(handler.key)) console.log('---- Summarized previous section', { ...previousSection.scores[key] })
           } catch (e) {
             reportError(`Error summarizing previous section score for '${handler.key}'`, e)
@@ -164,7 +168,7 @@ export function analyzeAndSectionQSOs({ qsos, operation, settings, showDeletedQS
       try {
         const allSectionScores = sections.map(section => section.scores[key]).filter(x => x)
 
-        currentSection.scores[key] = handler.summarizeScore({ score: currentSection.scores[key] ?? {}, operation, ref, section: currentSection, allSectionScores })
+        currentSection.scores[key] = handler.summarizeScore({ t, score: currentSection.scores[key] ?? {}, operation, ref, section: currentSection, allSectionScores })
         if (VERBOSE && DEBUG_KEYS.includes(handler.key)) console.log('---- Summarized', { ...currentSection.scores[key] })
       } catch (e) {
         reportError(`Error summarizing score for '${handler.key}'`, e)

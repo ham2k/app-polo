@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
@@ -19,6 +20,8 @@ import { motaFindAllByLocation, motaFindAllByName, motaFindOneByReference } from
 import { MOTAListItem } from './MOTAListItem'
 
 export function MOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
@@ -26,10 +29,8 @@ export function MOTAActivityOptions ({ styles, operation, settings, refs: allRef
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (activityRefs?.length === 0) return 'No mills selected for activation'
-    else if (activityRefs?.length === 1) return 'Activating 1 mill'
-    else return `Activating ${activityRefs.length} mills`
-  }, [activityRefs])
+    return t('extensions.mota.activityOptions.title', 'Activating {{count}} mills', { count: activityRefs?.length })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
@@ -102,27 +103,23 @@ export function MOTAActivityOptions ({ styles, operation, settings, refs: allRef
         // If it's a naked reference, let's ensure the results include it, or else add a placeholder
         // just to cover any cases where the user knows about a new reference not included in our data
         if (nakedReference && !newResults.find(ref => ref.ref === nakedReference)) {
-          newResults.unshift({ ref: nakedReference, name: 'Unknown mill' })
+          newResults.unshift({ ref: nakedReference, name: t('extensions.mota.activityOptions.unknownMill', 'Unknown mill') })
         }
 
         setResults(newResults.slice(0, 15))
-        if (newResults.length === 0) {
-          setResultsMessage('No mills found')
-        } else if (newResults.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newResults.length} matches`)
-        } else if (newResults.length === 1) {
-          setResultsMessage('One matching mill')
+        if (newResults.length > 15) {
+          setResultsMessage(t('extensions.mota.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newResults.length }))
         } else {
-          setResultsMessage(`${newResults.length} matching mills`)
+          setResultsMessage(t('extensions.mota.activityOptions.matchingMills', '{{count}} matching mills', { count: newResults.length }))
         }
       } else {
         setResults(nearbyResults)
-        if (nearbyResults === undefined) setResultsMessage('Search for some mills to activate!')
-        else if (nearbyResults.length === 0) setResultsMessage('No mills nearby')
-        else setResultsMessage('Nearby mills')
+        if (nearbyResults === undefined) setResultsMessage(t('extensions.mota.activityOptions.searchForMills', 'Search for some mills to activate!'))
+        else if (nearbyResults.length === 0) setResultsMessage(t('extensions.mota.activityOptions.noMillsNearby', 'No mills nearby'))
+        else setResultsMessage(t('extensions.mota.activityOptions.nearbyMills', 'Nearby mills'))
       }
     })
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
     setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
@@ -152,7 +149,7 @@ export function MOTAActivityOptions ({ styles, operation, settings, refs: allRef
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={'Mills by name or reference…'}
+          placeholder={t('extensions.mota.activityOptions.searchPlaceholder', 'Mills by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />

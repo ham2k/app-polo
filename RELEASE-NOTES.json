@@ -1,8 +1,10 @@
 {
   "25.12.0-pre0": {
     "name": "December '25 (pre 0)",
-    "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
-    "changes": []
+    "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
+    "changes": [
+      "Internationalization!!!"
+    ]
   },
   "25.10.7": {
     "name": "October '25 (patch 7)",

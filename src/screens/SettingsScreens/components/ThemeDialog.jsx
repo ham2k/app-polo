@@ -9,11 +9,13 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { RadioButton, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 import { setSettings } from '../../../store/settings'
 
-export function ThemeDialog ({ visible, settings, styles, onDialogDone }) {
+export function ThemeDialog({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -41,7 +43,7 @@ export function ThemeDialog ({ visible, settings, styles, onDialogDone }) {
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>Theme</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.generalSettings.theme.dialogTitle', 'Theme')}</H2kDialogTitle>
       <H2kDialogContent>
         <RadioButton.Group
           onValueChange={(v) => setValue(v)}
@@ -49,21 +51,21 @@ export function ThemeDialog ({ visible, settings, styles, onDialogDone }) {
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="light" />
-            <Text onPress={() => setValue('light')} style={[styles.rowText, { flex: 1 }]}>Always in Light Mode</Text>
+            <Text onPress={() => setValue('light')} style={[styles.rowText, { flex: 1 }]}>{t('screens.generalSettings.theme.descriptionLight', 'Always in Light Mode')}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="dark" />
-            <Text onPress={() => setValue('dark')} style={[styles.rowText, { flex: 1 }]}>Always in Dark Mode</Text>
+            <Text onPress={() => setValue('dark')} style={[styles.rowText, { flex: 1 }]}>{t('screens.generalSettings.theme.descriptionDark', 'Always in Dark Mode')}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="auto" />
-            <Text onPress={() => setValue('auto')} style={[styles.rowText, { flex: 1 }]}>Same as Device Theme</Text>
+            <Text onPress={() => setValue('auto')} style={[styles.rowText, { flex: 1 }]}>{t('screens.generalSettings.theme.descriptionDevice', 'Same as Device Theme')}</Text>
           </View>
         </RadioButton.Group>
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

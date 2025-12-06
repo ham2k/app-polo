@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
@@ -21,6 +22,8 @@ import { trackEvent } from '../../../distro'
 import { H2kListItem, H2kListSection, H2kListSeparator } from '../../../ui'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles()
 
   const settings = useSelector(selectSettings)
@@ -39,12 +42,12 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
   useEffect(() => { // Prepare the screen, set the activity title, etc
     if (activity && operation) {
       navigation.setOptions({
-        title: activity.name ?? `Activity "${activity.key}"`,
+        title: t(`extensions.${activity.key}.name`, `Activity "${activity.key}"`),
 
         leftAction: 'accept',
-        leftActionA11yLabel: 'Accept Changes',
+        leftActionA11yLabel: t('general.buttons.accept-a11y', 'Accept Changes'),
         rightAction: 'revert',
-        rightActionA11yLabel: 'Revert Changes',
+        rightActionA11yLabel: t('general.buttons.revert-a11y', 'Revert Changes'),
         onLeftActionPress: () => {
           dispatch(setOperationData({ uuid: operation.uuid, refs }))
           navigation.goBack()
@@ -54,7 +57,7 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
         }
       })
     }
-  }, [navigation, activity, operation, dispatch, refs])
+  }, [navigation, activity, operation, dispatch, refs, t])
 
   const handleRemoveActivity = useCallback(() => {
     dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation, activity?.activationType ?? activity?.key ?? handler?.key, []) }))
@@ -72,7 +75,14 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
           <H2kListSection>
             <H2kListSeparator />
             <H2kListItem
-              title={`Remove ${activity?.shortName ?? activity?.name ?? handler?.name} from this operation`}
+              title={t('screens.operationActivityOptions.removeActivity', 'Remove {{activity}} from this operation',
+                {
+                  activity: t(`extensions.${activity.key}.shortName`, '') ||
+                            activity.shortName ||
+                            t(`extensions.${activity.key}.name`, '') ||
+                            activity.name
+                }
+              )}
               titleStyle={{ color: styles.theme.colors.error }}
               leftIcon="delete"
               leftIconColor={styles.theme.colors.error}

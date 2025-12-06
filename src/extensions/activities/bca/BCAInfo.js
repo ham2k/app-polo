@@ -18,21 +18,6 @@ export const Info = {
   scoring: {
     activates: 'once',
     qsosToActivate: 50,
-    uniquePer: ['band', 'mode', 'day'],
-    referenceLabel: 'Castle',
-    referenceLabelPlural: 'Castles',
-    ref2refLabel: 'C2C',
-    ref2refShortName: 'C2C',
-    huntedShorterName: 'C',
-    activatorQSOLabel: 'Activator QSO',
-    activatorQSOsLabel: 'Activator QSOs',
-    hunterQSOLabel: 'Hunter QSO',
-    hunterQSOsLabel: 'Hunter QSOs',
-    referenceActivatedLabel: 'Castle activated',
-    referencesActivatedLabel: 'Castles activated',
-    referenceMissedLabel: 'Castle missed',
-    referencesMissedLabel: 'Castles missed',
-    referenceHuntedLabel: 'Castle hunted',
-    referencesHuntedLabel: 'Castles hunted',
+    uniquePer: ['band', 'mode', 'day']
   }
 }

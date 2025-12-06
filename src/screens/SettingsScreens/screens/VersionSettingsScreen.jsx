@@ -10,6 +10,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Image, Pressable, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import releaseNotes from '../../../../RELEASE-NOTES.json'
 
@@ -18,6 +19,7 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { VersionSettingsForDistribution } from '../../../distro'
 import { selectSettings } from '../../../store/settings'
 import { H2kListItem, H2kListSection, H2kListRow, H2kMarkdown } from '../../../ui'
+import { translatedVersionName } from '../../../tools/i18nUtils'
 
 const SPLASH_IMAGE = require('../../../screens/StartScreen/img/launch_screen.jpg')
 
@@ -33,6 +35,8 @@ function prepareStyles (baseStyles) {
 }
 
 export default function VersionSettingsScreen ({ navigation, splitView }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles(prepareStyles)
   const safeAreaInsets = useSafeAreaInsets()
 
@@ -77,8 +81,8 @@ export default function VersionSettingsScreen ({ navigation, splitView }) {
 
           <H2kListSection>
             <H2kListItem
-              title={'Recent Changes'}
-              description={`Cover photo: ${releaseNotes[Object.keys(releaseNotes)[0]].photoCaption}`}
+              title={t('screens.versionSettings.recentChanges', 'Recent Changes')}
+              description={t('screens.versionSettings.coverPhoto', 'Cover photo: {{caption}}', { caption: releaseNotes[Object.keys(releaseNotes)[0]].photoCaption })}
               leftIcon="newspaper-variant-outline"
               right={() => (
                 <Pressable onPress={() => setShowImage(true)}>
@@ -91,11 +95,10 @@ export default function VersionSettingsScreen ({ navigation, splitView }) {
               <H2kListRow key={i} style={styles.listRow}>
 
                 <H2kMarkdown style={styles.markdown}>
-                  {
-  `## ${releaseNotes[release].name ? `${releaseNotes[release].name} Release` : `Version ${release}`}
-  ${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
-  `
-                  }
+                  {t('screens.versionSettings.changes-md', 'Changes', {
+                    version: translatedVersionName({ t, version: release }).full,
+                    changes: releaseNotes[release].changes.map(c => `* ${c}\n`).join('')
+                  })}
                 </H2kMarkdown>
               </H2kListRow>
             ))}

@@ -9,6 +9,7 @@ import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -29,6 +30,8 @@ function prepareStyles (baseStyles) {
 }
 
 export default function LoggingSettingsScreen ({ navigation, splitView }) {
+  const { t } = useTranslation()
+
   const safeAreaInsets = useSafeAreaInsets()
   const dispatch = useDispatch()
 
@@ -47,16 +50,16 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <H2kListSection>
-          <H2kListItem title={'Leftie Mode'}
-            description={settings.leftieMode ? 'Use layout for left-handed users' : 'Use layout for right-handed users' }
+          <H2kListItem title={t('screens.loggingSettings.leftieMode.title', 'Leftie Mode')}
+            description={settings.leftieMode ? t('screens.loggingSettings.leftieMode.descriptionOn', 'Use layout for left-handed users') : t('screens.loggingSettings.leftieMode.descriptionOff', 'Use layout for right-handed users') }
             leftIcon="hand-front-left-outline"
             rightSwitchValue={!!settings.leftieMode}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ leftieMode: value }))}
             onPress={() => dispatch(setSettings({ leftieMode: !settings.leftieMode }))}
           />
 
-          <H2kListItem title={'Country Flags'}
-            description={{ none: "Don't show any flags", all: 'Show flags for all contacts' }[settings.dxFlags] || 'Show only for DX contacts'}
+          <H2kListItem title={t('screens.loggingSettings.countryFlags.title', 'Country Flags')}
+            description={{ none: t('screens.loggingSettings.countryFlags.descriptionNone', "Don't show any flags"), all: t('screens.loggingSettings.countryFlags.descriptionAll', 'Show flags for all contacts') }[settings.dxFlags] || t('screens.loggingSettings.countryFlags.descriptionDefault', 'Show only for DX contacts')}
             leftIcon="flag"
             onPress={() => setCurrentDialog('flags')}
           />
@@ -68,16 +71,16 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
               onDialogDone={() => setCurrentDialog('')}
             />
           )}
-          <H2kListItem title={'State Field'}
-            description={settings.showStateField ? 'Include State field in main exchange' : "Don't include State field" }
+          <H2kListItem title={t('screens.loggingSettings.stateField.title', 'State Field')}
+            description={settings.showStateField ? t('screens.loggingSettings.stateField.descriptionOn', 'Include State field in main exchange') : t('screens.loggingSettings.stateField.descriptionOff', "Don't include State field") }
             leftIcon="select-marker"
             rightSwitchValue={!!settings.showStateField}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ showStateField: value }))}
             onPress={() => dispatch(setSettings({ showStateField: !settings.showStateField }))}
           />
 
-          <H2kListItem title={'Show Bearing'}
-            description={settings.showBearing ? 'Show estimated bearing to station' : "Don't show bearing information" }
+          <H2kListItem title={t('screens.loggingSettings.showBearing.title', 'Show Bearing')}
+            description={settings.showBearing ? t('screens.loggingSettings.showBearing.descriptionOn', 'Show estimated bearing to station') : t('screens.loggingSettings.showBearing.descriptionOff', "Don't show bearing information") }
             leftIcon="compass-outline"
             rightSwitchValue={!!settings.showBearing}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ showBearing: value }))}
@@ -85,8 +88,8 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
           />
 
           <H2kListItem
-            title="Switch signal report order"
-            description={!settings.switchSentRcvd ? 'Sent first, Rcvd second' : 'Rcvd first, Sent second'}
+            title={t('screens.loggingSettings.switchSignalReportOrder.title', 'Switch signal report order')}
+            description={!settings.switchSentRcvd ? t('screens.loggingSettings.switchSignalReportOrder.descriptionOn', 'Sent first, Rcvd second') : t('screens.loggingSettings.switchSignalReportOrder.descriptionOff', 'Rcvd first, Sent second')}
             leftIcon="arrow-left-right"
             rightSwitchValue={!!settings.switchSentRcvd}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ switchSentRcvd: value }))}
@@ -94,8 +97,8 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
           />
 
           <H2kListItem
-            title="Jump to next field on RST entry"
-            description={settings.jumpAfterRST ? 'Jump after RST is entered' : "Don't jump automatically" }
+            title={t('screens.loggingSettings.jumpAfterRST.title', 'Jump to next field on RST entry')}
+            description={settings.jumpAfterRST ? t('screens.loggingSettings.jumpAfterRST.descriptionOn', 'Jump after RST is entered') : t('screens.loggingSettings.jumpAfterRST.descriptionOff', "Don't jump automatically") }
             leftIcon="redo"
             rightSwitchValue={!!settings.jumpAfterRST}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ jumpAfterRST: value }))}
@@ -103,8 +106,8 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
           />
 
           <H2kListItem
-            title="Suggest default operator"
-            description={settings.suggestDefaultOperator ? `Set ${settings?.operatorCall} as operator in operations where station call is different` : "Don't suggest default operator regardless of station call used" }
+            title={t('screens.loggingSettings.suggestDefaultOperator.title', 'Suggest default operator')}
+            description={settings.suggestDefaultOperator ? t('screens.loggingSettings.suggestDefaultOperator.descriptionOn', `Set ${settings?.operatorCall} as operator in operations where station call is different`) : t('screens.loggingSettings.suggestDefaultOperator.descriptionOff', "Don't suggest default operator regardless of station call used") }
             leftIcon="account-question"
             rightSwitchValue={settings.suggestDefaultOperator !== false}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ suggestDefaultOperator: value }))}
@@ -112,15 +115,15 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
           />
 
           <H2kListItem
-            title="Bands & Modes"
-            description={[(settings.bands || []).join(', '), (settings.modes || []).join(', ')].join(' • ')}
+            title={t('screens.loggingSettings.bandsModes.title', 'Bands & Modes')}
+            description={t('screens.loggingSettings.bandsModes.description', '{{bands}} • {{modes}}', { bands: (settings.bands || []).join(', '), modes: (settings.modes || []).join(', ') })}
             leftIcon="radio"
             onPress={() => navigation.navigate('BandModeSettings')}
           />
         </H2kListSection>
 
         {extensionSettingHooks.length > 0 && (
-          <H2kListSection title={'Extensions'}>
+          <H2kListSection title={t('screens.loggingSettings.extensions.title', 'Extensions')}>
             {extensionSettingHooks.map((hook) => (
               <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
             ))}

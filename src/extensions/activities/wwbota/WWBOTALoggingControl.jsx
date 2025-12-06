@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { selectOperationCallInfo } from '../../../store/operations'
@@ -19,6 +20,8 @@ const MATCH_SYMBOLS_REGEX = /[ ,.]+$/
 
 export function WWBOTALoggingControl (props) {
   const { qso, operation, updateQSO, style, styles } = props
+
+  const { t } = useTranslation()
 
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
@@ -61,7 +64,7 @@ export function WWBOTALoggingControl (props) {
       innerRef={ref}
       style={[style, { maxWidth: '95%', minWidth: styles.oneSpace * 30, width: Math.max(16, refsString?.length || 0) * styles.oneSpace * 1.3 }]}
       value={innerValue}
-      label="Their Bunker"
+      label={t('extensions.wwbota.loggingControl.theirRefLabel', 'Their Bunker')}
       defaultPrefix={defaultPrefix}
       onChangeText={handleChangeText}
     />

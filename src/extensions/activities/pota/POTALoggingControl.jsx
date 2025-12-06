@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { selectOperationCallInfo } from '../../../store/operations'
@@ -19,6 +20,8 @@ const MATCH_SYMBOLS_REGEX = /[ ,.]+$/
 
 export function POTALoggingControl (props) {
   const { qso, operation, updateQSO, style, styles } = props
+
+  const { t } = useTranslation()
 
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
@@ -63,7 +66,7 @@ export function POTALoggingControl (props) {
       contentStyle={[]}
       value={innerValue}
       fieldId="potaReference"
-      label="Their POTA"
+      label={t('extensions.pota.loggingControl.theirRefLabel', 'Their POTA')}
       defaultPrefix={defaultPrefix}
       onChangeText={handleChangeText}
     />

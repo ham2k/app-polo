@@ -9,6 +9,7 @@ import React, { useMemo } from 'react'
 import { ScrollView, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { fmtDateDayMonth } from '@ham2k/lib-format-tools'
 
@@ -32,6 +33,8 @@ function prepareStyles (baseStyles) {
 const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
 export default function NoticesSettingsScreen ({ navigation, splitView }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles(prepareStyles)
   const safeAreaInsets = useSafeAreaInsets()
 
@@ -49,11 +52,11 @@ export default function NoticesSettingsScreen ({ navigation, splitView }) {
 
     return sortedKeys.map(key => {
       key = Number(key) // numeric keys get converted to strings in objects
-      const label = key ? fmtDateDayMonth(key) : 'Undated'
+      const label = key ? fmtDateDayMonth(key) : t('screens.noticesSettings.undated', 'Undated')
       const groupNotices = groupedNotices[key]
       return [label, groupNotices]
     })
-  }, [notices])
+  }, [notices, t])
 
   return (
     <ScreenContainer>
@@ -68,7 +71,7 @@ export default function NoticesSettingsScreen ({ navigation, splitView }) {
             </H2kListSection>
           ))
         ) : (
-          <Text style={{ margin: styles.oneSpace * 2, textAlign: 'center' }}>No recent notices</Text>
+          <Text style={{ margin: styles.oneSpace * 2, textAlign: 'center' }}>{t('screens.noticesSettings.noRecentNotices', 'No recent notices')}</Text>
         )}
 
         <View style={{ height: safeAreaInsets.bottom }} />

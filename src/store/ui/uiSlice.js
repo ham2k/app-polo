@@ -39,11 +39,17 @@ export const uiSlice = createSlice({
       //   console.log('====================')
       // }
       if (DEBUG) console.log('-- updated state', component, state[component])
+    },
+    setGlobalDialog: (state, action) => {
+      state.globalDialog = { ...state.globalDialog, ...action.payload }
+    },
+    resetGlobalDialog: (state) => {
+      state.globalDialog = {}
     }
   }
 })
 
-function deepMergeState (state, data, visited = undefined) {
+function deepMergeState(state, data, visited = undefined) {
   visited = visited || new Set()
   visited.add(data)
 
@@ -64,12 +70,17 @@ function deepMergeState (state, data, visited = undefined) {
 }
 
 export const { actions } = uiSlice
-export const { setStateForComponent, updateStateForComponent } = uiSlice.actions
+export const { setStateForComponent, updateStateForComponent, setGlobalDialog, resetGlobalDialog } = uiSlice.actions
 
 export const selectStateForComponent = createSelector(
   (state, component) => state?.ui,
   (state, component) => component,
   (ui, component) => ui?.[component]
+)
+
+export const selectGlobalDialog = createSelector(
+  (state) => state?.ui,
+  (ui) => ui?.globalDialog
 )
 
 export default uiSlice.reducer

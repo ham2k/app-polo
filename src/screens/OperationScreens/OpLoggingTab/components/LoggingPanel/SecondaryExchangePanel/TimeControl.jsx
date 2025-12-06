@@ -8,12 +8,17 @@
 import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import TimeChip from '../../../../components/TimeChip'
 import { setOperationLocalData } from '../../../../../../store/operations'
 import { H2kButton, H2kDateInput, H2kTimeInput } from '../../../../../../ui'
 
+import GLOBAL from '../../../../../../GLOBAL'
+
 const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
+  const { t } = useTranslation()
+
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
@@ -27,7 +32,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
         style={{ minWidth: styles.oneSpace * 11 }}
         valueInMillis={qso?.startAtMillis}
         disabled={disabled}
-        label="Time"
+        label={t('screens.opLoggingTab.timeLabel', 'Time')}
         onChange={handleFieldChange}
         onSubmitEditing={onSubmitEditing}
         fieldId={'time'}
@@ -38,7 +43,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
         style={{ minWidth: styles.oneSpace * 11 }}
         valueInMillis={qso?.startAtMillis}
         disabled={disabled}
-        label="Date"
+        label={t('screens.opLoggingTab.dateLabel', 'Date')}
         onChange={handleFieldChange}
         onSubmitEditing={onSubmitEditing}
         fieldId={'date'}
@@ -71,15 +76,15 @@ export const timeControl = {
   LabelComponent: (props) => {
     if (props.operation?.local?._nextManualTime) {
       return (
-        <TimeChip {...props} icon={'pause'} iconColor={'red'} accessibilityLabel={'Time Controls'} time={props?.qso?.startAtMillis} />
+        <TimeChip {...props} icon={'pause'} iconColor={'red'} accessibilityLabel={props.t('screens.opLoggingTab.timeControls-a11y', 'Time Controls')} time={props?.qso?.startAtMillis} />
       )
     } else {
       return (
-        <TimeChip {...props} accessibilityLabel={'Time Controls'} time={props?.qso?.startAtMillis} />
+        <TimeChip {...props} accessibilityLabel={props.t('screens.opLoggingTab.timeControls-a11y', 'Time Controls')} time={props?.qso?.startAtMillis} />
       )
     }
   },
-  accessibilityLabel: 'Time Controls',
+  accessibilityLabel: GLOBAL?.t?.('screens.opLoggingTab.timeControls-a11y', 'Time Controls') || 'Time Controls',
   InputComponent: TimeControlInputs,
   optionType: 'mandatory'
 }

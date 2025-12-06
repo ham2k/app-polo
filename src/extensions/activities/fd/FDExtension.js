@@ -92,13 +92,13 @@ const ReferenceHandler = {
     if (ref?.type === Info?.key) {
       return [{
         format: 'adif',
-        exportName: 'ARRL Field Day (ADIF)',
+        exportName: 'ARRL Field Day',
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       },
       {
         format: 'cabrillo',
-        exportName: 'ARRL Field Day (Cabrillo)',
+        exportName: 'ARRL Field Day',
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       }]

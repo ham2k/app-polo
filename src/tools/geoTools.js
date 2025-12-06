@@ -6,7 +6,9 @@
  */
 
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+
 import DXCC_LOCATIONS from '../data/dxccLocations.json'
+import GLOBAL from '../GLOBAL'
 
 export function distanceOnEarth(location1, location2, options = {}) {
   let radius
@@ -60,11 +62,11 @@ export function fmtDistance(dist, options) {
   if (options.precision === undefined && dist > 5)
     fixedPrecision = 0
 
-  if (options.units === 'miles') {
-    return `${dist.toFixed(fixedPrecision).replace(THOUSANDS_DELIMITER_REGEX, '$1,$2')} mi`
-  } else {
-    return `${dist.toFixed(fixedPrecision).replace(THOUSANDS_DELIMITER_REGEX, '$1.$2')} km`
+  const fmtDist = dist.toFixed(fixedPrecision).replace(THOUSANDS_DELIMITER_REGEX, '$1,$2') + (options.units === 'miles' ? ' mi' : ' km')
+  if (options.away) {
+    return GLOBAL?.t?.('general.formatting.distance.away', '{{distance}} away', { distance: fmtDist }) || `${fmtDist} away`
   }
+  return fmtDist
 }
 
 export function locationForQSONInfo(qsonInfo) {

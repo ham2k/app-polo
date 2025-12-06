@@ -8,123 +8,144 @@
 import React from 'react'
 import { Linking, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { H2kListItem, H2kListSection } from '../../../ui'
 
 export default function CreditsSettingsScreen ({ navigation, splitView }) {
-  const safeAreaInsets = useSafeAreaInsets()
+  const { t } = useTranslation()
 
+  const safeAreaInsets = useSafeAreaInsets()
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <H2kListSection>
-          <H2kListItem title={'Created by Sebastián Delmont • KI2D'}
+          <H2kListItem title={t('screens.creditsSettings.createdBy', 'Created by {{callsign}}', { callsign: 'KI2D' })}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'KI2D' })}
           />
 
-          <H2kListItem title={'Ham2K PoLo is Open Source'}
-            description={'Check out the code and contribute on GitHub!'}
+          <H2kListItem title={t('screens.creditsSettings.openSource', 'Ham2K PoLo is Open Source')}
+            description={t('screens.creditsSettings.checkOutCode', 'Check out the code and contribute on GitHub!')}
             leftIcon="github"
             onPress={async () => await Linking.openURL('https://github.com/ham2k/app-polo')}
           />
 
         </H2kListSection>
 
-        <H2kListSection title={'Team PoLo'}>
+        <H2kListSection title={t('screens.creditsSettings.teamPoLo', 'Team PoLo')}>
           <H2kListItem
             title={'Sebastián Delmont • KI2D'}
-            description={'Creator & Lead Developer'}
+            description={t('screens.creditsSettings.creator', 'Creator & Lead Developer')}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'KI2D' })}
           />
           <H2kListItem
             title={'Steve Hiscocks • M1SDH'}
-            description={'Developer'}
+            description={t('screens.creditsSettings.developer', 'Developer')}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'M1SDH' })}
           />
           <H2kListItem
             title={'Alan McDonald • VK1AO'}
-            description={'Lead Support & Documentation'}
+            description={t('screens.creditsSettings.leadSupport', 'Lead Support & Documentation')}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'VK1AO' })}
           />
 
         </H2kListSection>
 
-        <H2kListSection title={'More code and docs contributors'}>
+        <H2kListSection title={t('screens.creditsSettings.moreCodeAndDocsContributors', 'More code and docs contributors')}>
 
           {/* Sorted by callsign alphabetically */}
 
           <H2kListItem
             title={'Phil Kessels • DL9PK'}
-            description={'Code: spotting others'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'spotting others' })}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'DL9PK' })}
           />
           <H2kListItem
             title={'Ciemon Dunville • G0TRT'}
-            description={'Documentation'}
+            description={t('screens.creditsSettings.contributorDocumentation', 'Documentation')}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'G0TRT' })}
           />
           <H2kListItem
             title={'Emma • K0UWU/VA2EMZ'}
-            description={'Code: WaveLog support'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'Wavelog' })}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'K0UWU' })}
           />
           <H2kListItem
             title={'Woody • KC1VOP'}
-            description={'Documentation'}
+            description={t('screens.creditsSettings.contributorDocumentation', 'Documentation Contributor')}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'KC1VOP' })}
           />
           <H2kListItem
             title={'John • KQ4URU'}
-            description={'Code: QSO Party data and rules'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'KQ4URU' })}
           />
           <H2kListItem
             title={'Ian Renton • M0TRT'}
-            description={'Code: assorted bug fixes'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'assorted bug fixes' })}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'M0TRT' })}
           />
           <H2kListItem
             title={'Aldo Mendoza • NA7DO'}
-            description={'Code: power controls, confirm QSOs from spots, lots of small fixes'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'power controls, confirm QSOs from spots, lots of small fixes' })}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'NA7DO' })}
           />
           <H2kListItem
             title={'Stan • W1BOY'}
-            description={'Code: QSO Party data and rules. Documentation'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'W1BOY' })}
           />
           <H2kListItem
             title={'Marion • W1GRL'}
-            description={'Code: QSO Party data and rules. Documentation'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'W1GRL' })}
           />
           <H2kListItem
             title={'Bryan • W1WC'}
-            description={'Code: QSO Party data and rules. Documentation'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'W1WC' })}
           />
           <H2kListItem
             title={'Kevin • W8NI'}
-            description={'Code: QSO Party data and rules. Documentation'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
             leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'W8NI' })}
           />
         </H2kListSection>
+
+        <H2kListSection title={t('screens.creditsSettings.translations', 'Translations')}>
+          <H2kListItem
+            title={t('general.languages.en', 'English')}
+            description={'KI2D Sebastián'}
+            leftIcon="world"
+          />
+          <H2kListItem
+            title={t('general.languages.es', 'Norwegian')}
+            description={'LB4FH Kjetil'}
+            leftIcon="world"
+          />
+          <H2kListItem
+            title={t('general.languages.ca', 'Catalan')}
+            description={'EA3IMR Tomás, EA3IPX David'}
+            leftIcon="world"
+          />
+        </H2kListSection>
+
         <View style={{ height: safeAreaInsets.bottom }} />
 
       </ScrollView>

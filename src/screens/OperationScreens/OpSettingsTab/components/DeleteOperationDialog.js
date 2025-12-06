@@ -8,12 +8,16 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
-import { deleteOperation } from '../../../../store/operations'
+import { useTranslation } from 'react-i18next'
 import { useNavigation } from '@react-navigation/native'
+
+import { deleteOperation } from '../../../../store/operations'
 import { trackEvent } from '../../../../distro'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../../ui'
 
-export function DeleteOperationDialog ({ operation, visible, settings, styles, onDialogDone }) {
+export function DeleteOperationDialog({ operation, visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
@@ -39,13 +43,13 @@ export function DeleteOperationDialog ({ operation, visible, settings, styles, o
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center', color: styles.theme.colors.error }}>Delete operation?</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center', color: styles.theme.colors.error }}>{t('screens.operationData.deleteOperationDialog.title', 'Delete operation?')}</H2kDialogTitle>
       <H2kDialogContent>
-        <Text variant="bodyMedium">Are you sure you want to delete this operation?</Text>
+        <Text variant="bodyMedium">{t('screens.operationData.deleteOperationDialog.description', 'Are you sure you want to delete this operation?')}</Text>
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept} textColor={styles.theme.colors.error}>Yes, Delete</H2kButton>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept} textColor={styles.theme.colors.error}>{t('general.buttons.delete', 'Yes, Delete')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

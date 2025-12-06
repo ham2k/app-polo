@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
 import { selectRuntimeOnline } from '../../../store/runtime'
@@ -19,6 +20,8 @@ import { zlotaFindAllByLocation, zlotaFindAllByName, zlotaFindOneByReference } f
 import { ZLOTAListItem } from './ZLOTAListItem'
 
 export function ZLOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
 
   const online = useSelector(selectRuntimeOnline)
@@ -26,10 +29,8 @@ export function ZLOTAActivityOptions ({ styles, operation, settings, refs: allRe
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (activityRefs?.length === 0) return 'No references selected for activation'
-    else if (activityRefs?.length === 1) return `Activating 1 ${activityRefs[0].assetType ?? 'reference'}`
-    else return `Activating ${activityRefs.length} references`
-  }, [activityRefs])
+    return t('extensions.zlota.activityOptions.title', 'Activating {{count}} references', { count: 1 })
+  }, [t])
 
   const [search, setSearch] = useState('')
 
@@ -107,23 +108,19 @@ export function ZLOTAActivityOptions ({ styles, operation, settings, refs: allRe
         }
 
         setResults(newRefs.slice(0, 15))
-        if (newRefs.length === 0) {
-          setResultsMessage('No references found')
-        } else if (newRefs.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newRefs.length} matches`)
-        } else if (newRefs.length === 1) {
-          setResultsMessage(`One matching ${newRefs[0].assetType ?? 'reference'}`)
+        if (newRefs.length > 15) {
+          setResultsMessage(t('extensions.zlota.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newRefs.length }))
         } else {
-          setResultsMessage(`${newRefs.length} matching references`)
+          setResultsMessage(t('extensions.zlota.activityOptions.matchingReferences', '{{count}} matching references', { count: newRefs.length }))
         }
       } else {
         setResults(nearbyResults)
-        if (nearbyResults === undefined) setResultsMessage('Search for some references to activate!')
-        else if (nearbyResults.length === 0) setResultsMessage('No references nearby')
-        else setResultsMessage('Nearby references')
+        if (nearbyResults === undefined) setResultsMessage(t('extensions.zlota.activityOptions.searchForReferences', 'Search for some references to activate!'))
+        else if (nearbyResults.length === 0) setResultsMessage(t('extensions.zlota.activityOptions.noReferencesNearby', 'No references nearby'))
+        else setResultsMessage(t('extensions.zlota.activityOptions.nearbyReferences', 'Nearby references'))
       }
     })
-  }, [search, nearbyResults, location, settings.distanceUnits])
+  }, [search, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
     setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
@@ -153,7 +150,7 @@ export function ZLOTAActivityOptions ({ styles, operation, settings, refs: allRe
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={'Reference by name or code'}
+          placeholder={t('extensions.zlota.activityOptions.searchPlaceholder', 'Reference by name or code')}
           value={search}
           onChangeText={setSearch}
         />

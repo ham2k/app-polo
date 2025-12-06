@@ -12,6 +12,7 @@ import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { newEventQSO, addQSO } from '../../store/qsos'
 import { fetchWithTimeout } from '../../tools/fetchWithTimeout'
 import Geolocation from '@react-native-community/geolocation'
+import { setExtensionSettings } from '../../store/settings'
 
 const Info = {
   key: 'commands-annotation',
@@ -40,18 +41,18 @@ const NotesCommandHook = {
   key: 'commands-misc-note',
   match: /^(NOTES|NOTE)(|[ /.]|.+)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation }) => {
+  describeCommand: (match, { operation, t }) => {
     if (!operation) { return "" }
     let note = match[2]?.substring(1) || ''
 
     if (note) {
       note = note.trim()
-      return `Add note: ‘${note}’…`
+      return t?.('extensions.commands-annotation.addNote', 'Add note: ‘{{note}}’…', { note }) || `Add note: ‘${note}’…`
     } else {
-      return 'Add a note? keep typing…'
+      return t?.('extensions.commands-annotation.addNotePrompt', 'Add a note? keep typing…') || 'Add a note? keep typing…'
     }
   },
-  invokeCommand: (match, { operation, dispatch, settings }) => {
+  invokeCommand: (match, { operation, dispatch, settings, t }) => {
     if (!operation) { return "" }
 
     let note = match[2]?.substring(1) || ''
@@ -67,7 +68,7 @@ const NotesCommandHook = {
       }
       dispatch(newEventQSO({ uuid: operation.uuid, event }))
 
-      return `Note added!`
+      return t?.('extensions.commands-annotation.addNoteConfirm', 'Note added!') || 'Note added!'
     }
   }
 }
@@ -78,19 +79,19 @@ const TodoCommandHook = {
   key: 'commands-misc-todo',
   match: /^(TODO)(|[ /.]|.+)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation }) => {
+  describeCommand: (match, { operation, t }) => {
     if (!operation) { return "" }
 
     let note = match[2]?.substring(1) || ''
 
     if (note) {
       note = note.trim()
-      return `Add to-do: ‘${note}’…`
+      return t?.('extensions.commands-annotation.addTodo', 'Add to-do: ‘{{note}}’…', { note }) || `Add to-do: ‘${note}’…`
     } else {
-      return 'Add a to-do item? keep typing…'
+      return t?.('extensions.commands-annotation.addTodoPrompt', 'Add a to-do item? keep typing…') || 'Add a to-do item? keep typing…'
     }
   },
-  invokeCommand: (match, { operation, dispatch, settings }) => {
+  invokeCommand: (match, { operation, dispatch, settings, t }) => {
     if (!operation) { return "" }
 
     let note = match[2]?.substring(1) || ''
@@ -107,7 +108,7 @@ const TodoCommandHook = {
       }
       dispatch(newEventQSO({ uuid: operation.uuid, event }))
 
-      return `To-do added!`
+      return t?.('extensions.commands-annotation.addTodoConfirm', 'To-do added!') || 'To-do added!'
     }
   }
 }
@@ -118,19 +119,19 @@ const ChatCommandHook = {
   key: 'commands-misc-chat',
   match: /^(CHAT)(|[ /.]|.+)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation }) => {
+  describeCommand: (match, { operation, t }) => {
     if (!operation) { return false }
 
     let note = match[2]?.substring(1) || ''
 
     if (note) {
       note = note.trim()
-      return `Send chat: ‘${note}’…`
+      return t?.('extensions.commands-annotation.sendChat', 'Send chat: ‘{{note}}’…', { note }) || `Send chat: ‘${note}’…`
     } else {
-      return 'Send a chat? keep typing…'
+      return t?.('extensions.commands-annotation.sendChatPrompt', 'Send a chat? keep typing…') || 'Send a chat? keep typing…'
     }
   },
-  invokeCommand: (match, { operation, dispatch, settings }) => {
+  invokeCommand: (match, { operation, dispatch, settings, t }) => {
     if (!operation) { return "" }
 
     let note = match[2]?.substring(1) || ''
@@ -147,7 +148,7 @@ const ChatCommandHook = {
       }
       dispatch(newEventQSO({ uuid: operation.uuid, event }))
 
-      return `Chatted!`
+      return t?.('extensions.commands-annotation.sendChatConfirm', 'Chatted!') || 'Chatted!'
     }
     return null
   }
@@ -159,9 +160,9 @@ const EarthWeatherCommandHook = {
   key: 'commands-misc-weather',
   match: /^(WEATHER)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation, settings, setCommandInfo, setTimeoutForCommand }) => {
+  describeCommand: (match, { operation, settings, setCommandInfo, setTimeoutForCommand, t }) => {
     setTimeoutForCommand(async () => {
-      const weatherData = await _getWeatherData({ operation, settings })
+      const weatherData = await _getWeatherData({ operation, settings, t })
       const current = WEATHER_CODES[weatherData.current.weather_code]
       const currentEmoji = weatherData.current.is_day ? (current?.dayEmoji ?? current?.emoji) : (current?.nightEmoji ?? current?.emoji) || '🌤️'
       const currentDescription = weatherData.current.is_day ? (current?.dayDescription ?? current?.description) : (current?.nightDescription ?? current?.description)
@@ -173,12 +174,12 @@ const EarthWeatherCommandHook = {
         + `💨 ${weatherData.current.wind_speed_10m}${weatherData.current_units.wind_speed_10m}`
       setCommandInfo && setCommandInfo({ message, match: true, timeout: 6000 })
     })
-    return "Fetching current weather..."
+    return t?.('extensions.commands-annotation.fetchingCurrentWeather', 'Fetching current weather…') || 'Fetching current weather…'
   },
-  invokeCommand: (match, { operation, dispatch, settings, setCommandInfo }) => {
+  invokeCommand: (match, { operation, dispatch, settings, setCommandInfo, t }) => {
     if (!operation) return
     setTimeout(async () => {
-      const weatherData = await _getWeatherData({ operation, settings })
+      const weatherData = await _getWeatherData({ operation, settings, t })
 
       const current = WEATHER_CODES[weatherData.current.weather_code]
       const currentEmoji = weatherData.current.is_day ? (current?.dayEmoji ?? current?.emoji) : (current?.nightEmoji ?? current?.emoji) || '🌤️'
@@ -211,9 +212,9 @@ const SolarWeatherCommandHook = {
   key: 'commands-misc-solar',
   match: /^(SOLAR)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation, settings, setCommandInfo, setTimeoutForCommand }) => {
+  describeCommand: (match, { operation, settings, setCommandInfo, setTimeoutForCommand, t }) => {
     setTimeoutForCommand(async () => {
-      const solarData = await _getSolarData({ operation, settings })
+      const solarData = await _getSolarData({ operation, settings, t })
 
       const message = `${_emojiForSFI(solarData.solarflux)}SFI ${solarData.solarflux} `
         + `• ${_emojiForAIndex(solarData.aindex)}A ${solarData.aindex} `
@@ -222,12 +223,12 @@ const SolarWeatherCommandHook = {
 
       setCommandInfo && setCommandInfo({ message, match: true, timeout: 6000 })
     })
-    return `Fetching solar weather...`
+    return t?.('extensions.commands-annotation.fetchingSolarWeather', 'Fetching solar weather…') || 'Fetching solar weather…'
   },
-  invokeCommand: (match, { operation, dispatch, settings, setCommandInfo }) => {
+  invokeCommand: (match, { operation, dispatch, settings, setCommandInfo, t }) => {
     if (!operation) return
     setTimeout(async () => {
-      const solarData = await _getSolarData({ operation, settings })
+      const solarData = await _getSolarData({ operation, settings, t })
 
       const message = `${_emojiForSFI(solarData.solarflux)}SFI ${solarData.solarflux} `
         + `• ${_emojiForAIndex(solarData.aindex)}A ${solarData.aindex} `
@@ -249,7 +250,7 @@ const SolarWeatherCommandHook = {
   }
 }
 
-async function _getSolarData() {
+async function _getSolarData({ t }) {
   try {
     const response = await fetchWithTimeout('https://www.hamqsl.com/solarxml.php')
     const body = await response.text()
@@ -258,13 +259,13 @@ async function _getSolarData() {
     const solarData = { ...xml?.solar?.solardata }
     return solarData
   } catch (error) {
-    Alert.alert('Error fetching solar weather', error.message)
+    Alert.alert(t?.('extensions.commands-annotation.errorFetchingSolarWeather', 'Error fetching solar weather') || 'Error fetching solar weather', error.message)
     console.error('Error fetching solar weather:', error)
     return {}
   }
 }
 
-async function _getWeatherData({ operation, settings }) {
+async function _getWeatherData({ operation, settings, t }) {
   let latitude, longitude
 
   if (operation?.grid) {
@@ -303,7 +304,7 @@ async function _getWeatherData({ operation, settings }) {
 
     return data
   } catch (error) {
-    Alert.alert('Error fetching weather', error.message)
+    Alert.alert(t?.('extensions.commands-annotation.errorFetchingWeather', 'Error fetching weather') || 'Error fetching weather', error.message)
     console.error('Error fetching weather:', error)
     return {}
   }

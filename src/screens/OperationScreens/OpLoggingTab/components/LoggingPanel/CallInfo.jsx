@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Icon, Text } from 'react-native-paper'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
@@ -23,6 +24,7 @@ import { H2kMarkdown, H2kPressable } from '../../../../../ui'
 import { parseStackedCalls } from '../../../../../tools/callsignTools'
 
 import { useCallLookup } from './useCallLookup'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!',
@@ -34,20 +36,22 @@ export const MESSAGES_FOR_SCORING = {
   newDay: 'New Day',
   maybeDupe: 'Dupe?',
   partialDupe: 'Dupe',
-  'potaActivation.newDay': 'New POTA Day',
-  'potaActivation.newRef': 'New Park',
-  'sotaActivation.newDay': 'New SOTA Day',
-  'sotaActivation.newRef': 'New Summit',
-  'sotaActivation.duplicate': 'SOTA Dupe!',
-  'wwffActivation.duplicate': 'WWFF Dupe!',
-  'wwbotaActivation.newDay': 'New WWBOTA Day',
-  'wwbotaActivation.newRef': 'New Bunker',
-  'motaActivation.newRef': 'New Mill'
+  'potaActivation-newDay': 'New POTA Day',
+  'potaActivation-newRef': 'New Park',
+  'sotaActivation-newDay': 'New SOTA Day',
+  'sotaActivation-newRef': 'New Summit',
+  'sotaActivation-duplicate': 'SOTA Dupe!',
+  'wwffActivation-duplicate': 'WWFF Dupe!',
+  'wwbotaActivation-newDay': 'New WWBOTA Day',
+  'wwbotaActivation-newRef': 'New Bunker',
+  'motaActivation-newRef': 'New Mill'
 }
 
 const DEBUG = false
 
 export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, styles, themeColor, updateQSO, settings }) {
+  const { t } = useTranslation()
+
   const navigation = useNavigation()
   const online = useSelector(selectRuntimeOnline)
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
@@ -189,9 +193,9 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
       // console.log('scoreInfo', scoreInfo)
 
       const allScoringMessages = scoreInfo.sort((a, b) => (b.value ?? 0) - (a.value ?? 0)).map(score => {
-        const alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}.${alert}` }))
-        const notices = (score?.notices || []).map(notice => ({ msg: notice, level: 'notice', key: `${score.type}.${notice}` }))
-        const infos = (score?.infos || []).map(info => ({ msg: info, level: 'info', key: `${score.type}.${info}` }))
+        const alerts = (score?.alerts || []).map(alert => ({ msg: alert, level: 'alert', key: `${score.type}-${alert}` }))
+        const notices = (score?.notices || []).map(notice => ({ msg: notice, level: 'notice', key: `${score.type}-${notice}` }))
+        const infos = (score?.infos || []).map(info => ({ msg: info, level: 'info', key: `${score.type}-${info}` }))
 
         // if (hasValue && alerts.find(alert => alert.msg === 'duplicate')) {
         //   alerts = alerts.filter(alert => alert.msg !== 'duplicate')
@@ -200,7 +204,7 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
         // console.log('-- allScoringMessages', alerts, notices, infos)
         return [...notices, ...alerts, ...infos].map(oneInfo => ({
           ...oneInfo,
-          msg: MESSAGES_FOR_SCORING[oneInfo.key] ?? MESSAGES_FOR_SCORING[oneInfo.msg] ?? oneInfo.msg
+          msg: t(`screens.callInfo.messages.${oneInfo.key}`, `screens.callInfo.messages.${oneInfo.msg}`, '') ?? MESSAGES_FOR_SCORING[oneInfo.key] ?? MESSAGES_FOR_SCORING[oneInfo.msg] ?? oneInfo.msg
         }))
       }).flat()
 
@@ -225,18 +229,17 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
       const countLastWeek = historyMinusThis.filter(x => x.startAtMillis >= lastWeek).length - countToday
 
       if (countLastWeek > countToday || countLastWeek > countYesterday) {
-        // parts.push(`${countLastWeek} since ${fmtDateWeekDay(lastWeek)}`)
-        parts.push(`${countLastWeek} in last 7 days`)
+        parts.push(t('screens.callInfo.history.last7days', '{{count}} in last 7 days', { count: countLastWeek }))
         count -= countLastWeek
       } else if (countToday) {
-        parts.push(`${countToday} today`)
+        parts.push(t('screens.callInfo.history.today', '{{count}} today', { count: countToday }))
         count -= countToday
       } else if (countYesterday) {
-        parts.push(`${countYesterday} yesterday`)
+        parts.push(t('screens.callInfo.history.yesterday', '{{count}} yesterday', { count: countYesterday }))
         count -= countYesterday
       }
       if (count) {
-        parts.push(`${count} QSOs`)
+        parts.push(t('screens.callInfo.history.qsos', '{{count}} QSOs', { count, fmtCount: fmtNumber(count) }))
       }
 
       if (parts.length > 0 && qso?.startAtMillis) {
@@ -244,12 +247,12 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
       }
 
       if (parts.length > 0) {
-        newMessages.push({ msg: parts.join(' + ').replace(' 1 QSOs', ' 1 QSO'), level: 'info', key: 'history' })
+        newMessages.push({ msg: parts.join(' + '), level: 'info', key: 'history' })
       }
     }
 
     return newMessages
-  }, [scoreInfo, lookup?.history, qso?.startAtMillis])
+  }, [scoreInfo, lookup?.history, t, qso?.startAtMillis])
 
   const [infoContainerWidth, setInfoContainerWidth] = useState(0)
   const [infoTextWidth, setInfoTextWidth] = useState(0)

@@ -62,7 +62,7 @@ export const settingsSlice = createSlice({
 
 export const { setOperatorCall, setOnboarded, setAccountInfo, setSettings, setExtensionSettings, setExportSettings, mergeSettings } = settingsSlice.actions
 
-function deepMergeState (state, data, visited = undefined) {
+function deepMergeState(state, data, visited = undefined) {
   visited = visited || new Set()
   visited.add(data)
 
@@ -173,5 +173,7 @@ export const selectOperatorCallInfo = createSelector(
     return info
   }
 )
+
+export const selectSettingsLanguage = (state) => state?.settings?.language
 
 export default settingsSlice.reducer

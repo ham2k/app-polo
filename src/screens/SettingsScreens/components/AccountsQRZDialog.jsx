@@ -6,16 +6,21 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
+import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+
+import { parseCallsign } from '@ham2k/lib-callsigns'
+
 import { setAccountInfo } from '../../../store/settings'
 import { apiQRZ } from '../../../store/apis/apiQRZ'
-import { View } from 'react-native'
 import { resetCallLookupCache } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
-import { parseCallsign } from '@ham2k/lib-callsigns'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -41,11 +46,11 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
 
   useEffect(() => {
     if (login?.indexOf('@') >= 0) {
-      setError("Don't use your email for login.")
+      setError(t('screens.settings.accountsQRZ.errorEmail', "Don't use your email for login."))
     } else {
       setError(null)
     }
-  }, [login])
+  }, [login, t])
 
   const onChangeLogin = useCallback((text) => {
     setLogin(text)
@@ -90,9 +95,9 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>QRZ.com Account</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.settings.accountsQRZ.dialogTitle', 'QRZ.com Account')}</H2kDialogTitle>
       <H2kDialogContent>
-        <Text variant="bodyMedium">Please enter the details for your QRZ.com account:</Text>
+        <Text variant="bodyMedium">{t('screens.settings.accountsQRZ.pleaseEnterDetails', 'Please enter the details for your QRZ.com account:')}</Text>
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={login}
@@ -100,8 +105,8 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
           autoComplete="email"
           inputMode="email"
           keyboardType="email-address"
-          label="Login (your callsign)"
-          placeholder="your login"
+          label={t('screens.settings.accountsQRZ.loginLabel', 'Login (your callsign)')}
+          placeholder={t('screens.settings.accountsQRZ.loginPlaceholder', 'your login')}
           error={error}
           onChangeText={onChangeLogin}
         />
@@ -109,23 +114,23 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={password}
-          label="Password"
+          label={t('screens.settings.accountsQRZ.passwordLabel', 'Password')}
           autoComplete="current-password"
           keyboardType="default"
           textContentType="password"
           secureTextEntry={true}
           autoCapitalize={'none'}
-          placeholder="your password"
+          placeholder={t('screens.settings.accountsQRZ.passwordPlaceholder', 'your password')}
           onChangeText={onChangePassword}
         />
         <View style={{ marginTop: styles.oneSpace, flexDirection: 'row' }}>
-          {!testResult && <H2kButton onPress={handleTest}>{'Check Credentials'}</H2kButton>}
+          {!testResult && <H2kButton onPress={handleTest}>{t('screens.settings.accountsQRZ.checkCredentials', 'Check Credentials')}</H2kButton>}
           {testResult && <H2kMarkdown style={{ flex: 1, marginTop: styles.oneSpace * 0.6 }}>{testResult}</H2kMarkdown>}
         </View>
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

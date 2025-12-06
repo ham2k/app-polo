@@ -2,6 +2,8 @@
 .env.local
 .mise.toml.local
 mise.toml.local
+mise.local.toml
+.mise.local.toml
 
 # local files
 SCRATCHPAD.md

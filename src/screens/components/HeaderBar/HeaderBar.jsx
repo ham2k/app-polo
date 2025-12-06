@@ -117,6 +117,8 @@ export default function HeaderBar ({
                   style={styles.screenTitleSmall}
                   accessibilityLabel={tweakStringForVoiceOver([title, subTitle].filter(x => x).join(', '))}
                   accesibilityRole="header"
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.5}
                 >
                   {title}
                 </Text>
@@ -134,6 +136,8 @@ export default function HeaderBar ({
                 style={styles.screenTitle}
                 accessibilityLabel={tweakStringForVoiceOver(title)}
                 accesibilityRole="header"
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.5}
               >{title}</Text>
             )
         }

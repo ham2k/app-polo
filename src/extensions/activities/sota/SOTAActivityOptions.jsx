@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { selectOperationCallInfo } from '../../../store/operations'
 import { findRef, replaceRef } from '../../../tools/refTools'
@@ -19,6 +20,8 @@ import { SOTAListItem } from './SOTAListItem'
 import { sotaFindAllByLocation, sotaFindAllByName, sotaFindOneByReference } from './SOTADataFile'
 
 export function SOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
@@ -26,9 +29,8 @@ export function SOTAActivityOptions ({ styles, operation, settings, refs: allRef
   const activityRef = useMemo(() => findRef(allRefs, Info.activationType) ?? {}, [allRefs])
 
   const title = useMemo(() => {
-    if (!activityRef?.ref) return 'No summit selected for activation'
-    else return 'Activating summit:'
-  }, [activityRef])
+    return t('extensions.sota.activityOptions.title', 'Activating {{count}} summits', { count: 1 })
+  }, [t])
 
   const [search, setSearch] = useState('')
 
@@ -98,27 +100,23 @@ export function SOTAActivityOptions ({ styles, operation, settings, refs: allRef
         // If it's a naked reference, let's ensure the results include it, or else add a placeholder
         // just to cover any cases where the user knows about a new reference not included in our data
         if (nakedReference && !newResults.find(ref => ref.ref === nakedReference)) {
-          newResults.unshift({ ref: nakedReference, name: 'Unknown summit' })
+          newResults.unshift({ ref: nakedReference, name: t('extensions.sota.activityOptions.unknownSummit', 'Unknown summit') })
         }
 
         setResults(newResults.slice(0, 15))
-        if (newResults.length === 0) {
-          setResultsMessage('No summits found')
-        } else if (newResults.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newResults.length} matches`)
-        } else if (newResults.length === 1) {
-          setResultsMessage('One matching summits')
+        if (newResults.length > 15) {
+          setResultsMessage(t('extensions.sota.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newResults.length }))
         } else {
-          setResultsMessage(`${newResults.length} matching summits`)
+          setResultsMessage(t('extensions.sota.activityOptions.matchingSummits', '{{count}} matching summits', { count: newResults.length }))
         }
       }, 0)
     } else {
       setResults(nearbyResults)
-      if (nearbyResults === undefined) setResultsMessage('Search for some summits to activate!')
-      else if (nearbyResults.length === 0) setResultsMessage('No summits nearby')
-      else setResultsMessage('Nearby summits')
+      if (nearbyResults === undefined) setResultsMessage(t('extensions.sota.activityOptions.searchForSummits', 'Search for some summits to activate!'))
+      else if (nearbyResults.length === 0) setResultsMessage(t('extensions.sota.activityOptions.noSummitsNearby', 'No summits nearby'))
+      else setResultsMessage(t('extensions.sota.activityOptions.nearbySummits', 'Nearby summits'))
     }
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((newRef) => {
     setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: newRef }))
@@ -147,7 +145,7 @@ export function SOTAActivityOptions ({ styles, operation, settings, refs: allRef
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={'Summits by name or reference…'}
+          placeholder={t('extensions.sota.activityOptions.searchPlaceholder', 'Summits by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />

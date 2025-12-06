@@ -59,10 +59,10 @@ const ActivityHook = {
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,
 
-  sampleOperations: ({ settings, callInfo }) => {
+  sampleOperations: ({ settings, callInfo, t }) => {
     return [
       // Regular Activation
-      { refs: [{ type: Info.activationType, ref: 'XXWW-1234', name: 'Example National Park', shortName: 'Example NP', program: Info.shortName, label: `${Info.shortName} XXWW-1234: Example NationalPark`, shortLabel: `${Info.shortName} XXWW-1234` }] }
+      { refs: [{ type: Info.activationType, ref: 'XXWW-1234', name: t('extensions.wwff.exampleRefName', 'Example National Park'), shortName: t('extensions.wwff.activityOptions.exampleNP', 'Example NP'), program: Info.shortName, label: `${Info.shortName} XXWW-1234: Example NationalPark`, shortLabel: `${Info.shortName} XXWW-1234` }] }
     ]
   }
 }
@@ -70,7 +70,7 @@ const ActivityHook = {
 const SpotsHook = {
   ...Info,
   sourceName: 'WWFF Spotline',
-  fetchSpots: async ({ online, settings, dispatch }) => {
+  fetchSpots: async ({ online, settings, dispatch, t }) => {
     if (GLOBAL?.flags?.services?.wwff === false) return []
 
     let spots = []
@@ -105,7 +105,7 @@ const SpotsHook = {
           timeInMillis: spotTime,
           source: Info.key,
           icon: Info.icon,
-          label: `${spot.reference}: ${refDetails?.name ?? 'Unknown Park'}`,
+          label: `${spot.reference}: ${refDetails?.name ?? t('extensions.wwff.unknownRefName', 'Unknown Park')}`,
           type: spot.remarks.match(/QRT/i) ? 'QRT' : undefined,
           sourceInfo: {
             comments: spot.remarks,
@@ -165,7 +165,7 @@ const ReferenceHandler = {
 
   iconForQSO: Info.icon,
 
-  decorateRefWithDispatch: (ref) => async () => {
+  decorateRefWithDispatch: (ref) => async ({ t }) => {
     if (ref.ref) {
       const data = await wwffFindOneByReference(ref.ref)
       if (data) {
@@ -180,7 +180,7 @@ const ReferenceHandler = {
           program: Info.shortName
         }
       } else {
-        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
+        return { ...ref, name: Info.unknownReferenceName ?? t('extensions.wwff.unknownRefName', 'Unknown reference') }
       }
     }
   },
@@ -189,7 +189,7 @@ const ReferenceHandler = {
     return { type: ref.type }
   },
 
-  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+  updateFromTemplateWithDispatch: ({ t, ref, operation }) => async (dispatch) => {
     if (operation?.grid) {
       let info = parseCallsign(operation.stationCall || '')
       info = annotateFromCountryFile(info)
@@ -202,7 +202,7 @@ const ReferenceHandler = {
       })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
 
       if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
-      else return { type: ref.type, name: 'No parks nearby!' }
+      else return { type: ref.type, name: t('extensions.wwff.noRefsNearby', 'No parks nearby!') }
     } else {
       return { type: ref.type }
     }

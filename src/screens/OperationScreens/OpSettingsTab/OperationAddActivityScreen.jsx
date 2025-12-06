@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native'
 import { StackActions } from '@react-navigation/native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { selectOperation, setOperationData } from '../../../store/operations'
 import { findRef, replaceRefs } from '../../../tools/refTools'
@@ -19,6 +20,8 @@ import { trackEvent } from '../../../distro'
 import { H2kListItem, H2kListSection, H2kListSeparator } from '../../../ui'
 
 export default function OperationAddActivityScreen ({ navigation, route }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
   const currentActivities = useMemo(() => {
@@ -62,8 +65,8 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
             {activityHooks.map((activity) => (
               <H2kListItem
                 key={activity.key}
-                title={activity.name}
-                description={currentActivities[activity.key] ?? ''}
+                title={t(`extensions.${activity.key}.name`, activity.name)}
+                description={t(`extensions.${activity.key}.description`, currentActivities[activity.key] ?? '')}
                 leftIcon={activity.icon}
                 onPress={() => addActivity(activity)}
               />
@@ -74,8 +77,8 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
 
           <H2kListSection>
             <H2kListItem
-              title="Can't find the activity you're looking for?"
-              description="There are more options in Settings > App Features"
+              title={t('screens.operationAddActivity.cantFindActivity', "Can't find the activity you're looking for?")}
+              description={t('screens.operationAddActivity.thereAreMoreOptions', 'There are more options in Settings > App Features')}
               onPress={() => navigation.navigate('Settings', { screen: 'FeaturesSettings' })}
             />
           </H2kListSection>

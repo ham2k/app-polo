@@ -97,10 +97,10 @@ export function useNotices({ dispatch, includeDismissed = false, includeTransien
 
 function _adjustNotice(object, templateData) {
   for (const key in object) {
-    if (key.endsWith('.android') && Platform.OS === 'android') {
+    if (key.endsWith('-android') && Platform.OS === 'android') {
       object[key.slice(0, -7)] = object[key]
       delete object[key]
-    } else if (key.endsWith('.ios') && Platform.OS === 'ios') {
+    } else if (key.endsWith('-ios') && Platform.OS === 'ios') {
       object[key.slice(0, -4)] = object[key]
       delete object[key]
     }

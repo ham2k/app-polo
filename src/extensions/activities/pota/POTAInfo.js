@@ -22,18 +22,6 @@ export const Info = {
     activates: 'daily',
     allowsMultipleReferences: true,
     qsosToActivate: 10,
-    uniquePer: ['band', 'mode', 'day', 'ref'],
-    referenceLabel: 'park',
-    ref2refLabel: 'P2P',
-    activatorQSOLabel: 'activator QSO',
-    activatorQSOsLabel: 'activator QSOs',
-    hunterQSOLabel: 'hunter QSO',
-    hunterQSOsLabel: 'hunter QSOs',
-    referenceActivatedLabel: 'park activated',
-    referencesActivatedLabel: 'parks activated',
-    referenceHuntedLabel: 'park hunted',
-    referencesHuntedLabel: 'parks hunted',
-    referenceMissedLabel: 'park incomplete',
-    referencesMissedLabel: 'parks incomplete',
+    uniquePer: ['band', 'mode', 'day', 'ref']
   }
 }

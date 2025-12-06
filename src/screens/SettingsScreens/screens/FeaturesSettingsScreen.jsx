@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings, setSettings } from '../../../store/settings'
@@ -21,13 +22,15 @@ import Notices from '../../HomeScreen/components/Notices'
 import { H2kDialog, H2kDialogContent, H2kListItem, H2kListSection } from '../../../ui'
 
 const FeatureItem = ({ extension, settings, info, styles, onChange, category }) => {
+  const { t } = useTranslation()
+
   const enabled = useMemo(() => settings[`extensions/${extension.key}`] ?? extension?.enabledByDefault, [settings, extension])
 
   return (
     <H2kListItem
-      key={extension.name}
-      title={extension.name}
-      description={extension.description}
+      key={extension.key}
+      title={t(`extensions.${extension.key}.name`, extension.name || extension.key)}
+      description={t(`extensions.${extension.key}.description`, extension.description || '')}
       titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}
       descriptionStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}
       leftIcon={extension.icon ?? 'format-list-bulleted'}
@@ -40,6 +43,8 @@ const FeatureItem = ({ extension, settings, info, styles, onChange, category }) 
 }
 
 export default function FeaturesSettingsScreen ({ navigation, splitView }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles()
   const safeAreaInsets = useSafeAreaInsets()
 
@@ -55,7 +60,7 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
 
   const handleChange = useCallback((extension, value) => {
     const slowTimeout = setTimeout(() => {
-      setSlowOperationMessage('Activating extension, this may take a moment...')
+      setSlowOperationMessage(t('screens.featuresSettings.activatingExtension', 'Activating extension, this may take a moment...'))
     }, 1500)
     setTimeout(async () => {
       if (value) {
@@ -68,7 +73,7 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
       if (slowTimeout) clearTimeout(slowTimeout)
       setSlowOperationMessage()
     }, 0)
-  }, [dispatch])
+  }, [dispatch, t])
 
   return (
     <ScreenContainer>
@@ -82,7 +87,7 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         {featureGroups.map(({ category, label, extensions, popular }) => (
 
-          <H2kListSection title={label} key={category} titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}>
+          <H2kListSection title={t(`general.extensions.categories.${category}`, label)} key={category} titleStyle={category === 'devmode' ? { color: styles.colors.devMode } : {}}>
             {showMoreForGroup[category] || popular.length === 0 ? (
               <>
                 {extensions.map((extension) => (
@@ -90,7 +95,7 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
                 ))}
                 {popular.length > 0 && (
                   <H2kListItem
-                    title={`Fewer ${label}...`}
+                    title={t(`screens.featuresSettings.fewerOf.${label}`, 'Fewer {{category}}...', { category: t(`general.extensions.categories.${category}`, label) })}
                     left={() => <View style={{ width: styles.oneSpace * 5 }} />}
                     onPress={() => setShowMoreForGroup({ ...showMoreForGroup, [category]: false })}
                   />
@@ -102,7 +107,7 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
                   <FeatureItem key={extension.key} extension={extension} settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
                 ))}
                 <H2kListItem
-                  title={`More ${label}...`}
+                  title={t(`screens.featuresSettings.moreOf.${label}`, 'More {{category}}...', { category: t(`general.extensions.categories.${category}`, label) })}
                   left={() => <View style={{ width: styles.oneSpace * 5 }} />}
                   onPress={() => setShowMoreForGroup({ ...showMoreForGroup, [category]: true })}
                 />

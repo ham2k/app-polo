@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
@@ -19,6 +20,8 @@ import { blhaFindAllByLocation, blhaFindAllByName, blhaFindOneByReference } from
 import { BLHAListItem } from './BLHAListItem'
 
 export function BLHAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
@@ -26,10 +29,8 @@ export function BLHAActivityOptions ({ styles, operation, settings, refs: allRef
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (activityRefs?.length === 0) return 'No lighthouses selected for activation'
-    else if (activityRefs?.length === 1) return 'Activating 1 lighthouse'
-    else return `Activating ${activityRefs.length} lighthouses`
-  }, [activityRefs])
+    return t('extensions.blha.activityOptions.title', 'Activating {{count}} lighthouses', { count: activityRefs?.length })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
@@ -108,23 +109,19 @@ export function BLHAActivityOptions ({ styles, operation, settings, refs: allRef
         }
 
         setResults(newRefs.slice(0, 15))
-        if (newRefs.length === 0) {
-          setResultsMessage('No lighthouses found')
-        } else if (newRefs.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newRefs.length} matches`)
-        } else if (newRefs.length === 1) {
-          setResultsMessage('One matching lighthouses')
+        if (newRefs.length > 15) {
+          setResultsMessage(t('extensions.blha.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newRefs.length }))
         } else {
-          setResultsMessage(`${newRefs.length} matching lighthouses`)
+          setResultsMessage(t('extensions.blha.activityOptions.matchingLighthouses', '{{count}} matching lighthouses', { count: newRefs.length }))
         }
       } else {
         setResults(nearbyResults)
-        if (nearbyResults === undefined) setResultsMessage('Search for some lighthouses to activate!')
-        else if (nearbyResults.length === 0) setResultsMessage('No lighthouses nearby')
-        else setResultsMessage('Nearby lighthouses')
+        if (nearbyResults === undefined) setResultsMessage(t('extensions.blha.activityOptions.searchForLighthouses', 'Search for some lighthouses to activate!'))
+        else if (nearbyResults.length === 0) setResultsMessage(t('extensions.blha.activityOptions.noLighthousesNearby', 'No lighthouses nearby'))
+        else setResultsMessage(t('extensions.blha.activityOptions.nearbyLighthouses', 'Nearby lighthouses'))
       }
     })
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
     setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
@@ -154,7 +151,7 @@ export function BLHAActivityOptions ({ styles, operation, settings, refs: allRef
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={'Lighthouses by name or reference…'}
+          placeholder={t('extensions.blha.activityOptions.searchPlaceholder', 'Lighthouses by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />

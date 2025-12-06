@@ -73,8 +73,6 @@ export function computeSizes({ width, height, fontScale, pixelRatio, settingsSca
 
   const pixelScaleAdjustment = fontScale * fontScaleAdjustment // combined scale
 
-  console.log('fontScaleAdjustment', fontScaleAdjustment)
-
   const size = (() => {
     if (width / pixelScaleAdjustment < 340) return 'xs' // Small phone
     else if (width / pixelScaleAdjustment < 480) return 'sm' // Regular phone

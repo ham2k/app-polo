@@ -24,7 +24,7 @@ export function SOTAListItem ({ activityRef, refData, operationRef, style, setti
       titlePrimary={reference?.ref ?? activityRef}
       titleSecondary={reference?.name ? ` - ${reference?.name}` : ''}
       description={[
-        fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away',
+        fmtDistance(refData.distance, { units: settings.distanceUnits, away: true }),
         reference?.ref ? [reference?.region, reference?.association].filter(x => x).join(' • ') : 'Unknown Summit Reference'
       ].filter(x => x).join(' • ')}
       onPress={onPress}

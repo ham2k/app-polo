@@ -95,14 +95,14 @@ const ReferenceHandler = {
       return [
         {
           format: 'adif',
-          exportName: 'Winter Field Day (ADIF)',
+          exportName: 'Winter Field Day',
           nameTemplate: '{{>OtherActivityName}}',
           titleTemplate: '{{>OtherActivityTitle}}'
         },
         // WFD prefers users not to submit Cabrillo files
         // {
         //   format: 'cabrillo',
-        //   exportName: 'Winter Field Day (Cabrillo)',
+        //   exportName: 'Winter Field Day',
         //   nameTemplate: '{{>OtherActivityName}}',
         //   titleTemplate: '{{>OtherActivityTitle}}'
         // }

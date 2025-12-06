@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
@@ -19,6 +20,8 @@ import { ecaFindAllByLocation, ecaFindAllByName, ecaFindOneByReference } from '.
 import { ECAListItem } from './ECAListItem'
 
 export function ECAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
@@ -26,10 +29,8 @@ export function ECAActivityOptions ({ styles, operation, settings, refs: allRefs
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (activityRefs?.length === 0) return 'No castles selected for activation'
-    else if (activityRefs?.length === 1) return 'Activating 1 castle'
-    else return `Activating ${activityRefs.length} castles`
-  }, [activityRefs])
+    return t('extensions.eca.activityOptions.title', 'Activating {{count}} castles', { count: activityRefs?.length })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
@@ -108,23 +109,19 @@ export function ECAActivityOptions ({ styles, operation, settings, refs: allRefs
         }
 
         setResults(newRefs.slice(0, 15))
-        if (newRefs.length === 0) {
-          setResultsMessage('No castles found')
-        } else if (newRefs.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newRefs.length} matches`)
-        } else if (newRefs.length === 1) {
-          setResultsMessage('One matching castles')
+        if (newRefs.length > 15) {
+          setResultsMessage(t('extensions.eca.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newRefs.length }))
         } else {
-          setResultsMessage(`${newRefs.length} matching castles`)
+          setResultsMessage(t('extensions.eca.activityOptions.matchingCastles', '{{count}} matching castles', { count: newRefs.length }))
         }
       } else {
         setResults(nearbyResults)
-        if (nearbyResults === undefined) setResultsMessage('Search for some castles to activate!')
-        else if (nearbyResults.length === 0) setResultsMessage('No castles nearby')
-        else setResultsMessage('Nearby castles')
+        if (nearbyResults === undefined) setResultsMessage(t('extensions.eca.activityOptions.searchForCastles', 'Search for some castles to activate!'))
+        else if (nearbyResults.length === 0) setResultsMessage(t('extensions.eca.activityOptions.noCastlesNearby', 'No castles nearby'))
+        else setResultsMessage(t('extensions.eca.activityOptions.nearbyCastles', 'Nearby castles'))
       }
     })
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
     setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
@@ -154,7 +151,7 @@ export function ECAActivityOptions ({ styles, operation, settings, refs: allRefs
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={'Castles by name or reference…'}
+          placeholder={t('extensions.eca.activityOptions.searchPlaceholder', 'Castles by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />

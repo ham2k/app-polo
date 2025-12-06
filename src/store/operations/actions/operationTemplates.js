@@ -132,10 +132,10 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
           console.info('Geolocation error', error)
           resolve()
         }, {
-          enableHighAccuracy: true,
-          timeout: 1000 * 15 /* 15 seconds */,
-          maximumAge: 1000 * 60 /* 1 minute */
-        }
+        enableHighAccuracy: true,
+        timeout: 1000 * 15 /* 15 seconds */,
+        maximumAge: 1000 * 60 /* 1 minute */
+      }
       )
     })
     dispatch(setOperationData({ uuid, grid: operation.grid }))
@@ -152,14 +152,14 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
     if (hook?.updateFromTemplateWithDispatch) {
       try {
         // Let the hook decide how to clone the ref
-        newRef = await dispatch(hook.updateFromTemplateWithDispatch({ ref, operation }))
+        newRef = await dispatch(hook.updateFromTemplateWithDispatch({ t, ref, operation }))
       } catch (error) {
         console.error('Error cloning ref', error)
       }
     } else if (hook?.updateFromTemplate) {
       try {
         // Let the hook decide how to clone the ref
-        newRef = hook.updateFromTemplate({ ref, operation })
+        newRef = hook.updateFromTemplate({ t, ref, operation })
       } catch (error) {
         console.error('Error cloning ref', error)
       }

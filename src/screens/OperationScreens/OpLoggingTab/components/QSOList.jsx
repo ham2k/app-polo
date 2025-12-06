@@ -10,6 +10,7 @@ import { PixelRatio, SectionList, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import getItemLayout from 'react-native-get-item-layout-section-list'
+import { useTranslation } from 'react-i18next'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { findHooks } from '../../../../extensions/registry'
@@ -25,6 +26,8 @@ import EventSegmentItem from './entries/EventSegmentItem'
 let scrollTimeout
 
 const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress, lastUUID, selectedUUID, onSelectQSO }) {
+  const { t } = useTranslation()
+
   const { width } = useSafeAreaFrame()
   // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
   const safeAreaInsets = useSafeAreaInsets()
@@ -68,7 +71,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
 
   // When the lastQSO changes, scroll to it
   useEffect(() => {
-    console.log('useEffect scroll to', { lastUUID, jumpedToLast: jumpDataRef?.current?.jumpedToLast, sections: sections?.length })
+    // console.log('useEffect scroll to', { lastUUID, jumpedToLast: jumpDataRef?.current?.jumpedToLast, sections: sections?.length })
     if (!sections || !sections.length) return
 
     if (scrollTimeout) {
@@ -99,11 +102,11 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       //   return
       // }
     }
-    console.log('scroll to?', { targetUUID, jumpedToLast: jumpDataRef.current.jumpedToLast })
+    // console.log('scroll to?', { targetUUID, jumpedToLast: jumpDataRef.current.jumpedToLast })
 
     if (targetUUID !== jumpDataRef.current.jumpedToLast) {
       scrollTimeout = setTimeout(() => {
-        console.log('scrolling to')
+        // console.log('scrolling to')
         try {
           listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
         } catch (e) {
@@ -122,7 +125,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       }
     }
   }, [listRef, lastUUID, selectedUUID, sections])
-  console.log('QSLList last UUID', lastUUID)
+  // console.log('QSOList last UUID', lastUUID)
   const refHandlers = useMemo(() => {
     const types = {}
     ;(operation?.refs || []).forEach((ref) => {
@@ -212,8 +215,8 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
 
   const extractKey = useCallback((item, index) => item.uuid, [])
   const emptyComponent = useCallback(() => (
-    <ListEmptyComponent styles={styles} vfo={vfo} />
-  ), [styles, vfo])
+    <ListEmptyComponent styles={styles} vfo={vfo} t={t} />
+  ), [styles, vfo, t])
 
   return (
     <SectionList
@@ -237,14 +240,14 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   )
 })
 
-const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo }) {
+const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo, t }) {
   return (
     <View style={{ flexDirection: 'column' }}>
       <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
-        No QSOs yet!
+        {t('screens.opLoggingTab.noQSOsYet', 'No QSOs yet!')}
       </Text>
       <Text style={{ flex: 1, marginTop: styles.oneSpace * 8, textAlign: 'center' }}>
-        Currently set to
+        {t('screens.opLoggingTab.currentlySetTo', 'Currently set to')}
       </Text>
       <Text style={{ flex: 1, marginTop: styles.oneSpace * 1, textAlign: 'center', fontWeight: 'bold' }}>
         {[vfo.freq ? fmtFreqInMHz(vfo.freq) + ' MHz' : vfo.band, vfo.mode].filter(x => x).join(' • ')}

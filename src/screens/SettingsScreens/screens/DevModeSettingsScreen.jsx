@@ -6,7 +6,6 @@
  */
 
 import React, { useCallback } from 'react'
-import { IconButton } from 'react-native-paper'
 import { Alert, ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
@@ -15,11 +14,14 @@ import Share from 'react-native-share'
 import DeviceInfo from 'react-native-device-info'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import YAML from 'yaml'
+import Config from 'react-native-config'
+import { useTranslation } from 'react-i18next'
 
 import packageJson from '../../../../package.json'
 import GLOBAL from '../../../GLOBAL'
 
 import { DevModeSettingsForDistribution, reportError } from '../../../distro'
+import { refreshCrowdInTranslations } from '../../../i18n/i18n'
 import { mergeSettings, selectSettings, setSettings } from '../../../store/settings'
 import { importQSON, selectOperationsList } from '../../../store/operations'
 import { pathForDatabase, replaceDatabase, resetDatabase } from '../../../store/db/db'
@@ -28,7 +30,7 @@ import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
-import { H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kIconButton, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 function prepareStyles (baseStyles) {
   return {
@@ -42,6 +44,8 @@ function prepareStyles (baseStyles) {
 }
 
 export default function DevModeSettingsScreen ({ navigation, splitView }) {
+  const { t, i18n } = useTranslation()
+
   const styles = useThemedStyles(prepareStyles)
   const safeAreaInsets = useSafeAreaInsets()
 
@@ -97,17 +101,17 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
   }, [])
 
   const handleWipeDB = useCallback(() => {
-    Alert.alert('Wipe Database?', 'Are you sure you want to delete all Operations, QSOs and other data?', [
-      { text: 'No, Cancel', onPress: () => {} },
+    Alert.alert(t('screens.devModeSettings.wipeDatabase.title', 'Wipe Database?'), t('screens.devModeSettings.wipeDatabase.description', 'Are you sure you want to delete all Operations, QSOs and other data?'), [
+      { text: t('screens.devModeSettings.wipeDatabase.noCancel', 'No, Cancel'), onPress: () => {} },
       {
-        text: 'Yes, Wipe It!',
+        text: t('screens.devModeSettings.wipeDatabase.yesWipeIt', 'Yes, Wipe It!'),
         onPress: () => {
           dispatch(setLocalData({ sync: { lastestOperationSyncedAtMillis: 0, completedFullSync: false } }))
           setTimeout(async () => await resetDatabase(), 50)
         }
       }
     ])
-  }, [dispatch])
+  }, [dispatch, t])
 
   const handleImportFiles = useCallback(() => {
     pick({ mode: 'import' }).then(async (files) => {
@@ -132,7 +136,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
 
   const downloadDevSettings = useCallback(async () => {
     if (!settings.devSettingsLocation) {
-      Alert.alert('No location provided', 'Please provide a location for the dev settings')
+      Alert.alert(t('screens.devModeSettings.downloadDevSettings.noLocationProvided', 'No location provided'), t('screens.devModeSettings.downloadDevSettings.pleaseProvideLocation', 'Please provide a location for the dev settings'))
       return
     }
 
@@ -159,16 +163,22 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
       msg += `Exports: ${Object.keys(exports || {}).join(', ')}\n`
     }
     console.log('settings loaded', { extensions, exports })
-    Alert.alert('Settings Loaded', msg)
-  }, [dispatch, settings])
+    Alert.alert(t('screens.devModeSettings.downloadDevSettings.settingsLoaded', 'Settings Loaded'), msg)
+  }, [dispatch, settings, t])
 
   const shareSystemInfo = useCallback(() => {
     Share.open({
-      title: 'Ham2K PoLo System Information',
+      title: t('screens.devModeSettings.shareSystemInfo.title', 'Ham2K PoLo System Information'),
       message: systemInfo(),
       email: 'help@ham2k.com'
     })
-  }, [])
+  }, [t])
+
+  const handleRefreshCrowdInTranslations = useCallback(async () => {
+    if (!Config.CROWDIN_PROJECT_ID || !settings.crowdInPersonalToken) return
+
+    await refreshCrowdInTranslations({ all: true, i18n, settings, dispatch, token: settings.crowdInPersonalToken })
+  }, [dispatch, settings, i18n])
 
   if (!settings.devMode) return
 
@@ -176,9 +186,9 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <DevModeSettingsForDistribution styles={styles} dispatch={dispatch} settings={settings} operations={operations} />
-        <H2kListSection title={'Import'}>
+        <H2kListSection title={t('screens.devModeSettings.import.title', 'Import')}>
           <H2kListItem
-            title="Import QSON file"
+            title={t('screens.devModeSettings.import.importQSONFile', 'Import QSON file')}
             leftIcon={'briefcase-download'}
             leftIconColor={styles.colors.devMode}
             titleStyle={{ color: styles.colors.devMode }}
@@ -188,8 +198,8 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
         </H2kListSection>
         <H2kListSection title={'Experiments'}>
           <H2kListItem
-            title="Enable Wavelog Experiments"
-            description={settings.wavelogExperiments ? 'Experimental Wavelog features are enabled' : 'Wavelog is Disabled'}
+            title={t('screens.devModeSettings.experiments.enableWavelogExperiments', 'Enable Wavelog Experiments')}
+            description={settings.wavelogExperiments ? t('screens.devModeSettings.experiments.experimentalWavelogFeaturesEnabled', 'Experimental Wavelog features are enabled') : t('screens.devModeSettings.experiments.wavelogDisabled', 'Wavelog is Disabled')}
             leftIcon={'test-tube'}
             leftIconColor={styles.colors.devMode}
             rightValue={!!settings.wavelogExperiments}
@@ -201,8 +211,8 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
         </H2kListSection>
         <H2kListSection title={'Manage Database'}>
           <H2kListItem
-            title="Export Database"
-            description={'Export the current database file'}
+            title={t('screens.devModeSettings.manageDatabase.exportDatabase', 'Export Database')}
+            description={t('screens.devModeSettings.manageDatabase.exportDatabaseDescription', 'Export the current database file')}
             leftIcon={'briefcase-upload'}
             leftIconColor={styles.colors.devMode}
             titleStyle={{ color: styles.colors.devMode }}
@@ -210,8 +220,8 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
             onPress={handleExportDB}
           />
           <H2kListItem
-            title="Replace Database"
-            description={'Import a new database file and replace all data'}
+            title={t('screens.devModeSettings.manageDatabase.replaceDatabase', 'Replace Database')}
+            description={t('screens.devModeSettings.manageDatabase.replaceDatabaseDescription', 'Import a new database file and replace all data')}
             leftIcon={'briefcase-edit'}
             leftIconColor={styles.colors.devMode}
             titleStyle={{ color: styles.colors.devMode }}
@@ -219,8 +229,8 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
             onPress={handleImportDB}
           />
           <H2kListItem
-            title="Wipe Database"
-            description={'Delete all data from the database.'}
+            title={t('screens.devModeSettings.manageDatabase.wipeDatabase', 'Wipe Database')}
+            description={t('screens.devModeSettings.manageDatabase.wipeDatabaseDescription', 'Delete all data from the database.')}
             leftIcon={'briefcase-remove'}
             leftIconColor={styles.colors.devMode}
             titleStyle={{ color: styles.colors.devMode }}
@@ -229,32 +239,52 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
           />
         </H2kListSection>
 
+        {Config.CROWDIN_PROJECT_ID && (
+          <H2kListSection title={t('screens.devModeSettings.internationalization.title', 'Internationalization')}>
+            <H2kListRow style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+              <H2kTextInput
+                label={t('screens.devModeSettings.internationalization.crowdInPersonalTokenLabel', 'CrowdIn Personal Access Token')}
+                value={settings.crowdInPersonalToken ?? ''}
+                keyboard={'normal'}
+                secureTextEntry={true}
+                placeholder={t('screens.devModeSettings.internationalization.crowdInPersonalTokenPlaceholder', 'Get one from CrowdIn\'s account settings page')}
+                onChangeText={(value) => dispatch(setSettings({ crowdInPersonalToken: value }))}
+                style={{ flex: 1 }}
+              />
+              <H2kIconButton icon="refresh" mode="contained"
+                containerColor={styles.colors.devMode} iconColor={styles.colors.background}
+                onPress={handleRefreshCrowdInTranslations}
+              />
+            </H2kListRow>
+          </H2kListSection>
+        )}
+
         <H2kListSection title={'Download Advanced Settings'}>
-          <H2kListItem style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+          <H2kListRow style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
             <H2kTextInput
-              label="Location"
+              label={t('screens.devModeSettings.downloadAdvancedSettings.locationLabel', 'Location')}
               value={settings.devSettingsLocation ?? ''}
               inputMode={'url'}
-              placeholder={'https://example.com/dir/settings.yml'}
+              placeholder={t('screens.devModeSettings.downloadAdvancedSettings.locationPlaceholder', 'https://example.com/dir/settings.yml')}
               onChangeText={(value) => dispatch(setSettings({ devSettingsLocation: value })) }
               style={{ flex: 1 }}
             />
-            <IconButton icon="download" mode="contained"
+            <H2kIconButton icon="download" mode="contained"
               containerColor={styles.colors.devMode} iconColor={styles.colors.background}
               onPress={downloadDevSettings}
             />
-          </H2kListItem>
+          </H2kListRow>
 
         </H2kListSection>
 
-        <H2kListSection title={'System Information'}>
+        <H2kListSection title={t('screens.devModeSettings.systemInformation.title', 'System Information')}>
           <View style={{ paddingHorizontal: styles.oneSpace * 2 }}>
             <H2kMarkdown styles={{ markdown: { heading3: { ...styles.markdown.heading3, marginTop: styles.oneSpace } } }}>
               {systemInfo()}
             </H2kMarkdown>
           </View>
           <H2kListItem
-            title="Share with the Development Team"
+            title={t('screens.devModeSettings.systemInformation.shareWithDevelopmentTeam', 'Share with the Development Team')}
             leftIcon={'share'}
             onPress={shareSystemInfo}
           />

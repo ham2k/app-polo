@@ -13,16 +13,22 @@ import { authorize, logout } from 'react-native-app-auth'
 import { setAccountInfo } from '../../../store/settings'
 import { SOTASSOConfig, useAccountQuery } from '../../../store/apis/apiSOTA'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText } from '../../../ui'
+import { useTranslation } from 'react-i18next'
 
 export function SOTAAccountSetting ({ settings, styles }) {
+  const { t } = useTranslation()
+
   const [currentDialog, setCurrentDialog] = useState()
   const accountQueryResults = useAccountQuery(undefined, { skip: !settings?.accounts?.sota?.idToken })
   return (
     <React.Fragment>
       <H2kListItem
-        title="SOTA (for SOTAWatch self-spotting)"
-        description={settings?.accounts?.sota?.idToken ? `Logged in as ${accountQueryResults.data?.attributes?.Callsign?.[0] || '…'}` : 'No account'}
-        leftIcon={'web'}
+        title={t('extensions.sota.account.title', 'SOTA (for SOTAWatch self-spotting)')}
+        description={settings?.accounts?.sota?.idToken
+          ? t('extensions.sota.account.description', 'Logged in as {{callsign}}', { callsign: accountQueryResults.data?.attributes?.Callsign?.[0] || '…' })
+          : t('extensions.sota.account.noAccount', 'No account')
+        }
+        leftIcon="web"
         onPress={() => setCurrentDialog('accountsSOTA')}
       />
       {currentDialog === 'accountsSOTA' && (
@@ -38,6 +44,8 @@ export function SOTAAccountSetting ({ settings, styles }) {
 }
 
 export function AccountsSOTADialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -83,24 +91,24 @@ export function AccountsSOTADialog ({ visible, settings, styles, onDialogDone })
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleClose}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>SOTA Account</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.sota.account.dialogTitle', 'SOTA Account')}</H2kDialogTitle>
       {!accountQueryResults.isUninitialized ? (
         <H2kDialogContent>
           {(accountQueryResults.isLoading || accountQueryResults.isSuccess) ? (
-            <H2kText style={{ textAlign: 'center' }} variant="bodyMedium">Logged in as {accountQueryResults.data?.attributes?.Callsign?.[0] || '…' }</H2kText>
+            <H2kText style={{ textAlign: 'center' }} variant="bodyMedium">{t('extensions.sota.account.description', 'Logged in as {{callsign}}', { callsign: accountQueryResults.data?.attributes?.Callsign?.[0] || '…' })}</H2kText>
           ) : (
-            <H2kText style={{ textAlign: 'center' }} variant="bodyMedium">Error fetching account details</H2kText>
+            <H2kText style={{ textAlign: 'center' }} variant="bodyMedium">{t('extensions.sota.account.error', 'Error fetching account details')}</H2kText>
           )}
-          <H2kButton style={{ marginTop: styles.oneSpace * 2 }} mode="contained" onPress={handleLogout}>Logout</H2kButton>
+          <H2kButton style={{ marginTop: styles.oneSpace * 2 }} mode="contained" onPress={handleLogout}>{t('extensions.sota.account.logout', 'Logout')}</H2kButton>
         </H2kDialogContent>
       ) : (
         <H2kDialogContent>
-          <H2kText style={{ textAlign: 'center' }} variant="bodyMedium">Connect your SOTA account</H2kText>
-          <H2kButton style={{ marginTop: styles.oneSpace * 2 }} mode="contained" onPress={handleLogin}>Login</H2kButton>
+          <H2kText style={{ textAlign: 'center' }} variant="bodyMedium">{t('extensions.sota.account.connect', 'Connect your SOTA account')}</H2kText>
+          <H2kButton style={{ marginTop: styles.oneSpace * 2 }} mode="contained" onPress={handleLogin}>{t('general.buttons.login', 'Login')}</H2kButton>
         </H2kDialogContent>
       )}
       <H2kDialogActions>
-        <H2kButton onPress={handleClose}>Close</H2kButton>
+        <H2kButton onPress={handleClose}>{t('general.buttons.close', 'Close')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

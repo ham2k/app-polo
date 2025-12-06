@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
@@ -20,6 +21,8 @@ import { siotaFindAllByLocation, siotaFindAllByName, siotaFindOneByReference } f
 import { SiOTAListItem } from './SiOTAListItem'
 
 export function SiOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
 
   const online = useSelector(selectRuntimeOnline)
@@ -29,10 +32,8 @@ export function SiOTAActivityOptions ({ styles, operation, settings, refs: allRe
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (activityRefs?.length === 0) return 'No silos selected for activation'
-    else if (activityRefs?.length === 1) return 'Activating 1 silo'
-    else return `Activating ${activityRefs.length} silos`
-  }, [activityRefs])
+    return t('extensions.siota.activityOptions.title', 'Activating {{count}} silos', { count: activityRefs?.length })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
@@ -110,23 +111,19 @@ export function SiOTAActivityOptions ({ styles, operation, settings, refs: allRe
         }
 
         setResults(newRefs.slice(0, 15))
-        if (newRefs.length === 0) {
-          setResultsMessage('No silos found')
-        } else if (newRefs.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newRefs.length} matches`)
-        } else if (newRefs.length === 1) {
-          setResultsMessage('One matching silos')
+        if (newRefs.length > 15) {
+          setResultsMessage(t('extensions.siota.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newRefs.length }))
         } else {
-          setResultsMessage(`${newRefs.length} matching silos`)
+          setResultsMessage(t('extensions.siota.activityOptions.matchingSilos', '{{count}} matching silos', { count: newRefs.length }))
         }
       } else {
         setResults(nearbyResults)
-        if (nearbyResults === undefined) setResultsMessage('Search for some silos to activate!')
-        else if (nearbyResults.length === 0) setResultsMessage('No silos nearby')
-        else setResultsMessage('Nearby silos')
+        if (nearbyResults === undefined) setResultsMessage(t('extensions.siota.activityOptions.searchForSilos', 'Search for some silos to activate!'))
+        else if (nearbyResults.length === 0) setResultsMessage(t('extensions.siota.activityOptions.noSilosNearby', 'No silos nearby'))
+        else setResultsMessage(t('extensions.siota.activityOptions.nearbySilos', 'Nearby silos'))
       }
     })
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
     setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
@@ -156,7 +153,7 @@ export function SiOTAActivityOptions ({ styles, operation, settings, refs: allRe
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={'Silos by name or reference…'}
+          placeholder={t('extensions.siota.activityOptions.searchPlaceholder', 'Silos by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />

@@ -10,6 +10,7 @@ import { ScrollView, View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { selectExportSettings, selectSettings, setExportSettings } from '../../../store/settings'
 import ScreenContainer from '../../components/ScreenContainer'
@@ -20,6 +21,8 @@ import { fmtISODate } from '../../../tools/timeFormats'
 import { H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 export default function ExportSettingsScreen ({ navigation, splitView }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
   const safeAreaInsets = useSafeAreaInsets()
 
@@ -51,7 +54,7 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
     qso: {
       notes: 'Good Contact!',
       their: {
-        call: 'N0CALL',
+        call: t('general.misc.placeholderCallsign', 'N0CALL'),
         sent: '59',
         exchange: 'MA',
         grid: 'FF99'
@@ -61,7 +64,7 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
         exchange: 'NY'
       }
     }
-  }), [now])
+  }), [now, t])
 
   const exportTypes = useMemo(() => {
     const activityHooks = findHooks('activity')
@@ -72,8 +75,8 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
 
     newExportTypes.push({
       key: 'default',
-      name: 'Defaults',
-      description: 'Base settings for all exports',
+      name: t('screens.exportSettings.default.name', 'Defaults'),
+      description: t('screens.exportSettings.default.description', 'Base settings for all exports'),
       sampleData: {
         ...sampleTemplateData,
         ref: { type: 'potaActivation', ref: 'XX-1234' },
@@ -82,47 +85,47 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
       editableSettings: [
         {
           key: 'RefActivityNameNormal',
-          label: 'File name for Reference Activities (Normal)',
+          label: t('screens.exportSettings.default.fileNameNormal', 'File name for Reference Activities (Normal)'),
           default: defaultPartials.RefActivityNameNormal
         },
         {
           key: 'RefActivityNameCompact',
-          label: 'File name for Reference Activities (Compact)',
+          label: t('screens.exportSettings.default.fileNameCompact', 'File name for Reference Activities (Compact)'),
           default: defaultPartials.RefActivityNameCompact
         },
         {
           key: 'RefActivityTitle',
-          label: 'Title for Reference Activities',
+          label: t('screens.exportSettings.default.titleReferenceActivities', 'Title for Reference Activities'),
           default: defaultPartials.RefActivityTitle
         },
         {
           key: 'OtherActivityNameNormal',
-          label: 'File name for Other Activities (Normal)',
+          label: t('screens.exportSettings.default.fileNameOtherActivitiesNormal', 'File name for Other Activities (Normal)'),
           default: defaultPartials.OtherActivityNameNormal
         },
         {
           key: 'OtherActivityNameCompact',
-          label: 'File name for Other Activities (Compact)',
+          label: t('screens.exportSettings.default.fileNameOtherActivitiesCompact', 'File name for Other Activities (Compact)'),
           default: defaultPartials.OtherActivityNameCompact
         },
         {
           key: 'OtherActivityTitle',
-          label: 'Title for Other Activities',
+          label: t('screens.exportSettings.default.titleOtherActivities', 'Title for Other Activities'),
           default: defaultPartials.OtherActivityTitle
         },
         {
           key: 'ADIFNotes',
-          label: 'ADIF QSO Notes',
+          label: t('screens.exportSettings.default.adifNotes', 'ADIF QSO Notes'),
           default: defaultPartials.ADIFNotes
         },
         {
           key: 'ADIFComment',
-          label: 'ADIF QSO Comments',
+          label: t('screens.exportSettings.default.adifComments', 'ADIF QSO Comments'),
           default: defaultPartials.ADIFComment
         },
         {
           key: 'ADIFQslMsg',
-          label: 'ADIF QSL Message',
+          label: t('screens.exportSettings.default.adifQSLMessage', 'ADIF QSL Message'),
           default: defaultPartials.ADIFQslMsg
         }
       ],
@@ -135,24 +138,26 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
       if (addedHooks[hook.key]) return
       addedHooks[hook.key] = true
 
-      const sampleOperations = (hook.sampleOperations && hook.sampleOperations({ settings })) || []
+      const sampleOperations = (hook.sampleOperations && hook.sampleOperations({ t, settings })) || []
       sampleOperations.forEach(sampleOperation => {
         (sampleOperation?.refs || []).forEach(ref => {
           const refHook = findBestHook(`ref:${ref.type}`)
           if (refHook?.suggestExportOptions) {
-            const options = (refHook.suggestExportOptions && refHook.suggestExportOptions({ operation: sampleOperation, qsos: sampleOperation.qsos, ref, settings })) || []
+            const options = (refHook.suggestExportOptions && refHook.suggestExportOptions({ t, operation: sampleOperation, qsos: sampleOperation.qsos, ref, settings })) || []
             options.forEach(option => {
               const key = `${hook.key}-${option.format}-${option.exportType ?? 'export'}`
               const exportSettings = selectExportSettings({ settings }, key, (refHook?.defaultExportSettings && refHook?.defaultExportSettings()))
 
               const description = [
-                exportSettings.customTemplates ? 'Custom templates' : 'Default templates',
-                exportSettings.privateData ?? refHook?.privateDataDefault ? 'Include Private data' : ''
+                exportSettings.customTemplates ? t('screens.exportSettings.customTemplates', 'Custom templates') : t('screens.exportSettings.defaultTemplates', 'Default templates'),
+                exportSettings.privateData ?? refHook?.privateDataDefault ? t('screens.exportSettings.includePrivateData', 'Include Private data') : ''
               ].filter(x => x).join(' • ')
 
+              const formatDescription = t(`general.dataFormats.descriptions.${option.format}`, DATA_FORMAT_DESCRIPTIONS[option.format] || option.format)
+              const exportName = t([`extensions.${hook.key}.exportName`, `extensions.${hook.key}.shortName`], option.exportName || hook.shortName)
               const data = {
                 key,
-                name: `${option.exportName || hook.shortName} (${DATA_FORMAT_DESCRIPTIONS[option.format] || option.format})`,
+                name: `${exportName} (${formatDescription})`,
                 description,
                 hook,
                 refHook,
@@ -167,12 +172,12 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
                 editableSettings: [
                   {
                     key: 'nameTemplate',
-                    label: 'File name template',
+                    label: t('screens.exportSettings.fileNameTemplate', 'File name template'),
                     default: option.nameTemplate
                   },
                   {
                     key: 'titleTemplate',
-                    label: 'Title template',
+                    label: t('screens.exportSettings.titleTemplate', 'Title template'),
                     default: option.titleTemplate
                   }
                 ]
@@ -180,17 +185,17 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
               if (option.format === 'adif') {
                 data.editableSettings.push({
                   key: 'ADIFNotesTemplate',
-                  label: 'ADIF QSO Notes',
+                  label: t('screens.exportSettings.adifNotes', 'ADIF QSO Notes'),
                   default: option.ADIFNotesTemplate || defaultPartials.ADIFNotes
                 })
                 data.editableSettings.push({
                   key: 'ADIFCommentTemplate',
-                  label: 'ADIF QSO Comments',
+                  label: t('screens.exportSettings.adifComments', 'ADIF QSO Comments'),
                   default: option.ADIFCommentTemplate || defaultPartials.ADIFComment
                 })
                 data.editableSettings.push({
                   key: 'ADIFQslMsgTemplate',
-                  label: 'ADIF QSL Message',
+                  label: t('screens.exportSettings.adifQSLMessage', 'ADIF QSL Message'),
                   default: option.ADIFQslMsgTemplate || defaultPartials.ADIFQslMsg
                 })
               }
@@ -214,13 +219,15 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
           const exportSettings = selectExportSettings({ settings }, key, (exportHook?.defaultExportSettings && exportHook?.defaultExportSettings()))
 
           const description = [
-            exportSettings.customTemplates ? 'Custom templates' : 'Default templates',
-            exportSettings.privateData ?? exportHook?.privateDataDefault ? 'Include Private data' : ''
+            exportSettings.customTemplates ? t('screens.exportSettings.customTemplates', 'Custom templates') : t('screens.exportSettings.defaultTemplates', 'Default templates'),
+            exportSettings.privateData ?? exportHook?.privateDataDefault ? t('screens.exportSettings.includePrivateData', 'Include Private data') : ''
           ].filter(x => x).join(' • ')
 
+          const formatDescription = t(`general.dataFormats.descriptions.${option.format}`, DATA_FORMAT_DESCRIPTIONS[option.format] || option.format)
+          const exportName = t([`extensions.${exportHook.key}.exportName`, `extensions.${exportHook.key}.shortName`, option.exportName || exportHook.shortName])
           const data = {
             key,
-            name: `${option.exportName || exportHook.shortName} (${DATA_FORMAT_DESCRIPTIONS[option.format] || option.format})`,
+            name: `${exportName} (${formatDescription})`,
             description,
             hook: exportHook,
             exportHook,
@@ -233,12 +240,12 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
             editableSettings: [
               {
                 key: 'nameTemplate',
-                label: 'File name template',
+                label: t('screens.exportSettings.fileNameTemplate', 'File name template'),
                 default: option.nameTemplate
               },
               {
                 key: 'titleTemplate',
-                label: 'Title template',
+                label: t('screens.exportSettings.titleTemplate', 'Title template'),
                 default: option.titleTemplate
               }
             ]
@@ -246,17 +253,17 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
           if (option.format === 'adif') {
             data.editableSettings.push({
               key: 'ADIFNotesTemplate',
-              label: 'ADIF QSO Notes',
+              label: t('screens.exportSettings.adifNotes', 'ADIF QSO Notes'),
               default: option.ADIFNotesTemplate || defaultPartials.ADIFNotes
             })
             data.editableSettings.push({
               key: 'ADIFCommentTemplate',
-              label: 'ADIF QSO Comments',
+              label: t('screens.exportSettings.adifComments', 'ADIF QSO Comments'),
               default: option.ADIFCommentTemplate || defaultPartials.ADIFComment
             })
             data.editableSettings.push({
               key: 'ADIFQslMsgTemplate',
-              label: 'ADIF QSL Message',
+              label: t('screens.exportSettings.adifQSLMessage', 'ADIF QSL Message'),
               default: option.ADIFQslMsgTemplate || defaultPartials.ADIFQslMsg
             })
           }
@@ -266,18 +273,18 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
     })
 
     return newExportTypes
-  }, [sampleTemplateData, settings])
+  }, [sampleTemplateData, settings, t])
 
   const templateHelp = useMemo(() => {
-    const call = 'N0CALL'
+    const call = t('general.misc.placeholderCallsign', 'N0CALL')
     const otherCalls = 'OTH3R, C4LLS'
 
-    return `
+    return t('screens.exportSettings.templateHelp-md', `
 Some sample template elements...
 
 ### Log Export
 Attributes for the log being exported
-\`{{log.station}}\` → \`${call}\` Station for this export
+\`{{log.station}}\` → \`{{call}}\` Station for this export
 \`{{log.ref}}\` → \`XX-1234\` Reference for this export
 \`{{log.refName}}\` → \`Example National Park\` Reference name for this export
 \`{{log.refShortName}}\` → \`Example NP\` Short reference name for this export
@@ -286,14 +293,14 @@ Attributes for the log being exported
 \`{{log.handlerShortName}}\` → \`POTA\` Short handler name for this export
 
 ### Operation Callsigns
-\`{{op.station}}\` → \`${call}\` First station for the operation
-\`{{op.operator}}\` → \`${call}\` Operator for the operation
-\`{{op.allStations}}\` → \`${call}, ${otherCalls}\` All stations for the operation
-\`{{op.otherStations}}\` → \`${otherCalls}\` Other stations for the operation
+\`{{op.station}}\` → \`{{call}}\` First station for the operation
+\`{{op.operator}}\` → \`{{call}}\` Operator for the operation
+\`{{op.allStations}}\` → \`{{call}}, {{otherCalls}}\` All stations for the operation
+\`{{op.otherStations}}\` → \`{{otherCalls}}\` Other stations for the operation
 
 ### Operation Date
-\`{{op.date}}\` → \`${fmtISODate(now)}\`
-\`{{compact op.date}}\` → \`${fmtISODate(now).replace(/-/g, '')}\`
+\`{{op.date}}\` → \`{{date}}\`
+\`{{compact op.date}}\` → \`{{compactDate}}\`
 
 ### Other Operation Details
 \`{{op.title}}\` → \`at XX-1234, XXFF-0001\`
@@ -311,13 +318,13 @@ Attributes for the log being exported
 \`{{qso.their.grid}}\` → \`FF99\` The grid they reported
 \`{{qso.refs}}\` → A list of all the references for the QSO (includes both Operation refs and QSO-only refs)
 \`{{first8 qso.uuid}}\` → \`123e4567\`
-`
-  }, [now])
+`, { call, otherCalls, date: fmtISODate(now), compactDate: fmtISODate(now).replace(/-/g, '') })
+  }, [now, t])
 
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <H2kListSection title={'Export Types'} />
+        <H2kListSection title={t('screens.exportSettings.exportTypes', 'Export Types')} />
         {exportTypes.map(exportType => (
           <React.Fragment key={exportType.key}>
             <H2kListItem
@@ -331,8 +338,8 @@ Attributes for the log being exported
               <View style={{ marginLeft: styles.oneSpace * 5, borderBottomWidth: 2, marginRight: styles.oneSpace * 2, paddingBottom: styles.oneSpace * 2, borderColor: styles.colors.border }}>
                 {(exportType.key === 'default' || exportType.defaults.format === 'adif') && (
                   <H2kListItem
-                    title="Include Private Data"
-                    description={'Notes, names, addresses and other private information'}
+                    title={t('screens.exportSettings.includePrivateData', 'Include Private data')}
+                    description={t('screens.exportSettings.includePrivateDataDescription', 'Names, notes, addresses, etc.')}
                     rightSwitchValue={exportType.settings?.privateData ?? exportType.hook?.privateDataDefault}
                     rightSwitchOnValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, privateData: value }))}
                     onPress={() => dispatch(setExportSettings({ key: exportType.key, privateData: !exportType.settings?.privateData }))}
@@ -340,8 +347,8 @@ Attributes for the log being exported
                 )}
                 {exportType.key !== 'default' && (
                   <H2kListItem
-                    title="Custom templates"
-                    description={exportType.settings?.customTemplates ? 'Use the templates below' : 'Use default templates'}
+                    title={t('screens.exportSettings.customTemplates', 'Custom templates')}
+                    description={exportType.settings?.customTemplates ? t('screens.exportSettings.customTemplatesDescription', 'Use custom templates for the export') : t('screens.exportSettings.defaultTemplatesDescription', 'Use default templates for the export')}
                     rightSwitchValue={!!exportType.settings?.customTemplates}
                     rightSwitchOnValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, customTemplates: value }))}
                     onPress={() => dispatch(setExportSettings({ key: exportType.key, customTemplates: !exportType.settings?.customTemplates }))}
@@ -354,7 +361,7 @@ Attributes for the log being exported
             )}
           </React.Fragment>
         ))}
-        <H2kListSection title={'Template Help'}>
+        <H2kListSection title={t('screens.exportSettings.templateHelpTitle', 'Template Help')}>
           <H2kMarkdown style={{ margin: styles.oneSpace * 2 }}>{templateHelp}</H2kMarkdown>
         </H2kListSection>
 
@@ -385,10 +392,10 @@ function OneExportSetting ({ setting, settings, styles, sampleData, dispatch, ex
           value={exportType?.settings?.customTemplates === false ? '' : exportType?.settings?.[setting.key] ?? setting.default ?? ''}
           placeholder={setting.default}
           disabled={exportType?.settings?.customTemplates === false}
-          onChangeText={(value) => dispatch(setExportSettings({ key: exportType.key, [setting.key]: value })) }
+          onChangeText={(value) => dispatch(setExportSettings({ key: exportType.key, [setting.key]: value }))}
         />
 
-        <IconButton icon="backspace-outline" onPress={() => dispatch(setExportSettings({ key: exportType.key, [setting.key]: null })) } />
+        <IconButton icon="backspace-outline" onPress={() => dispatch(setExportSettings({ key: exportType.key, [setting.key]: null }))} />
       </View>
       <Text style={{ marginTop: styles.oneSpace, fontSize: styles.smallerFontSize, marginHorizontal: styles.oneSpace * 1 }}>
         {example}

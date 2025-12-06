@@ -30,14 +30,14 @@ const SetSettingCommandHook = {
   key: 'commands-settings-set',
   match: /^(SET)(|[ /]|.+)$$/i,
   allowSpaces: true,
-  describeCommand: (match, { settings }) => {
+  describeCommand: (match, { settings, t }) => {
     let [name, ...value] = match[2]?.substring(1).split(' ')
     value = value.join(' ')
 
     const setting = SETTINGS_BY_KEY[name.toUpperCase()]
     console.log('describe setting', name, 'value', value, setting)
 
-    if (!setting || !setting.key) return `Setting ${name}?`
+    if (!setting || !setting.key) return t?.('extensions.commands-settings.set', 'Setting {{name}}?', { name }) || `Setting ${name}?`
 
     const isDefault = settings[setting.key] === undefined
     const currentValue = settings[setting.key] || setting.default
@@ -47,15 +47,15 @@ const SetSettingCommandHook = {
 
       console.log('-- coerced value', value)
       if (value !== currentValue) {
-        return `Change "${setting.label}" to \`${_describeValue({ setting, value })}\`?`
+        return t?.('extensions.commands-settings.setChange', 'Change {{label}} to {{value}}?', { label: setting.label, value: _describeValue({ setting, value }) }) || `Change "${setting.label}" to \`${_describeValue({ setting, value })}\`?`
       } else {
-        return `${setting.label}: \`${_describeValue({ setting, value: currentValue, isDefault })}\``
+        return t?.('extensions.commands-settings.setCurrent', '{{label}}: {{value}}', { label: setting.label, value: _describeValue({ setting, value: currentValue, isDefault }) }) || `${setting.label}: \`${_describeValue({ setting, value: currentValue, isDefault })}\``
       }
     } else {
-      return `${setting.label}: \`${_describeValue({ setting, value: currentValue, isDefault })}\``
+      return t?.('extensions.commands-settings.setCurrent', '{{label}}: {{value}}', { label: setting.label, value: _describeValue({ setting, value: currentValue, isDefault }) }) || `${setting.label}: \`${_describeValue({ setting, value: currentValue, isDefault })}\``
     }
   },
-  invokeCommand: (match, { operation, qsos, dispatch, settings }) => {
+  invokeCommand: (match, { operation, qsos, dispatch, settings, t }) => {
     console.log('invoke', match)
     let [name, ...value] = match[2]?.substring(1).split(' ')
     value = value.join(' ')
@@ -71,10 +71,10 @@ const SetSettingCommandHook = {
       console.log('-- changing value', setting.key, value)
       dispatch(setSettings({ [setting.key]: value }))
 
-      return `"${setting.label}" set to \`${_describeValue({ setting, value })}\``
+      return t?.('extensions.commands-settings.setConfirm', '{{label}} set to {{value}}', { label: setting.label, value: _describeValue({ setting, value }) }) || `"${setting.label}" set to \`${_describeValue({ setting, value })}\``
     } else {
       console.log('-- not changing value', setting.key, value)
-      return 'Not changed'
+      return t?.('extensions.commands-settings.setNotChanged', 'Not changed') || 'Not changed'
     }
   }
 }

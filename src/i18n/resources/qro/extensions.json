@@ -1,0 +1,695 @@
+{
+  "extensions": {
+    "bca": {
+      "name": "BELGIUM CASTLES & FORTRESSES",
+      "shortName": "BCA",
+      "exportName": "BCA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO CASTLES SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 CASTLE",
+        "title_other": "ACTIVATING {{count}} CASTLES",
+        "noCastlesFound": "NO CASTLES FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingCastles_zero": "NO MATCHING CASTLES",
+        "matchingCastles_one": "1 MATCHING CASTLE",
+        "matchingCastles_other": "{{count}} MATCHING CASTLES",
+        "searchForCastles": "SEARCH FOR SOME CASTLES TO ACTIVATE!",
+        "noCastlesNearby": "NO CASTLES NEARBY",
+        "nearbyCastles": "NEARBY CASTLES",
+        "searchPlaceholder": "CASTLES BY NAME OR REFERENCE…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "NO CASTLES HUNTED",
+        "huntedRefsCount_one": "1 CASTLE HUNTED",
+        "huntedRefsCount_other": "{{fmtCount}} CASTLES HUNTED",
+        "activatorQSOsCount_zero": "NO ACTIVATOR QSOS",
+        "activatorQSOsCount_one": "1 ACTIVATOR QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} ACTIVATOR QSOS",
+        "huntedQSOsCount_zero": "NO HUNTED QSOS",
+        "huntedQSOsCount_one": "1 HUNTED QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} HUNTED QSOS",
+        "operationTotals": "OPERATION TOTALS",
+        "referencesActivatedCount_zero": "NO CASTLES ACTIVATED",
+        "referencesActivatedCount_one": "1 CASTLE ACTIVATED",
+        "referencesActivatedCount_other": "{{fmtCount}} CASTLES ACTIVATED",
+        "referencesMissedCount_zero": "NO INCOMPLETE CASTLES",
+        "referencesMissedCount_one": "1 INCOMPLETE CASTLE",
+        "referencesMissedCount_other": "{{fmtCount}} INCOMPLETE CASTLES",
+        "referencesHuntedCount_zero": "NO CASTLES HUNTED",
+        "referencesHuntedCount_one": "1 CASTLE HUNTED",
+        "referencesHuntedCount_other": "{{fmtCount}} CASTLES HUNTED"
+      },
+      "loggingControl": {
+        "theirRefLabel": "THEIR BCA"
+      }
+    },
+    "blha": {
+      "name": "BELGIAN LIGHTHOUSES AND LIGHTSHIPS",
+      "shortName": "BLHA",
+      "exportName": "BLHA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO LIGHTHOUSES SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 LIGHTHOUSE",
+        "title_other": "ACTIVATING {{count}} LIGHTHOUSES",
+        "noLighthousesFound": "NO LIGHTHOUSES FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingLighthouses_zero": "NO MATCHING LIGHTHOUSES",
+        "matchingLighthouses_one": "1 MATCHING LIGHTHOUSE",
+        "matchingLighthouses_other": "{{count}} MATCHING LIGHTHOUSES",
+        "searchForLighthouses": "SEARCH FOR SOME LIGHTHOUSES TO ACTIVATE!",
+        "noLighthousesNearby": "NO LIGHTHOUSES NEARBY",
+        "nearbyLighthouses": "NEARBY LIGHTHOUSES",
+        "searchPlaceholder": "LIGHTHOUSES BY NAME OR REFERENCE…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "NO LIGHTHOUSES HUNTED",
+        "huntedRefsCount_one": "1 LIGHTHOUSE HUNTED",
+        "huntedRefsCount_other": "{{fmtCount}} LIGHTHOUSES HUNTED",
+        "activatorQSOsCount_zero": "NO ACTIVATOR QSOS",
+        "activatorQSOsCount_one": "1 ACTIVATOR QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} ACTIVATOR QSOS",
+        "huntedQSOsCount_zero": "NO HUNTED QSOS",
+        "huntedQSOsCount_one": "1 HUNTED QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} HUNTED QSOS",
+        "operationTotals": "OPERATION TOTALS",
+        "referencesActivatedCount_zero": "NO LIGHTHOUSES ACTIVATED",
+        "referencesActivatedCount_one": "1 LIGHTHOUSE ACTIVATED",
+        "referencesActivatedCount_other": "{{fmtCount}} LIGHTHOUSES ACTIVATED",
+        "referencesMissedCount_zero": "NO INCOMPLETE LIGHTHOUSES",
+        "referencesMissedCount_one": "1 INCOMPLETE LIGHTHOUSE",
+        "referencesMissedCount_other": "{{fmtCount}} INCOMPLETE LIGHTHOUSES",
+        "referencesHuntedCount_zero": "NO LIGHTHOUSES HUNTED",
+        "referencesHuntedCount_one": "1 LIGHTHOUSE HUNTED",
+        "referencesHuntedCount_other": "{{fmtCount}} LIGHTHOUSES HUNTED"
+      }
+    },
+    "call-notes": {
+      "name": "CALLSIGN NOTES",
+      "description-md_zero": "NO NOTES LOADED.",
+      "description-md_one": "{{fmtCount}} {{type}} LOADED.",
+      "description-md_other": "{{fmtCount}} {{type}} LOADED.",
+      "builtIn": "BUILT-IN NOTES",
+      "userDefined": "USER NOTES",
+      "failedToLoad": "FAILED TO LOAD!",
+      "notesFile": "CALLSIGN NOTES FILE",
+      "nameLabel": "NAME",
+      "namePlaceholder": "NAME FOR YOUR CALLSIGN NOTES FILE",
+      "locationLabel": "LOCATION",
+      "locationPlaceholder": "HTTPS://EXAMPLE.COM/DIR/NOTES.TXT",
+      "builtinTitle": "BUILTIN",
+      "customTitle": "CUSTOM",
+      "addFile": "ADD A NEW FILE",
+      "aboutTitle": "ABOUT CALLSIGN NOTES",
+      "names": {
+        "ham2k-hams-of-note": "HAM2K'S HAMS OF NOTE"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "A VERITABLE SAMPLE OF WHO'S WHO AND WHO ISN'T IN THE WORLD OF RADIO"
+      },
+      "help-md": "CALLSIGN NOTES ARE STORED ON SIMPLE TEXT FILES, ONE CALL PER LINE FOLLOWED BY INFORMATION YOU WANT SHOWN IN THE LOGGING SCREEN. YOU CAN USE THE BUILTIN FILES OR ADD YOUR OWN.\n\nPROVIDE A DIRECT LINK TO A PLAIN TEXT FILE, OR A \"SHARE LINK\" FROM A SERVICE LIKE:\n* [GOOGLE DOCS](HTTPS: //DOCS.GOOGLE.COM/)\n* [GOOGLE DRIVE](HTTPS: //DRIVE.GOOGLE.COM/)\n* [GITHUB GISTS](HTTPS: //GIST.GITHUB.COM/)\n* [DROPBOX](HTTPS: //WWW.DROPBOX.COM/)\n* [APPLE ICLOUD DRIVE](HTTPS: //WWW.ICLOUD.COM/)\n\nLINES ON THAT FILE SHOULD LOOK LIKE THIS AND CAN SUPPORT BASIC MARKDOWN FORMATTING:\n\n```NK2HRC 🎉 HAM2K RADIO CLUB!!!\nKE8PZN 👑 JAMES POTA KING\nWD4DAN DAN POTA _ROYALTY_\nDAN WD4DAN,WD4JMM\n```\n\nIF THE ENTRY STARTS WITH AN EMOJI, IT WILL BE USED INSTEAD OF THE DEFAULT ⭐.\n\nENTRIES CAN BE USED FOR \"CALLSIGN EXPANSION\" IF YOU FIRST TYPE `..` OR ` //` IN THE CALLSIGN FIELD, SUCH AS `//DAN` IN THE EXAMPLE ABOVE."
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "SETTINGS",
+        "year": "YEAR",
+        "testMode-md": "SINCE THE EVENT FOR THIS YEAR HAS NOT YET STARTED, YOU CAN TEST YOUR OPERATION WITH QSOS FROM THE LAST SEVEN DAYS.",
+        "note-md": "NOTE: POLO WILL REPORT YOUR RESULTS USING ALL QSOS IN THE DATE RANGE, INCLUDING ANY OTHER OPERATIONS PRESENT ON THIS DEVICE.",
+        "info-md": "THE 13 COLONIES SPECIAL EVENT RUNS EVERY YEAR FROM 9AM ET JULY 1ST TO MIDNIGHT ET JULY 7TH."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "FETCHING CURRENT WEATHER…",
+      "errorFetchingWeather": "ERROR FETCHING WEATHER",
+      "fetchingSolarWeather": "FETCHING SOLAR WEATHER…",
+      "errorFetchingSolarWeather": "ERROR FETCHING SOLAR WEATHER",
+      "addNote": "ADD NOTE: ‘{{note}}’…",
+      "addNotePrompt": "ADD A NOTE? KEEP TYPING…",
+      "addNoteConfirm": "NOTE ADDED!",
+      "addTodo": "ADD TO-DO: ‘{{note}}’…",
+      "addTodoPrompt": "ADD A TO-DO ITEM? KEEP TYPING…",
+      "addTodoConfirm": "TO-DO ADDED!",
+      "sendChat": "SEND CHAT: ‘{{note}}’…",
+      "sendChatPrompt": "SEND A CHAT? KEEP TYPING…",
+      "sendChatConfirm": "CHATTED!"
+    },
+    "commands-debug": {
+      "syncall": "DELETE ALL OPERATIONS AND RESET SYNCED STATUS?",
+      "syncallConfirm": "WIPING DATA AND RESYNCING ALL…",
+      "syncup": "RE-SEND LOCAL DATA TO SYNC SERVICE?",
+      "syncupConfirm": "RE-SENDING…",
+      "wipedb": "DELETE ENTIRE DATABASE (BUT KEEP SETTINGS)?",
+      "wipedbConfirm": "WIPING DATABASE…",
+      "factory": "DELETE ALL DATA AND SETTINGS?",
+      "factoryConfirm": "FACTOY RESET IN PROGRESS…"
+    },
+    "commands-misc": {
+      "rtfm": "READ THE FINE MANUAL?",
+      "rtfmConfirm": "OPENING THE FINE MANUAL",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "CANNOT SELF-SPOT WITHOUT FREQUENCY",
+        "selfSpotWithComments": "SELF-SPOT WITH ‘{{comments}}’?",
+        "selfSpotPrompt": "SELF-SPOT?",
+        "selfSpottingWithComments": "SELF-SPOTTING AT {{freq}} WITH ‘{{comments}}’",
+        "selfSpotting": "SELF-SPOTTING AT {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "START THE OPERATION?",
+      "startConfirm": "OPERATION STARTED!",
+      "break": "ADD A BREAK?",
+      "breakConfirm": "ADDED AN OPERATION BREAK!",
+      "stop": "STOP THE OPERATION?",
+      "stopConfirm": "OPERATION STOPPED!"
+    },
+    "commands-operator": {
+      "change": "CHANGE OPERATOR TO {{operator}}?",
+      "changeConfirm": "OPERATOR SET TO {{operator}}"
+    },
+    "commands-radio": {
+      "band": "CHANGE BAND TO {{band}}?",
+      "bandConfirm": "BAND SET TO {{band}}",
+      "frequency": "CHANGE FREQUENCY TO {{freq}} MHZ{{mode}}?",
+      "frequencyConfirm": "FREQUENCY SET TO {{freq}} MHZ{{mode}}",
+      "frequencyAndMode": "CHANGE FREQUENCY TO {{freq}} MHZ ({{mode}})?",
+      "frequencyAndModeConfirm": "FREQUENCY SET TO {{freq}} MHZ ({{mode}})",
+      "power": "CHANGE POWER TO {{power}}W?",
+      "powerConfirm": "POWER SET TO {{power}}W",
+      "mode": "CHANGE MODE TO {{mode}}?",
+      "modeConfirm": "MODE SET TO {{mode}}"
+    },
+    "commands-settings": {
+      "set": "SETTING {{name}}?",
+      "setChange": "CHANGE {{label}} TO {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} SET TO {{value}}",
+      "setNotChanged": "NOT CHANGED"
+    },
+    "commands-time": {
+      "setTime": "SET TIME TO {{time}}?",
+      "setDate": "SET DATE TO {{date}}?",
+      "timeSet": "TIME SET TO {{time}}",
+      "dateSet": "DATE SET TO {{date}}",
+      "changeTimeByHours": "CHANGE TIME BY {{delta}} HOURS?",
+      "changeTimeByMinutes": "CHANGE TIME BY {{delta}} MINUTES?",
+      "changeTimeBySeconds": "CHANGE TIME BY {{delta}} SECONDS?",
+      "changeTimeByDays": "CHANGE TIME BY {{delta}} DAYS?",
+      "changeTimeByWeeks": "CHANGE TIME BY {{delta}} WEEKS?",
+      "changeTimeToNow": "CHANGE TIME TO NOW?",
+      "changeTimeToToday": "CHANGE TIME TO TODAY?",
+      "changeTimeToYesterday": "CHANGE TIME TO YESTERDAY?",
+      "timeSetToNow": "TIME SET TO NOW",
+      "timeSetToToday": "TIME SET TO TODAY",
+      "timeSetToYesterday": "TIME SET TO YESTERDAY"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "NO REFERENCES SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 REFERENCE",
+        "title_other": "ACTIVATING {{count}} REFERENCES",
+        "addMoreReferences": "ADD MORE REFERENCES",
+        "addReference": "ADD A REFERENCE",
+        "activityLabel": "ACTIVITY - MY_SIG IN ADIF (OPTIONAL)",
+        "activityPlaceholder": "I.E. COTA…",
+        "referenceLabel": "REFERENCE - MY_SIG_INFO IN ADIF",
+        "referencePlaceholder": "I.E. XY-1234…",
+        "nameLabel": "NAME (OPTIONAL)",
+        "namePlaceholder": "I.E. XYZ CASTLE…",
+        "addButton": "ADD {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "THEIR REF"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "OVERRIDE SPECIFIC DATA FILE TITLES HERE",
+        "pota-all-parks": "POTA: ALL PARKS",
+        "sota-all-summits": "SOTA: ALL SUMMITS"
+      }
+    },
+    "eca": {
+      "name": "ENGLISH CASTLES AWARDS",
+      "shortName": "ECA",
+      "exportName": "ECA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO CASTLES SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 CASTLE",
+        "title_other": "ACTIVATING {{count}} CASTLES",
+        "noCastlesFound": "NO CASTLES FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingCastles_zero": "NO MATCHING CASTLES",
+        "matchingCastles_one": "1 MATCHING CASTLE",
+        "matchingCastles_other": "{{count}} MATCHING CASTLES",
+        "searchForCastles": "SEARCH FOR SOME CASTLES TO ACTIVATE!",
+        "noCastlesNearby": "NO CASTLES NEARBY",
+        "nearbyCastles": "NEARBY CASTLES",
+        "searchPlaceholder": "CASTLES BY NAME OR REFERENCE…"
+      }
+    },
+    "ela": {
+      "name": "ENGLISH LIGHTHOUSE AWARDS",
+      "shortName": "ELA",
+      "exportName": "ELA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO LIGHTHOUSES SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 LIGHTHOUSE",
+        "title_other": "ACTIVATING {{count}} LIGHTHOUSES",
+        "noLighthousesFound": "NO LIGHTHOUSES FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingLighthouses_zero": "NO MATCHING LIGHTHOUSES",
+        "matchingLighthouses_one": "1 MATCHING LIGHTHOUSE",
+        "matchingLighthouses_other": "{{count}} MATCHING LIGHTHOUSES",
+        "searchForLighthouses": "SEARCH FOR SOME LIGHTHOUSES TO ACTIVATE!",
+        "noLighthousesNearby": "NO LIGHTHOUSES NEARBY",
+        "nearbyLighthouses": "NEARBY LIGHTHOUSES",
+        "searchPlaceholder": "LIGHTHOUSES BY NAME OR REFERENCE…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "EXCHANGE INFORMATION",
+        "classLabel": "CLASS",
+        "locationLabel": "LOCATION",
+        "additionalInformation": "ADDITIONAL INFORMATION",
+        "highestTransmitterPowerLabel": "HIGHEST TRANSMITTER POWER",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP: 5W OR LESS",
+        "qroOption": "QRO: 100W OR LESS",
+        "moreThan100WOption": "MORE THAN 100W",
+        "powerSourceLabel": "POWER SOURCE",
+        "powerSourcePlaceholder": "SELECT A POWER SOURCE",
+        "batteriesOption": "BATTERIES, SOLAR, WIND",
+        "commercialPowerOption": "COMMERCIAL POWER, GENERATOR",
+        "information-md": "CLASS FOR ARRL FIELD DAY IS, FOR EXAMPLE `2A`:\n\n  - `1`, `2`, `3`… FOR THE NUMBER OF TRANSMITTERS.\n  - `A` FOR GROUP (3 OR MORE) PORTABLE STATION\n  - `B` FOR ONE OR TWO PERSON PORTABLE STATION\n  - `C` FOR MOBILE STATION\n  - `D` FOR HOME STATION\n  - `E` FOR HOME STATION ON EMERGENCY POWER\n  - `F` FOR EMERGENCY OPERATION CENTER\n\nLOCATION IS THE ARRL SECTION, RAC SECTION, `MX` FOR MEXICO, OR `DX` FOR ANYWHERE ELSE.\n\nMORE INFO IN THE **[OFFICIAL RULES](HTTPS://WWW.ARRL.ORG/FIELD-DAY-RULES)**."
+      }
+    },
+    "gma": {
+      "name": "GLOBAL MOUNTAIN ACTIVITY",
+      "shortName": "GMA",
+      "exportName": "GMA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO SUMMITS SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 SUMMIT",
+        "title_other": "ACTIVATING {{count}} SUMMITS",
+        "noSummitsFound": "NO SUMMITS FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingSummits_zero": "NO MATCHING SUMMITS",
+        "matchingSummits_one": "1 MATCHING SUMMIT",
+        "matchingSummits_other": "{{count}} MATCHING SUMMITS",
+        "searchForSummits": "SEARCH FOR SOME SUMMITS TO ACTIVATE!",
+        "noSummitsNearby": "NO SUMMITS NEARBY",
+        "nearbySummits": "NEARBY SUMMITS",
+        "searchPlaceholder": "SUMMITS BY NAME OR REFERENCE…",
+        "unknownSummit": "UNKNOWN SUMMIT"
+      }
+    },
+    "hsota": {
+      "name": "HILLS ON THE AIR",
+      "shortName": "HSOTA",
+      "exportName": "HSOTA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO SITES SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 SITE",
+        "title_other": "ACTIVATING {{count}} SITES",
+        "noSitesFound": "NO SITES FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingSites_zero": "NO MATCHING SITES",
+        "matchingSites_one": "1 MATCHING SITE",
+        "matchingSites_other": "{{count}} MATCHING SITES",
+        "searchForSites": "SEARCH FOR SOME SITES TO ACTIVATE!",
+        "noSitesNearby": "NO SITES NEARBY",
+        "nearbySites": "NEARBY SITES",
+        "searchPlaceholder": "SITES BY NAME OR REFERENCE…",
+        "unknownSite": "UNKNOWN SITE"
+      }
+    },
+    "mota": {
+      "name": "MILLS ON THE AIR",
+      "shortName": "MOTA",
+      "exportName": "MOTA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO MILLS SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 MILL",
+        "title_other": "ACTIVATING {{count}} MILLS",
+        "noMillsFound": "NO MILLS FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingMills_zero": "NO MATCHING MILLS",
+        "matchingMills_one": "1 MATCHING MILL",
+        "matchingMills_other": "{{count}} MATCHING MILLS",
+        "searchForMills": "SEARCH FOR SOME MILLS TO ACTIVATE!",
+        "noMillsNearby": "NO MILLS NEARBY",
+        "nearbyMills": "NEARBY MILLS",
+        "searchPlaceholder": "MILLS BY NAME OR REFERENCE…",
+        "unknownMill": "UNKNOWN MILL"
+      },
+      "loggingControl": {
+        "theirRefLabel": "THEIR MILL"
+      }
+    },
+    "pga": {
+      "name": "POLISH GMINA AWARD",
+      "shortName": "PGA",
+      "exportName": "PGA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO GMINAS SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 GMINA",
+        "title_other": "ACTIVATING {{count}} GMINAS",
+        "noGminasFound": "NO GMINAS FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingGminas_zero": "NO MATCHING GMINAS",
+        "matchingGminas_one": "1 MATCHING GMINA",
+        "matchingGminas_other": "{{count}} MATCHING GMINAS",
+        "searchForGminas": "SEARCH FOR SOME GMINAS TO ACTIVATE!",
+        "noGminasNearby": "NO GMINAS NEARBY",
+        "nearbyGminas": "NEARBY GMINAS",
+        "searchPlaceholder": "GMINAS BY NAME OR REFERENCE…",
+        "unknownGmina": "UNKNOWN GMINA"
+      }
+    },
+    "pota": {
+      "name": "POTA: PARKS ON THE AIR",
+      "shortName": "POTA",
+      "exportName": "POTA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO PARKS SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 PARK",
+        "title_other": "ACTIVATING {{count}} PARKS",
+        "noParksFound": "NO PARKS FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingParks_zero": "NO MATCHING PARKS",
+        "matchingParks_one": "1 MATCHING PARK",
+        "matchingParks_other": "{{count}} MATCHING PARKS",
+        "searchForParks": "SEARCH FOR SOME PARKS TO ACTIVATE!",
+        "noParksNearby": "NO PARKS NEARBY",
+        "nearbyParks": "NEARBY PARKS",
+        "searchPlaceholder": "PARKS BY NAME OR REFERENCE…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "NO P2PS",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2PS",
+        "huntedRefsCount_zero": "NO PARKS HUNTED",
+        "huntedRefsCount_one": "1 PARK HUNTED",
+        "huntedRefsCount_other": "{{fmtCount}} PARKS HUNTED",
+        "activatorQSOsCount_zero": "NO ACTIVATOR QSOS",
+        "activatorQSOsCount_one": "1 ACTIVATOR QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} ACTIVATOR QSOS",
+        "ref2refQSOsCount_zero": "NO P2P QSOS",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOS",
+        "huntedQSOsCount_zero": "NO HUNTED QSOS",
+        "huntedQSOsCount_one": "1 HUNTED QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} HUNTED QSOS",
+        "operationTotals": "OPERATION TOTALS",
+        "referencesActivatedCount_zero": "NO PARKS ACTIVATED",
+        "referencesActivatedCount_one": "1 PARK ACTIVATED",
+        "referencesActivatedCount_other": "{{fmtCount}} PARKS ACTIVATED",
+        "referencesMissedCount_zero": "NO INCOMPLETE PARKS",
+        "referencesMissedCount_one": "1 INCOMPLETE PARK",
+        "referencesMissedCount_other": "{{fmtCount}} INCOMPLETE PARKS",
+        "referencesHuntedCount_zero": "NO PARKS HUNTED",
+        "referencesHuntedCount_one": "1 PARK HUNTED",
+        "referencesHuntedCount_other": "{{fmtCount}} PARKS HUNTED"
+      },
+      "loggingControl": {
+        "theirRefLabel": "THEIR POTA"
+      },
+      "exampleRefName": "EXAMPLE NATIONAL PARK",
+      "unknownRefName": "UNKNOWN PARK",
+      "noRefsNearby": "NO PARKS NEARBY!"
+    },
+    "siota": {
+      "name": "SILOS ON THE AIR",
+      "shortName": "SIOTA",
+      "exportName": "SIOTA ACTIVATION",
+      "account": {
+        "title": "PARKSNPEAKS (SIOTA SPOTTING)",
+        "dialogTitle": "PARKSNPEAKS ACCOUNT",
+        "description": "USERNAME: {{username}}",
+        "noAccount": "NO ACCOUNT",
+        "pleaseEnterDetails": "PLEASE ENTER THE DETAILS FOR YOUR PARKSNPEAKS ACCOUNT:",
+        "usernameLabel": "USERNAME (NOT CALLSIGN)",
+        "usernamePlaceholder": "YOUR ACCOUNT USERNAME",
+        "apiKeyLabel": "API KEY (NOT PASSWORD)",
+        "apiKeyPlaceholder": "YOUR API KEY"
+      },
+      "activityOptions": {
+        "title_zero": "NO SILOS SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 SILO",
+        "title_other": "ACTIVATING {{count}} SILOS",
+        "noSilosFound": "NO SILOS FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingSilos_zero": "NO MATCHING SILOS",
+        "matchingSilos_one": "1 MATCHING SILO",
+        "matchingSilos_other": "{{count}} MATCHING SILOS",
+        "searchForSilos": "SEARCH FOR SOME SILOS TO ACTIVATE!",
+        "noSilosNearby": "NO SILOS NEARBY",
+        "nearbySilos": "NEARBY SILOS",
+        "searchPlaceholder": "SILOS BY NAME OR REFERENCE…",
+        "unknownSilo": "UNKNOWN SILO"
+      },
+      "loggingControl": {
+        "theirRefLabel": "THEIR SILO"
+      }
+    },
+    "sota": {
+      "account": {
+        "title": "SOTA (FOR SOTAWATCH SELF-SPOTTING)",
+        "dialogTitle": "SOTA ACCOUNT",
+        "description": "LOGGED IN AS {{callsign}}",
+        "noAccount": "NO ACCOUNT",
+        "error": "ERROR FETCHING ACCOUNT DETAILS",
+        "connect": "CONNECT YOUR SOTA ACCOUNT"
+      },
+      "notLoggedInAlertTitle": "WARNING",
+      "notLoggedInAlertText": "NOT LOGGED INTO SOTAWATCH FOR SELF-SPOTTING. PLEASE GO TO POLO SETTINGS",
+      "activityOptions": {
+        "title_zero": "NO SUMMITS SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 SUMMIT",
+        "title_other": "ACTIVATING {{count}} SUMMITS",
+        "noSummitsFound": "NO SUMMITS FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingSummits_zero": "NO MATCHING SUMMITS",
+        "matchingSummits_one": "1 MATCHING SUMMIT",
+        "matchingSummits_other": "{{count}} MATCHING SUMMITS",
+        "searchForSummits": "SEARCH FOR SOME SUMMITS TO ACTIVATE!",
+        "noSummitsNearby": "NO SUMMITS NEARBY",
+        "nearbySummits": "NEARBY SUMMITS",
+        "searchPlaceholder": "SUMMITS BY NAME OR REFERENCE…",
+        "unknownSummit": "UNKNOWN SUMMIT"
+      },
+      "scoring": {
+        "ref2refCount_zero": "NO S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "NO SUMMITS HUNTED",
+        "huntedRefsCount_one": "1 SUMMIT HUNTED",
+        "huntedRefsCount_other": "{{fmtCount}} SUMMITS HUNTED",
+        "activatorQSOsCount_zero": "NO ACTIVATOR QSOS",
+        "activatorQSOsCount_one": "1 ACTIVATOR QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} ACTIVATOR QSOS",
+        "ref2refQSOsCount_zero": "NO S2S QSOS",
+        "ref2refQSOsCount_one": "1 S2S QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S QSOS",
+        "huntedQSOsCount_zero": "NO HUNTED QSOS",
+        "huntedQSOsCount_one": "1 HUNTED QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} HUNTED QSOS",
+        "operationTotals": "OPERATION TOTALS",
+        "referencesActivatedCount_zero": "NO SUMMITS ACTIVATED",
+        "referencesActivatedCount_one": "1 SUMMIT ACTIVATED",
+        "referencesActivatedCount_other": "{{fmtCount}} SUMMITS ACTIVATED",
+        "referencesMissedCount_zero": "NO INCOMPLETE SUMMITS",
+        "referencesMissedCount_one": "1 INCOMPLETE SUMMIT",
+        "referencesMissedCount_other": "{{fmtCount}} INCOMPLETE SUMMITS",
+        "referencesHuntedCount_zero": "NO SUMMITS HUNTED",
+        "referencesHuntedCount_one": "1 SUMMIT HUNTED",
+        "referencesHuntedCount_other": "{{fmtCount}} SUMMITS HUNTED"
+      },
+      "loggingControl": {
+        "theirRefLabel": "THEIR SOTA"
+      },
+      "exampleRefName": "EXAMPLE SUMMIT",
+      "unknownRefName": "UNKNOWN SUMMIT",
+      "noRefsNearby": "NO SUMMITS NEARBY!"
+    },
+    "wfd": {
+      "name": "WINTER FIELD DAY",
+      "shortName": "WFD",
+      "exportName": "WFD ACTIVATION",
+      "activityOptions": {
+        "exchangeInformation": "EXCHANGE INFORMATION",
+        "classLabel": "CLASS",
+        "locationLabel": "LOCATION",
+        "objectives_zero": "NO OBJECTIVES ACHIEVED",
+        "objectives_one": "1 OBJECTIVE ACHIEVED, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} OBJECTIVES ACHIEVED, OM ×{{multiplier}}",
+        "objectivesTitle": "OBJECTIVES: {{count}} ACHIEVED, OM ×{{multiplier}}",
+        "objectivesDescription": "REMEMBER TO ALSO REPORT THESE OBJECTIVES WHEN SUBMITTING YOUR LOG!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "ALTERNATIVE POWER",
+        "awayFromHome": "OPERATE AWAY FROM HOME",
+        "fmSatelliteContact": "FM SATELLITE CONTACT",
+        "ssbSatelliteContact": "SSB OR CW SATELLITE CONTACT",
+        "winlinkEmails": "WINLINK EMAILS",
+        "specialBulletin": "SPECIAL BULLETIN",
+        "sixBands": "SIX BANDS",
+        "twelveBands": "TWELVE BANDS",
+        "multipleModes": "MULTIPLE MODES",
+        "qrpOperation": "QRP OPERATION",
+        "sixContinuousHours": "SIX CONTINUOUS HOURS"
+      },
+      "objectiveDescription": {
+        "altPower": "OPERATE 100% ON ALTERNATIVE POWER, SUCH AS BATTERIES, SOLAR, WIND, ETC.",
+        "awayFromHome": "SET UP YOUR FIELD STATION AT LEAST ½ MILE AWAY FROM HOME.",
+        "fmSatelliteContact": "MAKE AT LEAST 1 FM SATELLITE CONTACT DURING THE OPERATING PERIOD.",
+        "ssbSatelliteContact": "MAKE AT LEAST ONE CONTACT USING SSB OR CW.",
+        "winlinkEmails": "SEND AND RECEIVE AT LEAST ONE EMAIL FROM USING WINLINK OVER RF.",
+        "specialBulletin": "ACCURATELY COPY THE WFD SPECIAL BULLETIN MESSAGE AND SUBMIT YOUR COPY WITH YOUR LOG SUBMISSION.",
+        "sixBands": "MAKE AT LEAST THREE CONTACTS ON EACH OF AT LEAST SIX DIFFERENT BANDS.",
+        "twelveBands": "MAKE AT LEAST THREE CONTACTS ON EACH OF AT LEAST TWELVE DIFFERENT BANDS.",
+        "multipleModes": "USE MULTIPLE MODES DURING THE OPERATING PERIOD.",
+        "qrpOperation": "OPERATE ON QRP POWER LEVELS (10W OR LESS ON PHONE, 5W OR LESS ON CW OR DIGITAL).",
+        "sixContinuousHours": "OPERATE FOR AT LEAST SIX CONTINUOUS HOURS DURING THE OPERATING PERIOD."
+      },
+      "information-md": "CLASS FOR WINTER FIELD DAY IS, FOR EXAMPLE `2M`:\n\n  - `1`, `2`, `3`… FOR THE NUMBER OF TRANSMITTERS.\n  - `H` FOR HOME STATION\n  - `I` FOR INDOORS\n  - `O` FOR OUTDOORS\n  - `M` FOR MOBILE OR MOBILE STATIONARY\n\nLOCATION IS THE ARRL SECTION, RAC SECTION, `MX` FOR MEXICO, OR `DX` FOR ANYWHERE ELSE.\n\nMORE INFO IN THE **[OFFICIAL RULES](HTTPS://WWW.WINTERFIELDDAY.COM/SOP.PHP)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: WORLD WIDE BUNKER AWARDS",
+      "shortName": "WWBOTA",
+      "exportName": "WWBOTA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO BUNKERS SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 BUNKER",
+        "title_other": "ACTIVATING {{count}} BUNKERS",
+        "noBunkersFound": "NO BUNKERS FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingBunkers_zero": "NO MATCHING BUNKERS",
+        "matchingBunkers_one": "1 MATCHING BUNKER",
+        "matchingBunkers_other": "{{count}} MATCHING BUNKERS",
+        "searchForBunkers": "SEARCH FOR SOME BUNKERS TO ACTIVATE!",
+        "noBunkersNearby": "NO BUNKERS NEARBY",
+        "nearbyBunkers": "NEARBY BUNKERS",
+        "searchPlaceholder": "BUNKERS BY NAME OR REFERENCE…",
+        "unknownBunker": "UNKNOWN BUNKER"
+      },
+      "loggingControl": {
+        "theirRefLabel": "THEIR BUNKER"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: WORLD WIDE FLORA & FAUNA",
+      "shortName": "WWFF",
+      "exportName": "WWFF ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO PARKS SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 PARK",
+        "title_other": "ACTIVATING {{count}} PARKS",
+        "noParksFound": "NO PARKS FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingParks_zero": "NO MATCHING PARKS",
+        "matchingParks_one": "1 MATCHING PARK",
+        "matchingParks_other": "{{count}} MATCHING PARKS",
+        "searchForParks": "SEARCH FOR SOME PARKS TO ACTIVATE!",
+        "noParksNearby": "NO PARKS NEARBY",
+        "nearbyParks": "NEARBY PARKS",
+        "searchPlaceholder": "PARKS BY NAME OR REFERENCE…",
+        "unknownPark": "UNKNOWN PARK"
+      },
+      "scoring": {
+        "ref2refCount_zero": "NO P2PS",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2PS",
+        "huntedRefsCount_zero": "NO PARKS HUNTED",
+        "huntedRefsCount_one": "1 PARK HUNTED",
+        "huntedRefsCount_other": "{{fmtCount}} PARKS HUNTED",
+        "activatorQSOsCount_zero": "NO ACTIVATOR QSOS",
+        "activatorQSOsCount_one": "1 ACTIVATOR QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} ACTIVATOR QSOS",
+        "ref2refQSOsCount_zero": "NO P2P QSOS",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOS",
+        "huntedQSOsCount_zero": "NO HUNTED QSOS",
+        "huntedQSOsCount_one": "1 HUNTED QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} HUNTED QSOS",
+        "operationTotals": "OPERATION TOTALS",
+        "referencesActivatedCount_zero": "NO PARKS ACTIVATED",
+        "referencesActivatedCount_one": "1 PARK ACTIVATED",
+        "referencesActivatedCount_other": "{{fmtCount}} PARKS ACTIVATED",
+        "referencesMissedCount_zero": "NO INCOMPLETE PARKS",
+        "referencesMissedCount_one": "1 INCOMPLETE PARK",
+        "referencesMissedCount_other": "{{fmtCount}} INCOMPLETE PARKS",
+        "referencesHuntedCount_zero": "NO PARKS HUNTED",
+        "referencesHuntedCount_one": "1 PARK HUNTED",
+        "referencesHuntedCount_other": "{{fmtCount}} PARKS HUNTED"
+      },
+      "loggingControl": {
+        "theirRefLabel": "THEIR WWFF"
+      },
+      "exampleRefName": "EXAMPLE PARK",
+      "unknownRefName": "UNKNOWN PARK",
+      "noRefsNearby": "NO PARKS NEARBY!"
+    },
+    "zlota": {
+      "account": {
+        "title": "ZLOTA (ZLOTA SPOTTING)",
+        "dialogTitle": "ZLOTA ACCOUNT",
+        "description": "CALLSIGN: {{callsign}}",
+        "noAccount": "NO ACCOUNT",
+        "pleaseEnterDetails": "PLEASE ENTER THE DETAILS FOR YOUR ZLOTA ACCOUNT:",
+        "callsignLabel": "CALLSIGN",
+        "callsignPlaceholder": "YOUR ACCOUNT CALLSIGN",
+        "pinLabel": "PIN (NOT PASSWORD)",
+        "pinPlaceholder": "YOUR PIN"
+      },
+      "activityOptions": {
+        "title_zero": "NO REFERENCES SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 REFERENCE",
+        "title_other": "ACTIVATING {{count}} REFERENCES",
+        "noReferencesFound": "NO REFERENCES FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingReferences_zero": "NO MATCHING REFERENCES",
+        "matchingReferences_one": "1 MATCHING REFERENCE",
+        "matchingReferences_other": "{{count}} MATCHING REFERENCES",
+        "searchForReferences": "SEARCH FOR SOME REFERENCES TO ACTIVATE!",
+        "noReferencesNearby": "NO REFERENCES NEARBY",
+        "nearbyReferences": "NEARBY REFERENCES",
+        "searchPlaceholder": "REFERENCES BY NAME OR CODE",
+        "unknownReference": "UNKNOWN REFERENCE"
+      },
+      "loggingControl": {
+        "theirRefLabel": "THEIR REFERENCE"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "ref2refCount_zero": "NO REF2REFS",
+        "ref2refCount_one": "1 REF2REF",
+        "ref2refCount_other": "{{fmtCount}} REF2REFS",
+        "huntedRefsCount_zero": "NO REFS HUNTED",
+        "huntedRefsCount_one": "1 REF HUNTED",
+        "huntedRefsCount_other": "{{fmtCount}} REFS HUNTED",
+        "activatorQSOsCount_zero": "NO ACTIVATOR QSOS",
+        "activatorQSOsCount_one": "1 ACTIVATOR QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} ACTIVATOR QSOS",
+        "ref2refQSOsCount_zero": "NO REF2REF QSOS",
+        "ref2refQSOsCount_one": "1 REF2REF QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} REF2REF QSOS",
+        "huntedQSOsCount_zero": "NO HUNTED QSOS",
+        "huntedQSOsCount_one": "1 HUNTED QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} HUNTED QSOS",
+        "operationTotals": "OPERATION TOTALS",
+        "referencesActivatedCount_zero": "NO REFS ACTIVATED",
+        "referencesActivatedCount_one": "1 REF ACTIVATED",
+        "referencesActivatedCount_other": "{{fmtCount}} REFS ACTIVATED",
+        "referencesMissedCount_zero": "NO INCOMPLETE REFS",
+        "referencesMissedCount_one": "1 INCOMPLETE REF",
+        "referencesMissedCount_other": "{{fmtCount}} INCOMPLETE REFS",
+        "referencesHuntedCount_zero": "NO REFS HUNTED",
+        "referencesHuntedCount_one": "1 REF HUNTED",
+        "referencesHuntedCount_other": "{{fmtCount}} REFS HUNTED"
+      }
+    }
+  }
+}

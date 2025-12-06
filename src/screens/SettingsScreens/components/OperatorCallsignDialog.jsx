@@ -8,11 +8,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { setSettings } from '../../../store/settings'
 import { H2kButton, H2kCallsignInput, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 
 export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const ref = useRef()
@@ -26,12 +29,12 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
   }, [visible])
 
   useEffect(() => {
-    if (settings?.operatorCall === 'N0CALL') {
+    if (settings?.operatorCall === 'N0CALL' || settings?.operatorCall === t('general.misc.placeholderCallsign', 'N0CALL')) {
       setValue('')
     } else {
       setValue(settings?.operatorCall || '')
     }
-  }, [settings])
+  }, [settings, t])
 
   const onChangeText = useCallback((text) => {
     setValue(text)
@@ -51,21 +54,21 @@ export function OperatorCallsignDialog ({ visible, settings, styles, onDialogDon
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>Operator's Callsign</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.settings.operatorCallsign.dialogTitle', 'Operator Callsign')}</H2kDialogTitle>
       <H2kDialogContent>
-        <Text variant="bodyMedium">Please enter the operator's callsign:</Text>
+        <Text variant="bodyMedium">{t('screens.settings.operatorCallsign.pleaseEnterCallsign', 'Please enter the operator\'s callsign:')}</Text>
         <H2kCallsignInput
           innerRef={ref}
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={value ?? ''}
-          label="Operator's Callsign"
-          placeholder="N0CALL"
+          label={t('screens.settings.operatorCallsign.callsignLabel', 'Operator\'s Callsign')}
+          placeholder={t('general.misc.placeholderCallsign', 'N0CALL')}
           onChangeText={onChangeText}
         />
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

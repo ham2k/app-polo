@@ -13,6 +13,8 @@ import { fetchAndProcessURL, loadDataFile, removeDataFile } from '../../../store
 import { selectExtensionSettings } from '../../../store/settings'
 import ManageCallNotesScreen from './screens/ManageCallNotesScreen'
 import { H2kListItem } from '../../../ui'
+import { fmtNumber } from '@ham2k/lib-format-tools'
+import { useTranslation } from 'react-i18next'
 
 const EMOJI_REGEX = emojiRegex()
 
@@ -68,14 +70,18 @@ const Extension = {
       hook: {
         key: 'call-notes-settings',
         category: 'data',
-        SettingItem: ({ navigation, styles }) => (
-          <H2kListItem
-            title="Callsign Notes"
-            description={''}
-            onPress={() => navigation.navigate('ExtensionScreen', { key: 'call-notes-settings' })}
-            leftIcon={'file-account-outline'}
-          />
-        )
+        SettingItem: ({ navigation, styles }) => {
+          const { t } = useTranslation()
+
+          return (
+            <H2kListItem
+              title={t('extensions.call-notes.name', 'Callsign Notes')}
+              description={''}
+              onPress={() => navigation.navigate('ExtensionScreen', { key: 'call-notes-settings' })}
+              leftIcon={'file-account-outline'}
+            />
+          )
+        }
       }
     })
 
@@ -156,12 +162,16 @@ export const createDataFileDefinition = (file) => ({
   key: `call-notes-${file.identifier}`,
   name: `Notes: ${file.name}`,
   icon: 'file-account-outline',
-  description: `${file.builtin ? 'Built-in' : "User's"} Callsign Notes`,
-  buildDescription: ({ data }) => {
+  buildDescription: ({ data, t }) => {
     if (data?.data) {
-      return `${Object.keys(data?.data || {}).length} ${file.builtin ? 'Built-in' : 'User'} callsign notes loaded.`
+      return t('extensions.call-notes.description-md', '{{count}} {{type}} loaded.',
+        {
+          count: Object.keys(data?.data || {}).length,
+          fmtCount: fmtNumber(Object.keys(data?.data || {}).length),
+          type: file.builtin ? t('extensions.call-notes.builtIn', 'Built-in notes') : t('extensions.call-notes.userDefined', 'User notes')
+        })
     } else {
-      return 'Failed to load!'
+      return t('extensions.call-notes.failedToLoad', 'Failed to load!')
     }
   },
   fetch: createCallNotesFetcher(file),

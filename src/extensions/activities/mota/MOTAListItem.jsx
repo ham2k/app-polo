@@ -26,7 +26,7 @@ export function MOTAListItem ({ activityRef, refData, allRefs, style, settings, 
   return (
     <H2kListItem style={{ paddingRight: styles.oneSpace * 1 }}
       titlePrimary={reference?.ref ?? activityRef}
-      titleSecondary={(typeof refData?.distance === 'number') && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
+      titleSecondary={(typeof refData?.distance === 'number') && fmtDistance(refData.distance, { units: settings.distanceUnits, away: true })}
       description={reference?.ref ? [reference?.name, reference?.type].filter(x => x).join(', ') : 'Unknown Mill Reference'}
       onPress={onPress}
       leftIcon={Info.icon}

@@ -8,6 +8,7 @@
 import { superModeForMode } from '@ham2k/lib-operation-data'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
+
 import { ThirteenColoniesOptions } from './ThirteenColoniesOptions'
 import { findQSOsInOtherOps } from '../../../store/qsos/actions/findQSOsInOtherOps'
 import { setOperationLocalData } from '../../../store/operations'
@@ -279,7 +280,7 @@ const ReferenceHandler = {
   }
 }
 
-function _dateRangeForSpecialEvent ({ operation }) {
+function _dateRangeForSpecialEvent({ operation }) {
   const ref = findRef(operation, Info.key)
   const today = new Date()
   // Get current year's dates
@@ -299,7 +300,7 @@ function _dateRangeForSpecialEvent ({ operation }) {
   }
 }
 
-async function _fetchColoniesChecklist ({ operation }) {
+async function _fetchColoniesChecklist({ operation }) {
   const { startMillis, endMillis } = _dateRangeForSpecialEvent({ operation })
 
   const calls = Object.keys(THIRTEEN_COLONIES_CALLS)
@@ -321,7 +322,7 @@ async function _fetchColoniesChecklist ({ operation }) {
   return checklist
 }
 
-async function _fetchColoniesExtendedChecklist ({ operation }) {
+async function _fetchColoniesExtendedChecklist({ operation }) {
   const { startMillis, endMillis } = _dateRangeForSpecialEvent({ operation })
 
   const calls = Object.keys(THIRTEEN_COLONIES_CALLS)

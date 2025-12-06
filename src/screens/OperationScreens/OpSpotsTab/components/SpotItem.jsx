@@ -16,8 +16,6 @@ import { H2kPressable, H2kIcon } from '../../../../ui'
 const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth }) {
   const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
 
-  if (spot?.their?.call === 'W8WR') spot.their.call = 'N2Y'
-
   const { commonStyle, bandStyle, modeStyle, refStyle, callStyle } = useMemo(() => {
     const workedStyles = {}
     if (spot.spot?.type === 'self') {

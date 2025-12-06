@@ -1,11 +1,12 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 
@@ -16,6 +17,8 @@ const MATCH_SYMBOLS_REGEX = /[ ,.]+$/
 
 export function ZLOTALoggingControl (props) {
   const { qso, updateQSO, style, styles } = props
+
+  const { t } = useTranslation()
 
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
@@ -46,7 +49,7 @@ export function ZLOTALoggingControl (props) {
       innerRef={ref}
       style={[style, { maxWidth: '95%', minWidth: styles.oneSpace * 30, width: Math.max(16, refsString?.length || 0) * styles.oneSpace * 1.3 }]}
       value={innerValue}
-      label="Their Reference"
+      label={t('extensions.zlota.loggingControl.theirRefLabel', 'Their Reference')}
       onChangeText={handleChangeText}
     />
   )

@@ -54,6 +54,7 @@ import SettingsCommands from './commands/SettingsCommands'
 
 import SatellitesExtension from './activities/satellites/SatellitesExtension'
 import WABExtension from './other/wab/WABExtension'
+import GLOBAL from '../GLOBAL'
 
 export const loadEarlyExtensions = () => async (dispatch, getState) => {
   registerExtension(DevModeExtension)
@@ -62,7 +63,7 @@ export const loadEarlyExtensions = () => async (dispatch, getState) => {
 }
 
 export const loadExtensions = () => async (dispatch, getState) => {
-  dispatch(addRuntimeMessage('Loading extensions'))
+  dispatch(addRuntimeMessage(GLOBAL.t('screens.start.Loading Extensions', 'Loading Extensions')))
   registerExtension(ADIFExtension)
   registerExtension(CountryFilesExtension)
   registerExtension(POTAExtension)

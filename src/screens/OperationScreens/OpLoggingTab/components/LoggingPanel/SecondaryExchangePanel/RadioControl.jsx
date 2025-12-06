@@ -7,6 +7,7 @@
 
 import React, { useEffect, useMemo, useRef } from 'react'
 import { View } from 'react-native'
+import { useTranslation } from 'react-i18next'
 
 import { ADIF_MODES_AND_SUBMODES, BANDS, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
 
@@ -14,6 +15,8 @@ import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
 import { H2kDropDown, H2kFrequencyInput } from '../../../../../../ui'
 
 const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
+  const { t } = useTranslation()
+
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
@@ -69,7 +72,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
   return (
     <View style={{ flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }}>
       <H2kDropDown
-        label="Band"
+        label={t('screens.opLoggingTab.bandLabel', 'Band')}
         themeColor={themeColor}
         value={bandValue}
         onChange={handleFieldChange}
@@ -85,7 +88,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
         style={{ width: styles.oneSpace * (styles.size === 'xs' ? 10 : 11) }}
         value={freqValue}
         disabled={disabled}
-        label="Frequency"
+        label={t('screens.opLoggingTab.frequencyLabel', 'Frequency')}
         placeholder=""
         onChange={handleFieldChange}
         onSubmitEditing={onSubmitEditing}
@@ -93,7 +96,7 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
         focusedRef={focusedRef}
       />
       <H2kDropDown
-        label="Mode"
+        label={t('screens.opLoggingTab.modeLabel', 'Mode')}
         value={modeValue}
         onChange={handleFieldChange}
         disabled={disabled}
@@ -110,7 +113,7 @@ export const radioControl = {
   key: 'radio',
   icon: 'radio',
   order: 1,
-  label: ({ qso, operation, vfo, settings }) => {
+  label: ({ t, qso, operation, vfo, settings }) => {
     const parts = []
     if (qso?.event) {
       if (vfo?.freq) {
@@ -118,7 +121,7 @@ export const radioControl = {
       } else if (vfo?.band) {
         parts.push(`${vfo?.band}`)
       } else {
-        parts.push('Band???')
+        parts.push(t('screens.opLoggingTab.bandMissing', 'Band???'))
       }
       parts.push(`${vfo?.mode ?? 'SSB'}`)
     } else {
@@ -127,25 +130,25 @@ export const radioControl = {
       } else if (qso?.band ?? vfo?.band) {
         parts.push(`${qso?.band ?? vfo?.band}`)
       } else {
-        parts.push('Band???')
+        parts.push(t('screens.opLoggingTab.bandMissing', 'Band???'))
       }
       parts.push(`${qso?.mode ?? vfo?.mode ?? 'SSB'}`)
     }
 
     return parts.join(' • ')
   },
-  accessibilityLabel: ({ qso, operation, vfo, settings }) => {
+  accessibilityLabel: ({ qso, t, operation, vfo, settings }) => {
     const parts = []
     if (qso?.freq ?? vfo?.freq) {
       parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo?.freq)} MHz`)
     } else if (qso?.band ?? operation?.local?.band) {
       parts.push(`${qso?.band ?? operation?.local?.band}`)
     } else {
-      parts.push('Band???')
+      parts.push(t('screens.opLoggingTab.bandMissing', 'Band???'))
     }
 
     parts.push(`${qso?.mode ?? vfo?.mode ?? 'SSB'}`)
-    return `Radio Controls, ${parts.join(', ')}`
+    return t('screens.opLoggingTab.radioControls-a11y', 'Radio Controls, {{parts}}', { parts: parts.join(', ') }) || `Radio Controls, ${parts.join(', ')}`
   },
   InputComponent: RadioControlInputs,
   inputWidthMultiplier: 43,

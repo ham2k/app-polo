@@ -10,8 +10,10 @@ import { Chip, IconButton, Text } from 'react-native-paper'
 import { View, Image, Linking } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useTranslation } from 'react-i18next'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { selectSettings, setSettings } from '../../../../store/settings'
 import { findHooks } from '../../../../extensions/registry'
@@ -26,6 +28,8 @@ import { selectOperationCallInfo } from '../../../../store/operations'
 const HISTORY_QSOS_TO_SHOW = 3
 
 export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles(prepareStyles, themeColor, style)
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
@@ -65,7 +69,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
         dist && fmtDistance(dist, { units: settings.distanceUnits }),
         bearing && `(${Math.round(bearing)}°)`
       ].filter(x => x).join(' ')
-      if (str) parts.push(`${str} away`)
+      if (str) parts.push(t('general.formatting.distance.away', '{{distance}} away', { distance: str }))
     }
 
     if (guess?.locationLabel) parts.push(`at ${guess?.locationLabel}`)
@@ -73,7 +77,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
     const locationText = parts.filter(x => x).join(' ')
 
     return locationText
-  }, [guess, operation.grid, ourInfo, qso?.their?.grid, settings.distanceUnits, settings.showBearing])
+  }, [guess, operation.grid, ourInfo, qso?.their?.grid, settings.distanceUnits, settings.showBearing, t])
 
   const [thisOpTitle, thisOpQSOs, historyTitle, historyRecent, historyAndMore] = useMemo(() => {
     const thisQs = (lookup?.history || []).filter(q => operation && q.operation === operation?.uuid)
@@ -84,32 +88,26 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
     let title
     let andMore
 
-    if (thisQs?.length === 1) {
-      thisTitle = 'One QSO in this operation'
-    } else if (thisQs?.length > 1) {
-      thisTitle = `${thisQs.length} QSOs in this operation`
+    if (thisQs?.length > 0) {
+      thisTitle = t('screens.callInfo.thisOpCount', '{{count}} QSO in this operation', { count: thisQs.length, fmtCount: fmtNumber(thisQs.length) })
     } else {
       thisTitle = ''
     }
 
-    if (otherOps?.length === 1) {
-      title = 'One previous QSO'
-    } else if (otherOps?.length > 1) {
-      title = `${otherOps.length} previous QSOs`
+    if (otherOps?.length > 0) {
+      title = t('screens.callInfo.otherOpsCount', '{{count}} QSOs in other operations', { count: otherOps.length, fmtCount: fmtNumber(otherOps.length) })
     } else {
       title = ''
     }
 
-    if (otherOps?.length <= HISTORY_QSOS_TO_SHOW) {
-      andMore = ''
-    } else if (otherOps?.length > HISTORY_QSOS_TO_SHOW) {
-      andMore = `… and ${otherOps.length - HISTORY_QSOS_TO_SHOW} more`
+    if (otherOps?.length > HISTORY_QSOS_TO_SHOW) {
+      andMore = t('screens.callInfo.andMoreCount', '… and {{count}} more', { count: otherOps.length, fmtCount: fmtNumber(otherOps.length) })
     } else {
       andMore = ''
     }
 
     return [thisTitle, thisQs, title, recent, andMore]
-  }, [lookup?.history, operation])
+  }, [lookup?.history, operation, t])
 
   const confirmations = findHooks('confirmation')
     .map(hook => hook?.fetchConfirmation(qso))
@@ -173,7 +171,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
                 onPress={handleToggleImage}
                 style={{ marginBottom: styles.oneSpace }}
               >
-                Show Image
+                {t('screens.callInfo.showImage', 'Show Image')}
               </Chip>
             )
           )}
@@ -196,7 +194,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
 
       {lookup?.notes && (
         <View style={styles.section}>
-          <Text variant="bodyLarge" style={{ fontWeight: 'bold', marginTop: styles.oneSpace * 2 }}>Notes</Text>
+          <Text variant="bodyLarge" style={{ fontWeight: 'bold', marginTop: styles.oneSpace * 2 }}>{t('screens.callInfo.notes', 'Notes')}</Text>
           <H2kMarkdown>{lookup.notes.map(note => note?.note).join('\n')}</H2kMarkdown>
         </View>
       )}
@@ -205,7 +203,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
         confirmations.map((confirmation, i) => (
           <View key={i} style={styles.section}>
             <Text variant="bodyLarge" style={{ fontWeight: 'bold', marginTop: styles.oneSpace * 2 }}>{confirmation.title}</Text>
-            {confirmation.isGuess && <Text style={{ fontWeight: 'bold' }}>Potential call: {confirmation.call}</Text>}
+            {confirmation.isGuess && <Text style={{ fontWeight: 'bold' }}>{t('screens.callInfo.potentialCall', 'Potential call: {{call}}', { call: confirmation.call })}</Text>}
             <H2kMarkdown>{confirmation?.note}</H2kMarkdown>
           </View>
         ))
@@ -222,7 +220,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
               <Text>{q.mode}</Text>
               <Text>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
               {(q.ourCall || q.our?.call) !== operation.stationCall && (
-                <Text>with {(q.ourCall || q.our?.call)}</Text>
+                <Text>{t('screens.callInfo.withCall', 'with {{call}}', { call: (q.ourCall || q.our?.call) })}</Text>
               )}
             </View>
           ))}
@@ -238,7 +236,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
             <Text style={{}}>{q.mode}</Text>
             <Text style={{}}>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
             {(q.ourCall || q.our?.call) !== operation.stationCall && (
-              <Text>with {(q.ourCall || q.our?.call)}</Text>
+              <Text>{t('screens.callInfo.withCall', 'with {{call}}', { call: (q.ourCall || q.our?.call) })}</Text>
             )}
           </View>
         ))}

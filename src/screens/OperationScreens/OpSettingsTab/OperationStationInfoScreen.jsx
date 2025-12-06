@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Text } from 'react-native-paper'
 import { ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
@@ -22,6 +23,8 @@ import { joinCalls } from '../../../tools/joinAnd'
 import { H2kCallsignInput, H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 export default function OperationStationInfoScreen ({ navigation, route }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles()
 
   const dispatch = useDispatch()
@@ -51,9 +54,9 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
 
     navigation.setOptions({
       leftAction: 'accept',
-      leftActionA11yLabel: 'Accept Changes',
+      leftActionA11yLabel: t('general.buttons.accept-a11y', 'Accept Changes'),
       rightAction: 'revert',
-      rightActionA11yLabel: 'Revert Changes',
+      rightActionA11yLabel: t('general.buttons.revert-a11y', 'Revert Changes'),
       onLeftActionPress: () => {
         dispatch(setOperationLocalData({
           uuid: operation.uuid,
@@ -74,7 +77,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
         navigation.goBack()
       }
     })
-  }, [dispatch, navigation, operation, values])
+  }, [dispatch, navigation, operation, values, t])
 
   const stations = useMemo(() => {
     const set = new Set()
@@ -99,11 +102,11 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
     const badCalls = allCalls.filter(c => !parseCallsign(c).baseCall)
 
     if (badCalls.length === 1) {
-      result.messageForStationCall = `Invalid callsign: \`${badCalls[0]}\``
+      result.messageForStationCall = t('screens.operationStationInfo.invalidCallsign', 'Invalid callsign: {{callsign}}', { callsign: badCalls[0] })
       result.colorForStationCall = styles.colors.error
       result.actionForStationCall = ''
     } else if (badCalls.length > 1) {
-      result.messageForStationCall = `Invalid callsigns: ${joinCalls(badCalls, { markdown: true })}`
+      result.messageForStationCall = t('screens.operationStationInfo.invalidCallsigns', 'Invalid callsigns: {{callsigns}}', { callsigns: joinCalls(badCalls, { markdown: true }) })
       result.colorForStationCall = styles.colors.error
       result.actionForStationCall = ''
     } else if (stations.length === 0 || singleStation === values.stationCall) {
@@ -111,11 +114,15 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
       result.colorForStationCall = styles.colors.primary
       result.actionForStationCall = ''
     } else if (stations.length === 1 && singleStation !== values.stationCall) {
-      result.messageForStationCall = `${singleStation || 'No call'} used so far.\n\`${values.stationCall}\` will be used for new QSOs.`
+      if (singleStation) {
+        result.messageForStationCall = t('screens.operationStationInfo.singleStationUsed-md', '`{{oldStation}}` used so far.\n{{newStation}}` will be used for new QSOs.', { oldStation: singleStation, newStation: values.stationCall })
+      } else {
+        result.messageForStationCall = t('screens.operationStationInfo.noStationUsed-md', 'No call used so far.\n{{newStation}} will be used for new QSOs.', { newStation: values.stationCall })
+      }
       result.colorForStationCall = styles.colors.primary
-      result.actionForStationCall = `Update \`${values.stationCall}\` on ${qsos.length} existing QSOs`.replaceAll('1 existing QSOs', '1 existing QSO')
+      result.actionForStationCall = t('screens.operationStationInfo.updateStation-md', 'Update `{{newStation}}` on {{count}} existing QSOs', { newStation: values.stationCall, count: qsos.length })
     } else {
-      result.messageForStationCall = `This activity already has QSOs using multiple station callsigns: ${joinCalls(stations, { markdown: true })}.\n\n\`${values.stationCall}\` will only be used for new QSOs.`
+      result.messageForStationCall = t('screens.operationStationInfo.multipleStationsUsed-md', 'This activity already has QSOs using multiple station callsigns: `{{stations}}`.\n\n`{{newStation}}` will only be used for new QSOs.', { stations: joinCalls(stations, { markdown: true }), newStation: values.stationCall })
       result.colorForStationCall = styles.colors.primary
       result.actionForStationCall = ''
     }
@@ -124,7 +131,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
     const badOperatorCall = values.operatorCall && !parseCallsign(values.operatorCall).baseCall
 
     if (badOperatorCall) {
-      result.messageForOperatorCall = `Invalid callsign: \`${values.operatorCall}\``
+      result.messageForOperatorCall = t('screens.operationStationInfo.invalidCallsign', 'Invalid callsign: {{callsign}}', { callsign: values.operatorCall })
       result.colorForOperatorCall = styles.colors.error
       result.actionForOperatorCall = ''
     } else if (operatorsUsedInQSOs.length === 0 || singleCurrentOperator === values.operatorCall) {
@@ -133,20 +140,20 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
       result.actionForOperatorCall = ''
     } else if (operatorsUsedInQSOs.length === 1 && singleCurrentOperator !== values.operatorCall) {
       if (singleCurrentOperator) {
-        result.messageForOperatorCall = `\`${singleCurrentOperator}\` used so far.\n\`${values.operatorCall}\` will be used for new QSOs.`
+        result.messageForOperatorCall = t('screens.operationStationInfo.singleOperatorUsed-md', '`{{oldOperator}}` used so far.\n{{newOperator}}` will be used for new QSOs.', { oldOperator: singleCurrentOperator, newOperator: values.operatorCall })
       } else {
-        result.messageForOperatorCall = `No call used so far.\n\`${values.operatorCall}\` will be used for new QSOs.`
+        result.messageForOperatorCall = t('screens.operationStationInfo.noOperatorUsed-md', 'No call used so far.\n{{newOperator}} will be used for new QSOs.', { newOperator: values.operatorCall })
       }
       result.colorForOperatorCall = styles.colors.primary
-      result.actionForOperatorCall = `Update \`${values.operatorCall}\` as operator for all QSOs`
+      result.actionForOperatorCall = t('screens.operationStationInfo.updateOperator-md', 'Update `{{newOperator}}` as operator for all QSOs', { newOperator: values.operatorCall })
     } else {
-      result.messageForOperatorCall = `This activity already has QSOs using multiple operator callsigns: ${joinCalls(operatorsUsedInQSOs, { markdown: true })}.\n\n\`${values.operatorCall}\` will only be used for new QSOs.`
+      result.messageForOperatorCall = t('screens.operationStationInfo.multipleOperatorsUsed-md', 'This activity already has QSOs using multiple operator callsigns: `{{operators}}`.\n\n`{{newOperator}}` will only be used for new QSOs.', { operators: joinCalls(operatorsUsedInQSOs, { markdown: true }), newOperator: values.operatorCall })
       result.colorForOperatorCall = styles.colors.primary
       result.actionForOperatorCall = ''
     }
 
     return result
-  }, [stations, operatorsUsedInQSOs, qsos.length, values, styles.colors.error, styles.colors.primary])
+  }, [stations, operatorsUsedInQSOs, qsos.length, values, styles.colors.error, styles.colors.primary, t])
 
   useEffect(() => { // Set initial values if needed
     if (!operation?.uuid) return
@@ -238,12 +245,12 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace, paddingHorizontal: styles.oneSpace * 2 }}>
           <H2kListSection>
-            <Text variant="bodyMedium">What is the callsign used on the air?</Text>
+            <Text variant="bodyMedium">{t('screens.operationStationInfo.whatIsTheCallsignUsedOnTheAir', 'What is the callsign used on the air?')}</Text>
             <H2kCallsignInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={values.allStationCalls || values.stationCall || ''}
-              label="Station Callsign"
-              placeholder={'N0CALL'}
+              label={t('screens.operationStationInfo.stationCallsign', 'Station Callsign')}
+              placeholder={t('general.misc.placeholderCallsign', 'N0CALL')}
               allowMultiple={true}
               onChangeText={handleChangeStation}
             />
@@ -264,13 +271,13 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
               variant="bodyMedium"
               style={values.stationCallPlusArray?.length ? { opacity: 0.5 } : {}}
             >
-              Who is operating the station? (optional)
+              {t('screens.operationStationInfo.whoIsOperatingTheStation', 'Who is operating the station? (optional)')}
             </Text>
             <H2kCallsignInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={values.operatorCall ?? ''}
-              label="Operator Callsign"
-              placeholder={values.stationCallPlusArray?.length > 0 ? values.allStationCalls : 'N0CALL'}
+              label={t('screens.operationStationInfo.operatorCallsign', 'Operator Callsign')}
+              placeholder={values.stationCallPlusArray?.length > 0 ? values.allStationCalls : t('general.misc.placeholderCallsign', 'N0CALL')}
               onChangeText={handleChangeOperator}
               disabled={values.stationCallPlusArray?.length}
             />
@@ -288,8 +295,8 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
           {settings.devMode && (
             <H2kListSection style={{ marginTop: styles.oneSpace * 3 }}>
               <H2kListItem
-                title="Multi-station operation?"
-                description={values.isMultiStation ? "Yes, we're one of many!" : 'No, just a regular station'}
+                title={t('screens.operationStationInfo.multiStationOperation', 'Multi-station operation?')}
+                description={values.isMultiStation ? t('screens.operationStationInfo.multiStationOperationYes', 'Yes, we\'re one of many!') : t('screens.operationStationInfo.multiStationOperationNo', 'No, just a regular station')}
                 leftIcon="account-group"
                 rightSwitchValue={values.isMultiStation}
                 rightSwitchOnValueChange={handleUpdateIsMultiStation}
@@ -301,7 +308,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
               <H2kTextInput
                 value={values.multiIdentifier ?? ''}
                 onChangeText={handleUpdateMultiIdentifier}
-                label="Identifier for this station (numbers only)"
+                label={t('screens.operationStationInfo.identifierForThisStation', 'Identifier for this station (numbers only)')}
                 keyboard="numbers"
                 numeric={true}
                 disabled={!values.isMultiStation}

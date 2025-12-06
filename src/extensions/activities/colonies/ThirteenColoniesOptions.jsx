@@ -6,6 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 import { findRef } from '../../../tools/refTools'
@@ -13,6 +14,8 @@ import { findRef } from '../../../tools/refTools'
 import { Info } from './ThirteenColoniesExtension'
 
 export function ThirteenColoniesOptions ({ styles, operation, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const isInTestMode = useMemo(() => {
@@ -25,12 +28,12 @@ export function ThirteenColoniesOptions ({ styles, operation, refs: allRefs, set
 
   return (
     <>
-      <H2kListSection title={'Settings'}>
+      <H2kListSection title={t('extensions.colonies.activityOptions.settings', 'Settings')}>
         <H2kListRow>
           <H2kTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
-            label={'Year'}
+            label={t('extensions.colonies.activityOptions.year', 'Year')}
             mode={'flat'}
             uppercase={true}
             noSpaces={true}
@@ -41,24 +44,26 @@ export function ThirteenColoniesOptions ({ styles, operation, refs: allRefs, set
       </H2kListSection>
       {isInTestMode && (
         <H2kListRow style={{ marginTop: styles.oneSpace * 2, marginBottom: styles.oneSpace }}>
-          <H2kMarkdown style={{ color: 'red' }}>{`
-Since the event for this year has not started yet, you can test your operation with QSOs from the last seven days.
-            `}</H2kMarkdown>
+          <H2kMarkdown style={{ color: 'red' }}>
+            {t('extensions.colonies.activityOptions.testMode-md', 'Since the event for this year has not yet started, you can test your operation with QSOs from the last seven days.')}`
+          </H2kMarkdown>
         </H2kListRow>
       )}
       <H2kListRow style={{ marginTop: styles.oneSpace * 2, marginBottom: styles.oneSpace }}>
-        <H2kMarkdown>{`
-NOTE: PoLo will report your results using all QSOs in the date range, including any other operations present on this device.
-            `}</H2kMarkdown>
+        <H2kMarkdown>
+          {t('extensions.colonies.activityOptions.note-md', 'NOTE: PoLo will report your results using all QSOs in the date range, including any other operations present on this device.')}
+        </H2kMarkdown>
       </H2kListRow>
 
       <H2kListRow style={{ marginTop: styles.oneSpace * 2, marginBottom: styles.oneSpace }}>
-        <H2kMarkdown>{`
+        <H2kMarkdown>
+          {t('extensions.colonies.activityOptions.info-md',
+`
 The 13 Colonies Special Event runs every year from 9am ET July 1st to midnight ET July 7th.
 
 More info at [http://www.13colonies.us/](http://www.13colonies.us/)
-
-            `}</H2kMarkdown>
+            `)}
+        </H2kMarkdown>
       </H2kListRow>
     </>
   )

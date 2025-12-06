@@ -32,12 +32,12 @@ const RTFMCommandHook = {
   extension: Extension,
   key: 'commands-misc-rtfm',
   match: /RTFM/i,
-  describeCommand: (match) => {
-    return 'Read the fine manual?'
+  describeCommand: (match, { t }) => {
+    return t?.('extensions.commands-misc.rtfm', 'Read the fine manual?') || 'Read the fine manual?'
   },
   invokeCommand: (match, { handleFieldChange }) => {
     Linking.openURL('https://polo.ham2k.com/docs/')
-    return 'Opening the fine manual'
+    return t?.('extensions.commands-misc.rtfmConfirm', 'Opening the fine manual') || 'Opening the fine manual'
   }
 }
 
@@ -53,7 +53,7 @@ const SpotCommandHook = {
 
     let comments = match[2]?.substring(1) || ''
 
-    if (!vfo.freq) return 'Cannot self-spot without frequency'
+    if (!vfo.freq) return t?.('extensions.commands-misc.spot.cannotSelfSpotWithoutFrequency', 'Cannot self-spot without frequency') || 'Cannot self-spot without frequency'
 
     if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
       comments = [match[1], comments].filter(x => x).join(' ')
@@ -64,9 +64,9 @@ const SpotCommandHook = {
 
     if (comments) {
       comments = comments.trim()
-      return `Self-spot with ‘${comments}’?`
+      return t?.('extensions.commands-misc.spot.selfSpotWithComments', 'Self-spot with ‘{{comments}}’?', { comments }) || `Self-spot with ‘${comments}’?`
     } else {
-      return 'Self-spot?'
+      return t?.('extensions.commands-misc.spot.selfSpotPrompt', 'Self-spot?') || 'Self-spot?'
     }
   },
   invokeCommand: (match, { operation, vfo, dispatch, settings }) => {
@@ -74,7 +74,7 @@ const SpotCommandHook = {
 
     let comments = match[2]?.substring(1) || ''
 
-    if (!vfo.freq) return 'Cannot self-spot without frequency'
+    if (!vfo.freq) return t?.('extensions.commands-misc.spot.cannotSelfSpotWithoutFrequency', 'Cannot self-spot without frequency') || 'Cannot self-spot without frequency'
 
     if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
       comments = [match[1], comments].filter(x => x).join(' ')
@@ -90,9 +90,9 @@ const SpotCommandHook = {
     const hooksWithSpotting = retrieveHooksWithSpotting({ isSelfSpotting: true, operation, settings })
     postSpots({ isSelfSpotting: true, operation, vfo, comments, hooksWithSpotting, dispatch })
     if (comments) {
-      return `Self-spotting at ${fmtFreqInMHz(vfo.freq)} with ‘${comments}’`
+      return t?.('extensions.commands-misc.spot.selfSpottingWithComments', 'Self-spotting at {{freq}} with ‘{{comments}}’', { freq: fmtFreqInMHz(vfo.freq), comments }) || `Self-spotting at ${fmtFreqInMHz(vfo.freq)} with ‘${comments}’`
     } else {
-      return `Self-spotting at ${fmtFreqInMHz(vfo.freq)}`
+      return t?.('extensions.commands-misc.spot.selfSpotting', 'Self-spotting at {{freq}}', { freq: fmtFreqInMHz(vfo.freq) }) || `Self-spotting at ${fmtFreqInMHz(vfo.freq)}`
     }
   }
 }

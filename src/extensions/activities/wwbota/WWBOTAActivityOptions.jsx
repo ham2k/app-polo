@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
@@ -20,8 +21,9 @@ import { wwbotaFindAllByLocation, wwbotaFindAllByName, wwbotaFindOneByReference 
 import { WWBOTAListItem } from './WWBOTAListItem'
 
 export function WWBOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
-  const NEARBY_DEGREES = 0.25
+  const { t } = useTranslation()
 
+  const NEARBY_DEGREES = 0.25
   const online = useSelector(selectRuntimeOnline)
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
@@ -29,10 +31,8 @@ export function WWBOTAActivityOptions ({ styles, operation, settings, refs: allR
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (activityRefs?.length === 0) return 'No bunkers selected for activation'
-    else if (activityRefs?.length === 1) return 'Activating 1 bunker'
-    else return `Activating ${activityRefs.length} bunkers`
-  }, [activityRefs])
+    return t('extensions.wwbota.activityOptions.title', 'Activating {{count}} bunkers', { count: activityRefs?.length })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
@@ -110,23 +110,19 @@ export function WWBOTAActivityOptions ({ styles, operation, settings, refs: allR
         }
 
         setResults(newRefs.slice(0, 15))
-        if (newRefs.length === 0) {
-          setResultsMessage('No bunkers found')
-        } else if (newRefs.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newRefs.length} matches`)
-        } else if (newRefs.length === 1) {
-          setResultsMessage('One matching bunkers')
+        if (newRefs.length > 15) {
+          setResultsMessage(t('extensions.wwbota.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newRefs.length }))
         } else {
-          setResultsMessage(`${newRefs.length} matching bunkers`)
+          setResultsMessage(t('extensions.wwbota.activityOptions.matchingBunkers', '{{count}} matching bunkers', { count: newRefs.length }))
         }
       } else {
         setResults(nearbyResults)
-        if (nearbyResults === undefined) setResultsMessage('Search for some bunkers to activate!')
-        else if (nearbyResults.length === 0) setResultsMessage('No bunkers nearby')
-        else setResultsMessage('Nearby bunkers')
+        if (nearbyResults === undefined) setResultsMessage(t('extensions.wwbota.activityOptions.searchForBunkers', 'Search for some bunkers to activate!'))
+        else if (nearbyResults.length === 0) setResultsMessage(t('extensions.wwbota.activityOptions.noBunkersNearby', 'No bunkers nearby'))
+        else setResultsMessage(t('extensions.wwbota.activityOptions.nearbyBunkers', 'Nearby bunkers'))
       }
     })
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
     setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
@@ -156,7 +152,7 @@ export function WWBOTAActivityOptions ({ styles, operation, settings, refs: allR
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={'Bunkers by name or reference…'}
+          placeholder={t('extensions.wwbota.activityOptions.searchPlaceholder', 'Bunkers by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />

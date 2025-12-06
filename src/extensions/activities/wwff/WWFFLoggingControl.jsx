@@ -1,11 +1,12 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 
@@ -17,6 +18,8 @@ import { selectOperationCallInfo } from '../../../store/operations'
 
 export function WWFFLoggingControl (props) {
   const { qso, operation, updateQSO, style, styles } = props
+
+  const { t } = useTranslation()
 
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
@@ -51,7 +54,7 @@ export function WWFFLoggingControl (props) {
       innerRef={ref}
       style={[style, { minWidth: 16 * styles.oneSpace }]}
       value={refsString}
-      label="Their WWFF"
+      label={t('extensions.wwff.loggingControl.theirRefLabel', 'Their WWFF')}
       defaultPrefix={defaultPrefix}
       onChangeText={handleChangeText}
     />

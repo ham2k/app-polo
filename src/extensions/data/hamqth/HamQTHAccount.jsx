@@ -9,6 +9,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
@@ -18,12 +19,14 @@ import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitl
 import { resetCallLookupCache } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 
 export function HamQTHAccountSetting ({ settings, styles }) {
+  const { t } = useTranslation()
+
   const [currentDialog, setCurrentDialog] = useState()
   return (
     <>
       <H2kListItem
-        title="HamQTH (for callsign lookups)"
-        description={settings?.accounts?.hamqth ? `Login: ${settings.accounts.hamqth.login}` : 'No account'}
+        title={t('extensions.hamqth.account.title', 'HamQTH (for callsign lookups)')}
+        description={settings?.accounts?.hamqth ? t('extensions.hamqth.account.description', 'Login: {{login}}', { login: settings.accounts.hamqth.login }) : t('extensions.hamqth.account.noAccount', 'No account')}
         leftIcon={'web'}
         onPress={() => setCurrentDialog('accountsHamQTH')}
       />
@@ -40,6 +43,8 @@ export function HamQTHAccountSetting ({ settings, styles }) {
 }
 
 function AccountsHamQTHDialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -105,36 +110,36 @@ function AccountsHamQTHDialog ({ visible, settings, styles, onDialogDone }) {
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>HamQTH Account</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.hamqth.account.dialogTitle', 'HamQTH Account')}</H2kDialogTitle>
       <H2kDialogContent>
-        <H2kText variant="bodyMedium">Please enter the details for your HamQTH account:</H2kText>
+        <H2kText variant="bodyMedium">{t('extensions.hamqth.account.pleaseEnterDetails', 'Please enter the details for your HamQTH account:')}</H2kText>
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={login}
-          label="Callsign"
-          placeholder="your account callsign"
+          label={t('extensions.hamqth.account.callsignLabel', 'Callsign')}
+          placeholder={t('extensions.hamqth.account.callsignPlaceholder', 'your account callsign')}
           onChangeText={onChangeLogin}
         />
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={password}
-          label="Password"
+          label={t('extensions.hamqth.account.passwordLabel', 'Password')}
           autoComplete="current-password"
           keyboardType="default"
           textContentType="password"
           secureTextEntry={true}
           autoCapitalize={'none'}
-          placeholder="your password"
+          placeholder={t('extensions.hamqth.account.passwordPlaceholder', 'your password')}
           onChangeText={onChangePassword}
         />
         <View style={{ marginTop: styles.oneSpace, flexDirection: 'row' }}>
-          {!testResult && <H2kButton onPress={handleTest}>{'Check Credentials'}</H2kButton>}
+          {!testResult && <H2kButton onPress={handleTest}>{t('extensions.hamqth.account.checkCredentials', 'Check Credentials')}</H2kButton>}
           {testResult && <H2kMarkdown style={{ flex: 1, marginTop: styles.oneSpace * 0.6 }}>{testResult}</H2kMarkdown>}
         </View>
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

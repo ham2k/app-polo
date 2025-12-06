@@ -38,7 +38,7 @@ export function POTAListItem ({ activityRef, refData, allRefs, style, styles, se
   return (
     <H2kListItem style={{ paddingRight: styles.oneSpace * 1 }}
       titlePrimary={pota?.data?.ref ?? activityRef ?? ''}
-      titleSecondary={(typeof refData?.distance === 'number') && fmtDistance(refData.distance, { units: settings.distanceUnits }) + ' away'}
+      titleSecondary={(typeof refData?.distance === 'number') && fmtDistance(refData.distance, { units: settings.distanceUnits, away: true })}
       description={description}
       onPress={onPress}
       leftIcon={Info.icon}

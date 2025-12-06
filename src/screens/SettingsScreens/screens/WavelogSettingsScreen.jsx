@@ -14,12 +14,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { View, ScrollView } from 'react-native'
 import { Text, TextInput, Button, List, HelperText } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
+
 import { selectSettings, setSettings } from '../../../store/settings'
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { H2kIcon } from '../../../ui'
 
 export default function WavelogSettingsScreen ({ navigation }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
   const safeAreaInsets = useSafeAreaInsets()
   const styles = useThemedStyles()
@@ -46,10 +50,10 @@ export default function WavelogSettingsScreen ({ navigation }) {
       } else if (Array.isArray(data.payload)) {
         setStations(data.payload)
       } else {
-        setError('No stations found or invalid response')
+        setError(t('screens.wavelogSettings.noStationsFoundOrInvalidResponse', 'No stations found or invalid response'))
       }
     } catch (e) {
-      setError('Error fetching stations: ' + e.message)
+      setError(t('screens.wavelogSettings.errorFetchingStations', 'Error fetching stations: {{message}}', { message: e.message }))
     }
     setFetching(false)
   }
@@ -69,7 +73,7 @@ export default function WavelogSettingsScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <View style={{ flex: 1, flexDirection: 'column', padding: 16, paddingBottom: safeAreaInsets.bottom }}>
-        <Text variant="titleLarge" style={{ marginBottom: 16 }}>Wavelog Configuration</Text>
+        <Text variant="titleLarge" style={{ marginBottom: 16 }}>{t('screens.wavelogSettings.title', 'Wavelog Configuration')}</Text>
         <TextInput
           label="Wavelog API URL"
           value={apiUrl}
@@ -85,12 +89,12 @@ export default function WavelogSettingsScreen ({ navigation }) {
           autoCapitalize="none"
         />
         <Button mode="outlined" onPress={fetchStations} loading={fetching} disabled={fetching || !apiUrl || !apiKey} style={{ marginBottom: 12 }}>
-          Fetch Stations
+          {t('screens.wavelogSettings.fetchStations', 'Fetch Stations')}
         </Button>
         {error ? <HelperText type="error">{error}</HelperText> : null}
         {stations.length > 0 && (
           <ScrollView style={{ maxHeight: 300, marginBottom: 12 }}>
-            <List.Section title="Select Station">
+            <List.Section title={t('screens.wavelogSettings.selectStation', 'Select Station')}>
               {stations.map(station => {
                 const id = station.id || station.station_profile_id || station.station_id
                 const profileName = station.station_profile_name || station.name || station.label || station.station_callsign || ''
@@ -110,7 +114,7 @@ export default function WavelogSettingsScreen ({ navigation }) {
         )}
         {stationId && (
           <HelperText type="info" style={{ marginBottom: 8 }}>
-            Selected station:{' '}
+            {t('screens.wavelogSettings.selectedStation', 'Selected station:')}{' '}
             {(() => {
               const selected = stations.find(station =>
                 (station.id || station.station_profile_id || station.station_id) === stationId
@@ -122,7 +126,7 @@ export default function WavelogSettingsScreen ({ navigation }) {
           </HelperText>
         )}
         <Button mode="contained" onPress={saveConfig} loading={saving} disabled={saving || !apiUrl || !apiKey || !stationId} style={{ marginTop: 16 }}>
-          Save
+          {t('general.buttons.save', 'Save')}
         </Button>
       </View>
     </ScreenContainer>

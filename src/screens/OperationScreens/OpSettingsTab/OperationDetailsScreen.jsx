@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
@@ -16,6 +17,7 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { H2kListSection, H2kTextInput } from '../../../ui'
 
 export default function OperationDetailsScreen ({ navigation, route }) {
+  const { t } = useTranslation()
   const styles = useThemedStyles()
 
   const dispatch = useDispatch()
@@ -31,9 +33,9 @@ export default function OperationDetailsScreen ({ navigation, route }) {
 
     navigation.setOptions({
       leftAction: 'accept',
-      leftActionA11yLabel: 'Accept Changes',
+      leftActionA11yLabel: t('general.buttons.accept-a11y', 'Accept Changes'),
       rightAction: 'revert',
-      rightActionA11yLabel: 'Revert Changes',
+      rightActionA11yLabel: t('general.buttons.revert-a11y', 'Revert Changes'),
       onLeftActionPress: () => {
         dispatch(setOperationData({ uuid: operation.uuid, userTitle: title, notes }))
         navigation.goBack()
@@ -44,7 +46,7 @@ export default function OperationDetailsScreen ({ navigation, route }) {
         navigation.goBack()
       }
     })
-  }, [navigation, operation, dispatch, title, notes])
+  }, [navigation, operation, dispatch, title, notes, t])
 
   const handleChangeTitle = useCallback((value) => {
     setTitle(value)
@@ -58,20 +60,20 @@ export default function OperationDetailsScreen ({ navigation, route }) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace }}>
-          <H2kListSection title={'Title'}>
+          <H2kListSection title={t('screens.operationDetails.operationTitle', 'Title')}>
             <View style={{ marginHorizontal: styles.oneSpace * 2 }}>
               <H2kTextInput
                 value={title ?? ''}
-                placeholder={'New Operation'}
+                placeholder={t('screens.operationDetails.newOperation', 'New Operation')}
                 onChangeText={handleChangeTitle}
               />
             </View>
           </H2kListSection>
-          <H2kListSection title={'Notes'}>
+          <H2kListSection title={t('screens.operationDetails.operationNotes', 'Notes')}>
             <View style={{ marginHorizontal: styles.oneSpace * 2 }}>
               <H2kTextInput
                 value={notes ?? ''}
-                placeholder={'Anything you want to write about this operation'}
+                placeholder={t('screens.operationDetails.anythingYouWantToWriteAboutThisOperation', 'Anything you want to write about this operation')}
                 onChangeText={handleChangeNotes}
               />
             </View>

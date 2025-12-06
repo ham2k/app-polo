@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { findRef, replaceRef } from '../../../tools/refTools'
 import { H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput, H2kDropDown } from '../../../ui'
@@ -13,6 +14,8 @@ import { H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput, H2kDropDown } fr
 import { Info } from './FDExtension'
 
 export function FDActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const handleChange = useCallback((value) => {
@@ -34,12 +37,12 @@ export function FDActivityOptions ({ styles, operation, settings, refs: allRefs,
 
   return (
     <>
-      <H2kListSection title={'Exchange Information'}>
+      <H2kListSection title={t('extensions.fd.activityOptions.exchangeInformation', 'Exchange Information')}>
         <H2kListRow>
           <H2kTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
-            label={'Class'}
+            label={t('extensions.fd.activityOptions.classLabel', 'Class')}
             mode={'flat'}
             uppercase={true}
             noSpaces={true}
@@ -51,7 +54,7 @@ export function FDActivityOptions ({ styles, operation, settings, refs: allRefs,
           <H2kTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
-            label={'Location'}
+            label={t('extensions.fd.activityOptions.locationLabel', 'Location')}
             mode={'flat'}
             uppercase={true}
             noSpaces={true}
@@ -60,10 +63,11 @@ export function FDActivityOptions ({ styles, operation, settings, refs: allRefs,
           />
         </H2kListRow>
         <H2kListRow style={{ marginTop: styles.oneSpace * 4 }}>
-          <H2kMarkdown>{`
+          <H2kMarkdown>{t('extensions.fd.activityOptions.information-md',
+`
   Class for ARRL Field Day is, for example \`2A\`:
 
-  - \`1\`, \`2\`, \`3\`... for the number of transmitters.
+  - \`1\`, \`2\`, \`3\`… for the number of transmitters.
   - \`A\` for Group (3 or more) Portable Station
   - \`B\` for One or two person Portable Station
   - \`C\` for Mobile Station
@@ -74,33 +78,33 @@ export function FDActivityOptions ({ styles, operation, settings, refs: allRefs,
   Location is the ARRL Section, RAC Section, \`MX\` for Mexico, or \`DX\` for anywhere else.
 
   More info in the **[official rules](https://www.arrl.org/field-day-rules)**.
-            `}</H2kMarkdown>
+            `)}</H2kMarkdown>
         </H2kListRow>
       </H2kListSection>
-      <H2kListSection title={'Additional Information'}>
+      <H2kListSection title={t('extensions.fd.activityOptions.additionalInformation', 'Additional Information')}>
         <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
           <H2kDropDown
-            label="Highest Transmitter Power"
+            label={t('extensions.fd.activityOptions.highestTransmitterPowerLabel', 'Highest Transmitter Power')}
             value={activityRef?.transmitterPower}
-            placeholder="100W"
+            placeholder={t('extensions.fd.activityOptions.highestTransmitterPowerPlaceholder', '100W')}
             onChangeText={handleTransmitterPowerChange}
             options={[
-              { label: 'QRP: 5W or less', value: '5W' },
-              { label: 'QRO: 100W or less', value: '100W' },
-              { label: 'More than 100W', value: '500W' }
+              { label: t('extensions.fd.activityOptions.qrpOption', 'QRP: 5W or less'), value: '5W' },
+              { label: t('extensions.fd.activityOptions.qroOption', 'QRO: 100W or less'), value: '100W' },
+              { label: t('extensions.fd.activityOptions.moreThan100WOption', 'More than 100W'), value: '500W' }
             ]}
           />
 
         </H2kListRow>
         <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
           <H2kDropDown
-            label="Power Source"
+            label={t('extensions.fd.activityOptions.powerSourceLabel', 'Power Source')}
             value={activityRef?.powerSource}
-            placeholder="Select a power source"
+            placeholder={t('extensions.fd.activityOptions.powerSourcePlaceholder', 'Select a power source')}
             onChangeText={handlePowerSourceChange}
             options={[
-              { label: 'Batteries, Solar, Wind', value: 'BATTERIES' },
-              { label: 'Commercial Power, Generator', value: 'GENERATOR' }
+              { label: t('extensions.fd.activityOptions.batteriesOption', 'Batteries, Solar, Wind'), value: 'BATTERIES' },
+              { label: t('extensions.fd.activityOptions.commercialPowerOption', 'Commercial Power, Generator'), value: 'GENERATOR' }
             ]}
           />
         </H2kListRow>

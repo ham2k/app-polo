@@ -8,6 +8,8 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { ScrollView, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -16,11 +18,10 @@ import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { useUIState } from '../../store/ui'
 import { selectOperation } from '../../store/operations'
+import { selectSettings } from '../../store/settings'
 import { parseFreqInMHz } from '../../tools/frequencyFormats'
 import { H2kCallsignInput, H2kDateInput, H2kFrequencyInput, H2kGridInput, H2kListSection, H2kRSTInput, H2kTextInput, H2kTimeInput } from '../../ui'
 import ScreenContainer from '../components/ScreenContainer'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { selectSettings } from '../../store/settings'
 
 const QSO_SECTIONS = [
   {
@@ -84,6 +85,8 @@ const QSO_SECTIONS = [
 ]
 
 export default function EditQSOScreen ({ navigation, route }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles()
   const settings = useSelector(selectSettings)
 
@@ -115,6 +118,7 @@ export default function EditQSOScreen ({ navigation, route }) {
     const [sectionKey, fieldKey] = fieldId.split('.')
 
     const section = QSO_SECTIONS.find(s => s.key === sectionKey)
+
     const field = section && section.fields.find(f => f.key === fieldKey)
     if (field && section) {
       let changes = {}
@@ -140,7 +144,8 @@ export default function EditQSOScreen ({ navigation, route }) {
       <ScrollView style={{ flex: 1, marginLeft: safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         {QSO_SECTIONS.map((section, index) => (
           <QSOSection
-            key={section.section}
+            key={section.key}
+            t={t}
             qso={qso}
             section={section}
             styles={styles}
@@ -154,9 +159,9 @@ export default function EditQSOScreen ({ navigation, route }) {
   )
 }
 
-function QSOSection ({ qso, section, styles, onChange, style, settings }) {
+function QSOSection ({ t, qso, section, styles, onChange, style, settings }) {
   return (
-    <H2kListSection title={section.section} style={style}>
+    <H2kListSection title={t(`screens.editQSO.sections.${section.key}`, section.section)} style={style}>
       <View
         style={{
           paddingVertical: styles.oneSpace,
@@ -171,7 +176,7 @@ function QSOSection ({ qso, section, styles, onChange, style, settings }) {
             {field.breakBefore && (
               <View style={{ width: '100%', height: 0 }} />
             )}
-            <QSOField field={field} qso={qso} section={section} styles={styles} onChange={onChange} settings={settings} />
+            <QSOField t={t} field={field} qso={qso} section={section} styles={styles} onChange={onChange} settings={settings} />
             {field.breakAfter && (
               <View style={{ width: '100%', height: 0 }} />
             )}
@@ -197,13 +202,13 @@ function getValueForField ({ qso, field, section }) {
   }
 }
 
-function QSOField ({ qso, field, section, styles, onChange, settings }) {
+function QSOField ({ t, qso, field, section, styles, onChange, settings }) {
   const value = getValueForField({ qso, field, section })
 
   const props = {
     onChange,
     value: value || '',
-    label: field.label,
+    label: t([`screens.editQSO.fields.${section.key}-${field.key}`, `screens.editQSO.fields.${field.key}`], field.label),
     fieldId: [section.key, field.key].join('.'),
     disabled: field.disabled,
     style: {
@@ -296,7 +301,7 @@ export const editQSOControl = {
   key: 'edit',
   icon: 'pencil',
   order: 99,
-  label: 'More',
+  label: ({ t }) => t('screens.opLoggingTab.moreLabel', 'More'),
   onSelect: ({ dispatch, navigation, operation, qso }) => {
     navigation.navigate('EditQSO', { operation, qso })
   },

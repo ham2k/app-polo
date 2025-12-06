@@ -11,6 +11,7 @@ import { Platform, View } from 'react-native'
 import { IconButton, Searchbar } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next'
 
 import { NumberKeys } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/NumberKeys'
 import { useUIState } from '../../../store/ui/useUIState'
@@ -27,6 +28,7 @@ import SyncProgress from './SyncProgress'
 let commandInfoTimeout
 
 export default function HomeTools ({ settings, styles, style }) {
+  const { t, i18n } = useTranslation()
   const navigation = useNavigation()
 
   const dispatch = useDispatch()
@@ -63,10 +65,10 @@ export default function HomeTools ({ settings, styles, style }) {
 
   useEffect(() => {
     if (search?.length > 2) {
-      const { description } = checkAndDescribeCommands(search, { dispatch, settings, online, setCommandInfo })
+      const { description } = checkAndDescribeCommands(search, { dispatch, settings, t, i18n, online, setCommandInfo })
       setCommandInfo({ message: description || undefined, match: !!description || description === '' })
     }
-  }, [dispatch, online, search, setCommandInfo, settings, settings.operatorCall])
+  }, [dispatch, online, search, setCommandInfo, settings, t, i18n, settings.operatorCall])
 
   const handleClearSearch = useCallback(() => {
     setSearch('')
@@ -124,12 +126,12 @@ export default function HomeTools ({ settings, styles, style }) {
   }, [])
 
   const handleSubmit = useCallback((event) => {
-    const commandResult = checkAndProcessCommands(search, { dispatch, settings, online, setCommandInfo, updateQSO: () => setSearch('') })
+    const commandResult = checkAndProcessCommands(search, { dispatch, settings, t, i18n, online, setCommandInfo, updateQSO: () => setSearch('') })
     if (commandResult) {
       trackEvent('command', { command: search })
       setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
     }
-  }, [search, dispatch, settings, online, setCommandInfo])
+  }, [search, dispatch, settings, t, i18n, online, setCommandInfo])
 
   return (
     <>
@@ -173,7 +175,7 @@ export default function HomeTools ({ settings, styles, style }) {
               onSubmitEditing: handleSubmit
             }}
             ref={actualInnerRef}
-            placeholder={'Quick Call Lookup…'}
+            placeholder={t('screens.home.quickCallLookupPlaceholder', 'Quick Call Lookup…')}
             value={localValue}
             onChangeText={handleChangeText}
             traileringIcon={search ? 'close' : ''}
@@ -185,7 +187,7 @@ export default function HomeTools ({ settings, styles, style }) {
           <IconButton
             icon="format-list-bulleted"
             iconColor={styles.colors.onPrimary}
-            accessibilityLabel={'Spots'}
+            accessibilityLabel={t('screens.home.spots-a11y', 'screens.home.spots', 'Spots')}
             size={styles.oneSpace * 3.5}
             style={{ flex: 0 }}
             onPress={() => navigation.navigate('Spots')}

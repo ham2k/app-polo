@@ -32,19 +32,19 @@ const StartOperationCommandHook = {
   key: 'commands-operation-start',
   match: /^(START)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation, settings }) => {
+  describeCommand: (match, { operation, settings, t }) => {
     if (!operation) { return false }
     if (!settings?.devMode) { return false }
 
-    return 'Start the operation?'
+    return t?.('extensions.commands-operation.start', 'Start the operation?') || 'Start the operation?'
   },
-  invokeCommand: (match, { operation, qsos, dispatch, settings }) => {
+  invokeCommand: (match, { operation, qsos, dispatch, settings, t }) => {
     if (!operation) { return }
     if (!settings?.devMode) { return false }
 
     markOperationStart({ operation, qsos, dispatch })
 
-    return `Operation started!`
+    return t?.('extensions.commands-operation.startConfirm', 'Operation started!') || 'Operation started!'
   }
 }
 
@@ -54,19 +54,19 @@ const BreakOperationCommandHook = {
   key: 'commands-operation-break',
   match: /^(BREAK)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation, settings }) => {
+  describeCommand: (match, { operation, settings, t }) => {
     if (!operation) { return false }
     if (!settings?.devMode) { return false }
 
-    return 'Add a break?'
+    return t?.('extensions.commands-operation.break', 'Add a break?') || 'Add a break?'
   },
-  invokeCommand: (match, { operation, qsos, dispatch, settings }) => {
+  invokeCommand: (match, { operation, qsos, dispatch, settings, t }) => {
     if (!operation) { return }
     if (!settings?.devMode) { return false }
 
     markOperationBreak({ operation, qsos, dispatch })
 
-    return `Added an operation break!`
+    return t?.('extensions.commands-operation.breakConfirm', 'Added an operation break!') || 'Added an operation break!'
   }
 }
 
@@ -76,11 +76,11 @@ const StopOperationCommandHook = {
   key: 'commands-operation-stop',
   match: /^(STOP|END)$/i,
   allowSpaces: true,
-  describeCommand: (match, { operation, settings }) => {
+  describeCommand: (match, { operation, settings, t }) => {
     if (!operation) { return false }
     if (!settings?.devMode) { return false }
 
-    return 'Stop the operation?'
+    return t?.('extensions.commands-operation.stop', 'Stop the operation?') || 'Stop the operation?'
   },
   invokeCommand: (match, { operation, qsos, dispatch, settings }) => {
     if (!operation) { return }
@@ -88,6 +88,6 @@ const StopOperationCommandHook = {
 
     markOperationStop({ operation, qsos, dispatch })
 
-    return `Operation stopped!`
+    return t?.('extensions.commands-operation.stopConfirm', 'Operation stopped!') || 'Operation stopped!'
   }
 }

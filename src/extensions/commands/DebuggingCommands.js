@@ -19,6 +19,7 @@ import { poissonRandom } from '../../tools/randomTools'
 import { logTimer } from '../../tools/perfTools'
 import { annotateQSO } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
+import { refreshCrowdInTranslations } from '../../i18n/i18n'
 
 const Info = {
   key: 'commands-debug',
@@ -40,6 +41,8 @@ const Extension = {
     registerHook('command', { priority: 100, hook: WipeOperationsCommandHook })
     registerHook('command', { priority: 100, hook: WipeDBCommandHook })
     registerHook('command', { priority: 100, hook: FactoryResetCommandHook })
+    registerHook('command', { priority: 100, hook: RefreshCrowdInTranslationsCommandHook })
+    registerHook('command', { priority: 100, hook: SwitchLanguageCommandHook })
   }
 }
 
@@ -126,14 +129,14 @@ const OnboardCommandHook = {
   extension: Extension,
   key: 'commands-debug-onboard',
   match: /^ONBOARD/i,
-  describeCommand: (match) => {
-    return 'Reset the onboarding process?'
+  describeCommand: (match, { t }) => {
+    return t?.('extensions.commands-debug.onboard', 'Reset the onboarding process?') || 'Reset the onboarding process?'
   },
-  invokeCommand: (match, { dispatch }) => {
+  invokeCommand: (match, { dispatch, t }) => {
     dispatch(setSystemFlag('onboardedOn', undefined))
     dispatch(setSettings({ operatorCall: undefined }))
     setTimeout(() => DevSettings.reload(), 500)
-    return 'Onboarding process resetted'
+    return t?.('extensions.commands-debug.onboardConfirm', 'Onboarding process resetted') || 'Onboarding process resetted'
   }
 }
 
@@ -142,16 +145,16 @@ const WipeOperationsCommandHook = {
   extension: Extension,
   key: 'commands-debug-wipeoperations',
   match: /^(WIPE!|SYNCALL)/i,
-  describeCommand: (match) => {
-    return 'Delete all operations and reset synced status?'
+  describeCommand: (match, { t }) => {
+    return t?.('extensions.commands-debug.syncall', 'Delete all operations and reset synced status?') || 'Delete all operations and reset synced status?'
   },
-  invokeCommand: (match, { dispatch }) => {
+  invokeCommand: (match, { dispatch, t }) => {
     setImmediate(async () => {
       await dispatch(setLocalData({ sync: { lastestOperationSyncedAtMillis: 0, completedFullSync: false } }))
       dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
       await dispatch(clearAllOperationData())
     })
-    return 'Wiping data and resyncing all…'
+    return t?.('extensions.commands-debug.syncallConfirm', 'Wiping data and resyncing all…') || 'Wiping data and resyncing all…'
   }
 }
 
@@ -160,14 +163,14 @@ const ResyncLocalDataCommandHook = {
   extension: Extension,
   key: 'commands-debug-resynclocaldata',
   match: /^(SYNCUP)/i,
-  describeCommand: (match) => {
-    return 'Re-send local data to sync service?'
+  describeCommand: (match, { t }) => {
+    return t?.('extensions.commands-debug.syncup', 'Re-send local data to sync service?') || 'Re-send local data to sync service?'
   },
-  invokeCommand: (match, { dispatch }) => {
+  invokeCommand: (match, { dispatch, t }) => {
     setImmediate(async () => {
       await dispatch(resetSyncedStatus())
     })
-    return 'Re-sending…'
+    return t?.('extensions.commands-debug.syncupConfirm', 'Re-sending…') || 'Re-sending…'
   }
 }
 
@@ -176,15 +179,15 @@ const WipeDBCommandHook = {
   extension: Extension,
   key: 'commands-debug-wipedb',
   match: /^WIPEDB!/i,
-  describeCommand: (match) => {
-    return 'Delete entire database (but keep settings)?'
+  describeCommand: (match, { t }) => {
+    return t?.('extensions.commands-debug.wipedb', 'Delete entire database (but keep settings)?') || 'Delete entire database (but keep settings)?'
   },
-  invokeCommand: (match, { dispatch }) => {
+  invokeCommand: (match, { dispatch, t }) => {
     dispatch(setLocalData({ sync: { lastestOperationSyncedAtMillis: 0, completedFullSync: false } }))
     setTimeout(async () => {
       await resetDatabase()
     }, 1000)
-    return 'Wiping Database…'
+    return t?.('extensions.commands-debug.wipedbConfirm', 'Wiping Database…') || 'Wiping Database…'
   }
 }
 
@@ -193,15 +196,15 @@ const FactoryResetCommandHook = {
   extension: Extension,
   key: 'commands-debug-factory',
   match: /^FACTORY!/i,
-  describeCommand: (match) => {
-    return 'Delete all data and settings?'
+  describeCommand: (match, { t }) => {
+    return t?.('extensions.commands-debug.factory', 'Delete all data and settings?') || 'Delete all data and settings?'
   },
   invokeCommand: (match, { dispatch, settings }) => {
     setTimeout(async () => {
       await persistor.purge()
       await resetDatabase()
     }, 1000)
-    return 'Factoy Reset in progress…'
+    return t?.('extensions.commands-debug.factoryConfirm', 'Factoy Reset in progress…') || 'Factoy Reset in progress…'
   }
 }
 
@@ -237,7 +240,7 @@ const SeedCommandHook = {
         const qsos = []
         while (count > 0) {
           const index = Math.floor(Math.random() * calls.length)
-          let call = calls[index] || 'N0CALL'
+          let call = calls[index] || GLOBAL?.t?.('general.misc.placeholderCallsign', 'N0CALL') || 'N0CALL'
 
           if (Math.random() > 0.20) { // On 80% of the calls, replace the digit with something random
             call = call.replace(/(?<=\w)(\d)/, (m, p1) => {
@@ -279,6 +282,74 @@ const SeedCommandHook = {
   }
 }
 
+const RefreshCrowdInTranslationsCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-refresh-crowdin-translations',
+  match: /^(CROWDINALL|CROWDIN)/i,
+  describeCommand: (match, { i18n, t }) => {
+    if (match[1] === 'CROWDINALL') {
+      return 'Refresh ALL CrowdIn translations?'
+    } else {
+      return `Refresh [${i18n.language}] CrowdIn translations?`
+    }
+    return 'Refresh CrowdIn translations?'
+  },
+  invokeCommand: (match, { dispatch, settings, i18n, t }) => {
+    const all = match[1] === 'CROWDINALL'
+    setImmediate(async () => {
+      await refreshCrowdInTranslations({ all, i18n, settings, dispatch, token: settings.crowdInPersonalToken })
+    })
+    if (all) {
+      return 'Refreshing ALL CrowdIn translations…'
+    } else {
+      return `Refreshing [${i18n.language}] CrowdIn translations…`
+    }
+    return 'Refreshing CrowdIn translations…'
+  }
+}
+
+const SwitchLanguageCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-switch-language',
+  match: /^(LANG)(|[ /.]|.+)$/i,
+  allowSpaces: true,
+  describeCommand: (match, { i18n, settings, t }) => {
+    let lang = match[2]?.substring(1) || ''
+
+    if (lang) {
+      const parts = lang.split('-')
+      lang = [parts[0]?.toLowerCase(), parts[1]?.toUpperCase()].filter(Boolean).join('-')
+
+      return t(
+        'extensions.commands-debug.switchLanguage',
+        'Switch language to `{{lang}}` {{name}}?',
+        { lang, name: t(`general.languages.names.${lang}`, '') }
+      ).trim()
+    } else {
+      lang = settings.language || 'default'
+      return t(
+        'extensions.commands-debug.switchLanguagePrompt',
+        'Language `{{lang}}` {{name}}',
+        { lang, name: t(`general.languages.names.${lang}`, '') }
+      ).trim()
+    }
+  },
+  invokeCommand: (match, { dispatch, settings, t }) => {
+    let lang = match[2]?.substring(1) || ''
+    if (lang) {
+      const parts = lang.split('-')
+      lang = [parts[0]?.toLowerCase(), parts[1]?.toUpperCase()].filter(Boolean).join('-')
+      if (lang === 'default') lang = undefined
+      dispatch(setSettings({ language: lang }))
+      return t('extensions.commands-debug.switchLanguageConfirm', 'Switching to `{{lang}}` {{name}}…', { lang, name: t(`general.languages.names.${lang}`, '') }).trim()
+    } else {
+      return false
+    }
+  }
+}
+
 function randomRST(mode) {
   const n = Math.min(poissonRandom(7), 9)
   if (mode === 'CW' || mode === 'RTTY') {
@@ -287,3 +358,4 @@ function randomRST(mode) {
     return `${Math.min(n, 5)}${n}`
   }
 }
+

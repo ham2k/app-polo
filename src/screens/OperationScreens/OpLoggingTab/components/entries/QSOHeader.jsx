@@ -9,9 +9,9 @@ import React from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 
-import { fmtNumber } from '@ham2k/lib-format-tools'
+import { capitalizeFirstLetter, fmtNumber } from '@ham2k/lib-format-tools'
 
-import { fmtDateZuluDynamic } from '../../../../../tools/timeFormats'
+import { fmtDateDynamicZulu } from '../../../../../tools/timeFormats'
 import { H2kIcon, H2kPressable } from '../../../../../ui'
 
 const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings, onHeaderPress }) {
@@ -22,7 +22,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
     <H2kPressable onPressOut={onHeaderPress} style={styles.headerRow}>
       <View style={styles.rowInner}>
         <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
-          {fmtDateZuluDynamic(section.day)}
+          {capitalizeFirstLetter(fmtDateDynamicZulu(section.day, { compact: true }))}
         </Text>
         <Text style={[styles.fields.header, { flex: 0, textAlign: 'right', minWidth: styles.oneSpace * 8 }]}>
           {

@@ -65,10 +65,10 @@ const ActivityHook = {
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,
 
-  sampleOperations: ({ settings, callInfo }) => {
+  sampleOperations: ({ settings, callInfo, t }) => {
     return [
       // Regular Activation
-      { refs: [{ type: Info.activationType, ref: 'XX-1234', name: 'Example National Park', shortName: 'Example NP', program: Info.shortName, label: `${Info.shortName} XX-1234: Example National Park`, shortLabel: `${Info.shortName} XX-1234` }] }
+      { refs: [{ type: Info.activationType, ref: 'XX-1234', name: t('extensions.pota.exampleRefName', 'Example National Park'), shortName: t('extensions.pota.activityOptions.exampleNP', 'Example NP'), program: Info.shortName, label: `${Info.shortName} XX-1234: Example National Park`, shortLabel: `${Info.shortName} XX-1234` }] }
     ]
   }
 }
@@ -233,7 +233,7 @@ const ReferenceHandler = {
           result.state = (lookup.location || '').split('-')[1]?.trim()
         }
       } else {
-        return { name: Info.unknownReferenceName ?? 'Unknown reference', ...ref }
+        return { name: t('extensions.pota.unknownRefName', Info.unknownReferenceName ?? 'Unknown reference'), ...ref }
       }
     }
     return result
@@ -243,7 +243,7 @@ const ReferenceHandler = {
     return { type: ref.type }
   },
 
-  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+  updateFromTemplateWithDispatch: ({ t, ref, operation }) => async (dispatch) => {
     if (operation?.grid) {
       let info = parseCallsign(operation.stationCall || '')
       info = annotateFromCountryFile(info)
@@ -256,7 +256,7 @@ const ReferenceHandler = {
       })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
 
       if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
-      else return { type: ref.type, name: 'No parks nearby!' }
+      else return { type: ref.type, name: t('extensions.pota.noRefsNearby', 'No parks nearby!') }
     } else {
       return { type: ref.type }
     }
@@ -324,8 +324,6 @@ const ReferenceHandler = {
   summarizeScore: generateActivitySumarizer({ info: Info }),
 
   originalScoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
-    const DEBUG = qso.their.call === 'KK1K' || qso.their.call === 'KK3K'
-
     const { band, mode, uuid, startAtMillis } = qso
     if (DEBUG) console.log('  -- POTA scoringForQSO', { ...operation }, { ...scoredRef })
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24

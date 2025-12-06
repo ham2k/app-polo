@@ -11,6 +11,7 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
 import GLOBAL from '../../../GLOBAL'
+
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../../tools/refTools'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
@@ -72,7 +73,10 @@ const ActivityHook = {
     const enabled = !!settings?.accounts?.sota?.idToken
     const now = new Date().getTime()
     if (!enabled && (!lastAuthenticationCheck || (now - lastAuthenticationCheck > 1000 * 60 * 30))) {
-      Alert.alert('Warning', 'Not logged into SOTAWatch for spotting. Please go to PoLo settings')
+      Alert.alert(
+        GLOBAL?.t?.('extensions.sota.notLoggedInAlertTitle', 'Warning') || 'Warning',
+        GLOBAL?.t?.('extensions.sota.notLoggedInAlertText', 'Not logged into SOTAWatch for spotting. Please go to PoLo settings') || 'Not logged into SOTAWatch for spotting. Please go to PoLo settings'
+      )
       lastAuthenticationCheck = now
     }
     return enabled
@@ -81,7 +85,10 @@ const ActivityHook = {
     const enabled = !!settings?.accounts?.sota?.idToken
     const now = new Date().getTime()
     if (!enabled && (!lastAuthenticationCheck || (now - lastAuthenticationCheck > 1000 * 60 * 30))) {
-      Alert.alert('Warning', 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings')
+      Alert.alert(
+        GLOBAL?.t?.('extensions.sota.notLoggedInAlertTitle', 'Warning') || 'Warning',
+        GLOBAL?.t?.('extensions.sota.notLoggedInAlertText', 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings') || 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings'
+      )
       lastAuthenticationCheck = now
     }
     return enabled
@@ -91,12 +98,12 @@ const ActivityHook = {
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,
 
-  sampleOperations: ({ settings, callInfo }) => {
+  sampleOperations: ({ t, settings, callInfo }) => {
     return [
       // Regular Activation
-      { refs: [{ type: Info.activationType, ref: 'A/BC-1234', name: 'Example Summit', shortName: 'Example Summit', program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] },
+      { refs: [{ type: Info.activationType, ref: 'A/BC-1234', name: t('extensions.sota.exampleRefName', 'Example Summit'), shortName: t('extensions.sota.activityOptions.exampleSummit', 'Example Summit'), program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] },
       // Hunting in a different operation
-      { refs: [{}], qsos: [{ refs: [{ type: Info.huntingType, ref: 'A/BC-1234', name: 'Example Summit', shortName: 'Example Summit', program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] }] }
+      { refs: [{}], qsos: [{ refs: [{ type: Info.huntingType, ref: 'A/BC-1234', name: t('extensions.sota.exampleRefName', 'Example Summit'), shortName: t('extensions.sota.activityOptions.exampleSummit', 'Example Summit'), program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] }] }
     ]
   }
 }
@@ -222,7 +229,7 @@ const ReferenceHandler = {
           program: Info.shortName
         }
       } else {
-        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
+        return { ...ref, name: t('extensions.sota.unknownRefName', Info.unknownReferenceName ?? 'Unknown reference') }
       }
     }
   },
@@ -231,7 +238,7 @@ const ReferenceHandler = {
     return { type: ref.type }
   },
 
-  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+  updateFromTemplateWithDispatch: ({ t, ref, operation }) => async (dispatch) => {
     if (operation?.grid) {
       let info = parseCallsign(operation.stationCall || '')
       info = annotateFromCountryFile(info)
@@ -244,7 +251,7 @@ const ReferenceHandler = {
       })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
 
       if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
-      else return { type: ref.type, name: 'No summits nearby!' }
+      else return { type: ref.type, name: t('extensions.sota.noRefsNearby', 'No summits nearby!') }
     } else {
       return { type: ref.type }
     }

@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 import { ScrollView } from 'react-native'
 import UUID from 'react-native-uuid'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { loadDataFile } from '../../../../store/dataFiles/actions/dataFileFS'
 import { registerDataFile, unRegisterDataFile } from '../../../../store/dataFiles'
@@ -21,6 +22,8 @@ import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitl
 import { BUILT_IN_NOTES, CallNotesData, Info, createDataFileDefinition } from '../CallNotesExtension'
 
 const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDialogDone }) => {
+  const { t } = useTranslation()
+
   const def = useMemo(() => extSettings.customFiles.find(f => f.identifier === identifier), [extSettings.customFiles, identifier])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,35 +75,37 @@ const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDia
 
   return (
     <H2kDialog visible={true} onDismiss={onDialogDone}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>Callsign Notes File</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.call-notes.notesFile', 'Callsign Notes File')}</H2kDialogTitle>
       <H2kDialogContent>
         <H2kTextInput
-          label="Name"
+          label={t('extensions.call-notes.nameLabel', 'Name')}
           value={def.name ?? ''}
-          placeholder={'Name for your Callsign Notes File'}
+          placeholder={t('extensions.call-notes.namePlaceholder', 'Name for your Callsign Notes File')}
           onChangeText={(value) => updateDef({ name: value }) }
         />
         <H2kTextInput
-          label="Location"
+          label={t('extensions.call-notes.locationLabel', 'Location')}
           value={def.location ?? ''}
           inputMode={'url'}
           // multiline={true}  // TODO: Change to multiline when this bug is fixed https://github.com/facebook/react-native/issues/37784
-          placeholder={'https://example.com/dir/notes.txt'}
+          placeholder={t('extensions.call-notes.locationPlaceholder', 'https://example.com/dir/notes.txt')}
           onChangeText={(value) => updateDef({ location: value }) }
         />
       </H2kDialogContent>
       <H2kDialogActions style={{ justifyContent: 'space-between' }}>
-        <H2kButton onPress={handleDelete}>Delete</H2kButton>
-        <H2kButton onPress={handleDone}>Done</H2kButton>
+        <H2kButton onPress={handleDelete}>{t('general.buttons.delete', 'Delete')}</H2kButton>
+        <H2kButton onPress={handleDone}>{t('general.buttons.done', 'Done')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )
 }
 
 export default function ManageCallNotesScreen ({ navigation, dispatch }) {
+  const { t } = useTranslation()
+
   useEffect(() => {
-    navigation.setOptions({ title: 'Callsign Notes' })
-  }, [navigation])
+    navigation.setOptions({ title: t('extensions.call-notes.title', 'Callsign Notes') })
+  }, [navigation, t])
 
   const styles = useThemedStyles()
 
@@ -128,12 +133,12 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
-          <H2kListSection title={'Builtin'}>
+          <H2kListSection title={t('extensions.call-notes.builtinTitle', 'Builtin')}>
             {BUILT_IN_NOTES.map(def => (
               <H2kListItem
                 key={def.name}
-                title={def.name}
-                description={def.description}
+                title={t(`extensions.call-notes.names.${def.key}`, def.name)}
+                description={t(`extensions.call-notes.descriptions.${def.key}`, def.description)}
                 leftIcon={'file-account-outline'}
                 rightSwitchValue={extSettings?.enabledNotes?.[def.identifier] !== false}
                 rightSwitchOnValueChange={(value) => handleToggle(def.identifier, value)}
@@ -141,10 +146,10 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
             ))}
           </H2kListSection>
 
-          <H2kListSection title="Custom">
+          <H2kListSection title={t('extensions.call-notes.customTitle', 'Custom')}>
             {customFiles.map((def, i) => (
               <H2kListItem key={i}
-                title={def.name}
+                title={t(`extensions.call-notes.names.${def.key}`, def.name)}
                 description={def.location}
                 leftIcon={'file-account-outline'}
                 rightSwitchValue={extSettings?.enabledNotes?.[def.identifier] !== false}
@@ -154,7 +159,7 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
             ))}
 
             <H2kListItem
-              title={'Add a new file'}
+              title={t('extensions.call-notes.addFile', 'Add a new file')}
               leftIcon={'plus'}
               onPress={handleNewFile}
             />
@@ -169,37 +174,28 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
               onDialogDone={() => setSelectedFile(undefined)}
             />
           )}
-          <H2kListSection title={'About Callsign Notes'}>
+          <H2kListSection title={t('extensions.call-notes.aboutTitle', 'About Callsign Notes')}>
             <H2kMarkdown style={{ marginHorizontal: styles.oneSpace * 2 }}>
-              {`
-Callsign notes are stored on simple text files, one call per line followed by information you want shown in the logging screen. You can use the builtin files or add your own.
+              {t('extensions.call-notes.help-md', `Callsign notes are stored on simple text files, one call per line followed by information you want shown in the logging screen. You can use the builtin files or add your own.
 
 Provide a direct link to a plain text file, or a "share link" from a service like:
-
-* [Google Docs](https://docs.google.com/)
-* [Google Drive](https://drive.google.com/)
-* [GitHub Gists](https://gist.github.com/)
-* [Dropbox](https://www.dropbox.com/)
-* [Apple iCloud Drive](https://www.icloud.com/)
+* [Google Docs](https: //docs.google.com/)
+* [Google Drive](https: //drive.google.com/)
+* [GitHub Gists](https: //gist.github.com/)
+* [Dropbox](https: //www.dropbox.com/)
+* [Apple iCloud Drive](https: //www.icloud.com/)
 
 Lines on that file should look like this and can support basic markdown formatting:
 
-\`\`\`
-K2HRC 🎉 Ham2K Radio Club!!!
-
+\`\`\`nK2HRC 🎉 Ham2K Radio Club!!!
 KE8PZN 👑 James POTA King
-
 WD4DAN Dan POTA _Royalty_
-
 DAN WD4DAN,WD4JMM
 \`\`\`
 
-
 If the entry starts with an emoji, it will be used instead of the default ⭐.
 
-Entries can be used for "callsign expansion" if you first type \`..\` or \`//\` in the callsign field, such as \`//DAN\` in the example above.
-
-          `}
+Entries can be used for "callsign expansion" if you first type \`..\` or \` //\` in the callsign field, such as \`//DAN\` in the example above.`)}
             </H2kMarkdown>
           </H2kListSection>
         </ScrollView>

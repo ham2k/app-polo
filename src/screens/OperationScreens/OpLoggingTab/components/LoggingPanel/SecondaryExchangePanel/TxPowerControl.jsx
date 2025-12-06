@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,11 +7,17 @@
 
 import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
+import { useTranslation } from 'react-i18next'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
+
+import GLOBAL from '../../../../../../GLOBAL'
+
 import { H2kTextInput } from '../../../../../../ui'
 
 const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
+  const { t } = useTranslation()
+
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
@@ -33,7 +39,7 @@ const TxPowerControl = ({ qso, operation, settings, disabled, icon, style, style
         style={[styles.input, { minWidth: styles.oneSpace * 10, width: '100%' }]}
         value={qso?.power ?? ''}
         disabled={disabled}
-        label="Power"
+        label={t('screens.opLoggingTab.powerLabel', 'Power')}
         placeholder=""
         onChange={handleOnChange}
         onSubmitEditing={onSubmitEditing}
@@ -52,10 +58,10 @@ export const powerControl = {
     if (qso?.power) {
       return fmtNumber(qso.power, 0) + 'W'
     } else {
-      return 'Power'
+      return GLOBAL?.t?.('screens.opLoggingTab.powerLabel', 'Power') || 'Power'
     }
   },
-  accessibilityLabel: 'Power Controls',
+  accessibilityLabel: GLOBAL?.t?.('screens.opLoggingTab.powerControls-a11y', 'Power Controls') || 'Power Controls',
   InputComponent: TxPowerControl,
   inputWidthMultiplier: 10,
   optionType: 'optional'

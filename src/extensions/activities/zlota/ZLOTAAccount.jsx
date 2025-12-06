@@ -8,17 +8,20 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { setAccountInfo } from '../../../store/settings'
 import { H2kButton, H2kCallsignInput, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kTextInput } from '../../../ui'
 
 export function ZLOTAAccountSetting ({ settings, styles }) {
+  const { t } = useTranslation()
+
   const [currentDialog, setCurrentDialog] = useState()
   return (
     <>
       <H2kListItem
-        title="ZLOTA (ZLOTA spotting)"
-        description={settings?.accounts?.zlota?.userId ? `Callsign: ${settings.accounts.zlota.userId}` : 'No account'}
+        title={t('extensions.zlota.account.title', 'ZLOTA (ZLOTA spotting)')}
+        description={settings?.accounts?.zlota?.userId ? t('extensions.zlota.account.description', 'Callsign: {{callsign}}', { callsign: settings.accounts.zlota.userId }) : t('extensions.zlota.account.noAccount', 'No account')}
         leftIcon={'web'}
         onPress={() => setCurrentDialog('accountsZLOTA')}
       />
@@ -35,6 +38,8 @@ export function ZLOTAAccountSetting ({ settings, styles }) {
 }
 
 function AccountsZLOTADialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -73,32 +78,32 @@ function AccountsZLOTADialog ({ visible, settings, styles, onDialogDone }) {
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>ZLOTA Account</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.zlota.account.dialogTitle', 'ZLOTA Account')}</H2kDialogTitle>
       <H2kDialogContent>
-        <H2kText variant="bodyMedium">Please enter the details for your ZLOTA account:</H2kText>
+        <H2kText variant="bodyMedium">{t('extensions.zlota.account.pleaseEnterDetails', 'Please enter the details for your ZLOTA account:')}</H2kText>
         <H2kCallsignInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={userId}
-          label="Callsign"
-          placeholder="your account callsign"
+          label={t('extensions.zlota.account.callsignLabel', 'Callsign')}
+          placeholder={t('extensions.zlota.account.callsignPlaceholder', 'your account callsign')}
           onChangeText={onChangeUserId}
         />
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={pin}
-          label="PIN (not password)"
+          label={t('extensions.zlota.account.pinLabel', 'PIN (not password)')}
           autoComplete="current-password"
           keyboardType="default"
           textContentType="password"
           secureTextEntry={true}
           autoCapitalize={'none'}
-          placeholder="your PIN"
+          placeholder={t('extensions.zlota.account.pinPlaceholder', 'your PIN')}
           onChangeText={onChangePin}
         />
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

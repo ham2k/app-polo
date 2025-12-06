@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
@@ -20,6 +21,8 @@ import { potaFindParkByReference, potaFindParksByLocation, potaFindParksByName, 
 import { POTAListItem } from './POTAListItem'
 
 export function POTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
 
   const online = useSelector(selectRuntimeOnline)
@@ -29,10 +32,8 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (activityRefs?.length === 0) return 'No parks selected for activation'
-    else if (activityRefs?.length === 1) return 'Activating 1 park'
-    else return `Activating ${activityRefs.length} parks`
-  }, [activityRefs])
+    return t('extensions.pota.activityOptions.title', 'Activating {{count}} parks', { count: activityRefs?.length })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
@@ -114,23 +115,19 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
         }
 
         setParks(newParks.slice(0, 15))
-        if (newParks.length === 0) {
-          setParksMessage('No parks found')
-        } else if (newParks.length > 15) {
-          setParksMessage(`Nearest 15 of ${newParks.length} matches`)
-        } else if (newParks.length === 1) {
-          setParksMessage('One matching park')
+        if (newParks.length > 15) {
+          setParksMessage(t('extensions.pota.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newParks.length }))
         } else {
-          setParksMessage(`${newParks.length} matching parks`)
+          setParksMessage(t('extensions.pota.activityOptions.matchingParks', '{{count}} matching parks', { count: newParks.length }))
         }
       } else {
         setParks(nearbyResults)
-        if (nearbyResults === undefined) setParksMessage('Search for some parks to activate!')
-        else if (nearbyResults.length === 0) setParksMessage('No parks nearby')
-        else setParksMessage('Nearby parks')
+        if (nearbyResults === undefined) setParksMessage(t('extensions.pota.activityOptions.searchForParks', 'Search for some parks to activate!'))
+        else if (nearbyResults.length === 0) setParksMessage(t('extensions.pota.activityOptions.noParksNearby', 'No parks nearby'))
+        else setParksMessage(t('extensions.pota.activityOptions.nearbyParks', 'Nearby parks'))
       }
     })
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
     setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
@@ -160,7 +157,7 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={'Parks by name or reference…'}
+          placeholder={t('extensions.pota.activityOptions.searchPlaceholder', 'Parks by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />

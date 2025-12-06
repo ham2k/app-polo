@@ -11,6 +11,7 @@ import { addRuntimeMessage } from '../../runtime'
 import { reportError } from '../../../distro'
 
 import packageJson from '../../../../package.json'
+import GLOBAL from '../../../GLOBAL'
 
 import { addNotice } from '../../system/systemSlice'
 import {
@@ -103,19 +104,19 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
     const exists = await existsInLocalFileSystem(filenameForDefinition(definition))
     if (!exists || force) {
       console.info(`Data for ${definition.key} not found, fetching a fresh version`)
-      dispatch(addRuntimeMessage(`Downloading ${definition.name}`))
+      dispatch(addRuntimeMessage(GLOBAL.t('general.dataFiles.downloading', 'Downloading {{name}}', { name: definition.name })))
       if (noticesInsteadOfFetch) {
         await dispatch(addNotice({
           unique: `dataFiles:${definition.key}`,
           priority: -1,
           transient: true,
-          title: definition.title || definition.name,
+          title: GLOBAL.t(`extensions.dataFiles.title.${definition.key}`, definition.title || definition.name),
           icon: definition.titleIcon || definition.icon,
-          text: `Data for **${definition.name}** has to be downloaded.`,
+          text: GLOBAL.t('general.dataFiles.dataHasToBeDownloaded-md', 'Data for **{{name}}** has to be downloaded.', { name: definition.name }),
           actions: [
             {
               action: 'fetch',
-              label: 'Download Now',
+              label: GLOBAL.t('general.dataFiles.downloadNow', 'Download Now'),
               args: {
                 key: definition.key
               }
@@ -129,20 +130,20 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
       const readOk = await dispatch(readDataFile(key))
       const date = selectDataFileInfo(getState(), key)?.date
 
-      dispatch(addRuntimeMessage(`Loading ${definition.name}`))
+      dispatch(addRuntimeMessage(GLOBAL.t('general.dataFiles.loading', 'Loading {{name}}', { name: definition.name })))
       if (date && maxAgeInDays && (Date.now() - Date.parse(date)) / 1000 / 60 / 60 / 24 > maxAgeInDays) {
         if (noticesInsteadOfFetch) {
           await dispatch(addNotice({
-            unique: `dataFiles:${definition.key}`,
+            unique: `dataFiles: ${definition.key}`,
             priority: -1,
             transient: true,
-            title: definition.title || definition.name,
+            title: GLOBAL.t([`extensions.dataFiles.title.${definition.key}`, definition.title, definition.name]),
             icon: definition.titleIcon || definition.icon,
-            text: `Data for **${definition.name}** has not been updated in a while.`,
+            text: GLOBAL.t('general.dataFiles.dataHasNotBeenUpdatedInAWhile-md', 'Data for **{{name}}** has not been updated in a while.', { name: definition.name }),
             actions: [
               {
                 action: 'fetch',
-                label: 'Refresh Now',
+                label: GLOBAL.t('general.dataFiles.refreshNow', 'Refresh Now'),
                 args: {
                   key: definition.key
                 }
@@ -155,16 +156,16 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
       } else if (!readOk) {
         if (noticesInsteadOfFetch) {
           await dispatch(addNotice({
-            unique: `dataFiles:${definition.key}`,
+            unique: `dataFiles:${definition.key} `,
             priority: -1,
             transient: true,
-            title: definition.title || definition.name,
+            title: GLOBAL.t(`extensions.dataFiles.title.${definition.key}`, definition.title || definition.name),
             icon: definition.titleIcon || definition.icon,
-            text: `Data for **${definition.name}** has to be downloaded.`,
+            text: GLOBAL.t('general.dataFiles.dataHasToBeDownloaded-md', 'Data for **{{name}}** has to be downloaded.', { name: definition.name }),
             actions: [
               {
                 action: 'fetch',
-                label: 'Download Now',
+                label: GLOBAL.t('general.dataFiles.downloadNow', 'Download Now'),
                 args: {
                   key: definition.key
                 }
@@ -177,7 +178,7 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
       }
     }
   } catch (error) {
-    reportError(`Error loading data file ${key}`, error)
+    reportError(`Error loading data file ${key} `, error)
     dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
     return 'error'
   }
@@ -205,11 +206,11 @@ export const loadAllDataFiles = () => async (dispatch) => {
 
 const DEBUG_FETCH = false
 
-export async function fetchAndProcessURL ({ url, key, process, definition, info, options }) {
+export async function fetchAndProcessURL({ url, key, process, definition, info, options }) {
   url = await resolveDownloadUrl(url)
 
   const headers = {
-    'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
+    'User-Agent': `Ham2K Portable Logger / ${packageJson.version} `
   }
   if (DEBUG_FETCH) console.log('Fetching', { url, info })
   if (info?.data?.etag) {
@@ -226,7 +227,7 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
   return data
 }
 
-export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options }) {
+export async function fetchAndProcessBatchedLines({ url, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options }) {
   url = await resolveDownloadUrl(url)
 
   if (!processLineBatch) {
@@ -235,7 +236,7 @@ export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch,
   }
 
   const headers = {
-    'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
+    'User-Agent': `Ham2K Portable Logger / ${packageJson.version} `
   }
   if (DEBUG_FETCH) console.log('Fetching for batching', { url, info })
   if (info?.data?.etag) {
@@ -251,7 +252,7 @@ export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch,
   }
 }
 
-export async function resolveDownloadUrl (url) {
+export async function resolveDownloadUrl(url) {
   url = url?.trim() || ''
 
   // Dropbox
@@ -262,7 +263,7 @@ export async function resolveDownloadUrl (url) {
     } else {
       return `${url}?dl=1&raw=1`
     }
-  // Apple iCloud Drive
+    // Apple iCloud Drive
   } else if (url.match(/^https:\/\/(www\.)*icloud\.com\/iclouddrive/i)) {
     const parts = url.match(/iclouddrive\/([\w_]+)/)
     const response = await fetch('https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve', {
@@ -279,7 +280,7 @@ export async function resolveDownloadUrl (url) {
     } else {
       return url
     }
-  // Google Drive
+    // Google Drive
   } else if (url.match(/^https:\/\/drive\.google\.com\//i)) {
     const parts = url.match(/file\/d\/([\w_-]+)/)
     if (parts) {
@@ -288,11 +289,11 @@ export async function resolveDownloadUrl (url) {
       console.log('No parts found for Google Drive URL', url)
       return url
     }
-  // Google Docs
+    // Google Docs
   } else if (url.match(/^https:\/\/docs\.google\.com\/document/i)) {
     const parts = url.match(/\/d\/([\w_-]+)/)
     return `https://docs.google.com/document/export?format=txt&id=${parts[1]}`
-  // GitHub Gist
+    // GitHub Gist
   } else if (url.match(/^https:\/\/gist\.github\.com\//i)) {
     console.log('gist url', url)
     const response = await fetch(url, {

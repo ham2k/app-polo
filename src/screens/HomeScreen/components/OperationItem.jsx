@@ -10,9 +10,9 @@ import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useSelector } from 'react-redux'
 
-import { fmtNumber } from '@ham2k/lib-format-tools'
+import { capitalizeFirstLetter, fmtNumber } from '@ham2k/lib-format-tools'
 
-import { fmtDateZuluDynamic } from '../../../tools/timeFormats'
+import { fmtDateDynamicZulu } from '../../../tools/timeFormats'
 import { tweakStringForVoiceOver } from '../../../tools/a11yTools'
 import { buildTitleForOperation } from '../../OperationScreens/OperationScreen'
 import { selectOperation } from '../../../store/operations'
@@ -48,7 +48,7 @@ export default function OperationItem ({ operationId, settings, onPress, styles,
   return (
     <H2kPressable
       onPress={pressHandler}
-      accessibilityLabel={tweakStringForVoiceOver(`${operation.stationCallPlus || operation.stationCall} ${title}, ${operation.subtitle}, ${operation.qsoCount ?? 0} Q sos, ${fmtDateZuluDynamic(operation.startAtMillisMax)}`)}
+      accessibilityLabel={tweakStringForVoiceOver(`${operation.stationCallPlus || operation.stationCall} ${title}, ${operation.subtitle}, ${operation.qsoCount ?? 0} Q sos, ${fmtDateDynamicZulu(operation.startAtMillisMax)}`)}
       style={styles.rowRoot}
     >
       <View style={rowStyle}>
@@ -68,7 +68,7 @@ export default function OperationItem ({ operationId, settings, onPress, styles,
           </View>
           <View style={styles.rowBottomRight}>
             <Text style={styles.rowTextSmall}>
-              {operation.startAtMillisMax && fmtDateZuluDynamic(operation.startAtMillisMax)}
+              {operation.startAtMillisMax && capitalizeFirstLetter(fmtDateDynamicZulu(operation.startAtMillisMax, { compact: true }))}
             </Text>
           </View>
         </View>

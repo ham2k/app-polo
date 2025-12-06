@@ -1,25 +1,26 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { Keyboard, View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation } from '../../../store/operations'
 import { selectQSOs } from '../../../store/qsos'
-import { Keyboard, View } from 'react-native'
 import { selectSettings } from '../../../store/settings'
-
 import { useUIState } from '../../../store/ui'
+
 import MapWithQSOs from './components/MapWithQSOs'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function prepareStyles (baseStyles, themeColor) {
   return {
@@ -39,6 +40,8 @@ function prepareStyles (baseStyles, themeColor) {
 }
 
 export default function OpMapTab ({ navigation, route }) {
+  const { t } = useTranslation()
+
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor)
   const safeAreaInsets = useSafeAreaInsets()
@@ -73,7 +76,10 @@ export default function OpMapTab ({ navigation, route }) {
     if (!qth.latitude) {
       _warnings.push({
         key: 'no-location',
-        text: 'No lines?\nYou need to set your location first.\n\nTap here to do it.',
+        text: t('screens.opMapTab.noLocation', `No lines?
+You need to set your location first.
+
+Tap here to do it.`),
         onPress: () => navigation.navigate('OperationLocation', { operation: operation.uuid }),
         style: {
           backgroundColor: 'red',
@@ -87,12 +93,14 @@ export default function OpMapTab ({ navigation, route }) {
     if (qsosWithNoLocation.length / qsos.length > 0.5 && qsos.length > 5) {
       _warnings.push({
         key: 'many-no-location',
-        text: 'Many of these QSOs have no precise location.\n\nYou might need a paid QRZ.com account for location lookups.',
+        text: t('screens.opMapTab.manyNoLocation', `Many of these QSOs have no precise location.
+
+You might need a paid QRZ.com account for location lookups.`),
         onPress: () => navigation.navigate('Settings')
       })
     }
     return _warnings
-  }, [navigation, operation.uuid, qsos, qth?.latitude])
+  }, [navigation, operation.uuid, qsos, qth?.latitude, t])
 
   const [keyboardPaddingBottom, setKeyboardPaddingBottom] = useState(0)
   useEffect(() => {

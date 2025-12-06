@@ -9,6 +9,7 @@ import React, { useCallback, useEffect } from 'react'
 
 import { View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, selectOperationCallInfo } from '../../../store/operations'
@@ -22,11 +23,13 @@ import { selectSectionedQSOs } from '../../../store/qsos'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { useAutoRespotting } from './components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
 
 export default function OpLoggingTab ({ navigation, route, splitView }) {
+  const { t } = useTranslation()
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
   const vfo = useSelector(state => selectVFO(state))
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
@@ -55,7 +58,7 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   // useEffect(() => console.log('-- OpLoggingTab activeQSOs', activeQSOs), [activeQSOs])
   // useEffect(() => console.log('-- OpLoggingTab loggingState', loggingState), [loggingState])
 
-  useAutoRespotting({ operation, vfo, dispatch, settings })
+  useAutoRespotting({ t, operation, vfo, dispatch, settings })
 
   useEffect(() => { // Reset logging state when operation changes
     if (loggingState?.operationUUID !== operation?.uuid) {
@@ -79,11 +82,13 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
 
   useEffect(() => { // Set navigation title
     if (styles?.smOrLarger) {
-      navigation.setOptions({ title: `${activeQSOs.length} ${activeQSOs.length !== 1 ? 'QSOs' : 'QSO'}`, iconName: 'radio' })
+      navigation.setOptions({
+        title: t('screens.opLoggingTab.qsosTabCount', '{{count}} QSOs', { count: activeQSOs.length, fmtCount: fmtNumber(activeQSOs.length) })
+      })
     } else {
-      navigation.setOptions({ title: `${activeQSOs.length} ${activeQSOs.length !== 1 ? 'Qs' : 'Q'}`, iconName: 'radio' })
+      navigation.setOptions({ title: t('screens.opLoggingTab.qsosCompactTabCount', '{{count}} Qs', { count: activeQSOs.length, fmtCount: fmtNumber(activeQSOs.length) }) })
     }
-  }, [navigation, activeQSOs, styles?.smOrLarger])
+  }, [navigation, activeQSOs, styles?.smOrLarger, t])
 
   useEffect(() => { // Setup reference handlers
     const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]

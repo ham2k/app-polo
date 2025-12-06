@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import UUID from 'react-native-uuid'
 import { useNavigation } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -50,6 +51,7 @@ let submitTimeout
 export default function LoggingPanel ({
   style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo, splitView
 }) {
+  const { t, i18n } = useTranslation()
   const navigation = useNavigation()
   const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
@@ -105,11 +107,15 @@ export default function LoggingPanel ({
     if (!operation?.stationCall) errors.push('callsign')
 
     if (errors.length > 0) {
-      return [false, `ERROR: Please enter **${joinAnd(errors)}** for a valid operation`]
+      return [false,
+        t('screens.opLoggingTab.missingInfoError.message', 'ERROR: Please enter **{{errors}}** for a valid operation', {
+          errors: joinAnd(errors.map(error => t(`screens.opLoggingTab.missingInfoError.${error}`, error)))
+        })
+      ]
     } else {
       return [true, undefined]
     }
-  }, [qso, operation, vfo])
+  }, [qso, operation, vfo, t])
 
   useEffect(() => { // Manage the QSO Queue
     // When there is no current QSO, pop one from the queue or create a new one
@@ -202,7 +208,7 @@ export default function LoggingPanel ({
     }
 
     if (fieldId === 'theirCall') {
-      const { description, allowSpaces, matchingCommand } = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, setCommandInfo })
+      const { description, allowSpaces, matchingCommand } = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, setCommandInfo })
       setCommandInfo({ message: description || undefined, matchingCommand, match: !!matchingCommand })
       setAllowSpacesInCallField(allowSpaces)
 
@@ -245,7 +251,7 @@ export default function LoggingPanel ({
     } else if (fieldId === 'eventData') {
       updateQSO({ event: { data: value } })
     }
-  }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, setCommandInfo, updateQSO])
+  }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, setCommandInfo, updateQSO])
 
   // Since our fields and logic often perform some async work,
   // we need to wait a few milliseconds before submitting to ensure all async work is complete.
@@ -272,7 +278,7 @@ export default function LoggingPanel ({
       // First, try to process any commands, but only if we're not editing an event
       if (!qso.event) {
         const command = qso?.their?.call
-        const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit, setCommandInfo })
+        const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit, setCommandInfo })
         if (commandResult) {
           trackEvent('command', { command })
           setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
@@ -393,7 +399,7 @@ export default function LoggingPanel ({
     }, 0)
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
   }, [
-    qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo,
+    qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, i18n, t, online, ourInfo,
     updateQSO, updateLoggingState, handleFieldChange, isValidQSO,
     setCommandInfo, setCurrentSecondaryControl, setQSO, doSubmit, handleSubmit
   ])
@@ -531,7 +537,7 @@ export default function LoggingPanel ({
                 loggingState?.undoInfo ? (
                   <IconButton
                     icon={'undo'}
-                    accessibilityLabel="Undo"
+                    accessibilityLabel={t('screens.opLoggingTab.actions.undo-a11y', 'Undo')}
                     onPress={handleUnwipe}
                     size={styles.actions.button.size}
                     mode={styles.actions.button.mode}
@@ -541,7 +547,7 @@ export default function LoggingPanel ({
                 ) : (
                   <IconButton
                     icon={'backspace-outline'}
-                    accessibilityLabel="Erase"
+                    accessibilityLabel={t('screens.opLoggingTab.actions.erase-a11y', 'Erase')}
                     onPress={handleWipe}
                     disabled={!loggingState?.hasChanges}
                     size={styles.actions.button.size}
@@ -554,7 +560,7 @@ export default function LoggingPanel ({
                 (qso?.deleted || qso?._willBeDeleted || loggingState?.undoInfo) ? (
                   <IconButton
                     icon={loggingState.undoInfo ? 'undo' : 'delete-restore'}
-                    accessibilityLabel="Undo"
+                    accessibilityLabel={t('screens.opLoggingTab.actions.undo-a11y', 'Undo')}
                     size={styles.actions.button.size}
                     mode={styles.actions.button.mode}
                     iconColor={styles.actions.button.color}
@@ -564,7 +570,7 @@ export default function LoggingPanel ({
                 ) : (
                   <IconButton
                     icon={'trash-can-outline'}
-                    accessibilityLabel="Delete"
+                    accessibilityLabel={t('screens.opLoggingTab.actions.delete-a11y', 'Delete')}
                     onPress={handleDelete}
                     disabled={false}
                     size={styles.actions.button.size}
@@ -577,7 +583,7 @@ export default function LoggingPanel ({
 
               <IconButton
                 icon={qso?._isNew ? 'upload' : (qso?._willBeDeleted ? 'trash-can' : 'content-save')}
-                accessibilityLabel={qso?._isNew ? 'Add QSO' : 'Save QSO'}
+                accessibilityLabel={qso?._isNew ? t('screens.opLoggingTab.actions.addQSO-a11y', 'Add QSO') : t('screens.opLoggingTab.actions.saveQSO-a11y', 'Save QSO')}
                 onPress={handleSubmit}
                 disabled={disableSubmit}
                 size={styles.actions.importantButton.size}
@@ -815,11 +821,13 @@ function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
 }
 
 const PanelSelector = ({ qso, opMessage, styles, ...props }) => {
+  const { t } = useTranslation()
+
   if (qso?.deleted || qso?._willBeDeleted) {
     return (
       <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
         <Text style={{ fontWeight: 'bold', fontSize: styles.normalFontSize, color: styles.theme.colors.error }}>
-          {qso?.deleted ? 'Deleted QSO' : 'QSO will be deleted!'}
+          {qso?.deleted ? t('screens.opLoggingTab.deletedQSO', 'Deleted QSO') : t('screens.opLoggingTab.qsoWillBeDeleted', 'QSO will be deleted!')}
         </Text>
       </View>
     )
@@ -858,7 +866,6 @@ const PanelSelector = ({ qso, opMessage, styles, ...props }) => {
 const _convertRSTValues = ({ theirReport, ourReport, mode, originalMode }, { settings }) => {
   console.log('conver rst values', theirReport, ourReport, mode, originalMode)
   if ((mode === 'CW' || mode === 'RTTY') && (originalMode === 'SSB' || originalMode === 'USB' || originalMode === 'LSB')) {
-    console.log('converting cw to ssb')
     if (theirReport) {
       const [readability, strength, ...extra] = theirReport.split('')
       theirReport = `${readability}${strength}${strength}${extra}`
@@ -868,7 +875,6 @@ const _convertRSTValues = ({ theirReport, ourReport, mode, originalMode }, { set
       ourReport = `${readability}${strength}${strength}${extra}`
     }
   } else if ((mode === 'SSB' || mode === 'USB' || mode === 'LSB') && (originalMode === 'CW' || mode === 'RTTY')) {
-    console.log('converting ssb to cw')
     if (theirReport) {
       // eslint-disable-next-line no-unused-vars
       const [readability, strength, tone, ...extra] = theirReport.split('')
