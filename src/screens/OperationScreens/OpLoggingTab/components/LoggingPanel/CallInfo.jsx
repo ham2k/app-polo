@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Icon, Text } from 'react-native-paper'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
@@ -251,9 +251,20 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
     return newMessages
   }, [scoreInfo, lookup?.history, qso?.startAtMillis])
 
-  const messagesAreLong = useMemo(() => {
-    return messages?.length > 1 || (messages?.length === 1 && messages[0]?.msg?.length >= 8)
-  }, [messages])
+  const [infoContainerWidth, setInfoContainerWidth] = useState(0)
+  const [infoTextWidth, setInfoTextWidth] = useState(0)
+  const [messagesWidth, setMessagesWidth] = useState(0)
+  const handleInfoContainerLayout = useCallback((e) => setInfoContainerWidth(e.nativeEvent.layout.width), [])
+  const handleInfoTextLayout = useCallback((e) => setInfoTextWidth(e.nativeEvent.layout.width), [])
+  const handleMessagesLayout = useCallback((e) => setMessagesWidth(e.nativeEvent.layout.width), [])
+
+  const infoContainerStyle = useMemo(() => {
+    if (infoTextWidth + messagesWidth > infoContainerWidth + styles.oneSpace) {
+      return [styles.callInfoPanel.secondRow, { flexDirection: 'column', gap: styles.halfSpace, justifyContent: 'space-between', alignItems: 'flex-start' }]
+    } else {
+      return [styles.callInfoPanel.secondRow, { flexDirection: 'row', gap: styles.oneSpace, justifyContent: 'space-between', alignItems: 'flex-start' }]
+    }
+  }, [infoContainerWidth, infoTextWidth, messagesWidth, styles.oneSpace, styles.callInfoPanel.secondRow, styles.halfSpace])
 
   if (DEBUG) console.log('CallInfo render with', { call, locationInfo, stationInfo })
 
@@ -293,27 +304,23 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
               </Text>
             )}
           </View>
-          <View style={styles.callInfoPanel.secondRow}>
-            <H2kMarkdown style={{ numberOfLines: 1, lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}>{stationInfo ?? ''}</H2kMarkdown>
-            {messages.length > 0 && !messagesAreLong && (
-              <View style={{ flex: 1, marginLeft: styles.halfSpace, alignSelf: 'flex-end', flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                {messages.map((msg) => (
-                  <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
-                    <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
-                  </View>
-                ))}
-              </View>
-            )}
-          </View>
-          {messagesAreLong && (
-            <View style={styles.callInfoPanel.extraRow}>
+          <View onLayout={handleInfoContainerLayout} style={infoContainerStyle}>
+            <View onLayout={handleInfoTextLayout} style={styles.callInfoPanel.infoText}>
+              <H2kMarkdown
+                numberOfLines={1}
+                style={{ lineHeight: styles.normalFontSize * 1.3, fontWeight: 'bold', fontFamily: stationInfo.length > 40 ? styles.maybeCondensedFontFamily : styles.normalFontFamily }} styles={styles}
+              >
+                {stationInfo ?? ''}
+              </H2kMarkdown>
+            </View>
+            <View onLayout={handleMessagesLayout} style={styles.callInfoPanel.messages}>
               {messages.map((msg) => (
                 <View key={msg.key} style={[styles.history.pill, msg.level && styles.history[msg.level]]}>
                   <Text numberOfLines={1} style={[styles.history.text, msg.level && styles.history[msg.level]]}>{msg.msg}</Text>
                 </View>
               ))}
             </View>
-          )}
+          </View>
         </View>
       </View>
     </H2kPressable>
@@ -354,23 +361,23 @@ function prepareStyles (themeStyles, { style }) {
         flexDirection: 'row',
         alignItems: 'flex-start'
       },
-      extraRow: {
-        alignSelf: 'flex-start',
-        minHeight: themeStyles.oneSpace * 2,
-        overflow: 'hidden',
-        flexWrap: 'wrap',
+      infoText: {
+        alignSelf: 'flex-start'
+      },
+      messages: {
+        alignSelf: 'flex-end',
         flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        flexWrap: 'wrap',
+        gap: themeStyles.halfSpace
       }
     },
 
     history: {
       pill: {
-        marginRight: themeStyles.halfSpace,
-        marginTop: themeStyles.oneSpace * 0.25,
+        height: themeStyles.oneSpace * 3,
         borderRadius: 3,
-        // marginTop: baseStyles.oneSpace * 0.25,
         paddingHorizontal: themeStyles.oneSpace * 0.5,
         backgroundColor: themeStyles.theme.colors[`${themeStyles.upcasedThemeColor}Light`]
       },
