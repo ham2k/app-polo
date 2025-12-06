@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024, 2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,7 +8,7 @@
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import DXCC_LOCATIONS from '../data/dxccLocations.json'
 
-export function distanceOnEarth (location1, location2, options = {}) {
+export function distanceOnEarth(location1, location2, options = {}) {
   let radius
   if (options.units === 'miles') {
     radius = 3958.8 // Radius of the Earth in miles
@@ -32,7 +32,7 @@ export function distanceOnEarth (location1, location2, options = {}) {
   return radius * c
 }
 
-export function bearingOnEarth (location1, location2) {
+export function bearingOnEarth(location1, location2) {
   const lat1 = deg2rad(location1?.lat ?? location1?.latitude)
   const lon1 = deg2rad(location1?.lon ?? location1?.longitude)
   const lat2 = deg2rad(location2?.lat ?? location2?.latitude)
@@ -47,23 +47,27 @@ export function bearingOnEarth (location1, location2) {
   return (theta * 180 / Math.PI + 360) % 360 // in degrees
 }
 
-function deg2rad (deg) {
+function deg2rad(deg) {
   return deg * (Math.PI / 180)
 }
 
 const THOUSANDS_DELIMITER_REGEX = /^(\d+)(\d\d\d)$/
 
-export function fmtDistance (dist, options) {
+export function fmtDistance(dist, options) {
   if (!dist) return ''
 
+  let fixedPrecision = options.precision ?? 1
+  if (options.precision === undefined && dist > 5)
+    fixedPrecision = 0
+
   if (options.units === 'miles') {
-    return `${dist.toFixed(1).replace(THOUSANDS_DELIMITER_REGEX, '$1,$2')} mi`
+    return `${dist.toFixed(fixedPrecision).replace(THOUSANDS_DELIMITER_REGEX, '$1,$2')} mi`
   } else {
-    return `${dist.toFixed(1).replace(THOUSANDS_DELIMITER_REGEX, '$1.$2')} km`
+    return `${dist.toFixed(fixedPrecision).replace(THOUSANDS_DELIMITER_REGEX, '$1.$2')} km`
   }
 }
 
-export function locationForQSONInfo (qsonInfo) {
+export function locationForQSONInfo(qsonInfo) {
   try {
     const grid = qsonInfo?.grid ?? qsonInfo?.guess?.grid
 
@@ -84,19 +88,19 @@ export function locationForQSONInfo (qsonInfo) {
   }
 }
 
-export function distanceForQSON (qso, { units }) {
+export function distanceForQSON(qso, { units }) {
   const theirLocation = locationForQSONInfo(qso?.their)
   const ourLocation = locationForQSONInfo(qso?.our)
   return (theirLocation && ourLocation) ? distanceOnEarth(theirLocation, ourLocation, { units }) : null
 }
 
-export function bearingForQSON (qso) {
+export function bearingForQSON(qso) {
   const theirLocation = locationForQSONInfo(qso?.their)
   const ourLocation = locationForQSONInfo(qso?.our)
   return (theirLocation && ourLocation) ? bearingOnEarth(ourLocation, theirLocation) : null
 }
 
-export function degreesInMinutes (degrees) {
+export function degreesInMinutes(degrees) {
   const sign = degrees < 0 ? -1 : 1
   degrees = Math.abs(degrees)
   const d = Math.floor(degrees)
@@ -112,7 +116,7 @@ export function degreesInMinutes (degrees) {
   }
 }
 
-export function latitudeInMinutes (latitude) {
+export function latitudeInMinutes(latitude) {
   const values = degreesInMinutes(latitude)
   return {
     ...values,
@@ -121,7 +125,7 @@ export function latitudeInMinutes (latitude) {
   }
 }
 
-export function longitudeInMinutes (longitude) {
+export function longitudeInMinutes(longitude) {
   const values = degreesInMinutes(longitude)
   return {
     ...values,

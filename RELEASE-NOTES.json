@@ -9,7 +9,8 @@
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
     "changes": [
       "More accessibility improvements, better text contrast in input fields",
-      "Don't mix references in ADIF exports for specific activities"
+      "Don't mix references in ADIF exports for specific activities",
+      "Layout improvements for Call Info"
     ]
   },
   "25.10.6": {
