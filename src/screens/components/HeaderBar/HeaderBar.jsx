@@ -188,19 +188,20 @@ function prepareStyles (baseStyles, { back, close, safeAreaInsets, splitView }) 
   return ({
     ...baseStyles,
     root: {
-      height: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * 5,
+      height: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? 4 : 6.5),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingLeft: Math.max(safeAreaInsets.left, baseStyles.oneSpace * 2),
       paddingRight: splitView ? 0 : Math.max(safeAreaInsets.right, baseStyles.oneSpace * 2),
-      paddingTop: Math.min(safeAreaInsets.top, baseStyles.oneSpace * 8) - baseStyles.oneSpace,
+      paddingTop: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? -1 : 1),
       paddingBottom: 0
     },
     content: {
       flex: 1,
       flexDirection: 'column',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      minHeight: baseStyles.oneSpace * 5
     },
     screenContainer: {
       backgroundColor: baseStyles.colors.background
@@ -208,7 +209,7 @@ function prepareStyles (baseStyles, { back, close, safeAreaInsets, splitView }) 
     screenTitle: {
       fontFamily: baseStyles.boldTitleFontFamily,
       fontSize: 20 * baseStyles.fontScaleAdjustment,
-      lineHeight: 22 * baseStyles.fontScaleAdjustment,
+      lineHeight: 25 * baseStyles.fontScaleAdjustment,
       color: baseStyles.colors.onPrimary
     },
     screenTitleSmall: {

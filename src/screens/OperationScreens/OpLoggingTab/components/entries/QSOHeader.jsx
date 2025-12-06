@@ -52,6 +52,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
                     name={score.icon}
                     color={score.activated === true ? styles.colors.important : undefined}
                     style={styles.fields.icon}
+                    size={styles.normalFontSize * 1.1}
                   />
                 ) : (
                   `${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ' '}`

@@ -363,6 +363,7 @@ export function H2kTextInput (props) {
         onFocus={handleFocus}
         onBlur={handleBlur}
         onSelectionChange={trackSelection ? handleSelectionChange : undefined}
+        underlineColorAndroid='transparent'
       >{valueAsChild ? stringValue : null}</NativeTextInput>
 
     </View>
@@ -416,6 +417,14 @@ function prepareStyles (themeStyles, { style, textStyle, error, themeColor, disa
     },
     input: {
       ...textStyle,
+      paddingVertical: 0,
+      marginVertical: 0,
+      margin: 0,
+      padding: 0,
+      marginTop: 0,
+      paddingTop: 0,
+      textAlignVertical: 'middle',
+      height: themeStyles.oneSpace * 3,
       fontSize: themeStyles.normalFontSize,
       fontFamily: themeStyles.monospacedFontFamily,
       fontVariant: ['tabular-nums'],

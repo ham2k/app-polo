@@ -58,7 +58,7 @@ const EventItem = React.memo(function EventItem (
       <View style={styles.rowInner}>
         <Text style={[fieldsStyle.time, !selected && styles.eventContent]}>{timeFormatFunction(qso.startAtMillis)}</Text>
         <Text style={[fieldsStyle.icons, !selected && styles.eventContent]}>
-          <H2kIcon name={qso.event.icon ?? 'information-outline'} style={fieldsStyle.icon} color={!selected && styles.eventContent.color}/>
+          <H2kIcon name={qso.event.icon ?? 'information-outline'} style={fieldsStyle.icon} color={!selected && styles.eventContent.color} size={styles.normalFontSize}/>
         </Text>
         <Text style={[textStyle, !selected && styles.eventContent]}>
           <H2kMarkdown style={[!selected && { color: styles.eventContent.color }]}>{qso.event.description ?? qso.event.event.toUpperCase()}</H2kMarkdown>
