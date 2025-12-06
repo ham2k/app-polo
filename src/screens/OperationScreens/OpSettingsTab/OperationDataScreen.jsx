@@ -60,7 +60,7 @@ export default function OperationDataScreen (props) {
   }, [dispatch, navigation, operation, settings, styles])
 
   const pendingTodos = useMemo(() => {
-    return qsos.filter((qso) => !qso?.deleted && qso?.event?.event === 'todo' && !qso.event.done)
+    return qsos.filter((qso) => !qso?.deleted && qso?.event?.event === 'todo' && !(qso.event?.data?.done ?? qso.event?.done))
   }, [qsos])
 
   const readyToExport = useMemo(() => {

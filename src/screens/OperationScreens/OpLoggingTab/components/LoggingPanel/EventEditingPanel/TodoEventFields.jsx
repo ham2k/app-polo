@@ -21,8 +21,8 @@ export default function TodoEventFields ({
     <>
       <View style={{ flex: 0, width: styles.oneSpace * 7 }}>
         <IconButton
-          icon={qso.event?.done ? 'sticker-check-outline' : 'sticker'}
-          onPress={() => handleFieldChange({ fieldId: 'eventDone', value: !qso.event?.done })}
+          icon={qso.event?.data?.done ?? qso.event?.done ? 'sticker-check-outline' : 'sticker'}
+          onPress={() => handleFieldChange({ fieldId: 'eventData', value: { done: !(qso.event?.data?.done ?? qso.event?.done) } })}
           mode="outlined"
         />
       </View>

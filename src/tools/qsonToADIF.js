@@ -71,9 +71,20 @@ export function qsonToADIF({ operation, settings, qsos, handler, format, title, 
     if (qso.deleted) return
     if (qso.event) {
       if (privateData) {
-        const eventRecord = `${fmtISODateTime(qso.startAtMillis)}: ${qso.event.note ?? qso.event.message ?? qso.event.description.replaceAll(/ • /g, ' * ')}`
         if (qso.event.event === 'break' || qso.event.event === 'start') str += "\n"
+
+        const eventRecord = `${fmtISODateTime(qso.startAtMillis)}: ${qso.event.note ?? qso.event.message ?? qso.event.description.replaceAll(/ • /g, ' * ')}`
         str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}`, eventRecord, { newLine: true })
+
+        if (qso.event.data) {
+          str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}_DATA`, JSON.stringify(qso.event.data), { newLine: true })
+        } else {
+          const dataField = Object.keys(qso.event).find(key => key.endsWith('Data'))
+          if (dataField) {
+            str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}_DATA`, JSON.stringify(qso.event[dataField]), { newLine: true })
+          }
+        }
+
         if (qso.event.event === 'break' || qso.event.event === 'start') str += "\n"
       }
 

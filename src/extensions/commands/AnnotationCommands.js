@@ -102,7 +102,7 @@ const TodoCommandHook = {
         command: `TODO ${note}`,
         icon: 'sticker-outline',
         note,
-        done: false,
+        data: { done: false },
         operatorCall: operation?.local?.operatorCall
       }
       dispatch(newEventQSO({ uuid: operation.uuid, event }))
@@ -193,7 +193,7 @@ const EarthWeatherCommandHook = {
       dispatch(newEventQSO({
         uuid: operation.uuid, event: {
           event: 'weather',
-          weatherData,
+          data: weatherData,
           icon: 'weather-sunny',
           description: message,
           operatorCall: operation?.local?.operatorCall
@@ -237,7 +237,7 @@ const SolarWeatherCommandHook = {
       dispatch(newEventQSO({
         uuid: operation.uuid, event: {
           event: 'solar',
-          solarData,
+          data: solarData,
           icon: 'sun-wireless',
           description: message,
           operatorCall: operation?.local?.operatorCall

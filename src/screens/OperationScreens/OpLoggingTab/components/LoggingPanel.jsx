@@ -242,8 +242,8 @@ export default function LoggingPanel ({
       if (qso?._isNew) dispatch(setVFO({ power: value }))
     } else if (fieldId === 'eventNote') {
       updateQSO({ event: { note: value } })
-    } else if (fieldId === 'eventDone') {
-      updateQSO({ event: { done: value } })
+    } else if (fieldId === 'eventData') {
+      updateQSO({ event: { data: value } })
     }
   }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, online, ourInfo, setCommandInfo, updateQSO])
 

@@ -41,14 +41,14 @@ const EventNoteItem = React.memo(function EventNoteItem (
   const icon = useMemo(() => {
     if (qso.event?.event === 'todo' && qso.deleted) {
       return 'sticker-outline'
-    } else if (qso.event?.event === 'todo' && qso.event?.done) {
+    } else if (qso.event?.event === 'todo' && (qso.event?.data?.done ?? qso.event?.done)) {
       return 'sticker-check-outline'
-    } else if (qso.event?.event === 'todo' && !qso.event?.done) {
+    } else if (qso.event?.event === 'todo' && !(qso.event?.data?.done ?? qso.event?.done)) {
       return 'sticker'
     } else {
       return 'sticker-text-outline'
     }
-  }, [qso.event?.event, qso.event?.done, qso.deleted])
+  }, [qso.event?.event, qso.event?.data?.done, qso.event?.done, qso.deleted])
 
   return (
     <H2kPressable onPress={pressHandler} style={rowStyle}>
