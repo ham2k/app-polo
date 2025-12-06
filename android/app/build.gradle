@@ -86,11 +86,17 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode project.env.get("POLO_BUILD").toInteger()
         versionName project.env.get("POLO_BASE_VERSION")
-        setProperty("archivesBaseName", applicationId + "-v" + versionCode + "(" + versionName + ")")
         resValue "string", "build_config_package", "com.ham2k.polo"
         manifestPlaceholders = [
             appAuthRedirectScheme: 'com.ham2k.polo'
         ]
+    }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def baseName = "com.ham2k.polo-v${variant.versionCode}(${variant.versionName})"
+            outputFileName = "${baseName}-${variant.name}.apk"
+        }
     }
     signingConfigs {
         debug {

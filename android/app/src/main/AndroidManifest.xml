@@ -23,6 +23,7 @@
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:allowBackup="false"
+      android:usesCleartextTraffic="${usesCleartextTraffic}"
       android:theme="@style/AppTheme">
       <activity
         android:name=".MainActivity"
