@@ -436,7 +436,7 @@ export default function LoggingPanel ({
 
   const opMessage = useMemo(() => {
     if (operationError) return { text: operationError, icon: 'alert-circle', hideCallInfo: true }
-    if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information', hideCallInfo: false }
+    if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information', hideCallInfo: true }
     if (commandInfo?.message) return { text: `**${commandInfo.message}**`, icon: 'chevron-right-box', hideCallInfo: true }
     return undefined
   }, [operationError, commandInfo?.message, loggingState.infoMessage])
