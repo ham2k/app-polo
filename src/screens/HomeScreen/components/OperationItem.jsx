@@ -67,9 +67,9 @@ export default function OperationItem ({ operationId, settings, onPress, styles,
             <Text style={styles.rowTextSmall} numberOfLines={1} ellipsizeMode={'tail'}>{operation.subtitle}</Text>
           </View>
           <View style={styles.rowBottomRight}>
-            {operation.startAtMillisMax && (
-              <Text style={styles.rowTextSmall}>{fmtDateZuluDynamic(operation.startAtMillisMax)}</Text>
-            )}
+            <Text style={styles.rowTextSmall}>
+              {operation.startAtMillisMax && fmtDateZuluDynamic(operation.startAtMillisMax)}
+            </Text>
           </View>
         </View>
       </View>
