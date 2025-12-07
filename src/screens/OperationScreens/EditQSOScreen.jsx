@@ -33,7 +33,7 @@ const QSO_SECTIONS = [
       { key: 'freq', label: 'Frequency', type: 'freq', setter: frequencySetter, getter: ({ qso }) => qso.freq },
       { key: 'mode', label: 'Mode', type: 'mode' },
       { key: 'band', label: 'Band', type: 'band' },
-      { key: 'power', label: 'Power', type: 'number' }
+      { key: 'power', label: 'Power', type: 'number' },
     ]
   },
   {
@@ -47,6 +47,7 @@ const QSO_SECTIONS = [
       //{ key: 'exchange', label: 'Exchange', type: 'upcasedText' },
       //{ key: 'name', label: 'Name', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 } },
       // { key: 'qth', label: 'QTH', type: 'text', guess: true, minSpaces: 16, breakBefore: true },
+      { key: 'grid', label: 'Grid', type: 'grid', guess: true, breakBefore: true },
       { key: 'qthname', label: 'QTH name', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 } },
       //{ key: 'state', label: 'State', type: 'upcasedText', guess: true },
       //{ key: 'county', label: 'County', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 }, includeIf: ({ qso }) => qso?.their?.entityPrefix === 'K' || qso?.their?.guess?.entityPrefix === 'K' },
@@ -54,7 +55,6 @@ const QSO_SECTIONS = [
       //{ key: 'cqZone', label: 'CQ Zone', type: 'number', guess: true },
       //{ key: 'ituZone', label: 'ITU Zone', type: 'number', guess: true },
       //{ key: 'arrlSection', label: 'ARRL Section', type: 'upcasedText', minSpaces: 14, includeIf: ({ qso }) => qso?.their?.entityPrefix === 'K' || qso?.their?.guess?.entityPrefix === 'K' },
-      { key: 'grid', label: 'Grid', type: 'grid', guess: true, breakBefore: true },
       { key: 'latitude', label: 'Latitude', type: 'float', guess: true },
       { key: 'longitude', label: 'Longitude', type: 'float', guess: true },
       { key: 'power', label: 'Power', type: 'number', guess: true }
@@ -69,8 +69,8 @@ const QSO_SECTIONS = [
       { key: 'operatorCall', label: 'Operator Call', type: 'callsign', minSpaces: 11, style: { flex: 1 } },
       { key: 'sent', label: 'RST', type: 'rst', minSpaces: 4, style: { flex: 1 },  breakBefore: true },
       //{ key: 'exchange', label: 'Exchange', type: 'upcasedText', minSpaces: 8, style: { flex: 1 } },
-      { key: 'ourqth', label: 'Our QTH', type: 'grid', minSpaces: 7, style: { flex: 1 } },
-      { key: 'ourqthname', label: 'QTH name', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 } },
+      { key: 'grid', label: 'Grid', type: 'grid', minSpaces: 7, style: { flex: 1 } },
+      { key: 'qthname', label: 'QTH name', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 } },
       { key: 'latitude', label: 'Latitude', type: 'number' },
       { key: 'longitude', label: 'Longitude', type: 'number' }
     ]
