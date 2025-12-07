@@ -1,6 +1,6 @@
-# Ham2K Portable Logger - PoLo
+# Simpler PoLo
 
-The fastest, easiest, bestest way to log your amateur radio operations on the go.
+My fork of Ham2K amazing Portable Logger. Currently meant as my personal fork, with some minor changes that I needed.
 
 ### Our Community
 
