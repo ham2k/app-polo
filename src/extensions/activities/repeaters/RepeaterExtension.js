@@ -5,128 +5,113 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
+import React from 'react'
+
+import { bandForFrequency } from '@ham2k/lib-operation-data'
+
+import { findRef, replaceRef } from '../../../tools/refTools'
+import { loadDataFile } from '../../../store/dataFiles/actions/dataFileFS'
+import { H2kGridInput } from '../../../ui'
 
 import { Info } from './RepeaterInfo'
-import { RepeaterActivityOptions } from './RepeaterActivityOptions'
 import { RepeaterLoggingControl } from './RepeaterLoggingControl'
 
 const Extension = {
   ...Info,
+  enabledByDefault: false,
   category: 'other',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
-    registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
-    registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+    registerHook(`ref:${Info.refType}`, { hook: ReferenceHandler })
   }
 }
 export default Extension
 
-const ActivatorLoggingControl = {
-  key: 'custom/activator',
+const ActivityHook = {
+  ...Info,
+  mainExchangeForQSO,
+  loggingControls: ({ operation, settings }) => {
+    return [LoggingControl]
+  },
+  prepareNewQSO: ({ operation, qso }) => {
+    if (!qso._isSuggested && operation?.satellite) {
+      qso.refs = replaceRef(qso.refs, Info.refType, { type: Info.refType, ref: operation.satellite })
+    }
+  }
+}
+
+const LoggingControl = {
+  key: Info.key,
   order: 10,
   icon: Info.icon,
   label: ({ operation, qso }) => {
-    const parts = ['Custom']
-    if (findRef(qso, Info.huntingType)) parts.unshift('✓')
-    return parts.join(' ')
+    const ref = findRef(qso?.refs, Info.refType)
+    if (ref?.ref) {
+      const [name] = ref.ref.split('/')
+
+      return `✓ ${name}`
+    } else {
+      return [Info.shortName]
+    }
   },
   InputComponent: RepeaterLoggingControl,
+  inputWidthMultiplier: 40,
   optionType: 'optional'
 }
 
-const ActivityHook = {
-  ...Info,
-  MainExchangePanel: null,
-  loggingControls: ({ operation, settings }) => {
-    if (findRef(operation, Info.activationType)) {
-      return [ActivatorLoggingControl]
-    } else {
-      return []
-    }
-  },
-  Options: RepeaterActivityOptions,
+function mainExchangeForQSO (props) {
+  const { qso, updateQSO, styles, refStack, disabled, themeColor } = props
+  const fields = []
 
-  sampleOperations: ({ settings, callInfo }) => {
-    return [
-      // Regular Activation
-      { refs: [ReferenceHandler.decorateRef({ type: Info.activationType, ref: 'ABC123', mySig: 'EXOTA' })] }
-    ]
+  if (findRef(qso, Info.refType)) {
+    fields.push(
+      <H2kGridInput
+        {...props}
+        themeColor={themeColor}
+        key={`${Info.key}/grid`}
+        innerRef={refStack.shift()}
+        style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
+        textStyle={styles.text.callsign}
+        label={'Grid'}
+        placeholder={qso?.their?.guess?.grid || ''}
+        mode={'flat'}
+        value={qso?.their?.grid || ''}
+        disabled={disabled}
+        onChangeText={(text) => updateQSO({
+          their: { grid: text, exchange: text }
+        })}
+      />
+    )
   }
+  return fields
 }
 
 const ReferenceHandler = {
   ...Info,
 
-  shortDescription: (operation) => refsToString(operation, Info.activationType),
-
-  description: (operation) => {
-    const refs = filterRefs(operation, Info.activationType)
-    return [
-      refs.map(r => r.ref).filter(x => x).join(', '),
-      refs.map(r => r.name).filter(x => x).join(', ')
-    ].filter(x => x).join(' • ')
-  },
-
   iconForQSO: Info.icon,
 
-  decorateRef: (ref) => {
-    return { ...ref, program: ref.mySig, label: `${ref.mySig} ${ref.ref}: ${ref.name}`, shortLabel: `${ref.mySig} ${ref.ref}` }
-  },
-
-  extractTemplate: ({ ref, operation }) => {
-    return { ...ref }
-  },
-
-  suggestOperationTitle: (ref) => {
-    if (ref.type === Info.activationType && ref.ref) {
-      return {
-        at: ref.ref,
-        subtitle: ref.name
-      }
-    } else {
-      return null
-    }
-  },
-
-  suggestExportOptions: ({ operation, ref, settings }) => {
-    if (ref?.type === Info.activationType && ref?.ref) {
-      return [{
-        format: 'adif',
-        exportData: { refs: [ref] }, // exports only see this one ref
-        templateData: { refPrefix: ref.mySig || 'Custom' },
-        nameTemplate: '{{>RefActivityName}}',
-        titleTemplate: '{{>RefActivityTitle}}'
-      }]
-    }
-  },
-
   adifFieldsForOneQSO: ({ qso, operation }) => {
-    const huntingRefs = filterRefs(qso, Info.huntingType)
-    const activationRef = findRef(operation, Info.activationType)
-    const fields = []
-    if (activationRef) fields.push({ MY_SIG: activationRef.mySig }, { MY_SIG_INFO: activationRef.mySigInfo })
-    if (huntingRefs.length > 0) fields.push({ SIG: huntingRefs[0].mySig }, { SIG_INFO: huntingRefs[0].ref })
-    return fields
+    const ref = findRef(qso, Info.refType)
+    const [satName, satFreq, satMode] = ref?.ref ? ref.ref.split('/') : []
+    const sat = SatelliteData.satelliteByName[satName]
+    if (sat) {
+      const linkIndex = sat.uplinks.findIndex(link => `${link.lowerMHz}` === satFreq && link.mode === satMode)
+      // const uplink = sat.uplinks[linkIndex] || sat.uplinks[0]
+      const downlink = sat.downlinks[linkIndex] || sat.downlinks[0]
+
+      const fields = []
+      fields.push({ PROP_MODE: 'SAT' })
+      fields.push({ SAT_NAME: satName })
+      fields.push({ BAND_RX: bandForFrequency(downlink.upperMHz) })
+      return fields
+    }
   },
 
-  adifFieldCombinationsForOneQSO: ({ qso, operation }) => {
-    const huntingRefs = filterRefs(qso, Info.huntingType)
-    const activationRef = findRef(operation, Info.activationType)
-    const activationADIF = []
-    if (activationRef) {
-      if (activationRef?.mySig) activationADIF.push({ MY_SIG: activationRef.mySig })
-      if (activationRef?.mySigInfo) activationADIF.push({ MY_SIG_INFO: activationRef.mySigInfo })
-    }
-
-    if (huntingRefs.length > 0) {
-      if (activationRef?.mySig) activationADIF.push({ SIG: activationRef.mySig })
-      return huntingRefs.map(huntingRef => [
-        ...activationADIF,
-        { SIG_INFO: huntingRef.ref }
-      ])
-    } else {
-      return [activationADIF]
+  relevantInfoForQSOItem: ({ qso, operation }) => {
+    const ref = findRef(qso, Info.refType)
+    if (ref?.ref && qso.their.grid) {
+      return [qso.their.grid.substring(0, 4)]
     }
   }
 }

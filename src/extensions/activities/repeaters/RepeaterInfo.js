@@ -7,9 +7,8 @@
 
 export const Info = {
   key: 'rpt',
-  icon: 'radio-handheld',
-  name: 'QSO via repeater',
-  shortName: 'Rpt',
-  infoURL: '',
-  descriptionPlaceholder: 'Enter reference',
+  icon: 'satellite-variant',
+  name: 'Repeater Operation',
+  shortName: 'RPTs',
+  refType: 'repeater'
 }
