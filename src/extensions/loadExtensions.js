@@ -53,6 +53,9 @@ import AnnotationCommands from './commands/AnnotationCommands'
 import SettingsCommands from './commands/SettingsCommands'
 
 import SatellitesExtension from './activities/satellites/SatellitesExtension'
+
+import RepeaterExtension from './activities/repeaters/RepeaterExtension'
+
 import WABExtension from './other/wab/WABExtension'
 
 export const loadEarlyExtensions = () => async (dispatch, getState) => {
@@ -107,6 +110,8 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(HamQTHExtension)
 
   registerExtension(SatellitesExtension)
+
+  registerExtension(RepeaterExtension)
 
   registerExtension(WABExtension)
 
