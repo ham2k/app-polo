@@ -34,7 +34,7 @@ export function RepeaterLoggingControl(props) {
           noSpaces={true}
           value={qso?.rpt?.call || ''}
           onChangeText={handleChange('rpt', 'call')}
-          keyboard="default"
+          keyboard="dumb"
         />
         <H2kTextInput
           textStyle={styles.text.grid}
@@ -43,16 +43,16 @@ export function RepeaterLoggingControl(props) {
           noSpaces={true}
           value={qso?.rpt?.grid || ''}
           onChangeText={handleChange('rpt', 'grid')}
-          keyboard="default"
+          keyboard="dumb"
         />
         <H2kTextInput
           textStyle={styles.text}
-          label={'RPT Offset'}
+          label={'RPT RX'}
           mode={'flat'}
           noSpaces={true}
-          value={qso?.rpt?.offset|| ''}
-          onChangeText={handleChange('rpt', 'offset')}
-          keyboard="default"
+          value={qso?.rpt?.rx|| ''}
+          onChangeText={handleChange('rpt', 'rx')}
+          keyboard="dumb"
         />
     </View>
   )
