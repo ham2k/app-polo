@@ -16,6 +16,8 @@ import { findRef, removeRef, replaceRef } from '../../../tools/refTools'
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
+import { ScrollView, View } from 'react-native'
+
 import { Info } from './RepeaterInfo'
 
 export function RepeaterLoggingControl(props) {
@@ -31,16 +33,29 @@ export function RepeaterLoggingControl(props) {
   }
 
   return (
-    <H2kTextInput
-      {...props}
-      style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-      textStyle={styles.text.callsign}
-      label={'Location'}
-      mode={'flat'}
-      uppercase={true}
-      noSpaces={true}
-      value={qso?.their?.grid || ''}
-      onChangeText={handleChange}
-    />
+    <View style={[style, { flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }]}>
+        <H2kTextInput
+          {...props}
+          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
+          textStyle={styles.text.callsign}
+          label={'Location'}
+          mode={'flat'}
+          uppercase={true}
+          noSpaces={true}
+          value={qso?.their?.grid || ''}
+          onChangeText={handleChange}
+        />
+        <H2kTextInput
+          {...props}
+          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
+          textStyle={styles.text.callsign}
+          label={'Location'}
+          mode={'flat'}
+          uppercase={true}
+          noSpaces={true}
+          value={qso?.their?.grid || ''}
+          onChangeText={handleChange}
+        />
+    </View>
   )
 }
