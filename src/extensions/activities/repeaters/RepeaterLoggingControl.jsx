@@ -23,11 +23,11 @@ import { Info } from './RepeaterInfo'
 export function RepeaterLoggingControl(props) {
   const { qso, updateQSO, style, styles } = props
 
-  const handleChange = (text) => {
+  const handleChange = (section, field) => (text) => {
     updateQSO({
-      their: {
-        ...qso?.their,
-        grid: text
+      [section]: {
+        ...qso?.[section],
+        [field]: text
       }
     })
   }
@@ -35,26 +35,24 @@ export function RepeaterLoggingControl(props) {
   return (
     <View style={[style, { flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }]}>
         <H2kTextInput
-          {...props}
           style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
           textStyle={styles.text.callsign}
-          label={'Location'}
+          label={'RPT Call'}
           mode={'flat'}
           uppercase={true}
           noSpaces={true}
-          value={qso?.their?.grid || ''}
-          onChangeText={handleChange}
+          value={qso?.rpt?.call || ''}
+          onChangeText={handleChange('rpt', 'call')}
         />
         <H2kTextInput
-          {...props}
           style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
           textStyle={styles.text.callsign}
-          label={'Location'}
+          label={'RPT Grid'}
           mode={'flat'}
           uppercase={true}
           noSpaces={true}
-          value={qso?.their?.grid || ''}
-          onChangeText={handleChange}
+          value={qso?.rpt?.grid || ''}
+          onChangeText={handleChange('rpt', 'grid')}
         />
     </View>
   )
