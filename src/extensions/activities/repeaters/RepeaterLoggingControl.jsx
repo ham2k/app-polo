@@ -13,73 +13,34 @@ import { setVFO } from '../../../store/station/stationSlice'
 import { capitalizeString } from '../../../tools/capitalizeString'
 import { fmtFreqInMHz } from '../../../tools/frequencyFormats'
 import { findRef, removeRef, replaceRef } from '../../../tools/refTools'
-import { H2kDropDown } from '../../../ui'
+import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
+import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 import { Info } from './RepeaterInfo'
 
-export function RepeaterLoggingControl (props) {
-  const { qso, vfo, operation, updateQSO, styles, style } = props
-  const dispatch = useDispatch()
+export function RepeaterLoggingControl(props) {
+  const { qso, updateQSO, style, styles } = props
 
-  const value = useMemo(() => {
-    const ref = findRef(qso?.refs, Info.refType)
-    return qso?._isNew ? ref?.ref ?? operation?.satellite : ref?.ref
-  }, [operation?.satellite, qso?.refs, qso?._isNew])
-
-  const options = useMemo(() => {
-    const sats = [{ label: 'None', value: '' }]
-
-    ;(SatelliteData?.activeSatellites ?? []).forEach(sat => {
-      sat.uplinks.forEach((uplink, index) => {
-        const downlink = sat.downlinks[index] && sat.downlinks[index]
-        let label = sat.name
-        label += ` • ${capitalizeString(uplink?.mode)}: `
-        label += [fmtFreqInMHz(uplink?.lowerMHz), fmtFreqInMHz(downlink?.upperMHz)].filter(x => x).join(' → ')
-        if (sat.aliases) label += ' (' + sat.aliases.join(', ') + ')'
-
-        sats.push({
-          label,
-          value: `${sat.name}/${uplink?.lowerMHz}/${uplink?.mode}`
-        })
-      })
+  const handleChange = (text) => {
+    updateQSO({
+      their: {
+        ...qso?.their,
+        grid: text
+      }
     })
-    return sats
-  }, [])
-
-  const handleChange = useCallback((event) => {
-    const newValue = event.nativeEvent.text
-    const [satName, satFreq, satMode] = newValue.split('/')
-
-    const sat = SatelliteData.satelliteByName[satName]
-    if (sat) {
-      const linkIndex = sat.uplinks.findIndex(link => `${link.lowerMHz}` === satFreq && link.mode === satMode)
-      const uplink = sat.uplinks[linkIndex] || sat.uplinks[0]
-      const freq = uplink.lowerMHz ? uplink.lowerMHz * 1000 : vfo?.freq
-      const mode = uplink.mode === 'fm' ? 'FM' : vfo?.mode
-
-      updateQSO({ freq, mode, refs: replaceRef(qso?.refs, Info.refType, { type: Info.refType, ref: newValue }) })
-      if (qso?._isNew) {
-        dispatch(setOperationData({ uuid: operation.uuid, satellite: newValue }))
-        dispatch(setVFO({ freq, mode }))
-      }
-    } else {
-      updateQSO({ refs: removeRef(qso?.refs, Info.refType) })
-      if (qso?._isNew) {
-        dispatch(setOperationData({ uuid: operation.uuid, satellite: undefined }))
-      }
-    }
-  }, [dispatch, operation.uuid, qso?.refs, qso?._isNew, updateQSO, vfo?.freq, vfo?.mode])
+  }
 
   return (
-    <H2kDropDown
+    <H2kTextInput
       {...props}
-      label="Satellite"
-      value={value ?? ''}
-      onChange={handleChange}
-      dropDownContainerMaxHeight={styles.oneSpace * 19}
-      fieldId={'satellite'}
-      style={{ ...style, width: styles.oneSpace * 40 }}
-      options={options}
+      style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
+      textStyle={styles.text.callsign}
+      label={'Location'}
+      mode={'flat'}
+      uppercase={true}
+      noSpaces={true}
+      value={qso?.their?.grid || ''}
+      onChangeText={handleChange}
     />
   )
 }
