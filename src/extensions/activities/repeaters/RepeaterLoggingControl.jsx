@@ -22,6 +22,7 @@ export function RepeaterLoggingControl(props) {
         [field]: text
       }
     })
+    updateQSO({refs: replaceRef(qso?.refs, Info.refType, { type: Info.refType, ref: newValue })})
   }
 
   return (
