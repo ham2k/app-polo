@@ -13,7 +13,7 @@ import MapboxMapWithQSOs from './MapboxMapWithQSOs'
 
 export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedUUID, projection }) {
   const mappableQSOs = useMemo(() => {
-    const activeQSOs = qsos.filter(qso => !qso.deleted)
+    const activeQSOs = qsos.filter(qso => !qso.deleted && !qso.event)
     return activeQSOs
       .map(qso => {
         const location = locationForQSONInfo(qso?.their)

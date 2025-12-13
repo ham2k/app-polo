@@ -67,7 +67,8 @@ export default function OpMapTab ({ navigation, route }) {
     }
   }, [operation.grid])
 
-  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
+  const allQsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
+  const qsos = useMemo(() => allQsos.filter(qso => !qso.deleted && !qso.event), [allQsos])
 
   const [dismissedWarnings, setDismissedWarnings] = useState({})
 
