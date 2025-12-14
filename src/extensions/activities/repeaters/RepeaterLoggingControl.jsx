@@ -7,6 +7,7 @@
 
 import React, { useCallback, useMemo,useRef } from 'react'
 import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { findRef, removeRef, replaceRef } from '../../../tools/refTools'
 
 import { ScrollView, View } from 'react-native'
 

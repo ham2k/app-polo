@@ -64,17 +64,6 @@ const ReferenceHandler = {
   ...Info,
   iconForQSO: Info.icon,
 
-  adifFieldsForOneQSO: ({ qso, operation }) => {
-    const ref = findRef(qso, Info.refType)
-
-    if (true) {
-
-      const fields = []
-      fields.push({ PROP_MODE: 'SAT' })
-      return fields
-    }
-  },
-
   relevantInfoForQSOItem: ({ qso }) =>
     qso.their?.grid ? [qso.their.grid.substring(0, 4)] : []
 }
