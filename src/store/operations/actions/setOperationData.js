@@ -32,7 +32,6 @@ export const setOperationLocalData = (data) => async (dispatch, getState) => {
 }
 
 export const setOperationData = (data) => async (dispatch, getState) => {
-  console.log('setOperationData', data)
   try {
     const { uuid } = data
     const state = getState()
@@ -116,6 +115,18 @@ export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, 
     } else {
       data.grid = ''
       data.gridSource = ''
+    }
+  }
+
+  // If no state is set, or the state is set from refs, and this update includes state, then update the state too
+  if (!data.state && data.refs && (!operation.state || operation.stateSource === 'refs')) {
+    const state = (data.refs || []).find(ref => ref.state)
+    if (state) {
+      data.state = state.state
+      data.stateSource = 'refs'
+    } else {
+      data.state = ''
+      data.stateSource = ''
     }
   }
 

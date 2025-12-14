@@ -20,7 +20,7 @@ import { selectOperation, setOperationData } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
 import { findBestHook } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { H2kGridInput, H2kListItem, H2kListSection } from '../../../ui'
+import { H2kGridInput, H2kListItem, H2kListSection, H2kTextInput } from '../../../ui'
 
 export default function OperationLocationScreen ({ navigation, route }) {
   const { t } = useTranslation()
@@ -39,6 +39,8 @@ export default function OperationLocationScreen ({ navigation, route }) {
 
   const [grid, setGrid] = useState(operation?.grid || '')
   const [gridSource, setGridSource] = useState(operation?.gridSource ?? operation?.source ?? '')
+  const [locationState, setLocationState] = useState(operation?.state || '')
+  const [locationCounty, setLocationCounty] = useState(operation?.county || '')
 
   useEffect(() => {
     if (!operation) {
@@ -50,12 +52,12 @@ export default function OperationLocationScreen ({ navigation, route }) {
       rightAction: 'revert',
       rightActionA11yLabel: t('general.buttons.revert-a11y', 'Revert Changes'),
       onLeftActionPress: () => {
-        dispatch(setOperationData({ uuid: operation.uuid, grid, gridSource }))
+        dispatch(setOperationData({ uuid: operation.uuid, grid, gridSource, state: locationState, county: locationCounty }))
         navigation.goBack()
       },
       onRightActionPress: () => navigation.goBack()
     })
-  }, [dispatch, grid, gridSource, navigation, operation, t])
+  }, [dispatch, grid, gridSource, locationState, locationCounty, navigation, operation, t])
 
   const handleChangeGrid = useCallback((newGrid, newGridSource) => {
     setGridSource(newGridSource ?? 'manual')
@@ -139,6 +141,23 @@ export default function OperationLocationScreen ({ navigation, route }) {
               />
             ))}
           </H2kListSection>
+
+          <H2kListSection title={t('screens.operationLocation.moreDetails', 'More Details')} style={{ marginTop: styles.oneSpace * 3 }}>
+            <H2kTextInput
+              style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
+              value={locationState || ''}
+              label={t('screens.operationLocation.stateOrProvince', 'State or Province (optional)')}
+              onChangeText={(text) => setLocationState(text)}
+            />
+            <H2kTextInput
+              style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
+              value={locationCounty || ''}
+              label={t('screens.operationLocation.county', 'County (optional)')}
+              onChangeText={(text) => setLocationCounty(text)}
+            />
+
+          </H2kListSection>
+
         </ScrollView>
       </SafeAreaView>
     </ScreenContainer>

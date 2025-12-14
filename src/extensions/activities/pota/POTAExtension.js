@@ -202,6 +202,7 @@ const ReferenceHandler = {
         shortLabel: `${Info.shortName} ${ref.ref}`,
         program: Info.shortName
       }
+      console.log('pota db lookup', data)
       if (data?.location?.indexOf(',') < 0) {
         result.accuracy = LOCATION_ACCURACY.REASONABLE
         result.grid = data.grid
@@ -210,6 +211,8 @@ const ReferenceHandler = {
           // For US, Canada or Australia, use the state/province.
           result.state = (data.location || '').split('-')[1]?.trim()
         }
+      } else {
+        result.possibleStates = (data.location || '').split(',').map(x => x.split('-', 2)[1]?.trim())
       }
     } else {
       const lookup = await dispatch(directLookupPark(ref.ref))
@@ -228,9 +231,14 @@ const ReferenceHandler = {
           result.grid = lookup.grid6
         }
 
-        if (lookup.ref?.startsWith('US-') || lookup.ref?.startsWith('CA-') || lookup.ref?.startsWith('AU-')) {
-          // For US, Canada or Australia, use the state/province.
-          result.state = (lookup.location || '').split('-')[1]?.trim()
+        console.log('pota lookup', lookup)
+        if (lookup.locationDesc?.indexOf(',') >= 0) {
+          result.possibleStates = (lookup.locationDesc || '').split(',').map(x => x.split('-', 2)[1]?.trim())
+        } else {
+          if (lookup.ref?.startsWith('US-') || lookup.ref?.startsWith('CA-') || lookup.ref?.startsWith('AU-')) {
+            // For US, Canada or Australia, use the state/province.
+            result.state = (lookup.locationDesc || '').split('-')[1]?.trim()
+          }
         }
       } else {
         return { name: t('extensions.pota.unknownRefName', Info.unknownReferenceName ?? 'Unknown reference'), ...ref }

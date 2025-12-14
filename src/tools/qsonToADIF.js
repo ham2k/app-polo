@@ -39,6 +39,8 @@ export function qsonToADIF({ operation, settings, qsos, handler, format, title, 
   let common = {
     refs: operation.refs,
     grid: operation.grid,
+    state: operation.state,
+    county: operation.county,
     stationCall: operation.stationCall ?? settings.operatorCall,
     templates
   }
@@ -195,11 +197,14 @@ function adifFieldsForOneQSO({ qso, operation, common, privateData, templates, t
     { OPERATOR: qso.our.operatorCall || common.operatorCall || qso.our.call || common.stationCall },
     { GRIDSQUARE: privateData && (qso.their?.grid ?? qso.their?.guess?.grid) },
     { MY_GRIDSQUARE: privateData && (qso?.our?.grid ?? common.grid) },
+    { MY_STATE: qso?.our?.state ?? common.state },
+    { MY_CNTY: privateData && _cleanCounty(qso?.our?.county ?? common.county, qso?.our?.state ?? common.state) },
     { NAME: privateData && (qso.their?.name ?? qso.their?.guess?.name) },
     { DXCC: qso.their?.dxccCode ?? qso.their?.guess?.dxccCode },
     { QTH: privateData && (qso.their?.city ?? qso.their?.guess?.city) },
     { COUNTRY: qso.their?.country ?? qso.their?.guess?.country },
     { STATE: qso.their?.state ?? qso.their?.guess?.state },
+    { CNTY: privateData && _cleanCounty(qso.their?.county ?? qso.their?.guess?.county, qso.their?.state ?? qso.their?.guess?.state) },
     { CQZ: qso.their?.cqZone ?? qso.their?.guess?.cqZone },
     { ITUZ: qso.their?.ituZone ?? qso.their?.guess?.ituZone },
     { ARRL_SECT: qso.their.arrlSection }
@@ -262,4 +267,15 @@ function adifField(name, value, options = {}) {
   value = escapeToUnicodeEntities(value)
 
   return `<${name}:${value?.length ?? 0}>${value}${options.newLine ? '\n' : ' '}`
+}
+
+function _cleanCounty(county, state) {
+  if (!county) return undefined
+
+  const parts = county.split(',')
+  if (parts.length > 1) {
+    return county
+  } else {
+    return [state, parts[0].trim()].filter(x => x).join(',')
+  }
 }

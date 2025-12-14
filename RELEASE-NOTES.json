@@ -3,7 +3,8 @@
     "name": "December '25 (pre 0)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
     "changes": [
-      "Internationalization!!!"
+      "Internationalization!!!",
+      "Set operation's state and county, and include in ADIF exports"
     ]
   },
   "25.10.7": {

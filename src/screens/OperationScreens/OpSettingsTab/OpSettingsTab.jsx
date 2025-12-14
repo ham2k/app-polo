@@ -184,7 +184,13 @@ export default function OpSettingsTab ({ navigation, route }) {
 
         <H2kListItem
           title={t('screens.opSettingsTab.locationTitle', 'Location')}
-          description={() => <H2kMarkdown style={{ ...styles.list.description }} compact={true}>{operation.grid ? t('screens.opSettingsTab.gridDescription-md', 'Grid `{{grid}}`', { grid: operation.grid }) : t('screens.opSettingsTab.gridDescriptionNone-md', 'No location set')}</H2kMarkdown>}
+          description={() => <H2kMarkdown style={{ ...styles.list.description }} compact={true}>{
+            [
+              operation.grid ? t('screens.opSettingsTab.gridDescription-md', 'Grid `{{grid}}`', { grid: operation.grid }) : '',
+              operation.county ? t('screens.opSettingsTab.countyDescription-md', 'County: `{{county}}`', { county: operation.county }) : '',
+              operation.state ? t('screens.opSettingsTab.stateDescription-md', 'State: `{{state}}`', { state: operation.state }) : ''
+            ].filter(Boolean).join(' • ') || t('screens.opSettingsTab.locationDescriptionNone-md', 'No location set')
+          }</H2kMarkdown>}
           titleStyle={{ paddingRight: safeAreaInsets.right }}
           descriptionStyle={{ paddingRight: safeAreaInsets.right }}
           leftIcon={'map-marker-radius'}

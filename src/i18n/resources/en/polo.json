@@ -67,7 +67,9 @@
       "deviceGps": "Device GPS",
       "locating": "Locating…",
       "gpsError": "GPS Error",
-      "noGps": "NO GPS"
+      "noGps": "NO GPS",
+      "stateOrProvince": "State or Province (optional)",
+      "county": "County (optional)"
     },
     "operationAddActivity": {
       "title": "Add Activity",
@@ -895,7 +897,9 @@
       "stationAndOperatorTitle": "Station & Operator",
       "locationTitle": "Location",
       "gridDescription-md": "Grid `{{grid}}`",
-      "gridDescriptionNone-md": "No location set",
+      "stateDescription-md": "State: `{{state}}`",
+      "countyDescription-md": "County: `{{county}}`",
+      "locationDescriptionNone-md": "No location set",
       "operationDetailsTitle": "Operation Details",
       "operationDetailsDescription": "Add notes for this operation",
       "addTitleOrNotesForOperation": "Add a title or notes for this operation",
