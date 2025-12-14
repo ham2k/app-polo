@@ -140,7 +140,7 @@ const SpotsHook = {
       }
     }
 
-    const qsos = dedupedSpots.filter(x => (x?.type ?? 'NORMAL') === 'NORMAL').map(spot => {
+    const qsos = dedupedSpots.filter(x => (x?.type || 'NORMAL') === 'NORMAL').map(spot => {
       const qso = {
         their: { call: spot.activatorCallsign },
         freq: spot.frequency * 1000,
