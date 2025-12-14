@@ -91,11 +91,6 @@ android {
         manifestPlaceholders = [
             appAuthRedirectScheme: 'com.ham2k.polo'
         ]
-		externalNativeBuild {
-			cmake {
-				arguments "-DCMAKE_MAKE_PROGRAM=C:\\ninja\\ninja.exe", "-DCMAKE_OBJECT_PATH_MAX=1024"
-			}
-		}
 	}
     signingConfigs {
         debug {
