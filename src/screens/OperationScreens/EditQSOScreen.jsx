@@ -68,7 +68,7 @@ const QSO_SECTIONS = [
       { key: 'operatorCall', label: 'Operator Call', type: 'callsign', minSpaces: 11, style: { flex: 1 } },
       { key: 'sent', label: 'RST', type: 'rst', minSpaces: 4, style: { flex: 1 } },
       { key: 'exchange', label: 'Exchange', type: 'upcasedText', minSpaces: 8, style: { flex: 1 } },
-      { key: 'grid', label: 'Grid', type: 'grid' },
+      { key: 'grid', label: 'Grid', type: 'grid', breakBefore: true },
       { key: 'latitude', label: 'Latitude', type: 'number' },
       { key: 'longitude', label: 'Longitude', type: 'number' }
     ]
