@@ -140,7 +140,7 @@ function prepareStyles (baseStyles, { safeArea }) {
       flex: 1
     },
     fab: {
-      ...baseStyles.isAndroid ? { position: 'absolute' } : {},
+      ...(baseStyles.isAndroid ? { position: 'absolute' } : {}),
       right: Math.max(baseStyles.oneSpace * 2, safeArea.right),
       bottom: Math.max(baseStyles.oneSpace * 2, safeArea.bottom)
     },

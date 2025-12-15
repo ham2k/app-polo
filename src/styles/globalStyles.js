@@ -84,7 +84,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     },
     screenTabBarLabel: {
       fontFamily: normalFontFamily,
-      fontWeight: '500',
+      fontWeight: '400',
       color: theme.colors.onPrimary,
       textTransform: 'uppercase',
       fontSize: smallFontSize * fontScaleAdjustment
@@ -99,7 +99,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       fontFamily: boldTitleFontFamily,
       marginBottom: oneSpace,
       fontSize: largeFontSize,
-      fontWeight: '500'
+      fontWeight: '400'
     },
     paragraph: {
       marginBottom: oneSpace,
@@ -166,7 +166,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       title: {
         fontSize: normalFontSize,
         lineHeight: normalFontSize * 1.2,
-        fontWeight: '500',
+        fontWeight: '400',
         fontFamily: 'Roboto Medium'
       },
       description: {
