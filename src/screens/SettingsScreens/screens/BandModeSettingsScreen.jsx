@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { ADIF_MODES_AND_SUBMODES, BANDS, MAIN_MODES, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
+import { ADIF_MODES_AND_SUBMODES, EXTENDED_BANDS, MAIN_MODES, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -26,6 +26,7 @@ const ACCESSIBILITY_TEXT_FOR_BAND = {
   '17m': '17 Meters',
   '15m': '15 Meters',
   '12m': '12 Meters',
+  '11m': '11 Meters',
   '10m': '10 Meters',
   '6m': '6 Meters',
   '2m': '2 Meters',
@@ -54,7 +55,7 @@ const ACCESSIBILITY_TEXT_FOR_MODE = {
   other: 'Other Mode'
 }
 
-export default function BandModeSettingsScreen({ navigation, splitView }) {
+export default function BandModeSettingsScreen ({ navigation, splitView }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -71,8 +72,8 @@ export default function BandModeSettingsScreen({ navigation, splitView }) {
       newBands = settings.bands.filter(item => item !== band)
     }
 
-    newBands = newBands.filter(b => BANDS.includes(b))
-    newBands.sort((a, b) => BANDS.indexOf(a) - BANDS.indexOf(b))
+    newBands = newBands.filter(b => EXTENDED_BANDS.includes(b))
+    newBands.sort((a, b) => EXTENDED_BANDS.indexOf(a) - EXTENDED_BANDS.indexOf(b))
     dispatch(setSettings({ bands: newBands }))
   }, [dispatch, settings?.bands])
 
@@ -104,7 +105,7 @@ export default function BandModeSettingsScreen({ navigation, splitView }) {
 
   const bandOptions = useMemo(() => {
     if (moreBands || (settings.bands ?? []).find(band => !POPULAR_BANDS.includes(band))) {
-      return BANDS
+      return EXTENDED_BANDS
     } else {
       return POPULAR_BANDS
     }
