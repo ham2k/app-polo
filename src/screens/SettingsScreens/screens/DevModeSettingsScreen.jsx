@@ -5,14 +5,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback } from 'react'
-import { Alert, ScrollView, View } from 'react-native'
+import React, { useCallback, useMemo } from 'react'
+import { Alert, PixelRatio, ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 import DeviceInfo from 'react-native-device-info'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import YAML from 'yaml'
 import Config from 'react-native-config'
 import { useTranslation } from 'react-i18next'
@@ -166,13 +166,50 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
     Alert.alert(t('screens.devModeSettings.downloadDevSettings.settingsLoaded', 'Settings Loaded'), msg)
   }, [dispatch, settings, t])
 
+  const { width, height } = useSafeAreaFrame()
+  // const { width, height } = useWindowDimensions() <-- broken on iOS, no rotation
+
+  const pixelRatio = PixelRatio.get()
+  const fontScale = PixelRatio.getFontScale()
+
+  const systemInfo = useMemo(() => {
+    return `
+### Version
+
+* ${packageJson.version}
+* Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})
+
+### System
+
+* ${DeviceInfo.getSystemName()} ${DeviceInfo.getSystemVersion()}
+* ${DeviceInfo.getManufacturerSync()} ${DeviceInfo.getDeviceId()}
+* ${DeviceInfo.getInstallerPackageNameSync()} - ${DeviceInfo.getInstallReferrerSync()}
+* Device ${GLOBAL.deviceId.slice(0, 8)}… "${GLOBAL.deviceName}"
+
+### Resources
+
+* ${fmtGigabytes(DeviceInfo.getTotalMemorySync())} RAM - ${fmtMegabytes(DeviceInfo.getUsedMemorySync())} used
+* ${fmtGigabytes(DeviceInfo.getTotalDiskCapacitySync())} storage - ${fmtGigabytes(DeviceInfo.getFreeDiskStorageSync())} free
+${DeviceInfo.isKeyboardConnectedSync() ? '* Keyboard connected\n' : ''}
+
+### Screen & Font Info
+
+* Screen ${width} x ${height}
+* Pixel Ratio: ${pixelRatio}
+* Font Scale: ${fontScale}
+* PoLo Pixel Scale Adjustment: ${styles.pixelScaleAdjustment}
+* PoLo Font Scale Adjusment: ${styles.fontScaleAdjustment}
+
+  `
+  }, [width, height, pixelRatio, fontScale, styles.pixelScaleAdjustment, styles.fontScaleAdjustment])
+
   const shareSystemInfo = useCallback(() => {
     Share.open({
       title: t('screens.devModeSettings.shareSystemInfo.title', 'Ham2K PoLo System Information'),
-      message: systemInfo(),
+      message: systemInfo,
       email: 'help@ham2k.com'
     })
-  }, [t])
+  }, [t, systemInfo])
 
   const handleRefreshCrowdInTranslations = useCallback(async () => {
     if (!Config.CROWDIN_PROJECT_ID || !settings.crowdInPersonalToken) return
@@ -280,7 +317,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
         <H2kListSection title={t('screens.devModeSettings.systemInformation.title', 'System Information')}>
           <View style={{ paddingHorizontal: styles.oneSpace * 2 }}>
             <H2kMarkdown styles={{ markdown: { heading3: { ...styles.markdown.heading3, marginTop: styles.oneSpace } } }}>
-              {systemInfo()}
+              {systemInfo}
             </H2kMarkdown>
           </View>
           <H2kListItem
@@ -295,26 +332,4 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
       </ScrollView>
     </ScreenContainer>
   )
-}
-
-function systemInfo () {
-  return `
-### Version
-
-* ${packageJson.version}
-* Build ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})
-
-### System
-
-* ${DeviceInfo.getSystemName()} ${DeviceInfo.getSystemVersion()}
-* ${DeviceInfo.getManufacturerSync()} ${DeviceInfo.getDeviceId()}
-* ${DeviceInfo.getInstallerPackageNameSync()} - ${DeviceInfo.getInstallReferrerSync()}
-* Device ${GLOBAL.deviceId.slice(0, 8)}… "${GLOBAL.deviceName}"
-
-### Resources
-
-* ${fmtGigabytes(DeviceInfo.getTotalMemorySync())} RAM - ${fmtMegabytes(DeviceInfo.getUsedMemorySync())} used
-* ${fmtGigabytes(DeviceInfo.getTotalDiskCapacitySync())} storage - ${fmtGigabytes(DeviceInfo.getFreeDiskStorageSync())} free
-${DeviceInfo.isKeyboardConnectedSync() ? '* Keyboard connected\n' : ''}
-  `
 }

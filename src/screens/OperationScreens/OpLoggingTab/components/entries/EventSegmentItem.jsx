@@ -56,11 +56,11 @@ const EventSegmentItem = React.memo(function EventSegmentItem (
   return (
     <H2kPressable onPress={pressHandler} style={rowStyle}>
       <View style={styles.rowInner}>
-        <Text style={fieldsStyle.time}>{timeFormatFunction(qso.startAtMillis)}</Text>
-        <Text style={fieldsStyle.icons}>
+        <Text numberOfLines={1} style={fieldsStyle.time}>{timeFormatFunction(qso.startAtMillis)}</Text>
+        <Text numberOfLines={1} style={fieldsStyle.icons}>
           <H2kIcon name={icon} style={fieldsStyle.icon} size={styles.normalFontSize} />
         </Text>
-        <Text style={fieldsStyle.location}>
+        <Text numberOfLines={1} ellipsizeMode={'tail'} style={fieldsStyle.location}>
           {description}
         </Text>
       </View>

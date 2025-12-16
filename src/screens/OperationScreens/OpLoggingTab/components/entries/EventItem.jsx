@@ -45,23 +45,27 @@ const EventItem = React.memo(function EventItem (
     if (qso.event?.description?.match(EMOJI_REGEX)) {
       return {
         ...fieldsStyle.event,
-        marginTop: styles.oneSpace * -0.2,
-        height: styles.oneSpace * 4.3
+        marginTop: styles.oneSpace * (styles.isIOS ? 0.2 : 0.1),
+        height: styles.oneSpace * 4
       }
     } else {
-      return fieldsStyle.event
+      return {
+        ...fieldsStyle.event,
+        marginTop: styles.oneSpace * (styles.isIOS ? 0.4 : 0.1),
+        height: styles.oneSpace * 3.7
+      }
     }
-  }, [fieldsStyle.event, qso.event?.description, styles.oneSpace])
+  }, [fieldsStyle.event, qso.event?.description, styles.isIOS, styles.oneSpace])
 
   return (
     <H2kPressable onPress={pressHandler} style={rowStyle}>
       <View style={styles.rowInner}>
         <Text style={[fieldsStyle.time, !selected && styles.eventContent]}>{timeFormatFunction(qso.startAtMillis)}</Text>
-        <Text style={[fieldsStyle.icons, !selected && styles.eventContent]}>
+        <Text numberOfLines={1} style={[fieldsStyle.icons, !selected && styles.eventContent]}>
           <H2kIcon name={qso.event.icon ?? 'information-outline'} style={fieldsStyle.icon} color={!selected && styles.eventContent.color} size={styles.normalFontSize}/>
         </Text>
         <Text style={[textStyle, !selected && styles.eventContent]}>
-          <H2kMarkdown style={[!selected && { color: styles.eventContent.color }]}>{qso.event.description ?? qso.event.event.toUpperCase()}</H2kMarkdown>
+          <H2kMarkdown numberOfLines={1} ellipsizeMode={'tail'} style={[!selected && { color: styles.eventContent.color }]}>{qso.event.description ?? qso.event.event.toUpperCase()}</H2kMarkdown>
         </Text>
       </View>
     </H2kPressable>

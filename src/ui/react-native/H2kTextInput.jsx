@@ -352,7 +352,7 @@ export function H2kTextInput (props) {
         value={valueAsChild ? undefined : stringValue}
         placeholder={placeholder || ''}
         style={styles.input}
-        allowFontScaling={false}
+        allowFontScaling={true}
         placeholderTextColor={styles.theme.colors.onBackgroundLighter}
         // cursorColor={colorStyles.cursorColor}
         // selectionColor={colorStyles.sectionColor}

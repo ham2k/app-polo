@@ -8,8 +8,11 @@
 import React, { useCallback, useMemo } from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
+import emojiRegex from 'emoji-regex'
 
 import { H2kIcon, H2kMarkdown, H2kPressable } from '../../../../../ui'
+
+const EMOJI_REGEX = emojiRegex()
 
 const EventNoteItem = React.memo(function EventNoteItem (
   { qso, ourInfo, onPress, styles, selected, isOtherOperator, settings, timeFormatFunction, refHandlers }
@@ -38,6 +41,22 @@ const EventNoteItem = React.memo(function EventNoteItem (
     }
   }, [qso.deleted, isOtherOperator, styles.deletedFields, styles.otherOperatorFields, styles.fields])
 
+  const textStyle = useMemo(() => {
+    if (qso.event?.description?.match(EMOJI_REGEX)) {
+      return {
+        ...fieldsStyle.event,
+        marginTop: styles.oneSpace * (styles.isIOS ? 0.4 : 0.1),
+        height: styles.oneSpace * 4
+      }
+    } else {
+      return {
+        ...fieldsStyle.event,
+        marginTop: styles.oneSpace * (styles.isIOS ? 0.4 : 0.1),
+        height: styles.oneSpace * 3.7
+      }
+    }
+  }, [fieldsStyle.event, qso.event?.description, styles.isIOS, styles.oneSpace])
+
   const icon = useMemo(() => {
     if (qso.event?.event === 'todo' && qso.deleted) {
       return 'sticker-outline'
@@ -53,11 +72,11 @@ const EventNoteItem = React.memo(function EventNoteItem (
   return (
     <H2kPressable onPress={pressHandler} style={rowStyle}>
       <View style={styles.rowInner}>
-        <Text style={[fieldsStyle.time, !selected && styles.eventContent]}>{timeFormatFunction(qso.startAtMillis)}</Text>
-        <Text style={[fieldsStyle.icons, !selected && styles.eventContent]}>
+        <Text numberOfLines={1} style={[fieldsStyle.time, !selected && styles.eventContent]}>{timeFormatFunction(qso.startAtMillis)}</Text>
+        <Text numberOfLines={1} style={[fieldsStyle.icons, !selected && styles.eventContent]}>
           <H2kIcon name={icon} style={fieldsStyle.icon} color={!selected && styles.eventContent.color} size={styles.normalFontSize} />
         </Text>
-        <Text style={[fieldsStyle.event, !selected && styles.eventContent]}>
+        <Text style={[textStyle, !selected && styles.eventContent]}>
           <H2kMarkdown style={[fieldsStyle.markdown, !selected && { color: styles.eventContent.color }]}>{qso.event.note}</H2kMarkdown>
         </Text>
       </View>

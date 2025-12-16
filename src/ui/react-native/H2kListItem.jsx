@@ -37,14 +37,17 @@ export function H2kListItem ({
   const titleStyle = useMemo(() => {
     return {
       ...styles.list.title,
-      ...moreProps.titleStyle
+      fontWeight: 'bold',
+      ...moreProps.titleStyle,
+      lineHeight: undefined // line height interferes with adjustsFontSizeToFit
     }
   }, [moreProps.titleStyle, styles])
 
   const descriptionStyle = useMemo(() => {
     return {
       ...styles.list.description,
-      ...moreProps.descriptionStyle
+      ...moreProps.descriptionStyle,
+      lineHeight: undefined // line height interferes with adjustsFontSizeToFit
     }
   }, [moreProps.descriptionStyle, styles])
 
@@ -54,12 +57,12 @@ export function H2kListItem ({
     } else if (titlePrimary || titleSecondary) {
       return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
-          <Text style={{ fontWeight: 'bold' }}>{titlePrimary}</Text>
-          <Text ellipsizeMode={'tail'} numberOfLines={1}>{titleSecondary}</Text>
+          <Text style={titleStyle} adjustsFontSizeToFit={false}>{titlePrimary}</Text>
+          <Text ellipsizeMode={'tail'} numberOfLines={1} adjustsFontSizeToFit={false}>{titleSecondary}</Text>
         </View>
       )
     }
-  }, [styles.oneSpace, title, titlePrimary, titleSecondary])
+  }, [styles.oneSpace, title, titlePrimary, titleSecondary, titleStyle])
 
   const descriptionElement = useMemo(() => {
     if (description) {
@@ -67,13 +70,13 @@ export function H2kListItem ({
     } else if (descriptionPrimary || descriptionSecondary) {
       return (
         <View style={{ flexDirection: 'row', flex: 1 }}>
-          <Text>{descriptionPrimary}</Text>
-          <Text ellipsizeMode={'tail'} numberOfLines={1}>{descriptionSecondary}</Text>
+          <Text style={descriptionStyle} adjustsFontSizeToFit={false}>{descriptionPrimary}</Text>
+          <Text ellipsizeMode={'tail'} numberOfLines={1} adjustsFontSizeToFit={false}>{descriptionSecondary}</Text>
         </View>
       )
     }
     return null
-  }, [description, descriptionPrimary, descriptionSecondary])
+  }, [description, descriptionPrimary, descriptionSecondary, descriptionStyle])
 
   const leftElement = useMemo(() => {
     if (left) {

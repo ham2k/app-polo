@@ -80,7 +80,7 @@ export default function HeaderBar ({
       theme={styles.appBarTheme}
       dark={true}
       mode={'center-aligned'}
-      safeAreaInsets={{ left: Math.max(safeAreaInsets.left, styles.oneSpace * 2), right: splitView ? 0 : Math.max(safeAreaInsets.right, styles.oneSpace * 2), top: safeAreaInsets.top, bottom: 0 }}
+      // safeAreaInsets={{ left: Math.max(safeAreaInsets.left, styles.oneSpace * 2), right: splitView ? 0 : Math.max(safeAreaInsets.right, styles.oneSpace * 2), top: safeAreaInsets.top, bottom: 0 }}
       style={styles.root}
     >
       <SystemBars style="light" />
@@ -99,7 +99,7 @@ export default function HeaderBar ({
           </View>
         )}
         {leftAction === 'logo' && (
-          <Image source={LOGO} style={{ height: 3 * styles.oneSpace, width: 8 * styles.oneSpace, marginLeft: styles.oneSpace * 0 }} resizeMode="contain" />
+          <Image source={LOGO} style={{ marginLeft: -styles.oneSpace * 1.5, height: 3 * styles.oneSpace, width: 8 * styles.oneSpace }} resizeMode="contain" />
         )}
         {leftAction === 'none' && (
           <Text accessible={false}>{' '}</Text>
@@ -117,8 +117,8 @@ export default function HeaderBar ({
                   style={styles.screenTitleSmall}
                   accessibilityLabel={tweakStringForVoiceOver([title, subTitle].filter(x => x).join(', '))}
                   accesibilityRole="header"
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.5}
+                  adjustsFontSizeToFit={false}
+                  minimumFontScale={0.9}
                 >
                   {title}
                 </Text>
@@ -127,6 +127,8 @@ export default function HeaderBar ({
                   numberOfLines={1}
                   ellipsizeMode={'tail'}
                   style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}
+                  adjustsFontSizeToFit={false}
+                  minimumFontScale={0.95}
                 >{subTitle}</Text>
               </>
             ) : (
@@ -137,7 +139,7 @@ export default function HeaderBar ({
                 accessibilityLabel={tweakStringForVoiceOver(title)}
                 accesibilityRole="header"
                 adjustsFontSizeToFit={true}
-                minimumFontScale={0.5}
+                minimumFontScale={0.80}
               >{title}</Text>
             )
         }
@@ -188,51 +190,65 @@ export default function HeaderBar ({
   )
 }
 
-function prepareStyles (baseStyles, { back, close, safeAreaInsets, splitView }) {
+function prepareStyles (baseStyles, { leftAction, safeAreaInsets, splitView }) {
   return ({
     ...baseStyles,
     root: {
-      height: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? 4 : 6.5),
+      height: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? 4.5 : 5),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingLeft: Math.max(safeAreaInsets.left, baseStyles.oneSpace * 2),
       paddingRight: splitView ? 0 : Math.max(safeAreaInsets.right, baseStyles.oneSpace * 2),
-      paddingTop: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? -1 : 1),
+      paddingTop: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2), // + baseStyles.oneSpace * (baseStyles.isIOS ? -1 : 0),
       paddingBottom: 0
     },
     content: {
       flex: 1,
       flexDirection: 'column',
       justifyContent: 'center',
-      minHeight: baseStyles.oneSpace * 5
+      minHeight: baseStyles.oneSpace * 3
     },
     screenContainer: {
       backgroundColor: baseStyles.colors.background
     },
     screenTitle: {
       fontFamily: baseStyles.boldTitleFontFamily,
-      fontSize: 20 * baseStyles.fontScaleAdjustment,
-      lineHeight: 25 * baseStyles.fontScaleAdjustment,
-      color: baseStyles.colors.onPrimary
+      fontSize: 26 * baseStyles.fontScaleAdjustment,
+      lineHeight: undefined, // line height interferes with adjustsFontSizeToFit // 25 * baseStyles.fontScaleAdjustment,
+      color: baseStyles.colors.onPrimary,
+      height: 30 * baseStyles.fontScaleAdjustment,
+      textAlign: 'center',
+      alignSelf: 'center'
     },
     screenTitleSmall: {
       fontFamily: 'Roboto Slab Medium',
       fontSize: 17 * baseStyles.fontScaleAdjustment,
-      lineHeight: 20 * baseStyles.fontScaleAdjustment,
-      color: baseStyles.colors.onPrimary
+      lineHeight: undefined, // line height interferes with adjustsFontSizeToFit // 20 * baseStyles.fontScaleAdjustment,
+      color: baseStyles.colors.onPrimary,
+      height: 24 * baseStyles.fontScaleAdjustment,
+      width: '100%',
+      textAlign: 'center',
+      textAlignVertical: 'center',
+      alignSelf: 'center'
     },
     screenSubTitle: {
       fontFamily: baseStyles.normalFontFamily,
       fontSize: 13 * baseStyles.fontScaleAdjustment,
-      lineHeight: 14 * baseStyles.fontScaleAdjustment,
+      lineHeight: undefined, // line height interferes with adjustsFontSizeToFit // 14 * baseStyles.fontScaleAdjustment,
       fontWeight: baseStyles.isIOS ? '400' : '100',
-      color: baseStyles.colors.onPrimary
+      color: baseStyles.colors.onPrimary,
+      height: 16 * baseStyles.fontScaleAdjustment,
+      textAlign: 'center',
+      textAlignVertical: 'center',
+      alignSelf: 'center',
+      width: '100%'
+
     },
     screenSubTitleCondensed: {
       fontFamily: baseStyles.maybeCondensedFontFamily,
       fontSize: 13 * baseStyles.fontScaleAdjustment,
-      lineHeight: 14 * baseStyles.fontScaleAdjustment,
+      lineHeight: undefined, // line height interferes with adjustsFontSizeToFit // 14 * baseStyles.fontScaleAdjustment,
       fontWeight: baseStyles.isIOS ? '400' : '100',
       color: baseStyles.colors.onPrimary
     },
@@ -246,11 +262,11 @@ function prepareStyles (baseStyles, { back, close, safeAreaInsets, splitView }) 
     screenTitleBold: {
       fontFamily: 'Roboto Black',
       fontSize: 20 * baseStyles.fontScaleAdjustment,
-      lineHeight: 22 * baseStyles.fontScaleAdjustment
+      lineHeight: undefined // line height interferes with adjustsFontSizeToFit // 22 * baseStyles.fontScaleAdjustment
     },
     sideContent: {
       flex: 0,
-      width: baseStyles.oneSpace * ((back || close) ? 4 : 8),
+      width: baseStyles.oneSpace * ((leftAction === 'logo') ? 7.5 : 3),
       alignItems: 'flex-end'
     },
     appBarTheme: {

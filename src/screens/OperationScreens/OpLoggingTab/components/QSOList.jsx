@@ -361,7 +361,7 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
       },
       event: {
         ...commonStyles,
-        lineHeight: normalFontSize * (isIOS ? 1.5 : 1.4),
+        lineHeight: normalFontSize * (isIOS ? 1.6 : 1.8),
         marginLeft: oneSpace * sized({ xs: 1, lg: 2 }),
         minWidth: PixelRatio.roundToNearestPixel(oneSpace * 3.5),
         textAlign: 'left',

@@ -109,12 +109,12 @@ export default function StartScreen ({ setAppState }) {
       <GestureHandlerRootView>
         <SafeAreaView style={styles.container}>
           <View style={styles.titleBoxSpacer} />
-          <Pressable style={styles.titleBoxTop} onPress={() => { handleInterruption(); return true }}>
-            <Image source={HAM2K_LOGO} style={{ height: 60, width: 500, alignSelf: 'center' }} resizeMode="contain" />
+          <Pressable style={[styles.titleBoxTop, { backgroundColor: 'transparent' }]} onPress={() => { handleInterruption(); return true }} android_ripple={false}>
+            <Image source={HAM2K_LOGO} style={{ height: 60, width: 500, alignSelf: 'center', backgroundColor: 'transparent' }} resizeMode="contain" />
           </Pressable>
-          <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }}>
-            <Text style={styles.polo} onPressIn={handleInterruption}>Portable Logger</Text>
-            <Text style={styles.credits} onPressIn={handleInterruption}>{t('screens.start.credits', 'by KI2D and friends')}</Text>
+          <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }} >
+            <Text style={styles.polo}>Portable Logger</Text>
+            <Text style={styles.credits}>{t('screens.start.credits', 'by KI2D and friends')}</Text>
             <Text style={styles.version}>{translatedVersionName({ t, version: packageJson.version }).full}</Text>
           </Pressable>
           <View style={styles.messagesBox}>
@@ -146,15 +146,15 @@ export default function StartScreen ({ setAppState }) {
 }
 
 function prepareStyles (baseTheme, height, dialogVisible) {
-  const characterizeTopHalf = 'medium' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
+  const characterizeTopHalf = 'dark' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
   const characterizeBottomHalf = 'dark' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
 
   const topTextColor = { light: '#000', mediumLight: '#000', medium: '#FFF', mediumDark: '#FFF', dark: '#FFF' }[characterizeTopHalf]
   const topHaloColor = { light: '#FFF', mediumLight: '#FFF', medium: '#000', mediumDark: '#000', dark: '#000' }[characterizeTopHalf]
-  const topBackColor = { light: 'rgba(0,0,0,0)', mediumLight: 'rgba(0,0,0,0)', medium: 'rgba(255,255,255,0)', mediumDark: 'rgba(255,255,255,.1)', dark: 'rgba(255,255,255,.0)' }[characterizeTopHalf]
+  const topBackColor = { light: 'rgba(0,0,0,0.3)', mediumLight: 'rgba(0,0,0,0.3)', medium: 'transparent', mediumDark: 'transparent', dark: 'transparent' }[characterizeTopHalf]
   const bottomTextColor = { light: '#000', mediumLight: '#000', medium: '#FFF', mediumDark: '#FFF', dark: '#FFF' }[characterizeBottomHalf]
   const bottomHaloColor = { light: '#FFF', mediumLight: '#FFF', medium: '#000', mediumDark: '#000', dark: '#000' }[characterizeBottomHalf]
-  const bottomBackColor = { light: 'rgba(255,255,255,0.3)', mediumLight: 'rgba(0,0,0,.3)', medium: 'rgba(0,0,0,0)', mediumDark: 'rgba(255,255,255,0)', dark: 'rgba(0,0,0,.20)' }[characterizeBottomHalf]
+  const bottomBackColor = { light: 'rgba(255,255,255,0.3)', mediumLight: 'rgba(0,0,0,0.3)', medium: 'transparent', mediumDark: 'transparent', dark: 'transparent' }[characterizeBottomHalf]
 
   return {
     ...baseTheme,
@@ -172,20 +172,21 @@ function prepareStyles (baseTheme, height, dialogVisible) {
     container: {
       height: '100%',
       flexDirection: 'column',
+      alignItems: 'stretch',
       justifyContent: 'space-between'
     },
     titleBoxSpacer: {
       height: dialogVisible ? '10%' : '10%'
     },
     titleBoxTop: {
-      backgroundColor: topBackColor,
-      justifyContent: 'flex-end'
+      // justifyContent: 'flex-end',
+      backgroundColor: topBackColor
     },
     titleBoxBottom: {
       // marginTop: height * 0.15
       justifyContent: 'flex-start',
       marginBottom: baseTheme.oneSpace * 2,
-      backgroundColor: topBackColor,
+      backgroundColor: bottomBackColor,
       flex: 0
     },
     messagesBox: {
@@ -200,16 +201,6 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       justifyContent: 'flex-end',
       alignItems: 'center',
       backgroundColor: bottomBackColor
-    },
-    ham2k: {
-      fontSize: baseTheme.normalFontSize * 1.7,
-      lineHeight: baseTheme.normalFontSize * 2,
-      fontWeight: 400,
-      textShadowColor: topHaloColor,
-      textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 1, // 1.5,
-      color: topTextColor,
-      textAlign: 'center'
     },
     polo: {
       fontSize: baseTheme.normalFontSize * 2.3,
@@ -238,8 +229,8 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       lineHeight: baseTheme.normalFontSize * 2,
       fontWeight: 400,
       textShadowColor: topHaloColor,
-      textShadowOffset: { width: 3, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 0.5,
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace * 1,
       color: topTextColor,
       textAlign: 'center',
       paddingTop: baseTheme.oneSpace
