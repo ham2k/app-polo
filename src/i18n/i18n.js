@@ -17,7 +17,7 @@ import { setGlobalDialog } from '../store/ui'
 
 import packageJson from '../../package.json'
 
-const BUNDLED_LANGUAGES = ['en', 'es']
+const BUNDLED_LANGUAGES = ['en', 'es', 'fr', 'de']
 
 function readBundledJSON(language, namespace) {
   // Using `require` allows us to only load one language at a time
@@ -53,6 +53,18 @@ function readBundledJSON(language, namespace) {
         ...require('./crowdin/es/general.json'),
         ...require('./crowdin/es/polo.json'),
         ...require('./crowdin/es/extensions.json')
+      }
+    case 'de/translation':
+      return {
+        ...require('./crowdin/de/general.json'),
+        ...require('./crowdin/de/polo.json'),
+        ...require('./crowdin/de/extensions.json')
+      }
+    case 'fr/translation':
+      return {
+        ...require('./crowdin/fr/general.json'),
+        ...require('./crowdin/fr/polo.json'),
+        ...require('./crowdin/fr/extensions.json')
       }
   }
 }

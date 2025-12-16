@@ -49,14 +49,14 @@ const KonamiCommandHook = {
   extension: Extension,
   key: 'commands-devmode-konami',
   match: /^(KONAMI|DEVMODE)$/i,
-  describeCommand: (match, { settings }) => {
+  describeCommand: (match, { t, settings }) => {
     if (settings.devMode) {
-      return 'Deactivate developer mode?'
+      return t?.('extensions.commands-devmode.deactivate', 'Deactivate developer mode?') || 'Deactivate developer mode?'
     } else {
-      return 'Activate developer mode?'
+      return t?.('extensions.commands-devmode.activate', 'Activate developer mode?') || 'Activate developer mode?'
     }
   },
-  invokeCommand: (match, { dispatch, settings, handleFieldChange }) => {
+  invokeCommand: (match, { t, dispatch, settings, handleFieldChange }) => {
     dispatch(setSettings({ devMode: !settings.devMode }))
     // handleFieldChange({ fieldId: 'theirCall', value: 'KONAMI!' })
     // animateCall([
@@ -104,9 +104,9 @@ const KonamiCommandHook = {
     // ],
     // handleFieldChange, { time: 80 })
     if (settings.devMode) {
-      return 'Developer Mode: OFF'
+      return t?.('extensions.commands-devmode.off', 'Developer Mode: OFF') || 'Developer Mode: OFF'
     } else {
-      return 'Developer Mode: ON!!!'
+      return t?.('extensions.commands-devmode.on', 'Developer Mode: ON!!!') || 'Developer Mode: ON!!!'
     }
   }
 }

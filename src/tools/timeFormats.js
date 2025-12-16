@@ -232,6 +232,7 @@ export function fmtDateTimeNice(t, { utc = false } = {}) {
 
   if (t) {
     const interpolation = dateTimeInterpolationParts(t, { utc })
+    interpolation.time = GLOBAL?.t?.('general.formatting.time.short', interpolation) || `${interpolation.hoursZero}:${interpolation.minutesZero}${interpolation.lowerZulu}`
 
     return GLOBAL?.t?.(`general.formatting.dateTime.nice`, '{{time}} {{month}} {{dayOrd}} {{year}}', interpolation)
       || `${interpolation.time} ${interpolation.month} ${interpolation.dayOrd}, ${interpolation.year}`

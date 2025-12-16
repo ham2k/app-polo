@@ -17,6 +17,30 @@
         "noCastlesNearby": "No hay castillos cerca",
         "nearbyCastles": "Castillos cercanos",
         "searchPlaceholder": "Buscar castillos por nombre o referencia…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "No se cazaron castillos",
+        "huntedRefsCount_one": "1 castillo cazado",
+        "huntedRefsCount_other": "{{fmtCount}} castillos cazados",
+        "activatorQSOsCount_zero": "Ningún QSOs como activador",
+        "activatorQSOsCount_one": "1 QSO como activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
+        "huntedQSOsCount_zero": "Ningún QSOs como cazador",
+        "huntedQSOsCount_one": "1 QSO como cazador",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
+        "operationTotals": "Totales de la Operación",
+        "referencesActivatedCount_zero": "Sin castillos activados",
+        "referencesActivatedCount_one": "1 castillo activado",
+        "referencesActivatedCount_other": "{{fmtCount}} castillos activados",
+        "referencesMissedCount_zero": "Sin castillos incompletos",
+        "referencesMissedCount_one": "1 castillo incompleto",
+        "referencesMissedCount_other": "{{fmtCount}} castillos incompletos",
+        "referencesHuntedCount_zero": "No se cazaron castillos",
+        "referencesHuntedCount_one": "1 castillo cazado",
+        "referencesHuntedCount_other": "{{fmtCount}} castillos cazados"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Su BCA"
       }
     },
     "blha": {
@@ -36,6 +60,27 @@
         "noLighthousesNearby": "No hay faros cerca",
         "nearbyLighthouses": "Faros cercanos",
         "searchPlaceholder": "Buscar faros por nombre o referencia…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "No se cazaron faros",
+        "huntedRefsCount_one": "1 faro cazado",
+        "huntedRefsCount_other": "{{fmtCount}} faros cazados",
+        "activatorQSOsCount_zero": "No QSOs activadores",
+        "activatorQSOsCount_one": "1 QSO como activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
+        "huntedQSOsCount_zero": "No QSOs cazados",
+        "huntedQSOsCount_one": "1 QSO como cazador",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
+        "operationTotals": "Totales de la Operación",
+        "referencesActivatedCount_zero": "No se encontraron faros",
+        "referencesActivatedCount_one": "1 faro activado",
+        "referencesActivatedCount_other": "{{fmtCount}} faros activados",
+        "referencesMissedCount_zero": "No faros incompletos",
+        "referencesMissedCount_one": "1 faro incompleto",
+        "referencesMissedCount_other": "{{fmtCount}} faros incompletos",
+        "referencesHuntedCount_zero": "No se encontraron faros",
+        "referencesHuntedCount_one": "1 faro cazado",
+        "referencesHuntedCount_other": "{{fmtCount}} faros cazados"
       }
     },
     "call-notes": {
@@ -79,72 +124,82 @@
       "errorFetchingSolarWeather": "Error obteniendo el clima solar",
       "addNote": "Añadir nota: ‘{{note}}’…",
       "addNotePrompt": "Añadir una nota? sigue escribiendo…",
-      "addNoteConfirm": "Nota añadida!",
+      "addNoteConfirm": "¡Nota añadida!",
       "addTodo": "Añadir tarea: ‘{{note}}’…",
       "addTodoPrompt": "Añadir una tarea? sigue escribiendo…",
-      "addTodoConfirm": "Tarea añadida!",
+      "addTodoConfirm": "¡Tarea añadida!",
       "sendChat": "Enviar chat: ‘{{note}}’…",
       "sendChatPrompt": "Enviar un chat? sigue escribiendo…",
-      "sendChatConfirm": "Chat enviado!"
+      "sendChatConfirm": "¡Chat enviado!"
     },
     "commands-debug": {
-      "syncall": "Eliminar todas las operaciones y restablecer el estado sincronizado?",
+      "syncall": "¿Eliminar todas las operaciones y restablecer el estado sincronizado?",
       "syncallConfirm": "Eliminando datos y re-sincronizando todas…",
-      "syncup": "Re-enviar datos locales al servicio de sincronización?",
+      "syncup": "¿Re-enviar datos locales al servicio de sincronización?",
       "syncupConfirm": "Re-enviando…",
-      "wipedb": "Eliminar toda la base de datos (pero mantener la configuración)?",
+      "wipedb": "¿Eliminar toda la base de datos (pero mantener la configuración)?",
       "wipedbConfirm": "Eliminando base de datos…",
-      "factory": "Eliminar todos los datos y la configuración?",
-      "factoryConfirm": "Reset de fábrica en progreso…"
+      "factory": "¿Eliminar todos los datos y la configuración?",
+      "factoryConfirm": "Reset de fábrica en progreso…",
+      "switchLanguage": "¿Cambiar idioma a `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Idioma `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Cambiando a `{{lang}}` {{name}}…"
     },
     "commands-misc": {
       "rtfm": "¿Leer el manual?",
-      "rtfmConfirm": "Abriendo el manual…"
+      "rtfmConfirm": "Abriendo el manual…",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "No puede autoavistarse sin frecuencia",
+        "selfSpotWithComments": "¿Autoavistar con ‘{{comments}}’?",
+        "selfSpotPrompt": "¿Autoavistar?",
+        "selfSpottingWithComments": "Autoavistando en {{freq}} con ‘{{comments}}’",
+        "selfSpotting": "Autoavistando en {{freq}}"
+      }
     },
     "commands-operation": {
       "start": "¿Iniciar la operación?",
-      "startConfirm": "Operación iniciada!",
+      "startConfirm": "¡Operación iniciada!",
       "break": "¿Agregar una pausa?",
-      "breakConfirm": "Pausa agregada!",
+      "breakConfirm": "¡Pausa agregada!",
       "stop": "¿Detener la operación?",
-      "stopConfirm": "Operación detenida!"
+      "stopConfirm": "¡Operación detenida!"
     },
     "commands-operator": {
       "change": "¿Cambiar el operador a {{operator}}?",
       "changeConfirm": "Operador cambiado a {{operator}}"
     },
     "commands-radio": {
-      "band": "Cambiar la banda a {{band}}?",
+      "band": "¿Cambiar la banda a {{band}}?",
       "bandConfirm": "Banda cambiada a {{band}}",
-      "frequency": "Cambiar la frecuencia a {{freq}} MHz{{mode}}?",
+      "frequency": "¿Cambiar la frecuencia a {{freq}} MHz{{mode}}?",
       "frequencyConfirm": "Frecuencia cambiada a {{freq}} MHz{{mode}}",
-      "frequencyAndMode": "Cambiar la frecuencia a {{freq}} MHz ({{mode}})?",
+      "frequencyAndMode": "¿Cambiar la frecuencia a {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frecuencia cambiada a {{freq}} MHz ({{mode}})",
-      "power": "Cambiar la potencia a {{power}}W?",
+      "power": "¿Cambiar la potencia a {{power}}W?",
       "powerConfirm": "Potencia cambiada a {{power}}W",
-      "mode": "Cambiar el modo a {{mode}}?",
+      "mode": "¿Cambiar el modo a {{mode}}?",
       "modeConfirm": "Modo cambiado a {{mode}}"
     },
     "commands-settings": {
       "set": "Establecer {{name}}?",
-      "setChange": "Cambiar {{label}} a {{value}}?",
+      "setChange": "¿Cambiar {{label}} a {{value}}?",
       "setCurrent": "{{label}}: {{value}}",
       "setConfirm": "{{label}} establecido a {{value}}",
       "setNotChanged": "No cambiado"
     },
     "commands-time": {
-      "setTime": "Establecer la hora a {{time}}?",
-      "setDate": "Establecer la fecha a {{date}}?",
+      "setTime": "¿Establecer la hora a {{time}}?",
+      "setDate": "¿Establecer la fecha a {{date}}?",
       "timeSet": "Hora establecida a {{time}}",
       "dateSet": "Fecha establecida a {{date}}",
-      "changeTimeByHours": "Cambiar la hora por {{delta}} horas?",
-      "changeTimeByMinutes": "Cambiar la hora por {{delta}} minutos?",
-      "changeTimeBySeconds": "Cambiar la hora por {{delta}} segundos?",
-      "changeTimeByDays": "Cambiar la hora por {{delta}} días?",
-      "changeTimeByWeeks": "Cambiar la hora por {{delta}} semanas?",
-      "changeTimeToNow": "Cambiar la hora a ahora?",
-      "changeTimeToToday": "Cambiar la hora a hoy?",
-      "changeTimeToYesterday": "Cambiar la hora a ayer?",
+      "changeTimeByHours": "¿Cambiar la hora por {{delta}} horas?",
+      "changeTimeByMinutes": "¿Cambiar la hora por {{delta}} minutos?",
+      "changeTimeBySeconds": "¿Cambiar la hora por {{delta}} segundos?",
+      "changeTimeByDays": "¿Cambiar la hora por {{delta}} días?",
+      "changeTimeByWeeks": "¿Cambiar la hora por {{delta}} semanas?",
+      "changeTimeToNow": "¿Cambiar la hora a ahora?",
+      "changeTimeToToday": "¿Cambiar la hora a hoy?",
+      "changeTimeToYesterday": "¿Cambiar la hora a ayer?",
       "timeSetToNow": "Hora establecida a ahora",
       "timeSetToToday": "Hora establecida a hoy",
       "timeSetToYesterday": "Hora establecida a ayer"
@@ -163,6 +218,9 @@
         "nameLabel": "Nombre (Opcional)",
         "namePlaceholder": "i.e. Castillo XYZ…",
         "addButton": "Agregar {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Referencia de ellos"
       }
     },
     "dataFiles": {
@@ -286,6 +344,9 @@
         "nearbyMills": "Molinos cercanos",
         "searchPlaceholder": "Buscar molinos por nombre o referencia…",
         "unknownMill": "Molino desconocido"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Su Molino"
       }
     },
     "pga": {
@@ -327,7 +388,7 @@
         "searchPlaceholder": "Buscar parques por nombre o referencia…"
       },
       "scoring": {
-        "ref2refCount_zero": "No P2Ps",
+        "ref2refCount_zero": "No QSOs P2P",
         "ref2refCount_one": "1 P2P",
         "ref2refCount_other": "{{fmtCount}} P2Ps",
         "huntedRefsCount_zero": "No parques cazados",
@@ -389,6 +450,9 @@
         "nearbySilos": "Silos cercanos",
         "searchPlaceholder": "Buscar silos por nombre o referencia…",
         "unknownSilo": "Silo desconocido"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Información de ellos"
       }
     },
     "sota": {
@@ -400,6 +464,8 @@
         "error": "Error buscando los detalles de la cuenta",
         "connect": "Conectar tu cuenta SOTA"
       },
+      "notLoggedInAlertTitle": "Advertencia",
+      "notLoggedInAlertText": "No hay sesión iniciada en SOTAWatch para self-spotting. Por favor, vaya a la configuración de PoLo",
       "activityOptions": {
         "title_zero": "No se han seleccionado cumbres para activar",
         "title_one": "Activando 1 cumbre",
@@ -434,6 +500,10 @@
         "operationTotals": "Totales de la Operación",
         "referencesActivatedCount_zero": "No cumbres activadas",
         "referencesActivatedCount_one": "1 cumbre activada",
+        "referencesActivatedCount_other": "{{fmtCount}} cumbres activadas",
+        "referencesMissedCount_zero": "No cumbres incompletas",
+        "referencesMissedCount_one": "1 cumbre incompleta",
+        "referencesMissedCount_other": "{{fmtCount}} cumbres incompletas",
         "referencesHuntedCount_zero": "No cumbres cazadas",
         "referencesHuntedCount_one": "1 cumbre cazada",
         "referencesHuntedCount_other": "{{fmtCount}} cumbres cazadas"
@@ -506,6 +576,9 @@
         "nearbyBunkers": "Búnkers cercanos",
         "searchPlaceholder": "Búnkers por nombre o referencia…",
         "unknownBunker": "Búnker desconocido"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Su Bunker"
       }
     },
     "wwff": {
@@ -526,7 +599,40 @@
         "nearbyParks": "Parques cercanos",
         "searchPlaceholder": "Parques por nombre o referencia…",
         "unknownPark": "Parque desconocido"
-      }
+      },
+      "scoring": {
+        "ref2refCount_zero": "No QSOs P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2Ps",
+        "huntedRefsCount_zero": "No parques cazados",
+        "huntedRefsCount_one": "1 parque cazado",
+        "huntedRefsCount_other": "{{fmtCount}} parques cazados",
+        "activatorQSOsCount_zero": "No QSOs activadores",
+        "activatorQSOsCount_one": "1 QSO como activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
+        "ref2refQSOsCount_zero": "No QSOs P2P",
+        "ref2refQSOsCount_one": "1 QSO P2P",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs P2P",
+        "huntedQSOsCount_zero": "No QSOs cazados",
+        "huntedQSOsCount_one": "1 QSO como cazador",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
+        "operationTotals": "Totales de la Operación",
+        "referencesActivatedCount_zero": "No parques activados",
+        "referencesActivatedCount_one": "1 parque activado",
+        "referencesActivatedCount_other": "{{fmtCount}} parques activados",
+        "referencesMissedCount_zero": "No parques incompletos",
+        "referencesMissedCount_one": "1 parque incompleto",
+        "referencesMissedCount_other": "{{fmtCount}} parques incompletos",
+        "referencesHuntedCount_zero": "No parques cazados",
+        "referencesHuntedCount_one": "1 parque cazado",
+        "referencesHuntedCount_other": "{{fmtCount}} parques cazados"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Información de ellos"
+      },
+      "exampleRefName": "Parque Ejemplo",
+      "unknownRefName": "Parque desconocido",
+      "noRefsNearby": "¡No hay parques cercanos!"
     },
     "zlota": {
       "account": {
@@ -554,6 +660,38 @@
         "nearbyReferences": "Referencias cercanas",
         "searchPlaceholder": "Referencias por nombre o código",
         "unknownReference": "Referencia desconocida"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Su Ref"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "ref2refCount_zero": "Sin Ref2Ref",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Refs",
+        "huntedRefsCount_zero": "No parques cazados",
+        "huntedRefsCount_one": "1 parque cazado",
+        "huntedRefsCount_other": "{{fmtCount}} parques cazados",
+        "activatorQSOsCount_zero": "No QSOs activadores",
+        "activatorQSOsCount_one": "1 QSO como activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
+        "ref2refQSOsCount_zero": "No QSOs P2P",
+        "ref2refQSOsCount_one": "1 QSO Ref2Ref",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs Ref2Ref",
+        "huntedQSOsCount_zero": "No QSOs cazados",
+        "huntedQSOsCount_one": "1 QSO como cazador",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
+        "operationTotals": "Totales de la Operación",
+        "referencesActivatedCount_zero": "No referencias activadas",
+        "referencesActivatedCount_one": "1 referencia activada",
+        "referencesActivatedCount_other": "{{fmtCount}} referencias activadas",
+        "referencesMissedCount_zero": "No referencias incompletas",
+        "referencesMissedCount_one": "1 referencia incompleta",
+        "referencesMissedCount_other": "{{fmtCount}} referencias incompletas",
+        "referencesHuntedCount_zero": "No referencias cazadas",
+        "referencesHuntedCount_one": "1 referencia cazada",
+        "referencesHuntedCount_other": "{{fmtCount}} referencias cazadas"
       }
     }
   }

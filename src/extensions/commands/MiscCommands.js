@@ -47,7 +47,7 @@ const SpotCommandHook = {
   key: 'commands-misc-spot',
   match: /^(SPOT|SPOTME|SPME|SELFSPOT|QRV|QRT|QSY)(|[ /][\s\w\d!,.-_]*)$/i,
   allowSpaces: true,
-  describeCommand: (match, { vfo, operation }) => {
+  describeCommand: (match, { t, vfo, operation }) => {
     console.log('spot command hook', match, vfo, operation)
     if (!vfo || !operation) return
 
@@ -69,7 +69,7 @@ const SpotCommandHook = {
       return t?.('extensions.commands-misc.spot.selfSpotPrompt', 'Self-spot?') || 'Self-spot?'
     }
   },
-  invokeCommand: (match, { operation, vfo, dispatch, settings }) => {
+  invokeCommand: (match, { t, operation, vfo, dispatch, settings }) => {
     if (!vfo || !operation) return
 
     let comments = match[2]?.substring(1) || ''

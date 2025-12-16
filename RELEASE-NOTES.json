@@ -1,10 +1,11 @@
 {
-  "25.12.0-pre0": {
-    "name": "December '25 (pre 0)",
+  "25.12.0-pre3": {
+    "name": "December '25 (pre 3)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
     "changes": [
-      "Internationalization!!!",
-      "Set operation's state and county, and include in ADIF exports"
+      "Internationalization!!! (French, German, Spanish, to start)",
+      "Set operation's state and county, and include in ADIF exports",
+      "Layout and font size tweaks"
     ]
   },
   "25.10.7": {

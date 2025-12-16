@@ -1,5 +1,14 @@
 {
   "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "No Bands",
+      "bandsCount_one": "1 Band",
+      "bandsCount_other": "{{count}} Bands",
+      "modesCount_zero": "No Modes",
+      "modesCount_one": "1 Mode",
+      "modesCount_other": "{{count}} Modes",
+      "total": "Total {{count}}"
+    },
     "bca": {
       "name": "Belgium Castles & Fortresses",
       "shortName": "BCA",
@@ -108,6 +117,11 @@
       },
       "help-md": "Callsign notes are stored on simple text files, one call per line followed by information you want shown in the logging screen. You can use the builtin files or add your own.\n\nProvide a direct link to a plain text file, or a \"share link\" from a service like:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nLines on that file should look like this and can support basic markdown formatting:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nIf the entry starts with an emoji, it will be used instead of the default ⭐.\n\nEntries can be used for \"callsign expansion\" if you first type `..` or ` //` in the callsign field, such as `//DAN` in the example above."
     },
+    "canadianProvinces": {
+      "provincesCount_zero": "No Canadian Provinces",
+      "provincesCount_one": "1 Canadian Province",
+      "provincesCount_other": "{{count}} Canadian Provinces"
+    },
     "colonies": {
       "activityOptions": {
         "settings": "Settings",
@@ -144,6 +158,14 @@
       "switchLanguage": "Switch language to `{{lang}}` {{name}}?",
       "switchLanguagePrompt": "Language `{{lang}}` {{name}}",
       "switchLanguageConfirm": "Switching to `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Activate developer mode?",
+      "activateConfirm": "Developer mode activated!",
+      "deactivate": "Deactivate developer mode?",
+      "deactivateConfirm": "Developer mode deactivated!",
+      "on": "Developer Mode: ON!!!",
+      "off": "Developer Mode: OFF"
     },
     "commands-misc": {
       "rtfm": "Read the fine manual?",
@@ -229,6 +251,11 @@
         "pota-all-parks": "POTA: All Parks",
         "sota-all-summits": "SOTA: All Summits"
       }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "No DXCC Entities",
+      "entitiesCount_one": "1 DXCC Entity",
+      "entitiesCount_other": "{{count}} DXCC Entities"
     },
     "eca": {
       "name": "English Castles Awards",
@@ -514,6 +541,11 @@
       "exampleRefName": "Example Summit",
       "unknownRefName": "Unknown Summit",
       "noRefsNearby": "No summits nearby!"
+    },
+    "usStates": {
+      "statesCount_zero": "No US States",
+      "statesCount_one": "1 US State",
+      "statesCount_other": "{{count}} US States"
     },
     "wfd": {
       "name": "Winter Field Day",

@@ -35,7 +35,7 @@ export const CanadianProvincesScoringHandler = {
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  summarizeScore: ({ t, score, operation, ref, section }) => {
     score.icon = 'leaf-maple'
     score.weight = CanadianProvincesScoringHandler.weight
 
@@ -48,7 +48,7 @@ export const CanadianProvincesScoringHandler = {
     }
 
     if (count >= 2) {
-      score.label = `${count} Canadian Provinces`
+      score.label = t?.('extensions.canadianProvinces.provincesCount', '{{count}} Canadian Provinces', { count: count }) || `${count} Canadian Provinces`
       score.longSummary = ''
       for (let row = 0; row < 2; row++) {
         score.longSummary += '\n> '

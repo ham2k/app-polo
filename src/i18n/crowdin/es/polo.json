@@ -67,7 +67,9 @@
       "deviceGps": "GPS del dispositivo",
       "locating": "Localizando…",
       "gpsError": "Error de GPS",
-      "noGps": "SIN GPS"
+      "noGps": "SIN GPS",
+      "stateOrProvince": "Estado o Provincia (opcional)",
+      "county": "Condado (opcional)"
     },
     "operationAddActivity": {
       "title": "Agregar Actividad",
@@ -95,7 +97,7 @@
       "ham2kLoFiSync": "Sincronización Ham2K LoFi",
       "operation": "Operación",
       "exportSettings": "Configuración de Exportación",
-      "useCompactFileNames": "Nombres de archivos compactos",
+      "useCompactFileNames": "Usar nombres de archivos compactos",
       "wavelogExport": "Exportar a Wavelog",
       "exportQSOsToWavelogDescription": "Enviar todos los QSOs para esta operación a Wavelog",
       "wavelogDialog": {
@@ -112,13 +114,13 @@
       "title": "Información de Indicativo",
       "messages": {
         "duplicate": "Dup",
-        "invalidBand": "Bandas inválida",
+        "invalidBand": "Banda inválida",
         "newBand": "Nueva Banda",
         "newMode": "Nuevo Modo",
-        "newRef": "Nueva Ref.",
+        "newRef": "Nueva Ref",
         "newMult": "Nuevo Mult",
         "newDay": "Nuevo Día",
-        "maybeDupe": "Dup?",
+        "maybeDupe": "¿Dup?",
         "partialDupe": "Dup",
         "potaActivation-newDay": "Nuevo Día de POTA",
         "potaActivation-newRef": "Nuevo Parque",
@@ -134,7 +136,7 @@
         "last7days": "{{count}} en 7 días",
         "today": "{{count}} hoy",
         "yesterday": "{{count}} ayer",
-        "qsos_zero": "0 QSOs",
+        "qsos_zero": "0 QSO",
         "qsos_one": "1 QSO",
         "qsos_other": "{{count}} QSOs"
       },
@@ -222,7 +224,7 @@
         "description": "Sync y backup en la nube"
       },
       "appFeatures": {
-        "title": "Funcionalidades de la Aplicación",
+        "title": "Extensiones de la Aplicación",
         "description": "Opciones como POTA, SOTA, etc"
       },
       "developerSettings": {
@@ -598,7 +600,7 @@
         "crowdInPersonalTokenPlaceholder": "Obtén uno desde la página de ajustes de tu cuenta de CrowdIn",
         "refreshCrowdInTranslations": {
           "title": "Actualizando traducciones…",
-          "starting": "Espere mientras actualizamos las traducciones…",
+          "starting": "Espera mientras actualizamos las traducciones…",
           "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
           "completed": "¡Actualización completada!",
           "errorTitle": "Error al actualizar traducciones",
@@ -800,7 +802,7 @@
       "modeLabel": "Modo",
       "bandLabel": "Banda",
       "frequencyLabel": "Frecuencia",
-      "bandMissing": "Banda???",
+      "bandMissing": "¿Banda?",
       "radioControls-a11y": "Controles de Radio {{parts}}",
       "notesLabel": "Notas",
       "notesLabel-a11y": "Notas",
@@ -816,15 +818,7 @@
       "hideMostSecondaryControls-a11y": "Ocultar la mayoría de los controles secundarios",
       "showAllSecondaryControls-a11y": "Mostrar todos los controles secundarios",
       "spotting": {
-        "selfSpottingLabel": "Self-Spotting",
-        "selfSpottingControls-a11y": "Controles de Self-Spotting",
-        "spottingLabel": "Spotting",
-        "spottingControls-a11y": "Controles de Spotting",
-        "autoRespottingLabel": "Auto-respotting",
-        "autoRespottingControls-a11y": "Controles de Auto-respotting",
-        "nothingToSpot": "Nada para spotting",
         "selfSpottingAt": "Self-spot en {{freq}}",
-        "selfSpotAt": "Self-spot en {{freq}}",
         "stopAutoRespotting": "Detener self-respotting",
         "setFrequencyFirst": "Primero establece una frecuencia para spotting.",
         "reSpotEvery": "Re-spot cada {{minutes}} min",
@@ -832,6 +826,13 @@
         "selfSpottedAt": "Self-spoteado en {{time}}",
         "spotAt": "Spot {{call}} en {{freq}}",
         "tooLateToSpot": "Demasiado tarde para spotting {{call}}",
+        "nothingToSpot": "Nada para spotting",
+        "selfSpottingLabel": "Autodivulgación",
+        "selfSpottingControls-a11y": "Controles de Self-Spotting",
+        "spottingLabel": "Divulgación",
+        "spottingControls-a11y": "Controles de Spotting",
+        "autoRespottingLabel": "Auto-redistribución",
+        "autoRespottingControls-a11y": "Controles de Auto-respotting",
         "commentsLabel": "Comentarios"
       }
     },
@@ -896,7 +897,9 @@
       "stationAndOperatorTitle": "Estación y Operador",
       "locationTitle": "Ubicación",
       "gridDescription-md": "Grilla `{{grid}}`",
-      "gridDescriptionNone-md": "No hay ubicación",
+      "stateDescription-md": "Estado: `{{state}}`",
+      "countyDescription-md": "Condado: `{{county}}`",
+      "locationDescriptionNone-md": "Sin ubicación establecida",
       "operationDetailsTitle": "Detalles de la Operación",
       "operationDetailsDescription": "Agregar notas para esta operación",
       "addTitleOrNotesForOperation": "Agregar un título o notas para esta operación",

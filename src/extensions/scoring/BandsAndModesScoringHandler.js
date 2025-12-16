@@ -33,7 +33,7 @@ export const BandsAndModesScoringHandler = {
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  summarizeScore: ({ t, score, operation, ref, section }) => {
     score.icon = 'antenna'
     score.weight = BandsAndModesScoringHandler.weight
 
@@ -41,8 +41,8 @@ export const BandsAndModesScoringHandler = {
     const modeCount = Object.keys(score.modes ?? {}).length
 
     const labelParts = []
-    if (bandCount >= 2) labelParts.push(`${bandCount} Bands`)
-    if (modeCount >= 2) labelParts.push(`${modeCount} Modes`)
+    if (bandCount >= 2) labelParts.push(t?.('extensions.bandsAndModes.bandsCount', '{{count}} Bands', { count: bandCount }) || `${bandCount} Bands`)
+    if (modeCount >= 2) labelParts.push(t?.('extensions.bandsAndModes.modesCount', '{{count}} Modes', { count: modeCount }) || `${modeCount} Modes`)
     if (labelParts.length > 0) score.label = labelParts.join(', ') + '\n'
 
     score.longSummary = ''
@@ -57,7 +57,7 @@ export const BandsAndModesScoringHandler = {
           }
         })
         if (parts.length > 1) {
-          parts.push(`Total ${score.bands[band]}`)
+          parts.push(t?.('extensions.bandsAndModes.total', 'Total {{count}}', { count: score.bands[band] }) || `Total ${score.bands[band]}`)
         }
         score.longSummary += ` ${parts.join(' • ')}\n`
       }

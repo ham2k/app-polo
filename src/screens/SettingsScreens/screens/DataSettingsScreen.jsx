@@ -86,7 +86,7 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
           </>
         ) : (
           <H2kMarkdown>
-            {t('screens.dataSettings.updated-md', 'Updated on {{date}}', { date: fmtDateTimeNice(info?.date) })}
+            {t('screens.dataSettings.updated-md', 'Updated on {{date}}', { date: fmtDateTimeNice(info?.date, { utc: true }) })}
             {info?.version && `\n\n${t('screens.dataSettings.version-md', 'Version: {{version}}', { version: info.version })}`}
           </H2kMarkdown>
         )}

@@ -204,7 +204,7 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
         // console.log('-- allScoringMessages', alerts, notices, infos)
         return [...notices, ...alerts, ...infos].map(oneInfo => ({
           ...oneInfo,
-          msg: t(`screens.callInfo.messages.${oneInfo.key}`, `screens.callInfo.messages.${oneInfo.msg}`, '') ?? MESSAGES_FOR_SCORING[oneInfo.key] ?? MESSAGES_FOR_SCORING[oneInfo.msg] ?? oneInfo.msg
+          msg: t([`screens.callInfo.messages.${oneInfo.key}`, `screens.callInfo.messages.${oneInfo.msg}`], '') || MESSAGES_FOR_SCORING[oneInfo.key] || MESSAGES_FOR_SCORING[oneInfo.msg] || oneInfo.msg
         }))
       }).flat()
 
