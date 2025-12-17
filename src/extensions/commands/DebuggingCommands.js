@@ -10,10 +10,10 @@ import { DevSettings } from 'react-native'
 import { persistor } from '../../store'
 import { addQSOs } from '../../store/qsos'
 import { resetSyncedStatus } from '../../store/operations'
-import { resetDatabase } from '../../store/db/db'
+import { dbExecute, dbSelectAll, resetDatabase } from '../../store/db/db'
 import { setLocalData } from '../../store/local'
 import { setSettings } from '../../store/settings'
-import { clearAllOperationData } from '../../store/operations/actions/operationsDB'
+import { clearAllOperationData, loadOperations } from '../../store/operations/actions/operationsDB'
 import { addNotice, clearNoticesDismissed, clearMatchingNotices, setSystemFlag } from '../../store/system'
 import { poissonRandom } from '../../tools/randomTools'
 import { logTimer } from '../../tools/perfTools'
@@ -43,6 +43,7 @@ const Extension = {
     registerHook('command', { priority: 100, hook: FactoryResetCommandHook })
     registerHook('command', { priority: 100, hook: RefreshCrowdInTranslationsCommandHook })
     registerHook('command', { priority: 100, hook: SwitchLanguageCommandHook })
+    registerHook('command', { priority: 100, hook: RecoverBackupCommandHook })
   }
 }
 
@@ -347,6 +348,41 @@ const SwitchLanguageCommandHook = {
     } else {
       return false
     }
+  }
+}
+
+const RecoverBackupCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-debug-recover-backup',
+  match: /^(RECOVER!)$/i,
+  allowSpaces: true,
+  describeCommand: (match, { i18n, settings, t }) => {
+    return "Recover local dabatase backup?"
+  },
+  invokeCommand: (match, { dispatch, settings, t }) => {
+    setImmediate(async () => {
+      const tables = await dbSelectAll("SELECT name FROM sqlite_schema WHERE type='table' ORDER BY name")
+      console.log('tables', tables)
+      const backups = tables.map(t => {
+        const match = t.name.match(/^bkp_(\d+)_(.*)$/)
+        if (match) {
+          return {
+            backupTable: t.name,
+            timestamp: match[1],
+            tableName: match[2]
+          }
+        }
+      }).filter(Boolean)
+      console.log('backups', backups)
+      backups.forEach(async (backup) => {
+        console.log('backup', backup)
+        console.log(`INSERT OR IGNORE INTO ${backup.tableName} SELECT * FROM ${backup.backupTable}`)
+        await dbExecute(`INSERT OR IGNORE INTO ${backup.tableName} SELECT * FROM ${backup.backupTable}`)
+      })
+      await dispatch(loadOperations())
+    })
+    return "Recovering local database backup…"
   }
 }
 
