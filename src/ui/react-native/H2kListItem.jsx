@@ -37,7 +37,6 @@ export function H2kListItem ({
   const titleStyle = useMemo(() => {
     return {
       ...styles.list.title,
-      fontWeight: 'bold',
       ...moreProps.titleStyle,
       lineHeight: undefined // line height interferes with adjustsFontSizeToFit
     }
