@@ -276,7 +276,7 @@ export default function LoggingPanel ({
 
     setTimeout(async () => { // Run inside a setTimeout to allow for async functions
       // First, try to process any commands, but only if we're not editing an event
-      if (!qso.event) {
+      if (!qso?.event) {
         const command = qso?.their?.call
         const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit, setCommandInfo })
         if (commandResult) {

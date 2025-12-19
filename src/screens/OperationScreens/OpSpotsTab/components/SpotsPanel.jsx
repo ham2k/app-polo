@@ -132,7 +132,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       setTimeout(async () => {
         await Promise.all(
           spotsHooks.filter(hook => filterState.sources?.[hook.key] !== false && hook.fetchSpots).map(hook => {
-            return hook.fetchSpots({ online, settings, dispatch, operation }).then(async spots => {
+            return hook.fetchSpots({ t, online, settings, dispatch, operation }).then(async spots => {
               const annotatedSpots = []
               for (const spot of spots) {
                 spot.our = spot.our || {}
@@ -151,7 +151,11 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
         updateSpotsState({ lastFetched: new Date(), loading: false })
       }, 0)
     }
-  }, [allOperations, spotsHooks, online, settings, dispatch, operation, spotsState.lastFetched, updateSpotsState, filterState.sources, ourInfo])
+  }, [
+    allOperations, spotsHooks, online, settings, dispatch,
+    operation, spotsState.lastFetched, updateSpotsState,
+    filterState.sources, ourInfo, t
+  ])
 
   const { spots: filteredSpots, options, counts } = useMemo(() => {
     const allSpots = []

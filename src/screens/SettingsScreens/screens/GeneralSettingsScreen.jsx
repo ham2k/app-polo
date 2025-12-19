@@ -20,7 +20,7 @@ import { H2kListItem, H2kListSection, H2kListSubheader } from '../../../ui'
 import { FontScaleDialog } from '../components/FontScaleDialog'
 import { LanguageDialog } from '../components/LanguageDialog'
 
-function prepareStyles(baseStyles) {
+function prepareStyles (baseStyles) {
   return {
     ...baseStyles,
     listRow: {
@@ -31,7 +31,7 @@ function prepareStyles(baseStyles) {
   }
 }
 
-export default function GeneralSettingsScreen({ navigation, splitView }) {
+export default function GeneralSettingsScreen ({ navigation, splitView }) {
   const { t, i18n } = useTranslation()
 
   const dispatch = useDispatch()

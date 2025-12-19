@@ -130,18 +130,18 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
 
         <H2kListSection title={t('screens.creditsSettings.translations', 'Translations')}>
           <H2kListItem
-            title={t('general.languages.en', 'English')}
-            description={'KI2D Sebastián'}
+            title={t('general.languages.es', 'Spanish')}
+            description={'KI2D Sebastián (lead)'}
             leftIcon="world"
           />
           <H2kListItem
-            title={t('general.languages.es', 'Norwegian')}
-            description={'LB4FH Kjetil'}
+            title={t('general.languages.fr', 'French')}
+            description={'F8EXM Yannick (lead), F4JSU Rémi, VA6DM Dino'}
             leftIcon="world"
           />
           <H2kListItem
-            title={t('general.languages.ca', 'Catalan')}
-            description={'EA3IMR Tomás, EA3IPX David'}
+            title={t('general.languages.de', 'German')}
+            description={'DA1EE Lucas (lead), DJ5NF Martin, DK8YS Yannick, DO7JZ Julius'}
             leftIcon="world"
           />
         </H2kListSection>

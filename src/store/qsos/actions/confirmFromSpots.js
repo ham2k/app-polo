@@ -9,6 +9,7 @@ import { selectQSOs } from '../qsosSlice'
 import { addQSOs } from '../../../store/qsos'
 import { findHooks } from '../../../extensions/registry'
 import { get as getDistance } from 'fast-levenshtein'
+import GLOBAL from '../../../GLOBAL'
 
 export const confirmFromSpots = (options = {}) => async (dispatch, getState) => {
   if (!options.operation) {
@@ -28,7 +29,8 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
   const hookSpots = {}
   await Promise.all(hooks.map(hook => hook?.fetchSpots({
     operation: options.operation,
-    dispatch
+    dispatch,
+    t: GLOBAL?.t
   })?.then(spots => {
     hookSpots[hook.confirmationName] = spots
   })))
@@ -98,7 +100,7 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
   }))
 }
 
-function sameUTCDay (aMillis, bMillis) {
+function sameUTCDay(aMillis, bMillis) {
   if (!aMillis || !bMillis) {
     return false
   }

@@ -68,7 +68,7 @@ const FrequencyCommandHook = {
     }
     if (freq) {
       const mode = modeForFrequency(freq, ourInfo) ?? vfo.mode ?? 'SSB'
-      if (mode !== vfo?.mode) {
+      if (mode && mode !== vfo?.mode) {
         return t?.('extensions.commands-radio.frequencyAndMode', 'Change frequency to {{freq}} MHz ({{mode}})?', { freq: fmtFreqInMHz(freq), mode }) || `Change frequency to ${fmtFreqInMHz(freq)} MHz (${mode})?`
       } else {
         return t?.('extensions.commands-radio.frequency', 'Change frequency to {{freq}} MHz?', { freq: fmtFreqInMHz(freq) }) || `Change frequency to ${fmtFreqInMHz(freq)} MHz?`
@@ -90,7 +90,7 @@ const FrequencyCommandHook = {
     if (freq) {
       const mode = modeForFrequency(freq, ourInfo) ?? vfo.mode ?? 'SSB'
       handleFieldChange({ fieldId: 'freq', value: freq })
-      if (mode !== vfo?.mode) {
+      if (mode && mode !== vfo?.mode) {
         return t?.('extensions.commands-radio.frequencyAndModeConfirm', 'Frequency set to {{freq}} MHz ({{mode}})', { freq: fmtFreqInMHz(freq), mode }) || `Frequency set to ${fmtFreqInMHz(freq)} MHz (${mode})`
       } else {
         return t?.('extensions.commands-radio.frequencyConfirm', 'Frequency set to {{freq}} MHz', { freq: fmtFreqInMHz(freq) }) || `Frequency set to ${fmtFreqInMHz(freq)} MHz`

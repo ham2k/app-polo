@@ -137,7 +137,7 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
             unique: `dataFiles: ${definition.key}`,
             priority: -1,
             transient: true,
-            title: GLOBAL.t([`extensions.dataFiles.title.${definition.key}`, definition.title, definition.name]),
+            title: GLOBAL.t(`extensions.dataFiles.title.${definition.key}`, definition.title || definition.name),
             icon: definition.titleIcon || definition.icon,
             text: GLOBAL.t('general.dataFiles.dataHasNotBeenUpdatedInAWhile-md', 'Data for **{{name}}** has not been updated in a while.', { name: definition.name }),
             actions: [
