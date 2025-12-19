@@ -9,6 +9,8 @@ import RNFetchBlob from 'react-native-blob-util'
 import { Buffer } from 'buffer'
 import { Alert } from 'react-native'
 
+import GLOBAL from '../../../../GLOBAL'
+
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { adifToQSON } from '@ham2k/lib-qson-adif'
 
@@ -57,7 +59,7 @@ export const importADIFIntoOperation = (path, operation, operationQSOs) => async
     dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'ready' }))
     return { adifCount: data.qsos.length, importCount: qsos.length }
   } catch (error) {
-    Alert.alert('Error importing ADIF into Operation', error.message)
+    Alert.alert(GLOBAL?.t?.('polo.other.importADIF.error', 'Error importing ADIF into Operation') ?? 'Error importing ADIF into Operation', error.message ?? (GLOBAL?.t?.('polo.other.importADIF.unknownError', 'Unknown error') ?? 'Unknown error'))
     reportError('Error importing ADIF into Operation', error)
   }
 
@@ -99,7 +101,7 @@ export const importHistoricalADIF = (path) => async (dispatch) => {
     await dispatch(saveQSOsForOperation('historical'))
     dispatch(qsosActions.setQSOsStatus({ uuid: 'historical', status: 'ready' }))
   } catch (error) {
-    Alert.alert('Error importing Historical ADIF', error.message)
+    Alert.alert(GLOBAL?.t?.('polo.other.importADIF.historicalImportError', 'Error importing Historical ADIF') ?? 'Error importing Historical ADIF', error.message ?? (GLOBAL?.t?.('polo.other.importADIF.unknownError', 'Unknown error') ?? 'Unknown error'))
     reportError('Error importing Historical ADIF', error)
   }
 }

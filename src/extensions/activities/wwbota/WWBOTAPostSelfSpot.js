@@ -17,7 +17,7 @@ import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 
 import { Info } from './WWBOTAInfo'
 
-export const WWBOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+export const WWBOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (dispatch, getState) => {
   if (GLOBAL?.flags?.services?.wwbota === false) return false
 
   const state = getState()
@@ -75,7 +75,7 @@ export const WWBOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispa
         }))
       }
     } catch (error) {
-      Alert.alert('Error posting WWBOTA spot', error.message)
+      Alert.alert(t('extensions.activities.wwbota.postSpotAPI.error', 'Error posting WWBOTA spot'), error.message)
       reportError('Error posting WWBOTA spot', error)
     }
   }

@@ -102,7 +102,7 @@ export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, 
   }
 
   if (!operation.title && (!data.title || data.title === 'at ')) {
-    data.title = 'General Operation'
+    data.title = GLOBAL?.t?.('general.terms.generalOperation', 'General Operation') ?? 'General Operation'
     data.subtitle = ''
   }
 

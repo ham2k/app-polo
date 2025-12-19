@@ -6,13 +6,17 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
+import { View } from 'react-native'
 import { RadioButton, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+
 import { setSettings } from '../../../store/settings'
-import { View } from 'react-native'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 
 export function FlagsDialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -40,7 +44,7 @@ export function FlagsDialog ({ visible, settings, styles, onDialogDone }) {
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>Show Flags</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.loggingSettings.countryFlags.title', 'Country Flags')}</H2kDialogTitle>
       <H2kDialogContent>
         <RadioButton.Group
           onValueChange={(v) => setValue(v)}
@@ -48,21 +52,21 @@ export function FlagsDialog ({ visible, settings, styles, onDialogDone }) {
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="dx" />
-            <Text onPress={() => setValue('dx')} style={styles.rowText}>Only for DX contacts</Text>
+            <Text onPress={() => setValue('dx')} style={styles.rowText}>{t('screens.loggingSettings.countryFlags.descriptionDefault', 'Show only for DX contacts')}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="all" />
-            <Text onPress={() => setValue('all')} style={styles.rowText}>For all contacts</Text>
+            <Text onPress={() => setValue('all')} style={styles.rowText}>{t('screens.loggingSettings.countryFlags.descriptionAll', 'Show flags for all contacts')}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="none" />
-            <Text onPress={() => setValue('none')} style={styles.rowText}>Don't show any flags</Text>
+            <Text onPress={() => setValue('none')} style={styles.rowText}>{t('screens.loggingSettings.countryFlags.descriptionNone', "Don't show any flags")}</Text>
           </View>
         </RadioButton.Group>
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

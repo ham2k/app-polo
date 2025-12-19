@@ -6,9 +6,10 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
+import { View } from 'react-native'
 import { RadioButton, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { View } from 'react-native'
+import { useTranslation } from 'react-i18next'
 
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kTextInput } from '../../../ui'
@@ -24,6 +25,8 @@ const OPTION_FOR_SERVER = Object.keys(SERVERS).reduce((acc, key) => {
 }, {})
 
 export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const lofiSettings = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
@@ -64,7 +67,7 @@ export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) 
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>Ham2K Log Filer Sync Service</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.syncSettings.syncServiceDialog.title', 'Ham2K Log Filer Sync Service')}</H2kDialogTitle>
       <H2kDialogContent>
         <RadioButton.Group
           onValueChange={(v) => setServerOption(v)}
@@ -79,14 +82,14 @@ export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) 
           ))}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="other" />
-            <Text onPress={() => setServerOption('other')} style={styles.rowText}>Custom</Text>
+            <Text onPress={() => setServerOption('other')} style={styles.rowText}>{t('screens.syncSettings.syncServiceDialog.custom', 'Custom')}</Text>
             <H2kTextInput keyboard="dumb"style={{ marginLeft: styles.oneSpace, flex: 1 }} value={otherServer} onChangeText={setOtherServer} />
           </View>
         </RadioButton.Group>
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept}>Ok</H2kButton>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

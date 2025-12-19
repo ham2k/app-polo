@@ -14,7 +14,7 @@ import { findRef } from '../../../tools/refTools'
 import { apiPnP } from '../../../store/apis/apiPnP'
 import { Info } from './SiOTAInfo'
 
-export const SiOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dispatch, getState) => {
+export const SiOTAPostOtherSpot = ({ t, comments, qso, spotterCall }) => async (dispatch, getState) => {
   const ref = findRef(qso, Info.huntingType)
 
   if (ref) {
@@ -34,11 +34,11 @@ export const SiOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dis
       apiPromise.unsubscribe && apiPromise.unsubscribe()
 
       if (apiResults?.error || apiResults?.data?.match(/Failure/)) {
-        Alert.alert('Error posting SiOTA spot', apiResults?.error ? apiResults.error?.error : apiResults?.data)
+        Alert.alert(t('extensions.activities.siota.postSpotAPI.error', 'Error posting SiOTA spot'), apiResults?.error ? apiResults.error?.error : apiResults?.data)
         return false
       }
     } catch (error) {
-      Alert.alert('Error posting SiOTA spot', error.message)
+      Alert.alert(t('extensions.activities.siota.postSpotAPI.error', 'Error posting SiOTA spot'), error.message)
       reportError('Error posting SiOTA spot', error)
     }
     return true

@@ -18,7 +18,7 @@ import { apiSOTA } from '../../../store/apis/apiSOTA'
 
 const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']
 
-export const SOTAPostOtherSpot = ({ comments, qso }) => async (dispatch) => {
+export const SOTAPostOtherSpot = ({ t, comments, qso }) => async (dispatch) => {
   if (GLOBAL?.flags?.services?.sota === false) return false
 
   const activatorCallsign = qso.their.call
@@ -55,14 +55,14 @@ export const SOTAPostOtherSpot = ({ comments, qso }) => async (dispatch) => {
 
     if (apiResults?.error) {
       if (apiResults.error?.status === 403) { // Forbidden, not logged in
-        Alert.alert('Error posting SOTA spot', 'SOTA account logged out. Please log in again in PoLo settings')
+        Alert.alert(t('extensions.activities.sota.postSpotAPI.error', 'Error posting SOTA spot'), t('extensions.activities.sota.postSpotAPI.sotaAccountLoggedOut', 'SOTA account logged out. Please log in again in PoLo settings'))
       } else {
-        Alert.alert('Error posting SOTA spot', `${apiResults.error?.status} ${apiResults.error?.data?.message}`)
+        Alert.alert(t('extensions.activities.sota.postSpotAPI.error', 'Error posting SOTA spot'), t('extensions.activities.sota.postSpotAPI.serverResponse', 'Server responded with status {{status}} {{message}}', { status: apiResults.error?.status, message: apiResults.error?.data?.message }))
       }
       return false
     }
   } catch (error) {
-    Alert.alert('Error posting SOTA spot', error.message)
+    Alert.alert(t('extensions.activities.sota.postSpotAPI.error', 'Error posting SOTA spot'), error.message)
     reportError('Error posting SOTA spot', error)
     return false
   }

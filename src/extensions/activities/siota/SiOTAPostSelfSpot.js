@@ -16,7 +16,7 @@ import { apiPnP } from '../../../store/apis/apiPnP'
 
 import { Info } from './SiOTAInfo'
 
-export const SiOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+export const SiOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (dispatch, getState) => {
   if (GLOBAL?.flags?.services?.pnp === false) return false
 
   const state = getState()
@@ -43,11 +43,11 @@ export const SiOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispat
       apiPromise.unsubscribe && apiPromise.unsubscribe()
 
       if (apiResults?.error || apiResults?.data?.match(/Failure/)) {
-        Alert.alert('Error posting SiOTA spot', apiResults?.error ? apiResults.error?.error : apiResults?.data)
+        Alert.alert(t('extensions.activities.siota.postSpotAPI.error', 'Error posting SiOTA spot'), apiResults?.error ? apiResults.error?.error : apiResults?.data)
         return false
       }
     } catch (error) {
-      Alert.alert('Error posting SiOTA spot', error.message)
+      Alert.alert(t('extensions.activities.siota.postSpotAPI.error', 'Error posting SiOTA spot'), error.message)
       reportError('Error posting SiOTA spot', error)
     }
     return true

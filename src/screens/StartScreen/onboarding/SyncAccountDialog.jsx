@@ -8,12 +8,15 @@
 import React, { useCallback, useEffect } from 'react'
 import { Switch, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 import { View } from 'react-native'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 
 export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
@@ -35,13 +38,13 @@ export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, 
 
   return (
     <H2kDialog visible={true} dismissable={false}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>Ham2K Log Filer</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.startScreen.onboarding.ham2kLogFiler', 'Ham2K Log Filer')}</H2kDialogTitle>
       <H2kDialogContent>
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center', marginBottom: styles.oneSpace * 2 }}>
-          We provide a basic sync and backup service for free, and more for a fee.
+          {t('screens.startScreen.onboarding.logFilerDescription', 'We provide a basic sync and backup service for free, and more for a fee.')}
         </Text>
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center', marginBottom: styles.oneSpace * 2 }}>
-          Find more details in the Settings.
+          {t('screens.startScreen.onboarding.findMoreDetailsInSettings', 'Find more details in the Settings.')}
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace }}>
           <Switch value={!!lofiData?.enabled} onValueChange={(v) => {
@@ -54,13 +57,13 @@ export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, 
           }
           />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: !lofiData?.enabled }))}>
-            Enable Cloud Sync and Backups
+            {t('screens.startScreen.onboarding.enableCloudSyncAndBackups', 'Enable Cloud Sync and Backups')}
           </Text>
         </View>
       </H2kDialogContent>
       <H2kDialogActions style={{ justifyContent: 'space-between' }}>
-        <H2kButton onPress={handlePrevious}>{previousLabel ?? 'Back'}</H2kButton>
-        <H2kButton onPress={handleNext}>{nextLabel ?? 'Continue'}</H2kButton>
+        <H2kButton onPress={handlePrevious}>{previousLabel ?? t('general.buttons.back', 'Back')}</H2kButton>
+        <H2kButton onPress={handleNext}>{nextLabel ?? t('general.buttons.continue', 'Continue')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

@@ -16,7 +16,7 @@ import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 
 import { Info } from './WWBOTAInfo'
 
-export const WWBOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (dispatch) => {
+export const WWBOTAPostOtherSpot = ({ t, comments, qso, spotterCall }) => async (dispatch) => {
   if (GLOBAL?.flags?.services?.wwbota === false) return false
 
   const refs = filterRefs(qso, Info.huntingType)
@@ -50,7 +50,7 @@ export const WWBOTAPostOtherSpot = ({ comments, qso, spotterCall }) => async (di
     await dispatch((_dispatch, _getState) => apiWWBOTA.endpoints.spot.select(spot)(_getState()))
     apiPromise.unsubscribe && apiPromise.unsubscribe()
   } catch (error) {
-    Alert.alert('Error posting WWBOTA spot', error.message)
+    Alert.alert(t('extensions.activities.wwbota.postSpotAPI.error', 'Error posting WWBOTA spot'), error.message)
     reportError('Error posting WWBOTA spot', error)
   }
 }

@@ -256,7 +256,7 @@ function OneDialog ({ dialog, styles, handleDialogAction, setDialog }) {
             onPress={() => {
               setDialog(undefined)
             }}
-          >Ok</H2kButton>
+          >{t('general.buttons.ok', 'Ok')}</H2kButton>
         </H2kDialogActions>
       </H2kDialog>
     </>

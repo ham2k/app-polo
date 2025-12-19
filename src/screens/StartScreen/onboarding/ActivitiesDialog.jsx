@@ -9,11 +9,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { Switch, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { setSettings } from '../../../store/settings'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 
 export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [values, setValues] = useState('')
@@ -38,7 +41,7 @@ export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrev
 
   return (
     <H2kDialog visible={true} dismissable={false}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>Favorite Activities</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.startScreen.onboarding.favoriteActivities', 'Favorite Activities')}</H2kDialogTitle>
       <H2kDialogContent>
         <Text style={{ fontSize: styles.normalFontSize, marginBottom: styles.oneSpace * 2, textAlign: 'center' }}>Are you interested in any of these popular activation programs?</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace }}>
@@ -53,7 +56,7 @@ export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrev
             }}
           />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, 'extensions/pota': !values['extensions/pota'] })}>
-            Parks On The Air
+            {t('extensions.pota.name', 'Parks On The Air')}
           </Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace, marginTop: styles.oneSpace }}>
@@ -68,7 +71,7 @@ export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrev
             }}
           />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, 'extensions/sota': !values['extensions/sota'] })}>
-            Summits On The Air
+            {t('extensions.sota.name', 'Summits On The Air')}
           </Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace, marginTop: styles.oneSpace }}>
@@ -83,7 +86,7 @@ export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrev
             }}
           />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, 'extensions/wwff': !values['extensions/wwff'] })}>
-            Worldwide Fauna & Flora
+            {t('extensions.wwff.name', 'Worldwide Fauna & Flora')}
           </Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace, marginTop: styles.oneSpace }}>
@@ -98,14 +101,14 @@ export function ActivitiesDialog ({ settings, styles, onDialogNext, onDialogPrev
             }}
           />
           <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setValues({ ...values, 'extensions/satellites': !values['extensions/satellites'] })}>
-            Satellites
+            {t('extensions.satellites.name', 'Satellites')}
           </Text>
         </View>
         <Text style={{ fontSize: styles.normalFontSize, marginTop: styles.oneSpace * 2, textAlign: 'center' }}>(You can find more options in the Settings, under 'App Features')</Text>
       </H2kDialogContent>
       <H2kDialogActions style={{ justifyContent: 'space-between' }}>
-        <H2kButton onPress={handlePrevious}>{previousLabel ?? 'Back'}</H2kButton>
-        <H2kButton onPress={handleNext}>{nextLabel ?? 'Continue'}</H2kButton>
+        <H2kButton onPress={handlePrevious}>{previousLabel ?? t('general.buttons.back', 'Back')}</H2kButton>
+        <H2kButton onPress={handleNext}>{nextLabel ?? t('general.buttons.continue', 'Continue')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

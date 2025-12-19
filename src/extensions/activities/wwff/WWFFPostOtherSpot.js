@@ -13,7 +13,7 @@ import { reportError } from '../../../distro'
 import { apiWWFF } from '../../../store/apis/apiWWFF'
 import { findRef } from '../../../tools/refTools'
 
-export const WWFFPostOtherSpot = ({ comments, qso, spotterCall }) => async (dispatch) => {
+export const WWFFPostOtherSpot = ({ t, comments, qso, spotterCall }) => async (dispatch) => {
   if (GLOBAL?.flags?.services?.wwff === false) return false
 
   const ref = findRef(qso, 'wwff')
@@ -35,11 +35,12 @@ export const WWFFPostOtherSpot = ({ comments, qso, spotterCall }) => async (disp
       apiPromise.unsubscribe && apiPromise.unsubscribe()
       // Don't worry about duplicates
       if (apiResults?.error && !apiResults?.error?.data?.message?.match(/Duplicate spot detected/)) {
-        Alert.alert('Error posting WWFF spot', `Server responded with status ${apiResults.error?.status} ${apiResults.error?.data?.message}`)
+        Alert.alert(t('extensions.activities.wwff.postSpotAPI.error', 'Error posting WWFF spot'),
+          t('extensions.activities.wwff.postSpotAPI.serverResponse', 'Server responded with status {{status}} {{message}}', { status: apiResults.error?.status, message: apiResults.error?.data?.message }))
         return false
       }
     } catch (error) {
-      Alert.alert('Error posting WWFF spot', error.message)
+      Alert.alert(t('extensions.activities.wwff.postSpotAPI.error', 'Error posting WWFF spot'), error.message)
       reportError('Error posting WWFF spot', error)
       return false
     }

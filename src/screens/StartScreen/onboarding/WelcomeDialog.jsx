@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Text } from 'react-native-paper'
+import { useTranslation } from 'react-i18next'
 
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 import { findHooks } from '../../../extensions/registry'
@@ -15,6 +16,8 @@ import { setSettings } from '../../../store/settings'
 import { resetDatabase } from '../../../store/db/db'
 
 export function WelcomeDialog ({ settings, styles, onDialogNext, onDialogPrevious, onAccountConnect, nextLabel, previousLabel }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
   const [existingAccount, setExistingAccount] = useState()
   const [accountData, setAccountData] = useState()
@@ -77,22 +80,22 @@ export function WelcomeDialog ({ settings, styles, onDialogNext, onDialogPreviou
   if (settings.devMode && existingAccount) {
     return (
       <H2kDialog visible={true} dismissable={false}>
-        <H2kDialogTitle style={{ textAlign: 'center' }}>Welcome to PoLo!</H2kDialogTitle>
+        <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.startScreen.onboarding.welcomeToPoLo', 'Welcome to PoLo!')}</H2kDialogTitle>
         <H2kDialogContent>
           <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
-            This device is linked to an existing Ham2K Log Filer account:
+            {t('screens.startScreen.onboarding.welcomeDialog.existingAccountDescription', 'This device is linked to an existing Ham2K Log Filer account:')}
           </Text>
           <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
             {existingAccount.email ?? `#${existingAccount.uuid.slice(0, 8).toUpperCase()}`}
           </Text>
           <H2kButton onPress={handleConnect}>
-            Connect with Account
+            {t('screens.startScreen.onboarding.connectButton', 'Connect with Account')}
           </H2kButton>
           <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center', paddingTop: styles.oneSpace * 2 }}>
-            Or if you prefer, you can…
+            {t('screens.startScreen.onboarding.orIfYouPrefer', 'Or if you prefer, you can…')}
           </Text>
           <H2kButton onPress={handleReset}>
-            Reset and Setup from Scratch
+            {t('screens.startScreen.onboarding.resetButton', 'Reset and Setup from Scratch')}
           </H2kButton>
         </H2kDialogContent>
       </H2kDialog>
@@ -100,15 +103,15 @@ export function WelcomeDialog ({ settings, styles, onDialogNext, onDialogPreviou
   } else {
     return (
       <H2kDialog visible={true} dismissable={false}>
-        <H2kDialogTitle style={{ textAlign: 'center' }}>Welcome to PoLo!</H2kDialogTitle>
+        <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.startScreen.onboarding.welcomeToPoLo', 'Welcome to PoLo!')}</H2kDialogTitle>
         <H2kDialogContent>
           <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
-            We have a few questions to help us better suit your needs.
+            {t('screens.startScreen.onboarding.weHaveAFewQuestions', 'We have a few questions to help us better suit your needs.')}
           </Text>
         </H2kDialogContent>
         <H2kDialogActions style={{ justifyContent: 'space-between' }}>
-          <H2kButton onPress={handlePrevious}>{previousLabel ?? 'Skip'}</H2kButton>
-          <H2kButton onPress={handleNext}>{nextLabel ?? 'Continue'}</H2kButton>
+          <H2kButton onPress={handlePrevious}>{previousLabel ?? t('general.buttons.skip', 'Skip')}</H2kButton>
+          <H2kButton onPress={handleNext}>{nextLabel ?? t('general.buttons.continue', 'Continue')}</H2kButton>
         </H2kDialogActions>
       </H2kDialog>
     )

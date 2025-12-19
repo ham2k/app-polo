@@ -54,7 +54,8 @@
       "QSO": "QSO",
       "QSO-a11y": "Q so",
       "QSOs-a11y": "Q sos",
-      "Operation": "Operation"
+      "Operation": "Operation",
+      "generalOperation": "General Operation"
     },
     "formatting": {
       "thousandsDelimiter": ",",

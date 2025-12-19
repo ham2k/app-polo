@@ -8,6 +8,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
@@ -16,6 +17,8 @@ import { Alert, View } from 'react-native'
 import { getSyncCounts } from '../../../store/operations'
 
 export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const callRef = useRef()
@@ -58,16 +61,17 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
       if (counts?.qsos?.pending > 0 || counts?.operations?.pending > 0) {
         const alertResponse = await new Promise((resolve) => {
           Alert.alert(
-            'Potential for data loss!!!',
-            'You have not synced all the data in this device.\n\n' +
+            t('screens.syncSettings.syncAccountDialog.potentialForDataLoss', 'Potential for data loss!!!'),
+            t('screens.syncSettings.syncAccountDialog.potentialForDataLossDescription',
+              'You have not synced all the data in this device.\n\n' +
               'If you link this device to a new account, ' +
               'you will be asked if you want to replace its data with that from the new account.\n\n' +
               'If this is the case, you might not be able to recover any existing activity ' +
               'that has not been synced yet.\n\n' +
-              'We suggest you complete syncing this device first!',
+              'We suggest you complete syncing this device first!'),
             [
-              { text: 'Go back and complete syncing first', style: 'cancel', onPress: () => resolve('cancel') },
-              { text: 'I know what I\'m doing! Continue Anyway', style: 'destructive', onPress: () => resolve('replace') }
+              { text: t('screens.syncSettings.syncAccountDialog.syncFirstButton', 'Go back and complete syncing first'), style: 'cancel', onPress: () => resolve('cancel') },
+              { text: t('screens.syncSettings.syncAccountDialog.continueAnywayButton', 'I know what I\'m doing! Continue Anyway'), style: 'destructive', onPress: () => resolve('replace') }
             ]
           )
         })
@@ -100,7 +104,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
 
       setErrors(newErrors)
     }
-  }, [email, dispatch, onDialogDone, syncHook])
+  }, [email, dispatch, onDialogDone, syncHook, t])
 
   const handleCancel = useCallback(() => {
     setEmail(lofiData.pending_link_email || lofiData.account.email)
@@ -171,7 +175,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>Ham2K LoFi Account</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.syncSettings.syncAccountDialog.title', 'Ham2K LoFi Account')}</H2kDialogTitle>
       <H2kDialogContent>
         {errors?.default?.length > 0 && (
           <Text style={{ color: 'red', textAlign: 'center', marginTop: styles.oneSpace }}>
@@ -182,7 +186,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
           innerRef={emailRef}
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={email ?? ''}
-          label="Email Address"
+          label={t('screens.syncSettings.syncAccountDialog.emailAddressLabel', 'Email Address')}
           placeholder="you@example.com"
           onChangeText={onChangeEmail}
         />
@@ -195,8 +199,8 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
       <H2kDialogActions>
         {showResend ? (
           <>
-            <H2kButton onPress={handleResend} style={{ alignSelf: 'flex-start' }}>Resend</H2kButton>
-            <H2kButton onPress={handleRevert} style={{ alignSelf: 'flex-start' }}>Revert</H2kButton>
+            <H2kButton onPress={handleResend} style={{ alignSelf: 'flex-start' }}>{t('screens.syncSettings.syncAccountDialog.resendButton', 'Resend')}</H2kButton>
+            <H2kButton onPress={handleRevert} style={{ alignSelf: 'flex-start' }}>{t('screens.syncSettings.syncAccountDialog.revertButton', 'Revert')}</H2kButton>
           </>
         ) : (
           // Otherwise the "Ok" button jumps around!
@@ -204,8 +208,8 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
         )}
         <View style={{ flex: 1 }} />
 
-        <H2kButton style={{ flex: 0 }} onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton style={{ flex: 0 }} onPress={handleAccept}>Ok</H2kButton>
+        <H2kButton style={{ flex: 0 }} onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton style={{ flex: 0 }} onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

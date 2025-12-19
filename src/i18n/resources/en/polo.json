@@ -517,6 +517,16 @@
         "text": "An error occurred while linking back to the previous account.\n\n{{error}}\n\nPlease try again later.",
         "buttonCancel": "OK"
       },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi Account",
+        "emailAddressLabel": "Email Address",
+        "resendButton": "Resend",
+        "revertButton": "Revert",
+        "syncFirstButton": "Go back and complete syncing first",
+        "continueAnywayButton": "I know what I'm doing! Continue Anyway",
+        "potentialForDataLoss": "Potential for data loss!!!",
+        "potentialForDataLossDescription": "You have not synced all the data in this device.\n\nIf you link this device to a new account, you will be asked if you want to replace its data with that from the new account.\n\nIf this is the case, you might not be able to recover any existing activity that has not been synced yet.\n\nWe suggest you complete syncing this device first!"
+      },
       "syncServiceDescription-md": "Basic service is free and allows you to sync recent data (up to 7 days) between two devices or apps at limited speed.\n\nFull service requires a paid subscription and includes all your operations synced between any reasonable number of devices or apps at full speed.\n\nWhile the LoFi service is in its TESTING PERIOD for the next couple of months, the service will remain free. After that prices will depend on the country and currency but should not be more than US$30/year or equivalent, and probably less.",
       "thisDevice": "This Device",
       "notAuthenticated": "Not authenticated",
@@ -929,6 +939,19 @@
       "timeSinceLast": "{{time}} since last QSO",
       "last10QSOs": "{{rate}} Q/h for last 10",
       "last100QSOs": "{{rate}} Q/h for last 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Error importing QSON",
+      "invalidName": "Invalid Name",
+      "invalidNameDescription": "The file name must end with .qson or .json",
+      "unknownError": "Unknown error"
+    },
+    "importADIF": {
+      "error": "Error importing ADIF into Operation",
+      "historicalImportError": "Error importing Historical ADIF",
+      "unknownError": "Unknown error"
     }
   }
 }

@@ -15,7 +15,7 @@ import { filterRefs } from '../../../tools/refTools'
 import { apiZLOTA } from '../../../store/apis/apiZLOTA'
 import { Info } from './ZLOTAInfo'
 
-export const ZLOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
+export const ZLOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (dispatch, getState) => {
   if (GLOBAL?.flags?.services?.zlota === false) return false
 
   const state = getState()
@@ -43,11 +43,11 @@ export const ZLOTAPostSelfSpot = ({ operation, vfo, comments }) => async (dispat
 
       // Ignore timeout as this seems to happen, despite successful spot???
       if (!apiResults?.data?.success && apiResults?.error?.status !== 'TIMEOUT_ERROR') {
-        Alert.alert('Error posting ZLOTA spot', apiResults?.data?.message)
+        Alert.alert(t('extensions.activities.zlota.postSpotAPI.error', 'Error posting ZLOTA spot'), apiResults?.data?.message)
         return false
       }
     } catch (error) {
-      Alert.alert('Error posting ZLOTA spot', error.message)
+      Alert.alert(t('extensions.activities.zlota.postSpotAPI.error', 'Error posting ZLOTA spot'), error.message)
       reportError('Error posting ZLOTA spot', error)
     }
     return true

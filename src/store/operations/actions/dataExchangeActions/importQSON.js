@@ -8,6 +8,8 @@
 import UUID from 'react-native-uuid'
 import RNFetchBlob from 'react-native-blob-util'
 
+import GLOBAL from '../../../../GLOBAL'
+
 import { reportError } from '../../../../distro'
 
 import { actions } from '../../operationsSlice'
@@ -38,11 +40,17 @@ export const importQSON = (path) => async (dispatch, getState) => {
       dispatch(qsosActions.setQSOsStatus({ uuid: data.operation.uuid, status: 'ready' }))
       dispatch(actions.setOperation({ uuid, status: 'ready' }))
     } catch (error) {
-      Alert.alert('Error importing QSON', error.message)
+      Alert.alert(
+        GLOBAL?.t?.('polo.other.importQSON.error', 'Error importing QSON') ?? 'Error importing QSON',
+        error.message ?? (GLOBAL?.t?.('polo.other.importQSON.unknownError', 'Unknown error') ?? 'Unknown error')
+      )
       reportError('Error importing QSON', error)
     }
   } else {
-    Alert.alert('Invalid Name', 'The file name must end with .qson or .json')
+    Alert.alert(
+      GLOBAL?.t?.('polo.other.importQSON.invalidName', 'Invalid Name') ?? 'Invalid Name',
+      GLOBAL?.t?.('polo.other.importQSON.invalidNameDescription', 'The file name must end with .qson or .json') ?? 'The file name must end with .qson or .json'
+    )
     reportError('Invalid Path importing QSON', path)
   }
 }

@@ -160,8 +160,8 @@ export default function OperationBadgeScreen ({ navigation, route }) {
         </View>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'center', position: 'absolute', bottom: Math.max(safeArea.bottom, styles.oneSpace), right: styles.oneSpace * 10, left: styles.oneSpace * 10 }}>
-        <Text style={styles.ham2k}>Ham2K </Text>
-        <Text style={styles.logger}>Portable Logger</Text>
+        <Text style={styles.ham2k}>{'Ham2K' /* Don't translate this */}{' '}</Text>
+        <Text style={styles.logger}>{'Portable Logger' /* Don't translate this */}</Text>
       </View>
       <View style={{ position: 'absolute', bottom: safeArea.bottom + styles.oneSpace, right: safeArea.right + styles.oneSpace }}>
         {projection === 'mercator' ? (

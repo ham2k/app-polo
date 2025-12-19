@@ -8,6 +8,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
 import { selectOperationCallInfo, setOperationData } from '../../../../store/operations'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kPressable, H2kText, H2kTextInput } from '../../../../ui'
@@ -18,6 +19,8 @@ const VALID_WAB_REGEX = /^(W[AV][0-9]{2}|[BCDFGHJLMNOQRSTVWX][0-9]{2}|[HJNOST][A
 const PARTIAL_WAB_REGEX = /^([CDGHJNOSTW]{0,1}|W[AV][0-9]{0,2}|[BCDFGHJLMNOQRSTVWX][0-9]{0,2}|[HJNOST][A-Z][0-9]{0,2})$/
 
 export function WABSquareDialog ({ operation, visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -96,29 +99,29 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>{'Worked All ' + (callInfo?.entityPrefix?.[0] === 'G' ? 'Britain' : 'Ireland') + ' Square'}</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{callInfo?.entityPrefix?.[0] === 'G' ? t('extensions.wab.workedAllBritainSquare', 'Worked All Britain Square') : t('extensions.wab.workedAllIrelandSquare', 'Worked All Ireland Square')}</H2kDialogTitle>
       <H2kDialogContent>
-        <H2kText variant="bodyMedium">Enter Square</H2kText>
+        <H2kText variant="bodyMedium">{t('extensions.wab.enterSquare', 'Enter Square')}</H2kText>
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={square}
           label="Square"
-          placeholder={callInfo?.entityPrefix?.[0] === 'G' ? 'e.g. SU14' : 'e.g. N93'}
+          placeholder={callInfo?.entityPrefix?.[0] === 'G' ? t('extensions.wab.placeholderBritain', 'e.g. SU14') : t('extensions.wab.placeholderIreland', 'e.g. N93')}
           onChangeText={handSquareChange}
           error={!isValid}
         />
         {wabSquare && (
           <H2kPressable onPress={() => setSquareValue(wabSquare)} style={{ marginTop: styles.oneSpace }}>
             <H2kText variant="bodyMedium" style={{ marginTop: styles.oneSpace, marginBottom: styles.oneSpace }}>
-              <H2kText>Current Square: </H2kText>
+              <H2kText>{t('extensions.wab.currentSquare', 'Current Square:')}{' '}</H2kText>
               <H2kText style={{ color: styles.colors.primary, fontWeight: 'bold' }}>{wabSquare}</H2kText>
             </H2kText>
           </H2kPressable>
         )}
       </H2kDialogContent>
       <H2kDialogActions>
-        <H2kButton onPress={handleCancel}>Cancel</H2kButton>
-        <H2kButton onPress={handleAccept} disabled={!isValid}>Ok</H2kButton>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept} disabled={!isValid}>{t('general.buttons.ok', 'Ok')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

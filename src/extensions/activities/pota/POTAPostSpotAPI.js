@@ -6,13 +6,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { reportError } from '../../../distro'
 import { Alert } from 'react-native'
+import { useTranslation } from 'react-i18next'
 
 import packageJson from '../../../../package.json'
 import GLOBAL from '../../../GLOBAL'
+import { reportError } from '../../../distro'
 
-export const POTAPostSpotAPI = async ({ calls, comments, freq, mode, refs, spotterCall }) => {
+export const POTAPostSpotAPI = async ({ t, calls, comments, freq, mode, refs, spotterCall }) => {
   if (GLOBAL?.flags?.services?.pota === false) return false
 
   if (refs.length > 0 && refs[0]?.ref) {
@@ -36,12 +37,13 @@ export const POTAPostSpotAPI = async ({ calls, comments, freq, mode, refs, spott
         })
         if (response.status !== 200) {
           const body = await response.text()
-          Alert.alert('Error posting POTA spot', `Server responded with error ${response.status}: ${body}`)
+          Alert.alert(t('extensions.activities.pota.postSpotAPI.error', 'Error posting POTA spot'),
+            t('extensions.activities.pota.postSpotAPI.serverResponse', 'Server responded with error {{status}}: {{body}}', { status: response.status, body: body }))
           // reportError('POTA Spotter http error', response, body)
           return false
         }
       } catch (error) {
-        Alert.alert('Error posting POTA spot', error.message)
+        Alert.alert(t('extensions.activities.pota.postSpotAPI.error', 'Error posting POTA spot'), error.message)
         if (error.message !== 'Network request failed') {
           reportError('POTA Spotter error', error)
         }

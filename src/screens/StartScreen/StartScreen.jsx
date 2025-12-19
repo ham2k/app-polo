@@ -113,7 +113,7 @@ export default function StartScreen ({ setAppState }) {
             <Image source={HAM2K_LOGO} style={{ height: 60, width: 500, alignSelf: 'center', backgroundColor: 'transparent' }} resizeMode="contain" />
           </Pressable>
           <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }} >
-            <Text style={styles.polo}>Portable Logger</Text>
+            <Text style={styles.polo}>{'Portable Logger' /* dont't translate this */}</Text>
             <Text style={styles.credits}>{t('screens.start.credits', 'by KI2D and friends')}</Text>
             <Text style={styles.version}>{translatedVersionName({ t, version: packageJson.version }).full}</Text>
           </Pressable>

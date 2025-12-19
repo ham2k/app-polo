@@ -448,6 +448,10 @@
       "loggingControl": {
         "theirRefLabel": "Their POTA"
       },
+      "postSpotAPI": {
+        "error": "Error posting POTA spot",
+        "serverResponse": "Server responded with error {{status}}: {{body}}"
+      },
       "exampleRefName": "Example National Park",
       "unknownRefName": "Unknown Park",
       "noRefsNearby": "No parks nearby!"
@@ -484,6 +488,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Their Silo"
+      },
+      "postSpotAPI": {
+        "error": "Error posting SiOTA spot",
+        "serverResponse": "Server responded with error {{status}}: {{body}}"
       }
     },
     "sota": {
@@ -541,6 +549,11 @@
       },
       "loggingControl": {
         "theirRefLabel": "Their SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Error posting SOTA spot",
+        "serverResponse": "Server responded with status {{status}} {{message}}",
+        "sotaAccountLoggedOut": "SOTA account logged out. Please log in again in PoLo settings"
       },
       "exampleRefName": "Example Summit",
       "unknownRefName": "Unknown Summit",
@@ -669,6 +682,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Their Bunker"
+      },
+      "postSpotAPI": {
+        "error": "Error posting WWBOTA spot",
+        "serverResponse": "Server responded with status {{status}} {{message}}"
       }
     },
     "wwff": {
@@ -722,7 +739,11 @@
       },
       "exampleRefName": "Example Park",
       "unknownRefName": "Unknown Park",
-      "noRefsNearby": "No parks nearby!"
+      "noRefsNearby": "No parks nearby!",
+      "postSpotAPI": {
+        "error": "Error posting WWFF spot",
+        "serverResponse": "Server responded with status {{status}} {{message}}"
+      }
     },
     "zlota": {
       "account": {
@@ -753,6 +774,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Their Reference"
+      },
+      "postSpotAPI": {
+        "error": "Error posting ZLOTA spot",
+        "serverResponse": "Server responded with status {{status}} {{message}}"
       }
     },
     "shared": {
