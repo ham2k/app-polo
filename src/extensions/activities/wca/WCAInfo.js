@@ -12,6 +12,7 @@ export const Info = {
   shortName: 'WCA',
   infoURL: 'https://wcagroup.org/',
   activationType: 'wcaActivation',
+  otherActivationTypes: ['ecaActivation', 'bcaActivation'],
   descriptionPlaceholder: 'Enter WCA reference',
   unknownReferenceName: 'Unknown Castle',
   referenceRegex: /^[A-Z0-9]+-[0-9]{5}$/i,

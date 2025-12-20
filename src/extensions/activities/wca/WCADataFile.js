@@ -14,12 +14,14 @@
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
-import { GLOBAL } from '../../../GLOBAL'
+import GLOBAL from '../../../GLOBAL'
 
-import { fmtDateNice } from '../../../tools/timeFormats'
+import { fmtDateTimeNiceZulu } from '../../../tools/timeFormats'
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
+import { Info } from './WCAInfo'
+import { configureReanimatedLogger } from 'react-native-reanimated'
 
 export const WCAData = {}
 
@@ -49,7 +51,6 @@ export function registerWCADataFile() {
         url,
         process: async (body) => {
           const lines = body.split('\n')
-          const versionRow = lines.shift()
           const headers = parseWCACSVRow(lines.shift()).filter(x => x).map(x => x.trim())
 
           let totalRefs = 0
@@ -70,36 +71,39 @@ export function registerWCADataFile() {
                 db.transaction(async transaction => {
                   for (const line of batch) {
                     const row = parseWCACSVRow(line, { headers })
-                    let lon, lat, grid
-                    if (row['COORDINATES'] && row['COORDINATES'].includes(',')) {
-                      const [lonStr, latStr] = row['COORDINATES'].split(',')
-                      lon = Number.parseFloat(lonStr)
-                      lat = Number.parseFloat(latStr)
-                      grid = locationToGrid6(lat, lon)
-                    }
-                    const data = {
-                      ref: row['REF'].toUpperCase(),
-                      prefix: row['PREFIX'],
-                      name: row['CLEAN NAME'],
-                      location: row['CLEAN LOCATION'],
-                      grid,
-                      lat,
-                      lon
-                    }
 
-                    totalRefs++
-                    transaction.executeSql(`
-                      INSERT INTO lookups
-                        (category, subCategory, key, name, data, lat, lon, flags, updated)
-                      VALUES
-                        (?, ?, ?, ?, ?, ?, ?, ?, 1)
-                      ON CONFLICT DO
-                      UPDATE SET
-                        subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                      `, ['wca', data.prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.prefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                    )
+                    if (row['REF'] && Info.referenceRegex.test(row['REF'])) {
+                      let lon, lat, grid
+                      if (row['COORDINATES'] && row['COORDINATES'].includes(',')) {
+                        const [latStr, lonStr] = row['COORDINATES'].split(',')
+                        lon = Number.parseFloat(lonStr)
+                        lat = Number.parseFloat(latStr)
+                        grid = locationToGrid6(lat, lon)
+                      }
+                      const data = {
+                        ref: row['REF'].toUpperCase(),
+                        prefix: row['PREFIX'],
+                        name: row['CLEAN NAME'],
+                        location: row['CLEAN LOCATION'],
+                        grid,
+                        lat,
+                        lon
+                      }
+
+                      totalRefs++
+                      transaction.executeSql(`
+                        INSERT INTO lookups
+                          (category, subCategory, key, name, data, lat, lon, flags, updated)
+                        VALUES
+                          (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                        ON CONFLICT DO
+                        UPDATE SET
+                          subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                        `, ['wca', data.prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.prefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
+                      )
+                    }
+                    processedLines++
                   }
-                  processedLines++
 
                   options.onStatus && await options.onStatus({
                     key,
@@ -113,7 +117,7 @@ export function registerWCADataFile() {
                         percent: fmtPercent(Math.min(processedLines / totalLines, 1), 'integer'),
                         secondsLeft: fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')
                       }
-                    ) || `Loading... ${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}%`
+                    ) || `Loading... ${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}`
                   })
                   resolve()
                 })
@@ -127,7 +131,7 @@ export function registerWCADataFile() {
 
           return {
             totalRefs,
-            version: fmtDateNice(new Date())
+            version: fmtDateTimeNiceZulu(new Date())
           }
         }
       })

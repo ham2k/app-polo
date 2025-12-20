@@ -429,6 +429,11 @@
         "descriptionOn": "Set {{operatorCall}} as operator in operations where station call is different",
         "descriptionOff": "Don't suggest default operator regardless of station call used"
       },
+      "suggestTemplates": {
+        "title": "Use operation templates",
+        "descriptionOn": "Suggest templates for new operations",
+        "descriptionOff": "Don't suggest templates"
+      },
       "bandsModes": {
         "title": "Bands & Modes",
         "description": "{{bands}} • {{modes}}"

@@ -93,7 +93,7 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
       </H2kDialogContent>
       <H2kDialogActions style={{ justifyContent: 'space-between' }}>
         <H2kButton onPress={handleRefresh} disabled={info?.status === 'fetching'}>{t('general.buttons.refresh', 'Refresh')}</H2kButton>
-        <H2kButton onPress={onDialogDone}>{t('general.buttons.done', 'Done')}</H2kButton>
+        <H2kButton onPress={onDialogDone} disabled={info?.status === 'fetching'}>{t('general.buttons.done', 'Done')}</H2kButton>
       </H2kDialogActions>
     </H2kDialog>
   )

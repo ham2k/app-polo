@@ -245,7 +245,7 @@ export function fmtDateTimeNiceZulu(t) {
   return fmtDateTimeNice(t, { utc: true })
 }
 
-export function fmtDateNice(t, { utc = false }) {
+export function fmtDateNice(t, { utc = false } = {}) {
   t = prepareTimeValue(t)
 
   if (t) {

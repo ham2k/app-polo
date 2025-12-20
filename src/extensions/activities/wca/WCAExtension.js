@@ -5,19 +5,23 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+
+import GLOBAL from '../../../GLOBAL'
+
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
+import { LOCATION_ACCURACY } from '../../constants'
+import { distanceOnEarth } from '../../../tools/geoTools'
+
+import { generateActivityOperationAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 import { Info } from './WCAInfo'
 import { wcaFindAllByLocation, wcaFindOneByReference, registerWCADataFile } from './WCADataFile'
 import { WCAActivityOptions } from './WCAActivityOptions'
 import { WCAPostSelfSpot } from './WCAPostSelfSpot'
-import { LOCATION_ACCURACY } from '../../constants'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
-import { GLOBAL } from '../../../GLOBAL'
 
 const Extension = {
   ...Info,
@@ -25,6 +29,9 @@ const Extension = {
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+    for (const type of Info.otherActivationTypes) {
+      registerHook(`ref:${type}`, { hook: ReferenceHandler })
+    }
 
     registerWCADataFile()
     await dispatch(loadDataFile('wca-all-castles', { noticesInsteadOfFetch: true }))
@@ -61,7 +68,7 @@ const ReferenceHandler = {
     ].filter(x => x).join(' • ')
   },
 
-  decorateRefWithDispatch: (t, ref) => async () => {
+  decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {
       const reference = await wcaFindOneByReference(ref.ref)
       if (reference) {

@@ -12,8 +12,9 @@ import { dbExecute, dbSelectAll, dbSelectOne } from './db'
 import { logTimer } from '../../tools/perfTools'
 import { Platform } from 'react-native'
 import { fmtTimestamp } from '../../tools/timeFormats'
+import { queryOperations } from '../operations'
 
-const CURRENT_VERSION = 8
+const CURRENT_VERSION = 9
 
 export async function createTables(dbParams = {}) {
   let version
@@ -284,8 +285,27 @@ export async function createTables(dbParams = {}) {
       await dbExecute('UPDATE version SET version = 8', [], dbParams)
     }
 
+    if (version < 9) {
+      // We're consolidating ECA and BCA into WCA
+      const operations = await queryOperations('WHERE data LIKE "%ecaActivation%" OR data LIKE "%bcaActivation%"', [])
+      for (const operation of operations) {
+        const newRefs = operation.refs.map(ref => {
+          if (ref.type === 'ecaActivation') {
+            return { ...ref, type: 'wcaActivation' }
+          } else if (ref.type === 'bcaActivation') {
+            return { ...ref, type: 'wcaActivation' }
+          } else {
+            return ref
+          }
+        })
+        operation.refs = newRefs
+        await dbExecute('UPDATE operations SET data = ?, synced = false WHERE uuid = ?', [JSON.stringify(operation), operation.uuid])
+      }
+      await dbExecute('UPDATE version SET version = 9', [], dbParams)
+    }
+
     // TODO: Uncomment this block when we're close to releasing the December '24 version
-    // if (version < 8) {
+    // if (version < 9) {
     //   console.log('createTables -- creating version 8')
     //   await dbExecute(`
     //     ALTER TABLE operations RENAME COLUMN startOnMillisMin TO startAtMillisMin

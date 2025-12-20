@@ -115,6 +115,15 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
           />
 
           <H2kListItem
+            title={t('screens.loggingSettings.suggestTemplates.title', 'Suggest operation templates')}
+            description={settings.suggestTemplates !== false ? t('screens.loggingSettings.suggestTemplates.descriptionOn', 'Suggest templates for new operations') : t('screens.loggingSettings.suggestTemplates.descriptionOff', "Don't suggest templates")}
+            leftIcon="progress-question"
+            rightSwitchValue={settings.suggestTemplates !== false}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ suggestTemplates: value }))}
+            onPress={() => dispatch(setSettings({ suggestTemplates: !settings.suggestTemplates }))}
+          />
+
+          <H2kListItem
             title={t('screens.loggingSettings.bandsModes.title', 'Bands & Modes')}
             description={t('screens.loggingSettings.bandsModes.description', '{{bands}} • {{modes}}', { bands: (settings.bands || []).join(', '), modes: (settings.modes || []).join(', ') })}
             leftIcon="radio"

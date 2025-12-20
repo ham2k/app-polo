@@ -66,12 +66,14 @@ export default function OpSettingsTab ({ navigation, route }) {
   const [templates, setTemplates] = useState()
   const [templateLimit, setTemplateLimit] = useState(3)
   useEffect(() => {
-    if (operation._useTemplates) {
+    if (operation._useTemplates && settings.suggestTemplates !== false) {
       dispatch(async (_dispatch, getState) => {
         const operations = selectOperationsList(getState())
         const newTemplates = getAllOperationTemplates({ operations, settings })
         const currentTemplate = getOperationTemplate({ operation, settings })
+
         setTemplates(newTemplates.filter(tmpl => tmpl?.key !== currentTemplate?.key))
+
         dispatch(setOperationData({ uuid: operation.uuid, _useTemplates: undefined }))
       })
     }

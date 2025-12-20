@@ -19,7 +19,7 @@ function prepareStyles (baseTheme, themeColor) {
       ...baseTheme.colors,
       primary: baseTheme.colors[themeColor],
       onPrimary: baseTheme.colors[`on${upcasedThemeColor}`],
-      onSurfaceDisabled: baseTheme.colors[themeColor],
+      onSurfaceDisabled: baseTheme.colors.onSurfaceDisabled,
       outline: baseTheme.colors[themeColor]
     }
   }

@@ -11,10 +11,8 @@ import { activateEnabledExtensions, registerExtension } from './registry'
 import CountryFilesExtension from './core/countryFiles'
 import DevModeExtension from './core/devMode'
 import ADIFExtension from './core/adif'
-import BCAExtension from './activities/bca/BCAExtension'
 import BLHAExtension from './activities/blha/BLHAExtension'
 import CustomExtension from './activities/custom/CustomExtension'
-import ECAExtension from './activities/eca/ECAExtension'
 import ELAExtension from './activities/ela/ELAExtension'
 import FDExtension from './activities/fd/FDExtension'
 import GMAExtension from './activities/gma/GMAExtension'
@@ -70,10 +68,10 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(ADIFExtension)
   registerExtension(CountryFilesExtension)
 
-  registerExtension(BCAExtension)
+  // registerExtension(BCAExtension)
   registerExtension(BLHAExtension)
   registerExtension(CustomExtension)
-  registerExtension(ECAExtension)
+  // registerExtension(ECAExtension)
   registerExtension(ELAExtension)
   registerExtension(FDExtension)
   registerExtension(GMAExtension)
