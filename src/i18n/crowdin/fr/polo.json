@@ -17,7 +17,7 @@
       }
     },
     "home": {
-      "title": "Journal de trafic Portable",
+      "title": "Logger portable",
       "newOperation": "Nouvelle opération",
       "newOperation-a11y": "Nouvelle opération",
       "operationList-a11y": "Liste d'opérations",
@@ -60,9 +60,9 @@
       "identifierForThisStation": "Identifiant de cette station (uniquement des chiffres)"
     },
     "operationLocation": {
-      "title": "Lieu de l'opération",
-      "selectedLocation": "Lieu sélectionné",
-      "maidenheadGridSquareLocator": "Localisateur de carrés Maidenhead",
+      "title": "Emplacement de l'opération",
+      "selectedLocation": "Emplacement sélectionné",
+      "maidenheadGridSquareLocator": "Carré Locator Maidenhead",
       "suggestedLocations": "Emplacements suggérés",
       "deviceGps": "GPS de l'appareil",
       "locating": "Localisation…",
@@ -151,7 +151,7 @@
       "andMoreCount_other": "… et {{count}} de plus",
       "showImage": "Afficher l'image",
       "notes": "Notes",
-      "potentialCall": "Appel potentiel : {{call}}",
+      "potentialCall": "Indicatif potentiel : {{call}}",
       "withCall": "avec {{call}}"
     },
     "spots": {
@@ -212,8 +212,8 @@
         "description": "Mode sombre, rangée de nombres, unités, et plus encore"
       },
       "loggingSettings": {
-        "title": "Paramètres de journalisation",
-        "description": "Personnaliser l'expérience de journalisation"
+        "title": "Paramètres de saisie",
+        "description": "Personnaliser l'expérience de saisie"
       },
       "dataSettings": {
         "title": "Paramètres de données",
@@ -260,7 +260,7 @@
         "description": "Sébastián Delmont KI2D & Équipe PoLo"
       },
       "noticesSettings": {
-        "title": "Avis récents",
+        "title": "Notifications récentes",
         "description": "Messages que vous avez pu manquer ?"
       },
       "readTheFineManual": {
@@ -517,6 +517,16 @@
         "text": "Une erreur s'est produite lors de la liaison avec le compte précédent.\n\n{{error}}\n\nVeuillez réessayer plus tard.",
         "buttonCancel": "OK"
       },
+      "syncAccountDialog": {
+        "title": "Compte Ham2K LoFi",
+        "emailAddressLabel": "Adresse courriel",
+        "resendButton": "Renvoyer",
+        "revertButton": "Rétablir",
+        "syncFirstButton": "Retourner et terminer la synchronisation d’abord",
+        "continueAnywayButton": "Je sais ce que je fais ! Continuer quand même",
+        "potentialForDataLoss": "Risque de perte de données !!!",
+        "potentialForDataLossDescription": "Vous n'avez pas synchronisé toutes les données de cet appareil.\n\nSi vous associez cet appareil à un nouveau compte, vous serez invité à remplacer ses données par celles du nouveau compte.\n\nDans ce cas, vous risquez de ne pas pouvoir récupérer toute activité existante qui n'a pas encore été synchronisée.\n\nNous vous suggérons de terminer d'abord la synchronisation de cet appareil!"
+      },
       "syncServiceDescription-md": "Le service de base est gratuit et vous permet de synchroniser les données récentes (jusqu'à 7 jours) entre deux appareils ou applications à une vitesse limitée.\n\nLe service complet nécessite un abonnement payant et synchronise toutes vos opérations entre un nombre raisonnable d'appareils ou d'applications à pleine vitesse.\n\nPendant la PÉRIODE DE TEST du service LoFi pour les prochains mois, le service restera gratuit. Après cela, les prix dépendront du pays et de la monnaie, mais ne devraient pas dépasser 30 USD/an ou l'équivalent, probablement moins.",
       "thisDevice": "Cet appareil",
       "notAuthenticated": "Non authentifié",
@@ -648,6 +658,7 @@
           "17m-a11y": "17 Mètres",
           "15m-a11y": "15 Mètres",
           "12m-a11y": "12 Mètres",
+          "11m-a11y": "11 mètres",
           "10m-a11y": "10 Mètres",
           "6m-a11y": "6 Mètres",
           "2m-a11y": "2 Mètres",
@@ -895,7 +906,7 @@
       "templatesAvailable_one": "1 modèle disponible",
       "templatesAvailable_other": "{{count}} modèles disponibles",
       "stationAndOperatorTitle": "Station & Opérateur",
-      "locationTitle": "Lieu",
+      "locationTitle": "Emplacement",
       "gridDescription-md": "Grille `{{grid}}`",
       "stateDescription-md": "État: `{{state}}`",
       "countyDescription-md": "Comté: `{{county}}`",
@@ -928,6 +939,19 @@
       "timeSinceLast": "{{time}} depuis le dernier QSO",
       "last10QSOs": "{{rate}} Q/h pour les 10 derniers",
       "last100QSOs": "{{rate}} Q/h pour les 100 derniers"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Erreur lors de l'importation de QSON",
+      "invalidName": "Nom non valide",
+      "invalidNameDescription": "Le nom de fichier doit se terminer par .qson ou .json",
+      "unknownError": "Erreur inconnue"
+    },
+    "importADIF": {
+      "error": "Erreur lors de l'importation de l'ADIF dans l'opération",
+      "historicalImportError": "Erreur d'importation d'ADIF historique",
+      "unknownError": "Erreur inconnue"
     }
   }
 }

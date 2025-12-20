@@ -1,5 +1,14 @@
 {
   "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Aucune bande",
+      "bandsCount_one": "1 Bande",
+      "bandsCount_other": "{{count}} bandes",
+      "modesCount_zero": "Aucun mode",
+      "modesCount_one": "1 mode",
+      "modesCount_other": "{{count}} modes",
+      "total": "Total {{count}}"
+    },
     "bca": {
       "name": "Châteaux et Forteresses de Belgique",
       "shortName": "BCA",
@@ -106,7 +115,12 @@
       "descriptions": {
         "ham2k-hams-of-note": "Un échantillon réel de qui est qui et qui ne l'est pas dans le monde de la radio"
       },
-      "help-md": "Les notes d'indicatif sont stockées dans de simples fichiers texte, une indication par ligne suivie de l'information que vous souhaitez afficher à l'écran de journalisation. Vous pouvez utiliser les fichiers intégrés ou ajouter les vôtres.\n\nFournissez un lien direct vers un fichier texte simple, ou un \"lien de partage\" à partir d'un service tel que :\n* [Google Docs](https://docs.google.com/)\n* [Google Drive](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\nLes lignes de ce fichier doivent ressembler à ceci et peuvent supporter le formatage de base en markdown :\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nSi l'entrée commence par un emoji, il sera utilisé à la place de l'étoile par défaut ⭐.\n\nLes entrées peuvent être utilisées pour \"l'expansion de l'indicatif d'appel\" si vous tapez d'abord `..` ou `//` dans le champ indicatif, comme `//DAN` dans l'exemple ci-dessus."
+      "help-md": "Les notes d'indicatif sont stockées dans de simples fichiers texte, une indication par ligne suivie de l'information que vous souhaitez afficher à l'écran de saisie. Vous pouvez utiliser les fichiers intégrés ou ajouter les vôtres.\n\nFournissez un lien direct vers un fichier texte simple, ou un \"lien de partage\" à partir d'un service tel que :\n* [Google Docs](https://docs.google.com/)\n* [Google Drive](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\nLes lignes de ce fichier doivent ressembler à ceci et peuvent supporter le formatage de base en markdown :\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nSi l'entrée commence par un emoji, il sera utilisé à la place de l'étoile par défaut ⭐.\n\nLes entrées peuvent être utilisées pour \"l'expansion de l'indicatif d'appel\" si vous tapez d'abord `..` ou `//` dans le champ indicatif, comme `//DAN` dans l'exemple ci-dessus."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Aucune province canadienne",
+      "provincesCount_one": "1 province canadienne",
+      "provincesCount_other": "{{count}} provinces canadiennes"
     },
     "colonies": {
       "activityOptions": {
@@ -144,6 +158,14 @@
       "switchLanguage": "Changer la langue en '{{lang}}' {{name}}?",
       "switchLanguagePrompt": "Langue `{{lang}}` {{name}}",
       "switchLanguageConfirm": "Changement au `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Activer le mode développeur ?",
+      "activateConfirm": "Mode développeur activé !",
+      "deactivate": "Désactiver le mode développeur ?",
+      "deactivateConfirm": "Mode développeur désactivé !",
+      "on": "Mode développeur : ACTIVÉ !!!",
+      "off": "Mode développeur : DÉSACTIVÉ"
     },
     "commands-misc": {
       "rtfm": "Lire le manuel détaillé ?",
@@ -229,6 +251,11 @@
         "pota-all-parks": "POTA : Tous les parcs",
         "sota-all-summits": "SOTA : Tous les sommets"
       }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Aucune entité DXCC",
+      "entitiesCount_one": "1 entité DXCC",
+      "entitiesCount_other": "{{count}} entités DXCC"
     },
     "eca": {
       "name": "Diplômes des Châteaux Anglais",
@@ -346,7 +373,7 @@
         "unknownMill": "Moulin inconnu"
       },
       "loggingControl": {
-        "theirRefLabel": "Leur Moulin"
+        "theirRefLabel": "Leur moulin"
       }
     },
     "pga": {
@@ -415,7 +442,11 @@
         "referencesHuntedCount_other": "{{fmtCount}} parcs chassés"
       },
       "loggingControl": {
-        "theirRefLabel": "Leur POTA"
+        "theirRefLabel": "Leur parc"
+      },
+      "postSpotAPI": {
+        "error": "Erreur lors de la publication du spot POTA",
+        "serverResponse": "Le serveur a répondu avec l'erreur {{status}} : {{body}}"
       },
       "exampleRefName": "Exemple de parc national",
       "unknownRefName": "Parc inconnu",
@@ -453,6 +484,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Leur silo"
+      },
+      "postSpotAPI": {
+        "error": "Erreur lors de la la publication du spot de SiOTA",
+        "serverResponse": "Le serveur a répondu avec l'erreur {{status}} : {{body}}"
       }
     },
     "sota": {
@@ -511,9 +546,30 @@
       "loggingControl": {
         "theirRefLabel": "Leur SOTA"
       },
+      "postSpotAPI": {
+        "error": "Erreur lors de la publication du spot de SOTA",
+        "serverResponse": "Le serveur a répondu avec le statut {{status}} {{message}}",
+        "sotaAccountLoggedOut": "Compte SOTA déconnecté. Connectez-vous de nouveau dans les paramètres de PoLo"
+      },
       "exampleRefName": "Exemple de sommet",
       "unknownRefName": "Sommet inconnu",
       "noRefsNearby": "Pas de sommets à proximité !"
+    },
+    "usStates": {
+      "statesCount_zero": "Aucun État américain",
+      "statesCount_one": "1 État américain",
+      "statesCount_other": "{{count}} États américains"
+    },
+    "wab": {
+      "name": "Worked All Britain/Ireland",
+      "description": "Ajouter le carré WAB/WAI à l'opération",
+      "workedAllBritainSquare": "Carré Worked All Britain",
+      "workedAllIrelandSquare": "Carré Worked All Ireland",
+      "enterSquare": "Entrer le carré",
+      "placeholderBritain": "par exemple SU14",
+      "placeholderIreland": "par exemple N93",
+      "currentSquare": "Carré Actuel :",
+      "noSquareSet": "Aucun carré défini"
     },
     "wfd": {
       "name": "Winter Field Day",
@@ -579,6 +635,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Leur bunker"
+      },
+      "postSpotAPI": {
+        "error": "Erreur lors de la publication du spot de WWBOTA",
+        "serverResponse": "Le serveur a répondu avec le statut {{status}} {{message}}"
       }
     },
     "wwff": {
@@ -632,7 +692,11 @@
       },
       "exampleRefName": "Parc exemple",
       "unknownRefName": "Parc inconnu",
-      "noRefsNearby": "Aucun parc à proximité!"
+      "noRefsNearby": "Aucun parc à proximité!",
+      "postSpotAPI": {
+        "error": "Erreur lors de la publication du spot de WWFF",
+        "serverResponse": "Le serveur a répondu avec le statut {{status}} {{message}}"
+      }
     },
     "zlota": {
       "account": {
@@ -663,6 +727,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Leur référence"
+      },
+      "postSpotAPI": {
+        "error": "Erreur lors de la publication du spot de ZLOTA",
+        "serverResponse": "Le serveur a répondu avec le statut {{status}} {{message}}"
       }
     },
     "shared": {

@@ -1,0 +1,957 @@
+{
+  "screens": {
+    "start": {
+      "credits": "by KI2D and friends",
+      "Loading Extensions": "Extensies laden",
+      "Development Build": "Portabel logboekprogramma ontwikkelversie",
+      "messages": {
+        "Reticulating splines": "Splines inschalen",
+        "Tuning the antenna": "De antenne afstemmen",
+        "Checking the tubes": "Buizen controleren",
+        "Warming up the tubes": "Buizen opwarmen",
+        "Unfolding the map": "De kaart uitvouwen",
+        "Charging the flux capacitor": "De flux condensator opladen",
+        "Purging the dilithium chamber": "De dilithium kamer zuiveren",
+        "Activating the turbo encabulator": "De turbo encabulator activeren",
+        "Engaging the warp drive": "De warp aandrijving inschakelen"
+      }
+    },
+    "home": {
+      "title": "Draagbare Logger",
+      "newOperation": "Nieuwe activatie",
+      "newOperation-a11y": "Nieuwe activatie",
+      "operationList-a11y": "Activatielijst",
+      "noOperations": "Geen activaties!",
+      "settings-a11y": "Instellingen",
+      "quickCallLookupPlaceholder": "Snelle roepnaam zoeker…",
+      "spots-a11y": "Spots"
+    },
+    "operation": {
+      "title": "Activatie"
+    },
+    "operationDetails": {
+      "title": "Activatie gegevens",
+      "operationTitle": "Titel",
+      "newOperation": "Nieuwe activatie",
+      "operationNotes": "Notities",
+      "anythingYouWantToWriteAboutThisOperation": "Alles wat u over deze operatie wil schrijven"
+    },
+    "operationStationInfo": {
+      "title": "Station &  activator informatie",
+      "invalidCallsign": "Ongeldige roepnaam: {{callsign}}",
+      "invalidCallsigns": "`{{oldStation}}` tot nu toe gebruikt.\n`{{newStation}}` zal worden gebruikt voor nieuwe QSO's.",
+      "singleStationUsed-md": "`{{oldStation}}` tot nu toe gebruikt.\n`{{newStation}}` zal worden gebruikt voor nieuwe QSO's.",
+      "noStationUsed-md": "Nog geen roepnaam gebruikt.\n{{newStation}} zal worden gebruikt voor nieuwe QSO's.",
+      "updateStation-md_zero": "`{{newStation}}` bijwerken met nul bestaande QSO's",
+      "updateStation-md_one": "`{{newStation}}` bijwerken met één bestaand QSO",
+      "updateStation-md_other": "Werk `{{newStation}}` bij op {{count}} bestaande QSO's",
+      "multipleStationsUsed-md": "Deze activiteit heeft al QSO's met meerdere stations: `{{stations}}`.\n\n`{{newStation}}` zal alleen gebruikt worden voor nieuwe QSO's.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` tot nu toe gebruikt.\n`{{newOperator}}` zal worden gebruikt voor nieuwe QSO's.",
+      "noOperatorUsed-md": "Nog geen roepnaam gebruikt.\n{{newOperator}} zal worden gebruikt voor nieuwe QSO's.",
+      "updateOperator-md": "`{{newOperator}}` bijwerken als operator voor alle QSO's",
+      "multipleOperatorsUsed-md": "Deze activiteit heeft al QSO's met meerdere operator roepnamen: `{{operators}}`.\n\n`{{newOperator}}` zal alleen worden gebruikt voor nieuwe QSO's.",
+      "whatIsTheCallsignUsedOnTheAir": "Welke roepnaam wordt \"on air\" gebruikt?",
+      "stationCallsign": "Station roepnaam",
+      "whoIsOperatingTheStation": "Wie bedient het station? (optioneel)",
+      "operatorCallsign": "Operator roepnaam",
+      "multiStationOperation": "Multi-station activatie?",
+      "multiStationOperationYes": "Ja, wij zijn een van de velen!",
+      "multiStationOperationNo": "Nee, alleen een gewoon station",
+      "identifierForThisStation": "Identificatie voor dit station (alleen nummers)"
+    },
+    "operationLocation": {
+      "title": "Activatie locatie",
+      "selectedLocation": "Geselecteerde Locatie",
+      "maidenheadGridSquareLocator": "Grid square",
+      "suggestedLocations": "Voorgestelde Locaties",
+      "deviceGps": "Gps-apparaat",
+      "locating": "Plaatsen…",
+      "gpsError": "GPS Fout",
+      "noGps": "GEEN GPS",
+      "stateOrProvince": "Staat of Provincie (optioneel)",
+      "county": "County (optioneel)"
+    },
+    "operationAddActivity": {
+      "title": "Activiteit Toevoegen",
+      "cantFindActivity": "Kunt u de activiteit die u zoekt niet vinden?",
+      "thereAreMoreOptions": "Er zijn meer opties in Instellingen > App Functies"
+    },
+    "operationActivityOptions": {
+      "title": "Activiteit Opties",
+      "removeActivity": "Verwijder {{activity}} van deze activiteit"
+    },
+    "operationData": {
+      "title": "Activatie Gegevens",
+      "selectFromTheExportOptionsBelow": "Selecteer uit de onderstaande exportopties",
+      "exportSingeFile": "Exporteer één bestand",
+      "exportSelectedFiles_zero": "Exporteer 0 geselecteerde bestanden",
+      "exportSelectedFiles_one": "Exporteer 1 geselecteerd bestand.",
+      "exportSelectedFiles_other": "Exporteer {{count}} geselecteerde bestanden.",
+      "exportAllFiles": "Exporteer alle bestanden",
+      "exportQSOs": "Exporteer QSO's",
+      "pendingToDoItems_zero": "Geen lopende acties om te doen",
+      "pendingToDoItems_one": "1 lopend to-do item",
+      "pendingToDoItems_other": "{{count}} te behandelen to-do items",
+      "importQSOs": "Importeer QSO's",
+      "addQSOsFromADIFFile": "Voeg QSO's toe vanuit ADIF-bestand",
+      "ham2kLoFiSync": "Ham2K LoFi synchronisatie",
+      "operation": "Activatie",
+      "exportSettings": "Exporteer Instellingen",
+      "useCompactFileNames": "Gebruik compacte bestandsnamen",
+      "wavelogExport": "Wavelog Exporteren",
+      "exportQSOsToWavelogDescription": "Stuur alle QSO's voor deze operatie naar Wavelog",
+      "wavelogDialog": {
+        "title": "Exporteer QSO's naar Wavelog",
+        "status": "Exporteer alle QSO's voor deze operatie naar Wavelog.",
+        "exporting": "Exporteren naar Wavelog…"
+      },
+      "deleteOperationDialog": {
+        "title": "Activatie verwijderen?",
+        "description": "Weet u zeker dat u deze operatie wilt verwijderen?"
+      }
+    },
+    "callInfo": {
+      "title": "Roepnaam Info",
+      "messages": {
+        "duplicate": "Dupliceren",
+        "invalidBand": "Ongeldige Band",
+        "newBand": "Nieuwe Band",
+        "newMode": "Nieuwe Modus",
+        "newRef": "Nieuwe Referentie",
+        "newMult": "Nieuwe Multiplier",
+        "newDay": "Nieuwe Dag",
+        "maybeDupe": "Dupe?",
+        "partialDupe": "Dupe",
+        "potaActivation-newDay": "Nieuwe POTA Dag",
+        "potaActivation-newRef": "Nieuw Park",
+        "sotaActivation-newDay": "Nieuwe SOTA Dag",
+        "sotaActivation-newRef": "Nieuwe Top",
+        "sotaActivation-duplicate": "SOTA Dupe!",
+        "wwffActivation-duplicate": "WWFF Dupe!",
+        "wwbotaActivation-newDay": "Nieuwe WWBOTA Dag",
+        "wwbotaActivation-newRef": "Nieuwe Bunker",
+        "motaActivation-newRef": "Nieuwe Molen"
+      },
+      "history": {
+        "last7days": "{{count}} in de laatste 7 dagen",
+        "today": "{{count}} vandaag",
+        "yesterday": "{{count}} gisteren",
+        "qsos_zero": "0 QSO's",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSO's"
+      },
+      "thisOpCount_zero": "0 QSO's in deze operatie",
+      "thisOpCount_one": "1 QSO in deze operatie",
+      "thisOpCount_other": "{{count}} QSO's in deze operatie",
+      "otherOpsCount_zero": "0 QSO's in andere operaties",
+      "otherOpsCount_one": "1 QSO in andere operaties",
+      "otherOpsCount_other": "{{count}} QSO's in andere operaties",
+      "andMoreCount_zero": "… en {{count}} meer",
+      "andMoreCount_one": "… en {{count}} meer",
+      "andMoreCount_other": "… en {{count}} meer",
+      "showImage": "Afbeelding tonen",
+      "notes": "Notities",
+      "potentialCall": "Potentiële oproep: {{call}}",
+      "withCall": "Met {{call}}"
+    },
+    "spots": {
+      "title": "Spots"
+    },
+    "editQSO": {
+      "title": "QSO bewerken",
+      "sections": {
+        "qso": "QSO Details",
+        "their": "Hun Info",
+        "our": "Onze Info",
+        "more": "Meer"
+      },
+      "fields": {
+        "time": "Tijd",
+        "date": "Datum",
+        "freq": "Frequentie",
+        "mode": "Modus",
+        "band": "Band",
+        "power": "Vermogen",
+        "call": "Station Oproep",
+        "sent": "RST",
+        "exchange": "Uitwisseling",
+        "name": "Naam",
+        "city": "Stad",
+        "state": "Staat/Provincie",
+        "county": "County",
+        "entity": "Entiteit",
+        "cqZone": "CQ Zone",
+        "ituZone": "ITU Zone",
+        "arrlSection": "ARRL Sectie",
+        "grid": "Rooster",
+        "latitude": "Breedtegraad",
+        "longitude": "Lengtegraad",
+        "notes": "Notities"
+      }
+    },
+    "opInfo": {
+      "title": "Activatie Info"
+    },
+    "settings": {
+      "title": "Instellingen",
+      "sections": {
+        "settings": "Instellingen",
+        "accounts": "Accounts",
+        "about": "Over Ham2K",
+        "help": "Hulp nodig?"
+      },
+      "operatorCallsign": {
+        "title": "Operator roepnaam",
+        "noCall": "Geen roepnaam",
+        "dialogTitle": "Operator roepnaam",
+        "pleaseEnterCallsign": "Voer een roepnaam in!",
+        "callsignLabel": "Roepnaam van de operator"
+      },
+      "generalSettings": {
+        "title": "Algemene Instellingen",
+        "description": "Donkere modus, cijferrij, eenheden, en meer"
+      },
+      "loggingSettings": {
+        "title": "Logboek Instellingen",
+        "description": "Pas de logboek configuratie aan"
+      },
+      "dataSettings": {
+        "title": "Gegevens Instellingen",
+        "description": "Gegevensbestanden, roepnaam notities, en meer"
+      },
+      "syncSettings": {
+        "title": "Synchronisatie Instellingen",
+        "description": "Cloud synchronisatie en backup"
+      },
+      "appFeatures": {
+        "title": "App Functies",
+        "description": "Beheer functies zoals POTA, SOTA, enz"
+      },
+      "developerSettings": {
+        "title": "Ontwikkelaar Instellingen",
+        "description": "Kijk hiermee uit"
+      },
+      "accountsQRZ": {
+        "title": "QRZ (voor roepnaam opzoekingen)",
+        "description": "Inloggen: {{login}}",
+        "noAccount": "Geen account",
+        "errorEmail": "Gebruik uw e-mail niet voor inloggen.",
+        "dialogTitle": "QRZ.com Account",
+        "pleaseEnterDetails": "Voer de gegevens voor uw QRZ.com account in:",
+        "loginLabel": "Inloggen (uw roepnaam)",
+        "loginPlaceholder": "Uw login",
+        "passwordLabel": "Wachtwoord",
+        "passwordPlaceholder": "Uw wachtwoord",
+        "checkCredentials": "Bevestig Referenties"
+      },
+      "wavelogSettings": {
+        "title": "Wavelog Instellingen",
+        "description": "Configureer Wavelog API verbinding"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} is een sponsor van Ham2K",
+        "couldBeASupporter": "{{callsign}} zou een sponsor van Ham2K kunnen zijn"
+      },
+      "versionSettings": {
+        "description": "Bekijk recente wijzigingen"
+      },
+      "creditsSettings": {
+        "title": "Credits",
+        "description": "Sebastián Delmont KI2D & Team PoLo"
+      },
+      "noticesSettings": {
+        "title": "Recent nieuws",
+        "description": "Berichten die u mogelijk hebt gemist?"
+      },
+      "readTheFineManual": {
+        "title": "Lees de gedetailleerde handleiding",
+        "description": "Blader door de documentatie van PoLo"
+      },
+      "ham2KForums": {
+        "title": "Ham2K Forums",
+        "description": "Vind hulp, geef feedback, bespreek ideeën…"
+      },
+      "ham2KChat": {
+        "title": "Ham2K Chat",
+        "description": "De discord server voor onze online community"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "Video's en Live Streams"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagram",
+        "description": "Omdat je nooit genoeg foto's kunt hebben…"
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "Volg ons voor nieuws en updates"
+      },
+      "contactUs": {
+        "title": "Contacteer Ons",
+        "description": "help@ham2k.com\n   (maar probeer eerst de Forums of Chat!)"
+      }
+    },
+    "generalSettings": {
+      "title": "Algemene Instellingen",
+      "theme": {
+        "title": "Thema",
+        "descriptionDark": "Altijd in Donkere Modus",
+        "descriptionLight": "Altijd in Lichte Modus",
+        "descriptionDevice": "Zelfde als apparaat thema",
+        "dialogTitle": "Thema"
+      },
+      "fontScale": {
+        "title": "Lettergrootte",
+        "descriptionXS": "Kleinste",
+        "descriptionSM": "Kleiner",
+        "descriptionMD": "Normaal",
+        "descriptionLG": "Groter",
+        "descriptionXL": "Grootste",
+        "dialogTitle": "Lettertype Schaal",
+        "dialogDescription": "Deze maten worden ook beïnvloed door apparaatinstellingen, zoals Weergave en Toegankelijkheid."
+      },
+      "language": {
+        "title": "Taal: {{lang}}",
+        "description": "Wijzig de taal van de app",
+        "dialogTitle": "Taal",
+        "dialogDescription": "Wijzig de taal",
+        "deviceDefault": "Gebruik apparaat instellingen ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (Apparaat Instellingen) wordt momenteel niet ondersteund."
+      },
+      "showNumbersRow": {
+        "title": "Toon cijferrij",
+        "descriptionOn": "Snelle knoppen voor cijfers",
+        "descriptionOff": "Toon geen cijferrij"
+      },
+      "showExtraInNumbersRow": {
+        "title": "Punt in cijferrij",
+        "descriptionOn": "Inclusief punt (en schuine streep)",
+        "descriptionOff": "Toon alleen de cijfers"
+      },
+      "showCommaInNumbersRow": {
+        "title": "Komma in cijferrij",
+        "descriptionOn": "Inclusief een komma toets",
+        "descriptionOff": "Geen komma toets"
+      },
+      "vibrateNumbersRow": {
+        "title": "Gebruik vibratie in cijferrij",
+        "descriptionOn": "Trillen bij drukken op nummers",
+        "descriptionOff": "Trilt niet bij drukken op nummers"
+      },
+      "useMetricUnits": {
+        "title": "Gebruik metrische eenheden",
+        "descriptionOn": "Gebruik mijlen voor afstanden",
+        "descriptionOff": "Gebruik kilometers voor afstanden"
+      },
+      "keepDeviceAwake": {
+        "title": "Houd apparaat wakker",
+        "descriptionOn": "Voorkom dat apparaat het scherm vergrendelt",
+        "descriptionOff": "Sta schermvergrendeling toe"
+      },
+      "useSplitViews": {
+        "title": "Gebruik Gesplitste Weergaven",
+        "descriptionOn": "Gebruik gesplitste weergaven wanneer het scherm groot genoeg is",
+        "descriptionOff": "Gebruik geen gesplitste scherm weergaven"
+      },
+      "useGrid8": {
+        "title": "Hoge precisie locatie",
+        "descriptionOn": "Gebruik 8-cijferige grid",
+        "descriptionOff": "Gebruik 6-cijferige grid"
+      },
+      "smartKeyboard": {
+        "title": "Slimme Keyboard Functies",
+        "descriptionOn": "Slimme keyboardfuncties inschakelen",
+        "descriptionOff": "Gebruik eenvoudigere toetsenborden voor compatibiliteitsredenen met sommige apparaten"
+      },
+      "exportSettings": {
+        "title": "Exporteer Instellingen",
+        "description": "Bestandsnamen en andere instellingen aanpassen"
+      },
+      "privacy": {
+        "title": "Privacy"
+      },
+      "shareAppUsageData": {
+        "title": "Deel app gegevens",
+        "descriptionOn": "Help ons de app te verbeteren door gebruiks-, crash- en prestatiegegevens te delen",
+        "descriptionOff": "Houd gebruiksgegevens van de app privé. Het Ham2K-team kan crashes of andere problemen niet detecteren."
+      },
+      "shareOperationData": {
+        "title": "Deel activatie gegevens",
+        "descriptionOn": "Deel bepaalde activatie gegevens openbaar en met andere gebruikers.",
+        "descriptionOff": "Houd activatie gegevens privé"
+      },
+      "privacyPolicy": {
+        "title": "Privacybeleid",
+        "description": "Lees ons privacybeleid"
+      },
+      "termsOfService": {
+        "title": "Algemene Voorwaarden",
+        "description": "Lees onze Algemene Voorwaarden"
+      }
+    },
+    "loggingSettings": {
+      "title": "Loginstellingen",
+      "leftieMode": {
+        "title": "Linkshandige gebruiker mode",
+        "descriptionOn": "Gebruik lay-out voor linkshandige gebruikers",
+        "descriptionOff": "Gebruik lay-out voor rechtshandige gebruikers"
+      },
+      "countryFlags": {
+        "title": "Vlaggen van landen",
+        "descriptionNone": "Toon geen vlaggen",
+        "descriptionAll": "Toon vlaggen voor alle QSO's",
+        "descriptionDefault": "Toon alleen voor DX-QSO's"
+      },
+      "stateField": {
+        "title": "State veld",
+        "descriptionOn": "Toon state veld in hoofduitwisseling",
+        "descriptionOff": "State veld niet tonen"
+      },
+      "showBearing": {
+        "title": "Toon Azimuth",
+        "descriptionOn": "Toon geschatte Azimuth naar station",
+        "descriptionOff": "Geen Azimuth tonen"
+      },
+      "switchSignalReportOrder": {
+        "title": "Wijzig volgorde signaalrapport",
+        "descriptionOn": "Verzonden, ontvangen",
+        "descriptionOff": "Ontvangen, verzonden"
+      },
+      "jumpAfterRST": {
+        "title": "Ga naar volgende veld bij RST-invoer",
+        "descriptionOn": "Ga verder RST is ingevoerd",
+        "descriptionOff": "Niet automatisch verder gaan"
+      },
+      "suggestDefaultOperator": {
+        "title": "Stel standaard operator voor",
+        "descriptionOn": "Stel {{operatorCall}} in als operator bij operaties waar station roepnaam anders is",
+        "descriptionOff": "Stel geen standaardoperator voor, ongeacht de gebruikte station roepnaam"
+      },
+      "bandsModes": {
+        "title": "Banden & Modes",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "Extensies"
+      }
+    },
+    "featuresSettings": {
+      "title": "App functies",
+      "activatingExtension": "Extensie activeren, dit kan even duren…",
+      "fewerOf": "Minder {{category}}…",
+      "moreOf": "Meer {{category}}…"
+    },
+    "dataSettings": {
+      "title": "Gegevensinstellingen",
+      "offlineDataTitle": "Offline Data",
+      "extensionsTitle": "Extensies",
+      "logDataTitle": "Loggegevens",
+      "importHistoryFromADIF": "Importeer ADIF geschiedenis",
+      "importHistoryFromADIFDescription": "Gebruikt voor offline opzoekingen en QSO-statistieken",
+      "clearADIFHistory": "ADIF geschiedenis wissen",
+      "clearADIFHistoryDescription": "Geïmporteerde ADIF records verwijderen",
+      "updatedRelative": "Bijgewerkt {{date}}",
+      "fetching-md": "### Ophalen **{{title}}**…",
+      "progress-md": "### Ophalen **{{title}}**\n\n{{progress}}",
+      "updated-md": "Bijgewerkt op {{date}}",
+      "version-md": "Versie: {{version}}",
+      "confirmClearHistory": {
+        "title": "Weet je het zeker?",
+        "description": "Hiermee worden alle historische gegevens verwijderd die eerder uit ADIF-bestanden zijn geïmporteerd",
+        "recordsNotDeleted": "Records van operaties worden niet verwijderd"
+      },
+      "importingHistoricalADIF": "ADIF-records importeren… Even geduld!",
+      "errorImportingHistoricalADIF": "Fout bij het importeren van oude ADIF",
+      "errorDeletingHistoricalRecords": "Fout bij het verwijderen van oude records",
+      "recordsCount_zero": "Geen gegevens",
+      "recordsCount_one": "1 record",
+      "recordsCount_other": "{{fmtCount}} records"
+    },
+    "syncSettings": {
+      "title": "Synchronisatie-instellingen",
+      "description": "Ham2K LoFi biedt een betrouwbare synchronisatiedienst tussen al je apparaten en zorgt voor een back-up van je gebruiksgegevens in de cloud.",
+      "syncService": "Synchronisatie Service",
+      "syncService.enabled": "Ingeschakeld",
+      "syncService.disabled": "Uitgeschakeld",
+      "deviceNotLinked": "Apparaat niet gelinked! ({{id}})",
+      "anonymousAccount": "Anoniem account (#{{id}})",
+      "enableSyncToLinkDevice": "Schakel synchronisatie in om dit apparaat te koppelen",
+      "checkEmailInboxForConfirmation": "(controleer je e-mailinbox voor bevestiging)",
+      "accountNumber": "Account #{{id}}",
+      "pendingEmailConfirmation": "(e-mailbevestiging in afwachting)",
+      "tapToConfigure": "Tik om te configureren",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (Ontwikkeling)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (Officieel)",
+        "custom": "Aangepast ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "Dit apparaat was voor het laatst gesynchroniseerd met een ander account (#{{id}}).\n\nOm door te gaan met synchroniseren, moet je kiezen tussen de volgende opties:",
+        "option1withEmail-md": "Optie #1: Vervang gegevens op dit apparaat met die van het **{{email}}** account op de server.",
+        "option1noEmail-md": "Optie #1: Vervang gegevens op dit apparaat door die van het nieuwe account op de server.",
+        "option1button": "Kies #1: vervang door servergegevens",
+        "option2withEmail-md": "Optie #2: Voeg gegevens op dit apparaat samen met die van het **{{email}}** account op de server.",
+        "option2noEmail-md": "Optie #2: Voeg gegevens op dit apparaat samen met die van het nieuwe account op de server.",
+        "option2button": "Kies #2: Voeg gegevens samen",
+        "option3-md": "Optie #3: Herstel verbinding met het vorige account, **{{email}}**.",
+        "option3button": "Kies #3: vorig account",
+        "buttonCancel": "Nee, Annuleer",
+        "buttonProcees": "Ja, ik neem het risico! Vervang alles!"
+      },
+      "combineDataAlert": {
+        "title": "Lokale Data Combineren?",
+        "text": "Weet je zeker dat je deze activaties en QSO's wilt combineren met het nieuwe account?\n\nDit zal QSO's op dit apparaat combineren met wat zich al in de synchronisatie bevindt voor het nieuwe account en kan per ongeluk leiden tot het samenvoegen van niet-gerelateerde logboeken!\n\nDeze operatie kan niet ongedaan worden gemaakt.",
+        "buttonCancel": "Nee, Annuleer",
+        "buttonProcees": "Ja, ik neem het risico! Voeg ze samen!"
+      },
+      "replaceDataAlert": {
+        "title": "Lokale Data Vervangen?",
+        "text": "Weet je zeker dat je alle gegevens op dit apparaat wilt vervangen door de activaties en QSO's voor het nieuwe account van de Synchronisatiedienst?\n\nDe app zal opnieuw starten.\n\nAls je niet-gesynchroniseerde gegevens hebt, GAAT DIT VERLOREN.",
+        "buttonCancel": "Nee, Annuleer",
+        "buttonProcees": "Ja, ik neem het risico! Vervang alles!"
+      },
+      "linkBackErrorAlert": {
+        "title": "Fout bij terugkoppeling naar vorige account",
+        "text": "Er is een fout opgetreden bij het koppelen naar het vorige account.\n\n{{error}}\n\nProbeer het later opnieuw.",
+        "buttonCancel": "OK"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi Account",
+        "emailAddressLabel": "E-mailadres",
+        "resendButton": "Opnieuw verzenden",
+        "revertButton": "Herstellen",
+        "syncFirstButton": "Ga terug en voltooi eerst de synchronisatie",
+        "continueAnywayButton": "Ik weet wat ik doe! Toch doorgaan",
+        "potentialForDataLoss": "Opgepast voor gegevensverlies!!!",
+        "potentialForDataLossDescription": "Je hebt niet alle gegevens op dit apparaat gesynchroniseerd.\n\nAls je dit apparaat aan een nieuw account koppelt, wordt je gevraagd of je de gegevens wilt vervangen met die van het nieuwe account.\n\nIn dat geval kun je mogelijk bestaande activaties die nog niet zijn gesynchroniseerd, niet terughalen.\n\nWe raden aan eerst de synchronisatie van dit apparaat te voltooien!"
+      },
+      "syncServiceDescription-md": "De basisdienst is gratis en stelt je in staat om recente gegevens (tot 7 dagen) tussen twee apparaten of apps te synchroniseren met beperkte snelheid.\n\nVolledige dienst vereist een betaald abonnement en omvat dat al je activaties gesynchroniseerd worden tussen alle apparaten of apps en dat op volle snelheid.\n\nWanneer de LoFi-dienst in zijn TESTPERIODE blijft in de volgende maanden, dan blijft de dienst gratis. Daarna zijn de prijzen afhankelijk van het land en de valuta, maar zouden ze niet meer zijn dan US$30/jaar of equivalent, waarschijnlijk minder.",
+      "thisDevice": "Dit apparaat",
+      "notAuthenticated": "Niet geauthentiseerd",
+      "lofiServer": "LoFi Server",
+      "otherDevices": "Andere apparaten",
+      "devSettings": "Ontwikkelaars instellingen",
+      "resetSyncStatus": "Synchronisatie status resetten",
+      "noDataStored": "Geen gegevens opgeslagen",
+      "syncCountDescription": {
+        "operations": "Activaties: {{synced}} gesynchroniseerd, {{pending}} in afwachting",
+        "qsos": "QSO's: {{synced}} gesynchroniseerd, {{pending}} in afwachting"
+      },
+      "cloudCountDescription": {
+        "operations": "Activaties: {{total}} totaal",
+        "operationsSyncable": "Activaties: {{total}} opgeslagen, {{syncable}} synchroniseerbaar",
+        "qsos": "QSO's: {{total}} opgeslagen",
+        "qsosSyncable": "QSO's: {{total}} opgeslagen, {{syncable}} synchroniseerbaar"
+      }
+    },
+    "versionSettings": {
+      "title": "Versie Informatie",
+      "recentChanges": "Recente Wijzigingen",
+      "coverPhoto": "Omslagfoto: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "Controleren op patches…",
+      "newMajorReleaseAvailable": "Nieuwe belangrijke release beschikbaar.",
+      "patchAvailable": "{{track}} patch beschikbaar",
+      "checkForUpdates": "Controleer {{track}} updates",
+      "checkForUpdatesGeneric": "Controleer op updates",
+      "updateAvailable": "Update beschikbaar",
+      "downloading": "Downloaden…",
+      "downloadingProgress": "Downloaden {{progress}}%",
+      "installing": "Installeren…",
+      "errorDownloadingUpdate": "Fout bij het downloaden van update",
+      "errorCheckingForUpdates": "Fout bij het controleren op updates",
+      "noUpdatesAvailable": "Geen updates beschikbaar",
+      "versionDescription": "{{version}} - Basis Build {{build}}"
+    },
+    "creditsSettings": {
+      "title": "Credits",
+      "createdBy": "Gecreëerd door {{callsign}}",
+      "openSource": "Ham2K PoLo is Open Source",
+      "checkOutCode": "Bekijk de code en draag bij op GitHub!",
+      "teamPoLo": "Team PoLo",
+      "creator": "Maker & Hoofdontwikkelaar",
+      "developer": "Ontwikkelaar",
+      "leadSupport": "Hoofd ondersteuning & Documentatie",
+      "moreCodeAndDocsContributors": "Meer bijdragers…",
+      "contributorCode": "Code Bijdrager: {{contributions}}",
+      "contributorDocumentation": "Documentatie",
+      "translations": "Vertalingen"
+    },
+    "devModeSettings": {
+      "title": "Ontwikkelaarsinstellingen",
+      "wipeDatabase": {
+        "title": "Database Wissen?",
+        "description": "Weet je zeker dat je alle activaties, QSO's en andere gegevens wilt verwijderen?",
+        "noCancel": "Nee, Annuleer",
+        "yesWipeIt": "Ja, verwijder alles!"
+      },
+      "import": {
+        "title": "Importeren",
+        "importQSONFile": "QSON-bestand importeren"
+      },
+      "experiments": {
+        "title": "Experimenten",
+        "enableWavelogExperiments": "Wavelog-experimenten inschakelen"
+      },
+      "manageDatabase": {
+        "title": "Database beheren",
+        "exportDatabase": "Database exporteren",
+        "exportDatabaseDescription": "Exporteer het huidige databasebestand",
+        "replaceDatabase": "Vervang Database",
+        "replaceDatabaseDescription": "Importeer een nieuw database bestand en vervang alle gegevens",
+        "wipeDatabase": "Database Wissen",
+        "wipeDatabaseDescription": "Verwijder alle gegevens uit de database."
+      },
+      "internationalization": {
+        "title": "Internationalisatie",
+        "crowdInPersonalTokenLabel": "CrowdIn Persoonlijke Toegangskey",
+        "crowdInPersonalTokenPlaceholder": "Verkrijg er een van de CrowdIn accountinstellingen pagina",
+        "refreshCrowdInTranslations": {
+          "title": "Vertalingen verversen…",
+          "starting": "Even geduld terwijl we de vertalingen verversen…",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "Verversing voltooid!",
+          "errorTitle": "Fout bij het verversen van vertalingen",
+          "error": "Fout bij het verversen van CrowdIn-vertalingen: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "Geavanceerde instellingen downloaden",
+        "locationLabel": "Locatie",
+        "locationPlaceholder": "https://voorbeeld.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "Systeeminformatie",
+        "shareWithDevelopmentTeam": "Deel met het Ontwikkelteam"
+      },
+      "updatePatches": {
+        "title": "Update Patches",
+        "selectTrackForPatches": "Selecteer track voor patches",
+        "selectTrackForPatchesDescription": "Selecteer de track voor patches",
+        "checkingForUpdates": "Controleren op updates…",
+        "checkForUpdates": "Controleer op {{track}} updates",
+        "updateAvailable": "Update beschikbaar",
+        "updateAvailableForTrack": "{{track}} update beschikbaar",
+        "downloading": "Downloaden…",
+        "downloadingProgress": "Downloaden {{progress}}%",
+        "installing": "Installeren…",
+        "errorDownloadingUpdate": "Fout bij het downloaden van update",
+        "errorCheckingForUpdates": "Fout bij het controleren op updates",
+        "noUpdatesAvailable": "Geen updates beschikbaar"
+      }
+    },
+    "bandModeSettings": {
+      "title": "Banden & Modes",
+      "bands": {
+        "title": "Banden",
+        "showCommonBands": "Toon de gebruikelijke banden",
+        "showAllBands": "Toon alle banden",
+        "names": {
+          "160m-a11y": "160 Meter",
+          "80m-a11y": "80 Meter",
+          "60m-a11y": "60 Meter",
+          "40m-a11y": "40 Meter",
+          "30m-a11y": "30 Meter",
+          "20m-a11y": "20 Meter",
+          "17m-a11y": "17 Meter",
+          "15m-a11y": "15 Meter",
+          "12m-a11y": "12 Meter",
+          "11m-a11y": "11 meter",
+          "10m-a11y": "10 Meter",
+          "6m-a11y": "6 Meter",
+          "2m-a11y": "2 Meter",
+          "70cm-a11y": "70 Centimeter",
+          "23cm-a11y": "23 Centimeter",
+          "13cm-a11y": "13 Centimeter",
+          "9cm-a11y": "9 Centimeter",
+          "6cm-a11y": "6 Centimeter",
+          "3cm-a11y": "3 Centimeter",
+          "1-25cm-a11y": "1,25 Centimeter",
+          "6mm-a11y": "6 Millimeter",
+          "4mm-a11y": "4 Millimeter",
+          "2-5mm-a11y": "2,5 Millimeter",
+          "2mm-a11y": "2 Millimeter",
+          "1mm-a11y": "1 Millimeter",
+          "submm-a11y": "Submillimeter",
+          "other": "Anders",
+          "other-a11y": "Andere Band"
+        }
+      },
+      "modes": {
+        "title": "Modi",
+        "showMoreModes": "Toon meer modi",
+        "showEvenMoreModes": "Toon nog meer modi",
+        "showFewerModes": "Toon minder modi",
+        "names": {
+          "SSB-a11y": "Enkele Zijband",
+          "USB-a11y": "Bovenste Zijband",
+          "LSB-a11y": "Onderste Zijband",
+          "RTTY-a11y": "Rtty",
+          "CW-a11y": "CW",
+          "other": "Anders",
+          "other-a11y": "Andere Modi"
+        }
+      }
+    },
+    "exportSettings": {
+      "title": "Export Instellingen",
+      "exportTypes": "Export Types",
+      "customTemplates": "Aangepaste sjablonen",
+      "defaultTemplates": "Standaard sjablonen",
+      "customTemplatesDescription": "Gebruik aangepaste sjablonen voor de export",
+      "defaultTemplatesDescription": "Gebruik standaard sjablonen voor de export",
+      "includePrivateData": "Privégegevens Inbegrepen",
+      "fileNameTemplate": "Bestandsnaam sjabloon",
+      "titleTemplate": "Titel sjabloon",
+      "adifNotes": "ADIF QSO Notities",
+      "adifComments": "ADIF QSO Opmerkingen",
+      "adifQslMessage": "ADIF QSL Bericht",
+      "templateHelpTitle": "Sjabloon Hulp",
+      "includePrivateDataDescription": "Namen, notities, adressen, etc.",
+      "templateHelp-md": "Enkele voorbeeldsjabloonelementen…\n\n### Log-export\nAttributen voor het logboek dat wordt geëxporteerd\n`{{log.station}}` → `{{call}}` Station voor deze export\n`{{log.ref}}` → `XX-1234` Referentie voor deze export\n`{{log.refName}}` → `Voorbeeld Nationaal Park` Referentienaam voor deze export\n`{{log.refShortName}}` → `Voorbeeld NP` Korte referentienaam voor deze export\n`{{log.handlerType}}` → `pota` Handler type voor deze export\n`{{log.handlerName}}` → `Parks On The Air` Handlernaam voor deze export\n`{{log.handlerShortName}}` → `POTA` Korte handlernaam voor deze export\n\n### Operatieoproepnamen\n`{{op.station}}` → `{{call}}` Eerste station voor de operatie\n`{{op.operator}}` → `{{call}}` Operator voor de operatie\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alle stations voor de operatie\n`{{op.otherStations}}` → `{{otherCalls}}` Andere stations voor de operatie\n\n### Operatiedatum\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Andere operatiedetails\n`{{op.title}}` → `bij XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mijn Speciale Operatie`\n`{{op.userNotes}}` → `Gingen vroeg in de ochtend…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Rooster voor deze operatie\n\n### QSO-informatie\n`{{qso.notes}}` → `Vreselijke audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Het signaalrapport dat ze hebben gestuurd\n`{{qso.our.sent}}` → `55` Het signaalrapport dat ik heb gestuurd\n`{{qso.their.grid}}` → `FF99` Het raster dat zij hebben gerapporteerd\n`{{qso.refs}}` → Een lijst van alle referenties voor de QSO's (inclusief zowel activatie referenties als QSO-only referenties)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "\nStandaarden",
+        "description": "Basisinstellingen voor alle exports",
+        "fileNameNormal": "Bestandsnaam voor referenties (volledig)",
+        "fileNameCompact": "Bestandsnaam voor referentie activaties (compact)",
+        "titleReferenceActivities": "Titel voor referentie activaties",
+        "fileNameOtherActivitiesNormal": "Bestandsnaam voor andere activaties (volledig)",
+        "fileNameOtherActivitiesCompact": "Bestandsnaam voor andere activaties (compact)",
+        "titleOtherActivities": "Titel voor Andere activaties",
+        "adifNotes": "ADIF QSO Notities",
+        "adifComments": "ADIF QSO Opmerkingen",
+        "adifQSLMessage": "ADIF QSL Bericht"
+      }
+    },
+    "noticesSettings": {
+      "title": "Recente Kennisgevingen",
+      "undated": "Geen Datum",
+      "noRecentNotices": "Geen recente kennisgevingen"
+    },
+    "extensionSettings": {
+      "title": "Uitbreiding"
+    },
+    "wavelogSettings": {
+      "title": "Wavelog Instellingen",
+      "noStationsFoundOrInvalidResponse": "Geen stations gevonden of ongeldige reactie",
+      "errorFetchingStations": "Fout bij ophalen van stations: {{message}}",
+      "fetchStations": "Stations Ophalen",
+      "selectStation": "Selecteer Station",
+      "selectedStation": "Geselecteerd station: {{station}}"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Venster afscheiding",
+      "qsosTab": "QSOs",
+      "qsosTab-a11y": "Q sos Tab",
+      "infoTab": "Info",
+      "infoTab-a11y": "Info Tab",
+      "operationInfo-a11y": "Bedrijfsinfo",
+      "spotsTab": "Spots",
+      "spotsTab-a11y": "Spots Tab",
+      "mapTab": "Kaart",
+      "mapTab-a11y": "Kaart Tab",
+      "settingsTab": "Operatie",
+      "settingsCompactTab": "Oper",
+      "settingsTab-a11y": "Operatie Instellingen Tab",
+      "menu": {
+        "loggingSettings": "Loginstellingen",
+        "rstFields": "RST Velden",
+        "stateField": "Staat Veld",
+        "showDeletedQSOs": "Verwijderde QSOs Tonen",
+        "numbersRow": "Cijferlijn",
+        "actions": "Acties",
+        "lookupAllQSOs": "Zoek alle QSOs op",
+        "confirmSpots": "Bevestig Spots"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "Geen QSOs",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSOs",
+      "qsosCompactTabCount_zero": "Geen QSO",
+      "qsosCompactTabCount_one": "1 QSO",
+      "qsosCompactTabCount_other": "{{fmtCount}} QSO",
+      "noQSOsYet": "Nog geen QSO's!",
+      "currentlySetTo": "Momenteel ingesteld op",
+      "missingInfoError": {
+        "message": "FOUT: Voer **{{errors}}** in voor een geldige activatie",
+        "errors": {
+          "band": "band",
+          "callsign": "roepnaam"
+        }
+      },
+      "actions": {
+        "undo-a11y": "Ongedaan maken",
+        "erase-a11y": "Verwijderen",
+        "delete-a11y": "Delete",
+        "addQSO-a11y": "Voeg QSO toe",
+        "saveQSO-a11y": "QSO opslaan"
+      },
+      "deletedQSO": "Verwijderd QSO",
+      "qsoWillBeDeleted": "QSO wordt verwijderd!",
+      "noQSOsBy-md": "Nog geen QSO's door {{callsign}}… Laten we de ether opgaan!",
+      "noQSOsYet-md": "Nog geen QSO's… Laten we de ether opgaan!",
+      "qsoCount_zero": "Geen QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "qsosInTime": "{{countText}} in {{timeText}}",
+      "last10QSOs": "{{rate}} Q/h voor de laatste 10",
+      "last100QSOs": "{{rate}} Q/h voor de laatste 100",
+      "timeSinceLast": "{{time}} sinds de laatste",
+      "moreLabel": "Meer",
+      "theirCallLabel": "Hun roepnaam",
+      "ourSentLabel": "Verzonden",
+      "theirSentLabel": "Ontvangen",
+      "stateLabel": "Staat",
+      "timeLabel": "Tijd",
+      "dateLabel": "Datum",
+      "timeControls-a11y": "Tijdbeheer",
+      "powerLabel": "Vermogen",
+      "powerControls-a11y": "Vermogensbeheer",
+      "modeLabel": "Modus",
+      "bandLabel": "Band",
+      "frequencyLabel": "Frequentie",
+      "bandMissing": "Band???",
+      "radioControls-a11y": "Radio bedieningselementen {{parts}}",
+      "notesLabel": "Notities",
+      "notesLabel-a11y": "Notities",
+      "activeControlsLabel": "Actieve besturingselementen",
+      "activeControlsLabel-a11y": "Actieve besturingselementen",
+      "selectToRemoveActiveControls": "selecteer om ze te verwijderen",
+      "selectToRemoveActiveControls-a11y": "selecteer om ze te verwijderen",
+      "moreControlsLabel": "Meer bedieningselementen",
+      "moreControlsLabel-a11y": "Meer bedieningselementen",
+      "selectToAddMoreControls": "selecteer om toe te voegen",
+      "selectToAddMoreControls-a11y": "selecteer om toe te voegen",
+      "showSecondaryControlSettings-a11y": "Toon secundaire besturingselementen",
+      "hideMostSecondaryControls-a11y": "Verstop de meeste secundaire bedieningselementen",
+      "showAllSecondaryControls-a11y": "Toon alle secundaire bedieningselementen",
+      "spotting": {
+        "selfSpottingAt": "Zelfspotten op {{freq}}",
+        "stopAutoRespotting": "Stop automatisch opnieuw spotten",
+        "setFrequencyFirst": "Stel eerst een frequentie in om te spotten.",
+        "reSpotEvery": "Herhaal elke {{minutes}} min",
+        "reSpotAt": "Herhaal op {{freq}}",
+        "selfSpottedAt": "Zelfgespot om {{time}}",
+        "spotAt": "Spot {{call}} op {{freq}}",
+        "tooLateToSpot": "Te laat om {{call}} te spotten",
+        "nothingToSpot": "Niets te spotten",
+        "selfSpottingLabel": "Zelfspotting",
+        "selfSpottingControls-a11y": "Zelfspotting instellingen",
+        "spottingLabel": "Spotting",
+        "spottingControls-a11y": "Spotting bedieningselementen",
+        "autoRespottingLabel": "Automatisch opnieuw spotten",
+        "autoRespottingControls-a11y": "Automatisch opnieuw spotten bedieningselementen",
+        "commentsLabel": "Opmerkingen"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "Geen lijnen?\nJe moet eerst je locatie instellen.\n\nTik hier om te doen.",
+      "manyNoLocation": "Veel van deze QSOs hebben geen nauwkeurige locatie.\n\nJe hebt een betaald QRZ.com account nodig voor roepnaam opzoekingen."
+    },
+    "opSpotsTab": {
+      "noSpots": "Geen Spots",
+      "spotsCount_zero": "Geen Spots",
+      "spotsCount_one": "1 Spot",
+      "spotsCount_other": "{{fmtCount}} Spots",
+      "showingSpots": "Toont {{count}} van {{total}}",
+      "loadingSpots": "Spots laden…",
+      "sections": {
+        "specialSpots": "Speciale Spots",
+        "newMultipliers": "Nieuwe Multipliers",
+        "callsOfNote": "Opmerkelijke Roepnamen",
+        "mostRecentSpots": "Meest recente spots"
+      },
+      "allBands": "Alle Banden",
+      "auto": "Auto",
+      "allModes": "Alle modes",
+      "filters": "Filters",
+      "filtersBand": "Band",
+      "filtersAllBands": "Alle Banden",
+      "filtersBandAutomatic": "Automatisch (Momenteel {{band}})",
+      "filtersMode": "Mode",
+      "filtersAllModes": "Alle Modes",
+      "filtersModeAutomatic": "Automatisch (Momenteel {{mode}})",
+      "filtersMaximumAge": "Maximale tijd",
+      "filtersAnyAge": "Alle tijden",
+      "filtersAge10Minutes": "10 minuten",
+      "filtersAge20Minutes": "20 minuten",
+      "filtersAge30Minutes": "30 minuten",
+      "filtersAge45Minutes": "45 minuten",
+      "filtersAge60Minutes": "60 minuten",
+      "filtersSorting": "Sortering",
+      "filtersSortByTime": "Op spot tijd",
+      "filtersSortByFrequency": "Op frequentie",
+      "filtersGroupSpecialSpots": "Groep Speciale Spots Eerst",
+      "filtersGroupCallsWithNotes": "Groep Roepnamen met Opmerkingen",
+      "filtersSpotSources": "Spot Bronnen",
+      "filtersFilterByContinent": "Filter op Continent",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "SSB",
+        "DIGITAL": "Digitaal",
+        "DATA": "Digitaal",
+        "phoneOrCW": "SSB of CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "Ongeldige Roepnaam {{callsign}}",
+      "invalidCallsigns": "Ongeldige Roepnamen {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (bediend door {{operator}})",
+      "noStationCallsignDefined": "GEEN STATION ROEPNAAM GEDEFINIEERD",
+      "showMoreTemplates": "Toon Meer Sjablonen",
+      "templatesAvailable_zero": "Geen sjablonen beschikbaar",
+      "templatesAvailable_one": "1 sjabloon beschikbaar",
+      "templatesAvailable_other": "{{count}} sjablonen beschikbaar",
+      "stationAndOperatorTitle": "Station & Operator",
+      "locationTitle": "Locatie",
+      "gridDescription-md": "Grid `{{grid}}`",
+      "stateDescription-md": "Staat: `{{state}}`",
+      "countyDescription-md": "County: `{{county}}`",
+      "locationDescriptionNone-md": "Geen locatie ingesteld",
+      "operationDetailsTitle": "Activatie details",
+      "operationDetailsDescription": "Notities aan deze activatie toevoegen",
+      "addTitleOrNotesForOperation": "Voeg een titel of notities toe voor deze activatie",
+      "activitiesTitle": "Activaties",
+      "addActivityTitle": "Activatie Toevoegen",
+      "addActivityDescription": "POTA, SOTA, Velddag en meer!",
+      "addActivityDescription-noFeatures": "Schakel eerst enkele activatie functies in in de hoofdinstellingen",
+      "operationDataTitle": "Activatie Data",
+      "manageOperationLogsTitle": "Beheer de Logboeken",
+      "manageOperationLogsDescription": "Exporteer, importeer en beheer data",
+      "useAsTemplateTitle": "Gebruik als sjabloon",
+      "useAsTemplateDescription": "Begin een nieuwe bewerking met vergelijkbare instellingen",
+      "dangerZoneTitle": "De Gevarenzone",
+      "undeleteOperationTitle": "Activatie Herstellen",
+      "deleteOperationTitle": "Activatie Verwijderen"
+    },
+    "opInfoPanel": {
+      "statsTitle": "Activatie statistieken",
+      "operationTotalsTitle-md": "Totaal Bewerking:",
+      "qsosInTime_zero": "Geen QSO's",
+      "qsosInTime_one": "1 QSO in {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSO's in {{time}}",
+      "qsoCount_zero": "Geen QSO's",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSO's",
+      "timeSinceLast": "{{time}} sinds laatste QSO",
+      "last10QSOs": "{{rate}} Q/h voor de laatste 10",
+      "last100QSOs": "{{rate}} Q/h voor de laatste 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Fout bij het importeren van QSON",
+      "invalidName": "Ongeldige naam",
+      "invalidNameDescription": "De bestandsnaam moet eindigen op .qson of .json",
+      "unknownError": "Onbekende fout"
+    },
+    "importADIF": {
+      "error": "Fout bij het importeren van ADIF naar Operatie",
+      "historicalImportError": "Fout bij het importeren van historische ADIF",
+      "unknownError": "Onbekende fout"
+    }
+  }
+}

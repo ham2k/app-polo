@@ -17,7 +17,7 @@ import { setGlobalDialog } from '../store/ui'
 
 import packageJson from '../../package.json'
 
-const BUNDLED_LANGUAGES = ['en', 'es', 'fr', 'de']
+const BUNDLED_LANGUAGES = ['en', 'es', 'fr', 'de', 'nl', 'sk', 'nb']
 
 function readBundledJSON(language, namespace) {
   // Using `require` allows us to only load one language at a time
@@ -66,6 +66,30 @@ function readBundledJSON(language, namespace) {
         ...require('./crowdin/fr/polo.json'),
         ...require('./crowdin/fr/extensions.json')
       }
+    case 'nl/translation':
+      return {
+        ...require('./crowdin/nl/general.json'),
+        ...require('./crowdin/nl/polo.json'),
+        ...require('./crowdin/nl/extensions.json')
+      }
+    case 'sk/translation':
+      return {
+        ...require('./crowdin/sk/general.json'),
+        ...require('./crowdin/sk/polo.json'),
+        ...require('./crowdin/sk/extensions.json')
+      }
+    case 'nb/translation':
+      return {
+        ...require('./crowdin/nb/general.json'),
+        ...require('./crowdin/nb/polo.json'),
+        ...require('./crowdin/nb/extensions.json')
+      }
+    case 'no/translation': // Alias for nb
+      return {
+        ...require('./crowdin/nb/general.json'),
+        ...require('./crowdin/nb/polo.json'),
+        ...require('./crowdin/nb/extensions.json')
+      }
   }
 }
 
@@ -88,7 +112,13 @@ export const preferredLanguage = () => {
 }
 
 export const bestLanguageMatch = () => {
+  const languages = [...supportedLanguages(), 'no']
   const bestMatch = findBestLanguageTag(supportedLanguages())
+
+  if (bestMatch?.languageTag === 'no') {
+    return 'nb'
+  }
+
   return bestMatch?.languageTag
 }
 

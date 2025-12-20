@@ -121,13 +121,13 @@
         "newMult": "Nuevo Mult",
         "newDay": "Nuevo Día",
         "maybeDupe": "¿Dup?",
-        "partialDupe": "Dup",
+        "partialDupe": "Duplicado",
         "potaActivation-newDay": "Nuevo Día de POTA",
         "potaActivation-newRef": "Nuevo Parque",
         "sotaActivation-newDay": "Nuevo Día de SOTA",
         "sotaActivation-newRef": "Nueva Cima",
-        "sotaActivation-duplicate": "Dup de SOTA",
-        "wwffActivation-duplicate": "Dup de WWFF",
+        "sotaActivation-duplicate": "SOTA duplicado",
+        "wwffActivation-duplicate": "WWFF duplicado",
         "wwbotaActivation-newDay": "Nuevo Día de WWBOTA",
         "wwbotaActivation-newRef": "Nuevo Bunker",
         "motaActivation-newRef": "Nuevo Granero"
@@ -161,8 +161,8 @@
       "title": "Editar QSO",
       "sections": {
         "qso": "Detalles del QSO",
-        "their": "Información de ellos",
-        "our": "Información de nosotros",
+        "their": "Su Información",
+        "our": "Nuestra Información",
         "more": "Más"
       },
       "fields": {
@@ -204,7 +204,7 @@
         "title": "Indicativo del Operador",
         "noCall": "Sin indicativo",
         "dialogTitle": "Indicativo del Operador",
-        "pleaseEnterCallsign": "¡Por favor, ingresa un indicativo!",
+        "pleaseEnterCallsign": "¡Por favor, introduce un indicativo!",
         "callsignLabel": "Indicativo del Operador"
       },
       "generalSettings": {
@@ -220,8 +220,8 @@
         "description": "Archivos de datos, notas de indicativo, etc"
       },
       "syncSettings": {
-        "title": "Configuración de Sync",
-        "description": "Sync y backup en la nube"
+        "title": "Configuración de sincronización",
+        "description": "Sincronización y backup en la nube"
       },
       "appFeatures": {
         "title": "Extensiones de la Aplicación",
@@ -237,7 +237,7 @@
         "noAccount": "Sin cuenta",
         "errorEmail": "No uses tu email como login.",
         "dialogTitle": "Cuenta QRZ.com",
-        "pleaseEnterDetails": "Por favor, ingresa los detalles de tu cuenta en QRZ.com:",
+        "pleaseEnterDetails": "Por favor, introduce los detalles de tu cuenta en QRZ.com:",
         "loginLabel": "Login (tu indicativo)",
         "loginPlaceholder": "tu login",
         "passwordLabel": "Contraseña",
@@ -288,7 +288,7 @@
         "description": "Síguenos para noticias y actualizaciones"
       },
       "contactUs": {
-        "title": "Contactanos",
+        "title": "Contáctanos",
         "description": "help@ham2k.com\n   (¡pero intenta los Foros o el Chat primero!)"
       }
     },
@@ -357,7 +357,7 @@
       },
       "useGrid8": {
         "title": "Precisión de ubicación",
-        "descriptionOn": "Usar 8 dígitos para la grilla",
+        "descriptionOn": "Usar 8 dígitos para la casilla",
         "descriptionOff": "Usar 6 dígitos para la grilla"
       },
       "smartKeyboard": {
@@ -394,7 +394,7 @@
     "loggingSettings": {
       "title": "Configuración de Logging",
       "leftieMode": {
-        "title": "Modo para Zurdos",
+        "title": "Modo para zurdos",
         "descriptionOn": "Usar diseño para usuarios zurdos",
         "descriptionOff": "Usar diseño para usuarios diestros"
       },
@@ -411,8 +411,8 @@
       },
       "showBearing": {
         "title": "Mostrar Orientación",
-        "descriptionOn": "Mostrar la orientación estimada hacia la estación",
-        "descriptionOff": "No mostrar información de orientación"
+        "descriptionOn": "Mostrar el rumbo estimado hacia la estación",
+        "descriptionOff": "No mostrar información de rumbo"
       },
       "switchSignalReportOrder": {
         "title": "Intercambiar el orden de los reportes de señal",
@@ -447,7 +447,7 @@
       "title": "Configuración de Datos",
       "offlineDataTitle": "Datos Offline",
       "extensionsTitle": "Extensiones",
-      "logDataTitle": "Datos de la Bitácora",
+      "logDataTitle": "Datos del Libro de Guardia",
       "importHistoryFromADIF": "Importar Historial desde ADIF",
       "importHistoryFromADIFDescription": "Usado para búsquedas offline y estadísticas de QSO",
       "clearADIFHistory": "Borrar Historial de ADIF",
@@ -470,7 +470,7 @@
       "recordsCount_other": "{{fmtCount}} registros"
     },
     "syncSettings": {
-      "title": "Configuración de Sync",
+      "title": "Configuración de sincronización",
       "description": "Ham2K Log Filer ofrece un servicio de sincronización confiable entre todos tus dispositivos y proporciona un backup de tus datos de operación en la nube.",
       "syncService": "Sincronización",
       "syncService.enabled": "Habilitada",
@@ -504,7 +504,7 @@
         "title": "¿Combinar Datos Locales?",
         "text": "¿Estás seguro de querer combinar estas operaciones y QSOs con la nueva cuenta?\n\nEsto combinará los QSOs en este dispositivo con los que ya están en el Servicio de Sincronización para la nueva cuenta, y puede resultar en mezclar registros no relacionados!\n\nEsta operación no puede ser revertida.",
         "buttonCancel": "No, Cancelar",
-        "buttonProcees": "Sí, ¡tomo el riesgo! ¡Combinar Todo!"
+        "buttonProcees": "Sí, ¡acepto el riesgo! ¡Combinar Todo!"
       },
       "replaceDataAlert": {
         "title": "¿Reemplazar Datos Locales?",
@@ -516,6 +516,16 @@
         "title": "Error al Vincular de Nuevo a la Cuenta Anterior",
         "text": "Ocurrió un error al vincular de nuevo a la cuenta anterior.\n\n{{error}}\n\nPuedes intentar nuevamente más tarde.",
         "buttonCancel": "OK"
+      },
+      "syncAccountDialog": {
+        "title": "Cuenta LoFi Ham2K",
+        "emailAddressLabel": "Dirección de correo electrónico",
+        "resendButton": "Reenviar",
+        "revertButton": "Deshacer",
+        "syncFirstButton": "Regresar y completar la sincronización primero",
+        "continueAnywayButton": "¡Sé lo que estoy haciendo! Continuar de todos modos",
+        "potentialForDataLoss": "¡Posibilidad de pérdida de datos!!!",
+        "potentialForDataLossDescription": "No has sincronizado todos los datos en este dispositivo.\n\nSi vinculas este dispositivo a una nueva cuenta, se te pedirá si deseas reemplazar sus datos con los de la nueva cuenta.\n\nEn este caso, es posible que no puedas recuperar ninguna actividad existente que aún no se haya sincronizado.\n\n¡Sugerimos que completes la sincronización de este dispositivo primero!"
       },
       "syncServiceDescription-md": "El servicio básico es gratuito y permite sincronizar datos recientes (hasta 7 días) entre dos dispositivos o aplicaciones a una velocidad limitada.\n\nEl servicio completo requiere una suscripción pagada y incluye todas tus operaciones sincronizadas entre cualquier número razonable de dispositivos o aplicaciones a velocidad completa.\n\nMientras el servicio LoFi esté en su PERÍODO DE PRUEBA para los próximos meses, el servicio permanecerá gratuito. Después de eso, los precios dependerán del país y moneda, pero no deberían ser más de US$30/año o equivalente, y probablemente menos.",
       "thisDevice": "Este Dispositivo",
@@ -620,7 +630,7 @@
         "title": "Actualizaciones",
         "selectTrackForPatches": "Seleccionar Track de Actualizaciones",
         "selectTrackForPatchesDescription": "Seleccionar el track para actualizaciones",
-        "checkingForUpdates": "Buscando actualizaciónes",
+        "checkingForUpdates": "Buscando actualizaciones",
         "checkForUpdates": "Buscar actualizaciones {{track}}",
         "updateAvailable": "Actualización disponible",
         "updateAvailableForTrack": "Actualización disponible para {{track}}",
@@ -628,7 +638,7 @@
         "downloadingProgress": "Descargando… {{progress}}%",
         "installing": "Instalando…",
         "errorDownloadingUpdate": "Error al descargar la actualización",
-        "errorCheckingForUpdates": "Error al buscar actualizaciónes",
+        "errorCheckingForUpdates": "Error al buscar actualizaciones",
         "noUpdatesAvailable": "No hay actualizaciones disponibles"
       }
     },
@@ -648,6 +658,7 @@
           "17m-a11y": "17 Metros",
           "15m-a11y": "15 Metros",
           "12m-a11y": "12 Metros",
+          "11m-a11y": "11 Metros",
           "10m-a11y": "10 Metros",
           "6m-a11y": "6 Metros",
           "2m-a11y": "2 Metros",
@@ -663,7 +674,7 @@
           "2-5mm-a11y": "2,5 Milímetros",
           "2mm-a11y": "2 Milímetros",
           "1mm-a11y": "1 Milímetro",
-          "submm-a11y": "Submilímetrica",
+          "submm-a11y": "Sub-milimétrica",
           "other": "Otra",
           "other-a11y": "Otra Banda"
         }
@@ -677,7 +688,7 @@
           "SSB-a11y": "Banda Lateral Única",
           "USB-a11y": "Banda Lateral Superior",
           "LSB-a11y": "Banda Lateral Inferior",
-          "RTTY-a11y": "Ritty",
+          "RTTY-a11y": "R.T.T.I.",
           "CW-a11y": "Telegrafía",
           "other": "Otro",
           "other-a11y": "Otro Modo"
@@ -699,7 +710,7 @@
       "adifQslMessage": "Mensaje de QSL en ADIF",
       "templateHelpTitle": "Ayuda de Plantillas",
       "includePrivateDataDescription": "Nombres, notas, direcciones, etc.",
-      "templateHelp-md": "Algunos elementos de plantilla de ejemplo…\n\n### Exportar Log\nAtributos para el log que se exporta\n`{{log.station}}` → `{{call}}` Estación para este archivo\n`{{log.ref}}` → `XX-1234` Referencia para este archivo\n`{{log.refName}}` → `Example National Park` Nombre de la referencia para este archivo\n`{{log.refShortName}}` → `Example NP` Nombre corto de la referencia para este archivo\n`{{log.handlerType}}` → `pota` Tipo de gestor para este archivo\n`{{log.handlerName}}` → `Parks On The Air` Nombre del gestor para este archivo\n`{{log.handlerShortName}}` → `POTA` Nombre corto del gestor para este archivo\n\n### Indicativos de Operación\n`{{op.station}}` → `{{call}}` Primera estación para la operación\n`{{op.operator}}` → `{{call}}` Operador de la operación\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Todas las estaciones de la operación\n`{{op.otherStations}}` → `{{otherCalls}}` Otras estaciones de la operación\n\n### Fecha de la Operación\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Otros Detalles de la Operación\n`{{op.title}}` → `en XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mi Operación Especial`\n`{{op.userNotes}}` → `Fui temprano en la mañana…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grilla para esta operación\n\n### Información de QSO\n`{{qso.notes}}` → `¡Audio terrible!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` El reporte de señal que recibimos\n`{{qso.our.sent}}` → `55` El reporte de señal que enviamos\n`{{qso.their.grid}}` → `FF99` Grilla que reportaron ellos\n`{{qso.refs}}` → Una lista de todas las referencias para el QSO (incluye referencias de la Operación y del QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "templateHelp-md": "Algunos elementos de plantilla de ejemplo…\n\n### Exportar Log\nAtributos para el log que se exporta\n`{{log.station}}` → `{{call}}` Estación para este archivo\n`{{log.ref}}` → `XX-1234` Referencia para este archivo\n`{{log.refName}}` → `Example National Park` Nombre de la referencia para este archivo\n`{{log.refShortName}}` → `Example NP` Nombre corto de la referencia para este archivo\n`{{log.handlerType}}` → `pota` Tipo de gestor para este archivo\n`{{log.handlerName}}` → `Parks On The Air` Nombre del gestor para este archivo\n`{{log.handlerShortName}}` → `POTA` Nombre corto del gestor para este archivo\n\n### Indicativos de Operación\n`{{op.station}}` → `{{call}}` Primera estación para la operación\n`{{op.operator}}` → `{{call}}` Operador de la operación\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Todas las estaciones de la operación\n`{{op.otherStations}}` → `{{otherCalls}}` Otras estaciones de la operación\n\n### Fecha de la Operación\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Otros Detalles de la Operación\n`{{op.title}}` → `en XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mi Operación Especial`\n`{{op.userNotes}}` → `Fuí temprano en la mañana…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grilla para esta operación\n\n### Información de QSO\n`{{qso.notes}}` → `¡Audio terrible!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` El reporte de señal que recibimos\n`{{qso.our.sent}}` → `55` El reporte de señal que enviamos\n`{{qso.their.grid}}` → `FF99` Casilla que reportaron ellos\n`{{qso.refs}}` → Una lista de todas las referencias para el QSO (incluye referencias de la Operación y del QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Por Defecto",
         "description": "Configuración por defecto para todas las exportaciones",
@@ -724,7 +735,7 @@
     },
     "wavelogSettings": {
       "title": "Configuración de Wavelog",
-      "noStationsFoundOrInvalidResponse": "No se encontraron estaciones o respuesta inválida",
+      "noStationsFoundOrInvalidResponse": "No se encontraron estaciones o respuesta no válida",
       "errorFetchingStations": "Error al obtener estaciones: {{message}}",
       "fetchStations": "Obtener Estaciones",
       "selectStation": "Seleccionar Estación",
@@ -735,7 +746,7 @@
       "qsosTab": "QSOs",
       "qsosTab-a11y": "Tab de Cusos",
       "infoTab": "Info",
-      "infoTab-a11y": "Tab de Información",
+      "infoTab-a11y": "Pestaña de Información",
       "operationInfo-a11y": "Información de la Operación",
       "spotsTab": "Spots",
       "spotsTab-a11y": "Tab de Spots",
@@ -765,7 +776,7 @@
       "noQSOsYet": "¡No hay ningún QSO!",
       "currentlySetTo": "Configurado para",
       "missingInfoError": {
-        "message": "ERROR: Por favor, ingrese **{{errors}}** para una operación válida",
+        "message": "ERROR: Por favor, introduzca **{{errors}}** para una operación válida",
         "errors": {
           "band": "banda",
           "callsign": "indicativo"
@@ -786,8 +797,8 @@
       "qsoCount_one": "1 QSO",
       "qsoCount_other": "{{fmtCount}} QSOs",
       "qsosInTime": "{{countText}} en {{timeText}}",
-      "last10QSOs": "{{rate}} Q/h para los últimos 10",
-      "last100QSOs": "{{rate}} Q/h para los últimos 100",
+      "last10QSOs": "{{rate}} Q/h en los últimos 10",
+      "last100QSOs": "{{rate}} Q/h en los últimos 100",
       "timeSinceLast": "{{time}} desde el último",
       "moreLabel": "Más",
       "theirCallLabel": "Indicativo",
@@ -808,8 +819,8 @@
       "notesLabel-a11y": "Notas",
       "activeControlsLabel": "Controles Activados",
       "activeControlsLabel-a11y": "Controles Activados",
-      "selectToRemoveActiveControls": "seleccionar para removerlos",
-      "selectToRemoveActiveControls-a11y": "seleccionar para removerlos",
+      "selectToRemoveActiveControls": "seleccionar para eliminar",
+      "selectToRemoveActiveControls-a11y": "seleccionar para eliminar",
       "moreControlsLabel": "Más Controles",
       "moreControlsLabel-a11y": "Más Controles",
       "selectToAddMoreControls": "seleccionar para agregarlos",
@@ -927,7 +938,20 @@
       "qsoCount_other": "{{fmtCount}} QSOs",
       "timeSinceLast": "{{time}} desde el último QSO",
       "last10QSOs": "{{rate}} Q/h para los últimos 10",
-      "last100QSOs": "{{rate}} Q/h para los últimos 100"
+      "last100QSOs": "{{rate}} Q/h en los últimos 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Error al importar QSON",
+      "invalidName": "Nombre inválido",
+      "invalidNameDescription": "El nombre del archivo debe terminar con .qson o .json",
+      "unknownError": "Error desconocido"
+    },
+    "importADIF": {
+      "error": "Error al importar ADIF en Operación",
+      "historicalImportError": "Error al importar ADIF histórico",
+      "unknownError": "Error desconocido"
     }
   }
 }

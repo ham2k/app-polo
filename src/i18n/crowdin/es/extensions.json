@@ -1,5 +1,14 @@
 {
   "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "No hay bandas",
+      "bandsCount_one": "1 banda",
+      "bandsCount_other": "{{count}} bandas",
+      "modesCount_zero": "No hay modos",
+      "modesCount_one": "1 modo",
+      "modesCount_other": "{{count}} modos",
+      "total": "Total {{count}}"
+    },
     "bca": {
       "name": "Castillos y Fortalezas de Bélgica",
       "shortName": "BCA",
@@ -84,14 +93,14 @@
       }
     },
     "call-notes": {
-      "name": "Notas de Indicativo",
+      "name": "Notas del operador",
       "description-md_zero": "No se han cargado ningunas notas",
       "description-md_one": "{{fmtCount}} {{type}} cargadas.",
       "description-md_other": "{{fmtCount}} {{type}} cargadas.",
       "builtIn": "Notas incorporadas",
       "userDefined": "Notas definidas por el usuario",
       "failedToLoad": "¡Error al cargar las notas!",
-      "notesFile": "Archivo de Notas de Indicativo",
+      "notesFile": "Archivo de Notas del operador",
       "nameLabel": "Nombre",
       "namePlaceholder": "Nombre para tu Archivo de Notas de Indicativo",
       "locationLabel": "Ubicación",
@@ -106,7 +115,12 @@
       "descriptions": {
         "ham2k-hams-of-note": "Quién es quién y quién no, en el mundo de la radio"
       },
-      "help-md": "Las notas de indicativo se almacenan en archivos de texto, un indicativo por línea, seguido de las notas que deseas mostrar. Puedes usar las notas que vienen con Ham2K PoLo, o agregar las tuyas.\n\nProporciona un enlace directo a un archivo de texto plano, o un \"enlace de compartición\" de un servicio como:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nLas líneas en ese archivo deberían verse así y pueden soportar formato básico de markdown:\n\n```\nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 Rey del POTA\nWD4DAN Dan _Realeza_ POTA\nDAN WD4DAN,WD4JMM\n```\n\nSi la entrada comienza con un emoji, se usará en lugar del default ⭐.\n\nLas entradas pueden ser usadas para \"expansión de indicativo\" si primero escribes `..` o ` //` en el campo de indicativo, como `//DAN` en el ejemplo anterior."
+      "help-md": "Las notas del operador se almacenan en archivos de texto, un indicativo por línea, seguido de las notas que deseas mostrar. Puedes usar las notas que vienen con Ham2K PoLo, o agregar las tuyas.\n\nProporciona un enlace directo a un archivo de texto plano, o un \"enlace de compartición\" de un servicio como:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nLas líneas en ese archivo deberían verse así y pueden soportar formato básico de markdown:\n\n```\nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 Rey del POTA\nWD4DAN Dan _Realeza_ POTA\nDAN WD4DAN,WD4JMM\n```\n\nSi la entrada comienza con un emoji, se usará en lugar del default ⭐.\n\nLas entradas pueden ser usadas para \"expansión de indicativo\" si primero escribes `..` o ` //` en el campo de indicativo, como `//DAN` en el ejemplo anterior."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "No hay provincias canadienses",
+      "provincesCount_one": "1 provincia canadiense",
+      "provincesCount_other": "{{count}} provincias canadienses"
     },
     "colonies": {
       "activityOptions": {
@@ -145,15 +159,23 @@
       "switchLanguagePrompt": "Idioma `{{lang}}` {{name}}",
       "switchLanguageConfirm": "Cambiando a `{{lang}}` {{name}}…"
     },
+    "commands-devmode": {
+      "activate": "¿Activar modo desarrollador?",
+      "activateConfirm": "¡Modo desarrollador activado!",
+      "deactivate": "¿Desactivar modo desarrollador?",
+      "deactivateConfirm": "¡Modo desarrollador desactivado!",
+      "on": "Modo Desarrollador: ACTIVADO",
+      "off": "Modo Desarrollador: DESACTIVADO"
+    },
     "commands-misc": {
       "rtfm": "¿Leer el manual?",
       "rtfmConfirm": "Abriendo el manual…",
       "spot": {
         "cannotSelfSpotWithoutFrequency": "No puede autoavistarse sin frecuencia",
-        "selfSpotWithComments": "¿Autoavistar con ‘{{comments}}’?",
-        "selfSpotPrompt": "¿Autoavistar?",
-        "selfSpottingWithComments": "Autoavistando en {{freq}} con ‘{{comments}}’",
-        "selfSpotting": "Autoavistando en {{freq}}"
+        "selfSpotWithComments": "¿Auto publicación con ‘{{comments}}’?",
+        "selfSpotPrompt": "¿Auto publicación?",
+        "selfSpottingWithComments": "Auto publicación en {{freq}} con ‘{{comments}}’",
+        "selfSpotting": "Auto publicación en {{freq}}"
       }
     },
     "commands-operation": {
@@ -229,6 +251,11 @@
         "pota-all-parks": "POTA: Todos los parques",
         "sota-all-summits": "SOTA: Todos los picos"
       }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "No hay entidades DXCC",
+      "entitiesCount_one": "1 entidad DXCC",
+      "entitiesCount_other": "{{count}} entidades DXCC"
     },
     "eca": {
       "name": "English Castles Awards",
@@ -397,25 +424,29 @@
         "activatorQSOsCount_zero": "No QSOs activadores",
         "activatorQSOsCount_one": "1 QSO como activador",
         "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
-        "ref2refQSOsCount_zero": "No QSOs P2P",
+        "ref2refQSOsCount_zero": "No hay QSOs P2P",
         "ref2refQSOsCount_one": "1 QSO P2P",
         "ref2refQSOsCount_other": "{{fmtCount}} QSOs P2P",
-        "huntedQSOsCount_zero": "No QSOs como cazador",
+        "huntedQSOsCount_zero": "No hay QSOs como cazador",
         "huntedQSOsCount_one": "1 QSO como cazador",
         "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
         "operationTotals": "Totales de la Operación",
-        "referencesActivatedCount_zero": "No parques activados",
+        "referencesActivatedCount_zero": "No hay parques activados",
         "referencesActivatedCount_one": "1 parque activado",
         "referencesActivatedCount_other": "{{fmtCount}} parques activados",
-        "referencesMissedCount_zero": "No parques incompletos",
+        "referencesMissedCount_zero": "No hay parques incompletos",
         "referencesMissedCount_one": "1 parque incompleto",
         "referencesMissedCount_other": "{{fmtCount}} parques incompletos",
-        "referencesHuntedCount_zero": "No parques cazados",
+        "referencesHuntedCount_zero": "No hay parques cazados",
         "referencesHuntedCount_one": "1 parque cazado",
         "referencesHuntedCount_other": "{{fmtCount}} parques cazados"
       },
       "loggingControl": {
         "theirRefLabel": "Su POTA"
+      },
+      "postSpotAPI": {
+        "error": "Error al publicar el spot POTA",
+        "serverResponse": "El servidor respondió con error {{status}}: {{body}}"
       },
       "exampleRefName": "Ejemplo de Parque",
       "unknownRefName": "Parque desconocido",
@@ -453,6 +484,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Información de ellos"
+      },
+      "postSpotAPI": {
+        "error": "Error al publicar el punto SiOTA",
+        "serverResponse": "El servidor respondió con error {{status}}: {{body}}"
       }
     },
     "sota": {
@@ -483,17 +518,17 @@
       },
       "scoring": {
         "ref2refCount_zero": "No P2Ps",
-        "ref2refCount_one": "1 P2P",
-        "ref2refCount_other": "{{fmtCount}} P2Ps",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
         "huntedRefsCount_zero": "No cumbres cazadas",
         "huntedRefsCount_one": "1 cumbre cazada",
         "huntedRefsCount_other": "{{fmtCount}} cumbres cazadas",
         "activatorQSOsCount_zero": "No QSOs activadores",
         "activatorQSOsCount_one": "1 QSO como activador",
         "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
-        "ref2refQSOsCount_zero": "No QSOs P2P",
-        "ref2refQSOsCount_one": "1 QSO P2P",
-        "ref2refQSOsCount_other": "{{fmtCount}} QSOs P2P",
+        "ref2refQSOsCount_zero": "No hay QSOs S2S",
+        "ref2refQSOsCount_one": "1 QSO S2S",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs S2S",
         "huntedQSOsCount_zero": "No QSOs como cazador",
         "huntedQSOsCount_one": "1 QSO como cazador",
         "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
@@ -511,9 +546,30 @@
       "loggingControl": {
         "theirRefLabel": "Su SOTA"
       },
+      "postSpotAPI": {
+        "error": "Error al publicar el spot SOTA",
+        "serverResponse": "El servidor respondió con estado {{status}} {{message}}",
+        "sotaAccountLoggedOut": "Cuenta de SOTA cerrada. Por favor, inicie sesión de nuevo en la configuración de PoLo"
+      },
       "exampleRefName": "Ejemplo de Cima",
       "unknownRefName": "Cima desconocida",
       "noRefsNearby": "¡No hay cumbres cercanas!"
+    },
+    "usStates": {
+      "statesCount_zero": "No hay estados de EE.UU.",
+      "statesCount_one": "1 estado de EE.UU.",
+      "statesCount_other": "{{count}} estados de EE.UU."
+    },
+    "wab": {
+      "name": "Trabajado todo Gran Bretaña/Irlanda",
+      "description": "Agregar cuadrícula WAB/WAI a la operación",
+      "workedAllBritainSquare": "Cuadrícula Trabajado Todo Gran Bretaña",
+      "workedAllIrelandSquare": "Cuadrícula Trabajado Todo Irlanda",
+      "enterSquare": "Ingresar Cuadrícula",
+      "placeholderBritain": "por ej., SU14",
+      "placeholderIreland": "por ej., N93",
+      "currentSquare": "Cuadrícula Actual:",
+      "noSquareSet": "Ninguna cuadrícula establecida"
     },
     "wfd": {
       "name": "Winter Field Day",
@@ -523,11 +579,11 @@
         "exchangeInformation": "Intercambio de Información",
         "classLabel": "Clase",
         "locationLabel": "Ubicación",
-        "objectives_zero": "No has logrado ningún objectivo",
+        "objectives_zero": "No has logrado ningún objetivo ",
         "objectives_one": "1 objetivo logrado, OM ×{{multiplier}}",
         "objectives_other": "{{count}} objetivos logrados, OM ×{{multiplier}}",
         "objectivesTitle": "Objetivos: {{count}} logrados, OM ×{{multiplier}}",
-        "objectivesDescription": "¡No olvides reportar también estos objetivos al enviar tu log!",
+        "objectivesDescription": "¡No olvides reportar también estos objetivos al enviar tu libro de guardia!",
         "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
       },
       "objectiveName": {
@@ -545,7 +601,7 @@
       },
       "objectiveDescription": {
         "altPower": "Opera al 100% con energía alternativa, como baterías, solar, viento, etc.",
-        "awayFromHome": "Instala tu estación al menos a ½ milla de distancia de casa.",
+        "awayFromHome": "Instala tu estación al menos a ~1 km de distancia de casa.",
         "fmSatelliteContact": "Realiza al menos 1 contacto con satélite FM durante el periodo de operación.",
         "ssbSatelliteContact": "Realiza al menos un contacto usando SSB o CW.",
         "winlinkEmails": "Envía y recibe al menos un correo electrónico usando Winlink por radio.",
@@ -579,6 +635,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Su Bunker"
+      },
+      "postSpotAPI": {
+        "error": "Error al publicar el punto WWBOTA",
+        "serverResponse": "El servidor respondió con estado {{status}} {{message}}"
       }
     },
     "wwff": {
@@ -610,20 +670,20 @@
         "activatorQSOsCount_zero": "No QSOs activadores",
         "activatorQSOsCount_one": "1 QSO como activador",
         "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
-        "ref2refQSOsCount_zero": "No QSOs P2P",
+        "ref2refQSOsCount_zero": "No hay QSOs P2P",
         "ref2refQSOsCount_one": "1 QSO P2P",
         "ref2refQSOsCount_other": "{{fmtCount}} QSOs P2P",
-        "huntedQSOsCount_zero": "No QSOs cazados",
+        "huntedQSOsCount_zero": "No hay QSOs cazados",
         "huntedQSOsCount_one": "1 QSO como cazador",
         "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
         "operationTotals": "Totales de la Operación",
         "referencesActivatedCount_zero": "No parques activados",
         "referencesActivatedCount_one": "1 parque activado",
         "referencesActivatedCount_other": "{{fmtCount}} parques activados",
-        "referencesMissedCount_zero": "No parques incompletos",
+        "referencesMissedCount_zero": "No hay parques incompletos",
         "referencesMissedCount_one": "1 parque incompleto",
         "referencesMissedCount_other": "{{fmtCount}} parques incompletos",
-        "referencesHuntedCount_zero": "No parques cazados",
+        "referencesHuntedCount_zero": "No hay parques cazados",
         "referencesHuntedCount_one": "1 parque cazado",
         "referencesHuntedCount_other": "{{fmtCount}} parques cazados"
       },
@@ -632,7 +692,11 @@
       },
       "exampleRefName": "Parque Ejemplo",
       "unknownRefName": "Parque desconocido",
-      "noRefsNearby": "¡No hay parques cercanos!"
+      "noRefsNearby": "¡No hay parques cercanos!",
+      "postSpotAPI": {
+        "error": "Error al publicar el punto WWFF",
+        "serverResponse": "El servidor respondió con estado {{status}} {{message}}"
+      }
     },
     "zlota": {
       "account": {
@@ -640,7 +704,7 @@
         "dialogTitle": "Cuenta ZLOTA",
         "description": "Indicativo: {{callsign}}",
         "noAccount": "Sin cuenta",
-        "pleaseEnterDetails": "Por favor, ingresa los detalles de tu cuenta ZLOTA:",
+        "pleaseEnterDetails": "Por favor, introduce los detalles de tu cuenta ZLOTA:",
         "callsignLabel": "Indicativo",
         "callsignPlaceholder": "tu indicativo de ZLOTA",
         "pinLabel": "PIN (no contraseña)",
@@ -663,6 +727,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Su Ref"
+      },
+      "postSpotAPI": {
+        "error": "Error al publicar el punto ZLOTA",
+        "serverResponse": "El servidor respondió con estado {{status}} {{message}}"
       }
     },
     "shared": {
@@ -673,23 +741,23 @@
         "huntedRefsCount_zero": "No parques cazados",
         "huntedRefsCount_one": "1 parque cazado",
         "huntedRefsCount_other": "{{fmtCount}} parques cazados",
-        "activatorQSOsCount_zero": "No QSOs activadores",
+        "activatorQSOsCount_zero": "No hay QSOs de activadores",
         "activatorQSOsCount_one": "1 QSO como activador",
         "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
         "ref2refQSOsCount_zero": "No QSOs P2P",
         "ref2refQSOsCount_one": "1 QSO Ref2Ref",
         "ref2refQSOsCount_other": "{{fmtCount}} QSOs Ref2Ref",
-        "huntedQSOsCount_zero": "No QSOs cazados",
+        "huntedQSOsCount_zero": "No hay QSOs cazados",
         "huntedQSOsCount_one": "1 QSO como cazador",
         "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
         "operationTotals": "Totales de la Operación",
         "referencesActivatedCount_zero": "No referencias activadas",
         "referencesActivatedCount_one": "1 referencia activada",
         "referencesActivatedCount_other": "{{fmtCount}} referencias activadas",
-        "referencesMissedCount_zero": "No referencias incompletas",
+        "referencesMissedCount_zero": "No hay referencias incompletas",
         "referencesMissedCount_one": "1 referencia incompleta",
         "referencesMissedCount_other": "{{fmtCount}} referencias incompletas",
-        "referencesHuntedCount_zero": "No referencias cazadas",
+        "referencesHuntedCount_zero": "No hay referencias cazadas",
         "referencesHuntedCount_one": "1 referencia cazada",
         "referencesHuntedCount_other": "{{fmtCount}} referencias cazadas"
       }

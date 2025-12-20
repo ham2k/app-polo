@@ -12,7 +12,7 @@
         "da": "Danés - Dansk",
         "de": "Alemán - Deutsch",
         "en-PL": "Pig Latin",
-        "en-PT": "Pirata",
+        "en-PT": "Pirata Inglés",
         "eo": "Esperanto - Esperanto",
         "es": "Español",
         "et": "Estonio - Eesti",
@@ -54,7 +54,8 @@
       "QSO": "QSO",
       "QSO-a11y": "Cuso",
       "QSOs-a11y": "Cusos",
-      "Operation": "Operación"
+      "Operation": "Operación",
+      "generalOperation": "Operación General"
     },
     "formatting": {
       "thousandsDelimiter": ".",
@@ -216,23 +217,23 @@
         "generic": "Buscando actualizaciónes…",
         "stable": "Buscando actualización estable…",
         "unstable": "Buscando actualización inestable…",
-        "bleedingEdge": "Buscando actualización bleeding edge…"
+        "bleedingEdge": "Buscando actualización \"Bleeding Edge\"…"
       },
       "tracksPlural": {
         "stable": "Estables",
         "unstable": "Inestables",
-        "bleedingEdge": "Última versión",
+        "bleedingEdge": "\"Bleeding Edge\"",
         "Production": "Estables",
         "Staging": "Inestables",
-        "Development": "Última versión"
+        "Development": "\"Bleeding Edge\""
       },
       "trackSingular": {
         "stable": "Estable",
         "unstable": "Inestable",
-        "bleedingEdge": "Última versión",
+        "bleedingEdge": "\"Bleeding Edge\"",
         "Production": "Estable",
         "Staging": "Inestable",
-        "Development": "Última versión"
+        "Development": "\"Bleeding Edge\""
       },
       "versionIsAvailable-md": "La versión {{versionName}} está disponible.",
       "updateNow": "Actualizar Ahora",

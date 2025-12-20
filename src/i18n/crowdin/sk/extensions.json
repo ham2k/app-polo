@@ -1,0 +1,766 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Žiadne pásma",
+      "bandsCount_one": "1 pásmo",
+      "bandsCount_other": "{{count}} pásma",
+      "modesCount_zero": "Žiadne módy",
+      "modesCount_one": "1 mód",
+      "modesCount_other": "{{count}} módov",
+      "total": "Celkom {{count}}"
+    },
+    "bca": {
+      "name": "Belgické hrady a pevnosti",
+      "shortName": "BCA",
+      "exportName": "Aktivácia BCA",
+      "activityOptions": {
+        "title_zero": "Žiadne hrady nie sú vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 hradu",
+        "title_other": "Aktivácia {{count}} hradov",
+        "noCastlesFound": "Nenašli sa žiadne hrady",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingCastles_zero": "Žiadne zodpovedajúce hrady",
+        "matchingCastles_one": "1 zodpovedajúci hrad",
+        "matchingCastles_other": "{{count}} zodpovedajúcich hradov",
+        "searchForCastles": "Vyhľadajte nejaké hrady pre aktiváciu!",
+        "noCastlesNearby": "Žiadne hrady v blízkosti",
+        "nearbyCastles": "Hrady v blízkosti",
+        "searchPlaceholder": "Hrady podľa mena alebo referenčného čísla…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Žiadne lovené hrady",
+        "huntedRefsCount_one": "1 lovený hrad",
+        "huntedRefsCount_other": "{{fmtCount}} lovených hradov",
+        "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
+        "activatorQSOsCount_one": "1 aktivátorové QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
+        "huntedQSOsCount_zero": "Žiadne lovené QSOs",
+        "huntedQSOsCount_one": "1 lovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "operationTotals": "Celkové operácie",
+        "referencesActivatedCount_zero": "Žiadne aktivované hrady",
+        "referencesActivatedCount_one": "1 aktivovaný hrad",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných hradov",
+        "referencesMissedCount_zero": "Žiadne neúplné hrady",
+        "referencesMissedCount_one": "1 neúplný hrad",
+        "referencesMissedCount_other": "{{fmtCount}} neúplné hrady",
+        "referencesHuntedCount_zero": "Žiadne lovené hrady",
+        "referencesHuntedCount_one": "1 lovený hrad",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených hradov"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich BCA"
+      }
+    },
+    "blha": {
+      "name": "Belgické majáky a svetelné lode",
+      "shortName": "BLHA",
+      "exportName": "Aktivácia BLHA",
+      "activityOptions": {
+        "title_zero": "Žiadne majáky neboli vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 majáka",
+        "title_other": "Aktivácia {{count}} majákov",
+        "noLighthousesFound": "Nenašli sa žiadne majáky",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingLighthouses_zero": "Žiadne zodpovedajúce majáky",
+        "matchingLighthouses_one": "1 zodpovedajúci maják",
+        "matchingLighthouses_other": "{{count}} zodpovedajúcich majákov",
+        "searchForLighthouses": "Vyhľadajte nejaké majáky pre aktiváciu!",
+        "noLighthousesNearby": "Žiadne majáky v blízkosti",
+        "nearbyLighthouses": "Majáky v blízkosti",
+        "searchPlaceholder": "Majáky podľa mena alebo referenčného čísla…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Žiadne lovené majáky",
+        "huntedRefsCount_one": "1 lovený maják",
+        "huntedRefsCount_other": "{{fmtCount}} lovených majákov",
+        "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
+        "activatorQSOsCount_one": "1 aktivátorové QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
+        "huntedQSOsCount_zero": "Žiadne lovené QSOs",
+        "huntedQSOsCount_one": "1 lovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "operationTotals": "Celkové operácie",
+        "referencesActivatedCount_zero": "Žiadne aktivované majáky",
+        "referencesActivatedCount_one": "1 aktivovaný maják",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných majákov",
+        "referencesMissedCount_zero": "Žiadne neúplné majáky",
+        "referencesMissedCount_one": "1 neúplný maják",
+        "referencesMissedCount_other": "{{fmtCount}} neúplné majáky",
+        "referencesHuntedCount_zero": "Žiadne lovené majáky",
+        "referencesHuntedCount_one": "1 lovený maják",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených majákov"
+      }
+    },
+    "call-notes": {
+      "name": "Poznámky volacích znakov",
+      "description-md_zero": "Žiadne poznámky neboli načítané.",
+      "description-md_one": "{{fmtCount}} {{type}} načítané.",
+      "description-md_other": "{{fmtCount}} {{type}} načítané.",
+      "builtIn": "Vstavané poznámky",
+      "userDefined": "Používateľské poznámky",
+      "failedToLoad": "Načítanie zlyhalo!",
+      "notesFile": "Súbor poznámok volacích znakov",
+      "nameLabel": "Meno",
+      "namePlaceholder": "Meno pre váš súbor poznámok volacích znakov",
+      "locationLabel": "Poloha",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Vstavaný",
+      "customTitle": "Vlastný",
+      "addFile": "Pridať nový súbor",
+      "aboutTitle": "O poznámkach volacích znakov",
+      "names": {
+        "ham2k-hams-of-note": "Ham2K's Hams of Note"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Oznamujúci výber, kto je kto a kto nie je vo svete rádiá"
+      },
+      "help-md": "Poznámky volacích znakov sú uložené v jednoduchých textových súboroch, jeden volací znak na riadok, za ktorým nasledujú informácie, ktoré chcete zobraziť na obrazovke denníka. Môžete použiť vstavané súbory alebo pridať svoje vlastné.\n\nPoskytnite priamy odkaz na obyčajný textový súbor alebo \"zdieľací odkaz\" zo služby ako:\n* [Google Docs](https://docs.google.com/)\n* [Google Drive](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\nRiadky v tomto súbore by mali vyzerať ako tento a môžu podporovať základné formátovanie markdown:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nAk položka začína emoji, bude použitá namiesto predvolenej ⭐.\n\nPoložky je možné použiť na \"rozšírenie volacieho znaku\", ak najskôr napíšete `..` alebo `//` do poľa volacieho znaku, ako napríklad `//DAN` v príklade vyššie."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Žiadne kanadské provincie",
+      "provincesCount_one": "1 kanadská provincia",
+      "provincesCount_other": "{{count}} kanadských provincií"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Nastavenia",
+        "year": "Rok",
+        "testMode-md": "Keďže sa udalosť pre tento rok ešte nezačala, môžete otestovať svoju prevádzku s QSOs z posledných siedmich dní.",
+        "note-md": "POZNÁMKA: PoLo nahlási vaše výsledky pomocou všetkých QSOs v rámci dátumu, vrátane akýchkoľvek ďalších činností na tomto zariadení.",
+        "info-md": "Špeciálna udalosť 13 kolónií prebieha každý rok od 9:00 EST 1. júla do polnoci EST 7. júla."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Načítava sa aktuálne počasie…",
+      "errorFetchingWeather": "Chyba pri načítavaní počasia",
+      "fetchingSolarWeather": "Načítava sa solárne počasie…",
+      "errorFetchingSolarWeather": "Chyba pri načítavaní solárneho počasia",
+      "addNote": "Pridaj poznámku: ‚{{note}}’…",
+      "addNotePrompt": "Pridať poznámku? pokračujte v písaní…",
+      "addNoteConfirm": "Poznámka pridaná!",
+      "addTodo": "Pridaj úlohu: ‚{{note}}’…",
+      "addTodoPrompt": "Pridať úlohu? pokračujte v písaní…",
+      "addTodoConfirm": "Úloha pridaná!",
+      "sendChat": "Odošli správu: ‚{{note}}’…",
+      "sendChatPrompt": "Poslať správu? pokračujte v písaní…",
+      "sendChatConfirm": "Správa odoslaná!"
+    },
+    "commands-debug": {
+      "syncall": "Vymazať všetky operácie a resetovať synchronizovaný stav?",
+      "syncallConfirm": "Mažú sa údaje a resynchronizácia všetkých…",
+      "syncup": "Znova poslať lokálne údaje do synchronizačnej služby?",
+      "syncupConfirm": "Znovu sa posiela…",
+      "wipedb": "Vymazať celú databázu (ale ponechať nastavenia)?",
+      "wipedbConfirm": "Vymazáva sa databáza…",
+      "factory": "Vymazať všetky údaje a nastavenia?",
+      "factoryConfirm": "Prebieha reset zariadenia…",
+      "switchLanguage": "Zmeniť jazyk na `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Jazyk `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Prebieha prechod na `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Aktivovať režim vývojára?",
+      "activateConfirm": "Režim vývojára aktivovaný!",
+      "deactivate": "Deaktivovať režim vývojára?",
+      "deactivateConfirm": "Režim vývojára deaktivovaný!",
+      "on": "Režim vývojára: ZAP!!!",
+      "off": "Režim vývojára: VYP"
+    },
+    "commands-misc": {
+      "rtfm": "Prečítať manuál?",
+      "rtfmConfirm": "Manuál sa otvára",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "Nemožno uskutočniť self-spot bez uvedenia frekvencie",
+        "selfSpotWithComments": "Vlastná aktualizácia s ‚{{comments}}’?",
+        "selfSpotPrompt": "Vlastná aktualizácia?",
+        "selfSpottingWithComments": "Aktualizuje sa na {{freq}} s ‚{{comments}}’",
+        "selfSpotting": "Aktualizuje na {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "Začať operáciu?",
+      "startConfirm": "Operácia začala!",
+      "break": "Pridať si pauzu?",
+      "breakConfirm": "Pauza operácie pridaná!",
+      "stop": "Ukončiť operáciu?",
+      "stopConfirm": "Operácia ukončená!"
+    },
+    "commands-operator": {
+      "change": "Zmeniť operátora na {{operator}}?",
+      "changeConfirm": "Operátor nastavený na {{operator}}"
+    },
+    "commands-radio": {
+      "band": "Zmeniť pásmo na {{band}}?",
+      "bandConfirm": "Pásmo nastavené na {{band}}",
+      "frequency": "Zmeniť frekvenciu na {{freq}} MHz{{mode}}?",
+      "frequencyConfirm": "Frekvencia nastavená na {{freq}} MHz{{mode}}",
+      "frequencyAndMode": "Zmeniť frekvenciu na {{freq}} MHz ({{mode}})?",
+      "frequencyAndModeConfirm": "Frekvencia nastavená na {{freq}} MHz ({{mode}})",
+      "power": "Zmeniť výkon na {{power}}W?",
+      "powerConfirm": "Výkon nastavený na {{power}}W",
+      "mode": "Zmeniť mód na {{mode}}?",
+      "modeConfirm": "Mód nastavený na {{mode}}"
+    },
+    "commands-settings": {
+      "set": "Nastavuje sa {{name}}?",
+      "setChange": "Zmeniť {{label}} na {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} nastavené na {{value}}",
+      "setNotChanged": "Nezmenené"
+    },
+    "commands-time": {
+      "setTime": "Nastaviť čas na {{time}}?",
+      "setDate": "Nastaviť dátum na {{date}}?",
+      "timeSet": "Čas nastavený na {{time}}",
+      "dateSet": "Dátum nastavený na {{date}}",
+      "changeTimeByHours": "Zmeniť čas o {{delta}} hodín?",
+      "changeTimeByMinutes": "Zmeniť čas o {{delta}} minút?",
+      "changeTimeBySeconds": "Zmeniť čas o {{delta}} sekúnd?",
+      "changeTimeByDays": "Zmeniť čas o {{delta}} dní?",
+      "changeTimeByWeeks": "Zmeniť čas o {{delta}} týždňov?",
+      "changeTimeToNow": "Zmeniť čas na teraz?",
+      "changeTimeToToday": "Zmeniť čas na dnes?",
+      "changeTimeToYesterday": "Zmeniť čas na včerajšok?",
+      "timeSetToNow": "Čas nastavený na teraz",
+      "timeSetToToday": "Čas nastavený na dnes",
+      "timeSetToYesterday": "Čas nastavený na včerajšok"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "Žiadne odkazy neboli vybrané na aktiváciu",
+        "title_one": "Aktivácia 1 odkazu",
+        "title_other": "Aktivácia {{count}} odkazov",
+        "addMoreReferences": "Pridať viac odkazov",
+        "addReference": "Pridať odkaz",
+        "activityLabel": "Aktivita - MY_SIG v ADIF (nepovinné)",
+        "activityPlaceholder": "napr. COTA…",
+        "referenceLabel": "Odkaz - MY_SIG_INFO v ADIF",
+        "referencePlaceholder": "napr. XY-1234…",
+        "nameLabel": "Meno (nepovinné)",
+        "namePlaceholder": "napr. XYZ hrad…",
+        "addButton": "Pridať {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich Ref"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Tu prepíšte špecifické názvy súborov dát",
+        "pota-all-parks": "POTA: Všetky parky",
+        "sota-all-summits": "SOTA: Všetky vrcholy"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Žiadne DXCC entity",
+      "entitiesCount_one": "1 DXCC entita",
+      "entitiesCount_other": "{{count}} DXCC entít"
+    },
+    "eca": {
+      "name": "Ocenenia anglických hradov",
+      "shortName": "ECA",
+      "exportName": "Aktivácia ECA",
+      "activityOptions": {
+        "title_zero": "Žiadne hrady nie sú vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 hradu",
+        "title_other": "Aktivácia {{count}} hradov",
+        "noCastlesFound": "Nenašli sa žiadne hrady",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingCastles_zero": "Žiadne zodpovedajúce hrady",
+        "matchingCastles_one": "1 zodpovedajúci hrad",
+        "matchingCastles_other": "{{count}} zodpovedajúcich hradov",
+        "searchForCastles": "Vyhľadajte nejaké hrady pre aktiváciu!",
+        "noCastlesNearby": "Žiadne hrady v blízkosti",
+        "nearbyCastles": "Hrady v blízkosti",
+        "searchPlaceholder": "Hrady podľa mena alebo referenčného čísla…"
+      }
+    },
+    "ela": {
+      "name": "Ocenenia anglických majákov",
+      "shortName": "ELA",
+      "exportName": "Aktivácia ELA",
+      "activityOptions": {
+        "title_zero": "Žiadne majáky neboli vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 majáka",
+        "title_other": "Aktivácia {{count}} majákov",
+        "noLighthousesFound": "Nenašli sa žiadne majáky",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingLighthouses_zero": "Žiadne zodpovedajúce majáky",
+        "matchingLighthouses_one": "1 zodpovedajúci maják",
+        "matchingLighthouses_other": "{{count}} zodpovedajúcich majákov",
+        "searchForLighthouses": "Vyhľadajte nejaké majáky pre aktiváciu!",
+        "noLighthousesNearby": "Žiadne majáky v blízkosti",
+        "nearbyLighthouses": "Majáky v blízkosti",
+        "searchPlaceholder": "Majáky podľa mena alebo referenčného čísla…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Výmena informácií",
+        "classLabel": "Trieda",
+        "locationLabel": "Poloha",
+        "additionalInformation": "Ďalšie informácie",
+        "highestTransmitterPowerLabel": "Najvyšší výkon vysielača",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP: 5W alebo menej",
+        "qroOption": "QRO: 100W alebo menej",
+        "moreThan100WOption": "Viac ako 100W",
+        "powerSourceLabel": "Zdroj napájania",
+        "powerSourcePlaceholder": "Vyberte zdroj napájania",
+        "batteriesOption": "Batérie, solárne, veterné",
+        "commercialPowerOption": "Komerčné napájanie, generátor",
+        "information-md": "Trieda pre ARRL Field Day je napríklad „2A“:\n\n- „1“, „2“, „3“… pre počet vysielačov.\n  - „A“ pre skupinu (3 alebo viac) poratblových staníc\n  - „B“ pre jednu alebo dve osoby portablových stanice\n  - „C“ pre mobilnú stanicu\n  - „D“ pre domáce stanice\n  - „E“ pre domáce stanice s núdzovým napájaním\n  - „F“ pre núdzové operačné stredisko\n\nPoloha je ARRL sekcia, sekcia RAC, „MX“ pre Mexiko alebo „DX“ pre všetky ostatné krajiny.\n\nViac informácií nájdete v **[oficiálnych pravidlách](https://www.arrl.org/field-day-rules)**."
+      }
+    },
+    "gma": {
+      "name": "Globálna horská aktivita",
+      "shortName": "GMA",
+      "exportName": "Aktivácia GMA",
+      "activityOptions": {
+        "title_zero": "Žiadne vrcholy neboli vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 vrcholu",
+        "title_other": "Aktivácia {{count}} vrcholov",
+        "noSummitsFound": "Nenašli sa žiadne vrcholy",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingSummits_zero": "Žiadne zodpovedajúce vrcholy",
+        "matchingSummits_one": "1 zodpovedajúci vrchol",
+        "matchingSummits_other": "{{count}} zodpovedajúcich vrcholov",
+        "searchForSummits": "Vyhľadajte nejaké vrcholy pre aktiváciu!",
+        "noSummitsNearby": "Žiadne vrcholy v blízkosti",
+        "nearbySummits": "Vrcholy v blízkosti",
+        "searchPlaceholder": "Vrcholy podľa mena alebo referenčného čísla…",
+        "unknownSummit": "Neznámy vrchol"
+      }
+    },
+    "hsota": {
+      "name": "Kopce v éteri",
+      "shortName": "HSOTA",
+      "exportName": "Aktivácia HSOTA",
+      "activityOptions": {
+        "title_zero": "Žiadne lokality neboli vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 lokality",
+        "title_other": "Aktivácia {{count}} lokalít",
+        "noSitesFound": "Nenašli sa žiadne lokality",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingSites_zero": "Žiadne zodpovedajúce lokality",
+        "matchingSites_one": "1 zodpovedajúca lokalita",
+        "matchingSites_other": "{{count}} zodpovedajúcich lokalít",
+        "searchForSites": "Vyhľadajte nejaké lokality pre aktiváciu!",
+        "noSitesNearby": "Žiadne lokality v blízkosti",
+        "nearbySites": "Lokality v blízkosti",
+        "searchPlaceholder": "Lokality podľa mena alebo referenčného čísla…",
+        "unknownSite": "Neznáma lokalita"
+      }
+    },
+    "mota": {
+      "name": "Mlyny v éteri",
+      "shortName": "MOTA",
+      "exportName": "Aktivácia MOTA",
+      "activityOptions": {
+        "title_zero": "Žiadne mlyny neboli vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 mlyna",
+        "title_other": "Aktivácia {{count}} mlynov",
+        "noMillsFound": "Nenašli sa žiadne mlyny",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingMills_zero": "Žiadne zodpovedajúce mlyny",
+        "matchingMills_one": "1 zodpovedajúci mlyn",
+        "matchingMills_other": "{{count}} zodpovedajúcich mlynov",
+        "searchForMills": "Vyhľadajte nejaké mlyny pre aktiváciu!",
+        "noMillsNearby": "Žiadne mlyny v blízkosti",
+        "nearbyMills": "Mlyny v blízkosti",
+        "searchPlaceholder": "Mlyny podľa mena alebo referenčného čísla…",
+        "unknownMill": "Neznámy mlyn"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich mlyn"
+      }
+    },
+    "pga": {
+      "name": "Poľské ocenenie Gmina",
+      "shortName": "PGA",
+      "exportName": "Aktivácia PGA",
+      "activityOptions": {
+        "title_zero": "Žiadne gminy neboli vybrané na aktiváciu",
+        "title_one": "Aktivácia 1 gminy",
+        "title_other": "Aktivácia {{count}} gmin",
+        "noGminasFound": "Nenašli sa žiadne gminy",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingGminas_zero": "Žiadne zodpovedajúce gminy",
+        "matchingGminas_one": "1 zodpovedajúca gmina",
+        "matchingGminas_other": "{{count}} zodpovedajúcich gmin",
+        "searchForGminas": "Vyhľadajte nejaké gminy na aktiváciu!",
+        "noGminasNearby": "Žiadne gminy v blízkosti",
+        "nearbyGminas": "Gminy v blízkosti",
+        "searchPlaceholder": "Gminy podľa mena alebo odkazu…",
+        "unknownGmina": "Neznáma gmina"
+      }
+    },
+    "pota": {
+      "name": "POTA: Parks on the Air",
+      "shortName": "POTA",
+      "exportName": "Aktivácia POTA",
+      "activityOptions": {
+        "title_zero": "Žiadne parky neboli vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 parku",
+        "title_other": "Aktivácia {{count}} parkov",
+        "noParksFound": "Nenájdené žiadne parky",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingParks_zero": "Žiadne zodpovedajúce parky",
+        "matchingParks_one": "1 zodpovedajúci park",
+        "matchingParks_other": "{{count}} zodpovedajúcich parkov",
+        "searchForParks": "Vyhľadajte nejaké parky pre aktiváciu!",
+        "noParksNearby": "Žiadne parky v blízkosti",
+        "nearbyParks": "Blízke parky",
+        "searchPlaceholder": "Parky podľa názvu alebo referenčného čísla…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Žiadne P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Žiadne lovené parky",
+        "huntedRefsCount_one": "1 lovený park",
+        "huntedRefsCount_other": "{{fmtCount}} lovených parkov",
+        "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
+        "activatorQSOsCount_one": "1 aktivátorové QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
+        "ref2refQSOsCount_zero": "Žiadne P2P QSOs",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOs",
+        "huntedQSOsCount_zero": "Žiadne lovené QSOs",
+        "huntedQSOsCount_one": "1 lovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "operationTotals": "Celkové operácie",
+        "referencesActivatedCount_zero": "Žiadne aktivované parky",
+        "referencesActivatedCount_one": "1 aktivovaný park",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných parkov",
+        "referencesMissedCount_zero": "Žiadne neúplné parky",
+        "referencesMissedCount_one": "1 neúplný park",
+        "referencesMissedCount_other": "{{fmtCount}} neúplné parky",
+        "referencesHuntedCount_zero": "Žiadne lovené parky",
+        "referencesHuntedCount_one": "1 lovený park",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených parkov"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich POTA"
+      },
+      "postSpotAPI": {
+        "error": "Chyba pri odosielaní spotu POTA",
+        "serverResponse": "Server odpovedal s chybou {{status}}: {{body}}"
+      },
+      "exampleRefName": "Príklad Národného parku",
+      "unknownRefName": "Neznámy park",
+      "noRefsNearby": "Žiadne parky v okolí!"
+    },
+    "siota": {
+      "name": "Silo na vzduchu",
+      "shortName": "SIOTA",
+      "exportName": "Aktivácia SIOTA",
+      "account": {
+        "title": "ParksnPeaks (nájdenie SiOTA)",
+        "dialogTitle": "Účet ParksnPeaks",
+        "description": "Používateľské meno: {{username}}",
+        "noAccount": "Bez účtu",
+        "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ParksnPeaks:",
+        "usernameLabel": "Používateľské meno (nie volací znak)",
+        "usernamePlaceholder": "vaše používateľské meno účtu",
+        "apiKeyLabel": "API kľúč (nie heslo)",
+        "apiKeyPlaceholder": "váš API kľúč"
+      },
+      "activityOptions": {
+        "title_zero": "Žiadne silá vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 sila",
+        "title_other": "Aktivácia {{count}} síl",
+        "noSilosFound": "Nezistené žiadne silá",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingSilos_zero": "Žiadne zodpovedajúce silá",
+        "matchingSilos_one": "1 zodpovedajúce silo",
+        "matchingSilos_other": "{{count}} zodpovedajúcich síl",
+        "searchForSilos": "Vyhľadajte nejaké silá pre aktiváciu!",
+        "noSilosNearby": "Žiadne silá v blízkosti",
+        "nearbySilos": "Blízke silá",
+        "searchPlaceholder": "Silá podľa názvu alebo referenčného čísla…",
+        "unknownSilo": "Neznáme silo"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich silo"
+      },
+      "postSpotAPI": {
+        "error": "Chyba pri odosielaní spotu SiOTA",
+        "serverResponse": "Server odpovedal s chybou {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "account": {
+        "title": "SOTA (pre samo-nájsť SOTAWatch)",
+        "dialogTitle": "Účet SOTA",
+        "description": "Prihlásený ako {{callsign}}",
+        "noAccount": "Bez účtu",
+        "error": "Chyba pri získavaní údajov o účte",
+        "connect": "Pripojte si svoj účet SOTA"
+      },
+      "notLoggedInAlertTitle": "Upozornenie",
+      "notLoggedInAlertText": "Nie ste prihlásený do SOTAWatch pre vlastnú aktualizáciu. Navštívte nastavenia PoLo",
+      "activityOptions": {
+        "title_zero": "Žiadne vrcholy vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 vrcholu",
+        "title_other": "Aktivácia {{count}} vrcholov",
+        "noSummitsFound": "Nenájdené žiadne vrcholy",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingSummits_zero": "Žiadne zodpovedajúce vrcholy",
+        "matchingSummits_one": "1 zodpovedajúci vrchol",
+        "matchingSummits_other": "{{count}} zodpovedajúcich vrcholov",
+        "searchForSummits": "Vyhľadajte nejaké vrcholy pre aktiváciu!",
+        "noSummitsNearby": "Žiadne vrcholy v blízkosti",
+        "nearbySummits": "Blízke vrcholy",
+        "searchPlaceholder": "Vrcholy podľa názvu alebo referenčného čísla…",
+        "unknownSummit": "Neznámy vrchol"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Žiadne S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "Žiadne lovené končiare",
+        "huntedRefsCount_one": "1 lovený končiar",
+        "huntedRefsCount_other": "{{fmtCount}} lovené končiare",
+        "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
+        "activatorQSOsCount_one": "1 aktivátorové QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
+        "ref2refQSOsCount_zero": "Žiadne S2S QSOs",
+        "ref2refQSOsCount_one": "1 S2S QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S QSOs",
+        "huntedQSOsCount_zero": "Žiadne lovené QSOs",
+        "huntedQSOsCount_one": "1 lovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "operationTotals": "Celkové operácie",
+        "referencesActivatedCount_zero": "Žiadne aktivované končiare",
+        "referencesActivatedCount_one": "1 aktivovaný končiar",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivované končiare",
+        "referencesMissedCount_zero": "Žiadne neúplné končiare",
+        "referencesMissedCount_one": "1 neúplný končiar",
+        "referencesMissedCount_other": "{{fmtCount}} neúplné končiare",
+        "referencesHuntedCount_zero": "Žiadne lovené končiare",
+        "referencesHuntedCount_one": "1 lovený končiar",
+        "referencesHuntedCount_other": "{{fmtCount}} lovené končiare"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Chyba pri odosielaní spotu SOTA",
+        "serverResponse": "Server odpovedal so stavom {{status}} {{message}}",
+        "sotaAccountLoggedOut": "Účet SOTA bol odhlásený. Prosím prihláste sa znova v nastaveniach PoLo"
+      },
+      "exampleRefName": "Príklad končiara",
+      "unknownRefName": "Neznámy končiar",
+      "noRefsNearby": "Žiadne končiare v okolí!"
+    },
+    "usStates": {
+      "statesCount_zero": "Žiadne štáty USA",
+      "statesCount_one": "1 štát USA",
+      "statesCount_other": "{{count}} štátov USA"
+    },
+    "wab": {
+      "name": "Worked All Britain/Ireland",
+      "description": "Pridať štvorca WAB/WAI k operácii",
+      "workedAllBritainSquare": "Worked All Britain Square",
+      "workedAllIrelandSquare": "Worked All Ireland Square",
+      "enterSquare": "Zadať štvorec",
+      "placeholderBritain": "napríklad SU14",
+      "placeholderIreland": "napríklad N93",
+      "currentSquare": "Aktuálny štvorec:",
+      "noSquareSet": "Nebol zadaný žiaden štvorec"
+    },
+    "wfd": {
+      "name": "Zimný Deň Polí",
+      "shortName": "ZDP",
+      "exportName": "Aktivácia ZDP",
+      "activityOptions": {
+        "exchangeInformation": "Vymeniť informácie",
+        "classLabel": "Trieda",
+        "locationLabel": "Miesto",
+        "objectives_zero": "Žiadne ciele dosiahnuté",
+        "objectives_one": "1 cieľ dosiahnutý, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} cieľov dosiahnutých, OM ×{{multiplier}}",
+        "objectivesTitle": "Ciele: {{count}} dosiahnuté, OM ×{{multiplier}}",
+        "objectivesDescription": "Nezabudnite tiež zadať tieto ciele pri odoslaní svojho záznamu!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Alternatívny zdroj",
+        "awayFromHome": "Prevádzka ďaleko od domova",
+        "fmSatelliteContact": "FM satelitný kontakt",
+        "ssbSatelliteContact": "SSB alebo CW satelitný kontakt",
+        "winlinkEmails": "Winlink e-maily",
+        "specialBulletin": "Špeciálny Bulletin",
+        "sixBands": "Šesť Pásiem",
+        "twelveBands": "Dvanásť Pásiem",
+        "multipleModes": "Viacnásobné módy",
+        "qrpOperation": "QRP prevádzka",
+        "sixContinuousHours": "Šesť Neprerušovaných Hodín"
+      },
+      "objectiveDescription": {
+        "altPower": "Operujte 100% na alternatívny zdroj, ako sú batérie, solárna energia, vietor, atď.",
+        "awayFromHome": "Nastavte svoju terénnu stanicu aspoň pol míle (0,805km) od domova.",
+        "fmSatelliteContact": "Vytvorte aspoň 1 FM satelitný kontakt počas prevádzkového obdobia.",
+        "ssbSatelliteContact": "Vytvorte aspoň jeden kontakt pomocou SSB alebo CW.",
+        "winlinkEmails": "Odošlite a prijmite aspoň jeden e-mail pomocou Winlink cez RF.",
+        "specialBulletin": "Presne prekopírujte správu WFD špeciálneho bulletinu a spolu so záznamom ju odovzdajte do svojho denníka.",
+        "sixBands": "Vytvorte aspoň tri kontakty na každom z minimálne šesť rôznych pásiem.",
+        "twelveBands": "Vytvorte aspoň tri kontakty na každom z minimálne dvanásť rôznych pásiem.",
+        "multipleModes": "Používajte viaceré módy počas prevádzkového obdobia.",
+        "qrpOperation": "Operujte na úrovniach QRP výkonu (10W alebo menej na Phone, 5W alebo menej na CW alebo Digital).",
+        "sixContinuousHours": "Operujte aspoň šesť neprerušených hodín počas prevádzkového obdobia."
+      },
+      "information-md": "Trieda pre zimný poľný deň je napríklad „2M“:\n\n  - „1“, „2“, „3“… pre počet vysielačov.\n  - „H“ pre domáce stanice\n  - „I“ pre vnútorné priestory\n  - „O“ pre vonkajšie priestory\n  - „M“ pre mobilné alebo mobilné stacionárne stanice\n\nMiesto je sekcia ARRL, sekcia RAC, „MX“ pre Mexiko alebo „DX“ pre akékoľvek iné miesto.\n\nViac informácií nájdete v **[oficiálnych pravidlách](https://www.winterfieldday.com/sop.php)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: Svetové Ocenenia Bunkrov",
+      "shortName": "WWBOTA",
+      "exportName": "Aktivácia WWBOTA",
+      "activityOptions": {
+        "title_zero": "Žiadne bunkre vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 bunkru",
+        "title_other": "Aktivácia {{count}} bunkrov",
+        "noBunkersFound": "Nenájdené žiadne bunkre",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingBunkers_zero": "Žiadne zodpovedajúce bunkre",
+        "matchingBunkers_one": "1 zodpovedajúci bunker",
+        "matchingBunkers_other": "{{count}} zodpovedajúcich bunkrov",
+        "searchForBunkers": "Vyhľadajte nejaké bunkre pre aktiváciu!",
+        "noBunkersNearby": "Žiadne bunkre v blízkosti",
+        "nearbyBunkers": "Blízke bunkre",
+        "searchPlaceholder": "Bunkre podľa názvu alebo referenčného čísla…",
+        "unknownBunker": "Neznámy bunker"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich bunker"
+      },
+      "postSpotAPI": {
+        "error": "Chyba pri odosielaní spotu WWBOTA",
+        "serverResponse": "Server odpovedal so stavom {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: Svetová Flóra & Fauna",
+      "shortName": "WWFF",
+      "exportName": "Aktivácia WWFF",
+      "activityOptions": {
+        "title_zero": "Žiadne parky vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 parku",
+        "title_other": "Aktivácia {{count}} parkov",
+        "noParksFound": "Nenájdené žiadne parky",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingParks_zero": "Žiadne zodpovedajúce parky",
+        "matchingParks_one": "1 zodpovedajúci park",
+        "matchingParks_other": "{{count}} zodpovedajúcich parkov",
+        "searchForParks": "Vyhľadajte nejaké parky pre aktiváciu!",
+        "noParksNearby": "Žiadne parky v blízkosti",
+        "nearbyParks": "Blízke parky",
+        "searchPlaceholder": "Parky podľa názvu alebo referenčného čísla…",
+        "unknownPark": "Neznámy park"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Žiadne P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Žiadne lovené parky",
+        "huntedRefsCount_one": "1 lovený park",
+        "huntedRefsCount_other": "{{fmtCount}} lovených parkov",
+        "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
+        "activatorQSOsCount_one": "1 aktivátorové QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
+        "ref2refQSOsCount_zero": "Žiadne P2P QSOs",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOs",
+        "huntedQSOsCount_zero": "Žiadne lovené QSOs",
+        "huntedQSOsCount_one": "1 lovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "operationTotals": "Celkové operácie",
+        "referencesActivatedCount_zero": "Žiadne aktivované parky",
+        "referencesActivatedCount_one": "1 aktivovaný park",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných parkov",
+        "referencesMissedCount_zero": "Žiadne nekompletné parky",
+        "referencesMissedCount_one": "1 nekompletný park",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletných parkov",
+        "referencesHuntedCount_zero": "Žiadne lovené parky",
+        "referencesHuntedCount_one": "1 lovený park",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených parkov"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich WWFF"
+      },
+      "exampleRefName": "Príkladový park",
+      "unknownRefName": "Neznámy park",
+      "noRefsNearby": "V blízkosti nie sú žiadne parky!",
+      "postSpotAPI": {
+        "error": "Chyba pri odosielaní spotu WWFF",
+        "serverResponse": "Server odpovedal so stavom {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "account": {
+        "title": "ZLOTA (spotting ZLOTA)",
+        "dialogTitle": "Účet ZLOTA",
+        "description": "Volací znak: {{callsign}}",
+        "noAccount": "Bez účtu",
+        "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ZLOTA:",
+        "callsignLabel": "Volací znak",
+        "callsignPlaceholder": "váš volací znak účtu",
+        "pinLabel": "PIN kód (nie heslo)",
+        "pinPlaceholder": "váš PIN kód"
+      },
+      "activityOptions": {
+        "title_zero": "Žiadne referencie vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 referencie",
+        "title_other": "Aktivácia {{count}} referencií",
+        "noReferencesFound": "Nenájdené žiadne referencie",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingReferences_zero": "Žiadne zodpovedajúce referencie",
+        "matchingReferences_one": "1 zodpovedajúca referencia",
+        "matchingReferences_other": "{{count}} zodpovedajúcich referencií",
+        "searchForReferences": "Vyhľadajte nejaké referencie pre aktiváciu!",
+        "noReferencesNearby": "Žiadne referencie v blízkosti",
+        "nearbyReferences": "Blízke referencie",
+        "searchPlaceholder": "Referencie podľa názvu alebo kódu",
+        "unknownReference": "Neznáma referencia"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich referencia"
+      },
+      "postSpotAPI": {
+        "error": "Chyba pri odosielaní spotu ZLOTA",
+        "serverResponse": "Server odpovedal so stavom {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "ref2refCount_zero": "Žiadne Ref2Refs",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Refs",
+        "huntedRefsCount_zero": "Žiadne lovené referencie",
+        "huntedRefsCount_one": "1 lovená referencia",
+        "huntedRefsCount_other": "{{fmtCount}} lovených referencií",
+        "activatorQSOsCount_zero": "Žiadne QSOs aktivátora",
+        "activatorQSOsCount_one": "1 QSO aktivátora",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs aktivátora",
+        "ref2refQSOsCount_zero": "Žiadne Ref2Ref QSOs",
+        "ref2refQSOsCount_one": "1 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSOs",
+        "huntedQSOsCount_zero": "Žiadne lovené QSOs",
+        "huntedQSOsCount_one": "1 lovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "operationTotals": "Súhrn prevádzok",
+        "referencesActivatedCount_zero": "Žiadne referencie aktivované",
+        "referencesActivatedCount_one": "1 referencia aktivovaná",
+        "referencesActivatedCount_other": "{{fmtCount}} referencií aktivovaných",
+        "referencesMissedCount_zero": "Žiadne nekompletné referencie",
+        "referencesMissedCount_one": "1 nekompletná referencia",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletných referencií",
+        "referencesHuntedCount_zero": "Žiadne lovené referencie",
+        "referencesHuntedCount_one": "1 lovená referencia",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených referencií"
+      }
+    }
+  }
+}

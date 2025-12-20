@@ -1,5 +1,14 @@
 {
   "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Keine Bänder",
+      "bandsCount_one": "1 Band",
+      "bandsCount_other": "{{count}} Bänder",
+      "modesCount_zero": "Keine Modi",
+      "modesCount_one": "1 Modus",
+      "modesCount_other": "{{count}} Modi",
+      "total": "Insgesamt {{count}}"
+    },
     "bca": {
       "name": "Belgium Castles & Fortresses",
       "shortName": "BCA",
@@ -108,6 +117,11 @@
       },
       "help-md": "Rufzeichennotizen werden in einfachen Textdateien gespeichert, ein Rufzeichen pro Zeile, gefolgt von Informationen, die im Protokollbildschirm angezeigt werden sollen. Du kannst die eingebauten Dateien verwenden oder deine eigenen hinzufügen.\n\nGeb einen direkten Link zu einer reinen Textdatei oder einen \"Freigabelink\" von einem Dienst ein wie:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nZeilen in dieser Datei sollten so aussehen und grundlegende Markdown-Formatierung unterstützen:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nWenn der Eintrag mit einem Emoji beginnt, wird es anstelle des Standard-⭐ verwendet.\n\nEinträge können für \"Rufzeichenerweiterung\" verwendet werden, wenn du zuerst `..` oder ` //` im Rufzeichenfeld eingibst, wie `//DAN` im obigen Beispiel."
     },
+    "canadianProvinces": {
+      "provincesCount_zero": "Keine Canadian Provinces",
+      "provincesCount_one": "1 Canadian Province",
+      "provincesCount_other": "{{count}} Canadian Provinces"
+    },
     "colonies": {
       "activityOptions": {
         "settings": "Einstellungen",
@@ -144,6 +158,14 @@
       "switchLanguage": "Sprache zu `{{lang}}` {{name}} wechseln?",
       "switchLanguagePrompt": "Sprache `{{lang}}` {{name}}",
       "switchLanguageConfirm": "Wechseln zu `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Entwicklermodus aktivieren?",
+      "activateConfirm": "Entwicklermodus aktiviert!",
+      "deactivate": "Entwicklermodus deaktivieren?",
+      "deactivateConfirm": "Entwicklermodus deaktiviert!",
+      "on": "Entwicklermodus: EIN!!!",
+      "off": "Entwicklermodus: AUS"
     },
     "commands-misc": {
       "rtfm": "Das schöne Handbuch lesen?",
@@ -229,6 +251,11 @@
         "pota-all-parks": "POTA: Alle Parks",
         "sota-all-summits": "SOTA: Alle Gipfel"
       }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Keine DXCC-Entitäten",
+      "entitiesCount_one": "1 DXCC-Entität",
+      "entitiesCount_other": "{{count}} DXCC-Entitäten"
     },
     "eca": {
       "name": "English Castles Awards",
@@ -417,6 +444,10 @@
       "loggingControl": {
         "theirRefLabel": "Deren POTA"
       },
+      "postSpotAPI": {
+        "error": "Fehler beim Posten des POTA-Spots",
+        "serverResponse": "Server hat mit Fehler {{status}} geantwortet: {{body}}"
+      },
       "exampleRefName": "Beispiel-Nationalpark",
       "unknownRefName": "Unbekannter Park",
       "noRefsNearby": "Keine Parks in der Nähe!"
@@ -453,6 +484,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Deren Silo"
+      },
+      "postSpotAPI": {
+        "error": "Fehler beim Posten des SiOTA-Spots",
+        "serverResponse": "Server hat mit Fehler {{status}} geantwortet: {{body}}"
       }
     },
     "sota": {
@@ -511,9 +546,30 @@
       "loggingControl": {
         "theirRefLabel": "Deren SOTA"
       },
+      "postSpotAPI": {
+        "error": "Fehler beim Posten des SOTA-Spots",
+        "serverResponse": "Server antwortete mit Status {{status}} {{message}}",
+        "sotaAccountLoggedOut": "SOTA-Konto abgemeldet. Bitte erneut in den PoLo-Einstellungen anmelden"
+      },
       "exampleRefName": "Beispiel-Gipfel",
       "unknownRefName": "Unbekannter Gipfel",
       "noRefsNearby": "Keine Gipfel in der Nähe!"
+    },
+    "usStates": {
+      "statesCount_zero": "Keine US States",
+      "statesCount_one": "1 US State",
+      "statesCount_other": "{{count}} US States"
+    },
+    "wab": {
+      "name": "Worked All Britain/Ireland",
+      "description": "Füge WAB/WAI Quadrat zur Operation hinzu",
+      "workedAllBritainSquare": "Worked All Britain-Quadrat",
+      "workedAllIrelandSquare": "Worked All Ireland-Quadrat",
+      "enterSquare": "Quadrat eingeben",
+      "placeholderBritain": "z.B. SU14",
+      "placeholderIreland": "z.B. N93",
+      "currentSquare": "Aktuelles Quadrat:",
+      "noSquareSet": "Kein Quadrat eingestellt"
     },
     "wfd": {
       "name": "Winter Field Day",
@@ -579,6 +635,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Deren Bunker"
+      },
+      "postSpotAPI": {
+        "error": "Fehler beim Posten des WWBOTA-Spots",
+        "serverResponse": "Server antwortete mit Status {{status}} {{message}}"
       }
     },
     "wwff": {
@@ -632,7 +692,11 @@
       },
       "exampleRefName": "Beispielpark",
       "unknownRefName": "Unbekannter Park",
-      "noRefsNearby": "Keine Parks in der Nähe!"
+      "noRefsNearby": "Keine Parks in der Nähe!",
+      "postSpotAPI": {
+        "error": "Fehler beim Posten des WWFF-Spots",
+        "serverResponse": "Server antwortete mit Status {{status}} {{message}}"
+      }
     },
     "zlota": {
       "account": {
@@ -663,6 +727,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "Deren Referenz"
+      },
+      "postSpotAPI": {
+        "error": "Fehler beim Posten des ZLOTA-Spots",
+        "serverResponse": "Server antwortete mit Status {{status}} {{message}}"
       }
     },
     "shared": {

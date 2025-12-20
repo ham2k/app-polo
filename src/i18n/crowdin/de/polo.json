@@ -517,6 +517,16 @@
         "text": "Ein Fehler trat auf beim Verknüpfen mit dem vorherigen Konto\n\n{{error}}\n\nBitte versuche es später erneut.",
         "buttonCancel": "OK"
       },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi-Konto",
+        "emailAddressLabel": "E-Mail-Adresse",
+        "resendButton": "Erneut senden",
+        "revertButton": "Rückgängig machen",
+        "syncFirstButton": "Gehen Sie zurück und synchronisieren Sie zuerst!",
+        "continueAnywayButton": "Ich weiß, was ich tue! Trotzdem fortfahren",
+        "potentialForDataLoss": "Potenzial für Datenverlust!!!",
+        "potentialForDataLossDescription": "Sie haben nicht alle Daten auf diesem Gerät synchronisiert.\n\nWenn Sie dieses Gerät mit einem neuen Konto verknüpfen, werden Sie gefragt, ob Sie dessen Daten durch die des neuen Kontos ersetzen möchten.\n\nFalls dies der Fall ist, können Sie möglicherweise keine bereits vorhandenen Aktivitäten wiederherstellen, die noch nicht synchronisiert wurden.\n\nWir empfehlen Ihnen, dieses Gerät zuerst vollständig zu synchronisieren!"
+      },
       "syncServiceDescription-md": "Grunddienst ist kostenlos und erlaubt es, aktuelle Daten (bis zu 7 Tage) zwischen zwei Geräten oder Anwendungen mit begrenzter Geschwindigkeit zu synchronisieren.\n\nVollständiger Dienst benötigt ein bezahltes Abonnement und umfasst die Synchronisation all deiner Funkbetriebe zwischen einer angemessenen Anzahl von Geräten oder Anwendungen bei voller Geschwindigkeit.\n\nWährend der LoFi Dienst in seiner TESTPHASE für die nächsten Monate ist, bleibt der Dienst kostenlos. Danach hängen die Preise vom Land und der Währung ab, sollten aber nicht mehr als 30 $/Jahr oder Äquivalent sein, wahrscheinlich weniger.",
       "thisDevice": "Dieses Gerät",
       "notAuthenticated": "Nicht authentifiziert",
@@ -648,6 +658,7 @@
           "17m-a11y": "17 Meter",
           "15m-a11y": "15 Meter",
           "12m-a11y": "12 Meter",
+          "11m-a11y": "11 Meter",
           "10m-a11y": "10 Meter",
           "6m-a11y": "6 Meter",
           "2m-a11y": "2 Meter",
@@ -928,6 +939,19 @@
       "timeSinceLast": "{{time}} seit letztem QSO",
       "last10QSOs": "{{rate}} Q/h für die letzten 10",
       "last100QSOs": "{{rate}} Q/h für die letzten 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Fehler beim Importieren von QSON",
+      "invalidName": "Ungültiger Name",
+      "invalidNameDescription": "Der Dateiname muss mit .qson oder .json enden",
+      "unknownError": "Unbekannter Fehler"
+    },
+    "importADIF": {
+      "error": "Fehler beim Importieren von ADIF in den Betrieb",
+      "historicalImportError": "Fehler beim Importieren historischer ADIF-Daten",
+      "unknownError": "Unbekannter Fehler"
     }
   }
 }
