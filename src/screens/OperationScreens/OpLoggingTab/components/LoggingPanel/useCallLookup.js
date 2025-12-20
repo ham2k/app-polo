@@ -107,7 +107,7 @@ export const useCallLookup = (qso) => {
   }
 }
 
-export async function annotateQSO ({ qso, online, settings, dispatch, mode = 'full' }) {
+export async function annotateQSO({ qso, online, settings, dispatch, mode = 'full' }) {
   const { call, theirInfo } = _extractCallInfo(qso?.their?.call, qso?.refs)
 
   const { guess, lookup } = await _performLookup({ qso, call, theirInfo, online, settings, dispatch, mode })
@@ -115,7 +115,7 @@ export async function annotateQSO ({ qso, online, settings, dispatch, mode = 'fu
   return { ...qso, their: { ...qso.their, ...theirInfo, guess, lookup } }
 }
 
-function _extractCallInfo (call, refs) {
+function _extractCallInfo(call, refs) {
   // Pick the last call in the list, and ignore any under 3 characters or with a question mark
   const { allCalls } = parseStackedCalls(call)
   const calls = allCalls.filter(x => x && x.length > 2 && x.indexOf('?') < 0) ?? []
@@ -143,7 +143,7 @@ function _extractCallInfo (call, refs) {
   return { call: oneCall, theirInfo, cacheKey, baseCacheKey }
 }
 
-async function _performLookup ({ refs, call, theirInfo, online, settings, dispatch, mode = 'full' }) {
+async function _performLookup({ refs, call, theirInfo, online, settings, dispatch, mode = 'full' }) {
   const { lookups } = await _lookupCall(theirInfo, { online, settings, dispatch, mode })
   const { refs: lookedUpRefs } = await _lookupRefs(refs, { lookups, online, settings, dispatch, mode })
   const { guess, lookup } = _mergeData({ theirInfo, lookups, refs: lookedUpRefs })
@@ -152,7 +152,7 @@ async function _performLookup ({ refs, call, theirInfo, online, settings, dispat
   return { guess, lookup, lookups, theirInfo }
 }
 
-async function _lookupCall (theirInfo, { online, settings, dispatch, mode = 'full' }) {
+async function _lookupCall(theirInfo, { online, settings, dispatch, mode = 'full' }) {
   const lookups = {}
   const lookupHooks = findHooks('lookup')
   const lookedUp = {}
@@ -181,7 +181,7 @@ async function _lookupCall (theirInfo, { online, settings, dispatch, mode = 'ful
   return { lookups }
 }
 
-async function _lookupRefs (refs, { online, settings, dispatch, mode = 'full' }) {
+async function _lookupRefs(refs, { online, settings, dispatch, mode = 'full' }) {
   let newRefs = []
   for (const ref of (refs || [])) {
     const hooks = findHooks(`ref:${ref.type}`)
@@ -202,7 +202,7 @@ async function _lookupRefs (refs, { online, settings, dispatch, mode = 'full' })
   return { refs: newRefs }
 }
 
-function _mergeData ({ theirInfo, lookups, refs }) {
+function _mergeData({ theirInfo, lookups, refs }) {
   let mergedLookup = {}
   const newGuess = { ...theirInfo }
 

@@ -211,7 +211,7 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
       if (addedHooks[exportHook.key]) return
       addedHooks[exportHook.key] = true
 
-      const sampleOperations = (exportHook.sampleOperations && exportHook.sampleOperations({ settings })) || []
+      const sampleOperations = (exportHook.sampleOperations && exportHook.sampleOperations({ t, settings })) || []
       sampleOperations.forEach(operation => {
         const options = (exportHook.suggestExportOptions && exportHook.suggestExportOptions({ operation, qsos: operation.qsos, settings })) || []
         options.forEach(option => {
