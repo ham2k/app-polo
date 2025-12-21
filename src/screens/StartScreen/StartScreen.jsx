@@ -113,8 +113,8 @@ export default function StartScreen ({ setAppState }) {
             <Image source={HAM2K_LOGO} style={{ height: 60, width: 500, alignSelf: 'center', backgroundColor: 'transparent' }} resizeMode="contain" />
           </Pressable>
           <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }} >
-            <Text style={styles.polo}>{'Portable Logger' /* dont't translate this */}</Text>
-            <Text style={styles.credits}>{t('screens.start.credits', 'by KI2D and friends')}</Text>
+            <Text style={styles.polo} adjustsFontSizeToFit={false} numberOfLines={1}>{'Portable Logger' /* dont't translate this */}</Text>
+            <Text style={styles.credits} adjustsFontSizeToFit={true} numberOfLines={1}>{t('screens.start.credits', 'by KI2D and friends')}</Text>
             <Text style={styles.version}>{translatedVersionName({ t, version: packageJson.version }).full}</Text>
           </Pressable>
           <View style={styles.messagesBox}>
@@ -203,18 +203,20 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       backgroundColor: bottomBackColor
     },
     polo: {
+      height: baseTheme.oneSpace * 7,
       fontSize: baseTheme.normalFontSize * 2.3,
       lineHeight: baseTheme.normalFontSize * 3,
       textShadowColor: topHaloColor,
       textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 2,
+      textShadowRadius: baseTheme.oneSpace * 1.6,
       fontFamily: 'Roboto Slab Black',
       color: topTextColor,
       textAlign: 'center'
     },
     credits: {
-      fontSize: baseTheme.normalFontSize * 1.1,
-      lineHeight: baseTheme.normalFontSize * 2,
+      fontSize: baseTheme.normalFontSize * 1.3,
+      width: '100%',
+      height: baseTheme.oneSpace * 5,
       fontWeight: 400,
       textShadowColor: topHaloColor,
       textShadowOffset: { width: 0, height: 0 },
@@ -222,12 +224,15 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       fontFamily: 'Roboto Slab',
       color: topTextColor,
       textAlign: 'center',
-      paddingBottom: baseTheme.oneSpace
+      alignSelf: 'center',
+      paddingTop: baseTheme.oneSpace * 1,
+      paddingHorizontal: baseTheme.oneSpace * 4,
+      marginBottom: baseTheme.oneSpace
     },
     version: {
       fontSize: baseTheme.normalFontSize * 1.3,
       lineHeight: baseTheme.normalFontSize * 2,
-      fontWeight: 400,
+      fontWeight: 'bold',
       textShadowColor: topHaloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace * 1,

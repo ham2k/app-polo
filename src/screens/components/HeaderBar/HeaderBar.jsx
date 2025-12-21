@@ -194,20 +194,20 @@ function prepareStyles (baseStyles, { leftAction, safeAreaInsets, splitView }) {
   return ({
     ...baseStyles,
     root: {
-      height: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? 4.5 : 5),
+      height: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? 6 : 5),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingLeft: Math.max(safeAreaInsets.left, baseStyles.oneSpace * 2),
       paddingRight: splitView ? 0 : Math.max(safeAreaInsets.right, baseStyles.oneSpace * 2),
-      paddingTop: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2), // + baseStyles.oneSpace * (baseStyles.isIOS ? -1 : 0),
+      paddingTop: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? 0 : -1),
       paddingBottom: 0
     },
     content: {
       flex: 1,
       flexDirection: 'column',
       justifyContent: 'center',
-      minHeight: baseStyles.oneSpace * 3
+      height: baseStyles.oneSpace * 6
     },
     screenContainer: {
       backgroundColor: baseStyles.colors.background
