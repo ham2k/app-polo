@@ -60,7 +60,6 @@
 		59232FB52CBE4FBEA9C17B56 /* Roboto Slab ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Slab ExtraBold.ttf"; path = "../assets/fonts/Roboto Slab ExtraBold.ttf"; sourceTree = "<group>"; };
 		5C0B5909F8BC4EDA8E81F330 /* Roboto Slab Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto Slab Medium.ttf"; path = "../assets/fonts/Roboto Slab Medium.ttf"; sourceTree = "<group>"; };
 		720996792BA85FB5002C388D /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
-		7223333C2D7C5F4500D75C8F /* polo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "polo/polo-Bridging-Header.h"; sourceTree = "<group>"; };
 		722871012D79DD9F00B9131B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = polo/AppDelegate.swift; sourceTree = "<group>"; };
 		72A0D32B2B162706007E568A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		72A0D32C2B162706007E568A /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
@@ -109,7 +108,6 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				720996792BA85FB5002C388D /* Config.xcconfig */,
 				EAEEA1DF5608CEBDB7C04460 /* PrivacyInfo.xcprivacy */,
-				7223333C2D7C5F4500D75C8F /* polo-Bridging-Header.h */,
 			);
 			name = polo;
 			sourceTree = "<group>";
