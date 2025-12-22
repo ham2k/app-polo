@@ -71,42 +71,42 @@
   "labelLarge": {
     "fontFamily": "Roboto Medium",
     "fontSize": 16,
-    "fontWeight": "500",
+    "fontWeight": "400",
     "letterSpacing": 0.1,
     "lineHeight": 20
   },
   "labelMedium": {
     "fontFamily": "Roboto Medium",
     "fontSize": 14,
-    "fontWeight": "500",
+    "fontWeight": "400",
     "letterSpacing": 0.5,
     "lineHeight": 16
   },
   "labelSmall": {
     "fontFamily": "Roboto Medium",
     "fontSize": 12,
-    "fontWeight": "500",
+    "fontWeight": "400",
     "letterSpacing": 0.5,
     "lineHeight": 16
   },
   "titleLarge": {
     "fontFamily": "Roboto Medium",
     "fontSize": 22,
-    "fontWeight": "500",
+    "fontWeight": "400",
     "letterSpacing": 0,
     "lineHeight": 28
   },
   "titleMedium": {
     "fontFamily": "Roboto Medium",
     "fontSize": 16,
-    "fontWeight": "500",
+    "fontWeight": "400",
     "letterSpacing": 0.15,
     "lineHeight": 24
   },
   "titleSmall": {
     "fontFamily": "Roboto Medium",
     "fontSize": 14,
-    "fontWeight": "500",
+    "fontWeight": "400",
     "letterSpacing": 0.1,
     "lineHeight": 20
   }
