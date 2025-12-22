@@ -250,6 +250,10 @@
         "__comment__": "Modifier ici les titres spécifiques des fichiers de données",
         "pota-all-parks": "POTA : Tous les parcs",
         "sota-all-summits": "SOTA : Tous les sommets"
+      },
+      "loading": {
+        "progress": "Chargement des `{{processedLines}}` références.\n\n`{{percent}}` • {{secondsLeft}} secondes restantes.",
+        "downloadingRawData": "Téléchargement des données brutes…"
       }
     },
     "dxcc": {
@@ -570,6 +574,49 @@
       "placeholderIreland": "par exemple N93",
       "currentSquare": "Carré Actuel :",
       "noSquareSet": "Aucun carré défini"
+    },
+    "wca": {
+      "name": "Prix des Châteaux du Monde",
+      "shortName": "WCA",
+      "exportName": "Activation WCA",
+      "activityOptions": {
+        "title_zero": "Aucun château sélectionné pour l'activation",
+        "title_one": "Activation de 1 château",
+        "title_other": "Activation de {{count}} châteaux",
+        "noCastlesFound": "Aucun château trouvé",
+        "nearestMatches": "Les {{limit}} plus proches sur {{count}} correspondances",
+        "matchingCastles_zero": "Aucun château correspondant",
+        "matchingCastles_one": "1 château correspondant",
+        "matchingCastles_other": "{{count}} châteaux correspondants",
+        "searchForCastles": "Rechercher des châteaux à activer !",
+        "noCastlesNearby": "Aucun château à proximité",
+        "nearbyCastles": "Châteaux à proximité",
+        "searchPlaceholder": "Châteaux par nom ou référence…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Aucun château chassé",
+        "huntedRefsCount_one": "1 château chassé",
+        "huntedRefsCount_other": "{{fmtCount}} châteaux chassés",
+        "activatorQSOsCount_zero": "Aucun QSO d'activateur",
+        "activatorQSOsCount_one": "1 QSO d'activateur",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs d'activateur",
+        "huntedQSOsCount_zero": "Aucun QSO chassé",
+        "huntedQSOsCount_one": "1 QSO chassé",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs chassés",
+        "operationTotals": "Totaux d'opération",
+        "referencesActivatedCount_zero": "Aucun château activé",
+        "referencesActivatedCount_one": "1 château activé",
+        "referencesActivatedCount_other": "{{fmtCount}} châteaux activés",
+        "referencesMissedCount_zero": "Aucun château incomplet",
+        "referencesMissedCount_one": "1 château incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} châteaux incomplets",
+        "referencesHuntedCount_zero": "Aucun château chassé",
+        "referencesHuntedCount_one": "1 château chassé",
+        "referencesHuntedCount_other": "{{fmtCount}} châteaux chassés"
+      },
+      "exampleRefName": "Château Exemple",
+      "unknownRefName": "Château Inconnu",
+      "noRefsNearby": "Aucun château à proximité!"
     },
     "wfd": {
       "name": "Winter Field Day",

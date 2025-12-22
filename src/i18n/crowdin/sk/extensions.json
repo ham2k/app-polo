@@ -250,6 +250,10 @@
         "__comment__": "Tu prepíšte špecifické názvy súborov dát",
         "pota-all-parks": "POTA: Všetky parky",
         "sota-all-summits": "SOTA: Všetky vrcholy"
+      },
+      "loading": {
+        "progress": "Načítalo sa `{{processedLines}}` referencií.\n\n`{{percent}}` • {{secondsLeft}} sekúnd zostáva.",
+        "downloadingRawData": "Sťahujem surové dáta…"
       }
     },
     "dxcc": {
@@ -570,6 +574,49 @@
       "placeholderIreland": "napríklad N93",
       "currentSquare": "Aktuálny štvorec:",
       "noSquareSet": "Nebol zadaný žiaden štvorec"
+    },
+    "wca": {
+      "name": "World Castles Awards",
+      "shortName": "WCA",
+      "exportName": "Aktivácia WCA",
+      "activityOptions": {
+        "title_zero": "Žiadne hrady nie sú vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 hradu",
+        "title_other": "Aktivácia {{count}} hradov",
+        "noCastlesFound": "Nenašli sa žiadne hrady",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingCastles_zero": "Žiadne zodpovedajúce hrady",
+        "matchingCastles_one": "1 zodpovedajúci hrad",
+        "matchingCastles_other": "{{count}} zodpovedajúcich hradov",
+        "searchForCastles": "Vyhľadajte nejaké hrady pre aktiváciu!",
+        "noCastlesNearby": "Žiadne hrady v blízkosti",
+        "nearbyCastles": "Hrady v blízkosti",
+        "searchPlaceholder": "Hrady podľa mena alebo referenčného čísla…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Žiadne lovené hrady",
+        "huntedRefsCount_one": "1 lovený hrad",
+        "huntedRefsCount_other": "{{fmtCount}} lovených hradov",
+        "activatorQSOsCount_zero": "No activator QSOs",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "huntedQSOsCount_zero": "Žiadne lovené QSOs",
+        "huntedQSOsCount_one": "1 lovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "operationTotals": "Súhrn prevádzok",
+        "referencesActivatedCount_zero": "Žiadne aktivované hrady",
+        "referencesActivatedCount_one": "1 aktivovaný hrad",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných hradov",
+        "referencesMissedCount_zero": "Žiadne nekompletné hrady",
+        "referencesMissedCount_one": "1 nekompletný hrad",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletných hradov",
+        "referencesHuntedCount_zero": "Žiadne lovené hrady",
+        "referencesHuntedCount_one": "1 lovený hrad",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených hradov"
+      },
+      "exampleRefName": "Príklad hradu",
+      "unknownRefName": "Neznámy hrad",
+      "noRefsNearby": "Žiadne hrady v blízkosti!"
     },
     "wfd": {
       "name": "Zimný Deň Polí",

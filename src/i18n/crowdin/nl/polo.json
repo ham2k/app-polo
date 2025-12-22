@@ -429,6 +429,11 @@
         "descriptionOn": "Stel {{operatorCall}} in als operator bij operaties waar station roepnaam anders is",
         "descriptionOff": "Stel geen standaardoperator voor, ongeacht de gebruikte station roepnaam"
       },
+      "suggestTemplates": {
+        "title": "Gebruik operationele sjablonen",
+        "descriptionOn": "Stel sjablonen voor nieuwe operaties voor",
+        "descriptionOff": "Geen sjablonen voorstellen"
+      },
       "bandsModes": {
         "title": "Banden & Modes",
         "description": "{{bands}} • {{modes}}"

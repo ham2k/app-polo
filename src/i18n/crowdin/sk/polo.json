@@ -429,6 +429,11 @@
         "descriptionOn": "Nastaviť {{operatorCall}} ako operátora v prevádzkach, kde sú rôzne volacie znaky stanice",
         "descriptionOff": "Nenasadzujte predvoleného operátora bez ohľadu na volanie stanice"
       },
+      "suggestTemplates": {
+        "title": "Použiť šablóny operácií",
+        "descriptionOn": "Navrhnúť šablóny pre nové operácie",
+        "descriptionOff": "Nenavrhuje šablóny"
+      },
       "bandsModes": {
         "title": "Pásma a módy",
         "description": "{{bands}} • {{modes}}"

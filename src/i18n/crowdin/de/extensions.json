@@ -250,6 +250,10 @@
         "__comment__": "Überschreibe hier die Titel spezifischer Datendateien",
         "pota-all-parks": "POTA: Alle Parks",
         "sota-all-summits": "SOTA: Alle Gipfel"
+      },
+      "loading": {
+        "progress": "{{processedLines}} Referenzen geladen.\n\n{{percent}} • {{secondsLeft}} Sekunden übrig.",
+        "downloadingRawData": "Rohdaten werden heruntergeladen…"
       }
     },
     "dxcc": {
@@ -570,6 +574,49 @@
       "placeholderIreland": "z.B. N93",
       "currentSquare": "Aktuelles Quadrat:",
       "noSquareSet": "Kein Quadrat eingestellt"
+    },
+    "wca": {
+      "name": "World Castles Awards",
+      "shortName": "WCA",
+      "exportName": "WCA Aktivierung",
+      "activityOptions": {
+        "title_zero": "Keine Burgen zur Aktivierung ausgewählt",
+        "title_one": "Eine Burg wird aktiviert",
+        "title_other": "{{count}} Burgen werden aktiviert",
+        "noCastlesFound": "Keine Burgen gefunden",
+        "nearestMatches": "Nächstgelegene {{limit}} von {{count}} Treffern",
+        "matchingCastles_zero": "Keine passenden Burgen",
+        "matchingCastles_one": "Eine passende Burg",
+        "matchingCastles_other": "{{count}} passende Burgen",
+        "searchForCastles": "Suche aktivierbare Burgen!",
+        "noCastlesNearby": "Keine Burgen in der Nähe",
+        "nearbyCastles": "Burgen in der Nähe",
+        "searchPlaceholder": "Burgen nach Namen oder Referenz…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Keine Burgen gejagt",
+        "huntedRefsCount_one": "1 Burg gejagt",
+        "huntedRefsCount_other": "{{fmtCount}} Burgen gejagt",
+        "activatorQSOsCount_zero": "Keine Aktivator-QSOs",
+        "activatorQSOsCount_one": "1 Aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} Aktivator-QSOs",
+        "huntedQSOsCount_zero": "Keine gejagten QSOs",
+        "huntedQSOsCount_one": "1 gejagtes QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} gejagte QSOs",
+        "operationTotals": "Betrieb-Gesamt",
+        "referencesActivatedCount_zero": "Keine Burgen aktiviert",
+        "referencesActivatedCount_one": "1 Burg aktiviert",
+        "referencesActivatedCount_other": "{{fmtCount}} Burgen aktiviert",
+        "referencesMissedCount_zero": "Keine unvollständigen Burgen",
+        "referencesMissedCount_one": "1 unvollständige Burg",
+        "referencesMissedCount_other": "{{fmtCount}} unvollständige Burgen",
+        "referencesHuntedCount_zero": "Keine Burgen gejagt",
+        "referencesHuntedCount_one": "1 Burg gejagt",
+        "referencesHuntedCount_other": "{{fmtCount}} Burgen gejagt"
+      },
+      "exampleRefName": "Beispiel Burg",
+      "unknownRefName": "Unbekannte Burg",
+      "noRefsNearby": "Keine Burgen in der Nähe!"
     },
     "wfd": {
       "name": "Winter Field Day",

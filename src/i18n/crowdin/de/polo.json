@@ -429,6 +429,11 @@
         "descriptionOn": "Setze {{operatorCall}} als Operator in den Funkbetrieben, bei denen das Stationsrufzeichen unterschiedlich ist",
         "descriptionOff": "Schlage keinen Standardoperator vor, unabhängig vom verwendeten Stationsrufzeichen"
       },
+      "suggestTemplates": {
+        "title": "Vorlagen für Operationen verwenden",
+        "descriptionOn": "Vorlagen für neue Operationen vorschlagen",
+        "descriptionOff": "Keine Vorlagen vorschlagen"
+      },
       "bandsModes": {
         "title": "Bänder & Modi",
         "description": "{{bands}} • {{modes}}"

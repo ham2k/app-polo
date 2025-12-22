@@ -429,6 +429,11 @@
         "descriptionOn": "Sett {{operatorCall}} som operatør i operasjoner der stasjonskall er forskjellig",
         "descriptionOff": "Ikke foreslå standardoperatør uavhengig av stasjonskall som brukes"
       },
+      "suggestTemplates": {
+        "title": "Bruk operasjonsmaler",
+        "descriptionOn": "Forslå maler for nye operasjoner",
+        "descriptionOff": "Ikke foreslå maler"
+      },
       "bandsModes": {
         "title": "Bånd og moduser",
         "description": "{{bands}} • {{modes}}"

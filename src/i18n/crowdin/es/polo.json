@@ -429,6 +429,11 @@
         "descriptionOn": "Usar {{operatorCall}} como operador en operaciones que usen otro indicativo de estación",
         "descriptionOff": "No sugerir ningún operador por defecto, independientemente del indicativo de la estación usado"
       },
+      "suggestTemplates": {
+        "title": "Usar plantillas de operación",
+        "descriptionOn": "Sugerir plantillas para nuevas operaciones",
+        "descriptionOff": "No sugerir plantillas"
+      },
       "bandsModes": {
         "title": "Bandas y Modos",
         "description": "{{bands}} • {{modes}}"
@@ -550,7 +555,7 @@
       "title": "Acerca de la Versión",
       "recentChanges": "Cambios Recientes",
       "coverPhoto": "Portada: {{caption}}",
-      "changes-md": "## {{version}}\\n\\n{{changes}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
       "checkingForPatches": "Buscando actualizaciones…",
       "newMajorReleaseAvailable": "Nueva versión principal disponible",
       "patchAvailable": "{{track}} actualización disponible",

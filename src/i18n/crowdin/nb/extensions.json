@@ -250,6 +250,10 @@
         "__comment__": "Overstyr spesifikke datafil-titler her",
         "pota-all-parks": "POTA: Alle parker",
         "sota-all-summits": "SOTA: Alle topper"
+      },
+      "loading": {
+        "progress": "Lastet inn `{{processedLines}}` referanser.\n\n`{{percent}}` • {{secondsLeft}} sekunder igjen.",
+        "downloadingRawData": "Laster ned rådata…"
       }
     },
     "dxcc": {
@@ -570,6 +574,49 @@
       "placeholderIreland": "f.eks. N93",
       "currentSquare": "Nåværende Kvadrant:",
       "noSquareSet": "Ingen kvadrant satt"
+    },
+    "wca": {
+      "name": "World Castles Awards",
+      "shortName": "WCA",
+      "exportName": "WCA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen slott valgt for aktivering",
+        "title_one": "Aktiverer 1 slott",
+        "title_other": "Aktiverer {{count}} slott",
+        "noCastlesFound": "Ingen slott funnet",
+        "nearestMatches": "Nærmeste {{limit}} av {{count}} treff",
+        "matchingCastles_zero": "Ingen matchende slott",
+        "matchingCastles_one": "1 matchende slott",
+        "matchingCastles_other": "{{count}} matchende slott",
+        "searchForCastles": "Søk etter noen slott å aktivere!",
+        "noCastlesNearby": "Ingen slott i nærheten",
+        "nearbyCastles": "Nærliggende slott",
+        "searchPlaceholder": "Slott etter navn eller referanse…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Ingen slott jaktet",
+        "huntedRefsCount_one": "1 slott jaktet",
+        "huntedRefsCount_other": "{{fmtCount}} slott jaktet",
+        "activatorQSOsCount_zero": "Ingen aktivator-QSOer",
+        "activatorQSOsCount_one": "1 aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivator-QSOer",
+        "huntedQSOsCount_zero": "Ingen jakt-QSOer",
+        "huntedQSOsCount_one": "1 jakt-QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} jakt-QSOer",
+        "operationTotals": "Operasjonsresultater",
+        "referencesActivatedCount_zero": "Ingen slott aktivert",
+        "referencesActivatedCount_one": "1 slott aktivert",
+        "referencesActivatedCount_other": "{{fmtCount}} slott aktivert",
+        "referencesMissedCount_zero": "Ingen ufullstendige slott",
+        "referencesMissedCount_one": "1 ufullstendig slott",
+        "referencesMissedCount_other": "{{fmtCount}} ufullstendige slott",
+        "referencesHuntedCount_zero": "Ingen slott jaktet",
+        "referencesHuntedCount_one": "1 slott jaktet",
+        "referencesHuntedCount_other": "{{fmtCount}} slott jaktet"
+      },
+      "exampleRefName": "Eksempelslott",
+      "unknownRefName": "Ukjent slott",
+      "noRefsNearby": "Ingen slott i nærheten!"
     },
     "wfd": {
       "name": "Winter Field Day",

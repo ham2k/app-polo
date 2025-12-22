@@ -429,6 +429,11 @@
         "descriptionOn": "Définir {{operatorCall}} comme opérateur dans les opérations où l'indicatif de la station est différent",
         "descriptionOff": "Ne pas suggérer d'opérateur par défaut quel que soit l'indicatif de la station utilisé"
       },
+      "suggestTemplates": {
+        "title": "Utiliser les modèles d'opérations",
+        "descriptionOn": "Suggérer des modèles pour les nouvelles opérations",
+        "descriptionOff": "Ne pas suggérer de modèles"
+      },
       "bandsModes": {
         "title": "Bandes et Modes",
         "description": "{{bands}} • {{modes}}"

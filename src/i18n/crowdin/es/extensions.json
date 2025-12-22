@@ -250,6 +250,10 @@
         "__comment__": "Override specific data file titles here",
         "pota-all-parks": "POTA: Todos los parques",
         "sota-all-summits": "SOTA: Todos los picos"
+      },
+      "loading": {
+        "progress": "Cargadas `{{processedLines}}` referencias.\n\n`{{percent}}` • {{secondsLeft}} segundos restantes.",
+        "downloadingRawData": "Descargando datos sin procesar..."
       }
     },
     "dxcc": {
@@ -570,6 +574,49 @@
       "placeholderIreland": "por ej., N93",
       "currentSquare": "Cuadrícula Actual:",
       "noSquareSet": "Ninguna cuadrícula establecida"
+    },
+    "wca": {
+      "name": "Premios a Castillos del Mundo",
+      "shortName": "WCA",
+      "exportName": "Activación WCA",
+      "activityOptions": {
+        "title_zero": "No se han seleccionado castillos para activar",
+        "title_one": "Activando 1 castillo",
+        "title_other": "Activando {{count}} castillos",
+        "noCastlesFound": "No se encontraron castillos",
+        "nearestMatches": "{{limit}} más cercanos de {{count}} encontradas",
+        "matchingCastles_zero": "No se encontró ningún castillo",
+        "matchingCastles_one": "1 castillo encontrado",
+        "matchingCastles_other": "{{count}} castillos encontrados",
+        "searchForCastles": "¡Busca algunos castillos para activar!",
+        "noCastlesNearby": "No hay castillos cerca",
+        "nearbyCastles": "Castillos cercanos",
+        "searchPlaceholder": "Buscar castillos por nombre o referencia…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "No se cazaron castillos",
+        "huntedRefsCount_one": "1 castillo cazado",
+        "huntedRefsCount_other": "{{fmtCount}} castillos cazados",
+        "activatorQSOsCount_zero": "No hay QSOs de activadores",
+        "activatorQSOsCount_one": "1 QSO como activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
+        "huntedQSOsCount_zero": "No hay QSOs cazados",
+        "huntedQSOsCount_one": "1 QSO como cazador",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
+        "operationTotals": "Totales de la Operación",
+        "referencesActivatedCount_zero": "Sin castillos activados",
+        "referencesActivatedCount_one": "1 castillo activado",
+        "referencesActivatedCount_other": "{{fmtCount}} castillos activados",
+        "referencesMissedCount_zero": "Sin castillos incompletos",
+        "referencesMissedCount_one": "1 castillo incompleto",
+        "referencesMissedCount_other": "{{fmtCount}} castillos incompletos",
+        "referencesHuntedCount_zero": "No se cazaron castillos",
+        "referencesHuntedCount_one": "1 castillo cazado",
+        "referencesHuntedCount_other": "{{fmtCount}} castillos cazados"
+      },
+      "exampleRefName": "Ejemplo de Castillo",
+      "unknownRefName": "Castillo desconocido",
+      "noRefsNearby": "¡No hay castillos cerca!"
     },
     "wfd": {
       "name": "Winter Field Day",

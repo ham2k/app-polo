@@ -250,6 +250,10 @@
         "__comment__": "Overschrijf specifieke gegevensbestandstitels hier",
         "pota-all-parks": "POTA: Alle Parken",
         "sota-all-summits": "SOTA: Alle Summits"
+      },
+      "loading": {
+        "progress": "Geladen `{{processedLines}}` referenties.\n\n`{{percent}}` • {{secondsLeft}} seconden over.",
+        "downloadingRawData": "Onbewerkte gegevens downloaden…"
       }
     },
     "dxcc": {
@@ -570,6 +574,49 @@
       "placeholderIreland": "bijv. N93",
       "currentSquare": "Huidig vierkant:",
       "noSquareSet": "Geen vierkant ingesteld"
+    },
+    "wca": {
+      "name": "Wereldkastelen Awards",
+      "shortName": "WCA",
+      "exportName": "WCA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen kastelen geselecteerd voor activering",
+        "title_one": "1 kasteel activeren",
+        "title_other": "{{count}} kastelen activeren",
+        "noCastlesFound": "Geen kastelen gevonden",
+        "nearestMatches": "Dichtstbijzijnde {{limit}} van {{count}} overeenkomsten",
+        "matchingCastles_zero": "Geen overeenkomende kastelen",
+        "matchingCastles_one": "1 overeenkomend kasteel",
+        "matchingCastles_other": "{{count}} overeenkomende kastelen",
+        "searchForCastles": "Zoek naar enkele kastelen om te activeren!",
+        "noCastlesNearby": "Geen kastelen in de buurt",
+        "nearbyCastles": "Nabijgelegen kastelen",
+        "searchPlaceholder": "Kastelen op naam of referentie…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Geen gejaagde kastelen",
+        "huntedRefsCount_one": "1 kasteel gelogd",
+        "huntedRefsCount_other": "{{fmtCount}} kastelen gejaagd",
+        "activatorQSOsCount_zero": "Geen activator QSO's",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
+        "huntedQSOsCount_zero": "Geen gejaagde QSO's",
+        "huntedQSOsCount_one": "1 gejaagde QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} gejaagde QSO's",
+        "operationTotals": "Operationele totaal",
+        "referencesActivatedCount_zero": "Geen kastelen geactiveerd",
+        "referencesActivatedCount_one": "1 kasteel geactiveerd",
+        "referencesActivatedCount_other": "{{fmtCount}} kastelen geactiveerd",
+        "referencesMissedCount_zero": "Geen onvolledige kastelen activatie",
+        "referencesMissedCount_one": "1 onvolledig kasteel geactiveerd",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige kastelen geactiveerd",
+        "referencesHuntedCount_zero": "Geen gejagde kastelen",
+        "referencesHuntedCount_one": "1 kasteel gelogd",
+        "referencesHuntedCount_other": "{{fmtCount}} kastelen gejaagd"
+      },
+      "exampleRefName": "Voorbeeldkasteel",
+      "unknownRefName": "Onbekend kasteel",
+      "noRefsNearby": "Geen kastelen in de buurt!"
     },
     "wfd": {
       "name": "Winter Field Day",
