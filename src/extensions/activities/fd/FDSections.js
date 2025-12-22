@@ -93,7 +93,8 @@ export const RAC_SECTIONS = {
   PE: 'Prince Edward Island',
   QC: 'Quebec',
   SK: 'Saskatchewan',
-  TER: 'Territories'
+  TER: 'Territories',
+  YT: 'Yukon Territory'
 }
 
 export const ABBREVIATED_SECTION_NAMES = {
