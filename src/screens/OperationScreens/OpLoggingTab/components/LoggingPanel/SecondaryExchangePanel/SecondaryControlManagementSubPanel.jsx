@@ -12,7 +12,7 @@ import { Text } from 'react-native-paper'
 import { useTranslation } from 'react-i18next'
 
 import LoggerChip from '../../../../components/LoggerChip'
-import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
+import { valueOrFunction } from '../../../../../../tools/valueOrFunction'
 import { setOperationLocalData } from '../../../../../../store/operations'
 import { setSettings } from '../../../../../../store/settings'
 import { H2kIcon } from '../../../../../../ui'
@@ -77,7 +77,7 @@ export const SecondaryControlManagementSubPanel = ({
                 selected={false}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               >
-                {control.label ? stringOrFunction(control.label, { t, operation, vfo, qso, settings }) : control.key}
+                {control.label ? valueOrFunction(control.label, { t, operation, vfo, qso, settings }) : control.key}
               </LoggerChip>
             )}
           </View>
@@ -111,7 +111,7 @@ export const SecondaryControlManagementSubPanel = ({
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={false}
                 disabled={control.optionType === 'mandatory'}
-                accessibilityLabel={control.accessibilityLabel ? stringOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
+                accessibilityLabel={control.accessibilityLabel ? valueOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               />
             ) : (
@@ -120,10 +120,10 @@ export const SecondaryControlManagementSubPanel = ({
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={false}
                 disabled={control.optionType === 'mandatory'}
-                accessibilityLabel={control.accessibilityLabel ? stringOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
+                accessibilityLabel={control.accessibilityLabel ? valueOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               >
-                {control.label ? stringOrFunction(control.label, { t, operation, vfo, qso, settings }) : control.key}
+                {control.label ? valueOrFunction(control.label, { t, operation, vfo, qso, settings }) : control.key}
               </LoggerChip>
             )}
           </View>

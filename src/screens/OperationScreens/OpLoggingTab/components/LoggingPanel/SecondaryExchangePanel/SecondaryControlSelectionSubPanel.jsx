@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 
 import LoggerChip from '../../../../components/LoggerChip'
-import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
+import { valueOrFunction } from '../../../../../../tools/valueOrFunction'
 import { setSettings } from '../../../../../../store/settings'
 import { H2kIcon, H2kIconButton } from '../../../../../../ui'
 
@@ -39,9 +39,9 @@ const PositionedControlChip = (props) => {
         <LoggerChip
           {...props}
           onChange={handleChange}
-          accessibilityLabel={control.accessibilityLabel ? stringOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
+          accessibilityLabel={control.accessibilityLabel ? valueOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
         >
-          {control.label ? stringOrFunction(control.label, { t, operation, qso, vfo, settings }) : control.key}
+          {control.label ? valueOrFunction(control.label, { t, operation, qso, vfo, settings }) : control.key}
         </LoggerChip>
       </View>
     )
