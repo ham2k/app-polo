@@ -340,7 +340,7 @@ export function H2kTextInput (props) {
   const valueAsChild = !(numeric || decimal || rst)
 
   return (
-    <View style={styles.root}>
+    <View style={isFocused ? styles.focusedRoot : styles.root}>
       <Text style={styles.label}>{label}</Text>
 
       <NativeTextInput
@@ -392,23 +392,30 @@ function prepareStyles (themeStyles, { style, textStyle, error, themeColor, disa
     labelColor = themeStyles.theme.colors.onSurfaceDisabled
   }
 
+  const rootStyle = {
+    ...style,
+    minHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 6),
+    backgroundColor: themeStyles.theme.colors.background,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    borderWidth: 0,
+    borderBottomWidth: PixelRatio.roundToNearestPixel(1.5),
+    borderBottomColor: borderColor,
+    paddingHorizontal: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.8),
+    paddingBottom: themeStyles.halfSpace,
+    paddingTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.2),
+    flexDirection: 'column',
+    gap: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.3),
+    justifyContent: 'flex-start'
+  }
+
   return {
     ...themeStyles,
-    root: {
-      ...style,
-      minHeight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 6),
-      backgroundColor: themeStyles.theme.colors.background,
-      borderTopLeftRadius: 4,
-      borderTopRightRadius: 4,
-      borderWidth: 0,
-      borderBottomWidth: PixelRatio.roundToNearestPixel(1.5),
-      borderBottomColor: borderColor,
-      paddingHorizontal: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.8),
-      paddingBottom: themeStyles.halfSpace,
-      paddingTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.2),
-      flexDirection: 'column',
-      gap: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.3),
-      justifyContent: 'flex-start'
+    root: rootStyle,
+    focusedRoot: {
+      ...rootStyle,
+      paddingBottom: themeStyles.halfSpace - PixelRatio.roundToNearestPixel(2.5),
+      borderBottomWidth: PixelRatio.roundToNearestPixel(4)
     },
     label: {
       fontSize: themeStyles.smallestFontSize,
