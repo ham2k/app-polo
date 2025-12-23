@@ -404,11 +404,6 @@
         "descriptionAll": "Vis flagg for alle kontakter",
         "descriptionDefault": "Vis bare for DX-kontakter"
       },
-      "stateField": {
-        "title": "Stat-felt",
-        "descriptionOn": "Inkluder Stat-felt i hovedutveksling",
-        "descriptionOff": "Ikke inkluder Stat-felt"
-      },
       "showBearing": {
         "title": "Vis peiling",
         "descriptionOn": "Vis estimert peiling til stasjon",
@@ -582,7 +577,9 @@
       "moreCodeAndDocsContributors": "Flere bidragsytere…",
       "contributorCode": "Kodebidragsyter: {{contributions}}",
       "contributorDocumentation": "Dokumentasjon",
-      "translations": "Oversettelser"
+      "translations": "Oversettelser",
+      "translationsService": "Oversettelsesverktøy fra CrowdIn",
+      "translationsServiceDescription": "Verktøy for å administrere oversettelsesprosessen er velvillig donert av CrowdIn"
     },
     "devModeSettings": {
       "title": "Utviklerinnstillinger",
@@ -764,6 +761,7 @@
         "loggingSettings": "Loggingsinnstillinger",
         "rstFields": "RST-felt",
         "stateField": "Stat-felt",
+        "gridField": "Gridfelt",
         "showDeletedQSOs": "Vis slettede QSOer",
         "numbersRow": "Tallrad",
         "actions": "Handlinger",
@@ -810,6 +808,7 @@
       "ourSentLabel": "Sendt",
       "theirSentLabel": "Mottatt",
       "stateLabel": "Stat",
+      "gridLabel": "Grid",
       "timeLabel": "Tid",
       "dateLabel": "Dato",
       "timeControls-a11y": "Tidskontroller",

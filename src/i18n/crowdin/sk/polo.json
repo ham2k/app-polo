@@ -404,11 +404,6 @@
         "descriptionAll": "Zobraziť vlajky pre všetky spojenia",
         "descriptionDefault": "Zobraziť iba pre DX spojenia"
       },
-      "stateField": {
-        "title": "Pole štátu",
-        "descriptionOn": "Zahrnúť pole štátu v hlavnej výmene",
-        "descriptionOff": "Nezahrnúť pole štátu"
-      },
       "showBearing": {
         "title": "Zobrazovať azimut",
         "descriptionOn": "Zobrazovať odhadovaný azimut ku stanici",
@@ -582,7 +577,9 @@
       "moreCodeAndDocsContributors": "Viac prispievateľov…",
       "contributorCode": "Kode prispievateľ: {{contributions}}",
       "contributorDocumentation": "Dokumentácia",
-      "translations": "Preklady"
+      "translations": "Preklady",
+      "translationsService": "Prekladové nástroje od CrowdIn",
+      "translationsServiceDescription": "Nástroje na správu procesu prekladu sú štedro darované spoločnosťou CrowdIn"
     },
     "devModeSettings": {
       "title": "Nastavenia pre vývojárov",
@@ -764,6 +761,7 @@
         "loggingSettings": "Nastavenia denníka",
         "rstFields": "RST Polia",
         "stateField": "Štát pole",
+        "gridField": "Mriežkové pole",
         "showDeletedQSOs": "Zobraziť vymazané QSOs",
         "numbersRow": "Rada čísel",
         "actions": "Akcie",
@@ -810,6 +808,7 @@
       "ourSentLabel": "Odoslané",
       "theirSentLabel": "Prijaté",
       "stateLabel": "Stav",
+      "gridLabel": "Lokátorová mriežka",
       "timeLabel": "Čas",
       "dateLabel": "Dátum",
       "timeControls-a11y": "Ovládanie času",

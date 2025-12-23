@@ -404,11 +404,6 @@
         "descriptionAll": "Flaggen für alle Kontakte anzeigen",
         "descriptionDefault": "Nur für DX-Kontakte anzeigen"
       },
-      "stateField": {
-        "title": "Bundesstaaten-Feld",
-        "descriptionOn": "Bundesstaaten-Feld im Hauptaustausch einbeziehen",
-        "descriptionOff": "Bundesstaaten-Feld nicht einbeziehen"
-      },
       "showBearing": {
         "title": "Peilung anzeigen",
         "descriptionOn": "Geschätzte Peilung zur Station anzeigen",
@@ -582,7 +577,9 @@
       "moreCodeAndDocsContributors": "Weitere Mitwirkende…",
       "contributorCode": "Code-Mitwirkende: {{contributions}}",
       "contributorDocumentation": "Dokumentation",
-      "translations": "Übersetzungen"
+      "translations": "Übersetzungen",
+      "translationsService": "Übersetzungstools von CrowdIn",
+      "translationsServiceDescription": "Werkzeuge zur Verwaltung des Übersetzungsprozesses werden großzügig von CrowdIn gespendet."
     },
     "devModeSettings": {
       "title": "Entwickler-Einstellungen",
@@ -764,6 +761,7 @@
         "loggingSettings": "Logging-Einstellungen",
         "rstFields": "RST-Felder",
         "stateField": "Bundesstaaten-Feld",
+        "gridField": "Gitterfeld",
         "showDeletedQSOs": "Gelöschte QSOs anzeigen",
         "numbersRow": "Zahlenreihe",
         "actions": "Aktionen",
@@ -810,6 +808,7 @@
       "ourSentLabel": "Gesendet",
       "theirSentLabel": "Rcvd",
       "stateLabel": "Staat",
+      "gridLabel": "Raster",
       "timeLabel": "Zeit",
       "dateLabel": "Datum",
       "timeControls-a11y": "Zeitsteuerungen",

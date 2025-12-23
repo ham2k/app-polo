@@ -404,11 +404,6 @@
         "descriptionAll": "Afficher les drapeaux pour tous les contacts",
         "descriptionDefault": "Afficher uniquement pour les contacts DX"
       },
-      "stateField": {
-        "title": "Champ État",
-        "descriptionOn": "Inclure le champ État dans l'échange principal",
-        "descriptionOff": "Ne pas inclure le champ État"
-      },
       "showBearing": {
         "title": "Afficher la direction",
         "descriptionOn": "Afficher la direction estimée vers la station",
@@ -582,7 +577,9 @@
       "moreCodeAndDocsContributors": "Plus de contributeurs…",
       "contributorCode": "Contributeur de code : {{contributions}}",
       "contributorDocumentation": "Documentation",
-      "translations": "Traductions"
+      "translations": "Traductions",
+      "translationsService": "Outils de traduction par CrowdIn",
+      "translationsServiceDescription": "Les outils pour gérer le processus de traduction sont généreusement offerts par CrowdIn"
     },
     "devModeSettings": {
       "title": "Paramètres de développement",
@@ -764,6 +761,7 @@
         "loggingSettings": "Paramètres de saisie",
         "rstFields": "Champs RST",
         "stateField": "Champ État",
+        "gridField": "Champ de Grille",
         "showDeletedQSOs": "Afficher les QSOs supprimés",
         "numbersRow": "Ligne des chiffres",
         "actions": "Actions",
@@ -810,6 +808,7 @@
       "ourSentLabel": "Envoyé",
       "theirSentLabel": "Reçu",
       "stateLabel": "État",
+      "gridLabel": "Grille",
       "timeLabel": "Heure",
       "dateLabel": "Date",
       "timeControls-a11y": "Contrôles de temps",

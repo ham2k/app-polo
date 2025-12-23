@@ -71,25 +71,25 @@
         "searchPlaceholder": "Vuurtorens op naam of referentie…"
       },
       "scoring": {
-        "huntedRefsCount_zero": "Geen vuurtorens hunted",
-        "huntedRefsCount_one": "1 hunted vuurtoren",
+        "huntedRefsCount_zero": "Geen vuurtorens gelogd",
+        "huntedRefsCount_one": "1 gelogde vuurtoren",
         "huntedRefsCount_other": "{{fmtCount}} hunted vuurtorens",
         "activatorQSOsCount_zero": "Geen activator QSO's",
         "activatorQSOsCount_one": "1 activator QSO",
         "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
         "huntedQSOsCount_zero": "Geen hunter QSO's",
         "huntedQSOsCount_one": "1 hunter QSO",
-        "huntedQSOsCount_other": "{{fmtCount}} hunterQSO's",
+        "huntedQSOsCount_other": "{{fmtCount}} hunter QSO's",
         "operationTotals": "Activatie totaal",
         "referencesActivatedCount_zero": "Geen vuurtorens geactiveerd",
         "referencesActivatedCount_one": "1 vuurtoren geactiveerd",
         "referencesActivatedCount_other": "{{fmtCount}} vuurtorens geactiveerd",
         "referencesMissedCount_zero": "Geen onvolledige vuurtorens log",
         "referencesMissedCount_one": "1 onvolledige vuurtoren log",
-        "referencesMissedCount_other": "{{fmtCount}} onvolledige vuurtorens log",
-        "referencesHuntedCount_zero": "Geen vuurtorens hunted",
-        "referencesHuntedCount_one": "1 vuurtoren hunted",
-        "referencesHuntedCount_other": "{{fmtCount}} vuurtorens hunted"
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige vuurtoren logs",
+        "referencesHuntedCount_zero": "Geen vuurtorens gelogd",
+        "referencesHuntedCount_one": "1 vuurtoren gelogd",
+        "referencesHuntedCount_other": "{{fmtCount}} vuurtorens gelogd"
       }
     },
     "call-notes": {
@@ -115,7 +115,7 @@
       "descriptions": {
         "ham2k-hams-of-note": "Een werkelijk voorbeeld van wie is en wie is niet in de wereld van radio"
       },
-      "help-md": "Roepnotities worden opgeslagen in simpele tekstbestanden, één oproep per regel gevolgd door informatie die u op het logscherm wilt weergeven. U kunt de ingebouwde bestanden gebruiken of uw eigen toevoegen.\n\nGeef een directe link naar een gewoon tekstbestand, of een \"deel link\" van een service zoals:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nRegels op dat bestand moeten er zo uitzien en kunnen basis markdown-opmaak ondersteunen:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nAls de invoer begint met een emoji, zal deze worden gebruikt in plaats van de standaard ⭐.\n\nInvoeren kunnen worden gebruikt voor \"roepnaam uitbreiding\" als u eerst `..` of ` //` in het roepnaam veld typt, zoals `//DAN` in het voorbeeld hierboven."
+      "help-md": "Roepnaam notities worden opgeslagen in simpele tekstbestanden, één oproep per regel gevolgd door informatie die u op het logscherm wilt weergeven. U kunt de ingebouwde bestanden gebruiken of uw eigen toevoegen.\n\nGeef een directe link naar een gewoon tekstbestand, of een \"deel link\" van een service zoals:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nRegels in dat bestand moeten er zo uitzien en kunnen basis markdown-opmaak ondersteunen:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nAls de invoer begint met een emoji, zal deze worden gebruikt in plaats van de standaard ⭐.\n\nInvoer kan worden gebruikt voor \"roepnaam uitbreiding\" als u eerst `..` of ` //` in het roepnaam veld typt, zoals `//DAN` in het voorbeeld hierboven."
     },
     "canadianProvinces": {
       "provincesCount_zero": "Geen Canadese provincies",
@@ -199,8 +199,8 @@
       "frequencyAndModeConfirm": "Frequentie ingesteld op {{freq}} MHz ({{mode}})",
       "power": "Vermogen wijzigen naar {{power}}W?",
       "powerConfirm": "Vermogen ingesteld op {{power}}W",
-      "mode": "Modus wijzigen naar {{mode}}?",
-      "modeConfirm": "Modus ingesteld op {{mode}}"
+      "mode": "Mode wijzigen naar {{mode}}?",
+      "modeConfirm": "Mode ingesteld op {{mode}}"
     },
     "commands-settings": {
       "set": "Instelling {{name}}?",
@@ -214,7 +214,7 @@
       "setDate": "Datum instellen op {{date}}?",
       "timeSet": "Tijd ingesteld op {{time}}",
       "dateSet": "Datum ingesteld op {{date}}",
-      "changeTimeByHours": "Tijd wijzigen met {{delta}} uur?",
+      "changeTimeByHours": "Tijd wijzigen met {{delta}} uren?",
       "changeTimeByMinutes": "Tijd wijzigen met {{delta}} minuten?",
       "changeTimeBySeconds": "Tijd wijzigen met {{delta}} seconden?",
       "changeTimeByDays": "Tijd wijzigen met {{delta}} dagen?",
@@ -576,7 +576,7 @@
       "noSquareSet": "Geen vierkant ingesteld"
     },
     "wca": {
-      "name": "Wereldkastelen Awards",
+      "name": "World Castle Awards",
       "shortName": "WCA",
       "exportName": "WCA Activatie",
       "activityOptions": {
@@ -594,13 +594,13 @@
         "searchPlaceholder": "Kastelen op naam of referentie…"
       },
       "scoring": {
-        "huntedRefsCount_zero": "Geen gejaagde kastelen",
+        "huntedRefsCount_zero": "Geen gelogde kastelen",
         "huntedRefsCount_one": "1 kasteel gelogd",
-        "huntedRefsCount_other": "{{fmtCount}} kastelen gejaagd",
+        "huntedRefsCount_other": "{{fmtCount}} kastelen gelogd",
         "activatorQSOsCount_zero": "Geen activator QSO's",
         "activatorQSOsCount_one": "1 activator QSO",
         "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
-        "huntedQSOsCount_zero": "Geen gejaagde QSO's",
+        "huntedQSOsCount_zero": "Geen hunter QSO's",
         "huntedQSOsCount_one": "1 gejaagde QSO",
         "huntedQSOsCount_other": "{{fmtCount}} gejaagde QSO's",
         "operationTotals": "Operationele totaal",
@@ -608,13 +608,13 @@
         "referencesActivatedCount_one": "1 kasteel geactiveerd",
         "referencesActivatedCount_other": "{{fmtCount}} kastelen geactiveerd",
         "referencesMissedCount_zero": "Geen onvolledige kastelen activatie",
-        "referencesMissedCount_one": "1 onvolledig kasteel geactiveerd",
+        "referencesMissedCount_one": "1 onvolledige kasteel activatie",
         "referencesMissedCount_other": "{{fmtCount}} onvolledige kastelen geactiveerd",
-        "referencesHuntedCount_zero": "Geen gejagde kastelen",
+        "referencesHuntedCount_zero": "Geen gelogde kastelen",
         "referencesHuntedCount_one": "1 kasteel gelogd",
         "referencesHuntedCount_other": "{{fmtCount}} kastelen gejaagd"
       },
-      "exampleRefName": "Voorbeeldkasteel",
+      "exampleRefName": "Voorbeeld kasteel",
       "unknownRefName": "Onbekend kasteel",
       "noRefsNearby": "Geen kastelen in de buurt!"
     },

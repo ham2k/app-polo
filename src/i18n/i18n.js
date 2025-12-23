@@ -147,7 +147,7 @@ export const initializeI18Next = (language) => {
     .init({
       fallbackLng: 'en',
       lng: language === 'default' ? undefined : language,
-      debug: true,
+      debug: false,
       nonExplicitSupportedLngs: true,
       interpolation: {
         escapeValue: false

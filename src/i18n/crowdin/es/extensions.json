@@ -253,7 +253,7 @@
       },
       "loading": {
         "progress": "Cargadas `{{processedLines}}` referencias.\n\n`{{percent}}` • {{secondsLeft}} segundos restantes.",
-        "downloadingRawData": "Descargando datos sin procesar..."
+        "downloadingRawData": "Descargando datos..."
       }
     },
     "dxcc": {
@@ -565,7 +565,7 @@
       "statesCount_other": "{{count}} estados de EE.UU."
     },
     "wab": {
-      "name": "Trabajado todo Gran Bretaña/Irlanda",
+      "name": "WAB/WAI: Trabajado todo Gran Bretaña/Irlanda",
       "description": "Agregar cuadrícula WAB/WAI a la operación",
       "workedAllBritainSquare": "Cuadrícula Trabajado Todo Gran Bretaña",
       "workedAllIrelandSquare": "Cuadrícula Trabajado Todo Irlanda",
@@ -576,7 +576,7 @@
       "noSquareSet": "Ninguna cuadrícula establecida"
     },
     "wca": {
-      "name": "Premios a Castillos del Mundo",
+      "name": "WCA: Castillos del Mundo",
       "shortName": "WCA",
       "exportName": "Activación WCA",
       "activityOptions": {
@@ -600,10 +600,10 @@
         "activatorQSOsCount_zero": "No hay QSOs de activadores",
         "activatorQSOsCount_one": "1 QSO como activador",
         "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
-        "huntedQSOsCount_zero": "No hay QSOs cazados",
+        "huntedQSOsCount_zero": "No hay QSOs como cazador",
         "huntedQSOsCount_one": "1 QSO como cazador",
         "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
-        "operationTotals": "Totales de la Operación",
+        "operationTotals": "Totales de la operación",
         "referencesActivatedCount_zero": "Sin castillos activados",
         "referencesActivatedCount_one": "1 castillo activado",
         "referencesActivatedCount_other": "{{fmtCount}} castillos activados",
@@ -614,7 +614,7 @@
         "referencesHuntedCount_one": "1 castillo cazado",
         "referencesHuntedCount_other": "{{fmtCount}} castillos cazados"
       },
-      "exampleRefName": "Ejemplo de Castillo",
+      "exampleRefName": "Ejemplo de castillo",
       "unknownRefName": "Castillo desconocido",
       "noRefsNearby": "¡No hay castillos cerca!"
     },

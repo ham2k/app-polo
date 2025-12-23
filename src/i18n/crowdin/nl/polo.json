@@ -404,11 +404,6 @@
         "descriptionAll": "Toon vlaggen voor alle QSO's",
         "descriptionDefault": "Toon alleen voor DX-QSO's"
       },
-      "stateField": {
-        "title": "State veld",
-        "descriptionOn": "Toon state veld in hoofduitwisseling",
-        "descriptionOff": "State veld niet tonen"
-      },
       "showBearing": {
         "title": "Toon Azimuth",
         "descriptionOn": "Toon geschatte Azimuth naar station",
@@ -582,7 +577,9 @@
       "moreCodeAndDocsContributors": "Meer bijdragers…",
       "contributorCode": "Code Bijdrager: {{contributions}}",
       "contributorDocumentation": "Documentatie",
-      "translations": "Vertalingen"
+      "translations": "Vertalingen",
+      "translationsService": "Vertaalhulpmiddelen door CrowdIn",
+      "translationsServiceDescription": "Hulpmiddelen om het vertaalproces te beheren worden genereus gedoneerd door CrowdIn"
     },
     "devModeSettings": {
       "title": "Ontwikkelaarsinstellingen",
@@ -764,6 +761,7 @@
         "loggingSettings": "Loginstellingen",
         "rstFields": "RST Velden",
         "stateField": "Staat Veld",
+        "gridField": "Rooster Veld",
         "showDeletedQSOs": "Verwijderde QSOs Tonen",
         "numbersRow": "Cijferlijn",
         "actions": "Acties",
@@ -810,6 +808,7 @@
       "ourSentLabel": "Verzonden",
       "theirSentLabel": "Ontvangen",
       "stateLabel": "Staat",
+      "gridLabel": "Rooster",
       "timeLabel": "Tijd",
       "dateLabel": "Datum",
       "timeControls-a11y": "Tijdbeheer",

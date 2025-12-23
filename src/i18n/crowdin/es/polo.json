@@ -404,11 +404,6 @@
         "descriptionAll": "Mostrar banderas para todos los contactos",
         "descriptionDefault": "Mostrar solo para contactos DX"
       },
-      "stateField": {
-        "title": "Campo de Estado",
-        "descriptionOn": "Incluir campo de estado en el intercambio principal",
-        "descriptionOff": "No incluir campo de estado"
-      },
       "showBearing": {
         "title": "Mostrar Orientación",
         "descriptionOn": "Mostrar el rumbo estimado hacia la estación",
@@ -430,7 +425,7 @@
         "descriptionOff": "No sugerir ningún operador por defecto, independientemente del indicativo de la estación usado"
       },
       "suggestTemplates": {
-        "title": "Usar plantillas de operación",
+        "title": "Usar plantillas de operaciones",
         "descriptionOn": "Sugerir plantillas para nuevas operaciones",
         "descriptionOff": "No sugerir plantillas"
       },
@@ -523,14 +518,14 @@
         "buttonCancel": "OK"
       },
       "syncAccountDialog": {
-        "title": "Cuenta LoFi Ham2K",
+        "title": "Cuenta de Ham2K LoFi",
         "emailAddressLabel": "Dirección de correo electrónico",
         "resendButton": "Reenviar",
         "revertButton": "Deshacer",
         "syncFirstButton": "Regresar y completar la sincronización primero",
         "continueAnywayButton": "¡Sé lo que estoy haciendo! Continuar de todos modos",
-        "potentialForDataLoss": "¡Posibilidad de pérdida de datos!!!",
-        "potentialForDataLossDescription": "No has sincronizado todos los datos en este dispositivo.\n\nSi vinculas este dispositivo a una nueva cuenta, se te pedirá si deseas reemplazar sus datos con los de la nueva cuenta.\n\nEn este caso, es posible que no puedas recuperar ninguna actividad existente que aún no se haya sincronizado.\n\n¡Sugerimos que completes la sincronización de este dispositivo primero!"
+        "potentialForDataLoss": "¡¡¡Posibilidad de pérdida de datos!!!",
+        "potentialForDataLossDescription": "No has sincronizado todos los datos en este dispositivo.\n\nSi vinculas este dispositivo a una nueva cuenta, se te pedirá si deseas reemplazar sus datos con los de la nueva cuenta.\n\nEn este caso, es posible que no puedas recuperar actividades existentes que aún no se hayan sincronizado.\n\n¡Sugerimos que completes la sincronización de este dispositivo primero!"
       },
       "syncServiceDescription-md": "El servicio básico es gratuito y permite sincronizar datos recientes (hasta 7 días) entre dos dispositivos o aplicaciones a una velocidad limitada.\n\nEl servicio completo requiere una suscripción pagada y incluye todas tus operaciones sincronizadas entre cualquier número razonable de dispositivos o aplicaciones a velocidad completa.\n\nMientras el servicio LoFi esté en su PERÍODO DE PRUEBA para los próximos meses, el servicio permanecerá gratuito. Después de eso, los precios dependerán del país y moneda, pero no deberían ser más de US$30/año o equivalente, y probablemente menos.",
       "thisDevice": "Este Dispositivo",
@@ -582,7 +577,9 @@
       "moreCodeAndDocsContributors": "Otros contribuidores…",
       "contributorCode": "Código: {{contributions}}",
       "contributorDocumentation": "Documentación",
-      "translations": "Traducciones"
+      "translations": "Traducciones",
+      "translationsService": "Herramientas de traducción por CrowdIn",
+      "translationsServiceDescription": "Las herramientas para gestionar el proceso de traducción son generosamente donadas por CrowdIn"
     },
     "devModeSettings": {
       "title": "Opciones de Desarrollador",
@@ -764,6 +761,7 @@
         "loggingSettings": "Configuración de Logging",
         "rstFields": "Campos RST",
         "stateField": "Campo de Estado",
+        "gridField": "Campo de rejilla",
         "showDeletedQSOs": "QSOs Eliminados",
         "numbersRow": "Teclas de Números",
         "actions": "Acciones",
@@ -810,6 +808,7 @@
       "ourSentLabel": "Env.",
       "theirSentLabel": "Recib.",
       "stateLabel": "Estado",
+      "gridLabel": "Rejilla",
       "timeLabel": "Hora",
       "dateLabel": "Fecha",
       "timeControls-a11y": "Controles de Hora",
@@ -954,7 +953,7 @@
       "unknownError": "Error desconocido"
     },
     "importADIF": {
-      "error": "Error al importar ADIF en Operación",
+      "error": "Error al importar ADIF a esta operación",
       "historicalImportError": "Error al importar ADIF histórico",
       "unknownError": "Error desconocido"
     }
