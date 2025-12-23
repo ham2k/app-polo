@@ -42,7 +42,7 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
   useEffect(() => { // Prepare the screen, set the activity title, etc
     if (activity && operation) {
       navigation.setOptions({
-        title: t(`extensions.${activity.key}.name`, `Activity "${activity.key}"`),
+        title: t(`extensions.${activity.key}.name`, activity.name || `Activity "${activity.key}"`),
 
         leftAction: 'accept',
         leftActionA11yLabel: t('general.buttons.accept-a11y', 'Accept Changes'),

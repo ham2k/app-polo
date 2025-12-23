@@ -582,7 +582,9 @@
       "moreCodeAndDocsContributors": "More contributors…",
       "contributorCode": "Code Contributor: {{contributions}}",
       "contributorDocumentation": "Documentation",
-      "translations": "Translations"
+      "translations": "Translations",
+      "translationsService": "Translation tooling by CrowdIn",
+      "translationsServiceDescription": "Tools to manage the translation process are generously donated by CrowdIn"
     },
     "devModeSettings": {
       "title": "Developer Settings",

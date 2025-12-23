@@ -28,12 +28,12 @@ export const translatedVersionName = ({ t, version }) => {
       month: t(`general.formatting.month.${minor}`, DEFAULT_MONTHS[minor]),
       year: major
     }),
-    patch: t('general.version.patch', 'patch {{patch}}', { patch }),
+    patch: patch !== '0' ? t('general.version.patch', 'patch {{patch}}', { patch }) : '',
     full: t('general.version.specific', '{{month}} \'{{year}} {{patch}}', {
       month: t(`general.formatting.month.${minor}`, DEFAULT_MONTHS[minor]),
       year: major,
-      patch: t('general.version.patch', 'patch {{patch}}', { patch })
-    }),
+      patch: patch !== '0' ? t('general.version.patch', 'patch {{patch}}', { patch }) : ''
+    }).trim(),
   }
 }
 

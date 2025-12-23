@@ -130,6 +130,11 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
 
         <H2kListSection title={t('screens.creditsSettings.translations', 'Translations')}>
           <H2kListItem
+            title={t('screens.creditsSettings.translationService', 'Translation tooling by CrowdIn')}
+            description={t('screens.creditsSettings.translationServiceDescription', 'Tools to manage the translation process are generously donated by CrowdIn')}
+            leftIcon="hammer-screwdriver"
+          />
+          <H2kListItem
             title={t('general.languages.es', 'Spanish')}
             description={'KI2D Sebastián (lead), EA1HET Jonathan'}
             leftIcon="earth"
