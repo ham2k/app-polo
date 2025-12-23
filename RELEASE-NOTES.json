@@ -1,12 +1,14 @@
 {
-  "25.12.0-pre5": {
-    "name": "December '25 (pre 5)",
+  "25.12.0": {
+    "name": "December '25 (11)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
     "changes": [
       "Internationalization!!! (French, German, Spanish, Dutch, Slovak, and Norwegian Bokmål, to start)",
       "World Castles Awards (WCA) - Replaces ECA and BCA and adds the rest of the world",
-      "Set operation's state and county, and include in ADIF exports",
-      "Setting to disable operation template suggestions",
+      "State and county for operations, included in ADIF exports",
+      "Optional Grid field",
+      "SOTA 2026 Challenge support",
+      "Added a setting to disable operation template suggestions",
       "Layout and font size tweaks"
     ]
   },

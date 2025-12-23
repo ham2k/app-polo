@@ -58,7 +58,14 @@ let lastAuthenticationCheck
 
 const ActivityHook = {
   ...Info,
+
+  standardExchangeFields: ({ vfo }) => ({
+    // Enable grid for the 2026 SOTA Challenge (https://reflector.sota.org.uk/t/2026-sota-challenge-part-1/39799)
+    grid: (vfo?.band === '2m' || vfo?.band === '70cm') && (vfo?.mode === 'CW' || vfo?.mode === 'SSB' || vfo?.mode === 'USB')
+  }),
+
   MainExchangePanel: null,
+
   loggingControls: ({ operation, settings }) => {
     if (findRef(operation, Info.activationType)) {
       return [ActivatorLoggingControl]
@@ -305,6 +312,12 @@ const ReferenceHandler = {
     }
 
     if (huntingRef) fields.push({ SOTA_REF: huntingRef.ref })
+
+    // For the 2026 SOTA Challenge, they ask for POTA and WWFF refs as a way to determine location
+    const potaRefs = filterRefs(qso, 'pota')
+    if (potaRefs.length > 0) fields.push({ POTA_REF: potaRefs.map(ref => ref.ref).filter(x => x).join(',') })
+    const wwffRefs = filterRefs(qso, 'wwff')
+    if (wwffRefs.length > 0) fields.push({ WWFF_REF: wwffRefs.map(ref => ref.ref).filter(x => x).join(',') })
 
     // SOTA does not save signal reports, so most operators like to include this in the comments
     // Also, SOTA does not process the NOTES field, so we include our notes and signal reports in the COMMENT field
