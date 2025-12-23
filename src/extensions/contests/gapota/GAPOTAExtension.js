@@ -85,7 +85,7 @@ const ActivityHook = {
   ...Info,
   Options: ActivityOptions,
 
-  hideStateField: false
+  standardExchangeFields: { state: true },
 }
 
 const ReferenceHandler = {

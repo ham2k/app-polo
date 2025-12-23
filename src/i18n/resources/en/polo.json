@@ -404,11 +404,6 @@
         "descriptionAll": "Show flags for all contacts",
         "descriptionDefault": "Show only for DX contacts"
       },
-      "stateField": {
-        "title": "State Field",
-        "descriptionOn": "Include State field in main exchange",
-        "descriptionOff": "Don't include State field"
-      },
       "showBearing": {
         "title": "Show Bearing",
         "descriptionOn": "Show estimated bearing to station",
@@ -766,6 +761,7 @@
         "loggingSettings": "Logging Settings",
         "rstFields": "RST Fields",
         "stateField": "State Field",
+        "gridField": "Grid Field",
         "showDeletedQSOs": "Show Deleted QSOs",
         "numbersRow": "Numbers Row",
         "actions": "Actions",
@@ -812,6 +808,7 @@
       "ourSentLabel": "Sent",
       "theirSentLabel": "Rcvd",
       "stateLabel": "State",
+      "gridLabel": "Grid",
       "timeLabel": "Time",
       "dateLabel": "Date",
       "timeControls-a11y": "Time Controls",

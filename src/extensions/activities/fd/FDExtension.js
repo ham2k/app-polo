@@ -51,7 +51,7 @@ export default Extension
 const ActivityHook = {
   ...Info,
 
-  hideStateField: true,
+  standardExchangeFields: { state: false, grid: false },
 
   Options: FDActivityOptions,
   mainExchangeForOperation,

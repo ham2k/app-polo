@@ -13,6 +13,7 @@ import { findRef } from '../../../../../tools/refTools'
 import { findHooks } from '../../../../../extensions/registry'
 import { H2kCallsignInput, H2kRSTInput, H2kTextInput } from '../../../../../ui'
 import { expandRSTValues } from '../../../../../tools/callsignTools'
+import { valueOrFunction } from '../../../../../tools/valueOrFunction'
 
 export const MainExchangePanel = ({
   qso, qsos, operation, vfo, settings, style, styles, themeColor, disabled,
@@ -151,10 +152,26 @@ export const MainExchangePanel = ({
     fields = fields.concat(rstFields)
   }
 
-  let hideStateField = false
+  const extraFields = {
+    state: false,
+    grid: false
+  }
+  findHooks('activity').filter(activity => activity.standardExchangeFields).forEach(activity => {
+    const requestedFields = valueOrFunction(activity.standardExchangeFields, { qso, operation, vfo, settings })
+    for (const field of Object.keys(requestedFields)) {
+      extraFields[field] = extraFields[field] || requestedFields[field]
+    }
+  })
+  if (settings.showStateField === true || settings.showStateField === false) {
+    extraFields.state = settings.showStateField
+  }
+  if (settings.showGridField === true || settings.showGridField === false) {
+    extraFields.grid = settings.showGridField
+  }
+
+  console.log('extraFields', extraFields)
 
   findHooks('activity').filter(activity => activity.mainExchangeForOperation && findRef(operation, activity.key)).forEach(activity => {
-    if (activity.hideStateField) hideStateField = true
     fields = fields.concat(
       activity.mainExchangeForOperation(
         { qso, qsos, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
@@ -162,15 +179,40 @@ export const MainExchangePanel = ({
     )
   })
   findHooks('activity').filter(activity => activity.mainExchangeForQSO).forEach(activity => {
-    if (activity.hideStateField) hideStateField = true
-    fields = fields.concat(
-      activity.mainExchangeForQSO(
-        { qso, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
-      ) || []
-    )
+    if (activity) {
+      fields = fields.concat(
+        activity.mainExchangeForQSO(
+          { qso, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
+        ) || []
+      )
+    }
   })
 
-  if (settings.showStateField && !hideStateField) {
+  if (extraFields.grid) {
+    fields.push(
+      <H2kTextInput
+        key="grid"
+        innerRef={refStack.shift()}
+        themeColor={themeColor}
+        style={[styles.input, { minWidth: styles.oneSpace * 8.5, flex: 1 }]}
+        value={qso?.their?.grid ?? ''}
+        label={t('screens.opLoggingTab.gridLabel', 'Grid')}
+        placeholder={qso?.their?.guess?.grid ?? ''}
+        uppercase={true}
+        noSpaces={true}
+        onChange={handleFieldChange}
+        onSubmitEditing={onSubmitEditing}
+        fieldId={'grid'}
+        onSpace={spaceHandler}
+        keyboard={'dumb'}
+        maxLength={8}
+        focusedRef={focusedRef}
+        disabled={disabled}
+      />
+    )
+  }
+
+  if (extraFields.state) {
     fields.push(
       <H2kTextInput
         key="state"

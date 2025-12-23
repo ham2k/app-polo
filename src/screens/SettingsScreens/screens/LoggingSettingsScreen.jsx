@@ -71,13 +71,6 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
               onDialogDone={() => setCurrentDialog('')}
             />
           )}
-          <H2kListItem title={t('screens.loggingSettings.stateField.title', 'State Field')}
-            description={settings.showStateField ? t('screens.loggingSettings.stateField.descriptionOn', 'Include State field in main exchange') : t('screens.loggingSettings.stateField.descriptionOff', "Don't include State field") }
-            leftIcon="select-marker"
-            rightSwitchValue={!!settings.showStateField}
-            rightSwitchOnValueChange={(value) => dispatch(setSettings({ showStateField: value }))}
-            onPress={() => dispatch(setSettings({ showStateField: !settings.showStateField }))}
-          />
 
           <H2kListItem title={t('screens.loggingSettings.showBearing.title', 'Show Bearing')}
             description={settings.showBearing ? t('screens.loggingSettings.showBearing.descriptionOn', 'Show estimated bearing to station') : t('screens.loggingSettings.showBearing.descriptionOff', "Don't show bearing information") }

@@ -42,7 +42,7 @@ const ActivityHook = {
   ...Info,
   Options: ActivityOptions,
 
-  hideStateField: true,
+  standardExchangeFields: { state: false, grid: false },
 
   mainExchangeForOperation
 }

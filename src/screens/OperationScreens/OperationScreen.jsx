@@ -363,18 +363,28 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       </Text>
       <Menu.Item
         leadingIcon="signal"
-        trailingIcon={settings.showRSTFields === false ? 'circle-outline' : 'check-circle-outline'}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showRSTFields: settings.showRSTFields === false }))) }}
+        trailingIcon={_iconForTernarySetting(settings.showRSTFields)}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showRSTFields: _nextTernaryValue(settings.showRSTFields) }))) }}
         title={t('screens.operationScreen.menu.rstFields', 'RST Fields')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
+
       <Menu.Item
-        leadingIcon="select-marker"
-        trailingIcon={settings.showStateField === false ? 'circle-outline' : 'check-circle-outline'}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: settings.showStateField === false }))) }}
+        leadingIcon="selection-marker"
+        trailingIcon={_iconForTernarySetting(settings.showStateField)}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: _nextTernaryValue(settings.showStateField) }))) }}
         title={t('screens.operationScreen.menu.stateField', 'State Field')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
+
+      <Menu.Item
+        leadingIcon="select-marker"
+        trailingIcon={_iconForTernarySetting(settings.showGridField)}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showGridField: _nextTernaryValue(settings.showGridField) }))) }}
+        title={t('screens.operationScreen.menu.gridField', 'Grid Field')}
+        contentStyle={{ minWidth: styles.oneSpace * 20 }}
+      />
+
       <Menu.Item
         leadingIcon="delete-off-outline"
         trailingIcon={settings.showDeletedQSOs === false ? 'circle-outline' : 'check-circle-outline'}
@@ -382,6 +392,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
         title={t('screens.operationScreen.menu.showDeletedQSOs', 'Show Deleted QSOs')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
+
       <Menu.Item
         leadingIcon="numeric"
         trailingIcon={settings.showNumbersRow === false ? 'circle-outline' : 'check-circle-outline'}
@@ -389,16 +400,19 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
         title={t('screens.operationScreen.menu.numbersRow', 'Numbers Row')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
+
       <View style={{ height: 2, backgroundColor: styles.colors.onSurface, marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace }} />
       <Text style={{ marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
         {t('screens.operationScreen.menu.actions', 'Actions')}
       </Text>
+
       <Menu.Item
         leadingIcon="search-web"
         onPress={() => hideAndRun(() => dispatch(lookupAllQSOs(operation.uuid)))}
         title={t('screens.operationScreen.menu.lookupAllQSOs', 'Lookup all QSOs')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
+
       {hasRef(operation, 'potaActivation') &&
         <Menu.Item
           leadingIcon="list-status"
@@ -410,4 +424,24 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
         />}
     </>
   )
+}
+
+function _iconForTernarySetting (value) {
+  if (value === true) {
+    return 'check-circle-outline'
+  } else if (value === false) {
+    return 'circle-outline'
+  } else {
+    return 'help-circle-outline'
+  }
+}
+
+function _nextTernaryValue (value) {
+  if (value === true) {
+    return false
+  } else if (value === false) {
+    return ''
+  } else {
+    return true
+  }
 }

@@ -241,6 +241,8 @@ export default function LoggingPanel ({
       if (qso?._isNew) dispatch(setVFO({ mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
       updateQSO({ startAtMillis: value, _manualTime: true })
+    } else if (fieldId === 'grid') {
+      updateQSO({ their: { grid: value } })
     } else if (fieldId === 'state') {
       updateQSO({ their: { state: value } })
     } else if (fieldId === 'power') {
