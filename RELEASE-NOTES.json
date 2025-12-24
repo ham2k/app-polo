@@ -1,4 +1,12 @@
 {
+  "25.12.1": {
+    "name": "December '25 (patch 1)",
+    "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
+    "changes": [
+      "Fixed crash on Android",
+      "Translation updates"
+    ]
+  },
   "25.12.0": {
     "name": "December '25 (11)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
