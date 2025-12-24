@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Change band to {{band}}?",
       "bandConfirm": "Band set to {{band}}",
-      "frequency": "Change frequency to {{freq}} MHz{{mode}}?",
-      "frequencyConfirm": "Frequency set to {{freq}} MHz{{mode}}",
+      "frequency": "Change frequency to {{freq}} MHz?",
+      "frequencyConfirm": "Frequency set to {{freq}} MHz",
       "frequencyAndMode": "Change frequency to {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frequency set to {{freq}} MHz ({{mode}})",
       "power": "Change power to {{power}}W?",

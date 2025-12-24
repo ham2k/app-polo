@@ -5,25 +5,25 @@
       "Loading Extensions": "Extensies laden",
       "Development Build": "Portabel logboekprogramma ontwikkelversie",
       "messages": {
-        "Reticulating splines": "Splines inschalen",
+        "Reticulating splines": "Internet verbinding check",
         "Tuning the antenna": "De antenne afstemmen",
-        "Checking the tubes": "Buizen controleren",
-        "Warming up the tubes": "Buizen opwarmen",
+        "Checking the tubes": "Lampen controleren",
+        "Warming up the tubes": "Lampen opwarmen",
         "Unfolding the map": "De kaart uitvouwen",
-        "Charging the flux capacitor": "De flux condensator opladen",
-        "Purging the dilithium chamber": "De dilithium kamer zuiveren",
-        "Activating the turbo encabulator": "De turbo encabulator activeren",
-        "Engaging the warp drive": "De warp aandrijving inschakelen"
+        "Charging the flux capacitor": "Klaar?",
+        "Purging the dilithium chamber": "Radio check",
+        "Activating the turbo encabulator": "Go?",
+        "Engaging the warp drive": "Are you ready?"
       }
     },
     "home": {
-      "title": "Portable Logger",
+      "title": "Portabele Logger",
       "newOperation": "Nieuwe activatie",
       "newOperation-a11y": "Nieuwe activatie",
       "operationList-a11y": "Activatielijst",
       "noOperations": "Geen activaties!",
       "settings-a11y": "Instellingen",
-      "quickCallLookupPlaceholder": "Snelle roepnaam opzoeker…",
+      "quickCallLookupPlaceholder": "Snelle zoeker roepnaam…",
       "spots-a11y": "Spots"
     },
     "operation": {
@@ -45,11 +45,11 @@
       "updateStation-md_zero": "`{{newStation}}` bijwerken met nul bestaande QSO's",
       "updateStation-md_one": "`{{newStation}}` bijwerken met één bestaand QSO",
       "updateStation-md_other": "Werk `{{newStation}}` bij op {{count}} bestaande QSO's",
-      "multipleStationsUsed-md": "Deze activiteit heeft al QSO's met meerdere stations: `{{stations}}`.\n\n`{{newStation}}` zal alleen gebruikt worden voor nieuwe QSO's.",
+      "multipleStationsUsed-md": "Deze activatie heeft al QSO's met meerdere stations: `{{stations}}`.\n\n`{{newStation}}` zal alleen gebruikt worden voor nieuwe QSO's.",
       "singleOperatorUsed-md": "`{{oldOperator}}` tot nu toe gebruikt.\n`{{newOperator}}` zal worden gebruikt voor nieuwe QSO's.",
       "noOperatorUsed-md": "Nog geen roepnaam gebruikt.\n{{newOperator}} zal worden gebruikt voor nieuwe QSO's.",
       "updateOperator-md": "`{{newOperator}}` bijwerken als operator voor alle QSO's",
-      "multipleOperatorsUsed-md": "Deze activiteit heeft al QSO's met meerdere operator roepnamen: `{{operators}}`.\n\n`{{newOperator}}` zal alleen worden gebruikt voor nieuwe QSO's.",
+      "multipleOperatorsUsed-md": "Deze activatie heeft al QSO's met meerdere operator roepnamen: `{{operators}}`.\n\n`{{newOperator}}` zal alleen worden gebruikt voor nieuwe QSO's.",
       "whatIsTheCallsignUsedOnTheAir": "Welke roepnaam wordt \"on air\" gebruikt?",
       "stationCallsign": "Station roepnaam",
       "whoIsOperatingTheStation": "Wie bedient het station? (optioneel)",
@@ -72,13 +72,13 @@
       "county": "County (optioneel)"
     },
     "operationAddActivity": {
-      "title": "Activiteit Toevoegen",
-      "cantFindActivity": "Kunt u de activiteit die u zoekt niet vinden?",
+      "title": "Activatie Toevoegen",
+      "cantFindActivity": "Kunt u de activatie die u zoekt niet vinden?",
       "thereAreMoreOptions": "Er zijn meer opties in Instellingen > App Functies"
     },
     "operationActivityOptions": {
       "title": "Activiteit Opties",
-      "removeActivity": "Verwijder {{activity}} van deze activiteit"
+      "removeActivity": "Verwijder {{activity}} van deze activatie"
     },
     "operationData": {
       "title": "Activatie Gegevens",
@@ -99,15 +99,15 @@
       "exportSettings": "Exporteer Instellingen",
       "useCompactFileNames": "Gebruik compacte bestandsnamen",
       "wavelogExport": "Naar Wavelog Exporteren",
-      "exportQSOsToWavelogDescription": "Stuur alle QSO's voor deze operatie naar Wavelog",
+      "exportQSOsToWavelogDescription": "Stuur alle QSO's voor deze activatie naar Wavelog",
       "wavelogDialog": {
         "title": "Exporteer QSO's naar Wavelog",
-        "status": "Exporteer alle QSO's voor deze operatie naar Wavelog.",
+        "status": "Exporteer alle QSO's voor deze activatie naar Wavelog.",
         "exporting": "Exporteren naar Wavelog…"
       },
       "deleteOperationDialog": {
         "title": "Activatie verwijderen?",
-        "description": "Weet u zeker dat u deze operatie wilt verwijderen?"
+        "description": "Weet u zeker dat u deze activatie wilt verwijderen?"
       }
     },
     "callInfo": {
@@ -309,7 +309,7 @@
         "descriptionLG": "Groter",
         "descriptionXL": "Grootste",
         "dialogTitle": "Lettertype Schaal",
-        "dialogDescription": "Deze maten worden ook beïnvloed door apparaatinstellingen, zoals Weergave en Toegankelijkheid."
+        "dialogDescription": "Deze grootte wordt ook beïnvloed door apparaatinstellingen, zoals Weergave en Toegankelijkheid."
       },
       "language": {
         "title": "Taal: {{lang}}",
@@ -346,7 +346,7 @@
         "descriptionOff": "Gebruik kilometers voor afstanden"
       },
       "keepDeviceAwake": {
-        "title": "Houd apparaat wakker",
+        "title": "Houd apparaat actief",
         "descriptionOn": "Voorkom dat apparaat het scherm vergrendelt",
         "descriptionOff": "Sta schermvergrendeling toe"
       },
@@ -421,12 +421,12 @@
       },
       "suggestDefaultOperator": {
         "title": "Stel standaard operator voor",
-        "descriptionOn": "Stel {{operatorCall}} in als operator bij operaties waar station roepnaam anders is",
+        "descriptionOn": "Stel {{operatorCall}} in als operator bij activaties waar station roepnaam anders is",
         "descriptionOff": "Stel geen standaardoperator voor, ongeacht de gebruikte station roepnaam"
       },
       "suggestTemplates": {
         "title": "Gebruik operationele sjablonen",
-        "descriptionOn": "Stel sjablonen voor nieuwe operaties voor",
+        "descriptionOn": "Stel sjablonen voor nieuwe activaties voor",
         "descriptionOff": "Geen sjablonen voorstellen"
       },
       "bandsModes": {
@@ -460,7 +460,7 @@
       "confirmClearHistory": {
         "title": "Weet je het zeker?",
         "description": "Hiermee worden alle historische gegevens verwijderd die eerder uit ADIF-bestanden zijn geïmporteerd",
-        "recordsNotDeleted": "Records van operaties worden niet verwijderd"
+        "recordsNotDeleted": "Records van activaties worden niet verwijderd"
       },
       "importingHistoricalADIF": "ADIF-records importeren… Even geduld!",
       "errorImportingHistoricalADIF": "Fout bij het importeren van oude ADIF",
@@ -712,7 +712,7 @@
       "adifQslMessage": "ADIF QSL Bericht",
       "templateHelpTitle": "Sjabloon Hulp",
       "includePrivateDataDescription": "Namen, notities, adressen, etc.",
-      "templateHelp-md": "Enkele voorbeeldsjabloonelementen…\n\n### Log-export\nAttributen voor het logboek dat wordt geëxporteerd\n`{{log.station}}` → `{{call}}` Station voor deze export\n`{{log.ref}}` → `XX-1234` Referentie voor deze export\n`{{log.refName}}` → `Voorbeeld Nationaal Park` Referentienaam voor deze export\n`{{log.refShortName}}` → `Voorbeeld NP` Korte referentienaam voor deze export\n`{{log.handlerType}}` → `pota`type voor deze export\n`{{log.handlerName}}` → `Parks On The Air` Naam voor deze export\n`{{log.handlerShortName}}` → `POTA` Korte naam voor deze export\n\n### Operatieoproepnamen\n`{{op.station}}` → `{{call}}` Eerste station voor de activatie\n`{{op.operator}}` → `{{call}}` Operator voor de activatie\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alle stations voor de activatie\n`{{op.otherStations}}` → `{{otherCalls}}` Andere stations voor de activatie\n\n### Operatiedatum\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Andere operatiedetails\n`{{op.title}}` → `bij XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mijn Speciale activatie`\n`{{op.userNotes}}` → `Gingen vroeg in de ochtend…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grid voor deze activatie\n\n### QSO-informatie\n`{{qso.notes}}` → `Vreselijke audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Het signaalrapport dat ze hebben gestuurd\n`{{qso.our.sent}}` → `55` Het signaalrapport dat ik heb gestuurd\n`{{qso.their.grid}}` → `FF99` De Griddat zij hebben gerapporteerd\n`{{qso.refs}}` → Een lijst van alle referenties voor de QSO's (inclusief zowel activatie referenties als QSO-only referenties)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "templateHelp-md": "Enkele voorbeeldsjabloonelementen…\n\n### Log-export\nAttributen voor het logboek dat wordt geëxporteerd\n`{{log.station}}` → `{{call}}` Station voor deze export\n`{{log.ref}}` → `XX-1234` Referentie voor deze export\n`{{log.refName}}` → `Voorbeeld Nationaal Park` Referentienaam voor deze export\n`{{log.refShortName}}` → `Voorbeeld NP` Korte referentienaam voor deze export\n`{{log.handlerType}}` → `pota`type voor deze export\n`{{log.handlerName}}` → `Parks On The Air` Naam voor deze export\n`{{log.handlerShortName}}` → `POTA` Korte naam voor deze export\n\n### Operatieoproepnamen\n`{{op.station}}` → `{{call}}` Eerste station voor de activatie\n`{{op.operator}}` → `{{call}}` Operator voor de activatie\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alle stations voor de activatie\n`{{op.otherStations}}` → `{{otherCalls}}` Andere stations voor de activatie\n\n### Operatiedatum\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Andere operatiedetails\n`{{op.title}}` → `bij XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mijn Speciale activatie`\n`{{op.userNotes}}` → `Gingen vroeg in de ochtend…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grid voor deze activatie\n\n### QSO-informatie\n`{{qso.notes}}` → `Vreselijke audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Het signaalrapport dat ze hebben gestuurd\n`{{qso.our.sent}}` → `55` Het signaalrapport dat ik heb gestuurd\n`{{qso.their.grid}}` → `FF99` De Grid die zij hebben gerapporteerd\n`{{qso.refs}}` → Een lijst van alle referenties voor de QSO's (inclusief zowel activatie referenties als QSO-only referenties)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "\nStandaarden",
         "description": "Basisinstellingen voor alle exports",
@@ -754,9 +754,9 @@
       "spotsTab-a11y": "Spots Tab",
       "mapTab": "Kaart",
       "mapTab-a11y": "Kaart Tab",
-      "settingsTab": "Operatie",
+      "settingsTab": "Activatie",
       "settingsCompactTab": "Oper",
-      "settingsTab-a11y": "Operatie Instellingen Tab",
+      "settingsTab-a11y": "Activatie Instellingen Tab",
       "menu": {
         "loggingSettings": "Loginstellingen",
         "rstFields": "RST Velden",
@@ -926,14 +926,14 @@
       "manageOperationLogsTitle": "Beheer de Logboeken",
       "manageOperationLogsDescription": "Exporteer, importeer en beheer data",
       "useAsTemplateTitle": "Gebruik als sjabloon",
-      "useAsTemplateDescription": "Begin een nieuwe bewerking met vergelijkbare instellingen",
+      "useAsTemplateDescription": "Begin een nieuwe activatie met vergelijkbare instellingen",
       "dangerZoneTitle": "De Gevarenzone",
       "undeleteOperationTitle": "Activatie Herstellen",
       "deleteOperationTitle": "Activatie Verwijderen"
     },
     "opInfoPanel": {
       "statsTitle": "Activatie statistieken",
-      "operationTotalsTitle-md": "Totaal Bewerking:",
+      "operationTotalsTitle-md": "Totaal activatie:",
       "qsosInTime_zero": "Geen QSO's",
       "qsosInTime_one": "1 QSO in {{time}}",
       "qsosInTime_other": "{{fmtCount}} QSO's in {{time}}",
@@ -953,7 +953,7 @@
       "unknownError": "Onbekende fout"
     },
     "importADIF": {
-      "error": "Fout bij het importeren van ADIF naar Operatie",
+      "error": "Fout bij het importeren van ADIF naar de activatie",
       "historicalImportError": "Fout bij het importeren van historische ADIF",
       "unknownError": "Onbekende fout"
     }

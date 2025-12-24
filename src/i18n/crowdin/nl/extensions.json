@@ -73,7 +73,7 @@
       "scoring": {
         "huntedRefsCount_zero": "Geen vuurtorens gelogd",
         "huntedRefsCount_one": "1 gelogde vuurtoren",
-        "huntedRefsCount_other": "{{fmtCount}} hunted vuurtorens",
+        "huntedRefsCount_other": "{{fmtCount}} gelogde vuurtorens",
         "activatorQSOsCount_zero": "Geen activator QSO's",
         "activatorQSOsCount_one": "1 activator QSO",
         "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
@@ -147,7 +147,7 @@
       "sendChatConfirm": "Gechat!"
     },
     "commands-debug": {
-      "syncall": "Alle bewerkingen verwijderen en gesynchroniseerde status resetten?",
+      "syncall": "Alle activaties verwijderen en gesynchroniseerde status resetten?",
       "syncallConfirm": "Gegevens wissen en alles opnieuw synchroniseren…",
       "syncup": "Lokale gegevens opnieuw verzenden naar synchronisatieservice?",
       "syncupConfirm": "Opnieuw verzenden",
@@ -179,12 +179,12 @@
       }
     },
     "commands-operation": {
-      "start": "De bewerking starten?",
-      "startConfirm": "Bewerking gestart!",
+      "start": "De activatie starten?",
+      "startConfirm": "Activatie gestart!",
       "break": "Een pauze toevoegen?",
-      "breakConfirm": "Een bewerking pauze toegevoegd!",
-      "stop": "De bewerking stoppen?",
-      "stopConfirm": "Bewerking gestopt!"
+      "breakConfirm": "Een pauze toegevoegd!",
+      "stop": "De activatie stoppen?",
+      "stopConfirm": "Activatie gestopt!"
     },
     "commands-operator": {
       "change": "Operator wijzigen in {{operator}}?",
@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Band wijzigen naar {{band}}?",
       "bandConfirm": "Band ingesteld op {{band}}",
-      "frequency": "Frequentie wijzigen naar {{freq}} MHz{{mode}}?",
-      "frequencyConfirm": "Frequentie ingesteld op {{freq}} MHz{{mode}}",
+      "frequency": "Frequentie wijzigen naar {{freq}} MHz?",
+      "frequencyConfirm": "Frequentie ingesteld op {{freq}} MHz",
       "frequencyAndMode": "Frequentie wijzigen naar {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frequentie ingesteld op {{freq}} MHz ({{mode}})",
       "power": "Vermogen wijzigen naar {{power}}W?",
@@ -262,7 +262,7 @@
       "entitiesCount_other": "{{count}} DXCC-entiteiten"
     },
     "eca": {
-      "name": "Engelse Kastelen Awards",
+      "name": "English Castle Awards",
       "shortName": "ECA",
       "exportName": "ECA Activatie",
       "activityOptions": {
@@ -281,7 +281,7 @@
       }
     },
     "ela": {
-      "name": "Engelse Vuurtoren Awards",
+      "name": "English Lighthouse Awards",
       "shortName": "ELA",
       "exportName": "ELA Activatie",
       "activityOptions": {
@@ -314,7 +314,7 @@
         "powerSourcePlaceholder": "Selecteer een voedingsbron",
         "batteriesOption": "Batterijen, Zonne-energie, Wind",
         "commercialPowerOption": "Net energie, Generator",
-        "information-md": "Klasse voor ARRL Field Day is bijvoorbeeld `2A`:\n\n  - `1`, `2`, `3`... voor het aantal zenders.\n  - `A` voor Groep (3 of meer) Draagbare Station\n  - `B` voor Een of twee personen Draagbare Station\n  - `C` voor Mobiele Station\n  - `D` voor Thuisstation\n  - `E` voor Thuisstation op Noodkracht\n  - `F` voor Noodoperatiecentrum\n\nLocatie is de ARRL Sectie, RAC Sectie, `MX` voor Mexico, of `DX` voor ergens anders.\n\nMeer info in de **[officiële regels](https://www.arrl.org/field-day-rules)**."
+        "information-md": "Klasse voor ARRL Field Day is bijvoorbeeld `2A`:\n\n  - `1`, `2`, `3`... voor het aantal zenders.\n  - `A` voor Groep (3 of meer) Portabel Station\n  - `B` voor Een of twee personen Portabel Station\n  - `C` voor Mobiele Station\n  - `D` voor Thuisstation\n  - `E` voor Thuisstation op Noodkracht\n  - `F` voor Noodoperatiecentrum\n\nLocatie is de ARRL Sectie, RAC Sectie, `MX` voor Mexico, of `DX` voor ergens anders.\n\nMeer info in de **[officiële regels](https://www.arrl.org/field-day-rules)**."
       }
     },
     "gma": {
@@ -327,9 +327,9 @@
         "title_other": "{{count}} summits activeren",
         "noSummitsFound": "Geen summits gevonden",
         "nearestMatches": "Dichtstbijzijnde overeenkomstige {{limit}} van {{count}}",
-        "matchingSummits_zero": "Geen overeenkomstige summits",
-        "matchingSummits_one": "1 overeenkomstige summit",
-        "matchingSummits_other": "{{count}} overeenkomstige summits",
+        "matchingSummits_zero": "Geen overeenkomstige toppen",
+        "matchingSummits_one": "1 overeenkomstige top",
+        "matchingSummits_other": "{{count}} overeenkomstige toppen",
         "searchForSummits": "Zoek naar enkele summits om te activeren!",
         "noSummitsNearby": "Geen summits in de buurt",
         "nearbySummits": "Nabijgelegen summits",
@@ -566,7 +566,7 @@
     },
     "wab": {
       "name": "Gewerkte Groot-Brittannië/Ierland",
-      "description": "Voeg WAB/WAI-vierkant toe aan operatie",
+      "description": "Voeg WAB/WAI-vierkant toe aan activatie",
       "workedAllBritainSquare": "Gewerkte WAB square",
       "workedAllIrelandSquare": "Gewerkte WAI square",
       "enterSquare": "Voer square in",
@@ -601,18 +601,18 @@
         "activatorQSOsCount_one": "1 activator QSO",
         "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
         "huntedQSOsCount_zero": "Geen hunter QSO's",
-        "huntedQSOsCount_one": "1 gejaagde QSO",
-        "huntedQSOsCount_other": "{{fmtCount}} gejaagde QSO's",
-        "operationTotals": "Operationele totaal",
+        "huntedQSOsCount_one": "1 hunter QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} hunter QSO's",
+        "operationTotals": "Activatie totaal",
         "referencesActivatedCount_zero": "Geen kastelen geactiveerd",
         "referencesActivatedCount_one": "1 kasteel geactiveerd",
         "referencesActivatedCount_other": "{{fmtCount}} kastelen geactiveerd",
-        "referencesMissedCount_zero": "Geen onvolledige kastelen activatie",
+        "referencesMissedCount_zero": "Geen onvolledige kastelen log",
         "referencesMissedCount_one": "1 onvolledige kasteel activatie",
-        "referencesMissedCount_other": "{{fmtCount}} onvolledige kastelen geactiveerd",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige kastelen logs",
         "referencesHuntedCount_zero": "Geen gelogde kastelen",
         "referencesHuntedCount_one": "1 kasteel gelogd",
-        "referencesHuntedCount_other": "{{fmtCount}} kastelen gejaagd"
+        "referencesHuntedCount_other": "{{fmtCount}} kastelen gelogd"
       },
       "exampleRefName": "Voorbeeld kasteel",
       "unknownRefName": "Onbekend kasteel",
@@ -805,8 +805,8 @@
         "referencesMissedCount_one": "1 onvolledige referentie log",
         "referencesMissedCount_other": "{{fmtCount}} onvolledige referenties logs",
         "referencesHuntedCount_zero": "Geen referenties hunted",
-        "referencesHuntedCount_one": "1 referentie gejaagd",
-        "referencesHuntedCount_other": "{{fmtCount}} referenties gejaagd"
+        "referencesHuntedCount_one": "1 referentie gelogd",
+        "referencesHuntedCount_other": "{{fmtCount}} referenties gelogd"
       }
     }
   }

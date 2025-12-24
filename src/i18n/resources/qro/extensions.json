@@ -168,8 +168,8 @@
     "commands-radio": {
       "band": "CHANGE BAND TO {{band}}?",
       "bandConfirm": "BAND SET TO {{band}}",
-      "frequency": "CHANGE FREQUENCY TO {{freq}} MHZ{{mode}}?",
-      "frequencyConfirm": "FREQUENCY SET TO {{freq}} MHZ{{mode}}",
+      "frequency": "CHANGE FREQUENCY TO {{freq}} MHZ?",
+      "frequencyConfirm": "FREQUENCY SET TO {{freq}} MHZ",
       "frequencyAndMode": "CHANGE FREQUENCY TO {{freq}} MHZ ({{mode}})?",
       "frequencyAndModeConfirm": "FREQUENCY SET TO {{freq}} MHZ ({{mode}})",
       "power": "CHANGE POWER TO {{power}}W?",

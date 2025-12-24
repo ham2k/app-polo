@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Zmeniť pásmo na {{band}}?",
       "bandConfirm": "Pásmo nastavené na {{band}}",
-      "frequency": "Zmeniť frekvenciu na {{freq}} MHz{{mode}}?",
-      "frequencyConfirm": "Frekvencia nastavená na {{freq}} MHz{{mode}}",
+      "frequency": "Zmeniť frekvenciu na {{freq}} MHz?",
+      "frequencyConfirm": "Frekvencia nastavená na {{freq}} MHz",
       "frequencyAndMode": "Zmeniť frekvenciu na {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frekvencia nastavená na {{freq}} MHz ({{mode}})",
       "power": "Zmeniť výkon na {{power}}W?",
