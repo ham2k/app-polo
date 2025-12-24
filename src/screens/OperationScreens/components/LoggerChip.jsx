@@ -98,7 +98,7 @@ export default function LoggerChip ({
       textStyle={[baseTextStyle, textStyle]}
       disabled={disabled}
       onPress={handlePress}
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={accessibilityLabel ?? ''}
     >
       {children}
     </Chip>

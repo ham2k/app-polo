@@ -39,7 +39,7 @@ const PositionedControlChip = (props) => {
         <LoggerChip
           {...props}
           onChange={handleChange}
-          accessibilityLabel={control.accessibilityLabel ? valueOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
+          accessibilityLabel={control.accessibilityLabel ? valueOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : ''}
         >
           {control.label ? valueOrFunction(control.label, { t, operation, qso, vfo, settings }) : control.key}
         </LoggerChip>

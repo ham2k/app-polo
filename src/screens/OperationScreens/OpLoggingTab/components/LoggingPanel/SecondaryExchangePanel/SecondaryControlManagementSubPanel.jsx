@@ -62,7 +62,6 @@ export const SecondaryControlManagementSubPanel = ({
                 t={t}
                 qso={qso} operation={operation} vfo={vfo} settings={settings} control={control}
                 icon={control.icon}
-                accessibilityLabel={control.accessibilityLabel}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 disabled={control.optionType === 'mandatory'}
                 selected={false}
@@ -71,7 +70,6 @@ export const SecondaryControlManagementSubPanel = ({
             ) : (
               <LoggerChip
                 icon={control.icon}
-                accessibilityLabel={control.accessibilityLabel}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 disabled={control.optionType === 'mandatory'}
                 selected={false}
@@ -111,7 +109,6 @@ export const SecondaryControlManagementSubPanel = ({
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={false}
                 disabled={control.optionType === 'mandatory'}
-                accessibilityLabel={control.accessibilityLabel ? valueOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               />
             ) : (
@@ -120,7 +117,6 @@ export const SecondaryControlManagementSubPanel = ({
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={false}
                 disabled={control.optionType === 'mandatory'}
-                accessibilityLabel={control.accessibilityLabel ? valueOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               >
                 {control.label ? valueOrFunction(control.label, { t, operation, vfo, qso, settings }) : control.key}
@@ -136,7 +132,6 @@ export const SecondaryControlManagementSubPanel = ({
               style={{ flex: 0 }}
               themeColor={themeColor}
               selected={true}
-              accessibilityLabel={'Hide Secondary Control Settings'}
               onChange={() => setCurrentSecondaryControl('manage-controls')}
             >
               <H2kIcon icon="cog" size={styles.normalFontSize} />

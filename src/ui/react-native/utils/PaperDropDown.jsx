@@ -103,7 +103,7 @@ export function PaperDropDown (props, _ref) {
         <TouchableHighlight
           onPress={showDropDown}
           onLayout={onLayout}
-          accessibilityLabel={accessibilityLabel}
+          accessibilityLabel={accessibilityLabel ?? ''}
           onFocus={onFocus}
           onBlur={onBlur}
           borderless={borderless}

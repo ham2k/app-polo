@@ -136,7 +136,7 @@ export function H2kListItem ({
       description={descriptionElement}
       titleStyle={titleStyle}
       descriptionStyle={descriptionStyle}
-      accessibilityLabel={actualAccessibilityLabel}
+      accessibilityLabel={actualAccessibilityLabel ?? ''}
       accessibilityRole={actualAccessibilityRole}
       left={leftElement}
       right={rightElement}
