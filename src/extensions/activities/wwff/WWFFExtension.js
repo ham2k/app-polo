@@ -165,7 +165,7 @@ const ReferenceHandler = {
 
   iconForQSO: Info.icon,
 
-  decorateRefWithDispatch: (ref) => async ({ t }) => {
+  decorateRefWithDispatch: (ref) => async () => {
     if (ref.ref) {
       const data = await wwffFindOneByReference(ref.ref)
       if (data) {
@@ -180,7 +180,7 @@ const ReferenceHandler = {
           program: Info.shortName
         }
       } else {
-        return { ...ref, name: Info.unknownReferenceName ?? t('extensions.wwff.unknownRefName', 'Unknown reference') }
+        return { ...ref, name: Info.unknownReferenceName ?? GLOBAL?.t?.('extensions.wwff.unknownRefName', 'Unknown reference') ?? 'Unknown reference' }
       }
     }
   },

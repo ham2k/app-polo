@@ -241,7 +241,7 @@ const ReferenceHandler = {
           }
         }
       } else {
-        return { name: t('extensions.pota.unknownRefName', Info.unknownReferenceName ?? 'Unknown reference'), ...ref }
+        return { name: GLOBAL?.t?.('extensions.pota.unknownRefName', Info.unknownReferenceName ?? 'Unknown reference') ?? Info.unknownReferenceName, ...ref }
       }
     }
     return result

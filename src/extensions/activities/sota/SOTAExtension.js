@@ -236,7 +236,7 @@ const ReferenceHandler = {
           program: Info.shortName
         }
       } else {
-        return { ...ref, name: t('extensions.sota.unknownRefName', Info.unknownReferenceName ?? 'Unknown reference') }
+        return { ...ref, name: GLOBAL?.t?.('extensions.sota.unknownRefName', Info.unknownReferenceName ?? 'Unknown reference') ?? Info.unknownReferenceName }
       }
     }
   },
