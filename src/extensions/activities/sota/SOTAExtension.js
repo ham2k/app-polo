@@ -13,7 +13,7 @@ import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import GLOBAL from '../../../GLOBAL'
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { findRef, refsToString } from '../../../tools/refTools'
+import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
 import { LOCATION_ACCURACY } from '../../constants'
 import { distanceOnEarth } from '../../../tools/geoTools'

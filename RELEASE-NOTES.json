@@ -1,4 +1,11 @@
 {
+  "25.12.2": {
+    "name": "December '25 (patch 2)",
+    "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
+    "changes": [
+      "Fixed bug in SOTA ADIF exports"
+    ]
+  },
   "25.12.1": {
     "name": "December '25 (patch 1)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
