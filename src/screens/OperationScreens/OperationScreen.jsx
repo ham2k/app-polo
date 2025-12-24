@@ -432,7 +432,7 @@ function _iconForTernarySetting (value) {
   } else if (value === false) {
     return 'circle-outline'
   } else {
-    return 'help-circle-outline'
+    return 'alpha-a-circle-outline'
   }
 }
 
