@@ -449,7 +449,7 @@
         "theirRefLabel": "Deres POTA"
       },
       "postSpotAPI": {
-        "error": "Feil ved postering av POTA-spot",
+        "error": "Feil ved sending av POTA-spot",
         "serverResponse": "Serveren svarte med feil {{status}}: {{body}}"
       },
       "exampleRefName": "Eksempel nasjonalpark",
@@ -490,7 +490,7 @@
         "theirRefLabel": "Deres Silo"
       },
       "postSpotAPI": {
-        "error": "Feil ved postering av SiOTA-spot",
+        "error": "Feil ved sending av SiOTA-spot",
         "serverResponse": "Serveren svarte med feil {{status}}: {{body}}"
       }
     },
@@ -551,7 +551,7 @@
         "theirRefLabel": "Deres SOTA"
       },
       "postSpotAPI": {
-        "error": "Feil ved postering av SOTA-spot",
+        "error": "Feil ved sending av SOTA-spot",
         "serverResponse": "Serveren svarte med status {{status}} {{message}}",
         "sotaAccountLoggedOut": "SOTA-kontoen ble logget ut. Vennligst logg inn igjen i PoLo-innstillinger"
       },
@@ -566,19 +566,19 @@
     },
     "wab": {
       "name": "Worked All Britain/Ireland",
-      "description": "Legg til WAB/WAI Kvadrant til operasjon",
-      "workedAllBritainSquare": "Worked All Britain Kvadrant",
-      "workedAllIrelandSquare": "Worked All Ireland Kvadrant",
-      "enterSquare": "Angi Kvadrant",
+      "description": "Legg til WAB/WAI kvadrant til operasjon",
+      "workedAllBritainSquare": "Worked All Britain rute",
+      "workedAllIrelandSquare": "Worked All Ireland rute",
+      "enterSquare": "Angi rute",
       "placeholderBritain": "f.eks. SU14",
       "placeholderIreland": "f.eks. N93",
-      "currentSquare": "Nåværende Kvadrant:",
-      "noSquareSet": "Ingen kvadrant satt"
+      "currentSquare": "Nåværende rute:",
+      "noSquareSet": "Ingen rute satt"
     },
     "wca": {
       "name": "World Castles Awards",
       "shortName": "WCA",
-      "exportName": "WCA Aktivering",
+      "exportName": "WCA aktivering",
       "activityOptions": {
         "title_zero": "Ingen slott valgt for aktivering",
         "title_one": "Aktiverer 1 slott",
@@ -776,7 +776,7 @@
         "theirRefLabel": "Deres Referanse"
       },
       "postSpotAPI": {
-        "error": "Feil ved postering av ZLOTA-spot",
+        "error": "Feil ved lagring av ZLOTA-spot",
         "serverResponse": "Serveren svarte med status {{status}} {{message}}"
       }
     },

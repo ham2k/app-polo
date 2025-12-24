@@ -217,7 +217,7 @@
         "generic": "Controleren op updates…",
         "stable": "Controleren op stabiele updates…",
         "unstable": "Controleren op onstabiele updates…",
-        "bleedingEdge": "Controleren op snedige updates…"
+        "bleedingEdge": "Controleren op nieuwe updates…"
       },
       "tracksPlural": {
         "stable": "Stabiel",

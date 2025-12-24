@@ -17,13 +17,13 @@
       }
     },
     "home": {
-      "title": "Draagbare Logger",
+      "title": "Portable Logger",
       "newOperation": "Nieuwe activatie",
       "newOperation-a11y": "Nieuwe activatie",
       "operationList-a11y": "Activatielijst",
       "noOperations": "Geen activaties!",
       "settings-a11y": "Instellingen",
-      "quickCallLookupPlaceholder": "Snelle roepnaam zoeker…",
+      "quickCallLookupPlaceholder": "Snelle roepnaam opzoeker…",
       "spots-a11y": "Spots"
     },
     "operation": {
@@ -34,7 +34,7 @@
       "operationTitle": "Titel",
       "newOperation": "Nieuwe activatie",
       "operationNotes": "Notities",
-      "anythingYouWantToWriteAboutThisOperation": "Alles wat u over deze operatie wil schrijven"
+      "anythingYouWantToWriteAboutThisOperation": "Alles wat u over deze operatie wil neerschrijven"
     },
     "operationStationInfo": {
       "title": "Station &  activator informatie",
@@ -89,7 +89,7 @@
       "exportSelectedFiles_other": "Exporteer {{count}} geselecteerde bestanden.",
       "exportAllFiles": "Exporteer alle bestanden",
       "exportQSOs": "Exporteer QSO's",
-      "pendingToDoItems_zero": "Geen lopende acties om te doen",
+      "pendingToDoItems_zero": "Geen lopende to-do acties",
       "pendingToDoItems_one": "1 lopend to-do item",
       "pendingToDoItems_other": "{{count}} te behandelen to-do items",
       "importQSOs": "Importeer QSO's",
@@ -98,7 +98,7 @@
       "operation": "Activatie",
       "exportSettings": "Exporteer Instellingen",
       "useCompactFileNames": "Gebruik compacte bestandsnamen",
-      "wavelogExport": "Wavelog Exporteren",
+      "wavelogExport": "Naar Wavelog Exporteren",
       "exportQSOsToWavelogDescription": "Stuur alle QSO's voor deze operatie naar Wavelog",
       "wavelogDialog": {
         "title": "Exporteer QSO's naar Wavelog",
@@ -140,18 +140,18 @@
         "qsos_one": "1 QSO",
         "qsos_other": "{{count}} QSO's"
       },
-      "thisOpCount_zero": "0 QSO's in deze operatie",
-      "thisOpCount_one": "1 QSO in deze operatie",
-      "thisOpCount_other": "{{count}} QSO's in deze operatie",
-      "otherOpsCount_zero": "0 QSO's in andere operaties",
-      "otherOpsCount_one": "1 QSO in andere operaties",
-      "otherOpsCount_other": "{{count}} QSO's in andere operaties",
+      "thisOpCount_zero": "0 QSO's in deze activatie",
+      "thisOpCount_one": "1 QSO in deze activatie",
+      "thisOpCount_other": "{{count}} QSO's in deze activatie",
+      "otherOpsCount_zero": "0 QSO's in andere activaties",
+      "otherOpsCount_one": "1 QSO in andere activaties",
+      "otherOpsCount_other": "{{count}} QSO's in andere activaties",
       "andMoreCount_zero": "… en {{count}} meer",
       "andMoreCount_one": "… en {{count}} meer",
       "andMoreCount_other": "… en {{count}} meer",
       "showImage": "Afbeelding tonen",
       "notes": "Notities",
-      "potentialCall": "Potentiële oproep: {{call}}",
+      "potentialCall": "Potentiële roepnaam: {{call}}",
       "withCall": "Met {{call}}"
     },
     "spots": {
@@ -169,10 +169,10 @@
         "time": "Tijd",
         "date": "Datum",
         "freq": "Frequentie",
-        "mode": "Modus",
+        "mode": "Mode",
         "band": "Band",
         "power": "Vermogen",
-        "call": "Station Oproep",
+        "call": "Station Roepnaam",
         "sent": "RST",
         "exchange": "Uitwisseling",
         "name": "Naam",
@@ -183,7 +183,7 @@
         "cqZone": "CQ Zone",
         "ituZone": "ITU Zone",
         "arrlSection": "ARRL Sectie",
-        "grid": "Rooster",
+        "grid": "GRID",
         "latitude": "Breedtegraad",
         "longitude": "Lengtegraad",
         "notes": "Notities"
@@ -351,7 +351,7 @@
         "descriptionOff": "Sta schermvergrendeling toe"
       },
       "useSplitViews": {
-        "title": "Gebruik Gesplitste Weergaven",
+        "title": "Gebruik gesplitste Weergaven",
         "descriptionOn": "Gebruik gesplitste weergaven wanneer het scherm groot genoeg is",
         "descriptionOff": "Gebruik geen gesplitste scherm weergaven"
       },
@@ -683,17 +683,17 @@
       },
       "modes": {
         "title": "Modi",
-        "showMoreModes": "Toon meer modi",
-        "showEvenMoreModes": "Toon nog meer modi",
-        "showFewerModes": "Toon minder modi",
+        "showMoreModes": "Toon meer modes",
+        "showEvenMoreModes": "Toon nog meer modes",
+        "showFewerModes": "Toon minder modes",
         "names": {
-          "SSB-a11y": "Enkele Zijband",
-          "USB-a11y": "Bovenste Zijband",
-          "LSB-a11y": "Onderste Zijband",
+          "SSB-a11y": "SSB",
+          "USB-a11y": "USB",
+          "LSB-a11y": "LSB",
           "RTTY-a11y": "Rtty",
           "CW-a11y": "CW",
-          "other": "Anders",
-          "other-a11y": "Andere Modi"
+          "other": "Andere",
+          "other-a11y": "Andere Modes"
         }
       }
     },
@@ -712,7 +712,7 @@
       "adifQslMessage": "ADIF QSL Bericht",
       "templateHelpTitle": "Sjabloon Hulp",
       "includePrivateDataDescription": "Namen, notities, adressen, etc.",
-      "templateHelp-md": "Enkele voorbeeldsjabloonelementen…\n\n### Log-export\nAttributen voor het logboek dat wordt geëxporteerd\n`{{log.station}}` → `{{call}}` Station voor deze export\n`{{log.ref}}` → `XX-1234` Referentie voor deze export\n`{{log.refName}}` → `Voorbeeld Nationaal Park` Referentienaam voor deze export\n`{{log.refShortName}}` → `Voorbeeld NP` Korte referentienaam voor deze export\n`{{log.handlerType}}` → `pota` Handler type voor deze export\n`{{log.handlerName}}` → `Parks On The Air` Handlernaam voor deze export\n`{{log.handlerShortName}}` → `POTA` Korte handlernaam voor deze export\n\n### Operatieoproepnamen\n`{{op.station}}` → `{{call}}` Eerste station voor de operatie\n`{{op.operator}}` → `{{call}}` Operator voor de operatie\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alle stations voor de operatie\n`{{op.otherStations}}` → `{{otherCalls}}` Andere stations voor de operatie\n\n### Operatiedatum\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Andere operatiedetails\n`{{op.title}}` → `bij XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mijn Speciale Operatie`\n`{{op.userNotes}}` → `Gingen vroeg in de ochtend…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Rooster voor deze operatie\n\n### QSO-informatie\n`{{qso.notes}}` → `Vreselijke audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Het signaalrapport dat ze hebben gestuurd\n`{{qso.our.sent}}` → `55` Het signaalrapport dat ik heb gestuurd\n`{{qso.their.grid}}` → `FF99` Het raster dat zij hebben gerapporteerd\n`{{qso.refs}}` → Een lijst van alle referenties voor de QSO's (inclusief zowel activatie referenties als QSO-only referenties)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "templateHelp-md": "Enkele voorbeeldsjabloonelementen…\n\n### Log-export\nAttributen voor het logboek dat wordt geëxporteerd\n`{{log.station}}` → `{{call}}` Station voor deze export\n`{{log.ref}}` → `XX-1234` Referentie voor deze export\n`{{log.refName}}` → `Voorbeeld Nationaal Park` Referentienaam voor deze export\n`{{log.refShortName}}` → `Voorbeeld NP` Korte referentienaam voor deze export\n`{{log.handlerType}}` → `pota`type voor deze export\n`{{log.handlerName}}` → `Parks On The Air` Naam voor deze export\n`{{log.handlerShortName}}` → `POTA` Korte naam voor deze export\n\n### Operatieoproepnamen\n`{{op.station}}` → `{{call}}` Eerste station voor de activatie\n`{{op.operator}}` → `{{call}}` Operator voor de activatie\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alle stations voor de activatie\n`{{op.otherStations}}` → `{{otherCalls}}` Andere stations voor de activatie\n\n### Operatiedatum\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Andere operatiedetails\n`{{op.title}}` → `bij XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mijn Speciale activatie`\n`{{op.userNotes}}` → `Gingen vroeg in de ochtend…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grid voor deze activatie\n\n### QSO-informatie\n`{{qso.notes}}` → `Vreselijke audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Het signaalrapport dat ze hebben gestuurd\n`{{qso.our.sent}}` → `55` Het signaalrapport dat ik heb gestuurd\n`{{qso.their.grid}}` → `FF99` De Griddat zij hebben gerapporteerd\n`{{qso.refs}}` → Een lijst van alle referenties voor de QSO's (inclusief zowel activatie referenties als QSO-only referenties)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "\nStandaarden",
         "description": "Basisinstellingen voor alle exports",
@@ -761,7 +761,7 @@
         "loggingSettings": "Loginstellingen",
         "rstFields": "RST Velden",
         "stateField": "Staat Veld",
-        "gridField": "Rooster Veld",
+        "gridField": "GRID Veld",
         "showDeletedQSOs": "Verwijderde QSOs Tonen",
         "numbersRow": "Cijferlijn",
         "actions": "Acties",
@@ -794,8 +794,8 @@
       },
       "deletedQSO": "Verwijderd QSO",
       "qsoWillBeDeleted": "QSO wordt verwijderd!",
-      "noQSOsBy-md": "Nog geen QSO's door {{callsign}}… Laten we de ether opgaan!",
-      "noQSOsYet-md": "Nog geen QSO's… Laten we de ether opgaan!",
+      "noQSOsBy-md": "Nog geen QSO's door {{callsign}}… Laten we starten!",
+      "noQSOsYet-md": "Nog geen QSO's… Laten we starten!",
       "qsoCount_zero": "Geen QSOs",
       "qsoCount_one": "1 QSO",
       "qsoCount_other": "{{fmtCount}} QSOs",
@@ -808,7 +808,7 @@
       "ourSentLabel": "Verzonden",
       "theirSentLabel": "Ontvangen",
       "stateLabel": "Staat",
-      "gridLabel": "Rooster",
+      "gridLabel": "GRID",
       "timeLabel": "Tijd",
       "dateLabel": "Datum",
       "timeControls-a11y": "Tijdbeheer",
@@ -830,7 +830,7 @@
       "selectToAddMoreControls": "selecteer om toe te voegen",
       "selectToAddMoreControls-a11y": "selecteer om toe te voegen",
       "showSecondaryControlSettings-a11y": "Toon secundaire besturingselementen",
-      "hideMostSecondaryControls-a11y": "Verstop de meeste secundaire bedieningselementen",
+      "hideMostSecondaryControls-a11y": "Verberg de meeste secundaire bedieningselementen",
       "showAllSecondaryControls-a11y": "Toon alle secundaire bedieningselementen",
       "spotting": {
         "selfSpottingAt": "Zelfspotten op {{freq}}",
@@ -852,7 +852,7 @@
       }
     },
     "opMapTab": {
-      "noLocation": "Geen lijnen?\nJe moet eerst je locatie instellen.\n\nTik hier om te doen.",
+      "noLocation": "Geen info?\nJe moet eerst je locatie instellen.\n\nTik hier om te doen.",
       "manyNoLocation": "Veel van deze QSOs hebben geen nauwkeurige locatie.\n\nJe hebt een betaald QRZ.com account nodig voor roepnaam opzoekingen."
     },
     "opSpotsTab": {

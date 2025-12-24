@@ -401,8 +401,8 @@
       "countryFlags": {
         "title": "Banderas de País",
         "descriptionNone": "No mostrar banderas",
-        "descriptionAll": "Mostrar banderas para todos los contactos",
-        "descriptionDefault": "Mostrar solo para contactos DX"
+        "descriptionAll": "Mostrar banderas en todos los contactos",
+        "descriptionDefault": "Mostrar solo en contactos DX"
       },
       "showBearing": {
         "title": "Mostrar Orientación",
@@ -527,7 +527,7 @@
         "potentialForDataLoss": "¡¡¡Posibilidad de pérdida de datos!!!",
         "potentialForDataLossDescription": "No has sincronizado todos los datos en este dispositivo.\n\nSi vinculas este dispositivo a una nueva cuenta, se te pedirá si deseas reemplazar sus datos con los de la nueva cuenta.\n\nEn este caso, es posible que no puedas recuperar actividades existentes que aún no se hayan sincronizado.\n\n¡Sugerimos que completes la sincronización de este dispositivo primero!"
       },
-      "syncServiceDescription-md": "El servicio básico es gratuito y permite sincronizar datos recientes (hasta 7 días) entre dos dispositivos o aplicaciones a una velocidad limitada.\n\nEl servicio completo requiere una suscripción pagada y incluye todas tus operaciones sincronizadas entre cualquier número razonable de dispositivos o aplicaciones a velocidad completa.\n\nMientras el servicio LoFi esté en su PERÍODO DE PRUEBA para los próximos meses, el servicio permanecerá gratuito. Después de eso, los precios dependerán del país y moneda, pero no deberían ser más de US$30/año o equivalente, y probablemente menos.",
+      "syncServiceDescription-md": "El servicio básico es gratuito y permite sincronizar datos recientes (hasta 7 días) entre dos dispositivos o aplicaciones a una velocidad limitada.\n\nEl servicio completo requiere una suscripción pagada y incluye la sincronización de todas tus operaciones, entre cualquier número razonable de dispositivos o aplicaciones, y a velocidad completa.\n\nMientras el servicio LoFi esté en su PERÍODO DE PRUEBA durante los próximos meses, el servicio permanecerá gratuito. Después de eso, los precios dependerán del país y moneda, pero no deberían ser más de US$30/año o equivalente, y probablemente menos.",
       "thisDevice": "Este Dispositivo",
       "notAuthenticated": "No autenticado",
       "lofiServer": "Servidor LoFi",
@@ -823,12 +823,12 @@
       "notesLabel-a11y": "Notas",
       "activeControlsLabel": "Controles Activados",
       "activeControlsLabel-a11y": "Controles Activados",
-      "selectToRemoveActiveControls": "seleccionar para eliminar",
-      "selectToRemoveActiveControls-a11y": "seleccionar para eliminar",
+      "selectToRemoveActiveControls": "selecciona para eliminar",
+      "selectToRemoveActiveControls-a11y": "selecciona para eliminar",
       "moreControlsLabel": "Más Controles",
       "moreControlsLabel-a11y": "Más Controles",
-      "selectToAddMoreControls": "seleccionar para agregarlos",
-      "selectToAddMoreControls-a11y": "seleccionar para agregarlos",
+      "selectToAddMoreControls": "selecciona para agregar",
+      "selectToAddMoreControls-a11y": "selecciona para agregar",
       "showSecondaryControlSettings-a11y": "Mostrar Configuración de Controles Secundarios",
       "hideMostSecondaryControls-a11y": "Ocultar la mayoría de los controles secundarios",
       "showAllSecondaryControls-a11y": "Mostrar todos los controles secundarios",
@@ -842,9 +842,9 @@
         "spotAt": "Spot {{call}} en {{freq}}",
         "tooLateToSpot": "Demasiado tarde para spotting {{call}}",
         "nothingToSpot": "Nada para spotting",
-        "selfSpottingLabel": "Autodivulgación",
+        "selfSpottingLabel": "Self-spotting",
         "selfSpottingControls-a11y": "Controles de Self-Spotting",
-        "spottingLabel": "Divulgación",
+        "spottingLabel": "Spotting",
         "spottingControls-a11y": "Controles de Spotting",
         "autoRespottingLabel": "Auto-redistribución",
         "autoRespottingControls-a11y": "Controles de Auto-respotting",

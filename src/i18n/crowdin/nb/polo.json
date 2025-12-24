@@ -3,11 +3,11 @@
     "start": {
       "credits": "av KI2D og venner",
       "Loading Extensions": "Laster utvidelser",
-      "Development Build": "Bærbar Logger Utviklingsbygg",
+      "Development Build": "Portable Logger Development Build",
       "messages": {
-        "Reticulating splines": "Retikulerende spline",
+        "Reticulating splines": "Kommer aldri til å gi deg opp",
         "Tuning the antenna": "Justerer antennen",
-        "Checking the tubes": "Sjekker etter oppdateringer",
+        "Checking the tubes": "Sjekker radiorørene",
         "Warming up the tubes": "Varmer opp rørene",
         "Unfolding the map": "Bretter ut kartet",
         "Charging the flux capacitor": "Lader flux-kondensatoren",
@@ -23,8 +23,8 @@
       "operationList-a11y": "Operasjonsliste",
       "noOperations": "Ingen operasjoner!",
       "settings-a11y": "Innstillinger",
-      "quickCallLookupPlaceholder": "Rask kallesignalsøk…",
-      "spots-a11y": "spot"
+      "quickCallLookupPlaceholder": "Slå opp kallesignal…",
+      "spots-a11y": "Spotter"
     },
     "operation": {
       "title": "Operasjon"
@@ -52,7 +52,7 @@
       "multipleOperatorsUsed-md": "Denne aktiviteten har allerede QSOer med flere operatør kallesignaler: `{{operators}}`.\n\n`{{newOperator}}` vil bare bli brukt for nye QSOer.",
       "whatIsTheCallsignUsedOnTheAir": "Hva er kallesignalet som brukes på lufta?",
       "stationCallsign": "Stasjonskallesignal",
-      "whoIsOperatingTheStation": "Hvem styrer stasjonen? (valgfritt)",
+      "whoIsOperatingTheStation": "Hva er kallesignalet til operatøren? (valgfritt)",
       "operatorCallsign": "Operatørkallesignal",
       "multiStationOperation": "Er det multi-stasjonsoperasjon?",
       "multiStationOperationYes": "Ja, vi er en av mange!",
@@ -60,9 +60,9 @@
       "identifierForThisStation": "Identifikator for denne stasjonen (kun tall)"
     },
     "operationLocation": {
-      "title": "Operasjonslokasjon",
+      "title": "Plassering",
       "selectedLocation": "Valgt plassering",
-      "maidenheadGridSquareLocator": "Maidenhead rutenettfinner",
+      "maidenheadGridSquareLocator": "Finn din maidenhead-rute",
       "suggestedLocations": "Foreslåtte plasseringer",
       "deviceGps": "Enhet GPS",
       "locating": "Lokaliserer…",
@@ -126,8 +126,8 @@
         "potaActivation-newRef": "Ny park",
         "sotaActivation-newDay": "Ny SOTA-dag",
         "sotaActivation-newRef": "Ny SOTA-topp",
-        "sotaActivation-duplicate": "SOTA Dupe!",
-        "wwffActivation-duplicate": "WWFF Dupe!",
+        "sotaActivation-duplicate": "SOTA duplikat!",
+        "wwffActivation-duplicate": "WWFF duplikat!",
         "wwbotaActivation-newDay": "Ny WWBOTA-dag",
         "wwbotaActivation-newRef": "Ny bunker",
         "motaActivation-newRef": "Ny mølle"
@@ -155,7 +155,7 @@
       "withCall": "med {{call}}"
     },
     "spots": {
-      "title": "spot"
+      "title": "Spotter"
     },
     "editQSO": {
       "title": "Rediger QSO",
@@ -242,7 +242,7 @@
         "loginPlaceholder": "din innlogging",
         "passwordLabel": "Passord",
         "passwordPlaceholder": "ditt passord",
-        "checkCredentials": "Sjekk legitimasjon"
+        "checkCredentials": "Sjekk innloggingsdetaljer"
       },
       "wavelogSettings": {
         "title": "Wavelog-innstillinger",
@@ -273,7 +273,7 @@
       },
       "ham2KChat": {
         "title": "Ham2K-chat",
-        "description": "Discord-serveren for vårt nettbaserte samfunn"
+        "description": "Discord-serveren for Ham2k PoLo"
       },
       "ham2KYouTube": {
         "title": "Ham2K-forum",
@@ -356,9 +356,9 @@
         "descriptionOff": "Ikke bruk delte visninger"
       },
       "useGrid8": {
-        "title": "Høy presisjonsplassering",
-        "descriptionOn": "Bruk 8-sifrede rutenett",
-        "descriptionOff": "Bruk 6-sifrede rutenett"
+        "title": "Posisjon med høy nøyaktighet",
+        "descriptionOn": "Bruk 8-sifrede grids",
+        "descriptionOff": "Bruk 6-sifrede grids"
       },
       "smartKeyboard": {
         "title": "Smarte tastaturfunksjoner",
@@ -373,7 +373,7 @@
         "title": "Personvern"
       },
       "shareAppUsageData": {
-        "title": "Del appbruksdata",
+        "title": "Del data om bruken din",
         "descriptionOn": "Hjelp oss med å forbedre appen ved å dele bruks-, krasj- og ytelsesdata",
         "descriptionOff": "Hold appbruksdata private.\nHam2K-teamet vil ikke kunne oppdage krasj eller andre problemer."
       },
@@ -399,18 +399,18 @@
         "descriptionOff": "Bruk oppsett for høyrehendte brukere"
       },
       "countryFlags": {
-        "title": "Landsflagg",
+        "title": "Vis flagg",
         "descriptionNone": "Ikke vis noen flagg",
         "descriptionAll": "Vis flagg for alle kontakter",
-        "descriptionDefault": "Vis bare for DX-kontakter"
+        "descriptionDefault": "Vis bare for andre land"
       },
       "showBearing": {
-        "title": "Vis peiling",
-        "descriptionOn": "Vis estimert peiling til stasjon",
-        "descriptionOff": "Ikke vis peilingsinformasjon"
+        "title": "Vis retning",
+        "descriptionOn": "Vis estimert retning til stasjon",
+        "descriptionOff": "Ikke vis retningsinformasjon"
       },
       "switchSignalReportOrder": {
-        "title": "Bytt signalrapportrekkefølge",
+        "title": "Bytt rekkefølge for signalrapport",
         "descriptionOn": "Sendt først, mottatt andre",
         "descriptionOff": "Mottatt først, sendt andre"
       },
@@ -426,7 +426,7 @@
       },
       "suggestTemplates": {
         "title": "Bruk operasjonsmaler",
-        "descriptionOn": "Forslå maler for nye operasjoner",
+        "descriptionOn": "Foreslå maler for nye operasjoner",
         "descriptionOff": "Ikke foreslå maler"
       },
       "bandsModes": {
@@ -455,19 +455,19 @@
       "updatedRelative": "Oppdatert {{date}}",
       "fetching-md": "### Henter **{{title}}**…",
       "progress-md": "### Henter **{{title}}**\n\n{{progress}}",
-      "updated-md": "Oppdatert {{date}}",
+      "updated-md": "Oppdatert på {{date}}",
       "version-md": "Versjon: {{version}}",
       "confirmClearHistory": {
         "title": "Er du sikker?",
         "description": "Dette vil fjerne alle historiske poster som tidligere er importert fra ADIF-filer",
-        "recordsNotDeleted": "Poster fra operasjoner vil ikke bli slettet"
+        "recordsNotDeleted": "Logger fra operasjoner vil ikke bli slettet"
       },
       "importingHistoricalADIF": "Importerer ADIF-poster... Vær tålmodig!",
       "errorImportingHistoricalADIF": "Feil ved import av historisk ADIF",
       "errorDeletingHistoricalRecords": "Feil ved sletting av historiske poster",
-      "recordsCount_zero": "Ingen poster",
-      "recordsCount_one": "1 post",
-      "recordsCount_other": "{{fmtCount}} poster"
+      "recordsCount_zero": "Ingen logger",
+      "recordsCount_one": "1 logg",
+      "recordsCount_other": "{{fmtCount}} logger"
     },
     "syncSettings": {
       "title": "Synkroniseringsinnstillinger",
@@ -475,9 +475,9 @@
       "syncService": "Synkroniseringstjeneste",
       "syncService.enabled": "Aktivert",
       "syncService.disabled": "Deaktivert",
-      "deviceNotLinked": "Enhet ikke koblet! ({{id}})",
+      "deviceNotLinked": "Enhet ikke linket! ({{id}})",
       "anonymousAccount": "Anonym konto (#{{id}})",
-      "enableSyncToLinkDevice": "Aktiver synkronisering for å koble denne enheten",
+      "enableSyncToLinkDevice": "Aktiver synkronisering for å linke denne enheten",
       "checkEmailInboxForConfirmation": "(sjekk innboksen din for bekreftelse)",
       "accountNumber": "Konto #{{id}}",
       "pendingEmailConfirmation": "(venter på e-postbekreftelse)",
@@ -496,7 +496,7 @@
         "option2noEmail-md": "Alternativ #2: Kombiner data på denne enheten med det fra den nye kontoen på serveren.",
         "option2button": "Gå med #2: kombiner data",
         "option3-md": "Alternativ #3: Koble tilbake til forrige konto, **{{email}}**.",
-        "option3button": "Gå med #3: forrige konto",
+        "option3button": "Bruk #3: forrige konto",
         "buttonCancel": "Nei, avbryt",
         "buttonProcees": "Ja, jeg tar risikoen! Erstatt alt!"
       },
@@ -607,9 +607,9 @@
         "wipeDatabaseDescription": "Slett alle data fra databasen."
       },
       "internationalization": {
-        "title": "Internasjonalisering",
-        "crowdInPersonalTokenLabel": "CrowdIn personlig tilgangsnøkkel",
-        "crowdInPersonalTokenPlaceholder": "Få en fra CrowdIns kontoinnstillinger",
+        "title": "Internasjonale innstillinger",
+        "crowdInPersonalTokenLabel": "CrowdIn tilgangsnøkkel",
+        "crowdInPersonalTokenPlaceholder": "Hent på CrowdIn",
         "refreshCrowdInTranslations": {
           "title": "Oppdaterer oversettelser…",
           "starting": "Vent mens vi oppdaterer oversettelsene...",
@@ -621,7 +621,7 @@
       },
       "downloadAdvancedSettings": {
         "title": "Last ned avanserte innstillinger",
-        "locationLabel": "Plassering",
+        "locationLabel": "Lokasjon",
         "locationPlaceholder": "https://example.com/dir/settings.yml"
       },
       "systemInformation": {
@@ -690,8 +690,8 @@
           "SSB-a11y": "Enkelt sidebånd",
           "USB-a11y": "Øvre sidebånd",
           "LSB-a11y": "Nedre sidebånd",
-          "RTTY-a11y": "RTTY",
-          "CW-a11y": "CW",
+          "RTTY-a11y": "Ritty",
+          "CW-a11y": "C.W.",
           "other": "Annet",
           "other-a11y": "Annen modus"
         }
@@ -700,11 +700,11 @@
     "exportSettings": {
       "title": "Eksportinnstillinger",
       "exportTypes": "Eksporttyper",
-      "customTemplates": "Tilpassede maler",
+      "customTemplates": "Egendefinerte maler",
       "defaultTemplates": "Standardmaler",
       "customTemplatesDescription": "Bruk tilpassede maler for eksporten",
       "defaultTemplatesDescription": "Bruk standardmaler for eksporten",
-      "includePrivateData": "Inkluder private data",
+      "includePrivateData": "Inkluder personlig informasjon",
       "fileNameTemplate": "Filnavnsmal",
       "titleTemplate": "Tittelmal",
       "adifNotes": "ADIF QSO-notater",
@@ -750,7 +750,7 @@
       "infoTab": "Info",
       "infoTab-a11y": "Info-fane",
       "operationInfo-a11y": "Operasjonsinfo",
-      "spotsTab": "Spots",
+      "spotsTab": "Spotter",
       "spotsTab-a11y": "Spots-fane",
       "mapTab": "Kart",
       "mapTab-a11y": "Kart-fane",
@@ -761,7 +761,7 @@
         "loggingSettings": "Loggingsinnstillinger",
         "rstFields": "RST-felt",
         "stateField": "Stat-felt",
-        "gridField": "Gridfelt",
+        "gridField": "Grid-felt",
         "showDeletedQSOs": "Vis slettede QSOer",
         "numbersRow": "Tallrad",
         "actions": "Handlinger",
@@ -842,12 +842,12 @@
         "spotAt": "Spot {{call}} ved {{freq}}",
         "tooLateToSpot": "For sent å spotte {{call}}",
         "nothingToSpot": "Ingenting å spotte",
-        "selfSpottingLabel": "Egen-spotting",
-        "selfSpottingControls-a11y": "Egen-spotting kontroller",
+        "selfSpottingLabel": "Selvspotting",
+        "selfSpottingControls-a11y": "Selvspotting-kontroll",
         "spottingLabel": "Spotting",
-        "spottingControls-a11y": "Spotting kontroller",
-        "autoRespottingLabel": "Automatisk omspotting",
-        "autoRespottingControls-a11y": "Automatisk omspotting kontroller",
+        "spottingControls-a11y": "Kontroller for spotting",
+        "autoRespottingLabel": "Selvspot automatisk",
+        "autoRespottingControls-a11y": "Kontroll for automatisk selvspotting",
         "commentsLabel": "Kommentarer"
       }
     },
@@ -874,7 +874,7 @@
       "filters": "Filtre",
       "filtersBand": "Bånd",
       "filtersAllBands": "Alle bånd",
-      "filtersBandAutomatic": "Automatisk (For øyeblikket {{band}})",
+      "filtersBandAutomatic": "Automatisk (for øyeblikket {{band}})",
       "filtersMode": "Modus",
       "filtersAllModes": "Alle moduser",
       "filtersModeAutomatic": "Automatisk (For øyeblikket {{mode}})",
@@ -927,7 +927,7 @@
       "manageOperationLogsDescription": "Eksporter, importer og administrer data",
       "useAsTemplateTitle": "Bruk som mal",
       "useAsTemplateDescription": "Start en ny operasjon med lignende innstillinger",
-      "dangerZoneTitle": "Farens sone",
+      "dangerZoneTitle": "Skadelige funksjoner",
       "undeleteOperationTitle": "Gjenopprett operasjon",
       "deleteOperationTitle": "Slett operasjon"
     },
@@ -935,8 +935,8 @@
       "statsTitle": "Operasjonsstatistikk",
       "operationTotalsTitle-md": "Operasjonstotalt:",
       "qsosInTime_zero": "Ingen QSOer",
-      "qsosInTime_one": "1 QSO i {{time}}",
-      "qsosInTime_other": "{{fmtCount}} QSOer i {{time}}",
+      "qsosInTime_one": "1 QSO på {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSOer på {{time}}",
       "qsoCount_zero": "Ingen QSOer",
       "qsoCount_one": "1 QSO",
       "qsoCount_other": "{{fmtCount}} QSOer",
