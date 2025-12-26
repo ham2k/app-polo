@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Band wijzigen naar {{band}}?",
       "bandConfirm": "Band ingesteld op {{band}}",
-      "frequency": "Frequentie wijzigen naar {{freq}} MHz?",
-      "frequencyConfirm": "Frequentie ingesteld op {{freq}} MHz",
+      "frequency": "Frequentie wijzigen naar {{freq}} MHz{{mode}}?",
+      "frequencyConfirm": "Frequentie ingesteld op {{freq}} MHz{{mode}}",
       "frequencyAndMode": "Frequentie wijzigen naar {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frequentie ingesteld op {{freq}} MHz ({{mode}})",
       "power": "Vermogen wijzigen naar {{power}}W?",

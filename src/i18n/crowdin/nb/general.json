@@ -73,7 +73,7 @@
         "fromNow": "om {{time}}",
         "shortSeconds": "{{s}}s",
         "shortMinutes": "{{m}}m",
-        "shortMinutesAndSeconds": "{{m}}t {{s}}m",
+        "shortMinutesAndSeconds": "{{m}}m {{s}}d",
         "shortHours": "{{h}}t",
         "shortHoursAndMinutes": "{{h}}t {{m}}m",
         "shortDays": "{{d}}d",

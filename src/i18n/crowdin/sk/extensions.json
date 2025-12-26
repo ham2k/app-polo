@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Zmeniť pásmo na {{band}}?",
       "bandConfirm": "Pásmo nastavené na {{band}}",
-      "frequency": "Zmeniť frekvenciu na {{freq}} MHz?",
-      "frequencyConfirm": "Frekvencia nastavená na {{freq}} MHz",
+      "frequency": "Zmeniť frekvenciu na {{freq}} MHz{{mode}}?",
+      "frequencyConfirm": "Frekvencia nastavená na {{freq}} MHz{{mode}}",
       "frequencyAndMode": "Zmeniť frekvenciu na {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frekvencia nastavená na {{freq}} MHz ({{mode}})",
       "power": "Zmeniť výkon na {{power}}W?",
@@ -537,15 +537,15 @@
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
         "operationTotals": "Celkové operácie",
-        "referencesActivatedCount_zero": "Žiadne aktivované končiare",
-        "referencesActivatedCount_one": "1 aktivovaný končiar",
-        "referencesActivatedCount_other": "{{fmtCount}} aktivované končiare",
-        "referencesMissedCount_zero": "Žiadne neúplné končiare",
-        "referencesMissedCount_one": "1 neúplný končiar",
-        "referencesMissedCount_other": "{{fmtCount}} neúplné končiare",
+        "referencesActivatedCount_zero": "Žiadne aktivované vrcholy",
+        "referencesActivatedCount_one": "1 aktivovaný vrchol",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivované vrcholy",
+        "referencesMissedCount_zero": "Žiadne neúplné vrcholy",
+        "referencesMissedCount_one": "1 neúplný vrchol",
+        "referencesMissedCount_other": "{{fmtCount}} neúplné vrcholy",
         "referencesHuntedCount_zero": "Žiadne lovené končiare",
-        "referencesHuntedCount_one": "1 lovený končiar",
-        "referencesHuntedCount_other": "{{fmtCount}} lovené končiare"
+        "referencesHuntedCount_one": "1 lovený vrchol",
+        "referencesHuntedCount_other": "{{fmtCount}} lovené vrcholy"
       },
       "loggingControl": {
         "theirRefLabel": "Ich SOTA"
@@ -555,9 +555,9 @@
         "serverResponse": "Server odpovedal so stavom {{status}} {{message}}",
         "sotaAccountLoggedOut": "Účet SOTA bol odhlásený. Prosím prihláste sa znova v nastaveniach PoLo"
       },
-      "exampleRefName": "Príklad končiara",
-      "unknownRefName": "Neznámy končiar",
-      "noRefsNearby": "Žiadne končiare v okolí!"
+      "exampleRefName": "Príklad vrcholu",
+      "unknownRefName": "Neznámy vrchol",
+      "noRefsNearby": "Žiadne vrcholy v okolí!"
     },
     "usStates": {
       "statesCount_zero": "Žiadne štáty USA",

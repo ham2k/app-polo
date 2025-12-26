@@ -18,23 +18,23 @@
     },
     "home": {
       "title": "Portable Logger",
-      "newOperation": "Neuer Einsatz",
-      "newOperation-a11y": "Neuer Einsatz",
+      "newOperation": "Neuer Betrieb",
+      "newOperation-a11y": "Neuer Betrieb",
       "operationList-a11y": "Liste der Einsätze",
-      "noOperations": "Kein Einsatz!",
+      "noOperations": "Kein Betrieb!",
       "settings-a11y": "Einstellungen",
       "quickCallLookupPlaceholder": "Rufzeichen nachschlagen…",
       "spots-a11y": "Spots"
     },
     "operation": {
-      "title": "Einsatz"
+      "title": "Betrieb"
     },
     "operationDetails": {
-      "title": "Einsatz-Details",
+      "title": "Betriebs-Details",
       "operationTitle": "Titel",
-      "newOperation": "Neuer Einsatz",
+      "newOperation": "Neuer Betrieb",
       "operationNotes": "Notizen",
-      "anythingYouWantToWriteAboutThisOperation": "Alles, was du über diesen Einsatz schreiben möchtest"
+      "anythingYouWantToWriteAboutThisOperation": "Alles, was du über diesen Betrieb schreiben möchtest"
     },
     "operationStationInfo": {
       "title": "Stations- & Operator-Info",
@@ -54,13 +54,13 @@
       "stationCallsign": "Stations-Rufzeichen",
       "whoIsOperatingTheStation": "Wer betreibt die Station? (optional)",
       "operatorCallsign": "Operator Rufzeichen",
-      "multiStationOperation": "Mehrfachstation Einsatz?",
+      "multiStationOperation": "Mehrfachstation Betrieb?",
       "multiStationOperationYes": "Ja, wir sind eine von vielen!",
       "multiStationOperationNo": "Nein, nur eine normale Station",
       "identifierForThisStation": "Kennung für diese Station (nur Zahlen)"
     },
     "operationLocation": {
-      "title": "Einsatzort",
+      "title": "Betriebsort",
       "selectedLocation": "Ausgewählter Ort",
       "maidenheadGridSquareLocator": "Maidenhead Grid Square Locator",
       "suggestedLocations": "Vorgeschlagene Orte",
@@ -78,10 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Aktivitäts-Optionen",
-      "removeActivity": "Entfernen die Aktivität {{activity}} aus diesem Einsatz"
+      "removeActivity": "Entfernen die Aktivität {{activity}} aus diesem Betrieb"
     },
     "operationData": {
-      "title": "Einsatzdaten",
+      "title": "Betriebsdaten",
       "selectFromTheExportOptionsBelow": "Wählen aus den folgenden Exportoptionen",
       "exportSingeFile": "Eine Datei exportieren",
       "exportSelectedFiles_zero": "0 ausgewählte Dateien exportieren",
@@ -140,9 +140,9 @@
         "qsos_one": "1 QSO",
         "qsos_other": "{{count}} QSOs"
       },
-      "thisOpCount_zero": "0 QSOs bei diesem Einsatz",
-      "thisOpCount_one": "1 QSO bei diesem Einsatz",
-      "thisOpCount_other": "{{count}} QSOs in diesem Einsatz",
+      "thisOpCount_zero": "0 QSOs bei diesem Betrieb",
+      "thisOpCount_one": "1 QSO bei diesem Betrieb",
+      "thisOpCount_other": "{{count}} QSOs in diesem Betrieb",
       "otherOpsCount_zero": "0 QSOs in anderen Einsätzen",
       "otherOpsCount_one": "1 QSO in anderen Einsätzen",
       "otherOpsCount_other": "{{count}} QSOs in anderen Einsätzen",
@@ -190,7 +190,7 @@
       }
     },
     "opInfo": {
-      "title": "Einsatz Info"
+      "title": "Betrieb Info"
     },
     "settings": {
       "title": "Einstellungen",
@@ -336,7 +336,7 @@
         "descriptionOff": "Keine Kommataste"
       },
       "vibrateNumbersRow": {
-        "title": "Vibration in der Zahlenreihe verwenden",
+        "title": "Vibration in der Zahlenreihe",
         "descriptionOn": "Bei Drücken von Zahlen vibrieren",
         "descriptionOff": "Beim Drücken von Zahlen nicht vibrieren"
       },
@@ -374,13 +374,13 @@
       },
       "shareAppUsageData": {
         "title": "App-Nutzungsdaten teilen",
-        "descriptionOn": "Hilf uns, die App zu verbessern, indem du Nutzungs-, Absturz- und Leistungsdaten mitteilst",
+        "descriptionOn": "Hilf die App zu verbessern durchs Teilen der Nutzungs-, Absturz- und Leistungsdaten",
         "descriptionOff": "Halten die App-Nutzungsdaten privat.\nDas Ham2K-Team kann Abstürze oder andere Probleme nicht erkennen."
       },
       "shareOperationData": {
-        "title": "Einsatzdaten teilen",
-        "descriptionOn": "Teile einige Einsatzdaten öffentlich und mit anderen Nutzern",
-        "descriptionOff": "Einsatzdaten privat halten"
+        "title": "Betriebsdaten teilen",
+        "descriptionOn": "Teile einige Betriebsdaten öffentlich und mit anderen Nutzern",
+        "descriptionOff": "Betriebsdaten privat halten"
       },
       "privacyPolicy": {
         "title": "Datenschutzerklärung",
@@ -415,18 +415,18 @@
         "descriptionOff": "Empfangen zuerst, Gesendet als zweites"
       },
       "jumpAfterRST": {
-        "title": "Zum nächsten Feld bei RST-Eingabe springen",
+        "title": "Spring weiter bei RST-Eingabe",
         "descriptionOn": "Springe nach RST-Eingabe",
         "descriptionOff": "Nicht automatisch springen"
       },
       "suggestDefaultOperator": {
         "title": "Standard-Operator vorschlagen",
-        "descriptionOn": "Setze {{operatorCall}} als Operator in den Funkbetrieben, bei denen das Stationsrufzeichen unterschiedlich ist",
+        "descriptionOn": "Operator {{operatorCall}} setzen, bei denen sich das Stationsrufzeichen unterscheidet",
         "descriptionOff": "Schlage keinen Standardoperator vor, unabhängig vom verwendeten Stationsrufzeichen"
       },
       "suggestTemplates": {
-        "title": "Vorlagen für Operationen verwenden",
-        "descriptionOn": "Vorlagen für neue Operationen vorschlagen",
+        "title": "Vorlagen für Betrieb verwenden",
+        "descriptionOn": "Vorlagen für neue Betrieb vorschlagen",
         "descriptionOff": "Keine Vorlagen vorschlagen"
       },
       "bandsModes": {
@@ -522,10 +522,10 @@
         "emailAddressLabel": "E-Mail-Adresse",
         "resendButton": "Erneut senden",
         "revertButton": "Rückgängig machen",
-        "syncFirstButton": "Gehen Sie zurück und synchronisieren Sie zuerst!",
+        "syncFirstButton": "Gehe zurück und synchronisiere zuerst fertig",
         "continueAnywayButton": "Ich weiß, was ich tue! Trotzdem fortfahren",
-        "potentialForDataLoss": "Potenzial für Datenverlust!!!",
-        "potentialForDataLossDescription": "Sie haben nicht alle Daten auf diesem Gerät synchronisiert.\n\nWenn Sie dieses Gerät mit einem neuen Konto verknüpfen, werden Sie gefragt, ob Sie dessen Daten durch die des neuen Kontos ersetzen möchten.\n\nFalls dies der Fall ist, können Sie möglicherweise keine bereits vorhandenen Aktivitäten wiederherstellen, die noch nicht synchronisiert wurden.\n\nWir empfehlen Ihnen, dieses Gerät zuerst vollständig zu synchronisieren!"
+        "potentialForDataLoss": "Möglicher Datenverlust!!!",
+        "potentialForDataLossDescription": "Du hast nicht alle Daten auf diesem Gerät synchronisiert.\n\nWenn du dieses Gerät mit einem neuen Konto verknüpfst, wirst du gefragt, ob du dessen Daten durch die des neuen Kontos ersetzen möchtest.\n\nFalls dies der Fall ist, kannst du möglicherweise keine bereits vorhandenen Aktivitäten wiederherstellen, die noch nicht synchronisiert wurden.\n\nWir empfehlen dir, dieses Gerät zuerst vollständig zu synchronisieren!"
       },
       "syncServiceDescription-md": "Grunddienst ist kostenlos und erlaubt es, aktuelle Daten (bis zu 7 Tage) zwischen zwei Geräten oder Anwendungen mit begrenzter Geschwindigkeit zu synchronisieren.\n\nVollständiger Dienst benötigt ein bezahltes Abonnement und umfasst die Synchronisation all deiner Funkbetriebe zwischen einer angemessenen Anzahl von Geräten oder Anwendungen bei voller Geschwindigkeit.\n\nWährend der LoFi Dienst in seiner TESTPHASE für die nächsten Monate ist, bleibt der Dienst kostenlos. Danach hängen die Preise vom Land und der Währung ab, sollten aber nicht mehr als 30 $/Jahr oder Äquivalent sein, wahrscheinlich weniger.",
       "thisDevice": "Dieses Gerät",
@@ -621,7 +621,7 @@
       },
       "downloadAdvancedSettings": {
         "title": "Erweiterte Einstellungen herunterladen",
-        "locationLabel": "Standort",
+        "locationLabel": "Ablageort",
         "locationPlaceholder": "https://example.com/dir/settings.yml"
       },
       "systemInformation": {
@@ -761,7 +761,7 @@
         "loggingSettings": "Logging-Einstellungen",
         "rstFields": "RST-Felder",
         "stateField": "Bundesstaaten-Feld",
-        "gridField": "Gitterfeld",
+        "gridField": "Rasterfeld",
         "showDeletedQSOs": "Gelöschte QSOs anzeigen",
         "numbersRow": "Zahlenreihe",
         "actions": "Aktionen",
@@ -886,8 +886,8 @@
       "filtersAge45Minutes": "45 Minuten",
       "filtersAge60Minutes": "60 Minuten",
       "filtersSorting": "Sortierung",
-      "filtersSortByTime": "Nach Spot-Zeitpunkt",
-      "filtersSortByFrequency": "Nach Frequenz",
+      "filtersSortByTime": "Spot-Zeit",
+      "filtersSortByFrequency": "Frequenz",
       "filtersGroupSpecialSpots": "Besondere Spots zuerst gruppieren",
       "filtersGroupCallsWithNotes": "Rufzeichen mit Notizen gruppieren",
       "filtersSpotSources": "Spot-Quellen",

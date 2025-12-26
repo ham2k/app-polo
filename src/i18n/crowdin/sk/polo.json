@@ -3,12 +3,12 @@
     "start": {
       "credits": "od KI2D a priateľov",
       "Loading Extensions": "Načítavanie rozšírení",
-      "Development Build": "Vývojová verzia Prenosného záznamníka",
+      "Development Build": "Vývojová verzia Portable Loggeru",
       "messages": {
-        "Reticulating splines": "Retikulácia splínov",
+        "Reticulating splines": "Prepočitávanie kriviek",
         "Tuning the antenna": "Ladenie antény",
-        "Checking the tubes": "Kontrola rúrok",
-        "Warming up the tubes": "Zahrievanie rúrok",
+        "Checking the tubes": "Kontrola elektróniek",
+        "Warming up the tubes": "Zahrievanie elektróniek",
         "Unfolding the map": "Rozbalenie mapy",
         "Charging the flux capacitor": "Nabíjanie fluxu kondenzátoru",
         "Purging the dilithium chamber": "Vyčistenie dilithium komory",
@@ -97,7 +97,7 @@
       "ham2kLoFiSync": "Ham2K LoFi Sync",
       "operation": "Prevádzka",
       "exportSettings": "Nastavenia exportu",
-      "useCompactFileNames": "Použiť kompaktne názvy súborov",
+      "useCompactFileNames": "Použiť krátke názvy súborov",
       "wavelogExport": "Export do Wavelog",
       "exportQSOsToWavelogDescription": "Odoslať všetky QSOs tejto prevádzky do Wavelog",
       "wavelogDialog": {
@@ -151,7 +151,7 @@
       "andMoreCount_other": "… a {{count}} ďalších",
       "showImage": "Zobraziť obrázok",
       "notes": "Poznámky",
-      "potentialCall": "Potenciálny hovor: {{call}}",
+      "potentialCall": "Možná značka: {{call}}",
       "withCall": "s {{call}}"
     },
     "spots": {
@@ -407,7 +407,7 @@
       "showBearing": {
         "title": "Zobrazovať azimut",
         "descriptionOn": "Zobrazovať odhadovaný azimut ku stanici",
-        "descriptionOff": "Nezobrazovať údaje o azimute"
+        "descriptionOff": "Nezobrazovať informácie o azimute"
       },
       "switchSignalReportOrder": {
         "title": "Prepnite poradie hlásení signálu",
@@ -529,7 +529,7 @@
       },
       "syncServiceDescription-md": "Základná služba je zdarma a umožňuje synchronizáciu najnovších údajov (až 7 dní) medzi dvoma zariadeniami alebo aplikáciami s obmedzenou rýchlosťou.\n\nPlná služba vyžaduje platené predplatné a zahŕňa všetky vaše operácie synchronizované medzi akýmkoľvek rozumným počtom zariadení alebo aplikácií s plnou rýchlosťou.\n\nPočas TESTOVACEJ PERIÓDY služby LoFi v nasledujúcich niekoľkých mesiacoch zostane služba zadarmo. Potom ceny závisia od krajiny a meny, ale nemali by byť vyššie ako 30 USD/rok alebo ekvivalent, a pravdepodobne nižšie.",
       "thisDevice": "Toto zariadenie",
-      "notAuthenticated": "Nepreukázaný",
+      "notAuthenticated": "Neprihlasený",
       "lofiServer": "LoFi server",
       "otherDevices": "Iné zariadenia",
       "devSettings": "Nastavenia pre vývoj",
@@ -633,7 +633,7 @@
         "selectTrackForPatches": "Vybrať trať pre záplaty",
         "selectTrackForPatchesDescription": "Vyberte trať pre záplaty",
         "checkingForUpdates": "Kontrola aktualizácií…",
-        "checkForUpdates": "Skontrolujte aktualizácie {{track}}",
+        "checkForUpdates": "Skontrolovať aktualizácie {{track}}",
         "updateAvailable": "Aktualizácia k dispozícii",
         "updateAvailableForTrack": "Aktualizácia {{track}} k dispozícii",
         "downloading": "Sťahovanie…",
@@ -687,8 +687,8 @@
         "showEvenMoreModes": "Zobraziť ešte viac módov",
         "showFewerModes": "Zobraziť menej módov",
         "names": {
-          "SSB-a11y": "Jednoduche Bočné Pásmo",
-          "USB-a11y": "Horné Bočné Pásmo",
+          "SSB-a11y": "Jednostranné pásmo",
+          "USB-a11y": "Horné postranné pásmo",
           "LSB-a11y": "Dolné Bočné Pásmo",
           "RTTY-a11y": "Ritty",
           "CW-a11y": "C.W.",
@@ -729,7 +729,7 @@
     },
     "noticesSettings": {
       "title": "Nedávne Upozornenia",
-      "undated": "Bezdátové",
+      "undated": "Bez dátumu",
       "noRecentNotices": "Žiadne nedávne upozornenia"
     },
     "extensionSettings": {
@@ -807,7 +807,7 @@
       "theirCallLabel": "Ich volací znak",
       "ourSentLabel": "Odoslané",
       "theirSentLabel": "Prijaté",
-      "stateLabel": "Stav",
+      "stateLabel": "Štát",
       "gridLabel": "Lokátorová mriežka",
       "timeLabel": "Čas",
       "dateLabel": "Dátum",

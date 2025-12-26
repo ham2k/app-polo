@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Endre bånd til {{band}}?",
       "bandConfirm": "Bånd satt til {{band}}",
-      "frequency": "Endre frekvens til {{freq}} MHz?",
-      "frequencyConfirm": "Frekvens satt til {{freq}} MHz",
+      "frequency": "Endre frekvens til {{freq}} MHz{{mode}}?",
+      "frequencyConfirm": "Frekvens satt til {{freq}} MHz{{mode}}",
       "frequencyAndMode": "Endre frekvens til {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frekvens satt til {{freq}} MHz ({{mode}})",
       "power": "Endre styrke til {{power}}W?",

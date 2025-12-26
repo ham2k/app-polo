@@ -54,8 +54,8 @@
       "QSO": "QSO",
       "QSO-a11y": "Q S O",
       "QSOs-a11y": "Q S Os",
-      "Operation": "Einsatz",
-      "generalOperation": "Allgemeine Bedienung"
+      "Operation": "Betrieb",
+      "generalOperation": "Allgemeiner Betrieb"
     },
     "formatting": {
       "thousandsDelimiter": ".",
@@ -287,7 +287,7 @@
       "categories": {
         "core": "Kernfunktionen",
         "locationBased": "Ortsbezogene Aktivitäten",
-        "contestsAndFieldOps": "Wettbewerbe & Feldeinsatz",
+        "contestsAndFieldOps": "Wettbewerbe & Feldbetrieb",
         "lookup": "Datenabfrage",
         "devmode": "Entwicklermodus",
         "other": "Andere Funktionen"

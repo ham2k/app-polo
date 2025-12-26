@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Band zu {{band}} ändern?",
       "bandConfirm": "Band auf {{band}} gesetzt",
-      "frequency": "Frequenz zu {{freq}} MHz ändern?",
-      "frequencyConfirm": "Frequenz auf {{freq}} MHz gesetzt",
+      "frequency": "Frequenz zu {{freq}} MHz{{mode}} ändern?",
+      "frequencyConfirm": "Frequenz auf {{freq}} MHz{{mode}} gesetzt",
       "frequencyAndMode": "Frequenz zu {{freq}} MHz ({{mode}}) ändern?",
       "frequencyAndModeConfirm": "Frequenz auf {{freq}} MHz ({{mode}}) gesetzt",
       "power": "Leistung auf {{power}}W ändern?",
@@ -342,7 +342,7 @@
       "shortName": "HSOTA",
       "exportName": "HSOTA Aktivierung",
       "activityOptions": {
-        "title_zero": "Keine Schautplatz zur Aktivierung ausgewählt",
+        "title_zero": "Kein Schauplatz zur Aktivierung ausgewählt",
         "title_one": "Ein Schauplatz wird aktiviert",
         "title_other": "{{count}} Schauplätze werden aktiviert",
         "noSitesFound": "Keine Schauplätze gefunden",
@@ -566,7 +566,7 @@
     },
     "wab": {
       "name": "Worked All Britain/Ireland",
-      "description": "Füge WAB/WAI Quadrat zur Operation hinzu",
+      "description": "Füge WAB/WAI Quadrat zum Betrieb hinzu",
       "workedAllBritainSquare": "Worked All Britain-Quadrat",
       "workedAllIrelandSquare": "Worked All Ireland-Quadrat",
       "enterSquare": "Quadrat eingeben",
