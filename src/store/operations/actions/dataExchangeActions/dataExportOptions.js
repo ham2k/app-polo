@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -10,10 +10,11 @@
 # Explanation of how PoLo manages exports for one operation.
 
 For each station callsign in the operation, we collect "export options" from:
-- The handler for each reference in the operation.
+- The handler for each reference in the operation, including references in separate "breaks".
 - Any "export" handler.
 
 Each of these handlers can suggest zero or more export options, for which they provide:
+- A key (a unique identifier for the export option, which might group multiple references together)
 - A format (ADIF, Cabrillo, etc.)
 - A name template (e.g. "{{op.date}} {{op.call}} {{log.ref}}")
 - A title template (e.g. "{{log.call}} at {{log.ref}} on {{op.date}}")
@@ -91,6 +92,7 @@ export const DATA_EXTENSIONS = {
   qson: 'qson',
   json: 'json',
   txt: 'txt',
+  text: 'txt',
   csv: 'csv',
   tsv: 'tsv',
   other: 'dat'
@@ -107,7 +109,7 @@ export const DATA_FORMAT_DESCRIPTIONS = {
   other: 'Data'
 }
 
-export function baseNamePartsFor ({ operation, ourInfo }) {
+export function baseNamePartsFor({ operation, ourInfo }) {
   return {
     call: ourInfo.call,
     baseCall: ourInfo.baseCall,
@@ -119,35 +121,78 @@ export function baseNamePartsFor ({ operation, ourInfo }) {
   }
 }
 
-export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
+function getAllRefsForOperation({ operation, qsos }) {
+  const refs = qsos.filter(qso => !qso.deleted && (qso?.event?.event === 'start' || qso?.event?.event === 'break'))
+    .map(qso => qso?.event?.operation?.refs ?? [])
+    .flat().filter(ref => ref)
+
+  if (refs.length === 0) {
+    refs.push(...(operation?.refs || []))
+  }
+  return refs
+}
+
+const DEBUG = false
+
+function getExportOptionsForOperation({ operation, qsos, settings }) {
+  const refs = getAllRefsForOperation({ operation, qsos })
+  const exportOptions = {}
+
+  for (const ref of refs) {
+    const handler = findBestHook(`ref:${ref.type}`, { withFunction: 'suggestExportOptions' })
+
+    if (handler) {
+      const options = (handler.suggestExportOptions({ operation, qsos, ref, settings }) ?? []).filter(x => x)
+
+      for (const option of options) {
+        const refKey = handler.keyForRef ? handler.keyForRef(ref) : `${ref.type}-${ref.ref}`
+        const optionKey = `${handler.key}-${option.format}-${option.exportType ?? 'export'}`
+        const combinedKey = `${optionKey}-${refKey}`
+        exportOptions[combinedKey] = exportOptions[combinedKey] || { optionKey, refKey, handler, option, refs: [] }
+
+        const existingRef = exportOptions[combinedKey]?.refs?.find(r => {
+          const existingRefKey = handler.keyForRef ? handler.keyForRef(r) : `${r.type}-${r.ref}`
+          return existingRefKey === refKey
+        })
+        if (!existingRef) {
+          exportOptions[combinedKey].refs.push(ref)
+        }
+      }
+    }
+  }
+
+  findHooks('export', { withFunction: 'suggestExportOptions' }).forEach(handler => {
+    const options = (handler.suggestExportOptions({ operation, qsos, settings }) ?? []).filter(x => x)
+    for (const option of options) {
+      const optionKey = [handler.key, option.format, option.exportType ?? 'export'].filter(x => x).join('-')
+      exportOptions[optionKey] = exportOptions[optionKey] || { optionKey, refKey: null, handler, option, refs: [{ type: handler.key }] }
+    }
+  })
+  if (DEBUG) console.log('-- exportOptions', exportOptions)
+  return Object.values(exportOptions)
+}
+
+export function dataExportOptions({ operation, qsos, settings, ourInfo }) {
   const exports = []
 
+  const exportOptions = getExportOptionsForOperation({ operation, qsos, settings })
+
   const exportHandlersForRefs = (operation?.refs || [])
-    .map(ref => ({ handler: findBestHook(`ref:${ref.type}`), ref }))
-    .filter(x => x?.handler && x.handler.suggestExportOptions)
-  const exportHandlersForExports = findHooks('export')
-    .map(handler => ({ handler, ref: {} }))
-    .flat().filter(x => x.handler && x.handler.suggestExportOptions)
 
-  const handlersWithOptions = [...exportHandlersForRefs, ...exportHandlersForExports].map(({ handler, ref }) => (
-    { handler, ref, options: handler.suggestExportOptions && handler.suggestExportOptions({ operation, qsos, ref, settings }) }
-  )).flat().filter(({ options }) => options)
+  for (const { optionKey, refKey, handler, refs, option } of exportOptions) {
+    let exportSettings = selectExportSettings({ settings }, optionKey, (handler?.defaultExportSettings && handler?.defaultExportSettings()))
+    if (exportSettings.customTemplates === false) {
+      const { privateData } = exportSettings
+      exportSettings = selectExportSettings({ settings }, 'default')
+      exportSettings.private = privateData
+    }
+    const nameTemplate = compileTemplateForOperation(exportSettings?.nameTemplate || option.nameTemplate || '{{> DefaultName}}', { settings })
+    const titleTemplate = compileTemplateForOperation(exportSettings?.titleTemplate || option.titleTemplate || '{{> DefaultTitle}}', { settings })
+    const partials = basePartialTemplates({ settings })
+    const data = extraDataForTemplates({ settings })
 
-  handlersWithOptions.forEach(({ handler, ref, options }) => {
-    options.forEach(option => {
-      const key = `${handler.key}-${option.format}-${option.exportType ?? 'export'}`
-      let exportSettings = selectExportSettings({ settings }, key, (handler?.defaultExportSettings && handler?.defaultExportSettings()))
-      if (exportSettings.customTemplates === false) {
-        const { privateData } = exportSettings
-        exportSettings = selectExportSettings({ settings }, 'default')
-        exportSettings.private = privateData
-      }
-      const nameTemplate = compileTemplateForOperation(exportSettings?.nameTemplate || option.nameTemplate || '{{> DefaultName}}', { settings })
-      const titleTemplate = compileTemplateForOperation(exportSettings?.titleTemplate || option.titleTemplate || '{{> DefaultTitle}}', { settings })
-
+    for (const ref of refs) {
       const context = templateContextForOneExport({ option, settings, operation, ourInfo, handler, ref })
-      const partials = basePartialTemplates({ settings })
-      const data = extraDataForTemplates({ settings })
 
       let title
       try {
@@ -176,14 +221,15 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
       const exportLabel = option.exportLabel || option.exportName || `${handler.shortName ?? handler.name} ${DATA_FORMAT_DESCRIPTIONS[option.format] || DATA_FORMAT_DESCRIPTIONS.other}`
       const exportType = option.exportType || handler.key
 
+      // console.log('dataExportOptions', { exportSettings, option, title, fileName, exportLabel, exportType })
       exports.push({ ...option, handler, ref, fileName, title, exportLabel, exportType, operation, ourInfo })
-    })
-  })
-
+    }
+  }
+  if (DEBUG) console.log('dataExportOptions', exports)
   return exports.sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
 }
 
-export function compileTemplateForOperation (template, { settings }) {
+export function compileTemplateForOperation(template, { settings }) {
   try {
     const compiled = Handlebars.compile(template ?? '', { noEscape: true })
     return compiled
@@ -193,7 +239,7 @@ export function compileTemplateForOperation (template, { settings }) {
   }
 }
 
-export function runTemplateForOperation (template, { settings, operation, ourInfo, handler, ref, qso }) {
+export function runTemplateForOperation(template, { settings, operation, ourInfo, handler, ref, qso }) {
   try {
     const compiled = Handlebars.compile(template ?? '', { noEscape: true })
     const context = templateContextForOneExport({ settings, operation, ourInfo, handler, ref, qso })
@@ -207,7 +253,7 @@ export function runTemplateForOperation (template, { settings, operation, ourInf
   }
 }
 
-export function templateContextForOneExport ({ option, settings, operation, ourInfo, handler, qso, ref, context }) {
+export function templateContextForOneExport({ option, settings, operation, ourInfo, handler, qso, ref, context }) {
   return {
     settings: {
       useCompactFileNames: settings.useCompactFileNames
@@ -216,10 +262,10 @@ export function templateContextForOneExport ({ option, settings, operation, ourI
       station: ourInfo?.call,
       callInfo: ourInfo,
       ref: ref?.ref,
-      refName: ref?.name ?? ref?.label,
-      refLabel: ref?.label ?? ref?.name,
-      refShortName: ref?.shortName ?? ref?.shortLabel ?? ref?.name ?? ref?.label,
-      refShortLabel: ref?.shortLabel ?? ref?.shortName ?? ref?.label ?? ref?.name,
+      refName: ref?.name ?? ref?.label ?? ref?.subtitle,
+      refLabel: ref?.label ?? ref?.name ?? ref?.subtitle,
+      refShortName: ref ? (ref.shortName ?? ref.shortLabel ?? ref.shortSubtitle ?? ref.name ?? ref.label ?? ref.subtitle) : '',
+      refShortLabel: ref ? (ref.shortLabel ?? ref.shortName ?? ref.shortSubtitle ?? ref.label ?? ref.name ?? ref.subtitle) : '',
       handlerType: handler?.type,
       handlerName: handler?.name,
       handlerShortName: handler?.shortName,
@@ -250,7 +296,7 @@ export function templateContextForOneExport ({ option, settings, operation, ourI
   }
 }
 
-export function basePartialTemplates ({ settings }) {
+export function basePartialTemplates({ settings }) {
   let partials = {
     RefActivityNameNormal: '{{op.date}}{{#if log.includeTime}} {{op.startTime}}{{/if}} {{log.station}} at {{#if log.refPrefix}}{{log.refPrefix}} {{/if}}{{log.ref}}',
     RefActivityNameCompact: '{{log.station}}@{{#if log.refPrefix}}{{dash (downcase log.refPrefix)}}-{{/if}}{{log.ref}}-{{compact op.date}}',
@@ -258,7 +304,7 @@ export function basePartialTemplates ({ settings }) {
     OtherActivityNameCompact: '{{log.station}}-{{dash (downcase log.handlerShortName)}}{{#if log.includeTime}}-{{op.startTime}}{{/if}}-{{compact op.date}}',
     DefaultNameNormal: '{{op.date}}{{#if log.includeTime}} {{op.startTime}}{{/if}} {{log.station}} {{op.title}} {{log.modifier}}',
     DefaultNameCompact: '{{#dash}}{{log.station}}-{{compact op.date}}{{#if log.includeTime}}-{{op.startTime}}{{/if}}-{{downcase op.title}}-{{downcase log.modifier}}{{/dash}}',
-    RefActivityTitle: '{{log.station}}: {{log.handlerShortName}} at {{#trim}}{{log.ref}} {{log.refShortLabel}}{{/trim}} on {{op.date}}',
+    RefActivityTitle: '{{log.station}}: {{log.handlerShortName}} at {{#trim}}{{log.ref}} {{log.refName}}{{/trim}} on {{op.date}}',
     OtherActivityTitle: '{{log.station}}: {{log.handlerShortName}} on {{op.date}}',
     DefaultTitle: '{{log.station}}: {{#join op.refs separator=", " final=" & "}}{{or shortLabel label key}}{{/join}} on {{op.date}}',
     ADIFNotes: '{{qso.notes}}',
@@ -275,10 +321,14 @@ export function basePartialTemplates ({ settings }) {
   partials.OtherActivityName = settings?.useCompactFileNames ? partials.OtherActivityNameCompact : partials.OtherActivityNameNormal
   partials.DefaultName = settings?.useCompactFileNames ? partials.DefaultNameCompact : partials.DefaultNameNormal
 
+  Object.keys(partials).forEach(key => {
+    partials[key] = partials[key] ?? ''
+  })
+
   return partials
 }
 
-export function extraDataForTemplates ({ settings }) {
+export function extraDataForTemplates({ settings }) {
   return {
     app: {
       name: 'Ham2K Portable Logger',
@@ -370,7 +420,7 @@ Handlebars.registerHelper('join', function (...args) {
 Handlebars.registerHelper('or', function (...args) {
   // eslint-disable-next-line no-unused-vars
   const options = args.pop()
-  return args.find(x => !Handlebars.Utils.isEmpty(x)) || false
+  return args.find(x => !Handlebars.Utils.isEmpty(x)) || ''
 })
 
 Handlebars.registerHelper('and', function (...args) {
@@ -380,4 +430,64 @@ Handlebars.registerHelper('and', function (...args) {
     return args[args.length - 1]
   }
   return false
+})
+
+Handlebars.registerHelper('eq', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  // eslint-disable-next-line eqeqeq
+  return args[0] == args[1]
+})
+
+Handlebars.registerHelper('ne', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  // eslint-disable-next-line eqeqeq
+  return args[0] != args[1]
+})
+
+Handlebars.registerHelper('gt', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] > args[1]
+})
+
+Handlebars.registerHelper('ge', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] >= args[1]
+})
+
+Handlebars.registerHelper('lt', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] < args[1]
+})
+
+Handlebars.registerHelper('le', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+
+  return args[0] <= args[1]
+})
+
+Handlebars.registerHelper('includes', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  return args[0].includes(args[1])
+})
+
+Handlebars.registerHelper('startsWith', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  return args[0].startsWith(args[1])
+})
+
+Handlebars.registerHelper('endsWith', function (...args) {
+  // eslint-disable-next-line no-unused-vars
+  const options = args.pop()
+  return args[0].endsWith(args[1])
 })

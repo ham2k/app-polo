@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { TouchableOpacity, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { useTranslation } from 'react-i18next'
 
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { BANDS, ADIF_MODES, superModeForMode, modeForFrequency } from '@ham2k/lib-operation-data'
@@ -19,7 +20,7 @@ import { selectAllOperations, selectOperationCallInfo } from '../../../../store/
 import { selectSettings, setSettings } from '../../../../store/settings'
 import { useUIState } from '../../../../store/ui'
 import { selectVFO } from '../../../../store/station'
-import { useFindHooks } from '../../../../extensions/registry'
+import { findBestHook, findHooks } from '../../../../extensions/registry'
 import { scoringHandlersForOperation } from '../../../../extensions/scoring'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { annotateQSO } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
@@ -28,6 +29,9 @@ import MapWithSpots from './MapWithSpots'
 import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
 import SpotListMapToggle from './SpotListMapToggle'
+
+import GLOBAL from '../../../../GLOBAL'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 export const LABEL_FOR_MODE = {
   CW: 'CW',
@@ -45,7 +49,7 @@ export const LONG_LABEL_FOR_MODE = {
 
 const REFRESH_INTERVAL_IN_SECONDS = 60
 
-function prepareStyles (baseStyles, themeColor) {
+function prepareStyles (baseStyles, themeColor, style) {
   return {
     ...baseStyles,
     panel: {
@@ -53,7 +57,8 @@ function prepareStyles (baseStyles, themeColor) {
       borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
       borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
       borderBottomWidth: 1,
-      padding: baseStyles.oneSpace,
+      paddingTop: baseStyles.oneSpace,
+      paddingBottom: baseStyles.oneSpace,
       flexDirection: 'column'
     },
     container: {
@@ -65,9 +70,11 @@ function prepareStyles (baseStyles, themeColor) {
   }
 }
 
-export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
+export default function SpotsPanel ({ operation, qsos, sections, onSelect, style }) {
+  const { t } = useTranslation()
+
   const themeColor = 'tertiary'
-  const styles = useThemedStyles(prepareStyles, themeColor)
+  const styles = useThemedStyles(prepareStyles, themeColor, style)
 
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
@@ -90,7 +97,21 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
 
   const [showMap, setShowMap] = useState(false)
 
-  const spotsHooks = useFindHooks('spots', { filter: 'fetchSpots' })
+  const spotsHooks = useMemo(() => {
+    const hooks = findHooks('spots', { withFunction: 'fetchSpots' })
+
+    ;(operation?.refs || []).forEach(ref => {
+      const refHook = findBestHook(`ref:${ref.type}`)
+      if (refHook?.activitySpecificSpots?.fetchSpots) {
+        hooks.push({
+          ...refHook.activitySpecificSpots,
+          sourceName: refHook.activitySpecificSpots.sourceNameForRef({ ref, operation })
+        })
+      }
+    })
+
+    return hooks
+  }, [operation])
 
   useEffect(() => { // Refresh periodically
     const interval = setInterval(() => {
@@ -98,6 +119,12 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
     }, 1000 * REFRESH_INTERVAL_IN_SECONDS)
     return () => clearInterval(interval)
   })
+
+  useEffect(() => { // Ensure we refresh if we've been offline for too long
+    if (spotsState.lastFetched - Date.now() > 1000 * 2 * REFRESH_INTERVAL_IN_SECONDS) {
+      updateSpotsState({ lastFetched: 0 })
+    }
+  }, [spotsState.lastFetched, updateSpotsState])
 
   const refresh = useCallback(() => {
     updateSpotsState({ lastFetched: 0 })
@@ -108,13 +135,13 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
       updateSpotsState({ loading: true })
       setTimeout(async () => {
         await Promise.all(
-          spotsHooks.filter(hook => filterState.sources?.[hook.key] !== false).map(hook => {
-            return hook.fetchSpots({ online, settings, dispatch }).then(async spots => {
+          spotsHooks.filter(hook => filterState.sources?.[hook.key] !== false && hook.fetchSpots).map(hook => {
+            return hook.fetchSpots({ t, online, settings, dispatch, operation }).then(async spots => {
               const annotatedSpots = []
               for (const spot of spots) {
                 spot.our = spot.our || {}
                 spot.timeInMillis = 0
-                spot.key = `${spot.spot.source}:${qsoKey(spot)}`
+                spot.key = `${spot.spot.subSource ?? spot.spot.source}:${qsoKey(spot)}`
                 if (!spot.mode) {
                   spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
                 }
@@ -128,7 +155,11 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
         updateSpotsState({ lastFetched: new Date(), loading: false })
       }, 0)
     }
-  }, [allOperations, spotsHooks, online, settings, dispatch, operation, spotsState.lastFetched, updateSpotsState, filterState.sources, ourInfo])
+  }, [
+    allOperations, spotsHooks, online, settings, dispatch,
+    operation, spotsState.lastFetched, updateSpotsState,
+    filterState.sources, ourInfo, t
+  ])
 
   const { spots: filteredSpots, options, counts } = useMemo(() => {
     const allSpots = []
@@ -161,7 +192,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
   }, [spotsHooks, filterState, vfo, spotsState.spots])
 
   const scoredSpots = useMemo(() => {
-    const scoringHandlers = scoringHandlersForOperation(operation, settings)
+    const scoringHandlers = scoringHandlersForOperation({ operation, settings })
 
     return filteredSpots.map(rawSpot => {
       const spot = { ...rawSpot }
@@ -174,7 +205,8 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
       } else {
         scoringHandlers.forEach(({ handler, ref }) => {
           const lastSection = sections && sections[sections.length - 1]
-          const score = handler.scoringForQSO({ qso: spot, qsos, score: lastSection?.scores?.[ref.key], ref })
+          const score = handler.scoringForQSO({ qso: spot, qsos, operation, score: lastSection?.scores?.[ref.key ?? ref.type], ref })
+
           if (score?.alerts && score?.alerts[0] === 'duplicate' && (spot.spot?.type !== 'scoring')) {
             spot.spot.type = 'duplicate'
           } else if (score?.value > 0 || score?.points > 0) {
@@ -194,41 +226,130 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
           if (score.notices) {
             score.notices.forEach(notice => (spot.spot.flags[notice] = true))
           }
+
+          if (score.newMult) {
+            spot.spot.flags.newMult = true
+          }
+
+          // if (spot?.their?.call === 'KI2D') {
+          //   console.log('KI2D spot', handler.key, score, { ...spot.spot.flags })
+          // }
         })
+      }
+
+      const specialLabel = GLOBAL?.flags?.specialCalls?.[spot?.their?.call?.toLowerCase()]
+      if (specialLabel) {
+        spot.spot.flags.specialCall = true
+        spot.spot.callLabel = specialLabel
       }
       return spot
     })
   }, [operation, settings, filteredSpots, ourInfo.call, sections, qsos])
 
   const mergedOpSpots = useMemo(() => {
-    const mOpSpots = []
+    const _mergedSpots = []
     scoredSpots.forEach((spot) => {
+      // if (spot.spot?.key?.endsWith('-special')) {
+      //   mOpSpots.push(spot)
+      //   return
+      // }
+
       // Not digital as could be multiple people on one freq. e.g. FT8
-      const matchingSpot = superModeForMode(spot.mode) !== 'DATA' && mOpSpots.find(opSpot => (
-        spot.spot.type === opSpot.spot.type && // Don't mix scoring and dupes
-          Math.abs(spot.freq - opSpot.freq) <= 0.1 && // 0.1 kHz
-          Math.abs(spot.spot.timeInMillis - opSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
-          spot.refs.length === opSpot.refs.length && // all refs match
-          opSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
+      const matchingSpot = superModeForMode(spot.mode) !== 'DATA' && _mergedSpots.find(otherSpot => (
+        spot.spot.type === otherSpot.spot.type && // Don't mix scoring and dupes
+          Math.abs(spot.freq - otherSpot.freq) <= 0.1 && // 0.1 kHz
+          Math.abs(spot.spot.timeInMillis - otherSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
+          spot.refs.length === otherSpot.refs.length && // all refs match
+          otherSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
       ))
       if (matchingSpot) {
         matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call},${spot.their.call}` }
       } else {
-        mOpSpots.push(spot)
+        _mergedSpots.push(spot)
       }
     })
-    return mOpSpots
+    return _mergedSpots
   }, [scoredSpots])
+
+  const sectionedSpots = useMemo(() => {
+    const _sections = []
+    if (filterState.groupSpecialSpots !== false) {
+      const specialSpots = mergedOpSpots.filter(spot => spot.spot.flags?.specialCall && spot.spot?.type !== 'duplicate')
+      if (specialSpots.length > 0) {
+        _sections.push({
+          key: 'special',
+          label: t('screens.opSpotsTab.sections.specialSpots', 'Special Spots'),
+          data: specialSpots
+        })
+      }
+      const newMults = mergedOpSpots.filter(spot => spot.spot?.flags?.newMult && spot.spot?.type !== 'duplicate')
+      if (newMults.length > 0) {
+        _sections.push({
+          key: 'newMults',
+          label: t('screens.opSpotsTab.sections.newMultipliers', 'New Multipliers'),
+          data: newMults
+        })
+      }
+    }
+
+    if (filterState.groupCallsWithNotes) {
+      const callsWithNotes = mergedOpSpots.filter(spot => spot.their?.guess?.emoji && spot.spot?.type !== 'duplicate')
+      if (callsWithNotes.length > 0) {
+        _sections.push({
+          key: 'notes',
+          label: t('screens.opSpotsTab.sections.callsOfNote', 'Calls of Note'),
+          data: callsWithNotes
+        })
+      }
+    }
+
+    if (filterState.sortBy === 'time') {
+      _sections.push({
+        key: 'spots',
+        label: t('screens.opSpotsTab.sections.mostRecentSpots', 'Most recent spots'),
+        data: mergedOpSpots
+      })
+    } else {
+      BANDS.forEach(band => {
+        const group = mergedOpSpots.filter(spot => spot.band === band)
+        if (group.length > 0) {
+          _sections.push({
+            key: band,
+            label: t(`screens.opSpotsTab.sections.band${band}`, band),
+            data: group
+          })
+        }
+      })
+    }
+    return _sections
+  }, [
+    filterState.groupCallsWithNotes, filterState.groupSpecialSpots,
+    filterState.sortBy, mergedOpSpots, t
+  ])
+
+  const spotCountText = useMemo(() => {
+    if (!counts.all) {
+      return t('screens.opSpotsTab.noSpots', 'No Spots')
+    } else {
+      if (filteredSpots.length !== counts.all) {
+        const total = t('screens.opSpotsTab.spotsCount', '{{count}} Spots', { count: counts.all, fmtCount: fmtNumber(counts.all) })
+        return t('screens.opSpotsTab.showingSpots', 'Showing {{count}} out of {{total}}', { count: filteredSpots.length, total })
+      } else {
+        return t('screens.opSpotsTab.spotsCount', '{{count}} Spots', { count: filteredSpots.length, fmtCount: fmtNumber(filteredSpots.length) })
+      }
+    }
+  }, [counts.all, filteredSpots.length, t])
 
   const handlePress = useCallback(({ spot }) => {
     onSelect && onSelect({ spot })
   }, [onSelect])
 
   return (
-    <GestureHandlerRootView style={[{ flex: 1, height: '100%', width: '100%', flexDirection: 'column', alignItems: 'stretch' }]}>
+    <GestureHandlerRootView style={[{ flex: 1, flexDirection: 'column', alignItems: 'stretch' }]}>
       {showControls ? (
-        <View style={[styles.panel, { flex: 1, padding: 0, flexDirection: 'column', alignItems: 'stretch' }]}>
+        <View style={[styles.panel, { flex: 1, paddingBottom: 0 }]}>
           <SpotFilterControls
+            style={{ paddingBottom: Math.max(style?.paddingBottom ?? 0 + styles.oneSpace, styles.oneSpace * 2), paddingRight: style?.paddingRight ?? 0 }}
             rawSpots={spotsState.rawSpots}
             filteredSpots={scoredSpots}
             options={options}
@@ -270,33 +391,35 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect }) {
             <TouchableOpacity onPress={() => setShowControls(true)} style={{ flex: 0, flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }}>
               <Text style={{ fontWeight: 'bold', marginTop: styles.halfSpace, textAlign: 'center' }}>
                 {spotsState.loading ? (
-                  'Loading Spots...'
+                  t('screens.opSpotsTab.loadingSpots', 'Loading Spots...')
                 ) : (
-                  !counts.all ? (
-                    'No Spots'
-                  ) : (
-                    (filteredSpots.length !== counts.all) ? (
-                      `Showing ${filteredSpots.length} out of ${counts.all} Spots`
-                    ) : (
-                      `${filteredSpots.length} Spots`
-                    )
-                  )
+                  spotCountText
                 )}
               </Text>
             </TouchableOpacity>
           </View>
           {showMap ? (
-            <MapWithSpots
-              spots={mergedOpSpots}
-              // Operation may or may not exist depending on if we have one active or not
-              operation={operation}
-              onPress={handlePress}
-              styles={styles}
-              settings={settings}
-              selectedUUID={null}
-            />
+              <MapWithSpots
+                  spots={sectionedSpots}
+                  // Operation may or may not exist depending on if we have one active or not
+                  operation={operation}
+                  onPress={handlePress}
+                  styles={styles}
+                  settings={settings}
+                  selectedUUID={null}
+              />
           ) : (
-            <SpotList spots={mergedOpSpots} loading={spotsState.loading} refresh={refresh} onPress={handlePress} />
+              <SpotList
+                sections={sectionedSpots}
+                loading={spotsState.loading}
+                refresh={refresh}
+                onPress={handlePress}
+                style={{
+                  paddingBottom: style?.paddingBottom,
+                  paddingRight: style?.paddingRight,
+                  paddingLeft: style?.paddingLeft
+                }}
+              />
           )}
         </>
       )}
@@ -366,11 +489,19 @@ export function filterAndCount (rawSpots, filterState, vfo) {
     Object.keys(results.counts.mode)
       .map(key => ({ mode: key, count: results.counts.mode[key] }))
       .sort((a, b) => ADIF_MODES.indexOf(a.mode) - ADIF_MODES.indexOf(b.mode))
-      .map(a => ({ value: a.mode, label: `${LONG_LABEL_FOR_MODE[a.mode]} (${a.count})` }))
+      .map(a => ({ value: a.mode, label: `${GLOBAL.t(`screens.opSpotsTab.modeLabel.${a.mode}`, LONG_LABEL_FOR_MODE[a.mode] || a.mode)} (${a.count})` }))
   )
+  results.options.mode.push({ value: 'notDigital', label: `${GLOBAL.t('screens.opSpotsTab.modeLabel.phoneOrCW', `${LONG_LABEL_FOR_MODE.PHONE} or ${LONG_LABEL_FOR_MODE.CW}`)} (${(results.counts.mode.PHONE || 0) + (results.counts.mode.CW || 0)})` })
+
   if (filterState.mode && filterState.mode !== 'any') {
     const mode = filterState.mode === 'auto' ? superModeForMode(vfo.mode) : filterState.mode
-    results.spots = results.spots.filter(spot => superModeForMode(spot.mode) === mode)
+    results.spots = results.spots.filter(spot => {
+      if (mode === 'notDigital') {
+        return superModeForMode(spot.mode) !== 'DATA'
+      } else {
+        return superModeForMode(spot.mode) === mode
+      }
+    })
   }
 
   if (filterState.sortBy === 'time') {

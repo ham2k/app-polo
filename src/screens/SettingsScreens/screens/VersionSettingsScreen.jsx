@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,20 +7,19 @@
 
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState } from 'react'
-import { List } from 'react-native-paper'
 import { useSelector } from 'react-redux'
-import { Image, Pressable, ScrollView } from 'react-native'
-import Markdown from 'react-native-markdown-display'
+import { Image, Pressable, ScrollView, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import releaseNotes from '../../../../RELEASE-NOTES.json'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { ListRow } from '../../components/ListComponents'
 import { VersionSettingsForDistribution } from '../../../distro'
 import { selectSettings } from '../../../store/settings'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { H2kListItem, H2kListSection, H2kListRow, H2kMarkdown } from '../../../ui'
+import { translatedVersionName } from '../../../tools/i18nUtils'
 
 const SPLASH_IMAGE = require('../../../screens/StartScreen/img/launch_screen.jpg')
 
@@ -35,8 +34,11 @@ function prepareStyles (baseStyles) {
   }
 }
 
-export default function VersionSettingsScreen ({ navigation }) {
+export default function VersionSettingsScreen ({ navigation, splitView }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles(prepareStyles)
+  const safeAreaInsets = useSafeAreaInsets()
 
   const settings = useSelector(selectSettings)
 
@@ -74,13 +76,14 @@ export default function VersionSettingsScreen ({ navigation }) {
 
         </Pressable>
       ) : (
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
           <VersionSettingsForDistribution settings={settings} styles={styles} />
 
-          <Ham2kListSection>
-            <Ham2kListItem
-              title={'Recent Changes'}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="newspaper-variant-outline" />}
+          <H2kListSection>
+            <H2kListItem
+              title={t('screens.versionSettings.recentChanges', 'Recent Changes')}
+              description={t('screens.versionSettings.coverPhoto', 'Cover photo: {{caption}}', { caption: releaseNotes[Object.keys(releaseNotes)[0]].photoCaption })}
+              leftIcon="newspaper-variant-outline"
               right={() => (
                 <Pressable onPress={() => setShowImage(true)}>
                   <Image source={SPLASH_IMAGE} style={{ width: 64, height: 64 }} />
@@ -89,18 +92,19 @@ export default function VersionSettingsScreen ({ navigation }) {
             />
 
             {Object.keys(releaseNotes).slice(0, 8).map((release, i) => (
-              <ListRow key={i} style={styles.listRow}>
+              <H2kListRow key={i} style={styles.listRow}>
 
-                <Markdown style={styles.markdown}>
-                  {
-  `## ${releaseNotes[release].name ? `${releaseNotes[release].name} Release` : `Version ${release}`}
-  ${releaseNotes[release].changes.map(c => `* ${c}\n`).join('')}
-  `
-                  }
-                </Markdown>
-              </ListRow>
+                <H2kMarkdown style={styles.markdown}>
+                  {t('screens.versionSettings.changes-md', 'Changes', {
+                    version: translatedVersionName({ t, version: release }).full,
+                    changes: releaseNotes[release].changes.map(c => `* ${c}\n`).join('')
+                  })}
+                </H2kMarkdown>
+              </H2kListRow>
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
+
+          <View style={{ height: safeAreaInsets.bottom }} />
 
         </ScrollView>
       )}

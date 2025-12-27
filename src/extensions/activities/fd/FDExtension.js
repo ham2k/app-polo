@@ -1,20 +1,19 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
-
-import { setOperationData } from '../../../store/operations'
-import { findRef, replaceRef } from '../../../tools/refTools'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import { ListRow } from '../../../screens/components/ListComponents'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
+import React from 'react'
 import { superModeForMode } from '@ham2k/lib-operation-data'
-import { FIELD_DAY_SECTIONS } from './FDSections'
+import { fmtInteger, fmtNumber } from '@ham2k/lib-format-tools'
+
+import { findRef, replaceRef } from '../../../tools/refTools'
+import { FDActivityOptions } from './FDActivityOptions'
+
+import { ABBREVIATED_SECTION_NAMES, RAC_SECTIONS, ARRL_SECTIONS } from './FDSections'
+import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui'
 
 /*
  NOTES:
@@ -30,7 +29,7 @@ import { FIELD_DAY_SECTIONS } from './FDSections'
 
  */
 
-const Info = {
+export const Info = {
   key: 'fd',
   icon: 'weather-sunny',
   name: 'ARRL Field Day',
@@ -51,8 +50,13 @@ export default Extension
 
 const ActivityHook = {
   ...Info,
-  Options: ActivityOptions,
+
+  standardExchangeFields: { state: false, grid: false },
+
+  Options: FDActivityOptions,
   mainExchangeForOperation,
+  processQSOBeforeSave,
+
   sampleOperations: ({ settings, callInfo }) => {
     return [
       { refs: [ReferenceHandler.decorateRef({ type: Info.key, class: '1A', location: 'ENY' })] }
@@ -88,11 +92,13 @@ const ReferenceHandler = {
     if (ref?.type === Info?.key) {
       return [{
         format: 'adif',
+        exportName: 'ARRL Field Day',
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       },
       {
         format: 'cabrillo',
+        exportName: 'ARRL Field Day',
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       }]
@@ -111,6 +117,8 @@ const ReferenceHandler = {
   },
 
   qsoToCabrilloParts: ({ qso, ref, operation, settings, parts }) => {
+    parts = parts || []
+
     const ourCall = operation.stationCall || settings.operatorCall
     const qsoRef = findRef(qso, Info.key)
 
@@ -125,50 +133,199 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation, common, ref, mainHandler }) => {
     // Include `CONTEST_ID` even if we're not the main handler, if the Operation is a FD operation
-    if (findRef(common, Info.key)) {
-      return ([{ CONTEST_ID: 'ARRL-FIELD-DAY' }])
+    const opRef = findRef(common, Info.key)
+    if (opRef) {
+      return ([
+        { CONTEST_ID: 'ARRL-FIELD-DAY' },
+        { CLASS: opRef?.class },
+        { ARRL_SECT: opRef?.location }
+      ])
     }
   },
 
   relevantInfoForQSOItem: ({ qso, operation }) => {
-    return [qso.their.exchange]
+    let exchange = qso?.their?.exchange
+    if (exchange?.startsWith('PC')) { // "Please Copy…"
+      exchange = '+' + exchange.slice(2)
+    } else if (exchange?.startsWith('P') || exchange?.startsWith('C')) { // "Please Copy…"
+      exchange = '+' + exchange.slice(1)
+    }
+    const parts = exchange?.split(' ') || []
+    return [[parts[0]?.padStart(3, ' ') || '', parts[1]?.padStart(3, ' ') || ''].join(' ')]
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
-    const { band, mode, key, startAtMillis } = qso
+  scoringForQSO: ({ qso, qsos, operation, ref, score }) => {
+    const { band, mode, uuid, startAtMillis } = qso
     const superMode = superModeForMode(mode)
 
-    const nearDupes = qsos.filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.key !== key)
+    const qsoRef = findRef(qso, Info.key)
+
+    const nearDupes = qsos.filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
+
+    const value = superMode === 'PHONE' ? 1 : 2
+    const scoring = { value, theirSection: qsoRef?.location, mode: superMode, band }
+
+    if (FD_LOCATION_VALUES[qsoRef?.location]) {
+      if (score?.arrlSections?.[qsoRef?.location] || score?.racSections?.[qsoRef?.location] || score?.otherSections?.[qsoRef?.location]) {
+        scoring.infos = [`${ABBREVIATED_SECTION_NAMES[qsoRef?.location] || FD_LOCATION_VALUES[qsoRef?.location]}`]
+      } else {
+        scoring.notices = [`${ABBREVIATED_SECTION_NAMES[qsoRef?.location] || FD_LOCATION_VALUES[qsoRef?.location]}`]
+      }
+    }
+
+    if (qso?.their?.exchange?.startsWith('P') || qso?.their?.exchange?.startsWith('C')) {
+      scoring.pleaseCopy = 1
+    }
 
     if (nearDupes.length === 0) {
-      return { counts: 1, type: Info.activationType }
+      return scoring
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => superModeForMode(q.mode) === superMode).length !== 0
-      if (sameBand && sameMode) {
-        return { counts: 0, alerts: ['duplicate'], type: Info.activationType }
+      const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0
+      if (sameBandMode) {
+        return { ...scoring, value: 0, alerts: ['duplicate'] }
       } else {
-        const notices = []
+        const notices = [...(scoring.notices || [])]
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        return { counts: 1, notices, type: Info.activationType }
+        return { ...scoring, notices }
       }
     }
+  },
+
+  accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
+    if (!qsoScore.value) return score
+
+    if (!score?.key) score = undefined // Reset if score doesn't have the right shape
+    score = score ?? {
+      key: ref?.type,
+      icon: Info.icon,
+      label: Info.name,
+      total: 0,
+      pleaseCopy: 0,
+      qsoCount: 0,
+      qsoPoints: 0,
+      powerMult: 1,
+      modes: {},
+      arrlSections: {},
+      racSections: {},
+      otherSections: {}
+    }
+
+    score.qsoCount = score.qsoCount + 1
+    score.qsoPoints = score.qsoPoints + qsoScore.value
+
+    score.pleaseCopy = score.pleaseCopy + (qsoScore.pleaseCopy || 0)
+
+    score.modes[qsoScore.mode] = (score.modes[qsoScore.mode] || 0) + 1
+    if (ARRL_SECTIONS[qsoScore.theirSection]) {
+      score.arrlSections[qsoScore.theirSection] = (score.arrlSections[qsoScore.theirSection] || 0) + 1
+    } else if (RAC_SECTIONS[qsoScore.theirSection]) {
+      score.racSections[qsoScore.theirSection] = (score.racSections[qsoScore.theirSection] || 0) + 1
+    } else if (qsoScore.theirSection === 'MX' || qsoScore.theirSection === 'DX') {
+      score.otherSections[qsoScore.theirSection] = (score.otherSections[qsoScore.theirSection] || 0) + 1
+    }
+
+    if (ref?.transmitterPower === '5W' && ref?.powerSource === 'BATTERIES') score.powerMult = 5
+    else if (ref?.transmitterPower === '5W') score.powerMult = 2
+    else if (ref?.transmitterPower === '100W') score.powerMult = 2
+    else score.powerMult = 1
+
+    score.total = score.qsoPoints * score.powerMult
+
+    return score
+  },
+
+  summarizeScore: ({ score, operation, ref, section }) => {
+    if (!score.total) {
+      score.summary = '0 pts'
+      score.longSummary = '0 pts\nNo valid QSOs yet!'
+      return score
+    }
+
+    score.summary = `${fmtNumber(score.total)} pts`
+
+    const parts = []
+    parts.push(`**${fmtNumber(score.qsoPoints)} QSO points x ${score.powerMult} power mult = ${fmtNumber(score.total)} points**`)
+    parts.push(
+      Object.keys(score.modes ?? {}).sort().map(mode => {
+        if (score?.modes[mode]) {
+          return (`${fmtNumber(score.modes[mode])} ${mode} QSOs`)
+        } else {
+          return null
+        }
+      }).filter(x => x).join(' • ')
+    )
+
+    if (score.pleaseCopy) {
+      parts.push(`🙏 ${score.pleaseCopy} Please Copys (${fmtInteger(score.pleaseCopy / score.qsoCount * 100)}%)\n\n`)
+    }
+
+    let line
+
+    parts.push(`### ${Object.keys(score?.arrlSections ?? {}).length} ARRL Sections`)
+    line = '> '
+    Object.keys(ARRL_SECTIONS).forEach(s => {
+      s = s.toUpperCase()
+      if (score.arrlSections[s]) {
+        line += `**~~${s}~~**${s.length === 2 ? ' ' : ''} `
+      } else {
+        line += `${s}${s.length === 2 ? ' ' : ''} `
+      }
+    })
+    parts.push(line)
+
+    parts.push(`### ${Object.keys(score?.racSections ?? {}).length} RAC Sections`)
+    line = '> '
+    Object.keys(RAC_SECTIONS).forEach(s => {
+      s = s.toUpperCase()
+      if (score.racSections[s]) {
+        line += `**~~${s}~~**${s.length === 2 ? ' ' : ''} `
+      } else {
+        line += `${s}${s.length === 2 ? ' ' : ''} `
+      }
+    })
+    parts.push(line)
+
+    parts.push(`### ${Object.keys(score?.otherSections ?? {}).length} Other`)
+    line = '> '
+      ;['MX', 'DX'].forEach(s => {
+        if (score.otherSections[s]) {
+          line += `**~~${s}~~**  `
+        } else {
+          line += `${s}  `
+        }
+      })
+
+    parts.push(line)
+
+    score.longSummary = '\n' + parts.join('\n')
+
+    return score
   }
 }
 
-const EXCHANGE_REGEX = /^(\d+)([ABCDEF])$/
+const FD_CLASS_REGEX = /^(PC|)(\d+)([ABCDEF])$/
 
-function mainExchangeForOperation (props) {
-  const { qso, updateQSO, styles, refStack } = props
+export const FD_LOCATION_VALUES = { ...ARRL_SECTIONS, ...RAC_SECTIONS, MX: 'Mexico', DX: 'Other DX' }
+export const FD_LOCATIONS = Object.keys(FD_LOCATION_VALUES)
 
-  const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: '', location: '' }
+export const K_LOCATION_SUGGESTIONS = Object.entries(ARRL_SECTIONS)
+export const VE_LOCATION_SUGGESTIONS = Object.entries(RAC_SECTIONS)
+export const OTHER_LOCATION_SUGGESTIONS = [['MX', 'Mexico'], ['DX', 'Other DX']]
+export const ALL_LOCATION_SUGGESTIONS = Object.entries(FD_LOCATION_VALUES)
+
+function mainExchangeForOperation(props) {
+  const { qso, qsos, operation, updateQSO, styles, refStack, disabled } = props
+
+  const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
 
   const fields = []
 
   fields.push(
-    <ThemedTextInput
+    <H2kTextInput
       {...props}
       key={`${Info.key}/class`}
       innerRef={refStack.shift()}
@@ -177,18 +334,19 @@ function mainExchangeForOperation (props) {
       label={'Class'}
       placeholder={''}
       mode={'flat'}
+      keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
-      value={ref?.class || ''}
-      error={ref?.class?.length >= 2 && !EXCHANGE_REGEX.test(ref?.class)}
+      disabled={disabled}
+      value={ref?.class ?? _defaultClassFor({ qso, qsos, operation }) ?? ''}
+      error={ref?.class && !ref.class.match(FD_CLASS_REGEX)}
       onChangeText={(text) => updateQSO({
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text }),
-        their: { exchange: [text, ref?.location].join(' ') }
+        refs: replaceRef(qso?.refs, Info.key, { ...ref, class: text })
       })}
     />
   )
   fields.push(
-    <ThemedTextInput
+    <H2kTextInputWithSuggestions
       {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}
@@ -197,59 +355,56 @@ function mainExchangeForOperation (props) {
       label={'Loc'}
       placeholder={''}
       mode={'flat'}
+      keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
-      value={ref?.location || ''}
-      error={ref?.location?.length >= 2 && !FIELD_DAY_SECTIONS[ref?.location]}
+      disabled={disabled}
+      value={ref?.location ?? _defaultLocationFor({ qso, qsos, operation }) ?? ''}
+      error={ref?.location && !FD_LOCATIONS.includes(ref.location)}
+      suggestions={_suggestionsFor(qso)}
+      minimumLengthForSuggestions={3}
       onChangeText={(text) => updateQSO({
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text }),
-        their: { arrlSection: text, exchange: [ref?.class, text].join(' ') }
+        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text })
       })}
     />
   )
   return fields
 }
 
-export function ActivityOptions (props) {
-  const { styles, operation } = props
+function processQSOBeforeSave({ qso, qsos, operation }) {
+  if (findRef(operation, Info.key)) {
+    const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
+    ref.class = ref.class ?? _defaultClassFor({ qso, qsos, operation })
+    ref.location = ref.location ?? _defaultLocationFor({ qso, qsos, operation })
+    if (ref.class || ref.location) {
+      qso.refs = replaceRef(qso.refs, Info.key, ref)
+      qso.their.exchange = [ref.class, ref.location].join(' ')
+    }
+  }
+  return qso
+}
 
-  const dispatch = useDispatch()
+function _suggestionsFor(qso) {
+  const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+  if (prefix === 'K') return K_LOCATION_SUGGESTIONS
+  else if (prefix === 'VE') return VE_LOCATION_SUGGESTIONS
+  else if (prefix) return OTHER_LOCATION_SUGGESTIONS
+  else return ALL_LOCATION_SUGGESTIONS
+}
 
-  const ref = useMemo(() => findRef(operation, Info.key), [operation])
+function _defaultClassFor({ qso, qsos, operation }) {
+  const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
+  if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.class
+  else return undefined
+}
 
-  const handleChange = useCallback((value) => {
-    if (value?.class) value.class = value.class.toUpperCase()
-    if (value?.location) value.location = value.location.toUpperCase()
+function _defaultLocationFor({ qso, qsos, operation }) {
+  const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
+  if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.location
 
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRef(operation?.refs, Info.key, { ...ref, ...value }) }))
-  }, [dispatch, operation, ref])
-
-  return (
-    <Ham2kListSection title={'Exchange Information'}>
-      <ListRow>
-        <ThemedTextInput
-          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-          textStyle={styles.text.callsign}
-          label={'Class'}
-          mode={'flat'}
-          uppercase={true}
-          noSpaces={true}
-          value={ref?.class || ''}
-          onChangeText={(text) => handleChange({ class: text })}
-        />
-      </ListRow>
-      <ListRow>
-        <ThemedTextInput
-          style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
-          textStyle={styles.text.callsign}
-          label={'Location'}
-          mode={'flat'}
-          uppercase={true}
-          noSpaces={true}
-          value={ref?.location || ''}
-          onChangeText={(text) => handleChange({ location: text })}
-        />
-      </ListRow>
-    </Ham2kListSection>
-  )
+  const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+  if (prefix === 'K' || prefix === 'VE') return undefined
+  else if (prefix === 'XE') return 'MX'
+  else if (prefix) return 'DX'
+  else return undefined
 }

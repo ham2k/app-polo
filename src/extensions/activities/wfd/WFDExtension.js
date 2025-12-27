@@ -8,14 +8,13 @@
 import React from 'react'
 
 import { superModeForMode } from '@ham2k/lib-operation-data'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { findRef, replaceRef } from '../../../tools/refTools'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import ThemedTextInputWithSuggestions from '../../../screens/components/ThemedTextInputWithSuggestions'
+import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui'
 
 import { WFDActivityOptions } from './WFDActivityOptions'
 import { ABBREVIATED_SECTION_NAMES, ARRL_SECTIONS, RAC_SECTIONS } from '../fd/FDSections'
-import { fmtNumber } from '@ham2k/lib-format-tools'
 
 /*
  NOTES:
@@ -53,15 +52,17 @@ export default Extension
 const ActivityHook = {
   ...Info,
 
-  hideStateField: true,
-
   Options: WFDActivityOptions,
+
+  standardExchangeFields: { state: false, grid: false },
+
   mainExchangeForOperation,
+
   processQSOBeforeSave,
 
   sampleOperations: ({ settings, callInfo }) => {
     return [
-      { refs: [ReferenceHandler.decorateRef({ type: Info.key, class: '1A', location: 'ENY' })] }
+      { refs: [ReferenceHandler.decorateRef({ type: Info.key, class: '1O', location: 'ENY' })] }
     ]
   }
 
@@ -93,18 +94,21 @@ const ReferenceHandler = {
 
   suggestExportOptions: ({ operation, ref, settings }) => {
     if (ref?.type === Info?.key) {
-      return [{
-        format: 'adif',
-        exportName: 'Winter Field Day',
-        nameTemplate: '{{>OtherActivityName}}',
-        titleTemplate: '{{>OtherActivityTitle}}'
-      },
-      {
-        format: 'cabrillo',
-        exportName: 'Winter Field Day',
-        nameTemplate: '{{>OtherActivityName}}',
-        titleTemplate: '{{>OtherActivityTitle}}'
-      }]
+      return [
+        {
+          format: 'adif',
+          exportName: 'Winter Field Day',
+          nameTemplate: '{{>OtherActivityName}}',
+          titleTemplate: '{{>OtherActivityTitle}}'
+        },
+        // WFD prefers users not to submit Cabrillo files
+        // {
+        //   format: 'cabrillo',
+        //   exportName: 'Winter Field Day',
+        //   nameTemplate: '{{>OtherActivityName}}',
+        //   titleTemplate: '{{>OtherActivityTitle}}'
+        // }
+      ]
     }
   },
 
@@ -136,8 +140,13 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation, common, ref, mainHandler }) => {
     // Include `CONTEST_ID` even if we're not the main handler, if the Operation is a WFD operation
-    if (findRef(common, Info.key)) {
-      return ([{ CONTEST_ID: 'WFD' }])
+    const opRef = findRef(common, Info.key)
+    if (opRef) {
+      return ([
+        { CONTEST_ID: 'WFD' },
+        { CLASS: opRef?.class },
+        { ARRL_SECT: opRef?.location }
+      ])
     }
   },
 
@@ -169,7 +178,8 @@ const ReferenceHandler = {
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => superModeForMode(q.mode) === superMode).length !== 0
-      if (sameBand && sameMode) {
+      const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0
+      if (sameBandMode) {
         return { ...scoring, value: 0, alerts: ['duplicate'] }
       } else {
         const notices = [...(scoring.notices || [])]
@@ -188,7 +198,7 @@ const ReferenceHandler = {
     score = score ?? {
       key: ref?.type,
       icon: Info.icon,
-      label: Info.shortName,
+      label: Info.name,
       total: 0,
       qsoCount: 0,
       qsoPoints: 0,
@@ -212,7 +222,8 @@ const ReferenceHandler = {
     }
 
     score.mults = Object.keys(score.arrlSections).length + Object.keys(score.racSections).length + Object.keys(score.otherSections).length
-    score.total = score.qsoPoints * score.mults
+    score.objectiveMultiplier = ref?.objectiveMultiplier || 1
+    score.total = score.qsoPoints * score.mults * score.objectiveMultiplier
 
     return score
   },
@@ -227,7 +238,7 @@ const ReferenceHandler = {
     score.summary = `${fmtNumber(score.total)} pts`
 
     const parts = []
-    parts.push(`**${fmtNumber(score.qsoPoints)} Points x ${score.mults} Mults = ${fmtNumber(score.total)} Total Points**`)
+    parts.push(`**${fmtNumber(score.qsoPoints)} Points × ${score.mults} Mults × ${score.objectiveMultiplier} OM = ${fmtNumber(score.total)} Total Points**`)
     parts.push(
       Object.keys(score.modes ?? {}).sort().map(mode => {
         if (score?.modes[mode]) {
@@ -266,13 +277,13 @@ const ReferenceHandler = {
 
     parts.push(`### ${Object.keys(score?.otherSections ?? {}).length} Other`)
     line = '> '
-    ;['MX', 'DX'].forEach(s => {
-      if (score.otherSections[s]) {
-        line += `**~~${s}~~**  `
-      } else {
-        line += `${s}  `
-      }
-    })
+      ;['MX', 'DX'].forEach(s => {
+        if (score.otherSections[s]) {
+          line += `**~~${s}~~**  `
+        } else {
+          line += `${s}  `
+        }
+      })
 
     parts.push(line)
 
@@ -292,15 +303,15 @@ export const VE_LOCATION_SUGGESTIONS = Object.entries(RAC_SECTIONS)
 export const OTHER_LOCATION_SUGGESTIONS = [['MX', 'Mexico'], ['DX', 'Other DX']]
 export const ALL_LOCATION_SUGGESTIONS = Object.entries(WFD_LOCATION_VALUES)
 
-function mainExchangeForOperation (props) {
-  const { qso, qsos, operation, updateQSO, styles, refStack } = props
+function mainExchangeForOperation(props) {
+  const { qso, qsos, operation, updateQSO, styles, refStack, disabled } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
 
   const fields = []
 
   fields.push(
-    <ThemedTextInput
+    <H2kTextInput
       {...props}
       key={`${Info.key}/class`}
       innerRef={refStack.shift()}
@@ -312,6 +323,7 @@ function mainExchangeForOperation (props) {
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
+      disabled={disabled}
       value={ref?.class ?? _defaultClassFor({ qso, qsos, operation }) ?? ''}
       error={ref?.class && !ref.class.match(WFD_CLASS_REGEX)}
       onChangeText={(text) => updateQSO({
@@ -320,7 +332,7 @@ function mainExchangeForOperation (props) {
     />
   )
   fields.push(
-    <ThemedTextInputWithSuggestions
+    <H2kTextInputWithSuggestions
       {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}
@@ -332,6 +344,7 @@ function mainExchangeForOperation (props) {
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
+      disabled={disabled}
       value={ref?.location ?? _defaultLocationFor({ qso, qsos, operation }) ?? ''}
       error={ref?.location && !WFD_LOCATIONS.includes(ref.location)}
       suggestions={_suggestionsFor(qso)}
@@ -344,7 +357,7 @@ function mainExchangeForOperation (props) {
   return fields
 }
 
-function processQSOBeforeSave ({ qso, qsos, operation }) {
+function processQSOBeforeSave({ qso, qsos, operation }) {
   if (findRef(operation, Info.key)) {
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
     ref.class = ref.class ?? _defaultClassFor({ qso, qsos, operation })
@@ -357,7 +370,7 @@ function processQSOBeforeSave ({ qso, qsos, operation }) {
   return qso
 }
 
-function _suggestionsFor (qso) {
+function _suggestionsFor(qso) {
   const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
   if (prefix === 'K') return K_LOCATION_SUGGESTIONS
   else if (prefix === 'VE') return VE_LOCATION_SUGGESTIONS
@@ -365,13 +378,13 @@ function _suggestionsFor (qso) {
   else return ALL_LOCATION_SUGGESTIONS
 }
 
-function _defaultClassFor ({ qso, qsos, operation }) {
+function _defaultClassFor({ qso, qsos, operation }) {
   const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
   if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.class
   else return undefined
 }
 
-function _defaultLocationFor ({ qso, qsos, operation }) {
+function _defaultLocationFor({ qso, qsos, operation }) {
   const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
   if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.location
 

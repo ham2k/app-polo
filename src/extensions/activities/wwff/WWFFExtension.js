@@ -1,24 +1,29 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
+import GLOBAL from '../../../GLOBAL'
+
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
+import { apiWWFF } from '../../../store/apis/apiWWFF'
+import { LOCATION_ACCURACY } from '../../constants'
+import { distanceOnEarth } from '../../../tools/geoTools'
+import { generateActivityOperationAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 import { Info } from './WWFFInfo'
 import { registerWWFFDataFile, wwffFindAllByLocation, wwffFindOneByReference } from './WWFFDataFile'
 import { WWFFActivityOptions } from './WWFFActivityOptions'
 import { WWFFLoggingControl } from './WWFFLoggingControl'
-import { WWFFPostSpot } from './WWFFPostSpot'
-import { apiGMA } from '../../../store/apis/apiGMA'
-import { LOCATION_ACCURACY } from '../../constants'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
+import { WWFFPostSelfSpot } from './WWFFPostSelfSpot'
+import { WWFFPostOtherSpot } from './WWFFPostOtherSpot'
 
 const Extension = {
   ...Info,
@@ -48,61 +53,74 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  postSpot: WWFFPostSpot,
+  postOtherSpot: WWFFPostOtherSpot,
+  postSelfSpot: WWFFPostSelfSpot,
   Options: WWFFActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,
 
-  sampleOperations: ({ settings, callInfo }) => {
+  sampleOperations: ({ settings, callInfo, t }) => {
     return [
       // Regular Activation
-      { refs: [{ type: Info.activationType, ref: 'XXWW-1234', name: 'Example National Park', shortName: 'Example NP', program: Info.shortName, label: `${Info.shortName} XXWW-1234: Example NationalPark`, shortLabel: `${Info.shortName} XXWW-1234` }] }
+      { refs: [{ type: Info.activationType, ref: 'XXWW-1234', name: t('extensions.wwff.exampleRefName', 'Example National Park'), shortName: t('extensions.wwff.activityOptions.exampleNP', 'Example NP'), program: Info.shortName, label: `${Info.shortName} XXWW-1234: Example NationalPark`, shortLabel: `${Info.shortName} XXWW-1234` }] }
     ]
   }
 }
 
 const SpotsHook = {
   ...Info,
-  sourceName: 'WWFFwatch',
-  fetchSpots: async ({ online, settings, dispatch }) => {
+  sourceName: 'WWFF Spotline',
+  fetchSpots: async ({ online, settings, dispatch, t }) => {
+    if (GLOBAL?.flags?.services?.wwff === false) return []
+
     let spots = []
     if (online) {
-      const apiPromise = await dispatch(apiGMA.endpoints.spots.initiate('wwff', { forceRefetch: true }))
-      await Promise.all(dispatch(apiGMA.util.getRunningQueriesThunk()))
-      const apiResults = await dispatch((_dispatch, getState) => apiGMA.endpoints.spots.select('wwff')(getState()))
+      const apiPromise = await dispatch(apiWWFF.endpoints.spots.initiate({}, { forceRefetch: true }))
+      await Promise.all(dispatch(apiWWFF.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, getState) => apiWWFF.endpoints.spots.select({})(getState()))
 
       apiPromise.unsubscribe && apiPromise.unsubscribe()
       spots = apiResults.data || []
     }
-    const qsos = spots.map(spot => {
+
+    const today = new Date()
+    const qsos = []
+    for (const spot of spots) {
+      if (!spot) continue
+      const spotTime = spot.spot_time * 1000
+      if ((today - spotTime) > 1000 * 60 * 60) {
+        continue // Some spots can be several hours old: cut off at 1 hour
+      }
+      const refDetails = await wwffFindOneByReference(spot.reference)
       const qso = {
-        their: { call: spot.ACTIVATOR },
-        freq: spot.frequency,
-        band: spot.band,
-        mode: spot.mode,
+        their: { call: spot.activator?.toUpperCase() },
+        freq: spot.frequency_khz,
+        band: spot.frequency_khz ? bandForFrequency(spot.frequency_khz) : 'other',
+        mode: spot.mode?.toUpperCase(),
         refs: [{
-          ref: spot.REF,
+          ref: spot.reference,
           type: Info.huntingType
         }],
         spot: {
-          timeInMillis: spot.timeInMillis,
+          timeInMillis: spotTime,
           source: Info.key,
           icon: Info.icon,
-          label: `${spot.REF}: ${spot.NAME}`,
+          label: `${spot.reference}: ${refDetails?.name ?? t('extensions.wwff.unknownRefName', 'Unknown Park')}`,
+          type: spot.remarks.match(/QRT/i) ? 'QRT' : undefined,
           sourceInfo: {
-            comments: spot.TEXT,
-            spotter: spot.SPOTTER
+            comments: spot.remarks,
+            spotter: spot.spotter?.toUpperCase()
           }
         }
       }
-      return qso
-    })
+      qsos.push(qso)
+    }
     const dedupedQSOs = []
     const includedCalls = {}
     for (const qso of qsos) {
       if (!includedCalls[qso.their.call]) {
         includedCalls[qso.their.call] = true
-        dedupedQSOs.push(qso)
+        if (qso.spot.type !== 'QRT') dedupedQSOs.push(qso)
       }
     }
     return dedupedQSOs
@@ -147,7 +165,7 @@ const ReferenceHandler = {
 
   iconForQSO: Info.icon,
 
-  decorateRefWithDispatch: (ref) => async () => {
+  decorateRefWithDispatch: (ref) => async ({ t }) => {
     if (ref.ref) {
       const data = await wwffFindOneByReference(ref.ref)
       if (data) {
@@ -162,7 +180,7 @@ const ReferenceHandler = {
           program: Info.shortName
         }
       } else {
-        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
+        return { ...ref, name: Info.unknownReferenceName ?? t('extensions.wwff.unknownRefName', 'Unknown reference') }
       }
     }
   },
@@ -171,7 +189,7 @@ const ReferenceHandler = {
     return { type: ref.type }
   },
 
-  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+  updateFromTemplateWithDispatch: ({ t, ref, operation }) => async (dispatch) => {
     if (operation?.grid) {
       let info = parseCallsign(operation.stationCall || '')
       info = annotateFromCountryFile(info)
@@ -184,7 +202,7 @@ const ReferenceHandler = {
       })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
 
       if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
-      else return { type: ref.type, name: 'No parks nearby!' }
+      else return { type: ref.type, name: t('extensions.wwff.noRefsNearby', 'No parks nearby!') }
     } else {
       return { type: ref.type }
     }
@@ -205,7 +223,11 @@ const ReferenceHandler = {
         exportData: { refs: [ref] }, // exports only see this one ref
         // Note that compact format uses a space instead of - because of WWFF requirements
         nameTemplate: '{{log.station}}@{{log.ref}} {{compact op.date}}',
-        titleTemplate: '{{>RefActivityTitle}}'
+        titleTemplate: '{{>RefActivityTitle}}',
+        // WWFF prefers ADIF files with no notes, comments, or QSL messages
+        ADIFNotesTemplate: '',
+        ADIFCommentTemplate: '',
+        ADIFQslMsgTemplate: ''
       }]
     }
   },
@@ -225,40 +247,39 @@ const ReferenceHandler = {
     return fields
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+  scoringForQSO: generateActivityScorer({ info: Info }),
+  accumulateScoreForOperation: generateActivityOperationAccumulator({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info }),
+
+  originalScoringForQSO: ({ qso, qsos, operation, ref }) => {
     const { band, mode, uuid, startAtMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
 
-    const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
-
-    if (refs.length === 0 && !ref?.ref) return { value: 0 } // If not activating, only counts if other QSO has a WWFF ref
+    if (refs.length === 0 && !ref?.ref) return { value: 0, refCount: 0 } // If not activating, only counts if other QSO has a WWFF ref
 
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
     if (nearDupes.length === 0) {
-      return { value: 1, type: Info.activationType }
+      return { value: 1, refCount: 0, type: Info.activationType }
     } else {
       const thisQSOTime = qso.startAtMillis ?? Date.now()
-      const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
 
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
-      const sameDay = nearDupes.filter(q => (q.startAtMillis - (q.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
-      const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
-      if (sameBand && sameMode && sameDay && (sameRefs || refs.length === 0)) {
-        return { value: 0, alerts: ['duplicate'], type: Info.activationType }
+      const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0
+      if (sameBandMode) {
+        return { value: 0, refCount: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
-        if (refs.length > 0 && !sameRefs) notices.push('newRef') // only if at new ref
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        return { value: 1, notices, type: Info.activationType }
+        return { value: 1, refCount: refs.length, notices, type: Info.activationType }
       }
     }
   },
 
-  accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
+  originalAccumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
     if (!ref?.ref) return score // No scoring if not activating
     if (!score?.key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
@@ -266,19 +287,30 @@ const ReferenceHandler = {
       icon: Info.icon,
       label: Info.shortName,
       value: 0,
+      refCount: 0,
       summary: ''
     }
 
     score.value = score.value + qsoScore.value
+
+    score.refCount = score.refCount + (qsoScore.refCount ?? 0)
+
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  originalSummarizeScore: ({ score, operation, ref, section }) => {
+    const activationRef = findRef(operation, Info.activationType)
+
     score.activated = score.value >= 44
     if (score.activated) {
       score.summary = '✓'
     } else {
       score.summary = `${score.value}/44`
+    }
+
+    if (score.refCount > 0) {
+      const label = activationRef?.ref ? 'P2P' : 'P'
+      score.summary = [score.summary, `${score.refCount} ${label}`].filter(x => x).join(' • ')
     }
 
     return score

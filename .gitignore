@@ -1,5 +1,12 @@
 # .env
 .env.local
+.mise.toml.local
+mise.toml.local
+mise.local.toml
+.mise.local.toml
+
+# local files
+SCRATCHPAD.md
 
 # react-native-config codegen
 ios/tmp.xcconfig
@@ -79,3 +86,5 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+/sourcemaps

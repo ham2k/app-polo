@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -11,6 +11,7 @@ import { registerDataFile } from '../../../store/dataFiles'
 import { dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessBatchedLines } from '../../../store/dataFiles/actions/dataFileFS'
 import { logTimer } from '../../../tools/perfTools'
+import { Info } from './POTAInfo'
 
 export const POTAAllParks = { prefixByDXCCCode: {} }
 
@@ -21,6 +22,8 @@ export function registerPOTAAllParksData () {
     key: 'pota-all-parks',
     name: 'POTA: All Parks',
     description: 'Database of all POTA references',
+    title: Info.name,
+    titleIcon: Info.icon,
     infoURL: 'https://pota.app/',
     icon: 'file-powerpoint-outline',
     maxAgeInDays: 28,
@@ -36,7 +39,7 @@ export function registerPOTAAllParksData () {
       const dataRows = []
 
       // Since we're streaming, we cannot know how many references there are beforehand, so we need to take a guess
-      const expectedReferences = 67000
+      const expectedReferences = 78000
 
       // Since the work is split in two phases, and their speeds are different,
       // we need to adjust the expected steps based on a ratio.

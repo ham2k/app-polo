@@ -6,10 +6,10 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { useHeaderHeight } from '@react-navigation/elements'
 
-import { KeyboardAvoidingView, Platform, View, Keyboard } from 'react-native'
+import { Keyboard, Platform, View } from 'react-native'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function prepareStyles (baseStyles) {
   return ({
@@ -26,15 +26,22 @@ function prepareStyles (baseStyles) {
 }
 
 export default function ScreenContainer ({ children }) {
-  const headerHeight = useHeaderHeight()
   const styles = useThemedStyles(prepareStyles)
+  const safeAreaInsets = useSafeAreaInsets()
 
   const [keyboardVisible, setKeyboardVisible] = useState()
+  const [keyboardHeight, setKeyboardHeight] = useState()
 
   useEffect(() => {
-    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+    const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      const metrics = Keyboard.metrics()
       setKeyboardVisible(true)
-      if (Keyboard.metrics().height > 100) {
+      if (Platform.OS === 'android') {
+        setKeyboardHeight((metrics?.height ?? 0) + safeAreaInsets.bottom)
+      } else {
+        setKeyboardHeight(metrics?.height ?? 0)
+      }
+      if (metrics.height > 100) {
         // On iPads, when there's an external keyboard connected, the OS still shows a small
         // button on the bottom right with some options
         // This is considered "keyboard visible", which causes KeyboardAvoidingView to leave an ugly empty padding
@@ -43,24 +50,57 @@ export default function ScreenContainer ({ children }) {
         setKeyboardVisible(false)
       }
     })
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+    const willHideSubscription = Keyboard.addListener('keyboardWillHide', () => {
+      const metrics = Keyboard.metrics()
+
       setKeyboardVisible(false)
+      setKeyboardHeight(metrics?.height ?? 0)
+    })
+    const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      const metrics = Keyboard.metrics()
+
+      setKeyboardVisible(false)
+      setKeyboardHeight(metrics?.height ?? 0)
+    })
+    const frameSubscription = Keyboard.addListener('keyboardDidChangeFrame', () => {
+      const metrics = Keyboard.metrics()
+
+      setKeyboardHeight(metrics?.height ?? 0)
     })
 
     return () => {
-      showSubscription.remove()
-      hideSubscription.remove()
+      didShowSubscription.remove()
+      willHideSubscription.remove()
+      didHideSubscription.remove()
+      frameSubscription.remove()
     }
-  }, [])
+  }, [safeAreaInsets])
 
-  return (
-    <KeyboardAvoidingView
-      style={styles.root}
-      behavior={'padding'}
-      keyboardVerticalOffset={headerHeight}
-      enabled={keyboardVisible}
-    >
-      {children}
-    </KeyboardAvoidingView>
-  )
+  if (keyboardVisible) {
+    return (
+      <View style={[styles.root, { paddingBottom: keyboardHeight ?? 0 }]}>
+        {children}
+      </View>
+    )
+  } else {
+    return (
+      <View style={styles.root}>
+        {children}
+      </View>
+    )
+  }
+
+  // There is a bug in react-native-keyboard-controller with Reanimated 4.0
+  // where the padding is not removed after the keyboard is shown, so we implemented our own version
+
+  // return (
+  //   <KeyboardAvoidingView
+  //     style={styles.root}
+  //     behavior={'padding'}
+  //     // keyboardVerticalOffset={headerHeight}
+  //     enabled={keyboardVisible}
+  //   >
+  //     {children}
+  //   </KeyboardAvoidingView>
+  // )
 }

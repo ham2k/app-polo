@@ -3,5 +3,24 @@
   "name": "Nevada QSO Party",
   "start": "2025-10-11 03:00Z",
   "end": "2025-10-12 21:00Z",
-  "status": "Pending"
+  "status": "Pending",
+  "counties": {
+    "NVCAR": "Carson City",
+    "NVCHU": "Churchill",
+    "NVCLA": "Clark",
+    "NVDOU": "Douglas",
+    "NVELK": "Elko",
+    "NVESM": "Esmeralda",
+    "NVEUR": "Eureka",
+    "NVHUM": "Humboldt",
+    "NVLAN": "Lander",
+    "NVLIN": "Lincoln",
+    "NVLYO": "Lyon",
+    "NVMIN": "Mineral",
+    "NVNYE": "Nye",
+    "NVPER": "Pershing",
+    "NVSTO": "Storey",
+    "NVWAS": "Washoe",
+    "NVWHI": "White Pine"
+  }
 }

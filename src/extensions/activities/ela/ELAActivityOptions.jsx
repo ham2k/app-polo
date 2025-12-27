@@ -1,41 +1,35 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Searchbar } from 'react-native-paper'
+import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
-import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
+import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
-import { ListRow } from '../../../screens/components/ListComponents'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
 import { Info } from './ELAInfo'
 import { elaFindAllByLocation, elaFindAllByName, elaFindOneByReference } from './ELADataFile'
 import { ELAListItem } from './ELAListItem'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
-export function ELAActivityOptions (props) {
+export function ELAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
 
-  const { styles, operation, settings } = props
-
-  const dispatch = useDispatch()
-
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
-
-  const refs = useMemo(() => filterRefs(operation, Info.activationType).filter(ref => ref.ref), [operation])
+  const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (refs?.length === 0) return 'No lighthouses selected for activation'
-    else if (refs?.length === 1) return 'Activating 1 lighthouse'
-    else return `Activating ${refs.length} lighthouses`
-  }, [refs])
+    return t('extensions.ela.activityOptions.title', 'Activating {{count}} lighthouses', { count: activityRefs?.length })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
@@ -53,8 +47,8 @@ export function ELAActivityOptions (props) {
         console.info('Geolocation error', error)
       }, {
         enableHighAccuracy: true,
-        timeout: 30 * 1000 /* 30 seconds */,
-        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+        timeout: 1000 * 30 /* 30 seconds */,
+        maximumAge: 1000 * 60 /* 1 minute */
       }
     )
   }, [])
@@ -63,7 +57,7 @@ export function ELAActivityOptions (props) {
   useEffect(() => {
     setTimeout(async () => {
       const datas = []
-      for (const ref of refs) {
+      for (const ref of activityRefs) {
         const result = await elaFindOneByReference(ref.ref)
         const newData = { ...ref, ...result }
         if (location?.lat && location?.lon) {
@@ -73,7 +67,7 @@ export function ELAActivityOptions (props) {
       }
       setRefDatas(datas)
     }, 0)
-  }, [refs, location, settings.distanceUnits])
+  }, [activityRefs, location, settings.distanceUnits])
 
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
@@ -114,41 +108,37 @@ export function ELAActivityOptions (props) {
         }
 
         setResults(newRefs.slice(0, 15))
-        if (newRefs.length === 0) {
-          setResultsMessage('No lighthouses found')
-        } else if (newRefs.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newRefs.length} matches`)
-        } else if (newRefs.length === 1) {
-          setResultsMessage('One matching lighthouses')
+        if (newRefs.length > 15) {
+          setResultsMessage(t('extensions.ela.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newRefs.length }))
         } else {
-          setResultsMessage(`${newRefs.length} matching lighthouses`)
+          setResultsMessage(t('extensions.ela.activityOptions.matchingLighthouses', '{{count}} matching lighthouses', { count: newRefs.length }))
         }
       } else {
         setResults(nearbyResults)
-        if (nearbyResults === undefined) setResultsMessage('Search for some lighthouses to activate!')
-        else if (nearbyResults.length === 0) setResultsMessage('No lighthouses nearby')
-        else setResultsMessage('Nearby lighthouses')
+        if (nearbyResults === undefined) setResultsMessage(t('extensions.ela.activityOptions.searchForLighthouses', 'Search for some lighthouses to activate!'))
+        else if (nearbyResults.length === 0) setResultsMessage(t('extensions.ela.activityOptions.noLighthousesNearby', 'No lighthouses nearby'))
+        else setResultsMessage(t('extensions.ela.activityOptions.nearbyLighthouses', 'Nearby lighthouses'))
       }
     })
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, [...refs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
+  }, [activityRefs, allRefs, setRefs])
 
   const handleRemoveReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, refs.filter(r => r.ref !== ref)) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== ref)))
+  }, [activityRefs, allRefs, setRefs])
 
   return (
     <>
-      <Ham2kListSection title={title}>
+      <H2kListSection title={title}>
         {refDatas.map((refData, index) => (
           <ELAListItem
             key={refData.ref}
             activityRef={refData.ref}
             refData={refData}
-            allRefs={refs}
+            allRefs={activityRefs}
             operationRef={refData.ref}
             styles={styles}
             settings={settings}
@@ -156,22 +146,22 @@ export function ELAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </Ham2kListSection>
+      </H2kListSection>
 
-      <ListRow>
-        <Searchbar
-          placeholder={'Lighthouses by name or reference…'}
+      <H2kListRow>
+        <H2kSearchBar
+          placeholder={t('extensions.ela.activityOptions.searchPlaceholder', 'Lighthouses by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />
-      </ListRow>
+      </H2kListRow>
 
-      <Ham2kListSection title={resultsMessage}>
+      <H2kListSection title={resultsMessage}>
         {results.map((result) => (
           <ELAListItem
             key={result.ref}
             activityRef={result.ref}
-            allRefs={refs}
+            allRefs={activityRefs}
             refData={result}
             styles={styles}
             settings={settings}
@@ -180,7 +170,7 @@ export function ELAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </Ham2kListSection>
+      </H2kListSection>
     </>
   )
 }

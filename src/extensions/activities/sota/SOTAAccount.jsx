@@ -1,31 +1,34 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  * Copyright ©️ 2024 Steven Hiscocks <steven@hiscocks.me.uk>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, List, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { authorize, logout } from 'react-native-app-auth'
 
 import { setAccountInfo } from '../../../store/settings'
-import { Ham2kListItem } from '../../../screens/components/Ham2kListItem'
-import { Ham2kDialog } from '../../../screens/components/Ham2kDialog'
 import { SOTASSOConfig, useAccountQuery } from '../../../store/apis/apiSOTA'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText } from '../../../ui'
+import { useTranslation } from 'react-i18next'
 
 export function SOTAAccountSetting ({ settings, styles }) {
+  const { t } = useTranslation()
+
   const [currentDialog, setCurrentDialog] = useState()
   const accountQueryResults = useAccountQuery(undefined, { skip: !settings?.accounts?.sota?.idToken })
   return (
     <React.Fragment>
-      <Ham2kListItem
-        title="SOTA (for SOTAWatch self-spotting)"
-        description={settings?.accounts?.sota?.idToken ? `Logged in as ${accountQueryResults.data?.attributes?.Callsign?.[0] || '…'}` : 'No account'}
-        left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="web" />}
+      <H2kListItem
+        title={t('extensions.sota.account.title', 'SOTA (for SOTAWatch self-spotting)')}
+        description={settings?.accounts?.sota?.idToken
+          ? t('extensions.sota.account.description', 'Logged in as {{callsign}}', { callsign: accountQueryResults.data?.attributes?.Callsign?.[0] || '…' })
+          : t('extensions.sota.account.noAccount', 'No account')
+        }
+        leftIcon="web"
         onPress={() => setCurrentDialog('accountsSOTA')}
       />
       {currentDialog === 'accountsSOTA' && (
@@ -41,6 +44,8 @@ export function SOTAAccountSetting ({ settings, styles }) {
 }
 
 export function AccountsSOTADialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -85,26 +90,26 @@ export function AccountsSOTADialog ({ visible, settings, styles, onDialogDone })
   const accountQueryResults = useAccountQuery(undefined, { skip: !settings?.accounts?.sota?.idToken })
 
   return (
-    <Ham2kDialog visible={dialogVisible} onDismiss={handleClose}>
-      <Dialog.Title style={{ textAlign: 'center' }}>SOTA Account</Dialog.Title>
+    <H2kDialog visible={dialogVisible} onDismiss={handleClose}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.sota.account.dialogTitle', 'SOTA Account')}</H2kDialogTitle>
       {!accountQueryResults.isUninitialized ? (
-        <Dialog.Content>
+        <H2kDialogContent>
           {(accountQueryResults.isLoading || accountQueryResults.isSuccess) ? (
-            <Text style={{ textAlign: 'center' }} variant="bodyMedium">Logged in as {accountQueryResults.data?.attributes?.Callsign?.[0] || '…' }</Text>
+            <H2kText style={{ textAlign: 'center' }} variant="bodyMedium">{t('extensions.sota.account.description', 'Logged in as {{callsign}}', { callsign: accountQueryResults.data?.attributes?.Callsign?.[0] || '…' })}</H2kText>
           ) : (
-            <Text style={{ textAlign: 'center' }} variant="bodyMedium">Error fetching account details</Text>
+            <H2kText style={{ textAlign: 'center' }} variant="bodyMedium">{t('extensions.sota.account.error', 'Error fetching account details')}</H2kText>
           )}
-          <Button style={{ marginTop: styles.oneSpace * 2 }} mode="contained" onPress={handleLogout}>Logout</Button>
-        </Dialog.Content>
+          <H2kButton style={{ marginTop: styles.oneSpace * 2 }} mode="contained" onPress={handleLogout}>{t('extensions.sota.account.logout', 'Logout')}</H2kButton>
+        </H2kDialogContent>
       ) : (
-        <Dialog.Content>
-          <Text style={{ textAlign: 'center' }} variant="bodyMedium">Connect your SOTA account</Text>
-          <Button style={{ marginTop: styles.oneSpace * 2 }} mode="contained" onPress={handleLogin}>Login</Button>
-        </Dialog.Content>
+        <H2kDialogContent>
+          <H2kText style={{ textAlign: 'center' }} variant="bodyMedium">{t('extensions.sota.account.connect', 'Connect your SOTA account')}</H2kText>
+          <H2kButton style={{ marginTop: styles.oneSpace * 2 }} mode="contained" onPress={handleLogin}>{t('general.buttons.login', 'Login')}</H2kButton>
+        </H2kDialogContent>
       )}
-      <Dialog.Actions>
-        <Button onPress={handleClose}>Close</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      <H2kDialogActions>
+        <H2kButton onPress={handleClose}>{t('general.buttons.close', 'Close')}</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

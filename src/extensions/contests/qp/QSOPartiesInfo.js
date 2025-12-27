@@ -8,7 +8,8 @@
 export const Info = {
   key: 'qp',
   icon: 'flag-checkered',
-  name: 'QSO Parties (Early Access)',
+  name: 'QSO Parties (Beta)',
   shortName: 'QSO Parties',
-  infoURL: 'https://stateqsoparty.com/'
+  infoURL: 'https://stateqsoparty.com/',
+  activationType: 'qp'
 }

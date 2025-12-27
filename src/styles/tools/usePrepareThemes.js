@@ -18,7 +18,7 @@ import lightColors from '../lightColors'
 import darkColors from '../darkColors'
 import fontConfig from '../fonts'
 
-export function usePrepareThemes () {
+export function usePrepareThemes() {
   const settings = useSelector(selectSettings)
 
   const deviceColorScheme = useColorScheme()
@@ -30,17 +30,20 @@ export function usePrepareThemes () {
     }
   }, [settings?.theme, deviceColorScheme])
 
-  const sizes = useComputeSizes()
+  const sizes = useComputeSizes({ settingsScale: settings.fontScale })
 
   const fonts = useMemo(() => {
-    const { fontScaleAdjustment } = sizes
-    Object.keys(fontConfig).forEach(variant => {
-      if (fontConfig[variant].fontSize) fontConfig[variant].fontSize = fontConfig[variant].fontSize * fontScaleAdjustment
-      if (fontConfig[variant].lineHeight) fontConfig[variant].lineHeight = fontConfig[variant].lineHeight * fontScaleAdjustment
+    const scaledFontConfig = {}
+    Object.keys(fontConfig).forEach((key) => {
+      scaledFontConfig[key] = {
+        ...fontConfig[key],
+        fontSize: fontConfig[key].fontSize * sizes.fontScaleAdjustment,
+        lineHeight: fontConfig[key].lineHeight * sizes.fontScaleAdjustment
+      }
     })
-    const configuredFonts = configureFonts({ config: fontConfig })
-    return configuredFonts
-  }, [sizes])
+
+    return configureFonts({ config: scaledFontConfig })
+  }, [sizes.fontScaleAdjustment])
 
   const colors = useMemo(() => {
     const loadedColors = colorScheme === 'dark' ? darkColors.colors : lightColors.colors
@@ -58,13 +61,16 @@ export function usePrepareThemes () {
         loadedColors[`${color}ContainerAlpha`] = Color(loadedColors[`${color}Container`]).alpha(0.8).string()
       })
       loadedColors.onBackgroundLight = Color(loadedColors.onBackground).darken(0.1).desaturate(0.1).hex()
-      loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).darken(0.5).hex()
+      loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).darken(0.25).hex()
+
+      loadedColors.primaryLighter = Color(loadedColors.primary).darken(0.3).desaturate(0.2).hex()
+
     } else {
       ['primary', 'secondary', 'tertiary'].forEach((color) => {
         const upcasedColor = color.charAt(0).toUpperCase() + color.slice(1)
         // loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(0.95).desaturate(0.7).hex()
         loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(1.3).desaturate(0.3).hex()
-        loadedColors[`${color}Lighter`] = Color(loadedColors[color]).lighten(1.9).desaturate(0.3).hex()
+        loadedColors[`${color}Lighter`] = Color(loadedColors[color]).lighten(1.9).desaturate(0.5).hex()
         loadedColors[`on${upcasedColor}Light`] = loadedColors[`on${upcasedColor}`]
         loadedColors[`on${upcasedColor}Lighter`] = Color(loadedColors[`on${upcasedColor}`]).darken(0.7).desaturate(0.2).hex()
         loadedColors[`${color}Highlight`] = Color(loadedColors[color]).lighten(1.9).desaturate(0.3).hex()
@@ -73,7 +79,7 @@ export function usePrepareThemes () {
         loadedColors[`${color}ContainerAlpha`] = Color(loadedColors[`${color}Container`]).alpha(0.8).string()
       })
       loadedColors.onBackgroundLight = Color(loadedColors.onBackground).lighten(3).hex()
-      loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).lighten(6).hex()
+      loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).lighten(5).hex()
     }
 
     return loadedColors
@@ -81,6 +87,7 @@ export function usePrepareThemes () {
 
   const paperTheme = useMemo(() => {
     const baseTheme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
+
     return {
       ...baseTheme,
       colors: {

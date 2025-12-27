@@ -1,22 +1,23 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { useMemo } from 'react'
-import { useTheme } from 'react-native-paper'
+import { createContext, useContext, useMemo } from 'react'
 
 import { prepareGlobalStyles } from '../globalStyles'
-import { useColorScheme, useWindowDimensions } from 'react-native'
+import { useColorScheme } from 'react-native'
 import { useSelector } from 'react-redux'
 import { selectSettings } from '../../store/settings'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
-export function useThemedStyles (styleMassager, extraArg1, extraArg2, extraArg3) {
-  const theme = useTheme()
+export const BaseStylesContext = createContext()
 
-  const { width, height } = useWindowDimensions()
+export function useBaseStyles({ theme }) {
+  const { width, height } = useSafeAreaFrame()
+  // const { width, height } = useWindowDimensions() <-- broken on iOS, no rotation
 
   const settings = useSelector(selectSettings)
 
@@ -34,13 +35,19 @@ export function useThemedStyles (styleMassager, extraArg1, extraArg2, extraArg3)
     return prepareGlobalStyles({ theme, colorScheme, width, height })
   }, [theme, colorScheme, width, height])
 
+  return baseStyles
+}
+
+export function useThemedStyles(styleMassager, extraArg1, extraArg2, extraArg3, extraArg4) {
+  const baseStyles = useContext(BaseStylesContext)
+
   const styles = useMemo(() => {
     if (styleMassager) {
-      return styleMassager(baseStyles, extraArg1, extraArg2, extraArg3)
+      return styleMassager(baseStyles, extraArg1, extraArg2, extraArg3, extraArg4)
     } else {
       return baseStyles
     }
-  }, [baseStyles, styleMassager, extraArg1, extraArg2, extraArg3])
+  }, [baseStyles, styleMassager, extraArg1, extraArg2, extraArg3, extraArg4])
 
   return styles
 }

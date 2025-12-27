@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { selectOperationCallInfo } from '../../../store/operations'
@@ -20,8 +21,10 @@ const MATCH_SYMBOLS_REGEX = /[ ,.]+$/
 export function POTALoggingControl (props) {
   const { qso, operation, updateQSO, style, styles } = props
 
+  const { t } = useTranslation()
+
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
@@ -38,7 +41,9 @@ export function POTALoggingControl (props) {
   }, [refsString, innerValue])
 
   const handleChangeText = useCallback((value) => {
-    const refs = stringToRefs(Info.huntingType, value)
+    let refs = stringToRefs(Info.huntingType, value)
+    refs = refs.map(r => ({ ...r, label: `${Info.shortName} ${r.ref}` }))
+
     setInnerValue(value)
     updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
   }, [qso, updateQSO])
@@ -60,7 +65,8 @@ export function POTALoggingControl (props) {
       style={[style, { maxWidth: '95%', minWidth: styles.oneSpace * 30, width: Math.max(16, refsString?.length || 0) * styles.oneSpace * 1.3 }]}
       contentStyle={[]}
       value={innerValue}
-      label="Their POTA"
+      fieldId="potaReference"
+      label={t('extensions.pota.loggingControl.theirRefLabel', 'Their POTA')}
       defaultPrefix={defaultPrefix}
       onChangeText={handleChangeText}
     />

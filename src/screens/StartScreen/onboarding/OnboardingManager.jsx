@@ -23,7 +23,7 @@ export function OnboardingManager ({ settings, styles, onOnboardingDone }) {
           styles={styles}
           onDialogPrevious={() => onOnboardingDone()}
           onDialogNext={() => setStep('callsign')}
-          onAccountConnect={() => setStep('existingAccount')}
+          onAccountConnect={() => onOnboardingDone()}
         />
       )}
       {step === 'existingAccount' && (

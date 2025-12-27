@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,23 +8,20 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { ScrollView, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
+
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { useUIState } from '../../store/ui'
 import { selectOperation } from '../../store/operations'
-import ScreenContainer from '../components/ScreenContainer'
-import { Ham2kListSection } from '../components/Ham2kListSection'
-import CallsignInput from '../components/CallsignInput'
-import ThemedTextInput from '../components/ThemedTextInput'
-import { TimeInput } from '../components/TimeInput'
-import { DateInput } from '../components/DateInput'
-import FrequencyInput from '../components/FrequencyInput'
-import RSTInput from '../components/RSTInput'
+import { selectSettings } from '../../store/settings'
 import { parseFreqInMHz } from '../../tools/frequencyFormats'
-import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import GridInput from '../components/GridInput'
+import { H2kCallsignInput, H2kDateInput, H2kFrequencyInput, H2kGridInput, H2kListSection, H2kRSTInput, H2kTextInput, H2kTimeInput } from '../../ui'
+import ScreenContainer from '../components/ScreenContainer'
 
 const QSO_SECTIONS = [
   {
@@ -47,19 +44,20 @@ const QSO_SECTIONS = [
     fields: [
       { key: 'call', label: 'Station Call', type: 'callsign', setter: callParsingSetter, minSpaces: 14, style: { flex: 1 } },
       { key: 'sent', label: 'RST', type: 'rst' },
-      { key: 'exchange', label: 'Exchange', type: 'text' },
+      { key: 'exchange', label: 'Exchange', type: 'upcasedText' },
       { key: 'name', label: 'Name', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 } },
       // { key: 'qth', label: 'QTH', type: 'text', guess: true, minSpaces: 16, breakBefore: true },
       { key: 'city', label: 'City', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 } },
-      { key: 'state', label: 'State', type: 'text', guess: true },
+      { key: 'state', label: 'State', type: 'upcasedText', guess: true },
       { key: 'county', label: 'County', type: 'text', guess: true, minSpaces: 16, style: { flex: 1 }, includeIf: ({ qso }) => qso?.their?.entityPrefix === 'K' || qso?.their?.guess?.entityPrefix === 'K' },
       { key: 'entity', label: 'Entity', type: 'text', guess: true, disabled: true, minSpaces: 16, style: { flex: 1 }, getter: ({ qso }) => qso?.their?.entityName ? `${qso?.their?.entityName || qso?.their?.guess?.entityName} (${qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix})` : undefined },
       { key: 'cqZone', label: 'CQ Zone', type: 'number', guess: true },
       { key: 'ituZone', label: 'ITU Zone', type: 'number', guess: true },
-      { key: 'arrlSection', label: 'ARRL Section', type: 'text', minSpaces: 14, includeIf: ({ qso }) => qso?.their?.entityPrefix === 'K' || qso?.their?.guess?.entityPrefix === 'K' },
+      { key: 'arrlSection', label: 'ARRL Section', type: 'upcasedText', minSpaces: 14, includeIf: ({ qso }) => qso?.their?.entityPrefix === 'K' || qso?.their?.guess?.entityPrefix === 'K' },
       { key: 'grid', label: 'Grid', type: 'grid', guess: true, breakBefore: true },
       { key: 'latitude', label: 'Latitude', type: 'float', guess: true },
-      { key: 'longitude', label: 'Longitude', type: 'float', guess: true }
+      { key: 'longitude', label: 'Longitude', type: 'float', guess: true },
+      { key: 'power', label: 'Power', type: 'number', guess: true }
     ]
   },
   {
@@ -70,7 +68,7 @@ const QSO_SECTIONS = [
       { key: 'call', label: 'Station Call', type: 'callsign', setter: callParsingSetter, minSpaces: 11, style: { flex: 1 } },
       { key: 'operatorCall', label: 'Operator Call', type: 'callsign', minSpaces: 11, style: { flex: 1 } },
       { key: 'sent', label: 'RST', type: 'rst', minSpaces: 4, style: { flex: 1 } },
-      { key: 'exchange', label: 'Exchange', type: 'text', minSpaces: 8, style: { flex: 1 } }
+      { key: 'exchange', label: 'Exchange', type: 'upcasedText', minSpaces: 8, style: { flex: 1 } }
       // { key: 'grid', label: 'Grid', type: 'grid' },
       // { key: 'latitude', label: 'Latitude', type: 'number' },
       // { key: 'longitude', label: 'Longitude', type: 'number' }
@@ -87,7 +85,12 @@ const QSO_SECTIONS = [
 ]
 
 export default function EditQSOScreen ({ navigation, route }) {
+  const { t } = useTranslation()
+
   const styles = useThemedStyles()
+  const settings = useSelector(selectSettings)
+
+  const safeAreaInsets = useSafeAreaInsets()
 
   const operation = useSelector(state => selectOperation(state, route.params.operation?.uuid ?? route.params.operation))
 
@@ -115,6 +118,7 @@ export default function EditQSOScreen ({ navigation, route }) {
     const [sectionKey, fieldKey] = fieldId.split('.')
 
     const section = QSO_SECTIONS.find(s => s.key === sectionKey)
+
     const field = section && section.fields.find(f => f.key === fieldKey)
     if (field && section) {
       let changes = {}
@@ -137,18 +141,27 @@ export default function EditQSOScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
-        {QSO_SECTIONS.map((section) => (
-          <QSOSection key={section.section} qso={qso} section={section} styles={styles} onChange={handleChanges} />
+      <ScrollView style={{ flex: 1, marginLeft: safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+        {QSO_SECTIONS.map((section, index) => (
+          <QSOSection
+            key={section.key}
+            t={t}
+            qso={qso}
+            section={section}
+            styles={styles}
+            style={{ marginBottom: (index === QSO_SECTIONS.length - 1 ? safeAreaInsets.bottom : 0) + styles.oneSpace }}
+            onChange={handleChanges}
+            settings={settings}
+          />
         ))}
       </ScrollView>
     </ScreenContainer>
   )
 }
 
-function QSOSection ({ qso, section, styles, onChange }) {
+function QSOSection ({ t, qso, section, styles, onChange, style, settings }) {
   return (
-    <Ham2kListSection title={section.section}>
+    <H2kListSection title={t(`screens.editQSO.sections.${section.key}`, section.section)} style={style}>
       <View
         style={{
           paddingVertical: styles.oneSpace,
@@ -163,18 +176,22 @@ function QSOSection ({ qso, section, styles, onChange }) {
             {field.breakBefore && (
               <View style={{ width: '100%', height: 0 }} />
             )}
-            <QSOField field={field} qso={qso} section={section} styles={styles} onChange={onChange} />
+            <QSOField t={t} field={field} qso={qso} section={section} styles={styles} onChange={onChange} settings={settings} />
             {field.breakAfter && (
               <View style={{ width: '100%', height: 0 }} />
             )}
           </React.Fragment>
         ))}
       </View>
-    </Ham2kListSection>
+    </H2kListSection>
   )
 }
 
 function getValueForField ({ qso, field, section }) {
+  if (field.key === 'power') {
+    console.log('getValueForField', qso)
+  }
+
   const sectionData = (section.data ? qso[section.data] : qso) || {}
   if (field.getter) {
     return field.getter({ qso, field, section, sectionData })
@@ -185,13 +202,13 @@ function getValueForField ({ qso, field, section }) {
   }
 }
 
-function QSOField ({ qso, field, section, styles, onChange }) {
+function QSOField ({ t, qso, field, section, styles, onChange, settings }) {
   const value = getValueForField({ qso, field, section })
 
   const props = {
     onChange,
     value: value || '',
-    label: field.label,
+    label: t([`screens.editQSO.fields.${section.key}-${field.key}`, `screens.editQSO.fields.${field.key}`], field.label),
     fieldId: [section.key, field.key].join('.'),
     disabled: field.disabled,
     style: {
@@ -202,70 +219,78 @@ function QSOField ({ qso, field, section, styles, onChange }) {
   }
   if (field.type === 'text') {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
+      />
+    )
+  } else if (field.type === 'upcasedText') {
+    return (
+      <H2kTextInput
+        {...props}
+        uppercase={true}
       />
     )
   } else if (field.type === 'number') {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
       />
     )
   } else if (field.type === 'callsign') {
     return (
-      <CallsignInput
+      <H2kCallsignInput
         {...props}
       />
     )
   } else if (field.type === 'time') {
     return (
-      <TimeInput
+      <H2kTimeInput
         {...props}
         valueInMillis={value}
       />
     )
   } else if (field.type === 'date') {
     return (
-      <DateInput
+      <H2kDateInput
         {...props}
         valueInMillis={value}
       />
     )
   } else if (field.type === 'freq') {
     return (
-      <FrequencyInput
+      <H2kFrequencyInput
         {...props}
       />
     )
   } else if (field.type === 'mode') {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
       />
     )
   } else if (field.type === 'band') {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
       />
     )
   } else if (field.type === 'rst') {
     return (
-      <RSTInput
+      <H2kRSTInput
         {...props}
         radioMode={qso?.mode ?? 'SSB'}
+        settings={settings}
       />
     )
   } else if (field.type === 'grid') {
     return (
-      <GridInput
+      <H2kGridInput
         {...props}
       />
     )
   } else {
     return (
-      <ThemedTextInput
+      <H2kTextInput
         {...props}
       />
     )
@@ -276,7 +301,7 @@ export const editQSOControl = {
   key: 'edit',
   icon: 'pencil',
   order: 99,
-  label: 'More',
+  label: ({ t }) => t('screens.opLoggingTab.moreLabel', 'More'),
   onSelect: ({ dispatch, navigation, operation, qso }) => {
     navigation.navigate('EditQSO', { operation, qso })
   },

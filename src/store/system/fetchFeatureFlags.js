@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -13,8 +13,12 @@ import deepmerge from 'deepmerge'
 import { selectRawSettings } from '../settings'
 import { selectRuntimeOnline } from '../runtime'
 import { setFeatureFlags } from './systemSlice'
+import { reportError } from '../../distro'
+import { fetchWithTimeout } from '../../tools/fetchWithTimeout'
 
-const DEBUG = true
+const DEBUG = false
+
+const MAX_REQUEST_TIME = 5000
 
 export const fetchFeatureFlags = () => async (dispatch, getState) => {
   const state = getState()
@@ -51,15 +55,10 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
   const fetchedLocations = {}
   try {
     while (locations.length > 0) {
-      const location = locations.pop()
-      try {
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 4000) // 4 second timeout
+      const location = locations.shift()
 
-        const response = await fetch(`${Config.POLO_FLAGS_BASE_URL}/${location}`, {
-          signal: controller.signal
-        })
-        clearTimeout(timeoutId) // Clear timeout if fetch succeeds
+      try {
+        const response = await fetchWithTimeout(`${Config.POLO_FLAGS_BASE_URL}/${location}`, { timeout: MAX_REQUEST_TIME })
 
         fetchedLocations[location] = true
 
@@ -86,18 +85,18 @@ export const fetchFeatureFlags = () => async (dispatch, getState) => {
           if (DEBUG) console.log('-- status', response.status)
         }
       } catch (error) {
-        if (error.name === 'AbortError') {
-          throw new Error('Request timed out after 4 seconds') // Re-raise to stop all further fetches
+        // If there's a timeout, re-raise to stop all further fetches
+        if (error.name === 'FetchTimeoutError') {
+          throw error
         }
-        console.error('Error fetching flags from', location, error)
+        // But for any other error, just try the next location
+
+        // console.error('Error fetching flags from', location, error)
+        reportError(`Error fetching flags from \`${location}\``, error)
       }
     }
   } catch (error) {
-    if (error.name === 'AbortError') {
-      console.error('Request timed out after 4 seconds')
-    } else {
-      console.error('Error fetching flags', error)
-    }
+    console.error('Error fetching flags', error)
   }
   console.log('Flags', flags)
 

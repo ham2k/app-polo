@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -41,30 +41,31 @@ const Hooks = {
 
 const VALID_HOOK_REGEX = /^(ref:\w+)/
 
-export function registerExtension (extension) {
+export function registerExtension(extension) {
   Extensions[extension.key] = extension
 }
 
-export function getExtension (key) {
+export function getExtension(key) {
   return Extensions[key]
 }
 
-export function allExtensions () {
+export function allExtensions() {
   return Object.values(Extensions)
 }
 
-function isExtensionEnabled (extension, settings) {
+function isExtensionEnabled(extension, settings) {
   return (extension.alwaysEnabled || (settings[`extensions/${extension.key}`] ?? extension.enabledByDefault))
 }
 
-export function findHooks (hookCategory, { key } = {}) {
+export function findHooks(hookCategory, { key, withFunction } = {}) {
   let hooks = (Hooks[hookCategory] ?? []).map(h => h.hook)
   if (key) hooks = hooks.filter(h => h.key === key)
+  if (withFunction) hooks = hooks.filter(h => h[withFunction])
 
   return hooks
 }
 
-export function useFindHooks (hookCategory, { key, filter } = {}) {
+export function useFindHooks(hookCategory, { key, withFunction } = {}) {
   const settings = useSelector(selectSettings)
 
   const activeExtensionHash = useMemo(() => {
@@ -73,19 +74,17 @@ export function useFindHooks (hookCategory, { key, filter } = {}) {
   }, [settings])
 
   return useMemo(() => {
-    let hooks = findHooks(hookCategory, { key })
-    if (filter) {
-      hooks = hooks.filter(h => h[filter])
-    }
+    let hooks = findHooks(hookCategory, { key, withFunction })
+
     return hooks
-  }, [activeExtensionHash, hookCategory, key, filter]) // eslint-disable-line react-hooks/exhaustive-deps -- because we want to refresh if the exension hash changes
+  }, [activeExtensionHash, hookCategory, key, withFunction]) // eslint-disable-line react-hooks/exhaustive-deps -- because we want to refresh if the exension hash changes
 }
 
-export function findBestHook (hookCategory, options) {
+export function findBestHook(hookCategory, options) {
   return findHooks(hookCategory, options)[0]
 }
 
-function registerHook (hookCategory, { extension, hook, priority }) {
+function registerHook(hookCategory, { extension, hook, priority }) {
   if (!Hooks[hookCategory] && !VALID_HOOK_REGEX.test(hookCategory)) {
     reportError(`Invalid hook ${hookCategory} for extension ${extension.key}`)
     return false
@@ -94,19 +93,21 @@ function registerHook (hookCategory, { extension, hook, priority }) {
   if (!hook) hook = extension[hookCategory]
   if (!extension) extension = hook.extension
 
+  hook.priority = hook.priority || extension.priority || 0
+
   const newHooks = (Hooks[hookCategory] ?? []).filter(h => h.key !== (hook.key ?? extension.key))
   newHooks.push({ key: hook.key ?? extension.key, extension, hook, priority })
-  newHooks.sort((a, b) => (b.priority ?? b.extension?.priority ?? 0) - (a.priority ?? a.extension?.priority ?? 0))
+  newHooks.sort((a, b) => b.priority - a.priority)
   Hooks[hookCategory] = newHooks
 }
 
-function unregisterAllHooks ({ extension }) {
+function unregisterAllHooks({ extension }) {
   Object.keys(Hooks).forEach(hookCategory => {
     Hooks[hookCategory] = Hooks[hookCategory].filter(h => h.extension.key !== extension.key)
   })
 }
 
-export async function activateEnabledExtensions (dispatch, getState) {
+export async function activateEnabledExtensions(dispatch, getState) {
   const settings = selectSettings(getState()) || {}
   const extensions = allExtensions()
   for (const extension of extensions) {

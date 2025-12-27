@@ -7,13 +7,15 @@
 
 import React from 'react'
 
+import { bandForFrequency } from '@ham2k/lib-operation-data'
+
 import { findRef, replaceRef } from '../../../tools/refTools'
-import GridInput from '../../../screens/components/GridInput'
-import { SatelliteData, registerSatelliteData } from './SatelliteData'
+import { loadDataFile } from '../../../store/dataFiles/actions/dataFileFS'
+import { H2kGridInput } from '../../../ui'
+
 import { Info } from './SatellitesInfo'
 import { SatellitesLoggingControl } from './SatellitesLoggingControl'
-import { loadDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { SatelliteData, registerSatelliteData } from './SatelliteData'
 
 const Extension = {
   ...Info,
@@ -62,12 +64,12 @@ const LoggingControl = {
 }
 
 function mainExchangeForQSO (props) {
-  const { qso, updateQSO, styles, refStack, themeColor } = props
+  const { qso, updateQSO, styles, refStack, disabled, themeColor } = props
   const fields = []
 
   if (findRef(qso, Info.refType)) {
     fields.push(
-      <GridInput
+      <H2kGridInput
         {...props}
         themeColor={themeColor}
         key={`${Info.key}/grid`}
@@ -78,6 +80,7 @@ function mainExchangeForQSO (props) {
         placeholder={qso?.their?.guess?.grid || ''}
         mode={'flat'}
         value={qso?.their?.grid || ''}
+        disabled={disabled}
         onChangeText={(text) => updateQSO({
           their: { grid: text, exchange: text }
         })}
@@ -94,7 +97,7 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
     const ref = findRef(qso, Info.refType)
-    const [satName, satFreq, satMode] = ref?.ref?.split('/')
+    const [satName, satFreq, satMode] = ref?.ref ? ref.ref.split('/') : []
     const sat = SatelliteData.satelliteByName[satName]
     if (sat) {
       const linkIndex = sat.uplinks.findIndex(link => `${link.lowerMHz}` === satFreq && link.mode === satMode)

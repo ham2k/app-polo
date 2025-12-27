@@ -1,0 +1,961 @@
+{
+  "screens": {
+    "start": {
+      "credits": "od KI2D a priateľov",
+      "Loading Extensions": "Načítavanie rozšírení",
+      "Development Build": "Vývojová verzia Prenosného záznamníka",
+      "messages": {
+        "Reticulating splines": "Retikulácia splínov",
+        "Tuning the antenna": "Ladenie antény",
+        "Checking the tubes": "Kontrola rúrok",
+        "Warming up the tubes": "Zahrievanie rúrok",
+        "Unfolding the map": "Rozbalenie mapy",
+        "Charging the flux capacitor": "Nabíjanie fluxu kondenzátoru",
+        "Purging the dilithium chamber": "Vyčistenie dilithium komory",
+        "Activating the turbo encabulator": "Aktivácia turbo enkabolátora",
+        "Engaging the warp drive": "Zapájanie warp pohonu"
+      }
+    },
+    "home": {
+      "title": "Portable Logger",
+      "newOperation": "Nová operácia",
+      "newOperation-a11y": "Nová operácia",
+      "operationList-a11y": "Zoznam operácií",
+      "noOperations": "Žiadne operácie!",
+      "settings-a11y": "Nastavenia",
+      "quickCallLookupPlaceholder": "Rýchle vyhľadávanie volacieho znaku…",
+      "spots-a11y": "Spoty"
+    },
+    "operation": {
+      "title": "Prevádzka"
+    },
+    "operationDetails": {
+      "title": "Podrobnosti o operácii",
+      "operationTitle": "Názov",
+      "newOperation": "Nová operácia",
+      "operationNotes": "Poznámky",
+      "anythingYouWantToWriteAboutThisOperation": "Čokoľvek, čo chcete napísať o tejto operácii"
+    },
+    "operationStationInfo": {
+      "title": "Informácie o stanici a operátorovi",
+      "invalidCallsign": "Neplatný volací znak: {{callsign}}",
+      "invalidCallsigns": "Neplatné volacie znaky: {{callsigns}}",
+      "singleStationUsed-md": "`{{oldStation}}` použitá doteraz.\n{{newStation}} bude použitá pre nové QSOs.",
+      "noStationUsed-md": "Žiaden doteraz použitý volací znak.\n{{newStation}} bude použitá pre nové QSOs.",
+      "updateStation-md_zero": "Aktualizovať `{{newStation}}` na nula existujúcich QSOs",
+      "updateStation-md_one": "Aktualizovať `{{newStation}}` na jedno existujúce QSO",
+      "updateStation-md_other": "Aktualizovať `{{newStation}}` na {{count}} existujúcich QSOs",
+      "multipleStationsUsed-md": "Táto aktivita už má QSOs používajúce viacero volacích znakov stanice: `{{stations}}`.\n\n`{{newStation}}` bude použitá len pre nové QSOs.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` použitý doteraz.\n{{newOperator}} bude použitý pre nové QSOs.",
+      "noOperatorUsed-md": "Žiaden doteraz použitý volací znak.\n{{newOperator}} bude použitý pre nové QSOs.",
+      "updateOperator-md": "Aktualizovať `{{newOperator}}` ako operátora pre všetky QSOs",
+      "multipleOperatorsUsed-md": "Táto aktivita už má QSOs používajúce viacero volacích znakov operátorov: `{{operators}}`.\n\n`{{newOperator}}` bude použitý len pre nové QSOs.",
+      "whatIsTheCallsignUsedOnTheAir": "Aký volací znak sa používa vo vysielaní?",
+      "stationCallsign": "Volací znak stanice",
+      "whoIsOperatingTheStation": "Kto prevádzkuje stanicu? (nepovinné)",
+      "operatorCallsign": "Volací znak operátora",
+      "multiStationOperation": "Prevádzka viacerých staníc?",
+      "multiStationOperationYes": "Áno, sme jedným z mnohých!",
+      "multiStationOperationNo": "Nie, len bežná stanica",
+      "identifierForThisStation": "Identifikátor pre túto stanicu (iba čísla)"
+    },
+    "operationLocation": {
+      "title": "Umiestnenie operácie",
+      "selectedLocation": "Vybraná lokalita",
+      "maidenheadGridSquareLocator": "Lokátor",
+      "suggestedLocations": "Odporúčané lokality",
+      "deviceGps": "GPS zariadenie",
+      "locating": "Lokalizácia…",
+      "gpsError": "Chyba GPS",
+      "noGps": "Žiadne GPS",
+      "stateOrProvince": "Štát alebo provincia (nepovinné)",
+      "county": "Kraj (nepovinné)"
+    },
+    "operationAddActivity": {
+      "title": "Pridať aktivitu",
+      "cantFindActivity": "Nemôžete nájsť aktivitu, ktorú hľadáte?",
+      "thereAreMoreOptions": "Ďalšie možnosti nájdete v Nastavenia > Funkcie aplikácie"
+    },
+    "operationActivityOptions": {
+      "title": "Možnosti aktivity",
+      "removeActivity": "Odstrániť {{activity}} z tejto prevádzky"
+    },
+    "operationData": {
+      "title": "Údaje o prevádzke",
+      "selectFromTheExportOptionsBelow": "Vyberte z nasledujúcich možností exportu",
+      "exportSingeFile": "Exportovať jeden súbor",
+      "exportSelectedFiles_zero": "Exportovať 0 vybraných súborov",
+      "exportSelectedFiles_one": "Exportovať 1 vybraný súbor",
+      "exportSelectedFiles_other": "Exportovať {{count}} vybraných súborov",
+      "exportAllFiles": "Exportovať všetky súbory",
+      "exportQSOs": "Export QSOs",
+      "pendingToDoItems_zero": "Žiadne čakajúce úlohy",
+      "pendingToDoItems_one": "1 čakajúca úloha",
+      "pendingToDoItems_other": "{{count}} čakajúcich úloh",
+      "importQSOs": "Import QSOs",
+      "addQSOsFromADIFFile": "Pridať QSOs z ADIF súboru",
+      "ham2kLoFiSync": "Ham2K LoFi Sync",
+      "operation": "Prevádzka",
+      "exportSettings": "Nastavenia exportu",
+      "useCompactFileNames": "Použiť kompaktne názvy súborov",
+      "wavelogExport": "Export do Wavelog",
+      "exportQSOsToWavelogDescription": "Odoslať všetky QSOs tejto prevádzky do Wavelog",
+      "wavelogDialog": {
+        "title": "Export QSOs do Wavelog",
+        "status": "Exportovať všetky QSOs tejto prevádzky do Wavelog.",
+        "exporting": "Exportovanie do Wavelog…"
+      },
+      "deleteOperationDialog": {
+        "title": "Vymazať túto prevádzku?",
+        "description": "Naozaj chcete vymazať túto prevádzku?"
+      }
+    },
+    "callInfo": {
+      "title": "Informácie o volacom znaku",
+      "messages": {
+        "duplicate": "Duplikát",
+        "invalidBand": "Neplatné pásmo",
+        "newBand": "Nová pásmo",
+        "newMode": "Nový mód",
+        "newRef": "Nová referencia",
+        "newMult": "Nový násobič",
+        "newDay": "Nový deň",
+        "maybeDupe": "Duplikát?",
+        "partialDupe": "Duplikát",
+        "potaActivation-newDay": "Nový POTA deň",
+        "potaActivation-newRef": "Nový park",
+        "sotaActivation-newDay": "Nový SOTA deň",
+        "sotaActivation-newRef": "Nový vrchol",
+        "sotaActivation-duplicate": "SOTA duplikát!",
+        "wwffActivation-duplicate": "WWFF duplikát!",
+        "wwbotaActivation-newDay": "Nový WWBOTA deň",
+        "wwbotaActivation-newRef": "Nový bunker",
+        "motaActivation-newRef": "Nový mlyn"
+      },
+      "history": {
+        "last7days": "{{count}} za posledných 7 dní",
+        "today": "{{count}} dnes",
+        "yesterday": "{{count}} včera",
+        "qsos_zero": "0 QSOs",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSOs"
+      },
+      "thisOpCount_zero": "0 QSOs v tejto prevádzke",
+      "thisOpCount_one": "1 QSO v tejto prevádzke",
+      "thisOpCount_other": "{{count}} QSOs v tejto prevádzke",
+      "otherOpsCount_zero": "0 QSOs v iných prevádzkach",
+      "otherOpsCount_one": "1 QSO v iných prevádzkach",
+      "otherOpsCount_other": "{{count}} QSOs v iných prevádzkach",
+      "andMoreCount_zero": "… a {{count}} ďalších",
+      "andMoreCount_one": "… a {{count}} ďalších",
+      "andMoreCount_other": "… a {{count}} ďalších",
+      "showImage": "Zobraziť obrázok",
+      "notes": "Poznámky",
+      "potentialCall": "Potenciálny hovor: {{call}}",
+      "withCall": "s {{call}}"
+    },
+    "spots": {
+      "title": "Spoty"
+    },
+    "editQSO": {
+      "title": "Upraviť QSO",
+      "sections": {
+        "qso": "Detaily QSO",
+        "their": "Ich informácie",
+        "our": "Naše informácie",
+        "more": "Viac"
+      },
+      "fields": {
+        "time": "Čas",
+        "date": "Dátum",
+        "freq": "Frekvencia",
+        "mode": "Mód",
+        "band": "Pásmo",
+        "power": "Výkon",
+        "call": "Volací znak stanice",
+        "sent": "RST",
+        "exchange": "Výmena",
+        "name": "Meno",
+        "city": "Mesto",
+        "state": "Štát/Provincia",
+        "county": "Kraj",
+        "entity": "Entita",
+        "cqZone": "CQ zóna",
+        "ituZone": "ITU zóna",
+        "arrlSection": "ARRL Sekcia",
+        "grid": "Lokátorová mriežka",
+        "latitude": "Zemepisná šírka",
+        "longitude": "Zemepisná dĺžka",
+        "notes": "Poznámky"
+      }
+    },
+    "opInfo": {
+      "title": "Informácie o prevádzke"
+    },
+    "settings": {
+      "title": "Nastavenia",
+      "sections": {
+        "settings": "Nastavenia",
+        "accounts": "Účty",
+        "about": "O Ham2K",
+        "help": "Potrebujete pomoc?"
+      },
+      "operatorCallsign": {
+        "title": "Volací znak operátora",
+        "noCall": "Žiadny volací znak",
+        "dialogTitle": "Volací znak operátora",
+        "pleaseEnterCallsign": "Zadajte prosím volací znak!",
+        "callsignLabel": "Volací znak operátora"
+      },
+      "generalSettings": {
+        "title": "Všeobecné nastavenia",
+        "description": "Tmavý režim, riadok s číslami, jednotky a viac"
+      },
+      "loggingSettings": {
+        "title": "Nastavenia logovania",
+        "description": "Prispôsobte si logovací zážitok"
+      },
+      "dataSettings": {
+        "title": "Nastavenia údajov",
+        "description": "Súbory s údajmi, poznámky o volacích znakoch a viac"
+      },
+      "syncSettings": {
+        "title": "Nastavenia synchronizácie",
+        "description": "Synchronizácia a záloha v cloude"
+      },
+      "appFeatures": {
+        "title": "Funkcie aplikácie",
+        "description": "Spravovať funkcie ako POTA, SOTA atď."
+      },
+      "developerSettings": {
+        "title": "Nastavenia vývojárov",
+        "description": "Tu sú draci"
+      },
+      "accountsQRZ": {
+        "title": "QRZ (pre vyhľadávanie volacích znakov)",
+        "description": "Prihlásenie: {{login}}",
+        "noAccount": "Žiadny účet",
+        "errorEmail": "Nepoužívajte svoj e-mail na prihlásenie.",
+        "dialogTitle": "Účet QRZ.com",
+        "pleaseEnterDetails": "Zadajte prosím podrobnosti pre svoj účet na QRZ.com:",
+        "loginLabel": "Prihlásenie (váš volací znak)",
+        "loginPlaceholder": "vaše prihlásenie",
+        "passwordLabel": "Heslo",
+        "passwordPlaceholder": "vaše heslo",
+        "checkCredentials": "Skontrolujte prihlasovacie údaje"
+      },
+      "wavelogSettings": {
+        "title": "Nastavenia Wavelog",
+        "description": "Nakonfigurujte pripojenie k API Wavelog"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} je podporovateľom Ham2K",
+        "couldBeASupporter": "{{callsign}} by mohol byť podporovateľom Ham2K"
+      },
+      "versionSettings": {
+        "description": "Zobraziť nedávne zmeny"
+      },
+      "creditsSettings": {
+        "title": "Aplikácia funguje zásluhou",
+        "description": "Sebastián Delmont KI2D & Tím PoLo"
+      },
+      "noticesSettings": {
+        "title": "Nedávne upozornenia",
+        "description": "Správy, ktoré ste zrejme zmeškali?"
+      },
+      "readTheFineManual": {
+        "title": "Prečítajte si manuál",
+        "description": "Prezrite si dokumentáciu pre PoLo"
+      },
+      "ham2KForums": {
+        "title": "Fóra Ham2K",
+        "description": "Nájdite pomoc, dávať spätnú väzbu, diskutovať myšlienky…"
+      },
+      "ham2KChat": {
+        "title": "Ham2K Chat",
+        "description": "Discord server pre našu online komunitu"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "Videá a živé vysielania"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagram",
+        "description": "Pretože nikdy nemôžete mať príliš veľa fotiek…"
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "Sledujte nás pre novinky a aktualizácie"
+      },
+      "contactUs": {
+        "title": "Kontaktujte nás",
+        "description": "help@ham2k.com\n   (ale najprv skúste Fóra alebo Chat!)"
+      }
+    },
+    "generalSettings": {
+      "title": "Všeobecné nastavenia",
+      "theme": {
+        "title": "Téma",
+        "descriptionDark": "Vždy v tmavom režime",
+        "descriptionLight": "Vždy v svetlom režime",
+        "descriptionDevice": "Rovnako ako téma zariadenia",
+        "dialogTitle": "Téma"
+      },
+      "fontScale": {
+        "title": "Veľkosť písma",
+        "descriptionXS": "Najmenšia",
+        "descriptionSM": "Menšia",
+        "descriptionMD": "Normálna",
+        "descriptionLG": "Väčšia",
+        "descriptionXL": "Najväčšia",
+        "dialogTitle": "Veľkosť písma",
+        "dialogDescription": "Tieto veľkosti sú ovplyvnené tiež nastaveniami zariadenia, ako sú zobrazenie a prístupnosť."
+      },
+      "language": {
+        "title": "Jazyk: {{lang}}",
+        "description": "Zmeniť jazyk aplikácie",
+        "dialogTitle": "Jazyk",
+        "dialogDescription": "Zmeniť jazyk",
+        "deviceDefault": "Použiť nastavenia zariadenia ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (Nastavenia zariadenia) momentálne nie je podporované."
+      },
+      "showNumbersRow": {
+        "title": "Zobraziť riadok s číslami",
+        "descriptionOn": "Rýchle tlačidlá na čísla",
+        "descriptionOff": "Nezobrazovať riadok s číslami"
+      },
+      "showExtraInNumbersRow": {
+        "title": "Bodka v riadku s číslami",
+        "descriptionOn": "Zahrňte bodku (a lomítko)",
+        "descriptionOff": "Len zobrazovať čísla"
+      },
+      "showCommaInNumbersRow": {
+        "title": "Čiarka v riadku s číslami",
+        "descriptionOn": "Zahrňte klávesu s čiarkou",
+        "descriptionOff": "Bez klávesy s čiarkou"
+      },
+      "vibrateNumbersRow": {
+        "title": "Použiť vibrovanie v riadku s číslami",
+        "descriptionOn": "Vibrovať pri stlačení čísel",
+        "descriptionOff": "Nevibrovať pri stlačení čísel"
+      },
+      "useMetricUnits": {
+        "title": "Používať metrické jednotky",
+        "descriptionOn": "Používať míle pre vzdialenosti",
+        "descriptionOff": "Používať kilometre pre vzdialenosti"
+      },
+      "keepDeviceAwake": {
+        "title": "Udržiavať zariadenie aktívne",
+        "descriptionOn": "Zabrániť zariadeniu uzamknúť obrazovku",
+        "descriptionOff": "Povoliť bežné uzamknutie obrazovky"
+      },
+      "useSplitViews": {
+        "title": "Použiť rozdelené zobrazenia",
+        "descriptionOn": "Použiť rozdelené zobrazenia, keď je obrazovka dostatočne veľká",
+        "descriptionOff": "Nepoužívať rozdelené zobrazenia"
+      },
+      "useGrid8": {
+        "title": "Lokalizácia s vysokou presnosťou",
+        "descriptionOn": "Použiť 8-miestne lokátorové štvorce",
+        "descriptionOff": "Použiť 6-miestne lokátorové štvorce"
+      },
+      "smartKeyboard": {
+        "title": "Funkcie inteligentnej klávesnice",
+        "descriptionOn": "Povoliť funkcie inteligentnej klávesnice",
+        "descriptionOff": "Použiť jednoduchšie klávesnice pre dôvody kompatibility s niektorými zariadeniami"
+      },
+      "exportSettings": {
+        "title": "Nastavenia exportu",
+        "description": "Prispôsobte si názvy súborov a ďalšie nastavenia"
+      },
+      "privacy": {
+        "title": "Súkromie"
+      },
+      "shareAppUsageData": {
+        "title": "Zdieľať údaje o používaní aplikácie",
+        "descriptionOn": "Pomôžte nám zlepšiť aplikáciu zdieľaním údajov o používaní, výpadkoch a výkone aplikácie",
+        "descriptionOff": "Udržujte súkromie údajov o používaní aplikácie.\nTím Ham2K nebude schopný zistiť chyby alebo iné problémy."
+      },
+      "shareOperationData": {
+        "title": "Zdieľať údaje o prevádzke",
+        "descriptionOn": "Zdieľať niektoré údaje o prevádzke verejne a s inými používateľmi",
+        "descriptionOff": "Udržiavať údaje o prevádzke súkromné"
+      },
+      "privacyPolicy": {
+        "title": "Zásady ochrany osobných údajov",
+        "description": "Prečítajte si naše zásady ochrany osobných údajov"
+      },
+      "termsOfService": {
+        "title": "Podmienky služby",
+        "description": "Prečítajte si naše Podmienky služby"
+      }
+    },
+    "loggingSettings": {
+      "title": "Nastavenia prihlásenia",
+      "leftieMode": {
+        "title": "Mód pre ľavákov",
+        "descriptionOn": "Použiť rozloženie pre ľavákov",
+        "descriptionOff": "Použiť rozloženie pre pravákov"
+      },
+      "countryFlags": {
+        "title": "Vlajky krajín",
+        "descriptionNone": "Nezobrazovať žiadne vlajky",
+        "descriptionAll": "Zobraziť vlajky pre všetky spojenia",
+        "descriptionDefault": "Zobraziť iba pre DX spojenia"
+      },
+      "showBearing": {
+        "title": "Zobrazovať azimut",
+        "descriptionOn": "Zobrazovať odhadovaný azimut ku stanici",
+        "descriptionOff": "Nezobrazovať údaje o azimute"
+      },
+      "switchSignalReportOrder": {
+        "title": "Prepnite poradie hlásení signálu",
+        "descriptionOn": "Odoslaný ako prvý, prijatý ako druhý",
+        "descriptionOff": "Prijatý ako prvý, odoslaný ako druhý"
+      },
+      "jumpAfterRST": {
+        "title": "Prejsť na ďalšie pole po zadaní RST",
+        "descriptionOn": "Prejsť po zadaní RST",
+        "descriptionOff": "Neprejsť automaticky"
+      },
+      "suggestDefaultOperator": {
+        "title": "Nastaviť predvoleného operátora",
+        "descriptionOn": "Nastaviť {{operatorCall}} ako operátora v prevádzkach, kde sú rôzne volacie znaky stanice",
+        "descriptionOff": "Nenasadzujte predvoleného operátora bez ohľadu na volanie stanice"
+      },
+      "suggestTemplates": {
+        "title": "Použiť šablóny operácií",
+        "descriptionOn": "Navrhnúť šablóny pre nové operácie",
+        "descriptionOff": "Nenavrhuje šablóny"
+      },
+      "bandsModes": {
+        "title": "Pásma a módy",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "Rozšírenia"
+      }
+    },
+    "featuresSettings": {
+      "title": "Funkcie aplikácie",
+      "activatingExtension": "Načítanie rozšírenia, môže to chvíľu trvať…",
+      "fewerOf": "Menej {{category}}…",
+      "moreOf": "Viac {{category}}…"
+    },
+    "dataSettings": {
+      "title": "Nastavenie dát",
+      "offlineDataTitle": "Offline dáta",
+      "extensionsTitle": "Rozšírenia",
+      "logDataTitle": "Logovanie dát",
+      "importHistoryFromADIF": "Importovať históriu z ADIF",
+      "importHistoryFromADIFDescription": "Používa sa na offline vyhľadávanie a štatistiku QSO",
+      "clearADIFHistory": "Vymazať históriu ADIF",
+      "clearADIFHistoryDescription": "Odstrániť importované záznamy ADIF",
+      "updatedRelative": "Aktualizované {{date}}",
+      "fetching-md": "### Načítavanie **{{title}}**...",
+      "progress-md": "### Načítanie **{{title}}**\n\n{{progress}}",
+      "updated-md": "Aktualizované {{date}}",
+      "version-md": "Verzia: {{version}}",
+      "confirmClearHistory": {
+        "title": "Ste si istí?",
+        "description": "Toto odstráni všetky predošlé záznamy importované z ADIF súborov",
+        "recordsNotDeleted": "Záznamy z prevádzok nebudú odstránené"
+      },
+      "importingHistoricalADIF": "Importovanie ADIF záznamov… Prosím, buď trpezlivý!",
+      "errorImportingHistoricalADIF": "Chyba pri importovaní historického ADIF",
+      "errorDeletingHistoricalRecords": "Chyba pri mazaní historických záznamov",
+      "recordsCount_zero": "Žiadne záznamy",
+      "recordsCount_one": "1 záznam",
+      "recordsCount_other": "{{fmtCount}} záznamov"
+    },
+    "syncSettings": {
+      "title": "Nastavenia synchronizácie",
+      "description": "Ham2K LoFi ponúka spoľahlivú synchronizačnú službu medzi všetkými vašimi zariadeniami a poskytuje záložnú kópiu údajov o prevádzke v cloude.",
+      "syncService": "Synchronizačná služba",
+      "syncService.enabled": "Zapnuté",
+      "syncService.disabled": "Vypnuté",
+      "deviceNotLinked": "Zariadenie nie je prepojené! ({{id}})",
+      "anonymousAccount": "Anonymný účet (#{{id}})",
+      "enableSyncToLinkDevice": "Povoliť synchronizáciu na prepojenie tohto zariadenia",
+      "checkEmailInboxForConfirmation": "(skontrolujte svoju e-mailovú schránku pre potvrdenie)",
+      "accountNumber": "Účet #{{id}}",
+      "pendingEmailConfirmation": "(čaká sa na potvrdenie e-mailom)",
+      "tapToConfigure": "Ťuknite pre konfiguráciu",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (vývoj)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (oficiálne)",
+        "custom": "Vlastné ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "Toto zariadenie bolo naposledy synchronizované s iným účtom (#{{id}}).\n\nAby ste mohli pokračovať v synchronizácii, musíte sa rozhodnúť medzi nasledujúcimi možnosťami:",
+        "option1withEmail-md": "Možnosť č. 1: Nahradiť údaje na tomto zariadení údajmi z účtu **{{email}}** na serveri.",
+        "option1noEmail-md": "Možnosť č. 1: Nahradiť dáta na tomto zariadení tými z nového účtu na serveri.",
+        "option1button": "Choďte na č. 1: nahradiť serverovými dátami",
+        "option2withEmail-md": "Možnosť č. 2: Skombinovať údaje na tomto zariadení s údajmi z účtu **{{email}}** na serveri.",
+        "option2noEmail-md": "Možnosť č. 2: Kombinovať dáta na tomto zariadení s tými z nového účtu na serveri.",
+        "option2button": "Choďte na č. 2: kombinovať dáta",
+        "option3-md": "Možnosť č. 3: Prepojiť späť s predošlým účtom, **{{email}}**.",
+        "option3button": "Choďte na č. 3: predchádzajúci účet",
+        "buttonCancel": "Nie, Zrušiť",
+        "buttonProcees": "Áno, riskujem! Nahradiť všetko!"
+      },
+      "combineDataAlert": {
+        "title": "Kombinovať lokálne dáta?",
+        "text": "Naozaj chcete kombinovať tieto operácie a QSO s novým účtom?\n\nToto skombinuje QSOS na tomto zariadení s tým, čo už je v synchronizačnej službe pre nový účet, a môže neúmyselne viesť k miešaniu nesúvisiacich záznamov.\n\nTáto operácia sa nedá vrátiť späť.",
+        "buttonCancel": "Nie, Zrušiť",
+        "buttonProcees": "Áno, riskujem! Kombinovať ich!"
+      },
+      "replaceDataAlert": {
+        "title": "Nahradiť miestne dáta?",
+        "text": "Ste si istí, že chcete nahradiť všetky dáta na tomto zariadení operáciami a QSO pre nový účet zo synchronizačnej služby?\n\nAplikácia sa reštartuje.\n\nAk máte nesynchronizované dáta, BUDÚ STRATENÉ.",
+        "buttonCancel": "Nie, Zrušiť",
+        "buttonProcees": "Áno, riskujem! Nahradiť všetko!"
+      },
+      "linkBackErrorAlert": {
+        "title": "Chyba pri opätovnom prepojení so starým účtom",
+        "text": "Počas prepojenia so starým účtom sa vyskytla chyba.\n\n{{error}}\n\nSkúste to prosím neskôr.",
+        "buttonCancel": "OK"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi účet",
+        "emailAddressLabel": "Emailová adresa",
+        "resendButton": "Odoslať znova",
+        "revertButton": "Vrátiť späť",
+        "syncFirstButton": "Najprv sa vrátiť a dokončiť synchronizáciu",
+        "continueAnywayButton": "Viem, čo robím! Napriek tomu pokračovať",
+        "potentialForDataLoss": "Možnosť straty údajov!!!",
+        "potentialForDataLossDescription": "Na tomto zariadení ste nesynchronizovali všetky údaje.\n\nAk toto zariadenie spojíte s novým účtom, bude sa vás pýtať, či chcete jeho údaje nahradiť údajmi z nového účtu.\n\nV takom prípade, možno nebudete môcť obnoviť žiadne existujúce aktivity, ktoré ešte neboli synchronizované.\n\nOdporúčame vám najprv dokončiť synchronizáciu tohto zariadenia!"
+      },
+      "syncServiceDescription-md": "Základná služba je zdarma a umožňuje synchronizáciu najnovších údajov (až 7 dní) medzi dvoma zariadeniami alebo aplikáciami s obmedzenou rýchlosťou.\n\nPlná služba vyžaduje platené predplatné a zahŕňa všetky vaše operácie synchronizované medzi akýmkoľvek rozumným počtom zariadení alebo aplikácií s plnou rýchlosťou.\n\nPočas TESTOVACEJ PERIÓDY služby LoFi v nasledujúcich niekoľkých mesiacoch zostane služba zadarmo. Potom ceny závisia od krajiny a meny, ale nemali by byť vyššie ako 30 USD/rok alebo ekvivalent, a pravdepodobne nižšie.",
+      "thisDevice": "Toto zariadenie",
+      "notAuthenticated": "Nepreukázaný",
+      "lofiServer": "LoFi server",
+      "otherDevices": "Iné zariadenia",
+      "devSettings": "Nastavenia pre vývoj",
+      "resetSyncStatus": "Obnoviť stav synchronizácie",
+      "noDataStored": "Nie sú uložené žiadne dáta",
+      "syncCountDescription": {
+        "operations": "Operácie: {{synced}} synchronizované, {{pending}} nevybavené",
+        "qsos": "QSOs: {{synced}} synchronizované, {{pending}} nevybavené"
+      },
+      "cloudCountDescription": {
+        "operations": "Operácie: {{total}} celkom",
+        "operationsSyncable": "Operácie: {{total}} uložené, {{syncable}} synchronizovateľné",
+        "qsos": "QSOs: {{total}} uložené",
+        "qsosSyncable": "QSOs: {{total}} uložené, {{syncable}} synchronizovateľné"
+      }
+    },
+    "versionSettings": {
+      "title": "Informácie o verzii",
+      "recentChanges": "Nedávne zmeny",
+      "coverPhoto": "Úvodná fotografia: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "Kontrola aktualizácií…",
+      "newMajorReleaseAvailable": "Nová hlavná verzia dostupná",
+      "patchAvailable": "{{track}} náplasť dostupná",
+      "checkForUpdates": "Skontrolovať aktualizácie {{track}}",
+      "checkForUpdatesGeneric": "Skontrolovať aktualizácie",
+      "updateAvailable": "Aktualizácia dostupná",
+      "downloading": "Sťahovanie…",
+      "downloadingProgress": "Sťahuje sa {{progress}}%",
+      "installing": "Inštalácia…",
+      "errorDownloadingUpdate": "Chyba pri sťahovaní aktualizácie",
+      "errorCheckingForUpdates": "Chyba pri kontrole aktualizácií",
+      "noUpdatesAvailable": "Žiadne aktualizácie k dispozícii",
+      "versionDescription": "{{version}} - základná zostava {{build}}"
+    },
+    "creditsSettings": {
+      "title": "Kredity",
+      "createdBy": "Vytvoril {{callsign}}",
+      "openSource": "Ham2K PoLo je Open Source",
+      "checkOutCode": "Pozrite si kód a prispejte na GitHub!",
+      "teamPoLo": "Tím PoLo",
+      "creator": "Tvorca & hlavný vývojár",
+      "developer": "Vývojár",
+      "leadSupport": "Hlavná podpora a dokumentácia",
+      "moreCodeAndDocsContributors": "Viac prispievateľov…",
+      "contributorCode": "Kode prispievateľ: {{contributions}}",
+      "contributorDocumentation": "Dokumentácia",
+      "translations": "Preklady",
+      "translationsService": "Prekladové nástroje od CrowdIn",
+      "translationsServiceDescription": "Nástroje na správu procesu prekladu sú štedro darované spoločnosťou CrowdIn"
+    },
+    "devModeSettings": {
+      "title": "Nastavenia pre vývojárov",
+      "wipeDatabase": {
+        "title": "Vymazať databázu?",
+        "description": "Ste si istí, že chcete vymazať všetky operácie, QSOs a iné dáta?",
+        "noCancel": "Nie, Zrušiť",
+        "yesWipeIt": "Áno, vymažte to!"
+      },
+      "import": {
+        "title": "Importovať",
+        "importQSONFile": "Importovať súbor QSON"
+      },
+      "experiments": {
+        "title": "Experimenty",
+        "enableWavelogExperiments": "Povoliť experimenty Wavelog"
+      },
+      "manageDatabase": {
+        "title": "Správa databázy",
+        "exportDatabase": "Export databázy",
+        "exportDatabaseDescription": "Export aktuálneho databázového súboru",
+        "replaceDatabase": "Nahradiť databázu",
+        "replaceDatabaseDescription": "Importovať nový databázový súbor a nahradiť všetky dáta",
+        "wipeDatabase": "Vyčistiť databázu",
+        "wipeDatabaseDescription": "Vymazať všetky údaje z databázy."
+      },
+      "internationalization": {
+        "title": "Medzinárodná konfigurácia",
+        "crowdInPersonalTokenLabel": "CrowdIn osobný prístupový token",
+        "crowdInPersonalTokenPlaceholder": "Získajte jeden z nastavení účtu CrowdIn",
+        "refreshCrowdInTranslations": {
+          "title": "Obnovovanie prekladov…",
+          "starting": "Počkajte, prosím, pokiaľ aktualizujeme preklady…",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "Obnovenie dokončené!",
+          "errorTitle": "Chyba pri obnove prekladov",
+          "error": "Chyba pri obnovovaní prekladov CrowdIn: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "Stiahnuť pokročilé nastavenia",
+        "locationLabel": "Poloha",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "Informácie o systéme",
+        "shareWithDevelopmentTeam": "Zdieľať s vývojovým tímom"
+      },
+      "updatePatches": {
+        "title": "Aktualizovať záplaty",
+        "selectTrackForPatches": "Vybrať trať pre záplaty",
+        "selectTrackForPatchesDescription": "Vyberte trať pre záplaty",
+        "checkingForUpdates": "Kontrola aktualizácií…",
+        "checkForUpdates": "Skontrolujte aktualizácie {{track}}",
+        "updateAvailable": "Aktualizácia k dispozícii",
+        "updateAvailableForTrack": "Aktualizácia {{track}} k dispozícii",
+        "downloading": "Sťahovanie…",
+        "downloadingProgress": "Sťahuje sa {{progress}}%",
+        "installing": "Inštalácia…",
+        "errorDownloadingUpdate": "Chyba pri sťahovaní aktualizácie",
+        "errorCheckingForUpdates": "Chyba pri kontrole aktualizácií",
+        "noUpdatesAvailable": "Žiadne aktualizácie k dispozícii"
+      }
+    },
+    "bandModeSettings": {
+      "title": "Pásma a módy",
+      "bands": {
+        "title": "Pásma",
+        "showCommonBands": "Zobraziť bežné pásma",
+        "showAllBands": "Zobraziť všetky pásma",
+        "names": {
+          "160m-a11y": "160 Metrov",
+          "80m-a11y": "80 Metrov",
+          "60m-a11y": "60m",
+          "40m-a11y": "40m",
+          "30m-a11y": "30m",
+          "20m-a11y": "20m",
+          "17m-a11y": "17m",
+          "15m-a11y": "15m",
+          "12m-a11y": "12m",
+          "11m-a11y": "11m",
+          "10m-a11y": "10m",
+          "6m-a11y": "6m",
+          "2m-a11y": "2m",
+          "70cm-a11y": "70cm",
+          "23cm-a11y": "23cm",
+          "13cm-a11y": "13cm",
+          "9cm-a11y": "9cm",
+          "6cm-a11y": "6cm",
+          "3cm-a11y": "3cm",
+          "1-25cm-a11y": "1,25cm",
+          "6mm-a11y": "6mm",
+          "4mm-a11y": "4mm",
+          "2-5mm-a11y": "2,5mm",
+          "2mm-a11y": "2mm",
+          "1mm-a11y": "1mm",
+          "submm-a11y": "Submilimeter",
+          "other": "Iné",
+          "other-a11y": "Iné pásmo"
+        }
+      },
+      "modes": {
+        "title": "Módy",
+        "showMoreModes": "Zobraziť viac módov",
+        "showEvenMoreModes": "Zobraziť ešte viac módov",
+        "showFewerModes": "Zobraziť menej módov",
+        "names": {
+          "SSB-a11y": "Jednoduche Bočné Pásmo",
+          "USB-a11y": "Horné Bočné Pásmo",
+          "LSB-a11y": "Dolné Bočné Pásmo",
+          "RTTY-a11y": "Ritty",
+          "CW-a11y": "C.W.",
+          "other": "Iné",
+          "other-a11y": "Iný mód"
+        }
+      }
+    },
+    "exportSettings": {
+      "title": "Export nastavení",
+      "exportTypes": "Typy exportu",
+      "customTemplates": "Vlastné šablóny",
+      "defaultTemplates": "Predvolené šablóny",
+      "customTemplatesDescription": "Použiť vlastné šablóny pre export",
+      "defaultTemplatesDescription": "Použiť predvolené šablóny pre export",
+      "includePrivateData": "Zahrnúť súkromné údaje",
+      "fileNameTemplate": "Šablóna názvu súboru",
+      "titleTemplate": "Šablóna Titulu",
+      "adifNotes": "ADIF QSO poznámky",
+      "adifComments": "ADIF QSO komentáre",
+      "adifQslMessage": "ADIF QSL správa",
+      "templateHelpTitle": "Pomoc Šablón",
+      "includePrivateDataDescription": "Mená, poznámky, adresy, atď.",
+      "templateHelp-md": "Niektoré príklady prvkov šablóny…\n\n### Export protokolu\nAtribúty exportovaného logu\n`{{log.station}}` → `{{call}}` Stanica pre tento export\n`{{log.ref}}` → `XX-1234` Referencia pre tento export\n`{{log.refName}}` → `Príklad národného parku` Referenčné meno pre tento export\n`{{log.refShortName}}` → `Príklad NP` Krátky referenčný názov pre tento export\n`{{log.handlerType}}` → `pota` Typ obsluhy pre tento export\n`{{log.handlerName}}` → `Parks On The Air` Názov obsluhy pre tento export\n`{{log.handlerShortName}}` → `POTA` Krátky názov obsluhy pre tento export\n\n### Volacie znaky operácie\n`{{op.station}}` → `{{call}}` Prvá stanica pre operáciu\n`{{op.operator}}` → `{{call}}` Operátor pre operáciu\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Všetky stanice pre operáciu\n`{{op.otherStations}}` → `{{otherCalls}}` Ostatné stanice pre operáciu\n\n### Dátum operácie\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Ďalšie podrobnosti operácie\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Moja špeciálna operácia`\n`{{op.userNotes}}` → `Vyrazil som skoro ráno…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Lokátor pre túto operáciu\n\n### Informácie o QSO\n`{{qso.notes}}` → `Hrozný zvuk!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Správa o signále, ktorú poslali\n`{{qso.our.sent}}` → `55` Správa o signále, ktorú sme poslali\n`{{qso.their.grid}}` → `FF99` Lokátor, ktorú nahlásili\n`{{qso.refs}}` → Zoznam všetkých referencií pre QSO (zahŕňa referencie operácie aj referencie iba pre QSO)\n`{{first8 qso.uuid}}` → `123e4567`",
+      "default": {
+        "name": "Predvolené",
+        "description": "Základné nastavenia pre všetky exporty",
+        "fileNameNormal": "Názov súboru pre referenčné činnosti (Normálne)",
+        "fileNameCompact": "Názov súboru pre referenčné činnosti (Kompaktné)",
+        "titleReferenceActivities": "Titul pre Referenčné Činnosti",
+        "fileNameOtherActivitiesNormal": "Názov súboru pre ďalšie činnosti (Normálne)",
+        "fileNameOtherActivitiesCompact": "Názov súboru pre ďalšie činnosti (Kompaktné)",
+        "titleOtherActivities": "Titul pre Ďalšie Činnosti",
+        "adifNotes": "ADIF QSO Poznámky",
+        "adifComments": "ADIF QSO Komentáre",
+        "adifQSLMessage": "ADIF QSL Správa"
+      }
+    },
+    "noticesSettings": {
+      "title": "Nedávne Upozornenia",
+      "undated": "Bezdátové",
+      "noRecentNotices": "Žiadne nedávne upozornenia"
+    },
+    "extensionSettings": {
+      "title": "Rozšírenie"
+    },
+    "wavelogSettings": {
+      "title": "Nastavenia Wavelog",
+      "noStationsFoundOrInvalidResponse": "Neboli nájdené stanice alebo neplatná odpoveď",
+      "errorFetchingStations": "Chyba pri načítavaní staníc: {{message}}",
+      "fetchStations": "Načítať Stanice",
+      "selectStation": "Vybrať Stanicu",
+      "selectedStation": "Vybraná stanica: {{station}}"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Rozdeľovač panelov",
+      "qsosTab": "QSOs",
+      "qsosTab-a11y": "Tab Q sos",
+      "infoTab": "Info",
+      "infoTab-a11y": "Tab Info",
+      "operationInfo-a11y": "Informácie o prevádzke",
+      "spotsTab": "Spoty",
+      "spotsTab-a11y": "Tabuľka spotov",
+      "mapTab": "Mapa",
+      "mapTab-a11y": "Záložka Mapa",
+      "settingsTab": "Operácia",
+      "settingsCompactTab": "Oper.",
+      "settingsTab-a11y": "Tab Nastavení Operácie",
+      "menu": {
+        "loggingSettings": "Nastavenia denníka",
+        "rstFields": "RST Polia",
+        "stateField": "Štát pole",
+        "gridField": "Mriežkové pole",
+        "showDeletedQSOs": "Zobraziť vymazané QSOs",
+        "numbersRow": "Rada čísel",
+        "actions": "Akcie",
+        "lookupAllQSOs": "Vyhľadať všetky QSOs",
+        "confirmSpots": "Potvrdiť Miesta"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "Žiadne QSOs",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSOs",
+      "qsosCompactTabCount_zero": "Žiadne Qs",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} Qs",
+      "noQSOsYet": "Zatiaľ žiadne QSOs!",
+      "currentlySetTo": "Aktuálne nastavené na",
+      "missingInfoError": {
+        "message": "CHYBA: Zadajte **{{errors}}** pre platnú operáciu",
+        "errors": {
+          "band": "pásmo",
+          "callsign": "volací znak"
+        }
+      },
+      "actions": {
+        "undo-a11y": "Vrátiť späť",
+        "erase-a11y": "Vymazať",
+        "delete-a11y": "Vymazať",
+        "addQSO-a11y": "Pridať QSO",
+        "saveQSO-a11y": "Uložiť QSO"
+      },
+      "deletedQSO": "Vymazané QSO",
+      "qsoWillBeDeleted": "QSO bude vymazané!",
+      "noQSOsBy-md": "Zatiaľ žiadne QSO od {{callsign}}… Poďme do éteru!",
+      "noQSOsYet-md": "Žiadne QSOs… Poďme do éteru!",
+      "qsoCount_zero": "Žiadne QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "qsosInTime": "{{countText}} za {{timeText}}",
+      "last10QSOs": "{{rate}} Q/h za posledných 10",
+      "last100QSOs": "{{rate}} Q/h za posledných 100",
+      "timeSinceLast": "{{time}} od posledného",
+      "moreLabel": "Viac",
+      "theirCallLabel": "Ich volací znak",
+      "ourSentLabel": "Odoslané",
+      "theirSentLabel": "Prijaté",
+      "stateLabel": "Stav",
+      "gridLabel": "Lokátorová mriežka",
+      "timeLabel": "Čas",
+      "dateLabel": "Dátum",
+      "timeControls-a11y": "Ovládanie času",
+      "powerLabel": "Výkon",
+      "powerControls-a11y": "Ovládanie výkonu",
+      "modeLabel": "Režim",
+      "bandLabel": "Pásmo",
+      "frequencyLabel": "Frekvencia",
+      "bandMissing": "Pásmo???",
+      "radioControls-a11y": "Radiové ovládanie {{parts}}",
+      "notesLabel": "Poznámky",
+      "notesLabel-a11y": "Poznámky",
+      "activeControlsLabel": "Aktívne ovládanie",
+      "activeControlsLabel-a11y": "Aktívne ovládanie",
+      "selectToRemoveActiveControls": "vyberte na odstránenie",
+      "selectToRemoveActiveControls-a11y": "vyberte na odstránenie",
+      "moreControlsLabel": "Viac ovládacích prvkov",
+      "moreControlsLabel-a11y": "Viac ovládacích prvkov",
+      "selectToAddMoreControls": "vyberte na pridanie",
+      "selectToAddMoreControls-a11y": "vyberte na pridanie",
+      "showSecondaryControlSettings-a11y": "Zobraziť nastavenia sekundárnych ovládacích prvkov",
+      "hideMostSecondaryControls-a11y": "Skryť väčšinu sekundárnych ovládacích prvkov",
+      "showAllSecondaryControls-a11y": "Zobraziť všetky sekundárne ovládacie prvky",
+      "spotting": {
+        "selfSpottingAt": "Self-spotovanie na {{freq}}",
+        "stopAutoRespotting": "Zastaviť automatický respot",
+        "setFrequencyFirst": "Najprv nastavte frekvenciu pre spot.",
+        "reSpotEvery": "Re-spot každých {{minutes}} min",
+        "reSpotAt": "Re-spot na {{freq}}",
+        "selfSpottedAt": "Self-spotovaný o {{time}}",
+        "spotAt": "Spot {{call}} na {{freq}}",
+        "tooLateToSpot": "Príliš neskoro na spot {{call}}",
+        "nothingToSpot": "Nič pre spot",
+        "selfSpottingLabel": "Self-spotovanie",
+        "selfSpottingControls-a11y": "Ovládanie samo-spottovania",
+        "spottingLabel": "Spotovanie",
+        "spottingControls-a11y": "Ovládanie spotovania",
+        "autoRespottingLabel": "Auto-respotting",
+        "autoRespottingControls-a11y": "Ovládanie auto-respottingu",
+        "commentsLabel": "Komentáre"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "Žiadne riadky?\nNajskôr musíte nastaviť svoju polohu.\n\nŤuknite sem, aby ste tak spravili.",
+      "manyNoLocation": "Mnohé z týchto QSOs nemajú presnú polohu.\n\nMôže byť potrebný platený účet QRZ.com na vyhľadávanie polohy."
+    },
+    "opSpotsTab": {
+      "noSpots": "Žiadne spoty",
+      "spotsCount_zero": "Žiadne spoty",
+      "spotsCount_one": "1 spot",
+      "spotsCount_other": "{{fmtCount}} spotov",
+      "showingSpots": "Zobrazuje sa {{count}} z {{total}}",
+      "loadingSpots": "Načítavanie spotov…",
+      "sections": {
+        "specialSpots": "Špeciálne spoty",
+        "newMultipliers": "Nové násobiče",
+        "callsOfNote": "Pozoruhodné Volania",
+        "mostRecentSpots": "Najnovšie spoty"
+      },
+      "allBands": "Všetky pásma",
+      "auto": "Auto",
+      "allModes": "Všetky módy",
+      "filters": "Filtre",
+      "filtersBand": "Pásmo",
+      "filtersAllBands": "Všetky pásma",
+      "filtersBandAutomatic": "Automatické (Momentálne {{band}})",
+      "filtersMode": "Mód",
+      "filtersAllModes": "Všetky módy",
+      "filtersModeAutomatic": "Automatické (Momentálne {{mode}})",
+      "filtersMaximumAge": "Maximálny vek",
+      "filtersAnyAge": "Bez veku",
+      "filtersAge10Minutes": "10 minút",
+      "filtersAge20Minutes": "20 minút",
+      "filtersAge30Minutes": "30 minút",
+      "filtersAge45Minutes": "45 minút",
+      "filtersAge60Minutes": "60 minút",
+      "filtersSorting": "Triedenie",
+      "filtersSortByTime": "Podľa času spotu",
+      "filtersSortByFrequency": "Podľa frekvencie",
+      "filtersGroupSpecialSpots": "Zoskupiť Špeciálne Miesta Najprv",
+      "filtersGroupCallsWithNotes": "Zoskupiť Volania s Poznámkami",
+      "filtersSpotSources": "Zdroje pre spoty",
+      "filtersFilterByContinent": "Filtrovať podľa kontinentu",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "Phone",
+        "DIGITAL": "Digitálne",
+        "DATA": "Digitálne",
+        "phoneOrCW": "Phone alebo CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "Neplatný volací znak {{callsign}}",
+      "invalidCallsigns": "Neplatné volacie znaky {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (obsluhované {{operator}})",
+      "noStationCallsignDefined": "ŽIADNA STANIČNÁ VOLACIA ZNAČKA NENASTAVENÁ",
+      "showMoreTemplates": "Zobraziť viac šablón",
+      "templatesAvailable_zero": "Žiadne šablóny k dispozícii",
+      "templatesAvailable_one": "1 šablóna k dispozícii",
+      "templatesAvailable_other": "{{count}} šablón k dispozícii",
+      "stationAndOperatorTitle": "Stanica a Operátor",
+      "locationTitle": "Poloha",
+      "gridDescription-md": "Lokátor `{{grid}}`",
+      "stateDescription-md": "Štát: `{{state}}`",
+      "countyDescription-md": "Kraj: `{{county}}`",
+      "locationDescriptionNone-md": "Žiadna poloha nie je nastavená",
+      "operationDetailsTitle": "Podrobnosti o operácii",
+      "operationDetailsDescription": "Pridajte poznámky k tejto operácii",
+      "addTitleOrNotesForOperation": "Pridajte názov alebo poznámky k tejto operácii",
+      "activitiesTitle": "Aktivity",
+      "addActivityTitle": "Pridať aktivitu",
+      "addActivityDescription": "POTA, SOTA, Poľný deň a ďalšie!",
+      "addActivityDescription-noFeatures": "Najprv povoľte niektoré funkcie aktivity v hlavnej obrazovke nastavení",
+      "operationDataTitle": "Údaje o operácii",
+      "manageOperationLogsTitle": "Spravovať denníky operácií",
+      "manageOperationLogsDescription": "Export, import a spravovanie dát",
+      "useAsTemplateTitle": "Použiť ako šablónu",
+      "useAsTemplateDescription": "Začať novú operáciu s podobnými nastaveniami",
+      "dangerZoneTitle": "Nebezpečná zóna",
+      "undeleteOperationTitle": "Obnoviť operáciu",
+      "deleteOperationTitle": "Odstrániť operáciu"
+    },
+    "opInfoPanel": {
+      "statsTitle": "Štatistiky operácie",
+      "operationTotalsTitle-md": "Celkové výsledky operácie:",
+      "qsosInTime_zero": "Žiadne QSOs",
+      "qsosInTime_one": "1 QSO za {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSOs za {{time}}",
+      "qsoCount_zero": "Žiadne QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "timeSinceLast": "{{time}} od posledného QSO",
+      "last10QSOs": "{{rate}} Q/h pre posledných 10",
+      "last100QSOs": "{{rate}} Q/h pre posledných 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Chyba pri importovaní QSON",
+      "invalidName": "Neplatné meno",
+      "invalidNameDescription": "Názov súboru musí končiť na .qson alebo .json",
+      "unknownError": "Neznáma chyba"
+    },
+    "importADIF": {
+      "error": "Chyba pri importovaní ADIF do prevádzky",
+      "historicalImportError": "Chyba pri importovaní historického ADIF",
+      "unknownError": "Neznáma chyba"
+    }
+  }
+}

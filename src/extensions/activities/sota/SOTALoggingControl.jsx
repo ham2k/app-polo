@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { Info } from './SOTAInfo'
@@ -14,8 +15,10 @@ import SOTAInput from './SOTAInput'
 export function SOTALoggingControl (props) {
   const { qso, updateQSO, style, styles } = props
 
+  const { t } = useTranslation()
+
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
   const refsString = useMemo(() => {
     const refs = filterRefs(qso, Info.huntingType)
@@ -23,7 +26,8 @@ export function SOTALoggingControl (props) {
   }, [qso])
 
   const handleChangeText = useCallback((value) => {
-    const refs = stringToRefs(Info.huntingType, value)
+    let refs = stringToRefs(Info.huntingType, value)
+    refs = refs.map(r => ({ ...r, label: `${Info.shortName} ${r.ref}` }))
 
     updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
   }, [qso, updateQSO])
@@ -34,7 +38,7 @@ export function SOTALoggingControl (props) {
       innerRef={ref}
       style={[style, { minWidth: 16 * styles.oneSpace }]}
       value={refsString}
-      label="Their SOTA"
+      label={t('extensions.sota.loggingControl.theirRefLabel', 'Their SOTA')}
       onChangeText={handleChangeText}
     />
   )

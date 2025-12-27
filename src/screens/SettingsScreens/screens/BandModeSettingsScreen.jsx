@@ -1,24 +1,65 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Switch } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { ADIF_MODES_AND_SUBMODES, BANDS, MAIN_MODES, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
+import { ADIF_MODES_AND_SUBMODES, EXTENDED_BANDS, MAIN_MODES, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import { selectSettings, setSettings } from '../../../store/settings'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { H2kListItem, H2kListSection } from '../../../ui'
 
-export default function BandModeSettingsScreen ({ navigation }) {
+const ACCESSIBILITY_TEXT_FOR_BAND = {
+  '160m': '160 Meters',
+  '80m': '80 Meters',
+  '60m': '60 Meters',
+  '40m': '40 Meters',
+  '30m': '30 Meters',
+  '20m': '20 Meters',
+  '17m': '17 Meters',
+  '15m': '15 Meters',
+  '12m': '12 Meters',
+  '11m': '11 Meters',
+  '10m': '10 Meters',
+  '6m': '6 Meters',
+  '2m': '2 Meters',
+  '70cm': '70 Centimeters',
+  '23cm': '23 Centimeters',
+  '13cm': '13 Centimeters',
+  '9cm': '9 Centimeters',
+  '6cm': '6 Centimeters',
+  '3cm': '3 Centimeters',
+  '1.25cm': '1.25 Centimeters',
+  '6mm': '6 Millimeters',
+  '4mm': '4 Millimeters',
+  '2.5mm': '2.5 Millimeters',
+  '2mm': '2 Millimeters',
+  '1mm': '1 Millimeters',
+  submm: 'Submillimeter',
+  other: 'Other Band'
+}
+
+const ACCESSIBILITY_TEXT_FOR_MODE = {
+  SSB: 'Single Sideband',
+  USB: 'Upper Sideband',
+  LSB: 'Lower Sideband',
+  RTTY: 'Ritty',
+  CW: 'C.W.',
+  other: 'Other Mode'
+}
+
+export default function BandModeSettingsScreen ({ navigation, splitView }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const settings = useSelector(selectSettings)
 
@@ -31,8 +72,8 @@ export default function BandModeSettingsScreen ({ navigation }) {
       newBands = settings.bands.filter(item => item !== band)
     }
 
-    newBands = newBands.filter(b => BANDS.includes(b))
-    newBands.sort((a, b) => BANDS.indexOf(a) - BANDS.indexOf(b))
+    newBands = newBands.filter(b => EXTENDED_BANDS.includes(b))
+    newBands.sort((a, b) => EXTENDED_BANDS.indexOf(a) - EXTENDED_BANDS.indexOf(b))
     dispatch(setSettings({ bands: newBands }))
   }, [dispatch, settings?.bands])
 
@@ -64,7 +105,7 @@ export default function BandModeSettingsScreen ({ navigation }) {
 
   const bandOptions = useMemo(() => {
     if (moreBands || (settings.bands ?? []).find(band => !POPULAR_BANDS.includes(band))) {
-      return BANDS
+      return EXTENDED_BANDS
     } else {
       return POPULAR_BANDS
     }
@@ -96,36 +137,42 @@ export default function BandModeSettingsScreen ({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
-        <Ham2kListSection title={'Bands'}>
+      <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+        <H2kListSection title={t('screens.bandModeSettings.bands.title', 'Bands')}>
           {bandOptions.map((band) => (
-            <Ham2kListItem
+            <H2kListItem
               key={band}
-              title={band}
-              right={() => <Switch value={settings.bands.includes(band)} onValueChange={(value) => setBand(band, value)} />}
+              title={t(`screens.bandModeSettings.bands.names.${band.replace('.', '-')}`, band)}
+              accessibilityTitle={t(`screens.bandModeSettings.bands.names.${band.replace('.', '-')}-a11y`, ACCESSIBILITY_TEXT_FOR_BAND[band] || band)}
+              rightSwitchValue={settings.bands.includes(band)}
+              rightSwitchOnValueChange={(value) => setBand(band, value)}
               onPress={() => setBand(band, !settings.bands.includes(band))}
             />
           ))}
-          <Ham2kListItem
-            title={moreBands ? 'Show common bands' : 'Show all bands'}
+          <H2kListItem
+            title={moreBands ? t('screens.bandModeSettings.bands.showCommonBands', 'Show common bands') : t('screens.bandModeSettings.bands.showAllBands', 'Show all bands')}
             onPress={() => setMoreBands(!moreBands)}
           />
-        </Ham2kListSection>
+        </H2kListSection>
 
-        <Ham2kListSection title={'Modes'}>
+        <H2kListSection title={t('screens.bandModeSettings.modes.title', 'Modes')}>
           {modeOptions.map((mode) => (
-            <Ham2kListItem
+            <H2kListItem
               key={mode}
-              title={mode}
-              right={() => <Switch value={settings.modes.includes(mode)} onValueChange={(value) => setMode(mode, value)} />}
+              title={t(`screens.bandModeSettings.modes.names.${mode}`, mode)}
+              accessibilityTitle={t(`screens.bandModeSettings.modes.names.${mode}-a11y`, ACCESSIBILITY_TEXT_FOR_MODE[mode] || mode)}
+              rightSwitchValue={settings.modes.includes(mode)}
+              rightSwitchOnValueChange={(value) => setMode(mode, value)}
               onPress={() => setMode(mode, !settings.modes.includes(mode))}
             />
           ))}
-          <Ham2kListItem
-            title={{ 0: 'Show more modes', 1: 'Show even more modes', 2: 'Show fewer modes' }[moreModes] ?? 'Show more modes'}
+          <H2kListItem
+            title={{ 0: t('screens.bandModeSettings.modes.showMoreModes', 'Show more modes'), 1: t('screens.bandModeSettings.modes.showEvenMoreModes', 'Show even more modes'), 2: t('screens.bandModeSettings.modes.showFewerModes', 'Show fewer modes') }[moreModes] ?? t('screens.bandModeSettings.modes.showMoreModes', 'Show more modes')}
             onPress={() => setMoreModes(moreModes + 1 % 3)}
           />
-        </Ham2kListSection>
+        </H2kListSection>
+
+        <View style={{ height: safeAreaInsets.bottom }} />
       </ScrollView>
     </ScreenContainer>
   )

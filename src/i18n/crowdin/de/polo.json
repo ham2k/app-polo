@@ -1,0 +1,961 @@
+{
+  "screens": {
+    "start": {
+      "credits": "von KI2D und Freunden",
+      "Loading Extensions": "Erweiterungen laden",
+      "Development Build": "Portable Logger Entwicklungs-Build",
+      "messages": {
+        "Reticulating splines": "Splines vernetzen",
+        "Tuning the antenna": "Antenne abstimmen",
+        "Checking the tubes": "Röhren prüfen",
+        "Warming up the tubes": "Röhren vorwärmen",
+        "Unfolding the map": "Karte entfalten",
+        "Charging the flux capacitor": "Fluxkondensator aufladen",
+        "Purging the dilithium chamber": "Dilithium-Kammer reinigen",
+        "Activating the turbo encabulator": "Turbo-Encabulator aktivieren",
+        "Engaging the warp drive": "Warp-Antrieb einschalten"
+      }
+    },
+    "home": {
+      "title": "Portable Logger",
+      "newOperation": "Neuer Einsatz",
+      "newOperation-a11y": "Neuer Einsatz",
+      "operationList-a11y": "Liste der Einsätze",
+      "noOperations": "Kein Einsatz!",
+      "settings-a11y": "Einstellungen",
+      "quickCallLookupPlaceholder": "Rufzeichen nachschlagen…",
+      "spots-a11y": "Spots"
+    },
+    "operation": {
+      "title": "Einsatz"
+    },
+    "operationDetails": {
+      "title": "Einsatz-Details",
+      "operationTitle": "Titel",
+      "newOperation": "Neuer Einsatz",
+      "operationNotes": "Notizen",
+      "anythingYouWantToWriteAboutThisOperation": "Alles, was du über diesen Einsatz schreiben möchtest"
+    },
+    "operationStationInfo": {
+      "title": "Stations- & Operator-Info",
+      "invalidCallsign": "Ungültiges Rufzeichen: {{callsign}}",
+      "invalidCallsigns": "Ungültige Rufzeichen: {{callsigns}}",
+      "singleStationUsed-md": "`{{oldStation}}` wurde bisher verwendet.\n`{{newStation}}` wird für neue QSOs verwendet.",
+      "noStationUsed-md": "Bisher wurde kein Rufzeichen verwendet.\n`{{newStation}}` wird für neue QSOs verwendet.",
+      "updateStation-md_zero": "`{{newStation}}` bei null vorhandenen QSOs aktualisieren",
+      "updateStation-md_one": "`{{newStation}}` bei einem vorhandenen QSO aktualisieren",
+      "updateStation-md_other": "`{{newStation}}` bei {{count}} vorhandenen QSOs aktualisieren",
+      "multipleStationsUsed-md": "Diese Aktivität hat bereits QSOs mit mehreren Stationsrufzeichen: `{{stations}}`.\n\n`{{newStation}}` wird nur für neue QSOs verwendet.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` wurde bisher verwendet.\n`{{newOperator}}` wird für neue QSOs verwendet.",
+      "noOperatorUsed-md": "Bisher wurde kein Rufzeichen verwendet.\n`{{newOperator}}` wird für neue QSOs verwendet.",
+      "updateOperator-md": "Alle QSOs auf `{{newOperator}}` als Operator aktualisieren",
+      "multipleOperatorsUsed-md": "Diese Aktivität hat bereits QSOs mit mehreren Operator-Rufzeichen: `{{operators}}`.\n\n`{{newOperator}}` wird nur für neue QSOs verwendet.",
+      "whatIsTheCallsignUsedOnTheAir": "Welches Rufzeichen wird verwendet?",
+      "stationCallsign": "Stations-Rufzeichen",
+      "whoIsOperatingTheStation": "Wer betreibt die Station? (optional)",
+      "operatorCallsign": "Operator Rufzeichen",
+      "multiStationOperation": "Mehrfachstation Einsatz?",
+      "multiStationOperationYes": "Ja, wir sind eine von vielen!",
+      "multiStationOperationNo": "Nein, nur eine normale Station",
+      "identifierForThisStation": "Kennung für diese Station (nur Zahlen)"
+    },
+    "operationLocation": {
+      "title": "Einsatzort",
+      "selectedLocation": "Ausgewählter Ort",
+      "maidenheadGridSquareLocator": "Maidenhead Grid Square Locator",
+      "suggestedLocations": "Vorgeschlagene Orte",
+      "deviceGps": "Geräte-GPS",
+      "locating": "Ermittle Standort…",
+      "gpsError": "GPS-Fehler",
+      "noGps": "KEIN GPS",
+      "stateOrProvince": "Bundesland oder Provinz (optional)",
+      "county": "Landkreis (optional)"
+    },
+    "operationAddActivity": {
+      "title": "Aktivität hinzufügen",
+      "cantFindActivity": "Findest du nicht die gesuchte Aktivität?",
+      "thereAreMoreOptions": "Weitere Optionen unter Einstellungen > App-Funktionen"
+    },
+    "operationActivityOptions": {
+      "title": "Aktivitäts-Optionen",
+      "removeActivity": "Entfernen die Aktivität {{activity}} aus diesem Einsatz"
+    },
+    "operationData": {
+      "title": "Einsatzdaten",
+      "selectFromTheExportOptionsBelow": "Wählen aus den folgenden Exportoptionen",
+      "exportSingeFile": "Eine Datei exportieren",
+      "exportSelectedFiles_zero": "0 ausgewählte Dateien exportieren",
+      "exportSelectedFiles_one": "1 ausgewählte Datei exportieren",
+      "exportSelectedFiles_other": "{{count}} ausgewählte Dateien exportieren",
+      "exportAllFiles": "Alle Dateien exportieren",
+      "exportQSOs": "QSOs exportieren",
+      "pendingToDoItems_zero": "Keine ausstehenden Aufgaben",
+      "pendingToDoItems_one": "1 ausstehende Aufgabe",
+      "pendingToDoItems_other": "{{count}} ausstehende Aufgaben",
+      "importQSOs": "QSOs importieren",
+      "addQSOsFromADIFFile": "QSOs aus ADIF-Datei hinzufügen",
+      "ham2kLoFiSync": "Ham2K LoFi Sync",
+      "operation": "Funkbetrieb",
+      "exportSettings": "Export-Einstellungen",
+      "useCompactFileNames": "Verwende kompakte Dateinamen",
+      "wavelogExport": "Wavelog-Export",
+      "exportQSOsToWavelogDescription": "Alle QSOs dieser Operation an Wavelog senden",
+      "wavelogDialog": {
+        "title": "QSOs zu Wavelog exportieren",
+        "status": "Alle QSOs dieser Operation zu Wavelog exportieren.",
+        "exporting": "Exportiere zu Wavelog…"
+      },
+      "deleteOperationDialog": {
+        "title": "Funkbetrieb löschen?",
+        "description": "Bist du sicher, dass du diese Operation löschen möchtest?"
+      }
+    },
+    "callInfo": {
+      "title": "Rufzeichen Info",
+      "messages": {
+        "duplicate": "Duplikat",
+        "invalidBand": "Ungültiges Band",
+        "newBand": "Neues Band",
+        "newMode": "Neuer Modus",
+        "newRef": "Neue Referenz",
+        "newMult": "Neuer Multi",
+        "newDay": "Neuer Tag",
+        "maybeDupe": "Dupe?",
+        "partialDupe": "Dupe",
+        "potaActivation-newDay": "Neuer POTA-Tag",
+        "potaActivation-newRef": "Neuer Park",
+        "sotaActivation-newDay": "Neuer SOTA-Tag",
+        "sotaActivation-newRef": "Neuer Gipfel",
+        "sotaActivation-duplicate": "SOTA-Duplikat!",
+        "wwffActivation-duplicate": "WWFF-Duplikat!",
+        "wwbotaActivation-newDay": "Neuer WWBOTA-Tag",
+        "wwbotaActivation-newRef": "Neuer Bunker",
+        "motaActivation-newRef": "Neue Mühle"
+      },
+      "history": {
+        "last7days": "{{count}} in den letzten 7 Tagen",
+        "today": "{{count}} heute",
+        "yesterday": "{{count}} gestern",
+        "qsos_zero": "0 QSOs",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSOs"
+      },
+      "thisOpCount_zero": "0 QSOs bei diesem Einsatz",
+      "thisOpCount_one": "1 QSO bei diesem Einsatz",
+      "thisOpCount_other": "{{count}} QSOs in diesem Einsatz",
+      "otherOpsCount_zero": "0 QSOs in anderen Einsätzen",
+      "otherOpsCount_one": "1 QSO in anderen Einsätzen",
+      "otherOpsCount_other": "{{count}} QSOs in anderen Einsätzen",
+      "andMoreCount_zero": "… und {{count}} mehr",
+      "andMoreCount_one": "… und {{count}} mehr",
+      "andMoreCount_other": "… und {{count}} mehr",
+      "showImage": "Bild anzeigen",
+      "notes": "Notizen",
+      "potentialCall": "Mögliches Rufzeichen: {{call}}",
+      "withCall": "mit {{call}}"
+    },
+    "spots": {
+      "title": "Spots"
+    },
+    "editQSO": {
+      "title": "QSO bearbeiten",
+      "sections": {
+        "qso": "QSO-Details",
+        "their": "Deren Info",
+        "our": "Unsere Info",
+        "more": "Mehr"
+      },
+      "fields": {
+        "time": "Zeit",
+        "date": "Datum",
+        "freq": "Frequenz",
+        "mode": "Modus",
+        "band": "Band",
+        "power": "Leistung",
+        "call": "Stations-Rufzeichen",
+        "sent": "RST",
+        "exchange": "Austausch",
+        "name": "Name",
+        "city": "Stadt",
+        "state": "Bundesland/Provinz",
+        "county": "Landkreis",
+        "entity": "Einheit",
+        "cqZone": "CQ-Zone",
+        "ituZone": "ITU-Zone",
+        "arrlSection": "ARRL-Sektion",
+        "grid": "Raster",
+        "latitude": "Breitengrad",
+        "longitude": "Längengrad",
+        "notes": "Notizen"
+      }
+    },
+    "opInfo": {
+      "title": "Einsatz Info"
+    },
+    "settings": {
+      "title": "Einstellungen",
+      "sections": {
+        "settings": "Einstellungen",
+        "accounts": "Konten",
+        "about": "Über Ham2K",
+        "help": "Brauchst du Hilfe?"
+      },
+      "operatorCallsign": {
+        "title": "Operator Rufzeichen",
+        "noCall": "Kein Rufzeichen",
+        "dialogTitle": "Operator Rufzeichen",
+        "pleaseEnterCallsign": "Bitte ein Rufzeichen angeben!",
+        "callsignLabel": "Rufzeichen des Betreibers"
+      },
+      "generalSettings": {
+        "title": "Allgemeine Einstellungen",
+        "description": "Dunkler Modus, Zahlenreihe, Einheiten und mehr"
+      },
+      "loggingSettings": {
+        "title": "Logging Einstellungen",
+        "description": "Anpassung der Logging-Erfahrung"
+      },
+      "dataSettings": {
+        "title": "Daten-Einstellungen",
+        "description": "Dateien, Notizen zum Rufzeichen und mehr"
+      },
+      "syncSettings": {
+        "title": "Sync-Einstellungen",
+        "description": "Cloud-Sync und -Sicherung"
+      },
+      "appFeatures": {
+        "title": "App-Funktionen",
+        "description": "Funktionen wie POTA, SOTA, usw. verwalten"
+      },
+      "developerSettings": {
+        "title": "Entwicklereinstellungen",
+        "description": "Hier gibt's Drachen"
+      },
+      "accountsQRZ": {
+        "title": "QRZ (um Rufzeichen nachzuschlagen)",
+        "description": "Login: {{login}}",
+        "noAccount": "Kein Konto",
+        "errorEmail": "Verwende nicht deine E-Mail zum Einloggen.",
+        "dialogTitle": "QRZ.com-Konto",
+        "pleaseEnterDetails": "Bitte gebe die Details deines QRZ.com-Kontos ein:",
+        "loginLabel": "Login (Dein Rufzeichen)",
+        "loginPlaceholder": "Dein Login",
+        "passwordLabel": "Passwort",
+        "passwordPlaceholder": "Dein Passwort",
+        "checkCredentials": "Anmeldeinformationen prüfen"
+      },
+      "wavelogSettings": {
+        "title": "Wavelog-Einstellungen",
+        "description": "Wavelog-API-Verbindung konfigurieren"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} ist ein Unterstützer von Ham2K",
+        "couldBeASupporter": "{{callsign}} könnte ein Unterstützer von Ham2K sein"
+      },
+      "versionSettings": {
+        "description": "Letzte Änderungen anzeigen"
+      },
+      "creditsSettings": {
+        "title": "Credits",
+        "description": "Sebastián Delmont KI2D & Team PoLo"
+      },
+      "noticesSettings": {
+        "title": "Aktuelle Hinweise",
+        "description": "Nachrichten, die du vielleicht verpasst hast?"
+      },
+      "readTheFineManual": {
+        "title": "Lies das schöne Handbuch",
+        "description": "Durchsuche die Dokumentation von PoLo"
+      },
+      "ham2KForums": {
+        "title": "Ham2K Foren",
+        "description": "Hilfe finden, Feedback geben, Ideen diskutieren…"
+      },
+      "ham2KChat": {
+        "title": "Ham2K Chat",
+        "description": "Der Discord-Server für unsere Online-Community"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "Videos und Live-Streams"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagram",
+        "description": "Weil man nie genug Fotos haben kann…"
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "Folge uns für Neuigkeiten und Updates"
+      },
+      "contactUs": {
+        "title": "Kontaktiere uns",
+        "description": "help@ham2k.com\n   (aber versuche erst die Foren oder den Chat!)"
+      }
+    },
+    "generalSettings": {
+      "title": "Allgemeine Einstellungen",
+      "theme": {
+        "title": "Design",
+        "descriptionDark": "Immer im Dunkelmodus",
+        "descriptionLight": "Immer im Hellmodus",
+        "descriptionDevice": "Wie das Geräte-Theme",
+        "dialogTitle": "Design"
+      },
+      "fontScale": {
+        "title": "Schriftgröße",
+        "descriptionXS": "Kleinste",
+        "descriptionSM": "Kleiner",
+        "descriptionMD": "Normal",
+        "descriptionLG": "Größer",
+        "descriptionXL": "Größte",
+        "dialogTitle": "Schriftgröße",
+        "dialogDescription": "Diese Größen werden auch durch Geräteeinstellungen wie Anzeige und Barrierefreiheit beeinflusst."
+      },
+      "language": {
+        "title": "Sprache: {{lang}}",
+        "description": "Ändere die Sprache der App",
+        "dialogTitle": "Sprache",
+        "dialogDescription": "Sprache ändern",
+        "deviceDefault": "Geräteeinstellungen verwenden ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (Geräteeinstellungen) wird derzeit nicht unterstützt."
+      },
+      "showNumbersRow": {
+        "title": "Zahlenreihe anzeigen",
+        "descriptionOn": "Schnelltasten für Zahlen",
+        "descriptionOff": "Zahlenreihe nicht anzeigen"
+      },
+      "showExtraInNumbersRow": {
+        "title": "Punkt in der Zahlenreihe",
+        "descriptionOn": "Punkt (und Schrägstrich) einbeziehen",
+        "descriptionOff": "Nur die Zahlen anzeigen"
+      },
+      "showCommaInNumbersRow": {
+        "title": "Komma in der Zahlenreihe",
+        "descriptionOn": "Eine Kommataste einbeziehen",
+        "descriptionOff": "Keine Kommataste"
+      },
+      "vibrateNumbersRow": {
+        "title": "Vibration in der Zahlenreihe verwenden",
+        "descriptionOn": "Bei Drücken von Zahlen vibrieren",
+        "descriptionOff": "Beim Drücken von Zahlen nicht vibrieren"
+      },
+      "useMetricUnits": {
+        "title": "Metrische Einheiten verwenden",
+        "descriptionOn": "Meilen für Entfernungen verwenden",
+        "descriptionOff": "Kilometer für Entfernungen verwenden"
+      },
+      "keepDeviceAwake": {
+        "title": "Gerät wach halten",
+        "descriptionOn": "Sperrbildschirm des Gerätes verhindern",
+        "descriptionOff": "Reguläre Bildschirmsperre zulassen"
+      },
+      "useSplitViews": {
+        "title": "Geteilte Ansichten verwenden",
+        "descriptionOn": "Geteilte Ansichten verwenden, wenn der Bildschirm groß genug ist",
+        "descriptionOff": "Geteilte Ansichten nicht verwenden"
+      },
+      "useGrid8": {
+        "title": "Position mit hoher Genauigkeit",
+        "descriptionOn": "8-stellige Raster verwenden",
+        "descriptionOff": "6-stellige Raster verwenden"
+      },
+      "smartKeyboard": {
+        "title": "Smarte Tastaturfunktionen",
+        "descriptionOn": "Smarte Tastaturfunktionen aktivieren",
+        "descriptionOff": "Benutze einfachere Tastaturen aus Kompatibilitätsgründen mit einigen Geräten"
+      },
+      "exportSettings": {
+        "title": "Export-Einstellungen",
+        "description": "Dateinamen und andere Einstellungen anpassen"
+      },
+      "privacy": {
+        "title": "Datenschutz"
+      },
+      "shareAppUsageData": {
+        "title": "App-Nutzungsdaten teilen",
+        "descriptionOn": "Hilf uns, die App zu verbessern, indem du Nutzungs-, Absturz- und Leistungsdaten mitteilst",
+        "descriptionOff": "Halten die App-Nutzungsdaten privat.\nDas Ham2K-Team kann Abstürze oder andere Probleme nicht erkennen."
+      },
+      "shareOperationData": {
+        "title": "Einsatzdaten teilen",
+        "descriptionOn": "Teile einige Einsatzdaten öffentlich und mit anderen Nutzern",
+        "descriptionOff": "Einsatzdaten privat halten"
+      },
+      "privacyPolicy": {
+        "title": "Datenschutzerklärung",
+        "description": "Lese unsere Datenschutzerklärung"
+      },
+      "termsOfService": {
+        "title": "Nutzungsbedingungen",
+        "description": "Lesen Sie unsere Nutzungsbedingungen"
+      }
+    },
+    "loggingSettings": {
+      "title": "Logging Einstellungen",
+      "leftieMode": {
+        "title": "Linkshänder Modus",
+        "descriptionOn": "Layout für Linkshänder verwendern",
+        "descriptionOff": "Layout für Rechtshänder verwenden"
+      },
+      "countryFlags": {
+        "title": "Länderflaggen",
+        "descriptionNone": "Keine Flaggen anzeigen",
+        "descriptionAll": "Flaggen für alle Kontakte anzeigen",
+        "descriptionDefault": "Nur für DX-Kontakte anzeigen"
+      },
+      "showBearing": {
+        "title": "Peilung anzeigen",
+        "descriptionOn": "Geschätzte Peilung zur Station anzeigen",
+        "descriptionOff": "Keine Peilungsinformation anzeigen"
+      },
+      "switchSignalReportOrder": {
+        "title": "Rapport-Reihenfolge wechseln",
+        "descriptionOn": "Gesendet zuerst, Empfangen als zweites",
+        "descriptionOff": "Empfangen zuerst, Gesendet als zweites"
+      },
+      "jumpAfterRST": {
+        "title": "Zum nächsten Feld bei RST-Eingabe springen",
+        "descriptionOn": "Springe nach RST-Eingabe",
+        "descriptionOff": "Nicht automatisch springen"
+      },
+      "suggestDefaultOperator": {
+        "title": "Standard-Operator vorschlagen",
+        "descriptionOn": "Setze {{operatorCall}} als Operator in den Funkbetrieben, bei denen das Stationsrufzeichen unterschiedlich ist",
+        "descriptionOff": "Schlage keinen Standardoperator vor, unabhängig vom verwendeten Stationsrufzeichen"
+      },
+      "suggestTemplates": {
+        "title": "Vorlagen für Operationen verwenden",
+        "descriptionOn": "Vorlagen für neue Operationen vorschlagen",
+        "descriptionOff": "Keine Vorlagen vorschlagen"
+      },
+      "bandsModes": {
+        "title": "Bänder & Modi",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "Erweiterungen"
+      }
+    },
+    "featuresSettings": {
+      "title": "App-Funktionen",
+      "activatingExtension": "Erweiterung wird aktiviert, dies kann einen Moment dauern…",
+      "fewerOf": "Weniger {{category}}…",
+      "moreOf": "Mehr {{category}}…"
+    },
+    "dataSettings": {
+      "title": "Daten-Einstellungen",
+      "offlineDataTitle": "Offline-Daten",
+      "extensionsTitle": "Erweiterungen",
+      "logDataTitle": "Log Daten",
+      "importHistoryFromADIF": "Verlauf aus ADIF importieren",
+      "importHistoryFromADIFDescription": "Wird für Offline-Übersichten und QSO-Statistiken verwendet",
+      "clearADIFHistory": "ADIF-Verlauf löschen",
+      "clearADIFHistoryDescription": "Importierte ADIF-Datensätze entfernen",
+      "updatedRelative": "Aktualisiert {{date}}",
+      "fetching-md": "### Abrufen **{{title}}**…",
+      "progress-md": "### Abrufen **{{title}}**\n\n{{progress}}",
+      "updated-md": "Aktualisiert am {{date}}",
+      "version-md": "Version: {{version}}",
+      "confirmClearHistory": {
+        "title": "Bist du sicher?",
+        "description": "Dies wird alle zuvor aus ADIF-Dateien importierten historischen Daten entfernen",
+        "recordsNotDeleted": "Datensätze aus dem Betrieb werden nicht gelöscht"
+      },
+      "importingHistoricalADIF": "Importiere ADIF Datensätze… Bitte sei geduldig!",
+      "errorImportingHistoricalADIF": "Fehler beim Importieren historischer ADIF-Daten",
+      "errorDeletingHistoricalRecords": "Fehler beim Löschen historischer Einträge",
+      "recordsCount_zero": "Keine Aufzeichnungen",
+      "recordsCount_one": "1 Eintrag",
+      "recordsCount_other": "{{fmtCount}} Einträge"
+    },
+    "syncSettings": {
+      "title": "Sync-Einstellungen",
+      "description": "Ham2K LoFi bietet einen zuverlässigen Synchronisierungsdienst zwischen all deinen Geräten und bietet eine Sicherung der Funkbetriebs-Daten in der Cloud.",
+      "syncService": "Sync-Dienst",
+      "syncService.enabled": "Aktiviert",
+      "syncService.disabled": "Deaktiviert",
+      "deviceNotLinked": "Gerät nicht verknüpft! ({{id}})",
+      "anonymousAccount": "Anonymes Konto (#{{id}})",
+      "enableSyncToLinkDevice": "Synchronisieren einschalten, um dieses Gerät zu verknüpfen",
+      "checkEmailInboxForConfirmation": "(überprüfen deinen E-Mail-Posteingang auf Bestätigung)",
+      "accountNumber": "Konto #{{id}}",
+      "pendingEmailConfirmation": "(E-Mail-Bestätigung ausstehend)",
+      "tapToConfigure": "Tippe, um zu konfigurieren",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (Entwicklung)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (Offiziell)",
+        "custom": "Benutzerdefiniert ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "Dieses Gerät wurde zuletzt mit einem anderen Konto (#{{id}}) synchronisiert.\n\nUm weiter zu synchronisieren, musst du zwischen den folgenden Optionen entscheiden:",
+        "option1withEmail-md": "Option #1: Ersetze die Daten auf diesem Gerät mit den Daten des **{{email}}** Accounts auf dem Server.",
+        "option1noEmail-md": "Option #1: Daten auf diesem Gerät durch die Daten vom neuen Konto auf dem Server ersetzen.",
+        "option1button": "Entscheiden dich für #1: Mit Serverdaten ersetzen",
+        "option2withEmail-md": "Option #2: Führe die Daten auf diesem Gerät mit denen des Kontos **{{email}}** auf dem Server zusammen.",
+        "option2noEmail-md": "Option #2: Daten auf diesem Gerät mit denen vom neuen Konto auf dem Server kombinieren.",
+        "option2button": "Entscheiden dich für #2: Daten kombinieren",
+        "option3-md": "Option #3: Mit dem vorherigen Konto **{{email}}** verknüpfen.",
+        "option3button": "Entscheiden dich für #3: Vorheriges Konto",
+        "buttonCancel": "Nein, Abbrechen",
+        "buttonProcees": "Ja, ich gehe das Risiko ein! Alles ersetzen!"
+      },
+      "combineDataAlert": {
+        "title": "Lokale Daten kombinieren?",
+        "text": "Bist du sicher, dass du diese Vorgänge und QSOs mit dem neuen Konto kombinieren möchtest?\n\nDies wird die QSOs auf diesem Gerät mit dem synchronisierten Dienst für das neue Konto kombinieren und kann versehentlich in der Vermischung nicht zusammengehöriger Logs resultieren!\n\nDiese Aktion kann nicht rückgängig gemacht werden.",
+        "buttonCancel": "Nein, Abbrechen",
+        "buttonProcees": "Ja, ich gehe das Risiko ein! Kombinieren!"
+      },
+      "replaceDataAlert": {
+        "title": "Lokale Daten ersetzen?",
+        "text": "Bist du sicher, dass alle Daten auf diesem Gerät mit den Operationen und QSOs für das neue Konto vom Synchronisierungsdienst ersetzen möchtest?\n\nDie App wird neu starten.\n\nFall du nicht synchronisierte Daten hast, WERDEN SIE VERLOREN GEHEN.",
+        "buttonCancel": "Nein, Abbrechen",
+        "buttonProcees": "Ja, ich gehe das Risiko ein! Alles ersetzen!"
+      },
+      "linkBackErrorAlert": {
+        "title": "Fehler beim Verknüpfen zum vorherigen Konto",
+        "text": "Ein Fehler trat auf beim Verknüpfen mit dem vorherigen Konto\n\n{{error}}\n\nBitte versuche es später erneut.",
+        "buttonCancel": "OK"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi-Konto",
+        "emailAddressLabel": "E-Mail-Adresse",
+        "resendButton": "Erneut senden",
+        "revertButton": "Rückgängig machen",
+        "syncFirstButton": "Gehen Sie zurück und synchronisieren Sie zuerst!",
+        "continueAnywayButton": "Ich weiß, was ich tue! Trotzdem fortfahren",
+        "potentialForDataLoss": "Potenzial für Datenverlust!!!",
+        "potentialForDataLossDescription": "Sie haben nicht alle Daten auf diesem Gerät synchronisiert.\n\nWenn Sie dieses Gerät mit einem neuen Konto verknüpfen, werden Sie gefragt, ob Sie dessen Daten durch die des neuen Kontos ersetzen möchten.\n\nFalls dies der Fall ist, können Sie möglicherweise keine bereits vorhandenen Aktivitäten wiederherstellen, die noch nicht synchronisiert wurden.\n\nWir empfehlen Ihnen, dieses Gerät zuerst vollständig zu synchronisieren!"
+      },
+      "syncServiceDescription-md": "Grunddienst ist kostenlos und erlaubt es, aktuelle Daten (bis zu 7 Tage) zwischen zwei Geräten oder Anwendungen mit begrenzter Geschwindigkeit zu synchronisieren.\n\nVollständiger Dienst benötigt ein bezahltes Abonnement und umfasst die Synchronisation all deiner Funkbetriebe zwischen einer angemessenen Anzahl von Geräten oder Anwendungen bei voller Geschwindigkeit.\n\nWährend der LoFi Dienst in seiner TESTPHASE für die nächsten Monate ist, bleibt der Dienst kostenlos. Danach hängen die Preise vom Land und der Währung ab, sollten aber nicht mehr als 30 $/Jahr oder Äquivalent sein, wahrscheinlich weniger.",
+      "thisDevice": "Dieses Gerät",
+      "notAuthenticated": "Nicht authentifiziert",
+      "lofiServer": "LoFi-Server",
+      "otherDevices": "Andere Geräte",
+      "devSettings": "Entwickler-Einstellungen",
+      "resetSyncStatus": "Synchronisationsstatus zurücksetzen",
+      "noDataStored": "Keine Daten gespeichert",
+      "syncCountDescription": {
+        "operations": "Betrieb: {{synced}} synchronisiert, {{pending}} ausstehend",
+        "qsos": "QSOs: {{synced}} synchronisiert, {{pending}} ausstehend"
+      },
+      "cloudCountDescription": {
+        "operations": "Funkbetrieb: {{total}} gesamt",
+        "operationsSyncable": "Funkbetrieb: {{total}} gespeichert, {{syncable}} synchronisierbar",
+        "qsos": "QSOs: {{total}} gespeichert",
+        "qsosSyncable": "QSOs: {{total}} gespeichert, {{syncable}} synchronisierbar"
+      }
+    },
+    "versionSettings": {
+      "title": "Versionsinfo",
+      "recentChanges": "Letzte Änderungen",
+      "coverPhoto": "Titelbild: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "Suche nach Patches…",
+      "newMajorReleaseAvailable": "Neue Hauptversion verfügbar",
+      "patchAvailable": "Patch für {{track}} verfügbar",
+      "checkForUpdates": "Suche nach {{track}}-Updates",
+      "checkForUpdatesGeneric": "Suche nach Updates",
+      "updateAvailable": "Update verfügbar",
+      "downloading": "Lade herunter…",
+      "downloadingProgress": "Herunterladen {{progress}}%",
+      "installing": "Installiere…",
+      "errorDownloadingUpdate": "Fehler beim Herunterladen des Updates",
+      "errorCheckingForUpdates": "Fehler beim Prüfen auf Updates",
+      "noUpdatesAvailable": "Keine Updates verfügbar",
+      "versionDescription": "{{version}} - Basis-Build {{build}}"
+    },
+    "creditsSettings": {
+      "title": "Danksagungen",
+      "createdBy": "Erstellt von {{callsign}}",
+      "openSource": "Ham2K PoLo ist Open Source",
+      "checkOutCode": "Schau dir den Quellcode auf GitHub an und trage bei!",
+      "teamPoLo": "Team PoLo",
+      "creator": "Urheber & Hauptentwickler",
+      "developer": "Entwickler",
+      "leadSupport": "Leiter Support & Dokumentation",
+      "moreCodeAndDocsContributors": "Weitere Mitwirkende…",
+      "contributorCode": "Code-Mitwirkende: {{contributions}}",
+      "contributorDocumentation": "Dokumentation",
+      "translations": "Übersetzungen",
+      "translationsService": "Übersetzungstools von CrowdIn",
+      "translationsServiceDescription": "Werkzeuge zur Verwaltung des Übersetzungsprozesses werden großzügig von CrowdIn gespendet."
+    },
+    "devModeSettings": {
+      "title": "Entwickler-Einstellungen",
+      "wipeDatabase": {
+        "title": "Datenbank löschen?",
+        "description": "Bist du sicher, dass du alle Funkbetriebe, QSOs und anderen Daten löschen möchtest?",
+        "noCancel": "Nein, Abbrechen",
+        "yesWipeIt": "Ja, Löschen!"
+      },
+      "import": {
+        "title": "Import",
+        "importQSONFile": "QSON-Datei importieren"
+      },
+      "experiments": {
+        "title": "Experimente",
+        "enableWavelogExperiments": "Wavelog-Experimente aktivieren"
+      },
+      "manageDatabase": {
+        "title": "Datenbank verwalten",
+        "exportDatabase": "Datenbank exportieren",
+        "exportDatabaseDescription": "Die aktuelle Datenbankdatei exportieren",
+        "replaceDatabase": "Datenbank ersetzen",
+        "replaceDatabaseDescription": "Eine neue Datenbankdatei importieren und alle Daten ersetzen",
+        "wipeDatabase": "Datenbank löschen",
+        "wipeDatabaseDescription": "Alle Daten in der Datenbank löschen."
+      },
+      "internationalization": {
+        "title": "Internationalisierung",
+        "crowdInPersonalTokenLabel": "CrowdIn-Personal-Access-Token",
+        "crowdInPersonalTokenPlaceholder": "Einen Token aus den Konto-Einstellungen von CrowdIn erhalten",
+        "refreshCrowdInTranslations": {
+          "title": "Übersetzungen aktualisieren…",
+          "starting": "Bitte warte, während wir die Übersetzungen aktualisieren…",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "Aktualisierung abgeschlossen!",
+          "errorTitle": "Fehler beim Aktualisieren der Übersetzungen",
+          "error": "Fehler beim Aktualisieren der CrowdIn-Übersetzungen: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "Erweiterte Einstellungen herunterladen",
+        "locationLabel": "Standort",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "Systeminformationen",
+        "shareWithDevelopmentTeam": "Mit dem Entwicklungsteam teilen"
+      },
+      "updatePatches": {
+        "title": "Patches aktualisieren",
+        "selectTrackForPatches": "Zweig für Patches auswählen",
+        "selectTrackForPatchesDescription": "Wähle den Zweig für Patches",
+        "checkingForUpdates": "Überprüfe auf Updates…",
+        "checkForUpdates": "Suche nach {{track}} Updates",
+        "updateAvailable": "Update verfügbar",
+        "updateAvailableForTrack": "{{track}} Update verfügbar",
+        "downloading": "Lade herunter…",
+        "downloadingProgress": "Herunterladen {{progress}}%",
+        "installing": "Installiere…",
+        "errorDownloadingUpdate": "Fehler beim Herunterladen des Updates",
+        "errorCheckingForUpdates": "Fehler bei der Suche nach Updates",
+        "noUpdatesAvailable": "Keine Updates verfügbar"
+      }
+    },
+    "bandModeSettings": {
+      "title": "Bänder & Modi",
+      "bands": {
+        "title": "Bänder",
+        "showCommonBands": "Gemeinsame Bänder anzeigen",
+        "showAllBands": "Alle Bänder anzeigen",
+        "names": {
+          "160m-a11y": "160 Meter",
+          "80m-a11y": "80 Meter",
+          "60m-a11y": "60 Meter",
+          "40m-a11y": "40 Meter",
+          "30m-a11y": "30 Meter",
+          "20m-a11y": "20 Meter",
+          "17m-a11y": "17 Meter",
+          "15m-a11y": "15 Meter",
+          "12m-a11y": "12 Meter",
+          "11m-a11y": "11 Meter",
+          "10m-a11y": "10 Meter",
+          "6m-a11y": "6 Meter",
+          "2m-a11y": "2 Meter",
+          "70cm-a11y": "70 Zentimeter",
+          "23cm-a11y": "23 Zentimeter",
+          "13cm-a11y": "13 Zentimeter",
+          "9cm-a11y": "9 Zentimeter",
+          "6cm-a11y": "6 Zentimeter",
+          "3cm-a11y": "3 Zentimeter",
+          "1-25cm-a11y": "1,25 Zentimeter",
+          "6mm-a11y": "6 Millimeter",
+          "4mm-a11y": "4 Millimeter",
+          "2-5mm-a11y": "2,5 Millimeter",
+          "2mm-a11y": "2 Millimeter",
+          "1mm-a11y": "1 Millimeter",
+          "submm-a11y": "Submillimeter",
+          "other": "Andere",
+          "other-a11y": "Anderes Band"
+        }
+      },
+      "modes": {
+        "title": "Modi",
+        "showMoreModes": "Mehr Modi anzeigen",
+        "showEvenMoreModes": "Noch mehr Modi anzeigen",
+        "showFewerModes": "Weniger Modi anzeigen",
+        "names": {
+          "SSB-a11y": "Einseitenband",
+          "USB-a11y": "Oberes Seitenband",
+          "LSB-a11y": "Unteres Seitenband",
+          "RTTY-a11y": "Ritty",
+          "CW-a11y": "C.W.",
+          "other": "Andere",
+          "other-a11y": "Andere Modi"
+        }
+      }
+    },
+    "exportSettings": {
+      "title": "Einstellungen exportieren",
+      "exportTypes": "Export-Arten",
+      "customTemplates": "Eigene Vorlagen",
+      "defaultTemplates": "Standard-Vorlagen",
+      "customTemplatesDescription": "Eigene Vorlagen für den Export verwenden",
+      "defaultTemplatesDescription": "Standardvorlagen für den Export verwenden",
+      "includePrivateData": "Private Daten einbeziehen",
+      "fileNameTemplate": "Dateiname-Vorlage",
+      "titleTemplate": "Titel-Vorlage",
+      "adifNotes": "ADIF QSO Notizen",
+      "adifComments": "ADIF QSO Kommentare",
+      "adifQslMessage": "ADIF QSL Nachricht",
+      "templateHelpTitle": "Vorlagen-Hilfe",
+      "includePrivateDataDescription": "Namen, Notizen, Adressen, usw.",
+      "templateHelp-md": "Einige Beispielvorlagen-Elemente...\n\n### Log-Export\nAttribute für das zu exportierende Log\n`{{log.station}}` → `{{call}}` Station für diesen Export\n`{{log.ref}}` → `XX-1234` Referenz für diesen Export\n`{{log.refName}}` → `Beispiel-Nationalpark` Referenzname für diesen Export\n`{{log.refShortName}}` → `Beispiel-NP` Kurzer Referenzname für diesen Export\n`{{log.handlerType}}` → `pota` Handler-Typ für diesen Export\n`{{log.handlerName}}` → `Parks On The Air` Handler-Name für diesen Export\n`{{log.handlerShortName}}` → `POTA` Kurzer Handler-Name für diesen Export\n\n### Betriebsrufzeichen\n`{{op.station}}` → `{{call}}` Erste Station für den Betrieb\n`{{op.operator}}` → `{{call}}` Betreiber für den Betrieb\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alle Stationen für den Betrieb\n`{{op.otherStations}}` → `{{otherCalls}}` Andere Stationen für den Betrieb\n\n### Betriebsdatum\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Weitere Betriebsdetails\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Meine Spezialoperation`\n`{{op.userNotes}}` → `Früh am Morgen gegangen…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Raster für diesen Betrieb\n\n### QSO-Informationen\n`{{qso.notes}}` → `Schrecklicher Ton!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Der Signalreport, den du gesendet hast\n`{{qso.our.sent}}` → `55` Der Signalreport, den wir gesendet haben\n`{{qso.their.grid}}` → `FF99` Das Raster, das du gemeldet hast\n`{{qso.refs}}` → Eine Liste aller Referenzen für das QSO (inklusive Betriebs- und QSO-spezifische Referenzen)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "Standardwerte",
+        "description": "Grundeinstellungen für alle Exporte",
+        "fileNameNormal": "Dateiname für Referenzaktivitäten (Normal)",
+        "fileNameCompact": "Dateiname für Referenzaktivitäten (Kompakt)",
+        "titleReferenceActivities": "Titel für Referenzaktivitäten",
+        "fileNameOtherActivitiesNormal": "Dateiname für andere Aktivitäten (Normal)",
+        "fileNameOtherActivitiesCompact": "Dateiname für andere Aktivitäten (Kompakt)",
+        "titleOtherActivities": "Titel für andere Aktivitäten",
+        "adifNotes": "ADIF QSO Notizen",
+        "adifComments": "ADIF QSO Kommentare",
+        "adifQSLMessage": "ADIF QSL Nachricht"
+      }
+    },
+    "noticesSettings": {
+      "title": "Neueste Hinweise",
+      "undated": "Undatiert",
+      "noRecentNotices": "Keine aktuellen Hinweise"
+    },
+    "extensionSettings": {
+      "title": "Erweiterung"
+    },
+    "wavelogSettings": {
+      "title": "Wavelog Einstellungen",
+      "noStationsFoundOrInvalidResponse": "Keine Stationen gefunden oder ungültige Antwort",
+      "errorFetchingStations": "Fehler beim Abrufen von Stationen: {{message}}",
+      "fetchStations": "Stationen abrufen",
+      "selectStation": "Station auswählen",
+      "selectedStation": "Ausgewählte Station: {{station}}"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Fenstertrennzeichen",
+      "qsosTab": "QSOs",
+      "qsosTab-a11y": "Q S Os Tab",
+      "infoTab": "Info",
+      "infoTab-a11y": "Info-Tab",
+      "operationInfo-a11y": "Funkbetrieb Info",
+      "spotsTab": "Spots",
+      "spotsTab-a11y": "Spots-Tab",
+      "mapTab": "Karte",
+      "mapTab-a11y": "Karten-Tab",
+      "settingsTab": "Betrieb",
+      "settingsCompactTab": "Betr.",
+      "settingsTab-a11y": "Funkbetriebseinstellungen-Tab",
+      "menu": {
+        "loggingSettings": "Logging-Einstellungen",
+        "rstFields": "RST-Felder",
+        "stateField": "Bundesstaaten-Feld",
+        "gridField": "Gitterfeld",
+        "showDeletedQSOs": "Gelöschte QSOs anzeigen",
+        "numbersRow": "Zahlenreihe",
+        "actions": "Aktionen",
+        "lookupAllQSOs": "Alle QSOs nachschlagen",
+        "confirmSpots": "Spots bestätigen"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "Keine QSOs",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSOs",
+      "qsosCompactTabCount_zero": "0 Qs",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} Qs",
+      "noQSOsYet": "Noch keine QSOs!",
+      "currentlySetTo": "Derzeit eingestellt auf",
+      "missingInfoError": {
+        "message": "FEHLER: Bitte gib **{{errors}}** für eine gültige Operation ein",
+        "errors": {
+          "band": "Band",
+          "callsign": "Rufzeichen"
+        }
+      },
+      "actions": {
+        "undo-a11y": "Rückgängig",
+        "erase-a11y": "Löschen",
+        "delete-a11y": "Entfernen",
+        "addQSO-a11y": "QSO hinzufügen",
+        "saveQSO-a11y": "QSO speichern"
+      },
+      "deletedQSO": "Gelöschtes QSO",
+      "qsoWillBeDeleted": "QSO wird gelöscht!",
+      "noQSOsBy-md": "Noch keine QSOs von {{callsign}}… Lass uns loslegen!",
+      "noQSOsYet-md": "Noch keine QSOs… Lass uns loslegen!",
+      "qsoCount_zero": "Keine QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "qsosInTime": "{{countText}} in {{timeText}}",
+      "last10QSOs": "{{rate}} Q/h für die letzten 10",
+      "last100QSOs": "{{rate}} Q/h für die letzten 100",
+      "timeSinceLast": "{{time}} seit dem letzten Mal",
+      "moreLabel": "Mehr",
+      "theirCallLabel": "Dein Rufzeichen",
+      "ourSentLabel": "Gesendet",
+      "theirSentLabel": "Rcvd",
+      "stateLabel": "Staat",
+      "gridLabel": "Raster",
+      "timeLabel": "Zeit",
+      "dateLabel": "Datum",
+      "timeControls-a11y": "Zeitsteuerungen",
+      "powerLabel": "Leistung",
+      "powerControls-a11y": "Leistungssteuerungen",
+      "modeLabel": "Modus",
+      "bandLabel": "Band",
+      "frequencyLabel": "Frequenz",
+      "bandMissing": "Band???",
+      "radioControls-a11y": "Funkgerät-Steuerungen {{parts}}",
+      "notesLabel": "Notizen",
+      "notesLabel-a11y": "Notizen",
+      "activeControlsLabel": "Aktive Steuerungen",
+      "activeControlsLabel-a11y": "Aktive Steuerungen",
+      "selectToRemoveActiveControls": "zum Entfernen auswählen",
+      "selectToRemoveActiveControls-a11y": "zum Entfernen auswählen",
+      "moreControlsLabel": "Weitere Steuerungen",
+      "moreControlsLabel-a11y": "Weitere Steuerungen",
+      "selectToAddMoreControls": "zum Hinzufügen auswählen",
+      "selectToAddMoreControls-a11y": "zum Hinzufügen auswählen",
+      "showSecondaryControlSettings-a11y": "Sekundäre Steuerungseinstellungen anzeigen",
+      "hideMostSecondaryControls-a11y": "Die meisten sekundären Steuerungen ausblenden",
+      "showAllSecondaryControls-a11y": "Alle sekundären Steuerungen anzeigen",
+      "spotting": {
+        "selfSpottingAt": "Selbst-Spot auf {{freq}}",
+        "stopAutoRespotting": "Automatischen erneuten Spot stoppen",
+        "setFrequencyFirst": "Zuerst eine Frequenz zum Spotten einstellen.",
+        "reSpotEvery": "Alle {{minutes}} Minuten erneuter Spot",
+        "reSpotAt": "Erneuter Spot auf {{freq}}",
+        "selfSpottedAt": "Selbst-Spot um {{time}}",
+        "spotAt": "Spot {{call}} auf {{freq}}",
+        "tooLateToSpot": "Zu spät um Spot auf {{call}} zu melden",
+        "nothingToSpot": "Kein Spot zu melden",
+        "selfSpottingLabel": "Selbst-Spot",
+        "selfSpottingControls-a11y": "Selbst-Spot Steuerungen",
+        "spottingLabel": "Spot",
+        "spottingControls-a11y": "Spot Steuerungen",
+        "autoRespottingLabel": "Automatischer erneuter Spot",
+        "autoRespottingControls-a11y": "Steuerung für automatischen erneuten Spot",
+        "commentsLabel": "Kommentare"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "Keine Linien?\nDu musst zuerst deine Position festlegen.\n\nTippe hier, um dies zu tun.",
+      "manyNoLocation": "Viele dieser QSOs haben keinen genauen Standort.\n\nVielleicht benötigst du ein kostenpflichtiges QRZ.com-Konto für Standortanfragen."
+    },
+    "opSpotsTab": {
+      "noSpots": "Keine Spots",
+      "spotsCount_zero": "Keine Spots",
+      "spotsCount_one": "1 Spot",
+      "spotsCount_other": "{{fmtCount}} Spots",
+      "showingSpots": "Es werden {{count}} von {{total}} angezeigt",
+      "loadingSpots": "Lade Spots…",
+      "sections": {
+        "specialSpots": "Spezielle Spots",
+        "newMultipliers": "Neue Multiplikatoren",
+        "callsOfNote": "Besonders erwähnenswerte Anrufe",
+        "mostRecentSpots": "Neueste Spots"
+      },
+      "allBands": "Alle Bänder",
+      "auto": "Auto",
+      "allModes": "Alle Modi",
+      "filters": "Filter",
+      "filtersBand": "Band",
+      "filtersAllBands": "Alle Bänder",
+      "filtersBandAutomatic": "Automatisch (Derzeit {{band}})",
+      "filtersMode": "Modus",
+      "filtersAllModes": "Alle Modi",
+      "filtersModeAutomatic": "Automatisch (Derzeit {{mode}})",
+      "filtersMaximumAge": "Maximales Alter",
+      "filtersAnyAge": "Jedes Alter",
+      "filtersAge10Minutes": "10 Minuten",
+      "filtersAge20Minutes": "20 Minuten",
+      "filtersAge30Minutes": "30 Minuten",
+      "filtersAge45Minutes": "45 Minuten",
+      "filtersAge60Minutes": "60 Minuten",
+      "filtersSorting": "Sortierung",
+      "filtersSortByTime": "Nach Spot-Zeitpunkt",
+      "filtersSortByFrequency": "Nach Frequenz",
+      "filtersGroupSpecialSpots": "Besondere Spots zuerst gruppieren",
+      "filtersGroupCallsWithNotes": "Rufzeichen mit Notizen gruppieren",
+      "filtersSpotSources": "Spot-Quellen",
+      "filtersFilterByContinent": "Nach Kontinent filtern",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "Phone",
+        "DIGITAL": "Digital",
+        "DATA": "Digital",
+        "phoneOrCW": "Phone oder CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "Ungültiges Rufzeichen {{callsign}}",
+      "invalidCallsigns": "Ungültige Rufzeichen {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (betrieben von {{operator}})",
+      "noStationCallsignDefined": "KEIN STATIONSRUFKENNZEICHEN DEFINIERT",
+      "showMoreTemplates": "Weitere Vorlagen anzeigen",
+      "templatesAvailable_zero": "Keine Vorlagen verfügbar",
+      "templatesAvailable_one": "1 Vorlage verfügbar",
+      "templatesAvailable_other": "{{count}} Vorlagen verfügbar",
+      "stationAndOperatorTitle": "Station & Operator",
+      "locationTitle": "Standort",
+      "gridDescription-md": "Raster `{{grid}}`",
+      "stateDescription-md": "Staat: `{{state}}`",
+      "countyDescription-md": "Landkreis: `{{county}}`",
+      "locationDescriptionNone-md": "Kein Standort gesetzt",
+      "operationDetailsTitle": "Funkbetrieb-Details",
+      "operationDetailsDescription": "Notizen für diesen Betrieb hinzufügen",
+      "addTitleOrNotesForOperation": "Einen Titel oder Notizen für diesen Betrieb hinzufügen",
+      "activitiesTitle": "Aktivitäten",
+      "addActivityTitle": "Aktivität hinzufügen",
+      "addActivityDescription": "POTA, SOTA, Field Day und mehr!",
+      "addActivityDescription-noFeatures": "Schalte zuerst einige Aktivitätsfunktionen auf dem Haupteinstellungsbildschirm ein",
+      "operationDataTitle": "Betriebsdaten",
+      "manageOperationLogsTitle": "Betriebs-Logs verwalten",
+      "manageOperationLogsDescription": "Daten exportieren, importieren und verwalten",
+      "useAsTemplateTitle": "Als Vorlage verwenden",
+      "useAsTemplateDescription": "Einen neuen Betrieb mit ähnlichen Einstellungen starten",
+      "dangerZoneTitle": "Gefahrenzone",
+      "undeleteOperationTitle": "Betrieb wiederherstellen",
+      "deleteOperationTitle": "Betrieb löschen"
+    },
+    "opInfoPanel": {
+      "statsTitle": "Betriebsstatistik",
+      "operationTotalsTitle-md": "Betriebssummen:",
+      "qsosInTime_zero": "Keine QSOs",
+      "qsosInTime_one": "1 QSO in {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSOs in {{time}}",
+      "qsoCount_zero": "Keine QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "timeSinceLast": "{{time}} seit letztem QSO",
+      "last10QSOs": "{{rate}} Q/h für die letzten 10",
+      "last100QSOs": "{{rate}} Q/h für die letzten 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Fehler beim Importieren von QSON",
+      "invalidName": "Ungültiger Name",
+      "invalidNameDescription": "Der Dateiname muss mit .qson oder .json enden",
+      "unknownError": "Unbekannter Fehler"
+    },
+    "importADIF": {
+      "error": "Fehler beim Importieren von ADIF in den Betrieb",
+      "historicalImportError": "Fehler beim Importieren historischer ADIF-Daten",
+      "unknownError": "Unbekannter Fehler"
+    }
+  }
+}

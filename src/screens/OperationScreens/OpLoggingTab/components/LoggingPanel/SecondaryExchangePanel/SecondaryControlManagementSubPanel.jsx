@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,17 +8,21 @@
 import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { Icon, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
+import { useTranslation } from 'react-i18next'
 
 import LoggerChip from '../../../../components/LoggerChip'
-import { stringOrFunction } from '../../../../../../tools/stringOrFunction'
+import { valueOrFunction } from '../../../../../../tools/valueOrFunction'
 import { setOperationLocalData } from '../../../../../../store/operations'
 import { setSettings } from '../../../../../../store/settings'
+import { H2kIcon } from '../../../../../../ui'
 
 export const SecondaryControlManagementSubPanel = ({
   qso, operation, vfo, settings, styles, themeColor, currentSecondaryControl, setCurrentSecondaryControl,
   allControls, enabledControls, moreControls, secondaryControlSettings
 }) => {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const toggleSecondaryControlSettings = useCallback((key) => {
@@ -36,8 +40,8 @@ export const SecondaryControlManagementSubPanel = ({
     <>
       <View style={styles.secondaryControls.headingContainer}>
         <Text style={styles.secondaryControls.headingText}>
-          <Text style={[styles.secondaryControls.headingText, { fontWeight: 'bold' }]}>More Controls</Text>
-          {' '}— select to add them
+          <Text style={[styles.secondaryControls.headingText, { fontWeight: 'bold' }]}>{t('screens.opLoggingTab.moreControlsLabel', 'More Controls')}</Text>
+          {' '}— {t('screens.opLoggingTab.selectToAddMoreControls', 'select to add them')}
         </Text>
       </View>
 
@@ -55,7 +59,8 @@ export const SecondaryControlManagementSubPanel = ({
           <View key={control.key} style={{ flex: 0, flexDirection: 'column' }}>
             {control.LabelComponent ? (
               <control.LabelComponent
-                qso={qso} operation={operation} vfo={vfo} settings={settings}
+                t={t}
+                qso={qso} operation={operation} vfo={vfo} settings={settings} control={control}
                 icon={control.icon}
                 accessibilityLabel={control.accessibilityLabel}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
@@ -72,7 +77,7 @@ export const SecondaryControlManagementSubPanel = ({
                 selected={false}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               >
-                {control.label ? stringOrFunction(control.label, { operation, vfo, qso, settings }) : control.key}
+                {control.label ? valueOrFunction(control.label, { t, operation, vfo, qso, settings }) : control.key}
               </LoggerChip>
             )}
           </View>
@@ -81,8 +86,8 @@ export const SecondaryControlManagementSubPanel = ({
 
       <View style={[styles.secondaryControls.headingContainer, { paddingHorizontal: styles.oneSpace, paddingVertical: styles.halfSpace }]}>
         <Text style={styles.secondaryControls.headingText}>
-          <Text style={[styles.secondaryControls.headingText, { fontWeight: 'bold' }]}>Active Controls</Text>
-          {' '}— select to remove them
+          <Text style={[styles.secondaryControls.headingText, { fontWeight: 'bold' }]}>{t('screens.opLoggingTab.activeControlsLabel', 'Active Controls')}</Text>
+          {' '}— {t('screens.opLoggingTab.selectToRemoveActiveControls', 'select to remove them')}
         </Text>
       </View>
 
@@ -100,12 +105,13 @@ export const SecondaryControlManagementSubPanel = ({
           <View key={control.key} style={{ flex: 0, flexDirection: 'column' }}>
             {control.LabelComponent ? (
               <control.LabelComponent
-                qso={qso} operation={operation} vfo={vfo} settings={settings}
+                t={t}
+                qso={qso} operation={operation} vfo={vfo} settings={settings} control={control}
                 icon={control.icon}
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={false}
                 disabled={control.optionType === 'mandatory'}
-                accessibilityLabel={control.accessibilityLabel}
+                accessibilityLabel={control.accessibilityLabel ? valueOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               />
             ) : (
@@ -114,10 +120,10 @@ export const SecondaryControlManagementSubPanel = ({
                 style={{ flex: 0 }} styles={styles} themeColor={themeColor}
                 selected={false}
                 disabled={control.optionType === 'mandatory'}
-                accessibilityLabel={control.accessibilityLabel ? stringOrFunction(control.accessibilityLabel, { operation, vfo, qso, settings }) : undefined}
+                accessibilityLabel={control.accessibilityLabel ? valueOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : undefined}
                 onChange={() => toggleSecondaryControlSettings(control.key)}
               >
-                {control.label ? stringOrFunction(control.label, { operation, vfo, qso, settings }) : control.key}
+                {control.label ? valueOrFunction(control.label, { t, operation, vfo, qso, settings }) : control.key}
               </LoggerChip>
             )}
           </View>
@@ -130,9 +136,10 @@ export const SecondaryControlManagementSubPanel = ({
               style={{ flex: 0 }}
               themeColor={themeColor}
               selected={true}
+              accessibilityLabel={'Hide Secondary Control Settings'}
               onChange={() => setCurrentSecondaryControl('manage-controls')}
             >
-              <Icon source="cog" accesibilityLabel={'Hide Secondary Control Settings'} size={styles.oneSpace * 2} color={styles.colors[`on${styles.upcasedThemeColor}`]} />
+              <H2kIcon icon="cog" size={styles.normalFontSize} />
             </LoggerChip>
           </View>
         </View>

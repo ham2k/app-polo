@@ -15,7 +15,7 @@ export function GMALoggingControl (props) {
   const { qso, updateQSO, style, styles } = props
 
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
   const refsString = useMemo(() => {
     const refs = filterRefs(qso, Info.huntingType)
@@ -23,7 +23,8 @@ export function GMALoggingControl (props) {
   }, [qso])
 
   const handleChangeText = useCallback((value) => {
-    const refs = stringToRefs(Info.huntingType, value)
+    let refs = stringToRefs(Info.huntingType, value)
+    refs = refs.map(r => ({ ...r, label: `${Info.shortName} ${r.ref}` }))
 
     updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
   }, [qso, updateQSO])

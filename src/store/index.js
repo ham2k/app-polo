@@ -20,13 +20,17 @@ import operationsReducer from './operations'
 import qsosReducer from './qsos'
 import stationReducer from './station'
 import timeReducer from './time'
+import dataFilesReducer from './dataFiles'
 import { reducer as apiQRZReducer, middleware as apiQRZMiddleware } from './apis/apiQRZ'
 import { reducer as apiHamQTHReducer, middleware as apiHamQTHMiddleware } from './apis/apiHamQTH'
 import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apis/apiPOTA'
 import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './apis/apiSOTA'
 import { reducer as apiGMAReducer, middleware as apiGMAMiddleware } from './apis/apiGMA'
+import { reducer as apiWWFFReducer, middleware as apiWWFFMiddleware } from './apis/apiWWFF'
 import { reducer as apiWWBOTAReducer, middleware as apiWWBOTAMiddleware } from './apis/apiWWBOTA'
-import dataFilesReducer from './dataFiles'
+import { reducer as apiZLOTAReducer, middleware as apiZLOTAMiddleware } from './apis/apiZLOTA'
+import { reducer as apiPnPReducer, middleware as apiPnPMiddleware } from './apis/apiPnP'
+
 import { reduxEnhancersForDistribution } from '../distro'
 
 // Redux Toolkit uses Immer, which freezes state by default.
@@ -52,7 +56,10 @@ const rootReducer = combineReducers({
   apiPOTA: apiPOTAReducer,
   apiSOTA: apiSOTAReducer,
   apiGMA: apiGMAReducer,
-  apiWWBOTA: apiWWBOTAReducer
+  apiWWFF: apiWWFFReducer,
+  apiWWBOTA: apiWWBOTAReducer,
+  apiZLOTA: apiZLOTAReducer,
+  apiPnP: apiPnPReducer
 })
 
 const persistConfig = {
@@ -104,7 +111,10 @@ export const store = configureStore({
     middlewares.push(apiPOTAMiddleware)
     middlewares.push(apiSOTAMiddleware)
     middlewares.push(apiGMAMiddleware)
+    middlewares.push(apiWWFFMiddleware)
     middlewares.push(apiWWBOTAMiddleware)
+    middlewares.push(apiZLOTAMiddleware)
+    middlewares.push(apiPnPMiddleware)
 
     return middlewares
   },

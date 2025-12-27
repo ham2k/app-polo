@@ -1,16 +1,17 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Animated, PanResponder, Platform, View, useWindowDimensions } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { Animated, PanResponder, View } from 'react-native'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import KeepAwake from '@sayem314/react-native-keep-awake'
+import { useTranslation } from 'react-i18next'
 
 import { loadOperation, selectOperation } from '../../store/operations'
 import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../store/qsos'
@@ -31,6 +32,7 @@ import { Icon, Menu, Text } from 'react-native-paper'
 import { slashZeros } from '../../tools/stringTools'
 import { hasRef } from '../../tools/refTools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
+import GLOBAL from '../../GLOBAL'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -38,11 +40,14 @@ const MIN_WIDTH_LEFT = 60
 const MIN_WIDTH_RIGHT = 40
 
 export default function OperationScreen (props) {
+  const { t } = useTranslation()
+
   const { navigation, route } = props
   const styles = useThemedStyles()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const dispatch = useDispatch()
-  const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
+  const operation = useSelector(state => selectOperation(state, route.params.operation?.uuid ?? route.params.uuid))
   const suggestedQSO = route?.params?.qso
   const settings = useSelector(selectSettings)
   const online = useSelector(selectRuntimeOnline)
@@ -54,10 +59,10 @@ export default function OperationScreen (props) {
 
   useEffect(() => { // When starting, make sure all operation data is loaded
     setImmediate(async () => {
-      await dispatch(loadOperation(route.params.operation.uuid))
+      await dispatch(loadOperation(route.params.operation?.uuid ?? route.params.uuid))
       await dispatch(loadQSOs(route.params.operation.uuid))
     })
-  }, [route.params.operation.uuid, dispatch])
+  }, [route.params?.operation?.uuid, route.params?.uuid, dispatch])
 
   const [lastTracking, setLastTracking] = useState(0)
 
@@ -76,18 +81,19 @@ export default function OperationScreen (props) {
         subTitle: operation.subtitle
       }
     } else {
-      options = { title: 'New Operation' }
+      options = { title: t('general.terms.newOperation', 'New Operation') }
     }
-    options.closeInsteadOfBack = true
+    options.leftAction = 'close'
     options.rightMenuItems = <OperationMenuItems {...{ operation, settings, styles, dispatch, online }} />
 
     return options
-  }, [dispatch, online, operation, settings, styles])
+  }, [dispatch, online, operation, settings, styles, t])
 
-  const dimensions = useWindowDimensions()
+  const dimensions = useSafeAreaFrame()
+  // const dimensions = useWindowDimensions() <-- broken on iOS, no rotation
 
   const [panesState, , updatePanesState] = useUIState('OperationScreen', 'panes', {
-    mainPaneWidth: dimensions?.width * 0.8,
+    mainPaneWidth: settings.loggingPaneWidth ?? dimensions?.width * 0.8,
     resizingActive: false,
     mainPaneDelta: 0
   })
@@ -100,18 +106,19 @@ export default function OperationScreen (props) {
     if (isNaN(panesState.mainPaneWidth) || !panesState.mainPaneWidth) {
       return (dimensions.width - styles.oneSpace * MIN_WIDTH_LEFT) + (panesState.mainPaneDelta || 0)
     } else {
-      return Math.max(
+      const width = Math.max(
         Math.min(
           panesState.mainPaneWidth + (panesState.mainPaneDelta || 0),
           dimensions.width - styles.oneSpace * MIN_WIDTH_RIGHT
         ),
         styles.oneSpace * MIN_WIDTH_LEFT
       )
+      return width
     }
-  }, [dimensions.width, panesState, styles.oneSpace])
+  }, [dimensions, panesState, styles.oneSpace])
 
-  const panResponder = useRef(
-    PanResponder.create({
+  const panResponder = useMemo(() => {
+    return PanResponder.create({
       onStartShouldSetPanResponder: (event, gestureState) => true,
       onStartShouldSetPanResponderCapture: (event, gestureState) => true,
       onMoveShouldSetPanResponder: (event, gestureState) => true,
@@ -119,7 +126,7 @@ export default function OperationScreen (props) {
       onMoveShouldSetResponderCapture: (event, gestureState) => true,
 
       onPanResponderGrant: (event, gestureState) => {
-        updatePanesState({ resizingActive: true })
+        updatePanesState({ mainPaneDelta: 0, resizingActive: true })
       },
 
       onPanResponderMove: (event, gestureState) => {
@@ -130,13 +137,14 @@ export default function OperationScreen (props) {
         updatePanesState({ resizingActive: false })
       }
     })
-  ).current
+  }, [updatePanesState])
 
   useEffect(() => {
     if (panesState.resizingActive === false && panesState.mainPaneDelta !== 0) {
       updatePanesState({ mainPaneWidth, mainPaneDelta: 0 })
+      dispatch(setSettings({ loggingPaneWidth: mainPaneWidth }))
     }
-  }, [panesState.resizingActive, panesState.mainPaneDelta, mainPaneWidth, updatePanesState])
+  }, [panesState.resizingActive, panesState.mainPaneDelta, mainPaneWidth, updatePanesState, panesState, dispatch])
 
   if (splitView) {
     return (
@@ -151,8 +159,8 @@ export default function OperationScreen (props) {
                 height: '100%'
               }}
             >
-              <HeaderBar options={headerOptions} navigation={navigation} back={true} rightAction={'cog'} />
-              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView } }} />
+              <HeaderBar options={headerOptions} navigation={navigation} back={true} rightAction={'cog'} splitView={splitView} />
+              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView, selectedUUID: route?.params?.selectedUUID } }} splitView={splitView} />
             </Animated.View>
             <View
               style={{
@@ -162,7 +170,7 @@ export default function OperationScreen (props) {
                 justifyContent: 'center',
                 alignItems: 'center'
               }}
-              accesibilityLabel={'Pane Separator'}
+              accessibilityLabel={t('screens.operationScreen.paneSeparator-a11y', 'Pane Separator')}
               {...panResponder.panHandlers}
             >
               <View style={{ marginLeft: styles.oneSpace * -0.7, opacity: 0.8 }}>
@@ -177,43 +185,42 @@ export default function OperationScreen (props) {
                 height: '100%'
               }}
             >
-              <SafeAreaView edges={['top']}
+              <View
                 style={{
                   height: '100%',
                   width: '100%',
+                  paddingTop: Math.max(safeAreaInsets.top, styles.oneSpace * 2) - styles.oneSpace * 1,
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                   alignItems: 'stretch'
                 }}
               >
-
                 <Tab.Navigator
                   id={'OperationScreen_TabNavigator'}
                   initialLayout={{ width: (dimensions.width - mainPaneWidth), height: dimensions.height }}
                   initialRouteName={ operation?.qsoCount > 0 ? 'OpInfo' : 'OpSettings' }
                   screenOptions={{
-                    tabBarItemStyle: [{ width: (dimensions.width - mainPaneWidth) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
+                    tabBarItemStyle: [{ width: (dimensions.width - mainPaneWidth - safeAreaInsets.right) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                     tabBarLabelStyle: styles.screenTabBarLabel,
-                    tabBarStyle: styles.screenTabBar,
+                    tabBarStyle: [styles.screenTabBar, { paddingRight: safeAreaInsets.right }],
                     tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryHighlight, height: styles.halfSpace * 1.5 },
-                    // See https://github.com/react-navigation/react-navigation/issues/11301
-                    // on iOS, if the keyboard is open, tabs get stuck when switching
-                    animationEnabled: Platform.OS !== 'ios',
+                    animationEnabled: false,
+                    swipeEnabled: false,
                     freezeOnBlur: true,
                     lazy: true
                   }}
                 >
                   <Tab.Screen
                     name="OpInfo"
-                    options={{ title: 'Info', tabBarAccessibilityLabel: 'Info Tab' }}
-                    accessibilityLabel="Operation Info"
+                    options={{ title: t('screens.operationScreen.infoTab', 'Info'), tabBarAccessibilityLabel: t('screens.operationScreen.infoTab-a11y', 'Info Tab') }}
+                    accessibilityLabel={t('screens.operationScreen.operationInfo-a11y', 'Operation Info')}
                     component={OpInfoTab}
                     initialParams={{ uuid: operation.uuid, operation, splitView }}
                   />
 
                   <Tab.Screen
                     name="OpSpots"
-                    options={{ title: 'Spots', tabBarAccessibilityLabel: 'Spots Tab' }}
+                    options={{ title: t('screens.operationScreen.spotsTab', 'Spots'), tabBarAccessibilityLabel: t('screens.operationScreen.spotsTab-a11y', 'Spots Tab') }}
                     component={OpSpotsTab}
                     initialParams={{ uuid: operation.uuid, operation, splitView }}
                     screenOptions={{ lazy: true }}
@@ -221,7 +228,7 @@ export default function OperationScreen (props) {
 
                   <Tab.Screen
                     name="OpMap"
-                    options={{ title: 'Map', tabBarAccessibilityLabel: 'Map Tab' }}
+                    options={{ title: t('screens.operationScreen.mapTab', 'Map'), tabBarAccessibilityLabel: t('screens.operationScreen.mapTab-a11y', 'Map Tab') }}
                     component={OpMapTab}
                     initialParams={{ uuid: operation.uuid, operation, splitView }}
                     screenOptions={{ lazy: true }}
@@ -231,8 +238,8 @@ export default function OperationScreen (props) {
                   <Tab.Screen
                     name="OpSettings"
                     options={{
-                      title: (dimensions.width / 4) > (styles.oneSpace * 34) ? 'Operation' : 'Oper.',
-                      tabBarAccessibilityLabel: 'Operation Settings Tab'
+                      title: ((dimensions.width - mainPaneWidth) / 4) > (styles.oneSpace * 14) ? t('screens.operationScreen.settingsTab', 'Operation') : t('screens.operationScreen.settingsCompactTab', 'Oper.'),
+                      tabBarAccessibilityLabel: t('screens.operationScreen.settingsTab-a11y', 'Operation Settings Tab')
                     }}
                     component={OpSettingsTab}
                     initialParams={{ uuid: operation.uuid, operation, splitView }}
@@ -240,7 +247,7 @@ export default function OperationScreen (props) {
                   />
 
                 </Tab.Navigator>
-              </SafeAreaView>
+              </View>
             </Animated.View>
 
           </View>
@@ -264,23 +271,22 @@ export default function OperationScreen (props) {
                 tabBarLabelStyle: styles.screenTabBarLabel,
                 tabBarStyle: styles.screenTabBar,
                 tabBarIndicatorStyle: { backgroundColor: styles.colors.primaryLighter, height: styles.halfSpace * 1.5 },
-                // See https://github.com/react-navigation/react-navigation/issues/11301
-                // on iOS, if the keyboard is open, tabs get stuck when switching
-                animationEnabled: Platform.OS !== 'ios',
+                animationEnabled: false,
+                swipeEnabled: false,
                 freezeOnBlur: true,
                 lazy: true
               }}
             >
               <Tab.Screen
                 name="OpLog"
-                options={{ title: 'QSOs', tabBarAccessibilityLabel: 'Q sos Tab' }}
+                options={{ title: t('screens.operationScreen.qsosTab', 'QSOs'), tabBarAccessibilityLabel: t('screens.operationScreen.qsosTab-a11y', 'Q sos Tab') }}
                 component={OpLoggingTab}
                 initialParams={{ uuid: operation.uuid, operation }}
               />
 
               <Tab.Screen
                 name="OpSpots"
-                options={{ title: 'Spots', tabBarAccessibilityLabel: 'Spots Tab' }}
+                options={{ title: t('screens.operationScreen.spotsTab', 'Spots'), tabBarAccessibilityLabel: t('screens.operationScreen.spotsTab-a11y', 'Spots Tab') }}
                 component={OpSpotsTab}
                 initialParams={{ uuid: operation.uuid, operation }}
                 screenOptions={ { lazy: true }}
@@ -288,7 +294,7 @@ export default function OperationScreen (props) {
 
               <Tab.Screen
                 name="OpMap"
-                options={{ title: 'Map', tabBarAccessibilityLabel: 'Map Tab' }}
+                options={{ title: t('screens.operationScreen.mapTab', 'Map'), tabBarAccessibilityLabel: t('screens.operationScreen.mapTab-a11y', 'Map Tab') }}
                 component={OpMapTab}
                 initialParams={{ uuid: operation.uuid, operation }}
                 screenOptions={ { lazy: true }}
@@ -297,8 +303,8 @@ export default function OperationScreen (props) {
               <Tab.Screen
                 name="OpSettings"
                 options={{
-                  title: (dimensions.width / 4) > (styles.oneSpace * 10.5) ? 'Operation' : 'Oper.',
-                  tabBarAccessibilityLabel: 'Operation Settings Tab'
+                  title: (dimensions.width / 4) > (styles.oneSpace * 12) ? t('screens.operationScreen.settingsTab', 'Operation') : t('screens.operationScreen.settingsCompactTab', 'Oper.'),
+                  tabBarAccessibilityLabel: t('screens.operationScreen.settingsTab-a11y', 'Operation Settings Tab')
                 }}
                 component={OpSettingsTab}
                 initialParams={{ uuid: operation.uuid, operation }}
@@ -315,7 +321,7 @@ export default function OperationScreen (props) {
 export function buildTitleForOperation (operationAttrs, { includeCall = true } = {}) {
   if (operationAttrs.stationCall) {
     let call = operationAttrs.stationCall
-    if (operationAttrs.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
+    if (operationAttrs?.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
       const stationCallInfo = parseCallsign(operationAttrs.stationCall)
       const operatorCallInfo = parseCallsign(operationAttrs.operatorCall)
       if (stationCallInfo?.baseCall !== operatorCallInfo?.baseCall) {
@@ -330,7 +336,7 @@ export function buildTitleForOperation (operationAttrs, { includeCall = true } =
       parts.push(operationAttrs.title)
     }
     let title = parts.join(' ')
-    title = title || 'General Operation'
+    title = title || GLOBAL?.t?.('general.terms.generalOperation', 'General Operation') || 'General Operation'
 
     if (includeCall) {
       return [call ? slashZeros(call) : '', title].join(' ')
@@ -338,11 +344,13 @@ export function buildTitleForOperation (operationAttrs, { includeCall = true } =
       return title
     }
   } else {
-    return 'New Operation'
+    return GLOBAL?.t?.('general.terms.newOperation', 'New Operation') || 'New Operation'
   }
 }
 
 function OperationMenuItems ({ operation, settings, styles, dispatch, online, setShowMenu }) {
+  const { t } = useTranslation()
+
   const hideAndRun = useCallback((action) => {
     setShowMenu(false)
     setTimeout(() => action(), 10)
@@ -350,56 +358,90 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
 
   return (
     <>
-      <Text style={{ marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
-        Logging Settings
+      <Text style={{ minWidth: styles.oneSpace * 28, marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
+        {t('screens.operationScreen.menu.loggingSettings', 'Logging Settings')}
       </Text>
       <Menu.Item
         leadingIcon="signal"
-        trailingIcon={settings.showRSTFields === false ? 'circle-outline' : 'check-circle-outline'}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showRSTFields: settings.showRSTFields === false }))) }}
-        title={'RST Fields'}
+        trailingIcon={_iconForTernarySetting(settings.showRSTFields)}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showRSTFields: _nextTernaryValue(settings.showRSTFields) }))) }}
+        title={t('screens.operationScreen.menu.rstFields', 'RST Fields')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
+
+      <Menu.Item
+        leadingIcon="selection-marker"
+        trailingIcon={_iconForTernarySetting(settings.showStateField)}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: _nextTernaryValue(settings.showStateField) }))) }}
+        title={t('screens.operationScreen.menu.stateField', 'State Field')}
+        contentStyle={{ minWidth: styles.oneSpace * 20 }}
+      />
+
       <Menu.Item
         leadingIcon="select-marker"
-        trailingIcon={settings.showStateField === false ? 'circle-outline' : 'check-circle-outline'}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: settings.showStateField === false }))) }}
-        title={'State Field'}
+        trailingIcon={_iconForTernarySetting(settings.showGridField)}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showGridField: _nextTernaryValue(settings.showGridField) }))) }}
+        title={t('screens.operationScreen.menu.gridField', 'Grid Field')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
+
       <Menu.Item
         leadingIcon="delete-off-outline"
         trailingIcon={settings.showDeletedQSOs === false ? 'circle-outline' : 'check-circle-outline'}
         onPress={() => { hideAndRun(() => dispatch(setSettings({ showDeletedQSOs: settings.showDeletedQSOs === false }))) }}
-        title={'Show Deleted QSOs'}
+        title={t('screens.operationScreen.menu.showDeletedQSOs', 'Show Deleted QSOs')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
+
       <Menu.Item
         leadingIcon="numeric"
         trailingIcon={settings.showNumbersRow === false ? 'circle-outline' : 'check-circle-outline'}
         onPress={() => { hideAndRun(() => dispatch(setSettings({ showNumbersRow: settings.showNumbersRow === false }))) }}
-        title={'Numbers Row'}
+        title={t('screens.operationScreen.menu.numbersRow', 'Numbers Row')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
+
       <View style={{ height: 2, backgroundColor: styles.colors.onSurface, marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace }} />
       <Text style={{ marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
-        Actions
+        {t('screens.operationScreen.menu.actions', 'Actions')}
       </Text>
+
       <Menu.Item
         leadingIcon="search-web"
         onPress={() => hideAndRun(() => dispatch(lookupAllQSOs(operation.uuid)))}
-        title={'Lookup all QSOs'}
+        title={t('screens.operationScreen.menu.lookupAllQSOs', 'Lookup all QSOs')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
+
       {hasRef(operation, 'potaActivation') &&
         <Menu.Item
           leadingIcon="list-status"
           onPress={() => hideAndRun(() => {
             return dispatch(confirmFromSpots({ operation }))
           })}
-          title={'Confirm Spots'}
+          title={t('screens.operationScreen.menu.confirmSpots', 'Confirm Spots')}
           contentStyle={{ minWidth: styles.oneSpace * 20 }}
         />}
     </>
   )
+}
+
+function _iconForTernarySetting (value) {
+  if (value === true) {
+    return 'check-circle-outline'
+  } else if (value === false) {
+    return 'circle-outline'
+  } else {
+    return 'help-circle-outline'
+  }
+}
+
+function _nextTernaryValue (value) {
+  if (value === true) {
+    return false
+  } else if (value === false) {
+    return ''
+  } else {
+    return true
+  }
 }

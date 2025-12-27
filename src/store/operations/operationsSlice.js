@@ -46,6 +46,17 @@ export const operationsSlice = createSlice({
         ...action.payload
       }
     },
+    updateOperations: (state, action) => {
+      for (const operation of action.payload) {
+        if (operation?.uuid) {
+          state.info[operation.uuid] = {
+            ...OPERATION_INITIAL_STATE,
+            ...state.info[operation.uuid],
+            ...operation
+          }
+        }
+      }
+    },
     setOperationLocal: (state, action) => {
       const { uuid, ...localData } = action.payload
       state.info[uuid] = {
@@ -89,10 +100,30 @@ export const selectOperationCall = createSelector(
 
 export const selectOperationsList = createSelector(
   (state) => state?.operations?.info,
-  (info) => {
-    return Object.values(info || {}).sort((a, b) => {
+  (state) => state?.settings?.showDeletedOps,
+  (info, showDeletedOps) => {
+    return Object.values(info || {}).filter((info) => info?.uuid && (showDeletedOps || !info?.deleted)).sort((a, b) => {
       return (b.startAtMillisMax ?? b.createdAtMillis ?? 0) - (a.startAtMillisMax ?? a.createdAtMillis ?? 0)
     })
+  }
+)
+
+export const selectOperationIds = createSelector(
+  (state) => state?.operations?.info,
+  (state) => state?.settings?.showDeletedOps,
+  (info, showDeletedOps) => {
+    return Object.values(info || {}).filter(op => op?.uuid && (showDeletedOps || !op?.deleted)).sort((a, b) => {
+      return (b.startAtMillisMax ?? b.createdAtMillis ?? 0) - (a.startAtMillisMax ?? a.createdAtMillis ?? 0)
+    }).filter(Boolean).map(op => op.uuid) // Just return the UUIDs
+  },
+  {
+    memoizeOptions: {
+      resultEqualityCheck: (prevIds, nextIds) => {
+        // Only return new array if order/length changed
+        if (prevIds.length !== nextIds.length) return false
+        return prevIds.every((id, index) => id === nextIds[index])
+      }
+    }
   }
 )
 

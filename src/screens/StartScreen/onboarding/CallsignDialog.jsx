@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,29 +7,31 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Dialog, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import RNRestart from 'react-native-restart'
+import { useTranslation } from 'react-i18next'
 
-import CallsignInput from '../../components/CallsignInput'
 import { setSettings } from '../../../store/settings'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
 import { persistor } from '../../../store'
+import { H2kButton, H2kCallsignInput, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 
 export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 500) }, [])
 
   const [value, setValue] = useState('')
   console.log('settings', settings)
   useEffect(() => {
-    if (settings?.operatorCall === 'N0CALL') {
+    if (settings?.operatorCall === t('general.misc.placeholderCallsign', 'N0CALL')) {
       setValue('')
     } else {
       setValue(settings?.operatorCall || '')
     }
-  }, [settings])
+  }, [settings, t])
 
   const onChangeText = useCallback((text) => {
     setValue(text)
@@ -53,25 +55,25 @@ export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevio
   }, [onDialogPrevious])
 
   return (
-    <Ham2kDialog visible={true} dismissable={false}>
-      <Dialog.Title style={{ textAlign: 'center' }}>What's your callsign?</Dialog.Title>
-      <Dialog.Content>
+    <H2kDialog visible={true} dismissable={false}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.startScreen.onboarding.whatsYourCallsign', "What's your callsign?")}</H2kDialogTitle>
+      <H2kDialogContent>
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
-          You need an Amateur Radio Operator License in order to find this app useful
+          {t('screens.startScreen.onboarding.callsignDescription', 'You need an Amateur Radio Operator License in order to find this app useful')}
         </Text>
-        <CallsignInput
+        <H2kCallsignInput
           innerRef={ref}
           style={[styles.input, { marginTop: styles.oneSpace * 2 }]}
           value={value ?? ''}
-          label="Operator's Callsign"
-          placeholder="N0CALL"
+          label={t('screens.startScreen.onboarding.callsignLabel', "Operator's Callsign")}
+          placeholder={t('general.misc.placeholderCallsign', 'N0CALL')}
           onChangeText={onChangeText}
         />
-      </Dialog.Content>
-      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
-        <Button onPress={handlePrevious}>{previousLabel ?? 'Back'}</Button>
-        <Button onPress={handleNext}>{nextLabel ?? 'Next'}</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions style={{ justifyContent: 'space-between' }}>
+        <H2kButton onPress={handlePrevious}>{previousLabel ?? t('general.buttons.back', 'Back')}</H2kButton>
+        <H2kButton onPress={handleNext}>{nextLabel ?? t('general.buttons.next', 'Next')}</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

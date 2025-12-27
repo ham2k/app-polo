@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,22 +7,20 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List } from 'react-native-paper'
 import { ScrollView } from 'react-native'
 import { StackActions } from '@react-navigation/native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
 import { findRef, replaceRefs } from '../../../tools/refTools'
 import { findBestHook, useFindHooks } from '../../../extensions/registry'
 import ScreenContainer from '../../components/ScreenContainer'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import { ListSeparator } from '../../components/ListComponents'
 import { trackEvent } from '../../../distro'
+import { H2kListItem, H2kListSection, H2kListSeparator } from '../../../ui'
 
 export default function OperationAddActivityScreen ({ navigation, route }) {
-  const styles = useThemedStyles()
+  const { t } = useTranslation()
 
   const dispatch = useDispatch()
   const operation = useSelector(state => selectOperation(state, route.params.operation))
@@ -61,30 +59,31 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
-        <Ham2kListSection>
-          {activityHooks.map((activity) => (
-            <Ham2kListItem
-              key={activity.key}
-              title={activity.name}
-              description={currentActivities[activity.key] ?? ''}
-              // eslint-disable-next-line react/no-unstable-nested-components
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon={activity.icon} />}
-              onPress={() => addActivity(activity)}
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
+          <H2kListSection>
+            {activityHooks.map((activity) => (
+              <H2kListItem
+                key={activity.key}
+                title={t(`extensions.${activity.key}.name`, activity.name)}
+                description={t(`extensions.${activity.key}.description`, currentActivities[activity.key] ?? '')}
+                leftIcon={activity.icon}
+                onPress={() => addActivity(activity)}
+              />
+            ))}
+          </H2kListSection>
+
+          <H2kListSeparator />
+
+          <H2kListSection>
+            <H2kListItem
+              title={t('screens.operationAddActivity.cantFindActivity', "Can't find the activity you're looking for?")}
+              description={t('screens.operationAddActivity.thereAreMoreOptions', 'There are more options in Settings > App Features')}
+              onPress={() => navigation.navigate('Settings', { screen: 'FeaturesSettings' })}
             />
-          ))}
-        </Ham2kListSection>
-
-        <ListSeparator />
-
-        <Ham2kListSection>
-          <Ham2kListItem
-            title="Can't find the activity you're looking for?"
-            description="There are more options in Settings > App Features"
-            onPress={() => navigation.navigate('Settings', { screen: 'FeaturesSettings' })}
-          />
-        </Ham2kListSection>
-      </ScrollView>
+          </H2kListSection>
+        </ScrollView>
+      </SafeAreaView>
     </ScreenContainer>
   )
 }

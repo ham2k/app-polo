@@ -1,17 +1,18 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useMemo } from 'react'
-
 import { Chip } from 'react-native-paper'
+
+import { H2kIcon } from '../../../ui'
 
 export default function LoggerChip ({
   children,
-  icon,
+  icon, iconColor,
   styles, style, themeColor, textStyle,
   selected,
   disabled,
@@ -76,12 +77,24 @@ export default function LoggerChip ({
     return { mode, colorizedTheme, baseTextStyle }
   }, [themeColor, styles, selected, disabled])
 
+  const combinedStyle = useMemo(() => {
+    if (styles.mdOrLarger) {
+      return [style, { paddingTop: styles.oneSpace * 0.5, paddingBottom: styles.oneSpace * 0.5 }]
+    } else {
+      return style
+    }
+  }, [style, styles])
+
+  const ChipIcon = useMemo(() => {
+    return ({ props }) => <H2kIcon icon={icon} color={iconColor} size={styles.normalFontSize} {...props} />
+  }, [icon, iconColor, styles.normalFontSize])
+
   return (
     <Chip
-      icon={icon}
+      icon={ChipIcon}
       mode={mode}
       theme={colorizedTheme}
-      style={[style]}
+      style={combinedStyle}
       textStyle={[baseTextStyle, textStyle]}
       disabled={disabled}
       onPress={handlePress}

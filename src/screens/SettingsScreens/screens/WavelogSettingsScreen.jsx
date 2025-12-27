@@ -1,0 +1,134 @@
+/*
+ * Copyright ©️ 2025 Emma Ruby <k0uwu@0xem.ma>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
+/*
+ * WavelogSettingsScreen.jsx
+ * Settings screen for Wavelog integration (API URL + API Key + Station picker)
+ */
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { View, ScrollView } from 'react-native'
+import { Text, TextInput, Button, List, HelperText } from 'react-native-paper'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
+
+import { selectSettings, setSettings } from '../../../store/settings'
+import ScreenContainer from '../../components/ScreenContainer'
+import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
+import { H2kIcon } from '../../../ui'
+
+export default function WavelogSettingsScreen ({ navigation }) {
+  const { t } = useTranslation()
+
+  const dispatch = useDispatch()
+  const safeAreaInsets = useSafeAreaInsets()
+  const styles = useThemedStyles()
+  const settings = useSelector(selectSettings)
+  const [apiUrl, setApiUrl] = useState(settings?.wavelog?.apiUrl || '')
+  const [apiKey, setApiKey] = useState(settings?.wavelog?.apiKey || '')
+  const [stations, setStations] = useState([])
+  const [stationId, setStationId] = useState(settings?.wavelog?.stationId || '')
+  const [fetching, setFetching] = useState(false)
+  const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  const fetchStations = async () => {
+    setFetching(true)
+    setError('')
+    setStations([])
+    try {
+      const url = `${apiUrl.replace(/\/$/, '')}/api/station_info/${apiKey}`
+      const response = await fetch(url, { method: 'GET' })
+      if (!response.ok) throw new Error('Failed to fetch stations')
+      const data = await response.json()
+      if (Array.isArray(data)) {
+        setStations(data)
+      } else if (Array.isArray(data.payload)) {
+        setStations(data.payload)
+      } else {
+        setError(t('screens.wavelogSettings.noStationsFoundOrInvalidResponse', 'No stations found or invalid response'))
+      }
+    } catch (e) {
+      setError(t('screens.wavelogSettings.errorFetchingStations', 'Error fetching stations: {{message}}', { message: e.message }))
+    }
+    setFetching(false)
+  }
+
+  const saveConfig = () => {
+    setSaving(true)
+    dispatch(setSettings({
+      wavelog: {
+        apiUrl,
+        apiKey,
+        stationId
+      }
+    }))
+    setSaving(false)
+  }
+
+  return (
+    <ScreenContainer>
+      <View style={{ flex: 1, flexDirection: 'column', padding: 16, paddingBottom: safeAreaInsets.bottom }}>
+        <Text variant="titleLarge" style={{ marginBottom: 16 }}>{t('screens.wavelogSettings.title', 'Wavelog Configuration')}</Text>
+        <TextInput
+          label="Wavelog API URL"
+          value={apiUrl}
+          onChangeText={setApiUrl}
+          style={{ marginBottom: 12 }}
+          autoCapitalize="none"
+        />
+        <TextInput
+          label="API Key"
+          value={apiKey}
+          onChangeText={setApiKey}
+          style={{ marginBottom: 12 }}
+          autoCapitalize="none"
+        />
+        <Button mode="outlined" onPress={fetchStations} loading={fetching} disabled={fetching || !apiUrl || !apiKey} style={{ marginBottom: 12 }}>
+          {t('screens.wavelogSettings.fetchStations', 'Fetch Stations')}
+        </Button>
+        {error ? <HelperText type="error">{error}</HelperText> : null}
+        {stations.length > 0 && (
+          <ScrollView style={{ maxHeight: 300, marginBottom: 12 }}>
+            <List.Section title={t('screens.wavelogSettings.selectStation', 'Select Station')}>
+              {stations.map(station => {
+                const id = station.id || station.station_profile_id || station.station_id
+                const profileName = station.station_profile_name || station.name || station.label || station.station_callsign || ''
+                return (
+                  <List.Item
+                    key={id}
+                    title={profileName}
+                    description={station.station_callsign || station.label || ''}
+                    onPress={() => setStationId(id)}
+                    left={props => <H2kIcon {...props} icon={stationId === id ? 'check-circle' : 'radiobox-blank'} />}
+                    style={{ backgroundColor: stationId === id ? styles.colors.primaryLighter : undefined }}
+                  />
+                )
+              })}
+            </List.Section>
+          </ScrollView>
+        )}
+        {stationId && (
+          <HelperText type="info" style={{ marginBottom: 8 }}>
+            {t('screens.wavelogSettings.selectedStation', 'Selected station:')}{' '}
+            {(() => {
+              const selected = stations.find(station =>
+                (station.id || station.station_profile_id || station.station_id) === stationId
+              )
+              return selected
+                ? (selected.station_profile_name || selected.name || selected.label || selected.station_callsign || stationId)
+                : stationId
+            })()}
+          </HelperText>
+        )}
+        <Button mode="contained" onPress={saveConfig} loading={saving} disabled={saving || !apiUrl || !apiKey || !stationId} style={{ marginTop: 16 }}>
+          {t('general.buttons.save', 'Save')}
+        </Button>
+      </View>
+    </ScreenContainer>
+  )
+}

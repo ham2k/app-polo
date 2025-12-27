@@ -17,5 +17,11 @@ export const Info = {
   activationType: 'potaActivation',
   descriptionPlaceholder: 'Enter POTA references',
   unknownReferenceName: 'Unknown Park',
-  referenceRegex: /^[A-Z0-9]+-(?:[0-9]{4,5}|TEST)$/i
+  referenceRegex: /^[A-Z0-9]+-(?:[0-9]{4,5}|TEST)$/i,
+  scoring: {
+    activates: 'daily',
+    allowsMultipleReferences: true,
+    qsosToActivate: 10,
+    uniquePer: ['band', 'mode', 'day', 'ref']
+  }
 }

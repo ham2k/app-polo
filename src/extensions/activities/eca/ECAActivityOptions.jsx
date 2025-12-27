@@ -1,41 +1,36 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Searchbar } from 'react-native-paper'
+import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
-import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
+import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
-import { ListRow } from '../../../screens/components/ListComponents'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
 import { Info } from './ECAInfo'
 import { ecaFindAllByLocation, ecaFindAllByName, ecaFindOneByReference } from './ECADataFile'
 import { ECAListItem } from './ECAListItem'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
-export function ECAActivityOptions (props) {
+export function ECAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
-
-  const { styles, operation, settings } = props
-
-  const dispatch = useDispatch()
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const refs = useMemo(() => filterRefs(operation, Info.activationType).filter(ref => ref.ref), [operation])
+  const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (refs?.length === 0) return 'No castles selected for activation'
-    else if (refs?.length === 1) return 'Activating 1 castle'
-    else return `Activating ${refs.length} castles`
-  }, [refs])
+    return t('extensions.eca.activityOptions.title', 'Activating {{count}} castles', { count: activityRefs?.length })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
@@ -53,8 +48,8 @@ export function ECAActivityOptions (props) {
         console.info('Geolocation error', error)
       }, {
         enableHighAccuracy: true,
-        timeout: 30 * 1000 /* 30 seconds */,
-        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+        timeout: 1000 * 30 /* 30 seconds */,
+        maximumAge: 1000 * 60 /* 1 minute */
       }
     )
   }, [])
@@ -63,7 +58,7 @@ export function ECAActivityOptions (props) {
   useEffect(() => {
     setTimeout(async () => {
       const datas = []
-      for (const ref of refs) {
+      for (const ref of activityRefs) {
         const result = await ecaFindOneByReference(ref.ref)
         const newData = { ...ref, ...result }
         if (location?.lat && location?.lon) {
@@ -73,7 +68,7 @@ export function ECAActivityOptions (props) {
       }
       setRefDatas(datas)
     }, 0)
-  }, [refs, location, settings.distanceUnits])
+  }, [activityRefs, location, settings.distanceUnits])
 
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
@@ -114,41 +109,37 @@ export function ECAActivityOptions (props) {
         }
 
         setResults(newRefs.slice(0, 15))
-        if (newRefs.length === 0) {
-          setResultsMessage('No castles found')
-        } else if (newRefs.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newRefs.length} matches`)
-        } else if (newRefs.length === 1) {
-          setResultsMessage('One matching castles')
+        if (newRefs.length > 15) {
+          setResultsMessage(t('extensions.eca.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newRefs.length }))
         } else {
-          setResultsMessage(`${newRefs.length} matching castles`)
+          setResultsMessage(t('extensions.eca.activityOptions.matchingCastles', '{{count}} matching castles', { count: newRefs.length }))
         }
       } else {
         setResults(nearbyResults)
-        if (nearbyResults === undefined) setResultsMessage('Search for some castles to activate!')
-        else if (nearbyResults.length === 0) setResultsMessage('No castles nearby')
-        else setResultsMessage('Nearby castles')
+        if (nearbyResults === undefined) setResultsMessage(t('extensions.eca.activityOptions.searchForCastles', 'Search for some castles to activate!'))
+        else if (nearbyResults.length === 0) setResultsMessage(t('extensions.eca.activityOptions.noCastlesNearby', 'No castles nearby'))
+        else setResultsMessage(t('extensions.eca.activityOptions.nearbyCastles', 'Nearby castles'))
       }
     })
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, [...refs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
+  }, [activityRefs, allRefs, setRefs])
 
   const handleRemoveReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, refs.filter(r => r.ref !== ref)) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== ref)))
+  }, [activityRefs, allRefs, setRefs])
 
   return (
     <>
-      <Ham2kListSection title={title}>
+      <H2kListSection title={title}>
         {refDatas.map((refData, index) => (
           <ECAListItem
             key={refData.ref}
             activityRef={refData.ref}
             refData={refData}
-            allRefs={refs}
+            allRefs={activityRefs}
             operationRef={refData.ref}
             styles={styles}
             settings={settings}
@@ -156,22 +147,22 @@ export function ECAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </Ham2kListSection>
+      </H2kListSection>
 
-      <ListRow>
-        <Searchbar
-          placeholder={'Castles by name or reference…'}
+      <H2kListRow>
+        <H2kSearchBar
+          placeholder={t('extensions.eca.activityOptions.searchPlaceholder', 'Castles by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />
-      </ListRow>
+      </H2kListRow>
 
-      <Ham2kListSection title={resultsMessage}>
+      <H2kListSection title={resultsMessage}>
         {results.map((result) => (
           <ECAListItem
             key={result.ref}
             activityRef={result.ref}
-            allRefs={refs}
+            allRefs={activityRefs}
             refData={result}
             styles={styles}
             settings={settings}
@@ -180,7 +171,7 @@ export function ECAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </Ham2kListSection>
+      </H2kListSection>
     </>
   )
 }

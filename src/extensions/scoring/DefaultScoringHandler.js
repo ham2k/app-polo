@@ -17,7 +17,8 @@ export const DefaultScoringHandler = {
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
-      if (sameBand && sameMode) {
+      const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0
+      if (sameBandMode) {
         return { count: 0, alerts: ['duplicate'], type: 'defaultOperation' }
       } else {
         const notices = []

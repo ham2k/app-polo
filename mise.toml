@@ -1,0 +1,11 @@
+
+# Tasks useful for local development
+
+[tasks.ios-polo]
+description = "Open the PoLo `Documents` folder for the current iOS Simulator"
+run = "open `xcrun simctl get_app_container booted com.ham2k.polo data`/Documents"
+
+[tasks.ios-files]
+description = "Open the `Files` folder for the current iOS Simulator"
+run = "open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep FileProvider.LocalStorage|sed \"s/group.com.apple.FileProvider.LocalStorage//g\"`/File\\ Provider\\ Storage"
+

@@ -12,6 +12,7 @@ import { selectSettings } from '../../settings'
 import { fetchFeatureFlags } from '../../system/fetchFeatureFlags'
 import { addRuntimeMessage, resetRuntimeMessages } from '../runtimeSlice'
 import { setupOnlineStatusMonitoring } from './onlineStatus'
+import GLOBAL from '../../../GLOBAL'
 
 const MESSAGES = [
   'Reticulating splines',
@@ -43,8 +44,9 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
       setTimeout(() => { resolve() }, 1000)
     })
 
+    const message = MESSAGES[Math.floor(Math.random() * MESSAGES.length)]
     const steps = [
-      async () => await dispatch(addRuntimeMessage(MESSAGES[Math.floor(Math.random() * MESSAGES.length)])),
+      async () => await dispatch(addRuntimeMessage(GLOBAL.t(`screens.start.messages.${message}`, message))),
       async () => await dispatch(fetchFeatureFlags()),
       async () => await dispatch(loadExtensions()),
       async () => await dispatch(loadOperations()),
@@ -56,4 +58,11 @@ export const startupSequence = (onReady) => (dispatch, getState) => {
 
     onReady && onReady()
   }, 0)
+}
+
+// This function is used to reload extensions if the app is hot-reloaded in development mode
+export const hotReloadSequence = async (dispatch, getState) => {
+  console.log('hotReloadSequence')
+  await dispatch(loadEarlyExtensions())
+  await dispatch(loadExtensions())
 }

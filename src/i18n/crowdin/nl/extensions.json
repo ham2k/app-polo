@@ -1,0 +1,813 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Geen banden",
+      "bandsCount_one": "1 band",
+      "bandsCount_other": "{{count}} banden",
+      "modesCount_zero": "Geen modi",
+      "modesCount_one": "1 modus",
+      "modesCount_other": "{{count}} modes",
+      "total": "Totaal {{count}}"
+    },
+    "bca": {
+      "name": "Belgische kastelen & Forten",
+      "shortName": "BCA",
+      "exportName": "BCA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen kastelen geselecteerd voor activering",
+        "title_one": "1 kasteel activeren",
+        "title_other": "{{count}} kastelen activeren",
+        "noCastlesFound": "Geen kastelen gevonden",
+        "nearestMatches": "Dichtstbijzijnde {{limit}} van {{count}} overeenkomsten",
+        "matchingCastles_zero": "Geen overeenkomende kastelen",
+        "matchingCastles_one": "1 overeenkomend kasteel",
+        "matchingCastles_other": "{{count}} overeenkomende kastelen",
+        "searchForCastles": "Zoek naar enkele kastelen om te activeren!",
+        "noCastlesNearby": "Geen kastelen in de buurt",
+        "nearbyCastles": "Nabijgelegen kastelen",
+        "searchPlaceholder": "Kastelen op naam of referentie…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Geen hunted kastelen",
+        "huntedRefsCount_one": "1 kasteel hunted",
+        "huntedRefsCount_other": "{{fmtCount}} kastelen gejaagd",
+        "activatorQSOsCount_zero": "Geen activator QSO's",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
+        "huntedQSOsCount_zero": "Geen hunter QSO's",
+        "huntedQSOsCount_one": "1 hunter QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} hunter QSO's",
+        "operationTotals": "Activatie totaal",
+        "referencesActivatedCount_zero": "Geen kastelen geactiveerd",
+        "referencesActivatedCount_one": "1 kasteel geactiveerd",
+        "referencesActivatedCount_other": "{{fmtCount}} kastelen geactiveerd",
+        "referencesMissedCount_zero": "Geen onvolledige kastelen activatie",
+        "referencesMissedCount_one": "1 onvolledig kasteel geactiveerd",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige kastelen geactiveerd",
+        "referencesHuntedCount_zero": "Geen kastelen gelogd",
+        "referencesHuntedCount_one": "1 kasteel gelogd",
+        "referencesHuntedCount_other": "{{fmtCount}} kastelen gelogd"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun BCA"
+      }
+    },
+    "blha": {
+      "name": "Belgische Vuurtorens en Lichtschepen",
+      "shortName": "BLHA",
+      "exportName": "BLHA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen vuurtorens geselecteerd voor activering",
+        "title_one": "1 vuurtoren activeren",
+        "title_other": "{{count}} vuurtorens activeren",
+        "noLighthousesFound": "Geen vuurtorens gevonden",
+        "nearestMatches": "Dichtstbijzijnde {{limit}} van {{count}} overeenkomsten",
+        "matchingLighthouses_zero": "Geen overeenkomende vuurtorens",
+        "matchingLighthouses_one": "1 overeenkomende vuurtoren",
+        "matchingLighthouses_other": "{{count}} overeenkomende vuurtorens",
+        "searchForLighthouses": "Zoek naar enkele vuurtorens om te activeren!",
+        "noLighthousesNearby": "Geen vuurtorens in de buurt",
+        "nearbyLighthouses": "Nabijgelegen vuurtorens",
+        "searchPlaceholder": "Vuurtorens op naam of referentie…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Geen vuurtorens gelogd",
+        "huntedRefsCount_one": "1 gelogde vuurtoren",
+        "huntedRefsCount_other": "{{fmtCount}} hunted vuurtorens",
+        "activatorQSOsCount_zero": "Geen activator QSO's",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
+        "huntedQSOsCount_zero": "Geen hunter QSO's",
+        "huntedQSOsCount_one": "1 hunter QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} hunter QSO's",
+        "operationTotals": "Activatie totaal",
+        "referencesActivatedCount_zero": "Geen vuurtorens geactiveerd",
+        "referencesActivatedCount_one": "1 vuurtoren geactiveerd",
+        "referencesActivatedCount_other": "{{fmtCount}} vuurtorens geactiveerd",
+        "referencesMissedCount_zero": "Geen onvolledige vuurtorens log",
+        "referencesMissedCount_one": "1 onvolledige vuurtoren log",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige vuurtoren logs",
+        "referencesHuntedCount_zero": "Geen vuurtorens gelogd",
+        "referencesHuntedCount_one": "1 vuurtoren gelogd",
+        "referencesHuntedCount_other": "{{fmtCount}} vuurtorens gelogd"
+      }
+    },
+    "call-notes": {
+      "name": "Roepnaam notities",
+      "description-md_zero": "Geen notities geladen.",
+      "description-md_one": "{{fmtCount}} {{type}} Geladen.",
+      "description-md_other": "{{fmtCount}} {{type}} geladen.",
+      "builtIn": "Voorgeïnstalleerde notities",
+      "userDefined": "Gebruikersnotities",
+      "failedToLoad": "Laden mislukt!",
+      "notesFile": "Roepnaam notities bestand",
+      "nameLabel": "Naam",
+      "namePlaceholder": "Naam voor uw roepnaam notitie bestand",
+      "locationLabel": "Locatie",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Voorgeïnstalleerd",
+      "customTitle": "Aangepast",
+      "addFile": "Voeg een nieuw bestand toe",
+      "aboutTitle": "Over roepnaam notities",
+      "names": {
+        "ham2k-hams-of-note": "Ham2K's Hams notitie"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Een werkelijk voorbeeld van wie is en wie is niet in de wereld van radio"
+      },
+      "help-md": "Roepnaam notities worden opgeslagen in simpele tekstbestanden, één oproep per regel gevolgd door informatie die u op het logscherm wilt weergeven. U kunt de ingebouwde bestanden gebruiken of uw eigen toevoegen.\n\nGeef een directe link naar een gewoon tekstbestand, of een \"deel link\" van een service zoals:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nRegels in dat bestand moeten er zo uitzien en kunnen basis markdown-opmaak ondersteunen:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nAls de invoer begint met een emoji, zal deze worden gebruikt in plaats van de standaard ⭐.\n\nInvoer kan worden gebruikt voor \"roepnaam uitbreiding\" als u eerst `..` of ` //` in het roepnaam veld typt, zoals `//DAN` in het voorbeeld hierboven."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Geen Canadese provincies",
+      "provincesCount_one": "1 Canadese provincie",
+      "provincesCount_other": "{{count}} Canadese provincies"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Instellingen",
+        "year": "Jaar",
+        "testMode-md": "Aangezien het evenement voor dit jaar nog niet is begonnen, kunt u de werking testen met QSOs van de afgelopen zeven dagen.",
+        "note-md": "LET OP: PoLo rapporteert uw resultaten met alle QSOs in het datumbereik, inclusief alle andere activaties die op dit apparaat aanwezig zijn.",
+        "info-md": "Het 13 Colonies Special Event vindt elk jaar plaats van 9 uur ET 1 juli tot middernacht ET 7 juli."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Huidige weer ophalen…",
+      "errorFetchingWeather": "Fout bij ophalen van weer",
+      "fetchingSolarWeather": "Zonneweer ophalen…",
+      "errorFetchingSolarWeather": "Fout bij het ophalen van zonneweer",
+      "addNote": "Notitie toevoegen: ‘{{note}}’…",
+      "addNotePrompt": "Een notitie toevoegen? blijf typen...",
+      "addNoteConfirm": "Notitie toegevoegd!",
+      "addTodo": "Voeg to-do toe: ‘{{note}}’…",
+      "addTodoPrompt": "Een to-do item toevoegen? blijf typen...",
+      "addTodoConfirm": "To-do toegevoegd!",
+      "sendChat": "Chat verzenden: ‘{{note}}’…",
+      "sendChatPrompt": "Een chat verzenden? blijf typen…",
+      "sendChatConfirm": "Gechat!"
+    },
+    "commands-debug": {
+      "syncall": "Alle bewerkingen verwijderen en gesynchroniseerde status resetten?",
+      "syncallConfirm": "Gegevens wissen en alles opnieuw synchroniseren…",
+      "syncup": "Lokale gegevens opnieuw verzenden naar synchronisatieservice?",
+      "syncupConfirm": "Opnieuw verzenden",
+      "wipedb": "Volledige database verwijderen (maar instellingen behouden)?",
+      "wipedbConfirm": "Database wissen",
+      "factory": "Alle gegevens en instellingen verwijderen?",
+      "factoryConfirm": "Fabrieksreset bezig...",
+      "switchLanguage": "Taal wijzigen naar `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Taal `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Overschakelen naar `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Ontwikkelaarsmodus activeren?",
+      "activateConfirm": "Ontwikkelaarsmodus geactiveerd!",
+      "deactivate": "Ontwikkelaarsmodus deactiveren?",
+      "deactivateConfirm": "Ontwikkelaarsmodus gedeactiveerd!",
+      "on": "Ontwikkelaarsmodus: AAN!!!",
+      "off": "Ontwikkelaarsmodus: UIT"
+    },
+    "commands-misc": {
+      "rtfm": "Lees de handleiding?",
+      "rtfmConfirm": "De handleiding openen",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "Zelf-spotten zonder frequentie niet mogelijk",
+        "selfSpotWithComments": "Zelf-spotten met ‘{{comments}}’?",
+        "selfSpotPrompt": "Zelf spotten?",
+        "selfSpottingWithComments": "Zelf-spotting bij {{freq}} met ‘{{comments}}’",
+        "selfSpotting": "Zelf-spotting bij {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "De bewerking starten?",
+      "startConfirm": "Bewerking gestart!",
+      "break": "Een pauze toevoegen?",
+      "breakConfirm": "Een bewerking pauze toegevoegd!",
+      "stop": "De bewerking stoppen?",
+      "stopConfirm": "Bewerking gestopt!"
+    },
+    "commands-operator": {
+      "change": "Operator wijzigen in {{operator}}?",
+      "changeConfirm": "Operator ingesteld op {{operator}}"
+    },
+    "commands-radio": {
+      "band": "Band wijzigen naar {{band}}?",
+      "bandConfirm": "Band ingesteld op {{band}}",
+      "frequency": "Frequentie wijzigen naar {{freq}} MHz{{mode}}?",
+      "frequencyConfirm": "Frequentie ingesteld op {{freq}} MHz{{mode}}",
+      "frequencyAndMode": "Frequentie wijzigen naar {{freq}} MHz ({{mode}})?",
+      "frequencyAndModeConfirm": "Frequentie ingesteld op {{freq}} MHz ({{mode}})",
+      "power": "Vermogen wijzigen naar {{power}}W?",
+      "powerConfirm": "Vermogen ingesteld op {{power}}W",
+      "mode": "Mode wijzigen naar {{mode}}?",
+      "modeConfirm": "Mode ingesteld op {{mode}}"
+    },
+    "commands-settings": {
+      "set": "Instelling {{name}}?",
+      "setChange": "Wijzig {{label}} naar {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} ingesteld op {{value}}",
+      "setNotChanged": "Niet gewijzigd"
+    },
+    "commands-time": {
+      "setTime": "Tijd instellen op {{time}}?",
+      "setDate": "Datum instellen op {{date}}?",
+      "timeSet": "Tijd ingesteld op {{time}}",
+      "dateSet": "Datum ingesteld op {{date}}",
+      "changeTimeByHours": "Tijd wijzigen met {{delta}} uren?",
+      "changeTimeByMinutes": "Tijd wijzigen met {{delta}} minuten?",
+      "changeTimeBySeconds": "Tijd wijzigen met {{delta}} seconden?",
+      "changeTimeByDays": "Tijd wijzigen met {{delta}} dagen?",
+      "changeTimeByWeeks": "Tijd wijzigen met {{delta}} weken?",
+      "changeTimeToNow": "Tijd wijzigen naar nu?",
+      "changeTimeToToday": "Tijd wijzigen naar vandaag?",
+      "changeTimeToYesterday": "Tijd wijzigen naar gisteren?",
+      "timeSetToNow": "Tijd ingesteld op nu",
+      "timeSetToToday": "Tijd ingesteld op vandaag",
+      "timeSetToYesterday": "Tijd ingesteld op gisteren"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "Geen referenties geselecteerd voor activering",
+        "title_one": "1 referentie activeren",
+        "title_other": "{{count}} referenties activeren",
+        "addMoreReferences": "Voeg meer referenties toe",
+        "addReference": "Voeg een referentie toe",
+        "activityLabel": "Activiteit - MY_SIG in ADIF (Optioneel)",
+        "activityPlaceholder": "i.e. COTA…",
+        "referenceLabel": "Referentie MY_SIG_INFO in ADIF",
+        "referencePlaceholder": "d.w.z. XY-1234…",
+        "nameLabel": "Naam (Optioneel)",
+        "namePlaceholder": "b.v. XYZ Kasteel…",
+        "addButton": "Voeg {{mySig}} {{mySigInfo}} toe"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun Ref"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Overschrijf specifieke gegevensbestandstitels hier",
+        "pota-all-parks": "POTA: Alle Parken",
+        "sota-all-summits": "SOTA: Alle Summits"
+      },
+      "loading": {
+        "progress": "Geladen `{{processedLines}}` referenties.\n\n`{{percent}}` • {{secondsLeft}} seconden over.",
+        "downloadingRawData": "Onbewerkte gegevens downloaden…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Geen DXCC-entiteiten",
+      "entitiesCount_one": "1 DXCC-entiteit",
+      "entitiesCount_other": "{{count}} DXCC-entiteiten"
+    },
+    "eca": {
+      "name": "Engelse Kastelen Awards",
+      "shortName": "ECA",
+      "exportName": "ECA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen kastelen geselecteerd voor activering",
+        "title_one": "1 kasteel activeren",
+        "title_other": "{{count}} kastelen activeren",
+        "noCastlesFound": "Geen kastelen gevonden",
+        "nearestMatches": "Dichtstbijzijnde overeenkomstige {{limit}} van {{count}}",
+        "matchingCastles_zero": "Geen overeenkomstige kastelen",
+        "matchingCastles_one": "1 overeenkomstig kasteel",
+        "matchingCastles_other": "{{count}} overeenkomstige kastelen",
+        "searchForCastles": "Zoek naar enkele kastelen om te activeren!",
+        "noCastlesNearby": "Geen kastelen in de buurt",
+        "nearbyCastles": "Nabijgelegen kastelen",
+        "searchPlaceholder": "Kastelen op naam of referentie…"
+      }
+    },
+    "ela": {
+      "name": "Engelse Vuurtoren Awards",
+      "shortName": "ELA",
+      "exportName": "ELA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen vuurtorens geselecteerd voor activering",
+        "title_one": "1 vuurtoren activeren",
+        "title_other": "{{count}} vuurtorens activeren",
+        "noLighthousesFound": "Geen vuurtorens gevonden",
+        "nearestMatches": "Dichtstbijzijnde overeenkomstige {{limit}} van {{count}}",
+        "matchingLighthouses_zero": "Geen overeenkomstige vuurtorens",
+        "matchingLighthouses_one": "1 overeenkomstige vuurtoren",
+        "matchingLighthouses_other": "{{count}} overeenkomstige vuurtorens",
+        "searchForLighthouses": "Zoek naar enkele vuurtorens om te activeren!",
+        "noLighthousesNearby": "Geen vuurtorens in de buurt",
+        "nearbyLighthouses": "Nabijgelegen vuurtorens",
+        "searchPlaceholder": "Vuurtorens op naam of referentie…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Uitwisselingsinformatie",
+        "classLabel": "Klasse",
+        "locationLabel": "Locatie",
+        "additionalInformation": "Aanvullende informatie",
+        "highestTransmitterPowerLabel": "Hoogste zendervermogen",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP: 5W of minder",
+        "qroOption": "QRO: 100W of minder",
+        "moreThan100WOption": "Meer dan 100W",
+        "powerSourceLabel": "Voedingsbron",
+        "powerSourcePlaceholder": "Selecteer een voedingsbron",
+        "batteriesOption": "Batterijen, Zonne-energie, Wind",
+        "commercialPowerOption": "Net energie, Generator",
+        "information-md": "Klasse voor ARRL Field Day is bijvoorbeeld `2A`:\n\n  - `1`, `2`, `3`... voor het aantal zenders.\n  - `A` voor Groep (3 of meer) Draagbare Station\n  - `B` voor Een of twee personen Draagbare Station\n  - `C` voor Mobiele Station\n  - `D` voor Thuisstation\n  - `E` voor Thuisstation op Noodkracht\n  - `F` voor Noodoperatiecentrum\n\nLocatie is de ARRL Sectie, RAC Sectie, `MX` voor Mexico, of `DX` voor ergens anders.\n\nMeer info in de **[officiële regels](https://www.arrl.org/field-day-rules)**."
+      }
+    },
+    "gma": {
+      "name": "Global Mountain Activity",
+      "shortName": "GMA",
+      "exportName": "GMA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen toppen geselecteerd voor activering",
+        "title_one": "1 top activeren",
+        "title_other": "{{count}} summits activeren",
+        "noSummitsFound": "Geen summits gevonden",
+        "nearestMatches": "Dichtstbijzijnde overeenkomstige {{limit}} van {{count}}",
+        "matchingSummits_zero": "Geen overeenkomstige summits",
+        "matchingSummits_one": "1 overeenkomstige summit",
+        "matchingSummits_other": "{{count}} overeenkomstige summits",
+        "searchForSummits": "Zoek naar enkele summits om te activeren!",
+        "noSummitsNearby": "Geen summits in de buurt",
+        "nearbySummits": "Nabijgelegen summits",
+        "searchPlaceholder": "Summits op naam of referentie…",
+        "unknownSummit": "Onbekende summit"
+      }
+    },
+    "hsota": {
+      "name": "Hills on the Air",
+      "shortName": "HSOTA",
+      "exportName": "HSOTA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen locaties geselecteerd voor activering",
+        "title_one": "1 locatie activeren",
+        "title_other": "{{count}} locaties activeren",
+        "noSitesFound": "Geen locaties gevonden",
+        "nearestMatches": "Dichtstbijzijnde {{limit}} van {{count}} overeenkomsten",
+        "matchingSites_zero": "Geen overeenkomende locaties",
+        "matchingSites_one": "1 overeenkomende locatie",
+        "matchingSites_other": "{{count}} overeenkomende locaties",
+        "searchForSites": "Zoek naar enkele locaties om te activeren!",
+        "noSitesNearby": "Geen locaties in de buurt",
+        "nearbySites": "Nabijgelegen locaties",
+        "searchPlaceholder": "Locaties op naam of referentie…",
+        "unknownSite": "Onbekende locatie"
+      }
+    },
+    "mota": {
+      "name": "Mills on the Air",
+      "shortName": "MOTA",
+      "exportName": "MOTA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen molens geselecteerd voor activering",
+        "title_one": "1 molen activeren",
+        "title_other": "{{count}} molens activeren",
+        "noMillsFound": "Geen molens gevonden",
+        "nearestMatches": "Dichtstbijzijnde overeenkomstige {{limit}} van {{count}}",
+        "matchingMills_zero": "Geen overeenkomstige molens",
+        "matchingMills_one": "1 overeenkomstige molen",
+        "matchingMills_other": "{{count}} overeenkomstige molens",
+        "searchForMills": "Zoek naar enkele molens om te activeren!",
+        "noMillsNearby": "Geen molens in de buurt",
+        "nearbyMills": "Nabijgelegen molens",
+        "searchPlaceholder": "Molens op naam of referentie…",
+        "unknownMill": "Onbekende molen"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun Molen"
+      }
+    },
+    "pga": {
+      "name": "Pools Gmina Award",
+      "shortName": "PGA",
+      "exportName": "PGA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen Gminas geselecteerd voor activering",
+        "title_one": "1 Gmina activeren",
+        "title_other": "{{count}} Gminas activeren",
+        "noGminasFound": "Geen Gminas gevonden",
+        "nearestMatches": "Dichtstbijzijnde  {{limit}} van {{count}}",
+        "matchingGminas_zero": "Geen overeenkomstige Gina",
+        "matchingGminas_one": "1 overeenkomstige Gmina",
+        "matchingGminas_other": "{{count}} overeenkomstige Gminas",
+        "searchForGminas": "Zoek naar enkele Gminas om te activeren!",
+        "noGminasNearby": "Geen Gminas in de buurt",
+        "nearbyGminas": "Nabijgelegen Gina",
+        "searchPlaceholder": "Gminas op naam of referentie…",
+        "unknownGmina": "Onbekende Gmina"
+      }
+    },
+    "pota": {
+      "name": "POTA: Parks on the Air",
+      "shortName": "POTA",
+      "exportName": "POTA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen parken geselecteerd voor activering",
+        "title_one": "1 park activeren",
+        "title_other": "{{count}} parken activeren",
+        "noParksFound": "Geen parken gevonden",
+        "nearestMatches": "Dichtstbijzijnde overeenkomstige {{limit}} van {{count}}",
+        "matchingParks_zero": "Geen overeenkomstige parken",
+        "matchingParks_one": "1 overeenkomstig park",
+        "matchingParks_other": "{{count}} overeenkomstige parken",
+        "searchForParks": "Zoek naar parken om te activeren!",
+        "noParksNearby": "Geen parken in de buurt",
+        "nearbyParks": "Parken in de buurt",
+        "searchPlaceholder": "Parken op naam of referentie…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Geen P2P's",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P's",
+        "huntedRefsCount_zero": "Geen parken gejaagd",
+        "huntedRefsCount_one": "1 park gejaagd",
+        "huntedRefsCount_other": "{{fmtCount}} parken gejaagd",
+        "activatorQSOsCount_zero": "Geen activator QSO's",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
+        "ref2refQSOsCount_zero": "Geen P2P QSO's",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSO's",
+        "huntedQSOsCount_zero": "Geen gejaagde QSO's",
+        "huntedQSOsCount_one": "1 gejaagde QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} gejaagde QSO's",
+        "operationTotals": "Operationele totaal",
+        "referencesActivatedCount_zero": "Geen parken geactiveerd",
+        "referencesActivatedCount_one": "1 park geactiveerd",
+        "referencesActivatedCount_other": "{{fmtCount}} parken geactiveerd",
+        "referencesMissedCount_zero": "Geen onvolledige parken",
+        "referencesMissedCount_one": "1 onvolledig park",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige parken",
+        "referencesHuntedCount_zero": "Geen parken gejaagd",
+        "referencesHuntedCount_one": "1 park gejaagd",
+        "referencesHuntedCount_other": "{{fmtCount}} parken gejaagd"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun POTA"
+      },
+      "postSpotAPI": {
+        "error": "Fout bij het plaatsen van POTA spot",
+        "serverResponse": "Server reageerde met fout {{status}}: {{body}}"
+      },
+      "exampleRefName": "Voorbeeld Nationaal Park",
+      "unknownRefName": "Onbekend Park",
+      "noRefsNearby": "Geen parken in de buurt!"
+    },
+    "siota": {
+      "name": "Silos in de lucht",
+      "shortName": "SIOTA",
+      "exportName": "SIOTA Activering",
+      "account": {
+        "title": "ParksnPeaks (SiOTA-spotting)",
+        "dialogTitle": "ParksnPeaks Account",
+        "description": "Gebruikersnaam: {{username}}",
+        "noAccount": "Geen account",
+        "pleaseEnterDetails": "Voer de gegevens van uw ParksnPeaks-account in:",
+        "usernameLabel": "Gebruikersnaam (niet roepletter)",
+        "usernamePlaceholder": "uw gebruikersnaam",
+        "apiKeyLabel": "API-sleutel (geen wachtwoord!)",
+        "apiKeyPlaceholder": "Uw API sleutel"
+      },
+      "activityOptions": {
+        "title_zero": "Geen silo's geselecteerd voor activering",
+        "title_one": "1 silo activeren",
+        "title_other": "{{count}} Silo's",
+        "noSilosFound": "Geen silo's gevonden",
+        "nearestMatches": "Dichtstbijzijnde overeenkomstige {{limit}} van {{count}}",
+        "matchingSilos_zero": "Geen overeenkomstige silo's",
+        "matchingSilos_one": "1 overeenkomstige silo",
+        "matchingSilos_other": "{{count}} overeenkomstige silo's",
+        "searchForSilos": "Zoek naar silo's om te activeren!",
+        "noSilosNearby": "Geen silo's in de buurt",
+        "nearbySilos": "Silo's in de buurt",
+        "searchPlaceholder": "Silo's op naam of referentie…",
+        "unknownSilo": "Onbekende silo"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun Silo"
+      },
+      "postSpotAPI": {
+        "error": "Fout bij het plaatsen van SiOTA spot",
+        "serverResponse": "Server reageerde met fout {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "account": {
+        "title": "SOTA (voor SOTAWatch self-spotting)",
+        "dialogTitle": "SOTA Account",
+        "description": "Ingelogd als {{callsign}}",
+        "noAccount": "Geen account",
+        "error": "Fout bij ophalen accountgegevens",
+        "connect": "Verbind met uw SOTA-account"
+      },
+      "notLoggedInAlertTitle": "Waarschuwing",
+      "notLoggedInAlertText": "Niet ingelogd bij SOTAWatch voor zelf-spotting. Ga naar PoLo instellingen",
+      "activityOptions": {
+        "title_zero": "Geen summits geselecteerd voor activering",
+        "title_one": "1 summit activeren",
+        "title_other": "{{count}} summits activeren",
+        "noSummitsFound": "Geen summits gevonden",
+        "nearestMatches": "Dichtstbijzijnde overeenkomstige  {{limit}} van {{count}}",
+        "matchingSummits_zero": "Geen overeenkomstige summits",
+        "matchingSummits_one": "1 overeenkomstige summit",
+        "matchingSummits_other": "{{count}} overeenkomstige summits",
+        "searchForSummits": "Zoek naar summits om te activeren!",
+        "noSummitsNearby": "Geen summits in de buurt",
+        "nearbySummits": "Summits in de buurt",
+        "searchPlaceholder": "Summits op naam of referentie…",
+        "unknownSummit": "Onbekende summit"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Geen S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "Geen summits hunted",
+        "huntedRefsCount_one": "1 summit hunted",
+        "huntedRefsCount_other": "{{fmtCount}} summits hunted",
+        "activatorQSOsCount_zero": "Geen activator QSO's",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
+        "ref2refQSOsCount_zero": "Geen S2S QSO's",
+        "ref2refQSOsCount_one": "1 S2S QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S QSO's",
+        "huntedQSOsCount_zero": "Geen hunter QSO's",
+        "huntedQSOsCount_one": "1 hunter QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} hunter QSO's",
+        "operationTotals": "Operationele totaal",
+        "referencesActivatedCount_zero": "Geen toppen geactiveerd",
+        "referencesActivatedCount_one": "1 top geactiveerd",
+        "referencesActivatedCount_other": "{{fmtCount}} summits geactiveerd",
+        "referencesMissedCount_zero": "Geen onvolledige summit logs",
+        "referencesMissedCount_one": "1 onvolledige summit log",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige summit logs",
+        "referencesHuntedCount_zero": "Geen toppen gejaagd",
+        "referencesHuntedCount_one": "1 top gejaagd",
+        "referencesHuntedCount_other": "{{fmtCount}} summits hunted"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Fout bij het plaatsen van SOTA spot",
+        "serverResponse": "Server reageerde met status {{status}} {{message}}",
+        "sotaAccountLoggedOut": "SOTA-account uitgelogd. Log opnieuw in via de PoLo-instellingen"
+      },
+      "exampleRefName": "Voorbeeld Top",
+      "unknownRefName": "Onbekende Top",
+      "noRefsNearby": "Geen toppen in de buurt!"
+    },
+    "usStates": {
+      "statesCount_zero": "Geen Amerikaanse Staten",
+      "statesCount_one": "1 Amerikaanse Staat",
+      "statesCount_other": "{{count}} Amerikaanse Staten"
+    },
+    "wab": {
+      "name": "Gewerkte Groot-Brittannië/Ierland",
+      "description": "Voeg WAB/WAI-vierkant toe aan operatie",
+      "workedAllBritainSquare": "Gewerkte WAB square",
+      "workedAllIrelandSquare": "Gewerkte WAI square",
+      "enterSquare": "Voer square in",
+      "placeholderBritain": "bijv. SU14",
+      "placeholderIreland": "bijv. N93",
+      "currentSquare": "Huidig vierkant:",
+      "noSquareSet": "Geen vierkant ingesteld"
+    },
+    "wca": {
+      "name": "World Castle Awards",
+      "shortName": "WCA",
+      "exportName": "WCA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen kastelen geselecteerd voor activering",
+        "title_one": "1 kasteel activeren",
+        "title_other": "{{count}} kastelen activeren",
+        "noCastlesFound": "Geen kastelen gevonden",
+        "nearestMatches": "Dichtstbijzijnde {{limit}} van {{count}} overeenkomsten",
+        "matchingCastles_zero": "Geen overeenkomende kastelen",
+        "matchingCastles_one": "1 overeenkomend kasteel",
+        "matchingCastles_other": "{{count}} overeenkomende kastelen",
+        "searchForCastles": "Zoek naar enkele kastelen om te activeren!",
+        "noCastlesNearby": "Geen kastelen in de buurt",
+        "nearbyCastles": "Nabijgelegen kastelen",
+        "searchPlaceholder": "Kastelen op naam of referentie…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Geen gelogde kastelen",
+        "huntedRefsCount_one": "1 kasteel gelogd",
+        "huntedRefsCount_other": "{{fmtCount}} kastelen gelogd",
+        "activatorQSOsCount_zero": "Geen activator QSO's",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
+        "huntedQSOsCount_zero": "Geen hunter QSO's",
+        "huntedQSOsCount_one": "1 gejaagde QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} gejaagde QSO's",
+        "operationTotals": "Operationele totaal",
+        "referencesActivatedCount_zero": "Geen kastelen geactiveerd",
+        "referencesActivatedCount_one": "1 kasteel geactiveerd",
+        "referencesActivatedCount_other": "{{fmtCount}} kastelen geactiveerd",
+        "referencesMissedCount_zero": "Geen onvolledige kastelen activatie",
+        "referencesMissedCount_one": "1 onvolledige kasteel activatie",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige kastelen geactiveerd",
+        "referencesHuntedCount_zero": "Geen gelogde kastelen",
+        "referencesHuntedCount_one": "1 kasteel gelogd",
+        "referencesHuntedCount_other": "{{fmtCount}} kastelen gejaagd"
+      },
+      "exampleRefName": "Voorbeeld kasteel",
+      "unknownRefName": "Onbekend kasteel",
+      "noRefsNearby": "Geen kastelen in de buurt!"
+    },
+    "wfd": {
+      "name": "Winter Field Day",
+      "shortName": "WFD",
+      "exportName": "WFD Activering",
+      "activityOptions": {
+        "exchangeInformation": "Informatie Uitwisselen",
+        "classLabel": "Klasse",
+        "locationLabel": "Locatie",
+        "objectives_zero": "Geen doelen bereikt",
+        "objectives_one": "1 doel bereikt, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} doelen bereikt, OM ×{{multiplier}}",
+        "objectivesTitle": "Doelen: {{count}} bereikt, OM ×{{multiplier}}",
+        "objectivesDescription": "Vergeet niet deze doelen ook te rapporteren bij het indienen van uw logboek!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Alternatieve stroom",
+        "awayFromHome": "Buiten huis opereren",
+        "fmSatelliteContact": "FM satelliet QSO",
+        "ssbSatelliteContact": "SSB of CW satelliet QSO",
+        "winlinkEmails": "Winlink emails",
+        "specialBulletin": "Special Bulletin",
+        "sixBands": "Zes banden",
+        "twelveBands": "Twaalf banden",
+        "multipleModes": "Meerdere modes",
+        "qrpOperation": "QRP activatie",
+        "sixContinuousHours": "Zes opeenvolgende uren"
+      },
+      "objectiveDescription": {
+        "altPower": "Bedien 100% op alternatieve energie, zoals batterijen, zon, wind, enz.",
+        "awayFromHome": "Zet uw veldstation op minstens 1km van huis.",
+        "fmSatelliteContact": "Maak minstens 1 FM satelliet QSO tijdens de activatie.",
+        "ssbSatelliteContact": "Maak minstens één QSO in SSB of CW.",
+        "winlinkEmails": "Verzend EN ontvang minstens één email met Winlink over RF.",
+        "specialBulletin": "Kopieer nauwkeurig het \"WFD Special Bulletin\" bericht en dien uw kopie in bij uw logboek.",
+        "sixBands": "Maak minstens drie QSO's op elk van zes verschillende banden.",
+        "twelveBands": "Maak minstens drie QSO's op elk van minstens twaalf verschillende banden.",
+        "multipleModes": "Gebruik meerdere mods tijdens de activatie.",
+        "qrpOperation": "Activeer met QRP-vermogen  (10W of minder in SSB, 5W of minder in CW of digitaal).",
+        "sixContinuousHours": "Activeer minstens zes opeenvolgende uren tijdens de activatie."
+      },
+      "information-md": "Klasse voor Winter Field Day is bijvoorbeeld `2M`:\n\n  - `1`, `2`, `3`... voor het aantal zenders.\n  - `H` voor Thuisstation\n  - `I` voor Binnen\n  - `O` voor Buiten\n  - `M` voor Mobiele of Mobiel Stationair\n\nLocatie is de ARRL Sectie, RAC Sectie, `MX` voor Mexico, of `DX` voor ergens anders.\n\nMeer info in de **[officiële regels](https://www.winterfieldday.com/sop.php)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: Worldwide Bunker Awards",
+      "shortName": "WWBOTA",
+      "exportName": "WWBOTA Activering",
+      "activityOptions": {
+        "title_zero": "Geen bunkers geselecteerd voor activering",
+        "title_one": "1 bunker activeren",
+        "title_other": "{{count}} bunkers activeren",
+        "noBunkersFound": "Geen bunkers gevonden",
+        "nearestMatches": "Dichtstbijzijnde overeenkomstige {{limit}} van {{count}}",
+        "matchingBunkers_zero": "Geen overeenkomstige bunkers",
+        "matchingBunkers_one": "1 overeenkomstige bunker",
+        "matchingBunkers_other": "{{count}} overeenkomstige bunkers",
+        "searchForBunkers": "Zoek naar bunkers om te activeren!",
+        "noBunkersNearby": "Geen bunkers in de buurt",
+        "nearbyBunkers": "Bunkers in de buurt",
+        "searchPlaceholder": "Bunkers op naam of referentie…",
+        "unknownBunker": "Onbekende bunker"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun Bunker"
+      },
+      "postSpotAPI": {
+        "error": "Fout bij het plaatsen van WWBOTA spot",
+        "serverResponse": "Server reageerde met status {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: World Wide Flora & Fauna",
+      "shortName": "WWFF",
+      "exportName": "WWFF Activering",
+      "activityOptions": {
+        "title_zero": "Geen parken geselecteerd voor activering",
+        "title_one": "1 park activeren",
+        "title_other": "{{count}} parken activeren",
+        "noParksFound": "Geen parken gevonden",
+        "nearestMatches": "Dichtstbijzijnde overeenkomstige {{limit}} van {{count}}",
+        "matchingParks_zero": "Geen overeenkomstige parken",
+        "matchingParks_one": "1 overeenkomstig park",
+        "matchingParks_other": "{{count}} overeenkomstige parken",
+        "searchForParks": "Zoek naar parken om te activeren!",
+        "noParksNearby": "Geen parken in de buurt",
+        "nearbyParks": "Parken in de buurt",
+        "searchPlaceholder": "Parken op naam of referentie…",
+        "unknownPark": "Onbekend park"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Geen P2P's",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P's",
+        "huntedRefsCount_zero": "Geen P2P's",
+        "huntedRefsCount_one": "1 park hunted",
+        "huntedRefsCount_other": "{{fmtCount}} parken hunted",
+        "activatorQSOsCount_zero": "Geen activator QSO's",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
+        "ref2refQSOsCount_zero": "Geen P2P QSO's",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSO's",
+        "huntedQSOsCount_zero": "Geen hunter QSO's",
+        "huntedQSOsCount_one": "1 hunter QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} gejaagde QSO's",
+        "operationTotals": "Activatie Totalen",
+        "referencesActivatedCount_zero": "Geen parken geactiveerd",
+        "referencesActivatedCount_one": "1 park geactiveerd",
+        "referencesActivatedCount_other": "{{fmtCount}} parken geactiveerd",
+        "referencesMissedCount_zero": "Geen onvolledige parken log",
+        "referencesMissedCount_one": "1 onvolledig park park",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige park logs",
+        "referencesHuntedCount_zero": "Geen parken hunted",
+        "referencesHuntedCount_one": "1 park hunted",
+        "referencesHuntedCount_other": "{{fmtCount}} parken hunted"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun WWFF"
+      },
+      "exampleRefName": "Voorbeeldpark",
+      "unknownRefName": "Onbekend Park",
+      "noRefsNearby": "Geen parken in de buurt!",
+      "postSpotAPI": {
+        "error": "Fout bij het plaatsen van WWFF spot",
+        "serverResponse": "Server reageerde met status {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "account": {
+        "title": "ZLOTA (ZLOTA-spotting)",
+        "dialogTitle": "ZLOTA Account",
+        "description": "Roepnaam: {{callsign}}",
+        "noAccount": "Geen account",
+        "pleaseEnterDetails": "Voer de gegevens van uw ZLOTA account in:",
+        "callsignLabel": "Roepnaam",
+        "callsignPlaceholder": "uw account roepnaam",
+        "pinLabel": "PIN (geen wachtwoord!)",
+        "pinPlaceholder": "Uw PIN"
+      },
+      "activityOptions": {
+        "title_zero": "Geen referenties geselecteerd voor activering",
+        "title_one": "1 referentie activeren",
+        "title_other": "{{count}} referenties activeren",
+        "noReferencesFound": "Geen referenties gevonden",
+        "nearestMatches": "Dichtstbijzijnde overeenkomstige {{limit}} van {{count}}",
+        "matchingReferences_zero": "Geen overeenkomstige referenties",
+        "matchingReferences_one": "1 overeenkomstige referentie",
+        "matchingReferences_other": "{{count}} overeenkomstige referenties",
+        "searchForReferences": "Zoek naar referenties om te activeren!",
+        "noReferencesNearby": "Geen referenties in de buurt",
+        "nearbyReferences": "Referenties in de buurt",
+        "searchPlaceholder": "Referenties op naam of nummer",
+        "unknownReference": "Onbekende referentie"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun Referentie"
+      },
+      "postSpotAPI": {
+        "error": "Fout bij het plaatsen van ZLOTA spot",
+        "serverResponse": "Server reageerde met status {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "ref2refCount_zero": "Geen Ref2Refs",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Refs",
+        "huntedRefsCount_zero": "Geen referenties gejaagd",
+        "huntedRefsCount_one": "1 referentie gejaagd",
+        "huntedRefsCount_other": "{{fmtCount}} referenties gejaagd",
+        "activatorQSOsCount_zero": "Geen activator QSO's",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
+        "ref2refQSOsCount_zero": "Geen Ref2Ref QSO's",
+        "ref2refQSOsCount_one": "1 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSO's",
+        "huntedQSOsCount_zero": "Geen hunted QSO's",
+        "huntedQSOsCount_one": "1 hunted QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} hunted QSO's",
+        "operationTotals": "Activatie Totalen",
+        "referencesActivatedCount_zero": "Geen referenties geactiveerd",
+        "referencesActivatedCount_one": "1 referentie geactiveerd",
+        "referencesActivatedCount_other": "{{fmtCount}} referenties geactiveerd",
+        "referencesMissedCount_zero": "Geen onvolledige referentie logs",
+        "referencesMissedCount_one": "1 onvolledige referentie log",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige referenties logs",
+        "referencesHuntedCount_zero": "Geen referenties hunted",
+        "referencesHuntedCount_one": "1 referentie gejaagd",
+        "referencesHuntedCount_other": "{{fmtCount}} referenties gejaagd"
+      }
+    }
+  }
+}

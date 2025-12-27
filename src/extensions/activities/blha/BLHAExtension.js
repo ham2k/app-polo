@@ -11,12 +11,13 @@ import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { Info } from './BLHAInfo'
 import { blhaFindAllByLocation, blhaFindOneByReference, registerBLHADataFile } from './BLHADataFile'
 import { BLHAActivityOptions } from './BLHAActivityOptions'
-import { BLHAPostSpot } from './BLHAPostSpot'
+import { BLHAPostSelfSpot } from './BLHAPostSelfSpot'
 import { LOCATION_ACCURACY } from '../../constants'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { generateActivityOperationAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 const Extension = {
   ...Info,
@@ -38,7 +39,7 @@ const ActivityHook = {
   ...Info,
   MainExchangePanel: null,
   Options: BLHAActivityOptions,
-  postSpot: BLHAPostSpot,
+  postSelfSpot: BLHAPostSelfSpot,
 
   sampleOperations: ({ settings, callInfo }) => {
     return [
@@ -131,7 +132,11 @@ const ReferenceHandler = {
     return fields
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+  scoringForQSO: generateActivityScorer({ info: Info }),
+  accumulateScoreForOperation: generateActivityOperationAccumulator({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info }),
+
+  originalScoringForQSO: ({ qso, qsos, operation, ref }) => {
     const { band, mode, key, startAtMillis } = qso
 
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.key !== key)
@@ -141,7 +146,8 @@ const ReferenceHandler = {
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
-      if (sameBand && sameMode) {
+      const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0
+      if (sameBandMode) {
         return { value: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
@@ -153,7 +159,7 @@ const ReferenceHandler = {
     }
   },
 
-  accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
+  originalAccumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
     if (!ref?.ref) return score // No scoring if not activating
     if (!score?.key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
@@ -177,7 +183,7 @@ const ReferenceHandler = {
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  originalSummarizeScore: ({ score, operation, ref, section }) => {
     score.activated = score.value >= 25
     if (score.activated) {
       score.summary = '✓'

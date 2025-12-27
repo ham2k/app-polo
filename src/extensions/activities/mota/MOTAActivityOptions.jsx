@@ -1,41 +1,36 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Searchbar } from 'react-native-paper'
+import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { useTranslation } from 'react-i18next'
 
-import { selectOperationCallInfo, setOperationData } from '../../../store/operations'
+import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
-import { ListRow } from '../../../screens/components/ListComponents'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
 import { Info } from './MOTAInfo'
 import { motaFindAllByLocation, motaFindAllByName, motaFindOneByReference } from './MOTADataFile'
 import { MOTAListItem } from './MOTAListItem'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
-export function MOTAActivityOptions (props) {
+export function MOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
+
   const NEARBY_DEGREES = 0.25
-
-  const { styles, operation, settings } = props
-
-  const dispatch = useDispatch()
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const refs = useMemo(() => filterRefs(operation, Info.activationType).filter(ref => ref.ref), [operation])
+  const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    if (refs?.length === 0) return 'No mills selected for activation'
-    else if (refs?.length === 1) return 'Activating 1 mill'
-    else return `Activating ${refs.length} mills`
-  }, [refs])
+    return t('extensions.mota.activityOptions.title', 'Activating {{count}} mills', { count: activityRefs?.length })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
@@ -53,8 +48,8 @@ export function MOTAActivityOptions (props) {
         console.info('Geolocation error', error)
       }, {
         enableHighAccuracy: true,
-        timeout: 30 * 1000 /* 30 seconds */,
-        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+        timeout: 1000 * 30 /* 30 seconds */,
+        maximumAge: 1000 * 60 /* 1 minute */
       }
     )
   }, [])
@@ -63,7 +58,7 @@ export function MOTAActivityOptions (props) {
   useEffect(() => {
     setTimeout(async () => {
       const datas = []
-      for (const ref of refs) {
+      for (const ref of activityRefs) {
         const lookupData = await motaFindOneByReference(ref.ref)
         const newData = { ...ref, ...lookupData }
         if (location?.lat && location?.lon) {
@@ -73,7 +68,7 @@ export function MOTAActivityOptions (props) {
       }
       setRefDatas(datas)
     }, 0)
-  }, [refs, location, settings.distanceUnits])
+  }, [activityRefs, location, settings.distanceUnits])
 
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
@@ -108,46 +103,41 @@ export function MOTAActivityOptions (props) {
         // If it's a naked reference, let's ensure the results include it, or else add a placeholder
         // just to cover any cases where the user knows about a new reference not included in our data
         if (nakedReference && !newResults.find(ref => ref.ref === nakedReference)) {
-          newResults.unshift({ ref: nakedReference, name: 'Unknown mill' })
+          newResults.unshift({ ref: nakedReference, name: t('extensions.mota.activityOptions.unknownMill', 'Unknown mill') })
         }
 
         setResults(newResults.slice(0, 15))
-        if (newResults.length === 0) {
-          setResultsMessage('No mills found')
-        } else if (newResults.length > 15) {
-          setResultsMessage(`Nearest 15 of ${newResults.length} matches`)
-        } else if (newResults.length === 1) {
-          setResultsMessage('One matching mill')
+        if (newResults.length > 15) {
+          setResultsMessage(t('extensions.mota.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newResults.length }))
         } else {
-          setResultsMessage(`${newResults.length} matching mills`)
+          setResultsMessage(t('extensions.mota.activityOptions.matchingMills', '{{count}} matching mills', { count: newResults.length }))
         }
       } else {
         setResults(nearbyResults)
-        if (nearbyResults === undefined) setResultsMessage('Search for some mills to activate!')
-        else if (nearbyResults.length === 0) setResultsMessage('No mills nearby')
-        else setResultsMessage('Nearby mills')
+        if (nearbyResults === undefined) setResultsMessage(t('extensions.mota.activityOptions.searchForMills', 'Search for some mills to activate!'))
+        else if (nearbyResults.length === 0) setResultsMessage(t('extensions.mota.activityOptions.noMillsNearby', 'No mills nearby'))
+        else setResultsMessage(t('extensions.mota.activityOptions.nearbyMills', 'Nearby mills'))
       }
     })
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits])
-
+  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, [...refs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
+  }, [activityRefs, allRefs, setRefs])
 
   const handleRemoveReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, refs.filter(r => r.ref !== ref)) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== ref)))
+  }, [activityRefs, allRefs, setRefs])
 
   return (
     <>
-      <Ham2kListSection title={title}>
-      {refDatas.map((refData, index) => (
+      <H2kListSection title={title}>
+        {refDatas.map((refData, index) => (
           <MOTAListItem
             key={refData.ref}
             activityRef={refData.ref}
             refData={refData}
-            allRefs={refs}
+            allRefs={activityRefs}
             operationRef={refData.ref}
             styles={styles}
             settings={settings}
@@ -155,22 +145,22 @@ export function MOTAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </Ham2kListSection>
+      </H2kListSection>
 
-      <ListRow>
-        <Searchbar
-          placeholder={'Mills by name or reference…'}
+      <H2kListRow>
+        <H2kSearchBar
+          placeholder={t('extensions.mota.activityOptions.searchPlaceholder', 'Mills by name or reference…')}
           value={search}
           onChangeText={setSearch}
         />
-      </ListRow>
+      </H2kListRow>
 
-      <Ham2kListSection title={resultsMessage}>
+      <H2kListSection title={resultsMessage}>
         {results.map((result) => (
           <MOTAListItem
             key={result.ref}
             activityRef={result.ref}
-            allRefs={refs}
+            allRefs={activityRefs}
             refData={result}
             styles={styles}
             settings={settings}
@@ -179,7 +169,7 @@ export function MOTAActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </Ham2kListSection>
+      </H2kListSection>
     </>
   )
 }

@@ -40,7 +40,7 @@ export const USStatesScoringHandler = {
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  summarizeScore: ({ t, score, operation, ref, section }) => {
     score.icon = 'star'
     score.weight = USStatesScoringHandler.weight
 
@@ -53,7 +53,7 @@ export const USStatesScoringHandler = {
     }
 
     if (count >= 3) {
-      score.label = `${count} US States`
+      score.label = t?.('extensions.usStates.statesCount', '{{count}} US States', { count: count }) || `${count} US States`
       score.longSummary = ''
       // for (let row = 0; row < 5; row++) {
       // Object.keys(US_STATES).slice(row * 10, row * 10 + 10).forEach(state => {

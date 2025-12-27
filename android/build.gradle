@@ -2,13 +2,13 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "35.0.0"
+        buildToolsVersion = "36.0.0"
         minSdkVersion = 24
-        compileSdkVersion = 35
-        targetSdkVersion = 35
+        compileSdkVersion = 36
+        targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.0.21"
-        RNMapboxMapsVersion = '11.11.0'
+        kotlinVersion = "2.1.20"
+        RNMapboxMapsVersion = '11.15.3'
     }
     repositories {
         google()
@@ -23,6 +23,11 @@ buildscript {
 
 allprojects {
     repositories {
+        maven {
+            // react-native-ble-plx
+            url 'https://www.jitpack.io'
+        }
+
         maven {
             url 'https://api.mapbox.com/downloads/v2/releases/maven'
             authentication {

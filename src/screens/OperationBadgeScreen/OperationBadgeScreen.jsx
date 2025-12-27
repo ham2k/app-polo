@@ -1,13 +1,14 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { StatusBar, View, useColorScheme } from 'react-native'
+import { View, useColorScheme } from 'react-native'
+import { SystemBars } from 'react-native-edge-to-edge'
 import { IconButton, Text } from 'react-native-paper'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
@@ -56,31 +57,31 @@ function prepareStyles (baseTheme, themeColor, deviceColorScheme) {
       right: 100
     },
     title: {
-      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      fontSize: baseTheme.mediumFontSize,
       color: '#222',
       fontFamily: baseTheme.boldTitleFontFamily
     },
     secondaryTitle: {
-      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      fontSize: baseTheme.mediumFontSize,
       color: '#222',
       fontFamily: baseTheme.boldTitleFontFamily
     },
     subTitle: {
-      fontSize: 16 * baseTheme.fontScaleAdjustment,
+      fontSize: baseTheme.normalFontSize,
       color: '#222',
       fontFamily: baseTheme.normalFontFamily
     },
     ham2k: {
-      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      fontSize: baseTheme.mediumFontSize,
       color: baseTheme.isIOS && deviceColorScheme === 'dark' ? '#CCC' : '#222',
       fontFamily: baseTheme.normalFontFamily,
-      lineHeight: 18 * baseTheme.fontScaleAdjustment
+      lineHeight: baseTheme.mediumFontSize
     },
     logger: {
-      fontSize: 18 * baseTheme.fontScaleAdjustment,
+      fontSize: baseTheme.mediumFontSize,
       color: baseTheme.isIOS && deviceColorScheme === 'dark' ? '#CCC' : '#222',
       fontFamily: baseTheme.boldTitleFontFamily,
-      lineHeight: 18 * baseTheme.fontScaleAdjustment
+      lineHeight: baseTheme.mediumFontSize
     }
   }
 }
@@ -119,18 +120,23 @@ export default function OperationBadgeScreen ({ navigation, route }) {
   }, [operation])
 
   const opStats = useMemo(() => {
-    return `${qsos.length} ${qsos.length === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`
+    const activeQSOsLength = qsos.filter(qso => !qso.deleted).length
+    return `${activeQSOsLength} ${activeQSOsLength === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`
   }, [qsos, operation])
+
+  const [projection, setProjection] = useState('mercator')
 
   return (
     <>
-      <StatusBar hidden />
+      <SystemBars hidden />
+
       <MapWithQSOs
         styles={styles}
         operation={operation}
         qth={qth}
         qsos={qsos}
         settings={settings}
+        projection={projection}
       />
       <View style={[styles.titleContainer,
         { width: '100%', maxWidth: '100%', paddingTop: safeArea.top + styles.oneSpace, paddingHorizontal: Math.max(safeArea.left, safeArea.right) + (styles.oneSpace * 2), flexDirection: styles.portrait ? 'column' : 'row', justifyContent: 'space-between' }
@@ -154,10 +160,27 @@ export default function OperationBadgeScreen ({ navigation, route }) {
         </View>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'center', position: 'absolute', bottom: Math.max(safeArea.bottom, styles.oneSpace), right: styles.oneSpace * 10, left: styles.oneSpace * 10 }}>
-        <Text style={styles.ham2k}>Ham2K </Text>
-        <Text style={styles.logger}>Portable Logger</Text>
+        <Text style={styles.ham2k}>{'Ham2K' /* Don't translate this */}{' '}</Text>
+        <Text style={styles.logger}>{'Portable Logger' /* Don't translate this */}</Text>
       </View>
-      <View style={{ position: 'absolute', bottom: safeArea.bottom + styles.oneSpace, right: styles.oneSpace * 2 }}>
+      <View style={{ position: 'absolute', bottom: safeArea.bottom + styles.oneSpace, right: safeArea.right + styles.oneSpace }}>
+        {projection === 'mercator' ? (
+          <IconButton
+            icon="earth"
+            size={styles.oneSpace * 4}
+            mode={'contained'}
+            style={{ opacity: 0.7 }}
+            onPress={() => setProjection('globe')}
+          />
+        ) : (
+          <IconButton
+            icon="earth-box"
+            size={styles.oneSpace * 4}
+            mode={'contained'}
+            style={{ opacity: 0.7 }}
+            onPress={() => setProjection('mercator')}
+          />
+        ) }
         <IconButton
           icon="fullscreen-exit"
           size={styles.oneSpace * 4}

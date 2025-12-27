@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { prepareTimeValue, fmtShortTimeZulu, fmtTimeZulu, fmtDateZulu, fmtDateTimeZuluDynamic, fmtADIFTime, fmtCabrilloTime } from './timeFormats'
+import { prepareTimeValue, fmtShortTimeZulu, fmtTimeZulu, fmtDateZulu, fmtDateTimeDynamicZulu, fmtADIFTime, fmtCabrilloTime } from './timeFormats'
 
 describe('prepareTimeValue', () => {
   it('should work', () => {
@@ -37,23 +37,22 @@ describe('fmtDateZulu', () => {
   })
 })
 
-describe('fmtDateTimeZuluDynamic', () => {
+describe('fmtDateTimeDynamicZulu', () => {
   it('should work', () => {
     const now = new Date('2024-03-12T08:00:00-0400')
+    expect(fmtDateTimeDynamicZulu('2024-03-12T07:00:00-0400', { now })).toEqual('11:00z Tuesday 12th')
+    expect(fmtDateTimeDynamicZulu('2024-03-11T23:15:00Z', { now })).toEqual('23:15z Monday 11th')
+    expect(fmtDateTimeDynamicZulu('2024-03-10T23:15:00-0400', { now })).toEqual('03:15z Monday 11th')
+    expect(fmtDateTimeDynamicZulu('2024-03-10T23:15:00Z', { now })).toEqual('23:15z Sunday 10th')
+    expect(fmtDateTimeDynamicZulu('2023-05-10T23:15:00Z', { now })).toEqual('23:15z May 10th 2023')
+    expect(fmtDateTimeDynamicZulu('2023-02-01T23:15:00Z', { now })).toEqual('23:15z February 1st 2023')
 
-    expect(fmtDateTimeZuluDynamic('2024-03-12T07:00:00-0400', { now })).toEqual('Mar 12 11:00z')
-    expect(fmtDateTimeZuluDynamic('2024-03-11T23:15:00Z', { now })).toEqual('Mar 11 23:15z')
-    expect(fmtDateTimeZuluDynamic('2024-03-10T23:15:00-0400', { now })).toEqual('Mar 11 03:15z')
-    expect(fmtDateTimeZuluDynamic('2024-03-10T23:15:00Z', { now })).toEqual('Mar 10 23:15z')
-    expect(fmtDateTimeZuluDynamic('2023-05-10T23:15:00Z', { now })).toEqual('May 10, 2023')
-    expect(fmtDateTimeZuluDynamic('2023-02-01T23:15:00Z', { now })).toEqual('Feb 1, 2023')
-
-    expect(fmtDateTimeZuluDynamic('2024-03-12T07:00:00-0400', { now, compact: true })).toEqual('11:00z')
-    expect(fmtDateTimeZuluDynamic('2024-03-11T23:15:00Z', { now, compact: true })).toEqual('23:15z')
-    expect(fmtDateTimeZuluDynamic('2024-03-10T23:15:00-0400', { now, compact: true })).toEqual('Mar 11')
-    expect(fmtDateTimeZuluDynamic('2024-03-10T23:15:00Z', { now, compact: true })).toEqual('Mar 10')
-    expect(fmtDateTimeZuluDynamic('2023-05-10T23:15:00Z', { now, compact: true })).toEqual('May 10')
-    expect(fmtDateTimeZuluDynamic('2023-02-10T23:15:00Z', { now, compact: true })).toEqual('Feb 2023')
+    expect(fmtDateTimeDynamicZulu('2024-03-12T07:00:00-0400', { now, compact: true })).toEqual('11:00z')
+    expect(fmtDateTimeDynamicZulu('2024-03-11T23:15:00Z', { now, compact: true })).toEqual('23:15z')
+    expect(fmtDateTimeDynamicZulu('2024-03-10T23:15:00-0400', { now, compact: true })).toEqual('03:15z Mon 11')
+    expect(fmtDateTimeDynamicZulu('2024-03-10T23:15:00Z', { now, compact: true })).toEqual('23:15z Sun 10')
+    expect(fmtDateTimeDynamicZulu('2023-05-10T23:15:00Z', { now, compact: true })).toEqual('23:15z May 10 2023')
+    expect(fmtDateTimeDynamicZulu('2023-02-10T23:15:00Z', { now, compact: true })).toEqual('23:15z Feb 10 2023')
   })
 })
 

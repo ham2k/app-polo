@@ -32,7 +32,7 @@ export function registerWWFFDataFile () {
       const dataRows = []
 
       // Since we're streaming, we cannot know how many references there are beforehand, so we need to take a guess
-      const expectedReferences = 63000
+      const expectedReferences = 65000
 
       // Since the work is split in two phases, and their speeds are different,
       // we need to adjust the expected steps based on a ratio.

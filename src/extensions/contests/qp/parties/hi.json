@@ -3,17 +3,20 @@
   "name": "Hawaii QSO Party",
   "start": "2025-8-23 04:00Z",
   "end": "2025-8-25 03:59Z",
+  "url": "https://www.hawaiiqsoparty.org/",
   "cabrilloName": "HI-QSO-PARTY",
-  "notes": "Contributed by W1GRL & W1BOY",
+  "notes": "Multipliers for out-of-state will not be accurate. Contributed by W1GRL & W1BOY",
   "internalNotes": "HI stations mults not per band, non-HI stations mults are per band",
-  "lastUpdated": "2025-04-01 18:00Z",
-  "status": "Updated for 2025, see internalNotes",
+  "lastUpdated": "2025-05-23 12:00Z",
+  "status": "Updated for 2025, but not verified",
   "options": {
     "dcCountsAsMaryland": false,
     "stateCountsForInState": true,
     "countyLine": false,
     "dxEntityIsMultiplier": true,
-    "selfSpotting": true
+    "selfSpotting": true,
+    "multsPerBandMode": true,
+    "inStateMultsPerBand": true
   },
   "points": {
     "PHONE": 2,

@@ -1,32 +1,38 @@
-/* eslint-disable react/no-unstable-nested-components */
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Alert, ScrollView, View } from 'react-native'
-import { Checkbox, List, Menu, Text } from 'react-native-paper'
+import { Checkbox, Menu, Text } from 'react-native-paper'
 import { pick, keepLocalCopy } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
+
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import { dataExportOptions, generateExportsForOptions, importADIFIntoOperation, loadOperation, selectOperation, selectOperationCallInfo } from '../../../store/operations'
 import { loadQSOs, selectQSOs } from '../../../store/qsos'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { buildTitleForOperation } from '../OperationScreen'
 import { reportError, trackEvent } from '../../../distro'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
+import { H2kListItem, H2kListSection } from '../../../ui'
+
+import ScreenContainer from '../../components/ScreenContainer'
+import { ExportWavelogDialog } from './components/ExportWavelogDialog'
+import { buildTitleForOperation } from '../OperationScreen'
 
 export default function OperationDataScreen (props) {
+  const { t } = useTranslation()
+
   const { navigation, route } = props
   const styles = useThemedStyles()
 
@@ -40,20 +46,25 @@ export default function OperationDataScreen (props) {
     dispatch(loadQSOs(route.params.operation))
     dispatch(loadOperation(route.params.operation))
   }, [route.params.operation, dispatch])
+  const [showExportWavelog, setShowExportWavelog] = useState(false)
 
   useEffect(() => {
-    let options = { title: 'Operation Data' }
+    let options = { title: t('screens.operationData.title', 'Operation Data') }
     if (operation?.stationCall) {
       options = {
         subTitle: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCallPlus || operation.stationCall, title: operation.title, userTitle: operation.userTitle })
       }
     } else {
-      options = { subTitle: 'New Operation' }
+      options = { subTitle: t('general.terms.newOperation', 'New Operation') }
     }
     options.rightMenuItems = <DataScreenMenuItems {...{ operation, settings, styles, dispatch }} />
 
     navigation.setOptions(options)
-  }, [dispatch, navigation, operation, settings, styles])
+  }, [dispatch, navigation, operation, settings, styles, t])
+
+  const pendingTodos = useMemo(() => {
+    return qsos.filter((qso) => !qso?.deleted && qso?.event?.event === 'todo' && !(qso.event?.data?.done ?? qso.event?.done))
+  }, [qsos])
 
   const readyToExport = useMemo(() => {
     return ourInfo.call && operation.qsoCount > 0
@@ -88,20 +99,38 @@ export default function OperationDataScreen (props) {
         refs: (option.operationData?.refs || []).map(r => r.type).join(',')
       })
     })
-    dispatch(generateExportsForOptions(operation.uuid, options)).then((paths) => {
-      if (paths?.length > 0) {
-        Share.open({
-          urls: paths.map(p => `file://${p}`)
-        }).then((x) => {
+    console.log('handle exports', options)
+    const useDataURIs = false
+    dispatch(generateExportsForOptions(operation.uuid, options, { dataURI: useDataURIs })).then((exports) => {
+      console.log('generated exports', exports)
+      if (exports?.length > 0) {
+        const shareOptions = {
+          urls: exports.map(e => e.uri),
+          mimeType: 'text/plain',
+          showAppsToView: true
+        }
+        if (useDataURIs) {
+          shareOptions.filenames = exports.map(e => e.fileName)
+        }
+
+        console.log('share options', shareOptions)
+        Share.open(shareOptions).then((x) => {
           console.info('Shared', x)
         }).catch((e) => {
-          console.info('Sharing Error', e)
+          if (e.message.includes('user canceled')) {
+            // Do nothing
+          } else {
+            console.info('Sharing Error', e)
+          }
         }).finally(() => {
           // Deleting these file causes GMail on Android to fail to attach it
           // So for the time being, we're leaving them in place.
           // dispatch(deleteExport(path))
         })
       }
+    }).catch((error) => {
+      console.error('Error generating exports', error)
+      reportError('Error generating exports', error)
     })
   }, [dispatch, operation])
 
@@ -115,7 +144,7 @@ export default function OperationDataScreen (props) {
         destination: 'cachesDirectory'
       })
 
-      const filename = decodeURIComponent(localCopy.localUri.replace('file://', ''))
+      const filename = decodeURIComponent(localCopy?.localUri?.replace('file://', ''))
       const { adifCount, importCount } = await dispatch(importADIFIntoOperation(filename, operation, qsos))
       trackEvent('import_adif', {
         import_count: importCount,
@@ -125,82 +154,135 @@ export default function OperationDataScreen (props) {
       })
       RNFetchBlob.fs.unlink(filename)
     }).catch((error) => {
-      if (error.indexOf('cancelled') >= 0) {
+      if (error?.message?.indexOf('user canceled') >= 0) {
         // ignore
       } else {
-        Alert.alert('Error importing ADIF', error.message)
+        Alert.alert(t('screens.operationData.errorImportingADIF', 'Error importing ADIF'), error.message)
         reportError('Error importing ADIF', error)
       }
     })
-  }, [dispatch, operation, qsos])
+  }, [dispatch, operation, qsos, t])
 
   const selectedExportOptions = useMemo(() => exportOptions.filter(option => (settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false), [exportOptions, settings.exportTypes])
 
   const exportLabel = useMemo(() => {
-    if (selectedExportOptions.length === 0) return 'Select from the export options below'
-    if (selectedExportOptions.length === 1 && exportOptions.length === 1) return 'Export 1 file'
-    if (selectedExportOptions.length === 1) return 'Export 1 selected file'
-    if (selectedExportOptions.length === exportOptions.length) return `Export all ${selectedExportOptions.length} files`
-    return `Export ${selectedExportOptions.length} selected files`
-  }, [exportOptions.length, selectedExportOptions.length])
+    if (selectedExportOptions.length === 0) return t('screens.operationData.selectFromTheExportOptionsBelow', 'Select from the export options below')
+    if (exportOptions.length === 1) return t('screens.operationData.exportSingeFile', 'Export one file')
+    if (selectedExportOptions.length === exportOptions.length) return t('screens.operationData.exportAllFiles', `Export all ${selectedExportOptions.length} files`)
+    return t('screens.operationData.exportSelectedFiles', 'Export {{count}} selected files', { count: selectedExportOptions.length })
+  }, [exportOptions.length, selectedExportOptions.length, t])
+
+  const handleNavigateToLoggingTab = useCallback(() => {
+    // Passing `selectedUUID` in `params` so that it makes it to the `OpLog` tab if it is present
+    // but also passing it directly so that it makes it to the main screen in split view.
+    navigation.popTo('Operation', {
+      uuid: operation.uuid,
+      screen: 'OpLog',
+      params: { selectedUUID: pendingTodos?.[0]?.uuid },
+      selectedUUID: pendingTodos?.[0]?.uuid
+    })
+  }, [navigation, operation.uuid, pendingTodos])
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <Ham2kListSection title={'Export QSOs'}>
-        <Ham2kListItem
-          title={exportLabel}
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="share" />}
-          onPress={() => readyToExport && handleExports({ options: selectedExportOptions })}
-          style={{ opacity: readyToExport ? 1 : 0.5 }}
-          disabled={!readyToExport}
-        />
-        {exportOptions.map((option) => (
-          <View key={`${option.exportType}-${option.fileName}`} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'center' }}>
-            <Checkbox
-              status={(settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
-              onPress={() => dispatch(setSettings({ exportTypes: { ...settings.exportTypes, [option.exportType]: !((settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false) } }))}
-            />
-            <Ham2kListItem
-              key={option.fileName}
-              title={option.exportLabel || option.exportName}
-              description={option.fileName}
-              left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} color={option.devMode ? styles.colors.devMode : styles.colors.onBackground} icon={option.icon ?? option.handler.icon ?? 'file-outline'} />}
-              onPress={() => readyToExport && handleExports({ options: [option] })}
-              descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
-              titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
-              style={{ opacity: readyToExport ? 1 : 0.5, flex: 1 }}
+    <ScreenContainer>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
+          <H2kListSection title={t('screens.operationData.exportQSOs', 'Export QSOs')}>
+
+            {pendingTodos.length > 0 && (
+              <H2kListItem
+                title={t('screens.operationData.pendingToDoItems', '{{count}} pending to-do items', { count: pendingTodos.length })}
+                leftIcon="sticker"
+                titleStyle={{ color: styles.theme.colors.error }}
+                leftIconColor={styles.theme.colors.error}
+                onPress={handleNavigateToLoggingTab}
+              />
+            )}
+
+            <H2kListItem
+              title={exportLabel}
+              leftIcon="share"
+              onPress={() => readyToExport && handleExports({ options: selectedExportOptions })}
+              style={{ opacity: readyToExport ? 1 : 0.5 }}
               disabled={!readyToExport}
             />
-          </View>
-        ))}
-      </Ham2kListSection>
+            {exportOptions.map((option) => (
+              <View key={`${option.exportType}-${option.fileName}`} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'flex-start' }}>
+                <View style={{ marginTop: styles.oneSpace * 1 }}>
+                  <Checkbox
+                    status={(settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
+                    onPress={() => dispatch(setSettings({ exportTypes: { ...settings.exportTypes, [option.exportType]: !((settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false) } }))}
+                  />
+                </View>
+                <H2kListItem
+                  key={option.fileName}
+                  title={option.exportLabel || option.exportName}
+                  description={option.fileName}
+                  leftIcon={option.icon ?? option.handler.icon ?? 'file-outline'}
+                  leftIconColor={option.devMode ? styles.colors.devMode : styles.colors.onBackground}
+                  onPress={() => readyToExport && handleExports({ options: [option] })}
+                  descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
+                  titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
+                  style={{ opacity: readyToExport ? 1 : 0.5, flex: 1 }}
+                  disabled={!readyToExport}
+                />
+              </View>
+            ))}
+          </H2kListSection>
 
-      <Ham2kListSection title={'Import QSOs'}>
-        <Ham2kListItem
-          title="Add QSOs from ADIF file"
-          left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="file-import-outline" />}
-          onPress={() => handleImportADIF()}
-        />
-      </Ham2kListSection>
+          <H2kListSection title={t('screens.operationData.importQSOs', 'Import QSOs')}>
+            <H2kListItem
+              title={t('screens.operationData.addQSOsFromADIFFile', 'Add QSOs from ADIF file')}
+              leftIcon="file-import-outline"
+              onPress={() => handleImportADIF()}
+            />
+          </H2kListSection>
 
-      { settings.devMode && (
+          { settings.devMode && (
 
-        <Ham2kListSection title={'Ham2K LoFi Sync'} titleStyle={{ color: styles.colors.devMode }}>
-          <Ham2kListItem
-            title="Operation"
-            description={operation.uuid}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="sync-circle" color={styles.colors.devMode} />}
-            titleStyle={{ color: styles.colors.devMode }}
-            descriptionStyle={{ color: styles.colors.devMode }}
-            onPress={() => {}}
-          />
-        </Ham2kListSection>
-      )}
-    </ScrollView>
+            <H2kListSection title={t('screens.operationData.ham2kLoFiSync', 'Ham2K LoFi Sync')} titleStyle={{ color: styles.colors.devMode }}>
+              <H2kListItem
+                title={t('screens.operationData.operation', 'Operation')}
+                description={operation.uuid}
+                leftIcon="sync-circle"
+                leftIconColor={styles.colors.devMode}
+                titleStyle={{ color: styles.colors.devMode }}
+                descriptionStyle={{ color: styles.colors.devMode }}
+                onPress={() => {}}
+              />
+            </H2kListSection>
+          )}
+          { settings.wavelogExperiments && (
+            <H2kListSection title={t('screens.operationData.wavelogExport', 'Wavelog Export')} titleStyle={{ color: styles.colors.devMode }}>
+              <H2kListItem
+                title={t('screens.operationData.exportQSOsToWavelog', 'Export QSOs to Wavelog')}
+                description={t('screens.operationData.exportQSOsToWavelogDescription', 'Send all QSOs for this operation to Wavelog')}
+                leftIcon="cloud-upload-outline"
+                leftIconColor={styles.colors.devMode}
+                onPress={() => setShowExportWavelog(true)}
+                titleStyle={{ color: styles.colors.devMode }}
+                descriptionStyle={{ color: styles.colors.devMode }}
+              />
+            </H2kListSection>
+
+          )}
+          { showExportWavelog && (
+            <ExportWavelogDialog
+              operation={operation}
+              qsos={qsos || []}
+              visible={showExportWavelog}
+              onDialogDone={() => setShowExportWavelog(false)}
+            />
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    </ScreenContainer>
   )
 }
 
 function DataScreenMenuItems ({ operation, settings, styles, dispatch, online, setShowMenu }) {
+  const { t } = useTranslation()
+
   const hideAndRun = useCallback((action) => {
     setShowMenu(false)
     setTimeout(() => action(), 10)
@@ -209,14 +291,13 @@ function DataScreenMenuItems ({ operation, settings, styles, dispatch, online, s
   return (
     <>
       <Text style={{ marginHorizontal: styles.oneSpace * 2, marginVertical: styles.oneSpace * 1, ...styles.text.bold }}>
-        Export Settings
+        {t('screens.operationData.exportSettings', 'Export Settings')}
       </Text>
       <Menu.Item
         leadingIcon="file-code-outline"
         trailingIcon={settings.useCompactFileNames ? 'check-circle-outline' : 'circle-outline'}
         onPress={() => { hideAndRun(() => dispatch(setSettings({ useCompactFileNames: !settings.useCompactFileNames }))) }}
-        title={'Use compact file names'}
-
+        title={t('screens.operationData.useCompactFileNames', 'Use compact file names')}
       />
     </>
   )

@@ -19,15 +19,16 @@ export const uiSlice = createSlice({
 
   reducers: {
     setStateForComponent: (state, action) => {
-      if (DEBUG) console.log('setStateForComponent', action.payload)
       const { component, ...data } = action.payload
+      if (DEBUG) console.log('setStateForComponent called with', component, data)
       state[component] = data
 
-      if (DEBUG) console.log('setStateForComponent', state[component])
+      if (DEBUG) console.log('-- set state to', component, state[component])
     },
     updateStateForComponent: (state, action) => {
-      if (DEBUG) console.log('updateStateForComponent', action.payload)
       const { component, ...data } = action.payload
+      if (DEBUG) console.log('updateStateForComponent called with', component, data)
+      if (DEBUG) console.log('-- current state', component, state[component])
       state[component] = state[component] || {}
       deepMergeState(state[component], data)
       // if (component === 'OpLoggingTab' && data.loggingState?.qso) {
@@ -37,12 +38,18 @@ export const uiSlice = createSlice({
       //   console.log(' -- state', { theirCall: state[component].loggingState.qso?.their?.call, name: state[component].loggingState.qso?.their?.guess?.name, status: state[component].loggingState.qso?.their?.lookup?.status })
       //   console.log('====================')
       // }
-      if (DEBUG) console.log('updateStateForComponent', state[component])
+      if (DEBUG) console.log('-- updated state', component, state[component])
+    },
+    setGlobalDialog: (state, action) => {
+      state.globalDialog = { ...state.globalDialog, ...action.payload }
+    },
+    resetGlobalDialog: (state) => {
+      state.globalDialog = {}
     }
   }
 })
 
-function deepMergeState (state, data, visited = undefined) {
+function deepMergeState(state, data, visited = undefined) {
   visited = visited || new Set()
   visited.add(data)
 
@@ -63,12 +70,17 @@ function deepMergeState (state, data, visited = undefined) {
 }
 
 export const { actions } = uiSlice
-export const { setStateForComponent, updateStateForComponent } = uiSlice.actions
+export const { setStateForComponent, updateStateForComponent, setGlobalDialog, resetGlobalDialog } = uiSlice.actions
 
 export const selectStateForComponent = createSelector(
   (state, component) => state?.ui,
   (state, component) => component,
   (ui, component) => ui?.[component]
+)
+
+export const selectGlobalDialog = createSelector(
+  (state) => state?.ui,
+  (ui) => ui?.globalDialog
 )
 
 export default uiSlice.reducer

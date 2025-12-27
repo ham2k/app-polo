@@ -1,12 +1,13 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import { useMemo } from 'react'
-import { PixelRatio, Dimensions } from 'react-native'
+import { PixelRatio } from 'react-native'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 /*
  * Compute the different screen size values and ratios needed to properly layout our screens
@@ -17,7 +18,6 @@ import { PixelRatio, Dimensions } from 'react-native'
  * `fontScale` is the ratio of the font size to the default font size, as determined by the OS settings.
  * `pixelRatio` is the ratio of "device pixels" to actual "screen pixels"
  * `fontScaleAdjustment` is a factor we add on top of `fontScale` or `lineHeight` to better fit things on our screens.
- * `pixelScaleAdjustment` is the ratio of pixels to the adjusted font size.
  *
  * `size` is a string representing the screen size category: 'xs', 'sm', 'md', 'lg', 'xl'.
  * `smOrLarger`, `mdOrLarger`, `lgOrLarger`, `lgOrSmaller`, `mdOrSmaller`, `smOrSmaller` are booleans shortcuts for `size` comparisons
@@ -49,53 +49,80 @@ import { PixelRatio, Dimensions } from 'react-native'
  *    1: 462 • 2: 392 • 3: 352 • 4: 320 (width) Pixel 3a
  */
 
-export function computeSizes ({ width, height, fontScale, pixelRatio }) {
-  // If the screen is too small, and the font scale too large, nothing will fit, so we need to adjust our font sizes down
+export const SCALE_ADJUSTMENTS = {
+  xs: 0.85,
+  sm: 0.92,
+  md: 1.00,
+  lg: 1.12,
+  xl: 1.25
+}
+
+export function computeSizes({ width, height, fontScale, pixelRatio, settingsScale }) {
+  const smallestSize = Math.min(width, height)
+
+  const settingsScaleAdjustment = SCALE_ADJUSTMENTS[settingsScale] ?? 1.0
+
   let fontScaleAdjustment = 1
-  if ((width / fontScale) < 300) {
-    fontScaleAdjustment = width / fontScale / 300
+
+  if (smallestSize < 320 * fontScale) {
+    // If the screen is too small, and the font scale too large, nothing will fit, so we need to adjust our font sizes down
+    fontScaleAdjustment = smallestSize / fontScale / 320
   }
 
-  // For Tablets, lets bump the font size a bit
-  if (width > 1000) {
-    fontScaleAdjustment = fontScaleAdjustment * 1.07
+  fontScaleAdjustment = fontScaleAdjustment * settingsScaleAdjustment
+
+  const pixelScaleAdjustment = fontScale * fontScaleAdjustment // combined scale
+
+  const size = (() => {
+    if (width / pixelScaleAdjustment < 340) return 'xs' // Small phone
+    else if (width / pixelScaleAdjustment < 480) return 'sm' // Regular phone
+    else if (width / pixelScaleAdjustment < 720) return 'md' // Tablet
+    else if (width / pixelScaleAdjustment < 1000) return 'lg' // Large Tablet
+    else return 'xl' // Full desktop
+  })()
+
+  const sized = (options) => {
+    if (size === 'xs') return options.xs // Small phone
+    else if (size === 'sm') return options.sm ?? options.xs // Regular phone
+    else if (size === 'md') return options.md ?? options.sm ?? options.xs // Tablet
+    else if (size === 'lg') return options.lg ?? options.md ?? options.sm ?? options.xs // Large Tablet
+    else if (size === 'xl') return options.xl ?? options.lg ?? options.md ?? options.sm ?? options.xs // Full desktop
   }
-
-  const pixelScaleAdjustment = fontScale * fontScaleAdjustment
-
-  let size
-  if (width / pixelScaleAdjustment < 340) size = 'xs'
-  else if (width / pixelScaleAdjustment < 500) size = 'sm'
-  else if (width / pixelScaleAdjustment < 1000) size = 'md'
-  else if (width / pixelScaleAdjustment < 1200) size = 'lg'
-  else size = 'xl'
 
   const portrait = height > width
   const landscape = !portrait
 
   return {
+    width,
+    height,
     size,
+    sized,
     portrait,
     landscape,
     fontScale,
     pixelRatio,
+    fontScale,
+    settingsScale,
+    settingsScaleAdjustment,
     fontScaleAdjustment,
     pixelScaleAdjustment,
 
-    smOrLarger: size !== 'xs',
-    mdOrLarger: size !== 'xs' && size !== 'sm',
-    lgOrLarger: size !== 'xs' && size !== 'sm' && size !== 'md',
-    lgOrSmaller: size !== 'xl',
-    mdOrSmaller: size !== 'xl' && size !== 'lg',
-    smOrSmaller: size !== 'xl' && size !== 'lg' && size !== 'md'
+    smOrLarger: sized({ xs: false, sm: true }),
+    mdOrLarger: sized({ xs: false, md: true }),
+    lgOrLarger: sized({ xs: false, lg: true }),
+    lgOrSmaller: sized({ xs: true, xl: false }),
+    mdOrSmaller: sized({ xs: true, lg: false, xl: false }),
+    smOrSmaller: sized({ xs: true, lg: false, xl: false, md: false }),
   }
 }
 
-export function useComputeSizes () {
-  const { width, height } = Dimensions.get('window')
+export function useComputeSizes({ settingsScale }) {
+  const { width, height } = useSafeAreaFrame()
+  // const { width, height } = useWindowDimensions() <-- broken on iOS, no rotation
+
   const pixelRatio = PixelRatio.get()
   const fontScale = PixelRatio.getFontScale()
 
-  const sizes = useMemo(() => computeSizes({ width, height, fontScale, pixelRatio }), [width, height, fontScale, pixelRatio])
+  const sizes = useMemo(() => computeSizes({ width, height, fontScale, pixelRatio, settingsScale }), [width, height, fontScale, pixelRatio, settingsScale])
   return sizes
 }

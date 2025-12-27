@@ -4,15 +4,17 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+
 import React from 'react'
 import { findRef, replaceRef } from '../../../tools/refTools'
-
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
 
 import { superModeForMode } from '@ham2k/lib-operation-data'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
+import { H2kTextInput } from '../../../ui'
+
 import { ActivityOptions } from './SimpleContestActivityOptions'
+
 export const Info = {
   key: 'simple-contest',
   icon: 'flag-checkered',
@@ -40,7 +42,7 @@ const ActivityHook = {
   ...Info,
   Options: ActivityOptions,
 
-  hideStateField: true,
+  standardExchangeFields: { state: false, grid: false },
 
   mainExchangeForOperation
 }
@@ -109,10 +111,10 @@ const ReferenceHandler = {
     const rows = [
       [
         (ourCall ?? ' '),
-        (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59'),
+        (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59'),
         (ref?.exchange || ' '),
         (qso?.their?.call || ' '),
-        (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? '599' : '59'),
+        (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59'),
         (qsoRef?.exchange || ' ')
       ]
     ]
@@ -138,7 +140,8 @@ const ReferenceHandler = {
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => superModeForMode(q.mode) === superMode).length !== 0
-      if (sameBand && sameMode) {
+      const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0
+      if (sameBandMode) {
         return { value: 0, alerts: ['duplicate'], type: Info.key }
       } else {
         const notices = []
@@ -199,15 +202,15 @@ const ReferenceHandler = {
   }
 }
 
-function mainExchangeForOperation (props) {
-  const { qso, updateQSO, styles, refStack } = props
+function mainExchangeForOperation(props) {
+  const { qso, updateQSO, styles, disabled, refStack } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, location: '' }
 
   const fields = []
 
   fields.push(
-    <ThemedTextInput
+    <H2kTextInput
       {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}
@@ -220,6 +223,7 @@ function mainExchangeForOperation (props) {
       noSpaces={false}
       value={ref?.exchange || ''}
       error={false}
+      disabled={disabled}
       onChangeText={(text) => updateQSO({
         refs: replaceRef(qso?.refs, Info.key, { ...ref, exchange: text }),
         their: { exchange: text }

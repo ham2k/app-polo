@@ -1,51 +1,119 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback } from 'react'
-import { Button, Dialog, Text } from 'react-native-paper'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Text } from 'react-native-paper'
+import { useTranslation } from 'react-i18next'
+
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
+import { findHooks } from '../../../extensions/registry'
+import { useDispatch } from 'react-redux'
+import { setSettings } from '../../../store/settings'
+import { resetDatabase } from '../../../store/db/db'
 
 export function WelcomeDialog ({ settings, styles, onDialogNext, onDialogPrevious, onAccountConnect, nextLabel, previousLabel }) {
+  const { t } = useTranslation()
+
+  const dispatch = useDispatch()
+  const [existingAccount, setExistingAccount] = useState()
+  const [accountData, setAccountData] = useState()
+  const syncHook = useMemo(() => {
+    return findHooks('sync')[0]
+  }, [])
+
+  useEffect(() => {
+    setImmediate(async () => {
+      const results = await dispatch(syncHook.getAccountData())
+      console.log('account data', results)
+      if (results.ok) {
+        const json = results.json
+        if (json?.current_account?.email || json?.settings?.operatorCall) {
+          setExistingAccount(json?.current_account)
+        }
+        setAccountData(json)
+      }
+    })
+  }, [syncHook, dispatch])
+
   const handleNext = useCallback(() => {
-    onDialogNext && onDialogNext()
-  }, [onDialogNext])
+    if (existingAccount) {
+      setImmediate(async () => {
+        await dispatch(syncHook.resetClient())
+        onDialogNext && onDialogNext()
+      })
+    } else {
+      onDialogNext && onDialogNext()
+    }
+  }, [dispatch, existingAccount, onDialogNext, syncHook])
 
   const handlePrevious = useCallback(() => {
     onDialogPrevious && onDialogPrevious()
   }, [onDialogPrevious])
 
   const handleConnect = useCallback(() => {
-    onAccountConnect && onAccountConnect()
-  }, [onAccountConnect])
+    if (existingAccount) {
+      setImmediate(async () => {
+        if (Object.keys(accountData?.settings ?? {}).length > 1) {
+          await dispatch(setSettings(accountData.settings))
+        } else if (Object.keys(accountData?.suggested_settings ?? {}).length > 1) {
+          await dispatch(setSettings(accountData.suggested_settings))
+        }
+        onAccountConnect && onAccountConnect()
+      })
+    } else {
+      onAccountConnect && onAccountConnect()
+    }
+  }, [accountData, dispatch, existingAccount, onAccountConnect])
 
-  return (
-    <Ham2kDialog visible={true} dismissable={false}>
-      <Dialog.Title style={{ textAlign: 'center' }}>Welcome to PoLo!</Dialog.Title>
-      {settings.devMode ? (
-        <Dialog.Content>
+  const handleReset = useCallback(() => {
+    setImmediate(async () => {
+      await dispatch(syncHook.resetClient())
+      await resetDatabase()
+    })
+    onDialogPrevious && onDialogPrevious()
+  }, [dispatch, onDialogPrevious, syncHook])
+
+  if (settings.devMode && existingAccount) {
+    return (
+      <H2kDialog visible={true} dismissable={false}>
+        <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.startScreen.onboarding.welcomeToPoLo', 'Welcome to PoLo!')}</H2kDialogTitle>
+        <H2kDialogContent>
           <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
-            Do you have an existing account?
+            {t('screens.startScreen.onboarding.welcomeDialog.existingAccountDescription', 'This device is linked to an existing Ham2K Log Filer account:')}
           </Text>
-          <Button onPress={handleConnect}>Connect with Ham2K Log Filer</Button>
+          <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
+            {existingAccount.email ?? `#${existingAccount.uuid.slice(0, 8).toUpperCase()}`}
+          </Text>
+          <H2kButton onPress={handleConnect}>
+            {t('screens.startScreen.onboarding.connectButton', 'Connect with Account')}
+          </H2kButton>
           <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center', paddingTop: styles.oneSpace * 2 }}>
-            Otherwise, we'll help you set up on this device.
+            {t('screens.startScreen.onboarding.orIfYouPrefer', 'Or if you prefer, you can…')}
           </Text>
-        </Dialog.Content>
-      ) : (
-        <Dialog.Content>
+          <H2kButton onPress={handleReset}>
+            {t('screens.startScreen.onboarding.resetButton', 'Reset and Setup from Scratch')}
+          </H2kButton>
+        </H2kDialogContent>
+      </H2kDialog>
+    )
+  } else {
+    return (
+      <H2kDialog visible={true} dismissable={false}>
+        <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.startScreen.onboarding.welcomeToPoLo', 'Welcome to PoLo!')}</H2kDialogTitle>
+        <H2kDialogContent>
           <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center' }}>
-            We have a few questions to help us better suit your needs.
+            {t('screens.startScreen.onboarding.weHaveAFewQuestions', 'We have a few questions to help us better suit your needs.')}
           </Text>
-        </Dialog.Content>
-      )}
-      <Dialog.Actions style={{ justifyContent: 'space-between' }}>
-        <Button onPress={handlePrevious}>{previousLabel ?? 'Skip'}</Button>
-        <Button onPress={handleNext}>{nextLabel ?? 'Continue'}</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
-  )
+        </H2kDialogContent>
+        <H2kDialogActions style={{ justifyContent: 'space-between' }}>
+          <H2kButton onPress={handlePrevious}>{previousLabel ?? t('general.buttons.skip', 'Skip')}</H2kButton>
+          <H2kButton onPress={handleNext}>{nextLabel ?? t('general.buttons.continue', 'Continue')}</H2kButton>
+        </H2kDialogActions>
+      </H2kDialog>
+    )
+  }
 }

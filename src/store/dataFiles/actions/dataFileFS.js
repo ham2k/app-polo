@@ -1,12 +1,9 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-
-import { Buffer } from 'buffer'
-import RNFetchBlob from 'react-native-blob-util'
 
 import { getDataFileDefinition, getDataFileDefinitions } from '../dataFilesRegistry'
 import { actions, selectDataFileInfo } from '../dataFilesSlice'
@@ -14,9 +11,16 @@ import { addRuntimeMessage } from '../../runtime'
 import { reportError } from '../../../distro'
 
 import packageJson from '../../../../package.json'
+import GLOBAL from '../../../GLOBAL'
 
 import { addNotice } from '../../system/systemSlice'
-import { Platform } from 'react-native'
+import {
+  ensureDataFileDirectoryExists, existsInLocalFileSystem,
+  fetchForDataFiles, fetchForDataFilesBatchedLines,
+  filenameForDefinition, getLastModifiedDate,
+  readDataFileFromLocalFileSystem, removeDataFileFromLocalFileSystem,
+  saveDataFileToLocalFileSystem
+} from './dataFileFSNative'
 
 /*
  * Loading lifecycle:
@@ -36,8 +40,8 @@ export const fetchDataFile = (key, options = {}) => async (dispatch, getState) =
 
     const data = await definition.fetch({ key, definition, info, dispatch, getState, options })
 
-    try { await RNFetchBlob.fs.mkdir(`${RNFetchBlob.fs.dirs.DocumentDir}/data/`) } catch (error) { /* ignore */ }
-    await RNFetchBlob.fs.writeFile(filenameForDefinition(definition), JSON.stringify(data))
+    await ensureDataFileDirectoryExists()
+    await saveDataFileToLocalFileSystem(filenameForDefinition(definition), data)
 
     await dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', version: data.version, date: data.date ?? new Date() }))
     options.onStatus && await options.onStatus({ key, definition, status: 'loaded', data })
@@ -49,7 +53,6 @@ export const fetchDataFile = (key, options = {}) => async (dispatch, getState) =
     return loadedOk
   } catch (error) {
     console.warn(`Error fetching data file ${key}`, error)
-    console.warn(error.stack)
     await dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
     options.onStatus && await options.onStatus({ key, definition, status: 'error', error })
     return false
@@ -63,15 +66,13 @@ export const readDataFile = (key, options = {}) => async (dispatch, getState) =>
   try {
     dispatch(actions.setDataFileInfo({ key, status: 'loading' }))
 
-    const body = await RNFetchBlob.fs.readFile(filenameForDefinition(definition))
-    const data = JSON.parse(body)
+    const data = await readDataFileFromLocalFileSystem(filenameForDefinition(definition))
 
     let date
     if (data.date) {
       date = new Date(data.date)
     } else {
-      const stat = await RNFetchBlob.fs.stat(filenameForDefinition(definition))
-      date = new Date(stat.lastModified)
+      date = await getLastModifiedDate(filenameForDefinition(definition))
     }
 
     dispatch(actions.setDataFileInfo({ key, data, status: 'loaded', date }))
@@ -100,12 +101,28 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
   try {
     const maxAgeInDays = definition?.maxAgeInDays || 7
 
-    const exists = await RNFetchBlob.fs.exists(filenameForDefinition(definition))
+    const exists = await existsInLocalFileSystem(filenameForDefinition(definition))
     if (!exists || force) {
       console.info(`Data for ${definition.key} not found, fetching a fresh version`)
-      dispatch(addRuntimeMessage(`Downloading ${definition.name}`))
+      dispatch(addRuntimeMessage(GLOBAL.t('general.dataFiles.downloading', 'Downloading {{name}}', { name: definition.name })))
       if (noticesInsteadOfFetch) {
-        await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for '${definition.name}' has to be downloaded.`, actionLabel: 'Download Now', action: 'fetch', actionArgs: { key: definition.key } }))
+        await dispatch(addNotice({
+          unique: `dataFiles:${definition.key}`,
+          priority: -1,
+          transient: true,
+          title: GLOBAL.t(`extensions.dataFiles.title.${definition.key}`, definition.title || definition.name),
+          icon: definition.titleIcon || definition.icon,
+          text: GLOBAL.t('general.dataFiles.dataHasToBeDownloaded-md', 'Data for **{{name}}** has to be downloaded.', { name: definition.name }),
+          actions: [
+            {
+              action: 'fetch',
+              label: GLOBAL.t('general.dataFiles.downloadNow', 'Download Now'),
+              args: {
+                key: definition.key
+              }
+            }
+          ]
+        }))
       } else {
         await dispatch(fetchDataFile(key))
       }
@@ -113,23 +130,55 @@ export const loadDataFile = (key, options) => async (dispatch, getState) => {
       const readOk = await dispatch(readDataFile(key))
       const date = selectDataFileInfo(getState(), key)?.date
 
-      dispatch(addRuntimeMessage(`Loading ${definition.name}`))
+      dispatch(addRuntimeMessage(GLOBAL.t('general.dataFiles.loading', 'Loading {{name}}', { name: definition.name })))
       if (date && maxAgeInDays && (Date.now() - Date.parse(date)) / 1000 / 60 / 60 / 24 > maxAgeInDays) {
         if (noticesInsteadOfFetch) {
-          await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for '${definition.name}' has not been updated in a while.`, actionLabel: 'Refresh Now', action: 'fetch', actionArgs: { key: definition.key } }))
+          await dispatch(addNotice({
+            unique: `dataFiles: ${definition.key}`,
+            priority: -1,
+            transient: true,
+            title: GLOBAL.t(`extensions.dataFiles.title.${definition.key}`, definition.title || definition.name),
+            icon: definition.titleIcon || definition.icon,
+            text: GLOBAL.t('general.dataFiles.dataHasNotBeenUpdatedInAWhile-md', 'Data for **{{name}}** has not been updated in a while.', { name: definition.name }),
+            actions: [
+              {
+                action: 'fetch',
+                label: GLOBAL.t('general.dataFiles.refreshNow', 'Refresh Now'),
+                args: {
+                  key: definition.key
+                }
+              }
+            ]
+          }))
         } else {
           await dispatch(fetchDataFile(key))
         }
       } else if (!readOk) {
         if (noticesInsteadOfFetch) {
-          await dispatch(addNotice({ key: `dataFiles:${definition.key}`, text: `Data for '${definition.name}' has to be downloaded.`, actionLabel: 'Download Now', action: 'fetch', actionArgs: { key: definition.key } }))
+          await dispatch(addNotice({
+            unique: `dataFiles:${definition.key} `,
+            priority: -1,
+            transient: true,
+            title: GLOBAL.t(`extensions.dataFiles.title.${definition.key}`, definition.title || definition.name),
+            icon: definition.titleIcon || definition.icon,
+            text: GLOBAL.t('general.dataFiles.dataHasToBeDownloaded-md', 'Data for **{{name}}** has to be downloaded.', { name: definition.name }),
+            actions: [
+              {
+                action: 'fetch',
+                label: GLOBAL.t('general.dataFiles.downloadNow', 'Download Now'),
+                args: {
+                  key: definition.key
+                }
+              }
+            ]
+          }))
         } else {
           await dispatch(fetchDataFile(key))
         }
       }
     }
   } catch (error) {
-    reportError(`Error loading data file ${key}`, error)
+    reportError(`Error loading data file ${key} `, error)
     dispatch(actions.setDataFileInfo({ key, status: 'error', error }))
     return 'error'
   }
@@ -139,9 +188,9 @@ export const removeDataFile = (key, force) => async (dispatch, getState) => {
   const definition = getDataFileDefinition(key)
   if (!definition) throw new Error(`No data file definition found for ${key}`)
 
-  const exists = await RNFetchBlob.fs.exists(filenameForDefinition(definition))
+  const exists = await existsInLocalFileSystem(filenameForDefinition(definition))
   if (exists) {
-    await RNFetchBlob.fs.unlink(filenameForDefinition(definition))
+    await removeDataFileFromLocalFileSystem(filenameForDefinition(definition))
   }
   if (definition.onRemove) await definition.onRemove()
   dispatch(actions.setDataFileInfo({ key, data: undefined, status: 'removed', date: undefined }))
@@ -155,13 +204,13 @@ export const loadAllDataFiles = () => async (dispatch) => {
   }
 }
 
-const DEBUG_FETCH = true
+const DEBUG_FETCH = false
 
-export async function fetchAndProcessURL ({ url, key, process, definition, info, options }) {
+export async function fetchAndProcessURL({ url, key, process, definition, info, options }) {
   url = await resolveDownloadUrl(url)
 
   const headers = {
-    'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
+    'User-Agent': `Ham2K Portable Logger / ${packageJson.version} `
   }
   if (DEBUG_FETCH) console.log('Fetching', { url, info })
   if (info?.data?.etag) {
@@ -169,42 +218,16 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
     headers['If-None-Match'] = info.data.etag
   }
 
-  const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, headers)
-  if (DEBUG_FETCH) console.log('-- Response status', response?.respInfo?.status)
-  if (DEBUG_FETCH) console.log('-- Response headers', response?.respInfo?.headers)
-  if (response.respInfo.status === 304) {
-    if (DEBUG_FETCH) console.log('-- 304 Not Modified')
-    return info?.data
-  } else if (response.respInfo.status >= 301 && response.respInfo.status <= 308) {
-    if (DEBUG_FETCH) console.log(`-- ${response.respInfo.status} Redirect`)
-    return await fetchAndProcessURL({ url: response.respInfo.headers.location, key, process, definition, info, options })
-  } else if (response.respInfo.status !== 200) {
-    throw new Error(`Failed to fetch ${url}: ${response.respInfo.status}`)
-  }
-
-  if (DEBUG_FETCH) console.log('-- Reading file', response.data)
-
-  // The utf8 encoder in RNFetchBlob often breaks when there are some odd characters.
-  // whereas `Buffer` is more resilient, so we go thru extra hoops, which are slower but more reliable
-  const data64 = await RNFetchBlob.fs.readFile(response.data, 'base64')
-  if (DEBUG_FETCH) console.log('-- Decoding', data64.length, 'bytes')
-  const buffer = Buffer.from(data64, 'base64')
-  const body = buffer.toString('utf8')
+  const { body, etag } = await fetchForDataFiles({ url, headers, key, process, definition, info, options })
 
   const data = process ? process(body) : body
 
-  RNFetchBlob.fs.unlink(response.data)
-
-  const etagKey = Object.keys(response.respInfo.headers).find(k => k.toLowerCase() === 'etag')
-  if (etagKey && response.respInfo.headers[etagKey]) {
-    data.etag = response.respInfo.headers[etagKey]
-    if (DEBUG_FETCH) console.log('-- Saved etag', data.etag)
-  }
+  data.etag = etag
 
   return data
 }
 
-export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options }) {
+export async function fetchAndProcessBatchedLines({ url, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options }) {
   url = await resolveDownloadUrl(url)
 
   if (!processLineBatch) {
@@ -213,7 +236,7 @@ export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch,
   }
 
   const headers = {
-    'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
+    'User-Agent': `Ham2K Portable Logger / ${packageJson.version} `
   }
   if (DEBUG_FETCH) console.log('Fetching for batching', { url, info })
   if (info?.data?.etag) {
@@ -221,87 +244,16 @@ export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch,
     // headers['If-None-Match'] = info.data.etag
   }
 
-  const response = await RNFetchBlob.config({ fileCache: true }).fetch('GET', url, headers)
-  if (DEBUG_FETCH) console.log('-- Response status', response?.respInfo?.status)
-  if (DEBUG_FETCH) console.log('-- Response headers', response?.respInfo?.headers)
-  if (response.respInfo.status === 304) {
-    if (DEBUG_FETCH) console.log('-- 304 Not Modified')
+  const { status, etag } = await fetchForDataFilesBatchedLines({ url, headers, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options })
+  if (status === 304) {
     return info?.data
-  } else if (response.respInfo.status !== 200) {
-    throw new Error(`Failed to fetch ${url}: ${response.respInfo.status}`)
-  }
-
-  const streamingPromise = new Promise((resolve, reject) => {
-    let previousChunk = ''
-
-    if (Platform.OS === 'ios') {
-      // There's a crashing bug in RNFetchBlob streams: https://github.com/RonRadtke/react-native-blob-util/issues/391
-      // So until that's fixed, we'll use regular `readFile` instead for iOS
-      // The utf8 encoder in RNFetchBlob often breaks when there are some odd characters.
-      // whereas `Buffer` is more resilient, so we go thru extra hoops, which are slower but more reliable
-      RNFetchBlob.fs.readFile(response.data, 'utf8').then(body => {
-        // if (DEBUG_FETCH) console.log('-- Decoding', data64.length, 'bytes')
-        // const buffer = Buffer.from(data64, 'base64')
-        // const body = buffer.toString('utf8')
-        const lines = body.split('\n')
-        processLineBatch(lines)
-        processEndOfBatch && processEndOfBatch()
-        resolve()
-      }).catch(err => {
-        console.log('Error reading file', err)
-        reject(err)
-      })
-    } else {
-      RNFetchBlob.fs.readStream(response.data, 'utf8', chunkSize ?? 4096).then(stream => {
-        stream.onData(chunk64 => {
-          // The utf8 encoder in RNFetchBlob often breaks when there are some odd characters.
-          // whereas `Buffer` is more resilient, so we go thru extra hoops, which are slower but more reliable
-          // const buffer = Buffer.from(chunk64, 'base64')
-          // let chunk = buffer.toString('utf8')
-          let chunk = chunk64
-
-          // If the chunk ends with a complete line, then it ends in "\n" and `lines` will have an empty element as last.
-          // but if it's not a complete line, then the last element will be the partial line.
-          // In either case, we save it as `previousChunk` and remove it from the array,
-          // and in the next chunk we'll prepend it to the first line.
-          chunk = previousChunk + chunk
-          const lines = chunk.split('\n')
-          previousChunk = lines.pop()
-          processLineBatch(lines)
-        })
-        stream.onEnd(() => {
-          processEndOfBatch && processEndOfBatch()
-          resolve()
-        })
-        stream.onError((err) => {
-          console.log('Error reading stream', err)
-          reject(err)
-        })
-        stream.open()
-      })
-    }
-  })
-
-  await streamingPromise
-
-  RNFetchBlob.fs.unlink(response.data)
-
-  const etagKey = Object.keys(response.respInfo.headers).find(k => k.toLowerCase() === 'etag')
-  if (etagKey && response.respInfo.headers[etagKey]) {
-    if (DEBUG_FETCH) console.log('-- Saved etag', response.respInfo.headers[etagKey])
-    return { etag: response.respInfo.headers[etagKey] }
   } else {
-    return {}
+    return { etag }
   }
 }
 
-function filenameForDefinition (definition) {
-  const basename = [definition.key, definition.version].filter(x => x).join('-')
-  return `${RNFetchBlob.fs.dirs.DocumentDir}/data/${basename}.json`
-}
-
-export async function resolveDownloadUrl (url) {
-  url = url.trim()
+export async function resolveDownloadUrl(url) {
+  url = url?.trim() || ''
 
   // Dropbox
   if (url.match(/^https:\/\/(www\.)*dropbox\.com\//i)) {
@@ -311,7 +263,7 @@ export async function resolveDownloadUrl (url) {
     } else {
       return `${url}?dl=1&raw=1`
     }
-  // Apple iCloud Drive
+    // Apple iCloud Drive
   } else if (url.match(/^https:\/\/(www\.)*icloud\.com\/iclouddrive/i)) {
     const parts = url.match(/iclouddrive\/([\w_]+)/)
     const response = await fetch('https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve', {
@@ -328,15 +280,20 @@ export async function resolveDownloadUrl (url) {
     } else {
       return url
     }
-  // Google Drive
+    // Google Drive
   } else if (url.match(/^https:\/\/drive\.google\.com\//i)) {
     const parts = url.match(/file\/d\/([\w_-]+)/)
-    return `https://drive.google.com/uc?id=${parts[1]}&export=download`
-  // Google Docs
+    if (parts) {
+      return `https://drive.google.com/uc?id=${parts[1]}&export=download`
+    } else {
+      console.log('No parts found for Google Drive URL', url)
+      return url
+    }
+    // Google Docs
   } else if (url.match(/^https:\/\/docs\.google\.com\/document/i)) {
     const parts = url.match(/\/d\/([\w_-]+)/)
     return `https://docs.google.com/document/export?format=txt&id=${parts[1]}`
-  // GitHub Gist
+    // GitHub Gist
   } else if (url.match(/^https:\/\/gist\.github\.com\//i)) {
     console.log('gist url', url)
     const response = await fetch(url, {

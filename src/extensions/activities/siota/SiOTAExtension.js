@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -12,19 +12,33 @@ import { Info } from './SiOTAInfo'
 import { SiOTAActivityOptions } from './SiOTAActivityOptions'
 import { siotaFindOneByReference, registerSiOTADataFile, siotaFindAllByLocation } from './SiOTADataFile'
 import { SiOTALoggingControl } from './SiOTALoggingControl'
+import { SiOTAPostSelfSpot } from './SiOTAPostSelfSpot'
+import { SiOTAPostOtherSpot } from './SiOTAPostOtherSpot'
+import { PnPAccountSetting } from './PnPAccount'
+import { apiPnP } from '../../../store/apis/apiPnP'
+import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import GLOBAL from '../../../GLOBAL'
 
 const Extension = {
   ...Info,
   category: 'locationBased',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
+    registerHook('spots', { hook: SpotsHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
+    registerHook('setting', {
+      hook: {
+        key: 'pnp-account',
+        category: 'account',
+        SettingItem: PnPAccountSetting
+      }
+    })
 
     registerSiOTADataFile()
     await dispatch(loadDataFile('siota-all-silos', { noticesInsteadOfFetch: true }))
@@ -45,6 +59,17 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
+  postSelfSpot: SiOTAPostSelfSpot,
+  postOtherSpot: SiOTAPostOtherSpot,
+  isOtherSpotEnabled: ({ settings, operation }) => {
+    const enabled = !!settings?.accounts?.pnp?.apiKey
+    return enabled
+  },
+  isSelfSpotEnabled: ({ settings, operation }) => {
+    const enabled = !!settings?.accounts?.pnp?.apiKey
+    return enabled
+  },
+
   Options: SiOTAActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,
@@ -54,6 +79,63 @@ const ActivityHook = {
       // Regular Activation
       { refs: [{ type: Info.activationType, ref: 'VK-ABC123', name: 'Example Silo', shortName: 'Example Silo', program: Info.shortName, label: `${Info.shortName} VK-ABC123: Example Silo`, shortLabel: `${Info.shortName} VK-ABC123` }] }
     ]
+  }
+}
+
+const SpotsHook = {
+  ...Info,
+  sourceName: 'PnP',
+  fetchSpots: async ({ online, settings, dispatch }) => {
+    if (GLOBAL?.flags?.services?.pnp === false) return []
+
+    let spots = []
+    if (online) {
+      const apiPromise = await dispatch(apiPnP.endpoints.spots.initiate({}, { forceRefetch: true }))
+      await Promise.all(dispatch(apiPnP.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, getState) => apiPnP.endpoints.spots.select({})(getState()))
+
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+      spots = apiResults.data || []
+    }
+
+    const qsos = []
+    for (const spot of spots) {
+      if (Info.referenceRegex.test(spot.actSiteID)) {
+        const spotTime = Date.parse(spot.actTime + 'Z')
+        const freq = parseFloat(spot.actFreq) * 1000
+        const qso = {
+          their: { call: spot.actCallsign.toUpperCase().trim() },
+          freq,
+          band: freq ? bandForFrequency(freq) : 'other',
+          mode: spot.actMode?.toUpperCase() || (freq ? modeForFrequency(freq, { ituRegion: 3, countryCode: 'AU', entityPrefix: 'VK' }) : 'SSB'),
+          refs: [{
+            ref: spot.actSiteID,
+            type: Info.huntingType
+          }],
+          spot: {
+            timeInMillis: spotTime,
+            source: Info.key,
+            icon: Info.icon,
+            label: `${spot.actSiteID}: ${spot?.altLocation || 'Unknown Reference'}`,
+            sourceInfo: {
+              comments: spot.actComments,
+              spotter: spot.actSpoter.toUpperCase().trim()
+            }
+          }
+        }
+        qsos.push(qso)
+      }
+    }
+    const dedupedQSOs = []
+    const includedCalls = {}
+    for (const qso of qsos) {
+      if (!includedCalls[qso.their.call]) {
+        includedCalls[qso.their.call] = true
+        dedupedQSOs.push(qso)
+      }
+    }
+
+    return dedupedQSOs
   }
 }
 
@@ -192,26 +274,42 @@ const ReferenceHandler = {
     }
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+  scoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
     const { band, mode, uuid, startAtMillis } = qso
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const points = refs.length
 
+    if (scoredRef?.ref) {
+      type = Info.activationType
+      value = points || 1
+    } else {
+      type = Info.huntingType
+      value = points
+    }
+
+    const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
+
     const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
     if (nearDupes.length === 0) {
-      return { counts: 1, points, type: Info.activationType }
+      return { counts: 1, points, type }
     } else {
+      const thisQSOTime = qso.startAtMillis ?? Date.now()
+      const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
+
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
+      const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0
+      const sameDay = nearDupes.filter(q => (q.startAtMillis - (q.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
       const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
-      if (sameBand && sameMode) {
+      if (sameBandMode && sameDay) {
         if (points > 0 && !sameRefs) { // Doesn't count towards activation, but towards Silo 2 Silo award.
-          return { counts: 0, points, notices: ['newRef'], type: Info.activationType }
+          return { counts: 0, points, notices: ['newRef'], type }
         }
-        return { counts: 0, points: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { counts: 0, points: 0, alerts: ['duplicate'], type }
       } else {
         const notices = []
+        if (!sameDay) notices.push('newDay')
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 

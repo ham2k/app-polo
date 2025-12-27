@@ -44,7 +44,7 @@ export const ConfirmFromSpotsHook = {
     await Promise.all(dispatch(apiPOTA.util.getRunningQueriesThunk()))
     apiPromise.unsubscribe?.()
 
-    const spots = apiPromise.data
+    const spots = apiPromise.data || []
 
     return spots
       .filter(spot => spot.source.toUpperCase() !== 'RBN')

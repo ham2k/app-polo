@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,19 +7,24 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
 import { useFindHooks } from '../../../extensions/registry'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectSettings } from '../../../store/settings'
-import { selectQSOs } from '../../../store/qsos'
+import { selectSectionedQSOs } from '../../../store/qsos'
 
 import SpotsPanel from './components/SpotsPanel'
 
 export default function OpSpotsTab ({ navigation, route }) {
-  const operation = route.params.operation
-  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
   const dispatch = useDispatch()
+  const safeArea = useSafeAreaInsets()
+
   const settings = useSelector(selectSettings)
+  const operation = route.params.operation
+  const { sections, qsos } = useSelector(state => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false))
   const online = useSelector(selectRuntimeOnline)
+
   const spotsHooks = useFindHooks('spots')
 
   const extraSpotInfoHooks = useMemo(() => spotsHooks.filter(hook => hook?.extraSpotInfo), [spotsHooks])
@@ -39,6 +44,6 @@ export default function OpSpotsTab ({ navigation, route }) {
   }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings])
 
   return (
-    <SpotsPanel operation={operation} qsos={qsos} onSelect={handleSelect} />
+    <SpotsPanel operation={operation} qsos={qsos} sections={sections} onSelect={handleSelect} style={{ paddingBottom: safeArea.bottom, paddingRight: safeArea.right }} />
   )
 }

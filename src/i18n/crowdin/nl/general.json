@@ -1,0 +1,308 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Engels",
+        "ar": "Arabisch - العربية",
+        "ast": "Asturisch - Asturianu",
+        "bn": "Bengaals - বাংলা",
+        "ca": "Catalaans - Català",
+        "cs": "Tsjechisch - Čeština",
+        "cy": "Welsh - Cymraeg",
+        "da": "Deens - Dansk",
+        "de": "Duits - Deutsch",
+        "en-PL": "Pig Latin",
+        "en-PT": "Piraat",
+        "eo": "Esperanto - Esperanto",
+        "es": "Spaans - Español",
+        "et": "Ests - Eesti",
+        "eu": "Baskisch - Euskara",
+        "fi": "Fins - Suomi",
+        "fr": "Frans - Français",
+        "ga": "Iers - Gaeilge",
+        "gl": "Gallisch - Galego",
+        "hi": "Hindi - हिंदी",
+        "id": "Indonesisch - Bahasa Indonesie",
+        "it": "Italiaans - Italiano",
+        "ja": "Japans - 日本語",
+        "ko": "Koreaans - 한국어",
+        "lt": "Litouws - Lietuvių",
+        "lv": "Lets - Latvijas",
+        "ms": "Maleisisch - Bahasa Melayu",
+        "nb": "Noors Bokmål - Norsk bokmål",
+        "nl": "Nederlands - Nederlands",
+        "nn": "Noors Nynorsk - Nynorsk",
+        "pl": "Pools - Polski",
+        "pt-BR": "Portugees (Brazilië) - Português (Brasil)",
+        "pt-PT": "Portugees (Portugal) - Português (Portugal)",
+        "pt": "Portugees - Português",
+        "ro": "Roemeens - Română",
+        "ru": "Russisch - Русский",
+        "sk": "Slowaaks - Slovenčina",
+        "sv": "Zweeds - Svenska",
+        "th": "Thais - ภาษาไทย",
+        "tl": "Tagalog - Wikang Filipino",
+        "tlh": "Klingon - ᏣᎳᎩ",
+        "tr": "Turks - Türkçe",
+        "uk": "Oekraïens - Українська",
+        "ur": "Urdu - اردو",
+        "vi": "Vietnamees - Tiếng Việt",
+        "zh": "Chinees - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "QSO",
+      "QSOs-a11y": "QSO's",
+      "Operation": "Activatie",
+      "generalOperation": "Algemene Operatie"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " en "
+      },
+      "time": {
+        "tomorrow": "Morgen",
+        "today": "Vandaag",
+        "yesterday": "Gisteren",
+        "ago": "{{time}} geleden",
+        "fromNow": "{{time}} vanaf nu",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}m",
+        "shortMinutesAndSeconds": "{{m}}m {{s}}s",
+        "shortHours": "{{h}}u",
+        "shortHoursAndMinutes": "{{h}}u {{m}}m",
+        "shortDays": "{{d}}d",
+        "shortDaysAndHours": "{{d}}d {{h}}u",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Januari",
+        "2": "Februari",
+        "3": "Maart",
+        "4": "April",
+        "5": "Mei",
+        "6": "Juni",
+        "7": "Juli",
+        "8": "Augustus",
+        "9": "September",
+        "10": "Oktober",
+        "11": "November",
+        "12": "December"
+      },
+      "monthAbbr": {
+        "1": "Jan",
+        "2": "Feb",
+        "3": "Maa",
+        "4": "Apr",
+        "5": "Mei",
+        "6": "Jun",
+        "7": "Jul",
+        "8": "Aug",
+        "9": "Sep",
+        "10": "Okt",
+        "11": "Nov",
+        "12": "Dec"
+      },
+      "weekday": {
+        "1": "Maandag",
+        "2": "Dinsdag",
+        "3": "Woensdag",
+        "4": "Donderdag",
+        "5": "Vrijdag",
+        "6": "Zaterdag",
+        "7": "Zondag"
+      },
+      "weekdayAbbr": {
+        "1": "Ma",
+        "2": "Di",
+        "3": "Wo",
+        "4": "Do",
+        "5": "Vr",
+        "6": "Za",
+        "7": "Zo"
+      },
+      "ordinalDay": {
+        "1": "1ste",
+        "2": "2de",
+        "3": "3de",
+        "4": "4de",
+        "5": "5de",
+        "6": "6de",
+        "7": "7de",
+        "8": "8ste",
+        "9": "9de",
+        "10": "10de",
+        "11": "11ste",
+        "12": "12de",
+        "13": "13de",
+        "14": "14de",
+        "15": "15de",
+        "16": "16de",
+        "17": "17de",
+        "18": "18de",
+        "19": "19de",
+        "20": "20ste",
+        "21": "21ste",
+        "22": "22ste",
+        "23": "23ste",
+        "24": "24ste",
+        "25": "25ste",
+        "26": "26ste",
+        "27": "27ste",
+        "28": "28ste",
+        "29": "29ste",
+        "30": "30ste",
+        "31": "31ste"
+      },
+      "distance": {
+        "away": "{{distance}} verwijdert"
+      }
+    },
+    "buttons": {
+      "cancel": "Annuleren",
+      "ok": "Ok",
+      "close": "Sluiten",
+      "login": "Inloggen",
+      "logout": "Uitloggen",
+      "delete": "Verwijderen",
+      "refresh": "Verversen",
+      "done": "Klaar",
+      "accept": "Accepteren",
+      "accept-a11y": "Wijzigingen Accepteren",
+      "revert": "Herstellen",
+      "revert-a11y": "Wijzigingen Herstellen",
+      "save": "Opslaan",
+      "export": "Exporteren"
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "Patch {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Controleren op updates…",
+        "stable": "Controleren op stabiele updates…",
+        "unstable": "Controleren op onstabiele updates…",
+        "bleedingEdge": "Controleren op snedige updates…"
+      },
+      "tracksPlural": {
+        "stable": "Stabiel",
+        "unstable": "Instabiel",
+        "bleedingEdge": "Bleeding Edge",
+        "Production": "Stabiel",
+        "Staging": "Onstabiel",
+        "Development": "Bleeding Edge"
+      },
+      "trackSingular": {
+        "stable": "Stabiel",
+        "unstable": "Onstabiel",
+        "bleedingEdge": "Bleeding Edge",
+        "Production": "Stabiel",
+        "Staging": "Onstabiel",
+        "Development": "Bleeding Edge"
+      },
+      "versionIsAvailable-md": "Nieuwe versie {{versionName}} is beschikbaar.",
+      "updateNow": "Nu bijwerken",
+      "newVersionAvailable-md": "Een nieuwe versie van PoLo is beschikbaar!"
+    },
+    "dataFiles": {
+      "loading": "Laden {{name}}",
+      "downloading": "Downloaden {{name}}",
+      "dataHasToBeDownloaded-md": "Gegevens voor **{{name}}** moeten worden gedownload.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Gegevens voor **{{name}}** zijn al een tijdje niet bijgewerkt.",
+      "downloadNow": "Nu downloaden",
+      "refreshNow": "Nu verversen"
+    },
+    "notices": {
+      "action": {
+        "ok": "Oké!",
+        "__comment__": "Specifieke notities (activaties) overschrijven"
+      },
+      "title": {
+        "__comment__": "Hier specifieke notities (titels) overschrijven"
+      },
+      "text": {
+        "__comment__": "Hier specifieke notities (tekst) overschrijven"
+      },
+      "dialogTitle": {
+        "__comment__": "Hier specifieke dialoogtafels"
+      },
+      "dialogText": {
+        "__comment__": "Hier specifieke dialoogteksten overschrijven"
+      },
+      "dataFiles": {
+        "fetching": "Ophalen {{title}}…",
+        "progress": "Ophalen {{title}}\n\n{{progress}}",
+        "done": "Gereed met ophalen {{title}}",
+        "error": "Fout bij ophalen {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Tekst",
+        "csv": "Door komma’s gescheiden waarden",
+        "tsv": "Door tab gescheiden waarden",
+        "other": "Gegevens"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Kernfuncties",
+        "locationBased": "Locatiegebonden Activiteiten",
+        "contestsAndFieldOps": "Wedstrijden & Veldacties",
+        "lookup": "Opzoeking Gegevens",
+        "devmode": "Ontwikkelingsmodus",
+        "other": "Andere Functies"
+      }
+    },
+    "continents": {
+      "AF": "Afrika",
+      "AS": "Azië",
+      "EU": "Europa",
+      "NA": "Noord-Amerika",
+      "SA": "Zuid-Amerika",
+      "OC": "Oceanië"
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

@@ -2,8 +2,32 @@
   "key": "CO",
   "name": "Colorado QSO Party",
   "start": "2025-8-30 13:00Z",
-  "end": "2025-8-31 04:00Z",
-  "status": "Pending",
+  "end": "2025-8-31 03:59Z",
+  "url": "https://ppraa.org/coqp",
+  "cabrilloName": "COQP",
+  "notes": "Multipliers for power, mode and other factors are not correclty included in score yet.",
+  "internalNotes": "",
+  "lastUpdated": "2025-05-23 12:00Z",
+  "status": "Updated for 2025, but not verified",
+  "exchange": ["Name", "Location"],
+  "options": {
+    "dcCountsAsMaryland": false,
+    "stateCountsForInState": true,
+    "selfSpotting": true,
+    "countyLine": true,
+    "dxIsMultiplier": true,
+    "multsPerBandMode": true,
+    "inStateMultsPerBand": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2,
+    "DIGI": 2
+  },
+  "bonusStations": {
+    "AF0S": 500,
+    "WA0VTU": 500
+  },
   "counties": {
     "ADA": "Adams",
     "ALA": "Alamosa",
@@ -66,7 +90,7 @@
     "SED": "Sedgwick",
     "SUM": "Summit",
     "TEL": "Teller",
-    "WAS": "Washington",
+    "WAS": "Washington County",
     "WEL": "Weld",
     "YUM": "Yuma"
   }

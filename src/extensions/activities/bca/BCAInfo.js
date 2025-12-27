@@ -14,5 +14,10 @@ export const Info = {
   activationType: 'bcaActivation',
   descriptionPlaceholder: 'Enter BCA reference',
   unknownReferenceName: 'Unknown Castle',
-  referenceRegex: /^ON-[0-9]{5}$/i
+  referenceRegex: /^ON-[0-9]{5}$/i,
+  scoring: {
+    activates: 'once',
+    qsosToActivate: 50,
+    uniquePer: ['band', 'mode', 'day']
+  }
 }

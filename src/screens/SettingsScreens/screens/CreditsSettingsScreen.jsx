@@ -1,94 +1,174 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React from 'react'
-import { List } from 'react-native-paper'
-import { Linking, ScrollView } from 'react-native'
+import { Linking, ScrollView, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import ScreenContainer from '../../components/ScreenContainer'
-import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
+import { H2kListItem, H2kListSection } from '../../../ui'
 
-function prepareStyles (baseStyles) {
-  return {
-    ...baseStyles,
-    listRow: {
-      marginLeft: baseStyles.oneSpace * 2,
-      marginRight: baseStyles.oneSpace * 2,
-      marginBottom: baseStyles.oneSpace
-    }
-  }
-}
+export default function CreditsSettingsScreen ({ navigation, splitView }) {
+  const { t } = useTranslation()
 
-export default function CreditsSettingsScreen ({ navigation }) {
-  const styles = useThemedStyles(prepareStyles)
-
+  const safeAreaInsets = useSafeAreaInsets()
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
-        <Ham2kListSection>
-          <Ham2kListItem title={'Created by Sebastián Delmont • KI2D'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+      <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+        <H2kListSection>
+          <H2kListItem title={t('screens.creditsSettings.createdBy', 'Created by {{callsign}}', { callsign: 'KI2D' })}
+            leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'KI2D' })}
           />
 
-          <Ham2kListItem title={'Ham2K PoLo is Open Source'}
-            description={'Check out the code and contribute on GitHub!'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="github" />}
+          <H2kListItem title={t('screens.creditsSettings.openSource', 'Ham2K PoLo is Open Source')}
+            description={t('screens.creditsSettings.checkOutCode', 'Check out the code and contribute on GitHub!')}
+            leftIcon="github"
             onPress={async () => await Linking.openURL('https://github.com/ham2k/app-polo')}
           />
 
-        </Ham2kListSection>
+        </H2kListSection>
 
-        <Ham2kListSection title={'Team PoLo'}>
-          <Ham2kListItem
+        <H2kListSection title={t('screens.creditsSettings.teamPoLo', 'Team PoLo')}>
+          <H2kListItem
             title={'Sebastián Delmont • KI2D'}
-            description={'Creator & Lead Developer'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            description={t('screens.creditsSettings.creator', 'Creator & Lead Developer')}
+            leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'KI2D' })}
           />
-          <Ham2kListItem
+          <H2kListItem
             title={'Steve Hiscocks • M1SDH'}
-            description={'Developer'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            description={t('screens.creditsSettings.developer', 'Developer')}
+            leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'M1SDH' })}
           />
-          <Ham2kListItem
-            title={'Aldo Mendoza • NA7DO'}
-            description={'Developer'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
-            onPress={() => navigation.navigate('CallInfo', { call: 'NA7DO' })}
-          />
-          <Ham2kListItem
-            title={'Ian Renton • M0TRT'}
-            description={'Developer'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
-            onPress={() => navigation.navigate('CallInfo', { call: 'M0TRT' })}
-          />
-          <Ham2kListItem
-            title={'Ciemon Dunville • G0TRT'}
-            description={'Documentation'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
-            onPress={() => navigation.navigate('CallInfo', { call: 'G0TRT' })}
-          />
-          <Ham2kListItem
+          <H2kListItem
             title={'Alan McDonald • VK1AO'}
-            description={'Documentation'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="account" />}
+            description={t('screens.creditsSettings.leadSupport', 'Lead Support & Documentation')}
+            leftIcon="account"
             onPress={() => navigation.navigate('CallInfo', { call: 'VK1AO' })}
           />
 
-        </Ham2kListSection>
+        </H2kListSection>
+
+        <H2kListSection title={t('screens.creditsSettings.moreCodeAndDocsContributors', 'More code and docs contributors')}>
+
+          {/* Sorted by callsign alphabetically */}
+
+          <H2kListItem
+            title={'Phil Kessels • DL9PK'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'spotting others' })}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'DL9PK' })}
+          />
+          <H2kListItem
+            title={'Ciemon Dunville • G0TRT'}
+            description={t('screens.creditsSettings.contributorDocumentation', 'Documentation')}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'G0TRT' })}
+          />
+          <H2kListItem
+            title={'Emma • K0UWU/VA2EMZ'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'Wavelog' })}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'K0UWU' })}
+          />
+          <H2kListItem
+            title={'Woody • KC1VOP'}
+            description={t('screens.creditsSettings.contributorDocumentation', 'Documentation Contributor')}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'KC1VOP' })}
+          />
+          <H2kListItem
+            title={'John • KQ4URU'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'KQ4URU' })}
+          />
+          <H2kListItem
+            title={'Ian Renton • M0TRT'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'assorted bug fixes' })}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'M0TRT' })}
+          />
+          <H2kListItem
+            title={'Aldo Mendoza • NA7DO'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'power controls, confirm QSOs from spots, lots of small fixes' })}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'NA7DO' })}
+          />
+          <H2kListItem
+            title={'Stan • W1BOY'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'W1BOY' })}
+          />
+          <H2kListItem
+            title={'Marion • W1GRL'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'W1GRL' })}
+          />
+          <H2kListItem
+            title={'Bryan • W1WC'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'W1WC' })}
+          />
+          <H2kListItem
+            title={'Kevin • W8NI'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'W8NI' })}
+          />
+        </H2kListSection>
+
+        <H2kListSection title={t('screens.creditsSettings.translations', 'Translations')}>
+          <H2kListItem
+            title={t('screens.creditsSettings.translationService', 'Translation tooling by CrowdIn')}
+            description={t('screens.creditsSettings.translationServiceDescription', 'Tools to manage the translation process are generously donated by CrowdIn')}
+            leftIcon="hammer-screwdriver"
+          />
+          <H2kListItem
+            title={t('general.languages.es', 'Spanish')}
+            description={'KI2D Sebastián (lead), EA1HET Jonathan'}
+            leftIcon="earth"
+          />
+          <H2kListItem
+            title={t('general.languages.fr', 'French')}
+            description={'F8EXM Yannick (lead), F4JSU Rémi, VA6DM Dino'}
+            leftIcon="earth"
+          />
+          <H2kListItem
+            title={t('general.languages.de', 'German')}
+            description={'DA1EE Lucas (lead), DJ5NF Martin, DK8YS Yannick, DO7JZ Julius'}
+            leftIcon="earth"
+          />
+          <H2kListItem
+            title={t('general.languages.nb', 'Norwegian')}
+            description={'LB4FH Kjetil (lead), LA2USA Espen'}
+            leftIcon="earth"
+          />
+          <H2kListItem
+            title={t('general.languages.nl', 'Dutch')}
+            description={'ON4VT Danny (lead)'}
+            leftIcon="earth"
+          />
+          <H2kListItem
+            title={t('general.languages.sk', 'Slovak')}
+            description={'OM8ATE Matúš (lead)'}
+            leftIcon="earth"
+          />
+        </H2kListSection>
+
+        <View style={{ height: safeAreaInsets.bottom }} />
 
       </ScrollView>
     </ScreenContainer>
   )
 }
-
-// ))}

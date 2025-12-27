@@ -5,9 +5,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { actions, selectQSOs } from '../qsosSlice'
+import { selectQSOs } from '../qsosSlice'
+import { addQSOs } from '../../../store/qsos'
 import { findHooks } from '../../../extensions/registry'
 import { get as getDistance } from 'fast-levenshtein'
+import GLOBAL from '../../../GLOBAL'
 
 export const confirmFromSpots = (options = {}) => async (dispatch, getState) => {
   if (!options.operation) {
@@ -25,15 +27,17 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
   }
 
   const hookSpots = {}
-  await Promise.all(hooks.map(hook => hook.fetchSpots({
+  await Promise.all(hooks.map(hook => hook?.fetchSpots({
     operation: options.operation,
-    dispatch
-  }).then(spots => {
+    dispatch,
+    t: GLOBAL?.t
+  })?.then(spots => {
     hookSpots[hook.confirmationName] = spots
   })))
 
   const stationCall = options.operation.stationCall
   const qsoCalls = new Set(qsos.map(qso => qso?.their?.call))
+  const updatedQSOs = []
   for (const qso of qsos) {
     const call = qso?.their?.call
     if (!call) {
@@ -81,20 +85,22 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
           isGuess
         }
         const notes = [qso.notes, isGuess ? undefined : currentSpot.note].filter(n => !!n).join(' | ')
-        dispatch(actions.addQSO({
-          uuid: options.operation.uuid,
-          qso: {
-            ...qso,
-            notes: notes.length > 0 ? notes : undefined,
-            qsl
-          }
-        }))
+        updatedQSOs.push({
+          ...qso,
+          notes: notes.length > 0 ? notes : undefined,
+          qsl
+        })
       }
     }
   }
+
+  dispatch(addQSOs({
+    uuid: options.operation.uuid,
+    qsos: updatedQSOs
+  }))
 }
 
-function sameUTCDay (aMillis, bMillis) {
+function sameUTCDay(aMillis, bMillis) {
   if (!aMillis || !bMillis) {
     return false
   }

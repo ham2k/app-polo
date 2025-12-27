@@ -60,7 +60,7 @@ export function registerELADataFile () {
                       const grid = (!isNaN(lat) && !isNaN(lon)) ? locationToGrid6(lat, lon) : null
                       const data = {
                         ref: reference['№ ELA'],
-                        name: reference['NAME OF LIGHTHOUSE'].trim(),
+                        name: reference['NAME OF LIGHTHOUSE']?.trim(),
                         location: reference.Location,
                         lat: isNaN(lat) ? null : lat,
                         lon: isNaN(lon) ? null : lon,

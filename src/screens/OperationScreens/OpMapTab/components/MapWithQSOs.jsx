@@ -10,15 +10,10 @@ import React, { useMemo } from 'react'
 import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../../tools/geoTools'
 
 import MapboxMapWithQSOs from './MapboxMapWithQSOs'
-import NativeMapWithQSOs from './NativeMapWithQSOs'
-import { selectFeatureFlag } from '../../../../store/system'
-import { useSelector } from 'react-redux'
 
 export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedUUID, projection }) {
-  const mapEngine = useSelector(state => selectFeatureFlag(state, 'mapEngine')) || 'Mapbox'
-
   const mappableQSOs = useMemo(() => {
-    const activeQSOs = qsos.filter(qso => !qso.deleted)
+    const activeQSOs = qsos.filter(qso => !qso.deleted && !qso.event)
     return activeQSOs
       .map(qso => {
         const location = locationForQSONInfo(qso?.their)
@@ -38,10 +33,10 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     let longitudeMin = longitude ?? 0
     let longitudeMax = longitude ?? 0
     for (const { location } of mappableQSOs) {
-      latitudeMin = Math.min(latitudeMin, location.latitude)
-      latitudeMax = Math.max(latitudeMax, location.latitude)
-      longitudeMin = Math.min(longitudeMin, location.longitude)
-      longitudeMax = Math.max(longitudeMax, location.longitude)
+      latitudeMin = Math.min(latitudeMin, location?.latitude ?? 0)
+      latitudeMax = Math.max(latitudeMax, location?.latitude ?? 0)
+      longitudeMin = Math.min(longitudeMin, location?.longitude ?? 0)
+      longitudeMax = Math.max(longitudeMax, location?.longitude ?? 0)
     }
     return {
       latitude: latitudeMin + (latitudeMax - latitudeMin) / 2,
@@ -55,11 +50,7 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     }
   }, [qth, mappableQSOs])
 
-  if (mapEngine === 'Mapbox') {
-    return <MapboxMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} qsos={qsos} settings={settings} selectedUUID={selectedUUID} projection={projection} />
-  } else {
-    return <NativeMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} settings={settings} selectedUUID={selectedUUID} projection={projection} />
-  }
+  return <MapboxMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} qsos={qsos} settings={settings} selectedUUID={selectedUUID} projection={projection} />
 }
 
 function strengthForQSO (qso) {

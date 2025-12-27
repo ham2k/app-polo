@@ -31,7 +31,7 @@
     "MOBILE": 2
   },
   "counties": {
-    "ARK": "Arkansas",
+    "ARK": "Arkansas County",
     "ASH": "Ashley",
     "BAX": "Baxter",
     "BEN": "Benton",
@@ -77,7 +77,7 @@
     "MAD": "Madison",
     "MRN": "Marion",
     "MIL": "Miller",
-    "MIS": "Mississippi",
+    "MIS": "Mississippi County",
     "MON": "Monroe",
     "MGY": "Montgomery",
     "NEV": "Nevada",
@@ -102,7 +102,7 @@
     "STO": "Stone",
     "UNI": "Union",
     "VBN": "Van Buren",
-    "WAS": "Washington",
+    "WAS": "Washington County",
     "WHI": "White",
     "WOO": "Woodruff",
     "YEL": "Yell"

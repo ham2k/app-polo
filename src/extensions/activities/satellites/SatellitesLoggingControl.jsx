@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -10,10 +10,10 @@ import { useDispatch } from 'react-redux'
 
 import { setOperationData } from '../../../store/operations'
 import { setVFO } from '../../../store/station/stationSlice'
-import ThemedDropDown from '../../../screens/components/ThemedDropDown'
 import { capitalizeString } from '../../../tools/capitalizeString'
 import { fmtFreqInMHz } from '../../../tools/frequencyFormats'
 import { findRef, removeRef, replaceRef } from '../../../tools/refTools'
+import { H2kDropDown } from '../../../ui'
 
 import { SatelliteData } from './SatelliteData'
 import { Info } from './SatellitesInfo'
@@ -72,7 +72,7 @@ export function SatellitesLoggingControl (props) {
   }, [dispatch, operation.uuid, qso?.refs, qso?._isNew, updateQSO, vfo?.freq, vfo?.mode])
 
   return (
-    <ThemedDropDown
+    <H2kDropDown
       {...props}
       label="Satellite"
       value={value ?? ''}
@@ -80,7 +80,7 @@ export function SatellitesLoggingControl (props) {
       dropDownContainerMaxHeight={styles.oneSpace * 19}
       fieldId={'satellite'}
       style={{ ...style, width: styles.oneSpace * 40 }}
-      list={options}
+      options={options}
     />
   )
 }

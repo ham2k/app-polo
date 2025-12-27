@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,6 +7,7 @@
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile, useBuiltinCountryFile } from '@ham2k/lib-country-files'
+import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { Platform } from 'react-native'
 
@@ -61,7 +62,7 @@ export const settingsSlice = createSlice({
 
 export const { setOperatorCall, setOnboarded, setAccountInfo, setSettings, setExtensionSettings, setExportSettings, mergeSettings } = settingsSlice.actions
 
-function deepMergeState (state, data, visited = undefined) {
+function deepMergeState(state, data, visited = undefined) {
   visited = visited || new Set()
   visited.add(data)
 
@@ -155,5 +156,24 @@ export const selectOperatorCall = createSelector(
   (state) => state?.settings,
   (settings) => settings?.operatorCall === 'N0CALL' ? '' : (settings?.operatorCall ?? '')
 )
+
+export const selectOperatorCallInfo = createSelector(
+  (state) => state?.settings?.operatorCall === 'N0CALL' ? '' : (state?.settings?.operatorCall ?? ''),
+  (settingsCall) => {
+    let info = {}
+    if (settingsCall) {
+      info = parseCallsign(settingsCall)
+    }
+    if (info.baseCall) {
+      info = annotateFromCountryFile(info)
+      if (info.entityPrefix) {
+        info = { ...info, ...DXCC_BY_PREFIX[info?.entityPrefix] }
+      }
+    }
+    return info
+  }
+)
+
+export const selectSettingsLanguage = (state) => state?.settings?.language
 
 export default settingsSlice.reducer

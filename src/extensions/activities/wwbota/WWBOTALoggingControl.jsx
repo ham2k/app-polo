@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
 import { selectOperationCallInfo } from '../../../store/operations'
@@ -20,8 +21,10 @@ const MATCH_SYMBOLS_REGEX = /[ ,.]+$/
 export function WWBOTALoggingControl (props) {
   const { qso, operation, updateQSO, style, styles } = props
 
+  const { t } = useTranslation()
+
   const ref = useRef()
-  useEffect(() => { setTimeout(() => ref?.current?.focus(), 0) }, [])
+  useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
@@ -32,21 +35,22 @@ export function WWBOTALoggingControl (props) {
 
   const [innerValue, setInnerValue] = useState(refsString)
   useEffect(() => {
-    if (refsString.replace(MATCH_SYMBOLS_REGEX, '') !== innerValue.replace(MATCH_SYMBOLS_REGEX, '')) {
+    if (refsString?.replace(MATCH_SYMBOLS_REGEX, '') !== innerValue?.replace(MATCH_SYMBOLS_REGEX, '')) {
       setInnerValue(refsString)
     }
   }, [refsString, innerValue])
 
   const handleChangeText = useCallback((value) => {
-    const refs = stringToRefs(Info.huntingType, value)
-    setInnerValue(value)
+    let refs = stringToRefs(Info.huntingType, value)
+    refs = refs.map(r => ({ ...r, label: `${Info.shortName} ${r.ref}` }))
 
+    setInnerValue(value)
     updateQSO({ refs: replaceRefs(qso?.refs, Info.huntingType, refs) })
   }, [qso, updateQSO])
 
   const defaultPrefix = useMemo(() => {
     if (qso?.their?.guess?.entityPrefix) {
-      return (wwbotaPrefixForDXCCPrefix(qso?.their.guess.entityPrefix) ?? 'B/?')
+      return (wwbotaPrefixForDXCCPrefix(qso?.their?.guess?.entityPrefix) ?? 'B/?')
     } else if (ourInfo?.entityPrefix) {
       return (wwbotaPrefixForDXCCPrefix(ourInfo?.entityPrefix) ?? 'B/?')
     } else {
@@ -60,7 +64,7 @@ export function WWBOTALoggingControl (props) {
       innerRef={ref}
       style={[style, { maxWidth: '95%', minWidth: styles.oneSpace * 30, width: Math.max(16, refsString?.length || 0) * styles.oneSpace * 1.3 }]}
       value={innerValue}
-      label="Their Bunker"
+      label={t('extensions.wwbota.loggingControl.theirRefLabel', 'Their Bunker')}
       defaultPrefix={defaultPrefix}
       onChangeText={handleChangeText}
     />

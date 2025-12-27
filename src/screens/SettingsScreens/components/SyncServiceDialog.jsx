@@ -1,20 +1,22 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, RadioButton, Text, TextInput } from 'react-native-paper'
-import { useDispatch, useSelector } from 'react-redux'
 import { View } from 'react-native'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
+import { RadioButton, Text } from 'react-native-paper'
+import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kTextInput } from '../../../ui'
 
 const SERVERS = {
   prod: 'https://lofi.ham2k.net',
-  dev: 'https://dev.lofi.ham2k.net',
+  test: 'https://test.lofi.ham2k.net',
   local: 'http://localhost:3000'
 }
 const OPTION_FOR_SERVER = Object.keys(SERVERS).reduce((acc, key) => {
@@ -23,6 +25,8 @@ const OPTION_FOR_SERVER = Object.keys(SERVERS).reduce((acc, key) => {
 }, {})
 
 export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const lofiSettings = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
@@ -62,9 +66,9 @@ export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) 
   }, [onDialogDone])
 
   return (
-    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <Dialog.Title style={{ textAlign: 'center' }}>Ham2K Log Filer Sync Service</Dialog.Title>
-      <Dialog.Content>
+    <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.syncSettings.syncServiceDialog.title', 'Ham2K Log Filer Sync Service')}</H2kDialogTitle>
+      <H2kDialogContent>
         <RadioButton.Group
           onValueChange={(v) => setServerOption(v)}
           value={serverOption}
@@ -78,15 +82,15 @@ export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) 
           ))}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="other" />
-            <Text onPress={() => setServerOption('other')} style={styles.rowText}>Custom</Text>
-            <TextInput style={{ marginLeft: styles.oneSpace, flex: 1 }} value={otherServer} onChangeText={setOtherServer} />
+            <Text onPress={() => setServerOption('other')} style={styles.rowText}>{t('screens.syncSettings.syncServiceDialog.custom', 'Custom')}</Text>
+            <H2kTextInput keyboard="dumb"style={{ marginLeft: styles.oneSpace, flex: 1 }} value={otherServer} onChangeText={setOtherServer} />
           </View>
         </RadioButton.Group>
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={handleCancel}>Cancel</Button>
-        <Button onPress={handleAccept}>Ok</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

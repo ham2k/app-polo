@@ -1,23 +1,25 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Keyboard, View } from 'react-native'
+import { IconButton, Text } from 'react-native-paper'
 import { useSelector } from 'react-redux'
-import { IconButton } from 'react-native-paper'
+import { useTranslation } from 'react-i18next'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation } from '../../../store/operations'
 import { selectQSOs } from '../../../store/qsos'
-import { View } from 'react-native'
 import { selectSettings } from '../../../store/settings'
-
 import { useUIState } from '../../../store/ui'
+
 import MapWithQSOs from './components/MapWithQSOs'
 
 function prepareStyles (baseStyles, themeColor) {
@@ -38,8 +40,11 @@ function prepareStyles (baseStyles, themeColor) {
 }
 
 export default function OpMapTab ({ navigation, route }) {
+  const { t } = useTranslation()
+
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor)
+  const safeAreaInsets = useSafeAreaInsets()
 
   const settings = useSelector(selectSettings)
 
@@ -51,15 +56,84 @@ export default function OpMapTab ({ navigation, route }) {
 
   const qth = useMemo(() => {
     try {
-      if (!operation?.grid) return {}
-      const [latitude, longitude] = gridToLocation(operation.grid)
-      return { latitude, longitude }
+      if (operation.grid) {
+        const [latitude, longitude] = gridToLocation(operation.grid)
+        return { latitude, longitude }
+      } else {
+        return {}
+      }
     } catch (e) {
       return {}
     }
-  }, [operation?.grid])
+  }, [operation.grid])
 
-  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
+  const allQsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
+  const qsos = useMemo(() => allQsos.filter(qso => !qso.deleted && !qso.event), [allQsos])
+
+  const [dismissedWarnings, setDismissedWarnings] = useState({})
+
+  const warnings = useMemo(() => {
+    const _warnings = []
+    if (!qth.latitude) {
+      _warnings.push({
+        key: 'no-location',
+        text: t('screens.opMapTab.noLocation', `No lines?
+You need to set your location first.
+
+Tap here to do it.`),
+        onPress: () => navigation.navigate('OperationLocation', { operation: operation.uuid }),
+        style: {
+          backgroundColor: 'red',
+          opacity: 0.8
+        }
+      })
+    }
+
+    const qsosWithNoLocation = qsos.filter(qso => !qso.their?.grid && !qso.their?.guess?.grid)
+
+    if (qsosWithNoLocation.length / qsos.length > 0.5 && qsos.length > 5) {
+      _warnings.push({
+        key: 'many-no-location',
+        text: t('screens.opMapTab.manyNoLocation', `Many of these QSOs have no precise location.
+
+You might need a paid QRZ.com account for location lookups.`),
+        onPress: () => navigation.navigate('Settings')
+      })
+    }
+    return _warnings
+  }, [navigation, operation.uuid, qsos, qth?.latitude, t])
+
+  const [keyboardPaddingBottom, setKeyboardPaddingBottom] = useState(0)
+  useEffect(() => {
+    if (Keyboard.isVisible()) {
+      const metrics = Keyboard.metrics()
+      if (metrics.height > 100) {
+        setKeyboardPaddingBottom(0)
+      } else {
+        setKeyboardPaddingBottom(metrics.height - 10)
+      }
+    }
+
+    const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      const metrics = Keyboard.metrics()
+      if (metrics.height > 100) {
+        // On iPads, when there's an external keyboard connected, the OS still shows a small
+        // button on the bottom right with some options
+        // This is considered "keyboard visible", which causes KeyboardAvoidingView to leave an ugly empty padding
+        setKeyboardPaddingBottom(0)
+      } else {
+        setKeyboardPaddingBottom(metrics.height - 10)
+      }
+    })
+    const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardPaddingBottom(0)
+    })
+
+    return () => {
+      didShowSubscription.remove()
+      didHideSubscription.remove()
+    }
+  }, [])
 
   return (
     <>
@@ -72,7 +146,39 @@ export default function OpMapTab ({ navigation, route }) {
         settings={settings}
         selectedUUID={loggingState?.selectedUUID}
       />
-      <View style={{ position: 'absolute', bottom: styles.oneSpace * 2, right: styles.oneSpace * 2 }}>
+      {warnings.length > 0 && (
+        <View style={{ position: 'absolute', top: styles.oneSpace * 1, left: styles.oneSpace * 1 + safeAreaInsets.left, right: styles.oneSpace * 1 + safeAreaInsets.right }}>
+          {warnings.filter(warning => !dismissedWarnings[warning.key]).map((warning, index) => (
+            <View
+              key={index}
+              style={{
+                backgroundColor: 'red',
+                opacity: 0.8,
+                marginBottom: styles.oneSpace * 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Text
+                style={{ color: 'white', padding: styles.oneSpace, flex: 1 }}
+                onPress={warning.onPress}
+              >
+                {warning.text}
+              </Text>
+              <IconButton
+                icon="close"
+                iconColor="white"
+                style={{ flex: 0, minWidth: styles.oneSpace * 4 }}
+                size={styles.oneSpace * 2}
+                mode={'default'}
+                onPress={() => setDismissedWarnings({ ...dismissedWarnings, [warning.key]: true })}
+              />
+            </View>
+          ))}
+        </View>
+      )}
+      <View style={{ position: 'absolute', bottom: styles.oneSpace * 1 + safeAreaInsets.bottom + keyboardPaddingBottom, right: styles.oneSpace * 1 + safeAreaInsets.right }}>
         {projection === 'mercator' ? (
           <IconButton
             icon="earth"

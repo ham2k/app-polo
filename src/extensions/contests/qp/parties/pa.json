@@ -48,7 +48,7 @@
     "CRA": "Crawford",
     "CUM": "Cumberland",
     "DAU": "Dauphin",
-    "DCO": "Delaware",
+    "DCO": "Delaware County",
     "ELK": "Elk",
     "ERI": "Erie",
     "FAY": "Fayette",
@@ -57,7 +57,7 @@
     "FRA": "Franklin",
     "GRE": "Greene",
     "HUN": "Huntingdon",
-    "INN": "Indiana",
+    "INN": "Indiana County",
     "JEF": "Jefferson",
     "JUN": "Juniata",
     "LAC": "Lackawanna",
@@ -88,10 +88,10 @@
     "UNI": "Union",
     "VEN": "Venango",
     "WAR": "Warren",
-    "WAS": "Washington",
+    "WAS": "Washington County",
     "WAY": "Wayne",
     "WES": "Westmoreland",
-    "WYO": "Wyoming",
+    "WYO": "Wyoming County",
     "YOR": "York"
   }
 }

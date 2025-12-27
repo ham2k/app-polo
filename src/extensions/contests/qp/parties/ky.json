@@ -2,22 +2,26 @@
   "key": "KY",
   "name": "Kentucky QSO Party",
   "start": "2025-6-7 13:00Z",
-  "end": "2025-6-8 01:00Z",
-  "cabrilloName": "KY-QSO-PARTY",
-  "notes": "Counties entered by W1GRL and rules by W1BOY",
-  "internalNotes": "Power multiplier needs to be implemented",
-  "lastUpdated": "2025-03-22 19:00Z",
-  "status": "See internalNotes",
+  "end": "2025-6-8 00:59Z",
+  "url": "https://kyqsoparty.org/rules/",
+  "cabrilloName": "KYQP",
+  "notes": "Scoring does not include Power Multiplier.Counties entered by W1GRL and rules by W1BOY",
+  "internalNotes": "",
+  "lastUpdated": "2025-05-23 12:00Z",
+  "status": "Updated for 2025, but not verified",
   "options": {
     "dcCountsAsMaryland": false,
     "countyLine": true,
     "selfSpotting": true,
     "dxIsMultiplier": false,
-    "stateCountsForInState": true
+    "stateCountsForInState": true,
+    "bonusPerBandMode": true,
+    "bonusPostMultiplier": true
   },
   "points": {
     "PHONE": 1,
-    "CW": 2
+    "CW": 2,
+    "RTTY": 2
   },
   "bonusStations": {
     "K4KCG": 100
@@ -114,7 +118,7 @@
     "MUH": "Muhlenberg",
     "NEL": "Nelson",
     "NIC": "Nicholas",
-    "OHI": "Ohio",
+    "OHI": "Ohio County",
     "OLD": "Oldham",
     "OWE": "Owen",
     "OWS": "Owsley",
@@ -137,7 +141,7 @@
     "TRM": "Trimble",
     "UNI": "Union",
     "WAR": "Warren",
-    "WAS": "Washington",
+    "WAS": "Washington County",
     "WAY": "Wayne",
     "WEB": "Webster",
     "WHI": "Whitley",

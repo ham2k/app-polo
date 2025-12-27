@@ -1,23 +1,22 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useMemo, useState } from 'react'
-import { List, Switch } from 'react-native-paper'
-import { ScrollView } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { ScrollView, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { useDispatch, useSelector } from 'react-redux'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { FlagsDialog } from '../components/FlagsDialog'
-import { Ham2kListItem } from '../../components/Ham2kListItem'
-import { Ham2kListSection } from '../../components/Ham2kListSection'
 import { findHooks } from '../../../extensions/registry'
+import { H2kListItem, H2kListSection } from '../../../ui'
 
 function prepareStyles (baseStyles) {
   return {
@@ -30,7 +29,10 @@ function prepareStyles (baseStyles) {
   }
 }
 
-export default function LoggingSettingsScreen ({ navigation }) {
+export default function LoggingSettingsScreen ({ navigation, splitView }) {
+  const { t } = useTranslation()
+
+  const safeAreaInsets = useSafeAreaInsets()
   const dispatch = useDispatch()
 
   const styles = useThemedStyles(prepareStyles)
@@ -46,25 +48,19 @@ export default function LoggingSettingsScreen ({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView style={{ flex: 1 }}>
-        <Ham2kListSection>
-          {/* <Ham2kListItem title={'Clone Settings from Previous'}
-            description={settings.cloneLastOperation !== false ? 'Settings for new operations are based on the most recent one' : 'New operations start with default settings' }
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="content-copy" />}
-            right={() => <Switch value={settings.cloneLastOperation !== false} onValueChange={(value) => dispatch(setSettings({ cloneLastOperation: value })) } />}
-            onPress={() => dispatch(setSettings({ cloneLastOperation: !settings.cloneLastOperation }))}
-          /> */}
-
-          <Ham2kListItem title={'Leftie Mode'}
-            description={settings.leftieMode ? 'Use layout for left-handed users' : 'Use layout for right-handed users' }
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="hand-front-left-outline" />}
-            right={() => <Switch value={!!settings.leftieMode} onValueChange={(value) => dispatch(setSettings({ leftieMode: value })) } />}
+      <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
+        <H2kListSection>
+          <H2kListItem title={t('screens.loggingSettings.leftieMode.title', 'Leftie Mode')}
+            description={settings.leftieMode ? t('screens.loggingSettings.leftieMode.descriptionOn', 'Use layout for left-handed users') : t('screens.loggingSettings.leftieMode.descriptionOff', 'Use layout for right-handed users') }
+            leftIcon="hand-front-left-outline"
+            rightSwitchValue={!!settings.leftieMode}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ leftieMode: value }))}
             onPress={() => dispatch(setSettings({ leftieMode: !settings.leftieMode }))}
           />
 
-          <Ham2kListItem title={'Country Flags'}
-            description={{ none: "Don't show any flags", all: 'Show flags for all contacts' }[settings.dxFlags] || 'Show only for DX contacts'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="flag" />}
+          <H2kListItem title={t('screens.loggingSettings.countryFlags.title', 'Country Flags')}
+            description={{ none: t('screens.loggingSettings.countryFlags.descriptionNone', "Don't show any flags"), all: t('screens.loggingSettings.countryFlags.descriptionAll', 'Show flags for all contacts') }[settings.dxFlags] || t('screens.loggingSettings.countryFlags.descriptionDefault', 'Show only for DX contacts')}
+            leftIcon="flag"
             onPress={() => setCurrentDialog('flags')}
           />
           {currentDialog === 'flags' && (
@@ -75,51 +71,68 @@ export default function LoggingSettingsScreen ({ navigation }) {
               onDialogDone={() => setCurrentDialog('')}
             />
           )}
-          <Ham2kListItem title={'State Field'}
-            description={settings.showStateField ? 'Include State field in main exchange' : "Don't include State field" }
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="select-marker" />}
-            right={() => <Switch value={!!settings.showStateField} onValueChange={(value) => dispatch(setSettings({ showStateField: value })) } />}
-            onPress={() => dispatch(setSettings({ showStateField: !settings.showStateField }))}
-          />
 
-          <Ham2kListItem title={'Show Bearing'}
-            description={settings.showBearing ? 'Show estimated bearing to station' : "Don't show bearing information" }
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="compass-outline" />}
-            right={() => <Switch value={!!settings.showBearing} onValueChange={(value) => dispatch(setSettings({ showBearing: value })) } />}
+          <H2kListItem title={t('screens.loggingSettings.showBearing.title', 'Show Bearing')}
+            description={settings.showBearing ? t('screens.loggingSettings.showBearing.descriptionOn', 'Show estimated bearing to station') : t('screens.loggingSettings.showBearing.descriptionOff', "Don't show bearing information") }
+            leftIcon="compass-outline"
+            rightSwitchValue={!!settings.showBearing}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ showBearing: value }))}
             onPress={() => dispatch(setSettings({ showBearing: !settings.showBearing }))}
           />
 
-          <Ham2kListItem
-            title="Switch signal report order"
-            description={!settings.switchSentRcvd ? 'Sent first, Rcvd second' : 'Rcvd first, Sent second'}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="arrow-left-right" />}
-            right={() => <Switch value={!!settings.switchSentRcvd} onValueChange={(value) => dispatch(setSettings({ switchSentRcvd: value })) } />}
+          <H2kListItem
+            title={t('screens.loggingSettings.switchSignalReportOrder.title', 'Switch signal report order')}
+            description={!settings.switchSentRcvd ? t('screens.loggingSettings.switchSignalReportOrder.descriptionOn', 'Sent first, Rcvd second') : t('screens.loggingSettings.switchSignalReportOrder.descriptionOff', 'Rcvd first, Sent second')}
+            leftIcon="arrow-left-right"
+            rightSwitchValue={!!settings.switchSentRcvd}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ switchSentRcvd: value }))}
             onPress={() => dispatch(setSettings({ switchSentRcvd: !settings.switchSentRcvd }))}
           />
 
-          <Ham2kListItem
-            title="Jump to next field on RST entry"
-            description={settings.jumpAfterRST ? 'Jump after RST is entered' : "Don't jump automatically" }
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="redo" />}
-            right={() => <Switch value={!!settings.jumpAfterRST} onValueChange={(value) => dispatch(setSettings({ jumpAfterRST: value })) } />}
+          <H2kListItem
+            title={t('screens.loggingSettings.jumpAfterRST.title', 'Jump to next field on RST entry')}
+            description={settings.jumpAfterRST ? t('screens.loggingSettings.jumpAfterRST.descriptionOn', 'Jump after RST is entered') : t('screens.loggingSettings.jumpAfterRST.descriptionOff', "Don't jump automatically") }
+            leftIcon="redo"
+            rightSwitchValue={!!settings.jumpAfterRST}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ jumpAfterRST: value }))}
             onPress={() => dispatch(setSettings({ jumpAfterRST: !settings.jumpAfterRST }))}
           />
 
-          <Ham2kListItem
-            title="Bands & Modes"
-            description={[(settings.bands || []).join(', '), (settings.modes || []).join(', ')].join(' • ')}
-            left={() => <List.Icon style={{ marginLeft: styles.oneSpace * 2 }} icon="radio" />}
+          <H2kListItem
+            title={t('screens.loggingSettings.suggestDefaultOperator.title', 'Suggest default operator')}
+            description={settings.suggestDefaultOperator ? t('screens.loggingSettings.suggestDefaultOperator.descriptionOn', `Set ${settings?.operatorCall} as operator in operations where station call is different`) : t('screens.loggingSettings.suggestDefaultOperator.descriptionOff', "Don't suggest default operator regardless of station call used") }
+            leftIcon="account-question"
+            rightSwitchValue={settings.suggestDefaultOperator !== false}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ suggestDefaultOperator: value }))}
+            onPress={() => dispatch(setSettings({ suggestDefaultOperator: !settings.suggestDefaultOperator }))}
+          />
+
+          <H2kListItem
+            title={t('screens.loggingSettings.suggestTemplates.title', 'Suggest operation templates')}
+            description={settings.suggestTemplates !== false ? t('screens.loggingSettings.suggestTemplates.descriptionOn', 'Suggest templates for new operations') : t('screens.loggingSettings.suggestTemplates.descriptionOff', "Don't suggest templates")}
+            leftIcon="progress-question"
+            rightSwitchValue={settings.suggestTemplates !== false}
+            rightSwitchOnValueChange={(value) => dispatch(setSettings({ suggestTemplates: value }))}
+            onPress={() => dispatch(setSettings({ suggestTemplates: !settings.suggestTemplates }))}
+          />
+
+          <H2kListItem
+            title={t('screens.loggingSettings.bandsModes.title', 'Bands & Modes')}
+            description={t('screens.loggingSettings.bandsModes.description', '{{bands}} • {{modes}}', { bands: (settings.bands || []).join(', '), modes: (settings.modes || []).join(', ') })}
+            leftIcon="radio"
             onPress={() => navigation.navigate('BandModeSettings')}
           />
-        </Ham2kListSection>
+        </H2kListSection>
 
         {extensionSettingHooks.length > 0 && (
-          <Ham2kListSection title={'Extensions'}>
+          <H2kListSection title={t('screens.loggingSettings.extensions.title', 'Extensions')}>
             {extensionSettingHooks.map((hook) => (
               <hook.SettingItem key={hook.key} settings={settings} styles={styles} navigation={navigation} />
             ))}
-          </Ham2kListSection>
+          </H2kListSection>
         )}
+
+        <View style={{ height: safeAreaInsets.bottom }} />
 
       </ScrollView>
     </ScreenContainer>

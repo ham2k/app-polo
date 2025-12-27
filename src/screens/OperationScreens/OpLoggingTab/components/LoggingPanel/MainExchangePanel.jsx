@@ -1,22 +1,27 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { View, findNodeHandle } from 'react-native'
-import CallsignInput from '../../../../components/CallsignInput'
-import RSTInput from '../../../../components/RSTInput'
-import ThemedTextInput from '../../../../components/ThemedTextInput'
 import { findRef } from '../../../../../tools/refTools'
 import { findHooks } from '../../../../../extensions/registry'
+import { H2kCallsignInput, H2kRSTInput, H2kTextInput } from '../../../../../ui'
+import { expandRSTValues } from '../../../../../tools/callsignTools'
+import { valueOrFunction } from '../../../../../tools/valueOrFunction'
 
 export const MainExchangePanel = ({
-  qso, qsos, operation, vfo, settings, style, styles, themeColor, onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef
+  qso, qsos, operation, vfo, settings, style, styles, themeColor, disabled,
+  onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef,
+  allowSpacesInCallField
 }) => {
+  const { t } = useTranslation()
+
   // We need to pre-allocate a ref for the main field, in case `mainFieldRef` is not provided
   // but since hooks cannot be called conditionally, we just need to create it whether we need it or not
   const alternateCallFieldRef = useRef()
@@ -49,7 +54,7 @@ export const MainExchangePanel = ({
         const next = (pos + 1) % renderedRefs.length
         setTimeout(() => {
           renderedRefs[next]?.current?.focus()
-        }, 0)
+        }, 100)
       }
     }
   }, [refs])
@@ -73,47 +78,37 @@ export const MainExchangePanel = ({
   }, [handleFieldChange, spaceHandler, rstLength, settings])
 
   const handleRSTBlur = useCallback((event) => {
-    let text = event?.value || event?.nativeEvent?.text
+    const text = event?.value || event?.nativeEvent?.text || ''
     const mode = qso?.mode ?? vfo?.mode ?? 'SSB'
-
-    text = text?.trim() || ''
-    if (text.length === 1) {
-      let readability = '5'
-      const strength = text
-      const tone = '9'
-      if (strength === '1' || strength === '2' || strength === '3') {
-        readability = '3'
-      } else if (strength === '4') {
-        readability = '4'
+    if (text.trim().length === 1 || text.trim().length === 2) {
+      const expanded = expandRSTValues(text, mode, { settings })
+      if (expanded !== text) {
+        handleFieldChange && handleFieldChange({ ...event, value: expanded, nativeEvent: { ...event?.nativeEvent, text } })
       }
-      if (mode === 'CW' || mode === 'RTTY') {
-        text = `${readability}${strength}${tone}`
-      } else {
-        text = `${readability}${strength}`
-      }
-
-      handleFieldChange && handleFieldChange({ ...event, value: text, nativeEvent: { ...event?.nativeEvent, text } })
     }
 
     return true
-  }, [handleFieldChange, qso?.mode, vfo?.mode])
+  }, [handleFieldChange, qso, vfo?.mode, settings])
 
   let fields = []
   fields.push(
-    <CallsignInput
+    <H2kCallsignInput
       key="call"
       innerRef={refStack.shift()}
       themeColor={themeColor}
       style={[styles.input, { minWidth: styles.oneSpace * 10, flex: 10 }]}
       value={qso?.their?.call ?? ''}
-      label="Their Call"
+      label={t('screens.opLoggingTab.theirCallLabel', 'Their Call')}
       placeholder=""
       onChange={handleFieldChange}
       onSubmitEditing={onSubmitEditing}
       fieldId={'theirCall'}
+      noSpaces={!allowSpacesInCallField}
       onSpace={spaceHandler}
       focusedRef={focusedRef}
       allowMultiple={true}
+      allowStack={true}
+      disabled={disabled}
     />
   )
 
@@ -132,55 +127,100 @@ export const MainExchangePanel = ({
     }
 
     const rstFields = [
-      <RSTInput
+      <H2kRSTInput
         {...rstFieldProps}
         key="sent"
         innerRef={rstFieldRefs.shift()}
         value={qso?.our?.sent ?? ''}
-        label="Sent"
+        label={t('screens.opLoggingTab.ourSentLabel', 'Sent')}
         fieldId={'ourSent'}
+        disabled={disabled}
+        settings={settings}
       />,
-      <RSTInput
+      <H2kRSTInput
         {...rstFieldProps}
         key="received"
         innerRef={rstFieldRefs.shift()}
         value={qso?.their?.sent || ''}
-        label="Rcvd"
+        label={t('screens.opLoggingTab.theirSentLabel', 'Rcvd')}
         fieldId={'theirSent'}
+        disabled={disabled}
+        settings={settings}
       />
     ]
     if (settings.switchSentRcvd) rstFields.reverse()
     fields = fields.concat(rstFields)
   }
 
-  let hideStateField = false
+  const extraFields = {
+    state: false,
+    grid: false
+  }
+  findHooks('activity').filter(activity => activity.standardExchangeFields).forEach(activity => {
+    const requestedFields = valueOrFunction(activity.standardExchangeFields, { qso, operation, vfo, settings })
+    for (const field of Object.keys(requestedFields)) {
+      extraFields[field] = extraFields[field] || requestedFields[field]
+    }
+  })
+  if (settings.showStateField === true || settings.showStateField === false) {
+    extraFields.state = settings.showStateField
+  }
+  if (settings.showGridField === true || settings.showGridField === false) {
+    extraFields.grid = settings.showGridField
+  }
+
+  console.log('extraFields', extraFields)
 
   findHooks('activity').filter(activity => activity.mainExchangeForOperation && findRef(operation, activity.key)).forEach(activity => {
-    if (activity.hideStateField) hideStateField = true
     fields = fields.concat(
       activity.mainExchangeForOperation(
-        { qso, qsos, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
+        { qso, qsos, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
       ) || []
     )
   })
   findHooks('activity').filter(activity => activity.mainExchangeForQSO).forEach(activity => {
-    if (activity.hideStateField) hideStateField = true
-    fields = fields.concat(
-      activity.mainExchangeForQSO(
-        { qso, operation, vfo, settings, styles, themeColor, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
-      ) || []
-    )
+    if (activity) {
+      fields = fields.concat(
+        activity.mainExchangeForQSO(
+          { qso, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
+        ) || []
+      )
+    }
   })
 
-  if (settings.showStateField && !hideStateField) {
+  if (extraFields.grid) {
     fields.push(
-      <ThemedTextInput
+      <H2kTextInput
+        key="grid"
+        innerRef={refStack.shift()}
+        themeColor={themeColor}
+        style={[styles.input, { minWidth: styles.oneSpace * 8.5, flex: 1 }]}
+        value={qso?.their?.grid ?? ''}
+        label={t('screens.opLoggingTab.gridLabel', 'Grid')}
+        placeholder={qso?.their?.guess?.grid ?? ''}
+        uppercase={true}
+        noSpaces={true}
+        onChange={handleFieldChange}
+        onSubmitEditing={onSubmitEditing}
+        fieldId={'grid'}
+        onSpace={spaceHandler}
+        keyboard={'dumb'}
+        maxLength={8}
+        focusedRef={focusedRef}
+        disabled={disabled}
+      />
+    )
+  }
+
+  if (extraFields.state) {
+    fields.push(
+      <H2kTextInput
         key="state"
         innerRef={refStack.shift()}
         themeColor={themeColor}
         style={[styles.input, { minWidth: styles.oneSpace * 5.7, flex: 1 }]}
         value={qso?.their?.state ?? ''}
-        label="State"
+        label={t('screens.opLoggingTab.stateLabel', 'State')}
         placeholder={qso?.their?.guess?.state ?? ''}
         uppercase={true}
         noSpaces={true}
@@ -191,12 +231,13 @@ export const MainExchangePanel = ({
         keyboard={'dumb'}
         maxLength={5}
         focusedRef={focusedRef}
+        disabled={disabled}
       />
     )
   }
 
   return (
-    <View style={{ ...style, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'stretch', gap: styles.oneSpace }}>
+    <View style={styles.mainExchangePanel.container}>
       {fields}
     </View>
   )

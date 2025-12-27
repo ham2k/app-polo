@@ -117,7 +117,7 @@ export function useLookupParkQuery (arg, options) {
   const [lookupData, setLookupData] = useState()
 
   if (!arg?.ref || !arg?.ref?.match(POTA_REGEX)) {
-    result = apiPOTA.useLookupParkQuery('', { skip: true })
+    return undefined
   } else if (POTAAllParks.byReference && POTAAllParks.byReference[arg.ref] && !options.online) {
     result = apiPOTA.useLookupParkQuery(arg.ref, { skip: true })
     result = { ...result } // It seems that redux queries reuse their data structures, so let's clone it first
@@ -144,6 +144,19 @@ export function useLookupParkQuery (arg, options) {
     return undefined
   } else {
     return result
+  }
+}
+
+export const directLookupPark = (ref) => async (dispatch) => {
+  const apiPromise = await dispatch(apiPOTA.endpoints.lookupPark.initiate({ ref }))
+  await Promise.all(dispatch(apiPOTA.util.getRunningQueriesThunk()))
+  const apiLookup = await dispatch((_dispatch, getState) => apiPOTA.endpoints.lookupPark.select({ ref })(getState()))
+  apiPromise.unsubscribe && apiPromise.unsubscribe()
+
+  if (apiLookup.isSuccess) {
+    return apiLookup.data
+  } else {
+    return null
   }
 }
 

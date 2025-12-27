@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -9,10 +9,25 @@ import { reportError } from '../../distro'
 
 import { findHooks } from '../registry'
 
-export function checkAndProcessCommands (value, extraParams) {
+let commandDescriptionTimeout
+
+const setTimeoutForCommand = (callback, timeout = 1000) => {
+  if (commandDescriptionTimeout) {
+    clearTimeout(commandDescriptionTimeout)
+  }
+  console.log('setTimeoutForCommand', callback, timeout)
+  commandDescriptionTimeout = setTimeout(callback, timeout)
+}
+
+export function checkAndProcessCommands(value, extraParams) {
+  if (commandDescriptionTimeout) {
+    clearTimeout(commandDescriptionTimeout)
+  }
+
   const { matchingCommand, match } = findMatchingCommand(value)
 
   if (matchingCommand && matchingCommand.invokeCommand) {
+
     const { handleFieldChange, updateQSO, handleSubmit } = extraParams
     let callWasCleared = false
     // We need special wrappers for `handleFieldChange` and `updateQSO` in order to also reset the call if a command was processed
@@ -20,62 +35,36 @@ export function checkAndProcessCommands (value, extraParams) {
     // because the `qso` we have access here is the one from the time of the initial call to `checkAndProcessCommands`
     // not the one with updates from the command processing.
     const handleFieldChangeWrapper = (event) => {
-      handleFieldChange({ ...event, alsoClearTheirCall: true })
+      handleFieldChange && handleFieldChange({ ...event, alsoClearTheirCall: true })
       callWasCleared = true
     }
     const updateQSOWrapper = (args) => {
-      updateQSO({ their: { call: args.their?.call || '' } })
+      updateQSO && updateQSO({ ...args, their: { ...args?.their, call: args?.their?.call || '' } })
       callWasCleared = true
     }
     const handleSubmitWrapper = (args) => {
-      handleSubmit(handleSubmit)
+      handleSubmit && handleSubmit(args)
       callWasCleared = true
     }
 
-    try {
-      const result = matchingCommand.invokeCommand(
-        match,
-        {
-          ...extraParams,
-          handleFieldChange: handleFieldChangeWrapper,
-          updateQSO: updateQSOWrapper,
-          handleSubmit: handleSubmitWrapper
-        }
-      )
-      if (!callWasCleared) {
-        updateQSO({ their: { call: '' } })
+    // try {
+    const result = matchingCommand.invokeCommand(
+      match,
+      {
+        ...extraParams,
+        handleFieldChange: handleFieldChangeWrapper,
+        updateQSO: updateQSOWrapper,
+        handleSubmit: handleSubmitWrapper,
+        setTimeoutForCommand: setTimeoutForCommand
       }
-
-      return result ?? true
-    } catch (e) {
-      console.error('Error in checkAndProcessCommands', e)
-      if (e.message === 'Test error!') {
-        throw e
-      } else {
-        reportError(`Error in checkAndProcessCommands invocation for '${matchingCommand.key}'`, e)
-        return false
-      }
+    )
+    if (!callWasCleared) {
+      updateQSO && updateQSO({ their: { call: '' } })
     }
-  } else {
-    return false
-  }
-}
 
-export function checkAndDescribeCommands (value, extraParams) {
-  const { matchingCommand, match } = findMatchingCommand(value)
-
-  if (matchingCommand) {
-    try {
-      let result
-      if (matchingCommand.describeCommand) {
-        result = matchingCommand.describeCommand(match, extraParams)
-      } else {
-        result = match?.[0]
-      }
-
+    if (result || result === null || result === '') {
       return result
-    } catch (e) {
-      reportError(`Error in checkAndDescribeCommands invocation for '${matchingCommand.key}'`, e)
+    } else {
       return false
     }
   } else {
@@ -83,9 +72,42 @@ export function checkAndDescribeCommands (value, extraParams) {
   }
 }
 
-export function findMatchingCommand (value) {
+export function checkAndDescribeCommands(value, extraParams) {
+
+  if (commandDescriptionTimeout) {
+    clearTimeout(commandDescriptionTimeout)
+  }
+
+  const { matchingCommand, match } = findMatchingCommand(value)
+
+  if (matchingCommand) {
+    try {
+      const result = {
+        match,
+        matchingCommand,
+        allowSpaces: !!matchingCommand.allowSpaces
+      }
+
+      if (matchingCommand.describeCommand) {
+        result.description = matchingCommand.describeCommand(match, { ...extraParams, setTimeoutForCommand })
+      } else {
+        result.description = match?.[0]
+      }
+
+      return result
+    } catch (e) {
+      reportError(`Error in checkAndDescribeCommands invocation for '${matchingCommand.key}'`, e)
+      return {}
+    }
+  } else {
+    return {}
+  }
+}
+
+export function findMatchingCommand(value) {
   const hooks = findHooks('command')
   let match
+
   const matchingCommand = hooks.find(hook => {
     try {
       if (typeof hook?.match === 'function') {
@@ -109,3 +131,4 @@ export function findMatchingCommand (value) {
   })
   return { matchingCommand, match }
 }
+

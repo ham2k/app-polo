@@ -9,6 +9,8 @@ import RNFetchBlob from 'react-native-blob-util'
 import { Buffer } from 'buffer'
 import { Alert } from 'react-native'
 
+import GLOBAL from '../../../../GLOBAL'
+
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { adifToQSON } from '@ham2k/lib-qson-adif'
 
@@ -16,7 +18,6 @@ import { reportError } from '../../../../distro'
 
 import { addQSOs, actions as qsosActions, saveQSOsForOperation } from '../../../qsos'
 import { annotateQSO } from '../../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
-import { DefaultScoringHandler } from '../../../../extensions/scoring/DefaultScoringHandler'
 
 export const importADIFIntoOperation = (path, operation, operationQSOs) => async (dispatch) => {
   dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'loading' }))
@@ -26,9 +27,12 @@ export const importADIFIntoOperation = (path, operation, operationQSOs) => async
     const adif = buffer.toString('utf8')
 
     const data = adifToQSON(adif)
-    const dedupedQSOs = data.qsos.filter(
-      (qso) => DefaultScoringHandler.scoringForQSO({ qso, qsos: operationQSOs, operation })?.count !== 0
-    )
+
+    const dedupedQSOs = data.qsos.filter(qso => {
+      const key = qsoKey(qso)
+      return !operationQSOs.find(q => q.key === key)
+    })
+
     const qsos = dedupedQSOs.map((qso) => {
       const newQSO = { ...qso }
       newQSO.refs = (qso.refs || []).map(ref => {
@@ -49,13 +53,13 @@ export const importADIFIntoOperation = (path, operation, operationQSOs) => async
       return await annotateQSO({ qso, online: false, dispatch, settings: {} })
     })
 
+    await dispatch(saveQSOsForOperation(operation.uuid, { qsos }))
     await dispatch(addQSOs({ uuid: operation.uuid, qsos }))
 
-    await dispatch(saveQSOsForOperation(operation.uuid))
     dispatch(qsosActions.setQSOsStatus({ uuid: operation.uuid, status: 'ready' }))
     return { adifCount: data.qsos.length, importCount: qsos.length }
   } catch (error) {
-    Alert.alert('Error importing ADIF into Operation', error.message)
+    Alert.alert(GLOBAL?.t?.('polo.other.importADIF.error', 'Error importing ADIF into Operation') ?? 'Error importing ADIF into Operation', error.message ?? (GLOBAL?.t?.('polo.other.importADIF.unknownError', 'Unknown error') ?? 'Unknown error'))
     reportError('Error importing ADIF into Operation', error)
   }
 
@@ -97,7 +101,7 @@ export const importHistoricalADIF = (path) => async (dispatch) => {
     await dispatch(saveQSOsForOperation('historical'))
     dispatch(qsosActions.setQSOsStatus({ uuid: 'historical', status: 'ready' }))
   } catch (error) {
-    Alert.alert('Error importing Historical ADIF', error.message)
+    Alert.alert(GLOBAL?.t?.('polo.other.importADIF.historicalImportError', 'Error importing Historical ADIF') ?? 'Error importing Historical ADIF', error.message ?? (GLOBAL?.t?.('polo.other.importADIF.unknownError', 'Unknown error') ?? 'Unknown error'))
     reportError('Error importing Historical ADIF', error)
   }
 }

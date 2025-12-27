@@ -6,6 +6,18 @@
  */
 
 export const migrations = {
+  2: (state) => {
+    // We're consolidating ECA and BCA into WCA
+    if (state?.settings?.['extensions/bca']) {
+      state.settings['extensions/wca'] = true
+      delete state.settings['extensions/bca']
+    }
+    if (state?.settings?.['extensions/eca']) {
+      state.settings['extensions/wca'] = true
+      delete state.settings['extensions/eca']
+    }
+    return state
+  },
   1: (state) => {
     // settings.call is now settings.operatorCall, and operation.call is now operation.stationCall
     const newState = {
@@ -24,4 +36,4 @@ export const migrations = {
   }
 }
 
-export const LATEST_VERSION = 1
+export const LATEST_VERSION = 2

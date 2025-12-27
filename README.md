@@ -39,6 +39,7 @@ Then clone this repository, `cd` into it and install the dependencies:
 
 ```
 npm install
+# you might need to also run `npm install redux-persist` if you get errors about missing modules
 ```
 
 ### Maps
@@ -104,6 +105,36 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 * On `ios/polo/Images.xcassets/LaunchScreen.imageset` replace the three versions of `launch_screen`
 * On `src/screens/StartScreen/img` replace the three versions of `launch_screen`.
 
+# Translations
+
+Environment setup:
+```
+$ brew tap crowdin/crowdin && brew install crowdin
+```
+
+Update CrowdIn with base English translations:
+```
+$ crowdin push sources
+```
+
+Fetch updated translations from CrowdIn:
+```
+$ crowdin pull translations
+```
+
+## Notes on translation strings:
+
+* keys that end in `-md` are meant to be used with Markdown formatting.
+* keys that end in `-a11y` are meant to be used for accessibility labels, to be spoken aloud.
+* keys that end in `_zero`, `_one`, `_other` are meant to be used with pluralization.
+
+## Testing in-app
+
+In CrowdIn, create a "personal access token" at https://crowdin.com/settings#api-key
+
+In PoLo, enable Developer Mode and in the Developer Settings screen, enter that personal token into the "CrowdIn API Key" field.
+
+Then on the Quick Lookup field in the home screen, enter "CROWDIN" and press enter. This will refresh the current language in the app, and also fetch the list of all languages available in CrowdIn. After changing languages, and any time you reopen the app, you can enter "CROWDIN" again to fetch the latest version of the translations from CrowdIn.
 
 ---
 
@@ -113,26 +144,20 @@ open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep 
 
 ### Clean Build
 ```
-# For all platforms
-rm -rf node_modules
-npm install
+npm run clean:js  # wipe node_modules and reinstall
+npm run clean:android  # wipe android build and gradle caches
+npm run clean:ios  # wipe ios build and cocoapods caches, reinstall pods
+npm run clean:watchman  # wipe watchman caches
 
-# For android
-rm -rf android/app/.cxx
-rm -rf android/build
-(cd android && ./gradlew clean)
+# or
 
-# For iOS
-rm -rf ~/Library/Caches/CocoaPods
-rm -rf ios/Pods
-rm -rf ios/Podfile.lock
-rm -rf ios/build
-(cd ios && pod install)
+npm run clean:all  # wipe all caches and reinstall
 
-# For all platforms
-watchman watch-del .
-watchman watch-project .
+# and then
+
 npm start -- --reset-cache
+npm run ios
+npm run android
 ```
 
 ### "Unable to boot simulator" error for iOS Simulator
@@ -141,6 +166,14 @@ npm start -- --reset-cache
 * Delete XCode caches
 
 https://github.com/shinydevelopment/SimulatorStatusMagic
+
+
+
+### "unable to resolve module redux-persist/integration/react"
+
+For some reason, sometimes the `redux-persist` does not install correctly
+the first time, so you need to run `npm install redux-persist` manually.
+
 
 ### Some troubleshooting links
 

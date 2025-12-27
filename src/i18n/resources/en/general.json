@@ -1,0 +1,308 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "English",
+        "ar": "Arabic - العربية",
+        "ast": "Asturian - Asturianu",
+        "bn": "Bengali - বাংলা",
+        "ca": "Catalan - Català",
+        "cs": "Czech - Čeština",
+        "cy": "Welsh - Cymraeg",
+        "da": "Danish - Dansk",
+        "de": "German - Deutsch",
+        "en-PL": "Pig Latin",
+        "en-PT": "Pirate",
+        "eo": "Esperanto - Esperanto",
+        "es": "Spanish - Español",
+        "et": "Estonian - Eesti",
+        "eu": "Basque - Euskara",
+        "fi": "Finnish - Suomi",
+        "fr": "French - Français",
+        "ga": "Irish - Gaeilge",
+        "gl": "Galician - Galego",
+        "hi": "Hindi - हिंदी",
+        "id": "Indonesian - Bahasa Indonesia",
+        "it": "Italian - Italiano",
+        "ja": "Japanese - 日本語",
+        "ko": "Korean - 한국어",
+        "lt": "Lithuanian - Lietuvių",
+        "lv": "Latvian - Latvijas",
+        "ms": "Malay - Bahasa Melayu",
+        "nb": "Norwegian Bokmål - Norsk bokmål",
+        "nl": "Dutch - Nederlands",
+        "nn": "Norwegian Nynorsk - Nynorsk",
+        "pl": "Polish - Polski",
+        "pt-BR": "Portuguese (Brazil) - Português (Brasil)",
+        "pt-PT": "Portuguese (Portugal) - Português (Portugal)",
+        "pt": "Portuguese - Português",
+        "ro": "Romanian - Română",
+        "ru": "Russian - Русский",
+        "sk": "Slovak - Slovenčina",
+        "sv": "Swedish - Svenska",
+        "th": "Thai - ภาษาไทย",
+        "tl": "Tagalog - Wikang Filipino",
+        "tlh": "Klingon - ᏣᎳᎩ",
+        "tr": "Turkish - Türkçe",
+        "uk": "Ukrainian - Українська",
+        "ur": "Urdu - اردو",
+        "vi": "Vietnamese - Tiếng Việt",
+        "zh": "Chinese - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q so",
+      "QSOs-a11y": "Q sos",
+      "Operation": "Operation",
+      "generalOperation": "General Operation"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " and "
+      },
+      "time": {
+        "tomorrow": "Tomorrow",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "ago": "{{time}} ago",
+        "fromNow": "{{time}} from now",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}m",
+        "shortMinutesAndSeconds": "{{m}}m {{s}}s",
+        "shortHours": "{{h}}h",
+        "shortHoursAndMinutes": "{{h}}h {{m}}m",
+        "shortDays": "{{d}}d",
+        "shortDaysAndHours": "{{d}}d {{h}}h",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "January",
+        "2": "February",
+        "3": "March",
+        "4": "April",
+        "5": "May",
+        "6": "June",
+        "7": "July",
+        "8": "August",
+        "9": "September",
+        "10": "October",
+        "11": "November",
+        "12": "December"
+      },
+      "monthAbbr": {
+        "1": "Jan",
+        "2": "Feb",
+        "3": "Mar",
+        "4": "Apr",
+        "5": "May",
+        "6": "Jun",
+        "7": "Jul",
+        "8": "Aug",
+        "9": "Sep",
+        "10": "Oct",
+        "11": "Nov",
+        "12": "Dec"
+      },
+      "weekday": {
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday",
+        "7": "Sunday"
+      },
+      "weekdayAbbr": {
+        "1": "Mon",
+        "2": "Tue",
+        "3": "Wed",
+        "4": "Thu",
+        "5": "Fri",
+        "6": "Sat",
+        "7": "Sun"
+      },
+      "ordinalDay": {
+        "1": "1st",
+        "2": "2nd",
+        "3": "3rd",
+        "4": "4th",
+        "5": "5th",
+        "6": "6th",
+        "7": "7th",
+        "8": "8th",
+        "9": "9th",
+        "10": "10th",
+        "11": "11th",
+        "12": "12th",
+        "13": "13th",
+        "14": "14th",
+        "15": "15th",
+        "16": "16th",
+        "17": "17th",
+        "18": "18th",
+        "19": "19th",
+        "20": "20th",
+        "21": "21st",
+        "22": "22nd",
+        "23": "23rd",
+        "24": "24th",
+        "25": "25th",
+        "26": "26th",
+        "27": "27th",
+        "28": "28th",
+        "29": "29th",
+        "30": "30th",
+        "31": "31st"
+      },
+      "distance": {
+        "away": "{{distance}} away"
+      }
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "ok": "Ok",
+      "close": "Close",
+      "login": "Login",
+      "logout": "Logout",
+      "delete": "Delete",
+      "refresh": "Refresh",
+      "done": "Done",
+      "accept": "Accept",
+      "accept-a11y": "Accept Changes",
+      "revert": "Revert",
+      "revert-a11y": "Revert Changes",
+      "save": "Save",
+      "export": "Export"
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "patch {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Checking for updates…",
+        "stable": "Checking for stable updates…",
+        "unstable": "Checking for unstable updates…",
+        "bleedingEdge": "Checking for bleeding edge updates…"
+      },
+      "tracksPlural": {
+        "stable": "Stable",
+        "unstable": "Unstable",
+        "bleedingEdge": "Bleeding Edge",
+        "Production": "Stable",
+        "Staging": "Unstable",
+        "Development": "Bleeding Edge"
+      },
+      "trackSingular": {
+        "stable": "Stable",
+        "unstable": "Unstable",
+        "bleedingEdge": "Bleeding Edge",
+        "Production": "Stable",
+        "Staging": "Unstable",
+        "Development": "Bleeding Edge"
+      },
+      "versionIsAvailable-md": "Version {{versionName}} is available.",
+      "updateNow": "Update Now",
+      "newVersionAvailable-md": "A new version of PoLo is available!"
+    },
+    "dataFiles": {
+      "loading": "Loading {{name}}",
+      "downloading": "Downloading {{name}}",
+      "dataHasToBeDownloaded-md": "Data for **{{name}}** has to be downloaded.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Data for **{{name}}** has not been updated in a while.",
+      "downloadNow": "Download Now",
+      "refreshNow": "Refresh Now"
+    },
+    "notices": {
+      "action": {
+        "ok": "Ok!",
+        "__comment__": "Override specific notice actions here"
+      },
+      "title": {
+        "__comment__": "Override specific notice titles here"
+      },
+      "text": {
+        "__comment__": "Override specific notice texts here"
+      },
+      "dialogTitle": {
+        "__comment__": "Override specific dialog titles here"
+      },
+      "dialogText": {
+        "__comment__": "Override specific dialog texts here"
+      },
+      "dataFiles": {
+        "fetching": "Fetching {{title}}…",
+        "progress": "Fetching {{title}}\n\n{{progress}}",
+        "done": "Done fetching {{title}}",
+        "error": "Error fetching {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Text",
+        "csv": "Comma-Separated Values",
+        "tsv": "Tab-Separated Values",
+        "other": "Data"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Core Features",
+        "locationBased": "Location-based Activities",
+        "contestsAndFieldOps": "Contests & Field Ops",
+        "lookup": "Data Lookup",
+        "devmode": "Developer Mode",
+        "other": "Other Features"
+      }
+    },
+    "continents": {
+      "AF": "Africa",
+      "AS": "Asia",
+      "EU": "Europe",
+      "NA": "North America",
+      "SA": "South America",
+      "OC": "Oceania"
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

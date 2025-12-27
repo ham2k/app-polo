@@ -1,26 +1,38 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useState, useCallback, useEffect, useRef } from 'react'
-import { Keyboard, Platform, View } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { Platform, View } from 'react-native'
 import { IconButton, Searchbar } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next'
 
 import { NumberKeys } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/NumberKeys'
 import { useUIState } from '../../../store/ui/useUIState'
+import { useKeyboardVisible } from '../../components/useKeyboardVisible'
+import { selectRuntimeOnline } from '../../../store/runtime'
+import { checkAndDescribeCommands, checkAndProcessCommands } from '../../../extensions/commands/commandHandling'
+
+import { trackEvent } from '../../../distro'
 
 import CallLookup from './CallLookup'
-import { trackEvent } from '../../../distro'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import Notices from './Notices'
+import SyncProgress from './SyncProgress'
+
+let commandInfoTimeout
 
 export default function HomeTools ({ settings, styles, style }) {
+  const { t, i18n } = useTranslation()
   const navigation = useNavigation()
+
+  const dispatch = useDispatch()
+  const online = useSelector(selectRuntimeOnline)
 
   const actualInnerRef = useRef()
 
@@ -28,8 +40,21 @@ export default function HomeTools ({ settings, styles, style }) {
   const [localValue, setLocalValue] = useState()
   useEffect(() => { setLocalValue(search) }, [search])
 
+  const [commandInfo, actualSetCommandInfo] = useState()
+  const setCommandInfo = useCallback((info) => {
+    if (commandInfoTimeout) {
+      clearTimeout(commandInfoTimeout)
+    }
+    if (info?.timeout) {
+      commandInfoTimeout = setTimeout(() => {
+        actualSetCommandInfo(undefined)
+      }, info.timeout)
+    }
+    actualSetCommandInfo(info)
+  }, [actualSetCommandInfo])
+
   const handleChangeText = useCallback((value) => {
-    actualInnerRef.current.setNativeProps({ text: value.toUpperCase() })
+    actualInnerRef.current?.setNativeProps({ text: value.toUpperCase() })
     if (Platform.OS === 'android') {
       // This minimizes issues when using external keyboards on Android
       setTimeout(() => setSearch(value.toUpperCase()), 15)
@@ -39,18 +64,11 @@ export default function HomeTools ({ settings, styles, style }) {
   }, [])
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      let theirInfo = parseCallsign(search)
-      if (theirInfo.baseCall) {
-        theirInfo = annotateFromCountryFile(theirInfo)
-      }
-      if (theirInfo.entityPrefix) {
-        trackEvent('search_callsign', { their_prefix: theirInfo.entityPrefix })
-      }
-    }, 2000)
-
-    return () => clearTimeout(timeout)
-  }, [search, settings?.operatorCall])
+    if (search?.length > 2) {
+      const { description } = checkAndDescribeCommands(search, { dispatch, settings, t, i18n, online, setCommandInfo })
+      setCommandInfo({ message: description || undefined, match: !!description || description === '' })
+    }
+  }, [dispatch, online, search, setCommandInfo, settings, t, i18n, settings.operatorCall])
 
   const handleClearSearch = useCallback(() => {
     setSearch('')
@@ -60,43 +78,7 @@ export default function HomeTools ({ settings, styles, style }) {
     navigation.navigate('CallInfo', { call })
   }, [navigation])
 
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
-  const [keyboardExtraStyles, setKeyboardExtraStyles] = useState({})
-  useEffect(() => {
-    if (Keyboard.isVisible()) {
-      const metrics = Keyboard.metrics()
-      if (metrics.height > 100) {
-        setIsKeyboardVisible(true)
-        setKeyboardExtraStyles({})
-      } else {
-        setIsKeyboardVisible(false)
-        setKeyboardExtraStyles({ paddingBottom: metrics.height - 10 })
-      }
-    }
-
-    const didShowSubscription = Keyboard.addListener('keyboardDidShow', () => {
-      const metrics = Keyboard.metrics()
-      if (metrics.height > 100) {
-        // On iPads, when there's an external keyboard connected, the OS still shows a small
-        // button on the bottom right with some options
-        // This is considered "keyboard visible", which causes KeyboardAvoidingView to leave an ugly empty padding
-        setIsKeyboardVisible(true)
-        setKeyboardExtraStyles({})
-      } else {
-        setIsKeyboardVisible(false)
-        setKeyboardExtraStyles({ paddingBottom: metrics.height - 10 })
-      }
-    })
-    const didHideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-      setIsKeyboardVisible(false)
-      setKeyboardExtraStyles({})
-    })
-
-    return () => {
-      didShowSubscription.remove()
-      didHideSubscription.remove()
-    }
-  }, [])
+  const { isKeyboardVisible, keyboardExtraStyles } = useKeyboardVisible()
 
   const [currentSelection, setCurrentSelection] = useState({})
   const [isFocused, setIsFocused] = useState(false)
@@ -143,13 +125,22 @@ export default function HomeTools ({ settings, styles, style }) {
     setIsFocused(false)
   }, [])
 
+  const handleSubmit = useCallback((event) => {
+    const commandResult = checkAndProcessCommands(search, { dispatch, settings, t, i18n, online, setCommandInfo, updateQSO: () => setSearch('') })
+    if (commandResult) {
+      trackEvent('command', { command: search })
+      setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
+    }
+  }, [search, dispatch, settings, t, i18n, online, setCommandInfo])
+
   return (
     <>
       <CallLookup
         call={search}
+        commandInfo={commandInfo}
         settings={settings}
         styles={styles}
-        style={{ backgroundColor: styles.colors.primaryContainer, borderTopWidth: 1, borderTopColor: styles.colors.primary }}
+        style={{ backgroundColor: styles.colors.primaryContainer, marginTop: styles.oneSpace, borderTopWidth: 1, borderTopColor: styles.colors.primary }}
         onPress={navigateToCall}
       />
 
@@ -158,7 +149,7 @@ export default function HomeTools ({ settings, styles, style }) {
         style={{ flex: 0, flexDirection: 'column', width: '100%', backgroundColor: styles.colors.primary }}
       >
         <View
-          style={{ flexDirection: 'row', padding: styles.oneSpace, margin: 0, paddingBottom: styles.oneSpace, ...keyboardExtraStyles }}
+          style={{ flexDirection: 'row', margin: styles.oneSpace, ...keyboardExtraStyles }}
         >
           <Searchbar
             {...{
@@ -180,10 +171,11 @@ export default function HomeTools ({ settings, styles, style }) {
 
               onBlur: handleBlur,
               onFocus: handleFocus,
-              onSelectionChange: handleSelectionChange
+              onSelectionChange: handleSelectionChange,
+              onSubmitEditing: handleSubmit
             }}
             ref={actualInnerRef}
-            placeholder={'Quick Call Lookup…'}
+            placeholder={t('screens.home.quickCallLookupPlaceholder', 'Quick Call Lookup…')}
             value={localValue}
             onChangeText={handleChangeText}
             traileringIcon={search ? 'close' : ''}
@@ -195,12 +187,18 @@ export default function HomeTools ({ settings, styles, style }) {
           <IconButton
             icon="format-list-bulleted"
             iconColor={styles.colors.onPrimary}
-            accessibilityLabel={'Spots'}
+            accessibilityLabel={t('screens.home.spots-a11y', 'screens.home.spots', 'Spots')}
             size={styles.oneSpace * 3.5}
             style={{ flex: 0 }}
             onPress={() => navigation.navigate('Spots')}
           />
+
         </View>
+
+        <SyncProgress />
+
+        <Notices paddingForSafeArea={false} />
+
         {isKeyboardVisible && settings.showNumbersRow && (
           <NumberKeys settings={settings} themeColor={'primary'} onNumberKeyPressed={handleNumberKey} enabled={!!isFocused} />
         )}

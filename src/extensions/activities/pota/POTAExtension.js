@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -12,8 +12,10 @@ import { Info } from './POTAInfo'
 import { POTAActivityOptions } from './POTAActivityOptions'
 import { potaFindParkByReference, potaFindParksByLocation, registerPOTAAllParksData } from './POTAAllParksData'
 import { POTALoggingControl } from './POTALoggingControl'
-import { POTAPostSpot } from './POTAPostSpot'
-import { apiPOTA } from '../../../store/apis/apiPOTA'
+
+import { POTAPostOtherSpot } from './POTAPostOtherSpot'
+import { POTAPostSelfSpot } from './POTAPostSelfSpot'
+import { apiPOTA, directLookupPark } from '../../../store/apis/apiPOTA'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 import { ConfirmFromSpotsHook } from './POTAConfirmFromSpots'
@@ -21,6 +23,9 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import GLOBAL from '../../../GLOBAL'
+import { filterNearDupes, filterQSOsWithSectionRefs } from '../../../tools/qsonTools'
+import { generateActivityDailyAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 const Extension = {
   ...Info,
@@ -54,15 +59,16 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
-  postSpot: POTAPostSpot,
+  postOtherSpot: POTAPostOtherSpot,
+  postSelfSpot: POTAPostSelfSpot,
   Options: POTAActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,
 
-  sampleOperations: ({ settings, callInfo }) => {
+  sampleOperations: ({ settings, callInfo, t }) => {
     return [
       // Regular Activation
-      { refs: [{ type: Info.activationType, ref: 'XX-1234', name: 'Example National Park', shortName: 'Example NP', program: Info.shortName, label: `${Info.shortName} XX-1234: Example National Park`, shortLabel: `${Info.shortName} XX-1234` }] }
+      { refs: [{ type: Info.activationType, ref: 'XX-1234', name: t('extensions.pota.exampleRefName', 'Example National Park'), shortName: t('extensions.pota.activityOptions.exampleNP', 'Example NP'), program: Info.shortName, label: `${Info.shortName} XX-1234: Example National Park`, shortLabel: `${Info.shortName} XX-1234` }] }
     ]
   }
 }
@@ -71,6 +77,8 @@ const SpotsHook = {
   ...Info,
   sourceName: 'POTA.app',
   fetchSpots: async ({ online, settings, dispatch }) => {
+    if (GLOBAL?.flags?.services?.pota === false) return []
+
     let spots = []
     if (online) {
       const apiPromise = await dispatch(apiPOTA.endpoints.spots.initiate({}, { forceRefetch: true }))
@@ -78,9 +86,9 @@ const SpotsHook = {
       const apiResults = await dispatch((_dispatch, getState) => apiPOTA.endpoints.spots.select({})(getState()))
 
       apiPromise.unsubscribe && apiPromise.unsubscribe()
-      spots = apiResults.data || {}
+      spots = apiResults.data || []
     }
-    return spots.map(spot => {
+    return spots.filter(spot => !spot.comments?.match(/QRT/i)).map(spot => {
       const qso = {
         their: { call: spot.activator },
         freq: spot.frequency,
@@ -94,7 +102,7 @@ const SpotsHook = {
           timeInMillis: Date.parse(spot.spotTime + 'Z'),
           source: Info.key,
           icon: Info.icon,
-          label: `POTA ${spot.reference}: ${spot.locationDesc ? spot.locationDesc.split('-')[1] + ' •' : ''} ${spot.name}`,
+          label: `${spot.reference}: ${[_simplifyPOTAStates(spot.locationDesc), spot.name].filter(x => x).join(' • ')}`,
           sourceInfo: {
             source: spot.source,
             id: spot.spotId,
@@ -109,6 +117,8 @@ const SpotsHook = {
     })
   },
   extraSpotInfo: async ({ online, settings, dispatch, spot }) => {
+    if (GLOBAL?.flags?.services?.pota === false) return
+
     if (online) {
       const spotRef = findRef(spot, Info.huntingType)
       if (spotRef) {
@@ -178,12 +188,11 @@ const ReferenceHandler = {
 
   iconForQSO: Info.icon,
 
-  decorateRefWithDispatch: (ref) => async () => {
+  decorateRefWithDispatch: (ref) => async (dispatch) => {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', shortName: '', location: '' }
+    let result
 
     const data = await potaFindParkByReference(ref.ref)
-
-    let result
     if (data?.name) {
       result = {
         ...ref,
@@ -193,17 +202,47 @@ const ReferenceHandler = {
         shortLabel: `${Info.shortName} ${ref.ref}`,
         program: Info.shortName
       }
+      console.log('pota db lookup', data)
       if (data?.location?.indexOf(',') < 0) {
         result.accuracy = LOCATION_ACCURACY.REASONABLE
         result.grid = data.grid
 
         if (data.ref?.startsWith('US-') || data.ref?.startsWith('CA-') || data.ref?.startsWith('AU-')) {
           // For US, Canada or Australia, use the state/province.
-          result.state = (data.location || '').split('-').pop().trim()
+          result.state = (data.location || '').split('-')[1]?.trim()
         }
+      } else {
+        result.possibleStates = (data.location || '').split(',').map(x => x.split('-', 2)[1]?.trim())
       }
     } else {
-      return { name: Info.unknownReferenceName ?? 'Unknown reference', ...ref }
+      const lookup = await dispatch(directLookupPark(ref.ref))
+
+      if (lookup?.name) {
+        result = {
+          ...ref,
+          name: lookup.name,
+          location: lookup.locationDesc,
+          label: `${Info.shortName} ${ref.ref}: ${lookup.name}`,
+          shortLabel: `${Info.shortName} ${ref.ref}`,
+          program: Info.shortName
+        }
+        if (lookup.locationDesc?.indexOf(',') < 0) {
+          result.accuracy = LOCATION_ACCURACY.REASONABLE
+          result.grid = lookup.grid6
+        }
+
+        console.log('pota lookup', lookup)
+        if (lookup.locationDesc?.indexOf(',') >= 0) {
+          result.possibleStates = (lookup.locationDesc || '').split(',').map(x => x.split('-', 2)[1]?.trim())
+        } else {
+          if (lookup.ref?.startsWith('US-') || lookup.ref?.startsWith('CA-') || lookup.ref?.startsWith('AU-')) {
+            // For US, Canada or Australia, use the state/province.
+            result.state = (lookup.locationDesc || '').split('-')[1]?.trim()
+          }
+        }
+      } else {
+        return { name: t('extensions.pota.unknownRefName', Info.unknownReferenceName ?? 'Unknown reference'), ...ref }
+      }
     }
     return result
   },
@@ -212,7 +251,7 @@ const ReferenceHandler = {
     return { type: ref.type }
   },
 
-  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+  updateFromTemplateWithDispatch: ({ t, ref, operation }) => async (dispatch) => {
     if (operation?.grid) {
       let info = parseCallsign(operation.stationCall || '')
       info = annotateFromCountryFile(info)
@@ -225,7 +264,7 @@ const ReferenceHandler = {
       })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
 
       if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
-      else return { type: ref.type, name: 'No parks nearby!' }
+      else return { type: ref.type, name: t('extensions.pota.noRefsNearby', 'No parks nearby!') }
     } else {
       return { type: ref.type }
     }
@@ -233,7 +272,9 @@ const ReferenceHandler = {
 
   suggestOperationTitle: (ref) => {
     if (ref.type === Info.activationType && ref.ref) {
-      return { at: ref.ref, subtitle: ref.name, shortSubtitle: ref.shortName }
+      return {
+        at: ref.ref, subtitle: ref.name, shortSubtitle: ref.shortName, description: `${Info.shortName}: ${ref.ref}`
+      }
     } else {
       return null
     }
@@ -286,16 +327,20 @@ const ReferenceHandler = {
     }
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
-    const { band, mode, uuid, startAtMillis } = qso
+  scoringForQSO: generateActivityScorer({ info: Info }),
+  accumulateScoreForDay: generateActivityDailyAccumulator({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info }),
 
+  originalScoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
+    const { band, mode, uuid, startAtMillis } = qso
+    if (DEBUG) console.log('  -- POTA scoringForQSO', { ...operation }, { ...scoredRef })
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const refCount = refs.length
     let value
     let type
-    if (ref?.ref) {
+    if (scoredRef?.ref) {
       type = Info.activationType
       value = refCount || 1
     } else {
@@ -304,20 +349,32 @@ const ReferenceHandler = {
     }
 
     if (value === 0) return { value: 0 } // If not activating, only counts if other QSO has a POTA ref
+    // console.log('pota scoring', qso.their.call, scoredRef.type ?? '?', scoredRef.ref ?? '?')
 
-    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
+    const nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
+    if (DEBUG) console.log('-- nearDupes', qso.uuid, qso.key, nearDupes)
 
     if (nearDupes.length === 0) {
+      if (DEBUG) console.log('-- no dupes', { value, refCount, type })
       return { value, refCount, type }
     } else {
       const thisQSOTime = qso.startAtMillis ?? Date.now()
       const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
 
-      const sameBand = nearDupes.filter(q => q.band === band).length !== 0
-      const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
-      const sameDay = nearDupes.filter(q => (q.startAtMillis - (q.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
-      const sameRefs = nearDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
-      if (sameBand && sameMode && sameDay && (sameRefs || refs.length === 0)) {
+      const sameDayDupes = nearDupes.filter(q => (q.startAtMillis - (q.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day)
+
+      const sameDay = sameDayDupes.length !== 0
+      const sameBand = sameDayDupes.filter(q => q.band === band).length !== 0
+      const sameMode = sameDayDupes.filter(q => q.mode === mode).length !== 0
+      const sameBandMode = sameDayDupes.filter(q => q.band === band && q.mode === mode).length !== 0
+      const sameRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
+      const dupesHadRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).length !== 0).length !== 0
+
+      if (DEBUG) console.log('-- ', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
+
+      if (sameBandMode && sameDay && (sameRefs || refs.length === 0)) {
+        if (DEBUG) console.log('-- duplicate', qso.uuid, { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
+        if (refs.length === 0 && dupesHadRefs && !qso.uuid) return { value: 0, refCount, notices: ['maybeDupe'], type }
         return { value: 0, refCount, alerts: ['duplicate'], type }
       } else {
         const notices = []
@@ -326,12 +383,13 @@ const ReferenceHandler = {
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
+        if (DEBUG) console.log('-- near duplicate', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
         return { value, refCount, notices, type }
       }
     }
   },
 
-  accumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
+  originalAccumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
     if (!ref?.ref) return score // No scoring if not activating
     if (!score?.key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
@@ -347,8 +405,10 @@ const ReferenceHandler = {
     }
 
     if (!score.refs[ref.ref]) { // Track how many parks we're activating
-      score.refs[ref.ref] = true
+      score.refs[ref.ref] = 1
       score.primaryRef = score.primaryRef || ref.ref
+    } else {
+      score.refs[ref.ref] += 1
     }
 
     if (score.primaryRef === ref.ref) { // Only do scoring for the primary ref
@@ -360,7 +420,7 @@ const ReferenceHandler = {
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  originalSummarizeScore: ({ score, operation, ref, section }) => {
     score.activated = score.value >= 10
 
     if (score.activated) {
@@ -380,5 +440,16 @@ const ReferenceHandler = {
     score.longSummary = [score.summary, `${score.value} Contacts`].filter(x => x).join(' • ')
 
     return score
+  }
+}
+
+function _simplifyPOTAStates(locationDesc) {
+  if (!locationDesc) return ''
+  const states = locationDesc.split(',')
+  const oneState = states[0].split('-', 2)[1]?.trim()
+  if (states.length > 1) {
+    return `${oneState}+${states.length - 1}`
+  } else {
+    return oneState
   }
 }

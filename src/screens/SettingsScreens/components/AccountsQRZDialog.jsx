@@ -1,23 +1,26 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Dialog, Text } from 'react-native-paper'
-import { useDispatch } from 'react-redux'
-import { setAccountInfo } from '../../../store/settings'
-import ThemedTextInput from '../../components/ThemedTextInput'
-import { Ham2kDialog } from '../../components/Ham2kDialog'
-import { apiQRZ } from '../../../store/apis/apiQRZ'
 import { View } from 'react-native'
-import { Ham2kMarkdown } from '../../components/Ham2kMarkdown'
-import { resetCallLookupCache } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { Text } from 'react-native-paper'
+import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
+import { setAccountInfo } from '../../../store/settings'
+import { apiQRZ } from '../../../store/apis/apiQRZ'
+import { resetCallLookupCache } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kMarkdown, H2kTextInput } from '../../../ui'
+
 export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) {
+  const { t } = useTranslation()
+
   const dispatch = useDispatch()
 
   const [dialogVisible, setDialogVisible] = useState(false)
@@ -43,11 +46,11 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
 
   useEffect(() => {
     if (login?.indexOf('@') >= 0) {
-      setError("Don't use your email for login.")
+      setError(t('screens.settings.accountsQRZ.errorEmail', "Don't use your email for login."))
     } else {
       setError(null)
     }
-  }, [login])
+  }, [login, t])
 
   const onChangeLogin = useCallback((text) => {
     setLogin(text)
@@ -91,44 +94,44 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
   }, [originalValues, dispatch, onDialogDone])
 
   return (
-    <Ham2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <Dialog.Title style={{ textAlign: 'center' }}>QRZ.com Account</Dialog.Title>
-      <Dialog.Content>
-        <Text variant="bodyMedium">Please enter the details for your QRZ.com account:</Text>
-        <ThemedTextInput
+    <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.settings.accountsQRZ.dialogTitle', 'QRZ.com Account')}</H2kDialogTitle>
+      <H2kDialogContent>
+        <Text variant="bodyMedium">{t('screens.settings.accountsQRZ.pleaseEnterDetails', 'Please enter the details for your QRZ.com account:')}</Text>
+        <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={login}
           autoCapitalize={'none'}
           autoComplete="email"
           inputMode="email"
           keyboardType="email-address"
-          label="Login (your callsign)"
-          placeholder="your login"
+          label={t('screens.settings.accountsQRZ.loginLabel', 'Login (your callsign)')}
+          placeholder={t('screens.settings.accountsQRZ.loginPlaceholder', 'your login')}
           error={error}
           onChangeText={onChangeLogin}
         />
         {error && <Text style={{ marginTop: styles.oneSpace, color: 'red' }}>{error}</Text>}
-        <ThemedTextInput
+        <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={password}
-          label="Password"
+          label={t('screens.settings.accountsQRZ.passwordLabel', 'Password')}
           autoComplete="current-password"
           keyboardType="default"
           textContentType="password"
           secureTextEntry={true}
           autoCapitalize={'none'}
-          placeholder="your password"
+          placeholder={t('screens.settings.accountsQRZ.passwordPlaceholder', 'your password')}
           onChangeText={onChangePassword}
         />
         <View style={{ marginTop: styles.oneSpace, flexDirection: 'row' }}>
-          {!testResult && <Button onPress={handleTest}>{'Check Credentials'}</Button>}
-          {testResult && <Ham2kMarkdown style={{ flex: 1, marginTop: styles.oneSpace * 0.6 }}>{testResult}</Ham2kMarkdown>}
+          {!testResult && <H2kButton onPress={handleTest}>{t('screens.settings.accountsQRZ.checkCredentials', 'Check Credentials')}</H2kButton>}
+          {testResult && <H2kMarkdown style={{ flex: 1, marginTop: styles.oneSpace * 0.6 }}>{testResult}</H2kMarkdown>}
         </View>
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={handleCancel}>Cancel</Button>
-        <Button onPress={handleAccept}>Ok</Button>
-      </Dialog.Actions>
-    </Ham2kDialog>
+      </H2kDialogContent>
+      <H2kDialogActions>
+        <H2kButton onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+        <H2kButton onPress={handleAccept}>{t('general.buttons.ok', 'Ok')}</H2kButton>
+      </H2kDialogActions>
+    </H2kDialog>
   )
 }

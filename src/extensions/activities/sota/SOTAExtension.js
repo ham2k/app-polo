@@ -4,23 +4,29 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+import { Alert } from 'react-native'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+
+import GLOBAL from '../../../GLOBAL'
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../../tools/refTools'
+import { apiSOTA } from '../../../store/apis/apiSOTA'
+import { LOCATION_ACCURACY } from '../../constants'
+import { distanceOnEarth } from '../../../tools/geoTools'
 
 import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { registerSOTADataFile, sotaFindAllByLocation, sotaFindOneByReference } from './SOTADataFile'
 import { Info } from './SOTAInfo'
 import { SOTALoggingControl } from './SOTALoggingControl'
 import { SOTAAccountSetting } from './SOTAAccount'
-import { SOTAPostSpot } from './SOTAPostSpot'
-import { apiSOTA } from '../../../store/apis/apiSOTA'
-import { bandForFrequency } from '@ham2k/lib-operation-data'
-import { LOCATION_ACCURACY } from '../../constants'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
+import { SOTAPostSelfSpot } from './SOTAPostSelfSpot'
+import { SOTAPostOtherSpot } from './SOTAPostOtherSpot'
+import { filterNearDupes } from '../../../tools/qsonTools'
+import { generateActivityDailyAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 const Extension = {
   ...Info,
@@ -48,9 +54,18 @@ const Extension = {
 }
 export default Extension
 
+let lastAuthenticationCheck
+
 const ActivityHook = {
   ...Info,
+
+  standardExchangeFields: ({ vfo }) => ({
+    // Enable grid for the 2026 SOTA Challenge (https://reflector.sota.org.uk/t/2026-sota-challenge-part-1/39799)
+    grid: (vfo?.band === '2m' || vfo?.band === '70cm') && (vfo?.mode === 'CW' || vfo?.mode === 'SSB' || vfo?.mode === 'USB')
+  }),
+
   MainExchangePanel: null,
+
   loggingControls: ({ operation, settings }) => {
     if (findRef(operation, Info.activationType)) {
       return [ActivatorLoggingControl]
@@ -59,21 +74,43 @@ const ActivityHook = {
     }
   },
 
-  postSpot: SOTAPostSpot,
-  isSpotEnabled: ({ operation, settings }) => {
-    return !!settings?.accounts?.sota?.idToken
+  postOtherSpot: SOTAPostOtherSpot,
+  postSelfSpot: SOTAPostSelfSpot,
+  isOtherSpotEnabled: ({ settings, operation }) => {
+    const enabled = !!settings?.accounts?.sota?.idToken
+    const now = new Date().getTime()
+    if (!enabled && (!lastAuthenticationCheck || (now - lastAuthenticationCheck > 1000 * 60 * 30))) {
+      Alert.alert(
+        GLOBAL?.t?.('extensions.sota.notLoggedInAlertTitle', 'Warning') || 'Warning',
+        GLOBAL?.t?.('extensions.sota.notLoggedInAlertText', 'Not logged into SOTAWatch for spotting. Please go to PoLo settings') || 'Not logged into SOTAWatch for spotting. Please go to PoLo settings'
+      )
+      lastAuthenticationCheck = now
+    }
+    return enabled
+  },
+  isSelfSpotEnabled: ({ settings, operation }) => {
+    const enabled = !!settings?.accounts?.sota?.idToken
+    const now = new Date().getTime()
+    if (!enabled && (!lastAuthenticationCheck || (now - lastAuthenticationCheck > 1000 * 60 * 30))) {
+      Alert.alert(
+        GLOBAL?.t?.('extensions.sota.notLoggedInAlertTitle', 'Warning') || 'Warning',
+        GLOBAL?.t?.('extensions.sota.notLoggedInAlertText', 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings') || 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings'
+      )
+      lastAuthenticationCheck = now
+    }
+    return enabled
   },
 
   Options: SOTAActivityOptions,
 
   generalHuntingType: ({ operation, settings }) => Info.huntingType,
 
-  sampleOperations: ({ settings, callInfo }) => {
+  sampleOperations: ({ t, settings, callInfo }) => {
     return [
       // Regular Activation
-      { refs: [{ type: Info.activationType, ref: 'A/BC-1234', name: 'Example Summit', shortName: 'Example Summit', program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] },
+      { refs: [{ type: Info.activationType, ref: 'A/BC-1234', name: t('extensions.sota.exampleRefName', 'Example Summit'), shortName: t('extensions.sota.activityOptions.exampleSummit', 'Example Summit'), program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] },
       // Hunting in a different operation
-      { refs: [{}], qsos: [{ refs: [{ type: Info.huntingType, ref: 'A/BC-1234', name: 'Example Summit', shortName: 'Example Summit', program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] }] }
+      { refs: [{}], qsos: [{ refs: [{ type: Info.huntingType, ref: 'A/BC-1234', name: t('extensions.sota.exampleRefName', 'Example Summit'), shortName: t('extensions.sota.activityOptions.exampleSummit', 'Example Summit'), program: Info.shortName, label: `${Info.shortName} A/BC-1234: Example Summit`, shortLabel: `${Info.shortName} A/BC-1234` }] }] }
     ]
   }
 }
@@ -82,6 +119,8 @@ const SpotsHook = {
   ...Info,
   sourceName: 'SOTAWatch',
   fetchSpots: async ({ online, settings, dispatch }) => {
+    if (GLOBAL?.flags?.services?.sota === false) return []
+
     let spots = []
     if (online) {
       const apiEpochPromise = await dispatch(apiSOTA.endpoints.epoch.initiate({}, { forceRefetch: true }))
@@ -115,7 +154,7 @@ const SpotsHook = {
       }
     }
 
-    const qsos = dedupedSpots.filter(x => (x?.type ?? 'NORMAL') === 'NORMAL').map(spot => {
+    const qsos = dedupedSpots.filter(x => (x?.type || 'NORMAL') === 'NORMAL').map(spot => {
       const qso = {
         their: { call: spot.activatorCallsign },
         freq: spot.frequency * 1000,
@@ -129,7 +168,7 @@ const SpotsHook = {
           timeInMillis: Date.parse(spot.timeStamp),
           source: Info.key,
           icon: Info.icon,
-          label: `SOTA ${spot.summitCode}: ${spot.summitName}`,
+          label: `${spot.points ? String.fromCodePoint(10121 + spot.points) : ''} ${spot.summitCode}: ${spot.summitName}`,
           sourceInfo: {
             id: spot.id,
             comments: spot.comments,
@@ -197,7 +236,7 @@ const ReferenceHandler = {
           program: Info.shortName
         }
       } else {
-        return { ...ref, name: Info.unknownReferenceName ?? 'Unknown reference' }
+        return { ...ref, name: t('extensions.sota.unknownRefName', Info.unknownReferenceName ?? 'Unknown reference') }
       }
     }
   },
@@ -206,7 +245,7 @@ const ReferenceHandler = {
     return { type: ref.type }
   },
 
-  updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
+  updateFromTemplateWithDispatch: ({ t, ref, operation }) => async (dispatch) => {
     if (operation?.grid) {
       let info = parseCallsign(operation.stationCall || '')
       info = annotateFromCountryFile(info)
@@ -219,7 +258,7 @@ const ReferenceHandler = {
       })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999))
 
       if (nearby.length > 0) return { type: ref.type, ref: nearby[0]?.ref }
-      else return { type: ref.type, name: 'No summits nearby!' }
+      else return { type: ref.type, name: t('extensions.sota.noRefsNearby', 'No summits nearby!') }
     } else {
       return { type: ref.type }
     }
@@ -241,8 +280,7 @@ const ReferenceHandler = {
         exportName: 'SOTA Activation',
         exportData: { refs: [ref] }, // exports only see this one ref
         nameTemplate: '{{>RefActivityName}}',
-        titleTemplate: '{{>RefActivityTitle}}',
-        ADIFCommentTemplate: 's{{qso.our.sent}} r{{qso.their.sent}} {{>ADIFNotes}}'
+        titleTemplate: '{{>RefActivityTitle}}'
       }]
     } else { // "export" hook
       const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType) && !q.deleted)
@@ -254,21 +292,32 @@ const ReferenceHandler = {
         exportName: 'SOTA Hunter',
         templateData: { handlerShortName: 'SOTA Hunted', handlerName: 'SOTA Hunted', includeTime: true },
         nameTemplate: '{{>OtherActivityName}}',
-        titleTemplate: '{{>OtherActivityTitle}}',
-        ADIFCommentTemplate: 's{{qso.our.sent}} r{{qso.their.sent}} {{>ADIFNotes}}'
+        titleTemplate: '{{>OtherActivityTitle}}'
       }]
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation, exportType }) => {
+  adifFieldsForOneQSO: ({ qso, operation, common, exportType }) => {
     const huntingRef = findRef(qso, Info.huntingType)
     const activationRef = findRef(operation, Info.activationType)
 
     if (!activationRef && !huntingRef) return false
 
     const fields = []
-    if (activationRef) fields.push({ MY_SOTA_REF: activationRef.ref })
+
+    if (activationRef) {
+      fields.push({ MY_SOTA_REF: activationRef.ref })
+      fields.push({ GRIDSQUARE: (qso.their?.grid ?? qso.their?.guess?.grid) })
+      fields.push({ MY_GRIDSQUARE: (qso?.our?.grid ?? common.grid) })
+    }
+
     if (huntingRef) fields.push({ SOTA_REF: huntingRef.ref })
+
+    // For the 2026 SOTA Challenge, they ask for POTA and WWFF refs as a way to determine location
+    const potaRefs = filterRefs(qso, 'pota')
+    if (potaRefs.length > 0) fields.push({ POTA_REF: potaRefs.map(ref => ref.ref).filter(x => x).join(',') })
+    const wwffRefs = filterRefs(qso, 'wwff')
+    if (wwffRefs.length > 0) fields.push({ WWFF_REF: wwffRefs.map(ref => ref.ref).filter(x => x).join(',') })
 
     // SOTA does not save signal reports, so most operators like to include this in the comments
     // Also, SOTA does not process the NOTES field, so we include our notes and signal reports in the COMMENT field
@@ -277,7 +326,11 @@ const ReferenceHandler = {
     return fields
   },
 
-  scoringForQSO: ({ qso, qsos, operation, ref }) => {
+  scoringForQSO: generateActivityScorer({ info: Info }),
+  accumulateScoreForDay: generateActivityDailyAccumulator({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info }),
+
+  originalScoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const { uuid, startAtMillis } = qso
@@ -285,12 +338,12 @@ const ReferenceHandler = {
     const refCount = theirRef ? 1 : 0
     const points = refCount
 
-    if (!theirRef && !ref?.ref) return { value: 0 } // If not activating, only counts if other QSO has a SOTA ref
+    if (!theirRef && !scoredRef?.ref) return { value: 0 } // If not activating, only counts if other QSO has a SOTA ref
 
-    const nearDupes = (qsos || []).filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
+    const nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
 
     if (nearDupes.length === 0) {
-      return { value: 1, refCount, points, type: Info.activationType }
+      return { value: 1, refCount, refs: [theirRef], points, type: Info.activationType }
     } else if (points > 0) {
       // Contacts with the same station don't count for the 4 QSOs needed to activate the summit
       // But might count for hunter points if they are for a new summit or day
@@ -301,20 +354,20 @@ const ReferenceHandler = {
       const sameRefs = nearDupes.filter(q => findRef(q, Info.huntingType)?.ref === theirRef.ref).length !== 0
       const sameDay = nearDupes.filter(q => (q.startAtMillis - (q.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day).length !== 0
       if (sameDay && sameRefs) {
-        return { value: 0, refCount, points: 0, alerts: ['duplicate'], type: Info.activationType }
+        return { value: 0, refCount, refs: [theirRef], points: 0, alerts: ['duplicate'], type: Info.activationType }
       } else {
         const notices = []
         if (!sameRefs) notices.push('newRef')
         if (!sameDay) notices.push('newDay')
 
-        return { value: 0, refCount, points, notices, type: Info.activationType }
+        return { value: 0, refCount, refs: [theirRef], points, notices, type: Info.activationType }
       }
     } else {
-      return { value: 0, refCount, points: 0, alerts: ['duplicate'], type: Info.activationType }
+      return { value: 0, refCount, refs: [theirRef], points: 0, alerts: ['duplicate'], type: Info.activationType }
     }
   },
 
-  accumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
+  originalAccumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
     if (!ref?.ref) return score // No scoring if not activating
     if (!score?.key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
@@ -333,7 +386,7 @@ const ReferenceHandler = {
     return score
   },
 
-  summarizeScore: ({ score, operation, ref, section }) => {
+  originalSummarizeScore: ({ score, operation, ref, section }) => {
     score.activated = score.value >= 4
 
     if (score.activated) {

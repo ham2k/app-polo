@@ -6,11 +6,15 @@
  */
 
 import Config from 'react-native-config'
-import packageJson from '../../../../package.json'
-import { logRemotely } from '../../../distro'
-import GLOBAL from '../../../GLOBAL'
+import { Platform } from 'react-native'
+
 import { selectSettings } from '../../../store/settings'
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
+import GLOBAL from '../../../GLOBAL'
+import { fetchWithTimeout } from '../../../tools/fetchWithTimeout'
+import { logRemotely, syncMetaForDistribution } from '../../../distro'
+
+import packageJson from '../../../../package.json'
 
 export const Info = {
   key: 'ham2k-lofi',
@@ -35,16 +39,34 @@ export default Extension
 
 export const DEFAULT_LOFI_SERVER = 'https://lofi.ham2k.net'
 
-const DEBUG = true
+const DEBUG = false
 
 const SyncHook = {
   ...Info,
   sync: (params) => async (dispatch, getState) => {
-    console.log('sync', { meta: params.meta })
+    if (DEBUG) console.log('sync', { meta: params.meta })
 
     const body = JSON.stringify(params)
     const response = await requestWithAuth({ dispatch, getState, url: 'v1/sync', method: 'POST', body })
     return response
+  },
+
+  getOperations: (params) => async (dispatch, getState) => {
+    if (DEBUG) console.log('getOperations', { meta: params.meta })
+
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/operations', method: 'GET', params })
+    return response
+  },
+
+  getQSOs: (params) => async (dispatch, getState) => {
+    if (DEBUG) console.log('getQsos', { meta: params.meta })
+
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/qsos', method: 'GET', params })
+    return response
+  },
+
+  resetConnection: () => async (dispatch, getState) => {
+    GLOBAL.syncLoFiToken = undefined
   },
 
   linkClient: (email) => async (dispatch, getState) => {
@@ -52,14 +74,36 @@ const SyncHook = {
     return response
   },
 
+  resetClient: (email) => async (dispatch, getState) => {
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/client/reset', method: 'POST', body: JSON.stringify({ email }) })
+    return response
+  },
+
   getAccountData: () => async (dispatch, getState) => {
     const results = await requestWithAuth({ dispatch, getState, url: 'v1/accounts', method: 'GET' })
     if (results.ok) {
+      console.log('getAccountData', results.json)
+
+      const currentData = selectLocalExtensionData(getState(), Info.key) || {}
+
       const updates = {}
-      if (results.json.current_account) updates.account = results.json.current_account
-      if (results.json.current_client) updates.client = results.json.current_client
+      if (results.json.current_account?.uuid) {
+        if (results.json.current_account.uuid !== currentData.account?.uuid) {
+          updates.previousAccount = currentData.account
+        }
+        updates.account = results.json.current_account
+      }
+      if (results.json.current_client?.uuid) {
+        if (results.json.current_client.uuid !== currentData.client?.uuid) {
+          updates.previousClient = currentData.client
+        }
+        updates.client = results.json.current_client
+      }
       if (results.json.clients) updates.allClients = results.json.clients
       if (results.json.accounts) updates.allAccounts = results.json.accounts
+      if (results.json.subscription) updates.subscription = results.json.subscription
+      if (results.json.operations) updates.operations = results.json.operations
+      if (results.json.qsos) updates.qsos = results.json.qsos
       if (Object.keys(updates).length > 0) {
         dispatch(setLocalExtensionData({ key: Info.key, ...updates }))
       }
@@ -74,12 +118,21 @@ const SyncHook = {
     const results = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}`, method: 'PATCH', body })
 
     return results
+  },
+
+  resendEmail: () => async (dispatch, getState) => {
+    const { account } = selectLocalExtensionData(getState(), Info.key) || {}
+    const response = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}/resend_email`, method: 'POST' })
+
+    return response
   }
 }
 
-async function requestWithAuth ({ dispatch, getState, url, method, body, params }) {
+async function requestWithAuth({ dispatch, getState, url, method, body, params }) {
+  if (GLOBAL?.flags?.services?.lofi === false) return { ok: false, status: 500, json: {} }
+
   try {
-    console.log('Ham2K LoFi request', { url, method })
+    if (DEBUG) console.log('Ham2K LoFi request', { url, method })
     const settings = selectSettings(getState())
 
     let { server, account } = selectLocalExtensionData(getState(), Info.key) || {}
@@ -95,10 +148,10 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       retries--
       if (!token) {
         if (DEBUG) console.log('-- Ham2K LoFi Authenticating', { server, token, secret })
-        const response = await fetch(`${server}/v1/client`, {
+        const response = await fetchWithTimeout(`${server}/v1/client`, {
           method: 'POST',
           headers: {
-            'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
+            'User-Agent': _buildUserAgent(),
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -109,12 +162,15 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
             },
             account: {
               call: settings.operatorCall
+            },
+            meta: {
+              ...syncMetaForDistribution({ settings }),
             }
           })
         })
 
         const responseBody = await response.text()
-        // console.log(' -- auth response body', responseBody)
+        if (DEBUG) console.log(' -- auth response body', responseBody)
         // const json = await response.json()
         let json
         try {
@@ -122,25 +178,25 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
         } catch (e) {
           json = {}
         }
-        processResponseMeta({ json, account, response, dispatch })
+        _processResponseMeta({ json, account, response, dispatch })
 
         if (response.status === 200) {
           if (DEBUG) console.log('-- auth ok', json)
           token = json.token
           GLOBAL.syncLoFiToken = token
         } else if (response.status === 401) {
-          logRemotely({ message: '-- Ham2K LoFi Authentication failed', server, token, secret, url, body })
+          // logRemotely({ message: '-- Ham2K LoFi Authentication failed', server, token, secret, url, body })
           if (DEBUG) console.log('-- auth failed')
           throw new Error('Authentication Failed')
         } else {
-          logRemotely({ message: `-- Ham2K LoFi Server Error ${response.status}`, server, token, secret, url, body })
+          // logRemotely({ message: `-- Ham2K LoFi Server Error ${response.status}`, server, token, secret, url, body })
           if (DEBUG) console.log('-- auth failed')
           throw new Error(`Server Error ${response.status}`)
         }
       }
 
-      if (DEBUG) console.log('-- request', { url, method, body })
-      const response = await fetch(`${server}/${url}`, {
+      if (DEBUG) console.log('-- request', { url, method, body, token })
+      const response = await fetchWithTimeout(`${server}/${url}`, {
         method,
         headers: {
           'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
@@ -151,8 +207,9 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       })
 
       const responseBody = await response.text()
-      // console.log(' -- main response body', responseBody)
+      if (DEBUG) console.log(' -- main response body', responseBody)
       // const json = await response.json()
+      // if (DEBUG)console.log(' -- body size: ', responseBody.length)
       let json
       try {
         json = JSON.parse(responseBody)
@@ -160,7 +217,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
         json = {}
       }
 
-      processResponseMeta({ json, account, response, dispatch })
+      _processResponseMeta({ json, account, response, dispatch })
 
       if (response.status === 401) {
         if (DEBUG) console.log(' -- auth failed')
@@ -174,6 +231,8 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
     if (DEBUG) console.log('Error in requestWithAuth', e)
     if (e.message === 'Network request failed') {
       return { ok: false, status: 0, json: { error: 'Network request failed' } }
+    } else if (e.name === 'FetchTimeoutError') {
+      return { ok: false, status: 504, json: { error: 'Request timed out' } }
     } else {
       throw e
     }
@@ -181,30 +240,22 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
   return { ok: false, status: 401, json: {} }
 }
 
-function processResponseMeta ({ json, account, response, dispatch }) {
+function _processResponseMeta({ json, account, response, dispatch }) {
   try {
     if (json?.account && (!account || Object.keys(json.account).find(k => account[k] !== json.account[k]))) {
       dispatch(setLocalExtensionData({ key: Info.key, account: json.account }))
     }
-
-    if (json?.meta?.suggestedSyncBatchSize || json?.meta?.suggested_sync_batch_size) {
-      GLOBAL.syncBatchSize = Number.parseInt(json.meta.suggestedSyncBatchSize || json.meta.suggested_sync_batch_size, 10)
-      if (GLOBAL.syncBatchSize < 1) GLOBAL.syncBatchSize = undefined
-      if (isNaN(GLOBAL.syncBatchSize)) GLOBAL.syncBatchSize = undefined
-    }
-
-    if (json?.meta?.suggestedSyncLoopDelay || json?.meta?.suggested_sync_loop_delay) {
-      GLOBAL.syncLoopDelay = Number.parseInt(json.meta.suggestedSyncLoopDelay || json.meta.suggested_sync_loop_delay, 10) * 1000
-      if (GLOBAL.syncLoopDelay < 1) GLOBAL.syncLoopDelay = undefined
-      if (isNaN(GLOBAL.syncLoopDelay)) GLOBAL.syncLoopDelay = undefined
-    }
-
-    if (json?.meta?.suggestedSyncCheckPeriod || json?.meta?.suggested_sync_check_period) {
-      GLOBAL.syncCheckPeriod = Number.parseInt(json.meta.suggestedSyncCheckPeriod || json.meta.suggested_sync_check_period, 10) * 1000
-      if (GLOBAL.syncCheckPeriod < 1) GLOBAL.syncCheckPeriod = undefined
-      if (isNaN(GLOBAL.syncCheckPeriod)) GLOBAL.syncCheckPeriod = undefined
-    }
   } catch (e) {
-    console.log('Error parsing sync meta', e, json)
+    console.log('Error parsing ham2k-lofi sync meta', e, json)
+  }
+}
+
+function _buildUserAgent() {
+  if (Platform.OS === 'ios') {
+    return `Ham2K Portable Logger/${packageJson.version} iOS ${Platform.Version} ${[Platform.isIphone && 'iPhone', Platform.isIPad && 'iPad', Platform.isTV && 'TV', Platform.isMacCatalyst && 'Catalyst', Platform.isMac && 'Mac'].filter(Boolean).join(' ')}`
+  } else if (Platform.OS === 'android') {
+    return `Ham2K Portable Logger/${packageJson.version} Android ${Platform.Version} ${Platform.Manufacturer} ${Platform.Model} ${Platform.Fingerprint} `
+  } else {
+    return `Ham2K Portable Logger/${packageJson.version} ${Platform.OS}`
   }
 }

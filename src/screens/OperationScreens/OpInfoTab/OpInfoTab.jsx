@@ -7,7 +7,6 @@
 
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { View } from 'react-native'
 
 import { selectOperation } from '../../../store/operations'
 import { useUIState } from '../../../store/ui'
@@ -17,6 +16,7 @@ import { CallInfoPanel } from './components/CallInfoPanel'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { OpInfoPanel } from './components/OpInfoPanel'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 export default function OpInfoTab ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
@@ -29,21 +29,24 @@ export default function OpInfoTab ({ navigation, route }) {
   }, [loggingState?.qso?._isNew])
 
   const styles = useThemedStyles()
-  const safeArea = useSafeAreaInsets()
+  const safeAreaInsets = useSafeAreaInsets()
 
   return (
-    <View
+    <GestureHandlerRootView
       style={{
-        height: '100%',
         flexDirection: 'column',
+        flex: 1,
         justifyContent: 'space-between',
         alignItems: 'stretch',
-        backgroundColor: styles.theme.colors[`${themeColor}Container`],
-        paddingRight: safeArea.right
+        paddingRight: safeAreaInsets.right,
+        backgroundColor: styles.theme.colors[`${themeColor}Container`]
       }}
     >
-      <OpInfoPanel styles={styles} style={{ maxHeight: '95%' }} qsos={qsos} qso={loggingState.qso} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
-      <CallInfoPanel styles={styles} style={{ flexDirection: 'column-reverse' }} qso={loggingState.qso} operation={operation} sections={sections} themeColor={themeColor} />
-    </View>
+      {loggingState.qso?.their?.call ? (
+        <CallInfoPanel styles={styles} style={{ paddingBottom: safeAreaInsets.bottom }} qso={loggingState.qso} operation={operation} sections={sections} themeColor={themeColor} />
+      ) : (
+        <OpInfoPanel styles={styles} style={{ paddingBottom: safeAreaInsets.bottom }} qsos={qsos} qso={loggingState.qso} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
+      )}
+    </GestureHandlerRootView>
   )
 }

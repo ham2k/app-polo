@@ -6,6 +6,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import GLOBAL from '../../../GLOBAL'
 import { apiHamQTH } from '../../../store/apis/apiHamQTH'
 import { HamQTHAccountSetting } from './HamQTHAccount'
 
@@ -37,9 +38,13 @@ export default Extension
 const LookupHook = {
   ...Info,
   shouldSkipLookup: ({ online, lookedUp }) => {
+    if (GLOBAL?.flags?.services?.hamqth === false) return true
+
     return !online || (lookedUp.name && lookedUp.grid)
   },
   lookupCallWithDispatch: (callInfo, { settings, online }) => async (dispatch) => {
+    if (GLOBAL?.flags?.services?.hamqth === false) return {}
+
     if (online && settings?.accounts?.hamqth?.login && settings?.accounts?.hamqth?.password && callInfo?.baseCall?.length > 2) {
       const promise = await dispatch(apiHamQTH.endpoints.lookupCall.initiate({ call: callInfo.call }))
       await Promise.all(dispatch(apiHamQTH.util.getRunningQueriesThunk()))

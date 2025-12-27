@@ -1,159 +1,40 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { ImageBackground, Pressable, View, useWindowDimensions } from 'react-native'
+import { Image, ImageBackground, Pressable, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaFrame } from 'react-native-safe-area-context'
 import SplashScreen from 'react-native-splash-screen'
+import { useTranslation } from 'react-i18next'
+
+import { enableStartupInterruptionDialogForDistribution, StartupInterruptionDialogForDistribution } from '../../distro'
 
 import { selectRuntimeMessages } from '../../store/runtime'
-import { Ham2kMarkdown } from '../components/Ham2kMarkdown'
 import { earlyStartupSequence, startupSequence } from '../../store/runtime/actions/startupSequence'
 import { selectSystemFlag, setSystemFlag } from '../../store/system'
 import { selectSettings } from '../../store/settings'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { OnboardingManager } from './onboarding/OnboardingManager'
-
-import { enableStartupInterruptionDialogForDistribution, StartupInterruptionDialogForDistribution } from '../../distro'
+import { H2kMarkdown } from '../../ui'
+import { translatedVersionName } from '../../tools/i18nUtils'
 
 import releaseNotes from '../../../RELEASE-NOTES.json'
 import packageJson from '../../../package.json'
 
 const SPLASH_IMAGE = require('./img/launch_screen.jpg')
-
-function prepareStyles (baseTheme, height, dialogVisible) {
-  const isLightImage = true
-  const baseColor = isLightImage ? '#000' : '#FFF'
-  const haloColor = isLightImage ? '#FFF' : '#000'
-
-  return {
-    ...baseTheme,
-    root: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'stretch',
-      resizeMode: 'cover',
-      height: '100%'
-    },
-    container: {
-      height: '100%',
-      flexDirection: 'column',
-      justifyContent: 'space-between'
-    },
-    titleBoxSpacer: {
-      height: dialogVisible ? '10%' : '10%'
-    },
-    titleBoxTop: {
-      backgroundColor: 'rgba(255,255,255,.1)',
-      justifyContent: 'flex-end'
-    },
-    titleBoxBottom: {
-      // marginTop: height * 0.15
-      justifyContent: 'flex-start',
-      marginBottom: baseTheme.oneSpace * 2,
-      backgroundColor: 'rgba(255,255,255,.1)',
-      flex: 0
-    },
-    messagesBox: {
-      marginBottom: height * 0.05,
-      flex: 1,
-      // minHeight: baseTheme.oneSpace * 20,
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      overflow: 'hidden'
-    },
-    captionBox: {
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      backgroundColor: 'rgba(255,255,255,.15)'
-    },
-    ham2k: {
-      fontSize: baseTheme.normalFontSize * 1.7,
-      lineHeight: baseTheme.normalFontSize * 2,
-      fontWeight: 400,
-      textShadowColor: haloColor,
-      textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 1, // 1.5,
-      color: baseColor,
-      textAlign: 'center'
-    },
-    polo: {
-      fontSize: baseTheme.normalFontSize * 2.3,
-      lineHeight: baseTheme.normalFontSize * 3,
-      textShadowColor: haloColor,
-      textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 2,
-      fontFamily: 'Roboto Slab Black',
-      color: baseColor,
-      textAlign: 'center'
-    },
-    version: {
-      fontSize: baseTheme.normalFontSize * 1.3,
-      lineHeight: baseTheme.normalFontSize * 2,
-      fontWeight: 400,
-      textShadowColor: haloColor,
-      textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace * 2,
-      color: baseColor,
-      textAlign: 'center',
-      paddingTop: baseTheme.oneSpace
-    },
-    message: {
-      textShadowColor: haloColor,
-      textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace,
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: baseColor, // '#D0D0D0',
-      textAlign: 'center'
-    },
-    caption: {
-      textShadowColor: haloColor,
-      textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: baseTheme.oneSpace,
-      fontSize: 18,
-      fontWeight: 'normal',
-      color: baseColor, // '#D0D0D0',
-      textAlign: 'center',
-      padding: baseTheme.oneSpace
-    },
-    markdown: {
-      ...baseTheme.markdown,
-      body: {
-        ...baseTheme.markdown.body,
-        color: baseColor, // '#D0D0D0',
-        fontSize: baseTheme.normalFontSize * 1.2,
-        textAlign: 'center',
-        marginLeft: baseTheme.oneSpace * 3,
-        marginRight: baseTheme.oneSpace * 3
-      },
-      paragraph: {
-        backgroundColor: 'rgba(255,255,255,.3)',
-        paddingHorizontal: baseTheme.oneSpace * 0.5,
-        textShadowColor: 'rgba(255,255,255,1)',
-        textShadowOffset: { width: 0, height: 0 },
-        textShadowRadius: baseTheme.oneSpace * 0.5,
-        textAlign: 'center',
-        alignItems: 'center',
-        margin: 0,
-        marginBottom: 0,
-        marginTop: baseTheme.halfSpace,
-        padding: 0
-      }
-    }
-  }
-}
+const HAM2K_LOGO = require('./img/ham2k-3000-filled.png')
 
 export default function StartScreen ({ setAppState }) {
-  const { height } = useWindowDimensions()
+  const { t } = useTranslation()
+  const { height } = useSafeAreaFrame()
+  // const { height } = useWindowDimensions() <-- broken on iOS, no rotation
 
   const settings = useSelector(selectSettings)
   const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
@@ -168,8 +49,6 @@ export default function StartScreen ({ setAppState }) {
   useEffect(() => {
     SplashScreen.hide()
   }, [])
-
-  const versionName = packageJson.versionName ? `${packageJson.versionName} Release` : `Version ${packageJson.version}`
 
   const [startupPhase, setStartupPhase] = useState(undefined)
 
@@ -230,16 +109,17 @@ export default function StartScreen ({ setAppState }) {
       <GestureHandlerRootView>
         <SafeAreaView style={styles.container}>
           <View style={styles.titleBoxSpacer} />
-          <Pressable style={styles.titleBoxTop} onPress={() => { handleInterruption(); return true }}>
-            <Text style={styles.ham2k}>Ham2K</Text>
+          <Pressable style={[styles.titleBoxTop, { backgroundColor: 'transparent' }]} onPress={() => { handleInterruption(); return true }} android_ripple={false}>
+            <Image source={HAM2K_LOGO} style={{ height: 60, width: 500, alignSelf: 'center', backgroundColor: 'transparent' }} resizeMode="contain" />
           </Pressable>
-          <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }}>
-            <Text style={styles.polo} onPressIn={handleInterruption}>Portable Logger</Text>
-            <Text style={styles.version}>{versionName}</Text>
+          <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }} >
+            <Text style={styles.polo} adjustsFontSizeToFit={false} numberOfLines={1}>{'Portable Logger' /* dont't translate this */}</Text>
+            <Text style={styles.credits} adjustsFontSizeToFit={true} numberOfLines={1}>{t('screens.start.credits', 'by KI2D and friends')}</Text>
+            <Text style={styles.version}>{translatedVersionName({ t, version: packageJson.version }).full}</Text>
           </Pressable>
           <View style={styles.messagesBox}>
             {messages.map((msg, i) => (
-              <Ham2kMarkdown key={i} styles={styles}>{msg.message}</Ham2kMarkdown>
+              <H2kMarkdown key={i} styles={styles}>{msg.message}</H2kMarkdown>
             ))}
           </View>
           <View style={styles.captionBox}>
@@ -263,4 +143,145 @@ export default function StartScreen ({ setAppState }) {
       </GestureHandlerRootView>
     </ImageBackground>
   )
+}
+
+function prepareStyles (baseTheme, height, dialogVisible) {
+  const characterizeTopHalf = 'dark' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
+  const characterizeBottomHalf = 'dark' // 'light', 'mediumLight', 'medium', 'mediumDark', 'dark'
+
+  const topTextColor = { light: '#000', mediumLight: '#000', medium: '#FFF', mediumDark: '#FFF', dark: '#FFF' }[characterizeTopHalf]
+  const topHaloColor = { light: '#FFF', mediumLight: '#FFF', medium: '#000', mediumDark: '#000', dark: '#000' }[characterizeTopHalf]
+  const topBackColor = { light: 'rgba(0,0,0,0.3)', mediumLight: 'rgba(0,0,0,0.3)', medium: 'transparent', mediumDark: 'transparent', dark: 'transparent' }[characterizeTopHalf]
+  const bottomTextColor = { light: '#000', mediumLight: '#000', medium: '#FFF', mediumDark: '#FFF', dark: '#FFF' }[characterizeBottomHalf]
+  const bottomHaloColor = { light: '#FFF', mediumLight: '#FFF', medium: '#000', mediumDark: '#000', dark: '#000' }[characterizeBottomHalf]
+  const bottomBackColor = { light: 'rgba(255,255,255,0.3)', mediumLight: 'rgba(0,0,0,0.3)', medium: 'transparent', mediumDark: 'transparent', dark: 'transparent' }[characterizeBottomHalf]
+
+  return {
+    ...baseTheme,
+    root: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'stretch',
+      resizeMode: 'cover',
+      resizeMethod: 'resize',
+      position: 'absolute',
+      width: '100%',
+      height: '100%'
+    },
+    container: {
+      height: '100%',
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      justifyContent: 'space-between'
+    },
+    titleBoxSpacer: {
+      height: dialogVisible ? '10%' : '10%'
+    },
+    titleBoxTop: {
+      // justifyContent: 'flex-end',
+      backgroundColor: topBackColor
+    },
+    titleBoxBottom: {
+      // marginTop: height * 0.15
+      justifyContent: 'flex-start',
+      marginBottom: baseTheme.oneSpace * 2,
+      backgroundColor: bottomBackColor,
+      flex: 0
+    },
+    messagesBox: {
+      marginBottom: height * 0.05,
+      flex: 1,
+      // minHeight: baseTheme.oneSpace * 20,
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      overflow: 'hidden'
+    },
+    captionBox: {
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      backgroundColor: bottomBackColor
+    },
+    polo: {
+      height: baseTheme.oneSpace * 7,
+      fontSize: baseTheme.normalFontSize * 2.3,
+      lineHeight: baseTheme.normalFontSize * 3,
+      textShadowColor: topHaloColor,
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace * 1.6,
+      fontFamily: 'Roboto Slab Black',
+      color: topTextColor,
+      textAlign: 'center'
+    },
+    credits: {
+      fontSize: baseTheme.normalFontSize * 1.3,
+      width: '100%',
+      height: baseTheme.oneSpace * 5,
+      fontWeight: 400,
+      textShadowColor: topHaloColor,
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace * 1, // 1.5,
+      fontFamily: 'Roboto Slab',
+      color: topTextColor,
+      textAlign: 'center',
+      alignSelf: 'center',
+      paddingTop: baseTheme.oneSpace * 1,
+      paddingHorizontal: baseTheme.oneSpace * 4,
+      marginBottom: baseTheme.oneSpace
+    },
+    version: {
+      fontSize: baseTheme.normalFontSize * 1.3,
+      lineHeight: baseTheme.normalFontSize * 2,
+      fontWeight: 'bold',
+      textShadowColor: topHaloColor,
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace * 1,
+      color: topTextColor,
+      textAlign: 'center',
+      paddingTop: baseTheme.oneSpace
+    },
+    message: {
+      textShadowColor: bottomHaloColor,
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace,
+      fontSize: baseTheme.normalFontSize * 1.25,
+      fontWeight: 'bold',
+      color: bottomTextColor,
+      textAlign: 'center'
+    },
+    caption: {
+      color: bottomTextColor,
+      textShadowColor: bottomHaloColor,
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: baseTheme.oneSpace,
+      fontSize: baseTheme.normalFontSize * 1.125,
+      fontWeight: 'normal',
+      textAlign: 'center',
+      padding: baseTheme.oneSpace
+    },
+    markdown: {
+      ...baseTheme.markdown,
+      body: {
+        ...baseTheme.markdown.body,
+        color: bottomTextColor,
+        fontSize: baseTheme.normalFontSize * 1.2,
+        textAlign: 'center',
+        marginLeft: baseTheme.oneSpace * 3,
+        marginRight: baseTheme.oneSpace * 3
+      },
+      paragraph: {
+        backgroundColor: bottomBackColor,
+        paddingHorizontal: baseTheme.oneSpace * 0.5,
+        textShadowColor: bottomHaloColor,
+        textShadowOffset: { width: 0, height: 0 },
+        textShadowRadius: baseTheme.oneSpace * 1,
+        textAlign: 'center',
+        alignItems: 'center',
+        margin: 0,
+        marginBottom: 0,
+        marginTop: baseTheme.halfSpace,
+        padding: 0
+      }
+    }
+  }
 }

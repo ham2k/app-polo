@@ -1,56 +1,51 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useState, useMemo, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { Button } from 'react-native-paper'
+import { useTranslation } from 'react-i18next'
 
-import { setOperationData } from '../../../store/operations'
+import { H2kButton, H2kListRow, H2kListSection, H2kTextInput } from '../../../ui'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
+
 import { Info } from './CustomInfo'
 import { CustomListItem } from './CustomListItem'
-import { ListRow } from '../../../screens/components/ListComponents'
-import ThemedTextInput from '../../../screens/components/ThemedTextInput'
-import { Ham2kListSection } from '../../../screens/components/Ham2kListSection'
 
-export function CustomActivityOptions (props) {
-  const { styles, operation } = props
+export function CustomActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+  const { t } = useTranslation()
 
-  const dispatch = useDispatch()
+  const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
+
+  const title = useMemo(() => {
+    return t('extensions.custom.activityOptions.title', 'Activating {{count}} references', { count: activityRefs?.length })
+  }, [activityRefs?.length, t])
 
   const [mySig, setMySig] = useState('')
   const [mySigInfo, setMySigInfo] = useState('')
   const [name, setName] = useState('')
-  const refs = useMemo(() => filterRefs(operation, Info.activationType), [operation]).filter(ref => ref.ref)
-
-  const title = useMemo(() => {
-    if (refs?.length === 0) return 'No references provided for activation'
-    else return 'Activating references:'
-  }, [refs])
 
   const handleAddReference = useCallback((refMySigInfo, refName, refMySig) => {
     const data = {
       type: Info.activationType,
-      ref: [refMySig.trim(), refMySigInfo.trim()].filter(x => x).join(' '),
+      ref: [refMySig?.trim(), refMySigInfo?.trim()].filter(x => x).join(' '),
       name: refName,
       mySig: refMySig,
       mySigInfo: refMySigInfo
     }
-    if (data.ref !== '') dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, [...refs.filter(r => r.ref !== data.ref), data]) }))
-  }, [dispatch, operation, refs])
+    if (data.ref !== '') setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== data.ref), data]))
+  }, [activityRefs, allRefs, setRefs])
 
   const handleRemoveReference = useCallback((ref) => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation?.refs, Info.activationType, refs.filter(r => r.ref !== ref)) }))
-  }, [dispatch, operation, refs])
+    setRefs(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== ref)))
+  }, [activityRefs, allRefs, setRefs])
 
   return (
     <>
-      <Ham2kListSection title={title}>
-        {refs.map((ref, index) => (
+      <H2kListSection title={title}>
+        {activityRefs.map((ref, index) => (
           <CustomListItem
             key={ref.ref}
             activityRef={ref}
@@ -58,36 +53,36 @@ export function CustomActivityOptions (props) {
             onRemoveReference={handleRemoveReference}
           />
         ))}
-      </Ham2kListSection>
-      <Ham2kListSection title={refs?.length === 0 ? 'Add more references' : 'Add a reference'}>
-        <ListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
-          <ThemedTextInput
-            label="Activity - MY_SIG in ADIF (Optional)"
-            placeholder={'i.e. COTA…'}
+      </H2kListSection>
+      <H2kListSection title={activityRefs?.length === 0 ? t('extensions.custom.activityOptions.addMoreReferences', 'Add more references') : t('extensions.custom.activityOptions.addReference', 'Add a reference')}>
+        <H2kListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
+          <H2kTextInput
+            label={t('extensions.custom.activityOptions.activityLabel', 'Activity - MY_SIG in ADIF (Optional)')}
+            placeholder={t('extensions.custom.activityOptions.activityPlaceholder', 'i.e. COTA…')}
             value={mySig}
             onChangeText={text => setMySig(text)}
           />
-        </ListRow>
-        <ListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
-          <ThemedTextInput
-            label="Reference - MY_SIG_INFO in ADIF"
-            placeholder={'i.e. XY-1234…'}
+        </H2kListRow>
+        <H2kListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
+          <H2kTextInput
+            label={t('extensions.custom.activityOptions.referenceLabel', 'Reference - MY_SIG_INFO in ADIF')}
+            placeholder={t('extensions.custom.activityOptions.referencePlaceholder', 'i.e. XY-1234…')}
             value={mySigInfo}
             onChangeText={text => setMySigInfo(text)}
           />
-        </ListRow>
-        <ListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
-          <ThemedTextInput
-            label="Name (Optional)"
-            placeholder={'i.e. XYZ Castle…'}
+        </H2kListRow>
+        <H2kListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
+          <H2kTextInput
+            label={t('extensions.custom.activityOptions.nameLabel', 'Name (Optional)')}
+            placeholder={t('extensions.custom.activityOptions.namePlaceholder', 'i.e. XYZ Castle…')}
             value={name}
             onChangeText={text => setName(text)}
           />
-        </ListRow>
-        <ListRow>
-          <Button icon="plus-circle" mode="contained" onPress = {() => handleAddReference(mySigInfo, name, mySig) }>Add</Button>
-        </ListRow>
-      </Ham2kListSection>
+        </H2kListRow>
+        <H2kListRow>
+          <H2kButton icon="plus-circle" mode="contained" onPress = {() => handleAddReference(mySigInfo, name, mySig) }>{t('extensions.custom.activityOptions.addButton', 'Add {{mySig}} {{mySigInfo}}', { mySig, mySigInfo })}</H2kButton>
+        </H2kListRow>
+      </H2kListSection>
     </>
   )
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -14,16 +14,14 @@ export function useUIState (component, key, initialValue) {
   const componentData = useSelector(state => selectStateForComponent(state, component))
   const setter = useCallback((newData) => dispatch(setStateForComponent({ component, [key]: newData })), [dispatch, component, key])
   const updater = useCallback((newData) => dispatch(updateStateForComponent({ component, [key]: newData })), [dispatch, component, key])
-  let data = (componentData && componentData[key]) ?? initialValue
 
   useEffect(() => {
-    if (data === undefined && initialValue !== undefined) {
+    if ((!componentData || componentData[key] === undefined) && initialValue !== undefined) {
       setter(initialValue)
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      data = initialValue
     }
-  }, [data, setter, initialValue])
+  }, [setter, initialValue, componentData, key, component])
+
+  const data = (componentData && componentData[key]) ?? initialValue
 
   return [data, setter, updater]
 }
