@@ -89,7 +89,7 @@ function MainApp ({ navigationTheme }) {
 
   useEffect(() => {
     setImmediate(async () => {
-      GLOBAL.deviceId = GLOBAL.deviceId || (await DeviceInfo.getUniqueId())
+      GLOBAL.deviceId = GLOBAL.deviceId || (await DeviceInfo.syncUniqueId())
       GLOBAL.deviceName = GLOBAL.deviceName || (await DeviceInfo.getDeviceName())
     })
   }, [])
