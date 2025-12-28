@@ -1,0 +1,961 @@
+{
+  "screens": {
+    "start": {
+      "credits": "KI2Dと仲間たちによる",
+      "Loading Extensions": "拡張機能を読み込んでいます",
+      "Development Build": "Portable Logger Development Build ポータブルロガー開発版",
+      "messages": {
+        "Reticulating splines": "スプラインを再接続しています",
+        "Tuning the antenna": "アンテナを調整しています",
+        "Checking the tubes": "チューブを確認中",
+        "Warming up the tubes": "チューブを暖めています",
+        "Unfolding the map": "地図を展開しています",
+        "Charging the flux capacitor": "フラックスコンデンサの充電",
+        "Purging the dilithium chamber": "デリシウム室を排気しています",
+        "Activating the turbo encabulator": "トーピックエンキャブレータを起動しています",
+        "Engaging the warp drive": "ウェーブドライブを起動しています"
+      }
+    },
+    "home": {
+      "title": " ポータブルロガー",
+      "newOperation": "新しいオペレーション",
+      "newOperation-a11y": "新しいオペレーション",
+      "operationList-a11y": "オペレーションリスト",
+      "noOperations": "オペレーションがありません！",
+      "settings-a11y": "設定",
+      "quickCallLookupPlaceholder": "クイックコール検索…",
+      "spots-a11y": "スポット"
+    },
+    "operation": {
+      "title": "オペレーション"
+    },
+    "operationDetails": {
+      "title": "オペレーション詳細",
+      "operationTitle": "タイトル",
+      "newOperation": "新しいオペレーション",
+      "operationNotes": "ノート",
+      "anythingYouWantToWriteAboutThisOperation": "このオペレーションについて書きたいこと"
+    },
+    "operationStationInfo": {
+      "title": "局とオペレーターの情報",
+      "invalidCallsign": "無効なコールサイン: {{callsign}}",
+      "invalidCallsigns": "無効なコールサイン: {{callsigns}}",
+      "singleStationUsed-md": "今までの`{{oldStation}}`\n新しいQSOには`{{newStation}}`が使用されます。",
+      "noStationUsed-md": "過去に使用されたコールサインはありません。\n新しいQSOには{{newStation}}が使用されます。",
+      "updateStation-md_zero": "0の既存QSOに`{{newStation}}`を更新",
+      "updateStation-md_one": "1つの既存QSOに`{{newStation}}`を更新",
+      "updateStation-md_other": "{{count}}の既存QSOに`{{newStation}}`を更新",
+      "multipleStationsUsed-md": "この活動には既に複数のステーションコールサインを使用したQSOがあります: `{{stations}}`。\n\n新しいQSOには`{{newStation}}`のみが使用されます。",
+      "singleOperatorUsed-md": "過去に使用された`{{oldOperator}}`\n新しいQSOには{{newOperator}}`が使用されます。",
+      "noOperatorUsed-md": "過去に使用されたコールサインはありません。\n新しいQSOには{{newOperator}}が使用されます。",
+      "updateOperator-md": "すべてのQSOのオペレーターとして`{{newOperator}}`を更新",
+      "multipleOperatorsUsed-md": "この活動には既に複数のオペレーターコールサインを使用したQSOがあります: `{{operators}}`。\n\n新しいQSOには`{{newOperator}}`のみが使用されます。",
+      "whatIsTheCallsignUsedOnTheAir": "オンエアで使用されているコールサインは何ですか？",
+      "stationCallsign": "ステーションコールサイン",
+      "whoIsOperatingTheStation": "ステーションでオペレーションしているのは誰ですか？（オプション）",
+      "operatorCallsign": "オペレーターのコールサイン",
+      "multiStationOperation": "マルチステーションの運用？",
+      "multiStationOperationYes": "はい、そのうちの１つです！",
+      "multiStationOperationNo": "いいえ、通常のステーションです",
+      "identifierForThisStation": "このステーションの識別子（数値のみ）"
+    },
+    "operationLocation": {
+      "title": "オペレーション場所",
+      "selectedLocation": "選択された場所",
+      "maidenheadGridSquareLocator": "メイデンヘッド・グリッドスクエアロケーター",
+      "suggestedLocations": "提案された場所",
+      "deviceGps": "デバイスGPS",
+      "locating": "検索中…",
+      "gpsError": "GPSエラー",
+      "noGps": "GPSなし",
+      "stateOrProvince": "州または都道府県（任意）",
+      "county": "郡（任意）"
+    },
+    "operationAddActivity": {
+      "title": "アクティビティを追加",
+      "cantFindActivity": "お探しのアクティビティが見つかりませんか？",
+      "thereAreMoreOptions": "設定 > アプリの機能にもっとオプションがあります"
+    },
+    "operationActivityOptions": {
+      "title": "アクティビティオプション",
+      "removeActivity": "このオペレーションから{{activity}}を削除"
+    },
+    "operationData": {
+      "title": "オペレーションデータ",
+      "selectFromTheExportOptionsBelow": "以下のエクスポートオプションから選択",
+      "exportSingeFile": "1ファイルをエクスポート",
+      "exportSelectedFiles_zero": "0件の選択されたファイルをエクスポート",
+      "exportSelectedFiles_one": "1件の選択されたファイルをエクスポート",
+      "exportSelectedFiles_other": "{{count}}件の選択されたファイルをエクスポート",
+      "exportAllFiles": "すべてのファイルをエクスポート",
+      "exportQSOs": "QSOをエクスポート",
+      "pendingToDoItems_zero": "保留中のTo-Do項目はありません",
+      "pendingToDoItems_one": "1件の保留中To-Do項目",
+      "pendingToDoItems_other": "保留中のTo-Do項目が{{count}}件あります",
+      "importQSOs": "QSOをインポート",
+      "addQSOsFromADIFFile": "ADIFファイルからQSOを追加",
+      "ham2kLoFiSync": "Ham2K LoFi 同期",
+      "operation": "オペレーション",
+      "exportSettings": "エクスポート設定",
+      "useCompactFileNames": "コンパクトファイル名を使用",
+      "wavelogExport": "Wavelogエクスポート",
+      "exportQSOsToWavelogDescription": "このオペレーションのすべてのQSOをWavelogに送信",
+      "wavelogDialog": {
+        "title": "WavelogへQSOをエクスポート",
+        "status": "このオペレーションのすべてのQSOをWavelogにエクスポート。",
+        "exporting": "ウェーブログにエクスポート中…"
+      },
+      "deleteOperationDialog": {
+        "title": "操作を削除しますか？",
+        "description": "本当にこの操作を削除してもよろしいですか？"
+      }
+    },
+    "callInfo": {
+      "title": "コールサイン情報",
+      "messages": {
+        "duplicate": "重複",
+        "invalidBand": "無効なバンド",
+        "newBand": "新しいバンド",
+        "newMode": "新しいモード",
+        "newRef": "新しいリファレンス",
+        "newMult": "新しいマルチ",
+        "newDay": "新しい日",
+        "maybeDupe": "重複？",
+        "partialDupe": "重複",
+        "potaActivation-newDay": "新しいPOTAの日",
+        "potaActivation-newRef": "新しい公園",
+        "sotaActivation-newDay": "新しいSOTAの日",
+        "sotaActivation-newRef": "新しい頂上",
+        "sotaActivation-duplicate": "SOTA重複！",
+        "wwffActivation-duplicate": "WWFF重複！",
+        "wwbotaActivation-newDay": "新しいWWBOTAの日",
+        "wwbotaActivation-newRef": "新しい防空壕",
+        "motaActivation-newRef": "新しいミル"
+      },
+      "history": {
+        "last7days": "{{count}} 件 (過去 7 日間)",
+        "today": "今日：{{count}}件",
+        "yesterday": "昨日：{{count}}件",
+        "qsos_zero": "0 QSO",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}}  QSO"
+      },
+      "thisOpCount_zero": "現在のオペレーションでのQSO数：0 QSO",
+      "thisOpCount_one": "現在のオペレーションでのQSO数：1 QSO",
+      "thisOpCount_other": "現在のオペレーションでのQSO数：{{count}} QSO",
+      "otherOpsCount_zero": "他のオペレーションでのQSO数：0 QSO",
+      "otherOpsCount_one": "他のオペレーションでのQSO数： 1 QSO",
+      "otherOpsCount_other": "他のオペレーションでのQSO数：{{count}} QSO",
+      "andMoreCount_zero": "…さらに{{count}}件",
+      "andMoreCount_one": "…さらに{{count}}件",
+      "andMoreCount_other": "…さらに{{count}}件",
+      "showImage": "画像を表示",
+      "notes": "メモ",
+      "potentialCall": "可能性のあるコールサイン: {{call}}",
+      "withCall": "{{call}}と共に"
+    },
+    "spots": {
+      "title": "スポット"
+    },
+    "editQSO": {
+      "title": "QSOを編集",
+      "sections": {
+        "qso": "QSOの詳細",
+        "their": "相手の情報",
+        "our": "私たちの情報",
+        "more": "もっと見る"
+      },
+      "fields": {
+        "time": "時間",
+        "date": "日付",
+        "freq": "周波数",
+        "mode": "モード",
+        "band": "バンド",
+        "power": "パワー",
+        "call": "局の呼び出し名",
+        "sent": "RST",
+        "exchange": "交換",
+        "name": "名前",
+        "city": "都市",
+        "state": "州/都道府県",
+        "county": "郡",
+        "entity": "エンティティ",
+        "cqZone": "CQゾーン",
+        "ituZone": "ITUゾーン",
+        "arrlSection": "ARRLセクション",
+        "grid": "グリッド",
+        "latitude": "緯度",
+        "longitude": "経度",
+        "notes": "メモ"
+      }
+    },
+    "opInfo": {
+      "title": "オペレーション情報"
+    },
+    "settings": {
+      "title": "設定",
+      "sections": {
+        "settings": "設定",
+        "accounts": "アカウント",
+        "about": "Ham2Kについて",
+        "help": "ヘルプが必要ですか？"
+      },
+      "operatorCallsign": {
+        "title": "オペレーターのコールサイン",
+        "noCall": "コールサインなし",
+        "dialogTitle": "オペレーターのコールサイン",
+        "pleaseEnterCallsign": "コールサインを入力してください！",
+        "callsignLabel": "オペレーターのコールサイン"
+      },
+      "generalSettings": {
+        "title": "一般設定",
+        "description": "ダークモード, 数字行, 単位, その他"
+      },
+      "loggingSettings": {
+        "title": "ロギング設定",
+        "description": "ロギング体験をカスタマイズします"
+      },
+      "dataSettings": {
+        "title": "データ設定",
+        "description": "データファイル, コールサインノート, その他"
+      },
+      "syncSettings": {
+        "title": "同期設定",
+        "description": "クラウド同期とバックアップ"
+      },
+      "appFeatures": {
+        "title": "アプリ機能",
+        "description": "POTA, SOTA, などの機能を管理します"
+      },
+      "developerSettings": {
+        "title": "開発者設定",
+        "description": "Here be dragons ドラゴンがいます"
+      },
+      "accountsQRZ": {
+        "title": "QRZ (for callsign lookups) コールサイン検索用",
+        "description": "ログイン: {{login}}",
+        "noAccount": "アカウントなし",
+        "errorEmail": "ログインにメールアドレスを使用しないでください。",
+        "dialogTitle": "QRZ.com アカウント",
+        "pleaseEnterDetails": "QRZ.com アカウントの詳細を入力してください:",
+        "loginLabel": "ログイン (あなたのコールサイン)",
+        "loginPlaceholder": "あなたのログイン",
+        "passwordLabel": "パスワード",
+        "passwordPlaceholder": "あなたのパスワード",
+        "checkCredentials": "認証を確認"
+      },
+      "wavelogSettings": {
+        "title": "Wavelog Settings ウェーブログ設定",
+        "description": "Wavelog ウェーブログAPI接続を設定します"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} は Ham2K のサポーターです",
+        "couldBeASupporter": "{{callsign}} は Ham2K のサポーターになるかもしれません"
+      },
+      "versionSettings": {
+        "description": "最近の変更を見る"
+      },
+      "creditsSettings": {
+        "title": "クレジット",
+        "description": "セバスチャン・デルモント KI2D & Team PoLo"
+      },
+      "noticesSettings": {
+        "title": "最新のお知らせ",
+        "description": "あなたが見逃したメッセージがありますか？"
+      },
+      "readTheFineManual": {
+        "title": "Fine Manualを読む",
+        "description": "PoLo のドキュメントを閲覧します"
+      },
+      "ham2KForums": {
+        "title": "Ham2K フォーラム",
+        "description": "ヘルプを見つける, フィードバックを提供する, アイデアを議論する…"
+      },
+      "ham2KChat": {
+        "title": "Ham2K チャット",
+        "description": "オンラインコミュニティのDiscordサーバー"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "ビデオとライブストリーム"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagram",
+        "description": "写真を撮ることができないため、写真を撮ることができません…"
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "新着・更新情報についてフォローする"
+      },
+      "contactUs": {
+        "title": "お問い合わせ",
+        "description": "help@ham2k.com\n   (フォーラムやチャットを先に試してください！)"
+      }
+    },
+    "generalSettings": {
+      "title": "一般設定",
+      "theme": {
+        "title": "テーマ",
+        "descriptionDark": "常にダークモード",
+        "descriptionLight": "常にライトモード",
+        "descriptionDevice": "デバイスのテーマと同じ",
+        "dialogTitle": "テーマ"
+      },
+      "fontScale": {
+        "title": "フォントサイズ",
+        "descriptionXS": "最小",
+        "descriptionSM": "小さい",
+        "descriptionMD": "正常",
+        "descriptionLG": "大きい",
+        "descriptionXL": "最大",
+        "dialogTitle": "フォントサイズ",
+        "dialogDescription": "これらのサイズはデバイス設定にも影響を受けます。表示とアクセシビリティなど。"
+      },
+      "language": {
+        "title": "言語: {{lang}} / Language",
+        "description": "アプリの言語を変更します",
+        "dialogTitle": "言語",
+        "dialogDescription": "言語を変更します",
+        "deviceDefault": "デバイス設定を使用 ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (デバイス設定) は現在サポートされていません。"
+      },
+      "showNumbersRow": {
+        "title": "数字行を表示",
+        "descriptionOn": "数字のクイックボタン",
+        "descriptionOff": "数字行を表示しない"
+      },
+      "showExtraInNumbersRow": {
+        "title": "数字行にピリオドを表示",
+        "descriptionOn": "ピリオド (とスラッシュ) を表示",
+        "descriptionOff": "数字のみを表示"
+      },
+      "showCommaInNumbersRow": {
+        "title": "数字行にカンマを表示",
+        "descriptionOn": "コンマキーを表示",
+        "descriptionOff": "コンマキーを表示しない"
+      },
+      "vibrateNumbersRow": {
+        "title": "数字行でバイブレーションを使用",
+        "descriptionOn": "数字を押した時に振動させる",
+        "descriptionOff": "数字を押した時に振動させない"
+      },
+      "useMetricUnits": {
+        "title": "メートル単位を使用",
+        "descriptionOn": "距離にマイルを使用",
+        "descriptionOff": "距離にキロメートルを使用"
+      },
+      "keepDeviceAwake": {
+        "title": "端末のスリープを無効化",
+        "descriptionOn": "端末のロック画面の無効化",
+        "descriptionOff": "通常の画面ロックを許可"
+      },
+      "useSplitViews": {
+        "title": "分割表示を使用",
+        "descriptionOn": "画面が十分に大きい場合に分割表示を使用",
+        "descriptionOff": "分割表示を使用しない"
+      },
+      "useGrid8": {
+        "title": "高精度の位置情報",
+        "descriptionOn": "8桁のグリッドを使用",
+        "descriptionOff": "6桁のグリッドを使用"
+      },
+      "smartKeyboard": {
+        "title": "スマートキーボード機能",
+        "descriptionOn": "スマートキーボード機能を有効にする",
+        "descriptionOff": "一部のデバイスとの互換性のためにシンプルなキーボードを使用"
+      },
+      "exportSettings": {
+        "title": "エクスポート設定",
+        "description": "ファイル名やその他の設定をカスタマイズ"
+      },
+      "privacy": {
+        "title": "プライバシー"
+      },
+      "shareAppUsageData": {
+        "title": "アプリ使用データを共有",
+        "descriptionOn": "使用状況、クラッシュ、パフォーマンスデータを共有してアプリの改善にご協力ください",
+        "descriptionOff": "アプリの使用データを非公開にします。\nHam2Kチームはクラッシュやその他の問題を検出できません。"
+      },
+      "shareOperationData": {
+        "title": "オペレーションデータを共有",
+        "descriptionOn": "オペレーションデータを公開して他のユーザーと共有",
+        "descriptionOff": "オペレーションデータをプライベートに保ちます"
+      },
+      "privacyPolicy": {
+        "title": "プライバシーポリシー",
+        "description": "プライバシーポリシーを読む"
+      },
+      "termsOfService": {
+        "title": "利用規約",
+        "description": "利用規約を読む"
+      }
+    },
+    "loggingSettings": {
+      "title": "ロギング設定",
+      "leftieMode": {
+        "title": "左利きモード",
+        "descriptionOn": "左利きユーザー向けのレイアウトを使用",
+        "descriptionOff": "右利きユーザー向けのレイアウトを使用"
+      },
+      "countryFlags": {
+        "title": "国旗",
+        "descriptionNone": "国旗を表示しない",
+        "descriptionAll": "すべてのコンタクトに国旗を表示",
+        "descriptionDefault": "DXコンタクトのみに国旗を表示"
+      },
+      "showBearing": {
+        "title": "方位を表示",
+        "descriptionOn": "局への推定方位を表示",
+        "descriptionOff": "方位情報を表示しない"
+      },
+      "switchSignalReportOrder": {
+        "title": "シグナルレポートの順序を切り替える",
+        "descriptionOn": "送信が先、受信が後",
+        "descriptionOff": "受信が先、送信が後"
+      },
+      "jumpAfterRST": {
+        "title": "RST入力時に次のフィールドにジャンプ",
+        "descriptionOn": "RST入力後にジャンプ",
+        "descriptionOff": "自動的にジャンプしない"
+      },
+      "suggestDefaultOperator": {
+        "title": "デフォルトオペレーターを提案",
+        "descriptionOn": "ステーションコールが異なるオペレーションで{{operatorCall}}をオペレーターとして設定",
+        "descriptionOff": "使用する局コールに関係なくデフォルトオペレーターを提案しない"
+      },
+      "suggestTemplates": {
+        "title": "運用テンプレートを使用",
+        "descriptionOn": "新しい運用のためのテンプレートを提案",
+        "descriptionOff": "テンプレートを提案しない"
+      },
+      "bandsModes": {
+        "title": "バンドとモード",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "拡張機能"
+      }
+    },
+    "featuresSettings": {
+      "title": "アプリ機能",
+      "activatingExtension": "拡張機能を有効化しています。しばらくお待ちください...",
+      "fewerOf": "{{category}}を減らす...",
+      "moreOf": "{{category}}を増やす..."
+    },
+    "dataSettings": {
+      "title": "データ設定",
+      "offlineDataTitle": "オフラインデータ",
+      "extensionsTitle": "拡張機能",
+      "logDataTitle": "ログデータ",
+      "importHistoryFromADIF": "ADIFから履歴をインポート",
+      "importHistoryFromADIFDescription": "オフライン検索とQSO統計に使用",
+      "clearADIFHistory": "ADIF履歴をクリア",
+      "clearADIFHistoryDescription": "ADIFからインポートしたレコードを削除",
+      "updatedRelative": "{{date}}に更新",
+      "fetching-md": "### **{{title}}**を取得中…",
+      "progress-md": "### **{{title}}**を取得中\n\n{{progress}}",
+      "updated-md": "{{date}}に更新",
+      "version-md": "バージョン: {{version}}",
+      "confirmClearHistory": {
+        "title": "よろしいですか？",
+        "description": "これにより、以前にADIFファイルからインポートしたすべての履歴レコードが削除されます",
+        "recordsNotDeleted": "オペレーションからのレコードは削除されません"
+      },
+      "importingHistoricalADIF": "ADIFレコードをインポートしています... しばらくお待ちください！",
+      "errorImportingHistoricalADIF": "ADIF履歴のインポートエラー",
+      "errorDeletingHistoricalRecords": "履歴レコードの削除エラー",
+      "recordsCount_zero": "レコードなし",
+      "recordsCount_one": "1レコード",
+      "recordsCount_other": "{{fmtCount}}レコード"
+    },
+    "syncSettings": {
+      "title": "同期設定",
+      "description": "Ham2K LoFiは、すべてのデバイス間で信頼性の高い同期サービスを提供し、クラウドでオペレーションデータのバックアップを提供します。",
+      "syncService": "同期サービス",
+      "syncService.enabled": "有効",
+      "syncService.disabled": "無効",
+      "deviceNotLinked": "デバイスがリンクされていません！({{id}})",
+      "anonymousAccount": "匿名アカウント (#{{id}})",
+      "enableSyncToLinkDevice": "同期を有効にしてこのデバイスをリンク",
+      "checkEmailInboxForConfirmation": "(確認のためメールボックスをチェックしてください)",
+      "accountNumber": "アカウント #{{id}}",
+      "pendingEmailConfirmation": "(メール確認待ち)",
+      "tapToConfigure": "タップして設定",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (開発版)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (正式版)",
+        "custom": "カスタム ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "このデバイスは最後に別のアカウント (#{{id}}) と同期しました。\n\n同期を続行するには、次のオプションから選択する必要があります:",
+        "option1withEmail-md": "オプション #1: このデバイスのデータをサーバー上の新しいアカウント**{{email}}**で置き換えます。",
+        "option1noEmail-md": "オプション #1: このデバイスのデータをサーバー上の新しいアカウントのデータで置き換えます。",
+        "option1button": "#1を選択: サーバーデータで置き換え",
+        "option2withEmail-md": "オプション #2: このデバイスのデータをサーバー上の**{{email}}** アカウントのデータと結合します。",
+        "option2noEmail-md": "オプション #2: このデバイスのデータをサーバー上の新しいアカウントのデータと結合します。",
+        "option2button": "#2を選択: データを結合",
+        "option3-md": "オプション #3: 以前のアカウント **{{email}}**に戻ってリンクします。",
+        "option3button": "#3を選択: 以前のアカウント",
+        "buttonCancel": "いいえ、キャンセルします",
+        "buttonProcees": "はい、リスクを承知します！すべて置き換えます！"
+      },
+      "combineDataAlert": {
+        "title": "ローカルデータを結合しますか？",
+        "text": "これらのオペレーションとQSOを新しいアカウントと結合してもよいですか？\n\nこれにより、このデバイスのQSOが新しいアカウントの同期サービスに既にあるデータと結合され、無関係なログが誤って混在する可能性があります！\n\nこの操作は元に戻せません。",
+        "buttonCancel": "いいえ、キャンセルします",
+        "buttonProcees": "はい、リスクを承知します！結合します！"
+      },
+      "replaceDataAlert": {
+        "title": "ローカルデータを置き換えますか？",
+        "text": "このデバイスのすべてのデータを同期サービスからの新しいアカウントのオペレーションとQSOで置き換えてもいいですか？\n\nアプリが再起動します。\n\n未同期のデータがある場合、失われます。",
+        "buttonCancel": "いいえ、キャンセルします",
+        "buttonProcees": "はい、リスクを承知します！すべて置き換えます！"
+      },
+      "linkBackErrorAlert": {
+        "title": "以前のアカウントに戻す際のエラー",
+        "text": "以前のアカウントに戻す際にエラーが発生しました。\n\n{{error}}\n\n後でもう一度お試しください。",
+        "buttonCancel": "OK"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi アカウント",
+        "emailAddressLabel": "メールアドレス",
+        "resendButton": "再送信",
+        "revertButton": "元に戻す",
+        "syncFirstButton": "先に同期を完了してください",
+        "continueAnywayButton": "何が起こるのか理解しています！続行します",
+        "potentialForDataLoss": "データ損失の可能性があります!!!",
+        "potentialForDataLossDescription": "このデバイスのデータは全て同期されていません。\n\nこのデバイスを新しいアカウントにリンクすると、そのデータを新しいアカウントのデータに置き換えるか尋ねられます。\n\nこれが事実であれば、まだ同期されていない既存のアクティビティを復元できない可能性があります。\n\nまず、このデバイスの同期を完了されることをお勧めします！"
+      },
+      "syncServiceDescription-md": "基本のサービスは無料で、2台のデバイスまたはアプリ間で最近のデータ（最大7日間）を制限された速度で同期できます。\n\n完全なサービスには有料サブスクリプションが必要で、任意のリーズナブルな数のデバイスまたはアプリ間で全速度でオペレーションを同期できます。\n\nLoFiサービスは今後数か月間のテスト期間中、サービスは無料のままです。その後、年間30米ドルかそれ以下の料金が発生する見込みです。ただし料金は国と通貨によって異なります。",
+      "thisDevice": "このデバイス",
+      "notAuthenticated": "認証されていません",
+      "lofiServer": "LoFiサーバー",
+      "otherDevices": "他のデバイス",
+      "devSettings": "開発者設定",
+      "resetSyncStatus": "同期ステータスをリセット",
+      "noDataStored": "データが保存されていません",
+      "syncCountDescription": {
+        "operations": "オペレーション: {{synced}}件が同期済み、{{pending}}が保留中",
+        "qsos": "QSO: {{synced}}件が同期済み、{{pending}}件が保留中"
+      },
+      "cloudCountDescription": {
+        "operations": "オペレーション: 合計{{total}}件",
+        "operationsSyncable": "オペレーション: {{total}}件が保存済み、{{syncable}}件が同期可能",
+        "qsos": "QSO: {{total}}件が保存済み",
+        "qsosSyncable": "QSO: {{total}}件が保存済み、{{syncable}}件が同期可能"
+      }
+    },
+    "versionSettings": {
+      "title": "バージョン情報",
+      "recentChanges": "最近の変更",
+      "coverPhoto": "カバー写真: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "パッチの確認中…",
+      "newMajorReleaseAvailable": "新しいメジャーリリースが利用可能",
+      "patchAvailable": "{{track}}パッチが利用可能",
+      "checkForUpdates": "{{track}}の更新を確認",
+      "checkForUpdatesGeneric": "アップデートを確認",
+      "updateAvailable": "アップデートが利用可能",
+      "downloading": "ダウンロード中…",
+      "downloadingProgress": "ダウンロード中 {{progress}}%",
+      "installing": "インストール中…",
+      "errorDownloadingUpdate": "アップデートのダウンロードエラー",
+      "errorCheckingForUpdates": "アップデート確認エラー",
+      "noUpdatesAvailable": "アップデートは利用できません",
+      "versionDescription": "{{version}} - ベースビルド {{build}}"
+    },
+    "creditsSettings": {
+      "title": "クレジット",
+      "createdBy": "作成者: {{callsign}}",
+      "openSource": "Ham2K PoLoはオープンソースです",
+      "checkOutCode": "GitHubでコードを確認して貢献してください！",
+      "teamPoLo": "チームPoLo",
+      "creator": "作成者＆開発リーダー",
+      "developer": "開発者",
+      "leadSupport": "リードサポート & ドキュメント",
+      "moreCodeAndDocsContributors": "その他の貢献者…",
+      "contributorCode": "コード貢献者: {{contributions}}",
+      "contributorDocumentation": "ドキュメント",
+      "translations": "翻訳",
+      "translationsService": "CrowdInによる翻訳ツールの提供",
+      "translationsServiceDescription": "翻訳プロセスを管理するためのツールはCrowdInにより提供されています"
+    },
+    "devModeSettings": {
+      "title": "開発者設定",
+      "wipeDatabase": {
+        "title": "データベースを削除しますか？",
+        "description": "すべてのオペレーション、QSO、その他のデータを削除してもよろしいですか？",
+        "noCancel": "いいえ、キャンセルします",
+        "yesWipeIt": "はい、削除します！"
+      },
+      "import": {
+        "title": "インポート",
+        "importQSONFile": "QSONファイルをインポート"
+      },
+      "experiments": {
+        "title": "実験",
+        "enableWavelogExperiments": "Wavelog実験を有効化"
+      },
+      "manageDatabase": {
+        "title": "データベース管理",
+        "exportDatabase": "データベースをエクスポート",
+        "exportDatabaseDescription": "現在のデータベースファイルをエクスポート",
+        "replaceDatabase": "データベースを置き換え",
+        "replaceDatabaseDescription": "新しいデータベースファイルをインポートしてすべてのデータを置き換え",
+        "wipeDatabase": "データベースを削除",
+        "wipeDatabaseDescription": "データベースからすべてのデータを削除します。"
+      },
+      "internationalization": {
+        "title": "国際化",
+        "crowdInPersonalTokenLabel": "CrowdInパーソナルアクセストークン",
+        "crowdInPersonalTokenPlaceholder": "CrowdInのアカウント設定ページから取得",
+        "refreshCrowdInTranslations": {
+          "title": "翻訳の更新中…",
+          "starting": "翻訳を更新していますのでお待ちください…",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "更新完了！",
+          "errorTitle": "翻訳の更新エラー",
+          "error": "CrowdIn翻訳の更新エラー: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "高度な設定をダウンロード",
+        "locationLabel": "場所",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "システム情報",
+        "shareWithDevelopmentTeam": "開発チームと共有"
+      },
+      "updatePatches": {
+        "title": "パッチを更新",
+        "selectTrackForPatches": "パッチのトラックを選択",
+        "selectTrackForPatchesDescription": "パッチのトラックを選択",
+        "checkingForUpdates": "アップデートをチェック中…",
+        "checkForUpdates": "{{track}}のアップデートを確認",
+        "updateAvailable": "アップデートが利用可能",
+        "updateAvailableForTrack": "{{track}}のアップデートが利用可能",
+        "downloading": "ダウンロード中…",
+        "downloadingProgress": "ダウンロード中 {{progress}}%",
+        "installing": "インストール中…",
+        "errorDownloadingUpdate": "アップデートのダウンロードエラー",
+        "errorCheckingForUpdates": "アップデート確認エラー",
+        "noUpdatesAvailable": "アップデートは利用できません"
+      }
+    },
+    "bandModeSettings": {
+      "title": "バンドとモード",
+      "bands": {
+        "title": "バンド",
+        "showCommonBands": "一般的なバンドを表示",
+        "showAllBands": "すべてのバンドを表示",
+        "names": {
+          "160m-a11y": "160 m",
+          "80m-a11y": "80 m",
+          "60m-a11y": "60 m",
+          "40m-a11y": "40 m",
+          "30m-a11y": "30 m",
+          "20m-a11y": "20 m",
+          "17m-a11y": "17 m",
+          "15m-a11y": "15 m",
+          "12m-a11y": "12 m",
+          "11m-a11y": "11 m",
+          "10m-a11y": "10 m",
+          "6m-a11y": "6 m",
+          "2m-a11y": "2 m",
+          "70cm-a11y": "70 cm",
+          "23cm-a11y": "23 cm",
+          "13cm-a11y": "13 cm",
+          "9cm-a11y": "9 cm",
+          "6cm-a11y": "6 cm",
+          "3cm-a11y": "3 cm",
+          "1-25cm-a11y": "1.25 cm",
+          "6mm-a11y": "6 mm",
+          "4mm-a11y": "4 mm",
+          "2-5mm-a11y": "2.5 mm",
+          "2mm-a11y": "2 mm",
+          "1mm-a11y": "1 mm",
+          "submm-a11y": "サブmm",
+          "other": "その他",
+          "other-a11y": "その他のバンド"
+        }
+      },
+      "modes": {
+        "title": "モード",
+        "showMoreModes": "さらに多くのモードを表示",
+        "showEvenMoreModes": "さらに多くのモードを表示",
+        "showFewerModes": "より少ないモードを表示",
+        "names": {
+          "SSB-a11y": "シングルサイドバンド：SSB",
+          "USB-a11y": "上側サイドバンド：USB",
+          "LSB-a11y": "下側サイドバンド：LSB",
+          "RTTY-a11y": "RTTY",
+          "CW-a11y": "CW",
+          "other": "その他",
+          "other-a11y": "その他のモード"
+        }
+      }
+    },
+    "exportSettings": {
+      "title": "エクスポート設定",
+      "exportTypes": "エクスポート種別",
+      "customTemplates": "カスタムテンプレート",
+      "defaultTemplates": "デフォルトテンプレート",
+      "customTemplatesDescription": "エクスポートにカスタムテンプレートを使用",
+      "defaultTemplatesDescription": "エクスポートにデフォルトテンプレートを使用",
+      "includePrivateData": "プライベートデータを含める",
+      "fileNameTemplate": "ファイル名テンプレート",
+      "titleTemplate": "タイトルテンプレート",
+      "adifNotes": "ADIF QSOノート",
+      "adifComments": "ADIF QSOコメント",
+      "adifQslMessage": "ADIF QSLメッセージ",
+      "templateHelpTitle": "テンプレートのヘルプ",
+      "includePrivateDataDescription": "名前、メモ、アドレスなど。",
+      "templateHelp-md": "いくつかのサンプルテンプレート要素...\n\n### ログエクスポート\nエクスポートされるログの属性\n`{{log.station}}` → `{{call}}` このエクスポートの局\n`{{log.ref}}` → `XX-1234` このエクスポートの参照\n`{{log.refName}}` → `Example National Park` このエクスポートの参照名\n`{{log.refShortName}}` → `Example NP` このエクスポートの短い参照名\n`{{log.handlerType}}` → `pota` このエクスポートのハンドラータイプ\n`{{log.handlerName}}` → `Parks On The Air` このエクスポートのハンドラー名\n`{{log.handlerShortName}}` → `POTA` このエクスポートの短いハンドラー名\n\n### オペレーションコールサイン\n`{{op.station}}` → `{{call}}` オペレーションの最初の局\n`{{op.operator}}` → `{{call}}` オペレーションのオペレーター\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` オペレーションのすべての局\n`{{op.otherStations}}` → `{{otherCalls}}` オペレーションの他の局\n\n### オペレーション日付\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### その他のオペレーション詳細\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `My Special Operation`\n`{{op.userNotes}}` → `Went early in the morning…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` このオペレーションのグリッド\n\n### QSO情報\n`{{qso.notes}}` → `Terrible audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` 彼らが送信した信号レポート\n`{{qso.our.sent}}` → `55` 私たちが送信した信号レポート\n`{{qso.their.grid}}` → `FF99` 彼らが報告したグリッド\n`{{qso.refs}}` → QSOのすべての参照のリスト（オペレーション参照とQSO専用参照の両方を含む）\n`{{first8 qso.uuid}}` → `123e4567`",
+      "default": {
+        "name": "既定値",
+        "description": "すべてのエクスポートの基本設定",
+        "fileNameNormal": "参照活動のファイル名（通常）",
+        "fileNameCompact": "参照活動のファイル名（コンパクト）",
+        "titleReferenceActivities": "参照活動のタイトル",
+        "fileNameOtherActivitiesNormal": "その他の活動のファイル名（通常）",
+        "fileNameOtherActivitiesCompact": "その他の活動のファイル名（コンパクト）",
+        "titleOtherActivities": "他のアクティビティのタイトル",
+        "adifNotes": "ADIF QSOノート",
+        "adifComments": "ADIF QSOコメント",
+        "adifQSLMessage": "ADIF QSLメッセージ"
+      }
+    },
+    "noticesSettings": {
+      "title": "最新のお知らせ",
+      "undated": "古い順",
+      "noRecentNotices": "最新のお知らせはありません"
+    },
+    "extensionSettings": {
+      "title": "エクステンション"
+    },
+    "wavelogSettings": {
+      "title": "Wavelogの設定",
+      "noStationsFoundOrInvalidResponse": "ステーションが見つからないか無効の応答",
+      "errorFetchingStations": "ステーションの取得エラー: {{message}}",
+      "fetchStations": "ステーションの取得",
+      "selectStation": "ステーションを選択",
+      "selectedStation": "選択したステーション: {{station}}"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Paneセパレーター",
+      "qsosTab": "QSOs",
+      "qsosTab-a11y": "Q sos Tab",
+      "infoTab": "Info",
+      "infoTab-a11y": "Info Tab",
+      "operationInfo-a11y": "オペレーション情報",
+      "spotsTab": "スポット",
+      "spotsTab-a11y": "スポットタブ",
+      "mapTab": "地図",
+      "mapTab-a11y": "地図タブ",
+      "settingsTab": "オペレーション",
+      "settingsCompactTab": "Oper.",
+      "settingsTab-a11y": "オペレーション設定タブ",
+      "menu": {
+        "loggingSettings": "ロギング設定",
+        "rstFields": "RST フィールド",
+        "stateField": "州フィールド",
+        "gridField": "Grid フィールド",
+        "showDeletedQSOs": "削除したQSOを表示",
+        "numbersRow": "数の行",
+        "actions": "アクション",
+        "lookupAllQSOs": "すべてのQSOを検索",
+        "confirmSpots": "スポットを確認"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "QSOなし",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} 件のQSO",
+      "qsosCompactTabCount_zero": "Qなし",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} Q",
+      "noQSOsYet": "まだQSOがありません！",
+      "currentlySetTo": "現在の設定",
+      "missingInfoError": {
+        "message": "エラー: 有効なオペレーションのために **{{errors}}** を入力してください",
+        "errors": {
+          "band": "バンド",
+          "callsign": "コールサイン"
+        }
+      },
+      "actions": {
+        "undo-a11y": "元に戻す",
+        "erase-a11y": "消去",
+        "delete-a11y": "削除",
+        "addQSO-a11y": "QSOを追加",
+        "saveQSO-a11y": "QSOを保存"
+      },
+      "deletedQSO": "削除されたQSO",
+      "qsoWillBeDeleted": "QSOが削除されます！",
+      "noQSOsBy-md": "{{callsign}}によるQSOはまだありません... オンエアしましょう！",
+      "noQSOsYet-md": "まだQSOがありません... オンエアしましょう！",
+      "qsoCount_zero": "QSOなし",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} 件のQSO",
+      "qsosInTime": "{{timeText}}で{{countText}}",
+      "last10QSOs": "最後の10件で{{rate}} Q/h",
+      "last100QSOs": "最後の100件で{{rate}} Q/h",
+      "timeSinceLast": "最後から{{time}}",
+      "moreLabel": "もっと見る",
+      "theirCallLabel": "相手のコール",
+      "ourSentLabel": "送信",
+      "theirSentLabel": "受信",
+      "stateLabel": "州",
+      "gridLabel": "グリッド",
+      "timeLabel": "時間",
+      "dateLabel": "日付",
+      "timeControls-a11y": "時間操作",
+      "powerLabel": "パワー",
+      "powerControls-a11y": "パワー操作",
+      "modeLabel": "モード",
+      "bandLabel": "バンド",
+      "frequencyLabel": "周波数",
+      "bandMissing": "バンド???",
+      "radioControls-a11y": "ラジオ操作 {{parts}}",
+      "notesLabel": "メモ",
+      "notesLabel-a11y": "メモ",
+      "activeControlsLabel": "アクティブ操作",
+      "activeControlsLabel-a11y": "アクティブ操作",
+      "selectToRemoveActiveControls": "選択して削除",
+      "selectToRemoveActiveControls-a11y": "選択して削除",
+      "moreControlsLabel": "その他の操作",
+      "moreControlsLabel-a11y": "その他の操作",
+      "selectToAddMoreControls": "選択して追加",
+      "selectToAddMoreControls-a11y": "選択して追加",
+      "showSecondaryControlSettings-a11y": "セカンダリ操作設定の表示",
+      "hideMostSecondaryControls-a11y": "ほとんどのセカンダリ操作を非表示",
+      "showAllSecondaryControls-a11y": "すべてのセカンダリ操作を表示",
+      "spotting": {
+        "selfSpottingAt": "自局での周波数セット {{freq}}",
+        "stopAutoRespotting": "自動リスポット停止",
+        "setFrequencyFirst": "最初に周波数を設定してください。",
+        "reSpotEvery": "{{minutes}} 分ごとに再スポット",
+        "reSpotAt": "{{freq}}で再スポット",
+        "selfSpottedAt": "{{time}} にセルフスポット",
+        "spotAt": "{{call}}を{{freq}}でスポット",
+        "tooLateToSpot": "{{call}}のスポットには遅すぎます",
+        "nothingToSpot": "スポットするものなし",
+        "selfSpottingLabel": "セルフスポッティング",
+        "selfSpottingControls-a11y": "セルフスポッティング操作",
+        "spottingLabel": "スポッティング",
+        "spottingControls-a11y": "スポッティング操作",
+        "autoRespottingLabel": "自動再スポッティング",
+        "autoRespottingControls-a11y": "自動再スポッティング操作",
+        "commentsLabel": "コメント"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "線がありませんか？\nまず位置を設定する必要があります。\n\nここをタップして設定してください。",
+      "manyNoLocation": "これらのQSOの多くには正確な位置情報がありません。\n\n位置検索には有料のQRZ.comアカウントが必要な場合があります。"
+    },
+    "opSpotsTab": {
+      "noSpots": "スポットなし",
+      "spotsCount_zero": "スポットなし",
+      "spotsCount_one": "1スポット",
+      "spotsCount_other": "{{fmtCount}}スポット",
+      "showingSpots": "{{total}}件中{{count}}件を表示",
+      "loadingSpots": "スポットを読み込み中...",
+      "sections": {
+        "specialSpots": "特別なスポット",
+        "newMultipliers": "新しいマルチプライヤー",
+        "callsOfNote": "注目のコール",
+        "mostRecentSpots": "最新のスポット"
+      },
+      "allBands": "すべてのバンド",
+      "auto": "自動",
+      "allModes": "すべてのモード",
+      "filters": "フィルター",
+      "filtersBand": "バンド",
+      "filtersAllBands": "すべてのバンド",
+      "filtersBandAutomatic": "自動（現在{{band}}）",
+      "filtersMode": "モード",
+      "filtersAllModes": "すべてのモード",
+      "filtersModeAutomatic": "自動（現在{{mode}}）",
+      "filtersMaximumAge": "最大経過時間",
+      "filtersAnyAge": "任意の経過時間",
+      "filtersAge10Minutes": "10分",
+      "filtersAge20Minutes": "20分",
+      "filtersAge30Minutes": "30分",
+      "filtersAge45Minutes": "45分",
+      "filtersAge60Minutes": "60分",
+      "filtersSorting": "並び替え",
+      "filtersSortByTime": "スポット時間順",
+      "filtersSortByFrequency": "周波数順",
+      "filtersGroupSpecialSpots": "特別なスポットを最初にグループ化",
+      "filtersGroupCallsWithNotes": "ノート付きコールをグループ化",
+      "filtersSpotSources": "ソースを見つける",
+      "filtersFilterByContinent": "大陸で絞り込む",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "電話",
+        "DIGITAL": "デジタル",
+        "DATA": "デジタル",
+        "phoneOrCW": "電話またはCW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "無効なコールサイン {{callsign}}",
+      "invalidCallsigns": "無効なコールサイン {{callsigns}}",
+      "stationCallAndOperator": "{{station}}（{{operator}}が運用）",
+      "noStationCallsignDefined": "局コールサインが定義されていません",
+      "showMoreTemplates": "より多くのテンプレートを表示",
+      "templatesAvailable_zero": "利用可能なテンプレートなし",
+      "templatesAvailable_one": "1つのテンプレートが利用可能",
+      "templatesAvailable_other": "{{count}}個のテンプレートが利用可能",
+      "stationAndOperatorTitle": "局とオペレーター",
+      "locationTitle": "場所",
+      "gridDescription-md": "グリッド `{{grid}}`",
+      "stateDescription-md": "州: `{{state}}`",
+      "countyDescription-md": "郡: `{{county}}`",
+      "locationDescriptionNone-md": "場所が設定されていません",
+      "operationDetailsTitle": "オペレーション詳細",
+      "operationDetailsDescription": "このオペレーションのノートを追加",
+      "addTitleOrNotesForOperation": "このオペレーションのタイトルまたはノートを追加",
+      "activitiesTitle": "活動",
+      "addActivityTitle": "活動を追加",
+      "addActivityDescription": "POTA、SOTA、フィールドデーなど！",
+      "addActivityDescription-noFeatures": "まずメイン設定画面でいくつかの活動機能を有効にしてください",
+      "operationDataTitle": "オペレーションデータ",
+      "manageOperationLogsTitle": "オペレーションログを管理",
+      "manageOperationLogsDescription": "データのエクスポート、インポート、管理",
+      "useAsTemplateTitle": "テンプレートとして使用",
+      "useAsTemplateDescription": "同様の設定で新しいオペレーションを開始",
+      "dangerZoneTitle": "危険ゾーン",
+      "undeleteOperationTitle": "オペレーションを復元",
+      "deleteOperationTitle": "オペレーションを削除"
+    },
+    "opInfoPanel": {
+      "statsTitle": "オペレーションの統計",
+      "operationTotalsTitle-md": "オペレーション合計:",
+      "qsosInTime_zero": "QSOなし",
+      "qsosInTime_one": "{{time}}での1件のQSO",
+      "qsosInTime_other": "{{time}}での{{fmtCount}}のQSO",
+      "qsoCount_zero": "QSOなし",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSO",
+      "timeSinceLast": "最後のQSOから{{time}}",
+      "last10QSOs": "最後の10件で{{rate}} Q/h",
+      "last100QSOs": "最後の100件で{{rate}} Q/h"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "QSONのインポートエラー",
+      "invalidName": "名前が無効です",
+      "invalidNameDescription": "ファイル名は.qsonまたは.jsonで終わる必要があります",
+      "unknownError": "不明なエラー"
+    },
+    "importADIF": {
+      "error": "操作中にADIFをインポートするエラー",
+      "historicalImportError": "履歴ADIFをインポートするエラー",
+      "unknownError": "不明なエラー"
+    }
+  }
+}

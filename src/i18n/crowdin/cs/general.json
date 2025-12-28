@@ -1,0 +1,308 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Angličtina",
+        "ar": "Arabština - العربية",
+        "ast": "Asturština - Asturianu",
+        "bn": "Bengálština - বাংলা",
+        "ca": "Katalánština - Català",
+        "cs": "Čeština",
+        "cy": "Welština - Cymraeg",
+        "da": "Dánština - Dansk",
+        "de": "Němčina - Deutsch",
+        "en-PL": "Pig Latin",
+        "en-PT": "Řeč pirátů",
+        "eo": "Esperanto - Esperanto",
+        "es": "Španělština - Español",
+        "et": "Estonština - Eesti",
+        "eu": "Baskičtina - Euskara",
+        "fi": "Finština - Suomi",
+        "fr": "Francouzština - Français",
+        "ga": "Irština - Gaeilge",
+        "gl": "Galicijština - Galego",
+        "hi": "Hindština - हिंदी",
+        "id": "Indonézština - Bahasa Indonesia",
+        "it": "Italština - Italiano",
+        "ja": "Japonština - 日本語",
+        "ko": "Korejština - 한국어",
+        "lt": "Litevština - Lietuvių",
+        "lv": "Lotyština - Latvijas",
+        "ms": "Malajština - Bahasa Melayu",
+        "nb": "Norština Bokmål - Norsk bokmål",
+        "nl": "Nizozemština - Nederlands",
+        "nn": "Norština Nynorsk - Nynorsk",
+        "pl": "Polština - Polski",
+        "pt-BR": "Portugalština (Brazílie) - Português (Brasil)",
+        "pt-PT": "Portugalština (Portugalsko) - Português (Portugal)",
+        "pt": "Portugalština - Português",
+        "ro": "Rumunština - Română",
+        "ru": "Ruština - Русский",
+        "sk": "Slovenština - Slovenčina",
+        "sv": "Švédština - Svenska",
+        "th": "Thajština - ภาษาไทย",
+        "tl": "Tagalog - Wikang Filipino",
+        "tlh": "Klingonština - ᏣᎳᎩ",
+        "tr": "Turečtina - Türkçe",
+        "uk": "Ukrajinština - Українська",
+        "ur": "Urdu - اردو",
+        "vi": "Vietnamská - Tiếng Việt",
+        "zh": "Čínština - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q tak",
+      "QSOs-a11y": "Q takové",
+      "Operation": "Operace",
+      "generalOperation": "Obecná operace"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " a "
+      },
+      "time": {
+        "tomorrow": "Zítra",
+        "today": "Dnes",
+        "yesterday": "Včera",
+        "ago": "před {{time}}",
+        "fromNow": "za {{time}}",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}m",
+        "shortMinutesAndSeconds": "{{m}}m {{s}}s",
+        "shortHours": "{{h}}h",
+        "shortHoursAndMinutes": "{{h}}h {{m}}m",
+        "shortDays": "{{d}}d",
+        "shortDaysAndHours": "{{d}}d {{h}}h",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "leden",
+        "2": "únor",
+        "3": "březen",
+        "4": "duben",
+        "5": "květen",
+        "6": "červen",
+        "7": "červenec",
+        "8": "srpen",
+        "9": "září",
+        "10": "říjen",
+        "11": "listopad",
+        "12": "prosinec"
+      },
+      "monthAbbr": {
+        "1": "led.",
+        "2": "ún.",
+        "3": "bře.",
+        "4": "Dub",
+        "5": "kvě.",
+        "6": "črv.",
+        "7": "čvc.",
+        "8": "srp.",
+        "9": "zář.",
+        "10": "říj.",
+        "11": "lis.",
+        "12": "pro."
+      },
+      "weekday": {
+        "1": "pondělí",
+        "2": "úterý",
+        "3": "středa",
+        "4": "čtvrtek",
+        "5": "pátek",
+        "6": "sobota",
+        "7": "neděle"
+      },
+      "weekdayAbbr": {
+        "1": "po.",
+        "2": "út.",
+        "3": "st.",
+        "4": "čt.",
+        "5": "pá.",
+        "6": "so.",
+        "7": "ne."
+      },
+      "ordinalDay": {
+        "1": "1.",
+        "2": "2.",
+        "3": "3.",
+        "4": "4.",
+        "5": "5.",
+        "6": "6.",
+        "7": "7.",
+        "8": "8.",
+        "9": "9.",
+        "10": "10.",
+        "11": "11.",
+        "12": "12.",
+        "13": "13.",
+        "14": "14.",
+        "15": "15.",
+        "16": "16.",
+        "17": "17.",
+        "18": "18.",
+        "19": "19.",
+        "20": "20.",
+        "21": "21.",
+        "22": "22.",
+        "23": "23.",
+        "24": "24.",
+        "25": "25.",
+        "26": "26.",
+        "27": "27.",
+        "28": "28.",
+        "29": "29.",
+        "30": "30.",
+        "31": "31."
+      },
+      "distance": {
+        "away": "{{distance}} daleko"
+      }
+    },
+    "buttons": {
+      "cancel": "Zrušit",
+      "ok": "Ok",
+      "close": "Zavřít",
+      "login": "Přihlásit se",
+      "logout": "Odhlásit se",
+      "delete": "Smazat",
+      "refresh": "Obnovit",
+      "done": "Hotovo",
+      "accept": "Přijmout",
+      "accept-a11y": "Přijmout změny",
+      "revert": "Vrátit zpět",
+      "revert-a11y": "Vrátit změny",
+      "save": "Uložit",
+      "export": "Exportovat"
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "verze {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Kontrola aktualizací…",
+        "stable": "Kontrola stabilních aktualizací…",
+        "unstable": "Kontrola nestabilních aktualizací…",
+        "bleedingEdge": "Kontrola experimentálních aktualizací…"
+      },
+      "tracksPlural": {
+        "stable": "Stabilní",
+        "unstable": "Nestabilní",
+        "bleedingEdge": "Experimentální",
+        "Production": "Stabilní",
+        "Staging": "Nestabilní",
+        "Development": "Experimentální"
+      },
+      "trackSingular": {
+        "stable": "Stabilní",
+        "unstable": "Nestabilní",
+        "bleedingEdge": "Experimentální",
+        "Production": "Stabilní",
+        "Staging": "Nestabilní",
+        "Development": "Experimentální"
+      },
+      "versionIsAvailable-md": "Verze {{versionName}} je dostupná.",
+      "updateNow": "Aktualizovat nyní",
+      "newVersionAvailable-md": "Je dostupná nová verze PoLo!"
+    },
+    "dataFiles": {
+      "loading": "Načítání {{name}}",
+      "downloading": "Stahování {{name}}",
+      "dataHasToBeDownloaded-md": "Data pro **{{name}}** je třeba stáhnout.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Data pro **{{name}}** nebyla aktualizována delší dobu.",
+      "downloadNow": "Stáhnout nyní",
+      "refreshNow": "Obnovit nyní"
+    },
+    "notices": {
+      "action": {
+        "ok": "Ok!",
+        "__comment__": "Přepsat konkrétní akce upozornění zde"
+      },
+      "title": {
+        "__comment__": "Přepsat konkrétní názvy upozornění zde"
+      },
+      "text": {
+        "__comment__": "Přepsat konkrétní texty upozornění zde"
+      },
+      "dialogTitle": {
+        "__comment__": "Přepsat konkrétní názvy dialogů zde"
+      },
+      "dialogText": {
+        "__comment__": "Přepsat konkrétní texty dialogů zde"
+      },
+      "dataFiles": {
+        "fetching": "Načítání {{title}}…",
+        "progress": "Načítání {{title}}\n\n{{progress}}",
+        "done": "Načítání {{title}} dokončeno",
+        "error": "Chyba při načítání {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Text",
+        "csv": "Hodnoty oddělené čárkami",
+        "tsv": "Hodnoty oddělené tabulátory",
+        "other": "Data"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Klíčové funkce",
+        "locationBased": "Aktivity založené na poloze",
+        "contestsAndFieldOps": "Soutěže a operace v terénu",
+        "lookup": "Hledání dat",
+        "devmode": "Režim vývojáře",
+        "other": "Další funkce"
+      }
+    },
+    "continents": {
+      "AF": "Afrika",
+      "AS": "Asie",
+      "EU": "Evropa",
+      "NA": "Severní Amerika",
+      "SA": "Jižní Amerika",
+      "OC": "Oceánie"
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

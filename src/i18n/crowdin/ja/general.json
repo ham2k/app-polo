@@ -1,0 +1,308 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "English - English",
+        "ar": "アラビア語 - العربيّة",
+        "ast": "アストゥリアス語 - Asturianu",
+        "bn": "ベンガル語 - বাংলা",
+        "ca": "カタルーニャ語 - Català",
+        "cs": "チェコ語 - Čeština",
+        "cy": "ウェールズ語 - Cymraeg",
+        "da": "デンマーク語 - Dansk",
+        "de": "ドイツ語 - Deutsch",
+        "en-PL": "ピッグラテン",
+        "en-PT": "パイレーツ語",
+        "eo": "エスペラント - Esperanto",
+        "es": "スペイン語 - Español",
+        "et": "エストニア語 - Eesti",
+        "eu": "バスク語 - Euskara",
+        "fi": "フィンランド語 - Suomi",
+        "fr": "フランス語 - Français",
+        "ga": "アイルランド語 - Gaeilge",
+        "gl": "ガリシア語 - Galego",
+        "hi": "ヒンディー語 - हिंदी",
+        "id": "インドネシア語 - Bahasa Indonesia",
+        "it": "イタリア語 - Italiano",
+        "ja": "日本語 - 日本語",
+        "ko": "韓国語 - 한국어",
+        "lt": "リトアニア語 - Lietuvių",
+        "lv": "ラトビア語 - Latvijas",
+        "ms": "マレー語 - Bahasa Melayu",
+        "nb": "ノルウェー語ブークモール - Norsk bokmål",
+        "nl": "オランダ語 - Nederlands",
+        "nn": "ノルウェー語ニーノシュク - Nynorsk",
+        "pl": "ポーランド語 - Polski",
+        "pt-BR": "ポルトガル語（ブラジル） - Português (Brasil)",
+        "pt-PT": "ポルトガル語（ポルトガル） - Português (Portugal)",
+        "pt": "ポルトガル語 - Português",
+        "ro": "ルーマニア語 - Română",
+        "ru": "ロシア語 - Русский",
+        "sk": "スロバキア語 - Slovenčina",
+        "sv": "スウェーデン語 - Svenska",
+        "th": "タイ語 - ภาษาไทย",
+        "tl": "タガログ語 - Wikang Filipino",
+        "tlh": "クリンゴン語 - ᏣᎳᎩ",
+        "tr": "トルコ語 - Türkçe",
+        "uk": "ウクライナ語 - Українська",
+        "ur": "ウルドゥー語 - اردو",
+        "vi": "ベトナム語 - Tiếng Việt",
+        "zh": "中国語 - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q so",
+      "QSOs-a11y": "Q sos",
+      "Operation": "オペレーション",
+      "generalOperation": "ジェネラルオペレーション"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " と "
+      },
+      "time": {
+        "tomorrow": "明日",
+        "today": "今日",
+        "yesterday": "昨日",
+        "ago": "{{time}} 前",
+        "fromNow": "{{time}} 後",
+        "shortSeconds": "{{s}}秒",
+        "shortMinutes": "{{m}}分",
+        "shortMinutesAndSeconds": "{{m}}分 {{s}}秒",
+        "shortHours": "{{h}}時間",
+        "shortHoursAndMinutes": "{{h}}時間 {{m}}分",
+        "shortDays": "{{d}}日",
+        "shortDaysAndHours": "{{d}}日 {{h}}時間",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "1月",
+        "2": "2月",
+        "3": "3月",
+        "4": "4月",
+        "5": "5月",
+        "6": "6月",
+        "7": "7月",
+        "8": "8月",
+        "9": "9月",
+        "10": "10月",
+        "11": "11月",
+        "12": "12月"
+      },
+      "monthAbbr": {
+        "1": "1月",
+        "2": "2月",
+        "3": "3月",
+        "4": "4月",
+        "5": "5月",
+        "6": "6月",
+        "7": "7月",
+        "8": "8月",
+        "9": "9月",
+        "10": "10月",
+        "11": "11月",
+        "12": "12月"
+      },
+      "weekday": {
+        "1": "月曜日",
+        "2": "火曜日",
+        "3": "水曜日",
+        "4": "木曜日",
+        "5": "金曜日",
+        "6": "土曜日",
+        "7": "日曜日"
+      },
+      "weekdayAbbr": {
+        "1": "月",
+        "2": "火",
+        "3": "水",
+        "4": "木",
+        "5": "金",
+        "6": "土",
+        "7": "日"
+      },
+      "ordinalDay": {
+        "1": "1日",
+        "2": "2日",
+        "3": "3日",
+        "4": "4日",
+        "5": "5日",
+        "6": "6日",
+        "7": "7日",
+        "8": "8日",
+        "9": "9日",
+        "10": "10日",
+        "11": "11日",
+        "12": "12日",
+        "13": "13日",
+        "14": "14日",
+        "15": "15日",
+        "16": "16日",
+        "17": "17日",
+        "18": "18日",
+        "19": "19日",
+        "20": "20日",
+        "21": "21日",
+        "22": "22日",
+        "23": "23日",
+        "24": "24日",
+        "25": "25日",
+        "26": "26日",
+        "27": "27日",
+        "28": "28日",
+        "29": "29日",
+        "30": "30日",
+        "31": "31日"
+      },
+      "distance": {
+        "away": "{{distance}} 離れた所"
+      }
+    },
+    "buttons": {
+      "cancel": "キャンセル",
+      "ok": "OK",
+      "close": "閉じる",
+      "login": "ログイン",
+      "logout": "ログアウト",
+      "delete": "削除",
+      "refresh": "更新",
+      "done": "完了",
+      "accept": "承認",
+      "accept-a11y": "変更を承認",
+      "revert": "元に戻す",
+      "revert-a11y": "変更を元に戻す",
+      "save": "保存",
+      "export": "エクスポート"
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "パッチ {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "更新を確認しています...",
+        "stable": "安定版の更新を確認しています...",
+        "unstable": "不安定版の更新を確認しています...",
+        "bleedingEdge": "ベージングエッジの更新を確認しています..."
+      },
+      "tracksPlural": {
+        "stable": "安定版",
+        "unstable": "不安定版",
+        "bleedingEdge": "ベージングエッジ",
+        "Production": "安定版",
+        "Staging": "不安定版",
+        "Development": "ベージングエッジ"
+      },
+      "trackSingular": {
+        "stable": "安定版",
+        "unstable": "不安定版",
+        "bleedingEdge": "ベージングエッジ",
+        "Production": "安定版",
+        "Staging": "不安定版",
+        "Development": "ベージングエッジ"
+      },
+      "versionIsAvailable-md": "バージョン {{versionName}} が利用可能です。",
+      "updateNow": "更新する",
+      "newVersionAvailable-md": "新しいバージョンの PoLo が利用可能です！"
+    },
+    "dataFiles": {
+      "loading": "{{name}} を読み込んでいます",
+      "downloading": "{{name}} をダウンロードしています",
+      "dataHasToBeDownloaded-md": "**{{name}}** のデータをダウンロードする必要があります。",
+      "dataHasNotBeenUpdatedInAWhile-md": "**{{name}}** のデータが更新されていません。",
+      "downloadNow": "ダウンロードする",
+      "refreshNow": "更新する"
+    },
+    "notices": {
+      "action": {
+        "ok": "OK!",
+        "__comment__": "ここに特定の通知アクションを上書きします"
+      },
+      "title": {
+        "__comment__": "ここに特定の通知のタイトルを上書きします"
+      },
+      "text": {
+        "__comment__": "ここに特定の通知テキストを上書きします"
+      },
+      "dialogTitle": {
+        "__comment__": "ここに特定のダイアログタイトルを上書きします"
+      },
+      "dialogText": {
+        "__comment__": "ここに特定のダイアログテキストを上書きします"
+      },
+      "dataFiles": {
+        "fetching": "{{title}} を読み込んでいます…",
+        "progress": "{{title}} を読み込んでいます\n\n{{progress}}",
+        "done": "{{title}} を読み込みました",
+        "error": "{{title}} を読み込めませんでした"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "テキスト",
+        "csv": "カンマ区切りの値",
+        "tsv": "タブ区切りの値",
+        "other": "データ"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "基本機能",
+        "locationBased": "位置情報ベースのアクティビティ",
+        "contestsAndFieldOps": "コンテスト & フィールドオペレーション",
+        "lookup": "データ検索",
+        "devmode": "開発者モード",
+        "other": "その他の機能"
+      }
+    },
+    "continents": {
+      "AF": "アフリカ",
+      "AS": "アジア",
+      "EU": "ヨーロッパ",
+      "NA": "北アメリカ",
+      "SA": "南アメリカ",
+      "OC": "オセアニア"
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

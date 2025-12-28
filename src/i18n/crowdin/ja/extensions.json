@@ -1,0 +1,813 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "バンドなし",
+      "bandsCount_one": "1 バンド",
+      "bandsCount_other": "{{count}} バンド",
+      "modesCount_zero": "モードなし",
+      "modesCount_one": "1 モード",
+      "modesCount_other": "{{count}} モード",
+      "total": "合計 {{count}}"
+    },
+    "bca": {
+      "name": "ベルギーの城と要塞 (Belgium Castels & Fortresses)",
+      "shortName": "BCA",
+      "exportName": "BCAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートする城が選択されていません",
+        "title_one": "アクティベートする城：1ヶ所",
+        "title_other": "アクティベーションする城：{{count}}ヶ所",
+        "noCastlesFound": "城が見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingCastles_zero": "一致する城がありません",
+        "matchingCastles_one": "一致する城：1ヶ所",
+        "matchingCastles_other": "一致する城：{{count}}ヶ所",
+        "searchForCastles": "アクティベートする城を探しましょう！",
+        "noCastlesNearby": "近くに城はありません",
+        "nearbyCastles": "近くの城",
+        "searchPlaceholder": "名称または参照番号で城を検索…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "城は狩られていません",
+        "huntedRefsCount_one": "1つの城が狩られました ",
+        "huntedRefsCount_other": "{{fmtCount}}の城が狩られました",
+        "activatorQSOsCount_zero": "アクティベーターのQSOはありません",
+        "activatorQSOsCount_one": "1つのアクティベーターQSO",
+        "activatorQSOsCount_other": "{{fmtCount}} のアクティベーターQSO",
+        "huntedQSOsCount_zero": "ハンターQSOはありません",
+        "huntedQSOsCount_one": "1つのハンターQSO",
+        "huntedQSOsCount_other": "{{fmtCount}} のハンターQSO",
+        "operationTotals": "オペレーション合計",
+        "referencesActivatedCount_zero": "活性化された城はありません",
+        "referencesActivatedCount_one": "1つの活性化された城",
+        "referencesActivatedCount_other": "{{fmtCount}} の活性化された城",
+        "referencesMissedCount_zero": "未完了の城はありません",
+        "referencesMissedCount_one": "1つの未完了の城",
+        "referencesMissedCount_other": "{{fmtCount}} の未完了の城",
+        "referencesHuntedCount_zero": "狩られた城はありません",
+        "referencesHuntedCount_one": "1つの狩られた城",
+        "referencesHuntedCount_other": "{{fmtCount}} の狩られた城"
+      },
+      "loggingControl": {
+        "theirRefLabel": "彼らのBCA"
+      }
+    },
+    "blha": {
+      "name": "ベルギーの灯台と灯船（Belgian Lighthouse and Lightships）",
+      "shortName": "BLHA",
+      "exportName": "BLHAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートする灯台が選択されていません",
+        "title_one": "アクティベートする灯台：1ヶ所",
+        "title_other": "アクティベートする灯台：{{count}}ヶ所",
+        "noLighthousesFound": "灯台が見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingLighthouses_zero": "一致する灯台がありません",
+        "matchingLighthouses_one": "一致する灯台：1ヶ所",
+        "matchingLighthouses_other": "一致する灯台：{{count}}ヶ所",
+        "searchForLighthouses": "アクティベートする灯台を探しましょう！",
+        "noLighthousesNearby": "近くに灯台はありません",
+        "nearbyLighthouses": "近くの灯台",
+        "searchPlaceholder": "名前または参照番号で灯台を検索..."
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "灯台はまだハンティングされていません",
+        "huntedRefsCount_one": "ハンティングした灯台の数: 1",
+        "huntedRefsCount_other": "ハンティングした灯台の数: {{fmtCount}}",
+        "activatorQSOsCount_zero": "アクティベーターQSOはまだありません",
+        "activatorQSOsCount_one": "アクティベーターQSO数: 1",
+        "activatorQSOsCount_other": "アクティベーターQSO数: {{fmtCount}}",
+        "huntedQSOsCount_zero": "ハンターQSOはまだありません",
+        "huntedQSOsCount_one": "ハンターQSO数: 1",
+        "huntedQSOsCount_other": "ハンターQSO数: {{fmtCount}} ",
+        "operationTotals": "オペレーション合計",
+        "referencesActivatedCount_zero": "アクティベーションした灯台はまだありません",
+        "referencesActivatedCount_one": "アクティベーションした灯台の数: 1",
+        "referencesActivatedCount_other": "アクティベーションした灯台の数: {{fmtCount}} ",
+        "referencesMissedCount_zero": "未達成の灯台はありません",
+        "referencesMissedCount_one": "未達成の灯台の数: 1",
+        "referencesMissedCount_other": "未達成の灯台の数: {{fmtCount}} ",
+        "referencesHuntedCount_zero": "ハンティングした灯台はありません",
+        "referencesHuntedCount_one": "ハンティングした灯台の数: 1",
+        "referencesHuntedCount_other": "ハンティングした灯台の数: {{fmtCount}} "
+      }
+    },
+    "call-notes": {
+      "name": "コールサインノート",
+      "description-md_zero": "読み込まれたノートはありません。",
+      "description-md_one": "{{fmtCount}} {{type}} が読込み完了。",
+      "description-md_other": "{{fmtCount}} {{type}} が読込み完了。",
+      "builtIn": "ビルトインノート",
+      "userDefined": "ユーザーノート",
+      "failedToLoad": "読込みに失敗しました！",
+      "notesFile": "コールサインノートファイル",
+      "nameLabel": "名前",
+      "namePlaceholder": "あなたのコールサインノートファイル名",
+      "locationLabel": "場所",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "ビルトイン",
+      "customTitle": "カスタム",
+      "addFile": "新しいファイルを追加",
+      "aboutTitle": "コールサインメモについて",
+      "names": {
+        "ham2k-hams-of-note": "Ham2KのHams of Note"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "world of radioにいる人、いない人の代表的なサンプル"
+      },
+      "help-md": "コールサインノートはシンプルなテキストファイルに保存されています。1行に1つのコールサインと、それに続いてログ用画面に表示させたい情報が保存されています。ビルトインファイルを使用することも、自分でファイルを追加することも可能です。\n\nプレーンテキストファイルへの直接リンク、あるいは他のサービスからの \"共有リンク\"を入力してください:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\n上記ファイル内の行は以下のような形式で、基本的な Markdown 形式をサポートしています:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nエントリーの最初が絵文字の場合、デフォルトとして ⭐ が代用されます。\n\n“コールサインの展開“のエントリーは、コールサインフィールドに `..` または ` //` を入力することで利用可能です。上記の例では `//DAN` となります。"
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "カナダの州なし",
+      "provincesCount_one": "カナダの州: 1州",
+      "provincesCount_other": "カナダの州: {{count}}州"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "設定",
+        "year": "年",
+        "testMode-md": "今年のイベントはまだ始まっていませんが、過去7日間のQSOを用いてテスト操作を行うことができます。",
+        "note-md": "注意：PoLoは、日付範囲内のすべてのQSOを含む結果を報告します。使用中のデバイスに他の運用情報が存在する場合、その情報も報告されます。",
+        "info-md": "The 13 Colonies Special Event は毎年、米国東部時間 7月1日午前9時から7月7日午後11時59分まで行われます。"
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "現在の天気を取得中…",
+      "errorFetchingWeather": "天気の取得にエラー",
+      "fetchingSolarWeather": "太陽の天気を取得中…",
+      "errorFetchingSolarWeather": "太陽の天気の取得にエラー",
+      "addNote": "ノートを追加: ‘{{note}}’…",
+      "addNotePrompt": "ノートを追加しますか？ 続けて入力してください…",
+      "addNoteConfirm": "ノートが追加されました!",
+      "addTodo": "To-doを追加: ‘{{note}}’…",
+      "addTodoPrompt": "To-do項目を追加しますか？ 続けて入力してください…",
+      "addTodoConfirm": "To-doが追加されました!",
+      "sendChat": "チャットを送信: ‘{{note}}’…",
+      "sendChatPrompt": "チャットを送信しますか？ 続けて入力してください…",
+      "sendChatConfirm": "チャットが送信されました!"
+    },
+    "commands-debug": {
+      "syncall": "すべての操作を削除して同期状態をリセットしますか？",
+      "syncallConfirm": "データを消去してすべてを再同期中…",
+      "syncup": "同期サービスにローカルデータを再送信しますか？",
+      "syncupConfirm": "再送信中…",
+      "wipedb": "データベース全体を削除しますか(設定を保持しますか)？",
+      "wipedbConfirm": "データベースを消去中…",
+      "factory": "すべてのデータと設定を削除しますか？",
+      "factoryConfirm": "ファクトリーリセット中…",
+      "switchLanguage": "言語を`{{lang}}` {{name}}へ変更しますか？",
+      "switchLanguagePrompt": "言語：`{{lang}}` {{name}}",
+      "switchLanguageConfirm": "言語を`{{lang}}` {{name}}へ変更します"
+    },
+    "commands-devmode": {
+      "activate": "開発者モードを有効にしますか？",
+      "activateConfirm": "開発者モードが有効になりました！",
+      "deactivate": "開発者モードを無効にしますか？",
+      "deactivateConfirm": "開発者モードが無効になりました！",
+      "on": "開発者モード：オン！！！",
+      "off": "開発者モード：オフ"
+    },
+    "commands-misc": {
+      "rtfm": "マニュアルを読みますか？",
+      "rtfmConfirm": "マニュアルを開いています",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "周波数なしでのセルフスポットはできません",
+        "selfSpotWithComments": "‘{{comments}}’を使ってセルフスポットしますか？",
+        "selfSpotPrompt": "セルフスポットしますか？",
+        "selfSpottingWithComments": "‘{{comments}}’と{{freq}}でセルフスポット中",
+        "selfSpotting": "{{freq}}でセルフスポット中"
+      }
+    },
+    "commands-operation": {
+      "start": "操業を開始しますか？",
+      "startConfirm": "オペレーションが開始されました!",
+      "break": "休憩を追加しますか？",
+      "breakConfirm": "オペレーション休憩が追加されました!",
+      "stop": "オペレーションを停止しますか？",
+      "stopConfirm": "オペレーションが停止されました!"
+    },
+    "commands-operator": {
+      "change": "オペレーターを{{operator}}に変更しますか？",
+      "changeConfirm": "オペレーターが{{operator}}に設定されました"
+    },
+    "commands-radio": {
+      "band": "バンドを{{band}}に変更しますか？",
+      "bandConfirm": "バンドが{{band}}に設定されました",
+      "frequency": "{{freq}} MHz{{mode}}に周波数を変更しますか？",
+      "frequencyConfirm": "周波数が{{freq}} MHz{{mode}}に設定されました",
+      "frequencyAndMode": "{{freq}} MHz({{mode}})に周波数を変更しますか？",
+      "frequencyAndModeConfirm": "周波数が{{freq}} MHz({{mode}})に設定されました",
+      "power": "出力を{{power}}Wへ変更しますか？",
+      "powerConfirm": "出力が{{power}}Wに設定されました",
+      "mode": "モードを{{mode}}に変更しますか？",
+      "modeConfirm": "モードが{{mode}}に設定されました"
+    },
+    "commands-settings": {
+      "set": "{{name}}を設定していますか？",
+      "setChange": "{{label}}を{{value}}に変更しますか？",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}}が{{value}}に設定されました",
+      "setNotChanged": "変更されていません"
+    },
+    "commands-time": {
+      "setTime": "時間を{{time}}にセットしますか？",
+      "setDate": "日付を{{date}}にセットしますか？",
+      "timeSet": "時間が{{time}}に設定されました",
+      "dateSet": "日付が{{date}}に設定されました",
+      "changeTimeByHours": "時間を{{delta}}時間変更しますか？",
+      "changeTimeByMinutes": "時間を{{delta}}分変更しますか？",
+      "changeTimeBySeconds": "時間を{{delta}}秒変更しますか？",
+      "changeTimeByDays": "時間を{{delta}}日変更しますか？",
+      "changeTimeByWeeks": "時間を{{delta}}週間変更しますか？",
+      "changeTimeToNow": "現在の時間に変更しますか？",
+      "changeTimeToToday": "今日に時間を変更しますか？",
+      "changeTimeToYesterday": "昨日へ時間を変更しますか？",
+      "timeSetToNow": "時間が現在に設定されました",
+      "timeSetToToday": "時間が今日に設定されました",
+      "timeSetToYesterday": "時間が昨日に設定されました"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "アクティベートする参照番号（公園番号）が選択されていません",
+        "title_one": "アクティベートする参照番号：1ヶ所",
+        "title_other": "アクティベートする参照番号：{{count}}ヶ所",
+        "addMoreReferences": "参照番号を追加",
+        "addReference": "参照番号を追加",
+        "activityLabel": "アクティビティ - ADIFのMY_SIG (オプション)",
+        "activityPlaceholder": "例：COTA…",
+        "referenceLabel": "参照コード - ADIFのMY_SIG_INFO",
+        "referencePlaceholder": "例：XY-1234…",
+        "nameLabel": "名前（オプション）",
+        "namePlaceholder": "例：XYZ城…",
+        "addButton": "{{mySig}} {{mySigInfo}}を追加"
+      },
+      "loggingControl": {
+        "theirRefLabel": "参照コード"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "データファイル名を上書き",
+        "pota-all-parks": "POTA: すべての公園",
+        "sota-all-summits": "SOTA: すべての山"
+      },
+      "loading": {
+        "progress": "`{{processedLines}}`件の参照コードをロードしました。\n\n残りあと`{{percent}}` • {{secondsLeft}} 秒 ",
+        "downloadingRawData": "生データをダウンロード中…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "DXCCエンティティなし",
+      "entitiesCount_one": "DXCCエンティティ 1",
+      "entitiesCount_other": "DXCCエンティティ {{count}}"
+    },
+    "eca": {
+      "name": "イギリスの城アワード",
+      "shortName": "ECA",
+      "exportName": "ECAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートする城が選択されていません",
+        "title_one": "アクティベートする城：1ヶ所",
+        "title_other": "アクティベートする城：{{count}}ヶ所",
+        "noCastlesFound": "城が見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingCastles_zero": "一致する城がありません",
+        "matchingCastles_one": "一致する城：1ヶ所",
+        "matchingCastles_other": "一致する城：{{count}}ヶ所",
+        "searchForCastles": "アクティベートする城を探しましょう！",
+        "noCastlesNearby": "近くに城はありません",
+        "nearbyCastles": "近くの城",
+        "searchPlaceholder": "名前または参照番号で城を検索..."
+      }
+    },
+    "ela": {
+      "name": "イギリスの灯台アワード（English Lighthouse Awards: ELA）",
+      "shortName": "ELA",
+      "exportName": "ELAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートする灯台が選択されていません",
+        "title_one": "アクティベートする灯台：1ヶ所",
+        "title_other": "アクティベートする灯台：{{count}}ヶ所",
+        "noLighthousesFound": "灯台が見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingLighthouses_zero": "一致する灯台がありません",
+        "matchingLighthouses_one": "一致する灯台：1ヶ所",
+        "matchingLighthouses_other": "一致する灯台：{{count}}ヶ所",
+        "searchForLighthouses": "アクティベートする灯台を探しましょう！",
+        "noLighthousesNearby": "近くに灯台はありません",
+        "nearbyLighthouses": "近くの灯台",
+        "searchPlaceholder": "名前または参照番号で灯台を検索..."
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "交換情報",
+        "classLabel": "クラス",
+        "locationLabel": "場所",
+        "additionalInformation": "追加情報",
+        "highestTransmitterPowerLabel": "最大送信出力",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP：5W以下",
+        "qroOption": "QRO：100W以下",
+        "moreThan100WOption": "100W超",
+        "powerSourceLabel": "電源",
+        "powerSourcePlaceholder": "電源を選択",
+        "batteriesOption": "バッテリー、ソーラー、風力",
+        "commercialPowerOption": "商用電源、発電機",
+        "information-md": "ARRLフィールドデーのクラスは、例えば「2A」となります：\n\n  - 送信機の台数を表す「1」、「2」、「3」…\n  - 「A」はグループ(3名以上)のポータブルステーション\n  - 「B」は1名または2名のポータブルステーション\n  - 「C」は移動ステーション\n  - 「D」はホームステーション\n  - 「E」は非常用電源のホームステーション\n  - 「F」は緊急運営センター\n\n場所はARRLセクション、RACセクション、メキシコの場合は「MX」、その他の場所は「DX」で表します。\n\n詳細は**[公式ルール](https://www.arrl.org/field-day-rules)**をご覧ください。"
+      }
+    },
+    "gma": {
+      "name": "グローバルマウンテンアクティビティ(Global Mountain Activity）",
+      "shortName": "GMA",
+      "exportName": "GMAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートする山頂が選択されていません",
+        "title_one": "アクティベートする山頂：1ヶ所",
+        "title_other": "アクティベートする山頂：{{count}}ヶ所",
+        "noSummitsFound": "山頂が見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingSummits_zero": "一致する山頂がありません",
+        "matchingSummits_one": "一致する山頂：1ヶ所",
+        "matchingSummits_other": "一致する山頂：{{count}}ヶ所",
+        "searchForSummits": "アクティベートする山頂を探しましょう！",
+        "noSummitsNearby": "近くに山頂はありません",
+        "nearbySummits": "近くの山頂",
+        "searchPlaceholder": "名称または参照コードで山頂を検索...",
+        "unknownSummit": "不明な山頂"
+      }
+    },
+    "hsota": {
+      "name": "ヒルズオンザエア（Hills on the Air）",
+      "shortName": "HSOTA",
+      "exportName": "HSOTAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートするサイトが選択されていません",
+        "title_one": "アクティベートするサイト：1ヶ所",
+        "title_other": "アクティベートするサイト：{{count}}ヶ所",
+        "noSitesFound": "サイトが見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingSites_zero": "一致するサイトがありません",
+        "matchingSites_one": "一致するサイト：1ヶ所",
+        "matchingSites_other": "一致するサイト：{{count}}ヶ所",
+        "searchForSites": "アクティベートするサイトを探しましょう！",
+        "noSitesNearby": "近くにサイトはありません",
+        "nearbySites": "近くのサイト",
+        "searchPlaceholder": "名前または参照コードでサイトを検索...",
+        "unknownSite": "不明なサイト"
+      }
+    },
+    "mota": {
+      "name": "ミルズオンザエア（Mills on the Air: MOTA）",
+      "shortName": "MOTA",
+      "exportName": "MOTAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートするミルは選択されていません",
+        "title_one": "アクティベートするミル：1ヶ所",
+        "title_other": "アクティベートするミル：{{count}}ヶ所",
+        "noMillsFound": "ミルが見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingMills_zero": "一致するミルがありません",
+        "matchingMills_one": "一致するミル：1ヶ所",
+        "matchingMills_other": "一致する{{count}}個の一致するミル",
+        "searchForMills": "アクティベートするミルを探しましょう！",
+        "noMillsNearby": "近くにミルはありません",
+        "nearbyMills": "近くのミル",
+        "searchPlaceholder": "名称または参照コードでミルを検索...",
+        "unknownMill": "不明なミル"
+      },
+      "loggingControl": {
+        "theirRefLabel": "彼らのミル"
+      }
+    },
+    "pga": {
+      "name": "ポーランドのグミナ（基礎自治体）アワード",
+      "shortName": "PGA",
+      "exportName": "PGAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートするグミナが選択されていません",
+        "title_one": "アクティベートするグミナ：1ヶ所",
+        "title_other": "アクティベートするグミナ：{{count}}ヶ所",
+        "noGminasFound": "グミナが見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingGminas_zero": "一致するグミナがありません",
+        "matchingGminas_one": "一致するグミナ：1ヶ所",
+        "matchingGminas_other": "一致するグミナ：{{count}}ヶ所",
+        "searchForGminas": "アクティベートするグミナを探しましょう！",
+        "noGminasNearby": "近くにグミナはありません",
+        "nearbyGminas": "近くのグミナ",
+        "searchPlaceholder": "名前または参照番号でグミナを検索...",
+        "unknownGmina": "不明なグミナ"
+      }
+    },
+    "pota": {
+      "name": "POTA: パークス・オン・ザ・エア",
+      "shortName": "POTA",
+      "exportName": "POTAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートする公園が選択されていません",
+        "title_one": "アクティベートする公園：1ヶ所",
+        "title_other": "アクティベートする公園：{{count}}ヶ所",
+        "noParksFound": "公園が見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingParks_zero": "一致する公園がありません",
+        "matchingParks_one": "一致する公園：1ヶ所",
+        "matchingParks_other": "一致する公園：{{count}}ヶ所",
+        "searchForParks": "アクティベートする公園を探しましょう！",
+        "noParksNearby": "近くに公園はありません",
+        "nearbyParks": "近くの公園",
+        "searchPlaceholder": "名称または参照コードで公園を検索..."
+      },
+      "scoring": {
+        "ref2refCount_zero": "P2Pなし",
+        "ref2refCount_one": "P2P数: 1",
+        "ref2refCount_other": "P2P数: {{fmtCount}} ",
+        "huntedRefsCount_zero": "ハンティングした公園はありません",
+        "huntedRefsCount_one": "ハンティングした公園の数:1ヶ所",
+        "huntedRefsCount_other": "ハンティングした公園の数:{{fmtCount}} ヶ所",
+        "activatorQSOsCount_zero": "アクティベーターQSOはありません",
+        "activatorQSOsCount_one": "アクティベーターQSO数: 1",
+        "activatorQSOsCount_other": "アクティベーターQSO数:{{fmtCount}}",
+        "ref2refQSOsCount_zero": "P2P QSOなし",
+        "ref2refQSOsCount_one": "P2P QSO数: 1",
+        "ref2refQSOsCount_other": "P2P QSO数: {{fmtCount}} ",
+        "huntedQSOsCount_zero": "ハンターQSOはありません",
+        "huntedQSOsCount_one": "ハンターQSO数: 1",
+        "huntedQSOsCount_other": "ハンターQSO数: {{fmtCount}} ",
+        "operationTotals": "オペレーション合計",
+        "referencesActivatedCount_zero": "アクティベートした公園はありません",
+        "referencesActivatedCount_one": "アクティベートした公園の数: 1",
+        "referencesActivatedCount_other": "アクティベートした公園の数:{{fmtCount}} ",
+        "referencesMissedCount_zero": "未達成の公園はありません",
+        "referencesMissedCount_one": "未達成の公園の数 :1",
+        "referencesMissedCount_other": "未達成の公園の数 :{{fmtCount}} ",
+        "referencesHuntedCount_zero": "ハンティングした公園はありません",
+        "referencesHuntedCount_one": "ハンティングした公園の数: 1",
+        "referencesHuntedCount_other": "ハンティングした公園の数: {{fmtCount}} "
+      },
+      "loggingControl": {
+        "theirRefLabel": "彼らのPOTA"
+      },
+      "postSpotAPI": {
+        "error": "POTAスポットの投稿でエラーが発生しました",
+        "serverResponse": "サーバーがエラー {{status}}: {{body}}と応答しました"
+      },
+      "exampleRefName": "国立公園の例",
+      "unknownRefName": "不明な公園",
+      "noRefsNearby": "近くに公園はありません!"
+    },
+    "siota": {
+      "name": "サイロズオンザエア（Silos on the Air）",
+      "shortName": "SIOTA",
+      "exportName": "SIOTAアクティベーション",
+      "account": {
+        "title": "ParksnPeaks (SiOTA スポット)",
+        "dialogTitle": "ParksnPeaks アカウント",
+        "description": "ユーザー名: {{username}}",
+        "noAccount": "アカウントなし",
+        "pleaseEnterDetails": "ParksnPeaks アカウントの詳細を入力してください:",
+        "usernameLabel": "ユーザー名 (コールサインではありません)",
+        "usernamePlaceholder": "あなたののユーザー名",
+        "apiKeyLabel": "API キー (パスワードなし)",
+        "apiKeyPlaceholder": "あなたの API キー"
+      },
+      "activityOptions": {
+        "title_zero": "アクティベートするサイロが選択されていません",
+        "title_one": "アクティベートするサイロ：1ヶ所",
+        "title_other": "アクティベートするサイロ：{{count}}ヶ所",
+        "noSilosFound": "サイロが見つかりません",
+        "nearestMatches": "一致する{{limit}}ヶ所 のうち最も近い {{count}}ヶ所",
+        "matchingSilos_zero": "一致するサイロがありません",
+        "matchingSilos_one": "一致するサイロ：1ヶ所",
+        "matchingSilos_other": "一致するサイロ：{{count}}ヶ所",
+        "searchForSilos": "アクティベートするサイロを探しましょう！",
+        "noSilosNearby": "近くにサイロはありません",
+        "nearbySilos": "近くのサイロ",
+        "searchPlaceholder": "名称または参照コードでサイロを検索...",
+        "unknownSilo": "不明なサイロ"
+      },
+      "loggingControl": {
+        "theirRefLabel": "彼らのサイロ"
+      },
+      "postSpotAPI": {
+        "error": "SiOTAスポットの投稿でエラーが発生しました",
+        "serverResponse": "サーバーがエラー{{status}}: {{body}} で応答しました "
+      }
+    },
+    "sota": {
+      "account": {
+        "title": "SOTA (SOTAWatch でのスポット)",
+        "dialogTitle": "SOTA アカウント",
+        "description": "{{callsign}} でログイン中",
+        "noAccount": "アカウントなし",
+        "error": "アカウント詳細の取得に失敗しました",
+        "connect": "SOTA アカウントに接続してください"
+      },
+      "notLoggedInAlertTitle": "警告",
+      "notLoggedInAlertText": "SOTAWatchにログインされていないため、セルフスポットはできません。PoLo設定に移動してください",
+      "activityOptions": {
+        "title_zero": "アクティベートする山頂が選択されていません",
+        "title_one": "アクティベートする山頂：1ヶ所",
+        "title_other": "アクティベートする山頂：{{count}}ヶ所",
+        "noSummitsFound": "山頂が見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingSummits_zero": "一致する山頂がありません",
+        "matchingSummits_one": "一致する山頂：1ヶ所",
+        "matchingSummits_other": "一致する山頂：{{count}}ヶ所",
+        "searchForSummits": "アクティベートする山頂を検索しましょう！",
+        "noSummitsNearby": "近くに山頂がありません",
+        "nearbySummits": "近くの山頂",
+        "searchPlaceholder": "名称または参照コードで山頂…",
+        "unknownSummit": "不明な山頂"
+      },
+      "scoring": {
+        "ref2refCount_zero": "S2Sなし",
+        "ref2refCount_one": "S2S 数: 1",
+        "ref2refCount_other": "S2S 数: {{fmtCount}} ",
+        "huntedRefsCount_zero": "ハンティングした山頂はありません",
+        "huntedRefsCount_one": "ハンティングした山頂の数: 1",
+        "huntedRefsCount_other": "ハンティングした山頂の数: {{fmtCount}} ",
+        "activatorQSOsCount_zero": "アクティベーターQSOはありません",
+        "activatorQSOsCount_one": "アクティベーターQSO数: 1",
+        "activatorQSOsCount_other": "アクティベーターQSO数: {{fmtCount}}",
+        "ref2refQSOsCount_zero": "S2S QSOなし",
+        "ref2refQSOsCount_one": "S2S QSO 数: 1",
+        "ref2refQSOsCount_other": "S2S QSO 数: {{fmtCount}} ",
+        "huntedQSOsCount_zero": "ハンターQSOはありません",
+        "huntedQSOsCount_one": "ハンターQSO数: 1",
+        "huntedQSOsCount_other": "ハンターQSO数: {{fmtCount}} ",
+        "operationTotals": "オペレーション合計",
+        "referencesActivatedCount_zero": "アクティベーションした山頂はありません",
+        "referencesActivatedCount_one": "アクティベーションした山頂数: 1",
+        "referencesActivatedCount_other": "アクティベーションした山頂の数:{{fmtCount}} ",
+        "referencesMissedCount_zero": "未達成の山頂はありません",
+        "referencesMissedCount_one": "未達成の山頂の数: 1",
+        "referencesMissedCount_other": "未達成の山頂の数: {{fmtCount}} ",
+        "referencesHuntedCount_zero": "ハンティングした山頂はありません",
+        "referencesHuntedCount_one": "ハンティングした山頂 の数: 1",
+        "referencesHuntedCount_other": "ハンティングした山頂 の数: {{fmtCount}} "
+      },
+      "loggingControl": {
+        "theirRefLabel": "彼らのSOTA"
+      },
+      "postSpotAPI": {
+        "error": "SOTAスポットの投稿中にエラーが発生しました",
+        "serverResponse": "サーバーがステータス {{status}} {{message}} で応答しました",
+        "sotaAccountLoggedOut": "SOTAアカウントがログアウトしました。PoLoの設定で再度ログインしてください"
+      },
+      "exampleRefName": "山頂の例",
+      "unknownRefName": "不明な山頂",
+      "noRefsNearby": "近くに山頂はありません!"
+    },
+    "usStates": {
+      "statesCount_zero": "米国の州なし",
+      "statesCount_one": "米国の州: 1州",
+      "statesCount_other": "米国の州: {{count}}州"
+    },
+    "wab": {
+      "name": "英/アイルランド全地点通信達成",
+      "description": "WAB/WAIスクエアを操作に追加",
+      "workedAllBritainSquare": "英国内全通信スクエア",
+      "workedAllIrelandSquare": "アイルランド全通信スクエア",
+      "enterSquare": "スクエアを入力してください",
+      "placeholderBritain": "例: SU14",
+      "placeholderIreland": "例: N93",
+      "currentSquare": "現在のスクエア:",
+      "noSquareSet": "スクエアが設定されていません"
+    },
+    "wca": {
+      "name": "世界の城アワード",
+      "shortName": "WCA",
+      "exportName": "WCAアクティべーション",
+      "activityOptions": {
+        "title_zero": "アクティベートする城が選択されていません",
+        "title_one": "アクティベートする城：1ヶ所",
+        "title_other": "アクティベーションする城：{{count}}ヶ所",
+        "noCastlesFound": "城が見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingCastles_zero": "一致する城はありません",
+        "matchingCastles_one": "一致する城：1ヶ所",
+        "matchingCastles_other": "一致する城：{{count}}ヶ所",
+        "searchForCastles": "アクティベートする城を探しましょう！",
+        "noCastlesNearby": "近くに城はありません",
+        "nearbyCastles": "近くの城",
+        "searchPlaceholder": "名称または参照番号で城を検索…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "ハンティングした城はありません",
+        "huntedRefsCount_one": "ハンティングした城：1ヶ所",
+        "huntedRefsCount_other": "{{fmtCount}}ヶ所の城をハンティングしました",
+        "activatorQSOsCount_zero": "アクティベーターQSOはありません",
+        "activatorQSOsCount_one": "アクティベーターQSO：1件",
+        "activatorQSOsCount_other": "{{fmtCount}} 件のアクティベーターQSO",
+        "huntedQSOsCount_zero": "ハンティングしたQSOはありません",
+        "huntedQSOsCount_one": "ハンティングしたQSO：1件",
+        "huntedQSOsCount_other": "{{fmtCount}} 件のハンティングしたQSO",
+        "operationTotals": "オペレーション合計",
+        "referencesActivatedCount_zero": "アクティベートした城：0",
+        "referencesActivatedCount_one": "アクティベートした城：1ヶ所",
+        "referencesActivatedCount_other": "アクティベートした城：{{fmtCount}}ヶ所",
+        "referencesMissedCount_zero": "未達成の城はありません",
+        "referencesMissedCount_one": "未達成の城：1ヶ所",
+        "referencesMissedCount_other": "未達成の城：{{fmtCount}}ヶ所",
+        "referencesHuntedCount_zero": "ハンティングされた城はありません",
+        "referencesHuntedCount_one": "ハンティングした城：1ヶ所",
+        "referencesHuntedCount_other": "ハンティングした城：{{fmtCount}}ヶ所"
+      },
+      "exampleRefName": "城の例",
+      "unknownRefName": "不明な城",
+      "noRefsNearby": "近くに城はありません!"
+    },
+    "wfd": {
+      "name": "ウィンターフィールドデー（Winter Field Day: WFD）",
+      "shortName": "WFD",
+      "exportName": "WFDアクティベーション",
+      "activityOptions": {
+        "exchangeInformation": "交換情報",
+        "classLabel": "クラス",
+        "locationLabel": "場所",
+        "objectives_zero": "目標達成なし",
+        "objectives_one": "1 目標達成, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} 目標達成, OM ×{{multiplier}}",
+        "objectivesTitle": "目標: {{count}} 達成, OM ×{{multiplier}}",
+        "objectivesDescription": "ログの提出時、これらの目標の報告も忘れずに!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "代替電源",
+        "awayFromHome": "家から離れた場所で運用",
+        "fmSatelliteContact": "FMによる衛星コンタクト",
+        "ssbSatelliteContact": "SSB または CW による衛星コンタクト",
+        "winlinkEmails": "Winlink メール",
+        "specialBulletin": "Special Bulletin (特別なお知らせ)",
+        "sixBands": "6バンド",
+        "twelveBands": "12バンド",
+        "multipleModes": "複数モード",
+        "qrpOperation": "QRP 運用",
+        "sixContinuousHours": "6時間連続運用"
+      },
+      "objectiveDescription": {
+        "altPower": "代替電源で 100% 運用。例えば、バッテリー、ソーラー、風力など。",
+        "awayFromHome": "家から少なくとも ½ マイル（約0.8 km）離れた場所に設置します。",
+        "fmSatelliteContact": "運用期間中、少なくとも 1 回 FM で衛星コンタクトします。",
+        "ssbSatelliteContact": "少なくとも 1 回、 SSB または CW でコンタクトします。",
+        "winlinkEmails": "少なくとも 1 回、 RF を使用して Winlink メール送信します。",
+        "specialBulletin": "WFD Special Bulletin メッセージを正確にコピーし、ログ提出時にそのコピーを提出します。",
+        "sixBands": "少なくとも 6 つの異なるバンドで少なくとも 3 回コンタクトします。",
+        "twelveBands": "少なくとも 12 つの異なるバンドで少なくとも 3 回コンタクトします。",
+        "multipleModes": "運用期間中に複数のモードを使用します。",
+        "qrpOperation": "QRP 電力レベルで運用します(電話/ボイスでは 10W 以下、CW またはデジタルでは 5W 以下)。",
+        "sixContinuousHours": "運用期間中に少なくとも 6 時間連続運用します。"
+      },
+      "information-md": "冬フェイルドデーのクラスは、例えば「2M」となります：\n\n  - 送信機の台数を表す「1」、「2」、「3」…\n  - 「H」はホームステーション\n  - 「I」は屋内\n  - 「O」は屋外\n  - 「M」は移動または静止移動ステーション\n\n場所はARRLセクション、RACセクション、メキシコの場合は「MX」、その他の場所は「DX」で表します。\n\n詳細は**[公式ルール](https://www.winterfieldday.com/sop.php)**をご覧ください。"
+    },
+    "wwbota": {
+      "name": "WWBOTA: ワールドワイドバンカーアワード",
+      "shortName": "WWBOTA",
+      "exportName": "WWBOTAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートする防空壕が選択されていません",
+        "title_one": "アクティベートする防空壕：1ヶ所",
+        "title_other": "アクティベートする防空壕：{{count}}ヶ所",
+        "noBunkersFound": "防空壕が見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingBunkers_zero": "一致する防空壕がありません",
+        "matchingBunkers_one": "一致する防空壕：1ヶ所",
+        "matchingBunkers_other": "一致する防空壕：{{count}}ヶ所",
+        "searchForBunkers": "アクティベートする防空壕を検索しましょう！",
+        "noBunkersNearby": "近くに防空壕がありません",
+        "nearbyBunkers": "近くの防空壕",
+        "searchPlaceholder": "名称または参照番号で防空壕…",
+        "unknownBunker": "不明な防空壕"
+      },
+      "loggingControl": {
+        "theirRefLabel": "彼らの防空壕"
+      },
+      "postSpotAPI": {
+        "error": "WWBOTAスポットの投稿でエラーが発生しました",
+        "serverResponse": "サーバーがステータス {{status}} {{message}} で応答しました"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: ワールドワイドフローラ＆ファウナ",
+      "shortName": "WWFF",
+      "exportName": "WWFFアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートする公園が選択されていません",
+        "title_one": "アクティベートする公園：1ヶ所",
+        "title_other": "アクティベートする公園：{{count}}ヶ所",
+        "noParksFound": "公園が見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingParks_zero": "一致する公園がありません",
+        "matchingParks_one": "一致する公園：1ヶ所",
+        "matchingParks_other": "一致する公園：{{count}}ヶ所",
+        "searchForParks": "アクティベートする公園を検索しましょう！",
+        "noParksNearby": "近くに公園がありません",
+        "nearbyParks": "近くの公園",
+        "searchPlaceholder": "名称または参照番号で公園…",
+        "unknownPark": "不明な公園"
+      },
+      "scoring": {
+        "ref2refCount_zero": "P2Pなし",
+        "ref2refCount_one": "P2P数: 1",
+        "ref2refCount_other": "P2P数: {{fmtCount}} ",
+        "huntedRefsCount_zero": "ハンティングした公園はありません",
+        "huntedRefsCount_one": "ハンティングした公園: 1ヶ所",
+        "huntedRefsCount_other": "ハンティングした公園: {{fmtCount}} ヶ所",
+        "activatorQSOsCount_zero": "アクティベーターQSOはありません",
+        "activatorQSOsCount_one": "アクティベーターQSOの数: 1",
+        "activatorQSOsCount_other": "アクティベーターQSOの数: {{fmtCount}} ",
+        "ref2refQSOsCount_zero": "P2P QSO なし",
+        "ref2refQSOsCount_one": "P2P QSOの数: 1",
+        "ref2refQSOsCount_other": "P2P QSOの数: {{fmtCount}}",
+        "huntedQSOsCount_zero": "ハンティングで得た QSO :0",
+        "huntedQSOsCount_one": "ハンティングで得た QSO数: 1 ",
+        "huntedQSOsCount_other": " ハンティングで得たQSO数: {{fmtCount}} ハンテッド QSO",
+        "operationTotals": "オペレーション合計",
+        "referencesActivatedCount_zero": "アクティベートした公園: 0",
+        "referencesActivatedCount_one": "アクティベートした公園: 1",
+        "referencesActivatedCount_other": "アクティベートした公園: {fmtCount}} ",
+        "referencesMissedCount_zero": "未達成の公園はありません",
+        "referencesMissedCount_one": "未達成の公園の数: 1 ",
+        "referencesMissedCount_other": "未達成の公園の数: {{fmtCount}} ",
+        "referencesHuntedCount_zero": "ハンティングした公園はありません",
+        "referencesHuntedCount_one": "ハンティングした公園の数: 1 ",
+        "referencesHuntedCount_other": "ハンティングした公園の数: 1 {{fmtCount}} "
+      },
+      "loggingControl": {
+        "theirRefLabel": "彼らのWWFF"
+      },
+      "exampleRefName": "例の公園",
+      "unknownRefName": "不明な公園",
+      "noRefsNearby": "近くに公園はありません！",
+      "postSpotAPI": {
+        "error": "WWFFスポットの投稿でエラーが発生しました",
+        "serverResponse": "サーバーがステータス {{status}} {{message}} で応答しました"
+      }
+    },
+    "zlota": {
+      "account": {
+        "title": "ZLOTA (ZLOTA スポット)",
+        "dialogTitle": "ZLOTA アカウント",
+        "description": "コールサイン: {{callsign}}",
+        "noAccount": "アカウントなし",
+        "pleaseEnterDetails": "ZLOTA アカウントの詳細を入力してください:",
+        "callsignLabel": "コールサイン",
+        "callsignPlaceholder": "あなたのアカウントのコールサイン",
+        "pinLabel": "PIN (パスワードではありません)",
+        "pinPlaceholder": "あなたの PIN"
+      },
+      "activityOptions": {
+        "title_zero": "アクティベートする場所の参照コードが選択されていません",
+        "title_one": "アクティベートする場所の参照コード：1ヶ所",
+        "title_other": "アクティベートする場所の参照コード：{{count}}ヶ所",
+        "noReferencesFound": "参照コードが見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingReferences_zero": "一致する参照コードがありません",
+        "matchingReferences_one": "一致する参照コード：1件",
+        "matchingReferences_other": "一致する参照コード：{{count}}件",
+        "searchForReferences": "アクティベートする場所の参照コードを検索しましょう！",
+        "noReferencesNearby": "参照コードに対応する場所が近くにありません",
+        "nearbyReferences": "近くに存在する参照番号",
+        "searchPlaceholder": "名称またはコードで参照…",
+        "unknownReference": "不明な参照コード"
+      },
+      "loggingControl": {
+        "theirRefLabel": "彼らの参照コード"
+      },
+      "postSpotAPI": {
+        "error": "ZLOTAスポットの投稿でエラーが発生しました",
+        "serverResponse": "サーバーがステータス {{status}} {{message}} で応答しました"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "ref2refCount_zero": "Ref2Ref なし",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Ref",
+        "huntedRefsCount_zero": "ハンティングした参照コードはありません",
+        "huntedRefsCount_one": "ハンティングした参照コード数: 1",
+        "huntedRefsCount_other": "ハンティングした参照コード数: {{fmtCount}} ",
+        "activatorQSOsCount_zero": "アクティベーターQSOはありません",
+        "activatorQSOsCount_one": "アクティベーター QSO 数: 1",
+        "activatorQSOsCount_other": "アクティベーター QSO 数: {{fmtCount}} ",
+        "ref2refQSOsCount_zero": "Ref2Ref QSO はありません",
+        "ref2refQSOsCount_one": "Ref2Ref QSO数: 1 ",
+        "ref2refQSOsCount_other": "Ref2Ref QSO数: {{fmtCount}} ",
+        "huntedQSOsCount_zero": "ハンティングした QSOはありません",
+        "huntedQSOsCount_one": "ハンティングした QSO数: 1",
+        "huntedQSOsCount_other": "ハンティングした QSO数: {{fmtCount}}",
+        "operationTotals": "オペレーション合計",
+        "referencesActivatedCount_zero": "アクティベートされた参照コードなし",
+        "referencesActivatedCount_one": "アクティベートされた参照コード数: 1",
+        "referencesActivatedCount_other": "アクティベートされた参照コード数: {{fmtCount}} ",
+        "referencesMissedCount_zero": "未達成の参照コードはありません",
+        "referencesMissedCount_one": "未達成の参照コード数: 1",
+        "referencesMissedCount_other": "未達成の参照コード数: {{fmtCount}} ",
+        "referencesHuntedCount_zero": "ハンティングした参照コードはありません",
+        "referencesHuntedCount_one": "ハンティングした参照コード: 1",
+        "referencesHuntedCount_other": "ハンティングした参照コード: {{fmtCount}} "
+      }
+    }
+  }
+}

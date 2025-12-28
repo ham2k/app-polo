@@ -17,7 +17,7 @@ import { setGlobalDialog } from '../store/ui'
 
 import packageJson from '../../package.json'
 
-const BUNDLED_LANGUAGES = ['en', 'es', 'fr', 'de', 'nl', 'sk', 'nb']
+const BUNDLED_LANGUAGES = ['en', 'es', 'ja', 'de', 'fr', 'nl', 'sk', 'nb', 'cs']
 
 function readBundledJSON(language, namespace) {
   // Using `require` allows us to only load one language at a time
