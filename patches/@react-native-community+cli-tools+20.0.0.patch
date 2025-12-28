@@ -1,0 +1,13 @@
+diff --git a/node_modules/@react-native-community/cli-tools/build/startServerInNewWindow.js b/node_modules/@react-native-community/cli-tools/build/startServerInNewWindow.js
+index d93ee0b..b1687ed 100644
+--- a/node_modules/@react-native-community/cli-tools/build/startServerInNewWindow.js
++++ b/node_modules/@react-native-community/cli-tools/build/startServerInNewWindow.js
+@@ -100,7 +100,7 @@ function startServerInNewWindow(port, projectRoot, reactNativePath, terminal) {
+   }
+   if (process.platform === 'darwin') {
+     try {
+-      return _execa().default.sync('open', ['-na', terminal, launchPackagerScript], procConfig);
++      return _execa().default.sync('open', ['-a', terminal, launchPackagerScript], procConfig);
+     } catch (error) {
+       return _execa().default.sync('open', [launchPackagerScript], procConfig);
+     }
