@@ -198,14 +198,18 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
       </H2kDialogContent>
       <H2kDialogActions>
         {showResend ? (
-          <>
-            <H2kButton onPress={handleResend} style={{ alignSelf: 'flex-start' }}>{t('screens.syncSettings.syncAccountDialog.resendButton', 'Resend')}</H2kButton>
-            <H2kButton onPress={handleRevert} style={{ alignSelf: 'flex-start' }}>{t('screens.syncSettings.syncAccountDialog.revertButton', 'Revert')}</H2kButton>
-          </>
+          <H2kButton onPress={handleResend} style={{ alignSelf: 'flex-start' }}>{t('screens.syncSettings.syncAccountDialog.resendButton', 'Resend')}</H2kButton>
         ) : (
           // Otherwise the "Ok" button jumps around!
           <View style={{ flex: 0, width: styles.oneSpace }} />
         )}
+        {showResend ? (
+          <H2kButton onPress={handleRevert} style={{ alignSelf: 'flex-start' }}>{t('screens.syncSettings.syncAccountDialog.revertButton', 'Revert')}</H2kButton>
+        ) : (
+          // Otherwise the "Ok" button jumps around!
+          <View style={{ flex: 0, width: styles.oneSpace }} />
+        )}
+
         <View style={{ flex: 1 }} />
 
         <H2kButton style={{ flex: 0 }} onPress={handleCancel}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>

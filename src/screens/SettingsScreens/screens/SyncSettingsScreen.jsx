@@ -20,11 +20,12 @@ import { H2kButton, H2kListItem, H2kListSection, H2kMarkdown } from '../../../ui
 import { SyncServiceDialog } from '../components/SyncServiceDialog'
 import { SyncAccountDialog } from '../components/SyncAccountDialog'
 import { findHooks } from '../../../extensions/registry'
-import { selectLocalExtensionData, setLocalExtensionData, selectLocalData, setLocalData } from '../../../store/local'
+import { selectLocalExtensionData, setLocalExtensionData, selectLocalData } from '../../../store/local'
 import { selectSettings } from '../../../store/settings'
 import { clearMatchingNotices } from '../../../store/system'
-import { selectFiveSecondsTick } from '../../../store/time'
-import { clearAllOperationData, getSyncCounts, resetSyncedStatus } from '../../../store/operations'
+import { selectFiveSecondsTick, startTickTock, stopTickTock } from '../../../store/time'
+import { getSyncCounts, resetSyncedStatus } from '../../../store/operations'
+import { prepareSyncToReplaceLocalData, prepareSyncToCombineLocalData } from '../../../store/sync'
 
 import GLOBAL from '../../../GLOBAL'
 
@@ -57,13 +58,20 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     console.log('LOFI', lofiData)
   }, [lofiData])
 
+  useEffect(() => { // Ensure the clock is ticking
+    dispatch(startTickTock())
+    return () => dispatch(stopTickTock())
+  }, [dispatch])
+
   const fiveSecondTick = useSelector(selectFiveSecondsTick)
-  const [syncStatus, setSyncStatus] = useState()
+
+  const [counts, setCounts] = useState()
   useEffect(() => {
     if (!currentDialog) {
       setImmediate(async () => {
+        console.log('refreshing data')
         dispatch(syncHook.getAccountData())
-        setSyncStatus(await _syncCountDescription({ t }))
+        setCounts(await getSyncCounts())
       })
     }
   }, [currentDialog, dispatch, fiveSecondTick, syncHook, t])
@@ -113,14 +121,23 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     }
   }, [currentDialog])
 
-  const handleResetSyncStatus = useCallback(async () => {
-    await dispatch(resetSyncedStatus())
-    setSyncStatus(await _syncCountDescription({ t }))
-  }, [dispatch, t])
-
   const askAboutMergingAccounts = useMemo(() => {
-    return lofiData?.account?.uuid && localData?.sync?.lastSyncAccountUUID && (lofiData.account.uuid !== localData.sync.lastSyncAccountUUID)
-  }, [lofiData?.account?.uuid, localData?.sync?.lastSyncAccountUUID])
+    if (lofiData?.account?.uuid && localData?.sync?.lastSyncAccountUUID && (lofiData.account.uuid !== localData.sync.lastSyncAccountUUID)) {
+      if (lofiData?.account?.operations?.total === 0 && lofiData?.account?.qsos?.total === 0) {
+        return false
+      }
+
+      if (counts?.qsos?.total === 0 && counts?.operations?.total > 0) {
+        return false
+      }
+
+      return true
+    }
+  }, [
+    lofiData.account.uuid, lofiData.account?.operations?.total, lofiData.account?.qsos?.total,
+    localData.sync.lastSyncAccountUUID,
+    counts?.qsos?.total, counts?.operations?.total
+  ])
 
   const serverLabel = useMemo(() => {
     if (lofiData?.server) {
@@ -148,14 +165,18 @@ If you have unsynced data, IT WILL BE LOST.`),
           text: t('screens.syncSettings.replaceDataAlert.buttonProcees', 'Yes, I\'ll take the risk! Replace It All!'),
           style: 'destructive',
           onPress: async () => {
-            dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
-            dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
-            await dispatch(clearAllOperationData())
+            await prepareSyncToReplaceLocalData({ dispatch })
           }
         }
       ]
     )
   }, [dispatch, t])
+
+  // TODO: Make this reset trigger a full sync, not just upload
+  const handleResetSyncStatus = useCallback(async () => {
+    await dispatch(resetSyncedStatus())
+    setCounts(await getSyncCounts())
+  }, [dispatch])
 
   const handleCombineLocalData = useCallback(async () => {
     Alert.alert(t('screens.syncSettings.combineDataAlert.title', 'Combine Local Data?'),
@@ -170,10 +191,7 @@ This operation cannot be undone.`),
           text: t('screens.syncSettings.combineDataAlert.buttonText', 'Yes, I\'ll take the risk! Combine Them!'),
           style: 'destructive',
           onPress: async () => {
-            dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
-            dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
-            await dispatch(resetSyncedStatus())
-            dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))
+            await prepareSyncToCombineLocalData({ dispatch })
           }
         }
       ])
@@ -203,12 +221,12 @@ Please try again later.`, { error: linkResult.json.error })
   const handleDialogDone = useCallback(() => {
     setCurrentDialog('')
     setImmediate(async () => {
-      setSyncStatus(await _syncCountDescription({ t }))
+      setCounts(await getSyncCounts())
       if (syncHook) {
         dispatch(syncHook.getAccountData())
       }
     })
-  }, [dispatch, syncHook, t])
+  }, [dispatch, syncHook])
 
   const progressWrapper = useMemo(() => {
     return ({ children }) => (
@@ -224,90 +242,99 @@ Please try again later.`, { error: linkResult.json.error })
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
-        <H2kListSection title={t('screens.syncSettings.title', 'Sync Settings')}>
-          <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
-            <Text style={styles.paragraph}>
-              {t('screens.syncSettings.description', 'Ham2K LoFi offers a reliable sync service between all your devices and provides a backup for your operation data in the cloud.')}
-            </Text>
-          </View>
-          <H2kListItem
-            title={t('screens.syncSettings.syncService', 'Sync Service')}
-            description={lofiData?.enabled !== false ? t('screens.syncSettings.syncService.enabled', 'Enabled') : t('screens.syncSettings.syncService.disabled', 'Disabled')}
-            leftIcon="sync-circle"
-            rightSwitchValue={lofiData?.enabled !== false}
-            rightSwitchOnValueChange={(value) => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: value }))}
-            onPress={() => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: !lofiData.enabled }))}
+        <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
+          <Text style={styles.paragraph}>
+            {t('screens.syncSettings.description', 'Ham2K LoFi offers a reliable sync service between all your devices and provides a backup for your operation data in the cloud.')}
+          </Text>
+        </View>
+        <H2kListItem
+          title={t('screens.syncSettings.syncService', 'Sync Service')}
+          description={lofiData?.enabled !== false ? t('screens.syncSettings.syncService.enabled', 'Enabled') : t('screens.syncSettings.syncService.disabled', 'Disabled')}
+          leftIcon="sync-circle"
+          rightSwitchValue={lofiData?.enabled !== false}
+          rightSwitchOnValueChange={(value) => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: value }))}
+          onPress={() => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: !lofiData.enabled }))}
+        />
+        <H2kListItem
+          title={accountTitle}
+          description={accountInfo}
+          leftIcon="card-account-details"
+          onPress={() => setCurrentDialog('syncAccount')}
+        />
+        {currentDialog === 'syncAccount' && (
+          <SyncAccountDialog
+            styles={styles}
+            visible={true}
+            syncHook={syncHook}
+            onDialogDone={handleDialogDone}
           />
-          <H2kListItem
-            title={accountTitle}
-            description={accountInfo}
-            leftIcon="card-account-details"
-            onPress={() => setCurrentDialog('syncAccount')}
-          />
-          {currentDialog === 'syncAccount' && (
-            <SyncAccountDialog
-              styles={styles}
-              visible={true}
-              syncHook={syncHook}
-              onDialogDone={handleDialogDone}
-            />
-          )}
+        )}
 
-          {askAboutMergingAccounts && (
-            <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column', marginBottom: styles.oneSpace * 4 }}>
-              <H2kMarkdown style={[styles.paragraph, styles.text.bold, { color: styles.colors.error }]}>
-                {t('screens.syncSettings.askAboutMergingAccounts.warning-md', { id: localData.sync.lastSyncAccountUUID.slice(0, 8).toUpperCase() })}
-              </H2kMarkdown>
-              <H2kMarkdown style={[styles.paragraph, { marginTop: styles.oneSpace * 1 }]}>
-                {lofiData?.account?.email ? (
-                  t('screens.syncSettings.askAboutMergingAccounts.option1withEmail-md', { email: lofiData?.account?.email })
-                ) : (
-                  t('screens.syncSettings.askAboutMergingAccounts.option1noEmail-md', 'Option #1: Replace data on this device with that from the new account on the server.')
-                )}
-              </H2kMarkdown>
-              <H2kButton mode="contained" style={{ marginBottom: styles.oneSpace * 1 }} onPress={handleReplaceLocalData}>{t('screens.syncSettings.askAboutMergingAccounts.option1button', 'Go with #1: replace with server data')}</H2kButton>
-
-              <H2kMarkdown style={[styles.paragraph, { marginTop: styles.oneSpace * 1 }]}>
-                {lofiData?.account?.email ? (
-                  t('screens.syncSettings.askAboutMergingAccounts.option2withEmail-md', { email: lofiData?.account?.email })
-                ) : (
-                  t('screens.syncSettings.askAboutMergingAccounts.option2noEmail-md', 'Option #2: Combine data on this device with that from the new account on the server.')
-                )}
-              </H2kMarkdown>
-              <H2kButton mode="contained" style={{ marginBottom: styles.oneSpace * 1 }} onPress={handleCombineLocalData}>{t('screens.syncSettings.askAboutMergingAccounts.option2button', 'Go with #2: combine data')}</H2kButton>
-
-              {lofiData?.previousAccount?.email && (
-                <>
-                  <H2kMarkdown style={[styles.paragraph, { marginTop: styles.oneSpace * 1 }]}>
-                    {t('screens.syncSettings.askAboutMergingAccounts.option3-md', { email: lofiData?.previousAccount?.email })}
-                  </H2kMarkdown>
-                  <H2kButton mode="contained" style={{ marginBottom: styles.oneSpace * 1 }} onPress={handleLinkBack}>{t('screens.syncSettings.askAboutMergingAccounts.option3button', 'Go with #3: previous account')}</H2kButton>
-                </>
+        {askAboutMergingAccounts && (
+          <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column', marginBottom: styles.oneSpace * 4 }}>
+            <H2kMarkdown style={[styles.paragraph, styles.text.bold, { color: styles.colors.error }]}>
+              {t('screens.syncSettings.askAboutMergingAccounts.warning-md', { id: localData.sync.lastSyncAccountUUID.slice(0, 8).toUpperCase() })}
+            </H2kMarkdown>
+            <H2kMarkdown style={[styles.paragraph, { marginTop: styles.oneSpace * 1 }]}>
+              {lofiData?.account?.email ? (
+                t('screens.syncSettings.askAboutMergingAccounts.option1withEmail-md', { email: lofiData?.account?.email })
+              ) : (
+                t('screens.syncSettings.askAboutMergingAccounts.option1noEmail-md', 'Option #1: Replace data on this device with that from the new account on the server.')
               )}
-            </View>
-          )}
+            </H2kMarkdown>
+            <H2kButton mode="contained" style={{ marginBottom: styles.oneSpace * 1 }} onPress={handleReplaceLocalData}>{t('screens.syncSettings.askAboutMergingAccounts.option1button', 'Go with #1: replace with server data')}</H2kButton>
 
-          <H2kListItem
-            title={`${lofiData?.subscription?.plan?.name ?? t('screens.syncSettings.noActivePlan', 'No Active Plan')}`}
-            description={t(`screens.syncSettings.plans.${lofiData?.subscription?.plan?.slug}`, lofiData?.subscription?.plan?.description ?? '')}
-            leftIcon="calendar-clock"
-            onPress={() => null}
-          />
+            <H2kMarkdown style={[styles.paragraph, { marginTop: styles.oneSpace * 1 }]}>
+              {lofiData?.account?.email ? (
+                t('screens.syncSettings.askAboutMergingAccounts.option2withEmail-md', { email: lofiData?.account?.email })
+              ) : (
+                t('screens.syncSettings.askAboutMergingAccounts.option2noEmail-md', 'Option #2: Combine data on this device with that from the new account on the server.')
+              )}
+            </H2kMarkdown>
+            <H2kButton mode="contained" style={{ marginBottom: styles.oneSpace * 1 }} onPress={handleCombineLocalData}>{t('screens.syncSettings.askAboutMergingAccounts.option2button', 'Go with #2: combine data')}</H2kButton>
 
-          <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
-            <H2kMarkdown style={styles.paragraph}>{t('screens.syncSettings.syncServiceDescription-md', `Basic service is free and allows you to sync recent data (up to 7 days) between two devices or apps at limited speed.
+            {lofiData?.previousAccount?.email && (
+              <>
+                <H2kMarkdown style={[styles.paragraph, { marginTop: styles.oneSpace * 1 }]}>
+                  {t('screens.syncSettings.askAboutMergingAccounts.option3-md', { email: lofiData?.previousAccount?.email })}
+                </H2kMarkdown>
+                <H2kButton mode="contained" style={{ marginBottom: styles.oneSpace * 1 }} onPress={handleLinkBack}>{t('screens.syncSettings.askAboutMergingAccounts.option3button', 'Go with #3: previous account')}</H2kButton>
+              </>
+            )}
+          </View>
+        )}
+
+        <H2kListItem
+          title={`${lofiData?.subscription?.plan?.name ?? t('screens.syncSettings.noActivePlan', 'No Active Plan')}`}
+          description={t(`screens.syncSettings.plans.${lofiData?.subscription?.plan?.slug}`, lofiData?.subscription?.plan?.description ?? '')}
+          leftIcon="calendar-clock"
+          onPress={() => null}
+        />
+
+        <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
+          <H2kMarkdown style={styles.paragraph}>{t('screens.syncSettings.syncServiceDescription-md', `Basic service is free and allows you to sync recent data (up to 7 days) between two devices or apps at limited speed.
 
 Full service requires a paid subscription and includes all your operations synced between any reasonable number of devices or apps at full speed.
 
 While the LoFi service is in its TESTING PERIOD for the next couple of months, the service will remain free. After that prices will depend on the country and currency but should not be more than US$30/year or equivalent, and probably less.`)}</H2kMarkdown>
-          </View>
+        </View>
 
-        </H2kListSection>
         <H2kListSection title={t('screens.syncSettings.thisDevice', 'This Device')}>
           <H2kListItem
             key={lofiData?.client?.uuid}
             title={lofiData?.client?.name ? `${lofiData?.client?.name} (${lofiData?.client?.uuid?.slice(0, 8)?.toUpperCase() ?? '?'})` : t('screens.syncSettings.notAuthenticated', 'Not authenticated')}
-            description={syncStatus}
+            description={
+              [
+                t(
+                  'screens.syncSettings.syncCountDescription.operations', 'Operations: {{synced}} synced, {{pending}} pending',
+                  { synced: fmtNumber(counts?.operations?.synced || 0), pending: fmtNumber(counts?.operations?.pending || 0) }
+                ),
+                t(
+                  'screens.syncSettings.syncCountDescription.qsos', 'QSOs: {{synced}} synced, {{pending}} pending',
+                  { synced: fmtNumber(counts?.qsos?.synced || 0), pending: fmtNumber(counts?.qsos?.pending || 0) }
+                )
+              ].join('\n')
+            }
             leftIcon="cellphone"
           />
         </H2kListSection>
@@ -377,21 +404,6 @@ While the LoFi service is in its TESTING PERIOD for the next couple of months, t
 
     </ScreenContainer>
   )
-}
-
-async function _syncCountDescription ({ t }) {
-  const counts = await getSyncCounts()
-
-  return [
-    t(
-      'screens.syncSettings.syncCountDescription.operations', 'Operations: {{synced}} synced, {{pending}} pending',
-      { synced: fmtNumber(counts?.operations?.synced || 0), pending: fmtNumber(counts?.operations?.pending || 0) }
-    ),
-    t(
-      'screens.syncSettings.syncCountDescription.qsos', 'QSOs: {{synced}} synced, {{pending}} pending',
-      { synced: fmtNumber(counts?.qsos?.synced || 0), pending: fmtNumber(counts?.qsos?.pending || 0) }
-    )
-  ].join('\n')
 }
 
 function _cloudCountDescription ({ operations, qsos, t }) {

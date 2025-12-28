@@ -12,9 +12,9 @@ import { diff } from 'just-diff'
 import GLOBAL from '../../GLOBAL'
 
 import { findHooks } from '../../extensions/registry'
-import { addNotice } from '../system'
+import { addNotice, clearMatchingNotices } from '../system'
 // import { logRemotely } from '../../distro'
-import { getSyncCounts, markOperationsAsSynced, mergeSyncOperations, queryOperations, resetSyncedStatus } from '../operations'
+import { clearAllOperationData, getSyncCounts, markOperationsAsSynced, mergeSyncOperations, queryOperations, resetSyncedStatus } from '../operations'
 import { markQSOsAsSynced, mergeSyncQSOs, queryQSOs } from '../qsos'
 import { selectFiveSecondsTick, startTickTock, stopTickTock } from '../time'
 import { selectLocalData, selectLocalExtensionData, setLocalData, setLocalExtensionData } from '../local'
@@ -32,7 +32,7 @@ const DEFAULT_SYNC_CHECK_PERIOD = 1000 * 10 // 1000 * 60 * 1 // 1 minutes, time 
 const SMALL_BATCH_SIZE = 10 // QSOs or Operations to send on a quick `syncLatest...`
 const DEFAULT_LARGE_BATCH_SIZE = 10 //200 // QSOs or Operations to send on a regular sync loop
 
-const VERBOSE = 0
+const VERBOSE = 2
 
 let errorCount = 0
 
@@ -84,6 +84,10 @@ export function useSyncLoop({ dispatch, settings, online, appState }) {
     } else if (currentAccountUUID && localData?.sync?.lastSyncAccountUUID !== currentAccountUUID) {
       // Account changed!!! Disable sync until the user updates their settings
       if (VERBOSE > 1) console.log(' -- account changed, sync disabled')
+      console.log('🚨 Account Changed!!!')
+      console.log('-- currentAccountUUID', currentAccountUUID)
+      console.log('-- localData', localData)
+
       setGoAheadWithSync(false)
       // logRemotely({ message: 'account changed, sync disabled', currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
       _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
@@ -320,7 +324,7 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
       if (VERBOSE > 1) console.log(' -- qsos', response?.json?.qsos)
       if (VERBOSE > 1) console.log(' -- operations', response?.json?.operations)
 
-      const [metaOk, changesToSyncData] = await _processResponseMeta({ response, dispatch, localData })
+      const [metaOk, changesToSyncData] = await _processResponseMeta({ syncHook, response, dispatch, localData })
       if (metaOk) {
         if (response.ok) {
           if (VERBOSE >= 1) logTimer('sync', 'Response parsed')
@@ -459,19 +463,13 @@ function _scheduleDebouncedFunctionForSyncLoop(fn) {
   }
 }
 
-async function _processResponseMeta({ response = {}, localData = {}, dispatch }) {
+async function _processResponseMeta({ response = {}, localData = {}, dispatch, syncHook }) {
   const { json = {}, ok } = response
   const { meta = {}, account = {} } = json
   const { sync = {} } = localData
   const changesToSyncData = {}
 
-  if (ok && sync.lastSyncAccountUUID && sync.lastSyncAccountUUID !== json.account?.uuid) {
-    // Do not process the response unless the account matches the previous sync
-    // Let the user know so they can address this in the settings.
-    currentAccountUUID = account?.uuid
-    if (VERBOSE > 1) console.log(' -- account changed, sync ignored', { lastSyncAccountUUID: sync.lastSyncAccountUUID, newAccountUUID: account.uuid })
-    // logRemotely({ message: 'account changed, sync ignored', currentAccountUUID, lastSyncAccountUUID: localData.sync?.lastSyncAccountUUID })
-    _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAccountUUID: sync.lastSyncAccountUUID })
+  if (ok && !await _analyzeAccountChanges({ dispatch, syncHook, account, lofiData: localData?.extensions?.['ham2k-lofi'], syncData: sync })) {
     return [false, undefined]
   }
 
@@ -545,6 +543,40 @@ async function _processResponseMeta({ response = {}, localData = {}, dispatch })
   return [true, changesToSyncData]
 }
 
+async function _analyzeAccountChanges({ dispatch, account, lofiData, syncData, syncHook }) {
+  // If the account has changed, consider pausing sync…
+  if (syncData?.lastSyncAccountUUID && syncData?.lastSyncAccountUUID !== account?.uuid) {
+    if (VERBOSE > 0) console.log('🚨 Account changed', account.uuid, syncData.lastSyncAccountUUID)
+    if (VERBOSE > 0) console.log('-- account', account)
+    if (VERBOSE > 0) console.log('-- syncData', syncData)
+    if (VERBOSE > 0) console.log('-- lofiData', lofiData)
+
+    const freshAccountData = await dispatch(syncHook.getAccountData())
+    if (freshAccountData.ok) {
+      // If the other account has no data, we can just continue syncing
+      if (freshAccountData?.json?.operations?.total === 0 && freshAccountData?.json?.qsos?.total === 0) {
+        if (VERBOSE > 0) console.log(' -- other account has no data, continuing sync')
+        await prepareSyncToCombineLocalData({ dispatch })
+        return true
+      }
+    }
+
+    const counts = await getSyncCounts()
+    if (counts?.qsos?.total === 0 && counts?.operations?.total > 0) {
+      if (VERBOSE > 0) console.log(' -- previous account has no data, continuing sync')
+      await prepareSyncToCombineLocalData({ dispatch })
+      return true
+    }
+
+    if (VERBOSE > 0) console.log(' -- other account has data, pausing sync')
+    // Pause sync and show a notice to the user
+    _addNoticeForAccountChanged({ dispatch, currentAccountUUID: account.uuid, lastSyncAccountUUID: syncData.lastSyncAccountUUID })
+    return false
+  }
+  // No account change, continue syncing
+  return true
+}
+
 let _lastAccountNotified = 0
 
 function _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAccountUUID }) {
@@ -565,4 +597,18 @@ function _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAcc
       }
     ]
   }))
+}
+
+async function prepareSyncToReplaceLocalData({ dispatch }) {
+  dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
+  dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
+  dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))
+  await dispatch(clearAllOperationData())
+}
+
+async function prepareSyncToCombineLocalData({ dispatch }) {
+  dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
+  dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
+  dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))
+  await dispatch(resetSyncedStatus())
 }
