@@ -1,4 +1,12 @@
 {
+  "25.12.3": {
+    "name": "December '25 (patch 3)",
+    "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
+    "changes": [
+      "Japanese and Czech translations",
+      "Fixed issues in sync service"
+    ]
+  },
   "25.12.2": {
     "name": "December '25 (patch 2)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
