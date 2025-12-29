@@ -16,7 +16,6 @@ import CustomExtension from './activities/custom/CustomExtension'
 import ELAExtension from './activities/ela/ELAExtension'
 import FDExtension from './activities/fd/FDExtension'
 import GMAExtension from './activities/gma/GMAExtension'
-import HSOTAExtension from './activities/hsota/HSOTAExtension'
 import MOTAExtension from './activities/mota/MOTAExtension'
 import PGAExtentsion from './activities/pga/PGAExtension'
 import POTAExtension from './activities/pota/POTAExtension'
@@ -75,7 +74,6 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(ELAExtension)
   registerExtension(FDExtension)
   registerExtension(GMAExtension)
-  registerExtension(HSOTAExtension)
   registerExtension(MOTAExtension)
   registerExtension(PGAExtentsion)
   registerExtension(POTAExtension)

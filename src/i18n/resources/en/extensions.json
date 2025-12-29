@@ -337,26 +337,6 @@
         "unknownSummit": "Unknown summit"
       }
     },
-    "hsota": {
-      "name": "Hills on the Air",
-      "shortName": "HSOTA",
-      "exportName": "HSOTA Activation",
-      "activityOptions": {
-        "title_zero": "No sites selected for activation",
-        "title_one": "Activating 1 site",
-        "title_other": "Activating {{count}} sites",
-        "noSitesFound": "No sites found",
-        "nearestMatches": "Nearest {{limit}} of {{count}} matches",
-        "matchingSites_zero": "No matching sites",
-        "matchingSites_one": "1 matching site",
-        "matchingSites_other": "{{count}} matching sites",
-        "searchForSites": "Search for some sites to activate!",
-        "noSitesNearby": "No sites nearby",
-        "nearbySites": "Nearby sites",
-        "searchPlaceholder": "Sites by name or reference…",
-        "unknownSite": "Unknown site"
-      }
-    },
     "mota": {
       "name": "Mills on the Air",
       "shortName": "MOTA",
