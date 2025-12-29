@@ -103,7 +103,7 @@ export const selectOperationsList = createSelector(
   (state) => state?.settings?.showDeletedOps,
   (info, showDeletedOps) => {
     return Object.values(info || {}).filter((info) => info?.uuid && (showDeletedOps || !info?.deleted)).sort((a, b) => {
-      return (b.startAtMillisMax ?? b.createdAtMillis ?? 0) - (a.startAtMillisMax ?? a.createdAtMillis ?? 0)
+      return (b.startAtMillisMax || b.createdAtMillis || 0) - (a.startAtMillisMax || a.createdAtMillis || 0)
     })
   }
 )
@@ -113,7 +113,7 @@ export const selectOperationIds = createSelector(
   (state) => state?.settings?.showDeletedOps,
   (info, showDeletedOps) => {
     return Object.values(info || {}).filter(op => op?.uuid && (showDeletedOps || !op?.deleted)).sort((a, b) => {
-      return (b.startAtMillisMax ?? b.createdAtMillis ?? 0) - (a.startAtMillisMax ?? a.createdAtMillis ?? 0)
+      return (b.startAtMillisMax || b.createdAtMillis || 0) - (a.startAtMillisMax || a.createdAtMillis || 0)
     }).filter(Boolean).map(op => op.uuid) // Just return the UUIDs
   },
   {
