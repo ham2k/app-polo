@@ -649,52 +649,13 @@
       "bands": {
         "title": "Bånd",
         "showCommonBands": "Vis vanlige bånd",
-        "showAllBands": "Vis alle bånd",
-        "names": {
-          "160m-a11y": "160 meter",
-          "80m-a11y": "80 meter",
-          "60m-a11y": "60 meter",
-          "40m-a11y": "40 meter",
-          "30m-a11y": "30 meter",
-          "20m-a11y": "20 meter",
-          "17m-a11y": "17 meter",
-          "15m-a11y": "15 meter",
-          "12m-a11y": "12 meter",
-          "11m-a11y": "11 meter",
-          "10m-a11y": "10 meter",
-          "6m-a11y": "6 meter",
-          "2m-a11y": "2 meter",
-          "70cm-a11y": "70 centimeter",
-          "23cm-a11y": "23 centimeter",
-          "13cm-a11y": "13 centimeter",
-          "9cm-a11y": "9 centimeter",
-          "6cm-a11y": "6 centimeter",
-          "3cm-a11y": "3 centimeter",
-          "1-25cm-a11y": "1,25 centimeter",
-          "6mm-a11y": "6 millimeter",
-          "4mm-a11y": "4 millimeter",
-          "2-5mm-a11y": "2,5 millimeter",
-          "2mm-a11y": "2 millimeter",
-          "1mm-a11y": "1 millimeter",
-          "submm-a11y": "Submillimeter",
-          "other": "Annet",
-          "other-a11y": "Annet bånd"
-        }
+        "showAllBands": "Vis alle bånd"
       },
       "modes": {
         "title": "Modus",
         "showMoreModes": "Vis flere moduser",
         "showEvenMoreModes": "Vis enda flere moduser",
-        "showFewerModes": "Vis færre moduser",
-        "names": {
-          "SSB-a11y": "Enkelt sidebånd",
-          "USB-a11y": "Øvre sidebånd",
-          "LSB-a11y": "Nedre sidebånd",
-          "RTTY-a11y": "Ritty",
-          "CW-a11y": "C.W.",
-          "other": "Annet",
-          "other-a11y": "Annen modus"
-        }
+        "showFewerModes": "Vis færre moduser"
       }
     },
     "exportSettings": {

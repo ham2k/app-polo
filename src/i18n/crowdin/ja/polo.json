@@ -649,52 +649,13 @@
       "bands": {
         "title": "バンド",
         "showCommonBands": "一般的なバンドを表示",
-        "showAllBands": "すべてのバンドを表示",
-        "names": {
-          "160m-a11y": "160 m",
-          "80m-a11y": "80 m",
-          "60m-a11y": "60 m",
-          "40m-a11y": "40 m",
-          "30m-a11y": "30 m",
-          "20m-a11y": "20 m",
-          "17m-a11y": "17 m",
-          "15m-a11y": "15 m",
-          "12m-a11y": "12 m",
-          "11m-a11y": "11 m",
-          "10m-a11y": "10 m",
-          "6m-a11y": "6 m",
-          "2m-a11y": "2 m",
-          "70cm-a11y": "70 cm",
-          "23cm-a11y": "23 cm",
-          "13cm-a11y": "13 cm",
-          "9cm-a11y": "9 cm",
-          "6cm-a11y": "6 cm",
-          "3cm-a11y": "3 cm",
-          "1-25cm-a11y": "1.25 cm",
-          "6mm-a11y": "6 mm",
-          "4mm-a11y": "4 mm",
-          "2-5mm-a11y": "2.5 mm",
-          "2mm-a11y": "2 mm",
-          "1mm-a11y": "1 mm",
-          "submm-a11y": "サブmm",
-          "other": "その他",
-          "other-a11y": "その他のバンド"
-        }
+        "showAllBands": "すべてのバンドを表示"
       },
       "modes": {
         "title": "モード",
         "showMoreModes": "さらに多くのモードを表示",
         "showEvenMoreModes": "さらに多くのモードを表示",
-        "showFewerModes": "より少ないモードを表示",
-        "names": {
-          "SSB-a11y": "シングルサイドバンド：SSB",
-          "USB-a11y": "上側サイドバンド：USB",
-          "LSB-a11y": "下側サイドバンド：LSB",
-          "RTTY-a11y": "RTTY",
-          "CW-a11y": "CW",
-          "other": "その他",
-          "other-a11y": "その他のモード"
-        }
+        "showFewerModes": "より少ないモードを表示"
       }
     },
     "exportSettings": {

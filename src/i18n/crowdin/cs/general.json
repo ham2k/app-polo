@@ -301,6 +301,58 @@
       "SA": "Jižní Amerika",
       "OC": "Oceánie"
     },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Jedno postranní pásmo",
+        "USB": "USB",
+        "USB-a11y": "Horní postranní pásmo",
+        "LSB": "LSB",
+        "LSB-a11y": "Dolní postranní pásmo",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Ritty",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Jiné",
+        "other-a11y": "Jiné módy"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 metrů",
+        "80m-a11y": "80 metrů",
+        "60m-a11y": "60 metrů",
+        "40m-a11y": "40 metrů",
+        "30m-a11y": "30 metrů",
+        "20m-a11y": "20 metrů",
+        "17m-a11y": "17 metrů",
+        "15m-a11y": "15 metrů",
+        "12m-a11y": "12 metrů",
+        "11m-a11y": "11 metrů",
+        "10m-a11y": "10 metrů",
+        "6m-a11y": "6 metrů",
+        "2m-a11y": "2 metry",
+        "70cm-a11y": "70 centimetrů",
+        "23cm-a11y": "23 centimetrů",
+        "13cm-a11y": "13 centimetrů",
+        "9cm-a11y": "9 centimetrů",
+        "6cm-a11y": "6 centimetrů",
+        "3cm-a11y": "3 centimetry",
+        "1-25cm-a11y": "1,25 centimetru",
+        "6mm-a11y": "6 milimetrů",
+        "4mm-a11y": "4 milimetry",
+        "2-5mm-a11y": "2,5 milimetrů",
+        "2mm-a11y": "2 milimetry",
+        "1mm-a11y": "1 milimetr",
+        "submm-a11y": "Submilimetr",
+        "other": "Jiné",
+        "other-a11y": "Jiná pásma"
+      }
+    },
     "misc": {
       "placeholderCallsign": "N0CALL"
     }

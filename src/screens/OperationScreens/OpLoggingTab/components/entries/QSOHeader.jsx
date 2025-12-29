@@ -20,7 +20,7 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
 
   return (
     <H2kPressable onPressOut={onHeaderPress} style={styles.headerRow}>
-      <View style={styles.rowInner}>
+      <View style={styles.rowInner} accessibilityRole="header">
         <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
           {capitalizeFirstLetter(fmtDateDynamicZulu(section.day, { compact: true }))}
         </Text>

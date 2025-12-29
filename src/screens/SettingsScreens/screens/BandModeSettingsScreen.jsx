@@ -142,8 +142,8 @@ export default function BandModeSettingsScreen ({ navigation, splitView }) {
           {bandOptions.map((band) => (
             <H2kListItem
               key={band}
-              title={t(`screens.bandModeSettings.bands.names.${band.replace('.', '-')}`, band)}
-              accessibilityTitle={t(`screens.bandModeSettings.bands.names.${band.replace('.', '-')}-a11y`, ACCESSIBILITY_TEXT_FOR_BAND[band] || band)}
+              title={t(`general.bands.names.${band.replace('.', '-')}`, band)}
+              accessibilityTitle={t(`general.bands.names.${band.replace('.', '-')}-a11y`, ACCESSIBILITY_TEXT_FOR_BAND[band] || band)}
               rightSwitchValue={settings.bands.includes(band)}
               rightSwitchOnValueChange={(value) => setBand(band, value)}
               onPress={() => setBand(band, !settings.bands.includes(band))}
@@ -159,8 +159,8 @@ export default function BandModeSettingsScreen ({ navigation, splitView }) {
           {modeOptions.map((mode) => (
             <H2kListItem
               key={mode}
-              title={t(`screens.bandModeSettings.modes.names.${mode}`, mode)}
-              accessibilityTitle={t(`screens.bandModeSettings.modes.names.${mode}-a11y`, ACCESSIBILITY_TEXT_FOR_MODE[mode] || mode)}
+              title={t(`general.modes.names.${mode}`, mode)}
+              accessibilityTitle={t(`general.modes.names.${mode}-a11y`, ACCESSIBILITY_TEXT_FOR_MODE[mode] || mode)}
               rightSwitchValue={settings.modes.includes(mode)}
               rightSwitchOnValueChange={(value) => setMode(mode, value)}
               onPress={() => setMode(mode, !settings.modes.includes(mode))}

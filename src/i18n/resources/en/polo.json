@@ -649,52 +649,13 @@
       "bands": {
         "title": "Bands",
         "showCommonBands": "Show common bands",
-        "showAllBands": "Show all bands",
-        "names": {
-          "160m-a11y": "160 Meters",
-          "80m-a11y": "80 Meters",
-          "60m-a11y": "60 Meters",
-          "40m-a11y": "40 Meters",
-          "30m-a11y": "30 Meters",
-          "20m-a11y": "20 Meters",
-          "17m-a11y": "17 Meters",
-          "15m-a11y": "15 Meters",
-          "12m-a11y": "12 Meters",
-          "11m-a11y": "11 Meters",
-          "10m-a11y": "10 Meters",
-          "6m-a11y": "6 Meters",
-          "2m-a11y": "2 Meters",
-          "70cm-a11y": "70 Centimeters",
-          "23cm-a11y": "23 Centimeters",
-          "13cm-a11y": "13 Centimeters",
-          "9cm-a11y": "9 Centimeters",
-          "6cm-a11y": "6 Centimeters",
-          "3cm-a11y": "3 Centimeters",
-          "1-25cm-a11y": "1.25 Centimeters",
-          "6mm-a11y": "6 Millimeters",
-          "4mm-a11y": "4 Millimeters",
-          "2-5mm-a11y": "2.5 Millimeters",
-          "2mm-a11y": "2 Millimeters",
-          "1mm-a11y": "1 Millimeters",
-          "submm-a11y": "Submillimeter",
-          "other": "Other",
-          "other-a11y": "Other Band"
-        }
+        "showAllBands": "Show all bands"
       },
       "modes": {
         "title": "Modes",
         "showMoreModes": "Show more modes",
         "showEvenMoreModes": "Show even more modes",
-        "showFewerModes": "Show fewer modes",
-        "names": {
-          "SSB-a11y": "Single Sideband",
-          "USB-a11y": "Upper Sideband",
-          "LSB-a11y": "Lower Sideband",
-          "RTTY-a11y": "Ritty",
-          "CW-a11y": "C.W.",
-          "other": "Other",
-          "other-a11y": "Other Mode"
-        }
+        "showFewerModes": "Show fewer modes"
       }
     },
     "exportSettings": {

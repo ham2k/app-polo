@@ -649,52 +649,13 @@
       "bands": {
         "title": "Pásma",
         "showCommonBands": "Zobraziť bežné pásma",
-        "showAllBands": "Zobraziť všetky pásma",
-        "names": {
-          "160m-a11y": "160 Metrov",
-          "80m-a11y": "80 Metrov",
-          "60m-a11y": "60m",
-          "40m-a11y": "40m",
-          "30m-a11y": "30m",
-          "20m-a11y": "20m",
-          "17m-a11y": "17m",
-          "15m-a11y": "15m",
-          "12m-a11y": "12m",
-          "11m-a11y": "11m",
-          "10m-a11y": "10m",
-          "6m-a11y": "6m",
-          "2m-a11y": "2m",
-          "70cm-a11y": "70cm",
-          "23cm-a11y": "23cm",
-          "13cm-a11y": "13cm",
-          "9cm-a11y": "9cm",
-          "6cm-a11y": "6cm",
-          "3cm-a11y": "3cm",
-          "1-25cm-a11y": "1,25cm",
-          "6mm-a11y": "6mm",
-          "4mm-a11y": "4mm",
-          "2-5mm-a11y": "2,5mm",
-          "2mm-a11y": "2mm",
-          "1mm-a11y": "1mm",
-          "submm-a11y": "Submilimeter",
-          "other": "Iné",
-          "other-a11y": "Iné pásmo"
-        }
+        "showAllBands": "Zobraziť všetky pásma"
       },
       "modes": {
         "title": "Módy",
         "showMoreModes": "Zobraziť viac módov",
         "showEvenMoreModes": "Zobraziť ešte viac módov",
-        "showFewerModes": "Zobraziť menej módov",
-        "names": {
-          "SSB-a11y": "Jednostranné pásmo",
-          "USB-a11y": "Horné postranné pásmo",
-          "LSB-a11y": "Dolné Bočné Pásmo",
-          "RTTY-a11y": "Ritty",
-          "CW-a11y": "C.W.",
-          "other": "Iné",
-          "other-a11y": "Iný mód"
-        }
+        "showFewerModes": "Zobraziť menej módov"
       }
     },
     "exportSettings": {

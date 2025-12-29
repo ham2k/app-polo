@@ -4,7 +4,8 @@
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
     "changes": [
       "Japanese and Czech translations",
-      "Fixed issues in sync service"
+      "Fixed issues in sync service",
+      "Assorted tweaks and fixes"
     ]
   },
   "25.12.2": {

@@ -301,6 +301,58 @@
       "SA": "Južná Amerika",
       "OC": "Oceánia"
     },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Jednostranné pásmo",
+        "USB": "USB",
+        "USB-a11y": "Horné postranné pásmo",
+        "LSB": "LSB",
+        "LSB-a11y": "Spodné postranné pásmo",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Ritty",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Iné",
+        "other-a11y": "Iný mód"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 Metrov",
+        "80m-a11y": "80 Metrov",
+        "60m-a11y": "60 Metrov",
+        "40m-a11y": "40 Metrov",
+        "30m-a11y": "30 Metrov",
+        "20m-a11y": "20 Metrov",
+        "17m-a11y": "17 Metrov",
+        "15m-a11y": "15 Metrov",
+        "12m-a11y": "12 Metrov",
+        "11m-a11y": "11 Metrov",
+        "10m-a11y": "10 Metrov",
+        "6m-a11y": "6 Metrov",
+        "2m-a11y": "2 Metrov",
+        "70cm-a11y": "70 Centimetrov",
+        "23cm-a11y": "23 Centimetrov",
+        "13cm-a11y": "13 Centimetrov",
+        "9cm-a11y": "9 Centimetrov",
+        "6cm-a11y": "6 Centimetrov",
+        "3cm-a11y": "3 Centimetrov",
+        "1-25cm-a11y": "1,25 Centimetrov",
+        "6mm-a11y": "6 Milimetrov",
+        "4mm-a11y": "4 Milimetrov",
+        "2-5mm-a11y": "2,5 Milimetrov",
+        "2mm-a11y": "2 Milimetrov",
+        "1mm-a11y": "1 Milimetr",
+        "submm-a11y": "Podmilimetrové",
+        "other": "Iné",
+        "other-a11y": "Iné pásmo"
+      }
+    },
     "misc": {
       "placeholderCallsign": "N0CALL"
     }

@@ -301,6 +301,58 @@
       "SA": "Sudamérica",
       "OC": "Oceanía"
     },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Banda Lateral Única",
+        "USB": "USB",
+        "USB-a11y": "Banda Lateral Superior",
+        "LSB": "LSB",
+        "LSB-a11y": "Banda Lateral Inferior",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "R.T.T.I.",
+        "CW": "Telegrafía",
+        "CW-a11y": "Telegrafía",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Otra",
+        "other-a11y": "Otro Modo"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 Metros",
+        "80m-a11y": "80 Metros",
+        "60m-a11y": "60 Metros",
+        "40m-a11y": "40 Metros",
+        "30m-a11y": "30 Metros",
+        "20m-a11y": "20 Metros",
+        "17m-a11y": "17 Metros",
+        "15m-a11y": "15 Metros",
+        "12m-a11y": "12 Metros",
+        "11m-a11y": "11 Metros",
+        "10m-a11y": "10 Metros",
+        "6m-a11y": "6 Metros",
+        "2m-a11y": "2 Metros",
+        "70cm-a11y": "70 Centímetros",
+        "23cm-a11y": "23 Centímetros",
+        "13cm-a11y": "13 Centímetros",
+        "9cm-a11y": "9 Centímetros",
+        "6cm-a11y": "6 Centímetros",
+        "3cm-a11y": "3 Centímetros",
+        "1-25cm-a11y": "1,25 Centímetros",
+        "6mm-a11y": "6 Milímetros",
+        "4mm-a11y": "4 Milímetros",
+        "2-5mm-a11y": "2,5 Milímetros",
+        "2mm-a11y": "2 Milímetros",
+        "1mm-a11y": "1 Milímetro",
+        "submm-a11y": "Sub-milimétrica",
+        "other": "Otra",
+        "other-a11y": "Otra Banda"
+      }
+    },
     "misc": {
       "placeholderCallsign": "N0CALL"
     }
