@@ -29,7 +29,7 @@ export function WCAActivityOptions ({ styles, operation, settings, refs: allRefs
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.wca.activityOptions.title', 'Activating {{count}} castles', { count: activityRefs?.length })
+    return t('extensions.wca.activityOptions.title', 'Activating {{count}} castles', { count: activityRefs?.length || 0 })
   }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')

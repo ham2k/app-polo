@@ -25,8 +25,8 @@ export function PGAActivityOptions ({ styles, operation, settings, refs: allRefs
   const activityRef = useMemo(() => findRef(allRefs, Info.activationType) ?? {}, [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.pga.activityOptions.title', 'Activating {{count}} gminas', { count: 1 })
-  }, [t])
+    return t('extensions.pga.activityOptions.title', 'Activating {{count}} gminas', { count: activityRef?.ref ? 1 : 0 })
+  }, [activityRef, t])
 
   const [search, setSearch] = useState('')
 

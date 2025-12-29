@@ -29,7 +29,7 @@ export function MOTAActivityOptions ({ styles, operation, settings, refs: allRef
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.mota.activityOptions.title', 'Activating {{count}} mills', { count: activityRefs?.length })
+    return t('extensions.mota.activityOptions.title', 'Activating {{count}} mills', { count: activityRefs?.length || 0 })
   }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')

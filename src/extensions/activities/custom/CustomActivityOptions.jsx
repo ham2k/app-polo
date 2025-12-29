@@ -20,7 +20,7 @@ export function CustomActivityOptions ({ styles, operation, settings, refs: allR
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.custom.activityOptions.title', 'Activating {{count}} references', { count: activityRefs?.length })
+    return t('extensions.custom.activityOptions.title', 'Activating {{count}} references', { count: activityRefs?.length || 0 })
   }, [activityRefs?.length, t])
 
   const [mySig, setMySig] = useState('')

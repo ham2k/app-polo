@@ -29,8 +29,8 @@ export function SOTAActivityOptions ({ styles, operation, settings, refs: allRef
   const activityRef = useMemo(() => findRef(allRefs, Info.activationType) ?? {}, [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.sota.activityOptions.title', 'Activating {{count}} summits', { count: 1 })
-  }, [t])
+    return t('extensions.sota.activityOptions.title', 'Activating {{count}} summits', { count: activityRef?.ref ? 1 : 0 })
+  }, [activityRef, t])
 
   const [search, setSearch] = useState('')
 

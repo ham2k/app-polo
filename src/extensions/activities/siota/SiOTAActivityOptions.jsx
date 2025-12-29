@@ -32,7 +32,7 @@ export function SiOTAActivityOptions ({ styles, operation, settings, refs: allRe
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.siota.activityOptions.title', 'Activating {{count}} silos', { count: activityRefs?.length })
+    return t('extensions.siota.activityOptions.title', 'Activating {{count}} silos', { count: activityRefs?.length || 0 })
   }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')

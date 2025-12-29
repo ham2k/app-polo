@@ -29,8 +29,8 @@ export function WWFFActivityOptions ({ styles, operation, settings, refs: allRef
   const activityRef = useMemo(() => findRef(allRefs, Info.activationType) ?? {}, [allRefs]) ?? ''
 
   const title = useMemo(() => {
-    return t('extensions.wwff.activityOptions.title', 'Activating {{count}} parks', { count: 1 })
-  }, [t])
+    return t('extensions.wwff.activityOptions.title', 'Activating {{count}} parks', { count: activityRef?.ref ? 1 : 0 })
+  }, [activityRef?.ref, t])
 
   const [search, setSearch] = useState('')
 

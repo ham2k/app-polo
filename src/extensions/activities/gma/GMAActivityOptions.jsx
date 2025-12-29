@@ -29,8 +29,8 @@ export function GMAActivityOptions ({ styles, operation, settings, refs: allRefs
   const activityRef = useMemo(() => findRef(allRefs, Info.activationType) ?? {}, [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.gma.activityOptions.title', 'Activating {{count}} summit', { count: 1 })
-  }, [t])
+    return t('extensions.gma.activityOptions.title', 'Activating {{count}} summit', { count: activityRef?.ref ? 1 : 0 })
+  }, [activityRef, t])
 
   const [search, setSearch] = useState('')
 

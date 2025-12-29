@@ -29,8 +29,8 @@ export function ZLOTAActivityOptions ({ styles, operation, settings, refs: allRe
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.zlota.activityOptions.title', 'Activating {{count}} references', { count: 1 })
-  }, [t])
+    return t('extensions.zlota.activityOptions.title', 'Activating {{count}} references', { count: activityRefs?.length || 0 })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 

@@ -28,7 +28,7 @@ export function ELAActivityOptions ({ styles, operation, settings, refs: allRefs
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.ela.activityOptions.title', 'Activating {{count}} lighthouses', { count: activityRefs?.length })
+    return t('extensions.ela.activityOptions.title', 'Activating {{count}} lighthouses', { count: activityRefs?.length || 0 })
   }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')

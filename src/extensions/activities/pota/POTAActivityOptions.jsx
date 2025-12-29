@@ -32,7 +32,7 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.pota.activityOptions.title', 'Activating {{count}} parks', { count: activityRefs?.length })
+    return t('extensions.pota.activityOptions.title', 'Activating {{count}} parks', { count: activityRefs?.length || 0 })
   }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
