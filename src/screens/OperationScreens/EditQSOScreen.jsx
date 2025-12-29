@@ -54,7 +54,7 @@ const QSO_SECTIONS = [
       { key: 'cqZone', label: 'CQ Zone', type: 'number', guess: true },
       { key: 'ituZone', label: 'ITU Zone', type: 'number', guess: true },
       { key: 'arrlSection', label: 'ARRL Section', type: 'upcasedText', minSpaces: 14, includeIf: ({ qso }) => qso?.their?.entityPrefix === 'K' || qso?.their?.guess?.entityPrefix === 'K' },
-      { key: 'grid', label: 'Grid', type: 'grid', guess: true, breakBefore: true },
+      { key: 'grid', label: 'Grid', type: 'grid', guess: true, breakBefore: true, minSpaces: 9 },
       { key: 'latitude', label: 'Latitude', type: 'float', guess: true },
       { key: 'longitude', label: 'Longitude', type: 'float', guess: true },
       { key: 'power', label: 'Power', type: 'number', guess: true }

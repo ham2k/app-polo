@@ -242,7 +242,8 @@ export default function LoggingPanel ({
     } else if (fieldId === 'time' || fieldId === 'date') {
       updateQSO({ startAtMillis: value, _manualTime: true })
     } else if (fieldId === 'grid') {
-      updateQSO({ their: { grid: value } })
+      const corrected = value.substring(0, 4).toUpperCase() + value.substring(4).toLowerCase()
+      updateQSO({ their: { grid: corrected } })
     } else if (fieldId === 'state') {
       updateQSO({ their: { state: value } })
     } else if (fieldId === 'power') {

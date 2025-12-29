@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { View, findNodeHandle } from 'react-native'
 import { findRef } from '../../../../../tools/refTools'
 import { findHooks } from '../../../../../extensions/registry'
-import { H2kCallsignInput, H2kRSTInput, H2kTextInput } from '../../../../../ui'
+import { H2kCallsignInput, H2kGridInput, H2kRSTInput, H2kTextInput } from '../../../../../ui'
 import { expandRSTValues } from '../../../../../tools/callsignTools'
 import { valueOrFunction } from '../../../../../tools/valueOrFunction'
 
@@ -190,7 +190,7 @@ export const MainExchangePanel = ({
 
   if (extraFields.grid) {
     fields.push(
-      <H2kTextInput
+      <H2kGridInput
         key="grid"
         innerRef={refStack.shift()}
         themeColor={themeColor}
@@ -198,14 +198,10 @@ export const MainExchangePanel = ({
         value={qso?.their?.grid ?? ''}
         label={t('screens.opLoggingTab.gridLabel', 'Grid')}
         placeholder={qso?.their?.guess?.grid ?? ''}
-        uppercase={true}
-        noSpaces={true}
         onChange={handleFieldChange}
         onSubmitEditing={onSubmitEditing}
         fieldId={'grid'}
         onSpace={spaceHandler}
-        keyboard={'dumb'}
-        maxLength={8}
         focusedRef={focusedRef}
         disabled={disabled}
       />
