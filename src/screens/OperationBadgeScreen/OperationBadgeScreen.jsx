@@ -16,7 +16,7 @@ import { loadOperation, selectOperation } from '../../store/operations'
 import { loadQSOs, selectQSOs } from '../../store/qsos'
 import { selectSettings } from '../../store/settings'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import { fmtDateTimeNice, fmtTimeBetween } from '../../tools/timeFormats'
+import { fmtDateTimeNiceZulu, fmtTimeBetween } from '../../tools/timeFormats'
 import Color from 'color'
 import MapWithQSOs from '../OperationScreens/OpMapTab/components/MapWithQSOs'
 import { slashZeros } from '../../tools/stringTools'
@@ -116,7 +116,7 @@ export default function OperationBadgeScreen ({ navigation, route }) {
   }, [operation?.grid])
 
   const opDate = useMemo(() => {
-    return `${fmtDateTimeNice(operation.startAtMillisMin)}`
+    return `${fmtDateTimeNiceZulu(operation.startAtMillisMin)}`
   }, [operation])
 
   const opStats = useMemo(() => {

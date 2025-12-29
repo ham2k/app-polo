@@ -9,12 +9,12 @@ import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
-import { fmtDateNice } from '../../../tools/timeFormats'
+import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const PGAData = {}
 
-export function registerPGADataFile () {
+export function registerPGADataFile() {
   registerDataFile({
     key: 'pga-gminas',
     name: 'PGA: Gminas',
@@ -99,7 +99,7 @@ export function registerPGADataFile () {
 
           return {
             totalGminas,
-            version: fmtDateNice(new Date())
+            version: fmtDateNiceZulu(new Date())
           }
         }
       })
@@ -114,11 +114,11 @@ export function registerPGADataFile () {
   })
 }
 
-export async function pgaFindOneByReference (ref) {
+export async function pgaFindOneByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['pga', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function pgaFindAllByName (name) {
+export async function pgaFindAllByName(name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['pga', `%${name}%`, `%${name}%`],
@@ -127,7 +127,7 @@ export async function pgaFindAllByName (name) {
   return results
 }
 
-export async function pgaFindAllByLocation (lat, lon, delta = 1) {
+export async function pgaFindAllByLocation(lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['pga', lat - delta, lat + delta, lon - delta, lon + delta],
@@ -144,7 +144,7 @@ const CSV_ROW_REGEX = /(?:"((?:[^"]|"")*)"|([^",]*))(?:,|\s*$)/g
 // )                # End of non-capturing group for each column
 // (?:,|\s*$)       # Match either a comma or the end of the line
 
-function parsePGACSVRow (row, options) {
+function parsePGACSVRow(row, options) {
   const parts = [...row.matchAll(CSV_ROW_REGEX)].map(match => match[1]?.replaceAll('""', '"') ?? match[2] ?? '')
 
   if (options?.headers) {

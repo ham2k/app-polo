@@ -8,14 +8,14 @@
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
-import { fmtDateNice } from '../../../tools/timeFormats'
+import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const BCAData = {}
 
-export function registerBCADataFile () {
+export function registerBCADataFile() {
   registerDataFile({
     key: 'bca-all-castles',
     name: 'BCA: All Castles',
@@ -94,7 +94,7 @@ export function registerBCADataFile () {
 
           return {
             totalRefs,
-            version: fmtDateNice(new Date())
+            version: fmtDateNiceZulu(new Date())
           }
         }
       })
@@ -109,11 +109,11 @@ export function registerBCADataFile () {
   })
 }
 
-export async function bcaFindOneByReference (ref) {
+export async function bcaFindOneByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['bca', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function bcaFindAllByName (dxccCode, name) {
+export async function bcaFindAllByName(dxccCode, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['bca', `%${name}%`, `%${name}%`],
@@ -122,7 +122,7 @@ export async function bcaFindAllByName (dxccCode, name) {
   return results
 }
 
-export async function bcaFindAllByLocation (dxccCode, lat, lon, delta = 1) {
+export async function bcaFindAllByLocation(dxccCode, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['bca', lat - delta, lat + delta, lon - delta, lon + delta],

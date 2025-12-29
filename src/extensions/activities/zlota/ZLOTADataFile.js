@@ -10,12 +10,12 @@ import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
-import { fmtDateNice } from '../../../tools/timeFormats'
+import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
-export const ZLOTAData = { }
+export const ZLOTAData = {}
 
-export function registerZLOTADataFile () {
+export function registerZLOTADataFile() {
   registerDataFile({
     key: 'zlota-all-references',
     name: 'ZLOTA: All References',
@@ -93,7 +93,7 @@ export function registerZLOTADataFile () {
 
           return {
             totalReferences: totalRefs,
-            version: fmtDateNice(new Date())
+            version: fmtDateNiceZulu(new Date())
           }
         }
       })
@@ -108,11 +108,11 @@ export function registerZLOTADataFile () {
   })
 }
 
-export async function zlotaFindOneByReference (ref) {
+export async function zlotaFindOneByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['zlota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function zlotaFindAllByName (name) {
+export async function zlotaFindAllByName(name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['zlota', `%${name}%`, `%${name}%`],
@@ -121,7 +121,7 @@ export async function zlotaFindAllByName (name) {
   return results
 }
 
-export async function zlotaFindAllByLocation (lat, lon, delta = 1) {
+export async function zlotaFindAllByLocation(lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['zlota', lat - delta, lat + delta, lon - delta, lon + delta],

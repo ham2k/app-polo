@@ -22,7 +22,7 @@ import { getDataFileDefinitions, selectAllDataFileInfos } from '../../../store/d
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { selectSettings } from '../../../store/settings'
 import { countHistoricalRecords, deleteHistoricalRecords, importHistoricalADIF } from '../../../store/operations'
-import { fmtDateTimeNice, fmtDateTimeRelative } from '../../../tools/timeFormats'
+import { fmtDateTimeNiceZulu, fmtDateTimeRelative } from '../../../tools/timeFormats'
 import { findHooks } from '../../../extensions/registry'
 import ScreenContainer from '../../components/ScreenContainer'
 import KeepAwake from '@sayem314/react-native-keep-awake'
@@ -86,7 +86,7 @@ const DataFileDefinitionDialog = ({ def, info, settings, styles, onDialogDone })
           </>
         ) : (
           <H2kMarkdown>
-            {t('screens.dataSettings.updated-md', 'Updated on {{date}}', { date: fmtDateTimeNice(info?.date, { utc: true }) })}
+            {t('screens.dataSettings.updated-md', 'Updated on {{date}}', { date: fmtDateTimeNiceZulu(info?.date, { utc: true }) })}
             {info?.version && `\n\n${t('screens.dataSettings.version-md', 'Version: {{version}}', { version: info.version })}`}
           </H2kMarkdown>
         )}

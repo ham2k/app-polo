@@ -19,7 +19,7 @@ import { selectSettings, setSettings } from '../../../../store/settings'
 import { findHooks } from '../../../../extensions/registry'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { capitalizeString } from '../../../../tools/capitalizeString'
-import { fmtDateTimeDynamic } from '../../../../tools/timeFormats'
+import { fmtDateTimeDynamicZulu } from '../../../../tools/timeFormats'
 import { useCallLookup } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
 import { H2kMarkdown } from '../../../../ui'
 import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../tools/geoTools'
@@ -218,7 +218,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
             <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
               <Text>{q.band}</Text>
               <Text>{q.mode}</Text>
-              <Text>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
+              <Text>{fmtDateTimeDynamicZulu(q.startAtMillis)}</Text>
               {(q.ourCall || q.our?.call) !== operation.stationCall && (
                 <Text>{t('screens.callInfo.withCall', 'with {{call}}', { call: (q.ourCall || q.our?.call) })}</Text>
               )}
@@ -234,7 +234,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
           <View key={i} style={{ flexDirection: 'row', gap: styles.oneSpace }}>
             <Text style={{}}>{q.band}</Text>
             <Text style={{}}>{q.mode}</Text>
-            <Text style={{}}>{fmtDateTimeDynamic(q.startAtMillis)}</Text>
+            <Text style={{}}>{fmtDateTimeDynamicZulu(q.startAtMillis)}</Text>
             {(q.ourCall || q.our?.call) !== operation.stationCall && (
               <Text>{t('screens.callInfo.withCall', 'with {{call}}', { call: (q.ourCall || q.our?.call) })}</Text>
             )}

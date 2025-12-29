@@ -7,7 +7,7 @@
 
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
-import { fmtDateNice } from '../../../tools/timeFormats'
+import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
@@ -15,7 +15,7 @@ import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const BLHAData = {}
 
-export function registerBLHADataFile () {
+export function registerBLHADataFile() {
   registerDataFile({
     key: 'blha-all-lighthouses',
     name: 'BLHA: All Lighthouses',
@@ -94,7 +94,7 @@ export function registerBLHADataFile () {
 
           return {
             totalRefs,
-            version: fmtDateNice(new Date())
+            version: fmtDateNiceZulu(new Date())
           }
         }
       })
@@ -109,11 +109,11 @@ export function registerBLHADataFile () {
   })
 }
 
-export async function blhaFindOneByReference (ref) {
+export async function blhaFindOneByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['blha', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function blhaFindAllByName (dxccCode, name) {
+export async function blhaFindAllByName(dxccCode, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['blha', `%${name}%`, `%${name}%`],
@@ -122,7 +122,7 @@ export async function blhaFindAllByName (dxccCode, name) {
   return results
 }
 
-export async function blhaFindAllByLocation (dxccCode, lat, lon, delta = 1) {
+export async function blhaFindAllByLocation(dxccCode, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['blha', lat - delta, lat + delta, lon - delta, lon + delta],

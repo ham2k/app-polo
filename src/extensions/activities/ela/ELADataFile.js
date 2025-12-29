@@ -7,7 +7,7 @@
 
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
-import { fmtDateNice } from '../../../tools/timeFormats'
+import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { registerDataFile } from '../../../store/dataFiles'
 import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
@@ -16,7 +16,7 @@ import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const ELAData = {}
 
-export function registerELADataFile () {
+export function registerELADataFile() {
   registerDataFile({
     key: 'ela-all-lighthouses',
     name: 'ELA: All Lighthouses',
@@ -99,7 +99,7 @@ export function registerELADataFile () {
 
           return {
             totalRefs,
-            version: fmtDateNice(new Date())
+            version: fmtDateNiceZulu(new Date())
           }
         }
       })
@@ -114,11 +114,11 @@ export function registerELADataFile () {
   })
 }
 
-export async function elaFindOneByReference (ref) {
+export async function elaFindOneByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['ela', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function elaFindAllByName (dxccCode, name) {
+export async function elaFindAllByName(dxccCode, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['ela', `%${name}%`, `%${name}%`],
@@ -127,7 +127,7 @@ export async function elaFindAllByName (dxccCode, name) {
   return results
 }
 
-export async function elaFindAllByLocation (dxccCode, lat, lon, delta = 1) {
+export async function elaFindAllByLocation(dxccCode, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['ela', lat - delta, lat + delta, lon - delta, lon + delta],
