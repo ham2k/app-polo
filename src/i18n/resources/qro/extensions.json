@@ -1,5 +1,14 @@
 {
   "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "NO BANDS",
+      "bandsCount_one": "1 BAND",
+      "bandsCount_other": "{{count}} BANDS",
+      "modesCount_zero": "NO MODES",
+      "modesCount_one": "1 MODE",
+      "modesCount_other": "{{count}} MODES",
+      "total": "TOTAL {{count}}"
+    },
     "bca": {
       "name": "BELGIUM CASTLES & FORTRESSES",
       "shortName": "BCA",
@@ -108,6 +117,11 @@
       },
       "help-md": "CALLSIGN NOTES ARE STORED ON SIMPLE TEXT FILES, ONE CALL PER LINE FOLLOWED BY INFORMATION YOU WANT SHOWN IN THE LOGGING SCREEN. YOU CAN USE THE BUILTIN FILES OR ADD YOUR OWN.\n\nPROVIDE A DIRECT LINK TO A PLAIN TEXT FILE, OR A \"SHARE LINK\" FROM A SERVICE LIKE:\n* [GOOGLE DOCS](HTTPS: //DOCS.GOOGLE.COM/)\n* [GOOGLE DRIVE](HTTPS: //DRIVE.GOOGLE.COM/)\n* [GITHUB GISTS](HTTPS: //GIST.GITHUB.COM/)\n* [DROPBOX](HTTPS: //WWW.DROPBOX.COM/)\n* [APPLE ICLOUD DRIVE](HTTPS: //WWW.ICLOUD.COM/)\n\nLINES ON THAT FILE SHOULD LOOK LIKE THIS AND CAN SUPPORT BASIC MARKDOWN FORMATTING:\n\n```NK2HRC 🎉 HAM2K RADIO CLUB!!!\nKE8PZN 👑 JAMES POTA KING\nWD4DAN DAN POTA _ROYALTY_\nDAN WD4DAN,WD4JMM\n```\n\nIF THE ENTRY STARTS WITH AN EMOJI, IT WILL BE USED INSTEAD OF THE DEFAULT ⭐.\n\nENTRIES CAN BE USED FOR \"CALLSIGN EXPANSION\" IF YOU FIRST TYPE `..` OR ` //` IN THE CALLSIGN FIELD, SUCH AS `//DAN` IN THE EXAMPLE ABOVE."
     },
+    "canadianProvinces": {
+      "provincesCount_zero": "NO CANADIAN PROVINCES",
+      "provincesCount_one": "1 CANADIAN PROVINCE",
+      "provincesCount_other": "{{count}} CANADIAN PROVINCES"
+    },
     "colonies": {
       "activityOptions": {
         "settings": "SETTINGS",
@@ -140,7 +154,18 @@
       "wipedb": "DELETE ENTIRE DATABASE (BUT KEEP SETTINGS)?",
       "wipedbConfirm": "WIPING DATABASE…",
       "factory": "DELETE ALL DATA AND SETTINGS?",
-      "factoryConfirm": "FACTOY RESET IN PROGRESS…"
+      "factoryConfirm": "FACTOY RESET IN PROGRESS…",
+      "switchLanguage": "SWITCH LANGUAGE TO `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "LANGUAGE `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "SWITCHING TO `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "ACTIVATE DEVELOPER MODE?",
+      "activateConfirm": "DEVELOPER MODE ACTIVATED!",
+      "deactivate": "DEACTIVATE DEVELOPER MODE?",
+      "deactivateConfirm": "DEVELOPER MODE DEACTIVATED!",
+      "on": "DEVELOPER MODE: ON!!!",
+      "off": "DEVELOPER MODE: OFF"
     },
     "commands-misc": {
       "rtfm": "READ THE FINE MANUAL?",
@@ -225,7 +250,16 @@
         "__comment__": "OVERRIDE SPECIFIC DATA FILE TITLES HERE",
         "pota-all-parks": "POTA: ALL PARKS",
         "sota-all-summits": "SOTA: ALL SUMMITS"
+      },
+      "loading": {
+        "progress": "LOADED `{{processedLines}}` REFERENCES.\n\n`{{percent}}` • {{secondsLeft}} SECONDS LEFT.",
+        "downloadingRawData": "DOWNLOADING RAW DATA…"
       }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "NO DXCC ENTITIES",
+      "entitiesCount_one": "1 DXCC ENTITY",
+      "entitiesCount_other": "{{count}} DXCC ENTITIES"
     },
     "eca": {
       "name": "ENGLISH CASTLES AWARDS",
@@ -301,26 +335,6 @@
         "nearbySummits": "NEARBY SUMMITS",
         "searchPlaceholder": "SUMMITS BY NAME OR REFERENCE…",
         "unknownSummit": "UNKNOWN SUMMIT"
-      }
-    },
-    "hsota": {
-      "name": "HILLS ON THE AIR",
-      "shortName": "HSOTA",
-      "exportName": "HSOTA ACTIVATION",
-      "activityOptions": {
-        "title_zero": "NO SITES SELECTED FOR ACTIVATION",
-        "title_one": "ACTIVATING 1 SITE",
-        "title_other": "ACTIVATING {{count}} SITES",
-        "noSitesFound": "NO SITES FOUND",
-        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
-        "matchingSites_zero": "NO MATCHING SITES",
-        "matchingSites_one": "1 MATCHING SITE",
-        "matchingSites_other": "{{count}} MATCHING SITES",
-        "searchForSites": "SEARCH FOR SOME SITES TO ACTIVATE!",
-        "noSitesNearby": "NO SITES NEARBY",
-        "nearbySites": "NEARBY SITES",
-        "searchPlaceholder": "SITES BY NAME OR REFERENCE…",
-        "unknownSite": "UNKNOWN SITE"
       }
     },
     "mota": {
@@ -414,6 +428,10 @@
       "loggingControl": {
         "theirRefLabel": "THEIR POTA"
       },
+      "postSpotAPI": {
+        "error": "ERROR POSTING POTA SPOT",
+        "serverResponse": "SERVER RESPONDED WITH ERROR {{status}}: {{body}}"
+      },
       "exampleRefName": "EXAMPLE NATIONAL PARK",
       "unknownRefName": "UNKNOWN PARK",
       "noRefsNearby": "NO PARKS NEARBY!"
@@ -450,6 +468,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "THEIR SILO"
+      },
+      "postSpotAPI": {
+        "error": "ERROR POSTING SIOTA SPOT",
+        "serverResponse": "SERVER RESPONDED WITH ERROR {{status}}: {{body}}"
       }
     },
     "sota": {
@@ -508,9 +530,73 @@
       "loggingControl": {
         "theirRefLabel": "THEIR SOTA"
       },
+      "postSpotAPI": {
+        "error": "ERROR POSTING SOTA SPOT",
+        "serverResponse": "SERVER RESPONDED WITH STATUS {{status}} {{message}}",
+        "sotaAccountLoggedOut": "SOTA ACCOUNT LOGGED OUT. PLEASE LOG IN AGAIN IN POLO SETTINGS"
+      },
       "exampleRefName": "EXAMPLE SUMMIT",
       "unknownRefName": "UNKNOWN SUMMIT",
       "noRefsNearby": "NO SUMMITS NEARBY!"
+    },
+    "usStates": {
+      "statesCount_zero": "NO US STATES",
+      "statesCount_one": "1 US STATE",
+      "statesCount_other": "{{count}} US STATES"
+    },
+    "wab": {
+      "name": "WORKED ALL BRITAIN/IRELAND",
+      "description": "ADD WAB/WAI SQUARE TO OPERATION",
+      "workedAllBritainSquare": "WORKED ALL BRITAIN SQUARE",
+      "workedAllIrelandSquare": "WORKED ALL IRELAND SQUARE",
+      "enterSquare": "ENTER SQUARE",
+      "placeholderBritain": "E.G. SU14",
+      "placeholderIreland": "E.G. N93",
+      "currentSquare": "CURRENT SQUARE:",
+      "noSquareSet": "NO SQUARE SET"
+    },
+    "wca": {
+      "name": "WORLD CASTLES AWARDS",
+      "shortName": "WCA",
+      "exportName": "WCA ACTIVATION",
+      "activityOptions": {
+        "title_zero": "NO CASTLES SELECTED FOR ACTIVATION",
+        "title_one": "ACTIVATING 1 CASTLE",
+        "title_other": "ACTIVATING {{count}} CASTLES",
+        "noCastlesFound": "NO CASTLES FOUND",
+        "nearestMatches": "NEAREST {{limit}} OF {{count}} MATCHES",
+        "matchingCastles_zero": "NO MATCHING CASTLES",
+        "matchingCastles_one": "1 MATCHING CASTLE",
+        "matchingCastles_other": "{{count}} MATCHING CASTLES",
+        "searchForCastles": "SEARCH FOR SOME CASTLES TO ACTIVATE!",
+        "noCastlesNearby": "NO CASTLES NEARBY",
+        "nearbyCastles": "NEARBY CASTLES",
+        "searchPlaceholder": "CASTLES BY NAME OR REFERENCE…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "NO CASTLES HUNTED",
+        "huntedRefsCount_one": "1 CASTLE HUNTED",
+        "huntedRefsCount_other": "{{fmtCount}} CASTLES HUNTED",
+        "activatorQSOsCount_zero": "NO ACTIVATOR QSOS",
+        "activatorQSOsCount_one": "1 ACTIVATOR QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} ACTIVATOR QSOS",
+        "huntedQSOsCount_zero": "NO HUNTED QSOS",
+        "huntedQSOsCount_one": "1 HUNTED QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} HUNTED QSOS",
+        "operationTotals": "OPERATION TOTALS",
+        "referencesActivatedCount_zero": "NO CASTLES ACTIVATED",
+        "referencesActivatedCount_one": "1 CASTLE ACTIVATED",
+        "referencesActivatedCount_other": "{{fmtCount}} CASTLES ACTIVATED",
+        "referencesMissedCount_zero": "NO INCOMPLETE CASTLES",
+        "referencesMissedCount_one": "1 INCOMPLETE CASTLE",
+        "referencesMissedCount_other": "{{fmtCount}} INCOMPLETE CASTLES",
+        "referencesHuntedCount_zero": "NO CASTLES HUNTED",
+        "referencesHuntedCount_one": "1 CASTLE HUNTED",
+        "referencesHuntedCount_other": "{{fmtCount}} CASTLES HUNTED"
+      },
+      "exampleRefName": "EXAMPLE CASTLE",
+      "unknownRefName": "UNKNOWN CASTLE",
+      "noRefsNearby": "NO CASTLES NEARBY!"
     },
     "wfd": {
       "name": "WINTER FIELD DAY",
@@ -576,6 +662,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "THEIR BUNKER"
+      },
+      "postSpotAPI": {
+        "error": "ERROR POSTING WWBOTA SPOT",
+        "serverResponse": "SERVER RESPONDED WITH STATUS {{status}} {{message}}"
       }
     },
     "wwff": {
@@ -629,7 +719,11 @@
       },
       "exampleRefName": "EXAMPLE PARK",
       "unknownRefName": "UNKNOWN PARK",
-      "noRefsNearby": "NO PARKS NEARBY!"
+      "noRefsNearby": "NO PARKS NEARBY!",
+      "postSpotAPI": {
+        "error": "ERROR POSTING WWFF SPOT",
+        "serverResponse": "SERVER RESPONDED WITH STATUS {{status}} {{message}}"
+      }
     },
     "zlota": {
       "account": {
@@ -660,6 +754,10 @@
       },
       "loggingControl": {
         "theirRefLabel": "THEIR REFERENCE"
+      },
+      "postSpotAPI": {
+        "error": "ERROR POSTING ZLOTA SPOT",
+        "serverResponse": "SERVER RESPONDED WITH STATUS {{status}} {{message}}"
       }
     },
     "shared": {

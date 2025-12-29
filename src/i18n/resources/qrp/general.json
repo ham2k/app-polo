@@ -9,7 +9,6 @@
         "ca": "catalan - català",
         "cs": "czech - čeština",
         "cy": "welsh - cymraeg",
-        "cw": "cw",
         "da": "danish - dansk",
         "de": "german - deutsch",
         "en-PL": "pig latin",
@@ -37,8 +36,6 @@
         "pt-BR": "portuguese (brazil) - português (brasil)",
         "pt-PT": "portuguese (portugal) - português (portugal)",
         "pt": "portuguese - português",
-        "qro": "qro",
-        "qrp": "qrp",
         "ro": "romanian - română",
         "ru": "russian - русский",
         "sk": "slovak - slovenčina",
@@ -57,7 +54,8 @@
       "QSO": "qso",
       "QSO-a11y": "q so",
       "QSOs-a11y": "q sos",
-      "Operation": "operation"
+      "Operation": "operation",
+      "generalOperation": "general operation"
     },
     "formatting": {
       "thousandsDelimiter": ",",

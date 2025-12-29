@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Changer de bande à {{band}} ?",
       "bandConfirm": "Bande réglée sur {{band}}",
-      "frequency": "Changer la fréquence à {{freq}} MHz{{mode}} ?",
-      "frequencyConfirm": "Fréquence réglée sur {{freq}} MHz{{mode}}",
+      "frequency": "Changer la fréquence à {{freq}} MHz{} ?",
+      "frequencyConfirm": "Fréquence réglée sur {{freq}} MHz",
       "frequencyAndMode": "Changer la fréquence à {{freq}} MHz ({{mode}}) ?",
       "frequencyAndModeConfirm": "Fréquence réglée sur {{freq}} MHz ({{mode}})",
       "power": "Changer la puissance en {{power}}W ?",
@@ -335,26 +335,6 @@
         "nearbySummits": "Sommets à proximité",
         "searchPlaceholder": "Sommets par nom ou référence…",
         "unknownSummit": "Sommet inconnu"
-      }
-    },
-    "hsota": {
-      "name": "Hills On The Air",
-      "shortName": "HSOTA",
-      "exportName": "Activation HSOTA",
-      "activityOptions": {
-        "title_zero": "Aucun site sélectionné pour l'activation",
-        "title_one": "Activation de 1 site",
-        "title_other": "Activation de {{count}} sites",
-        "noSitesFound": "Aucun site trouvé",
-        "nearestMatches": "Plus proche {{limit}} de {{count}} correspondances",
-        "matchingSites_zero": "Aucun site correspondant",
-        "matchingSites_one": "1 site correspondant",
-        "matchingSites_other": "{{count}} sites correspondants",
-        "searchForSites": "Recherchez des sites à activer !",
-        "noSitesNearby": "Aucun site à proximité",
-        "nearbySites": "Sites à proximité",
-        "searchPlaceholder": "Sites par nom ou référence…",
-        "unknownSite": "Site inconnu"
       }
     },
     "mota": {

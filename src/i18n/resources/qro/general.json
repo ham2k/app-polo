@@ -9,7 +9,6 @@
         "ca": "CATALAN - CATALÀ",
         "cs": "CZECH - ČEŠTINA",
         "cy": "WELSH - CYMRAEG",
-        "cw": "CW",
         "da": "DANISH - DANSK",
         "de": "GERMAN - DEUTSCH",
         "en-PL": "PIG LATIN",
@@ -37,8 +36,6 @@
         "pt-BR": "PORTUGUESE (BRAZIL) - PORTUGUÊS (BRASIL)",
         "pt-PT": "PORTUGUESE (PORTUGAL) - PORTUGUÊS (PORTUGAL)",
         "pt": "PORTUGUESE - PORTUGUÊS",
-        "qro": "QRO",
-        "qrp": "QRP",
         "ro": "ROMANIAN - ROMÂNĂ",
         "ru": "RUSSIAN - РУССКИЙ",
         "sk": "SLOVAK - SLOVENČINA",
@@ -57,7 +54,8 @@
       "QSO": "QSO",
       "QSO-a11y": "Q SO",
       "QSOs-a11y": "Q SOS",
-      "Operation": "OPERATION"
+      "Operation": "OPERATION",
+      "generalOperation": "GENERAL OPERATION"
     },
     "formatting": {
       "thousandsDelimiter": ",",

@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Změnit pásmo na {{band}}?",
       "bandConfirm": "Pásmo nastaveno na {{band}}",
-      "frequency": "Změnit frekvenci na {{freq}} MHz{{mode}}?",
-      "frequencyConfirm": "Frekvence nastavená na {{freq}} MHz{{mode}}",
+      "frequency": "Change frequency to {{freq}} MHz?",
+      "frequencyConfirm": "Frequency set to {{freq}} MHz",
       "frequencyAndMode": "Změnit frekvenci na {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frekvence nastavená na {{freq}} MHz ({{mode}})",
       "power": "Změnit výkon na {{power}}W?",
@@ -335,26 +335,6 @@
         "nearbySummits": "Vrcholy v okolí",
         "searchPlaceholder": "Vrcholy dle názvu nebo reference…",
         "unknownSummit": "Neznámý vrchol"
-      }
-    },
-    "hsota": {
-      "name": "Hills on the Air",
-      "shortName": "HSOTA",
-      "exportName": "Aktivace HSOTA",
-      "activityOptions": {
-        "title_zero": "Žádná místa nebyla vybrána pro aktivaci",
-        "title_one": "Aktivuji 1 místo",
-        "title_other": "Aktivuji {{count}} míst",
-        "noSitesFound": "Nenalezena žádná místa",
-        "nearestMatches": "Nejbližší {{limit}} z {{count}} shod",
-        "matchingSites_zero": "Žádné odpovídající místa",
-        "matchingSites_one": "1 odpovídající místo",
-        "matchingSites_other": "{{count}} odpovídající místa",
-        "searchForSites": "Hledat nějaká místa k aktivaci!",
-        "noSitesNearby": "Žádná místa v okolí",
-        "nearbySites": "Místa v okolí",
-        "searchPlaceholder": "Místa dle názvu nebo reference…",
-        "unknownSite": "Neznámé místo"
       }
     },
     "mota": {

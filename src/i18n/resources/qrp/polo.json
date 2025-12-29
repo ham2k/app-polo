@@ -67,7 +67,9 @@
       "deviceGps": "device gps",
       "locating": "locating…",
       "gpsError": "gps error",
-      "noGps": "no gps"
+      "noGps": "no gps",
+      "stateOrProvince": "state or province (optional)",
+      "county": "county (optional)"
     },
     "operationAddActivity": {
       "title": "add activity",
@@ -402,11 +404,6 @@
         "descriptionAll": "show flags for all contacts",
         "descriptionDefault": "show only for dx contacts"
       },
-      "stateField": {
-        "title": "state field",
-        "descriptionOn": "include state field in main exchange",
-        "descriptionOff": "don't include state field"
-      },
       "showBearing": {
         "title": "show bearing",
         "descriptionOn": "show estimated bearing to station",
@@ -426,6 +423,11 @@
         "title": "suggest default operator",
         "descriptionOn": "set {{operatorCall}} as operator in operations where station call is different",
         "descriptionOff": "don't suggest default operator regardless of station call used"
+      },
+      "suggestTemplates": {
+        "title": "use operation templates",
+        "descriptionOn": "suggest templates for new operations",
+        "descriptionOff": "don't suggest templates"
       },
       "bandsModes": {
         "title": "bands & modes",
@@ -515,6 +517,16 @@
         "text": "an error occurred while linking back to the previous account.\n\n{{error}}\n\nplease try again later.",
         "buttonCancel": "ok"
       },
+      "syncAccountDialog": {
+        "title": "ham2k lofi account",
+        "emailAddressLabel": "email address",
+        "resendButton": "resend",
+        "revertButton": "revert",
+        "syncFirstButton": "go back and complete syncing first",
+        "continueAnywayButton": "i know what i'm doing! continue anyway",
+        "potentialForDataLoss": "potential for data loss!!!",
+        "potentialForDataLossDescription": "you have not synced all the data in this device.\n\nif you link this device to a new account, you will be asked if you want to replace its data with that from the new account.\n\nif this is the case, you might not be able to recover any existing activity that has not been synced yet.\n\nwe suggest you complete syncing this device first!"
+      },
       "syncServiceDescription-md": "basic service is free and allows you to sync recent data (up to 7 days) between two devices or apps at limited speed.\n\nfull service requires a paid subscription and includes all your operations synced between any reasonable number of devices or apps at full speed.\n\nwhile the lofi service is in its testing period for the next couple of months, the service will remain free. after that prices will depend on the country and currency but should not be more than us$30/year or equivalent, and probably less.",
       "thisDevice": "this device",
       "notAuthenticated": "not authenticated",
@@ -565,7 +577,9 @@
       "moreCodeAndDocsContributors": "more contributors…",
       "contributorCode": "code contributor: {{contributions}}",
       "contributorDocumentation": "documentation",
-      "translations": "translations"
+      "translations": "translations",
+      "translationsService": "translation tooling by crowdin",
+      "translationsServiceDescription": "tools to manage the translation process are generously donated by crowdin"
     },
     "devModeSettings": {
       "title": "developer settings",
@@ -646,6 +660,7 @@
           "17m-a11y": "17 meters",
           "15m-a11y": "15 meters",
           "12m-a11y": "12 meters",
+          "11m-a11y": "11 meters",
           "10m-a11y": "10 meters",
           "6m-a11y": "6 meters",
           "2m-a11y": "2 meters",
@@ -746,6 +761,7 @@
         "loggingSettings": "logging settings",
         "rstFields": "rst fields",
         "stateField": "state field",
+        "gridField": "grid field",
         "showDeletedQSOs": "show deleted qsos",
         "numbersRow": "numbers row",
         "actions": "actions",
@@ -792,6 +808,7 @@
       "ourSentLabel": "sent",
       "theirSentLabel": "rcvd",
       "stateLabel": "state",
+      "gridLabel": "grid",
       "timeLabel": "time",
       "dateLabel": "date",
       "timeControls-a11y": "time controls",
@@ -895,7 +912,9 @@
       "stationAndOperatorTitle": "station & operator",
       "locationTitle": "location",
       "gridDescription-md": "grid `{{grid}}`",
-      "gridDescriptionNone-md": "no location set",
+      "stateDescription-md": "state: `{{state}}`",
+      "countyDescription-md": "county: `{{county}}`",
+      "locationDescriptionNone-md": "no location set",
       "operationDetailsTitle": "operation details",
       "operationDetailsDescription": "add notes for this operation",
       "addTitleOrNotesForOperation": "add a title or notes for this operation",
@@ -924,6 +943,19 @@
       "timeSinceLast": "{{time}} since last qso",
       "last10QSOs": "{{rate}} q/h for last 10",
       "last100QSOs": "{{rate}} q/h for last 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "error importing qson",
+      "invalidName": "invalid name",
+      "invalidNameDescription": "the file name must end with .qson or .json",
+      "unknownError": "unknown error"
+    },
+    "importADIF": {
+      "error": "error importing adif into operation",
+      "historicalImportError": "error importing historical adif",
+      "unknownError": "unknown error"
     }
   }
 }

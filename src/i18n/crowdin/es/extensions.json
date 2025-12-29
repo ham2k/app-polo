@@ -68,7 +68,7 @@
         "searchForLighthouses": "¡Busca algunos faros para activar!",
         "noLighthousesNearby": "No hay faros cerca",
         "nearbyLighthouses": "Faros cercanos",
-        "searchPlaceholder": "Buscar faros por nombre o referencia…"
+        "searchPlaceholder": "Nombre o referencia…"
       },
       "scoring": {
         "huntedRefsCount_zero": "No se cazaron faros",
@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "¿Cambiar la banda a {{band}}?",
       "bandConfirm": "Banda cambiada a {{band}}",
-      "frequency": "¿Cambiar la frecuencia a {{freq}} MHz{{mode}}?",
-      "frequencyConfirm": "Frecuencia cambiada a {{freq}} MHz{{mode}}",
+      "frequency": "¿Cambiar la frecuencia a {{freq}} MHz?",
+      "frequencyConfirm": "Frecuencia cambiada a {{freq}} MHz",
       "frequencyAndMode": "¿Cambiar la frecuencia a {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frecuencia cambiada a {{freq}} MHz ({{mode}})",
       "power": "¿Cambiar la potencia a {{power}}W?",
@@ -277,7 +277,7 @@
         "searchForCastles": "¡Busca algunos castillos para activar!",
         "noCastlesNearby": "No hay castillos cerca",
         "nearbyCastles": "Castillos cercanos",
-        "searchPlaceholder": "Buscar castillos por nombre o referencia…"
+        "searchPlaceholder": "Nombre o referencia…"
       }
     },
     "ela": {
@@ -296,7 +296,7 @@
         "searchForLighthouses": "¡Busca algunos faros para activar!",
         "noLighthousesNearby": "No hay faros cerca",
         "nearbyLighthouses": "Faros cercanos",
-        "searchPlaceholder": "Buscar faros por nombre o referencia…"
+        "searchPlaceholder": "Nombre o referencia…"
       }
     },
     "fd": {
@@ -333,28 +333,8 @@
         "searchForSummits": "¡Busca algunas cumbres para activar!",
         "noSummitsNearby": "No hay cumbres cerca",
         "nearbySummits": "Cumbres cercanas",
-        "searchPlaceholder": "Buscar cumbres por nombre o referencia…",
+        "searchPlaceholder": "Nombre o referencia…",
         "unknownSummit": "Cumbre desconocida"
-      }
-    },
-    "hsota": {
-      "name": "Colinas en el Aire",
-      "shortName": "HSOTA",
-      "exportName": "Activación HSOTA",
-      "activityOptions": {
-        "title_zero": "No se han seleccionado sitios para activar",
-        "title_one": "Activando 1 sitio",
-        "title_other": "Activando {{count}} sitios",
-        "noSitesFound": "No se encontraron sitios",
-        "nearestMatches": "{{limit}} más cercanos de {{count}} encontrados",
-        "matchingSites_zero": "No se encontraron sitios",
-        "matchingSites_one": "1 sitio encontrado",
-        "matchingSites_other": "{{count}} sitios encontrados",
-        "searchForSites": "¡Busca algunos sitios para activar!",
-        "noSitesNearby": "No hay sitios cerca",
-        "nearbySites": "Sitios cercanos",
-        "searchPlaceholder": "Buscar sitios por nombre o referencia…",
-        "unknownSite": "Sitio desconocido"
       }
     },
     "mota": {
@@ -373,7 +353,7 @@
         "searchForMills": "¡Busca algunos molinos para activar!",
         "noMillsNearby": "No hay molinos cerca",
         "nearbyMills": "Molinos cercanos",
-        "searchPlaceholder": "Buscar molinos por nombre o referencia…",
+        "searchPlaceholder": "Nombre o referencia…",
         "unknownMill": "Molino desconocido"
       },
       "loggingControl": {
@@ -396,7 +376,7 @@
         "searchForGminas": "¡Busca algunas gminas para activar!",
         "noGminasNearby": "No hay gminas cerca",
         "nearbyGminas": "Gminas cercanas",
-        "searchPlaceholder": "Buscar gminas por nombre o referencia…",
+        "searchPlaceholder": "Nombre o referencia…",
         "unknownGmina": "Gmina desconocida"
       }
     },
@@ -416,7 +396,7 @@
         "searchForParks": "¡Busca algunos parques para activar!",
         "noParksNearby": "No hay parques cerca",
         "nearbyParks": "Parques cercanos",
-        "searchPlaceholder": "Buscar parques por nombre o referencia…"
+        "searchPlaceholder": "Nombre o referencia…"
       },
       "scoring": {
         "ref2refCount_zero": "No QSOs P2P",
@@ -483,7 +463,7 @@
         "searchForSilos": "¡Busca algunos silos para activar!",
         "noSilosNearby": "No hay silos cerca",
         "nearbySilos": "Silos cercanos",
-        "searchPlaceholder": "Buscar silos por nombre o referencia…",
+        "searchPlaceholder": "Nombre o referencia…",
         "unknownSilo": "Silo desconocido"
       },
       "loggingControl": {
@@ -517,7 +497,7 @@
         "searchForSummits": "¡Busca algunas cumbres para activar!",
         "noSummitsNearby": "No hay cumbres cercanas",
         "nearbySummits": "Cumbres cercanas",
-        "searchPlaceholder": "Cumbres por nombre o referencia…",
+        "searchPlaceholder": "Nombre o referencia…",
         "unknownSummit": "Cumbre desconocida"
       },
       "scoring": {
@@ -591,7 +571,7 @@
         "searchForCastles": "¡Busca algunos castillos para activar!",
         "noCastlesNearby": "No hay castillos cerca",
         "nearbyCastles": "Castillos cercanos",
-        "searchPlaceholder": "Buscar castillos por nombre o referencia…"
+        "searchPlaceholder": "Nombre o referencia…"
       },
       "scoring": {
         "huntedRefsCount_zero": "No se cazaron castillos",
@@ -677,7 +657,7 @@
         "searchForBunkers": "¡Busca algunos búnkers para activar!",
         "noBunkersNearby": "No hay búnkers cercanos",
         "nearbyBunkers": "Búnkers cercanos",
-        "searchPlaceholder": "Búnkers por nombre o referencia…",
+        "searchPlaceholder": "Nombre o referencia…",
         "unknownBunker": "Búnker desconocido"
       },
       "loggingControl": {
@@ -704,7 +684,7 @@
         "searchForParks": "¡Busca algunos parques para activar!",
         "noParksNearby": "No hay parques cercanos",
         "nearbyParks": "Parques cercanos",
-        "searchPlaceholder": "Parques por nombre o referencia…",
+        "searchPlaceholder": "Nombre o referencia…",
         "unknownPark": "Parque desconocido"
       },
       "scoring": {
@@ -769,7 +749,7 @@
         "searchForReferences": "¡Busca algunas referencias para activar!",
         "noReferencesNearby": "No hay referencias cercanas",
         "nearbyReferences": "Referencias cercanas",
-        "searchPlaceholder": "Referencias por nombre o código",
+        "searchPlaceholder": "Nombre o referencia…",
         "unknownReference": "Referencia desconocida"
       },
       "loggingControl": {

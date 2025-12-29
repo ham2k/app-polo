@@ -48,6 +48,12 @@ function readBundledJSON(language, namespace) {
         ...require('./resources/cw/polo.json'),
         ...require('./resources/cw/extensions.json')
       }
+    case 'cs/translation':
+      return {
+        ...require('./crowdin/cs/general.json'),
+        ...require('./crowdin/cs/polo.json'),
+        ...require('./crowdin/cs/extensions.json')
+      }
     case 'es/translation':
       return {
         ...require('./crowdin/es/general.json'),
@@ -66,17 +72,11 @@ function readBundledJSON(language, namespace) {
         ...require('./crowdin/fr/polo.json'),
         ...require('./crowdin/fr/extensions.json')
       }
-    case 'nl/translation':
+    case 'ja/translation':
       return {
-        ...require('./crowdin/nl/general.json'),
-        ...require('./crowdin/nl/polo.json'),
-        ...require('./crowdin/nl/extensions.json')
-      }
-    case 'sk/translation':
-      return {
-        ...require('./crowdin/sk/general.json'),
-        ...require('./crowdin/sk/polo.json'),
-        ...require('./crowdin/sk/extensions.json')
+        ...require('./crowdin/ja/general.json'),
+        ...require('./crowdin/ja/polo.json'),
+        ...require('./crowdin/ja/extensions.json')
       }
     case 'nb/translation':
       return {
@@ -84,11 +84,23 @@ function readBundledJSON(language, namespace) {
         ...require('./crowdin/nb/polo.json'),
         ...require('./crowdin/nb/extensions.json')
       }
+    case 'nl/translation':
+      return {
+        ...require('./crowdin/nl/general.json'),
+        ...require('./crowdin/nl/polo.json'),
+        ...require('./crowdin/nl/extensions.json')
+      }
     case 'no/translation': // Alias for nb
       return {
         ...require('./crowdin/nb/general.json'),
         ...require('./crowdin/nb/polo.json'),
         ...require('./crowdin/nb/extensions.json')
+      }
+    case 'sk/translation':
+      return {
+        ...require('./crowdin/sk/general.json'),
+        ...require('./crowdin/sk/polo.json'),
+        ...require('./crowdin/sk/extensions.json')
       }
   }
 }

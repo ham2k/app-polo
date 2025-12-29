@@ -221,7 +221,7 @@
       },
       "syncSettings": {
         "title": "Configuración de sincronización",
-        "description": "Sincronización y backup en la nube"
+        "description": "Sincronización y respaldo en la nube"
       },
       "appFeatures": {
         "title": "Extensiones de la Aplicación",
@@ -471,7 +471,7 @@
     },
     "syncSettings": {
       "title": "Configuración de sincronización",
-      "description": "Ham2K Log Filer ofrece un servicio de sincronización confiable entre todos tus dispositivos y proporciona un backup de tus datos de operación en la nube.",
+      "description": "Ham2K Log Filer es un servicio de sincronización confiable entre todos tus dispositivos y proporciona un respaldo de tus contactos y operaciones en la nube.",
       "syncService": "Sincronización",
       "syncService.enabled": "Habilitada",
       "syncService.disabled": "Deshabilitada",
@@ -773,7 +773,7 @@
       "qsosTabCount_zero": "No hay QSOs",
       "qsosTabCount_one": "1 QSO",
       "qsosTabCount_other": "{{fmtCount}} QSOs",
-      "qsosCompactTabCount_zero": "Sin Qs",
+      "qsosCompactTabCount_zero": "0 Qs",
       "qsosCompactTabCount_one": "1 Q",
       "qsosCompactTabCount_other": "{{fmtCount}} Qs",
       "noQSOsYet": "¡No hay ningún QSO!",
@@ -834,19 +834,19 @@
       "showAllSecondaryControls-a11y": "Mostrar todos los controles secundarios",
       "spotting": {
         "selfSpottingAt": "Self-spot en {{freq}}",
-        "stopAutoRespotting": "Detener self-respotting",
+        "stopAutoRespotting": "Detener auto-respotting",
         "setFrequencyFirst": "Primero establece una frecuencia para spotting.",
         "reSpotEvery": "Re-spot cada {{minutes}} min",
         "reSpotAt": "Re-spot en {{freq}}",
-        "selfSpottedAt": "Self-spoteado en {{time}}",
+        "selfSpottedAt": "Self-spot a las {{time}}",
         "spotAt": "Spot {{call}} en {{freq}}",
-        "tooLateToSpot": "Demasiado tarde para spotting {{call}}",
-        "nothingToSpot": "Nada para spotting",
+        "tooLateToSpot": "Demasiado tarde para hacer spot de {{call}}",
+        "nothingToSpot": "Nada para hacer spot",
         "selfSpottingLabel": "Self-spotting",
         "selfSpottingControls-a11y": "Controles de Self-Spotting",
         "spottingLabel": "Spotting",
         "spottingControls-a11y": "Controles de Spotting",
-        "autoRespottingLabel": "Auto-redistribución",
+        "autoRespottingLabel": "Auto-respotting",
         "autoRespottingControls-a11y": "Controles de Auto-respotting",
         "commentsLabel": "Comentarios"
       }

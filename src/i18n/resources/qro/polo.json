@@ -67,7 +67,9 @@
       "deviceGps": "DEVICE GPS",
       "locating": "LOCATING…",
       "gpsError": "GPS ERROR",
-      "noGps": "NO GPS"
+      "noGps": "NO GPS",
+      "stateOrProvince": "STATE OR PROVINCE (OPTIONAL)",
+      "county": "COUNTY (OPTIONAL)"
     },
     "operationAddActivity": {
       "title": "ADD ACTIVITY",
@@ -402,11 +404,6 @@
         "descriptionAll": "SHOW FLAGS FOR ALL CONTACTS",
         "descriptionDefault": "SHOW ONLY FOR DX CONTACTS"
       },
-      "stateField": {
-        "title": "STATE FIELD",
-        "descriptionOn": "INCLUDE STATE FIELD IN MAIN EXCHANGE",
-        "descriptionOff": "DON'T INCLUDE STATE FIELD"
-      },
       "showBearing": {
         "title": "SHOW BEARING",
         "descriptionOn": "SHOW ESTIMATED BEARING TO STATION",
@@ -426,6 +423,11 @@
         "title": "SUGGEST DEFAULT OPERATOR",
         "descriptionOn": "SET {{operatorCall}} AS OPERATOR IN OPERATIONS WHERE STATION CALL IS DIFFERENT",
         "descriptionOff": "DON'T SUGGEST DEFAULT OPERATOR REGARDLESS OF STATION CALL USED"
+      },
+      "suggestTemplates": {
+        "title": "USE OPERATION TEMPLATES",
+        "descriptionOn": "SUGGEST TEMPLATES FOR NEW OPERATIONS",
+        "descriptionOff": "DON'T SUGGEST TEMPLATES"
       },
       "bandsModes": {
         "title": "BANDS & MODES",
@@ -515,6 +517,16 @@
         "text": "AN ERROR OCCURRED WHILE LINKING BACK TO THE PREVIOUS ACCOUNT.\n\n{{error}}\n\nPLEASE TRY AGAIN LATER.",
         "buttonCancel": "OK"
       },
+      "syncAccountDialog": {
+        "title": "HAM2K LOFI ACCOUNT",
+        "emailAddressLabel": "EMAIL ADDRESS",
+        "resendButton": "RESEND",
+        "revertButton": "REVERT",
+        "syncFirstButton": "GO BACK AND COMPLETE SYNCING FIRST",
+        "continueAnywayButton": "I KNOW WHAT I'M DOING! CONTINUE ANYWAY",
+        "potentialForDataLoss": "POTENTIAL FOR DATA LOSS!!!",
+        "potentialForDataLossDescription": "YOU HAVE NOT SYNCED ALL THE DATA IN THIS DEVICE.\n\nIF YOU LINK THIS DEVICE TO A NEW ACCOUNT, YOU WILL BE ASKED IF YOU WANT TO REPLACE ITS DATA WITH THAT FROM THE NEW ACCOUNT.\n\nIF THIS IS THE CASE, YOU MIGHT NOT BE ABLE TO RECOVER ANY EXISTING ACTIVITY THAT HAS NOT BEEN SYNCED YET.\n\nWE SUGGEST YOU COMPLETE SYNCING THIS DEVICE FIRST!"
+      },
       "syncServiceDescription-md": "BASIC SERVICE IS FREE AND ALLOWS YOU TO SYNC RECENT DATA (UP TO 7 DAYS) BETWEEN TWO DEVICES OR APPS AT LIMITED SPEED.\n\nFULL SERVICE REQUIRES A PAID SUBSCRIPTION AND INCLUDES ALL YOUR OPERATIONS SYNCED BETWEEN ANY REASONABLE NUMBER OF DEVICES OR APPS AT FULL SPEED.\n\nWHILE THE LOFI SERVICE IS IN ITS TESTING PERIOD FOR THE NEXT COUPLE OF MONTHS, THE SERVICE WILL REMAIN FREE. AFTER THAT PRICES WILL DEPEND ON THE COUNTRY AND CURRENCY BUT SHOULD NOT BE MORE THAN US$30/YEAR OR EQUIVALENT, AND PROBABLY LESS.",
       "thisDevice": "THIS DEVICE",
       "notAuthenticated": "NOT AUTHENTICATED",
@@ -565,7 +577,9 @@
       "moreCodeAndDocsContributors": "MORE CONTRIBUTORS…",
       "contributorCode": "CODE CONTRIBUTOR: {{contributions}}",
       "contributorDocumentation": "DOCUMENTATION",
-      "translations": "TRANSLATIONS"
+      "translations": "TRANSLATIONS",
+      "translationsService": "TRANSLATION TOOLING BY CROWDIN",
+      "translationsServiceDescription": "TOOLS TO MANAGE THE TRANSLATION PROCESS ARE GENEROUSLY DONATED BY CROWDIN"
     },
     "devModeSettings": {
       "title": "DEVELOPER SETTINGS",
@@ -646,6 +660,7 @@
           "17m-a11y": "17 METERS",
           "15m-a11y": "15 METERS",
           "12m-a11y": "12 METERS",
+          "11m-a11y": "11 METERS",
           "10m-a11y": "10 METERS",
           "6m-a11y": "6 METERS",
           "2m-a11y": "2 METERS",
@@ -746,6 +761,7 @@
         "loggingSettings": "LOGGING SETTINGS",
         "rstFields": "RST FIELDS",
         "stateField": "STATE FIELD",
+        "gridField": "GRID FIELD",
         "showDeletedQSOs": "SHOW DELETED QSOS",
         "numbersRow": "NUMBERS ROW",
         "actions": "ACTIONS",
@@ -792,6 +808,7 @@
       "ourSentLabel": "SENT",
       "theirSentLabel": "RCVD",
       "stateLabel": "STATE",
+      "gridLabel": "GRID",
       "timeLabel": "TIME",
       "dateLabel": "DATE",
       "timeControls-a11y": "TIME CONTROLS",
@@ -895,7 +912,9 @@
       "stationAndOperatorTitle": "STATION & OPERATOR",
       "locationTitle": "LOCATION",
       "gridDescription-md": "GRID `{{grid}}`",
-      "gridDescriptionNone-md": "NO LOCATION SET",
+      "stateDescription-md": "STATE: `{{state}}`",
+      "countyDescription-md": "COUNTY: `{{county}}`",
+      "locationDescriptionNone-md": "NO LOCATION SET",
       "operationDetailsTitle": "OPERATION DETAILS",
       "operationDetailsDescription": "ADD NOTES FOR THIS OPERATION",
       "addTitleOrNotesForOperation": "ADD A TITLE OR NOTES FOR THIS OPERATION",
@@ -924,6 +943,19 @@
       "timeSinceLast": "{{time}} SINCE LAST QSO",
       "last10QSOs": "{{rate}} Q/H FOR LAST 10",
       "last100QSOs": "{{rate}} Q/H FOR LAST 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "ERROR IMPORTING QSON",
+      "invalidName": "INVALID NAME",
+      "invalidNameDescription": "THE FILE NAME MUST END WITH .QSON OR .JSON",
+      "unknownError": "UNKNOWN ERROR"
+    },
+    "importADIF": {
+      "error": "ERROR IMPORTING ADIF INTO OPERATION",
+      "historicalImportError": "ERROR IMPORTING HISTORICAL ADIF",
+      "unknownError": "UNKNOWN ERROR"
     }
   }
 }

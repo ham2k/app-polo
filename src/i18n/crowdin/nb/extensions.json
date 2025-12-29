@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Endre bånd til {{band}}?",
       "bandConfirm": "Bånd satt til {{band}}",
-      "frequency": "Endre frekvens til {{freq}} MHz{{mode}}?",
-      "frequencyConfirm": "Frekvens satt til {{freq}} MHz{{mode}}",
+      "frequency": "Change frequency to {{freq}} MHz?",
+      "frequencyConfirm": "Frequency set to {{freq}} MHz",
       "frequencyAndMode": "Endre frekvens til {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frekvens satt til {{freq}} MHz ({{mode}})",
       "power": "Endre styrke til {{power}}W?",
@@ -335,26 +335,6 @@
         "nearbySummits": "Nærliggende topper",
         "searchPlaceholder": "Topper etter navn eller referanse…",
         "unknownSummit": "Ukjent topp"
-      }
-    },
-    "hsota": {
-      "name": "Hills on the Air",
-      "shortName": "HSOTA",
-      "exportName": "HSOTA Aktivering",
-      "activityOptions": {
-        "title_zero": "Ingen steder valgt for aktivering",
-        "title_one": "Aktiverer 1 sted",
-        "title_other": "Aktiverer {{count}} steder",
-        "noSitesFound": "Ingen steder funnet",
-        "nearestMatches": "Nærmeste {{limit}} av {{count}} treff",
-        "matchingSites_zero": "Ingen matchende steder",
-        "matchingSites_one": "1 matchende sted",
-        "matchingSites_other": "{{count}} matchende steder",
-        "searchForSites": "Søk etter noen steder å aktivere!",
-        "noSitesNearby": "Ingen steder i nærheten",
-        "nearbySites": "Nærliggende steder",
-        "searchPlaceholder": "Steder etter navn eller referanse…",
-        "unknownSite": "Ukjent sted"
       }
     },
     "mota": {

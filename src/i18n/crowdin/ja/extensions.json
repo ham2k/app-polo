@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "バンドを{{band}}に変更しますか？",
       "bandConfirm": "バンドが{{band}}に設定されました",
-      "frequency": "{{freq}} MHz{{mode}}に周波数を変更しますか？",
-      "frequencyConfirm": "周波数が{{freq}} MHz{{mode}}に設定されました",
+      "frequency": "Change frequency to {{freq}} MHz?",
+      "frequencyConfirm": "Frequency set to {{freq}} MHz",
       "frequencyAndMode": "{{freq}} MHz({{mode}})に周波数を変更しますか？",
       "frequencyAndModeConfirm": "周波数が{{freq}} MHz({{mode}})に設定されました",
       "power": "出力を{{power}}Wへ変更しますか？",
@@ -335,26 +335,6 @@
         "nearbySummits": "近くの山頂",
         "searchPlaceholder": "名称または参照コードで山頂を検索...",
         "unknownSummit": "不明な山頂"
-      }
-    },
-    "hsota": {
-      "name": "ヒルズオンザエア（Hills on the Air）",
-      "shortName": "HSOTA",
-      "exportName": "HSOTAアクティベーション",
-      "activityOptions": {
-        "title_zero": "アクティベートするサイトが選択されていません",
-        "title_one": "アクティベートするサイト：1ヶ所",
-        "title_other": "アクティベートするサイト：{{count}}ヶ所",
-        "noSitesFound": "サイトが見つかりません",
-        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
-        "matchingSites_zero": "一致するサイトがありません",
-        "matchingSites_one": "一致するサイト：1ヶ所",
-        "matchingSites_other": "一致するサイト：{{count}}ヶ所",
-        "searchForSites": "アクティベートするサイトを探しましょう！",
-        "noSitesNearby": "近くにサイトはありません",
-        "nearbySites": "近くのサイト",
-        "searchPlaceholder": "名前または参照コードでサイトを検索...",
-        "unknownSite": "不明なサイト"
       }
     },
     "mota": {

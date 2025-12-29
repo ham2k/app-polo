@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Band zu {{band}} ändern?",
       "bandConfirm": "Band auf {{band}} gesetzt",
-      "frequency": "Frequenz zu {{freq}} MHz{{mode}} ändern?",
-      "frequencyConfirm": "Frequenz auf {{freq}} MHz{{mode}} gesetzt",
+      "frequency": "Change frequency to {{freq}} MHz?",
+      "frequencyConfirm": "Frequency set to {{freq}} MHz",
       "frequencyAndMode": "Frequenz zu {{freq}} MHz ({{mode}}) ändern?",
       "frequencyAndModeConfirm": "Frequenz auf {{freq}} MHz ({{mode}}) gesetzt",
       "power": "Leistung auf {{power}}W ändern?",
@@ -335,26 +335,6 @@
         "nearbySummits": "Gipfel in der Nähe",
         "searchPlaceholder": "Gipfel nach Namen oder Referenz…",
         "unknownSummit": "Unbekannter Gipfel"
-      }
-    },
-    "hsota": {
-      "name": "Hills on the Air",
-      "shortName": "HSOTA",
-      "exportName": "HSOTA Aktivierung",
-      "activityOptions": {
-        "title_zero": "Kein Schauplatz zur Aktivierung ausgewählt",
-        "title_one": "Ein Schauplatz wird aktiviert",
-        "title_other": "{{count}} Schauplätze werden aktiviert",
-        "noSitesFound": "Keine Schauplätze gefunden",
-        "nearestMatches": "Nächstgelegen {{limit}} von {{count}} Treffern",
-        "matchingSites_zero": "Keine passenden Schauplätze",
-        "matchingSites_one": "Ein passender Schauplatz",
-        "matchingSites_other": "{{count}} passende Schauplätze",
-        "searchForSites": "Suche aktivierbare Schauplätze!",
-        "noSitesNearby": "Keine Schauplätze in der Nähe",
-        "nearbySites": "Schauplätze in der Nähe",
-        "searchPlaceholder": "Schauplätze nach Namen oder Referenz…",
-        "unknownSite": "Unbekannter Schauplatz"
       }
     },
     "mota": {

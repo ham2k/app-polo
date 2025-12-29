@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Band wijzigen naar {{band}}?",
       "bandConfirm": "Band ingesteld op {{band}}",
-      "frequency": "Frequentie wijzigen naar {{freq}} MHz{{mode}}?",
-      "frequencyConfirm": "Frequentie ingesteld op {{freq}} MHz{{mode}}",
+      "frequency": "Change frequency to {{freq}} MHz?",
+      "frequencyConfirm": "Frequency set to {{freq}} MHz",
       "frequencyAndMode": "Frequentie wijzigen naar {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frequentie ingesteld op {{freq}} MHz ({{mode}})",
       "power": "Vermogen wijzigen naar {{power}}W?",
@@ -335,26 +335,6 @@
         "nearbySummits": "Nabijgelegen summits",
         "searchPlaceholder": "Summits op naam of referentie…",
         "unknownSummit": "Onbekende summit"
-      }
-    },
-    "hsota": {
-      "name": "Hills on the Air",
-      "shortName": "HSOTA",
-      "exportName": "HSOTA Activatie",
-      "activityOptions": {
-        "title_zero": "Geen locaties geselecteerd voor activering",
-        "title_one": "1 locatie activeren",
-        "title_other": "{{count}} locaties activeren",
-        "noSitesFound": "Geen locaties gevonden",
-        "nearestMatches": "Dichtstbijzijnde {{limit}} van {{count}} overeenkomsten",
-        "matchingSites_zero": "Geen overeenkomende locaties",
-        "matchingSites_one": "1 overeenkomende locatie",
-        "matchingSites_other": "{{count}} overeenkomende locaties",
-        "searchForSites": "Zoek naar enkele locaties om te activeren!",
-        "noSitesNearby": "Geen locaties in de buurt",
-        "nearbySites": "Nabijgelegen locaties",
-        "searchPlaceholder": "Locaties op naam of referentie…",
-        "unknownSite": "Onbekende locatie"
       }
     },
     "mota": {

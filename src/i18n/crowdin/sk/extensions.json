@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Zmeniť pásmo na {{band}}?",
       "bandConfirm": "Pásmo nastavené na {{band}}",
-      "frequency": "Zmeniť frekvenciu na {{freq}} MHz{{mode}}?",
-      "frequencyConfirm": "Frekvencia nastavená na {{freq}} MHz{{mode}}",
+      "frequency": "Change frequency to {{freq}} MHz?",
+      "frequencyConfirm": "Frequency set to {{freq}} MHz",
       "frequencyAndMode": "Zmeniť frekvenciu na {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frekvencia nastavená na {{freq}} MHz ({{mode}})",
       "power": "Zmeniť výkon na {{power}}W?",
@@ -335,26 +335,6 @@
         "nearbySummits": "Vrcholy v blízkosti",
         "searchPlaceholder": "Vrcholy podľa mena alebo referenčného čísla…",
         "unknownSummit": "Neznámy vrchol"
-      }
-    },
-    "hsota": {
-      "name": "Kopce v éteri",
-      "shortName": "HSOTA",
-      "exportName": "Aktivácia HSOTA",
-      "activityOptions": {
-        "title_zero": "Žiadne lokality neboli vybrané pre aktiváciu",
-        "title_one": "Aktivácia 1 lokality",
-        "title_other": "Aktivácia {{count}} lokalít",
-        "noSitesFound": "Nenašli sa žiadne lokality",
-        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
-        "matchingSites_zero": "Žiadne zodpovedajúce lokality",
-        "matchingSites_one": "1 zodpovedajúca lokalita",
-        "matchingSites_other": "{{count}} zodpovedajúcich lokalít",
-        "searchForSites": "Vyhľadajte nejaké lokality pre aktiváciu!",
-        "noSitesNearby": "Žiadne lokality v blízkosti",
-        "nearbySites": "Lokality v blízkosti",
-        "searchPlaceholder": "Lokality podľa mena alebo referenčného čísla…",
-        "unknownSite": "Neznáma lokalita"
       }
     },
     "mota": {
