@@ -25,7 +25,7 @@
         "searchForCastles": "Hledejte některé hrady k aktivaci!",
         "noCastlesNearby": "Žádné hrady v okolí",
         "nearbyCastles": "Hrady v okolí",
-        "searchPlaceholder": "Hrady dle názvu nebo reference…"
+        "searchPlaceholder": "Jméno nebo reference…"
       },
       "scoring": {
         "huntedRefsCount_zero": "Neodloveny žádné hrady",
@@ -68,7 +68,7 @@
         "searchForLighthouses": "Hledejte některé majáky k aktivaci!",
         "noLighthousesNearby": "Žádné majáky v okolí",
         "nearbyLighthouses": "Majáky v okolí",
-        "searchPlaceholder": "Majáky dle názvu nebo reference…"
+        "searchPlaceholder": "Jméno nebo reference…"
       },
       "scoring": {
         "huntedRefsCount_zero": "Neodloveny žádné majáky",
@@ -193,8 +193,8 @@
     "commands-radio": {
       "band": "Změnit pásmo na {{band}}?",
       "bandConfirm": "Pásmo nastaveno na {{band}}",
-      "frequency": "Change frequency to {{freq}} MHz?",
-      "frequencyConfirm": "Frequency set to {{freq}} MHz",
+      "frequency": "Změnit frekvenci na {{freq}} MHz?",
+      "frequencyConfirm": "Frekvence nastavena na {{freq}} MHz",
       "frequencyAndMode": "Změnit frekvenci na {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frekvence nastavená na {{freq}} MHz ({{mode}})",
       "power": "Změnit výkon na {{power}}W?",
@@ -277,7 +277,7 @@
         "searchForCastles": "Vyhledat nějaké hrady k aktivaci!",
         "noCastlesNearby": "Žádné hrady v okolí",
         "nearbyCastles": "Hrady v okolí",
-        "searchPlaceholder": "Hrady dle názvu nebo reference…"
+        "searchPlaceholder": "Jméno nebo reference…"
       }
     },
     "ela": {
@@ -296,7 +296,7 @@
         "searchForLighthouses": "Vyhledat nějaké majáky k aktivaci!",
         "noLighthousesNearby": "Žádné majáky v okolí",
         "nearbyLighthouses": "Majáky v okolí",
-        "searchPlaceholder": "Majáky dle názvu nebo reference…"
+        "searchPlaceholder": "Jméno nebo reference…"
       }
     },
     "fd": {
@@ -333,7 +333,7 @@
         "searchForSummits": "Najít nějaké vrcholy k aktivaci!",
         "noSummitsNearby": "Žádné vrcholy v okolí",
         "nearbySummits": "Vrcholy v okolí",
-        "searchPlaceholder": "Vrcholy dle názvu nebo reference…",
+        "searchPlaceholder": "Jméno nebo reference…",
         "unknownSummit": "Neznámý vrchol"
       }
     },
@@ -353,7 +353,7 @@
         "searchForMills": "Hledat mlýny k aktivaci!",
         "noMillsNearby": "Žádné mlýny v okolí",
         "nearbyMills": "Mlýny v okolí",
-        "searchPlaceholder": "Mlýny dle názvu nebo reference…",
+        "searchPlaceholder": "Jméno nebo reference…",
         "unknownMill": "Neznámý mlýn"
       },
       "loggingControl": {
@@ -376,7 +376,7 @@
         "searchForGminas": "Hledat obce k aktivaci!",
         "noGminasNearby": "Žádné obce v okolí",
         "nearbyGminas": "Obce v okolí",
-        "searchPlaceholder": "Obce dle názvu nebo reference…",
+        "searchPlaceholder": "Jméno nebo reference…",
         "unknownGmina": "Neznámá obec"
       }
     },
@@ -396,7 +396,7 @@
         "searchForParks": "Hledat parky k aktivaci!",
         "noParksNearby": "Žádné parky v okolí",
         "nearbyParks": "Parky v okolí",
-        "searchPlaceholder": "Parky podle názvu nebo referencí…"
+        "searchPlaceholder": "Jméno nebo reference…"
       },
       "scoring": {
         "ref2refCount_zero": "Žádné P2P",
@@ -463,7 +463,7 @@
         "searchForSilos": "Vyhledat sila k aktivaci!",
         "noSilosNearby": "Žádná sila v okolí",
         "nearbySilos": "Sila v okolí",
-        "searchPlaceholder": "Sila podle názvu nebo referencí…",
+        "searchPlaceholder": "Jméno nebo reference…",
         "unknownSilo": "Neznámé silo"
       },
       "loggingControl": {
@@ -497,7 +497,7 @@
         "searchForSummits": "Vyhledat vrcholy k aktivaci!",
         "noSummitsNearby": "Žádné vrcholy v okolí",
         "nearbySummits": "Vrcholy v okolí",
-        "searchPlaceholder": "Vrcholy podle názvu nebo referencí…",
+        "searchPlaceholder": "Jméno nebo reference…",
         "unknownSummit": "Neznámý vrchol"
       },
       "scoring": {
@@ -571,7 +571,7 @@
         "searchForCastles": "Vyhledat hrady k aktivaci!",
         "noCastlesNearby": "Nenalezeny žádné hrady v okolí",
         "nearbyCastles": "Hrady v okolí",
-        "searchPlaceholder": "Hrady podle jména nebo referencí…"
+        "searchPlaceholder": "Jméno nebo reference…"
       },
       "scoring": {
         "huntedRefsCount_zero": "Nenalezeny žádné ulovené hrady",
@@ -657,7 +657,7 @@
         "searchForBunkers": "Vyhledat bunkry k aktivaci!",
         "noBunkersNearby": "Žádné bunkry v okolí",
         "nearbyBunkers": "Bunkry v okolí",
-        "searchPlaceholder": "Bunkry podle názvu nebo referencí…",
+        "searchPlaceholder": "Jméno nebo reference…",
         "unknownBunker": "Neznámý bunkr"
       },
       "loggingControl": {
@@ -684,7 +684,7 @@
         "searchForParks": "Vyhledat parky k aktivaci!",
         "noParksNearby": "Žádné parky v okolí",
         "nearbyParks": "Parky v okolí",
-        "searchPlaceholder": "Parky podle názvu nebo referencí…",
+        "searchPlaceholder": "Jméno nebo reference…",
         "unknownPark": "Neznámý park"
       },
       "scoring": {
@@ -749,7 +749,7 @@
         "searchForReferences": "Vyhledat reference k aktivaci!",
         "noReferencesNearby": "Žádné reference v okolí",
         "nearbyReferences": "Reference v okolí",
-        "searchPlaceholder": "Reference podle názvu nebo kódu",
+        "searchPlaceholder": "Jméno nebo reference…",
         "unknownReference": "Neznámá reference"
       },
       "loggingControl": {

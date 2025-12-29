@@ -164,6 +164,17 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             description={'OM8ATE Matúš (lead)'}
             leftIcon="earth"
           />
+          <H2kListItem
+            title={t('general.languages.ja', 'Japanese')}
+            description={'W9WOT Tomoko (lead)'}
+            leftIcon="earth"
+          />
+          <H2kListItem
+            title={t('general.languages.cs', 'Czech')}
+            description={'OK1PTR Petr (lead)'}
+            leftIcon="earth"
+          />
+
         </H2kListSection>
 
         <View style={{ height: safeAreaInsets.bottom }} />

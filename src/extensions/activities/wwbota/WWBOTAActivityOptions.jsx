@@ -20,7 +20,7 @@ import { Info } from './WWBOTAInfo'
 import { wwbotaFindAllByLocation, wwbotaFindAllByName, wwbotaFindOneByReference } from './WWBOTADataFile'
 import { WWBOTAListItem } from './WWBOTAListItem'
 
-export function WWBOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function WWBOTAActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
@@ -49,10 +49,10 @@ export function WWBOTAActivityOptions ({ styles, operation, settings, refs: allR
       error => {
         console.info('Geolocation error', error)
       }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 30 /* 30 seconds */,
-        maximumAge: 1000 * 60 /* 1 minute */
-      }
+      enableHighAccuracy: true,
+      timeout: 1000 * 30 /* 30 seconds */,
+      maximumAge: 1000 * 60 /* 1 minute */
+    }
     )
   }, [])
 
@@ -152,7 +152,7 @@ export function WWBOTAActivityOptions ({ styles, operation, settings, refs: allR
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={t('extensions.wwbota.activityOptions.searchPlaceholder', 'Bunkers by name or reference…')}
+          placeholder={t('extensions.wwbota.activityOptions.searchPlaceholder', 'Name or reference…')}
           value={search}
           onChangeText={setSearch}
         />
@@ -167,7 +167,7 @@ export function WWBOTAActivityOptions ({ styles, operation, settings, refs: allR
             refData={ref}
             styles={styles}
             settings={settings}
-            onPress={() => handleAddReference(ref.ref) }
+            onPress={() => handleAddReference(ref.ref)}
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />

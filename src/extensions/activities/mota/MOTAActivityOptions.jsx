@@ -19,7 +19,7 @@ import { Info } from './MOTAInfo'
 import { motaFindAllByLocation, motaFindAllByName, motaFindOneByReference } from './MOTADataFile'
 import { MOTAListItem } from './MOTAListItem'
 
-export function MOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function MOTAActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
@@ -47,10 +47,10 @@ export function MOTAActivityOptions ({ styles, operation, settings, refs: allRef
       error => {
         console.info('Geolocation error', error)
       }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 30 /* 30 seconds */,
-        maximumAge: 1000 * 60 /* 1 minute */
-      }
+      enableHighAccuracy: true,
+      timeout: 1000 * 30 /* 30 seconds */,
+      maximumAge: 1000 * 60 /* 1 minute */
+    }
     )
   }, [])
 
@@ -149,7 +149,7 @@ export function MOTAActivityOptions ({ styles, operation, settings, refs: allRef
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={t('extensions.mota.activityOptions.searchPlaceholder', 'Mills by name or reference…')}
+          placeholder={t('extensions.mota.activityOptions.searchPlaceholder', 'Name or reference…')}
           value={search}
           onChangeText={setSearch}
         />
@@ -164,7 +164,7 @@ export function MOTAActivityOptions ({ styles, operation, settings, refs: allRef
             refData={result}
             styles={styles}
             settings={settings}
-            onPress={() => handleAddReference(result.ref) }
+            onPress={() => handleAddReference(result.ref)}
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />

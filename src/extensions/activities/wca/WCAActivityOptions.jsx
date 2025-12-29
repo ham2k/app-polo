@@ -19,7 +19,7 @@ import { Info } from './WCAInfo'
 import { wcaFindAllByLocation, wcaFindAllByName, wcaFindOneByReference } from './WCADataFile'
 import { WCAListItem } from './WCAListItem'
 
-export function WCAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function WCAActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
@@ -47,10 +47,10 @@ export function WCAActivityOptions ({ styles, operation, settings, refs: allRefs
       error => {
         console.info('Geolocation error', error)
       }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 30 /* 30 seconds */,
-        maximumAge: 1000 * 60 /* 1 minute */
-      }
+      enableHighAccuracy: true,
+      timeout: 1000 * 30 /* 30 seconds */,
+      maximumAge: 1000 * 60 /* 1 minute */
+    }
     )
   }, [])
 
@@ -151,7 +151,7 @@ export function WCAActivityOptions ({ styles, operation, settings, refs: allRefs
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={t('extensions.wca.activityOptions.searchPlaceholder', 'Castles by name or reference…')}
+          placeholder={t('extensions.wca.activityOptions.searchPlaceholder', 'Name or reference…')}
           value={search}
           onChangeText={setSearch}
         />
@@ -166,7 +166,7 @@ export function WCAActivityOptions ({ styles, operation, settings, refs: allRefs
             refData={result}
             styles={styles}
             settings={settings}
-            onPress={() => handleAddReference(result.ref) }
+            onPress={() => handleAddReference(result.ref)}
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />

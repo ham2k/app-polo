@@ -25,7 +25,7 @@
         "searchForCastles": "¡Busca algunos castillos para activar!",
         "noCastlesNearby": "No hay castillos cerca",
         "nearbyCastles": "Castillos cercanos",
-        "searchPlaceholder": "Buscar castillos por nombre o referencia…"
+        "searchPlaceholder": "Nombre o referencia…"
       },
       "scoring": {
         "huntedRefsCount_zero": "No se cazaron castillos",

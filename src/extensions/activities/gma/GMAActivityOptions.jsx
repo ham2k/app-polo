@@ -19,7 +19,7 @@ import { Info } from './GMAInfo'
 import { GMAListItem } from './GMAListItem'
 import { gmaFindAllByLocation, gmaFindAllByName, gmaFindOneByReference } from './GMADataFile'
 
-export function GMAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function GMAActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
@@ -47,10 +47,10 @@ export function GMAActivityOptions ({ styles, operation, settings, refs: allRefs
       error => {
         console.info('Geolocation error', error)
       }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 30 /* 30 seconds */,
-        maximumAge: 1000 * 60 /* 1 minute */
-      }
+      enableHighAccuracy: true,
+      timeout: 1000 * 30 /* 30 seconds */,
+      maximumAge: 1000 * 60 /* 1 minute */
+    }
     )
   }, [])
 
@@ -149,7 +149,7 @@ export function GMAActivityOptions ({ styles, operation, settings, refs: allRefs
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={t('extensions.gma.activityOptions.searchPlaceholder', 'Summits by name or reference…')}
+          placeholder={t('extensions.gma.activityOptions.searchPlaceholder', 'Name or reference…')}
           value={search}
           onChangeText={setSearch}
         />
@@ -164,7 +164,7 @@ export function GMAActivityOptions ({ styles, operation, settings, refs: allRefs
             refData={result}
             styles={styles}
             settings={settings}
-            onPress={() => handleAddReference(result.ref) }
+            onPress={() => handleAddReference(result.ref)}
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />

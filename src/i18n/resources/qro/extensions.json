@@ -25,7 +25,7 @@
         "searchForCastles": "SEARCH FOR SOME CASTLES TO ACTIVATE!",
         "noCastlesNearby": "NO CASTLES NEARBY",
         "nearbyCastles": "NEARBY CASTLES",
-        "searchPlaceholder": "CASTLES BY NAME OR REFERENCE…"
+        "searchPlaceholder": "NAME OR REFERENCE…"
       },
       "scoring": {
         "huntedRefsCount_zero": "NO CASTLES HUNTED",
@@ -68,7 +68,7 @@
         "searchForLighthouses": "SEARCH FOR SOME LIGHTHOUSES TO ACTIVATE!",
         "noLighthousesNearby": "NO LIGHTHOUSES NEARBY",
         "nearbyLighthouses": "NEARBY LIGHTHOUSES",
-        "searchPlaceholder": "LIGHTHOUSES BY NAME OR REFERENCE…"
+        "searchPlaceholder": "NAME OR REFERENCE…"
       },
       "scoring": {
         "huntedRefsCount_zero": "NO LIGHTHOUSES HUNTED",
@@ -277,7 +277,7 @@
         "searchForCastles": "SEARCH FOR SOME CASTLES TO ACTIVATE!",
         "noCastlesNearby": "NO CASTLES NEARBY",
         "nearbyCastles": "NEARBY CASTLES",
-        "searchPlaceholder": "CASTLES BY NAME OR REFERENCE…"
+        "searchPlaceholder": "NAME OR REFERENCE…"
       }
     },
     "ela": {
@@ -296,7 +296,7 @@
         "searchForLighthouses": "SEARCH FOR SOME LIGHTHOUSES TO ACTIVATE!",
         "noLighthousesNearby": "NO LIGHTHOUSES NEARBY",
         "nearbyLighthouses": "NEARBY LIGHTHOUSES",
-        "searchPlaceholder": "LIGHTHOUSES BY NAME OR REFERENCE…"
+        "searchPlaceholder": "NAME OR REFERENCE…"
       }
     },
     "fd": {
@@ -333,7 +333,7 @@
         "searchForSummits": "SEARCH FOR SOME SUMMITS TO ACTIVATE!",
         "noSummitsNearby": "NO SUMMITS NEARBY",
         "nearbySummits": "NEARBY SUMMITS",
-        "searchPlaceholder": "SUMMITS BY NAME OR REFERENCE…",
+        "searchPlaceholder": "NAME OR REFERENCE…",
         "unknownSummit": "UNKNOWN SUMMIT"
       }
     },
@@ -353,7 +353,7 @@
         "searchForMills": "SEARCH FOR SOME MILLS TO ACTIVATE!",
         "noMillsNearby": "NO MILLS NEARBY",
         "nearbyMills": "NEARBY MILLS",
-        "searchPlaceholder": "MILLS BY NAME OR REFERENCE…",
+        "searchPlaceholder": "NAME OR REFERENCE…",
         "unknownMill": "UNKNOWN MILL"
       },
       "loggingControl": {
@@ -376,7 +376,7 @@
         "searchForGminas": "SEARCH FOR SOME GMINAS TO ACTIVATE!",
         "noGminasNearby": "NO GMINAS NEARBY",
         "nearbyGminas": "NEARBY GMINAS",
-        "searchPlaceholder": "GMINAS BY NAME OR REFERENCE…",
+        "searchPlaceholder": "NAME OR REFERENCE…",
         "unknownGmina": "UNKNOWN GMINA"
       }
     },
@@ -396,7 +396,7 @@
         "searchForParks": "SEARCH FOR SOME PARKS TO ACTIVATE!",
         "noParksNearby": "NO PARKS NEARBY",
         "nearbyParks": "NEARBY PARKS",
-        "searchPlaceholder": "PARKS BY NAME OR REFERENCE…"
+        "searchPlaceholder": "NAME OR REFERENCE…"
       },
       "scoring": {
         "ref2refCount_zero": "NO P2PS",
@@ -463,7 +463,7 @@
         "searchForSilos": "SEARCH FOR SOME SILOS TO ACTIVATE!",
         "noSilosNearby": "NO SILOS NEARBY",
         "nearbySilos": "NEARBY SILOS",
-        "searchPlaceholder": "SILOS BY NAME OR REFERENCE…",
+        "searchPlaceholder": "NAME OR REFERENCE…",
         "unknownSilo": "UNKNOWN SILO"
       },
       "loggingControl": {
@@ -497,7 +497,7 @@
         "searchForSummits": "SEARCH FOR SOME SUMMITS TO ACTIVATE!",
         "noSummitsNearby": "NO SUMMITS NEARBY",
         "nearbySummits": "NEARBY SUMMITS",
-        "searchPlaceholder": "SUMMITS BY NAME OR REFERENCE…",
+        "searchPlaceholder": "NAME OR REFERENCE…",
         "unknownSummit": "UNKNOWN SUMMIT"
       },
       "scoring": {
@@ -571,7 +571,7 @@
         "searchForCastles": "SEARCH FOR SOME CASTLES TO ACTIVATE!",
         "noCastlesNearby": "NO CASTLES NEARBY",
         "nearbyCastles": "NEARBY CASTLES",
-        "searchPlaceholder": "CASTLES BY NAME OR REFERENCE…"
+        "searchPlaceholder": "NAME OR REFERENCE…"
       },
       "scoring": {
         "huntedRefsCount_zero": "NO CASTLES HUNTED",
@@ -657,7 +657,7 @@
         "searchForBunkers": "SEARCH FOR SOME BUNKERS TO ACTIVATE!",
         "noBunkersNearby": "NO BUNKERS NEARBY",
         "nearbyBunkers": "NEARBY BUNKERS",
-        "searchPlaceholder": "BUNKERS BY NAME OR REFERENCE…",
+        "searchPlaceholder": "NAME OR REFERENCE…",
         "unknownBunker": "UNKNOWN BUNKER"
       },
       "loggingControl": {
@@ -684,7 +684,7 @@
         "searchForParks": "SEARCH FOR SOME PARKS TO ACTIVATE!",
         "noParksNearby": "NO PARKS NEARBY",
         "nearbyParks": "NEARBY PARKS",
-        "searchPlaceholder": "PARKS BY NAME OR REFERENCE…",
+        "searchPlaceholder": "NAME OR REFERENCE…",
         "unknownPark": "UNKNOWN PARK"
       },
       "scoring": {
@@ -749,7 +749,7 @@
         "searchForReferences": "SEARCH FOR SOME REFERENCES TO ACTIVATE!",
         "noReferencesNearby": "NO REFERENCES NEARBY",
         "nearbyReferences": "NEARBY REFERENCES",
-        "searchPlaceholder": "REFERENCES BY NAME OR CODE",
+        "searchPlaceholder": "NAME OR REFERENCE…",
         "unknownReference": "UNKNOWN REFERENCE"
       },
       "loggingControl": {

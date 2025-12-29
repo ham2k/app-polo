@@ -20,7 +20,7 @@ import { Info } from './POTAInfo'
 import { potaFindParkByReference, potaFindParksByLocation, potaFindParksByName, potaPrefixForDXCCCode } from './POTAAllParksData'
 import { POTAListItem } from './POTAListItem'
 
-export function POTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function POTAActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
@@ -50,10 +50,10 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
       error => {
         console.info('Geolocation error', error)
       }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 30 /* 30 seconds */,
-        maximumAge: 1000 * 60 /* 1 minute */
-      }
+      enableHighAccuracy: true,
+      timeout: 1000 * 30 /* 30 seconds */,
+      maximumAge: 1000 * 60 /* 1 minute */
+    }
     )
   }, [])
 
@@ -157,7 +157,7 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={t('extensions.pota.activityOptions.searchPlaceholder', 'Parks by name or reference…')}
+          placeholder={t('extensions.pota.activityOptions.searchPlaceholder', 'Name or reference…')}
           value={search}
           onChangeText={setSearch}
         />
@@ -172,7 +172,7 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
             refData={park}
             styles={styles}
             settings={settings}
-            onPress={() => handleAddReference(park.ref) }
+            onPress={() => handleAddReference(park.ref)}
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />
