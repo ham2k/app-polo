@@ -194,13 +194,13 @@ function prepareStyles (baseStyles, { leftAction, safeAreaInsets, splitView }) {
   return ({
     ...baseStyles,
     root: {
-      height: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? 6 : 5),
+      height: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? 6 : 5.5),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingLeft: Math.max(safeAreaInsets.left, baseStyles.oneSpace * 2),
       paddingRight: splitView ? 0 : Math.max(safeAreaInsets.right, baseStyles.oneSpace * 2),
-      paddingTop: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? 0 : -1),
+      paddingTop: Math.max(safeAreaInsets.top, baseStyles.oneSpace * 2) + baseStyles.oneSpace * (baseStyles.isIOS ? -1 : -2),
       paddingBottom: 0
     },
     content: {
@@ -238,7 +238,7 @@ function prepareStyles (baseStyles, { leftAction, safeAreaInsets, splitView }) {
       lineHeight: undefined, // line height interferes with adjustsFontSizeToFit // 14 * baseStyles.fontScaleAdjustment,
       fontWeight: baseStyles.isIOS ? '400' : '100',
       color: baseStyles.colors.onPrimary,
-      height: 16 * baseStyles.fontScaleAdjustment,
+      height: 18 * baseStyles.fontScaleAdjustment,
       textAlign: 'center',
       textAlignVertical: 'center',
       alignSelf: 'center',
