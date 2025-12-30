@@ -48,8 +48,10 @@ const Extension = {
   onActivationDispatch: ({ registerHook }) => async (dispatch, getState) => {
     const settings = selectExtensionSettings(getState(), Info.key)
 
-    const files = [...BUILT_IN_NOTES]
-    settings.customFiles?.forEach(file => files.unshift({ ...file, builtin: false }))
+    const files = [
+      ...(settings.customFiles ?? []).map(file => ({ ...file, builtin: false })),
+      BUILT_IN_NOTES
+    ]
 
     CallNotesData.notes = {}
     CallNotesData.files = []
