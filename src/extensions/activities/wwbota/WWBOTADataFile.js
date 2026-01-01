@@ -28,7 +28,7 @@ export function registerWWBOTADataFile () {
       const { key, definition, options } = args
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
-      const url = 'https://wwbota.org/wwbota-3/'
+      const url = 'https://api.wwbota.org/bunkers/?format=CSV'
 
       return fetchAndProcessURL({
         ...args,
