@@ -53,12 +53,12 @@ const ErrorCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-debug-error',
-  match: /^3RR0R/i,
+  match: /^ERROR!/i,
   describeCommand: (match) => {
     return 'Throw a test error?'
   },
   invokeCommand: (match, { handleFieldChange }) => {
-    throw new Error('Test error!')
+    throw new Error('Test error triggered!')
   }
 }
 

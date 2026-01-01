@@ -143,6 +143,7 @@ export const MainExchangePanel = ({
         innerRef={rstFieldRefs.shift()}
         value={qso?.their?.sent || ''}
         label={t('screens.opLoggingTab.theirSentLabel', 'Rcvd')}
+        accessibiltyLabel={t('screens.opLoggingTab.theirSentLabel-a11y', 'Received')}
         fieldId={'theirSent'}
         disabled={disabled}
         settings={settings}

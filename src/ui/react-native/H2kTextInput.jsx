@@ -32,6 +32,7 @@ export function H2kTextInput (props) {
     fieldId, objectId,
     multiline,
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst, textTransformer,
+    accessibiltyLabel,
     keyboard
   } = props
   const styles = useThemedStyles(prepareStyles, { style, textStyle, error, themeColor, disabled })
@@ -364,6 +365,7 @@ export function H2kTextInput (props) {
         onBlur={handleBlur}
         onSelectionChange={trackSelection ? handleSelectionChange : undefined}
         underlineColorAndroid='transparent'
+        accessibilityLabel={accessibiltyLabel ?? label}
       >{valueAsChild ? stringValue : null}</NativeTextInput>
 
     </View>
