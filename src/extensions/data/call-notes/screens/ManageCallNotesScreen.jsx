@@ -133,14 +133,14 @@ const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDia
               disabled={isFirst}
               style={{ marginHorizontal: styles.oneSpace / 2 }}
             >
-              {t('general.buttons.moveUp', 'Move Up')}
+              {t('extensions.call-notes.increasePriority', 'Increase priority')}
             </H2kButton>
             <H2kButton
               onPress={handleDown}
               disabled={isLast}
               style={{ marginHorizontal: styles.oneSpace / 2 }}
             >
-              {t('general.buttons.moveDown', 'Move Down')}
+              {t('extensions.call-notes.decreasePriority', 'Decrease priority')}
             </H2kButton>
           </View>
         )}
