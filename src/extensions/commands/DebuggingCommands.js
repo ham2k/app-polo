@@ -68,13 +68,29 @@ const NoticeCommandHook = {
   key: 'commands-debug-notice',
   match: /^(NOTICELONG|NOTICE)/i,
   describeCommand: (match) => {
-    return 'Show a notice?'
+    if (match[1] === 'NOTICELONG') {
+      return 'Show a long notice?'
+    } else {
+      return 'Show a notice?'
+    }
   },
   invokeCommand: (match, { dispatch }) => {
     console.log('NoticeCommandHook', match)
     let text = 'This is a sample notice. With **some text** using ~~Markdown~~.'
+    let dialogText = 'This is a sample dialog text. With **some text** using ~~Markdown~~. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
     if (match[1] === 'NOTICELONG') {
       text = 'This is a longer sample notice. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      dialogText = `This is a longer sample dialog text.
+
+One Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Two Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Three Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Four Lorem ipsum dolor sit amet, consectetur adipiscing elit.Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Five Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`
     }
 
     dispatch(addNotice({
@@ -85,22 +101,7 @@ const NoticeCommandHook = {
       action: 'dialog',
       actionArgs: {
         dialogTitle: 'Sample Notice Dialog',
-        dialogText: `This is a sample dialog. It includes **some text** using ~~Markdown~~ .
-
-[Open Play Store](https://play.google.com/store/apps/details?id=com.ham2k.polo.beta)
-
-One Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
-Two Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
-Three Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
-Four Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
-Five Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
-Six Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        `,
+        dialogText: dialogText,
         dialogActions: [
           { label: 'Change', action: 'navigate', args: ['Settings', { screen: 'DataSettings' }] },
           { label: 'RTFM', action: 'link', args: { url: 'https://polo.ham2k.com/docs' } },

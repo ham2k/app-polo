@@ -5,13 +5,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useMemo, useState, useRef } from 'react'
+import React, { useMemo, useState, useRef, useCallback } from 'react'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { Dialog, Portal } from 'react-native-paper'
 
 import { BaseStylesContext, useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
-import { ScrollView, View } from 'react-native'
+import { Dimensions, ScrollView, View } from 'react-native'
 
 export function H2kDialog ({ children, style, ...props }) {
   const styles = useThemedStyles()
@@ -72,6 +72,9 @@ export function H2kDialogCloseButton (props) {
   return <Dialog.CloseButton {...props} />
 }
 
+const MIN_VIEW_HEIGHT = 0.15
+const MAX_VIEW_HEIGHT = 0.4
+
 export function H2kDialogScrollArea ({ children, style, ...props }) {
   const styles = useThemedStyles()
   const [showTopShadow, setShowTopShadow] = useState(false)
@@ -79,8 +82,11 @@ export function H2kDialogScrollArea ({ children, style, ...props }) {
   const contentHeightRef = useRef(0)
   const scrollViewHeightRef = useRef(0)
   const scrollYRef = useRef(0)
+  const screenHeight = Dimensions.get('window').height
 
-  const updateShadows = (scrollY, contentHeight, scrollViewHeight) => {
+  const [requestedViewHeight, setRequestedViewHeight] = useState(screenHeight * MIN_VIEW_HEIGHT)
+
+  const updateShadows = useCallback((scrollY, contentHeight, scrollViewHeight) => {
     scrollYRef.current = scrollY
     contentHeightRef.current = contentHeight
     scrollViewHeightRef.current = scrollViewHeight
@@ -90,23 +96,31 @@ export function H2kDialogScrollArea ({ children, style, ...props }) {
 
     // Show bottom shadow if there's more content below (with small threshold)
     setShowBottomShadow(scrollY + scrollViewHeight < contentHeight - 5)
-  }
+  }, [setShowTopShadow, setShowBottomShadow])
 
-  const handleScroll = (event) => {
+  const handleScroll = useCallback((event) => {
     const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent
     updateShadows(contentOffset.y, contentSize.height, layoutMeasurement.height)
-  }
+  }, [updateShadows])
 
-  const handleContentSizeChange = (contentWidth, contentHeight) => {
+  const handleContentSizeChange = useCallback((contentWidth, contentHeight) => {
     // Re-check shadows when content size changes
-    updateShadows(scrollYRef.current, contentHeight, scrollViewHeightRef.current)
-  }
+    let expectedHeight = scrollViewHeightRef.current
+    if (contentHeight > requestedViewHeight) {
+      expectedHeight = Math.min(contentHeight, screenHeight * MAX_VIEW_HEIGHT)
+      setRequestedViewHeight(expectedHeight)
+    } else if (contentHeight < requestedViewHeight) {
+      expectedHeight = Math.max(contentHeight, screenHeight * MIN_VIEW_HEIGHT)
+      setRequestedViewHeight(expectedHeight)
+    }
+    updateShadows(scrollYRef.current, contentHeight, expectedHeight)
+  }, [updateShadows, requestedViewHeight, screenHeight, scrollViewHeightRef])
 
-  const handleLayout = (event) => {
+  const handleLayout = useCallback((event) => {
     const { height } = event.nativeEvent.layout
     // Re-check shadows when layout changes
     updateShadows(scrollYRef.current, contentHeightRef.current, height)
-  }
+  }, [updateShadows])
 
   return (
     <Dialog.ScrollArea {...props}
@@ -117,8 +131,9 @@ export function H2kDialogScrollArea ({ children, style, ...props }) {
         padding: 0,
         paddingHorizontal: styles.oneSpace,
         position: 'relative',
-        minHeight: styles.oneSpace * 30,
-        maxHeight: '60%'
+        minHeight: requestedViewHeight,
+        height: requestedViewHeight,
+        maxHeight: requestedViewHeight
       }}
     >
       <View style={{ position: 'relative', flex: 1 }}>
@@ -144,7 +159,7 @@ const ScrollTopShadow = ({ styles }) => {
         left: 0,
         right: 0,
         height: shadowHeight,
-        marginHorizontal: styles.oneSpace * 3,
+        marginHorizontal: styles.oneSpace * 1,
         zIndex: 1,
         pointerEvents: 'none'
       }}
@@ -171,7 +186,7 @@ const ScrollBottomShadow = ({ styles }) => {
         right: 0,
         height: shadowHeight,
         zIndex: 1,
-        marginHorizontal: styles.oneSpace * 3,
+        marginHorizontal: styles.oneSpace * 1,
         pointerEvents: 'none'
       }}
     >
