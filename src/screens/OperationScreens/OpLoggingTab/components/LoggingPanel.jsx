@@ -294,7 +294,7 @@ export default function LoggingPanel ({
       else if (qso?._isNew) eventName = 'add_qso'
       else if (qso?._willBeDeleted === false && qso?.deleted === false) eventName = 'undelete_qso'
 
-      if (qso._willBeDeleted !== undefined) {
+      if (qso?._willBeDeleted !== undefined) {
         qso.deleted = qso._willBeDeleted
         delete qso._willBeDeleted
         dispatch(addQSO({ uuid: operation.uuid, qso }))
@@ -307,13 +307,13 @@ export default function LoggingPanel ({
           undoInfo: undefined
         })
         trackEvent(eventName, { their_prefix: qso.their?.entityPrefix ?? qso.their?.guess?.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
-      } else if (qso.event && !qso.deleted) {
+      } else if (qso?.event && !qso?.deleted) {
         // Events are just saved as-is, no extra processing needed.
         setTimeout(() => {
           dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso] }))
           setQSO(undefined, { otherStateChanges: { lastUUID: qso.uuid } })
         }, 50)
-      } else if (isValidQSO && !qso.deleted) {
+      } else if (isValidQSO && !qso?.deleted) {
         setCurrentSecondaryControl(undefined)
 
         if (qso?._isNew && qso?._manualTime && qso.startAtMillis) {
