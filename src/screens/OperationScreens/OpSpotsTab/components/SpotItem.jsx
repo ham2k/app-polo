@@ -103,7 +103,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
               <H2kIcon
                 key={subSpot.subSource ?? subSpot.source}
                 name={subSpot.icon}
-                size={styles.normalFontSize * 1.2}
+                size={styles.normalFontSize}
                 color={(subSpot?.type === 'scoring' && refStyle?.color) || commonStyle?.color}
               />
             </View>

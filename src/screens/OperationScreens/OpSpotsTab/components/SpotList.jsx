@@ -115,6 +115,7 @@ function _prepareStyles (themeStyles, style) {
         flex: 0,
         width: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 11.15),
         marginLeft: 0,
+        marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.1),
         textAlign: 'right'
       },
       freqMHz: {
@@ -176,6 +177,7 @@ function _prepareStyles (themeStyles, style) {
         ...commonStyles,
         flex: 0,
         textAlign: 'left',
+        fontSize: themeStyles.normalFontSize * 0.5,
         marginRight: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.3),
         marginLeft: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * -0.5),
         marginTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.2)

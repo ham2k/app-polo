@@ -319,7 +319,8 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
       borderTopWidth: 0,
       borderBottomWidth: 2,
       borderTopColor: colors.onBackgroundLight,
-      borderBottomColor: colors.onBackgroundLight
+      borderBottomColor: colors.onBackgroundLight,
+      paddingTop: PixelRatio.roundToNearestPixel(oneSpace * 0.2)
     },
     eventRow: {
       backgroundColor: 'rgb(252, 244, 167)',
@@ -468,6 +469,7 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         flexDirection: 'row',
         textAlign: 'right',
         marginLeft: oneSpace * sized({ xs: 1, lg: 2 }),
+        marginTop: PixelRatio.roundToNearestPixel(oneSpace * 0.1),
         minWidth: oneSpace * 0,
         maxWidth: oneSpace * 9
       },
