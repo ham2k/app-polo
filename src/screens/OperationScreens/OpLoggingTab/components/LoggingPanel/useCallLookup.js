@@ -7,7 +7,6 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import emojiRegex from 'emoji-regex'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
@@ -22,7 +21,7 @@ import { removeEmptyValues } from '../../../../../tools/objectTools'
 import { reportError } from '../../../../../distro'
 import { parseStackedCalls } from '../../../../../tools/callsignTools'
 
-const EMOJI_REGEX = emojiRegex()
+import { combineCallNotes } from './callNoteTools'
 
 const DEBUG = false
 
@@ -236,14 +235,10 @@ function _mergeData({ theirInfo, lookups, refs }) {
     }
   }
 
-  if (mergedLookup.notes?.length > 0 && (mergedLookup.notes[0]?.call === undefined || mergedLookup.notes[0]?.call === theirInfo.baseCall || mergedLookup.notes[0]?.call === theirInfo?.call)) {
-    newGuess.note = mergedLookup.notes[0].note
-    const matches = newGuess.note && newGuess.note.match(EMOJI_REGEX)
-    if (matches) {
-      newGuess.emoji = matches[0]
-    } else {
-      newGuess.emoji = '⭐️'
-    }
+  const combinedNotes = combineCallNotes(mergedLookup.notes, theirInfo)
+  if (combinedNotes) {
+    newGuess.note = combinedNotes.note
+    newGuess.emoji = combinedNotes.emoji
   } else {
     newGuess.emoji = undefined
   }
