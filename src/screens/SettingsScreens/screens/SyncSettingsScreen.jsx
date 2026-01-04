@@ -15,11 +15,13 @@ import { useTranslation } from 'react-i18next'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import ScreenContainer from '../../components/ScreenContainer'
 import { H2kButton, H2kListItem, H2kListSection, H2kMarkdown } from '../../../ui'
+import ScreenContainer from '../../components/ScreenContainer'
 import { SyncServiceDialog } from '../components/SyncServiceDialog'
 import { SyncAccountDialog } from '../components/SyncAccountDialog'
+import SyncProgress from '../../HomeScreen/components/SyncProgress'
 import { findHooks } from '../../../extensions/registry'
+import { DEFAULT_LOFI_SERVER } from '../../../extensions/data/ham2k-lofi-sync/Ham2KLoFiSyncExtension'
 import { selectLocalExtensionData, setLocalExtensionData, selectLocalData } from '../../../store/local'
 import { selectSettings } from '../../../store/settings'
 import { clearMatchingNotices } from '../../../store/system'
@@ -27,10 +29,8 @@ import { selectFiveSecondsTick, startTickTock, stopTickTock } from '../../../sto
 import { getSyncCounts, resetSyncedStatus } from '../../../store/operations'
 import { prepareSyncToReplaceLocalData, prepareSyncToCombineLocalData } from '../../../store/sync'
 
+import { SyncSettingsForDistribution } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
-
-import { DEFAULT_LOFI_SERVER } from '../../../extensions/data/ham2k-lofi-sync/Ham2KLoFiSyncExtension'
-import SyncProgress from '../../HomeScreen/components/SyncProgress'
 
 const LOFI_SERVER_LABELS = {
   // 'https://dev.lofi.ham2k.net': 'Ham2K LoFi (Development)',
@@ -311,13 +311,7 @@ Please try again later.`, { error: linkResult.json.error })
           onPress={() => null}
         />
 
-        <View style={{ marginHorizontal: styles.oneSpace * 2, marginTop: styles.oneSpace * 2, flexDirection: 'column' }}>
-          <H2kMarkdown style={styles.paragraph}>{t('screens.syncSettings.syncServiceDescription-md', `Basic service is free and allows you to sync recent data (up to 7 days) between two devices or apps at limited speed.
-
-Full service requires a paid subscription and includes all your operations synced between any reasonable number of devices or apps at full speed.
-
-While the LoFi service is in its TESTING PERIOD for the next couple of months, the service will remain free. After that prices will depend on the country and currency but should not be more than US$30/year or equivalent, and probably less.`)}</H2kMarkdown>
-        </View>
+        <SyncSettingsForDistribution settings={settings} styles={styles} />
 
         <H2kListSection title={t('screens.syncSettings.thisDevice', 'This Device')}>
           <H2kListItem

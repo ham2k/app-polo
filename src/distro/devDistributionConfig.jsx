@@ -156,3 +156,9 @@ export function syncMetaForDistribution ({ settings }) {
     locale: GLOBAL.locale
   }
 }
+
+export function SyncSettingsForDistribution ({ settings, styles }) {
+  return (
+    <></>
+  )
+}
