@@ -242,6 +242,15 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
         fontVariant: ['tabular-nums'],
         fontFamily: 'Roboto Mono',
         backgroundColor: false
+      },
+      fence: {
+        fontVariant: ['tabular-nums'],
+        fontFamily: 'Roboto Mono',
+        fontSize: normalFontSize,
+        backgroundColor: theme.colors.surfaceVariant,
+        color: theme.colors.onSurfaceVariant,
+        padding: oneSpace,
+        borderRadius: halfSpace
       }
       // strong: {
       //   fontWeight: '700'
