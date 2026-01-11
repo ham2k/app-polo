@@ -83,19 +83,15 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
     }
   }, [loggingState?.operationUUID, loggingState?.qso, operation?.uuid, setLoggingState])
 
-  useEffect(() => { // Inject suggested-qso when present
-    if (route?.params?.qso?._suggestedKey && loggingState?.suggestedQSO?._suggestedKey !== route.params.qso._suggestedKey && loggingState?.qso?._suggestedKey !== route.params.qso._suggestedKey) {
+  useEffect(() => { // Inject suggested-qso when present (only for splitView - non-splitView handled by OperationScreen)
+    if (splitView && route?.params?.qso?._suggestedKey && loggingState?.suggestedQSO?._suggestedKey !== route.params.qso._suggestedKey && loggingState?.qso?._suggestedKey !== route.params.qso._suggestedKey) {
       setLoggingState({ ...loggingState, selectedUUID: 'suggested-qso', suggestedQSO: route.params.qso })
-      if (route?.params?.splitView) {
-        navigation.navigate('Operation', { ...route?.params, qso: undefined })
-      } else {
-        navigation.navigate('OpLog', { qso: undefined })
-      }
+      navigation.navigate('Operation', { ...route?.params, qso: undefined })
     } else if (route?.params?.selectedUUID) {
       setLoggingState({ ...loggingState, selectedUUID: route.params.selectedUUID })
       navigation.replace('Operation', { ...route?.params, selectedUUID: undefined })
     }
-  }, [loggingState, setLoggingState, navigation, route.params, operation.uuid])
+  }, [splitView, loggingState, setLoggingState, navigation, route.params, operation.uuid])
 
   useEffect(() => { // Set navigation title
     if (styles?.smOrLarger) {

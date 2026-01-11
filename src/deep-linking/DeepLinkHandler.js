@@ -10,7 +10,7 @@ import { Linking } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 
-import { selectAllOperations, addNewOperation } from '../store/operations'
+import { selectAllOperations, addNewOperation, setOperationData } from '../store/operations'
 import { findRef } from '../tools/refTools'
 import { URL_SCHEME, TYPE_TO_ACTIVATION, parseDeepLinkURL, buildSuggestedQSO } from './DeepLinkUtils'
 
@@ -37,6 +37,7 @@ export function useDeepLinkHandler () {
   const navigation = useNavigation()
   const operations = useSelector(selectAllOperations)
   const processedUrlRef = useRef(null)
+  const initialUrlCheckedRef = useRef(false)
 
   const handleDeepLink = useCallback(async (url) => {
     if (!url || !url.startsWith(URL_SCHEME)) return
@@ -73,7 +74,10 @@ export function useDeepLinkHandler () {
 
   useEffect(() => {
     // Handle app opened from deep link (cold start)
+    // Only check initial URL once to prevent re-processing when effect dependencies change
     const checkInitialURL = async () => {
+      if (initialUrlCheckedRef.current) return
+      initialUrlCheckedRef.current = true
       try {
         const url = await Linking.getInitialURL()
         if (url) {
@@ -123,6 +127,12 @@ async function findOrCreateOperation ({ myRef, mySig, operations, dispatch }) {
   const newOperation = await dispatch(addNewOperation({
     refs: [{ type: activationType, ref: myRef }],
     _isNew: true
+  }))
+
+  // Trigger ref decoration and title derivation
+  await dispatch(setOperationData({
+    uuid: newOperation.uuid,
+    refs: newOperation.refs
   }))
 
   return newOperation

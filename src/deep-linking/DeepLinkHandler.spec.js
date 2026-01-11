@@ -23,7 +23,7 @@ jest.mock('@ham2k/lib-operation-data', () => ({
   }
 }))
 
-import { parseDeepLinkURL, buildSuggestedQSO, TYPE_TO_ACTIVATION } from './DeepLinkUtils'
+import { parseDeepLinkURL, buildSuggestedQSO, TYPE_TO_ACTIVATION, TYPE_TO_HUNTING } from './DeepLinkUtils'
 
 describe('DeepLinkHandler', () => {
   describe('TYPE_TO_ACTIVATION', () => {
@@ -35,6 +35,19 @@ describe('DeepLinkHandler', () => {
         gma: 'gmaActivation',
         wca: 'wcaActivation',
         zlota: 'zlotaActivation'
+      })
+    })
+  })
+
+  describe('TYPE_TO_HUNTING', () => {
+    it('should have all expected hunting types', () => {
+      expect(TYPE_TO_HUNTING).toEqual({
+        sota: 'sota',
+        pota: 'pota',
+        wwff: 'wwff',
+        gma: 'gma',
+        wca: 'wca',
+        zlota: 'zlota'
       })
     })
   })
@@ -193,21 +206,23 @@ describe('DeepLinkHandler', () => {
   })
 
   describe('buildSuggestedQSO', () => {
-    it('builds QSO with their ref from theirRef/theirSig', () => {
+    it('builds QSO with their ref from theirRef/theirSig using hunting type', () => {
       const params = { theirRef: 'W6/CT-006', theirSig: 'sota', theirCall: 'K6TEST' }
       const qso = buildSuggestedQSO(params)
-      expect(qso.refs).toEqual([{ type: 'sotaActivation', ref: 'W6/CT-006' }])
+      // theirRef should use hunting type (e.g., 'sota') not activation type (e.g., 'sotaActivation')
+      expect(qso.refs).toEqual([{ type: 'sota', ref: 'W6/CT-006' }])
       expect(qso.their.call).toBe('K6TEST')
     })
 
-    it('maps all theirSig values to correct activation types', () => {
+    it('maps all theirSig values to correct hunting types', () => {
+      // theirRef represents the station being chased, so uses hunting types
       const testCases = [
-        { sig: 'sota', expected: 'sotaActivation' },
-        { sig: 'pota', expected: 'potaActivation' },
-        { sig: 'wwff', expected: 'wwffActivation' },
-        { sig: 'gma', expected: 'gmaActivation' },
-        { sig: 'wca', expected: 'wcaActivation' },
-        { sig: 'zlota', expected: 'zlotaActivation' }
+        { sig: 'sota', expected: 'sota' },
+        { sig: 'pota', expected: 'pota' },
+        { sig: 'wwff', expected: 'wwff' },
+        { sig: 'gma', expected: 'gma' },
+        { sig: 'wca', expected: 'wca' },
+        { sig: 'zlota', expected: 'zlota' }
       ]
 
       testCases.forEach(({ sig, expected }) => {

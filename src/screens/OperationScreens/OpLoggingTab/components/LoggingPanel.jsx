@@ -60,8 +60,11 @@ export default function LoggingPanel ({
   const [qso, setQSO, updateQSO] = useMemo(() => {
     const qsoValue = loggingState?.qso
     const setQSOFunction = (newQSO, more) => {
+      // Build state without suggestedQSO to prevent stale data from being reintroduced
+      // suggestedQSO should only be set via OperationScreen's deep link handling
+      const { suggestedQSO: _ignoredSuggestedQSO, ...restOfLoggingState } = loggingState || {}
       setLoggingState({
-        ...loggingState,
+        ...restOfLoggingState,
         qso: newQSO,
         selectedUUID: newQSO?.uuid,
         originalQSO: cloneDeep(newQSO),
@@ -125,8 +128,10 @@ export default function LoggingPanel ({
       const otherStateChanges = {}
 
       if (loggingState?.qsoQueue?.length > 0) {
-        nextQSO = loggingState.qsoQueue.pop() ?? prepareNewQSO(operation, qsos, vfo, settings)
-        otherStateChanges.qsoQueue = loggingState.qsoQueue
+        // Create a copy to avoid mutating Redux state directly
+        const queue = [...loggingState.qsoQueue]
+        nextQSO = queue.pop() ?? prepareNewQSO(operation, qsos, vfo, settings)
+        otherStateChanges.qsoQueue = queue
       } else {
         nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
       }

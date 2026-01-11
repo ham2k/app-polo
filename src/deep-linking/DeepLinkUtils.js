@@ -9,7 +9,7 @@ import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
 export const URL_SCHEME = 'com.ham2k.polo://'
 
-// Map URL type/sig param to operation activation type
+// Map URL type/sig param to operation activation type (for myRef - what YOU are activating)
 export const TYPE_TO_ACTIVATION = {
   sota: 'sotaActivation',
   pota: 'potaActivation',
@@ -18,6 +18,16 @@ export const TYPE_TO_ACTIVATION = {
   wca: 'wcaActivation',
   zlota: 'zlotaActivation'
   // iota: 'iotaActivation', // IOTA not yet supported in Polo
+}
+
+// Map URL type/sig param to QSO hunting type (for theirRef - what THEY have that you're chasing)
+export const TYPE_TO_HUNTING = {
+  sota: 'sota',
+  pota: 'pota',
+  wwff: 'wwff',
+  gma: 'gma',
+  wca: 'wca',
+  zlota: 'zlota'
 }
 
 /**
@@ -124,9 +134,10 @@ export function buildSuggestedQSO ({ theirRef, theirSig, freq, mode, time, myCal
   }
 
   // Add their ref for chasing/hunting (the station being worked has this ref)
+  // Use hunting type (e.g., 'pota') not activation type (e.g., 'potaActivation')
   if (theirRef && theirSig) {
-    const theirActivationType = TYPE_TO_ACTIVATION[theirSig]
-    qso.refs = [{ type: theirActivationType, ref: theirRef }]
+    const theirHuntingType = TYPE_TO_HUNTING[theirSig]
+    qso.refs = [{ type: theirHuntingType, ref: theirRef }]
   }
 
   return qso

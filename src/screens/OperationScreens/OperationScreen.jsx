@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Animated, PanResponder, View } from 'react-native'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -27,7 +27,7 @@ import OpMapTab from './OpMapTab/OpMapTab'
 import OpInfoTab from './OpInfoTab/OpInfoTab'
 import { trackOperation } from '../../distro'
 import { selectRuntimeOnline } from '../../store/runtime'
-import { useUIState } from '../../store/ui'
+import { useUIState, updateStateForComponent } from '../../store/ui'
 import { Icon, Menu, Text } from 'react-native-paper'
 import { slashZeros } from '../../tools/stringTools'
 import { hasRef } from '../../tools/refTools'
@@ -77,6 +77,27 @@ export default function OperationScreen (props) {
       setLastTracking(Date.now())
     }
   }, [settings, operation, lastTracking, online])
+
+  const processedSuggestedKeyRef = useRef(null)
+
+  useEffect(() => { // Inject suggestedQSO into OpLoggingTab's state when received via deep link
+    const key = suggestedQSO?._suggestedKey
+    if (key && key !== processedSuggestedKeyRef.current) {
+      processedSuggestedKeyRef.current = key
+      // Use _replace marker to ensure suggestedQSO is completely replaced, not deep merged
+      // This prevents old nested properties from persisting across different deep links
+      dispatch(updateStateForComponent({
+        component: 'OpLoggingTab',
+        loggingState: {
+          operationUUID: operation?.uuid,
+          selectedUUID: 'suggested-qso',
+          suggestedQSO: { ...suggestedQSO, _replace: true }
+        }
+      }))
+      // Clear the qso from route params to avoid re-triggering
+      navigation.setParams({ qso: undefined })
+    }
+  }, [suggestedQSO, operation?.uuid, dispatch, navigation])
 
   const headerOptions = useMemo(() => {
     let options = {}
@@ -274,7 +295,7 @@ export default function OperationScreen (props) {
             <Tab.Navigator
               id={'OperationScreen_TabNavigator'}
               initialLayout={{ width: dimensions.width, height: dimensions.height }}
-              initialRouteName={ operation?.stationCall && operation?.qsoCount > 0 ? 'OpLog' : 'OpSettings' }
+              initialRouteName={ suggestedQSO || (operation?.stationCall && operation?.qsoCount > 0) ? 'OpLog' : 'OpSettings' }
               screenOptions={{
                 tabBarItemStyle: [{ width: dimensions.width / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 4, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                 tabBarLabelStyle: styles.screenTabBarLabel,

@@ -56,7 +56,11 @@ function deepMergeState(state, data, visited = undefined) {
   // Then merge keys, recursively
   for (const key of Object.keys(data || {})) {
     const value = data[key]
-    if (typeof value === 'object' && !Array.isArray(value) && !visited.has(value)) {
+    // Check for _replace marker - if present, replace the entire object instead of merging
+    if (value?._replace) {
+      const { _replace, ...rest } = value
+      state[key] = rest
+    } else if (typeof value === 'object' && !Array.isArray(value) && !visited.has(value)) {
       if (Object.keys(value || {}).length === 0) {
         state[key] = {}
       } else {
