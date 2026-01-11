@@ -161,7 +161,7 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
           />
           <H2kListItem
             title={t('general.languages.sk', 'Slovak')}
-            description={'OM8ATE Matúš (lead)'}
+            description={'OM8ATE Matúš (lead), OM1PU Michal'}
             leftIcon="earth"
           />
           <H2kListItem
