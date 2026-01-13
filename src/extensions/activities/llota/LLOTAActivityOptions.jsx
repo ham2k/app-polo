@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -16,11 +16,11 @@ import { selectRuntimeOnline } from '../../../store/runtime'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
-import { Info } from './POTAInfo'
-import { potaFindParkByReference, potaFindParksByLocation, potaFindParksByName, potaPrefixForDXCCCode } from './POTAAllParksData'
-import { POTAListItem } from './POTAListItem'
+import { Info } from './LLOTAInfo'
+import { llotaFindByReference, llotaFindByLocation, llotaFindByName, llotaPrefixForDXCCCode } from './LLOTAAllRefsData'
+import { LLOTAListItem } from './LLOTAListItem'
 
-export function POTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function LLOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs: setRefsUpstream }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
@@ -32,13 +32,13 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.pota.activityOptions.title', 'Activating {{count}} parks', { count: activityRefs?.length || 0 })
+    return t('extensions.llota.activityOptions.title', 'Activating {{count}} lakes', { count: activityRefs?.length || 0 })
   }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
-  const [parks, setParks] = useState([])
-  const [parksMessage, setParksMessage] = useState([])
+  const [refs, setRefs] = useState([])
+  const [refsMessage, setRefsMessage] = useState([])
 
   const [location, setLocation] = useState()
   useEffect(() => {
@@ -62,8 +62,8 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
     setTimeout(async () => {
       const datas = []
       for (const ref of activityRefs) {
-        const park = await potaFindParkByReference(ref.ref)
-        const newData = { ...ref, ...park }
+        const refData = await llotaFindByReference(ref.ref)
+        const newData = { ...ref, ...refData }
         if (location?.lat && location?.lon) {
           newData.distance = distanceOnEarth(newData, location, { units: settings.distanceUnits })
         }
@@ -77,7 +77,7 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
   useEffect(() => {
     setTimeout(async () => {
       if (location?.lat && location?.lon) {
-        const newResults = await potaFindParksByLocation(ourInfo.dxccCode, location.lat, location.lon, NEARBY_DEGREES)
+        const newResults = await llotaFindByLocation(ourInfo.dxccCode, location.lat, location.lon, NEARBY_DEGREES)
         setNearbyResults(
           newResults.map(result => ({
             ...result,
@@ -91,11 +91,11 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
   useEffect(() => {
     setTimeout(async () => {
       if (search?.length > 2) {
-        let newParks = await potaFindParksByName(ourInfo?.dxccCode, search.toLowerCase())
+        let newRefs = await llotaFindByName(ourInfo?.dxccCode, search.toLowerCase())
         if (location?.lat && location?.lon) {
-          newParks = newParks.map(park => ({
-            ...park,
-            distance: distanceOnEarth(park, location, { units: settings.distanceUnits })
+          newRefs = newRefs.map(ref => ({
+            ...ref,
+            distance: distanceOnEarth(ref, location, { units: settings.distanceUnits })
           })).sort((a, b) => a.distance - b.distance)
         }
 
@@ -103,48 +103,48 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
         let nakedReference
         const parts = search.match(/^\s*([A-Z]*)[-]{0,1}(\d+|TEST)\s*$/i)
         if (parts && parts[2].length >= 4) {
-          nakedReference = (parts[1]?.toUpperCase() || potaPrefixForDXCCCode(ourInfo?.dxccCode) || 'K') + '-' + parts[2].toUpperCase()
+          nakedReference = (parts[1]?.toUpperCase() || llotaPrefixForDXCCCode(ourInfo?.dxccCode) || 'K') + '-' + parts[2].toUpperCase()
         } else if (search.match(Info.referenceRegex)) {
           nakedReference = search
         }
 
         // If it's a naked reference, let's ensure the results include it, or else add a placeholder
-        // just to cover any cases where the user knows about a new park not included in our data
-        if (nakedReference && !newParks.find(park => park.ref === nakedReference)) {
-          newParks.unshift({ ref: nakedReference })
+        // just to cover any cases where the user knows about a new reference not included in our data
+        if (nakedReference && !newRefs.find(ref => ref.ref === nakedReference)) {
+          newRefs.unshift({ ref: nakedReference })
         }
 
-        setParks(newParks.slice(0, 15))
-        if (newParks.length > 15) {
-          setParksMessage(t('extensions.pota.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newParks.length }))
+        setRefs(newRefs.slice(0, 15))
+        if (newRefs.length > 15) {
+          setRefsMessage(t('extensions.llota.activityOptions.nearestMatches', 'Nearest {{limit}} of {{count}} matches', { limit: 15, count: newRefs.length }))
         } else {
-          setParksMessage(t('extensions.pota.activityOptions.matchingParks', '{{count}} matching parks', { count: newParks.length }))
+          setRefsMessage(t('extensions.llota.activityOptions.matchingRefs', '{{count}} matching lakes', { count: newRefs.length }))
         }
       } else {
-        setParks(nearbyResults)
-        if (nearbyResults === undefined) setParksMessage(t('extensions.pota.activityOptions.searchForParks', 'Search for some parks to activate!'))
-        else if (nearbyResults.length === 0) setParksMessage(t('extensions.pota.activityOptions.noParksNearby', 'No parks nearby'))
-        else setParksMessage(t('extensions.pota.activityOptions.nearbyParks', 'Nearby parks'))
+        setRefs(nearbyResults)
+        if (nearbyResults === undefined) setRefsMessage(t('extensions.llota.activityOptions.searchForRefs', 'Search for some lakes to activate!'))
+        else if (nearbyResults.length === 0) setRefsMessage(t('extensions.llota.activityOptions.noRefsNearby', 'No lakes nearby'))
+        else setRefsMessage(t('extensions.llota.activityOptions.nearbyRefs', 'Nearby lakes'))
       }
     })
   }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
-    setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
-  }, [activityRefs, allRefs, setRefs])
+    setRefsUpstream(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
+  }, [activityRefs, allRefs, setRefsUpstream])
 
   const handleRemoveReference = useCallback((ref) => {
-    setRefs(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== ref)))
-  }, [activityRefs, allRefs, setRefs])
+    setRefsUpstream(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== ref)))
+  }, [activityRefs, allRefs, setRefsUpstream])
 
   return (
     <>
       <H2kListSection title={title}>
-        {refDatas.map((park, index) => (
-          <POTAListItem
-            key={park.ref}
-            activityRef={park.ref}
-            refData={park}
+        {refDatas.map((ref, index) => (
+          <LLOTAListItem
+            key={ref.ref}
+            activityRef={ref.ref}
+            refData={ref}
             allRefs={activityRefs}
             styles={styles}
             settings={settings}
@@ -157,22 +157,22 @@ export function POTAActivityOptions ({ styles, operation, settings, refs: allRef
 
       <H2kListRow>
         <H2kSearchBar
-          placeholder={t('extensions.pota.activityOptions.searchPlaceholder', 'Name or reference…')}
+          placeholder={t('extensions.llota.activityOptions.searchPlaceholder', 'Name or reference…')}
           value={search}
           onChangeText={setSearch}
         />
       </H2kListRow>
 
-      <H2kListSection title={parksMessage}>
-        {parks.map((park) => (
-          <POTAListItem
-            key={park.ref}
-            activityRef={park.ref}
+      <H2kListSection title={refsMessage}>
+        {refs.map((ref) => (
+          <LLOTAListItem
+            key={ref.ref}
+            activityRef={ref.ref}
             allRefs={activityRefs}
-            refData={park}
+            refData={ref}
             styles={styles}
             settings={settings}
-            onPress={() => handleAddReference(park.ref)}
+            onPress={() => handleAddReference(ref.ref)}
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />

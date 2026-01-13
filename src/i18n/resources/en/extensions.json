@@ -337,6 +337,62 @@
         "unknownSummit": "Unknown summit"
       }
     },
+    "llota": {
+      "name": "LLOTA: Lakes and Lagoons on the Air",
+      "shortName": "LLOTA",
+      "exportName": "LLOTA Activation",
+      "activityOptions": {
+        "title_zero": "No lakes selected for activation",
+        "title_one": "Activating 1 lake",
+        "title_other": "Activating {{count}} lakes",
+        "noLakesFound": "No lakes found",
+        "nearestMatches": "Nearest {{limit}} of {{count}} matches",
+        "matchingRefs_zero": "No matching lakes",
+        "matchingRefs_one": "1 matching lake",
+        "matchingRefs_other": "{{count}} matching lakes",
+        "searchForRefs": "Search for some lakes to activate!",
+        "noRefsNearby": "No lakes nearby",
+        "nearbyRefs": "Nearby lakes",
+        "searchPlaceholder": "Name or reference…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "No L2Ls",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2Ls",
+        "huntedRefsCount_zero": "No lakes hunted",
+        "huntedRefsCount_one": "1 lake hunted",
+        "huntedRefsCount_other": "{{fmtCount}} lakes hunted",
+        "activatorQSOsCount_zero": "No activator QSOs",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSOs",
+        "ref2refQSOsCount_zero": "No L2L QSOs",
+        "ref2refQSOsCount_one": "1 L2L QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L QSOs",
+        "huntedQSOsCount_zero": "No hunted QSOs",
+        "huntedQSOsCount_one": "1 hunted QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} hunted QSOs",
+        "operationTotals": "Operation Totals",
+        "referencesActivatedCount_zero": "No lakes activated",
+        "referencesActivatedCount_one": "1 lake activated",
+        "referencesActivatedCount_other": "{{fmtCount}} lakes activated",
+        "referencesMissedCount_zero": "No incomplete lakes",
+        "referencesMissedCount_one": "1 incomplete lake",
+        "referencesMissedCount_other": "{{fmtCount}} incomplete lakes",
+        "referencesHuntedCount_zero": "No lakes hunted",
+        "referencesHuntedCount_one": "1 lake hunted",
+        "referencesHuntedCount_other": "{{fmtCount}} lakes hunted"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Their LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Error posting LLOTA spot",
+        "serverResponse": "Server responded with error {{status}}: {{body}}"
+      },
+      "exampleRefName": "Example Lake",
+      "unknownRefName": "Unknown Lake",
+      "noRefsNearby": "No lakes nearby!"
+    },
     "mota": {
       "name": "Mills on the Air",
       "shortName": "MOTA",

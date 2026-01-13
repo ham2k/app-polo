@@ -121,14 +121,22 @@ export const activateExtension = (extension) => async (dispatch) => {
   if (extension.activated) return true
 
   if (extension.onActivation) {
-    extension.onActivation({
-      registerHook: (hookCategory, props) => { registerHook(hookCategory, { ...props, extension }) }
-    })
+    try {
+      extension.onActivation({
+        registerHook: (hookCategory, props) => { registerHook(hookCategory, { ...props, extension }) }
+      })
+    } catch (error) {
+      reportError(`Error activating extension ${extension.key}`, error)
+    }
   }
   if (extension.onActivationDispatch) {
-    await dispatch(extension.onActivationDispatch({
-      registerHook: (hookCategory, props) => { registerHook(hookCategory, { ...props, extension }) }
-    }))
+    try {
+      await dispatch(extension.onActivationDispatch({
+        registerHook: (hookCategory, props) => { registerHook(hookCategory, { ...props, extension }) }
+      }))
+    } catch (error) {
+      reportError(`Error activating extension ${extension.key}`, error)
+    }
   }
   extension.activated = true
 }
@@ -136,10 +144,18 @@ export const activateExtension = (extension) => async (dispatch) => {
 export const deactivateExtension = (extension) => async (dispatch) => {
   if (extension.activated) {
     if (extension.onDeactivation) {
-      extension.onDeactivation({})
+      try {
+        extension.onDeactivation({})
+      } catch (error) {
+        reportError(`Error deactivating extension ${extension.key}`, error)
+      }
     }
     if (extension.onDeactivationDispatch) {
-      await dispatch(extension.onDeactivationDispatch({}))
+      try {
+        await dispatch(extension.onDeactivationDispatch({}))
+      } catch (error) {
+        reportError(`Error deactivating extension ${extension.key}`, error)
+      }
     }
   }
   Object.keys(Hooks).forEach(hookCategory => {

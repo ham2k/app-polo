@@ -21,15 +21,16 @@ import qsosReducer from './qsos'
 import stationReducer from './station'
 import timeReducer from './time'
 import dataFilesReducer from './dataFiles'
-import { reducer as apiQRZReducer, middleware as apiQRZMiddleware } from './apis/apiQRZ'
-import { reducer as apiHamQTHReducer, middleware as apiHamQTHMiddleware } from './apis/apiHamQTH'
-import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apis/apiPOTA'
-import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './apis/apiSOTA'
 import { reducer as apiGMAReducer, middleware as apiGMAMiddleware } from './apis/apiGMA'
-import { reducer as apiWWFFReducer, middleware as apiWWFFMiddleware } from './apis/apiWWFF'
-import { reducer as apiWWBOTAReducer, middleware as apiWWBOTAMiddleware } from './apis/apiWWBOTA'
-import { reducer as apiZLOTAReducer, middleware as apiZLOTAMiddleware } from './apis/apiZLOTA'
+import { reducer as apiHamQTHReducer, middleware as apiHamQTHMiddleware } from './apis/apiHamQTH'
+import { reducer as apiLLOTAReducer, middleware as apiLLOTAMiddleware } from './apis/apiLLOTA'
 import { reducer as apiPnPReducer, middleware as apiPnPMiddleware } from './apis/apiPnP'
+import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apis/apiPOTA'
+import { reducer as apiQRZReducer, middleware as apiQRZMiddleware } from './apis/apiQRZ'
+import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './apis/apiSOTA'
+import { reducer as apiWWBOTAReducer, middleware as apiWWBOTAMiddleware } from './apis/apiWWBOTA'
+import { reducer as apiWWFFReducer, middleware as apiWWFFMiddleware } from './apis/apiWWFF'
+import { reducer as apiZLOTAReducer, middleware as apiZLOTAMiddleware } from './apis/apiZLOTA'
 
 import { reduxEnhancersForDistribution } from '../distro'
 
@@ -51,15 +52,16 @@ const rootReducer = combineReducers({
   station: stationReducer,
   time: timeReducer,
   dataFiles: dataFilesReducer,
-  apiQRZ: apiQRZReducer,
-  apiHamQTH: apiHamQTHReducer,
-  apiPOTA: apiPOTAReducer,
-  apiSOTA: apiSOTAReducer,
   apiGMA: apiGMAReducer,
-  apiWWFF: apiWWFFReducer,
+  apiHamQTH: apiHamQTHReducer,
+  apiLLOTA: apiLLOTAReducer,
+  apiPnP: apiPnPReducer,
+  apiPOTA: apiPOTAReducer,
+  apiQRZ: apiQRZReducer,
+  apiSOTA: apiSOTAReducer,
   apiWWBOTA: apiWWBOTAReducer,
-  apiZLOTA: apiZLOTAReducer,
-  apiPnP: apiPnPReducer
+  apiWWFF: apiWWFFReducer,
+  apiZLOTA: apiZLOTAReducer
 })
 
 const persistConfig = {
@@ -106,15 +108,16 @@ export const store = configureStore({
       immutableCheck: false // https://github.com/reduxjs/redux-toolkit/issues/415
     })
 
-    middlewares.push(apiQRZMiddleware)
-    middlewares.push(apiHamQTHMiddleware)
-    middlewares.push(apiPOTAMiddleware)
-    middlewares.push(apiSOTAMiddleware)
     middlewares.push(apiGMAMiddleware)
-    middlewares.push(apiWWFFMiddleware)
-    middlewares.push(apiWWBOTAMiddleware)
-    middlewares.push(apiZLOTAMiddleware)
+    middlewares.push(apiHamQTHMiddleware)
+    middlewares.push(apiLLOTAMiddleware)
     middlewares.push(apiPnPMiddleware)
+    middlewares.push(apiPOTAMiddleware)
+    middlewares.push(apiQRZMiddleware)
+    middlewares.push(apiSOTAMiddleware)
+    middlewares.push(apiWWBOTAMiddleware)
+    middlewares.push(apiWWFFMiddleware)
+    middlewares.push(apiZLOTAMiddleware)
 
     return middlewares
   },
