@@ -68,7 +68,7 @@ const QSOItem = React.memo(function QSOItem ({
   }, [qso.deleted, isOtherOperator, styles.deletedFields, styles.otherOperatorFields, styles.fields])
 
   const refIcons = useMemo(() => {
-    return (qso.refs || []).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.iconForQSO).map(({ ref, handler }, i) => (
+    return (qso.refs || []).filter(ref => ref.type).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.iconForQSO).map(({ ref, handler }, i) => (
       <H2kIcon key={i} name={handler?.iconForQSO} color={fieldsStyle.icon.color} size={styles.normalFontSize * 0.9} />
     ))
   }, [qso.refs, fieldsStyle.icon, styles.normalFontSize])

@@ -184,6 +184,8 @@ async function _lookupCall(theirInfo, { online, settings, dispatch, mode = 'full
 async function _lookupRefs(refs, { online, settings, dispatch, mode = 'full' }) {
   let newRefs = []
   for (const ref of (refs || [])) {
+    if (!ref.type) continue
+
     const hooks = findHooks(`ref:${ref.type}`)
     for (const hook of hooks) {
       try {

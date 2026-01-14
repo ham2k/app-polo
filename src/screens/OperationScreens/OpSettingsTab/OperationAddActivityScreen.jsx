@@ -26,7 +26,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation))
   const currentActivities = useMemo(() => {
     const activities = {}
-    ;(operation?.refs || []).forEach(ref => {
+    ;(operation?.refs || []).filter(ref => ref.type).forEach(ref => {
       const hook = findBestHook(`ref:${ref.type}`)
       if (hook) {
         activities[hook.key] = hook.description && hook.description(operation)

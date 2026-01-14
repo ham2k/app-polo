@@ -140,7 +140,7 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
 
       const sampleOperations = (hook.sampleOperations && hook.sampleOperations({ t, settings })) || []
       sampleOperations.forEach(sampleOperation => {
-        (sampleOperation?.refs || []).forEach(ref => {
+        (sampleOperation?.refs || []).filter(ref => ref.type).forEach(ref => {
           const refHook = findBestHook(`ref:${ref.type}`)
           if (refHook?.suggestExportOptions) {
             const options = (refHook.suggestExportOptions && refHook.suggestExportOptions({ t, operation: sampleOperation, qsos: sampleOperation.qsos, ref, settings })) || []

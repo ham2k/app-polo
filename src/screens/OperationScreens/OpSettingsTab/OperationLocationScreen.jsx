@@ -32,7 +32,7 @@ export default function OperationLocationScreen ({ navigation, route }) {
   const operation = useSelector(state => selectOperation(state, route.params.operation))
 
   const refsWithHandlers = useMemo(() => {
-    return (operation?.refs || []).filter(ref => ref.grid).map(ref => {
+    return (operation?.refs || []).filter(ref => ref.grid && ref.type).map(ref => {
       return { ref, handler: findBestHook(`ref:${ref.type}`) || defaultReferenceHandlerFor(ref.type) }
     })
   }, [operation?.refs])

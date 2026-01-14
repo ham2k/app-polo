@@ -28,7 +28,7 @@ export function scoringHandlersForOperation({ operation, settings }) {
 
   const refs = (operation?.refs || []).filter(Boolean)
 
-  refs.forEach(ref => {
+  refs.filter(ref => ref.type).forEach(ref => {
     const handler = findBestHook(`ref:${ref.type}`)
     if (handler && handler.scoringForQSO) {
       scoringHandlers.push({ handler, ref })

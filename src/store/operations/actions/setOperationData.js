@@ -56,7 +56,7 @@ export const setOperationData = (data) => async (dispatch, getState) => {
 export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, getState) => {
   if (data.refs) {
     const decoratedRefs = []
-    for (const ref of data.refs.filter(Boolean)) {
+    for (const ref of data.refs.filter(ref => ref?.type)) {
       let decoratedRef = ref
       const hooks = findHooks(`ref:${ref.type}`)
       for (const hook of hooks) {

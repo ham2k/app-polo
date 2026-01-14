@@ -143,7 +143,7 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
 
   const includedRefTypes = {}
   for (const ref of (template.refs ?? [])) {
-    if (includedRefTypes[ref.type]) continue
+    if (includedRefTypes[ref.type] || !ref.type) continue
 
     includedRefTypes[ref.type] = true
 

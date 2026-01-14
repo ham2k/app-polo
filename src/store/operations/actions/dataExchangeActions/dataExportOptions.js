@@ -139,6 +139,8 @@ function getExportOptionsForOperation({ operation, qsos, settings }) {
   const exportOptions = {}
 
   for (const ref of refs) {
+    if (!ref.type) continue
+
     const handler = findBestHook(`ref:${ref.type}`, { withFunction: 'suggestExportOptions' })
 
     if (handler) {
