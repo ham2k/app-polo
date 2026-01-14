@@ -3,7 +3,7 @@
     "start": {
       "credits": "od KI2D a přátel",
       "Loading Extensions": "Načítání rozšíření",
-      "Development Build": "Vývojová verze Portable Loggeru",
+      "Development Build": "Vývojová verze Portable deníku",
       "messages": {
         "Reticulating splines": "Generování křivek",
         "Tuning the antenna": "Ladění antény",
@@ -17,22 +17,22 @@
       }
     },
     "home": {
-      "title": "Portable logbook",
+      "title": "Portable deník",
       "newOperation": "Nová operace",
       "newOperation-a11y": "Nová operace",
       "operationList-a11y": "Seznam operací",
-      "noOperations": "Žádné operace!",
+      "noOperations": "Žádné aktivity!",
       "settings-a11y": "Nastavení",
       "quickCallLookupPlaceholder": "Rychlé vyhledání značky…",
       "spots-a11y": "Spoty"
     },
     "operation": {
-      "title": "Operace"
+      "title": "Aktivita"
     },
     "operationDetails": {
-      "title": "Podrobnosti operace",
+      "title": "Podrobnosti aktivity",
       "operationTitle": "Název",
-      "newOperation": "Nová operace",
+      "newOperation": "Nová aktivita",
       "operationNotes": "Poznámky",
       "anythingYouWantToWriteAboutThisOperation": "Cokoliv, co chcete napsat o této operaci"
     },
@@ -60,7 +60,7 @@
       "identifierForThisStation": "Identifikátor pro tuto stanici (pouze čísla)"
     },
     "operationLocation": {
-      "title": "Lokalita operace",
+      "title": "Lokalita aktivity",
       "selectedLocation": "Vybraná lokalita",
       "maidenheadGridSquareLocator": "Maidenhead Grid Square Locator",
       "suggestedLocations": "Navrhované lokality",
@@ -78,10 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Možnosti aktivity",
-      "removeActivity": "Odstranit {{activity}} z této operace"
+      "removeActivity": "Odstranit {{activity}} z této aktivity"
     },
     "operationData": {
-      "title": "Data operace",
+      "title": "Data aktivity",
       "selectFromTheExportOptionsBelow": "Vyberte si z níže uvedených možností exportu",
       "exportSingeFile": "Exportovat jeden soubor",
       "exportSelectedFiles_zero": "Exportovat 0 vybraných souboru",
@@ -95,14 +95,14 @@
       "importQSOs": "Import QSO",
       "addQSOsFromADIFFile": "Přidat QSOs ze souboru ADIF",
       "ham2kLoFiSync": "Ham2K LoFi Sync",
-      "operation": "Operace",
+      "operation": "Aktivita",
       "exportSettings": "Nastavení exportu",
       "useCompactFileNames": "Použít kompaktní názvy souborů",
       "wavelogExport": "Wavelog Export",
-      "exportQSOsToWavelogDescription": "Poslat všechny QSOs této operace do Wavelogu",
+      "exportQSOsToWavelogDescription": "Poslat všechny QSOs této aktivity do Wavelogu",
       "wavelogDialog": {
         "title": "Export QSO do Wavelogu",
-        "status": "Export všech QSO této operace do Wavelogu.",
+        "status": "Export všech QSO této aktivity do Wavelogu.",
         "exporting": "Exportování do Wavelog…"
       },
       "deleteOperationDialog": {
@@ -204,7 +204,7 @@
         "title": "Volací značka operátora",
         "noCall": "Žádná volací značka",
         "dialogTitle": "Volací značka operátora",
-        "pleaseEnterCallsign": "Prosím zadejte volací značku!",
+        "pleaseEnterCallsign": "Prosím zadej volací značku!",
         "callsignLabel": "Volací značka operátora"
       },
       "generalSettings": {
@@ -395,8 +395,8 @@
       "title": "Nastavení logování",
       "leftieMode": {
         "title": "Režim pro leváky",
-        "descriptionOn": "Použít rozložení pro leváky",
-        "descriptionOff": "Použít rozložení pro praváky"
+        "descriptionOn": "Použito rozložení pro leváky",
+        "descriptionOff": "Použito rozložení pro praváky"
       },
       "countryFlags": {
         "title": "Vlajky zemí",
@@ -406,13 +406,13 @@
       },
       "showBearing": {
         "title": "Zobrazit azimut",
-        "descriptionOn": "Zobrazit odhadovaný azimut do stanice",
+        "descriptionOn": "Zobrazit odhadovaný azimut k protistanici",
         "descriptionOff": "Nezobrazovat informace o azimutu"
       },
       "switchSignalReportOrder": {
         "title": "Přepnout pořadí reportu",
-        "descriptionOn": "Poslán první, přijatý druhý",
-        "descriptionOff": "Přijatý první, poslán druhý"
+        "descriptionOn": "Odeslán první, přijatý druhý",
+        "descriptionOff": "Přijatý první, odeslán druhý"
       },
       "jumpAfterRST": {
         "title": "Přejít na další pole po zadání RST",
@@ -426,7 +426,7 @@
       },
       "suggestTemplates": {
         "title": "Použít šablony operací",
-        "descriptionOn": "Navrhnout šablony pro nové operace",
+        "descriptionOn": "Navrhnout šablony pro nové aktivity",
         "descriptionOff": "Nenavrhovat šablony"
       },
       "bandsModes": {
@@ -502,13 +502,13 @@
       },
       "combineDataAlert": {
         "title": "Kombinovat lokální data?",
-        "text": "Jsi si jistý, že chceš kombinovat tyto operace a QSO s novým účtem?\n\nToto sloučí QSO na tomto zařízení s daty, která již existují v synchronizační službě pro nový účet, a může to náhodně vést k míchání nesouvisejících logů!\n\nTuto operaci nelze vrátit zpět.",
+        "text": "Jsi si jistý, že chceš kombinovat tyto aktivity a QSO s novým účtem?\n\nToto sloučí QSO na tomto zařízení s daty, která již existují v synchronizační službě pro nový účet, a může to náhodně vést k míchání nesouvisejících logů!\n\nTuto operaci nelze vrátit zpět.",
         "buttonCancel": "Ne, zrušit",
         "buttonProcees": "Ano, risknu to! Kombinovat!"
       },
       "replaceDataAlert": {
         "title": "Nahradit místní data?",
-        "text": "Určitě chceš nahradit všechna data na tomto zařízení operacemi a QSO pro nový účet ze synchronizační služby?\n\nAplikace se restartuje.\n\nPokud máš nesynchronizovaná data, TAK BUDOU ZTRACENA.",
+        "text": "Určitě chceš nahradit všechna data na tomto zařízení aktivitami a QSO pro nový účet ze synchronizační služby?\n\nAplikace se restartuje.\n\nPokud máš nesynchronizovaná data, TAK BUDOU ZTRACENA.",
         "buttonCancel": "Ne, zrušit",
         "buttonProcees": "Ano, risknu to! Nahradit všechno!"
       },
@@ -536,11 +536,11 @@
       "resetSyncStatus": "Obnovit stav synchronizace",
       "noDataStored": "Žádná data neuložena",
       "syncCountDescription": {
-        "operations": "Operace: {{synced}} synchronizováno, {{pending}} čeká",
+        "operations": "Aktivity: {{synced}} synchronizováno, {{pending}} čeká",
         "qsos": "QSO: {{synced}} synchronizováno, {{pending}} čeká"
       },
       "cloudCountDescription": {
-        "operations": "Operace: {{total}} celkem",
+        "operations": "Aktivity: {{total}} celkem",
         "operationsSyncable": "Operace: {{total}} uloženo, {{syncable}} synchronizovatelné",
         "qsos": "QSO: {{total}} uloženo",
         "qsosSyncable": "QSO: {{total}} uloženo, {{syncable}} synchronizovatelné"
@@ -585,7 +585,7 @@
       "title": "Nastavení pro vývojáře",
       "wipeDatabase": {
         "title": "Vymazat databázi?",
-        "description": "Jste si jisti, že chcete smazat všechny operace, QSO a další data?",
+        "description": "Jste si jisti, že chcete smazat všechny aktivity, QSO a další data?",
         "noCancel": "Ne, zrušit",
         "yesWipeIt": "Ano, vymazat!"
       },
@@ -715,7 +715,7 @@
       "spotsTab-a11y": "Záložka spoty",
       "mapTab": "Mapa",
       "mapTab-a11y": "Záložka mapy",
-      "settingsTab": "Operace",
+      "settingsTab": "Aktivita",
       "settingsCompactTab": "Oper.",
       "settingsTab-a11y": "Záložka nastavení operace",
       "menu": {
@@ -763,7 +763,7 @@
       "qsosInTime": "{{countText}} ve {{timeText}}",
       "last10QSOs": "{{rate}} Q/h za posledních 10",
       "last100QSOs": "{{rate}} Q/h za posledních 100",
-      "timeSinceLast": "{{čas}} od posledního",
+      "timeSinceLast": "{{time}} od posledního",
       "moreLabel": "Více",
       "theirCallLabel": "Volací znak protistanice",
       "ourSentLabel": "Odesláno",
@@ -775,7 +775,7 @@
       "timeControls-a11y": "Řízení času",
       "powerLabel": "Výkon",
       "powerControls-a11y": "Řízení výkonu",
-      "modeLabel": "Režim",
+      "modeLabel": "Mód",
       "bandLabel": "Pásmo",
       "frequencyLabel": "Frekvence",
       "bandMissing": "Pásmo???",
@@ -876,15 +876,15 @@
       "stateDescription-md": "Stát: `{{state}}`",
       "countyDescription-md": "Okres: `{{county}}`",
       "locationDescriptionNone-md": "Lokace není nastavena",
-      "operationDetailsTitle": "Detaily operace",
+      "operationDetailsTitle": "Detaily aktivity",
       "operationDetailsDescription": "Přidat poznámky k této operaci",
       "addTitleOrNotesForOperation": "Přidej název nebo poznámky k této operaci",
       "activitiesTitle": "Aktivity",
       "addActivityTitle": "Přidat aktivitu",
       "addActivityDescription": "POTA, SOTA, Polní den a více!",
       "addActivityDescription-noFeatures": "Nejprve povol některé funkce aktivity na hlavní obrazovce nastavení",
-      "operationDataTitle": "Data operace",
-      "manageOperationLogsTitle": "Spravovat záznamy operace",
+      "operationDataTitle": "Data aktivity",
+      "manageOperationLogsTitle": "Spravovat záznamy aktivity",
       "manageOperationLogsDescription": "Export, import a správa dat",
       "useAsTemplateTitle": "Použít jako šablonu",
       "useAsTemplateDescription": "Zahájit novou operaci se stejným nastavením",
@@ -893,7 +893,7 @@
       "deleteOperationTitle": "Smazat operaci"
     },
     "opInfoPanel": {
-      "statsTitle": "Statistiky operace",
+      "statsTitle": "Statistiky aktivity",
       "operationTotalsTitle-md": "Celkový přehled:",
       "qsosInTime_zero": "Žádné QSO",
       "qsosInTime_one": "1 QSO v {{time}}",
@@ -914,7 +914,7 @@
       "unknownError": "Neznámá chyba"
     },
     "importADIF": {
-      "error": "Chyba při importu ADIF do operace",
+      "error": "Chyba při importu ADIF do aktivity",
       "historicalImportError": "Chyba při importu historického ADIF",
       "unknownError": "Neznámá chyba"
     }

@@ -24,7 +24,7 @@
         "hi": "ヒンディー語 - हिंदी",
         "id": "インドネシア語 - Bahasa Indonesia",
         "it": "イタリア語 - Italiano",
-        "ja": "日本語 - 日本語",
+        "ja": "日本語",
         "ko": "韓国語 - 한국어",
         "lt": "リトアニア語 - Lietuvių",
         "lv": "ラトビア語 - Latvijas",
@@ -314,9 +314,9 @@
         "CW": "CW",
         "CW-a11y": "CW",
         "FM": "FM",
-        "FM-a11y": "F.M.",
+        "FM-a11y": "FM",
         "AM": "AM",
-        "AM-a11y": "A.M.",
+        "AM-a11y": "AM",
         "other": "その他",
         "other-a11y": "その他のモード"
       }

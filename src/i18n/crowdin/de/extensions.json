@@ -337,6 +337,62 @@
         "unknownSummit": "Unbekannter Gipfel"
       }
     },
+    "llota": {
+      "name": "LLOTA: Seen und Lagunen auf Sendung",
+      "shortName": "LLOTA",
+      "exportName": "LLOTA-Aktivierung",
+      "activityOptions": {
+        "title_zero": "Keine Seen zur Aktivierung ausgewählt",
+        "title_one": "Ein See wird aktiviert",
+        "title_other": "{{count}} Seen werden aktiviert",
+        "noLakesFound": "Keine Seen gefunden",
+        "nearestMatches": "Nächstgelegene {{limit}} von {{count}} Treffern",
+        "matchingRefs_zero": "Keine passenden Seen",
+        "matchingRefs_one": "Ein passender See",
+        "matchingRefs_other": "{{count}} passende Seen",
+        "searchForRefs": "Suche aktivierbare Seen!",
+        "noRefsNearby": "Keine Seen in der Nähe",
+        "nearbyRefs": "Seen in der Nähe",
+        "searchPlaceholder": "Name oder Referenz…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Keine L2Ls",
+        "ref2refCount_one": "Ein L2L",
+        "ref2refCount_other": "{{fmtCount}} L2Ls",
+        "huntedRefsCount_zero": "Keine Seen gejagt",
+        "huntedRefsCount_one": "Ein See gejagt",
+        "huntedRefsCount_other": "{{fmtCount}} Seen gejagt",
+        "activatorQSOsCount_zero": "Keine Aktivator-QSOs",
+        "activatorQSOsCount_one": "Ein Aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} Aktivator-QSOs",
+        "ref2refQSOsCount_zero": "Keine L2L-QSOs",
+        "ref2refQSOsCount_one": "Ein L2L-QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L-QSOs",
+        "huntedQSOsCount_zero": "Keine gejagten QSOs",
+        "huntedQSOsCount_one": "Ein gejagtes QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} gejagte QSOs",
+        "operationTotals": "Betrieb-Gesamt",
+        "referencesActivatedCount_zero": "Keine Seen aktiviert",
+        "referencesActivatedCount_one": "Ein See aktiviert",
+        "referencesActivatedCount_other": "{{fmtCount}} Seen aktiviert",
+        "referencesMissedCount_zero": "Keine unvollständigen Seen",
+        "referencesMissedCount_one": "Ein unvollständiger See",
+        "referencesMissedCount_other": "{{fmtCount}} unvollständige Seen",
+        "referencesHuntedCount_zero": "Keine Seen gejagt",
+        "referencesHuntedCount_one": "Ein See gejagt",
+        "referencesHuntedCount_other": "{{fmtCount}} Seen gejagt"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deren LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Fehler beim Posten des LLOTA-Spots",
+        "serverResponse": "Server hat mit Fehler {{status}} geantwortet: {{body}}"
+      },
+      "exampleRefName": "Beispiel See",
+      "unknownRefName": "Unbekannter See",
+      "noRefsNearby": "Keine Seen in der Nähe!"
+    },
     "mota": {
       "name": "Mills on the Air",
       "shortName": "MOTA",

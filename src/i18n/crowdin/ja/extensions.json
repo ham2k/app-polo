@@ -25,7 +25,7 @@
         "searchForCastles": "アクティベートする城を探しましょう！",
         "noCastlesNearby": "近くに城はありません",
         "nearbyCastles": "近くの城",
-        "searchPlaceholder": "名前または参照…"
+        "searchPlaceholder": "名前または参照コード…"
       },
       "scoring": {
         "huntedRefsCount_zero": "城は狩られていません",
@@ -68,7 +68,7 @@
         "searchForLighthouses": "アクティベートする灯台を探しましょう！",
         "noLighthousesNearby": "近くに灯台はありません",
         "nearbyLighthouses": "近くの灯台",
-        "searchPlaceholder": "名前または参照…"
+        "searchPlaceholder": "名前または参照コード…"
       },
       "scoring": {
         "huntedRefsCount_zero": "灯台はまだハンティングされていません",
@@ -277,7 +277,7 @@
         "searchForCastles": "アクティベートする城を探しましょう！",
         "noCastlesNearby": "近くに城はありません",
         "nearbyCastles": "近くの城",
-        "searchPlaceholder": "名前または参照…"
+        "searchPlaceholder": "名前または参照コード…"
       }
     },
     "ela": {
@@ -296,7 +296,7 @@
         "searchForLighthouses": "アクティベートする灯台を探しましょう！",
         "noLighthousesNearby": "近くに灯台はありません",
         "nearbyLighthouses": "近くの灯台",
-        "searchPlaceholder": "名前または参照…"
+        "searchPlaceholder": "名前または参照コード…"
       }
     },
     "fd": {
@@ -333,9 +333,65 @@
         "searchForSummits": "アクティベートする山頂を探しましょう！",
         "noSummitsNearby": "近くに山頂はありません",
         "nearbySummits": "近くの山頂",
-        "searchPlaceholder": "名前または参照…",
+        "searchPlaceholder": "名前または参照コード…",
         "unknownSummit": "不明な山頂"
       }
+    },
+    "llota": {
+      "name": "LLOTA: 電波で湖やラグーンを",
+      "shortName": "LLOTA",
+      "exportName": "LLOTAアクティベーション",
+      "activityOptions": {
+        "title_zero": "アクティベートする湖が選択されていません",
+        "title_one": "アクティベートする湖：1つ",
+        "title_other": "アクティベートする湖：{{count}}つ",
+        "noLakesFound": "湖が見つかりません",
+        "nearestMatches": "一致する{{count}}つのうち最も近い{{limit}}つ",
+        "matchingRefs_zero": "一致する湖がありません",
+        "matchingRefs_one": "一致する湖：1つ",
+        "matchingRefs_other": "一致する湖：{{count}}つ",
+        "searchForRefs": "アクティベートする湖を探しましょう！",
+        "noRefsNearby": "近くに湖がありません",
+        "nearbyRefs": "近くの湖",
+        "searchPlaceholder": "名前または参照…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "L2Lなし",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "L2L数: {{fmtCount}}",
+        "huntedRefsCount_zero": "狩られた湖はありません",
+        "huntedRefsCount_one": "狩られた湖：1つ",
+        "huntedRefsCount_other": "狩られた湖：{{fmtCount}}つ",
+        "activatorQSOsCount_zero": "アクティベーターQSOはありません",
+        "activatorQSOsCount_one": "アクティベーター QSO 数: 1",
+        "activatorQSOsCount_other": "アクティベーター QSO 数: {{fmtCount}}",
+        "ref2refQSOsCount_zero": "L2L QSO なし",
+        "ref2refQSOsCount_one": "L2L QSOの数: 1",
+        "ref2refQSOsCount_other": "L2L QSOの数: {{fmtCount}}",
+        "huntedQSOsCount_zero": "狩られた QSOはありません",
+        "huntedQSOsCount_one": "狩られた QSO数: 1",
+        "huntedQSOsCount_other": "狩られた QSO数: {{fmtCount}}",
+        "operationTotals": "オペレーション合計",
+        "referencesActivatedCount_zero": "アクティベートした湖: 0",
+        "referencesActivatedCount_one": "アクティベートした湖: 1",
+        "referencesActivatedCount_other": "アクティベートした湖: {{fmtCount}}",
+        "referencesMissedCount_zero": "未達成の湖はありません",
+        "referencesMissedCount_one": "未達成の湖: 1",
+        "referencesMissedCount_other": "未達成の湖: {{fmtCount}}",
+        "referencesHuntedCount_zero": "狩られた湖はありません",
+        "referencesHuntedCount_one": "狩られた湖: 1",
+        "referencesHuntedCount_other": "狩られた湖: {{fmtCount}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "彼らのLLOTA"
+      },
+      "postSpotAPI": {
+        "error": "LLOTAスポットの投稿でエラーが発生しました",
+        "serverResponse": "サーバーがエラー {{status}}: {{body}}と応答しました"
+      },
+      "exampleRefName": "例の湖",
+      "unknownRefName": "不明な湖",
+      "noRefsNearby": "近くに湖はありません！"
     },
     "mota": {
       "name": "ミルズオンザエア（Mills on the Air: MOTA）",
@@ -353,7 +409,7 @@
         "searchForMills": "アクティベートするミルを探しましょう！",
         "noMillsNearby": "近くにミルはありません",
         "nearbyMills": "近くのミル",
-        "searchPlaceholder": "名前または参照…",
+        "searchPlaceholder": "名前または参照コード…",
         "unknownMill": "不明なミル"
       },
       "loggingControl": {
@@ -376,7 +432,7 @@
         "searchForGminas": "アクティベートするグミナを探しましょう！",
         "noGminasNearby": "近くにグミナはありません",
         "nearbyGminas": "近くのグミナ",
-        "searchPlaceholder": "名前または参照…",
+        "searchPlaceholder": "名前または参照コード…",
         "unknownGmina": "不明なグミナ"
       }
     },
@@ -396,7 +452,7 @@
         "searchForParks": "アクティベートする公園を探しましょう！",
         "noParksNearby": "近くに公園はありません",
         "nearbyParks": "近くの公園",
-        "searchPlaceholder": "名前または参照…"
+        "searchPlaceholder": "名前または参照コード…"
       },
       "scoring": {
         "ref2refCount_zero": "P2Pなし",
@@ -463,7 +519,7 @@
         "searchForSilos": "アクティベートするサイロを探しましょう！",
         "noSilosNearby": "近くにサイロはありません",
         "nearbySilos": "近くのサイロ",
-        "searchPlaceholder": "名前または参照…",
+        "searchPlaceholder": "名前または参照コード…",
         "unknownSilo": "不明なサイロ"
       },
       "loggingControl": {
@@ -497,7 +553,7 @@
         "searchForSummits": "アクティベートする山頂を検索しましょう！",
         "noSummitsNearby": "近くに山頂がありません",
         "nearbySummits": "近くの山頂",
-        "searchPlaceholder": "名前または参照…",
+        "searchPlaceholder": "名前または参照コード…",
         "unknownSummit": "不明な山頂"
       },
       "scoring": {
@@ -571,7 +627,7 @@
         "searchForCastles": "アクティベートする城を探しましょう！",
         "noCastlesNearby": "近くに城はありません",
         "nearbyCastles": "近くの城",
-        "searchPlaceholder": "名前または参照…"
+        "searchPlaceholder": "名前または参照コード…"
       },
       "scoring": {
         "huntedRefsCount_zero": "ハンティングした城はありません",
@@ -657,7 +713,7 @@
         "searchForBunkers": "アクティベートする防空壕を検索しましょう！",
         "noBunkersNearby": "近くに防空壕がありません",
         "nearbyBunkers": "近くの防空壕",
-        "searchPlaceholder": "名前または参照…",
+        "searchPlaceholder": "名前または参照コード…",
         "unknownBunker": "不明な防空壕"
       },
       "loggingControl": {
@@ -684,7 +740,7 @@
         "searchForParks": "アクティベートする公園を検索しましょう！",
         "noParksNearby": "近くに公園がありません",
         "nearbyParks": "近くの公園",
-        "searchPlaceholder": "名前または参照…",
+        "searchPlaceholder": "名前または参照コード…",
         "unknownPark": "不明な公園"
       },
       "scoring": {
@@ -749,7 +805,7 @@
         "searchForReferences": "アクティベートする場所の参照コードを検索しましょう！",
         "noReferencesNearby": "参照コードに対応する場所が近くにありません",
         "nearbyReferences": "近くに存在する参照番号",
-        "searchPlaceholder": "名前または参照…",
+        "searchPlaceholder": "名前または参照コード…",
         "unknownReference": "不明な参照コード"
       },
       "loggingControl": {

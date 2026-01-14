@@ -421,7 +421,7 @@
       },
       "suggestDefaultOperator": {
         "title": "Standard-Operator vorschlagen",
-        "descriptionOn": "Operator {{operatorCall}} setzen, bei denen sich das Stationsrufzeichen unterscheidet",
+        "descriptionOn": "Operator {{operatorCall}} setzen, falls sich das Stationsrufzeichen unterscheidet",
         "descriptionOff": "Schlage keinen Standardoperator vor, unabhängig vom verwendeten Stationsrufzeichen"
       },
       "suggestTemplates": {

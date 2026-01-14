@@ -337,6 +337,62 @@
         "unknownSummit": "Cumbre desconocida"
       }
     },
+    "llota": {
+      "name": "LLOTA: Lagos y Lagunas en el Aire",
+      "shortName": "LLOTA",
+      "exportName": "Activación LLOTA",
+      "activityOptions": {
+        "title_zero": "No hay lagos seleccionados para activar",
+        "title_one": "Activando 1 lago",
+        "title_other": "Activando {{count}} lagos",
+        "noLakesFound": "No se encontraron lagos",
+        "nearestMatches": "{{count}} de {{limit}} referencias cercanas",
+        "matchingRefs_zero": "No se encontró ningún lago",
+        "matchingRefs_one": "1 lago encontrado",
+        "matchingRefs_other": "{{count}} lagos encontrados",
+        "searchForRefs": "¡Busca algunos lagos para activar!",
+        "noRefsNearby": "No hay lagos cercanos",
+        "nearbyRefs": "Lagos cercanos",
+        "searchPlaceholder": "Nombre o referencia…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "No L2Ls",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2Ls",
+        "huntedRefsCount_zero": "No hay lagos cazados",
+        "huntedRefsCount_one": "1 lago cazado",
+        "huntedRefsCount_other": "{{fmtCount}} lagos cazados",
+        "activatorQSOsCount_zero": "No hay QSOs de activadores",
+        "activatorQSOsCount_one": "1 QSO como activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
+        "ref2refQSOsCount_zero": "No hay QSOs L2L",
+        "ref2refQSOsCount_one": "1 QSO L2L",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs L2L",
+        "huntedQSOsCount_zero": "No hay QSOs cazados",
+        "huntedQSOsCount_one": "1 QSO como cazador",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
+        "operationTotals": "Totales de la operación",
+        "referencesActivatedCount_zero": "No hay lagos activados",
+        "referencesActivatedCount_one": "1 lago activado",
+        "referencesActivatedCount_other": "{{fmtCount}} lagos activados",
+        "referencesMissedCount_zero": "No hay lagos incompletos",
+        "referencesMissedCount_one": "1 lago incompleto",
+        "referencesMissedCount_other": "{{fmtCount}} lagos incompletos",
+        "referencesHuntedCount_zero": "No hay lagos cazados",
+        "referencesHuntedCount_one": "1 lago cazado",
+        "referencesHuntedCount_other": "{{fmtCount}} lagos cazados"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Su LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Error al publicar el spot LLOTA",
+        "serverResponse": "El servidor respondió con error {{status}}: {{body}}"
+      },
+      "exampleRefName": "Lago de ejemplo",
+      "unknownRefName": "Lago desconocido",
+      "noRefsNearby": "¡No hay lagos cercanos!"
+    },
     "mota": {
       "name": "Molinos en el Aire",
       "shortName": "MOTA",

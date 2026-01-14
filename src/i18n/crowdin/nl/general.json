@@ -30,7 +30,7 @@
         "lv": "Lets - Latvijas",
         "ms": "Maleisisch - Bahasa Melayu",
         "nb": "Noors Bokmål - Norsk bokmål",
-        "nl": "Nederlands - Nederlands",
+        "nl": "Nederlands",
         "nn": "Noors Nynorsk - Nynorsk",
         "pl": "Pools - Polski",
         "pt-BR": "Portugees (Brazilië) - Português (Brasil)",
@@ -188,7 +188,7 @@
         "31": "31ste"
       },
       "distance": {
-        "away": "{{distance}} verwijdert"
+        "away": "{{distance}} verwijderd"
       }
     },
     "buttons": {

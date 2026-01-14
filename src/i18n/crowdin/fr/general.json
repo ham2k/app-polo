@@ -2,7 +2,7 @@
   "general": {
     "languages": {
       "names": {
-        "en": "Anglais",
+        "en": "Anglais - English",
         "ar": "Arabe - العربية",
         "ast": "Asturien - Asturianu",
         "bn": "Bengali - বাংলা",
@@ -18,7 +18,7 @@
         "et": "Estonien - Eesti",
         "eu": "Basque - Euskara",
         "fi": "Finnois - Suomi",
-        "fr": "Français - Français",
+        "fr": "Français",
         "ga": "Irlandais - Gaeilge",
         "gl": "Galicien - Galego",
         "hi": "Hindi - हिंदी",

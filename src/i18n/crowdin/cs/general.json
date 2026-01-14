@@ -2,7 +2,7 @@
   "general": {
     "languages": {
       "names": {
-        "en": "Angličtina",
+        "en": "Angličtina - English",
         "ar": "Arabština - العربية",
         "ast": "Asturština - Asturianu",
         "bn": "Bengálština - বাংলা",
@@ -53,9 +53,9 @@
     "terms": {
       "QSO": "QSO",
       "QSO-a11y": "Q tak",
-      "QSOs-a11y": "Q takové",
-      "Operation": "Operace",
-      "generalOperation": "Obecná operace"
+      "QSOs-a11y": "QSO",
+      "Operation": "Aktivita",
+      "generalOperation": "Obecná aktivita"
     },
     "formatting": {
       "thousandsDelimiter": ",",
@@ -198,7 +198,7 @@
       "login": "Přihlásit se",
       "logout": "Odhlásit se",
       "delete": "Smazat",
-      "refresh": "Obnovit",
+      "refresh": "Aktualizovat",
       "done": "Hotovo",
       "accept": "Přijmout",
       "accept-a11y": "Přijmout změny",
@@ -287,7 +287,7 @@
       "categories": {
         "core": "Klíčové funkce",
         "locationBased": "Aktivity založené na poloze",
-        "contestsAndFieldOps": "Soutěže a operace v terénu",
+        "contestsAndFieldOps": "Soutěže a aktivity v terénu",
         "lookup": "Hledání dat",
         "devmode": "Režim vývojáře",
         "other": "Další funkce"

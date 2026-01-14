@@ -337,6 +337,62 @@
         "unknownSummit": "Neznámy vrchol"
       }
     },
+    "llota": {
+      "name": "LLOTA: Jazerá a lagúny na vzduchu",
+      "shortName": "LLOTA",
+      "exportName": "Aktivácia LLOTA",
+      "activityOptions": {
+        "title_zero": "Žiadne jazerá vybrané pre aktiváciu",
+        "title_one": "Aktivácia 1 jazera",
+        "title_other": "Aktivácia {{count}} jazier",
+        "noLakesFound": "Nenašli sa žiadne jazerá",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingRefs_zero": "Žiadne zodpovedajúce jazerá",
+        "matchingRefs_one": "1 zodpovedajúce jazero",
+        "matchingRefs_other": "{{count}} zodpovedajúcich jazier",
+        "searchForRefs": "Vyhľadajte nejaké jazerá pre aktiváciu!",
+        "noRefsNearby": "Žiadne jazerá v blízkosti",
+        "nearbyRefs": "Jazerá v blízkosti",
+        "searchPlaceholder": "Názov alebo referenčné číslo…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Žiadne L2L",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2L",
+        "huntedRefsCount_zero": "Žiadne lovené jazerá",
+        "huntedRefsCount_one": "1 lovené jazero",
+        "huntedRefsCount_other": "{{fmtCount}} lovených jazier",
+        "activatorQSOsCount_zero": "Žiadne spojenia aktivátorov",
+        "activatorQSOsCount_one": "1 spojenie aktivátora",
+        "activatorQSOsCount_other": "{{fmtCount}} spojení aktivátorov",
+        "ref2refQSOsCount_zero": "Žiadne spojenia L2L",
+        "ref2refQSOsCount_one": "1 spojenie L2L",
+        "ref2refQSOsCount_other": "{{fmtCount}} spojení L2L",
+        "huntedQSOsCount_zero": "Žiadne lovené spojenia",
+        "huntedQSOsCount_one": "1 lovené spojenie",
+        "huntedQSOsCount_other": "{{fmtCount}} lovených spojení",
+        "operationTotals": "Súhrn prevádzok",
+        "referencesActivatedCount_zero": "Žiadne aktivované jazerá",
+        "referencesActivatedCount_one": "1 aktivované jazero",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných jazier",
+        "referencesMissedCount_zero": "Žiadne nekompletné jazerá",
+        "referencesMissedCount_one": "1 neúplné jazero",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletných jazier",
+        "referencesHuntedCount_zero": "Žiadne lovené jazerá",
+        "referencesHuntedCount_one": "1 lovené jazero",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených jazier"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Chyba pri odosielaní spotu LLOTA",
+        "serverResponse": "Server odpovedal s chybou {{status}}: {{body}}"
+      },
+      "exampleRefName": "Príklad jazera",
+      "unknownRefName": "Neznáme jazero",
+      "noRefsNearby": "V blízkosti nie sú žiadne jazerá!"
+    },
     "mota": {
       "name": "Mlyny v éteri",
       "shortName": "MOTA",

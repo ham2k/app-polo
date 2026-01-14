@@ -22,7 +22,7 @@
         "matchingCastles_zero": "Žádné odpovídající hrady",
         "matchingCastles_one": "1 odpovídající hrad",
         "matchingCastles_other": "{{count}} odpovídající hrady",
-        "searchForCastles": "Hledejte některé hrady k aktivaci!",
+        "searchForCastles": "Hledat hrady k aktivaci!",
         "noCastlesNearby": "Žádné hrady v okolí",
         "nearbyCastles": "Hrady v okolí",
         "searchPlaceholder": "Jméno nebo reference…"
@@ -37,7 +37,7 @@
         "huntedQSOsCount_zero": "Žádné lovené QSO",
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSO",
-        "operationTotals": "Součty operace",
+        "operationTotals": "Součty aktivity",
         "referencesActivatedCount_zero": "Neaktivovány žádné hrady",
         "referencesActivatedCount_one": "1 aktivovaný hrad",
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných hradů",
@@ -80,7 +80,7 @@
         "huntedQSOsCount_zero": "Žádné odlovené QSO",
         "huntedQSOsCount_one": "1 odlovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSO",
-        "operationTotals": "Součty operace",
+        "operationTotals": "Součty aktivity",
         "referencesActivatedCount_zero": "Neaktivovány žádné majáky",
         "referencesActivatedCount_one": "1 aktivovaný maják",
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných majáků",
@@ -147,7 +147,7 @@
       "sendChatConfirm": "Zpráva odeslaná!"
     },
     "commands-debug": {
-      "syncall": "Smazat všechny operace a resetovat stav synchronizace?",
+      "syncall": "Smazat všechny aktivity a resetovat stav synchronizace?",
       "syncallConfirm": "Mazání dat a znovu synchronizovat vše…",
       "syncup": "Odeslat místní data k synchronizaci?",
       "syncupConfirm": "Odesílání…",
@@ -182,9 +182,9 @@
       "start": "Spustit operaci?",
       "startConfirm": "Operace spuštěna!",
       "break": "Přidat přestávku?",
-      "breakConfirm": "Přestávka operace přidána!",
+      "breakConfirm": "Přestávka aktivity přidána!",
       "stop": "Zastavit operaci?",
-      "stopConfirm": "Operace zastavena!"
+      "stopConfirm": "Aktivita zastavena!"
     },
     "commands-operator": {
       "change": "Změnit operátora na {{operator}}?",
@@ -199,8 +199,8 @@
       "frequencyAndModeConfirm": "Frekvence nastavená na {{freq}} MHz ({{mode}})",
       "power": "Změnit výkon na {{power}}W?",
       "powerConfirm": "Výkon nastaven na {{power}}W",
-      "mode": "Změnit režim na {{mode}}?",
-      "modeConfirm": "Režim nastaven na {{mode}}"
+      "mode": "Změnit mód na {{mode}}?",
+      "modeConfirm": "Mód nastaven na {{mode}}"
     },
     "commands-settings": {
       "set": "Nastavuji {{name}}?",
@@ -337,6 +337,62 @@
         "unknownSummit": "Neznámý vrchol"
       }
     },
+    "llota": {
+      "name": "LLOTA: Jezera a laguny v éteru",
+      "shortName": "LLOTA",
+      "exportName": "Aktivace LLOTA",
+      "activityOptions": {
+        "title_zero": "Žádná jezera nejsou vybrána k aktivaci",
+        "title_one": "Aktivace 1 jezera",
+        "title_other": "Aktivace {{count}} jezer",
+        "noLakesFound": "Žádná jezera nebyla nalezena",
+        "nearestMatches": "Nejbližší {{limit}} z {{count}} shod",
+        "matchingRefs_zero": "Žádná odpovídající jezera",
+        "matchingRefs_one": "1 odpovídající jezero",
+        "matchingRefs_other": "{{count}} odpovídajících jezer",
+        "searchForRefs": "Vyhledat jezera k aktivaci!",
+        "noRefsNearby": "Žádná jezera v okolí",
+        "nearbyRefs": "Jezera v okolí",
+        "searchPlaceholder": "Jméno nebo reference…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Žádné L2L",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2L",
+        "huntedRefsCount_zero": "Žádná lovená jezera",
+        "huntedRefsCount_one": "1 lovené jezero",
+        "huntedRefsCount_other": "{{fmtCount}} lovených jezer",
+        "activatorQSOsCount_zero": "Žádná QSO aktivátorů",
+        "activatorQSOsCount_one": "1 QSO aktivátoru",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs aktivátorů",
+        "ref2refQSOsCount_zero": "Žádné L2L QSO",
+        "ref2refQSOsCount_one": "1 L2L QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L QSO",
+        "huntedQSOsCount_zero": "Žádné ulovené QSO",
+        "huntedQSOsCount_one": "1 ulovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} lovené QSO",
+        "operationTotals": "Součty aktivity",
+        "referencesActivatedCount_zero": "Žádná aktivovaná jezera",
+        "referencesActivatedCount_one": "1 aktivované jezero",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných jezer",
+        "referencesMissedCount_zero": "Žádná neúplná jezera",
+        "referencesMissedCount_one": "1 neúplné jezero",
+        "referencesMissedCount_other": "{{fmtCount}} neúplných jezer",
+        "referencesHuntedCount_zero": "Žádná lovená jezera",
+        "referencesHuntedCount_one": "1 lovené jezero",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených jezer"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jejich LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Chyba při odesílání LLOTA hlášení",
+        "serverResponse": "Server odpověděl chybou {{status}}: {{body}}"
+      },
+      "exampleRefName": "Příklad jezera",
+      "unknownRefName": "Neznámé jezero",
+      "noRefsNearby": "Žádná jezera v okolí!"
+    },
     "mota": {
       "name": "Mills on the Air",
       "shortName": "MOTA",
@@ -381,7 +437,7 @@
       }
     },
     "pota": {
-      "name": "POTA: Parky v éteru",
+      "name": "POTA: Parks on the Ait",
       "shortName": "POTA",
       "exportName": "Aktivace POTA",
       "activityOptions": {
@@ -414,7 +470,7 @@
         "huntedQSOsCount_zero": "Žádné lovené QSO",
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSO",
-        "operationTotals": "Součty operace",
+        "operationTotals": "Součty aktivity",
         "referencesActivatedCount_zero": "Neaktivován žádný park",
         "referencesActivatedCount_one": "1 aktivovaný park",
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných parků",
@@ -516,7 +572,7 @@
         "huntedQSOsCount_zero": "Žádné lovené QSO",
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSO",
-        "operationTotals": "Součty operace",
+        "operationTotals": "Součty aktivity",
         "referencesActivatedCount_zero": "Neaktivován žádný vrchol",
         "referencesActivatedCount_one": "1 aktivovaný vrchol",
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných vrcholů",
@@ -583,7 +639,7 @@
         "huntedQSOsCount_zero": "Žádné ulovené QSO",
         "huntedQSOsCount_one": "1 ulovený QSO",
         "huntedQSOsCount_other": "{{fmtCount}} ulovené QSO",
-        "operationTotals": "Součty operace",
+        "operationTotals": "Součty aktivity",
         "referencesActivatedCount_zero": "Nebyly aktivovány žádné hrady",
         "referencesActivatedCount_one": "1 aktivovaný hrad",
         "referencesActivatedCount_other": "{{fmtCount}} aktivované hrady",
@@ -622,7 +678,7 @@
         "specialBulletin": "Speciální bulletin",
         "sixBands": "Šest pásem",
         "twelveBands": "Dvanáct pásem",
-        "multipleModes": "Více režimů",
+        "multipleModes": "Více módů",
         "qrpOperation": "QRP provoz",
         "sixContinuousHours": "Šest nepřetržitých hodin"
       },
@@ -635,7 +691,7 @@
         "specialBulletin": "Zkopíruj přesně zprávu speciálního bulletinu WFD a odešli ji se svým logem.",
         "sixBands": "Uskutečni alespoň tři kontakty na každém z minimálně šesti různých pásem.",
         "twelveBands": "Uskutečni alespoň tři kontakty na každém z minimálně dvanácti různých pásem.",
-        "multipleModes": "Použij více režimů během doby provozu.",
+        "multipleModes": "Použij více módů během doby provozu.",
         "qrpOperation": "Provoz na úrovních QRP výkonu (10W nebo méně na telefon, 5W nebo méně na CW nebo digitální).",
         "sixContinuousHours": "Provoz po dobu nejméně šesti nepřetržitých hodin během doby provozu."
       },
@@ -703,7 +759,7 @@
         "huntedQSOsCount_zero": "Žádné lovené QSO",
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovené QSO",
-        "operationTotals": "Celkem operace",
+        "operationTotals": "Součty aktivity",
         "referencesActivatedCount_zero": "Žádné aktivované parky",
         "referencesActivatedCount_one": "1 aktivovaný park",
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných parků",
@@ -777,7 +833,7 @@
         "huntedQSOsCount_zero": "Žádné lovené QSO",
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} odlovených QSO",
-        "operationTotals": "Součty operace",
+        "operationTotals": "Součty aktivity",
         "referencesActivatedCount_zero": "Žádné aktivované reference",
         "referencesActivatedCount_one": "1 aktivovaná reference",
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných referencí",

@@ -337,6 +337,62 @@
         "unknownSummit": "Ukjent topp"
       }
     },
+    "llota": {
+      "name": "LLOTA: Innsjøer på luften",
+      "shortName": "LLOTA",
+      "exportName": "LLOTA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen innsjøer valgt for aktivering",
+        "title_one": "Aktiverer 1 innsjø",
+        "title_other": "Aktiverer {{count}} innsjøer",
+        "noLakesFound": "Ingen innsjøer funnet",
+        "nearestMatches": "Nærmeste {{limit}} av {{count}} treff",
+        "matchingRefs_zero": "Ingen matchende innsjøer",
+        "matchingRefs_one": "1 matchende innsjø",
+        "matchingRefs_other": "{{count}} matchende innsjøer",
+        "searchForRefs": "Søk etter noen innsjøer for å aktivere!",
+        "noRefsNearby": "Ingen innsjøer i nærheten",
+        "nearbyRefs": "Innsjøer i nærheten",
+        "searchPlaceholder": "Navn eller referanse…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Ingen L2Ler",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2Ler",
+        "huntedRefsCount_zero": "Ingen jakt-innsjøer",
+        "huntedRefsCount_one": "1 innsjø jaktet",
+        "huntedRefsCount_other": "{{fmtCount}} innsjøer jaktet",
+        "activatorQSOsCount_zero": "Ingen aktivator-QSOer",
+        "activatorQSOsCount_one": "1 aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivator-QSOer",
+        "ref2refQSOsCount_zero": "Ingen L2L-QSOer",
+        "ref2refQSOsCount_one": "1 L2L-QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L-QSOer",
+        "huntedQSOsCount_zero": "Ingen jakt-QSOer",
+        "huntedQSOsCount_one": "1 jakt-QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} jakt-QSOer",
+        "operationTotals": "Operasjonsresultater",
+        "referencesActivatedCount_zero": "Ingen innsjøer aktivert",
+        "referencesActivatedCount_one": "1 innsjø aktivert",
+        "referencesActivatedCount_other": "{{fmtCount}} innsjøer aktivert",
+        "referencesMissedCount_zero": "Ingen ufullstendige innsjøer",
+        "referencesMissedCount_one": "1 ufullstendig innsjø",
+        "referencesMissedCount_other": "{{fmtCount}} ufullstendige innsjøer",
+        "referencesHuntedCount_zero": "Ingen jakt-innsjøer",
+        "referencesHuntedCount_one": "1 innsjø jaktet",
+        "referencesHuntedCount_other": "{{fmtCount}} innsjøer jaktet"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Feil ved lagring av LLOTA-spot",
+        "serverResponse": "Serveren svarte med feil {{status}}: {{body}}"
+      },
+      "exampleRefName": "Eksempelinnsjø",
+      "unknownRefName": "Ukjent innsjø",
+      "noRefsNearby": "Ingen innsjøer i nærheten!"
+    },
     "mota": {
       "name": "Mills on the Air",
       "shortName": "MOTA",

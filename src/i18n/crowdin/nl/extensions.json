@@ -25,7 +25,7 @@
         "searchForCastles": "Zoek naar enkele kastelen om te activeren!",
         "noCastlesNearby": "Geen kastelen in de buurt",
         "nearbyCastles": "Nabijgelegen kastelen",
-        "searchPlaceholder": "Naam of referentie..."
+        "searchPlaceholder": "Naam of referentie…"
       },
       "scoring": {
         "huntedRefsCount_zero": "Geen gelogde kastelen",
@@ -68,7 +68,7 @@
         "searchForLighthouses": "Zoek naar enkele vuurtorens om te activeren!",
         "noLighthousesNearby": "Geen vuurtorens in de buurt",
         "nearbyLighthouses": "Nabijgelegen vuurtorens",
-        "searchPlaceholder": "Naam of referentie..."
+        "searchPlaceholder": "Naam of referentie…"
       },
       "scoring": {
         "huntedRefsCount_zero": "Geen vuurtorens gelogd",
@@ -277,7 +277,7 @@
         "searchForCastles": "Zoek naar enkele kastelen om te activeren!",
         "noCastlesNearby": "Geen kastelen in de buurt",
         "nearbyCastles": "Nabijgelegen kastelen",
-        "searchPlaceholder": "Naam of referentie..."
+        "searchPlaceholder": "Naam of referentie…"
       }
     },
     "ela": {
@@ -296,7 +296,7 @@
         "searchForLighthouses": "Zoek naar enkele vuurtorens om te activeren!",
         "noLighthousesNearby": "Geen vuurtorens in de buurt",
         "nearbyLighthouses": "Nabijgelegen vuurtorens",
-        "searchPlaceholder": "Naam of referentie..."
+        "searchPlaceholder": "Naam of referentie…"
       }
     },
     "fd": {
@@ -333,9 +333,65 @@
         "searchForSummits": "Zoek naar enkele summits om te activeren!",
         "noSummitsNearby": "Geen summits in de buurt",
         "nearbySummits": "Nabijgelegen summits",
-        "searchPlaceholder": "Naam of referentie...",
+        "searchPlaceholder": "Naam of referentie…",
         "unknownSummit": "Onbekende summit"
       }
+    },
+    "llota": {
+      "name": "LLOTA: Meren en Lagunes in de Lucht",
+      "shortName": "LLOTA",
+      "exportName": "LLOTA Activatie",
+      "activityOptions": {
+        "title_zero": "Geen meren geselecteerd voor activering",
+        "title_one": "1 meer activeren",
+        "title_other": "{{count}} meren activeren",
+        "noLakesFound": "Geen meren gevonden",
+        "nearestMatches": "Dichtstbijzijnde {{limit}} van {{count}} overeenkomsten",
+        "matchingRefs_zero": "Geen overeenkomende meren",
+        "matchingRefs_one": "1 overeenkomend meer",
+        "matchingRefs_other": "{{count}} overeenkomende meren",
+        "searchForRefs": "Zoek naar enkele meren om te activeren!",
+        "noRefsNearby": "Geen meren in de buurt",
+        "nearbyRefs": "Nabijgelegen meren",
+        "searchPlaceholder": "Naam of referentie…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Geen L2L's",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2L's",
+        "huntedRefsCount_zero": "Geen meren gelogd",
+        "huntedRefsCount_one": "1 meer gelogd",
+        "huntedRefsCount_other": "{{fmtCount}} meren gelogd",
+        "activatorQSOsCount_zero": "Geen activator QSO's",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
+        "ref2refQSOsCount_zero": "Geen L2L QSO's",
+        "ref2refQSOsCount_one": "1 L2L QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L QSO's",
+        "huntedQSOsCount_zero": "Geen hunter QSO's",
+        "huntedQSOsCount_one": "1 hunter QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} gejaagde QSO's",
+        "operationTotals": "Activatie totaal",
+        "referencesActivatedCount_zero": "Geen meren geactiveerd",
+        "referencesActivatedCount_one": "1 meer geactiveerd",
+        "referencesActivatedCount_other": "{{fmtCount}} meren geactiveerd",
+        "referencesMissedCount_zero": "Geen onvolledige meren logs",
+        "referencesMissedCount_one": "1 onvolledig meer log",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige meer logs",
+        "referencesHuntedCount_zero": "Geen meren gelogd",
+        "referencesHuntedCount_one": "1 meer gelogd",
+        "referencesHuntedCount_other": "{{fmtCount}} meren gelogd"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Fout bij het plaatsen van LLOTA spot",
+        "serverResponse": "Server reageerde met fout {{status}}: {{body}}"
+      },
+      "exampleRefName": "Voorbeeldmeer",
+      "unknownRefName": "Onbekend Meer",
+      "noRefsNearby": "Geen locaties in de buurt!"
     },
     "mota": {
       "name": "Mills on the Air",
@@ -353,7 +409,7 @@
         "searchForMills": "Zoek naar enkele molens om te activeren!",
         "noMillsNearby": "Geen molens in de buurt",
         "nearbyMills": "Nabijgelegen molens",
-        "searchPlaceholder": "Naam of referentie...",
+        "searchPlaceholder": "Naam of referentie…",
         "unknownMill": "Onbekende molen"
       },
       "loggingControl": {
@@ -376,7 +432,7 @@
         "searchForGminas": "Zoek naar enkele Gminas om te activeren!",
         "noGminasNearby": "Geen Gminas in de buurt",
         "nearbyGminas": "Nabijgelegen Gina",
-        "searchPlaceholder": "Naam of referentie...",
+        "searchPlaceholder": "Naam of referentie…",
         "unknownGmina": "Onbekende Gmina"
       }
     },
@@ -396,7 +452,7 @@
         "searchForParks": "Zoek naar parken om te activeren!",
         "noParksNearby": "Geen parken in de buurt",
         "nearbyParks": "Parken in de buurt",
-        "searchPlaceholder": "Naam of referentie..."
+        "searchPlaceholder": "Naam of referentie…"
       },
       "scoring": {
         "ref2refCount_zero": "Geen P2P's",
@@ -463,7 +519,7 @@
         "searchForSilos": "Zoek naar silo's om te activeren!",
         "noSilosNearby": "Geen silo's in de buurt",
         "nearbySilos": "Silo's in de buurt",
-        "searchPlaceholder": "Naam of referentie...",
+        "searchPlaceholder": "Naam of referentie…",
         "unknownSilo": "Onbekende silo"
       },
       "loggingControl": {
@@ -497,7 +553,7 @@
         "searchForSummits": "Zoek naar summits om te activeren!",
         "noSummitsNearby": "Geen summits in de buurt",
         "nearbySummits": "Summits in de buurt",
-        "searchPlaceholder": "Naam of referentie...",
+        "searchPlaceholder": "Naam of referentie…",
         "unknownSummit": "Onbekende summit"
       },
       "scoring": {
@@ -571,7 +627,7 @@
         "searchForCastles": "Zoek naar enkele kastelen om te activeren!",
         "noCastlesNearby": "Geen kastelen in de buurt",
         "nearbyCastles": "Nabijgelegen kastelen",
-        "searchPlaceholder": "Naam of referentie..."
+        "searchPlaceholder": "Naam of referentie…"
       },
       "scoring": {
         "huntedRefsCount_zero": "Geen gelogde kastelen",
@@ -657,7 +713,7 @@
         "searchForBunkers": "Zoek naar bunkers om te activeren!",
         "noBunkersNearby": "Geen bunkers in de buurt",
         "nearbyBunkers": "Bunkers in de buurt",
-        "searchPlaceholder": "Naam of referentie...",
+        "searchPlaceholder": "Naam of referentie…",
         "unknownBunker": "Onbekende bunker"
       },
       "loggingControl": {
@@ -684,7 +740,7 @@
         "searchForParks": "Zoek naar parken om te activeren!",
         "noParksNearby": "Geen parken in de buurt",
         "nearbyParks": "Parken in de buurt",
-        "searchPlaceholder": "Naam of referentie...",
+        "searchPlaceholder": "Naam of referentie…",
         "unknownPark": "Onbekend park"
       },
       "scoring": {
@@ -749,7 +805,7 @@
         "searchForReferences": "Zoek naar referenties om te activeren!",
         "noReferencesNearby": "Geen referenties in de buurt",
         "nearbyReferences": "Referenties in de buurt",
-        "searchPlaceholder": "Naam of referentie...",
+        "searchPlaceholder": "Naam of referentie…",
         "unknownReference": "Onbekende referentie"
       },
       "loggingControl": {
