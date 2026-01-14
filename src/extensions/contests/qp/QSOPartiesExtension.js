@@ -57,7 +57,6 @@ export default Extension
 //     infoURL: Info.infoURL,
 //     icon: Info.icon,
 //     maxAgeInDays: 30,
-//     enabledByDefault: true,
 //     fetch: async (args) => {
 //       return DEFAULT_QSO_PARTY_DATA
 //       // return fetchAndProcessURL({

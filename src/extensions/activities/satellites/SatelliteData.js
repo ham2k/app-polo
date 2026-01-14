@@ -10,7 +10,7 @@ import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const SatelliteData = {}
 
-export function registerSatelliteData () {
+export function registerSatelliteData() {
   registerDataFile({
     key: 'satellite-data',
     name: 'Satellites: Active Birds',
@@ -18,7 +18,6 @@ export function registerSatelliteData () {
     infoURL: 'https://www.amsat.org/',
     icon: 'satellite-variant',
     maxAgeInDays: 28,
-    enabledByDefault: true,
     fetch: async (args) => {
       const { key, definition, options } = args
 

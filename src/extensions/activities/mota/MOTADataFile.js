@@ -14,7 +14,7 @@ import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const MOTAData = {}
 
-export function registerMOTADataFile () {
+export function registerMOTADataFile() {
   registerDataFile({
     key: 'mota-all-mills',
     name: 'MOTA: All Mills',
@@ -22,7 +22,6 @@ export function registerMOTADataFile () {
     infoURL: 'https://www.cqgma.org/motadsp.php',
     icon: 'file-image-outline',
     maxAgeInDays: 100,
-    enabledByDefault: false,
     fetch: async (args) => {
       const { key, definition, options } = args
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
@@ -116,11 +115,11 @@ export function registerMOTADataFile () {
   })
 }
 
-export async function motaFindOneByReference (ref) {
+export async function motaFindOneByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['mota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function motaFindAllByName (entityPrefix, name) {
+export async function motaFindAllByName(entityPrefix, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['mota', entityPrefix, `%${name}%`, `%${name}%`],
@@ -129,7 +128,7 @@ export async function motaFindAllByName (entityPrefix, name) {
   return results
 }
 
-export async function motaFindAllByLocation (entityPrefix, lat, lon, delta = 1) {
+export async function motaFindAllByLocation(entityPrefix, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['mota', entityPrefix, lat - delta, lat + delta, lon - delta, lon + delta],
@@ -146,7 +145,7 @@ const CSV_ROW_REGEX = /(?:"((?:[^"]|"")*)"|([^",]*))(?:,|\s*$)/g
 // )                # End of non-capturing group for each column
 // (?:,|\s*$)       # Match either a comma or the end of the line
 
-function parseMOTACSVRow (row, options) {
+function parseMOTACSVRow(row, options) {
   const parts = [...row.matchAll(CSV_ROW_REGEX)].map(match => match[1]?.replaceAll('""', '"') ?? match[2] ?? '')
 
   if (options?.headers) {

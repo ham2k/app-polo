@@ -14,7 +14,7 @@ import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const GMAData = {}
 
-export function registerGMADataFile () {
+export function registerGMADataFile() {
   registerDataFile({
     key: 'gma-all-summits',
     name: 'GMA: All Summits',
@@ -22,7 +22,6 @@ export function registerGMADataFile () {
     infoURL: 'https://www.cqgma.org/smtdsp.php',
     icon: 'file-image-outline',
     maxAgeInDays: 100,
-    enabledByDefault: false,
     fetch: async (args) => {
       const { key, definition, options } = args
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
@@ -116,11 +115,11 @@ export function registerGMADataFile () {
   })
 }
 
-export async function gmaFindOneByReference (ref) {
+export async function gmaFindOneByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['gma', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function gmaFindAllByName (dxccCode, name) {
+export async function gmaFindAllByName(dxccCode, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['gma', `%${name}%`, `%${name}%`],
@@ -129,7 +128,7 @@ export async function gmaFindAllByName (dxccCode, name) {
   return results
 }
 
-export async function gmaFindAllByLocation (dxccCode, lat, lon, delta = 1) {
+export async function gmaFindAllByLocation(dxccCode, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['gma', lat - delta, lat + delta, lon - delta, lon + delta],
@@ -146,7 +145,7 @@ const CSV_ROW_REGEX = /(?:"((?:[^"]|"")*)"|([^",]*))(?:,|\s*$)/g
 // )                # End of non-capturing group for each column
 // (?:,|\s*$)       # Match either a comma or the end of the line
 
-function parseGMACSVRow (row, options) {
+function parseGMACSVRow(row, options) {
   const parts = [...row.matchAll(CSV_ROW_REGEX)].map(match => match[1]?.replaceAll('""', '"') ?? match[2] ?? '')
 
   if (options?.headers) {

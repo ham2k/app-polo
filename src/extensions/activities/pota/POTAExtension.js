@@ -30,7 +30,6 @@ import { generateActivityDailyAccumulator, generateActivityScorer, generateActiv
 const Extension = {
   ...Info,
   category: 'locationBased',
-  enabledByDefault: true,
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
     registerHook('spots', { hook: SpotsHook })

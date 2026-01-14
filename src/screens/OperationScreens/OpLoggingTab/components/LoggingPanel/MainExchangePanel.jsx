@@ -170,8 +170,6 @@ export const MainExchangePanel = ({
     extraFields.grid = settings.showGridField
   }
 
-  console.log('extraFields', extraFields)
-
   findHooks('activity').filter(activity => activity.mainExchangeForOperation && findRef(operation, activity.key)).forEach(activity => {
     fields = fields.concat(
       activity.mainExchangeForOperation(

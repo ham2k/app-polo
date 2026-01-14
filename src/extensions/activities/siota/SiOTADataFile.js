@@ -23,7 +23,6 @@ export function registerSiOTADataFile() {
     infoURL: 'https://www.silosontheair.com',
     icon: 'file-cloud-outline',
     maxAgeInDays: 100,
-    enabledByDefault: true,
     fetch: async (args) => {
       const { key, definition, options } = args
 

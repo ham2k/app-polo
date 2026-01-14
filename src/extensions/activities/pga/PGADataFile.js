@@ -22,7 +22,6 @@ export function registerPGADataFile() {
     infoURL: 'https://pga-zawody.pzk.pl/lista.php',
     icon: 'file-powerpoint-outline',
     maxAgeInDays: 100,
-    enabledByDefault: false,
     fetch: async (args) => {
       const { key, definition, options } = args
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })

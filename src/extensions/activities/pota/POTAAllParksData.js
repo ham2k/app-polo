@@ -17,7 +17,7 @@ export const POTAAllParks = { prefixByDXCCCode: {} }
 
 const DEBUG = true
 
-export function registerPOTAAllParksData () {
+export function registerPOTAAllParksData() {
   registerDataFile({
     key: 'pota-all-parks',
     name: 'POTA: All Parks',
@@ -28,7 +28,6 @@ export function registerPOTAAllParksData () {
     icon: 'file-powerpoint-outline',
     maxAgeInDays: 28,
     version: 2,
-    enabledByDefault: true,
     fetch: async (args) => {
       const { key, definition, options } = args
 
@@ -39,7 +38,7 @@ export function registerPOTAAllParksData () {
       const dataRows = []
 
       // Since we're streaming, we cannot know how many references there are beforehand, so we need to take a guess
-      const expectedReferences = 78000
+      const expectedReferences = 85000
 
       // Since the work is split in two phases, and their speeds are different,
       // we need to adjust the expected steps based on a ratio.
@@ -152,15 +151,15 @@ export function registerPOTAAllParksData () {
   })
 }
 
-export function potaPrefixForDXCCCode (code) {
+export function potaPrefixForDXCCCode(code) {
   return (POTAAllParks.prefixByDXCCCode && POTAAllParks.prefixByDXCCCode[code]) || ''
 }
 
-export async function potaFindParkByReference (ref) {
+export async function potaFindParkByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['pota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function potaFindParksByName (dxccCode, name) {
+export async function potaFindParksByName(dxccCode, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['pota', `${dxccCode}`, `%${name}%`, `%${name}%`],
@@ -169,7 +168,7 @@ export async function potaFindParksByName (dxccCode, name) {
   return results
 }
 
-export async function potaFindParksByLocation (dxccCode, lat, lon, delta = 1) {
+export async function potaFindParksByLocation(dxccCode, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['pota', `${dxccCode}`, lat - delta, lat + delta, lon - delta, lon + delta],
@@ -179,7 +178,7 @@ export async function potaFindParksByLocation (dxccCode, lat, lon, delta = 1) {
 }
 
 const QUOTED_CSV_ROW_REGEX = /"(([^"]|"")*)",{0,1}/g
-function parsePOTACSVRow (row, options) {
+function parsePOTACSVRow(row, options) {
   const parts = [...row.matchAll(QUOTED_CSV_ROW_REGEX)].map(match => match[1].replaceAll('""', '"'))
 
   if (options?.headers) {

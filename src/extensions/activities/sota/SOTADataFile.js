@@ -15,7 +15,7 @@ import { Info } from './SOTAInfo'
 
 export const SOTAData = {}
 
-export function registerSOTADataFile () {
+export function registerSOTADataFile() {
   registerDataFile({
     key: 'sota-all-summits',
     name: 'SOTA: All Summits',
@@ -25,7 +25,6 @@ export function registerSOTADataFile () {
     infoURL: 'https://www.sotadata.org.uk/en/summits',
     icon: 'file-image-outline',
     maxAgeInDays: 100,
-    enabledByDefault: false,
     fetch: async (args) => {
       const { key, definition, options } = args
 
@@ -139,11 +138,11 @@ export function registerSOTADataFile () {
   })
 }
 
-export async function sotaFindOneByReference (ref) {
+export async function sotaFindOneByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['sota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function sotaFindAllByName (dxccCode, name) {
+export async function sotaFindAllByName(dxccCode, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['sota', `%${name}%`, `%${name}%`],
@@ -152,7 +151,7 @@ export async function sotaFindAllByName (dxccCode, name) {
   return results
 }
 
-export async function sotaFindAllByLocation (dxccCode, lat, lon, delta = 1) {
+export async function sotaFindAllByLocation(dxccCode, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['sota', lat - delta, lat + delta, lon - delta, lon + delta],
@@ -169,7 +168,7 @@ const CSV_ROW_REGEX = /(?:"((?:[^"]|"")*)"|([^",]*))(?:,|\s*$)/g
 // )                # End of non-capturing group for each column
 // (?:,|\s*$)       # Match either a comma or the end of the line
 
-function parseSOTACSVRow (row, options) {
+function parseSOTACSVRow(row, options) {
   const parts = [...row.matchAll(CSV_ROW_REGEX)].map(match => match[1]?.replaceAll('""', '"') ?? match[2] ?? '')
 
   if (options?.headers) {
@@ -183,7 +182,7 @@ function parseSOTACSVRow (row, options) {
   }
 }
 
-function isValidDateAsOfToday (str) {
+function isValidDateAsOfToday(str) {
   if (str === '31/12/2099') return true
 
   const [day, month, year] = str.split('/').map(Number)

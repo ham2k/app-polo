@@ -23,7 +23,6 @@ export function registerECADataFile() {
     infoURL: 'https://ecaelastats.site/eca_refs.php',
     icon: 'file-certificate-outline',
     maxAgeInDays: 100,
-    enabledByDefault: false,
     fetch: async (args) => {
       const { key, definition, options } = args
 

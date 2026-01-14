@@ -19,7 +19,6 @@ import { SatelliteData, registerSatelliteData } from './SatelliteData'
 
 const Extension = {
   ...Info,
-  enabledByDefault: false,
   category: 'other',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
@@ -63,7 +62,7 @@ const LoggingControl = {
   optionType: 'optional'
 }
 
-function mainExchangeForQSO (props) {
+function mainExchangeForQSO(props) {
   const { qso, updateQSO, styles, refStack, disabled, themeColor } = props
   const fields = []
 

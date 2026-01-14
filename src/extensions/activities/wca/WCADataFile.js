@@ -33,7 +33,6 @@ export function registerWCADataFile() {
     infoURL: 'https://wcagroup.org/',
     icon: 'file-certificate-outline',
     maxAgeInDays: 100,
-    enabledByDefault: false,
     fetch: async (args) => {
       const { key, definition, options } = args
       options.onStatus && await options.onStatus({

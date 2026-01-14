@@ -23,7 +23,6 @@ export function registerZLOTADataFile() {
     infoURL: 'https://ontheair.nz',
     icon: 'file-cloud-outline',
     maxAgeInDays: 100,
-    enabledByDefault: true,
     fetch: async (args) => {
       const { key, definition, options } = args
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
