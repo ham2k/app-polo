@@ -134,8 +134,8 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
       return true
     }
   }, [
-    lofiData.account.uuid, lofiData.account?.operations?.total, lofiData.account?.qsos?.total,
-    localData.sync.lastSyncAccountUUID,
+    lofiData.account?.uuid, lofiData.account?.operations?.total, lofiData.account?.qsos?.total,
+    localData.sync?.lastSyncAccountUUID,
     counts?.qsos?.total, counts?.operations?.total
   ])
 
