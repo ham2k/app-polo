@@ -150,11 +150,11 @@ export function SpotterControlInputs (props) {
     } else if (autoRespotting === false) {
       dispatch(setOperationLocalData({ uuid: operation.uuid, autoRespotting: false }))
     } else {
-      postSpots({ isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings })
+      postSpots({ t, isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings })
     }
   }, [
     isSelfSpotting, autoRespotting, qso, hooksWithSpotting, dispatch, operation, vfo, comments,
-    setCurrentSecondaryControl, settings
+    setCurrentSecondaryControl, settings, t
   ])
 
   return (
@@ -243,7 +243,7 @@ export async function postSpots ({ t, isSelfSpotting, qso, operation, vfo, comme
       message: t('screens.opLoggingTab.spotting.spotting', 'Spotting {{name}}…', { name: hook.shortName ?? hook.name }),
       disabled: true
     })
-    status[hook.key] = await dispatch(isSelfSpotting ? hook.postSelfSpot({ operation, vfo, settings, comments, qCode, qRest }) : hook.postOtherSpot({ qso, comments, spotterCall: operation.stationCall || settings.operatorCall }))
+    status[hook.key] = await dispatch(isSelfSpotting ? hook.postSelfSpot({ t, operation, vfo, settings, comments, qCode, qRest }) : hook.postOtherSpot({ t, qso, comments, spotterCall: operation.stationCall || settings.operatorCall }))
     ok = ok && status[hook.key]
     setSpotStatus && setSpotStatus(status)
   }

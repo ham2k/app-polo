@@ -8,10 +8,11 @@
 import { filterRefs } from '../../../tools/refTools'
 import { POTAPostSpotAPI } from './POTAPostSpotAPI'
 
-export const POTAPostOtherSpot = ({ comments, qso, spotterCall }) => () => {
+export const POTAPostOtherSpot = ({ t, comments, qso, spotterCall }) => () => {
   const refs = filterRefs(qso, 'pota')
 
   return POTAPostSpotAPI({
+    t,
     calls: [qso.their.call],
     comments,
     freq: qso.freq,

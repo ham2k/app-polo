@@ -88,7 +88,7 @@ const SpotCommandHook = {
     }
 
     const hooksWithSpotting = retrieveHooksWithSpotting({ isSelfSpotting: true, operation, settings })
-    postSpots({ isSelfSpotting: true, operation, vfo, comments, hooksWithSpotting, dispatch })
+    postSpots({ t, isSelfSpotting: true, operation, vfo, comments, hooksWithSpotting, dispatch })
     if (comments) {
       return t?.('extensions.commands-misc.spot.selfSpottingWithComments', 'Self-spotting at {{freq}} with ‘{{comments}}’', { freq: fmtFreqInMHz(vfo.freq), comments }) || `Self-spotting at ${fmtFreqInMHz(vfo.freq)} with ‘${comments}’`
     } else {

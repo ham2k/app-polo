@@ -8,7 +8,7 @@
 import { filterRefs } from '../../../tools/refTools'
 import { POTAPostSpotAPI } from './POTAPostSpotAPI'
 
-export const POTAPostSelfSpot = ({ operation, vfo, comments }) => (_dispatch, getState) => {
+export const POTAPostSelfSpot = ({ t, operation, vfo, comments }) => (_dispatch, getState) => {
   const state = getState()
 
   let mainCall = operation.stationCall || state.settings.operatorCall
@@ -25,6 +25,7 @@ export const POTAPostSelfSpot = ({ operation, vfo, comments }) => (_dispatch, ge
 
   return Promise.all(
     calls.map((call) => POTAPostSpotAPI({
+      t,
       calls: [call],
       comments,
       freq: vfo.freq,
