@@ -119,14 +119,9 @@ const SpotsHook = {
       const spotRef = findRef(spot, Info.huntingType)
       if (spotRef) {
         const args = { call: spot.their.call, ref: spotRef.ref }
-        const spotCommentPromise = await dispatch(apiLLOTA.endpoints.spotComments.initiate(args))
-        await Promise.all(dispatch(apiLLOTA.util.getRunningQueriesThunk()))
-        const spotCommentResults = await dispatch((_dispatch, getState) => apiLLOTA.endpoints.spotComments.select(args)(getState()))
-        spotCommentPromise.unsubscribe && spotCommentPromise.unsubscribe()
-        const spotComments = spotCommentResults.data || []
+        const spotComments = spot.sourceInfo?.comments || []
 
         const filteredSpotComment = spotComments.find(x =>
-          x.source.startsWith('Ham2K Portable Logger') &&
           x.comments.match(/\b[0-9]+-fer:(?: [A-Z0-9]+-(?:[0-9]{4,5}|TEST)){2,}$/)
         )
         if (filteredSpotComment) {
