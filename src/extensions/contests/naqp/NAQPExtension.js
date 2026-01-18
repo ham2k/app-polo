@@ -49,24 +49,25 @@ const ReferenceHandler = {
   },
 
   suggestOperationTitle: (ref) => {
-    return { for: 'NAQP', subtitle: ref?.exchange }
+    return { for: `${Info.shortName} ${ref.mode}`, subtitle: ref?.exchange }
   },
 
   suggestExportOptions: ({ operation, ref, settings }) => {
+    console.log('suggestExportOptions', operation, ref, settings)
     if (ref?.type === Info?.key) {
       return [{
         format: 'adif',
         exportType: 'contest-adif',
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}',
-        templateData: { handlerShortName: ref.contestIdentifier, handlerName: ref.contestIdentifier }
+        templateData: { handlerShortName: `${Info.shortName} ${ref.mode}`, handlerName: `${Info.shortName} ${ref.mode}` }
       },
       {
         format: 'cabrillo',
         exportType: 'generic-cabrillo',
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}',
-        templateData: { handlerShortName: ref.contestIdentifier, handlerName: ref.contestIdentifier }
+        templateData: { handlerShortName: `${Info.shortName} ${ref.mode}`, handlerName: `${Info.shortName} ${ref.mode}` }
       }]
     }
   },
