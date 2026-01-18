@@ -41,7 +41,7 @@ export function qsonToReg1test({ operation, qsos, settings, handler, combineSegm
   str += `[QSORecords;${actualCount}]\n`
 
   for (const qso of qsos) {
-    if (qso.deleted) return
+    if (qso.deleted) continue
     if (qso.event) {
       if (qso.event.event === 'break' || qso.event.event === 'start') {
         if (combineSegmentRefs) {
@@ -54,7 +54,7 @@ export function qsonToReg1test({ operation, qsos, settings, handler, combineSegm
           common = { ...common, ...qso.event.operation, refs: common.refs }
         }
       }
-      return
+      continue
     }
 
     let combinations = handler.qsoToReg1testParts && handler.qsoToReg1testParts({ qso, operation, ref })

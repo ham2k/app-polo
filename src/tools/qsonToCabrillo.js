@@ -23,7 +23,7 @@ export function qsonToCabrillo({ operation, qsos, settings, handler, combineSegm
   }
 
   for (const qso of qsos) {
-    if (qso.deleted) return
+    if (qso.deleted) continue
     if (qso.event) {
       if (qso.event.event === 'break' || qso.event.event === 'start') {
         if (combineSegmentRefs) {
@@ -34,7 +34,7 @@ export function qsonToCabrillo({ operation, qsos, settings, handler, combineSegm
           operation = { ...operation, ...qso.event.operation, refs: operation.refs }
         }
       }
-      return
+      continue
     }
 
     let combinations = handler.qsoToCabrilloParts && handler.qsoToCabrilloParts({ qso, operation, ref })
