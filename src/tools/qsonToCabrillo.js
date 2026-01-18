@@ -76,7 +76,7 @@ const DEFAULT_FREQUENCIES_PER_BAND = {
 }
 
 function cabrilloFreq(qso) {
-  if (qso.freq) return `${qso.freq}`
+  if (qso.freq) return `${Math.round(qso.freq)}`
   else return DEFAULT_FREQUENCIES_PER_BAND[qso.band] ?? '0'
 }
 
