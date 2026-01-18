@@ -113,7 +113,7 @@
     "callInfo": {
       "title": "Roepnaam Info",
       "messages": {
-        "duplicate": "Dupliceren",
+        "duplicate": "Dupe",
         "invalidBand": "Ongeldige Band",
         "newBand": "Nieuwe Band",
         "newMode": "Nieuwe Modus",

@@ -1,4 +1,12 @@
 {
+  "25.12.6": {
+    "name": "December '25 (patch 6)",
+    "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
+    "changes": [
+      "Fixed bugs in Cabrillo exports",
+      "Assorted tweaks and fixes"
+    ]
+  },
   "25.12.5": {
     "name": "December '25 (patch 5)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",

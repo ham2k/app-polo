@@ -389,9 +389,9 @@
         "error": "Fout bij het plaatsen van LLOTA spot",
         "serverResponse": "Server reageerde met fout {{status}}: {{body}}"
       },
-      "exampleRefName": "Voorbeeldmeer",
+      "exampleRefName": "Voorbeeld meer",
       "unknownRefName": "Onbekend Meer",
-      "noRefsNearby": "Geen locaties in de buurt!"
+      "noRefsNearby": "Geen meren in de buurt!"
     },
     "mota": {
       "name": "Mills on the Air",
