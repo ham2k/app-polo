@@ -263,7 +263,7 @@ export const generateActivitySumarizer = ({ info }) => {
     if (allSectionScores?.length > 1) {
       const refTotals = allSectionScores.reduce((totals, sectionScore) => {
         Object.keys(sectionScore.activatedRefs).forEach(key => {
-          if (sectionScore.activatedRefs[key] >= qsosToActivate) {
+          if (sectionScore?.activatedRefs?.[key] ?? 0 >= qsosToActivate) {
             totals.activated += 1
           } else {
             totals.missed += 1

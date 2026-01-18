@@ -264,11 +264,12 @@ export default function LoggingPanel ({
 
   const handleSubmit = useCallback(() => { //
     if (submitTimeout) clearTimeout(submitTimeout)
+    if (!qso) return
 
     submitTimeout = setTimeout(() => {
       setDoSubmit(true)
     }, 50)
-  }, [setDoSubmit])
+  }, [setDoSubmit, qso])
 
   useEffect(() => { // Actually perform the submission: saving the QSO, or creating a new one
     if (!doSubmit) return

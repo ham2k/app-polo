@@ -96,7 +96,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   const spotsHooks = useMemo(() => {
     const hooks = findHooks('spots', { withFunction: 'fetchSpots' })
 
-    ;(operation?.refs || []).filter(ref => ref.type).forEach(ref => {
+    ;(operation?.refs || []).filter(ref => ref?.type).forEach(ref => {
       const refHook = findBestHook(`ref:${ref.type}`)
       if (refHook?.activitySpecificSpots?.fetchSpots) {
         hooks.push({
