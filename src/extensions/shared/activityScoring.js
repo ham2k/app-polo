@@ -110,6 +110,7 @@ export const generateActivityScorer = ({ info }) => {
 
       if (notices.length === 0 && nearDupes.length > 0) {
         alerts.push('duplicate')
+        score.value = 0
       }
 
       if (DEBUG_THIS_ONE) console.log('-- ', notices)
