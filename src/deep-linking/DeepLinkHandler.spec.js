@@ -6,19 +6,20 @@
  */
 
 // Mock @ham2k/lib-operation-data before importing DeepLinkUtils
+// Note: These use kHz values since parseFrequency now converts Hz to kHz
 jest.mock('@ham2k/lib-operation-data', () => ({
   bandForFrequency: (freq) => {
-    if (freq >= 14000000 && freq < 14350000) return '20m'
-    if (freq >= 7000000 && freq < 7300000) return '40m'
-    if (freq >= 21000000 && freq < 21450000) return '15m'
+    if (freq >= 14000 && freq < 14350) return '20m'
+    if (freq >= 7000 && freq < 7300) return '40m'
+    if (freq >= 21000 && freq < 21450) return '15m'
     return undefined
   },
   modeForFrequency: (freq) => {
     // Simplified: CW below 14100, SSB above
-    if (freq >= 14000000 && freq < 14100000) return 'CW'
-    if (freq >= 14100000 && freq < 14350000) return 'SSB'
-    if (freq >= 7000000 && freq < 7050000) return 'CW'
-    if (freq >= 7050000 && freq < 7300000) return 'SSB'
+    if (freq >= 14000 && freq < 14100) return 'CW'
+    if (freq >= 14100 && freq < 14350) return 'SSB'
+    if (freq >= 7000 && freq < 7050) return 'CW'
+    if (freq >= 7050 && freq < 7300) return 'SSB'
     return 'SSB'
   }
 }))
@@ -63,7 +64,7 @@ describe('DeepLinkHandler', () => {
           theirRef: 'W6/CT-006',
           theirSig: 'sota',
           theirCall: 'K6TEST',
-          freq: 14285000,
+          freq: 14285, // Hz input (14285000) converted to kHz
           mode: 'CW',
           time: undefined,
           myCall: undefined
@@ -77,7 +78,7 @@ describe('DeepLinkHandler', () => {
         expect(result.mySig).toBe('sota')
         expect(result.theirRef).toBeUndefined()
         expect(result.theirSig).toBeUndefined()
-        expect(result.freq).toBe(14285000)
+        expect(result.freq).toBe(14285) // Hz input converted to kHz
         expect(result.mode).toBe('CW')
       })
 
@@ -99,7 +100,7 @@ describe('DeepLinkHandler', () => {
           mySig: 'pota',
           theirRef: 'W6/CT-006',
           theirSig: 'sota',
-          freq: 14285000,
+          freq: 14285, // Hz input (14285000) converted to kHz
           mode: 'CW',
           time: 1704067200000,
           myCall: 'N0CALL',
@@ -203,6 +204,57 @@ describe('DeepLinkHandler', () => {
         expect(parseDeepLinkURL(url).theirRef).toBe('W6/CT-006')
       })
     })
+
+    describe('frequency handling', () => {
+      it('converts Hz input to kHz for internal storage', () => {
+        // SOTAcat sends 7245000 Hz (7.245 MHz on 40m)
+        const url = 'com.ham2k.polo://qso?theirRef=W6/CT-006&theirSig=sota&freq=7245000'
+        const result = parseDeepLinkURL(url)
+        expect(result.freq).toBe(7245) // 7245000 Hz → 7245 kHz
+      })
+
+      it('handles missing frequency gracefully', () => {
+        const url = 'com.ham2k.polo://qso?theirRef=TEST&theirSig=sota'
+        const result = parseDeepLinkURL(url)
+        expect(result.freq).toBeUndefined()
+      })
+
+      it('handles invalid frequency string', () => {
+        const url = 'com.ham2k.polo://qso?theirRef=TEST&theirSig=sota&freq=abc'
+        const result = parseDeepLinkURL(url)
+        expect(result.freq).toBeUndefined()
+      })
+
+      it('handles empty frequency string', () => {
+        const url = 'com.ham2k.polo://qso?theirRef=TEST&theirSig=sota&freq='
+        const result = parseDeepLinkURL(url)
+        expect(result.freq).toBeUndefined()
+      })
+    })
+  })
+
+  describe('frequency conversion for ADIF export', () => {
+    it('converts Hz input to kHz internally for correct ADIF export', () => {
+      // SOTAcat sends 7245000 Hz (7.245 MHz on 40m)
+      const url = 'com.ham2k.polo://qso?theirRef=W6/CT-006&theirSig=sota&freq=7245000'
+      const parsed = parseDeepLinkURL(url)
+
+      // Internal storage should be in kHz
+      expect(parsed.freq).toBe(7245)
+
+      // ADIF export divides by 1000, so 7245 kHz / 1000 = 7.245 MHz
+      const adifFreq = (parsed.freq / 1000).toFixed(6)
+      expect(adifFreq).toBe('7.245000')
+    })
+
+    it('derives correct band from kHz frequency', () => {
+      const qso = buildSuggestedQSO({
+        theirRef: 'TEST',
+        theirSig: 'sota',
+        freq: 7245 // kHz (after parseFrequency conversion)
+      })
+      expect(qso.band).toBe('40m')
+    })
   })
 
   describe('buildSuggestedQSO', () => {
@@ -232,7 +284,7 @@ describe('DeepLinkHandler', () => {
     })
 
     it('does not add refs when theirRef/theirSig not provided', () => {
-      const params = { freq: 14285000, mode: 'CW' }
+      const params = { freq: 14285, mode: 'CW' } // kHz (after Hz→kHz conversion)
       const qso = buildSuggestedQSO(params)
       expect(qso.refs).toBeUndefined()
     })
@@ -248,23 +300,23 @@ describe('DeepLinkHandler', () => {
     })
 
     it('includes frequency and derives band', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14285000 })
-      expect(qso.freq).toBe(14285000)
+      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14285 }) // kHz
+      expect(qso.freq).toBe(14285)
       expect(qso.band).toBe('20m')
     })
 
     it('derives mode from frequency when not provided', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14285000 })
+      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14285 }) // kHz
       expect(qso.mode).toBe('SSB')
     })
 
     it('derives CW mode for CW portion of band', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14035000 })
+      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14035 }) // kHz
       expect(qso.mode).toBe('CW')
     })
 
     it('uses provided mode over derived mode', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14285000, mode: 'CW' })
+      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14285, mode: 'CW' }) // kHz
       expect(qso.mode).toBe('CW')
     })
 

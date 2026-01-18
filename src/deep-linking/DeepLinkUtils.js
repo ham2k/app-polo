@@ -90,12 +90,14 @@ export function parseDeepLinkURL (url) {
 }
 
 /**
- * Parse frequency from string (Hz)
+ * Parse frequency from string (Hz) and convert to kHz for internal storage.
+ * SOTAcat and other deep-link sources send frequency in Hz (e.g., 7245000 for 7.245 MHz).
+ * The app stores frequency in kHz internally.
  */
 function parseFrequency (freqStr) {
   if (!freqStr) return undefined
   const hz = parseInt(freqStr, 10)
-  return isNaN(hz) ? undefined : hz
+  return isNaN(hz) ? undefined : hz / 1000
 }
 
 /**
