@@ -50,6 +50,12 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
 
   const [currentDialog, setCurrentDialog] = useState()
 
+  const syncEnabled = useMemo(() => {
+    if (lofiData?.enabled) return true
+    if (lofiData?.enabled === false) return false
+    return settings.consentAppData || settings.consentOpData
+  }, [lofiData?.enabled, settings.consentAppData, settings.consentOpData])
+
   const syncHook = useMemo(() => {
     return findHooks('sync')[0]
   }, [])
@@ -70,11 +76,13 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     if (!currentDialog) {
       setImmediate(async () => {
         console.log('refreshing data')
-        dispatch(syncHook.getAccountData())
+        if (syncEnabled) {
+          dispatch(syncHook.getAccountData())
+        }
         setCounts(await getSyncCounts())
       })
     }
-  }, [currentDialog, dispatch, fiveSecondTick, syncHook, t])
+  }, [currentDialog, dispatch, fiveSecondTick, syncHook, t, syncEnabled])
 
   const accountTitle = useMemo(() => {
     const id = lofiData?.account?.uuid.slice(0, 8).toUpperCase()
@@ -112,14 +120,6 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
       }
     }
   }, [lofiData.account, lofiData.pending_link_email, t])
-
-  useEffect(() => {
-    if (currentDialog) {
-      GLOBAL.syncEnabled = false
-    } else {
-      GLOBAL.syncEnabled = true
-    }
-  }, [currentDialog])
 
   const askAboutMergingAccounts = useMemo(() => {
     if (lofiData?.account?.uuid && localData?.sync?.lastSyncAccountUUID && (lofiData.account.uuid !== localData.sync.lastSyncAccountUUID)) {
@@ -223,10 +223,12 @@ Please try again later.`, { error: linkResult.json.error })
     setImmediate(async () => {
       setCounts(await getSyncCounts())
       if (syncHook) {
-        dispatch(syncHook.getAccountData())
+        if (syncEnabled) {
+          dispatch(syncHook.getAccountData())
+        }
       }
     })
-  }, [dispatch, syncHook])
+  }, [dispatch, syncEnabled, syncHook])
 
   const progressWrapper = useMemo(() => {
     return ({ children }) => (
@@ -249,9 +251,9 @@ Please try again later.`, { error: linkResult.json.error })
         </View>
         <H2kListItem
           title={t('screens.syncSettings.syncService', 'Sync Service')}
-          description={lofiData?.enabled !== false ? t('screens.syncSettings.syncService.enabled', 'Enabled') : t('screens.syncSettings.syncService.disabled', 'Disabled')}
+          description={syncEnabled ? t('screens.syncSettings.syncService.enabled', 'Enabled') : t('screens.syncSettings.syncService.disabled', 'Disabled')}
           leftIcon="sync-circle"
-          rightSwitchValue={lofiData?.enabled !== false}
+          rightSwitchValue={syncEnabled}
           rightSwitchOnValueChange={(value) => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: value }))}
           onPress={() => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: !lofiData.enabled }))}
         />
@@ -260,6 +262,7 @@ Please try again later.`, { error: linkResult.json.error })
           description={accountInfo}
           leftIcon="card-account-details"
           onPress={() => setCurrentDialog('syncAccount')}
+          disabled={!syncEnabled}
         />
         {currentDialog === 'syncAccount' && (
           <SyncAccountDialog
@@ -309,6 +312,7 @@ Please try again later.`, { error: linkResult.json.error })
           description={t(`screens.syncSettings.plans.${lofiData?.subscription?.plan?.slug}`, lofiData?.subscription?.plan?.description ?? '')}
           leftIcon="calendar-clock"
           onPress={() => null}
+          disabled={!syncEnabled}
         />
 
         <SyncSettingsForDistribution settings={settings} styles={styles} />
@@ -339,6 +343,7 @@ Please try again later.`, { error: linkResult.json.error })
             title={serverLabel}
             description={serverCountDescription}
             leftIcon="cloud-sync-outline"
+            disabled={!syncEnabled}
           />
         </H2kListSection>
 
@@ -350,6 +355,7 @@ Please try again later.`, { error: linkResult.json.error })
                 title={client.name}
                 description={client.uuid === lofiData?.client?.uuid ? t('screens.syncSettings.thisDevice', 'This device') : client.uuid.slice(0, 8)?.toUpperCase()}
                 leftIcon="cellphone"
+                disabled={!syncEnabled}
               />
             ))}
           </H2kListSection>

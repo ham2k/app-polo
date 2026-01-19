@@ -201,7 +201,7 @@ const FactoryResetCommandHook = {
   describeCommand: (match, { t }) => {
     return t?.('extensions.commands-debug.factory', 'Delete all data and settings?') || 'Delete all data and settings?'
   },
-  invokeCommand: (match, { dispatch, settings }) => {
+  invokeCommand: (match, { dispatch, settings, t }) => {
     setTimeout(async () => {
       await persistor.purge()
       await resetDatabase()
@@ -221,7 +221,7 @@ const SeedCommandHook = {
     const count = parseInt(match[1], 10)
     return `Seed the log with ${count} QSOs?`
   },
-  invokeCommand: (match, { handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
+  invokeCommand: (match, { t, handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
     if (!operation) return
 
     let count = parseInt(match[1], 10)
@@ -242,7 +242,7 @@ const SeedCommandHook = {
         const qsos = []
         while (count > 0) {
           const index = Math.floor(Math.random() * calls.length)
-          let call = calls[index] || GLOBAL?.t?.('general.misc.placeholderCallsign', 'N0CALL') || 'N0CALL'
+          let call = calls[index] || t?.('general.misc.placeholderCallsign', 'N0CALL') || 'N0CALL'
 
           if (Math.random() > 0.20) { // On 80% of the calls, replace the digit with something random
             call = call.replace(/(?<=\w)(\d)/, (m, p1) => {
