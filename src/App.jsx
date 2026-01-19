@@ -99,14 +99,12 @@ function MainApp ({ navigationTheme }) {
     // so we set them in the GLOBAL object here.
     GLOBAL.consentAppData = settings.consentAppData
     GLOBAL.consentOpData = settings.consentOpData
-    GLOBAL.syncEnabled = lofiData?.enabled === false ? false : settings.consentAppData || settings.consentOpData
+    GLOBAL.syncEnabled = (lofiData?.enabled === false) ? false : (lofiData?.enabled || settings.consentAppData || settings.consentOpData)
     GLOBAL.flags = flags
     GLOBAL.t = t
     GLOBAL.language = i18n.language
     GLOBAL.locale = getLocales()[0].languageCode
-
-    console.log('GLOBAL', GLOBAL)
-  }, [settings.consentAppData, settings.consentOpData, lofiData?.enabled, flags, t, i18n.language])
+  }, [settings.consentAppData, settings.consentOpData, lofiData?.enabled, flags, t, i18n.language, lofiData])
 
   useSyncLoop({ dispatch, settings, online, appState })
 

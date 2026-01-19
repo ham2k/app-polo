@@ -30,7 +30,6 @@ import { getSyncCounts, resetSyncedStatus } from '../../../store/operations'
 import { prepareSyncToReplaceLocalData, prepareSyncToCombineLocalData } from '../../../store/sync'
 
 import { SyncSettingsForDistribution } from '../../../distro'
-import GLOBAL from '../../../GLOBAL'
 
 const LOFI_SERVER_LABELS = {
   // 'https://dev.lofi.ham2k.net': 'Ham2K LoFi (Development)',

@@ -311,7 +311,11 @@ const ReferenceHandler = {
       fields.push({ MY_GRIDSQUARE: (qso?.our?.grid ?? common.grid) })
     }
 
-    if (huntingRef) fields.push({ SOTA_REF: huntingRef.ref })
+    if (huntingRef) {
+      fields.push({ SOTA_REF: huntingRef.ref })
+      fields.push({ GRIDSQUARE: (qso.their?.grid ?? qso.their?.guess?.grid) })
+      fields.push({ MY_GRIDSQUARE: (qso?.our?.grid ?? common.grid) })
+    }
 
     // For the 2026 SOTA Challenge, they ask for POTA and WWFF refs as a way to determine location
     const potaRefs = filterRefs(qso, 'pota')
