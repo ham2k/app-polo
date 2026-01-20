@@ -168,7 +168,8 @@ const ReferenceHandler = {
     const qsoRef = findRef(qso, Info.key)
     const qp = qpData({ ref })
 
-    const hasNumbers = (qp?.exchange?.[0] === 'Number')
+    const hasNumbers = (qp?.exchange?.find(field => field === 'Number') !== undefined)
+    const hasNames = (qp?.exchange?.find(field => field.startsWith('Name')) !== undefined)
 
     const fields = [
       { CONTEST_ID: qp.cabrilloName },
@@ -176,8 +177,15 @@ const ReferenceHandler = {
     ]
 
     if (hasNumbers) {
-      fields[1] = { STX_STRING: `${qsoRef.ourNumber} ${fields[1]?.STX_STRING}` }
+      const stxIndex = fields.findIndex(field => field.STX_STRING)
+      fields[stxIndex] = { STX_STRING: `${qsoRef.ourNumber} ${fields[stxIndex]?.STX_STRING}`.trim() }
       fields.push({ STX: qsoRef.ourNumber })
+    }
+
+    if (hasNames) {
+      const stxIndex = fields.findIndex(field => field.STX_STRING)
+      fields[stxIndex] = { STX_STRING: `${ref.ourName} ${fields[stxIndex]?.STX_STRING}`.trim() }
+      fields.push({ MY_NAME: ref.ourName })
     }
 
     if (qsoRef?.location) {
@@ -191,8 +199,15 @@ const ReferenceHandler = {
     }
 
     if (hasNumbers) {
-      fields[3] = { SRX_STRING: `${qsoRef.theirNumber} ${fields[3]?.SRX_STRING}` }
+      const srxIndex = fields.findIndex(field => field.SRX_STRING)
+      fields[srxIndex] = { SRX_STRING: `${qsoRef.theirNumber} ${fields[srxIndex]?.SRX_STRING}`.trim() }
       fields.push({ SRX: qsoRef.theirNumber })
+    }
+
+    if (hasNames) {
+      const srxIndex = fields.findIndex(field => field.SRX_STRING)
+      fields[srxIndex] = { SRX_STRING: `${qsoRef.theirName} ${fields[srxIndex]?.SRX_STRING}`.trim() }
+      fields.push({ NAME: qsoRef.theirName })
     }
 
     return fields
@@ -222,7 +237,8 @@ const ReferenceHandler = {
   qsoToCabrilloParts: ({ qso, ref, operation, settings }) => {
     const qp = qpData({ ref })
 
-    const hasNumbers = (qp?.exchange?.[0] === 'Number')
+    const hasNumbers = (qp?.exchange?.find(field => field === 'Number') !== undefined)
+    const hasNames = (qp?.exchange?.find(field => field.startsWith('Name')) !== undefined)
 
     let ourLocations = ref?.location
     let weAreInState
@@ -266,10 +282,12 @@ const ReferenceHandler = {
         row.push((ourCall ?? ' ').padEnd(13, ' '))
         row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
         if (hasNumbers) row.push((qsoRef.ourNumber ?? ' ').padEnd(6, ' '))
+        if (hasNames) row.push((ref.ourName ?? ' ').padEnd(10, ' '))
         row.push((ourLocation ?? ' ').padEnd(6, ' '))
         row.push((qso?.their?.call ?? '').padEnd(13, ' '))
         row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
         if (hasNumbers) row.push((qsoRef.theirNumber ?? ' ').padEnd(6, ' '))
+        if (hasNames) row.push((qsoRef.theirName ?? ' ').padEnd(10, ' '))
         row.push((theirLocation ?? ' ').padEnd(6, ' '))
         rows.push(row)
       }
@@ -631,12 +649,15 @@ const ReferenceHandler = {
 function mainExchangeForOperation(props) {
   const { qso, qsos, operation, updateQSO, styles, disabled, refStack } = props
 
-  const ref = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
+  const qsoRef = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
   const opRef = findRef(operation, Info.key)
   const qp = qpData({ ref: opRef })
 
+  const hasNumbers = (qp?.exchange?.find(field => field === 'Number') !== undefined)
+  const hasNames = (qp?.exchange?.find(field => field.startsWith('Name')) !== undefined)
+
   const fields = []
-  if (qp?.exchange?.[0] === 'Number') {
+  if (hasNumbers) {
     fields.push(
       <H2kTextInput
         {...props}
@@ -646,14 +667,14 @@ function mainExchangeForOperation(props) {
         style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }]}
         textStyle={styles.text.callsign}
         label={'Our #'}
-        placeholder={ref?.ourNumber ?? operation?.nextNumber ?? '1'}
+        placeholder={qsoRef?.ourNumber ?? operation?.nextNumber ?? '1'}
         keyboard={'numbers'}
         numeric={true}
         noSpaces={true}
-        value={ref?.ourNumber ?? operation?.nextNumber ?? '1'}
+        value={qsoRef?.ourNumber ?? operation?.nextNumber ?? '1'}
         disabled={disabled}
         onChangeText={(text) => updateQSO({
-          refs: replaceRef(qso?.refs, Info.key, { ...ref, ourNumber: text })
+          refs: replaceRef(qso?.refs, Info.key, { ...qsoRef, ourNumber: text })
         })}
       />
     )
@@ -666,14 +687,37 @@ function mainExchangeForOperation(props) {
         style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }]}
         textStyle={styles.text.callsign}
         label={'Their #'}
-        placeholder={ref?.theirNumber ?? ''}
+        placeholder={qsoRef?.theirNumber ?? ''}
         keyboard={'numbers'}
         numeric={true}
         noSpaces={true}
-        value={ref?.theirNumber ?? ''}
+        value={qsoRef?.theirNumber ?? ''}
         disabled={disabled}
         onChangeText={(text) => updateQSO({
-          refs: replaceRef(qso?.refs, Info.key, { ...ref, theirNumber: text })
+          refs: replaceRef(qso?.refs, Info.key, { ...qsoRef, theirNumber: text })
+        })}
+      />
+    )
+  }
+
+  if (hasNames) {
+    fields.push(
+      <H2kTextInput
+        {...props}
+        key={`${Info.key}/theirName`}
+        innerRef={refStack.shift()}
+        style={[styles.input, { minWidth: styles.oneSpace * 10, flex: 1 }]}
+        textStyle={styles.text.callsign}
+        label={'Name'}
+        placeholder={'Name'}
+        keyboard="dumb"
+        uppercase={true}
+        noSpaces={true}
+        value={qsoRef?.theirName ?? ''}
+        disabled={disabled}
+        error={false}
+        onChangeText={(text) => updateQSO({
+          refs: replaceRef(qso?.refs, Info.key, { ...qsoRef, theirName: text, guess: false })
         })}
       />
     )
@@ -692,12 +736,12 @@ function mainExchangeForOperation(props) {
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
-      value={ref?.location ?? _defaultLocationFor({ qp, qso, qsos, operation }) ?? ''}
-      error={ref?.location && !qpNormalizeLocation({ qp, qso, location: ref.location })}
+      value={qsoRef?.location ?? _defaultLocationFor({ qp, qso, qsos, operation }) ?? ''}
+      error={qsoRef?.location && !qpNormalizeLocation({ qp, qso, location: qsoRef.location })}
       suggestions={_suggestionsFor({ qso, qp })}
       minimumLengthForSuggestions={3}
       onChangeText={(text) => updateQSO({
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text })
+        refs: replaceRef(qso?.refs, Info.key, { ...qsoRef, location: text })
       })}
     />
   )

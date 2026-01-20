@@ -24,6 +24,10 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
 
   const qp = useMemo(() => qpData({ ref: activityRef }), [activityRef])
 
+  const hasNames = useMemo(() => {
+    return qp?.exchange?.find(field => field.startsWith('Name')) !== undefined
+  }, [qp])
+
   const locationLabel = useMemo(() => {
     const locations = qpParseLocations({ location: activityRef?.location, qp, qso: { their: ourInfo } })
 
@@ -75,6 +79,10 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
     setRefs(replaceRef(allRefs, Info.key, { ...activityRef, location: value }))
   }, [activityRef, allRefs, setRefs])
 
+  const handleNameChange = useCallback((value) => {
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, ourName: value }))
+  }, [activityRef, allRefs, setRefs])
+
   const handleEmailChange = useCallback((value) => {
     setRefs(replaceRef(allRefs, Info.key, { ...activityRef, email: value }))
   }, [activityRef, allRefs, setRefs])
@@ -108,6 +116,17 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
       {qp && (
         <>
           <H2kListSection title={'Your Exchange'}>
+            {hasNames && (
+              <H2kListRow>
+                <H2kTextInput
+                  label="Name"
+                  value={activityRef?.ourName || ''}
+                  uppercase={true}
+                  onChangeText={handleNameChange}
+                />
+              </H2kListRow>
+            )}
+
             <H2kListRow>
               <H2kTextInput
                 label="Location"
