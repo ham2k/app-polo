@@ -3,15 +3,16 @@
   "name": "British Columbia QSO Party",
   "short": "BCQP",
   "url": "https://www.orcadxcc.org/bcqp_rules.html",
-  "start": "2025-2-1 16:00Z",
-  "end": "2025-2-2 03:59Z",
-  "secondStart": "2025-2-2 16:00Z",
-  "secondEnd": "2025-2-2 23:59Z",
+  "start": "2025-2-7 16:00Z",
+  "end": "2025-2-8 03:59Z",
+  "secondStart": "2025-2-8 16:00Z",
+  "secondEnd": "2025-2-8 23:59Z",
   "cabrilloName": "BC-QSO-PARTY",
   "notes": "",
-  "lastUpdated": "2025-02-19 15:00Z",
+  "lastUpdated": "2026-01-20 15:00Z",
+  "status": "Revised for 2026",
   "bonusStations": {
-    "VO7ODX": 20
+    "VA7ODX": 20
   },
   "options": {
     "dcCountsAsMaryland": true,

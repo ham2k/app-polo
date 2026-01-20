@@ -3,9 +3,10 @@
   "name": "South Carolina QSO Party",
   "url": "https://scqso.com/",
   "short": "SCQP",
-  "start": "2025-2-22 15:00Z",
-  "end": "2025-2-23 01:59Z",
-  "lastUpdated": "2025-02-19 15:00Z",
+  "start": "2025-2-28 15:00Z",
+  "end": "2025-2-29 01:59Z",
+  "lastUpdated": "2026-01-20 15:00Z",
+  "status": "Revised for 2026",
   "cabrilloName": "SC-QSO-PARTY",
   "notes": "FT8/FT4 is allowed, but not supported in PoLo.",
   "bonusStations": {

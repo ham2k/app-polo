@@ -1,16 +1,18 @@
 {
   "key": "MN",
-  "disabled": true,
-  "disabledReason": "Not implemented `Name` input yet",
   "name": "Minnesota QSO Party",
   "short": "MNQP",
   "url": "https://www.w0aa.org/mn-qso-party/",
-  "start": "2025-2-1 14:00Z",
-  "end": "2025-2-1 23:59Z",
+  "start": "2026-2-7 14:00Z",
+  "end": "2026-2-7 23:59Z",
   "cabrilloName": "MN-QSO-PARTY",
   "notes": "",
-  "lastUpdated": "2025-02-19 15:00Z",
-  "exchange": [ "Name", "Location" ],
+  "lastUpdated": "2026-01-20 15:00Z",
+  "status": "Revised for 2026",
+  "exchange": [
+    "Name",
+    "Location"
+  ],
   "options": {
     "dcCountsAsMaryland": false,
     "stateCountsForInState": false,

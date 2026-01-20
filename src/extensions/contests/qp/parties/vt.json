@@ -3,11 +3,12 @@
   "name": "Vermont QSO Party",
   "short": "VTQP",
   "url": "https://www.ranv.org/vtqso.html",
-  "start": "2025-2-1 00:00Z",
-  "end": "2025-2-2 23:59Z",
+  "start": "2026-2-7 00:00Z",
+  "end": "2026-2-8 23:59Z",
   "cabrilloName": "VT-QSO-PARTY",
-  "notes": "FT8/FT4 is allowed, but not supported in PoLo.",
-  "lastUpdated": "2025-02-19 15:00Z",
+  "notes": "FT8/FT4 is allowed, but not supported in PoLo. W1AW/1 counts for a 2 point bonus for out of state participants.",
+  "lastUpdated": "2026-01-20 15:00Z",
+  "status": "Revised for 2026",
   "openQuestions": "Does any county count as VT multiplier for in-state stations?",
   "specialCalls": [
     "W1NVT"

@@ -52,6 +52,7 @@ import sd from './parties/sd.json'
 import tn from './parties/tn.json'
 import tx from './parties/tx.json'
 import va from './parties/va.json'
+import vt from './parties/vt.json'
 import wa from './parties/wa.json'
 import wi from './parties/wi.json'
 import wv from './parties/wv.json'
@@ -59,5 +60,5 @@ import wv from './parties/wv.json'
 export default [
   sevenqp, acqp, al, ar, az, bc, ca, co, cpqp, de, fl, ga, hi, ia, id, il,
   indiana, ks, ky, la, md, mi, mn, mo, ms, nc, nd, ne, neqp, nh, nj,
-  nm, ns, nv, ny, oh, ok, on, pa, qc, sc, sd, tn, tx, va, wa, wi, wv
+  nm, ns, nv, ny, oh, ok, on, pa, qc, sc, sd, tn, tx, va, vt, wa, wi, wv
 ]
