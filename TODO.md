@@ -6,6 +6,30 @@
 "I could not double tap on the "Close modal” button to dismiss the screen. I used the VoiceOver two finger scrub gesture but should be able to double tap the button as well"
 
 
+# Performance
+
+### Look into @shopify/flash-list
+
+### Home Screen vs Settings change
+
+Consider using something like:
+
+```
+const isFocused = useIsFocused();
+
+// Local state to hold the settings currently being used for display
+const [focusedSettings, setFocusedSettings] = useState(globalSettings);
+
+useEffect(() => {
+  // Only sync the settings to this screen when the screen comes into view
+  if (isFocused) {
+    setFocusedSettings(globalSettings);
+  }
+}, [isFocused, globalSettings]);
+```
+
+so that child components only re-render based on settings when the screen is focused.
+
 
 
 # General Package Maintenance Tasks
