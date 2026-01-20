@@ -10,6 +10,7 @@ import { selectSettings } from '../../settings'
 import { findBestHook } from '../../../extensions/registry'
 import { locationToGrid6, locationToGrid8 } from '@ham2k/lib-maidenhead-grid'
 import { setOperationData } from './setOperationData'
+import GLOBAL from '../../../GLOBAL'
 
 export const getOperationTemplate = ({ operation, settings }) => {
   const template = {
@@ -152,14 +153,14 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
     if (hook?.updateFromTemplateWithDispatch) {
       try {
         // Let the hook decide how to clone the ref
-        newRef = await dispatch(hook.updateFromTemplateWithDispatch({ t, ref, operation }))
+        newRef = await dispatch(hook.updateFromTemplateWithDispatch({ t: GLOBAL.t, ref, operation }))
       } catch (error) {
         console.error('Error cloning ref', error)
       }
     } else if (hook?.updateFromTemplate) {
       try {
         // Let the hook decide how to clone the ref
-        newRef = hook.updateFromTemplate({ t, ref, operation })
+        newRef = hook.updateFromTemplate({ t: GLOBAL.t, ref, operation })
       } catch (error) {
         console.error('Error cloning ref', error)
       }
