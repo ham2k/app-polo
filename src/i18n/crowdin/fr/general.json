@@ -235,7 +235,7 @@
         "Staging": "Instable",
         "Development": "A la pointe"
       },
-      "versionIsAvailable-md": "La version {{versionName}} est disponible.",
+      "versionIsAvailable-md": "Une mise à jour vers {{versionName}} est disponible.",
       "updateNow": "Mettre à jour maintenant",
       "newVersionAvailable-md": "Une nouvelle version de PoLo est disponible !"
     },

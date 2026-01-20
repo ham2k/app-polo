@@ -235,7 +235,7 @@
         "Staging": "不安定版",
         "Development": "ベージングエッジ"
       },
-      "versionIsAvailable-md": "バージョン {{versionName}} が利用可能です。",
+      "versionIsAvailable-md": "{{versionName}} に更新が利用可能です。",
       "updateNow": "更新する",
       "newVersionAvailable-md": "新しいバージョンの PoLo が利用可能です！"
     },

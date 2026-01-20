@@ -235,7 +235,7 @@
         "Staging": "Inestable",
         "Development": "\"Bleeding Edge\""
       },
-      "versionIsAvailable-md": "La versión {{versionName}} está disponible.",
+      "versionIsAvailable-md": "La actualización a {{versionName}} está disponible.",
       "updateNow": "Actualizar Ahora",
       "newVersionAvailable-md": "¡Está disponible una nueva versión PoLo!"
     },

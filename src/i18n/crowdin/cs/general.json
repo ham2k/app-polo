@@ -235,7 +235,7 @@
         "Staging": "Nestabilní",
         "Development": "Experimentální"
       },
-      "versionIsAvailable-md": "Verze {{versionName}} je dostupná.",
+      "versionIsAvailable-md": "Aktualizace na {{versionName}} je dostupná.",
       "updateNow": "Aktualizovat nyní",
       "newVersionAvailable-md": "Je dostupná nová verze PoLo!"
     },

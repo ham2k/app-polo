@@ -235,7 +235,7 @@
         "Staging": "Onstabiel",
         "Development": "Bleeding Edge"
       },
-      "versionIsAvailable-md": "Nieuwe versie {{versionName}} is beschikbaar.",
+      "versionIsAvailable-md": "Bijgewerkte versie {{versionName}} is beschikbaar.",
       "updateNow": "Nu bijwerken",
       "newVersionAvailable-md": "Een nieuwe versie van PoLo is beschikbaar!"
     },
