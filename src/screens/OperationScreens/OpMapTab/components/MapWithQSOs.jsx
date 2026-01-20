@@ -69,3 +69,54 @@ function strengthForQSO (qso) {
     return 5
   }
 }
+
+export function stylesForMap ({ longitudeDelta, metersPerPixel, count, deviceColorScheme }) {
+  // in iOS, maps change with the actual device color scheme, not the user preferences in the app
+
+  if (count > 50) {
+    longitudeDelta = longitudeDelta * 1.5
+  }
+
+  if (Platform.OS === 'ios') {
+    const darkMode = Platform.OS === 'ios' && deviceColorScheme === 'dark'
+    if (metersPerPixel > 32000) {
+      return { marker: { opacity: 0.7, size: 1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
+    } else if (metersPerPixel > 16000) {
+      return { marker: { opacity: 0.7, size: 1.4 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
+    } else if (metersPerPixel > 8000) {
+      return { marker: { opacity: 0.8, size: 1.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '40,40,40'}, 0.3)` } }
+    } else if (metersPerPixel > 4000) {
+      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
+    } else if (metersPerPixel > 2000) {
+      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
+    } else if (metersPerPixel > 1000) {
+      return { marker: { opacity: 0.7, size: 2.1 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '60,60,60'}, 0.4)` } }
+    } else if (metersPerPixel > 500) {
+      return { marker: { opacity: 1, size: 2.2 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.4)` } }
+    } else if (metersPerPixel > 100) {
+      return { marker: { opacity: 1, size: 2.4 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
+    } else {
+      return { marker: { opacity: 1, size: 2.8 }, line: { strokeColor: `rgba(${darkMode ? '180,180,180' : '75,75,75'}, 0.5)` } }
+    }
+  } else {
+    if (metersPerPixel > 32000) {
+      return { marker: { opacity: 0.7, size: 1.4 }, line: { strokeColor: 'rgba(40,40,40,0.4)' } }
+    } else if (metersPerPixel > 16000) {
+      return { marker: { opacity: 0.7, size: 1.6 }, line: { strokeColor: 'rgba(40,40,40,0.4)' } }
+    } else if (metersPerPixel > 8000) {
+      return { marker: { opacity: 0.8, size: 1.8 }, line: { strokeColor: 'rgba(40,40,40,0.5)' } }
+    } else if (metersPerPixel > 4000) {
+      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: 'rgba(60,60,60,0.5)' } }
+    } else if (metersPerPixel > 2000) {
+      return { marker: { opacity: 0.7, size: 2 }, line: { strokeColor: 'rgba(60,60,60,0.6)' } }
+    } else if (metersPerPixel > 1000) {
+      return { marker: { opacity: 0.7, size: 2.1 }, line: { strokeColor: 'rgba(60,60,60,0.6)' } }
+    } else if (metersPerPixel > 500) {
+      return { marker: { opacity: 1, size: 2.2 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
+    } else if (metersPerPixel > 100) {
+      return { marker: { opacity: 1, size: 2.4 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
+    } else {
+      return { marker: { opacity: 1, size: 2.8 }, line: { strokeColor: 'rgba(75,75,75,0.7)' } }
+    }
+  }
+}

@@ -25,8 +25,10 @@ import { scoringHandlersForOperation } from '../../../../extensions/scoring'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { annotateQSO } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
 import SpotList from './SpotList'
+import MapWithSpots from './MapWithSpots'
 import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
+import SpotListMapToggle from './SpotListMapToggle'
 
 import GLOBAL from '../../../../GLOBAL'
 import { fmtNumber } from '@ham2k/lib-format-tools'
@@ -92,6 +94,8 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation.uuid))
 
   const [showControls, setShowControls] = useState(false)
+
+  const [showMap, setShowMap] = useState(false)
 
   const spotsHooks = useMemo(() => {
     const hooks = findHooks('spots', { withFunction: 'fetchSpots' })
@@ -366,16 +370,24 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       ) : (
         <>
           <View style={[{ flex: 0, flexDirection: 'column', alignItems: 'center' }, styles.panel]}>
-            <SpotFilterIndicators
-              operation={operation}
-              vfo={vfo}
-              styles={styles}
-              themeColor={themeColor}
-              settings={settings}
-              online={online}
-              filterState={filterState}
-              onPress={() => setShowControls(true)}
-            />
+            <View style={[{ flex: 0, flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }]}>
+              <SpotFilterIndicators
+                operation={operation}
+                vfo={vfo}
+                styles={styles}
+                themeColor={themeColor}
+                settings={settings}
+                online={online}
+                filterState={filterState}
+                onPress={() => setShowControls(true)}
+              />
+              <SpotListMapToggle
+                styles={styles}
+                themeColor={themeColor}
+                inMapMode={showMap}
+                onPress={() => setShowMap(!showMap)}
+              />
+            </View>
             <TouchableOpacity onPress={() => setShowControls(true)} style={{ flex: 0, flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }}>
               <Text style={{ fontWeight: 'bold', marginTop: styles.halfSpace, textAlign: 'center' }}>
                 {spotsState.loading ? (
@@ -386,17 +398,29 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
               </Text>
             </TouchableOpacity>
           </View>
-          <SpotList
-            sections={sectionedSpots}
-            loading={spotsState.loading}
-            refresh={refresh}
-            onPress={handlePress}
-            style={{
-              paddingBottom: style?.paddingBottom,
-              paddingRight: style?.paddingRight,
-              paddingLeft: style?.paddingLeft
-            }}
-          />
+          {showMap ? (
+              <MapWithSpots
+                  spots={sectionedSpots}
+                  // Operation may or may not exist depending on if we have one active or not
+                  operation={operation}
+                  onPress={handlePress}
+                  styles={styles}
+                  settings={settings}
+                  selectedUUID={null}
+              />
+          ) : (
+              <SpotList
+                sections={sectionedSpots}
+                loading={spotsState.loading}
+                refresh={refresh}
+                onPress={handlePress}
+                style={{
+                  paddingBottom: style?.paddingBottom,
+                  paddingRight: style?.paddingRight,
+                  paddingLeft: style?.paddingLeft
+                }}
+              />
+          )}
         </>
       )}
     </GestureHandlerRootView>
