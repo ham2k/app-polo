@@ -66,7 +66,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
   const { t } = useTranslation()
 
   const styles = useThemedStyles(prepareStyles, themeColor, style)
-
+  console.log('style.paddingBottom', style.paddingBottom, 'styles.root', styles.root)
   const now = useSelector(selectSecondsTick)
 
   const lastSection = sections[sections.length - 1]
@@ -153,7 +153,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
         </View>
       ))}
 
-      <View style={{ flexDirection: 'column', marginTop: styles.oneSpace }}>
+      <View style={{ flexDirection: 'column', marginTop: styles.oneSpace, paddingBottom: (style.paddingBottom || 0) + styles.oneSpace * 2 }}>
         <Text style={[styles.markdown.body, { marginBottom: styles.halfSpace }]}>
           <Text style={{ fontWeight: 'bold' }}>{t('screens.opInfoPanel.operationTotalsTitle-md', 'Operation Totals:')}</Text>
           <Text>
