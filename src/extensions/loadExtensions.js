@@ -22,6 +22,7 @@ import POTAExtension from './activities/pota/POTAExtension'
 import SatellitesExtension from './activities/satellites/SatellitesExtension'
 import SiOTAExtentsion from './activities/siota/SiOTAExtension'
 import SOTAExtension from './activities/sota/SOTAExtension'
+import TOTAExtension from './activities/tota/TOTAExtension'
 import ThirteenColoniesExtension from './activities/colonies/ThirteenColoniesExtension'
 import WCAExtension from './activities/wca/WCAExtension'
 import WFDExtension from './activities/wfd/WFDExtension'
@@ -80,6 +81,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(SatellitesExtension)
   registerExtension(SiOTAExtentsion)
   registerExtension(SOTAExtension)
+  registerExtension(TOTAExtension)
   registerExtension(ThirteenColoniesExtension)
   registerExtension(WCAExtension)
   registerExtension(WFDExtension)
