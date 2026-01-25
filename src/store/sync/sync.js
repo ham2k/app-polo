@@ -599,14 +599,14 @@ function _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAcc
   }))
 }
 
-async function prepareSyncToReplaceLocalData({ dispatch }) {
+export async function prepareSyncToReplaceLocalData({ dispatch }) {
   dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
   dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
   dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))
   await dispatch(clearAllOperationData())
 }
 
-async function prepareSyncToCombineLocalData({ dispatch }) {
+export async function prepareSyncToCombineLocalData({ dispatch }) {
   dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
   dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
   dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))
