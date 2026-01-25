@@ -135,6 +135,16 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             leftIcon="hammer-screwdriver"
           />
           <H2kListItem
+            title={t('general.languages.cs', 'Czech')}
+            description={'OK1PTR Petr (lead)'}
+            leftIcon="earth"
+          />
+          <H2kListItem
+            title={t('general.languages.de', 'German')}
+            description={'DA1EE Lucas (lead), DJ5NF Martin, DK8YS Yannick, DO7JZ Julius'}
+            leftIcon="earth"
+          />
+          <H2kListItem
             title={t('general.languages.es', 'Spanish')}
             description={'KI2D Sebastián (lead), EA1HET Jonathan'}
             leftIcon="earth"
@@ -145,8 +155,8 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             leftIcon="earth"
           />
           <H2kListItem
-            title={t('general.languages.de', 'German')}
-            description={'DA1EE Lucas (lead), DJ5NF Martin, DK8YS Yannick, DO7JZ Julius'}
+            title={t('general.languages.ja', 'Japanese')}
+            description={'W9WOT Tomoko (lead)'}
             leftIcon="earth"
           />
           <H2kListItem
@@ -165,13 +175,8 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             leftIcon="earth"
           />
           <H2kListItem
-            title={t('general.languages.ja', 'Japanese')}
-            description={'W9WOT Tomoko (lead)'}
-            leftIcon="earth"
-          />
-          <H2kListItem
-            title={t('general.languages.cs', 'Czech')}
-            description={'OK1PTR Petr (lead)'}
+            title={t('general.languages.zh', 'Chinese')}
+            description={'BG4JIN Hanshen Liu (lead)'}
             leftIcon="earth"
           />
 

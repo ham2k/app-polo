@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "25.12.7",
-  "versionName": "December '25 (patch 7)",
+  "version": "25.12.8",
+  "versionName": "December '25 (patch 8)",
   "private": true,
   "scripts": {
     "android": "react-native run-android --appId com.ham2k.polo.alpha",
@@ -16,7 +16,7 @@
     "clean:all": "npm run clean:js && npm run clean:android && npm run clean:ios && npm run clean:watchman",
     "postinstall": "patch-package",
     "crowdin:push": "crowdin push sources",
-    "crowdin:pull": "crowdin pull translations -l es-ES -l de -l fr -l nl -l sk -l nb -l cs -l ja"
+    "crowdin:pull": "crowdin pull translations -l es-ES -l de -l fr -l nl -l sk -l nb -l cs -l ja -l zh-CN"
   },
   "dependencies": {
     "@ham2k/lib-callsigns": "0.4.2",

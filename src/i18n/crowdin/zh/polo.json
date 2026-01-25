@@ -1,0 +1,922 @@
+{
+  "screens": {
+    "start": {
+      "credits": "由 KI2D 和朋友们制作",
+      "Loading Extensions": "加载扩展",
+      "Development Build": "Portable Logger 开发构建",
+      "messages": {
+        "Reticulating splines": "正在网格化样条…",
+        "Tuning the antenna": "调谐天线",
+        "Checking the tubes": "检查电子管",
+        "Warming up the tubes": "预热电子管",
+        "Unfolding the map": "展开地图",
+        "Charging the flux capacitor": "给电容器充电",
+        "Purging the dilithium chamber": "正在清空二聚晶室…",
+        "Activating the turbo encabulator": "正在启动涡轮封装器…",
+        "Engaging the warp drive": "启用曲速引擎"
+      }
+    },
+    "home": {
+      "title": "便携式记录器",
+      "newOperation": "新操作",
+      "newOperation-a11y": "新操作",
+      "operationList-a11y": "操作列表",
+      "noOperations": "无操作！",
+      "settings-a11y": "设置",
+      "quickCallLookupPlaceholder": "快速呼叫查找…",
+      "spots-a11y": "信号"
+    },
+    "operation": {
+      "title": "操作"
+    },
+    "operationDetails": {
+      "title": "操作详情",
+      "operationTitle": "标题",
+      "newOperation": "新操作",
+      "operationNotes": "笔记",
+      "anythingYouWantToWriteAboutThisOperation": "关于此操作的信息"
+    },
+    "operationStationInfo": {
+      "title": "电台及操作员信息",
+      "invalidCallsign": "无效的呼号：{{callsign}}",
+      "invalidCallsigns": "无效的呼号：{{callsigns}}",
+      "singleStationUsed-md": "目前使用的是 `{{oldStation}}`。\n新的 QSO 将使用 `{{newStation}}`。",
+      "noStationUsed-md": "尚无呼号使用\n今后新的 QSO 将使用 {{newStation}}。",
+      "updateStation-md_zero": "在0个现有 QSO 上更新为 `{{newStation}}`",
+      "updateStation-md_one": "对 1个现有 QSO 更新为 `{{newStation}}`",
+      "updateStation-md_other": "对 {{count}} 个QSO更新 `{{newStation}}`",
+      "multipleStationsUsed-md": "本次活动已有使用多个呼号的 QSO： `{{stations}}`。\n\n`{{newStation}}` 仅用于新的 QSO。",
+      "singleOperatorUsed-md": "目前使用的是`{{oldOperator}}` 。\n新的 QSO 将使用`{{newOperator}}`。",
+      "noOperatorUsed-md": "未使用呼号。\n{{newOperator}} 将用于新的 QSO。",
+      "updateOperator-md": "将 `{{newOperator}}` 更新为所有 QSO 的操作员",
+      "multipleOperatorsUsed-md": "此活动已经使用了多个操作员呼号： `{{operators}}`。\n\n`{{newOperator}}` 仅用于新的 QSO。",
+      "whatIsTheCallsignUsedOnTheAir": "在空中使用的呼号是什么？",
+      "stationCallsign": "电台呼号",
+      "whoIsOperatingTheStation": "谁正在操作电台？（可选）",
+      "operatorCallsign": "操作员呼号",
+      "multiStationOperation": "是否为多站运行？",
+      "multiStationOperationYes": "是的，我们是众多站点之一！",
+      "multiStationOperationNo": "不，只是常规台",
+      "identifierForThisStation": "该电台的标识符（仅限数字）"
+    },
+    "operationLocation": {
+      "title": "操作位置",
+      "selectedLocation": "所选位置",
+      "maidenheadGridSquareLocator": "梅登海德网格位置指示器",
+      "suggestedLocations": "建议位置",
+      "deviceGps": "设备 GPS",
+      "locating": "定位中…",
+      "gpsError": "GPS 错误",
+      "noGps": "没有 GPS",
+      "stateOrProvince": "州或省（可选）",
+      "county": "县（可选）"
+    },
+    "operationAddActivity": {
+      "title": "添加活动",
+      "cantFindActivity": "找不到您要找的活动吗？",
+      "thereAreMoreOptions": "更多选项在 设置 > 应用程序功能中"
+    },
+    "operationActivityOptions": {
+      "title": "活动选项",
+      "removeActivity": "从此操作中删除 {{activity}}"
+    },
+    "operationData": {
+      "title": "操作数据",
+      "selectFromTheExportOptionsBelow": "从以下导出选项中选择",
+      "exportSingeFile": "导出一个文件",
+      "exportSelectedFiles_zero": "导出 0 个选中文件",
+      "exportSelectedFiles_one": "导出 1 个选中文件",
+      "exportSelectedFiles_other": "导出 {{count}} 个选中文件",
+      "exportAllFiles": "导出所有文件",
+      "exportQSOs": "导出 QSOs",
+      "pendingToDoItems_zero": "没有待办事项",
+      "pendingToDoItems_one": "1 个待办事项",
+      "pendingToDoItems_other": "{{count}} 个待办事项",
+      "importQSOs": "导入 QSOs",
+      "addQSOsFromADIFFile": "从 ADIF 文件添加 QSOs",
+      "ham2kLoFiSync": "Ham2K LoFi 同步",
+      "operation": "操作",
+      "exportSettings": "导出设置",
+      "useCompactFileNames": "使用简易文件名",
+      "wavelogExport": "Wavelog 导出",
+      "exportQSOsToWavelogDescription": "将此操作的所有 QSOs 发送到 Wavelog",
+      "wavelogDialog": {
+        "title": "导出 QSOs 到 Wavelog",
+        "status": "导出此操作的所有 QSOs 到 Wavelog。",
+        "exporting": "正在导出到 Wavelog…"
+      },
+      "deleteOperationDialog": {
+        "title": "删除操作？",
+        "description": "确定要删除此操作吗？"
+      }
+    },
+    "callInfo": {
+      "title": "呼号信息",
+      "messages": {
+        "duplicate": "重复",
+        "invalidBand": "无效频段",
+        "newBand": "新频段",
+        "newMode": "新模式",
+        "newRef": "新参考",
+        "newMult": "新倍数",
+        "newDay": "新的一天",
+        "maybeDupe": "重复？",
+        "partialDupe": "重复",
+        "potaActivation-newDay": "新的 POTA 日",
+        "potaActivation-newRef": "新公园",
+        "sotaActivation-newDay": "新的 SOTA 日",
+        "sotaActivation-newRef": "新山峰",
+        "sotaActivation-duplicate": "SOTA 重复！",
+        "wwffActivation-duplicate": "WWFF 重复！",
+        "wwbotaActivation-newDay": "新的 WWBOTA 日",
+        "wwbotaActivation-newRef": "新地堡",
+        "motaActivation-newRef": "新工厂"
+      },
+      "history": {
+        "last7days": "过去 7 天内有 {{count}} 条",
+        "today": "今天有 {{count}} 条",
+        "yesterday": "昨天有 {{count}} 条",
+        "qsos_zero": "0 个 QSO",
+        "qsos_one": "1 个 QSO",
+        "qsos_other": "{{count}} 个 QSO"
+      },
+      "thisOpCount_zero": "本操作中有 0 个 QSO",
+      "thisOpCount_one": "本操作中有 1 个 QSO",
+      "thisOpCount_other": "本操作中有 {{count}} 个 QSO",
+      "otherOpsCount_zero": "其他操作中有 0 个 QSO",
+      "otherOpsCount_one": "其他操作中有 1 个 QSO",
+      "otherOpsCount_other": "其他操作中有 {{count}} 个 QSO",
+      "andMoreCount_zero": "…还有 {{count}} 条",
+      "andMoreCount_one": "…还有 {{count}} 条",
+      "andMoreCount_other": "…还有 {{count}} 条",
+      "showImage": "显示图片",
+      "notes": "备注",
+      "potentialCall": "潜在呼叫: {{call}}",
+      "withCall": "与 {{call}}"
+    },
+    "spots": {
+      "title": "信号"
+    },
+    "editQSO": {
+      "title": "编辑 QSO",
+      "sections": {
+        "qso": "QSO 详情",
+        "their": "他们的信息",
+        "our": "我们的信息",
+        "more": "更多"
+      },
+      "fields": {
+        "time": "时间",
+        "date": "日期",
+        "freq": "频率",
+        "mode": "模式",
+        "band": "频段",
+        "power": "功率",
+        "call": "台站呼号",
+        "sent": "RST",
+        "exchange": "交换",
+        "name": "名称",
+        "city": "城市",
+        "state": "州/省",
+        "county": "县",
+        "entity": "实体",
+        "cqZone": "CQ 区",
+        "ituZone": "ITU 区",
+        "arrlSection": "ARRL 部门",
+        "grid": "网格",
+        "latitude": "纬度",
+        "longitude": "经度",
+        "notes": "备注"
+      }
+    },
+    "opInfo": {
+      "title": "操作信息"
+    },
+    "settings": {
+      "title": "设置",
+      "sections": {
+        "settings": "设置",
+        "accounts": "账户",
+        "about": "关于 Ham2K",
+        "help": "需要帮助？"
+      },
+      "operatorCallsign": {
+        "title": "操作员呼号",
+        "noCall": "无呼叫",
+        "dialogTitle": "操作员呼号",
+        "pleaseEnterCallsign": "请输入呼号！",
+        "callsignLabel": "操作员呼号"
+      },
+      "generalSettings": {
+        "title": "通用设置",
+        "description": "黑暗模式、数字行、单位等"
+      },
+      "loggingSettings": {
+        "title": "记录设置",
+        "description": "自定义记录体验"
+      },
+      "dataSettings": {
+        "title": "数据设置",
+        "description": "数据文件、呼叫标注等"
+      },
+      "syncSettings": {
+        "title": "同步设置",
+        "description": "云同步和备份"
+      },
+      "appFeatures": {
+        "title": "应用特性",
+        "description": "管理 POTA, SOTA 等功能"
+      },
+      "developerSettings": {
+        "title": "开发者设置",
+        "description": "这里有龙"
+      },
+      "accountsQRZ": {
+        "title": "QRZ（用于呼号查询）",
+        "description": "登录：{{login}}",
+        "noAccount": "没有账户",
+        "errorEmail": "不要使用邮件登录。",
+        "dialogTitle": "QRZ.com 账户",
+        "pleaseEnterDetails": "请输入您的 QRZ.com 账户的详细信息：",
+        "loginLabel": "登录（您的呼号）",
+        "loginPlaceholder": "您的登录",
+        "passwordLabel": "密码",
+        "passwordPlaceholder": "您的密码",
+        "checkCredentials": "检查凭证"
+      },
+      "wavelogSettings": {
+        "title": "Wavelog 设置",
+        "description": "配置 Wavelog API 连接"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} 是 Ham2K 的支持者",
+        "couldBeASupporter": "{{callsign}} 可能是 Ham2K 的支持者"
+      },
+      "versionSettings": {
+        "description": "查看最近的更改"
+      },
+      "creditsSettings": {
+        "title": "鸣谢",
+        "description": "塞巴斯蒂安·德尔蒙特 KI2D & PoLo团队"
+      },
+      "noticesSettings": {
+        "title": "最近通知",
+        "description": "错过的信息？"
+      },
+      "readTheFineManual": {
+        "title": "阅读指导手册",
+        "description": "浏览 PoLo 的文档"
+      },
+      "ham2KForums": {
+        "title": "Ham2K 论坛",
+        "description": "寻找帮助，给予反馈，讨论想法…"
+      },
+      "ham2KChat": {
+        "title": "Ham2K 聊天",
+        "description": "我们的在线社区的 Discord 服务器"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "视频和直播"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagram",
+        "description": "因为照片永远不嫌多…"
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "关注我们以获取新闻和更新"
+      },
+      "contactUs": {
+        "title": "联系我们",
+        "description": "help@ham2k.com\n   (但请先尝试使用论坛或聊天！)"
+      }
+    },
+    "generalSettings": {
+      "title": "通用设置",
+      "theme": {
+        "title": "主题",
+        "descriptionDark": "保持黑暗模式",
+        "descriptionLight": "保持明亮模式",
+        "descriptionDevice": "与设备主题一致",
+        "dialogTitle": "主题"
+      },
+      "fontScale": {
+        "title": "字体缩放",
+        "descriptionXS": "最小",
+        "descriptionSM": "更小",
+        "descriptionMD": "正常",
+        "descriptionLG": "更大",
+        "descriptionXL": "最大",
+        "dialogTitle": "字体缩放",
+        "dialogDescription": "这些大小也会受到设备设置的影响，例如显示和辅助功能。"
+      },
+      "language": {
+        "title": "语言：{{lang}}",
+        "description": "更改应用程序的语言",
+        "dialogTitle": "语言",
+        "dialogDescription": "更改语言",
+        "deviceDefault": "使用设备设置（{{lang}}）",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}}（设备设置）目前不支持。"
+      },
+      "showNumbersRow": {
+        "title": "显示数字行",
+        "descriptionOn": "数字的快捷按钮",
+        "descriptionOff": "不显示数字行"
+      },
+      "showExtraInNumbersRow": {
+        "title": "数字行中的句号",
+        "descriptionOn": "包含句号（和斜线）",
+        "descriptionOff": "仅显示数字"
+      },
+      "showCommaInNumbersRow": {
+        "title": "数字行中的逗号",
+        "descriptionOn": "包括逗号键",
+        "descriptionOff": "没有逗号键"
+      },
+      "vibrateNumbersRow": {
+        "title": "在数字行中使用振动",
+        "descriptionOn": "按数字时振动",
+        "descriptionOff": "按数字时不振动"
+      },
+      "useMetricUnits": {
+        "title": "使用公制单位",
+        "descriptionOn": "使用英里作为距离单位",
+        "descriptionOff": "使用公里作为距离单位"
+      },
+      "keepDeviceAwake": {
+        "title": "保持设备唤醒",
+        "descriptionOn": "防止设备锁屏",
+        "descriptionOff": "允许正常锁屏"
+      },
+      "useSplitViews": {
+        "title": "使用分屏视图",
+        "descriptionOn": "当屏幕足够大时使用分屏视图",
+        "descriptionOff": "不使用分屏视图"
+      },
+      "useGrid8": {
+        "title": "高精度位置",
+        "descriptionOn": "使用 8 位网格",
+        "descriptionOff": "使用 6 位网格"
+      },
+      "smartKeyboard": {
+        "title": "智能键盘功能",
+        "descriptionOn": "启用智能键盘功能",
+        "descriptionOff": "为了兼容某些设备，使用简单的键盘"
+      },
+      "exportSettings": {
+        "title": "导出设置",
+        "description": "自定义文件名和其他设置"
+      },
+      "privacy": {
+        "title": "隐私"
+      },
+      "shareAppUsageData": {
+        "title": "分享应用使用数据",
+        "descriptionOn": "帮助我们改善应用，通过分享使用、崩溃及性能数据",
+        "descriptionOff": "保持应用数据私密。\nHam2K团队将无法检测崩溃或其他问题。"
+      },
+      "shareOperationData": {
+        "title": "共享操作数据",
+        "descriptionOn": "公开与其他用户共享部分操作数据",
+        "descriptionOff": "保持操作数据私密"
+      },
+      "privacyPolicy": {
+        "title": "隐私政策",
+        "description": "阅读我们的隐私政策"
+      },
+      "termsOfService": {
+        "title": "服务条款",
+        "description": "阅读我们的服务条款"
+      }
+    },
+    "loggingSettings": {
+      "title": "日志设置",
+      "leftieMode": {
+        "title": "左撇子模式",
+        "descriptionOn": "为左撇子用户使用布局",
+        "descriptionOff": "为右撇子用户使用布局"
+      },
+      "countryFlags": {
+        "title": "国家旗帜",
+        "descriptionNone": "不显示任何旗帜",
+        "descriptionAll": "为所有联系人显示旗帜",
+        "descriptionDefault": "仅对DX联系人显示"
+      },
+      "showBearing": {
+        "title": "显示方位",
+        "descriptionOn": "显示到台站的预计方位",
+        "descriptionOff": "不显示方位信息"
+      },
+      "switchSignalReportOrder": {
+        "title": "切换信号报告顺序",
+        "descriptionOn": "先发射，后接收",
+        "descriptionOff": "先接收，后发射"
+      },
+      "jumpAfterRST": {
+        "title": "在填入RST后跳转下一个字段",
+        "descriptionOn": "在RST输入后跳转",
+        "descriptionOff": "不自动跳转"
+      },
+      "suggestDefaultOperator": {
+        "title": "建议默认操作员",
+        "descriptionOn": "在站呼不同的操作中，将 {{operatorCall}} 设置为操作员。",
+        "descriptionOff": "无论使用何种站呼，都不要建议默认操作员。"
+      },
+      "suggestTemplates": {
+        "title": "使用操作模板",
+        "descriptionOn": "为新操作建议模板",
+        "descriptionOff": "不要建议模板"
+      },
+      "bandsModes": {
+        "title": "频带与模式",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "扩展"
+      }
+    },
+    "featuresSettings": {
+      "title": "应用特性",
+      "activatingExtension": "正在激活扩展，这可能需要一些时间…",
+      "fewerOf": "更少的 {{category}}…",
+      "moreOf": "更多的 {{category}}…"
+    },
+    "dataSettings": {
+      "title": "数据设置",
+      "offlineDataTitle": "离线数据",
+      "extensionsTitle": "扩展",
+      "logDataTitle": "日志数据",
+      "importHistoryFromADIF": "从ADIF导入历史",
+      "importHistoryFromADIFDescription": "用于离线查看和QSO统计",
+      "clearADIFHistory": "清除ADIF历史",
+      "clearADIFHistoryDescription": "删除已导入的ADIF记录",
+      "updatedRelative": "已更新{{date}}",
+      "fetching-md": "### 获取 **{{title}}**…",
+      "progress-md": "### 获取 **{{title}}**\n\n{{progress}}",
+      "updated-md": "更新于{{date}}",
+      "version-md": "版本：{{version}}",
+      "confirmClearHistory": {
+        "title": "您确定吗？",
+        "description": "这将移除所有之前从ADIF文件导入的历史记录",
+        "recordsNotDeleted": "操作记录不会被删除"
+      },
+      "importingHistoricalADIF": "正在导入 ADIF 记录… 请耐心等待！",
+      "errorImportingHistoricalADIF": "导入历史ADIF时出错",
+      "errorDeletingHistoricalRecords": "删除历史记录时出错",
+      "recordsCount_zero": "无记录",
+      "recordsCount_one": "1条记录",
+      "recordsCount_other": "{{fmtCount}}条记录"
+    },
+    "syncSettings": {
+      "title": "同步设置",
+      "description": "Ham2K LoFi 提供了一个可靠的同步服务，可以让您在所有设备间进行同步，并在云中备份您的操作数据。",
+      "syncService": "同步服务",
+      "syncService.enabled": "已启用",
+      "syncService.disabled": "已禁用",
+      "deviceNotLinked": "设备未链接！({{id}})",
+      "anonymousAccount": "匿名账户 (#{{id}})",
+      "enableSyncToLinkDevice": "启用同步以连接此设备",
+      "checkEmailInboxForConfirmation": "(查看您的电子邮件收件箱以获取确认）",
+      "accountNumber": "账户 #{{id}}",
+      "pendingEmailConfirmation": "(待邮件确认)",
+      "tapToConfigure": "点击配置",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi（开发）",
+        "https://lofi.ham2k.net": "Ham2K LoFi（官方）",
+        "custom": "自定义（{{server}}）"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "此设备最后一次与不同的账户 (#{{id}}) 同步。\n\n要继续同步，您需要在以下选项中做出决定：",
+        "option1withEmail-md": "选项 #1: 用此设备上的数据替换来自服务器上 **{{email}}** 帐户中的数据。",
+        "option1noEmail-md": "选项#1：用服务器上的新账户数据替换此设备上的数据。",
+        "option1button": "选择#1：用服务器数据替换",
+        "option2withEmail-md": "选项 #2: 将此设备上的数据与服务器上 **{{email}}** 帐户中的数据合并。",
+        "option2noEmail-md": "选项#2：将此设备上的数据与服务器上的新账户数据合并。",
+        "option2button": "选择#2：合并数据",
+        "option3-md": "选项 #3: 连接回先前的帐户 **{{email}}**。",
+        "option3button": "选择#3：以前的账户",
+        "buttonCancel": "不，取消",
+        "buttonProcees": "我愿承担风险！全部替换！"
+      },
+      "combineDataAlert": {
+        "title": "合并本地数据？",
+        "text": "确定要将这些操作与 QSO 合并到新账户吗？\n\n这会把本设备上的 QSO 与新账户在同步服务中已有的记录合并。操作可能会意外导致不相关的日志被混合，无法自动还原。请确认你已备份或确信需要合并。\n\n此操作无法撤销。",
+        "buttonCancel": "不，取消",
+        "buttonProcees": "我愿承担风险！合并它们！"
+      },
+      "replaceDataAlert": {
+        "title": "替换本地数据？",
+        "text": "您确定要用同步服务中新账户的操作和QSOs替换此设备上的所有数据吗？\n\n应用将重新启动。\n\n如果您有未同步的数据，它将会丢失。",
+        "buttonCancel": "不，取消",
+        "buttonProcees": "我愿承担风险！替换所有！"
+      },
+      "linkBackErrorAlert": {
+        "title": "链接回先前账户时出错",
+        "text": "在将账户恢复为先前账户的过程中发生错误。\n\n{{error}}\n\n请稍后再试。",
+        "buttonCancel": "好"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi 账号",
+        "emailAddressLabel": "电子邮件地址",
+        "resendButton": "重新发送",
+        "revertButton": "恢复",
+        "syncFirstButton": "请先返回并完成同步",
+        "continueAnywayButton": "我知道我在做什么！继续",
+        "potentialForDataLoss": "可能导致数据丢失！！！",
+        "potentialForDataLossDescription": "您尚未同步此设备中的所有数据。\n\n如果您将此设备链接到新账户，系统会询问是否要用新账户的数据替换其数据。\n\n如果是这种情况，您可能无法恢复尚未同步的任何现有活动。\n\n建议您先完成设备同步！"
+      },
+      "syncServiceDescription-md": "基础服务是免费的，允许您在两个设备或应用之间以有限的速度同步最近数据（最多7天）。\n\n完整的服务需要付费订阅，包括在任意合理数量的设备或应用上同步的所有操作。\n\n在接下来的几个月里，LoFi服务的测试期内该服务将保持免费。之后价格将取决于国家和货币，但不应超过每年30美元或等值金额，并且可能更低。",
+      "thisDevice": "此设备",
+      "notAuthenticated": "未认证",
+      "lofiServer": "LoFi服务器",
+      "otherDevices": "其他设备",
+      "devSettings": "开发设置",
+      "resetSyncStatus": "重置同步状态",
+      "noDataStored": "未存储数据",
+      "syncCountDescription": {
+        "operations": "操作：{{synced}}已同步，{{pending}}待处理",
+        "qsos": "QSOs：{{synced}}已同步，{{pending}}待处理"
+      },
+      "cloudCountDescription": {
+        "operations": "操作：总共{{total}}",
+        "operationsSyncable": "操作：{{total}}已存储，{{syncable}}可同步",
+        "qsos": "QSOs：{{total}}已存储",
+        "qsosSyncable": "QSOs：{{total}}已存储，{{syncable}}可同步"
+      }
+    },
+    "versionSettings": {
+      "title": "版本信息",
+      "recentChanges": "最近更改",
+      "coverPhoto": "封面照片：{{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "检查更新包…",
+      "newMajorReleaseAvailable": "有新的主要版本可用",
+      "patchAvailable": "{{track}}补丁可用",
+      "checkForUpdates": "检查{{track}}更新",
+      "checkForUpdatesGeneric": "检查更新",
+      "updateAvailable": "有更新可用",
+      "downloading": "下载中…",
+      "downloadingProgress": "下载进度{{progress}}%",
+      "installing": "安装中…",
+      "errorDownloadingUpdate": "下载更新时出错",
+      "errorCheckingForUpdates": "检查更新时出错",
+      "noUpdatesAvailable": "无可用更新",
+      "versionDescription": "{{version}} - 基础构建{{build}}"
+    },
+    "creditsSettings": {
+      "title": "致谢",
+      "createdBy": "由{{callsign}}创建",
+      "openSource": "Ham2K PoLo 是开源软件",
+      "checkOutCode": "在GitHub上查看代码并贡献！",
+      "teamPoLo": "团队PoLo",
+      "creator": "创造者 & 首席开发者",
+      "developer": "开发者",
+      "leadSupport": "首席支持及文档",
+      "moreCodeAndDocsContributors": "更多贡献者…",
+      "contributorCode": "代码贡献者：{{contributions}}",
+      "contributorDocumentation": "文档",
+      "translations": "翻译",
+      "translationsService": "CrowdIn提供的翻译工具",
+      "translationsServiceDescription": "管理翻译过程的工具由CrowdIn慷慨提供"
+    },
+    "devModeSettings": {
+      "title": "开发者设置",
+      "wipeDatabase": {
+        "title": "清空数据库？",
+        "description": "您确定要删除所有操作、QSOs及其他数据吗？",
+        "noCancel": "不，取消",
+        "yesWipeIt": "是的，清空！"
+      },
+      "import": {
+        "title": "导入",
+        "importQSONFile": "导入QSON文件"
+      },
+      "experiments": {
+        "title": "实验",
+        "enableWavelogExperiments": "启用Wavelog实验"
+      },
+      "manageDatabase": {
+        "title": "管理数据库",
+        "exportDatabase": "导出数据库",
+        "exportDatabaseDescription": "导出当前数据库文件",
+        "replaceDatabase": "替换数据库",
+        "replaceDatabaseDescription": "导入新数据库文件并替换所有数据",
+        "wipeDatabase": "清空数据库",
+        "wipeDatabaseDescription": "删除数据库中的所有数据。"
+      },
+      "internationalization": {
+        "title": "国际化",
+        "crowdInPersonalTokenLabel": "CrowdIn 个人访问令牌",
+        "crowdInPersonalTokenPlaceholder": "从 CrowdIn 账户设置页面获取一个",
+        "refreshCrowdInTranslations": {
+          "title": "正在刷新翻译…",
+          "starting": "请稍候，我们正在刷新翻译…",
+          "progress": "{{current}} / {{total}}：{{language}} - {{file}}",
+          "completed": "刷新完成！",
+          "errorTitle": "刷新翻译时出错",
+          "error": "刷新CrowdIn翻译错误：{{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "下载高级设置",
+        "locationLabel": "位置",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "系统信息",
+        "shareWithDevelopmentTeam": "分享给开发团队"
+      },
+      "updatePatches": {
+        "title": "更新补丁",
+        "selectTrackForPatches": "选择补丁轨迹",
+        "selectTrackForPatchesDescription": "选择补丁的轨迹",
+        "checkingForUpdates": "检查更新…",
+        "checkForUpdates": "检查{{track}}更新",
+        "updateAvailable": "有更新可用",
+        "updateAvailableForTrack": "{{track}} 更新可用",
+        "downloading": "下载中…",
+        "downloadingProgress": "下载进度{{progress}}%",
+        "installing": "安装中…",
+        "errorDownloadingUpdate": "下载更新出错",
+        "errorCheckingForUpdates": "检查更新出错",
+        "noUpdatesAvailable": "没有可用更新"
+      }
+    },
+    "bandModeSettings": {
+      "title": "波段与模式",
+      "bands": {
+        "title": "波段",
+        "showCommonBands": "显示常用波段",
+        "showAllBands": "显示所有波段"
+      },
+      "modes": {
+        "title": "模式",
+        "showMoreModes": "显示更多模式",
+        "showEvenMoreModes": "显示甚至更多的模式",
+        "showFewerModes": "显示更少的模式"
+      }
+    },
+    "exportSettings": {
+      "title": "导出设置",
+      "exportTypes": "导出类型",
+      "customTemplates": "自定义模版",
+      "defaultTemplates": "默认模版",
+      "customTemplatesDescription": "导出使用自定义模版",
+      "defaultTemplatesDescription": "导出使用默认模版",
+      "includePrivateData": "包含私人数据",
+      "fileNameTemplate": "文件名模版",
+      "titleTemplate": "标题模版",
+      "adifNotes": "ADIF QSO 备注",
+      "adifComments": "ADIF QSO 评论",
+      "adifQslMessage": "ADIF QSL 消息",
+      "templateHelpTitle": "模版帮助",
+      "includePrivateDataDescription": "姓名、备注、地址等。",
+      "templateHelp-md": "一些示例模板元素…\n\n### 日志导出\n导出日志的属性\n`{{log.station}}` → `{{call}}` 此导出的站点\n`{{log.ref}}` → `XX-1234` 此导出的参考\n`{{log.refName}}` → `示例国家公园` 此导出的参考名称\n`{{log.refShortName}}` → `示例 NP` 此导出的参考简称\n`{{log.handlerType}}` → `pota` 此导出的处理程序类型\n`{{log.handlerName}}` → `空中公园` 此导出的处理程序名称\n`{{log.handlerShortName}}` → `POTA` 此导出的处理程序简称\n\n### 操作呼号\n`{{op.station}}` → `{{call}}` 操作的首个站点\n`{{op.operator}}` → `{{call}}` 操作的操作者\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` 操作的所有站点\n`{{op.otherStations}}` → `{{otherCalls}}` 操作的其他站点\n\n### 操作日期\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### 其他操作详情\n`{{op.title}}` → `在 XX-1234，XXFF-0001`\n`{{op.userTitle}}` → `我的特别活动`\n`{{op.userNotes}}` → `早上早来…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` 此操作的网格\n\n### QSO 信息\n`{{qso.notes}}` → `糟糕的音频！`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` 他们发送的信号报告\n`{{qso.our.sent}}` → `55` 我们发送的信号报告\n`{{qso.their.grid}}` → `FF99` 他们报告的网格\n`{{qso.refs}}` → 所有 QSO 的参考列表（包括操作参考和仅 QSO 参考）\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "默认",
+        "description": "所有导出的基本设置",
+        "fileNameNormal": "参考活动（正常）文件名",
+        "fileNameCompact": "参考活动（紧凑）文件名",
+        "titleReferenceActivities": "参考活动标题",
+        "fileNameOtherActivitiesNormal": "其他活动（正常）文件名",
+        "fileNameOtherActivitiesCompact": "其他活动（紧凑）文件名",
+        "titleOtherActivities": "其他活动标题",
+        "adifNotes": "ADIF QSO 备注",
+        "adifComments": "ADIF QSO 评论",
+        "adifQSLMessage": "ADIF QSL 消息"
+      }
+    },
+    "noticesSettings": {
+      "title": "最近通知",
+      "undated": "无日期",
+      "noRecentNotices": "没有最近的通知"
+    },
+    "extensionSettings": {
+      "title": "扩展"
+    },
+    "wavelogSettings": {
+      "title": "Wavelog 设置",
+      "noStationsFoundOrInvalidResponse": "未找到电台或响应无效",
+      "errorFetchingStations": "获取电台出错：{{message}}",
+      "fetchStations": "获取电台",
+      "selectStation": "选择电台",
+      "selectedStation": "选定电台：{{station}}"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "窗格分隔符",
+      "qsosTab": "个QSO",
+      "qsosTab-a11y": "Q sos 标签",
+      "infoTab": "信息",
+      "infoTab-a11y": "信息标签",
+      "operationInfo-a11y": "操作信息",
+      "spotsTab": "信号",
+      "spotsTab-a11y": "信号标签",
+      "mapTab": "地图",
+      "mapTab-a11y": "地图标签",
+      "settingsTab": "操作",
+      "settingsCompactTab": "操作。",
+      "settingsTab-a11y": "操作设置标签",
+      "menu": {
+        "loggingSettings": "日志设置",
+        "rstFields": "RST 字段",
+        "stateField": "状态字段",
+        "gridField": "网格字段",
+        "showDeletedQSOs": "显示已删除的 QSOs",
+        "numbersRow": "数字行",
+        "actions": "操作",
+        "lookupAllQSOs": "查询所有 QSO（联络）",
+        "confirmSpots": "确认 Spot"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "没有 QSO",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} 个QSO",
+      "qsosCompactTabCount_zero": "没有 Q",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} 个Q",
+      "noQSOsYet": "暂时无 QSOs！",
+      "currentlySetTo": "当前设置为",
+      "missingInfoError": {
+        "message": "错误：请输入**{{errors}}**以进行有效操作",
+        "errors": {
+          "band": "波段",
+          "callsign": "呼号"
+        }
+      },
+      "actions": {
+        "undo-a11y": "撤销",
+        "erase-a11y": "擦除",
+        "delete-a11y": "删除",
+        "addQSO-a11y": "添加 QSO",
+        "saveQSO-a11y": "保存 QSO"
+      },
+      "deletedQSO": "已删除 QSO",
+      "qsoWillBeDeleted": "QSO 将被删除！",
+      "noQSOsBy-md": "{{callsign}} 的 QSO 尚未记录… 让我们开始广播吧！",
+      "noQSOsYet-md": "尚未有 QSO… 让我们开始广播吧！",
+      "qsoCount_zero": "无 QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} 个QSO",
+      "qsosInTime": "{{countText}} 在 {{timeText}}",
+      "last10QSOs": "最近 10 个每小时 {{rate}} Q",
+      "last100QSOs": "最近 100 个每小时 {{rate}} Q",
+      "timeSinceLast": "距离上次过去 {{time}}",
+      "moreLabel": "更多",
+      "theirCallLabel": "对方的呼号",
+      "ourSentLabel": "发送",
+      "theirSentLabel": "接受",
+      "stateLabel": "状态",
+      "gridLabel": "栅格",
+      "timeLabel": "时间",
+      "dateLabel": "日期",
+      "timeControls-a11y": "时间控制",
+      "powerLabel": "功率",
+      "powerControls-a11y": "功率控制",
+      "modeLabel": "模式",
+      "bandLabel": "频段",
+      "frequencyLabel": "频率",
+      "bandMissing": "频段？？？",
+      "radioControls-a11y": "无线电控制 {{parts}}",
+      "notesLabel": "备注",
+      "notesLabel-a11y": "备注",
+      "activeControlsLabel": "活跃控件",
+      "activeControlsLabel-a11y": "活跃控件",
+      "selectToRemoveActiveControls": "选择以移除它们",
+      "selectToRemoveActiveControls-a11y": "选择以移除它们",
+      "moreControlsLabel": "更多控件",
+      "moreControlsLabel-a11y": "更多控件",
+      "selectToAddMoreControls": "选择以添加它们",
+      "selectToAddMoreControls-a11y": "选择以添加它们",
+      "showSecondaryControlSettings-a11y": "显示次要控制设置",
+      "hideMostSecondaryControls-a11y": "隐藏大多数次要控制",
+      "showAllSecondaryControls-a11y": "显示所有次要控制",
+      "spotting": {
+        "selfSpottingAt": "在 {{freq}} 进行自我 Spot（点名）",
+        "stopAutoRespotting": "停止自动重新 Spot",
+        "setFrequencyFirst": "请先设置要 Spot 的频率",
+        "reSpotEvery": "每 {{minutes}} 分钟重新 Spot",
+        "reSpotAt": "在 {{freq}} 重新 Spot",
+        "selfSpottedAt": "已于 {{time}} 进行自我 Spot",
+        "spotAt": "Spot {{call}} 于 {{freq}}",
+        "tooLateToSpot": "Spot {{call}} 为时已晚",
+        "nothingToSpot": "没有可 Spot 的内容",
+        "selfSpottingLabel": "自我 Spot",
+        "selfSpottingControls-a11y": "自我Spot控件",
+        "spottingLabel": "Spot 操作",
+        "spottingControls-a11y": "Spot 控制",
+        "autoRespottingLabel": "自动重新 Spot",
+        "autoRespottingControls-a11y": "自动重新 Spot 控制",
+        "commentsLabel": "评论"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "没有记录？\n您需要先设置您的位置。\n\n点击此处以设置。",
+      "manyNoLocation": "这些 QSO 中许多没有精确位置。\n\n您可能需要一个付费的 QRZ.com 帐户以进行位置查找。"
+    },
+    "opSpotsTab": {
+      "noSpots": "无Spot",
+      "spotsCount_zero": "无Spot",
+      "spotsCount_one": "1个Spot",
+      "spotsCount_other": "{{fmtCount}} 个Spot ",
+      "showingSpots": "显示 {{count}} / {{total}}",
+      "loadingSpots": "加载Spot …",
+      "sections": {
+        "specialSpots": "特殊Spot ",
+        "newMultipliers": "新倍数",
+        "callsOfNote": "注意的呼号",
+        "mostRecentSpots": "最新信号"
+      },
+      "allBands": "所有波段",
+      "auto": "自动",
+      "allModes": "所有模式",
+      "filters": "筛选",
+      "filtersBand": "波段",
+      "filtersAllBands": "所有波段",
+      "filtersBandAutomatic": "自动 (当前 {{band}})",
+      "filtersMode": "模式",
+      "filtersAllModes": "所有模式",
+      "filtersModeAutomatic": "自动 (当前 {{mode}})",
+      "filtersMaximumAge": "最大有效时间",
+      "filtersAnyAge": "不限时效",
+      "filtersAge10Minutes": "10 分钟",
+      "filtersAge20Minutes": "20 分钟",
+      "filtersAge30Minutes": "30 分钟",
+      "filtersAge45Minutes": "45 分钟",
+      "filtersAge60Minutes": "60 分钟",
+      "filtersSorting": "排序",
+      "filtersSortByTime": "按信号时间",
+      "filtersSortByFrequency": "按频率",
+      "filtersGroupSpecialSpots": "先分组特殊信号",
+      "filtersGroupCallsWithNotes": "注意呼叫分组",
+      "filtersSpotSources": "信号来源",
+      "filtersFilterByContinent": "按洲筛选",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "电话",
+        "DIGITAL": "数字",
+        "DATA": "数字",
+        "phoneOrCW": "电话或 CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "无效的呼号 {{callsign}}",
+      "invalidCallsigns": "无效的呼号 {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (由 {{operator}} 操作)",
+      "noStationCallsignDefined": "没有定义电台呼号",
+      "showMoreTemplates": "显示更多模板",
+      "templatesAvailable_zero": "无可用模板",
+      "templatesAvailable_one": "1 个模板可用",
+      "templatesAvailable_other": "{{count}} 个模板可用",
+      "stationAndOperatorTitle": "电台和操作员",
+      "locationTitle": "位置",
+      "gridDescription-md": "网格 `{{grid}}`",
+      "stateDescription-md": "州：`{{state}}`",
+      "countyDescription-md": "县：`{{county}}`",
+      "locationDescriptionNone-md": "未设置位置",
+      "operationDetailsTitle": "操作详情",
+      "operationDetailsDescription": "为此操作添加备注",
+      "addTitleOrNotesForOperation": "为此操作添加标题或备注",
+      "activitiesTitle": "活动",
+      "addActivityTitle": "添加活动",
+      "addActivityDescription": "POTA, SOTA, 户外活动日等！",
+      "addActivityDescription-noFeatures": "首先在主设置屏幕中启用一些活动功能",
+      "operationDataTitle": "操作数据",
+      "manageOperationLogsTitle": "管理操作日志",
+      "manageOperationLogsDescription": "导出、导入和管理数据",
+      "useAsTemplateTitle": "用作模板",
+      "useAsTemplateDescription": "使用类似设置启动新操作",
+      "dangerZoneTitle": "危险区域",
+      "undeleteOperationTitle": "取消删除操作",
+      "deleteOperationTitle": "删除操作"
+    },
+    "opInfoPanel": {
+      "statsTitle": "操作统计",
+      "operationTotalsTitle-md": "操作总计：",
+      "qsosInTime_zero": "无 QSOs",
+      "qsosInTime_one": "{{time}} 内有 1 次 QSO",
+      "qsosInTime_other": "{{time}} 内有 {{fmtCount}} 次 QSOs",
+      "qsoCount_zero": "无 QSOs",
+      "qsoCount_one": "1 次 QSO",
+      "qsoCount_other": "{{fmtCount}} 次 QSOs",
+      "timeSinceLast": "距离上次 QSO 已过 {{time}}",
+      "last10QSOs": "过去 10 次每小时 {{rate}} 个Q",
+      "last100QSOs": "过去 100 次每小时 {{rate}} 个Q"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "导入 QSON 时出错",
+      "invalidName": "无效名称",
+      "invalidNameDescription": "文件名必须以 .qson 或 .json 结尾",
+      "unknownError": "未知错误"
+    },
+    "importADIF": {
+      "error": "导入 ADIF 至操作时出错",
+      "historicalImportError": "导入历史 ADIF 时出错",
+      "unknownError": "未知错误"
+    }
+  }
+}

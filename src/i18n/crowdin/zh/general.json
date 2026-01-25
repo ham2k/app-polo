@@ -1,0 +1,360 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "英语 - English",
+        "ar": "阿拉伯语 - العربية",
+        "ast": "阿斯图里亚斯语 - Asturianu",
+        "bn": "孟加拉语 - বাংলা",
+        "ca": "加泰罗尼亚语 - Català",
+        "cs": "捷克语 - Čeština",
+        "cy": "威尔士语 - Cymraeg",
+        "da": "丹麦语 - Dansk",
+        "de": "德语 - Deutsch",
+        "en-PL": "波兰语",
+        "en-PT": "海盗语",
+        "eo": "世界语 - Esperanto",
+        "es": "西班牙语 - Español",
+        "et": "爱沙尼亚语 - Eesti",
+        "eu": "巴斯克语 - Euskara",
+        "fi": "芬兰语 - Suomi",
+        "fr": "法语 - Français",
+        "ga": "爱尔兰语 - Gaeilge",
+        "gl": "加利西亚语 - Galego",
+        "hi": "印地语 - हिंदी",
+        "id": "印度尼西亚语 - Bahasa Indonesia",
+        "it": "意大利语 - Italiano",
+        "ja": "日语 - 日本语",
+        "ko": "韩语 - 한국어",
+        "lt": "立陶宛语 - Lietuvių",
+        "lv": "拉脱维亚语 - Latvijas",
+        "ms": "马来语 - Bahasa Melayu",
+        "nb": "挪威博克马尔语 - Norsk bokmål",
+        "nl": "荷兰语 - Nederlands",
+        "nn": "挪威新挪威语 - Nynorsk",
+        "pl": "波兰语 - Polski",
+        "pt-BR": "葡萄牙语（巴西）- Português (Brasil)",
+        "pt-PT": "葡萄牙语（葡萄牙）- Português (Portugal)",
+        "pt": "葡萄牙语 - Português",
+        "ro": "罗马尼亚语 - Română",
+        "ru": "俄语 - Русский",
+        "sk": "斯洛伐克语 - Slovenčina",
+        "sv": "瑞典语 - Svenska",
+        "th": "泰语 - ภาษาไทย",
+        "tl": "他加禄语 - Wikang Filipino",
+        "tlh": "克林贡语 - ᏣᎳᎩ",
+        "tr": "土耳其语 - Türkçe",
+        "uk": "乌克兰语 - Українська",
+        "ur": "乌尔都语 - اردو",
+        "vi": "越南语 - Tiếng Việt",
+        "zh": "中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q so",
+      "QSOs-a11y": "Q sos",
+      "Operation": "操作",
+      "generalOperation": "通用操作"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": "。",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " 和 "
+      },
+      "time": {
+        "tomorrow": "明天",
+        "today": "今天",
+        "yesterday": "昨天",
+        "ago": "{{time}} 之前",
+        "fromNow": "{{time}} 之后",
+        "shortSeconds": "{{s}} 秒",
+        "shortMinutes": "{{m}} 分钟",
+        "shortMinutesAndSeconds": "{{m}} 分 {{s}} 秒",
+        "shortHours": "{{h}} 小时",
+        "shortHoursAndMinutes": "{{h}} 小时 {{m}} 分钟",
+        "shortDays": "{{d}} 天",
+        "shortDaysAndHours": "{{d}} 天 {{h}} 小时",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "一月",
+        "2": "二月",
+        "3": "三月",
+        "4": "四月",
+        "5": "五月",
+        "6": "六月",
+        "7": "七月",
+        "8": "八月",
+        "9": "九月",
+        "10": "十月",
+        "11": "十一月",
+        "12": "十二月"
+      },
+      "monthAbbr": {
+        "1": "一月",
+        "2": "二月",
+        "3": "三月",
+        "4": "四月",
+        "5": "五月",
+        "6": "六月",
+        "7": "七月",
+        "8": "八月",
+        "9": "九月",
+        "10": "十月",
+        "11": "十一月",
+        "12": "十二月"
+      },
+      "weekday": {
+        "1": "星期一",
+        "2": "星期二",
+        "3": "星期三",
+        "4": "星期四",
+        "5": "星期五",
+        "6": "星期六",
+        "7": "星期日"
+      },
+      "weekdayAbbr": {
+        "1": "周一",
+        "2": "周二",
+        "3": "周三",
+        "4": "周四",
+        "5": "周五",
+        "6": "周六",
+        "7": "周日"
+      },
+      "ordinalDay": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "10",
+        "11": "11",
+        "12": "12",
+        "13": "13",
+        "14": "14",
+        "15": "15",
+        "16": "16",
+        "17": "17",
+        "18": "18",
+        "19": "19",
+        "20": "20",
+        "21": "21",
+        "22": "22",
+        "23": "23",
+        "24": "24",
+        "25": "25",
+        "26": "26",
+        "27": "27",
+        "28": "28",
+        "29": "29",
+        "30": "30",
+        "31": "31"
+      },
+      "distance": {
+        "away": "{{distance}} 距离"
+      }
+    },
+    "buttons": {
+      "cancel": "取消",
+      "ok": "确定",
+      "close": "关闭",
+      "login": "登录",
+      "logout": "登出",
+      "delete": "删除",
+      "refresh": "刷新",
+      "done": "完成",
+      "accept": "接受",
+      "accept-a11y": "接受更改",
+      "revert": "恢复",
+      "revert-a11y": "恢复更改",
+      "save": "保存",
+      "export": "导出"
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "补丁 {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "检查更新中…",
+        "stable": "检查稳定版本更新中…",
+        "unstable": "检查不稳定版本更新中…",
+        "bleedingEdge": "检查前沿更新中…"
+      },
+      "tracksPlural": {
+        "stable": "稳定",
+        "unstable": "不稳定",
+        "bleedingEdge": "前沿",
+        "Production": "稳定",
+        "Staging": "不稳定",
+        "Development": "前沿"
+      },
+      "trackSingular": {
+        "stable": "稳定",
+        "unstable": "不稳定",
+        "bleedingEdge": "前沿",
+        "Production": "稳定",
+        "Staging": "不稳定",
+        "Development": "前沿"
+      },
+      "versionIsAvailable-md": "有可用更新到 {{versionName}}。",
+      "updateNow": "立即更新",
+      "newVersionAvailable-md": "PoLo 的新版本可用！"
+    },
+    "dataFiles": {
+      "loading": "正在加载 {{name}}",
+      "downloading": "正在下载 {{name}}",
+      "dataHasToBeDownloaded-md": "**{{name}}** 的数据需要下载。",
+      "dataHasNotBeenUpdatedInAWhile-md": "**{{name}}** 的数据已有一段时间未更新。",
+      "downloadNow": "立即下载",
+      "refreshNow": "立即刷新"
+    },
+    "notices": {
+      "action": {
+        "ok": "好！",
+        "__comment__": "覆盖通知操作"
+      },
+      "title": {
+        "__comment__": "覆盖通知标题"
+      },
+      "text": {
+        "__comment__": "覆盖通知文本"
+      },
+      "dialogTitle": {
+        "__comment__": "覆盖对话框标题"
+      },
+      "dialogText": {
+        "__comment__": "覆盖对话框文本"
+      },
+      "dataFiles": {
+        "fetching": "正在获取 {{title}}…",
+        "progress": "正在获取 {{title}}\n\n{{progress}}",
+        "done": "已完成拉取：{{title}}",
+        "error": "获取 {{title}} 时出错"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "文本",
+        "csv": "逗号分隔值",
+        "tsv": "制表符分隔值",
+        "other": "数据"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "核心功能",
+        "locationBased": "基于位置的活动",
+        "contestsAndFieldOps": "竞赛和现场操作",
+        "lookup": "数据查找",
+        "devmode": "开发者模式",
+        "other": "其他功能"
+      }
+    },
+    "continents": {
+      "AF": "非洲",
+      "AS": "亚洲",
+      "EU": "欧洲",
+      "NA": "北美洲",
+      "SA": "南美洲",
+      "OC": "大洋洲"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "单边带",
+        "USB": "USB",
+        "USB-a11y": "上边带",
+        "LSB": "LSB",
+        "LSB-a11y": "下边带",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Ritty",
+        "CW": "CW",
+        "CW-a11y": "等幅电报",
+        "FM": "FM",
+        "FM-a11y": "调频",
+        "AM": "AM",
+        "AM-a11y": "调幅",
+        "other": "其他",
+        "other-a11y": "其他模式"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160米",
+        "80m-a11y": "80米",
+        "60m-a11y": "60米",
+        "40m-a11y": "40米",
+        "30m-a11y": "30米",
+        "20m-a11y": "20米",
+        "17m-a11y": "17米",
+        "15m-a11y": "15米",
+        "12m-a11y": "12米",
+        "11m-a11y": "11米",
+        "10m-a11y": "10米",
+        "6m-a11y": "6米",
+        "2m-a11y": "2米",
+        "70cm-a11y": "70厘米",
+        "23cm-a11y": "23厘米",
+        "13cm-a11y": "13厘米",
+        "9cm-a11y": "9厘米",
+        "6cm-a11y": "6厘米",
+        "3cm-a11y": "3厘米",
+        "1-25cm-a11y": "1.25厘米",
+        "6mm-a11y": "6毫米",
+        "4mm-a11y": "4毫米",
+        "2-5mm-a11y": "2.5毫米",
+        "2mm-a11y": "2毫米",
+        "1mm-a11y": "1毫米",
+        "submm-a11y": "亚毫米",
+        "other": "其他",
+        "other-a11y": "其他波段"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

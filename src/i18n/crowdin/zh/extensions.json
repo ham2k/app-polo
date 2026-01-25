@@ -1,0 +1,849 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "没有波段",
+      "bandsCount_one": "1 个波段",
+      "bandsCount_other": "{{count}} 个波段",
+      "modesCount_zero": "没有模式",
+      "modesCount_one": "1 种模式",
+      "modesCount_other": "{{count}} 种模式",
+      "total": "共 {{count}}"
+    },
+    "bca": {
+      "name": "比利时 COTA（城堡与要塞）",
+      "shortName": "BCA",
+      "exportName": "BCA（比利时城堡与要塞）激活",
+      "activityOptions": {
+        "title_zero": "未选择任何城堡用于激活",
+        "title_one": "激活 1 个城堡",
+        "title_other": "激活 {{count}} 个城堡",
+        "noCastlesFound": "未找到城堡",
+        "nearestMatches": "最近的 {{limit}} 个中的 {{count}} 个匹配",
+        "matchingCastles_zero": "没有匹配的城堡",
+        "matchingCastles_one": "1 座匹配的城堡",
+        "matchingCastles_other": "{{count}} 座匹配的城堡",
+        "searchForCastles": "搜索可激活的城堡进行激活！",
+        "noCastlesNearby": "附近没有可激活的 COTA 点",
+        "nearbyCastles": "附近的城堡（ COTA 点）",
+        "searchPlaceholder": "名称或参考编号…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "未联系到任何城堡",
+        "huntedRefsCount_one": "联系到1座城堡",
+        "huntedRefsCount_other": "联系到{{fmtCount}}座城堡",
+        "activatorQSOsCount_zero": "激活者无QSO联络",
+        "activatorQSOsCount_one": "1个激活者通信",
+        "activatorQSOsCount_other": "{{fmtCount}}个激活者通信",
+        "huntedQSOsCount_zero": "无追逐者QSO联络",
+        "huntedQSOsCount_one": "1 次追逐者QSO联络",
+        "huntedQSOsCount_other": "{{fmtCount}} 次追逐者QSO联络",
+        "operationTotals": "操作总计",
+        "referencesActivatedCount_zero": "没有激活的城堡",
+        "referencesActivatedCount_one": "激活了1座城堡",
+        "referencesActivatedCount_other": "激活了{{fmtCount}}座城堡",
+        "referencesMissedCount_zero": "没有未完成的城堡",
+        "referencesMissedCount_one": "1座未完成的城堡",
+        "referencesMissedCount_other": "{{fmtCount}}座未完成的城堡",
+        "referencesHuntedCount_zero": "未联系到任何城堡",
+        "referencesHuntedCount_one": "联系到1座城堡",
+        "referencesHuntedCount_other": "联系到{{fmtCount}}座城堡"
+      },
+      "loggingControl": {
+        "theirRefLabel": "对方的 BCA"
+      }
+    },
+    "blha": {
+      "name": "比利时灯塔与灯船",
+      "shortName": "BLHA",
+      "exportName": "BLHA(比利时灯塔/灯船)激活",
+      "activityOptions": {
+        "title_zero": "未选择任何灯塔进行激活",
+        "title_one": "激活 1 座灯塔",
+        "title_other": "激活 {{count}} 座灯塔",
+        "noLighthousesFound": "未找到灯塔",
+        "nearestMatches": "最近的 {{limit}} 个中的 {{count}} 个匹配",
+        "matchingLighthouses_zero": "没有匹配的灯塔",
+        "matchingLighthouses_one": "1 座匹配的灯塔",
+        "matchingLighthouses_other": "{{count}} 座匹配的灯塔",
+        "searchForLighthouses": "搜索要激活的灯塔！",
+        "noLighthousesNearby": "附近没有灯塔",
+        "nearbyLighthouses": "附近的灯塔",
+        "searchPlaceholder": "名称或参考…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "没有猎取到灯塔",
+        "huntedRefsCount_one": "猎取了1座灯塔",
+        "huntedRefsCount_other": "猎取了{{fmtCount}}座灯塔",
+        "activatorQSOsCount_zero": "没有激活者通信",
+        "activatorQSOsCount_one": "1个激活者通信",
+        "activatorQSOsCount_other": "{{fmtCount}}个激活者通信",
+        "huntedQSOsCount_zero": "没有猎取到的通信",
+        "huntedQSOsCount_one": "猎取到1个通信",
+        "huntedQSOsCount_other": "猎取到{{fmtCount}}个通信",
+        "operationTotals": "操作总计",
+        "referencesActivatedCount_zero": "没有激活灯塔",
+        "referencesActivatedCount_one": "激活了1座灯塔",
+        "referencesActivatedCount_other": "激活了{{fmtCount}}座灯塔",
+        "referencesMissedCount_zero": "没有未完成的灯塔",
+        "referencesMissedCount_one": "1座未完成的灯塔",
+        "referencesMissedCount_other": "{{fmtCount}}座未完成的灯塔",
+        "referencesHuntedCount_zero": "没有猎取到灯塔",
+        "referencesHuntedCount_one": "猎取了1座灯塔",
+        "referencesHuntedCount_other": "猎取了{{fmtCount}}座灯塔"
+      }
+    },
+    "call-notes": {
+      "name": "呼号备注",
+      "description-md_zero": "未加载备注。",
+      "description-md_one": "已加载 {{fmtCount}} {{type}}。",
+      "description-md_other": "已加载 {{fmtCount}} {{type}}。",
+      "builtIn": "内置备注",
+      "userDefined": "用户备注",
+      "failedToLoad": "加载失败！",
+      "notesFile": "呼号备注文件",
+      "nameLabel": "名称",
+      "namePlaceholder": "您的呼号备注文件名称",
+      "locationLabel": "位置",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "内置",
+      "customTitle": "自定义",
+      "addFile": "添加新文件",
+      "aboutTitle": "关于呼号备注",
+      "names": {
+        "ham2k-hams-of-note": "Ham2K 的电台成员"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "谁是电台世界中的重要人物一览"
+      },
+      "help-md": "呼号备注存储在简单的文本文件中，每行一个呼号，后面跟着您希望在日志屏幕中显示的信息。您可以使用内置文件或添加自己的。\n\n提供纯文本文件的直接链接，或者从以下服务获取“共享链接”：\n* [Google 文档](https://docs.google.com/)\n* [Google 云端硬盘](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\n该文件中的行应如下所示，支持基本的 Markdown 格式：\n\n```nK2HRC 🎉 Ham2K 电台俱乐部!!!\nKE8PZN 👑 James POTA 之王\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN, WD4JMM\n```\n\n如果条目以表情符号开头，它将代替默认的 ⭐ 使用。\n\n如果您首先在呼号字段中键入 `..` 或 `//`，则可以用作“呼号扩展”，例如上面的示例中 `//DAN`。"
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "没有加拿大省份",
+      "provincesCount_one": "1 个加拿大省份",
+      "provincesCount_other": "{{count}} 个加拿大省份"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "设置",
+        "year": "年份",
+        "testMode-md": "由于今年的活动尚未开始，您可以使用过去七天的 QSO 来测试您的操作。",
+        "note-md": "注意：PoLo 会使用日期范围内的所有 QSO 报告您的结果，包括本设备上存在的其他操作。",
+        "info-md": "13 号殖民地特别活动每年从7月1日上午 9 点（美国东部时间）开始，到7月7日午夜（美国东部时间）结束。"
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "获取当前天气…",
+      "errorFetchingWeather": "获取天气出错",
+      "fetchingSolarWeather": "获取太阳天气…",
+      "errorFetchingSolarWeather": "获取太阳天气出错",
+      "addNote": "添加备注: ‘{{note}}’…",
+      "addNotePrompt": "添加备注？继续输入…",
+      "addNoteConfirm": "备注已添加！",
+      "addTodo": "添加待办事项: ‘{{note}}’…",
+      "addTodoPrompt": "添加待办项？继续输入…",
+      "addTodoConfirm": "已添加待办！",
+      "sendChat": "发送聊天信息: ‘{{note}}’…",
+      "sendChatPrompt": "发送聊天信息？继续输入…",
+      "sendChatConfirm": "已发送聊天！"
+    },
+    "commands-debug": {
+      "syncall": "删除所有操作并重置同步状态？",
+      "syncallConfirm": "正在清除数据并重新同步所有内容…",
+      "syncup": "重新发送本地数据到同步服务？",
+      "syncupConfirm": "正在重新发送中…",
+      "wipedb": "删除整个数据库（但保留设置）？",
+      "wipedbConfirm": "正在清除数据库…",
+      "factory": "删除所有数据和设置？",
+      "factoryConfirm": "进行出厂重置…",
+      "switchLanguage": "将语言切换为 `{{lang}}` {{name}}？",
+      "switchLanguagePrompt": "语言 `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "切换至 `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "激活开发者模式？",
+      "activateConfirm": "开发者模式已激活！",
+      "deactivate": "停用开发者模式？",
+      "deactivateConfirm": "开发者模式已停用！",
+      "on": "开发者模式：已开启！！！！",
+      "off": "开发者模式：已关闭"
+    },
+    "commands-misc": {
+      "rtfm": "查看详细手册？",
+      "rtfmConfirm": "正在打开手册",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "未设置频率，无法进行自报点",
+        "selfSpotWithComments": "是否使用‘{{comments}}’进行自报点？",
+        "selfSpotPrompt": "进行自报点？",
+        "selfSpottingWithComments": "正在以‘{{comments}}’在{{freq}}进行自报点",
+        "selfSpotting": "正在{{freq}}进行自报点"
+      }
+    },
+    "commands-operation": {
+      "start": "开始操作？",
+      "startConfirm": "操作已开始！",
+      "break": "添加休息？",
+      "breakConfirm": "已添加操作休息！",
+      "stop": "停止操作？",
+      "stopConfirm": "操作已停止！"
+    },
+    "commands-operator": {
+      "change": "要更换操作者为{{operator}}吗？",
+      "changeConfirm": "操作者已设为{{operator}}"
+    },
+    "commands-radio": {
+      "band": "要更换频段为{{band}}吗？",
+      "bandConfirm": "频段已设为{{band}}",
+      "frequency": "要将频率更改为 {{freq}} MHz吗？",
+      "frequencyConfirm": "频率设置为 {{freq}} MHz",
+      "frequencyAndMode": "要改变频率为{{freq}} MHz ({{mode}})吗？",
+      "frequencyAndModeConfirm": "频率已设为{{freq}} MHz ({{mode}})",
+      "power": "要改变功率为{{power}}W吗？",
+      "powerConfirm": "功率已设为{{power}}W",
+      "mode": "要更换模式为{{mode}}吗？",
+      "modeConfirm": "模式已设为{{mode}}"
+    },
+    "commands-settings": {
+      "set": "设置{{name}}？",
+      "setChange": "更改{{label}}为{{value}}？",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}}设为{{value}}",
+      "setNotChanged": "未更改"
+    },
+    "commands-time": {
+      "setTime": "设定时间为{{time}}？",
+      "setDate": "设定日期为{{date}}？",
+      "timeSet": "时间已设为{{time}}",
+      "dateSet": "日期已设为{{date}}",
+      "changeTimeByHours": "更改时间{{delta}}小时？",
+      "changeTimeByMinutes": "更改时间{{delta}}分钟？",
+      "changeTimeBySeconds": "更改时间{{delta}}秒？",
+      "changeTimeByDays": "更改时间{{delta}}天？",
+      "changeTimeByWeeks": "更改时间{{delta}}周？",
+      "changeTimeToNow": "更改时间为现在？",
+      "changeTimeToToday": "更改时间为今天？",
+      "changeTimeToYesterday": "更改时间为昨天？",
+      "timeSetToNow": "时间已设为现在",
+      "timeSetToToday": "时间已设为今天",
+      "timeSetToYesterday": "时间已设为昨天"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "未选择激活的参考",
+        "title_one": "激活 1 个参考",
+        "title_other": "激活 {{count}} 个参考",
+        "addMoreReferences": "添加更多参考",
+        "addReference": "添加一个参考",
+        "activityLabel": "活动 - ADIF 中的 MY_SIG (可选)",
+        "activityPlaceholder": "例如 COTA…",
+        "referenceLabel": "参考 - ADIF 中的 MY_SIG_INFO",
+        "referencePlaceholder": "例如 XY-1234…",
+        "nameLabel": "名称 (可选)",
+        "namePlaceholder": "例如 XYZ 城堡…",
+        "addButton": "添加 {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "他们的参考"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "在此处覆盖特定数据文件标题",
+        "pota-all-parks": "POTA：所有公园",
+        "sota-all-summits": "SOTA：所有山峰"
+      },
+      "loading": {
+        "progress": "已加载{{processedLines}}个参考。\n\n{{percent}} • 剩余{{secondsLeft}}秒。",
+        "downloadingRawData": "下载原始数据…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "没有 DXCC 实体",
+      "entitiesCount_one": "1 个 DXCC 实体",
+      "entitiesCount_other": "{{count}} 个 DXCC 实体"
+    },
+    "eca": {
+      "name": "英国城堡奖",
+      "shortName": "ECA",
+      "exportName": "ECA 激活",
+      "activityOptions": {
+        "title_zero": "未选择激活的城堡",
+        "title_one": "激活 1 座城堡",
+        "title_other": "激活 {{count}} 座城堡",
+        "noCastlesFound": "未找到城堡",
+        "nearestMatches": "最近的 {{limit}} 个中的 {{count}} 个匹配",
+        "matchingCastles_zero": "没有匹配的城堡",
+        "matchingCastles_one": "1 座匹配的城堡",
+        "matchingCastles_other": "{{count}} 座匹配的城堡",
+        "searchForCastles": "搜索要激活的城堡！",
+        "noCastlesNearby": "附近没有城堡",
+        "nearbyCastles": "附近的城堡",
+        "searchPlaceholder": "名称或参考…"
+      }
+    },
+    "ela": {
+      "name": "英国灯塔奖",
+      "shortName": "ELA",
+      "exportName": "ELA 激活",
+      "activityOptions": {
+        "title_zero": "未选择激活的灯塔",
+        "title_one": "激活 1 座灯塔",
+        "title_other": "激活 {{count}} 座灯塔",
+        "noLighthousesFound": "未找到灯塔",
+        "nearestMatches": "最近的 {{limit}} 个中的 {{count}} 个匹配",
+        "matchingLighthouses_zero": "没有匹配的灯塔",
+        "matchingLighthouses_one": "1 座匹配的灯塔",
+        "matchingLighthouses_other": "{{count}} 座匹配的灯塔",
+        "searchForLighthouses": "搜索要激活的灯塔！",
+        "noLighthousesNearby": "附近没有灯塔",
+        "nearbyLighthouses": "附近的灯塔",
+        "searchPlaceholder": "名称或参考…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "交换信息",
+        "classLabel": "类别",
+        "locationLabel": "位置",
+        "additionalInformation": "附加信息",
+        "highestTransmitterPowerLabel": "最高发射功率",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP：5W 或更少",
+        "qroOption": "QRO：100W 或更少",
+        "moreThan100WOption": "超过 100W",
+        "powerSourceLabel": "电源",
+        "powerSourcePlaceholder": "选择电源",
+        "batteriesOption": "电池、太阳能、风能",
+        "commercialPowerOption": "商业电源、发电机",
+        "information-md": "ARRL 野外活动的类别，例如 `2A`:\n\n  - `1`，`2`，`3`… 代表发射机数量。\n  - `A` 代表小组（3人或以上）便携式工作站\n  - `B` 代表一两人便携式工作站\n  - `C` 代表移动工作站\n  - `D` 代表家庭工作站\n  - `E` 代表紧急供电的家庭工作站\n  - `F` 代表应急操作中心\n\n地点是 ARRL 区域、RAC 区域、墨西哥用 `MX` 表示，其他地方用 `DX` 表示。\n\n更多信息请查看 **[官方规则](https://www.arrl.org/field-day-rules)**。"
+      }
+    },
+    "gma": {
+      "name": "全球山地活动",
+      "shortName": "GMA",
+      "exportName": "GMA 激活",
+      "activityOptions": {
+        "title_zero": "未选择激活的山峰",
+        "title_one": "激活 1 座山峰",
+        "title_other": "激活 {{count}} 座山峰",
+        "noSummitsFound": "未找到山峰",
+        "nearestMatches": "最近的 {{limit}} 个中的 {{count}} 个匹配",
+        "matchingSummits_zero": "没有匹配的山峰",
+        "matchingSummits_one": "1 座匹配的山峰",
+        "matchingSummits_other": "{{count}} 座匹配的山峰",
+        "searchForSummits": "搜索要激活的山峰！",
+        "noSummitsNearby": "附近没有山峰",
+        "nearbySummits": "附近的山峰",
+        "searchPlaceholder": "名称或参考…",
+        "unknownSummit": "未知山峰"
+      }
+    },
+    "llota": {
+      "name": "LLOTA：空中的湖泊和泻湖",
+      "shortName": "LLOTA",
+      "exportName": "LLOTA 激活",
+      "activityOptions": {
+        "title_zero": "未选择激活的湖泊",
+        "title_one": "正在激活 1 个湖泊",
+        "title_other": "正在激活 {{count}} 个湖泊",
+        "noLakesFound": "未找到湖泊",
+        "nearestMatches": "最近的 {{limit}} 个中的 {{count}} 个匹配",
+        "matchingRefs_zero": "没有匹配的湖泊",
+        "matchingRefs_one": "1 个匹配的湖泊",
+        "matchingRefs_other": "{{count}} 个匹配的湖泊",
+        "searchForRefs": "搜索要激活的湖泊！",
+        "noRefsNearby": "附近没有湖泊",
+        "nearbyRefs": "附近的湖泊",
+        "searchPlaceholder": "名称或参考…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "没有 L2L",
+        "ref2refCount_one": "1 个 L2L",
+        "ref2refCount_other": "{{fmtCount}} 个 L2L",
+        "huntedRefsCount_zero": "尚未猎取任何湖泊",
+        "huntedRefsCount_one": "1 个湖泊被猎取",
+        "huntedRefsCount_other": "{{fmtCount}} 个湖泊被猎取",
+        "activatorQSOsCount_zero": "没有激活者 QSO",
+        "activatorQSOsCount_one": "1 个激活者 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} 个激活者 QSO",
+        "ref2refQSOsCount_zero": "没有 L2L QSO",
+        "ref2refQSOsCount_one": "1 个 L2L QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} 个 L2L QSO",
+        "huntedQSOsCount_zero": "没有被猎取的 QSO",
+        "huntedQSOsCount_one": "1 个被猎取的 QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} 个被猎取的 QSO",
+        "operationTotals": "操作总计",
+        "referencesActivatedCount_zero": "没有激活的湖泊",
+        "referencesActivatedCount_one": "1 个湖泊已激活",
+        "referencesActivatedCount_other": "{{fmtCount}} 个湖泊已激活",
+        "referencesMissedCount_zero": "没有未完成的湖泊",
+        "referencesMissedCount_one": "1 个未完成的湖泊",
+        "referencesMissedCount_other": "{{fmtCount}} 个未完成的湖泊",
+        "referencesHuntedCount_zero": "无湖泊被猎取",
+        "referencesHuntedCount_one": "1 个湖泊被猎取",
+        "referencesHuntedCount_other": "{{fmtCount}} 个湖泊被猎取"
+      },
+      "loggingControl": {
+        "theirRefLabel": "他们的 LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "发布 LLOTA 点错误",
+        "serverResponse": "服务器响应错误 {{status}}：{{body}}"
+      },
+      "exampleRefName": "示例湖泊",
+      "unknownRefName": "未知湖泊",
+      "noRefsNearby": "附近没有湖泊！"
+    },
+    "mota": {
+      "name": "空中磨坊",
+      "shortName": "MOTA",
+      "exportName": "MOTA 激活",
+      "activityOptions": {
+        "title_zero": "未选择激活的磨坊",
+        "title_one": "激活 1 个磨坊",
+        "title_other": "激活 {{count}} 个磨坊",
+        "noMillsFound": "未找到磨坊",
+        "nearestMatches": "最近的 {{limit}} 个中的 {{count}} 个匹配",
+        "matchingMills_zero": "没有匹配的磨坊",
+        "matchingMills_one": "1 个匹配的磨坊",
+        "matchingMills_other": "{{count}} 个匹配的磨坊",
+        "searchForMills": "搜索要激活的磨坊！",
+        "noMillsNearby": "附近没有磨坊",
+        "nearbyMills": "附近的磨坊",
+        "searchPlaceholder": "名称或参考…",
+        "unknownMill": "未知磨坊"
+      },
+      "loggingControl": {
+        "theirRefLabel": "他们的磨坊"
+      }
+    },
+    "pga": {
+      "name": "波兰省奖",
+      "shortName": "PGA",
+      "exportName": "PGA 激活",
+      "activityOptions": {
+        "title_zero": "未选择激活的省",
+        "title_one": "激活 1 个省",
+        "title_other": "激活 {{count}} 个省",
+        "noGminasFound": "未找到省",
+        "nearestMatches": "最近的 {{limit}} 个中的 {{count}} 个匹配",
+        "matchingGminas_zero": "没有匹配的省",
+        "matchingGminas_one": "1 个匹配的省",
+        "matchingGminas_other": "{{count}} 个匹配的省",
+        "searchForGminas": "搜索要激活的省！",
+        "noGminasNearby": "附近没有省",
+        "nearbyGminas": "附近的省",
+        "searchPlaceholder": "名称或参考…",
+        "unknownGmina": "未知省"
+      }
+    },
+    "pota": {
+      "name": "POTA: 空中公园",
+      "shortName": "POTA",
+      "exportName": "POTA 激活",
+      "activityOptions": {
+        "title_zero": "未选择激活的公园",
+        "title_one": "激活 1 个公园",
+        "title_other": "激活 {{count}} 个公园",
+        "noParksFound": "未找到公园",
+        "nearestMatches": "最近的 {{limit}} 个中有 {{count}} 个匹配",
+        "matchingParks_zero": "无匹配的公园",
+        "matchingParks_one": "1 个匹配的公园",
+        "matchingParks_other": "{{count}} 个匹配的公园",
+        "searchForParks": "搜索要激活的公园！",
+        "noParksNearby": "附近没有公园",
+        "nearbyParks": "附近的公园",
+        "searchPlaceholder": "名称或参考…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "没有P2P",
+        "ref2refCount_one": "1个P2P",
+        "ref2refCount_other": "{{fmtCount}}个P2P",
+        "huntedRefsCount_zero": "没有猎取到公园",
+        "huntedRefsCount_one": "猎取了1座公园",
+        "huntedRefsCount_other": "猎取了{{fmtCount}}座公园",
+        "activatorQSOsCount_zero": "没有激活者通信",
+        "activatorQSOsCount_one": "1个激活者通信",
+        "activatorQSOsCount_other": "{{fmtCount}}个激活者通信",
+        "ref2refQSOsCount_zero": "没有P2P通信",
+        "ref2refQSOsCount_one": "1个P2P通信",
+        "ref2refQSOsCount_other": "{{fmtCount}}个P2P通信",
+        "huntedQSOsCount_zero": "没有猎取到的通信",
+        "huntedQSOsCount_one": "猎取到1个通信",
+        "huntedQSOsCount_other": "猎取到{{fmtCount}}个通信",
+        "operationTotals": "操作总计",
+        "referencesActivatedCount_zero": "没有激活的公园",
+        "referencesActivatedCount_one": "激活了1座公园",
+        "referencesActivatedCount_other": "激活了{{fmtCount}}座公园",
+        "referencesMissedCount_zero": "没有未完成的公园",
+        "referencesMissedCount_one": "1座未完成的公园",
+        "referencesMissedCount_other": "{{fmtCount}}座未完成的公园",
+        "referencesHuntedCount_zero": "没有猎取到公园",
+        "referencesHuntedCount_one": "猎取了1座公园",
+        "referencesHuntedCount_other": "猎取了{{fmtCount}}座公园"
+      },
+      "loggingControl": {
+        "theirRefLabel": "他们的POTA"
+      },
+      "postSpotAPI": {
+        "error": "发布 POTA 点时出错",
+        "serverResponse": "服务器响应错误 {{status}}: {{body}}"
+      },
+      "exampleRefName": "国家公园示例",
+      "unknownRefName": "未知的公园",
+      "noRefsNearby": "附近没有公园！"
+    },
+    "siota": {
+      "name": "空气中的筒仓",
+      "shortName": "SiOTA",
+      "exportName": "SiOTA 激活",
+      "account": {
+        "title": "ParksnPeaks (SiOTA 发现)",
+        "dialogTitle": "ParksnPeaks 账户",
+        "description": "用户名：{{username}}",
+        "noAccount": "无账户",
+        "pleaseEnterDetails": "请输入您的 ParksnPeaks 帐户信息：",
+        "usernameLabel": "用户名（不是呼号）",
+        "usernamePlaceholder": "您的账户用户名",
+        "apiKeyLabel": "API 密钥（不是密码）",
+        "apiKeyPlaceholder": "您的 API 密钥"
+      },
+      "activityOptions": {
+        "title_zero": "未选择筒仓进行激活",
+        "title_one": "激活 1 个筒仓",
+        "title_other": "激活 {{count}} 个筒仓",
+        "noSilosFound": "未找到筒仓",
+        "nearestMatches": "最近的 {{limit}} 个中有 {{count}} 个匹配",
+        "matchingSilos_zero": "无匹配的筒仓",
+        "matchingSilos_one": "1 个匹配的筒仓",
+        "matchingSilos_other": "{{count}} 个匹配的筒仓",
+        "searchForSilos": "搜索要激活的筒仓！",
+        "noSilosNearby": "附近没有筒仓",
+        "nearbySilos": "附近的筒仓",
+        "searchPlaceholder": "名称或参考…",
+        "unknownSilo": "未知筒仓"
+      },
+      "loggingControl": {
+        "theirRefLabel": "他们的筒仓"
+      },
+      "postSpotAPI": {
+        "error": "发布 SiOTA 点时出错",
+        "serverResponse": "服务器响应错误 {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "account": {
+        "title": "SOTA (用于 SOTAWatch 自我发现)",
+        "dialogTitle": "SOTA 账户",
+        "description": "已登录为 {{callsign}}",
+        "noAccount": "无账户",
+        "error": "获取账户详情时出错",
+        "connect": "连接您的 SOTA 账户"
+      },
+      "notLoggedInAlertTitle": "警告",
+      "notLoggedInAlertText": "未登录SOTAWatch进行自我定位。请前往PoLo设置",
+      "activityOptions": {
+        "title_zero": "未选择峰顶进行激活",
+        "title_one": "激活 1 个峰顶",
+        "title_other": "激活 {{count}} 个峰顶",
+        "noSummitsFound": "未找到峰顶",
+        "nearestMatches": "最近的 {{limit}} 个中有 {{count}} 个匹配",
+        "matchingSummits_zero": "无匹配的峰顶",
+        "matchingSummits_one": "1 个匹配的峰顶",
+        "matchingSummits_other": "{{count}} 个匹配的峰顶",
+        "searchForSummits": "搜索要激活的峰顶！",
+        "noSummitsNearby": "附近没有峰顶",
+        "nearbySummits": "附近的峰顶",
+        "searchPlaceholder": "名称或参考…",
+        "unknownSummit": "未知峰顶"
+      },
+      "scoring": {
+        "ref2refCount_zero": "没有S2S",
+        "ref2refCount_one": "1个S2S",
+        "ref2refCount_other": "{{fmtCount}}个S2S",
+        "huntedRefsCount_zero": "没有猎取到山峰",
+        "huntedRefsCount_one": "猎取了1座山峰",
+        "huntedRefsCount_other": "猎取了{{fmtCount}}座山峰",
+        "activatorQSOsCount_zero": "没有激活者通信",
+        "activatorQSOsCount_one": "1个激活者通信",
+        "activatorQSOsCount_other": "{{fmtCount}}个激活者通信",
+        "ref2refQSOsCount_zero": "没有S2S通信",
+        "ref2refQSOsCount_one": "1个S2S通信",
+        "ref2refQSOsCount_other": "{{fmtCount}}个S2S通信",
+        "huntedQSOsCount_zero": "没有猎取到的通信",
+        "huntedQSOsCount_one": "猎取到1个通信",
+        "huntedQSOsCount_other": "猎取到{{fmtCount}}个通信",
+        "operationTotals": "操作总计",
+        "referencesActivatedCount_zero": "没有激活的山峰",
+        "referencesActivatedCount_one": "激活了1座山峰",
+        "referencesActivatedCount_other": "激活了{{fmtCount}}座山峰",
+        "referencesMissedCount_zero": "没有未完成的山峰",
+        "referencesMissedCount_one": "1座未完成的山峰",
+        "referencesMissedCount_other": "{{fmtCount}}座未完成的山峰",
+        "referencesHuntedCount_zero": "没有猎取到山峰",
+        "referencesHuntedCount_one": "猎取了1座山峰",
+        "referencesHuntedCount_other": "猎取了{{fmtCount}}座山峰"
+      },
+      "loggingControl": {
+        "theirRefLabel": "他们的SOTA"
+      },
+      "postSpotAPI": {
+        "error": "发布 SOTA 点时出错",
+        "serverResponse": "服务器响应状态 {{status}} {{message}}",
+        "sotaAccountLoggedOut": "SOTA 账户已注销。请在 PoLo 设置中重新登录"
+      },
+      "exampleRefName": "山峰示例",
+      "unknownRefName": "未知的山峰",
+      "noRefsNearby": "附近没有山峰！"
+    },
+    "usStates": {
+      "statesCount_zero": "没有美国州",
+      "statesCount_one": "1 个美国州",
+      "statesCount_other": "{{count}} 个美国州"
+    },
+    "wab": {
+      "name": "走遍不列颠/爱尔兰",
+      "description": "将 WAB/WAI 方块添加到操作中",
+      "workedAllBritainSquare": "走遍不列颠方块",
+      "workedAllIrelandSquare": "走遍爱尔兰方块",
+      "enterSquare": "输入方块",
+      "placeholderBritain": "例如：SU14",
+      "placeholderIreland": "例如：N93",
+      "currentSquare": "当前网格：",
+      "noSquareSet": "尚未设置网格"
+    },
+    "wca": {
+      "name": "世界城堡奖",
+      "shortName": "世界城堡",
+      "exportName": "WCA激活",
+      "activityOptions": {
+        "title_zero": "未选择要激活的城堡",
+        "title_one": "正在激活1座城堡",
+        "title_other": "正在激活{{count}}座城堡",
+        "noCastlesFound": "未找到城堡",
+        "nearestMatches": "最近的{{count}}中的{{limit}}场比赛",
+        "matchingCastles_zero": "没有匹配的城堡",
+        "matchingCastles_one": "1座匹配的城堡",
+        "matchingCastles_other": "{{count}}座匹配的城堡",
+        "searchForCastles": "搜索要激活的城堡！",
+        "noCastlesNearby": "附近没有城堡",
+        "nearbyCastles": "附近的城堡",
+        "searchPlaceholder": "名称或参考…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "没有被猎取的城堡",
+        "huntedRefsCount_one": "猎取了1座城堡",
+        "huntedRefsCount_other": "猎取了{{fmtCount}}座城堡",
+        "activatorQSOsCount_zero": "没有激活的QSOs",
+        "activatorQSOsCount_one": "1个激活的QSO",
+        "activatorQSOsCount_other": "{{fmtCount}}个激活的QSO",
+        "huntedQSOsCount_zero": "没有被猎取的QSOs",
+        "huntedQSOsCount_one": "1个猎取的QSO",
+        "huntedQSOsCount_other": "猎取了{{fmtCount}}个QSO",
+        "operationTotals": "操作总计",
+        "referencesActivatedCount_zero": "没有激活的城堡",
+        "referencesActivatedCount_one": "激活了1座城堡",
+        "referencesActivatedCount_other": "激活了{{fmtCount}}座城堡",
+        "referencesMissedCount_zero": "没有不完整的城堡",
+        "referencesMissedCount_one": "1座不完整的城堡",
+        "referencesMissedCount_other": "{{fmtCount}}座不完整的城堡",
+        "referencesHuntedCount_zero": "没有被猎取的城堡",
+        "referencesHuntedCount_one": "猎取了1座城堡",
+        "referencesHuntedCount_other": "猎取了{{fmtCount}}座城堡"
+      },
+      "exampleRefName": "示例城堡",
+      "unknownRefName": "未知城堡",
+      "noRefsNearby": "附近没有城堡！"
+    },
+    "wfd": {
+      "name": "冬日野营日",
+      "shortName": "WFD",
+      "exportName": "WFD 激活",
+      "activityOptions": {
+        "exchangeInformation": "交换信息",
+        "classLabel": "类别",
+        "locationLabel": "位置",
+        "objectives_zero": "未实现目标",
+        "objectives_one": "1 个目标实现，OM×{{multiplier}}",
+        "objectives_other": "{{count}} 个目标达成，OM×{{multiplier}}",
+        "objectivesTitle": "目标：{{count}} 个达成，OM×{{multiplier}}",
+        "objectivesDescription": "提交日志时也请报告这些目标！",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "备用电源",
+        "awayFromHome": "远离家操作",
+        "fmSatelliteContact": "FM 卫星联系",
+        "ssbSatelliteContact": "SSB 或 CW 卫星联系",
+        "winlinkEmails": "Winlink 邮件",
+        "specialBulletin": "特别公告",
+        "sixBands": "六个波段",
+        "twelveBands": "十二个波段",
+        "multipleModes": "多模式",
+        "qrpOperation": "QRP 操作",
+        "sixContinuousHours": "连续六小时"
+      },
+      "objectiveDescription": {
+        "altPower": "100% 使用备用电源，如电池、太阳能、风能等。",
+        "awayFromHome": "在距离家至少 ½ 英里处搭建现场站。",
+        "fmSatelliteContact": "在操作期间至少进行 1 次 FM 卫星通联。",
+        "ssbSatelliteContact": "至少使用 SSB 或 CW 进行一次通联。",
+        "winlinkEmails": "通过 Winlink 通过 RF 至少发送和接收一封电子邮件。",
+        "specialBulletin": "准确抄录 WFD 特别公告信息并随日志提交您的抄录。",
+        "sixBands": "在至少六个不同波段上至少进行三次通联。",
+        "twelveBands": "在至少十二个不同波段上至少进行三次通联。",
+        "multipleModes": "在操作期间使用多种模式。",
+        "qrpOperation": "使用 QRP 功率水平操作（电话 10W 或更少，CW 或数字 5W 或更少）。",
+        "sixContinuousHours": "在操作期间至少运行连续六个小时。"
+      },
+      "information-md": "冬季野外活动的类别，例如 `2M`:\n\n  - `1`，`2`，`3`… 代表发射机数量。\n  - `H` 代表家庭工作站\n  - `I` 代表室内\n  - `O` 代表户外\n  - `M` 代表移动或静止移动\n\n地点是 ARRL 区域、RAC 区域、墨西哥用 `MX` 表示，其他地方用 `DX` 表示。\n\n欲了解更多信息请查看 **[官方规则](https://www.winterfieldday.com/sop.php)**。"
+    },
+    "wwbota": {
+      "name": "WWBOTA: 世界掩体奖励",
+      "shortName": "WWBOTA",
+      "exportName": "WWBOTA 激活",
+      "activityOptions": {
+        "title_zero": "未选择掩体进行激活",
+        "title_one": "激活 1 个掩体",
+        "title_other": "激活 {{count}} 个掩体",
+        "noBunkersFound": "未找到掩体",
+        "nearestMatches": "最近的 {{limit}} 个中有 {{count}} 个匹配",
+        "matchingBunkers_zero": "无匹配的掩体",
+        "matchingBunkers_one": "1 个匹配的掩体",
+        "matchingBunkers_other": "{{count}} 个匹配的掩体",
+        "searchForBunkers": "搜索要激活的掩体！",
+        "noBunkersNearby": "附近没有掩体",
+        "nearbyBunkers": "附近的掩体",
+        "searchPlaceholder": "名称或参考…",
+        "unknownBunker": "未知掩体"
+      },
+      "loggingControl": {
+        "theirRefLabel": "他们的碉堡"
+      },
+      "postSpotAPI": {
+        "error": "发布 WWBOTA 点时出错",
+        "serverResponse": "服务器响应状态 {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: 世界动植物",
+      "shortName": "WWFF",
+      "exportName": "WWFF 激活",
+      "activityOptions": {
+        "title_zero": "未选择公园进行激活",
+        "title_one": "激活 1 个公园",
+        "title_other": "激活 {{count}} 个公园",
+        "noParksFound": "未找到公园",
+        "nearestMatches": "最近的 {{limit}} 个中有 {{count}} 个匹配",
+        "matchingParks_zero": "无匹配公园",
+        "matchingParks_one": "1 个匹配的公园",
+        "matchingParks_other": "{{count}} 个匹配的公园",
+        "searchForParks": "搜索要激活的公园！",
+        "noParksNearby": "附近没有公园",
+        "nearbyParks": "附近的公园",
+        "searchPlaceholder": "名称或参考…",
+        "unknownPark": "未知公园"
+      },
+      "scoring": {
+        "ref2refCount_zero": "没有P2P",
+        "ref2refCount_one": "1个P2P",
+        "ref2refCount_other": "{{fmtCount}}个P2P",
+        "huntedRefsCount_zero": "没有猎取到公园",
+        "huntedRefsCount_one": "猎取了1座公园",
+        "huntedRefsCount_other": "猎取了{{fmtCount}}座公园",
+        "activatorQSOsCount_zero": "没有激活者通信",
+        "activatorQSOsCount_one": "1个激活者通信",
+        "activatorQSOsCount_other": "{{fmtCount}} 激活者 QSO",
+        "ref2refQSOsCount_zero": "无 P2P QSO",
+        "ref2refQSOsCount_one": "1 个 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} 个 P2P QSO",
+        "huntedQSOsCount_zero": "无猎取 QSO",
+        "huntedQSOsCount_one": "猎取了1个 QSO",
+        "huntedQSOsCount_other": "猎取了{{fmtCount}} 个QSO",
+        "operationTotals": "操作总数",
+        "referencesActivatedCount_zero": "无激活的公园",
+        "referencesActivatedCount_one": "激活了 1 个公园",
+        "referencesActivatedCount_other": "激活了 {{fmtCount}} 个公园",
+        "referencesMissedCount_zero": "无未完成的公园",
+        "referencesMissedCount_one": "1 个未完成的公园",
+        "referencesMissedCount_other": "{{fmtCount}} 个未完成的公园",
+        "referencesHuntedCount_zero": "无猎取的公园",
+        "referencesHuntedCount_one": "猎取了 1 个公园",
+        "referencesHuntedCount_other": "猎取了 {{fmtCount}} 个公园"
+      },
+      "loggingControl": {
+        "theirRefLabel": "他们的 WWFF"
+      },
+      "exampleRefName": "示例公园",
+      "unknownRefName": "未知公园",
+      "noRefsNearby": "附近无公园！",
+      "postSpotAPI": {
+        "error": "发布 WWFF 点时出错",
+        "serverResponse": "服务器响应状态 {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "account": {
+        "title": "ZLOTA (ZLOTA 发现)",
+        "dialogTitle": "ZLOTA 账户",
+        "description": "呼号：{{callsign}}",
+        "noAccount": "无账户",
+        "pleaseEnterDetails": "请输入您的 ZLOTA 帐户信息：",
+        "callsignLabel": "呼号",
+        "callsignPlaceholder": "您的账户呼号",
+        "pinLabel": "PIN（不是密码）",
+        "pinPlaceholder": "您的 PIN"
+      },
+      "activityOptions": {
+        "title_zero": "未选择参考进行激活",
+        "title_one": "激活 1 个参考",
+        "title_other": "激活 {{count}} 个参考",
+        "noReferencesFound": "未找到参考",
+        "nearestMatches": "最近的 {{limit}} 个中有 {{count}} 个匹配",
+        "matchingReferences_zero": "无匹配的参考",
+        "matchingReferences_one": "1 个匹配的参考",
+        "matchingReferences_other": "{{count}} 个匹配的参考",
+        "searchForReferences": "搜索要激活的参考！",
+        "noReferencesNearby": "附近没有参考",
+        "nearbyReferences": "附近的参考",
+        "searchPlaceholder": "名称或参考…",
+        "unknownReference": "未知参考"
+      },
+      "loggingControl": {
+        "theirRefLabel": "他们的参考"
+      },
+      "postSpotAPI": {
+        "error": "发布 ZLOTA 点时出错",
+        "serverResponse": "服务器响应状态 {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "ref2refCount_zero": "无 Ref2Refs",
+        "ref2refCount_one": "1 个 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} 个 Ref2Refs",
+        "huntedRefsCount_zero": "无猎取的参考",
+        "huntedRefsCount_one": "猎取了 1 个参考",
+        "huntedRefsCount_other": "猎取了 {{fmtCount}} 个参考",
+        "activatorQSOsCount_zero": "无激活者 QSO",
+        "activatorQSOsCount_one": "1 个激活者 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} 激活者 QSO",
+        "ref2refQSOsCount_zero": "无 Ref2Ref QSO",
+        "ref2refQSOsCount_one": "1 个 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} 个 Ref2Ref QSO",
+        "huntedQSOsCount_zero": "无猎取 QSO",
+        "huntedQSOsCount_one": "猎取了1个 QSO",
+        "huntedQSOsCount_other": "猎取了{{fmtCount}} 个QSO",
+        "operationTotals": "操作总数",
+        "referencesActivatedCount_zero": "无激活的参考",
+        "referencesActivatedCount_one": "激活了 1 个参考",
+        "referencesActivatedCount_other": "激活了 {{fmtCount}} 个参考",
+        "referencesMissedCount_zero": "无未完成的参考",
+        "referencesMissedCount_one": "1 个未完成的参考",
+        "referencesMissedCount_other": "{{fmtCount}} 个未完成的参考",
+        "referencesHuntedCount_zero": "无猎取的参考",
+        "referencesHuntedCount_one": "猎取了 1 个参考",
+        "referencesHuntedCount_other": "猎取了 {{fmtCount}} 个参考"
+      }
+    }
+  }
+}

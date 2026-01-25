@@ -1,4 +1,12 @@
 {
+  "25.12.8": {
+    "name": "December '25 (patch 8)",
+    "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
+    "changes": [
+      "Fixed bug in scoring for Winter Field Day",
+      "Chinese translations"
+    ]
+  },
   "25.12.7": {
     "name": "December '25 (patch 7)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
