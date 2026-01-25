@@ -202,7 +202,6 @@ const ReferenceHandler = {
       total: 0,
       qsoCount: 0,
       qsoPoints: 0,
-      mults: 0,
       modes: {},
       arrlSections: {},
       racSections: {},
@@ -221,9 +220,8 @@ const ReferenceHandler = {
       score.otherSections[qsoScore.theirSection] = (score.otherSections[qsoScore.theirSection] || 0) + 1
     }
 
-    score.mults = Object.keys(score.arrlSections).length + Object.keys(score.racSections).length + Object.keys(score.otherSections).length
-    score.objectiveMultiplier = ref?.objectiveMultiplier || 1
-    score.total = score.qsoPoints * score.mults * score.objectiveMultiplier
+    score.objectiveMultiplier = (ref?.objectiveMultiplier || 0) + 1
+    score.total = score.qsoPoints * score.objectiveMultiplier
 
     return score
   },
@@ -238,7 +236,7 @@ const ReferenceHandler = {
     score.summary = `${fmtNumber(score.total)} pts`
 
     const parts = []
-    parts.push(`**${fmtNumber(score.qsoPoints)} Points × ${score.mults} Mults × ${score.objectiveMultiplier} OM = ${fmtNumber(score.total)} Total Points**`)
+    parts.push(`**${fmtNumber(score.qsoPoints)} Points × ${score.objectiveMultiplier} OM+1 = ${fmtNumber(score.total)} Total Points**`)
     parts.push(
       Object.keys(score.modes ?? {}).sort().map(mode => {
         if (score?.modes[mode]) {
