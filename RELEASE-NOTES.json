@@ -1,9 +1,11 @@
 {
-  "26.1.0": {
-    "name": "January '25",
-    "photoCaption": "TBC",
+  "26.2.0": {
+    "name": "February '26 pre 0",
+    "photoCaption": "HB9/OK1PTR/P at CH-0165",
     "changes": [
-      "Towers on the Air (TOTA)"
+      "Towers on the Air (TOTA)",
+      "ParksnPeaks Spotting (by M1SDH)",
+      "Assorted bug fixes"
     ]
   },
   "25.12.8": {
