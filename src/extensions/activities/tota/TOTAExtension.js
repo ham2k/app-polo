@@ -8,6 +8,7 @@
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
 
 import GLOBAL from '../../../GLOBAL'
 
@@ -18,16 +19,19 @@ import { distanceOnEarth } from '../../../tools/geoTools'
 
 import { generateActivityOperationAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
+import { apiTOTA } from '../../../store/apis/apiTOTA'
 import { Info } from './TOTAInfo'
 import { totaFindAllByLocation, totaFindOneByReference, registerTOTADataFile } from './TOTADataFile'
 import { TOTAActivityOptions } from './TOTAActivityOptions'
 import { TOTALoggingControl } from './TOTALoggingControl'
+import { TOTAPostSelfSpot } from './TOTAPostSelfSpot'
 
 const Extension = {
   ...Info,
   category: 'locationBased',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook })
+    registerHook('spots', { hook: SpotsHook })
     registerHook(`ref:${Info.huntingType}`, { hook: ReferenceHandler })
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
 
@@ -50,6 +54,7 @@ const ActivityHook = {
       return [HunterLoggingControl]
     }
   },
+  postSelfSpot: TOTAPostSelfSpot,
   Options: TOTAActivityOptions,
   generalHuntingType: ({ operation, settings }) => Info.huntingType,
   sampleOperations: ({ t, settings, callInfo }) => {
@@ -57,6 +62,66 @@ const ActivityHook = {
       // Regular Activation
       { refs: [{ type: Info.activationType, ref: 'OKR-0123', program: Info.shortName, name: t('extensions.tota.exampleRefName', 'Example Tower'), shortName: t('extensions.tota.activityOptions.exampleRefName', 'Example Tower'), label: `${Info.shortName} OKR-0123: ${t('extensions.tota.exampleRefName', 'Example Tower')}`, shortLabel: `${Info.shortName} OKR-0123` }] }
     ]
+  }
+}
+
+const SpotsHook = {
+  ...Info,
+  sourceName: 'TOTA Cluster',
+  fetchSpots: async ({ online, settings, dispatch, t }) => {
+    if (GLOBAL?.flags?.services?.tota === false) return []
+
+    let spots = []
+    if (online) {
+      const apiPromise = await dispatch(apiTOTA.endpoints.spots.initiate({}, { forceRefetch: true }))
+      await Promise.all(dispatch(apiTOTA.util.getRunningQueriesThunk()))
+      const apiResults = await dispatch((_dispatch, getState) => apiTOTA.endpoints.spots.select({})(getState()))
+
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+      spots = apiResults.data?.spots || []
+    }
+
+    const today = new Date()
+    const qsos = []
+    for (const spot of spots) {
+      if (!spot) continue
+      const spotTime = Date.parse(spot.time_utc)
+      if ((today - spotTime) > 1000 * 60 * 60) {
+        continue // Some spots can be several hours old: cut off at 1 hour
+      }
+      const refDetails = await totaFindOneByReference(spot.tower_ref)
+      const qso = {
+        their: { call: spot.callsign?.toUpperCase() },
+        freq: spot.frequency,
+        band: spot.frequency ? bandForFrequency(spot.frequency) : 'other',
+        mode: spot.mode?.toUpperCase(),
+        refs: [{
+          ref: spot.tower_ref,
+          type: Info.huntingType
+        }],
+        spot: {
+          timeInMillis: spotTime,
+          source: Info.key,
+          icon: Info.icon,
+          label: `${spot.tower_ref}: ${refDetails?.name ?? t('extensions.tota.unknownRefName', 'Unknown Tower')}`,
+          type: spot.comment?.match?.(/QRT/i) ? 'QRT' : undefined,
+          sourceInfo: {
+            comments: spot.comment,
+            spotter: spot.spotter?.toUpperCase()
+          }
+        }
+      }
+      qsos.push(qso)
+    }
+    const dedupedQSOs = []
+    const includedCalls = {}
+    for (const qso of qsos) {
+      if (!includedCalls[qso.their.call]) {
+        includedCalls[qso.their.call] = true
+        if (qso.spot.type !== 'QRT') dedupedQSOs.push(qso)
+      }
+    }
+    return dedupedQSOs
   }
 }
 
