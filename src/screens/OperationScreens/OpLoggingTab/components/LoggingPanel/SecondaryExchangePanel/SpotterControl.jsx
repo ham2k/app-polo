@@ -295,6 +295,7 @@ export const spotterControl = {
   LabelComponent: ({ t, qso, operation, control, ...props }) => {
     let label = props.label || t('screens.opLoggingTab.spotting.selfSpottingLabel', 'Self-Spotting')
     let a11yLabel = t('screens.opLoggingTab.spotting.selfSpottingControls-a11y', 'Self-Spotting Controls')
+
     if (control.labelAsGeneralSpotting) {
       label = t('screens.opLoggingTab.spotting.spottingLabel', 'Spotting')
       a11yLabel = t('screens.opLoggingTab.spotting.spottingControls-a11y', 'Spotting Controls')

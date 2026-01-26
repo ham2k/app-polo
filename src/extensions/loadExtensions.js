@@ -39,6 +39,7 @@ import HamQTHExtension from './data/hamqth/HamQTHExtension'
 import QRZExtension from './data/qrz/QRZExtension'
 import SpotDiscordExtension from './data/spot-discord/SpotDiscordExtension'
 import SpotHistoryExtension from './data/spot-history/SpotHistoryExtension'
+import SpotParksnPeaksExtension from './data/spot-parksnpeaks/SpotParksnPeaksExtension'
 
 import GAPOTAExtension from './contests/gapota/GAPOTAExtension'
 import NAQPExtension from './contests/naqp/NAQPExtension'
@@ -108,6 +109,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(CallHistoryExtension)
   registerExtension(SpotHistoryExtension)
   registerExtension(SpotDiscordExtension)
+  registerExtension(SpotParksnPeaksExtension)
 
   registerExtension(QRZExtension)
   registerExtension(HamDBExtension)

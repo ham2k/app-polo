@@ -24,7 +24,6 @@ import dataFilesReducer from './dataFiles'
 import { reducer as apiGMAReducer, middleware as apiGMAMiddleware } from './apis/apiGMA'
 import { reducer as apiHamQTHReducer, middleware as apiHamQTHMiddleware } from './apis/apiHamQTH'
 import { reducer as apiLLOTAReducer, middleware as apiLLOTAMiddleware } from './apis/apiLLOTA'
-import { reducer as apiPnPReducer, middleware as apiPnPMiddleware } from './apis/apiPnP'
 import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apis/apiPOTA'
 import { reducer as apiQRZReducer, middleware as apiQRZMiddleware } from './apis/apiQRZ'
 import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './apis/apiSOTA'
@@ -55,7 +54,6 @@ const rootReducer = combineReducers({
   apiGMA: apiGMAReducer,
   apiHamQTH: apiHamQTHReducer,
   apiLLOTA: apiLLOTAReducer,
-  apiPnP: apiPnPReducer,
   apiPOTA: apiPOTAReducer,
   apiQRZ: apiQRZReducer,
   apiSOTA: apiSOTAReducer,
@@ -111,7 +109,6 @@ export const store = configureStore({
     middlewares.push(apiGMAMiddleware)
     middlewares.push(apiHamQTHMiddleware)
     middlewares.push(apiLLOTAMiddleware)
-    middlewares.push(apiPnPMiddleware)
     middlewares.push(apiPOTAMiddleware)
     middlewares.push(apiQRZMiddleware)
     middlewares.push(apiSOTAMiddleware)

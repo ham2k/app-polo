@@ -33,19 +33,38 @@ export const SecondaryExchangePanel = (props) => {
       edit: editQSOControl,
       power: powerControl
     }
+
     const activityHooks = findHooks('activity')
-    const activityHooksWithSpotting = activityHooks.filter((x) => (
+    const spottingHooks = findHooks('spots')
+
+    const activityHooksWithSelfSpotting = activityHooks.filter((x) => (
       findRef(operation, x.activationType) && x.postSelfSpot &&
-      (!x.isSpotEnabled || (x.isSpotEnabled && x.isSpotEnabled({ operation, settings }))))
-    )
-    if (activityHooksWithSpotting.length > 0) {
+      (!x.isSelfSpotEnabled || (x.isSelfSpotEnabled && x.isSelfSpotEnabled({ operation, settings })))
+    ))
+
+    const spottingHooksWithSelfSpotting = spottingHooks.filter((x) => (
+      x.postSelfSpot &&
+      (!x.isSelfSpotEnabled || (x.isSelfSpotEnabled && x.isSelfSpotEnabled({ operation, settings })))
+    ))
+
+    if (activityHooksWithSelfSpotting.length + spottingHooksWithSelfSpotting.length > 0) {
       newControls[spotterControl.key] = spotterControl
     } else {
-      const otherSpottingHooks = findHooks('spots', { withFunction: 'postOtherSpot' })
-      if (otherSpottingHooks.length > 0) {
+      // If the current operation has no activities with self-spotting,
+      // lets see if there is a chance that other activities or spotting hooks
+      // might potentially be available, and if so, we'll show the control
+      // even if it gets marked as disabled based on other conditions.
+      const activityHooksWithOtherSpotting = activityHooks.filter((x) => (
+        x.postOtherSpot
+      ))
+      const spottingHooksWithOtherSpotting = spottingHooks.filter((x) => (
+        x.postOtherSpot
+      ))
+      if (activityHooksWithOtherSpotting.length + spottingHooksWithOtherSpotting.length > 0) {
         newControls[spotterControl.key] = { ...spotterControl, labelAsGeneralSpotting: true }
       }
     }
+
     activityHooks.forEach(activity => {
       const activityControls = activity.loggingControls ? activity.loggingControls({ operation, vfo, settings }) : []
       for (const control of activityControls) {

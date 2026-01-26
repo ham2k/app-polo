@@ -20,8 +20,8 @@ export function PnPAccountSetting ({ settings, styles }) {
   return (
     <React.Fragment>
       <H2kListItem
-        title={t('extensions.siota.account.title', 'ParksnPeaks (SiOTA spotting)')}
-        description={settings?.accounts?.pnp?.userId ? t('extensions.siota.account.description', 'Username: {{username}}', { username: settings.accounts.pnp.userId }) : t('extensions.siota.account.noAccount', 'No account')}
+        title={t('extensions.spots.parksnpeaks.account.title', 'ParksnPeaks (VK/ZL spotting)')}
+        description={settings?.accounts?.parksnpeaks?.userId ? t('extensions.spots.parksnpeaks.account.description', 'Username: {{username}}', { username: settings.accounts.parksnpeaks.userId }) : t('extensions.spots.parksnpeaks.account.noAccount', 'No account')}
         leftIcon="web"
         onPress={() => setCurrentDialog('accountsPnP')}
       />
@@ -52,8 +52,8 @@ function AccountsPnPDialog ({ visible, settings, styles, onDialogDone }) {
   }, [visible])
 
   useEffect(() => {
-    setUserId(settings?.accounts?.pnp?.userId || '')
-    setAPIKey(settings?.accounts?.pnp?.apiKey || '')
+    setUserId(settings?.accounts?.parksnpeaks?.userId || '')
+    setAPIKey(settings?.accounts?.parksnpeaks?.apiKey || '')
   }, [settings])
 
   const onChangeUserId = useCallback((text) => {
@@ -64,40 +64,41 @@ function AccountsPnPDialog ({ visible, settings, styles, onDialogDone }) {
   }, [setAPIKey])
 
   const handleAccept = useCallback(() => {
-    dispatch(setAccountInfo({ pnp: { userId, apiKey } }))
+    dispatch(setAccountInfo({ parksnpeaks: { userId, apiKey } }))
     setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [userId, apiKey, dispatch, onDialogDone])
 
   const handleCancel = useCallback(() => {
-    setUserId(settings?.accounts?.pnp?.userId || '')
-    setAPIKey(settings?.accounts?.pnp?.apiKey || '')
+    setUserId(settings?.accounts?.parksnpeaks?.userId || '')
+    setAPIKey(settings?.accounts?.parksnpeaks?.apiKey || '')
     setDialogVisible(false)
     onDialogDone && onDialogDone()
   }, [settings, onDialogDone])
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.siota.account.dialogTitle', 'ParksnPeaks Account')}</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.spots.parksnpeaks.account.dialogTitle', 'ParksnPeaks Account')}</H2kDialogTitle>
       <H2kDialogContent>
-        <H2kText variant="bodyMedium">{t('extensions.siota.account.pleaseEnterDetails', 'Please enter the details for your ParksnPeaks account:')}</H2kText>
+        <H2kText variant="bodyMedium">{t('extensions.spots.parksnpeaks.account.pleaseEnterDetails', 'Please enter the details for your ParksnPeaks account:')}</H2kText>
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={userId}
-          label={t('extensions.siota.account.usernameLabel', 'Username (not callsign)')}
-          placeholder={t('extensions.siota.account.usernamePlaceholder', 'your account username')}
+          keyboard="dumb"
+          label={t('extensions.spots.parksnpeaks.account.usernameLabel', 'Username (not callsign)')}
+          placeholder={t('extensions.spots.parksnpeaks.account.usernamePlaceholder', 'your account username')}
           onChangeText={onChangeUserId}
         />
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={apiKey}
-          label={t('extensions.siota.account.apiKeyLabel', 'API Key (not password)')}
+          label={t('extensions.spots.parksnpeaks.account.apiKeyLabel', 'API Key (not password)')}
           autoComplete="current-password"
           keyboardType="default"
           textContentType="password"
           secureTextEntry={true}
           autoCapitalize={'none'}
-          placeholder={t('extensions.siota.account.apiKeyPlaceholder', 'your API Key')}
+          placeholder={t('extensions.spots.parksnpeaks.account.apiKeyPlaceholder', 'your API Key')}
           onChangeText={onChangeAPIKey}
         />
       </H2kDialogContent>

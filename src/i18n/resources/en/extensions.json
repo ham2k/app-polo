@@ -416,6 +416,22 @@
         "theirRefLabel": "Their Mill"
       }
     },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Spotting",
+      "description": "Used mostly in VK and ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL spotting)",
+        "dialogTitle": "ParksnPeaks Account",
+        "description": "Username: {{username}}",
+        "noAccount": "No account",
+        "pleaseEnterDetails": "Please enter the details for your ParksnPeaks account:",
+      },
+      "usernameLabel": "Username (not callsign)",
+      "usernamePlaceholder": "your account username",
+      "apiKeyLabel": "API Key (not password)",
+      "apiKeyPlaceholder": "your API Key"
+    },
     "pga": {
       "name": "Polish Gmina Award",
       "shortName": "PGA",

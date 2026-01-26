@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -171,7 +171,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
     allSpots.forEach((spot) => {
       const existingSpot = callSpots?.[spot.their.call]
       // Assume divergence in frequency different spot: don't merge
-      // and reasonable 30mins between spots
+      // and reasonable 30 mins between spots
       if (!existingSpot ||
           Math.abs(spot.freq - existingSpot.freq) > 0.5 || // 0.5 kHz
           Math.abs(spot.spot.timeInMillis - existingSpot.spot.timeInMillis) > 1000 * 60 * 30) { // 30mins
@@ -180,7 +180,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
         mergedSpots.push(newSpot)
       } else {
         existingSpot.spots.push({ ...spot.spot })
-        existingSpot.refs.push(...spot.refs)
+        existingSpot.refs.push(...spot.refs.filter(ref => !existingSpot.refs.find(r => r.type === ref.type && r.ref === ref.ref)))
       }
     })
 
