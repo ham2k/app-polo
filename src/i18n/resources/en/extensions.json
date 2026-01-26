@@ -611,6 +611,56 @@
       "unknownRefName": "Unknown Summit",
       "noRefsNearby": "No summits nearby!"
     },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "No towers selected for activation",
+        "title_one": "Activating 1 tower",
+        "title_other": "Activating {{count}} towers",
+        "noTowersFound": "No towers found",
+        "nearestMatches": "Nearest {{limit}} of {{count}} matches",
+        "matchingTowers_zero": "No matching towers",
+        "matchingTowers_one": "1 matching tower",
+        "matchingTowers_other": "{{count}} matching towers",
+        "searchForTowers": "Search for some towers to activate!",
+        "noTowersNearby": "No towers nearby",
+        "nearbyTowers": "Nearby towers",
+        "searchPlaceholder": "Name or reference…",
+        "unknownTower": "Unknown tower"
+      },
+      "scoring": {
+        "ref2refCount_zero": "No R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "No towers hunted",
+        "huntedRefsCount_one": "1 tower hunted",
+        "huntedRefsCount_other": "{{fmtCount}} towers hunted",
+        "activatorQSOsCount_zero": "No activator QSOs",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSOs",
+        "ref2refQSOsCount_zero": "No R2R QSOs",
+        "ref2refQSOsCount_one": "1 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R QSOs",
+        "huntedQSOsCount_zero": "No hunted QSOs",
+        "huntedQSOsCount_one": "1 hunted QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} hunted QSOs",
+        "operationTotals": "Operation Totals",
+        "referencesActivatedCount_zero": "No towers activated",
+        "referencesActivatedCount_one": "1 tower activated",
+        "referencesActivatedCount_other": "{{fmtCount}} towers activated",
+        "referencesMissedCount_zero": "No incomplete towers",
+        "referencesMissedCount_one": "1 incomplete tower",
+        "referencesMissedCount_other": "{{fmtCount}} incomplete towers",
+        "referencesHuntedCount_zero": "No towers hunted",
+        "referencesHuntedCount_one": "1 tower hunted",
+        "referencesHuntedCount_other": "{{fmtCount}} towers hunted"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Their Tower"
+      },
+      "exampleRefName": "Example Tower",
+      "unknownRefName": "Unknown Tower",
+      "noRefsNearby": "No towers nearby!"
+    },
     "usStates": {
       "statesCount_zero": "No US States",
       "statesCount_one": "1 US State",
