@@ -27,6 +27,7 @@ import { reducer as apiLLOTAReducer, middleware as apiLLOTAMiddleware } from './
 import { reducer as apiPOTAReducer, middleware as apiPOTAMiddleware } from './apis/apiPOTA'
 import { reducer as apiQRZReducer, middleware as apiQRZMiddleware } from './apis/apiQRZ'
 import { reducer as apiSOTAReducer, middleware as apiSOTAMiddleware } from './apis/apiSOTA'
+import { reducer as apiTOTAReducer, middleware as apiTOTAMiddleware } from './apis/apiTOTA'
 import { reducer as apiWWBOTAReducer, middleware as apiWWBOTAMiddleware } from './apis/apiWWBOTA'
 import { reducer as apiWWFFReducer, middleware as apiWWFFMiddleware } from './apis/apiWWFF'
 import { reducer as apiZLOTAReducer, middleware as apiZLOTAMiddleware } from './apis/apiZLOTA'
@@ -57,6 +58,7 @@ const rootReducer = combineReducers({
   apiPOTA: apiPOTAReducer,
   apiQRZ: apiQRZReducer,
   apiSOTA: apiSOTAReducer,
+  apiTOTA: apiTOTAReducer,
   apiWWBOTA: apiWWBOTAReducer,
   apiWWFF: apiWWFFReducer,
   apiZLOTA: apiZLOTAReducer
@@ -112,6 +114,7 @@ export const store = configureStore({
     middlewares.push(apiPOTAMiddleware)
     middlewares.push(apiQRZMiddleware)
     middlewares.push(apiSOTAMiddleware)
+    middlewares.push(apiTOTAMiddleware)
     middlewares.push(apiWWBOTAMiddleware)
     middlewares.push(apiWWFFMiddleware)
     middlewares.push(apiZLOTAMiddleware)
