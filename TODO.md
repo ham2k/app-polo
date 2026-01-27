@@ -8,8 +8,6 @@
 
 # Performance
 
-### Look into @shopify/flash-list
-
 ### Home Screen vs Settings change
 
 Consider using something like:

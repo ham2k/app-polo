@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo } from 'react'
 
-import { FlatList, View } from 'react-native'
+import { View } from 'react-native'
 import { AnimatedFAB, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -22,6 +22,7 @@ import OperationItem from './components/OperationItem'
 import HomeTools from './components/HomeTools'
 import { trackEvent, trackSettings } from '../../distro'
 import { selectRuntimeOnline } from '../../store/runtime'
+import { FlashList } from '@shopify/flash-list'
 
 export default function HomeScreen ({ navigation }) {
   const { t } = useTranslation()
@@ -89,7 +90,7 @@ export default function HomeScreen ({ navigation }) {
     <ScreenContainer>
       <View style={styles.root}>
         <GestureHandlerRootView style={styles.root}>
-          <FlatList
+          <FlashList
             accesibilityLabel={t('screens.home.operationList-a11y', 'screens.home.operationList', 'Operation List')}
             style={styles.list}
             data={operationIds}

@@ -136,7 +136,7 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
       />
 
       <LoggingPanel
-        style={flexZero}
+        style={[flexZero, { minHeight: 200 }]}
         operation={operation}
         qsos={qsos}
         sections={sections}

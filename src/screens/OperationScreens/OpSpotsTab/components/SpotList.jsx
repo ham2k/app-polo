@@ -1,25 +1,24 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useMemo, useRef } from 'react'
-import { PixelRatio, SectionList, View } from 'react-native'
+import { PixelRatio, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { RefreshControl } from 'react-native-gesture-handler'
-import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import getItemLayout from 'react-native-get-item-layout-section-list'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import SpotItem from './SpotItem'
 import SpotHeader from './SpotHeader'
+import { SectionFlashList } from '../../../components/SectionFlashList'
 
 export default function SpotList ({ sections, loading, refresh, style, onPress }) {
   const styles = useThemedStyles(_prepareStyles, style)
-
-  const safeArea = useSafeAreaInsets()
 
   const { width } = useSafeAreaFrame()
   // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
@@ -28,7 +27,7 @@ export default function SpotList ({ sections, loading, refresh, style, onPress }
 
   const listRef = useRef()
 
-  const { paddingRight, paddingLeft, ...restOfStyle } = useMemo(() => style, [style])
+  const { paddingRight, paddingLeft, paddingBottom, ...restOfStyle } = useMemo(() => style, [style])
 
   const renderHeader = useCallback(({ section, index }) => {
     return (
@@ -42,9 +41,9 @@ export default function SpotList ({ sections, loading, refresh, style, onPress }
   const renderRow = useCallback(({ item, index }) => {
     const spot = item
     return (
-      <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} style={{ paddingRight, paddingLeft }} extendedWidth={extendedWidth} />
+      <SpotItem key={spot.key} spot={spot} onPress={onPress} styles={styles} extendedWidth={extendedWidth} />
     )
-  }, [styles, onPress, extendedWidth, paddingRight, paddingLeft])
+  }, [styles, onPress, extendedWidth])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const calculateLayout = useCallback(
@@ -55,8 +54,9 @@ export default function SpotList ({ sections, loading, refresh, style, onPress }
     [styles]
   )
 
+  // FlashSectionList does not support styles, so we need to wrap it in a View
   return (
-    <SectionList
+    <SectionFlashList
       style={restOfStyle}
       ref={listRef}
       sections={sections || []}
@@ -72,7 +72,7 @@ export default function SpotList ({ sections, loading, refresh, style, onPress }
       refreshControl={
         <RefreshControl refreshing={loading} onRefresh={refresh} />
       }
-      ListFooterComponent={<View style={{ height: safeArea.bottom }}/>}
+      ListFooterComponent={<View style={{ height: paddingBottom }}/>}
       stickySectionHeadersEnabled={true}
       removeClippedSubviews={false} // Buggy on Android
     />

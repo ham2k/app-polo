@@ -1,12 +1,12 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { PixelRatio, SectionList, View } from 'react-native'
+import { PixelRatio, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import getItemLayout from 'react-native-get-item-layout-section-list'
@@ -22,8 +22,7 @@ import QSOHeader from './entries/QSOHeader'
 import EventItem from './entries/EventItem'
 import EventNoteItem from './entries/EventNoteItem'
 import EventSegmentItem from './entries/EventSegmentItem'
-
-let scrollTimeout
+import { SectionFlashList } from '../../../components/SectionFlashList'
 
 const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress, lastUUID, selectedUUID, onSelectQSO }) {
   const { t } = useTranslation()
@@ -62,70 +61,19 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   // useEffect(() => console.log('-- QSOList stylesForOtherOperator', stylesForOtherOperator), [stylesForOtherOperator])
   // useEffect(() => console.log('-- QSOList listRef', listRef), [listRef])
 
-  // When the list is first displayed, we want to jump to the bottom.
-  // When there's a new `lastUUID`, we also jump to it.
-  // And if there's a `selectedUUID`, we want to make sure it is visible.
-  // But when selection changes to "nothing", or to a uuid that cannot be found (new QSO),
-  // then we DO NOT want to jump back to the last QSO.
-  const jumpDataRef = useRef({ jumpedToLast: -1 })
-
-  // When the lastQSO changes, scroll to it
+  // When a new QSO is logged, scroll to the bottom of the list
   useEffect(() => {
-    // console.log('useEffect scroll to', { lastUUID, jumpedToLast: jumpDataRef?.current?.jumpedToLast, sections: sections?.length })
     if (!sections || !sections.length) return
 
-    if (scrollTimeout) {
-      clearTimeout(scrollTimeout)
-    }
+    const lastSection = sections[sections.length - 1]
+    const lastQSO = lastSection.data[lastSection.data.length - 1]
 
-    const targetUUID = selectedUUID || lastUUID
-
-    let sectionIndex = sections.length - 1
-    let itemIndex = sections[sectionIndex].data.length - 1
-
-    if (targetUUID && targetUUID !== jumpDataRef.current.jumpedToLast) {
-      // eslint-disable-next-line no-unused-vars
-      const found = sections.find((section, i) => {
-        return section.data.find((qso, j) => {
-          if (qso.uuid === targetUUID) {
-            sectionIndex = i
-            itemIndex = j
-            return true
-          }
-          return false
-        })
-      })
-      // TODO: Figure out how to only scroll when opening the operation,
-      // or when logging a new QSO, but not when just changing the selected QSO
-
-      // if (!found) {
-      //   return
-      // }
-    }
-    // console.log('scroll to?', { targetUUID, jumpedToLast: jumpDataRef.current.jumpedToLast })
-
-    if (targetUUID !== jumpDataRef.current.jumpedToLast) {
-      scrollTimeout = setTimeout(() => {
-        // console.log('scrolling to')
-        try {
-          listRef.current?.scrollToLocation({ sectionIndex, itemIndex, animated: true })
-        } catch (e) {
-          // Sometimes the QSO list can change before this timeout call is executed
-          console.error('Error scrolling to last QSO', e)
-        }
-      }, 50)
-    }
-
-    if (targetUUID === lastUUID) {
-      jumpDataRef.current.jumpedToLast = lastUUID
-    }
-    return () => {
-      if (scrollTimeout) {
-        clearTimeout(scrollTimeout)
-      }
+    if (lastUUID === lastQSO?.uuid) {
+      console.log(' -- scrolling to end')
+      listRef.current?.scrollToEnd({ animated: true })
     }
   }, [listRef, lastUUID, selectedUUID, sections])
-  // console.log('QSOList last UUID', lastUUID)
+
   const refHandlers = useMemo(() => {
     const types = {}
     ;(operation?.refs || []).forEach((ref) => {
@@ -218,8 +166,9 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
     <ListEmptyComponent styles={styles} vfo={vfo} t={t} />
   ), [styles, vfo, t])
 
+  // FlashSectionList does not support styles, so we need to wrap it in a View
   return (
-    <SectionList
+    <SectionFlashList
       style={style}
       ref={listRef}
       onLayout={handleLayout}
@@ -230,12 +179,15 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       keyExtractor={extractKey}
       ListEmptyComponent={emptyComponent}
       keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
+      stickySectionHeadersEnabled={true}
+      maintainVisibleContentPosition={{
+        autoscrollToBottomThreshold: 0.2,
+        startRenderingFromBottom: true
+      }}
       initialNumToRender={20}
       windowSize={2}
       maxToRenderPerBatch={30}
       updateCellsBatchingPeriod={100}
-      stickySectionHeadersEnabled={true}
-      removeClippedSubviews={false} // Buggy on Android
     />
   )
 })
