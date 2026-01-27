@@ -6,30 +6,6 @@
 "I could not double tap on the "Close modal” button to dismiss the screen. I used the VoiceOver two finger scrub gesture but should be able to double tap the button as well"
 
 
-# Performance
-
-### Home Screen vs Settings change
-
-Consider using something like:
-
-```
-const isFocused = useIsFocused();
-
-// Local state to hold the settings currently being used for display
-const [focusedSettings, setFocusedSettings] = useState(globalSettings);
-
-useEffect(() => {
-  // Only sync the settings to this screen when the screen comes into view
-  if (isFocused) {
-    setFocusedSettings(globalSettings);
-  }
-}, [isFocused, globalSettings]);
-```
-
-so that child components only re-render based on settings when the screen is focused.
-
-
-
 # General Package Maintenance Tasks
 
 
@@ -42,7 +18,9 @@ We work around this by using a simpler Pressable component on Android, as part o
 
 ### Splash Screen
 
-The existing package has been mostly abandoned, consider migrating to https://github.com/zoontek/react-native-bootsplash
+The existing package has been mostly abandoned.
+
+An alternative is https://github.com/zoontek/react-native-bootsplash but it's meant to show a logo in the middle of a single color background, not full screen image.
 
 
 
@@ -63,13 +41,6 @@ onValueChange={(v) => {
 }
 ```
 
-
-
-
-### React Native Config
-
-This issue prevents us from updating to 1.5.9
-https://github.com/lugg/react-native-config/issues/848
 
 
 
