@@ -61,15 +61,20 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   // useEffect(() => console.log('-- QSOList stylesForOtherOperator', stylesForOtherOperator), [stylesForOtherOperator])
   // useEffect(() => console.log('-- QSOList listRef', listRef), [listRef])
 
+  const firstScrollToEnd = useRef(false)
+
   // When a new QSO is logged, scroll to the bottom of the list
   useEffect(() => {
     if (!sections || !sections.length) return
 
     const lastSection = sections[sections.length - 1]
     const lastQSO = lastSection.data[lastSection.data.length - 1]
+    console.log('scroll?', { lastUUID, selectedUUID, lastQ: lastQSO?.uuid })
 
-    if (lastUUID === lastQSO?.uuid) {
-      console.log(' -- scrolling to end')
+    if (firstScrollToEnd.current === false) {
+      firstScrollToEnd.current = true
+      listRef.current?.scrollToEnd({ animated: false })
+    } else if (lastUUID === lastQSO?.uuid) {
       listRef.current?.scrollToEnd({ animated: true })
     }
   }, [listRef, lastUUID, selectedUUID, sections])
@@ -180,10 +185,10 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       ListEmptyComponent={emptyComponent}
       keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
       stickySectionHeadersEnabled={true}
-      maintainVisibleContentPosition={{
-        autoscrollToBottomThreshold: 0.2,
-        startRenderingFromBottom: true
-      }}
+      // maintainVisibleContentPosition={{
+        // autoscrollToBottomThreshold: 0.2
+        // startRenderingFromBottom: true
+      // }}
       initialNumToRender={20}
       windowSize={2}
       maxToRenderPerBatch={30}

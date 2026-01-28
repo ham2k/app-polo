@@ -6,30 +6,32 @@
  */
 
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { TouchableOpacity, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useTranslation } from 'react-i18next'
+import { useIsFocused } from '@react-navigation/native'
 
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { BANDS, ADIF_MODES, superModeForMode, modeForFrequency } from '@ham2k/lib-operation-data'
+import { fmtNumber } from '@ham2k/lib-format-tools'
+
+import GLOBAL from '../../../../GLOBAL'
 
 import { selectRuntimeOnline } from '../../../../store/runtime'
 import { selectAllOperations, selectOperationCallInfo } from '../../../../store/operations'
 import { selectSettings, setSettings } from '../../../../store/settings'
-import { useUIState } from '../../../../store/ui'
 import { selectVFO } from '../../../../store/station'
 import { findBestHook, findHooks } from '../../../../extensions/registry'
 import { scoringHandlersForOperation } from '../../../../extensions/scoring'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { annotateQSO } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
+import { useSelectorConditionally, useUIStateConditionally } from '../../../components/useConditionally'
+
 import SpotList from './SpotList'
 import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
-
-import GLOBAL from '../../../../GLOBAL'
-import { fmtNumber } from '@ham2k/lib-format-tools'
 
 export const LABEL_FOR_MODE = {
   CW: 'CW',
@@ -47,49 +49,29 @@ export const LONG_LABEL_FOR_MODE = {
 
 const REFRESH_INTERVAL_IN_SECONDS = 60
 
-function prepareStyles (baseStyles, themeColor, style) {
-  return {
-    ...baseStyles,
-    panel: {
-      backgroundColor: baseStyles.theme.colors[`${themeColor}Container`],
-      borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
-      borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
-      borderBottomWidth: 1,
-      paddingTop: baseStyles.oneSpace,
-      paddingBottom: baseStyles.oneSpace,
-      flexDirection: 'column'
-    },
-    container: {
-      paddingHorizontal: baseStyles.oneSpace,
-      paddingTop: baseStyles.oneSpace,
-      paddingBottom: baseStyles.oneSpace,
-      gap: baseStyles.halfSpace
-    }
-  }
-}
-
 export default function SpotsPanel ({ operation, qsos, sections, onSelect, style }) {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
 
   const themeColor = 'tertiary'
-  const styles = useThemedStyles(prepareStyles, themeColor, style)
+  const styles = useThemedStyles(_prepareStyles, themeColor, style)
 
-  const dispatch = useDispatch()
-  const settings = useSelector(selectSettings)
-  const online = useSelector(selectRuntimeOnline)
-  const vfo = useSelector(state => selectVFO(state))
+  const isFocused = useIsFocused()
+  const settings = useSelectorConditionally(isFocused, selectSettings)
+  const online = useSelectorConditionally(isFocused, selectRuntimeOnline)
+  const vfo = useSelectorConditionally(isFocused, state => selectVFO(state))
 
   const filterState = useMemo(() => settings?.spots?.filters || {}, [settings])
   const updateFilterState = useCallback((newState) => {
     dispatch(setSettings({ spots: { ...settings?.spots, filters: { ...settings?.spots?.filters, ...newState } } }))
   }, [dispatch, settings.spots])
 
-  const [spotsState, , updateSpotsState] = useUIState('OpSpotsTab', 'spotsState', { spots: {}, lastFetched: 0, loading: false })
+  const [spotsState, , updateSpotsState] = useUIStateConditionally(isFocused, 'OpSpotsTab', 'spotsState', { spots: {}, lastFetched: 0, loading: false })
   // The keys used to get this state are also referenced in `SpotHistoryExtension`
 
-  const allOperations = useSelector(selectAllOperations)
+  const allOperations = useSelectorConditionally(isFocused, selectAllOperations)
 
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation.uuid))
+  const ourInfo = useSelectorConditionally(isFocused, state => selectOperationCallInfo(state, operation.uuid))
 
   const [showControls, setShowControls] = useState(false)
 
@@ -491,4 +473,25 @@ export function filterAndCount (rawSpots, filterState, vfo) {
   }
 
   return results
+}
+
+function _prepareStyles (baseStyles, themeColor, style) {
+  return {
+    ...baseStyles,
+    panel: {
+      backgroundColor: baseStyles.theme.colors[`${themeColor}Container`],
+      borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
+      borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
+      borderBottomWidth: 1,
+      paddingTop: baseStyles.oneSpace,
+      paddingBottom: baseStyles.oneSpace,
+      flexDirection: 'column'
+    },
+    container: {
+      paddingHorizontal: baseStyles.oneSpace,
+      paddingTop: baseStyles.oneSpace,
+      paddingBottom: baseStyles.oneSpace,
+      gap: baseStyles.halfSpace
+    }
+  }
 }

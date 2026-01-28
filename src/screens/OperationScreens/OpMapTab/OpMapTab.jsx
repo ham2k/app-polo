@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -11,6 +11,7 @@ import { IconButton, Text } from 'react-native-paper'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useIsFocused } from '@react-navigation/native'
 
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 
@@ -18,39 +19,23 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation } from '../../../store/operations'
 import { selectQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
-import { useUIState } from '../../../store/ui'
+import { useSelectorConditionally, useUIStateConditionally } from '../../components/useConditionally'
 
 import MapWithQSOs from './components/MapWithQSOs'
-
-function prepareStyles (baseStyles, themeColor) {
-  return {
-    ...baseStyles,
-    root: {
-      flexDirection: 'column',
-      flex: 1
-    },
-    panel: {
-      backgroundColor: baseStyles.theme.colors[`${themeColor}Container`],
-      borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
-      borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
-      borderBottomWidth: 1,
-      padding: baseStyles.oneSpace
-    }
-  }
-}
 
 export default function OpMapTab ({ navigation, route }) {
   const { t } = useTranslation()
 
   const themeColor = 'tertiary'
-  const styles = useThemedStyles(prepareStyles, themeColor)
+  const styles = useThemedStyles(_prepareStyles, themeColor)
   const safeAreaInsets = useSafeAreaInsets()
 
-  const settings = useSelector(selectSettings)
+  const isFocused = useIsFocused()
+  const settings = useSelectorConditionally(isFocused, selectSettings)
 
-  const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
+  const operation = useSelectorConditionally(isFocused, state => selectOperation(state, route.params.operation.uuid))
 
-  const [loggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  const [loggingState] = useUIStateConditionally(isFocused, 'OpLoggingTab', 'loggingState', {})
 
   const [projection, setProjection] = useState('mercator')
 
@@ -206,4 +191,21 @@ You might need a paid QRZ.com account for location lookups.`),
       </View>
     </>
   )
+}
+
+function _prepareStyles (baseStyles, themeColor) {
+  return {
+    ...baseStyles,
+    root: {
+      flexDirection: 'column',
+      flex: 1
+    },
+    panel: {
+      backgroundColor: baseStyles.theme.colors[`${themeColor}Container`],
+      borderBottomColor: baseStyles.theme.colors[`${themeColor}Light`],
+      borderTopColor: baseStyles.theme.colors[`${themeColor}Light`],
+      borderBottomWidth: 1,
+      padding: baseStyles.oneSpace
+    }
+  }
 }

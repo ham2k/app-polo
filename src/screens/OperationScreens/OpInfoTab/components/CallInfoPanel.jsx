@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,9 +8,10 @@
 import React, { useCallback, useMemo } from 'react'
 import { Chip, IconButton, Text } from 'react-native-paper'
 import { View, Image, Linking } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useTranslation } from 'react-i18next'
+import { useIsFocused } from '@react-navigation/native'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { fmtNumber } from '@ham2k/lib-format-tools'
@@ -24,16 +25,18 @@ import { useCallLookup } from '../../OpLoggingTab/components/LoggingPanel/useCal
 import { H2kMarkdown } from '../../../../ui'
 import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../tools/geoTools'
 import { selectOperationCallInfo } from '../../../../store/operations'
+import { useSelectorConditionally } from '../../../components/useConditionally'
 
 const HISTORY_QSOS_TO_SHOW = 3
 
 export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
 
   const styles = useThemedStyles(prepareStyles, themeColor, style)
-  const dispatch = useDispatch()
-  const settings = useSelector(selectSettings)
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+  const isFocused = useIsFocused()
+  const settings = useSelectorConditionally(isFocused, selectSettings)
+  const ourInfo = useSelectorConditionally(state => selectOperationCallInfo(state, operation?.uuid))
 
   const call = useMemo(() => {
     const calls = qso?.their?.call?.split(',')?.filter(x => x)

@@ -1,47 +1,63 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import { useIsFocused } from '@react-navigation/native'
+
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, selectOperationCallInfo } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
-import { useUIState } from '../../../store/ui'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectVFO } from '../../../store/station/stationSlice'
-import QSOList from './components/QSOList'
-import LoggingPanel from './components/LoggingPanel'
 import { selectSectionedQSOs } from '../../../store/qsos'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
+import { useSelectorConditionally, useUIStateConditionally } from '../../components/useConditionally'
+
+import QSOList from './components/QSOList'
+import LoggingPanel from './components/LoggingPanel'
 import { useAutoRespotting } from './components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
-import { fmtNumber } from '@ham2k/lib-format-tools'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
 
 export default function OpLoggingTab ({ navigation, route, splitView }) {
   const { t } = useTranslation()
-  const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
-  const vfo = useSelector(state => selectVFO(state))
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
   const dispatch = useDispatch()
+  const online = useSelector(selectRuntimeOnline)
   const styles = useThemedStyles()
 
-  const settings = useSelector(selectSettings)
-  const online = useSelector(selectRuntimeOnline)
+  const isFocused = useIsFocused()
+  const operation = useSelectorConditionally(isFocused, state => selectOperation(state, route.params.operation.uuid))
+  const vfo = useSelectorConditionally(isFocused, state => selectVFO(state))
+  const ourInfo = useSelectorConditionally(isFocused, state => selectOperationCallInfo(state, operation?.uuid))
 
-  const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false))
+  const settings = useSelectorConditionally(isFocused, selectSettings)
 
-  const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  useEffect(() => console.log('OpLoggingTab isFocused', isFocused), [isFocused])
+
+  // Memoize the selector function to prevent excessive calls
+  const sectionedQSOsSelector = useMemo(
+    () => (state) => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false),
+    [operation?.uuid, settings.showDeletedQSOs]
+  )
+  const { sections, qsos, activeQSOs } = useSelector(sectionedQSOsSelector)
+  // console.log('OpLoggingTab -- render', qsos?.length)
+  // useEffect(() => {
+  //   console.log('OpLoggingTab -- qsos', qsos?.length)
+  // }, [qsos])
+
+  const [loggingState, setLoggingState, updateLoggingState] = useUIStateConditionally(isFocused, 'OpLoggingTab', 'loggingState', {})
 
   // console.log('OpLoggingTab render')
   // useEffect(() => console.log('-- OpLoggingTab navigation', navigation), [navigation])

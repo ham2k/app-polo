@@ -1,12 +1,11 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import React, { useMemo } from 'react'
-import { useSelector } from 'react-redux'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -18,56 +17,15 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { fmtDateFullZulu, fmtTimeBetween } from '../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../store/time'
 import { H2kIcon, H2kMarkdown } from '../../../../ui'
-
-function prepareStyles (baseStyles, themeColor, style) {
-  return {
-    ...baseStyles,
-    root: {
-      ...style,
-      paddingTop: baseStyles.oneSpace * 2,
-      paddingLeft: Math.max(style?.paddingLeft || 0, baseStyles.oneSpace * 2),
-      paddingRight: Math.max(style?.paddingRight || 0, baseStyles.oneSpace * 2),
-      paddingBottom: Math.max(style?.paddingBottom || 0, baseStyles.oneSpace * 2),
-      flexDirection: 'column',
-      gap: baseStyles.oneSpace * 2
-    },
-    section: {
-      flexDirection: 'column',
-      marginVertical: baseStyles.oneSpace
-    },
-    icon: {
-      // maxWidth: baseStyles.oneSpace * 8
-    },
-    scoringMarkdown: {
-      // For scoring summaries, we want most text to be small, monospaced, and light
-      // And then we override blockquotes to be regular text
-      // This allow for nice checklists
-      s: {
-        color: baseStyles.colors.onBackground,
-        textDecorationLine: 'line-through'
-      },
-      blockquote: {
-        ...baseStyles.markdown.body,
-        ...baseStyles.text.callsign,
-        backgroundColor: undefined,
-        borderColor: undefined,
-        borderLeftWidth: 0,
-        marginLeft: 0,
-        paddingHorizontal: 0,
-        fontSize: baseStyles.smallFontSize,
-        color: baseStyles.colors.onBackgroundLighter,
-        opacity: 1
-      }
-    }
-  }
-}
+import { useIsFocused } from '@react-navigation/native'
+import { useSelectorConditionally } from '../../../components/useConditionally'
 
 export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, themeColor }) {
   const { t } = useTranslation()
+  const styles = useThemedStyles(_prepareStyles, themeColor, style)
 
-  const styles = useThemedStyles(prepareStyles, themeColor, style)
-  console.log('style.paddingBottom', style.paddingBottom, 'styles.root', styles.root)
-  const now = useSelector(selectSecondsTick)
+  const isFocused = useIsFocused()
+  const now = useSelectorConditionally(isFocused, selectSecondsTick)
 
   const lastSection = sections[sections.length - 1]
 
@@ -193,4 +151,47 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
       </View>
     </ScrollView>
   )
+}
+
+function _prepareStyles (baseStyles, themeColor, style) {
+  return {
+    ...baseStyles,
+    root: {
+      ...style,
+      paddingTop: baseStyles.oneSpace * 2,
+      paddingLeft: Math.max(style?.paddingLeft || 0, baseStyles.oneSpace * 2),
+      paddingRight: Math.max(style?.paddingRight || 0, baseStyles.oneSpace * 2),
+      paddingBottom: Math.max(style?.paddingBottom || 0, baseStyles.oneSpace * 2),
+      flexDirection: 'column',
+      gap: baseStyles.oneSpace * 2
+    },
+    section: {
+      flexDirection: 'column',
+      marginVertical: baseStyles.oneSpace
+    },
+    icon: {
+      // maxWidth: baseStyles.oneSpace * 8
+    },
+    scoringMarkdown: {
+      // For scoring summaries, we want most text to be small, monospaced, and light
+      // And then we override blockquotes to be regular text
+      // This allow for nice checklists
+      s: {
+        color: baseStyles.colors.onBackground,
+        textDecorationLine: 'line-through'
+      },
+      blockquote: {
+        ...baseStyles.markdown.body,
+        ...baseStyles.text.callsign,
+        backgroundColor: undefined,
+        borderColor: undefined,
+        borderLeftWidth: 0,
+        marginLeft: 0,
+        paddingHorizontal: 0,
+        fontSize: baseStyles.smallFontSize,
+        color: baseStyles.colors.onBackgroundLighter,
+        opacity: 1
+      }
+    }
+  }
 }

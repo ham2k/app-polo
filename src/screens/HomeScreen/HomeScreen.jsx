@@ -23,17 +23,21 @@ import HomeTools from './components/HomeTools'
 import { trackEvent, trackSettings } from '../../distro'
 import { selectRuntimeOnline } from '../../store/runtime'
 import { FlashList } from '@shopify/flash-list'
+import { useIsFocused } from '@react-navigation/native'
+import { useSelectorConditionally } from '../components/useConditionally'
 
 export default function HomeScreen ({ navigation }) {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const safeArea = useSafeAreaInsets()
+  const online = useSelector(selectRuntimeOnline)
+
   const styles = useThemedStyles(prepareStyles, { safeArea })
 
-  const dispatch = useDispatch()
-  const operationIds = useSelector(selectOperationIds)
-  const settings = useSelector(selectSettings)
-  const rawSettings = useSelector(selectRawSettings)
-  const online = useSelector(selectRuntimeOnline)
+  const isFocused = useIsFocused()
+  const operationIds = useSelectorConditionally(isFocused, selectOperationIds)
+  const settings = useSelectorConditionally(isFocused, selectSettings)
+  const rawSettings = useSelectorConditionally(isFocused, selectRawSettings)
 
   useEffect(() => {
     if (!settings?.operatorCall) {

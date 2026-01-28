@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,7 +8,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -24,40 +24,18 @@ import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { H2kListItem, H2kListSection, H2kMarkdown } from '../../../ui'
 import { joinCalls } from '../../../tools/joinAnd'
-
-function prepareStyles (baseStyles) {
-  return {
-    ...baseStyles,
-    panel: {
-      backgroundColor: baseStyles.theme.colors.secondaryContainer,
-      borderBottomColor: baseStyles.theme.colors.secondaryLight,
-      borderBottomWidth: 1
-    },
-    paperInput: {
-      backgroundColor: baseStyles.theme.colors.surface,
-      color: baseStyles.theme.colors.onSurface
-    },
-    nativeInput: {
-      backgroundColor: baseStyles.theme.colors.surface,
-      color: baseStyles.theme.colors.onSurface
-    },
-    container: {
-      paddingHorizontal: baseStyles.oneSpace,
-      paddingTop: baseStyles.oneSpace,
-      paddingBottom: baseStyles.oneSpace,
-      gap: baseStyles.halfSpace
-    }
-  }
-}
+import { useIsFocused } from '@react-navigation/native'
+import { useSelectorConditionally } from '../../components/useConditionally'
 
 export default function OpSettingsTab ({ navigation, route }) {
   const { t } = useTranslation()
 
-  const styles = useThemedStyles(prepareStyles)
+  const styles = useThemedStyles(_prepareStyles)
   const safeAreaInsets = useSafeAreaInsets()
 
-  const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
-  const settings = useSelector(selectSettings)
+  const isFocused = useIsFocused()
+  const operation = useSelectorConditionally(isFocused, state => selectOperation(state, route.params.operation.uuid))
+  const settings = useSelectorConditionally(isFocused, selectSettings)
 
   const dispatch = useDispatch()
 
@@ -298,4 +276,29 @@ export default function OpSettingsTab ({ navigation, route }) {
     </ScrollView>
 
   )
+}
+
+function _prepareStyles (baseStyles) {
+  return {
+    ...baseStyles,
+    panel: {
+      backgroundColor: baseStyles.theme.colors.secondaryContainer,
+      borderBottomColor: baseStyles.theme.colors.secondaryLight,
+      borderBottomWidth: 1
+    },
+    paperInput: {
+      backgroundColor: baseStyles.theme.colors.surface,
+      color: baseStyles.theme.colors.onSurface
+    },
+    nativeInput: {
+      backgroundColor: baseStyles.theme.colors.surface,
+      color: baseStyles.theme.colors.onSurface
+    },
+    container: {
+      paddingHorizontal: baseStyles.oneSpace,
+      paddingTop: baseStyles.oneSpace,
+      paddingBottom: baseStyles.oneSpace,
+      gap: baseStyles.halfSpace
+    }
+  }
 }
