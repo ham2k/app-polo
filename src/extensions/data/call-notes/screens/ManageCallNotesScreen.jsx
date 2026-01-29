@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import UUID from 'react-native-uuid'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +18,7 @@ import { selectExtensionSettings, setExtensionSettings } from '../../../../store
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import ScreenContainer from '../../../../screens/components/ScreenContainer'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../../ui'
+import { resetCallLookupCache } from '../../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 
 import { BUILT_IN_NOTES, CallNotesData, Info, createDataFileDefinition } from '../CallNotesExtension'
 
@@ -28,6 +29,15 @@ const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDia
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const originalLocation = useMemo(() => def.location, [])
+
+  const currentIndex = useMemo(() =>
+    extSettings.customFiles.findIndex(f => f.identifier === identifier),
+  [extSettings.customFiles, identifier])
+
+  const totalFiles = extSettings.customFiles.length
+  const isFirst = currentIndex === 0
+  const isLast = currentIndex === totalFiles - 1
+  const isSingleFile = totalFiles === 1
 
   const updateDef = useCallback((values) => {
     const newFiles = [...extSettings.customFiles]
@@ -73,6 +83,30 @@ const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDia
     onDialogDone && onDialogDone()
   }, [originalLocation, def, onDialogDone, identifier, dispatch])
 
+  const handleUp = useCallback(() => {
+    if (isFirst) return
+
+    const newFiles = [...extSettings.customFiles]
+    const temp = newFiles[currentIndex - 1]
+    newFiles[currentIndex - 1] = newFiles[currentIndex]
+    newFiles[currentIndex] = temp
+
+    dispatch(setExtensionSettings({ key: Info.key, customFiles: newFiles }))
+    dispatch(resetCallLookupCache())
+  }, [currentIndex, isFirst, extSettings.customFiles, dispatch])
+
+  const handleDown = useCallback(() => {
+    if (isLast) return
+
+    const newFiles = [...extSettings.customFiles]
+    const temp = newFiles[currentIndex + 1]
+    newFiles[currentIndex + 1] = newFiles[currentIndex]
+    newFiles[currentIndex] = temp
+
+    dispatch(setExtensionSettings({ key: Info.key, customFiles: newFiles }))
+    dispatch(resetCallLookupCache())
+  }, [currentIndex, isLast, extSettings.customFiles, dispatch])
+
   return (
     <H2kDialog visible={true} onDismiss={onDialogDone}>
       <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.call-notes.notesFile', 'Callsign Notes File')}</H2kDialogTitle>
@@ -91,6 +125,25 @@ const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDia
           placeholder={t('extensions.call-notes.locationPlaceholder', 'https://example.com/dir/notes.txt')}
           onChangeText={(value) => updateDef({ location: value }) }
         />
+
+        {!isSingleFile && (
+          <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: styles.oneSpace }}>
+            <H2kButton
+              onPress={handleUp}
+              disabled={isFirst}
+              style={{ marginHorizontal: styles.oneSpace / 2 }}
+            >
+              {t('extensions.call-notes.increasePriority', 'Increase priority')}
+            </H2kButton>
+            <H2kButton
+              onPress={handleDown}
+              disabled={isLast}
+              style={{ marginHorizontal: styles.oneSpace / 2 }}
+            >
+              {t('extensions.call-notes.decreasePriority', 'Decrease priority')}
+            </H2kButton>
+          </View>
+        )}
       </H2kDialogContent>
       <H2kDialogActions style={{ justifyContent: 'space-between' }}>
         <H2kButton onPress={handleDelete}>{t('general.buttons.delete', 'Delete')}</H2kButton>
