@@ -659,7 +659,11 @@
       },
       "exampleRefName": "Example Tower",
       "unknownRefName": "Unknown Tower",
-      "noRefsNearby": "No towers nearby!"
+      "noRefsNearby": "No towers nearby!",
+      "postSpotAPI": {
+        "error": "Error posting TOTA spot",
+        "serverResponse": "Server responded with status {{status}} {{message}}"
+      }
     },
     "usStates": {
       "statesCount_zero": "No US States",

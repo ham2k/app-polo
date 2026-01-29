@@ -43,11 +43,11 @@ export const TOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (disp
       // Don't worry about duplicates
       if (apiResults?.error && !apiResults?.error?.data?.message?.match(/Duplicate self-spot/)) {
         Alert.alert(t('extensions.activities.tota.postSpotAPI.error', 'Error posting TOTA spot'),
-          t('extensions.activities.tota.postSpotAPI.serverResponse', 'Server responded with status {{status}} {{message}}', { status: apiResults.error?.status, message: apiResults.error?.data?.message }))
+          t('extensions.tota.postSpotAPI.serverResponse', 'Server responded with status {{status}} {{message}}', { status: apiResults.error?.status, message: apiResults.error?.data?.message }))
         return false
       }
     } catch (error) {
-      Alert.alert(t('extensions.activities.tota.postSpotAPI.error', 'Error posting TOTA spot'), error.message)
+      Alert.alert(t('extensions.tota.postSpotAPI.error', 'Error posting TOTA spot'), error.message)
       reportError('Error posting TOTA spot', error)
       return false
     }
