@@ -51,7 +51,7 @@
     "event-target-shim": "^6.0.2",
     "fast-levenshtein": "3.0.0",
     "fast-text-encoding": "^1.0.6",
-    "fast-xml-parser": "5.3.3",
+    "fast-xml-parser": "5.3.4",
     "fuzzball": "2.2.3",
     "handlebars": "4.7.8",
     "i18next": "^25.7.3",
