@@ -24,14 +24,16 @@ import { H2kCallsignInput, H2kListItem, H2kListSection, H2kMarkdown, H2kTextInpu
 
 export default function OperationStationInfoScreen ({ navigation, route }) {
   const { t } = useTranslation()
-
+  const dispatch = useDispatch()
   const styles = useThemedStyles()
 
-  const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
-  const operation = useSelector(state => selectOperation(state, route.params.operation))
 
-  const qsos = useSelector(state => selectQSOs(state, route.params.operation))
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation), [route.params.operation])
+  const operation = useSelector(operationSelector)
+
+  const qsosSelector = useCallback((state) => selectQSOs(state, route.params.operation), [route.params.operation])
+  const qsos = useSelector(qsosSelector)
 
   const [values, setValues] = useState({
     stationCall: operation?.stationCall,

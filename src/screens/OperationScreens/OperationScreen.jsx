@@ -42,13 +42,15 @@ const MIN_WIDTH_RIGHT = 40
 
 export default function OperationScreen (props) {
   const { t } = useTranslation()
-
+  const dispatch = useDispatch()
   const { navigation, route } = props
-  const styles = useThemedStyles()
   const safeAreaInsets = useSafeAreaInsets()
 
-  const dispatch = useDispatch()
-  const operation = useSelector(state => selectOperation(state, route.params.operation?.uuid ?? route.params.uuid))
+  const styles = useThemedStyles()
+
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation?.uuid ?? route.params.uuid), [route.params.operation?.uuid, route.params.uuid])
+  const operation = useSelector(operationSelector)
+
   const suggestedQSO = route?.params?.qso
   const settings = useSelector(selectSettings)
   const online = useSelector(selectRuntimeOnline)

@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { View, useColorScheme } from 'react-native'
 import { SystemBars } from 'react-native-edge-to-edge'
@@ -87,14 +87,15 @@ function prepareStyles (baseTheme, themeColor, deviceColorScheme) {
 }
 
 export default function OperationBadgeScreen ({ navigation, route }) {
+  const dispatch = useDispatch()
+
   // Maps change with the actual device color scheme, not the user preferences in the app
   const deviceColorScheme = useColorScheme()
-
   const themeColor = 'tertiary'
   const styles = useThemedStyles(prepareStyles, themeColor, deviceColorScheme)
 
-  const dispatch = useDispatch()
-  const operation = useSelector(state => selectOperation(state, route.params.operation.uuid))
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation.uuid), [route.params.operation.uuid])
+  const operation = useSelector(operationSelector)
   const settings = useSelector(selectSettings)
 
   const safeArea = useSafeAreaInsets()
@@ -103,7 +104,9 @@ export default function OperationBadgeScreen ({ navigation, route }) {
     dispatch(loadQSOs(route.params.operation.uuid))
     dispatch(loadOperation(route.params.operation.uuid))
   }, [route.params.operation.uuid, dispatch])
-  const qsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
+
+  const qsosSelector = useCallback((state) => selectQSOs(state, route.params.operation.uuid), [route.params.operation.uuid])
+  const qsos = useSelector(qsosSelector)
 
   const qth = useMemo(() => {
     try {

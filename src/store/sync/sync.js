@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { diff } from 'just-diff'
 
@@ -113,8 +113,10 @@ export function useSyncLoop({ dispatch, settings, online, appState }) {
     }
   }, [settings, lastSettings, appState])
 
+  const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
+  const lofiData = useSelector(lofiDataSelector)
+
   // Phase out dev.lofi.ham2k.net
-  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
   useEffect(() => {
     if (lofiData?.server === 'https://dev.lofi.ham2k.net') {
       dispatch(setLocalExtensionData({ key: 'ham2k-lofi', server: 'https://lofi.ham2k.net' }))

@@ -45,7 +45,9 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
   const localData = useSelector(selectLocalData)
-  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
+
+  const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
+  const lofiData = useSelector(lofiDataSelector)
 
   const [currentDialog, setCurrentDialog] = useState()
 

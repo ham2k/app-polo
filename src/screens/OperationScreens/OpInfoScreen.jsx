@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -22,7 +22,8 @@ export default function OpInfoScreen ({ navigation, route }) {
 
   const safeAreaInsets = useSafeAreaInsets()
 
-  const { sections, qsos, activeQSOs } = useSelector(state => selectSectionedQSOs(state, operation?.uuid))
+  const sectionedQSOsSelector = useCallback((state) => selectSectionedQSOs(state, operation?.uuid), [operation?.uuid])
+  const { sections, qsos, activeQSOs } = useSelector(sectionedQSOsSelector)
 
   const styles = useThemedStyles()
 

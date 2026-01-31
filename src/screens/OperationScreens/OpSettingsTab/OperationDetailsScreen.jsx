@@ -18,10 +18,11 @@ import { H2kListSection, H2kTextInput } from '../../../ui'
 
 export default function OperationDetailsScreen ({ navigation, route }) {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const styles = useThemedStyles()
 
-  const dispatch = useDispatch()
-  const operation = useSelector(state => selectOperation(state, route.params.operation))
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation), [route.params.operation])
+  const operation = useSelector(operationSelector)
 
   const [title, setTitle] = useState(operation?.userTitle || '')
   const [notes, setNotes] = useState(operation?.notes || '')

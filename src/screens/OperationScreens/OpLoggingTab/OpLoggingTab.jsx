@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import { View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -38,17 +38,20 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   const styles = useThemedStyles()
 
   const isFocused = useIsFocused()
-  const operation = useSelectorConditionally(isFocused, state => selectOperation(state, route.params.operation.uuid))
-  const vfo = useSelectorConditionally(isFocused, state => selectVFO(state))
-  const ourInfo = useSelectorConditionally(isFocused, state => selectOperationCallInfo(state, operation?.uuid))
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation.uuid), [route.params.operation.uuid])
+  const operation = useSelectorConditionally(isFocused, operationSelector)
+  const vfoSelector = useCallback((state) => selectVFO(state), [])
+  const vfo = useSelectorConditionally(isFocused, vfoSelector)
+  const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
+  const ourInfo = useSelectorConditionally(isFocused, ourInfoSelector)
 
   const settings = useSelectorConditionally(isFocused, selectSettings)
 
   useEffect(() => console.log('OpLoggingTab isFocused', isFocused), [isFocused])
 
   // Memoize the selector function to prevent excessive calls
-  const sectionedQSOsSelector = useMemo(
-    () => (state) => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false),
+  const sectionedQSOsSelector = useCallback(
+    (state) => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false),
     [operation?.uuid, settings.showDeletedQSOs]
   )
   const { sections, qsos, activeQSOs } = useSelector(sectionedQSOsSelector)

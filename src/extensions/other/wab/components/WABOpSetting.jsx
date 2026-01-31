@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
@@ -19,7 +19,10 @@ export function WABOpSetting ({ styles, operation, settings, titleStyle, descrip
   const { t } = useTranslation()
 
   const [currentDialog, setCurrentDialog] = useState()
-  const callInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+
+  const callInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
+  const callInfo = useSelector(callInfoSelector)
+
   if (callInfo?.entityPrefix?.[0] === 'G' || callInfo?.entityPrefix === 'EI') {
     return (
       <>

@@ -19,7 +19,8 @@ export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, 
 
   const dispatch = useDispatch()
 
-  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
+  const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
+  const lofiData = useSelector(lofiDataSelector)
 
   useEffect(() => {
     if (lofiData?.enabled === undefined) {

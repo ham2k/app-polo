@@ -92,7 +92,8 @@ export default function EditQSOScreen ({ navigation, route }) {
 
   const safeAreaInsets = useSafeAreaInsets()
 
-  const operation = useSelector(state => selectOperation(state, route.params.operation?.uuid ?? route.params.operation))
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation?.uuid ?? route.params.operation), [route.params.operation])
+  const operation = useSelector(operationSelector)
 
   const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
   const [qso, updateQSO] = useMemo(() => {

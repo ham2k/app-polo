@@ -26,7 +26,8 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
 
   useEffect(() => { setTimeout(() => callRef?.current?.focus(), 500) }, [])
 
-  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
+  const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
+  const lofiData = useSelector(lofiDataSelector)
 
   const [dialogVisible, setDialogVisible] = useState(visible)
   const [email, setEmail] = useState('')

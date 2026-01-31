@@ -20,14 +20,15 @@ import { Info } from './SiOTAInfo'
 import { siotaFindAllByLocation, siotaFindAllByName, siotaFindOneByReference } from './SiOTADataFile'
 import { SiOTAListItem } from './SiOTAListItem'
 
-export function SiOTAActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function SiOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
 
   const online = useSelector(selectRuntimeOnline)
 
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+  const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
+  const ourInfo = useSelector(ourInfoSelector)
 
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
@@ -50,10 +51,10 @@ export function SiOTAActivityOptions({ styles, operation, settings, refs: allRef
       error => {
         console.info('Geolocation error', error)
       }, {
-      enableHighAccuracy: true,
-      timeout: 1000 * 30 /* 30 seconds */,
-      maximumAge: 1000 * 60 /* 1 minute */
-    }
+        enableHighAccuracy: true,
+        timeout: 1000 * 30 /* 30 seconds */,
+        maximumAge: 1000 * 60 /* 1 minute */
+      }
     )
   }, [])
 

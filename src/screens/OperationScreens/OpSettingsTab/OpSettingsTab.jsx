@@ -34,7 +34,8 @@ export default function OpSettingsTab ({ navigation, route }) {
   const safeAreaInsets = useSafeAreaInsets()
 
   const isFocused = useIsFocused()
-  const operation = useSelectorConditionally(isFocused, state => selectOperation(state, route.params.operation.uuid))
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation.uuid), [route.params.operation.uuid])
+  const operation = useSelectorConditionally(isFocused, operationSelector)
   const settings = useSelectorConditionally(isFocused, selectSettings)
 
   const dispatch = useDispatch()

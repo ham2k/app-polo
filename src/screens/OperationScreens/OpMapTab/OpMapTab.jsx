@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Keyboard, View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
 import { useSelector } from 'react-redux'
@@ -33,7 +33,8 @@ export default function OpMapTab ({ navigation, route }) {
   const isFocused = useIsFocused()
   const settings = useSelectorConditionally(isFocused, selectSettings)
 
-  const operation = useSelectorConditionally(isFocused, state => selectOperation(state, route.params.operation.uuid))
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation.uuid), [route.params.operation.uuid])
+  const operation = useSelectorConditionally(isFocused, operationSelector)
 
   const [loggingState] = useUIStateConditionally(isFocused, 'OpLoggingTab', 'loggingState', {})
 
@@ -52,7 +53,9 @@ export default function OpMapTab ({ navigation, route }) {
     }
   }, [operation.grid])
 
-  const allQsos = useSelector(state => selectQSOs(state, route.params.operation.uuid))
+  const allQsosSelector = useCallback((state) => selectQSOs(state, route.params.operation.uuid), [route.params.operation.uuid])
+  const allQsos = useSelector(allQsosSelector)
+
   const qsos = useMemo(() => allQsos.filter(qso => !qso.deleted && !qso.event), [allQsos])
 
   const [dismissedWarnings, setDismissedWarnings] = useState({})

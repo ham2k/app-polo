@@ -37,7 +37,8 @@ export default function StartScreen ({ setAppState }) {
   // const { height } = useWindowDimensions() <-- broken on iOS, no rotation
 
   const settings = useSelector(selectSettings)
-  const onboardedOn = useSelector((state) => selectSystemFlag(state, 'onboardedOn'))
+  const onboardedOnSelector = useCallback((state) => selectSystemFlag(state, 'onboardedOn'), [])
+  const onboardedOn = useSelector(onboardedOnSelector)
   const dispatch = useDispatch()
   const messages = useSelector(selectRuntimeMessages)
 

@@ -19,12 +19,13 @@ import { Info } from './GMAInfo'
 import { GMAListItem } from './GMAListItem'
 import { gmaFindAllByLocation, gmaFindAllByName, gmaFindOneByReference } from './GMADataFile'
 
-export function GMAActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function GMAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
 
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+  const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
+  const ourInfo = useSelector(ourInfoSelector)
 
   const activityRef = useMemo(() => findRef(allRefs, Info.activationType) ?? {}, [allRefs])
 
@@ -47,10 +48,10 @@ export function GMAActivityOptions({ styles, operation, settings, refs: allRefs,
       error => {
         console.info('Geolocation error', error)
       }, {
-      enableHighAccuracy: true,
-      timeout: 1000 * 30 /* 30 seconds */,
-      maximumAge: 1000 * 60 /* 1 minute */
-    }
+        enableHighAccuracy: true,
+        timeout: 1000 * 30 /* 30 seconds */,
+        maximumAge: 1000 * 60 /* 1 minute */
+      }
     )
   }, [])
 

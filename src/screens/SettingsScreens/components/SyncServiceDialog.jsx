@@ -29,7 +29,8 @@ export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) 
 
   const dispatch = useDispatch()
 
-  const lofiSettings = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
+  const lofiSettingsSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
+  const lofiSettings = useSelector(lofiSettingsSelector)
 
   const [dialogVisible, setDialogVisible] = useState(false)
 

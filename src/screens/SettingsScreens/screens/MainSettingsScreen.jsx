@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'react-native-paper'
 import { Linking, ScrollView, View } from 'react-native'
@@ -145,7 +145,9 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
     return hooks
   }, [settings]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
+  const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
+  const lofiData = useSelector(lofiDataSelector)
+
   const showSyncSettings = useMemo(() => {
     return lofiData?.account?.cutoff_date_millis &&
       (Date.now() - lofiData?.account?.cutoff_date_millis > 1000 * 60 * 60 * 24)

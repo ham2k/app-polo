@@ -59,7 +59,8 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   const isFocused = useIsFocused()
   const settings = useSelectorConditionally(isFocused, selectSettings)
   const online = useSelectorConditionally(isFocused, selectRuntimeOnline)
-  const vfo = useSelectorConditionally(isFocused, state => selectVFO(state))
+  const vfoSelector = useCallback((state) => selectVFO(state), [])
+  const vfo = useSelectorConditionally(isFocused, vfoSelector)
 
   const filterState = useMemo(() => settings?.spots?.filters || {}, [settings])
   const updateFilterState = useCallback((newState) => {
@@ -71,7 +72,8 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
 
   const allOperations = useSelectorConditionally(isFocused, selectAllOperations)
 
-  const ourInfo = useSelectorConditionally(isFocused, state => selectOperationCallInfo(state, operation.uuid))
+  const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation.uuid), [operation.uuid])
+  const ourInfo = useSelectorConditionally(isFocused, ourInfoSelector)
 
   const [showControls, setShowControls] = useState(false)
 

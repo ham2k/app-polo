@@ -30,7 +30,8 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
 
   const dispatch = useDispatch()
 
-  const operation = useSelector(state => selectOperation(state, route.params.operation))
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation), [route.params.operation])
+  const operation = useSelector(operationSelector)
 
   const [refs, setRefs] = useState(operation?.refs || [])
 

@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useIsFocused } from '@react-navigation/native'
@@ -20,10 +20,12 @@ import { OpInfoPanel } from './components/OpInfoPanel'
 
 export default function OpInfoTab ({ navigation, route }) {
   const isFocused = useIsFocused()
-  const operation = useSelectorConditionally(isFocused ? 'opInfoTab operation' : undefined, state => selectOperation(state, route.params.operation.uuid))
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation.uuid), [route.params.operation.uuid])
+  const operation = useSelectorConditionally(isFocused ? 'opInfoTab operation' : undefined, operationSelector)
   const [loggingState] = useUIStateConditionally(isFocused, 'OpLoggingTab', 'loggingState', {})
 
-  const { sections, qsos, activeQSOs } = useSelectorConditionally(isFocused, state => selectSectionedQSOs(state, operation?.uuid))
+  const sectionedQSOsSelector = useCallback((state) => selectSectionedQSOs(state, operation?.uuid), [operation?.uuid])
+  const { sections, qsos, activeQSOs } = useSelectorConditionally(isFocused, sectionedQSOsSelector)
 
   const themeColor = useMemo(() => {
     return (!loggingState?.qso?._isNew ? 'secondary' : 'tertiary')

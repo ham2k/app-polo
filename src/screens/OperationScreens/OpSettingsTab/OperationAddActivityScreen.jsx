@@ -23,7 +23,10 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
-  const operation = useSelector(state => selectOperation(state, route.params.operation))
+
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation), [route.params.operation])
+  const operation = useSelector(operationSelector)
+
   const currentActivities = useMemo(() => {
     const activities = {}
     ;(operation?.refs || []).filter(ref => ref.type).forEach(ref => {

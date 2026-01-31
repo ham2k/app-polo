@@ -26,7 +26,8 @@ export function POTALoggingControl (props) {
   const ref = useRef()
   useEffect(() => { setTimeout(() => ref?.current?.focus(), 200) }, [])
 
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+  const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
+  const ourInfo = useSelector(ourInfoSelector)
 
   const refsString = useMemo(() => {
     const refs = filterRefs(qso, Info.huntingType)

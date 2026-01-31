@@ -109,7 +109,8 @@ export default function ManageCallNotesScreen ({ navigation, dispatch }) {
 
   const styles = useThemedStyles()
 
-  const extSettings = useSelector(state => selectExtensionSettings(state, Info.key))
+  const extSettingsSelector = useCallback((state) => selectExtensionSettings(state, Info.key), [])
+  const extSettings = useSelector(extSettingsSelector)
 
   const customFiles = useMemo(() => {
     return extSettings?.customFiles || []

@@ -32,14 +32,20 @@ import { buildTitleForOperation } from '../OperationScreen'
 
 export default function OperationDataScreen (props) {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
 
   const { navigation, route } = props
   const styles = useThemedStyles()
 
-  const dispatch = useDispatch()
-  const operation = useSelector(state => selectOperation(state, route.params.operation))
-  const qsos = useSelector(state => selectQSOs(state, operation?.uuid))
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation), [route.params.operation])
+  const operation = useSelector(operationSelector)
+
+  const qsosSelector = useCallback((state) => selectQSOs(state, operation?.uuid), [operation?.uuid])
+  const qsos = useSelector(qsosSelector)
+
+  const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
+  const ourInfo = useSelector(ourInfoSelector)
+
   const settings = useSelector(selectSettings)
 
   useEffect(() => { // When starting, make sure all operation data is loaded

@@ -36,7 +36,8 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
   const styles = useThemedStyles(prepareStyles, themeColor, style)
   const isFocused = useIsFocused()
   const settings = useSelectorConditionally(isFocused, selectSettings)
-  const ourInfo = useSelectorConditionally(state => selectOperationCallInfo(state, operation?.uuid))
+  const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
+  const ourInfo = useSelectorConditionally(isFocused, ourInfoSelector)
 
   const call = useMemo(() => {
     const calls = qso?.their?.call?.split(',')?.filter(x => x)

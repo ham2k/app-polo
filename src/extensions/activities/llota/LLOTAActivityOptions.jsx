@@ -27,7 +27,8 @@ export function LLOTAActivityOptions ({ styles, operation, settings, refs: allRe
 
   const online = useSelector(selectRuntimeOnline)
 
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+  const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
+  const ourInfo = useSelector(ourInfoSelector)
 
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 

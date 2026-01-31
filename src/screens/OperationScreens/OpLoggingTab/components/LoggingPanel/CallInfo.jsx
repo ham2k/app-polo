@@ -54,7 +54,9 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
 
   const navigation = useNavigation()
   const online = useSelector(selectRuntimeOnline)
-  const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+
+  const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
+  const ourInfo = useSelector(ourInfoSelector)
 
   styles = prepareStyles(styles, { style })
 

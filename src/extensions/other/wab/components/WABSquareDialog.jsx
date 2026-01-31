@@ -28,7 +28,8 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
   const [square, setSquareValue] = useState('')
   const [isValid, setIsValidValue] = useState()
 
-  const callInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
+  const callInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
+  const callInfo = useSelector(callInfoSelector)
 
   useEffect(() => {
     setDialogVisible(visible)

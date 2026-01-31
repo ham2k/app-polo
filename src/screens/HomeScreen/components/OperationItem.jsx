@@ -19,7 +19,9 @@ import { selectOperation } from '../../../store/operations'
 import { H2kMarkdown, H2kPressable } from '../../../ui'
 
 export default function OperationItem ({ operationId, settings, onPress, styles, style }) {
-  const operation = useSelector(state => selectOperation(state, operationId))
+  const operationSelector = useCallback((state) => selectOperation(state, operationId), [operationId])
+  const operation = useSelector(operationSelector)
+
   const pressHandler = useCallback(() => {
     onPress && onPress(operation)
   }, [onPress, operation])

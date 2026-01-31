@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux'
@@ -81,7 +81,9 @@ function MainApp ({ navigationTheme }) {
   const flags = useSelector(selectFeatureFlags)
   const globalDialog = useSelector(selectGlobalDialog)
   const online = useSelector(selectRuntimeOnline)
-  const lofiData = useSelector(state => selectLocalExtensionData(state, 'ham2k-lofi'))
+
+  const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
+  const lofiData = useSelector(lofiDataSelector)
 
   useConfigForDistribution({ settings, flags })
 

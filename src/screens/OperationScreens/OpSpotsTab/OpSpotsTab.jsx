@@ -27,7 +27,8 @@ export default function OpSpotsTab ({ navigation, route }) {
   const settings = useSelectorConditionally(isFocused, selectSettings)
 
   const operation = route.params.operation
-  const { sections, qsos } = useSelectorConditionally(isFocused, state => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false))
+  const sectionedQSOsSelector = useCallback((state) => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false), [operation?.uuid, settings.showDeletedQSOs])
+  const { sections, qsos } = useSelectorConditionally(isFocused, sectionedQSOsSelector)
 
   const spotsHooks = useFindHooks('spots')
 

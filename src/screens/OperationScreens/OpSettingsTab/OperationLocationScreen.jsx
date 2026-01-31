@@ -24,12 +24,13 @@ import { H2kGridInput, H2kListItem, H2kListSection, H2kTextInput } from '../../.
 
 export default function OperationLocationScreen ({ navigation, route }) {
   const { t } = useTranslation()
-
+  const dispatch = useDispatch()
   const styles = useThemedStyles()
 
-  const dispatch = useDispatch()
   const settings = useSelector(selectSettings)
-  const operation = useSelector(state => selectOperation(state, route.params.operation))
+
+  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation), [route.params.operation])
+  const operation = useSelector(operationSelector)
 
   const refsWithHandlers = useMemo(() => {
     return (operation?.refs || []).filter(ref => ref.grid && ref.type).map(ref => {

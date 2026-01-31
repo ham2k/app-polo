@@ -7,11 +7,14 @@
 
 import { useDispatch, useSelector } from 'react-redux'
 import { selectStateForComponent, setStateForComponent, updateStateForComponent } from './uiSlice'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
-export function useUIState (component, key, initialValue) {
+export function useUIState(component, key, initialValue) {
   const dispatch = useDispatch()
-  const componentData = useSelector(state => selectStateForComponent(state, component))
+
+  const componentDataSelector = useCallback((state) => selectStateForComponent(state, component), [component])
+  const componentData = useSelector(componentDataSelector)
+
   const setter = useCallback((newData) => dispatch(setStateForComponent({ component, [key]: newData })), [dispatch, component, key])
   const updater = useCallback((newData) => dispatch(updateStateForComponent({ component, [key]: newData })), [dispatch, component, key])
 
