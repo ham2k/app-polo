@@ -59,7 +59,7 @@ const ActivityHook = {
 
   Options: WWBOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+  generalHuntingType: ({ operation }) => Info.huntingType,
 
   sampleOperations: ({ settings, callInfo }) => {
     return [

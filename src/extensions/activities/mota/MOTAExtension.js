@@ -51,7 +51,7 @@ const ActivityHook = {
   postSelfSpot: MOTAPostSelfSpot,
   Options: MOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+  generalHuntingType: ({ operation }) => Info.huntingType,
 
   sampleOperations: ({ settings, callInfo }) => {
     return [

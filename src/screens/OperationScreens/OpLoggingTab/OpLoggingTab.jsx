@@ -54,7 +54,7 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
     (state) => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false),
     [operation?.uuid, settings.showDeletedQSOs]
   )
-  const { sections, qsos, activeQSOs } = useSelector(sectionedQSOsSelector)
+  const { sections, qsos, activeQSOs } = useSelectorConditionally(isFocused, sectionedQSOsSelector)
   // console.log('OpLoggingTab -- render', qsos?.length)
   // useEffect(() => {
   //   console.log('OpLoggingTab -- qsos', qsos?.length)

@@ -20,7 +20,7 @@ const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 const VERBOSE = 0
 const DEBUG_KEYS = ['pota', 'qp']
 
-export function scoringHandlersForOperation({ operation, settings }) {
+export function scoringHandlersForOperation({ operation }) {
   const scoringKeys = {}
 
   // Get handlers for operation refs
@@ -40,7 +40,7 @@ export function scoringHandlersForOperation({ operation, settings }) {
 
   // Get handlers for general hunting activities
   findHooks('activity').forEach(hook => {
-    const type = hook.generalHuntingType && hook.generalHuntingType({ operation, settings })
+    const type = hook.generalHuntingType && hook.generalHuntingType({ operation })
     const handler = type && findBestHook(`ref:${type}`)
     if (handler && handler.scoringForQSO && !scoringKeys[handler.key]) {
       scoringHandlers.push({ handler, ref: { type } })
@@ -65,7 +65,7 @@ export function scoringHandlersForOperation({ operation, settings }) {
   return scoringHandlers.sort((a, b) => b.priority - a.priority)
 }
 
-export function analyzeAndSectionQSOs({ qsos, operation, settings, showDeletedQSOs = true }) {
+export function analyzeAndSectionQSOs({ qsos, operation, showDeletedQSOs = true }) {
   const t = GLOBAL?.t
 
   qsos = qsos ?? []
@@ -73,7 +73,7 @@ export function analyzeAndSectionQSOs({ qsos, operation, settings, showDeletedQS
 
   if (VERBOSE) console.log('\n\n\nAnalyzing and sectioning QSOs', qsos.length)
 
-  let scoringHandlers = scoringHandlersForOperation({ operation, settings })
+  let scoringHandlers = scoringHandlersForOperation({ operation })
 
   const activeQSOs = qsos.filter(qso => !qso.deleted && !qso.event)
 
@@ -129,7 +129,7 @@ export function analyzeAndSectionQSOs({ qsos, operation, settings, showDeletedQS
 
         if (VERBOSE) console.log('\nOperation Break', qso.event)
 
-        scoringHandlers = scoringHandlersForOperation({ operation: currentOperation, settings })
+        scoringHandlers = scoringHandlersForOperation({ operation: currentOperation })
 
         if (VERBOSE) console.log('-- New scoring handlers', scoringHandlers.map(({ handler, ref }) => (`${handler.key} ${ref.ref ?? ref.location ?? ref.type ?? '-'}`)).join(', '))
       }

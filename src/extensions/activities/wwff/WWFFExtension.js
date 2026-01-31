@@ -57,7 +57,7 @@ const ActivityHook = {
   postSelfSpot: WWFFPostSelfSpot,
   Options: WWFFActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+  generalHuntingType: ({ operation }) => Info.huntingType,
 
   sampleOperations: ({ settings, callInfo, t }) => {
     return [

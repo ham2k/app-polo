@@ -62,7 +62,7 @@ const ActivityHook = {
   postSelfSpot: POTAPostSelfSpot,
   Options: POTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+  generalHuntingType: ({ operation }) => Info.huntingType,
 
   sampleOperations: ({ settings, callInfo, t }) => {
     return [

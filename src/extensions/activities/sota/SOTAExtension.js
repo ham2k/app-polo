@@ -103,7 +103,7 @@ const ActivityHook = {
 
   Options: SOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+  generalHuntingType: ({ operation }) => Info.huntingType,
 
   sampleOperations: ({ t, settings, callInfo }) => {
     return [

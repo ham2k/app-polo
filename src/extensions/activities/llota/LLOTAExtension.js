@@ -60,7 +60,7 @@ const ActivityHook = {
   postSelfSpot: LLOTAPostSelfSpot,
   Options: LLOTAActivityOptions,
 
-  generalHuntingType: ({ operation, settings }) => Info.huntingType,
+  generalHuntingType: ({ operation }) => Info.huntingType,
 
   sampleOperations: ({ settings, callInfo, t }) => {
     return [
