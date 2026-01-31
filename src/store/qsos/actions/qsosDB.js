@@ -34,7 +34,7 @@ export const prepareQSORow = (row) => {
 
 export const loadQSOs = (uuid) => async (dispatch, getState) => {
   dispatch(actions.setQSOsStatus({ uuid, status: 'loading' }))
-
+  console.log('loadQSOs', { uuid })
   let qsos = []
   try {
     // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
@@ -50,9 +50,10 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
     }
   })
 
+  console.log('loadQSOs -- qsos', qsos.length)
   dispatch(actions.setQSOs({ uuid, qsos }))
   dispatch(actions.setQSOsStatus({ uuid, status: 'ready' }))
-
+  console.log('loadQSOs -- done')
   let operationInfo = getState().operations.info[uuid]
 
   const qsoCount = qsos.filter(qso => !qso.deleted && !qso.event).length
@@ -206,7 +207,7 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
 
 export async function markQSOsAsSynced(qsos) {
   if (!qsos || qsos.length === 0) return
-  await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `"${q.uuid}"`).join(',')})`, [])
+  await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `'${q.uuid}'`).join(',')})`, [])
 }
 
 export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getState) => {

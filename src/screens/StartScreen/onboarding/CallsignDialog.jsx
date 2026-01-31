@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,12 +8,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Text } from 'react-native-paper'
-import RNRestart from 'react-native-restart'
 import { useTranslation } from 'react-i18next'
 
 import { setSettings } from '../../../store/settings'
 import { persistor } from '../../../store'
 import { H2kButton, H2kCallsignInput, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
+import { closeDatabaseAndRestart } from '../../../store/db/db'
 
 export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const { t } = useTranslation()
@@ -42,7 +42,7 @@ export function CallsignDialog ({ settings, styles, onDialogNext, onDialogPrevio
       setImmediate(async () => {
         await dispatch(setSettings({ devMode: true }))
         await persistor.flush()
-        setTimeout(() => RNRestart.restart(), 1000)
+        setTimeout(() => closeDatabaseAndRestart(), 1000)
       })
     } else {
       dispatch(setSettings({ operatorCall: value }))

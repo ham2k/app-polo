@@ -1,12 +1,11 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 import UUID from 'react-native-uuid'
-import RNRestart from 'react-native-restart'
 import RNFetchBlob from 'react-native-blob-util'
 
 import { reportError } from '../../../distro'
@@ -14,7 +13,7 @@ import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
 import { persistor } from '../..'
 import { actions as qsosActions } from '../../qsos'
-import { dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
+import { closeDatabaseAndRestart, dbExecute, dbSelectAll, dbSelectOne } from '../../db/db'
 import { sendOperationsToSyncService } from '../../sync'
 import { actions } from '../operationsSlice'
 import { selectSettings } from '../../settings'
@@ -196,7 +195,7 @@ export const mergeSyncOperations = ({ operations }) => async (dispatch, getState
 
 export async function markOperationsAsSynced(operations) {
   if (!operations || operations.length === 0) return
-  await dbExecute(`UPDATE operations SET synced = true WHERE uuid IN (${operations.map(q => `"${q.uuid}"`).join(',')})`, [])
+  await dbExecute(`UPDATE operations SET synced = true WHERE uuid IN (${operations.map(q => `'${q.uuid}'`).join(',')})`, [])
 }
 
 export const resetSyncedStatus = () => async (dispatch) => {
@@ -220,7 +219,7 @@ export const clearAllOperationData = () => async (dispatch) => {
   await persistor.purge()
 
   setTimeout(() => {
-    RNRestart.restart()
+    closeDatabaseAndRestart()
   }, 500)
 }
 
@@ -249,7 +248,7 @@ export async function getSyncCounts() {
   const counts = {}
 
   const opCounts = await dbSelectAll('SELECT COUNT(*) as count, synced FROM operations GROUP BY synced')
-  const qsoCounts = await dbSelectAll('SELECT COUNT(*) as count, synced FROM qsos WHERE operation != "historical" GROUP BY synced')
+  const qsoCounts = await dbSelectAll("SELECT COUNT(*) as count, synced FROM qsos WHERE operation != 'historical' GROUP BY synced")
 
   counts.operations = opCounts.reduce((acc, row) => {
     acc[row.synced ? 'synced' : 'pending'] = row.count
@@ -311,7 +310,7 @@ export const deleteOperation = (uuid) => async (dispatch, getState) => {
 
 export const restoreOperation = (uuid) => async (dispatch) => {
   await dbExecute('UPDATE operations SET deleted = ? WHERE uuid = ?', [false, uuid])
-  await dbExecute('UPDATE qsos SET deleted = ifnull(json_extract("data", "$.deleted"), false) WHERE operation = ?', [uuid])
+  await dbExecute("UPDATE qsos SET deleted = ifnull(json_extract('data', '$.deleted'), false) WHERE operation = ?", [uuid])
   await dispatch(actions.unsetOperation(uuid))
   await dispatch(qsosActions.unsetQSOs(uuid))
   await dispatch(loadOperation(uuid))

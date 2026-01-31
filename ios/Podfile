@@ -29,6 +29,14 @@ target 'polo' do
 
   pre_install do |installer|
     $RNMapboxMaps.pre_install(installer)
+
+    installer.pod_targets.each do |pod|
+      if pod.name.eql?('op-sqlite')
+        def pod.build_type
+          Pod::BuildType.static_library
+        end
+      end
+    end
   end
 
   post_install do |installer|

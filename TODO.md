@@ -42,15 +42,6 @@ onValueChange={(v) => {
 ```
 
 
-
-
-### React Native SQLite
-
-Consider migrating to https://github.com/margelo/react-native-nitro-sqlite
-or https://github.com/OP-Engineering/op-sqlite
-
-
-
 -----
 
 # SOTAMat

@@ -2286,8 +2286,6 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-sqlite-2 (3.6.2):
-    - React-Core
   - react-native-vector-icons-fontawesome6 (12.3.0)
   - react-native-vector-icons-material-design-icons (12.4.0)
   - React-NativeModulesApple (0.83.1):
@@ -3325,7 +3323,6 @@ DEPENDENCIES:
   - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
-  - react-native-sqlite-2 (from `../node_modules/react-native-sqlite-2`)
   - "react-native-vector-icons-fontawesome6 (from `../node_modules/@react-native-vector-icons/fontawesome6`)"
   - "react-native-vector-icons-material-design-icons (from `../node_modules/@react-native-vector-icons/material-design-icons`)"
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -3499,8 +3496,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
-  react-native-sqlite-2:
-    :path: "../node_modules/react-native-sqlite-2"
   react-native-vector-icons-fontawesome6:
     :path: "../node_modules/@react-native-vector-icons/fontawesome6"
   react-native-vector-icons-material-design-icons:
@@ -3656,7 +3651,6 @@ SPEC CHECKSUMS:
   react-native-restart: 0bc732f4461709022a742bb29bcccf6bbc5b4863
   react-native-safe-area-context: 0a3b034bb63a5b684dd2f5fffd3c90ef6ed41ee8
   react-native-splash-screen: fdba1769a3837247479f5fea508a61e826aabf54
-  react-native-sqlite-2: 1356d7be6e51712e5de9fdc0be2be140162b563d
   react-native-vector-icons-fontawesome6: 1a73ea16a698f70851ad47e94521a99499e8e974
   react-native-vector-icons-material-design-icons: 76cd460b3540b80527b4a80fb7f867f7deedb498
   React-NativeModulesApple: e554252d69442010807867cc7d70c0008048ad20
@@ -3707,6 +3701,6 @@ SPEC CHECKSUMS:
   Turf: c9eb11a65d96af58cac523460fd40fec5061b081
   Yoga: 33b53536a0500d039f2cd78caf1d5d68712d3af7
 
-PODFILE CHECKSUM: cd300816a79562a15864910d07de5c65922fa9dd
+PODFILE CHECKSUM: bb2f55d707600380b120f6338650c74d348c35c0
 
 COCOAPODS: 1.16.2
