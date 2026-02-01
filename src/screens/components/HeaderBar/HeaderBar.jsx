@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { tweakStringForVoiceOver } from '../../../tools/a11yTools'
 
-import LOGO from './img/ham2k-800-filled.png'
+import LOGO from './img/ham2k-square-300.png'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
@@ -36,7 +36,7 @@ export default function HeaderBar ({
   onRightActionPress = onRightActionPress ?? options?.onRightActionPress
 
   const safeAreaInsets = useSafeAreaInsets()
-  const styles = useThemedStyles(prepareStyles, { leftAction, safeAreaInsets, splitView })
+  const styles = useThemedStyles(_prepareStyles, { leftAction, safeAreaInsets, splitView })
 
   const [showMenu, setShowMenu] = useState(false)
   const onRightActionShowMenu = useCallback(() => {
@@ -99,7 +99,11 @@ export default function HeaderBar ({
           </View>
         )}
         {leftAction === 'logo' && (
-          <Image source={LOGO} style={{ marginLeft: -styles.oneSpace * 1.5, height: 3 * styles.oneSpace, width: 8 * styles.oneSpace }} resizeMode="contain" />
+          <Image
+            source={LOGO}
+            style={styles.logo}
+            resizeMode="contain"
+          />
         )}
         {leftAction === 'none' && (
           <Text accessible={false}>{' '}</Text>
@@ -190,7 +194,7 @@ export default function HeaderBar ({
   )
 }
 
-function prepareStyles (baseStyles, { leftAction, safeAreaInsets, splitView }) {
+function _prepareStyles (baseStyles, { leftAction, safeAreaInsets, splitView }) {
   return ({
     ...baseStyles,
     root: {
@@ -266,8 +270,17 @@ function prepareStyles (baseStyles, { leftAction, safeAreaInsets, splitView }) {
     },
     sideContent: {
       flex: 0,
-      width: baseStyles.oneSpace * ((leftAction === 'logo') ? 7.5 : 3),
+      // borderWidth: 1,
+      borderColor: 'yellow',
+      width: baseStyles.oneSpace * ((leftAction === 'logo') ? 6 : 3),
       alignItems: 'flex-end'
+    },
+    logo: {
+      // borderWidth: 1,
+      borderColor: 'red',
+      // marginLeft: -baseStyles.oneSpace * 1.5,
+      height: 6 * baseStyles.oneSpace,
+      width: 6 * baseStyles.oneSpace
     },
     appBarTheme: {
       colors: {

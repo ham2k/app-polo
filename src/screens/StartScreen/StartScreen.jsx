@@ -29,7 +29,7 @@ import releaseNotes from '../../../RELEASE-NOTES.json'
 import packageJson from '../../../package.json'
 
 const SPLASH_IMAGE = require('./img/launch_screen.jpg')
-const HAM2K_LOGO = require('./img/ham2k-3000-filled.png')
+const POLO_WORDMARK = require('./img/polo-wordmark.png')
 
 export default function StartScreen ({ setAppState }) {
   const { t } = useTranslation()
@@ -111,10 +111,9 @@ export default function StartScreen ({ setAppState }) {
         <SafeAreaView style={styles.container}>
           <View style={styles.titleBoxSpacer} />
           <Pressable style={[styles.titleBoxTop, { backgroundColor: 'transparent' }]} onPress={() => { handleInterruption(); return true }} android_ripple={false}>
-            <Image source={HAM2K_LOGO} style={{ height: 60, width: 500, alignSelf: 'center', backgroundColor: 'transparent' }} resizeMode="contain" />
+            <Image source={POLO_WORDMARK} style={{ height: styles.portrait ? 200 : 160, alignSelf: 'center', backgroundColor: 'transparent' }} resizeMode="contain" />
           </Pressable>
           <Pressable style={styles.titleBoxBottom} onPress={() => { handleInterruption(); return true }} >
-            <Text style={styles.polo} adjustsFontSizeToFit={false} numberOfLines={1}>{'Portable Logger' /* dont't translate this */}</Text>
             <Text style={styles.credits} adjustsFontSizeToFit={true} numberOfLines={1}>{t('screens.start.credits', 'by KI2D and friends')}</Text>
             <Text style={styles.version}>{translatedVersionName({ t, version: packageJson.version }).full}</Text>
           </Pressable>
@@ -181,6 +180,7 @@ function prepareStyles (baseTheme, height, dialogVisible) {
     },
     titleBoxTop: {
       // justifyContent: 'flex-end',
+      marginTop: baseTheme.portrait ? baseTheme.oneSpace * 6 : baseTheme.oneSpace,
       backgroundColor: topBackColor
     },
     titleBoxBottom: {
