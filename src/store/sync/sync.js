@@ -224,7 +224,7 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
     const counts = await getSyncCounts()
 
     // Prepare a batch of unsynced QSOs to send to the server
-    const qsos = await queryQSOs("WHERE synced IS false AND operation != 'historical' ORDER BY startOnMillis DESC LIMIT ?", [qsoBatchSize])
+    const qsos = await queryQSOs("WHERE synced IS false AND operation != 'historical' ORDER BY startAtMillis DESC LIMIT ?", [qsoBatchSize])
     if (qsos.length > 0) {
       const opIds = qsos.map(q => `'${q.operation}'`).join(',')
       // Ensure the Operations referenced by the `qsos` are also included in the batch
@@ -363,7 +363,7 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
           } else {
             // When doing a regular batch, we want to check
             // if there are any pending QSOs or Operations to keep syncing
-            const anyPendingQSO = await queryQSOs("WHERE synced IS false AND operation != 'historical' ORDER BY startOnMillis DESC LIMIT 1")
+            const anyPendingQSO = await queryQSOs("WHERE synced IS false AND operation != 'historical' ORDER BY startAtMillis DESC LIMIT 1")
             const anyPendingOperation = await queryOperations('WHERE synced IS false LIMIT 1')
 
             const receivedAllUpdates = ((response.json.operations?.length || 0) < syncPayload.meta?.sync?.operations.limit) && ((response.json?.qsos?.length || 0) < syncPayload.meta?.sync?.qsos?.limit)

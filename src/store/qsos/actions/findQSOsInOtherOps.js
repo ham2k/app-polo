@@ -8,27 +8,26 @@
 import { dbSelectAll } from '../../db/db'
 import { prepareQSORow } from './qsosDB'
 
-export async function findQSOsInOtherOps (calls, options = {}) {
+export async function findQSOsInOtherOps(calls, options = {}) {
   const whereClauses = []
   const whereArgs = []
 
   if (options.startMillis) {
-    whereClauses.push('qsos.startOnMillis >= ?')
+    whereClauses.push('qsos.startAtMillis >= ?')
     whereArgs.push(options.startMillis)
   }
 
   if (options.endMillis) {
-    whereClauses.push('qsos.startOnMillis <= ?')
+    whereClauses.push('qsos.startAtMillis <= ?')
     whereArgs.push(options.endMillis)
   }
 
   const uuid = options.uuid ?? options.operation?.uuid ?? ''
 
-  // TODO: Rename `startOnMillis` to `startAtMillis` in the database
   let rows = await dbSelectAll(
     `
     SELECT
-      qsos.key, qsos.ourCall, qsos.theirCall, qsos.operation, qsos.startOnMillis, qsos.band, qsos.mode, qsos.data
+      qsos.key, qsos.ourCall, qsos.theirCall, qsos.operation, qsos.startAtMillis, qsos.band, qsos.mode, qsos.data
     FROM
       qsos
     LEFT OUTER JOIN operations ON operations.uuid = qsos.operation
@@ -43,12 +42,6 @@ export async function findQSOsInOtherOps (calls, options = {}) {
   )
 
   rows = rows.filter(row => !row.deleted)
-  rows.forEach(row => {
-    if (row.startOnMillis) {
-      row.startAtMillis = row.startOnMillis
-      delete row.startOnMillis
-    }
-  })
 
   return rows.map(row => prepareQSORow(row))
 }

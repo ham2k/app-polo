@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -14,7 +14,7 @@ import { Platform } from 'react-native'
 import { fmtTimestamp } from '../../tools/timeFormats'
 import { queryOperations } from '../operations'
 
-const CURRENT_VERSION = 9
+const CURRENT_VERSION = 10
 
 export async function createTables(dbParams = {}) {
   let version
@@ -29,7 +29,7 @@ export async function createTables(dbParams = {}) {
 
   if (version === 0) {
     // Create tables from scratch
-    console.log('createTables -- creating version 7')
+    console.log('createTables -- creating tables from scratch')
     await dbExecute(`
         CREATE TABLE IF NOT EXISTS version (
           version INTEGER PRIMARY KEY NOT NULL
@@ -54,7 +54,7 @@ export async function createTables(dbParams = {}) {
           theirCall TEXT,
           mode TEXT,
           band TEXT,
-          startOnMillis INTEGER,
+          startAtMillis INTEGER,
           data TEXT,
           deleted BOOLEAN DEFAULT false,
           synced BOOLEAN DEFAULT false
@@ -143,7 +143,7 @@ export async function createTables(dbParams = {}) {
       }
       const uuidSuffix = UUID.v4().split('-').slice(1).join('-')
       await dbExecute(`
-            UPDATE qsos SET uuid = lower(hex(randomblob(4))) || "-" || ?
+            UPDATE qsos SET uuid = lower(hex(randomblob(4))) || '-' || ?
           `, [uuidSuffix], { dbParams })
       await dbExecute(`
         CREATE TABLE IF NOT EXISTS qsos_new (
@@ -199,18 +199,18 @@ export async function createTables(dbParams = {}) {
 
       await dbExecute(`
         UPDATE operations SET
-          startAtMillisMin = json_extract(data, "$.startAtMillisMin"),
-          startAtMillisMax = json_extract(data, "$.startAtMillisMax"),
+          startAtMillisMin = json_extract(data, '$.startAtMillisMin'),
+          startAtMillisMax = json_extract(data, '$.startAtMillisMax'),
           qsoCount = json_extract(data, "$.qsoCount")
       `, [], dbParams)
       await dbExecute(`
         UPDATE operations SET
-          startAtMillisMin = json_extract(data, "$.startOnMillisMin")
+          startAtMillisMin = json_extract(data, '$.startOnMillisMin')
         WHERE startAtMillisMin = 0 OR startAtMillisMin IS NULL
       `, [], dbParams)
       await dbExecute(`
         UPDATE operations SET
-          startAtMillisMax = json_extract(data, "$.startOnMillisMax")
+          startAtMillisMax = json_extract(data, '$.startOnMillisMax')
         WHERE startAtMillisMax = 0 OR startAtMillisMax IS NULL
       `, [], dbParams)
 
@@ -287,7 +287,8 @@ export async function createTables(dbParams = {}) {
 
     if (version < 9) {
       // We're consolidating ECA and BCA into WCA
-      const operations = await queryOperations('WHERE data LIKE "%ecaActivation%" OR data LIKE "%bcaActivation%"', [])
+      console.log('createTables -- creating version 9')
+      const operations = await queryOperations("WHERE data LIKE '%ecaActivation%' OR data LIKE '%bcaActivation%'", [])
       for (const operation of operations) {
         const newRefs = operation.refs.map(ref => {
           if (ref.type === 'ecaActivation') {
@@ -299,25 +300,18 @@ export async function createTables(dbParams = {}) {
           }
         })
         operation.refs = newRefs
-        await dbExecute('UPDATE operations SET data = ?, synced = false WHERE uuid = ?', [JSON.stringify(operation), operation.uuid])
+        await dbExecute('UPDATE operations SET data = ?, synced = false WHERE uuid = ?', [JSON.stringify(operation), operation.uuid], dbParams)
       }
       await dbExecute('UPDATE version SET version = 9', [], dbParams)
     }
 
-    // TODO: Uncomment this block when we're close to releasing the December '24 version
-    // if (version < 9) {
-    //   console.log('createTables -- creating version 8')
-    //   await dbExecute(`
-    //     ALTER TABLE operations RENAME COLUMN startOnMillisMin TO startAtMillisMin
-    //   `, [], { db })
-    //   await dbExecute(`
-    //     ALTER TABLE operations RENAME COLUMN startOnMillisMax TO startAtMillisMax
-    //   `, [], { db })
-    //   await dbExecute(`
-    //     ALTER TABLE qsos RENAME COLUMN startOnMillis TO startAtMillis
-    //   `, [], { db })
+    if (version < 10) {
+      console.log('createTables -- creating version 10')
+      await dbExecute(`
+      ALTER TABLE qsos RENAME COLUMN startOnMillis TO startAtMillis
+    `, [], dbParams)
 
-    //   await dbExecute('UPDATE version SET version = 8', [], dbParams)
-    // }
+      await dbExecute('UPDATE version SET version = 10', [], dbParams)
+    }
   }
 }

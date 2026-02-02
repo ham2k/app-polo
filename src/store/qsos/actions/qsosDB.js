@@ -37,8 +37,7 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
   console.log('loadQSOs', { uuid })
   let qsos = []
   try {
-    // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
-    qsos = await dbSelectAll('SELECT * FROM qsos WHERE operation = ? ORDER BY startOnMillis', [uuid], { row: prepareQSORow })
+    qsos = await dbSelectAll('SELECT * FROM qsos WHERE operation = ? ORDER BY startAtMillis', [uuid], { row: prepareQSORow })
   } catch (error) {
   }
 
@@ -139,14 +138,16 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
     }
 
     if (DEBUG) logTimer('addQSOs', 'batch data ready')
-    // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
+
     await dbExecute(`
       INSERT INTO qsos
-        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, deleted, synced)
+        (uuid, operation, key, data, ourCall, theirCall, mode, band, startAtMillis, deleted, synced)
       VALUES
         ${batchData.map(q => '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').join(',')}
-      ON CONFLICT
-        DO UPDATE SET operation = excluded.operation, key = excluded.key, data = excluded.data, ourCall = excluded.ourCall, theirCall = excluded.theirCall, mode = excluded.mode, band = excluded.band, startOnMillis = excluded.startOnMillis, deleted = excluded.deleted, synced = excluded.synced
+      ON CONFLICT DO UPDATE SET
+        operation = excluded.operation, key = excluded.key, data = excluded.data, ourCall = excluded.ourCall,
+        theirCall = excluded.theirCall, mode = excluded.mode, band = excluded.band, startAtMillis = excluded.startAtMillis,
+        deleted = excluded.deleted, synced = excluded.synced
       `, batchData.flat()
     )
     if (DEBUG) logTimer('addQSOs', 'sql insert')
@@ -224,10 +225,9 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
     qso.updatedAtMillis = now
     qso.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
 
-    // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
     await dbExecute(`
       UPDATE qsos
-      SET key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startOnMillis = ?, deleted = ?, synced = ?
+      SET key = ?, data = ?, ourCall = ?, theirCall = ?, mode = ?, band = ?, startAtMillis = ?, deleted = ?, synced = ?
       WHERE uuid = ?
       `, [
       qso.key, JSON.stringify(qso), qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, false,
@@ -258,11 +258,15 @@ export const saveQSOsForOperation = (uuid, { qsos, synced } = {}) => async (disp
 
       const json = JSON.stringify(qso)
 
-      // TODO: Rename column `startOnMillis` to `startAtMillis` in the database
       await dbExecute(`
         INSERT INTO qsos
-        (uuid, operation, key, data, ourCall, theirCall, mode, band, startOnMillis, deleted, synced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT DO UPDATE SET operation = excluded.operation, key = excluded.key, data = excluded.data, ourCall = excluded.ourCall, theirCall = excluded.theirCall, mode = excluded.mode, band = excluded.band, startOnMillis = excluded.startOnMillis, deleted = excluded.deleted, synced = excluded.synced
+          (uuid, operation, key, data, ourCall, theirCall, mode, band, startAtMillis, deleted, synced)
+        VALUES
+          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT DO UPDATE SET
+          operation = excluded.operation, key = excluded.key, data = excluded.data, ourCall = excluded.ourCall,
+          theirCall = excluded.theirCall, mode = excluded.mode, band = excluded.band, startAtMillis = excluded.startAtMillis,
+          deleted = excluded.deleted, synced = excluded.synced
       `, [
         qso.uuid,
         uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced

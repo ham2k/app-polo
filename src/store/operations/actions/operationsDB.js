@@ -127,9 +127,10 @@ export const saveOperation = (operation, { synced = false } = {}) => async (disp
     `
       INSERT INTO operations
         (uuid, data, localData, startAtMillisMin, startAtMillisMax, qsoCount, deleted, synced)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      ON CONFLICT DO
-        UPDATE SET data = ?, localData = ?, startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ?, deleted = ?, synced = ?
+      VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT DO UPDATE SET
+        data = ?, localData = ?, startAtMillisMin = ?, startAtMillisMax = ?, qsoCount = ?, deleted = ?, synced = ?
     `,
     [
       row.uuid,
@@ -226,7 +227,7 @@ export const clearAllOperationData = () => async (dispatch) => {
 export const updateOperationInfo = ({ uuid }) => async (dispatch, getState) => {
   const qsoData = await dbSelectAll(`
     SELECT
-      MIN(startOnMillis) as startAtMillisMin, MAX(startOnMillis) as startAtMillisMax,
+      MIN(startAtMillis) as startAtMillisMin, MAX(startAtMillis) as startAtMillisMax,
       COUNT(*) as qsoCount
     FROM qsos
     WHERE operation = ? AND band != 'event' AND (deleted = 0 OR deleted IS NULL)
