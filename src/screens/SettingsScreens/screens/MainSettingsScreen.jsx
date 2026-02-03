@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -14,21 +14,21 @@ import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-cont
 import { useTranslation } from 'react-i18next'
 
 import packageJson from '../../../../package.json'
-import { findHooks } from '../../../extensions/registry'
 
 import { selectSettings } from '../../../store/settings'
 import { fetchFeatureFlags } from '../../../store/system/fetchFeatureFlags'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-
+import { selectLocalExtensionData } from '../../../store/local'
+import { translatedVersionName } from '../../../tools/i18nUtils'
 import { H2kListItem, H2kListSection, H2kListSubheader } from '../../../ui'
 import ScreenContainer from '../../components/ScreenContainer'
 import HeaderBar from '../../components/HeaderBar'
 import { OperatorCallsignDialog } from '../components/OperatorCallsignDialog'
-import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
 
 import BandModeSettingsScreen from './BandModeSettingsScreen'
 import CreditsSettingsScreen from './CreditsSettingsScreen'
 import DataSettingsScreen from './DataSettingsScreen'
+import AccountsSettingsScreen from './AccountsSettingsScreen'
 import DevModeSettingsScreen from './DevModeSettingsScreen'
 import ExportSettingsScreen from './ExportSettingsScreen'
 import ExtensionScreen from './ExtensionScreen'
@@ -38,11 +38,9 @@ import LoggingSettingsScreen from './LoggingSettingsScreen'
 import VersionSettingsScreen from './VersionSettingsScreen'
 import SyncSettingsScreen from './SyncSettingsScreen'
 import WavelogSettingsScreen from './WavelogSettingsScreen'
+import NoticesSettingsScreen from './NoticesSettingsScreen'
 
 import { MainSettingsForDistribution } from '../../../distro'
-import NoticesSettingsScreen from './NoticesSettingsScreen'
-import { selectLocalExtensionData } from '../../../store/local'
-import { translatedVersionName } from '../../../tools/i18nUtils'
 
 const Stack = createNativeStackNavigator()
 
@@ -140,11 +138,6 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
   const safeAreaInsets = useSafeAreaInsets()
   const [currentDialog, setCurrentDialog] = useState()
 
-  const accountSettingHooks = useMemo(() => {
-    const hooks = findHooks('setting').filter(hook => hook.category === 'account' && hook.SettingItem)
-    return hooks
-  }, [settings]) // eslint-disable-line react-hooks/exhaustive-deps
-
   const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
   const lofiData = useSelector(lofiDataSelector)
 
@@ -210,6 +203,13 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
         )}
 
         <H2kListItem
+          title={t('screens.settings.accountsSettings.title', 'Accounts & Services')}
+          description={t('screens.settings.accountsSettings.description', 'QRZ.com and other services')}
+          onPress={() => navigation.navigate('Settings', { screen: 'AccountsSettings' })}
+          leftIcon="key-chain"
+        />
+
+        <H2kListItem
           title={t('screens.settings.appFeatures.title', 'App Features')}
           description={t('screens.settings.appFeatures.description', 'Manage features like POTA, SOTA, etc')}
           onPress={() => navigation.navigate('Settings', { screen: 'FeaturesSettings' })}
@@ -226,37 +226,6 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
           />
         )}
 
-      </H2kListSection>
-
-      <H2kListSection>
-        <H2kListSubheader>{t('screens.settings.sections.accounts', 'Accounts')}</H2kListSubheader>
-
-        <H2kListItem
-          title={t('screens.settings.accountsQRZ.title', 'QRZ (for callsign lookups)')}
-          description={settings?.accounts?.qrz ? t('screens.settings.accountsQRZ.description', 'Login: {{login}}', { login: settings.accounts.qrz.login }) : t('screens.settings.accountsQRZ.noAccount', 'No account')}
-          leftIcon="web"
-          onPress={() => setCurrentDialog('accountsQRZ')}
-        />
-        {currentDialog === 'accountsQRZ' && (
-          <AccountsQRZDialog
-            settings={settings}
-            styles={styles}
-            visible={true}
-            onDialogDone={() => setCurrentDialog('')}
-          />
-        )}
-        {accountSettingHooks.map((hook) => (
-          <hook.SettingItem key={hook.key} settings={settings} styles={styles} />
-        ))}
-        {settings.wavelogExperiments && (
-          <H2kListItem
-            title={t('screens.settings.wavelogSettings.title', 'Wavelog Settings')}
-            description={t('screens.settings.wavelogSettings.description', 'Configure Wavelog API connection')}
-            onPress={() => navigation.navigate('Settings', { screen: 'WavelogSettings' })}
-            leftIcon="cloud-upload-outline"
-            leftIconColor={styles.colors.devMode}
-          />
-        )}
       </H2kListSection>
 
       <MainSettingsForDistribution settings={settings} styles={styles} />
@@ -374,6 +343,11 @@ function settingsScreensArray ({ t, includeMain, topLevelBack, splitView }) {
     <Stack.Screen name="SyncSettings" key="SyncSettings"
       options={{ title: t('screens.syncSettings.title', 'Sync Settings'), leftAction: topLevelBack ? 'back' : 'none' }}
       component={SyncSettingsScreen}
+    />,
+
+    <Stack.Screen name="AccountsSettings" key="AccountsSettings"
+      options={{ title: t('screens.accountsSettings.title', 'Accounts Settings'), leftAction: topLevelBack ? 'back' : 'none' }}
+      component={AccountsSettingsScreen}
     />,
 
     <Stack.Screen name="VersionSettings" key="VersionSettings"

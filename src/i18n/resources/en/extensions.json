@@ -425,7 +425,7 @@
         "dialogTitle": "ParksnPeaks Account",
         "description": "Username: {{username}}",
         "noAccount": "No account",
-        "pleaseEnterDetails": "Please enter the details for your ParksnPeaks account:",
+        "pleaseEnterDetails": "Please enter the details for your ParksnPeaks account:"
       },
       "usernameLabel": "Username (not callsign)",
       "usernamePlaceholder": "your account username",

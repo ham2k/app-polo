@@ -46,7 +46,7 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
 
   useEffect(() => {
     if (login?.indexOf('@') >= 0) {
-      setError(t('screens.settings.accountsQRZ.errorEmail', "Don't use your email for login."))
+      setError(t('screens.accountsSettings.accountsQRZ.errorEmail', "Don't use your email for login."))
     } else {
       setError(null)
     }
@@ -95,9 +95,9 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.settings.accountsQRZ.dialogTitle', 'QRZ.com Account')}</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.accountsSettings.accountsQRZ.dialogTitle', 'QRZ.com Account')}</H2kDialogTitle>
       <H2kDialogContent>
-        <Text variant="bodyMedium">{t('screens.settings.accountsQRZ.pleaseEnterDetails', 'Please enter the details for your QRZ.com account:')}</Text>
+        <Text variant="bodyMedium">{t('screens.accountsSettings.accountsQRZ.pleaseEnterDetails', 'Please enter the details for your QRZ.com account:')}</Text>
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={login}
@@ -105,8 +105,8 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
           autoComplete="email"
           inputMode="email"
           keyboardType="email-address"
-          label={t('screens.settings.accountsQRZ.loginLabel', 'Login (your callsign)')}
-          placeholder={t('screens.settings.accountsQRZ.loginPlaceholder', 'your login')}
+          label={t('screens.accountsSettings.accountsQRZ.loginLabel', 'Login (your callsign)')}
+          placeholder={t('screens.accountsSettings.accountsQRZ.loginPlaceholder', 'your login')}
           error={error}
           onChangeText={onChangeLogin}
         />
@@ -114,17 +114,17 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={password}
-          label={t('screens.settings.accountsQRZ.passwordLabel', 'Password')}
+          label={t('screens.accountsSettings.accountsQRZ.passwordLabel', 'Password')}
           autoComplete="current-password"
           keyboardType="default"
           textContentType="password"
           secureTextEntry={true}
           autoCapitalize={'none'}
-          placeholder={t('screens.settings.accountsQRZ.passwordPlaceholder', 'your password')}
+          placeholder={t('screens.accountsSettings.accountsQRZ.passwordPlaceholder', 'your password')}
           onChangeText={onChangePassword}
         />
         <View style={{ marginTop: styles.oneSpace, flexDirection: 'row' }}>
-          {!testResult && <H2kButton onPress={handleTest}>{t('screens.settings.accountsQRZ.checkCredentials', 'Check Credentials')}</H2kButton>}
+          {!testResult && <H2kButton onPress={handleTest}>{t('screens.accountsSettings.accountsQRZ.checkCredentials', 'Check Credentials')}</H2kButton>}
           {testResult && <H2kMarkdown style={{ flex: 1, marginTop: styles.oneSpace * 0.6 }}>{testResult}</H2kMarkdown>}
         </View>
       </H2kDialogContent>

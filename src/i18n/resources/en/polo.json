@@ -231,23 +231,6 @@
         "title": "Developer Settings",
         "description": "Here be dragons"
       },
-      "accountsQRZ": {
-        "title": "QRZ (for callsign lookups)",
-        "description": "Login: {{login}}",
-        "noAccount": "No account",
-        "errorEmail": "Don't use your email for login.",
-        "dialogTitle": "QRZ.com Account",
-        "pleaseEnterDetails": "Please enter the details for your QRZ.com account:",
-        "loginLabel": "Login (your callsign)",
-        "loginPlaceholder": "your login",
-        "passwordLabel": "Password",
-        "passwordPlaceholder": "your password",
-        "checkCredentials": "Check Credentials"
-      },
-      "wavelogSettings": {
-        "title": "Wavelog Settings",
-        "description": "Configure Wavelog API connection"
-      },
       "contribute": {
         "isASupporter": "{{callsign}} is a Supporter of Ham2K",
         "couldBeASupporter": "{{callsign}} could be a Supporter of Ham2K"
@@ -468,6 +451,34 @@
       "recordsCount_zero": "No records",
       "recordsCount_one": "1 record",
       "recordsCount_other": "{{fmtCount}} records"
+    },
+    "accountsSettings": {
+      "title": "Accounts & Services",
+      "description": "QRZ.com and other services",
+      "accountsSection": "Credentials",
+      "servicesSection": "Services",
+      "accountsQRZ": {
+        "title": "QRZ (for callsign lookups)",
+        "description": "Login: {{login}}",
+        "noAccount": "No account",
+        "errorEmail": "Don't use your email for login.",
+        "dialogTitle": "QRZ.com Account",
+        "pleaseEnterDetails": "Please enter the details for your QRZ.com account:",
+        "loginLabel": "Login (your callsign)",
+        "loginPlaceholder": "your login",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "your password",
+        "checkCredentials": "Check Credentials"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Wavelog Settings",
+      "description": "Configure Wavelog API connection",
+      "noStationsFoundOrInvalidResponse": "No stations found or invalid response",
+      "errorFetchingStations": "Error fetching stations: {{message}}",
+      "fetchStations": "Fetch Stations",
+      "selectStation": "Select Station",
+      "selectedStation": "Selected station: {{station}}"
     },
     "syncSettings": {
       "title": "Sync Settings",
@@ -695,14 +706,6 @@
     },
     "extensionSettings": {
       "title": "Extension"
-    },
-    "wavelogSettings": {
-      "title": "Wavelog Settings",
-      "noStationsFoundOrInvalidResponse": "No stations found or invalid response",
-      "errorFetchingStations": "Error fetching stations: {{message}}",
-      "fetchStations": "Fetch Stations",
-      "selectStation": "Select Station",
-      "selectedStation": "Selected station: {{station}}"
     },
     "operationScreen": {
       "paneSeparator-a11y": "Pane Separator",
