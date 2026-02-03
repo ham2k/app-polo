@@ -416,6 +416,22 @@
         "theirRefLabel": "Leur moulin"
       }
     },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Repérage",
+      "description": "Utilisé principalement en VK et ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (Repérage VK/ZL)",
+        "dialogTitle": "Compte ParksnPeaks",
+        "description": "Nom d'utilisateur : {{username}}",
+        "noAccount": "Pas de compte",
+        "pleaseEnterDetails": "Veuillez entrer les détails de votre compte ParksnPeaks :"
+      },
+      "usernameLabel": "Nom d'utilisateur (pas l'indicatif)",
+      "usernamePlaceholder": "votre nom d'utilisateur de compte",
+      "apiKeyLabel": "Clé API (pas le mot de passe)",
+      "apiKeyPlaceholder": "votre clé API"
+    },
     "pga": {
       "name": "Polish Gmina Award",
       "shortName": "PGA",
@@ -594,6 +610,60 @@
       "exampleRefName": "Exemple de sommet",
       "unknownRefName": "Sommet inconnu",
       "noRefsNearby": "Pas de sommets à proximité !"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "Aucune tour sélectionnée pour l'activation",
+        "title_one": "Activation de 1 tour",
+        "title_other": "Activation de {{count}} tours",
+        "noTowersFound": "Aucune tour trouvée",
+        "nearestMatches": "Les {{limit}} plus proches sur {{count}} correspondances",
+        "matchingTowers_zero": "Aucune tour correspondante",
+        "matchingTowers_one": "1 tour correspondante",
+        "matchingTowers_other": "{{count}} tours correspondantes",
+        "searchForTowers": "Recherchez quelques tours à activer !",
+        "noTowersNearby": "Aucune tour à proximité",
+        "nearbyTowers": "Tours à proximité",
+        "searchPlaceholder": "Nom ou référence...",
+        "unknownTower": "Tour inconnue"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Aucun R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Aucune tour chassée",
+        "huntedRefsCount_one": "1 tour chassée",
+        "huntedRefsCount_other": "{{fmtCount}} tours chassées",
+        "activatorQSOsCount_zero": "Aucun QSO d'activateur",
+        "activatorQSOsCount_one": "1 QSO d'activateur",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs d'activateur",
+        "ref2refQSOsCount_zero": "Aucun QSO R2R",
+        "ref2refQSOsCount_one": "1 QSO R2R",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs R2R",
+        "huntedQSOsCount_zero": "Aucun QSO chassé",
+        "huntedQSOsCount_one": "1 QSO chassé",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs chassés",
+        "operationTotals": "Totaux d'opération",
+        "referencesActivatedCount_zero": "Aucune tour activée",
+        "referencesActivatedCount_one": "1 tour activée",
+        "referencesActivatedCount_other": "{{fmtCount}} tours activées",
+        "referencesMissedCount_zero": "Aucune tour incomplète",
+        "referencesMissedCount_one": "1 tour incomplète",
+        "referencesMissedCount_other": "{{fmtCount}} tours incomplètes",
+        "referencesHuntedCount_zero": "Aucune tour chassée",
+        "referencesHuntedCount_one": "1 tour chassée",
+        "referencesHuntedCount_other": "{{fmtCount}} tours chassées"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Leur tour"
+      },
+      "exampleRefName": "Exemple de tour",
+      "unknownRefName": "Tour inconnue",
+      "noRefsNearby": "Aucune tour à proximité !",
+      "postSpotAPI": {
+        "error": "Erreur lors de la publication du spot TOTA",
+        "serverResponse": "Le serveur a répondu avec le statut {{status}} {{message}}"
+      }
     },
     "usStates": {
       "statesCount_zero": "Aucun État américain",

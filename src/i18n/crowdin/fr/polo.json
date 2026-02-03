@@ -231,23 +231,6 @@
         "title": "Paramètres développeur",
         "description": "Attention, zone dangereuse"
       },
-      "accountsQRZ": {
-        "title": "QRZ (pour recherches d'indicatif)",
-        "description": "Identifiant : {{login}}",
-        "noAccount": "Pas de compte",
-        "errorEmail": "N'utilisez pas votre e-mail pour vous connecter.",
-        "dialogTitle": "Compte QRZ.com",
-        "pleaseEnterDetails": "Veuillez entrer les détails de votre compte QRZ.com :",
-        "loginLabel": "Connexion (votre indicatif)",
-        "loginPlaceholder": "votre identifiant",
-        "passwordLabel": "Mot de passe",
-        "passwordPlaceholder": "votre mot de passe",
-        "checkCredentials": "Vérifier les identifiants"
-      },
-      "wavelogSettings": {
-        "title": "Paramètres de Wavelog",
-        "description": "Configurer la connexion API de Wavelog"
-      },
       "contribute": {
         "isASupporter": "{{callsign}} est un supporter de Ham2K",
         "couldBeASupporter": "{{callsign}} pourrait être un supporter de Ham2K"
@@ -468,6 +451,34 @@
       "recordsCount_zero": "Aucun enregistrement",
       "recordsCount_one": "1 enregistrement",
       "recordsCount_other": "{{fmtCount}} enregistrements"
+    },
+    "accountsSettings": {
+      "title": "Comptes et Services",
+      "description": "QRZ.com et autres services",
+      "accountsSection": "Identifiants",
+      "servicesSection": "Services",
+      "accountsQRZ": {
+        "title": "QRZ (pour recherches d'indicatif)",
+        "description": "Identifiant : {{login}}",
+        "noAccount": "Pas de compte",
+        "errorEmail": "N'utilisez pas votre e-mail pour vous connecter.",
+        "dialogTitle": "Compte QRZ.com",
+        "pleaseEnterDetails": "Veuillez entrer les détails de votre compte QRZ.com :",
+        "loginLabel": "Connexion (votre indicatif)",
+        "loginPlaceholder": "votre identifiant",
+        "passwordLabel": "Mot de passe",
+        "passwordPlaceholder": "votre mot de passe",
+        "checkCredentials": "Vérifier les identifiants"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Paramètres de Wavelog",
+      "description": "Configurer la connexion API de Wavelog",
+      "noStationsFoundOrInvalidResponse": "Aucune station trouvée ou réponse invalide",
+      "errorFetchingStations": "Erreur lors de la récupération des stations : {{message}}",
+      "fetchStations": "Récupérer les stations",
+      "selectStation": "Sélectionner la station",
+      "selectedStation": "Station sélectionnée : {{station}}"
     },
     "syncSettings": {
       "title": "Paramètres de synchronisation",
@@ -695,14 +706,6 @@
     },
     "extensionSettings": {
       "title": "Extension"
-    },
-    "wavelogSettings": {
-      "title": "Paramètres de Wavelog",
-      "noStationsFoundOrInvalidResponse": "Aucune station trouvée ou réponse invalide",
-      "errorFetchingStations": "Erreur lors de la récupération des stations : {{message}}",
-      "fetchStations": "Récupérer les stations",
-      "selectStation": "Sélectionner la station",
-      "selectedStation": "Station sélectionnée : {{station}}"
     },
     "operationScreen": {
       "paneSeparator-a11y": "Séparateur de volet",

@@ -416,6 +416,22 @@
         "theirRefLabel": "彼らのミル"
       }
     },
+    "parksnpeaks": {
+      "name": "ParksnPeaks スポッティング",
+      "description": "主にVKとZLで使用されます",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL スポット)",
+        "dialogTitle": "ParksnPeaks アカウント",
+        "description": "ユーザー名: {{username}}",
+        "noAccount": "アカウントなし",
+        "pleaseEnterDetails": "ParksnPeaks アカウントの詳細を入力してください:"
+      },
+      "usernameLabel": "ユーザー名 (コールサインではありません)",
+      "usernamePlaceholder": "あなたのユーザー名",
+      "apiKeyLabel": "API キー (パスワードなし)",
+      "apiKeyPlaceholder": "あなたの API キー"
+    },
     "pga": {
       "name": "ポーランドのグミナ（基礎自治体）アワード",
       "shortName": "PGA",
@@ -594,6 +610,60 @@
       "exampleRefName": "山頂の例",
       "unknownRefName": "不明な山頂",
       "noRefsNearby": "近くに山頂はありません!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "アクティベートするタワーが選択されていません",
+        "title_one": "アクティベート中のタワー：1ヶ所",
+        "title_other": "アクティベート中のタワー：{{count}}ヶ所",
+        "noTowersFound": "タワーが見つかりません",
+        "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
+        "matchingTowers_zero": "一致するタワーがありません",
+        "matchingTowers_one": "一致するタワー：1ヶ所",
+        "matchingTowers_other": "一致するタワー：{{count}}ヶ所",
+        "searchForTowers": "アクティベートするタワーを探しましょう！",
+        "noTowersNearby": "近くにタワーがありません",
+        "nearbyTowers": "近くのタワー",
+        "searchPlaceholder": "名前または参照コード…",
+        "unknownTower": "不明なタワー"
+      },
+      "scoring": {
+        "ref2refCount_zero": "R2Rはありません",
+        "ref2refCount_one": "R2R数: 1",
+        "ref2refCount_other": "R2R数: {{fmtCount}}",
+        "huntedRefsCount_zero": "ハンティングしたタワーはありません",
+        "huntedRefsCount_one": "ハンティングしたタワー：1ヶ所",
+        "huntedRefsCount_other": "ハンティングしたタワー：{{fmtCount}}ヶ所",
+        "activatorQSOsCount_zero": "アクティベーターQSOはありません",
+        "activatorQSOsCount_one": "アクティベーター QSO 数: 1",
+        "activatorQSOsCount_other": "アクティベーター QSO 数: {{fmtCount}}",
+        "ref2refQSOsCount_zero": "R2R QSO なし",
+        "ref2refQSOsCount_one": "R2R QSOの数: 1",
+        "ref2refQSOsCount_other": "R2R QSOの数: {{fmtCount}}",
+        "huntedQSOsCount_zero": "ハンティングした QSOはありません",
+        "huntedQSOsCount_one": "ハンティングした QSO数: 1",
+        "huntedQSOsCount_other": "ハンティングした QSO数: {{fmtCount}}",
+        "operationTotals": "オペレーション合計",
+        "referencesActivatedCount_zero": "アクティベートされたタワーはありません",
+        "referencesActivatedCount_one": "アクティベートされたタワー：1ヶ所",
+        "referencesActivatedCount_other": "アクティベートされたタワー：{{fmtCount}}ヶ所",
+        "referencesMissedCount_zero": "未達成のタワーはありません",
+        "referencesMissedCount_one": "未達成のタワー：1ヶ所",
+        "referencesMissedCount_other": "未達成のタワー：{{fmtCount}}ヶ所",
+        "referencesHuntedCount_zero": "ハンティングしたタワーはありません",
+        "referencesHuntedCount_one": "ハンティングしたタワー：1ヶ所",
+        "referencesHuntedCount_other": "ハンティングしたタワー：{{fmtCount}}ヶ所"
+      },
+      "loggingControl": {
+        "theirRefLabel": "彼らのタワー"
+      },
+      "exampleRefName": "例のタワー",
+      "unknownRefName": "不明なタワー",
+      "noRefsNearby": "近くにタワーがありません！",
+      "postSpotAPI": {
+        "error": "TOTAスポットの投稿中にエラーが発生しました",
+        "serverResponse": "サーバーがステータス {{status}} {{message}} で応答しました"
+      }
     },
     "usStates": {
       "statesCount_zero": "米国の州なし",

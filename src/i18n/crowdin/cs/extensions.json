@@ -180,7 +180,7 @@
     },
     "commands-operation": {
       "start": "Spustit operaci?",
-      "startConfirm": "Operace spuštěna!",
+      "startConfirm": "Aktivita spuštěna!",
       "break": "Přidat přestávku?",
       "breakConfirm": "Přestávka aktivity přidána!",
       "stop": "Zastavit operaci?",
@@ -346,7 +346,7 @@
         "title_one": "Aktivace 1 jezera",
         "title_other": "Aktivace {{count}} jezer",
         "noLakesFound": "Žádná jezera nebyla nalezena",
-        "nearestMatches": "Nejbližší {{limit}} z {{count}} shod",
+        "nearestMatches": "Nejbližších {{limit}} z {{count}} shod",
         "matchingRefs_zero": "Žádná odpovídající jezera",
         "matchingRefs_one": "1 odpovídající jezero",
         "matchingRefs_other": "{{count}} odpovídajících jezer",
@@ -362,15 +362,15 @@
         "huntedRefsCount_zero": "Žádná lovená jezera",
         "huntedRefsCount_one": "1 lovené jezero",
         "huntedRefsCount_other": "{{fmtCount}} lovených jezer",
-        "activatorQSOsCount_zero": "Žádná QSO aktivátorů",
-        "activatorQSOsCount_one": "1 QSO aktivátoru",
-        "activatorQSOsCount_other": "{{fmtCount}} QSOs aktivátorů",
+        "activatorQSOsCount_zero": "Žádné aktivátorské QSO",
+        "activatorQSOsCount_one": "1 aktivátorské QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivátorských QSO",
         "ref2refQSOsCount_zero": "Žádné L2L QSO",
         "ref2refQSOsCount_one": "1 L2L QSO",
         "ref2refQSOsCount_other": "{{fmtCount}} L2L QSO",
         "huntedQSOsCount_zero": "Žádné ulovené QSO",
         "huntedQSOsCount_one": "1 ulovené QSO",
-        "huntedQSOsCount_other": "{{fmtCount}} lovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ulovených QSO",
         "operationTotals": "Součty aktivity",
         "referencesActivatedCount_zero": "Žádná aktivovaná jezera",
         "referencesActivatedCount_one": "1 aktivované jezero",
@@ -415,6 +415,22 @@
       "loggingControl": {
         "theirRefLabel": "Mlýn protistanice"
       }
+    },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Spotting",
+      "description": "Většinou se používá v VK a ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL spotting)",
+        "dialogTitle": "Účet ParksnPeaks",
+        "description": "Uživatelské jméno: {{username}}",
+        "noAccount": "Žádný účet",
+        "pleaseEnterDetails": "Zadejte prosím údaje pro svůj účet ParksnPeaks:"
+      },
+      "usernameLabel": "Uživatelské jméno (ne volací znak)",
+      "usernamePlaceholder": "uživatelské jméno vašeho účtu",
+      "apiKeyLabel": "API klíč (ne heslo)",
+      "apiKeyPlaceholder": "váš API klíč"
     },
     "pga": {
       "name": "Polské ocenění za obce",
@@ -594,6 +610,60 @@
       "exampleRefName": "Vzorový vrchol",
       "unknownRefName": "Neznámý vrchol",
       "noRefsNearby": "Neloveny žádné vrcholy!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "Žádné věže vybrané k aktivaci",
+        "title_one": "Aktivace 1 věže",
+        "title_other": "Aktivace {{count}} věží",
+        "noTowersFound": "Žádné věže nenalezeny",
+        "nearestMatches": "Nejbližších {{limit}} z {{count}} shod",
+        "matchingTowers_zero": "Žádné odpovídající věže",
+        "matchingTowers_one": "1 odpovídající věž",
+        "matchingTowers_other": "{{count}} odpovídajících věží",
+        "searchForTowers": "Vyhledat věže k aktivaci!",
+        "noTowersNearby": "Žádné věže v okolí",
+        "nearbyTowers": "Věže v okolí",
+        "searchPlaceholder": "Jméno nebo reference…",
+        "unknownTower": "Neznámá věž"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Žádné R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Žádné lovené věže",
+        "huntedRefsCount_one": "1 lovená věž",
+        "huntedRefsCount_other": "{{fmtCount}} lovených věží",
+        "activatorQSOsCount_zero": "Žádné QSO aktivátorů",
+        "activatorQSOsCount_one": "1 QSO aktivátoru",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs aktivátorů",
+        "ref2refQSOsCount_zero": "Žádné R2R QSOs",
+        "ref2refQSOsCount_one": "1 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R QSOs",
+        "huntedQSOsCount_zero": "Žádné ulovené QSO",
+        "huntedQSOsCount_one": "1 ulovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ulovených QSO",
+        "operationTotals": "Součty aktivity",
+        "referencesActivatedCount_zero": "Žádné aktivované věže",
+        "referencesActivatedCount_one": "1 aktivovaná věž",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných věží",
+        "referencesMissedCount_zero": "Žádné neúplné věže",
+        "referencesMissedCount_one": "1 neúplná věž",
+        "referencesMissedCount_other": "{{fmtCount}} neúplných věží",
+        "referencesHuntedCount_zero": "Žádné lovené věže",
+        "referencesHuntedCount_one": "1 lovená věž",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených věží"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Věž protistanice"
+      },
+      "exampleRefName": "Příklad věže",
+      "unknownRefName": "Neznámá věž",
+      "noRefsNearby": "Žádné věže v okolí!",
+      "postSpotAPI": {
+        "error": "Chyba při odesílání TOTA hlášení",
+        "serverResponse": "Server odpověděl se stavem {{status}} {{message}}"
+      }
     },
     "usStates": {
       "statesCount_zero": "Žádné americké státy",

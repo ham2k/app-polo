@@ -231,23 +231,6 @@
         "title": "Nastavenia vývojárov",
         "description": "Tu sú draci"
       },
-      "accountsQRZ": {
-        "title": "QRZ (pre vyhľadávanie volacích znakov)",
-        "description": "Prihlásenie: {{login}}",
-        "noAccount": "Žiadny účet",
-        "errorEmail": "Nepoužívajte svoj e-mail na prihlásenie.",
-        "dialogTitle": "Účet QRZ.com",
-        "pleaseEnterDetails": "Zadajte prosím podrobnosti pre svoj účet na QRZ.com:",
-        "loginLabel": "Prihlásenie (váš volací znak)",
-        "loginPlaceholder": "vaše prihlásenie",
-        "passwordLabel": "Heslo",
-        "passwordPlaceholder": "vaše heslo",
-        "checkCredentials": "Skontrolujte prihlasovacie údaje"
-      },
-      "wavelogSettings": {
-        "title": "Nastavenia Wavelog",
-        "description": "Nakonfigurujte pripojenie k API Wavelog"
-      },
       "contribute": {
         "isASupporter": "{{callsign}} je podporovateľom Ham2K",
         "couldBeASupporter": "{{callsign}} by mohol byť podporovateľom Ham2K"
@@ -269,7 +252,7 @@
       },
       "ham2KForums": {
         "title": "Fóra Ham2K",
-        "description": "Nájdite pomoc, dávať spätnú väzbu, diskutovať myšlienky…"
+        "description": "Nájdite pomoc, dajte spätnú väzbu, diskutujte o nápadoch…"
       },
       "ham2KChat": {
         "title": "Ham2K Chat",
@@ -422,7 +405,7 @@
       "suggestDefaultOperator": {
         "title": "Nastaviť predvoleného operátora",
         "descriptionOn": "Nastaviť {{operatorCall}} ako operátora v prevádzkach, kde sú rôzne volacie znaky stanice",
-        "descriptionOff": "Nenasadzujte predvoleného operátora bez ohľadu na volanie stanice"
+        "descriptionOff": "Nenasadzujte predvoleného operátora bez ohľadu na použitý volací znak"
       },
       "suggestTemplates": {
         "title": "Použiť šablóny operácií",
@@ -468,6 +451,34 @@
       "recordsCount_zero": "Žiadne záznamy",
       "recordsCount_one": "1 záznam",
       "recordsCount_other": "{{fmtCount}} záznamov"
+    },
+    "accountsSettings": {
+      "title": "Účty a služby",
+      "description": "QRZ.com a iné služby",
+      "accountsSection": "Prihlasovacie údaje",
+      "servicesSection": "Služby",
+      "accountsQRZ": {
+        "title": "QRZ (pre vyhľadávanie volacích znakov)",
+        "description": "Prihlásenie: {{login}}",
+        "noAccount": "Bez účtu",
+        "errorEmail": "Nepoužívajte svoj e-mail na prihlásenie.",
+        "dialogTitle": "Účet QRZ.com",
+        "pleaseEnterDetails": "Zadajte prosím podrobnosti pre svoj účet na QRZ.com:",
+        "loginLabel": "Prihlásenie (váš volací znak)",
+        "loginPlaceholder": "vaše prihlásenie",
+        "passwordLabel": "Heslo",
+        "passwordPlaceholder": "vaše heslo",
+        "checkCredentials": "Skontrolujte prihlasovacie údaje"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Nastavenia Wavelog",
+      "description": "Nakonfigurujte pripojenie k API Wavelog",
+      "noStationsFoundOrInvalidResponse": "Neboli nájdené stanice alebo neplatná odpoveď",
+      "errorFetchingStations": "Chyba pri načítavaní staníc: {{message}}",
+      "fetchStations": "Načítať Stanice",
+      "selectStation": "Vybrať Stanicu",
+      "selectedStation": "Vybraná stanica: {{station}}"
     },
     "syncSettings": {
       "title": "Nastavenia synchronizácie",
@@ -575,7 +586,7 @@
       "developer": "Vývojár",
       "leadSupport": "Hlavná podpora a dokumentácia",
       "moreCodeAndDocsContributors": "Viac prispievateľov…",
-      "contributorCode": "Kode prispievateľ: {{contributions}}",
+      "contributorCode": "Code prispievateľ: {{contributions}}",
       "contributorDocumentation": "Dokumentácia",
       "translations": "Preklady",
       "translationsService": "Prekladové nástroje od CrowdIn",
@@ -696,14 +707,6 @@
     "extensionSettings": {
       "title": "Rozšírenie"
     },
-    "wavelogSettings": {
-      "title": "Nastavenia Wavelog",
-      "noStationsFoundOrInvalidResponse": "Neboli nájdené stanice alebo neplatná odpoveď",
-      "errorFetchingStations": "Chyba pri načítavaní staníc: {{message}}",
-      "fetchStations": "Načítať Stanice",
-      "selectStation": "Vybrať Stanicu",
-      "selectedStation": "Vybraná stanica: {{station}}"
-    },
     "operationScreen": {
       "paneSeparator-a11y": "Rozdeľovač panelov",
       "qsosTab": "QSOs",
@@ -761,15 +764,15 @@
       "qsoCount_one": "1 QSO",
       "qsoCount_other": "{{fmtCount}} QSOs",
       "qsosInTime": "{{countText}} za {{timeText}}",
-      "last10QSOs": "{{rate}} Q/h za posledných 10",
-      "last100QSOs": "{{rate}} Q/h za posledných 100",
+      "last10QSOs": "{{rate}} Q/h pre posledných 10",
+      "last100QSOs": "{{rate}} Q/h pre posledných 100",
       "timeSinceLast": "{{time}} od posledného",
       "moreLabel": "Viac",
       "theirCallLabel": "Ich volací znak",
       "ourSentLabel": "Odoslané",
       "theirSentLabel": "Prijaté",
       "stateLabel": "Štát",
-      "gridLabel": "Lokátorová mriežka",
+      "gridLabel": "Lokátorový štvorec",
       "timeLabel": "Čas",
       "dateLabel": "Dátum",
       "timeControls-a11y": "Ovládanie času",
@@ -865,7 +868,7 @@
       "invalidCallsign": "Neplatný volací znak {{callsign}}",
       "invalidCallsigns": "Neplatné volacie znaky {{callsigns}}",
       "stationCallAndOperator": "{{station}} (obsluhované {{operator}})",
-      "noStationCallsignDefined": "ŽIADNA STANIČNÁ VOLACIA ZNAČKA NENASTAVENÁ",
+      "noStationCallsignDefined": "ŽIADNA VOLACÍ ZNAK STANICE NENASTAVENÝ",
       "showMoreTemplates": "Zobraziť viac šablón",
       "templatesAvailable_zero": "Žiadne šablóny k dispozícii",
       "templatesAvailable_one": "1 šablóna k dispozícii",

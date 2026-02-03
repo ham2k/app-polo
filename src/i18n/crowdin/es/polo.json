@@ -231,23 +231,6 @@
         "title": "Opciones de Desarrollador",
         "description": "¡Aquí hay dragones!"
       },
-      "accountsQRZ": {
-        "title": "QRZ (para búsquedas de indicativo)",
-        "description": "Inicio de sesión: {{login}}",
-        "noAccount": "Sin cuenta",
-        "errorEmail": "No uses tu email como login.",
-        "dialogTitle": "Cuenta QRZ.com",
-        "pleaseEnterDetails": "Por favor, introduce los detalles de tu cuenta en QRZ.com:",
-        "loginLabel": "Login (tu indicativo)",
-        "loginPlaceholder": "tu login",
-        "passwordLabel": "Contraseña",
-        "passwordPlaceholder": "tu contraseña",
-        "checkCredentials": "Verificar Credenciales"
-      },
-      "wavelogSettings": {
-        "title": "Configuración de Wavelog",
-        "description": "Configura la conexión de la API de Wavelog"
-      },
       "contribute": {
         "isASupporter": "{{callsign}} apoya a Ham2K",
         "couldBeASupporter": "{{callsign}} podría apoyar a Ham2K"
@@ -468,6 +451,34 @@
       "recordsCount_zero": "No hay registros",
       "recordsCount_one": "1 registro",
       "recordsCount_other": "{{fmtCount}} registros"
+    },
+    "accountsSettings": {
+      "title": "Cuentas y Servicios",
+      "description": "QRZ.com y otros servicios",
+      "accountsSection": "Credenciales",
+      "servicesSection": "Servicios",
+      "accountsQRZ": {
+        "title": "QRZ (para búsquedas de indicativo)",
+        "description": "Inicio de sesión: {{login}}",
+        "noAccount": "Sin cuenta",
+        "errorEmail": "No uses tu email como login.",
+        "dialogTitle": "Cuenta QRZ.com",
+        "pleaseEnterDetails": "Por favor, introduce los detalles de tu cuenta en QRZ.com:",
+        "loginLabel": "Login (tu indicativo)",
+        "loginPlaceholder": "tu login",
+        "passwordLabel": "Contraseña",
+        "passwordPlaceholder": "tu contraseña",
+        "checkCredentials": "Verificar Credenciales"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Configuración de Wavelog",
+      "description": "Configura la conexión de la API de Wavelog",
+      "noStationsFoundOrInvalidResponse": "No se encontraron estaciones o respuesta no válida",
+      "errorFetchingStations": "Error al obtener estaciones: {{message}}",
+      "fetchStations": "Obtener Estaciones",
+      "selectStation": "Seleccionar Estación",
+      "selectedStation": "Estación seleccionada: {{station}}"
     },
     "syncSettings": {
       "title": "Configuración de sincronización",
@@ -695,14 +706,6 @@
     },
     "extensionSettings": {
       "title": "Extensión"
-    },
-    "wavelogSettings": {
-      "title": "Configuración de Wavelog",
-      "noStationsFoundOrInvalidResponse": "No se encontraron estaciones o respuesta no válida",
-      "errorFetchingStations": "Error al obtener estaciones: {{message}}",
-      "fetchStations": "Obtener Estaciones",
-      "selectStation": "Seleccionar Estación",
-      "selectedStation": "Estación seleccionada: {{station}}"
     },
     "operationScreen": {
       "paneSeparator-a11y": "Separador",

@@ -416,6 +416,22 @@
         "theirRefLabel": "他们的磨坊"
       }
     },
+    "parksnpeaks": {
+      "name": "ParksnPeaks 发现",
+      "description": "主要用于 VK 和 ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks（VK/ZL 发现）",
+        "dialogTitle": "ParksnPeaks 账户",
+        "description": "用户名：{{username}}",
+        "noAccount": "无账户",
+        "pleaseEnterDetails": "请输入您的 ParksnPeaks 帐户信息："
+      },
+      "usernameLabel": "用户名（不是呼号）",
+      "usernamePlaceholder": "您的账户用户名",
+      "apiKeyLabel": "API 密钥（不是密码）",
+      "apiKeyPlaceholder": "您的 API 密钥"
+    },
     "pga": {
       "name": "波兰省奖",
       "shortName": "PGA",
@@ -594,6 +610,60 @@
       "exampleRefName": "山峰示例",
       "unknownRefName": "未知的山峰",
       "noRefsNearby": "附近没有山峰！"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "未选择塔进行激活",
+        "title_one": "激活 1 个塔",
+        "title_other": "激活 {{count}} 个塔",
+        "noTowersFound": "未找到塔",
+        "nearestMatches": "最近的{{count}}个中的{{limit}}场比赛",
+        "matchingTowers_zero": "无匹配的塔",
+        "matchingTowers_one": "1 个匹配的塔",
+        "matchingTowers_other": "{{count}} 个匹配的塔",
+        "searchForTowers": "搜索要激活的塔！",
+        "noTowersNearby": "附近没有塔",
+        "nearbyTowers": "附近的塔",
+        "searchPlaceholder": "名称或参考…",
+        "unknownTower": "未知塔"
+      },
+      "scoring": {
+        "ref2refCount_zero": "没有 R2R",
+        "ref2refCount_one": "1 个 R2R",
+        "ref2refCount_other": "{{fmtCount}} 个 R2R",
+        "huntedRefsCount_zero": "无猎取的塔",
+        "huntedRefsCount_one": "猎取了 1 个塔",
+        "huntedRefsCount_other": "猎取了 {{fmtCount}} 个塔",
+        "activatorQSOsCount_zero": "无激活者 QSO",
+        "activatorQSOsCount_one": "1 个激活者 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} 激活者 QSO",
+        "ref2refQSOsCount_zero": "无 R2R QSO",
+        "ref2refQSOsCount_one": "1 个 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} 个 R2R QSO",
+        "huntedQSOsCount_zero": "无猎取 QSO",
+        "huntedQSOsCount_one": "猎取了 1 个 QSO",
+        "huntedQSOsCount_other": "猎取了 {{fmtCount}} 个 QSO",
+        "operationTotals": "操作总数",
+        "referencesActivatedCount_zero": "无激活的塔",
+        "referencesActivatedCount_one": "激活了 1 个塔",
+        "referencesActivatedCount_other": "激活了 {{fmtCount}} 个塔",
+        "referencesMissedCount_zero": "无未完成的塔",
+        "referencesMissedCount_one": "1 个未完成的塔",
+        "referencesMissedCount_other": "{{fmtCount}} 个未完成的塔",
+        "referencesHuntedCount_zero": "无猎取的塔",
+        "referencesHuntedCount_one": "猎取了 1 个塔",
+        "referencesHuntedCount_other": "猎取了 {{fmtCount}} 个塔"
+      },
+      "loggingControl": {
+        "theirRefLabel": "他们的塔"
+      },
+      "exampleRefName": "示例塔",
+      "unknownRefName": "未知塔",
+      "noRefsNearby": "附近没有塔！",
+      "postSpotAPI": {
+        "error": "发布 TOTA 点时出错",
+        "serverResponse": "服务器响应状态 {{status}} {{message}}"
+      }
     },
     "usStates": {
       "statesCount_zero": "没有美国州",

@@ -231,23 +231,6 @@
         "title": "Utviklerinnstillinger",
         "description": "Her er det drager"
       },
-      "accountsQRZ": {
-        "title": "QRZ (for kallesignalsøk)",
-        "description": "Innlogging: {{login}}",
-        "noAccount": "Ingen konto",
-        "errorEmail": "Ikke bruk e-posten din for innlogging.",
-        "dialogTitle": "QRZ.com-konto",
-        "pleaseEnterDetails": "Vennligst oppgi detaljene for din QRZ.com-konto:",
-        "loginLabel": "Innlogging (ditt kallesignal)",
-        "loginPlaceholder": "din innlogging",
-        "passwordLabel": "Passord",
-        "passwordPlaceholder": "ditt passord",
-        "checkCredentials": "Sjekk innloggingsdetaljer"
-      },
-      "wavelogSettings": {
-        "title": "Wavelog-innstillinger",
-        "description": "Konfigurer Wavelog API-tilkobling"
-      },
       "contribute": {
         "isASupporter": "{{callsign}} er en støttespiller for Ham2K",
         "couldBeASupporter": "{{callsign}} kunne være en støttespiller for Ham2K"
@@ -468,6 +451,34 @@
       "recordsCount_zero": "Ingen logger",
       "recordsCount_one": "1 logg",
       "recordsCount_other": "{{fmtCount}} logger"
+    },
+    "accountsSettings": {
+      "title": "Kontoer og tjenester",
+      "description": "QRZ.com og andre tjenester",
+      "accountsSection": "Innloggingsdetaljer",
+      "servicesSection": "Tjenester",
+      "accountsQRZ": {
+        "title": "QRZ (for kallesignalsøk)",
+        "description": "Innlogging: {{login}}",
+        "noAccount": "Ingen konto",
+        "errorEmail": "Ikke bruk e-posten din for innlogging.",
+        "dialogTitle": "QRZ.com-konto",
+        "pleaseEnterDetails": "Vennligst oppgi detaljene for din QRZ.com-konto:",
+        "loginLabel": "Innlogging (ditt kallesignal)",
+        "loginPlaceholder": "din innlogging",
+        "passwordLabel": "Passord",
+        "passwordPlaceholder": "ditt passord",
+        "checkCredentials": "Sjekk innloggingsdetaljer"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Wavelog-innstillinger",
+      "description": "Konfigurer Wavelog API-tilkobling",
+      "noStationsFoundOrInvalidResponse": "Ingen stasjoner funnet eller ugyldig respons",
+      "errorFetchingStations": "Feil ved henting av {{message}}",
+      "fetchStations": "Hent stasjoner",
+      "selectStation": "Velg stasjon",
+      "selectedStation": "Valgt stasjon: {{station}}"
     },
     "syncSettings": {
       "title": "Synkroniseringsinnstillinger",
@@ -695,14 +706,6 @@
     },
     "extensionSettings": {
       "title": "Utvidelse"
-    },
-    "wavelogSettings": {
-      "title": "Wavelog-innstillinger",
-      "noStationsFoundOrInvalidResponse": "Ingen stasjoner funnet eller ugyldig respons",
-      "errorFetchingStations": "Feil ved henting av {{message}}",
-      "fetchStations": "Hent stasjoner",
-      "selectStation": "Velg stasjon",
-      "selectedStation": "Valgt stasjon: {{station}}"
     },
     "operationScreen": {
       "paneSeparator-a11y": "Panel-separator",

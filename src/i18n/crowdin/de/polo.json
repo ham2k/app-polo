@@ -231,23 +231,6 @@
         "title": "Entwicklereinstellungen",
         "description": "Hier gibt's Drachen"
       },
-      "accountsQRZ": {
-        "title": "QRZ (um Rufzeichen nachzuschlagen)",
-        "description": "Login: {{login}}",
-        "noAccount": "Kein Konto",
-        "errorEmail": "Verwende nicht deine E-Mail zum Einloggen.",
-        "dialogTitle": "QRZ.com-Konto",
-        "pleaseEnterDetails": "Bitte gebe die Details deines QRZ.com-Kontos ein:",
-        "loginLabel": "Login (Dein Rufzeichen)",
-        "loginPlaceholder": "Dein Login",
-        "passwordLabel": "Passwort",
-        "passwordPlaceholder": "Dein Passwort",
-        "checkCredentials": "Anmeldeinformationen prüfen"
-      },
-      "wavelogSettings": {
-        "title": "Wavelog-Einstellungen",
-        "description": "Wavelog-API-Verbindung konfigurieren"
-      },
       "contribute": {
         "isASupporter": "{{callsign}} ist ein Unterstützer von Ham2K",
         "couldBeASupporter": "{{callsign}} könnte ein Unterstützer von Ham2K sein"
@@ -468,6 +451,34 @@
       "recordsCount_zero": "Keine Aufzeichnungen",
       "recordsCount_one": "1 Eintrag",
       "recordsCount_other": "{{fmtCount}} Einträge"
+    },
+    "accountsSettings": {
+      "title": "Konten & Dienste",
+      "description": "QRZ.com und andere Dienste",
+      "accountsSection": "Anmeldeinformationen",
+      "servicesSection": "Dienste",
+      "accountsQRZ": {
+        "title": "QRZ (um Rufzeichen nachzuschlagen)",
+        "description": "Login: {{login}}",
+        "noAccount": "Kein Konto",
+        "errorEmail": "Verwende nicht deine E-Mail zum Einloggen.",
+        "dialogTitle": "QRZ.com-Konto",
+        "pleaseEnterDetails": "Bitte gebe die Details deines QRZ.com-Kontos ein:",
+        "loginLabel": "Login (Dein Rufzeichen)",
+        "loginPlaceholder": "Dein Login",
+        "passwordLabel": "Passwort",
+        "passwordPlaceholder": "Dein Passwort",
+        "checkCredentials": "Anmeldeinformationen prüfen"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Wavelog Einstellungen",
+      "description": "Wavelog-API-Verbindung konfigurieren",
+      "noStationsFoundOrInvalidResponse": "Keine Stationen gefunden oder ungültige Antwort",
+      "errorFetchingStations": "Fehler beim Abrufen von Stationen: {{message}}",
+      "fetchStations": "Stationen abrufen",
+      "selectStation": "Station auswählen",
+      "selectedStation": "Ausgewählte Station: {{station}}"
     },
     "syncSettings": {
       "title": "Sync-Einstellungen",
@@ -695,14 +706,6 @@
     },
     "extensionSettings": {
       "title": "Erweiterung"
-    },
-    "wavelogSettings": {
-      "title": "Wavelog Einstellungen",
-      "noStationsFoundOrInvalidResponse": "Keine Stationen gefunden oder ungültige Antwort",
-      "errorFetchingStations": "Fehler beim Abrufen von Stationen: {{message}}",
-      "fetchStations": "Stationen abrufen",
-      "selectStation": "Station auswählen",
-      "selectedStation": "Ausgewählte Station: {{station}}"
     },
     "operationScreen": {
       "paneSeparator-a11y": "Fenstertrennzeichen",

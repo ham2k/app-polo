@@ -345,9 +345,9 @@
         "1-25cm-a11y": "1,25 Centimetrov",
         "6mm-a11y": "6 Milimetrov",
         "4mm-a11y": "4 Milimetrov",
-        "2-5mm-a11y": "2,5 Milimetrov",
-        "2mm-a11y": "2 Milimetrov",
-        "1mm-a11y": "1 Milimetr",
+        "2-5mm-a11y": "2,5 Milimetra",
+        "2mm-a11y": "2 Milimetre",
+        "1mm-a11y": "1 Milimeter",
         "submm-a11y": "Podmilimetrové",
         "other": "Iné",
         "other-a11y": "Iné pásmo"

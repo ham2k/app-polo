@@ -231,23 +231,6 @@
         "title": "開発者設定",
         "description": "Here be dragons ドラゴンがいます"
       },
-      "accountsQRZ": {
-        "title": "QRZ (for callsign lookups) コールサイン検索用",
-        "description": "ログイン: {{login}}",
-        "noAccount": "アカウントなし",
-        "errorEmail": "ログインにメールアドレスを使用しないでください。",
-        "dialogTitle": "QRZ.com アカウント",
-        "pleaseEnterDetails": "QRZ.com アカウントの詳細を入力してください:",
-        "loginLabel": "ログイン (あなたのコールサイン)",
-        "loginPlaceholder": "あなたのログイン",
-        "passwordLabel": "パスワード",
-        "passwordPlaceholder": "あなたのパスワード",
-        "checkCredentials": "認証を確認"
-      },
-      "wavelogSettings": {
-        "title": "Wavelog Settings ウェーブログ設定",
-        "description": "Wavelog ウェーブログAPI接続を設定します"
-      },
       "contribute": {
         "isASupporter": "{{callsign}} は Ham2K のサポーターです",
         "couldBeASupporter": "{{callsign}} は Ham2K のサポーターになるかもしれません"
@@ -468,6 +451,34 @@
       "recordsCount_zero": "レコードなし",
       "recordsCount_one": "1レコード",
       "recordsCount_other": "{{fmtCount}}レコード"
+    },
+    "accountsSettings": {
+      "title": "アカウントとサービス",
+      "description": "QRZ.comおよびその他のサービス",
+      "accountsSection": "認証情報",
+      "servicesSection": "サービス",
+      "accountsQRZ": {
+        "title": "QRZ（コールサイン検索用）",
+        "description": "ログイン: {{login}}",
+        "noAccount": "アカウントなし",
+        "errorEmail": "ログインにメールアドレスを使用しないでください。",
+        "dialogTitle": "QRZ.com アカウント",
+        "pleaseEnterDetails": "QRZ.com アカウントの詳細を入力してください:",
+        "loginLabel": "ログイン（あなたのコールサイン）",
+        "loginPlaceholder": "あなたのログイン",
+        "passwordLabel": "パスワード",
+        "passwordPlaceholder": "あなたのパスワード",
+        "checkCredentials": "認証を確認"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Wavelogの設定",
+      "description": "Wavelog API接続を設定します",
+      "noStationsFoundOrInvalidResponse": "ステーションが見つからないか無効の応答",
+      "errorFetchingStations": "ステーションの取得エラー: {{message}}",
+      "fetchStations": "ステーションの取得",
+      "selectStation": "ステーションを選択",
+      "selectedStation": "選択したステーション: {{station}}"
     },
     "syncSettings": {
       "title": "同期設定",
@@ -695,14 +706,6 @@
     },
     "extensionSettings": {
       "title": "エクステンション"
-    },
-    "wavelogSettings": {
-      "title": "Wavelogの設定",
-      "noStationsFoundOrInvalidResponse": "ステーションが見つからないか無効の応答",
-      "errorFetchingStations": "ステーションの取得エラー: {{message}}",
-      "fetchStations": "ステーションの取得",
-      "selectStation": "ステーションを選択",
-      "selectedStation": "選択したステーション: {{station}}"
     },
     "operationScreen": {
       "paneSeparator-a11y": "Paneセパレーター",

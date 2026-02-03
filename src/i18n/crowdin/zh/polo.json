@@ -231,23 +231,6 @@
         "title": "开发者设置",
         "description": "这里有龙"
       },
-      "accountsQRZ": {
-        "title": "QRZ（用于呼号查询）",
-        "description": "登录：{{login}}",
-        "noAccount": "没有账户",
-        "errorEmail": "不要使用邮件登录。",
-        "dialogTitle": "QRZ.com 账户",
-        "pleaseEnterDetails": "请输入您的 QRZ.com 账户的详细信息：",
-        "loginLabel": "登录（您的呼号）",
-        "loginPlaceholder": "您的登录",
-        "passwordLabel": "密码",
-        "passwordPlaceholder": "您的密码",
-        "checkCredentials": "检查凭证"
-      },
-      "wavelogSettings": {
-        "title": "Wavelog 设置",
-        "description": "配置 Wavelog API 连接"
-      },
       "contribute": {
         "isASupporter": "{{callsign}} 是 Ham2K 的支持者",
         "couldBeASupporter": "{{callsign}} 可能是 Ham2K 的支持者"
@@ -468,6 +451,34 @@
       "recordsCount_zero": "无记录",
       "recordsCount_one": "1条记录",
       "recordsCount_other": "{{fmtCount}}条记录"
+    },
+    "accountsSettings": {
+      "title": "账户及服务",
+      "description": "QRZ.com和其他服务",
+      "accountsSection": "凭证",
+      "servicesSection": "服务",
+      "accountsQRZ": {
+        "title": "QRZ（用于呼号查询）",
+        "description": "登录：{{login}}",
+        "noAccount": "无账户",
+        "errorEmail": "不要使用邮件登录。",
+        "dialogTitle": "QRZ.com账户",
+        "pleaseEnterDetails": "请输入您的QRZ.com账户的详细信息：",
+        "loginLabel": "登录（您的呼号）",
+        "loginPlaceholder": "您的登录",
+        "passwordLabel": "密码",
+        "passwordPlaceholder": "您的密码",
+        "checkCredentials": "检查凭证"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Wavelog 设置",
+      "description": "配置Wavelog API连接",
+      "noStationsFoundOrInvalidResponse": "未找到电台或响应无效",
+      "errorFetchingStations": "获取电台出错：{{message}}",
+      "fetchStations": "获取电台",
+      "selectStation": "选择电台",
+      "selectedStation": "选定电台：{{station}}"
     },
     "syncSettings": {
       "title": "同步设置",
@@ -695,14 +706,6 @@
     },
     "extensionSettings": {
       "title": "扩展"
-    },
-    "wavelogSettings": {
-      "title": "Wavelog 设置",
-      "noStationsFoundOrInvalidResponse": "未找到电台或响应无效",
-      "errorFetchingStations": "获取电台出错：{{message}}",
-      "fetchStations": "获取电台",
-      "selectStation": "选择电台",
-      "selectedStation": "选定电台：{{station}}"
     },
     "operationScreen": {
       "paneSeparator-a11y": "窗格分隔符",

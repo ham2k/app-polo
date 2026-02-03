@@ -416,6 +416,22 @@
         "theirRefLabel": "Deres mølle"
       }
     },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Spotting",
+      "description": "Brukes mest i VK og ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL spotting)",
+        "dialogTitle": "ParksnPeaks-konto",
+        "description": "Brukernavn: {{username}}",
+        "noAccount": "Ingen konto",
+        "pleaseEnterDetails": "Vennligst oppgi detaljene for din ParksnPeaks-konto:"
+      },
+      "usernameLabel": "Brukernavn (ikke kallesignal)",
+      "usernamePlaceholder": "Ditt brukernavn",
+      "apiKeyLabel": "API-nøkkel (ikke passord)",
+      "apiKeyPlaceholder": "Din API-nøkkel"
+    },
     "pga": {
       "name": "Polish Gmina Award",
       "shortName": "PGA",
@@ -594,6 +610,60 @@
       "exampleRefName": "Eksempel topp",
       "unknownRefName": "Ukjent topp",
       "noRefsNearby": "Ingen topper i nærheten!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "Ingen tårn valgt for aktivering",
+        "title_one": "Aktiverer 1 tårn",
+        "title_other": "Aktiverer {{count}} tårn",
+        "noTowersFound": "Ingen tårn funnet",
+        "nearestMatches": "Nærmeste {{limit}} av {{count}} treff",
+        "matchingTowers_zero": "Ingen matchende tårn",
+        "matchingTowers_one": "1 matchende tårn",
+        "matchingTowers_other": "{{count}} matchende tårn",
+        "searchForTowers": "Søk etter noen tårn å aktivere!",
+        "noTowersNearby": "Ingen tårn i nærheten",
+        "nearbyTowers": "Tårn i nærheten",
+        "searchPlaceholder": "Navn eller referanse…",
+        "unknownTower": "Ukjent tårn"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Ingen R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Ingen jaktede tårn",
+        "huntedRefsCount_one": "1 jaget tårn",
+        "huntedRefsCount_other": "{{fmtCount}} jagede tårn",
+        "activatorQSOsCount_zero": "Ingen aktivator-QSOer",
+        "activatorQSOsCount_one": "1 aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivator-QSOer",
+        "ref2refQSOsCount_zero": "Ingen R2R-QSOer",
+        "ref2refQSOsCount_one": "1 R2R-QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R-QSOer",
+        "huntedQSOsCount_zero": "Ingen jaktede QSOer",
+        "huntedQSOsCount_one": "1 jakt-QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} jakt-QSOer",
+        "operationTotals": "Operasjonsresultater",
+        "referencesActivatedCount_zero": "Ingen tårn aktivert",
+        "referencesActivatedCount_one": "1 aktivert tårn",
+        "referencesActivatedCount_other": "{{fmtCount}} aktiverte tårn",
+        "referencesMissedCount_zero": "Ingen ufullstendige tårn",
+        "referencesMissedCount_one": "1 ufullstendig tårn",
+        "referencesMissedCount_other": "{{fmtCount}} ufullstendige tårn",
+        "referencesHuntedCount_zero": "Ingen jaktede tårn",
+        "referencesHuntedCount_one": "1 jaktet tårn",
+        "referencesHuntedCount_other": "{{fmtCount}} jaktede tårn"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres tårn"
+      },
+      "exampleRefName": "Eksempeltårn",
+      "unknownRefName": "Ukjent tårn",
+      "noRefsNearby": "Ingen tårn i nærheten!",
+      "postSpotAPI": {
+        "error": "Feil ved sending av TOTA-spot",
+        "serverResponse": "Serveren svarte med status {{status}} {{message}}"
+      }
     },
     "usStates": {
       "statesCount_zero": "Ingen amerikanske delstater",

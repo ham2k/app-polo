@@ -416,6 +416,22 @@
         "theirRefLabel": "Su Molino"
       }
     },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Spotting",
+      "description": "Usado principalmente en VK y ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (spotting VK/ZL)",
+        "dialogTitle": "Cuenta ParksnPeaks",
+        "description": "Usuario: {{username}}",
+        "noAccount": "Sin cuenta",
+        "pleaseEnterDetails": "Por favor, ingresa los detalles de tu cuenta ParksnPeaks:"
+      },
+      "usernameLabel": "Usuario (no indicativo)",
+      "usernamePlaceholder": "tu usuario de ParksnPeaks",
+      "apiKeyLabel": "API Key (no contraseña)",
+      "apiKeyPlaceholder": "Tu API Key"
+    },
     "pga": {
       "name": "Premio Gmina de Polonia",
       "shortName": "PGA",
@@ -594,6 +610,60 @@
       "exampleRefName": "Ejemplo de Cima",
       "unknownRefName": "Cima desconocida",
       "noRefsNearby": "¡No hay cumbres cercanas!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "No se seleccionaron torres para activar",
+        "title_one": "Activando 1 torre",
+        "title_other": "Activando {{count}} torres",
+        "noTowersFound": "No se encontraron torres",
+        "nearestMatches": "{{count}} de {{limit}} referencias cercanas",
+        "matchingTowers_zero": "No se encontró ninguna torre coincidente",
+        "matchingTowers_one": "1 torre coincidente",
+        "matchingTowers_other": "{{count}} torres coincidentes",
+        "searchForTowers": "¡Busca algunas torres para activar!",
+        "noTowersNearby": "No hay torres cercanas",
+        "nearbyTowers": "Torres cercanas",
+        "searchPlaceholder": "Nombre o referencia…",
+        "unknownTower": "Torre desconocida"
+      },
+      "scoring": {
+        "ref2refCount_zero": "No R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "No hay torres cazadas",
+        "huntedRefsCount_one": "1 torre cazada",
+        "huntedRefsCount_other": "{{fmtCount}} torres cazadas",
+        "activatorQSOsCount_zero": "No hay QSOs de activadores",
+        "activatorQSOsCount_one": "1 QSO como activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs como activador",
+        "ref2refQSOsCount_zero": "No hay QSOs R2R",
+        "ref2refQSOsCount_one": "1 QSO R2R",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs R2R",
+        "huntedQSOsCount_zero": "No hay QSOs cazados",
+        "huntedQSOsCount_one": "1 QSO como cazador",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs como cazador",
+        "operationTotals": "Totales de la operación",
+        "referencesActivatedCount_zero": "No hay torres activadas",
+        "referencesActivatedCount_one": "1 torre activada",
+        "referencesActivatedCount_other": "{{fmtCount}} torres activadas",
+        "referencesMissedCount_zero": "No hay torres incompletas",
+        "referencesMissedCount_one": "1 torre incompleta",
+        "referencesMissedCount_other": "{{fmtCount}} torres incompletas",
+        "referencesHuntedCount_zero": "No hay torres cazadas",
+        "referencesHuntedCount_one": "1 torre cazada",
+        "referencesHuntedCount_other": "{{fmtCount}} torres cazadas"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Su Torre"
+      },
+      "exampleRefName": "Torre de ejemplo",
+      "unknownRefName": "Torre desconocida",
+      "noRefsNearby": "¡No hay torres cercanas!",
+      "postSpotAPI": {
+        "error": "Error al publicar el spot TOTA",
+        "serverResponse": "El servidor respondió con estado {{status}} {{message}}"
+      }
     },
     "usStates": {
       "statesCount_zero": "No hay estados de EE.UU.",

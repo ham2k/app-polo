@@ -25,7 +25,7 @@
         "searchForCastles": "Vyhľadajte nejaké hrady pre aktiváciu!",
         "noCastlesNearby": "Žiadne hrady v blízkosti",
         "nearbyCastles": "Hrady v blízkosti",
-        "searchPlaceholder": "Názov alebo referencia…"
+        "searchPlaceholder": "Názov alebo referenčné číslo…"
       },
       "scoring": {
         "huntedRefsCount_zero": "Žiadne lovené hrady",
@@ -68,7 +68,7 @@
         "searchForLighthouses": "Vyhľadajte nejaké majáky pre aktiváciu!",
         "noLighthousesNearby": "Žiadne majáky v blízkosti",
         "nearbyLighthouses": "Majáky v blízkosti",
-        "searchPlaceholder": "Názov alebo referencia…"
+        "searchPlaceholder": "Názov alebo referenčné číslo…"
       },
       "scoring": {
         "huntedRefsCount_zero": "Žiadne lovené majáky",
@@ -277,7 +277,7 @@
         "searchForCastles": "Vyhľadajte nejaké hrady pre aktiváciu!",
         "noCastlesNearby": "Žiadne hrady v blízkosti",
         "nearbyCastles": "Hrady v blízkosti",
-        "searchPlaceholder": "Názov alebo referencia…"
+        "searchPlaceholder": "Názov alebo referenčné číslo…"
       }
     },
     "ela": {
@@ -296,7 +296,7 @@
         "searchForLighthouses": "Vyhľadajte nejaké majáky pre aktiváciu!",
         "noLighthousesNearby": "Žiadne majáky v blízkosti",
         "nearbyLighthouses": "Majáky v blízkosti",
-        "searchPlaceholder": "Názov alebo referencia…"
+        "searchPlaceholder": "Názov alebo referenčné číslo…"
       }
     },
     "fd": {
@@ -415,6 +415,22 @@
       "loggingControl": {
         "theirRefLabel": "Ich mlyn"
       }
+    },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Spottingu",
+      "description": "Používa sa hlavne vo VK a ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL spottingu)",
+        "dialogTitle": "Účet ParksnPeaks",
+        "description": "Používateľské meno: {{username}}",
+        "noAccount": "Bez účtu",
+        "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ParksnPeaks:"
+      },
+      "usernameLabel": "Používateľské meno (nie volací znak)",
+      "usernamePlaceholder": "vaše používateľské meno účtu",
+      "apiKeyLabel": "API kľúč (nie heslo)",
+      "apiKeyPlaceholder": "váš API kľúč"
     },
     "pga": {
       "name": "Poľské ocenenie Gmina",
@@ -594,6 +610,60 @@
       "exampleRefName": "Príklad vrcholu",
       "unknownRefName": "Neznámy vrchol",
       "noRefsNearby": "Žiadne vrcholy v okolí!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "Nie sú vybrané veže na aktiváciu",
+        "title_one": "Aktivácia 1 veže",
+        "title_other": "Aktivácia {{count}} veží",
+        "noTowersFound": "Nenájdené žiadne veže",
+        "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
+        "matchingTowers_zero": "Žiadne zodpovedajúce veže",
+        "matchingTowers_one": "1 zodpovedajúca veža",
+        "matchingTowers_other": "{{count}} zodpovedajúcich veží",
+        "searchForTowers": "Vyhľadajte nejaké veže pre aktiváciu!",
+        "noTowersNearby": "Žiadne veže v blízkosti",
+        "nearbyTowers": "Blízke veže",
+        "searchPlaceholder": "Názov alebo referenčné číslo…",
+        "unknownTower": "Neznáma veža"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Žiadne R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Žiadne lovené veže",
+        "huntedRefsCount_one": "1 lovená veža",
+        "huntedRefsCount_other": "{{fmtCount}} lovených veží",
+        "activatorQSOsCount_zero": "No activator QSOs",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivovaných QSOs",
+        "ref2refQSOsCount_zero": "Žiadne R2R QSOs",
+        "ref2refQSOsCount_one": "1 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R QSOs",
+        "huntedQSOsCount_zero": "Žiadne lovené QSOs",
+        "huntedQSOsCount_one": "1 lovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "operationTotals": "Súhrn prevádzok",
+        "referencesActivatedCount_zero": "Žiadne aktivované veže",
+        "referencesActivatedCount_one": "1 aktivovaná veža",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných veží",
+        "referencesMissedCount_zero": "Žiadne nekompletné veže",
+        "referencesMissedCount_one": "1 nekompletná veža",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletných veží",
+        "referencesHuntedCount_zero": "Žiadne lovené veže",
+        "referencesHuntedCount_one": "1 lovená veža",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených veží"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich veža"
+      },
+      "exampleRefName": "Príklad veže",
+      "unknownRefName": "Neznáma veža",
+      "noRefsNearby": "Žiadne veže v blízkosti!",
+      "postSpotAPI": {
+        "error": "Chyba pri odosielaní spotu TOTA",
+        "serverResponse": "Server odpovedal so stavom {{status}} {{message}}"
+      }
     },
     "usStates": {
       "statesCount_zero": "Žiadne štáty USA",

@@ -416,6 +416,22 @@
         "theirRefLabel": "Hun Molen"
       }
     },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Spotting",
+      "description": "Voornamelijk gebruikt in VK en ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL-spotting)",
+        "dialogTitle": "ParksnPeaks Account",
+        "description": "Gebruikersnaam: {{username}}",
+        "noAccount": "Geen account",
+        "pleaseEnterDetails": "Voer de gegevens van uw ParksnPeaks-account in:"
+      },
+      "usernameLabel": "Gebruikersnaam (niet roepletter)",
+      "usernamePlaceholder": "uw gebruikersnaam",
+      "apiKeyLabel": "API-sleutel (geen wachtwoord!)",
+      "apiKeyPlaceholder": "Uw API sleutel"
+    },
     "pga": {
       "name": "Pools Gmina Award",
       "shortName": "PGA",
@@ -594,6 +610,60 @@
       "exampleRefName": "Voorbeeld Top",
       "unknownRefName": "Onbekende Top",
       "noRefsNearby": "Geen toppen in de buurt!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "Geen torens geselecteerd voor activering",
+        "title_one": "1 toren activeren",
+        "title_other": "{{count}} torens activeren",
+        "noTowersFound": "Geen torens gevonden",
+        "nearestMatches": "Dichtstbijzijnde {{limit}} van {{count}} overeenkomsten",
+        "matchingTowers_zero": "Geen overeenkomstige torens",
+        "matchingTowers_one": "1 overeenkomstige toren",
+        "matchingTowers_other": "{{count}} overeenkomstige torens",
+        "searchForTowers": "Zoek naar torens om te activeren!",
+        "noTowersNearby": "Geen torens in de buurt",
+        "nearbyTowers": "Torens in de buurt",
+        "searchPlaceholder": "Naam of referentie…",
+        "unknownTower": "Onbekende toren"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Geen R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Geen torens gelogd",
+        "huntedRefsCount_one": "1 toren gelogd",
+        "huntedRefsCount_other": "{{fmtCount}} torens gelogd",
+        "activatorQSOsCount_zero": "Geen activator QSO's",
+        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activator QSO's",
+        "ref2refQSOsCount_zero": "Geen R2R QSO's",
+        "ref2refQSOsCount_one": "1 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R QSO's",
+        "huntedQSOsCount_zero": "Geen hunter QSO's",
+        "huntedQSOsCount_one": "1 hunter QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} gejaagde QSO's",
+        "operationTotals": "Operatie totaal",
+        "referencesActivatedCount_zero": "Geen torens geactiveerd",
+        "referencesActivatedCount_one": "1 toren geactiveerd",
+        "referencesActivatedCount_other": "{{fmtCount}} torens geactiveerd",
+        "referencesMissedCount_zero": "Geen onvolledige torens",
+        "referencesMissedCount_one": "1 onvolledige toren",
+        "referencesMissedCount_other": "{{fmtCount}} onvolledige torens",
+        "referencesHuntedCount_zero": "Geen torens gelogd",
+        "referencesHuntedCount_one": "1 toren gelogd",
+        "referencesHuntedCount_other": "{{fmtCount}} torens gelogd"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Hun Toren"
+      },
+      "exampleRefName": "Voorbeeld Toren",
+      "unknownRefName": "Onbekende Toren",
+      "noRefsNearby": "Geen torens in de buurt!",
+      "postSpotAPI": {
+        "error": "Fout bij het plaatsen van TOTA spot",
+        "serverResponse": "Server reageerde met status {{status}} {{message}}"
+      }
     },
     "usStates": {
       "statesCount_zero": "Geen Amerikaanse Staten",

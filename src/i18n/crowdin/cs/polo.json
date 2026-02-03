@@ -18,8 +18,8 @@
     },
     "home": {
       "title": "Portable deník",
-      "newOperation": "Nová operace",
-      "newOperation-a11y": "Nová operace",
+      "newOperation": "Nová aktivita",
+      "newOperation-a11y": "Nová aktivita",
       "operationList-a11y": "Seznam operací",
       "noOperations": "Žádné aktivity!",
       "settings-a11y": "Nastavení",
@@ -230,23 +230,6 @@
       "developerSettings": {
         "title": "Nastavení pro vývojáře",
         "description": "Zde jsou draci"
-      },
-      "accountsQRZ": {
-        "title": "QRZ (pro vyhledávání značek)",
-        "description": "Přihlášení: {{login}}",
-        "noAccount": "Žádný účet",
-        "errorEmail": "Nepoužívej svůj e-mail pro přihlášení.",
-        "dialogTitle": "Účet QRZ.com",
-        "pleaseEnterDetails": "Prosím, zadej detaily svého účtu QRZ.com:",
-        "loginLabel": "Přihlášení (tvá volací značka)",
-        "loginPlaceholder": "tvů login",
-        "passwordLabel": "Heslo",
-        "passwordPlaceholder": "tvé heslo",
-        "checkCredentials": "Zkontroluj přihlašovací údaje"
-      },
-      "wavelogSettings": {
-        "title": "Nastavení Wavelogu",
-        "description": "Konfigurace připojení k API Wavelogu"
       },
       "contribute": {
         "isASupporter": "{{callsign}} je podporovatelem Ham2K",
@@ -469,6 +452,34 @@
       "recordsCount_one": "1 záznam",
       "recordsCount_other": "{{fmtCount}} záznamů"
     },
+    "accountsSettings": {
+      "title": "Účty a služby",
+      "description": "QRZ.com a další služby",
+      "accountsSection": "Přihlašovací údaje",
+      "servicesSection": "Služby",
+      "accountsQRZ": {
+        "title": "QRZ (pro vyhledávání značek)",
+        "description": "Přihlášení: {{login}}",
+        "noAccount": "Žádný účet",
+        "errorEmail": "Nepoužívej svůj e-mail pro přihlášení.",
+        "dialogTitle": "Účet QRZ.com",
+        "pleaseEnterDetails": "Prosím, zadej detaily svého účtu QRZ.com:",
+        "loginLabel": "Přihlášení (tvá volací značka)",
+        "loginPlaceholder": "tvé přihlášení",
+        "passwordLabel": "Heslo",
+        "passwordPlaceholder": "tvé heslo",
+        "checkCredentials": "Zkontroluj přihlašovací údaje"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Nastavení Wavelog",
+      "description": "Konfigurace připojení k API Wavelogu",
+      "noStationsFoundOrInvalidResponse": "Žádné stanice nenalezeny nebo neplatná odezva",
+      "errorFetchingStations": "Chyba při načítání stanic: {{zpráva}}",
+      "fetchStations": "Načítání stanic",
+      "selectStation": "Vyberte Stanici",
+      "selectedStation": "Vybraná stanice: {{stanice}}"
+    },
     "syncSettings": {
       "title": "Nastavení synchronizace",
       "description": "Ham2K LoFi poskytuje spolehlivou synchronizaci mezi všemi tvými zařízeními a zajišťuje zálohu dat tvých operací v cloudu.",
@@ -541,7 +552,7 @@
       },
       "cloudCountDescription": {
         "operations": "Aktivity: {{total}} celkem",
-        "operationsSyncable": "Operace: {{total}} uloženo, {{syncable}} synchronizovatelné",
+        "operationsSyncable": "Aktivita: {{total}} uloženo, {{syncable}} synchronizovatelné",
         "qsos": "QSO: {{total}} uloženo",
         "qsosSyncable": "QSO: {{total}} uloženo, {{syncable}} synchronizovatelné"
       }
@@ -695,14 +706,6 @@
     },
     "extensionSettings": {
       "title": "Rozšíření"
-    },
-    "wavelogSettings": {
-      "title": "Nastavení Wavelog",
-      "noStationsFoundOrInvalidResponse": "Žádné stanice nenalezeny nebo neplatná odezva",
-      "errorFetchingStations": "Chyba při načítání stanic: {{zpráva}}",
-      "fetchStations": "Načítání stanic",
-      "selectStation": "Vyberte Stanici",
-      "selectedStation": "Vybraná stanice: {{stanice}}"
     },
     "operationScreen": {
       "paneSeparator-a11y": "Oddělovač panelů",

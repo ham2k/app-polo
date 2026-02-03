@@ -416,6 +416,22 @@
         "theirRefLabel": "Deren Mühle"
       }
     },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Spotting",
+      "description": "Hauptsächlich in VK und ZL genutzt",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL Spotting)",
+        "dialogTitle": "ParksnPeaks Konto",
+        "description": "Benutzername: {{username}}",
+        "noAccount": "Kein Konto",
+        "pleaseEnterDetails": "Bitte gib die Details deines ParksnPeaks-Kontos ein:"
+      },
+      "usernameLabel": "Benutzername (kein Rufzeichen)",
+      "usernamePlaceholder": "Dein Kontobenutzername",
+      "apiKeyLabel": "API-Schlüssel (nicht das Passwort)",
+      "apiKeyPlaceholder": "Dein API-Schlüssel"
+    },
     "pga": {
       "name": "Polish Gmina Award",
       "shortName": "PGA",
@@ -594,6 +610,60 @@
       "exampleRefName": "Beispiel-Gipfel",
       "unknownRefName": "Unbekannter Gipfel",
       "noRefsNearby": "Keine Gipfel in der Nähe!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "Keine Türme zur Aktivierung ausgewählt",
+        "title_one": "Ein Turm wird aktiviert",
+        "title_other": "{{count}} Türme werden aktiviert",
+        "noTowersFound": "Keine Türme gefunden",
+        "nearestMatches": "Nächstgelegene {{limit}} von {{count}} Treffern",
+        "matchingTowers_zero": "Keine passenden Türme",
+        "matchingTowers_one": "Ein passender Turm",
+        "matchingTowers_other": "{{count}} passende Türme",
+        "searchForTowers": "Suche nach aktivierbaren Türmen!",
+        "noTowersNearby": "Keine Türme in der Nähe",
+        "nearbyTowers": "Türme in der Nähe",
+        "searchPlaceholder": "Name oder Referenz…",
+        "unknownTower": "Unbekannter Turm"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Kein R2R",
+        "ref2refCount_one": "Ein R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Keine gejagten Türme",
+        "huntedRefsCount_one": "Ein gejagter Turm",
+        "huntedRefsCount_other": "{{fmtCount}} gejagte Türme",
+        "activatorQSOsCount_zero": "Keine Aktivator-QSOs",
+        "activatorQSOsCount_one": "1 Aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} Aktivator-QSOs",
+        "ref2refQSOsCount_zero": "Keine R2R-QSOs",
+        "ref2refQSOsCount_one": "Ein R2R-QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R-QSOs",
+        "huntedQSOsCount_zero": "Keine gejagten QSOs",
+        "huntedQSOsCount_one": "1 gejagtes QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} gejagte QSOs",
+        "operationTotals": "Betrieb Gesamt",
+        "referencesActivatedCount_zero": "Keine aktivierten Türme",
+        "referencesActivatedCount_one": "1 aktivierter Turm",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivierte Türme",
+        "referencesMissedCount_zero": "Keine unvollständigen Türme",
+        "referencesMissedCount_one": "1 unvollständiger Turm",
+        "referencesMissedCount_other": "{{fmtCount}} unvollständige Türme",
+        "referencesHuntedCount_zero": "Keine gejagten Türme",
+        "referencesHuntedCount_one": "Ein gejagter Turm",
+        "referencesHuntedCount_other": "{{fmtCount}} gejagte Türme"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deren Turm"
+      },
+      "exampleRefName": "Beispielturm",
+      "unknownRefName": "Unbekannter Turm",
+      "noRefsNearby": "Keine Türme in der Nähe!",
+      "postSpotAPI": {
+        "error": "Fehler beim Posten des TOTA-Spots",
+        "serverResponse": "Server antwortete mit Status {{status}} {{message}}"
+      }
     },
     "usStates": {
       "statesCount_zero": "Keine US States",

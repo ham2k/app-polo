@@ -231,23 +231,6 @@
         "title": "Ontwikkelaar Instellingen",
         "description": "Kijk hiermee uit"
       },
-      "accountsQRZ": {
-        "title": "QRZ (voor roepnaam opzoekingen)",
-        "description": "Inloggen: {{login}}",
-        "noAccount": "Geen account",
-        "errorEmail": "Gebruik uw e-mail niet voor inloggen.",
-        "dialogTitle": "QRZ.com Account",
-        "pleaseEnterDetails": "Voer de gegevens voor uw QRZ.com account in:",
-        "loginLabel": "Inloggen (uw roepnaam)",
-        "loginPlaceholder": "Uw login",
-        "passwordLabel": "Wachtwoord",
-        "passwordPlaceholder": "Uw wachtwoord",
-        "checkCredentials": "Bevestig Referenties"
-      },
-      "wavelogSettings": {
-        "title": "Wavelog Instellingen",
-        "description": "Configureer Wavelog API verbinding"
-      },
       "contribute": {
         "isASupporter": "{{callsign}} is een sponsor van Ham2K",
         "couldBeASupporter": "{{callsign}} zou een sponsor van Ham2K kunnen zijn"
@@ -468,6 +451,34 @@
       "recordsCount_zero": "Geen gegevens",
       "recordsCount_one": "1 record",
       "recordsCount_other": "{{fmtCount}} records"
+    },
+    "accountsSettings": {
+      "title": "Accounts & Services",
+      "description": "QRZ.com en andere diensten",
+      "accountsSection": "Referenties",
+      "servicesSection": "Diensten",
+      "accountsQRZ": {
+        "title": "QRZ (voor roepnaam opzoekingen)",
+        "description": "Inloggen: {{login}}",
+        "noAccount": "Geen account",
+        "errorEmail": "Gebruik uw e-mail niet voor inloggen.",
+        "dialogTitle": "QRZ.com Account",
+        "pleaseEnterDetails": "Voer de gegevens voor uw QRZ.com account in:",
+        "loginLabel": "Inloggen (uw roepnaam)",
+        "loginPlaceholder": "Uw login",
+        "passwordLabel": "Wachtwoord",
+        "passwordPlaceholder": "Uw wachtwoord",
+        "checkCredentials": "Bevestig Referenties"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Wavelog Instellingen",
+      "description": "Configureer Wavelog API verbinding",
+      "noStationsFoundOrInvalidResponse": "Geen stations gevonden of ongeldige reactie",
+      "errorFetchingStations": "Fout bij ophalen van stations: {{message}}",
+      "fetchStations": "Stations Ophalen",
+      "selectStation": "Selecteer Station",
+      "selectedStation": "Geselecteerd station: {{station}}"
     },
     "syncSettings": {
       "title": "Synchronisatie-instellingen",
@@ -695,14 +706,6 @@
     },
     "extensionSettings": {
       "title": "Uitbreiding"
-    },
-    "wavelogSettings": {
-      "title": "Wavelog Instellingen",
-      "noStationsFoundOrInvalidResponse": "Geen stations gevonden of ongeldige reactie",
-      "errorFetchingStations": "Fout bij ophalen van stations: {{message}}",
-      "fetchStations": "Stations Ophalen",
-      "selectStation": "Selecteer Station",
-      "selectedStation": "Geselecteerd station: {{station}}"
     },
     "operationScreen": {
       "paneSeparator-a11y": "Venster afscheiding",
