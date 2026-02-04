@@ -130,7 +130,7 @@ const BundledJSONBackend = {
       const data = readBundledJSON(language, namespace)
       callback(null, data)
     } catch (error) {
-      console.error('🔴🔴 BundledJSONBackend read error', language, namespace, error)
+      console.error('BundledJSONBackend read error', language, namespace, error)
       callback(error, null)
     }
   }
@@ -169,7 +169,6 @@ const I18N_EXTRA_INFO = {
 }
 
 export const initializeI18Next = (language) => {
-  console.log('🌎🌎🌎 initializeI18Next', language)
   return i18n
     .use(BundledJSONBackend)
     .use(NativeLanguageDetector)
@@ -231,7 +230,7 @@ export const refreshCrowdInTranslations = async ({ all = true, i18n, settings, d
     }))
 
     const projectResponse = await crowdinApiFetch(`projects/${Config.CROWDIN_PROJECT_ID}`, { token })
-    console.log('projectResponse', projectResponse)
+
     let languages = projectResponse.data.targetLanguages.map(language => ({
       id: language.id,
       name: language.name,
@@ -242,7 +241,6 @@ export const refreshCrowdInTranslations = async ({ all = true, i18n, settings, d
     const filesResponse = await crowdinApiFetch(`projects/${Config.CROWDIN_PROJECT_ID}/files`, { token })
     const files = filesResponse.data.map(file => ({ id: file.data.id, name: file.data.name, namespace: file.data.name.replace('.json', '') }))
 
-    console.log('languages', languages)
     I18N_EXTRA_INFO.languages = ['en', ...languages.map(language => language.twoLettersCode)]
 
     if (!all) {
@@ -263,7 +261,6 @@ export const refreshCrowdInTranslations = async ({ all = true, i18n, settings, d
         }))
 
         if (CROWDIN_NAMESPACES.includes(file.namespace)) {
-          // console.log('file', file)
           const fileResponse = await crowdinApiFetch(
             `projects/${Config.CROWDIN_PROJECT_ID}/translations/builds/files/${file.id}`, {
             token,
@@ -278,7 +275,7 @@ export const refreshCrowdInTranslations = async ({ all = true, i18n, settings, d
           const downloadUrl = fileResponse.data.url
           const downloadResponse = await fetch(downloadUrl)
           const json = await downloadResponse.json()
-          console.log(`json for ${language.twoLettersCode} ${file.namespace}`, json)
+
           resources[language.twoLettersCode].translation = {
             ...resources[language.twoLettersCode].translation,
             ...json

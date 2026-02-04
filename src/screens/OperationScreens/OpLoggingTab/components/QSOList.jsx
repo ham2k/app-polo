@@ -69,7 +69,6 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
 
     const lastSection = sections[sections.length - 1]
     const lastQSO = lastSection.data[lastSection.data.length - 1]
-    console.log('scroll?', { lastUUID, selectedUUID, lastQ: lastQSO?.uuid })
 
     if (firstScrollToEnd.current === false) {
       firstScrollToEnd.current = true

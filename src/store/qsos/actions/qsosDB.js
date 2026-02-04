@@ -34,7 +34,7 @@ export const prepareQSORow = (row) => {
 
 export const loadQSOs = (uuid) => async (dispatch, getState) => {
   dispatch(actions.setQSOsStatus({ uuid, status: 'loading' }))
-  console.log('loadQSOs', { uuid })
+
   let qsos = []
   try {
     qsos = await dbSelectAll('SELECT * FROM qsos WHERE operation = ? ORDER BY startAtMillis', [uuid], { row: prepareQSORow })
@@ -49,10 +49,9 @@ export const loadQSOs = (uuid) => async (dispatch, getState) => {
     }
   })
 
-  console.log('loadQSOs -- qsos', qsos.length)
   dispatch(actions.setQSOs({ uuid, qsos }))
   dispatch(actions.setQSOsStatus({ uuid, status: 'ready' }))
-  console.log('loadQSOs -- done')
+
   let operationInfo = getState().operations.info[uuid]
 
   const qsoCount = qsos.filter(qso => !qso.deleted && !qso.event).length

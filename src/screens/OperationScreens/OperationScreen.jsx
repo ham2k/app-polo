@@ -8,13 +8,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Animated, PanResponder, View } from 'react-native'
-import { useIsFocused } from '@react-navigation/native'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useTranslation } from 'react-i18next'
 
-import { loadOperation, selectOperation, selectOperationCallInfo } from '../../store/operations'
+import { loadOperation, selectOperation } from '../../store/operations'
 import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../store/qsos'
 import { selectSettings, setSettings } from '../../store/settings'
 import { startTickTock, stopTickTock } from '../../store/time'
@@ -69,9 +68,6 @@ export default function OperationScreen (props) {
       await dispatch(loadQSOs(route.params.operation.uuid))
     })
   }, [route.params?.operation?.uuid, route.params?.uuid, dispatch])
-
-  const isFocused = useIsFocused()
-  useEffect(() => console.log('OperationScreen isFocused', isFocused), [isFocused])
 
   const [lastTracking, setLastTracking] = useState(0)
 

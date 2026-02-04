@@ -47,8 +47,6 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
 
   const settings = useSelectorConditionally(isFocused, selectSettings)
 
-  useEffect(() => console.log('OpLoggingTab isFocused', isFocused), [isFocused])
-
   // Memoize the selector function to prevent excessive calls
   const sectionedQSOsSelector = useCallback(
     (state) => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false),

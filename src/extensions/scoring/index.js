@@ -175,6 +175,6 @@ export function analyzeAndSectionQSOs({ qsos, operation, showDeletedQSOs = true 
       }
     }
   })
-  console.log('analyzeAndSectionQSOs -- ', qsos.length, sections.length)
+
   return { qsos, activeQSOs, sections }
 }
