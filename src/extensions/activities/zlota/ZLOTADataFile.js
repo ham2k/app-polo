@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -9,9 +9,9 @@ import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
+import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
 export const ZLOTAData = {}
 
@@ -37,32 +37,28 @@ export function registerZLOTADataFile() {
 
           const totalRefs = refs.length
 
-          const db = await database()
-          db.transaction(transaction => {
-            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['zlota'])
-          })
+          await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['zlota'])
 
           const startTime = Date.now()
           let processedRefs = 0
 
           while (refs.length > 0) {
             const batch = refs.splice(0, 251)
-            await (() => new Promise(resolve => {
-              setTimeout(() => {
-                db.transaction(async transaction => {
-                  for (const ref of batch) {
-                    // fallback on code in reference
-                    const grid = locationToGrid6(ref.y, ref.x)
-                    const data = {
-                      ref: ref.code,
-                      name: ref.name,
-                      assetType: ref.asset_type,
-                      grid,
-                      lat: ref.y,
-                      lon: ref.x
-                    }
+            const sql = []
+            for (const ref of batch) {
+              // fallback on code in reference
+              const grid = locationToGrid6(ref.y, ref.x)
+              const data = {
+                ref: ref.code,
+                name: ref.name,
+                assetType: ref.asset_type,
+                grid,
+                lat: ref.y,
+                lon: ref.x
+              }
 
-                    transaction.executeSql(`
+              sql.push([
+                `
                     INSERT INTO lookups
                       (category, subCategory, key, name, data, lat, lon, flags, updated)
                     VALUES
@@ -70,25 +66,27 @@ export function registerZLOTADataFile() {
                     ON CONFLICT DO
                     UPDATE SET
                       subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                    `, ['zlota', data.assetType, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.assetType, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                    )
-                    processedRefs++
-                  }
-                  options.onStatus && await options.onStatus({
-                    key,
-                    definition,
-                    status: 'progress',
-                    progress: `Loaded \`${fmtNumber(processedRefs)}\` references.\n\n\`${fmtPercent(Math.min(processedRefs / totalRefs, 1), 'integer')}\` • ${fmtNumber((totalRefs - processedRefs) * ((Date.now() - startTime) / 1000) / processedRefs, 'oneDecimal')} seconds left.`
-                  })
-                  resolve()
-                })
-              }, 0)
-            }))()
+                    `,
+                [
+                  'zlota',
+                  data.assetType, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1,
+                  data.assetType, data.name, JSON.stringify(data), data.lat, data.lon, 1
+                ]
+              ])
+              processedRefs++
+            }
+
+            await dbExecuteBatch(sql)
+
+            options.onStatus && await options.onStatus({
+              key,
+              definition,
+              status: 'progress',
+              progress: `Loaded \`${fmtNumber(processedRefs)}\` references.\n\n\`${fmtPercent(Math.min(processedRefs / totalRefs, 1), 'integer')}\` • ${fmtNumber((totalRefs - processedRefs) * ((Date.now() - startTime) / 1000) / processedRefs, 'oneDecimal')} seconds left.`
+            })
           }
 
-          db.transaction(transaction => {
-            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['zlota'])
-          })
+          await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['zlota'])
 
           return {
             totalReferences: totalRefs,

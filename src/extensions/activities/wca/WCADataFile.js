@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -18,10 +18,9 @@ import GLOBAL from '../../../GLOBAL'
 
 import { fmtDateTimeNiceZulu } from '../../../tools/timeFormats'
 import { registerDataFile } from '../../../store/dataFiles'
-import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 import { Info } from './WCAInfo'
-import { configureReanimatedLogger } from 'react-native-reanimated'
 
 export const WCAData = {}
 
@@ -54,10 +53,7 @@ export function registerWCADataFile() {
 
           let totalRefs = 0
 
-          const db = await database()
-          db.transaction(transaction => {
-            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['wca'])
-          })
+          await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['wca'])
 
           const startTime = Date.now()
           let processedLines = 0
@@ -65,68 +61,68 @@ export function registerWCADataFile() {
 
           while (lines.length > 0) {
             const batch = lines.splice(0, 797)
-            await (() => new Promise(resolve => {
-              setTimeout(() => {
-                db.transaction(async transaction => {
-                  for (const line of batch) {
-                    const row = parseWCACSVRow(line, { headers })
+            const sql = []
+            for (const line of batch) {
+              const row = parseWCACSVRow(line, { headers })
 
-                    if (row['REF'] && Info.referenceRegex.test(row['REF'])) {
-                      let lon, lat, grid
-                      if (row['COORDINATES'] && row['COORDINATES'].includes(',')) {
-                        const [latStr, lonStr] = row['COORDINATES'].split(',')
-                        lon = Number.parseFloat(lonStr)
-                        lat = Number.parseFloat(latStr)
-                        grid = locationToGrid6(lat, lon)
-                      }
-                      const data = {
-                        ref: row['REF'].toUpperCase(),
-                        prefix: row['PREFIX'],
-                        name: row['CLEAN NAME'],
-                        location: row['CLEAN LOCATION'],
-                        grid,
-                        lat,
-                        lon
-                      }
+              if (row['REF'] && Info.referenceRegex.test(row['REF'])) {
+                let lon, lat, grid
+                if (row['COORDINATES'] && row['COORDINATES'].includes(',')) {
+                  const [latStr, lonStr] = row['COORDINATES'].split(',')
+                  lon = Number.parseFloat(lonStr)
+                  lat = Number.parseFloat(latStr)
+                  grid = locationToGrid6(lat, lon)
+                }
+                const data = {
+                  ref: row['REF'].toUpperCase(),
+                  prefix: row['PREFIX'],
+                  name: row['CLEAN NAME'],
+                  location: row['CLEAN LOCATION'],
+                  grid,
+                  lat,
+                  lon
+                }
 
-                      totalRefs++
-                      transaction.executeSql(`
-                        INSERT INTO lookups
-                          (category, subCategory, key, name, data, lat, lon, flags, updated)
-                        VALUES
-                          (?, ?, ?, ?, ?, ?, ?, ?, 1)
-                        ON CONFLICT DO
-                        UPDATE SET
-                          subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                        `, ['wca', data.prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.prefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                      )
-                    }
-                    processedLines++
-                  }
+                totalRefs++
+                sql.push([
+                  `
+                      INSERT INTO lookups
+                        (category, subCategory, key, name, data, lat, lon, flags, updated)
+                      VALUES
+                        (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                      ON CONFLICT DO
+                      UPDATE SET
+                        subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                      `,
+                  [
+                    'wca',
+                    data.prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1,
+                    data.prefix, data.name, JSON.stringify(data), data.lat, data.lon, 1
+                  ]
+                ])
+              }
+              processedLines++
+            }
 
-                  options.onStatus && await options.onStatus({
-                    key,
-                    definition,
-                    status: 'progress',
-                    progress: GLOBAL?.t?.(
-                      'extensions.dataFiles.loading.progress',
-                      'Loaded \`{{processedLines}}\` references.\n\n\`{{percent}}\` • {{secondsLeft}} seconds left.',
-                      {
-                        processedLines: fmtNumber(processedLines),
-                        percent: fmtPercent(Math.min(processedLines / totalLines, 1), 'integer'),
-                        secondsLeft: fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')
-                      }
-                    ) || `Loading... ${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}`
-                  })
-                  resolve()
-                })
-              }, 0)
-            }))()
+            await dbExecuteBatch(sql)
+
+            options.onStatus && await options.onStatus({
+              key,
+              definition,
+              status: 'progress',
+              progress: GLOBAL?.t?.(
+                'extensions.dataFiles.loading.progress',
+                'Loaded \`{{processedLines}}\` references.\n\n\`{{percent}}\` • {{secondsLeft}} seconds left.',
+                {
+                  processedLines: fmtNumber(processedLines),
+                  percent: fmtPercent(Math.min(processedLines / totalLines, 1), 'integer'),
+                  secondsLeft: fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')
+                }
+              ) || `Loading... ${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}`
+            })
           }
 
-          db.transaction(transaction => {
-            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wca'])
-          })
+          await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['wca'])
 
           return {
             totalRefs,

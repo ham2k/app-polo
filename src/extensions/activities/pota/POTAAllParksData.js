@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,7 +8,7 @@
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessBatchedLines } from '../../../store/dataFiles/actions/dataFileFS'
 import { logTimer } from '../../../tools/perfTools'
 import { Info } from './POTAInfo'
@@ -105,29 +105,28 @@ export function registerPOTAAllParksData() {
 
       while (dataRows.length > 0) {
         const batch = dataRows.splice(0, 1571) // prime number chunks make for more "random" progress updates
-        await (() => new Promise(resolve => {
-          setTimeout(async () => {
-            await dbExecute(
-              `
-                INSERT INTO lookups
-                  (category, subCategory, key, name, data, lat, lon, flags, updated)
-                VALUES
-                  ${batch.map(rowData => '(?, ?, ?, ?, ?, ?, ?, ?, 1)').join(', ')}
-              `,
-              batch.flatMap(rowData => ['pota', `${rowData.dxccCode}`, rowData.ref, rowData.name, JSON.stringify(rowData), rowData.lat, rowData.lon, rowData.active])
-            )
+        const sql = []
+        for (const rowData of batch) {
+          sql.push([
+            `
+            INSERT INTO lookups
+              (category, subCategory, key, name, data, lat, lon, flags, updated)
+            VALUES
+              (?, ?, ?, ?, ?, ?, ?, ?, 1)
+            `,
+            ['pota', `${rowData.dxccCode}`, rowData.ref, rowData.name, JSON.stringify(rowData), rowData.lat, rowData.lon, rowData.active]
+          ])
+        }
+        await dbExecuteBatch(sql)
 
-            completedSteps += dbWorkRatio * batch.length
+        completedSteps += dbWorkRatio * batch.length
 
-            options.onStatus && options.onStatus({
-              key,
-              definition,
-              status: 'progress',
-              progress: `Loaded \`${fmtNumber(Math.round(completedSteps / (fetchWorkRatio + dbWorkRatio)))}\` references.\n\n\`${fmtPercent(Math.min(completedSteps / expectedSteps, 1), 'integer')}\` • ${fmtNumber(Math.max(expectedSteps - completedSteps, 1) * ((Date.now() - startTime) / 1000) / completedSteps, 'oneDecimal')} seconds left.`
-            })
-            resolve()
-          }, 0)
-        }))()
+        options.onStatus && options.onStatus({
+          key,
+          definition,
+          status: 'progress',
+          progress: `Loaded \`${fmtNumber(Math.round(completedSteps / (fetchWorkRatio + dbWorkRatio)))}\` references.\n\n\`${fmtPercent(Math.min(completedSteps / expectedSteps, 1), 'integer')}\` • ${fmtNumber(Math.max(expectedSteps - completedSteps, 1) * ((Date.now() - startTime) / 1000) / completedSteps, 'oneDecimal')} seconds left.`
+        })
       }
       if (DEBUG) logTimer('pota-all-parks', 'Rows Inserted')
 

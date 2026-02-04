@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,7 +8,7 @@
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
+import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { Info } from './SiOTAInfo'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
@@ -39,10 +39,7 @@ export function registerSiOTADataFile() {
 
           let totalReferences = 0
 
-          const db = await database()
-          db.transaction(transaction => {
-            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['siota'])
-          })
+          await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['siota'])
 
           const startTime = Date.now()
           let processedLines = 0
@@ -50,25 +47,24 @@ export function registerSiOTADataFile() {
 
           while (lines.length > 0) {
             const batch = lines.splice(0, 250)
-            await (() => new Promise(resolve => {
-              setTimeout(() => {
-                db.transaction(async transaction => {
-                  for (const line of batch) {
-                    const row = parseSiOTACSVRow(line, { headers })
-                    const ref = row.SILO_CODE
-                    if (Info.referenceRegex.test(ref)) {
-                      const data = {
-                        ref,
-                        name: row.NAME,
-                        location: row.LOCALITY,
-                        state: row.STATE,
-                        grid: row.LOCATOR,
-                        lat: Number.parseFloat(row.LAT),
-                        lon: Number.parseFloat(row.LNG)
-                      }
+            const sql = []
+            for (const line of batch) {
+              const row = parseSiOTACSVRow(line, { headers })
+              const ref = row.SILO_CODE
+              if (Info.referenceRegex.test(ref)) {
+                const data = {
+                  ref,
+                  name: row.NAME,
+                  location: row.LOCALITY,
+                  state: row.STATE,
+                  grid: row.LOCATOR,
+                  lat: Number.parseFloat(row.LAT),
+                  lon: Number.parseFloat(row.LNG)
+                }
 
-                      totalReferences++
-                      transaction.executeSql(`
+                totalReferences++
+                sql.push([
+                  `
                       INSERT INTO lookups
                         (category, subCategory, key, name, data, lat, lon, flags, updated)
                       VALUES
@@ -76,26 +72,28 @@ export function registerSiOTADataFile() {
                       ON CONFLICT DO
                       UPDATE SET
                         subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                      `, ['siota', data.state, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.state, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                      )
-                    }
-                    processedLines++
-                  }
-                  options.onStatus && await options.onStatus({
-                    key,
-                    definition,
-                    status: 'progress',
-                    progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
-                  })
-                  resolve()
-                })
-              }, 0)
-            }))()
+                      `,
+                  [
+                    'siota',
+                    data.state, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1,
+                    data.state, data.name, JSON.stringify(data), data.lat, data.lon, 1
+                  ]
+                ])
+              }
+              processedLines++
+            }
+
+            await dbExecuteBatch(sql)
+
+            options.onStatus && await options.onStatus({
+              key,
+              definition,
+              status: 'progress',
+              progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
+            })
           }
 
-          db.transaction(transaction => {
-            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['siota'])
-          })
+          await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['siota'])
 
           return {
             totalReferences,

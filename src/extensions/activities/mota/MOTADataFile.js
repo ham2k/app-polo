@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -9,8 +9,8 @@ import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
+import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
 export const MOTAData = {}
 
@@ -38,10 +38,7 @@ export function registerMOTADataFile() {
 
           let totalMills = 0
 
-          const db = await database()
-          db.transaction(transaction => {
-            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['mota'])
-          })
+          await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['mota'])
 
           const startTime = Date.now()
           let processedLines = 0
@@ -49,54 +46,55 @@ export function registerMOTADataFile() {
 
           while (lines.length > 0) {
             const batch = lines.splice(0, 797)
-            await (() => new Promise(resolve => {
-              setTimeout(() => {
-                db.transaction(async transaction => {
-                  for (const line of batch) {
-                    const row = parseMOTACSVRow(line, { headers })
-                    if (row.valid_to === '21991231') {
-                      const lon = Number.parseFloat(row.Longitude)
-                      const lat = Number.parseFloat(row.Latitude)
-                      const grid = !row.Locator ? locationToGrid6(lat, lon) : row.Locator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
-                      const data = {
-                        ref: row.Reference.toUpperCase(),
-                        prefix: row.Prefix,
-                        name: row.Name,
-                        grid,
-                        type: row.Type !== 'unknown' ? row.Type : undefined,
-                        lat,
-                        lon
-                      }
+            const sql = []
+            for (const line of batch) {
+              const row = parseMOTACSVRow(line, { headers })
+              if (row.valid_to === '21991231') {
+                const lon = Number.parseFloat(row.Longitude)
+                const lat = Number.parseFloat(row.Latitude)
+                const grid = !row.Locator ? locationToGrid6(lat, lon) : row.Locator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
+                const data = {
+                  ref: row.Reference.toUpperCase(),
+                  prefix: row.Prefix,
+                  name: row.Name,
+                  grid,
+                  type: row.Type !== 'unknown' ? row.Type : undefined,
+                  lat,
+                  lon
+                }
 
-                      totalMills++
-                      transaction.executeSql(`
-                        INSERT INTO lookups
-                          (category, subCategory, key, name, data, lat, lon, flags, updated)
-                        VALUES
-                          (?, ?, ?, ?, ?, ?, ?, ?, 1)
-                        ON CONFLICT DO
-                        UPDATE SET
-                          subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                        `, ['mota', data.prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.prefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                      )
-                    }
-                    processedLines++
-                  }
-                  options.onStatus && await options.onStatus({
-                    key,
-                    definition,
-                    status: 'progress',
-                    progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
-                  })
-                  resolve()
-                })
-              }, 0)
-            }))()
+                totalMills++
+                sql.push([
+                  `
+                      INSERT INTO lookups
+                        (category, subCategory, key, name, data, lat, lon, flags, updated)
+                      VALUES
+                        (?, ?, ?, ?, ?, ?, ?, ?, 1)
+                      ON CONFLICT DO
+                      UPDATE SET
+                        subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
+                      `,
+                  [
+                    'mota',
+                    data.prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1,
+                    data.prefix, data.name, JSON.stringify(data), data.lat, data.lon, 1
+                  ]
+                ])
+              }
+              processedLines++
+            }
+
+            await dbExecuteBatch(sql)
+
+            options.onStatus && await options.onStatus({
+              key,
+              definition,
+              status: 'progress',
+              progress: `Loaded \`${fmtNumber(processedLines)}\` references.\n\n\`${fmtPercent(Math.min(processedLines / totalLines, 1), 'integer')}\` • ${fmtNumber((totalLines - processedLines) * ((Date.now() - startTime) / 1000) / processedLines, 'oneDecimal')} seconds left.`
+            })
           }
 
-          db.transaction(transaction => {
-            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['mota'])
-          })
+          await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['mota'])
 
           return {
             totalMills,

@@ -10,11 +10,11 @@ import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { database, dbExecute, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
+import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
-export const TOTAData = { }
+export const TOTAData = {}
 import Config from 'react-native-config'
 
 export function registerTOTADataFile() {
@@ -40,10 +40,7 @@ export function registerTOTADataFile() {
 
           const totalReferences = refs.length
 
-          const db = await database()
-          db.transaction(transaction => {
-            transaction.executeSql('UPDATE lookups SET updated = 0 WHERE category = ?', ['tota'])
-          })
+          await dbExecute('UPDATE lookups SET updated = 0 WHERE category = ?', ['tota'])
 
           const startTime = Date.now()
           let processedRefs = 0
@@ -51,18 +48,17 @@ export function registerTOTADataFile() {
 
           while (refs.length > 0) {
             const batch = refs.splice(0, 251)
-            await (() => new Promise(resolve => {
-              setTimeout(() => {
-                db.transaction(async transaction => {
-                  for (const ref of batch) {
-                    const grid = locationToGrid6(ref.lat, ref.lon)
-                    const prefix = ref.ref.split("-")[0] // May be useful later
-                    const data = {
-                      ...ref,
-                      grid,
-                    }
+            const sql = []
+            for (const ref of batch) {
+              const grid = locationToGrid6(ref.lat, ref.lon)
+              const prefix = ref.ref.split("-")[0] // May be useful later
+              const data = {
+                ...ref,
+                grid,
+              }
 
-                    transaction.executeSql(`
+              sql.push([
+                `
                     INSERT INTO lookups
                       (category, subCategory, key, name, data, lat, lon, flags, updated)
                     VALUES
@@ -70,25 +66,27 @@ export function registerTOTADataFile() {
                     ON CONFLICT DO
                     UPDATE SET
                       subCategory = ?, name = ?, data = ?, lat = ?, lon = ?, flags = ?, updated = 1
-                    `, ['tota', prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1, data.entityPrefix, data.name, JSON.stringify(data), data.lat, data.lon, 1]
-                    )
-                    processedRefs++
-                  }
-                  options.onStatus && await options.onStatus({
-                    key,
-                    definition,
-                    status: 'progress',
-                    progress: `Loaded \`${fmtNumber(processedRefs)}\` references.\n\n\`${fmtPercent(Math.min(processedRefs / totalReferences, 1), 'integer')}\` • ${fmtNumber((totalReferences - processedRefs) * ((Date.now() - startTime) / 1000) / processedRefs, 'oneDecimal')} seconds left.`
-                  })
-                  resolve()
-                })
-              }, 0)
-            }))()
+                    `,
+                [
+                  'tota',
+                  prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1,
+                  data.entityPrefix, data.name, JSON.stringify(data), data.lat, data.lon, 1
+                ]
+              ])
+              processedRefs++
+            }
+
+            await dbExecuteBatch(sql)
+
+            options.onStatus && await options.onStatus({
+              key,
+              definition,
+              status: 'progress',
+              progress: `Loaded \`${fmtNumber(processedRefs)}\` references.\n\n\`${fmtPercent(Math.min(processedRefs / totalReferences, 1), 'integer')}\` • ${fmtNumber((totalReferences - processedRefs) * ((Date.now() - startTime) / 1000) / processedRefs, 'oneDecimal')} seconds left.`
+            })
           }
 
-          db.transaction(transaction => {
-            transaction.executeSql('DELETE FROM lookups WHERE category = ? AND updated = 0', ['tota'])
-          })
+          await dbExecute('DELETE FROM lookups WHERE category = ? AND updated = 0', ['tota'])
 
           return {
             totalReferences,

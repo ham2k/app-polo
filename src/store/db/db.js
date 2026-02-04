@@ -57,11 +57,42 @@ export function dbExecute(sql, params, options = {}) {
   if (sql.indexOf('"') >= 0) console.error('SQL has double quotes', { sql, params })
 
   return transactionWrapper(options.transaction)(({ txn, resolve, reject }) => {
-
     txn.execute(sql, params ?? []).then(results => {
       resolve(results)
     }).catch(error => {
-      logRemotely({ error: `Error in dbExecute: ${error.message}`, sql, params })
+      console.error(`Error in dbExecute: ${error.message}`, sql, params, error)
+      if (options.ignoreError && error.message.indexOf(options.ignoreError) >= 0) {
+        resolve(false)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}
+
+export function dbExecuteFast(sql, params, options = {}) {
+  return transactionWrapper(options.transaction)(({ txn, db, resolve, reject }) => {
+    db.executeWithHostObjects(sql, params ?? []).then(results => {
+      resolve(results)
+    }).catch(error => {
+      console.error(`Error in dbExecuteFast: ${error.message}`, sql, params, error)
+      if (options.ignoreError && error.message.indexOf(options.ignoreError) >= 0) {
+        resolve(false)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}
+
+export function dbExecuteBatch(statements, options = {}) {
+  if (statements.length === 0 || !statements) return false
+
+  return transactionWrapper(options.transaction)(({ txn, db, resolve, reject }) => {
+    db.executeBatch(statements).then(results => {
+      resolve(results)
+    }).catch(error => {
+      console.error(`Error in dbExecuteBatch: ${error.message}`, error)
       if (options.ignoreError && error.message.indexOf(options.ignoreError) >= 0) {
         resolve(false)
       } else {
