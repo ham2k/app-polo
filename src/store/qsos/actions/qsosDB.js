@@ -12,7 +12,7 @@ import GLOBAL from '../../../GLOBAL'
 
 import { actions } from '../qsosSlice'
 import { actions as operationActions, saveOperationLocalData, updateOperationInfo } from '../../operations'
-import { dbExecute, dbSelectAll, dbTransaction } from '../../db/db'
+import { dbExecute, dbSelectAll, dbExecuteBatch } from '../../db/db'
 import { sendQSOsToSyncService } from '../../sync'
 import { logTimer } from '../../../tools/perfTools'
 import { annotateQSO } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
@@ -240,39 +240,40 @@ export const batchUpdateQSOs = ({ uuid, qsos, data }) => async (dispatch, getSta
 }
 
 export const saveQSOsForOperation = (uuid, { qsos, synced } = {}) => async (dispatch, getState) => {
+  console.log('saveQSOsForOperation', uuid, qsos, synced)
   const now = Date.now()
 
   synced = synced || false
 
-  return dbTransaction(async transaction => {
-    qsos = qsos || getState().qsos.qsos[uuid]
+  qsos = qsos || getState().qsos.qsos[uuid]
+  const sql = []
 
-    // Save new QSOs
-    for (const qso of qsos) {
-      qso.key = qsoKey(qso)
-      qso.uuid = qso.uuid || UUID.v4()
-      qso.createdAtMillis = qso.createdAtMillis || now
-      qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
-      qso.updatedAtMillis = now
-      qso.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
+  // Save new QSOs
+  for (const qso of qsos) {
+    qso.key = qsoKey(qso)
+    qso.uuid = qso.uuid || UUID.v4()
+    qso.createdAtMillis = qso.createdAtMillis || now
+    qso.createdOnDeviceId = qso.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
+    qso.updatedAtMillis = now
+    qso.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
 
-      const json = JSON.stringify(qso)
+    const json = JSON.stringify(qso)
 
-      await dbExecute(`
-        INSERT INTO qsos
-          (uuid, operation, key, data, ourCall, theirCall, mode, band, startAtMillis, deleted, synced)
-        VALUES
-          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT DO UPDATE SET
-          operation = excluded.operation, key = excluded.key, data = excluded.data, ourCall = excluded.ourCall,
-          theirCall = excluded.theirCall, mode = excluded.mode, band = excluded.band, startAtMillis = excluded.startAtMillis,
-          deleted = excluded.deleted, synced = excluded.synced
-      `, [
-        qso.uuid,
-        uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced
-      ])
-    }
-  })
+    sql.push([
+      `
+      INSERT INTO qsos
+        (uuid, operation, key, data, ourCall, theirCall, mode, band, startAtMillis, deleted, synced)
+      VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT DO UPDATE SET
+        operation = excluded.operation, key = excluded.key, data = excluded.data, ourCall = excluded.ourCall,
+        theirCall = excluded.theirCall, mode = excluded.mode, band = excluded.band, startAtMillis = excluded.startAtMillis,
+        deleted = excluded.deleted, synced = excluded.synced
+      `,
+      [qso.uuid, uuid, qso.key, json, qso.our?.call, qso.their?.call, qso.mode, qso.band, qso.startAtMillis, qso.deleted, synced]
+    ])
+  }
+  await dbExecuteBatch(sql)
 }
 
 function fingerprintQSOData(qso) {
