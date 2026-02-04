@@ -18,7 +18,7 @@ import { useSelectorConditionally } from '../../components/useConditionally'
 
 import SpotsPanel from './components/SpotsPanel'
 
-export default function OpSpotsTab({ navigation, route }) {
+export default function OpSpotsTab ({ navigation, route }) {
   const dispatch = useDispatch()
   const safeArea = useSafeAreaInsets()
   const online = useSelector(selectRuntimeOnline)
@@ -42,12 +42,12 @@ export default function OpSpotsTab({ navigation, route }) {
     }
 
     const qso = {
-      their: { call: spot.call },
+      their: { call: spot.their?.call },
       band: spot.band,
       freq: spot.freq,
       mode: spot.mode,
       refs: [...spot.refs],
-      _suggestedKey: spot.key,
+      _suggestedKey: spot.key
     }
 
     if (route?.params?.splitView) {
