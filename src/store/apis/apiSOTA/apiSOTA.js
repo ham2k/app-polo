@@ -132,6 +132,13 @@ export const apiSOTA = createApi({
         url: `api-db2.sota.org.uk/api/spots/${limit}/${band ?? 'all'}/${mode ?? 'all'}/`
       }),
       keepUnusedDataFor: 15 * 60 // 15 minutes
+    }),
+    logUpload: builder.query({
+      query: (body) => ({
+        url: 'api-db2.sota.org.uk/uploads',
+        method: 'POST',
+        body
+      })
     })
   })
 })
