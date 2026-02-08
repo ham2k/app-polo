@@ -148,7 +148,7 @@ const SpotsHook = {
 }
 
 function wwbotaQsoDataStr(qso) {
-  return [qso.key, qso.our?.sent, qso.their?.sent, qso.notes, filterRefs(qso.refs, Info.huntingType).map(r => r.ref).join('|')].join('|')
+  return [qso.key, qso.our?.sent, qso.their?.sent, qso.notes, ...filterRefs(qso.refs, Info.huntingType).map(r => r.ref).sort()].join('|')
 }
 
 const QSLHook = {
