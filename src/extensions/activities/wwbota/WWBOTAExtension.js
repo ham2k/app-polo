@@ -215,10 +215,9 @@ const QSLHook = {
       delete qslUploadIDs[qsoUUID]
     })
 
-    for (const wwbotaUUID of qsosToDelete) {
-      await dispatch(apiWWBOTA.endpoints.deleteQSO.initiate({id: wwbotaUUID}))
-    }
-    await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
+    const apiPromises = qsosToDelete.map(id => dispatch(apiWWBOTA.endpoints.deleteQSO.initiate({ id })))
+    await Promise.all(apiPromises)
+    apiPromises.forEach(p => p.unsubscribe && p.unsubscribe())
 
     let apiResults
     if (uploadQSOs.length > 0) {
