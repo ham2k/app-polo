@@ -20,7 +20,9 @@ export function H2kIcon ({ ...props }) {
   // Our component manages size in virtual pixels, but the underlying icons use "font size" units
 
   if (name?.startsWith && name.startsWith('fa-')) {
-    return <FontAwesome6Icon {...props} name={name.slice(3)} iconStyle="solid" />
+    // default to onSurface if no color is provided, same as PaperIcon
+    const color = props.color || styles.colors.onSurface
+    return <FontAwesome6Icon {...props} name={name.slice(3)} iconStyle="solid" color={color} />
   } else {
     return <PaperIcon source={name} {...props} />
   }
