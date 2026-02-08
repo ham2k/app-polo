@@ -771,6 +771,20 @@
       "name": "WWBOTA: World Wide Bunker Awards",
       "shortName": "WWBOTA",
       "exportName": "WWBOTA Activation",
+      "account": {
+        "title": "WWBOTA (log upload)",
+        "dialogTitle": "WWBOTA Account",
+        "description": "Login: {{login}}",
+        "noAccount": "No account",
+        "pleaseEnterDetails": "Please enter the details for your WWBOTA account:",
+        "usernameLabel": "Username",
+        "usernamePlaceholder": "your account username",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "your password",
+        "checkCredentials": "Check credentials",
+        "invalidCredentials": "Invalid credentials, please try again",
+        "validCredentials": "Credentials are valid!"
+      },
       "activityOptions": {
         "title_zero": "No bunkers selected for activation",
         "title_one": "Activating 1 bunker",
