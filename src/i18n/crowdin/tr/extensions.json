@@ -1,0 +1,919 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Bant yok",
+      "bandsCount_one": "1 Bant",
+      "bandsCount_other": "{{count}} Bantlar",
+      "modesCount_zero": "Mod Yok",
+      "modesCount_one": "1 Mod var",
+      "modesCount_other": "{{count}} Modlar",
+      "total": "Toplam {{count}}"
+    },
+    "bca": {
+      "name": "Belçika Kaleleri ve Hisarları",
+      "shortName": "BCA",
+      "exportName": "BCA Aktivasyonu",
+      "activityOptions": {
+        "title_zero": "Aktivasyon için kale seçilmedi",
+        "title_one": "1 kale aktifleştiriliyor",
+        "title_other": "{{count}} kale aktifleştiriliyor",
+        "noCastlesFound": "Kale bulunamadı.",
+        "nearestMatches": "En yakın {{count}} eşleşmeden {{limit}} tanesi",
+        "matchingCastles_zero": "Eşleşen kale bulunamadı",
+        "matchingCastles_one": "1 eşleşen kale",
+        "matchingCastles_other": "{{count}} eşleşen kale",
+        "searchForCastles": "Aktive etmek için bazı kaleleri arayın!",
+        "noCastlesNearby": "Yakınlarda kale yok",
+        "nearbyCastles": "Yakındaki kaleler",
+        "searchPlaceholder": "Ad veya referans.."
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Avlanan kale yok",
+        "huntedRefsCount_one": "1 kale avlandı",
+        "huntedRefsCount_other": "{{fmtCount}} kale avlandı",
+        "activatorQSOsCount_zero": "Hiç avlayıcı QSO yok",
+        "activatorQSOsCount_one": "1 avlayıcı QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} avlayıcı QSO",
+        "huntedQSOsCount_zero": "Hiç avlanan QSO yok",
+        "huntedQSOsCount_one": "1 avlanan QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} avlanan QSO",
+        "operationTotals": "İşletim Toplamları",
+        "referencesActivatedCount_zero": "Aktive edilen kale yok",
+        "referencesActivatedCount_one": "1 kale aktive edildi",
+        "referencesActivatedCount_other": "{{fmtCount}} kale aktive edildi",
+        "referencesMissedCount_zero": "Tamamlanmamış kale yok",
+        "referencesMissedCount_one": "1 tamamlanmamış kale",
+        "referencesMissedCount_other": "{{fmtCount}} tamamlanmamış kale",
+        "referencesHuntedCount_zero": "Avlanan kale yok",
+        "referencesHuntedCount_one": "1 kale avlandı",
+        "referencesHuntedCount_other": "{{fmtCount}} kale avlandı"
+      },
+      "loggingControl": {
+        "theirRefLabel": "BCA’lar"
+      }
+    },
+    "blha": {
+      "name": "Belçika Deniz Fenerleri ve Fener Gemileri",
+      "shortName": "BLHA",
+      "exportName": "BLHA Aktivasyonu",
+      "activityOptions": {
+        "title_zero": "Aktivasyon için deniz feneri seçilmedi",
+        "title_one": "1 deniz feneri aktifleştiriliyor",
+        "title_other": "{{count}} deniz feneri aktifleştiriliyor",
+        "noLighthousesFound": "Deniz feneri bulunamadı",
+        "nearestMatches": "En yakın {{count}} eşleşmeden {{limit}} tanesi",
+        "matchingLighthouses_zero": "Eşleşen deniz feneri bulunamadı",
+        "matchingLighthouses_one": "1 eşleşen deniz feneri",
+        "matchingLighthouses_other": "{{count}} eşleşen deniz feneri",
+        "searchForLighthouses": "Aktive etmek için bazı deniz fenerlerini arayın!",
+        "noLighthousesNearby": "Yakınlarda deniz feneri yok",
+        "nearbyLighthouses": "Yakındaki deniz fenerleri",
+        "searchPlaceholder": "Ad veya referans…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Avlanan deniz feneri yok",
+        "huntedRefsCount_one": "1 deniz feneri avlandı",
+        "huntedRefsCount_other": "{{fmtCount}} deniz feneri avlandı",
+        "activatorQSOsCount_zero": "Hiç avlayıcı QSO yok",
+        "activatorQSOsCount_one": "1 avlayıcı QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} avlayıcı QSO",
+        "huntedQSOsCount_zero": "Hiç avlanan QSO yok",
+        "huntedQSOsCount_one": "1 avlanan QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} avlanan QSO",
+        "operationTotals": "İşletim Toplamları",
+        "referencesActivatedCount_zero": "Aktive edilen deniz feneri yok",
+        "referencesActivatedCount_one": "1 deniz feneri aktive edildi",
+        "referencesActivatedCount_other": "{{fmtCount}} deniz feneri aktive edildi",
+        "referencesMissedCount_zero": "Tamamlanmamış deniz feneri yok",
+        "referencesMissedCount_one": "1 tamamlanmamış deniz feneri",
+        "referencesMissedCount_other": "{{fmtCount}} tamamlanmamış deniz feneri",
+        "referencesHuntedCount_zero": "Avlanan deniz feneri yok",
+        "referencesHuntedCount_one": "1 deniz feneri avlandı",
+        "referencesHuntedCount_other": "{{fmtCount}} deniz feneri avlandı"
+      }
+    },
+    "call-notes": {
+      "name": "Çağrı Yazısı Notları",
+      "description-md_zero": "Yüklenmiş not yok.",
+      "description-md_one": "{{fmtCount}} {{type}} yüklendi.",
+      "description-md_other": "{{fmtCount}} {{type}} yüklendi.",
+      "builtIn": "Dahili notlar",
+      "userDefined": "Kullanıcı notları",
+      "failedToLoad": "Yükleme başarısız!",
+      "notesFile": "Çağrı Yazısı Not Dosyası",
+      "nameLabel": "Ad",
+      "namePlaceholder": "Çağrı Yazısı Not Dosyanız için İsim",
+      "locationLabel": "Yer",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Dahili",
+      "customTitle": "Özel",
+      "addFile": "Yeni dosya ekle",
+      "aboutTitle": "Çağrı Yazısı Notları Hakkında",
+      "names": {
+        "ham2k-hams-of-note": "Ham2K'nin Öne Çıkan notlar"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Radyo dünyasında kim olduğu ve kim olmadığına dair gerçek bir örneklem"
+      },
+      "help-md": "Çağrı yazısı notları basit metin dosyalarında saklanır, her çağrı bir satır başına olmak üzere, bilgi gösterimi için günlük ekranında sunulur. Dahili dosyaları kullanabilirsiniz ya da kendi dosyanızı ekleyebilirsiniz.\n\nBasit metin dosyasına doğrudan bir bağlantı veya aşağıdaki gibi bir hizmetten \"paylaşım bağlantısı\" sağlayın:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nBu dosyanın içindeki satırlar aşağıdaki gibi olmalı ve temel markdown biçimlendirmesini destekleyebilir:\n\n```nK2HRC 🎉 Ham2K Radyo Kulübü!!!\nKE8PZN 👑 James POTA Kralı\nWD4DAN Dan POTA _Asaleti_\nDAN WD4DAN,WD4JMM\n```\n\nGirdi bir emoji ile başlarsa, bu varsayılan ⭐ yerine kullanılacaktır.\n\nGirdiler, örnekteki gibi çağrı işareti alanına `..` veya ` //` yazarak \"çağrı genişletmesi\" için kullanılabilir, örneğin `//DAN`."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Hiç Kanada Eyaleti Yok",
+      "provincesCount_one": "1 Kanada Eyaleti",
+      "provincesCount_other": "{{count}} Kanada Eyaleti"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Ayarlar",
+        "year": "Yıl",
+        "testMode-md": "Bu yılki etkinlik henüz başlamadığından, son yedi günden QSO ile operasyonunuzu test edebilirsiniz.",
+        "note-md": "NOT: PoLo, seçilen tarih aralığında bu cihazda yapılan tüm QSO’ları diğer işlemler dahil kullanarak sonuçları raporlar.",
+        "info-md": "13 Koloni Özel Etkinliği 1 Temmuz 9am ET’den 7 Temmuz gece yarısı ET’ye kadar sürer."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Hava durumu alınıyor…",
+      "errorFetchingWeather": "Hava durumu alınırken hata oluştu",
+      "fetchingSolarWeather": "Güneş hava durumu alınıyor…",
+      "errorFetchingSolarWeather": "Güneş hava durumu alınırken hata oluştu",
+      "addNote": "Not ekleyin: '{{note}}'…",
+      "addNotePrompt": "Bir not ekleyin? Yazmaya devam edin…",
+      "addNoteConfirm": "Not eklendi!",
+      "addTodo": "Yapılacaklar ekleyin: '{{note}}'…",
+      "addTodoPrompt": "Yapılacak bir madde ekleyin? yazmaya devam edin…",
+      "addTodoConfirm": "Yapılacaklar eklendi!",
+      "sendChat": "Sohbet gönder: '{{note}}'…",
+      "sendChatPrompt": "Sohbet gönder? yazmaya devam edin…",
+      "sendChatConfirm": "Sohbet edildi!"
+    },
+    "commands-debug": {
+      "syncall": "Tüm işlemleri sil ve senkronizasyon durumunu sıfırla?",
+      "syncallConfirm": "Veriler siliniyor ve her şey yeniden senkronize ediliyor…",
+      "syncup": "Yerli verileri yeniden senkronizasyon servisine gönder?",
+      "syncupConfirm": "Yeniden gönderiliyor…",
+      "wipedb": "Tüm veritabanını sil (ama ayarları koru)?",
+      "wipedbConfirm": "Veritabanı siliniyor…",
+      "factory": "Tüm verileri ve ayarları sil?",
+      "factoryConfirm": "Fabrika Ayarları sıfırlama yapılıyor…",
+      "switchLanguage": "Dili '{{lang}}' {{name}} olarak değiştirmek istiyor musunuz?",
+      "switchLanguagePrompt": "Dil '{{lang}}' {{name}}",
+      "switchLanguageConfirm": "'{{lang}}' dili {{name}}' ye geçiliyor…"
+    },
+    "commands-devmode": {
+      "activate": "Geliştirici modunu etkinleştirmek istiyor musunuz?",
+      "activateConfirm": "Geliştirici modu etkinleştirildi!",
+      "deactivate": "Geliştirici modunu devre dışı bırakmak istiyor musunuz?",
+      "deactivateConfirm": "Geliştirici modu devre dışı bırakıldı!",
+      "on": "Geliştirici Modu: AÇIK!!!",
+      "off": "Geliştirici Modu: KAPALI"
+    },
+    "commands-misc": {
+      "rtfm": "İnce kılavuzu okumak ister misiniz?",
+      "rtfmConfirm": "İnce kılavuz açılıyor",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "Frekans olmadan kendi kendine nokta yapılamaz",
+        "selfSpotWithComments": "‘{{comments}}’ ile kendi kendine nokta yapmak mı?",
+        "selfSpotPrompt": "Kendi kendine nokta yapmak mı?",
+        "selfSpottingWithComments": "{{freq}} frekansında ‘{{comments}}’ ile kendi kendine nokta yapılıyor",
+        "selfSpotting": "{{freq}} frekansında kendi kendine yer belirleme"
+      }
+    },
+    "commands-operation": {
+      "start": "İşlemi başlatmak istiyor musunuz?",
+      "startConfirm": "İşlem başlatıldı!",
+      "break": "Bir ara eklemek istiyor musunuz?",
+      "breakConfirm": "İşlem molası eklendi!",
+      "stop": "İşlemi durdurmak istiyor musunuz?",
+      "stopConfirm": "İşlem durduruldu!"
+    },
+    "commands-operator": {
+      "change": "Operatörü {{operator}} olarak değiştirmek istiyor musunuz?",
+      "changeConfirm": "Operatör {{operator}} olarak ayarlandı"
+    },
+    "commands-radio": {
+      "band": "Bandı {{band}} olarak değiştirmek istiyor musunuz?",
+      "bandConfirm": "Bant {{band}} olarak ayarlandı",
+      "frequency": "Frekansı {{freq}} Mhz olarak değiştir?",
+      "frequencyConfirm": "Frekans {{freq}} Mhz {} olarak ayarlandı",
+      "frequencyAndMode": "Frekansı {{freq}} Mhz ({{mode}}) olarak değiştirmek istiyor musunuz?",
+      "frequencyAndModeConfirm": "Frekans {{freq}} Mhz ({{mode}}) olarak ayarlandı",
+      "power": "Gücü {{power}}W olarak değiştirmek istiyor musunuz?",
+      "powerConfirm": "Güç {{power}}W olarak ayarlandı",
+      "mode": "Modu {{mode}} olarak değiştirmek istiyor musunuz?",
+      "modeConfirm": "Mod {{mode}} olarak ayarlandı"
+    },
+    "commands-settings": {
+      "set": "{{name}} ayarlanıyor mu?",
+      "setChange": "{{label}} etiketini {{value}} olarak değiştirmek istiyor musunuz?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} {{value}} olarak ayarlandı",
+      "setNotChanged": "Değiştirilmedi"
+    },
+    "commands-time": {
+      "setTime": "Zamanı {{time}} olarak ayarlasın mı?",
+      "setDate": "Tarihi {{date}} olarak ayarlasın mı?",
+      "timeSet": "Zaman {{time}} olarak ayarlandı",
+      "dateSet": "Tarih {{date}} olarak ayarlandı",
+      "changeTimeByHours": "Zamanı {{delta}} saat değiştirilsin mi?",
+      "changeTimeByMinutes": "Zamanı {{delta}} dakika değiştirilsin mi?",
+      "changeTimeBySeconds": "Zamanı {{delta}} saniye değiştirilsin mi?",
+      "changeTimeByDays": "Zamanı {{delta}} gün değiştirilsin mi?",
+      "changeTimeByWeeks": "Zamanı {{delta}} hafta değiştirilsin mi?",
+      "changeTimeToNow": "Zamanı şu anki zamana değiştirmek istiyor musunuz?",
+      "changeTimeToToday": "Zamanı bugüne değiştirmek istiyor musunuz?",
+      "changeTimeToYesterday": "Zamanı düne değiştirmek istiyor musunuz?",
+      "timeSetToNow": "Zaman şu anki zamana ayarlandı",
+      "timeSetToToday": "Zaman bugüne ayarlandı",
+      "timeSetToYesterday": "Zaman düne ayarlandı"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "Aktivasyon için referans seçilmedi",
+        "title_one": "1 referans aktifleştiriliyor",
+        "title_other": "{{count}} referans aktifleştiriliyor",
+        "addMoreReferences": "Daha fazla referans ekle",
+        "addReference": "Bir referans ekle",
+        "activityLabel": "Etkinlik - ADIF'te MY_SIG (Opsiyonel)",
+        "activityPlaceholder": "ör. COTA…",
+        "referenceLabel": "Referans - ADIF'te MY_SIG_INFO",
+        "referencePlaceholder": "ör. XY-1234…",
+        "nameLabel": "İsim (Opsiyonel)",
+        "namePlaceholder": "ör. XYZ Şatosu…",
+        "addButton": "{{mySig}} {{mySigInfo}} ekle"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Onların Referansı"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Burada belirli veri dosyası başlıklarını geçerli kılın",
+        "pota-all-parks": "POTA: Tüm Parklar",
+        "sota-all-summits": "SOTA: Tüm Zirveler"
+      },
+      "loading": {
+        "progress": "`{{processedLines}}` referanslar yüklendi.\n\n`{{percent}}` • {{secondsLeft}} saniye kaldı.",
+        "downloadingRawData": "Ham veriler indiriliyor…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Hiç DXCC Varlığı Yok",
+      "entitiesCount_one": "1 DXCC Varlığı",
+      "entitiesCount_other": "{{count}} DXCC Varlığı"
+    },
+    "eca": {
+      "name": "İngiliz Şato Ödülleri",
+      "shortName": "ECA",
+      "exportName": "ECA Aktivasyonu",
+      "activityOptions": {
+        "title_zero": "Aktivasyon için şato seçilmedi",
+        "title_one": "1 şato aktifleştiriliyor",
+        "title_other": "{{count}} şato aktifleştiriliyor",
+        "noCastlesFound": "Şato bulunamadı",
+        "nearestMatches": "En yakın {{count}} eşleşmeden {{limit}} tanesi",
+        "matchingCastles_zero": "Eşleşen şato bulunamadı",
+        "matchingCastles_one": "1 eşleşen şato",
+        "matchingCastles_other": "{{count}} eşleşen şato",
+        "searchForCastles": "Aktive etmek için bazı şatoları arayın!",
+        "noCastlesNearby": "Yakınlarda şato yok",
+        "nearbyCastles": "Yakındaki şatolar",
+        "searchPlaceholder": "Ad veya referans…"
+      }
+    },
+    "ela": {
+      "name": "İngiliz Deniz Feneri Ödülleri",
+      "shortName": "ELA",
+      "exportName": "ELA Aktivasyonu",
+      "activityOptions": {
+        "title_zero": "Aktivasyon için deniz feneri seçilmedi",
+        "title_one": "1 deniz feneri aktifleştiriliyor",
+        "title_other": "{{count}} deniz feneri aktifleştiriliyor",
+        "noLighthousesFound": "Deniz feneri bulunamadı",
+        "nearestMatches": "En yakın {{count}} eşleşmeden {{limit}} tanesi",
+        "matchingLighthouses_zero": "Eşleşen deniz feneri bulunamadı",
+        "matchingLighthouses_one": "1 eşleşen deniz feneri",
+        "matchingLighthouses_other": "{{count}} eşleşen deniz feneri",
+        "searchForLighthouses": "Aktive etmek için bazı deniz fenerlerini arayın!",
+        "noLighthousesNearby": "Yakınlarda deniz feneri yok",
+        "nearbyLighthouses": "Yakındaki deniz fenerleri",
+        "searchPlaceholder": "Ad veya referans…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Takas Bilgisi",
+        "classLabel": "Sınıf",
+        "locationLabel": "Lokasyon",
+        "additionalInformation": "Ek Bilgi",
+        "highestTransmitterPowerLabel": "En Yüksek Verici Gücü",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP: 5W veya daha az",
+        "qroOption": "QRO: 100W veya daha az",
+        "moreThan100WOption": "100W'tan fazla",
+        "powerSourceLabel": "Güç Kaynağı",
+        "powerSourcePlaceholder": "Bir güç kaynağı seçin",
+        "batteriesOption": "Piller, Güneş Enerjisi, Rüzgar",
+        "commercialPowerOption": "Ticari Güç, Jeneratör",
+        "information-md": "ARRL Field Day için sınıflar örneğin `2A`: `1`, `2`, `3`… vericilerin sayısı için `A` Grup (3 veya daha fazla) Taşınabilir İstasyon için `B` Bir veya iki kişilik Taşınabilir İstasyon için `C` Mobil İstasyon için `D` Ev İstasyonu için `E` Acil Güçle Çalışan Ev İstasyonu için `F` Acil Operasyon Merkezi için Konum, ARRL Bölümü, RAC Bölümü, `MX` Meksika için veya `DX` başka bir yer için. Daha fazla bilgi için [resmi kurallar](https://www.arrl.org/field-day-rules)."
+      }
+    },
+    "gma": {
+      "name": "Küresel Dağ Aktivitesi",
+      "shortName": "GMA",
+      "exportName": "GMA Aktivasyonu",
+      "activityOptions": {
+        "title_zero": "Aktivasyon için zirve seçilmedi",
+        "title_one": "1 zirve aktifleştiriliyor",
+        "title_other": "{{count}} zirve aktifleştiriliyor",
+        "noSummitsFound": "Zirve bulunamadı",
+        "nearestMatches": "En yakın {{count}} eşleşmeden {{limit}} tanesi",
+        "matchingSummits_zero": "Eşleşen zirve bulunamadı",
+        "matchingSummits_one": "1 eşleşen zirve",
+        "matchingSummits_other": "{{count}} eşleşen zirve",
+        "searchForSummits": "Aktive etmek için bazı zirveleri arayın!",
+        "noSummitsNearby": "Yakınlarda zirve yok",
+        "nearbySummits": "Yakındaki zirveler",
+        "searchPlaceholder": "Ad veya referans…",
+        "unknownSummit": "Bilinmeyen zirve"
+      }
+    },
+    "llota": {
+      "name": "LLOTA: Göller ve Lagünler Havadadır",
+      "shortName": "LLOTA",
+      "exportName": "LLOTA Aktivasyonu",
+      "activityOptions": {
+        "title_zero": "Etkinleştirilmek üzere göl seçilmedi",
+        "title_one": "1 göl etkinleştiriliyor",
+        "title_other": "{{count}} göl etkinleştiriliyor",
+        "noLakesFound": "Göl bulunamadı",
+        "nearestMatches": "En yakından {{limit}} {{count}} tanesi",
+        "matchingRefs_zero": "Eşleşen göl yok",
+        "matchingRefs_one": "1 eşleşen göl",
+        "matchingRefs_other": "{{count}} eşleşen göl",
+        "searchForRefs": "Bazı gölleri etkinleştirmek için arayın!",
+        "noRefsNearby": "Yakınlarda göl yok",
+        "nearbyRefs": "Yakındaki göller",
+        "searchPlaceholder": "Ad veya referans…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Hiç L2L yok",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2L",
+        "huntedRefsCount_zero": "Hiç göl avlanmadı",
+        "huntedRefsCount_one": "1 göl avlanmış",
+        "huntedRefsCount_other": "{{fmtCount}} göl avlanmış",
+        "activatorQSOsCount_zero": "Hiç etkinleştirici QSO yok",
+        "activatorQSOsCount_one": "1 aktivatör QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivatör QSOs",
+        "ref2refQSOsCount_zero": "Hiç L2L QSO yok",
+        "ref2refQSOsCount_one": "1 L2L QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L QSOs",
+        "huntedQSOsCount_zero": "Avlanan QSOs yok",
+        "huntedQSOsCount_one": "1 avlanan QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} avlanan QSOs",
+        "operationTotals": "Operasyon Toplamları",
+        "referencesActivatedCount_zero": "Hiç göl etkinleştirilmedi",
+        "referencesActivatedCount_one": "1 göl etkinleştirilmiş",
+        "referencesActivatedCount_other": "{{fmtCount}} göl etkinleştirilmiş",
+        "referencesMissedCount_zero": "Hiç tamamlanmayan göl yok",
+        "referencesMissedCount_one": "1 tamamlanmayan göl",
+        "referencesMissedCount_other": "{{fmtCount}} tamamlanmayan göl",
+        "referencesHuntedCount_zero": "Hiç göl avlanmadı",
+        "referencesHuntedCount_one": "1 göl avlanmış",
+        "referencesHuntedCount_other": "{{fmtCount}} göl avlanmış"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Onların LLOTA'sı"
+      },
+      "postSpotAPI": {
+        "error": "LLOTA noktası gönderirken hata oluştu",
+        "serverResponse": "Sunucu {{status}} hatasıyla yanıt verdi: {{body}}"
+      },
+      "exampleRefName": "Örnek Göl",
+      "unknownRefName": "Bilinmeyen Göl",
+      "noRefsNearby": "Yakında göl yok!"
+    },
+    "mota": {
+      "name": "Havada Değirmenler",
+      "shortName": "MOTA",
+      "exportName": "MOTA Aktivasyonu",
+      "activityOptions": {
+        "title_zero": "Aktivasyon için değirmen seçilmedi",
+        "title_one": "1 değirmen aktifleştiriliyor",
+        "title_other": "{{count}} değirmen aktifleştiriliyor",
+        "noMillsFound": "Değirmen bulunamadı",
+        "nearestMatches": "En yakın {{count}} eşleşmeden {{limit}} tanesi",
+        "matchingMills_zero": "Eşleşen değirmen bulunamadı",
+        "matchingMills_one": "1 eşleşen değirmen",
+        "matchingMills_other": "{{count}} eşleşen değirmen",
+        "searchForMills": "Aktive etmek için bazı değirmenleri arayın!",
+        "noMillsNearby": "Yakınlarda değirmen yok",
+        "nearbyMills": "Yakındaki değirmenler",
+        "searchPlaceholder": "Ad veya referans…",
+        "unknownMill": "Bilinmeyen değirmen"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Onların Mill"
+      }
+    },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Görünüm",
+      "description": "Çoğunlukla VK ve ZL'de kullanılır",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL önizleme)",
+        "dialogTitle": "ParksnPeaks Hesabı",
+        "description": "Kullanıcı Adı: {{username}}",
+        "noAccount": "Hesap yok",
+        "pleaseEnterDetails": "Lütfen ParksnPeaks hesabınız için bilgileri girin:"
+      },
+      "usernameLabel": "Kullanıcı Adı (çağrı işareti değil)",
+      "usernamePlaceholder": "hesap kullanıcı adınız",
+      "apiKeyLabel": "API Anahtarı (şifre değil)",
+      "apiKeyPlaceholder": "API anahtarınız"
+    },
+    "pga": {
+      "name": "Polonya Gmina Ödülü",
+      "shortName": "PGA",
+      "exportName": "PGA Aktivasyonu",
+      "activityOptions": {
+        "title_zero": "Aktivasyon için gmina seçilmedi",
+        "title_one": "1 gmina aktifleştiriliyor",
+        "title_other": "{{count}} gmina aktifleştiriliyor",
+        "noGminasFound": "Gmina bulunamadı",
+        "nearestMatches": "En yakın {{count}} eşleşmeden {{limit}} tanesi",
+        "matchingGminas_zero": "Eşleşen gmina bulunamadı",
+        "matchingGminas_one": "1 eşleşen gmina",
+        "matchingGminas_other": "{{count}} eşleşen gmina",
+        "searchForGminas": "Aktive etmek için bazı gmina'ları arayın!",
+        "noGminasNearby": "Yakınlarda gmina yok",
+        "nearbyGminas": "Yakındaki gmina'lar",
+        "searchPlaceholder": "Ad veya referans…",
+        "unknownGmina": "Bilinmeyen gmina"
+      }
+    },
+    "pota": {
+      "name": "POTA: Havadaki Parklar",
+      "shortName": "POTA",
+      "exportName": "POTA Aktivasyonu",
+      "activityOptions": {
+        "title_zero": "Aktivasyon için park seçilmedi",
+        "title_one": "1 park aktifleştiriliyor",
+        "title_other": "{{count}} park aktifleştiriliyor",
+        "noParksFound": "Park bulunamadı",
+        "nearestMatches": "En yakın {{count}} eşleşmeden {{limit}} tanesi",
+        "matchingParks_zero": "Eşleşen park bulunamadı",
+        "matchingParks_one": "1 eşleşen park",
+        "matchingParks_other": "{{count}} eşleşen değirmen",
+        "searchForParks": "Aktive etmek için bazı parkları arayın!",
+        "noParksNearby": "Yakınlarda park yok",
+        "nearbyParks": "Yakındaki parklar",
+        "searchPlaceholder": "Ad veya referans…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Hiç P2P yok",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Hiç park avlanmadı",
+        "huntedRefsCount_one": "1 park avlanmış",
+        "huntedRefsCount_other": "{{fmtCount}} park avlanmış",
+        "activatorQSOsCount_zero": "Hiç etkinleştirici QSO yok",
+        "activatorQSOsCount_one": "1 etkinleştirici QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} etkinleştirici QSO",
+        "ref2refQSOsCount_zero": "Hiç P2P QSO yok",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSO",
+        "huntedQSOsCount_zero": "Hiç avlanan QSO yok",
+        "huntedQSOsCount_one": "1 avlanan QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} avlanan QSO",
+        "operationTotals": "Operasyon Toplamları",
+        "referencesActivatedCount_zero": "Hiç park etkinleştirilmedi",
+        "referencesActivatedCount_one": "1 park etkinleştirilmiş",
+        "referencesActivatedCount_other": "{{fmtCount}} park etkinleştirilmiş",
+        "referencesMissedCount_zero": "Hiç tamamlanmayan park yok",
+        "referencesMissedCount_one": "1 tamamlanmayan park",
+        "referencesMissedCount_other": "{{fmtCount}} tamamlanmayan park",
+        "referencesHuntedCount_zero": "Hiç park avlanmadı",
+        "referencesHuntedCount_one": "1 park avlanmış",
+        "referencesHuntedCount_other": "{{fmtCount}} park avlanmış"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Onların POTA faaliyeti"
+      },
+      "postSpotAPI": {
+        "error": "POTA yerleştirmesi hatası",
+        "serverResponse": "Sunucu {{status}} hatasıyla yanıt verdi: {{body}}"
+      },
+      "exampleRefName": "Örnek Milli Park",
+      "unknownRefName": "Bilinmeyen Park",
+      "noRefsNearby": "Yakında park yok!"
+    },
+    "siota": {
+      "name": "Havadaki Silolar",
+      "shortName": "SIOTA",
+      "exportName": "SIOTA Aktivasyonu",
+      "account": {
+        "title": "ParksnPeaks (SiOTA Önizleme)",
+        "dialogTitle": "ParksnPeaks Hesabı",
+        "description": "Kullanıcı Adı: {{username}}",
+        "noAccount": "Hesap yok",
+        "pleaseEnterDetails": "Lütfen ParksnPeaks hesabınız için bilgileri girin:",
+        "usernameLabel": "Kullanıcı Adı (çağrı işareti değil)",
+        "usernamePlaceholder": "hesap kullanıcı adınız",
+        "apiKeyLabel": "API Anahtarı (şifre değil)",
+        "apiKeyPlaceholder": "API anahtarınız"
+      },
+      "activityOptions": {
+        "title_zero": "Aktivasyon için silo seçilmedi",
+        "title_one": "1 silo aktifleştiriliyor",
+        "title_other": "{{count}} silo aktifleştiriliyor",
+        "noSilosFound": "Silo bulunamadı",
+        "nearestMatches": "En yakın {{count}} eşleşmeden {{limit}} tanesi",
+        "matchingSilos_zero": "Eşleşen silo bulunamadı",
+        "matchingSilos_one": "1 eşleşen silo",
+        "matchingSilos_other": "{{count}} eşleşen silo",
+        "searchForSilos": "Bazı siloları etkinleştirmek için arayın!",
+        "noSilosNearby": "Yakında silo yok",
+        "nearbySilos": "Yakındaki silolar",
+        "searchPlaceholder": "Ad veya referans…",
+        "unknownSilo": "Bilinmeyen silo"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Onların Silosu"
+      },
+      "postSpotAPI": {
+        "error": "SiOTA yerleştirmesi hatası",
+        "serverResponse": "Sunucu {{status}} hatasıyla yanıt verdi: {{body}}"
+      }
+    },
+    "sota": {
+      "account": {
+        "title": "SOTA (SOTAwatch kendi kendine noktalama için)",
+        "dialogTitle": "SOTA Hesabı",
+        "description": "{{callsign}} olarak giriş yaptınız",
+        "noAccount": "Hesap yok",
+        "error": "Hesap detayları alınırken hata oluştu",
+        "connect": "SOTA hesabınızı bağlayın"
+      },
+      "notLoggedInAlertTitle": "Uyarı",
+      "notLoggedInAlertText": "SOTAWatch'a giriş yapılmadı. Lütfen PoLo ayarlarına gidin",
+      "activityOptions": {
+        "title_zero": "Etkinleştirilmek üzere hiçbir zirve seçilmedi",
+        "title_one": "1 zirve etkinleştiriliyor",
+        "title_other": "{{count}} zirve etkinleştiriliyor",
+        "noSummitsFound": "Zirve bulunamadı",
+        "nearestMatches": "En yakından {{limit}} yada {{count}} tanesi",
+        "matchingSummits_zero": "Eşleşen zirve yok",
+        "matchingSummits_one": "1 eşleşen zirve",
+        "matchingSummits_other": "{{count}} eşleşen zirve",
+        "searchForSummits": "Bazı zirveleri etkinleştirmek için arayın!",
+        "noSummitsNearby": "Yakında zirve yok",
+        "nearbySummits": "Yakındaki zirveler",
+        "searchPlaceholder": "Ad veya referans…",
+        "unknownSummit": "Bilinmeyen zirve"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Hiç S2S yok",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "Hiç zirve avlanmadı",
+        "huntedRefsCount_one": "1 zirve avlanmış",
+        "huntedRefsCount_other": "{{fmtCount}} zirve avlanmış",
+        "activatorQSOsCount_zero": "Hiç etkinleştirici QSO yok",
+        "activatorQSOsCount_one": "1 etkinleştirici QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} etkinleştirici QSO",
+        "ref2refQSOsCount_zero": "Hiç S2S QSO yok",
+        "ref2refQSOsCount_one": "1 S2S QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S QSO",
+        "huntedQSOsCount_zero": "Hiç avlanan QSO yok",
+        "huntedQSOsCount_one": "1 avlanan QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} avlanan QSO",
+        "operationTotals": "Operasyon Toplamları",
+        "referencesActivatedCount_zero": "Hiç zirve etkinleştirilmedi",
+        "referencesActivatedCount_one": "1 zirve etkinleştirilmiş",
+        "referencesActivatedCount_other": "{{fmtCount}} zirve etkinleştirilmiş",
+        "referencesMissedCount_zero": "Hiç tamamlanmayan zirve yok",
+        "referencesMissedCount_one": "1 tamamlanmayan zirve",
+        "referencesMissedCount_other": "{{fmtCount}} tamamlanmayan zirve",
+        "referencesHuntedCount_zero": "Hiç zirve avlanmadı",
+        "referencesHuntedCount_one": "1 zirve avlanmış",
+        "referencesHuntedCount_other": "{{fmtCount}} zirve avlanmış"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Onların SOTA'sı"
+      },
+      "postSpotAPI": {
+        "error": "SOTA yerleştirmesi hatası",
+        "serverResponse": "Sunucu {{status}} {{message}} durumuyla yanıtladı",
+        "sotaAccountLoggedOut": "SOTA hesabı çıkış yaptı. Lütfen yeniden PoLo ayarlarından giriş yapın.."
+      },
+      "exampleRefName": "Örnek Zirve",
+      "unknownRefName": "Bilinmeyen Zirve",
+      "noRefsNearby": "Yakında zirve yok!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "Etkinleştirilmek üzere seçilmiş kule yok",
+        "title_one": "1 kule etkinleştiriliyor",
+        "title_other": "{{count}} kule etkinleştiriliyor",
+        "noTowersFound": "Kule bulunamadı",
+        "nearestMatches": "En yakından {{limit}} {{count}} tanesi",
+        "matchingTowers_zero": "Eşleşen kule yok",
+        "matchingTowers_one": "1 eşleşen kule",
+        "matchingTowers_other": "{{count}} eşleşen kule",
+        "searchForTowers": "Bazı kuleleri etkinleştirmek için arayın!",
+        "noTowersNearby": "Yakında kule yok",
+        "nearbyTowers": "Yakındaki kule",
+        "searchPlaceholder": "Ad veya referans…",
+        "unknownTower": "Bilinmeyen kule"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Hiç R2R yok",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Hiç avlanmış kule yok",
+        "huntedRefsCount_one": "1 kule avlandı",
+        "huntedRefsCount_other": "{{fmtCount}} kule avlandı",
+        "activatorQSOsCount_zero": "Aktivatör QSOs yok",
+        "activatorQSOsCount_one": "1 aktivatör QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivatör QSOs",
+        "ref2refQSOsCount_zero": "Hiç R2R QSOs yok",
+        "ref2refQSOsCount_one": "1 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R QSOs",
+        "huntedQSOsCount_zero": "Avlanan QSOs yok",
+        "huntedQSOsCount_one": "1 avlanan QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} avlanan QSOs",
+        "operationTotals": "İşlem Toplamları",
+        "referencesActivatedCount_zero": "Hiç etkinleştirilen kule yok",
+        "referencesActivatedCount_one": "1 kule etkinleştirildi",
+        "referencesActivatedCount_other": "{{fmtCount}} kule etkinleştirildi",
+        "referencesMissedCount_zero": "Hiç tamamlanmamış kule yok",
+        "referencesMissedCount_one": "1 tamamlanmayan kule",
+        "referencesMissedCount_other": "{{fmtCount}} tamamlanmamış kule",
+        "referencesHuntedCount_zero": "Hiç avlanmış kule yok",
+        "referencesHuntedCount_one": "1 kule avlandı",
+        "referencesHuntedCount_other": "{{fmtCount}} kule avlandı"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Onların kulesi"
+      },
+      "exampleRefName": "Örnek Kule",
+      "unknownRefName": "Bilinmeyen kule",
+      "noRefsNearby": "Yakında kule yok!",
+      "postSpotAPI": {
+        "error": "TOTA yerleştirme hatası",
+        "serverResponse": "Sunucu {{status}} {{message}} durumuyla yanıt verdi"
+      }
+    },
+    "usStates": {
+      "statesCount_zero": "Hiç ABD Eyaleti Yok",
+      "statesCount_one": "1 ABD Eyaleti",
+      "statesCount_other": "{{count}} ABD Eyaleti"
+    },
+    "wab": {
+      "name": "Bütün Britanya/İrlanda Çalıştı",
+      "description": "Operasyona WAB/WAI Kare ekleyin",
+      "workedAllBritainSquare": "Bütün Britanya Karesi Çalıştı",
+      "workedAllIrelandSquare": "Bütün İrlanda Karesi Çalıştı",
+      "enterSquare": "Karenizi girin",
+      "placeholderBritain": "örn. SU14",
+      "placeholderIreland": "örn. N93",
+      "currentSquare": "Geçerli Kare:",
+      "noSquareSet": "Henüz kare ayarlanmadı"
+    },
+    "wca": {
+      "name": "Dünya Kaleleri Ödülleri",
+      "shortName": "WCA",
+      "exportName": "WCA Aktivasyonu",
+      "activityOptions": {
+        "title_zero": "Aktive edilecek kale seçilmedi",
+        "title_one": "1 kale aktif ediliyor",
+        "title_other": "{{count}} kaleler aktif ediliyor",
+        "noCastlesFound": "Uygun kale bulunamadı",
+        "nearestMatches": "En yakın {{limit}} dizideki {{count}} eşleşmeler",
+        "matchingCastles_zero": "Eşleşen kale yok",
+        "matchingCastles_one": "1 eşleşen kale",
+        "matchingCastles_other": "{{count}} eşleşen kale",
+        "searchForCastles": "Aktivasyon için bazı kaleleri arayın!",
+        "noCastlesNearby": "Yakında kale yok",
+        "nearbyCastles": "Yakında bulunan kaleler",
+        "searchPlaceholder": "Ad veya referans…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Avlanmış kale yok",
+        "huntedRefsCount_one": "1 kale avlandı",
+        "huntedRefsCount_other": "{{fmtCount}} kaleler avlandı",
+        "activatorQSOsCount_zero": "Aktivatör QSOs yok",
+        "activatorQSOsCount_one": "1 aktivatör QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivatör QSOs",
+        "huntedQSOsCount_zero": "Avlanan QSOs yok",
+        "huntedQSOsCount_one": "1 avlanan QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} avlanan QSOs",
+        "operationTotals": "Operasyon Toplamları",
+        "referencesActivatedCount_zero": "Aktive edilen kale yok",
+        "referencesActivatedCount_one": "1 kale aktif edildi",
+        "referencesActivatedCount_other": "{{fmtCount}} kale aktif edildi",
+        "referencesMissedCount_zero": "Eksik kale yok",
+        "referencesMissedCount_one": "1 eksik kale",
+        "referencesMissedCount_other": "{{fmtCount}} eksik kaleler",
+        "referencesHuntedCount_zero": "Avlanan kale yok",
+        "referencesHuntedCount_one": "1 kale avlandı",
+        "referencesHuntedCount_other": "{{fmtCount}} kale avlandı"
+      },
+      "exampleRefName": "Örnek Kale",
+      "unknownRefName": "Bilinmeyen Kale",
+      "noRefsNearby": "Yakında kale yok!"
+    },
+    "wfd": {
+      "name": "Kış Saha Günü",
+      "shortName": "KSG",
+      "exportName": "KSG Etkinleştirme",
+      "activityOptions": {
+        "exchangeInformation": "Bilgi alışverişi",
+        "classLabel": "Sınıf",
+        "locationLabel": "Yer",
+        "objectives_zero": "Başarılan hedef yok",
+        "objectives_one": "1 hedef başarıldı, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} hedef başarıldı, OM ×{{multiplier}}",
+        "objectivesTitle": "Hedefler: {{count}} başarıldı, OM ×{{multiplier}}",
+        "objectivesDescription": "Log gönderirken bu hedefleri de rapor etmeyi unutmayın!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Alternatif Güç",
+        "awayFromHome": "Evden Uzakta İşletim",
+        "fmSatelliteContact": "FM Uydu Temas",
+        "ssbSatelliteContact": "SSB veya CW Uydu Temas",
+        "winlinkEmails": "Winlink E-postaları",
+        "specialBulletin": "Özel Bülten",
+        "sixBands": "Altı Bant",
+        "twelveBands": "On İki Bant",
+        "multipleModes": "Çoklu Modlar",
+        "qrpOperation": "QRP İşletimi",
+        "sixContinuousHours": "Altı Kesintisiz Saat"
+      },
+      "objectiveDescription": {
+        "altPower": "%100 alternatör gücüyle çalışın, örneğin pil, güneş enerjisi, rüzgar gibi.",
+        "awayFromHome": "Saha istasyonunuzu eve en az ½ mil uzaklıkta kurun.",
+        "fmSatelliteContact": "Çalışma süresi boyunca en az 1 FM uydu temas noktası yapın.",
+        "ssbSatelliteContact": "SSB veya CW kullanarak en az bir temas yapın.",
+        "winlinkEmails": "Winlink üzerinden RF kullanarak en az bir e-posta gönderin ve alın.",
+        "specialBulletin": "WFD Özel Bülten mesajını doğru kopyalayın ve kopyanızı log gönderiminize ekleyin.",
+        "sixBands": "En az altı farklı bantta en az üç temas yapın.",
+        "twelveBands": "En az on iki farklı bantta en az üç temas yapın.",
+        "multipleModes": "Çalışma süresi boyunca çok mod kullanın.",
+        "qrpOperation": "QRP güç seviyelerinde çalışın (Telefon için 10W veya daha az, CW veya Dijital için 5W veya daha az).",
+        "sixContinuousHours": "Çalışma süresi boyunca en az altı kesintisiz saat çalışın."
+      },
+      "information-md": "Kış Saha Günü için sınıflar örneğin `2M`: `1`, `2`, `3`… vericilerin sayısı için `H` Ev İstasyonu için `I` İç mekanlar için `O` Dış mekanlar için `M` Mobil veya Durağan Mobil için Konum, ARRL Bölümü, RAC Bölümü, `MX` Meksika için veya `DX` başka bir yer için. Daha fazla bilgi için [resmi kurallar](https://www.winterfieldday.com/sop.php)."
+    },
+    "wwbota": {
+      "name": "WWBOTA: Dünya Çapında Sığınak Ödülleri",
+      "shortName": "WWBOTA",
+      "exportName": "WWBOTA Etkinleştirme",
+      "activityOptions": {
+        "title_zero": "Etkinleştirilmek üzere seçilmiş sığınak yok",
+        "title_one": "1 sığınak etkinleştiriliyor",
+        "title_other": "{{count}} sığınak etkinleştiriliyor",
+        "noBunkersFound": "Bunker bulunamadı",
+        "nearestMatches": "En yakından {{limit}} {{count}} tanesi",
+        "matchingBunkers_zero": "Eşleşen sığınak yok",
+        "matchingBunkers_one": "1 eşleşen sığınak",
+        "matchingBunkers_other": "{{count}} eşleşen sığınak",
+        "searchForBunkers": "Bazı sığınakları etkinleştirmek için arayın!",
+        "noBunkersNearby": "Yakında sığınak yok",
+        "nearbyBunkers": "Yakındaki sığınak",
+        "searchPlaceholder": "Ad veya referans…",
+        "unknownBunker": "Bilinmeyen sığınak"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Onların WWBOTA'sı"
+      },
+      "postSpotAPI": {
+        "error": "WWBOTA yayını gönderirken hata oluştu",
+        "serverResponse": "Sunucu {{status}} {{message}} durumuyla yanıt verdi"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: Dünya Çapında Flora & Fauna",
+      "shortName": "WWFF",
+      "exportName": "WWFF Etkinleştirme",
+      "activityOptions": {
+        "title_zero": "Etkinleştirilmek üzere park seçilmedi",
+        "title_one": "1 park etkinleştiriliyor",
+        "title_other": "{{count}} park etkinleştiriliyor",
+        "noParksFound": "Park bulunamadı",
+        "nearestMatches": "En yakından {{limit}} {{count}} tanesi",
+        "matchingParks_zero": "Eşleşen park yok",
+        "matchingParks_one": "1 eşleşen park",
+        "matchingParks_other": "{{count}} eşleşen park",
+        "searchForParks": "Bazı parkları etkinleştirmek için arayın!",
+        "noParksNearby": "Yakında park yok",
+        "nearbyParks": "Yakındaki parklar",
+        "searchPlaceholder": "Ad veya referans…",
+        "unknownPark": "Bilinmeyen park"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Hiç P2P yok",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Hiç park avlanmadı",
+        "huntedRefsCount_one": "1 park avlanmış",
+        "huntedRefsCount_other": "{{fmtCount}} park avlanmış",
+        "activatorQSOsCount_zero": "Hiç etkinleştirici QSO yok",
+        "activatorQSOsCount_one": "1 etkinleştirici QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} etkinleştirici QSO",
+        "ref2refQSOsCount_zero": "Hiç P2P QSO yok",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSO",
+        "huntedQSOsCount_zero": "Hiç avlanan QSO yok",
+        "huntedQSOsCount_one": "1 avlanan QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} avlanan QSO",
+        "operationTotals": "Operasyon Toplamları",
+        "referencesActivatedCount_zero": "Hiç park etkinleştirilmedi",
+        "referencesActivatedCount_one": "1 park etkinleştirilmiş",
+        "referencesActivatedCount_other": "{{fmtCount}} park etkinleştirilmiş",
+        "referencesMissedCount_zero": "Hiç tamamlanmayan park yok",
+        "referencesMissedCount_one": "1 tamamlanmayan park",
+        "referencesMissedCount_other": "{{fmtCount}} tamamlanmayan park",
+        "referencesHuntedCount_zero": "Hiç park avlanmadı",
+        "referencesHuntedCount_one": "1 park avlanmış",
+        "referencesHuntedCount_other": "{{fmtCount}} park avlanmış"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Onların WWFF'si"
+      },
+      "exampleRefName": "Örnek Park",
+      "unknownRefName": "Bilinmeyen Park",
+      "noRefsNearby": "Yakında park yok!",
+      "postSpotAPI": {
+        "error": "WWFF yayını gönderirken hata oluştu",
+        "serverResponse": "Sunucu {{status}} {{message}} durumuyla yanıt verdi"
+      }
+    },
+    "zlota": {
+      "account": {
+        "title": "ZLOTA (ZLOTA noktalama)",
+        "dialogTitle": "ZLOTA Hesabı",
+        "description": "Çağrı İşareti: {{callsign}}",
+        "noAccount": "Hesap yok",
+        "pleaseEnterDetails": "ZLOTA hesabınızın ayrıntılarını giriniz:",
+        "callsignLabel": "Çağrı İşareti",
+        "callsignPlaceholder": "hesap çağrı işaretiniz",
+        "pinLabel": "PIN (şifre değil)",
+        "pinPlaceholder": "PIN kodunuz"
+      },
+      "activityOptions": {
+        "title_zero": "Etkinleştirilmek üzere referans seçilmedi",
+        "title_one": "1 referans etkinleştiriliyor",
+        "title_other": "{{count}} referans etkinleştiriliyor",
+        "noReferencesFound": "Referans bulunamadı",
+        "nearestMatches": "En yakından {{limit}} {{count}} tanesi",
+        "matchingReferences_zero": "Eşleşen referans yok",
+        "matchingReferences_one": "1 eşleşen referans",
+        "matchingReferences_other": "{{count}} eşleşen referans",
+        "searchForReferences": "Bazı referansları etkinleştirmek için arayın!",
+        "noReferencesNearby": "Yakında referans yok",
+        "nearbyReferences": "Yakındaki referanslar",
+        "searchPlaceholder": "Ad veya referans…",
+        "unknownReference": "Bilinmeyen referans"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Onların Referansı"
+      },
+      "postSpotAPI": {
+        "error": "ZLOTA yayını gönderirken hata oluştu",
+        "serverResponse": "Sunucu {{status}} {{message}} durumuyla yanıt verdi"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "ref2refCount_zero": "Hiç Ref2Refs yok",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Refs",
+        "huntedRefsCount_zero": "Hiç referans avlanmadı",
+        "huntedRefsCount_one": "1 referans avlanmış",
+        "huntedRefsCount_other": "{{fmtCount}} referans avlanmış",
+        "activatorQSOsCount_zero": "Hiç etkinleştirici QSO yok",
+        "activatorQSOsCount_one": "1 etkinleştirici QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} etkinleştirici QSO",
+        "ref2refQSOsCount_zero": "Hiç Ref2Ref QSO yok",
+        "ref2refQSOsCount_one": "1 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSO",
+        "huntedQSOsCount_zero": "Hiç avlanan QSO yok",
+        "huntedQSOsCount_one": "1 avlanan QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} avlanan QSO",
+        "operationTotals": "Operasyon Toplamları",
+        "referencesActivatedCount_zero": "Hiç referans etkinleştirilmedi",
+        "referencesActivatedCount_one": "1 referans etkinleştirilmiş",
+        "referencesActivatedCount_other": "{{fmtCount}} referans etkinleştirilmiş",
+        "referencesMissedCount_zero": "Hiç tamamlanmayan referans yok",
+        "referencesMissedCount_one": "1 tamamlanmayan referans",
+        "referencesMissedCount_other": "{{fmtCount}} tamamlanmayan referans",
+        "referencesHuntedCount_zero": "Hiç referans avlanmadı",
+        "referencesHuntedCount_one": "1 referans avlanmış",
+        "referencesHuntedCount_other": "{{fmtCount}} referans avlanmış"
+      }
+    }
+  }
+}

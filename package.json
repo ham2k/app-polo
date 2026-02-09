@@ -16,7 +16,7 @@
     "clean:all": "npm run clean:js && npm run clean:android && npm run clean:ios && npm run clean:watchman",
     "postinstall": "patch-package",
     "crowdin:push": "crowdin push sources",
-    "crowdin:pull": "crowdin pull translations -l es-ES -l de -l fr -l nl -l sk -l nb -l cs -l ja -l zh-CN"
+    "crowdin:pull": "crowdin pull translations -l cs -l de -l es-ES -l fr -l ja -l pt-BR -l nb -l nl -l sk -l tr -l zh-CN"
   },
   "dependencies": {
     "@ham2k/lib-callsigns": "0.5.0",

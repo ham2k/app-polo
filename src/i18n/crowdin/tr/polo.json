@@ -1,0 +1,925 @@
+{
+  "screens": {
+    "start": {
+      "credits": "KI2D ve arkadaşlar tarafından",
+      "Loading Extensions": "Uzantılar Yükleniyor",
+      "Development Build": "Taşınabilir Logger Geliştirme Sürümü",
+      "messages": {
+        "Reticulating splines": "Splineler Yeniden Boyutlandırılıyor",
+        "Tuning the antenna": "Anten İnceleniyor",
+        "Checking the tubes": "Tüpler Kontrol Ediliyor",
+        "Warming up the tubes": "Tüpler Isıtılıyor",
+        "Unfolding the map": "Harita Açılıyor",
+        "Charging the flux capacitor": "Akı Kapasitörü Şarj Ediliyor",
+        "Purging the dilithium chamber": "Dilityum Odası Temizleniyor",
+        "Activating the turbo encabulator": "Turbo Enkabulatör Etkinleştiriliyor",
+        "Engaging the warp drive": "Warp Motoru Devreye Sokuluyor"
+      }
+    },
+    "home": {
+      "title": "Taşınabilir Logger",
+      "newOperation": "Yeni Operasyon",
+      "newOperation-a11y": "Yeni Operasyon",
+      "operationList-a11y": "Operasyon Listesi",
+      "noOperations": "Operasyon Yok!",
+      "settings-a11y": "Ayarlar",
+      "quickCallLookupPlaceholder": "Hızlı Arama Çağrısı…",
+      "spots-a11y": "Görevler"
+    },
+    "operation": {
+      "title": "Operasyon"
+    },
+    "operationDetails": {
+      "title": "Operasyon Detayları",
+      "operationTitle": "Başlık",
+      "newOperation": "Yeni Operasyon",
+      "operationNotes": "Notlar",
+      "anythingYouWantToWriteAboutThisOperation": "Bu operasyon hakkında yazmak istediğiniz herhangi bir şey"
+    },
+    "operationStationInfo": {
+      "title": "İstasyon & Operatör Bilgisi",
+      "invalidCallsign": "Geçersiz çağrı işareti: {{callsign}}",
+      "invalidCallsigns": "Geçersiz çağrı işaretleri: {{callsigns}}",
+      "singleStationUsed-md": "`{{oldStation}}` şimdiye kadar kullanıldı.\n{{newStation}}` yeni QSOs için kullanılacak.",
+      "noStationUsed-md": "Şimdiye kadar bir çağrı kullanılmadı.\n{{newStation}} yeni QSOs için kullanılacak.",
+      "updateStation-md_zero": "Sıfır mevcut QSO üzerinde `{{newStation}}` güncelle",
+      "updateStation-md_one": "Bir mevcut QSO üzerinde `{{newStation}}` güncelle",
+      "updateStation-md_other": "{{count}} mevcut QSO üzerinde `{{newStation}}` güncelle",
+      "multipleStationsUsed-md": "Bu aktivite zaten birden fazla istasyon çağrı işareti kullanılarak QSOs içeriyor: `{{stations}}`.\n\n`{{newStation}}` yalnızca yeni QSOs için kullanılacak.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` şimdiye kadar kullanıldı.\n{{newOperator}}` yeni QSOs için kullanılacak.",
+      "noOperatorUsed-md": "Şimdiye kadar bir çağrı kullanılmadı.\n{{newOperator}} yeni QSOs için kullanılacak.",
+      "updateOperator-md": "Tüm QSOs için operatör olarak `{{newOperator}}` güncelle",
+      "multipleOperatorsUsed-md": "Bu aktivite zaten birden fazla operatör çağrı işareti kullanılarak QSOs içeriyor: `{{operators}}`.\n\n`{{newOperator}}` yalnızca yeni QSOs için kullanılacak.",
+      "whatIsTheCallsignUsedOnTheAir": "Havada kullanılan çağrı işareti nedir?",
+      "stationCallsign": "İstasyon Çağrı İzi",
+      "whoIsOperatingTheStation": "İstasyonu kim çalıştırıyor? (isteğe bağlı)",
+      "operatorCallsign": "Operatör Çağrı İzi",
+      "multiStationOperation": "Çoklu istasyon operasyonu?",
+      "multiStationOperationYes": "Evet, biz birçok kişiden biriyiz!",
+      "multiStationOperationNo": "Hayır, sadece bir düzenli istasyon",
+      "identifierForThisStation": "Bu istasyon için tanımlayıcı (sadece sayılar)"
+    },
+    "operationLocation": {
+      "title": "Operasyon Konumu",
+      "selectedLocation": "Seçilen Konum",
+      "maidenheadGridSquareLocator": "Maidenhead Grid Square Konum Bulucu",
+      "suggestedLocations": "Önerilen Konumlar",
+      "deviceGps": "Cihaz GPS",
+      "locating": "Yer Tespiti Yapılıyor…",
+      "gpsError": "GPS Hatası",
+      "noGps": "GPS YOK",
+      "stateOrProvince": "Eyalet veya İl (isteğe bağlı)",
+      "county": "Şehir (isteğe bağlı)"
+    },
+    "operationAddActivity": {
+      "title": "Aktivite Ekle",
+      "cantFindActivity": "Aradığınız aktiviteyi bulamıyor musunuz?",
+      "thereAreMoreOptions": "Ayarlar > Uygulama Özelliklerinde daha fazla seçenek var"
+    },
+    "operationActivityOptions": {
+      "title": "Aktivite Seçenekleri",
+      "removeActivity": "Bu operasyondan {{activity}} aktivitesini kaldır"
+    },
+    "operationData": {
+      "title": "Operasyon Verileri",
+      "selectFromTheExportOptionsBelow": "Aşağıdaki dışa aktarma seçeneklerinden birini seçin",
+      "exportSingeFile": "Bir dosyayı dışa aktar",
+      "exportSelectedFiles_zero": "0 seçili dosyayı dışa aktar",
+      "exportSelectedFiles_one": "1 seçili dosyayı dışa aktar",
+      "exportSelectedFiles_other": "{{count}} seçili dosyayı dışa aktar",
+      "exportAllFiles": "Tüm dosyaları dışa aktar",
+      "exportQSOs": "QSOs Dışa Aktar",
+      "pendingToDoItems_zero": "Bekleyen yapılacak bir şey yok",
+      "pendingToDoItems_one": "1 bekleyen yapılacak iş",
+      "pendingToDoItems_other": "{{count}} bekleyen yapılacak işler",
+      "importQSOs": "QSOs İçe Aktar",
+      "addQSOsFromADIFFile": "ADIF dosyasından QSOs ekle",
+      "ham2kLoFiSync": "Ham2K LoFi Senkronizasyonu",
+      "operation": "Operasyon",
+      "exportSettings": "Dışa Aktarma Ayarları",
+      "useCompactFileNames": "Sıkıştırılmış dosya adlarını kullan",
+      "wavelogExport": "Wavelog Dışa Aktar",
+      "exportQSOsToWavelogDescription": "Bu operasyon için tüm QSOs Wavelog'a gönder",
+      "wavelogDialog": {
+        "title": "QSO'ları Wavelog'a Dışa Aktar",
+        "status": "Bu operasyon için tüm QSO'lar Wavelog'a dışa aktarılıyor.",
+        "exporting": "Wavelog'a dışa aktarılıyor…"
+      },
+      "deleteOperationDialog": {
+        "title": "Operasyonu sil?",
+        "description": "Bu operasyonu silmek istediğinizden emin misiniz?"
+      }
+    },
+    "callInfo": {
+      "title": "Çağrı İşareti Bilgisi",
+      "messages": {
+        "duplicate": "Çift",
+        "invalidBand": "Geçersiz Bant",
+        "newBand": "Yeni Bant",
+        "newMode": "Yeni Mod",
+        "newRef": "Yeni Referans",
+        "newMult": "Yeni Mult",
+        "newDay": "Yeni Gün",
+        "maybeDupe": "Çift?",
+        "partialDupe": "Çift",
+        "potaActivation-newDay": "Yeni POTA Günü",
+        "potaActivation-newRef": "Yeni Park",
+        "sotaActivation-newDay": "Yeni SOTA Günü",
+        "sotaActivation-newRef": "Yeni Zirve",
+        "sotaActivation-duplicate": "SOTA Çifti!",
+        "wwffActivation-duplicate": "WWFF Çifti!",
+        "wwbotaActivation-newDay": "Yeni WWBOTA Günü",
+        "wwbotaActivation-newRef": "Yeni Sığınak",
+        "motaActivation-newRef": "Yeni Değirmen"
+      },
+      "history": {
+        "last7days": "Son 7 günde {{count}}",
+        "today": "Bugün {{count}}",
+        "yesterday": "Dün {{count}}",
+        "qsos_zero": "0 QSO",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSO"
+      },
+      "thisOpCount_zero": "Bu operasyonda 0 QSO",
+      "thisOpCount_one": "Bu operasyonda 1 QSO",
+      "thisOpCount_other": "Bu operasyonda {{count}} QSO",
+      "otherOpsCount_zero": "Diğer operasyonlarda 0 QSO",
+      "otherOpsCount_one": "Diğer operasyonlarda 1 QSO",
+      "otherOpsCount_other": "Diğer operasyonlarda {{count}} QSO",
+      "andMoreCount_zero": "… ve {{count}} daha",
+      "andMoreCount_one": "… ve {{count}} daha",
+      "andMoreCount_other": "… ve {{count}} daha",
+      "showImage": "Görüntüyü Göster",
+      "notes": "Notlar",
+      "potentialCall": "Potansiyel çağrı: {{call}}",
+      "withCall": "ile {{call}}"
+    },
+    "spots": {
+      "title": "Görevler"
+    },
+    "editQSO": {
+      "title": "QSO'yu Düzenle",
+      "sections": {
+        "qso": "QSO Ayrıntıları",
+        "their": "Onların Bilgisi",
+        "our": "Bizim Bilgimiz",
+        "more": "Diğer"
+      },
+      "fields": {
+        "time": "Zaman",
+        "date": "Tarih",
+        "freq": "Frekans",
+        "mode": "Mod",
+        "band": "Bant",
+        "power": "Güç",
+        "call": "İstasyon Çağrısı",
+        "sent": "RST",
+        "exchange": "Değişim",
+        "name": "İsim",
+        "city": "Şehir",
+        "state": "Eyalet/İl",
+        "county": "Şehir",
+        "entity": "Varlık",
+        "cqZone": "CQ Bölgesi",
+        "ituZone": "ITU Bölgesi",
+        "arrlSection": "ARRL Bölümü",
+        "grid": "Grid",
+        "latitude": "Enlem",
+        "longitude": "Boylam",
+        "notes": "Notlar"
+      }
+    },
+    "opInfo": {
+      "title": "Operasyon Bilgisi"
+    },
+    "settings": {
+      "title": "Ayarlar",
+      "sections": {
+        "settings": "Ayarlar",
+        "accounts": "Hesaplar",
+        "about": "Ham2K Hakkında",
+        "help": "Yardıma mı ihtiyacınız var?"
+      },
+      "operatorCallsign": {
+        "title": "Operatör Çağrı İzi",
+        "noCall": "Çağrı Yok",
+        "dialogTitle": "Operatör Çağrı İzi",
+        "pleaseEnterCallsign": "Lütfen bir çağrı izi girin!",
+        "callsignLabel": "Operatörün Çağrı İzi"
+      },
+      "generalSettings": {
+        "title": "Genel Ayarlar",
+        "description": "Koyu mod, sayı satırı, birimler ve daha fazlası"
+      },
+      "loggingSettings": {
+        "title": "Kayıt Ayarları",
+        "description": "Kayıt deneyimini özelleştirin"
+      },
+      "dataSettings": {
+        "title": "Veri Ayarları",
+        "description": "Veri dosyaları, çağrı notları ve daha fazlası"
+      },
+      "syncSettings": {
+        "title": "Senkronizasyon Ayarları",
+        "description": "Bulut senkronizasyonu ve yedekleme"
+      },
+      "appFeatures": {
+        "title": "Uygulama Özellikleri",
+        "description": "POTA, SOTA gibi özellikleri yönetin"
+      },
+      "developerSettings": {
+        "title": "Geliştirici Ayarları",
+        "description": "Burada ejderhalar var"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} Ham2K'nin Destekçisidir",
+        "couldBeASupporter": "{{callsign}} Ham2K'nin Destekçisi olabilir"
+      },
+      "versionSettings": {
+        "description": "Son değişiklikleri görün"
+      },
+      "creditsSettings": {
+        "title": "Katkılar",
+        "description": "Sebastián Delmont KI2D & Team PoLo"
+      },
+      "noticesSettings": {
+        "title": "Son Uyarılar",
+        "description": "Kaçırmış olabileceğiniz mesajlar var mı?"
+      },
+      "readTheFineManual": {
+        "title": "Kılavuzu İnceleyin",
+        "description": "PoLo için belgeleri gözden geçirin"
+      },
+      "ham2KForums": {
+        "title": "Ham2K Forumları",
+        "description": "Yardım bulun, geri bildirim verin, fikirleri tartışın…"
+      },
+      "ham2KChat": {
+        "title": "Ham2K Sohbeti",
+        "description": "Çevrimiçi topluluğumuz için discord sunucusu"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "Videolar ve Canlı Yayınlar"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagrami",
+        "description": "Çok fazla fotoğrafınız olamaz..."
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "Haber ve güncellemeler için bizi takip edin"
+      },
+      "contactUs": {
+        "title": "İletişim",
+        "description": "help@ham2k.com\n(Başka bir yol denemeden önce Forumlar veya Sohbet'le deneyin!)"
+      }
+    },
+    "generalSettings": {
+      "title": "Genel Ayarlar",
+      "theme": {
+        "title": "Tema",
+        "descriptionDark": "Her Zaman Koyu Mod",
+        "descriptionLight": "Her Zaman Açık Mod",
+        "descriptionDevice": "Aynı cihaz temasıyla",
+        "dialogTitle": "Tema"
+      },
+      "fontScale": {
+        "title": "Yazı Tipi Ölçeği",
+        "descriptionXS": "En Küçük",
+        "descriptionSM": "Daha Küçük",
+        "descriptionMD": "Normal",
+        "descriptionLG": "Daha Büyük",
+        "descriptionXL": "En Büyük",
+        "dialogTitle": "Yazı Tipi Ölçeği",
+        "dialogDescription": "Bu boyutlar ayrıca Ekran ve Erişilebilirlik gibi cihaz ayarlarından da etkilenir."
+      },
+      "language": {
+        "title": "Dil: {{lang}}",
+        "description": "Uygulamanın dilini değiştir",
+        "dialogTitle": "Dil",
+        "dialogDescription": "Dili değiştir",
+        "deviceDefault": "Cihaz ayarlarını kullan ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (Cihaz Ayarları) şu anda desteklenmiyor."
+      },
+      "showNumbersRow": {
+        "title": "Sayı Satırını Göster",
+        "descriptionOn": "Sayılar için hızlı düğmeler",
+        "descriptionOff": "Sayılar satırını gösterme"
+      },
+      "showExtraInNumbersRow": {
+        "title": "Sayı satırında nokta",
+        "descriptionOn": "Nokta (ve eğik çizgi) ekleyin",
+        "descriptionOff": "Sadece sayıları göster"
+      },
+      "showCommaInNumbersRow": {
+        "title": "Sayı satırında virgül",
+        "descriptionOn": "Virgül tuşu ekleyin",
+        "descriptionOff": "Virgül tuşu yok"
+      },
+      "vibrateNumbersRow": {
+        "title": "Sayı satırında titreşim kullan",
+        "descriptionOn": "Sayılara basarken titre",
+        "descriptionOff": "Sayılara basarken titreşme"
+      },
+      "useMetricUnits": {
+        "title": "Metre Birimleri Kullanın",
+        "descriptionOn": "Mesafeleri Mil olarak kullan",
+        "descriptionOff": "Mesafeleri Kilometre olarak kullan"
+      },
+      "keepDeviceAwake": {
+        "title": "Cihazı Uyanık Tut",
+        "descriptionOn": "Cihazın ekran kilidini kapatmasını engelleyin",
+        "descriptionOff": "Düzenli ekran kilitlemeye izin ver"
+      },
+      "useSplitViews": {
+        "title": "Bölünmüş Görünümleri Kullan",
+        "descriptionOn": "Ekran yeterince büyükse Bölünmüş Görünümleri kullan",
+        "descriptionOff": "Bölünmüş görünümleri kullanma"
+      },
+      "useGrid8": {
+        "title": "Yüksek Hassasiyetli Konum",
+        "descriptionOn": "8 haneli ızgaraları kullanın",
+        "descriptionOff": "6 haneli ızgaraları kullanın"
+      },
+      "smartKeyboard": {
+        "title": "Akıllı Klavye Özellikleri",
+        "descriptionOn": "Akıllı klavye özelliklerini etkinleştir.",
+        "descriptionOff": "Bazı cihazlarla uyumlu olması için daha basit klavyeler kullanın"
+      },
+      "exportSettings": {
+        "title": "Dışa Aktarma Ayarları",
+        "description": "Dosya adlarını ve diğer ayarları özelleştirin"
+      },
+      "privacy": {
+        "title": "Gizlilik"
+      },
+      "shareAppUsageData": {
+        "title": "Uygulama kullanım verilerini paylaşın",
+        "descriptionOn": "Uygulamanın geliştirilmesine katkı sağlamak için kullanım, çökme ve performans verilerini paylaşın",
+        "descriptionOff": "Uygulama kullanım verilerini gizli tutun.\nHam2K ekibi çökme ya da diğer sorunları tespit edemez."
+      },
+      "shareOperationData": {
+        "title": "Operasyon verilerini paylaşın",
+        "descriptionOn": "Bazı işlem verilerini herkese açık ve diğer kullanıcılarla paylaşın",
+        "descriptionOff": "İşlem verilerini özel tut"
+      },
+      "privacyPolicy": {
+        "title": "Gizlilik Politikası",
+        "description": "Gizlilik Politikamızı Okuyun"
+      },
+      "termsOfService": {
+        "title": "Hizmet Şartları",
+        "description": "Hizmet Şartlarımızı Okuyun"
+      }
+    },
+    "loggingSettings": {
+      "title": "Günlük Ayarları",
+      "leftieMode": {
+        "title": "Sol El Modu",
+        "descriptionOn": "Solak kullanıcılar için düzeni kullan",
+        "descriptionOff": "Sağ elini kullanan kullanıcılar için düzeni kullan"
+      },
+      "countryFlags": {
+        "title": "Ülke Bayrakları",
+        "descriptionNone": "Herhangi bir bayrak göstermeyin",
+        "descriptionAll": "Tüm kişiler için bayrakları göster",
+        "descriptionDefault": "Sadece DX kişileri için göster"
+      },
+      "showBearing": {
+        "title": "Yönü Göster",
+        "descriptionOn": "İstasyona tahmini yönü göster",
+        "descriptionOff": "Yön bilgilerini göstermeyin"
+      },
+      "switchSignalReportOrder": {
+        "title": "Sinyal rapor sırasını değiştir",
+        "descriptionOn": "Önce gönderildi, sonra alındı",
+        "descriptionOff": "Önce alındı, sonra gönderildi"
+      },
+      "jumpAfterRST": {
+        "title": "RST girişinde bir sonraki alana geç",
+        "descriptionOn": "RST girildikten sonra atla",
+        "descriptionOff": "Otomatik atlama yapma"
+      },
+      "suggestDefaultOperator": {
+        "title": "Varsayılan operatörü öner",
+        "descriptionOn": "{{operatorCall}}' istasyon çağrısının farklı olduğu işlemlerde operatör olarak ayarla",
+        "descriptionOff": "İstasyon çağrısına bakılmaksızın varsayılan operatörü önermeyin."
+      },
+      "suggestTemplates": {
+        "title": "Operasyon şablonlarını kullanın",
+        "descriptionOn": "Yeni operasyonlar için şablon öner",
+        "descriptionOff": "Şablon önermeyin."
+      },
+      "bandsModes": {
+        "title": "Bantlar & Modlar",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "Eklentiler"
+      }
+    },
+    "featuresSettings": {
+      "title": "Uygulama Özellikleri",
+      "activatingExtension": "Uzantıyı etkinleştiriliyor, bu biraz zaman alabilir…",
+      "fewerOf": "Daha az {{category}}…",
+      "moreOf": "Daha fazla {{category}}…"
+    },
+    "dataSettings": {
+      "title": "Veri Ayarları",
+      "offlineDataTitle": "Çevrimdışı Veri",
+      "extensionsTitle": "Eklentiler",
+      "logDataTitle": "Günlük Verisi",
+      "importHistoryFromADIF": "ADIF'den Geçmişi İçe Aktar",
+      "importHistoryFromADIFDescription": "Çevrimdışı aramalar ve QSO istatistikleri için kullanılır",
+      "clearADIFHistory": "ADIF Geçmişini Temizle",
+      "clearADIFHistoryDescription": "ADIF ile aktarılan kayıtları kaldır",
+      "updatedRelative": "{{date}} tarihinde güncellendi",
+      "fetching-md": "### **{{title}}** alınıyor…",
+      "progress-md": "### **{{title}}** alınırken\n\n{{progress}}",
+      "updated-md": "{{date}} tarihinde güncellendi",
+      "version-md": "Sürüm: {{version}}",
+      "confirmClearHistory": {
+        "title": "Emin misiniz?",
+        "description": "Bu, daha önce ADIF dosyalarından getirilen tüm geçmiş kayıtları kaldıracaktır",
+        "recordsNotDeleted": "İşlem kayıtları silinmeyecek"
+      },
+      "importingHistoricalADIF": "ADIF kayıtları içe aktarılıyor… Lütfen sabırlı olun!",
+      "errorImportingHistoricalADIF": "Tarihsel ADIF'in içe aktarılması hatası",
+      "errorDeletingHistoricalRecords": "Tarihsel kayıtların silinmesi hatası",
+      "recordsCount_zero": "Kayıt Yok",
+      "recordsCount_one": "1 kayıt",
+      "recordsCount_other": "{{fmtCount}} kayıt"
+    },
+    "accountsSettings": {
+      "title": "Hesaplar ve Hizmetler",
+      "description": "QRZ.com ve diğer hizmetler",
+      "accountsSection": "Kimlik Bilgileri",
+      "servicesSection": "Hizmetler",
+      "accountsQRZ": {
+        "title": "QRZ (çağrı işareti sorguları için)",
+        "description": "Giriş: {{login}}",
+        "noAccount": "Hesap yok",
+        "errorEmail": "Giriş için e-postanızı kullanmayın.",
+        "dialogTitle": "QRZ.com Hesabı",
+        "pleaseEnterDetails": "Lütfen QRZ.com hesabınızın ayrıntılarını girin:",
+        "loginLabel": "Giriş (çağrı işaretiniz)",
+        "loginPlaceholder": "giriş bilginiz",
+        "passwordLabel": "Şifre",
+        "passwordPlaceholder": "şifreniz",
+        "checkCredentials": "Kimlik Bilgilerini Kontrol Et"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Wavelog Ayarları",
+      "description": "Wavelog API bağlantısını yapılandır",
+      "noStationsFoundOrInvalidResponse": "Hiçbir istasyon bulunamadı veya geçersiz yanıt",
+      "errorFetchingStations": "İstasyonlar alınırken hata oluştu: {{message}}",
+      "fetchStations": "İstasyonları Al",
+      "selectStation": "İstasyonu Seç",
+      "selectedStation": "Seçilen istasyon: {{station}}"
+    },
+    "syncSettings": {
+      "title": "Eşitleme Ayarları",
+      "description": "Ham2K LoFi, tüm cihazlarınız arasında güvenilir bir senkronizasyon hizmeti sunar ve operasyon verilerinizi bulutta yedekler.",
+      "syncService": "Senkronizasyon Hizmeti",
+      "syncService.enabled": "Etkin",
+      "syncService.disabled": "Devre Dışı",
+      "deviceNotLinked": "Cihaz bağlı değil! ({{id}})",
+      "anonymousAccount": "Anonim Hesap (#{{id}})",
+      "enableSyncToLinkDevice": "Bu cihazı bağlamak için senkronizasyonu etkinleştirin",
+      "checkEmailInboxForConfirmation": "(onay için e-posta kutunuzu kontrol edin)",
+      "accountNumber": "Hesap #{{id}}",
+      "pendingEmailConfirmation": "(e-posta onayı bekleniyor)",
+      "tapToConfigure": "Yapılandırmak için dokunun",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (Geliştirme)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (Resmi)",
+        "custom": "Özel ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "Bu cihaz en son farklı bir hesapla senkronize edildi (#{{id}}).\n\nSenkronizasyona devam edebilmek için şu seçeneklerden birini seçmelisiniz:",
+        "option1withEmail-md": "Seçenek #1: Bu cihazdaki verileri sunucudaki **{{email}}** hesabından gelenlerle değiştir.",
+        "option1noEmail-md": "Seçenek #1: Cihazdaki verileri sunucudaki yeni hesapla değiştirin.",
+        "option1button": "1. seçenekle devam et: sunucu verileriyle değiştir",
+        "option2withEmail-md": "Seçenek #2: Bu cihazdaki verileri sunucudaki **{{email}}** hesabından gelenlerle birleştir.",
+        "option2noEmail-md": "Seçenek #2: Cihazdaki verileri sunucudaki yeni hesapla birleştir.",
+        "option2button": "2. seçenekle devam et: verileri birleştir",
+        "option3-md": "Seçenek #3: Daha önceki hesapla yeniden bağla, **{{email}}**.",
+        "option3button": "Seçenek #3: önceki hesapla devam et",
+        "buttonCancel": "Hayır, Vazgeç",
+        "buttonProcees": "Evet, riski kabul ediyorum! Hepsini Değiştir!"
+      },
+      "combineDataAlert": {
+        "title": "Yerel Verileri Birleştir?",
+        "text": "Bu işlemleri ve QSO'ları yeni hesapla birleştirmek istediğinizden emin misiniz?\n\nBu, bu cihazdaki QSO'ları yeni hesap için Senkronizasyon Hizmetindekilerle birleştirir ve yanlışlıkla ilgisiz günlüklerin karışmasına neden olabilir!\n\nBu işlem geri alınamaz.",
+        "buttonCancel": "Hayır, Vazgeç",
+        "buttonProcees": "Evet, riski kabul ediyorum! Hepsini Birleştir!"
+      },
+      "replaceDataAlert": {
+        "title": "Yerel Verileri Değiştir?",
+        "text": "Bu cihazdaki tüm verileri, Senkronizasyon Hizmetindeki yeni hesap için işlemler ve QSO'larla değiştirmek istediğinizden emin misiniz?\n\nUygulama yeniden başlayacak.\n\nEşitlenmemiş verileriniz varsa, KAYBEDİLECEKTİR.",
+        "buttonCancel": "Hayır, Vazgeç",
+        "buttonProcees": "Evet, riski kabul ediyorum! Hepsini Değiştir!"
+      },
+      "linkBackErrorAlert": {
+        "title": "Önceki Hesaba Bağlanırken Hata",
+        "text": "Önceki hesaba bağlanırken bir hata oluştu.\n\n{{error}}\n\nLütfen daha sonra tekrar deneyin.",
+        "buttonCancel": "Tamam"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi Hesap",
+        "emailAddressLabel": "E-mail Adresi",
+        "resendButton": "Yeniden Gönder",
+        "revertButton": "Geri Al",
+        "syncFirstButton": "Önce senkronize etme işlemini tamamlayın",
+        "continueAnywayButton": "Ne yaptığımı biliyorum! Yine de Devam Et",
+        "potentialForDataLoss": "Veri kaybı olasılığı!!!",
+        "potentialForDataLossDescription": "Bu cihazdaki tüm verileri senkronize etmediniz.\n\nBu cihazı yeni bir hesaba bağlarsanız, cihazın verilerini yeni hesaptan gelenlerle değiştirmek isteyip istemediğiniz sorulacak.\n\nBu durumda, henüz senkronize edilmemiş mevcut etkinlikleri geri yükleyemeyebilirsiniz.\n\nÖncelikle bu cihazın senkronizasyonunu tamamlamanızı öneririz!"
+      },
+      "syncServiceDescription-md": "Temel hizmet ücretsizdir ve sınırlı hızda iki cihaz veya uygulama arasında son verilerinizi (7 güne kadar) senkronize etmenize olanak tanır.\n\nTam hizmet, makul bir sayıda cihaz veya uygulama arasında tüm operasyonlarınızı tam hızda eşitlemenizi sağlar ve ücretli bir abonelik gerektirir.\n\nLoFi hizmeti önümüzdeki birkaç ay boyunca TEST DÖNEMİNDE olduğundan, hizmet ücretsiz kalacaktır. Ardından, fiyatlar ülkeye ve para birimine bağlı olarak yıllık maksimum US$30 veya eşdeğer olacaktır, muhtemelen daha düşük.",
+      "thisDevice": "Bu Cihaz",
+      "notAuthenticated": "Kimlik doğrulaması yapılmamış",
+      "lofiServer": "LoFi Sunucusu",
+      "otherDevices": "Diğer Cihazlar",
+      "devSettings": "Geliştirici Ayarları",
+      "resetSyncStatus": "Eşitleme Durumunu Sıfırla",
+      "noDataStored": "Veri depolanmadı.",
+      "syncCountDescription": {
+        "operations": "Operasyonlar: {{synced}} eşitlendi, {{pending}} bekliyor",
+        "qsos": "QSO'lar: {{synced}} eşitlendi, {{pending}} bekliyor"
+      },
+      "cloudCountDescription": {
+        "operations": "Operasyonlar: {{total}} toplam",
+        "operationsSyncable": "Operasyonlar: {{total}} depolandı, {{syncable}} eşitlenebilir",
+        "qsos": "QSO'lar: {{total}} depolandı",
+        "qsosSyncable": "QSO'lar: {{total}} depolandı, {{syncable}} eşitlenebilir"
+      }
+    },
+    "versionSettings": {
+      "title": "Sürüm Bilgisi",
+      "recentChanges": "Son Değişiklikler",
+      "coverPhoto": "Kapak fotoğrafı: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "Yamalar kontrol ediliyor…",
+      "newMajorReleaseAvailable": "Yeni büyük sürüm mevcut",
+      "patchAvailable": "{{track}} yaması mevcut",
+      "checkForUpdates": "{{track}} güncellemelerini kontrol et",
+      "checkForUpdatesGeneric": "Güncellemeleri kontrol et",
+      "updateAvailable": "Güncelleme mevcut",
+      "downloading": "İndiriliyor…",
+      "downloadingProgress": "{{progress}}% indiriliyor",
+      "installing": "Yükleniyor…",
+      "errorDownloadingUpdate": "Güncelleme indirilirken hata",
+      "errorCheckingForUpdates": "Güncellemeler kontrol edilirken hata",
+      "noUpdatesAvailable": "Güncelleme mevcut değil",
+      "versionDescription": "{{version}} - Temel Sürüm {{build}}"
+    },
+    "creditsSettings": {
+      "title": "Katkılarda Bulunanlar",
+      "createdBy": "{{callsign}} tarafından oluşturuldu",
+      "openSource": "Ham2K PoLo Açık Kaynaktır",
+      "checkOutCode": "Kodu inceleyin ve GitHub'a katkıda bulunun!",
+      "teamPoLo": "PoLo Ekibi",
+      "creator": "Yaratıcı & Baş Geliştirici",
+      "developer": "Geliştirici",
+      "leadSupport": "Lider Destek & Dökümantasyon",
+      "moreCodeAndDocsContributors": "Daha fazla katkıda bulunan…",
+      "contributorCode": "Kod Katkıda Bulunan: {{contributions}}",
+      "contributorDocumentation": "Dökümantasyon",
+      "translations": "Çeviriler",
+      "translationsService": "CrowdIn ile Çeviri Araçları",
+      "translationsServiceDescription": "Çeviri sürecini yönetmek için araçlar CrowdIn tarafından cömert bir şekilde bağışlanmıştır"
+    },
+    "devModeSettings": {
+      "title": "Geliştirici Ayarları",
+      "wipeDatabase": {
+        "title": "Veritabanını Sil?",
+        "description": "Tüm Operasyonlar, QSO'lar ve diğer verileri silmek istediğinizden emin misiniz?",
+        "noCancel": "Hayır, Vazgeç",
+        "yesWipeIt": "Evet, Hepsini Sil!"
+      },
+      "import": {
+        "title": "İçe Aktar",
+        "importQSONFile": "QSON dosyası içe aktar"
+      },
+      "experiments": {
+        "title": "Denemeler",
+        "enableWavelogExperiments": "Wavelog Denemelerini Etkinleştir"
+      },
+      "manageDatabase": {
+        "title": "Veritabanını Yönet",
+        "exportDatabase": "Veritabanını Dışa Aktar",
+        "exportDatabaseDescription": "Mevcut veritabanı dosyasını dışa aktar",
+        "replaceDatabase": "Veritabanını Değiştir",
+        "replaceDatabaseDescription": "Yeni bir veritabanı dosyası içe aktarın ve tüm verileri değiştirin",
+        "wipeDatabase": "Veritabanını Sil",
+        "wipeDatabaseDescription": "Veritabanındaki tüm verileri silin."
+      },
+      "internationalization": {
+        "title": "Uluslararasılaştırma",
+        "crowdInPersonalTokenLabel": "CrowdIn Kişisel Erişim Parolası",
+        "crowdInPersonalTokenPlaceholder": "CrowdIn'in hesap ayarları sayfasından bir tane alın",
+        "refreshCrowdInTranslations": {
+          "title": "Çeviriler yenileniyor…",
+          "starting": "Çeviriler güncellenirken lütfen bekleyin…",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "Yenileme tamamlandı!",
+          "errorTitle": "Çeviriler yenilenirken hata",
+          "error": "CrowdIn çevirileri yenilenirken hata: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "Gelişmiş Ayarları İndir",
+        "locationLabel": "Konum",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "Sistem Bilgisi",
+        "shareWithDevelopmentTeam": "Geliştirme Ekibiyle Paylaş"
+      },
+      "updatePatches": {
+        "title": "Yama Güncellemeleri",
+        "selectTrackForPatches": "Yamalar İçin Parça Seç",
+        "selectTrackForPatchesDescription": "Yamalar için parçayı seçin",
+        "checkingForUpdates": "Güncellemeler kontrol ediliyor…",
+        "checkForUpdates": "{{track}} güncellemelerini kontrol et",
+        "updateAvailable": "Güncelleme Mevcut",
+        "updateAvailableForTrack": "{{track}} parçası için güncelleme mevcut",
+        "downloading": "İndiriliyor…",
+        "downloadingProgress": "{{progress}}% indiriliyor",
+        "installing": "Yükleniyor…",
+        "errorDownloadingUpdate": "Güncellemeyi indirirken hata",
+        "errorCheckingForUpdates": "Güncelleme kontrol edilirken hata",
+        "noUpdatesAvailable": "Güncellemeler mevcut değil"
+      }
+    },
+    "bandModeSettings": {
+      "title": "Bantlar & Modlar",
+      "bands": {
+        "title": "Bantlar",
+        "showCommonBands": "Yaygın bantları göster",
+        "showAllBands": "Tüm bantları göster"
+      },
+      "modes": {
+        "title": "Modlar",
+        "showMoreModes": "Daha fazla mod göster",
+        "showEvenMoreModes": "Daha da fazla mod göster",
+        "showFewerModes": "Daha az mod göster"
+      }
+    },
+    "exportSettings": {
+      "title": "Ayarları Dışa Aktar",
+      "exportTypes": "Dışa Aktarma Türleri",
+      "customTemplates": "Özel şablonlar",
+      "defaultTemplates": "Varsayılan şablonlar",
+      "customTemplatesDescription": "Dışa aktarım için özel şablonlar kullan",
+      "defaultTemplatesDescription": "Dışa aktarım için varsayılan şablonlar kullan",
+      "includePrivateData": "Özel Verileri Dahil Et",
+      "fileNameTemplate": "Dosya adı şablonu",
+      "titleTemplate": "Başlık şablonu",
+      "adifNotes": "ADIF QSO Notları",
+      "adifComments": "ADIF QSO Yorumları",
+      "adifQslMessage": "ADIF QSL Mesajı",
+      "templateHelpTitle": "Şablon Yardımı",
+      "includePrivateDataDescription": "İsimler, notlar, adresler, vb.",
+      "templateHelp-md": "Bazı örnek şablon öğeleri…\n\n### Günlük Dışa Aktar\nDışa aktarılan günlüğün öznitelikleri\n`{{log.station}}` → `{{call}}` Bu dışa aktarma için istasyon\n`{{log.ref}}` → `XX-1234` Bu dışa aktarma için referans\n`{{log.refName}}` → `Örnek Ulusal Park` Bu dışa aktarma için referans adı\n`{{log.refShortName}}` → `Örnek UP` Bu dışa aktarma için kısa referans adı\n`{{log.handlerType}}` → `pota` Bu dışa aktarma için işleyici türü\n`{{log.handlerName}}` → `Parks On The Air` Bu dışa aktarma için işleyici adı\n`{{log.handlerShortName}}` → `POTA` Bu dışa aktarma için kısa işleyici adı\n\n### Operasyon Çağrı Kodları\n`{{op.station}}` → `{{call}}` Operasyon için ilk istasyon\n`{{op.operator}}` → `{{call}}` Operasyon için operatör\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Operasyon için tüm istasyonlar\n`{{op.otherStations}}` → `{{otherCalls}}` Operasyon için diğer istasyonlar\n\n### Operasyon Tarihi\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Diğer Operasyon Ayrıntıları\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Benim Özel Operasyonum`\n`{{op.userNotes}}` → `Sabah erken gittim…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Bu operasyon için grid\n\n### QSO Bilgileri\n`{{qso.notes}}` → `Korkunç ses!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Gönderdikleri sinyal raporu\n`{{qso.our.sent}}` → `55` Gönderdiğimiz sinyal raporu\n`{{qso.their.grid}}` → `FF99` Bildirdikleri grid\n`{{qso.refs}}` → QSO için tüm referansların bir listesi (hem Operasyon referanslarını hem de yalnızca QSO referanslarını içerir)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "Varsayılanlar",
+        "description": "Tüm dışa aktarımlar için temel ayarlar",
+        "fileNameNormal": "Bağlantılı Aktiviteler için Dosya Adı (Normal)",
+        "fileNameCompact": "Bağlantılı Aktiviteler için Dosya Adı (Kompakt)",
+        "titleReferenceActivities": "Bağlantılı Aktiviteler için Başlık",
+        "fileNameOtherActivitiesNormal": "Diğer Aktiviteler için Dosya Adı (Normal)",
+        "fileNameOtherActivitiesCompact": "Diğer Aktiviteler için Dosya Adı (Kompakt)",
+        "titleOtherActivities": "Diğer Aktiviteler için Başlık",
+        "adifNotes": "ADIF QSO Notları",
+        "adifComments": "ADIF QSO Yorumları",
+        "adifQSLMessage": "ADIF QSL Mesajı"
+      }
+    },
+    "noticesSettings": {
+      "title": "Son Bildirimler",
+      "undated": "Tarihsiz",
+      "noRecentNotices": "Son bildirim yok"
+    },
+    "extensionSettings": {
+      "title": "Uzantı"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Bölüm Ayırıcı",
+      "qsosTab": "QSOs",
+      "qsosTab-a11y": "Q sos Sekmesi",
+      "infoTab": "Bilgi",
+      "infoTab-a11y": "Bilgi Sekmesi",
+      "operationInfo-a11y": "İşletim Bilgisi",
+      "spotsTab": "Spotlar",
+      "spotsTab-a11y": "Spotlar Sekmesi",
+      "mapTab": "Harita",
+      "mapTab-a11y": "Harita Sekmesi",
+      "settingsTab": "Operasyon",
+      "settingsCompactTab": "Operasyonlar",
+      "settingsTab-a11y": "İşletim Ayarları Sekmesi",
+      "menu": {
+        "loggingSettings": "Günlük Ayarları",
+        "rstFields": "RST Alanları",
+        "stateField": "Durum Alanı",
+        "gridField": "Grid Alanı",
+        "showDeletedQSOs": "Silinen QSOs Göster",
+        "numbersRow": "Sayılar Satırı",
+        "actions": "Eylemler",
+        "lookupAllQSOs": "Tüm QSOs'ları Araştır",
+        "confirmSpots": "Spotları Onayla"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "QSO Yok",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSOs",
+      "qsosCompactTabCount_zero": "Hiç Q Yok",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} Q",
+      "noQSOsYet": "Henüz QSO Yok!",
+      "currentlySetTo": "Şu anda ayarlanan",
+      "missingInfoError": {
+        "message": "HATA: Geçerli işlemler için **{{errors}}** giriniz",
+        "errors": {
+          "band": "bant",
+          "callsign": "çağrı işareti"
+        }
+      },
+      "actions": {
+        "undo-a11y": "Geri Al",
+        "erase-a11y": "Sil",
+        "delete-a11y": "Sil",
+        "addQSO-a11y": "QSO Ekle",
+        "saveQSO-a11y": "QSO Kaydet"
+      },
+      "deletedQSO": "Silinen QSO",
+      "qsoWillBeDeleted": "QSO Silinecek!",
+      "noQSOsBy-md": "Henüz {{callsign}} tarafından QSO yok… Hadi havaya çıkalım!",
+      "noQSOsYet-md": "Henüz QSO yok… Hadi havaya çıkalım!",
+      "qsoCount_zero": "QSO Yok",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "qsosInTime": "{{countText}} şu kadar sürede {{timeText}}",
+      "last10QSOs": "Son 10 için {{rate}} Q/s",
+      "last100QSOs": "Son 100 için {{rate}} Q/s",
+      "timeSinceLast": "Sonuncudan beri {{time}}",
+      "moreLabel": "Diğer",
+      "theirCallLabel": "Onların Çağrısı",
+      "ourSentLabel": "Gönderildi",
+      "theirSentLabel": "Alındı",
+      "stateLabel": "Durum",
+      "gridLabel": "Grid",
+      "timeLabel": "Zaman",
+      "dateLabel": "Tarih",
+      "timeControls-a11y": "Zaman Kontrolleri",
+      "powerLabel": "Güç",
+      "powerControls-a11y": "Güç Kontrolleri",
+      "modeLabel": "Mod",
+      "bandLabel": "Bant",
+      "frequencyLabel": "Frekans",
+      "bandMissing": "Bant???",
+      "radioControls-a11y": "Radyo Kontroller {{parts}}",
+      "notesLabel": "Notlar",
+      "notesLabel-a11y": "Notlar",
+      "activeControlsLabel": "Aktif Kontroller",
+      "activeControlsLabel-a11y": "Aktif Kontroller",
+      "selectToRemoveActiveControls": "çıkarmak için seçin",
+      "selectToRemoveActiveControls-a11y": "çıkarmak için seçin",
+      "moreControlsLabel": "Daha Fazla Kontrol",
+      "moreControlsLabel-a11y": "Daha Fazla Kontrol",
+      "selectToAddMoreControls": "eklemek için seçin",
+      "selectToAddMoreControls-a11y": "eklemek için seçin",
+      "showSecondaryControlSettings-a11y": "İkincil Kontrol Ayarlarını Göster",
+      "hideMostSecondaryControls-a11y": "Çoğu ikincil kontrolü gizle",
+      "showAllSecondaryControls-a11y": "Tüm ikincil kontrolleri göster",
+      "spotting": {
+        "selfSpottingAt": "Kendi-frekansı {{freq}} kendini işaretleme",
+        "stopAutoRespotting": "Otomatik yeniden işaretlemeyi durdur",
+        "setFrequencyFirst": "Önce işaretlenecek bir frekans ayarlayın.",
+        "reSpotEvery": "Her {{minutes}} dakikada bir yeniden işaretleme",
+        "reSpotAt": "{{freq}}'de yeniden işaretleme",
+        "selfSpottedAt": "Kendi frekansında saat {{time}} kendini işaretleme",
+        "spotAt": "{{call}} frekansında {{freq}} işaretle",
+        "tooLateToSpot": "{{call}} işaretlemek için çok geç",
+        "nothingToSpot": "İşaretlenecek bir şey yok",
+        "selfSpottingLabel": "Kendi-frekansı işaretleme",
+        "selfSpottingControls-a11y": "Kendi-frekansı işaretleme kontrolleri",
+        "spottingLabel": "İşaretleme",
+        "spottingControls-a11y": "İşaretleme Kontrolleri",
+        "autoRespottingLabel": "Otomatik yeniden işaretleme",
+        "autoRespottingControls-a11y": "Otomatik yeniden işaretleme kontrolleri",
+        "commentsLabel": "Yorumlar"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "Çizgi yok mu?\nÖncelikle konumunuzu ayarlamanız gerekiyor.\n\nBuraya dokunarak yapabilirsiniz.",
+      "manyNoLocation": "Bu QSO'ların çoğunun kesin bir konumu yok.\n\nKonum aramaları için ücretli bir QRZ.com hesabına ihtiyacınız olabilir."
+    },
+    "opSpotsTab": {
+      "noSpots": "Spot Yok",
+      "spotsCount_zero": "Spot Yok",
+      "spotsCount_one": "1 Spot",
+      "spotsCount_other": "{{fmtCount}} Spotlar",
+      "showingSpots": "{{count}} içinde {{total}} gösteriliyor",
+      "loadingSpots": "Spotlar yükleniyor…",
+      "sections": {
+        "specialSpots": "Özel Spotlar",
+        "newMultipliers": "Yeni Çarpanlar",
+        "callsOfNote": "Not Çağrıları",
+        "mostRecentSpots": "En son spotlar"
+      },
+      "allBands": "Tüm Bantlar",
+      "auto": "Oto",
+      "allModes": "Tüm Modlar",
+      "filters": "Filtreler",
+      "filtersBand": "Bant",
+      "filtersAllBands": "Tüm Bantlar",
+      "filtersBandAutomatic": "Otomatik (Şu anki {{band}})",
+      "filtersMode": "Mod",
+      "filtersAllModes": "Tüm Modlar",
+      "filtersModeAutomatic": "Otomatik (Şu anki {{mode}})",
+      "filtersMaximumAge": "Maksimum Yaş",
+      "filtersAnyAge": "Herhangi bir yaş",
+      "filtersAge10Minutes": "10 dakika",
+      "filtersAge20Minutes": "20 dakika",
+      "filtersAge30Minutes": "30 dakika",
+      "filtersAge45Minutes": "45 dakika",
+      "filtersAge60Minutes": "60 dakika",
+      "filtersSorting": "Sıralama",
+      "filtersSortByTime": "Spot zamanına göre",
+      "filtersSortByFrequency": "Frekansına göre",
+      "filtersGroupSpecialSpots": "Özel Spots Öncelikli Grupla",
+      "filtersGroupCallsWithNotes": "Notlu Çağrıları Grupla",
+      "filtersSpotSources": "Spot Kaynakları",
+      "filtersFilterByContinent": "Kıtaya Göre Filtrele",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "Telefon",
+        "DIGITAL": "Dijital",
+        "DATA": "Dijital",
+        "phoneOrCW": "Telefon veya CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "Geçersiz Çağrı İşareti {{callsign}}",
+      "invalidCallsigns": "Geçersiz Çağrı İşaretleri {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (çalışan {{operator}} tarafından)",
+      "noStationCallsignDefined": "İSTASYON ÇAĞRI İŞARETİ TANIMLANMAMIŞ",
+      "showMoreTemplates": "Daha Fazla Şablon Göster",
+      "templatesAvailable_zero": "Kullanılabilir şablon yok",
+      "templatesAvailable_one": "1 şablon kullanılabilir",
+      "templatesAvailable_other": "{{count}} şablon kullanılabilir",
+      "stationAndOperatorTitle": "İstasyon & Operatör",
+      "locationTitle": "Konum",
+      "gridDescription-md": "Grid `{{grid}}`",
+      "stateDescription-md": "Eyalet: `{{state}}`",
+      "countyDescription-md": "Şehir: `{{county}}`",
+      "locationDescriptionNone-md": "Konum ayarlanmadı",
+      "operationDetailsTitle": "Operasyon Detayları",
+      "operationDetailsDescription": "Bu operasyon için notlar ekle",
+      "addTitleOrNotesForOperation": "Bu operasyon için başlık veya not ekle",
+      "activitiesTitle": "Aktiviteler",
+      "addActivityTitle": "Aktivite Ekle",
+      "addActivityDescription": "POTA, SOTA, Alan Günü ve daha fazlası!",
+      "addActivityDescription-noFeatures": "Ana ayar ekranında bazı aktivite özelliklerini etkinleştirin",
+      "operationDataTitle": "Operasyon Verileri",
+      "manageOperationLogsTitle": "Operasyon Kayıtlarını Yönet",
+      "manageOperationLogsDescription": "Verileri dışa aktar, içe aktar ve yönet",
+      "useAsTemplateTitle": "Şablon olarak kullan",
+      "useAsTemplateDescription": "Benzer ayarlarla yeni bir operasyon başlat",
+      "dangerZoneTitle": "Tehlike Bölgesi",
+      "undeleteOperationTitle": "Operasyonu Geri Al",
+      "deleteOperationTitle": "Operasyonu Sil"
+    },
+    "opInfoPanel": {
+      "statsTitle": "Operasyon İstatistikleri",
+      "operationTotalsTitle-md": "Operasyon Toplamları:",
+      "qsosInTime_zero": "QSO Yok",
+      "qsosInTime_one": "1 QSO içinde {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSO içinde {{time}}",
+      "qsoCount_zero": "QSO Yok",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "timeSinceLast": "Son QSO'dan beri {{time}}",
+      "last10QSOs": "Son 10 için {{rate}} Q/s",
+      "last100QSOs": "Son 100 için {{rate}} Q/s"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "QSON içe aktarılamıyor",
+      "invalidName": "Geçersiz Ad",
+      "invalidNameDescription": "Dosya adı .qson veya .json ile bitmelidir",
+      "unknownError": "Bilinmeyen hata"
+    },
+    "importADIF": {
+      "error": "Operasyona ADIF içe aktarılamıyor",
+      "historicalImportError": "Tarihi ADIF içe aktarılamıyor",
+      "unknownError": "Bilinmeyen hata"
+    }
+  }
+}

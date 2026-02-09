@@ -1,0 +1,360 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "İngilizce - English",
+        "ar": "Arapça - العربية",
+        "ast": "Asturyas - Asturianu",
+        "bn": "Bengalce - বাংলা",
+        "ca": "Katalanca - Català",
+        "cs": "Çekçe - Čeština",
+        "cy": "Galce - Cymraeg",
+        "da": "Danca - Dansk",
+        "de": "Almanca - Deutsch",
+        "en-PL": "Pig Latin",
+        "en-PT": "Korsan",
+        "eo": "Esperanto - Esperanto",
+        "es": "İspanyolca - Español",
+        "et": "Estonca - Eesti",
+        "eu": "Baskça - Euskara",
+        "fi": "Fince - Suomi",
+        "fr": "Fransızca - Français",
+        "ga": "İrlandaca - Gaeilge",
+        "gl": "Galiçyaca - Galego",
+        "hi": "Hintçe - हिंदी",
+        "id": "Endonezce - Bahasa Indonesia",
+        "it": "İtalyanca - Italiano",
+        "ja": "Japonca - 日本語",
+        "ko": "Korece - 한국어",
+        "lt": "Litvanca - Lietuvių",
+        "lv": "Letonca - Latvijas",
+        "ms": "Malayca - Bahasa Melayu",
+        "nb": "Norveç Bokmål - Norsk bokmål",
+        "nl": "Flemenkçe - Nederlands",
+        "nn": "Norveç Nynorsk - Nynorsk",
+        "pl": "Lehçe - Polski",
+        "pt-BR": "Portekizce (Brezilya) - Português (Brasil)",
+        "pt-PT": "Portekizce (Portekiz) - Português (Portugal)",
+        "pt": "Portekizce - Português",
+        "ro": "Romence - Română",
+        "ru": "Rusça - Русский",
+        "sk": "Slovakça - Slovenčina",
+        "sv": "İsveççe - Svenska",
+        "th": "Tayca - ภาษาไทย",
+        "tl": "Tagalog - Wikang Filipino",
+        "tlh": "Klingon - ᏣᎳᎩ",
+        "tr": "Türkçe - Türkçe",
+        "uk": "Ukraynaca - Українська",
+        "ur": "Urduca - اردو",
+        "vi": "Vietnamca - Tiếng Việt",
+        "zh": "Çince - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q o",
+      "QSOs-a11y": "Q sos",
+      "Operation": "İşlem",
+      "generalOperation": "Genel İşlem"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " ve "
+      },
+      "time": {
+        "tomorrow": "Yarın",
+        "today": "Bugün",
+        "yesterday": "Dün",
+        "ago": "{{time}} önce",
+        "fromNow": "{{time}} sonra",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}d",
+        "shortMinutesAndSeconds": "{{m}}d {{s}}s",
+        "shortHours": "{{h}}s",
+        "shortHoursAndMinutes": "{{h}}s {{m}}d",
+        "shortDays": "{{d}}g",
+        "shortDaysAndHours": "{{d}}g {{h}}s",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Ocak",
+        "2": "Şubat",
+        "3": "Mart",
+        "4": "Nisan",
+        "5": "Mayıs",
+        "6": "Haziran",
+        "7": "Temmuz",
+        "8": "Ağustos",
+        "9": "Eylül",
+        "10": "Ekim",
+        "11": "Kasım",
+        "12": "Aralık"
+      },
+      "monthAbbr": {
+        "1": "Ocak",
+        "2": "Şubat",
+        "3": "Mart",
+        "4": "Nisan",
+        "5": "Mayıs",
+        "6": "Haziran",
+        "7": "Temmuz",
+        "8": "Ağustos",
+        "9": "Eylül",
+        "10": "Ekim",
+        "11": "Kasım",
+        "12": "Aralık"
+      },
+      "weekday": {
+        "1": "Pazartesi",
+        "2": "Salı",
+        "3": "Çarşamba",
+        "4": "Perşembe",
+        "5": "Cuma",
+        "6": "Cumartesi",
+        "7": "Pazar"
+      },
+      "weekdayAbbr": {
+        "1": "Pzt",
+        "2": "Sal",
+        "3": "Çar",
+        "4": "Perşembe",
+        "5": "Cuma",
+        "6": "Cumartesi",
+        "7": "Pazar"
+      },
+      "ordinalDay": {
+        "1": "Birinci",
+        "2": "İkinci",
+        "3": "Üçüncü",
+        "4": "Dördüncü",
+        "5": "Beşinci",
+        "6": "Altıncı",
+        "7": "Yedinci",
+        "8": "Sekizinci",
+        "9": "Dokuzuncu",
+        "10": "10",
+        "11": "11",
+        "12": "12",
+        "13": "13",
+        "14": "14",
+        "15": "15",
+        "16": "16",
+        "17": "17",
+        "18": "18",
+        "19": "19",
+        "20": "20",
+        "21": "21",
+        "22": "22",
+        "23": "23",
+        "24": "24",
+        "25": "25",
+        "26": "26",
+        "27": "27",
+        "28": "28",
+        "29": "29",
+        "30": "30",
+        "31": "31"
+      },
+      "distance": {
+        "away": "{{distance}} uzakta"
+      }
+    },
+    "buttons": {
+      "cancel": "İptal",
+      "ok": "Tamam",
+      "close": "Kapat",
+      "login": "Giriş",
+      "logout": "Çıkış",
+      "delete": "Sil",
+      "refresh": "Yenile",
+      "done": "Tamamlandı",
+      "accept": "Kabul et",
+      "accept-a11y": "Değişiklikleri Kabul Et",
+      "revert": "Geri Al",
+      "revert-a11y": "Değişiklikleri Geri Al",
+      "save": "Kaydet",
+      "export": "Dışa Aktar"
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "yama {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Güncellemeler için kontrol ediliyor…",
+        "stable": "Kararlı güncellemeler için kontrol ediliyor…",
+        "unstable": "Kararsız güncellemeler için kontrol ediliyor…",
+        "bleedingEdge": "En güncel güncellemeler için kontrol ediliyor…"
+      },
+      "tracksPlural": {
+        "stable": "Kararlı",
+        "unstable": "Kararsız",
+        "bleedingEdge": "Deneysel",
+        "Production": "Kararlı",
+        "Staging": "Kararsız",
+        "Development": "Deneysel"
+      },
+      "trackSingular": {
+        "stable": "Kararlı",
+        "unstable": "Kararsız",
+        "bleedingEdge": "Deneysel",
+        "Production": "Kararlı",
+        "Staging": "Kararsız",
+        "Development": "Deneysel"
+      },
+      "versionIsAvailable-md": "{{versionName}} sürümü mevcut.",
+      "updateNow": "Şimdi Güncelle",
+      "newVersionAvailable-md": "PoLo'nun yeni bir versiyonu mevcut!"
+    },
+    "dataFiles": {
+      "loading": "{{name}} yükleniyor",
+      "downloading": "{{name}} indiriliyor",
+      "dataHasToBeDownloaded-md": "**{{name}}** verileri indirilmelidir.",
+      "dataHasNotBeenUpdatedInAWhile-md": "**{{name}}** verileri bir süredir güncellenmedi.",
+      "downloadNow": "Şimdi İndir",
+      "refreshNow": "Şimdi Yenile"
+    },
+    "notices": {
+      "action": {
+        "ok": "Tamam!",
+        "__comment__": "Burada belirli uyarı eylemlerini geçersiz kılın"
+      },
+      "title": {
+        "__comment__": "Belirli uyarı başlıklarını burada geçersiz kılın"
+      },
+      "text": {
+        "__comment__": "Belirli uyarı metinlerini burada geçersiz kılın"
+      },
+      "dialogTitle": {
+        "__comment__": "Belirli bir diyalog başlıklarını burada geçersiz kılın"
+      },
+      "dialogText": {
+        "__comment__": "Belirli diyalog metinlerini burada geçersiz kılın"
+      },
+      "dataFiles": {
+        "fetching": "{{title}} alınıyor…",
+        "progress": "{{title}} alınıyor\n\n{{progress}}",
+        "done": "{{title}} alma işlemi tamamlandı",
+        "error": "{{title}} alınırken hata oluştu"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Metin",
+        "csv": "Virgülle Ayrılmış Değerler",
+        "tsv": "Sekmeyle Ayrılmış Değerler",
+        "other": "Veri"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Temel Özellikler",
+        "locationBased": "Konum Tabanlı Etkinlikler",
+        "contestsAndFieldOps": "Yarışmalar & Alan Operasyonları",
+        "lookup": "Veri Sorgulama",
+        "devmode": "Geliştirici Modu",
+        "other": "Diğer Özellikler"
+      }
+    },
+    "continents": {
+      "AF": "Afrika",
+      "AS": "Asya",
+      "EU": "Avrupa",
+      "NA": "Kuzey Amerika",
+      "SA": "Güney Amerika",
+      "OC": "Okyanusya"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Tek Yanbant",
+        "USB": "USB",
+        "USB-a11y": "Üst Yanbant",
+        "LSB": "LSB",
+        "LSB-a11y": "Alt Yanbant",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "RTTY",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Diğer",
+        "other-a11y": "Diğer Mod"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 Metre",
+        "80m-a11y": "80 Metre",
+        "60m-a11y": "60 Metre",
+        "40m-a11y": "40 Metre",
+        "30m-a11y": "30 Metre",
+        "20m-a11y": "20 Metre",
+        "17m-a11y": "17 Metre",
+        "15m-a11y": "15 Metre",
+        "12m-a11y": "12 Metre",
+        "11m-a11y": "11 Metre",
+        "10m-a11y": "10 Metre",
+        "6m-a11y": "6 Metre",
+        "2m-a11y": "2 Metre",
+        "70cm-a11y": "70 Santimetre",
+        "23cm-a11y": "23 Santimetre",
+        "13cm-a11y": "13 Santimetre",
+        "9cm-a11y": "9 Santimetre",
+        "6cm-a11y": "6 Santimetre",
+        "3cm-a11y": "3 Santimetre",
+        "1-25cm-a11y": "1,25 Santimetre",
+        "6mm-a11y": "6 Milimetre",
+        "4mm-a11y": "4 Milimetre",
+        "2-5mm-a11y": "2,5 Milimetre",
+        "2mm-a11y": "2 Milimetre",
+        "1mm-a11y": "1 Milimetre",
+        "submm-a11y": "Alt Milimetre",
+        "other": "Diğer",
+        "other-a11y": "Diğer Bant"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

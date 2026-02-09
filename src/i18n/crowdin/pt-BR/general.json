@@ -1,0 +1,360 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Inglês - English",
+        "ar": "Árabe - العربية",
+        "ast": "Asturiano - Asturianu",
+        "bn": "Bengali - বাংলা",
+        "ca": "Catalão - Català",
+        "cs": "Tcheco - Čeština",
+        "cy": "Galês - Cymraeg",
+        "da": "Dinamarquês - Dansk",
+        "de": "Alemão - Deutsch",
+        "en-PL": "Pig Latin",
+        "en-PT": "Pirata",
+        "eo": "Esperanto - Esperanto",
+        "es": "Espanhol - Español",
+        "et": "Estoniano - Eesti",
+        "eu": "Basco - Euskara",
+        "fi": "Finlandês - Suomi",
+        "fr": "Francês - Français",
+        "ga": "Irlandês - Gaeilge",
+        "gl": "Galego - Galego",
+        "hi": "Hindi - हिंदी",
+        "id": "Indonésio - Bahasa Indonesia",
+        "it": "Italiano - Italiano",
+        "ja": "Japonês - 日本語",
+        "ko": "Coreano - 한국어",
+        "lt": "Lituano - Lietuvių",
+        "lv": "Letão - Latvijas",
+        "ms": "Malaio - Bahasa Melayu",
+        "nb": "Norueguês Bokmål - Norsk, bokmål",
+        "nl": "Holandês - Nederlands",
+        "nn": "Norueguês Nynorsk - Norsk, nynorsk",
+        "pl": "Polonês - Polski",
+        "pt-BR": "Português (Brasil)",
+        "pt-PT": "Português (Portugal)",
+        "pt": "Português",
+        "ro": "Romeno - Română",
+        "ru": "Russo - Русский",
+        "sk": "Eslovaco - Slovenčina",
+        "sv": "Sueco - Svenska",
+        "th": "Tailandês - ภาษาไทย",
+        "tl": "Tagalo - Wikang Filipino",
+        "tlh": "Klingon - ᏣᎳᎩ",
+        "tr": "Turco - Türkçe",
+        "uk": "Ucraniano - Українська",
+        "ur": "Urdu - اردو",
+        "vi": "Vietnamita - Tiếng Việt",
+        "zh": "Chinês - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q so",
+      "QSOs-a11y": "Q sos",
+      "Operation": "Operação",
+      "generalOperation": "Operação Geral"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " e "
+      },
+      "time": {
+        "tomorrow": "Amanhã",
+        "today": "Hoje",
+        "yesterday": "Ontem",
+        "ago": "{{time}} atrás",
+        "fromNow": "{{time}} a partir de agora",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}m",
+        "shortMinutesAndSeconds": "{{m}}m {{s}}s",
+        "shortHours": "{{h}}h",
+        "shortHoursAndMinutes": "{{h}}h {{m}}m",
+        "shortDays": "{{d}}d",
+        "shortDaysAndHours": "{{d}}d {{h}}h",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Janeiro",
+        "2": "Fevereiro",
+        "3": "Março",
+        "4": "Abril",
+        "5": "Maio",
+        "6": "Junho",
+        "7": "Julho",
+        "8": "Agosto",
+        "9": "Setembro",
+        "10": "Outubro",
+        "11": "Novembro",
+        "12": "Dezembro"
+      },
+      "monthAbbr": {
+        "1": "Jan",
+        "2": "Fev",
+        "3": "Mar",
+        "4": "Abr",
+        "5": "Mai",
+        "6": "Jun",
+        "7": "Jul",
+        "8": "Ago",
+        "9": "Set",
+        "10": "Out",
+        "11": "Nov",
+        "12": "Dez"
+      },
+      "weekday": {
+        "1": "Segunda-feira",
+        "2": "Terça-feira",
+        "3": "Quarta-feira",
+        "4": "Quinta-feira",
+        "5": "Sexta-feira",
+        "6": "Sábado",
+        "7": "Domingo"
+      },
+      "weekdayAbbr": {
+        "1": "Seg",
+        "2": "Ter",
+        "3": "Qua",
+        "4": "Qui",
+        "5": "Sex",
+        "6": "Sáb",
+        "7": "Dom"
+      },
+      "ordinalDay": {
+        "1": "1º",
+        "2": "2º",
+        "3": "3º",
+        "4": "4º",
+        "5": "5º",
+        "6": "6º",
+        "7": "7º",
+        "8": "8º",
+        "9": "9º",
+        "10": "10º",
+        "11": "11º",
+        "12": "12º",
+        "13": "13º",
+        "14": "14º",
+        "15": "15º",
+        "16": "16º",
+        "17": "17º",
+        "18": "18º",
+        "19": "19º",
+        "20": "20º",
+        "21": "21º",
+        "22": "22º",
+        "23": "23º",
+        "24": "24º",
+        "25": "25º",
+        "26": "26º",
+        "27": "27º",
+        "28": "28º",
+        "29": "29º",
+        "30": "30º",
+        "31": "31º"
+      },
+      "distance": {
+        "away": "{{distance}} de distância"
+      }
+    },
+    "buttons": {
+      "cancel": "Cancelar",
+      "ok": "Ok",
+      "close": "Fechar",
+      "login": "Entrar",
+      "logout": "Sair",
+      "delete": "Excluir",
+      "refresh": "Atualizar",
+      "done": "Concluído",
+      "accept": "Aceitar",
+      "accept-a11y": "Aceitar Alterações",
+      "revert": "Reverter",
+      "revert-a11y": "Reverter Alterações",
+      "save": "Salvar",
+      "export": "Exportar"
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "patch {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Verificando atualizações…",
+        "stable": "Verificando atualizações estáveis…",
+        "unstable": "Verificando atualizações instáveis…",
+        "bleedingEdge": "Verificando atualizações de ponta…"
+      },
+      "tracksPlural": {
+        "stable": "Estável",
+        "unstable": "Instável",
+        "bleedingEdge": "Versão Experimental",
+        "Production": "Estável",
+        "Staging": "Instável",
+        "Development": "Versão Experimental"
+      },
+      "trackSingular": {
+        "stable": "Estável",
+        "unstable": "Instável",
+        "bleedingEdge": "Versão Experimental",
+        "Production": "Estável",
+        "Staging": "Instável",
+        "Development": "Versão Experimental"
+      },
+      "versionIsAvailable-md": "A atualização para {{versionName}} está disponível.",
+      "updateNow": "Atualizar Agora",
+      "newVersionAvailable-md": "Uma nova versão do PoLo está disponível!"
+    },
+    "dataFiles": {
+      "loading": "Carregando {{name}}",
+      "downloading": "Baixando {{name}}",
+      "dataHasToBeDownloaded-md": "Os dados para **{{name}}** precisam ser baixados.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Os dados para **{{name}}** não foram atualizados há um tempo.",
+      "downloadNow": "Baixar Agora",
+      "refreshNow": "Atualizar Agora"
+    },
+    "notices": {
+      "action": {
+        "ok": "Ok!",
+        "__comment__": "Substituir ações específicas de aviso aqui"
+      },
+      "title": {
+        "__comment__": "Substituir títulos específicos de aviso aqui"
+      },
+      "text": {
+        "__comment__": "Substituir textos específicos de aviso aqui"
+      },
+      "dialogTitle": {
+        "__comment__": "Substituir títulos específicos de diálogo aqui"
+      },
+      "dialogText": {
+        "__comment__": "Substituir textos específicos de diálogo aqui"
+      },
+      "dataFiles": {
+        "fetching": "Buscando {{title}}...",
+        "progress": "Buscando {{title}}\n\n{{progress}}",
+        "done": "Concluído ao buscar {{title}}",
+        "error": "Erro ao buscar {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Texto",
+        "csv": "Valores Separados por Vírgula",
+        "tsv": "Valores Separados por Tabulação",
+        "other": "Dados"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Recursos Principais",
+        "locationBased": "Atividades Baseadas em Localização",
+        "contestsAndFieldOps": "Concursos e Operações de Campo",
+        "lookup": "Consulta de Dados",
+        "devmode": "Modo Desenvolvedor",
+        "other": "Outras Funcionalidades"
+      }
+    },
+    "continents": {
+      "AF": "África",
+      "AS": "Ásia",
+      "EU": "Europa",
+      "NA": "América do Norte",
+      "SA": "América do Sul",
+      "OC": "Oceania"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Banda Lateral Única",
+        "USB": "USB",
+        "USB-a11y": "Banda Lateral Superior",
+        "LSB": "LSB",
+        "LSB-a11y": "Banda Lateral Inferior",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Ritty",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Outro",
+        "other-a11y": "Outro Modo"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 Metros",
+        "80m-a11y": "80 Metros",
+        "60m-a11y": "60 Metros",
+        "40m-a11y": "40 Metros",
+        "30m-a11y": "30 Metros",
+        "20m-a11y": "20 Metros",
+        "17m-a11y": "17 Metros",
+        "15m-a11y": "15 Metros",
+        "12m-a11y": "12 Metros",
+        "11m-a11y": "11 Metros",
+        "10m-a11y": "10 Metros",
+        "6m-a11y": "6 Metros",
+        "2m-a11y": "2 Metros",
+        "70cm-a11y": "70 Centímetros",
+        "23cm-a11y": "23 Centímetros",
+        "13cm-a11y": "13 Centímetros",
+        "9cm-a11y": "9 Centímetros",
+        "6cm-a11y": "6 Centímetros",
+        "3cm-a11y": "3 Centímetros",
+        "1-25cm-a11y": "1,25 Centímetros",
+        "6mm-a11y": "6 Milímetros",
+        "4mm-a11y": "4 Milímetros",
+        "2-5mm-a11y": "2,5 Milímetros",
+        "2mm-a11y": "2 Milímetros",
+        "1mm-a11y": "1 Milímetro",
+        "submm-a11y": "Submilímetro",
+        "other": "Outro",
+        "other-a11y": "Outra Banda"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

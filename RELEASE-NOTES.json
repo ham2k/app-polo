@@ -5,6 +5,8 @@
     "changes": [
       "Towers on the Air (TOTA)",
       "ParksnPeaks Spotting (by M1SDH)",
+      "Portuguese (Brazil) translations, thanks to PY2MP Eduardo",
+      "Turkish translations, thanks to Uğur TA1SW",
       "Performance and stability improvements",
       "Assorted bug fixes"
     ]
@@ -14,7 +16,7 @@
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
     "changes": [
       "Fixed bug in scoring for Winter Field Day",
-      "Chinese translations"
+      "Chinese translations, thanks to Hanshen Liu BG4JIN"
     ]
   },
   "25.12.7": {
