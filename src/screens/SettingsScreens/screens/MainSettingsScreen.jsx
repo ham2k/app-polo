@@ -193,14 +193,12 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
           leftIcon="file-cabinet"
         />
 
-        {(settings.devMode || showSyncSettings) && (
-          <H2kListItem
-            title={t('screens.settings.syncSettings.title', 'Sync Settings')}
-            description={t('screens.settings.syncSettings.description', 'Cloud sync and backup')}
-            onPress={() => navigation.navigate('Settings', { screen: 'SyncSettings' })}
-            leftIcon="sync"
-          />
-        )}
+        <H2kListItem
+          title={t('screens.settings.syncSettings.title', 'Sync Settings')}
+          description={t('screens.settings.syncSettings.description', 'Cloud sync and backup')}
+          onPress={() => navigation.navigate('Settings', { screen: 'SyncSettings' })}
+          leftIcon="sync"
+        />
 
         <H2kListItem
           title={t('screens.settings.accountsSettings.title', 'Accounts & Services')}

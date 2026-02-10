@@ -142,9 +142,9 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
 
   const serverLabel = useMemo(() => {
     if (lofiData?.server) {
-      return t(`screens.syncSettings.serverLabels.${lofiData.server}`, LOFI_SERVER_LABELS[lofiData.server] || 'screens.syncSettings.customServer', 'Custom ({{server}})', { server: lofiData.server })
+      return t([`screens.syncSettings.serverLabels.${lofiData.server}`, LOFI_SERVER_LABELS[lofiData.server] || 'screens.syncSettings.customServer'], 'Custom ({{server}})', { server: lofiData.server })
     } else {
-      return t(`screens.syncSettings.serverLabels.${DEFAULT_LOFI_SERVER}`, LOFI_SERVER_LABELS[DEFAULT_LOFI_SERVER] || DEFAULT_LOFI_SERVER)
+      return t([`screens.syncSettings.serverLabels.${DEFAULT_LOFI_SERVER}`, LOFI_SERVER_LABELS[DEFAULT_LOFI_SERVER]], DEFAULT_LOFI_SERVER)
     }
   }, [lofiData.server, t])
 
@@ -309,7 +309,7 @@ Please try again later.`, { error: linkResult.json.error })
         )}
 
         <H2kListItem
-          title={`${lofiData?.subscription?.plan?.name ?? t('screens.syncSettings.noActivePlan', 'No Active Plan')}`}
+          title={lofiData?.subscription?.plan?.name ? t('screens.syncSettings.activePlan', 'Active Plan: {{plan}}', { plan: lofiData?.subscription?.plan?.name }) : t('screens.syncSettings.noActivePlan', 'No Active Plan')}
           description={t(`screens.syncSettings.plans.${lofiData?.subscription?.plan?.slug}`, lofiData?.subscription?.plan?.description ?? '')}
           leftIcon="calendar-clock"
           onPress={() => null}
