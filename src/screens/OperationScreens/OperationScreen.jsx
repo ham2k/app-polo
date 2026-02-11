@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { loadOperation, selectOperation } from '../../store/operations'
 import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../store/qsos'
 import { selectSettings, setSettings } from '../../store/settings'
+import { setVFO } from '../../store/station/stationSlice'
 import { startTickTock, stopTickTock } from '../../store/time'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
@@ -89,6 +90,17 @@ export default function OperationScreen (props) {
           suggestedQSO: { ...suggestedQSO, _replace: true }
         }
       }))
+
+      // Update VFO with deeplink freq/mode so next QSO inherits them
+      // Only include defined values to avoid wiping existing VFO state with undefined
+      const vfoUpdate = {}
+      if (suggestedQSO.freq !== undefined) vfoUpdate.freq = suggestedQSO.freq
+      if (suggestedQSO.mode !== undefined) vfoUpdate.mode = suggestedQSO.mode
+      if (suggestedQSO.band !== undefined) vfoUpdate.band = suggestedQSO.band
+      if (Object.keys(vfoUpdate).length > 0) {
+        dispatch(setVFO(vfoUpdate))
+      }
+
       // Clear the qso from route params to avoid re-triggering
       navigation.setParams({ qso: undefined })
     }

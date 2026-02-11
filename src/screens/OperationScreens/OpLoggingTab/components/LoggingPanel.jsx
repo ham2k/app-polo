@@ -160,7 +160,7 @@ export default function LoggingPanel ({
         else nextQSO = prepareNewQSO(operation, qsos, settings)
       }
 
-      if (qso?._isNew && !qso?._isSuggested) {
+      if (qso?._isNew && !qso?._isSuggested && !loggingState?.suggestedQSO) {
         otherStateChanges.qsoQueue = [...loggingState?.qsoQueue || [], qso]
       }
 
