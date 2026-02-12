@@ -263,6 +263,8 @@
 				cs,
 				ja,
 				"zh-Hans",
+				tr,
+				"pt-BR",
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -419,7 +421,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.prod;
 				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_OBJC_BRIDGING_HEADER = "polo/polo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -449,7 +451,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ham2k.polo.prod;
 				PRODUCT_NAME = "Ham2K Portable Logger";
 				SWIFT_OBJC_BRIDGING_HEADER = "polo/polo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
