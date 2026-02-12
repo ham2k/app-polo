@@ -50,7 +50,7 @@ const Extension = {
 
     const files = [
       ...(settings.customFiles ?? []).map(file => ({ ...file, builtin: false })),
-      BUILT_IN_NOTES
+      ...BUILT_IN_NOTES
     ]
 
     CallNotesData.notes = {}
