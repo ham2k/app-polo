@@ -14,7 +14,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useTranslation } from 'react-i18next'
 
-import { loadOperation, selectOperation } from '../../store/operations'
+import { loadOperation, selectOperation, selectOperationCallInfo } from '../../store/operations'
 import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../store/qsos'
 import { selectSettings, setSettings } from '../../store/settings'
 import { startTickTock, stopTickTock } from '../../store/time'
@@ -34,6 +34,7 @@ import { slashZeros } from '../../tools/stringTools'
 import { hasRef } from '../../tools/refTools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import GLOBAL from '../../GLOBAL'
+import { selectFeatureFlags } from '../../store/system'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -47,6 +48,8 @@ export default function OperationScreen (props) {
   const safeAreaInsets = useSafeAreaInsets()
 
   const styles = useThemedStyles()
+
+  const featureFlags = useSelector(selectFeatureFlags)
 
   const operationSelector = useCallback((state) => selectOperation(state, route.params.operation?.uuid ?? route.params.uuid), [route.params.operation?.uuid, route.params.uuid])
   const operation = useSelector(operationSelector)
@@ -244,7 +247,11 @@ export default function OperationScreen (props) {
                   <Tab.Screen
                     name="OpSettings"
                     options={{
-                      title: ((dimensions.width - mainPaneWidth) / 4) > (styles.oneSpace * 14) ? t('screens.operationScreen.settingsTab', 'Operation') : t('screens.operationScreen.settingsCompactTab', 'Oper.'),
+                      title: (
+                        ((dimensions.width - mainPaneWidth) / 4) > (styles.oneSpace * 14)
+                          ? featureFlags?.opSettingsTab || t('screens.operationScreen.settingsTab', 'Operation')
+                          : featureFlags?.opSettingsCompactTab || featureFlags?.opSettingsTab || t('screens.operationScreen.settingsCompactTab', 'Oper.')
+                      ),
                       tabBarAccessibilityLabel: t('screens.operationScreen.settingsTab-a11y', 'Operation Settings Tab')
                     }}
                     component={OpSettingsTab}
@@ -309,7 +316,11 @@ export default function OperationScreen (props) {
               <Tab.Screen
                 name="OpSettings"
                 options={{
-                  title: (dimensions.width / 4) > (styles.oneSpace * 12) ? t('screens.operationScreen.settingsTab', 'Operation') : t('screens.operationScreen.settingsCompactTab', 'Oper.'),
+                  title: (
+                    ((dimensions.width - mainPaneWidth) / 4) > (styles.oneSpace * 14)
+                      ? featureFlags?.opSettingsTab || t('screens.operationScreen.settingsTab', 'Operation')
+                      : featureFlags?.opSettingsCompactTab || featureFlags?.opSettingsTab || t('screens.operationScreen.settingsCompactTab', 'Oper.')
+                  ),
                   tabBarAccessibilityLabel: t('screens.operationScreen.settingsTab-a11y', 'Operation Settings Tab')
                 }}
                 component={OpSettingsTab}
