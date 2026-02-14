@@ -211,8 +211,8 @@ const QSLHook = {
     Object.keys(qslUploadIDs).forEach(qsoUUID => {
       if (!qsos.find(q => !q.deleted && q.uuid === qsoUUID)) {
         qsosToDelete.push(...(qslUploadIDs[qsoUUID].uuids || []))
+        delete qslUploadIDs[qsoUUID]
       }
-      delete qslUploadIDs[qsoUUID]
     })
 
     const apiPromises = qsosToDelete.map(id => dispatch(apiWWBOTA.endpoints.deleteQSO.initiate({ id })))
