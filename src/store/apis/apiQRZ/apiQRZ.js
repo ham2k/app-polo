@@ -21,7 +21,7 @@ import { setAccountInfo } from '../../settings'
 
 const DEBUG = false
 
-const BASE_URL = 'https://xmldata.qrz.com/'
+const BASE_URL = 'https://'
 
 const API_TIMEOUT = 3000 // 3 seconds
 
@@ -34,20 +34,28 @@ function defaultParams (api) {
 }
 
 const baseQueryWithSettings = fetchBaseQuery({
-  baseUrl: `${BASE_URL}/xml/current`,
+  baseUrl: `${BASE_URL}`,
   timeout: API_TIMEOUT,
   prepareHeaders: (headers, { getState, endpoint }) => {
     headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
   },
   responseHandler: async (response) => {
-    if (response.status === 200) {
+    if (response.ok) {
+      const contentType = response.headers.get('content-type') || ''
       const body = await response.text()
-      const parser = new XMLParser()
-      const xml = parser.parse(body)
+      let data
+      if (contentType.includes('xml')) {
+        const parser = new XMLParser()
+        data = parser.parse(body)
+      } else if (contentType.includes('plain')) {
+        const parsed = new URLSearchParams(body)
+        data = Object.fromEntries(parsed.entries())
+      }
       if (DEBUG) console.log(`QRZApi ${response.url} ${response.status}`)
       if (DEBUG) console.log('-- url', response.url)
-      if (DEBUG) console.log('-- response', xml)
-      return xml
+      if (DEBUG) console.log('-- content-type', contentType)
+      if (DEBUG) console.log('-- response', data)
+      return data || body
     } else {
       return {}
     }
@@ -67,7 +75,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     const { login, password } = api.getState().settings?.accounts?.qrz ?? {}
     if (DEBUG) console.log('baseQueryWithReauth second call')
     result = await baseQueryWithSettings({
-      url: '',
+      url: 'xmldata.qrz.com/xml/current/',
       params: {
         ...defaultParams(api),
         s: undefined,
@@ -96,7 +104,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
 export const apiQRZ = createApi({
   reducerPath: 'apiQRZ',
-  baseQuery: baseQueryWithReauth,
   endpoints: builder => ({
 
     // Lookup a callsign
@@ -108,8 +115,8 @@ export const apiQRZ = createApi({
         const { call } = args
         if (!call || call.length < 3) return { data: {} }
 
-        const response = await baseQuery({
-          url: '',
+        const response = await baseQueryWithReauth({
+          url: 'xmldata.qrz.com/xml/current/',
           params: {
             ...defaultParams(api),
             callsign: call
@@ -159,6 +166,99 @@ export const apiQRZ = createApi({
                 imageInfo: (callsignInfo.imageinfo || '').split(':')
               },
               meta: response.meta
+            }
+          }
+        } else {
+          return response
+        }
+      }
+    }),
+    logbookStatus: builder.query({
+      keepUnusedDataFor: 60 * 60 * 12, // 12 hours
+      queryFn: async (args, api, extraOptions, baseQuery) => {
+        const { apiKey } = args
+        const formData = new FormData()
+        formData.append('KEY', apiKey)
+        formData.append('ACTION', 'STATUS')
+        const response = await baseQueryWithSettings({
+          url: 'logbook.qrz.com/api',
+          method: 'POST',
+          body: formData
+        }, api, extraOptions)
+        if (response.data) {
+          const data = response.data
+          if (data?.RESULT !== 'OK') {
+            return { ...response, error: data, data: undefined }
+          }
+          return {
+            ...response,
+            error: undefined,
+            data: {
+              callsign: data.CALLSIGN,
+              name: data.BOOK_NAME,
+              startDate: data.START_DATE ? new Date(`${data.START_DATE}T00:00:00Z`) : null,
+              endDate: data.END_DATE ? new Date(`${data.END_DATE}T00:00:00Z`) : null,
+            }
+          }
+        } else {
+          return response
+        }
+      }
+    }),
+    logbookInsert: builder.query({
+      queryFn: async (args, api, extraOptions, baseQuery) => {
+        const { apiKey, adif } = args
+        const formData = new FormData()
+        formData.append('KEY', apiKey)
+        formData.append('ACTION', 'INSERT')
+        formData.append('ADIF', adif)
+        formData.append('OPTION', 'REPLACE')
+        const response = await baseQueryWithSettings({
+          url: 'logbook.qrz.com/api',
+          method: 'POST',
+          body: formData
+        }, api, extraOptions)
+        if (response.data) {
+          const data = response.data
+          if (!(data?.RESULT == 'OK' || data?.RESULT == 'REPLACE')) {
+            return { ...response, error: data, data: undefined }
+          }
+          return {
+            ...response,
+            error: undefined,
+            data: {
+              result: data.RESULT,  // "OK" or "REPLACE"
+              logId: data.LOGID
+            }
+          }
+        } else {
+          return response
+        }
+      }
+    }),
+    logbookDelete: builder.query({
+      queryFn: async (args, api, extraOptions, baseQuery) => {
+        const { apiKey, logIds } = args
+        const formData = new FormData()
+        formData.append('KEY', apiKey)
+        formData.append('ACTION', 'DELETE')
+        formData.append('LOGIDS', logIds.join(','))
+        const response = await baseQueryWithSettings({
+          url: 'logbook.qrz.com/api',
+          method: 'POST',
+          body: formData
+        }, api, extraOptions)
+        if (response.data) {
+          const data = response.data
+          if (!(data?.RESULT === 'OK' || data?.RESULT === 'PARTIAL')) {
+            return { ...response, error: data, data: undefined }
+          }
+          return {
+            ...response,
+            error: undefined,
+            data: {
+              result: data.RESULT,  // "OK" or "PARTIAL"
+              logIds: data?.LOGIDS ? data.LOGIDS.split(',') : [],
             }
           }
         } else {
