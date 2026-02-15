@@ -141,25 +141,25 @@ const QSLHook = {
     }
 
     const errors = []
+    const promises = uploadQSOs.map((uploadQSO) => {
+      const { qsoAdifRow, qsoHash, qsoUUID } = uploadQSO;
 
-    for (const uploadQSO of uploadQSOs) {
-      const {qsoAdifRow, qsoHash, qsoUUID} = uploadQSO
-      // TODO: don't await here for each
-      const apiPromise = await dispatch(apiQRZ.endpoints.logbookInsert.initiate({apiKey, adif: qsoAdifRow}, { forceRefetch: true }))
-      await Promise.all(dispatch(apiQRZ.util.getRunningQueriesThunk()))
-      apiResults = await dispatch((_dispatch, getState) => apiQRZ.endpoints.logbookInsert.select({apiKey, adif: qsoAdifRow})(getState()))
-      apiPromise.unsubscribe && apiPromise.unsubscribe()
-
-      if (!apiResults?.error) {
-        qslUploadIDs[qsoUUID] = {
-          id: apiResults?.data?.logId,
-          hash: qsoHash
+      return dispatch(apiQRZ.endpoints.logbookInsert.initiate({ apiKey, adif: qsoAdifRow }, { forceRefetch: true }))
+      .then((result) => {
+        if (!result.error) {
+          qslUploadIDs[qsoUUID] = {
+            id: result.data?.logId,
+            hash: qsoHash,
+          };
+        } else {
+          console.log('Error uploading QSO to QRZ.com', result.error);
+          errors.push(result.error?.data?.REASON || 'Unknown error');
         }
-      } else {
-        console.log('Error uploading QSO to QRZ.com', apiResults.error)
-        errors.push(apiResults?.error?.data?.REASON || 'Unknown error')
-      }
-    }
+        result.unsubscribe && result.unsubscribe();
+      });
+    });
+    await Promise.all(promises)
+
     dispatch(setOperationData({
       uuid: operation.uuid,
       qsl: { ...operation?.qsl, [Info.key]: {
