@@ -8,6 +8,10 @@
 import GLOBAL from '../../../GLOBAL'
 import { apiQRZ } from '../../../store/apis/apiQRZ'
 
+import { hashCode } from '../../../tools/hashCode'
+import { setOperationData } from '../../../store/operations'
+import { adifFieldsForOneQSO, adifRow } from '../../../tools/qsonToADIF'
+
 export const Info = {
   key: 'qrz',
   icon: 'web',
@@ -24,6 +28,7 @@ const Extension = {
   onActivation: ({ registerHook }) => {
     registerHook('lookup', { hook: LookupHook, priority: 99 })
     registerHook('account', { hook: AccountHook })
+    registerHook('qsl', { hook: QSLHook })
   }
 }
 export default Extension
@@ -73,5 +78,109 @@ const LookupHook = {
 const AccountHook = {
   ...Info,
   fetchSpots: async ({ online, settings, dispatch }) => {
+  }
+}
+
+function qrzAdifRow(qso, operation) {
+  return adifRow(adifFieldsForOneQSO({qso, common: operation, privateData: true, templates: {}}))
+}
+
+const QSLHook = {
+  ...Info,
+  serviceName: 'QRZ.com Logbook',
+  canSendOutgoingQSLs: ({ operation, qsos, settings }) => {
+    console.log("canSend", operation, settings)
+    const activatorCallsign = operation.stationCall || settings.operatorCall
+    const apiKey = settings?.accounts?.qrz?.logbooks?.find(log => log.callsign === activatorCallsign)?.apiKey
+    return !!apiKey
+  },
+  sendOutgoingQSLs: async ({ operation, qsos, settings, dispatch }) => {
+    const activatorCallsign = operation.stationCall || settings.operatorCall
+    const apiKey = settings?.accounts?.qrz?.logbooks?.find(log => log.callsign === activatorCallsign)?.apiKey
+    console.log(settings.accounts?.qrz)
+    if (!apiKey) {
+      dispatch(setOperationData({
+        uuid: operation.uuid,
+        qsl: { ...operation?.qsl, [Info.key]: {
+          ...operation?.qsl?.[Info.key],
+          error: `No logbook for callsign ${activatorCallsign}`
+        }}
+      }))
+      return
+    }
+
+    const qsl = operation?.qsl?.[Info.key]
+    const qslUploadIDs = {...qsl?.uploadIDs || {}}
+
+    const uploadQSOs = []
+    const qsosToDelete = []
+    let qsosHash = 0
+    qsos.filter(q => !q.deleted).forEach(qso => {
+      const qsoAdifRow = qrzAdifRow(qso, operation)
+      const qsoHash = hashCode(qsoAdifRow)
+      qsosHash = hashCode(qsoAdifRow, qsosHash)
+      if (qslUploadIDs[qso.uuid]?.hash && qslUploadIDs[qso.uuid]?.hash === qsoHash) return
+      if (qslUploadIDs[qso.uuid]?.id) qsosToDelete.push(qslUploadIDs[qso.uuid].id)
+      uploadQSOs.push({
+        qsoUUID: qso.uuid,
+        qsoHash,
+        qsoAdifRow
+      })
+    })
+
+    Object.keys(qslUploadIDs).forEach(qsoUUID => {
+      if (!qsos.find(q => !q.deleted && q.uuid === qsoUUID)) {
+        if (qslUploadIDs[qsoUUID]?.id) qsosToDelete.push(qslUploadIDs[qsoUUID].id)
+        delete qslUploadIDs[qsoUUID]
+      }
+    })
+
+    if (qsosToDelete.length > 0) {
+      const apiDeletePromise = await dispatch(apiQRZ.endpoints.logbookDelete.initiate({apiKey, logIds: qsosToDelete}, {forceRefetch: true}))
+      apiDeletePromise.unsubscribe && apiDeletePromise.unsubscribe()
+    }
+
+    const errors = []
+
+    for (const uploadQSO of uploadQSOs) {
+      const {qsoAdifRow, qsoHash, qsoUUID} = uploadQSO
+      // TODO: don't await here for each
+      const apiPromise = await dispatch(apiQRZ.endpoints.logbookInsert.initiate({apiKey, adif: qsoAdifRow}, { forceRefetch: true }))
+      await Promise.all(dispatch(apiQRZ.util.getRunningQueriesThunk()))
+      apiResults = await dispatch((_dispatch, getState) => apiQRZ.endpoints.logbookInsert.select({apiKey, adif: qsoAdifRow})(getState()))
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+
+      if (!apiResults?.error) {
+        qslUploadIDs[qsoUUID] = {
+          id: apiResults?.data?.logId,
+          hash: qsoHash
+        }
+      } else {
+        console.log('Error uploading QSO to QRZ.com', apiResults.error)
+        errors.push(apiResults?.error?.data?.REASON || 'Unknown error')
+      }
+    }
+    dispatch(setOperationData({
+      uuid: operation.uuid,
+      qsl: { ...operation?.qsl, [Info.key]: {
+        lastUpdated: errors.length > 0 ? operation?.qsl?.[Info.key]?.lastUpdated : Date.now(),
+        qsosHash,
+        uploadIDs: qslUploadIDs,
+        error: errors?.[0] || null  // Just return the first error if there are multiple, to keep it simple.
+      }}
+    }))
+  },
+  qslStatusForOperation: ({ operation, qsos }) => {
+    error = operation?.qsl?.[Info.key]?.error
+    if (!operation?.qsl?.[Info.key]) return { status: 'neverSent', error }
+
+    // QSO modified in way that concerns service?
+    const qslHash = operation.qsl?.[Info.key]?.qsosHash
+    const newHash = qsos.filter(q => !q.deleted).reduce((hash, q) => hashCode(qrzAdifRow(q, operation), hash), 0)
+    if (qslHash !== newHash) {
+      return { status:'needsUpdate', error }
+    }
+
+    return { status: 'upToDate', error }
   }
 }

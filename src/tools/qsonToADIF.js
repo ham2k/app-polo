@@ -178,7 +178,7 @@ function modeToADIF(mode, freq, qsoInfo) {
   }
 }
 
-function adifFieldsForOneQSO({ qso, operation, common, privateData, templates, timeOffset }) {
+export function adifFieldsForOneQSO({ qso, operation, common, privateData, templates, timeOffset }) {
   timeOffset = timeOffset ?? 0
   const fields = [
     { CALL: qso.their.call },
@@ -246,7 +246,7 @@ function adifFieldsForOneQSO({ qso, operation, common, privateData, templates, t
   return fields
 }
 
-function adifRow(fields) {
+export function adifRow(fields) {
   return fields
     .filter(field => field[1] !== false)
     .map(field => adifField(Object.keys(field)[0], Object.values(field)[0]))
