@@ -10,8 +10,8 @@ import { Linking } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 
-import { selectAllOperations, addNewOperation, setOperationData } from '../store/operations'
-import { findRef } from '../tools/refTools'
+import { selectAllOperations, addNewOperation, setOperationData } from '../../../store/operations'
+import { findRef } from '../../../tools/refTools'
 import { URL_SCHEME, TYPE_TO_ACTIVATION, parseDeepLinkURL, buildSuggestedQSO } from './DeepLinkUtils'
 
 /**
