@@ -315,8 +315,12 @@ export function basePartialTemplates({ settings }) {
   }
 
   if (settings) {
-    const defaults = selectExportSettings({ settings }, 'default')
-    partials = { ...partials, ...defaults }
+    const userDefaults = selectExportSettings({ settings }, 'default')
+    Object.keys(userDefaults).forEach(key => {
+      if ((userDefaults[key] ?? '').trim() !== '') {
+        partials[key] = userDefaults[key]
+      }
+    })
   }
 
   partials.RefActivityName = settings?.useCompactFileNames ? partials.RefActivityNameCompact : partials.RefActivityNameNormal
