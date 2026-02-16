@@ -19,7 +19,7 @@
     "crowdin:pull": "crowdin pull translations -l cs -l de -l es-ES -l fr -l ja -l pt-BR -l nb -l nl -l sk -l tr -l zh-CN"
   },
   "dependencies": {
-    "@ham2k/lib-callsigns": "0.5.1",
+    "@ham2k/lib-callsigns": "0.5.2",
     "@ham2k/lib-country-files": "0.12.20251125",
     "@ham2k/lib-dxcc-data": "0.4.1",
     "@ham2k/lib-format-tools": "0.4.2",
