@@ -55,7 +55,7 @@ import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/Ope
 import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/OperationLocationScreen'
 import { GlobalDialog } from './ui/react-native/GlobalDialog'
 import { initializeI18Next } from './i18n/i18n'
-import { DeepLinkListener } from './deep-linking'
+import { DeepLinkListener } from './screens/components/DeepLinking'
 
 const Stack = createNativeStackNavigator()
 
