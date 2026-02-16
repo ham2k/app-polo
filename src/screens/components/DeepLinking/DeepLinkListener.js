@@ -107,6 +107,7 @@ export function useDeepLinkHandler () {
 async function findOrCreateOperation ({ myRef, mySig, operations, dispatch }) {
   // Chase-only mode: create generic operation
   if (!myRef || !mySig) {
+  // TODO: Search for recent "general operations" instead of adding a new operation
     const newOperation = await dispatch(addNewOperation({ _useTemplates: true }))
     return newOperation
   }
@@ -114,6 +115,7 @@ async function findOrCreateOperation ({ myRef, mySig, operations, dispatch }) {
   const activationType = TYPE_TO_ACTIVATION[mySig]
 
   // Search existing operations for one with matching ref
+  // TODO: Limit search to operations within 36-48 hours, and support multiple refs
   const existingOp = Object.values(operations || {}).find(op => {
     if (!op || op.deleted) return false
     const opRef = findRef(op, activationType)
