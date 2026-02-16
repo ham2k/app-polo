@@ -34,13 +34,11 @@ const StartOperationCommandHook = {
   allowSpaces: true,
   describeCommand: (match, { operation, settings, t }) => {
     if (!operation) { return false }
-    if (!settings?.devMode) { return false }
 
     return t?.('extensions.commands-operation.start', 'Start the operation?') || 'Start the operation?'
   },
   invokeCommand: (match, { operation, qsos, dispatch, settings, t }) => {
     if (!operation) { return }
-    if (!settings?.devMode) { return false }
 
     markOperationStart({ operation, qsos, dispatch })
 
@@ -56,13 +54,11 @@ const BreakOperationCommandHook = {
   allowSpaces: true,
   describeCommand: (match, { operation, settings, t }) => {
     if (!operation) { return false }
-    if (!settings?.devMode) { return false }
 
     return t?.('extensions.commands-operation.break', 'Add a break?') || 'Add a break?'
   },
   invokeCommand: (match, { operation, qsos, dispatch, settings, t }) => {
     if (!operation) { return }
-    if (!settings?.devMode) { return false }
 
     markOperationBreak({ operation, qsos, dispatch })
 
@@ -78,13 +74,11 @@ const StopOperationCommandHook = {
   allowSpaces: true,
   describeCommand: (match, { operation, settings, t }) => {
     if (!operation) { return false }
-    if (!settings?.devMode) { return false }
 
     return t?.('extensions.commands-operation.stop', 'Stop the operation?') || 'Stop the operation?'
   },
   invokeCommand: (match, { operation, qsos, dispatch, settings }) => {
     if (!operation) { return }
-    if (!settings?.devMode) { return false }
 
     markOperationStop({ operation, qsos, dispatch })
 
