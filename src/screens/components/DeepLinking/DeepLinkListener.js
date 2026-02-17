@@ -33,7 +33,7 @@ import { URL_SCHEME, TYPE_TO_ACTIVATION, parseDeepLinkURL, buildSuggestedQSO } f
  *
  * At least one of (myRef+mySig) or (theirRef+theirSig) must be provided.
  */
-export function useDeepLinkHandler () {
+function useDeepLinkHandler () {
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const operations = useSelector(selectAllOperations)
