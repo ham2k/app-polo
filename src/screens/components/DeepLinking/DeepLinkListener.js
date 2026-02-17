@@ -105,11 +105,16 @@ function useDeepLinkHandler () {
  * If no ourRefs provided (chase-only mode), create a generic operation.
  */
 async function findOrCreateOperation ({ ourRefs, operations, dispatch }) {
-  // Chase-only mode: create generic operation
-  // TODO: Search for recent "general operations" instead of adding a new operation
+  // Chase-only mode: reuse a recent general operation, or create one
   if (!ourRefs?.length) {
-    const newOperation = await dispatch(addNewOperation({ _useTemplates: true }))
-    return newOperation
+    const cutoff = Date.now() - RECENT_WINDOW_MS
+    const recentGeneral = Object.values(operations || {}).find(op => {
+      if (!op || op.deleted) return false
+      const lastActive = op.startAtMillisMax || op.createdAtMillis || 0
+      if (lastActive < cutoff) return false
+      return !op.refs || op.refs.length === 0
+    })
+    return recentGeneral || await dispatch(addNewOperation({ _useTemplates: true }))
   }
 
   // Search recent operations for one matching ANY of our refs
