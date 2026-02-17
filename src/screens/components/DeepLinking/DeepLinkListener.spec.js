@@ -6,6 +6,22 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+jest.mock('../../../extensions/registry', () => ({
+  findHooks: (category) => {
+    if (category === 'activity') {
+      return [
+        { key: 'sota', activationType: 'sotaActivation', huntingType: 'sota' },
+        { key: 'pota', activationType: 'potaActivation', huntingType: 'pota' },
+        { key: 'wwff', activationType: 'wwffActivation', huntingType: 'wwff' },
+        { key: 'gma', activationType: 'gmaActivation', huntingType: 'gma' },
+        { key: 'wca', activationType: 'wcaActivation', huntingType: 'wca' },
+        { key: 'zlota', activationType: 'zlotaActivation', huntingType: 'zlota' }
+      ]
+    }
+    return []
+  }
+}))
+
 // Mock @ham2k/lib-operation-data before importing DeepLinkUtils
 // Note: These use kHz values since parseFrequency now converts Hz to kHz
 jest.mock('@ham2k/lib-operation-data', () => ({
@@ -25,144 +41,120 @@ jest.mock('@ham2k/lib-operation-data', () => ({
   }
 }))
 
-import { parseDeepLinkURL, buildSuggestedQSO, TYPE_TO_ACTIVATION, TYPE_TO_HUNTING } from './DeepLinkUtils'
+import { parseDeepLinkURL, buildSuggestedQSO } from './DeepLinkUtils'
 
-describe('DeepLinkHandler', () => {
-  describe('TYPE_TO_ACTIVATION', () => {
-    it('should have all expected activation types', () => {
-      expect(TYPE_TO_ACTIVATION).toEqual({
-        sota: 'sotaActivation',
-        pota: 'potaActivation',
-        wwff: 'wwffActivation',
-        gma: 'gmaActivation',
-        wca: 'wcaActivation',
-        zlota: 'zlotaActivation'
-      })
-    })
-  })
-
-  describe('TYPE_TO_HUNTING', () => {
-    it('should have all expected hunting types', () => {
-      expect(TYPE_TO_HUNTING).toEqual({
-        sota: 'sota',
-        pota: 'pota',
-        wwff: 'wwff',
-        gma: 'gma',
-        wca: 'wca',
-        zlota: 'zlota'
-      })
-    })
-  })
-
+describe('DeepLinkListener', () => {
   describe('parseDeepLinkURL', () => {
     describe('valid URLs', () => {
-      it('parses chase-only URL with theirRef/theirSig', () => {
-        const url = 'com.ham2k.polo://qso?theirCall=K6TEST&theirRef=W6/CT-006&theirSig=sota&freq=14285000&mode=CW'
+      it('parses chase-only URL with their.refs', () => {
+        const url = 'com.ham2k.polo://qso?their.call=K6TEST&their.refs=sota:W6/CT-006&frequency=14285000&mode=CW'
         const result = parseDeepLinkURL(url)
         expect(result).toEqual({
-          myRef: undefined,
-          mySig: undefined,
-          theirRef: 'W6/CT-006',
-          theirSig: 'sota',
+          ourRefs: undefined,
+          theirRefs: [{ type: 'sota', ref: 'W6/CT-006' }],
           theirCall: 'K6TEST',
           freq: 14285, // Hz input (14285000) converted to kHz
           mode: 'CW',
-          time: undefined,
-          myCall: undefined
+          startAtMillis: undefined,
+          ourCall: undefined
         })
       })
 
-      it('parses spot URL with myRef/mySig', () => {
-        const url = 'com.ham2k.polo://qso?myRef=W6/CT-006&mySig=sota&freq=14285000&mode=CW'
+      it('parses activation URL with our.refs', () => {
+        const url = 'com.ham2k.polo://qso?our.refs=sota:W6/CT-006&frequency=14285000&mode=CW'
         const result = parseDeepLinkURL(url)
-        expect(result.myRef).toBe('W6/CT-006')
-        expect(result.mySig).toBe('sota')
-        expect(result.theirRef).toBeUndefined()
-        expect(result.theirSig).toBeUndefined()
+        expect(result.ourRefs).toEqual([{ type: 'sota', ref: 'W6/CT-006' }])
+        expect(result.theirRefs).toBeUndefined()
         expect(result.freq).toBe(14285) // Hz input converted to kHz
         expect(result.mode).toBe('CW')
       })
 
       it('parses S2S URL with both ref sets', () => {
-        const url = 'com.ham2k.polo://qso?myRef=K-1234&mySig=pota&theirRef=W6/CT-006&theirSig=sota&theirCall=K6TEST'
+        const url = 'com.ham2k.polo://qso?our.refs=pota:K-1234&their.refs=sota:W6/CT-006&their.call=K6TEST'
         const result = parseDeepLinkURL(url)
-        expect(result.myRef).toBe('K-1234')
-        expect(result.mySig).toBe('pota')
-        expect(result.theirRef).toBe('W6/CT-006')
-        expect(result.theirSig).toBe('sota')
+        expect(result.ourRefs).toEqual([{ type: 'pota', ref: 'K-1234' }])
+        expect(result.theirRefs).toEqual([{ type: 'sota', ref: 'W6/CT-006' }])
         expect(result.theirCall).toBe('K6TEST')
       })
 
+      it('parses URL with multiple our.refs', () => {
+        const url = 'com.ham2k.polo://qso?our.refs=pota:K-1234,sota:W6/CT-006&frequency=14285000'
+        const result = parseDeepLinkURL(url)
+        expect(result.ourRefs).toEqual([
+          { type: 'pota', ref: 'K-1234' },
+          { type: 'sota', ref: 'W6/CT-006' }
+        ])
+      })
+
+      it('parses URL with multiple their.refs', () => {
+        const url = 'com.ham2k.polo://qso?their.refs=pota:K-1234,sota:W6/CT-006'
+        const result = parseDeepLinkURL(url)
+        expect(result.theirRefs).toEqual([
+          { type: 'pota', ref: 'K-1234' },
+          { type: 'sota', ref: 'W6/CT-006' }
+        ])
+      })
+
       it('parses URL with all parameters', () => {
-        const url = 'com.ham2k.polo://qso?myRef=K-1234&mySig=pota&theirRef=W6/CT-006&theirSig=sota&freq=14285000&mode=CW&time=1704067200000&myCall=N0CALL&theirCall=K6TEST'
+        const url = 'com.ham2k.polo://qso?our.refs=pota:K-1234&their.refs=sota:W6/CT-006&frequency=14285000&mode=CW&startAtMillis=1704067200000&our.call=N0CALL&their.call=K6TEST'
         const result = parseDeepLinkURL(url)
         expect(result).toEqual({
-          myRef: 'K-1234',
-          mySig: 'pota',
-          theirRef: 'W6/CT-006',
-          theirSig: 'sota',
+          ourRefs: [{ type: 'pota', ref: 'K-1234' }],
+          theirRefs: [{ type: 'sota', ref: 'W6/CT-006' }],
           freq: 14285, // Hz input (14285000) converted to kHz
           mode: 'CW',
-          time: 1704067200000,
-          myCall: 'N0CALL',
+          startAtMillis: 1704067200000,
+          ourCall: 'N0CALL',
           theirCall: 'K6TEST'
         })
       })
     })
 
     describe('supported types', () => {
-      it.each(['sota', 'pota', 'wwff', 'gma', 'wca', 'zlota'])('accepts %s as mySig', (sig) => {
-        const url = `com.ham2k.polo://qso?myRef=TEST-123&mySig=${sig}`
-        expect(parseDeepLinkURL(url)).not.toBeNull()
-        expect(parseDeepLinkURL(url).mySig).toBe(sig)
+      it.each(['sota', 'pota', 'wwff', 'gma', 'wca', 'zlota'])('accepts %s in our.refs', (key) => {
+        const url = `com.ham2k.polo://qso?our.refs=${key}:TEST-123`
+        const result = parseDeepLinkURL(url)
+        expect(result).not.toBeNull()
+        expect(result.ourRefs[0].type).toBe(key)
       })
 
-      it.each(['sota', 'pota', 'wwff', 'gma', 'wca', 'zlota'])('accepts %s as theirSig', (sig) => {
-        const url = `com.ham2k.polo://qso?theirRef=TEST-123&theirSig=${sig}`
-        expect(parseDeepLinkURL(url)).not.toBeNull()
-        expect(parseDeepLinkURL(url).theirSig).toBe(sig)
+      it.each(['sota', 'pota', 'wwff', 'gma', 'wca', 'zlota'])('accepts %s in their.refs', (key) => {
+        const url = `com.ham2k.polo://qso?their.refs=${key}:TEST-123`
+        const result = parseDeepLinkURL(url)
+        expect(result).not.toBeNull()
+        expect(result.theirRefs[0].type).toBe(key)
       })
     })
 
     describe('invalid URLs', () => {
       it('returns null for URL with no refs', () => {
-        const url = 'com.ham2k.polo://qso?freq=14285000&mode=CW'
+        const url = 'com.ham2k.polo://qso?frequency=14285000&mode=CW'
         expect(parseDeepLinkURL(url)).toBeNull()
       })
 
-      it('returns null for unknown mySig', () => {
-        const url = 'com.ham2k.polo://qso?myRef=TEST&mySig=unknown'
+      it('returns null for unknown type in our.refs', () => {
+        const url = 'com.ham2k.polo://qso?our.refs=unknown:TEST'
         expect(parseDeepLinkURL(url)).toBeNull()
       })
 
       // IOTA not yet supported in Polo - change to valid test when iotaActivation is added
-      it('returns null for iota theirSig (not yet supported)', () => {
-        const url = 'com.ham2k.polo://qso?theirRef=TEST&theirSig=iota'
+      it('returns null for iota type (not yet supported)', () => {
+        const url = 'com.ham2k.polo://qso?their.refs=iota:TEST'
         expect(parseDeepLinkURL(url)).toBeNull()
       })
 
-      it('returns null for incomplete myRef pair (myRef without mySig)', () => {
-        const url = 'com.ham2k.polo://qso?myRef=W6/CT-006'
+      it('returns null for refs without colon separator', () => {
+        const url = 'com.ham2k.polo://qso?our.refs=sotaTEST'
         expect(parseDeepLinkURL(url)).toBeNull()
       })
 
-      it('returns null for incomplete myRef pair (mySig without myRef)', () => {
-        const url = 'com.ham2k.polo://qso?mySig=sota'
-        expect(parseDeepLinkURL(url)).toBeNull()
-      })
-
-      it('returns null for incomplete theirRef pair (theirRef without theirSig)', () => {
-        const url = 'com.ham2k.polo://qso?theirRef=W6/CT-006'
-        expect(parseDeepLinkURL(url)).toBeNull()
-      })
-
-      it('returns null for incomplete theirRef pair (theirSig without theirRef)', () => {
-        const url = 'com.ham2k.polo://qso?theirSig=sota'
+      it('returns null for refs with empty ref value', () => {
+        const url = 'com.ham2k.polo://qso?our.refs=sota:'
         expect(parseDeepLinkURL(url)).toBeNull()
       })
 
       it('returns null for wrong URL scheme', () => {
-        const url = 'https://example.com/qso?myRef=TEST&mySig=sota'
+        const url = 'https://example.com/qso?our.refs=sota:TEST'
         expect(parseDeepLinkURL(url)).toBeNull()
       })
 
@@ -173,61 +165,51 @@ describe('DeepLinkHandler', () => {
     })
 
     describe('case normalization', () => {
-      it('normalizes mySig to lowercase', () => {
-        const url = 'com.ham2k.polo://qso?myRef=TEST&mySig=SOTA'
-        expect(parseDeepLinkURL(url).mySig).toBe('sota')
-      })
-
-      it('normalizes theirSig to lowercase', () => {
-        const url = 'com.ham2k.polo://qso?theirRef=TEST&theirSig=POTA'
-        expect(parseDeepLinkURL(url).theirSig).toBe('pota')
+      it('normalizes ref type to lowercase', () => {
+        const url = 'com.ham2k.polo://qso?our.refs=SOTA:TEST'
+        expect(parseDeepLinkURL(url).ourRefs[0].type).toBe('sota')
       })
 
       it('normalizes mode to uppercase', () => {
-        const url = 'com.ham2k.polo://qso?theirRef=TEST&theirSig=sota&mode=cw'
+        const url = 'com.ham2k.polo://qso?their.refs=sota:TEST&mode=cw'
         expect(parseDeepLinkURL(url).mode).toBe('CW')
       })
 
       it('normalizes callsigns to uppercase', () => {
-        const url = 'com.ham2k.polo://qso?theirRef=TEST&theirSig=sota&theirCall=k6test&myCall=n0call'
+        const url = 'com.ham2k.polo://qso?their.refs=sota:TEST&their.call=k6test&our.call=n0call'
         const result = parseDeepLinkURL(url)
         expect(result.theirCall).toBe('K6TEST')
-        expect(result.myCall).toBe('N0CALL')
+        expect(result.ourCall).toBe('N0CALL')
       })
 
-      it('preserves myRef case', () => {
-        const url = 'com.ham2k.polo://qso?myRef=W6/CT-006&mySig=sota'
-        expect(parseDeepLinkURL(url).myRef).toBe('W6/CT-006')
-      })
-
-      it('preserves theirRef case', () => {
-        const url = 'com.ham2k.polo://qso?theirRef=W6/CT-006&theirSig=sota'
-        expect(parseDeepLinkURL(url).theirRef).toBe('W6/CT-006')
+      it('preserves ref case', () => {
+        const url = 'com.ham2k.polo://qso?our.refs=sota:W6/CT-006'
+        expect(parseDeepLinkURL(url).ourRefs[0].ref).toBe('W6/CT-006')
       })
     })
 
     describe('frequency handling', () => {
       it('converts Hz input to kHz for internal storage', () => {
         // SOTAcat sends 7245000 Hz (7.245 MHz on 40m)
-        const url = 'com.ham2k.polo://qso?theirRef=W6/CT-006&theirSig=sota&freq=7245000'
+        const url = 'com.ham2k.polo://qso?their.refs=sota:W6/CT-006&frequency=7245000'
         const result = parseDeepLinkURL(url)
         expect(result.freq).toBe(7245) // 7245000 Hz → 7245 kHz
       })
 
       it('handles missing frequency gracefully', () => {
-        const url = 'com.ham2k.polo://qso?theirRef=TEST&theirSig=sota'
+        const url = 'com.ham2k.polo://qso?their.refs=sota:TEST'
         const result = parseDeepLinkURL(url)
         expect(result.freq).toBeUndefined()
       })
 
       it('handles invalid frequency string', () => {
-        const url = 'com.ham2k.polo://qso?theirRef=TEST&theirSig=sota&freq=abc'
+        const url = 'com.ham2k.polo://qso?their.refs=sota:TEST&frequency=abc'
         const result = parseDeepLinkURL(url)
         expect(result.freq).toBeUndefined()
       })
 
       it('handles empty frequency string', () => {
-        const url = 'com.ham2k.polo://qso?theirRef=TEST&theirSig=sota&freq='
+        const url = 'com.ham2k.polo://qso?their.refs=sota:TEST&frequency='
         const result = parseDeepLinkURL(url)
         expect(result.freq).toBeUndefined()
       })
@@ -237,7 +219,7 @@ describe('DeepLinkHandler', () => {
   describe('frequency conversion for ADIF export', () => {
     it('converts Hz input to kHz internally for correct ADIF export', () => {
       // SOTAcat sends 7245000 Hz (7.245 MHz on 40m)
-      const url = 'com.ham2k.polo://qso?theirRef=W6/CT-006&theirSig=sota&freq=7245000'
+      const url = 'com.ham2k.polo://qso?their.refs=sota:W6/CT-006&frequency=7245000'
       const parsed = parseDeepLinkURL(url)
 
       // Internal storage should be in kHz
@@ -250,8 +232,7 @@ describe('DeepLinkHandler', () => {
 
     it('derives correct band from kHz frequency', () => {
       const qso = buildSuggestedQSO({
-        theirRef: 'TEST',
-        theirSig: 'sota',
+        theirRefs: [{ type: 'sota', ref: 'TEST' }],
         freq: 7245 // kHz (after parseFrequency conversion)
       })
       expect(qso.band).toBe('40m')
@@ -259,76 +240,89 @@ describe('DeepLinkHandler', () => {
   })
 
   describe('buildSuggestedQSO', () => {
-    it('builds QSO with their ref from theirRef/theirSig using hunting type', () => {
-      const params = { theirRef: 'W6/CT-006', theirSig: 'sota', theirCall: 'K6TEST' }
+    it('builds QSO with their refs using hunting type', () => {
+      const params = { theirRefs: [{ type: 'sota', ref: 'W6/CT-006' }], theirCall: 'K6TEST' }
       const qso = buildSuggestedQSO(params)
-      // theirRef should use hunting type (e.g., 'sota') not activation type (e.g., 'sotaActivation')
+      // theirRefs should use hunting type (e.g., 'sota') not activation type (e.g., 'sotaActivation')
       expect(qso.refs).toEqual([{ type: 'sota', ref: 'W6/CT-006' }])
       expect(qso.their.call).toBe('K6TEST')
     })
 
-    it('maps all theirSig values to correct hunting types', () => {
-      // theirRef represents the station being chased, so uses hunting types
+    it('builds QSO with multiple their refs', () => {
+      const params = {
+        theirRefs: [
+          { type: 'pota', ref: 'K-1234' },
+          { type: 'sota', ref: 'W6/CT-006' }
+        ]
+      }
+      const qso = buildSuggestedQSO(params)
+      expect(qso.refs).toEqual([
+        { type: 'pota', ref: 'K-1234' },
+        { type: 'sota', ref: 'W6/CT-006' }
+      ])
+    })
+
+    it('maps all ref types to correct hunting types', () => {
       const testCases = [
-        { sig: 'sota', expected: 'sota' },
-        { sig: 'pota', expected: 'pota' },
-        { sig: 'wwff', expected: 'wwff' },
-        { sig: 'gma', expected: 'gma' },
-        { sig: 'wca', expected: 'wca' },
-        { sig: 'zlota', expected: 'zlota' }
+        { type: 'sota', expected: 'sota' },
+        { type: 'pota', expected: 'pota' },
+        { type: 'wwff', expected: 'wwff' },
+        { type: 'gma', expected: 'gma' },
+        { type: 'wca', expected: 'wca' },
+        { type: 'zlota', expected: 'zlota' }
       ]
 
-      testCases.forEach(({ sig, expected }) => {
-        const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: sig })
+      testCases.forEach(({ type, expected }) => {
+        const qso = buildSuggestedQSO({ theirRefs: [{ type, ref: 'TEST' }] })
         expect(qso.refs).toEqual([{ type: expected, ref: 'TEST' }])
       })
     })
 
-    it('does not add refs when theirRef/theirSig not provided', () => {
+    it('does not add refs when theirRefs not provided', () => {
       const params = { freq: 14285, mode: 'CW' } // kHz (after Hz→kHz conversion)
       const qso = buildSuggestedQSO(params)
       expect(qso.refs).toBeUndefined()
     })
 
     it('includes their callsign', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', theirCall: 'K6TEST' })
+      const qso = buildSuggestedQSO({ theirRefs: [{ type: 'sota', ref: 'TEST' }], theirCall: 'K6TEST' })
       expect(qso.their.call).toBe('K6TEST')
     })
 
     it('includes our callsign', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', myCall: 'N0CALL' })
+      const qso = buildSuggestedQSO({ theirRefs: [{ type: 'sota', ref: 'TEST' }], ourCall: 'N0CALL' })
       expect(qso.our.call).toBe('N0CALL')
     })
 
     it('includes frequency and derives band', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14285 }) // kHz
+      const qso = buildSuggestedQSO({ theirRefs: [{ type: 'sota', ref: 'TEST' }], freq: 14285 }) // kHz
       expect(qso.freq).toBe(14285)
       expect(qso.band).toBe('20m')
     })
 
     it('derives mode from frequency when not provided', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14285 }) // kHz
+      const qso = buildSuggestedQSO({ theirRefs: [{ type: 'sota', ref: 'TEST' }], freq: 14285 }) // kHz
       expect(qso.mode).toBe('SSB')
     })
 
     it('derives CW mode for CW portion of band', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14035 }) // kHz
+      const qso = buildSuggestedQSO({ theirRefs: [{ type: 'sota', ref: 'TEST' }], freq: 14035 }) // kHz
       expect(qso.mode).toBe('CW')
     })
 
     it('uses provided mode over derived mode', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', freq: 14285, mode: 'CW' }) // kHz
+      const qso = buildSuggestedQSO({ theirRefs: [{ type: 'sota', ref: 'TEST' }], freq: 14285, mode: 'CW' }) // kHz
       expect(qso.mode).toBe('CW')
     })
 
     it('includes timestamp', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota', time: 1704067200000 })
+      const qso = buildSuggestedQSO({ theirRefs: [{ type: 'sota', ref: 'TEST' }], startAtMillis: 1704067200000 })
       expect(qso.startAtMillis).toBe(1704067200000)
     })
 
     it('includes _suggestedKey with deeplink prefix and timestamp', () => {
       const before = Date.now()
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota' })
+      const qso = buildSuggestedQSO({ theirRefs: [{ type: 'sota', ref: 'TEST' }] })
       const after = Date.now()
       expect(qso._suggestedKey).toMatch(/^deeplink-\d+$/)
       // Extract timestamp from key and verify it's in expected range
@@ -338,7 +332,7 @@ describe('DeepLinkHandler', () => {
     })
 
     it('initializes empty their and our objects', () => {
-      const qso = buildSuggestedQSO({ theirRef: 'TEST', theirSig: 'sota' })
+      const qso = buildSuggestedQSO({ theirRefs: [{ type: 'sota', ref: 'TEST' }] })
       expect(qso.their).toBeDefined()
       expect(qso.our).toBeDefined()
     })

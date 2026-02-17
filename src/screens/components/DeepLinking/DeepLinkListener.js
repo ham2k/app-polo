@@ -13,25 +13,23 @@ import { useNavigation } from '@react-navigation/native'
 
 import { selectAllOperations, addNewOperation, setOperationData } from '../../../store/operations'
 import { findRef } from '../../../tools/refTools'
-import { URL_SCHEME, TYPE_TO_ACTIVATION, parseDeepLinkURL, buildSuggestedQSO } from './DeepLinkUtils'
+import { URL_SCHEME, activationTypeForKey, parseDeepLinkURL, buildSuggestedQSO } from './DeepLinkUtils'
 
 /**
  * Hook that handles incoming deep links from companion apps.
  *
- * URL format: com.ham2k.polo://qso?myRef=...&mySig=...&theirRef=...&theirSig=...&freq=...&mode=...
+ * URL format: com.ham2k.polo://qso?our.refs=type:ref,...&their.refs=type:ref,...&frequency=...&mode=...
  *
  * Parameters:
- *   myRef    - Our activation reference (e.g., K-1234)
- *   mySig    - Our activation type (sota, pota, wwff, gma, wca, zlota)
- *   myCall   - Our callsign
- *   theirRef - Their activation reference (e.g., W6/CT-006)
- *   theirSig - Their activation type
- *   theirCall - Their callsign
- *   freq     - Frequency in Hz
- *   mode     - Operating mode (CW, SSB, etc.)
- *   time     - Timestamp in milliseconds
+ *   our.refs      - Comma-separated type:ref pairs (e.g., pota:K-1234,sota:W6/CT-006)
+ *   their.refs    - Comma-separated type:ref pairs
+ *   our.call      - Our callsign
+ *   their.call    - Their callsign
+ *   frequency     - Frequency in Hz
+ *   mode          - Operating mode (CW, SSB, etc.)
+ *   startAtMillis - Timestamp in milliseconds
  *
- * At least one of (myRef+mySig) or (theirRef+theirSig) must be provided.
+ * At least one of our.refs or their.refs must be provided.
  */
 function useDeepLinkHandler () {
   const dispatch = useDispatch()
@@ -54,13 +52,13 @@ function useDeepLinkHandler () {
         return
       }
 
-      const { myRef, mySig, theirRef, theirSig, freq, mode, time, myCall, theirCall } = parsed
+      const { ourRefs, theirRefs, freq, mode, startAtMillis, ourCall, theirCall } = parsed
 
       // Build the suggested QSO object
-      const suggestedQSO = buildSuggestedQSO({ theirRef, theirSig, freq, mode, time, myCall, theirCall })
+      const suggestedQSO = buildSuggestedQSO({ theirRefs, freq, mode, startAtMillis, ourCall, theirCall })
 
-      // Find or create operation matching our ref (or create generic if chase-only)
-      const operation = await findOrCreateOperation({ myRef, mySig, operations, dispatch })
+      // Find or create operation matching our refs (or create generic if chase-only)
+      const operation = await findOrCreateOperation({ ourRefs, operations, dispatch })
 
       // Navigate to the operation with the suggested QSO
       navigation.navigate('Operation', {
@@ -102,33 +100,39 @@ function useDeepLinkHandler () {
 
 /**
  * Find an existing operation with matching ref, or create a new one.
- * If no myRef/mySig provided (chase-only mode), create a generic operation.
+ * If no ourRefs provided (chase-only mode), create a generic operation.
  */
-async function findOrCreateOperation ({ myRef, mySig, operations, dispatch }) {
+async function findOrCreateOperation ({ ourRefs, operations, dispatch }) {
   // Chase-only mode: create generic operation
-  if (!myRef || !mySig) {
   // TODO: Search for recent "general operations" instead of adding a new operation
+  if (!ourRefs?.length) {
     const newOperation = await dispatch(addNewOperation({ _useTemplates: true }))
     return newOperation
   }
 
-  const activationType = TYPE_TO_ACTIVATION[mySig]
-
-  // Search existing operations for one with matching ref
   // TODO: Limit search to operations within 36-48 hours, and support multiple refs
+  // Search existing operations for one matching ANY of our refs
   const existingOp = Object.values(operations || {}).find(op => {
     if (!op || op.deleted) return false
-    const opRef = findRef(op, activationType)
-    return opRef?.ref === myRef
+    return ourRefs.some(({ type, ref }) => {
+      const activationType = activationTypeForKey(type)
+      const opRef = findRef(op, activationType)
+      return opRef?.ref === ref
+    })
   })
 
   if (existingOp) {
     return existingOp
   }
 
-  // Create new operation with this ref as activation
+  // Create new operation with these refs as activations
+  const refs = ourRefs.map(({ type, ref }) => ({
+    type: activationTypeForKey(type),
+    ref
+  }))
+
   const newOperation = await dispatch(addNewOperation({
-    refs: [{ type: activationType, ref: myRef }],
+    refs,
     _isNew: true
   }))
 
