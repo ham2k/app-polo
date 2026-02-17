@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 
 import { selectAllOperations, addNewOperation, setOperationData } from '../../../store/operations'
+import { setCatAddress } from '../../../store/station/stationSlice'
 import { findRef } from '../../../tools/refTools'
 import { URL_SCHEME, activationTypeForKey, parseDeepLinkURL, buildSuggestedQSO } from './DeepLinkUtils'
 
@@ -54,7 +55,12 @@ function useDeepLinkHandler () {
         return
       }
 
-      const { ourRefs, theirRefs, freq, mode, startAtMillis, ourCall, theirCall } = parsed
+      const { ourRefs, theirRefs, freq, mode, startAtMillis, ourCall, theirCall, returnpath } = parsed
+
+      // Store CAT device address if provided
+      if (returnpath) {
+        dispatch(setCatAddress(returnpath))
+      }
 
       // Build the suggested QSO object
       const suggestedQSO = buildSuggestedQSO({ theirRefs, freq, mode, startAtMillis, ourCall, theirCall })

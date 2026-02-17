@@ -10,7 +10,8 @@ import { bandForFrequency } from '@ham2k/lib-operation-data'
 
 const initialState = {
   devices: {},
-  currentTransceiver: 'default'
+  currentTransceiver: 'default',
+  catAddress: null
 }
 
 export const stationSlice = createSlice({
@@ -53,11 +54,14 @@ export const stationSlice = createSlice({
     },
     setCurrentTransceiver: (state, action) => {
       state.currentTransceiver = action.payload
+    },
+    setCatAddress: (state, action) => {
+      state.catAddress = action.payload
     }
   }
 })
 
-export const { setTransceiverState, setCurrentTransceiver, setVFO } = stationSlice.actions
+export const { setTransceiverState, setCurrentTransceiver, setVFO, setCatAddress } = stationSlice.actions
 
 export const selectTransceiver = createSelector(
   (state) => state?.station?.devices || state?.station?.transceivers,
@@ -69,5 +73,7 @@ export const selectVFO = createSelector(
   (state, transceiver) => selectTransceiver(state, transceiver),
   (transceiver) => transceiver.vfo || { band: '20m', mode: 'USB' }
 )
+
+export const selectCatAddress = (state) => state?.station?.catAddress
 
 export default stationSlice.reducer

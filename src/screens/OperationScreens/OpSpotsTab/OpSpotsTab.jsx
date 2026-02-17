@@ -13,6 +13,8 @@ import { useFindHooks } from '../../../extensions/registry'
 import { selectRuntimeOnline } from '../../../store/runtime'
 import { selectSettings } from '../../../store/settings'
 import { selectSectionedQSOs } from '../../../store/qsos'
+import { selectCatAddress } from '../../../store/station/stationSlice'
+import { tuneRadio } from '../../../store/apis/apiSOTAcat/apiSOTAcat'
 
 import SpotsPanel from './components/SpotsPanel'
 
@@ -24,6 +26,7 @@ export default function OpSpotsTab ({ navigation, route }) {
   const operation = route.params.operation
   const { sections, qsos } = useSelector(state => selectSectionedQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false))
   const online = useSelector(selectRuntimeOnline)
+  const catAddress = useSelector(selectCatAddress)
 
   const spotsHooks = useFindHooks('spots')
 
@@ -36,12 +39,24 @@ export default function OpSpotsTab ({ navigation, route }) {
       await hook.extraSpotInfo({ online, settings, dispatch, spot })
     }
 
-    if (route?.params?.splitView) {
-      navigation.navigate('Operation', { ...route?.params, qso: { ...spot, our: undefined, _suggestedKey: spot.key, key: undefined } })
-    } else {
-      navigation.navigate('OpLog', { qso: { ...spot, our: undefined, _suggestedKey: spot.key, key: undefined } })
+    // Tune SOTAcat radio if connected (fire-and-forget)
+    if (catAddress && (spot.freq || spot.mode)) {
+      tuneRadio(catAddress, spot.freq, spot.mode).catch(error => {
+        console.log('[SOTAcat] Tune error:', error)
+      })
     }
-  }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings])
+
+    const qso = {
+      their: { call: spot.their?.call },
+      band: spot.band,
+      freq: spot.freq,
+      mode: spot.mode,
+      refs: [...(spot.refs || [])],
+      _suggestedKey: spot.key
+    }
+
+    navigation.navigate('Operation', { ...route?.params, qso })
+  }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings, catAddress])
 
   return (
     <SpotsPanel operation={operation} qsos={qsos} sections={sections} onSelect={handleSelect} style={{ paddingBottom: safeArea.bottom, paddingRight: safeArea.right }} />

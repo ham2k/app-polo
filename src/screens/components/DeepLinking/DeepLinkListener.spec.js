@@ -56,7 +56,8 @@ describe('DeepLinkListener', () => {
           freq: 14285, // Hz input (14285000) converted to kHz
           mode: 'CW',
           startAtMillis: undefined,
-          ourCall: undefined
+          ourCall: undefined,
+          returnpath: undefined
         })
       })
 
@@ -105,7 +106,8 @@ describe('DeepLinkListener', () => {
           mode: 'CW',
           startAtMillis: 1704067200000,
           ourCall: 'N0CALL',
-          theirCall: 'K6TEST'
+          theirCall: 'K6TEST',
+          returnpath: undefined
         })
       })
     })
@@ -185,6 +187,44 @@ describe('DeepLinkListener', () => {
       it('preserves ref case', () => {
         const url = 'com.ham2k.polo://qso?our.refs=sota:W6/CT-006'
         expect(parseDeepLinkURL(url).ourRefs[0].ref).toBe('W6/CT-006')
+      })
+    })
+
+    describe('returnpath handling', () => {
+      it('parses returnpath from URL', () => {
+        const url = 'com.ham2k.polo://qso?their.refs=sota:W6/CT-006&returnpath=http%3A%2F%2Fsotacat.local%2F'
+        const result = parseDeepLinkURL(url)
+        expect(result.returnpath).toBe('http://sotacat.local')
+      })
+
+      it('parses returnpath with port', () => {
+        const url = 'com.ham2k.polo://qso?their.refs=sota:W6/CT-006&returnpath=http%3A%2F%2F192.168.4.1%3A8080%2F'
+        const result = parseDeepLinkURL(url)
+        expect(result.returnpath).toBe('http://192.168.4.1:8080')
+      })
+
+      it('strips trailing path from returnpath', () => {
+        const url = 'com.ham2k.polo://qso?their.refs=sota:W6/CT-006&returnpath=http%3A%2F%2Fsotacat.local%2Fsome%2Fpath'
+        const result = parseDeepLinkURL(url)
+        expect(result.returnpath).toBe('http://sotacat.local')
+      })
+
+      it('returns undefined for returnpath without protocol', () => {
+        const url = 'com.ham2k.polo://qso?their.refs=sota:W6/CT-006&returnpath=sotacat.local'
+        const result = parseDeepLinkURL(url)
+        expect(result.returnpath).toBeUndefined()
+      })
+
+      it('returns undefined for missing returnpath', () => {
+        const url = 'com.ham2k.polo://qso?their.refs=sota:W6/CT-006'
+        const result = parseDeepLinkURL(url)
+        expect(result.returnpath).toBeUndefined()
+      })
+
+      it('returns undefined for empty returnpath', () => {
+        const url = 'com.ham2k.polo://qso?their.refs=sota:W6/CT-006&returnpath='
+        const result = parseDeepLinkURL(url)
+        expect(result.returnpath).toBeUndefined()
       })
     })
 

@@ -82,11 +82,28 @@ export function parseDeepLinkURL (url) {
       mode: params.get('mode')?.toUpperCase() || undefined,
       startAtMillis: params.get('startAtMillis') ? parseInt(params.get('startAtMillis'), 10) : undefined,
       ourCall: params.get('our.call')?.toUpperCase() || undefined,
-      theirCall: params.get('their.call')?.toUpperCase() || undefined
+      theirCall: params.get('their.call')?.toUpperCase() || undefined,
+      returnpath: parseReturnpath(params.get('returnpath'))
     }
   } catch (e) {
     console.error('[DeepLink] Error parsing URL:', e)
     return null
+  }
+}
+
+/**
+ * Parse returnpath parameter — the base URL of the CAT device (e.g., "http://sotacat.local/").
+ * Validates that it contains a protocol, and strips any trailing path to keep just the origin.
+ */
+function parseReturnpath (returnpathStr) {
+  if (!returnpathStr) return undefined
+  if (!returnpathStr.includes('://')) return undefined
+
+  try {
+    const url = new URL(returnpathStr)
+    return url.origin
+  } catch {
+    return undefined
   }
 }
 
