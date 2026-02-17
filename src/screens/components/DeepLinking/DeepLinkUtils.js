@@ -7,28 +7,45 @@
  */
 
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
+import { findHooks } from '../../../extensions/registry'
 
 export const URL_SCHEME = 'com.ham2k.polo://'
 
-// Map URL type/sig param to operation activation type (for myRef - what YOU are activating)
-export const TYPE_TO_ACTIVATION = {
-  sota: 'sotaActivation',
-  pota: 'potaActivation',
-  wwff: 'wwffActivation',
-  gma: 'gmaActivation',
-  wca: 'wcaActivation',
-  zlota: 'zlotaActivation'
-  // iota: 'iotaActivation', // IOTA not yet supported in Polo
+export function activationTypeForKey (key) {
+  const hook = findHooks('activity').find(h => h.key === key)
+  return hook?.activationType
 }
 
-// Map URL type/sig param to QSO hunting type (for theirRef - what THEY have that you're chasing)
-export const TYPE_TO_HUNTING = {
-  sota: 'sota',
-  pota: 'pota',
-  wwff: 'wwff',
-  gma: 'gma',
-  wca: 'wca',
-  zlota: 'zlota'
+export function huntingTypeForKey (key) {
+  const hook = findHooks('activity').find(h => h.key === key)
+  return hook?.huntingType
+}
+
+/**
+ * Parse a comma-separated refs string (e.g. "sota:W6/CT-006,pota:US-1234")
+ * into an array of { type, ref } objects. Validates each type against findHooks('activity').
+ * Returns undefined if the string is empty or all entries are invalid.
+ */
+function parseRefs (refsStr) {
+  if (!refsStr) return undefined
+
+  const refs = []
+  for (const pair of refsStr.split(',')) {
+    const colonIndex = pair.indexOf(':')
+    if (colonIndex < 1) continue
+
+    const type = pair.slice(0, colonIndex).toLowerCase()
+    const ref = pair.slice(colonIndex + 1)
+    if (!ref) continue
+
+    if (!activationTypeForKey(type)) {
+      console.log('[DeepLink] Unknown ref type:', type)
+      return null // invalid type → reject entire URL
+    }
+    refs.push({ type, ref })
+  }
+
+  return refs.length > 0 ? refs : undefined
 }
 
 /**
@@ -39,7 +56,6 @@ export function parseDeepLinkURL (url) {
 
   try {
     // URL format: com.ham2k.polo://qso?params...
-    // We need to convert this to a parseable format
     const urlPath = url.slice(URL_SCHEME.length)
     const [, queryString] = urlPath.split('?')
 
@@ -47,42 +63,26 @@ export function parseDeepLinkURL (url) {
 
     const params = new URLSearchParams(queryString)
 
-    const myRef = params.get('myRef') || undefined
-    const mySig = params.get('mySig')?.toLowerCase() || undefined
-    const theirRef = params.get('theirRef') || undefined
-    const theirSig = params.get('theirSig')?.toLowerCase() || undefined
+    const ourRefs = parseRefs(params.get('our.refs'))
+    const theirRefs = parseRefs(params.get('their.refs'))
 
-    // Need at least one complete ref pair
-    const hasMyRef = myRef && mySig
-    const hasTheirRef = theirRef && theirSig
+    // parseRefs returns null on invalid type (reject URL)
+    if (ourRefs === null || theirRefs === null) return null
 
-    if (!hasMyRef && !hasTheirRef) {
+    // Need at least one ref set
+    if (!ourRefs && !theirRefs) {
       console.log('[DeepLink] No valid ref pair provided')
       return null
     }
 
-    // Validate mySig if provided
-    if (mySig && !TYPE_TO_ACTIVATION[mySig]) {
-      console.log('[DeepLink] Unknown mySig:', mySig)
-      return null
-    }
-
-    // Validate theirSig if provided
-    if (theirSig && !TYPE_TO_ACTIVATION[theirSig]) {
-      console.log('[DeepLink] Unknown theirSig:', theirSig)
-      return null
-    }
-
     return {
-      myRef,
-      mySig,
-      theirRef,
-      theirSig,
-      freq: parseFrequency(params.get('freq')),
+      ourRefs,
+      theirRefs,
+      freq: parseFrequency(params.get('frequency')),
       mode: params.get('mode')?.toUpperCase() || undefined,
-      time: params.get('time') ? parseInt(params.get('time'), 10) : undefined,
-      myCall: params.get('myCall')?.toUpperCase() || undefined,
-      theirCall: params.get('theirCall')?.toUpperCase() || undefined
+      startAtMillis: params.get('startAtMillis') ? parseInt(params.get('startAtMillis'), 10) : undefined,
+      ourCall: params.get('our.call')?.toUpperCase() || undefined,
+      theirCall: params.get('their.call')?.toUpperCase() || undefined
     }
   } catch (e) {
     console.error('[DeepLink] Error parsing URL:', e)
@@ -104,7 +104,7 @@ function parseFrequency (freqStr) {
 /**
  * Build a suggested QSO object with a unique key for triggering the pre-fill flow
  */
-export function buildSuggestedQSO ({ theirRef, theirSig, freq, mode, time, myCall, theirCall }) {
+export function buildSuggestedQSO ({ theirRefs, freq, mode, startAtMillis, ourCall, theirCall }) {
   const qso = {
     _suggestedKey: `deeplink-${Date.now()}`,
     their: {},
@@ -115,8 +115,8 @@ export function buildSuggestedQSO ({ theirRef, theirSig, freq, mode, time, myCal
     qso.their.call = theirCall
   }
 
-  if (myCall) {
-    qso.our.call = myCall
+  if (ourCall) {
+    qso.our.call = ourCall
   }
 
   if (freq) {
@@ -132,15 +132,17 @@ export function buildSuggestedQSO ({ theirRef, theirSig, freq, mode, time, myCal
     qso.mode = mode
   }
 
-  if (time) {
-    qso.startAtMillis = time
+  if (startAtMillis) {
+    qso.startAtMillis = startAtMillis
   }
 
-  // Add their ref for chasing/hunting (the station being worked has this ref)
+  // Add their refs for chasing/hunting (the station being worked has these refs)
   // Use hunting type (e.g., 'pota') not activation type (e.g., 'potaActivation')
-  if (theirRef && theirSig) {
-    const theirHuntingType = TYPE_TO_HUNTING[theirSig]
-    qso.refs = [{ type: theirHuntingType, ref: theirRef }]
+  if (theirRefs?.length > 0) {
+    qso.refs = theirRefs.map(({ type, ref }) => ({
+      type: huntingTypeForKey(type),
+      ref
+    }))
   }
 
   return qso
