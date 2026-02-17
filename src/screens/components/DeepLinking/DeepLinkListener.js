@@ -15,6 +15,8 @@ import { selectAllOperations, addNewOperation, setOperationData } from '../../..
 import { findRef } from '../../../tools/refTools'
 import { URL_SCHEME, activationTypeForKey, parseDeepLinkURL, buildSuggestedQSO } from './DeepLinkUtils'
 
+const RECENT_WINDOW_MS = 48 * 60 * 60 * 1000 // 48 hours
+
 /**
  * Hook that handles incoming deep links from companion apps.
  *
@@ -110,10 +112,12 @@ async function findOrCreateOperation ({ ourRefs, operations, dispatch }) {
     return newOperation
   }
 
-  // TODO: Limit search to operations within 36-48 hours, and support multiple refs
-  // Search existing operations for one matching ANY of our refs
+  // Search recent operations for one matching ANY of our refs
+  const cutoff = Date.now() - RECENT_WINDOW_MS
   const existingOp = Object.values(operations || {}).find(op => {
     if (!op || op.deleted) return false
+    const lastActive = op.startAtMillisMax || op.createdAtMillis || 0
+    if (lastActive < cutoff) return false
     return ourRefs.some(({ type, ref }) => {
       const activationType = activationTypeForKey(type)
       const opRef = findRef(op, activationType)
