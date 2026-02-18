@@ -69,9 +69,12 @@ export function parseDeepLinkURL (url) {
     // parseRefs returns null on invalid type (reject URL)
     if (ourRefs === null || theirRefs === null) return null
 
-    // Need at least one ref set
-    if (!ourRefs && !theirRefs) {
-      console.log('[DeepLink] No valid ref pair provided')
+    const theirCall = params.get('their.call')?.toUpperCase() || undefined
+    const ourCall = params.get('our.call')?.toUpperCase() || undefined
+
+    // Need at least one ref set or a callsign
+    if (!ourRefs && !theirRefs && !theirCall) {
+      console.log('[DeepLink] No valid refs or callsign provided')
       return null
     }
 
@@ -81,8 +84,8 @@ export function parseDeepLinkURL (url) {
       freq: parseFrequency(params.get('frequency')),
       mode: params.get('mode')?.toUpperCase() || undefined,
       startAtMillis: params.get('startAtMillis') ? parseInt(params.get('startAtMillis'), 10) : undefined,
-      ourCall: params.get('our.call')?.toUpperCase() || undefined,
-      theirCall: params.get('their.call')?.toUpperCase() || undefined
+      ourCall,
+      theirCall
     }
   } catch (e) {
     console.error('[DeepLink] Error parsing URL:', e)
