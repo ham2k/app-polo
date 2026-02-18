@@ -5,15 +5,15 @@
       "Loading Extensions": "Načítavanie rozšírení",
       "Development Build": "Vývojová verzia Portable Loggeru",
       "messages": {
-        "Reticulating splines": "Prepočitávanie kriviek",
+        "Reticulating splines": "Generovanie kriviek",
         "Tuning the antenna": "Ladenie antény",
         "Checking the tubes": "Kontrola elektróniek",
         "Warming up the tubes": "Zahrievanie elektróniek",
         "Unfolding the map": "Rozbalenie mapy",
         "Charging the flux capacitor": "Nabíjanie fluxu kondenzátoru",
-        "Purging the dilithium chamber": "Vyčistenie dilithium komory",
+        "Purging the dilithium chamber": "Odfúknutie dilítia",
         "Activating the turbo encabulator": "Aktivácia turbo enkabolátora",
-        "Engaging the warp drive": "Zapájanie warp pohonu"
+        "Engaging the warp drive": "Spustenie warp pohonu"
       }
     },
     "home": {
@@ -55,7 +55,7 @@
       "whoIsOperatingTheStation": "Kto prevádzkuje stanicu? (nepovinné)",
       "operatorCallsign": "Volací znak operátora",
       "multiStationOperation": "Prevádzka viacerých staníc?",
-      "multiStationOperationYes": "Áno, sme jedným z mnohých!",
+      "multiStationOperationYes": "Áno, som jedným z mnohých!",
       "multiStationOperationNo": "Nie, len bežná stanica",
       "identifierForThisStation": "Identifikátor pre túto stanicu (iba čísla)"
     },
@@ -447,7 +447,7 @@
       },
       "importingHistoricalADIF": "Importovanie ADIF záznamov… Prosím, buď trpezlivý!",
       "errorImportingHistoricalADIF": "Chyba pri importovaní historického ADIF",
-      "errorDeletingHistoricalRecords": "Chyba pri mazaní historických záznamov",
+      "errorDeletingHistoricalRecords": "Chyba pri vymazávaní historických záznamov",
       "recordsCount_zero": "Žiadne záznamy",
       "recordsCount_one": "1 záznam",
       "recordsCount_other": "{{fmtCount}} záznamov"
@@ -459,8 +459,8 @@
       "servicesSection": "Služby",
       "accountsQRZ": {
         "title": "QRZ (pre vyhľadávanie volacích znakov)",
-        "description": "Prihlásenie: {{login}}",
-        "noAccount": "Bez účtu",
+        "description": "Prihlásený: {{login}}",
+        "noAccount": "Žiadny účet",
         "errorEmail": "Nepoužívajte svoj e-mail na prihlásenie.",
         "dialogTitle": "Účet QRZ.com",
         "pleaseEnterDetails": "Zadajte prosím podrobnosti pre svoj účet na QRZ.com:",
@@ -473,7 +473,7 @@
     },
     "wavelogSettings": {
       "title": "Nastavenia Wavelog",
-      "description": "Nakonfigurujte pripojenie k API Wavelog",
+      "description": "Nakonfigurujte pripojenie k API Wavelogu",
       "noStationsFoundOrInvalidResponse": "Neboli nájdené stanice alebo neplatná odpoveď",
       "errorFetchingStations": "Chyba pri načítavaní staníc: {{message}}",
       "fetchStations": "Načítať Stanice",
@@ -540,7 +540,7 @@
       },
       "syncServiceDescription-md": "Základná služba je zdarma a umožňuje synchronizáciu najnovších údajov (až 7 dní) medzi dvoma zariadeniami alebo aplikáciami s obmedzenou rýchlosťou.\n\nPlná služba vyžaduje platené predplatné a zahŕňa všetky vaše operácie synchronizované medzi akýmkoľvek rozumným počtom zariadení alebo aplikácií s plnou rýchlosťou.\n\nPočas TESTOVACEJ PERIÓDY služby LoFi v nasledujúcich niekoľkých mesiacoch zostane služba zadarmo. Potom ceny závisia od krajiny a meny, ale nemali by byť vyššie ako 30 USD/rok alebo ekvivalent, a pravdepodobne nižšie.",
       "thisDevice": "Toto zariadenie",
-      "notAuthenticated": "Neprihlasený",
+      "notAuthenticated": "Neprihlásený",
       "lofiServer": "LoFi server",
       "otherDevices": "Iné zariadenia",
       "devSettings": "Nastavenia pre vývoj",
@@ -548,7 +548,7 @@
       "noDataStored": "Nie sú uložené žiadne dáta",
       "syncCountDescription": {
         "operations": "Operácie: {{synced}} synchronizované, {{pending}} nevybavené",
-        "qsos": "QSOs: {{synced}} synchronizované, {{pending}} nevybavené"
+        "qsos": "QSOs: {{synced}} synchronizované, {{pending}} čaká"
       },
       "cloudCountDescription": {
         "operations": "Operácie: {{total}} celkom",
@@ -564,7 +564,7 @@
       "changes-md": "## {{version}}\n\n{{changes}}",
       "checkingForPatches": "Kontrola aktualizácií…",
       "newMajorReleaseAvailable": "Nová hlavná verzia dostupná",
-      "patchAvailable": "{{track}} náplasť dostupná",
+      "patchAvailable": "Dostupná oprava {{track}}",
       "checkForUpdates": "Skontrolovať aktualizácie {{track}}",
       "checkForUpdatesGeneric": "Skontrolovať aktualizácie",
       "updateAvailable": "Aktualizácia dostupná",
@@ -640,9 +640,9 @@
         "shareWithDevelopmentTeam": "Zdieľať s vývojovým tímom"
       },
       "updatePatches": {
-        "title": "Aktualizovať záplaty",
-        "selectTrackForPatches": "Vybrať trať pre záplaty",
-        "selectTrackForPatchesDescription": "Vyberte trať pre záplaty",
+        "title": "Aktualizovať opravy",
+        "selectTrackForPatches": "Vybrať vetvu pre záplaty",
+        "selectTrackForPatchesDescription": "Vyberte vetvu pre záplaty",
         "checkingForUpdates": "Kontrola aktualizácií…",
         "checkForUpdates": "Skontrolovať aktualizácie {{track}}",
         "updateAvailable": "Aktualizácia k dispozícii",
@@ -682,15 +682,15 @@
       "adifNotes": "ADIF QSO poznámky",
       "adifComments": "ADIF QSO komentáre",
       "adifQslMessage": "ADIF QSL správa",
-      "templateHelpTitle": "Pomoc Šablón",
+      "templateHelpTitle": "Nápoveda k šablónam",
       "includePrivateDataDescription": "Mená, poznámky, adresy, atď.",
       "templateHelp-md": "Niektoré príklady prvkov šablóny…\n\n### Export protokolu\nAtribúty exportovaného logu\n`{{log.station}}` → `{{call}}` Stanica pre tento export\n`{{log.ref}}` → `XX-1234` Referencia pre tento export\n`{{log.refName}}` → `Príklad národného parku` Referenčné meno pre tento export\n`{{log.refShortName}}` → `Príklad NP` Krátky referenčný názov pre tento export\n`{{log.handlerType}}` → `pota` Typ obsluhy pre tento export\n`{{log.handlerName}}` → `Parks On The Air` Názov obsluhy pre tento export\n`{{log.handlerShortName}}` → `POTA` Krátky názov obsluhy pre tento export\n\n### Volacie znaky operácie\n`{{op.station}}` → `{{call}}` Prvá stanica pre operáciu\n`{{op.operator}}` → `{{call}}` Operátor pre operáciu\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Všetky stanice pre operáciu\n`{{op.otherStations}}` → `{{otherCalls}}` Ostatné stanice pre operáciu\n\n### Dátum operácie\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Ďalšie podrobnosti operácie\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Moja špeciálna operácia`\n`{{op.userNotes}}` → `Vyrazil som skoro ráno…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Lokátor pre túto operáciu\n\n### Informácie o QSO\n`{{qso.notes}}` → `Hrozný zvuk!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Správa o signále, ktorú poslali\n`{{qso.our.sent}}` → `55` Správa o signále, ktorú sme poslali\n`{{qso.their.grid}}` → `FF99` Lokátor, ktorú nahlásili\n`{{qso.refs}}` → Zoznam všetkých referencií pre QSO (zahŕňa referencie operácie aj referencie iba pre QSO)\n`{{first8 qso.uuid}}` → `123e4567`",
       "default": {
         "name": "Predvolené",
         "description": "Základné nastavenia pre všetky exporty",
         "fileNameNormal": "Názov súboru pre referenčné činnosti (Normálne)",
-        "fileNameCompact": "Názov súboru pre referenčné činnosti (Kompaktné)",
-        "titleReferenceActivities": "Titul pre Referenčné Činnosti",
+        "fileNameCompact": "Názov súboru pre referenčné aktivity (Kompaktné)",
+        "titleReferenceActivities": "Názov pre referenčné aktivity",
         "fileNameOtherActivitiesNormal": "Názov súboru pre ďalšie činnosti (Normálne)",
         "fileNameOtherActivitiesCompact": "Názov súboru pre ďalšie činnosti (Kompaktné)",
         "titleOtherActivities": "Titul pre Ďalšie Činnosti",
@@ -843,7 +843,7 @@
       "filtersAllModes": "Všetky módy",
       "filtersModeAutomatic": "Automatické (Momentálne {{mode}})",
       "filtersMaximumAge": "Maximálny vek",
-      "filtersAnyAge": "Bez veku",
+      "filtersAnyAge": "Akýkoľvek vek",
       "filtersAge10Minutes": "10 minút",
       "filtersAge20Minutes": "20 minút",
       "filtersAge30Minutes": "30 minút",
@@ -852,8 +852,8 @@
       "filtersSorting": "Triedenie",
       "filtersSortByTime": "Podľa času spotu",
       "filtersSortByFrequency": "Podľa frekvencie",
-      "filtersGroupSpecialSpots": "Zoskupiť Špeciálne Miesta Najprv",
-      "filtersGroupCallsWithNotes": "Zoskupiť Volania s Poznámkami",
+      "filtersGroupSpecialSpots": "Zoskupiť špeciálne spoty najprv",
+      "filtersGroupCallsWithNotes": "Skupina volacích znakov s poznámkami",
       "filtersSpotSources": "Zdroje pre spoty",
       "filtersFilterByContinent": "Filtrovať podľa kontinentu",
       "modeLabel": {

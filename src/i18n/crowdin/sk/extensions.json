@@ -3,7 +3,7 @@
     "bandsAndModes": {
       "bandsCount_zero": "Žiadne pásma",
       "bandsCount_one": "1 pásmo",
-      "bandsCount_other": "{{count}} pásma",
+      "bandsCount_other": "{{count}} pásiem",
       "modesCount_zero": "Žiadne módy",
       "modesCount_one": "1 mód",
       "modesCount_other": "{{count}} módov",
@@ -43,7 +43,7 @@
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných hradov",
         "referencesMissedCount_zero": "Žiadne neúplné hrady",
         "referencesMissedCount_one": "1 neúplný hrad",
-        "referencesMissedCount_other": "{{fmtCount}} neúplné hrady",
+        "referencesMissedCount_other": "{{fmtCount}} neúplnych hradov",
         "referencesHuntedCount_zero": "Žiadne lovené hrady",
         "referencesHuntedCount_one": "1 lovený hrad",
         "referencesHuntedCount_other": "{{fmtCount}} lovených hradov"
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Belgické majáky a svetelné lode",
+      "name": "Belgické majáky a majákové lode",
       "shortName": "BLHA",
       "exportName": "Aktivácia BLHA",
       "activityOptions": {
@@ -86,36 +86,36 @@
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných majákov",
         "referencesMissedCount_zero": "Žiadne neúplné majáky",
         "referencesMissedCount_one": "1 neúplný maják",
-        "referencesMissedCount_other": "{{fmtCount}} neúplné majáky",
+        "referencesMissedCount_other": "{{fmtCount}} neúplných majákov",
         "referencesHuntedCount_zero": "Žiadne lovené majáky",
         "referencesHuntedCount_one": "1 lovený maják",
         "referencesHuntedCount_other": "{{fmtCount}} lovených majákov"
       }
     },
     "call-notes": {
-      "name": "Poznámky volacích znakov",
+      "name": "Poznámky k volacím znakom",
       "description-md_zero": "Žiadne poznámky neboli načítané.",
       "description-md_one": "{{fmtCount}} {{type}} načítané.",
       "description-md_other": "{{fmtCount}} {{type}} načítané.",
       "builtIn": "Vstavané poznámky",
       "userDefined": "Používateľské poznámky",
       "failedToLoad": "Načítanie zlyhalo!",
-      "notesFile": "Súbor poznámok volacích znakov",
+      "notesFile": "Súbor poznámok k volacím znakom",
       "nameLabel": "Meno",
-      "namePlaceholder": "Meno pre váš súbor poznámok volacích znakov",
+      "namePlaceholder": "Názov súbor poznámok k volacím znakom",
       "locationLabel": "Poloha",
       "locationPlaceholder": "https://example.com/dir/notes.txt",
       "builtinTitle": "Vstavaný",
       "customTitle": "Vlastný",
       "addFile": "Pridať nový súbor",
-      "aboutTitle": "O poznámkach volacích znakov",
+      "aboutTitle": "O poznámkach k volacím znakom",
       "names": {
         "ham2k-hams-of-note": "Ham2K's Hams of Note"
       },
       "descriptions": {
-        "ham2k-hams-of-note": "Oznamujúci výber, kto je kto a kto nie je vo svete rádiá"
+        "ham2k-hams-of-note": "Ukážkový príklad, kto je kto a kto nie je vo svete rádiá"
       },
-      "help-md": "Poznámky volacích znakov sú uložené v jednoduchých textových súboroch, jeden volací znak na riadok, za ktorým nasledujú informácie, ktoré chcete zobraziť na obrazovke denníka. Môžete použiť vstavané súbory alebo pridať svoje vlastné.\n\nPoskytnite priamy odkaz na obyčajný textový súbor alebo \"zdieľací odkaz\" zo služby ako:\n* [Google Docs](https://docs.google.com/)\n* [Google Drive](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\nRiadky v tomto súbore by mali vyzerať ako tento a môžu podporovať základné formátovanie markdown:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nAk položka začína emoji, bude použitá namiesto predvolenej ⭐.\n\nPoložky je možné použiť na \"rozšírenie volacieho znaku\", ak najskôr napíšete `..` alebo `//` do poľa volacieho znaku, ako napríklad `//DAN` v príklade vyššie."
+      "help-md": "Poznámky k volacím znakom sú uložené v jednoduchých textových súboroch, jeden volací znak na riadok, za ktorým nasledujú informácie, ktoré chcete zobraziť na obrazovke denníka. Môžete použiť vstavané súbory alebo pridať svoje vlastné.\n\nPoskytnite priamy odkaz na obyčajný textový súbor alebo \"zdieľací odkaz\" zo služby ako:\n* [Google Docs](https://docs.google.com/)\n* [Google Drive](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\nRiadky v tomto súbore by mali vyzerať ako tento a môžu podporovať základné formátovanie markdown:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nAk položka začína emoji, bude použitá namiesto predvolenej ⭐.\n\nPoložky je možné použiť na \"rozšírenie volacieho znaku\", ak najskôr napíšete `..` alebo `//` do poľa volacieho znaku, ako napríklad `//DAN` v príklade vyššie."
     },
     "canadianProvinces": {
       "provincesCount_zero": "Žiadne kanadské provincie",
@@ -147,14 +147,14 @@
       "sendChatConfirm": "Správa odoslaná!"
     },
     "commands-debug": {
-      "syncall": "Vymazať všetky operácie a resetovať synchronizovaný stav?",
-      "syncallConfirm": "Mažú sa údaje a resynchronizácia všetkých…",
+      "syncall": "Vymazať všetky operácie a resetovať stav synchronizácie?",
+      "syncallConfirm": "Vymazanie údajov a opätovná synchronizácia všetkého…",
       "syncup": "Znova poslať lokálne údaje do synchronizačnej služby?",
       "syncupConfirm": "Znovu sa posiela…",
       "wipedb": "Vymazať celú databázu (ale ponechať nastavenia)?",
       "wipedbConfirm": "Vymazáva sa databáza…",
       "factory": "Vymazať všetky údaje a nastavenia?",
-      "factoryConfirm": "Prebieha reset zariadenia…",
+      "factoryConfirm": "Prebieha obnovenie továrenských nastavení…",
       "switchLanguage": "Zmeniť jazyk na `{{lang}}` {{name}}?",
       "switchLanguagePrompt": "Jazyk `{{lang}}` {{name}}",
       "switchLanguageConfirm": "Prebieha prechod na `{{lang}}` {{name}}…"
@@ -172,17 +172,17 @@
       "rtfmConfirm": "Manuál sa otvára",
       "spot": {
         "cannotSelfSpotWithoutFrequency": "Nemožno uskutočniť self-spot bez uvedenia frekvencie",
-        "selfSpotWithComments": "Vlastná aktualizácia s ‚{{comments}}’?",
-        "selfSpotPrompt": "Vlastná aktualizácia?",
-        "selfSpottingWithComments": "Aktualizuje sa na {{freq}} s ‚{{comments}}’",
-        "selfSpotting": "Aktualizuje na {{freq}}"
+        "selfSpotWithComments": "Vlastný spot s ‚{{comments}}’?",
+        "selfSpotPrompt": "Vlastný spot?",
+        "selfSpottingWithComments": "Vlastný spot na {{freq}} s ‚{{comments}}’",
+        "selfSpotting": "Vlastný spot na {{freq}}"
       }
     },
     "commands-operation": {
-      "start": "Začať operáciu?",
+      "start": "Spustiť operáciu?",
       "startConfirm": "Operácia začala!",
       "break": "Pridať si pauzu?",
-      "breakConfirm": "Pauza operácie pridaná!",
+      "breakConfirm": "Prestávka operácie pridaná!",
       "stop": "Ukončiť operáciu?",
       "stopConfirm": "Operácia ukončená!"
     },
@@ -228,21 +228,21 @@
     },
     "custom": {
       "activityOptions": {
-        "title_zero": "Žiadne odkazy neboli vybrané na aktiváciu",
-        "title_one": "Aktivácia 1 odkazu",
-        "title_other": "Aktivácia {{count}} odkazov",
+        "title_zero": "Žiadne referencie neboli vybrané na aktiváciu",
+        "title_one": "Aktivácia 1 referencie",
+        "title_other": "Aktivácia {{count}} referencií",
         "addMoreReferences": "Pridať viac odkazov",
         "addReference": "Pridať odkaz",
         "activityLabel": "Aktivita - MY_SIG v ADIF (nepovinné)",
         "activityPlaceholder": "napr. COTA…",
-        "referenceLabel": "Odkaz - MY_SIG_INFO v ADIF",
+        "referenceLabel": "Referencie - MY_SIG_INFO v ADIF",
         "referencePlaceholder": "napr. XY-1234…",
         "nameLabel": "Meno (nepovinné)",
         "namePlaceholder": "napr. XYZ hrad…",
         "addButton": "Pridať {{mySig}} {{mySigInfo}}"
       },
       "loggingControl": {
-        "theirRefLabel": "Ich Ref"
+        "theirRefLabel": "Ref. protistanice"
       }
     },
     "dataFiles": {
@@ -342,7 +342,7 @@
       "shortName": "LLOTA",
       "exportName": "Aktivácia LLOTA",
       "activityOptions": {
-        "title_zero": "Žiadne jazerá vybrané pre aktiváciu",
+        "title_zero": "Žiadne jazerá nie sú vybrané pre aktiváciu",
         "title_one": "Aktivácia 1 jazera",
         "title_other": "Aktivácia {{count}} jazier",
         "noLakesFound": "Nenašli sa žiadne jazerá",
@@ -350,9 +350,9 @@
         "matchingRefs_zero": "Žiadne zodpovedajúce jazerá",
         "matchingRefs_one": "1 zodpovedajúce jazero",
         "matchingRefs_other": "{{count}} zodpovedajúcich jazier",
-        "searchForRefs": "Vyhľadajte nejaké jazerá pre aktiváciu!",
-        "noRefsNearby": "Žiadne jazerá v blízkosti",
-        "nearbyRefs": "Jazerá v blízkosti",
+        "searchForRefs": "Vyhľadajte jazerá pre aktiváciu!",
+        "noRefsNearby": "Žiadne jazerá v okolí",
+        "nearbyRefs": "Jazerá v okolí",
         "searchPlaceholder": "Názov alebo referenčné číslo…"
       },
       "scoring": {
@@ -377,7 +377,7 @@
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných jazier",
         "referencesMissedCount_zero": "Žiadne nekompletné jazerá",
         "referencesMissedCount_one": "1 neúplné jazero",
-        "referencesMissedCount_other": "{{fmtCount}} nekompletných jazier",
+        "referencesMissedCount_other": "{{fmtCount}} neúplných jazier",
         "referencesHuntedCount_zero": "Žiadne lovené jazerá",
         "referencesHuntedCount_one": "1 lovené jazero",
         "referencesHuntedCount_other": "{{fmtCount}} lovených jazier"
@@ -391,10 +391,10 @@
       },
       "exampleRefName": "Príklad jazera",
       "unknownRefName": "Neznáme jazero",
-      "noRefsNearby": "V blízkosti nie sú žiadne jazerá!"
+      "noRefsNearby": "Žiadne jazerá v okolí!"
     },
     "mota": {
-      "name": "Mlyny v éteri",
+      "name": "Mills on the Air",
       "shortName": "MOTA",
       "exportName": "Aktivácia MOTA",
       "activityOptions": {
@@ -428,7 +428,7 @@
         "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ParksnPeaks:"
       },
       "usernameLabel": "Používateľské meno (nie volací znak)",
-      "usernamePlaceholder": "vaše používateľské meno účtu",
+      "usernamePlaceholder": "používateľské meno vašeho  účtu",
       "apiKeyLabel": "API kľúč (nie heslo)",
       "apiKeyPlaceholder": "váš API kľúč"
     },
@@ -576,9 +576,9 @@
         "ref2refCount_zero": "Žiadne S2S",
         "ref2refCount_one": "1 S2S",
         "ref2refCount_other": "{{fmtCount}} S2S",
-        "huntedRefsCount_zero": "Žiadne lovené končiare",
-        "huntedRefsCount_one": "1 lovený končiar",
-        "huntedRefsCount_other": "{{fmtCount}} lovené končiare",
+        "huntedRefsCount_zero": "Žiadne lovené vrcholy",
+        "huntedRefsCount_one": "1 lovený vrchol",
+        "huntedRefsCount_other": "{{fmtCount}} lovené vrcholy",
         "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
         "activatorQSOsCount_one": "1 aktivátorové QSO",
         "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
@@ -595,7 +595,7 @@
         "referencesMissedCount_zero": "Žiadne neúplné vrcholy",
         "referencesMissedCount_one": "1 neúplný vrchol",
         "referencesMissedCount_other": "{{fmtCount}} neúplné vrcholy",
-        "referencesHuntedCount_zero": "Žiadne lovené končiare",
+        "referencesHuntedCount_zero": "Žiadne lovené vrcholy",
         "referencesHuntedCount_one": "1 lovený vrchol",
         "referencesHuntedCount_other": "{{fmtCount}} lovené vrcholy"
       },
@@ -613,17 +613,17 @@
     },
     "tota": {
       "activityOptions": {
-        "title_zero": "Nie sú vybrané veže na aktiváciu",
+        "title_zero": "Žiadne vybrané veže na aktiváciu",
         "title_one": "Aktivácia 1 veže",
         "title_other": "Aktivácia {{count}} veží",
-        "noTowersFound": "Nenájdené žiadne veže",
+        "noTowersFound": "Nenašli sa žiadne veže",
         "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
         "matchingTowers_zero": "Žiadne zodpovedajúce veže",
         "matchingTowers_one": "1 zodpovedajúca veža",
         "matchingTowers_other": "{{count}} zodpovedajúcich veží",
-        "searchForTowers": "Vyhľadajte nejaké veže pre aktiváciu!",
+        "searchForTowers": "Vyhľadajte veže na aktiváciu!",
         "noTowersNearby": "Žiadne veže v blízkosti",
-        "nearbyTowers": "Blízke veže",
+        "nearbyTowers": "Veže v okolí",
         "searchPlaceholder": "Názov alebo referenčné číslo…",
         "unknownTower": "Neznáma veža"
       },
@@ -634,8 +634,8 @@
         "huntedRefsCount_zero": "Žiadne lovené veže",
         "huntedRefsCount_one": "1 lovená veža",
         "huntedRefsCount_other": "{{fmtCount}} lovených veží",
-        "activatorQSOsCount_zero": "No activator QSOs",
-        "activatorQSOsCount_one": "1 activator QSO",
+        "activatorQSOsCount_zero": "Žiadne QSO aktivátora",
+        "activatorQSOsCount_one": "1 QSO aktivátora",
         "activatorQSOsCount_other": "{{fmtCount}} aktivovaných QSOs",
         "ref2refQSOsCount_zero": "Žiadne R2R QSOs",
         "ref2refQSOsCount_one": "1 R2R QSO",
@@ -726,12 +726,12 @@
     },
     "wfd": {
       "name": "Zimný Deň Polí",
-      "shortName": "ZDP",
-      "exportName": "Aktivácia ZDP",
+      "shortName": "WFD",
+      "exportName": "Aktivácia WFD",
       "activityOptions": {
         "exchangeInformation": "Vymeniť informácie",
         "classLabel": "Trieda",
-        "locationLabel": "Miesto",
+        "locationLabel": "Poloha",
         "objectives_zero": "Žiadne ciele dosiahnuté",
         "objectives_one": "1 cieľ dosiahnutý, OM ×{{multiplier}}",
         "objectives_other": "{{count}} cieľov dosiahnutých, OM ×{{multiplier}}",
@@ -746,11 +746,11 @@
         "ssbSatelliteContact": "SSB alebo CW satelitný kontakt",
         "winlinkEmails": "Winlink e-maily",
         "specialBulletin": "Špeciálny Bulletin",
-        "sixBands": "Šesť Pásiem",
-        "twelveBands": "Dvanásť Pásiem",
+        "sixBands": "Šesť pásiem",
+        "twelveBands": "Dvanásť pásiem",
         "multipleModes": "Viacnásobné módy",
         "qrpOperation": "QRP prevádzka",
-        "sixContinuousHours": "Šesť Neprerušovaných Hodín"
+        "sixContinuousHours": "Šesť nepretržitých hodín"
       },
       "objectiveDescription": {
         "altPower": "Operujte 100% na alternatívny zdroj, ako sú batérie, solárna energia, vietor, atď.",
@@ -843,7 +843,7 @@
       "loggingControl": {
         "theirRefLabel": "Ich WWFF"
       },
-      "exampleRefName": "Príkladový park",
+      "exampleRefName": "Príklad parku",
       "unknownRefName": "Neznámy park",
       "noRefsNearby": "V blízkosti nie sú žiadne parky!",
       "postSpotAPI": {
@@ -859,7 +859,7 @@
         "noAccount": "Bez účtu",
         "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ZLOTA:",
         "callsignLabel": "Volací znak",
-        "callsignPlaceholder": "váš volací znak účtu",
+        "callsignPlaceholder": "volací znak vašeho účtu",
         "pinLabel": "PIN kód (nie heslo)",
         "pinPlaceholder": "váš PIN kód"
       },

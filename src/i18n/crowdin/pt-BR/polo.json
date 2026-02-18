@@ -11,7 +11,7 @@
         "Warming up the tubes": "Aquecendo os tubos",
         "Unfolding the map": "Desdobrando o mapa",
         "Charging the flux capacitor": "Carregando o capacitor de fluxo",
-        "Purging the dilithium chamber": "Purgando a câmara de dilithium",
+        "Purging the dilithium chamber": "Purgando a câmara de dilítio",
         "Activating the turbo encabulator": "Ativando o turbo encabulador",
         "Engaging the warp drive": "Engatando o motor de dobra"
       }
@@ -642,7 +642,7 @@
       "updatePatches": {
         "title": "Atualizar Patches",
         "selectTrackForPatches": "Selecionar Faixa para Patches",
-        "selectTrackForPatchesDescription": "Selecione a faixa para os patches",
+        "selectTrackForPatchesDescription": "Selecione a faixa para atualizar",
         "checkingForUpdates": "Verificando atualizações…",
         "checkForUpdates": "Verificar atualizações para {{track}}",
         "updateAvailable": "Atualização disponível",

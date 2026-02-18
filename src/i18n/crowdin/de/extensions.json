@@ -338,7 +338,7 @@
       }
     },
     "llota": {
-      "name": "LLOTA: Seen und Lagunen auf Sendung",
+      "name": "LLOTA: Lakes and Lagoons on the Air",
       "shortName": "LLOTA",
       "exportName": "LLOTA-Aktivierung",
       "activityOptions": {
@@ -428,7 +428,7 @@
         "pleaseEnterDetails": "Bitte gib die Details deines ParksnPeaks-Kontos ein:"
       },
       "usernameLabel": "Benutzername (kein Rufzeichen)",
-      "usernamePlaceholder": "Dein Kontobenutzername",
+      "usernamePlaceholder": "Dein Benutzername",
       "apiKeyLabel": "API-Schlüssel (nicht das Passwort)",
       "apiKeyPlaceholder": "Dein API-Schlüssel"
     },

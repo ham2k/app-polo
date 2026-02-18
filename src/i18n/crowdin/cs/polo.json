@@ -239,7 +239,7 @@
         "description": "Podívejte se na nedávné změny"
       },
       "creditsSettings": {
-        "title": "Kredity",
+        "title": "Autoři",
         "description": "Sebastián Delmont KI2D & Tým PoLo"
       },
       "noticesSettings": {
@@ -465,7 +465,7 @@
         "dialogTitle": "Účet QRZ.com",
         "pleaseEnterDetails": "Prosím, zadej detaily svého účtu QRZ.com:",
         "loginLabel": "Přihlášení (tvá volací značka)",
-        "loginPlaceholder": "tvé přihlášení",
+        "loginPlaceholder": "tvůj login",
         "passwordLabel": "Heslo",
         "passwordPlaceholder": "tvé heslo",
         "checkCredentials": "Zkontroluj přihlašovací údaje"
@@ -577,7 +577,7 @@
       "versionDescription": "{{version}} - Základní sestavení {{build}}"
     },
     "creditsSettings": {
-      "title": "Kredity",
+      "title": "Autoři",
       "createdBy": "Vytvořil {{callsign}}",
       "openSource": "Ham2K PoLo je Open Source",
       "checkOutCode": "Podívej se na kód a přispěj na GitHub!",
@@ -729,7 +729,7 @@
         "showDeletedQSOs": "Zobrazit smazané QSO",
         "numbersRow": "Řada čísel",
         "actions": "Akce",
-        "lookupAllQSOs": "Vyhledat všechny QSO",
+        "lookupAllQSOs": "Vyhledat všechna QSO",
         "confirmSpots": "Potvrdit spoty"
       }
     },
@@ -785,8 +785,8 @@
       "radioControls-a11y": "Řízení rádia {{parts}}",
       "notesLabel": "Poznámky",
       "notesLabel-a11y": "Poznámky",
-      "activeControlsLabel": "Aktivní řízení",
-      "activeControlsLabel-a11y": "Aktivní řízení",
+      "activeControlsLabel": "Aktivní položky",
+      "activeControlsLabel-a11y": "Aktivní položky",
       "selectToRemoveActiveControls": "vyber k odstranění",
       "selectToRemoveActiveControls-a11y": "vyber k odstranění",
       "moreControlsLabel": "Více řízení",
