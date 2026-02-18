@@ -95,6 +95,29 @@ describe('DeepLinkListener', () => {
         ])
       })
 
+      it('parses URL with callsign, frequency, and mode but no refs', () => {
+        const url = 'com.ham2k.polo://qso?their.call=Z1TEST,Z2TEST&frequency=14285000&mode=SSB'
+        const result = parseDeepLinkURL(url)
+        expect(result).toEqual({
+          ourRefs: undefined,
+          theirRefs: undefined,
+          theirCall: 'Z1TEST,Z2TEST',
+          freq: 14285,
+          mode: 'SSB',
+          startAtMillis: undefined,
+          ourCall: undefined
+        })
+      })
+
+      it('parses URL with only callsign and no refs', () => {
+        const url = 'com.ham2k.polo://qso?their.call=K6TEST'
+        const result = parseDeepLinkURL(url)
+        expect(result).not.toBeNull()
+        expect(result.theirCall).toBe('K6TEST')
+        expect(result.ourRefs).toBeUndefined()
+        expect(result.theirRefs).toBeUndefined()
+      })
+
       it('parses URL with all parameters', () => {
         const url = 'com.ham2k.polo://qso?our.refs=pota:K-1234&their.refs=sota:W6/CT-006&frequency=14285000&mode=CW&startAtMillis=1704067200000&our.call=N0CALL&their.call=K6TEST'
         const result = parseDeepLinkURL(url)
@@ -127,7 +150,7 @@ describe('DeepLinkListener', () => {
     })
 
     describe('invalid URLs', () => {
-      it('returns null for URL with no refs', () => {
+      it('returns null for URL with no refs and no callsign', () => {
         const url = 'com.ham2k.polo://qso?frequency=14285000&mode=CW'
         expect(parseDeepLinkURL(url)).toBeNull()
       })
