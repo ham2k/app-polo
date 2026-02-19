@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'react-native-paper'
 import { Linking, ScrollView, View } from 'react-native'
@@ -18,7 +18,6 @@ import packageJson from '../../../../package.json'
 import { selectSettings } from '../../../store/settings'
 import { fetchFeatureFlags } from '../../../store/system/fetchFeatureFlags'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { selectLocalExtensionData } from '../../../store/local'
 import { translatedVersionName } from '../../../tools/i18nUtils'
 import { H2kListItem, H2kListSection, H2kListSubheader } from '../../../ui'
 import ScreenContainer from '../../components/ScreenContainer'
@@ -138,14 +137,6 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
   const safeAreaInsets = useSafeAreaInsets()
   const [currentDialog, setCurrentDialog] = useState()
 
-  const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
-  const lofiData = useSelector(lofiDataSelector)
-
-  const showSyncSettings = useMemo(() => {
-    return lofiData?.account?.cutoff_date_millis &&
-      (Date.now() - lofiData?.account?.cutoff_date_millis > 1000 * 60 * 60 * 24)
-  }, [lofiData?.account?.cutoff_date_millis])
-
   return (
     <ScrollView style={{ flex: 1, marginLeft: safeAreaInsets.left, marginRight: splitView ? 0 : safeAreaInsets.right }}>
       <H2kListSection>
@@ -195,7 +186,7 @@ function MainSettingsOptions ({ settings, styles, navigation, splitView }) {
 
         <H2kListItem
           title={t('screens.settings.syncSettings.title', 'Sync Settings')}
-          description={t('screens.settings.syncSettings.description', 'Cloud sync and backup')}
+          description={`${t('screens.settings.syncSettings.description', 'Cloud sync and backup')} (Beta)`}
           onPress={() => navigation.navigate('Settings', { screen: 'SyncSettings' })}
           leftIcon="sync"
         />

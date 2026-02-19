@@ -251,7 +251,7 @@ Please try again later.`, { error: linkResult.json.error })
           </Text>
         </View>
         <H2kListItem
-          title={t('screens.syncSettings.syncService', 'Sync Service')}
+          title={`${t('screens.syncSettings.syncService', 'Sync Service')} (Beta)`}
           description={syncEnabled ? t('screens.syncSettings.syncService.enabled', 'Enabled') : t('screens.syncSettings.syncService.disabled', 'Disabled')}
           leftIcon="sync-circle"
           rightSwitchValue={syncEnabled}
