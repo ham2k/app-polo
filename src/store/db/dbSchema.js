@@ -201,7 +201,7 @@ export async function createTables(dbParams = {}) {
         UPDATE operations SET
           startAtMillisMin = json_extract(data, '$.startAtMillisMin'),
           startAtMillisMax = json_extract(data, '$.startAtMillisMax'),
-          qsoCount = json_extract(data, "$.qsoCount")
+          qsoCount = json_extract(data, '$.qsoCount')
       `, [], dbParams)
       await dbExecute(`
         UPDATE operations SET
@@ -232,7 +232,7 @@ export async function createTables(dbParams = {}) {
 
       await dbExecute(`
         UPDATE qsos SET
-          deleted = ifnull(json_extract(data, "$.deleted"), false)
+          deleted = ifnull(json_extract(data, '$.deleted'), false)
       `, [], dbParams)
 
       await dbExecute('UPDATE version SET version = 7', [], dbParams)
