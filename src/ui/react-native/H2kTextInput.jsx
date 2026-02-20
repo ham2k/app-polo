@@ -33,7 +33,9 @@ export function H2kTextInput (props) {
     multiline,
     uppercase, trim, noSpaces, periodToSlash, numeric, decimal, rst, textTransformer,
     accessibiltyLabel,
-    keyboard
+    keyboard,
+    left, right,
+    ...moreProps
   } = props
   const styles = useThemedStyles(prepareStyles, { style, textStyle, error, themeColor, disabled })
   const settings = useSelector(selectSettings)
@@ -344,29 +346,35 @@ export function H2kTextInput (props) {
     <View style={isFocused ? styles.focusedRoot : styles.root}>
       <Text style={styles.label}>{label}</Text>
 
-      <NativeTextInput
-        {...keyboardOptions}
+      <View style={styles.inputContainer}>
+        {left || null}
 
-        {...props}
+        <NativeTextInput
+          {...keyboardOptions}
 
-        ref={actualInnerRef}
-        value={valueAsChild ? undefined : stringValue}
-        placeholder={placeholder || ''}
-        style={styles.input}
-        allowFontScaling={true}
-        placeholderTextColor={styles.theme.colors.onBackgroundLighter}
-        // cursorColor={colorStyles.cursorColor}
-        // selectionColor={colorStyles.sectionColor}
-        onSubmitEditing={onSubmitEditing}
-        blurOnSubmit={false} // Prevent keyboard from hiding
-        onChange={handleChange}
-        onChangeText={undefined}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onSelectionChange={trackSelection ? handleSelectionChange : undefined}
-        underlineColorAndroid='transparent'
-        accessibilityLabel={accessibiltyLabel ?? label}
-      >{valueAsChild ? stringValue : null}</NativeTextInput>
+          {...moreProps}
+
+          ref={actualInnerRef}
+          value={valueAsChild ? undefined : stringValue}
+          placeholder={placeholder || ''}
+          style={styles.input}
+          allowFontScaling={true}
+          placeholderTextColor={styles.theme.colors.onBackgroundLighter}
+          // cursorColor={colorStyles.cursorColor}
+          // selectionColor={colorStyles.sectionColor}
+          onSubmitEditing={onSubmitEditing}
+          blurOnSubmit={false} // Prevent keyboard from hiding
+          onChange={handleChange}
+          onChangeText={undefined}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onSelectionChange={trackSelection ? handleSelectionChange : undefined}
+          underlineColorAndroid='transparent'
+          accessibilityLabel={accessibiltyLabel ?? label}
+        >{valueAsChild ? stringValue : null}</NativeTextInput>
+
+        {right || null}
+      </View>
 
     </View>
   )
@@ -375,7 +383,8 @@ export function H2kTextInput (props) {
 function prepareStyles (themeStyles, { style, textStyle, error, themeColor, disabled }) {
   let textColor = themeStyles.theme.colors.onBackground
   let labelColor = themeStyles.theme.colors.onBackground
-  let borderColor = error ? themeStyles.theme.colors.error : themeStyles.theme.colors.outline
+  let borderColor = themeStyles.theme.colors.outline
+  let borderOverrideColor = null
 
   style = StyleSheet.flatten(style)
 
@@ -385,11 +394,11 @@ function prepareStyles (themeStyles, { style, textStyle, error, themeColor, disa
 
   if (error) {
     labelColor = themeStyles.theme.colors.error
-    borderColor = themeStyles.theme.colors.error
+    borderOverrideColor = themeStyles.theme.colors.error
   }
 
   if (disabled) {
-    borderColor = themeStyles.theme.colors.outlineVariant
+    borderOverrideColor = themeStyles.theme.colors.outlineVariant
     textColor = themeStyles.theme.colors.onSurfaceDisabled
     labelColor = themeStyles.theme.colors.onSurfaceDisabled
   }
@@ -402,7 +411,7 @@ function prepareStyles (themeStyles, { style, textStyle, error, themeColor, disa
     borderTopRightRadius: 4,
     borderWidth: 0,
     borderBottomWidth: PixelRatio.roundToNearestPixel(1.5),
-    borderBottomColor: borderColor,
+    borderBottomColor: borderOverrideColor ?? borderColor,
     paddingHorizontal: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.8),
     paddingBottom: themeStyles.halfSpace,
     paddingTop: PixelRatio.roundToNearestPixel(themeStyles.oneSpace * 0.2),
@@ -417,15 +426,22 @@ function prepareStyles (themeStyles, { style, textStyle, error, themeColor, disa
     focusedRoot: {
       ...rootStyle,
       paddingBottom: themeStyles.halfSpace - PixelRatio.roundToNearestPixel(2.5),
-      borderBottomWidth: PixelRatio.roundToNearestPixel(4)
+      borderBottomWidth: PixelRatio.roundToNearestPixel(4),
+      borderBottomColor: borderOverrideColor ?? themeStyles.theme.colors.onSurface
     },
     label: {
       fontSize: themeStyles.smallestFontSize,
       color: labelColor,
       opacity: 0.8
     },
+    inputContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'baseline'
+    },
     input: {
       ...textStyle,
+      flex: 1,
       paddingVertical: 0,
       marginVertical: 0,
       margin: 0,

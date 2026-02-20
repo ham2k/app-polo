@@ -10,24 +10,24 @@
  * where the README has a badge mentioning the MIT license, but no license file is present
  */
 
-import React, { useState, useCallback, Fragment, useEffect } from 'react'
+import React, { useState, useCallback, Fragment, useEffect, useMemo } from 'react'
 
 import { LayoutChangeEvent, ScrollView, TouchableHighlight, View } from 'react-native'
-import { Divider, Icon, Menu, TextInput, useTheme } from 'react-native-paper'
+import { Divider, Menu } from 'react-native-paper'
+import { H2kTextInput } from '../H2kTextInput'
+import { H2kIcon } from '../H2kIcon'
 
 export function PaperDropDown (props, _ref) {
-  const activeTheme = useTheme()
   const {
     value,
     onChangeValue,
     activeColor,
-    mode,
     label,
     placeholder,
     list,
     dropDownContainerMaxHeight,
     dropDownContainerHeight,
-    theme,
+    styles,
     dropDownStyle,
     dropDownItemStyle,
     dropDownItemSelectedStyle,
@@ -38,7 +38,6 @@ export function PaperDropDown (props, _ref) {
     onFocus = () => { },
     onBlur = () => { },
     style = {},
-    contentStyle,
     editable,
     borderless,
     background,
@@ -46,15 +45,7 @@ export function PaperDropDown (props, _ref) {
     rippleColor,
     underlayColor,
     touchableStyle,
-    error,
-    selectionColor,
-    underlineColor,
-    activeUnderlineColor,
-    outlineColor,
-    activeOutlineColor,
-    dense,
-    iconColor,
-    iconStyle
+    error
   } = props
 
   const [displayValue, setDisplayValue] = useState('')
@@ -93,11 +84,21 @@ export function PaperDropDown (props, _ref) {
     onChangeValue && onChangeValue(currentValue)
   }, [onChangeValue])
 
+  const rightIcon = useMemo(() => {
+    return (
+      <H2kIcon
+        icon={visible ? 'menu-up' : 'menu-down'}
+        forceTextInputFocus={false}
+        size={styles.oneSpace * 2}
+      />
+    )
+  }, [styles.oneSpace, visible])
+
   return (
     <Menu
       visible={visible}
       onDismiss={onDismiss}
-      theme={theme}
+      theme={styles.theme}
       anchorPosition={'top'}
       anchor={
         <TouchableHighlight
@@ -132,7 +133,7 @@ export function PaperDropDown (props, _ref) {
             overflow: 'visible',
             maxWidth: '100%'
           }}
-          theme={theme}
+          theme={styles.theme}
         >
           <View
             pointerEvents={'none'}
@@ -141,43 +142,21 @@ export function PaperDropDown (props, _ref) {
               flexDirection: 'row'
             }}
           >
-            <TextInput
+            <H2kTextInput
               value={displayValue}
-              mode={mode}
               label={label}
               placeholder={placeholder}
               pointerEvents={'none'}
-              theme={theme}
-              right={
-                <Icon
-                  icon={visible ? 'menu-up' : 'menu-down'}
-                  forceTextInputFocus={false}
-                  color={iconColor}
-                  style={iconStyle}
-                  theme={theme}
-                />
-                }
+              right={rightIcon}
               disabled={disabled}
               error={error}
-              selectionColor={selectionColor}
-              underlineColor={underlineColor}
-              activeUnderlineColor={activeUnderlineColor}
-              outlineColor={outlineColor}
-              activeOutlineColor={activeOutlineColor}
-              dense={dense}
               multiline={false}
               numberOfLines={1}
               style={{
                 ...style,
                 flexGrow: 1,
-                alignSelf: 'stretch',
-                margin: 0,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: 0,
-                marginLeft: 0
+                alignSelf: 'stretch'
               }}
-              contentStyle={contentStyle}
               editable={false}
             />
           </View>
@@ -208,8 +187,8 @@ export function PaperDropDown (props, _ref) {
             <Menu.Item
               titleStyle={{
                 color: isActive(item.value)
-                  ? activeColor || (theme || activeTheme).colors.primary
-                  : (theme || activeTheme).colors.onSurface,
+                  ? activeColor || styles.theme.colors.primary
+                  : styles.theme.colors.onSurface,
                 ...(isActive(item.value)
                   ? dropDownItemSelectedTextStyle
                   : dropDownItemTextStyle)

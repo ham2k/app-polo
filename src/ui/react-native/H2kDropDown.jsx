@@ -48,12 +48,11 @@ export function H2kDropDown (props) {
       value={innerValue}
       onChangeValue={handleChangeValue}
       visible={isOpen}
+      styles={themeStyles}
       style={{
         ...style,
         color: colorStyles.paperDropdown.color,
         backgroundColor: colorStyles.paperDropdown.backgroundColor,
-        paddingLeft: 0, // props.dense ? themeStyles.halfSpace : themeStyles.oneSpace,
-        paddingRight: 0,
         fontSize: themeStyles.normalFontSize
       }}
       background={colorStyles.paperDropdown.backgroundColor}

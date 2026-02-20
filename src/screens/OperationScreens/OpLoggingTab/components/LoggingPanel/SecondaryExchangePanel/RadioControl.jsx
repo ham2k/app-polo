@@ -79,13 +79,13 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
         disabled={disabled || qso?.event}
         dropDownContainerMaxHeight={styles.oneSpace * 19}
         fieldId={'band'}
-        style={{ width: styles.oneSpace * (styles.size === 'xs' ? 13 : 15) }}
+        style={{ width: styles.oneSpace * (styles.size === 'xs' ? 12 : 14) }}
         options={bandOptions}
       />
       <H2kFrequencyInput
         innerRef={ref}
         themeColor={themeColor}
-        style={{ width: styles.oneSpace * (styles.size === 'xs' ? 10 : 11) }}
+        style={{ width: styles.oneSpace * (styles.size === 'xs' ? 10 : 12) }}
         value={freqValue}
         disabled={disabled}
         label={t('screens.opLoggingTab.frequencyLabel', 'Frequency')}
