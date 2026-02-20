@@ -317,7 +317,11 @@ export function basePartialTemplates({ settings }) {
   if (settings) {
     const userDefaults = selectExportSettings({ settings }, 'default')
     Object.keys(userDefaults).forEach(key => {
-      if ((userDefaults[key] ?? '').trim() !== '') {
+      if (typeof userDefaults[key] == 'string') {
+        if (userDefaults[key].trim() !== '') {
+          partials[key] = userDefaults[key]
+        }
+      } else if (userDefaults[key] !== undefined && userDefaults[key] !== null) {
         partials[key] = userDefaults[key]
       }
     })
