@@ -66,19 +66,22 @@ const NoticeCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-debug-notice',
-  match: /^(NOTICELONG|NOTICE)/i,
+  match: /^(NOTICEL|NOTICES|NOTICE)/i,
   describeCommand: (match) => {
-    if (match[1] === 'NOTICELONG') {
+    if (match[1] === 'NOTICEL') {
       return 'Show a long notice?'
+    } else if (match[1] === 'NOTICES') {
+      return 'Show a short notice?'
     } else {
       return 'Show a notice?'
     }
   },
   invokeCommand: (match, { dispatch }) => {
     console.log('NoticeCommandHook', match)
+    let title = 'Sample Notice Dialog'
     let text = 'This is a sample notice. With **some text** using ~~Markdown~~.'
     let dialogText = 'This is a sample dialog text. With **some text** using ~~Markdown~~. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    if (match[1] === 'NOTICELONG') {
+    if (match[1] === 'NOTICEL') {
       text = 'This is a longer sample notice. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
       dialogText = `This is a longer sample dialog text.
 
@@ -91,16 +94,20 @@ Three Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod te
 Four Lorem ipsum dolor sit amet, consectetur adipiscing elit.Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 Five Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`
+    } else if (match[1] === 'NOTICES') {
+      title = ''
+      text = 'This is a short sample notice. With **some text** using ~~Markdown~~.'
+      dialogText = 'This is a short sample dialog text. With **some text** using ~~Markdown~~.'
     }
 
     dispatch(addNotice({
       key: `debug-notice-${Date.now()}`,
-      title: `Sample Notice ${Math.floor(Math.random() * 100)}`,
+      title: title ? `${title} ${Math.floor(Math.random() * 100)}` : undefined,
       text,
       actionLabel: 'Do it!',
       action: 'dialog',
       actionArgs: {
-        dialogTitle: 'Sample Notice Dialog',
+        dialogTitle: title ? `${title} Dialog` : undefined,
         dialogText: dialogText,
         dialogActions: [
           { label: 'Change', action: 'navigate', args: ['Settings', { screen: 'DataSettings' }] },

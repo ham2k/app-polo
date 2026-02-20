@@ -72,7 +72,7 @@ export function H2kDialogCloseButton (props) {
   return <Dialog.CloseButton {...props} />
 }
 
-const MIN_VIEW_HEIGHT = 0.15
+const MIN_VIEW_HEIGHT = 0.07
 const MAX_VIEW_HEIGHT = 0.4
 
 export function H2kDialogScrollArea ({ children, style, ...props }) {

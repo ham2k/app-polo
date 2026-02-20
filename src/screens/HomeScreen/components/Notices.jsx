@@ -226,7 +226,7 @@ function OneDialog ({ dialog, styles, handleDialogAction, setDialog }) {
       <KeepAwake />
       <H2kDialog
         visible={true}
-        style={{ marginTop: 50, marginBottom: 50 }}
+        style={{ marginTop: 50, marginBottom: 50, paddingTop: dialog?.title ? 0 : styles.oneSpace * 3 }}
         onDismiss={() => {
           setDialog(undefined)
         }}
