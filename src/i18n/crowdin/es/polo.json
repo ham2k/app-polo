@@ -483,6 +483,8 @@
     "syncSettings": {
       "title": "Configuración de sincronización",
       "description": "Ham2K Log Filer es un servicio de sincronización confiable entre todos tus dispositivos y proporciona un respaldo de tus contactos y operaciones en la nube.",
+      "activePlan": "Plan Activo: {{plan}}",
+      "noActivePlan": "Sin Plan Activo",
       "syncService": "Sincronización",
       "syncService.enabled": "Habilitada",
       "syncService.disabled": "Deshabilitada",

@@ -483,6 +483,8 @@
     "syncSettings": {
       "title": "同步设置",
       "description": "Ham2K LoFi 提供了一个可靠的同步服务，可以让您在所有设备间进行同步，并在云中备份您的操作数据。",
+      "activePlan": "活动计划：{{plan}}",
+      "noActivePlan": "无活动计划",
       "syncService": "同步服务",
       "syncService.enabled": "已启用",
       "syncService.disabled": "已禁用",

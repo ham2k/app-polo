@@ -483,6 +483,8 @@
     "syncSettings": {
       "title": "Configurações de Sincronização",
       "description": "Ham2K LoFi oferece um serviço de sincronização confiável entre todos os seus dispositivos e fornece um backup para seus dados de operação na nuvem.",
+      "activePlan": "Plano ativo: {{plan}}",
+      "noActivePlan": "Nenhum plano ativo",
       "syncService": "Serviço de Sincronização",
       "syncService.enabled": "Habilitado",
       "syncService.disabled": "Desabilitado",

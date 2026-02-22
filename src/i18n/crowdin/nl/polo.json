@@ -483,6 +483,8 @@
     "syncSettings": {
       "title": "Synchronisatie-instellingen",
       "description": "Ham2K LoFi biedt een betrouwbare synchronisatiedienst tussen al je apparaten en zorgt voor een back-up van je gebruiksgegevens in de cloud.",
+      "activePlan": "Actief Plan: {{plan}}",
+      "noActivePlan": "Geen Actief Plan",
       "syncService": "Synchronisatie Service",
       "syncService.enabled": "Ingeschakeld",
       "syncService.disabled": "Uitgeschakeld",

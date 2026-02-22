@@ -483,6 +483,8 @@
     "syncSettings": {
       "title": "Sync-Einstellungen",
       "description": "Ham2K LoFi bietet einen zuverlässigen Synchronisierungsdienst zwischen all deinen Geräten und bietet eine Sicherung der Funkbetriebs-Daten in der Cloud.",
+      "activePlan": "Aktiver Plan: {{plan}}",
+      "noActivePlan": "Kein aktiver Plan",
       "syncService": "Sync-Dienst",
       "syncService.enabled": "Aktiviert",
       "syncService.disabled": "Deaktiviert",

@@ -483,6 +483,8 @@
     "syncSettings": {
       "title": "Synkroniseringsinnstillinger",
       "description": "Ham2K LoFi tilbyr en pålitelig synkroniseringstjeneste mellom alle enhetene dine og gir en sikkerhetskopi for operasjonsdataene dine i skyen.",
+      "activePlan": "Aktiv plan: {{plan}}",
+      "noActivePlan": "Ingen aktiv plan",
       "syncService": "Synkroniseringstjeneste",
       "syncService.enabled": "Aktivert",
       "syncService.disabled": "Deaktivert",

@@ -483,6 +483,8 @@
     "syncSettings": {
       "title": "Nastavenia synchronizácie",
       "description": "Ham2K LoFi ponúka spoľahlivú synchronizačnú službu medzi všetkými vašimi zariadeniami a poskytuje záložnú kópiu údajov o prevádzke v cloude.",
+      "activePlan": "Aktívny plán: {{plan}}",
+      "noActivePlan": "Žiadny aktívny plán",
       "syncService": "Synchronizačná služba",
       "syncService.enabled": "Zapnuté",
       "syncService.disabled": "Vypnuté",

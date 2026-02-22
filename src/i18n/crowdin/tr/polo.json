@@ -483,6 +483,8 @@
     "syncSettings": {
       "title": "Eşitleme Ayarları",
       "description": "Ham2K LoFi, tüm cihazlarınız arasında güvenilir bir senkronizasyon hizmeti sunar ve operasyon verilerinizi bulutta yedekler.",
+      "activePlan": "Aktif Plan: {{plan}}",
+      "noActivePlan": "Aktif Plan Yok",
       "syncService": "Senkronizasyon Hizmeti",
       "syncService.enabled": "Etkin",
       "syncService.disabled": "Devre Dışı",
