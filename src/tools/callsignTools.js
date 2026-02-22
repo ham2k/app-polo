@@ -50,7 +50,7 @@ export function expandRSTValues(text, mode, { settings } = {}) {
   text = text?.trim() || ''
   if (text.length === 0) {
     if (mode === 'CW' || mode === 'RTTY') return settings?.defaultReportCW || '599'
-    if (mode === 'FT8' || mode === 'FT4') return settings?.defaultReportFT8 || '+0'
+    if (mode === 'FT8' || mode === 'FT4' || mode === 'FT2') return settings?.defaultReportFT8 || '+0'
     return settings?.defaultReport || '59'
   } else if (text.length === 1) {
     let readability = '5'

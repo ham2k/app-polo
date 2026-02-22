@@ -121,7 +121,7 @@ const ModeCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-radio-mode',
-  match: /^(CW|SSB|USB|LSB|FM|AM|FT8|FT4|RTTY|LSB|USB)$/i,
+  match: /^(CW|SSB|USB|LSB|FM|AM|FT8|FT4|FT2|RTTY|LSB|USB)$/i,
   describeCommand: (match, { qso, t }) => {
     if (!qso) return
 

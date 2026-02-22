@@ -1,8 +1,10 @@
 {
-  "26.2.0-pre6": {
-    "name": "February '26 (pre 6)",
+  "26.2.0": {
+    "name": "February '26",
     "photoCaption": "HB9/OK1PTR/P at CH-0165",
     "changes": [
+      "Ham2K Log Filer Cloud Sync (beta testing)",
+      "Support for FT2 mode",
       "Towers on the Air (TOTA)",
       "ParksnPeaks Spotting (by M1SDH)",
       "Reorder call notes (by W6JSV)",

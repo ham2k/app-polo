@@ -27,6 +27,7 @@ const CAPTITALIZATION_EXCEPTIONS = {
   clublog: 'ClubLog',
   fcc: 'FCC',
   fm: 'FM',
+  ft2: 'FT2',
   ft4: 'FT4',
   ft8: 'FT8',
   flexradio: 'FlexRadio',
