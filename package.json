@@ -123,6 +123,6 @@
     "rtree": true
   },
   "engines": {
-    "node": ">=20"
+    "node": "22"
   }
 }
