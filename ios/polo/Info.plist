@@ -32,6 +32,22 @@
 				<string>com.ham2k.polo</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.ham2k.polo.auth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.ham2k.polo.auth</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.ham2k</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.ham2k</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(POLO_BUILD)</string>

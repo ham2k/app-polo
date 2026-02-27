@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -92,6 +92,15 @@ export const selectOperation = createSelector(
   (info, uuid) => info?.[uuid] ?? {}
 )
 
+export const selectLatestOperation = createSelector(
+  (state) => state?.operations?.info,
+  (info) => {
+    return Object.values(info || {})
+      .filter((op) => op?.uuid && !op?.deleted)
+      .sort(_operationSorter)[0] ?? {}
+  }
+)
+
 export const selectOperationCall = createSelector(
   (state, uuid) => state?.operations?.info,
   (state, uuid) => uuid,
@@ -102,9 +111,9 @@ export const selectOperationsList = createSelector(
   (state) => state?.operations?.info,
   (state) => state?.settings?.showDeletedOps,
   (info, showDeletedOps) => {
-    return Object.values(info || {}).filter((info) => info?.uuid && (showDeletedOps || !info?.deleted)).sort((a, b) => {
-      return (b.startAtMillisMax || b.createdAtMillis || 0) - (a.startAtMillisMax || a.createdAtMillis || 0)
-    })
+    return Object.values(info || {})
+      .filter((op) => op?.uuid && (showDeletedOps || !op?.deleted))
+      .sort(_operationSorter)
   }
 )
 
@@ -112,9 +121,10 @@ export const selectOperationIds = createSelector(
   (state) => state?.operations?.info,
   (state) => state?.settings?.showDeletedOps,
   (info, showDeletedOps) => {
-    return Object.values(info || {}).filter(op => op?.uuid && (showDeletedOps || !op?.deleted)).sort((a, b) => {
-      return (b.startAtMillisMax || b.createdAtMillis || 0) - (a.startAtMillisMax || a.createdAtMillis || 0)
-    }).filter(Boolean).map(op => op.uuid) // Just return the UUIDs
+    return Object.values(info || {})
+      .filter(op => op?.uuid && (showDeletedOps || !op?.deleted))
+      .sort(_operationSorter)
+      .map(op => op.uuid) // Just return the UUIDs
   },
   {
     memoizeOptions: {
@@ -150,5 +160,9 @@ export const selectOperationCallInfo = createSelector(
     return info
   }
 )
+
+const _operationSorter = (a, b) => {
+  return (b.startAtMillisMax || b.createdAtMillis || 0) - (a.startAtMillisMax || a.createdAtMillis || 0)
+}
 
 export default operationsSlice.reducer

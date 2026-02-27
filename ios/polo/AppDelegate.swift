@@ -35,14 +35,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlo
     return true
   }
 
-  // "open url" delegate function, for react-native-app-auth
+  // "open url" delegate function, for deeplinks like com.ham2k.polo://qso?... or com.ham2k.polo.auth://sota (using react-native-app-auth)
   public weak var authorizationFlowManagerDelegate: RNAppAuthAuthorizationFlowManagerDelegate?
   func application(
-      _ app: UIApplication,
-      open url: URL,
-      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-      return authorizationFlowManagerDelegate?.resumeExternalUserAgentFlow(with: url) ?? false
+    _ application: UIApplication,
+    open url: URL,
+    options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+  ) -> Bool {
+    if let delegate = authorizationFlowManagerDelegate,
+      delegate.resumeExternalUserAgentFlow(with: url)
+    {
+      return true
+    }
+    return RCTLinkingManager.application(application, open: url, options: options)
   }
+
+
+
+  // func application(
+  //   _ application: UIApplication,
+  //   continue userActivity: NSUserActivity,
+  //   restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+  // ) -> Bool {
+
+  //   // Handle Universal-Link–style OAuth redirects first
+  //   if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+  //     let delegate = authorizationFlowManagerDelegate,
+  //     delegate.resumeExternalUserAgentFlow(with: userActivity.webpageURL)
+  //   {
+  //     return true
+  //   }
+
+  //   // Fall back to React Native’s own Linking logic
+  //   return RCTLinkingManager.application(
+  //     application,
+  //     continue: userActivity,
+  //     restorationHandler: restorationHandler
+  //   )
+  // }
 }
 
 class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {

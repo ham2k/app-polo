@@ -120,6 +120,19 @@ In-app translation testing:
 2. In PoLo, enable Developer Mode and set the token in Developer Settings.
 3. Enter `CROWDIN` in the home screen quick lookup field to refresh language data.
 
+## Deep Linking
+
+To test deep linking, you can use the following commands:
+```
+export POLO_URL="com.ham2k://qso?their.call=W1WC\&mode=CW\&freq=7200"
+
+# iOS
+xcrun simctl openurl booted "$POLO_URL"
+
+# Android
+adb shell am start -W -a android.intent.action.VIEW -d "$POLO_URL" com.ham2k.polo.alpha
+```
+
 ## Splash Screen Updates
 
 1. Start with a `2048x2048` source image.

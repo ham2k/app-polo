@@ -55,6 +55,7 @@ import OperationDetailsScreen from './screens/OperationScreens/OpSettingsTab/Ope
 import OperationLocationScreen from './screens/OperationScreens/OpSettingsTab/OperationLocationScreen'
 import { GlobalDialog } from './ui/react-native/GlobalDialog'
 import { initializeI18Next } from './i18n/i18n'
+import { DeepLinks } from './DeepLinks'
 
 const Stack = createNativeStackNavigator()
 
@@ -148,6 +149,8 @@ function MainApp ({ navigationTheme }) {
             routeNameRef.current = currentRouteName
           }}
         >
+          <DeepLinks navigationRef={navigationRef} />
+
           <Stack.Navigator
             id="RootNavigator"
             screenOptions={{

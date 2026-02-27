@@ -1,5 +1,6 @@
 package com.ham2k.polo
 
+import android.content.Intent
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -21,6 +22,12 @@ class MainActivity : ReactActivity() {
     SplashScreen.show(this)
     supportFragmentManager.fragmentFactory = RNScreensFragmentFactory()
     super.onCreate(savedInstanceState)  // Required by react-native-screens / react-native-navigation
+  }
+
+  // With launchMode singleTask, deep links reopen this activity via onNewIntent; keep intent in sync so Linking works.
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
   }
 
   /**
