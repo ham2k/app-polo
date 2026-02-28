@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 import { Alert } from 'react-native'
-import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { ADIF_MODE_FOR_SUBMODE, bandForFrequency } from '@ham2k/lib-operation-data'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
@@ -17,6 +17,8 @@ import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
 import { LOCATION_ACCURACY } from '../../constants'
 import { distanceOnEarth } from '../../../tools/geoTools'
+import { setOperationData } from '../../../store/operations'
+import { hashCode } from '../../../tools/hashCode'
 
 import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { registerSOTADataFile, sotaFindAllByLocation, sotaFindOneByReference } from './SOTADataFile'
@@ -44,6 +46,7 @@ const Extension = {
         SettingItem: SOTAAccountSetting
       }
     })
+    registerHook('qsl', { hook: QSLHook })
 
     registerSOTADataFile()
     await dispatch(loadDataFile('sota-all-summits', { noticesInsteadOfFetch: true }))
@@ -180,6 +183,147 @@ const SpotsHook = {
     })
 
     return qsos
+  }
+}
+
+function sotaQsoDataStr(qso, operation) {
+  return [qso.key, qso.notes, qso.their?.grid || '', qso.our?.grid || operation?.grid || '', ...filterRefs(qso.refs, Info.huntingType).map(r => r.ref).sort()].join('|')
+}
+
+function fmtSOTADate(date) {
+  const d = String(date.getUTCDate()).padStart(2, '0');
+  const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const y = date.getUTCFullYear();
+  return `${d}/${m}/${y}`;
+}
+
+function fmtSotaTime(date) {
+  const h = String(date.getUTCHours()).padStart(2, '0');
+  const m = String(date.getUTCMinutes()).padStart(2, '0');
+  return `${h}${m}`;
+}
+
+const QSLHook = {
+  ...Info,
+  serviceName: 'SOTA Data',
+  canSendOutgoingQSLs: ({ operation, qsos, settings }) => {
+    if (!settings.accounts?.sota?.idToken) return false
+    const hasHunted = qsos.filter(q => !q.deleted && findRef(q, Info.huntingType)).length > 0
+    const isActivation = findRef(operation, Info.activationType)
+    return hasHunted || isActivation
+  },
+  sendOutgoingQSLs: async ({ operation, qsos, settings, dispatch }) => {
+    const qsl = operation?.qsl?.[Info.key]
+    const operationRef = findRef(operation, Info.activationType)
+
+    const uploadQSOs = []
+    const chaseQSOs = []
+    qsos.filter(q => !q.deleted).forEach(qso => {
+      const huntRef = findRef(qso.refs, Info.huntingType)
+      if (operationRef) {
+        uploadQSOs.push({
+          date: fmtSOTADate(new Date(qso.startAtMillis)),
+          time: fmtSotaTime(new Date(qso.startAtMillis)),
+          band: sotaBands[qso.band],
+          mode: getSOTAMode(qso.mode),
+          s2sSummitCode: huntRef?.ref,
+          callsign: qso.their?.call,
+          comments: qso.notes || '',
+          location: qso.their?.grid
+        })
+      }
+      if (huntRef) {
+        chaseQSOs.push({
+          date: fmtSOTADate(new Date(qso.startAtMillis)),
+          timeStr: fmtSotaTime(new Date(qso.startAtMillis)),
+          band: sotaBands[qso.band],
+          mode: getSOTAMode(qso.mode),
+          ownCallsign: qso.our?.call,
+          otherCallsign: qso.their?.call,
+          s2sSummitCode: huntRef.ref,
+          summitCode: operationRef?.ref,
+          notes: qso.notes || '',
+          location: qso.our?.grid || operation?.grid,
+        })
+      }
+    })
+
+    let upload
+    if (operationRef) {
+      upload = {
+        activations: [{
+          date: fmtSOTADate(new Date(operation.startAtMillisMin)),
+          summit: operationRef.ref,
+          ownCallsign: operation.stationCall || settings.operatorCall,
+          qsos: uploadQSOs
+        }],
+        s2s: chaseQSOs,
+        chases: []
+      }
+    } else {
+      upload = {
+        activations: [],
+        s2s: [],
+        chases: chaseQSOs
+      }
+    }
+
+    if (qsl?.uploadID) {
+      upload.id = qsl.uploadID
+    }
+
+    const apiPromise = await dispatch(apiSOTA.endpoints.logUpload.initiate(upload, { forceRefetch: true }))
+    await Promise.all(dispatch(apiSOTA.util.getRunningQueriesThunk()))
+    const apiResults = await dispatch((_dispatch, getState) => apiSOTA.endpoints.logUpload.select(upload)(getState()))
+    apiPromise.unsubscribe && apiPromise.unsubscribe()
+
+    if (!apiResults?.error) {
+      dispatch(setOperationData({
+        uuid: operation.uuid,
+        qsl: { ...operation?.qsl, [Info.key]: {
+          error: null,
+          lastUpdated: Date.now(),
+          ref: operationRef,
+          qsosHash: qsos.filter(q => !q.deleted).reduce((hash, q) => hashCode(sotaQsoDataStr(q, operation), hash), 0),
+          uploadID: apiResults?.data?.id
+        }},
+      }))
+    } else {
+      console.log('Error uploading SOTA QSLs:', apiResults.error)
+      if (apiResults.error.data?.message === "No upload found") {
+        // Must have been deleted on SOTA data
+        dispatch(setOperationData({
+          uuid: operation.uuid,
+          qsl: { ...operation?.qsl, [Info.key]: {
+            error: apiResults.error.data?.message || 'Unknown error',
+          }},
+        }))
+      } else {
+        dispatch(setOperationData({
+          uuid: operation.uuid,
+          qsl: { ...operation?.qsl, [Info.key]: {
+            ...operation?.qsl?.[Info.key],
+            error: apiResults.error.data?.message || 'Unknown error',
+          }},
+        }))
+      }
+    }
+  },
+  qslStatusForOperation: ({ operation, qsos }) => {
+    const error = operation?.qsl?.[Info.key]?.error
+    if (!operation?.qsl?.[Info.key]?.uploadID) return { status: 'neverSent', error }
+
+    // Activation references changed?
+    const qslRef = operation.qsl?.[Info.key]?.ref || []
+    const newRef = findRef(operation, Info.activationType)
+    if (qslRef?.ref !== newRef?.ref) return { status: 'needsUpdate', error }
+
+    // QSO modified in way that concerns service?
+    const qslHash = operation.qsl?.[Info.key]?.qsosHash
+    const newHash = qsos.filter(q => !q.deleted).reduce((hash, q) => hashCode(sotaQsoDataStr(q, operation), hash), 0)
+    if (qslHash !== newHash) return { status: 'needsUpdate', error }
+
+    return { status: 'upToDate', error }
   }
 }
 
@@ -406,4 +550,35 @@ const ReferenceHandler = {
 
     return score
   }
+}
+
+const validModes = ['AM', 'CW', 'DATA', 'DV', 'FM', 'SSB']
+
+function getSOTAMode(mode) {
+  if (ADIF_MODE_FOR_SUBMODE[mode]) mode = ADIF_MODE_FOR_SUBMODE[mode]
+  if (!validModes.includes(mode)) {
+    if (mode === 'DIGITALVOICE') {
+      mode = 'DV'
+    } else if (mode){
+      mode = 'DATA' // Reasonable guess
+    }
+  }
+  return mode
+}
+
+const sotaBands = {
+  '160m': '1.8MHz',
+  '80m': '3.5MHz',
+  '60m': '5MHz',
+  '40m': '7MHz',
+  '30m': '10MHz',
+  '20m': '14MHz',
+  '17m': '18MHz',
+  '15m': '21MHz',
+  '12m': '24MHz',
+  '10m': '28MHz',
+  '6m': '50MHz',
+  '2m': '144MHz',
+  '70cm': '432MHz',
+  '23cm': '1240MHz'
 }

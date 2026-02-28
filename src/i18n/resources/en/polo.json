@@ -88,7 +88,7 @@
       "exportSelectedFiles_one": "Export 1 selected file",
       "exportSelectedFiles_other": "Export {{count}} selected files",
       "exportAllFiles": "Export all files",
-      "exportQSOs": "Export QSOs",
+      "exportQSOs": "Export to Files",
       "pendingToDoItems_zero": "No pending to-do items",
       "pendingToDoItems_one": "1 pending to-do item",
       "pendingToDoItems_other": "{{count}} pending to-do items",
@@ -108,6 +108,18 @@
       "deleteOperationDialog": {
         "title": "Delete operation?",
         "description": "Are you sure you want to delete this operation?"
+      },
+      "uploadToServices": "Upload to Services",
+      "selectFromTheQSLOptionsBelow": "Select from services needing update below",
+      "allQSLOptionsUpToDate": "All services up to date",
+      "updateSingeQSLOption": "Upload to one service needing update",
+      "updateAllQSLOptions": "Upload to all {{count}} services",
+      "updateSelectedQSLOptions": "Upload to {{count}} services needing update",
+      "qslStatus": {
+        "neverSent": "Never sent",
+        "needsUpdate": "Needs update",
+        "upToDate": "Up to date",
+        "unknown": "Unknown status"
       }
     },
     "callInfo": {

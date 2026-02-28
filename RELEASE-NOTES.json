@@ -12,7 +12,8 @@
       "Portuguese (Brazil) translations, thanks to PY2MP Eduardo",
       "Turkish translations, thanks to Uğur TA1SW",
       "Performance and stability improvements",
-      "Assorted bug fixes"
+      "Assorted bug fixes",
+      "Add operation upload/QSL services for SOTA and WWBOTA (by M1SDH)"
     ]
   },
   "25.12.8": {

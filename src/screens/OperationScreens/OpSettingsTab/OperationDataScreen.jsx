@@ -29,6 +29,7 @@ import { H2kListItem, H2kListSection } from '../../../ui'
 import ScreenContainer from '../../components/ScreenContainer'
 import { ExportWavelogDialog } from './components/ExportWavelogDialog'
 import { buildTitleForOperation } from '../OperationScreen'
+import { findHooks } from '../../../extensions/registry'
 
 export default function OperationDataScreen (props) {
   const { t } = useTranslation()
@@ -140,6 +141,23 @@ export default function OperationDataScreen (props) {
     })
   }, [dispatch, operation])
 
+  const qslOptions = useMemo(() => {
+    const hooks = findHooks('qsl').filter(hook => hook.canSendOutgoingQSLs?.({ operation, qsos, settings }))
+    return hooks.map(hook => ({
+      key: hook.key,
+      icon: hook.icon,
+      label: hook.serviceName,
+      handler: hook,
+      ...hook?.qslStatusForOperation?.({ operation, qsos }) || { status: 'unknownStatus', error: 'Unknown error' }
+    }))
+  }, [operation, qsos, settings])
+
+  const handleQSLService = useCallback(({ options }) => {
+    options.forEach((option) => {
+      option.handler.sendOutgoingQSLs({ operation, qsos, settings, dispatch })
+    })
+  }, [operation, qsos, settings, dispatch])
+
   const handleImportADIF = useCallback(() => {
     pick({ mode: 'import' }).then(async (files) => {
       const [localCopy] = await keepLocalCopy({
@@ -178,6 +196,17 @@ export default function OperationDataScreen (props) {
     return t('screens.operationData.exportSelectedFiles', 'Export {{count}} selected files', { count: selectedExportOptions.length })
   }, [exportOptions.length, selectedExportOptions.length, t])
 
+  const selectedQSLOptions = useMemo(() => qslOptions.filter(option => (settings.qslServices?.[option.key] ?? option.selectedByDefault) !== false), [qslOptions, settings.qslServices])
+
+  const qslLabel = useMemo(() => {
+    const selectedNeedingUpdate = selectedQSLOptions.filter(option => option.status !== 'upToDate')
+    if (selectedNeedingUpdate.length === 0 && selectedQSLOptions.length > 0) return t('screens.operationData.selectFromTheQSLOptionsBelow', 'Select from services needing update below')
+    if (selectedNeedingUpdate.length === 0 && selectedQSLOptions.length === qslOptions.length) return t('screens.operationData.allQSLOptionsUpToDate', 'All services up to date')
+    if (selectedNeedingUpdate.length === 1) return t('screens.operationData.updateSingeQSLOption', 'Upload to one service needing update')
+    if (selectedNeedingUpdate.length === qslOptions.length) return t('screens.operationData.updateAllQSLOptions', 'Upload to all {{count}} services', { count: selectedNeedingUpdate.length })
+    return t('screens.operationData.updateSelectedQSLOptions', 'Upload to {{count}} selected services needing update', { count: selectedNeedingUpdate.length })
+  }, [qslOptions.length, selectedQSLOptions, t])
+
   const handleNavigateToLoggingTab = useCallback(() => {
     // Passing `selectedUUID` in `params` so that it makes it to the `OpLog` tab if it is present
     // but also passing it directly so that it makes it to the main screen in split view.
@@ -193,7 +222,7 @@ export default function OperationDataScreen (props) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
-          <H2kListSection title={t('screens.operationData.exportQSOs', 'Export QSOs')}>
+          <H2kListSection title={t('screens.operationData.exportQSOs', 'Export to Files')}>
 
             {pendingTodos.length > 0 && (
               <H2kListItem
@@ -235,6 +264,43 @@ export default function OperationDataScreen (props) {
               </View>
             ))}
           </H2kListSection>
+
+          { qslOptions.length > 0 && (
+            <H2kListSection title={t('screens.operationData.uploadToServices', 'Upload to Services')}>
+              <H2kListItem
+                title={qslLabel}
+                leftIcon="cloud-upload"
+                onPress={() => readyToExport && handleQSLService({ options: selectedQSLOptions.filter(option => option.status !== 'upToDate') })}
+                style={{ opacity: readyToExport ? 1 : 0.5 }}
+                disabled={!readyToExport}
+              />
+              {qslOptions.map((option) => (
+                <View key={option.key} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'flex-start' }}>
+                  <View style={{ marginTop: styles.oneSpace * 1 }}>
+                    <Checkbox
+                      status={(settings.qslServices?.[option.key] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
+                      onPress={() => dispatch(setSettings({ qslServices: { ...settings.qslServices, [option.key]: !((settings.qslServices?.[option.key] ?? option.selectedByDefault) !== false) } }))}
+                    />
+                  </View>
+                  <H2kListItem
+                    key={option.key}
+                    title={option.label}
+                    description={option.error || t(`screens.operationData.qslStatus.${option.status ?? 'unknown'}`, option.status === 'upToDate' ? 'Up to date' : option.status === 'needsUpdate' ? 'Needs update' : 'Never sent')}
+                    leftIcon={option.icon ?? option.handler.icon ?? 'file-outline'}
+                    leftIconColor={option.devMode ? styles.colors.devMode : styles.colors.onBackground}
+                    rightIcon={option.error ? 'alert-circle' : option.status === 'upToDate' ? 'check-circle' : option.status === 'neverSent' ? 'cloud-upload' : 'cloud-upload-outline'}
+                    rightIconColor={option.error ? styles.colors.error : option.status === 'upToDate' ? styles.colors.important : option.status === 'needsUpdate' ? styles.colors.secondary : undefined}
+                    onPressRight={() => readyToExport && handleQSLService({ options: [option] })}
+                    onPress={() => readyToExport && handleQSLService({ options: [option] })}
+                    descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
+                    titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
+                    style={{ opacity: readyToExport ? 1 : 0.5, flex: 1 }}
+                    disabled={!readyToExport}
+                  />
+                </View>
+              ))}
+            </H2kListSection>
+          )}
 
           <H2kListSection title={t('screens.operationData.importQSOs', 'Import QSOs')}>
             <H2kListItem
