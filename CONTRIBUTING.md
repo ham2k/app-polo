@@ -4,17 +4,23 @@ Thanks for helping improve PoLo.
 
 ## Before You Start
 
+Using `mise` is the easiest way to satisfy some of the local environment setup. Check it out here: https://mise.jdx.dev.
+
 1. Complete the React Native environment setup for your platform:
    https://reactnative.dev/docs/set-up-your-environment
-2. Make sure you have:
-   - Node.js 20+
-   - Ruby 3.2.4
+2. Ensure these required tools are available:
    - Xcode + CocoaPods (for iOS work)
    - Android Studio SDK/NDK (for Android work)
+   - If not using `mise`, you will have to manually manage these dependencies:
+      - Node.js 22
+      - Ruby 3.2
 
 ## Initial Setup
 
 ```bash
+# Recommended:
+mise install
+
 npm install
 bundle install
 bundle exec pod install --project-directory=ios
