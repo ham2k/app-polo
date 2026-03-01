@@ -17,6 +17,7 @@ import { loadQSOs, selectQSOs } from '../../store/qsos'
 import { selectSettings } from '../../store/settings'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { fmtDateTimeNiceZulu, fmtTimeBetween } from '../../tools/timeFormats'
+import { mapQSOsWithSectionContext } from '../../tools/qsonTools'
 import Color from 'color'
 import MapWithQSOs from '../OperationScreens/OpMapTab/components/MapWithQSOs'
 import { slashZeros } from '../../tools/stringTools'
@@ -106,7 +107,7 @@ export default function OperationBadgeScreen ({ navigation, route }) {
   }, [route.params.operation.uuid, dispatch])
 
   const qsosSelector = useCallback((state) => selectQSOs(state, route.params.operation.uuid), [route.params.operation.uuid])
-  const qsos = useSelector(qsosSelector)
+  const allQsos = useSelector(qsosSelector)
 
   const qth = useMemo(() => {
     try {
@@ -117,6 +118,30 @@ export default function OperationBadgeScreen ({ navigation, route }) {
       return {}
     }
   }, [operation?.grid])
+
+  const qsos = useMemo(() => {
+    const locationForGrid = (grid) => {
+      if (!grid) return qth
+      try {
+        const [latitude, longitude] = gridToLocation(grid)
+        return { latitude, longitude }
+      } catch (e) {
+        return qth
+      }
+    }
+
+    return mapQSOsWithSectionContext({
+      qsos: allQsos,
+      operation,
+      map: ({ qso, sectionGrid }) => ({
+        ...qso,
+        our: {
+          ...qso.our,
+          location: locationForGrid(sectionGrid)
+        }
+      })
+    })
+  }, [allQsos, operation, qth])
 
   const opDate = useMemo(() => {
     return `${fmtDateTimeNiceZulu(operation.startAtMillisMin)}`

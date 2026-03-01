@@ -19,6 +19,7 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation } from '../../../store/operations'
 import { selectQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
+import { mapQSOsWithSectionContext } from '../../../tools/qsonTools'
 import { useSelectorConditionally, useUIStateConditionally } from '../../components/useConditionally'
 
 import MapWithQSOs from './components/MapWithQSOs'
@@ -56,7 +57,29 @@ export default function OpMapTab ({ navigation, route }) {
   const allQsosSelector = useCallback((state) => selectQSOs(state, route.params.operation.uuid), [route.params.operation.uuid])
   const allQsos = useSelector(allQsosSelector)
 
-  const qsos = useMemo(() => allQsos.filter(qso => !qso.deleted && !qso.event), [allQsos])
+  const qsos = useMemo(() => {
+    const locationForGrid = (grid) => {
+      if (!grid) return qth
+      try {
+        const [latitude, longitude] = gridToLocation(grid)
+        return { latitude, longitude }
+      } catch (e) {
+        return qth
+      }
+    }
+
+    return mapQSOsWithSectionContext({
+      qsos: allQsos,
+      operation,
+      map: ({ qso, sectionGrid }) => ({
+        ...qso,
+        our: {
+          ...qso.our,
+          location: locationForGrid(sectionGrid)
+        }
+      })
+    })
+  }, [allQsos, operation, qth])
 
   const [dismissedWarnings, setDismissedWarnings] = useState({})
 

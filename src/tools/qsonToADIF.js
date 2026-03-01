@@ -11,6 +11,7 @@ import { basePartialTemplates, compileTemplateForOperation, extraDataForTemplate
 import { selectExportSettings } from '../store/settings'
 import { escapeToUnicodeEntities, sanitizeToISO8859 } from './stringTools'
 import { fmtADIFDate, fmtADIFTime, fmtISODateTime } from './timeFormats'
+import { forEachQSOWithSectionContext } from './qsonTools'
 
 import { adifModeAndSubmodeForMode, frequencyForBand, modeForFrequency } from '@ham2k/lib-operation-data'
 
@@ -52,8 +53,6 @@ export function qsonToADIF({ operation, settings, qsos, handler, format, title, 
     common.operatorCall = operation.local?.operatorCall || operation.operatorCall
   }
 
-  const eventQSOs = qsos.filter(qso => qso.event && !qso.deleted)
-
   let str = ''
   str += `ADIF for ${title || ([common.stationCall, operation?.title, operation.subTitle].filter(x => x).join(' ')) || 'Operation'} \n`
   str += adifField('ADIF_VER', '3.1.5', { newLine: true })
@@ -69,7 +68,7 @@ export function qsonToADIF({ operation, settings, qsos, handler, format, title, 
 
   str += '<EOH>\n'
 
-  qsos.forEach(qso => {
+  forEachQSOWithSectionContext({ qsos, operation, withEvents: true, callback: ({ qso, sectionRefs, sectionGrid }) => {
     if (qso.deleted) return
     if (qso.event) {
       if (privateData) {
@@ -91,14 +90,15 @@ export function qsonToADIF({ operation, settings, qsos, handler, format, title, 
       }
 
       if (qso.event.event === 'break' || qso.event.event === 'start') {
+        const segmentOperation = { ...qso.event.operation, refs: sectionRefs, grid: sectionGrid }
         if (combineSegmentRefs) {
-          // Update all operation attributes, including regs
-          operation = { ...operation, ...qso.event.operation }
-          common = { ...common, ...qso.event.operation }
+          // Update all operation attributes, including refs
+          operation = { ...operation, ...segmentOperation }
+          common = { ...common, ...segmentOperation }
         } else {
           // Combine other attributes, but keep refs as initialized
-          operation = { ...operation, ...qso.event.operation, refs: operation.refs }
-          common = { ...common, ...qso.event.operation, refs: common.refs }
+          operation = { ...operation, ...segmentOperation, refs: operation.refs }
+          common = { ...common, ...segmentOperation, refs: common.refs }
         }
         templates.context = templateContextForOneExport({ settings, operation, handler })
       }
@@ -155,7 +155,7 @@ export function qsonToADIF({ operation, settings, qsos, handler, format, title, 
 
       str += adifRow(fields)
     })
-  })
+  } })
 
   return str
 }
