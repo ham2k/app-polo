@@ -244,20 +244,21 @@ function _geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
 }
 
 function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
-  if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
-    const features = mappableQSOs.map(mappableQSO => _geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
+  const features = mappableQSOs.map(mappableQSO => _geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
 
-    return {
-      type: 'FeatureCollection',
-      features
-    }
+  return {
+    type: 'FeatureCollection',
+    features
   }
 }
 
 function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
   if (mappableQSO?.location?.latitude !== undefined && mappableQSO?.location?.longitude !== undefined) {
+    const ourLocation = mappableQSO?.ourLocation ?? qth
+    if (ourLocation?.latitude === undefined || ourLocation?.longitude === undefined) return null
+
     const start = _coordsFromLatLon(mappableQSO.location)
-    const end = _coordsFromLatLon(qth)
+    const end = _coordsFromLatLon(ourLocation)
 
     if (start[0] === end[0] && start[1] === end[1]) {
       return null

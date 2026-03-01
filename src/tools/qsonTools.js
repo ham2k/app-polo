@@ -5,6 +5,48 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+export function forEachQSOWithSectionContext({
+  qsos, operation,
+  withEvents = false, withDeleted = false,
+  callback
+}) {
+  let sectionRefs = operation?.refs ?? []
+  let sectionGrid = operation?.grid ?? undefined
+
+  qsos.forEach(qso => {
+    if (!qso.deleted && (qso.event?.event === 'break' || qso.event?.event === 'start')) {
+      sectionRefs = qso.event.operation?.refs ?? []
+      sectionGrid = qso.event.operation?.grid ?? undefined
+    }
+
+    if (!withEvents && qso.event) return
+
+    if (!withDeleted && qso.deleted) return
+
+    callback({ qso, sectionRefs, sectionGrid })
+  })
+}
+
+export function mapQSOsWithSectionContext({
+  qsos, operation,
+  withEvents = false, withDeleted = false,
+  map
+}) {
+  const mapped = []
+
+  forEachQSOWithSectionContext({
+    qsos,
+    operation,
+    withEvents,
+    withDeleted,
+    callback: (context) => {
+      mapped.push(map(context))
+    }
+  })
+
+  return mapped
+}
+
 export function filterQSOsWithSectionRefs({
   qsos, operation,
   withEvents = false, withDeleted = false,
@@ -13,40 +55,22 @@ export function filterQSOsWithSectionRefs({
 }) {
   filter = filter ?? (() => true)
 
-  let sectionRefs = operation?.refs ?? []
-  let sectionGrid = operation?.grid ?? undefined
   withSectionRefs = (withSectionRefs ?? []).filter(ref => ref?.type && ref?.ref)
-  let sectionIncludesRefs = withSectionRefs.length === 0 || withSectionRefs.every(
-    ref => sectionRefs.find(
-      sectionRef => sectionRef.type === ref.type && sectionRef.ref === ref.ref
-    )
-  )
-  // console.log('filterQSOsWithSectionRefs', withSectionRefs, qsos)
+  const filtered = []
 
-  return qsos.filter(qso => {
-    if (!qso.deleted && (qso.event?.event === 'break' || qso.event?.event === 'start')) {
-      // console.log('-- section', qso.event)
-      sectionRefs = qso.event.operation?.refs ?? []
-      sectionGrid = qso.event.operation?.grid ?? undefined
-      sectionIncludesRefs = withSectionRefs.length === 0 || withSectionRefs.every(
-        ref => sectionRefs.find(
-          sectionRef => sectionRef.type === ref.type && sectionRef.ref === ref.ref
-        )
+  forEachQSOWithSectionContext({ qsos, operation, withEvents, withDeleted, callback: ({ qso, sectionRefs, sectionGrid }) => {
+    const sectionIncludesRefs = withSectionRefs.length === 0 || withSectionRefs.every(
+      ref => sectionRefs.find(
+        sectionRef => sectionRef.type === ref.type && sectionRef.ref === ref.ref
       )
-      // console.log('-- sectionRefs', sectionRefs)
-      // console.log('-- sectionGrid', sectionGrid)
-      // console.log('-- sectionIncludesRefs', sectionIncludesRefs)
+    )
+    if (!sectionIncludesRefs) return
+    if (filter({ qso, sectionRefs, sectionGrid })) {
+      filtered.push(qso)
     }
+  } })
 
-    if (!withEvents && qso.event) return false
-
-    if (!withDeleted && qso.deleted) return false
-
-    if (withSectionRefs && !sectionIncludesRefs) return false
-
-    // console.log('filterQSOsWithSectionRefs', qso.uuid, qso.key, filter({ qso, sectionRefs, sectionGrid }))
-    return filter({ qso, sectionRefs, sectionGrid })
-  })
+  return filtered
 }
 
 /**
@@ -70,4 +94,3 @@ export function filterNearDupes({ qso, filter, ...rest }) {
 
   return filterQSOsWithSectionRefs({ ...rest, filter: actualFilter })
 }
-

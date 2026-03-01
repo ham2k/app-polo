@@ -17,10 +17,11 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     return activeQSOs
       .map(qso => {
         const location = locationForQSONInfo(qso?.their)
+        const ourLocation = qso?.our?.location ?? qth
         const strength = strengthForQSO(qso)
-        const distance = location && qth ? distanceOnEarth(location, qth, { units: settings.distanceUnits }) : null
+        const distance = location && ourLocation ? distanceOnEarth(location, ourLocation, { units: settings.distanceUnits }) : null
         const distanceStr = distance ? fmtDistance(distance, { units: settings.distanceUnits }) : ''
-        return { qso, location, strength, distance, distanceStr }
+        return { qso, location, ourLocation, strength, distance, distanceStr }
       })
       .filter(({ location }) => location)
       .sort((a, b) => b.strength - a.strength) // Weakest first
