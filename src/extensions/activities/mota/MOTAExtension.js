@@ -82,7 +82,9 @@ const ActivatorLoggingControl = {
   icon: Info.icon,
   label: ({ operation, qso }) => {
     const parts = [Info.shortNameDoubleContact]
-    if (findRef(qso, Info.huntingType)) parts.unshift('✓')
+    const refCount = filterRefs(qso, Info.huntingType).length
+    if (refCount === 1) parts.unshift('✓')
+    else if (refCount > 1) parts.unshift(`×${refCount}`)
     return parts.join(' ')
   },
   InputComponent: MOTALoggingControl,
