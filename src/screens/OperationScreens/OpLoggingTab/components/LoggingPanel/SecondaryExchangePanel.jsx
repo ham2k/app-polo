@@ -11,6 +11,8 @@ import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
 import { powerControl } from './SecondaryExchangePanel/TxPowerControl'
+import { rigControl } from './SecondaryExchangePanel/RigControl'
+import { antennaControl } from './SecondaryExchangePanel/AntennaControl'
 import { SecondaryControlManagementSubPanel } from './SecondaryExchangePanel/SecondaryControlManagementSubPanel'
 import { SecondaryControlSelectionsubPanel } from './SecondaryExchangePanel/SecondaryControlSelectionSubPanel'
 import { findHooks } from '../../../../../extensions/registry'
@@ -31,7 +33,9 @@ export const SecondaryExchangePanel = (props) => {
       radio: radioControl,
       notes: notesControl,
       edit: editQSOControl,
-      power: powerControl
+      power: powerControl,
+      rig: rigControl,
+      antenna: antennaControl
     }
 
     const activityHooks = findHooks('activity')

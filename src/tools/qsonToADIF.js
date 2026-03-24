@@ -198,6 +198,8 @@ function adifFieldsForOneQSO({ qso, operation, common, privateData, templates, t
     { GRIDSQUARE: privateData && (qso.their?.grid ?? qso.their?.guess?.grid) },
     { MY_GRIDSQUARE: privateData && (qso?.our?.grid ?? common.grid) },
     { MY_STATE: qso?.our?.state ?? common.state },
+    { MY_RIG: qso?.rig },
+    { MY_ANTENNA: qso?.antenna },
     { MY_CNTY: privateData && _cleanCounty(qso?.our?.county ?? common.county, qso?.our?.state ?? common.state) },
     { NAME: privateData && (qso.their?.name ?? qso.their?.guess?.name) },
     { DXCC: qso.their?.dxccCode ?? qso.their?.guess?.dxccCode },

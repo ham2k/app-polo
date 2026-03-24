@@ -249,6 +249,12 @@ export default function LoggingPanel ({
     } else if (fieldId === 'power') {
       updateQSO({ power: value })
       if (qso?._isNew) dispatch(setVFO({ power: value }))
+    } else if (fieldId === 'rig') {
+      updateQSO({ rig: value })
+      if (qso?._isNew) dispatch(setVFO({ rig: value }))
+    } else if (fieldId === 'antenna') {
+      updateQSO({ antenna: value })
+      if (qso?._isNew) dispatch(setVFO({ antenna: value }))
     } else if (fieldId === 'eventNote') {
       updateQSO({ event: { note: value } })
     } else if (fieldId === 'eventData') {
@@ -773,6 +779,8 @@ function prepareNewQSO (operation, qsos, vfo, settings) {
     freq: vfo.freq,
     mode: vfo.mode,
     power: vfo.power,
+    rig: vfo.rig,
+    antenna: vfo.antenna,
     _isNew: true
   }
   if (operation.local?._nextManualTime) {

@@ -73,8 +73,8 @@ npm start -- --reset-cache
 
 - Reference: https://www.iosdev.recipes/simctl/
 - `xcrun simctl listapps booted` to list installed simulator apps.
-- `open \`xcrun simctl get_app_container booted com.ham2k.polo data\`/Documents` to open PoLo's Documents folder.
-- `open \`xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep FileProvider.LocalStorage|sed "s/group.com.apple.FileProvider.LocalStorage//g"\`/File\ Provider\ Storage` to open simulator Files local storage.
+- ``open `xcrun simctl get_app_container booted com.ham2k.polo data`/Documents`` to open PoLo's Documents folder.
+- ``open `xcrun simctl get_app_container booted com.apple.DocumentsApp groups |grep FileProvider.LocalStorage|sed "s/group.com.apple.FileProvider.LocalStorage//g"`/File\ Provider\ Storage`` to open simulator Files local storage.
 
 ## Resources
 
