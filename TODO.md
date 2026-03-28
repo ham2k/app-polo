@@ -5,6 +5,7 @@
 * In Data File Settings, cannot dismiss the dialog.
 "I could not double tap on the "Close modal” button to dismiss the screen. I used the VoiceOver two finger scrub gesture but should be able to double tap the button as well"
 
+* Review voiceover for park and summit references in lists, titles, etc.
 
 # General Package Maintenance Tasks
 
@@ -41,6 +42,10 @@ onValueChange={(v) => {
 }
 ```
 
+### Keyboard Controller
+
+`react-native-keyboard-controller` has a toolbar component that might be useful for number keys.
+It also has a `chat scrollview` that's worth checking out.
 
 -----
 
